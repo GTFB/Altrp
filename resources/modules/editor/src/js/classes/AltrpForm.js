@@ -1,5 +1,6 @@
 import Resource from "./Resource";
 import {addResponseData, clearAllResponseData} from "../../../../front-app/src/js/store/responses-storage/actions";
+import {mbParseJSON} from "../../../../front-app/src/js/helpers";
 
 /**
  * Класс имитирующий поведение формы (собирает данные с виджетов полей и отправляет их на сервер)
@@ -122,6 +123,7 @@ class AltrpForm {
           case 'PUT': {
             let res;
             if (modelID || this.options.customRoute) {
+              console.log(_.assign(this.getData(), data));
               res = await this.resource.put(modelID, _.assign(this.getData(), data));
               import('./modules/ModelsManager').then(modelsManager => {
                 modelsManager.default.updateModelWithData(this.modelName, modelID, this.getData());
@@ -150,6 +152,13 @@ class AltrpForm {
             break;
         }
       } catch (error){
+        console.log(error);
+        if(error instanceof Promise){
+          error =  await error.then();
+          error = mbParseJSON(error, error);
+          this.updateResponseStorage(error);
+
+        }
         return{success: false, error};
       }
     } else {

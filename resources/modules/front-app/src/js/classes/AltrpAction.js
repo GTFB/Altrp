@@ -40,7 +40,7 @@ class AltrpAction extends AltrpModel {
    * @return {string}
    */
   getElementId() {
-    return this.getProperty("_widgetId");
+    return this.getProperty("_element").getId();
   }
 
   /**
@@ -49,7 +49,7 @@ class AltrpAction extends AltrpModel {
    */
   getFormId() {
     let formId = this.getProperty("form_id");
-    if (!formId) {
+    if (! formId) {
       return formId;
     }
     if (formId.indexOf("{{") !== -1) {
@@ -59,7 +59,7 @@ class AltrpAction extends AltrpModel {
   }
 
   /**
-   * Получить id для регистрации формы
+   * Получить URL формы
    * @return {string}
    */
   getFormURL() {
@@ -67,9 +67,6 @@ class AltrpAction extends AltrpModel {
     if (!formURL) {
       return formURL;
     }
-    // if(this.getType() === 'form'){
-    //   return formURL;
-    // }
     if (formURL.indexOf("{{") !== -1) {
       formURL = replaceContentWithData(
         formURL,
@@ -122,27 +119,27 @@ class AltrpAction extends AltrpModel {
   async init() {
     switch (this.getType()) {
       case "form": {
-        if (!this.getFormURL()) {
+        if (! this.getFormURL()) {
           this.setProperty("_form", null);
           return;
         }
-        const formsManager = (
-          await import(
-            "../../../../editor/src/js/classes/modules/FormsManager.js"
-          )
-        ).default;
-        const formOptions = {
-          dynamicURL: true,
-          customRoute: this.getFormURL()
-        };
+        // const formsManager = (
+        //   await import(
+        //     "../../../../editor/src/js/classes/modules/FormsManager.js"
+        //   )
+        // ).default;
+        // const formOptions = {
+        //   dynamicURL: true,
+        //   customRoute: this.getFormURL()
+        // };
 
-        const form = formsManager.registerForm(
-          this.getFormId(),
-          "",
-          this.getProperty("form_method"),
-          formOptions
-        );
-        this.setProperty("_form", form);
+        // const form = formsManager.registerForm(
+        //   this.getFormId(),
+        //   "",
+        //   this.getProperty("form_method"),
+        //   formOptions
+        // );
+        // this.setProperty("_form", form);
         return;
       }
       case "login": {
@@ -304,28 +301,22 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionForm() {
-    if (!this.getProperty("_form")) {
-      return {
-        success: false,
-        message: "Нет Формы"
-      };
-    }
+    // if (! this.getProperty("_form")) {
+    //   return {
+    //     success: false,
+    //     message: "Нет Формы"
+    //   };
+    // }
     const formsManager = (
       await import("../../../../editor/src/js/classes/modules/FormsManager.js")
     ).default;
-    if (this.getProperty("path")) {
-      let data = getDataByPath(this.getProperty("path"));
-      if (!_.isEmpty(data)) {
-        return this.getProperty("_form").submit("", "", data);
-      }
-      return { success: true };
-    }
+
     let data = null;
     if (this.getProperty("data")) {
       data = parseParamsFromString(
-        this.getProperty("data"),
-        getAppContext(),
-        true
+          this.getProperty("data"),
+          getAppContext(),
+          true
       );
       // if (!_.isEmpty(data)) {
       //   return form.submit("", "", data);
@@ -382,12 +373,18 @@ class AltrpAction extends AltrpModel {
 
       return { success: true };
     }
+    if (this.getProperty("path")) {
+      let _data = getDataByPath(this.getProperty("path"), {});
+      if(! _.isEmpty(_data)){
+        data = _.assign(_data, data);
+      }
+    }
     /**
      *
      * @type {AltrpForm}
      */
     // let form = this.getProperty("_form");
-    if (!this.getFormURL()) {
+    if (! this.getFormURL()) {
       this.setProperty("_form", null);
       return {
         success: false
@@ -397,12 +394,14 @@ class AltrpAction extends AltrpModel {
       dynamicURL: true,
       customRoute: this.getFormURL()
     };
+    console.log(formOptions);
     const form = formsManager.registerForm(
       this.getFormId(),
       "",
       this.getProperty("form_method"),
       formOptions
     );
+    console.log(form);
     let result = {
       success: false
     };
