@@ -109,6 +109,7 @@ export function actionsControllers(element){
   actionsRepeater.addControl('action', {
     type: CONTROLLER_TEXT,
     dynamic: false,
+    responsive: false,
     label: 'Add Action Name',
     conditions: {
       type: [
@@ -168,6 +169,7 @@ export function actionsControllers(element){
   actionsRepeater.addControl('form_id', {
     label: 'Form ID',
     dynamic: false,
+    responsive: false,
     conditions: {
       type: [
         'form',
@@ -179,6 +181,7 @@ export function actionsControllers(element){
   actionsRepeater.addControl('name', {
     label: 'File Name',
     dynamic: false,
+    responsive: false,
     conditions: {
       type: [
         'page_to_pdf',
@@ -228,6 +231,18 @@ export function actionsControllers(element){
 
   actionsRepeater.addControl('back', {
     label: 'Back',
+    type: CONTROLLER_SWITCHER,
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: [
+        'redirect',
+      ],
+    },
+  });
+
+  actionsRepeater.addControl('outer', {
+    label: 'Outer',
     type: CONTROLLER_SWITCHER,
     responsive: false,
     dynamic: false,
@@ -390,6 +405,7 @@ export function actionsControllers(element){
     isClearable: true,
     options_resource: '/admin/ajax/templates/options?template_type=popup&value=guid',
     nullable: true,
+    responsive: false,
     conditions: {
       type: [
         'toggle_popup',
@@ -400,24 +416,28 @@ export function actionsControllers(element){
   actionsRepeater.addControl('confirm', {
     type: CONTROLLER_TEXTAREA,
     dynamic: false,
+    responsive: false,
     label: 'Confirm Text',
   });
 
   actionsRepeater.addControl('alert', {
     type: CONTROLLER_TEXTAREA,
     dynamic: false,
+    responsive: false,
     label: 'Success',
   });
 
   actionsRepeater.addControl('reject', {
     type: CONTROLLER_TEXTAREA,
     dynamic: false,
+    responsive: false,
     label: 'Reject',
   });
 
   element.addControl('actions', {
     label: 'Actions',
     type: CONTROLLER_REPEATER,
+    responsive: false,
     fields: actionsRepeater.getControls(),
   });
 

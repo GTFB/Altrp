@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <script>
+
+    window.pageStorage = {};
+
+    var page_id = {{$page_id}};
+    var page_areas = {!! $page_areas !!};
+
+    if (typeof page_id !== 'undefined' && typeof page_areas !== 'undefined') {
+      window.pageStorage[page_id] = {areas:page_areas};
+    }
+
+  </script>
+  <script>
     /**
      * Функция для вывода ошибок в HTML
      * @param msg
@@ -47,13 +59,16 @@
       padding-left: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
       padding-right: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
     }
+    .front-app-content_preloaded{
+      display: none;
+    }
   </style>
   @if( isset( $preload_content[ 'important_styles'] ) )
     {!! $preload_content[ 'important_styles'] !!}
   @endif
 </head>
-<body>
-<div id="front-app" class="front-app">
+<body class="front-app-body">
+<div id="front-app" class="front-app {{ $is_admin ? 'front-app_admin' : '' }}">
   {!! isset( $preload_content[ 'content'] ) ? $preload_content['content'] : ''!!}
 </div>
 <script src="{{ altrp_asset( '/modules/front-app/front-app.js', 'http://localhost:3001/' ) }}" defer></script>

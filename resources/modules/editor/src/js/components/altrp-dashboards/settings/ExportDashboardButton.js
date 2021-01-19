@@ -9,6 +9,7 @@ class ExportDashboardButton extends Component {
     return (
       <>
         <button
+          className={`altrp-btn-draw`}
           style={{
             margin: "5px 5px 5px 5px"
           }}

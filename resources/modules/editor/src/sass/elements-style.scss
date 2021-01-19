@@ -1433,7 +1433,7 @@
 .altrp-label{
   &.altrp-label_slider{
     display: flex;
-    justify-content: center;
+      justify-content: center;
     flex-wrap: wrap;
   }
 }
@@ -1444,4 +1444,20 @@
 .altrp-pagination__previous, .altrp-pagination__next {
   display: flex;
   align-items: center;
+
+  img {
+      height: 60px;
+  }
+}
+
+.altrp-table {
+    border-width: 1px 1px 1px 1px;
+    border-color: rgb(186,186,186);
+}
+
+.altrp-table-global-filter {
+    font-weight: 400;
+    label {
+        display: inline-block;
+    }
 }

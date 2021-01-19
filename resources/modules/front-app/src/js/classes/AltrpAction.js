@@ -67,12 +67,12 @@ class AltrpAction extends AltrpModel {
    */
   getFormURL() {
     let formURL = this.getProperty("form_url");
-    if (! formURL) {
+    if (!formURL) {
       return formURL;
     }
-    if(this.getType() === 'form'){
-      return formURL;
-    }
+    // if(this.getType() === 'form'){
+    //   return formURL;
+    // }
     if (formURL.indexOf("{{") !== -1) {
       formURL = replaceContentWithData(
         formURL,
@@ -312,6 +312,9 @@ class AltrpAction extends AltrpModel {
         message: "Нет Формы"
       };
     }
+    const formsManager = (
+      await import("../../../../editor/src/js/classes/modules/FormsManager.js")
+    ).default;
     if (this.getProperty("path")) {
       let data = getDataByPath(this.getProperty("path"));
       if (!_.isEmpty(data)) {
@@ -339,8 +342,19 @@ class AltrpAction extends AltrpModel {
         let bulk = getDataByPath(this.getProperty("bulk_path"));
         let _form = this.getProperty("_form");
         data = _.assign(_form.getData(), data);
-        let bulkRequests = bulk.map(async (item, idx)=>{
+        let bulkRequests = bulk.map(async (item, idx) => {
           // return   ()=>{
+          if (this.getProperty("data")) {
+            data = parseParamsFromString(
+              this.getProperty("data"),
+              getAppContext(item),
+              true
+            );
+            // if (!_.isEmpty(data)) {
+            //   return form.submit("", "", data);
+            // }
+            // return { success: true };
+          }
           let url = this.getProperty("form_url");
           url = replaceContentWithData(url, item);
           const form = formsManager.registerForm(
@@ -374,8 +388,33 @@ class AltrpAction extends AltrpModel {
      *
      * @type {AltrpForm}
      */
-    let form = this.getProperty("_form");
-    return form.submit("", "", data);
+    // let form = this.getProperty("_form");
+    if (!this.getFormURL()) {
+      this.setProperty("_form", null);
+      return {
+        success: false
+      };
+    }
+    const formOptions = {
+      dynamicURL: true,
+      customRoute: this.getFormURL()
+    };
+    const form = formsManager.registerForm(
+      this.getFormId(),
+      "",
+      this.getProperty("form_method"),
+      formOptions
+    );
+    let result = {
+      success: false
+    };
+    try {
+      result = await form.submit("", "", data);
+    } catch (error) {
+      result.error = error;
+    }
+
+    return result;
   }
   /**
    * Делает редирект на страницу form_url
@@ -387,20 +426,7 @@ class AltrpAction extends AltrpModel {
       if (this.getProperty("back")) {
         frontAppRouter.history.goBack();
       } else {
-        let routes = appStore.getState().appRoutes.routes || [];
-        let innerRedirect = false;
-        if (URL === "/") {
-          innerRedirect = true;
-        } else {
-          routes.forEach(route => {
-            if (!route.path) {
-              return;
-            }
-            if (route.path === URL) {
-              innerRedirect = true;
-            }
-          });
-        }
+        let innerRedirect = !this.getProperty("outer");
         if (innerRedirect) {
           frontAppRouter.history.push(URL);
         } else {
@@ -662,7 +688,7 @@ class AltrpAction extends AltrpModel {
     if (!path) {
       return result;
     }
-    let value = this.getProperty("value") || '';
+    let value = this.getProperty("value") || "";
     value = value.trim();
     const setType = this.getProperty("set_type");
     let count = this.getProperty("count");

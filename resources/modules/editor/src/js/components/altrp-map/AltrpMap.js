@@ -6,16 +6,25 @@ import MapDesigner from "./MapDesigner";
 const defaultOptions = {
   fillColor: "#3388ff",
   fillOpacity: 0.5,
-  color: "#3388ff",
+  color: "#3388ff"
 };
 
 function AltrpMap({ settings }) {
   const [isLoading, setIsLoading] = useState(false);
   const [geoJson, setGeoJson] = useState({});
-  const { query, handler, canvas, zoom, lat, lng, style_height = {}, style_margin = {} } = settings;
+  const {
+    query,
+    handler,
+    canvas,
+    zoom,
+    lat,
+    lng,
+    style_height = {},
+    style_margin = {}
+  } = settings;
   console.log("settings :>> ", settings);
 
-  const handleClickPolygon = (e) => {
+  const handleClickPolygon = e => {
     // Получаем ID объекта на карте
     const { id } = e.target.feature;
     const url = handler.params.replace("{{id}}", id);
@@ -26,27 +35,27 @@ function AltrpMap({ settings }) {
     }
   };
 
-  const composeDynamicData = useCallback(async (url) => {
+  const composeDynamicData = useCallback(async url => {
     setIsLoading(true);
     const { data, status } = await axios(url);
     if (status === 200 && data.data) {
       const geojson = {
         type: "FeatureCollection",
-        features: data.data.map((item) => {
+        features: data.data.map(item => {
           return {
             id: item.id,
             type: "Feature",
             properties: {
               tooltip: item.name,
               ...defaultOptions,
-              ...item.options,
+              ...item.options
             },
             geometry: {
               type: "Polygon",
-              coordinates: JSON.parse(item.polygon),
-            },
+              coordinates: JSON.parse(item.polygon)
+            }
           };
-        }),
+        })
       };
       setGeoJson(geojson);
       setIsLoading(false);
@@ -56,7 +65,7 @@ function AltrpMap({ settings }) {
       // Сбрасываем полигоны
       setGeoJson({
         type: "FeatureCollection",
-        features: [],
+        features: []
       });
     }
   }, []);
@@ -64,7 +73,7 @@ function AltrpMap({ settings }) {
   const parseQueryParams = (qs = "") => {
     if (!qs) return "";
     const keyValues = qs.split("\n");
-    const result = keyValues.map((item) => item.replace("|", "=")).join("&");
+    const result = keyValues.map(item => item.replace("|", "=")).join("&");
     return `?${result}`;
   };
 
@@ -87,7 +96,7 @@ function AltrpMap({ settings }) {
         marginTop: style_margin.top + style_margin.unit,
         marginBottom: style_margin.bottom + style_margin.unit,
         marginLeft: style_margin.left + style_margin.unit,
-        marginRight: style_margin.right + style_margin.unit,
+        marginRight: style_margin.right + style_margin.unit
       }}
       isEditable={false}
       preferCanvas={canvas}

@@ -227,7 +227,7 @@ class ElementWrapper extends Component {
     }
     if (this.state.errorInfo) {
       return (
-        <div className="altrp-error">
+        <div className="altrp-error" data-eltype={this.props.element.getType()}>
           <h2>Something went wrong.</h2>
           <details style={{ whiteSpace: "pre-wrap" }}>
             {this.state.error && this.state.error.toString()}

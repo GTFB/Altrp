@@ -98,6 +98,13 @@ import woff2 from '../../../svgs/WOFF2.svg'
 import xls from '../../../svgs/XLS.svg'
 import xlsx from '../../../svgs/XLSX.svg'
 import zip from '../../../svgs/ZIP.svg'
+
+import adminBar1 from '../../../svgs/admin-bar1.svg';
+import adminBar2 from '../../../svgs/admin-bar2.svg';
+import adminBar3 from '../../../svgs/admin-bar3.svg';
+import adminBar4 from '../../../svgs/admin-bar4.svg';
+import copyIcon from '../../../svgs/copy-icon.svg';
+import chevronAdminBar from '../../../svgs/chevron-admin-bar.svg';
 class IconsManager {
   constructor() {
     this.icons = [];
@@ -202,6 +209,13 @@ class IconsManager {
     this.icons.push(new Icon('xls', xls));
     this.icons.push(new Icon('xlsx', xlsx));
     this.icons.push(new Icon('zip', zip));
+
+    this.icons.push(new Icon('admin-bar1', adminBar1));
+    this.icons.push(new Icon('admin-bar2', adminBar2));
+    this.icons.push(new Icon('admin-bar3', adminBar3));
+    this.icons.push(new Icon('admin-bar4', adminBar4));
+    this.icons.push(new Icon('copy-icon', copyIcon));
+    this.icons.push(new Icon('chevron-admin-bar', chevronAdminBar));
   }
   /**
    * @param {string} iconName

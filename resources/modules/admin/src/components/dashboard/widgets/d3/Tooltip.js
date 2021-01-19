@@ -61,21 +61,21 @@ class Tooltip extends Component {
   render() {
     if (this.state.enable) {
       return (
-        <div className="col-12" style={this.containerSettings()}>
+        <div className={`${this.props.widgetID} altrp-dashboard__tooltip--label-background col-12`}>
           <div
-            className="col px-0"
+            className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
             style={{
               textAlign: "left",
-              color: "red"
+              // color: "red"
             }}
           >
             {this.state.data.x}
           </div>
           <div
-            className="col px-0"
+            className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
             style={{
               textAlign: "right",
-              color: "blue"
+              // color: "blue"
             }}
           >
             {this.state.data.y}
@@ -91,7 +91,7 @@ class Tooltip extends Component {
           style={{
             background: "white",
             color: "inherit",
-            fontSize: "inherit",
+            fontSize: "{{SIZE}}px",
             borderRadius: "2px",
             boxShadow: "rgba(0, 0, 0, 0.25) 0px 1px 2px",
             padding: "5px 9px"

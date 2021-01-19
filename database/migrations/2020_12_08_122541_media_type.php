@@ -15,9 +15,10 @@ class MediaType extends Migration
   public function up()
   {
     //
-    Schema::table( 'media', function ( Blueprint $table ){
+    Schema::table( 'altrp_media', function ( Blueprint $table ){
       $table->string( 'type', 50 )->nullable()->index();
     } );
+
     Media::all()->each( function( Media $media ){
       $media->type = 'image';
       $media->save();
@@ -32,7 +33,7 @@ class MediaType extends Migration
   public function down()
   {
     //
-    Schema::table( 'media', function ( Blueprint $table ){
+    Schema::table( 'altrp_media', function ( Blueprint $table ){
       $table->dropColumn( 'type' );
     } );
   }
