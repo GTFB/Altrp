@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
 import "./rotating.scss";
-import {Motion, spring, TransitionMotion} from "react-motion/lib/react-motion";
 
 class Rotating extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
+    let state = {
       active: 0,
       step: 0,
       index: 0,
@@ -15,30 +14,48 @@ class Rotating extends Component {
       style: {}
     };
 
+    if(this.props.type === "swirl" || this.props.type === "blinds" || this.props.type === "wave") {
+      state.index = -1
+    }
+
+    if(this.props.type === "slide" || this.props.type === "slideDown") {
+      state.active = -1
+    }
+
+    if(this.props.type === "flip") {
+      state.step = 1
+    }
+
+    this.state = state
+
     this.rotating = this.rotating.bind(this);
     this.typing = this.typing.bind(this);
     this.getWidth = this.getWidth.bind(this);
     this.setStep = this.setStep.bind(this);
 
-    this.clipRef = React.createRef();
-    this.flipRef = React.createRef();
+    this.clipRef = React.createRef()
+    this.flipRef = React.createRef()
     this.swirlRef = React.createRef();
+    this.blindsRef = React.createRef();
+    this.dropInRef = React.createRef();
+    this.waveRef = React.createRef();
+    this.slideRef = React.createRef();
+    this.slideDownRef = React.createRef();
   }
 
   componentDidMount() {
     this.rotating();
 
-    if(this.clipRef.current && this.props.type === "clip") {
+    if(this.clipRef.current && this.props.type === "clip" || this.clipRef.current && this.props.type === "slide") {
       this.setState({ width: this.clipRef.current.offsetWidth })
+    }
+
+    if(this.clipRef.current && this.props.type === "dropIn") {
+      this.setState({ width: this.dropInRef.current.offsetWidth })
     }
 
     if(this.props.type === "flip") {
       this.getWidth();
-      this.setState({ step: 1 })
-    }
-
-    if(this.props.type === "swirl") {
-      this.setState({index: -1})
     }
   }
 
@@ -58,8 +75,7 @@ class Rotating extends Component {
         style: {}
       }));
 
-      if(this.props.type === "swirl") {
-        console.log('tg')
+      if(this.props.type === "swirl" || this.props.type === "blinds" || this.props.type === "wave") {
         this.setState({index: -1})
       }
 
@@ -76,7 +92,7 @@ class Rotating extends Component {
     }
   }
 
-  getWidth() {
+    getWidth() {
     switch (this.props.type) {
       case "flip":
         if (this.flipRef.current) {
@@ -92,6 +108,71 @@ class Rotating extends Component {
             if(this.props.text.split("\n").length >= this.state.widthRef) {
               this.setState((state) => ({
                 width: this.swirlRef.current.offsetWidth,
+                widthRef:state.widthRef + 1
+              }))
+            }
+          }
+        }
+        break;
+      case "blinds":
+        if (this.blindsRef.current) {
+          if (this.blindsRef.current.offsetWidth > this.state.width) {
+
+            if(this.props.text.split("\n").length >= this.state.widthRef) {
+              this.setState((state) => ({
+                width: this.blindsRef.current.offsetWidth,
+                widthRef:state.widthRef + 1
+              }))
+            }
+          }
+        }
+        break;
+      case "dropIn":
+        if (this.dropInRef.current) {
+          if (this.dropInRef.current.offsetWidth > this.state.width) {
+
+            if(this.props.text.split("\n").length >= this.state.widthRef) {
+              this.setState((state) => ({
+                width: this.dropInRef.current.offsetWidth,
+                widthRef:state.widthRef + 1
+              }))
+            }
+          }
+        }
+        break;
+      case "wave":
+        if (this.waveRef.current) {
+          if (this.waveRef.current.offsetWidth > this.state.width) {
+
+            if(this.props.text.split("\n").length >= this.state.widthRef) {
+              this.setState((state) => ({
+                width: this.waveRef.current.offsetWidth,
+                widthRef:state.widthRef + 1
+              }))
+            }
+          }
+        }
+        break;
+      case "slide":
+        if (this.slideRef.current) {
+          if (this.slideRef.current.offsetWidth > this.state.width) {
+
+            if(this.props.text.split("\n").length >= this.state.widthRef) {
+              this.setState((state) => ({
+                width: this.slideRef.current.offsetWidth,
+                widthRef:state.widthRef + 1
+              }))
+            }
+          }
+        }
+        break;
+      case "slideDown":
+        if (this.slideDownRef.current) {
+          if (this.slideDownRef.current.offsetWidth > this.state.width) {
+
+            if(this.props.text.split("\n").length >= this.state.widthRef) {
+              this.setState((state) => ({
+                width: this.slideDownRef.current.offsetWidth,
                 widthRef:state.widthRef + 1
               }))
             }
@@ -174,7 +255,7 @@ class Rotating extends Component {
         this.getWidth();
 
         if(_.isString(arrayText[this.state.active+1])) {
-          const wordNext = arrayText[this.state.active+1].split("").length;
+          const wordNext = arrayText[arrayText.length >= this.state.active+1 ? this.state.active+1 : 0].split("").length;
           const wordPrev = arrayText[this.state.active].split("").length;
 
           this.setState({
@@ -185,6 +266,7 @@ class Rotating extends Component {
         setTimeout(() => {
 
           const letterChanging = setInterval(() => {
+            this.getWidth();
             if(this.state.index < this.state.step) {
               this.setState((state) => ({index: state.index+1}))
             } else {
@@ -198,6 +280,97 @@ class Rotating extends Component {
           }, 100)
         }, 1000);
 
+        break;
+      case "blinds":
+        this.getWidth();
+
+        if(_.isString(arrayText[this.state.active+1])) {
+          const wordNext = arrayText[arrayText.length >= this.state.active+1 ? this.state.active+1 : 0].split("").length;
+          const wordPrev = arrayText[this.state.active].split("").length;
+
+          this.setState({
+            step: wordNext > wordPrev ? wordNext : wordPrev
+          });
+        }
+
+        setTimeout(() => {
+
+          const letterChanging = setInterval(() => {
+            this.getWidth();
+            if(this.state.index < this.state.step) {
+              this.setState((state) => ({index: state.index+1}))
+            } else {
+              clearInterval(letterChanging);
+              setTimeout(() => {
+                const length = arrayText.length > this.state.active+1;
+                this.setState((state) => ({ active: length ? state.active+1 : 0, index: -1 }));
+                this.rotating();
+              }, 500)
+            }
+          }, 100)
+        }, 1000);
+
+        break;
+      case "dropIn":
+        this.getWidth();
+
+        setTimeout(() => {
+          const wordNext = arrayText.length > this.state.active+1 ? this.state.active+1 : 0;
+
+          this.setState({
+            active: wordNext
+          })
+
+          this.rotating();
+        }, 2000)
+        break;
+      case "wave":
+        this.getWidth();
+
+        if(_.isString(arrayText[this.state.active+1])) {
+          const wordNext = arrayText[arrayText.length >= this.state.active+1 ? this.state.active+1 : 0].split("").length;
+          const wordPrev = arrayText[this.state.active].split("").length;
+
+          this.setState({
+            step: wordNext > wordPrev ? wordNext : wordPrev
+          });
+        }
+
+        setTimeout(() => {
+          const letterChanging = setInterval(() => {
+            this.getWidth();
+            if(this.state.index < this.state.step) {
+              this.setState((state) => ({index: state.index+1}))
+            } else {
+              clearInterval(letterChanging);
+              setTimeout(() => {
+                const length = arrayText.length > this.state.active+1;
+                this.setState((state) => ({ active: length ? state.active+1 : 0, index: -1 }));
+                this.rotating();
+              }, 500)
+            }
+          }, 100)
+        }, 1000);
+        break;
+      case "slide":
+        if(this.slideRef.current) {
+          const length = arrayText.length - 1;
+          this.getWidth();
+          setTimeout(() => {
+            this.setState((state) => ({active: this.state.active+1 < length ? state.active+1 : 0}))
+            this.rotating()
+          }, 4000)
+        }
+        break;
+      case "slideDown":
+        if(this.slideDownRef.current) {
+          const length = arrayText.length - 1;
+          this.getWidth();
+          setTimeout(() => {
+            this.setState((state) => ({active: this.state.active+1 < length ? state.active+1 : 0}))
+            this.rotating()
+          }, 4000)
+        }
         break;
     }
   }
@@ -267,7 +440,8 @@ class Rotating extends Component {
 
                   return (
                     <span
-                      ref={(this.state.active !== idx ? null : this.clipRef)} key={idx}
+                      ref={(this.state.active !== idx ? null : this.clipRef)}
+                      key={idx}
                       className={classNames}>
                       {
                         word
@@ -344,12 +518,11 @@ class Rotating extends Component {
                 {
                   word.split("").map((letter, idxL) => {
                     let classNames = "altrp-animating-rotating-swirl-letter";
-                  // || this.state.acitve === idx && word.split("").length
                     if(this.state.active !== idx) {
                       classNames += " altrp-animating-rotating-swirl-letter-hide"
                     }
 
-                    if(this.state.active + 1 === idx) {
+                    if((textArray.length > this.state.active + 1 ? this.state.active + 1 : 0) === idx) {
                       if(idxL <= this.state.index) {
                         classNames += " altrp-animating-rotating-swirl-letter-showing"
                       }
@@ -375,9 +548,218 @@ class Rotating extends Component {
           </div>
         )
         break;
+      case "blinds":
+        text = (
+          <div
+            style={{
+              width: this.state.width
+            }}
+            className="altrp-animating-rotating-blinds"
+          >
+            {
+              textArray.map((word, idx) => {
+                const classNames = "altrp-animating-rotating-blinds-word";
+
+                return (
+                  <span key={idx} ref={this.state.widthRef === idx ? this.blindsRef : null} className={classNames}>
+                {
+                  word.split("").map((letter, idxL) => {
+                    let classNames = "altrp-animating-rotating-blinds-letter";
+                    if(this.state.active !== idx) {
+                      classNames += " altrp-animating-rotating-blinds-letter-hide"
+                    }
+
+                    if((textArray.length > this.state.active + 1 ? this.state.active + 1 : 0) === idx) {
+                      if(idxL <= this.state.index) {
+                        classNames += " altrp-animating-rotating-blinds-letter-showing"
+                      }
+                    }
+
+                    if(this.state.active === idx && idxL <= this.state.index) {
+                      classNames += " altrp-animating-rotating-blinds-letter-hiding"
+                    }
+
+                    return (
+                      <div key={idxL} className={classNames}>
+                        {
+                          letter
+                        }
+                      </div>
+                    )
+                  })
+                }
+              </span>
+                )
+              })
+            }
+          </div>
+        )
+        break;
+      case "dropIn":
+        let stylesDropIn = {
+          width: this.state.width,
+        };
+
+        text = (
+          <React.Fragment>
+            <div style={stylesDropIn} className="altrp-animating-rotating-drop-in">
+              {
+                textArray.map((word, idx) => {
+                  let classNames = "altrp-animating-rotating-drop-in-word"
+
+                  const activePrev = this.state.active - 1 >= 0 ? this.state.active - 1 : textArray.length - 1;
+
+                  if(this.state.active !== idx) {
+                    if(activePrev === idx) {
+                      classNames += " altrp-animating-rotating-drop-in-hiding"
+                    } else {
+                      classNames += " altrp-animating-rotating-drop-in-hide"
+                    }
+                  } else {
+                    classNames += " altrp-animating-rotating-drop-in-show"
+                  }
+
+                  return (
+                    <span
+                      ref={this.state.widthRef === idx ? this.dropInRef : null}
+                      key={idx}
+                      className={classNames}>
+                      {
+                        word
+                      }
+                    </span>
+                  )
+                })
+              }
+            </div>
+          </React.Fragment>
+        );
+        break;
+      case "wave":
+        text = (
+          <div
+            style={{
+              width: this.state.width
+            }}
+            className="altrp-animating-rotating-wave"
+          >
+            {
+              textArray.map((word, idx) => {
+                const classNames = "altrp-animating-rotating-wave-word";
+
+                return (
+                  <span key={idx} ref={this.state.widthRef === idx ? this.waveRef : null} className={classNames}>
+                {
+                  word.split("").map((letter, idxL) => {
+                    let classNames = "altrp-animating-rotating-wave-letter";
+                    if(this.state.active !== idx) {
+                      classNames += " altrp-animating-rotating-wave-letter-hide"
+                    }
+
+                    if((textArray.length > this.state.active + 1 ? this.state.active + 1 : 0) === idx) {
+                      if(idxL <= this.state.index) {
+                        classNames += " altrp-animating-rotating-wave-letter-showing"
+                      }
+                    }
+
+                    if(this.state.active === idx && idxL <= this.state.index) {
+                      classNames += " altrp-animating-rotating-wave-letter-hiding"
+                    }
+
+                    return (
+                      <div key={idxL} className={classNames}>
+                        {
+                          letter
+                        }
+                      </div>
+                    )
+                  })
+                }
+              </span>
+                )
+              })
+            }
+          </div>
+        )
+        break;
+      case "slide":
+        let stylesSlide = {
+          width: this.state.width,
+        };
+
+        text = (
+          <React.Fragment>
+            <div style={stylesSlide} className="altrp-animating-rotating-slide">
+              {
+                textArray.map((word, idx) => {
+                  let classNames = " altrp-animating-rotating-slide-word";
+                  if(this.state.active !== idx) {
+                    if((this.state.active + 1 < textArray.length ? this.state.active + 1 : 0) === idx) {
+                      classNames += " altrp-animating-rotating-slide-word-showing"
+                    } else {
+                      classNames += " altrp-animating-rotating-slide-word-hide"
+                    }
+                  } else {
+                    classNames += " altrp-animating-rotating-slide-word-hiding"
+                  }
+
+                  return (
+                    <span
+                      ref={this.state.widthRef === idx ? this.slideRef : null}
+                      key={idx}
+                      className={classNames}>
+                      {
+                        word
+                      }
+                    </span>
+                  )
+                })
+              }
+            </div>
+          </React.Fragment>
+        );
+        break;
+      case "slideDown":
+        let stylesSlideDown = {
+          width: this.state.width,
+        };
+
+        text = (
+          <React.Fragment>
+            <div style={stylesSlideDown} className="altrp-animating-rotating-slide-down">
+              {
+                textArray.map((word, idx) => {
+                  let classNames = " altrp-animating-rotating-slide-down-word";
+                  if(this.state.active !== idx) {
+                    if((this.state.active + 1 < textArray.length ? this.state.active + 1 : 0) === idx) {
+                      classNames += " altrp-animating-rotating-slide-down-word-showing"
+                    } else {
+                      classNames += " altrp-animating-rotating-slide-down-word-hide"
+                    }
+                  } else {
+                    classNames += " altrp-animating-rotating-slide-down-word-hiding"
+                  }
+
+                  return (
+                    <span
+                      ref={this.state.widthRef === idx ? this.slideDownRef : null}
+                      key={idx}
+                      className={classNames}>
+                      {
+                        word
+                      }
+                    </span>
+                  )
+                })
+              }
+            </div>
+          </React.Fragment>
+        );
+        break;
+
     }
 
-    let content = (
+    return (
       <span
         className={_.join(classes, " ")}
         style={styles}
@@ -386,9 +768,7 @@ class Rotating extends Component {
           text
         }
       </span>
-    );
-
-    return content
+    )
 
     // return <AnimationEngine from={{
     //   width: 0

@@ -566,7 +566,7 @@ class Heading extends BaseElement {
           label: 'Slide'
         },
         {
-          value: 'Slide',
+          value: 'slideDown',
           label: 'Slide down'
         },
       ]

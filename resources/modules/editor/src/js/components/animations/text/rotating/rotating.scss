@@ -148,3 +148,226 @@
         opacity: 1;
     }
 }
+
+
+.altrp-animating-rotating-blinds-word {
+    position: absolute;
+    display: flex;
+}
+
+.altrp-animating-rotating-blinds-letter-hide {
+    opacity: 0;
+}
+
+.altrp-animating-rotating-blinds {
+    height: 100%;
+}
+
+.altrp-animating-rotating-blinds-letter-hiding {
+    animation: altrp-animating-rotating-blinds-letter-hiding 200ms forwards;
+}
+
+@keyframes altrp-animating-rotating-blinds-letter-hiding {
+    0% {
+        transform: rotateY(0) perspective(300px);
+        opacity: 1;
+    }
+    100% {
+        transform: rotateY(-180deg) perspective(300px);
+        opacity: 0;
+    }
+}
+
+.altrp-animating-rotating-blinds-letter-showing {
+    animation: altrp-animating-rotating-blinds-letter-showing 200ms forwards;
+}
+
+@keyframes altrp-animating-rotating-blinds-letter-showing {
+    0% {
+        transform: rotateY(-180deg);
+        opacity: 0;
+    }
+    100% {
+        transform: rotateY(0);
+        opacity: 1;
+    }
+}
+
+.altrp-animating-rotating-drop-in-hide {
+    opacity: 0;
+}
+
+.altrp-animating-rotating-drop-in-hiding {
+    animation: altrp-animating-rotating-drop-in-hiding 200ms forwards;
+}
+
+@keyframes altrp-animating-rotating-drop-in-hiding {
+    0% {
+        transform: translateZ(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateZ(-100px);
+        opacity: 0;
+    }
+}
+
+.altrp-animating-rotating-drop-in-word {
+    position: absolute;
+}
+
+.altrp-animating-rotating-drop-in-show {
+    animation: altrp-animating-rotating-drop-in-showing 200ms forwards;
+}
+
+@keyframes altrp-animating-rotating-drop-in-showing {
+    0% {
+        transform: translateZ(100px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateZ(0);
+        opacity: 1;
+    }
+}
+
+.altrp-animating-rotating-drop-in {
+    perspective: 300px;
+}
+
+.altrp-animating-rotating-wave-word {
+    position: absolute;
+    display: flex;
+}
+
+.altrp-animating-rotating-wave-letter-hide {
+    opacity: 0;
+}
+
+.altrp-animating-rotating-wave {
+    height: 100%;
+}
+
+.altrp-animating-rotating-wave-letter-hiding {
+    perspective: 300px;
+    animation: altrp-animating-rotating-wave-letter-hiding 200ms forwards;
+}
+
+@keyframes altrp-animating-rotating-wave-letter-hiding {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    75% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+.altrp-animating-rotating-wave-letter-showing {
+    perspective: 300px;
+    animation: altrp-animating-rotating-wave-letter-showing 200ms forwards;
+}
+
+@keyframes altrp-animating-rotating-wave-letter-showing {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    75% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.altrp-animating-rotating-slide-word-showing {
+    animation: altrp-animating-rotating-slide-word-showing 400ms forwards;
+}
+
+@keyframes altrp-animating-rotating-slide-word-showing {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 0;
+    }
+}
+
+.altrp-animating-rotating-slide-word-hiding {
+    animation: altrp-animating-rotating-slide-word-hiding 400ms forwards;
+}
+
+@keyframes altrp-animating-rotating-slide-word-hiding {
+    0% {
+        left: 0;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+.altrp-animating-rotating-slide-word {
+    position: absolute;
+}
+
+.altrp-animating-rotating-slide-word-hide {
+    display: none;
+}
+
+.altrp-animating-rotating-slide {
+    overflow: hidden;
+    position: relative;
+}
+
+
+
+.altrp-animating-rotating-slide-down-word-showing {
+    animation: altrp-animating-rotating-slide-down-word-showing 400ms forwards;
+}
+
+@keyframes altrp-animating-rotating-slide-down-word-showing {
+    0% {
+        bottom: 100%;
+    }
+    100% {
+        bottom: 0;
+    }
+}
+
+.altrp-animating-rotating-slide-down-word-hiding {
+    animation: altrp-animating-rotating-slide-down-word-hiding 400ms forwards;
+}
+
+@keyframes altrp-animating-rotating-slide-down-word-hiding {
+    0% {
+        bottom: 0;
+    }
+    100% {
+        bottom: -100%;
+    }
+}
+
+.altrp-animating-rotating-slide-down-word-hide {
+    display: none;
+}
+
+.altrp-animating-rotating-slide-down-word {
+    position: absolute;
+    left: 0;
+}
+
+.altrp-animating-rotating-slide-down {
+    overflow: hidden;
+    position: relative;
+}
