@@ -37,8 +37,14 @@ body {
   letter-spacing: 0em;
   text-align: left;
   z-index: 1000;
+
+  &__link {
+    cursor: pointer;
+  }
+
   &__tools {
     display: flex;
+    padding-left: 10px;
   }
 
   &__tool {
