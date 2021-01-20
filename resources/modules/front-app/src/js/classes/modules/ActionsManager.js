@@ -17,7 +17,7 @@ class ActionsManager extends AltrpModel{
    * @param {array} actions
    * @param {string} eventName
    * @param {FrontElement | null} element
-   * @param {{} | null} context
+   * @param {*} context
    */
   registerWidgetActions(widgetId, actions = [], eventName = 'click', element = null, context = null ){
     if((! actions) || ! actions.length){
@@ -39,11 +39,20 @@ class ActionsManager extends AltrpModel{
 
   /**
    * Вызывает все зарегистрированные действия определенного типа для виджета
+   * @param {string} widgetId
+   * @param {string} eventName
+   * @param {[]} preventedActions
+   * @param {FrontElement} element
    * @return {Promise<void>}
    */
-  async callAllWidgetActions(widgetId, eventName = 'click'){
-    const actions = this.getProperty(`actions.${widgetId}.${eventName}`, []);
+  async callAllWidgetActions(widgetId, eventName = 'click', preventedActions, element){
+    preventedActions = preventedActions || [];
+    let actions = this.getProperty(`actions.${widgetId}.${eventName}`, []);
     const errors = [];
+    if(! actions.length && preventedActions.length && element){
+      this.registerWidgetActions(widgetId, preventedActions, eventName, element);
+      actions = this.getProperty(`actions.${widgetId}.${eventName}`, []);
+    }
     for (let action of actions){
       try {
         let result = await action.doAction();

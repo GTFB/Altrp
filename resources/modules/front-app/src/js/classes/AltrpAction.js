@@ -64,7 +64,7 @@ class AltrpAction extends AltrpModel {
    */
   getFormURL() {
     let formURL = this.getProperty("form_url");
-    if (!formURL) {
+    if (! formURL) {
       return formURL;
     }
     if (formURL.indexOf("{{") !== -1) {

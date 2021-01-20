@@ -82,16 +82,13 @@ class SectionComponent extends Component {
     let sectionWrapper = this.state.children.map(column => (
       <ElementWrapper
           ElementWrapper={ElementWrapper}
-          key={column.getId()}
+          key={column.getIdForAction()}
+          rootElement={this.props.rootElement}
           component={column.componentClass}
           element={column}
-      // columnCount={this.props.element.getColumnsCount()}
       />
     ));
 
-    // if (this.state.settings.layout_content_width_type == "full") {
-    //   styles.width = getWindowWidth() + "px"
-    // }
 
     if (this.state.settings.layout_height === "fit") {
       styles.height = "100vh"

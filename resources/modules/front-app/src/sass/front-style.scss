@@ -192,7 +192,6 @@ body {
   }
 
 }
-
 .admin-bar__search-content {
   &::-webkit-scrollbar {
     width: 12px;
@@ -210,5 +209,14 @@ body {
   
   &::-webkit-scrollbar-thumb:hover {
     background: #555; 
+  }
+}
+
+@media screen and (max-width: 910px){
+  .admin-bar{
+    display: none;
+  }
+  .front-app_admin{
+    padding-top: 0;
   }
 }

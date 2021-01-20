@@ -1,5 +1,5 @@
 import CONSTANTS from "../../../../editor/src/js/consts";
-import {altrpRandomId, getMediaQueryByName, replaceContentWithData} from "../helpers";
+import {altrpRandomId, getMediaQueryByName, isEditor, replaceContentWithData} from "../helpers";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {addFont} from "../store/fonts-storage/actions";
 

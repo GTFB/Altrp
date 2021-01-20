@@ -2881,7 +2881,64 @@ class Table extends BaseElement {
     });
 
     this.endControlSection();
-    // <editor-fold desc="table_style_group"
+
+
+    this.startControlSection("table_style_cell", {
+      tab: TAB_STYLE,
+      label: "Cell"
+    });
+
+    this.addControl("cell_vertical_alignment", {
+      type: CONTROLLER_SELECT,
+      label: 'Vertical Alignment',
+      options: [
+        {
+          label: 'Default',
+          value: 'inherit',
+        },
+        {
+          label: 'Super',
+          value: 'super',
+        },
+        {
+          label: 'Top',
+          value: 'top',
+        },
+        {
+          label: 'Text Top',
+          value: 'text-top',
+        },
+        {
+          label: 'Baseline',
+          value: 'baseline',
+        },
+        {
+          label: 'Middle',
+          value: 'middle',
+        },
+        {
+          label: 'Text Bottom',
+          value: 'text-bottom',
+        },
+        {
+          label: 'Bottom',
+          value: 'bottom',
+        },
+        {
+          label: 'Sub',
+          value: 'sub',
+        },
+      ],
+
+      rules: {
+        '{{ELEMENT}} div:not(.altrp-element) .altrp-table-td{{STATE}}': [
+          'vertical-align: {{VALUE}};',
+        ],
+      },
+  });
+
+    this.endControlSection();
+// <editor-fold desc="table_style_group"
     /**
      * Стили для заголовка группы START
      */

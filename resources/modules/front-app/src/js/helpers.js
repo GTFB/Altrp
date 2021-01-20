@@ -472,8 +472,11 @@ export function getDataByPath(
   context = null,
   altrpCheck = false
 ) {
-  if (!path) {
+  if (! path) {
     return _default;
+  }
+  if(path.indexOf('{{') !== -1){
+    path = replaceContentWithData(path, context)
   }
   /**
    * проверим путь

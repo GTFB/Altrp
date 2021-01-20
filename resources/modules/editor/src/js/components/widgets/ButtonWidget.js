@@ -54,7 +54,10 @@ class ButtonWidget extends Component {
         )
       ).default;
       await actionsManager.callAllWidgetActions(
-        this.props.element.getIdForAction()
+        this.props.element.getIdForAction(),
+          'click',
+          this.props.element.getSettings("actions", []),
+          this.props.element
       );
     } else if (this.props.element.getForms().length) {
       this.setState(state => ({ ...state, pending: true }));

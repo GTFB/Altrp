@@ -3,6 +3,9 @@
 
 ## Changelog
 
+### 0.13.0
++ Аdd the Template Widget
+
 ### 0.12.1
 + Аdd the Adminbar
 + Insert Custom SVG to Content
