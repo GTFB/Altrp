@@ -395,6 +395,12 @@ class Admin extends Component {
               <Route path="/admin/tables/models/:modelId/fields/edit/:id">
                 <EditField />
               </Route>
+              <Route path="/admin/tables/models/:modelId/remote-fields/add">
+                <EditField />
+              </Route>
+              <Route path="/admin/tables/models/:modelId/remote-fields/edit/:id">
+                <EditField />
+              </Route>
               <Route path="/admin/tables/models/:modelId/relations/add">
                 <AddRelation />
               </Route>

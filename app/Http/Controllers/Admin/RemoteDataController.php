@@ -61,7 +61,7 @@ class RemoteDataController extends BaseController
      * @param $remotable_id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id, $remotable_type, $remotable_id)
+    public function update(Request $request, $remotable_type, $remotable_id, $id)
     {
         $data = $request->all();
         $remotableType = $this->getRemotableTypeClass($remotable_type);
