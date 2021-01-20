@@ -436,4 +436,10 @@ class Model extends EloquentModel
         }
         return false;
     }
+
+    public function validations()
+    {
+        return $this->hasMany(ValidationField::class);
+    }
 }
+
