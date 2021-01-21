@@ -257,7 +257,7 @@ class InputWidget extends Component {
     ) {
       this.updateOptions();
     }
-    if (content_options && ! model_for_options) {
+    if (content_options && !model_for_options) {
       let options = parseOptionsFromSettings(content_options);
       // console.log(options);
       // console.log(this.state.options);
@@ -451,7 +451,12 @@ class InputWidget extends Component {
       value = e.value;
     }
     if (editor !== null) {
-      value = editor.getData();
+      // const domParser = DOMParser().parseFromString(
+      //   editor.getData(),
+      //   "text/xml"
+      // );
+      // console.log(domParser);
+      value = `<div class="ck ck-content" style="width:100%">${editor.getData()}</div>`;
     }
     if (_.isArray(e)) {
       value = _.cloneDeep(e);
@@ -501,10 +506,12 @@ class InputWidget extends Component {
   /**
    * получить опции
    */
-  getOptions(){
+  getOptions() {
     let options = [...this.state.options];
-    const optionsDynamicSetting = this.props.element.getDynamicSetting('content_options');
-    if(optionsDynamicSetting){
+    const optionsDynamicSetting = this.props.element.getDynamicSetting(
+      "content_options"
+    );
+    if (optionsDynamicSetting) {
       options = convertData(optionsDynamicSetting, options);
     }
     return options;
