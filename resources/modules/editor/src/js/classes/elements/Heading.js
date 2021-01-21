@@ -1626,7 +1626,7 @@ class Heading extends BaseElement {
         type: CONTROLLER_COLOR,
         label: 'Color',
         rules: {
-          '{{ELEMENT}} .altrp-heading-sub{{STATE}}': 'background-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-animating-highlighted-svg svg path{{STATE}}': 'stroke: {{COLOR}};',
         },
       }
     );
@@ -1636,15 +1636,12 @@ class Heading extends BaseElement {
       label: 'Width',
       default: {
         size: 8,
-        unit: 'px',
+        unit: '',
       },
-      units: [
-        'px',
-      ],
       max: 20,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-carousel-slide{{STATE}}": "height: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-animating-highlighted-svg svg path{{STATE}}": "stroke-width: {{SIZE}}"
       }
     });
 
@@ -1674,7 +1671,7 @@ class Heading extends BaseElement {
         type: CONTROLLER_COLOR,
         label: 'Color',
         rules: {
-          '{{ELEMENT}} .altrp-heading-sub{{STATE}}': 'background-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-heading-no-animating-text{{STATE}}': 'color: {{COLOR}};',
         },
       }
     );
@@ -1691,7 +1688,7 @@ class Heading extends BaseElement {
         //   decoration: ""
         // },
         rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': [
+          '{{ELEMENT}} .altrp-heading-no-animating-text{{STATE}}': [
             'font-size: {{SIZE}}px;',
             'font-family: {{FAMILY}}',
             'line-height: {{LINEHEIGHT}};',
@@ -1714,7 +1711,7 @@ class Heading extends BaseElement {
         type: CONTROLLER_COLOR,
         label: 'Color',
         rules: {
-          '{{ELEMENT}} .altrp-heading-sub{{STATE}}': 'background-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-animating-text{{STATE}}': 'color: {{COLOR}};',
         },
       }
     );
@@ -1731,7 +1728,7 @@ class Heading extends BaseElement {
         //   decoration: ""
         // },
         rules: {
-          '{{ELEMENT}} .altrp-btn{{STATE}}': [
+          '{{ELEMENT}} .altrp-animating-text{{STATE}}': [
             'font-size: {{SIZE}}px;',
             'font-family: {{FAMILY}}',
             'line-height: {{LINEHEIGHT}};',

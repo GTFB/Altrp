@@ -357,7 +357,7 @@ class Rotating extends Component {
           const length = arrayText.length - 1;
           this.getWidth();
           setTimeout(() => {
-            this.setState((state) => ({active: this.state.active+1 < length ? state.active+1 : 0}))
+            this.setState((state) => ({active: this.state.active+1 < length ? state.active+1 : -1}))
             this.rotating()
           }, 4000)
         }
@@ -367,16 +367,21 @@ class Rotating extends Component {
           const length = arrayText.length - 1;
           this.getWidth();
           setTimeout(() => {
-            this.setState((state) => ({active: this.state.active+1 < length ? state.active+1 : 0}))
+            this.setState((state) => ({active: this.state.active+1 < length ? state.active+1 : -1}))
             this.rotating()
-          }, 4000)
+          }, 5000)
         }
         break;
     }
   }
 
   typing() {
-    const length = this.props.text.split("\n")[this.state.index].split("").length;
+    let length = 0;
+
+    if(this.props.text.split("\n")[this.state.index].split("")) {
+      length = this.props.text.split("\n")[this.state.index].split("").length
+    }
+
     setTimeout(() => {
       if(length >= this.state.active + 1) {
         this.setState((state) => ({ active: state.active+1 }));
@@ -393,7 +398,7 @@ class Rotating extends Component {
   };
 
   render() {
-    let classes = [(this.props.prefix ? "altrp-" + this.props.prefix + "-animating-rotating" : " "), "altrp-animating-rotating"];
+    let classes = [(this.props.prefix ? "altrp-" + this.props.prefix + "-animating-rotating" : " "), "altrp-animating-rotating", "altrp-animating-text"];
     const textArray = this.props.text.split("\n");
     let text = textArray[this.state.index];
     let styles = {};
@@ -694,10 +699,10 @@ class Rotating extends Component {
                 textArray.map((word, idx) => {
                   let classNames = " altrp-animating-rotating-slide-word";
                   if(this.state.active !== idx) {
-                    if((this.state.active + 1 < textArray.length ? this.state.active + 1 : 0) === idx) {
+                    if((this.state.active + 1 < textArray.length ? this.state.active + 1 : -1) === idx) {
                       classNames += " altrp-animating-rotating-slide-word-showing"
                     } else {
-                      classNames += " altrp-animating-rotating-slide-word-hide"
+                      classNames += " altrp-animating-rotating-slide-word-hiding"
                     }
                   } else {
                     classNames += " altrp-animating-rotating-slide-word-hiding"
@@ -734,7 +739,7 @@ class Rotating extends Component {
                     if((this.state.active + 1 < textArray.length ? this.state.active + 1 : 0) === idx) {
                       classNames += " altrp-animating-rotating-slide-down-word-showing"
                     } else {
-                      classNames += " altrp-animating-rotating-slide-down-word-hide"
+                      classNames += " altrp-animating-rotating-slide-down-word-hiding"
                     }
                   } else {
                     classNames += " altrp-animating-rotating-slide-down-word-hiding"

@@ -321,10 +321,6 @@
     position: absolute;
 }
 
-.altrp-animating-rotating-slide-word-hide {
-    display: none;
-}
-
 .altrp-animating-rotating-slide {
     overflow: hidden;
     position: relative;
@@ -333,33 +329,43 @@
 
 
 .altrp-animating-rotating-slide-down-word-showing {
-    animation: altrp-animating-rotating-slide-down-word-showing 400ms forwards;
+    animation: altrp-animating-rotating-slide-down-word-showing 600ms forwards;
 }
 
 @keyframes altrp-animating-rotating-slide-down-word-showing {
     0% {
         bottom: 100%;
+        opacity: 0;
     }
+
+    50% {
+        opacity: 1;
+        bottom: -20%;
+    }
+
     100% {
         bottom: 0;
     }
 }
 
 .altrp-animating-rotating-slide-down-word-hiding {
-    animation: altrp-animating-rotating-slide-down-word-hiding 400ms forwards;
+    animation: altrp-animating-rotating-slide-down-word-hiding 600ms forwards;
 }
 
 @keyframes altrp-animating-rotating-slide-down-word-hiding {
     0% {
         bottom: 0;
+        opacity: 1;
     }
+
+    50% {
+        opacity: 0;
+        bottom: -100%;
+    }
+
     100% {
         bottom: -100%;
     }
-}
-
-.altrp-animating-rotating-slide-down-word-hide {
-    display: none;
 }
 
 .altrp-animating-rotating-slide-down-word {
