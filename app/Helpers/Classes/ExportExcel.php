@@ -86,7 +86,6 @@ class ExportExcel {
                     if (!empty($data[1])) {
                         $ColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($j + 1);
                         $column = $ColumnIndex . ($i + 1 + $offset);
-                        //echo $column;
                         foreach ($data[1] as $item) {
                             $key = trim(explode(':', $item)[1]);
                             if (strpos($item, 'array:')) {
