@@ -6,7 +6,7 @@ import templateLoader from "../../classes/modules/TemplateLoader"
 import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric"
 import AltrpModel from "../../classes/AltrpModel";
 import ElementWrapper from "../../../../../front-app/src/js/components/ElementWrapper";
-import {isEditor} from "../../../../../front-app/src/js/helpers";
+import { isEditor, renderAssetIcon } from "../../../../../front-app/src/js/helpers";
 
 class AltrpPosts extends React.Component {
   constructor(props) {
@@ -155,12 +155,15 @@ class AltrpPosts extends React.Component {
                 disabled={currentPage <= 1}
                 onClick={()=>{this.setPage(currentPage - 1)}}>
           <span>{settings.posts_prev_text || ''}</span>
-          </button>
+          {renderAssetIcon(settings.prev_icon)}
+        </button>
+
         <button className={"altrp-pagination__next " + (currentPage === pageCount ? 'state-disabled' : '')}
                 disabled={currentPage === pageCount}
                 onClick={()=>{this.setPage(currentPage + 1)}}>
           <span>{settings.posts_next_text || ''}</span>
-          </button>
+          {renderAssetIcon(settings.next_icon)}
+        </button>
       </div>
     }
     return null;
