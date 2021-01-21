@@ -10,6 +10,12 @@ class ExportExcel {
 
     public $filename;
 
+    protected $worksheet;
+
+    protected $sheet;
+
+    protected $spreadsheet;
+
     public function __construct($data, $template, $filename) {
         $this->data = json_decode($data, true);
         $this->template = false;
@@ -32,10 +38,10 @@ class ExportExcel {
         return array_search(max($delimiters), $delimiters);
     }
 
-    protected function getStartRow($worksheet) {
+    protected function getStartRow() {
         $row = false;
-        for ($i = 0; $i < count($worksheet); $i++) {
-            if (!array_filter($worksheet[$i])) {
+        for ($i = 0; $i < count($this->worksheet); $i++) {
+            if (!array_filter($this->worksheet[$i])) {
                 if ($row === false)
                     $row = $i;
             }
@@ -46,43 +52,108 @@ class ExportExcel {
         return $row;
     }
 
+    protected function parseTemplateData() {
+        if (!empty($this->worksheet)) {
+            for ($i = 0; $i < count($this->worksheet); $i++) {
+                for ($j = 0; $j < count($this->worksheet[$i]); $j++) {
+                    preg_match_all('/\{\{([^{}]+)\}\}/im', trim($this->worksheet[$i][$j]), $data);
+                    if (!empty($data[1])) {
+                        $ColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($j + 1);
+                        $column = $ColumnIndex . ($i + 1);
+                        foreach ($data[1] as $item) {
+                            $key = trim(explode(':', $item)[1]);
+                            if (strpos($item, 'data:')) {
+                                //вставляем одиночную переменную
+                                $this->worksheet[$i][$j] = str_replace($item, $this->data[$key], $this->worksheet[$i][$j]);
+                                $this->worksheet[$i][$j] = str_replace('{{', '', $this->worksheet[$i][$j]);
+                                $this->worksheet[$i][$j] = str_replace('}}', '', $this->worksheet[$i][$j]);
+                                $this->spreadsheet->getActiveSheet()->setCellValue($column, $this->worksheet[$i][$j]);
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            throw new \Exception('Не удалось вставить данные');
+        }
+    }
+
+    protected function parseTemplateArray(&$offset) {
+        if (!empty($this->worksheet)) {
+            for ($i = 0; $i < count($this->worksheet); $i++) {
+                for ($j = 0; $j < count($this->worksheet[$i]); $j++) {
+                    preg_match_all('/\{\{([^{}]+)\}\}/im', trim($this->worksheet[$i][$j]), $data);
+                    if (!empty($data[1])) {
+                        $ColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($j + 1);
+                        $column = $ColumnIndex . ($i + 1 + $offset);
+                        //echo $column;
+                        foreach ($data[1] as $item) {
+                            $key = trim(explode(':', $item)[1]);
+                            if (strpos($item, 'array:')) {
+                                //вставляем массив
+                                $this->worksheet[$i][$j] = '';
+                                if (isset($this->data[$key]) && !empty($this->data[$key])) {
+                                    $countRows = count($this->data[$key]) - 1;
+                                    $this->sheet->insertNewRowBefore($i+2+$offset, $countRows);
+                                    $this->sheet->fromArray($this->data[$key], NULL, $column);
+                                    $offset = $offset + $countRows;
+                                    return;
+                                }
+                            }
+
+                        }
+
+                    }
+
+                }
+            }
+        } else {
+            throw new \Exception('Не удалось вставить массив');
+        }
+    }
+
     public function export()
     {
-        if ($this->template) {
+        try {
+            if ($this->template) {
+                //echo $this->template;
+                $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($this->template);
+                $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+                if ($inputFileType == 'Csv') {
+                    $reader->setDelimiter($this->getDelimiter($this->template));
+                }
 
-            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($this->template);
-            $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-            if ($inputFileType == 'Csv') {
-                $reader->setDelimiter($this->getDelimiter($this->template));
+                $reader->setReadDataOnly(false);
+
+                $this->spreadsheet = $reader->load($this->template);
+
+                $this->sheet = $this->spreadsheet->getActiveSheet(0);
+
+                $this->worksheet = $this->sheet->toArray();
+
+                $this->parseTemplateData();
+                $offset = 0;
+                foreach($this->data as $key => $data) {
+                    if (is_array($data))
+                        $this->parseTemplateArray($offset);
+                }
+
+            } else {
+                $this->spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+                $this->sheet = $this->spreadsheet->getActiveSheet();
+                $this->sheet->fromArray($this->data, NULL, 'A1' );
             }
-            $reader->setReadDataOnly(false);
 
-            $spreadsheet = $reader->load($this->template);
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename="' . $this->filename . '"');
+            header('Cache-Control: max-age=0');
 
-            $sheet = $spreadsheet->getActiveSheet();
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($this->spreadsheet, "Xlsx");
+            $writer->save('php://output');
 
-            $worksheet = $sheet->toArray();
-
-            $startRow = $this->getStartRow($worksheet);
-
-            $sheet->insertNewRowBefore($startRow + 1, count($this->data) - 1);
-
-        } else {
-            $startRow = 1;
-            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
         }
-
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->fromArray($this->data, NULL, 'A' . $startRow);
-
-        // redirect output to client browser
-        header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="'.$this->filename.'"');
-        header('Cache-Control: max-age=0');
-
-        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
-        $writer->save('php://output');
-
     }
 
 }
