@@ -118,7 +118,7 @@ class FrontElement {
      */
     if(widgetsWithActions.indexOf(this.getName()) >= 0 && this.getSettings('actions', []).length){
       try{
-        this.registerActions();
+        // this.registerActions();
       } catch(e){
         console.error(e);
       }

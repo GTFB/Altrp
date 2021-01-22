@@ -450,18 +450,8 @@ class InputWidget extends Component {
     if (e && e.value) {
       value = e.value;
     }
-<<<<<<< HEAD
     if (_.get(editor, 'getData')) {
-      value = editor.getData();
-=======
-    if (editor !== null) {
-      // const domParser = DOMParser().parseFromString(
-      //   editor.getData(),
-      //   "text/xml"
-      // );
-      // console.log(domParser);
       value = `<div class="ck ck-content" style="width:100%">${editor.getData()}</div>`;
->>>>>>> origin/reports04
     }
     if (_.isArray(e)) {
       value = _.cloneDeep(e);
