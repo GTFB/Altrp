@@ -1372,6 +1372,10 @@ const Cell = ({ cell, settings }) => {
   // }
   let style = cell.column.column_body_alignment ? { textAlign: cell.column.column_body_alignment } : {};
   style = _.assign(style, cellProps.style || {});
+  if (cell.column.column_cell_vertical_alignment && cell.column.column_cell_vertical_alignment !== 'inherit') {
+    style.verticalAlign = cell.column.column_cell_vertical_alignment;
+  }
+
   return <div {...cellProps} style={style} className={cellClassNames.join(' ')}>{cellContent}</div>
 };
 /**

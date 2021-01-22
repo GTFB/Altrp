@@ -353,6 +353,49 @@ class Table extends BaseElement {
       ]
     });
 
+    repeater.addControl("column_cell_vertical_alignment", {
+      type: CONTROLLER_SELECT,
+      label: 'Vertical Alignment',
+      options: [
+        {
+          label: 'Default',
+          value: 'inherit',
+        },
+        {
+          label: 'Super',
+          value: 'super',
+        },
+        {
+          label: 'Top',
+          value: 'top',
+        },
+        {
+          label: 'Text Top',
+          value: 'text-top',
+        },
+        {
+          label: 'Baseline',
+          value: 'baseline',
+        },
+        {
+          label: 'Middle',
+          value: 'middle',
+        },
+        {
+          label: 'Text Bottom',
+          value: 'text-bottom',
+        },
+        {
+          label: 'Bottom',
+          value: 'bottom',
+        },
+        {
+          label: 'Sub',
+          value: 'sub',
+        },
+      ],
+    });
+
     repeater.addControl('column_is_sorted', {
       type: CONTROLLER_SWITCHER,
       label: 'Is Sorted',
