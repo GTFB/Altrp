@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Helpers\Classes;
+namespace App\Altrp;
 
-class ExportExcel {
+use Illuminate\Database\Eloquent\Model;
+
+class ExportExcel extends Model {
 
     public $data;
 
@@ -63,7 +65,7 @@ class ExportExcel {
                         foreach ($data[1] as $item) {
                             $key = trim($item);
                             //вставляем одиночную переменную
-                            $this->worksheet[$i][$j] = str_replace($item, $this->data[$key], $this->worksheet[$i][$j]);
+                            $this->worksheet[$i][$j] = str_replace('data:'.$item, $this->data[$key], $this->worksheet[$i][$j]);
                             $this->worksheet[$i][$j] = str_replace('{{', '', $this->worksheet[$i][$j]);
                             $this->worksheet[$i][$j] = str_replace('}}', '', $this->worksheet[$i][$j]);
                             $this->spreadsheet->getActiveSheet()->setCellValue($column, $this->worksheet[$i][$j]);
@@ -107,7 +109,7 @@ class ExportExcel {
     {
         try {
             if ($this->template) {
-                //echo $this->template;
+
                 $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($this->template);
                 $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
                 if ($inputFileType == 'Csv') {
