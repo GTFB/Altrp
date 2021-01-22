@@ -56,19 +56,17 @@ class ExportExcel {
         if (!empty($this->worksheet)) {
             for ($i = 0; $i < count($this->worksheet); $i++) {
                 for ($j = 0; $j < count($this->worksheet[$i]); $j++) {
-                    preg_match_all('/\{\{([^{}]+)\}\}/im', trim($this->worksheet[$i][$j]), $data);
+                    preg_match_all('/\{\{*.data:([^{}]+)\}\}/im', trim($this->worksheet[$i][$j]), $data);
                     if (!empty($data[1])) {
                         $ColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($j + 1);
                         $column = $ColumnIndex . ($i + 1);
                         foreach ($data[1] as $item) {
-                            $key = trim(explode(':', $item)[1]);
-                            if (strpos($item, 'data:')) {
-                                //вставляем одиночную переменную
-                                $this->worksheet[$i][$j] = str_replace($item, $this->data[$key], $this->worksheet[$i][$j]);
-                                $this->worksheet[$i][$j] = str_replace('{{', '', $this->worksheet[$i][$j]);
-                                $this->worksheet[$i][$j] = str_replace('}}', '', $this->worksheet[$i][$j]);
-                                $this->spreadsheet->getActiveSheet()->setCellValue($column, $this->worksheet[$i][$j]);
-                            }
+                            $key = trim($item);
+                            //вставляем одиночную переменную
+                            $this->worksheet[$i][$j] = str_replace($item, $this->data[$key], $this->worksheet[$i][$j]);
+                            $this->worksheet[$i][$j] = str_replace('{{', '', $this->worksheet[$i][$j]);
+                            $this->worksheet[$i][$j] = str_replace('}}', '', $this->worksheet[$i][$j]);
+                            $this->spreadsheet->getActiveSheet()->setCellValue($column, $this->worksheet[$i][$j]);
                         }
                     }
                 }
@@ -82,26 +80,20 @@ class ExportExcel {
         if (!empty($this->worksheet)) {
             for ($i = 0; $i < count($this->worksheet); $i++) {
                 for ($j = 0; $j < count($this->worksheet[$i]); $j++) {
-                    preg_match_all('/\{\{([^{}]+)\}\}/im', trim($this->worksheet[$i][$j]), $data);
+                    preg_match('/\{\{*.array:([^{}]+)\}\}/im', trim($this->worksheet[$i][$j]), $data);
                     if (!empty($data[1])) {
                         $ColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($j + 1);
                         $column = $ColumnIndex . ($i + 1 + $offset);
-                        foreach ($data[1] as $item) {
-                            $key = trim(explode(':', $item)[1]);
-                            if (strpos($item, 'array:')) {
-                                //вставляем массив
-                                $this->worksheet[$i][$j] = '';
-                                if (isset($this->data[$key]) && !empty($this->data[$key])) {
-                                    $countRows = count($this->data[$key]) - 1;
-                                    $this->sheet->insertNewRowBefore($i+2+$offset, $countRows);
-                                    $this->sheet->fromArray($this->data[$key], NULL, $column);
-                                    $offset = $offset + $countRows;
-                                    return;
-                                }
-                            }
-
+                        $key = trim($data[1]);
+                        //вставляем массив
+                        $this->worksheet[$i][$j] = '';
+                        if (isset($this->data[$key]) && !empty($this->data[$key])) {
+                            $countRows = count($this->data[$key]) - 1;
+                            $this->sheet->insertNewRowBefore($i+2+$offset, $countRows);
+                            $this->sheet->fromArray($this->data[$key], NULL, $column);
+                            $offset = $offset + $countRows;
+                            return;
                         }
-
                     }
 
                 }
