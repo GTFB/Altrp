@@ -125,6 +125,7 @@ function AltrpTableWithoutUpdate(
 
   function DefaultCell(
     { row,
+      data,
       cell, value: initialValue,
       updateData }) {
     const { column } = cell;
@@ -178,20 +179,20 @@ function AltrpTableWithoutUpdate(
         }
       })
     }
-
     const columnTemplateContent = React.useMemo(() => {
       if (!columnTemplate) {
         return null;
       }
       let columnTemplateContent = frontElementsFabric.cloneElement(columnTemplate);
       columnTemplateContent.setCardModel(new AltrpModel(row.original || {}),);
+      // console.log(row.original);
       return React.createElement(columnTemplateContent.componentClass,
         {
           element: columnTemplateContent,
           ElementWrapper: ElementWrapper,
           children: columnTemplateContent.children
         });
-    }, [columnTemplate]);
+    }, [columnTemplate, row.original, data]);
     if (columnTemplateContent) {
       return <div className="altrp-posts"><div className="altrp-post overflow-visible">{columnTemplateContent}</div></div>;
     }
@@ -200,8 +201,6 @@ function AltrpTableWithoutUpdate(
      * Отоборажаем инпут для редактирования данных
      */
     if (columnEditUrl) {
-      // console.log(value);
-      console.log(columnEditUrl);
       return <AutoUpdateInput className="altrp-inherit"
         route={columnEditUrl}
         resourceid={''}

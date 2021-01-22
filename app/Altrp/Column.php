@@ -91,6 +91,11 @@ class Column extends Model
         return $this->hasOne('App\Altrp\Model', 'id', 'model_id');
     }
 
+    public function altrp_remote_data()
+    {
+        return $this->hasMany('App\Altrp\RemoteData');
+    }
+
 
     /**
      * Проверяем является ли колонка, колонкой с размером

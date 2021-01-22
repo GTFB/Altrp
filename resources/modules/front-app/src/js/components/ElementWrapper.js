@@ -252,6 +252,7 @@ class ElementWrapper extends Component {
       >
         {React.createElement(this.props.component, {
           ref: this.elementRef,
+          rootElement: this.props.rootElement,
           ElementWrapper: this.props.ElementWrapper,
           element: this.props.element,
           children: this.props.element.getChildren(),

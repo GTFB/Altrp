@@ -308,8 +308,9 @@ class Admin extends Component {
                     </ul>
                   </Scrollbars>
                 )}
-            </div>
-            <AdminVersion />
+
+              </div>
+              <AdminVersion />
           </nav>
           <Switch>
             <Route path="/admin/reports/add">
@@ -402,6 +403,12 @@ class Admin extends Component {
             <Route path="/admin/tables/models/:modelId/fields/edit/:id">
               <EditField />
             </Route>
+            <Route path="/admin/tables/models/:modelId/remote-fields/add">
+              <EditField />
+            </Route>
+            <Route path="/admin/tables/models/:modelId/remote-fields/edit/:id">
+              <EditField />
+            </Route>
             <Route path="/admin/tables/models/:modelId/relations/add">
               <AddRelation />
             </Route>
@@ -426,7 +433,6 @@ class Admin extends Component {
             <Route path="/admin/tables/data-sources/edit/:id">
               <AddDataSource />
             </Route>
-
             <Route path="/admin/access/roles/add">
               <RolePage />
             </Route>

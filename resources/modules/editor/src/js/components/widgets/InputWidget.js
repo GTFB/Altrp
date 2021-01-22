@@ -204,7 +204,7 @@ class InputWidget extends Component {
     const { content_options, model_for_options } = this.state.settings;
     if (
       prevProps &&
-      !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
+      ! prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
       let value = this.getContent(
@@ -258,7 +258,7 @@ class InputWidget extends Component {
     ) {
       this.updateOptions();
     }
-    if (content_options && ! model_for_options) {
+    if (content_options && !model_for_options) {
       let options = parseOptionsFromSettings(content_options);
       // console.log(options);
       // console.log(this.state.options);
@@ -280,7 +280,7 @@ class InputWidget extends Component {
     let content_calculation = this.props.element.getSettings(
       "content_calculation"
     );
-    if (!content_calculation) {
+    if (! content_calculation) {
       return;
     }
     const fieldName = this.props.element.getFieldId();
@@ -295,10 +295,10 @@ class InputWidget extends Component {
     const altrppagestate = this.props.altrpPageState.getData();
     const altrpresponses = this.props.altrpresponses.getData();
     const altrpmeta = this.props.altrpMeta.getData();
-    const context = {};
+    const context = this.props.element.getCurrentModel().getData();
     if (content_calculation.indexOf("altrpdata") !== -1) {
       context.altrpdata = altrpdata;
-      if (!altrpdata.currentDataStorageLoaded) {
+      if (! altrpdata.currentDataStorageLoaded) {
         prevContext.altrpdata = altrpdata;
       } else {
         prevContext.altrpdata = prevProps.currentDataStorage.getData();
@@ -452,7 +452,7 @@ class InputWidget extends Component {
       value = e.value;
     }
     if (_.get(editor, 'getData')) {
-      value = editor.getData();
+      value = `<div class="ck ck-content" style="width:100%">${editor.getData()}</div>`;
     }
     if (_.isArray(e)) {
       value = _.cloneDeep(e);
@@ -502,10 +502,12 @@ class InputWidget extends Component {
   /**
    * получить опции
    */
-  getOptions(){
+  getOptions() {
     let options = [...this.state.options];
-    const optionsDynamicSetting = this.props.element.getDynamicSetting('content_options');
-    if(optionsDynamicSetting){
+    const optionsDynamicSetting = this.props.element.getDynamicSetting(
+      "content_options"
+    );
+    if (optionsDynamicSetting) {
       options = convertData(optionsDynamicSetting, options);
     }
     return options;
@@ -534,7 +536,9 @@ class InputWidget extends Component {
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
-        "blur"
+        "blur",
+        this.props.element.getSettings("actions", []),
+        this.props.element
       );
     }
   };

@@ -3,6 +3,11 @@
 
 ## Changelog
 
+### 0.13.0
++ Аdd the Template Widget
++ Аdd the Section and Column Link
++ Many URL Params for Pages 
+
 ### 0.12.1
 + Аdd the Adminbar
 + Insert Custom SVG to Content

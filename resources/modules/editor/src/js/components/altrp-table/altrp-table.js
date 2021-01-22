@@ -88,7 +88,6 @@ const AltrpTable = ({settings,
    * @type {any[]}
    * @private
    */
-  console.log(data);
   data = data.map((row)=>{
     if(row.id === updatedData.rowId){
       row[updatedData.column] = updatedData.value;

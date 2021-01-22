@@ -196,6 +196,7 @@ button {
     cursor: move;
     border-radius: 2px;
     font-size: 0.8rem;
+    overflow: hidden;
     &__title {
         margin-top: 8px;
     }

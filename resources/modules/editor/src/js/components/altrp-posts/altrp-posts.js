@@ -57,7 +57,7 @@ class AltrpPosts extends React.Component {
     return false;
   }
   /**
-   * Компонент обновилсяdata
+   * Компонент обновился
    * @param {{}} prevProps
    */
   async componentDidUpdate(prevProps) {

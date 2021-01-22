@@ -21,7 +21,10 @@ function AltrpMapConstructor({ settings, id }) {
     style_margin = {},
     objects = {},
     url,
-    field_id
+    field_id,
+    url_connect = null,
+    field_first_connect = null,
+    field_second_connect = null
   } = settings;
   let latitude = lat;
   let longitude = lng;
@@ -53,7 +56,6 @@ function AltrpMapConstructor({ settings, id }) {
       return objects
         .map(r => {
           const geoObj = getDataByPath(r.path, []);
-
           const result = Array.isArray(geoObj)
             ? geoObj.map(data => ({
                 type: "Feature",
@@ -64,6 +66,7 @@ function AltrpMapConstructor({ settings, id }) {
                     Number(_.get(data, r.longitude))
                   ]
                 },
+                id: data.id,
                 inCluster: r?.useCluster || false,
                 properties: {
                   fillOpacity: 1,
@@ -86,6 +89,8 @@ function AltrpMapConstructor({ settings, id }) {
                     Number(_.get(geoObj, r.longitude))
                   ]
                 },
+
+                id: geoObj.id,
                 inCluster: r?.useCluster || false,
                 properties: {
                   fillOpacity: 1,
@@ -181,6 +186,9 @@ function AltrpMapConstructor({ settings, id }) {
       data={geoJson}
       saveData={handleSave}
       isLoading={isLoading}
+      url_connect={url_connect}
+      field_first_connect={field_first_connect}
+      field_second_connect={field_second_connect}
       style={{
         height: style_height.size + style_height.unit,
         marginTop: style_margin.top + style_margin.unit,

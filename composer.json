@@ -88,7 +88,8 @@
             "php artisan vendor:publish --tag=public --force"
         ],
         "post-install-cmd": [
-            "php artisan vendor:publish --tag=public --force"
+            "php artisan vendor:publish --tag=public --force",
+            "php artisan modules-statuses:write"
         ]
     }
 }

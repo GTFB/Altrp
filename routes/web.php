@@ -338,6 +338,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/tables/{table}/controller', "Admin\TableController@getController");
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
 
+    // Remote data
+    Route::get( '/remote_data/{remotable_type}/{remotable_id}', 'Admin\RemoteDataController@index');
+    Route::post( '/remote_data/{remotable_type}/{remotable_id}', 'Admin\RemoteDataController@store');
+    Route::put( '/remote_data/{remotable_type}/{remotable_id}/{id}', 'Admin\RemoteDataController@update');
+    Route::delete( '/remote_data/{id}', 'Admin\RemoteDataController@destroy');
+
     /**
      * Роут для загрузки favicon
      */
@@ -395,12 +401,16 @@ Route::get('/', function () {
   ]);
 })->middleware(['web', 'installation.checker']);
 
-foreach ($frontend_routes as $_frontend_route) {
+foreach ( $frontend_routes as $_frontend_route ) {
   $path = $_frontend_route['path'];
   $title = $_frontend_route['title'];
-  $frontend_route = str_replace(':id', '{id}', $path);
+  $pattern1 = '/:(.+)((\/)|$)/U';
+  $pattern2 = '/:(.+)(\/)/U';
+  $replacement1 = '{$1}/';
+  $replacement2 = '{$1}/';
+  $frontend_route = preg_replace( $pattern1, $replacement1,  $path );
 
-  Route::get($frontend_route, function () use ($title, $_frontend_route) {
+  Route::get($frontend_route, function () use ($title, $_frontend_route, $frontend_route) {
 
     $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
 

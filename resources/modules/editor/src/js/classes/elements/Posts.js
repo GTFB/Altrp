@@ -311,7 +311,7 @@ class Table extends BaseElement {
           label: 'Prev/Next',
         },
       ],
-      default: '',
+      default: 'prev_next',
     });
 
     this.endControlSection();

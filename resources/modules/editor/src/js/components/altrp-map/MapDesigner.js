@@ -34,9 +34,13 @@ function MapDesigner({
   saveData = noob,
   onTap = noob,
   url,
-  field_id
+  field_id,
+  url_connect = null,
+  field_first_connect = null,
+  field_second_connect = null
 }) {
   const FG = useRef(null);
+  const ModalRef = useRef(null);
   const [selected, setSelected] = useState(null);
   const [state, setState] = useState(data);
   const [open, setOpen] = useState(false);
@@ -44,7 +48,7 @@ function MapDesigner({
 
   const updateGeoObjectToModel = geoObject => {
     const { dbID } = geoObject;
-    let data = geoObject;
+    let data = _.cloneDeep(geoObject, {});
     delete data["dbID"];
     axios
       .put(`${url}/${dbID}`, {
@@ -250,14 +254,20 @@ function MapDesigner({
 
   const handleMarkerClick = (e, layer) => {
     e.originalEvent.view.L.DomEvent.stopPropagation(e);
+    setSelected(null);
+    setSelected(layer.feature.id);
   };
 
   const handlePolygonClick = (e, layer) => {
     e.originalEvent.view.L.DomEvent.stopPropagation(e);
+    setSelected(null);
+    setSelected(layer.feature.id);
   };
 
   const handleCircleClick = (e, layer) => {
     e.originalEvent.view.L.DomEvent.stopPropagation(e);
+    setSelected(null);
+    setSelected(layer.feature.id);
   };
 
   const whenReady = useCallback(() => {
@@ -300,7 +310,7 @@ function MapDesigner({
               );
               layer.setOpacity(feature.properties.fillOpacity);
               if (feature.inCluster) {
-                markers.push(feature);
+                markers.push(layer);
               }
             } else if (layer instanceof L.Polygon) {
               layer.addEventListener("click", e =>
@@ -415,12 +425,17 @@ function MapDesigner({
       >
         {isEditable && selected && (
           <ModalControl
+            markers={markers}
+            url_connect={url_connect}
+            field_first_connect={field_first_connect}
+            field_second_connect={field_second_connect}
             updateGeoObjectToModel={updateGeoObjectToModel}
             open={open}
             selected={selected}
             onClose={() => setOpen(false)}
             setState={setState}
             state={state}
+            forwardRef={ModalRef}
             fg={FG.current}
           />
         )}

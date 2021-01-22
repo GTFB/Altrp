@@ -198,13 +198,19 @@ function componentDidMount() {
  * @params {{}} prevState
  */
 function componentDidUpdate(prevProps, prevState) {
+  if(this.props.element !== prevProps.element){
+    // console.log('updated');
+    this.setState(state => ({...state, children: this.props.element.children}));
+  }
   if(_.isFunction(this._componentDidUpdate)){
     this._componentDidUpdate(prevProps, prevState);
   }
   /**
    * Если сменился url но сама страница та же надо обновить компоненты элементов
+   * или обновился корневой элемент (для встраиваемых шаблонов)
    */
-  if(! _.isEqual(this.props.match, prevProps.match)){
+  if(! _.isEqual(this.props.match, prevProps.match)
+      || prevProps.rootElement !== this.props.rootElement){
     if(_.isFunction(this._componentDidMount)){
       this._componentDidMount(prevProps, prevState);
     }

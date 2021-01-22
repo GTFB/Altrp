@@ -64,7 +64,7 @@ class AltrpAction extends AltrpModel {
    */
   getFormURL() {
     let formURL = this.getProperty("form_url");
-    if (!formURL) {
+    if (! formURL) {
       return formURL;
     }
     if (formURL.indexOf("{{") !== -1) {
@@ -423,11 +423,11 @@ class AltrpAction extends AltrpModel {
       if (this.getProperty("back")) {
         frontAppRouter.history.goBack();
       } else {
-        let innerRedirect = !this.getProperty("outer");
+        let innerRedirect = ! this.getProperty("outer");
         if (innerRedirect) {
           frontAppRouter.history.push(URL);
         } else {
-          window.location.replace(URL);
+          window.location.assign(URL);
         }
       }
     }
