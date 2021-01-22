@@ -127,7 +127,6 @@ function AltrpTableWithoutUpdate(
       data,
       cell, value: initialValue,
       updateData }) {
-    console.log(arguments);
     const { column } = cell;
     const [value, setValue] = React.useState(initialValue);
     React.useEffect(() => {

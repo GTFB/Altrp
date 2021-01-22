@@ -1515,3 +1515,34 @@ export function convertData(settings, data){
   return data;
   // if()
 }
+
+/**
+ * Перенаправление на другую страницу по настройкам LinkController
+ * @param {{}} linkSettings
+ * @param {{}} e
+ */
+export function redirect(linkSettings, e, context = {}){
+
+  if(_.get(linkSettings, 'toPrevPage') && frontAppRouter){
+    frontAppRouter.history.goBack();
+    return;
+  }
+  if(! _.get(linkSettings, 'url')){
+    return;
+  }
+  e.preventDefault();
+  e.stopPropagation();
+  let {url} = linkSettings;
+  url = replaceContentWithData(url, context);
+  if(linkSettings.openInNew){
+    window.open(url, '_blank');
+    return;
+  }
+  if(frontAppRouter){
+    if(linkSettings.tag === 'a'){
+      window.location.assign(url);
+    } else {
+      frontAppRouter.history.push(url);
+    }
+  }
+}

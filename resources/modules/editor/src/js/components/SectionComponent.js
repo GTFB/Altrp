@@ -1,8 +1,8 @@
-  import React, { Component } from "react";
+import React, { Component } from "react";
 import '../../sass/section.scss';
 import { connect } from "react-redux";
 import '../../sass/section.scss'
-  import {isEditor} from "../../../../front-app/src/js/helpers";
+import {isEditor, redirect} from "../../../../front-app/src/js/helpers";
 
 class SectionComponent extends Component {
   constructor(props) {
@@ -20,28 +20,17 @@ class SectionComponent extends Component {
     }
   }
 
-  // _componentDidMount() {
-  //   const { isScrollEffect } = this.props.element.getSettings();
-  //   console.log(isScrollEffect)
-  //   if (isScrollEffect) {
-  //     document.addEventListener('click', this.handleScroll);
-  //   }
-  // }
-
-  // componentWillUnmount() {
-  //   window.removeEventListener('scroll', this.handleScroll);
-  // }
-
-  // handleScroll = event => {
-  //   // let scrollTop = event.srcElement.body.scrollTop;
-  //     // itemTranslate = Math.min(0, scrollTop / 3 - 60);
-
-  //   // console.log({ scrollTop });
-  //   console.log("!!!!!!!!!!")
-  //   // this.setState({
-  //   //   transform: itemTranslate
-  //   // });
-  // }
+  /**
+   * Обрабатываем клик по секции
+   * @param e
+   */
+  onClick = (e) => {
+    if(isEditor()){
+      return;
+    }
+    const sectionLink = this.props.element.getSettings('link_link');
+    redirect(sectionLink, e, this.props.element.getCurrentModel().getData());
+  };
 
   render() {
     let styles = {};
@@ -95,7 +84,10 @@ class SectionComponent extends Component {
     }
 
     return React.createElement(this.state.settings.layout_html_tag || "div",
-      { style: styles, className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: "" },
+      { style: styles,
+        className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: "" ,
+        onClick: this.onClick,
+      },
       // isScrollEffect ?
       // <>
       //   <div className="motion-effects-container" onScroll={this.handleScroll}>

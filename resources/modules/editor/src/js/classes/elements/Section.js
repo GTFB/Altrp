@@ -440,7 +440,7 @@ class Section extends BaseElement{
 
     this.endControlSection();
 
-    this.startControlSection("secion_link", {
+    this.startControlSection("section_link", {
       tab: TAB_CONTENT,
       label: "Section Link"
     });

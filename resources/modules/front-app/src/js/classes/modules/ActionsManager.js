@@ -59,6 +59,7 @@ class ActionsManager extends AltrpModel{
         if(! result.success){
           if(result.error){
             console.error(result.error);
+            errors.push(result.error);
           }
           break;
         }

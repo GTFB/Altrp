@@ -48,6 +48,8 @@ class ButtonWidget extends Component {
       console.log(this.state.settings);
       e.preventDefault();
     } else if (this.props.element.getSettings("actions", []).length) {
+      e.preventDefault();
+      e.stopPropagation();
       const actionsManager = (
         await import(
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
@@ -55,9 +57,9 @@ class ButtonWidget extends Component {
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
-          'click',
-          this.props.element.getSettings("actions", []),
-          this.props.element
+        'click',
+        this.props.element.getSettings("actions", []),
+        this.props.element
       );
     } else if (this.props.element.getForms().length) {
       this.setState(state => ({ ...state, pending: true }));
