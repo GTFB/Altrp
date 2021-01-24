@@ -87,8 +87,11 @@ class Nav extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('layout_menu_section', {
+      conditions: {
+        'type_type': "menu",
+      },
       tab: TAB_CONTENT,
-      label: 'Layout (menu)',
+      label: 'Layout',
     });
 
     let repeaterMenu = new Repeater();
@@ -467,6 +470,9 @@ class Nav extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('main_menu_style', {
+      conditions: {
+        'type_type': "menu",
+      },
       tab: TAB_STYLE,
       label: 'Main menu',
     });
@@ -683,8 +689,11 @@ class Nav extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('dropdown_hor_ver_menu_section', {
+      conditions: {
+        'type_type': "menu",
+      },
       tab: TAB_STYLE,
-      label: 'Dropdown (Hor Ver)',
+      label: 'Dropdown (hor, ver)',
     });
 
     this.addControl('alignment_dropdown_hor_ver_menu_section', {
@@ -1210,6 +1219,10 @@ class Nav extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('dropdown_menu_section', {
+      conditions: {
+        'type_type': "menu",
+        "menu_layout": "dropdown"
+      },
       tab: TAB_STYLE,
       label: 'Dropdown',
     });
@@ -1577,6 +1590,9 @@ class Nav extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('bread_crumbs_section', {
+      conditions: {
+        'type_type': "breadCrumbs",
+      },
       tab: TAB_STYLE,
       label: 'Bread crumbs',
     });
@@ -1663,6 +1679,9 @@ class Nav extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('links_section', {
+      conditions: {
+        'type_type': "breadCrumbs",
+      },
       tab: TAB_STYLE,
       label: 'Links',
     });
@@ -1709,6 +1728,9 @@ class Nav extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('separator_section', {
+      conditions: {
+        'type_type': "breadCrumbs",
+      },
       tab: TAB_STYLE,
       label: 'Separator',
     });
@@ -1755,6 +1777,9 @@ class Nav extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('current_page_section', {
+      conditions: {
+        'type_type': "breadCrumbs",
+      },
       tab: TAB_STYLE,
       label: 'Current page',
     });

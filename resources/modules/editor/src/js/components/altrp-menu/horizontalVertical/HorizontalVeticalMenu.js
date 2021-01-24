@@ -112,7 +112,7 @@ class HorizontalVeticalMenu extends Component {
         break
     }
 
-    let pointerVariant = this.props.settings.hor_ver_pointer_menu_layout;
+    const pointerVariant = this.props.settings.hor_ver_pointer_menu_layout;
 
     switch (pointerVariant) {
       case "none":
