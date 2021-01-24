@@ -10,3 +10,11 @@ window.ElementWrapper = ElementWrapper;
  * */
 
 window.elementDecorator = frontDecorate;
+(async function (){
+  /**
+   * Менеджер форм загружаем ассинхронно
+   */
+  await import(
+      "../../editor/src/js/classes/modules/FormsManager.js"
+      )
+})();

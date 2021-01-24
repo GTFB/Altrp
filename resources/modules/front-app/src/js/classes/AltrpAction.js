@@ -143,11 +143,7 @@ class AltrpAction extends AltrpModel {
         return;
       }
       case "login": {
-        const formsManager = (
-          await import(
-            "../../../../editor/src/js/classes/modules/FormsManager.js"
-          )
-        ).default;
+        console.log('init');
         const form = formsManager.registerForm(
           this.getFormId(),
           "login",
@@ -441,7 +437,7 @@ class AltrpAction extends AltrpModel {
    */
   async doActionToggleElements() {
     let IDs = this.getProperty("elements_ids");
-    if (!IDs) {
+    if (! IDs) {
       return { success: true };
     }
     IDs = IDs.split(",");
