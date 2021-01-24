@@ -61,7 +61,6 @@ class Dropbar extends Component {
     let mainClass = "altrp-dropbar-" +
       this.props.className;
 
-    console.log(this.props)
     let type = this.props.settings.type_dropbar_section || "text";
     let content_dropbar_section = this.props.getContent('content_dropbar_section');
     return (

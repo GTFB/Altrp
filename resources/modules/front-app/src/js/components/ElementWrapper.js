@@ -266,6 +266,7 @@ class ElementWrapper extends Component {
           altrpPageState: this.props.altrpPageState,
           altrpMeta: this.props.altrpMeta,
           updateToken: this.state.updateToken,
+          currentScreen: this.props.currentScreen,
           appStore
         })}
       </div>
@@ -282,7 +283,8 @@ function mapStateToProps(state) {
     currentModel: state.currentModel,
     currentUser: state.currentUser,
     altrpMeta: state.altrpMeta,
-    altrpPageState: state.altrpPageState
+    altrpPageState: state.altrpPageState,
+    currentScreen: state.currentScreen,
   };
 }
 
