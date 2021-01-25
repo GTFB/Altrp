@@ -1,6 +1,6 @@
 
 import { TAB_CONTENT, TAB_STYLE } from "../modules/ControllersManager";
-import { getTemplateDataStorage, getEditor, getFactory } from "../../helpers";
+import { getTemplateDataStorage, getEditor, getFactory, editorSetCurrentElement } from "../../helpers";
 import CONSTANTS from "../../consts";
 import { changeTemplateStatus } from "../../store/template-status/actions";
 import store, {getCurrentScreen, getElementState} from "../../store/store";
@@ -132,19 +132,38 @@ class BaseElement extends ControlStack {
    * добавлйет новый  дочерний элемент в конец
    * @param {BaseElement} child
    * */
-  appendChild(child) {
+  appendChild(child, fromHistory = false) {
+    console.log('appendChild')
     this.children.push(child);
     child.setParent(this);
     if (this.component && typeof this.component.setChildren === 'function') {
       this.component.setChildren(this.children);
     }
     this.templateNeedUpdate();
-
-    store.dispatch(addHistoryStoreItem('ADD', {element: child}));
+    if(!fromHistory)
+      store.dispatch(addHistoryStoreItem('ADD', {element: child}));   
   }
 
   insertSiblingAfter(newSibling) {
     this.parent.insertNewChildAfter(this.getId(), newSibling);
+  }
+  /**
+   * @param {number} index
+   * @param {BaseElement} child
+   * */
+  restoreChild(index, child) {
+    if (index === undefined || index > this.children.length) {
+      throw 'can not restore child';
+    }
+    if(child.parent === undefined) {
+      child.setParent(this);
+    }
+
+    this.children.splice(index, 0, child);
+    this.component.setChildren(this.children);
+    editorSetCurrentElement(child);
+
+    this.templateNeedUpdate(); 
   }
 
   insertSiblingBefore(newSibling) {
@@ -168,6 +187,7 @@ class BaseElement extends ControlStack {
     this.children.splice(index + 1, 0, newChild);
     this.component.setChildren(this.children);
     this.templateNeedUpdate();
+    store.dispatch(addHistoryStoreItem('ADD', {element: newChild}));
   }
   /**
    * @param {string} childId
@@ -187,6 +207,7 @@ class BaseElement extends ControlStack {
     this.children.splice(index, 0, newChild);
     this.component.setChildren(this.children);
     this.templateNeedUpdate();
+    store.dispatch(addHistoryStoreItem('ADD', {element: newChild}));
   }
 
   /**
@@ -253,21 +274,22 @@ class BaseElement extends ControlStack {
    * @param {BaseElement | string} child
    * @throws Если не указан IG или сам элемент
    * */
-  deleteChild(child) {
+  deleteChild(child, fromHistory = false) {
     let childExist = false;
     let childId;
     if (typeof child === 'string') {
       childId = child;
     } else if (child instanceof BaseElement) {
-      store.dispatch(addHistoryStoreItem('DELETE', {element: child, parent: this}));
       childId = child.getId();
     } else {
       throw 'Delete Child can only by id or Instance';
     }
-    let newChildren = this.children.filter(item => {
+    let newChildren = this.children.filter((item, index) => {
       if (item.getId() === childId) {
         childExist = true;
         item.beforeDelete();
+        if(!fromHistory)
+          store.dispatch(addHistoryStoreItem('DELETE', {element: child, parent: this, index}));
         return false;
       }
       return true
@@ -353,11 +375,24 @@ class BaseElement extends ControlStack {
     this.updateStyles();
   }
 
-  setSettingValue(settingName, value) {
-    this.settings[settingName] = value;
-    if (this.component) {
-      this.component.changeSetting(settingName, value);
-    }
+  setSettingValue(settingName, value, fromHistory = false) {
+    //check change value
+    if(this.settings[settingName] !== value) {
+      if(!fromHistory)
+        store.dispatch(addHistoryStoreItem(
+          'EDIT', 
+          {
+            element: this, 
+            oldValue: { 
+              settingName, 
+              value: this.settings[settingName] 
+        }}));
+
+      this.settings[settingName] = value;
+      if (this.component) {
+        this.component.changeSetting(settingName, value);
+      }      
+    }  
   }
 
   _registerControls() {

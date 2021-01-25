@@ -23,7 +23,6 @@ import { contextMenu } from "react-contexify/lib/index";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
 import { TelephoneMinus } from "react-bootstrap-icons";
 import { thresholdSturges } from "d3";
-import { addHistoryStoreItem } from "../store/history-store/actions";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -131,7 +130,7 @@ class ElementWrapper extends Component {
             }
             break;
         }
-        store.dispatch(addHistoryStoreItem('ADD', {element: newElement}));
+        
       }
       if (this.props.element.getType() === "column") {
         this.props.element.appendChild(newElement);
@@ -398,7 +397,6 @@ class ElementWrapper extends Component {
 
   deleteElement(e) {
     e.stopPropagation();
-    console.log('delete element element wrapper')
     this.props.element.parent.deleteChild(this.props.element);
   }
   duplicateElement(e) {

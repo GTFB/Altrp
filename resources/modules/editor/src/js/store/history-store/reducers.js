@@ -1,6 +1,7 @@
 import { ADD_HISTORY_STORE_ITEM, DELETE_LAST_HISTORY_STORE_ITEMS } from './actions';
 
 const initialState = [];
+// todo: сделать future  
 
 export const historyStoreReducer = (state = initialState, { type, payload }) => {
   switch (type) {
