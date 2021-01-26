@@ -134,6 +134,36 @@ class Column  extends BaseElement {
       }
     });
 
+    this.addControl('layout_overflow', {
+      type: CONTROLLER_SELECT,
+      label: 'Overflow',
+      options: [
+        {
+          value: 'auto',
+          label: 'auto'
+        },
+        {
+          value: 'hidden',
+          label: 'hidden'
+        },
+        {
+          value: 'scroll',
+          label: 'scroll'
+        },
+        {
+          value: 'visible',
+          label: 'visible'
+        },
+        {
+          value: 'inherit',
+          label: 'default'
+        }
+      ],
+      rules: {
+        '{{ELEMENT}} > .altrp-column{{STATE}}': 'overflow: {{VALUE}}',
+      },
+    });
+
     this.addControl('layout_html_tag', {
       type: CONTROLLER_SELECT,
       label: 'HTML tag',
