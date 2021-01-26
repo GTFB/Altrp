@@ -1,5 +1,7 @@
 export const ADD_HISTORY_STORE_ITEM = "ADD_HISTORY_STORE_ITEM";
 export const DELETE_LAST_HISTORY_STORE_ITEMS = "DELETE_LAST_HISTORY_STORE_ITEM";
+export const UNDO = "UNDO";
+export const REDO = "REDO";
 
 export const addHistoryStoreItem = (type, data) => ({
   type: ADD_HISTORY_STORE_ITEM,
@@ -7,6 +9,16 @@ export const addHistoryStoreItem = (type, data) => ({
     type,
     data
   }
+});
+
+export const undo = count => ({
+  type: UNDO,
+  payload: { count }
+});
+
+export const redo = count => ({
+  type: REDO,
+  payload: { count }
 });
 
 export const deleteLastHistoryStoreItems = count => ({

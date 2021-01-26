@@ -64,8 +64,7 @@ class HistoryPanel extends Component {
 
 const ActionsTabContent = () => {
   const controllerHistory = new ControllerHistory();
-  const historyStore = useSelector(state => state.historyStore);
-  console.log(historyStore);
+  const historyStore = useSelector(state => state.historyStore.history);
 
   const deleteHistoryItems = index => {
     for (let i = 0; i < historyStore.length - index; i++) {

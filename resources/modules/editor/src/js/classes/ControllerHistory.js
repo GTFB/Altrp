@@ -1,18 +1,17 @@
 import AltrpModel from "./AltrpModel";
 import store from "../store/store";
-import { deleteLastHistoryStoreItems } from "../store/history-store/actions";
+import { undo } from "../store/history-store/actions";
 
 
 class ControllerHistory extends AltrpModel {
 
   restore() {
-    let index = appStore.getState().historyStore.indexOf(this);
-    let newHistoryStore = [...appStore.getState().historyStore];
-    console.log(newHistoryStore)
-    newHistoryStore.splice(0, index + 1);
+    console.log('historyStore: ', appStore.getState().historyStore.history);
+    console.log('current: ', appStore.getState().historyStore.current);
 
-    if(!(newHistoryStore.length === 0)) {
-      let restoreElement = newHistoryStore.pop();
+    if(!(appStore.getState().historyStore.history.length === 0)) {
+      let current = appStore.getState().historyStore.current;
+      let restoreElement = appStore.getState().historyStore.history[current];
 
       switch(restoreElement.type) {
         case 'ADD':
@@ -31,21 +30,21 @@ class ControllerHistory extends AltrpModel {
   restoreDelete(element, parent, index) {
     console.log('restore delete')
     parent.restoreChild(index, element);
-    store.dispatch(deleteLastHistoryStoreItems(1));
+    store.dispatch(undo(1));
   }
 
   restoreEdit(element, oldValue) {
     console.log('restore edit')
     element.setSettingValue(oldValue.settingName, oldValue.value, true);
 
-    store.dispatch(deleteLastHistoryStoreItems(1));
+    store.dispatch(undo(1));
   }
 
   restoreAdd(element) {
     console.log('restore add')
     element.parent.deleteChild(element, true);
 
-    store.dispatch(deleteLastHistoryStoreItems(1));
+    store.dispatch(undo(1));
   }
 }
 
