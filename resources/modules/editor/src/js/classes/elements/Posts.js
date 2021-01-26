@@ -1077,6 +1077,12 @@ class Table extends BaseElement {
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
           'margin-left: {{LEFT}}{{UNIT}};'
+        ],
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}} img': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
         ]
       },
     });
@@ -1299,6 +1305,12 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__next{{STATE}} svg': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ],
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}} img': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
