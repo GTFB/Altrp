@@ -523,12 +523,10 @@ class BaseElement extends ControlStack {
    * @param {string} fontName
    */
   addFont(settingName, fontName){
-    console.log(this.settings);
     if((! settingName) || ! fontName){
       return;
     }
     _.set(this.settings, `__altrpFonts__.${settingName}`, fontName);
-    console.log(this.settings);
 
   }
   /**

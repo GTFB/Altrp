@@ -690,6 +690,26 @@ class FrontElement {
   getDynamicSetting(dynamicSettingName){
     return _.get(this.settings, `altrpDynamicSetting.${dynamicSettingName}`, null);
   }
+
+  /**
+   * значение настройки в зависимости от разрешения
+   * @param settingName
+   * @param _default
+   * @return {*}
+   */
+  getResponsiveSetting(settingName, _default){
+    let {currentScreen} = appStore.getState();
+    if(currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT){
+      return this.getSettings(settingName, _default)
+    }
+    let suffix = currentScreen.name;
+    let _settingName = `${settingName}_${suffix}`;
+    let settings = this.getSettings(_settingName);
+    if(! settings){
+      settings = this.getSettings(settingName);
+    }
+    return settings;
+  }
 }
 
 export default FrontElement

@@ -1,10 +1,11 @@
+import styled from 'styled-components'
 import React, {Component} from 'react';
 import Dropdown from "./Dropdown";
 import {isEditor, parseURLTemplate, renderAsset} from "../../../../../../front-app/src/js/helpers";
 import AltrpLink from "../../altrp-link/AltrpLink";
 import LinkMenu from "../LinkMenu";
 
-class HorizontalVeticalMenu extends Component {
+class HorizontalVerticalMenu extends Component {
   constructor(props) {
     super(props);
 
@@ -97,6 +98,7 @@ class HorizontalVeticalMenu extends Component {
         stylesLink = verStyles
       }
     }
+    // console.log(this.props.element.getResponsiveSetting('hor_ver_align_menu_layout'));
     switch (this.props.settings.hor_ver_align_menu_layout) {
       case "start":
         ifHorElseVer({ justifyContent: "flex-start" }, { justifyContent: "flex-start" });
@@ -112,8 +114,18 @@ class HorizontalVeticalMenu extends Component {
         break
     }
 
-    let pointerVariant = this.props.settings.hor_ver_pointer_menu_layout;
-
+    let pointerVariant = this.props.element.getSettings('hor_ver_pointer_menu_layout');
+    let scale = this.props.element.getResponsiveSetting('pointer_text_scale');
+    let transition = this.props.element.getResponsiveSetting('pointer_text_transition_duration');
+    transition = _.get(transition, 'size', 0.3);
+    let Ul = styled.ul`
+    .altrp-nav-menu-li-animation-text{
+      transition-duration: ${transition}s
+    }
+    .altrp-nav-menu-li-animation-text:hover{
+      ${(pointerVariant === 'text') ? `transform: scale(${scale})` : ''}
+    }
+`;
     switch (pointerVariant) {
       case "none":
         break;
@@ -147,7 +159,7 @@ class HorizontalVeticalMenu extends Component {
     }
 
     return (
-      <ul style={stylesUl} className={"altrp-nav-menu-ul altrp-nav-menu-ul-" + layout} ref={this.children}>
+      <Ul  className={"altrp-nav-menu-ul altrp-nav-menu-ul-" + layout} ref={this.children}>
         {
           this.state.list.map((li, idx) => {
             const tag = li.link_repeater_menu_layout || "a";
@@ -206,9 +218,9 @@ class HorizontalVeticalMenu extends Component {
             )
           })
         }
-      </ul>
+      </Ul>
     );
   }
 }
 
-export default HorizontalVeticalMenu;
+export default HorizontalVerticalMenu;
