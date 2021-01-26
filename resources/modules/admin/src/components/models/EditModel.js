@@ -150,9 +150,18 @@ class EditModel extends Component {
    */
   onSubmit = async (model) => {
     let res;
+    const isNameTaken = await fetch(`/admin/ajax/model_name_is_free/?name=${model.name}`)
+      .then(res => res.json())
+      .then(res => !res.taken);
+      
+    if (isNameTaken) {
+      return alert(`Name ${model.name} is already taken. Use another one.`)
+    }
+    
     if (this.state.id) {
       res = await this.modelsResource.put(this.state.id, model);
     } else {
+
       res = await this.modelsResource.post(model);
     }
     this.props.history.push("/admin/tables/models");
@@ -176,7 +185,6 @@ class EditModel extends Component {
           edit={model.id}
           onSubmit={this.onSubmit} />
 
-
         {fields ? <><h2 className="sub-header">Fields</h2>
           <AdminTable
             columns={columns}
@@ -198,6 +206,7 @@ class EditModel extends Component {
           />
           <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/fields/add`}>Add Field</Link>
         </> : ''}
+
 
         <h2 className="sub-header">Remote Fields</h2>
         <AdminTable

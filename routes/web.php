@@ -213,7 +213,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/model_name_is_free', 'Admin\ModelsController@modelNameIsFree');
     Route::get('/models/{model_id}/field_name_is_free', 'Admin\ModelsController@fieldNameIsFree');
     Route::get('/models/{model_id}/relation_name_is_free', 'Admin\ModelsController@relationNameIsFree');
-    Route::get('/models/{model_id}/query_name_is_free', 'Admin\ModelsController@queryNameIsFree');
+    Route::get('/models/{model_id}/sql_builder_name_is_free', 'Admin\ModelsController@queryNameIsFree');
 
     /**
      * Модели
@@ -401,12 +401,16 @@ Route::get('/', function () {
   ]);
 })->middleware(['web', 'installation.checker']);
 
-foreach ($frontend_routes as $_frontend_route) {
+foreach ( $frontend_routes as $_frontend_route ) {
   $path = $_frontend_route['path'];
   $title = $_frontend_route['title'];
-  $frontend_route = str_replace(':id', '{id}', $path);
+  $pattern1 = '/:(.+)((\/)|$)/U';
+  $pattern2 = '/:(.+)(\/)/U';
+  $replacement1 = '{$1}/';
+  $replacement2 = '{$1}/';
+  $frontend_route = preg_replace( $pattern1, $replacement1,  $path );
 
-  Route::get($frontend_route, function () use ($title, $_frontend_route) {
+  Route::get($frontend_route, function () use ($title, $_frontend_route, $frontend_route) {
 
     $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
 

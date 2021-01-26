@@ -315,7 +315,7 @@ class Table extends BaseElement {
           label: 'Pages',
         }
       ],
-      default: '',
+      default: 'prev_next',
     });
 
     this.endControlSection();

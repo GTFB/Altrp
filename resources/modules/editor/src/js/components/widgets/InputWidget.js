@@ -6,7 +6,8 @@ import {
   parseParamsFromString,
   parseURLTemplate,
   replaceContentWithData,
-  sortOptions
+  sortOptions,
+  renderAssetIcon
 } from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
@@ -257,7 +258,7 @@ class InputWidget extends Component {
     ) {
       this.updateOptions();
     }
-    if (content_options && ! model_for_options) {
+    if (content_options && !model_for_options) {
       let options = parseOptionsFromSettings(content_options);
       // console.log(options);
       // console.log(this.state.options);
@@ -451,7 +452,7 @@ class InputWidget extends Component {
       value = e.value;
     }
     if (_.get(editor, 'getData')) {
-      value = editor.getData();
+      value = `<div class="ck ck-content" style="width:100%">${editor.getData()}</div>`;
     }
     if (_.isArray(e)) {
       value = _.cloneDeep(e);
@@ -501,10 +502,12 @@ class InputWidget extends Component {
   /**
    * получить опции
    */
-  getOptions(){
+  getOptions() {
     let options = [...this.state.options];
-    const optionsDynamicSetting = this.props.element.getDynamicSetting('content_options');
-    if(optionsDynamicSetting){
+    const optionsDynamicSetting = this.props.element.getDynamicSetting(
+      "content_options"
+    );
+    if (optionsDynamicSetting) {
       options = convertData(optionsDynamicSetting, options);
     }
     return options;
@@ -634,7 +637,8 @@ class InputWidget extends Component {
       options_sorting,
       content_readonly,
       image_select_options,
-      select2_multiple: isMultiple
+      select2_multiple: isMultiple,
+      label_icon
     } = this.props.element.getSettings();
 
     let value = this.state.value;
@@ -708,6 +712,9 @@ class InputWidget extends Component {
           >
             {this.state.settings.content_label}
           </label>
+          {label_icon && label_icon.assetType && <span className="altrp-label-icon">
+            {renderAssetIcon(label_icon)}
+          </span>}
         </div>
       );
     } else {
