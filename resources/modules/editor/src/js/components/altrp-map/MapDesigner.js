@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import L from "leaflet";
+import L, { CRS } from "leaflet";
 import axios from "axios";
 import Drawer from "rc-drawer";
 import MarkerCluster from "./MarkerCluster";
@@ -34,9 +34,13 @@ function MapDesigner({
   saveData = noob,
   onTap = noob,
   url,
-  field_id
+  field_id,
+  url_connect = null,
+  field_first_connect = null,
+  field_second_connect = null
 }) {
   const FG = useRef(null);
+  const ModalRef = useRef(null);
   const [selected, setSelected] = useState(null);
   const [state, setState] = useState(data);
   const [open, setOpen] = useState(false);
@@ -44,7 +48,7 @@ function MapDesigner({
 
   const updateGeoObjectToModel = geoObject => {
     const { dbID } = geoObject;
-    let data = geoObject;
+    let data = _.cloneDeep(geoObject, {});
     delete data["dbID"];
     axios
       .put(`${url}/${dbID}`, {
@@ -237,6 +241,35 @@ function MapDesigner({
     [onTap]
   );
 
+  const handleMapClick = (e, layer) => {
+    // e.DomEvent.stopPropagation();
+    // console.log(e);
+    // e.DomEvent.preventDefault();
+    L.DomEvent.stopPropagation(e);
+    L.DomEvent.preventDefault(e);
+    // e.originalEvent.view.L.DomEvent.stopPropagation(e);
+    setSelected(null);
+    // console.log(layer);
+  };
+
+  const handleMarkerClick = (e, layer) => {
+    e.originalEvent.view.L.DomEvent.stopPropagation(e);
+    setSelected(null);
+    setSelected(layer.feature.id);
+  };
+
+  const handlePolygonClick = (e, layer) => {
+    e.originalEvent.view.L.DomEvent.stopPropagation(e);
+    setSelected(null);
+    setSelected(layer.feature.id);
+  };
+
+  const handleCircleClick = (e, layer) => {
+    e.originalEvent.view.L.DomEvent.stopPropagation(e);
+    setSelected(null);
+    setSelected(layer.feature.id);
+  };
+
   const whenReady = useCallback(() => {
     if (!FG.current) return;
     // Очищаем старые слои
@@ -268,6 +301,7 @@ function MapDesigner({
           onEachFeature: (feature, layer) => {
             layer.addEventListener("click", handleSelected);
             if (layer instanceof L.Marker) {
+              layer.addEventListener("click", e => handleMarkerClick(e, layer));
               layer.setIcon(
                 customIcon(
                   feature.properties.icon,
@@ -276,8 +310,16 @@ function MapDesigner({
               );
               layer.setOpacity(feature.properties.fillOpacity);
               if (feature.inCluster) {
-                markers.push(feature);
+                markers.push(layer);
               }
+            } else if (layer instanceof L.Polygon) {
+              layer.addEventListener("click", e =>
+                handlePolygonClick(e, layer)
+              );
+              layer.setStyle(feature.properties);
+            } else if (layer instanceof L.Circle) {
+              layer.addEventListener("click", e => handleCircleClick(e, layer));
+              layer.setStyle(feature.properties);
             } else {
               layer.setStyle(feature.properties);
             }
@@ -294,7 +336,6 @@ function MapDesigner({
         });
       }
     }
-    console.log(markers);
     if (markers.length > 0) {
       setMarkers(markers);
     }
@@ -321,11 +362,12 @@ function MapDesigner({
       <Map
         center={center}
         zoom={zoom}
-        animate={false}
+        onclick={handleMapClick}
         className={`altrp-map__container ${className}`}
         whenReady={whenReady}
         scrollWheelZoom={true}
         touchZoom={true}
+        crs={CRS.EPSG3395}
         doubleClickZoom={true}
         keyboard={interactionOptions.keyboard}
         style={{ height: style.height }}
@@ -383,12 +425,17 @@ function MapDesigner({
       >
         {isEditable && selected && (
           <ModalControl
+            markers={markers}
+            url_connect={url_connect}
+            field_first_connect={field_first_connect}
+            field_second_connect={field_second_connect}
             updateGeoObjectToModel={updateGeoObjectToModel}
             open={open}
             selected={selected}
             onClose={() => setOpen(false)}
             setState={setState}
             state={state}
+            forwardRef={ModalRef}
             fg={FG.current}
           />
         )}

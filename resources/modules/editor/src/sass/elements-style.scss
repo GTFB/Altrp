@@ -873,6 +873,7 @@
 .altrp-dropbar-container {
   position: absolute;
   color: #666;
+  padding: 30px;
   background-color: #f1f3f5;
 }
 
@@ -1432,7 +1433,7 @@
 .altrp-label{
   &.altrp-label_slider{
     display: flex;
-    justify-content: center;
+      justify-content: center;
     flex-wrap: wrap;
   }
 }
@@ -1443,14 +1444,15 @@
 .altrp-pagination__previous, .altrp-pagination__next {
   display: flex;
   align-items: center;
+
   img {
-    height: 60px;
+    width: 60px;
   }
 }
 
 .altrp-table {
-  border-width: 1px 1px 1px 1px;
-  border-color: rgb(186,186,186);
+    border-width: 1px 1px 1px 1px;
+    border-color: rgb(186,186,186);
 }
 
 .altrp-table-global-filter {
@@ -1458,4 +1460,8 @@
   label {
     display: inline-block;
   }
+}
+
+.altrp-label-icon, .altrp-label-icon svg, .altrp-label-icon img {
+  width : 20px;
 }

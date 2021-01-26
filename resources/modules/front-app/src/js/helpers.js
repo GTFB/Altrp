@@ -10,7 +10,6 @@ import { changeAppRoutes } from "./store/routes/actions";
 import Route from "./classes/Route";
 import { changePageState } from "./store/altrp-page-state-storage/actions";
 import { changeAltrpMeta } from "./store/altrp-meta-storage/actions";
-import { useDispatch } from "react-redux";
 import { altrpFontsSet, GOOGLE_FONT } from "./components/FontsManager";
 import queryString from "query-string";
 import AltrpSVG from "../../../editor/src/js/components/altrp-svg/AltrpSVG";
@@ -185,20 +184,6 @@ export function renderAssetIcon(asset, props = null) {
     }
     switch (asset.assetType) {
       case "icon": {
-        // if(asset.url) {
-        //   return <AltrpSVG {...props} url={asset.url} />;
-        //   window.assetsCache = window.assetsCache || {};
-        //   if (window.assetsCache[asset.url]) return window[asset.url];
-        //   fetch(asset.url)
-        //     .then(response => response.text())
-        //     .then(svg => {
-        //       svg = svg.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
-        //       window[asset.url] = (<svg {...props} dangerouslySetInnerHTML={{__html: svg }}></svg>);
-        //     })
-        //     .catch(console.error.bind(console));
-        //
-        //   return window[asset.url];
-        // }
         return iconsManager().renderIcon(asset.name);
       }
       case "image": {
@@ -463,9 +448,6 @@ export function setDataByPath(path = "", value, dispatch = null) {
     if (_.isEqual(oldValue, value)) {
       return true;
     }
-    console.log("====================================");
-    console.log(value);
-    console.log("====================================");
     if (_.isFunction(dispatch)) {
       dispatch(changeCurrentUserProperty(path, value));
     } else {
@@ -490,8 +472,11 @@ export function getDataByPath(
   context = null,
   altrpCheck = false
 ) {
-  if (!path) {
+  if (! path) {
     return _default;
+  }
+  if(path.indexOf('{{') !== -1){
+    path = replaceContentWithData(path, context)
   }
   /**
    * проверим путь
@@ -1018,6 +1003,9 @@ export function replaceContentWithData(content = "", modelContext = null) {
     paths.forEach(path => {
       path = path.replace("{{", "");
       let value = getDataByPath(path, "", modelContext);
+      if(value === 0){
+        value = '0';
+      }
       content = content.replace(new RegExp(`{{${path}}}`, "g"), value || "");
     });
   }
@@ -1075,8 +1063,6 @@ export function printElements(elements, title = "") {
  * @params {string} filename
  */
 export async function elementsToPdf(elements, filename = "") {
-  console.log(elements, filename);
-
   let html2pdf = (await import("html2pdf.js")).default;
   elements = elements.body ? elements.body : elements;
   if (!elements) {
@@ -1498,24 +1484,6 @@ export function isValueMatchMask (value, mask) {
   return value.length && value.split("").every((char, index) => char === mask[index] || char.match(mask[index]));
 }
 
-/**
- * Преобразование данных
- * @param {*} data
- * @param {{} | []} settings
- * @return {*}
- */
-export function convertData(data, settings) {
-  if(! _.isArray(settings)) {
-    for(let item of settings){
-      if(_.isEmpty(item)){
-        continue;
-      }
-      data = convertData(data, item)
-    }
-  }
-
-  return data;
-}
 
 /**
  * Вернуть экземпляр конвертера необходимого типа (array - ArrayConverter и т. д.)
@@ -1526,4 +1494,61 @@ export function getConverter(data){
       case 'array': return new ArrayConverter(data);
   }
   return new DataConverter();
+}
+
+/**
+ * Конвертируются данные
+ * @param {{} | []} settings
+ * @param {*} data
+ */
+export function convertData(settings, data){
+  if(_.isArray(settings)){
+    settings.forEach(item => {
+      const converter = getConverter(item);
+      data = converter.convertData(data);
+    });
+  }
+  if(settings.data_type){
+    const converter = getConverter(settings);
+    data = converter.convertData(data);
+  }
+  return data;
+}
+export function renderIcon(isHidden, icon, defaultIcon, className) {
+  if (isHidden) return null;
+  
+  return <span className={className}>{icon && icon.assetType ? renderAssetIcon(icon) : defaultIcon}</span>
+  // if()
+}
+
+/**
+ * Перенаправление на другую страницу по настройкам LinkController
+ * @param {{}} linkSettings
+ * @param {{}} e
+ * @param {{}} context
+ */
+export function redirect(linkSettings, e, context = {}){
+
+  if(_.get(linkSettings, 'toPrevPage') && frontAppRouter){
+    frontAppRouter.history.goBack();
+    return;
+  }
+  if(! _.get(linkSettings, 'url')){
+    return;
+  }
+  e.preventDefault();
+  e.stopPropagation();
+  let {url} = linkSettings;
+  url = replaceContentWithData(url, context);
+  if(linkSettings.openInNew){
+    window.open(url, '_blank');
+    return;
+  }
+  if(frontAppRouter){
+    if(linkSettings.tag === 'a'){
+      window.location.assign(url);
+    } else {
+      frontAppRouter.history.push(url);
+    }
+  }
 }

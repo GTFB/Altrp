@@ -68,7 +68,10 @@ class DataStorageUpdater extends AltrpModel {
             res = await (new Resource({ route: dataSource.getWebUrl() })).getAll();
           }
         } catch (err) {
-          console.log(err);
+          if(err instanceof Promise){
+            err = await err.then();
+          }
+          console.error(err);
         }
         res = _.get(res, 'data', res);
         appStore.dispatch(changeCurrentDataStorage(dataSource.getAlias(), res));

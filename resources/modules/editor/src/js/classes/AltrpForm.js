@@ -1,5 +1,6 @@
 import Resource from "./Resource";
 import {addResponseData, clearAllResponseData} from "../../../../front-app/src/js/store/responses-storage/actions";
+import {mbParseJSON} from "../../../../front-app/src/js/helpers";
 
 /**
  * Класс имитирующий поведение формы (собирает данные с виджетов полей и отправляет их на сервер)
@@ -98,55 +99,67 @@ class AltrpForm {
       }
     });
     if(success){
-      switch (this.method){
-        case 'POST':{
-          let res =  await this.resource.post(_.assign(this.getData(), data));
-          if((this.modelName === 'login') && this.options.afterLoginRedirect){
-            document.location.replace(this.options.afterLoginRedirect);
-            return res;
-          }
-          if((this.modelName === 'logout') && this.options.afterLogoutRedirect){
-            document.location.replace(this.options.afterLogoutRedirect);
-            return res;
-          }
-          if(res.reload){
-            document.location.reload();
-            return;
-          }
-          this.clearInputs();
-          this.updateResponseStorage(res);
-          return res;
-        }
-
-        case 'PUT':{
-          let res;
-          if(modelID || this.options.customRoute){
-            res =  await this.resource.put(modelID, _.assign(this.getData(), data));
-            import('./modules/ModelsManager').then(modelsManager=>{
-              modelsManager.default.updateModelWithData(this.modelName, modelID, this.getData());
-            });
-            // this.clearInputs();
+      try {
+        switch (this.method) {
+          case 'POST': {
+            let res = await this.resource.post(_.assign(this.getData(), data));
+            if ((this.modelName === 'login') && this.options.afterLoginRedirect) {
+              document.location.replace(this.options.afterLoginRedirect);
+              return res;
+            }
+            if ((this.modelName === 'logout') && this.options.afterLogoutRedirect) {
+              document.location.replace(this.options.afterLogoutRedirect);
+              return res;
+            }
+            if (res.reload) {
+              document.location.reload();
+              return;
+            }
+            this.clearInputs();
             this.updateResponseStorage(res);
             return res;
           }
-          console.error('Не удалось получить ИД модели для обновления или customRoute!');
-        }
-        break;
-        case 'GET':{
-          // return await alert(JSON.stringify(this.getData()));
-          let res;
-          res =  await this.resource.getQueried(_.assign(this.getData(), data));
-          this.updateResponseStorage(res);
-          return res;
-        }
-        case 'DELETE':{
-          if(modelID || this.options.customRoute){
-            // return await await alert('Удаление!');
-            return await this.resource.delete(modelID, _.assign(this.getData(), data));
+
+          case 'PUT': {
+            let res;
+            if (modelID || this.options.customRoute) {
+              console.log(_.assign(this.getData(), data));
+              res = await this.resource.put(modelID, _.assign(this.getData(), data));
+              import('./modules/ModelsManager').then(modelsManager => {
+                modelsManager.default.updateModelWithData(this.modelName, modelID, this.getData());
+              });
+              // this.clearInputs();
+              this.updateResponseStorage(res);
+              return res;
+            }
+            console.error('Не удалось получить ИД модели для обновления или customRoute!');
           }
-          console.error('Не удалось получить ИД модели для удаления или customRoute!');
+            break;
+          case 'GET': {
+            // return await alert(JSON.stringify(this.getData()));
+            let res;
+            res = await this.resource.getQueried(_.assign(this.getData(), data));
+            this.updateResponseStorage(res);
+            return res;
+          }
+          case 'DELETE': {
+            if (modelID || this.options.customRoute) {
+              // return await await alert('Удаление!');
+              return await this.resource.delete(modelID, _.assign(this.getData(), data));
+            }
+            console.error('Не удалось получить ИД модели для удаления или customRoute!');
+          }
+            break;
         }
-        break;
+      } catch (error){
+        console.log(error);
+        if(error instanceof Promise){
+          error =  await error.then();
+          error = mbParseJSON(error, error);
+          this.updateResponseStorage(error);
+
+        }
+        return{success: false, error};
       }
     } else {
       await alert('Пожалуйста, заполните все обязательные поля');

@@ -1,8 +1,11 @@
 import React, {Component} from "react";
+import { connect } from "react-redux";
+
 import BellIcon from './../svgs/bell.svg';
 import UserIcon from './../svgs/user.svg';
 import LogoutIcon from './../svgs/logout.svg';
 import {logout} from "../js/helpers";
+
 
 class UserTopPanel extends Component {
   render(){
@@ -11,7 +14,7 @@ class UserTopPanel extends Component {
         <BellIcon className="notification__icon"/>
       </a>
       <UserIcon className="top-panel__portrait"/>
-      <div className="top-panel__greeting">Hello, administrator</div>
+      <div className="top-panel__greeting">Hello, {this.props.userName || "administrator"}</div>
       <button className="top-panel-logout logout" onClick={logout}>
         <LogoutIcon className="logout__icon"/>
       </button>
@@ -19,4 +22,10 @@ class UserTopPanel extends Component {
   }
 }
 
-export default UserTopPanel
+const mapStateToProps = state => {
+  return {
+    userName: state.currentUser.name
+  }
+};
+
+export default connect(mapStateToProps)(UserTopPanel);

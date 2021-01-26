@@ -1,4 +1,6 @@
+import { Provider } from "react-redux";
 
+import store from "./js/store/store";
 
 if (process.env.NODE_ENV !== 'production') {
   console.log('Looks like we are in development mode!');
@@ -7,19 +9,21 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 
-import('react').then((_export)=>{
+import('react').then((_export) => {
   window.React = _export.default;
   window.Component = _export.Component;
   return import('react-dom');
-}).then((_export)=>{
+}).then((_export) => {
   window.ReactDOM = _export.default;
   return import('./installing')
-}).then((_export)=>{
+}).then((_export) => {
   return import('../../editor/src/js/classes/modules/IconsManager');
-}).then((_export)=>{
+}).then((_export) => {
   window.iconsManager = new _export.default();
   return import('./Admin.js')
-}).then((_export)=>{
-  window.Admin =  _export.default;
-  ReactDOM.render(<Admin/>, document.getElementById('admin'));
+}).then((_export) => {
+  window.Admin = _export.default;
+  ReactDOM.render(<Provider store={store}>
+    <Admin />
+  </Provider>, document.getElementById('admin'));
 });

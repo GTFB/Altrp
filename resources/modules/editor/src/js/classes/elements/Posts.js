@@ -202,7 +202,7 @@ class Table extends BaseElement {
 
     this.addControl('posts_per_page', {
       type: CONTROLLER_NUMBER,
-      label: 'Posts per page',
+      label: 'Posts per Page',
       default: 3
     });
 
@@ -298,51 +298,107 @@ class Table extends BaseElement {
       label: 'Header',
     });    
 
-    this.addControl("posts_header_tag", {
+    this.addControl('posts_pagination_type', {
       type: CONTROLLER_SELECT,
-      label: "Headers Tag",
-      conditions: {
-        'posts_header': true,
-      },
+      label: 'Pagination Type',
       options: [
         {
-          label: 'H1',
-          value: 'h1'
-        }, 
-        {
-          label: 'H2',
-          value: 'h2'
+          value: '',
+          label: 'None',
         },
         {
-          label: 'H3',
-          value: 'h3'
+          value: 'prev_next',
+          label: 'Prev/Next',
         },
         {
-          label: 'H4',
-          value: 'h4'
-        },
-        {
-          label: 'H5',
-          value: 'h5'
-        },
-        {
-          label: 'H6',
-          value: 'h6'
-        },
-        {
-          label: 'div',
-          value: 'div'
-        },
-        {
-          label: 'span',
-          value: 'span'
-        },
-        {
-          label: 'p',
-          value: 'p'
+          value: 'pages',
+          label: 'Pages',
         }
       ],
-      default: 'h3',
+      default: 'prev_next',
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("posts_pagination_section", {
+      label: "Pagination",
+      conditions: {
+        'posts_pagination_type!': '',
+      },
+    });
+
+    this.addControl('posts_prev_text', {
+      label: 'Prev Text',
+      default: 'Prev Page',
+    });
+
+    this.addControl('prev_icon', {
+      type: CONTROLLER_MEDIA,
+      label: 'Prev Page Icon',
+    });
+
+    this.addControl('prev_icon_position', {
+      type: CONTROLLER_SELECT,
+      label: 'Prev Icon Position',
+      default: 'default',
+      options: [
+        {
+          value: 'row',
+          label: 'Right'
+        },
+        {
+          value: 'row-reverse',
+          label: 'Left'
+        },
+        {
+          value: 'column',
+          label: 'Bottom'
+        },
+        {
+          value: 'column-reverse',
+          label: 'Top'
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': 'flex-direction: {{VALUE}};'
+      },
+    });
+
+    this.addControl('posts_next_text', {
+      label: 'Next Text',
+      default: 'Next Page',
+    });
+
+    this.addControl('next_icon', {
+      type: CONTROLLER_MEDIA,
+      label: 'Next Page Icon',
+    });
+
+    this.addControl('next_icon_position', {
+      type: CONTROLLER_SELECT,
+      label: 'Next Icon Position',
+      default: 'default',
+      options: [
+        {
+          value: 'row',
+          label: 'Right'
+        },
+        {
+          value: 'row-reverse',
+          label: 'Left'
+        },
+        {
+          value: 'column',
+          label: 'Bottom'
+        },
+        {
+          value: 'column-reverse',
+          label: 'Top'
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}}': 'flex-direction: {{VALUE}};'
+      },
     });
 
     this.endControlSection();
@@ -382,14 +438,14 @@ class Table extends BaseElement {
         '%',
         'vh',
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}}': [
-      //     'padding-top: {{TOP}}{{UNIT}};',
-      //     'padding-right: {{RIGHT}}{{UNIT}};',
-      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'padding-left: {{LEFT}}{{UNIT}};'
-      //   ]
-      // },
+      rules: {
+        '{{ELEMENT}} .altrp-posts{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
     });
 
     this.addControl("posts_bottom_space", {
@@ -737,6 +793,489 @@ class Table extends BaseElement {
     });
 
     this.endControlSection();
+
+    this.startControlSection("posts_pagination_style_section", {
+      label: "Pagination",
+      tab: TAB_STYLE,
+      conditions: {
+        'posts_pagination_type!': '',
+      },
+    });
+
+    this.addControl('posts_pagination_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Wrapper Padding',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} > .altrp-pagination-pages{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.endControlSection();
+    //<editor-fold desc="posts_prev_style_section">
+
+    this.startControlSection("posts_prev_style_section", {
+      label: "Prev Button",
+      tab: TAB_STYLE,
+      conditions: {
+        'posts_pagination_type!': '',
+      },
+    });
+
+    this.addControl('posts_prev_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('posts_prev_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl("posts_prev_color", {
+      type: CONTROLLER_COLOR,
+      label: "Color",
+      default: {
+        color: "",
+        colorPickedHex: "#000",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}} .altrp-pagination__previous{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('posts_prev_typographic', {
+          type: CONTROLLER_TYPOGRAPHIC,
+          label: 'Typographic',
+          rules: {
+            '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': [
+              'font-family: "{{FAMILY}}", sans-serif;',
+              'font-size: {{SIZE}}px;',
+              'line-height: {{LINEHEIGHT}};',
+              'letter-spacing: {{SPACING}}px',
+              'font-weight: {{WEIGHT}}',
+              'text-transform: {{TRANSFORM}}',
+              'font-style: {{STYLE}}',
+              'text-decoration: {{DECORATION}}'
+            ],
+          },
+        }
+    );
+
+    this.addControl('posts_prev_border_type', {
+          type: CONTROLLER_SELECT,
+          label: 'Border Type',
+          options: [
+            {
+              'value': 'none',
+              'label': 'None',
+            },
+            {
+              'value': 'solid',
+              'label': 'Solid',
+            },
+            {
+              'value': 'double',
+              'label': 'Double',
+            },
+            {
+              'value': 'dotted',
+              'label': 'Dotted',
+            },
+            {
+              'value': 'dashed',
+              'label': 'Dashed',
+            },
+            {
+              'value': 'groove',
+              'label': 'Groove',
+            },
+          ],
+          rules: {
+            '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': 'border-style: {{VALUE}};',
+          },
+        }
+    );
+
+    this.addControl('posts_prev_border_width', {
+          type: CONTROLLER_DIMENSIONS,
+          label: 'Border Width',
+          default: {
+            bind: true
+          },
+          units: [
+            'px',
+            '%',
+            'vh',
+          ],
+          rules: {
+            '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          },
+        }
+    );
+
+    this.addControl('posts_prev_border_color', {
+          type: CONTROLLER_COLOR,
+          label: 'Border Color',
+          // default: {
+          //   color: "rgb(50,168,82)",
+          //   colorPickedHex: "#32a852",
+          // },
+          rules: {
+            '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': 'border-color: {{COLOR}};',
+          },
+        }
+    );
+
+    this.addControl('border_prev_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
+    });
+
+    this.addControl('style_prev_background_shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'Shadow',
+      default: {
+      },
+      presetColors: [
+        '#eaeaea',
+        '#9c18a8'
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    });
+
+    this.addControl('prev_icon_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Prev Icon Margin',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: ['px', '%', 'vh', 'vw'],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}} svg': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('prev_icon_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Prev Icon Size',
+      units: ['px', '%', 'vh', 'vw'],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}} svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}} img': 'height: {{SIZE}}{{UNIT}};',
+      },
+    });
+
+    this.addControl('prev_icon_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Prev Icon Color',
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__previous{{STATE}} path': 'fill: {{COLOR}};',
+      },
+    });
+
+    this.endControlSection();
+    //</editor-fold>
+
+    //<editor-fold desc="posts_next_style_section">
+
+    this.startControlSection("posts_next_style_section", {
+      label: "Next Button",
+      tab: TAB_STYLE,
+      conditions: {
+        'posts_pagination_type!': '',
+      },
+    });
+
+    this.addControl('posts_next_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('posts_next_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl("posts_next_color", {
+      type: CONTROLLER_COLOR,
+      label: "Color",
+      default: {
+        color: "",
+        colorPickedHex: "#000",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}} .altrp-pagination__next{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl('posts_next_typographic', {
+          type: CONTROLLER_TYPOGRAPHIC,
+          label: 'Typographic',
+          rules: {
+            '{{ELEMENT}} .altrp-pagination__next{{STATE}}': [
+              'font-family: "{{FAMILY}}", sans-serif;',
+              'font-size: {{SIZE}}px;',
+              'line-height: {{LINEHEIGHT}};',
+              'letter-spacing: {{SPACING}}px',
+              'font-weight: {{WEIGHT}}',
+              'text-transform: {{TRANSFORM}}',
+              'font-style: {{STYLE}}',
+              'text-decoration: {{DECORATION}}'
+            ],
+          },
+        }
+    );
+
+    this.addControl('posts_next_border_type', {
+          type: CONTROLLER_SELECT,
+          label: 'Border Type',
+          options: [
+            {
+              'value': 'none',
+              'label': 'None',
+            },
+            {
+              'value': 'solid',
+              'label': 'Solid',
+            },
+            {
+              'value': 'double',
+              'label': 'Double',
+            },
+            {
+              'value': 'dotted',
+              'label': 'Dotted',
+            },
+            {
+              'value': 'dashed',
+              'label': 'Dashed',
+            },
+            {
+              'value': 'groove',
+              'label': 'Groove',
+            },
+          ],
+          rules: {
+            '{{ELEMENT}} .altrp-pagination__next{{STATE}}': 'border-style: {{VALUE}};',
+          },
+        }
+    );
+
+    this.addControl('posts_next_border_width', {
+          type: CONTROLLER_DIMENSIONS,
+          label: 'Border Width',
+          default: {
+            bind: true
+          },
+          units: [
+            'px',
+            '%',
+            'vh',
+          ],
+          rules: {
+            '{{ELEMENT}} .altrp-pagination__next{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          },
+        }
+    );
+
+    this.addControl('posts_next_border_color', {
+          type: CONTROLLER_COLOR,
+          label: 'Border Color',
+          // default: {
+          //   color: "rgb(50,168,82)",
+          //   colorPickedHex: "#32a852",
+          // },
+          rules: {
+            '{{ELEMENT}} .altrp-pagination__next{{STATE}}': 'border-color: {{COLOR}};',
+          },
+        }
+    );
+
+    this.addControl('border_next_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+      default: {
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
+    });
+
+    this.addControl('style_next_background_shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'Shadow',
+      default: {
+      },
+      presetColors: [
+        '#eaeaea',
+        '#9c18a8'
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    });
+
+    this.addControl('next_icon_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Next Icon Margin',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: ['px', '%', 'vh', 'vw'],
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}} svg': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('next_icon_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Next Icon Size',
+      units: ['px', '%', 'vh', 'vw'],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}} svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}} img': 'height: {{SIZE}}{{UNIT}};',
+      },
+    });
+
+    this.addControl('next_icon_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Next Icon Color',
+      rules: {
+        '{{ELEMENT}} .altrp-pagination__next{{STATE}} path': 'fill: {{COLOR}};',
+      },
+    });
+
+    this.endControlSection();
+    //</editor-fold>
 
     advancedTabControllers(this);
   }

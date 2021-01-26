@@ -56,7 +56,6 @@ class DynamicContent extends Component {
    * Сохранйем значение в свойства элемента
    */
   setSettings(){
-    console.log(this.state.value);
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
     this.props.currentElement.setDynamicSetting(this.props.settingName, this.state.value);
   }

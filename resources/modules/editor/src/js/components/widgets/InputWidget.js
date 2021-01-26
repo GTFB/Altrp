@@ -1,13 +1,13 @@
 import React, { Component, Suspense } from "react";
 import {
-  altrpCompare,
-  getConverter,
+  altrpCompare, convertData,
   isEditor,
   parseOptionsFromSettings,
   parseParamsFromString,
   parseURLTemplate,
   replaceContentWithData,
-  sortOptions
+  sortOptions,
+  renderAssetIcon
 } from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
@@ -61,6 +61,7 @@ class InputWidget extends Component {
       value = [];
     }
     this.onChange(value);
+    this.dispatchFieldValueToStore(value, true);
   }
   /**
    * Метод устанавливает все опции как выбранные
@@ -203,7 +204,7 @@ class InputWidget extends Component {
     const { content_options, model_for_options } = this.state.settings;
     if (
       prevProps &&
-      !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
+      ! prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
       let value = this.getContent(
@@ -259,6 +260,8 @@ class InputWidget extends Component {
     }
     if (content_options && !model_for_options) {
       let options = parseOptionsFromSettings(content_options);
+      // console.log(options);
+      // console.log(this.state.options);
       if (!_.isEqual(options, this.state.options)) {
         this.setState(state => ({ ...state, options }));
       }
@@ -277,7 +280,7 @@ class InputWidget extends Component {
     let content_calculation = this.props.element.getSettings(
       "content_calculation"
     );
-    if (!content_calculation) {
+    if (! content_calculation) {
       return;
     }
     const fieldName = this.props.element.getFieldId();
@@ -292,10 +295,10 @@ class InputWidget extends Component {
     const altrppagestate = this.props.altrpPageState.getData();
     const altrpresponses = this.props.altrpresponses.getData();
     const altrpmeta = this.props.altrpMeta.getData();
-    const context = {};
+    const context = this.props.element.getCurrentModel().getData();
     if (content_calculation.indexOf("altrpdata") !== -1) {
       context.altrpdata = altrpdata;
-      if (!altrpdata.currentDataStorageLoaded) {
+      if (! altrpdata.currentDataStorageLoaded) {
         prevContext.altrpdata = altrpdata;
       } else {
         prevContext.altrpdata = prevProps.currentDataStorage.getData();
@@ -374,7 +377,7 @@ class InputWidget extends Component {
         }
       );
     } catch (e) {
-      console.error(e);
+      console.error(e, this.props.element.getId());
     }
   }
 
@@ -393,7 +396,7 @@ class InputWidget extends Component {
       /**
        * Сохраняем параметры запроса, и если надо обновляем опции
        */
-      let options = this.state.options;
+      let options = [...this.state.options];
       if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
         if (!_.isEmpty(paramsForUpdate)) {
           if (this.props.element.getSettings("params_as_filters", false)) {
@@ -448,8 +451,8 @@ class InputWidget extends Component {
     if (e && e.value) {
       value = e.value;
     }
-    if (editor !== null) {
-      value = editor.getData();
+    if (_.get(editor, 'getData')) {
+      value = `<div class="ck ck-content" style="width:100%">${editor.getData()}</div>`;
     }
     if (_.isArray(e)) {
       value = _.cloneDeep(e);
@@ -500,18 +503,18 @@ class InputWidget extends Component {
    * получить опции
    */
   getOptions() {
-    let options = this.state.options;
+    let options = [...this.state.options];
     const optionsDynamicSetting = this.props.element.getDynamicSetting(
       "content_options"
     );
     if (optionsDynamicSetting) {
-      const converter = getConverter(optionsDynamicSetting);
-      options = converter.convertData(options);
+      options = convertData(optionsDynamicSetting, options);
     }
     return options;
   }
   /**
    * Потеря фокуса для оптимизации
+   * @param  e
    * @param  editor для получения изменений из CKEditor
    */
   onBlur = async (e, editor = null) => {
@@ -522,7 +525,7 @@ class InputWidget extends Component {
     ) {
       this.dispatchFieldValueToStore(e.target.value, true);
     }
-    if (editor !== null) {
+    if (_.get(editor, 'getData')) {
       this.dispatchFieldValueToStore(editor.getData(), true);
     }
     if (this.props.element.getSettings("actions", []) && !isEditor()) {
@@ -533,7 +536,9 @@ class InputWidget extends Component {
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
-        "blur"
+        "blur",
+        this.props.element.getSettings("actions", []),
+        this.props.element
       );
     }
   };
@@ -545,7 +550,6 @@ class InputWidget extends Component {
   dispatchFieldValueToStore = (value, userInput = false) => {
     let formId = this.props.element.getFormId();
     let fieldName = this.props.element.getFieldId();
-
     if (fieldName.indexOf("{{") !== -1) {
       fieldName = replaceContentWithData(fieldName);
     }
@@ -633,7 +637,8 @@ class InputWidget extends Component {
       options_sorting,
       content_readonly,
       image_select_options,
-      select2_multiple: isMultiple
+      select2_multiple: isMultiple,
+      label_icon
     } = this.props.element.getSettings();
 
     let value = this.state.value;
@@ -707,6 +712,9 @@ class InputWidget extends Component {
           >
             {this.state.settings.content_label}
           </label>
+          {label_icon && label_icon.assetType && <span className="altrp-label-icon">
+            {renderAssetIcon(label_icon)}
+          </span>}
         </div>
       );
     } else {
@@ -960,7 +968,7 @@ class InputWidget extends Component {
         }
         if (_.isArray(option.options)) {
           option.options.forEach(option => {
-            if (option.value === value) {
+            if (option.value == value) {
               value = { ...option };
             }
           });
@@ -1024,7 +1032,7 @@ class InputWidget extends Component {
       settings: this.props.element.getSettings(),
       onChange: this.onChange,
       onBlur: this.onBlur,
-      value: value || _.find(options, o => o && o.value === this.state.value),
+      value: value || _.find(options, o => o && o.value == this.state.value),
       isOptionSelected: option => {
         if (_.isNumber(this.state.value) || _.isString(this.state.value)) {
           return this.state.value == option.value;

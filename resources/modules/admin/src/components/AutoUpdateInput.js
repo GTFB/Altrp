@@ -16,6 +16,25 @@ class AutoUpdateInput extends Component {
     this.onChange = this.onChange.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
   }
+
+  /**
+   * Обновление роута или значения через пропсы
+   * @param {{}} prevProps
+   * @param {{}} prevState
+   */
+  componentDidUpdate(prevProps, prevState){
+    if(prevProps.route !== this.props.route){
+      this.resource = new Resource({
+        route: this.props.route,
+      });
+      console.log(this.resource);
+    }
+    if(prevProps.value !== this.props.value && this.props.value !== this.state.value){
+      // console.log(this.props.value);
+      this.setState(state =>({...state, value: this.props.value}));
+    }
+  }
+
   async componentDidMount(){
     if(this.props.value !== undefined){
       return;

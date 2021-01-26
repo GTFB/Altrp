@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import HorizontalVeticalMenu from "./horizontalVertical/HorizontalVeticalMenu";
+import HorizontalVerticalMenu from "./horizontalVertical/HorizontalVerticalMenu";
 import DropdownMenu from "./dropdown/DropdownMenu";
 
 import "./altrp-menu.scss";
@@ -62,7 +62,12 @@ class AltrpMenu extends Component {
 
     if(this.state.settings.repeater_menu_layout) {
       content = layout !== "dropdown" ?
-        <HorizontalVeticalMenu modelId={this.props.modelId} modelData={this.props.modelData} settings={this.state.settings} idElement={this.props.element.getId()}/>
+        <HorizontalVerticalMenu modelId={this.props.modelId}
+                                currentScreen={this.props.currentScreen}
+                                modelData={this.props.modelData}
+                                settings={this.props.element.getSettings()}
+                                element={this.props.element}
+                                idElement={this.props.element.getId()}/>
         :
         <DropdownMenu modelId={this.props.modelId} modelData={this.props.modelData} settings={this.state.settings} idElement={this.props.element.getId()}/>
     }

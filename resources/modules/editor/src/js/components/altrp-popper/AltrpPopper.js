@@ -53,7 +53,7 @@ export default function AltrpPopper(props) {
         forceUpdate()
       }
     }
-  }, [props.children, props.settings.placement]);
+  }, [props.children, placement]);
 
   if(props.portal) {
     return ReactDOM.createPortal((

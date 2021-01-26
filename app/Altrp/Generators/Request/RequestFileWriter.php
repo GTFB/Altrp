@@ -18,7 +18,7 @@ class RequestFileWriter
         $this->replaceRequestNamespace($stubContent, $requestNamespace)
             ->replaceRequestName($stubContent, $request->getName())
             ->replaceValidations($stubContent, $request->getValidations());
-        $this->writeToFile($request->getFile(), implode(PHP_EOL, $stubContent));
+        return $this->writeToFile($request->getFile(), implode(PHP_EOL, $stubContent));
     }
 
     public function remove(RequestFile $request)

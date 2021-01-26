@@ -127,6 +127,23 @@ class MapConstructor extends BaseElement {
       label: "Field ID (Column Name)"
     });
 
+    this.addControl("url_connect", {
+      label: "URL to connect",
+      responsive: false,
+      dynamic: false,
+      description: "/ajax/models/tests/{{id}}"
+    });
+
+    this.addControl("field_first_connect", {
+      type: CONTROLLER_TEXT,
+      label: "Field First ID (Column Name)"
+    });
+
+    this.addControl("field_second_connect", {
+      type: CONTROLLER_TEXT,
+      label: "Field Second ID (Column Name)"
+    });
+
     this.endControlSection();
 
     this.startControlSection("objects_section", {
@@ -154,9 +171,9 @@ class MapConstructor extends BaseElement {
     });
 
     repeaterObjects.addControl("useCluster", {
-      label: "Unite in cluster?",
+      label: "Clusters",
       type: CONTROLLER_SWITCHER,
-      dynamic: false
+      dynamic: true
     });
 
     repeaterObjects.addControl("tooltipByKeyboard", {

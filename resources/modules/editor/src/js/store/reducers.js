@@ -21,6 +21,7 @@ import { altrpMetaReducer } from "../../../../front-app/src/js/store/altrp-meta-
 import { altrpPageStateReducer } from "../../../../front-app/src/js/store/altrp-page-state-storage/reducers";
 import { fontsReducer } from "../../../../front-app/src/js/store/fonts-storage/reducers";
 import { exportDashboard } from "../../../../front-app/src/js/store/altrp-dashboard-export/reducers";
+import {mediaScreenReducer} from "../../../../front-app/src/js/store/media-screen-storage/reducers";
 
 export default combineReducers({
   currentElement: currentElementReducer,
@@ -44,5 +45,6 @@ export default combineReducers({
   altrpMeta: altrpMetaReducer,
   altrpPageState: altrpPageStateReducer,
   altrpFonts: fontsReducer,
-  exportDashboard: exportDashboard
+  exportDashboard: exportDashboard,
+  currentMediaScreen: mediaScreenReducer,
 });

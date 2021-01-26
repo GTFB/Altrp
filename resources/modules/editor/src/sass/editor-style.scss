@@ -156,6 +156,9 @@ button {
             border-radius: 0 2px 2px 0;
         }
     }
+    &.control-group_single .btn:nth-child(n){
+        border-radius: 2px;
+    }
 }
 .control-button-container {
     justify-content: flex-end;
@@ -193,6 +196,7 @@ button {
     cursor: move;
     border-radius: 2px;
     font-size: 0.8rem;
+    overflow: hidden;
     &__title {
         margin-top: 8px;
     }
@@ -1834,4 +1838,10 @@ button {
 
 .editor-content .altrp-element {
     min-height: 1px;
+}
+
+.editor-content{
+  & .altrp-posts{
+    min-height: 20px;
+  }
 }

@@ -20,7 +20,6 @@ class CrudControllerCommand extends GeneratorCommand
                             {--controller-namespace= : Namespace of the controller.}
                             {--view-path= : The name of the view path.}
                             {--fields= : Field names for the form & migration.}
-                            {--validations= : Validation rules for the fields.}
                             {--route-group= : Prefix of the route group.}
                             {--pagination=25 : The amount of models per page for index pages.}
                             {--force : Overwrite already existing controller.}
@@ -105,7 +104,7 @@ class CrudControllerCommand extends GeneratorCommand
         $perPage = intval($this->option('pagination'));
         $viewName = Str::snake($this->option('crud-name'), '-');
         $fields = $this->option('fields');
-        $validations = rtrim($this->option('validations'), ';');
+//        $validations = rtrim($this->option('validations'), ';');
         $relations = $this->option('relations') ? explode(';', $this->option('relations')) : '';
         $customNamespaces = $this->option('custom-namespaces') ?? '';
         $customTraits = $this->option('custom-traits') ?? '';
@@ -120,26 +119,26 @@ class CrudControllerCommand extends GeneratorCommand
             . "use App\Http\Requests\AltrpRequests\\"
             . str_replace('AltrpModels\\', '', $modelNamespace) . $updateRequest . ";";
 
-        $validationRules = '';
-        if (trim($validations) != '') {
-            $validationRules = "\$this->validate(\$request, [";
-
-            $rules = explode(';', $validations);
-            foreach ($rules as $v) {
-                if (trim($v) == '') {
-                    continue;
-                }
-
-                // extract field name and args
-                $parts = explode('#', $v);
-                $fieldName = trim($parts[0]);
-                $rules = trim($parts[1]);
-                $validationRules .= "\n\t\t\t'$fieldName' => '$rules',";
-            }
-
-            $validationRules = substr($validationRules, 0, -1); // lose the last comma
-            $validationRules .= "\n\t\t]);";
-        }
+//        $validationRules = '';
+//        if (trim($validations) != '') {
+//            $validationRules = "\$this->validate(\$request, [";
+//
+//            $rules = explode(';', $validations);
+//            foreach ($rules as $v) {
+//                if (trim($v) == '') {
+//                    continue;
+//                }
+//
+//                // extract field name and args
+//                $parts = explode('#', $v);
+//                $fieldName = trim($parts[0]);
+//                $rules = trim($parts[1]);
+//                $validationRules .= "\n\t\t\t'$fieldName' => '$rules',";
+//            }
+//
+//            $validationRules = substr($validationRules, 0, -1); // lose the last comma
+//            $validationRules .= "\n\t\t]);";
+//        }
 
         if (\App::VERSION() < '5.3') {
             $snippet = <<<EOD
@@ -192,7 +191,7 @@ EOD;
             ->replaceRouteGroup($stub, $routeGroup)
             ->replaceRoutePrefix($stub, $routePrefix)
             ->replaceRoutePrefixCap($stub, $routePrefixCap)
-            ->replaceValidationRules($stub, $validationRules)
+//            ->replaceValidationRules($stub, $validationRules)
             ->replaceStoreRequest($stub, $storeRequest)
             ->replaceUpdateRequest($stub, $updateRequest)
             ->replaceRequestNamespaces($stub, $requestNamespaces)
