@@ -590,7 +590,12 @@ class Nav extends BaseElement {
         colorPickedHex: "",
       },
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-pointer{{STATE}}::after": "background: {{COLOR}};"
+        "{{ELEMENT}} .altrp-nav-menu-li-overline{{STATE}}::before": "background: {{COLOR}};",
+        "{{ELEMENT}} .altrp-nav-menu-li-underLine{{STATE}}::after": "background: {{COLOR}};",
+        "{{ELEMENT}} .altrp-nav-menu-li-doubleLine{STATE}}::before": "background: {{COLOR}};",
+        "{{ELEMENT}} .altrp-nav-menu-li-framed{STATE}}::before, .altrp-nav-menu-li-framed{STATE}}::after": "background: {{COLOR}};",
+        "{{ELEMENT}} .altrp-nav-menu-li-background:hover": "background: {{COLOR}};",
+        "{{ELEMENT}} .altrp-nav-menu-li-animation-text:hover altrp-nav-menu-li-link-label": "color: {{COLOR}};"
       }
     });
 

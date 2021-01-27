@@ -137,6 +137,15 @@
     color: #FFFFFF;
 }
 
+.altrp-nav-menu-li-animation-text {
+    transition: 0.2s;
+}
+
+.altrp-nav-menu-li-animation-text:hover {
+    transform: scale(1.4);
+}
+
+
 .altrp-nav-menu-li-link-icon {
     display: flex;
     justify-content: center;
@@ -396,4 +405,3 @@
     justify-content: space-between;
     flex-direction: row-reverse;
 }
-
