@@ -14,8 +14,7 @@ import {
   printElements,
   replaceContentWithData,
   scrollToElement,
-  setDataByPath,
-
+  setDataByPath
 } from "../helpers";
 import { togglePopup } from "../store/popup-trigger/actions";
 
@@ -49,7 +48,7 @@ class AltrpAction extends AltrpModel {
    */
   getFormId() {
     let formId = this.getProperty("form_id");
-    if (! formId) {
+    if (!formId) {
       return formId;
     }
     if (formId.indexOf("{{") !== -1) {
@@ -64,7 +63,7 @@ class AltrpAction extends AltrpModel {
    */
   getFormURL() {
     let formURL = this.getProperty("form_url");
-    if (! formURL) {
+    if (!formURL) {
       return formURL;
     }
     if (formURL.indexOf("{{") !== -1) {
@@ -119,7 +118,7 @@ class AltrpAction extends AltrpModel {
   async init() {
     switch (this.getType()) {
       case "form": {
-        if (! this.getFormURL()) {
+        if (!this.getFormURL()) {
           this.setProperty("_form", null);
           return;
         }
@@ -143,7 +142,7 @@ class AltrpAction extends AltrpModel {
         return;
       }
       case "login": {
-        console.log('init');
+        console.log("init");
         const form = formsManager.registerForm(
           this.getFormId(),
           "login",
@@ -310,9 +309,9 @@ class AltrpAction extends AltrpModel {
     let data = null;
     if (this.getProperty("data")) {
       data = parseParamsFromString(
-          this.getProperty("data"),
-          getAppContext(),
-          true
+        this.getProperty("data"),
+        getAppContext(),
+        true
       );
       // if (!_.isEmpty(data)) {
       //   return form.submit("", "", data);
@@ -371,7 +370,7 @@ class AltrpAction extends AltrpModel {
     }
     if (this.getProperty("path")) {
       let _data = getDataByPath(this.getProperty("path"), {});
-      if(! _.isEmpty(_data)){
+      if (!_.isEmpty(_data)) {
         data = _.assign(_data, data);
       }
     }
@@ -380,7 +379,7 @@ class AltrpAction extends AltrpModel {
      * @type {AltrpForm}
      */
     // let form = this.getProperty("_form");
-    if (! this.getFormURL()) {
+    if (!this.getFormURL()) {
       this.setProperty("_form", null);
       return {
         success: false
@@ -404,6 +403,7 @@ class AltrpAction extends AltrpModel {
     try {
       result = await form.submit("", "", data);
     } catch (error) {
+      console.log(error);
       result.error = error;
     }
 
@@ -419,7 +419,7 @@ class AltrpAction extends AltrpModel {
       if (this.getProperty("back")) {
         frontAppRouter.history.goBack();
       } else {
-        let innerRedirect = ! this.getProperty("outer");
+        let innerRedirect = !this.getProperty("outer");
         if (innerRedirect) {
           frontAppRouter.history.push(URL);
         } else {
@@ -437,7 +437,7 @@ class AltrpAction extends AltrpModel {
    */
   async doActionToggleElements() {
     let IDs = this.getProperty("elements_ids");
-    if (! IDs) {
+    if (!IDs) {
       return { success: true };
     }
     IDs = IDs.split(",");
