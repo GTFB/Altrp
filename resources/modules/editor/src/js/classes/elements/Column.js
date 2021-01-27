@@ -44,6 +44,60 @@ class Column  extends BaseElement {
     });
 
     this.addControl(
+      'layout_flex_wrap_content', {
+      type: CONTROLLER_SELECT,
+      label: 'Column wrap',
+      options: [
+        {
+          'value': 'wrap',
+          'label': 'wrap'
+        },
+        {
+          'value': 'nowrap',
+          'label': 'nowrap'
+        },
+        {
+          'value': 'wrap-reverse',
+          'label': 'wrap reverse'
+        }
+      ],
+      rules: {
+        "{{ELEMENT}} > .altrp-column{{STATE}}": "flex-wrap: {{VALUE}}",
+      },
+    }
+    );
+    this.addControl('layout_column_direction', {
+      type: CONTROLLER_SELECT,
+      label: 'Direction',
+      options: [
+        {
+          'value': 'row',
+          'label': 'row'
+        },
+        {
+          'value': 'row-reverse',
+          'label': 'row reverse'
+        },
+        {
+          'value': 'column',
+          'label': 'column'
+        },
+        {
+          'value': 'column-reverse',
+          'label': 'column-reverse'
+        },
+        {
+          'value': 'unset',
+          'label': 'unset'
+        },
+      ],
+      rules: {
+        "{{ELEMENT}} > .altrp-column{{STATE}}": "flex-direction: {{VALUE}}"
+      },
+    }
+    );
+
+    this.addControl(
       'layout_type', {
         type: CONTROLLER_SELECT,
         label: 'Vertical align',
