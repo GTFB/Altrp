@@ -146,18 +146,14 @@ class AltrpForm {
                   modelID,
                   _.assign(this.getData(), data)
                 );
-                import("./modules/ModelsManager").then(
-                  modelsManager => {
-                    modelsManager.default.updateModelWithData(
-                      this.modelName,
-                      modelID,
-                      this.getData()
-                    );
-                  },
-                  rej => {
-                    console.log(reject);
-                  }
-                );
+                console.log(res);
+                import("./modules/ModelsManager").then(modelsManager => {
+                  modelsManager.default.updateModelWithData(
+                    this.modelName,
+                    modelID,
+                    this.getData()
+                  );
+                });
                 // this.clearInputs();
                 this.updateResponseStorage(res);
                 return res;
