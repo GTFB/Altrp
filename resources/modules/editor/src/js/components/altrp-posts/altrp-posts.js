@@ -150,7 +150,7 @@ class AltrpPosts extends React.Component {
     if(_.get(settings, 'posts_pagination_type')){
       const {currentPage} = this.state;
       const pageCount = this.getPageCount();
-      return <div className="altrp-pagination-pages">
+      return settings.posts_pagination_type === "prev_next" ?<div className="altrp-pagination-pages">
         <button className={"altrp-pagination__previous " + (currentPage <= 1 ? 'state-disabled' : '')}
                 disabled={currentPage <= 1}
                 onClick={()=>{this.setPage(currentPage - 1)}}>
@@ -164,6 +164,38 @@ class AltrpPosts extends React.Component {
           <span>{settings.posts_next_text || ''}</span>
           {renderAssetIcon(settings.next_icon)}
         </button>
+      </div> :
+      <div className="altrp-pagination">
+        {!settings.hide_pre_page_button && <button className={"altrp-pagination__previous"}
+          onClick={() => this.setPage(currentPage - 1)}
+          disabled={currentPage <= 1}
+        >
+          <span dangerouslySetInnerHTML={{ __html: settings.prev_text || 'Previous Page' }} />
+            {renderAssetIcon(settings.prev_icon)}
+        </button>}
+        {!settings.hide_pages_buttons_button && <div className="altrp-pagination__count">
+          {settings.pageText}
+        </div>}
+        {!settings.hide_next_page_button && <button className="altrp-pagination__next"
+            onClick={() => this.setPage(currentPage + 1)}
+            disabled={currentPage === pageCount}
+          >
+            <span dangerouslySetInnerHTML={{ __html: settings.next_text || 'Next Page' }} />
+            {renderAssetIcon(settings.next_icon)}
+          </button>}
+        {/* {!settings.hide_page_input && <input className="altrp-pagination__goto-page"
+          type="number"
+          defaultValue={pageIndex + 1}
+          onChange={e => this.setPage(+e.target.value)} 
+        />}
+        {!settings.hide_pagination_select && countOptions && <AltrpSelect className="altrp-pagination__select-size"
+          options={countOptions}
+          classNamePrefix={widgetId + ' altrp-field-select2'}
+          value={countOptions.find(o => o.value === pageSize)}
+          isSearchable={false}
+          onChange={value => {
+            setPageSize(value.value)
+          }} />} */}
       </div>
     }
     return null;
