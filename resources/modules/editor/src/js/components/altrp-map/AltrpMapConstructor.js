@@ -1,8 +1,15 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  Suspense
+} from "react";
 import axios from "axios";
-import MapDesigner from "./MapDesigner";
 import { useSelector } from "react-redux";
 import { getDataByPath } from "../../../../../front-app/src/js/helpers";
+
+const MapDesigner = React.lazy(() => import("./MapDesigner"));
 
 function AltrpMapConstructor({ settings, id }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +28,10 @@ function AltrpMapConstructor({ settings, id }) {
     style_margin = {},
     objects = {},
     url,
-    field_id
+    field_id,
+    url_connect = null,
+    field_first_connect = null,
+    field_second_connect = null
   } = settings;
   let latitude = lat;
   let longitude = lng;
@@ -53,7 +63,6 @@ function AltrpMapConstructor({ settings, id }) {
       return objects
         .map(r => {
           const geoObj = getDataByPath(r.path, []);
-
           const result = Array.isArray(geoObj)
             ? geoObj.map(data => ({
                 type: "Feature",
@@ -64,6 +73,7 @@ function AltrpMapConstructor({ settings, id }) {
                     Number(_.get(data, r.longitude))
                   ]
                 },
+                id: data.id,
                 inCluster: r?.useCluster || false,
                 properties: {
                   fillOpacity: 1,
@@ -86,6 +96,8 @@ function AltrpMapConstructor({ settings, id }) {
                     Number(_.get(geoObj, r.longitude))
                   ]
                 },
+
+                id: geoObj.id,
                 inCluster: r?.useCluster || false,
                 properties: {
                   fillOpacity: 1,
@@ -177,24 +189,29 @@ function AltrpMapConstructor({ settings, id }) {
   }, [id, dynamicGeoObjectsRepeater]);
 
   return (
-    <MapDesigner
-      data={geoJson}
-      saveData={handleSave}
-      isLoading={isLoading}
-      style={{
-        height: style_height.size + style_height.unit,
-        marginTop: style_margin.top + style_margin.unit,
-        marginBottom: style_margin.bottom + style_margin.unit,
-        marginLeft: style_margin.left + style_margin.unit,
-        marginRight: style_margin.right + style_margin.unit
-      }}
-      isEditable={editable}
-      preferCanvas={canvas}
-      zoom={+zoom}
-      url={url}
-      field_id={field_id}
-      center={[latitude || 50.7496449, longitude || 86.1250068]}
-    />
+    <Suspense fallback={"Loading"}>
+      <MapDesigner
+        data={geoJson}
+        saveData={handleSave}
+        isLoading={isLoading}
+        url_connect={url_connect}
+        field_first_connect={field_first_connect}
+        field_second_connect={field_second_connect}
+        style={{
+          height: style_height.size + style_height.unit,
+          marginTop: style_margin.top + style_margin.unit,
+          marginBottom: style_margin.bottom + style_margin.unit,
+          marginLeft: style_margin.left + style_margin.unit,
+          marginRight: style_margin.right + style_margin.unit
+        }}
+        isEditable={editable}
+        preferCanvas={canvas}
+        zoom={+zoom}
+        url={url}
+        field_id={field_id}
+        center={[latitude || 50.7496449, longitude || 86.1250068]}
+      />
+    </Suspense>
   );
 }
 

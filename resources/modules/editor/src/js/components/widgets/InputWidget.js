@@ -1,12 +1,13 @@
 import React, { Component, Suspense } from "react";
 import {
-  altrpCompare,
+  altrpCompare, convertData,
   isEditor,
   parseOptionsFromSettings,
   parseParamsFromString,
   parseURLTemplate,
   replaceContentWithData,
-  sortOptions
+  sortOptions,
+  renderAssetIcon
 } from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
@@ -203,7 +204,7 @@ class InputWidget extends Component {
     const { content_options, model_for_options } = this.state.settings;
     if (
       prevProps &&
-      !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
+      ! prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
       let value = this.getContent(
@@ -257,7 +258,7 @@ class InputWidget extends Component {
     ) {
       this.updateOptions();
     }
-    if (content_options && ! model_for_options) {
+    if (content_options && !model_for_options) {
       let options = parseOptionsFromSettings(content_options);
       // console.log(options);
       // console.log(this.state.options);
@@ -279,7 +280,7 @@ class InputWidget extends Component {
     let content_calculation = this.props.element.getSettings(
       "content_calculation"
     );
-    if (!content_calculation) {
+    if (! content_calculation) {
       return;
     }
     const fieldName = this.props.element.getFieldId();
@@ -294,10 +295,10 @@ class InputWidget extends Component {
     const altrppagestate = this.props.altrpPageState.getData();
     const altrpresponses = this.props.altrpresponses.getData();
     const altrpmeta = this.props.altrpMeta.getData();
-    const context = {};
+    const context = this.props.element.getCurrentModel().getData();
     if (content_calculation.indexOf("altrpdata") !== -1) {
       context.altrpdata = altrpdata;
-      if (!altrpdata.currentDataStorageLoaded) {
+      if (! altrpdata.currentDataStorageLoaded) {
         prevContext.altrpdata = altrpdata;
       } else {
         prevContext.altrpdata = prevProps.currentDataStorage.getData();
@@ -450,8 +451,8 @@ class InputWidget extends Component {
     if (e && e.value) {
       value = e.value;
     }
-    if (editor !== null) {
-      value = editor.getData();
+    if (_.get(editor, 'getData')) {
+      value = `<div class="ck ck-content" style="width:100%">${editor.getData()}</div>`;
     }
     if (_.isArray(e)) {
       value = _.cloneDeep(e);
@@ -501,10 +502,12 @@ class InputWidget extends Component {
   /**
    * получить опции
    */
-  getOptions(){
+  getOptions() {
     let options = [...this.state.options];
-    const optionsDynamicSetting = this.props.element.getDynamicSetting('content_options');
-    if(optionsDynamicSetting){
+    const optionsDynamicSetting = this.props.element.getDynamicSetting(
+      "content_options"
+    );
+    if (optionsDynamicSetting) {
       options = convertData(optionsDynamicSetting, options);
     }
     return options;
@@ -522,7 +525,7 @@ class InputWidget extends Component {
     ) {
       this.dispatchFieldValueToStore(e.target.value, true);
     }
-    if (editor !== null) {
+    if (_.get(editor, 'getData')) {
       this.dispatchFieldValueToStore(editor.getData(), true);
     }
     if (this.props.element.getSettings("actions", []) && !isEditor()) {
@@ -533,7 +536,9 @@ class InputWidget extends Component {
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
-        "blur"
+        "blur",
+        this.props.element.getSettings("actions", []),
+        this.props.element
       );
     }
   };
@@ -632,7 +637,8 @@ class InputWidget extends Component {
       options_sorting,
       content_readonly,
       image_select_options,
-      select2_multiple: isMultiple
+      select2_multiple: isMultiple,
+      label_icon
     } = this.props.element.getSettings();
 
     let value = this.state.value;
@@ -706,6 +712,9 @@ class InputWidget extends Component {
           >
             {this.state.settings.content_label}
           </label>
+          {label_icon && label_icon.assetType && <span className="altrp-label-icon">
+            {renderAssetIcon(label_icon)}
+          </span>}
         </div>
       );
     } else {

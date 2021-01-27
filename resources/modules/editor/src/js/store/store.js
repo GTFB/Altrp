@@ -5,7 +5,6 @@ import rootReducer from "./reducers";
 let store = createStore(rootReducer, composeWithDevTools());
 window.appStore = store;
 export default store;
-
 /**
  * Возвращает текущий элемент (тот который в данный момент редлактируется)
  * @return {BaseElement}

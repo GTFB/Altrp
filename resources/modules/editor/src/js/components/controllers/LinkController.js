@@ -20,7 +20,7 @@ class LinkController extends Component {
       value = this.props.default;
     }
     value = value || {};
-    value.tag = value.tag || 'a';
+    value.tag = value.tag || 'Link';
     this.state = {
       value,
       toPrevPage: false,

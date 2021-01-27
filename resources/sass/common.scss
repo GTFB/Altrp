@@ -127,6 +127,9 @@ input[type="checkbox"] {
     border: inherit;
     text-transform: inherit;
 }
+.altrp-pointer{
+    cursor: pointer;
+}
 .altrp-scroll {
     &__vertical-track {
         bottom: 2px;

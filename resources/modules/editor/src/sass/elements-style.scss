@@ -1446,7 +1446,7 @@
   align-items: center;
 
   img {
-      height: 60px;
+    width: 60px;
   }
 }
 
@@ -1456,8 +1456,12 @@
 }
 
 .altrp-table-global-filter {
-    font-weight: 400;
-    label {
-        display: inline-block;
-    }
+  font-weight: 400;
+  label {
+    display: inline-block;
+  }
+}
+
+.altrp-label-icon, .altrp-label-icon svg, .altrp-label-icon img {
+  width : 20px;
 }

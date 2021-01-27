@@ -38,6 +38,8 @@ class FormsManager {
         delete this.fieldsStorage[formId]
       }
       this.forms.push(form);
+    } else if (! _.isEmpty(options)){
+      form.options = options
     }
     return form;
   }

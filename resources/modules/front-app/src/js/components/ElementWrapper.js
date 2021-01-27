@@ -252,6 +252,7 @@ class ElementWrapper extends Component {
       >
         {React.createElement(this.props.component, {
           ref: this.elementRef,
+          rootElement: this.props.rootElement,
           ElementWrapper: this.props.ElementWrapper,
           element: this.props.element,
           children: this.props.element.getChildren(),
@@ -265,6 +266,7 @@ class ElementWrapper extends Component {
           altrpPageState: this.props.altrpPageState,
           altrpMeta: this.props.altrpMeta,
           updateToken: this.state.updateToken,
+          currentScreen: this.props.currentScreen,
           appStore
         })}
       </div>
@@ -281,7 +283,8 @@ function mapStateToProps(state) {
     currentModel: state.currentModel,
     currentUser: state.currentUser,
     altrpMeta: state.altrpMeta,
-    altrpPageState: state.altrpPageState
+    altrpPageState: state.altrpPageState,
+    currentScreen: state.currentScreen,
   };
 }
 

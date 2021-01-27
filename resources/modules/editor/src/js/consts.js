@@ -10,6 +10,7 @@ const CONSTANTS = {
       name: 'DEFAULT_BREAKPOINT',
       id: 1,
       width: '100%',
+      fullMediaQuery: '',
       mediaQuery: ''
     },
     {
@@ -17,12 +18,14 @@ const CONSTANTS = {
       name: "Desktop",
       id: 2,
       width: '1440px',
+      fullMediaQuery: '@media screen and (max-width: 1440px) and (min-width: 1025px)',
       mediaQuery: '@media screen and (max-width: 1440px)'
     },
     {
       icon: 'laptop',
       name: "Laptop",
       id: 3,
+      fullMediaQuery: '@media screen and (max-width: 1024px) and (min-width: 769px)',
       width: '1024px',
       mediaQuery: '@media screen and (max-width: 1024px)'
     },
@@ -30,6 +33,7 @@ const CONSTANTS = {
       icon: 'tablet',
       name: "Tablet",
       id: 4,
+      fullMediaQuery: '@media screen and (max-width: 768px) and (min-width: 451px)',
       width: '768px',
       mediaQuery: '@media screen and (max-width: 768px)'
     },
@@ -38,12 +42,14 @@ const CONSTANTS = {
       name: "Big-Phone",
       id: 5,
       width: '450px',
+      fullMediaQuery: '@media screen and (max-width: 450px) and (min-width: 321px)',
       mediaQuery: '@media screen and (max-width: 450px)'
     },
     {
       icon: 'small_phone',
       name: "Small-Phone",
       id: 6,
+      fullMediaQuery: '@media screen and (max-width: 320px)',
       width: '320px',
       mediaQuery: '@media screen and (max-width: 320px)'
     },

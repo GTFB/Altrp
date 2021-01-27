@@ -58,3 +58,8 @@
   opacity: 1;
   
 }
+.altrp-widget_posts{
+  & > .altrp-pagination-pages{
+    justify-content: center;
+  }
+}

@@ -228,6 +228,25 @@ class Nav extends BaseElement {
       ],
     });
 
+    this.addControl("pointer_text_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: "Transition Duration",
+      step: 0.05,
+      max:1,
+      min:0,
+    });
+
+    this.addControl("pointer_text_scale", {
+      type: CONTROLLER_SLIDER,
+      label: "Scale",
+      step: 0.1,
+      max:10,
+      min:-10,
+      conditions: {
+        'hor_ver_pointer_menu_layout': 'text',
+      },
+    });
+
     this.addControl("hor_ver_line_animation_menu_layout", {
       type: CONTROLLER_SELECT,
       label: "Animation ((hor, ver), line)",
@@ -507,7 +526,7 @@ class Nav extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Text color",
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link-label{{STATE}}": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}}": "color: {{COLOR}};"
       }
     });
 

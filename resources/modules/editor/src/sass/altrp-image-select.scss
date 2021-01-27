@@ -1,9 +1,10 @@
 .altrp-image-select {
   display: flex;
   flex-wrap: wrap;
-  // justify-content: space-evenly;
+  justify-content: center;
   img {
     flex-grow: 1;
+    object-fit: contain;
   }
 
   .altrp-field {

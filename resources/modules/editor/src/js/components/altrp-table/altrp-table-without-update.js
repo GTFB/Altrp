@@ -8,7 +8,8 @@ import {
   storeWidgetState,
   scrollbarWidth, isEditor, parseURLTemplate, mbParseJSON,
   renderAssetIcon,
-  generateButtonsArray
+  generateButtonsArray,
+  renderIcon
 } from "../../../../../front-app/src/js/helpers";
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { Link } from "react-router-dom";
@@ -124,6 +125,7 @@ function AltrpTableWithoutUpdate(
 
   function DefaultCell(
     { row,
+      data,
       cell, value: initialValue,
       updateData }) {
     const { column } = cell;
@@ -177,20 +179,20 @@ function AltrpTableWithoutUpdate(
         }
       })
     }
-
     const columnTemplateContent = React.useMemo(() => {
       if (!columnTemplate) {
         return null;
       }
       let columnTemplateContent = frontElementsFabric.cloneElement(columnTemplate);
       columnTemplateContent.setCardModel(new AltrpModel(row.original || {}),);
+      // console.log(row.original);
       return React.createElement(columnTemplateContent.componentClass,
         {
           element: columnTemplateContent,
           ElementWrapper: ElementWrapper,
           children: columnTemplateContent.children
         });
-    }, [columnTemplate]);
+    }, [columnTemplate, row.original, data]);
     if (columnTemplateContent) {
       return <div className="altrp-posts"><div className="altrp-post overflow-visible">{columnTemplateContent}</div></div>;
     }
@@ -199,8 +201,6 @@ function AltrpTableWithoutUpdate(
      * Отоборажаем инпут для редактирования данных
      */
     if (columnEditUrl) {
-      // console.log(value);
-      console.log(columnEditUrl);
       return <AutoUpdateInput className="altrp-inherit"
         route={columnEditUrl}
         resourceid={''}
@@ -242,6 +242,10 @@ function AltrpTableWithoutUpdate(
     replace_rows,
     replace_width,
     ids_storage,
+    hide_grouped_column_icon,
+    grouped_column_icon,
+    hide_not_grouped_column_icon,
+    not_grouped_column_icon,
     checkbox_checked_icon: checkedIcon = {},
     checkbox_unchecked_icon: uncheckedIcon = {},
     checkbox_indeterminate_icon: indeterminateIcon = {} } = settings;
@@ -626,14 +630,14 @@ function AltrpTableWithoutUpdate(
                   ...column.getResizerProps(),
                   onClick: e => { e.stopPropagation(); }
                 };
-                if (! resize_columns && ! virtualized_rows) {
+                if (!resize_columns && !virtualized_rows) {
                   // delete columnProps.style;
                   columnProps.style = {};
                   if (column_width) columnProps.style.width = column_width + '%';
                   if (column_header_alignment) columnProps.style.textAlign = column_header_alignment;
                 }
                 let columnNameContent = column.render('column_name');
-                if(_.isString(columnNameContent)){
+                if (_.isString(columnNameContent)) {
                   columnNameContent = <span dangerouslySetInnerHTML={{ __html: column.render('column_name') }} />;
                 }
 
@@ -647,7 +651,9 @@ function AltrpTableWithoutUpdate(
                   {column.canGroupBy ? (
                     // If the column can be grouped, let's add a toggle
                     <span {...column.getGroupByToggleProps()} className="altrp-table-th__group-toggle">
-                      {column.isGrouped ? ' 🛑 ' : ' 👊 '}
+                      {column.isGrouped ?
+                        renderIcon(hide_not_grouped_column_icon, not_grouped_column_icon, ' 🛑 ', 'not-grouped-column') :
+                        renderIcon(hide_grouped_column_icon, grouped_column_icon, ' 👊 ', 'grouped-column')}
                     </span>
                   ) : null}
                   {
@@ -1133,7 +1139,17 @@ function NumberRangeColumnFilter({
  */
 export function settingsToColumns(settings, widgetId) {
   let columns = [];
-  let { tables_columns, card_template, row_expand, virtualized_rows, resize_columns } = settings;
+  let {
+    tables_columns,
+    card_template,
+    row_expand,
+    virtualized_rows,
+    resize_columns,
+    hide_expanded_row_icon,
+    expanded_row_icon,
+    hide_not_expanded_row_icon,
+    not_expanded_row_icon
+  } = settings;
   tables_columns = tables_columns || [];
   /**
    * Если в колонке пустые поля, то мы их игнорируем, чтобы не было ошибки
@@ -1175,7 +1191,7 @@ export function settingsToColumns(settings, widgetId) {
       }
       if (virtualized_rows || resize_columns) {
         // _column.width = (Number(_column.column_width) || 150) + '%';
-        _column.width = (Number(_column.column_width) || 150) ;
+        _column.width = (Number(_column.column_width) || 150);
       }
       columns.push(_column);
     }
@@ -1185,7 +1201,9 @@ export function settingsToColumns(settings, widgetId) {
       id: 'expander', // Make sure it has an ID
       column_name: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
         <span {...getToggleAllRowsExpandedProps()} className="altrp-table__all-row-expander">
-          {isAllRowsExpanded ? '👇' : '👉'}
+          {isAllRowsExpanded ?
+            renderIcon(hide_expanded_row_icon, expanded_row_icon, '👇', 'expanded-row') :
+            renderIcon(hide_not_expanded_row_icon, not_expanded_row_icon, '👉', 'not-expanded-row')}
         </span>
       ),
       Cell: ({ row }) =>
@@ -1202,7 +1220,9 @@ export function settingsToColumns(settings, widgetId) {
               },
             })}
           >
-            {row.isExpanded ? '👇' : '👉'}
+            {row.isExpanded ?
+              renderIcon(hide_expanded_row_icon, expanded_row_icon, '👇', 'expanded-row') :
+              renderIcon(hide_not_expanded_row_icon, not_expanded_row_icon, '👉', 'not-expanded-row')}
           </span>
         ) : null,
     });
@@ -1288,6 +1308,10 @@ const Cell = ({ cell, settings }) => {
     resize_columns,
     replace_rows,
     virtualized_rows,
+    hide_expanded_row_icon,
+    expanded_row_icon,
+    hide_not_expanded_row_icon,
+    not_expanded_row_icon
   } = settings;
   let cellContent = cell.render('Cell');
   if (cell.column.id === '##') {
@@ -1297,7 +1321,9 @@ const Cell = ({ cell, settings }) => {
     cellContent = (
       <>
         <span {...row.getToggleRowExpandedProps()}>
-          {row.isExpanded ? '👇' : '👉'}
+          {row.isExpanded ?
+            renderIcon(hide_expanded_row_icon, expanded_row_icon, '👇', 'expanded-row') :
+            renderIcon(hide_not_expanded_row_icon, not_expanded_row_icon, '👉', 'not-expanded-row')}
         </span>{' '}
         {cell.render('Cell')} ({recurseCount(row, 'subRows')})
       </>
@@ -1346,6 +1372,10 @@ const Cell = ({ cell, settings }) => {
   // }
   let style = cell.column.column_body_alignment ? { textAlign: cell.column.column_body_alignment } : {};
   style = _.assign(style, cellProps.style || {});
+  if (cell.column.column_cell_vertical_alignment && cell.column.column_cell_vertical_alignment !== 'inherit') {
+    style.verticalAlign = cell.column.column_cell_vertical_alignment;
+  }
+
   return <div {...cellProps} style={style} className={cellClassNames.join(' ')}>{cellContent}</div>
 };
 /**
@@ -1493,7 +1523,9 @@ const Row = ({ row,
             cellContent = (
               <>
                 <span {...row.getToggleRowExpandedProps()}>
-                  {row.isExpanded ? '👇' : '👉'}
+                  {row.isExpanded ?
+                    renderIcon(hide_expanded_row_icon, expanded_row_icon, '👇', 'expanded-row') :
+                    renderIcon(hide_not_expanded_row_icon, not_expanded_row_icon, '👉', 'not-expanded-row')}
                 </span>{' '}
                 {cell.render('Cell')} ({recurseCount(row, 'subRows')})
                 </>
