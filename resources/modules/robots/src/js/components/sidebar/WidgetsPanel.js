@@ -1,8 +1,7 @@
 import * as React from "react";
-
 import SidebarItem from "./SidebarItem";
-
 import Scrollbars from "react-custom-scrollbars";
+import store from "../../store/store"
 
 export default class WidgetsPanel extends React.Component {
   render() {
@@ -17,16 +16,6 @@ export default class WidgetsPanel extends React.Component {
                 port1: {
                   id: "port1",
                   type: "bottom"
-                }
-              }}
-            />
-            <SidebarItem
-              type="end"
-              properties={{ body: "End" }}
-              ports={{
-                port1: {
-                  id: "port1",
-                  type: "top"
                 }
               }}
             />
@@ -50,7 +39,10 @@ export default class WidgetsPanel extends React.Component {
             />
             <SidebarItem
               type="action"
-              properties={{ body: "Action" }}
+              properties={{ 
+                body: "Action",
+                data: store.getState()?.robotSettingsData || []
+              }}
               ports={{
                 port1: {
                   id: "port1",
@@ -66,16 +58,6 @@ export default class WidgetsPanel extends React.Component {
                 },
                 port4: {
                   id: "port4",
-                  type: "top"
-                }
-              }}
-            />
-            <SidebarItem
-              type="end"
-              properties={{ body: "End" }}
-              ports={{
-                port1: {
-                  id: "port1",
                   type: "top"
                 }
               }}
@@ -98,6 +80,16 @@ export default class WidgetsPanel extends React.Component {
                 },
                 port4: {
                   id: "port4",
+                  type: "top"
+                }
+              }}
+            />
+            <SidebarItem
+              type="end"
+              properties={{ body: "End" }}
+              ports={{
+                port1: {
+                  id: "port1",
                   type: "top"
                 }
               }}

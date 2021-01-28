@@ -3,6 +3,8 @@ import * as React from "react";
 import Scrollbars from "react-custom-scrollbars";
 
 import Chevron from "../../../../../editor/src/svgs/chevron.svg";
+import Send from "./data/Send"
+import Crud from "./data/Crud"
 
 export default class SelectedPanel extends React.Component {
   constructor(props) {
@@ -35,10 +37,14 @@ export default class SelectedPanel extends React.Component {
                         }}
                         value={
                           this.props.chart.nodes[this.props.chart.selected.id]
-                            .properties.body
+                            ?.properties.body
                         }
                       ></input>
                     </div>
+                    {(this.props.chart.nodes[this.props.chart.selected.id]?.type === "action") && <div>
+                        <Send data={this.props.chart.nodes[this.props.chart.selected.id]?.properties.data || []}/>
+                        <Crud data={this.props.chart.nodes[this.props.chart.selected.id]?.properties.data || []}/>
+                      </div>}
                   </div>
                 ) : (
                   "Select a node to edit"
