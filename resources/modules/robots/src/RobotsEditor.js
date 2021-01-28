@@ -24,11 +24,13 @@ class RobotsEditor extends Component {
       selected: {},
       hovered: {}
     };
-
+    this.onNodeClick = this.onNodeClick.bind(this);
     this.resource = new Resource({ route: "/admin/ajax/robots" });
-
     this.stateActions = mapValues(actions, func => (...args) =>
-      this.setState(func(...args))
+      this.setState({
+        ...func(...args),
+        onNodeClick: this.onNodeClick(...args)
+      })
     );
 
     this.callbacks = {
@@ -51,6 +53,11 @@ class RobotsEditor extends Component {
     this.setState(() => ({
       ...state
     }));
+  }
+
+  onNodeClick(node) {
+    if (node.event) {
+    }
   }
 
   render() {
