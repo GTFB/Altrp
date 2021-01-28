@@ -129,6 +129,12 @@ class Input extends BaseElement {
       ]
     });
 
+    this.addControl("invalid_email_message", {
+      type: CONTROLLER_TEXT,
+      label: "Invalid Email Message",
+      conditions: { content_type: ["email"] }
+    });
+
     this.addControl("textarea_resize", {
       type: CONTROLLER_SELECT,
       label: "Resize",
@@ -420,10 +426,9 @@ class Input extends BaseElement {
 
     this.addControl("mask_mismatch_message", {
       type: CONTROLLER_TEXT,
-      label: "Mask Mismatch Message",
+      label: "Validation Error Message",
       conditions: {
-        content_type: ["text", "tel"],
-        "content_mask!": [""]
+        content_type: ["text", "tel", "email"],
       }
     });
 
@@ -1429,7 +1434,7 @@ class Input extends BaseElement {
 
     this.startControlSection("mismatch_message_styles", {
       tab: TAB_STYLE,
-      label: "Mask Mismatch Message",
+      label: "Validation Error Message",
       conditions: { "mask_mismatch_message!": [""] }
     });
 
