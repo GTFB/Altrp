@@ -376,6 +376,7 @@ class ElementWrapper extends Component {
           children: this.state.children,
           currentModel: this.props.currentModel,
           currentUser: this.props.currentUser,
+          currentScreen: this.props.currentScreen,
           currentDataStorage: this.props.currentDataStorage,
           fireAction: this.fireAction,
           CKEditor: CKEditor,
@@ -416,7 +417,8 @@ function mapStateToProps(state) {
     currentUser: state.currentUser,
     controllerValue: state.controllerValue,
     currentDataStorage: state.currentDataStorage,
-    hideTriggers: state.hideTriggers
+    hideTriggers: state.hideTriggers,
+    currentScreen: state.currentScreen,
   };
 }
 

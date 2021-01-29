@@ -5,12 +5,14 @@ import {
   isEditor
 } from "../../../../../front-app/src/js/helpers";
 import AltrpImage from "../altrp-image/AltrpImage";
+import AltrpLightbox from "../altrp-lightbox/AltrpLightbox";
 
 class ImageWidget extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      settings: props.element.getSettings()
+      settings: props.element.getSettings(),
+      lightbox: false
     };
     props.element.component = this;
     if (window.elementDecorator) {
@@ -21,11 +23,19 @@ class ImageWidget extends Component {
   render() {
     const { element } = this.props;
     const link = this.state.settings.image_link || {};
+    const activeLightbox = this.props.element.getSettings("lightbox_switch", false);
+    const cursorPointer = this.props.element.getSettings("cursor_pointer", false);
     const background_image = this.props.element.getSettings(
       "background_image",
       {}
     );
+    let classNames = "altrp-image-container";
     let media = this.state.settings.content_media;
+
+    if(cursorPointer) {
+      classNames += " cursor-pointer"
+    }
+
     /**
      * Для карточки модель может быть другой
      * @type {AltrpModel}
@@ -73,18 +83,40 @@ class ImageWidget extends Component {
       />
     );
 
+    const lightbox = (
+      <AltrpLightbox
+        settings={{
+          mainSrc: (media ? media.url : ""),
+          onCloseRequest: () => this.setState({lightbox: false})
+        }}
+        // color={this.props.color_lightbox_style}
+      />
+    );
+
     if (link.toPrevPage && !isEditor()) {
       return (
         <div
-          className="altrp-image-container cursor-pointer"
-          onClick={() => history.back()}
+          className={classNames}
+          onClick={() => {
+            history.back();
+            if(activeLightbox) {
+              this.setState({lightbox: true})
+            }
+          }}
         >
           {altrpImage}
         </div>
       );
     } else {
       return (
-        <div className="altrp-image-container">
+        <div
+          className={classNames}
+          onClick={() => {
+            if(activeLightbox) {
+              this.setState({lightbox: true})
+            }
+          }}
+        >
           {link.url && !isEditor() ? (
             link.tag === "a" ? (
               <a href={link.url}>{altrpImage}</a>
@@ -94,6 +126,9 @@ class ImageWidget extends Component {
           ) : (
             altrpImage
           )}
+          {
+            activeLightbox && this.state.lightbox ? lightbox : ""
+          }
         </div>
       );
     }

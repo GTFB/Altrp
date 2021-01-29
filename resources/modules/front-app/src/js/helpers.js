@@ -472,8 +472,11 @@ export function getDataByPath(
   context = null,
   altrpCheck = false
 ) {
-  if (!path) {
+  if (! path) {
     return _default;
+  }
+  if(path.indexOf('{{') !== -1){
+    path = replaceContentWithData(path, context)
   }
   /**
    * проверим путь
@@ -1505,12 +1508,52 @@ export function convertData(settings, data){
       data = converter.convertData(data);
     });
   }
-  if(! settings.data_type){
+  if(settings.data_type){
     const converter = getConverter(settings);
     data = converter.convertData(data);
   }
-  console.log(data);
-  console.log(settings);
   return data;
+}
+export function renderIcon(isHidden, icon, defaultIcon, className) {
+  if (isHidden) return null;
+  
+  return <span className={className}>{icon && icon.assetType ? renderAssetIcon(icon) : defaultIcon}</span>
   // if()
+}
+
+/**
+ * Перенаправление на другую страницу по настройкам LinkController
+ * @param {{}} linkSettings
+ * @param {{}} e
+ * @param {{}} context
+ */
+export function redirect(linkSettings, e, context = {}){
+
+  if(_.get(linkSettings, 'toPrevPage') && frontAppRouter){
+    frontAppRouter.history.goBack();
+    return;
+  }
+  if(! _.get(linkSettings, 'url')){
+    return;
+  }
+  e.preventDefault();
+  e.stopPropagation();
+  let {url} = linkSettings;
+  url = replaceContentWithData(url, context);
+  if(linkSettings.openInNew){
+    window.open(url, '_blank');
+    return;
+  }
+  if(frontAppRouter){
+    if(linkSettings.tag === 'a'){
+      window.location.assign(url);
+    } else {
+      frontAppRouter.history.push(url);
+    }
+  }
+}
+
+export function validateEmail(email) {
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
 }

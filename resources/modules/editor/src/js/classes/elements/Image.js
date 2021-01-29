@@ -56,6 +56,18 @@ class Image extends BaseElement {
       label: 'Path',
     });
 
+    this.addControl('lightbox_switch', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Lightbox',
+      default: false
+    });
+
+    this.addControl('cursor_pointer', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Cursor pointer',
+      default: false
+    });
+
     this.endControlSection();
 
     this.startControlSection("link", {

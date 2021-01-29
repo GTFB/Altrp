@@ -129,6 +129,12 @@ class Input extends BaseElement {
       ]
     });
 
+    this.addControl("invalid_email_message", {
+      type: CONTROLLER_TEXT,
+      label: "Invalid Email Message",
+      conditions: { content_type: ["email"] }
+    });
+
     this.addControl("textarea_resize", {
       type: CONTROLLER_SELECT,
       label: "Resize",
@@ -236,7 +242,22 @@ class Input extends BaseElement {
       }
     });
 
-    this.addControl("image_select_image_fit", {
+    this.addControl("image_select_item_height", {
+      type: CONTROLLER_SLIDER,
+      label: "Item Height",
+      max: 500,
+      min: 0,
+      units: ["px", "%", "vh"],
+      default: { unit: "px" },
+      conditions: {
+        'content_type': ['image_select']
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-image-select>.altrp-field{{STATE}}": 'height: {{SIZE}}{{UNIT}};'
+      }
+    });
+
+    this.addControl('image_select_image_fit', {
       type: CONTROLLER_SELECT,
       options: [
         {
@@ -320,23 +341,7 @@ class Input extends BaseElement {
       }
     });
 
-    this.addControl("image_select_item_height", {
-      type: CONTROLLER_SLIDER,
-      label: "Item Height",
-      max: 500,
-      min: 0,
-      units: ["px", "%", "vh"],
-      default: { unit: "px" },
-      conditions: {
-        content_type: ["image_select"]
-      },
-      rules: {
-        "{{ELEMENT}} .altrp-image-select>.altrp-field{{STATE}}":
-          "height: {{SIZE}}{{UNIT}};"
-      }
-    });
-
-    this.addControl("content_accept", {
+    this.addControl('content_accept', {
       type: CONTROLLER_TEXT,
       label: "Accept",
       conditions: {
@@ -373,7 +378,39 @@ class Input extends BaseElement {
       ]
     });
 
-    this.addControl("content_placeholder", {
+    this.addControl('label_icon', {
+      type: CONTROLLER_MEDIA,
+      label: 'Choose Icon',
+    });
+
+    this.addControl('label_icon_position', {
+      type: CONTROLLER_SELECT,
+      label: 'Icon Position',
+      default: 'default',
+      options: [
+        {
+          value: 'row',
+          label: 'Right'
+        },
+        {
+          value: 'row-reverse',
+          label: 'Left'
+        },
+        {
+          value: 'column',
+          label: 'Bottom'
+        },
+        {
+          value: 'column-reverse',
+          label: 'Top'
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-field-label-container{{STATE}}': 'flex-direction: {{VALUE}};'
+      },
+    });
+
+    this.addControl('content_placeholder', {
       type: CONTROLLER_TEXT,
       label: "Placeholder",
       default: "Placeholder"
@@ -389,10 +426,9 @@ class Input extends BaseElement {
 
     this.addControl("mask_mismatch_message", {
       type: CONTROLLER_TEXT,
-      label: "Mask Mismatch Message",
+      label: "Validation Error Message",
       conditions: {
-        content_type: ["text", "tel"],
-        "content_mask!": [""]
+        content_type: ["text", "tel", "email"],
       }
     });
 
@@ -822,7 +858,51 @@ class Input extends BaseElement {
       }
     });
 
-    this.addControl("cross_color", {
+    this.addControl('icon_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Icon Padding',
+      units: ['px', '%', 'vh', 'vw'],
+      rules: {
+        '{{ELEMENT}} .altrp-label-icon{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('icon_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Icon color',
+      rules: {
+        '{{ELEMENT}} .altrp-label-icon path{{STATE}}': 'fill: {{COLOR}};',
+      },
+    });
+
+    this.addControl('icon_color_background', {
+      type: CONTROLLER_COLOR,
+      label: 'Background Color',
+      rules: {
+        '{{ELEMENT}} .altrp-label-icon svg{{STATE}}': 'background: {{COLOR}};',
+      },
+    }
+    );
+
+    this.addControl('icon_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Icon Size',
+      units: ['px', '%', 'vh', 'vw'],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-label-icon{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-label-icon svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-label-icon img{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      },
+    });
+
+    this.addControl('cross_color', {
       type: CONTROLLER_COLOR,
       label: "Cross Color",
       default: {
@@ -963,11 +1043,15 @@ class Input extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-field-container{{STATE}}": [
-          "margin-top: {{TOP}}{{UNIT}};",
-          "margin-right: {{RIGHT}}{{UNIT}};",
-          "margin-bottom: {{BOTTOM}}{{UNIT}};",
-          "margin-left: {{LEFT}}{{UNIT}};"
+        '{{ELEMENT}} .altrp-field-container{{STATE}}': [
+          'margin-top: {{TOP}}{{UNIT}};',
+          'margin-right: {{RIGHT}}{{UNIT}};',
+          'margin-bottom: {{BOTTOM}}{{UNIT}};',
+          'margin-left: {{LEFT}}{{UNIT}};'
+        ],
+        '{{ELEMENT}} .altrp-image-select{{STATE}}': [
+          'margin-right: -{{RIGHT}}{{UNIT}};',
+          'margin-left: -{{LEFT}}{{UNIT}};'
         ]
       }
     });
@@ -976,11 +1060,7 @@ class Input extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        // top: 2,
-        // right: 2,
-        // bottom: 2,
-        // left: 2,
-        unit: "px"
+        unit: 'px'
       },
       units: ["px", "%", "vh"],
       rules: {
@@ -1354,7 +1434,7 @@ class Input extends BaseElement {
 
     this.startControlSection("mismatch_message_styles", {
       tab: TAB_STYLE,
-      label: "Mask Mismatch Message",
+      label: "Validation Error Message",
       conditions: { "mask_mismatch_message!": [""] }
     });
 

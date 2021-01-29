@@ -241,8 +241,6 @@ class FrontPopup extends Component {
       maxHeight = Number(rootElementSettings.height_custom_popup_layout.size) || 0;
     }
 
-    console.log(maxHeight);
-
     const popup = (
       isVisible ?
         <div

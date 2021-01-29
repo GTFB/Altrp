@@ -34,6 +34,7 @@ import Tabs from "../elements/Tabs";
 import Divider from "../elements/Divider";
 import Nav from "../elements/Nav";
 import Table from "../elements/Table";
+import Template from "../elements/Template";
 import Posts from "../elements/Posts";
 import Map from "../elements/Map";
 import MapConstructor from "../elements/MapConstructor";
@@ -48,6 +49,7 @@ import ExportPanel from "../elements/ExportPanel";
 import ExportPanelWidget from "../../components/widgets/ExportPanelWidget";
 import Html from "../elements/Html";
 import HtmlWidget from "../../components/widgets/HtmlWidget";
+import TemplateWidget from "../../components/widgets/TemplateWidget";
 
 // Websocket import
 import Notifications from "../elements/Notifications";
@@ -81,6 +83,7 @@ export default class ElementsManger {
     this.elements[Dashboards.getName()] = Dashboards;
     this.elements[Carousel.getName()] = Carousel;
     this.elements[Tour.getName()] = Tour;
+    this.elements[Template.getName()] = Template;
     this.elements[ExportPanel.getName()] = ExportPanel;
     this.elements[Html.getName()] = Html;
     // Websocket Notifications
@@ -111,6 +114,7 @@ export default class ElementsManger {
     this.components[Dashboards.getName()] = DashboardsWidget;
     this.components[Icon.getName()] = IconWidget;
     this.components[Tour.getName()] = TourGuide;
+    this.components[Template.getName()] = TemplateWidget;
     this.components[ExportPanel.getName()] = ExportPanelWidget;
     this.components[Html.getName()] = HtmlWidget;
     // Websocket Notifications widget

@@ -196,6 +196,7 @@ button {
     cursor: move;
     border-radius: 2px;
     font-size: 0.8rem;
+    overflow: hidden;
     &__title {
         margin-top: 8px;
     }
@@ -1837,4 +1838,10 @@ button {
 
 .editor-content .altrp-element {
     min-height: 1px;
+}
+
+.editor-content{
+  & .altrp-posts{
+    min-height: 20px;
+  }
 }

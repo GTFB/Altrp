@@ -1,5 +1,5 @@
 @for $i from 1 through 20 {
-  .altrp-section_columns-#{$i} .altrp-element_column{
+  .altrp-section_columns-#{$i} > .altrp-element_column{
     width: 100% / $i;
   }
 }

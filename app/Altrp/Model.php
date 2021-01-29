@@ -42,6 +42,11 @@ class Model extends EloquentModel
         'relationships'
     ];
 
+    public function remote_data()
+    {
+        return $this->morphMany('App\Altrp\RemoteData', 'remotable');
+    }
+
   /**
    * Импортируем модели
    * @param array $imported_models
@@ -431,4 +436,10 @@ class Model extends EloquentModel
         }
         return false;
     }
+
+    public function validations()
+    {
+        return $this->hasMany(ValidationField::class);
+    }
 }
+

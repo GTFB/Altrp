@@ -3,7 +3,26 @@ import {Link, withRouter} from "react-router-dom";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import {titleToName} from "../../js/helpers";
 import store from '../../js/store/store';
+
+import AdminTable from "../AdminTable";
 import AltrpSelect from "../altrp-select/AltrpSelect";
+import AdminModal2 from "../AdminModal2";
+import SQLsRemoteFieldForm from "./RemoteFieldForms/SQLsRemoteFieldForm";
+
+const remoteFieldsColumns = [
+  {
+    name: 'name',
+    title: 'Name'
+  },
+  {
+    name: 'remote_find_column',
+    title: 'Remote Find Column'
+  },
+  {
+    name: 'remote_need_column',
+    title: 'Remote Need Column'
+  }
+]
 
 class SqlEditor extends Component {
   constructor(props) {
@@ -17,11 +36,14 @@ class SqlEditor extends Component {
         auth: false,
       },
       modelsOptions: [],
-      AceEditor: storeState.aceEditorReducer.AceEditor
+      AceEditor: storeState.aceEditorReducer.AceEditor,
+      remoteFields: [],
+      editingRemoteField: null,
+      isFieldRemoteModalOpened: false
     };
     this.sqlEditorResource = new Resource({route: `/admin/ajax/sql_editors`});
     this.modelsResource = new Resource({ route: '/admin/ajax/model_options' });
-
+    this.remoteFieldsResource = new Resource({ route: `/admin/ajax/remote_data/sql_editor/${this.props.match.params.id}` });
     store.subscribe(this.aceEditorObserver);
   }
 
@@ -41,10 +63,10 @@ class SqlEditor extends Component {
    */
   async componentDidMount() {
     const {id} = this.props.match.params;
-    let { options } = await this.modelsResource.getAll();
-    options = options.filter(option=>(option.label !== 'User'));
-    this.setState({ modelsOptions: options });
     if(id){
+      this.remoteFieldsResource.getAll()
+        .then(remoteFields => this.setState({ remoteFields }));
+
       let value = await this.sqlEditorResource.get(id);
       this.editor = null;
       this.setState(state=>({
@@ -52,6 +74,14 @@ class SqlEditor extends Component {
         value,
       }))
     }
+    let { options } = await this.modelsResource.getAll();
+    options = options.filter(option => (option.label !== 'User'));
+    this.setState({ modelsOptions: options });
+  }
+
+  updateRemoteFields = async () => {
+    let remoteFields = await this.remoteFieldsResource.getAll();
+    this.setState(state => ({ ...state, remoteFields, isFieldRemoteModalOpened: false, editingRemoteField: null }));
   }
 
   /**
@@ -98,6 +128,7 @@ class SqlEditor extends Component {
 
   render() {
     const {id} = this.props.match.params;
+    const { isFieldRemoteModalOpened, remoteFields, editingRemoteField } = this.state;
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
@@ -233,7 +264,36 @@ class SqlEditor extends Component {
         <button className="btn btn_failure">Delete</button> */}
           </div>
         </form>
+        {id && <>
+          <h2 className="sub-header">Remote Fields</h2>
+          <AdminTable
+            columns={remoteFieldsColumns}
+            quickActions={[{
+              callBack: field => this.setState({ isFieldRemoteModalOpened: true, editingRemoteField: field }),
+              title: 'Edit'
+            }, {
+              tag: 'button',
+              route: `/admin/ajax/remote_data/:id`,
+              method: 'delete',
+              confirm: 'Are You Sure?',
+              after: () => this.updateRemoteFields(),
+              className: 'quick-action-menu__item_danger',
+              title: 'Trash'
+            }]}
+            rows={remoteFields}
+          />
+          <button onClick={() => this.setState({ isFieldRemoteModalOpened: true, editingRemoteField: null })} className="btn btn_add">
+            Add Remote Field
+          </button>
+        </>}
       </div>
+      {isFieldRemoteModalOpened && <AdminModal2 closeHandler={() => this.setState({ isFieldRemoteModalOpened: false, editingRemoteField: null })}>
+        <SQLsRemoteFieldForm
+          remoteFieldsResource={this.remoteFieldsResource}
+          updateRemoteFields={this.updateRemoteFields}
+          field={editingRemoteField}
+        />
+      </AdminModal2>}
     </div>;
   }
 }
