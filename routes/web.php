@@ -48,8 +48,8 @@ Route::get('/admin/editor-content', function () {
   return view('editor-content');
 })->middleware('auth')->name('editor-content');
 
-// Route::get('/admin/reports-editor',fn()=>view('reports'));
-// Route::get('/admin/reports-content',fn()=>view('reports-content'));
+Route::get('/admin/reports-editor',fn()=>view('reports'));
+Route::get('/admin/reports-content',fn()=>view('reports-content'));
 
 // Route::get( '/admin/editor-reports', function (){
 //    return view( 'editor-reports' );

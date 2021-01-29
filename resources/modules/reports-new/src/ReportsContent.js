@@ -17,7 +17,7 @@ import { getRoutes } from "../../front-app/src/js/helpers";
 import Area from "../../front-app/src/js/classes/Area";
 import _ from "lodash";
 import Datasource from "../../front-app/src/js/classes/Datasource";
-import ExportPanel from "./ExportPanel";
+import ExportPanel from "../../editor/src/js/classes/elements/ExportPanel";
 
 class ReportsContent extends Component {
   constructor(props) {

@@ -8,8 +8,8 @@
 
     window.pageStorage = {};
 
-    var page_id = {{$page_id}};
-    var page_areas = {!! $page_areas !!};
+    var page_id = 1;
+    var page_areas = [];
 
     if (typeof page_id !== 'undefined' && typeof page_areas !== 'undefined') {
       window.pageStorage[page_id] = {areas:page_areas};
@@ -68,7 +68,7 @@
   @endif
 </head>
 <body class="front-app-body">
-<div id="front-app" class="front-app {{ $is_admin ? 'front-app_admin' : '' }}">
+<div id="front-app" class="front-app {{ 'front-app_admin' }}">
   {!! isset( $preload_content[ 'content'] ) ? $preload_content['content'] : ''!!}
 </div>
 <script src="{{ altrp_asset( '/modules/front-app/front-app.js', 'http://localhost:3001/' ) }}" defer></script>
