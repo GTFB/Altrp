@@ -8,7 +8,7 @@ import sectionElementEmailRender from '../renders/email/sectionElementEmailRende
  * @param value
  */
 export function changeSetting(settingName, value) {
-  let newState = this.state;
+  let newState = _.cloneDeep(this.state);
   newState.settings[settingName] = value;
   console.log(newState.settings[settingName])
   /**
@@ -19,6 +19,8 @@ export function changeSetting(settingName, value) {
   }
   this.setState({
     ...newState
+  }, () => {
+    console.log(this.state);
   });
 }
 
