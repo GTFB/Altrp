@@ -33,9 +33,15 @@
   &__restore-item {
     padding: 14px;
     margin-bottom: 11px;
+    
     border: 2px solid #D5DADF;
-
     color:  #6D7896;
+
+    display: pointer;
+  }
+
+  &__restore-item--active {
+    background-color: #e6e9ec;
   }
 
   &__restore-item-title {
@@ -46,6 +52,11 @@
   &__restore-item-type {
     font-style: italic;
     text-decoration: underline;
+  }
+
+  &__restore-item-icon {
+    float: right;
+    fill: #98a1a7;
   }
 
   &__actions-tab-subscribe {

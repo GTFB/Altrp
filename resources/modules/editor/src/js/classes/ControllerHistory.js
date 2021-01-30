@@ -1,50 +1,66 @@
 import AltrpModel from "./AltrpModel";
 import store from "../store/store";
-import { undo } from "../store/history-store/actions";
-
+import { undoHistoryStore, redoHistoryStore } from "../store/history-store/actions";
 
 class ControllerHistory extends AltrpModel {
 
-  restore() {
-    console.log('historyStore: ', appStore.getState().historyStore.history);
-    console.log('current: ', appStore.getState().historyStore.current);
-
-    if(!(appStore.getState().historyStore.history.length === 0)) {
-      let current = appStore.getState().historyStore.current;
-      let restoreElement = appStore.getState().historyStore.history[current];
+  undo() {
+    let current = appStore.getState().historyStore.current;
+    let history = _.cloneDeep(appStore.getState().historyStore.history);
+    if(current >= 0) {
+      let restoreElement = history[current];
 
       switch(restoreElement.type) {
         case 'ADD':
+          console.log('ADD')
           this.restoreAdd(restoreElement.data.element);
           break;
         case 'DELETE':
+          console.log('DELETE')
           this.restoreDelete(restoreElement.data.element, restoreElement.data.parent, restoreElement.data.index);
           break;
         case 'EDIT':
-          this.restoreEdit(restoreElement.data.element, restoreElement.data.oldValue); 
+          console.log('EDIT')
+          this.restoreEdit(restoreElement.data.element, restoreElement.data.settingName, restoreElement.data.oldValue); 
           break;
       }
+      store.dispatch(undoHistoryStore(1));
+    }
+  }
+
+  redo() {
+    let current = appStore.getState().historyStore.current;
+    let history = _.cloneDeep(appStore.getState().historyStore.history);
+    if(history.length - 1 > current) {
+      let restoreElement = history[current + 1];
+      switch(restoreElement.type) {
+        case 'ADD':
+          this.restoreDelete(restoreElement.data.element, restoreElement.data.parent, restoreElement.data.index);
+          break;
+        case 'DELETE':
+          this.restoreAdd(restoreElement.data.element);
+          break;
+        case 'EDIT':
+          this.restoreEdit(restoreElement.data.element, restoreElement.data.settingName, restoreElement.data.newValue); 
+          break;
+      }
+      store.dispatch(redoHistoryStore(1));
     }
   }
 
   restoreDelete(element, parent, index) {
     console.log('restore delete')
     parent.restoreChild(index, element);
-    store.dispatch(undo(1));
   }
 
-  restoreEdit(element, oldValue) {
+  restoreEdit(element, settingName, value) {
     console.log('restore edit')
-    element.setSettingValue(oldValue.settingName, oldValue.value, true);
-
-    store.dispatch(undo(1));
+    element.setSettingValue(settingName, value, true);
   }
 
   restoreAdd(element) {
     console.log('restore add')
     element.parent.deleteChild(element, true);
-
-    store.dispatch(undo(1));
   }
 }
 

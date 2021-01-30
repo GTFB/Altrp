@@ -7,6 +7,7 @@ import frontDecorate from '../../../../front-app/src/js/decorators/front-element
 export function changeSetting(settingName, value) {
   let newState = this.state;
   newState.settings[settingName] = value;
+  console.log(newState.settings[settingName])
   /**
    * Если виджет поле, то обнолвяем и значение
    */

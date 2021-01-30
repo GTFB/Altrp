@@ -7,7 +7,7 @@ import {
 
 const initialState = {
   history: [],
-  current: 0
+  current: -1
 };
 
 export const historyStoreReducer = (
@@ -21,10 +21,13 @@ export const historyStoreReducer = (
           history: [payload],
           current: 0,
         }
-      } else if(state.current < state.history.length) {
+      } else if(state.current < state.history.length - 1) {
         let newHistory = state.history;
-        newHistory.splice(state.current, newHistory.length - state.current - 1, payload);
-        console.log(newHistory.length)
+        if(state.current === -1) {
+          newHistory = [payload];
+        } else {
+          newHistory.splice(state.current - 1, newHistory.length - state.current - 1, payload);
+        }
         return {
           history: newHistory,
           current: newHistory.length - 1
@@ -36,13 +39,13 @@ export const historyStoreReducer = (
         };
       }
 
-    case UNDO: 
+    case UNDO:
       return {
         ...state,
         current: state.current - payload.count
       }
     
-    case REDO: 
+    case REDO:
       return {
         ...state,
         current: state.current + payload.count

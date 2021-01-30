@@ -158,9 +158,12 @@ class Editor extends Component {
 
     const controllerHistory = new ControllerHistory;
     document.addEventListener('keydown', (event) => {
-      if (event.ctrlKey && event.code === 'KeyZ') {
-        console.log('ControllerHistory');   
-        controllerHistory.restore()
+      if (event.ctrlKey && event.code === 'KeyZ' && event.shiftKey) {
+        console.log('redo');   
+        controllerHistory.redo()
+      } else if (event.ctrlKey && event.code === 'KeyZ') {
+        console.log('undo');   
+        controllerHistory.undo()
       }
     });
   }

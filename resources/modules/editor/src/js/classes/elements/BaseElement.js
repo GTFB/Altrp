@@ -133,7 +133,6 @@ class BaseElement extends ControlStack {
    * @param {BaseElement} child
    * */
   appendChild(child, fromHistory = false) {
-    console.log('appendChild')
     this.children.push(child);
     child.setParent(this);
     if (this.component && typeof this.component.setChildren === 'function') {
@@ -155,11 +154,22 @@ class BaseElement extends ControlStack {
     if (index === undefined || index > this.children.length) {
       throw 'can not restore child';
     }
+
     if(child.parent === undefined) {
       child.setParent(this);
     }
 
-    this.children.splice(index, 0, child);
+    let isHaveChild = false;
+    isHaveChild = this.children.some((childItem) => {
+      if (childItem.getId() === child.getId()) {
+        return true;
+      };
+    })
+    console.log(this.children)
+    if (!isHaveChild) {
+      this.children.splice(index, 0, child);
+    }
+
     this.component.setChildren(this.children);
     editorSetCurrentElement(child);
 
@@ -187,7 +197,7 @@ class BaseElement extends ControlStack {
     this.children.splice(index + 1, 0, newChild);
     this.component.setChildren(this.children);
     this.templateNeedUpdate();
-    store.dispatch(addHistoryStoreItem('ADD', {element: newChild}));
+    store.dispatch(addHistoryStoreItem('ADD', {element: newChild, index, parent: this}));
   }
   /**
    * @param {string} childId
@@ -207,7 +217,7 @@ class BaseElement extends ControlStack {
     this.children.splice(index, 0, newChild);
     this.component.setChildren(this.children);
     this.templateNeedUpdate();
-    store.dispatch(addHistoryStoreItem('ADD', {element: newChild}));
+    store.dispatch(addHistoryStoreItem('ADD', {element: newChild, index, parent: this}));
   }
 
   /**
@@ -377,17 +387,17 @@ class BaseElement extends ControlStack {
 
   setSettingValue(settingName, value, fromHistory = false) {
     //check change value
+    console.log(this);
     if(this.settings[settingName] !== value) {
-      if(!fromHistory)
-        store.dispatch(addHistoryStoreItem(
-          'EDIT', 
-          {
-            element: this, 
-            oldValue: { 
-              settingName, 
-              value: this.settings[settingName] 
-        }}));
-
+      if (!fromHistory)
+        store.dispatch(
+          addHistoryStoreItem("EDIT", {
+            element: this,
+            oldValue: this.settings[settingName],
+            newValue: value,
+            settingName
+          })
+        );
       this.settings[settingName] = value;
       if (this.component) {
         this.component.changeSetting(settingName, value);

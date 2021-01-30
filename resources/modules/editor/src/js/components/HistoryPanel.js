@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import ControllerHistory from "../classes/ControllerHistory";
+import CheckIcon from "../../svgs/check.svg";
 
 class HistoryPanel extends Component {
   constructor(props) {
@@ -65,10 +66,19 @@ class HistoryPanel extends Component {
 const ActionsTabContent = () => {
   const controllerHistory = new ControllerHistory();
   const historyStore = useSelector(state => state.historyStore.history);
+  const current = useSelector(state => state.historyStore.current);
 
-  const deleteHistoryItems = index => {
-    for (let i = 0; i < historyStore.length - index; i++) {
-      controllerHistory.restore();
+  const handlerHistory = index => {
+    return () => {
+      if(current > index) {
+        for (let i = 0; i < current - index; i++) {
+          controllerHistory.undo();
+        }
+      } else if(current < index) {
+        for (let i = 0; i < index - current; i++) {
+          controllerHistory.redo();
+        }
+      }
     }
   };
 
@@ -93,18 +103,29 @@ const ActionsTabContent = () => {
             break;
         }
 
+        let restoreItemClasses = "history-panel__restore-item ";
+        if (current === index) {
+          restoreItemClasses += "history-panel__restore-item--active ";
+        }
+
         return (
-          <div
-            key={index}
-            className="history-panel__restore-item"
-            onClick={() => deleteHistoryItems(index)}
-          >
+          <div key={index} className={restoreItemClasses} onClick={handlerHistory(index)}>
             <span className="history-panel__restore-item-title">{title}</span>
             <span className="history-panel__restore-item-type">{type}</span>
+            {current === index ? (
+              <CheckIcon
+                className="history-panel__restore-item-icon"
+                style={{ width: 20, height: 20 }}
+              />
+            ) : (
+              ""
+            )}
           </div>
         );
       })}
-      <div className="history-panel__actions-tab-subscribe">Switch to Revisions tab for older version</div>
+      <div className="history-panel__actions-tab-subscribe">
+        Switch to Revisions tab for older version
+      </div>
     </div>
   );
 };

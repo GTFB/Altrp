@@ -11,12 +11,12 @@ export const addHistoryStoreItem = (type, data) => ({
   }
 });
 
-export const undo = count => ({
+export const undoHistoryStore = count => ({
   type: UNDO,
   payload: { count }
 });
 
-export const redo = count => ({
+export const redoHistoryStore = count => ({
   type: REDO,
   payload: { count }
 });
