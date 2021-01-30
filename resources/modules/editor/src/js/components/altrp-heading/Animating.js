@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Rotating from "../animations/text/rotating/Rotating";
+import Highlighted from "../animations/text/highlighted/Highlighted";
 
 class Animating extends Component {
   render() {
@@ -9,15 +10,22 @@ class Animating extends Component {
     const beforeText = settings.text_before_animating;
     const afterText = settings.text_after_animating;
     const htmlTag = settings.html_tag_animating || "h2";
+    const prefix = "heading";
 
     if(settings.style_animating === "highlighted") {
 
-      animating = "highlighted"
+      animating = <Highlighted
+        shape={settings.shape_animating}
+        text={settings.text_highlighted_animating}
+        bringToFront={settings.bring_to_front_shape_animating}
+        roundedEdges={settings.rounded_edges_shape_animating}
+        prefix={prefix}
+      />
     } else if(settings.style_animating === "rotating") {
 
       animating = <Rotating
         type={settings.animation_animating}
-        prefix="heading"
+        prefix={prefix}
         text={settings.text_rotating_animating}
       />
     }
@@ -31,7 +39,10 @@ class Animating extends Component {
             <React.Fragment>
               {
                 beforeText ? (
-                  <span dangerouslySetInnerHTML={{ __html: beforeText }}/>
+                  <span
+                    className="altrp-heading-no-animating-text"
+                    dangerouslySetInnerHTML={{ __html: beforeText }}
+                  />
                 ) : null
               }
               &nbsp;
@@ -41,7 +52,10 @@ class Animating extends Component {
               &nbsp;
               {
                 afterText ? (
-                  <span dangerouslySetInnerHTML={{ __html: afterText }}/>
+                  <span
+                    className="altrp-heading-no-animating-text"
+                    dangerouslySetInnerHTML={{ __html: afterText }}
+                  />
                 ) : null
               }
             </React.Fragment>

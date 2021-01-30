@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Requests\ApiRequest;
+use App\User;
 use Illuminate\Support\Str;
 
 /**
@@ -448,4 +449,19 @@ function getDetailQueryValues($query, $filter) {
 
 function getFilterValues() {
 
+}
+
+/**
+ * Вернет true, если пользователь админ, false - в остальных случаях
+ * @return boolean
+ */
+function isAdmin(){
+  /**
+   * @var User $user
+   */
+  $user = auth()->user();
+  if( ! auth()->user() ){
+    return false;
+  }
+  return $user->hasRole( 'admin' );
 }

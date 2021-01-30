@@ -48,8 +48,8 @@ Route::get('/admin/editor-content', function () {
   return view('editor-content');
 })->middleware('auth')->name('editor-content');
 
-// Route::get('/admin/reports-editor',fn()=>view('reports'));
-// Route::get('/admin/reports-content',fn()=>view('reports-content'));
+Route::get('/admin/reports-editor',fn()=>view('reports'));
+Route::get('/admin/reports-content',fn()=>view('reports-content'));
 
 // Route::get( '/admin/editor-reports', function (){
 //    return view( 'editor-reports' );
@@ -213,7 +213,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/model_name_is_free', 'Admin\ModelsController@modelNameIsFree');
     Route::get('/models/{model_id}/field_name_is_free', 'Admin\ModelsController@fieldNameIsFree');
     Route::get('/models/{model_id}/relation_name_is_free', 'Admin\ModelsController@relationNameIsFree');
-    Route::get('/models/{model_id}/query_name_is_free', 'Admin\ModelsController@queryNameIsFree');
+    Route::get('/models/{model_id}/sql_builder_name_is_free', 'Admin\ModelsController@queryNameIsFree');
 
     /**
      * Модели
@@ -338,6 +338,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/tables/{table}/controller', "Admin\TableController@getController");
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
 
+    // Remote data
+    Route::get( '/remote_data/{remotable_type}/{remotable_id}', 'Admin\RemoteDataController@index');
+    Route::post( '/remote_data/{remotable_type}/{remotable_id}', 'Admin\RemoteDataController@store');
+    Route::put( '/remote_data/{remotable_type}/{remotable_id}/{id}', 'Admin\RemoteDataController@update');
+    Route::delete( '/remote_data/{id}', 'Admin\RemoteDataController@destroy');
+
     /**
      * Роут для загрузки favicon
      */
@@ -391,20 +397,30 @@ Route::get('/', function () {
     'title' => 'Main',
     '_frontend_route' => [],
     'preload_content' => [],
+    'is_admin' => isAdmin(),
   ]);
 })->middleware(['web', 'installation.checker']);
 
-foreach ($frontend_routes as $_frontend_route) {
+foreach ( $frontend_routes as $_frontend_route ) {
   $path = $_frontend_route['path'];
   $title = $_frontend_route['title'];
-  $frontend_route = str_replace(':id', '{id}', $path);
+  $pattern1 = '/:(.+)((\/)|$)/U';
+  $pattern2 = '/:(.+)(\/)/U';
+  $replacement1 = '{$1}/';
+  $replacement2 = '{$1}/';
+  $frontend_route = preg_replace( $pattern1, $replacement1,  $path );
 
-  Route::get($frontend_route, function () use ($title, $_frontend_route) {
-    $preload_content = Page::getPreloadPageContent($_frontend_route['id']);
+  Route::get($frontend_route, function () use ($title, $_frontend_route, $frontend_route) {
+
+    $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
+
     return view('front-app', [
+      'page_areas' => json_encode(Page::get_areas_for_page($_frontend_route['id'])),
+      'page_id' => $_frontend_route['id'],
       'title' => $title,
       '_frontend_route' => $_frontend_route,
       'preload_content' => $preload_content,
+      'is_admin' => isAdmin(),
     ]);
   })->middleware(['web', 'installation.checker']);
 }

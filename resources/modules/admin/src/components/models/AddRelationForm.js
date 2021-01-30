@@ -157,6 +157,14 @@ class AddRelationForm extends Component {
     e.preventDefault();
     const { history, match } = this.props;
     const data = this.state.value;
+    const isNameTaken = await fetch(`/admin/ajax/models/${match.params.modelId}/relation_name_is_free/?name=${data.name}`)
+      .then(res => res.json())
+      .then(res => !res.taken);
+
+    if (isNameTaken) {
+      return alert(`Name ${data.name} is already taken. Use another one.`)
+    }
+
     if (this.props.match.params.id) {
       let res = await this.relationsResource.put(this.props.match.params.id, data);
     } else {

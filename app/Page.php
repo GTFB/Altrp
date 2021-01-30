@@ -551,34 +551,33 @@ class Page extends Model
     } )->map( function( Area $area ){
       return $area->name;
     })->sortBy(function( $area ){
-      if( $area === 'header'){
+      if( $area === 'header' ){
         return 0;
       }
-      if( $area === 'content'){
+      if( $area === 'content' ){
         return 100;
       }
-      if( $area === 'footer'){
+      if( $area === 'footer' ){
         return 200;
       }
       return $area;
-      view('');
     })->toArray();
     if( ! count( $areas ) ){
       return $result;
     }
     $templates = [];
     foreach ( $areas as $area ) {
-      $template = Template::getTemplate([
+      $template = Template::getTemplate( [
         'page_id' => $page_id,
         'template_type' => $area,
-      ]);
+      ] );
       $template['template_type'] = $area;
       $templates[] = $template;
     }
     $important_styles = [];
     ob_start();
     ?>
-    <div class="front-app-content ">
+    <div class="front-app-content front-app-content_preloaded">
       <div class="route-content" id="route-content">
         <?php
         foreach ( $templates as $template ) {

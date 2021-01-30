@@ -79,10 +79,12 @@ class DummyClass extends ApiController
         $model = Model::where('name', '{{modelName}}')->first();
         $relations = Relationship::where([['model_id',$model->id],['always_with',1]])->get()->implode('name',',');
         $relations = $relations ? explode(',',$relations) : false;
+
         if ($relations) {
             ${{crudNameSingular}} = ${{crudNameSingular}}->load($relations);
         }
 
+        ${{crudNameSingular}} = $this->getRemoteData($model, ${{crudNameSingular}}, true);
 
         return response()->json(${{crudNameSingular}}, 200, [], JSON_UNESCAPED_UNICODE);
     }

@@ -8,25 +8,23 @@ export const queryString = (obj = {}) => {
     val = encodeURIComponent(obj[key]);
     return [str, delimiter, key, "=", val].join("");
   }, "");
-  // console.log('RESULT ==>', data);
+  console.log("RESULT ==>", data);
   return data;
 };
 
 export const getWidgetData = async (url, filter) => {
-  let params = '';
-  if (typeof filter === 'object') {
+  let params = "";
+  if (typeof filter === "object") {
     params = queryString(filter);
-  }
-  else if (typeof filter !== 'undefined') {
+  } else if (typeof filter !== "undefined") {
     params = queryString(JSON.parse(filter));
   }
   try {
     return await axios(url + params, {
-      headers: [
-        { key: 'Cache-Control', value: 'no-store' }
-      ]
+      // headers: [{ key: "Cache-Control", value: "no-store" }]
     });
   } catch (error) {
+    console.log(error);
     return { status: 500 };
   }
 };

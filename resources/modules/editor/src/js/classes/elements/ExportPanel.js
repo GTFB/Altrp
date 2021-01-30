@@ -41,6 +41,19 @@ class ExportPanel extends BaseElement {
       return;
     }
 
+    this.startControlSection("Content", {
+      tab: TAB_CONTENT,
+      label: "Content"
+    });
+
+    this.addControl("hidePanel", {
+      type: CONTROLLER_SWITCHER,
+      label: "Hide export panel?",
+      default: false
+    });
+
+    this.endControlSection();
+
     advancedTabControllers(this);
   }
 }

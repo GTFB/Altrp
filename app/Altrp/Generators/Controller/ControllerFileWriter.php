@@ -65,6 +65,7 @@ class ControllerFileWriter
         $methodContent = file($this->getControllerMethodStub(), 2);
 
         $this->replaceMethodName($methodContent, $methodName)
+            ->replaceModelName($methodContent, $this->repository->getModelName())
             ->replaceRepoInterface(
                 $methodContent,
                 $this->repository->getModelName() . 'RepositoryInterface'

@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import RouteContent from "./RouteContent";
 import Styles from "../../../../editor/src/js/components/Styles";
 import {isAltrpTestMode} from "../helpers";
-import AdminBar from "./AdminBar";
 
 class AppContent extends Component {
   constructor(props) {
@@ -19,7 +18,6 @@ class AppContent extends Component {
   render() {
     return (
       <Router ref={this.router}>
-        <AdminBar />
         <div className={`front-app-content ${isAltrpTestMode() ? 'front-app-content_test' : ''}`}>
           <Switch>
             {this.props.routes.map(route => (

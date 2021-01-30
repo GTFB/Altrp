@@ -152,10 +152,17 @@ class Controller {
    * */
   getSettingName() {
     /**
-     * Если css редактор, то добавляем суффикс
+     * Если css редактор, то не добавляем суффикс
      */
     if (this.data.controlId === "element_css_editor") {
       return "element_css_editor";
+    }
+    /**
+     * Если responsive отключен, то не добавляем суффикс
+     */
+    if (this.data.responsive === false) {
+      // console.log(this);
+      return this.data.controlId;
     }
     return this.data.controlId + getElementSettingsSuffix(this);
   }

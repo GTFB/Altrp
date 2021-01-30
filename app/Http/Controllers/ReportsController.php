@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Altrp\ExportExcel;
 use App\Page;
 use App\Reports;
 use App\PagesTemplate;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Controller;
 use App\Helpers\Classes\HtmlGenerator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
+
 
 class ReportsController extends Controller
 {
@@ -136,7 +138,7 @@ class ReportsController extends Controller
 
         return response($reports->html)->header('Content-Type', "text/html");
     }
-    
+
     public function html(Request $request,$id){
         $htmlString = Reports::findOrFail($id)->html;
         return $htmlString;
@@ -174,5 +176,10 @@ class ReportsController extends Controller
         ];
 
         return response()->json( $res );
+    }
+
+    public function exportToExcel(Request $request) {
+        $excel = new ExportExcel($request->data, $request->template, $request->filename);
+        $excel->export();
     }
 }

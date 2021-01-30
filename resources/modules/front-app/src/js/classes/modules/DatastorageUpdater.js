@@ -68,7 +68,10 @@ class DataStorageUpdater extends AltrpModel {
             res = await (new Resource({ route: dataSource.getWebUrl() })).getAll();
           }
         } catch (err) {
-          console.log(err);
+          if(err instanceof Promise){
+            err = await err.then();
+          }
+          console.error(err);
         }
         res = _.get(res, 'data', res);
         appStore.dispatch(changeCurrentDataStorage(dataSource.getAlias(), res));
@@ -144,14 +147,19 @@ class DataStorageUpdater extends AltrpModel {
           // }
         }
       });
-      if (!_.isEqual(params, oldParams) && !updating) {
+      if (! _.isEqual(params, oldParams) && ! updating) {
         ds.updating = true;
         let res = {};
-        res = await (new Resource({ route: dataSource.getWebUrl() })).getQueried(params);
-        res = _.get(res, 'data', res);
-        appStore.dispatch(changeCurrentDataStorage(dataSource.getAlias(), res));
-        dataSource.params = _.cloneDeep(params);
-        ds.updating = false;
+        try{
+          res = await (new Resource({ route: dataSource.getWebUrl() })).getQueried(params);
+          res = _.get(res, 'data', res);
+          appStore.dispatch(changeCurrentDataStorage(dataSource.getAlias(), res));
+          dataSource.params = _.cloneDeep(params);
+        } catch (err) {
+          console.error(err);
+        }finally {
+          ds.updating = false;
+        }
       }
     }
   }

@@ -84,6 +84,10 @@ export function actionsControllers(element){
         label: 'Table to CSV',
       },
       {
+        value: 'table_to_xls',
+        label: 'Table to XLS'
+      },
+      {
         value: 'login',
         label: 'Login',
       },
@@ -109,6 +113,7 @@ export function actionsControllers(element){
   actionsRepeater.addControl('action', {
     type: CONTROLLER_TEXT,
     dynamic: false,
+    responsive: false,
     label: 'Add Action Name',
     conditions: {
       type: [
@@ -168,6 +173,7 @@ export function actionsControllers(element){
   actionsRepeater.addControl('form_id', {
     label: 'Form ID',
     dynamic: false,
+    responsive: false,
     conditions: {
       type: [
         'form',
@@ -179,12 +185,14 @@ export function actionsControllers(element){
   actionsRepeater.addControl('name', {
     label: 'File Name',
     dynamic: false,
+    responsive: false,
     conditions: {
       type: [
         'page_to_pdf',
         'elements_to_pdf',
         'data_to_csv',
         'table_to_csv',
+        'table_to_xls'
       ],
     },
   });
@@ -238,6 +246,18 @@ export function actionsControllers(element){
     },
   });
 
+  actionsRepeater.addControl('outer', {
+    label: 'Outer',
+    type: CONTROLLER_SWITCHER,
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: [
+        'redirect',
+      ],
+    },
+  });
+
   actionsRepeater.addControl('elements_ids', {
     label: 'Elements',
     responsive: false,
@@ -263,7 +283,8 @@ export function actionsControllers(element){
         'scroll_to_element',
         'trigger',
         'table_to_csv',
-        'toggle_offcanvas'
+        'toggle_offcanvas',
+        'table_to_xls',
       ],
     },
   });
@@ -390,6 +411,7 @@ export function actionsControllers(element){
     isClearable: true,
     options_resource: '/admin/ajax/templates/options?template_type=popup&value=guid',
     nullable: true,
+    responsive: false,
     conditions: {
       type: [
         'toggle_popup',
@@ -400,24 +422,28 @@ export function actionsControllers(element){
   actionsRepeater.addControl('confirm', {
     type: CONTROLLER_TEXTAREA,
     dynamic: false,
+    responsive: false,
     label: 'Confirm Text',
   });
 
   actionsRepeater.addControl('alert', {
     type: CONTROLLER_TEXTAREA,
     dynamic: false,
+    responsive: false,
     label: 'Success',
   });
 
   actionsRepeater.addControl('reject', {
     type: CONTROLLER_TEXTAREA,
     dynamic: false,
+    responsive: false,
     label: 'Reject',
   });
 
   element.addControl('actions', {
     label: 'Actions',
     type: CONTROLLER_REPEATER,
+    responsive: false,
     fields: actionsRepeater.getControls(),
   });
 

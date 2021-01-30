@@ -24,7 +24,7 @@ class PagesController extends Controller
     $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
     $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
     $_pages = $search
-        ? Page::where('type',null)->getBySearch($search, 'title', [], $orderColumn, $orderType)
+        ? Page::getBySearch($search, 'title', [], $orderColumn, $orderType)
         : Page::where('type',null)->get()->$sortType( $orderColumn )->values();
     $pages = [];
     foreach ( $_pages as $page ) {

@@ -269,8 +269,9 @@ class ElementWrapper extends Component {
     const elementHideTrigger = this.props.element.settings.hide_on_trigger;
     const { isFixed } = this.props.element.getSettings();
 
+    let errorContent = null;
     if (this.state.errorInfo) {
-      return (
+      errorContent = (
         <div className="altrp-error">
           <h2>Something went wrong.</h2>
           <details style={{ whiteSpace: "pre-wrap" }}>
@@ -371,12 +372,13 @@ class ElementWrapper extends Component {
             </button>
           </div>
         </div>
-        {React.createElement(this.props.component, {
+        {errorContent || React.createElement(this.props.component, {
           ref: this.actionRef,
           element: this.props.element,
           children: this.state.children,
           currentModel: this.props.currentModel,
           currentUser: this.props.currentUser,
+          currentScreen: this.props.currentScreen,
           currentDataStorage: this.props.currentDataStorage,
           fireAction: this.fireAction,
           CKEditor: CKEditor,
@@ -417,7 +419,8 @@ function mapStateToProps(state) {
     currentUser: state.currentUser,
     controllerValue: state.controllerValue,
     currentDataStorage: state.currentDataStorage,
-    hideTriggers: state.hideTriggers
+    hideTriggers: state.hideTriggers,
+    currentScreen: state.currentScreen,
   };
 }
 

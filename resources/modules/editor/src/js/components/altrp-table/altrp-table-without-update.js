@@ -8,7 +8,8 @@ import {
   storeWidgetState,
   scrollbarWidth, isEditor, parseURLTemplate, mbParseJSON,
   renderAssetIcon,
-  generateButtonsArray
+  generateButtonsArray,
+  renderIcon
 } from "../../../../../front-app/src/js/helpers";
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { Link } from "react-router-dom";
@@ -124,13 +125,14 @@ function AltrpTableWithoutUpdate(
 
   function DefaultCell(
     { row,
+      data,
       cell, value: initialValue,
       updateData }) {
     const { column } = cell;
     const [value, setValue] = React.useState(initialValue);
     React.useEffect(() => {
       setValue(initialValue);
-    }, [initialValue]);
+    }, [initialValue, cell]);
     const { column_template, column_is_editable, column_edit_url, _accessor } = column;
     const [columnTemplate, setColumnTemplate] = React.useState(null);
     const columnEditUrl =
@@ -139,7 +141,7 @@ function AltrpTableWithoutUpdate(
           return null;
         }
         return parseURLTemplate(column_edit_url, row.original);
-      }, [column_edit_url, column_is_editable]);
+      }, [column_edit_url, column_is_editable, row, ]);
 
     React.useEffect(() => {
       if (column_template) {
@@ -177,20 +179,20 @@ function AltrpTableWithoutUpdate(
         }
       })
     }
-
     const columnTemplateContent = React.useMemo(() => {
       if (!columnTemplate) {
         return null;
       }
       let columnTemplateContent = frontElementsFabric.cloneElement(columnTemplate);
       columnTemplateContent.setCardModel(new AltrpModel(row.original || {}),);
+      // console.log(row.original);
       return React.createElement(columnTemplateContent.componentClass,
         {
           element: columnTemplateContent,
           ElementWrapper: ElementWrapper,
           children: columnTemplateContent.children
         });
-    }, [columnTemplate]);
+    }, [columnTemplate, row.original, data]);
     if (columnTemplateContent) {
       return <div className="altrp-posts"><div className="altrp-post overflow-visible">{columnTemplateContent}</div></div>;
     }
@@ -235,13 +237,18 @@ function AltrpTableWithoutUpdate(
     row_select_all,
     hide_columns,
     resize_columns,
+    table_transpose,
     virtualized_rows,
     replace_rows,
     replace_width,
     ids_storage,
-    checkbox_checked_icon: checkedIcon,
-    checkbox_unchecked_icon: uncheckedIcon,
-    checkbox_indeterminate_icon: indeterminateIcon } = settings;
+    hide_grouped_column_icon,
+    grouped_column_icon,
+    hide_not_grouped_column_icon,
+    not_grouped_column_icon,
+    checkbox_checked_icon: checkedIcon = {},
+    checkbox_unchecked_icon: uncheckedIcon = {},
+    checkbox_indeterminate_icon: indeterminateIcon = {} } = settings;
   const [cardTemplate, setCardTemplate] = React.useState(null);
   /**
    * Для перетаскивания
@@ -368,7 +375,7 @@ function AltrpTableWithoutUpdate(
         // Let's make a column for selection
         {
           id: 'selection',
-          width: row_select_width || 0,
+          column_width: row_select_width || 0,
           // The header can use the table's getToggleAllRowsSelectedProps method
           // to render a checkbox
           column_name: ({ getToggleAllRowsSelectedProps, getToggleAllPageRowsSelectedProps }) => {
@@ -475,7 +482,6 @@ function AltrpTableWithoutUpdate(
   /**
    * END настройки таблицы, свызов хука таблицы
    */
-  // console.log(ReactTable);
   const {
     getTableProps,
     getTableBodyProps,
@@ -547,12 +553,12 @@ function AltrpTableWithoutUpdate(
     if (selected_storage) {
       setDataByPath(selected_storage, originalSelectedRows);
     }
-  }, [selected_storage, originalSelectedRows]);
+  }, [selectedFlatRows]);
   React.useEffect(() => {
     if (ids_storage) {
       setDataByPath(ids_storage, selectedIds);
     }
-  }, [ids_storage, selectedIds]);
+  }, [selectedFlatRows]);
 
   /**
    * Настройки пагинации
@@ -619,26 +625,35 @@ function AltrpTableWithoutUpdate(
               {replace_rows && <div className="altrp-table-th" style={{ width: replace_width }} />}
               {headerGroup.headers.map((column, idx) => {
                 const { column_width, column_header_alignment } = column;
-                let columnProps = column.getHeaderProps();
-
-                columnProps = column.getHeaderProps(column.getSortByToggleProps());
-
-                const resizerProps = { ...column.getResizerProps(), onClick: e => { e.stopPropagation(); } };
+                let columnProps = column.getHeaderProps(column.getSortByToggleProps());
+                const resizerProps = {
+                  ...column.getResizerProps(),
+                  onClick: e => { e.stopPropagation(); }
+                };
                 if (!resize_columns && !virtualized_rows) {
                   // delete columnProps.style;
                   columnProps.style = {};
                   if (column_width) columnProps.style.width = column_width + '%';
                   if (column_header_alignment) columnProps.style.textAlign = column_header_alignment;
                 }
+                let columnNameContent = column.render('column_name');
+                if (_.isString(columnNameContent)) {
+                  columnNameContent = <span dangerouslySetInnerHTML={{ __html: column.render('column_name') }} />;
+                }
+
+                if(table_transpose){
+                  _.unset(columnProps, 'style.width')
+                }
                 return <div {...columnProps}
                   className="altrp-table-th"
-                  key={idx}>{
-                    column.render('column_name')
-                  }
+                  key={idx}>
+                  {columnNameContent}
                   {column.canGroupBy ? (
                     // If the column can be grouped, let's add a toggle
                     <span {...column.getGroupByToggleProps()} className="altrp-table-th__group-toggle">
-                      {column.isGrouped ? ' 🛑 ' : ' 👊 '}
+                      {column.isGrouped ?
+                        renderIcon(hide_not_grouped_column_icon, not_grouped_column_icon, ' 🛑 ', 'not-grouped-column') :
+                        renderIcon(hide_grouped_column_icon, grouped_column_icon, ' 👊 ', 'grouped-column')}
                     </span>
                   ) : null}
                   {
@@ -724,6 +739,7 @@ const TableBody =
       virtualized_rows,
       virtualized_height,
       item_size,
+      table_style_table_striple_style: isStriped
     } = settings;
     const RenderRow = React.useCallback(
       ({ index, style }) => {
@@ -759,7 +775,7 @@ const TableBody =
         </FixedSizeList>
       </div>
     }
-    return <div {...getTableBodyProps()} className="altrp-table-tbody">
+    return <div {...getTableBodyProps()} className={`altrp-table-tbody ${isStriped ? "altrp-table-tbody--striped" : ""}`}>
       {(page ? page : rows).map((row, i) => {
         prepareRow(row);
         return <Row
@@ -810,7 +826,16 @@ export function Pagination(
     widgetId,
     gotoPage,
   }) {
-  const { inner_page_count_options, inner_page_type, current_page_text, inner_page_count, next_icon, prev_icon } = settings;
+  const {
+    inner_page_count_options,
+    inner_page_type,
+    current_page_text,
+    inner_page_count,
+    next_icon, prev_icon,
+    first_last_buttons_count,
+    middle_buttons_count,
+    is_with_ellipsis
+  } = settings;
   let countOptions =
     React.useMemo(() => {
       let countOptions = null;
@@ -852,10 +877,11 @@ export function Pagination(
 
       // })}</div>
       return <div className="altrp-pagination-pages">
-        {pageCount > 7
-          ? generateButtonsArray(pageIndex, pageCount).map((item, index) => item === "ellipsis"
-            ? <div key={item + index} className="altrp-pagination__ellipsis">...</div>
-            : <PageButton key={item} index={item} pageIndex={pageIndex} gotoPage={gotoPage} />)
+        {pageCount > first_last_buttons_count * 2 + middle_buttons_count
+          ? generateButtonsArray(pageIndex, pageCount, first_last_buttons_count, middle_buttons_count)
+            .map((item, index) => item === "ellipsis"
+              ? is_with_ellipsis ? <div key={item + index} className="altrp-pagination__ellipsis">...</div> : <span>&nbsp;</span>
+              : <PageButton key={item} index={item} pageIndex={pageIndex} gotoPage={gotoPage} />)
           : [...Array(pageCount)].map((_, index) => <PageButton key={index} index={index} pageIndex={pageIndex} gotoPage={gotoPage} />)}
       </div>
     }
@@ -867,19 +893,18 @@ export function Pagination(
         previousPage();
       }}
       disabled={pageIndex === 0}>
-      <span>{settings.prev_text || 'Previous Page'}</span>
+      <span dangerouslySetInnerHTML={{ __html: settings.prev_text || 'Previous Page' }} />
       {renderAssetIcon(prev_icon)}
     </button>}
     {!settings.hide_pages_buttons_button && <div className="altrp-pagination__count">
       {pageText}
-
     </div>}
     {!settings.hide_next_page_button && <button className="altrp-pagination__next"
       onClick={() => {
         nextPage()
       }}
       disabled={pageCount === pageIndex + 1}>
-      <span>{settings.next_text || 'Next Page'}</span>
+      <span dangerouslySetInnerHTML={{ __html: settings.next_text || 'Next Page' }} />
       {renderAssetIcon(next_icon)}
     </button>}
     {!settings.hide_page_input && <input className="altrp-pagination__goto-page"
@@ -1114,7 +1139,17 @@ function NumberRangeColumnFilter({
  */
 export function settingsToColumns(settings, widgetId) {
   let columns = [];
-  let { tables_columns, card_template, row_expand, virtualized_rows, resize_columns } = settings;
+  let {
+    tables_columns,
+    card_template,
+    row_expand,
+    virtualized_rows,
+    resize_columns,
+    hide_expanded_row_icon,
+    expanded_row_icon,
+    hide_not_expanded_row_icon,
+    not_expanded_row_icon
+  } = settings;
   tables_columns = tables_columns || [];
   /**
    * Если в колонке пустые поля, то мы их игнорируем, чтобы не было ошибки
@@ -1155,7 +1190,8 @@ export function settingsToColumns(settings, widgetId) {
         };
       }
       if (virtualized_rows || resize_columns) {
-        _column.width = (Number(_column.column_width) || 150) + '%';
+        // _column.width = (Number(_column.column_width) || 150) + '%';
+        _column.width = (Number(_column.column_width) || 150);
       }
       columns.push(_column);
     }
@@ -1165,7 +1201,9 @@ export function settingsToColumns(settings, widgetId) {
       id: 'expander', // Make sure it has an ID
       column_name: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
         <span {...getToggleAllRowsExpandedProps()} className="altrp-table__all-row-expander">
-          {isAllRowsExpanded ? '👇' : '👉'}
+          {isAllRowsExpanded ?
+            renderIcon(hide_expanded_row_icon, expanded_row_icon, '👇', 'expanded-row') :
+            renderIcon(hide_not_expanded_row_icon, not_expanded_row_icon, '👉', 'not-expanded-row')}
         </span>
       ),
       Cell: ({ row }) =>
@@ -1182,7 +1220,9 @@ export function settingsToColumns(settings, widgetId) {
               },
             })}
           >
-            {row.isExpanded ? '👇' : '👉'}
+            {row.isExpanded ?
+              renderIcon(hide_expanded_row_icon, expanded_row_icon, '👇', 'expanded-row') :
+              renderIcon(hide_not_expanded_row_icon, not_expanded_row_icon, '👉', 'not-expanded-row')}
           </span>
         ) : null,
     });
@@ -1241,10 +1281,8 @@ function GlobalFilter({
   let placeholder = global_filter_placeholder || `${count} records...`;
   placeholder = placeholder.replace(/{{count}}/g, count);
   return (
-    <span className="altrp-table-global-filter">
-      <label htmlFor={`altrp-table-global-filter${widgetId}`}>
-        {labelText}
-      </label>
+    <div className="altrp-table-global-filter">
+      <label htmlFor={`altrp-table-global-filter${widgetId}`} dangerouslySetInnerHTML={{ __html: labelText }} />
       <input
         id={`altrp-table-global-filter${widgetId}`}
         value={value || ""}
@@ -1255,7 +1293,7 @@ function GlobalFilter({
         placeholder={placeholder}
 
       />
-    </span>
+    </div>
   )
 }
 const DND_ITEM_TYPE = 'row';
@@ -1270,6 +1308,10 @@ const Cell = ({ cell, settings }) => {
     resize_columns,
     replace_rows,
     virtualized_rows,
+    hide_expanded_row_icon,
+    expanded_row_icon,
+    hide_not_expanded_row_icon,
+    not_expanded_row_icon
   } = settings;
   let cellContent = cell.render('Cell');
   if (cell.column.id === '##') {
@@ -1279,7 +1321,9 @@ const Cell = ({ cell, settings }) => {
     cellContent = (
       <>
         <span {...row.getToggleRowExpandedProps()}>
-          {row.isExpanded ? '👇' : '👉'}
+          {row.isExpanded ?
+            renderIcon(hide_expanded_row_icon, expanded_row_icon, '👇', 'expanded-row') :
+            renderIcon(hide_not_expanded_row_icon, not_expanded_row_icon, '👉', 'not-expanded-row')}
         </span>{' '}
         {cell.render('Cell')} ({recurseCount(row, 'subRows')})
       </>
@@ -1327,6 +1371,11 @@ const Cell = ({ cell, settings }) => {
   //   cellClassNames.join( `altrp-table-td_alignment-${column.column_body_alignment}`);
   // }
   let style = cell.column.column_body_alignment ? { textAlign: cell.column.column_body_alignment } : {};
+  style = _.assign(style, cellProps.style || {});
+  if (cell.column.column_cell_vertical_alignment && cell.column.column_cell_vertical_alignment !== 'inherit') {
+    style.verticalAlign = cell.column.column_cell_vertical_alignment;
+  }
+
   return <div {...cellProps} style={style} className={cellClassNames.join(' ')}>{cellContent}</div>
 };
 /**
@@ -1448,7 +1497,6 @@ const Row = ({ row,
   //       })}
   //     </tr>
   // );
-  // console.log(style);
   const rowStyles = React.useMemo(() => {
     if (!resize_columns && !virtualized_rows) {
       return {};
@@ -1475,7 +1523,9 @@ const Row = ({ row,
             cellContent = (
               <>
                 <span {...row.getToggleRowExpandedProps()}>
-                  {row.isExpanded ? '👇' : '👉'}
+                  {row.isExpanded ?
+                    renderIcon(hide_expanded_row_icon, expanded_row_icon, '👇', 'expanded-row') :
+                    renderIcon(hide_not_expanded_row_icon, not_expanded_row_icon, '👉', 'not-expanded-row')}
                 </span>{' '}
                 {cell.render('Cell')} ({recurseCount(row, 'subRows')})
                 </>

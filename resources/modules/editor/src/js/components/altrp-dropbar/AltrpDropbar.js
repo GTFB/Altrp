@@ -79,6 +79,7 @@ class Dropbar extends Component {
               }
               )
           }
+
           <AltrpPopper
             target={this.children}
             portal={true}

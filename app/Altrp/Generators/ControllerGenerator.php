@@ -20,6 +20,7 @@ use App\SQLEditor;
 use Artisan;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ControllerGenerator extends AppGenerator
@@ -234,15 +235,22 @@ class ControllerGenerator extends AppGenerator
                 $url = $modelName . "/{{$singleResource}}";
                 $name = ucfirst($action) . ' ' . Str::studly($singleResource);
             }
-            $sources[] = [
+
+            $requestType = $this->createRequestType($action);
+
+            $sourceData = [
                 "model_id" => $this->getModelId(),
                 "controller_id" => $this->controllerModel->id,
                 "url" => '/' . $url,
                 "api_url" => '/' . $url,
                 "type" => $action,
                 "name" => $name,
+                "title" => $name,
+                'request_type' => $requestType,
                 "created_at" => $nowTime,
             ];
+
+            $sources[] = $sourceData;
         }
 
         try {
@@ -263,10 +271,41 @@ class ControllerGenerator extends AppGenerator
                 }
             }
         } catch (\Exception $e) {
+            Log::info($e->getMessage());
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * Сгенерировать тип запроса источника данных
+     * @param $action
+     * @return string
+     */
+    protected function createRequestType($action)
+    {
+        switch ($action) {
+            case 'get':
+            case 'show':
+            case 'options':
+            case 'filters':
+                $requestType = 'get';
+                break;
+            case 'add':
+                $requestType = 'post';
+                break;
+            case 'update':
+            case 'update_column':
+                $requestType = 'put';
+                break;
+            case 'delete':
+                $requestType = 'delete';
+                break;
+            default:
+                $requestType = 'get';
+        }
+        return $requestType;
     }
 
 //    protected function getSources($actions, $tableName, $nowTime)
@@ -462,7 +501,7 @@ class ControllerGenerator extends AppGenerator
                 '--model-namespace' => $modelNamespace,
                 '--controller-namespace' => $namespace,
                 '--route-group' => $prefix,
-                '--validations' => $validations,
+//                '--validations' => $validations,
                 '--relations' => $relations,
                 '--custom-namespaces' => $this->getCustomCodeBlock($customCode, 'custom_namespaces'),
                 '--custom-traits' => $this->getCustomCodeBlock($customCode, 'custom_traits'),
@@ -604,11 +643,11 @@ class ControllerGenerator extends AppGenerator
     /**
      * Получить валидационные правила
      *
-     * @return string
+     * @return
      */
     protected function getValidationRules()
     {
-        return $this->controllerModel->validations ?? null;
+        return $this->controllerModel->model->validations ?? null;
     }
 
     /**
@@ -895,16 +934,17 @@ class ControllerGenerator extends AppGenerator
      *
      * @return string
      */
-    protected function getValidations()
+    protected function getValidations($model, $type)
     {
         $validations = [];
-        $validationRules = $this->getValidationRules();
-        if (!$validationRules) return null;
-        $validationRules = explode(';', $validationRules);
-        foreach ($validationRules as $rule) {
-            $parts = explode('#', $rule);
-            $validations[] = "'{$parts[0]}' => '" . $parts[1] . "',";
-
+        $validationFields = $this->getValidationRules();
+        if (!$validationFields) return null;
+        foreach ($validationFields as $field) {
+            if (!$field->$type || !$field->rules->toArray()) continue;
+            $rules = $field->rules->implode('rule', '|');
+            $fieldName = $field->column->name;
+            if ($field->column_name) $fieldName = $field->column_name;
+            $validations[] = "'{$fieldName}' => '" . $rules . "',";
         }
         return implode(PHP_EOL . "\t\t\t", $validations);
     }
@@ -916,18 +956,20 @@ class ControllerGenerator extends AppGenerator
      */
     public function generateRequests()
     {
-        $requests = ['Store', 'Update'];
-        $validations = $this->getValidations();
-        foreach ($requests as $name) {
-            $request = new RequestFile(
-                $this->controllerModel->model,
-                $name,
-                $validations
-            );
-            $requestWriter = new RequestFileWriter();
-            $requestWriter->write($request);
-        }
-        return true;
+        $requestFileCreated = new RequestFile(
+            $this->controllerModel->model,
+            'Store',
+            $this->getValidations($this->controllerModel->model, 'is_created')
+        );
+        $requestFileUpdated = new RequestFile(
+            $this->controllerModel->model,
+            'Update',
+            $this->getValidations($this->controllerModel->model, 'is_updated')
+        );
+        $requestFileWriter = new RequestFileWriter();
+        $resCreated = $requestFileWriter->write($requestFileCreated);
+        $resUpdated = $requestFileWriter->write($requestFileUpdated);
+        return $resCreated && $resUpdated;
     }
 
     /**

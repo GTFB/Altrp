@@ -3,6 +3,19 @@
 
 ## Changelog
 
+### 0.13.0
++ Аdd the Template Widget
++ Аdd the Section and Column Link
++ Many URL Params for Pages 
+
+### 0.12.1
++ Аdd the Adminbar
++ Insert Custom SVG to Content
+
+### 0.11.16
++ Аdd the Possibility to Delete Widgets with Errors
++ Аdd the Possibility to Hide Export Panel in Dashboard Widget
+
 ### 0.11.1
 + Add Action Update Elements & Bulk Form Action
 + Draggable Repeater Items

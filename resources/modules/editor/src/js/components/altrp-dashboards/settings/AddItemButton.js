@@ -1,4 +1,4 @@
-import React, { Component, Suspense } from "react";
+import React, { Component } from "react";
 
 class AddItemButton extends Component {
   constructor(props) {
@@ -7,7 +7,15 @@ class AddItemButton extends Component {
 
   render() {
     return (
-      <button onClick={this.props.onAddItem}>Добавить виджет</button>
+      <button
+        className={`altrp-btn-draw`}
+        style={{
+          margin: "5px 5px 5px 5px"
+        }}
+        onClick={this.props.onAddItem}
+      >
+        Добавить виджет
+      </button>
     );
   }
 }

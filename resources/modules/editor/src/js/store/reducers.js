@@ -20,7 +20,9 @@ import { hideTriggersReducer } from "../../../../front-app/src/js/store/hide-tri
 import { elementReducer } from "./altrp-dashboard/reducers";
 import { altrpMetaReducer } from "../../../../front-app/src/js/store/altrp-meta-storage/reducers";
 import { altrpPageStateReducer } from "../../../../front-app/src/js/store/altrp-page-state-storage/reducers";
-import {fontsReducer} from "../../../../front-app/src/js/store/fonts-storage/reducers";
+import { fontsReducer } from "../../../../front-app/src/js/store/fonts-storage/reducers";
+import { exportDashboard } from "../../../../front-app/src/js/store/altrp-dashboard-export/reducers";
+import {mediaScreenReducer} from "../../../../front-app/src/js/store/media-screen-storage/reducers";
 
 export default combineReducers({
   currentElement: currentElementReducer,
@@ -45,4 +47,6 @@ export default combineReducers({
   altrpPageState: altrpPageStateReducer,
   altrpFonts: fontsReducer,
   historyStore: historyStoreReducer,
+  exportDashboard: exportDashboard,
+  currentMediaScreen: mediaScreenReducer,
 });

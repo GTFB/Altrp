@@ -15,6 +15,7 @@ import StiyleSettings from "./settings/StyleSettings";
 import FilterParameters from "./settings/FilterParameters";
 import DiagramTypeSettings from "./settings/DiagramTypeSettings";
 import LegendSettings from "./settings/LegendSettings";
+import TooltipSettings from "./settings/TooltipSettings";
 import AnimationSettings from "./settings/AnimationSettings";
 import SortData from "./settings/SortData";
 
@@ -25,7 +26,7 @@ const mapStateToProps = state => {
 function mapDispatchToProps(dispatch) {
   return {
     editElementDispatch: data => dispatch(editElement(data))
-  };
+  }; 
 }
 
 class WidgetSettings extends Component {
@@ -207,7 +208,7 @@ class WidgetSettings extends Component {
             name[index] = nameDatasource;
           }
         });
-        name = name.join(this.parseHtmlEntities(this.state.delimer));
+        name = name.join(this.state.delimer);
       } else {
         name = name.split(this.state.delimer);
         arrayOfDatasourceTitles.forEach((nameDatasource, index) => {
@@ -216,7 +217,7 @@ class WidgetSettings extends Component {
             name[index] = nameDatasource;
           }
         });
-        name = name.join(this.parseHtmlEntities(this.state.delimer));
+        name = name.join(this.state.delimer);
       }
     }
     return name;
@@ -474,7 +475,7 @@ class WidgetSettings extends Component {
           >
             <div className="collapse-button-content">
               <div
-                className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font`}
+                className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font altrp-dashboard__drawer--font-margin`}
               >
                 Базовые настройки
               </div>
@@ -555,7 +556,7 @@ class WidgetSettings extends Component {
           >
             <div className="collapse-button-content">
               <div
-                className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font`}
+                className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font altrp-dashboard__drawer--font-margin`}
               >
                 Настройки стилей
               </div>
@@ -569,13 +570,14 @@ class WidgetSettings extends Component {
               <StiyleSettings
                 widgetID={this.props.widgetID}
                 setProperty={this.setProperty}
+                checkboxColor={this.props?.checkboxColor}
                 setColorScheme={this.setColorScheme}
                 setTickRotation={this.setTickRotation}
               />
             </div>
           </Collapse>
         </div>
-        {/* <div className="row">
+        <div className="row">
           <Button
             className="collapse-button"
             onClick={() =>
@@ -585,16 +587,25 @@ class WidgetSettings extends Component {
             aria-expanded={this.state.openTooltipSettings}
           >
             <div className="collapse-button-content">
-              <div>Настройки подсказок</div>
+              <div 
+                className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font altrp-dashboard__drawer--font-margin`}
+              >
+              Настройки подсказок
+              </div>
               <div>
                 {!this.state.openTooltipSettings ? <ArrowDown /> : <ArrowUp />}
               </div>
             </div>
           </Button>
           <Collapse in={this.state.openTooltipSettings}>
-            <div></div>
+            <div>
+              <TooltipSettings
+                widgetID={this.props.widgetID}
+                setProperty={this.setProperty}
+              />
+            </div>
           </Collapse>
-        </div> */}
+        </div>
         <div className="row">
           <Button
             className="collapse-button"
@@ -606,7 +617,7 @@ class WidgetSettings extends Component {
           >
             <div className="collapse-button-content">
               <div
-                className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font`}
+                className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font altrp-dashboard__drawer--font-margin`}
               >
                 Настройки легенды
               </div>
@@ -638,7 +649,7 @@ class WidgetSettings extends Component {
             >
               <div className="collapse-button-content">
                 <div
-                  className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font`}
+                  className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font altrp-dashboard__drawer--font-margin`}
                 >
                   Настройки анимации
                 </div>
@@ -665,6 +676,7 @@ class WidgetSettings extends Component {
           <div className="row justify-content-beetwen mt-3">
             <div className="col">
               <button
+                className={`${this.props.widgetID} altrp-btn-draw`}
                 style={{ width: "100%" }}
                 onClick={e => this.props.onAddItem(this.state.editElement)}
               >
@@ -673,6 +685,7 @@ class WidgetSettings extends Component {
             </div>
             <div className="col">
               <button
+                className={`${this.props.widgetID} altrp-btn-draw`}
                 style={{ width: "100%" }}
                 onClick={e => this.props.onCloseHandler(null, false)}
               >
@@ -684,6 +697,7 @@ class WidgetSettings extends Component {
           <div className="row justify-content-beetwen mt-3">
             <div className="col">
               <button
+                className={`${this.props.widgetID} altrp-btn-draw`}
                 style={{ width: "100%" }}
                 onClick={e => this.props.onCloseHandler(null)}
               >
