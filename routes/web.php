@@ -531,7 +531,3 @@ Route::group(['prefix' => 'ajax', 'middleware' => 'auth'], function () {
  * Обновление всех ресурсов бэкенда
  */
 Route::post('update-all-resources', 'Admin\UpdateController@upgradeAllResources');
-/**
- * Экспорт в Excel
- */
-Route::post('export-excel', 'ReportsController@exportToExcel');

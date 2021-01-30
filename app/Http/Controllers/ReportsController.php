@@ -178,8 +178,8 @@ class ReportsController extends Controller
         return response()->json( $res );
     }
 
-    public function exportToExcel(Request $request, $data, $template, $filename) {
-        $excel = new ExportExcel($data, $template, $filename);
+    public function exportToExcel(Request $request) {
+        $excel = new ExportExcel($request->data, $request->template, $request->filename);
         $excel->export();
     }
 }

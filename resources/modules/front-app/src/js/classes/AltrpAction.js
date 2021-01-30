@@ -14,7 +14,8 @@ import {
   printElements,
   replaceContentWithData,
   scrollToElement,
-  setDataByPath
+  setDataByPath,
+  dataToXLS
 } from "../helpers";
 import { togglePopup } from "../store/popup-trigger/actions";
 
@@ -252,6 +253,9 @@ class AltrpAction extends AltrpModel {
         {
           result = await this.doActionTableToCSV();
         }
+        break;
+      case "table_to_xls":
+        result = await this.doActionTableToXLS();
         break;
       case "login":
         {
@@ -635,6 +639,40 @@ class AltrpAction extends AltrpModel {
     let filename = replaceContentWithData(this.getProperty("name", "file"));
     try {
       return await dataToCSV(data, filename);
+    } catch (error) {
+      console.error(error);
+      return { success: false };
+    }
+  }
+  /**
+   * HTML-таблицу в XLS-файл
+   * @return {Promise}
+   */
+  async doActionTableToXLS() {
+    const elementId = this.getProperty("element_id").trim();
+    if (!elementId) {
+      console.error("Element ID is not set");
+      return { success: true };
+    }
+
+    const table = getHTMLElementById(elementId);
+    if (!table) {
+      console.error("Table with provided ID is not found");
+      return { success: true };
+    }
+
+    const data = dataFromTable(table);
+    const filename = replaceContentWithData(this.getProperty("name", "file'"));
+
+    try {
+      const blob = await dataToXLS(data, filename);
+      let link = document.createElement("a");
+      link.setAttribute("href", window.URL.createObjectURL(blob));
+      link.setAttribute("download", filename + ".xls");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      return { success: true };
     } catch (error) {
       console.error(error);
       return { success: false };
