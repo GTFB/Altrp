@@ -1185,17 +1185,11 @@ export async function dataToCSV(data = {}, filename) {
  * @param {Object data} Объект данных
  * @param {String} filename Имя файла
  */
-export async function dataToXLS(data, filename = "table") {
-  const formattedData = [];
-
-  const headers = _.toPairs(data[0]).map(([name, value]) => name);
-  formattedData.push(headers);
-
-  _.each(data, row => formattedData.push(Object.values(row)));
-
+export async function dataToXLS(data, filename = "table", templateName = "") {
   const formData = new FormData();
   formData.append("filename", filename);
-  formData.append("data", JSON.stringify(formattedData));
+  formData.append("data", JSON.stringify(data));
+  formData.append("template", templateName);
 
   const response = await fetch("/api/export-excel", {
     method: "POST",
