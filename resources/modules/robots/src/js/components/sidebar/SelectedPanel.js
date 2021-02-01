@@ -23,7 +23,7 @@ export default class SelectedPanel extends React.Component {
                   </div>
                   <div className="settings-section__label">Настройки</div>
                 </div>
-                {this.props.chart.selected.id ? (
+                {/* {this.props.chart.selected.id ? (
                   <div className="controllers-wrapper">
                     <div className="controller-container controller-container_textarea">
                       <div className="controller-container__label">Text</div>
@@ -48,7 +48,7 @@ export default class SelectedPanel extends React.Component {
                   </div>
                 ) : (
                   "Select a node to edit"
-                )}
+                )} */}
               </div>
             </div>
           </Scrollbars>

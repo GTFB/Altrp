@@ -4,12 +4,31 @@ import Scrollbars from "react-custom-scrollbars";
 import store from "../../store/store"
 
 export default class WidgetsPanel extends React.Component {
+  onDragStart = (event, nodeType) => {
+    event.dataTransfer.setData('application/reactflow', nodeType);
+    event.dataTransfer.effectAllowed = 'move';
+  }
   render() {
+
+
     return (
       <div className="widget-panel-wrapper">
         <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
           <div className="widget-panel">
-            <SidebarItem
+          <aside>
+            <div className="description">You can drag these nodes to the pane on the right.</div>
+            <div className="dndnode input" onDragStart={(event) => this.onDragStart(event, 'input')} draggable>
+              Input Node
+            </div>
+            <div className="dndnode" onDragStart={(event) => this.onDragStart(event, 'default')} draggable>
+              Default Node
+            </div>
+            <div className="dndnode output" onDragStart={(event) => this.onDragStart(event, 'output')} draggable>
+              Output Node
+            </div>
+          </aside>
+
+            {/* <SidebarItem
               type="begin"
               properties={{ body: "Begin" }}
               ports={{
@@ -93,7 +112,7 @@ export default class WidgetsPanel extends React.Component {
                   type: "top"
                 }
               }}
-            />
+            /> */}
           </div>
         </Scrollbars>
       </div>

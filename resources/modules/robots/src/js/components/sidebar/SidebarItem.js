@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { REACT_FLOW_CHART } from "@mrblenny/react-flow-chart";
+// import { REACT_FLOW_CHART } from "@mrblenny/react-flow-chart";
 
 export default class SidebarItem extends React.Component {
   constructor(props) {
