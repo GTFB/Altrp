@@ -218,3 +218,6 @@ Route::group(['prefix' => 'users'], function () {
 
 Route::post('/feedback', 'MailController@sendMail');
 Route::post('/write_mail_settings', 'MailController@writeSettingsToEnv');
+
+ // Export to XLS
+ Route::post('export-excel', 'ReportsController@exportToExcel');

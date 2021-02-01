@@ -15,7 +15,7 @@ import {
   replaceContentWithData,
   scrollToElement,
   setDataByPath,
-
+  dataToXLS
 } from "../helpers";
 import { togglePopup } from "../store/popup-trigger/actions";
 
@@ -49,7 +49,7 @@ class AltrpAction extends AltrpModel {
    */
   getFormId() {
     let formId = this.getProperty("form_id");
-    if (! formId) {
+    if (!formId) {
       return formId;
     }
     if (formId.indexOf("{{") !== -1) {
@@ -64,7 +64,7 @@ class AltrpAction extends AltrpModel {
    */
   getFormURL() {
     let formURL = this.getProperty("form_url");
-    if (! formURL) {
+    if (!formURL) {
       return formURL;
     }
     if (formURL.indexOf("{{") !== -1) {
@@ -119,7 +119,7 @@ class AltrpAction extends AltrpModel {
   async init() {
     switch (this.getType()) {
       case "form": {
-        if (! this.getFormURL()) {
+        if (!this.getFormURL()) {
           this.setProperty("_form", null);
           return;
         }
@@ -253,6 +253,9 @@ class AltrpAction extends AltrpModel {
           result = await this.doActionTableToCSV();
         }
         break;
+      case "table_to_xls":
+        result = await this.doActionTableToXLS();
+        break;
       case "login":
         {
           result = await this.doActionLogin();
@@ -314,9 +317,9 @@ class AltrpAction extends AltrpModel {
     let data = null;
     if (this.getProperty("data")) {
       data = parseParamsFromString(
-          this.getProperty("data"),
-          getAppContext(),
-          true
+        this.getProperty("data"),
+        getAppContext(),
+        true
       );
       // if (!_.isEmpty(data)) {
       //   return form.submit("", "", data);
@@ -375,7 +378,7 @@ class AltrpAction extends AltrpModel {
     }
     if (this.getProperty("path")) {
       let _data = getDataByPath(this.getProperty("path"), {});
-      if(! _.isEmpty(_data)){
+      if (!_.isEmpty(_data)) {
         data = _.assign(_data, data);
       }
     }
@@ -384,7 +387,7 @@ class AltrpAction extends AltrpModel {
      * @type {AltrpForm}
      */
     // let form = this.getProperty("_form");
-    if (! this.getFormURL()) {
+    if (!this.getFormURL()) {
       this.setProperty("_form", null);
       return {
         success: false
@@ -407,6 +410,7 @@ class AltrpAction extends AltrpModel {
       const response = await form.submit("", "", data);
       result = _.assign(result, response);
     } catch (error) {
+      console.log(error);
       result.error = error;
       result.success = false;
     }
@@ -423,7 +427,7 @@ class AltrpAction extends AltrpModel {
       if (this.getProperty("back")) {
         frontAppRouter.history.goBack();
       } else {
-        let innerRedirect = ! this.getProperty("outer");
+        let innerRedirect = !this.getProperty("outer");
         if (innerRedirect) {
           frontAppRouter.history.push(URL);
         } else {
@@ -441,7 +445,7 @@ class AltrpAction extends AltrpModel {
    */
   async doActionToggleElements() {
     let IDs = this.getProperty("elements_ids");
-    if (! IDs) {
+    if (!IDs) {
       return { success: true };
     }
     IDs = IDs.split(",");
@@ -639,6 +643,40 @@ class AltrpAction extends AltrpModel {
     let filename = replaceContentWithData(this.getProperty("name", "file"));
     try {
       return await dataToCSV(data, filename);
+    } catch (error) {
+      console.error(error);
+      return { success: false };
+    }
+  }
+  /**
+   * HTML-таблицу в XLS-файл
+   * @return {Promise}
+   */
+  async doActionTableToXLS() {
+    const elementId = this.getProperty("element_id").trim();
+    if (!elementId) {
+      console.error("Element ID is not set");
+      return { success: true };
+    }
+
+    const table = getHTMLElementById(elementId);
+    if (!table) {
+      console.error("Table with provided ID is not found");
+      return { success: true };
+    }
+
+    const data = dataFromTable(table);
+    const filename = replaceContentWithData(this.getProperty("name", "file'"));
+
+    try {
+      const blob = await dataToXLS(data, filename);
+      let link = document.createElement("a");
+      link.setAttribute("href", window.URL.createObjectURL(blob));
+      link.setAttribute("download", filename + ".xls");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      return { success: true };
     } catch (error) {
       console.error(error);
       return { success: false };
