@@ -13,7 +13,8 @@ import {
   CONTROLLER_SELECT,
   CONTROLLER_COLOR,
   CONTROLLER_QUERY,
-  CONTROLLER_EVENT_HANDLER
+  CONTROLLER_EVENT_HANDLER,
+  CONTROLLER_TYPOGRAPHIC
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 
@@ -263,6 +264,107 @@ class MapConstructor extends BaseElement {
         ]
       }
     });
+
+    this.endControlSection();
+
+    this.startControlSection("styles", {
+      tab: TAB_STYLE,
+      label: "Custom Panel"
+    });
+
+    this.addControl("styles_font_drawer", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic",
+      rules: {
+        ".{{ID}}.altrp-custom--typographic{{STATE}}": [
+          "font-size: {{SIZE}}px;",
+          "font-family: {{FAMILY}}",
+          "line-height: {{LINEHEIGHT}};",
+          "letter-spacing: {{SPACING}}px",
+          "font-weight: {{WEIGHT}}",
+          "text-transform: {{TRANSFORM}}",
+          "font-style: {{STYLE}}",
+          "text-decoration: {{DECORATION}}"
+        ]
+      }
+    });
+
+    this.addControl("styles_font_color_drawer", {
+      type: CONTROLLER_COLOR,
+      label: "Typographic color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        ".{{ID}}.altrp-custom--typographic{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+
+    this.addControl("background_color_btn", {
+      type: CONTROLLER_COLOR,
+      label: "Background color button",
+      // default: {
+      //   color: "rgb(52,59,76)",
+      //   colorPickedHex: "#343B4C",
+      // },
+      rules: {
+        ".{{ID}}.altrp-map__modal.modal__body-save{{STATE}}": "background-color: {{COLOR}};"
+      }
+    });
+
+
+    this.addControl("font_typographic_btn", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic button",
+      // default:{
+      //   lineHeight: 1,
+      //   spacing: 0,
+      //   size: 16,
+      //   weight: "normal",
+      //   family: "Open Sans",
+      //   decoration: ""
+      // },
+      rules: {
+        ".{{ID}}.modal__body-save{{STATE}}": [
+          "font-size: {{SIZE}}px;",
+          "font-family: {{FAMILY}}",
+          "line-height: {{LINEHEIGHT}};",
+          "letter-spacing: {{SPACING}}px",
+          "font-weight: {{WEIGHT}}",
+          "text-transform: {{TRANSFORM}}",
+          "font-style: {{STYLE}}",
+          "text-decoration: {{DECORATION}}"
+        ]
+      }
+    });
+
+    this.addControl("font_color_btn", {
+      type: CONTROLLER_COLOR,
+      label: "Color font button",
+      // default: {
+      //   color: "rgb(255,255,255)",
+      //   colorPickedHex: "#FFF",
+      // },
+      rules: {
+        ".{{ID}}.modal__body-save{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("slider_range_color", {
+      type: CONTROLLER_COLOR,
+      label: "Slider color",
+      default: {
+        color: "black",
+        colorPickedHex: ""
+      },
+      rules: {
+        ".{{ID}}.altrp-dashboard__edit--range-edit-color.MuiSlider-root{{STATE}}":
+          "color: {{COLOR}};"
+      }
+    });
+    this.endControlSection();
 
     advancedTabControllers(this);
   }

@@ -35,6 +35,7 @@ function MapDesigner({
   onTap = noob,
   url,
   field_id,
+  id,
   url_connect = null,
   field_first_connect = null,
   field_second_connect = null
@@ -432,6 +433,7 @@ function MapDesigner({
             updateGeoObjectToModel={updateGeoObjectToModel}
             open={open}
             selected={selected}
+            id={id}
             onClose={() => setOpen(false)}
             setState={setState}
             state={state}

@@ -7,6 +7,7 @@ class Tooltip extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      enablebar: props.datum.enable,
       enable: props.enable,
       point: props.datum.point,
       data: props.datum.point.data,
@@ -50,7 +51,7 @@ class Tooltip extends Component {
       borderRadius: `${settings?.borderRadius || "4px"}`,
       borderColor: `${settings?.borderColor || "black"}`,
       borderWidth: `${settings?.borderWidth || "1px"}`,
-      backgroundColor: `${settings?.backgroundColor || "white"}`,
+      backgroundColor: `${settings?.backgroundColor || "red"}`,
       color: "white",
       width: "fit-content",
       flexDirection: "column-reverse"
@@ -61,26 +62,29 @@ class Tooltip extends Component {
   render() {
     if (this.state.enable) {
       return (
+        <>
         <div className={`${this.props.widgetID} altrp-dashboard__tooltip--label-background col-12`}>
-          <div
-            className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
+          <div             
             style={{
-              textAlign: "left",
-              // color: "red"
-            }}
-          >
-            {this.state.data.x}
-          </div>
-          <div
-            className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
-            style={{
-              textAlign: "right",
-              // color: "blue"
-            }}
-          >
-            {this.state.data.y}
+              whiteSpace: "pre",
+              display: "flex",
+              alignItems: "center"
+            }}>
+            <span
+              style={{
+                display: "block",
+                width: "12px",
+                height: "12px",
+                background: this.state.point.color,
+                marginRight: "7px"
+              }}
+            ></span>
+              <span className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}>
+              {this.state.data.x}: <strong className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}>{this.state.data.y}</strong>
+            </span>
           </div>
         </div>
+      </>
       );
     }
     //Дефолтный тултип
