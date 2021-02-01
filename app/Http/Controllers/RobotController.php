@@ -28,17 +28,7 @@ class RobotController extends Controller
     {
         $robot = Robot::query()->create([
             'name' => $request->name,
-            'data' => json_encode([
-                'offset' => [
-                    'x' => 0,
-                    'y' => 0
-                ],
-                'scale' => 1,
-                'nodes' => [],
-                'links' => [],
-                'selected' => [],
-                'hovered' => []
-            ], JSON_FORCE_OBJECT),
+            'data' => json_encode([]),
             'user_id' => auth()->id()
         ]);
 
