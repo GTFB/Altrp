@@ -13,7 +13,10 @@ import { hot } from "react-hot-loader";
 // import CustomNode from "./js/components/sidebar/items/CustomNode";
 // import CustomNodeInner from "./js/components/sidebar/items/CustomNodeInner";
 import store from "./js/store/store";
-import { setRobotSettingsData } from "./js/store/robot-settings/actions";
+import {
+  setNodePosition,
+  setRobotSettingsData
+} from "./js/store/robot-settings/actions";
 
 import Sidebar from "./js/components/sidebar/Sidebar";
 
@@ -98,9 +101,7 @@ class RobotsEditor extends Component {
     console.log(newNode);
 
     const robotStore = store.getState()?.robotSettingsData;
-    console.log("Old store: ", robotStore);
     const newStore = robotStore.concat(newNode);
-    console.log("New store: ", newStore);
     store.dispatch(setRobotSettingsData(newStore));
 
     // setElements((es) => es.concat(newNode));
@@ -120,6 +121,10 @@ class RobotsEditor extends Component {
     this.setState(s => ({ ...s, reactFlowInstance: _reactFlowInstance }));
   };
 
+  onNodeDragStop(event, node) {
+    store.dispatch(setNodePosition(node));
+  }
+
   render() {
     return (
       <div className="page__content">
@@ -132,6 +137,8 @@ class RobotsEditor extends Component {
               onElementsRemove={this.onElementsRemove}
               onLoad={this.onLoad}
               onDrop={this.onDrop}
+              onNodeDragStart={this.onNodeDragStart}
+              onNodeDragStop={this.onNodeDragStop}
               onDragOver={this.onDragOver}
             >
               <Controls />
