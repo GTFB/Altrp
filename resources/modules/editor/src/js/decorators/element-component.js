@@ -11,15 +11,18 @@ export function changeSetting(settingName, value) {
   let newState = _.cloneDeep(this.state);
   newState.settings[settingName] = value;
   console.log(newState.settings[settingName])
+
   /**
    * Если виджет поле, то обнолвяем и значение
    */
   if((settingName === 'content_default_value')){
     newState.value = value;
   }
+
   this.setState({
     ...newState
   }, () => {
+    console.log("------------------------")
     console.log(this.state);
   });
 }

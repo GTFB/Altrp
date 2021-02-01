@@ -160,6 +160,7 @@ class ButtonWidget extends Component {
   }
 
   render() {
+    console.log(this.state.settings.button_text)
     const { link_link = {} } = this.state.settings;
     const { back } = history;
     const background_image = this.props.element.getSettings(

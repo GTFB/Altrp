@@ -160,10 +160,10 @@ class Editor extends Component {
     document.addEventListener('keydown', (event) => {
       if (event.ctrlKey && event.code === 'KeyZ' && event.shiftKey) {
         console.log('redo');   
-        controllerHistory.redo()
+        controllerHistory.redo();
       } else if (event.ctrlKey && event.code === 'KeyZ') {
         console.log('undo');   
-        controllerHistory.undo()
+        controllerHistory.undo();
       }
     });
   }
