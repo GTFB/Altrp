@@ -103,7 +103,23 @@ export function actionsControllers(element){
         value: 'update_current_datasources',
         label: 'Update Current Datasources',
       },
+      {
+        value: 'custom_code',
+        label: 'Custom JS-Code',
+      },
     ],
+  });
+
+  actionsRepeater.addControl('code', {
+    type: CONTROLLER_TEXTAREA,
+    dynamic: false,
+    responsive: false,
+    label: 'Code',
+    conditions: {
+      type: [
+        'custom_code'
+      ],
+    },
   });
 
   actionsRepeater.addControl('action', {
