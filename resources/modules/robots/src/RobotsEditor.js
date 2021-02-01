@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import ReactFlow, { ReactFlowProvider, Controls, removeElements, addEdge } from 'react-flow-renderer';
+import ReactFlow, {
+  ReactFlowProvider,
+  Controls,
+  removeElements,
+  addEdge
+} from "react-flow-renderer";
 
 import _ from "lodash";
 import "./sass/styles.scss";
@@ -8,11 +13,9 @@ import { hot } from "react-hot-loader";
 // import CustomNode from "./js/components/sidebar/items/CustomNode";
 // import CustomNodeInner from "./js/components/sidebar/items/CustomNodeInner";
 import store from "./js/store/store";
-import {setRobotSettingsData} from "./js/store/robot-settings/actions";
+import { setRobotSettingsData } from "./js/store/robot-settings/actions";
 
 import Sidebar from "./js/components/sidebar/Sidebar";
-
-
 
 class RobotsEditor extends Component {
   constructor(props) {
@@ -23,17 +26,14 @@ class RobotsEditor extends Component {
       reactFlowInstance: null
     };
     this.resource = new Resource({ route: "/admin/ajax/robots" });
-    
-    // this.onNodeClick = this.onNodeClick.bind(this);
-    // this.callbacks = {
-    //   onNodeBodyChanged: this.onNodeBodyChanged.bind(this)
-    // };
+
+    this.reactFlowRef = React.createRef();
   }
 
   // Записьв store в state
   updateRobotState() {
     const robotState = store.getState()?.robotSettingsData;
-    this.setState(s => ({ ...s, elements: robotState}));
+    this.setState(s => ({ ...s, elements: robotState }));
   }
 
   async componentDidMount() {
@@ -67,77 +67,76 @@ class RobotsEditor extends Component {
   // }
 
   // Удаление ноды
-  onElementsRemove = (elementsToRemove) => {
+  onElementsRemove = elementsToRemove => {
     const robotStore = store.getState()?.robotSettingsData;
     const newStore = removeElements(elementsToRemove, robotStore);
     store.dispatch(setRobotSettingsData(newStore));
-  }
+  };
 
   // Добавление связи между нодами
-  onConnect = (params) => {
+  onConnect = params => {
     const robotStore = store.getState()?.robotSettingsData;
     const newStore = addEdge(params, robotStore);
     store.dispatch(setRobotSettingsData(newStore));
-  }
+  };
 
   // Добавление новой ноды
-  onDrop = (event) => {
+  onDrop = event => {
     event.preventDefault();
-    const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-    const type = event.dataTransfer.getData('application/reactflow');
-    const position = reactFlowInstance.project({
+    const reactFlowBounds = this.reactFlowRef.current.getBoundingClientRect();
+    const type = event.dataTransfer.getData("application/reactflow");
+    const position = this.state.reactFlowInstance.project({
       x: event.clientX - reactFlowBounds.left,
-      y: event.clientY - reactFlowBounds.top,
+      y: event.clientY - reactFlowBounds.top
     });
     const newNode = {
-      id: this.getId(),
+      id: `${this.getId()}`,
       type,
       position,
-      data: { label: `${type} node` },
+      data: { label: `${type} node` }
     };
+    console.log(newNode);
 
     const robotStore = store.getState()?.robotSettingsData;
+    console.log("Old store: ", robotStore);
     const newStore = robotStore.concat(newNode);
+    console.log("New store: ", newStore);
     store.dispatch(setRobotSettingsData(newStore));
 
     // setElements((es) => es.concat(newNode));
   };
 
-  getId(){
+  getId() {
     const lengthStore = store.getState().robotSettingsData.length;
-    return ++lengthStore;
+    return lengthStore + 1;
   }
 
-  onDragOver = (event) => {
+  onDragOver = event => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
+    event.dataTransfer.dropEffect = "move";
   };
 
-  onLoad = (_reactFlowInstance) => {
-    // console.log(_reactFlowInstance);
-    this.setState(s => ({ ...s, reactFlowInstance: _reactFlowInstance}));
+  onLoad = _reactFlowInstance => {
+    this.setState(s => ({ ...s, reactFlowInstance: _reactFlowInstance }));
   };
 
   render() {
-    // console.log(store.getState().robotSettingsData);
-    console.log(this.state);
-
     return (
       <div className="page__content">
         <ReactFlowProvider>
-          <Sidebar  chart={store.getState().robotSettingsData || []} />
-          <div className="content">
-          <ReactFlow
-            elements={this.state.elements}
-            onConnect={this.onConnect}
-            onElementsRemove={this.onElementsRemove}
-            onLoad={this.onLoad}
-            onDrop={this.onDrop}
-            onDragOver={this.onDragOver}
-          >
-            <Controls />
-          </ReactFlow>
-          </div>      
+          <Sidebar chart={store.getState().robotSettingsData || []} />
+          <div className="content" ref={this.reactFlowRef}>
+            <ReactFlow
+              elements={this.state.elements}
+              onConnect={this.onConnect}
+              onElementsRemove={this.onElementsRemove}
+              onLoad={this.onLoad}
+              onDrop={this.onDrop}
+              onDragOver={this.onDragOver}
+            >
+              <Controls />
+            </ReactFlow>
+          </div>
         </ReactFlowProvider>
       </div>
     );
