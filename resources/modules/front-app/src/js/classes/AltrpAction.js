@@ -143,7 +143,6 @@ class AltrpAction extends AltrpModel {
         return;
       }
       case "login": {
-        console.log("init");
         const form = formsManager.registerForm(
           this.getFormId(),
           "login",
@@ -282,6 +281,11 @@ class AltrpAction extends AltrpModel {
           result = await this.doActionFormsManipulate();
         }
         break;
+      case "custom_code":
+        {
+          result = await this.doActionCustomCode();
+        }
+        break;
     }
     let alertText = "";
     if (result.success) {
@@ -393,22 +397,22 @@ class AltrpAction extends AltrpModel {
       dynamicURL: true,
       customRoute: this.getFormURL()
     };
-    console.log(formOptions);
     const form = formsManager.registerForm(
       this.getFormId(),
       "",
       this.getProperty("form_method"),
       formOptions
     );
-    console.log(form);
     let result = {
-      success: false
+      success: true
     };
     try {
-      result = await form.submit("", "", data);
+      const response = await form.submit("", "", data);
+      result = _.assign(result, response);
     } catch (error) {
       console.log(error);
       result.error = error;
+      result.success = false;
     }
 
     return result;
@@ -884,6 +888,15 @@ class AltrpAction extends AltrpModel {
           break;
       }
     });
+    return { success: true };
+  }
+  /**
+   * действие - выполнение пользовательского кода
+   * @return {Promise<{}>}
+   */
+  doActionCustomCode() {
+    let code = this.getProperty('code');
+    eval(code);
     return { success: true };
   }
   /**
