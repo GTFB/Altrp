@@ -5,8 +5,7 @@ import controllerDecorate from "../../decorators/controller";
 import { iconsManager } from "../../helpers";
 import Controller from "../../classes/Controller";
 import update from "immutability-helper";
-import { DndProvider, useDrag, useDrop } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { useDrag, useDrop } from "react-dnd";
 
 /**
  * @method _changeValue
@@ -174,7 +173,6 @@ class RepeaterController extends Component {
       </div>
 
       <div className="repeater-fields">
-        <DndProvider backend={HTML5Backend}>
           {
             this.state.items.map((item, idx) => {
               let itemClasses = ['repeater-item'];
@@ -190,7 +188,6 @@ class RepeaterController extends Component {
               />
             })
           }
-        </DndProvider>
       </div>
 
       <div className="d-flex justify-center repeater-bottom">

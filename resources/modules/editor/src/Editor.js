@@ -2,6 +2,8 @@ import "./sass/editor-style.scss";
 import React, { Component } from "react";
 import { hot } from "react-hot-loader";
 import { Provider } from "react-redux";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 import Modules from "./js/classes/Modules";
 import WidgetsPanel from "./js/components/WidgetsPanel";
@@ -185,6 +187,7 @@ class Editor extends Component {
     }
     return (
       <Provider store={store}>
+        <DndProvider backend={HTML5Backend}>
         <div className={templateClasses}
           onClick={this.onClick}
           onDragEnd={this.onDragEnd}>
@@ -245,6 +248,7 @@ class Editor extends Component {
           </div>
         </div>
         <AssetsBrowser />
+        </DndProvider>
       </Provider>
     );
   }
