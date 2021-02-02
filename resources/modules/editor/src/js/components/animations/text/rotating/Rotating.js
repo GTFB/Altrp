@@ -60,11 +60,10 @@ class Rotating extends Component {
         style: {}
       }));
 
-      if(this.props.type === "swirl" || this.props.type === "blinds" || this.props.type === "wave") {
+      if(this.props.type === "swirl" || "blinds" || "wave" && prevProps.type !== "swirl" || "blinds" || "wave") {
         this.setState({index: -1})
       }
 
-      this.getWidth();
       this.rotating();
     };
 
@@ -75,6 +74,11 @@ class Rotating extends Component {
     if(prevProps.type !== this.props.type) {
       update()
     }
+
+    if(JSON.stringify(this.props.text.split("\n")) !== JSON.stringify(prevProps.text.split("\n")) && this.props.type !== "typing" || "clip") {
+      this.getWidth();
+    }
+
   }
 
   getWidth() {
@@ -88,7 +92,9 @@ class Rotating extends Component {
         }
       })
 
-      this.setState({width})
+      if(this.state.width !== width) {
+        this.setState({width})
+      }
     }
   }
 
@@ -144,7 +150,6 @@ class Rotating extends Component {
         }
         break;
       case "flip":
-        this.getWidth();
 
         setTimeout(() => {
           this.setState({step: 0});
@@ -162,7 +167,6 @@ class Rotating extends Component {
           }, 3000);
         break;
       case "swirl":
-        this.getWidth();
 
         if(_.isString(arrayText[this.state.active+1])) {
           const wordNext = arrayText[arrayText.length >= this.state.active+1 ? this.state.active+1 : 0].split("").length;
@@ -176,7 +180,6 @@ class Rotating extends Component {
         setTimeout(() => {
 
           const letterChanging = setInterval(() => {
-            this.getWidth();
             if(this.state.index < this.state.step) {
               this.setState((state) => ({index: state.index+1}))
             } else {
@@ -192,7 +195,6 @@ class Rotating extends Component {
 
         break;
       case "blinds":
-        this.getWidth();
 
         if(_.isString(arrayText[this.state.active+1])) {
           const wordNext = arrayText[arrayText.length >= this.state.active+1 ? this.state.active+1 : 0].split("").length;
@@ -206,7 +208,6 @@ class Rotating extends Component {
         setTimeout(() => {
 
           const letterChanging = setInterval(() => {
-            this.getWidth();
             if(this.state.index < this.state.step) {
               this.setState((state) => ({index: state.index+1}))
             } else {
@@ -222,7 +223,6 @@ class Rotating extends Component {
 
         break;
       case "dropIn":
-        this.getWidth();
 
         setTimeout(() => {
           const wordNext = arrayText.length > this.state.active+1 ? this.state.active+1 : 0;
@@ -235,10 +235,14 @@ class Rotating extends Component {
         }, 4000)
         break;
       case "wave":
-        this.getWidth();
 
         if(_.isString(arrayText[this.state.active+1])) {
-          const wordNext = arrayText[arrayText.length >= this.state.active+1 ? this.state.active+1 : 0].split("").length;
+          let wordNext = "";
+
+          if(arrayText[arrayText.length >= this.state.active+1 ? this.state.active+1 : 0]) {
+            wordNext = arrayText[arrayText.length >= this.state.active+1 ? this.state.active+1 : 0].split("").length
+          }
+
           const wordPrev = arrayText[this.state.active].split("").length;
 
           this.setState({
@@ -248,7 +252,6 @@ class Rotating extends Component {
 
         setTimeout(() => {
           const letterChanging = setInterval(() => {
-            this.getWidth();
             if(this.state.index < this.state.step) {
               this.setState((state) => ({index: state.index+1}))
             } else {
@@ -265,7 +268,6 @@ class Rotating extends Component {
       case "slide":
         if(this.widthRef.current) {
           const length = arrayText.length - 1;
-          this.getWidth();
           setTimeout(() => {
             this.setState((state) => ({active: this.state.active+1 < length ? state.active+1 : -1}))
             this.rotating()
@@ -275,7 +277,6 @@ class Rotating extends Component {
       case "slideDown":
         if(this.widthRef.current) {
           const length = arrayText.length - 1;
-          this.getWidth();
           setTimeout(() => {
             this.setState((state) => ({active: this.state.active+1 < length ? state.active+1 : -1}))
             this.rotating()
