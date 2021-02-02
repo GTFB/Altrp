@@ -63,7 +63,7 @@ class Tooltip extends Component {
     if (this.state.enable) {
       return (
         <>
-        <div className={`${this.props.widgetID} altrp-dashboard__tooltip--label-background col-12`}>
+        <div className={`${this.props.widgetID} altrp-dashboard__tooltip--label-background col-12`} style={{padding: '5px 9px'}}>
           <div             
             style={{
               whiteSpace: "pre",

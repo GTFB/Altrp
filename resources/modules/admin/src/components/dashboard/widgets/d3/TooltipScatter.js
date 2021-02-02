@@ -25,7 +25,7 @@ componentDidUpdate(prevProps, prevState) {
     customTooltip() {
         return (
           <>
-            <div className={`${this.props.widgetID} altrp-dashboard__tooltip--label-background col-12`}>
+            <div className={`${this.props.widgetID} altrp-dashboard__tooltip--label-background col-12`} style={{padding: '5px 9px'}}>
               <div
                 style={{
                   whiteSpace: "pre",

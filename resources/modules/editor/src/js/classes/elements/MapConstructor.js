@@ -364,6 +364,37 @@ class MapConstructor extends BaseElement {
           "color: {{COLOR}};"
       }
     });
+
+    this.addControl("styles_font_drawer_label", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic label",
+      rules: {
+        ".{{ID}}.altrp-map__modal .modal__body-text label{{STATE}}": [
+          "font-size: {{SIZE}}px;",
+          "font-family: {{FAMILY}}",
+          "line-height: {{LINEHEIGHT}};",
+          "letter-spacing: {{SPACING}}px",
+          "font-weight: {{WEIGHT}}",
+          "text-transform: {{TRANSFORM}}",
+          "font-style: {{STYLE}}",
+          "text-decoration: {{DECORATION}}"
+        ]
+      }
+    });
+
+    this.addControl("styles_font_color_drawer_label", {
+      type: CONTROLLER_COLOR,
+      label: "Typographic color label",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        ".{{ID}}.altrp-map__modal .modal__body-text label{{STATE}}": "color: {{COLOR}};"
+      }
+    });
+
+    // .altrp-map__modal .modal__body-text label
     this.endControlSection();
 
     advancedTabControllers(this);
