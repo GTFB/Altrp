@@ -3,6 +3,7 @@ import {connect, useSelector} from "react-redux";
 import DynamicIcon from "../../../svgs/dynamic.svg";
 import {controllerMapStateToProps} from "../../decorators/controller";
 const TinyMCE = React.lazy(() => import("../tinymce/TinyMCE"));
+import { mountListenerHistory, unmountListenerHistory } from '../../helpers';
 
 const WysiwygController = ({ controller, controlId, label }) => {
   const currentElement = useSelector((state) => state.currentElement.currentElement);
@@ -27,6 +28,14 @@ const WysiwygController = ({ controller, controlId, label }) => {
   if (!isShow) {
     return "";
   }
+
+   const onBlur = () => {
+    mountListenerHistory();
+  };
+  const onFocus = () =>{
+    unmountListenerHistory();
+  }
+
   return (
     <div className="controller-container controller-container_wysiwyg">
       <div className="controller-container__label">{label}</div>
@@ -35,7 +44,11 @@ const WysiwygController = ({ controller, controlId, label }) => {
         <DynamicIcon />
       </div>
       <Suspense fallback={<div>Loading...</div>}>
-        <TinyMCE onChange={(value) => setContent(value)} value={content} />
+        <TinyMCE 
+          onChange={(value) => setContent(value)} value={content}
+          onBlur={onBlur}
+          onFocus={onFocus}
+        />
       </Suspense>
     </div>
   );

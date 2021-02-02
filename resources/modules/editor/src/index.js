@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import "./installing";
 import ElementsManager from "./js/classes/modules/ElementsManager";
 import ControllersManager from "./js/classes/modules/ControllersManager";
+import { mountListenerHistory } from './js/helpers';
 import store from "../src/js/store/store";
 import _ from "lodash";
 import IconsManager from "./js/classes/modules/IconsManager";
@@ -105,3 +106,6 @@ import("./Editor.js")
       }
     };
   });
+
+  
+mountListenerHistory();

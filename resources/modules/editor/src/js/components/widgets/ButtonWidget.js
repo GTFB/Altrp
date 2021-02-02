@@ -160,14 +160,13 @@ class ButtonWidget extends Component {
   }
 
   render() {
-    console.log(this.state.settings.button_text)
     const { link_link = {} } = this.state.settings;
     const { back } = history;
     const background_image = this.props.element.getSettings(
       "background_image",
       {}
     );
-
+      
     let modelData = this.props.element.hasCardModel()
       ? this.props.element.getCardModel().getData()
       : this.props.currentModel.getData();
@@ -178,7 +177,7 @@ class ButtonWidget extends Component {
     }
 
     let buttonText = this.getContent("button_text") || "";
-
+    console.log(buttonText)
     let buttonMedia = { ...this.state.settings.button_icon };
     if (this.state.pending) {
       classes += " altrp-disabled";

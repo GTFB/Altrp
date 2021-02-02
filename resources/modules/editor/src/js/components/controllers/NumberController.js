@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import DynamicIcon from '../../../svgs/dynamic.svg'
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
+import { mountListenerHistory, unmountListenerHistory } from '../../helpers';
 
 class NumberController extends Component {
   constructor(props) {
@@ -25,8 +26,12 @@ class NumberController extends Component {
    * @param e
    */
   onBlur = e =>{
+    mountListenerHistory();
     this._changeValue(Number(e.target.value))
   };
+  onFocus = () =>{
+    unmountListenerHistory();
+  }
   /**
    * Изменение больше не обновляет элемент
    * @param e
@@ -51,6 +56,7 @@ class NumberController extends Component {
       <div className="control-group">
         <input className="control-field"
                onBlur={this.onBlur}
+               onFocus={this.onFocus}
                onChange={this.changeValue} value={value} type="number" />
       </div>
     </div>

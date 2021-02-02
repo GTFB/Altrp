@@ -387,7 +387,6 @@ class BaseElement extends ControlStack {
 
   setSettingValue(settingName, value, fromHistory = false) {
     //check change value
-    console.log(this);
     if(this.settings[settingName] !== value) {
       if (!fromHistory)
         store.dispatch(

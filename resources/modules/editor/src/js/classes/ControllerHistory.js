@@ -5,8 +5,10 @@ import { undoHistoryStore, redoHistoryStore } from "../store/history-store/actio
 class ControllerHistory extends AltrpModel {
 
   undo() {
+    console.log('undo')
     let current = appStore.getState().historyStore.current;
     let history = _.cloneDeep(appStore.getState().historyStore.history);
+    console.log('history: ', history);
     if(current >= 0) {
       let restoreElement = history[current];
 
@@ -29,8 +31,10 @@ class ControllerHistory extends AltrpModel {
   }
 
   redo() {
+    console.log('redo')
     let current = appStore.getState().historyStore.current;
     let history = _.cloneDeep(appStore.getState().historyStore.history);
+    console.log('history: ', history);
     if(history.length - 1 > current) {
       let restoreElement = history[current + 1];
       switch(restoreElement.type) {

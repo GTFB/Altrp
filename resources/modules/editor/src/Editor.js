@@ -155,17 +155,6 @@ class Editor extends Component {
     let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
     currentUser = currentUser.data;
     appStore.dispatch(changeCurrentUser(currentUser));
-
-    const controllerHistory = new ControllerHistory;
-    document.addEventListener('keydown', (event) => {
-      if (event.ctrlKey && event.code === 'KeyZ' && event.shiftKey) {
-        console.log('redo');   
-        controllerHistory.redo();
-      } else if (event.ctrlKey && event.code === 'KeyZ') {
-        console.log('undo');   
-        controllerHistory.undo();
-      }
-    });
   }
 
   /**

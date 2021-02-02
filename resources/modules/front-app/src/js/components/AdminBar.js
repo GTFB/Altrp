@@ -46,6 +46,10 @@ class AdminBar extends React.Component {
     window.open(`/admin/pages/edit/${this.props.idPage}`);
   }
 
+  openPageAdmin() {
+    window.open('/admin/dashboard');
+  } 
+
   handleInput(event) {
     let value = event.target.value;
     this.setState(state => ({
@@ -130,6 +134,9 @@ class AdminBar extends React.Component {
     return (
       <div className="admin-bar">
         <div className="admin-bar__tools">
+          <div className="admin-bar__link" onClick={this.openPageAdmin}>
+            admin
+          </div>
           <div className="admin-bar__tool">
             <span onClick={this.toggleVisiblePopupTemplate}>
               {iconsManager.renderIcon('admin-bar1', {className: "admin-bar__tool-svg"})} Edit-Template

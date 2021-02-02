@@ -6,6 +6,7 @@ import controllerDecorate from "../../decorators/controller";
 import { toggleDynamicContent } from "../../store/dynamic-content/actions";
 import { iconsManager } from "../../../../../admin/src/js/helpers";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
+import { mountListenerHistory, unmountListenerHistory } from '../../helpers';
 
 class TextController extends Component {
   constructor(props) {
@@ -30,8 +31,12 @@ class TextController extends Component {
    * @param e
    */
   onBlur = e =>{
+    mountListenerHistory();
     this._changeValue(e.target.value)
   };
+  onFocus = () =>{
+    unmountListenerHistory();
+  }
   /**
    * Изменение больше не обновляет элемент
    * @param e
@@ -70,6 +75,7 @@ class TextController extends Component {
           </div>
         </div> : <input className="control-field"
                         onBlur={this.onBlur}
+                        onFocus={this.onFocus}
                         onChange={this.changeValue} value={value} />
         }
 
