@@ -12,6 +12,7 @@ import { getDataByPath } from "../../../../../front-app/src/js/helpers";
 const MapDesigner = React.lazy(() => import("./MapDesigner"));
 
 function AltrpMapConstructor({ settings, id }) {
+  console.log(id);
   const [isLoading, setIsLoading] = useState(false);
   const [geoJson, setGeoJson] = useState({});
 
@@ -194,6 +195,7 @@ function AltrpMapConstructor({ settings, id }) {
         data={geoJson}
         saveData={handleSave}
         isLoading={isLoading}
+        id={id}
         url_connect={url_connect}
         field_first_connect={field_first_connect}
         field_second_connect={field_second_connect}
