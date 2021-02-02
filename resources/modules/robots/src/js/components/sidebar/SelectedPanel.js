@@ -5,11 +5,21 @@ import Scrollbars from "react-custom-scrollbars";
 import Chevron from "../../../../../editor/src/svgs/chevron.svg";
 import Send from "./data/Send"
 import Crud from "./data/Crud"
+import store from "../../store/store"
+import {setNodeName} from "../../store/robot-settings/actions"
 
 export default class SelectedPanel extends React.Component {
   constructor(props) {
     super(props);
   }
+
+  changeInput = e =>{
+    let selected = this.props.selected;
+    selected.data.label = e.target.value;
+    console.log(selected);
+    store.dispatch(setNodeName(selected));
+  }
+  
   render() {
     return (
       <div className="panel settings-panel d-flex">
@@ -23,32 +33,26 @@ export default class SelectedPanel extends React.Component {
                   </div>
                   <div className="settings-section__label">Настройки</div>
                 </div>
-                {/* {this.props.chart.selected.id ? (
+                {this.props.selected?.id ? (
                   <div className="controllers-wrapper">
                     <div className="controller-container controller-container_textarea">
                       <div className="controller-container__label">Text</div>
                       <input
                         type="text"
-                        onChange={e => {
-                          this.props.callbacks.onNodeBodyChanged(
-                            this.props.chart.selected.id,
-                            e.target.value
-                          );
-                        }}
+                        onChange={(e) => { this.changeInput(e) }}
                         value={
-                          this.props.chart.nodes[this.props.chart.selected.id]
-                            ?.properties.body
+                          this.props.selected.data?.label
                         }
                       ></input>
                     </div>
-                    {(this.props.chart.nodes[this.props.chart.selected.id]?.type === "action") && <div>
-                        <Send data={this.props.chart.nodes[this.props.chart.selected.id]?.properties.data || []}/>
-                        <Crud data={this.props.chart.nodes[this.props.chart.selected.id]?.properties.data || []}/>
-                      </div>}
+                    {/* {(this.props.nodes[this.props.selected.id]?.type === "action") && <div>
+                        <Send data={this.props.nodes[this.props.selected.id]?.properties.data || []}/>
+                        <Crud data={this.props.nodes[this.props.selected.id]?.properties.data || []}/>
+                      </div>} */}
                   </div>
                 ) : (
                   "Select a node to edit"
-                )} */}
+                )}
               </div>
             </div>
           </Scrollbars>

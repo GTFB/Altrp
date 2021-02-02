@@ -2,9 +2,9 @@ import {
   SET_ROBOT_SETTINGS,
   SET_ROBOT_EMAIL_TO,
   SET_ROBOT_EMAIL_MSG,
-  SET_NODE_POSITION
+  SET_NODE_POSITION,
+  SET_NODE_NAME
 } from "./actions";
-import { defaultData } from "../../components/sidebar/data/data";
 
 export function robotSettingsDataReducer(state, action) {
   state = state || [];
@@ -13,6 +13,10 @@ export function robotSettingsDataReducer(state, action) {
     case SET_NODE_POSITION:
       const nodeIndex = state.findIndex(node => node.id == action.value.id);
       state[nodeIndex].position = action.value.position;
+      break;
+    case SET_NODE_NAME:
+      const index = state.findIndex(node => node.id == action.value.id);
+      state[index] = action.value;
       break;
     case SET_ROBOT_SETTINGS:
       state = action.data;

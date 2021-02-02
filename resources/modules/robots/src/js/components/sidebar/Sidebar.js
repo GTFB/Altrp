@@ -8,25 +8,12 @@ import Logo from "../../../../../editor/src/svgs/logo.svg";
 import Dots from "../../../../../editor/src/svgs/dots.svg";
 import Hamburger from "../../../../../editor/src/svgs/hamburger.svg";
 
-const tabs = [
-  {
-    title: "Selected",
-    render: (chart, callbacks) => (
-      <SelectedPanel callbacks={callbacks} chart={chart}></SelectedPanel>
-    )
-  },
-  {
-    title: "Widgets",
-    render: props => <WidgetsPanel></WidgetsPanel>
-  }
-];
-
 export default class Sidebar extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      currentTab: 0
+      activePanel: 'widgets'
     };
 
     this.resource = new Resource({ route: "/admin/ajax/robots" });
@@ -44,16 +31,17 @@ export default class Sidebar extends React.Component {
   }
 
   changeTab(index) {
-    this.setState(state => ({
-      currentTab: index
-    }));
+    this.setState(s => ({ ...s, activePanel: index }));
   }
+
   render() {
+    let activePanel = this.state.activePanel;
+
     return (
       <div className="left-panel">
         <div className="editor-top-panel">
           <button
-            onClick={() => this.changeTab(0)}
+            onClick={() => this.changeTab("settings")}
             className="btn btn_hamburger"
           >
             <Hamburger className="icon" />
@@ -65,15 +53,13 @@ export default class Sidebar extends React.Component {
               <Logo viewBox="0 0 97 35" className="editor__logo" />
             )}
           </a>
-          <button className="btn btn_dots" onClick={() => this.changeTab(1)}>
+          <button className="btn btn_dots" onClick={() => this.changeTab('widgets')}>
             <Dots className="icon" />
           </button>
         </div>
         <div className="left-panel-main">
-          {tabs[this.state.currentTab].render(
-            this.props.chart,
-            this.props.callbacks
-          )}
+          {activePanel === "settings" && <SelectedPanel selected={this.props.selected} ></SelectedPanel>}
+          {activePanel === "widgets" && <WidgetsPanel ></WidgetsPanel>}
         </div>
         <div className="editor-bottom-panel d-flex align-content-center justify-start">
           <div className="control-group d-flex">
