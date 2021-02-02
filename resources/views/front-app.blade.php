@@ -9,7 +9,7 @@
     window.pageStorage = {};
 
     var page_id = 1;
-    var page_areas = [];
+    var page_areas = {!! $page_areas !!};
 
     if (typeof page_id !== 'undefined' && typeof page_areas !== 'undefined') {
       window.pageStorage[page_id] = {areas:page_areas};
