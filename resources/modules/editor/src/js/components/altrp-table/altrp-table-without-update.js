@@ -180,7 +180,7 @@ function AltrpTableWithoutUpdate(
       })
     }
     const columnTemplateContent = React.useMemo(() => {
-      if (!columnTemplate) {
+      if (! columnTemplate) {
         return null;
       }
       let columnTemplateContent = frontElementsFabric.cloneElement(columnTemplate);
@@ -1584,5 +1584,9 @@ const Row = ({ row,
 
 export default (props) => {
   props = { ...props };
+  if(props.settings.choose_datasource === 'datasource'){
+    props._status = 'success';
+    return <AltrpTableWithoutUpdate {...props}/>
+  }
   return <AltrpQueryComponent {...props}><AltrpTableWithoutUpdate /></AltrpQueryComponent>
 }

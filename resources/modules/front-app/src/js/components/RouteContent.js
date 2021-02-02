@@ -29,7 +29,7 @@ class RouteContent extends Component {
     this.scrollbar = React.createRef();
     this.isReport = window.location.href.includes("reports");
     appStore.dispatch(clearElements());
-
+    window.currentRouterMatch = new AltrpModel(props.match);
     this.admin = this.props.currentUser.hasRoles('admin');
   }
 
@@ -40,7 +40,6 @@ class RouteContent extends Component {
    * @return {Promise<void>}
    */
   async componentDidMount() {
-    window.currentRouterMatch = new AltrpModel(this.props.match);
     window.mainScrollbars = this.scrollbar.current;
     // setTitle(this.props.title);
     if (this.props.lazy && this.props.allowed) {
@@ -56,10 +55,6 @@ class RouteContent extends Component {
      */
     this.changeRouteCurrentModel();
     /**
-     * Обнуляем текущее хранилище dataStorage
-     */
-    // dataStorageUpdater.clearCurrent();
-    /**
      * Обнуляем хранилище ответов на отправленные формы
      */
     appStore.dispatch(clearAllResponseData());
@@ -70,11 +65,17 @@ class RouteContent extends Component {
   }
 
   /**
+   * Очистим currentDataSource после удаления компонента
+   */
+  componentWillUnmount(){
+    dataStorageUpdater.clearCurrent();
+  }
+  /**
    *  обновление currentDataStorage
    *  Сброс altrpPageState
    */
   async updateAppData() {
-    dataStorageUpdater.clearCurrent();
+      dataStorageUpdater.clearCurrent();
     if(window.formsManager){
       formsManager.clearFormsStore();
     }

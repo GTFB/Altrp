@@ -15,6 +15,7 @@ import queryString from "query-string";
 import AltrpSVG from "../../../editor/src/js/components/altrp-svg/AltrpSVG";
 import ArrayConverter from "./classes/converters/ArrayConverter";
 import DataConverter from "./classes/converters/DataConverter";
+import {changeFormFieldValue} from "./store/forms-data-storage/actions";
 
 export function getRoutes() {
   return import("./classes/Routes.js");
@@ -145,6 +146,9 @@ export function getCurrentBreakpoint() {
 export function parseURLTemplate(URLTemplate = "", object = {}) {
   let url = URLTemplate;
   let protocol = "";
+  if(! isEditor()){
+    object = _.assign(currentRouterMatch.getProperty('params'), object);
+  }
   url = url.trim();
   if (url.indexOf("https://") === 0) {
     protocol = "https://";
@@ -156,7 +160,7 @@ export function parseURLTemplate(URLTemplate = "", object = {}) {
   }
   // columnEditUrl = columnEditUrl.replace(':id', row.original.id);
   let idTemplates = url.match(/:([\s\S]+?)(\/|$)/g);
-  if (!idTemplates) {
+  if (! idTemplates) {
     return protocol + url;
   }
   idTemplates.forEach(idTemplate => {
@@ -331,7 +335,7 @@ export function conditionsChecker(
       result += conditionChecker(c, model, dataByPath);
     }
   });
-  return result;
+  return ! ! result;
 }
 
 /**
@@ -392,6 +396,7 @@ export function setDataByPath(path = "", value, dispatch = null) {
     return false;
   }
   path = path.replace("{{", "").replace("}}", "");
+  path = path.trim();
   switch (value) {
     case "true":
       value = true;
@@ -454,6 +459,20 @@ export function setDataByPath(path = "", value, dispatch = null) {
       appStore.dispatch(changeCurrentUserProperty(path, value));
     }
     return true;
+  }
+  if (path.indexOf("altrpforms.") === 0) {
+    path = path.replace("altrpforms.", "");
+    if (!path) {
+      return false;
+    }
+    const [formId, fieldName] = path.split('.');
+    const {formsStore} = appStore.getState();
+
+    const oldValue = _.get(formsStore, path);
+    if (_.isEqual(oldValue, value)) {
+      return true;
+    }
+    appStore.dispatch(changeFormFieldValue(fieldName, value, formId, true))
   }
   return false;
 }
@@ -597,7 +616,7 @@ export function mbParseJSON(string, _default = null) {
   try {
     return JSON.parse(string);
   } catch (e) {
-    return _default;
+    return _default === null ? string : _default;
   }
 }
 
@@ -618,17 +637,16 @@ export function altrpCompare(
       return _.isEmpty(leftValue);
     }
     case "not_empty": {
-      return !_.isEmpty(leftValue);
+      return ! _.isEmpty(leftValue);
     }
     case "null": {
-      return !leftValue;
+      return ! leftValue;
     }
     case "not_null": {
-      return !!leftValue;
+      return ! ! leftValue;
     }
     case "==": {
-      if (!leftValue && !rightValue) {
-        console.log(leftValue);
+      if (! leftValue && ! rightValue) {
         return true;
       }
       if (!(_.isObject(leftValue) || _.isObject(rightValue))) {

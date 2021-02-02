@@ -229,5 +229,8 @@ class AltrpPosts extends React.Component {
 }
 
 export default (props) => {
+  if(props.settings.choose_datasource === 'datasource'){
+    return<AltrpPosts {...props}/>
+  }
   return <AltrpQueryComponent {...props}><AltrpPosts/></AltrpQueryComponent>
 }

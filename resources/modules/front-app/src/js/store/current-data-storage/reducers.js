@@ -1,4 +1,9 @@
-import {CHANGE_CURRENT_DATASOURCE, CLEAR_CURRENT_DATASOURCE, SET_CURRENT_DATASOURCE_LOADED} from './actions'
+import {
+  CHANGE_CURRENT_DATASOURCE,
+  CLEAR_CURRENT_DATASOURCE,
+  SET_CURRENT_DATASOURCE_LOADED,
+  SET_CURRENT_DATASOURCE_LOADING
+} from './actions'
 import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
 import {setAltrpIndex} from "../../helpers";
 
@@ -24,6 +29,10 @@ export function currentDataStorageReducer(dataStorage, action) {
     case SET_CURRENT_DATASOURCE_LOADED:{
       dataStorage = _.cloneDeep(dataStorage);
       dataStorage.setProperty('currentDataStorageLoaded', true);
+    }break;
+    case SET_CURRENT_DATASOURCE_LOADING:{
+      dataStorage = _.cloneDeep(dataStorage);
+      dataStorage.setProperty('currentDataStorageLoaded', false);
     }break;
   }
   if(dataStorage instanceof AltrpModel){
