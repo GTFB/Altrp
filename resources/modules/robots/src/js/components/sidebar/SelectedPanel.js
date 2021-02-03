@@ -40,15 +40,13 @@ export default class SelectedPanel extends React.Component {
                       <input
                         type="text"
                         onChange={(e) => { this.changeInput(e) }}
-                        value={
-                          this.props.selected.data?.label
-                        }
+                        value={ this.props.selected.data?.label }
                       ></input>
                     </div>
-                    {/* {(this.props.nodes[this.props.selected.id]?.type === "action") && <div>
-                        <Send data={this.props.nodes[this.props.selected.id]?.properties.data || []}/>
-                        <Crud data={this.props.nodes[this.props.selected.id]?.properties.data || []}/>
-                      </div>} */}
+                    {(this.props.selected?.type === "action") && <div>
+                        <Send selected={this.props.selected || []}/>
+                        {/* <Crud data={this.props.nodes[this.props.selected.id]?.properties.data || []}/> */}
+                      </div>}
                   </div>
                 ) : (
                   "Select a node to edit"

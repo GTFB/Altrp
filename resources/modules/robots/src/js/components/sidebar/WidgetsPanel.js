@@ -13,19 +13,20 @@ export default class WidgetsPanel extends React.Component {
   }
 
   // Проверка на наличие в схеме ноды Begin
-  issetBegin() {
+  issetNode(type) {
     const item = store.getState()?.robotSettingsData;
-    let begin = true;
+    let node = true;
 
     item.map(el =>{
-      if(el.type === "begin") begin = false;
+      if(el.type === type) node = false;
     });
 
-    return begin;
+    return node;
   }
 
   render() {
-    let begin = this.issetBegin();
+    let begin = this.issetNode('begin');
+    let end = this.issetNode('end');
 
   return <div className="widget-panel-wrapper">
       <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
@@ -41,9 +42,9 @@ export default class WidgetsPanel extends React.Component {
           <div className="react-flow__node-input" onDragStart={(event) => this.onDragStart( event, 'action' )} draggable>
             Action
           </div>
-          <div className="react-flow__node-default" onDragStart={(event) => this.onDragStart( event, 'end' )} draggable>
+          {end && <div className="react-flow__node-default" onDragStart={(event) => this.onDragStart( event, 'end' )} draggable>
             End
-          </div>
+          </div>}
         </aside>
         </div>
       </Scrollbars>
