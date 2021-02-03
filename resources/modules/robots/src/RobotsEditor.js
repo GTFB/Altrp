@@ -87,7 +87,6 @@ class RobotsEditor extends Component {
               props
             }
     };
-    console.log(newNode);
 
     const robotStore = store.getState()?.robotSettingsData;
     const newStore = robotStore.concat(newNode);
