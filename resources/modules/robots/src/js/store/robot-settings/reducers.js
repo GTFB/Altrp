@@ -15,8 +15,20 @@ export function robotSettingsDataReducer(state, action) {
       state[nodeIndex].position = action.value.position;
       break;
     case SET_NODE_NAME:
-      const index = state.findIndex(node => node.id == action.value.id);
-      state[index] = action.value;
+      state.map(el =>{
+        if (el.id === action.value.id) {
+          el.data = {
+            ...el.data,
+            label: action.value.data.label,
+          };
+        }
+        return el;
+      });
+      // const index = state.findIndex(node => node.id == action.value.id);
+      // console.log(index);
+      console.log(state);
+      // console.log(state[index]);
+      // state[index] = action.value;
       break;
     case SET_ROBOT_SETTINGS:
       state = action.data;

@@ -19,6 +19,9 @@ import {
 import Sidebar from "./js/components/sidebar/Sidebar";
 import Condition from "./js/components/sidebar/nodes/Condition";
 import Loop from "./js/components/sidebar/nodes/Loop";
+import Begin from "./js/components/sidebar/nodes/Begin";
+import Action from "./js/components/sidebar/nodes/Action";
+import End from "./js/components/sidebar/nodes/End";
 import {dataAction} from "./js/components/sidebar/data/data";
 
 class RobotsEditor extends Component {
@@ -69,8 +72,7 @@ class RobotsEditor extends Component {
     event.preventDefault();
     const reactFlowBounds = this.reactFlowRef.current.getBoundingClientRect();
     const type = event.dataTransfer.getData("reactflow-type");
-    const label = event.dataTransfer.getData("reactflow-label");
-    const props = this.getNodeData(label);
+    const props = this.getNodeData(type);
     const position = this.state.reactFlowInstance.project({
       x: event.clientX - reactFlowBounds.left,
       y: event.clientY - reactFlowBounds.top
@@ -80,8 +82,7 @@ class RobotsEditor extends Component {
       type,
       position,
       data: { type: "node",
-              name: `${label}`,
-              label: `${label}`,
+              label: `${type}`,
               props
             }
     };
@@ -99,10 +100,10 @@ class RobotsEditor extends Component {
   }
 
   // Получение data нового элемента (ноды)
-  getNodeData(item) {
-    let data = { type: item };
+  getNodeData(type) {
+    let data = { type };
 
-    switch (item){
+    switch (type){
       case "action":
         data = dataAction;
         break;
@@ -129,13 +130,14 @@ class RobotsEditor extends Component {
   }
 
   render() {
+    let elements = store.getState().robotSettingsData || [];
     return (
       <div className="page__content">
         <ReactFlowProvider>
-          <Sidebar chart={ store.getState().robotSettingsData || [] } selected={ this.state.selected } />
+          <Sidebar elements={ elements } selected={ this.state.selected } onLoad={ this.onLoad }/>
           <div className="content" ref={this.reactFlowRef }>
             <ReactFlow
-              elements={ this.state.elements }
+              elements={ elements }
               onConnect={ this.onConnect }
               onElementsRemove={ this.onElementsRemove }
               onElementClick={ this.onElementClick }
@@ -144,10 +146,12 @@ class RobotsEditor extends Component {
               onNodeDragStart={ this.onNodeDragStart }
               onNodeDragStop={ this.onNodeDragStop }
               onDragOver={ this.onDragOver }
-              // nodeTypes={this.nodeTypes}
               nodeTypes={{
+                begin: Begin,
                 condition: Condition,
-                loop: Loop
+                action: Action,
+                end: End,
+                loop: Loop,
               }}
             >
               <Controls />

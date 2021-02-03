@@ -3,9 +3,8 @@ import Scrollbars from "react-custom-scrollbars";
 import store from "../../store/store"
 
 export default class WidgetsPanel extends React.Component {
-  onDragStart = (event, nodeType, nodeLabel) => {
+  onDragStart = (event, nodeType) => {
     event.dataTransfer.setData('reactflow-type', nodeType);
-    event.dataTransfer.setData('reactflow-label', nodeLabel);
     event.dataTransfer.effectAllowed = 'move';
   }
   render() {
@@ -17,16 +16,16 @@ export default class WidgetsPanel extends React.Component {
           <div className="widget-panel">
           <aside>
             <div className="description">You can drag these nodes to the pane on the right.</div>
-            <div className="react-flow__node-input" onDragStart={(event) => this.onDragStart( event, 'input', 'begin' )} draggable>
+            <div className="react-flow__node-default" onDragStart={(event) => this.onDragStart( event, 'begin' )} draggable>
               Begin
             </div>
-            <div className="react-flow__node-default" onDragStart={(event) => this.onDragStart( event, 'default', 'action' )} draggable>
-              Action
-            </div>
-            <div className="react-flow__node-default" onDragStart={(event) => this.onDragStart( event, 'condition', 'condition' )} draggable>
+            <div className="react-flow__node-output" onDragStart={(event) => this.onDragStart( event, 'condition' )} draggable>
               Condition
             </div>
-            <div className="react-flow__node-output" onDragStart={(event) => this.onDragStart( event, 'output', 'end' )} draggable>
+            <div className="react-flow__node-input" onDragStart={(event) => this.onDragStart( event, 'action' )} draggable>
+              Action
+            </div>
+            <div className="react-flow__node-default" onDragStart={(event) => this.onDragStart( event, 'end' )} draggable>
               End
             </div>
           </aside>

@@ -7,15 +7,14 @@ export default class Condition extends React.Component {
   }
 
   render() {
-    let nodeClasses = "flow-node ";
-    if (this.props.selected) nodeClasses += " selected";
-    
-    console.log(this.props);
-    
+    let nodeClasses = "react-flow__node-output";
+    if (this.props.selected) nodeClasses += " selected";    
+   
     return (
       <div className={nodeClasses}>
-        <Handle type="target" position="top" style={{ borderRadius: 0 }} />
-        <div>{this.props?.data?.label}</div>
+        <Handle type="target" position="top" />
+        <div><h3>{this.props?.data?.label}</h3></div>
+        <div>{this.props?.type}</div>
         <Handle
           type="source"
           position="left"

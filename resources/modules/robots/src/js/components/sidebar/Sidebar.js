@@ -26,7 +26,7 @@ export default class Sidebar extends React.Component {
     const robotId = new URL(window.location).searchParams.get("robot_id");
 
     this.resource.put(robotId, {
-      data: JSON.stringify(this.props.chart)
+      data: JSON.stringify(this.props.elements)
     });
   }
 
@@ -58,7 +58,7 @@ export default class Sidebar extends React.Component {
           </button>
         </div>
         <div className="left-panel-main">
-          {activePanel === "settings" && <SelectedPanel selected={this.props.selected} ></SelectedPanel>}
+          {activePanel === "settings" && <SelectedPanel selected={this.props.selected} onLoad={this.props.onLoad}></SelectedPanel>}
           {activePanel === "widgets" && <WidgetsPanel ></WidgetsPanel>}
         </div>
         <div className="editor-bottom-panel d-flex align-content-center justify-start">

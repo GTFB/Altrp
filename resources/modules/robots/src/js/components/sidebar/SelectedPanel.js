@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import Scrollbars from "react-custom-scrollbars";
+import {isNode} from 'react-flow-renderer';
 
 import Chevron from "../../../../../editor/src/svgs/chevron.svg";
 import Send from "./data/Send"
@@ -16,8 +17,12 @@ export default class SelectedPanel extends React.Component {
   changeInput = e =>{
     let selected = this.props.selected;
     selected.data.label = e.target.value;
-    console.log(selected);
+    console.log(isNode(selected));
     store.dispatch(setNodeName(selected));
+    console.log(store.getState().robotSettingsData);
+    console.log(this.props.selected.data?.label);
+    this.props.onLoad();
+    
   }
   
   render() {
