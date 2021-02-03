@@ -5,7 +5,6 @@ import DynamicIcon from "../../../svgs/dynamic.svg";
 import BindIcon from "../../../svgs/bind.svg";
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
-import { mountListenerHistory, unmountListenerHistory } from '../../helpers';
 
 class DimensionsController extends Component {
   constructor(props) {
@@ -42,11 +41,9 @@ class DimensionsController extends Component {
     return '';
   }
 
-  onBlur = e =>{
-    mountListenerHistory();
-  };
-  onFocus = () =>{
-    unmountListenerHistory();
+  onKeyDown = (event) => {
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
   }
 
   changeValue(e) {
@@ -148,8 +145,7 @@ class DimensionsController extends Component {
       <div className="control-group">
         <div className="control-dimensions-container">
           <input className="control-field control-field-dimensions control-field-top-l"
-            onBlur={this.onBlur}
-            onFocus={this.onFocus}
+            onKeyDown={this.onKeyDown}
             onChange={this.changeValue}
             data-active="top"
 

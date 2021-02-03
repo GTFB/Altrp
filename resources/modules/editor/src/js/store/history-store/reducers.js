@@ -22,7 +22,7 @@ export const historyStoreReducer = (
           current: 0,
         }
       } else if(state.current < state.history.length - 1) {
-        let newHistory = state.history;
+        let newHistory = _.cloneDeep(state.history);
         if(state.current === -1) {
           newHistory = [payload];
         } else {

@@ -1,14 +1,12 @@
 import AltrpModel from "./AltrpModel";
-import store from "../store/store";
 import { undoHistoryStore, redoHistoryStore } from "../store/history-store/actions";
 
 class ControllerHistory extends AltrpModel {
 
   undo() {
     console.log('undo')
-    let current = appStore.getState().historyStore.current;
-    let history = _.cloneDeep(appStore.getState().historyStore.history);
-    console.log('history: ', history);
+    let current = window.appStore.getState().historyStore.current;
+    let history = _.cloneDeep(window.appStore.getState().historyStore.history);
     if(current >= 0) {
       let restoreElement = history[current];
 
@@ -26,7 +24,7 @@ class ControllerHistory extends AltrpModel {
           this.restoreEdit(restoreElement.data.element, restoreElement.data.settingName, restoreElement.data.oldValue); 
           break;
       }
-      store.dispatch(undoHistoryStore(1));
+      appStore.dispatch(undoHistoryStore(1));
     }
   }
 
@@ -48,7 +46,7 @@ class ControllerHistory extends AltrpModel {
           this.restoreEdit(restoreElement.data.element, restoreElement.data.settingName, restoreElement.data.newValue); 
           break;
       }
-      store.dispatch(redoHistoryStore(1));
+      appStore.dispatch(redoHistoryStore(1));
     }
   }
 
@@ -69,4 +67,6 @@ class ControllerHistory extends AltrpModel {
 }
 
 
-export default ControllerHistory;
+window.controllerHistory = new ControllerHistory;
+
+export default window.controllerHistory;

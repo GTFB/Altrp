@@ -29,11 +29,9 @@ class CssEditorController extends Component {
     };
   }
 
-  onBlur = e =>{
-    mountListenerHistory();
-  };
-  onFocus = () =>{
-    unmountListenerHistory();
+  onKeyDown = (event) => {
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
   }
 
   onChange(newValue) {
@@ -103,8 +101,7 @@ class CssEditorController extends Component {
           mode="css"
           theme="textmate"
           onChange={this.onChange}
-          onBlur={this.onBlur}
-          onFocus={this.onFocus}
+          onKeyDown={this.onKeyDown}
 
           name="aceEditor"
           height="15em"

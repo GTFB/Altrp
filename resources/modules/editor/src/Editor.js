@@ -37,7 +37,6 @@ import {renderAsset} from "../../front-app/src/js/helpers";
 import {changeCurrentUser} from "../../front-app/src/js/store/current-user/actions";
 import Resource from "./js/classes/Resource";
 import appStore from "../../front-app/src/js/store/store";
-import ControllerHistory from "./js/classes/ControllerHistory";
 /**
  * Главный класс редактора.<br/>
  * Реакт-Компонент.<br/>
@@ -190,7 +189,9 @@ class Editor extends Component {
         <DndProvider backend={HTML5Backend}>
         <div className={templateClasses}
           onClick={this.onClick}
-          onDragEnd={this.onDragEnd}>
+          onDragEnd={this.onDragEnd}
+          onKeyDown={this.onKeyDown}  
+        >
           <div className="left-panel">
             <div className="editor-top-panel">
               <button

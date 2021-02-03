@@ -4,8 +4,6 @@ import { connect } from "react-redux";
 import DynamicIcon from '../../../svgs/dynamic.svg'
 import controllerDecorate from '../../decorators/controller'
 import { iconsManager } from "../../../../../admin/src/js/helpers";
-import { mountListenerHistory, unmountListenerHistory } from '../../helpers';
-
 
 class TextareaController extends Component {
   constructor(props) {
@@ -28,13 +26,15 @@ class TextareaController extends Component {
    * Потеря фокуса обновляет элемент
    * @param e
    */
+
+  onKeyDown = (event) => {
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
+  }
+
   onBlur = e =>{
-    mountListenerHistory();
     this._changeValue(e.target.value)
   };
-  onFocus = () =>{
-    unmountListenerHistory();
-  }
   /**
    * Изменение больше не обновляет элемент
    * @param e
@@ -75,8 +75,8 @@ class TextareaController extends Component {
           }
         </div>
       </div> : <textarea className="controller-container__textarea"
+                         onKeyDown={this.onKeyDown}
                          onBlur={this.onBlur}
-                         onFocus={this.onFocus}
                          onChange={this.changeValue} value={value} />
       }
       {this.props.description

@@ -1,7 +1,7 @@
 import { getCurrentScreen, getElementState } from "./store/store";
 import { isEditor } from "../../../front-app/src/js/helpers";
 import CONSTANTS from "./consts";
-import ControllerHistory from "./classes/ControllerHistory";
+import controllerHistory from "./classes/ControllerHistory";
 
 export function getTemplateId() {
   return new URL(window.location).searchParams.get("template_id");
@@ -143,7 +143,6 @@ export function rgb2hex(rgb) {
 }
 
 
-const controllerHistory = new ControllerHistory;
 export function listenerHistory(event) {
   if (event.ctrlKey && event.code === 'KeyZ' && event.shiftKey) { 
     controllerHistory.redo();
@@ -155,13 +154,13 @@ export function listenerHistory(event) {
 export function mountListenerHistory() {
   if(!window.isExistListenerHistory) {
     window.isExistListenerHistory = true;
-    document.addEventListener('keydown', listenerHistory, false);
+    window.addEventListener('keydown', listenerHistory, false);
   }
 }
 
 export function unmountListenerHistory() {
   if(window.isExistListenerHistory) {
     window.isExistListenerHistory = false;
-    document.removeEventListener('keydown', listenerHistory, false);
+    window.removeEventListener('keydown', listenerHistory, false);
   }
 }

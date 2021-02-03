@@ -3,7 +3,6 @@ import {connect, useSelector} from "react-redux";
 import DynamicIcon from "../../../svgs/dynamic.svg";
 import {controllerMapStateToProps} from "../../decorators/controller";
 const TinyMCE = React.lazy(() => import("../tinymce/TinyMCE"));
-import { mountListenerHistory, unmountListenerHistory } from '../../helpers';
 
 const WysiwygController = ({ controller, controlId, label }) => {
   const currentElement = useSelector((state) => state.currentElement.currentElement);
@@ -29,11 +28,9 @@ const WysiwygController = ({ controller, controlId, label }) => {
     return "";
   }
 
-   const onBlur = () => {
-    mountListenerHistory();
-  };
-  const onFocus = () =>{
-    unmountListenerHistory();
+  const onKeyDown = (event) => {
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
   }
 
   return (
@@ -46,8 +43,7 @@ const WysiwygController = ({ controller, controlId, label }) => {
       <Suspense fallback={<div>Loading...</div>}>
         <TinyMCE 
           onChange={(value) => setContent(value)} value={content}
-          onBlur={onBlur}
-          onFocus={onFocus}
+          onKeyDown={onKeyDown}
         />
       </Suspense>
     </div>
