@@ -693,11 +693,12 @@ class FrontElement {
 
   /**
    * значение настройки в зависимости от разрешения
-   * @param settingName
+   * @param {string} settingName
+   * @param {string} elementState
    * @param _default
    * @return {*}
    */
-  getResponsiveSetting(settingName, _default){
+  getResponsiveSetting(settingName, elementState = '', _default){
     // let {currentScreen} = appStore.getState();
     // if(currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT){
     //   return this.getSettings(settingName, _default)
@@ -709,7 +710,7 @@ class FrontElement {
     //   settings = this.getSettings(settingName);
     // }
     // return settings;
-    return getResponsiveSetting(this.getSettings(), settingName, _default)
+    return getResponsiveSetting(this.getSettings(), settingName, elementState, _default)
   }
 }
 
