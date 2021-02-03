@@ -23,7 +23,10 @@ import Loop from "./js/components/sidebar/nodes/Loop";
 import Begin from "./js/components/sidebar/nodes/Begin";
 import Action from "./js/components/sidebar/nodes/Action";
 import End from "./js/components/sidebar/nodes/End";
-import {dataAction} from "./js/components/sidebar/data/data";
+import {
+  dataAction,
+  dataCondition
+} from "./js/components/sidebar/data/data";
 
 class RobotsEditor extends Component {
   constructor(props) {
@@ -107,6 +110,9 @@ class RobotsEditor extends Component {
       case "action":
         data = dataAction;
         break;
+      case "condition":
+        data = dataCondition;
+        break;
     }
     return data;
   }
@@ -158,6 +164,7 @@ class RobotsEditor extends Component {
               <MiniMap
                 nodeColor={(node) => {
                   switch (node.type) {
+                    case 'begin': return 'green';
                     case 'condition': return 'red';
                     case 'action': return 'blue';
                     default: return '#999';
