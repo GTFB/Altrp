@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ReactFlow, {
+  MiniMap,
   ReactFlowProvider,
   Controls,
   removeElements,
@@ -155,6 +156,15 @@ class RobotsEditor extends Component {
               }}
             >
               <Controls />
+              <MiniMap
+                nodeColor={(node) => {
+                  switch (node.type) {
+                    case 'condition': return 'red';
+                    case 'action': return 'blue';
+                    default: return '#999';
+                  }
+                }}
+              />
             </ReactFlow>
           </div>
         </ReactFlowProvider>
