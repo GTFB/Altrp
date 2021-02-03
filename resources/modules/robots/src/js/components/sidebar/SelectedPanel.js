@@ -7,7 +7,7 @@ import Chevron from "../../../../../editor/src/svgs/chevron.svg";
 import Send from "./data/Send"
 import Crud from "./data/Crud"
 import store from "../../store/store"
-import {setNodeName} from "../../store/robot-settings/actions"
+import {setUpdatedNode} from "../../store/robot-settings/actions"
 
 export default class SelectedPanel extends React.Component {
   constructor(props) {
@@ -17,12 +17,7 @@ export default class SelectedPanel extends React.Component {
   changeInput = e =>{
     let selected = this.props.selected;
     selected.data.label = e.target.value;
-    console.log(isNode(selected));
-    store.dispatch(setNodeName(selected));
-    console.log(store.getState().robotSettingsData);
-    console.log(this.props.selected.data?.label);
-    this.props.onLoad();
-    
+    store.dispatch(setUpdatedNode(selected));
   }
   
   render() {

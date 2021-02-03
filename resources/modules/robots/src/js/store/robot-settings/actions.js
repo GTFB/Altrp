@@ -2,8 +2,7 @@ export const SET_ROBOT_SETTINGS = "SET_ROBOT_SETTINGS";
 export const SET_ROBOT_EMAIL_TO = "SET_ROBOT_EMAIL_TO";
 export const SET_ROBOT_EMAIL_MSG = "SET_ROBOT_EMAIL_MSG";
 
-export const SET_NODE_POSITION = "SET_NODE_POSITION";
-export const SET_NODE_NAME = "SET_NODE_NAME";
+export const SET_UPDATED_NODE = "SET_UPDATED_NODE";
 
 export function setRobotSettingsData(data) {
   return {
@@ -24,16 +23,9 @@ export function setRobotEmailMSG(value) {
   };
 }
 
-export function setNodePosition(value) {
+export function setUpdatedNode(value) {
   return {
-    type: SET_NODE_POSITION,
-    value
-  };
-}
-
-export function setNodeName(value) {
-  return {
-    type: SET_NODE_NAME,
+    type: SET_UPDATED_NODE,
     value
   };
 }

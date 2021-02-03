@@ -12,7 +12,7 @@ import Resource from "../../editor/src/js/classes/Resource";
 import { hot } from "react-hot-loader";
 import store from "./js/store/store";
 import {
-  setNodePosition,
+  setUpdatedNode,
   setRobotSettingsData
 } from "./js/store/robot-settings/actions";
 
@@ -121,7 +121,7 @@ class RobotsEditor extends Component {
   }
 
   onNodeDragStop(event, node) {
-    store.dispatch(setNodePosition(node));
+    store.dispatch(setUpdatedNode(node));
   }
 
   // Запись активного элемента в state
