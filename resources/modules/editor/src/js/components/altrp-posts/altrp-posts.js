@@ -1,3 +1,4 @@
+import styled from 'styled-components'
 import React from "react";
 import '../../../sass/altrp-pagination.scss';
 import './altrp-posts.scss'
@@ -6,7 +7,7 @@ import templateLoader from "../../classes/modules/TemplateLoader"
 import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric"
 import AltrpModel from "../../classes/AltrpModel";
 import ElementWrapper from "../../../../../front-app/src/js/components/ElementWrapper";
-import { isEditor, renderAssetIcon } from "../../../../../front-app/src/js/helpers";
+import {getResponsiveSetting, isEditor, renderAssetIcon, setAltrpIndex} from "../../../../../front-app/src/js/helpers";
 
 class AltrpPosts extends React.Component {
   constructor(props) {
@@ -36,11 +37,17 @@ class AltrpPosts extends React.Component {
   }
 
   /**
-   * Когда нужно робновлять компонент
+   * Когда нужно обновлять компонент
    * @param {{}} nextProps
    * @param {{}} nextState
    */
   shouldComponentUpdate(nextProps, nextState){
+    if(! isEditor()){
+      return true;
+    }
+    if(this.props.settings !== nextProps.settings){
+      return true;
+    }
     if(! _.isEqual(this.state.simpleTemplate, nextState.simpleTemplate)){
       return true;
     }
@@ -64,7 +71,7 @@ class AltrpPosts extends React.Component {
     const{settings} = this.props;
     const{simpleTemplateId} = this.state;
     const newSimpleTemplateId = _.get(settings, 'posts_card_template', simpleTemplateId);
-    if(prevProps.posts !== this.state.posts)
+    // if(prevProps.posts !== this.state.posts)
     if(! _.isEqual(prevProps.data, this.props.data)){
       this.setState(state =>({...state, posts: this.props.data}));
     }
@@ -98,7 +105,7 @@ class AltrpPosts extends React.Component {
           children: template.children
         });
     }
-    return <React.Fragment key={post.id + Math.random()}>
+    return <React.Fragment key={(post.id || post.altrpIndex) + Math.random()}>
       <div className="altrp-post">{PostContentComponent}
         {hoverTemplateId && <div className={`altrp-post altrp-post--hover altrp-post--hover--${transitionType}`}>{PostContentComponent}</div>}
       </div>
@@ -113,7 +120,7 @@ class AltrpPosts extends React.Component {
 
   getPageCount(){
     let {data: posts} = this.props;
-    const {posts_per_page} = this.props.settings;
+    const posts_per_page = Number(getResponsiveSetting(this.props.settings,'posts_per_page')) || 12;
     if(! posts_per_page || ! _.get(posts, 'length')){
       return 1;
     }
@@ -147,10 +154,11 @@ class AltrpPosts extends React.Component {
     if(! posts.length && ! isEditor()){
       return null;
     }
-    if(_.get(settings, 'posts_pagination_type')){
+    let posts_pagination_type = getResponsiveSetting(this.props.settings, 'posts_pagination_type') || '';
+    if(posts_pagination_type){
       const {currentPage} = this.state;
       const pageCount = this.getPageCount();
-      return settings.posts_pagination_type === "prev_next" ?<div className="altrp-pagination-pages">
+      return posts_pagination_type === "prev_next" ?<div className="altrp-pagination-pages">
         <button className={"altrp-pagination__previous " + (currentPage <= 1 ? 'state-disabled' : '')}
                 disabled={currentPage <= 1}
                 onClick={()=>{this.setPage(currentPage - 1)}}>
@@ -173,7 +181,7 @@ class AltrpPosts extends React.Component {
           <span dangerouslySetInnerHTML={{ __html: settings.prev_text || 'Previous Page' }} />
             {renderAssetIcon(settings.prev_icon)}
         </button>}
-        {!settings.hide_pages_buttons_button && <div className="altrp-pagination__count">
+        {! settings.hide_pages_buttons_button && <div className="altrp-pagination__count">
           {settings.pageText}
         </div>}
         {!settings.hide_next_page_button && <button className="altrp-pagination__next"
@@ -203,7 +211,7 @@ class AltrpPosts extends React.Component {
 
   render() {
     const {currentPage} = this.state;
-    const {posts_per_page} = this.props.settings;
+    const posts_per_page = Number(getResponsiveSetting(this.props.settings,'posts_per_page')) || 12;
     let {data: posts} = this.props;
     if((! _.isArray(posts)) && _.isObject(posts)){
       posts = [posts];
@@ -218,11 +226,17 @@ class AltrpPosts extends React.Component {
       }
       posts = posts.slice(postsStart, postsStart + posts_per_page);
     }
-    return<React.Fragment><div className="altrp-posts">
+    let columnsCount = Number(getResponsiveSetting(this.props.settings,'posts_columns')) || 1;
+    const PostsWrapper = styled.div`{
+      grid-template-columns: repeat(${columnsCount}, 1fr);
+      display: grid;    
+    }
+    `;
+    return<React.Fragment><PostsWrapper className="altrp-posts">
       {posts.map((p, idx)=>{
         return this.renderPost(postsStart + idx);
       })}
-    </div>
+    </PostsWrapper>
       {this.renderPagination()}
     </React.Fragment>
   }
@@ -230,6 +244,12 @@ class AltrpPosts extends React.Component {
 
 export default (props) => {
   if(props.settings.choose_datasource === 'datasource'){
+    if(isEditor()){
+      props = {...props};
+      props.settings = {...props.settings};
+      props.data = Array.from({length: 100}, () => ({}));
+      setAltrpIndex(props.data);
+    }
     return<AltrpPosts {...props}/>
   }
   return <AltrpQueryComponent {...props}><AltrpPosts/></AltrpQueryComponent>

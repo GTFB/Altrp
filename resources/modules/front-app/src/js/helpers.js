@@ -491,7 +491,7 @@ export function getDataByPath(
   context = null,
   altrpCheck = false
 ) {
-  if (!path) {
+  if (! path) {
     return _default;
   }
   if (path.indexOf("{{") !== -1) {
@@ -1639,4 +1639,26 @@ export function redirect(linkSettings, e, context = {}) {
 export function validateEmail(email) {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
+}
+
+/**
+ * значение настройки в зависимости от разрешения можно использовать вне виджетов с объектом настроек
+ * @param {{}} settings - объект настроек
+ * @param {string} settingName
+ * @param {string} elementState
+ * @param {*} _default
+ * @return {*}
+ */
+export function getResponsiveSetting(settings, settingName, elementState = '', _default = null){
+  let {currentScreen} = window.parent.appStore.getState();
+  if(currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT){
+    return _.get(settings, settingName, _default);
+  }
+  let suffix = currentScreen.name;
+  let _settingName = `${settingName}_${elementState}_${suffix}`;
+  let setting = _.get(settings, _settingName);
+  if(setting === undefined){
+    setting = _.get(settings, settingName);
+  }
+  return setting;
 }

@@ -1,11 +1,11 @@
-.altrp-columns{
-  @for $i from 1 through 16 {
-    &_#{$i} > .altrp-posts {
-      grid-template-columns: repeat($i, 1fr);
-      display: grid;
-    }
-  }
-}
+//.altrp-columns{
+//  @for $i from 1 through 16 {
+//    &_#{$i} > .altrp-posts {
+//      grid-template-columns: repeat($i, 1fr);
+//      display: grid;
+//    }
+//  }
+//}
 .altrp-post{
   width: 100%;
   position: relative;

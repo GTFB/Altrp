@@ -9,7 +9,7 @@ import {
   scrollbarWidth, isEditor, parseURLTemplate, mbParseJSON,
   renderAssetIcon,
   generateButtonsArray,
-  renderIcon
+  renderIcon, setAltrpIndex
 } from "../../../../../front-app/src/js/helpers";
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { Link } from "react-router-dom";
@@ -1586,6 +1586,12 @@ export default (props) => {
   props = { ...props };
   if(props.settings.choose_datasource === 'datasource'){
     props._status = 'success';
+    if(isEditor()){
+      props = {...props};
+      props.settings = {...props.settings};
+      props.data = Array.from({length: 100}, () => ({}));
+      setAltrpIndex(props.data);
+    }
     return <AltrpTableWithoutUpdate {...props}/>
   }
   return <AltrpQueryComponent {...props}><AltrpTableWithoutUpdate /></AltrpQueryComponent>

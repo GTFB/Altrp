@@ -118,7 +118,7 @@
         "session-file-store": "^1.4.0",
         "slick-carousel": "^1.8.1",
         "style-object-to-css-string": "^1.0.1",
-        "styled-components": "^4.0.0",
+        "styled-components": "^5.0.0",
         "text-mask-addons": "^3.8.0",
         "tinymce": "^5.4.1"
     },

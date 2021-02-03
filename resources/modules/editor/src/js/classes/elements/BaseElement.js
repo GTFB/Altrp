@@ -299,7 +299,7 @@ class BaseElement extends ControlStack {
    */
   getSettings(settingName, _default = '') {
     this._initDefaultSettings();
-    if (!settingName) {
+    if (! settingName) {
       return _.cloneDeep(this.settings);
     }
     if (this.settings[settingName] === undefined) {
