@@ -8,8 +8,6 @@ import { setUpdatedNode } from "../../../store/robot-settings/actions";
 class Send extends Component{
     constructor(props){
         super(props);
-
-        // this.onSendMail = this.onSendMail.bind(this);
     }
 
     getData = data => {
@@ -28,7 +26,7 @@ class Send extends Component{
         const node = this.props.selected;
 
         node.data.props.nodeData.map( item => {
-            if(item.type === "send_mail")item.data[type] = value;
+            if(item.type === "send_mail") item.data[type] = value;
             return item;
         });
 
@@ -41,7 +39,7 @@ class Send extends Component{
         const node = this.props.selected;
 
         node.data.props.nodeData.map( item => {
-            if(item.type === "send_notice")item.data[type] = value;
+            if(item.type === "send_notice") item.data[type] = value;
             return item;
         });
 

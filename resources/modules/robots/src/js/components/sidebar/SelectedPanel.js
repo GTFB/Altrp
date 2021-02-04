@@ -45,7 +45,7 @@ export default class SelectedPanel extends React.Component {
                     </div>
                     {(this.props.selected?.type === "action") && <div>
                         <Send selected={this.props.selected || []}/>
-                        {/* <Crud data={this.props.nodes[this.props.selected.id]?.properties.data || []}/> */}
+                        <Crud selected={this.props.selected || []}/>
                       </div>}
                   </div>
                 ) : (
