@@ -5,6 +5,7 @@ namespace App\Services\Robots\Blocks;
 
 
 use App\Mails\RobotsMail;
+use App\Services\Robots\JsonLogic;
 use App\User;
 use Illuminate\Support\Facades\Mail;
 
@@ -85,31 +86,11 @@ class Block
      */
     protected function runCondition($node)
     {
-        $conditionBody = collect($node->data->props->nodeData);
-        $linkLogicOperator = null;
-        $str = '';
-        $i = 1;
-
-        foreach ($conditionBody as $item) {
-            $arr = [];
-            foreach ($item->body as $operands) {
-                if (is_object($operands)) {
-                    $operandsCollection = collect($operands);
-                    $operator = $operandsCollection->keys()->first();
-                    $operands = $operandsCollection->values()->first();
-                    $arr[] = ' (' . $operands[0] . ' ' . $operator . ' ' . $operands[1] . ') ';
-                } else {
-                    if (collect($conditionBody)->count() != $i)
-                        $linkLogicOperator = $operands;
-                }
-            }
-            $str .= ' (' . implode($item->operator, $arr) . ') ' . $linkLogicOperator;
-            $i++;
+        $conditionBody = $node->data->props->nodeData;
+        if (!is_object($conditionBody)) {
+            $conditionBody = json_decode($conditionBody, true);
         }
-        $str = trim($str, $linkLogicOperator);
-        dump($str);
-        $str = 'if(' .$str .') { return true; } else { return false; }';
-        return eval($str);
+        return JsonLogic::apply($conditionBody);
     }
 
     /**
