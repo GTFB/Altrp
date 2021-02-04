@@ -205,7 +205,7 @@ class PagesController extends Controller
     $pages = Page::where( 'title', 'like', '%' . $request->get( 's' ) . '%' )
       ->orWhere( 'path', 'like', '%' . $request->get( 's' ) . '%' )
       ->orWhere( 'id', 'like', '%' . $request->get( 's' ) . '%' )->get()->where('type',null);
-      
+
     $pages_options = [];
     foreach ( $pages as $page ) {
       $pages_options[] = [
@@ -215,7 +215,7 @@ class PagesController extends Controller
     }
     return response()->json( $pages_options );
   }
-  
+
   /**
    * Обработка запроса на получение списка отчетов
    * @param Request $request

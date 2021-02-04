@@ -66,6 +66,19 @@ Route::get('/admin/robots-editor', fn() => view('robots'))->middleware('auth', '
                                                           ->name('robots-editor');
 
 /**
+ * Notifications routes
+ */
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/notifications', 'NotificationsController@getAllNotifications');
+    Route::get('/notifications/{notification_id}', 'NotificationsController@getNotification');
+    Route::get('/notifications/delete_all', 'NotificationsController@deleteAllNotifications');
+    Route::get('/notifications/delete/{notification_id}', 'NotificationsController@deleteNotification');
+    Route::get('/unread_notifications', 'NotificationsController@getAllUnreadNotifications');
+    Route::get('/unread_notifications/mark_as_read_all', 'NotificationsController@markAsReadAll');
+    Route::get('/unread_notifications/{notification_id}/mark_as_read', 'NotificationsController@markAsRead');
+});
+
+/**
  * Роуты Админки
  */
 
@@ -73,6 +86,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
   Route::group(['prefix' => 'ajax'], function () {
 
+    // Websockets
+    Route::get('/websockets', 'Admin\WebsocketsController@index');
+    
+    Route::get('/users/{user}/notifications', 'Admin\NoticeSettingController@index');
+    Route::get('/users/{user}/notifications/{notice}', 'Admin\NoticeSettingController@getNotice');
+    Route::post('/users/{user}/notifications', 'Admin\NoticeSettingController@store');
+    Route::put('/users/{user}/notifications/{notification}', 'Admin\NoticeSettingController@update');
+    Route::delete('/users/{user}/notifications/{notification}', 'Admin\NoticeSettingController@destroy');
+    
     Route::get('/analytics', 'AnalyticsController@index');
     Route::get('/analytics/none', 'AnalyticsController@none');
 

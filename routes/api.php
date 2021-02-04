@@ -17,9 +17,26 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+/**
+ * Notifications routes
+ */
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::get('/notifications', 'NotificationsController@getAllNotifications');
+    Route::get('/notifications/delete_all', 'NotificationsController@deleteAllNotifications');
+    Route::get('/unread_notifications', 'NotificationsController@getAllUnreadNotifications');
+    Route::get('/unread_notifications/mark_as_read_all', 'NotificationsController@markAsReadAll');
+    Route::get('/unread_notifications/{notification_id}/mark_as_read', 'NotificationsController@markAsRead');
+
+});
+
 Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], function () {
 
     Route::group(['prefix' => 'ajax'], function () {
+        Route::get('/users/{user}/notifications', 'Admin\NoticeSettingController@index');
+        Route::post('/users/{user}/notifications', 'Admin\NoticeSettingController@store');
+        Route::put('/users/{user}/notifications/{notification}', 'Admin\NoticeSettingController@update');
+        Route::delete('/users/{user}/notifications/{notification}', 'Admin\NoticeSettingController@destroy');
+    
         Route::get('/templates', "Constructor\Templates@getTemplates");
         Route::get('/templates/{template}', "Constructor\Templates@getTemplate");
         Route::post('/templates', "Constructor\Templates@insert");

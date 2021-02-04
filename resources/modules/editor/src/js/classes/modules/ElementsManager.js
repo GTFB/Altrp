@@ -51,10 +51,6 @@ import Html from "../elements/Html";
 import HtmlWidget from "../../components/widgets/HtmlWidget";
 import TemplateWidget from "../../components/widgets/TemplateWidget";
 
-// Websocket import
-import Notifications from "../elements/Notifications";
-import NotificationsWidget from "../../components/widgets/NotificationsWidget";
-
 export default class ElementsManger {
   constructor() {
     this.elements = {};
@@ -86,8 +82,6 @@ export default class ElementsManger {
     this.elements[Template.getName()] = Template;
     this.elements[ExportPanel.getName()] = ExportPanel;
     this.elements[Html.getName()] = Html;
-    // Websocket Notifications
-    this.elements[Notifications.getName()] = Notifications;
 
     //список компонентов
     this.components = {};
@@ -117,8 +111,6 @@ export default class ElementsManger {
     this.components[Template.getName()] = TemplateWidget;
     this.components[ExportPanel.getName()] = ExportPanelWidget;
     this.components[Html.getName()] = HtmlWidget;
-    // Websocket Notifications widget
-    this.components[Notifications.getName()] = NotificationsWidget;
   }
 
   getElements() {
