@@ -59,7 +59,6 @@ class RootElement extends BaseElement {
       },],
   } );
 */
-
     this.startControlSection('preview_section',{
       label: 'Preview Settings',
     });
@@ -111,7 +110,6 @@ class RootElement extends BaseElement {
     this.addControl("type_popup", {
       type: CONTROLLER_SELECT,
       label: "Type",
-      default: "popup",
       options: [
         {
           value: "popup",
@@ -126,6 +124,172 @@ class RootElement extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('popup_layout_section',{
+      label: 'Popup layout',
+    });
+
+    this.addControl("width_popup_layout", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      units: [
+        'px',
+        '%',
+        'vw'
+      ],
+      max: 1200,
+      min: 0,
+      rules: {
+        '.{{ID}}-app-popup .popup-window{{STATE}}': 'width: {{SIZE}}{{UNIT}};',
+      },
+    });
+
+    this.addControl("height_popup_layout", {
+      type: CONTROLLER_SELECT,
+      label: "Height",
+      options: [
+        {
+          value: "fitToContent",
+          label: "Fit to content"
+        },
+        {
+          value: "fitToScreen",
+          label: "Fit to screen"
+        },
+        {
+          value: "custom",
+          label: "Custom"
+        }
+      ],
+    });
+
+    this.addControl("height_custom_popup_layout", {
+      conditions: {
+        'height_popup_layout': 'custom',
+      },
+      type: CONTROLLER_SLIDER,
+      label: 'Custom height',
+      units: [
+        'px',
+        '%',
+        'vh'
+      ],
+      max: 1000,
+      min: 0,
+      rules: {
+        '.{{ID}}-app-popup.app-popup-height-custom .popup-window{{STATE}}': 'height: {{SIZE}}{{UNIT}};',
+      },
+    });
+
+    this.addControl("content_position_popup_layout", {
+      type: CONTROLLER_SELECT,
+      label: "Content position",
+      options: [
+        {
+          value: "flex-start",
+          label: "Top"
+        },
+        {
+          value: "center",
+          label: "center"
+        },
+        {
+          value: "flex-end",
+          label: "bottom"
+        }
+      ],
+      rules: {
+        '.{{ID}}-app-popup .popup-window{{STATE}}': 'justify-content: {{VALUE}};',
+      },
+    });
+
+    this.addControl('heading_position_popup_layout', {
+      type: CONTROLLER_HEADING,
+      label: "Position"
+    });
+
+    this.addControl('horizontal_position_popup_layout', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Horizontal',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ],
+    });
+
+    this.addControl('vertical_position_popup_layout', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Vertical',
+      options: [
+        {
+          icon: 'left',
+          value: 'top',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'bottom',
+        },
+      ],
+    });
+
+    this.addControl('heading_close_popup_layout', {
+      type: CONTROLLER_HEADING,
+      label: "Close",
+      default: true
+    });
+
+    this.addControl('overlay_close_popup_layout', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Overlay',
+      default: true
+    });
+
+    this.addControl('switcher_close_button_popup_layout', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Close button',
+    });
+
+    this.addControl('icon_close_button_popup_layout', {
+      conditions: {
+        'switcher_close_button_popup_layout': true,
+      },
+      type: CONTROLLER_MEDIA,
+      label: 'Icon',
+    });
+
+    this.addControl('position_close_button_popup_layout', {
+      conditions: {
+        'switcher_close_button_popup_layout': true,
+      },
+      type: CONTROLLER_CHOOSE,
+      label: 'alignment',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ],
+    });
+
+    this.endControlSection();
+
     this.startControlSection('offcanvas_section', {
       label: 'Offcanvas',
     });
@@ -133,14 +297,9 @@ class RootElement extends BaseElement {
     this.addControl("width_offcanvas", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default: {
-        size: 300,
-        unit: 'px',
-      },
       units: [
         'px',
         '%',
-        'vh',
         'vw'
       ],
       max: 1200,
@@ -167,7 +326,6 @@ class RootElement extends BaseElement {
       },
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: 'right',
       options: [
         {
           icon: 'left',
@@ -191,7 +349,6 @@ class RootElement extends BaseElement {
     this.addControl("close_cursor_offcanvas", {
       type: CONTROLLER_SELECT,
       label: "Close cursor",
-      default: "none",
       options: [
         {
           value: "none",
@@ -211,7 +368,6 @@ class RootElement extends BaseElement {
     this.addControl("direction_offcanvas", {
       type: CONTROLLER_SELECT,
       label: "Content box direction",
-      default: "left",
       options: [
         {
           value: "left",
@@ -251,7 +407,6 @@ class RootElement extends BaseElement {
     this.addControl("animations_offcanvas", {
       type: CONTROLLER_SELECT,
       label: "Animations",
-      default: "slide",
       options: [
         {
           value: "slide",
@@ -287,10 +442,6 @@ class RootElement extends BaseElement {
     this.addControl("section_style_background_color", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "body{{STATE}}": "background-color: {{COLOR}};"
@@ -300,7 +451,6 @@ class RootElement extends BaseElement {
     this.addControl('background_image', {
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
-      default: { url: "" },
       rules: {
         "body{{STATE}}": "background-image: url({{URL}});"
       }
@@ -347,7 +497,6 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Background Position',
-      default: 'top left',
       rules: {
         "body{{STATE}}": "background-position: {{VALUE}};"
       }
@@ -370,7 +519,6 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Background Attachment',
-      default: 'scroll',
       rules: {
         "body{{STATE}}": "background-attachment: {{VALUE}};"
       }
@@ -405,7 +553,6 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Background Repeat',
-      default: 'repeat',
       rules: {
         "body{{STATE}}": "background-repeat: {{VALUE}};"
       }
@@ -414,10 +561,6 @@ class RootElement extends BaseElement {
     this.addControl("background_image_width", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default: {
-        size: 100,
-        unit: 'px',
-      },
       conditions: {
         'background_size': [''],
       },
@@ -454,7 +597,6 @@ class RootElement extends BaseElement {
         },
       ],
       label: 'Background Size',
-      default: 'unset',
       rules: {
         "body{{STATE}}": "background-size: {{VALUE}};"
       }
@@ -463,15 +605,6 @@ class RootElement extends BaseElement {
     this.addControl('gradient', {
       type: CONTROLLER_GRADIENT,
       label: 'Gradient',
-      default: {
-        isWithGradient: false,
-        firstColor: "rgba(97,206,112,1)",
-        firstPoint: '100',
-        secondColor: "rgba(242,41,91,1)",
-        secondPoint: "0",
-        angle: "0",
-        value: ""
-      },
       rules: {
         "body{{STATE}}": "background-image: {{VALUE}}"
       }
@@ -480,14 +613,6 @@ class RootElement extends BaseElement {
     this.addControl('position_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit: 'px',
-        bind: true
-      },
       units: [
         'px',
         '%',
@@ -504,71 +629,69 @@ class RootElement extends BaseElement {
       },
     });
 
-    this.addControl('global_transition_property', {
-      type: CONTROLLER_TEXTAREA,
-      label: 'Transition Property',
-      rules: {
-        "body *": "transition-property: {{VALUE}};"
-      },
-      description: 'Input properties, commas separated'
-    });
-
-    this.addControl("global_transition_duration", {
-      type: CONTROLLER_SLIDER,
-      label: 'Transition Duration',
-      default: {
-        size: 0.2,
-      },
-      units: [],
-      max: 5,
-      min: 0,
-      step: 0.1,
-      rules: {
-        "body *": "transition-duration: {{SIZE}}s;"
-      }
-    });
-
-    this.addControl('global_transition_timing', {
-      type: CONTROLLER_SELECT,
-      options: [
-        {
-          value: "linear",
-          label: "linear"
-        },
-        {
-          value: "ease",
-          label: "ease"
-        },
-        {
-          value: "ease-in",
-          label: "ease-in"
-        },
-        {
-          value: "ease-out",
-          label: "ease-out"
-        },
-        {
-          value: "ease-in-out",
-          label: "ease-in-out"
-        }
-      ],
-      label: 'Transition Timing Function',
-      rules: {
-        "body *": "transition-timing-function: {{VALUE}};"
-      }
-    });
-
-    this.addControl("global_transition_delay", {
-      type: CONTROLLER_SLIDER,
-      label: 'Transition Delay',
-      units: [],
-      max: 5,
-      min: 0,
-      step: 0.1,
-      rules: {
-        "body *": "transition-delay: {{SIZE}}s;"
-      }
-    });
+    // this.addControl('global_transition_property', {
+    //   type: CONTROLLER_TEXTAREA,
+    //   label: 'Transition Property',
+    //   rules: {
+    //     "body *": "transition-property: {{VALUE}};"
+    //   },
+    //   description: 'Input properties, commas separated'
+    // });
+    //
+    // this.addControl("global_transition_duration", {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Transition Duration',
+    //   default: {
+    //     size: 0.2,
+    //   },
+    //   units: [],
+    //   max: 5,
+    //   min: 0,
+    //   step: 0.1,
+    //   rules: {
+    //     "body *": "transition-duration: {{SIZE}}s;"
+    //   }
+    // });
+    // this.addControl('global_transition_timing', {
+    //   type: CONTROLLER_SELECT,
+    //   options: [
+    //     {
+    //       value: "linear",
+    //       label: "linear"
+    //     },
+    //     {
+    //       value: "ease",
+    //       label: "ease"
+    //     },
+    //     {
+    //       value: "ease-in",
+    //       label: "ease-in"
+    //     },
+    //     {
+    //       value: "ease-out",
+    //       label: "ease-out"
+    //     },
+    //     {
+    //       value: "ease-in-out",
+    //       label: "ease-in-out"
+    //     }
+    //   ],
+    //   label: 'Transition Timing Function',
+    //   rules: {
+    //     "body *": "transition-timing-function: {{VALUE}};"
+    //   }
+    // });
+    // this.addControl("global_transition_delay", {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Transition Delay',
+    //   units: [],
+    //   max: 5,
+    //   min: 0,
+    //   step: 0.1,
+    //   rules: {
+    //     "body *": "transition-delay: {{SIZE}}s;"
+    //   }
+    // });
 
 
     this.endControlSection();
@@ -581,10 +704,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_h1_color", {
       type: CONTROLLER_COLOR,
       label: "H1 Color",
-      default: {
-        color: "",
-        colorPickedHex: "#000",
-      },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "h1.altrp-heading{{STATE}}": "color: {{COLOR}};"
@@ -594,10 +713,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_h2_color", {
       type: CONTROLLER_COLOR,
       label: "H2 Color",
-      default: {
-        color: "",
-        colorPickedHex: "#000",
-      },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "h2.altrp-heading{{STATE}}": "color: {{COLOR}};"
@@ -607,10 +722,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_h3_color", {
       type: CONTROLLER_COLOR,
       label: "H3 Color",
-      default: {
-        color: "",
-        colorPickedHex: "#000",
-      },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "h3.altrp-heading{{STATE}}": "color: {{COLOR}};"
@@ -620,10 +731,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_h4_color", {
       type: CONTROLLER_COLOR,
       label: "H4 Color",
-      default: {
-        color: "",
-        colorPickedHex: "#000",
-      },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "h4.altrp-heading{{STATE}}": "color: {{COLOR}};"
@@ -633,10 +740,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_h5_color", {
       type: CONTROLLER_COLOR,
       label: "H5 Color",
-      default: {
-        color: "",
-        colorPickedHex: "#000",
-      },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "h5.altrp-heading{{STATE}}": "color: {{COLOR}};"
@@ -646,10 +749,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_h6_color", {
       type: CONTROLLER_COLOR,
       label: "H6 Color",
-      default: {
-        color: "",
-        colorPickedHex: "#000",
-      },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "h6.altrp-heading{{STATE}}": "color: {{COLOR}};"
@@ -659,10 +758,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_p_color", {
       type: CONTROLLER_COLOR,
       label: "P Color",
-      default: {
-        color: "",
-        colorPickedHex: "#000",
-      },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "p.altrp-heading{{STATE}}": "color: {{COLOR}};"
@@ -792,13 +887,6 @@ class RootElement extends BaseElement {
     this.addControl('heading_default_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
-      default: {
-        // top: 5,
-        // right: 0,
-        // bottom: 5,
-        // left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -817,13 +905,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_default_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       rules: {
         "div .altrp-heading{{STATE}}": [
@@ -838,10 +919,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_default_background_color", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      // default: {
-      //   color: "",
-      //   colorPickedHex: "",
-      // },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         ".altrp-heading{{STATE}}": "background-color: {{COLOR}};"
@@ -851,9 +928,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_default_opacity", {
       type: CONTROLLER_SLIDER,
       label: "Opacity",
-      // default: {
-      //   size: 1
-      // },
       max: 1,
       min: 0,
       step: 0.01,
@@ -865,7 +939,6 @@ class RootElement extends BaseElement {
     this.addControl('heading_default_background_image', {
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
-      default: { url: "" },
       rules: {
         ".altrp-heading{{STATE}}": "background-image: url({{URL}});"
       }
@@ -912,7 +985,6 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Background Position',
-      // default: 'top left',
       rules: {
         "div .altrp-heading{{STATE}}": "background-position: {{VALUE}};"
       }
@@ -935,7 +1007,6 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Background Attachment',
-      // default: 'scroll',
       rules: {
         "div .altrp-heading{{STATE}}": "background-attachment: {{VALUE}};"
       }
@@ -970,7 +1041,6 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Background Repeat',
-      // default: 'repeat',
       rules: {
         "div .altrp-heading{{STATE}}": "background-repeat: {{VALUE}};"
       }
@@ -979,10 +1049,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_default_background_image_width", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default: {
-        size: 100,
-        unit: 'px',
-      },
       conditions: {
         'background_size': [''],
       },
@@ -1019,7 +1085,6 @@ class RootElement extends BaseElement {
         },
       ],
       label: 'Background Size',
-      // default: 'unset',
       rules: {
         ".altrp-heading{{STATE}}": "background-size: {{VALUE}};"
       }
@@ -1062,9 +1127,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_default_transition_duration", {
       type: CONTROLLER_SLIDER,
       label: 'Transition Duration',
-      default: {
-        size: 0.2,
-      },
       units: [],
       max: 5,
       min: 0,
@@ -1126,14 +1188,6 @@ class RootElement extends BaseElement {
     this.addControl('button_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default: {
-        // top: 20,
-        // right: 25,
-        // bottom: 20,
-        // left: 25,
-        unit: 'px',
-        bind: true
-      },
       units: [
         'px',
         '%',
@@ -1152,14 +1206,6 @@ class RootElement extends BaseElement {
     this.addControl('button_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      // default: {
-      //   lineHeight: 1,
-      //   spacing: 0,
-      //   size: 16,
-      //   weight: "normal",
-      //   family: "Open Sans",
-      //   decoration: ""
-      // },
       rules: {
         'div .altrp-btn{{STATE}}': [
           'font-size: {{SIZE}}px;',
@@ -1177,10 +1223,6 @@ class RootElement extends BaseElement {
     this.addControl('button_font_color', {
       type: CONTROLLER_COLOR,
       label: 'Color',
-      // default: {
-      //   color: "rgb(255,255,255)",
-      //   colorPickedHex: "#FFF",
-      // },
       rules: {
         'div .altrp-btn{{STATE}}': 'color: {{COLOR}};',
       },
@@ -1224,9 +1266,6 @@ class RootElement extends BaseElement {
     this.addControl('button_border_width', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Width',
-      default: {
-        bind: true
-      },
       units: [
         'px',
         '%',
@@ -1241,10 +1280,6 @@ class RootElement extends BaseElement {
     this.addControl('button_border_color', {
       type: CONTROLLER_COLOR,
       label: 'Border Color',
-      // default: {
-      //   color: "rgb(50,168,82)",
-      //   colorPickedHex: "#32a852",
-      // },
       rules: {
         'div .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
       },
@@ -1254,9 +1289,6 @@ class RootElement extends BaseElement {
     this.addControl('button_default_border_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Radius',
-      default: {
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -1275,17 +1307,6 @@ class RootElement extends BaseElement {
     this.addControl('button_box_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Shadow',
-      default: {
-        blur: 0,
-        horizontal: 0,
-        vertical: 0,
-        opacity: 1,
-        spread: 0,
-        colorRGB: 'rgb(0, 0, 0)',
-        color: 'rgb(0, 0, 0)',
-        colorPickedHex: '#000000',
-        type: " "
-      },
       presetColors: [
         '#eaeaea',
         '#9c18a8'
@@ -1298,10 +1319,6 @@ class RootElement extends BaseElement {
     this.addControl('button_background_color', {
       type: CONTROLLER_COLOR,
       label: 'Background color',
-      // default: {
-      //   color: "rgb(52,59,76)",
-      //   colorPickedHex: "#343B4C",
-      // },
       rules: {
         'div .altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
       },
@@ -1310,7 +1327,6 @@ class RootElement extends BaseElement {
     this.addControl('button_background_image', {
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
-      default: { url: "" },
       rules: {
         ".altrp-btn{{STATE}}": "background-image: url({{URL}});"
       }
@@ -1319,15 +1335,6 @@ class RootElement extends BaseElement {
     this.addControl('button_gradient', {
       type: CONTROLLER_GRADIENT,
       label: 'Gradient',
-      default: {
-        isWithGradient: false,
-        firstColor: "rgba(97,206,112,1)",
-        firstPoint: '100',
-        secondColor: "rgba(242,41,91,1)",
-        secondPoint: "0",
-        angle: "0",
-        value: ""
-      },
       rules: {
         "div .altrp-btn{{STATE}}": "background-image: {{VALUE}}"
       }
@@ -1374,7 +1381,6 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Background Position',
-      // default: 'top left',
       rules: {
         "div .altrp-btn{{STATE}}": "background-position: {{VALUE}};"
       }
@@ -1397,7 +1403,6 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Background Attachment',
-      // default: 'scroll',
       rules: {
         "div .altrp-btn{{STATE}}": "background-attachment: {{VALUE}};"
       }
@@ -1432,7 +1437,6 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Background Repeat',
-      // default: 'repeat',
       rules: {
         "div .altrp-btn{{STATE}}": "background-repeat: {{VALUE}};"
       }
@@ -1441,10 +1445,6 @@ class RootElement extends BaseElement {
     this.addControl("button_background_image_width", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default: {
-        size: 100,
-        unit: 'px',
-      },
       conditions: {
         'button_background_size': [''],
       },
@@ -1481,7 +1481,6 @@ class RootElement extends BaseElement {
         },
       ],
       label: 'Background Size',
-      // default: 'unset',
       rules: {
         ".altrp-btn{{STATE}}": "background-size: {{VALUE}};"
       }
@@ -1491,7 +1490,7 @@ class RootElement extends BaseElement {
       type: CONTROLLER_TEXTAREA,
       label: 'Transition Property',
       rules: {
-        ".altrp-btn": "transition-property: {{VALUE}};"
+        ".altrp-btn{{STATE}}": "transition-property: {{VALUE}};"
       },
       description: 'Input properties, commas separated'
     });
@@ -1499,15 +1498,12 @@ class RootElement extends BaseElement {
     this.addControl("button_transition_duration", {
       type: CONTROLLER_SLIDER,
       label: 'Transition Duration',
-      default: {
-        size: 0.2,
-      },
       units: [],
       max: 5,
       min: 0,
       step: 0.1,
       rules: {
-        ".altrp-btn": "transition-duration: {{SIZE}}s;"
+        "div .altrp-btn{{STATE}}": "transition-duration: {{SIZE}}s;"
       }
     });
 
@@ -1537,7 +1533,7 @@ class RootElement extends BaseElement {
       ],
       label: 'Transition Timing Function',
       rules: {
-        ".altrp-btn": "transition-timing-function: {{VALUE}};"
+        "div .altrp-btn{{STATE}}": "transition-timing-function: {{VALUE}};"
       }
     });
 
@@ -1549,7 +1545,7 @@ class RootElement extends BaseElement {
       min: 0,
       step: 0.1,
       rules: {
-        ".altrp-btn": "transition-delay: {{SIZE}}s;"
+        "div .altrp-btn{{STATE}}": "transition-delay: {{SIZE}}s;"
       }
     });
 
@@ -1599,7 +1595,6 @@ class RootElement extends BaseElement {
     this.addControl('alignment_list_default', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      // default: 'left',
       options: [
         {
           icon: 'left',
@@ -1623,10 +1618,6 @@ class RootElement extends BaseElement {
     this.addControl("indent_list_text_default", {
       type: CONTROLLER_SLIDER,
       label: 'Indent',
-      default: {
-        // size: 0,
-        unit: 'px',
-      },
       max: 50,
       min: 0,
       rules: {
@@ -1637,10 +1628,6 @@ class RootElement extends BaseElement {
     this.addControl("color_list_text_default", {
       type: CONTROLLER_COLOR,
       label: "Text color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       rules: {
         ".altrp-list-label{{STATE}}": "color: {{COLOR}};"
       }
@@ -1649,10 +1636,6 @@ class RootElement extends BaseElement {
     this.addControl("background_color_list_text_default", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       rules: {
         ".altrp-list-label{{STATE}}": "background-color: {{COLOR}};"
       }
@@ -1661,13 +1644,6 @@ class RootElement extends BaseElement {
     this.addControl('padding_list_text_default', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Text Padding',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -1686,14 +1662,6 @@ class RootElement extends BaseElement {
     this.addControl('typographic_list_text_default', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      // default: {
-      //   lineHeight: 1,
-      //   spacing: 0,
-      //   size: 16,
-      //   weight: "normal",
-      //   family: "Open Sans",
-      //   decoration: ""
-      // },
       rules: {
         '.altrp-list-label{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
@@ -1712,7 +1680,6 @@ class RootElement extends BaseElement {
     this.addControl("link_decoration_text_default", {
       type: CONTROLLER_SELECT,
       label: "Text decoration",
-      // default: "none",
       options: [
         {
           value: "none",
@@ -1749,9 +1716,6 @@ class RootElement extends BaseElement {
     this.addControl("list_transition_duration", {
       type: CONTROLLER_SLIDER,
       label: 'Transition Duration',
-      default: {
-        size: 0.2,
-      },
       units: [],
       max: 5,
       min: 0,
@@ -1819,13 +1783,6 @@ class RootElement extends BaseElement {
     this.addControl("text_style_position_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       rules: {
         "div .altrp-text{{STATE}}": [
@@ -1840,13 +1797,6 @@ class RootElement extends BaseElement {
     this.addControl('text_style_position_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
-      default: {
-        // top: 5,
-        // right: 0,
-        // bottom: 5,
-        // left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -1865,10 +1815,6 @@ class RootElement extends BaseElement {
     this.addControl("text_style_background_color", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         ".altrp-text{{STATE}}": "background-color: {{COLOR}};"
@@ -1878,9 +1824,6 @@ class RootElement extends BaseElement {
     this.addControl("text_style_background_opacity", {
       type: CONTROLLER_SLIDER,
       label: "Opacity",
-      // default: {
-      //   size: 1
-      // },
       max: 1,
       min: 0,
       step: 0.01,
@@ -1892,14 +1835,6 @@ class RootElement extends BaseElement {
     this.addControl('text_style_font_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      // default: {
-      //   lineHeight: 1.5,
-      //   spacing: 0,
-      //   size: 16,
-      //   weight: "normal",
-      //   family: "Open Sans",
-      //   decoration: ""
-      // },
       rules: {
         'div .altrp-text{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
@@ -1918,10 +1853,6 @@ class RootElement extends BaseElement {
     this.addControl("text_style_font_color", {
       type: CONTROLLER_COLOR,
       label: "Color",
-      // default: {
-      //   color: "rgb(0, 0, 1)",
-      //   colorPickedHex: "#000000"
-      // },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "div.altrp-text{{STATE}}": "color: {{COLOR}};"
@@ -1976,10 +1907,6 @@ class RootElement extends BaseElement {
     this.addControl("text_style_border_color", {
       type: CONTROLLER_COLOR,
       label: "Border color",
-      // default: {
-      //   color: "rgb(50,168,82)",
-      //   colorPickedHex: "#32a852"
-      // },
       rules: {
         "div .altrp-text{{STATE}}": "border-color: {{COLOR}};"
       }
@@ -1988,9 +1915,6 @@ class RootElement extends BaseElement {
     this.addControl('text_default_border_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Radius',
-      default: {
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -2018,9 +1942,6 @@ class RootElement extends BaseElement {
     this.addControl("text_transition_duration", {
       type: CONTROLLER_SLIDER,
       label: 'Transition Duration',
-      default: {
-        size: 0.2,
-      },
       units: [],
       max: 5,
       min: 0,
@@ -2083,13 +2004,6 @@ class RootElement extends BaseElement {
     this.addControl('image_default_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -2108,13 +2022,6 @@ class RootElement extends BaseElement {
     this.addControl('image_default_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -2133,9 +2040,6 @@ class RootElement extends BaseElement {
     this.addControl('image_default_opacity', {
       type: CONTROLLER_SLIDER,
       label: 'Opacity',
-      // default: {
-      //   size: 1,
-      // },
       max: 1,
       min: 0,
       step: 0.01,
@@ -2147,7 +2051,6 @@ class RootElement extends BaseElement {
     this.addControl('image_default_fit_size', {
       type: CONTROLLER_SELECT,
       label: 'Image fit',
-      // default: "cover",
       options: [
         {
           'value': 'fill',
@@ -2236,10 +2139,6 @@ class RootElement extends BaseElement {
     this.addControl('image_default_border_color', {
       type: CONTROLLER_COLOR,
       label: 'Border Color',
-      // default: {
-      //   color: "rgb(50,168,82)",
-      //   colorPickedHex: "#32a852",
-      // },
       rules: {
         'div .altrp-image{{STATE}}': 'border-color: {{COLOR}};',
       },
@@ -2249,9 +2148,6 @@ class RootElement extends BaseElement {
     this.addControl('image_default_border_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Radius',
-      default: {
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -2280,9 +2176,6 @@ class RootElement extends BaseElement {
     this.addControl("image_transition_duration", {
       type: CONTROLLER_SLIDER,
       label: 'Transition Duration',
-      default: {
-        size: 0.2,
-      },
       units: [],
       max: 5,
       min: 0,
@@ -2348,10 +2241,6 @@ class RootElement extends BaseElement {
     this.addControl("label_default_font_color", {
       type: CONTROLLER_COLOR,
       label: "Label Font Color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         ".altrp-field-label{{STATE}}": "color: {{COLOR}};"
@@ -2361,14 +2250,6 @@ class RootElement extends BaseElement {
     this.addControl('label_default_font_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Label Typographic',
-      // default: {
-      //   lineHeight: 1.5,
-      //   spacing: 0,
-      //   size: 16,
-      //   weight: "normal",
-      //   family: "Open Sans",
-      //   decoration: ""
-      // },
       rules: {
         'div .altrp-field-label{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
@@ -2387,14 +2268,6 @@ class RootElement extends BaseElement {
     this.addControl('field_default_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Field Typographic',
-      // default: {
-      //   lineHeight: 1.5,
-      //   spacing: 0,
-      //   size: 16,
-      //   weight: "normal",
-      //   family: "Open Sans",
-      //   decoration: ""
-      // },
       rules: {
         'div .altrp-field-select2__single-value{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
@@ -2422,10 +2295,6 @@ class RootElement extends BaseElement {
     this.addControl("field_default_color", {
       type: CONTROLLER_COLOR,
       label: "Field Font Color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         '.altrp-field-select2__single-value{{STATE}}': 'color : {{COLOR}};',
@@ -2436,7 +2305,6 @@ class RootElement extends BaseElement {
     this.addControl('placeholder_and_value_alignment_default', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment, value',
-      // default: 'left',
       options: [
         {
           icon: 'left',
@@ -2460,13 +2328,6 @@ class RootElement extends BaseElement {
     this.addControl('field_default_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -2485,13 +2346,6 @@ class RootElement extends BaseElement {
     this.addControl('field_default_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default: {
-        // top: 2,
-        // right: 2,
-        // bottom: 2,
-        // left: 2,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -2516,10 +2370,6 @@ class RootElement extends BaseElement {
     this.addControl("placeholder_default_color", {
       type: CONTROLLER_COLOR,
       label: "PLaceholder Font Color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         ".altrp-field::placeholder{{STATE}}": "color: {{COLOR}};",
@@ -2530,14 +2380,6 @@ class RootElement extends BaseElement {
     this.addControl('placeholder_default_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Placeholder Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 13,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
       rules: {
         'div .altrp-field::placeholder{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
@@ -2566,10 +2408,6 @@ class RootElement extends BaseElement {
     this.addControl('input_default_background_color', {
       type: CONTROLLER_COLOR,
       label: 'Background Color',
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       rules: {
         '.altrp-field{{STATE}}': 'background-color: {{COLOR}};',
         '.altrp-field-select2__control{{STATE}}': 'background-color: {{COLOR}};',
@@ -2580,7 +2418,6 @@ class RootElement extends BaseElement {
     this.addControl('input_default_border_type', {
       type: CONTROLLER_SELECT,
       label: 'Border Type',
-      // default: 'solid',
       options: [
         {
           'value': 'none',
@@ -2623,12 +2460,6 @@ class RootElement extends BaseElement {
         '%',
         'vh',
       ],
-      // default: {
-      //   top: 2,
-      //   right: 2,
-      //   bottom: 2,
-      //   left: 2
-      // },
       rules: {
         '.altrp-field{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         '.altrp-field-select2__control{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
@@ -2639,10 +2470,6 @@ class RootElement extends BaseElement {
     this.addControl('input_default_border_color', {
       type: CONTROLLER_COLOR,
       label: 'Border Color',
-      // default: {
-      //   color: "rgb(142,148,170)",
-      //   colorPickedHex: "#8E94AA",
-      // },
       rules: {
         '.altrp-field{{STATE}}': 'border-color: {{COLOR}};',
         '.altrp-field-select2__control{{STATE}}': 'border-color: {{COLOR}};'
@@ -2653,9 +2480,6 @@ class RootElement extends BaseElement {
     this.addControl('input_default_border_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Radius',
-      default: {
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -2680,17 +2504,6 @@ class RootElement extends BaseElement {
     this.addControl('input_default_box_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Box shadow',
-      default: {
-        blur: 0,
-        horizontal: 0,
-        vertical: 0,
-        opacity: 1,
-        spread: 0,
-        colorRGB: 'rgb(0, 0, 0)',
-        color: 'rgb(0, 0, 0)',
-        colorPickedHex: '#000000',
-        type: " "
-      },
       presetColors: [
         '#eaeaea',
         '#9c18a8'
@@ -2716,9 +2529,6 @@ class RootElement extends BaseElement {
     this.addControl("input_transition_duration", {
       type: CONTROLLER_SLIDER,
       label: 'Transition Duration',
-      default: {
-        size: 0.2,
-      },
       units: [],
       max: 5,
       min: 0,
@@ -2790,7 +2600,6 @@ class RootElement extends BaseElement {
     this.addControl('table_default_header_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Header alignment',
-      default: 'center',
       options: [
         {
           icon: 'left',
@@ -2813,7 +2622,6 @@ class RootElement extends BaseElement {
     this.addControl('table_default_body_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Body alignment',
-      // default: 'left',
       options: [
         {
           icon: 'left',
@@ -2836,10 +2644,6 @@ class RootElement extends BaseElement {
     this.addControl("table_default_stripe_color", {
       type: CONTROLLER_COLOR,
       label: "Stripe Color",
-      default: {
-        color: "rgba(0, 0, 50, .05)",
-        colorPickedHex: "#32a852"
-      },
       rules: {
         'tbody .altrp-table-tbody--striped tr:nth-child(2n)': 'background-color: {{COLOR}}'
       }
@@ -2883,13 +2687,6 @@ class RootElement extends BaseElement {
     this.addControl("table_default_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Table Border Width",
-      default: {
-        // top: 1,
-        // right: 1,
-        // bottom: 1,
-        // left: 1,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       rules: {
         'div .altrp-table{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
@@ -2899,10 +2696,6 @@ class RootElement extends BaseElement {
     this.addControl("table_default_border_color", {
       type: CONTROLLER_COLOR,
       label: "Table Border Color",
-      // default: {
-      //   color: "rgb(186,186,186)",
-      //   colorPickedHex: "#32a852"
-      // },
       rules: {
         'div .altrp-table{{STATE}}': 'border-color: {{COLOR}} !important'
       }
@@ -2911,10 +2704,6 @@ class RootElement extends BaseElement {
     this.addControl("table_default_header_background", {
       type: CONTROLLER_COLOR,
       label: "Header Background",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
         '.altrp-table-head{{STATE}}': 'background: {{COLOR}}'
       }
@@ -2923,10 +2712,6 @@ class RootElement extends BaseElement {
     this.addControl("table_default_header_text_color", {
       type: CONTROLLER_COLOR,
       label: "Header Text color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
         '.altrp-table-th{{STATE}}': 'color: {{COLOR}}'
       }
@@ -2935,14 +2720,6 @@ class RootElement extends BaseElement {
     this.addControl('table_default_header_font', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Header Typographic',
-      // default: {
-      //   lineHeight: 1.5,
-      //   spacing: 0,
-      //   size: 14,
-      //   weight: "normal",
-      //   family: "Open Sans",
-      //   decoration: ""
-      // },
       rules: {
         'tr .altrp-table-th{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
@@ -3004,10 +2781,6 @@ class RootElement extends BaseElement {
     this.addControl("table_default_header_border_color", {
       type: CONTROLLER_COLOR,
       label: "Header Border color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
         '.altrp-table-th{{STATE}}': 'border-color: {{COLOR}};',
       }
@@ -3016,13 +2789,6 @@ class RootElement extends BaseElement {
     this.addControl('table_default_header_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Header Padding',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -3085,10 +2851,6 @@ class RootElement extends BaseElement {
     this.addControl("table_default_body_border_color_", {
       type: CONTROLLER_COLOR,
       label: "Body Border color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
         '.altrp-table-td{{STATE}}': 'border-color: {{COLOR}};',
       }
@@ -3097,13 +2859,6 @@ class RootElement extends BaseElement {
     this.addControl('table_default_body_cell_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Cell padding',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -3122,10 +2877,6 @@ class RootElement extends BaseElement {
     this.addControl("table_default_body_border_background", {
       type: CONTROLLER_COLOR,
       label: "Body Background",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
         '.altrp-table-tbody .altrp-table-background{{STATE}}': 'background: {{COLOR}};',
       }
@@ -3134,10 +2885,6 @@ class RootElement extends BaseElement {
     this.addControl("table_default_body_border_text_color", {
       type: CONTROLLER_COLOR,
       label: "Body Text color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
         '.altrp-table-td{{STATE}}': 'color: {{COLOR}};',
       }
@@ -3146,14 +2893,6 @@ class RootElement extends BaseElement {
     this.addControl('table_default_body_font', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Body Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 14,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
       rules: {
         '.altrp-table-td{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
@@ -3171,10 +2910,6 @@ class RootElement extends BaseElement {
     this.addControl("table_default_body_links_color", {
       type: CONTROLLER_COLOR,
       label: "links_color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
       }
     });
@@ -3184,7 +2919,7 @@ class RootElement extends BaseElement {
       label: 'Transition Property',
       rules: {
         ".altrp-table-th": "transition-property: {{VALUE}};",
-        "..altrp-table-td": "transition-property: {{VALUE}};",
+        ".altrp-table-td": "transition-property: {{VALUE}};",
         ".altrp-table": "transition-property: {{VALUE}};",
         ".altrp-table-head": "transition-property: {{VALUE}};",
         ".altrp-table-background": "transition-property: {{VALUE}};",
@@ -3195,16 +2930,13 @@ class RootElement extends BaseElement {
     this.addControl("table_transition_duration", {
       type: CONTROLLER_SLIDER,
       label: 'Transition Duration',
-      default: {
-        size: 0.2,
-      },
       units: [],
       max: 5,
       min: 0,
       step: 0.1,
       rules: {
         ".altrp-table-th": "transition-duration: {{SIZE}}s;",
-        "..altrp-table-td": "transition-duration: {{SIZE}}s;",
+        ".altrp-table-td": "transition-duration: {{SIZE}}s;",
         ".altrp-table": "transition-duration: {{SIZE}}s;",
         ".altrp-table-head": "transition-duration: {{SIZE}}s;",
         ".altrp-table-background": "transition-duration: {{SIZE}}s;",
@@ -3238,7 +2970,7 @@ class RootElement extends BaseElement {
       label: 'Transition Timing Function',
       rules: {
         ".altrp-table-th": "transition-timing-function: {{VALUE}};",
-        "..altrp-table-td": "transition-timing-function: {{VALUE}};",
+        ".altrp-table-td": "transition-timing-function: {{VALUE}};",
         ".altrp-table": "transition-timing-function: {{VALUE}};",
         ".altrp-table-head": "transition-timing-function: {{VALUE}};",
         ".altrp-table-background": "transition-timing-function: {{VALUE}};",
@@ -3254,7 +2986,7 @@ class RootElement extends BaseElement {
       step: 0.1,
       rules: {
         ".altrp-table-th": "transition-delay: {{SIZE}}s;",
-        "..altrp-table-td": "transition-delay: {{SIZE}}s;",
+        ".altrp-table-td": "transition-delay: {{SIZE}}s;",
         ".altrp-table": "transition-delay: {{SIZE}}s;",
         ".altrp-table-head": "transition-delay: {{SIZE}}s;",
         ".altrp-table-background": "transition-delay: {{SIZE}}s;",
@@ -3264,10 +2996,6 @@ class RootElement extends BaseElement {
     this.addControl("table_style_pagination_buttons_text_color", {
       type: CONTROLLER_COLOR,
       label: "Pagination Buttons text color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
         '.altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'color: {{COLOR}}'
       }
@@ -3276,10 +3004,6 @@ class RootElement extends BaseElement {
     this.addControl("table_style_pagination_buttons_background_color", {
       type: CONTROLLER_COLOR,
       label: "Pagination Buttons background color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
         '.altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'background-color: {{COLOR}}'
       }
@@ -3288,13 +3012,6 @@ class RootElement extends BaseElement {
     this.addControl('table_style_pagination_padding_buttons', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Pagination buttons Padding',
-      default: {
-        top: 10,
-        right: 10,
-        bottom: 10,
-        left: 10,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -3313,10 +3030,6 @@ class RootElement extends BaseElement {
     this.addControl("table_style_pagination_count_text_color", {
       type: CONTROLLER_COLOR,
       label: "Pagination Count text color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
         '.altrp-pagination__count{{STATE}}': 'color: {{COLOR}}',
         '.altrp-pagination-pages__item{{STATE}}': 'color: {{COLOR}}'
@@ -3326,10 +3039,6 @@ class RootElement extends BaseElement {
     this.addControl("table_style_pagination_count_background_color", {
       type: CONTROLLER_COLOR,
       label: "Pagination Count background color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
         '.altrp-pagination__count{{STATE}}': 'background-color: {{COLOR}}'
       }
@@ -3338,10 +3047,6 @@ class RootElement extends BaseElement {
     this.addControl("table_style_pagination_count_item_background_color", {
       type: CONTROLLER_COLOR,
       label: "Pagination Count Item background color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
         '.altrp-pagination-pages__item{{STATE}}': 'background-color: {{COLOR}}'
       }
@@ -3350,10 +3055,6 @@ class RootElement extends BaseElement {
     this.addControl("table_style_pagination_active_count_text_color", {
       type: CONTROLLER_COLOR,
       label: "Pagination Active Count text color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
         '.active.altrp-pagination-pages__item{{STATE}}': 'color: {{COLOR}}'
       }
@@ -3362,10 +3063,6 @@ class RootElement extends BaseElement {
     this.addControl("table_style_pagination_active_count_item_background_color", {
       type: CONTROLLER_COLOR,
       label: "Pagination Active Count Item background color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
         '.active.altrp-pagination-pages__item{{STATE}}': 'background-color: {{COLOR}}'
       }
@@ -3374,13 +3071,6 @@ class RootElement extends BaseElement {
     this.addControl('table_style_pagination_padding_count', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Pagination count Padding',
-      default: {
-        top: 10,
-        right: 10,
-        bottom: 10,
-        left: 10,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -3399,13 +3089,6 @@ class RootElement extends BaseElement {
     this.addControl('table_style_pagination_padding_count_item', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Pagination Item Count Padding',
-      default: {
-        // top: 10,
-        // right: 10,
-        // bottom: 10,
-        // left: 10,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -3425,14 +3108,6 @@ class RootElement extends BaseElement {
       'table_style_pagination_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Pagination Typographic',
-      default: {
-        lineHeight: 0.8,
-        spacing: 0,
-        size: 16,
-        weight: 700,
-        family: 'Open Sans',
-        decoration: ""
-      },
       rules: {
         '.altrp-pagination__next{{STATE}}, .altrp-pagination-pages__item{{STATE}}, .altrp-pagination__count{{STATE}}, .altrp-pagination__previous{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
@@ -3495,10 +3170,6 @@ class RootElement extends BaseElement {
     this.addControl("table_style_pagination_border_color", {
       type: CONTROLLER_COLOR,
       label: "Pagination Border color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
         '.altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-color: {{COLOR}};',
       }
@@ -3551,10 +3222,6 @@ class RootElement extends BaseElement {
     this.addControl("table_style_pagination_count_item_border_color", {
       type: CONTROLLER_COLOR,
       label: "Pagination Item Count Border color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
         '.altrp-pagination-pages__item{{STATE}}': 'border-color: {{COLOR}};',
       }
@@ -3563,10 +3230,6 @@ class RootElement extends BaseElement {
     this.addControl("table_style_pagination_active_count_item_border_color", {
       type: CONTROLLER_COLOR,
       label: "Pagination Active Item Count Border color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
       rules: {
         '.active.altrp-pagination-pages__item{{STATE}}': 'border-color: {{COLOR}};',
       }
@@ -3575,13 +3238,6 @@ class RootElement extends BaseElement {
     this.addControl('table_style_pagination_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Pagination Padding',
-      default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -3602,10 +3258,6 @@ class RootElement extends BaseElement {
     this.addControl("filter_style_table_text_color", {
       type: CONTROLLER_COLOR,
       label: "Filter Text Color",
-      default: {
-        color: "rgb(27,27,27)",
-        colorPickedHex: "#1B1B1B"
-      },
       rules: {
         '.altrp-label_text>.altrp-field{{STATE}}, .altrp-label_min_max .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'color: {{COLOR}}'
       }
@@ -3614,10 +3266,6 @@ class RootElement extends BaseElement {
     this.addControl("filter_style_table_background_color", {
       type: CONTROLLER_COLOR,
       label: "Filter Background Color",
-      default: {
-        color: "rgb(186,186,186)",
-        colorPickedHex: "#BABABA"
-      },
       rules: {
         '.altrp-label_text>.altrp-field{{STATE}}, .altrp-label_min_max .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'background: {{COLOR}}'
       }
@@ -3626,13 +3274,6 @@ class RootElement extends BaseElement {
     this.addControl('filter_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Filter Input Padding',
-      default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -3650,13 +3291,6 @@ class RootElement extends BaseElement {
     this.addControl('label_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Filter Label Padding',
-      default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -3676,14 +3310,6 @@ class RootElement extends BaseElement {
       'filter_style_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Filter Typographic',
-      default: {
-        lineHeight: 0.8,
-        spacing: 0,
-        size: 14,
-        weight: 700,
-        family: 'Open Sans',
-        decoration: ""
-      },
       rules: {
         '.altrp-label_text>.altrp-field{{STATE}}, .altrp-label_min_max .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': [
           'font-family: "{{FAMILY}}", sans-serif;',
@@ -3737,13 +3363,6 @@ class RootElement extends BaseElement {
     this.addControl("filter_style_table_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Filter Border Width",
-      default: {
-        top: 1,
-        right: 1,
-        bottom: 1,
-        left: 1,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       rules: {
         '.altrp-label_text>.altrp-field{{STATE}}, .altrp-label_min_max .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
@@ -3753,10 +3372,6 @@ class RootElement extends BaseElement {
     this.addControl("filter_style_table_border_color", {
       type: CONTROLLER_COLOR,
       label: "Filter Border Color",
-      default: {
-        color: "rgb(186,186,186)",
-        colorPickedHex: "#32a852"
-      },
       rules: {
         '.altrp-label_text>.altrp-field{{STATE}}, .altrp-label_min_max .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-color: {{COLOR}} !important'
       }
@@ -3772,7 +3387,6 @@ class RootElement extends BaseElement {
     this.addControl('defaults_alignment_tabs', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: 'flex-start',
       options: [
         {
           icon: 'left',
@@ -3799,10 +3413,6 @@ class RootElement extends BaseElement {
     this.addControl("defaults_spacing_column_tabs", {
       type: CONTROLLER_SLIDER,
       label: "Tab spacing",
-      default: {
-        size: 10,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       max: 100,
       min: 0,
@@ -3815,10 +3425,6 @@ class RootElement extends BaseElement {
     this.addControl("defaults_spacing_content_tabs", {
       type: CONTROLLER_SLIDER,
       label: "Content spacing",
-      default: {
-        size: 10,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       max: 100,
       min: 0,
@@ -3833,10 +3439,6 @@ class RootElement extends BaseElement {
     this.addControl("defaults_background_tab_style", {
       type: CONTROLLER_COLOR,
       label: "Background tabs",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         ".altrp-tab-btn-container{{STATE}}": "background-color: {{COLOR}};"
@@ -3846,10 +3448,6 @@ class RootElement extends BaseElement {
     this.addControl("defaults_background_type_tab_style", {
       type: CONTROLLER_COLOR,
       label: "Background buttons",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         ".altrp-tab-btn{{STATE}}": "background-color: {{COLOR}};"
@@ -3859,10 +3457,6 @@ class RootElement extends BaseElement {
     this.addControl("defaults_background_text_color_tab_style", {
       type: CONTROLLER_COLOR,
       label: "Text color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         ".altrp-tab-btn{{STATE}}": "color: {{COLOR}};"
@@ -3872,17 +3466,6 @@ class RootElement extends BaseElement {
     this.addControl('defaults_box_shadow_tab_style', {
       type: CONTROLLER_SHADOW,
       label: 'Box shadow',
-      default: {
-        blur: 0,
-        horizontal: 0,
-        vertical: 0,
-        opacity: 1,
-        spread: 0,
-        colorRGB: 'rgb(0, 0, 0)',
-        color: 'rgb(0, 0, 0)',
-        colorPickedHex: '#000000',
-        type: ""
-      },
       presetColors: [
         '#eaeaea',
         '#9c18a8'
@@ -3895,13 +3478,6 @@ class RootElement extends BaseElement {
     this.addControl("defaults_padding_tab_style", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      default: {
-        top: 10,
-        right: 15,
-        bottom: 10,
-        left: 15,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       rules: {
         ".altrp-tab-btn{{STATE}}": [
@@ -3961,10 +3537,6 @@ class RootElement extends BaseElement {
     this.addControl("defaults_border_color_tab_style", {
       type: CONTROLLER_COLOR,
       label: "Border color",
-      default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852"
-      },
       rules: {
         ".altrp-tab-btn{{STATE}}": "border-color: {{COLOR}};"
       }
@@ -3973,10 +3545,6 @@ class RootElement extends BaseElement {
     this.addControl("defaults_border_radius_tab_style", {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
-      default: {
-        size: 0,
-        unit: 'px',
-      },
       units: [
         'px',
         '%',
@@ -3988,33 +3556,6 @@ class RootElement extends BaseElement {
         ".altrp-tab-btn{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
       }
     });
-
-    // this.addControl('defaults_typographic_tab_style', {
-    //   type: CONTROLLER_TYPOGRAPHIC,
-    //   label: 'Typographic',
-    //   default: {
-    //     lineHeight: 1.5,
-    //     spacing: 0,
-    //     size: 14,
-    //     weight: "normal",
-    //     family: "Open Sans",
-    //     decoration: ""
-    //   },
-    //   rules: {
-    //     '.altrp-tab-btn{{STATE}}': [
-    //       'font-family: "{{FAMILY}}", sans-serif;',
-    //       'font-size: {{SIZE}}px;',
-    //       'line-height: {{LINEHEIGHT}};',
-    //       'letter-spacing: {{SPACING}}px',
-    //       'font-weight: {{WEIGHT}}',
-    //       'text-transform: {{TRANSFORM}}',
-    //       'font-style: {{STYLE}}',
-    //       'text-decoration: {{DECORATION}}'
-    //     ],
-    //   },
-    // }
-    // );
-
 
     this.endControlSection();
 
@@ -4033,17 +3574,6 @@ class RootElement extends BaseElement {
     });
 
     this.addControl('shadow_offcanvas', {
-      default: {
-        // blur: 0,
-        // horizontal: 0,
-        // vertical: 0,
-        // opacity: 1,
-        // spread: 0,
-        // colorRGB: 'rgb(0, 0, 0)',
-        // color: 'rgb(0, 0, 0)',
-        // colorPickedHex: '#000000',
-        // type: ""
-      },
       type: CONTROLLER_SHADOW,
       label: 'Shadow',
       rules: {
@@ -4054,14 +3584,6 @@ class RootElement extends BaseElement {
     this.addControl('padding_offcanvas', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit: 'px',
-        bind: true
-      },
       units: [
         'px',
         '%',
@@ -4085,9 +3607,6 @@ class RootElement extends BaseElement {
     this.addControl("top_close_offcanvas", {
       type: CONTROLLER_SLIDER,
       label: 'Top position',
-      default: {
-        unit: 'px',
-      },
       max: 100,
       min: 0,
       rules: {
@@ -4098,9 +3617,6 @@ class RootElement extends BaseElement {
     this.addControl("left_close_offcanvas", {
       type: CONTROLLER_SLIDER,
       label: 'Left position',
-      default: {
-        unit: 'px',
-      },
       max: 100,
       min: 0,
       rules: {
@@ -4111,9 +3627,6 @@ class RootElement extends BaseElement {
     this.addControl("right_close_offcanvas", {
       type: CONTROLLER_SLIDER,
       label: 'Right position',
-      default: {
-        unit: 'px',
-      },
       max: 100,
       min: 0,
       rules: {
@@ -4124,9 +3637,6 @@ class RootElement extends BaseElement {
     this.addControl("size_close_offcanvas", {
       type: CONTROLLER_SLIDER,
       label: 'Size',
-      default: {
-        unit: 'px',
-      },
       max: 100,
       min: 0,
       rules: {
@@ -4140,10 +3650,6 @@ class RootElement extends BaseElement {
     this.addControl('background_close_offcanvas', {
       type: CONTROLLER_COLOR,
       label: 'Background color',
-      default: {
-        // color: "rgb(52,59,76)",
-        // colorPickedHex: "#343B4C",
-      },
       rules: {
         '.{{ID}}-altrp-offcanvas .altrp-offcanvas-button{{STATE}}': 'background-color: {{COLOR}};',
       },
@@ -4152,10 +3658,6 @@ class RootElement extends BaseElement {
     this.addControl('fill_close_offcanvas', {
       type: CONTROLLER_COLOR,
       label: 'Fill color',
-      default: {
-        // color: "rgb(52,59,76)",
-        // colorPickedHex: "#343B4C",
-      },
       rules: {
         '.{{ID}}-altrp-offcanvas .altrp-offcanvas-button{{STATE}} .altrp-offcanvas-button-icon path': 'fill: {{COLOR}};',
       },
@@ -4164,10 +3666,6 @@ class RootElement extends BaseElement {
     this.addControl('stroke_close_offcanvas', {
       type: CONTROLLER_COLOR,
       label: 'Stroke color',
-      default: {
-        // color: "rgb(52,59,76)",
-        // colorPickedHex: "#343B4C",
-      },
       rules: {
         '.{{ID}}-altrp-offcanvas .altrp-offcanvas-button{{STATE}} .altrp-offcanvas-button-icon path': 'stroke: {{COLOR}};',
       },
@@ -4176,9 +3674,6 @@ class RootElement extends BaseElement {
     this.addControl('border_radius_close_offcanvas', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Radius',
-      default: {
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -4197,14 +3692,6 @@ class RootElement extends BaseElement {
     this.addControl('padding_close_offcanvas', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit: 'px',
-        bind: true
-      },
       units: [
         'px',
         '%',
@@ -4224,6 +3711,191 @@ class RootElement extends BaseElement {
     /**
      * импорт/сохранение глобальных настроек
      */
+    // popup style
+    this.startControlSection('popup_style', {
+      tab: TAB_STYLE,
+      label: 'Popup',
+    });
+
+    this.addControl('background_popup_style', {
+      type: CONTROLLER_COLOR,
+      label: 'Background color',
+      rules: {
+        '.{{ID}}-app-popup .popup-window{{STATE}}': 'background-color: {{COLOR}};',
+      },
+    });
+
+    this.addControl('gradient_popup_style', {
+      type: CONTROLLER_GRADIENT,
+      label: 'Gradient',
+      rules: {
+        ".{{ID}}-app-popup .popup-window{{STATE}}": "background-image: {{VALUE}}"
+      }
+    });
+
+    this.addControl('border_type_popup_style', {
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+        rules: {
+          '.{{ID}}-app-popup .popup-window{{STATE}}': 'border-style: {{VALUE}};',
+        },
+      }
+    );
+
+    this.addControl('border_width_popup_style', {
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        units: [
+          'px',
+          '%',
+          'vh',
+        ],
+        rules: {
+          '.{{ID}}-app-popup .popup-window{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        },
+      }
+    );
+
+    this.addControl('border_color_popup_style', {
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+        rules: {
+          '.{{ID}}-app-popup .popup-window{{STATE}}': 'border-color: {{COLOR}};',
+        },
+      }
+    );
+
+    this.addControl('border_radius_popup_style', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '.{{ID}}-app-popup .popup-window{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
+    });
+
+    this.addControl('box_shadow_popup_style', {
+      type: CONTROLLER_SHADOW,
+      label: 'Shadow',
+      rules: {
+        '.{{ID}}-app-popup .popup-window{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    });
+
+    this.addControl('close_button_popup_style', {
+      type: CONTROLLER_HEADING,
+      label: 'Close button',
+    });
+
+    this.addControl('vertical_close_button_popup_style', {
+      type: CONTROLLER_SLIDER,
+      label: 'Vertical',
+      units: [
+        'px',
+        '%',
+      ],
+      step: 0.1,
+      max: 100,
+      min: 0,
+      rules: {
+        '.{{ID}}-app-popup .popup-close-button{{STATE}}': 'top: {{SIZE}}{{UNIT}}',
+      },
+    });
+
+    this.addControl('horizontal_close_button_popup_style', {
+      type: CONTROLLER_SLIDER,
+      label: 'Horizontal',
+      units: [
+        'px',
+        '%',
+      ],
+      step: 0.1,
+      max: 100,
+      min: 0,
+      rules: {
+        '.{{ID}}-app-popup .popup-close-button-right{{STATE}}': 'right: {{SIZE}}{{UNIT}}',
+        '.{{ID}}-app-popup .popup-close-button-left{{STATE}}': 'left: {{SIZE}}{{UNIT}}',
+      },
+    });
+
+    this.addControl('fill_close_button_popup_style', {
+      type: CONTROLLER_COLOR,
+      label: 'Fill',
+      rules: {
+        '.{{ID}}-app-popup .popup-close-button-icon fill{{STATE}}': 'fill: {{COLOR}};',
+      },
+    });
+
+    this.addControl('stroke_close_button_popup_style', {
+      type: CONTROLLER_COLOR,
+      label: 'Stroke',
+      rules: {
+        '.{{ID}}-app-popup .popup-close-button-icon stroke{{STATE}}': 'stroke: {{COLOR}};',
+      },
+    });
+
+    this.addControl('background_close_button_popup_style', {
+      type: CONTROLLER_COLOR,
+      label: 'Background color',
+      rules: {
+        '.{{ID}}-app-popup .popup-close-button{{STATE}}': 'background-color: {{COLOR}};',
+      },
+    });
+
+    this.addControl('size_close_button_popup_style', {
+      type: CONTROLLER_SLIDER,
+      label: 'Size',
+      units: [
+        'px',
+        '%',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '.{{ID}}-app-popup .popup-close-button svg{{STATE}}': [
+          'height: {{SIZE}}{{UNIT}}',
+          'width: {{SIZE}}{{UNIT}}'
+        ],
+      },
+    });
+
+    this.endControlSection();
+
     this.startControlSection('import_settings', {
       tab: TAB_ADVANCED,
       label: 'Import Settings',
@@ -4284,10 +3956,6 @@ class RootElement extends BaseElement {
     this.addControl('positioning_custom_top', {
       type: CONTROLLER_SLIDER,
       label: 'Custom top',
-      default: {
-        size: "20",
-        unit: '%'
-      },
       units: [
         'px',
         '%',

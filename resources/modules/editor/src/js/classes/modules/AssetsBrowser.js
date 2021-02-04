@@ -36,7 +36,7 @@ class AssetsBrowser extends Component {
       selectedAsset: null,
       mediaAssets: []
     };
-    this.mediaResource = new Resource({ route: "/admin/ajax/media" });
+    this.mediaResource = new Resource({ route: "/admin/ajax/media?type=image" });
   }
   async componentDidMount() {
     try {

@@ -14,10 +14,12 @@ import {
   CONTROLLER_SELECT2,
   TAB_CONTENT,
   TAB_STYLE, CONTROLLER_CHOOSE,
-  CONTROLLER_SHADOW, CONTROLLER_REPEATER
+  CONTROLLER_SHADOW, CONTROLLER_REPEATER,
+  CONTROLLER_MEDIA
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 import { CONDITIONS_OPTIONS } from "../../../../../front-app/src/js/helpers";
+import { actionsControllers } from "../../decorators/actions-controllers";
 
 class Input extends BaseElement {
   static getName() {
@@ -99,6 +101,10 @@ class Input extends BaseElement {
           label: 'Select2'
         },
         {
+          value: 'image_select',
+          label: 'Image Select'
+        },
+        {
           value: 'hidden',
           label: 'Hidden'
         },
@@ -117,6 +123,44 @@ class Input extends BaseElement {
       ]
     });
 
+    const optionsRepeater = new Repeater();
+
+    optionsRepeater.addControl('label', {
+      type: CONTROLLER_TEXT,
+      label: 'Label',
+    });
+
+    optionsRepeater.addControl('value', {
+      type: CONTROLLER_TEXT,
+      label: 'Value',
+    });
+
+    optionsRepeater.addControl('image', {
+      type: CONTROLLER_MEDIA,
+      label: 'Image',
+    });
+
+    this.addControl('image_select_options', {
+      label: 'Options',
+      type: CONTROLLER_REPEATER,
+      fields: optionsRepeater.getControls(),
+      conditions: {
+        'content_type': ['image_select']
+      },
+      default: [
+      ],
+    });
+
+    this.addControl("image_select_item_width", {
+      type: CONTROLLER_SLIDER,
+      label: "Item Width (%)",
+      max: 100,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-image-select>.altrp-field{{STATE}}": 'flex-basis: {{SIZE}}%;'
+      }
+    });
+
     this.addControl('content_accept', {
       type: CONTROLLER_TEXT,
       label: 'Accept',
@@ -128,28 +172,28 @@ class Input extends BaseElement {
     });
 
     this.addControl('content_label_position_type', {
-        type: CONTROLLER_SELECT,
-        label: 'Label Position',
-        default: 'top',
-        options:[
-          {
-            'value' : 'top',
-            'label' : 'Top',
-          },
-          {
-            'value' : 'bottom',
-            'label' : 'Bottom',
-          },
-          {
-            'value' : 'left',
-            'label' : 'Left',
-          },
-          {
-            'value': 'absolute',
-            'label': 'Absolute',
-          }
-        ],
-      }
+      type: CONTROLLER_SELECT,
+      label: 'Label Position',
+      default: 'top',
+      options: [
+        {
+          'value': 'top',
+          'label': 'Top',
+        },
+        {
+          'value': 'bottom',
+          'label': 'Bottom',
+        },
+        {
+          'value': 'left',
+          'label': 'Left',
+        },
+        {
+          'value': 'absolute',
+          'label': 'Absolute',
+        }
+      ],
+    }
     );
 
     // this.addControl('content_label_nowrap', {
@@ -175,7 +219,7 @@ class Input extends BaseElement {
     // }
     // );
 
-    
+
     // this.addControl("input_width", {
     //   type: CONTROLLER_SLIDER,
     //   label: "Field Width",
@@ -217,6 +261,11 @@ class Input extends BaseElement {
       label: 'Required',
     });
 
+    this.addControl('content_readonly', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Readonly',
+    });
+
     this.addControl('content_autocomplete', {
       type: CONTROLLER_SWITCHER,
       label: 'Autocomplete',
@@ -245,20 +294,6 @@ class Input extends BaseElement {
           ]
       },
     });
-
-    this.addControl('is_select_all_allowed', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Allow Select All',
-      default: false,
-      conditions: {
-        'content_type':
-          [
-            'select2',
-          ],
-        'select2_multiple' : [ true ]
-      },
-    });
-
     this.addControl('nulled_option_title', {
       type: CONTROLLER_TEXT,
       label: 'Nulled Option Label',
@@ -345,9 +380,23 @@ class Input extends BaseElement {
         'content_type': [
           'select2',
           'file',
+          'image_select',
         ],
       },
     });
+
+    // this.addControl('is_select_all_allowed', {
+    //   type: CONTROLLER_SWITCHER,
+    //   label: 'Allow Select All',
+    //   default: false,
+    //   conditions: {
+    //     'content_type':
+    //         [
+    //           'select2',
+    //         ],
+    //     'select2_multiple': [true]
+    //   },
+    // });
 
     this.addControl('content_options', {
       type: CONTROLLER_TEXTAREA,
@@ -360,7 +409,7 @@ class Input extends BaseElement {
           'checkbox',
         ],
       },
-      description: 'Enter each option in a separate line. To differentiate between label and value, separate them with a pipe char ("|"). For example: First Name|f_name',
+      description: 'Enter each option in a separate line. To differentiate between label and value, separate them with a pipe char ("|"). For example: f_name | First Name',
     });
 
     this.addControl('content_default_value', {
@@ -391,12 +440,12 @@ class Input extends BaseElement {
       },
     });
 
-    this.addControl('create_allowed',{
+    this.addControl('create_allowed', {
       type: CONTROLLER_SWITCHER,
       label: 'Allowed',
     });
 
-    this.addControl('create_url',{
+    this.addControl('create_url', {
       label: 'URL',
       dynamic: false,
       responsive: false,
@@ -406,7 +455,7 @@ class Input extends BaseElement {
       },
     });
 
-    this.addControl('create_label',{
+    this.addControl('create_label', {
       label: 'Label Field',
       dynamic: false,
       responsive: false,
@@ -415,7 +464,7 @@ class Input extends BaseElement {
       },
     });
 
-    this.addControl('create_data',{
+    this.addControl('create_data', {
       type: CONTROLLER_TEXTAREA,
       label: 'Data',
       conditions: {
@@ -426,29 +475,31 @@ class Input extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection('logic_section', {
-      tab: TAB_CONTENT,
-      label: 'Logic',
-    });
+    actionsControllers(this);
 
-    this.addControl('logic_action', {
-      type: CONTROLLER_SELECT2,
-      label: 'Action',
-      placeholder: 'action',
-      default: '1',
-      options: [
-        {
-          value: '1',
-          label: 'Select sd  Content 1'
-        },
-        {
-          value: '2',
-          label: 'Select Content 2'
-        },
-      ]
-    });
-
-    this.endControlSection();
+    // this.startControlSection('logic_section', {
+    //   tab: TAB_CONTENT,
+    //   label: 'Logic',
+    // });
+    //
+    // this.addControl('logic_action', {
+    //   type: CONTROLLER_SELECT2,
+    //   label: 'Action',
+    //   placeholder: 'action',
+    //   default: '1',
+    //   options: [
+    //     {
+    //       value: '1',
+    //       label: 'Select sd  Content 1'
+    //     },
+    //     {
+    //       value: '2',
+    //       label: 'Select Content 2'
+    //     },
+    //   ]
+    // });
+    //
+    // this.endControlSection();
 
     this.startControlSection('form_condition_display', {
       tab: TAB_CONTENT,

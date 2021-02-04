@@ -30,6 +30,11 @@ class Query extends EloquentModel
         'updated_at'
     ];
 
+    public function remote_data()
+    {
+        return $this->morphMany('App\Altrp\RemoteData', 'remotable');
+    }
+
   /**
    * ИМпортируем данные sql-buidler
    * @param array $imported_queries

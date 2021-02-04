@@ -57,7 +57,6 @@ class TemplateDataStorage extends BaseModule {
   }
 
   setCurrentElement(element) {
-    console.log("HEYHEYHEY");
     if (!element instanceof BaseElement) {
       throw "Only Base Element Can Be Set as Default";
     }

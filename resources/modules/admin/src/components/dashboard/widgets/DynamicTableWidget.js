@@ -4,27 +4,17 @@ import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
 import { getWidgetData } from "../services/getWidgetData";
+import moment from "moment";
 
-const sortData = (key, order = "desc") => {
-  return function innerSort(a, b) {
-    if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
-      return 0;
-    }
-
-    const varA = typeof a[key] === "string" ? a[key].toUpperCase() : a[key];
-    const varB = typeof b[key] === "string" ? b[key].toUpperCase() : b[key];
-
-    let comparison = 0;
-    if (varA > varB) {
-      comparison = 1;
-    } else if (varA < varB) {
-      comparison = -1;
-    }
-    return order === "desc" ? comparison * -1 : comparison;
-  };
-};
-
-const DynamicTableWidget = ({ widget, width, dataSource = [] }) => {
+const DynamicTableWidget = ({
+  widget,
+  width,
+  keyIsDate,
+  dataSource = [],
+  height = 450,
+  sort = "",
+  tickRotation = 0
+}) => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -32,34 +22,65 @@ const DynamicTableWidget = ({ widget, width, dataSource = [] }) => {
     setIsLoading(true);
     if (dataSource.length == 0) {
       const charts = await getWidgetData(widget.source, widget.filter);
-      if (charts.status === 200) {
-        let data = charts.data.data;
-        switch (Number(widget.options.sort)) {
-          case 0:
-            data = charts.data.data;
-            break;
-          case 1:
-            data = _.sortBy(data,'key');
-            break;
-          case 2:
-            data = _.sortBy(data,'data');
-            break;
-          default:
-            data = charts.data.data;
-            break;
-        }
-        setData(data || []);
+      if (charts.status === 200 && typeof charts.data !== "string") {
+        const newData = charts.data.data.map(item => {
+          const currentKey = item.key;
+          const keyFormatted = !moment(currentKey).isValid()
+            ? currentKey
+            : moment(currentKey).format("DD.MM.YYYY");
+          return {
+            y: Number(item.data),
+            x: keyIsDate ? keyFormatted : currentKey
+          };
+        });
+        let data = [
+          {
+            id: "",
+            data: newData
+          }
+        ];
+        setData(data);
         setIsLoading(false);
       }
-    }
-    else {
-      console.log('SOURCE ==>', dataSource);
-      setData(dataSource.sort(sortData("data")));
+    } else {
+      if (
+        sort !== null &&
+        sort !== "undefined" &&
+        typeof dataSource !== "undefined"
+      ) {
+        switch (sort) {
+          case "value":
+            dataSource.forEach((item, index) => {
+              if (item.data.length > 0) {
+                dataSource[index].data = _.sortBy(item.data, ["y"]);
+              }
+            });
+            break;
+          case "key":
+            data.forEach((item, index) => {
+              if (item.data.length > 0) {
+                dataSource[index].data = _.sortBy(item.data, ["x"]);
+              }
+            });
+            break;
+
+          default:
+            // data = data;
+            break;
+        }
+      }
+      setData(dataSource || []);
       setIsLoading(false);
     }
   }, [widget]);
 
-  const summary = useMemo(() => data.reduce((acc, item) => acc + item.data, 0), [data]);
+  const summary = useMemo(
+    () =>
+      data
+        .map(item => item.data.reduce((acc, object) => acc + object.y, 0))
+        .reduce((acc, item) => acc + item, 0),
+    [data]
+  );
 
   useEffect(() => {
     getData();
@@ -67,45 +88,42 @@ const DynamicTableWidget = ({ widget, width, dataSource = [] }) => {
 
   if (isLoading) return <Spinner />;
 
-  if (data.length === 0) return <EmptyWidget />;
+  let matches = [];
+  let isNotEmpty = false;
 
-  if (widget.options.isVertical) {
-    return (
-      <div className="widget-table">
-        <table className="vertical-table">
-          <tbody>
-            {data.map((item, key) => (
-              <tr key={key}>
-                <td>{item.key}</td>
-                <td>{item.data}</td>
-              </tr>
-            ))}
-            <tr>
-              <td>ИТОГО</td>
-              <td>{summary}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    );
-  }
+  matches = _.uniq(
+    data.map(item => {
+      return item.data.length > 0;
+    })
+  );
+
+  isNotEmpty = matches.includes(true);
+  if (!isNotEmpty) return <EmptyWidget />;
 
   return (
-    <div className="widget-table">
-      <table>
-        <thead>
-          <tr>
-            {data.map((item, key) => (
-              <th key={key}>{item.key}</th>
-            ))}
-            <th>ИТОГО</th>
-          </tr>
-        </thead>
+    <div className="widget-table" style={{ maxHeight: `${height}px` }}>
+      <table className="vertical-table">
         <tbody>
+          {data.map((item, key) => {
+            const dataset = item.data.map((object, index) => {
+              return (
+                <tr key={`${key}${index}`}>
+                  <td>{object.x}</td>
+                  <td>{object.y}</td>
+                </tr>
+              );
+            });
+            return (
+              <React.Fragment key={key}>
+                <tr key={key} style={{ textAlign: "center" }}>
+                  <td colSpan={2}>{item.id}</td>
+                </tr>
+                {dataset}
+              </React.Fragment>
+            );
+          })}
           <tr>
-            {data.map((item, key) => (
-              <td key={key}>{item.data}</td>
-            ))}
+            <td>ИТОГО</td>
             <td>{summary}</td>
           </tr>
         </tbody>

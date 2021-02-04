@@ -1,61 +1,89 @@
 import React, { useState, useEffect, useCallback } from "react";
 
-import {
-  ScatterPlot,
-  DiscreteLegendEntry,
-  ScatterSeries,
-  ScatterPoint,
-  DiscreteLegend,
-  LinearXAxis,
-  LinearXAxisTickSeries,
-  LinearXAxisTickLabel
-} from 'reaviz';
+import { ResponsiveScatterPlot } from "@nivo/scatterplot";
+
+import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
 
 import EmptyWidget from "./EmptyWidget";
 
 import { getWidgetData } from "../services/getWidgetData";
 import { customStyle } from "../widgetTypes";
-import { Spinner } from 'react-bootstrap';
-import ru from "date-fns/locale/ru";
-import format from "date-fns/format";
+import { Spinner } from "react-bootstrap";
 
+import moment from "moment";
+const format = "%d.%m.%Y";
 
-const PointChart = ({ widget, width = 300, height = 300, dataSource = [] }) => {
+const PointChart = ({
+  widget,
+  dataSource = [],
+  xScaleType = "point",
+  colorScheme = "red_grey",
+  nodeSize = 6,
+  sort = "",
+  tickRotation = 0,
+  bottomAxis = true,
+  precision,
+  enableGridX = true,
+  enableGridY = true,
+  keyIsDate = false
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
-
   const size = 4;
-  const fill = customStyle[0]
+  const fill = customStyle[0];
   const getData = useCallback(async () => {
     setIsLoading(true);
     if (dataSource.length == 0) {
       const charts = await getWidgetData(widget.source, widget.filter);
       if (charts.status === 200 && typeof charts.data !== "string") {
-        const newData = charts.data.data.map((item) => {
-          const key = new Date(item.key);
-          if (key) {
-            return {
-              key,
-              data: item.data,
-            };
-          }
+        const newData = charts.data.data.map(item => {
+          const currentKey = item.key;
+          const keyFormatted = !moment(currentKey).isValid()
+            ? currentKey
+            : moment(currentKey).format("DD.MM.YYYY");
+          return {
+            y: Number(item.data),
+            x: keyIsDate ? keyFormatted : currentKey
+          };
         });
-        setData(newData);
+        let data = [
+          {
+            id: "",
+            data: newData
+          }
+        ];
+        setData(data);
         setIsLoading(false);
       }
-    }
-    else {
-      const newData = dataSource.map((item) => {
-        let key = new Date(item.key);
-        if (key instanceof Date && !isNaN(key)) {
-          return {
-            key: key,
-            data: Number(item.data),
-          };
-        }
-      }).filter(item => typeof item != 'undefined');
+    } else {
+      if (
+        sort !== null &&
+        sort !== "undefined" &&
+        typeof dataSource !== "undefined"
+      ) {
+        switch (sort) {
+          case "value":
+            dataSource.forEach((item, index) => {
+              if (item.data.length > 0) {
+                dataSource[index].data = _.sortBy(item.data, ["y"]);
+              }
+            });
+            break;
+          case "key":
+            data.forEach((item, index) => {
+              if (item.data.length > 0) {
+                dataSource[index].data = _.sortBy(item.data, ["x"]);
+              }
+            });
+            break;
 
-      setData(newData || []);
+          default:
+            // data = data;
+            break;
+        }
+      }
+      setData(dataSource || []);
       setIsLoading(false);
     }
   }, [widget]);
@@ -66,37 +94,81 @@ const PointChart = ({ widget, width = 300, height = 300, dataSource = [] }) => {
 
   if (isLoading) return <Spinner />;
 
-  if (data.length === 0) return <EmptyWidget />;
+  let matches = [];
+  let isNotEmpty = false;
 
-  const formattingDate = (d) => {
-    return format(d, "d MMM yy", { locale: ru });
-  }
+  matches = _.uniq(
+    data.map(item => {
+      return item.data.length > 0;
+    })
+  );
+
+  isNotEmpty = matches.includes(true);
+  if (!isNotEmpty) return <EmptyWidget />;
 
   return (
     <>
-      <ScatterPlot
-        height={height}
-        // width={width}
-        data={data}
-        series={
-          <ScatterSeries point={<ScatterPoint color={fill} size={size} />} />
-        }
-        xAxis={
-          <LinearXAxis
-            type="time"
-            tickSeries={
-              <LinearXAxisTickSeries
-                label={
-                  <LinearXAxisTickLabel
-                    format={formattingDate} />
+      <div
+        style={{
+          width: `100%`,
+          height: `${450}px`
+        }}
+      >
+        <ResponsiveScatterPlot
+          data={data}
+          colors={
+            colorScheme === "regagro" ? regagroScheme : { scheme: colorScheme }
+          }
+          margin={{ top: 50, right: 180, bottom: 50, left: 60 }}
+          xFormat={xScaleType === "time" && "time:%d.%m.%Y"}
+          nodeSize={nodeSize}
+          xScale={
+            xScaleType === "time"
+              ? { type: xScaleType, format: format, precision: precision }
+              : { type: xScaleType }
+          }
+          enableGridX={enableGridX}
+          enableGridY={enableGridY}
+          axisBottom={
+            bottomAxis &&
+            (xScaleType === "time"
+              ? {
+                  format: format,
+                  tickRotation: tickRotation
                 }
-              />
+              : {
+                  tickRotation: tickRotation
+                })
+          }
+          legends={[
+            {
+              anchor: "bottom-right",
+              direction: "column",
+              justify: false,
+              translateX: 130,
+              translateY: 0,
+              itemsSpacing: 0,
+              itemDirection: "left-to-right",
+              itemWidth: 120,
+              itemHeight: 20,
+              itemOpacity: 0.75,
+              symbolSize: 12,
+              symbolShape: "circle",
+              symbolBorderColor: "rgba(0, 0, 0, .5)",
+              effects: [
+                {
+                  on: "hover",
+                  style: {
+                    itemBackground: "rgba(0, 0, 0, .03)",
+                    itemOpacity: 1
+                  }
+                }
+              ]
             }
-          />
-        }
-      />
+          ]}
+        />
+      </div>
     </>
   );
-
 };
 export default PointChart;

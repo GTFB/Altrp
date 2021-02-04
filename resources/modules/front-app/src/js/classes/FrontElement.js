@@ -1,6 +1,7 @@
 import CONSTANTS from "../../../../editor/src/js/consts";
-import {getMediaQueryByName, replaceContentWithData} from "../helpers";
+import {altrpRandomId, getMediaQueryByName, replaceContentWithData} from "../helpers";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
+import {addFont} from "../store/fonts-storage/actions";
 
 class FrontElement {
 
@@ -103,12 +104,14 @@ class FrontElement {
    */
   update(){
     this.updateStyles();
+
     let widgetsForForm = [
         'button',
         'input',
     ];
     let widgetsWithActions = [
         'button',
+        'input',
     ];
     /**
      * Инициация событий в первую очередь
@@ -119,8 +122,11 @@ class FrontElement {
       } catch(e){
         console.error(e);
       }
-      return;
+      if(this.getName() === 'button'){
+        return;
+      }
     }
+
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getFormId()){
       this.formInit();
       return;
@@ -131,12 +137,24 @@ class FrontElement {
     }
   }
   async registerActions(){
+    if(this.actionsRegistered){
+      return;
+    }
     /**
      * @member {ActionsManager|*} actionsManager
      */
     const actionsManager = (await import('./modules/ActionsManager.js')).default;
+    switch (this.getName()){
+      case 'button':{
+        actionsManager.registerWidgetActions(this.getIdForAction(), this.getSettings('actions', []), 'click', this);
+      }
+      break;
+      case 'input':{
+        actionsManager.registerWidgetActions(this.getIdForAction(), this.getSettings('actions', []), 'blur', this);
+      }
+    }
 
-    actionsManager.registerWidgetActions(this.getIdForAction(), this.getSettings('actions', []), 'click', this);
+    this.actionsRegistered = true;
   }
   /**
    * Если элемент поле или кнопка нужно инициализирваоть форму в FormsManager
@@ -145,8 +163,16 @@ class FrontElement {
     /**
      * @member {FormsManager} formsManager
      */
+    if(! this.component){
+      return;
+    }
+    if(this.formsIsInit){
+      return
+    }
+    this.formsIsInit = true;
     let formsManager = await import('../../../../editor/src/js/classes/modules/FormsManager.js');
     formsManager = formsManager.default;
+
     switch (this.getName()) {
       case 'button': {
         let method = 'POST';
@@ -185,7 +211,7 @@ class FrontElement {
                 'logout',
                 method,
                 {afterLogoutRedirect:this.getSettings('redirect_after')}
-          ));
+              ));
           }
           break;
           case 'email':{
@@ -194,7 +220,7 @@ class FrontElement {
                 'email',
                 method,
                 {afterLogoutRedirect:this.getSettings('redirect_after')}
-          ));
+              ));
           }
           break;
         }
@@ -243,7 +269,11 @@ class FrontElement {
    * @return {string}
    */
   getIdForAction(){
-    let id = this.getId();
+    if(! this.idForAction){
+      this.idForAction = altrpRandomId();
+    }
+    return this.idForAction;
+    let id = this.getId();//todo: delete this
     if(this.getCurrentModel().getProperty('altrpIndex') !== ''){
       id += `_${this.getCurrentModel().getProperty('altrpIndex')}`;
     }
@@ -412,7 +442,6 @@ class FrontElement {
     if(this.getName() === 'root-element'){
       return true;
     }
-    console.log(this);
     if(this.component.props.elementDisplay || this.getSettings('conditional_ignore_in_forms')){
       display = this.parent ? this.parent.elementIsDisplay() : true;
     } else {
@@ -642,6 +671,15 @@ class FrontElement {
       formId = replaceContentWithData(formId, this.getCurrentModel().getData());
     }
     return formId;
+  }
+
+  updateFonts(){
+    let fonts = _.get(this.settings,'__altrpFonts__',{});
+
+    fonts = _.toPairs(fonts);
+    fonts.forEach(([settingName, font])=>{
+      appStore.dispatch(addFont(this.getId(), settingName, font));
+    });
   }
 }
 

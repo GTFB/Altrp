@@ -9,6 +9,7 @@ function componentWillUnmount(){
   // if(this.model){
   //   this.model.uns
   // }
+  actionsManager.unregisterWidgetActions(this.props.element.getIdForAction());
   if(! this.props.element.dynamicContentSettings){
     return
   }
@@ -197,7 +198,7 @@ function componentDidUpdate(prevProps, prevState) {
    */
   if(! _.isEqual(this.props.match, prevProps.match)){
     if(_.isFunction(this._componentDidMount)){
-      this._componentDidMount();
+      this._componentDidMount(prevProps, prevState);
     }
   }
   /**
@@ -208,7 +209,7 @@ function componentDidUpdate(prevProps, prevState) {
   if(currentDataStorage.getProperty('currentDataStorageLoaded')
       && (currentDataStorage.getProperty('currentDataStorageLoaded') !== prevDataStorage.getProperty('currentDataStorageLoaded'))){
     if(_.isFunction(this._componentDidMount)){
-      this._componentDidMount();
+      this._componentDidMount(prevProps, prevState);
     }
   }
   /**
@@ -219,7 +220,7 @@ function componentDidUpdate(prevProps, prevState) {
   if(currentModel.getProperty('altrpModelUpdated')
       && (currentModel.getProperty('altrpModelUpdated') !== prevModel.getProperty('altrpModelUpdated'))){
     if(_.isFunction(this._componentDidMount)){
-      this._componentDidMount();
+      this._componentDidMount(prevProps, prevState);
     }
   }
   // this.subscribeToModels(this.getModelId());
