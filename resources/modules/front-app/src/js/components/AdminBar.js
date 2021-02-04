@@ -158,12 +158,15 @@ class AdminBar extends React.Component {
                         </div>
                       </div>
                     )
-                  else 
-                    return (
-                      <div className="admin-bar__popup-template-item" key={`template-${index}`} onClick={this.openTemplate(item.template.id)}>
-                        {item.template.name} 
-                      </div>
-                    )
+                  else {
+                    if(item.template.name)
+                      return (
+                        <div className="admin-bar__popup-template-item" key={`template-${index}`} onClick={this.openTemplate(item.template.id)}>
+                          {item.template.name}
+                        </div>
+                      )
+                  }
+                    
                 })}
               </div>
             )}
