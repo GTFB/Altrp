@@ -382,6 +382,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
       Route::get('settings', 'Admin\DownloadsController@exportAltrpSettings')->name('admin.download.settings');
     });
   });
+
 });
 
 //Route::resource( 'admin/ajax/areas', 'Admin\AreasController' );
@@ -442,16 +443,11 @@ foreach ($reports_routes as $report_route) {
   $path = $report_route['path'];
   $title = $report_route['title'];
 
-  $report_route = str_replace(':id', '{id}', $path);
+  $report_route = str_replace( ':id', '{id}', $path );
 
-  Route::get($report_route, function () use ($title) {
-
-    return view('front-app', [
-      'title' => $title,
-      '_frontend_route' => [],
-      'preload_content' => [],
-    ]);
-  })->middleware(['web', 'installation.checker']);
+  Route::get($report_route, function () use ($title){
+    return view('front-app',['title'=>$title]);
+  })->middleware(['web','installation.checker']);
 }
 
 /**

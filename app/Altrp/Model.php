@@ -47,6 +47,11 @@ class Model extends EloquentModel
         return $this->morphMany('App\Altrp\RemoteData', 'remotable');
     }
 
+    public function altrp_robots()
+    {
+        return $this->hasMany(Robot::class);
+    }
+
   /**
    * Импортируем модели
    * @param array $imported_models
