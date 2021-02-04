@@ -581,15 +581,9 @@ function AltrpTableWithoutUpdate(
       }
       return paginationProps;
     }, [inner_page_size, pageSize, pageCount, pageIndex, settings]);
-  const { WrapperComponent, wrapperProps } = React.useMemo(() => {
-    return {
-      WrapperComponent: replace_rows ? DndProvider : DndProvider/*React.Fragment*/,
-      // wrapperProps: replace_rows ? {backend:HTML5Backend} : {backend:HTML5Backend},
-      wrapperProps: { backend: HTML5Backend },
-    };
-  }, [replace_rows]);
 
-  return <WrapperComponent {...wrapperProps}>
+
+  return  <React.Fragment>
     {hide_columns && <div className="altrp-table-hidden">
       <div className="altrp-table-hidden__all">
         <IndeterminateCheckbox {...getToggleHideAllColumnsProps()} /> Toggle
@@ -720,7 +714,7 @@ function AltrpTableWithoutUpdate(
         </div></div></div>}
     </div>
     {paginationProps && <Pagination {...paginationProps} />}
-  </WrapperComponent>
+  </React.Fragment>
 }
 const TableBody =
   ({
@@ -1348,7 +1342,7 @@ const Cell = ({ cell, settings }) => {
       let cellStyles = _.get(cell, 'column.column_styles_field');
       cellStyles = _.get(row.original, cellStyles, '');
       cellStyles = mbParseJSON(cellStyles, {});
-      cellProps.style = _.assign(cellStyles, cellProps.style);
+      cellProps.style = _.assign({...cellStyles}, cellProps.style);
     }
     // if(replace_rows){
     //   cellProps.ref = dropRef;
@@ -1550,7 +1544,7 @@ const Row = ({ row,
               let cellStyles = _.get(cell, 'column.column_styles_field');
               cellStyles = _.get(row.original, cellStyles, '');
               cellStyles = mbParseJSON(cellStyles, {});
-              cellProps.style = _.assign(cellStyles, cellProps.style);
+              cellProps.style = _.assign({...cellStyles}, cellProps.style);
             }
             if (replace_rows) {
               cellProps.ref = dropRef;

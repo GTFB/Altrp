@@ -557,9 +557,6 @@ class InputWidget extends Component {
    * @param {boolean} userInput true - имзенилось пользователем
    */
   dispatchFieldValueToStore = (value, userInput = false) => {
-    if(this.props.element.getId() === '_t83p0i6pe'){
-      console.error(this);
-    }
     let formId = this.props.element.getFormId();
     let fieldName = this.props.element.getFieldId();
     if (fieldName.indexOf("{{") !== -1) {

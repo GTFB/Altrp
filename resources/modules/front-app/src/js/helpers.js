@@ -147,7 +147,7 @@ export function parseURLTemplate(URLTemplate = "", object = {}) {
   let url = URLTemplate;
   let protocol = "";
   if(! isEditor()){
-    object = _.assign(currentRouterMatch.getProperty('params'), object);
+    object = _.assign(_.cloneDeep(currentRouterMatch.getProperty('params')), object);
   }
   url = url.trim();
   if (url.indexOf("https://") === 0) {
