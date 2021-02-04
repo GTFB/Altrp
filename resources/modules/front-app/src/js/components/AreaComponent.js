@@ -10,9 +10,11 @@ class AreaComponent extends Component {
     if (this.props.area.getTemplates().length) {
       return (
         <div className={classes.join(" ")}>
-          {this.props.area.getTemplates().map(template => (
-            <FrontPopup key={template.id} template={template} />
-          ))}
+          {this.props.area.getTemplates().map(template => {
+            return (
+              <FrontPopup key={template.id} template={template} />
+            )
+          })}
         </div>
       );
     }

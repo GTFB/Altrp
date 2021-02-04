@@ -1,13 +1,13 @@
 import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { SketchPicker } from "react-color"
-import DynamicIcon from '../../../svgs/dynamic.svg'
 import ContentIcon from '../../../svgs/content.svg'
 import Select from "react-select";
-import HistoryIcon from '../../../svgs/history.svg'
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
+import {addFont, removeFont} from "../../../../../front-app/src/js/store/fonts-storage/actions";
+import {altrpFontsSet} from "../../../../../front-app/src/js/components/FontsManager";
+import {renderScrollbar} from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 
 class TypographicController extends Component {
   constructor(props) {
@@ -25,7 +25,13 @@ class TypographicController extends Component {
     this.horChange = this.horChange.bind(this);
     this.verChange = this.verChange.bind(this);
     this.inputVerUpdate = this.inputVerUpdate.bind(this);
-    this.units = ['px', 'em', 'rem', '%', 'vw', 'vh']
+    const familyOptions = _.toPairs(altrpFontsSet).map(([font, type])=>{
+      return {
+        label: font,
+        value: font,
+      };
+    });
+    this.units = ['px', 'em', 'rem', '%', 'vw', 'vh'];
     let value = this.getSettings(this.props.controlId);
     if (value === null && this.props.default) {
       value = this.props.default;
@@ -34,6 +40,7 @@ class TypographicController extends Component {
     this.state = {
       value,
       show: true,
+      familyOptions,
       activeTypographic: false,
       //size
       sizeMin: this.props.sizeMin || 0,
@@ -70,13 +77,23 @@ class TypographicController extends Component {
       shadowContentIcon.setAttribute("fill", "#8E94AA");
     }
   }
-  //начало select2
+  /**
+   * Меняем шрифт
+   */
   changeFamily(value) {
+    const {currentElement} = this.props;
     let _value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    if(value && value.value){
+      appStore.dispatch(addFont(currentElement.getId(), this.props.controller.getSettingName(), value.value));
+      currentElement.addFont(this.props.controller.getSettingName(), value.value);
+    } else {
+      appStore.dispatch(removeFont(currentElement.getId(), this.props.controller.getSettingName()));
+      currentElement.removeFont(this.props.controller.getSettingName());
+    }
     this._changeValue({
       ..._value,
-      family: value.value,
-      label: value.label
+      family: value ? value.value : '',
+      label:value ?  value.label : '',
     })
   };
   //конец select2
@@ -95,7 +112,7 @@ class TypographicController extends Component {
       ...value,
       sizeUnit: unit
     });
-  }
+  };
 
   blurChange(e) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
@@ -183,25 +200,7 @@ class TypographicController extends Component {
       return '';
     }
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
-    const familyOptions = [
-      {
-        value: 'Roboto',
-        label: 'Roboto'
-      },
-      {
-        value: 'PT Sans',
-        label: 'PT Sans'
-      },
-      {
-        value: 'Open Sans',
-        label: 'Open Sans'
-      },
-      {
-        value: 'Montserrat',
-        label: 'Montserrat'
-      },
-
-    ];
+    const {familyOptions} = this.state;
 
     const weightOptions = [
       {
@@ -329,7 +328,7 @@ class TypographicController extends Component {
         backgroundColor: state.isSelected ? "#5897fb" : "#FFF",
         fontSize: 13,
         padding: 5,
-        height: 20
+        height: 20,
       }),
 
       menu: () => ({
@@ -340,7 +339,8 @@ class TypographicController extends Component {
         borderWidth: "0px 1px 1px 1px",
         borderStyle: "solid",
         borderColor: "#E5E6EA",
-        position: 'absolute'
+        position: 'absolute',
+        zIndex: 100,
       }),
 
       menuList: () => ({
@@ -387,10 +387,12 @@ class TypographicController extends Component {
           <div className="control-container_select2-wrapper">
             <Select
               onChange={this.changeFamily}
-              value={value.family.label}
+              value={_.get(value,'family.label', '')}
               options={familyOptions}
               styles={customStyles}
               placeholder={value.label}
+              isClearable={true}
+              components={ {MenuList: renderScrollbar} }
               noOptionsMessage={() => "no fonts found"}
             />
           </div>

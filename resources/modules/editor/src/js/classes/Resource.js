@@ -107,6 +107,26 @@ class Resource {
       return res.json();
     });
   }
+  /**
+   * простой запрос
+   * @return {Promise}
+   * */
+  getAsText() {
+    let options = {
+      method: "get",
+      headers: {
+        "Content-Type": "text/plain"
+      }
+    };
+
+    let url = this.getRoute();
+    return fetch(url, options).then(res => {
+      if (res.ok === false) {
+        return Promise.reject(res.text(), res.status);
+      }
+      return res.text();
+    });
+  }
 
   /**
    * Запрос со строкой для поиска вхождений
@@ -178,7 +198,8 @@ class Resource {
         return res.json();
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
+        return Promise.reject(err.then(), err.status);
         return err.then();
       });
   }
@@ -201,8 +222,8 @@ class Resource {
       fileType = fileType.trim();
       for (let i = 0; i < files.length; i++) {
         if (
-          files[i].size > MAX_FILE_SIZE ||
-          files[i].type.indexOf(fileType) === -1
+          files[i].size > MAX_FILE_SIZE
+            // ||          files[i].type.indexOf(fileType) === -1
         ) {
           console.log(files[i]);
           continue;
@@ -339,7 +360,7 @@ class Resource {
    * @param {object} params
    * @return {Promise}
    * */
-  async getQueried(params) {
+  async getQueried(params, custom_headers = null) {
     let options = {
       method: "get",
       headers: {

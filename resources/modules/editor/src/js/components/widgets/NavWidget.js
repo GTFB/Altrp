@@ -15,10 +15,16 @@ class NavWidget extends Component {
 
   render() {
     let content;
+    let modelData = this.props.element.hasCardModel()
+      ? this.props.element.getCardModel().getData()
+      : this.props.currentModel.getData();
 
     switch (this.state.settings.type_type) {
       case "menu":
-        content = <AltrpMenu element={this.props.element}/>;
+        content = <AltrpMenu modelData={modelData}
+                             currentScreen={this.props.currentScreen}
+                             modelId={this.getModelId()}
+                             element={this.props.element}/>;
         break
     }
 

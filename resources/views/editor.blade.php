@@ -30,6 +30,7 @@
   </script>
   <link rel="stylesheet" href="{{ asset( '/modules/editor/editor.css?' ) . getCurrentVersion() }}">
   {{--<link rel="dns-prefetch" href="//fonts.gstatic.com">--}}
+  <style id="styled" ></style>
 </head>
 
 <body>

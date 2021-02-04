@@ -9,6 +9,7 @@ use App\Altrp\Source;
 use App\Exceptions\Repository\RepositoryFileException;
 use App\Exceptions\Route\RouteFileException;
 use App\Role;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class RouteFileWriter
@@ -274,7 +275,8 @@ class RouteFileWriter
             $middleware = $this->getMiddleware($source->type, 'type');
 
         if ($source->type == 'remote') {
-            $route = 'Route::get(\'/data_sources/' . strtolower(Str::plural($this->route->getModelName())) . '/'
+            $requestType = $source->request_type ? $source->request_type : 'get';
+            $route = 'Route::' . $requestType . '(\'/data_sources/' . strtolower(Str::plural($this->route->getModelName())) . '/'
                 . Str::snake($source->name) . '\', [';
         } elseif (in_array($source->type, $actions)) {
             $route = 'Route::' . $source->request_type . '(\'' . $source->url . '\', [';
@@ -311,7 +313,11 @@ class RouteFileWriter
      */
     protected function getMiddleware($methodName, $condField = 'type', $isApi = false)
     {
-        $source = Source::where($condField, Str::snake($methodName))->first();
+        if ($condField == 'type') {
+            $source = $this->route->getModel()->altrp_sources->where($condField, Str::snake($methodName))->first();
+        } else {
+            $source = Source::where($condField, Str::snake($methodName))->first();
+        }
 
         if(!$source) return null;
 

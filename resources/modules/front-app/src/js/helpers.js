@@ -5,11 +5,17 @@ import moment from "moment";
 import Resource from "../../../editor/src/js/classes/Resource";
 import appStore from "./store/store";
 import { changeCurrentUser } from "./store/current-user/actions";
+import { changeCurrentUserProperty } from "./store/current-user/actions";
 import { changeAppRoutes } from "./store/routes/actions";
 import Route from "./classes/Route";
 import { changePageState } from "./store/altrp-page-state-storage/actions";
 import { changeAltrpMeta } from "./store/altrp-meta-storage/actions";
-import { useDispatch } from "react-redux";
+import { altrpFontsSet, GOOGLE_FONT } from "./components/FontsManager";
+import queryString from "query-string";
+import AltrpSVG from "../../../editor/src/js/components/altrp-svg/AltrpSVG";
+import ArrayConverter from "./classes/converters/ArrayConverter";
+import DataConverter from "./classes/converters/DataConverter";
+import {changeFormFieldValue} from "./store/forms-data-storage/actions";
 
 export function getRoutes() {
   return import("./classes/Routes.js");
@@ -74,6 +80,7 @@ export function parseOptionsFromSettings(string) {
       value = getDataByPath(valuePath);
     }
     let label = option.split("|")[1] || value || "";
+    !_.isString(label) && (label = "");
     label = label.trim();
     let labelPath = extractPathFromString(label);
     if (labelPath) {
@@ -117,12 +124,31 @@ export function getMediaSettingsByName(screenSettingName) {
 }
 
 /**
+ * Возвращает брейкпоинт относительно текущего размера экрана
+ */
+export function getCurrentBreakpoint() {
+  const currentWidth = getWindowWidth();
+  const breakPoints = CONSTANTS.SCREENS;
+  const breakPointsSizes = breakPoints.map(item => ({
+    name: item.name,
+    size: Number(item.width.split("px")[0])
+  }));
+  for (let breakpoint of breakPointsSizes) {
+    if (breakpoint.size < currentWidth) {
+      return breakpoint.name;
+    }
+  }
+}
+/**
  *@param {string} URLTemplate
  *@param {{}} object
  */
 export function parseURLTemplate(URLTemplate = "", object = {}) {
   let url = URLTemplate;
   let protocol = "";
+  if(! isEditor()){
+    object = _.assign(currentRouterMatch.getProperty('params'), object);
+  }
   url = url.trim();
   if (url.indexOf("https://") === 0) {
     protocol = "https://";
@@ -134,7 +160,7 @@ export function parseURLTemplate(URLTemplate = "", object = {}) {
   }
   // columnEditUrl = columnEditUrl.replace(':id', row.original.id);
   let idTemplates = url.match(/:([\s\S]+?)(\/|$)/g);
-  if (!idTemplates) {
+  if (! idTemplates) {
     return protocol + url;
   }
   idTemplates.forEach(idTemplate => {
@@ -157,6 +183,9 @@ export function getWindowWidth() {
 
 export function renderAssetIcon(asset, props = null) {
   if (asset) {
+    if (asset.url && asset.type === "svg") {
+      return <AltrpSVG {...props} url={asset.url} />;
+    }
     switch (asset.assetType) {
       case "icon": {
         return iconsManager().renderIcon(asset.name);
@@ -179,6 +208,9 @@ export function renderAssetIcon(asset, props = null) {
  * @throws Исключение если иконка не найдена
  * */
 export function renderAsset(asset, props = null) {
+  if (asset.url && asset.type === "svg") {
+    return <AltrpSVG {...props} url={asset.url} />;
+  }
   if (asset instanceof File) {
     let refImg = React.createRef();
     let fr = new FileReader();
@@ -234,6 +266,9 @@ export function parseParamsFromString(
   context = {},
   allowObject = false
 ) {
+  if (!(context instanceof AltrpModel)) {
+    context = new AltrpModel(context);
+  }
   const params = {};
   const urlParams =
     window.currentRouterMatch instanceof AltrpModel
@@ -300,7 +335,7 @@ export function conditionsChecker(
       result += conditionChecker(c, model, dataByPath);
     }
   });
-  return result;
+  return ! ! result;
 }
 
 /**
@@ -360,7 +395,8 @@ export function setDataByPath(path = "", value, dispatch = null) {
   if (!path) {
     return false;
   }
-
+  path = path.replace("{{", "").replace("}}", "");
+  path = path.trim();
   switch (value) {
     case "true":
       value = true;
@@ -408,6 +444,36 @@ export function setDataByPath(path = "", value, dispatch = null) {
     }
     return true;
   }
+  if (path.indexOf("altrpuser.local_storage.") === 0) {
+    path = path.replace("altrpuser.", "");
+    if (!path) {
+      return false;
+    }
+    const oldValue = appStore.getState().currentUser.getProperty(path);
+    if (_.isEqual(oldValue, value)) {
+      return true;
+    }
+    if (_.isFunction(dispatch)) {
+      dispatch(changeCurrentUserProperty(path, value));
+    } else {
+      appStore.dispatch(changeCurrentUserProperty(path, value));
+    }
+    return true;
+  }
+  if (path.indexOf("altrpforms.") === 0) {
+    path = path.replace("altrpforms.", "");
+    if (!path) {
+      return false;
+    }
+    const [formId, fieldName] = path.split('.');
+    const {formsStore} = appStore.getState();
+
+    const oldValue = _.get(formsStore, path);
+    if (_.isEqual(oldValue, value)) {
+      return true;
+    }
+    appStore.dispatch(changeFormFieldValue(fieldName, value, formId, true))
+  }
   return false;
 }
 
@@ -415,7 +481,7 @@ export function setDataByPath(path = "", value, dispatch = null) {
  * Получить данные из окружения
  * @param {string} path
  * @param {*} _default
- * @param {AltrpModel} context
+ * @param {{} | AltrpModel | null} context
  * @param {boolean} altrpCheck - проверять ли altrp
  * @return {*}
  */
@@ -425,8 +491,11 @@ export function getDataByPath(
   context = null,
   altrpCheck = false
 ) {
-  if (!path) {
+  if (! path) {
     return _default;
+  }
+  if (path.indexOf("{{") !== -1) {
+    path = replaceContentWithData(path, context);
   }
   /**
    * проверим путь
@@ -451,10 +520,15 @@ export function getDataByPath(
     currentModel =
       context instanceof AltrpModel ? context : new AltrpModel(context);
   }
-  const urlParams =
+  let urlParams =
     window.currentRouterMatch instanceof AltrpModel
       ? window.currentRouterMatch.getProperty("params")
       : {};
+
+  let queryData = queryString.parseUrl(window.location.href).query;
+
+  urlParams = _.assign(queryData, urlParams);
+
   let value = _default;
   if (!_.isString(path)) {
     return value;
@@ -482,10 +556,17 @@ export function getDataByPath(
     value = getTimeValue(path.replace("altrptime.", ""));
   } else if (path.indexOf("altrpforms.") === 0) {
     value = _.get(formsStore, path.replace("altrpforms.", ""), _default);
+  } else if (path.indexOf("altrppage.") === 0) {
   } else {
     value = urlParams[path]
       ? urlParams[path]
       : currentModel.getProperty(path, _default);
+    value = currentModel.getProperty(path)
+      ? currentModel.getProperty(path)
+      : urlParams[path];
+    if (!value) {
+      value = _default;
+    }
   }
   return value;
 }
@@ -506,7 +587,6 @@ export function extractPathFromString(string = "") {
   }
   return path;
 }
-
 /**
  * Возвращает новый объект из свояств объекта, в именах которых присутствует префикс prefix
  * @param {string} prefix - строка для поиска (например 'test')
@@ -536,7 +616,7 @@ export function mbParseJSON(string, _default = null) {
   try {
     return JSON.parse(string);
   } catch (e) {
-    return _default;
+    return _default === null ? string : _default;
   }
 }
 
@@ -557,17 +637,16 @@ export function altrpCompare(
       return _.isEmpty(leftValue);
     }
     case "not_empty": {
-      return !_.isEmpty(leftValue);
+      return ! _.isEmpty(leftValue);
     }
     case "null": {
-      return !leftValue;
+      return ! leftValue;
     }
     case "not_null": {
-      return !!leftValue;
+      return ! ! leftValue;
     }
     case "==": {
-      if (!leftValue && !rightValue) {
-        console.log(leftValue);
+      if (! leftValue && ! rightValue) {
         return true;
       }
       if (!(_.isObject(leftValue) || _.isObject(rightValue))) {
@@ -944,7 +1023,10 @@ export function replaceContentWithData(content = "", modelContext = null) {
     paths.forEach(path => {
       path = path.replace("{{", "");
       let value = getDataByPath(path, "", modelContext);
-      content = content.replace(new RegExp(`{{${path}}}`, "g"), value);
+      if (value === 0) {
+        value = "0";
+      }
+      content = content.replace(new RegExp(`{{${path}}}`, "g"), value || "");
     });
   }
   return content;
@@ -1001,8 +1083,6 @@ export function printElements(elements, title = "") {
  * @params {string} filename
  */
 export async function elementsToPdf(elements, filename = "") {
-  console.log(elements, filename);
-
   let html2pdf = (await import("html2pdf.js")).default;
   elements = elements.body ? elements.body : elements;
   if (!elements) {
@@ -1037,24 +1117,27 @@ export function dataFromTable(HTMLElement) {
   if (!(HTMLElement && HTMLElement.querySelectorAll)) {
     return data;
   }
-  let table = HTMLElement.querySelector("table");
-  if (!table && HTMLElement.querySelector("tr")) {
+  let table = HTMLElement.querySelector(".altrp-table");
+  if (!table && HTMLElement.querySelector(".altrp-table-tr")) {
     table = HTMLElement;
   }
   if (!table) {
     return data;
   }
-  const ths = table.querySelectorAll("th");
+  const ths = table.querySelectorAll(".altrp-table-th");
   _.each(ths, th => {
-    if (th.innerText) {
-      headers.push(th.innerText || "");
-    }
+    // if (th.innerText) {
+    headers.push(th.innerText || "");
+    // }
   });
-  const rows = table.querySelectorAll("tbody tr");
+  const rows = table.querySelectorAll(".altrp-table-tbody .altrp-table-tr");
   _.each(rows, row => {
-    const cells = row.querySelectorAll("td");
+    const cells = row.querySelectorAll(".altrp-table-td");
     const part = {};
     headers.forEach((header, idx) => {
+      if (!header) {
+        return;
+      }
       part[header] = cells[idx].innerText || "";
     });
     data.push(part);
@@ -1101,7 +1184,11 @@ export async function dataToCSV(data = {}, filename) {
         return line;
       })
       .join("\n");
-  let blob = new Blob([csvContent], { type: "text/csv", charset: "utf-8" });
+  let blob = new Blob([csvContent], {
+    type: "text/csv",
+    charset: "windows-1251"
+    // charset: "utf-8",
+  });
   let link = document.createElement("a");
   link.setAttribute("href", window.URL.createObjectURL(blob));
   link.setAttribute("download", filename + ".csv");
@@ -1109,6 +1196,31 @@ export async function dataToCSV(data = {}, filename) {
   link.click();
   document.body.removeChild(link);
   return { success: true };
+}
+
+/**
+ * Генерация и загрузка XLS-файла
+ * @param {Object data} Объект данных
+ * @param {String} filename Имя файла
+ */
+export async function dataToXLS(data, filename = "table") {
+  const formattedData = [];
+
+  const headers = _.toPairs(data[0]).map(([name, value]) => name);
+  formattedData.push(headers);
+
+  _.each(data, row => formattedData.push(Object.values(row)));
+
+  const formData = new FormData();
+  formData.append("filename", filename);
+  formData.append("data", JSON.stringify(formattedData));
+
+  const response = await fetch("/api/export-excel", {
+    method: "POST",
+    body: formData
+  });
+
+  return await response.blob();
 }
 
 /**
@@ -1222,11 +1334,12 @@ export function recurseCount(object = {}, path = "") {
 
 /**
  * Вовращает AltrpModel, в котором храняться все источники данных на странице
+ * @param {{}} model
  * @return {AltrpModel}
  */
-export function getAppContext() {
+export function getAppContext(model = null) {
   const { currentModel } = appStore.getState();
-  const currentModelData = currentModel.getData();
+  const currentModelData = model ? model : currentModel.getData();
   const urlParams = _.cloneDeep(
     window.currentRouterMatch instanceof AltrpModel
       ? window.currentRouterMatch.getProperty("params")
@@ -1352,4 +1465,200 @@ export function setAltrpIndex(array = []) {
     }
     item.altrpIndex = idx;
   });
+}
+
+/**
+ *
+ * @param {string} font
+ * @return {*}
+ */
+export function renderFontLink(font) {
+  if (altrpFontsSet[font] !== GOOGLE_FONT) {
+    return null;
+  }
+  font = font.replace(/ /g, "+");
+  font +=
+    ":100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic";
+  let fontUrl =
+    "https://fonts.googleapis.com/css?family=" + font + "&subset=cyrillic";
+  fontUrl = encodeURI(fontUrl);
+  return <link rel="stylesheet" key={fontUrl} href={fontUrl} />;
+}
+
+/**
+ * Включен ли режим тестирования
+ */
+export function isAltrpTestMode() {
+  return window.location.href.indexOf("altrp-test=true") > 0;
+}
+
+/**
+ * лучайная строка
+ * @return {string}
+ */
+export function altrpRandomId() {
+  return Math.random()
+    .toString(36)
+    .substr(2, 9);
+}
+
+/**
+ * Кнопки для пагинации
+ * @param pageIndex
+ * @param pageCount
+ * @param first_last_buttons_count
+ * @param middle_buttons_count
+ * @return {*[]}
+ */
+export function generateButtonsArray(
+  pageIndex,
+  pageCount,
+  first_last_buttons_count,
+  middle_buttons_count
+) {
+  const buttonsSum = first_last_buttons_count + middle_buttons_count;
+  const lastButtons = Array.from(
+    { length: first_last_buttons_count },
+    (_, i) => pageCount - i - 1
+  ).reverse();
+  const middleButtons = Array.from(
+    { length: middle_buttons_count },
+    (_, i) => pageIndex - Math.floor(middle_buttons_count / 2) + i
+  );
+
+  if (pageIndex + 1 < buttonsSum) {
+    return [...Array(buttonsSum).keys(), "ellipsis", ...lastButtons];
+  }
+  if (
+    pageIndex >=
+    pageCount -
+      first_last_buttons_count -
+      1 -
+      Math.floor(middle_buttons_count / 2)
+  ) {
+    return [
+      ...Array(first_last_buttons_count).keys(),
+      "ellipsis",
+      ...Array.from(
+        { length: first_last_buttons_count + middle_buttons_count },
+        (_, i) => pageCount - i - 1
+      ).reverse()
+    ];
+  }
+
+  return [
+    ...Array(first_last_buttons_count).keys(),
+    "ellipsis",
+    ...middleButtons,
+    "ellipsis",
+    ...lastButtons
+  ];
+}
+
+export function isValueMatchMask(value, mask) {
+  return (
+    value.length &&
+    value
+      .split("")
+      .every((char, index) => char === mask[index] || char.match(mask[index]))
+  );
+}
+
+/**
+ * Вернуть экземпляр конвертера необходимого типа (array - ArrayConverter и т. д.)
+ * @return {DataConverter}
+ */
+export function getConverter(data) {
+  switch (data.data_type) {
+    case "array":
+      return new ArrayConverter(data);
+  }
+  return new DataConverter();
+}
+
+/**
+ * Конвертируются данные
+ * @param {{} | []} settings
+ * @param {*} data
+ */
+export function convertData(settings, data) {
+  if (_.isArray(settings)) {
+    settings.forEach(item => {
+      const converter = getConverter(item);
+      data = converter.convertData(data);
+    });
+  }
+  if (settings.data_type) {
+    const converter = getConverter(settings);
+    data = converter.convertData(data);
+  }
+  return data;
+}
+export function renderIcon(isHidden, icon, defaultIcon, className) {
+  if (isHidden) return null;
+
+  return (
+    <span className={className}>
+      {icon && icon.assetType ? renderAssetIcon(icon) : defaultIcon}
+    </span>
+  );
+  // if()
+}
+
+/**
+ * Перенаправление на другую страницу по настройкам LinkController
+ * @param {{}} linkSettings
+ * @param {{}} e
+ * @param {{}} context
+ */
+export function redirect(linkSettings, e, context = {}) {
+  if (_.get(linkSettings, "toPrevPage") && frontAppRouter) {
+    frontAppRouter.history.goBack();
+    return;
+  }
+  if (!_.get(linkSettings, "url")) {
+    return;
+  }
+  e.preventDefault();
+  e.stopPropagation();
+  let { url } = linkSettings;
+  url = replaceContentWithData(url, context);
+  if (linkSettings.openInNew) {
+    window.open(url, "_blank");
+    return;
+  }
+  if (frontAppRouter) {
+    if (linkSettings.tag === "a") {
+      window.location.assign(url);
+    } else {
+      frontAppRouter.history.push(url);
+    }
+  }
+}
+
+export function validateEmail(email) {
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
+
+/**
+ * значение настройки в зависимости от разрешения можно использовать вне виджетов с объектом настроек
+ * @param {{}} settings - объект настроек
+ * @param {string} settingName
+ * @param {string} elementState
+ * @param {*} _default
+ * @return {*}
+ */
+export function getResponsiveSetting(settings, settingName, elementState = '', _default = null){
+  let {currentScreen} = window.parent.appStore.getState();
+  if(currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT){
+    return _.get(settings, settingName, _default);
+  }
+  let suffix = currentScreen.name;
+  let _settingName = `${settingName}_${elementState}_${suffix}`;
+  let setting = _.get(settings, _settingName);
+  if(setting === undefined){
+    setting = _.get(settings, settingName);
+  }
+  return setting;
 }

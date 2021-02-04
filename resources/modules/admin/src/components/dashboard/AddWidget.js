@@ -23,7 +23,7 @@ const WidgetParams = ({ show, setShow, onSave }) => {
 
   const handleSave = () => {
     // Скрываем модальку
-    setShow(false);
+    setShow(false); 
     onSave(widget);
   };
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Altrp\Plugin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -19,7 +20,13 @@ class PluginController extends Controller
           $modules = Module::all();
           $modulesStatusesFile = base_path('modules_statuses.json');
           if (!file_exists($modulesStatusesFile)) {
-              file_put_contents($modulesStatusesFile, '{}');
+              $content = '';
+              $plugins = Plugin::all();
+              foreach ($plugins as $plugin) {
+                  $enabled = $plugin->enabled ? 'true' : 'false';
+                  $content .= '"' . $plugin->name . '": ' . $enabled . ',';
+              }
+              file_put_contents($modulesStatusesFile, '{' . trim($content, ',') . '}');
           }
           $modulesStatusesConfig = json_decode(file_get_contents($modulesStatusesFile), true);
           $modulesArr = [];
@@ -59,6 +66,9 @@ class PluginController extends Controller
           } else {
               $moduleInstance->enable();
           }
+
+          $plugin = Plugin::where('name', ucfirst($moduleName))->first();
+          $plugin->update(['enabled' => $value]);
 
             if ($value) {
                   return response()->json([

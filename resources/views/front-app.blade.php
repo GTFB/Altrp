@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <script>
+    /* <![CDATA[ */
+    window.pageStorage = {};
+
+    var page_id = {{$page_id}};
+    var page_areas = {!! $page_areas !!};
+
+    if (typeof page_id !== 'undefined' && typeof page_areas !== 'undefined') {
+      window.pageStorage[page_id] = {areas:page_areas};
+    }
+    /* ]]> */
+  </script>
+  <script>
+    /* <![CDATA[ */
     /**
      * Функция для вывода ошибок в HTML
      * @param msg
@@ -19,6 +32,7 @@
     }
 
     // window.onerror = myErrHandler;
+    /* ]]> */
   </script>
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -47,25 +61,34 @@
       padding-left: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
       padding-right: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
     }
+    .front-app-content_preloaded{
+      display: none;
+    }
   </style>
-  <link rel="stylesheet" href="{{ asset( '/modules/front-app/front-app.css' ) . '?' . getCurrentVersion() }}" />
-
+  @if( isset( $preload_content[ 'important_styles'] ) )
+    {!! $preload_content[ 'important_styles'] !!}
+  @endif
 </head>
-<body>
-<div id="front-app">
-
+<body class="front-app-body">
+<div id="front-app" class="front-app {{ 'front-app_admin' }}">
+  {!! isset( $preload_content[ 'content'] ) ? $preload_content['content'] : ''!!}
 </div>
 <script src="{{ altrp_asset( '/modules/front-app/front-app.js', 'http://localhost:3001/' ) }}" defer></script>
 @php
 $value = env( 'ALTRP_SETTING_ALL_SITE_JS', '' );
-  try {
-   $value = decrypt( $value );
-  } catch( \Illuminate\Contracts\Encryption\DecryptException $e){
-   $value = '';
-  }
+try {
+ $value = decrypt( $value );
+} catch( \Illuminate\Contracts\Encryption\DecryptException $e){
+ $value = '';
+}
 @endphp
 @if($value)
-  <script>{!! $value !!}</script>
+  <script>
+    /* <![CDATA[ */
+    {!! $value !!}
+    /* ]]> */
+  </script>
 @endif
 </body>
+<link rel="stylesheet" href="{{ asset( '/modules/front-app/front-app.css' ) . '?' . getCurrentVersion() }}" />
 </html>

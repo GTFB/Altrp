@@ -30,11 +30,15 @@ class DatasourceSettings extends Component {
     return (
       <div className="col-12">
         <Form.Group>
-          <Form.Label className="label">Тип диаграммы</Form.Label>
+          <Form.Label
+            className={`${this.props.widgetID} altrp-dashboard__drawer--label-font-size`}
+          >
+            Тип диаграммы
+          </Form.Label>
           <Form.Control
             onChange={e => this.props.setType(e.target.value)}
             value={this.props.editElement?.settings?.type}
-            className="select-type"
+            className={`${this.props.widgetID} altrp-dashboard__drawer--select select-type`}
             name="type"
             as="select"
           >

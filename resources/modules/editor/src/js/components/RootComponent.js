@@ -1,6 +1,4 @@
-import React, { Component, Provider } from "react";
-import { connect } from "react-redux";
-import FrontElement from "../../../../front-app/src/js/classes/FrontElement";
+import React, { Component,  } from "react";
 import { setDefaultTriggers } from "../../../../front-app/src/js/store/hide-triggers/actions";
 
 class RootComponent extends Component {
@@ -30,7 +28,7 @@ class RootComponent extends Component {
   render() {
     let classes = `sections-wrapper ${this.props.element
       .getSelector()
-      .replace(".", "")}`;
+      .replace(".", "")} ${this.props.element.hasCardModel() ? 'sections-wrapper_card' : ''}`;
     let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
     return (
       <div className={classes}>
@@ -38,7 +36,8 @@ class RootComponent extends Component {
         {this.state.children.map(section => (
           <ElementWrapper
             ElementWrapper={ElementWrapper}
-            key={section.getId()}
+            rootElement={this.props.element}
+            key={section.getIdForAction()}
             component={section.componentClass}
             element={section}
           />

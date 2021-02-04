@@ -153,7 +153,12 @@ class OffcanvasWidget extends Component {
                 }
               >
                 <div className={classes} ref={this.offcanvasContentRef}>
-                  <Scrollbars>
+                  <Scrollbars
+                    autoHide
+                    autoHideTimeout={1000}
+                    autoHideDuration={200}
+                    universal={true}
+                  >
                   {
                     closeButton
                   }

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import appStore from "../store/store";
-import { altrpCompare, conditionsChecker } from "../helpers";
+import {altrpCompare, altrpRandomId, conditionsChecker} from "../helpers";
 import { addElement } from "../store/elements-storage/actions";
 
 class ElementWrapper extends Component {
@@ -35,7 +35,9 @@ class ElementWrapper extends Component {
   componentDidMount() {
     if(_.isFunction(this.props.element.update)){
       this.props.element.update();
+      this.props.element.updateFonts();
     }
+    this.checkElementDisplay();
   }
   /**
    * Подписываемся на обновление store редакса
@@ -96,6 +98,13 @@ class ElementWrapper extends Component {
   }
 
   /**
+   * Обновить элемент изменив this.state.updateToken
+   */
+  updateElement(){
+    this.setState(state=>({...state, updateToken: altrpRandomId()}))
+  }
+
+  /**
    * Проверка видимости элемента
    * @param {{}} prevProps
    * @param {{}} prevState
@@ -105,7 +114,7 @@ class ElementWrapper extends Component {
      * @member {FrontElement} element
      */
     const { element } = this.props;
-    if (!element.getSettings("conditional_other")) {
+    if (! element.getSettings("conditional_other")) {
       return;
     }
     let conditions = element.getSettings("conditions", []);
@@ -132,9 +141,10 @@ class ElementWrapper extends Component {
       return;
     }
 
-    this.setState({
+    this.setState(state => ({
+        ...state,
       elementDisplay
-    });
+    }));
   }
 
   /**
@@ -143,7 +153,7 @@ class ElementWrapper extends Component {
   toggleElementDisplay() {
     this.setState(state => ({
       ...state,
-      elementDisplay: !state.elementDisplay
+      elementDisplay: ! state.elementDisplay
     }));
   }
   /**
@@ -219,7 +229,7 @@ class ElementWrapper extends Component {
     }
     if (this.state.errorInfo) {
       return (
-        <div className="altrp-error">
+        <div className="altrp-error" data-eltype={this.props.element.getType()}>
           <h2>Something went wrong.</h2>
           <details style={{ whiteSpace: "pre-wrap" }}>
             {this.state.error && this.state.error.toString()}
@@ -230,7 +240,7 @@ class ElementWrapper extends Component {
       );
     }
     const styles = {};
-    if (!this.state.elementDisplay) {
+    if (! this.state.elementDisplay) {
       styles.display = "none";
     }
     const CSSId = this.props.element.getSettings("advanced_element_id", "");
@@ -244,6 +254,7 @@ class ElementWrapper extends Component {
       >
         {React.createElement(this.props.component, {
           ref: this.elementRef,
+          rootElement: this.props.rootElement,
           ElementWrapper: this.props.ElementWrapper,
           element: this.props.element,
           children: this.props.element.getChildren(),
@@ -254,6 +265,10 @@ class ElementWrapper extends Component {
           altrpresponses: this.props.altrpresponses,
           formsStore: this.props.formsStore,
           elementDisplay: this.state.elementDisplay,
+          altrpPageState: this.props.altrpPageState,
+          altrpMeta: this.props.altrpMeta,
+          updateToken: this.state.updateToken,
+          currentScreen: this.props.currentScreen,
           appStore
         })}
       </div>
@@ -270,7 +285,8 @@ function mapStateToProps(state) {
     currentModel: state.currentModel,
     currentUser: state.currentUser,
     altrpMeta: state.altrpMeta,
-    altrpPageState: state.altrpPageState
+    altrpPageState: state.altrpPageState,
+    currentScreen: state.currentScreen,
   };
 }
 

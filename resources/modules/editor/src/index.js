@@ -12,10 +12,32 @@ window.React = React;
 window.ReactDOM = ReactDOM;
 window.Component = Component;
 
+// Websockets import
+// let mix = require('laravel-mix');
+// require('dotenv').config();
+// let my_env_key = process.env.MIX_PUSHER_APP_KEY;
+
+import Echo from "laravel-echo";
+window.Pusher = require("pusher-js");
+
+try {
+  window.Echo = new Echo({
+    broadcaster: "pusher",
+    key: 324345,
+    wsHost: window.location.hostname,
+    wsPort: 6001,
+    forceTLS: false,
+
+    disableStats: true
+  });
+} catch (error) {
+  console.error(error);
+}
+
 window._ = _;
 window.iconsManager = new IconsManager();
 
-window.stylesModulePromise = new Promise(function (resolve) {
+window.stylesModulePromise = new Promise(function(resolve) {
   window.stylesModuleResolve = resolve;
 });
 
@@ -38,7 +60,7 @@ if (process.env.NODE_ENV !== "production") {
  * Импортируем компонент редактора Editor
  */
 import("./Editor.js")
-  .then((Editor) => {
+  .then(Editor => {
     Editor = Editor.default;
 
     let editorTarget = document.getElementById("editor");
@@ -48,12 +70,13 @@ import("./Editor.js")
 
     return import("./EditorContent");
   })
-  .then((EditorContent) => {
+  .then(EditorContent => {
     EditorContent = EditorContent.default;
 
     window.onload = () => {
       let iframe = document.getElementsByTagName("iframe")[0];
-      if (!iframe) {
+      window.EditorFrame = iframe;
+      if (! iframe) {
         return;
       }
       let editorContentTarget = iframe.contentWindow.document.getElementById(
@@ -71,8 +94,7 @@ import("./Editor.js")
         styleLink.rel = "stylesheet";
         styleLink.href = `/modules/editor/editor.css?${_altrpVersion}`;
         head.appendChild(styleLink);
-      } else
-        {
+      } else {
         let head = iframe.contentWindow.document.getElementsByTagName(
           "head"
         )[0];

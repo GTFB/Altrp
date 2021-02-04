@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { connect } from "react-redux";
+import { Scrollbars } from "react-custom-scrollbars";
 import { editElement } from "../../store/altrp-dashboard/actions";
+import { exportDashboard } from "../../../../../front-app/src/js/store/altrp-dashboard-export/actions";
+
 import axios from "axios";
 import Drawer from "rc-drawer";
 
@@ -12,16 +15,23 @@ import WidgetData from "./WidgetData";
 import WidgetPreview from "./WidgetPreview";
 import WidgetSettings from "./WidgetSettings";
 import AddItemButton from "./settings/AddItemButton";
+import ExportDashboardButton from "./settings/ExportDashboardButton";
+import ImportDashboard from "./settings/ImportDashboard";
+import ImportDiagram from "./settings/ImportDiagram";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 const mapStateToProps = state => {
-  return { editElement: state.editElement };
+  return {
+    editElement: _.cloneDeep(state.editElement),
+    dashboardExport: _.cloneDeep(state.exportDashboard)
+  };
 };
 
 function mapDispatchToProps(dispatch) {
   return {
-    editElement: data => dispatch(editElement(data))
+    editElementDispatch: data => dispatch(editElement(data)),
+    exportDashboardDispatch: data => dispatch(exportDashboard(data))
   };
 }
 
@@ -35,7 +45,6 @@ class DataSourceDashboards extends Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
       id: props.id,
       items: props.items || [],
@@ -45,9 +54,18 @@ class DataSourceDashboards extends Component {
       addItemPreview: false,
       settings: props.settings,
       drawer: null,
-      datasources: null
+      datasources: null,
+      delimer: props.delimer,
+      importData: [],
+      importWidget: []
     };
 
+    this.export = this.export.bind(this);
+    this.import = this.import.bind(this);
+    this.getFile = this.getFile.bind(this);
+    this.exportCard = this.exportCard.bind(this);
+    this.importDiagram = this.importDiagram.bind(this);
+    this.getWidgetFile = this.getWidgetFile.bind(this);
     this.onAddItem = this.onAddItem.bind(this);
     this.onAddItemCard = this.onAddItemCard.bind(this);
     this.onBreakpointChange = this.onBreakpointChange.bind(this);
@@ -60,6 +78,7 @@ class DataSourceDashboards extends Component {
     this.openSettings = this.openSettings.bind(this);
     this.setCardName = this.setCardName.bind(this);
     this.onDragStop = this.onDragStop.bind(this);
+    this.copyWidget = this.copyWidget.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -74,6 +93,7 @@ class DataSourceDashboards extends Component {
       });
     }
     if (!_.isEqual(prevState.items, this.state.items)) {
+      this.saveWidgetData(this.state);
       this.setState(state => {
         return { ...state, items: this.state.items };
       });
@@ -109,16 +129,17 @@ class DataSourceDashboards extends Component {
           }
         )
         .then(res => {
-          // console.log(res.data);
+          console.log(res.data);
         });
     } catch (e) {
       console.log("ERROR ==>", e);
     }
   }
 
+  putLayoutToLocalStorage(layout) {}
+
   setEditItem(item) {
     let items = this.state.items;
-    item.edit = true;
     _.replace(items, { i: item.i }, item);
     let index = _.findKey(items, { i: item.i });
     this.setState(state => {
@@ -131,7 +152,7 @@ class DataSourceDashboards extends Component {
     const { items } = this.state;
     let widget = _.find(items, { i: el.i });
     widget.settings.name = name;
-    let index = _.findKey(items, { i: el.i });
+    const index = _.findKey(items, { i: el.i });
     this.setState(state => {
       state.items[index] = widget;
       return { ...state, items: items };
@@ -140,12 +161,13 @@ class DataSourceDashboards extends Component {
   }
 
   openSettings(el = null, addItemPreviewBool = null) {
+    const element = _.cloneDeep(el);
     this.setState(state => {
       if (el === null) {
         state.drawer = null;
       }
-      this.props.editElement(el);
-      state.editElement = el;
+      this.props.editElementDispatch(element);
+      state.editElement = element;
       if (addItemPreviewBool !== null) {
         return {
           ...state,
@@ -165,14 +187,14 @@ class DataSourceDashboards extends Component {
     let widget = _.find(items, { i: key });
     widget.settings = settings;
     widget.edit = false;
-    this.props.editElement(widget);
+    this.props.editElementDispatch(widget);
     _.replace(items, { i: key }, widget);
     let index = _.findKey(items, { i: key });
     this.setState(state => {
       state.items[index] = widget;
+      this.saveWidgetData(state);
       return { ...state, items: items };
     });
-    this.saveWidgetData();
   }
 
   onAddItem() {
@@ -182,15 +204,21 @@ class DataSourceDashboards extends Component {
 
   onAddItemCard(element) {
     if (_.keys(element).length > 0) {
-      this.setState(state => ({
-        ...state,
-        items: state.items.concat(
+      this.setState(state => {
+        if (!Array.isArray(state.items)) {
+          state.items = Object.values(state.items);
+        }
+        let items = state.items.concat(
           this.itemSettingsAdd(state, element.settings)
-        ),
-        newCounter: state.newCounter + 1,
-        addItemPreview: false,
-        settingsOpen: false
-      }));
+        );
+        return {
+          ...state,
+          items: items,
+          newCounter: state.newCounter + 1,
+          addItemPreview: false,
+          settingsOpen: false
+        };
+      });
       return;
     }
     alert("Информация не заполнена");
@@ -198,8 +226,11 @@ class DataSourceDashboards extends Component {
 
   itemSettingsAdd(state, settings) {
     return {
-      i: "n" + state.newCounter,
-      x: (state.items.length * 3) % (state.cols || 12),
+      i: typeof state.items !== "undefined" ? "n" + state.newCounter : "n" + 0,
+      x:
+        typeof state.items !== "undefined"
+          ? (state.items.length * 3) % (state.cols || 12)
+          : (0 * 3) % (state.cols || 12),
       y: Infinity,
       w: 3,
       h: 5,
@@ -276,6 +307,106 @@ class DataSourceDashboards extends Component {
     this.saveWidgetData(this.state);
   }
 
+  export() {
+    const settings = {
+      newCounter: _.cloneDeep(this.state.newCounter),
+      items: _.cloneDeep(this.state.items)
+    };
+    const dataStr =
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify(settings));
+    let link = document.createElement("a");
+    link.setAttribute("href", dataStr);
+    link.setAttribute("download", `${this.state.id}.json`);
+    link.click();
+  }
+
+  exportCard(el) {
+    const element = el.settings;
+    const dataStr =
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify(element));
+    let link = document.createElement("a");
+    link.setAttribute("href", dataStr);
+    link.setAttribute("download", `${el.settings.name}.json`);
+    link.click();
+  }
+
+  import() {
+    const file = this.state.importData;
+    const id = this.state.id;
+
+    if (_.keys(file).length <= 0) {
+      alert("Выберите файл");
+      return;
+    }
+    try {
+      const req = axios
+        .post(
+          `/ajax/dashboards/datasource/${id}/settings`,
+          {
+            settings: file
+          },
+          {
+            headers: {
+              "X-CSRF-TOKEN": document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content")
+            }
+          }
+        )
+        .then(res => {
+          try {
+            const settings = JSON?.parse(res.data.settings);
+            const { items, newCounter } = settings;
+            this.setState(s => ({
+              ...s,
+              items: items,
+              newCounter: newCounter
+            }));
+          } catch (error) {}
+        });
+    } catch (e) {
+      console.log("ERROR ==>", e);
+    }
+  }
+
+  importDiagram() {
+    const widget = { settings: this.state.importWidget };
+    if (_.keys(widget.settings).length <= 0) {
+      alert("Выберите файл");
+      return;
+    }
+    try {
+      this.onAddItemCard(widget);
+      this.setState(s => ({ importWidget: [] }));
+    } catch (e) {
+      console.log("ERROR ==>", e);
+    }
+  }
+
+  getFile(e) {
+    const fileReader = new FileReader();
+    fileReader.readAsText(e.target.files[0], "UTF-8");
+    fileReader.onload = e => {
+      const file = JSON.parse(e.target.result);
+      this.setState(s => ({ ...s, importData: file }));
+    };
+  }
+
+  getWidgetFile(e) {
+    const fileReader = new FileReader();
+    fileReader.readAsText(e.target.files[0], "UTF-8");
+    fileReader.onload = e => {
+      const file = JSON.parse(e.target.result);
+      this.setState(s => ({ ...s, importWidget: file }));
+    };
+  }
+
+  copyWidget(widget) {
+    this.onAddItemCard(widget);
+  }
+
   createElement(el, key) {
     el.y = el.y == null ? Infinity : el.y;
     return (
@@ -287,6 +418,9 @@ class DataSourceDashboards extends Component {
           setEditItem={this.setEditItem}
           onRemoveItem={this.onRemoveItem}
           saveWidget={this.saveWidgetData}
+          copyWidget={this.copyWidget}
+          exportCard={this.exportCard}
+          widgetID={this.state.id}
         />
       </div>
     );
@@ -295,11 +429,25 @@ class DataSourceDashboards extends Component {
   render() {
     return (
       <div>
-        {this.props.showButton && <AddItemButton onAddItem={this.onAddItem} />}
+        {this.props.showButton && (
+          <>
+            <AddItemButton onAddItem={this.onAddItem} />
+          </>
+        )}
+        {this.props.showExportButton && (
+          <ExportDashboardButton onExport={this.export} />
+        )}
+        <ImportDashboard onImport={this.import} getFile={this.getFile} />
+        <ImportDiagram
+          onImport={this.importDiagram}
+          getFile={this.getWidgetFile}
+        />
         <ResponsiveReactGridLayout
+          draggableCancel=".altrp-dashboards__cancle-drag"
           onLayoutChange={this.onLayoutChange}
           onResizeStart={this.onResizeHandler}
           onResizeStop={this.onResizeHandlerStop}
+          autoSize={true}
           onDrop={this.onDrop}
           onDragStop={this.onDragStop}
           onBreakpointChange={this.onBreakpointChange}
@@ -313,25 +461,31 @@ class DataSourceDashboards extends Component {
           placement="right"
           open={true}
           defaultOpen={true}
-          width={"30vh"}
+          width={this.props.drawerWidth}
           open={this.state.settingsOpen}
           onClose={this.openSettings}
           handler={false}
         >
           {this.state.settingsOpen && (
             <WidgetSettings
+              widgetID={this.state.id}
               addItemPreview={this.state.addItemPreview}
               filter_datasource={this.state.settings.filter_datasource}
               datasources={this.props.rep}
               editHandler={this.onEditItem}
+              checkboxColor={this.state.settings?.checkboxColor}
               onCloseHandler={this.openSettings}
               onAddItem={this.onAddItemCard}
+              setCardName={this.setCardName}
+              delimer={this.state.delimer}
             />
           )}
         </Drawer>
         {this.state.drawer != null &&
           ReactDOM.createPortal(
             <WidgetPreview
+              width={this.props.drawerWidth}
+              widgetID={this.state.id}
               addItemPreview={this.state.addItemPreview}
               setCardName={this.setCardName}
             />,

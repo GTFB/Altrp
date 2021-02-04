@@ -25,7 +25,8 @@ import {
   CONTROLLER_REPEATER
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
-// import {actionsControllers} from "../../decorators/actions-controllers";
+import {actionsControllers} from "../../decorators/actions-controllers";
+import {getTemplateDataStorage} from "../../helpers";
 
 class Button extends BaseElement {
   static getName() {
@@ -78,7 +79,7 @@ class Button extends BaseElement {
     //   label: "Popup ID",
     //   isClearable: true,
     //   options_resource: '/admin/ajax/templates/options?template_type=popup&value=guid',
-    //   nullable: true,
+    //   nullable: nullable: true,
     //   conditions: {
     //     'popup_trigger_type': true,
     //   },
@@ -125,9 +126,9 @@ class Button extends BaseElement {
         }
       ],
       rules: {
-        "{{ELEMENT}}": "align-items: {{VALUE}};",
-        "{{ELEMENT}} .altrp-dropbar": "align-items: {{VALUE}};"
-      }
+        '{{ELEMENT}}.altrp-element': 'align-items: {{VALUE}};',
+        '{{ELEMENT}} .altrp-dropbar': 'align-items: {{VALUE}};',
+      },
     });
 
     this.addControl("button_icon", {
@@ -278,7 +279,10 @@ class Button extends BaseElement {
 
     this.startControlSection("dropbar_section", {
       tab: TAB_CONTENT,
-      label: "Dropbar content"
+      label: 'Dropbar content',
+      conditions: {
+        'link_button_type': "dropbar",
+      },
     });
 
     this.addControl("type_dropbar_section", {
@@ -322,7 +326,10 @@ class Button extends BaseElement {
 
     this.startControlSection("dropbar_options_section", {
       tab: TAB_CONTENT,
-      label: "Dropbar options"
+      label: 'Dropbar options',
+      conditions: {
+        'link_button_type': "dropbar",
+      },
     });
 
     this.addControl("position_dropbar_options", {
@@ -397,27 +404,16 @@ class Button extends BaseElement {
       ]
     });
 
-    this.addControl("width_dropbar_options", {
-      type: CONTROLLER_SLIDER,
-      label: "Width",
-      default: {
-        unit: "px"
-      },
-      max: 1000,
-      min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-dropbar-container{{STATE}}":
-          "width: {{SIZE}}{{UNIT}}"
-      }
-    });
-
     this.addControl("show_delay_dropbar_options", {
       type: CONTROLLER_SLIDER,
       label: "Dropbar show delay",
       default: {
         size: 0,
-        unit: "s"
+        unit: 'ms',
       },
+      units: [
+        'ms'
+      ],
       max: 1000,
       min: 0
     });
@@ -427,8 +423,11 @@ class Button extends BaseElement {
       label: "Dropbar hide delay",
       default: {
         size: 0,
-        unit: "s"
+        unit: 'ms',
       },
+      units: [
+        'ms'
+      ],
       max: 1000,
       min: 0
     });
@@ -574,9 +573,9 @@ class Button extends BaseElement {
       default: {
         isWithGradient: false,
         firstColor: "rgba(97,206,112,1)",
-        firstPoint: "100",
+        firstPoint: '0',
         secondColor: "rgba(242,41,91,1)",
-        secondPoint: "0",
+        secondPoint: "100",
         angle: "0",
         value: ""
       },
@@ -993,7 +992,49 @@ class Button extends BaseElement {
 
     this.startControlSection("dropbar_content_style", {
       tab: TAB_STYLE,
-      label: "Dropbar"
+      label: "Dropbar",
+      conditions: {
+        'link_button_type': "dropbar",
+      },
+    });
+
+    this.addControl("padding_dropbar_content_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+
+    this.addControl("width_dropbar_options", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        "px",
+        "%",
+        "vw"
+      ],
+      max: 1000,
+      min: 0,
+      rules: {
+        ".{{ID}}-altrp-dropbar.altrp-dropbar-container{{STATE}}": "width: {{SIZE}}{{UNIT}}"
+      }
     });
 
     this.addControl("background_dropbar_content_style", {
@@ -1004,8 +1045,7 @@ class Button extends BaseElement {
         colorPickedHex: "#343B4C"
       },
       rules: {
-        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}":
-          "background-color: {{COLOR}};"
+        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
@@ -1017,7 +1057,7 @@ class Button extends BaseElement {
         colorPickedHex: "#FFFFFF"
       },
       rules: {
-        "{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}": "color: {{COLOR}};"
+        ".{{ID}}-altrp-dropbar .altrp-dropbar-btn-content{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -1033,7 +1073,7 @@ class Button extends BaseElement {
         decoration: ""
       },
       rules: {
-        "{{ELEMENT}} .altrp-dropbar-btn-content{{STATE}}": [
+        '.{{ID}}-altrp-dropbar.altrp-dropbar-btn-content{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           "font-size: {{SIZE}}px;",
           "line-height: {{LINEHEIGHT}};",
@@ -1042,27 +1082,6 @@ class Button extends BaseElement {
           "text-transform: {{TRANSFORM}}",
           "font-style: {{STYLE}}",
           "text-decoration: {{DECORATION}}"
-        ]
-      }
-    });
-
-    this.addControl("padding_dropbar_content_style", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Padding",
-      default: {
-        top: 30,
-        right: 30,
-        bottom: 30,
-        left: 30,
-        unit: "px"
-      },
-      units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
         ]
       }
     });
@@ -1097,8 +1116,7 @@ class Button extends BaseElement {
         }
       ],
       rules: {
-        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}":
-          "border-style: {{VALUE}};"
+        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}": "border-style: {{VALUE}};"
       }
     });
 
@@ -1107,7 +1125,7 @@ class Button extends BaseElement {
       label: "Border width",
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}":
+        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}":
           "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
       }
     });
@@ -1120,8 +1138,7 @@ class Button extends BaseElement {
         colorPickedHex: "#32a852"
       },
       rules: {
-        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}":
-          "border-color: {{COLOR}};"
+        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}": "border-color: {{COLOR}};"
       }
     });
 
@@ -1157,8 +1174,7 @@ class Button extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}":
-          "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}"
+        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
       }
     });
 

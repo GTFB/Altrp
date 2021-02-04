@@ -61,6 +61,14 @@ export function getTemplateDataStorage() {
 }
 
 /**
+ * @return {string}
+ * */
+export function getTemplateType() {
+  const templateDataStorage = getTemplateDataStorage();
+  return _.get(templateDataStorage, 'type', 'content')
+}
+
+/**
  *
  * @return {ElementsFactory}
  */
@@ -100,7 +108,7 @@ export function getElementSettingsSuffix(controller) {
   if (!(suffix_2 || suffix_1)) {
     return "";
   }
-  return `_${getElementState().value}_${getCurrentScreen().name}`;
+  return `_${getElementState().value}_${suffix_2}`;
 }
 
 /**

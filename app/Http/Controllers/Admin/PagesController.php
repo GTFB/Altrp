@@ -24,7 +24,7 @@ class PagesController extends Controller
     $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
     $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
     $_pages = $search
-        ? Page::where('type',null)->getBySearch($search, 'title', [], $orderColumn, $orderType)
+        ? Page::getBySearch($search, 'title', [], $orderColumn, $orderType)
         : Page::where('type',null)->get()->$sortType( $orderColumn )->values();
     $pages = [];
     foreach ( $_pages as $page ) {
@@ -140,6 +140,9 @@ class PagesController extends Controller
     $page->model_id = $request->model_id;
     $page->redirect = $request->redirect;
     $page->parent_page_id = $request->parent_page_id;
+    $page->seo_description = $request->seo_description;
+    $page->seo_keywords = $request->seo_keywords;
+    $page->seo_title = $request->seo_title;
     $res['page'] = $page->toArray();
 
     $pages_template = PagesTemplate::where( 'page_id', $id )->where( 'template_type', 'content' )->first();

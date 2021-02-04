@@ -43,7 +43,9 @@ class PostsWidget extends Component {
     }
     let data = query.getFromModel(this.state.modelData) || [];
     if(this.props.element.getSettings('choose_datasource') === 'datasource') {
-      data = getDataByPath(this.props.element.getSettings('posts_datasource'), []);
+      let path = this.props.element.getSettings('posts_datasource', '');
+      path = path.replace(/}}/g, '').replace(/{{/g, '');
+      data = getDataByPath(path, []);
     }
     return <this.state.PostsComponent query={query}
                                     currentModel={this.props.currentModel}

@@ -1,8 +1,8 @@
-  import React, { Component } from "react";
+import React, { Component } from "react";
 import '../../sass/section.scss';
 import { connect } from "react-redux";
 import '../../sass/section.scss'
-  import {isEditor} from "../../../../front-app/src/js/helpers";
+import {isEditor, redirect} from "../../../../front-app/src/js/helpers";
 
 class SectionComponent extends Component {
   constructor(props) {
@@ -20,28 +20,28 @@ class SectionComponent extends Component {
     }
   }
 
-  // _componentDidMount() {
-  //   const { isScrollEffect } = this.props.element.getSettings();
-  //   console.log(isScrollEffect)
-  //   if (isScrollEffect) {
-  //     document.addEventListener('click', this.handleScroll);
-  //   }
-  // }
+  /**
+   * Обрабатываем клик по секции
+   * @param e
+   */
+  onClick = (e) => {
+    if(isEditor()){
+      return;
+    }
+    const sectionLink = this.props.element.getSettings('link_link');
+    redirect(sectionLink, e, this.props.element.getCurrentModel().getData());
+  };
 
-  // componentWillUnmount() {
-  //   window.removeEventListener('scroll', this.handleScroll);
-  // }
-
-  // handleScroll = event => {
-  //   // let scrollTop = event.srcElement.body.scrollTop;
-  //     // itemTranslate = Math.min(0, scrollTop / 3 - 60);
-
-  //   // console.log({ scrollTop });
-  //   console.log("!!!!!!!!!!")
-  //   // this.setState({
-  //   //   transform: itemTranslate
-  //   // });
-  // }
+  /**
+   * Курсор для ссылки
+   * @return {boolean}
+   */
+  sectionIsLink(){
+    if(isEditor()){
+      return false;
+    }
+    return ! ! _.get(this, 'props.element.settings.link_link.url');
+  }
 
   render() {
     let styles = {};
@@ -62,7 +62,9 @@ class SectionComponent extends Component {
       'altrp-section',
       `altrp-section_columns-${this.props.element.getColumnsCount()}`
     ];
-
+    if(this.sectionIsLink()){
+      sectionClasses.push('altrp-pointer');
+    }
     if (background_image.url/*  && !isScrollEffect */) {
       sectionClasses.push('altrp-background-image');
     }
@@ -82,23 +84,23 @@ class SectionComponent extends Component {
     let sectionWrapper = this.state.children.map(column => (
       <ElementWrapper
           ElementWrapper={ElementWrapper}
-          key={column.getId()}
+          key={column.getIdForAction()}
+          rootElement={this.props.rootElement}
           component={column.componentClass}
           element={column}
-      // columnCount={this.props.element.getColumnsCount()}
       />
     ));
 
-    // if (this.state.settings.layout_content_width_type == "full") {
-    //   styles.width = getWindowWidth() + "px"
-    // }
 
     if (this.state.settings.layout_height === "fit") {
       styles.height = "100vh"
     }
 
     return React.createElement(this.state.settings.layout_html_tag || "div",
-      { style: styles, className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: "" },
+      { style: styles,
+        className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: "" ,
+        onClick: this.onClick,
+      },
       // isScrollEffect ?
       // <>
       //   <div className="motion-effects-container" onScroll={this.handleScroll}>

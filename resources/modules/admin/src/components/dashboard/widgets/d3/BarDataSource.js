@@ -1,8 +1,13 @@
 import React, { Component } from "react";
-import { ResponsiveBarCanvas, ResponsiveBar } from "@nivo/bar";
+import { ResponsiveBarCanvas } from "@nivo/bar";
 import { connect } from "react-redux";
 import ErrorBoundary from "./ErrorBoundary";
 import DataAdapter from "./DataAdapter";
+import invert from "invert-color";
+import TooltipBar from "./TooltipBar"
+import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+
+const regagroScheme = _.find(Schemes, { value: "regagro" }).colors.reverse();
 
 const mapStateToProps = state => {
   return { formsStore: _.cloneDeep(state.formsStore) };
@@ -76,23 +81,20 @@ class BarDataSource extends Component {
     }
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     await this.getData();
   }
 
   async getData() {
-    const {
-      data,
-      isMultiple,
-      isDate,
-      isLarge,
-      needCallAgain
-    } = await new DataAdapter().parseDataBar(
+    const adapterObject = await new DataAdapter(
+      this.props.element.settings.type,
       this.props.element.settings.sources,
-      this.props.formsStore.form_data,
+      _.cloneDeep(this.props.formsStore.form_data),
       this.state.params,
       this.state.countRequest
-    );
+    ).parseDataNotType();
+    const { isMultiple, isDate, isLarge, needCallAgain } = adapterObject;
+    let data = adapterObject.data;
     if (needCallAgain) {
       setTimeout(() => {
         this.getData();
@@ -109,7 +111,6 @@ class BarDataSource extends Component {
       isLarge: isLarge
     }));
   }
-
   render() {
     if (typeof this.state.sources === "undefined") {
       return <div>Укажите источник данных</div>;
@@ -124,11 +125,24 @@ class BarDataSource extends Component {
       return <div>Ограничьте диапозон данных или выберите другой источник</div>;
     }
     if (typeof this.state.data !== "undefined" && this.state.data.length > 0) {
+      let data = this.state.data;
+      const sort = this.state.settings?.sort?.value;
+      switch (sort) {
+        case "value":
+          data = _.sortBy(data, ["value"]);
+          break;
+        case "key":
+          data = _.sortBy(data, ["key"]);
+          break;
+        default:
+          data = data;
+          break;
+      }
       return (
         <>
           <ErrorBoundary>
-            <ResponsiveBar
-              data={this.state.data}
+            <ResponsiveBarCanvas
+              data={data}
               indexBy="key"
               enableLabel={this.state.settings?.enableSliceLabels}
               padding={this.state.settings?.padding}
@@ -136,10 +150,103 @@ class BarDataSource extends Component {
               reverse={this.state.settings?.reverse}
               groupMode={this.state.settings?.groupMode}
               layout={this.state.settings?.layout}
-              margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
-              colors={this.state.settings?.colors}
+              labelSkipHeight={this.state.settings?.labelSkipHeight}
+              labelSkipWidth={this.state.settings?.labelSkipWidth}
+              enableGridY={this.state.settings?.enableGridY}
+              enableGridX={this.state.settings?.enableGridX}
+              labelTextColor={datum =>
+                invert(datum.color, {
+                  black: "#000000",
+                  white: "#FFFFFF",
+                  threshold: 0.45
+                })
+              }
+              theme={{
+                tooltip: {
+                    container: {
+                        padding: '0',
+                    },
+                },
+            }}
+              margin={{
+                top: this.state.settings?.margin?.top || 40,
+                right: this.state.settings?.margin?.right || 80,
+                bottom: this.state.settings?.margin?.bottom || 80,
+                left: this.state.settings?.margin?.left || 80
+              }}
+              colors={
+                this.state.settings?.colors?.scheme === "regagro"
+                  ? regagroScheme
+                  : this.state.settings?.colors
+              }
               colorBy="index"
-              axisBottom={{ ...this.state.settings?.axisBottom }}
+              tooltip={datum => (
+                <TooltipBar
+                  enable={this.state.settings?.enableCustomTooltip}
+                  datum={datum}
+                  widgetID={this.props.widgetID}
+                ></TooltipBar>
+              )}
+              axisLeft={
+                this.state.settings?.layout === "horizontal"
+                  ? !this.state.settings?.reverse && {
+                      tickRotation: 0
+                    }
+                  : {
+                      tickRotation: 0
+                    }
+              }
+              axisRight={
+                this.state.settings?.layout === "horizontal"
+                  ? this.state.settings?.reverse && {
+                      tickRotation: 0
+                    }
+                  : null
+              }
+              axisBottom={
+                this.state.settings?.layout === "vertical"
+                  ? !this.state.settings?.reverse && {
+                      ...this.state.settings?.axisBottom
+                    }
+                  : {
+                      ...this.state.settings?.axisBottom
+                    }
+              }
+              axisTop={
+                this.state.settings?.layout === "vertical"
+                  ? this.state.settings?.reverse && {
+                      ...this.state.settings?.axisBottom
+                    }
+                  : null
+              }
+              animate={false}
+              motionDamping={this.state.settings?.animationMotionDamping}
+              motionStiffness={this.state.settings?.animationMotionStiffness}
+              legends={
+                this.state.settings?.enableLegend
+                  ? [
+                      {
+                        dataFrom: "indexes",
+                        anchor:
+                          this.state.settings?.legendAchor || "bottom-right",
+                        direction:
+                          this.state.settings?.legendDirection || "row",
+                        justify: this.state.settings?.legendJustify || false,
+                        translateX: this.state.settings?.legendTranslateX || 0,
+                        translateY: this.state.settings?.legendTranslateY || 0,
+                        itemsSpacing:
+                          this.state.settings?.legendItemsSpacing || 10,
+                        itemWidth: this.state.settings?.legendItemWidth || 10,
+                        itemHeight: this.state.settings?.legendItemHeight || 10,
+                        itemDirection:
+                          this.state.settings?.legendItemDirection ||
+                          "left-to-right",
+                        symbolSize: this.state.settings?.legendSymbolSize || 25,
+                        symbolShape: "circle"
+                      }
+                    ]
+                  : []
+              }
             />
           </ErrorBoundary>
         </>

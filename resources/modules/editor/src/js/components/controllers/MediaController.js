@@ -6,6 +6,7 @@ import AddIcon from '../../../svgs/add.svg'
 import controllerDecorate from "../../decorators/controller";
 import { assetsShow } from "../../store/assets-browser/actions";
 import { iconsManager } from "../../helpers";
+import AltrpSVG from "../altrp-svg/AltrpSVG";
 
 class MediaController extends Component {
   constructor(props) {
@@ -62,10 +63,12 @@ class MediaController extends Component {
       width: 227,
       height: 90,
     };
-
+    let renderedSvg = '';
     if (value.name) {
-      assetsProps.className = `asset asset_${value.assetType}`;
-
+      assetsProps.className = `controller-media__asset controller-media__asset_${value.assetType || value.type || ''}`;
+      if(value.type === 'svg' && value.url){
+        renderedSvg = <AltrpSVG {...assetsProps} url={value.url}/>
+      }
       switch (value.assetType) {
         case 'icon': {
           Asset = iconsManager().getIconComponent(value.name);
@@ -80,7 +83,6 @@ class MediaController extends Component {
     } else {
       Asset = AddIcon
     }
-
 
     return <div className="controller-container controller-container_media">
       <div className="controller-container__label">
@@ -105,7 +107,7 @@ class MediaController extends Component {
           }
         </div>
       </div> : <div className="controller-media-choose" onClick={this.openAssetsBrowser}>
-        {Asset ? <Asset {...assetsProps} /> : ''}
+        {renderedSvg || (Asset ? <Asset {...assetsProps} /> : '')}
         {
           value.name ?
             <button className="controller-media-choose__button controller-media-choose__button_delete"

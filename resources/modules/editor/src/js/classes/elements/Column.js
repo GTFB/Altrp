@@ -44,6 +44,60 @@ class Column  extends BaseElement {
     });
 
     this.addControl(
+      'layout_flex_wrap_content', {
+      type: CONTROLLER_SELECT,
+      label: 'Column wrap',
+      options: [
+        {
+          'value': 'wrap',
+          'label': 'wrap'
+        },
+        {
+          'value': 'nowrap',
+          'label': 'nowrap'
+        },
+        {
+          'value': 'wrap-reverse',
+          'label': 'wrap reverse'
+        }
+      ],
+      rules: {
+        "{{ELEMENT}} > .altrp-column{{STATE}}": "flex-wrap: {{VALUE}}",
+      },
+    }
+    );
+    this.addControl('layout_column_direction', {
+      type: CONTROLLER_SELECT,
+      label: 'Direction',
+      options: [
+        {
+          'value': 'row',
+          'label': 'row'
+        },
+        {
+          'value': 'row-reverse',
+          'label': 'row reverse'
+        },
+        {
+          'value': 'column',
+          'label': 'column'
+        },
+        {
+          'value': 'column-reverse',
+          'label': 'column-reverse'
+        },
+        {
+          'value': 'unset',
+          'label': 'unset'
+        },
+      ],
+      rules: {
+        "{{ELEMENT}} > .altrp-column{{STATE}}": "flex-direction: {{VALUE}}"
+      },
+    }
+    );
+
+    this.addControl(
       'layout_type', {
         type: CONTROLLER_SELECT,
         label: 'Vertical align',
@@ -78,7 +132,7 @@ class Column  extends BaseElement {
           }
         ],
         rules: {
-          '{{ELEMENT}} .altrp-column{{STATE}}': ['align-content: {{VALUE}};',
+          '{{ELEMENT}} > .altrp-column{{STATE}}': ['align-content: {{VALUE}};',
             'align-items: {{VALUE}};'
           ],
         },
@@ -120,7 +174,7 @@ class Column  extends BaseElement {
           }
         ],
         rules: {
-          '{{ELEMENT}} .altrp-column{{STATE}}': 'justify-content: {{VALUE}} !important;',
+          '{{ELEMENT}} > .altrp-column{{STATE}}': 'justify-content: {{VALUE}} !important;',
         },
       }
     );
@@ -132,6 +186,36 @@ class Column  extends BaseElement {
       rules: {
         '{{ELEMENT}} .altrp-element:not(:last-child){{STATE}}': 'margin-bottom: {{VALUE}}px',
       }
+    });
+
+    this.addControl('layout_overflow', {
+      type: CONTROLLER_SELECT,
+      label: 'Overflow',
+      options: [
+        {
+          value: 'auto',
+          label: 'auto'
+        },
+        {
+          value: 'hidden',
+          label: 'hidden'
+        },
+        {
+          value: 'scroll',
+          label: 'scroll'
+        },
+        {
+          value: 'visible',
+          label: 'visible'
+        },
+        {
+          value: 'inherit',
+          label: 'default'
+        }
+      ],
+      rules: {
+        '{{ELEMENT}} > .altrp-column{{STATE}}': 'overflow: {{VALUE}}',
+      },
     });
 
     this.addControl('layout_html_tag', {
@@ -207,7 +291,7 @@ class Column  extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-column{{STATE}}": "background-color: {{COLOR}};"
+        "{{ELEMENT}} > .altrp-column{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
@@ -224,7 +308,7 @@ class Column  extends BaseElement {
         value: ""
       },
       rules: {
-        "{{ELEMENT}} .altrp-column{{STATE}}": "background-image: {{VALUE}}"
+        "{{ELEMENT}} > .altrp-column{{STATE}}": "background-image: {{VALUE}}"
       }
     });
 
@@ -233,7 +317,7 @@ class Column  extends BaseElement {
       label: 'Background Image',
       default: { url: "" },
       rules: {
-        "{{ELEMENT}} .altrp-column.altrp-background-image{{STATE}}": "background-image: url({{URL}});"
+        "{{ELEMENT}} > .altrp-column.altrp-background-image{{STATE}}": "background-image: url({{URL}});"
       }
     });
 
@@ -280,7 +364,7 @@ class Column  extends BaseElement {
       label: 'Background Position',
       default: 'top left',
       rules: {
-        "{{ELEMENT}} .altrp-column.altrp-background-image{{STATE}}": "background-position: {{VALUE}};"
+        "{{ELEMENT}} > .altrp-column.altrp-background-image{{STATE}}": "background-position: {{VALUE}};"
       }
     });
 
@@ -303,7 +387,7 @@ class Column  extends BaseElement {
       label: 'Background Attachment',
       default: 'scroll',
       rules: {
-        "{{ELEMENT}} .altrp-column.altrp-background-image{{STATE}}": "background-attachment: {{VALUE}};"
+        "{{ELEMENT}} > .altrp-column.altrp-background-image{{STATE}}": "background-attachment: {{VALUE}};"
       }
     });
 
@@ -338,7 +422,7 @@ class Column  extends BaseElement {
       label: 'Background Repeat',
       default: 'repeat',
       rules: {
-        "{{ELEMENT}} .altrp-column.altrp-background-image{{STATE}}": "background-repeat: {{VALUE}};"
+        "{{ELEMENT}} > .altrp-column.altrp-background-image{{STATE}}": "background-repeat: {{VALUE}};"
       }
     });
 
@@ -360,7 +444,7 @@ class Column  extends BaseElement {
       max: 1000,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-column.altrp-background-image{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
+        "{{ELEMENT}} > .altrp-column.altrp-background-image{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
       }
     });
 
@@ -387,7 +471,7 @@ class Column  extends BaseElement {
       label: 'Background Size',
       default: 'unset',
       rules: {
-        "{{ELEMENT}} .altrp-column.altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
+        "{{ELEMENT}} > .altrp-column.altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
       }
     });
 
@@ -410,7 +494,7 @@ class Column  extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}}.altrp-element_column.altrp-element .altrp-column{{STATE}}": [
+        "{{ELEMENT}}.altrp-element_column.altrp-element > .altrp-column{{STATE}}": [
           "padding-top: {{TOP}}{{UNIT}};",
           "padding-right: {{RIGHT}}{{UNIT}};",
           "padding-bottom: {{BOTTOM}}{{UNIT}};",
@@ -435,7 +519,7 @@ class Column  extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}}.altrp-element_column.altrp-element .altrp-column{{STATE}}': [
+        '{{ELEMENT}}.altrp-element_column.altrp-element > .altrp-column{{STATE}}': [
           'margin-top: {{TOP}}{{UNIT}};',
           'margin-right: {{RIGHT}}{{UNIT}};',
           'margin-bottom: {{BOTTOM}}{{UNIT}};',
@@ -449,7 +533,7 @@ class Column  extends BaseElement {
       label: "Z-index",
       default: 0,
       rules: {
-        "{{ELEMENT}} .altrp-column{{STATE}}": "z-index: {{VALUE}}"
+        "{{ELEMENT}} > .altrp-column{{STATE}}": "z-index: {{VALUE}}"
       }
     });
 
@@ -491,7 +575,7 @@ class Column  extends BaseElement {
         }
       ],
       rules: {
-        "{{ELEMENT}} .altrp-column{{STATE}}": "border-style: {{VALUE}};"
+        "{{ELEMENT}} > .altrp-column{{STATE}}": "border-style: {{VALUE}};"
       }
     });
 
@@ -503,7 +587,7 @@ class Column  extends BaseElement {
       },
       units: ["px", "%", "vh"],
       rules: {
-        "{{ELEMENT}} .altrp-column{{STATE}}":
+        "{{ELEMENT}} > .altrp-column{{STATE}}":
           "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
       }
     });
@@ -516,7 +600,7 @@ class Column  extends BaseElement {
         colorPickedHex: "#32a852"
       },
       rules: {
-        "{{ELEMENT}} .altrp-column{{STATE}}": "border-color: {{COLOR}};"
+        "{{ELEMENT}} > .altrp-column{{STATE}}": "border-color: {{COLOR}};"
       }
     });
 
@@ -535,7 +619,7 @@ class Column  extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-column{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} > .altrp-column{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
       }
     });
 
@@ -558,7 +642,7 @@ class Column  extends BaseElement {
           '#9c18a8'
         ],
         rules: {
-          '{{ELEMENT}} .altrp-column{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+          '{{ELEMENT}} > .altrp-column{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
         },
       }
     );

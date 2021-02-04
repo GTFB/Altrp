@@ -4,10 +4,11 @@ const defaultState = {};
 
 export function elementReducer(state, action) {
   state = state || defaultState;
+  const data = _.cloneDeep(action.payload);
   switch (action.type) {
     case EDIT_ELEMENT:
       {
-        state = _.cloneDeep(action.payload, []);
+        state = data;
       }
       break;
   }

@@ -437,9 +437,17 @@ class SQLBuilderForm extends Component {
     })
   }
 
-  submitHandler(e) {
+  async submitHandler(e) {
     const { modelId, id } = this.props.match.params;
     e.preventDefault();
+
+    const isNameTaken = await fetch(`/admin/ajax/models/${modelId}/sql_builder_name_is_free?name=${this.state.value.name}`)
+      .then(res => res.json())
+      .then(res => !res.taken);
+
+    if (isNameTaken) {
+      return alert(`Name ${this.state.value.name} is already taken. Use another one.`)
+    }
 
     (id ?
       this.sqlResource.put(id, this.state.value) :

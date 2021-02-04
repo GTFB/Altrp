@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import AreaComponent from "./AreaComponent";
+import AdminBar from "./AdminBar";
 import { setTitle } from "../helpers";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Redirect, withRouter } from "react-router-dom";
@@ -28,6 +29,8 @@ class RouteContent extends Component {
     this.scrollbar = React.createRef();
     this.isReport = window.location.href.includes("reports");
     appStore.dispatch(clearElements());
+    window.currentRouterMatch = new AltrpModel(props.match);
+    this.admin = this.props.currentUser.hasRoles('admin');
   }
 
   /**
@@ -37,7 +40,6 @@ class RouteContent extends Component {
    * @return {Promise<void>}
    */
   async componentDidMount() {
-    window.currentRouterMatch = new AltrpModel(this.props.match);
     window.mainScrollbars = this.scrollbar.current;
     // setTitle(this.props.title);
     if (this.props.lazy && this.props.allowed) {
@@ -53,24 +55,30 @@ class RouteContent extends Component {
      */
     this.changeRouteCurrentModel();
     /**
-     * Обнуляем текущее хранилище dataStorage
-     */
-    dataStorageUpdater.clearCurrent();
-    /**
      * Обнуляем хранилище ответов на отправленные формы
      */
     appStore.dispatch(clearAllResponseData());
     /**
      * затем отправляем запросы на обновление данных и altrpPageState
      */
-    this.updateDataStorage();
+    this.updateAppData();
   }
 
+  /**
+   * Очистим currentDataSource после удаления компонента
+   */
+  componentWillUnmount(){
+    dataStorageUpdater.clearCurrent();
+  }
   /**
    *  обновление currentDataStorage
    *  Сброс altrpPageState
    */
-  async updateDataStorage() {
+  async updateAppData() {
+      dataStorageUpdater.clearCurrent();
+    if(window.formsManager){
+      formsManager.clearFormsStore();
+    }
     /**
      * @member {array} data_sources
      */
@@ -129,7 +137,7 @@ class RouteContent extends Component {
         _.get(prevProps, "match.params")
       )
     ) {
-      this.updateDataStorage();
+      this.updateAppData();
     }
     if (!_.isEqual(_.get(this.props, "match"), _.get(prevProps, "match"))) {
       window.currentRouterMatch = new AltrpModel(this.props.match);
@@ -142,40 +150,48 @@ class RouteContent extends Component {
       return <Redirect to={this.props.redirect || "/"} />;
     }
     return (
-      <Scrollbars
-        ref={this.scrollbar}
-        onUpdate={this.props.setScrollValue}
-        style={{ zIndex: 99999 }}
-        autoHide
-        autoHideTimeout={500}
-        autoHideDuration={200}
-        renderTrackVertical={({ style, ...props }) => {
-          return (
-            <div
-              className="altrp-scroll__vertical-track"
-              style={style}
-              {...props}
-            />
-          );
-        }}
-      >
-        <div className="route-content" id="route-content">
-          {this.state.areas.map(area => {
+      <React.Fragment>
+        {this.admin && <AdminBar areas={this.state.areas} data={this.props.currentUser.data} idPage={this.props.id} />}
+      
+        <Scrollbars
+          ref={this.scrollbar}
+          onUpdate={this.props.setScrollValue}
+          // style={{ zIndex: 99999 }}
+          autoHide
+          autoHideTimeout={500}
+          autoHideDuration={200}
+          renderTrackVertical={({ style, ...props }) => {
             return (
-              <AreaComponent
-                {...area}
-                area={area}
-                page={this.props.id}
-                models={[this.props.model]}
-                key={"appArea_" + area.id}
+              <div
+                className="altrp-scroll__vertical-track"
+                style={style}
+                {...props}
               />
             );
-          })}
-        </div>
-      </Scrollbars>
+          }}
+        >
+          <div className="route-content" id="route-content">
+            {this.state.areas.map(area => {
+              return (
+                <AreaComponent
+                  {...area}
+                  area={area}
+                  page={this.props.id}
+                  models={[this.props.model]}
+                  key={"appArea_" + area.id}
+                />
+              );
+            })}
+          </div>
+        </Scrollbars>
+      </React.Fragment>
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  currentUser: state.currentUser
+})
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -183,4 +199,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(withRouter(RouteContent));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(RouteContent));

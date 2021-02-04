@@ -1,7 +1,6 @@
 import React, { Component, Suspense } from "react";
 import { Link, Redirect, withRouter } from "react-router-dom";
 let Dropbar = React.lazy(() => import("../altrp-dropbar/AltrpDropbar"));
-import { connect } from "react-redux";
 import {
   getComponentByElementId,
   getHTMLElementById,
@@ -11,7 +10,6 @@ import {
   renderAssetIcon,
   scrollToElement
 } from "../../../../../front-app/src/js/helpers";
-import AltrpModel from "../../classes/AltrpModel";
 import { togglePopup } from "../../../../../front-app/src/js/store/popup-trigger/actions";
 import { toggleTrigger } from "../../../../../front-app/src/js/store/hide-triggers/actions";
 
@@ -50,12 +48,19 @@ class ButtonWidget extends Component {
       console.log(this.state.settings);
       e.preventDefault();
     } else if (this.props.element.getSettings("actions", []).length) {
+      e.preventDefault();
+      e.stopPropagation();
       const actionsManager = (
         await import(
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
         )
       ).default;
-      await actionsManager.callAllWidgetActions(this.props.element.getIdForAction());
+      await actionsManager.callAllWidgetActions(
+        this.props.element.getIdForAction(),
+        'click',
+        this.props.element.getSettings("actions", []),
+        this.props.element
+      );
     } else if (this.props.element.getForms().length) {
       this.setState(state => ({ ...state, pending: true }));
       this.props.element.getForms().forEach(
@@ -196,8 +201,6 @@ class ButtonWidget extends Component {
       ? link_link.url.replace(":id", this.getModelId() || "")
       : "";
     if (_.isObject(this.props.currentModel)) {
-      // console.log(this.props.currentModel);
-      // console.log(link_link.url);
       url = parseURLTemplate(link_link.url || "", modelData);
     }
 
@@ -221,8 +224,11 @@ class ButtonWidget extends Component {
         button = (
           <Suspense fallback={<div>Загрузка...</div>}>
             <Dropbar
+              elemenentId={this.props.element.getId()}
               settings={this.props.element.getSettings()}
               className="btn"
+              element={this.props.element}
+              getContent={this.getContent}
               showDelay={this.state.settings.show_delay_dropbar_options}
             >
               {buttonTemplate}

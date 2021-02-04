@@ -8,8 +8,17 @@ class AltrpLightbox extends Component {
   }
 
   render() {
+    let mainSrc = this.props.settings.mainSrc;
+    let settings = this.props.settings;
+
+    delete settings.mainSrc
+
+    if(!mainSrc) {
+      mainSrc = "/img/nullImage.png"
+    }
+
     return (
-      <Lightbox {...this.props.settings} wrapperClassName="altrp-lightbox"/>
+      <Lightbox mainSrc={mainSrc} {...settings} wrapperClassName="altrp-lightbox"/>
     )
   }
 }

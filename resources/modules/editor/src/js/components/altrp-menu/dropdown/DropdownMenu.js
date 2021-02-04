@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import AltrpImage from "../../altrp-image/AltrpImage";
 import AltrpLink from "../../altrp-link/AltrpLink";
 import DropdownSub from "./DropdownSub";
+import LinkMenu from "../LinkMenu";
 
 class DropdownMenu extends Component {
   constructor(props) {
@@ -115,15 +116,25 @@ class DropdownMenu extends Component {
           <ul className="altrp-nav-menu-ul-dropdown">
             {
               list.map((li, idx) => {
+                let link = <LinkMenu
+                  defaultChildren={(<div className="altrp-nav-menu-li-link-dropdown altrp-nav-menu-li-link-label-dropdown"/>)}
+                  modelData={this.props.modelData}
+                  modelId={this.props.modelId || null}
+                  link={li.link_repeater_menu_layout}
+                  className="altrp-nav-menu-li-link-dropdown altrp-nav-menu-li-link-label-dropdown"
+                >
+                  {
+                    li.label_repeater_menu_layout
+                  }
+                </LinkMenu>;
+
                 return (
                   !li.id_repeater_menu_layout ? (
                       !li.childrenParent ? (
                         <li className="altrp-nav-menu-li-dropdown" key={idx}>
-                          <AltrpLink link={li.link_repeater_menu_layout} className="altrp-nav-menu-li-link-dropdown altrp-nav-menu-li-link-label-dropdown">
-                            {
-                              li.label_repeater_menu_layout
-                            }
-                          </AltrpLink>
+                          {
+                            link
+                          }
                           {
                             this.props.settings.divider_switch_dropdown_menu_section ? <div className="altrp-nav-menu-dropdown-s-content-divider"/> : ""
                           }
@@ -131,7 +142,13 @@ class DropdownMenu extends Component {
                       ) : ""
                     ) :
                     !li.childrenParent ? <li className="altrp-nav-menu-li-dropdown altrp-nav-menu-li-sub" key={idx}>
-                        <DropdownSub settings={this.props.settings} list={this.state.list} li={li}/>
+                        <DropdownSub
+                          settings={this.props.settings}
+                          list={this.state.list}
+                          li={li}
+                          modelData={this.props.modelData}
+                          modelId={this.props.modelId}
+                        />
                       </li>
                       : ""
                 )})
