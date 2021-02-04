@@ -601,7 +601,7 @@ class Heading extends BaseElement {
       },
       type: CONTROLLER_TEXTAREA,
       label: 'Rotating',
-      default: "Amazing~and~supser"
+      default: "Amazing\nBigger\nFaster"
     });
 
     this.addControl('text_after_animating', {
