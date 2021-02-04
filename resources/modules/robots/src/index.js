@@ -25,15 +25,5 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 let robotsTarget = document.getElementById("robots-editor");
+
 if (robotsTarget) window.ReactDOM.render(<RobotsEditor />, robotsTarget);
-
-
-
-// ReactDOM.render(
-  // <RobotsEditor
-  //   sidebar={(chart, callbacks) => (
-  //     <Sidebar callbacks={callbacks} chart={chart} />
-  //   )}
-  // />,
-  // document.querySelector("#robots-editor")
-// );
