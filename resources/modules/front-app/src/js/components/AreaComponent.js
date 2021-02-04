@@ -2,6 +2,11 @@ import React, { Component } from "react";
 import FrontPopup from "./FrontPopup";
 
 class AreaComponent extends Component {
+
+  componentWillUnmount() {
+    window.stylesModule.removeStyleById(this.rootElement.id);
+  }
+
   render() {
     let classes = [`app-area`, `app-area_${this.props.id}`];
     /**
@@ -24,7 +29,7 @@ class AreaComponent extends Component {
     if (!this.props.template.data) {
       return <div className={classes.join(" ")} />;
     }
-    let rootElement = window.frontElementsFabric.parseData(
+    this.rootElement = window.frontElementsFabric.parseData(
       this.props.template.data,
       null,
       this.props.page,
@@ -32,9 +37,9 @@ class AreaComponent extends Component {
     );
     return (
       <div className={classes.join(" ")}>
-        {React.createElement(rootElement.componentClass, {
-          element: rootElement,
-          children: rootElement.children
+        {React.createElement(this.rootElement.componentClass, {
+          element: this.rootElement,
+          children: this.rootElement.children
         })}
       </div>
     );
