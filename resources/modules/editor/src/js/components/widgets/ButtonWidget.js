@@ -45,7 +45,6 @@ class ButtonWidget extends Component {
    */
   async onClick(e) {
     if (isEditor()) {
-      console.log(this.state.settings);
       e.preventDefault();
     } else if (this.props.element.getSettings("actions", []).length) {
       e.preventDefault();
@@ -177,7 +176,7 @@ class ButtonWidget extends Component {
     }
 
     let buttonText = this.getContent("button_text") || "";
-    console.log(buttonText)
+    console.log(this.props.element.getSettings("button_text"));
     let buttonMedia = { ...this.state.settings.button_icon };
     if (this.state.pending) {
       classes += " altrp-disabled";
