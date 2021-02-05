@@ -5,10 +5,25 @@ namespace App\Observers\AltrpObservers;
 use App\Altrp\Model;
 use App\Events\AltrpEvents\{{modelName}}Event;
 use App\Observers\BaseObserver;
+use App\Services\Robots\RobotsService;
 use {{modelNamespace}};
 
 class {{modelName}}Observer extends BaseObserver
 {
+    /**
+     * @var RobotsService
+     */
+    protected $robotsService;
+
+    /**
+     * test_postObserver constructor.
+     * @param RobotsService $robotsService
+     */
+    public function __construct(RobotsService $robotsService)
+    {
+        $this->robotsService = $robotsService;
+    }
+
     /**
      * Handle the {{modelSingle}} "created" event.
      *
@@ -29,6 +44,13 @@ class {{modelName}}Observer extends BaseObserver
         ];
 
         $this->sendNotifications(${{modelSingle}}, $source->notice_settings, $data);
+
+        $robots = $this->robotsService->getCurrentModelRobots($model);
+
+        foreach ($robots as $robot) {
+            if ($robot->start_condition != 'created' || !$robot->enabled) continue;
+            $this->robotsService->initRobot($robot)->runRobot();
+        }
     }
 
     /**
@@ -51,6 +73,13 @@ class {{modelName}}Observer extends BaseObserver
         ];
 
         $this->sendNotifications(${{modelSingle}}, $source->notice_settings, $data);
+
+        $robots = $this->robotsService->getCurrentModelRobots($model);
+
+        foreach ($robots as $robot) {
+            if ($robot->start_condition != 'updated' || !$robot->enabled) continue;
+            $this->robotsService->initRobot($robot)->runRobot();
+        }
     }
 
     /**
@@ -72,7 +101,16 @@ class {{modelName}}Observer extends BaseObserver
             'action_type' => 'delete'
         ];
 
-        $this->sendNotifications(${{modelSingle}}, $source->notice_settings, $data);
+        if (in_array('deleted_at', $columns)) {
+            $this->sendNotifications(${{modelSingle}}, $source->notice_settings, $data);
+        }
+
+        $robots = $this->robotsService->getCurrentModelRobots($model);
+
+        foreach ($robots as $robot) {
+            if ($robot->start_condition != 'deleted' || !$robot->enabled) continue;
+            $this->robotsService->initRobot($robot)->runRobot();
+        }
     }
 
     /**

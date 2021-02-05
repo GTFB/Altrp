@@ -4,6 +4,7 @@
 namespace App\Services\Robots\Blocks;
 
 
+use App\Altrp\Model;
 use App\Mails\RobotsMail;
 use App\User;
 use Illuminate\Support\Facades\Mail;
@@ -49,10 +50,12 @@ class Action
     protected function execCrud()
     {
         $data = json_decode(json_encode($this->node->data->props->nodeData->data->body), true);
-        $model_class = '\\' . $this->node->data->props->nodeData->data->model_class;
+        $model = Model::find($this->node->data->props->nodeData->data->model_id);
+        $modelNamespace = $model->parent ? $model->parent->namespace : $model->namespace;
+        $modelClass = '\\' . $modelNamespace;
         $method = $this->node->data->props->nodeData->data->method;
-        $id = $this->node->data->props->nodeData->data->model_id;
-        $entity = $model_class::find($id);
+        $id = $this->node->data->props->nodeData->data->record_id;
+        $entity = $modelClass::find($id);
         return $entity->$method($data);
     }
 
@@ -81,7 +84,21 @@ class Action
     protected function sendEmail()
     {
         $from = config('mail.username');
-        $users = User::whereIn('id', $this->getNodeProperties()->nodeData->data->users)->get()->toArray();
+        $entities = $this->getNodeProperties()->nodeData->data->entities;
+        if (is_object($entities)) {
+            $users = isset($entities->users) && !empty($entities->users) ? User::whereIn('id', $entities->users): null;
+            if (isset($entities->roles) && !empty($entities->roles)) {
+                $roles = $entities->roles;
+                $users = $users ? $users->whereHas('roles', function ($q) use ($roles){
+                    $q->whereIn('id', $roles);
+                }) : User::whereHas('roles', function ($q) use ($roles){
+                    $q->whereIn('id', $roles);
+                });
+            }
+            $users = $users->get()->toArray();
+        } else {
+            $users = User::all()->toArray();
+        }
         $message = $this->getNodeProperties()->nodeData->data->message;
         $subject = $this->getNodeProperties()->nodeData->data->subject;
         $data = [
