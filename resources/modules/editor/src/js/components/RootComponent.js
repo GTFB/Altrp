@@ -33,15 +33,17 @@ class RootComponent extends Component {
     return (
       <div className={classes}>
         {this.props.element.getSettings("test-text-4")}
-        {this.state.children.map(section => (
-          <ElementWrapper
-            ElementWrapper={ElementWrapper}
-            rootElement={this.props.element}
-            key={section.getIdForAction()}
-            component={section.componentClass}
-            element={section}
-          />
-        ))}
+        {this.state.children.map(section => {
+          return(
+            <ElementWrapper
+              ElementWrapper={ElementWrapper}
+              rootElement={this.props.element}
+              key={section.getIdForAction()}
+              component={section.componentClass}
+              element={section}
+            />
+          )})
+        }
       </div>
     );
   }

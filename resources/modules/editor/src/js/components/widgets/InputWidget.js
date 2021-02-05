@@ -476,7 +476,7 @@ class InputWidget extends Component {
     }
     if (
       this.props.element.getSettings("content_options_nullable") &&
-      e.value === "<null>"
+      e && e.value === "<null>"
     ) {
       value = null;
     }

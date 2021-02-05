@@ -67,7 +67,7 @@ includesSome.autoRemove = function (val) {
 };
 
 /**
- *
+ * Фильтрация нечеткого текста
  * @param rows
  * @param id
  * @param filterValue
@@ -85,8 +85,35 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
     }]
   })
 }
-// Let the table remove the filter if the string is empty
-fuzzyTextFilterFn.autoRemove = val => !val;
+fuzzyTextFilterFn.autoRemove = val => ! val;
+/**
+ * Фильтрация на точное соответствие
+ * @param rows
+ * @param id
+ * @param filterValue
+ * @return {*}
+ */
+function fullMatchTextFilterFn(rows, id, filterValue) {
+  id = id ? id[0] : undefined;
+  return rows.filter(row => _.get(row, `values.${id}`) === filterValue);
+}
+fullMatchTextFilterFn.autoRemove = val => ! val;
+/**
+ * Фильтрация на нахождение в тексте
+ * @param rows
+ * @param id
+ * @param filterValue
+ * @return {*}
+ */
+function partialMatchTextFilterFn(rows, id, filterValue) {
+  id = id ? id[0] : undefined;
+  return rows.filter(row => {
+    filterValue = filterValue.replace(/\s/g, '');
+    let value = _.get(row, `values.${id}`, '').replace(/\s/g, '');
+    return value.indexOf(filterValue) !== -1
+  });
+}
+partialMatchTextFilterFn.autoRemove = val => ! val;
 /**
  * Компонент, который работает только с внешними данными, которые не обновляются с сервера
  * @param {{}} settings
@@ -273,6 +300,8 @@ function AltrpTableWithoutUpdate(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: fuzzyTextFilterFn,
+      fullMatchText: fullMatchTextFilterFn,
+      partialMatchText: partialMatchTextFilterFn,
       // Or, override the default text filter to use
       // "startWith"
       text: (rows, id, filterValue) => {
@@ -1171,6 +1200,19 @@ export function settingsToColumns(settings, widgetId) {
           case 'select': {
             _column.filter = 'includesSome';
             _column.Filter = ({ column }) => <SelectColumnFilter column={column} widgetId={widgetId} />;
+          }
+            break;
+          case 'text': {
+            switch(_column.column_text_filter_type){
+              case 'full_match': {
+                _column.filter = 'fullMatchText';
+              }
+              break;
+              case 'partial_match': {
+                _column.filter = 'partialMatchText';
+              }
+              break;
+            }
           }
             break;
         }
