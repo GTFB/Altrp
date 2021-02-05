@@ -179,7 +179,6 @@ return [
          * Application Service Providers...
          */
         App\Providers\AppServiceProvider::class,
-        App\Providers\AltrpProviders\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
@@ -192,9 +191,9 @@ return [
         NotificationChannels\Telegram\TelegramServiceProvider::class,
         
         App\Providers\RepositoryServiceProvider::class,
-        // App\Providers\AltrpRepositoryServiceProvider::class,
         App\Providers\PluginServiceProvider::class,        
-        // App\Providers\AltrpRepositoryServiceProvider::class,
+        App\Providers\AltrpProviders\AppServiceProvider::class,
+        App\Providers\AltrpRepositoryServiceProvider::class,
     ],
 
     /*

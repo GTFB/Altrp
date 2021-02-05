@@ -20,8 +20,8 @@ class RobotController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
+        
         $data['user_id'] = auth()->id();
-        $data['model_id'] = 1;
         $robot = new Robot($data);
         $result = $robot->save();
 

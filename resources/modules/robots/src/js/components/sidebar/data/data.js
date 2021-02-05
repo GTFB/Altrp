@@ -16,10 +16,7 @@ export const dataAction =  {
         {
             "type": "send_mail",
             "data": {
-                "users": [
-                    1,
-                    2
-                ],
+                "entities": "all",
                 "subject": "New subject",
                 "message": "Hello my old friend!"
             }
@@ -27,10 +24,7 @@ export const dataAction =  {
         {
             "type": "send_notice",
             "data": {
-                "users": [
-                    3,
-                    4
-                ],
+                "entities": {"users": [1,2,3], "roles": [1,2,3]},
                 "message": "Message has been sent."
             }
         }
