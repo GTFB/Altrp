@@ -6,8 +6,10 @@ namespace App\Services\Robots\Blocks;
 
 use App\Altrp\Model;
 use App\Mails\RobotsMail;
+use App\Notifications\RobotNotification;
 use App\User;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 
 class Action
 {
@@ -65,6 +67,9 @@ class Action
      */
     protected function sendNotification()
     {
+        $entities = $this->getNodeProperties()->nodeData->data->entities;
+        $users = $this->getRequiredUsers($entities);
+        Notification::send($users, new RobotNotification($this->node));
         return true;
     }
 
@@ -85,20 +90,7 @@ class Action
     {
         $from = config('mail.username');
         $entities = $this->getNodeProperties()->nodeData->data->entities;
-        if (is_object($entities)) {
-            $users = isset($entities->users) && !empty($entities->users) ? User::whereIn('id', $entities->users): null;
-            if (isset($entities->roles) && !empty($entities->roles)) {
-                $roles = $entities->roles;
-                $users = $users ? $users->whereHas('roles', function ($q) use ($roles){
-                    $q->whereIn('id', $roles);
-                }) : User::whereHas('roles', function ($q) use ($roles){
-                    $q->whereIn('id', $roles);
-                });
-            }
-            $users = $users->get()->toArray();
-        } else {
-            $users = User::all()->toArray();
-        }
+        $users = $this->getRequiredUsers($entities)->toArray();
         $message = $this->getNodeProperties()->nodeData->data->message;
         $subject = $this->getNodeProperties()->nodeData->data->subject;
         $data = [
@@ -113,5 +105,29 @@ class Action
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    /**
+     * Получить пользователей, которых нужно уведомить
+     * @param $entities
+     * @return User[]|\Illuminate\Database\Eloquent\Collection
+     */
+    protected function getRequiredUsers($entities)
+    {
+        if (is_object($entities)) {
+            $users = isset($entities->users) && !empty($entities->users) ? User::whereIn('id', $entities->users): null;
+            if (isset($entities->roles) && !empty($entities->roles)) {
+                $roles = $entities->roles;
+                $users = $users ? $users->whereHas('roles', function ($q) use ($roles){
+                    $q->whereIn('id', $roles);
+                }) : User::whereHas('roles', function ($q) use ($roles){
+                    $q->whereIn('id', $roles);
+                });
+            }
+            $users = $users->get();
+        } else {
+            $users = User::all();
+        }
+        return $users;
     }
 }
