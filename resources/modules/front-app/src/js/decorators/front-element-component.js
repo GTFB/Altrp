@@ -151,7 +151,7 @@ function getContent(settingName, returnRaw = false) {
     let model = element.hasCardModel() ? element.getCardModel() : this.props.currentModel;
     if(returnRaw){
       content = content.trim().replace('{{', '').replace('}}', '');
-      content = getDataByPath(content, content, model);
+      content = getDataByPath(content, '', model);
     } else {
       content = replaceContentWithData(content, model);
     }

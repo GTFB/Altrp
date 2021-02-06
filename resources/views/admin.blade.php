@@ -12,6 +12,7 @@
   <!-- Scripts -->
 
   <script>
+    window.ALTRP_DEBUG = {!! json_encode( ! ! get_altrp_setting( 'altrp_debug', false ) ) !!};
     let _token = '{{ csrf_token() }}';
   </script>
   @if( env( 'ALTRP_SETTING_ADMIN_LOGO' ) )

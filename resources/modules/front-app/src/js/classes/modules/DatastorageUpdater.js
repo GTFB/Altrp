@@ -120,7 +120,6 @@ class DataStorageUpdater extends AltrpModel {
      */
     let formsStore = appStore.getState().formsStore;
 
-    // if(this.getProperty('formsStore') !== formsStore){
     if (!_.isEqual(this.getProperty('formsStore'), formsStore)) {
       await this.onFormsUpdate();
       this.setProperty('formsStore', formsStore);

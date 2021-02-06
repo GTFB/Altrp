@@ -12,7 +12,8 @@ class AdvancedSettings extends Component {
   constructor(props){
     super(props);
     this.state = {
-      allSiteJavascript: ''
+      allSiteJavascript: '',
+      debugOn: false,
     }
   }
 
@@ -21,8 +22,11 @@ class AdvancedSettings extends Component {
    */
   async componentDidMount() {
     const allSiteJavascript = (await new Resource({route: '/admin/ajax/settings'}).get('all_site_js?decrypt=true')).all_site_js || '';
-    console.log(allSiteJavascript);
-    this.setState(state => ({...state,allSiteJavascript}));
+    // let debugOn = ! ! (await new Resource({route:'/admin/ajax/settings'}).get('altrp_debug').altrp_debug);
+    let debugOn = ! ! (await new Resource({route:'/admin/ajax/settings'}).get('altrp_debug')).altrp_debug;
+    this.setState(state => ({...state,
+      allSiteJavascript,
+      debugOn}));
   }
 
   /**
@@ -33,9 +37,24 @@ class AdvancedSettings extends Component {
 
   async changeAdminLogo(value){
     await new Resource({route:'/admin/ajax/settings'}).put('admin_logo', {value: JSON.stringify(value)});
-    console.log(value);
     this.dispatch(setAdminLogo(value));
   }
+  /**
+   * Включить дебаг на фронте
+   * @param e
+   * @return {Promise<void>}
+   */
+
+  toggleDebug = async (e)=>{
+    // await new Resource({route:'/admin/ajax/settings'}).put('admin_logo', {value: JSON.stringify(value)});
+    // this.dispatch(setAdminLogo(value));
+    let value = e.target.checked;
+    await new Resource({route:'/admin/ajax/settings'}).put('altrp_debug', {value});
+    this.setState(state=>({
+      ...state,
+      debugOn: value,
+    }))
+  };
 
   /**
    * Удалить всю историю всех шаблонов
@@ -122,6 +141,18 @@ class AdvancedSettings extends Component {
                     onClick={this.updateAllSiteJavascript}>
               Update
             </button>
+          </td>
+        </tr>
+        <tr className="admin-settings-table-row">
+          <td className="admin-settings-table__td row-text" width="10%">
+            Debug Altrp App
+          </td>
+          <td className="admin-settings-table__td">
+            <input className="admin-table__td_check"
+                   onChange={this.toggleDebug}
+                   // value={this.state.debugOn}
+                   checked={this.state.debugOn}
+                   type="checkbox"/>
           </td>
         </tr>
         {/*<tr className="admin-settings-table-row">*/}
