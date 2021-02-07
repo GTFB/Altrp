@@ -88,13 +88,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     // Websockets
     Route::get('/websockets', 'Admin\WebsocketsController@index');
-    
+
     Route::get('/users/{user}/notifications', 'Admin\NoticeSettingController@index');
     Route::get('/users/{user}/notifications/{notice}', 'Admin\NoticeSettingController@getNotice');
     Route::post('/users/{user}/notifications', 'Admin\NoticeSettingController@store');
     Route::put('/users/{user}/notifications/{notification}', 'Admin\NoticeSettingController@update');
     Route::delete('/users/{user}/notifications/{notification}', 'Admin\NoticeSettingController@destroy');
-    
+
     Route::get('/analytics', 'AnalyticsController@index');
     Route::get('/analytics/none', 'AnalyticsController@none');
 
@@ -236,6 +236,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/models_options', 'Admin\ModelsController@models_options')->name('admin.models_options');
     Route::get('/models_with_fields_options', 'Admin\ModelsController@models_with_fields_options')
       ->name('admin.models_with_fields_options');
+
+    /**
+    * Получить записи из модели по её Id
+    */
+    Route::get('/models/{model_id}/records', 'Admin\ModelsController@getRecordsByModel');
 
     /**
      * Маршруты для проверки на уникальность имени

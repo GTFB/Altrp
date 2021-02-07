@@ -1691,4 +1691,17 @@ class ModelsController extends HttpController
         $response = $record->delete();
         return response()->json(['success' => $response], 200, [], JSON_UNESCAPED_UNICODE);
     }
+
+    /**
+     * Получение записей по ID модели
+     * @param $model_id
+     * @return mixed
+     */
+    public function getRecordsByModel($model_id)
+    {
+        $model = Model::find($model_id);
+        $modelClass = '\\' . $model->namespace;
+        $records = $modelClass::all();
+        return $records;
+    }
 }

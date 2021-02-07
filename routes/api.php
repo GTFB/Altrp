@@ -36,7 +36,7 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::post('/users/{user}/notifications', 'Admin\NoticeSettingController@store');
         Route::put('/users/{user}/notifications/{notification}', 'Admin\NoticeSettingController@update');
         Route::delete('/users/{user}/notifications/{notification}', 'Admin\NoticeSettingController@destroy');
-    
+
         Route::get('/templates', "Constructor\Templates@getTemplates");
         Route::get('/templates/{template}', "Constructor\Templates@getTemplate");
         Route::post('/templates', "Constructor\Templates@insert");
@@ -76,6 +76,12 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::resource( 'templates', 'TemplateController' );
         Route::resource( 'robots', 'RobotController' );
         Route::resource( 'sql_editors', 'Admin\SQLEditorController' );
+
+        /**
+         * Получить записи из модели по её Id
+         */
+        Route::get('/models/{model_id}/records', 'Admin\ModelsController@getRecordsByModel');
+
         /**
          * Маршруты для проверки на уникальность имени
          */
