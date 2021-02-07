@@ -8,6 +8,8 @@ import Send from "./data/Send"
 import Crud from "./data/Crud"
 import store from "../../store/store"
 import {setUpdatedNode} from "../../store/robot-settings/actions"
+import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
+
 
 export default class SelectedPanel extends React.Component {
   constructor(props) {
@@ -19,8 +21,22 @@ export default class SelectedPanel extends React.Component {
     selected.data.label = e.target.value;
     store.dispatch(setUpdatedNode(selected));
   }
+
+  changeSelect = e =>{
+    let selected = this.props.selected;
+    selected.data.props.nodeData.type = e.value;
+    selected.data.props.nodeData.data = {};
+    store.dispatch(setUpdatedNode(selected));
+  }
   
   render() {
+    const typeOptions = [
+      {label:'Send Mail', value: 'send_mail'},
+      {label:'Send Notification', value: 'send_notification'},
+      {label:'CRUD', value: 'crud'}
+    ];
+    const typeAction = this.props.selected.data?.props?.nodeData?.type ?? '';
+    // console.log(this.props.selected);
     return (
       <div className="panel settings-panel d-flex">
         <div className="settings-controllers">
@@ -44,8 +60,15 @@ export default class SelectedPanel extends React.Component {
                       ></input>
                     </div>
                     {(this.props.selected?.type === "action") && <div>
-                        <Send selected={this.props.selected || []}/>
-                        <Crud selected={this.props.selected || []}/>
+                      <div className="controller-container controller-container_textarea">
+                          <div className="controller-container__label">Method</div>
+                          <AltrpSelect id="type-action"
+                                          value={_.filter(typeOptions, item => typeAction === item.value)}
+                                          onChange={e => {this.changeSelect(e)}}
+                                          options={typeOptions} />
+                      </div>
+                        {/* <Send selected={this.props.selected || []}/> */}
+                        {(this.props.selected?.data?.props?.nodeData?.type === "crud") && <Crud selected={this.props.selected || []}/>}
                       </div>}
                   </div>
                 ) : (

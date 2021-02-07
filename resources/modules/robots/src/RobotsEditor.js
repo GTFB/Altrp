@@ -53,7 +53,7 @@ class RobotsEditor extends Component {
 
     const robotId = new URL(window.location).searchParams.get("robot_id");
     const robot = await this.resource.get(robotId);
-    const data = JSON.parse(robot.data);
+    const data = JSON.parse(robot.chart) ?? [];
     store.dispatch(setRobotSettingsData(data));
   }
 
@@ -98,7 +98,7 @@ class RobotsEditor extends Component {
 
   // Получение id нового элемента (ноды)
   getId() {
-    const lengthStore = store.getState().robotSettingsData.length;
+    const lengthStore = store.getState().robotSettingsData?.length ?? 0;
     return lengthStore + 1;
   }
 

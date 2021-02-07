@@ -17,10 +17,11 @@ export default class WidgetsPanel extends React.Component {
     const item = store.getState()?.robotSettingsData;
     let node = true;
 
-    item.map(el =>{
-      if(el.type === type) node = false;
-    });
-
+    if (_.isArray(item)) {
+      item.map(el =>{
+        if(el.type === type) node = false;
+      });
+    }
     return node;
   }
 

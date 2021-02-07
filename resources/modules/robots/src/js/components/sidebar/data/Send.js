@@ -46,10 +46,24 @@ class Send extends Component{
         store.dispatch(setUpdatedNode(node));
     }
 
+      // Изменение положения переключателя
+    toggle() {
+        const node = this.props.selected;
+        node.data.props.nodeData.map( item => {
+            if(item.type === "send_notice") item.data[type] = value;
+            return item;
+        });
+
+
+        // let checked = store.getState().websocketStore?.enabled ? 0 : 1 ;
+        // this.submitHandler(checked);
+    }
+
+
     render(){
         return <div>
-            <SendEmail onSendMail={this.onSendMail} emailData={this.getData("send_mail")}/>
-            <SendNotice onSendNotice={this.onSendNotice} noticeData={this.getData("send_notice")}/>
+            {(this.props.selected?.nodeData.type === "send_mail") && <SendEmail toggle={this.toggle} onSendMail={this.onSendMail} emailData={this.getData("send_mail")}/>}
+            {(this.props.selected?.nodeData.type === "send_notification") && <SendNotice toggle={this.toggle} onSendNotice={this.onSendNotice} noticeData={this.getData("send_notice")}/>}
         </div>
     }
 }

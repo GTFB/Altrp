@@ -478,7 +478,7 @@ class ModelsController extends HttpController
             ], 500, [], JSON_UNESCAPED_UNICODE);
         $model = Model::where('name', $name)->first();
         return response()->json([
-            'taken' => !$model,
+            'taken' => $model,
         ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
