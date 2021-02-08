@@ -301,10 +301,32 @@ class Table extends BaseElement {
       nullable: true,
     });
 
+    repeater.addControl("column_cell_content_type", {
+      type: CONTROLLER_SELECT,
+      label: 'Content Type',
+      options: [
+        {
+          label: 'Text / Link',
+          value: '',
+        },
+        {
+          label: 'Email',
+          value: 'email',
+        },
+        {
+          label: 'Phone',
+          value: 'phone',
+        }
+      ],
+    });
+
     repeater.addControl('column_link', {
       label: 'Link Template',
       dynamic: false,
       description: '/path/:id',
+      conditions: {
+        'column_cell_content_type': 'link',
+      },
     });
 
     repeater.addControl('column_width', {
