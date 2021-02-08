@@ -67,7 +67,7 @@ const DynamicPieChart = ({
             dataSource = _.sortBy(dataSource, ["id"]);
             break;
           default:
-            data = data;
+            dataSource = dataSource;
             break;
         }
       }
