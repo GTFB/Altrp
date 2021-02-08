@@ -28,7 +28,9 @@ const DynamicBarChart = ({
   tickRotation = 0,
   bottomAxis = true,
   enableGridX = true,
-  enableGridY = true
+  enableGridY = true,
+  customColorSchemeChecker = false,
+  customColors = []
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -78,7 +80,9 @@ const DynamicBarChart = ({
   if (isLoading) return <Spinner />;
 
   if (data.length === 0) return <EmptyWidget />;
-
+  console.log("====================================");
+  console.log(colorScheme);
+  console.log("====================================");
   return (
     <>
       <div style={{ height: `${height}px` }}>
@@ -87,7 +91,11 @@ const DynamicBarChart = ({
           margin={{ top: 50, right: 180, bottom: 50, left: 60 }}
           indexBy="key"
           colors={
-            colorScheme === "regagro" ? regagroScheme : { scheme: colorScheme }
+            customColorSchemeChecker && customColors.length > 0
+              ? customColors
+              : colorScheme === "regagro"
+              ? regagroScheme
+              : { scheme: colorScheme }
           }
           colorBy="index"
           layout={layout}

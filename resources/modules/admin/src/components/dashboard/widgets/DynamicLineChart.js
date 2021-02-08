@@ -43,11 +43,13 @@ const DynamicLineChart = ({
   tickRotation = 0,
   bottomAxis = true,
   enableGridX = true,
-  enableGridY = true
+  enableGridY = true,
+  customColorSchemeChecker = false,
+  customColors = [],
+  constantsAxises = []
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
-
   const markers = () => {
     let markerY = {};
     let markerX = {};
@@ -187,7 +189,7 @@ const DynamicLineChart = ({
               : { type: xScaleType }
           }
           lineWidth={lineWidth}
-          markers={markers()}
+          markers={constantsAxises}
           enableGridX={enableGridX}
           enableGridY={enableGridY}
           axisBottom={
@@ -207,7 +209,11 @@ const DynamicLineChart = ({
           pointSize={pointSize}
           curve={curve}
           colors={
-            colorScheme === "regagro" ? regagroScheme : { scheme: colorScheme }
+            customColorSchemeChecker && customColors.length > 0
+              ? customColors
+              : colorScheme === "regagro"
+              ? regagroScheme
+              : { scheme: colorScheme }
           }
           pointColor={
             typeof pointColor !== "undefined" && pointColor !== null

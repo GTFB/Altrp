@@ -72,6 +72,7 @@ class Diagram extends BaseElement {
 
     this.addControl("key_is_date", {
       dynamic: false,
+      default: false,
       label: "Key has Date format?",
       type: CONTROLLER_SWITCHER
     });
@@ -115,7 +116,6 @@ class Diagram extends BaseElement {
         }
       }
     });
-
     let repeater = new Repeater();
     repeater.addControl("title", {
       label: "Title",
@@ -139,6 +139,13 @@ class Diagram extends BaseElement {
       label: "Использовать множественные данные?",
       default: false
     });
+
+    // this.addControl("keysIsDate", {
+    //   label: "Ключи как дата",
+    //   type: CONTROLLER_SWITCHER,
+    //   default: false,
+    //   dynamic: false
+    // });
 
     this.addControl("rep", {
       type: CONTROLLER_REPEATER,
@@ -474,7 +481,7 @@ class Diagram extends BaseElement {
         type: LINE
       }
     });
-
+    /*
     this.addControl("yMarker", {
       type: CONTROLLER_SWITCHER,
       label: "Нормаль по Y",
@@ -617,6 +624,143 @@ class Diagram extends BaseElement {
         xMarker: true,
         type: LINE
       }
+    });
+    */
+    this.endControlSection();
+
+    this.startControlSection("axisConstants", {
+      tab: TAB_STYLE,
+      label: "Axis constatns (ONLY LINE AND SCATTER CHART!)"
+    });
+    let repeaterY = new Repeater();
+
+    repeaterY.addControl("yMarkerLabel", {
+      type: CONTROLLER_TEXT,
+      label: "Label Y",
+      dynamic: false
+    });
+    repeaterY.addControl("yMarkerValue", {
+      type: CONTROLLER_TEXT,
+      label: "Value Y (only numbers)",
+      dynamic: false
+    });
+    repeaterY.addControl("yMarkerOrientation", {
+      type: CONTROLLER_SELECT,
+      label: "Orientation Y",
+      default: "vertical",
+      options: [
+        { id: 0, value: "vertical", label: "Vertical" },
+        { id: 1, value: "horizontal", label: "Horizontal" }
+      ],
+      dynamic: false
+    });
+
+    repeaterY.addControl("yMarkerColor", {
+      type: CONTROLLER_COLOR,
+      label: "Color Y",
+      dynamic: false
+    });
+
+    repeaterY.addControl("yMarkerLabelColor", {
+      type: CONTROLLER_COLOR,
+      label: "Label color Y",
+      dynamic: false
+    });
+
+    repeaterY.addControl("yMarkerWidth", {
+      type: CONTROLLER_NUMBER,
+      label: "Width Y",
+      dynamic: false
+    });
+
+    //Y AXIS
+    this.addControl("axisY", {
+      label: "AXIS Y",
+      type: CONTROLLER_REPEATER,
+      default: [],
+      fields: repeaterY.getControls()
+    });
+
+    let repeaterX = new Repeater();
+
+    repeaterX.addControl("xMarkerLabel", {
+      type: CONTROLLER_TEXT,
+      label: "Label X",
+      dynamic: false
+    });
+
+    repeaterX.addControl("xMarkerIsDate", {
+      type: CONTROLLER_SWITCHER,
+      default: false,
+      label: "Value X is Date",
+      dynamic: false
+    });
+    repeaterX.addControl("xMarkerValue", {
+      type: CONTROLLER_TEXT,
+      label: "Value X (only numbers or dates)",
+      dynamic: false
+    });
+    repeaterX.addControl("xMarkerOrientation", {
+      type: CONTROLLER_SELECT,
+      label: "Orientation X",
+      default: "vertical",
+      options: [
+        { id: 0, value: "vertical", label: "Vertical" },
+        { id: 1, value: "horizontal", label: "Horizontal" }
+      ],
+      dynamic: false
+    });
+
+    repeaterX.addControl("xMarkerColor", {
+      type: CONTROLLER_COLOR,
+      label: "Color X",
+      dynamic: false
+    });
+
+    repeaterX.addControl("xMarkerLabelColor", {
+      type: CONTROLLER_COLOR,
+      label: "Label color X",
+      dynamic: false
+    });
+
+    repeaterX.addControl("xMarkerWidth", {
+      type: CONTROLLER_NUMBER,
+      label: "Width X",
+      dynamic: false
+    });
+    //X AXIS
+    this.addControl("axisX", {
+      label: "AXIS X",
+      type: CONTROLLER_REPEATER,
+      default: [],
+      fields: repeaterX.getControls()
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("custom_color_scheme", {
+      tab: TAB_STYLE,
+      label: "Custom color scheme"
+    });
+
+    let repeaterScheme = new Repeater();
+
+    repeaterScheme.addControl("color", {
+      label: "Color",
+      type: CONTROLLER_COLOR,
+      dynamic: false
+    });
+
+    this.addControl("isCustomColor", {
+      type: CONTROLLER_SWITCHER,
+      label: "Use custom color scheme?",
+      default: false
+    });
+
+    this.addControl("customScheme", {
+      type: CONTROLLER_REPEATER,
+      default: [],
+      fields: repeaterScheme.getControls()
     });
 
     this.endControlSection();
