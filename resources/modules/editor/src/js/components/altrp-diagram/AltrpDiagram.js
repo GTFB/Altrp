@@ -23,6 +23,8 @@ const AltrpDiagram = ({ settings }) => {
     _.get(item, "color.colorPickedHex")
   );
 
+  const yScaleMax = settings?.yScaleMax;
+
   const axisY = settings?.axisY;
   const formattedYAxis =
     axisY?.map(item => {
@@ -293,6 +295,7 @@ const AltrpDiagram = ({ settings }) => {
     case LINE:
       return (
         <DynamicLineChart
+          yScaleMax={yScaleMax}
           customColorSchemeChecker={customColorSchemeChecker}
           customColors={customColors}
           widget={widget}
@@ -332,6 +335,7 @@ const AltrpDiagram = ({ settings }) => {
     case POINT:
       return (
         <DynamicPointChart
+          yScaleMax={yScaleMax}
           customColorSchemeChecker={customColorSchemeChecker}
           customColors={customColors}
           dataSource={data}
@@ -351,6 +355,7 @@ const AltrpDiagram = ({ settings }) => {
     case BAR:
       return (
         <DynamicBarChart
+          yScaleMax={yScaleMax}
           customColorSchemeChecker={customColorSchemeChecker}
           customColors={customColors}
           isMultiple={isMultiple}
@@ -375,6 +380,7 @@ const AltrpDiagram = ({ settings }) => {
     case PIE:
       return (
         <DynamicPieChart
+          yScaleMax={yScaleMax}
           customColorSchemeChecker={customColorSchemeChecker}
           customColors={customColors}
           isMultiple={isMultiple}

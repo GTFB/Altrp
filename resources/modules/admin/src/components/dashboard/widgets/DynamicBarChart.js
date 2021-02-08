@@ -30,7 +30,8 @@ const DynamicBarChart = ({
   enableGridX = true,
   enableGridY = true,
   customColorSchemeChecker = false,
-  customColors = []
+  customColors = [],
+  yScaleMax
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);

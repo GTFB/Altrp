@@ -46,7 +46,8 @@ const DynamicLineChart = ({
   enableGridY = true,
   customColorSchemeChecker = false,
   customColors = [],
-  constantsAxises = []
+  constantsAxises = [],
+  yScaleMax
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -183,6 +184,16 @@ const DynamicLineChart = ({
           data={data}
           margin={{ top: 50, right: 180, bottom: 50, left: 60 }}
           xFormat={xScaleType === "time" && "time:%d.%m.%Y"}
+          yScale={
+            yScaleMax
+              ? {
+                  max: yScaleMax,
+                  type: "linear"
+                }
+              : {
+                  type: "linear"
+                }
+          }
           xScale={
             xScaleType === "time"
               ? { type: xScaleType, format: format, precision: precision }

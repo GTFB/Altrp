@@ -189,6 +189,11 @@ class Diagram extends BaseElement {
       options: colors
     });
 
+    this.addControl("yScaleMax", {
+      type: CONTROLLER_NUMBER,
+      label: "Y scale max"
+    });
+
     this.addControl("bottomAxis", {
       type: CONTROLLER_SWITCHER,
       label: "Отобразить нижнюю легенду",

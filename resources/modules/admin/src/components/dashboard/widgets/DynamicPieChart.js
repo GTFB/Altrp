@@ -27,7 +27,8 @@ const DynamicPieChart = ({
   keyIsDate = false,
   isDashboard = false,
   customColorSchemeChecker = false,
-  customColors = []
+  customColors = [],
+  yScaleMax
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
