@@ -436,6 +436,30 @@ class Table extends BaseElement {
       },
     });
 
+    repeater.addControl('column_text_filter_type', {
+      type: CONTROLLER_SELECT,
+      label: 'Text Match',
+      nullable: true,
+      options: [
+        {
+          label: 'Fuzzy Text Match',
+          value: 'fuzzy_match',
+        },
+        {
+          label: 'Full Match',
+          value: 'full_match',
+        },
+        {
+          label: 'Partial Match',
+          value: 'partial_match',
+        },
+      ],
+      responsive: false,
+      conditions: {
+        'column_filter_type': 'text',
+      },
+    });
+
     repeater.addControl('filter_placeholder', {
       label: 'Placeholder',
       conditions: {

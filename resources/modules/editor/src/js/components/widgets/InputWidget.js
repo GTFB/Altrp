@@ -132,6 +132,7 @@ class InputWidget extends Component {
     /**
      * Если динамическое значение загрузилось,
      * то используем this.getContent для получение этого динамического значения
+     * старые динамические данные
      * */
     if (
       _.get(value, "dynamic") &&
@@ -147,7 +148,7 @@ class InputWidget extends Component {
      */
     if (
       prevProps &&
-      !prevProps.currentModel.getProperty("altrpModelUpdated") &&
+      ! prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
       value = this.getContent("content_default_value");
@@ -162,7 +163,7 @@ class InputWidget extends Component {
     if (
       this.props.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
-      !this.state.contentLoaded
+      ! this.state.contentLoaded
     ) {
       value = this.getContent("content_default_value");
       this.setState(
@@ -238,10 +239,10 @@ class InputWidget extends Component {
       }
     }
     /**
-     * Если обновилась модель, то пробрасываем в стор новое значение
+     * Если обновилась модель, то пробрасываем в стор новое значение (старый источник диамических данных)
      */
     if (
-      !_.isEqual(this.props.currentModel, prevProps.currentModel) &&
+      ! _.isEqual(this.props.currentModel, prevProps.currentModel) &&
       this.state.value &&
       this.state.value.dynamic
     ) {
@@ -260,8 +261,6 @@ class InputWidget extends Component {
     }
     if (content_options && !model_for_options) {
       let options = parseOptionsFromSettings(content_options);
-      // console.log(options);
-      // console.log(this.state.options);
       if (!_.isEqual(options, this.state.options)) {
         this.setState(state => ({ ...state, options }));
       }
@@ -280,16 +279,26 @@ class InputWidget extends Component {
     let content_calculation = this.props.element.getSettings(
       "content_calculation"
     );
-    if (! content_calculation) {
-      return;
-    }
+    const altrpforms = this.props.formsStore;
     const fieldName = this.props.element.getFieldId();
     const formId = this.props.element.getFormId();
+    if (! content_calculation) {
+      /**
+       * Обновить значение, если formsStore изменилось из другого компонента
+       */
+      const path = `${formId}.${fieldName}`;
+      if((this.props.formsStore !== prevProps.formsStore) && _.get(altrpforms, path) !== this.state.value){
+        this.setState(state=>({
+            ...state,
+          value: _.get(altrpforms, path),
+        }))
+      }
+      return;
+    }
 
     const prevContext = {};
 
     const altrpdata = this.props.currentDataStorage.getData();
-    const altrpforms = this.props.formsStore;
     const altrpmodel = this.props.currentModel.getData();
     const altrpuser = this.props.currentUser.getData();
     const altrppagestate = this.props.altrpPageState.getData();
@@ -467,7 +476,7 @@ class InputWidget extends Component {
     }
     if (
       this.props.element.getSettings("content_options_nullable") &&
-      e.value === "<null>"
+      e && e.value === "<null>"
     ) {
       value = null;
     }

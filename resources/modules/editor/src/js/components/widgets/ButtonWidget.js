@@ -200,8 +200,6 @@ class ButtonWidget extends Component {
       ? link_link.url.replace(":id", this.getModelId() || "")
       : "";
     if (_.isObject(this.props.currentModel)) {
-      // console.log(this.props.currentModel);
-      // console.log(link_link.url);
       url = parseURLTemplate(link_link.url || "", modelData);
     }
 

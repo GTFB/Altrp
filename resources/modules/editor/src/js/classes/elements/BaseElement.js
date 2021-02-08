@@ -344,7 +344,7 @@ class BaseElement extends ControlStack {
    */
   getSettings(settingName, _default = '') {
     this._initDefaultSettings();
-    if (!settingName) {
+    if (! settingName) {
       return _.cloneDeep(this.settings);
     }
     if (this.settings[settingName] === undefined) {
@@ -388,7 +388,7 @@ class BaseElement extends ControlStack {
   setSettingValue(settingName, value, fromHistory = false) {
     //check change value
     if(this.settings[settingName] !== value) {
-      if (!fromHistory)
+      if (! fromHistory)
         store.dispatch(
           addHistoryStoreItem("EDIT", {
             element: this,
@@ -397,6 +397,7 @@ class BaseElement extends ControlStack {
             settingName
           })
         );
+      this.settings = {...this.settings};
       this.settings[settingName] = value;
       if (this.component) {
         this.component.changeSetting(settingName, value);

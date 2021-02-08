@@ -17,7 +17,9 @@ import './sass/editor-content.scss';
 import 'react-image-lightbox/style.css';
 import {changeCurrentModel} from "../../front-app/src/js/store/current-model/actions";
 import FontsManager from "../../front-app/src/js/components/FontsManager";
-
+import  { StyleSheetManager } from 'styled-components';
+import {HTML5Backend} from "react-dnd-html5-backend";
+import { DndProvider, } from 'react-dnd'
 class EditorContent extends Component {
   constructor(props) {
     super(props);
@@ -54,11 +56,14 @@ class EditorContent extends Component {
   onClick(e) {
     contextMenu.hideAll();
   }
-
   render() {
     return <Provider store={store}>
+      <StyleSheetManager target={EditorFrame.contentWindow.document.getElementsByTagName(
+          "head"
+      )[0]}>
       <Router>
-        <div className="editor-content d-flex flex-column justify-center align-content-center"
+        <DndProvider backend={HTML5Backend}>
+          <div className="editor-content d-flex flex-column justify-center align-content-center"
             onClick={this.onClick}
                     ref={this.editorWindow}>
           {
@@ -69,11 +74,13 @@ class EditorContent extends Component {
                 }
             ) : ''
           }
-          <NewSection />
-        </div>
+            <NewSection />
+          </div>
+        </DndProvider>
         <Styles/>
         <ElementContextMenu/>
       </Router>
+      </StyleSheetManager>
       <FontsManager />
     </Provider>;
   }

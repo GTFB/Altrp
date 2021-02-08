@@ -11,6 +11,7 @@ import L from "leaflet";
 import { iconTypes, customIcon } from "./DivIcon";
 import tooltipOptions from "./helpers/tooltipOptions";
 import axios from "axios";
+import Slider from "@material-ui/core/Slider";
 
 const ModalControl = forwardRef(
   (
@@ -25,7 +26,8 @@ const ModalControl = forwardRef(
       updateGeoObjectToModel,
       url_connect = null,
       field_first_connect = null,
-      field_second_connect = null
+      field_second_connect = null,
+      id
     },
     ref
   ) => {
@@ -125,13 +127,13 @@ const ModalControl = forwardRef(
       }
     };
 
-    const handleFillOpacity = event => {
-      setProperties({ ...properties, fillOpacity: event.target.value });
+    const handleFillOpacity = value => {
+      setProperties({ ...properties, fillOpacity: value });
       const layer = getLayer();
       if (layer instanceof L.Marker) {
-        layer.setOpacity(event.target.value);
+        layer.setOpacity(value);
       } else {
-        layer.setStyle({ fillOpacity: event.target.value });
+        layer.setStyle({ fillOpacity: value });
       }
     };
 
@@ -434,10 +436,11 @@ const ModalControl = forwardRef(
         getLayoutData();
       }
     }, [selected, url_connect, field_first_connect, field_second_connect]);
+    console.log(properties);
     return (
       <div className="altrp-map__modal modal">
         <div className={!open ? "modal__body" : "modal__body open"}>
-          <h3>Настройки</h3>
+          <h3 className={`${id} altrp-custom--typographic`}>Настройки</h3>
           <div className="modal__body-text">
             <label>
               Подпись
@@ -508,14 +511,22 @@ const ModalControl = forwardRef(
             <div className="modal__body-text">
               <label>
                 Прозрачность заливки
-                <input
+                <Slider
+                className={`${id} altrp-dashboard__edit--range-edit-color`}
+                defaultValue={properties.fillOpacity}
+                onChange={(e, newValue) => handleFillOpacity(newValue)}
+                min={0.1}
+                max={1.0}
+                step={0.1}
+              />
+                {/* <input
                   type="range"
                   min="0.1"
                   step="0.1"
                   max="1.0"
                   value={properties.fillOpacity}
                   onChange={handleFillOpacity}
-                />
+                /> */}
               </label>
             </div>
           )}
@@ -528,7 +539,7 @@ const ModalControl = forwardRef(
             <div className="col">
               <button
                 type="button"
-                className="modal__body-save"
+                className={`${id} modal__body-save`}
                 style={{
                   width: "100%"
                 }}
@@ -540,7 +551,7 @@ const ModalControl = forwardRef(
             <div className="col">
               <button
                 type="button"
-                className="modal__body-save"
+                className={`${id} modal__body-save`}
                 style={{
                   width: "100%"
                 }}

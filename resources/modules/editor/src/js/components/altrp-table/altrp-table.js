@@ -4,8 +4,6 @@ import {useQuery, usePaginatedQuery, queryCache} from  "react-query";
 import '../../../sass/altrp-pagination.scss';
 import {Link} from "react-router-dom";
 import {
-  extractPathFromString,
-  getDataByPath, getObjectByPrefix,
   isEditor, mbParseJSON,
   parseURLTemplate, renderAsset, replaceContentWithData
 } from "../../../../../front-app/src/js/helpers";

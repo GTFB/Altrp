@@ -13,6 +13,7 @@
 @import "default-styles";
 @import "./altrp-image-select.scss";
 @import "./history-panel.scss";
+@import "../../../../sass/ckeditor.scss";
 
 .editor {
     display: flex;
@@ -156,7 +157,7 @@ button {
             border-radius: 0 2px 2px 0;
         }
     }
-    &.control-group_single .btn:nth-child(n){
+    &.control-group_single .btn:nth-child(n) {
         border-radius: 2px;
     }
 }
@@ -511,8 +512,8 @@ button {
     width: 100%;
     margin-bottom: 5px;
 }
-.controller-media__asset_svg{
-  height: 100%;
+.controller-media__asset_svg {
+    height: 100%;
 }
 .controller-media {
     &-choose {
@@ -1840,8 +1841,8 @@ button {
     min-height: 1px;
 }
 
-.editor-content{
-  & .altrp-posts{
-    min-height: 20px;
-  }
+.editor-content {
+    & .altrp-posts {
+        min-height: 20px;
+    }
 }
