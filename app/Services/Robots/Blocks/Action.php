@@ -56,9 +56,19 @@ class Action
         $modelNamespace = $model->parent ? $model->parent->namespace : $model->namespace;
         $modelClass = '\\' . $modelNamespace;
         $method = $this->node->data->props->nodeData->data->method;
-        $id = $this->node->data->props->nodeData->data->record_id;
-        $entity = $modelClass::find($id);
-        return $entity->$method($data);
+        if ($method == 'create') {
+            $entity = new $modelClass($data);
+            $result = $entity->$method($data);
+        } elseif ($method == 'delete') {
+            $id = $this->node->data->props->nodeData->data->record_id;
+            $entity = $modelClass::find($id);
+            $result = $entity->$method();
+        } else {
+            $id = $this->node->data->props->nodeData->data->record_id;
+            $entity = $modelClass::find($id);
+            $result = $entity->$method($data);
+        }
+        return $result;
     }
 
     /**

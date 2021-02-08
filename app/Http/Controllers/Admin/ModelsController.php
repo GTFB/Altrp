@@ -1700,8 +1700,9 @@ class ModelsController extends HttpController
     public function getRecordsByModel($model_id)
     {
         $model = Model::find($model_id);
-        $modelClass = '\\' . $model->namespace;
-        $records = $modelClass::all();
-        return $records;
+        $modelClass = $model->parent
+            ? '\\' . $model->parent->namespace
+            :  '\\' . $model->namespace;
+        return $modelClass::all();
     }
 }

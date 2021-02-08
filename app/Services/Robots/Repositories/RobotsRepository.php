@@ -21,10 +21,20 @@ class RobotsRepository implements RobotsRepositoryInterface
     /**
      * Получить робота указанной модели
      * @param Model $model
-     * @return mixed
+     * @return Robot[]|\Illuminate\Database\Eloquent\Collection
      */
     public function getByModelRobots(Model $model)
     {
         return Robot::where('model_id', $model->id)->get();
+    }
+
+    /**
+     * Получить роботов по типу условия запуска
+     * @param string $type
+     * @return Robot[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getRobotsByStartConditionType(string $type)
+    {
+        return Robot::where('start_condition', $type)->get();
     }
 }

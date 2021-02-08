@@ -59,6 +59,16 @@ class RobotsService
     }
 
     /**
+     * Получить всех роботов, которые привязаны к опредлённому условию запуска
+     * @param string $condition
+     * @return mixed
+     */
+    public function getStartConditionRobots(string $condition)
+    {
+        return $this->robotsRepo->getRobotsByStartConditionType($condition);
+    }
+
+    /**
      * Инициализировать робота
      * @param $robot
      * @return $this
