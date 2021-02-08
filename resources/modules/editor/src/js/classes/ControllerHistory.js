@@ -6,7 +6,7 @@ class ControllerHistory extends AltrpModel {
   undo() {
     console.log('undo')
     let current = window.parent.appStore.getState().historyStore.current;
-    let history = _.cloneDeep(window.parent.appStore.getState().historyStore.history);
+    let history = window.parent.appStore.getState().historyStore.history;
     console.log(history)
     if(current >= 0) {
       let restoreElement = history[current];
@@ -32,7 +32,7 @@ class ControllerHistory extends AltrpModel {
   redo() {
     console.log('redo')
     let current = window.parent.appStore.getState().historyStore.current;
-    let history = _.cloneDeep(window.parent.appStore.getState().historyStore.history);
+    let history = window.parent.appStore.getState().historyStore.history;
     console.log('history: ', history);
     if(history.length - 1 > current) {
       let restoreElement = history[current + 1];

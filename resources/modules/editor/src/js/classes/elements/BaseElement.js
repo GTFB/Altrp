@@ -45,7 +45,6 @@ class BaseElement extends ControlStack {
    * @param settings
    */
   setSettings(settings) {
-    console.log('set Settings', this, settings)
     this.settings = settings || this.settings;
   }
 
@@ -400,7 +399,8 @@ class BaseElement extends ControlStack {
       this.settings[settingName] = value;
       if (this.component) {
         this.component.changeSetting(settingName, value);
-      }      
+      }
+      console.log('set settings value')
     }  
   }
 
