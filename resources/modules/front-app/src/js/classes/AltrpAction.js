@@ -15,7 +15,7 @@ import {
   replaceContentWithData,
   scrollToElement,
   setDataByPath,
-
+  dataToXLS
 } from "../helpers";
 import { togglePopup } from "../store/popup-trigger/actions";
 
@@ -49,7 +49,7 @@ class AltrpAction extends AltrpModel {
    */
   getFormId() {
     let formId = this.getProperty("form_id");
-    if (! formId) {
+    if (!formId) {
       return formId;
     }
     if (formId.indexOf("{{") !== -1) {
@@ -64,7 +64,7 @@ class AltrpAction extends AltrpModel {
    */
   getFormURL() {
     let formURL = this.getProperty("form_url");
-    if (! formURL) {
+    if (!formURL) {
       return formURL;
     }
     if (formURL.indexOf("{{") !== -1) {
@@ -119,7 +119,7 @@ class AltrpAction extends AltrpModel {
   async init() {
     switch (this.getType()) {
       case "form": {
-        if (! this.getFormURL()) {
+        if (!this.getFormURL()) {
           this.setProperty("_form", null);
           return;
         }
@@ -143,11 +143,6 @@ class AltrpAction extends AltrpModel {
         return;
       }
       case "login": {
-        const formsManager = (
-          await import(
-            "../../../../editor/src/js/classes/modules/FormsManager.js"
-          )
-        ).default;
         const form = formsManager.registerForm(
           this.getFormId(),
           "login",
@@ -258,6 +253,9 @@ class AltrpAction extends AltrpModel {
           result = await this.doActionTableToCSV();
         }
         break;
+      case "table_to_xls":
+        result = await this.doActionTableToXLS();
+        break;
       case "login":
         {
           result = await this.doActionLogin();
@@ -281,6 +279,11 @@ class AltrpAction extends AltrpModel {
       case "forms_manipulate":
         {
           result = await this.doActionFormsManipulate();
+        }
+        break;
+      case "custom_code":
+        {
+          result = await this.doActionCustomCode();
         }
         break;
     }
@@ -314,9 +317,9 @@ class AltrpAction extends AltrpModel {
     let data = null;
     if (this.getProperty("data")) {
       data = parseParamsFromString(
-          this.getProperty("data"),
-          getAppContext(),
-          true
+        this.getProperty("data"),
+        getAppContext(),
+        true
       );
       // if (!_.isEmpty(data)) {
       //   return form.submit("", "", data);
@@ -329,8 +332,19 @@ class AltrpAction extends AltrpModel {
         _.get(getDataByPath(this.getProperty("bulk_path")), "length")
       ) {
         let bulk = getDataByPath(this.getProperty("bulk_path"));
-        let _form = this.getProperty("_form");
-        data = _.assign(_form.getData(), data);
+        /**
+         * Для получение данных с полей формы, нужно создать форму и вызвать метод getData
+         * @type {AltrpForm}
+         */
+        const form = formsManager.registerForm(
+            this.getFormId(),
+            "",
+            this.getProperty("form_method"),
+            {
+              customRoute: ''
+            }
+        );
+        data = _.assign(form.getData(), data);
         let bulkRequests = bulk.map(async (item, idx) => {
           // return   ()=>{
           if (this.getProperty("data")) {
@@ -375,7 +389,7 @@ class AltrpAction extends AltrpModel {
     }
     if (this.getProperty("path")) {
       let _data = getDataByPath(this.getProperty("path"), {});
-      if(! _.isEmpty(_data)){
+      if (!_.isEmpty(_data)) {
         data = _.assign(_data, data);
       }
     }
@@ -384,7 +398,7 @@ class AltrpAction extends AltrpModel {
      * @type {AltrpForm}
      */
     // let form = this.getProperty("_form");
-    if (! this.getFormURL()) {
+    if (!this.getFormURL()) {
       this.setProperty("_form", null);
       return {
         success: false
@@ -394,21 +408,22 @@ class AltrpAction extends AltrpModel {
       dynamicURL: true,
       customRoute: this.getFormURL()
     };
-    console.log(formOptions);
     const form = formsManager.registerForm(
       this.getFormId(),
       "",
       this.getProperty("form_method"),
       formOptions
     );
-    console.log(form);
     let result = {
-      success: false
+      success: true
     };
     try {
-      result = await form.submit("", "", data);
+      const response = await form.submit("", "", data);
+      result = _.assign(result, response);
     } catch (error) {
+      console.log(error);
       result.error = error;
+      result.success = false;
     }
 
     return result;
@@ -423,7 +438,7 @@ class AltrpAction extends AltrpModel {
       if (this.getProperty("back")) {
         frontAppRouter.history.goBack();
       } else {
-        let innerRedirect = ! this.getProperty("outer");
+        let innerRedirect = !this.getProperty("outer");
         if (innerRedirect) {
           frontAppRouter.history.push(URL);
         } else {
@@ -645,6 +660,40 @@ class AltrpAction extends AltrpModel {
     }
   }
   /**
+   * HTML-таблицу в XLS-файл
+   * @return {Promise}
+   */
+  async doActionTableToXLS() {
+    const elementId = this.getProperty("element_id").trim();
+    if (!elementId) {
+      console.error("Element ID is not set");
+      return { success: true };
+    }
+
+    const table = getHTMLElementById(elementId);
+    if (!table) {
+      console.error("Table with provided ID is not found");
+      return { success: true };
+    }
+
+    const data = dataFromTable(table);
+    const filename = replaceContentWithData(this.getProperty("name", "file'"));
+
+    try {
+      const blob = await dataToXLS(data, filename);
+      let link = document.createElement("a");
+      link.setAttribute("href", window.URL.createObjectURL(blob));
+      link.setAttribute("download", filename + ".xls");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      return { success: true };
+    } catch (error) {
+      console.error(error);
+      return { success: false };
+    }
+  }
+  /**
    * действие-логин
    * @return {Promise<{}>}
    */
@@ -850,6 +899,15 @@ class AltrpAction extends AltrpModel {
           break;
       }
     });
+    return { success: true };
+  }
+  /**
+   * действие - выполнение пользовательского кода
+   * @return {Promise<{}>}
+   */
+  doActionCustomCode() {
+    let code = this.getProperty('code');
+    eval(code);
     return { success: true };
   }
   /**

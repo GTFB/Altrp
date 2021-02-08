@@ -21,7 +21,10 @@ class NavWidget extends Component {
 
     switch (this.state.settings.type_type) {
       case "menu":
-        content = <AltrpMenu modelData={modelData} modelId={this.getModelId()} element={this.props.element}/>;
+        content = <AltrpMenu modelData={modelData}
+                             currentScreen={this.props.currentScreen}
+                             modelId={this.getModelId()}
+                             element={this.props.element}/>;
         break
     }
 

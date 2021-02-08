@@ -1,5 +1,5 @@
 import CONSTANTS from "../../../../editor/src/js/consts";
-import {altrpRandomId, getMediaQueryByName, isEditor, replaceContentWithData} from "../helpers";
+import {altrpRandomId, getMediaQueryByName, getResponsiveSetting, isEditor, replaceContentWithData} from "../helpers";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {addFont} from "../store/fonts-storage/actions";
 
@@ -689,6 +689,28 @@ class FrontElement {
    */
   getDynamicSetting(dynamicSettingName){
     return _.get(this.settings, `altrpDynamicSetting.${dynamicSettingName}`, null);
+  }
+
+  /**
+   * значение настройки в зависимости от разрешения
+   * @param {string} settingName
+   * @param {string} elementState
+   * @param _default
+   * @return {*}
+   */
+  getResponsiveSetting(settingName, elementState = '', _default){
+    // let {currentScreen} = appStore.getState();
+    // if(currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT){
+    //   return this.getSettings(settingName, _default)
+    // }
+    // let suffix = currentScreen.name;
+    // let _settingName = `${settingName}_${suffix}`;
+    // let settings = this.getSettings(_settingName);
+    // if(! settings){
+    //   settings = this.getSettings(settingName);
+    // }
+    // return settings;
+    return getResponsiveSetting(this.getSettings(), settingName, elementState, _default)
   }
 }
 

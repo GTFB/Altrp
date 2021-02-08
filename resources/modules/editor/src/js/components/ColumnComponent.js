@@ -28,13 +28,24 @@ class ColumnComponent extends Component {
     redirect(columnLink, e, this.props.element.getCurrentModel().getData());
   };
 
+  /**
+   * Курсор для ссылки
+   * @return {boolean}
+   */
+  columnIsLink(){
+    return ! ! _.get(this, 'props.element.settings.link_link.url');
+  }
+
   render(){
     const background_image = this.props.element.getSettings('background_image', {});
     let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
-
+    let className = "altrp-column " + (this.state.settings.position_style_css_classes || "") + (background_image.url ? ' altrp-background-image' : '');
+    if(this.columnIsLink()){
+      className += ' altrp-pointer';
+    }
     return React.createElement(this.state.settings.layout_html_tag || "div",
       {
-        className: "altrp-column " + (this.state.settings.position_style_css_classes || "") + (background_image.url ? ' altrp-background-image' : ''),
+        className ,
         id :this.state.settings.position_style_css_id || "",
         onClick: this.onClick,
       },

@@ -37,6 +37,7 @@ class ElementWrapper extends Component {
       this.props.element.update();
       this.props.element.updateFonts();
     }
+    this.checkElementDisplay();
   }
   /**
    * Подписываемся на обновление store редакса
@@ -113,7 +114,7 @@ class ElementWrapper extends Component {
      * @member {FrontElement} element
      */
     const { element } = this.props;
-    if (!element.getSettings("conditional_other")) {
+    if (! element.getSettings("conditional_other")) {
       return;
     }
     let conditions = element.getSettings("conditions", []);
@@ -140,9 +141,10 @@ class ElementWrapper extends Component {
       return;
     }
 
-    this.setState({
+    this.setState(state => ({
+        ...state,
       elementDisplay
-    });
+    }));
   }
 
   /**
@@ -151,7 +153,7 @@ class ElementWrapper extends Component {
   toggleElementDisplay() {
     this.setState(state => ({
       ...state,
-      elementDisplay: !state.elementDisplay
+      elementDisplay: ! state.elementDisplay
     }));
   }
   /**
@@ -238,7 +240,7 @@ class ElementWrapper extends Component {
       );
     }
     const styles = {};
-    if (!this.state.elementDisplay) {
+    if (! this.state.elementDisplay) {
       styles.display = "none";
     }
     const CSSId = this.props.element.getSettings("advanced_element_id", "");
@@ -266,6 +268,7 @@ class ElementWrapper extends Component {
           altrpPageState: this.props.altrpPageState,
           altrpMeta: this.props.altrpMeta,
           updateToken: this.state.updateToken,
+          currentScreen: this.props.currentScreen,
           appStore
         })}
       </div>
@@ -282,7 +285,8 @@ function mapStateToProps(state) {
     currentModel: state.currentModel,
     currentUser: state.currentUser,
     altrpMeta: state.altrpMeta,
-    altrpPageState: state.altrpPageState
+    altrpPageState: state.altrpPageState,
+    currentScreen: state.currentScreen,
   };
 }
 

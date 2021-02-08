@@ -15,6 +15,7 @@ import queryString from "query-string";
 import AltrpSVG from "../../../editor/src/js/components/altrp-svg/AltrpSVG";
 import ArrayConverter from "./classes/converters/ArrayConverter";
 import DataConverter from "./classes/converters/DataConverter";
+import {changeFormFieldValue} from "./store/forms-data-storage/actions";
 
 export function getRoutes() {
   return import("./classes/Routes.js");
@@ -79,7 +80,7 @@ export function parseOptionsFromSettings(string) {
       value = getDataByPath(valuePath);
     }
     let label = option.split("|")[1] || value || "";
-    (!_.isString(label)) && (label = '');
+    !_.isString(label) && (label = "");
     label = label.trim();
     let labelPath = extractPathFromString(label);
     if (labelPath) {
@@ -145,6 +146,9 @@ export function getCurrentBreakpoint() {
 export function parseURLTemplate(URLTemplate = "", object = {}) {
   let url = URLTemplate;
   let protocol = "";
+  if(! isEditor()){
+    object = _.assign(_.cloneDeep(currentRouterMatch.getProperty('params')), object);
+  }
   url = url.trim();
   if (url.indexOf("https://") === 0) {
     protocol = "https://";
@@ -156,7 +160,7 @@ export function parseURLTemplate(URLTemplate = "", object = {}) {
   }
   // columnEditUrl = columnEditUrl.replace(':id', row.original.id);
   let idTemplates = url.match(/:([\s\S]+?)(\/|$)/g);
-  if (!idTemplates) {
+  if (! idTemplates) {
     return protocol + url;
   }
   idTemplates.forEach(idTemplate => {
@@ -179,7 +183,7 @@ export function getWindowWidth() {
 
 export function renderAssetIcon(asset, props = null) {
   if (asset) {
-    if(asset.url && asset.type === 'svg') {
+    if (asset.url && asset.type === "svg") {
       return <AltrpSVG {...props} url={asset.url} />;
     }
     switch (asset.assetType) {
@@ -194,7 +198,7 @@ export function renderAssetIcon(asset, props = null) {
       }
     }
   }
-  return  '';
+  return "";
 }
 
 /**
@@ -204,7 +208,7 @@ export function renderAssetIcon(asset, props = null) {
  * @throws Исключение если иконка не найдена
  * */
 export function renderAsset(asset, props = null) {
-  if(asset.url && asset.type === 'svg') {
+  if (asset.url && asset.type === "svg") {
     return <AltrpSVG {...props} url={asset.url} />;
   }
   if (asset instanceof File) {
@@ -262,7 +266,7 @@ export function parseParamsFromString(
   context = {},
   allowObject = false
 ) {
-  if(! (context instanceof AltrpModel)){
+  if (!(context instanceof AltrpModel)) {
     context = new AltrpModel(context);
   }
   const params = {};
@@ -271,7 +275,7 @@ export function parseParamsFromString(
       ? window.currentRouterMatch.getProperty("params")
       : {};
 
-  if (! string) {
+  if (!string) {
     return params;
   }
   const lines = string.split("\n");
@@ -331,7 +335,7 @@ export function conditionsChecker(
       result += conditionChecker(c, model, dataByPath);
     }
   });
-  return result;
+  return ! ! result;
 }
 
 /**
@@ -392,6 +396,7 @@ export function setDataByPath(path = "", value, dispatch = null) {
     return false;
   }
   path = path.replace("{{", "").replace("}}", "");
+  path = path.trim();
   switch (value) {
     case "true":
       value = true;
@@ -455,6 +460,20 @@ export function setDataByPath(path = "", value, dispatch = null) {
     }
     return true;
   }
+  if (path.indexOf("altrpforms.") === 0) {
+    path = path.replace("altrpforms.", "");
+    if (!path) {
+      return false;
+    }
+    const [formId, fieldName] = path.split('.');
+    const {formsStore} = appStore.getState();
+
+    const oldValue = _.get(formsStore, path);
+    if (_.isEqual(oldValue, value)) {
+      return true;
+    }
+    appStore.dispatch(changeFormFieldValue(fieldName, value, formId, true))
+  }
   return false;
 }
 
@@ -475,8 +494,8 @@ export function getDataByPath(
   if (! path) {
     return _default;
   }
-  if(path.indexOf('{{') !== -1){
-    path = replaceContentWithData(path, context)
+  if (path.indexOf("{{") !== -1) {
+    path = replaceContentWithData(path, context);
   }
   /**
    * проверим путь
@@ -542,8 +561,10 @@ export function getDataByPath(
     value = urlParams[path]
       ? urlParams[path]
       : currentModel.getProperty(path, _default);
-    value = currentModel.getProperty(path) ? currentModel.getProperty(path) : urlParams[path];
-    if(! value){
+    value = currentModel.getProperty(path)
+      ? currentModel.getProperty(path)
+      : urlParams[path];
+    if (!value) {
       value = _default;
     }
   }
@@ -595,7 +616,7 @@ export function mbParseJSON(string, _default = null) {
   try {
     return JSON.parse(string);
   } catch (e) {
-    return _default;
+    return _default === null ? string : _default;
   }
 }
 
@@ -616,17 +637,16 @@ export function altrpCompare(
       return _.isEmpty(leftValue);
     }
     case "not_empty": {
-      return !_.isEmpty(leftValue);
+      return ! _.isEmpty(leftValue);
     }
     case "null": {
-      return !leftValue;
+      return ! leftValue;
     }
     case "not_null": {
-      return !!leftValue;
+      return ! ! leftValue;
     }
     case "==": {
-      if (!leftValue && !rightValue) {
-        console.log(leftValue);
+      if (! leftValue && ! rightValue) {
         return true;
       }
       if (!(_.isObject(leftValue) || _.isObject(rightValue))) {
@@ -989,7 +1009,7 @@ function getPrevWeekEnd() {
 /**
  * Elfkztn gecnst cdjqcndf d j,]trnf[
  */
-export function clearEmptyProps() { }
+export function clearEmptyProps() {}
 
 /**
  * Заменяет в тексте конструкции типа {{altrpdata...}} на данные
@@ -1003,8 +1023,8 @@ export function replaceContentWithData(content = "", modelContext = null) {
     paths.forEach(path => {
       path = path.replace("{{", "");
       let value = getDataByPath(path, "", modelContext);
-      if(value === 0){
-        value = '0';
+      if (value === 0) {
+        value = "0";
       }
       content = content.replace(new RegExp(`{{${path}}}`, "g"), value || "");
     });
@@ -1166,7 +1186,7 @@ export async function dataToCSV(data = {}, filename) {
       .join("\n");
   let blob = new Blob([csvContent], {
     type: "text/csv",
-    charset: "windows-1251",
+    charset: "windows-1251"
     // charset: "utf-8",
   });
   let link = document.createElement("a");
@@ -1176,6 +1196,31 @@ export async function dataToCSV(data = {}, filename) {
   link.click();
   document.body.removeChild(link);
   return { success: true };
+}
+
+/**
+ * Генерация и загрузка XLS-файла
+ * @param {Object data} Объект данных
+ * @param {String} filename Имя файла
+ */
+export async function dataToXLS(data, filename = "table") {
+  const formattedData = [];
+
+  const headers = _.toPairs(data[0]).map(([name, value]) => name);
+  formattedData.push(headers);
+
+  _.each(data, row => formattedData.push(Object.values(row)));
+
+  const formData = new FormData();
+  formData.append("filename", filename);
+  formData.append("data", JSON.stringify(formattedData));
+
+  const response = await fetch("/api/export-excel", {
+    method: "POST",
+    body: formData
+  });
+
+  return await response.blob();
 }
 
 /**
@@ -1260,8 +1305,8 @@ export function sortOptions(options, sortDirection) {
     a.label.toLowerCase() > b.label.toLowerCase()
       ? 1
       : b.label.toLowerCase() > a.label.toLowerCase()
-        ? -1
-        : 0
+      ? -1
+      : 0
   );
   return sortDirection === "asc" ? options : options.reverse();
 }
@@ -1292,7 +1337,7 @@ export function recurseCount(object = {}, path = "") {
  * @param {{}} model
  * @return {AltrpModel}
  */
-export function getAppContext( model = null ) {
+export function getAppContext(model = null) {
   const { currentModel } = appStore.getState();
   const currentModelData = model ? model : currentModel.getData();
   const urlParams = _.cloneDeep(
@@ -1465,33 +1510,68 @@ export function altrpRandomId() {
  * @param middle_buttons_count
  * @return {*[]}
  */
-export function generateButtonsArray(pageIndex, pageCount, first_last_buttons_count, middle_buttons_count) {
+export function generateButtonsArray(
+  pageIndex,
+  pageCount,
+  first_last_buttons_count,
+  middle_buttons_count
+) {
   const buttonsSum = first_last_buttons_count + middle_buttons_count;
-  const lastButtons = Array.from({ length: first_last_buttons_count }, (_, i) => pageCount - i - 1).reverse();
-  const middleButtons = Array.from({ length: middle_buttons_count }, (_, i) => pageIndex - Math.floor(middle_buttons_count / 2) + i);
+  const lastButtons = Array.from(
+    { length: first_last_buttons_count },
+    (_, i) => pageCount - i - 1
+  ).reverse();
+  const middleButtons = Array.from(
+    { length: middle_buttons_count },
+    (_, i) => pageIndex - Math.floor(middle_buttons_count / 2) + i
+  );
 
   if (pageIndex + 1 < buttonsSum) {
-    return [...Array(buttonsSum).keys(), "ellipsis", ...lastButtons]
+    return [...Array(buttonsSum).keys(), "ellipsis", ...lastButtons];
   }
-  if (pageIndex >= pageCount - first_last_buttons_count - 1 - Math.floor(middle_buttons_count / 2)) {
-    return [...Array(first_last_buttons_count).keys(), "ellipsis", ...Array.from({ length: first_last_buttons_count + middle_buttons_count }, (_, i) => pageCount - i - 1).reverse()]
+  if (
+    pageIndex >=
+    pageCount -
+      first_last_buttons_count -
+      1 -
+      Math.floor(middle_buttons_count / 2)
+  ) {
+    return [
+      ...Array(first_last_buttons_count).keys(),
+      "ellipsis",
+      ...Array.from(
+        { length: first_last_buttons_count + middle_buttons_count },
+        (_, i) => pageCount - i - 1
+      ).reverse()
+    ];
   }
 
-  return [...Array(first_last_buttons_count).keys(), "ellipsis", ...middleButtons, "ellipsis", ...lastButtons];
+  return [
+    ...Array(first_last_buttons_count).keys(),
+    "ellipsis",
+    ...middleButtons,
+    "ellipsis",
+    ...lastButtons
+  ];
 }
 
-export function isValueMatchMask (value, mask) {
-  return value.length && value.split("").every((char, index) => char === mask[index] || char.match(mask[index]));
+export function isValueMatchMask(value, mask) {
+  return (
+    value.length &&
+    value
+      .split("")
+      .every((char, index) => char === mask[index] || char.match(mask[index]))
+  );
 }
-
 
 /**
  * Вернуть экземпляр конвертера необходимого типа (array - ArrayConverter и т. д.)
  * @return {DataConverter}
  */
-export function getConverter(data){
-  switch(data.data_type){
-      case 'array': return new ArrayConverter(data);
+export function getConverter(data) {
+  switch (data.data_type) {
+    case "array":
+      return new ArrayConverter(data);
   }
   return new DataConverter();
 }
@@ -1501,14 +1581,14 @@ export function getConverter(data){
  * @param {{} | []} settings
  * @param {*} data
  */
-export function convertData(settings, data){
-  if(_.isArray(settings)){
+export function convertData(settings, data) {
+  if (_.isArray(settings)) {
     settings.forEach(item => {
       const converter = getConverter(item);
       data = converter.convertData(data);
     });
   }
-  if(settings.data_type){
+  if (settings.data_type) {
     const converter = getConverter(settings);
     data = converter.convertData(data);
   }
@@ -1516,8 +1596,12 @@ export function convertData(settings, data){
 }
 export function renderIcon(isHidden, icon, defaultIcon, className) {
   if (isHidden) return null;
-  
-  return <span className={className}>{icon && icon.assetType ? renderAssetIcon(icon) : defaultIcon}</span>
+
+  return (
+    <span className={className}>
+      {icon && icon.assetType ? renderAssetIcon(icon) : defaultIcon}
+    </span>
+  );
   // if()
 }
 
@@ -1527,25 +1611,24 @@ export function renderIcon(isHidden, icon, defaultIcon, className) {
  * @param {{}} e
  * @param {{}} context
  */
-export function redirect(linkSettings, e, context = {}){
-
-  if(_.get(linkSettings, 'toPrevPage') && frontAppRouter){
+export function redirect(linkSettings, e, context = {}) {
+  if (_.get(linkSettings, "toPrevPage") && frontAppRouter) {
     frontAppRouter.history.goBack();
     return;
   }
-  if(! _.get(linkSettings, 'url')){
+  if (!_.get(linkSettings, "url")) {
     return;
   }
   e.preventDefault();
   e.stopPropagation();
-  let {url} = linkSettings;
+  let { url } = linkSettings;
   url = replaceContentWithData(url, context);
-  if(linkSettings.openInNew){
-    window.open(url, '_blank');
+  if (linkSettings.openInNew) {
+    window.open(url, "_blank");
     return;
   }
-  if(frontAppRouter){
-    if(linkSettings.tag === 'a'){
+  if (frontAppRouter) {
+    if (linkSettings.tag === "a") {
       window.location.assign(url);
     } else {
       frontAppRouter.history.push(url);
@@ -1556,4 +1639,26 @@ export function redirect(linkSettings, e, context = {}){
 export function validateEmail(email) {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
+}
+
+/**
+ * значение настройки в зависимости от разрешения можно использовать вне виджетов с объектом настроек
+ * @param {{}} settings - объект настроек
+ * @param {string} settingName
+ * @param {string} elementState
+ * @param {*} _default
+ * @return {*}
+ */
+export function getResponsiveSetting(settings, settingName, elementState = '', _default = null){
+  let {currentScreen} = window.parent.appStore.getState();
+  if(currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT){
+    return _.get(settings, settingName, _default);
+  }
+  let suffix = currentScreen.name;
+  let _settingName = `${settingName}_${elementState}_${suffix}`;
+  let setting = _.get(settings, _settingName);
+  if(setting === undefined){
+    setting = _.get(settings, settingName);
+  }
+  return setting;
 }

@@ -32,6 +32,17 @@ class SectionComponent extends Component {
     redirect(sectionLink, e, this.props.element.getCurrentModel().getData());
   };
 
+  /**
+   * Курсор для ссылки
+   * @return {boolean}
+   */
+  sectionIsLink(){
+    if(isEditor()){
+      return false;
+    }
+    return ! ! _.get(this, 'props.element.settings.link_link.url');
+  }
+
   render() {
     let styles = {};
     const  background_image  = this.props.element.getSettings('background_image', {});
@@ -51,7 +62,9 @@ class SectionComponent extends Component {
       'altrp-section',
       `altrp-section_columns-${this.props.element.getColumnsCount()}`
     ];
-
+    if(this.sectionIsLink()){
+      sectionClasses.push('altrp-pointer');
+    }
     if (background_image.url/*  && !isScrollEffect */) {
       sectionClasses.push('altrp-background-image');
     }

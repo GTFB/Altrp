@@ -286,7 +286,6 @@ class Page extends Model
         'template_type' => 'popup',
       ]),
     ];
-//    }
 
     return $areas;
   }

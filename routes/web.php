@@ -48,8 +48,11 @@ Route::get('/admin/editor-content', function () {
   return view('editor-content');
 })->middleware('auth')->name('editor-content');
 
-// Route::get('/admin/reports-editor',fn()=>view('reports'));
-// Route::get('/admin/reports-content',fn()=>view('reports-content'));
+Route::get( '/admin/editor-reports', function (){
+  return view( 'editor-reports' );
+} )->middleware( 'auth' )->name('editor-reports');
+//Route::get('/admin/reports-editor',fn()=>view('reports'));
+//Route::get('/admin/reports-content',fn()=>view('reports-content'));
 
 // Route::get( '/admin/editor-reports', function (){
 //    return view( 'editor-reports' );
@@ -414,8 +417,9 @@ foreach ( $frontend_routes as $_frontend_route ) {
 
     $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
 
+
     return view('front-app', [
-      'page_areas' => json_encode(Page::get_areas_for_page($_frontend_route['id'])),
+      'page_areas' => json_encode( Page::get_areas_for_page( $_frontend_route['id']) ),
       'page_id' => $_frontend_route['id'],
       'title' => $title,
       '_frontend_route' => $_frontend_route,

@@ -1,10 +1,18 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  Suspense
+} from "react";
 import axios from "axios";
-import MapDesigner from "./MapDesigner";
 import { useSelector } from "react-redux";
 import { getDataByPath } from "../../../../../front-app/src/js/helpers";
 
+const MapDesigner = React.lazy(() => import("./MapDesigner"));
+
 function AltrpMapConstructor({ settings, id }) {
+  console.log(id);
   const [isLoading, setIsLoading] = useState(false);
   const [geoJson, setGeoJson] = useState({});
 
@@ -182,27 +190,30 @@ function AltrpMapConstructor({ settings, id }) {
   }, [id, dynamicGeoObjectsRepeater]);
 
   return (
-    <MapDesigner
-      data={geoJson}
-      saveData={handleSave}
-      isLoading={isLoading}
-      url_connect={url_connect}
-      field_first_connect={field_first_connect}
-      field_second_connect={field_second_connect}
-      style={{
-        height: style_height.size + style_height.unit,
-        marginTop: style_margin.top + style_margin.unit,
-        marginBottom: style_margin.bottom + style_margin.unit,
-        marginLeft: style_margin.left + style_margin.unit,
-        marginRight: style_margin.right + style_margin.unit
-      }}
-      isEditable={editable}
-      preferCanvas={canvas}
-      zoom={+zoom}
-      url={url}
-      field_id={field_id}
-      center={[latitude || 50.7496449, longitude || 86.1250068]}
-    />
+    <Suspense fallback={"Loading"}>
+      <MapDesigner
+        data={geoJson}
+        saveData={handleSave}
+        isLoading={isLoading}
+        id={id}
+        url_connect={url_connect}
+        field_first_connect={field_first_connect}
+        field_second_connect={field_second_connect}
+        style={{
+          height: style_height.size + style_height.unit,
+          marginTop: style_margin.top + style_margin.unit,
+          marginBottom: style_margin.bottom + style_margin.unit,
+          marginLeft: style_margin.left + style_margin.unit,
+          marginRight: style_margin.right + style_margin.unit
+        }}
+        isEditable={editable}
+        preferCanvas={canvas}
+        zoom={+zoom}
+        url={url}
+        field_id={field_id}
+        center={[latitude || 50.7496449, longitude || 86.1250068]}
+      />
+    </Suspense>
   );
 }
 

@@ -84,6 +84,10 @@ export function actionsControllers(element){
         label: 'Table to CSV',
       },
       {
+        value: 'table_to_xls',
+        label: 'Table to XLS'
+      },
+      {
         value: 'login',
         label: 'Login',
       },
@@ -103,7 +107,23 @@ export function actionsControllers(element){
         value: 'update_current_datasources',
         label: 'Update Current Datasources',
       },
+      {
+        value: 'custom_code',
+        label: 'Custom JS-Code',
+      },
     ],
+  });
+
+  actionsRepeater.addControl('code', {
+    type: CONTROLLER_TEXTAREA,
+    dynamic: false,
+    responsive: false,
+    label: 'Code',
+    conditions: {
+      type: [
+        'custom_code'
+      ],
+    },
   });
 
   actionsRepeater.addControl('action', {
@@ -188,6 +208,7 @@ export function actionsControllers(element){
         'elements_to_pdf',
         'data_to_csv',
         'table_to_csv',
+        'table_to_xls'
       ],
     },
   });
@@ -278,7 +299,8 @@ export function actionsControllers(element){
         'scroll_to_element',
         'trigger',
         'table_to_csv',
-        'toggle_offcanvas'
+        'toggle_offcanvas',
+        'table_to_xls',
       ],
     },
   });

@@ -299,7 +299,7 @@ class BaseElement extends ControlStack {
    */
   getSettings(settingName, _default = '') {
     this._initDefaultSettings();
-    if (!settingName) {
+    if (! settingName) {
       return _.cloneDeep(this.settings);
     }
     if (this.settings[settingName] === undefined) {
@@ -523,12 +523,10 @@ class BaseElement extends ControlStack {
    * @param {string} fontName
    */
   addFont(settingName, fontName){
-    console.log(this.settings);
     if((! settingName) || ! fontName){
       return;
     }
     _.set(this.settings, `__altrpFonts__.${settingName}`, fontName);
-    console.log(this.settings);
 
   }
   /**

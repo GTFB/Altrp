@@ -15,7 +15,7 @@ class MediaType extends Migration
   public function up()
   {
     //
-    Schema::table( 'altrp_media', function ( Blueprint $table ){
+    Schema::table( 'media', function ( Blueprint $table ){
       $table->string( 'type', 50 )->nullable()->index();
     } );
 

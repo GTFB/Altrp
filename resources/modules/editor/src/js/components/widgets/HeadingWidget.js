@@ -25,9 +25,7 @@ class HeadingWidget extends Component {
     switch (this.props.element.getSettings("type", 'heading')) {
       case "heading":
 
-        let modelData = this.props.element.hasCardModel()
-          ? this.props.element.getCardModel().getData()
-          : this.props.currentModel.getData();
+        let modelData = this.props.element.getCurrentModel().getData();
         const  background_image = this.props.element.getSettings('background_image', {});
         let text = this.getContent('text');
         let link;

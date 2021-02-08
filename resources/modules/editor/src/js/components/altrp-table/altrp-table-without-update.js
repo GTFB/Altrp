@@ -9,7 +9,7 @@ import {
   scrollbarWidth, isEditor, parseURLTemplate, mbParseJSON,
   renderAssetIcon,
   generateButtonsArray,
-  renderIcon
+  renderIcon, setAltrpIndex
 } from "../../../../../front-app/src/js/helpers";
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { Link } from "react-router-dom";
@@ -67,7 +67,7 @@ includesSome.autoRemove = function (val) {
 };
 
 /**
- *
+ * Фильтрация нечеткого текста
  * @param rows
  * @param id
  * @param filterValue
@@ -85,8 +85,35 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
     }]
   })
 }
-// Let the table remove the filter if the string is empty
-fuzzyTextFilterFn.autoRemove = val => !val;
+fuzzyTextFilterFn.autoRemove = val => ! val;
+/**
+ * Фильтрация на точное соответствие
+ * @param rows
+ * @param id
+ * @param filterValue
+ * @return {*}
+ */
+function fullMatchTextFilterFn(rows, id, filterValue) {
+  id = id ? id[0] : undefined;
+  return rows.filter(row => _.get(row, `values.${id}`) === filterValue);
+}
+fullMatchTextFilterFn.autoRemove = val => ! val;
+/**
+ * Фильтрация на нахождение в тексте
+ * @param rows
+ * @param id
+ * @param filterValue
+ * @return {*}
+ */
+function partialMatchTextFilterFn(rows, id, filterValue) {
+  id = id ? id[0] : undefined;
+  return rows.filter(row => {
+    filterValue = filterValue.replace(/\s/g, '');
+    let value = _.get(row, `values.${id}`, '').replace(/\s/g, '');
+    return value.indexOf(filterValue) !== -1
+  });
+}
+partialMatchTextFilterFn.autoRemove = val => ! val;
 /**
  * Компонент, который работает только с внешними данными, которые не обновляются с сервера
  * @param {{}} settings
@@ -180,7 +207,7 @@ function AltrpTableWithoutUpdate(
       })
     }
     const columnTemplateContent = React.useMemo(() => {
-      if (!columnTemplate) {
+      if (! columnTemplate) {
         return null;
       }
       let columnTemplateContent = frontElementsFabric.cloneElement(columnTemplate);
@@ -273,6 +300,8 @@ function AltrpTableWithoutUpdate(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: fuzzyTextFilterFn,
+      fullMatchText: fullMatchTextFilterFn,
+      partialMatchText: partialMatchTextFilterFn,
       // Or, override the default text filter to use
       // "startWith"
       text: (rows, id, filterValue) => {
@@ -581,15 +610,9 @@ function AltrpTableWithoutUpdate(
       }
       return paginationProps;
     }, [inner_page_size, pageSize, pageCount, pageIndex, settings]);
-  const { WrapperComponent, wrapperProps } = React.useMemo(() => {
-    return {
-      WrapperComponent: replace_rows ? DndProvider : DndProvider/*React.Fragment*/,
-      // wrapperProps: replace_rows ? {backend:HTML5Backend} : {backend:HTML5Backend},
-      wrapperProps: { backend: HTML5Backend },
-    };
-  }, [replace_rows]);
 
-  return <WrapperComponent {...wrapperProps}>
+
+  return  <React.Fragment>
     {hide_columns && <div className="altrp-table-hidden">
       <div className="altrp-table-hidden__all">
         <IndeterminateCheckbox {...getToggleHideAllColumnsProps()} /> Toggle
@@ -720,7 +743,7 @@ function AltrpTableWithoutUpdate(
         </div></div></div>}
     </div>
     {paginationProps && <Pagination {...paginationProps} />}
-  </WrapperComponent>
+  </React.Fragment>
 }
 const TableBody =
   ({
@@ -1179,6 +1202,19 @@ export function settingsToColumns(settings, widgetId) {
             _column.Filter = ({ column }) => <SelectColumnFilter column={column} widgetId={widgetId} />;
           }
             break;
+          case 'text': {
+            switch(_column.column_text_filter_type){
+              case 'full_match': {
+                _column.filter = 'fullMatchText';
+              }
+              break;
+              case 'partial_match': {
+                _column.filter = 'partialMatchText';
+              }
+              break;
+            }
+          }
+            break;
         }
       }
       _column.canGroupBy = ! !_column.group_by;
@@ -1348,7 +1384,7 @@ const Cell = ({ cell, settings }) => {
       let cellStyles = _.get(cell, 'column.column_styles_field');
       cellStyles = _.get(row.original, cellStyles, '');
       cellStyles = mbParseJSON(cellStyles, {});
-      cellProps.style = _.assign(cellStyles, cellProps.style);
+      cellProps.style = _.assign({...cellStyles}, cellProps.style);
     }
     // if(replace_rows){
     //   cellProps.ref = dropRef;
@@ -1550,7 +1586,7 @@ const Row = ({ row,
               let cellStyles = _.get(cell, 'column.column_styles_field');
               cellStyles = _.get(row.original, cellStyles, '');
               cellStyles = mbParseJSON(cellStyles, {});
-              cellProps.style = _.assign(cellStyles, cellProps.style);
+              cellProps.style = _.assign({...cellStyles}, cellProps.style);
             }
             if (replace_rows) {
               cellProps.ref = dropRef;
@@ -1584,5 +1620,15 @@ const Row = ({ row,
 
 export default (props) => {
   props = { ...props };
+  if(props.settings.choose_datasource === 'datasource'){
+    props._status = 'success';
+    if(isEditor()){
+      props = {...props};
+      props.settings = {...props.settings};
+      props.data = Array.from({length: 100}, () => ({}));
+      setAltrpIndex(props.data);
+    }
+    return <AltrpTableWithoutUpdate {...props}/>
+  }
   return <AltrpQueryComponent {...props}><AltrpTableWithoutUpdate /></AltrpQueryComponent>
 }
