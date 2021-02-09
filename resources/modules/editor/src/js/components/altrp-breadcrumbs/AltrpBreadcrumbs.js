@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
 import "./altrp-breadcrumbs.scss";
-import {isEditor} from "../../../../../front-app/src/js/helpers";
+import {isEditor, replaceContentWithData} from "../../../../../front-app/src/js/helpers";
 
 class AltrpBreadcrumbs extends Component {
   constructor(props) {
@@ -24,6 +24,7 @@ class AltrpBreadcrumbs extends Component {
           breadcrumbs.map((name, idx) => {
             const to = idx === 0 ? "/" : pathname.split(name)[0] + name;
             const label = idx === 0 ? this.props.element.getContent("breadcrumbs_label", "Home") : name;
+            const currentLabel = replaceContentWithData(appStore.getState().currentTitle);
 
             return <li className="altrp-nav-breadcrumbs-li" key={idx}>
               {
@@ -40,7 +41,7 @@ class AltrpBreadcrumbs extends Component {
                 ) : (
                   <div className="altrp-nav-breadcrumbs-label altrp-nav-breadcrumbs-current">
                     {
-                      label
+                      isEditor() ? label : currentLabel
                     }
                   </div>
                 )

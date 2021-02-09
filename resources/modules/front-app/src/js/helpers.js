@@ -33,10 +33,10 @@ export function iconsManager() {
  */
 export function setTitle(title) {
   let titleElement = document.title;
-  if (!defaultTitle) {
+  if (! defaultTitle) {
     defaultTitle = titleElement.innerHTML;
   }
-  if (!title) {
+  if (! title) {
     title = defaultTitle;
   }
   if (document.title !== title) {
@@ -53,7 +53,7 @@ export function isEditor() {
 }
 
 /**
- * Переменная, в которой храниться измначальный заголовок
+ * Переменная, в которой храниться изначальный заголовок
  * @let {string}
  */
 let defaultTitle;

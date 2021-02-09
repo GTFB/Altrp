@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import FrontPopup from "./FrontPopup";
+import {replaceContentWithData, setTitle} from "../helpers";
 
 class AreaComponent extends Component {
   render() {

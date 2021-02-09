@@ -198,6 +198,7 @@ function componentDidMount() {
  * @params {{}} prevState
  */
 function componentDidUpdate(prevProps, prevState) {
+  console.log(this);
   if(this.props.element !== prevProps.element){
     // console.log('updated');
     this.setState(state => ({...state, children: this.props.element.children}));
