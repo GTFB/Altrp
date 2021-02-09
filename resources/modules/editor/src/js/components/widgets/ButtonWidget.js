@@ -61,7 +61,8 @@ class ButtonWidget extends Component {
         this.props.element.getSettings("actions", []),
         this.props.element
       );
-    } else if (this.props.element.getForms().length) {
+    }
+    if (this.props.element.getForms().length) {
       this.setState(state => ({ ...state, pending: true }));
       this.props.element.getForms().forEach(
         /**

@@ -122,9 +122,9 @@ class FrontElement {
       } catch(e){
         console.error(e);
       }
-      if(this.getName() === 'button'){
-        return;
-      }
+      // if(this.getName() === 'button'){
+      //   return;
+      // }
     }
 
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getFormId()){
