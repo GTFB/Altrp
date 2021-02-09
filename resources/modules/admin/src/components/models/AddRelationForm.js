@@ -77,6 +77,7 @@ class AddRelationForm extends Component {
     this.setState(state=>({...state, selfFieldsOptions}));
     if(id){
       let value = await this.relationsResource.get(id);
+      this.relationName = value.name;
       this.updateForeignFieldOptions(value.target_model_id);
       this.changeTargetModel(value.target_model_id);
       this.setState(state=>({...state, value}));
@@ -157,9 +158,11 @@ class AddRelationForm extends Component {
     e.preventDefault();
     const { history, match } = this.props;
     const data = this.state.value;
-    const isNameTaken = await fetch(`/admin/ajax/models/${match.params.modelId}/relation_name_is_free/?name=${data.name}`)
-      .then(res => res.json())
-      .then(res => !res.taken);
+    const isNameTaken = !this.props.match.params.id || this.relationName !== data.name ?
+      await fetch(`/admin/ajax/models/${match.params.modelId}/relation_name_is_free/?name=${data.name}`)
+        .then(res => res.json())
+        .then(res => !res.taken) :
+      null;
 
     if (isNameTaken) {
       return alert(`Name ${data.name} is already taken. Use another one.`)

@@ -301,6 +301,25 @@ class Table extends BaseElement {
       nullable: true,
     });
 
+    repeater.addControl("column_cell_content_type", {
+      type: CONTROLLER_SELECT,
+      label: 'Content Type',
+      options: [
+        {
+          label: 'Text / Link',
+          value: '',
+        },
+        {
+          label: 'Email',
+          value: 'email',
+        },
+        {
+          label: 'Phone',
+          value: 'phone',
+        }
+      ],
+    });
+
     repeater.addControl('column_link', {
       label: 'Link Template',
       dynamic: false,
@@ -3125,14 +3144,6 @@ class Table extends BaseElement {
     this.addControl('table_style_body_font', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      // default: {
-      //   lineHeight: 1.5,
-      //   spacing: 0,
-      //   size: 14,
-      //   weight: "normal",
-      //   family: "Open Sans",
-      //   decoration: ""
-      // },
       rules: {
         '{{ELEMENT}} .altrp-table-td{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
@@ -3147,16 +3158,39 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("table_style_body_links_color", {
+    this.addControl("table_link_heading", {
+      type: CONTROLLER_HEADING,
+      label: 'Links Styles'
+    });
+
+    this.addControl("table_link_color", {
       type: CONTROLLER_COLOR,
-      label: "links_color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
+      label: "Text color",
       rules: {
+        '{{ELEMENT}} .altrp-table-td a{{STATE}}': 'color: {{COLOR}};',
       }
     });
+
+
+
+    this.addControl('table_link_font', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+      rules: {
+        '{{ELEMENT}} .altrp-table-td a{{STATE}}': [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
+    });
+
+
 
     this.endControlSection();
 

@@ -161,7 +161,7 @@ class ButtonWidget extends Component {
   }
 
   render() {
-    const { link_link = {} } = this.state.settings;
+    const { link_link = {}, advanced_tooltip: tooltip } = this.state.settings;
     const { back } = history;
     const background_image = this.props.element.getSettings(
       "background_image",
@@ -212,6 +212,7 @@ class ButtonWidget extends Component {
         onClick={this.onClick}
         className={classes}
         id={this.state.settings.position_css_id}
+        title={tooltip || null}
       >
         {buttonText}
         <span className={"altrp-btn-icon "}>
@@ -256,6 +257,7 @@ class ButtonWidget extends Component {
             onClick={this.onClick}
             className={classes}
             target={target}
+            title={tooltip || null}
           >
             {" "}
             {buttonText || ""}
@@ -266,7 +268,7 @@ class ButtonWidget extends Component {
         );
       } else {
         link = (
-          <Link to={url} onClick={this.onClick} className={classes}>
+          <Link to={url} onClick={this.onClick} className={classes} title={tooltip || null}>
             {" "}
             {buttonText || ""}
             <span className={"altrp-btn-icon "}>
@@ -283,6 +285,7 @@ class ButtonWidget extends Component {
           onClick={() => (isEditor() ? null : back())}
           className={classes}
           id={this.state.settings.position_css_id}
+          title={tooltip || null}
         >
           {buttonText}
           <span className={"altrp-btn-icon "}>
