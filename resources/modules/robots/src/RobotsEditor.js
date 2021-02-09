@@ -35,7 +35,7 @@ class RobotsEditor extends Component {
     this.state = {
       elements: store.getState().robotSettingsData || [],
       reactFlowInstance: null,
-      selected: false
+      selected: false,
     };
 
     this.resource = new Resource({ route: "/admin/ajax/robots" });

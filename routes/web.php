@@ -241,6 +241,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     * Получить записи из модели по её Id
     */
     Route::get('/models/{model_id}/records', 'Admin\ModelsController@getRecordsByModel');
+    Route::get('/models/{model_id}/records_options', 'Admin\ModelsController@getRecordsByModelOptions');
 
     /**
      * Маршруты для проверки на уникальность имени
