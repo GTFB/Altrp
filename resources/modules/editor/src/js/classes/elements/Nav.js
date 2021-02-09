@@ -55,7 +55,7 @@ class Nav extends BaseElement {
         },
         {
           value: "breadCrumbs",
-          label: "Bread crumbs"
+          label: "Breadcrumbs"
         },
         {
           value: "prevNextPost",
@@ -87,8 +87,11 @@ class Nav extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('layout_menu_section', {
+      conditions: {
+        'type_type': "menu",
+      },
       tab: TAB_CONTENT,
-      label: 'Layout (menu)',
+      label: 'Layout',
     });
 
     let repeaterMenu = new Repeater();
@@ -485,7 +488,26 @@ class Nav extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('breadcrumbs', {
+      conditions: {
+        'type_type': "breadCrumbs",
+      },
+      tab: TAB_CONTENT,
+      label: 'Breadcrumbs',
+    });
+
+    this.addControl('breadcrumbs_label', {
+      type: CONTROLLER_TEXT,
+      default: "Home",
+      label: 'Home page label',
+    });
+
+    this.endControlSection();
+
     this.startControlSection('main_menu_style', {
+      conditions: {
+        'type_type': "menu",
+      },
       tab: TAB_STYLE,
       label: 'Main menu',
     });
@@ -603,7 +625,12 @@ class Nav extends BaseElement {
         colorPickedHex: "",
       },
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-pointer{{STATE}}::after": "background: {{COLOR}};"
+        "{{ELEMENT}} .altrp-nav-menu-li-overline{{STATE}}::before": "background: {{COLOR}};",
+        "{{ELEMENT}} .altrp-nav-menu-li-underLine{{STATE}}::after": "background: {{COLOR}};",
+        "{{ELEMENT}} .altrp-nav-menu-li-doubleLine{STATE}}::before": "background: {{COLOR}};",
+        "{{ELEMENT}} .altrp-nav-menu-li-framed{STATE}}::before, .altrp-nav-menu-li-framed{STATE}}::after": "background: {{COLOR}};",
+        "{{ELEMENT}} .altrp-nav-menu-li-background:hover": "background: {{COLOR}};",
+        "{{ELEMENT}} .altrp-nav-menu-li-animation-text:hover altrp-nav-menu-li-link-label": "color: {{COLOR}};"
       }
     });
 
@@ -702,8 +729,11 @@ class Nav extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('dropdown_hor_ver_menu_section', {
+      conditions: {
+        'type_type': "menu",
+      },
       tab: TAB_STYLE,
-      label: 'Dropdown (Hor Ver)',
+      label: 'Dropdown (hor, ver)',
     });
 
     this.addControl('alignment_dropdown_hor_ver_menu_section', {
@@ -1229,6 +1259,10 @@ class Nav extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('dropdown_menu_section', {
+      conditions: {
+        'type_type': "menu",
+        "menu_layout": "dropdown"
+      },
       tab: TAB_STYLE,
       label: 'Dropdown',
     });
@@ -1595,75 +1629,40 @@ class Nav extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection('bread_crumbs_section', {
+    this.startControlSection('breadcrumbs_section', {
+      conditions: {
+        'type_type': "breadCrumbs",
+      },
       tab: TAB_STYLE,
-      label: 'Bread crumbs',
+      label: 'Breadcrumbs',
     });
 
-    this.addControl('bread_crumbs_style_typographic', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 36,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
-      rules: {
-        '{{ELEMENT}} .altrp-heading': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
-    }
-    );
-
-    this.addControl("bread_crumbs_style_color", {
-      type: CONTROLLER_COLOR,
-      label: "Color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
-      rules: {
-        "{{ELEMENT}} .altrp-text{{STATE}}": "color: {{COLOR}};"
-      }
-    });
-
-    this.addControl("bread_crumbs_style_space_between", {
+    this.addControl("breadcrumbs_style_space_between", {
       type: CONTROLLER_SLIDER,
       label: "Space between",
       default: {
-        size: 0,
+        size: 4,
         unit: "px"
       },
       units: ["px", "%", "vh"],
       max: 20,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-text{{STATE}}": [
+        "{{ELEMENT}} .altrp-nav-breadcrumbs-label{{STATE}}": [
           "padding-left: {{SIZE}}{{UNIT}}",
           "padding-right: {{SIZE}}{{UNIT}}"
         ],
       }
     });
 
-    this.addControl('bread_crumbs_style_alignment', {
+    this.addControl('breadcrumbs_style_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'alignment',
       default: 'left',
       options: [
         {
           icon: 'left',
-          value: 'left',
+          value: 'flex-start',
         },
         {
           icon: 'center',
@@ -1671,34 +1670,37 @@ class Nav extends BaseElement {
         },
         {
           icon: 'right',
-          value: 'right',
+          value: 'flex-end',
         }
       ],
       rules: {
-        '{{ELEMENT}}': 'text-align: {{VALUE}};',
+        '{{ELEMENT}} .altrp-nav-breadcrumbs': 'justify-content: {{VALUE}};',
       },
     });
 
     this.endControlSection();
 
-    this.startControlSection('links_section', {
+    this.startControlSection('breadcrumbs_links_section', {
+      conditions: {
+        'type_type': "breadCrumbs",
+      },
       tab: TAB_STYLE,
       label: 'Links',
     });
 
-    this.addControl('links_style_typographic', {
+    this.addControl('breadcrumbs_links_style_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
       default: {
         lineHeight: 1.5,
         spacing: 0,
-        size: 36,
+        size: 21,
         weight: "normal",
         family: "Open Sans",
         decoration: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-heading{{STATE}}': [
+        '{{ELEMENT}} .altrp-nav-breadcrumbs-link{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -1712,39 +1714,55 @@ class Nav extends BaseElement {
     }
     );
 
-    this.addControl("links_style_color", {
+    this.addControl("breadcrumbs_links_style_color", {
       type: CONTROLLER_COLOR,
       label: "Color",
       default: {
-        color: "",
-        colorPickedHex: "",
+        color: "rgb(39, 75, 200)",
+        colorPickedHex: "#274BC8",
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-text{{STATE}}": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-nav-breadcrumbs-link{{STATE}}": "color: {{COLOR}};",
+      }
+    });
+
+    this.addControl("breadcrumbs_links_visited_style_color", {
+      type: CONTROLLER_COLOR,
+      label: "Visited link color",
+      default: {
+        color: "rgb(39, 75, 200)",
+        colorPickedHex: "#274BC8",
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}} .altrp-nav-breadcrumbs-link:visited": "color: {{COLOR}};"
       }
     });
 
     this.endControlSection();
 
-    this.startControlSection('separator_section', {
+    this.startControlSection('breadcrumbs_separator_section', {
+      conditions: {
+        'type_type': "breadCrumbs",
+      },
       tab: TAB_STYLE,
       label: 'Separator',
     });
 
-    this.addControl('separator_style_typographic', {
+    this.addControl('breadcrumbs_separator_style_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
       default: {
-        lineHeight: 1.5,
+        lineHeight: 1,
         spacing: 0,
-        size: 36,
+        size: 21,
         weight: "normal",
         family: "Open Sans",
         decoration: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-heading{{STATE}}': [
+        '{{ELEMENT}} .altrp-nav-breadcrumbs-separator{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -1758,7 +1776,7 @@ class Nav extends BaseElement {
     }
     );
 
-    this.addControl("separator_style_color", {
+    this.addControl("breadcrumbs_separator_style_color", {
       type: CONTROLLER_COLOR,
       label: "Color",
       default: {
@@ -1767,30 +1785,33 @@ class Nav extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-text{{STATE}}": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-nav-breadcrumbs-separator{{STATE}}": "color: {{COLOR}};"
       }
     });
 
     this.endControlSection();
 
-    this.startControlSection('current_page_section', {
+    this.startControlSection('breadcrumbs_current_page_section', {
+      conditions: {
+        'type_type': "breadCrumbs",
+      },
       tab: TAB_STYLE,
       label: 'Current page',
     });
 
-    this.addControl('current_page_style_typographic', {
+    this.addControl('breadcrumbs_current_page_style_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
       default: {
-        lineHeight: 1.5,
+        lineHeight: 1,
         spacing: 0,
-        size: 36,
+        size: 21,
         weight: "normal",
         family: "Open Sans",
         decoration: ""
       },
       rules: {
-        '{{ELEMENT}} .altrp-heading{{STATE}}': [
+        '{{ELEMENT}} .altrp-nav-breadcrumbs-current{{STATE}}': [
           'font-family: "{{FAMILY}}", sans-serif;',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
@@ -1804,7 +1825,7 @@ class Nav extends BaseElement {
     }
     );
 
-    this.addControl("current_page_style_color", {
+    this.addControl("breadcrumbs_current_page_style_color", {
       type: CONTROLLER_COLOR,
       label: "Color",
       default: {
@@ -1813,7 +1834,7 @@ class Nav extends BaseElement {
       },
       presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
-        "{{ELEMENT}} .altrp-text{{STATE}}": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-nav-breadcrumbs-current{{STATE}}": "color: {{COLOR}};"
       }
     });
 
