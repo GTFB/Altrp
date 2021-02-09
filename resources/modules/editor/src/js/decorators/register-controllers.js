@@ -118,6 +118,11 @@ export function advancedTabControllers(element) {
     }
   });
 
+  element.addControl('advanced_tooltip', {
+    type: CONTROLLER_TEXT,
+    label: "Tooltip"
+  });  
+
   element.endControlSection();
 
   if(element.getType() !== 'section') {
