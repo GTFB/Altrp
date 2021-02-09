@@ -163,7 +163,10 @@ class DataAdapter {
         return {
           key: keyIsDate ? keyFormatted : currentKey,
           value: Number(_.get(d, dataKey)),
-          [keyFormatted]: Number(_.get(d, dataKey))
+          [keyFormatted]: Number(_.get(d, dataKey)),
+          label: keyIsDate
+            ? `${keyFormatted} (${Number(_.get(d, dataKey))})`
+            : `${currentKey} (${Number(_.get(d, dataKey))})`
         };
       }) || []
     );
