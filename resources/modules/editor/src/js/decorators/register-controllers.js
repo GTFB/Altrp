@@ -253,7 +253,7 @@ export function advancedTabControllers(element) {
         },
         {
           value: 'static',
-          label: 'default'
+          label: 'static'
         },
         {
           value: 'absolute',
@@ -265,7 +265,7 @@ export function advancedTabControllers(element) {
         }
       ],
       rules: {
-        '{{ELEMENT}}': 'position: {{VALUE}};',
+        '{{ELEMENT}}': 'position: {{VALUE}} !important;',
       },
     });
 
