@@ -69,7 +69,7 @@
     {!! $preload_content[ 'important_styles'] !!}
   @endif
 </head>
-<body class="front-app-body">
+<body class="front-app-body" data-vector-indexeddb-worker-script="chat/bundles/20e685bbe1fd04829411/indexeddb-worker.js">
 <div id="front-app" class="front-app {{ 'front-app_admin' }}">
   {!! isset( $preload_content[ 'content'] ) ? $preload_content['content'] : ''!!}
 </div>
@@ -89,6 +89,13 @@ try {
     /* ]]> */
   </script>
 @endif
+<link rel="stylesheet" href="chat/bundles/20e685bbe1fd04829411/bundle.css">
+<!--link rel="stylesheet" disabled="disabled" title="Legacy" href="/modules/chat/webapp/bundles/20e685bbe1fd04829411/theme-legacy.css">
+<link rel="stylesheet" disabled="disabled" title="Light" href="/modules/chat/webapp/bundles/20e685bbe1fd04829411/theme-light.css">
+<link rel="stylesheet" disabled="disabled" title="Light-custom" href="/modules/chat/webapp/bundles/20e685bbe1fd04829411/theme-light-custom.css"-->
+<noscript>Sorry, Element requires JavaScript to be enabled.</noscript> <!-- TODO: Translate this? -->
+<section id="matrixchat" style="height: 100%; overflow: auto;" class="notranslate"></section>
+<script src="{{ altrp_asset( 'chat/bundles/20e685bbe1fd04829411/bundle.js', 'http://localhost:3001/' ) }}" defer></script>
 </body>
 <link rel="stylesheet" href="{{ asset( '/modules/front-app/front-app.css' ) . '?' . getCurrentVersion() }}" />
 </html>
