@@ -4,9 +4,6 @@ import { setUpdatedNode } from "../../../store/robot-settings/actions";
 import AltrpSelect from "../../../../../../admin/src/components/altrp-select/AltrpSelect";
 import Resource from "../../../../../../editor/src/js/classes/Resource";
 
-
-
-
 class Crud extends Component{
     constructor(props){
         super(props);
@@ -24,7 +21,7 @@ class Crud extends Component{
     }
 
     async componentDidMount() {
-        store.subscribe(this.setStateCrud.bind(this));
+        store.subscribe(this.setDataState.bind(this));
 
         let models = await this.modelsResource.getAll();
         let modelOptions = await this.modelOptionsResource.getAll();
@@ -32,17 +29,10 @@ class Crud extends Component{
         this.setState(s =>({...s, modelOptions, models }));
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.selected !== prevProps.selected) {
-            this.setStateCrud();
-        }
-    }    
-
     // Запись значений select в store
     changeSelect(e, type) {
         const node = this.props.selected;
         if(type === "body"){
-            if(!node.data.props.nodeData.data.body) node.data.props.nodeData.data.body = {};
             if(e === null) e = [];
             let body = {};
             e.map(item => {
@@ -82,14 +72,22 @@ class Crud extends Component{
         return item;
     }
 
+    setDataState() {
+       this.setStateCrud();
+    }
+
     async setStateCrud(){
         const item = this.props.selected?.data?.props?.nodeData?.data?.model_id ?? '';
+
+        // console.log(item);
 
         if(item){
             let fields = new Resource({ route: `/admin/ajax/models/${item}/field_options` });
             let records = new Resource({ route: `/admin/ajax/models/${item}/records_options` });
             fields = await fields.getAll();
             records = await records.getAll();
+            // console.log(fields);
+            // console.log(records);
             this.setState(s =>({...s, fieldOptions: fields.options, recordOptions: records}));
         }
     }
@@ -108,6 +106,9 @@ class Crud extends Component{
         const fields = this.getFields();
         const record = this.getData("record_id");
 
+        // console.log(fieldOptions);
+        // console.log(recordOptions);
+
         return <div>
             <div className="controller-container__label">CRUD:</div>
             <div className="controller-container controller-container_textarea">
@@ -115,7 +116,8 @@ class Crud extends Component{
                 <AltrpSelect id="crud-model"
                     value={_.filter(modelOptions, item => model == item.value)}
                     onChange={e => {this.changeSelect(e, "model_id")}}
-                    options={modelOptions} />
+                    options={modelOptions}
+                />
             </div>
 
             {model && <div className="controller-container controller-container_textarea">
@@ -123,22 +125,25 @@ class Crud extends Component{
                 <AltrpSelect id="crud-method"
                     value={_.filter(methodOptions, item => method === item.value)}
                     onChange={e => {this.changeSelect(e, "method")}}
-                    options={methodOptions} />
+                    options={methodOptions}
+                />
             </div>}
-            {(method !== "create") && <div className="controller-container controller-container_textarea">
+            {(method && method !== "create") && <div className="controller-container controller-container_textarea">
                 <div className="controller-container__label">Record</div>
-                <AltrpSelect id="crud-delete-record"
-                                value={_.filter(recordOptions, item => record == item.value)}
-                                onChange={e => {this.changeSelect(e, "record_id")}}
-                                options={recordOptions} />
+                <AltrpSelect id="crud-record"
+                    value={_.filter(recordOptions, item => record == item.value)}
+                    onChange={e => {this.changeSelect(e, "record_id")}}
+                    options={recordOptions}
+                />
             </div>}
-            {(method !== "delete") && <div className="controller-container controller-container_textarea">
+            {(method && method !== "delete") && <div className="controller-container controller-container_textarea">
                 <div className="controller-container__label">Fields</div>
-                <AltrpSelect id="crud-create"
+                <AltrpSelect id="crud-fields"
                     isMulti={true}
                     value={_.filter(fieldOptions, f => fields.indexOf(f.label) >= 0)}
                     onChange={e => {this.changeSelect(e, "body")}}
-                    options={fieldOptions} />
+                    options={fieldOptions}
+                />
 
                 {fields.map((item, index) =>
                 <div key={index}>

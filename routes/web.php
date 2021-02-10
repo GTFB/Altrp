@@ -153,6 +153,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::delete('/roles/{role}/permissions', "Users\Roles@detachPermission");
 
     Route::get('/users', "Users\Users@getUsers");
+    Route::get('/users_options', "Users\Users@getUsersOptions")->name('admin.user_options');
     Route::get('/users/{user}', "Users\Users@getUser");
     Route::get('/users/{user}/storage', "Users\Users@getUserStorage");
     Route::post('/users', "Users\Users@insert");

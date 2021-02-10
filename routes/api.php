@@ -204,6 +204,7 @@ Route::group(['prefix' => 'users'], function () {
     Route::delete('/roles/{role}/permissions', "Users\Roles@detachPermission");
 
     Route::get('/users', "Users\Users@getUsers");
+    Route::get('/users_options', "Users\Users@getUsersOptions");
     Route::get('/users/{user}', "Users\Users@getUser");
     Route::post('/users', "Users\Users@insert");
     Route::put('/users/{user}', "Users\Users@update");

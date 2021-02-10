@@ -10,23 +10,60 @@ import store from "../../store/store"
 import {setUpdatedNode} from "../../store/robot-settings/actions"
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 
-
 export default class SelectedPanel extends React.Component {
   constructor(props) {
     super(props);
   }
 
-  changeInput = e =>{
-    let selected = this.props.selected;
-    selected.data.label = e.target.value;
-    store.dispatch(setUpdatedNode(selected));
+  changeInput(e){
+    let node = this.props.selected;
+    node.data.label = e.target.value;
+    store.dispatch(setUpdatedNode(node));
   }
 
   changeSelect = e =>{
-    let selected = this.props.selected;
-    selected.data.props.nodeData.type = e.value;
-    selected.data.props.nodeData.data = {};
-    store.dispatch(setUpdatedNode(selected));
+    let node = this.props.selected;
+    switch(e.value){
+      case "crud":
+        node.data.props.nodeData = {
+          "type": "crud",
+          "data": {
+              "method": "",
+              "body": {},
+              "record_id": null,
+              "model_id": ""
+          }
+        };
+        break;
+      case "send_mail":
+        node.data.props.nodeData = {
+          "type": "send_mail",
+          "data": {
+              "entities": "",
+              "subject": "",
+              "message": ""
+          }
+        };
+        break;
+      case "send_notification":
+        node.data.props.nodeData = {
+          "type": "send_notification",
+          "data": {
+              "entities": "",
+              "channels": [
+                  "broadcast",
+                  "telegram",
+                  "mail"
+              ],
+              "message": ""
+          }
+        };
+        break;
+    }
+
+    console.log(node);
+
+    store.dispatch(setUpdatedNode(node));
   }
   
   render() {
@@ -63,11 +100,11 @@ export default class SelectedPanel extends React.Component {
                       <div className="controller-container controller-container_textarea">
                           <div className="controller-container__label">Method</div>
                           <AltrpSelect id="type-action"
-                                          value={_.filter(typeOptions, item => typeAction === item.value)}
-                                          onChange={e => {this.changeSelect(e)}}
-                                          options={typeOptions} />
+                              value={_.filter(typeOptions, item => typeAction === item.value)}
+                              onChange={e => {this.changeSelect(e)}}
+                              options={typeOptions} />
                       </div>
-                        {/* <Send selected={this.props.selected || []}/> */}
+                        <Send selected={this.props.selected || []}/>
                         {(this.props.selected?.data?.props?.nodeData?.type === "crud") && <Crud selected={this.props.selected || []}/>}
                       </div>}
                   </div>

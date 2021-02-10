@@ -23,10 +23,6 @@ import Loop from "./js/components/sidebar/nodes/Loop";
 import Begin from "./js/components/sidebar/nodes/Begin";
 import Action from "./js/components/sidebar/nodes/Action";
 import End from "./js/components/sidebar/nodes/End";
-import {
-  dataAction,
-  dataCondition
-} from "./js/components/sidebar/data/data";
 
 class RobotsEditor extends Component {
   constructor(props) {
@@ -60,12 +56,20 @@ class RobotsEditor extends Component {
   // Удаление ноды
   onElementsRemove = elementsToRemove => {
     const robotStore = store.getState()?.robotSettingsData;
+    const selected = this.state.selected;
     const newStore = removeElements(elementsToRemove, robotStore);
+    if(_.isArray(elementsToRemove)){
+      elementsToRemove.map(item =>{
+        if(item.id == selected?.id) this.setState(s => ({ ...s, selected: {} }));
+      })
+    }
+    console.log(elementsToRemove);
     store.dispatch(setRobotSettingsData(newStore));
   }
 
   // Добавление связи между нодами
   onConnect = params => {
+    console.log(params);
     const robotStore = store.getState()?.robotSettingsData;
     const newStore = addEdge(params, robotStore);
     store.dispatch(setRobotSettingsData(newStore));
@@ -98,8 +102,8 @@ class RobotsEditor extends Component {
 
   // Получение id нового элемента (ноды)
   getId() {
-    const lengthStore = store.getState().robotSettingsData?.length ?? 0;
-    return lengthStore + 1;
+    const time = new Date().getTime();
+    return time;
   }
 
   // Получение data нового элемента (ноды)
@@ -108,10 +112,20 @@ class RobotsEditor extends Component {
 
     switch (type){
       case "action":
-        data = dataAction;
+        data = {
+          "type": "action",
+          "nodeData": {}
+        };
         break;
       case "condition":
-        data = dataCondition;
+        data = {  
+          "type": "condition",
+          "nodeData": {
+              "type": "none",
+              "operator": "",
+              "body": []
+          }
+        };
         break;
     }
     return data;
@@ -132,11 +146,15 @@ class RobotsEditor extends Component {
 
   // Запись активного элемента в state
   onElementClick = (event, element) => {
+    store.dispatch(setUpdatedNode(element));
     this.setState(s => ({ ...s, selected: element }));
   }
 
   render() {
     let elements = store.getState().robotSettingsData || [];
+    // console.log(elements);
+    console.log(this.state.selected);
+    // console.log(this.state);
     return (
       <div className="page__content">
         <ReactFlowProvider>
