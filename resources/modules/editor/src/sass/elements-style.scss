@@ -94,7 +94,8 @@
   font-weight: 400;
   box-shadow: rgba(119, 119, 147, 0.2) 0px 20px 100px 0px;
   text-align: center;
-  display: block;
+  display: none;
+  width: auto;
   color: #fff;
   -webkit-border-radius: 2px;
   border-radius: 2px;
@@ -109,6 +110,10 @@
   text-transform: none;
   transition: 0.5s;
   animation: altrpTooltipAnimation 0.2s forwards;
+}
+
+.altrp-element > *:hover + .altrp-tooltip, .altrp-element > .altrp-tooltip:hover {
+  display: block;
 }
 
 @keyframes altrpTooltipAnimation {

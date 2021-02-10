@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import appStore from "../store/store";
 import {altrpCompare, altrpRandomId, conditionsChecker} from "../helpers";
 import { addElement } from "../store/elements-storage/actions";
+import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -199,7 +200,8 @@ class ElementWrapper extends Component {
       hide_on_big_phone,
       hide_on_small_phone,
       hide_on_trigger,
-      isFixed
+      isFixed,
+      tooltip_text
     } = this.props.element.settings;
     let classes = `altrp-element altrp-element${this.props.element.getId()} altrp-element_${this.props.element.getType()}`;
     classes += this.props.element.getPrefixClasses() + " ";
@@ -271,6 +273,7 @@ class ElementWrapper extends Component {
           currentScreen: this.props.currentScreen,
           appStore
         })}
+        {tooltip_text && <AltrpTooltip>{tooltip_text}</AltrpTooltip>}
       </div>
     );
   }
