@@ -16,6 +16,8 @@ class Send extends Component{
             rolesOptions: []
         };
         this.toggle = this.toggle.bind(this);
+        this.onSend = this.onSend.bind(this);
+        this.changeSelect = this.changeSelect.bind(this);
 
         this.usersOptions = new Resource({ route: "/admin/ajax/users_options" });
         this.rolesOptions = new Resource({ route: "/admin/ajax/role_options" });
@@ -29,41 +31,22 @@ class Send extends Component{
     }
     
 
-    // getData = data => {
-    //     const nodeData = this.props.selected?.data.props.nodeData ?? [];
-    //     if(nodeData instanceof Array){
-    //         const item = nodeData.filter(i =>{
-    //             if(i.type === data) return i;
-    //         });
-    //         return item[0];
-    //     }
-    // }
-
-    // Запись значений inputs в store
-    onSendMail = (e, type) => {
-        let value = e.target.value;
-        const node = this.props.selected;
-
-        // node.data.props.nodeData.map( item => {
-        //     if(item.type === "send_mail") item.data[type] = value;
-        //     return item;
-        // });
-
-        store.dispatch(setUpdatedNode(node));
+    getData = data => {
+        const nodeData = this.props.selected?.data.props.nodeData ?? [];
+        if(nodeData instanceof Array){
+            const item = nodeData.filter(i =>{
+                if(i.type === data) return i;
+            });
+            return item[0];
+        }
     }
 
     // Запись значений inputs в store
-    onSendNotice = (e, type) => {
+    onSend = (e, type) => {
         let value = e.target.value;
         const node = this.props.selected;
-
-
-        // node.data.props.nodeData.map( item => {
-        //     if(item.type === "send_notification") item.data[type] = value;
-        //     return item;
-        // });
-
-        // store.dispatch(setUpdatedNode(node));
+        node.data.props.nodeData.data[type] = value;
+        store.dispatch(setUpdatedNode(node));
     }
 
       // Изменение положения переключателя
@@ -79,8 +62,12 @@ class Send extends Component{
     // Запись значений select в store
     changeSelect(e, type) {
         const node = this.props.selected;
-        if(!_.isObject(node.data.props.nodeData.data.entities)) node.data.props.nodeData.data.entities = {};
-        node.data.props.nodeData.data.entities[type] = e ? e.map(item => item.value) : [];
+        if(type === "channels"){
+            node.data.props.nodeData.data[type] = e ? e.map(item => item.value) : [];
+        } else {
+            if(!_.isObject(node.data.props.nodeData.data.entities)) node.data.props.nodeData.data.entities = {};
+            node.data.props.nodeData.data.entities[type] = e ? e.map(item => item.value) : [];
+        }
         store.dispatch(setUpdatedNode(node));
     }
 
@@ -90,6 +77,7 @@ class Send extends Component{
         const users = this.props.selected?.data?.props?.nodeData?.data?.entities?.users ?? [];
         const roles = this.props.selected?.data?.props?.nodeData?.data?.entities?.roles ?? [];
         const typeAction =  this.props.selected?.data?.props?.nodeData?.type ?? '';
+        const sendData = this.props.selected?.data?.props?.nodeData ?? '';
         let value = (this.props.selected?.data?.props?.nodeData?.data?.entities === "all") ?? false;
         let switcherClasses = `control-switcher control-switcher_${value ? 'on' : 'off'}`;
 
@@ -128,8 +116,8 @@ class Send extends Component{
                 }
             </div>            
             }
-            {/* {(typeAction === "send_mail") && <SendEmail onSendMail={this.onSendMail} emailData={this.getData("send_mail")}/>} */}
-            {/* {(typeAction === "send_notification") && <SendNotice onSendNotice={this.onSendNotice} noticeData={this.getData("send_notification")}/>} */}
+            {(typeAction === "send_mail") && <SendEmail onSend={this.onSend} emailData={sendData}/>}
+            {(typeAction === "send_notification") && <SendNotice onSend={this.onSend} changeSelect={this.changeSelect} noticeData={sendData}/>}
         </div>
     }
 }
