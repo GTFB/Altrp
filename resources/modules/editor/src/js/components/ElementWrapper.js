@@ -266,7 +266,7 @@ class ElementWrapper extends Component {
   }
   render() {
     const elementHideTrigger = this.props.element.settings.hide_on_trigger;
-    const { isFixed, tooltip_text } = this.props.element.getSettings();
+    const { isFixed, tooltip_text, tooltip_position } = this.props.element.getSettings();
     
     let errorContent = null;
     if (this.state.errorInfo) {
@@ -383,7 +383,7 @@ class ElementWrapper extends Component {
           CKEditor: CKEditor,
           wrapper: this
         })}
-        {tooltip_text && <AltrpTooltip>{tooltip_text}</AltrpTooltip>}
+        {tooltip_text && <AltrpTooltip position={tooltip_position}>{tooltip_text}</AltrpTooltip>}
         {emptyColumn}
       </div>
     );

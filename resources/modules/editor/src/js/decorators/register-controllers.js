@@ -648,6 +648,30 @@ export function advancedTabControllers(element) {
     label: 'Content',
   });
 
+  element.addControl('tooltip_position', {
+    type: CONTROLLER_SELECT,
+    label: 'Position',
+    default: 'top',
+    options: [
+      {
+        label: 'top',
+        value: 'top',
+      },
+      {
+        value: 'bottom',
+        label: 'bottom',
+      },
+      {
+        value: 'left',
+        label: 'left',
+      },
+      {
+        value: 'right',
+        label: 'right',
+      },
+    ],
+  });
+
   element.addControl('tooltip_position_padding', {
     type: CONTROLLER_DIMENSIONS,
     label: 'Padding',
@@ -715,65 +739,13 @@ export function advancedTabControllers(element) {
     type: CONTROLLER_COLOR,
     label: 'Background Color',
     rules: {
-      '{{ELEMENT}} > .altrp-tooltip': 'background-color: {{COLOR}};',
-      '{{ELEMENT}} > .altrp-tooltip::after': 'border-color: transparent transparent {{COLOR}};',
-    },
-  });
-
-  element.addControl('tooltip_border_type', {
-    type: CONTROLLER_SELECT,
-    label: 'Border Type',
-    options: [
-      {
-        'value': 'none',
-        'label': 'None',
-      },
-      {
-        'value': 'solid',
-        'label': 'Solid',
-      },
-      {
-        'value': 'double',
-        'label': 'Double',
-      },
-      {
-        'value': 'dotted',
-        'label': 'Dotted',
-      },
-      {
-        'value': 'dashed',
-        'label': 'Dashed',
-      },
-      {
-        'value': 'groove',
-        'label': 'Groove',
-      },
-    ],
-    rules: {
-      '{{ELEMENT}} > .altrp-tooltip{{STATE}}': 'border-style: {{VALUE}};',
-    },
-  }
-  );
-
-  element.addControl('tooltip_border_width', {
-    type: CONTROLLER_DIMENSIONS,
-    label: 'Border Width',
-    units: ['px', '%', 'vh', 'vw'],
-    rules: {
-      '{{ELEMENT}} > .altrp-tooltip{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-    },
-  }
-  );
-
-  element.addControl('tooltip_border_color', {
-    type: CONTROLLER_COLOR,
-    label: 'Border Color',
-    rules: {
-      '{{ELEMENT}} > .altrp-tooltip{{STATE}}': 'border-color: {{COLOR}};',
-    },
-  }
-  );
-
+      '{{ELEMENT}} > .altrp-tooltip{{STATE}}': [
+        'border-color: transparent transparent {{COLOR}}',
+        'background-color: {{COLOR}}'
+      ]
+    }
+  }); 
+  
   element.addControl('tooltip_border_radius', {
     type: CONTROLLER_DIMENSIONS,
     label: 'Border Radius',
