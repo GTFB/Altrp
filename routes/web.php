@@ -131,6 +131,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     Route::get('/roles', "Users\Roles@getRoles");
     Route::resource( 'robots', 'RobotController' );
+    Route::get( 'robots_options', 'RobotController@getOptions' );
 
     /**
      * URL: /admin/ajax/role_options?s=search_string

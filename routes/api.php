@@ -75,6 +75,7 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::resource( 'pages', 'Admin\PagesController' );
         Route::resource( 'templates', 'TemplateController' );
         Route::resource( 'robots', 'RobotController' );
+        Route::get( 'robots_options', 'RobotController@getOptions' );
         Route::resource( 'sql_editors', 'Admin\SQLEditorController' );
 
         /**

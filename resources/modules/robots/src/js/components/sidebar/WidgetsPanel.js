@@ -43,6 +43,9 @@ export default class WidgetsPanel extends React.Component {
           <div className="react-flow__node-input" onDragStart={(event) => this.onDragStart( event, 'action' )} draggable>
             Action
           </div>
+          <div className="react-flow__node-input" onDragStart={(event) => this.onDragStart( event, 'robot' )} draggable>
+            Robot
+          </div>
           {end && <div className="flow-node" onDragStart={(event) => this.onDragStart( event, 'end' )} draggable>
             End
           </div>}

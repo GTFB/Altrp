@@ -4,8 +4,11 @@ import ReactFlow, {
   ReactFlowProvider,
   Controls,
   removeElements,
-  addEdge
+  addEdge,
+  isNode,
+  isEdge
 } from "react-flow-renderer";
+
 
 import _ from "lodash";
 import "./sass/styles.scss";
@@ -19,9 +22,9 @@ import {
 
 import Sidebar from "./js/components/sidebar/Sidebar";
 import Condition from "./js/components/sidebar/nodes/Condition";
-import Loop from "./js/components/sidebar/nodes/Loop";
 import Begin from "./js/components/sidebar/nodes/Begin";
 import Action from "./js/components/sidebar/nodes/Action";
+import Robot from "./js/components/sidebar/nodes/Robot";
 import End from "./js/components/sidebar/nodes/End";
 
 class RobotsEditor extends Component {
@@ -32,6 +35,7 @@ class RobotsEditor extends Component {
       elements: store.getState().robotSettingsData || [],
       reactFlowInstance: null,
       selected: false,
+      selectEdge: false
     };
 
     this.resource = new Resource({ route: "/admin/ajax/robots" });
@@ -127,6 +131,14 @@ class RobotsEditor extends Component {
           }
         };
         break;
+      case "robot":
+        data = {  
+          "type": "robot",
+          "nodeData": {
+              "id": "",
+          }
+        };
+        break;
     }
     return data;
   }
@@ -147,7 +159,8 @@ class RobotsEditor extends Component {
   // Запись активного элемента в state
   onElementClick = (event, element) => {
     store.dispatch(setUpdatedNode(element));
-    this.setState(s => ({ ...s, selected: element }));
+    if(isNode(element)) this.setState(s => ({ ...s, selected: element, selectEdge: false }));
+    if(isEdge(element)) this.setState(s => ({ ...s, selectEdge: element, selected: false }));
   }
 
   render() {
@@ -158,7 +171,7 @@ class RobotsEditor extends Component {
     return (
       <div className="page__content">
         <ReactFlowProvider>
-          <Sidebar elements={ elements } selected={ this.state.selected } onLoad={ this.onLoad }/>
+          <Sidebar elements={ elements } selected={ this.state.selected } selectEdge={ this.state.selectEdge } onLoad={ this.onLoad }/>
           <div className="content" ref={this.reactFlowRef }>
             <ReactFlow
               elements={ elements }
@@ -174,8 +187,8 @@ class RobotsEditor extends Component {
                 begin: Begin,
                 condition: Condition,
                 action: Action,
+                robot: Robot,
                 end: End,
-                loop: Loop,
               }}
             >
               <Controls />
