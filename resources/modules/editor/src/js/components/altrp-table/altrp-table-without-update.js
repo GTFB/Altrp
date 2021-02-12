@@ -197,9 +197,9 @@ function AltrpTableWithoutUpdate(
           href: `mailto:${cell.value}`,
           className: 'altrp-inherit altrp-table-td__default-content',
           dangerouslySetInnerHTML: {
-            __html: cell.value
+            __html: cell.value || '&nbsp;'
           }
-        })
+        });
         break;
         
       case 'phone':
@@ -207,9 +207,9 @@ function AltrpTableWithoutUpdate(
           href: `tel:${cell.value}`,
           className: 'altrp-inherit altrp-table-td__default-content',
           dangerouslySetInnerHTML: {
-            __html: cell.value
+            __html: cell.value || '&nbsp;'
           }
-        })
+        });
         break;
     
       default:
@@ -218,7 +218,7 @@ function AltrpTableWithoutUpdate(
             to: parseURLTemplate(column.column_link, row.original),
             className: 'altrp-inherit altrp-table-td__default-content',
             dangerouslySetInnerHTML: {
-              __html: cell.value
+              __html: cell.value || '&nbsp;'
             }
           })
         } else {
@@ -226,7 +226,7 @@ function AltrpTableWithoutUpdate(
             href,
             className: 'altrp-inherit altrp-table-td__default-content',
             dangerouslySetInnerHTML: {
-              __html: cell.value
+              __html: cell.value || '&nbsp;'
             }
           })
         }
