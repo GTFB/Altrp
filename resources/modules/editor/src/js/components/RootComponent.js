@@ -1,5 +1,4 @@
 import React, { Component,  } from "react";
-import { setDefaultTriggers } from "../../../../front-app/src/js/store/hide-triggers/actions";
 
 class RootComponent extends Component {
   constructor(props) {
@@ -16,7 +15,6 @@ class RootComponent extends Component {
 
   _componentDidMount() {
     let hiddenElementsTriggers = this.state.settings.hidden_elements_triggers;
-
     // if (hiddenElementsTriggers && _.isString(hiddenElementsTriggers)) {
     //   hiddenElementsTriggers = hiddenElementsTriggers
     //     .split(",")
@@ -33,25 +31,20 @@ class RootComponent extends Component {
     return (
       <div className={classes}>
         {this.props.element.getSettings("test-text-4")}
-        {this.state.children.map(section => (
-          <ElementWrapper
-            ElementWrapper={ElementWrapper}
-            rootElement={this.props.element}
-            key={section.getIdForAction()}
-            component={section.componentClass}
-            element={section}
-          />
-        ))}
+        {this.state.children.map(section => {
+          return(
+            <ElementWrapper
+              ElementWrapper={ElementWrapper}
+              rootElement={this.props.element}
+              key={section.getIdForAction()}
+              component={section.componentClass}
+              element={section}
+            />
+          )})
+        }
       </div>
     );
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    setDefaultTriggers: triggers => dispatch(setDefaultTriggers(triggers))
-  };
-};
-
-// export default connect(null, mapDispatchToProps)(RootComponent);
 export default RootComponent;

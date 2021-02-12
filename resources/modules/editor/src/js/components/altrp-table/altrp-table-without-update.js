@@ -67,7 +67,7 @@ includesSome.autoRemove = function (val) {
 };
 
 /**
- *
+ * Фильтрация нечеткого текста
  * @param rows
  * @param id
  * @param filterValue
@@ -85,8 +85,35 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
     }]
   })
 }
-// Let the table remove the filter if the string is empty
-fuzzyTextFilterFn.autoRemove = val => !val;
+fuzzyTextFilterFn.autoRemove = val => ! val;
+/**
+ * Фильтрация на точное соответствие
+ * @param rows
+ * @param id
+ * @param filterValue
+ * @return {*}
+ */
+function fullMatchTextFilterFn(rows, id, filterValue) {
+  id = id ? id[0] : undefined;
+  return rows.filter(row => _.get(row, `values.${id}`) === filterValue);
+}
+fullMatchTextFilterFn.autoRemove = val => ! val;
+/**
+ * Фильтрация на нахождение в тексте
+ * @param rows
+ * @param id
+ * @param filterValue
+ * @return {*}
+ */
+function partialMatchTextFilterFn(rows, id, filterValue) {
+  id = id ? id[0] : undefined;
+  return rows.filter(row => {
+    filterValue = filterValue.replace(/\s/g, '');
+    let value = _.get(row, `values.${id}`, '').replace(/\s/g, '');
+    return value.indexOf(filterValue) !== -1
+  });
+}
+partialMatchTextFilterFn.autoRemove = val => ! val;
 /**
  * Компонент, который работает только с внешними данными, которые не обновляются с сервера
  * @param {{}} settings
@@ -133,7 +160,7 @@ function AltrpTableWithoutUpdate(
     React.useEffect(() => {
       setValue(initialValue);
     }, [initialValue, cell]);
-    const { column_template, column_is_editable, column_edit_url, _accessor } = column;
+    const { column_template, column_is_editable, column_edit_url, _accessor, column_cell_content_type } = column;
     const [columnTemplate, setColumnTemplate] = React.useState(null);
     const columnEditUrl =
       React.useMemo(() => {
@@ -163,22 +190,49 @@ function AltrpTableWithoutUpdate(
     /**
      * Если в настройках колонки есть url, и в данных есть id, то делаем ссылку
      */
-    if (column.column_link) {
-      cellContent = React.createElement(linkTag, {
-        to: parseURLTemplate(column.column_link, row.original),
-        className: 'altrp-inherit altrp-table-td__default-content',
-        dangerouslySetInnerHTML: {
-          __html: cell.value
+    let href = null;
+    switch (column_cell_content_type) {
+      case 'email':
+        cellContent = React.createElement('a', {
+          href: `mailto:${cell.value}`,
+          className: 'altrp-inherit altrp-table-td__default-content',
+          dangerouslySetInnerHTML: {
+            __html: cell.value
+          }
+        })
+        break;
+        
+      case 'phone':
+        cellContent = React.createElement('a', {
+          href: `tel:${cell.value}`,
+          className: 'altrp-inherit altrp-table-td__default-content',
+          dangerouslySetInnerHTML: {
+            __html: cell.value
+          }
+        })
+        break;
+    
+      default:
+        if (column.column_link) {
+          cellContent = React.createElement(linkTag, {
+            to: parseURLTemplate(column.column_link, row.original),
+            className: 'altrp-inherit altrp-table-td__default-content',
+            dangerouslySetInnerHTML: {
+              __html: cell.value
+            }
+          })
+        } else {
+          cellContent = React.createElement('span', {
+            href,
+            className: 'altrp-inherit altrp-table-td__default-content',
+            dangerouslySetInnerHTML: {
+              __html: cell.value
+            }
+          })
         }
-      })
-    } else {
-      cellContent = React.createElement('span', {
-        className: 'altrp-inherit altrp-table-td__default-content',
-        dangerouslySetInnerHTML: {
-          __html: cell.value
-        }
-      })
+        break;
     }
+    
     const columnTemplateContent = React.useMemo(() => {
       if (! columnTemplate) {
         return null;
@@ -273,6 +327,8 @@ function AltrpTableWithoutUpdate(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: fuzzyTextFilterFn,
+      fullMatchText: fullMatchTextFilterFn,
+      partialMatchText: partialMatchTextFilterFn,
       // Or, override the default text filter to use
       // "startWith"
       text: (rows, id, filterValue) => {
@@ -581,15 +637,9 @@ function AltrpTableWithoutUpdate(
       }
       return paginationProps;
     }, [inner_page_size, pageSize, pageCount, pageIndex, settings]);
-  const { WrapperComponent, wrapperProps } = React.useMemo(() => {
-    return {
-      WrapperComponent: replace_rows ? DndProvider : DndProvider/*React.Fragment*/,
-      // wrapperProps: replace_rows ? {backend:HTML5Backend} : {backend:HTML5Backend},
-      wrapperProps: { backend: HTML5Backend },
-    };
-  }, [replace_rows]);
 
-  return <WrapperComponent {...wrapperProps}>
+
+  return  <React.Fragment>
     {hide_columns && <div className="altrp-table-hidden">
       <div className="altrp-table-hidden__all">
         <IndeterminateCheckbox {...getToggleHideAllColumnsProps()} /> Toggle
@@ -720,7 +770,7 @@ function AltrpTableWithoutUpdate(
         </div></div></div>}
     </div>
     {paginationProps && <Pagination {...paginationProps} />}
-  </WrapperComponent>
+  </React.Fragment>
 }
 const TableBody =
   ({
@@ -1179,6 +1229,19 @@ export function settingsToColumns(settings, widgetId) {
             _column.Filter = ({ column }) => <SelectColumnFilter column={column} widgetId={widgetId} />;
           }
             break;
+          case 'text': {
+            switch(_column.column_text_filter_type){
+              case 'full_match': {
+                _column.filter = 'fullMatchText';
+              }
+              break;
+              case 'partial_match': {
+                _column.filter = 'partialMatchText';
+              }
+              break;
+            }
+          }
+            break;
         }
       }
       _column.canGroupBy = ! !_column.group_by;
@@ -1348,7 +1411,7 @@ const Cell = ({ cell, settings }) => {
       let cellStyles = _.get(cell, 'column.column_styles_field');
       cellStyles = _.get(row.original, cellStyles, '');
       cellStyles = mbParseJSON(cellStyles, {});
-      cellProps.style = _.assign(cellStyles, cellProps.style);
+      cellProps.style = _.assign({...cellStyles}, cellProps.style);
     }
     // if(replace_rows){
     //   cellProps.ref = dropRef;
@@ -1550,7 +1613,7 @@ const Row = ({ row,
               let cellStyles = _.get(cell, 'column.column_styles_field');
               cellStyles = _.get(row.original, cellStyles, '');
               cellStyles = mbParseJSON(cellStyles, {});
-              cellProps.style = _.assign(cellStyles, cellProps.style);
+              cellProps.style = _.assign({...cellStyles}, cellProps.style);
             }
             if (replace_rows) {
               cellProps.ref = dropRef;

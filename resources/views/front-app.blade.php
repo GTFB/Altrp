@@ -7,6 +7,7 @@
   <script>
     /* <![CDATA[ */
     window.pageStorage = {};
+    window.ALTRP_DEBUG = {!! json_encode( ! ! get_altrp_setting( 'altrp_debug', false ) ) !!};
 
     var page_id = {{$page_id}};
     var page_areas = {!! $page_areas !!};
@@ -70,7 +71,7 @@
   @endif
 </head>
 <body class="front-app-body">
-<div id="front-app" class="front-app {{ 'front-app_admin' }}">
+<div id="front-app" class="front-app {{ $is_admin ? 'front-app_admin' : '' }}">
   {!! isset( $preload_content[ 'content'] ) ? $preload_content['content'] : ''!!}
 </div>
 <script src="{{ altrp_asset( '/modules/front-app/front-app.js', 'http://localhost:3001/' ) }}" defer></script>

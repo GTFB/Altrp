@@ -25,7 +25,10 @@ const DynamicPieChart = ({
   tickRotation = 0,
   bottomAxis = true,
   keyIsDate = false,
-  isDashboard = false
+  isDashboard = false,
+  customColorSchemeChecker = false,
+  customColors = [],
+  yScaleMax
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -64,7 +67,7 @@ const DynamicPieChart = ({
             dataSource = _.sortBy(dataSource, ["id"]);
             break;
           default:
-            data = data;
+            dataSource = dataSource;
             break;
         }
       }
@@ -92,6 +95,13 @@ const DynamicPieChart = ({
             bottom: 80,
             left: !isDashboard ? 140 : 60
           }}
+          colors={
+            customColorSchemeChecker && customColors.length > 0
+              ? customColors
+              : colorScheme === "regagro"
+              ? regagroScheme
+              : { scheme: colorScheme }
+          }
           innerRadius={innerRadius}
           enableSliceLabels={enableSliceLabels}
           padAngle={padAngle}

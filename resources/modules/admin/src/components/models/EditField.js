@@ -23,15 +23,15 @@ class EditField extends Component {
    * отправка данных
    * @return {*}
    */
-  onSubmit = async data => {
+  onSubmit = async (data, isNeedToCheckName) => {
     const { modelId } = this.props.match.params;
     const { history } = this.props;
-    const isNameTaken = await fetch(`/admin/ajax/models/${modelId}/field_name_is_free/?name=${data.name}`)
-      .then(res => res.json())
-      .then(res => !res.taken);
-
-    if (isNameTaken) {
-      return alert(`Name ${data.name} is already taken. Use another one.`)
+    if (isNeedToCheckName) {
+      fetch(`/admin/ajax/models/${modelId}/field_name_is_free/?name=${data.name}`)
+        .then(res => res.json())
+        .then(res => {
+          if (!res.taken) return alert(`Name ${data.name} is already taken. Use another one.`);
+        });
     }
 
     if (this.props.match.params.id) {

@@ -332,8 +332,19 @@ class AltrpAction extends AltrpModel {
         _.get(getDataByPath(this.getProperty("bulk_path")), "length")
       ) {
         let bulk = getDataByPath(this.getProperty("bulk_path"));
-        let _form = this.getProperty("_form");
-        data = _.assign(_form.getData(), data);
+        /**
+         * Для получение данных с полей формы, нужно создать форму и вызвать метод getData
+         * @type {AltrpForm}
+         */
+        const form = formsManager.registerForm(
+            this.getFormId(),
+            "",
+            this.getProperty("form_method"),
+            {
+              customRoute: ''
+            }
+        );
+        data = _.assign(form.getData(), data);
         let bulkRequests = bulk.map(async (item, idx) => {
           // return   ()=>{
           if (this.getProperty("data")) {

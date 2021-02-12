@@ -435,10 +435,18 @@ class DataSourceDashboards extends Component {
           </>
         )}
         {this.props.showExportButton && (
-          <ExportDashboardButton onExport={this.export} />
+          <ExportDashboardButton
+            className="altrp-dashboars__export-dashboard-button"
+            onExport={this.export}
+          />
         )}
-        <ImportDashboard onImport={this.import} getFile={this.getFile} />
+        <ImportDashboard
+          className="altrp-dashboars__import-dashboard-button"
+          onImport={this.import}
+          getFile={this.getFile}
+        />
         <ImportDiagram
+          className="altrp-dashboars__import-diagram-button"
           onImport={this.importDiagram}
           getFile={this.getWidgetFile}
         />

@@ -58,6 +58,7 @@ class AltrpBreadcrumbs extends Component {
           breadcrumbs.map((name, idx) => {
             const to = idx === 0 ? "/" : pathname.split(name)[0] + name;
             const label = idx === 0 ? this.props.element.getContent("breadcrumbs_label", "Home") : name;
+            const currentLabel = replaceContentWithData(appStore.getState().currentTitle);
 
             return <li className="altrp-nav-breadcrumbs-li" key={idx}>
               {
@@ -71,7 +72,9 @@ class AltrpBreadcrumbs extends Component {
                   </Link>
                 ) : (
                   <div className="altrp-nav-breadcrumbs-label altrp-nav-breadcrumbs-current">
-                    { label }
+                    {
+                      isEditor() ? label : currentLabel
+                    }
                   </div>
                 )
               }
