@@ -99,17 +99,19 @@ class ButtonWidget extends Component {
           }
         }
       );
-    } else if (
-      this.props.element.getSettings("popup_trigger_type") &&
-      this.props.element.getSettings("popup_id")
-    ) {
-      this.props.appStore.dispatch(
-        togglePopup(this.props.element.getSettings("popup_id"))
-      );
-      /**
-       * Проверим надо ли по ID скроллить к элементу
-       */
-    } else if (
+    }
+    // else      if (
+    //   this.props.element.getSettings("popup_trigger_type") &&
+    //   this.props.element.getSettings("popup_id")
+    // ) {
+    //   this.props.appStore.dispatch(
+    //     togglePopup(this.props.element.getSettings("popup_id"))
+    //   );
+    //   /**
+    //    * Проверим надо ли по ID скроллить к элементу
+    //    */
+    // }
+    else if (
       e.target.href &&
       e.target.href
         .replace(window.location.origin + window.location.pathname, "")

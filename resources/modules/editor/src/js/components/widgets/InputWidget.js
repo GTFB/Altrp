@@ -25,7 +25,10 @@ class InputWidget extends Component {
 
     this.defaultValue =
       props.element.getSettings().content_default_value ||
-      (props.element.getSettings().select2_multiple ? [] : "");
+      (this.valueMustArray() ? [] : "");
+    if(this.valueMustArray() && ! _.isArray(this.defaultValue)){
+      this.defaultValue = [];
+    }
     this.state = {
       settings: { ...props.element.getSettings() },
       value: this.defaultValue,
@@ -46,6 +49,19 @@ class InputWidget extends Component {
     }
   }
 
+  /**
+   * В некоторых случаях значение поля должно быть массивом
+   * @return {boolean}
+   */
+  valueMustArray(){
+    if((["file", "image_select", 'checkbox'].indexOf(this.props.element.getSettings('content_type')) !== -1)){
+      return true;
+    }
+    if(this.props.element.getSettings('content_type') === 'select2' && this.props.element.getSettings('select2_multiple')){
+      return true
+    }
+    return false;
+  }
   /**
    * Чистит значение
    */
@@ -1031,6 +1047,7 @@ class InputWidget extends Component {
         options
       );
     }
+    console.log(value);
     const select2Props = {
       className: "altrp-field-select2",
       element: this.props.element,

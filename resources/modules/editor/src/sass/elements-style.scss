@@ -967,8 +967,15 @@
  */
 .altrp-transpose_true{
   overflow: auto;
-  & > .altrp-table{
-    width: auto;
+  & > div > div > .altrp-table{
+    width: inherit;
+    overflow: visible;
+  }
+  & .altrp-scroll__horizontal-track{
+    width: 100%;
+    bottom: 0;
+    transform: scale(1, 1.2);
+    transform-origin: center 0;
   }
   & .altrp-table_columns-1{
     grid-template-rows: 1fr;

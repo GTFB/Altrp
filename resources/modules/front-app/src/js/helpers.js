@@ -49,7 +49,7 @@ export function setTitle(title) {
  * */
 export function isEditor() {
   const path = window.location.pathname;
-  return path.includes("admin");
+  return path.includes("/admin/editor");
 }
 
 /**
@@ -564,7 +564,7 @@ export function getDataByPath(
     value = currentModel.getProperty(path)
       ? currentModel.getProperty(path)
       : urlParams[path];
-    if (!value) {
+    if (! value) {
       value = _default;
     }
   }
