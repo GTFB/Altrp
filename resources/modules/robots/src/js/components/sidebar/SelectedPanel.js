@@ -5,6 +5,7 @@ import {isNode} from 'react-flow-renderer';
 
 import Chevron from "../../../../../editor/src/svgs/chevron.svg";
 import Send from "./data/Send"
+import Condition from "./data/Condition"
 import Crud from "./data/Crud"
 import store from "../../store/store"
 import {setUpdatedNode} from "../../store/robot-settings/actions"
@@ -60,19 +61,17 @@ export default class SelectedPanel extends React.Component {
         };
         break;
     }
-
-    console.log(node);
-
     store.dispatch(setUpdatedNode(node));
   }
   
   render() {
-    const typeOptions = [
+    const actionTypeOptions = [
       {label:'Send Mail', value: 'send_mail'},
       {label:'Send Notification', value: 'send_notification'},
       {label:'CRUD', value: 'crud'}
     ];
-    const typeAction = this.props.selected.data?.props?.nodeData?.type ?? '';
+    const conditionTypeOptions = [];
+    const typeData = this.props.selected.data?.props?.nodeData?.type ?? '';
     // console.log(this.props.selected);
     return (
       <div className="panel settings-panel d-flex">
@@ -100,12 +99,22 @@ export default class SelectedPanel extends React.Component {
                       <div className="controller-container controller-container_textarea">
                           <div className="controller-container__label">Method</div>
                           <AltrpSelect id="type-action"
-                              value={_.filter(typeOptions, item => typeAction === item.value)}
+                              value={_.filter(actionTypeOptions, item => typeData === item.value)}
                               onChange={e => {this.changeSelect(e)}}
-                              options={typeOptions} />
+                              options={actionTypeOptions} />
                       </div>
                         <Send selected={this.props.selected || []}/>
                         {(this.props.selected?.data?.props?.nodeData?.type === "crud") && <Crud selected={this.props.selected || []}/>}
+                      </div>}
+                    {(this.props.selected?.type === "condition") && <div>
+                      <div className="controller-container controller-container_textarea">
+                          <div className="controller-container__label">Type</div>
+                          <AltrpSelect id="type-condition"
+                              value={_.filter(conditionTypeOptions, item => typeData === item.value)}
+                              onChange={e => {this.changeSelect(e)}}
+                              options={conditionTypeOptions} />
+                      </div>
+                        <Condition selectNode={this.props.selected || []}/>
                       </div>}
                   </div>
                 ) : (
