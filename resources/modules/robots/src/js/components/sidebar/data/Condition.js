@@ -4,9 +4,6 @@ import { setUpdatedNode } from "../../../store/robot-settings/actions";
 import AltrpSelect from "../../../../../../admin/src/components/altrp-select/AltrpSelect";
 import {CONDITIONS_OPTIONS} from "../../../../../../front-app/src/js/helpers"
 
-
-
-
 class Condition extends Component{
     constructor(props){
         super(props);

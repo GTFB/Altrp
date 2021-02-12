@@ -7,7 +7,7 @@ export default class Begin extends React.Component {
   }
 
   render() {
-    let nodeClasses = "react-flow__node-default";
+    let nodeClasses = "flow-node";
     if (this.props.selected) nodeClasses += " selected";
     
     return (

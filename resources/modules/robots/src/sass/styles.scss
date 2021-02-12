@@ -61,7 +61,7 @@ body {
 
 .flow-node {
     padding: 10px;
-    border-radius: 3px;
+    border-radius: 45px;
     width: 150px;
     font-size: 12px;
     color: #222;
@@ -72,6 +72,52 @@ body {
         box-shadow: 0 0 0 0.5px #1a192b;
     }
 }
+
+.flow-node-condition {
+
+    .condition-type {
+        font-size: 12px;
+        margin-left: 55px;
+        margin-top: -50px;
+    }
+    .condition-romb{
+        width: 0; 
+        height: 0;
+        border: 80px solid transparent;
+        border-bottom-color: #d1fae6;
+        position: relative; 
+        top: -80px;
+        h3{
+            margin-top: 50px;
+            font-size: 12px;
+            margin-left: -50px;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100px;    
+            height: 55px;    
+        }    
+    }
+    .condition-romb:after {
+        content: "";
+        width: 0; 
+        height: 0;
+        position: absolute; 
+        left: -80px; 
+        top: 80px;
+        border: 80px solid transparent;
+        border-top-color: #d1fae6;
+        z-index: -10;
+
+    }
+    
+}
+
+.react-flow__minimap-node.condition-romb{
+    width: 150px; 
+    height: 150px;
+}
+
 
 // Switcher
 .robot_switcher{

@@ -34,7 +34,7 @@ export default class WidgetsPanel extends React.Component {
         <div className="widget-panel">
         <aside>
           <div className="description">You can drag these nodes to the pane on the right.</div>
-          {begin && <div className="react-flow__node-default" onDragStart={(event) => this.onDragStart( event, 'begin' )} draggable>
+          {begin && <div className="flow-node" onDragStart={(event) => this.onDragStart( event, 'begin' )} draggable>
             Begin
           </div>}
           <div className="react-flow__node-output" onDragStart={(event) => this.onDragStart( event, 'condition' )} draggable>
@@ -43,7 +43,7 @@ export default class WidgetsPanel extends React.Component {
           <div className="react-flow__node-input" onDragStart={(event) => this.onDragStart( event, 'action' )} draggable>
             Action
           </div>
-          {end && <div className="react-flow__node-default" onDragStart={(event) => this.onDragStart( event, 'end' )} draggable>
+          {end && <div className="flow-node" onDragStart={(event) => this.onDragStart( event, 'end' )} draggable>
             End
           </div>}
         </aside>

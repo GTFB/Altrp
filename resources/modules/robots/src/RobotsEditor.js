@@ -180,12 +180,20 @@ class RobotsEditor extends Component {
             >
               <Controls />
               <MiniMap
-                nodeColor={(node) => {
+                nodeColor={node => {
                   switch (node.type) {
                     case 'begin': return 'green';
                     case 'condition': return 'red';
                     case 'action': return 'blue';
                     default: return '#999';
+                  }
+                }}
+                nodeClassName={node => {
+                  switch (node.type) {
+                    case 'begin': return 'flow-node';
+                    case 'condition': return 'condition-romb';
+                    // case 'action': return 'blue';
+                    default: return 'flow-node';
                   }
                 }}
               />
