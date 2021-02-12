@@ -131,15 +131,15 @@ class BaseElement extends ControlStack {
    * добавлйет новый  дочерний элемент в конец
    * @param {BaseElement} child
    * */
-  appendChild(child, fromHistory = false) {
+  appendChild(child, dispatchToHistory = true) {
     this.children.push(child);
     child.setParent(this);
     if (this.component && typeof this.component.setChildren === 'function') {
       this.component.setChildren(this.children);
     }
     this.templateNeedUpdate();
-    if(!fromHistory)
-      store.dispatch(addHistoryStoreItem('ADD', {element: child}));   
+    if(dispatchToHistory)
+      store.dispatch(addHistoryStoreItem('ADD', {element: child, parent: this}));   
   }
 
   insertSiblingAfter(newSibling) {
@@ -164,7 +164,6 @@ class BaseElement extends ControlStack {
         return true;
       };
     })
-    console.log(this.children)
     if (!isHaveChild) {
       this.children.splice(index, 0, child);
     }
@@ -283,7 +282,7 @@ class BaseElement extends ControlStack {
    * @param {BaseElement | string} child
    * @throws Если не указан IG или сам элемент
    * */
-  deleteChild(child, fromHistory = false) {
+  deleteChild(child, dispatchToHistory = true) {
     let childExist = false;
     let childId;
     if (typeof child === 'string') {
@@ -297,7 +296,7 @@ class BaseElement extends ControlStack {
       if (item.getId() === childId) {
         childExist = true;
         item.beforeDelete();
-        if(!fromHistory)
+        if(dispatchToHistory)
           store.dispatch(addHistoryStoreItem('DELETE', {element: child, parent: this, index}));
         return false;
       }
@@ -384,10 +383,10 @@ class BaseElement extends ControlStack {
     this.updateStyles();
   }
 
-  setSettingValue(settingName, value, fromHistory = false) {
+  setSettingValue(settingName, value, dispatchToHistory = true) {
     //check change value
     if(this.settings[settingName] !== value) {
-      if (!fromHistory)
+      if (dispatchToHistory && store.getState().templateStatus.status === CONSTANTS.TEMPLATE_NEED_UPDATE)
         store.dispatch(
           addHistoryStoreItem("EDIT", {
             element: this,
@@ -400,7 +399,6 @@ class BaseElement extends ControlStack {
       if (this.component) {
         this.component.changeSetting(settingName, value);
       }
-      console.log('set settings value')
     }  
   }
 

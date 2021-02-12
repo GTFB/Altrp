@@ -656,7 +656,7 @@ class Column  extends BaseElement {
     if(newWidget.getType() !== 'widget'){
       throw 'Only Widget can be a Child of Column';
     }
-    this.appendChild(newWidget);
+    this.appendChild(newWidget, false);
   }
 
   /**

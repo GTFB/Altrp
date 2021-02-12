@@ -25,7 +25,7 @@ class ControllerHistory extends AltrpModel {
           this.restoreEdit(restoreElement.data.element, restoreElement.data.settingName, restoreElement.data.oldValue); 
           break;
       }
-      appStore.dispatch(undoHistoryStore(1));
+      window.parent.appStore.dispatch(undoHistoryStore(1));
     }
   }
 
@@ -38,7 +38,7 @@ class ControllerHistory extends AltrpModel {
       let restoreElement = history[current + 1];
       switch(restoreElement.type) {
         case 'ADD':
-          this.restoreDelete(restoreElement.data.element, restoreElement.data.parent, restoreElement.data.index);
+          this.restoreDelete(restoreElement.data.element, restoreElement.data.parent, restoreElement.data.index + 1);
           break;
         case 'DELETE':
           this.restoreAdd(restoreElement.data.element);
@@ -47,7 +47,7 @@ class ControllerHistory extends AltrpModel {
           this.restoreEdit(restoreElement.data.element, restoreElement.data.settingName, restoreElement.data.newValue); 
           break;
       }
-      appStore.dispatch(redoHistoryStore(1));
+      window.parent.appStore.dispatch(redoHistoryStore(1));
     }
   }
 
@@ -58,12 +58,12 @@ class ControllerHistory extends AltrpModel {
 
   restoreEdit(element, settingName, value) {
     console.log('restore edit')
-    element.setSettingValue(settingName, value, true);
+    element.setSettingValue(settingName, value, false);
   }
 
   restoreAdd(element) {
     console.log('restore add')
-    element.parent.deleteChild(element, true);
+    element.parent.deleteChild(element, false);
   }
 }
 

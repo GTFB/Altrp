@@ -5,13 +5,12 @@ import {getElementSettingsSuffix} from "../helpers";
  * Обновление значения в компоненте контроллера при загрузке нового экземпляра того же элемента
  */
 function componentDidUpdate(prevProps, prevState) {
-  console.log('update')
   if(!this.props.repeater){
     let elementValue = this.props.currentElement.getSettings(this.props.controlId);
     if(this.state.value !== elementValue){
       if(elementValue === null){
         elementValue = this.getDefaultValue();
-        this.props.currentElement.setSettingValue(this.props.controlId, elementValue);
+        this.props.currentElement.setSettingValue(this.props.controlId, elementValue, false);
         this.setState({
           value: elementValue
         });
@@ -34,7 +33,7 @@ function componentDidUpdate(prevProps, prevState) {
   } else {
   }
   if(this.props.historyStore !== prevProps.historyStore) {
-    console.log('COMPONENT DID UPDATE')
+    // console.log('COMPONENT DID UPDATE')
     let value = this.getSettings(this.props.controlId);
     this.setState({
       value

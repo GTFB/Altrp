@@ -64,7 +64,7 @@ class HistoryPanel extends Component {
 }
 
 const ActionsTabContent = () => {
-  const controllerHistory = new ControllerHistory();
+  const controllerHistory = window.controllerHistory;
   const historyStore = useSelector(state => state.historyStore.history);
   const current = useSelector(state => state.historyStore.current);
 

@@ -939,7 +939,7 @@ class Section extends BaseElement{
     if(!newColumn instanceof Column){
       throw 'Only Column can be a Child of Section';
     }
-    this.appendChild(newColumn);
+    this.appendChild(newColumn, false);
   }
 
   /**
