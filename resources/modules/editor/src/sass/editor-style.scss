@@ -1149,13 +1149,13 @@ button {
 .control-color-colorPicker {
     z-index: 9999;
     position: absolute;
-    margin: 0px;
-    margin-right: 10px;
-    transform: translateY(60px);
+    margin-top: 60px;
 }
-.sketchPicker-none {
+
+.control-color-hide {
     display: none;
 }
+
 .control-color-header {
     display: flex;
     flex-direction: row;

@@ -2,11 +2,17 @@ import React, {Component} from "react";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
 import "./altrp-breadcrumbs.scss";
-import {isEditor} from "../../../../../front-app/src/js/helpers";
+import {isEditor, replaceContentWithData} from "../../../../../front-app/src/js/helpers";
+import AltrpImage from "../altrp-image/AltrpImage";
 
 class AltrpBreadcrumbs extends Component {
   constructor(props) {
     super(props);
+  }
+
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    console.log(replaceContentWithData(appStore.getState()))
   }
 
   render() {
@@ -17,6 +23,34 @@ class AltrpBreadcrumbs extends Component {
     }
 
     const breadcrumbs = pathname.split("/");
+
+    const separatorType = this.props.element.getContent("breadcrumbs_type_separator", "default");
+    let separatorClasses = "altrp-nav-breadcrumbs-separator";
+    let separator = "-";
+
+    switch (separatorType) {
+      case "text":
+        const textSeparator = this.props.element.getContent("breadcrumbs_separator_text", ">");
+        separatorClasses += " altrp-nav-breadcrumbs-separator-text";
+        separator = textSeparator;
+        console.log(textSeparator)
+        break
+      case "icon":
+        const iconSeparator = this.props.element.getContent("breadcrumbs_separator_icon", {});
+        separatorClasses += " altrp-nav-breadcrumbs-separator-icon";
+        separator = <AltrpImage
+          image={iconSeparator}
+          default={{
+            assetType: "icon",
+            name: 'star',
+            iconComponent: iconsManager.renderIcon('star')
+          }}
+        />
+        console.log(iconSeparator)
+        break
+      default:
+        separatorClasses += " altrp-nav-breadcrumbs-separator-default";
+    }
 
     return (
       <ul className="altrp-nav-breadcrumbs">
@@ -33,22 +67,18 @@ class AltrpBreadcrumbs extends Component {
                     onClick={isEditor() ? (e) => e.preventDefault() : null}
                     className="altrp-nav-breadcrumbs-label altrp-nav-breadcrumbs-link"
                   >
-                    {
-                      label
-                    }
+                    { label }
                   </Link>
                 ) : (
                   <div className="altrp-nav-breadcrumbs-label altrp-nav-breadcrumbs-current">
-                    {
-                      label
-                    }
+                    { label }
                   </div>
                 )
               }
               {
                 idx !== (breadcrumbs.length - 1) && pathname !== "/" ? (
-                  <span className="altrp-nav-breadcrumbs-separator">
-                    -
+                  <span className={separatorClasses}>
+                    { separator }
                   </span>
                 ) : ""
               }
