@@ -576,7 +576,8 @@ class Nav extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Text color",
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}}": "color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}}": "color: {{COLOR}};",
+        "{{ELEMENT}} .altrp-nav-menu-li-link-label{{STATE}}": "color: {{COLOR}};",
       }
     });
 
@@ -678,7 +679,12 @@ class Nav extends BaseElement {
       max: 30,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-pointer:hover::after": "height: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} .altrp-nav-menu-li-underline:after": "height: {{SIZE}}{{UNIT}};",
+        "{{ELEMENT}} .altrp-nav-menu-li-overline:before": "height: {{SIZE}}{{UNIT}};",
+        "{{ELEMENT}} .altrp-nav-menu-li-doubleLine:before": "height: {{SIZE}}{{UNIT}};",
+        "{{ELEMENT}} .altrp-nav-menu-li-doubleLine:after": "height: calc({{SIZE}}{{UNIT}} * 2);",
+        "{{ELEMENT}} .altrp-nav-menu-li-framed:hover:after": "border-width: 0 {{SIZE}}{{UNIT}} {{SIZE}}{{UNIT}} 0;",
+        "{{ELEMENT}} .altrp-nav-menu-li-framed:hover:before": "border-width: {{SIZE}}{{UNIT}} 0 0 {{SIZE}}{{UNIT}};",
       }
     });
 
@@ -1293,10 +1299,11 @@ class Nav extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('dropdown_menu_section', {
-      conditions: {
-        'type_type': "menu",
-        "menu_layout": "dropdown"
-      },
+      //
+      // conditions: {
+      //   'type_type': "menu",
+      //   "menu_layout": "dropdown"
+      // },
       tab: TAB_STYLE,
       label: 'Dropdown',
     });
@@ -1530,7 +1537,7 @@ class Nav extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Color fill",
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}} .altrp-nav-menu-dropdown-button-icon path": "fill: {{COLOR}};"
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}} svg path": "fill: {{COLOR}};"
       }
     });
 
@@ -1538,7 +1545,7 @@ class Nav extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Color stroke",
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}} .altrp-nav-menu-dropdown-button-icon path": "stroke: {{COLOR}}"
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}} svg path": "stroke: {{COLOR}}"
       }
     });
 
@@ -1562,7 +1569,7 @@ class Nav extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}} .altrp-nav-menu-dropdown-button-icon": [
+        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}} svg": [
           "height: {{SIZE}}{{UNIT}}",
           "width: {{SIZE}}{{UNIT}}"
         ]
