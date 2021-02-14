@@ -390,11 +390,7 @@ class BaseElement extends ControlStack {
   setSettingValue(settingName, value, dispatchToHistory = true) {
     //check change value
     if(this.settings[settingName] !== value) {
-<<<<<<< HEAD
       if (dispatchToHistory && store.getState().templateStatus.status === CONSTANTS.TEMPLATE_NEED_UPDATE)
-=======
-      if (! fromHistory)
->>>>>>> e541b189c940bdba87952314b4e68760483ff2cf
         store.dispatch(
           addHistoryStoreItem("EDIT", {
             element: this,
