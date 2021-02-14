@@ -138,8 +138,11 @@ class BaseElement extends ControlStack {
       this.component.setChildren(this.children);
     }
     this.templateNeedUpdate();
-    if(dispatchToHistory)
-      store.dispatch(addHistoryStoreItem('ADD', {element: child, parent: this}));   
+    if(dispatchToHistory) {
+      let index = this.children.length - 1;
+      console.log(index);
+      store.dispatch(addHistoryStoreItem('ADD', {element: child, index, parent: this})); 
+    }
   }
 
   insertSiblingAfter(newSibling) {
@@ -195,6 +198,7 @@ class BaseElement extends ControlStack {
     this.children.splice(index + 1, 0, newChild);
     this.component.setChildren(this.children);
     this.templateNeedUpdate();
+    index += 1;
     store.dispatch(addHistoryStoreItem('ADD', {element: newChild, index, parent: this}));
   }
   /**
