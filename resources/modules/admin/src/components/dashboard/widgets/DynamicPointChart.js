@@ -26,7 +26,11 @@ const PointChart = ({
   precision,
   enableGridX = true,
   enableGridY = true,
-  keyIsDate = false
+  keyIsDate = false,
+  customColorSchemeChecker = false,
+  customColors = [],
+  constantsAxises = [],
+  yScaleMax
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -117,8 +121,23 @@ const PointChart = ({
         <ResponsiveScatterPlot
           data={data}
           colors={
-            colorScheme === "regagro" ? regagroScheme : { scheme: colorScheme }
+            customColorSchemeChecker && customColors.length > 0
+              ? customColors
+              : colorScheme === "regagro"
+              ? regagroScheme
+              : { scheme: colorScheme }
           }
+          yScale={
+            yScaleMax
+              ? {
+                  max: yScaleMax,
+                  type: "linear"
+                }
+              : {
+                  type: "linear"
+                }
+          }
+          markers={constantsAxises}
           margin={{ top: 50, right: 180, bottom: 50, left: 60 }}
           xFormat={xScaleType === "time" && "time:%d.%m.%Y"}
           nodeSize={nodeSize}
@@ -139,6 +158,13 @@ const PointChart = ({
               : {
                   tickRotation: tickRotation
                 })
+          }
+          colors={
+            customColorSchemeChecker && customColors.length > 0
+              ? customColors
+              : colorScheme === "regagro"
+              ? regagroScheme
+              : { scheme: colorScheme }
           }
           legends={[
             {

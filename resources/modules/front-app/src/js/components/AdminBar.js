@@ -59,47 +59,8 @@ class AdminBar extends React.Component {
   }
 
   renderResultSearch(resultSearch = null) {
-    console.log(JSON.stringify(getDataByPath(this.state.valueInput), null, '\t'))
+    console.log(getDataByPath(this.state.valueInput));
     return JSON.stringify(getDataByPath(this.state.valueInput), null, '\t');
-    // if (Array.isArray(resultSearch) && resultSearch.length !== 0) {
-    //   return (
-    //     <React.Fragment>
-    //       {resultSearch.map(item => (
-    //         <div className="admin-bar__search-value">
-    //           {this.renderResultSearch(item)}
-    //         </div>
-    //       ))}
-    //     </React.Fragment>
-    //   )
-
-    // } else if (typeof resultSearch === "object" &&
-    //   resultSearch !== null &&
-    //   Object.entries(resultSearch).length !== 0 ) {
-    //   return (
-    //     <React.Fragment>
-    //       {Object.keys(resultSearch).map(item=> (
-    //         <div className="admin-bar__search-item">
-    //           <div className="admin-bar__search-key">
-    //             {item}:
-    //           </div>
-              
-    //           {this.renderResultSearch(resultSearch[item])}
-    //         </div>
-    //       ))}
-    //     </React.Fragment>
-    //   )
-
-    // } else if (typeof resultSearch === "string" ||
-    //   typeof resultSearch === "number") {
-    //   return (
-    //     <div className="admin-bar__search-value">
-    //       {resultSearch}
-    //     </div>
-    //   )
-
-    // } else {
-    //   return "";
-    // }
   }
 
   handleOutsideClick(event) {

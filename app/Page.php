@@ -149,10 +149,12 @@ class Page extends Model
     /** @var Page $page */
     foreach ( $_pages as $page ) {
       if( $page->allowedForUser() ){
+
         $_page = [
           'path' => $page->path,
           'id' => $page->id,
           'title' => $page->title,
+          'parent_page_id' => $page->parent_page_id,
           'allowed' => true,
           'data_sources' => $page->page_data_sources->map( function ( PageDatasource $page_data_source ){
             if( $page_data_source->source ){

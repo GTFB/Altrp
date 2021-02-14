@@ -64,10 +64,7 @@ class EditModel extends Component {
       data_source_options: [],
       isModalOpened: false,
       isFieldRemoteModalOpened: false,
-      editingRemoteField: null,
-      // sql_editors: [],
-      // fields: [],
-      // relations: []
+      editingRemoteField: null
     };
 
     this.modelsResource = new Resource({ route: '/admin/ajax/models' });
@@ -120,7 +117,10 @@ class EditModel extends Component {
   async componentDidMount() {
     if (this.state.id) {
       this.modelsResource.get(this.state.id)
-        .then(model => this.setState({ model }));
+        .then(model => {
+          this.setState({ model });
+          this.modelName = model.name;
+        });
 
       this.fieldsResource.getAll()
         .then(fields => this.setState({ fields: fields.filter(({ name }) => name !== 'id') }));
@@ -150,14 +150,16 @@ class EditModel extends Component {
    */
   onSubmit = async (model) => {
     let res;
-    const isNameTaken = await fetch(`/admin/ajax/model_name_is_free/?name=${model.name}`)
-      .then(res => res.json())
-      .then(res => !res.taken);
-      
+    const isNameTaken = !this.state.id || this.modelName !== model.name ?
+      await fetch(`/admin/ajax/model_name_is_free/?name=${model.name}`)
+        .then(res => res.json())
+        .then(res => !res.taken) :
+      null;
+    
     if (isNameTaken) {
       return alert(`Name ${model.name} is already taken. Use another one.`)
     }
-    
+
     if (this.state.id) {
       res = await this.modelsResource.put(this.state.id, model);
     } else {

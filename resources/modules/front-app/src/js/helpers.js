@@ -33,10 +33,10 @@ export function iconsManager() {
  */
 export function setTitle(title) {
   let titleElement = document.title;
-  if (!defaultTitle) {
+  if (! defaultTitle) {
     defaultTitle = titleElement.innerHTML;
   }
-  if (!title) {
+  if (! title) {
     title = defaultTitle;
   }
   if (document.title !== title) {
@@ -49,11 +49,11 @@ export function setTitle(title) {
  * */
 export function isEditor() {
   const path = window.location.pathname;
-  return path.includes("admin");
+  return path.includes("/admin/editor");
 }
 
 /**
- * Переменная, в которой храниться измначальный заголовок
+ * Переменная, в которой храниться изначальный заголовок
  * @let {string}
  */
 let defaultTitle;
@@ -564,7 +564,7 @@ export function getDataByPath(
     value = currentModel.getProperty(path)
       ? currentModel.getProperty(path)
       : urlParams[path];
-    if (!value) {
+    if (! value) {
       value = _default;
     }
   }

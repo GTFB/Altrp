@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import appStore from "../store/store";
-import {altrpCompare, altrpRandomId, conditionsChecker} from "../helpers";
+import {altrpCompare, altrpRandomId, conditionsChecker, replaceContentWithData, setTitle} from "../helpers";
 import { addElement } from "../store/elements-storage/actions";
 
 class ElementWrapper extends Component {
@@ -95,6 +95,11 @@ class ElementWrapper extends Component {
    */
   componentDidUpdate(prevProps, prevState) {
     this.checkElementDisplay();
+    if(appStore.getState().currentModel.getProperty('altrpModelUpdated')){
+      let title = appStore.getState().currentTitle;
+      title = replaceContentWithData(title);
+      setTitle(title);
+    }
   }
 
   /**

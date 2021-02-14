@@ -1,6 +1,5 @@
 import '../altrp-posts/altrp-posts.scss'
 import update from 'immutability-helper'
-import { HTML5Backend } from 'react-dnd-html5-backend'
 import '../../../sass/altrp-pagination.scss';
 import {
   recurseCount,
@@ -11,7 +10,7 @@ import {
   generateButtonsArray,
   renderIcon, setAltrpIndex
 } from "../../../../../front-app/src/js/helpers";
-import { DndProvider, useDrag, useDrop } from 'react-dnd'
+import { useDrag, useDrop } from 'react-dnd'
 import { Link } from "react-router-dom";
 import { renderAdditionalRows, renderCellActions, } from "./altrp-table";
 import {
@@ -38,6 +37,8 @@ import AltrpModel from "../../classes/AltrpModel";
 import { FixedSizeList } from "react-window";
 import ElementWrapper from "../../../../../front-app/src/js/components/ElementWrapper";
 import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput";
+import TableComponent from "./components/TableComponent";
+
 /**
  *
  * @param rows
@@ -160,7 +161,7 @@ function AltrpTableWithoutUpdate(
     React.useEffect(() => {
       setValue(initialValue);
     }, [initialValue, cell]);
-    const { column_template, column_is_editable, column_edit_url, _accessor } = column;
+    const { column_template, column_is_editable, column_edit_url, _accessor, column_cell_content_type } = column;
     const [columnTemplate, setColumnTemplate] = React.useState(null);
     const columnEditUrl =
       React.useMemo(() => {
@@ -190,29 +191,55 @@ function AltrpTableWithoutUpdate(
     /**
      * Если в настройках колонки есть url, и в данных есть id, то делаем ссылку
      */
-    if (column.column_link) {
-      cellContent = React.createElement(linkTag, {
-        to: parseURLTemplate(column.column_link, row.original),
-        className: 'altrp-inherit altrp-table-td__default-content',
-        dangerouslySetInnerHTML: {
-          __html: cell.value
+    let href = null;
+    switch (column_cell_content_type) {
+      case 'email':
+        cellContent = React.createElement('a', {
+          href: `mailto:${cell.value}`,
+          className: 'altrp-inherit altrp-table-td__default-content',
+          dangerouslySetInnerHTML: {
+            __html: cell.value || '&nbsp;'
+          }
+        });
+        break;
+        
+      case 'phone':
+        cellContent = React.createElement('a', {
+          href: `tel:${cell.value}`,
+          className: 'altrp-inherit altrp-table-td__default-content',
+          dangerouslySetInnerHTML: {
+            __html: cell.value || '&nbsp;'
+          }
+        });
+        break;
+    
+      default:
+        if (column.column_link) {
+          cellContent = React.createElement(linkTag, {
+            to: parseURLTemplate(column.column_link, row.original),
+            className: 'altrp-inherit altrp-table-td__default-content',
+            dangerouslySetInnerHTML: {
+              __html: cell.value || '&nbsp;'
+            }
+          })
+        } else {
+          cellContent = React.createElement('span', {
+            href,
+            className: 'altrp-inherit altrp-table-td__default-content',
+            dangerouslySetInnerHTML: {
+              __html: cell.value || '&nbsp;'
+            }
+          })
         }
-      })
-    } else {
-      cellContent = React.createElement('span', {
-        className: 'altrp-inherit altrp-table-td__default-content',
-        dangerouslySetInnerHTML: {
-          __html: cell.value
-        }
-      })
+        break;
     }
+    
     const columnTemplateContent = React.useMemo(() => {
       if (! columnTemplate) {
         return null;
       }
       let columnTemplateContent = frontElementsFabric.cloneElement(columnTemplate);
       columnTemplateContent.setCardModel(new AltrpModel(row.original || {}),);
-      // console.log(row.original);
       return React.createElement(columnTemplateContent.componentClass,
         {
           element: columnTemplateContent,
@@ -611,6 +638,7 @@ function AltrpTableWithoutUpdate(
       return paginationProps;
     }, [inner_page_size, pageSize, pageCount, pageIndex, settings]);
 
+  let tableElement = React.useRef(null);
 
 
   return  <React.Fragment>
@@ -635,7 +663,11 @@ function AltrpTableWithoutUpdate(
       })}
       <br />
     </div>}
-    <div className={"altrp-table altrp-table_columns-" + columns.length} {...getTableProps()}>
+    <TableComponent className={"altrp-table altrp-table_columns-" + columns.length}
+                    settings={settings}
+                    table={tableElement}
+                    ref={tableElement}
+                    {...getTableProps()}>
       <div className="altrp-table-head">
         {renderAdditionalRows(settings)}
         {headerGroups.map(headerGroup => {
@@ -742,7 +774,7 @@ function AltrpTableWithoutUpdate(
         <div><div className="altrp-table-tr altrp-table-tr_loading"><div className="altrp-table-td altrp-table-td_loading" colSpan={visibleColumns.length + replace_rows}>
           {(_status === 'loading' ? (loading_text || null) : null)}
         </div></div></div>}
-    </div>
+    </TableComponent>
     {paginationProps && <Pagination {...paginationProps} />}
   </React.Fragment>
 }

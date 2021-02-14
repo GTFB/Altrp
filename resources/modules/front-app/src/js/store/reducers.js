@@ -16,6 +16,7 @@ import { fontsReducer } from "./fonts-storage/reducers";
 import { changeLocalStorageReducer } from "./user-local-storage/reducers";
 import { exportDashboard } from "./altrp-dashboard-export/reducers";
 import {mediaScreenReducer} from "./media-screen-storage/reducers";
+import {currentTitleReducer} from "./current-title/reducers";
 
 export default combineReducers({
   appRoutes: appRoutesReducer,
@@ -35,4 +36,5 @@ export default combineReducers({
   userLocalStorage: changeLocalStorageReducer,
   exportDashboard: exportDashboard,
   currentScreen: mediaScreenReducer,
+  currentTitle: currentTitleReducer,
 });

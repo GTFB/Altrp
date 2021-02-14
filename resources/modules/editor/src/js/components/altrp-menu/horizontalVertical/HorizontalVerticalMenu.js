@@ -124,8 +124,8 @@ class HorizontalVerticalMenu extends Component {
     }
     .altrp-nav-menu-li-animation-text:hover{
       ${(pointerVariant === 'text') ? `transform: scale(${scale})` : ''}
-    }
-`;
+    }`;
+
     switch (pointerVariant) {
       case "none":
         break;
