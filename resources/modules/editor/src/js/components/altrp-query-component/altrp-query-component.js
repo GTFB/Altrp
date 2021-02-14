@@ -37,6 +37,9 @@ const AltrpQueryComponent = (props)=>{
   const [sortSetting, setSortSettings] = useState(defaultSortSettings);
   const [filterSetting, setFilterSettings] = useState({});
   const fetchModels = useCallback(async (key, page = 1, sortSetting, filterSetting, params, updateToken, groupBy) => {
+    if(settings.choose_datasource === 'datasource'){
+      return data;
+    }
     let queryData = {page};
     const filterSettingJSON = JSON.stringify(filterSetting);
     if(sortSetting){
@@ -51,9 +54,6 @@ const AltrpQueryComponent = (props)=>{
     }
     if(filterSettingJSON.length > 2){
       queryData.filters = filterSettingJSON;
-    }
-    if(settings.choose_datasource === 'datasource'){
-      return data;
     }
     return await query.getQueried(queryData)
   });

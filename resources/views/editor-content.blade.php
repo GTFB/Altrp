@@ -14,7 +14,7 @@
   <!-- Fonts -->
   <link rel="stylesheet" href="/addons/slick/slick.css">
   <link rel="stylesheet" href="/addons/slick/slick-theme.css">
-  <style>
+  <style >
     .editor-content > .sections-wrapper{
       width: {{ get_altrp_setting( 'container_width', '1440' ) }}px;
     }
@@ -25,6 +25,7 @@
     }
   </style>
   <script>
+    window.ALTRP_DEBUG = {!! json_encode( ! ! get_altrp_setting( 'altrp_debug', false ) ) !!};
     let ALTRP_CONTAINER_WIDTH = {{ get_altrp_setting( 'container_width', '1440' ) }};
   </script>
 </head>
@@ -34,5 +35,6 @@
 
   </div>
 </body>
+<style id="styled" ></style>
 
 </html>

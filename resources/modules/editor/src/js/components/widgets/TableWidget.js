@@ -93,7 +93,7 @@ class TableWidget extends Component {
     if(! this.props.currentModel.getProperty('altrpModelUpdated')){
       return '';
     }
-    let data = null;
+    let data = [];
     if(this.props.element.getSettings('table_datasource')
         && this.props.element.getSettings('choose_datasource') === 'datasource'){
       let path = this.props.element.getSettings('table_datasource').replace(/{{/g, '').replace(/}}/g, '');

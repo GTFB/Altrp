@@ -110,7 +110,7 @@ class Query {
    * @return {object}
    */
   getParams(params) {
-    params = {..._.assign(this.getDefaultParams(), params)};
+    params = {..._.assign(_.cloneDeep(this.getDefaultParams()), params)};
     params.page = params.page || 1;
     if(_.has(params, 'pageSize') && (params.pageSize <= 0)){
       delete params.pageSize;

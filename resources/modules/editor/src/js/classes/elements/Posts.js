@@ -95,7 +95,6 @@ class Table extends BaseElement {
     this.addControl("posts_columns", {
       type: CONTROLLER_SELECT,
       label: "Columns",
-      prefixClass: 'altrp-columns_',
       options:[
         {
           label: '1',
@@ -176,29 +175,6 @@ class Table extends BaseElement {
       default: 'left',
     });
 
-    this.addControl("posts_skin", {
-      type: CONTROLLER_SELECT,
-      label: "Skin",
-      options: [
-        {
-          label: 'Custom',
-          value: 'Custom'
-        },
-        {
-          label: 'Classic',
-          value: 'Classic'
-        },
-        {
-          label: 'Cards',
-          value: 'Cards'
-        },
-        {
-          label: 'Full Content',
-          value: 'Full Content'
-        }
-      ],
-      default: 'Custom',
-    });
 
     this.addControl('posts_per_page', {
       type: CONTROLLER_NUMBER,
@@ -216,87 +192,7 @@ class Table extends BaseElement {
       max: 120,
       min: 0
     });
-    
-    this.addControl('posts_image', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Show Thumbnail',
-    });
 
-    this.addControl("posts_image_size", {
-      type: CONTROLLER_SELECT,
-      label: "Image Size",
-      options: [
-        {
-          label: 'Thumbnail - 150 x 150',
-          value: 'thumbnail'
-        },
-        {
-          label: 'Medium - 300 x 300',
-          value: 'medium'
-        },
-        {
-          label: 'Medium Large - 768 x 0',
-          value: 'medium_large'
-        },
-        {
-          label: 'Large - 600 x 1024',
-          value: 'large'
-        },
-        {
-          label: '1536 x 1536',
-          value: '1536x1536'
-        },
-        {
-          label: '2048 x 2048',
-          value: '2048x2048'
-        },
-        {
-          label: 'Full',
-          value: 'full'
-        }
-      ],
-      conditions: {
-        'posts_image': true,
-      },
-      default: 'medium',
-    });
-
-    this.addControl("posts_image_scale", {
-      type: CONTROLLER_SLIDER,
-      label: 'Image Aspect Ratio',
-      conditions: {
-        'posts_image': true,
-      },
-      default: {
-        size: 1,
-      },
-      max: 2,
-      min: 0,
-      step: 0.01
-    });
-
-    this.addControl("posts_image_width", {
-      type: CONTROLLER_SLIDER,
-      label: 'Image Width',
-      conditions: {
-        'posts_image': true,
-      },
-      default: {
-        size: 100,
-        unit: '%',
-      },
-      units: [
-        'px',
-        '%',
-      ],
-      max: 600,
-      min: 0
-    });
-
-    this.addControl('posts_header', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Header',
-    });    
 
     this.addControl('posts_pagination_type', {
       type: CONTROLLER_SELECT,

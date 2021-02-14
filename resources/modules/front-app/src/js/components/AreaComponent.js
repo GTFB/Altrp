@@ -21,15 +21,16 @@ class AreaComponent extends Component {
     /**
      * Если шаблон привязанный к странице удалили, то ничего не отрисовываем
      */
-    if (!this.props.template.data) {
+    if (! this.props.template.data) {
       return <div className={classes.join(" ")} />;
     }
-    let rootElement = window.frontElementsFabric.parseData(
+    let rootElement = this.rootElement ? this.rootElement : window.frontElementsFabric.parseData(
       this.props.template.data,
       null,
       this.props.page,
       this.props.models
     );
+    this.rootElement = rootElement;
     return (
       <div className={classes.join(" ")}>
         {React.createElement(rootElement.componentClass, {
