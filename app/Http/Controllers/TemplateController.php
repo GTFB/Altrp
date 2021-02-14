@@ -328,6 +328,26 @@ class TemplateController extends Controller
         return response()->json(['success' => (bool) $result]);
     }
 
+    /**
+     * Удалить шаблоны по родителю с типом review
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getReview( Request $request )
+    {
+        $result = Template::where([
+            ['parent_template', $request->template_id],
+            ['type', 'review'],
+            ['id', $request->review_id],
+        ]);
+      if( ! $result->count() ){
+        return response()->json(['success' => 'false'], 404, [], JSON_UNESCAPED_UNICODE);
+      } else {
+        return response()->json( [ 'success' => (bool)$result, 'data' => $result->get()->toArray() ] );
+      }
+    }
+
   /**
    * Удалить все review по
    *
