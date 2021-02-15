@@ -138,7 +138,7 @@ class ExportExcel extends Model {
             } else {
                 $this->spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
                 $this->sheet = $this->spreadsheet->getActiveSheet();
-                $this->sheet->fromArray($this->data, NULL, 'A1' );
+                $this->sheet->fromArray($this->data['dataArray'], NULL, 'A1' );
             }
 
             header('Content-Type: application/vnd.ms-excel');
