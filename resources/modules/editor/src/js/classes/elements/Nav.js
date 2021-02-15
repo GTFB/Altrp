@@ -493,12 +493,6 @@ class Nav extends BaseElement {
       label: 'Breadcrumbs',
     });
 
-    this.addControl('breadcrumbs_label', {
-      type: CONTROLLER_TEXT,
-      default: "Home",
-      label: 'Home page label',
-    });
-
     this.addControl("breadcrumbs_type_separator", {
       type: CONTROLLER_SELECT,
       label: "Icon",
