@@ -12,7 +12,7 @@ class Condition extends Component{
     }
 
     // Запись значений select в store
-    changeSelect(e, type, oldOperator = false) {
+    changeSelect(e, type) {
         const value = e.value;
         const node = this.props.selectNode;
         console.log(type);
@@ -20,11 +20,7 @@ class Condition extends Component{
             node.data.props.nodeData.operator = value;
         } else {
             node.data.props.nodeData.body.map(item => {
-                if(item.id === type) {
-                    item[value] = item[oldOperator];
-                    delete item[oldOperator];
-                }
-                console.log(item);
+                if(item.id === type)  item.operator = value;
                 return item;
             })
         }
@@ -32,11 +28,11 @@ class Condition extends Component{
     }
 
     // Запись значений select в store
-    changeInput(e, id, operator, key) {
+    changeInput(e, id, key) {
         const node = this.props.selectNode;
 
         node.data.props.nodeData.body.map(item =>{
-            if(item.id === id) item[operator][key] = e.target.value;
+            if(item.id === id) item.operands[key] = e.target.value;
             return item;
         });
         store.dispatch(setUpdatedNode(node));
@@ -45,7 +41,8 @@ class Condition extends Component{
     getNewCompare(){
         return {
             id: new Date().getTime(),
-            "==":[]
+            "operator": "==",
+            "operands":[]
         };
     }
 
@@ -89,18 +86,17 @@ class Condition extends Component{
               +
             </button>
             {compares.map( (item, index) =>{ 
-                const operator = _.keys(item)[1];            
                 return <div key={index}>
-                    <input type="text" id={`operand-1_${item.id}`} name="operand" value={item[operator][0] ?? ''} onChange={(e) => { this.changeInput(e, item.id, operator, 0) }} className="form-control" />
+                    <input type="text" id={`operand-1_${item.id}`} name="operand" value={item.operands[0] ?? ''} onChange={(e) => { this.changeInput(e, item.id, 0) }} className="form-control" />
                     <button className="btn btn_save" onClick={() => this.onDelete(item)}>
                         x
                     </button>
                     <AltrpSelect id="bit-operator"
-                        value={_.filter(bitOptions, i => operator == i.value)}
-                        onChange={e => {this.changeSelect(e, item.id, operator)}}
+                        value={_.filter(bitOptions, i => item.operator == i.value)}
+                        onChange={e => {this.changeSelect(e, item.id)}}
                         options={bitOptions}
                     />
-                    <input type="text" id={`operand-2_${item.id}`} name="operand" value={item[operator][1] ?? ''} onChange={(e) => { this.changeInput(e, item.id, operator, 1) }} className="form-control" />
+                    <input type="text" id={`operand-2_${item.id}`} name="operand" value={item.operands[1] ?? ''} onChange={(e) => { this.changeInput(e, item.id, 1) }} className="form-control" />
                 </div>}
             )}
 
