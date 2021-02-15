@@ -131,6 +131,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     Route::get('/roles', "Users\Roles@getRoles");
     Route::resource( 'robots', 'RobotController' );
+    Route::get( 'robots_options', 'RobotController@getOptions' );
 
     /**
      * URL: /admin/ajax/role_options?s=search_string
@@ -153,6 +154,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::delete('/roles/{role}/permissions', "Users\Roles@detachPermission");
 
     Route::get('/users', "Users\Users@getUsers");
+    Route::get('/users_options', "Users\Users@getUsersOptions")->name('admin.user_options');
     Route::get('/users/{user}', "Users\Users@getUser");
     Route::get('/users/{user}/storage', "Users\Users@getUserStorage");
     Route::post('/users', "Users\Users@insert");
@@ -241,6 +243,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     * Получить записи из модели по её Id
     */
     Route::get('/models/{model_id}/records', 'Admin\ModelsController@getRecordsByModel');
+    Route::get('/models/{model_id}/records_options', 'Admin\ModelsController@getRecordsByModelOptions');
 
     /**
      * Маршруты для проверки на уникальность имени

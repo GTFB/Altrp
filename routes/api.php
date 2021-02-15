@@ -75,12 +75,14 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::resource( 'pages', 'Admin\PagesController' );
         Route::resource( 'templates', 'TemplateController' );
         Route::resource( 'robots', 'RobotController' );
+        Route::get( 'robots_options', 'RobotController@getOptions' );
         Route::resource( 'sql_editors', 'Admin\SQLEditorController' );
 
         /**
          * Получить записи из модели по её Id
          */
         Route::get('/models/{model_id}/records', 'Admin\ModelsController@getRecordsByModel');
+        Route::get('/models/{model_id}/records_options', 'Admin\ModelsController@getRecordsByModelOptions');
 
         /**
          * Маршруты для проверки на уникальность имени
@@ -203,6 +205,7 @@ Route::group(['prefix' => 'users'], function () {
     Route::delete('/roles/{role}/permissions', "Users\Roles@detachPermission");
 
     Route::get('/users', "Users\Users@getUsers");
+    Route::get('/users_options', "Users\Users@getUsersOptions");
     Route::get('/users/{user}', "Users\Users@getUser");
     Route::post('/users', "Users\Users@insert");
     Route::put('/users/{user}', "Users\Users@update");

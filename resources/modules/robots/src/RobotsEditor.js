@@ -4,8 +4,12 @@ import ReactFlow, {
   ReactFlowProvider,
   Controls,
   removeElements,
-  addEdge
+  addEdge,
+  updateEdge,
+  isNode,
+  isEdge
 } from "react-flow-renderer";
+
 
 import _ from "lodash";
 import "./sass/styles.scss";
@@ -19,14 +23,11 @@ import {
 
 import Sidebar from "./js/components/sidebar/Sidebar";
 import Condition from "./js/components/sidebar/nodes/Condition";
-import Loop from "./js/components/sidebar/nodes/Loop";
 import Begin from "./js/components/sidebar/nodes/Begin";
 import Action from "./js/components/sidebar/nodes/Action";
+import Robot from "./js/components/sidebar/nodes/Robot";
 import End from "./js/components/sidebar/nodes/End";
-import {
-  dataAction,
-  dataCondition
-} from "./js/components/sidebar/data/data";
+import CustomEdge from "./js/components/sidebar/nodes/CustomEdge";
 
 class RobotsEditor extends Component {
   constructor(props) {
@@ -35,7 +36,8 @@ class RobotsEditor extends Component {
     this.state = {
       elements: store.getState().robotSettingsData || [],
       reactFlowInstance: null,
-      selected: false
+      selected: false,
+      selectEdge: false
     };
 
     this.resource = new Resource({ route: "/admin/ajax/robots" });
@@ -50,6 +52,7 @@ class RobotsEditor extends Component {
 
   async componentDidMount() {
     store.subscribe(this.updateRobotState.bind(this));
+    // store.subscribe(this.onLoad.bind(this));
 
     const robotId = new URL(window.location).searchParams.get("robot_id");
     const robot = await this.resource.get(robotId);
@@ -60,12 +63,20 @@ class RobotsEditor extends Component {
   // Удаление ноды
   onElementsRemove = elementsToRemove => {
     const robotStore = store.getState()?.robotSettingsData;
+    const selected = this.state.selected;
     const newStore = removeElements(elementsToRemove, robotStore);
+    if(_.isArray(elementsToRemove)){
+      elementsToRemove.map(item =>{
+        if(item.id == selected?.id) this.setState(s => ({ ...s, selected: {} }));
+      })
+    }
+    console.log(elementsToRemove);
     store.dispatch(setRobotSettingsData(newStore));
   }
 
   // Добавление связи между нодами
   onConnect = params => {
+    console.log(params);
     const robotStore = store.getState()?.robotSettingsData;
     const newStore = addEdge(params, robotStore);
     store.dispatch(setRobotSettingsData(newStore));
@@ -98,8 +109,8 @@ class RobotsEditor extends Component {
 
   // Получение id нового элемента (ноды)
   getId() {
-    const lengthStore = store.getState().robotSettingsData?.length ?? 0;
-    return lengthStore + 1;
+    const time = new Date().getTime();
+    return time;
   }
 
   // Получение data нового элемента (ноды)
@@ -108,10 +119,28 @@ class RobotsEditor extends Component {
 
     switch (type){
       case "action":
-        data = dataAction;
+        data = {
+          "type": "action",
+          "nodeData": {}
+        };
         break;
       case "condition":
-        data = dataCondition;
+        data = {  
+          "type": "condition",
+          "nodeData": {
+              "type": "none",
+              "operator": "",
+              "body": []
+          }
+        };
+        break;
+      case "robot":
+        data = {  
+          "type": "robot",
+          "nodeData": {
+              "id": "",
+          }
+        };
         break;
     }
     return data;
@@ -130,17 +159,29 @@ class RobotsEditor extends Component {
     store.dispatch(setUpdatedNode(node));
   }
 
+  onEdgeUpdate = (oldEdge, newConnection) => {
+
+    const robotStore = store.getState()?.robotSettingsData;
+    const newStore = updateEdge(oldEdge, newConnection, robotStore);
+    store.dispatch(setRobotSettingsData(newStore));
+  }
+
   // Запись активного элемента в state
   onElementClick = (event, element) => {
-    this.setState(s => ({ ...s, selected: element }));
+    store.dispatch(setUpdatedNode(element));
+    if(isNode(element)) this.setState(s => ({ ...s, selected: element, selectEdge: false }));
+    if(isEdge(element)) this.setState(s => ({ ...s, selectEdge: element, selected: false }));
   }
 
   render() {
     let elements = store.getState().robotSettingsData || [];
+    // console.log(elements);
+    console.log(this.state.selected);
+    // console.log(this.state);
     return (
       <div className="page__content">
         <ReactFlowProvider>
-          <Sidebar elements={ elements } selected={ this.state.selected } onLoad={ this.onLoad }/>
+          <Sidebar elements={ elements } selected={ this.state.selected } selectEdge={ this.state.selectEdge } onLoad={ this.onLoad }/>
           <div className="content" ref={this.reactFlowRef }>
             <ReactFlow
               elements={ elements }
@@ -156,18 +197,30 @@ class RobotsEditor extends Component {
                 begin: Begin,
                 condition: Condition,
                 action: Action,
+                robot: Robot,
                 end: End,
-                loop: Loop,
+              }}
+              onEdgeUpdate={this.onEdgeUpdate}
+              edgeTypes={{
+                custom: CustomEdge,
               }}
             >
               <Controls />
               <MiniMap
-                nodeColor={(node) => {
+                nodeColor={node => {
                   switch (node.type) {
                     case 'begin': return 'green';
                     case 'condition': return 'red';
                     case 'action': return 'blue';
                     default: return '#999';
+                  }
+                }}
+                nodeClassName={node => {
+                  switch (node.type) {
+                    case 'begin': return 'flow-node';
+                    case 'condition': return 'condition-romb';
+                    // case 'action': return 'blue';
+                    default: return 'flow-node';
                   }
                 }}
               />

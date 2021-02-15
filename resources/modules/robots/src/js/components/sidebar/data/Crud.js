@@ -4,71 +4,92 @@ import { setUpdatedNode } from "../../../store/robot-settings/actions";
 import AltrpSelect from "../../../../../../admin/src/components/altrp-select/AltrpSelect";
 import Resource from "../../../../../../editor/src/js/classes/Resource";
 
-
-
-
 class Crud extends Component{
     constructor(props){
         super(props);
         this.state = {
             modelOptions: [],
-            models: []
+            models: [],
+            currentModelId: '',
+            fieldOptions: [],
+            recordOptions: [],
+
         }
         this.modelsResource = new Resource({ route: '/admin/ajax/models' });
-        this.modelsResource1 = new Resource({ route: '/admin/ajax/models/13/fields_only' });
-        this.modelsResource2 = new Resource({ route: '/admin/ajax/models/13/records' });
         this.modelOptionsResource = new Resource({ route: '/admin/ajax/model_options' });
+
     }
 
     async componentDidMount() {
+        store.subscribe(this.setDataState.bind(this));
+
         let models = await this.modelsResource.getAll();
-        let models1 = await this.modelsResource1.getAll();
-        let models2 = await this.modelsResource2.getAll();
         let modelOptions = await this.modelOptionsResource.getAll();
-        console.log(models);
-        console.log(models1);
-        console.log(models2);
 
         this.setState(s =>({...s, modelOptions, models }));
     }
-    
 
     // Запись значений select в store
     changeSelect(e, type) {
-        let value = e.value;
         const node = this.props.selected;
+        if(type === "body"){
+            if(e === null) e = [];
+            let body = {};
+            e.map(item => {
+                if(node.data.props.nodeData.data.body[item.label] === undefined) body[item.label] = '';
+                else body[item.label] = node.data.props.nodeData.data.body[item.label];
+            });
+            node.data.props.nodeData.data.body = body;
+        } else {
+            node.data.props.nodeData.data[type] = e.value;
+        }    
+        store.dispatch(setUpdatedNode(node));
+    }
 
-        node.data.props.nodeData.data[type] = value;
+    // Запись значений input в store
+    changeInput(e, field, fieldsData) {
+        const node = this.props.selected;
+        if(!node.data.props.nodeData.data.body || _.isEmpty(fieldsData)) return;
 
-        // console.log(node);
-        // node.data.props.nodeData.map( item => {
-        //     if(item.type === "crud"){
-        //         if(type === "model"){
-        //             let model = this.state.models.models ?? [];
-        //             model.map(i =>{
-        //                 if(i.id == value){
-        //                     item.data.model_id = i.id;
-        //                     item.data.model_class = i.namespace;
-        //                 }
-        //                 return i;
-        //             });
-        //             console.log(item);
-        //         }else{
-        //             item.data[type]= value;
-        //         }
-        //     } 
-        //     return item;
-        // });
+        fieldsData.map(item =>{
+            if(item == field) node.data.props.nodeData.data.body[field] = e.target.value;
+        });
+
         store.dispatch(setUpdatedNode(node));
     }
 
     getData(type) {
-        // console.log(this.props.selected?.data?.props?.nodeData?.data);
-        let item = this.props.selected?.data?.props?.nodeData?.data[type] ?? [];
+        let item = this.props.selected?.data?.props?.nodeData?.data[type] ?? '';
+
+        return item;
+    }
+
+    getFields() {
+        let item = this.props.selected?.data?.props?.nodeData?.data?.body ?? [];
+
+        if(_.isObject(item)) item = _.keys(item);
+
+        return item;
+    }
+
+    setDataState() {
+       this.setStateCrud();
+    }
+
+    async setStateCrud(){
+        const item = this.props.selected?.data?.props?.nodeData?.data?.model_id ?? '';
 
         // console.log(item);
 
-        return item;
+        if(item){
+            let fields = new Resource({ route: `/admin/ajax/models/${item}/field_options` });
+            let records = new Resource({ route: `/admin/ajax/models/${item}/records_options` });
+            fields = await fields.getAll();
+            records = await records.getAll();
+            // console.log(fields);
+            // console.log(records);
+            this.setState(s =>({...s, fieldOptions: fields.options, recordOptions: records}));
+        }
     }
 
     render(){
@@ -78,43 +99,67 @@ class Crud extends Component{
             {label:'update', value: 'update'},
             {label:'delete', value: 'delete'}
         ];
-        const recordOptions = [];
+        const fieldOptions = this.state.fieldOptions ?? [];
+        const recordOptions = this.state.recordOptions ?? [];
         const model = this.getData("model_id");
         const method = this.getData("method");
+        const fields = this.getFields();
         const record = this.getData("record_id");
-        // console.log(model);
-        // console.log(modelOptions);
-        // console.log(this.state.models);
+
+        // console.log(fieldOptions);
+        // console.log(recordOptions);
 
         return <div>
-        <div className="controller-container__label">CRUD:</div>
-        <div className="controller-container controller-container_textarea">
-            <div className="controller-container__label">Models</div>
-            <AltrpSelect id="crud-model"
-                            value={_.filter(modelOptions, item => model == item.value)}
-                            onChange={e => {this.changeSelect(e, "model_id")}}
-                            options={modelOptions} />
-        </div>
+            <div className="controller-container__label">CRUD:</div>
+            <div className="controller-container controller-container_textarea">
+                <div className="controller-container__label">Models</div>
+                <AltrpSelect id="crud-model"
+                    value={_.filter(modelOptions, item => model == item.value)}
+                    onChange={e => {this.changeSelect(e, "model_id")}}
+                    options={modelOptions}
+                />
+            </div>
 
-        <div className="controller-container controller-container_textarea">
-            <div className="controller-container__label">Method</div>
-            <AltrpSelect id="crud-method"
-                            value={_.filter(methodOptions, item => method === item.value)}
-                            onChange={e => {this.changeSelect(e, "method")}}
-                            options={methodOptions} />
+            {model && <div className="controller-container controller-container_textarea">
+                <div className="controller-container__label">Method</div>
+                <AltrpSelect id="crud-method"
+                    value={_.filter(methodOptions, item => method === item.value)}
+                    onChange={e => {this.changeSelect(e, "method")}}
+                    options={methodOptions}
+                />
+            </div>}
+            {(method && method !== "create") && <div className="controller-container controller-container_textarea">
+                <div className="controller-container__label">Record</div>
+                <AltrpSelect id="crud-record"
+                    value={_.filter(recordOptions, item => record == item.value)}
+                    onChange={e => {this.changeSelect(e, "record_id")}}
+                    options={recordOptions}
+                />
+            </div>}
+            {(method && method !== "delete") && <div className="controller-container controller-container_textarea">
+                <div className="controller-container__label">Fields</div>
+                <AltrpSelect id="crud-fields"
+                    isMulti={true}
+                    value={_.filter(fieldOptions, f => fields.indexOf(f.label) >= 0)}
+                    onChange={e => {this.changeSelect(e, "body")}}
+                    options={fieldOptions}
+                />
+
+                {fields.map((item, index) =>
+                <div key={index}>
+                    <div className="controller-container__label">{item}</div>
+                    <input
+                        type="text"
+                        id={item}
+                        name={item}
+                        value={this.props.selected?.data.props.nodeData.data.body[item] ?? ''}
+                        onChange={(e) => { this.changeInput(e, item, fields) }}
+                        className="form-control"
+                    />
+                </div>
+                )}                           
+            </div>}
         </div>
-        {(method === "delete") && <div className="controller-container controller-container_textarea">
-            <div className="controller-container__label">Record</div>
-            <AltrpSelect id="crud-record"
-                            value={_.filter(recordOptions, item => record == item.value)}
-                            onChange={e => {this.changeSelect(e, "record_id")}}
-                            options={recordOptions} />
-        </div>}
-        <div className="controller-container controller-container_textarea">
-            <div className="controller-container__label">Body</div>
-            {/* <input type="text" id="body" name="body" value={this.props.noticeData?.data?.message ?? ''} onChange={(e) => { this.props.onSendNotice(e, "message") }} className="form-control" /> */}
-        </div>
-    </div>
     }
 }
 

@@ -478,13 +478,13 @@ class ModelsController extends HttpController
             ], 500, [], JSON_UNESCAPED_UNICODE);
         $model = Model::where('name', $name)->first();
         return response()->json([
-            'taken' => $model,
+            'taken' => !$model,
         ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     // Fields
     /**
-     * Получить поля медели
+     * Получить поля модели
      *
      * @param $model_id
      * @return JsonResponse
@@ -1704,5 +1704,24 @@ class ModelsController extends HttpController
             ? '\\' . $model->parent->namespace
             :  '\\' . $model->namespace;
         return $modelClass::all();
+    }
+
+    /**
+     * Получить записи для списка опций: id, name
+     * @param $model_id
+     * @return mixed
+     */
+    public function getRecordsByModelOptions($model_id)
+    {
+        $records = $this->getRecordsByModel($model_id);
+
+        $options = [];
+        foreach ($records as $record) {
+            $options[] = [
+                'value' => $record->id,
+                'label' => $record->id,
+            ];
+        }
+        return $options;
     }
 }

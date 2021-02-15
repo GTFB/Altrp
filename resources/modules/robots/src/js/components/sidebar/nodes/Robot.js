@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Handle } from 'react-flow-renderer';
 
-export default class Begin extends React.Component {
+export default class Robot extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -12,9 +12,9 @@ export default class Begin extends React.Component {
     
     return (
       <div className={nodeClasses}>
+        <Handle type="target" position="top" />
         <div><h3>{this.props?.data?.label}</h3></div>
         <div>{this.props?.type}</div>
-        <Handle type="source" position="bottom"/>
       </div>
     );
   }

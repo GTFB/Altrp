@@ -51,4 +51,20 @@ class RobotController extends Controller
 
         return \response()->json(['success' => $result], $result ? 200 : 500);
     }
+
+    public function getOptions(Request $reques)
+    {
+        $robots = Robot::with('user')->get()->each(function (Robot $robot) {
+            $robot->setAttribute('author', $robot->user->name);
+        });
+
+        $options = [];
+        foreach ($robots as $robot) {
+            $options[] = [
+                'value' => $robot->id,
+                'label' => $robot->name,
+            ];
+        }
+        return $options;
+    }
 }

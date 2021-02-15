@@ -362,4 +362,21 @@ class Users extends Controller
             JSON_UNESCAPED_UNICODE
         );
     }
+
+    /**
+     * Получить записи для списка опций: id, name
+     * @return mixed
+     */
+    public function getUsersOptions()
+    {
+        $users = User::all();
+        $options = [];
+        foreach ($users as $user) {
+            $options[] = [
+                'value' => $user->id,
+                'label' => $user->name,
+            ];
+        }
+        return $options;
+    }
 }

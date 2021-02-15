@@ -7,25 +7,25 @@ export default class Condition extends React.Component {
   }
 
   render() {
-    let nodeClasses = "react-flow__node-output";
+    let nodeClasses = "flow-node-condition";
     if (this.props.selected) nodeClasses += " selected";    
    
     return (
       <div className={nodeClasses}>
-        <Handle type="target" position="top" />
-        <div><h3>{this.props?.data?.label}</h3></div>
-        <div>{this.props?.type}</div>
+        <Handle type="target" position="top" style={{ zIndex: 100}}/>
+        <div className="condition-romb"><h3>{this.props?.data?.label}</h3></div>
+        <div className="condition-type">{this.props?.type}</div>
         <Handle
           type="source"
           position="left"
-          id="yes"
-          style={{ top: '70%', borderRadius: 0 }}
+          id="no"
+          style={{ top: '65%', borderRadius: 0 }}
         />
         <Handle
           type="source"
           position="right"
-          id="no"
-          style={{ top: '70%', borderRadius: 0 }}
+          id="yes"
+          style={{ top: '65%', borderRadius: 0 }}
         />
       </div>
     );
