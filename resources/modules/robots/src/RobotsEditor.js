@@ -5,6 +5,7 @@ import ReactFlow, {
   Controls,
   removeElements,
   addEdge,
+  updateEdge,
   isNode,
   isEdge
 } from "react-flow-renderer";
@@ -26,6 +27,7 @@ import Begin from "./js/components/sidebar/nodes/Begin";
 import Action from "./js/components/sidebar/nodes/Action";
 import Robot from "./js/components/sidebar/nodes/Robot";
 import End from "./js/components/sidebar/nodes/End";
+import CustomEdge from "./js/components/sidebar/nodes/CustomEdge";
 
 class RobotsEditor extends Component {
   constructor(props) {
@@ -50,6 +52,7 @@ class RobotsEditor extends Component {
 
   async componentDidMount() {
     store.subscribe(this.updateRobotState.bind(this));
+    // store.subscribe(this.onLoad.bind(this));
 
     const robotId = new URL(window.location).searchParams.get("robot_id");
     const robot = await this.resource.get(robotId);
@@ -156,6 +159,13 @@ class RobotsEditor extends Component {
     store.dispatch(setUpdatedNode(node));
   }
 
+  onEdgeUpdate = (oldEdge, newConnection) => {
+
+    const robotStore = store.getState()?.robotSettingsData;
+    const newStore = updateEdge(oldEdge, newConnection, robotStore);
+    store.dispatch(setRobotSettingsData(newStore));
+  }
+
   // Запись активного элемента в state
   onElementClick = (event, element) => {
     store.dispatch(setUpdatedNode(element));
@@ -189,6 +199,10 @@ class RobotsEditor extends Component {
                 action: Action,
                 robot: Robot,
                 end: End,
+              }}
+              onEdgeUpdate={this.onEdgeUpdate}
+              edgeTypes={{
+                custom: CustomEdge,
               }}
             >
               <Controls />
