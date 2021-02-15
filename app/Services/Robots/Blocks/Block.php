@@ -52,11 +52,16 @@ class Block
         $currentNode = collect($this->nodes)->where('data.props.type', $this->type)->first();
         $currentNode = self::$nextNode ?: $currentNode;
         $currentNodeEdgesSources = collect($this->edges)->where('source', $currentNode->id)->values()->all();
+
         $currentNodeEdgesSource = $this->getCurrentNodeEdgesSource($currentNode, $currentNodeEdgesSources);
         if ($currentNode->data->props->type == 'action') {
             $this->doAction($currentNode);
         }
-        self::$nextNode = collect($this->nodes)->where('id', $currentNodeEdgesSource->target)->first();
+
+        if ($currentNodeEdgesSource) {
+            self::$nextNode = collect($this->nodes)->where('id', $currentNodeEdgesSource->target)->first();
+        }
+
     }
 
     /**
@@ -86,11 +91,16 @@ class Block
      */
     protected function runCondition($node)
     {
-        $conditionBody = $node->data->props->nodeData;
-        if (!is_object($conditionBody)) {
-            $conditionBody = json_decode($conditionBody, true);
+        $condition = $node->data->props->nodeData;
+        $str = '';
+        $conditionBody = $condition->body;
+        $arr = [];
+        foreach ($conditionBody as $item) {
+            $arr[] = ' (' . $item->operands[0] . ' ' . $item->operator . ' ' . $item->operands[1] . ') ';
         }
-        return JsonLogic::apply($conditionBody);
+        $str .= ' (' . implode($condition->operator, $arr) . ') ';
+        $str = 'if(' .$str .') { return true; } else { return false; }';
+        return eval($str);
     }
 
     /**
@@ -103,6 +113,9 @@ class Block
         $action->runAction();
     }
 
+    /**
+     * @return mixed
+     */
     public function getCurrentNode()
     {
         return self::$nextNode->data->props->type;
