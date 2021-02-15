@@ -71,6 +71,17 @@ class TemplateDataStorage extends BaseModule {
     return this.currentElement;
   }
 
+  getElementById(elementId) {
+    let stack = [...this.rootElement.children];
+    let element;
+    while(!(stack.length === 0)) {
+        element = stack.pop()
+        if(element.id == elementId) 
+          return element;
+        stack.push(...element.children)
+    }
+  }
+
   getRootElement() {
     return this.rootElement;
   }

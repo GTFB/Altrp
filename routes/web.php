@@ -83,6 +83,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/templates/{template_id}/reviews', 'TemplateController@reviews');
     Route::delete('/templates/{template_id}/reviews', 'TemplateController@deleteReviews');
     Route::delete('/templates/{template_id}/reviews/{review_id}', 'TemplateController@deleteReview');
+    Route::get('/templates/{template_id}/reviews/{review_id}', 'TemplateController@getReview');
     Route::delete('/reviews', 'TemplateController@deleteAllReviews')->name('admin.delete-all-reviews');
 
     Route::resource('pages', 'Admin\PagesController');

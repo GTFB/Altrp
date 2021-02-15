@@ -58,6 +58,7 @@ import inactivityIcon from '../../../svgs/inactivity.svg'
 import exitIntent from '../../../svgs/exit_intent.svg'
 import exit from '../../../svgs/exit.svg'
 import starIcon from '../../../svgs/widget_icon.svg'
+import check from '../../../svgs/check.svg'
 
 import s1 from '../../../svgs/1H34NbWILW0tD8tr4snZXkDpw5B8IM9jFr2GUWxP.svg'
 import s2 from '../../../svgs/arrow-left 1.svg'
@@ -209,6 +210,7 @@ class IconsManager {
     this.icons.push(new Icon('xls', xls));
     this.icons.push(new Icon('xlsx', xlsx));
     this.icons.push(new Icon('zip', zip));
+    this.icons.push(new Icon('check', check));
 
     this.icons.push(new Icon('admin-bar1', adminBar1));
     this.icons.push(new Icon('admin-bar2', adminBar2));

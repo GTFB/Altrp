@@ -8,14 +8,16 @@ import sectionElementEmailRender from '../renders/email/sectionElementEmailRende
  * @param value
  */
 export function changeSetting(settingName, value) {
-  let newState = this.state;
+  let newState = _.cloneDeep(this.state);
   newState.settings[settingName] = value;
+
   /**
    * Если виджет поле, то обнолвяем и значение
    */
   if((settingName === 'content_default_value')){
     newState.value = value;
   }
+
   this.setState({
     ...newState
   });

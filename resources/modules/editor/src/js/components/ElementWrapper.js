@@ -130,10 +130,12 @@ class ElementWrapper extends Component {
             }
             break;
         }
+        
       }
       if (this.props.element.getType() === "column") {
         this.props.element.appendChild(newElement);
       }
+
       editorSetCurrentElement(newElement);
     }
     /**
@@ -252,6 +254,13 @@ class ElementWrapper extends Component {
    * @param {{}} nextState
    */
   shouldComponentUpdate(nextProps, nextState) {
+    if(this.state.children) {
+      if(this.state.children.component) {
+        if(this.state.children.component.settings.button_text) {
+          console.log(this.state.children.component.settings.button_text)
+        }
+      }
+    }
     /**
      * не обновляем элемент, если изменился контроллер не текущего элемента
      */

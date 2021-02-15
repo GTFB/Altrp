@@ -32,6 +32,10 @@ class TextController extends Component {
   onBlur = e =>{
     this._changeValue(e.target.value)
   };
+  onKeyDown = (event) => {
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
+  }
   /**
    * Изменение больше не обновляет элемент
    * @param e
@@ -70,6 +74,7 @@ class TextController extends Component {
           </div>
         </div> : <input className="control-field"
                         onBlur={this.onBlur}
+                        onKeyDown={this.onKeyDown}
                         onChange={this.changeValue} value={value} />
         }
 

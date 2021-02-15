@@ -23,6 +23,7 @@ class Controller {
           this.rules.push(newRule);
           let value = currentElement.getSettings(this.getSettingName());
           if (value) {
+            // console.log(this.getSettingName(), value)
             newRule.insertValue(value);
           }
         }

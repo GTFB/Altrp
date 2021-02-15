@@ -28,6 +28,10 @@ class CssEditorController extends Component {
     };
   }
 
+  onKeyDown = (event) => {
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
+  }
 
   onChange(newValue) {
     this._changeValue(newValue);
@@ -96,6 +100,7 @@ class CssEditorController extends Component {
           mode="css"
           theme="textmate"
           onChange={this.onChange}
+          onKeyDown={this.onKeyDown}
 
           name="aceEditor"
           height="15em"

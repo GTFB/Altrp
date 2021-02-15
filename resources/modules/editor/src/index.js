@@ -18,6 +18,8 @@ window.Component = Component;
 // let my_env_key = process.env.MIX_PUSHER_APP_KEY;
 
 import Echo from "laravel-echo";
+import {listenerHistory} from "./installing";
+import controllerHistory from "./js/classes/ControllerHistory";
 window.Pusher = require("pusher-js");
 
 try {
@@ -94,7 +96,8 @@ import("./Editor.js")
         styleLink.rel = "stylesheet";
         styleLink.href = `/modules/editor/editor.css?${_altrpVersion}`;
         head.appendChild(styleLink);
-      } else {
+      }
+      else {
         let head = iframe.contentWindow.document.getElementsByTagName(
           "head"
         )[0];
@@ -103,5 +106,17 @@ import("./Editor.js")
         script.defer = "http://localhost:3000/src/bundle.js";
         head.appendChild(script);
       }
+
+      function listenerHistory(event) {
+        if (event.ctrlKey && event.code === 'KeyZ' && event.shiftKey) {
+          controllerHistory.redo();
+        } else if (event.ctrlKey && event.code === 'KeyZ') {
+          controllerHistory.undo();
+        }
+      }
+      window.addEventListener('keydown', listenerHistory, false);
+      window.EditorFrame.contentWindow.addEventListener('keydown', listenerHistory, false);
     };
   });
+
+  
