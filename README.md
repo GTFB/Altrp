@@ -10,6 +10,7 @@
 + Add New Custom Code Action 
 + Setting Fields Value via Set Actions
 + Two New Text Filter in Table
++ Add History Panel in Editor
 
 ### 0.12.1
 + Аdd the Adminbar
