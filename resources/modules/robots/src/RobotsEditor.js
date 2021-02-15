@@ -152,6 +152,7 @@ class RobotsEditor extends Component {
   }
 
   onLoad = _reactFlowInstance => {
+    // _reactFlowInstance.fitView();
     this.setState(s => ({ ...s, reactFlowInstance: _reactFlowInstance }));
   }
 
@@ -177,6 +178,7 @@ class RobotsEditor extends Component {
     let elements = store.getState().robotSettingsData || [];
     // console.log(elements);
     console.log(this.state.selected);
+    console.log(this.state.selectEdge);
     // console.log(this.state);
     return (
       <div className="page__content">
