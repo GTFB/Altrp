@@ -763,6 +763,28 @@ export function advancedTabControllers(element) {
     }
   });
 
+  element.addControl('arrow_size', {
+    type: CONTROLLER_SLIDER,
+    label: 'Arrow Size',
+    units: ['px', '%'],
+    max: 50,
+    min: 0,
+    rules: {
+      '{{ELEMENT}} > .altrp-tooltip::after': 'border-width: {{SIZE}}{{UNIT}};',
+
+      '{{ELEMENT}} > .altrp-tooltip--top': 'bottom: calc(100% + {{SIZE}}{{UNIT}});',
+      '{{ELEMENT}} > .altrp-tooltip--bottom': 'top: calc(100% + {{SIZE}}{{UNIT}});',
+      '{{ELEMENT}} > .altrp-tooltip--right': 'left: calc(100% + {{SIZE}}{{UNIT}});',
+      '{{ELEMENT}} > .altrp-tooltip--left': 'right: calc(100% + {{SIZE}}{{UNIT}});', 
+
+      '{{ELEMENT}} > .altrp-tooltip--top::after': 'margin-left: -{{SIZE}}{{UNIT}};',
+      '{{ELEMENT}} > .altrp-tooltip--bottom::after': 'margin-left: -{{SIZE}}{{UNIT}};',
+      '{{ELEMENT}} > .altrp-tooltip--right::after': 'margin-top: -{{SIZE}}{{UNIT}};',
+      '{{ELEMENT}} > .altrp-tooltip--left::after': 'margin-top: -{{SIZE}}{{UNIT}};',
+      
+    },
+  });
+
   element.addControl('tooltip_background_shadow', {
     type: CONTROLLER_SHADOW,
     label: 'Shadow',
