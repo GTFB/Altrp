@@ -4,7 +4,10 @@ namespace App\Altrp;
 
 use Illuminate\Database\Eloquent\Model;
 
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+
 class ExportExcel extends Model {
+    const TEMPLATES_ROOT = 'modules/reports/templates/';
 
     public $data;
 
@@ -14,6 +17,7 @@ class ExportExcel extends Model {
 
     protected $worksheet;
 
+    /** @var Worksheet $sheet */
     protected $sheet;
 
     protected $spreadsheet;
@@ -21,8 +25,8 @@ class ExportExcel extends Model {
     public function __construct($data, $template, $filename) {
         $this->data = json_decode($data, true);
         $this->template = false;
-        if (file_exists($template))
-            $this->template = $template;
+        if (file_exists(public_path(self::TEMPLATES_ROOT . $template)))
+            $this->template = public_path(self::TEMPLATES_ROOT . $template);
         $this->filename = 'report.xlsx';
         if ($filename)
             $this->filename = $filename;
@@ -126,9 +130,9 @@ class ExportExcel extends Model {
 
                 $this->parseTemplateData();
                 $offset = 0;
-                foreach($this->data as $key => $data) {
-                    if (is_array($data))
-                        $this->parseTemplateArray($offset);
+
+                if (is_array($this->data['dataArray'])) {
+                    $this->parseTemplateArray($offset);
                 }
 
             } else {

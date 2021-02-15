@@ -305,6 +305,31 @@ export function actionsControllers(element){
     },
   });
 
+  actionsRepeater.addControl('template_name', {
+    label: 'Template name',
+    responsive: false,
+    dynamic: false,
+    description: 'template_name',
+    conditions: {
+      type: [
+        'table_to_xls'
+      ]
+    }
+  });
+
+  actionsRepeater.addControl('template_data', {
+    label: 'Data',
+    type: CONTROLLER_TEXTAREA,
+    responsive: false,
+    dynamic: false,
+    description: 'template_data',
+    conditions: {
+      type: [
+        'table_to_xls'
+      ]
+    }
+  });
+
   actionsRepeater.addControl('path', {
     type: CONTROLLER_TEXTAREA,
     label: 'Path',

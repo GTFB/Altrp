@@ -676,11 +676,24 @@ class AltrpAction extends AltrpModel {
       return { success: true };
     }
 
-    const data = dataFromTable(table);
+    let data = dataFromTable(table);
+    const formattedData = [];
+
+    _.each(data, row => formattedData.push(Object.values(row)));
+    const templateName = this.getProperty("template_name");
+    const rawTemplateData = this.getProperty("template_data");
+    const parsedTemplateData = rawTemplateData
+      .split("\n")
+      .reduce((data, row) => {
+        const keyValuePair = row.split("=");
+        data[keyValuePair[0]] = keyValuePair[1];
+        return data;
+      }, {});
+    data = { ...parsedTemplateData, dataArray: formattedData };
     const filename = replaceContentWithData(this.getProperty("name", "file'"));
 
     try {
-      const blob = await dataToXLS(data, filename);
+      const blob = await dataToXLS(data, filename, templateName);
       let link = document.createElement("a");
       link.setAttribute("href", window.URL.createObjectURL(blob));
       link.setAttribute("download", filename + ".xls");
