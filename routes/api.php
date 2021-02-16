@@ -91,11 +91,14 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::get('/models/{model_id}/field_name_is_free', 'Admin\ModelsController@fieldNameIsFree');
         Route::get('/models/{model_id}/relation_name_is_free', 'Admin\ModelsController@relationNameIsFree');
         Route::get('/models/{model_id}/sql_builder_name_is_free', 'Admin\ModelsController@queryNameIsFree');
+        Route::get('/models_with_fields_options', 'Admin\ModelsController@models_with_fields_options')
+            ->name('admin.models_with_fields_options');
 
         // Models
         Route::get( '/models', 'Admin\ModelsController@getModels');
         Route::get( '/model_options', 'Admin\ModelsController@getModelOptions');
         Route::get( '/models_without_parent', 'Admin\ModelsController@getModelsWithoutParent');
+        Route::get( '/models_without_preset', 'Admin\ModelsController@getModelsWithoutPreset');
         Route::post( '/models', 'Admin\ModelsController@storeModel');
         Route::put( '/models/{model_id}', 'Admin\ModelsController@updateModel');
         Route::get( '/models/{model_id}', 'Admin\ModelsController@showModel');

@@ -62,6 +62,22 @@ class ModelsController extends HttpController
         return response()->json($models, 200);
     }
 
+    /**
+     * Получить модели, которые не являются предустановленными
+     *
+     * @return JsonResponse
+     */
+    public function getModelsWithoutPreset()
+    {
+        $models = Model::select(['id as value', 'title as label'])
+            ->where('preset', 0)
+            ->get();
+        return response()->json([
+            'options' => $models,
+            'pageCount' => 0
+        ], 200);
+    }
+
   /**
    * @param Request $request
    * @return JsonResponse
@@ -246,12 +262,14 @@ class ModelsController extends HttpController
     {
         $search = $request->get('s');
         $page = $request->get('page');
-        if (! $page) {
+        $model = Model::find($request->model_id);
+        $count = $model->altrp_table->columns->count();
+        if (! $page && $count > 1) {
             $pageCount = 0;
             $fields = $search
                 ? Column::getBySearch($search, $request->model_id)
                 : Column::where('model_id', $request->model_id)->get();
-        } else {
+        } elseif ($page && $count > 1) {
             $fieldsCount = $search
                 ? Column::getCountWithSearch($search, $request->model_id)
                 : Column::getCount($request->model_id);
@@ -261,6 +279,9 @@ class ModelsController extends HttpController
             $fields = $search
                 ? Column::getBySearchWithPaginate($search, $request->model_id, $offset, $limit)
                 : Column::getWithPaginate($request->model_id, $offset, $limit);
+        } else {
+            $fields = array_keys($model->getAttributes());
+            $pageCount = 0;
         }
         return compact('pageCount', 'fields');
     }
@@ -548,8 +569,8 @@ class ModelsController extends HttpController
       $options = [];
       foreach ($result['fields'] as $field) {
           $options[] = [
-              'value' => $field->id,
-              'label' => $field->title,
+              'value' => $field->id ?? $field,
+              'label' => $field->title ?? $field,
           ];
       }
       $options = [
@@ -1722,6 +1743,6 @@ class ModelsController extends HttpController
                 'label' => $record->id,
             ];
         }
-        return $options;
+        return response()->json($options, 200, [], JSON_UNESCAPED_UNICODE);
     }
 }

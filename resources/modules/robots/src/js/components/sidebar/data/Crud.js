@@ -16,7 +16,7 @@ class Crud extends Component{
 
         }
         this.modelsResource = new Resource({ route: '/admin/ajax/models' });
-        this.modelOptionsResource = new Resource({ route: '/admin/ajax/model_options' });
+        this.modelOptionsResource = new Resource({ route: '/admin/ajax/models_without_preset' });
 
     }
 
@@ -42,7 +42,7 @@ class Crud extends Component{
             node.data.props.nodeData.data.body = body;
         } else {
             node.data.props.nodeData.data[type] = e.value;
-        }    
+        }
         store.dispatch(setUpdatedNode(node));
     }
 
@@ -157,7 +157,7 @@ class Crud extends Component{
                         className="form-control"
                     />
                 </div>
-                )}                           
+                )}
             </div>}
         </div>
     }
