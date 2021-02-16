@@ -135,7 +135,7 @@ class AdminBar extends React.Component {
       <div className="admin-bar">
         <div className="admin-bar__tools">
           <div className="admin-bar__link" onClick={this.openPageAdmin}>
-            admin
+            ADMIN
           </div>
           <div className="admin-bar__tool">
             <span onClick={this.toggleVisiblePopupTemplate}>
