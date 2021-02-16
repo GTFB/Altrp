@@ -84,6 +84,17 @@ const ActionsTabContent = () => {
 
   return (
     <div className="history-panel__actions-tab-content">
+      <div key={-1} className={ current === -1 ? "history-panel__restore-item history-panel__restore-item--active" : "history-panel__restore-item"} onClick={handlerHistory(-1)}>
+        <span className="history-panel__restore-item-title">start edit</span>
+        {current === -1 ? (
+          <CheckIcon
+            className="history-panel__restore-item-icon"
+            style={{ width: 20, height: 20 }}
+          />
+        ) : (
+          ""
+        )}
+      </div>
       {historyStore.map((item, index) => {
         let title = "";
         if (item.data) {

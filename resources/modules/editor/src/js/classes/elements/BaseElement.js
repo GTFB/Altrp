@@ -298,10 +298,11 @@ class BaseElement extends ControlStack {
     }
     let newChildren = this.children.filter((item, index) => {
       if (item.getId() === childId) {
-        childExist = true;
-        item.beforeDelete();
-        if(dispatchToHistory)
+        childExist = true;   
+        if(dispatchToHistory) {
           store.dispatch(addHistoryStoreItem('DELETE', {element: child, parent: this, index}));
+          item.beforeDelete();
+        } 
         return false;
       }
       return true
