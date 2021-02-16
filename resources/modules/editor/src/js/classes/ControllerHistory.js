@@ -6,7 +6,6 @@ class ControllerHistory extends AltrpModel {
   undo() {
     let current = window.parent.appStore.getState().historyStore.current;
     let history = window.parent.appStore.getState().historyStore.history;
-    console.log(history)
     if(current >= 0) {
       let restoreElement = history[current];
 
@@ -28,7 +27,6 @@ class ControllerHistory extends AltrpModel {
   redo() {
     let current = window.parent.appStore.getState().historyStore.current;
     let history = window.parent.appStore.getState().historyStore.history;
-    console.log(history)
     if(history.length - 1 > current) {
       let restoreElement = history[current + 1];
       switch(restoreElement.type) {
