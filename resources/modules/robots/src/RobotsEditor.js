@@ -56,6 +56,8 @@ class RobotsEditor extends Component {
 
     const robotId = new URL(window.location).searchParams.get("robot_id");
     const robot = await this.resource.get(robotId);
+    console.log(robot);
+    if(!robot.chart) return;
     const data = JSON.parse(robot.chart) ?? [];
     store.dispatch(setRobotSettingsData(data));
   }

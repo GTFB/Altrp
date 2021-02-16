@@ -96,6 +96,18 @@ export default class Robots extends Component {
                 title: "Author",
                 url: true,
                 target: "_blank"
+              },
+              {
+                name: "model_id",
+                title: "Model",
+                url: true,
+                target: "_blank"
+              },
+              {
+                name: "start_condition",
+                title: "Start Condition",
+                url: true,
+                target: "_blank"
               }
             ]}
             rows={this.state.robots}
