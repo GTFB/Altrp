@@ -10,6 +10,7 @@ import EmptyWidget from "./EmptyWidget";
 import { getWidgetData } from "../services/getWidgetData";
 import { customStyle } from "../widgetTypes";
 import { Spinner } from "react-bootstrap";
+import Tooltip from "./d3/TooltipScatter";
 
 import moment from "moment";
 const format = "%d.%m.%Y";
@@ -30,7 +31,9 @@ const PointChart = ({
   customColorSchemeChecker = false,
   customColors = [],
   constantsAxises = [],
-  yScaleMax
+  yScaleMax,
+  widgetID,
+  useCustomTooltips
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -146,6 +149,13 @@ const PointChart = ({
               ? { type: xScaleType, format: format, precision: precision }
               : { type: xScaleType }
           }
+          tooltip={datum => (
+            <Tooltip
+              datum={datum}
+              enable={useCustomTooltips}
+              widgetID={widgetID}
+            />
+          )}
           enableGridX={enableGridX}
           enableGridY={enableGridY}
           axisBottom={

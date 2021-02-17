@@ -76,7 +76,12 @@ class DataAdapter {
         .filter(item => {
           const value =
             item.split("=")[1] !== "undefined" ? item.split("=")[1] : "";
-          return typeof value !== "undefined" && value !== "" && value !== null;
+          return (
+            typeof value !== "undefined" &&
+            value !== "" &&
+            value !== null &&
+            value !== "null"
+          );
         })
         .join("&");
     }
@@ -453,7 +458,7 @@ class DataAdapter {
         let matches =
           data.length > 0 ? data.map(obj => obj.length > 0) : [false];
         //Если во вложениях есть пустые данные, то вызываем запрос данных снова
-        needCallAgain = _.has(matches, false) && this.countRequest < 5;
+        needCallAgain = _.includes(matches, false) && this.countRequest < 5;
         //Если один источник, проверяем данные в нём
         dates =
           data.length > 0

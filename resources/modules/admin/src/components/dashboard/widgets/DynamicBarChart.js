@@ -9,6 +9,7 @@ const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
 import { ResponsiveBar } from "@nivo/bar";
 
 import { getWidgetData } from "../services/getWidgetData";
+import TooltipBar from "./d3/TooltipBar";
 
 const DynamicBarChart = ({
   widget,
@@ -31,7 +32,9 @@ const DynamicBarChart = ({
   enableGridY = true,
   customColorSchemeChecker = false,
   customColors = [],
-  yScaleMax
+  yScaleMax,
+  widgetID,
+  useCustomTooltips
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -105,14 +108,13 @@ const DynamicBarChart = ({
               tickRotation: tickRotation
             }
           }
-          tooltip={datum => {
-            const { indexValue, value, color } = datum;
-            return (
-              <>
-                <span>{indexValue}</span>:<strong> {value}</strong>
-              </>
-            );
-          }}
+          tooltip={datum => (
+            <TooltipBar
+              enable={useCustomTooltips}
+              datum={datum}
+              widgetID={widgetID}
+            ></TooltipBar>
+          )}
           enableGridX={enableGridX}
           enableGridY={enableGridY}
           enableLabel={enableLabel}
