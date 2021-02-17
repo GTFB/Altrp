@@ -12,8 +12,12 @@ class Tooltip extends PureComponent {
       enable: props.enable,
       point: props.datum.point,
       data: props.datum.point.data,
-      settings: props?.settings
+      settings: props?.settings,
+      keyIsDate: props?.keyIsDate
     };
+    console.log("====================================");
+    console.log(this.state.data);
+    console.log("====================================");
     this.containerSettings = this.containerSettings.bind(this);
   }
 
@@ -81,7 +85,10 @@ class Tooltip extends PureComponent {
               <div
                 className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
               >
-                {this.state.data.x}:{" "}
+                {this.props.keyIsDate
+                  ? this.state.data.xFormatted
+                  : this.state.data.x}
+                :
                 <strong
                   className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
                 >
@@ -90,15 +97,17 @@ class Tooltip extends PureComponent {
               </div>
               {this.state.data?.tooltip?.map((item, index) => {
                 return (
-                  <div
-                    style={{
-                      color: item?.color || "#000000"
-                    }}
-                    key={index}
-                  >
-                    {`${item?.label}:`}
-                    <strong>{item.value}</strong>
-                  </div>
+                  <React.Fragment>
+                    <div
+                      style={{
+                        color: item?.color || "#000000"
+                      }}
+                      key={index}
+                    >
+                      {`${item?.label}:`}
+                      <strong>{item.value}</strong>
+                    </div>
+                  </React.Fragment>
                 );
               })}
             </div>

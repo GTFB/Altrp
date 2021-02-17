@@ -250,7 +250,9 @@ const AltrpDiagram = props => {
   } else if (settings.datasource_path != null) {
     try {
       data = getDataByPath(settings.datasource_path, []);
-
+      console.log("====================================");
+      console.log(data);
+      console.log("====================================");
       if (settings.type === LINE) {
         data = _.uniqBy(data, settings.key_name);
       }
