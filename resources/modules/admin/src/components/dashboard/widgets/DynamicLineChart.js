@@ -220,13 +220,19 @@ const DynamicLineChart = ({
           useMesh={true}
           enableArea={enableArea}
           enablePoints={enablePoints}
-          tooltip={datum => (
-            <Tooltip
-              datum={datum}
-              enable={useCustomTooltips}
-              widgetID={widgetID}
-            />
-          )}
+          tooltip={datum => {
+            console.log("====================================");
+            console.log(datum);
+            console.log("====================================");
+            return (
+              <Tooltip
+                keyIsDate={keyIsDate}
+                datum={datum}
+                enable={useCustomTooltips}
+                widgetID={widgetID}
+              />
+            );
+          }}
           // tooltip={datum => {
           //   const tooltip = datum.point.data?.tooltip;
           //   console.log("=============TOOLTIP==============");
