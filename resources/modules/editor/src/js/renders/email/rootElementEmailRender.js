@@ -1,26 +1,28 @@
+import {isEditor} from "../../../../../front-app/src/js/helpers";
 /**
  * Возвращает шаблон корневого элемента для письма
- * @return {null}
+ * @return {React.DetailedReactHTMLElement<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> | React.DetailedReactHTMLElement<React.HTMLAttributes<T>, HTMLElement> | React.ReactSVGElement | React.DOMElement<React.DOMAttributes<T>, Element> | React.FunctionComponentElement<{}> | React.CElement<{}, React.ClassicComponent<{}, React.ComponentState>> | React.CElement<{}, React.Component<P, React.ComponentState>> | React.ReactElement<{}>}
  */
 export default function rootElementEmailRender(){
-  console.log(this);
-
-  let classes = `sections-wrapper ${this.props.element
-      .getSelector()
-      .replace(".", "")} ${this.props.element.hasCardModel() ? 'sections-wrapper_card' : ''}`;
+  let rootElementTag;
+  rootElementTag = 'table';
+  const elementProps = {};
+  if(isEditor()){
+    rootElementTag = 'div';
+    elementProps.className = 'sections-wrapper';
+  }
   let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
-  return (
-      <table>
-        {this.props.element.getSettings("test-text-4")}
-        {this.state.children.map(section => (
-            <ElementWrapper
-                ElementWrapper={ElementWrapper}
-                key={section.getId()}
-                component={section.componentClass}
-                element={section}
-            />
-        ))}
-      </table>
-  );
-  return null;
+  let childrenComponents = this.state.children.map(section => (
+      <ElementWrapper
+          ElementWrapper={ElementWrapper}
+          key={section.getId()}
+          component={section.componentClass}
+          element={section}
+      />
+  ));
+  if(! isEditor()){
+    childrenComponents = <tbody>{childrenComponents}</tbody>;
+  }
+  return React.createElement(rootElementTag, elementProps, childrenComponents);
+
 }

@@ -2,6 +2,9 @@ import frontDecorate from '../../../../front-app/src/js/decorators/front-element
 import {getTemplateType} from "../helpers";
 import rootElementEmailRender from '../renders/email/rootElementEmailRender';
 import sectionElementEmailRender from '../renders/email/sectionElementEmailRender';
+import columnElementEmailRender from '../renders/email/columnElementEmailRender';
+import buttonElementEmailRender from '../renders/email/buttonElementEmailRender';
+import {isEditor} from "../../../../front-app/src/js/helpers";
 /**
  * Обновляем state элемента при изменении настроек в редакторе
  * @param settingName
@@ -65,8 +68,19 @@ function baseEmailRender(component){
     case 'section':{
       return sectionElementEmailRender.bind(component);
     }
+    case 'column':{
+      return columnElementEmailRender.bind(component);
+    }
+    case 'button':{
+      return buttonElementEmailRender.bind(component);
+    }
   }
-  return ()=>null;
+  return ()=>{
+    if(isEditor()){
+      return <div className="tba-placeholder">TBA</div>
+    }
+   return null
+  };
 }
 
 export default function decorate(component) {

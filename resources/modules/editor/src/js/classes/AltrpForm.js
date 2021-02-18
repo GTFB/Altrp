@@ -116,7 +116,7 @@ class AltrpForm {
       try {
         switch (this.method) {
           case "POST": {
-            let res = await this.resource.post(_.assign(this.getData(), data));
+            let res = await this.resource.post(_.assign(this.getData(), data,), customHeaders);
             if (this.modelName === "login" && this.options.afterLoginRedirect) {
               document.location.replace(this.options.afterLoginRedirect);
               return res;
@@ -144,7 +144,8 @@ class AltrpForm {
                 console.log(_.assign(this.getData(), data));
                 res = await this.resource.put(
                   modelID,
-                  _.assign(this.getData(), data)
+                  _.assign(this.getData(), data),
+                  customHeaders
                 );
                 console.log(res);
                 import("./modules/ModelsManager").then(modelsManager => {
@@ -167,7 +168,8 @@ class AltrpForm {
             // return await alert(JSON.stringify(this.getData()));
             let res;
             res = await this.resource.getQueried(
-              _.assign(this.getData(), data)
+              _.assign(this.getData(), data),
+                customHeaders
             );
             this.updateResponseStorage(res);
             return res;
@@ -178,7 +180,8 @@ class AltrpForm {
                 // return await await alert('Удаление!');
                 return await this.resource.delete(
                   modelID,
-                  _.assign(this.getData(), data)
+                  _.assign(this.getData(), data),
+                  customHeaders
                 );
               }
               console.error(

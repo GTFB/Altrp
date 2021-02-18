@@ -54,4 +54,7 @@ class TemplateLoader {
 }
 
 const templateLoader =  new TemplateLoader();
+if(window.ALTRP_DEBUG){
+  window.templateLoader = templateLoader;
+}
 export default templateLoader;

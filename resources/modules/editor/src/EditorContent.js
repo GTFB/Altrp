@@ -26,9 +26,23 @@ class EditorContent extends Component {
     this.state = {};
     this.editorWindow = React.createRef();
     store.subscribe(this.currentElementListener.bind(this));
+    store.subscribe(this.templateStatus.bind(this));
     window.altrpEditorContent = this;
   }
 
+  /**
+   * Метод-подписчик на изменение состояния Редактора из Редакс хранилища
+   * */
+  templateStatus() {
+    let templateStatus = store.getState().templateStatus.status;
+    if (templateStatus !== this.state.templateStatus) {
+      this.setState({ ...this.state, templateStatus });
+    }
+  }
+
+  /**
+   * Метод-подписчик на изменение текущего элемента из Редакс хранилища
+   * */
   currentElementListener(){
     let currentElement = store.getState().currentElement.currentElement;
     if(currentElement instanceof RootElement && currentElement !== this.state.rootElement){
@@ -77,7 +91,7 @@ class EditorContent extends Component {
             <NewSection />
           </div>
         </DndProvider>
-        <Styles/>
+        {store.getState().templateData.template_type !== 'email' && <Styles/>}
         <ElementContextMenu/>
       </Router>
       </StyleSheetManager>

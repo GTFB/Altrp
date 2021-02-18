@@ -18,6 +18,7 @@ import {
   dataToXLS
 } from "../helpers";
 import { togglePopup } from "../store/popup-trigger/actions";
+import {sendEmail} from "../helpers/sendEmail";
 
 // let  history = require('history');
 // // import {history} from 'history';
@@ -188,6 +189,11 @@ class AltrpAction extends AltrpModel {
           result = await this.doActionForm();
         }
         break;
+      case "email":
+        {
+          result = await this.doActionEmail();
+        }
+        break;
       case "redirect":
         {
           result = await this.doActionRedirect();
@@ -315,6 +321,10 @@ class AltrpAction extends AltrpModel {
     ).default;
 
     let data = null;
+    let customHeaders = null;
+    if(this.getProperty('custom_headers')){
+      customHeaders = parseParamsFromString(this.getProperty('custom_headers'), this.getCurrentModel());
+    }
     if (this.getProperty("data")) {
       data = parseParamsFromString(
         this.getProperty("data"),
@@ -368,7 +378,7 @@ class AltrpAction extends AltrpModel {
               customRoute: url
             }
           );
-          return await form.submit("", "", data);
+          return await form.submit("", "", data, customHeaders);
           // }
         });
         try {
@@ -398,7 +408,7 @@ class AltrpAction extends AltrpModel {
      * @type {AltrpForm}
      */
     // let form = this.getProperty("_form");
-    if (!this.getFormURL()) {
+    if (! this.getFormURL()) {
       this.setProperty("_form", null);
       return {
         success: false
@@ -418,7 +428,7 @@ class AltrpAction extends AltrpModel {
       success: true
     };
     try {
-      const response = await form.submit("", "", data);
+      const response = await form.submit("", "", data, customHeaders);
       result = _.assign(result, response);
     } catch (error) {
       console.log(error);
@@ -959,6 +969,26 @@ class AltrpAction extends AltrpModel {
         success: false
       };
     }
+  }
+
+  /**
+   * Отправка почты
+   */
+  async doActionEmail() {
+    let templateGUID = this.getProperty('email_template');
+    if(! templateGUID){
+      return {success: true};
+    }
+    let res = {success: false};
+    try{
+      res = await sendEmail(templateGUID);
+    } catch(e){
+      console.error(e);
+      return {
+        success: false
+      };
+    }
+    return res;
   }
 }
 

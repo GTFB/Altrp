@@ -326,6 +326,24 @@ class Table extends BaseElement {
       description: '/path/:id',
     });
 
+    repeater.addControl('column_external_link', {
+      label: 'External Link',
+      conditions: {
+        'column_link!' : ['', null, undefined],
+      },
+      dynamic: false,
+      type: CONTROLLER_SWITCHER,
+    });
+
+    repeater.addControl('column_blank_link', {
+      label: 'Open in New Tab',
+      conditions: {
+        'column_link!' : ['', null, undefined],
+      },
+      dynamic: false,
+      type: CONTROLLER_SWITCHER,
+    });
+
     repeater.addControl('column_width', {
       label: 'Column Width',
       dynamic: false,

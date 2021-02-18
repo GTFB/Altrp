@@ -161,7 +161,13 @@ function AltrpTableWithoutUpdate(
     React.useEffect(() => {
       setValue(initialValue);
     }, [initialValue, cell]);
-    const { column_template, column_is_editable, column_edit_url, _accessor, column_cell_content_type } = column;
+    const { column_template,
+      column_is_editable,
+      column_edit_url,
+      column_external_link,
+      column_blank_link,
+      _accessor,
+      column_cell_content_type } = column;
     const [columnTemplate, setColumnTemplate] = React.useState(null);
     const columnEditUrl =
       React.useMemo(() => {
@@ -181,7 +187,9 @@ function AltrpTableWithoutUpdate(
     }, [column_template]);
     let cellContent = cell.value;
     let linkTag = isEditor() ? 'a' : Link;
-
+    if(column_external_link && ! isEditor()) {
+      linkTag = 'a';
+    }
     /**
      * Если значение объект или массив, то отобразим пустую строку
      */
@@ -217,6 +225,8 @@ function AltrpTableWithoutUpdate(
         if (column.column_link) {
           cellContent = React.createElement(linkTag, {
             to: parseURLTemplate(column.column_link, row.original),
+            href: parseURLTemplate(column.column_link, row.original),
+            target: column_blank_link ? '_blank' : '',
             className: 'altrp-inherit altrp-table-td__default-content',
             dangerouslySetInnerHTML: {
               __html: cell.value || '&nbsp;'
@@ -522,7 +532,13 @@ function AltrpTableWithoutUpdate(
         };
       }
     }
-
+    if(! _.isArray(tableSettings.data)){
+      if(_.isObject(tableSettings.data)){
+        tableSettings.data = [tableSettings.data];
+      } else {
+        tableSettings.data = [];
+      }
+    }
     return tableSettings;
   }, [inner_page_size, data, columns, stateRef, records, replace_rows, skipPageReset]);
   React.useEffect(() => {

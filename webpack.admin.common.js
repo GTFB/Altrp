@@ -34,6 +34,7 @@ module.exports = {
       },
       {
         test: /\.svg$/,
+        exclude: /slick.svg$|spritesheet.svg$/,
         use: [
           {
             loader: "babel-loader"

@@ -17,6 +17,26 @@ import moment from "moment";
 const CKeditor = React.lazy(() => import("../ckeditor/CKeditor"));
 import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 const AltrpInput = React.lazy(() => import("../altrp-input/AltrpInput"));
+import styled from 'styled-components';
+
+const AltrpFieldContainer = styled.div`
+  ${({settings:{
+  content_label_position_type
+  }})=>{
+    switch (content_label_position_type){
+      case 'left':
+      {
+        return 'display: flex'
+      }
+      case 'right':
+      {
+        return 'display:flex;flex-direction:row-reverse;justify-content:flex-end;'
+      }
+    }
+  return '';
+  }}
+`;
+
 
 class InputWidget extends Component {
   constructor(props) {
@@ -459,6 +479,7 @@ class InputWidget extends Component {
    */
   onChange(e, editor = null) {
     let value = "";
+    const settings = this.props.element.getSettings();
     if (e && e.target) {
       if (this.props.element.getSettings("content_type") === "checkbox") {
         let inputs = document.getElementsByName(e.target.name);
@@ -468,6 +489,8 @@ class InputWidget extends Component {
             value.push(input.value);
           }
         });
+      } else if(settings.content_type === 'accept'){
+        value = ! this.state.value;
       } else {
         value = e.target.value;
       }
@@ -656,15 +679,24 @@ class InputWidget extends Component {
     }
   };
 
+  /**
+   * Взовращает имя для атрибута name
+   * @return {string}
+   */
+  getName(){
+    return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`
+  }
+
   render() {
     let label = null;
+    const settings = this.props.element.getSettings();
     const {
       options_sorting,
       content_readonly,
       image_select_options,
       select2_multiple: isMultiple,
       label_icon
-    } = this.props.element.getSettings();
+    } = settings;
 
     let value = this.state.value;
 
@@ -683,7 +715,8 @@ class InputWidget extends Component {
     }
     let classLabel = "";
     let styleLabel = {};
-    switch (this.state.settings.content_label_position_type) {
+    const content_label_position_type = this.props.element.getResponsiveSetting('content_label_position_type');
+    switch (content_label_position_type) {
       case "top":
         styleLabel = {
           marginBottom: this.state.settings.label_style_spacing
@@ -762,6 +795,7 @@ class InputWidget extends Component {
           input = (
             <select
               value={value || ""}
+              name={this.getName()}
               onChange={this.onChange}
               onBlur={this.onBlur}
               onKeyDown={this.handleEnter}
@@ -830,6 +864,9 @@ class InputWidget extends Component {
           />
         );
         break;
+      case "accept":
+        input = this.renderAcceptInput();
+        break;
       default: {
         const isClearable = this.state.settings.content_clearable;
         const isDate = this.state.settings.content_type === "date";
@@ -849,7 +886,7 @@ class InputWidget extends Component {
             <div className="altrp-input-wrapper">
               <AltrpInput
                 type={this.state.settings.content_type}
-                name={this.props.element.getFieldId()}
+                name={this.getName()}
                 value={value || ""}
                 readOnly={content_readonly}
                 autoComplete={autocomplete}
@@ -877,27 +914,51 @@ class InputWidget extends Component {
       }
     }
     return (
-      <div
+      <AltrpFieldContainer
+          settings={settings}
         className={
           this.state.settings.content_type !== "image_select"
             ? "altrp-field-container "
             : "" + classLabel
         }
       >
-        {this.state.settings.content_label_position_type == "top" ? label : ""}
-        {this.state.settings.content_label_position_type == "left" ? label : ""}
-        {this.state.settings.content_label_position_type == "absolute"
+        {content_label_position_type === "top" ? label : ""}
+        {content_label_position_type === "left" ? label : ""}
+        {content_label_position_type === "right" ? label : ""}
+        {content_label_position_type === "absolute"
           ? label
           : ""}
         {/* .altrp-field-label-container */}
         {input}
-        {this.state.settings.content_label_position_type == "bottom"
+        {content_label_position_type === "bottom"
           ? label
           : ""}
-      </div>
+      </AltrpFieldContainer>
     );
   }
+  /**
+   * Выводит input type=accept
+   */
+  renderAcceptInput(){
+    const settings = this.props.element.getSettings();
+    return <div
+        className={`altrp-field-option ${this.state.value ? "active" : ""}`}
+    >
+              <span className="altrp-field-option-span">
+                <input
+                    type="checkbox"
+                    name={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
+                    className={`altrp-field-option__input ${
+                        this.state.value ? "active" : ""
+                        }`}
+                    onChange={this.onChange}
+                    checked={! ! this.state.value}
+                    id={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
+                />
+              </span>
 
+    </div>
+  }
   /**
    * Выводит input type=checkbox|radio
    */
@@ -1047,7 +1108,6 @@ class InputWidget extends Component {
         options
       );
     }
-    console.log(value);
     const select2Props = {
       className: "altrp-field-select2",
       element: this.props.element,
@@ -1081,7 +1141,7 @@ class InputWidget extends Component {
           onBlur={this.onBlur}
           changeText={this.dispatchFieldValueToStore}
           text={this.getContent("content_default_value")}
-          name={this.props.element.getFieldId()}
+          name={this.getName()}
           readOnly={this.getContent("read_only")}
         />
       </Suspense>

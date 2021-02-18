@@ -44,6 +44,7 @@ class ButtonWidget extends Component {
    * @return {Promise<void>}
    */
   async onClick(e) {
+    e.persist();
     if (isEditor()) {
       e.preventDefault();
     } else if (this.props.element.getSettings("actions", []).length) {

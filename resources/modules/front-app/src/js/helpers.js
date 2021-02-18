@@ -16,7 +16,6 @@ import AltrpSVG from "../../../editor/src/js/components/altrp-svg/AltrpSVG";
 import ArrayConverter from "./classes/converters/ArrayConverter";
 import DataConverter from "./classes/converters/DataConverter";
 import {changeFormFieldValue} from "./store/forms-data-storage/actions";
-
 export function getRoutes() {
   return import("./classes/Routes.js");
 }
@@ -141,15 +140,18 @@ export function getCurrentBreakpoint() {
 }
 /**
  *@param {string} URLTemplate
- *@param {{}} object
+ *@param {{} | null} object
  */
-export function parseURLTemplate(URLTemplate = "", object = {}) {
+export function parseURLTemplate(URLTemplate = "", object = null) {
   let url = URLTemplate;
   let protocol = "";
   if(! isEditor()){
     object = _.assign(_.cloneDeep(currentRouterMatch.getProperty('params')), object);
   }
   url = url.trim();
+  if(url.indexOf('{{') !== -1){
+    url = replaceContentWithData(url, object);
+  }
   if (url.indexOf("https://") === 0) {
     protocol = "https://";
     url = url.replace("https://", "");
@@ -1655,4 +1657,18 @@ export function getResponsiveSetting(settings, settingName, elementState = '', _
     setting = _.get(settings, settingName);
   }
   return setting;
+}
+
+/**
+ * Заменяет false, null, true в строке на соответствующие значения
+ * @param {string} valueReplacement
+ * @return {*}
+ */
+export function valueReplacement(value){
+  switch(value){
+    case 'true': return true;
+    case 'false': return false;
+    case 'null': return null;
+  }
+  return value;
 }
