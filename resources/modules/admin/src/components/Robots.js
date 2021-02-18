@@ -10,7 +10,8 @@ export default class Robots extends Component {
     super(props);
 
     this.state = {
-      robots: []
+      robots: [],
+      model_id: false
     };
 
     this.resource = new Resource({
@@ -44,6 +45,16 @@ export default class Robots extends Component {
           name: data.name
         }),
       fields: [
+        {
+          name: "name",
+          label: "Robot name",
+          required: true
+        },
+        {
+          name: "model",
+          label: "Robot name",
+          required: true
+        },
         {
           name: "name",
           label: "Robot name",

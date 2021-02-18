@@ -21,7 +21,7 @@ class Crud extends Component{
     }
 
     async componentDidMount() {
-        store.subscribe(this.setDataState.bind(this));
+        store.subscribe(this.setStateCrud.bind(this));
 
         let models = await this.modelsResource.getAll();
         let modelOptions = await this.modelOptionsResource.getAll();
@@ -32,16 +32,33 @@ class Crud extends Component{
     // Запись значений select в store
     changeSelect(e, type) {
         const node = this.props.selected;
-        if(type === "body"){
-            if(e === null) e = [];
-            let body = {};
-            e.map(item => {
-                if(node.data.props.nodeData.data.body[item.label] === undefined) body[item.label] = '';
-                else body[item.label] = node.data.props.nodeData.data.body[item.label];
-            });
-            node.data.props.nodeData.data.body = body;
-        } else {
-            node.data.props.nodeData.data[type] = e.value;
+        switch(type){
+            case "model_id":
+                this.setStateCrud();
+                node.data.props.nodeData.data.method = '';
+                node.data.props.nodeData.data.record_id = '';
+                node.data.props.nodeData.data.body = {};
+                node.data.props.nodeData.data[type] = e.value;    
+                break;
+            case "method":
+                node.data.props.nodeData.data.record_id = '';
+                node.data.props.nodeData.data.body = {};
+                node.data.props.nodeData.data[type] = e.value;    
+                break;
+            case "record_id":
+                // node.data.props.nodeData.data.body = {};
+                node.data.props.nodeData.data[type] = e.value;    
+                break;
+            case "body":
+                if(e === null) e = [];
+                let body = {};
+                e.map(item => {
+                    if(node.data.props.nodeData.data.body[item.label] === undefined) body[item.label] = '';
+                    else body[item.label] = node.data.props.nodeData.data.body[item.label];
+                });
+                node.data.props.nodeData.data.body = body;    
+                break;
+    
         }
         store.dispatch(setUpdatedNode(node));
     }
@@ -69,26 +86,24 @@ class Crud extends Component{
 
         if(_.isObject(item)) item = _.keys(item);
 
-        return item;
-    }
+        console.log(item);
 
-    setDataState() {
-       this.setStateCrud();
+        return item;
     }
 
     async setStateCrud(){
         const item = this.props.selected?.data?.props?.nodeData?.data?.model_id ?? '';
 
-        // console.log(item);
-
         if(item){
             let fields = new Resource({ route: `/admin/ajax/models/${item}/field_options` });
-            let records = new Resource({ route: `/admin/ajax/models/${item}/records_options` });
+            let recordOptions = new Resource({ route: `/admin/ajax/models/${item}/records_options` });
             fields = await fields.getAll();
-            records = await records.getAll();
-            // console.log(fields);
-            // console.log(records);
-            this.setState(s =>({...s, fieldOptions: fields.options, recordOptions: records}));
+            recordOptions = await recordOptions.getAll();
+
+            console.log(fields);
+            console.log(recordOptions);
+            this.setState(s =>({...s, fieldOptions: fields.options}));
+            this.setState(s =>({...s, recordOptions}));
         }
     }
 
@@ -99,15 +114,15 @@ class Crud extends Component{
             {label:'update', value: 'update'},
             {label:'delete', value: 'delete'}
         ];
-        const fieldOptions = this.state.fieldOptions ?? [];
-        const recordOptions = this.state.recordOptions ?? [];
+        const fieldOptions = this.state.fieldOptions;
+        const recordOptions = this.state.recordOptions;
         const model = this.getData("model_id");
         const method = this.getData("method");
-        const fields = this.getFields();
         const record = this.getData("record_id");
+        const fields = this.getFields();
 
-        // console.log(fieldOptions);
-        // console.log(recordOptions);
+        console.log(fieldOptions);
+        console.log(recordOptions);
 
         return <div>
             <div className="controller-container__label">CRUD:</div>

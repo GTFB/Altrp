@@ -5,6 +5,8 @@ import store from "./js/store/store";
 import _ from "lodash";
 import IconsManager from "../../editor/src/js/classes/modules/IconsManager";
 import "./sass/styles.scss";
+import {Provider} from 'react-redux';
+
 
 window.React = React;
 window.ReactDOM = ReactDOM;
@@ -26,4 +28,4 @@ if (process.env.NODE_ENV !== "production") {
 
 let robotsTarget = document.getElementById("robots-editor");
 
-if (robotsTarget) window.ReactDOM.render(<RobotsEditor />, robotsTarget);
+if (robotsTarget) window.ReactDOM.render(<Provider store={store}><RobotsEditor /></Provider>, robotsTarget);

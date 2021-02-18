@@ -9,6 +9,7 @@ import ReactFlow, {
   isNode,
   isEdge
 } from "react-flow-renderer";
+import { connect } from "react-redux";
 
 
 import _ from "lodash";
@@ -29,12 +30,18 @@ import Robot from "./js/components/sidebar/nodes/Robot";
 import End from "./js/components/sidebar/nodes/End";
 import CustomEdge from "./js/components/sidebar/nodes/CustomEdge";
 
+const mapStateToProps = state => {
+  return {
+    elements: _.cloneDeep(state.robotSettingsData),
+  };
+};
+
 class RobotsEditor extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      elements: store.getState().robotSettingsData || [],
+      elements: props.elements || [],
       reactFlowInstance: null,
       selected: false,
       selectEdge: false
@@ -48,6 +55,12 @@ class RobotsEditor extends Component {
   updateRobotState() {
     const robotState = store.getState()?.robotSettingsData;
     this.setState(s => ({ ...s, elements: robotState }));
+  }
+
+  componentDidUpdate(prevProps,prevState){
+    if(!_.isEqual(prevProps.elements,this.props.elements)){
+      this.setState(s=> ({...s,elements:this.props.elements}));
+    }
   }
 
   async componentDidMount() {
@@ -177,7 +190,7 @@ class RobotsEditor extends Component {
   }
 
   render() {
-    let elements = store.getState().robotSettingsData || [];
+    // let elements = store.getState().robotSettingsData || [];
     // console.log(elements);
     console.log(this.state.selected);
     console.log(this.state.selectEdge);
@@ -185,10 +198,10 @@ class RobotsEditor extends Component {
     return (
       <div className="page__content">
         <ReactFlowProvider>
-          <Sidebar elements={ elements } selected={ this.state.selected } selectEdge={ this.state.selectEdge } onLoad={ this.onLoad }/>
+          <Sidebar elements={ this.state.elements } selected={ this.state.selected } selectEdge={ this.state.selectEdge } onLoad={ this.onLoad }/>
           <div className="content" ref={this.reactFlowRef }>
             <ReactFlow
-              elements={ elements }
+              elements={ this.state.elements }
               onConnect={ this.onConnect }
               onElementsRemove={ this.onElementsRemove }
               onElementClick={ this.onElementClick }
@@ -246,4 +259,4 @@ process.env.NODE_ENV === "production"
   ? (_export = RobotsEditor)
   : (_export = hot(module)(RobotsEditor));
 
-export default _export;
+export default connect(mapStateToProps)(_export);
