@@ -563,6 +563,12 @@ Route::get('/linkstorage', function () {
  */
 Route::group(['prefix' => 'ajax', 'middleware' => 'auth'], function () {
 });
+
+/**
+ * Robots
+ */
+Route::get('/altrp_run_robot/{robot_id}', 'RobotController@runRobot');
+
 /**
  * Обновление всех ресурсов бэкенда
  */

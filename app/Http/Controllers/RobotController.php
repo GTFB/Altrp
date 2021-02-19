@@ -3,12 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Altrp\Robot;
+use App\Services\Robots\RobotsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class RobotController extends Controller
 {
+    /**
+     * @var RobotsService
+     */
+    private $robotsService;
+
+    /**
+     * RobotController constructor.
+     * @param RobotsService $robotsService
+     */
+    public function __construct(RobotsService $robotsService)
+    {
+        $this->robotsService = $robotsService;
+    }
+
     public function index(Request $request): JsonResponse
     {
         $robots = Robot::with('user')->get()->each(function (Robot $robot) {
@@ -20,7 +35,7 @@ class RobotController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        
+
         $data['user_id'] = auth()->id();
         $robot = new Robot($data);
         $result = $robot->save();
@@ -66,5 +81,23 @@ class RobotController extends Controller
             ];
         }
         return $options;
+    }
+
+    /**
+     * Запустить робота
+     * @param $robot_id
+     * @return JsonResponse
+     */
+    public function runRobot($robot_id)
+    {
+        $robot = Robot::where([
+            ['id', $robot_id],
+            ['start_condition', 'action']
+        ])->first();
+        if ($robot && $robot->enabled) {
+            $result = $this->robotsService->initRobot($robot)->runRobot();
+            return response()->json(['success' => $result], $result ? 200 : 500);
+        }
+        return response()->json(['success' => false], 404);
     }
 }
