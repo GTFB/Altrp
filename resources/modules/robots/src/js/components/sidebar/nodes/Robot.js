@@ -15,6 +15,7 @@ export default class Robot extends React.Component {
         <Handle type="target" position="top" />
         <div><h3>{this.props?.data?.label}</h3></div>
         <div>{this.props?.type}</div>
+        <Handle type="source" position="bottom" style={{ borderRadius: 0 }} />
       </div>
     );
   }

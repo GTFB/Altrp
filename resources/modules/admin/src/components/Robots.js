@@ -42,7 +42,9 @@ export default class Robots extends Component {
       submitButton: "Add",
       submit: data =>
         this.resource.post({
-          name: data.name
+          name: data.name,
+          // model_id: data.model_id,
+          // start_condition: data.start_condition
         }),
       fields: [
         {
@@ -50,16 +52,16 @@ export default class Robots extends Component {
           label: "Robot name",
           required: true
         },
-        {
-          name: "model",
-          label: "Robot name",
-          required: true
-        },
-        {
-          name: "name",
-          label: "Robot name",
-          required: true
-        }
+        // {
+        //   name: "model_id",
+        //   label: "Model",
+        //   required: true
+        // },
+        // {
+        //   name: "start_condition",
+        //   label: "Start condition",
+        //   required: true
+        // }
       ],
       active: true,
       success: res => {

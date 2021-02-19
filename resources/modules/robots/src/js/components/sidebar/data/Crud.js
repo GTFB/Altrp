@@ -17,7 +17,6 @@ class Crud extends Component{
         }
         this.modelsResource = new Resource({ route: '/admin/ajax/models' });
         this.modelOptionsResource = new Resource({ route: '/admin/ajax/models_without_preset' });
-
     }
 
     async componentDidMount() {
@@ -57,8 +56,7 @@ class Crud extends Component{
                     else body[item.label] = node.data.props.nodeData.data.body[item.label];
                 });
                 node.data.props.nodeData.data.body = body;    
-                break;
-    
+                break;    
         }
         store.dispatch(setUpdatedNode(node));
     }
