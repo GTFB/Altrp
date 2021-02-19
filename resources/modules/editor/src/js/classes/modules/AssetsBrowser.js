@@ -92,7 +92,6 @@ class AssetsBrowser extends Component {
   }
 
   selectAsset(e) {
-    debugger;
     let selectedAsset = e.currentTarget.dataset.assetname;
     this.setState(state => {
       return { ...state, selectedAsset };
