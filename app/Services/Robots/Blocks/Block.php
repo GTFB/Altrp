@@ -4,11 +4,6 @@
 namespace App\Services\Robots\Blocks;
 
 
-use App\Mails\RobotsMail;
-use App\Services\Robots\JsonLogic;
-use App\User;
-use Illuminate\Support\Facades\Mail;
-
 class Block
 {
     /**
@@ -44,18 +39,27 @@ class Block
         $this->nodes = $nodes;
     }
 
+    public function getType()
+    {
+        return $this->type;
+    }
+
     /**
      * Запустить узел и выполнить действие
      */
     public function run()
     {
         $currentNode = collect($this->nodes)->where('data.props.type', $this->type)->first();
+
         $currentNode = self::$nextNode ?: $currentNode;
         $currentNodeEdgesSources = collect($this->edges)->where('source', $currentNode->id)->values()->all();
 
         $currentNodeEdgesSource = $this->getCurrentNodeEdgesSource($currentNode, $currentNodeEdgesSources);
+
         if ($currentNode->data->props->type == 'action') {
             $this->doAction($currentNode);
+        } elseif ($currentNode->data->props->type == 'robot') {
+            $this->runRobot($currentNode);
         }
 
         if ($currentNodeEdgesSource) {
@@ -111,6 +115,16 @@ class Block
     {
         $action = new Action($node);
         $action->runAction();
+    }
+
+    /**
+     * Выполнить робота
+     * @param $node
+     */
+    protected function runRobot($node)
+    {
+        $robot = new Robot($node);
+        $robot->runRobot();
     }
 
     /**

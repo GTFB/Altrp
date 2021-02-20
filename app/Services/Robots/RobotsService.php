@@ -6,11 +6,8 @@ namespace App\Services\Robots;
 
 use App\Altrp\Model;
 use App\Altrp\Robot;
-use App\Mails\RobotsMail;
 use App\Services\Robots\Blocks\Block;
 use App\Services\Robots\Repositories\RobotsRepository;
-use App\User;
-use Illuminate\Support\Facades\Mail;
 
 class RobotsService
 {
