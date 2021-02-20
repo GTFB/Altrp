@@ -9,7 +9,8 @@ import {
   CONTROLLER_CSSEDITOR,
   TAB_ADVANCED,
   CONTROLLER_SWITCHER, CONTROLLER_SELECT2, CONTROLLER_HEADING, CONTROLLER_REPEATER,
-  CONTROLLER_TEXT, CONTROLLER_NUMBER
+  CONTROLLER_TEXT, CONTROLLER_NUMBER,
+  CONTROLLER_TYPOGRAPHIC
 } from "../classes/modules/ControllersManager";
 import Repeater from "../classes/Repeater";
 import {CONDITIONS_OPTIONS} from "../../../../front-app/src/js/helpers";
@@ -633,6 +634,167 @@ export function advancedTabControllers(element) {
   element.addControl('hide_on_small_phone', {
     type: CONTROLLER_SWITCHER,
     label: 'Hide On Mobile',
+  });
+
+  element.endControlSection();
+
+  element.startControlSection('tooltip', {
+    tab: TAB_ADVANCED,
+    label: 'Tooltip',
+  });
+
+  element.addControl('tooltip_text', {
+    type: CONTROLLER_TEXT,
+    label: 'Content',
+  });
+
+  element.addControl('tooltip_position', {
+    type: CONTROLLER_SELECT,
+    label: 'Position',
+    default: 'top',
+    options: [
+      {
+        label: 'top',
+        value: 'top',
+      },
+      {
+        value: 'bottom',
+        label: 'bottom',
+      },
+      {
+        value: 'left',
+        label: 'left',
+      },
+      {
+        value: 'right',
+        label: 'right',
+      },
+    ],
+  });
+
+  element.addControl('tooltip_position_padding', {
+    type: CONTROLLER_DIMENSIONS,
+    label: 'Padding',
+    units: ['px', '%', 'vh', 'vw'],
+    rules: {
+      '{{ELEMENT}} > .altrp-tooltip{{STATE}}': [
+        'padding-top: {{TOP}}{{UNIT}};',
+        'padding-right: {{RIGHT}}{{UNIT}};',
+        'padding-bottom: {{BOTTOM}}{{UNIT}};',
+        'padding-left: {{LEFT}}{{UNIT}};'
+      ]
+    },
+  });
+
+  element.addControl('tooltip_horizontal_offset', {
+    type: CONTROLLER_SLIDER,
+    label: 'offset x',
+    units: ['px', '%', 'vh', 'vw'],
+    max: 1000,
+    min: -1000,
+    rules: {
+      '{{ELEMENT}} > .altrp-tooltip': 'left: {{SIZE}}{{UNIT}};',
+    },
+  });
+
+  element.addControl('tooltip_vertical_offset', {
+    type: CONTROLLER_SLIDER,
+    label: 'offset y',
+    units: ['px', '%', 'vh', 'vw'],
+    max: 1000,
+    min: -1000,
+    rules: {
+      '{{ELEMENT}} > .altrp-tooltip': 'bottom: {{SIZE}}{{UNIT}};',
+    },
+  });
+
+  element.addControl('tooltip_font_typographic', {
+    type: CONTROLLER_TYPOGRAPHIC,
+    label: 'Typographic',
+    rules: {
+      '{{ELEMENT}} > .altrp-tooltip{{STATE}}': [
+        'font-size: {{SIZE}}px;',
+        'font-family: {{FAMILY}}',
+        'line-height: {{LINEHEIGHT}};',
+        'letter-spacing: {{SPACING}}px',
+        'font-weight: {{WEIGHT}}',
+        'text-transform: {{TRANSFORM}}',
+        'font-style: {{STYLE}}',
+        'text-decoration: {{DECORATION}}'
+      ],
+    },
+  }
+  );
+
+  element.addControl('tooltip_font_color', {
+    type: CONTROLLER_COLOR,
+    label: 'Color',
+    rules: {
+      '{{ELEMENT}} > .altrp-tooltip{{STATE}}': 'color: {{COLOR}};',
+    },
+  }
+  );
+
+  element.addControl('tooltip_background_color', {
+    type: CONTROLLER_COLOR,
+    label: 'Background Color',
+    rules: {
+      '{{ELEMENT}} > .altrp-tooltip{{STATE}}': [
+        'border-color: transparent transparent {{COLOR}}',
+        'background-color: {{COLOR}}'
+      ]
+    }
+  }); 
+  
+  element.addControl('tooltip_border_radius', {
+    type: CONTROLLER_DIMENSIONS,
+    label: 'Border Radius',
+    default: {
+      unit: 'px'
+    },
+    units: ['px', '%', 'vh', 'vw'],
+    rules: {
+      '{{ELEMENT}} > .altrp-tooltip{{STATE}}': [
+        'border-top-left-radius: {{TOP}}{{UNIT}}',
+        'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+        'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+        'border-bottom-left-radius: {{LEFT}}{{UNIT}}'
+      ]
+    }
+  });
+
+  element.addControl('arrow_size', {
+    type: CONTROLLER_SLIDER,
+    label: 'Arrow Size',
+    units: ['px', '%'],
+    max: 50,
+    min: 0,
+    rules: {
+      '{{ELEMENT}} > .altrp-tooltip::after': 'border-width: {{SIZE}}{{UNIT}};',
+
+      '{{ELEMENT}} > .altrp-tooltip--top': 'bottom: calc(100% + {{SIZE}}{{UNIT}});',
+      '{{ELEMENT}} > .altrp-tooltip--bottom': 'top: calc(100% + {{SIZE}}{{UNIT}});',
+      '{{ELEMENT}} > .altrp-tooltip--right': 'left: calc(100% + {{SIZE}}{{UNIT}});',
+      '{{ELEMENT}} > .altrp-tooltip--left': 'right: calc(100% + {{SIZE}}{{UNIT}});', 
+
+      '{{ELEMENT}} > .altrp-tooltip--top::after': 'margin-left: -{{SIZE}}{{UNIT}};',
+      '{{ELEMENT}} > .altrp-tooltip--bottom::after': 'margin-left: -{{SIZE}}{{UNIT}};',
+      '{{ELEMENT}} > .altrp-tooltip--right::after': 'margin-top: -{{SIZE}}{{UNIT}};',
+      '{{ELEMENT}} > .altrp-tooltip--left::after': 'margin-top: -{{SIZE}}{{UNIT}};',
+      
+    },
+  });
+
+  element.addControl('tooltip_background_shadow', {
+    type: CONTROLLER_SHADOW,
+    label: 'Shadow',
+    presetColors: [
+      '#eaeaea',
+      '#9c18a8'
+    ],
+    rules: {
+      '{{ELEMENT}} > .altrp-tooltip{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+    },
   });
 
   element.endControlSection();

@@ -23,6 +23,7 @@ import { contextMenu } from "react-contexify/lib/index";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
 import { TelephoneMinus } from "react-bootstrap-icons";
 import { thresholdSturges } from "d3";
+import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -274,8 +275,8 @@ class ElementWrapper extends Component {
   }
   render() {
     const elementHideTrigger = this.props.element.settings.hide_on_trigger;
-    const { isFixed } = this.props.element.getSettings();
-
+    const { isFixed, tooltip_text, tooltip_position } = this.props.element.getSettings();
+    
     let errorContent = null;
     if (this.state.errorInfo) {
       errorContent = (
@@ -391,6 +392,7 @@ class ElementWrapper extends Component {
           CKEditor: CKEditor,
           wrapper: this
         })}
+        {tooltip_text && <AltrpTooltip position={tooltip_position}>{tooltip_text}</AltrpTooltip>}
         {emptyColumn}
       </div>
     );

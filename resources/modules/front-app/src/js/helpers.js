@@ -1691,11 +1691,18 @@ export function delay(ms) {
  */
 export function prepareURLForEmail(url){
   if(! _.isString(url) || ! url){
-    return url;
-  }
+  return url;
+}
   url = url.trim();
   if(url.indexOf('http') !== 0){
-    url = location.origin + url;
-  }
+  url = location.origin + url;
+}
   return parseURLTemplate(url);
+}
+
+export function parseIDFromYoutubeURL(youtubeURL) {
+  const startIndex = youtubeURL.indexOf('v=') + 2;
+  const endIndex = youtubeURL.indexOf('&', startIndex);
+  
+  return youtubeURL.substring(startIndex, endIndex);    
 }
