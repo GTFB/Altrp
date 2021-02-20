@@ -12,6 +12,9 @@ class NavWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
+    }
   }
 
   render() {

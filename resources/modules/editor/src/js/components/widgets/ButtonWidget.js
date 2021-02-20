@@ -24,6 +24,9 @@ class ButtonWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
+    }
     this.onClick = this.onClick.bind(this);
   }
   /**

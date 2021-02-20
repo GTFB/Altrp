@@ -7,7 +7,7 @@ import {
   parseURLTemplate,
   replaceContentWithData,
   sortOptions,
-  renderAssetIcon
+  renderAssetIcon, valueReplacement
 } from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
@@ -479,6 +479,7 @@ class InputWidget extends Component {
    */
   onChange(e, editor = null) {
     let value = "";
+    let dispatchedValue;
     const settings = this.props.element.getSettings();
     if (e && e.target) {
       if (this.props.element.getSettings("content_type") === "checkbox") {
@@ -491,6 +492,11 @@ class InputWidget extends Component {
         });
       } else if(settings.content_type === 'accept'){
         value = ! this.state.value;
+        let trueValue = this.props.element.getSettings('accept_checked') || true;
+        let falseValue = this.props.element.getSettings('accept_unchecked') || false;
+        falseValue = valueReplacement(falseValue);
+        trueValue = valueReplacement(trueValue);
+        dispatchedValue = value ? trueValue : falseValue;
       } else {
         value = e.target.value;
       }
@@ -541,7 +547,7 @@ class InputWidget extends Component {
             this.state.settings.content_type
           ) === -1
         ) {
-          this.dispatchFieldValueToStore(value, true);
+          this.dispatchFieldValueToStore( dispatchedValue !== undefined ? dispatchedValue : value, true);
         }
       }
     );

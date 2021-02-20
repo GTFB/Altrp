@@ -9,7 +9,6 @@ import { changeCurrentUser } from "./js/store/current-user/actions";
 import FontsManager from "./js/components/FontsManager";
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider, } from 'react-dnd'
-import EmailTemplatesRenderer from "./js/components/EmailTemplatesRenderer";
 
 class FrontApp extends Component {
   constructor(props) {
@@ -40,7 +39,6 @@ class FrontApp extends Component {
           <AppContent />
         </DndProvider>
         <FontsManager />
-        <EmailTemplatesRenderer/>
       </Provider>
     );
   }

@@ -24,7 +24,10 @@ class AccordionWidget extends Component {
     props.element.component = this;
     if(window.elementDecorator){
       window.elementDecorator(this);
-    };
+    }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
+    }
   }
 
   open(e) {

@@ -1661,7 +1661,7 @@ export function getResponsiveSetting(settings, settingName, elementState = '', _
 
 /**
  * Заменяет false, null, true в строке на соответствующие значения
- * @param {string} valueReplacement
+ * @param {string} value
  * @return {*}
  */
 export function valueReplacement(value){
@@ -1671,4 +1671,31 @@ export function valueReplacement(value){
     case 'null': return null;
   }
   return value;
+}
+
+/**
+ * Задержка и с интерфейсом промиса
+ * @param ms
+ * @return {Promise}
+ */
+export function delay(ms) {
+  return new Promise((resolve, reject) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+/**
+ * Подготавливает URL для шаблона письма
+ * @param {string} url
+ * @return {string}
+ */
+export function prepareURLForEmail(url){
+  if(! _.isString(url) || ! url){
+    return url;
+  }
+  url = url.trim();
+  if(url.indexOf('http') !== 0){
+    url = location.origin + url;
+  }
+  return parseURLTemplate(url);
 }

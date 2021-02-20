@@ -20,6 +20,7 @@ export default function sectionElementEmailRender(){
               ElementWrapper={ElementWrapper}
               key={column.getId()}
               component={column.componentClass}
+              baseRender={this.props.baseRender}
               element={column}
           />
       ))

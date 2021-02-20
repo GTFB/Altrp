@@ -11,6 +11,9 @@ class RootComponent extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
+    }
   }
 
   _componentDidMount() {
@@ -30,7 +33,6 @@ class RootComponent extends Component {
     let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
     return (
       <div className={classes}>
-        {this.props.element.getSettings("test-text-4")}
         {this.state.children.map(section => {
           return(
             <ElementWrapper
@@ -38,6 +40,7 @@ class RootComponent extends Component {
               rootElement={this.props.element}
               key={section.getIdForAction()}
               component={section.componentClass}
+              baseRender={this.props.baseRender}
               element={section}
             />
           )})

@@ -721,6 +721,15 @@ class FrontElement {
   getResponsiveSetting(settingName, elementState = '', _default){
     return getResponsiveSetting(this.getSettings(), settingName, elementState, _default)
   }
+
+  /**
+   * Возвращает текущий тип шаблона
+   * @return {string}
+   */
+  getTemplateType(){
+    const rootElement = this.getRoot();
+    return rootElement.templateType || 'content';
+  }
 }
 
 export default FrontElement

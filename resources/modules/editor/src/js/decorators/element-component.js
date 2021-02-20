@@ -1,10 +1,6 @@
 import frontDecorate from '../../../../front-app/src/js/decorators/front-element-component'
 import {getTemplateType} from "../helpers";
-import rootElementEmailRender from '../renders/email/rootElementEmailRender';
-import sectionElementEmailRender from '../renders/email/sectionElementEmailRender';
-import columnElementEmailRender from '../renders/email/columnElementEmailRender';
-import buttonElementEmailRender from '../renders/email/buttonElementEmailRender';
-import {isEditor} from "../../../../front-app/src/js/helpers";
+import {baseEmailRender} from "./base-email-render";
 /**
  * Обновляем state элемента при изменении настроек в редакторе
  * @param settingName
@@ -55,33 +51,6 @@ function editorElementRender(component, defaultRender){
   return defaultRender.bind(component)
 }
 
-/**
- * Отрисовка контента элемента для писем
- * @param component
- * @return {*}
- */
-function baseEmailRender(component){
-  switch(component.props.element.getName()){
-    case 'root-element':{
-      return rootElementEmailRender.bind(component);
-    }
-    case 'section':{
-      return sectionElementEmailRender.bind(component);
-    }
-    case 'column':{
-      return columnElementEmailRender.bind(component);
-    }
-    case 'button':{
-      return buttonElementEmailRender.bind(component);
-    }
-  }
-  return ()=>{
-    if(isEditor()){
-      return <div className="tba-placeholder">TBA</div>
-    }
-   return null
-  };
-}
 
 export default function decorate(component) {
   component.changeSetting = changeSetting.bind(component);

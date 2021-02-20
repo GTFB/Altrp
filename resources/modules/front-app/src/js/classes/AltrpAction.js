@@ -981,7 +981,12 @@ class AltrpAction extends AltrpModel {
     }
     let res = {success: false};
     try{
-      res = await sendEmail(templateGUID);
+      res = await sendEmail(templateGUID,
+          this.getReplacedProperty('subject'),
+          this.getReplacedProperty('from'),
+          this.getReplacedProperty('to'),
+          this.getReplacedProperty('attachments'),
+          );
     } catch(e){
       console.error(e);
       return {

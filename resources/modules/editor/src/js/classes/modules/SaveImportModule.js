@@ -72,7 +72,7 @@ class SaveImportModule extends BaseModule {
         });
         html_content = rootElement.outerHTML;
       }
-      stylesElements = window.altrpEditorContent.editorWindow.current.getRootNode().getElementById('styles-container').children;
+      stylesElements = window.altrpEditorContent.editorWindow.current.getRootNode().getElementById('styles-container')?.children;
       stylesElements = _.toArray(stylesElements);
       stylesElements = stylesElements.map(style => style ? style.outerHTML : '');
     }

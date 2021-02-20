@@ -250,9 +250,7 @@ class AltrpForm {
       data.user_message = userMessage;
     } else {
       this.fields.forEach(field => {
-        if (field.getValue() !== null) {
-          data[field.getFieldId()] = field.getValue();
-        }
+        data[field.getFieldId()] = field.getValue();
       });
     }
     return data;

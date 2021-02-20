@@ -10,8 +10,11 @@ class PostsWidget extends Component {
       PostsComponent: ()=><div children="Loading..."/>
     };
     props.element.component = this;
-    if(window.elementDecorator){
+    if (window.elementDecorator) {
       window.elementDecorator(this);
+    }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
     }
   }
   _componentDidMount(){

@@ -249,33 +249,42 @@ class ElementWrapper extends Component {
       styles.display = "none";
     }
     const CSSId = this.props.element.getSettings("advanced_element_id", "");
-    return hide_on_trigger &&
-      this.props.hideTriggers.includes(hide_on_trigger) ? null : (
+    const content = React.createElement(this.props.component, {
+      ref: this.elementRef,
+      rootElement: this.props.rootElement,
+      ElementWrapper: this.props.ElementWrapper,
+      element: this.props.element,
+      children: this.props.element.getChildren(),
+      match: this.props.match,
+      currentModel: this.props.currentModel,
+      currentUser: this.props.currentUser,
+      currentDataStorage: this.props.currentDataStorage,
+      altrpresponses: this.props.altrpresponses,
+      formsStore: this.props.formsStore,
+      elementDisplay: this.state.elementDisplay,
+      altrpPageState: this.props.altrpPageState,
+      altrpMeta: this.props.altrpMeta,
+      updateToken: this.state.updateToken,
+      currentScreen: this.props.currentScreen,
+      baseRender: this.props.baseRender,
+      appStore
+    });
+    if(this.props.element.getTemplateType() === 'email'){
+      if (! this.state.elementDisplay) {
+        return null;
+      }
+      return <>
+        {content}
+      </>
+    }
+    return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
       <div
         className={classes}
         ref={this.elementWrapperRef}
         style={styles}
         id={CSSId}
       >
-        {React.createElement(this.props.component, {
-          ref: this.elementRef,
-          rootElement: this.props.rootElement,
-          ElementWrapper: this.props.ElementWrapper,
-          element: this.props.element,
-          children: this.props.element.getChildren(),
-          match: this.props.match,
-          currentModel: this.props.currentModel,
-          currentUser: this.props.currentUser,
-          currentDataStorage: this.props.currentDataStorage,
-          altrpresponses: this.props.altrpresponses,
-          formsStore: this.props.formsStore,
-          elementDisplay: this.state.elementDisplay,
-          altrpPageState: this.props.altrpPageState,
-          altrpMeta: this.props.altrpMeta,
-          updateToken: this.state.updateToken,
-          currentScreen: this.props.currentScreen,
-          appStore
-        })}
+        {content}
       </div>
     );
   }

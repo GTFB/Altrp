@@ -211,6 +211,42 @@ export function actionsControllers(element){
     },
   });
 
+  actionsRepeater.addControl('from', {
+    label: 'From',
+    type: CONTROLLER_TEXT,
+    responsive: false,
+    conditions: {
+      type: 'email',
+    },
+  });
+
+  actionsRepeater.addControl('to', {
+    label: 'Email',
+    type: CONTROLLER_TEXT,
+    responsive: false,
+    conditions: {
+      type: 'email',
+    },
+  });
+
+  actionsRepeater.addControl('subject', {
+    label: 'Subject',
+    type: CONTROLLER_TEXTAREA,
+    responsive: false,
+    conditions: {
+      type: 'email',
+    },
+  });
+
+  actionsRepeater.addControl('attachments', {
+    label: 'Attachments',
+    type: CONTROLLER_TEXTAREA,
+    responsive: false,
+    conditions: {
+      type: 'email',
+    },
+  });
+
   actionsRepeater.addControl('form_id', {
     label: 'Form ID',
     dynamic: false,
