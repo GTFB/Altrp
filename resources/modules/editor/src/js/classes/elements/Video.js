@@ -53,6 +53,13 @@ class Video extends BaseElement {
       conditions: { 'is_youtube': true },
     });
 
+    this.addControl('content_path', {
+      type: CONTROLLER_TEXT,
+      dynamic: false,
+      responsive: false,
+      label: 'Path',
+    });
+
     this.addControl('video_width', {
       type: CONTROLLER_SLIDER,
       label: 'Width',

@@ -1662,3 +1662,10 @@ export function getResponsiveSetting(settings, settingName, elementState = '', _
   }
   return setting;
 }
+
+export function parseIDfromYoutubeURL(youtubeURL) {
+  const startIndex = youtubeURL.indexOf('v=') + 2;
+  const endIndex = youtubeURL.indexOf('&', startIndex);
+  
+  return youtubeURL.substring(startIndex, endIndex);    
+}
