@@ -3,6 +3,9 @@
 
 ## Changelog
 
+### 0.13.1
++ Add Video Widget
+
 ### 0.13.0
 + Аdd the Template Widget
 + Аdd the Section and Column Link
