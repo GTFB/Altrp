@@ -15,7 +15,9 @@ export default class Begin extends React.Component {
             sourcePosition,
             targetPosition,
             style = {},
-            data,
+            data = {
+              text: "new Edge"
+            },
             arrowHeadType,
             markerEndId } = this.props;
         const edgePath = getBezierPath({ sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition });
@@ -23,10 +25,10 @@ export default class Begin extends React.Component {
             
       return (
         <>
-        <path id={id} style={style} className="react-flow__edge-path" d={edgePath} markerEnd={markerEnd} />
+        <path id={id} style={style} className="react-flow__edge-path" d={edgePath} markerEnd={markerEnd} data={data}/>
         <text>
           <textPath href={`#${id}`} style={{ fontSize: '12px' }} startOffset="50%" textAnchor="middle">
-            {data?.text ?? "custom"}
+            {data?.text ?? ""}
           </textPath>
         </text>
         </>

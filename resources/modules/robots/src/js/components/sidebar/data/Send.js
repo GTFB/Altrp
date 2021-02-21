@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import Resource from "../../../../../../editor/src/js/classes/Resource";
-import SendEmail from "./send/SendEmail";
 import SendNotice from "./send/SendNotice";
 import store from "../../../store/store";
 import { setUpdatedNode } from "../../../store/robot-settings/actions";
@@ -82,7 +81,7 @@ class Send extends Component{
         let switcherClasses = `control-switcher control-switcher_${value ? 'on' : 'off'}`;
 
         return <div>
-            {(typeAction === "send_mail" || typeAction === "send_notification") && <div>
+            {typeAction === "send_notification" && <div>
                 <div className="robot_switcher">
                     <div className="robot_switcher__label">
                         All
@@ -116,7 +115,6 @@ class Send extends Component{
                 }
             </div>            
             }
-            {(typeAction === "send_mail") && <SendEmail onSend={this.onSend} emailData={sendData}/>}
             {(typeAction === "send_notification") && <SendNotice onSend={this.onSend} changeSelect={this.changeSelect} noticeData={sendData}/>}
         </div>
     }

@@ -91,6 +91,7 @@ class Crud extends Component{
 
     async setStateCrud(){
         const item = this.props.selected?.data?.props?.nodeData?.data?.model_id ?? '';
+        console.log(item);
 
         if(item){
             let fields = new Resource({ route: `/admin/ajax/models/${item}/field_options` });

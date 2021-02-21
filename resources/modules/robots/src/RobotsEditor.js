@@ -29,6 +29,7 @@ import Action from "./js/components/sidebar/nodes/Action";
 import Robot from "./js/components/sidebar/nodes/Robot";
 import End from "./js/components/sidebar/nodes/End";
 import CustomEdge from "./js/components/sidebar/nodes/CustomEdge";
+import ConnectionLine from './js/components/sidebar/nodes/ConnectionLine';
 
 const mapStateToProps = state => {
   return {
@@ -54,6 +55,7 @@ class RobotsEditor extends Component {
   // Записьв store в state
   updateRobotState() {
     const robotState = store.getState()?.robotSettingsData;
+    console.log(robotState);
     this.setState(s => ({ ...s, elements: robotState }));
   }
 
@@ -184,9 +186,9 @@ class RobotsEditor extends Component {
 
   // Запись активного элемента в state
   onElementClick = (event, element) => {
-    store.dispatch(setUpdatedNode(element));
     if(isNode(element)) this.setState(s => ({ ...s, selected: element, selectEdge: false }));
     if(isEdge(element)) this.setState(s => ({ ...s, selectEdge: element, selected: false }));
+    store.dispatch(setUpdatedNode(element));
   }
 
   render() {
@@ -219,8 +221,10 @@ class RobotsEditor extends Component {
               }}
               onEdgeUpdate={this.onEdgeUpdate}
               edgeTypes={{
+                default: CustomEdge,
                 custom: CustomEdge,
               }}
+              connectionLineComponent={ConnectionLine}
             >
               <Controls />
               <MiniMap

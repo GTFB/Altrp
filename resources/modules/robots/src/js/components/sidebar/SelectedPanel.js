@@ -34,10 +34,8 @@ export default class SelectedPanel extends React.Component {
     if(this.props.selectEdge) {
       node = this.props.selectEdge;
       console.log(node.data);
-      console.log(!node.data);
       if(!node.data) node.data = {};
-      if(node.type === "custom") node.data.text = value;
-      else node.label = value;
+      node.data.text = value;
     }
     store.dispatch(setUpdatedNode(node));
   }
@@ -65,16 +63,6 @@ export default class SelectedPanel extends React.Component {
             }
           };
           break;
-        case "send_mail":
-          node.data.props.nodeData = {
-            "type": "send_mail",
-            "data": {
-                "entities": "",
-                "subject": "",
-                "message": ""
-            }
-          };
-          break;
         case "send_notification":
           node.data.props.nodeData = {
             "type": "send_notification",
@@ -85,7 +73,19 @@ export default class SelectedPanel extends React.Component {
                     "telegram",
                     "mail"
                 ],
-                "message": ""
+                "content": {
+                  "broadcast": {
+                    "message": ""
+                  },
+                  "telegram": {
+                    "message": ""
+                  },
+                  "mail": {
+                    "subject": "",
+                    "message": ""
+                  }
+              }
+
             }
           };
           break;
@@ -106,16 +106,9 @@ export default class SelectedPanel extends React.Component {
 
     store.dispatch(setUpdatedNode(node));
   }
-
-  getValueInput(){
-    if(this.props.selectEdge.type === "custom") return this.props.selectEdge?.data?.text ?? '';
-    else return this.props.selectEdge?.label ?? ''; 
-  }
-
-  
+ 
   render() {
     const actionTypeOptions = [
-      {label:'Send Mail', value: 'send_mail'},
       {label:'Send Notification', value: 'send_notification'},
       {label:'CRUD', value: 'crud'}
     ];
@@ -214,7 +207,7 @@ export default class SelectedPanel extends React.Component {
                         <input
                           type="text"
                           onChange={(e) => { this.changeInput(e) }}
-                          value={ this.getValueInput() }
+                          value={ this.props.selectEdge?.data?.text ?? '' }
                         ></input>
 
                       </div>}
