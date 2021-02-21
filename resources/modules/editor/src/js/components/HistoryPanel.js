@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import ControllerHistory from "../classes/ControllerHistory";
-import CheckIcon from "../../svgs/check.svg";
+import { useSelector } from "react-redux";
+import { iconsManager } from "../../../../front-app/src/js/helpers";
+import { mountListenerHistory, unmountListenerHistory } from "../helpers";
 
 class HistoryPanel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeTab: "actions"
+      activeTab: "revision"
     };
   }
 
@@ -70,30 +70,36 @@ const ActionsTabContent = () => {
 
   const handlerHistory = index => {
     return () => {
-      if(current > index) {
+      if (current > index) {
         for (let i = 0; i < current - index; i++) {
           controllerHistory.undo();
         }
-      } else if(current < index) {
+      } else if (current < index) {
         for (let i = 0; i < index - current; i++) {
           controllerHistory.redo();
         }
       }
-    }
+    };
   };
 
   return (
-    <div className="history-panel__actions-tab-content">
-      <div key={-1} className={ current === -1 ? "history-panel__restore-item history-panel__restore-item--active" : "history-panel__restore-item"} onClick={handlerHistory(-1)}>
+    <div className="history-panel__content">
+      <div
+        key={-1}
+        className={
+          current === -1
+            ? "history-panel__restore-item history-panel__restore-item--active"
+            : "history-panel__restore-item"
+        }
+        onClick={handlerHistory(-1)}
+      >
         <span className="history-panel__restore-item-title">start edit</span>
-        {current === -1 ? (
-          <CheckIcon
-            className="history-panel__restore-item-icon"
-            style={{ width: 20, height: 20 }}
-          />
-        ) : (
-          ""
-        )}
+        {current === -1
+          ? iconsManager().renderIcon("check", {
+              style: { width: 20, height: 20 },
+              className: "history-panel__restore-item-icon"
+            })
+          : ""}
       </div>
       {historyStore.map((item, index) => {
         let title = "";
@@ -120,17 +126,19 @@ const ActionsTabContent = () => {
         }
 
         return (
-          <div key={index} className={restoreItemClasses} onClick={handlerHistory(index)}>
+          <div
+            key={index}
+            className={restoreItemClasses}
+            onClick={handlerHistory(index)}
+          >
             <span className="history-panel__restore-item-title">{title}</span>
             <span className="history-panel__restore-item-type">{type}</span>
-            {current === index ? (
-              <CheckIcon
-                className="history-panel__restore-item-icon"
-                style={{ width: 20, height: 20 }}
-              />
-            ) : (
-              ""
-            )}
+            {current === index
+              ? iconsManager().renderIcon("check", {
+                  style: { width: 20, height: 20 },
+                  className: "history-panel__restore-item-icon"
+                })
+              : ""}
           </div>
         );
       })}
@@ -142,7 +150,29 @@ const ActionsTabContent = () => {
 };
 
 const RevisionTabContent = () => {
-  return <div>RevisionTabContent</div>;
+  React.useEffect(() => {
+    unmountListenerHistory();
+    return () => {
+      mountListenerHistory();
+    };
+  });
+
+  return (
+    <React.Fragment>
+      <div className="history-panel__revision-actions">
+        <div className="history-panel__discard">
+          {iconsManager().renderIcon("deleteOne", {
+            style: { width: 20, height: 20 },
+            className: "history-panel__discard-icon"
+          })}
+          DISCARD
+        </div>
+        <div className="history-panel__apply">APPLY</div>
+      </div>
+      <div className="history-panel__title">Revisions</div>
+      <div className="history-panel__content">RevisionTabContent</div>
+    </React.Fragment>
+  );
 };
 
 export default HistoryPanel;

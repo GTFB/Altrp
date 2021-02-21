@@ -23,11 +23,19 @@
     height: calc(100% - 50px);
   }
 
-  &__actions-tab-content {
+  &__content {
     padding: 21px;
     background-color: #ffffff;
     overflow: auto;
     height: 100%;
+  }
+
+  &__title {
+    padding: 10px;
+
+    border-bottom: 2px solid hsl(210deg 14% 91%);
+    background-color: #ffffff;
+    font-weight: bold;
   }
 
   &__restore-item {
@@ -61,5 +69,37 @@
 
   &__actions-tab-subscribe {
     text-align: center;
+  }
+
+  &__revision-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 20px;
+    margin-bottom: 10px;
+
+    background-color: #ffffff;
+  }
+
+  &__discard {
+    display: flex;
+    align-items: center;
+    color: hsl(0deg 1% 73%);
+    line-height: 24px;
+  }
+
+  &__discard-icon {
+    margin-right: 7px;
+    path {
+      fill: hsl(0deg 1% 73%);
+    }
+  }
+
+  &__apply {
+    padding: 7px 15px;
+
+    border-radius: 7px;
+    background-color: hsl(128deg 52% 47%);
+    color: #fff;
   }
 }
