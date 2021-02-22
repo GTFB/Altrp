@@ -222,6 +222,12 @@ body {
 }
 
 #type-action, #type-condition, #crud-method, #crud-model, #crud-record, #crud-fields, #send-users, #send-roles, #send-channels, #bit-operator, #logic-operator, #type-edge {
-    width: 150px;
+    width: 175px;
 }
 
+.controllers-wrapper {
+    display: block;
+}
+.settings-section-box {
+    margin: 15px 0px;
+}

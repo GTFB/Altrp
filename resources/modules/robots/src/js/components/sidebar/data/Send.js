@@ -1,11 +1,11 @@
 import React, {Component} from "react";
 import Resource from "../../../../../../editor/src/js/classes/Resource";
-import SendNotice from "./send/SendNotice";
+import SendBroadcast from "./send/SendBroadcast";
+import SendEmail from "./send/SendEmail";
+import SendTelegram from "./send/SendTelegram";
 import store from "../../../store/store";
 import { setUpdatedNode } from "../../../store/robot-settings/actions";
 import AltrpSelect from "../../../../../../admin/src/components/altrp-select/AltrpSelect";
-
-
 
 class Send extends Component{
     constructor(props){
@@ -40,21 +40,30 @@ class Send extends Component{
         }
     }
 
+    getTypeSend = data => {
+        const channels = this.props.selected?.data.props.nodeData?.data?.channels ?? [];
+        let result = false;
+        if(channels instanceof Array){
+            channels.map(item =>{
+                if(item === data) result = true;
+            });
+        }
+        return result;
+    }
+
     // Запись значений inputs в store
-    onSend = (e, type) => {
+    onSend = (e, type, key) => {
         let value = e.target.value;
         const node = this.props.selected;
-        node.data.props.nodeData.data[type] = value;
+        node.data.props.nodeData.data.content[type][key] = value;
         store.dispatch(setUpdatedNode(node));
     }
 
       // Изменение положения переключателя
     toggle() {
         const node = this.props.selected;
-
         if(node.data.props.nodeData.data.entities === 'all') node.data.props.nodeData.data.entities = '';
         else node.data.props.nodeData.data.entities = 'all';
-
         store.dispatch(setUpdatedNode(node));
     }
 
@@ -73,15 +82,19 @@ class Send extends Component{
 
     render(){
         const { usersOptions, rolesOptions } = this.state;
+        const channelsOptions = [
+            {label:'broadcast', value: 'broadcast'},
+            {label:'telegram', value: 'telegram'},
+            {label:'mail', value: 'mail'}
+        ];
+        const channels = this.props.selected?.data?.props?.nodeData?.data?.channels ?? [];
         const users = this.props.selected?.data?.props?.nodeData?.data?.entities?.users ?? [];
         const roles = this.props.selected?.data?.props?.nodeData?.data?.entities?.roles ?? [];
-        const typeAction =  this.props.selected?.data?.props?.nodeData?.type ?? '';
-        const sendData = this.props.selected?.data?.props?.nodeData ?? '';
         let value = (this.props.selected?.data?.props?.nodeData?.data?.entities === "all") ?? false;
         let switcherClasses = `control-switcher control-switcher_${value ? 'on' : 'off'}`;
 
         return <div>
-            {typeAction === "send_notification" && <div>
+            <div>
                 <div className="robot_switcher">
                     <div className="robot_switcher__label">
                         All
@@ -92,7 +105,7 @@ class Send extends Component{
                         <div className="control-switcher__off-text">OFF</div>
                     </div>
                 </div>
-                {!value && <div>
+                {!value && <div className="settings-section-box">
                     <div className="controller-container controller-container_textarea">
                         <div className="controller-container__label">Users</div>
                         <AltrpSelect id="send-users"
@@ -111,11 +124,21 @@ class Send extends Component{
                             options={rolesOptions}
                         />
                     </div>
+                </div>}
+                <div className="controller-container controller-container_textarea">
+                    <div className="controller-container__label">Channels</div>
+                    <AltrpSelect id="send-channels"
+                        isMulti={true}
+                        value={_.filter(channelsOptions, c => channels.indexOf(c.value) >= 0)}
+                        onChange={e => {this.changeSelect(e, "channels")}}
+                        options={channelsOptions}
+                    />
                 </div>
-                }
             </div>            
-            }
-            {(typeAction === "send_notification") && <SendNotice onSend={this.onSend} changeSelect={this.changeSelect} noticeData={sendData}/>}
+            
+            {this.getTypeSend("broadcast") && <SendBroadcast activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={this.props.selected?.data?.props?.nodeData?.data?.content?.broadcast ?? ''}/>}
+            {this.getTypeSend("mail") && <SendEmail activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={this.props.selected?.data?.props?.nodeData?.data?.content?.mail ?? ''}/>}
+            {this.getTypeSend("telegram") && <SendTelegram activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={this.props.selected?.data?.props?.nodeData?.data?.content?.telegram ?? ''}/>}
         </div>
     }
 }

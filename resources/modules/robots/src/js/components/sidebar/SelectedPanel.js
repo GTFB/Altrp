@@ -20,7 +20,8 @@ export default class SelectedPanel extends React.Component {
       robotOptions: [],
       modelOptions: [],
       startConditionOptions: [],
-      activeTab: "content"
+      activeTab: "content",
+      activeSection: "general",
     }
     this.toggle = this.toggle.bind(this);
     this.toggleChevron = this.toggleChevron.bind(this);
@@ -123,8 +124,8 @@ export default class SelectedPanel extends React.Component {
     store.dispatch(setUpdatedNode(node));
   }
 
-  toggleChevron() {
-    console.log(this.state.activeTab);
+  toggleChevron(type) {
+    console.log(type);
   }
 
   /**
@@ -204,12 +205,14 @@ export default class SelectedPanel extends React.Component {
         <div className="settings-controllers">
           <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
             <div id="settingsControllers">
-              {(this.state.activeTab === "content") && (<div className={"settings-section " + (this.state.activeTab === "content" ? 'open' : '')}>
-                <div className="settings-section__title d-flex" onClick={this.toggleChevron}>
-                  <div className="settings-section__icon d-flex">
-                    <Chevron />
+              {(this.state.activeTab === "content") && (<div>
+                <div className={"settings-section " + (this.state.activeSection === "general" ? 'open' : '')}>
+                  <div className="settings-section__title d-flex" onClick={this.toggleChevron("general")}>
+                    <div className="settings-section__icon d-flex">
+                      <Chevron />
+                    </div>
+                    <div className="settings-section__label">Настройки</div>
                   </div>
-                  <div className="settings-section__label">Настройки</div>
                 </div>
                 {(this.props.selected?.id || this.props.selectEdge?.id) ? (
                   <div className="controllers-wrapper">
@@ -223,15 +226,15 @@ export default class SelectedPanel extends React.Component {
                     </div>}
                     {(this.props.selected?.type === "action") && <div>
                       <div className="controller-container controller-container_textarea">
-                          <div className="controller-container__label">Method</div>
+                          <div className="controller-container__label">Type</div>
                           <AltrpSelect id="type-action"
                               value={_.filter(actionTypeOptions, item => typeData === item.value)}
                               onChange={e => {this.changeSelect(e)}}
                               options={actionTypeOptions}
                           />
                       </div>
-                        <Send selected={this.props.selected || []}/>
-                        {(this.props.selected?.data?.props?.nodeData?.type === "crud") && <Crud selected={this.props.selected || []}/>}
+                        {(this.props.selected?.data?.props?.nodeData?.type === "send_notification") && <Send activeSection={this.state.activeSection} toggleChevron={this.toggleChevron} selected={this.props.selected || []}/>}
+                        {(this.props.selected?.data?.props?.nodeData?.type === "crud") && <Crud activeSection={this.state.activeSection} toggleChevron={this.toggleChevron} selected={this.props.selected || []}/>}
                       </div>}
                     {(this.props.selected?.type === "condition") && <div>
                       <div className="controller-container controller-container_textarea">
@@ -282,11 +285,9 @@ export default class SelectedPanel extends React.Component {
                         ></input>
 
                       </div>}
-                  </div>
-                  
-                ) : (
-                  "Select a node or edge to edit"
-                )}
+                  </div> ) : (
+                    "Select a node or edge to edit"
+                  )}
               </div>)}
               {(this.state.activeTab === "advanced") && (<div>
                 <div className="controller-container controller-container_textarea">
