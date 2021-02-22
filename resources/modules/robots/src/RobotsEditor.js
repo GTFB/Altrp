@@ -21,6 +21,7 @@ import {
   setUpdatedNode,
   setRobotSettingsData
 } from "./js/store/robot-settings/actions";
+import { setCurrentRobot } from "./js/store/current-robot/actions";
 
 import Sidebar from "./js/components/sidebar/Sidebar";
 import Condition from "./js/components/sidebar/nodes/Condition";
@@ -34,6 +35,7 @@ import ConnectionLine from './js/components/sidebar/nodes/ConnectionLine';
 const mapStateToProps = state => {
   return {
     elements: _.cloneDeep(state.robotSettingsData),
+    robot: _.cloneDeep(state.currentRobot),
   };
 };
 
@@ -43,6 +45,7 @@ class RobotsEditor extends Component {
 
     this.state = {
       elements: props.elements || [],
+      robot: props.robot || [],
       reactFlowInstance: null,
       selected: false,
       selectEdge: false
@@ -54,24 +57,26 @@ class RobotsEditor extends Component {
 
   // Записьв store в state
   updateRobotState() {
-    const robotState = store.getState()?.robotSettingsData;
-    console.log(robotState);
-    this.setState(s => ({ ...s, elements: robotState }));
+    const elements = store.getState()?.robotSettingsData;
+    const robot = store.getState()?.currentRobot;
+    console.log(elements);
+    console.log(robot);
+    this.setState(s => ({ ...s, elements, robot }));
   }
 
-  componentDidUpdate(prevProps,prevState){
-    if(!_.isEqual(prevProps.elements,this.props.elements)){
-      this.setState(s=> ({...s,elements:this.props.elements}));
-    }
-  }
+  // componentDidUpdate(prevProps, prevState){
+  //   if(!_.isEqual(prevProps.elements, this.props.elements)){
+  //     this.setState(s=> ({...s, elements: this.props.elements}));
+  //   }
+  // }
 
   async componentDidMount() {
     store.subscribe(this.updateRobotState.bind(this));
-    // store.subscribe(this.onLoad.bind(this));
 
     const robotId = new URL(window.location).searchParams.get("robot_id");
     const robot = await this.resource.get(robotId);
     console.log(robot);
+    store.dispatch(setCurrentRobot(robot));
     if(!robot.chart) return;
     const data = JSON.parse(robot.chart) ?? [];
     store.dispatch(setRobotSettingsData(data));
@@ -169,7 +174,6 @@ class RobotsEditor extends Component {
   }
 
   onLoad = _reactFlowInstance => {
-    // _reactFlowInstance.fitView();
     this.setState(s => ({ ...s, reactFlowInstance: _reactFlowInstance }));
   }
 
@@ -200,7 +204,7 @@ class RobotsEditor extends Component {
     return (
       <div className="page__content">
         <ReactFlowProvider>
-          <Sidebar elements={ this.state.elements } selected={ this.state.selected } selectEdge={ this.state.selectEdge } onLoad={ this.onLoad }/>
+          <Sidebar robot={ this.state.robot } elements={ this.state.elements } selected={ this.state.selected } selectEdge={ this.state.selectEdge } onLoad={ this.onLoad }/>
           <div className="content" ref={this.reactFlowRef }>
             <ReactFlow
               elements={ this.state.elements }

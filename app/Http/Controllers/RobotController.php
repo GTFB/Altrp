@@ -53,9 +53,7 @@ class RobotController extends Controller
 
     public function update(Robot $robot, Request $request)
     {
-        $result = $robot->update([
-            'chart' => $request->data
-        ]);
+        $result = $robot->update($request->data);
 
         return \response()->json(['success' => $result], $result ? 200 : 500);
     }

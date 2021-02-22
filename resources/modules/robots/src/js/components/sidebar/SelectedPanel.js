@@ -1,11 +1,15 @@
 import * as React from "react";
 import Scrollbars from "react-custom-scrollbars";
 import Chevron from "../../../../../editor/src/svgs/chevron.svg";
+import ContentIcon from "../../../../../editor/src/svgs/content.svg";
+import AdvancedIcon from "../../../../../editor/src/svgs/advanced.svg";
+
 import Send from "./data/Send"
 import Condition from "./data/Condition"
 import Crud from "./data/Crud"
 import store from "../../store/store"
 import {setUpdatedNode} from "../../store/robot-settings/actions"
+import {setCurrentRobot} from "../../store/current-robot/actions"
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import Resource from "../../../../../editor/src/js/classes/Resource";
 
@@ -13,15 +17,21 @@ export default class SelectedPanel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      robots: []
+      robotOptions: [],
+      modelOptions: [],
+      startConditionOptions: [],
+      activeTab: "content"
     }
     this.toggle = this.toggle.bind(this);
-    this.resource = new Resource({ route: "/admin/ajax/robots_options" });
+    this.toggleChevron = this.toggleChevron.bind(this);
+    this.robotOptionsResource = new Resource({ route: "/admin/ajax/robots_options" });
+    this.modelOptionsResource = new Resource({ route: '/admin/ajax/models_without_preset' });
   }
 
   async componentDidMount() {
-    const robots = await this.resource.getAll();
-    this.setState(s =>({...s, robots }));
+    const robotOptions = await this.robotOptionsResource.getAll();
+    const model = await this.modelOptionsResource.getAll();
+    this.setState(s =>({...s, robotOptions, modelOptions: model.options }));
 }
 
   changeInput(e){
@@ -46,7 +56,13 @@ export default class SelectedPanel extends React.Component {
     store.dispatch(setUpdatedNode(node));
   }
 
-  changeSelect = (e, type = false) =>{
+  robotSelect = (e, type) => {
+    let robot = this.props.robot;
+    robot[type] = e.value;
+    store.dispatch(setCurrentRobot(robot));
+  }
+
+  changeSelect = (e, type = false) => {
     let node = this.props.selected;
     if(type === "robot"){
       node.data.props.nodeData.id = e.value;
@@ -106,8 +122,28 @@ export default class SelectedPanel extends React.Component {
 
     store.dispatch(setUpdatedNode(node));
   }
+
+  toggleChevron() {
+    console.log(this.state.activeTab);
+  }
+
+  /**
+   * Устанавливает текущий таб
+   * @param activeTab
+   */
+  setActiveTab(item) {
+    this.setState(s =>({...s, activeTab: item }));
+  }
+
  
   render() {
+    let contentTabClasses =
+    "panel-tab d-flex " +
+    (this.state.activeTab === "content" ? "active" : "");
+  let advancedTabClasses =
+    "panel-tab d-flex " +
+    (this.state.activeTab === "advanced" ? "active" : "");
+
     const actionTypeOptions = [
       {label:'Send Notification', value: 'send_notification'},
       {label:'CRUD', value: 'crud'}
@@ -119,22 +155,57 @@ export default class SelectedPanel extends React.Component {
       {label:'smoothstep', value: 'smoothstep'},
       {label:'custom', value: 'custom'}
     ];
+    const {modelOptions, robotOptions} = this.state;
     const conditionTypeOptions = [];
-    const robotOptions = this.state.robots ?? [];
     const typeData = this.props.selected.data?.props?.nodeData?.type ?? '';
     const robot = this.props.selected.data?.props?.nodeData?.id ?? '';
     const edge = this.props.selectEdge?.type ?? '';
+    const model = this.props.robot?.model_id ?? '';
+    const start = this.props.robot?.start_condition ?? '';
+
+    const startOptions = model ? [
+      {label:'created', value: 'created'},
+      {label:'updated', value: 'updated'},
+      {label:'deleted', value: 'deleted'},
+      {label:'logged_in', value: 'logged_in'},
+      {label:'action', value: 'action'}
+    ] : [
+      {label:'logged_in', value: 'logged_in'},
+      {label:'action', value: 'action'}
+    ];
+
     let value = (this.props.selectEdge?.animated === true) ?? false;
     let switcherClasses = `control-switcher control-switcher_${value ? 'on' : 'off'}`;
 
     console.log(this.props.selectEdge);
     return (
       <div className="panel settings-panel d-flex">
+        <div className="panel-tabs d-flex">
+          <button
+            className={contentTabClasses}
+            onClick={() => this.setActiveTab("content")}
+          >
+            <span className="panel-tab__icon">
+              <ContentIcon />
+            </span>
+            <span className="panel-tab__text">Content</span>
+          </button>
+          <button
+            className={advancedTabClasses}
+            onClick={() => this.setActiveTab("advanced")}
+          >
+            <span className="panel-tab__icon">
+              <AdvancedIcon />
+            </span>
+            <span className="panel-tab__text">Advanced</span>
+          </button>
+        </div>
+
         <div className="settings-controllers">
           <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
             <div id="settingsControllers">
-              <div className="settings-section open">
-                <div className="settings-section__title d-flex">
+              {(this.state.activeTab === "content") && (<div className={"settings-section " + (this.state.activeTab === "content" ? 'open' : '')}>
+                <div className="settings-section__title d-flex" onClick={this.toggleChevron}>
                   <div className="settings-section__icon d-flex">
                     <Chevron />
                   </div>
@@ -216,7 +287,26 @@ export default class SelectedPanel extends React.Component {
                 ) : (
                   "Select a node or edge to edit"
                 )}
+              </div>)}
+              {(this.state.activeTab === "advanced") && (<div>
+                <div className="controller-container controller-container_textarea">
+                <div className="controller-container__label">Modal</div>
+                <AltrpSelect id="type-action"
+                    value={_.filter(modelOptions, item => model === item.value)}
+                    onChange={e => {this.robotSelect(e, "model_id")}}
+                    options={modelOptions}
+                />
               </div>
+              <div className="controller-container controller-container_textarea">
+              <div className="controller-container__label">Start condition</div>
+              <AltrpSelect id="type-action"
+                  value={_.filter(startOptions, item => start === item.value)}
+                  onChange={e => {this.robotSelect(e, "start_condition")}}
+                  options={startOptions}
+              />
+              </div>
+
+              </div>)}
             </div>
           </Scrollbars>
         </div>

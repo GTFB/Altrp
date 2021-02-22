@@ -20,6 +20,35 @@ body {
     flex: 1;
     max-width: 100vw;
     max-height: 100vh;
+
+    .panel {
+        width: 100%;
+        flex-direction: column;
+        &-tabs {
+            margin-bottom: 11px;
+        }
+        &-tab {
+            flex-direction: column;
+            align-items: center;
+            width: 50%;
+            padding: 8px 0 6px;
+            background-color: #fff;
+            border-bottom: 3px solid #fff;
+            font-size: 10px;
+            &.active {
+                background-color: #f7f8f9;
+                border-bottom-color: $purple;
+            }
+            & svg {
+                width: 20px;
+                height: 20px;
+            }
+            &__icon {
+                margin-bottom: 4px;
+            }
+        }
+    }
+    
 }
 
 .content {

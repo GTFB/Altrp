@@ -4,6 +4,9 @@ import SelectedPanel from "./SelectedPanel";
 import WidgetsPanel from "./WidgetsPanel";
 import Resource from "../../../../../editor/src/js/classes/Resource";
 
+import store from "../../store/store";
+import {setChartInCurrentRobot} from "../../store/current-robot/actions";
+
 import Logo from "../../../../../editor/src/svgs/logo.svg";
 import Dots from "../../../../../editor/src/svgs/dots.svg";
 import Hamburger from "../../../../../editor/src/svgs/hamburger.svg";
@@ -25,8 +28,14 @@ export default class Sidebar extends React.Component {
   async update() {
     const robotId = new URL(window.location).searchParams.get("robot_id");
 
+    const robotData = store.getState()?.currentRobot;
+    const robotChart = store.getState()?.robotSettingsData;
+
+    robotData.chart = robotChart;
+
+
     this.resource.put(robotId, {
-      data: JSON.stringify(this.props.elements)
+      data: robotData
     });
   }
 
@@ -58,7 +67,7 @@ export default class Sidebar extends React.Component {
           </button>
         </div>
         <div className="left-panel-main">
-          {activePanel === "settings" && <SelectedPanel selected={this.props.selected} selectEdge={ this.props.selectEdge } onLoad={this.props.onLoad}></SelectedPanel>}
+          {activePanel === "settings" && <SelectedPanel robot={ this.props.robot } selected={this.props.selected} selectEdge={ this.props.selectEdge } onLoad={this.props.onLoad}></SelectedPanel>}
           {activePanel === "widgets" && <WidgetsPanel ></WidgetsPanel>}
         </div>
         <div className="editor-bottom-panel d-flex align-content-center justify-start">
