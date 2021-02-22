@@ -9,7 +9,7 @@ class SendEmail extends Component{
 
     render(){
         return <div className="settings-section-box">
-            <div className={"settings-section " + (this.props.activeTab === "content" ? 'open' : '')}>
+            <div className={"settings-section " + (this.props.activeSection === "mail" ? '' : 'open')}>
                 <div className="settings-section__title d-flex" onClick={this.props.toggleChevron("mail")}>
                     <div className="settings-section__icon d-flex">
                         <Chevron />
@@ -20,11 +20,11 @@ class SendEmail extends Component{
 
             <div className="controller-container controller-container_textarea">
                 <div className="controller-container__label">Subject</div>
-                <input type="email" id="email-subject" name="subject" value={this.props.content.subject ?? ''} onChange={(e) => { this.props.onSend(e, "mail", "subject") }} className="form-control" />
+                <input type="text" id="email-subject" name="subject" value={this.props.content.subject ?? ''} onChange={(e) => { this.props.onSend(e, "mail", "subject") }} className="form-control" />
             </div>
             <div className="controller-container controller-container_textarea">
                 <div className="controller-container__label">Message</div>
-                <input type="email" id="email-message" name="message" value={this.props.content.message ?? ''} onChange={(e) => { this.props.onSend(e, "mail", "message") }} className="form-control" />
+                <input type="text" id="email-message" name="message" value={this.props.content.message ?? ''} onChange={(e) => { this.props.onSend(e, "mail", "message") }} className="form-control" />
             </div>
         </div>
     }

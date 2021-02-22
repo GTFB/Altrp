@@ -3,6 +3,8 @@ import store from "../../../store/store";
 import { setUpdatedNode } from "../../../store/robot-settings/actions";
 import AltrpSelect from "../../../../../../admin/src/components/altrp-select/AltrpSelect";
 import Resource from "../../../../../../editor/src/js/classes/Resource";
+import Chevron from "../../../../../../editor/src/svgs/chevron.svg";
+
 
 class Crud extends Component{
     constructor(props){
@@ -124,7 +126,15 @@ class Crud extends Component{
         console.log(recordOptions);
 
         return <div>
-            <div className="controller-container__label">CRUD:</div>
+            <div className={"settings-section " + (this.props.activeSection === "crud" ? '' : 'open')}>
+                <div className="settings-section__title d-flex" onClick={this.props.toggleChevron("crud")}>
+                    <div className="settings-section__icon d-flex">
+                        <Chevron />
+                    </div>
+                    <div className="settings-section__label">Broadcast</div>
+                </div>
+            </div>
+
             <div className="controller-container controller-container_textarea">
                 <div className="controller-container__label">Models</div>
                 <AltrpSelect id="crud-model"

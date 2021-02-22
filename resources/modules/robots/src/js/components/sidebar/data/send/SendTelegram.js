@@ -9,8 +9,8 @@ class SendTelegram extends Component{
 
     render(){
         return <div className="settings-section-box">
-            <div className={"settings-section " + (this.props.activeTab === "content" ? 'open' : '')}>
-                <div className="settings-section__title d-flex" onClick={this.props.toggleChevron("broadcast")}>
+            <div className={"settings-section " + (this.props.activeSection === "telegram" ? '' : 'open')}>
+                <div className="settings-section__title d-flex" onClick={this.props.toggleChevron("telegram")}>
                     <div className="settings-section__icon d-flex">
                         <Chevron />
                     </div>
@@ -20,7 +20,7 @@ class SendTelegram extends Component{
 
             <div className="controller-container controller-container_textarea">
                 <div className="controller-container__label">Message</div>
-                <input type="email" id="notice-message" name="message" value={this.props.content.message ?? ''} onChange={(e) => { this.props.onSend(e, "telegram", "message") }} className="form-control" />
+                <input type="text" id="telegram-message" name="message" value={this.props.content.message ?? ''} onChange={(e) => { this.props.onSend(e, "telegram", "message") }} className="form-control" />
             </div>
         </div>
     }
