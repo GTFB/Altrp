@@ -7,7 +7,8 @@ import {baseEmailRender} from "./base-email-render";
  * @param value
  */
 export function changeSetting(settingName, value) {
-  let newState = _.cloneDeep(this.state);
+  let newState = {...this.state};
+  newState.settings = {...newState.settings};
   newState.settings[settingName] = value;
 
   /**

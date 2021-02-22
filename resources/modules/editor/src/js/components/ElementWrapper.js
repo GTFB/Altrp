@@ -9,7 +9,6 @@ import {
   topOrBottomHover
 } from "../helpers";
 import EditIcon from "../../svgs/edit.svg";
-import DeleteIcon from "../../svgs/delete.svg";
 import DotsIcon from "../../svgs/dots_section.svg";
 import ColumnIcon from "../../svgs/columns.svg";
 import AddIcon from "../../svgs/add.svg";
@@ -17,11 +16,8 @@ import DuplicateIcon from "../../svgs/duplicate.svg";
 import CloseIcon from "../../svgs/close.svg";
 import store from "../store/store";
 import { START_DRAG, startDrag } from "../store/element-drag/actions";
-import { setCurrentElement } from "../store/current-element/actions";
-import { changeWidthColumns } from "../store/column-width/actions";
 import { contextMenu } from "react-contexify/lib/index";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
-import { TelephoneMinus } from "react-bootstrap-icons";
 import { thresholdSturges } from "d3";
 import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
 

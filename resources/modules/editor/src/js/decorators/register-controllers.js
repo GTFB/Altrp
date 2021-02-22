@@ -122,7 +122,7 @@ export function advancedTabControllers(element) {
   element.addControl('advanced_tooltip', {
     type: CONTROLLER_TEXT,
     label: "Tooltip"
-  });  
+  });
 
   element.endControlSection();
 
@@ -744,8 +744,8 @@ export function advancedTabControllers(element) {
         'background-color: {{COLOR}}'
       ]
     }
-  }); 
-  
+  });
+
   element.addControl('tooltip_border_radius', {
     type: CONTROLLER_DIMENSIONS,
     label: 'Border Radius',
@@ -775,13 +775,13 @@ export function advancedTabControllers(element) {
       '{{ELEMENT}} > .altrp-tooltip--top': 'bottom: calc(100% + {{SIZE}}{{UNIT}});',
       '{{ELEMENT}} > .altrp-tooltip--bottom': 'top: calc(100% + {{SIZE}}{{UNIT}});',
       '{{ELEMENT}} > .altrp-tooltip--right': 'left: calc(100% + {{SIZE}}{{UNIT}});',
-      '{{ELEMENT}} > .altrp-tooltip--left': 'right: calc(100% + {{SIZE}}{{UNIT}});', 
+      '{{ELEMENT}} > .altrp-tooltip--left': 'right: calc(100% + {{SIZE}}{{UNIT}});',
 
       '{{ELEMENT}} > .altrp-tooltip--top::after': 'margin-left: -{{SIZE}}{{UNIT}};',
       '{{ELEMENT}} > .altrp-tooltip--bottom::after': 'margin-left: -{{SIZE}}{{UNIT}};',
       '{{ELEMENT}} > .altrp-tooltip--right::after': 'margin-top: -{{SIZE}}{{UNIT}};',
       '{{ELEMENT}} > .altrp-tooltip--left::after': 'margin-top: -{{SIZE}}{{UNIT}};',
-      
+
     },
   });
 
