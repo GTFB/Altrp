@@ -32,6 +32,7 @@ class RouteContent extends Component {
     this.isReport = window.location.href.includes("reports");
     appStore.dispatch(clearElements());
     window.currentRouterMatch = new AltrpModel(props.match);
+    window.currentPageId = props.id
     this.admin = this.props.currentUser.hasRoles('admin');
   }
 
@@ -153,7 +154,7 @@ class RouteContent extends Component {
     return (
       <React.Fragment>
         {this.admin && <AdminBar areas={this.state.areas} data={this.props.currentUser.data} idPage={this.props.id} />}
-      
+
         <Scrollbars
           ref={this.scrollbar}
           onUpdate={this.props.setScrollValue}

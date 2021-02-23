@@ -1,0 +1,21 @@
+.altrp-gallery-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #C4C4C4;
+}
+
+.altrp-gallery-empty-icon {
+    height: 35px;
+    width: 35px;
+    opacity: 0.5;
+}
+
+.altrp-gallery-img {
+    background-size: cover;
+    padding-bottom: 100%;
+    background-position: center center;
+    width: 100%;
+    transform-origin: center top;
+}

@@ -12,7 +12,7 @@ class AltrpBreadcrumbs extends Component {
 
   render() {
     let breadcrumbs = [];
-    const routes = ! isEditor() ? replaceContentWithData(appStore.getState().appRoutes.routes) : [
+    const routes = !isEditor() ? appStore.getState().appRoutes.routes : [
       {
         title: "this",
         id: 1,
@@ -38,14 +38,16 @@ class AltrpBreadcrumbs extends Component {
         parent_page_id: 3
       }
     ];
-    const currentTitle = ! isEditor() ? replaceContentWithData(appStore.getState().currentTitle) : "wonderful";
 
-    console.log(currentTitle);
-    if(currentTitle !== routes[0].title) {
+    const currentId = !isEditor() ? window.currentPageId : 4;
+    console.log(currentId)
+    if(currentId !== routes[0].id) {
+
+
       let idCurrent = 0;
 
       routes.forEach((route, idx) => {
-        if(currentTitle === route.title) {
+        if(currentId === route.id) {
           idCurrent = idx
         }
       })
@@ -110,7 +112,7 @@ class AltrpBreadcrumbs extends Component {
 
             return <li className="altrp-nav-breadcrumbs-li" key={idx}>
               {
-                route.title !== currentTitle ? (
+                route.id !== currentId ? (
                   <Link
                     to={to}
                     onClick={isEditor() ? (e) => e.preventDefault() : null}
