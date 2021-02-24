@@ -14,7 +14,7 @@ class AddMediaTable extends Migration
     public function up()
     {
         $table = new \App\Altrp\Table([
-            'name' => 'media',
+            'name' => 'altrp_media',
             'title' => 'Media',
             'preset' => 1
         ]);
