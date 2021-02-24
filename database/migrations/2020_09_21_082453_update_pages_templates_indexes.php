@@ -14,9 +14,9 @@ class UpdatePagesTemplatesIndexes extends Migration
   public function up()
   {
     //
-    Schema::table( 'media', function ( Blueprint $table ) {
-      $table->unique( ['url'], 'url' );
-    } );
+    Schema::table('altrp_media', function (Blueprint $table) {
+      $table->unique(['url'], 'url');
+    });
   }
 
   /**
@@ -27,8 +27,8 @@ class UpdatePagesTemplatesIndexes extends Migration
   public function down()
   {
     //
-    Schema::table( 'media', function ( Blueprint $table ) {
-      $table->uuid( 'guid' )->nullable();
-    } );
+    Schema::table('altrp_media', function (Blueprint $table) {
+      $table->uuid('guid')->nullable();
+    });
   }
 }
