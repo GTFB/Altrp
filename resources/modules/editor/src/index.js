@@ -37,6 +37,11 @@ try {
 }
 
 window._ = _;
+// let cloneDeep = _.cloneDeep;
+// _.cloneDeep = function(){
+//  console.error(arguments);
+//  return cloneDeep.apply(_, arguments);
+// };
 window.iconsManager = new IconsManager();
 
 window.stylesModulePromise = new Promise(function(resolve) {
