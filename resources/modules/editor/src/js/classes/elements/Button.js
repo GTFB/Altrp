@@ -978,6 +978,76 @@ class Button extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection("btn_transition", {
+      tab: TAB_STYLE,
+      label: "Transition"
+    });
+
+    this.addControl('button_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        "{{ELEMENT}} .altrp-btn{{STATE}}": "transition-property: {{VALUE}};"
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("button_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        "{{ELEMENT}} .altrp-btn{{STATE}}": "transition-duration: {{SIZE}}s;"
+      }
+    });
+
+    this.addControl('button_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        "{{ELEMENT}} .altrp-btn{{STATE}}": "transition-timing-function: {{VALUE}};"
+      }
+    });
+
+    this.addControl("button_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        "{{ELEMENT}} .altrp-btn{{STATE}}": "transition-delay: {{SIZE}}s;"
+      }
+    });
+
+    this.endControlSection();
+
     this.startControlSection(
       'creative_link', {
       tab: TAB_STYLE,
