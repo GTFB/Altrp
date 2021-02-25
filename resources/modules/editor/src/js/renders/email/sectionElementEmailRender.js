@@ -5,10 +5,18 @@ import {isEditor} from "../../../../../front-app/src/js/helpers";
  * @return {React.DetailedReactHTMLElement<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> | React.DetailedReactHTMLElement<React.HTMLAttributes<T>, HTMLElement> | React.ReactSVGElement | React.DOMElement<React.DOMAttributes<T>, Element> | React.FunctionComponentElement<{}> | React.CElement<{}, React.ClassicComponent<{}, React.ComponentState>> | React.CElement<{}, React.Component<P, React.ComponentState>> | React.ReactElement<{}>}
  */
 export default function sectionElementEmailRender(){
+  const settings = this.props.element.getSettings();
 
   let sectionElementTag;
   sectionElementTag = 'tr';
-  const elementProps = {};
+  const elementProps = {
+    style: {
+      paddingLeft: _.get(settings, 'positioning_padding.left', '10') + _.get(settings, 'positioning_padding.unit', 'px'),
+      paddingRight: _.get(settings, 'positioning_padding.right', '10') + _.get(settings, 'positioning_padding.unit', 'px'),
+      paddingTop: _.get(settings, 'positioning_padding.top', '10') + _.get(settings, 'positioning_padding.unit', 'px'),
+      paddingBottom: _.get(settings, 'positioning_padding.bottom', '10') + _.get(settings, 'positioning_padding.unit', 'px'),
+    },
+  };
   if(isEditor()){
     sectionElementTag = 'div';
     elementProps.className = 'altrp-section';

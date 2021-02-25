@@ -30,7 +30,6 @@ export default function buttonElementEmailRender(){
     display: 'inline-block',
     textDecoration: 'none'
   };
-  // console.log(settings);
   let url = _.get(settings, 'link_link.url', location.origin) || '';
   url = prepareURLForEmail(url);
   const buttonProps = {
