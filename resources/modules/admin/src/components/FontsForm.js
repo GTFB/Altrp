@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Resource from "../../../editor/src/js/classes/Resource";
 
 const fontWeightOptions = [100, 200, 300, 400, 500, 600, 700, 800, 900];
 const fontStyleOptions = ['normal', 'italic', 'oblique'];
@@ -19,6 +20,13 @@ class FontsForm extends Component {
     this.setState({ [name]: value });
   };
 
+  postFont = e => {
+    e.persist();
+    new Resource({ route: '/admin/ajax/media' })
+      .postFiles(e.target.files)
+      .then(res => this.setState({ [e.target.name]: res[0].url}));
+  }
+
   submitHandler = e => {
     const { fontFamily, fontWeight, fontStyle, woffFile, woff2File, ttfFile, svgFile, eotFile } = this.state;
 
@@ -27,17 +35,17 @@ class FontsForm extends Component {
       return alert('Upload font file')
     }
 
-    const data = new FormData();
+    const data = {};
     for (const key in this.state) {
       if (this.state[key]) { 
-        data.append(key, this.state[key])
+        data[key] = this.state[key];
       }
     }
     console.log(data)
   }
 
   render() {
-    const { fontFamily, fontWeight, fontStyle } = this.state;
+    const { fontFamily, fontWeight, fontStyle, woffFile, woff2File, ttfFile, svgFile, eotFile  } = this.state;
     return <div className="admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
@@ -89,57 +97,97 @@ class FontsForm extends Component {
           </div>
 
           <div className="form-group d-flex justify-content-between">
-            <label htmlFor="fontStyle">WOFF File</label>
+            <label>WOFF File</label>
+            <input
+              placeholder="Input URL or upload file"
+              type="text"
+              name="woffFile"
+              value={typeof woffFile === "string" ? woffFile : ''}
+              onChange={this.changeHandler}
+              className="form-control w-auto flex-grow-1 mx-2"
+            />
             <input
               id="woffFile"
               name="woffFile"
               type="file"
               accept=".woff"
-              onChange={e => this.setState({ woffFile: e.target.files[0] })}
+              onChange={this.postFont}
             />
           </div>
 
           <div className="form-group d-flex justify-content-between">
-            <label htmlFor="fontStyle">WOFF2 File</label>
+            <label>WOFF2 File</label>
+            <input
+              placeholder="Input URL or upload file"
+              type="text"
+              name="woff2File"
+              value={typeof woff2File === "string" ? woff2File : ''}
+              onChange={this.changeHandler}
+              className="form-control w-auto flex-grow-1 mx-2"
+            />
             <input
               id="woff2File"
               name="woff2File"
               type="file"
               accept=".woff2"
-              onChange={e => this.setState({ woff2File: e.target.files[0] })}
+              onChange={this.postFont}
             />
           </div>
 
           <div className="form-group d-flex justify-content-between">
-            <label htmlFor="fontStyle">TTF File</label>
+            <label>TTF File</label>
+            <input
+              placeholder="Input URL or upload file"
+              type="text"
+              name="ttfFile"
+              value={typeof ttfFile === "string" ? ttfFile : ''}
+              onChange={this.changeHandler}
+              className="form-control w-auto flex-grow-1 mx-2"
+            />
             <input
               id="ttfFile"
               name="ttfFile"
               type="file"
               accept=".ttf"
-              onChange={e => this.setState({ ttfFile: e.target.files[0] })}
+              onChange={this.postFont}
             />
           </div>
 
           <div className="form-group d-flex justify-content-between">
-            <label htmlFor="fontStyle">SVG File</label>
+            <label>SVG File</label>
+            <input
+              placeholder="Input URL or upload file"
+              type="text"
+              name="svgFile"
+              value={typeof svgFile === "string" ? svgFile : ''}
+              onChange={this.changeHandler}
+              className="form-control w-auto flex-grow-1 mx-2"
+            />
             <input
               id="svgFile"
               name="svgFile"
               type="file"
               accept=".svg"
-              onChange={e => this.setState({ svgFile: e.target.files[0] })}
+              onChange={this.postFont}
             />
           </div>
 
           <div className="form-group d-flex justify-content-between">
-            <label htmlFor="fontStyle">EOT File</label>
+            <label>EOT File</label>
+            <input
+              placeholder="Input URL or upload file"
+              type="text"
+              name="eotFile"
+              value={typeof eotFile === "string" ? eotFile : ''}
+              onChange={this.changeHandler}
+              className="form-control w-auto flex-grow-1 mx-2"
+            />
             <input
               id="eotFile"
               name="eotFile"
               type="file"
               accept=".eot"
-              onChange={e => this.setState({ eotFile: e.target.files[0] })}
+              onChange={this.postFont}
             />
           </div>
 
