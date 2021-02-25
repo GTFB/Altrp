@@ -1,4 +1,4 @@
-import {isEditor, parseURLTemplate, prepareURLForEmail} from "../../../../../front-app/src/js/helpers";
+import {isEditor, prepareURLForEmail} from "../../../../../front-app/src/js/helpers";
 
 /**
  * Возвращает шаблон колонки для письма
