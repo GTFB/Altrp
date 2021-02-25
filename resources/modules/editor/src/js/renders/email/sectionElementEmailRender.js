@@ -11,10 +11,11 @@ export default function sectionElementEmailRender(){
   sectionElementTag = 'tr';
   const elementProps = {
     style: {
-      paddingLeft: _.get(settings, 'positioning_padding.left', '10') + _.get(settings, 'positioning_padding.unit', 'px'),
-      paddingRight: _.get(settings, 'positioning_padding.right', '10') + _.get(settings, 'positioning_padding.unit', 'px'),
-      paddingTop: _.get(settings, 'positioning_padding.top', '10') + _.get(settings, 'positioning_padding.unit', 'px'),
-      paddingBottom: _.get(settings, 'positioning_padding.bottom', '10') + _.get(settings, 'positioning_padding.unit', 'px'),
+      paddingLeft: _.get(settings, 'position_style_position_padding.left', '10') + _.get(settings, 'position_style_position_padding.unit', 'px'),
+      paddingRight: _.get(settings, 'position_style_position_padding.right', '10') + _.get(settings, 'position_style_position_padding.unit', 'px'),
+      paddingTop: _.get(settings, 'position_style_position_padding.top', '10') + _.get(settings, 'position_style_position_padding.unit', 'px'),
+      paddingBottom: _.get(settings, 'position_style_position_padding.bottom', '10') + _.get(settings, 'position_style_position_padding.unit', 'px'),
+      backgroundColor: _.get(settings, 'section_style_background_color.colorPickedHex', ''),
     },
   };
   if(isEditor()){
@@ -36,7 +37,7 @@ export default function sectionElementEmailRender(){
   );
   if(! isEditor()){
     columns =
-        <td><table width="100%"><tbody><tr>{columns}</tr></tbody></table></td>;
+        <td style={elementProps.style}><table width="100%"><tbody><tr>{columns}</tr></tbody></table></td>;
   }
   return React.createElement(sectionElementTag, elementProps, columns);
 }

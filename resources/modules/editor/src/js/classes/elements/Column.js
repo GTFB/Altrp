@@ -1,13 +1,11 @@
 import BaseElement from "./BaseElement";
 import {
-  CONTROLLER_TEXT,
   CONTROLLER_DIMENSIONS,
   CONTROLLER_NUMBER,
   CONTROLLER_LINK,
   CONTROLLER_COLOR,
   CONTROLLER_SELECT,
   CONTROLLER_SHADOW,
-  CONTROLLER_CSSEDITOR,
   CONTROLLER_SLIDER,
   TAB_STYLE,
   TAB_CONTENT,
@@ -296,6 +294,7 @@ class Column  extends BaseElement {
 
     this.addControl('gradient', {
       type: CONTROLLER_GRADIENT,
+      hideOnClick: true,
       label: 'Gradient',
       default: {
         isWithGradient: false,

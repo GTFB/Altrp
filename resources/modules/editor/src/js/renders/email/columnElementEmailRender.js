@@ -16,12 +16,10 @@ export default function columnElementEmailRender(){
       paddingRight: _.get(settings, 'positioning_padding.right', '10') + _.get(settings, 'positioning_padding.unit', 'px'),
       paddingTop: _.get(settings, 'positioning_padding.top', '10') + _.get(settings, 'positioning_padding.unit', 'px'),
       paddingBottom: _.get(settings, 'positioning_padding.bottom', '10') + _.get(settings, 'positioning_padding.unit', 'px'),
-      marginLeft: _.get(settings, 'positioning_margin.left', '10') + _.get(settings, 'positioning_margin.unit', 'px'),
-      marginRight: _.get(settings, 'positioning_margin.right', '10') + _.get(settings, 'positioning_margin.unit', 'px'),
-      marginTop: _.get(settings, 'positioning_margin.top', '10') + _.get(settings, 'positioning_margin.unit', 'px'),
-      marginBottom: _.get(settings, 'positioning_margin.bottom', '10') + _.get(settings, 'positioning_margin.unit', 'px'),
+      backgroundColor: _.get(settings, 'column_style_background_color.colorPickedHex', ''),
     },
   };
+  console.log(elementProps.style);
   if(isEditor()){
     columnElementTag = 'div';
     delete elementProps.width;

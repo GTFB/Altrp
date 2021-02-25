@@ -13,6 +13,98 @@ export default function imageElementEmailRender(){
     display: 'block',
     textAlign: 'center',
   };
+
+  if(settings['position_margin']) {
+    wrapperStyles.marginTop = settings['position_margin'].top ? (settings['position_margin'].top + settings['position_margin'].unit) : wrapperStyles.marginTop;
+    wrapperStyles.marginRight = settings['position_margin'].right ? (settings['position_margin'].right + settings['position_margin'].unit) : wrapperStyles.marginRight; 
+    wrapperStyles.marginBottom = settings['position_margin'].bottom ? (settings['position_margin'].bottom + settings['position_margin'].unit) : wrapperStyles.marginBottom;
+    wrapperStyles.marginLeft = settings['position_margin'].left ? (settings['position_margin'].left + settings['position_margin'].unit) : wrapperStyles.marginLeft ;
+  }
+
+  if(settings['position_padding']) {
+    wrapperStyles.paddingTop = settings['position_padding'].top ? (settings['position_padding'].top + settings['position_padding'].unit) : wrapperStyles.paddingTop;
+    wrapperStyles.paddingRight = settings['position_padding'].right ? (settings['position_padding'].right + settings['position_padding'].unit) : wrapperStyles.paddingRight;
+    wrapperStyles.paddingBottom = settings['position_padding'].bottom ? (settings['position_padding'].bottom + settings['position_padding'].unit) : wrapperStyles.paddingBottom;
+    wrapperStyles.paddingLeft = settings['position_padding'].left ? (settings['position_padding'].left + settings['position_padding'].unit) : wrapperStyles.paddingLeft;
+  }
+  
+  if(settings['opacity_overlay']) {
+    wrapperStyles.opacity = settings['opacity_overlay'].size;
+  }
+
+  if(settings['image_fit_size']) {
+    wrapperStyles.objectFit = settings['image_fit_size'];
+  }
+
+  if(settings['aspect_ratio_off']) {
+    wrapperStyles.position =  "relative";
+  } else {
+    wrapperStyles.position = "absolute";
+  }
+
+  if(settings['height_size']) {
+    wrapperStyles.height = settings['height_size'].size + settings['height_size'].unit;
+  }
+
+  if(settings['width_size']) {
+    wrapperStyles.width = settings['width_size'].size + settings['width_size'].unit;
+  }
+
+  if(settings['image_style_alignment']) {
+    wrapperStyles.alignContent = settings['image_style_alignment'];
+  }
+
+  if(settings['image_style_text_shadow']) {
+    wrapperStyles.filter = `blur(${settings['image_style_text_shadow'].blur}) brightness(${settings['image_style_text_shadow'].brightness}) contrast(${settings['image_style_text_shadow'].contrast}) hue-rotate(${settings['image_style_text_shadow'].hue}) saturation(${settings['image_style_text_shadow'].saturate})`
+  }
+
+  if(settings['background_color']) {
+    wrapperStyles.backgroundColor = settings['background_color'].colorPickedHex;
+  }
+
+  if(settings['gradient'] && settings['gradient'].isWithGradient) {
+    wrapperStyles.backgroundImage = settings['gradient'].value.slice(0, -1);
+  }
+
+  if(settings['background_image'].url) {
+    wrapperStyles.backgroundImage = `url(${settings['background_image'].url})`;
+  }
+
+  if(settings['background_position']) {
+    wrapperStyles.backgroundPosition = settings['background_position'];
+  }
+
+  if(settings['background_attachment']) {
+    wrapperStyles.backgroundAttachment = settings['background_attachment'];
+  }
+
+  if(settings['background_repeat']) {
+    wrapperStyles.backgroundRepeat = settings['background_repeat'];
+  }
+
+  if(settings['background_size']) {
+    wrapperStyles.backgroundSize = settings['background_size'];
+  }
+
+  if(settings['border_type'] && settings['border_type'] !== "none") {
+    wrapperStyles.borderTopWidth = settings['border_width'].top + settings['border_width'].unit;
+    wrapperStyles.borderRightWidth = settings['border_width'].right + settings['border_width'].unit;
+    wrapperStyles.borderBottomWidth = settings['border_width'].bottom + settings['border_width'].unit;
+    wrapperStyles.borderLeftWidth = settings['border_width'].left + settings['border_width'].unit;
+    wrapperStyles.borderStyle = settings['border_type'];
+    if(settings['border_color'] && settings['border_color'].colorPickedHex)
+      wrapperStyles.borderColor = settings['border_color'].colorPickedHex;
+  }
+
+  if(settings['border_radius']) {
+    // let borderRadiusTop = settings['border_radius'].top + settings['border_radius'].unit;
+    // let borderRadiusRight = settings['border_radius'].right + settings['border_radius'].unit;
+    // let borderRadiusBottom = settings['border_radius'].bottom + settings['border_radius'].unit;
+    // let borderRadiusLeft = settings['border_radius'].left + settings['border_radius'].unit;
+    // wrapperStyles.borderRadius = `${borderRadiusTop} ${borderRadiusRight} ${borderRadiusBottom} ${borderRadiusLeft}`;
+    wrapperStyles.borderRadius = settings['border_radius'].size + settings['border_radius'].unit;
+  }
+
   const wrapperProps = {
     style: wrapperStyles,
   };
