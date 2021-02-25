@@ -19,6 +19,7 @@ class AdminBar extends React.Component {
     this.openPageSettings = this.openPageSettings.bind(this);
     this.handleClickCopy = this.handleClickCopy.bind(this);
     this.handleClickSearch = this.handleClickSearch.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidMount() {
@@ -56,6 +57,11 @@ class AdminBar extends React.Component {
       ...state,
       valueInput: value,
     }));
+  }
+  handleKeyDown(event) {
+    if(event.key === "Enter") {
+      this.handleClickSearch();
+    }
   }
 
   renderResultSearch(resultSearch = null) {
@@ -194,6 +200,7 @@ class AdminBar extends React.Component {
               className="admin-bar__search"
               value={this.state.valueInput}
               onChange={this.handleInput}
+              onKeyDown={this.handleKeyDown}
               placeholder="source"
             />
             <button className="admin-bar__button" onClick={this.handleClickSearch}>test</button>
