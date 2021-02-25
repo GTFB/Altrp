@@ -19,12 +19,12 @@ export async function sendEmail(emailTemplateGUID = null, subject = 'Message', f
   appStore.dispatch(changeCurrentEmailTemplate(template));
   let html = '';
   do{
-    await delay(500);
+    await delay(1500);
     if(_.get(window, 'emailTemplatesRenderer.emailTemplate.current')){
       html = window.emailTemplatesRenderer.emailTemplate.current.outerHTML;
     }
   }while(! html);
-  appStore.dispatch(changeCurrentEmailTemplate(null));
+  // appStore.dispatch(changeCurrentEmailTemplate(null));
   const resource = new Resource({route: '/ajax/feedback-html'});
   let res = await resource.post(
     {

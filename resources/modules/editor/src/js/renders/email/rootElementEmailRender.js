@@ -11,9 +11,12 @@ export default function rootElementEmailRender() {
     border: "0",
     cellPadding: "0",
     cellSpacing: "0",
+    width: "100%",
     style: {
       margin: 0,
       padding: 0,
+      width: "100%",
+      fontFamily: 'Arial, sans-serif'
     },
   };
   if (isEditor()) {

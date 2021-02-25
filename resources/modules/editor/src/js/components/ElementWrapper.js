@@ -328,12 +328,17 @@ class ElementWrapper extends Component {
     if (isFixed) {
       classes += " fixed-section";
     }
+    const styles = {
 
+    };
+    if(this.props.element.getSettings('layout_column_width')){
+      styles.width = this.props.element.getSettings('layout_column_width') + '%';
+    }
     return elementHideTrigger &&
       this.props.hideTriggers.includes(elementHideTrigger) ? null : (
       <div
         className={classes}
-        style={this.props.width}
+        style={styles}
         ref={this.wrapper}
         onContextMenu={this.handleContext}
         onDragOver={this.onDragOver}
@@ -377,7 +382,6 @@ class ElementWrapper extends Component {
           </div>
         </div>
         {errorContent || React.createElement(this.props.component, {
-          ref: this.actionRef,
           element: this.props.element,
           children: this.state.children,
           currentModel: this.props.currentModel,

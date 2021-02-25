@@ -1718,9 +1718,10 @@ export function delay(ms) {
 /**
  * Подготавливает URL для шаблона письма
  * @param {string} url
+ * @param {{} | null} context
  * @return {string}
  */
-export function prepareURLForEmail(url){
+export function prepareURLForEmail(url, context = null){
   if(! _.isString(url) || ! url){
   return url;
 }
@@ -1728,7 +1729,7 @@ export function prepareURLForEmail(url){
   if(url.indexOf('http') !== 0){
   url = location.origin + url;
 }
-  return parseURLTemplate(url);
+  return parseURLTemplate(url, context);
 }
 
 export function parseIDFromYoutubeURL(youtubeURL) {

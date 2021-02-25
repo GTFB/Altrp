@@ -36,11 +36,11 @@ class EmailTemplatesRenderer extends Component {
       baseRender: this.state.baseEmailRender,
     });
     const wrapperStyles = {
-      display: 'none',
+      width: "100%"
     };
-    return <div style={wrapperStyles}>
-      <table id="email-renderer"
-             ref={this.emailTemplate}>
+    return <table id="altrp-email-renderer"
+                  style={wrapperStyles}
+                  ref={this.emailTemplate}>
         <tbody>
         <tr>
           <td>
@@ -49,7 +49,7 @@ class EmailTemplatesRenderer extends Component {
         </tr>
         </tbody>
       </table>
-    </div>
+
   }
 }
 

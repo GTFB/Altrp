@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { setCurrentScreen } from "../store/responsive-switcher/actions"
-import { iconsManager } from "../helpers"
+import {getTemplateType, iconsManager} from "../helpers"
 import CONSTANTS from '../consts'
 
 class ResponsiveDdMenu extends Component {
@@ -24,6 +24,9 @@ class ResponsiveDdMenu extends Component {
     })
   }
   render() {
+    if(getTemplateType() === 'email'){
+      return null;
+    }
     return (
       <div className="screens-container">
         <span onClick={() => this.toggleOpen()} className={"screens-title " + (this.state.open ? 'screens-title-open' : '')}>

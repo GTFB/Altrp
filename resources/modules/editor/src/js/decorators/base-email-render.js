@@ -5,6 +5,7 @@ import columnElementEmailRender from "../renders/email/columnElementEmailRender"
 import headingElementEmailRender from "../renders/email/headingElementEmailRender";
 import textElementEmailRender from "../renders/email/textElementEmailRender";
 import imageElementEmailRender from "../renders/email/imageElementEmailRender";
+import tableElementEmailRender from "../renders/email/tableElementEmailRender";
 import {isEditor} from "../../../../front-app/src/js/helpers";
 
 /**
@@ -34,6 +35,9 @@ export function baseEmailRender(component){
     }
     case 'image':{
       return imageElementEmailRender.bind(component);
+    }
+    case 'table':{
+      return tableElementEmailRender.bind(component);
     }
   }
   return ()=>{

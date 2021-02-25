@@ -16,7 +16,8 @@ export function actionsControllers(element){
    */
   element.startControlSection("actions_section", {
     tab: TAB_CONTENT,
-    label: "Actions"
+    hideOnEmail: true,
+    label: "Actions",
   });
 
   let actionsRepeater = new Repeater();

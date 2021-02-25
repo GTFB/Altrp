@@ -14,15 +14,21 @@ export default function sectionElementEmailRender(){
     elementProps.className = 'altrp-section';
   }
   let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
-  return React.createElement(sectionElementTag, elementProps,
-      this.state.children.map(column => (
-          <ElementWrapper
-              ElementWrapper={ElementWrapper}
-              key={column.getId()}
-              component={column.componentClass}
-              baseRender={this.props.baseRender}
-              element={column}
-          />
-      ))
+  let columns = this.state.children.map(column => {
+        let columnContent = <ElementWrapper
+            ElementWrapper={ElementWrapper}
+            key={column.getId()}
+            component={column.componentClass}
+            baseRender={this.props.baseRender}
+            element={column}
+        />;
+        return columnContent;
+      }
+
   );
+  if(! isEditor()){
+    columns =
+        <td><table width="100%"><tbody><tr>{columns}</tr></tbody></table></td>;
+  }
+  return React.createElement(sectionElementTag, elementProps, columns);
 }

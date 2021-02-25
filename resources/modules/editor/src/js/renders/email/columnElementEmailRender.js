@@ -5,12 +5,16 @@ import {isEditor} from "../../../../../front-app/src/js/helpers";
  * @return {React.DetailedReactHTMLElement<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> | React.DetailedReactHTMLElement<React.HTMLAttributes<T>, HTMLElement> | React.ReactSVGElement | React.DOMElement<React.DOMAttributes<T>, Element> | React.FunctionComponentElement<{}> | React.CElement<{}, React.ClassicComponent<{}, React.ComponentState>> | React.CElement<{}, React.Component<P, React.ComponentState>> | React.ReactElement<{}>}
  */
 export default function columnElementEmailRender(){
-
+  const settings = this.props.element.getSettings();
   let columnElementTag;
   columnElementTag = 'td';
-  const elementProps = {};
+  let width = (settings.layout_column_width || '100') + '%';
+  const elementProps = {
+    width,
+  };
   if(isEditor()){
     columnElementTag = 'div';
+    delete elementProps.width;
     elementProps.className = 'altrp-column';
   }
   let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;

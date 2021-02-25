@@ -16,7 +16,6 @@ export default function imageElementEmailRender(){
   const wrapperProps = {
     style: wrapperStyles,
   };
-  console.log(settings);
   let model = element.hasCardModel()
       ? element.getCardModel()
       : this.props.currentModel;
