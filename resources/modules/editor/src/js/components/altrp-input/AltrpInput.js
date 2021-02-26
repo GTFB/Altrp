@@ -7,16 +7,17 @@ const MaskedInput = React.lazy(() => import("react-text-mask"));
 class AltrpInput extends Component {
   state = {
     isValid: true
-  }
+  };
 
   checkValidity = mask => {
-    if (!mask) return;
-    if (this.props.value.length && !isValueMatchMask(this.props.value, mask)) {
+    console.log(this.state.isValid);
+    if (! mask) return;
+    if (this.props.value.length && ! isValueMatchMask(this.props.value, mask)) {
       this.setState({ isValid: false });
     } else {
       this.setState({ isValid: true });
     }
-  }
+  };
 
   render() {
     const { isValid } = this.state;
@@ -47,13 +48,13 @@ class AltrpInput extends Component {
         this.props.onBlur(e);
         if (mask_mismatch_message) {
           this.checkValidity(mask)
-        };
+        }
       };
       inputProps.onChange = e => {
         this.props.onChange(e);
         if (!isValid && mask_mismatch_message) {
           this.checkValidity(mask)
-        };
+        }
       };
 
       return (
