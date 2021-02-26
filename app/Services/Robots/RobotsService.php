@@ -119,9 +119,9 @@ class RobotsService
      * Запустить робота
      * @return bool
      */
-    public function runRobot()
+    public function runRobot($modelData = null)
     {
-        $currentAction = $this->getStartBlock();
+        $currentAction = $this->getStartBlock($modelData);
 
         do {
             $currentAction->run();
@@ -135,8 +135,8 @@ class RobotsService
      * Получить стартовый блок диаграммы
      * @return Block
      */
-    protected function getStartBlock()
+    protected function getStartBlock($modelData)
     {
-        return new Block('begin', $this->edges, $this->nodes);
+        return new Block('begin', $this->edges, $this->nodes, $modelData);
     }
 }

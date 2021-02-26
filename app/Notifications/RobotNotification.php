@@ -23,12 +23,18 @@ class RobotNotification extends Notification implements ShouldQueue
     private $node;
 
     /**
+     * @var object узел диаграммы робота
+     */
+    private $modelData;
+
+    /**
      * RobotNotification constructor.
      * @param $node
      */
-    public function __construct($node)
+    public function __construct($node, $modelData = null)
     {
         $this->node = $node;
+        $this->modelData = $modelData;
     }
 
     /**
@@ -75,7 +81,7 @@ class RobotNotification extends Notification implements ShouldQueue
     public function toCustomDatabase($notifiable)
     {
         return [
-            'message' => $this->node->data->props->nodeData->data->content->broadcast->message
+            'message' => $this->replaceColumns($this->node->data->props->nodeData->data->content->broadcast->message)
         ];
     }
 
@@ -88,7 +94,7 @@ class RobotNotification extends Notification implements ShouldQueue
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'message' => $this->node->data->props->nodeData->data->content->broadcast->message
+            'message' => $this->replaceColumns($this->node->data->props->nodeData->data->content->broadcast->message)
         ]);
     }
 
@@ -101,7 +107,7 @@ class RobotNotification extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         $mailObj = new MailMessage;
-        $mailObj = $mailObj->line($this->node->data->props->nodeData->data->content->mail->message);
+        $mailObj = $mailObj->line($this->replaceColumns($this->node->data->props->nodeData->data->content->mail->message));
         return $mailObj;
     }
 
@@ -115,7 +121,7 @@ class RobotNotification extends Notification implements ShouldQueue
         if (!$notifiable->telegram_user_id) return false;
         $tmObj = TelegramMessage::create()
             ->to($notifiable->telegram_user_id);
-        $tmObj = $tmObj->content($this->node->data->props->nodeData->data->content->telegram->message);
+        $tmObj = $tmObj->content($this->replaceColumns($this->node->data->props->nodeData->data->content->telegram->message));
         return $tmObj;
     }
 
@@ -150,18 +156,19 @@ class RobotNotification extends Notification implements ShouldQueue
      * @param $subject
      * @return string|string[]
      */
-    // protected function replaceColumns($subject)
-    // {
-    //     preg_match_all("#\{\{altrpdata\.(?<fields>[\w]+)\}\}#", $subject, $matches);
-    //     if ($matches) {
-    //         $matches = $matches['fields'];
-    //         foreach ($matches as $field) {
-    //             if (in_array($field, $this->data['columns'])) {
-    //                 $subject = str_replace("{{altrpdata.{$field}}}", $this->model->$field, $subject);
-    //             }
-    //         }
-    //     }
-    //     return $subject;
-    // }
+    protected function replaceColumns($subject)
+    {
+        
+        preg_match_all("#\{\{altrpdata\.(?<fields>[\w]+)\}\}#", $subject, $matches);
+        if ($matches) {
+            $matches = $matches['fields'];
+            foreach ($matches as $field) {
+                if (in_array($field, $this->modelData['columns'])) {
+                    $subject = str_replace("{{altrpdata.{$field}}}", $this->modelData['record']->$field, $subject);
+                }
+            }
+        }
+        return $subject;
+    }
 
 }

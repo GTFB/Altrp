@@ -17,12 +17,18 @@ class Robot
     protected $node;
 
     /**
+     * @var object Узел диаграммы
+     */
+    protected $modelData;
+
+    /**
      * Action constructor.
      * @param $node
      */
-    public function __construct($node)
+    public function __construct($node, $modelData = null)
     {
         $this->node = $node;
+        $this->modelData = $modelData;
     }
 
     /**

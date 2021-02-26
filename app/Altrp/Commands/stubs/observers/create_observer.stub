@@ -40,16 +40,15 @@ class {{modelName}}Observer extends BaseObserver
             'model' => $model,
             'source' => $source,
             'columns' => $columns,
+            'record' => ${{modelSingle}},
             'action_type' => 'create'
         ];
-
-        $this->sendNotifications(${{modelSingle}}, $source->notice_settings, $data);
 
         $robots = $this->robotsService->getCurrentModelRobots($model);
 
         foreach ($robots as $robot) {
             if ($robot->start_condition != 'created' || !$robot->enabled) continue;
-            $this->robotsService->initRobot($robot)->runRobot();
+            $this->robotsService->initRobot($robot)->runRobot($data);
         }
     }
 
@@ -69,16 +68,15 @@ class {{modelName}}Observer extends BaseObserver
             'model' => $model,
             'source' => $source,
             'columns' => $columns,
+            'record' => ${{modelSingle}},
             'action_type' => 'update'
         ];
-
-        $this->sendNotifications(${{modelSingle}}, $source->notice_settings, $data);
 
         $robots = $this->robotsService->getCurrentModelRobots($model);
 
         foreach ($robots as $robot) {
             if ($robot->start_condition != 'updated' || !$robot->enabled) continue;
-            $this->robotsService->initRobot($robot)->runRobot();
+            $this->robotsService->initRobot($robot)->runRobot($data);
         }
     }
 
@@ -98,18 +96,15 @@ class {{modelName}}Observer extends BaseObserver
             'model' => $model,
             'source' => $source,
             'columns' => $columns,
+            'record' => ${{modelSingle}},
             'action_type' => 'delete'
         ];
-
-        if (in_array('deleted_at', $columns)) {
-            $this->sendNotifications(${{modelSingle}}, $source->notice_settings, $data);
-        }
 
         $robots = $this->robotsService->getCurrentModelRobots($model);
 
         foreach ($robots as $robot) {
             if ($robot->start_condition != 'deleted' || !$robot->enabled) continue;
-            $this->robotsService->initRobot($robot)->runRobot();
+            $this->robotsService->initRobot($robot)->runRobot($data);
         }
     }
 

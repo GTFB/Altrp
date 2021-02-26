@@ -5,10 +5,8 @@ namespace App\Services\Robots\Blocks;
 
 
 use App\Altrp\Model;
-use App\Mails\RobotsMail;
 use App\Notifications\RobotNotification;
 use App\User;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 
 class Action
@@ -19,16 +17,22 @@ class Action
     protected $node;
 
     /**
+     * @var string Запись модели
+     */
+    protected $modelData;
+
+    /**
      * Action constructor.
      * @param $node
      */
-    public function __construct($node)
+    public function __construct($node, $modelData = null)
     {
         $this->node = $node;
+        $this->modelData = $modelData;
     }
 
     /**
-     * Запусить действие в записимости от типа
+     * Запустить действие в зависимости от типа
      */
     public function runAction()
     {
@@ -38,9 +42,6 @@ class Action
                 break;
             case 'send_notification':
                 $this->sendNotification();
-                break;
-            case 'send_mail':
-                $this->sendEmail();
                 break;
         }
     }
@@ -79,7 +80,7 @@ class Action
     {
         $entities = $this->getNodeProperties()->nodeData->data->entities;
         $users = $this->getRequiredUsers($entities);
-        Notification::send($users, new RobotNotification($this->node));
+        Notification::send($users, new RobotNotification($this->node, $this->modelData));
         return true;
     }
 
@@ -90,31 +91,6 @@ class Action
     protected function getNodeProperties()
     {
         return $this->node->data->props;
-    }
-
-    /**
-     * Отправить письмо по электронной почте
-     * @return bool
-     */
-    protected function sendEmail()
-    {
-        $from = config('mail.username');
-        $entities = $this->getNodeProperties()->nodeData->data->entities;
-        $users = $this->getRequiredUsers($entities)->toArray();
-        $message = $this->getNodeProperties()->nodeData->data->message;
-        $subject = $this->getNodeProperties()->nodeData->data->subject;
-        $data = [
-            'user_message' => $message,
-            'subject' => $subject,
-            'email' => $from,
-            'name' => $from
-        ];
-        try {
-            Mail::to($users)->send(new RobotsMail($data));
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
     }
 
     /**

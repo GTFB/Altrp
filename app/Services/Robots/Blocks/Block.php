@@ -22,6 +22,11 @@ class Block
     protected $nodes;
 
     /**
+     * @var string Запись модели
+     */
+    protected $modelData;
+
+    /**
      * @var object Следующий узел
      */
     protected static $nextNode;
@@ -32,11 +37,12 @@ class Block
      * @param $edges
      * @param $nodes
      */
-    public function __construct(string $type, $edges, $nodes)
+    public function __construct(string $type, $edges, $nodes, $modelData = null)
     {
         $this->type = $type;
         $this->edges = $edges;
         $this->nodes = $nodes;
+        $this->modelData = $modelData;
     }
 
     public function getType()
@@ -89,7 +95,7 @@ class Block
     }
 
     /**
-     * Запуститьобработку и выполнение условия
+     * Запустить обработку и выполнение условия
      * @param $node
      * @return mixed
      */
@@ -113,7 +119,7 @@ class Block
      */
     protected function doAction($node)
     {
-        $action = new Action($node);
+        $action = new Action($node, $this->modelData);
         $action->runAction();
     }
 
@@ -123,7 +129,7 @@ class Block
      */
     protected function runRobot($node)
     {
-        $robot = new Robot($node);
+        $robot = new Robot($node, $this->modelData);
         $robot->runRobot();
     }
 
@@ -141,7 +147,7 @@ class Block
      */
     public function next()
     {
-        return new self(self::$nextNode->data->props->type, $this->edges, $this->nodes);
+        return new self(self::$nextNode->data->props->type, $this->edges, $this->nodes, $this->modelData);
     }
 
     /**
