@@ -53,8 +53,8 @@ class DummyClass extends ApiController
         }
 
         ${{crudNameSingular}} = new {{modelName}}($data);
-
-        if(${{crudNameSingular}}->save()){
+        $res = ${{crudNameSingular}}->save();
+        if($res){
             return response()->json(['success'=>true, 'data'=>${{crudNameSingular}}], 200, [], JSON_UNESCAPED_UNICODE);
         }
 
@@ -137,7 +137,9 @@ class DummyClass extends ApiController
             return response()->json(['success'=>false, 'message' => trans("responses.not_found.{{crudNameSingular}}")], 404, [], JSON_UNESCAPED_UNICODE);
         }
 
-        if(${{crudNameSingular}}->delete()) {
+        $result = ${{crudNameSingular}}->delete();
+
+        if($result) {
             return response()->json(['success'=>true, 'message' => trans("responses.delete.{{crudNameSingular}}")], 200, [], JSON_UNESCAPED_UNICODE);
         }
 

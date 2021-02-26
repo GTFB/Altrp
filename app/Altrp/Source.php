@@ -33,6 +33,8 @@ class Source extends Model
         'updated_at'
     ];
 
+    protected $with = ['notice_settings'];
+
     public function sourceable()
     {
         return $this->morphTo();
@@ -56,6 +58,11 @@ class Source extends Model
     public function page_data_sources()
     {
         return $this->hasMany(PageDatasource::class,'source_id');
+    }
+
+    public function notice_settings()
+    {
+        return $this->belongsToMany(NoticeSetting::class, 'altrp_notice_setting_source', 'source_id', 'notice_setting_id');
     }
 
     public static function getBySearchWithPaginate($search, $offset, $limit, $fieldName = 'name', $orderColumn = 'id', $orderType = 'Desc', $with = [])

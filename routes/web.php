@@ -62,6 +62,22 @@ Route::get( '/admin/editor-reports', function (){
 // Route::get('/reports/{id}/html', "ReportsController@html");
 Route::post('/reports/generate', "ReportsController@setHtml");
 
+Route::get('/admin/robots-editor', fn() => view('robots'))->middleware('auth', 'admin')
+                                                          ->name('robots-editor');
+
+/**
+ * Notifications routes
+ */
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/notifications', 'NotificationsController@getAllNotifications');
+    Route::get('/notifications/{notification_id}', 'NotificationsController@getNotification');
+    Route::get('/notifications/delete_all', 'NotificationsController@deleteAllNotifications');
+    Route::get('/notifications/delete/{notification_id}', 'NotificationsController@deleteNotification');
+    Route::get('/unread_notifications', 'NotificationsController@getAllUnreadNotifications');
+    Route::get('/unread_notifications/mark_as_read_all', 'NotificationsController@markAsReadAll');
+    Route::get('/unread_notifications/{notification_id}/mark_as_read', 'NotificationsController@markAsRead');
+});
+
 /**
  * Роуты Админки
  */
@@ -69,6 +85,15 @@ Route::post('/reports/generate', "ReportsController@setHtml");
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
   Route::group(['prefix' => 'ajax'], function () {
+
+    // Websockets
+    Route::get('/websockets', 'Admin\WebsocketsController@index');
+
+    Route::get('/users/{user}/notifications', 'Admin\NoticeSettingController@index');
+    Route::get('/users/{user}/notifications/{notice}', 'Admin\NoticeSettingController@getNotice');
+    Route::post('/users/{user}/notifications', 'Admin\NoticeSettingController@store');
+    Route::put('/users/{user}/notifications/{notification}', 'Admin\NoticeSettingController@update');
+    Route::delete('/users/{user}/notifications/{notification}', 'Admin\NoticeSettingController@destroy');
 
     Route::get('/analytics', 'AnalyticsController@index');
     Route::get('/analytics/none', 'AnalyticsController@none');
@@ -106,6 +131,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::delete('/permissions/{permission}', "Users\Permissions@delete");
 
     Route::get('/roles', "Users\Roles@getRoles");
+    Route::resource( 'robots', 'RobotController' );
+    Route::get( 'robots_options', 'RobotController@getOptions' );
+
     /**
      * URL: /admin/ajax/role_options?s=search_string
      * response:
@@ -127,6 +155,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::delete('/roles/{role}/permissions', "Users\Roles@detachPermission");
 
     Route::get('/users', "Users\Users@getUsers");
+    Route::get('/users_options', "Users\Users@getUsersOptions")->name('admin.user_options');
     Route::get('/users/{user}', "Users\Users@getUser");
     Route::get('/users/{user}/storage', "Users\Users@getUserStorage");
     Route::post('/users', "Users\Users@insert");
@@ -212,6 +241,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
       ->name('admin.models_with_fields_options');
 
     /**
+    * Получить записи из модели по её Id
+    */
+    Route::get('/models/{model_id}/records', 'Admin\ModelsController@getRecordsByModel');
+    Route::get('/models/{model_id}/records_options', 'Admin\ModelsController@getRecordsByModelOptions');
+
+    /**
      * Маршруты для проверки на уникальность имени
      */
     Route::get('/model_name_is_free', 'Admin\ModelsController@modelNameIsFree');
@@ -225,6 +260,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/models', 'Admin\ModelsController@getModels');
     Route::get('/model_options', 'Admin\ModelsController@getModelOptions');
     Route::get('/models_without_parent', 'Admin\ModelsController@getModelsWithoutParent');
+    Route::get( '/models_without_preset', 'Admin\ModelsController@getModelsWithoutPreset');
     Route::post('/models', 'Admin\ModelsController@storeModel');
     Route::put('/models/{model_id}', 'Admin\ModelsController@updateModel');
     Route::get('/models/{model_id}', 'Admin\ModelsController@showModel');
@@ -378,6 +414,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
       Route::get('settings', 'Admin\DownloadsController@exportAltrpSettings')->name('admin.download.settings');
     });
   });
+
 });
 
 //Route::resource( 'admin/ajax/areas', 'Admin\AreasController' );
@@ -438,16 +475,11 @@ foreach ($reports_routes as $report_route) {
   $path = $report_route['path'];
   $title = $report_route['title'];
 
-  $report_route = str_replace(':id', '{id}', $path);
+  $report_route = str_replace( ':id', '{id}', $path );
 
-  Route::get($report_route, function () use ($title) {
-
-    return view('front-app', [
-      'title' => $title,
-      '_frontend_route' => [],
-      'preload_content' => [],
-    ]);
-  })->middleware(['web', 'installation.checker']);
+  Route::get($report_route, function () use ($title){
+    return view('front-app',['title'=>$title]);
+  })->middleware(['web','installation.checker']);
 }
 
 /**
@@ -533,6 +565,12 @@ Route::get('/linkstorage', function () {
  */
 Route::group(['prefix' => 'ajax', 'middleware' => 'auth'], function () {
 });
+
+/**
+ * Robots
+ */
+Route::get('/altrp_run_robot/{robot_id}', 'RobotController@runRobot');
+
 /**
  * Обновление всех ресурсов бэкенда
  */

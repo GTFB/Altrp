@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Altrp\Notification;
 use App\Traits\Searchable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -29,6 +30,7 @@ class User extends Authenticatable
       'email',
       'password',
       'last_name',
+      'notice_data'
     ];
 
     /**
@@ -48,6 +50,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Always with relations
+     * @var string[]
+     */
+    protected $with = ['notice_settings'];
 
 
     protected $appends = ['full_name'];
@@ -91,5 +99,20 @@ class User extends Authenticatable
             }
         }
         return false;
+    }
+
+    public function notice_settings()
+    {
+        return $this->morphMany('App\Altrp\NoticeSetting', 'noticed', 'noticed_type', 'noticed_id');
+    }
+
+    /**
+     * Get the entity's notifications.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'notifiable')->orderBy('created_at', 'desc');
     }
 }

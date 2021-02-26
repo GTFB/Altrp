@@ -27,7 +27,7 @@ export function iconsManager() {
 }
 
 /**
- * Устанавливаент заголовок страницы на фронтенде
+ * Устанавливает заголовок страницы на фронтенде
  * @param {string} title
  */
 export function setTitle(title) {

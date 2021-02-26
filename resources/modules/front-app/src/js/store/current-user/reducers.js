@@ -3,7 +3,7 @@ import {
   changeUpdateUserNotification,
   CHANGE_CURRENT_USER,
   CHANGE_CURRENT_USER_PROPERTY,
-  UPDATE_USER_NOTIFICATION
+  SET_NOTICE_FOR_USER,
 } from "./actions";
 import AltrpUser from "../../../../../editor/src/js/classes/AltrpUser";
 import Resource from "../../../../../editor/src/js/classes/Resource";
@@ -40,9 +40,11 @@ export function currentUserReducer(user, action) {
           .catch(error => console.log(error));
       }
       break;
-    case UPDATE_USER_NOTIFICATION:
-      const notification = action.notification;
-      user.notification = notification;
+    case SET_NOTICE_FOR_USER:
+      {
+        let newNotice = action.notice;
+        user = { ...user, notice: [...user.data?.notice || [], newNotice] };
+      }
       break;
   }
   if (user instanceof AltrpUser) {

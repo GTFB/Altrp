@@ -49,7 +49,7 @@ class AutoUpdateInput extends Component {
   }
 
   /**
-   * При нажатии на enter тоже обновдем данные
+   * При нажатии на enter тоже обновим данные
    * @param e
    */
   onKeyDown(e){

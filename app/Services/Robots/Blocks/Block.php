@@ -4,11 +4,6 @@
 namespace App\Services\Robots\Blocks;
 
 
-use App\Mails\RobotsMail;
-use App\Services\Robots\JsonLogic;
-use App\User;
-use Illuminate\Support\Facades\Mail;
-
 class Block
 {
     /**
@@ -27,6 +22,11 @@ class Block
     protected $nodes;
 
     /**
+     * @var string Запись модели
+     */
+    protected $modelData;
+
+    /**
      * @var object Следующий узел
      */
     protected static $nextNode;
@@ -37,11 +37,17 @@ class Block
      * @param $edges
      * @param $nodes
      */
-    public function __construct(string $type, $edges, $nodes)
+    public function __construct(string $type, $edges, $nodes, $modelData = null)
     {
         $this->type = $type;
         $this->edges = $edges;
         $this->nodes = $nodes;
+        $this->modelData = $modelData;
+    }
+
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
@@ -50,13 +56,22 @@ class Block
     public function run()
     {
         $currentNode = collect($this->nodes)->where('data.props.type', $this->type)->first();
+
         $currentNode = self::$nextNode ?: $currentNode;
         $currentNodeEdgesSources = collect($this->edges)->where('source', $currentNode->id)->values()->all();
+
         $currentNodeEdgesSource = $this->getCurrentNodeEdgesSource($currentNode, $currentNodeEdgesSources);
+
         if ($currentNode->data->props->type == 'action') {
             $this->doAction($currentNode);
+        } elseif ($currentNode->data->props->type == 'robot') {
+            $this->runRobot($currentNode);
         }
-        self::$nextNode = collect($this->nodes)->where('id', $currentNodeEdgesSource->target)->first();
+
+        if ($currentNodeEdgesSource) {
+            self::$nextNode = collect($this->nodes)->where('id', $currentNodeEdgesSource->target)->first();
+        }
+
     }
 
     /**
@@ -80,17 +95,37 @@ class Block
     }
 
     /**
-     * Запуститьобработку и выполнение условия
+     * Запустить обработку и выполнение условия
      * @param $node
      * @return mixed
      */
     protected function runCondition($node)
     {
-        $conditionBody = $node->data->props->nodeData;
-        if (!is_object($conditionBody)) {
-            $conditionBody = json_decode($conditionBody, true);
+        $condition = $node->data->props->nodeData;
+        $conditionBody = $condition->body;
+        if ($condition->type === "model_field") $conditionBody = $this->getBodyForType($conditionBody);
+        $str = '';
+        $arr = [];
+        foreach ($conditionBody as $item) {
+            $arr[] = ' (' . $item->operands[0] . ' ' . $item->operator . ' ' . $item->operands[1] . ') ';
         }
-        return JsonLogic::apply($conditionBody);
+        $str .= ' (' . implode($condition->operator, $arr) . ') ';
+        $str = 'if(' .$str .') { return true; } else { return false; }';
+        return eval($str);
+    }
+
+    /**
+     * Запустить обработку и выполнение условия
+     * @param $node
+     * @return mixed
+     */
+    protected function getBodyForType($conditionBody)
+    {
+        $body = [];
+        foreach ($conditionBody as $item) {
+        }
+
+        return $body;
     }
 
     /**
@@ -99,10 +134,23 @@ class Block
      */
     protected function doAction($node)
     {
-        $action = new Action($node);
+        $action = new Action($node, $this->modelData);
         $action->runAction();
     }
 
+    /**
+     * Выполнить робота
+     * @param $node
+     */
+    protected function runRobot($node)
+    {
+        $robot = new Robot($node, $this->modelData);
+        $robot->runRobot();
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCurrentNode()
     {
         return self::$nextNode->data->props->type;
@@ -114,7 +162,7 @@ class Block
      */
     public function next()
     {
-        return new self(self::$nextNode->data->props->type, $this->edges, $this->nodes);
+        return new self(self::$nextNode->data->props->type, $this->edges, $this->nodes, $this->modelData);
     }
 
     /**

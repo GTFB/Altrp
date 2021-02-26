@@ -4,6 +4,7 @@ import Updates from "./Updates";
 import StylesSettings from "./StylesSettings";
 import Import from "./settings/Import";
 import Export from "./settings/Export";
+import Websockets from "./settings/Websockets";
 const AdvancedSettings = React.lazy(()=>import('./AdvancedSettings'));
 const MailForm = React.lazy(()=>import('./settings/MailForm'));
 
@@ -57,6 +58,9 @@ export default class AdminSettings extends Component {
             </Tab>
             <Tab >
               MAIL
+            </Tab>
+            <Tab >
+              WEBSOCKETS
             </Tab>
           </TabList>
           <TabPanel>
@@ -125,6 +129,11 @@ export default class AdminSettings extends Component {
             <React.Suspense fallback={'Loading'}>
               <MailForm />
             </React.Suspense>
+          </TabPanel>
+          <TabPanel>
+            {/* <React.Suspense fallback={'Loading'}> */}
+              <Websockets />
+            {/* </React.Suspense> */}
           </TabPanel>
         </Tabs>
       </div>
