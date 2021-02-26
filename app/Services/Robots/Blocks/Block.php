@@ -102,8 +102,9 @@ class Block
     protected function runCondition($node)
     {
         $condition = $node->data->props->nodeData;
-        $str = '';
         $conditionBody = $condition->body;
+        if ($condition->type === "model_field") $conditionBody = $this->getBodyForType($conditionBody);
+        $str = '';
         $arr = [];
         foreach ($conditionBody as $item) {
             $arr[] = ' (' . $item->operands[0] . ' ' . $item->operator . ' ' . $item->operands[1] . ') ';
@@ -111,6 +112,20 @@ class Block
         $str .= ' (' . implode($condition->operator, $arr) . ') ';
         $str = 'if(' .$str .') { return true; } else { return false; }';
         return eval($str);
+    }
+
+    /**
+     * Запустить обработку и выполнение условия
+     * @param $node
+     * @return mixed
+     */
+    protected function getBodyForType($conditionBody)
+    {
+        $body = [];
+        foreach ($conditionBody as $item) {
+        }
+
+        return $body;
     }
 
     /**

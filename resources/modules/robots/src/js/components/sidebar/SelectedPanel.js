@@ -69,6 +69,12 @@ export default class SelectedPanel extends React.Component {
       node.data.props.nodeData.id = e.value;
     } else {
       switch(e.value){
+        case "model_field":
+          node.data.props.nodeData = {
+            "type": "model_field",
+            "body": [],
+          };
+          break;
         case "crud":
           node.data.props.nodeData = {
             "type": "crud",
@@ -157,7 +163,9 @@ export default class SelectedPanel extends React.Component {
       {label:'custom', value: 'custom'}
     ];
     const {modelOptions, robotOptions} = this.state;
-    const conditionTypeOptions = [];
+    const conditionTypeOptions = [
+      {label:'Model Field', value: 'model_field'},
+    ];
     const typeData = this.props.selected.data?.props?.nodeData?.type ?? '';
     const robot = this.props.selected.data?.props?.nodeData?.id ?? '';
     const edge = this.props.selectEdge?.type ?? '';
@@ -245,7 +253,7 @@ export default class SelectedPanel extends React.Component {
                               options={conditionTypeOptions}
                           />
                       </div>
-                        <Condition selectNode={this.props.selected || []}/>
+                        <Condition robot={ this.props.robot } selectNode={this.props.selected || []}/>
                       </div>}
                     {(this.props.selected?.type === "robot") && 
                       <div className="controller-container controller-container_textarea">
