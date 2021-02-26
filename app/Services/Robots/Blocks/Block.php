@@ -1,8 +1,5 @@
 <?php
-
-
 namespace App\Services\Robots\Blocks;
-
 
 class Block
 {
@@ -71,7 +68,6 @@ class Block
         if ($currentNodeEdgesSource) {
             self::$nextNode = collect($this->nodes)->where('id', $currentNodeEdgesSource->target)->first();
         }
-
     }
 
     /**
@@ -114,17 +110,14 @@ class Block
         return eval($str);
     }
 
-    /**
-     * Запустить обработку и выполнение условия
-     * @param $node
-     * @return mixed
-     */
     protected function getBodyForType($conditionBody)
     {
         $body = [];
         foreach ($conditionBody as $item) {
+            $operand1 = $item->operands[0];
+            if (is_object($this->modelData["record"])) $item->operands[0] = $this->modelData["record"]->$operand1;
+            $body[] = $item;
         }
-
         return $body;
     }
 

@@ -37,7 +37,7 @@ class Condition extends Component{
         } else {
             node.data.props.nodeData.body.map(item => {
                 if(item.id === id) {
-                    if (type === "model_field") item.operands[0] = value;
+                    if (type === "model_field") item.operands[0] = e.label;
                     else item.operator = value;
                 }  
                 return item;
@@ -112,7 +112,7 @@ class Condition extends Component{
                 return <div key={index}>
                     {typeCondition === "model_field"
                     ? <AltrpSelect id={`operand-1_${item.id}`}
-                        value={_.filter(fieldOptions, i => item.operands[0] == i.value)}
+                        value={_.filter(fieldOptions, i => item.operands[0] == i.label)}
                         onChange={e => {this.changeSelect(e, item.id, typeCondition)}}
                         options={fieldOptions}
                     />
