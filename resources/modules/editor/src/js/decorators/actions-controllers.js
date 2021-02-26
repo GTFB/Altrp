@@ -16,7 +16,8 @@ export function actionsControllers(element){
    */
   element.startControlSection("actions_section", {
     tab: TAB_CONTENT,
-    label: "Actions"
+    hideOnEmail: true,
+    label: "Actions",
   });
 
   let actionsRepeater = new Repeater();
@@ -30,6 +31,10 @@ export function actionsControllers(element){
       {
         value: 'form',
         label: 'Form',
+      },
+      {
+        value: 'email',
+        label: 'Send Email',
       },
       {
         value: 'toggle_element',
@@ -114,6 +119,18 @@ export function actionsControllers(element){
     ],
   });
 
+  actionsRepeater.addControl("email_template", {
+    type: CONTROLLER_SELECT2,
+    prefetch_options: true,
+    label: "Email Template",
+    isClearable: true,
+    options_resource: '/admin/ajax/templates/options?template_type=email&value=guid',
+    nullable: true,
+    conditions: {
+      'type': 'email',
+    },
+  });
+
   actionsRepeater.addControl('code', {
     type: CONTROLLER_TEXTAREA,
     dynamic: false,
@@ -183,6 +200,51 @@ export function actionsControllers(element){
     ],
     conditions: {
       type: 'form',
+    },
+  });
+
+  actionsRepeater.addControl('custom_headers', {
+    label: 'Custom Headers',
+    type: CONTROLLER_TEXTAREA,
+    responsive: false,
+    conditions: {
+      type: 'form',
+    },
+  });
+
+  actionsRepeater.addControl('from', {
+    label: 'From',
+    type: CONTROLLER_TEXT,
+    responsive: false,
+    conditions: {
+      type: 'email',
+    },
+  });
+
+  actionsRepeater.addControl('to', {
+    label: 'Email',
+    type: CONTROLLER_TEXT,
+    responsive: false,
+    conditions: {
+      type: 'email',
+    },
+  });
+
+  actionsRepeater.addControl('subject', {
+    label: 'Subject',
+    type: CONTROLLER_TEXTAREA,
+    responsive: false,
+    conditions: {
+      type: 'email',
+    },
+  });
+
+  actionsRepeater.addControl('attachments', {
+    label: 'Attachments',
+    type: CONTROLLER_TEXTAREA,
+    responsive: false,
+    conditions: {
+      type: 'email',
     },
   });
 
@@ -303,6 +365,31 @@ export function actionsControllers(element){
         'table_to_xls',
       ],
     },
+  });
+
+  actionsRepeater.addControl('template_name', {
+    label: 'Template name',
+    responsive: false,
+    dynamic: false,
+    description: 'template_name',
+    conditions: {
+      type: [
+        'table_to_xls'
+      ]
+    }
+  });
+
+  actionsRepeater.addControl('template_data', {
+    label: 'Data',
+    type: CONTROLLER_TEXTAREA,
+    responsive: false,
+    dynamic: false,
+    description: 'template_data',
+    conditions: {
+      type: [
+        'table_to_xls'
+      ]
+    }
   });
 
   actionsRepeater.addControl('path', {

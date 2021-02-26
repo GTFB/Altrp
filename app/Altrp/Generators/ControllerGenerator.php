@@ -740,18 +740,8 @@ class ControllerGenerator extends AppGenerator
         foreach ($sources as $source) {
             if (in_array($source->type, $actions)) {
                 $routeMiddleware = $routeGenerator->getMiddleware($source, $api);
-                $isApiAuth = $api && in_array($source->type, $apiAuthActions) && !$source->auth ? "'auth:api'," : '';
-                if ($routeMiddleware)
-                    $routeMiddleware = "'middleware' => [{$isApiAuth}'" . implode("','",$routeMiddleware) . "'], ";
-                else {
-                    $routeMiddleware = '';
-                    if ($api && $isApiAuth) {
-                        $isApiAuth = rtrim($isApiAuth, ',');
-                        $routeMiddleware = "'middleware' => [{$isApiAuth}], ";
-                    }
-                }
-//                $routeMiddleware = $routeMiddleware
-//                    ? "'middleware' => ['" . implode("','",$routeMiddleware) . "'], " : '';
+                $routeMiddleware = $routeMiddleware
+                    ? "'middleware' => ['" . implode("','",$routeMiddleware) . "'], " : '';
                 $routeGenerator->addDynamicVariable(
                     $source->type . 'Middleware',
                     $routeMiddleware

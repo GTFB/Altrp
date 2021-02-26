@@ -12,7 +12,15 @@ window.React = React;
 window.ReactDOM = ReactDOM;
 window.Component = Component;
 
+import {listenerHistory} from "./installing";
+import controllerHistory from "./js/classes/ControllerHistory";
+
 window._ = _;
+// let cloneDeep = _.cloneDeep;
+// _.cloneDeep = function(){
+//  console.error(arguments);
+//  return cloneDeep.apply(_, arguments);
+// };
 window.iconsManager = new IconsManager();
 
 window.stylesModulePromise = new Promise(function(resolve) {
@@ -72,7 +80,8 @@ import("./Editor.js")
         styleLink.rel = "stylesheet";
         styleLink.href = `/modules/editor/editor.css?${_altrpVersion}`;
         head.appendChild(styleLink);
-      } else {
+      }
+      else {
         let head = iframe.contentWindow.document.getElementsByTagName(
           "head"
         )[0];
@@ -81,5 +90,17 @@ import("./Editor.js")
         script.defer = "http://localhost:3000/src/bundle.js";
         head.appendChild(script);
       }
+
+      function listenerHistory(event) {
+        if (event.ctrlKey && event.code === 'KeyZ' && event.shiftKey) {
+          controllerHistory.redo();
+        } else if (event.ctrlKey && event.code === 'KeyZ') {
+          controllerHistory.undo();
+        }
+      }
+      window.addEventListener('keydown', listenerHistory, false);
+      window.EditorFrame.contentWindow.addEventListener('keydown', listenerHistory, false);
     };
   });
+
+  

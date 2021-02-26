@@ -495,6 +495,7 @@ class Section extends BaseElement{
     this.addControl('gradient', {
       type: CONTROLLER_GRADIENT,
       label: 'Gradient',
+      hideOnClick: true,
       default: {
         isWithGradient: false,
         firstColor: "rgba(97,206,112,1)",
@@ -939,7 +940,7 @@ class Section extends BaseElement{
     if(!newColumn instanceof Column){
       throw 'Only Column can be a Child of Section';
     }
-    this.appendChild(newColumn);
+    this.appendChild(newColumn, false);
   }
 
   /**

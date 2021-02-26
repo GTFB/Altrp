@@ -9,6 +9,8 @@ import { changeCurrentUser, setUserNotice } from "./js/store/current-user/action
 import FontsManager from "./js/components/FontsManager";
 import Echo from "laravel-echo";
 
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import { DndProvider, } from 'react-dnd'
 
 class FrontApp extends Component {
   constructor(props) {
@@ -74,7 +76,9 @@ class FrontApp extends Component {
   render() {
     return (
       <Provider store={appStore}>
-        <AppContent />
+        <DndProvider backend={HTML5Backend}>
+          <AppContent />
+        </DndProvider>
         <FontsManager />
       </Provider>
     );

@@ -27,6 +27,12 @@ const WysiwygController = ({ controller, controlId, label }) => {
   if (!isShow) {
     return "";
   }
+
+  const onKeyDown = (event) => {
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
+  }
+
   return (
     <div className="controller-container controller-container_wysiwyg">
       <div className="controller-container__label">{label}</div>
@@ -35,7 +41,10 @@ const WysiwygController = ({ controller, controlId, label }) => {
         <DynamicIcon />
       </div>
       <Suspense fallback={<div>Loading...</div>}>
-        <TinyMCE onChange={(value) => setContent(value)} value={content} />
+        <TinyMCE 
+          onChange={(value) => setContent(value)} value={content}
+          onKeyDown={onKeyDown}
+        />
       </Suspense>
     </div>
   );

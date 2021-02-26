@@ -105,5 +105,10 @@
   -webkit-transition: color 150ms;
   transition: color 150ms;
   box-sizing: border-box;
-
+}
+.tba-placeholder{
+  display: flex;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: bold;
 }

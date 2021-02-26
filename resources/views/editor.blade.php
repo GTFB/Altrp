@@ -26,6 +26,7 @@
   <script src="{{ altrp_asset( '/modules/editor/editor.js', 'http://localhost:3000/' ) }}" crossorigin defer></script>
 
   <script>
+    window.ALTRP_DEBUG = {!! json_encode( ! ! get_altrp_setting( 'altrp_debug', false ) ) !!};
     let ALTRP_CONTAINER_WIDTH = {{ get_altrp_setting( 'container_width', '1440' ) }};
   </script>
   <link rel="stylesheet" href="{{ asset( '/modules/editor/editor.css?' ) . getCurrentVersion() }}">

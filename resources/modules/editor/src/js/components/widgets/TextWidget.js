@@ -14,6 +14,9 @@ class TextWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
+    }
     this.tooltipActive = this.tooltipActive.bind(this);
     this.changeText = this.changeText.bind(this);
   }

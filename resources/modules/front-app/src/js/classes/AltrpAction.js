@@ -18,6 +18,7 @@ import {
   dataToXLS
 } from "../helpers";
 import { togglePopup } from "../store/popup-trigger/actions";
+import {sendEmail} from "../helpers/sendEmail";
 
 // let  history = require('history');
 // // import {history} from 'history';
@@ -188,6 +189,11 @@ class AltrpAction extends AltrpModel {
           result = await this.doActionForm();
         }
         break;
+      case "email":
+        {
+          result = await this.doActionEmail();
+        }
+        break;
       case "redirect":
         {
           result = await this.doActionRedirect();
@@ -315,6 +321,10 @@ class AltrpAction extends AltrpModel {
     ).default;
 
     let data = null;
+    let customHeaders = null;
+    if(this.getProperty('custom_headers')){
+      customHeaders = parseParamsFromString(this.getProperty('custom_headers'), this.getCurrentModel());
+    }
     if (this.getProperty("data")) {
       data = parseParamsFromString(
         this.getProperty("data"),
@@ -332,8 +342,19 @@ class AltrpAction extends AltrpModel {
         _.get(getDataByPath(this.getProperty("bulk_path")), "length")
       ) {
         let bulk = getDataByPath(this.getProperty("bulk_path"));
-        let _form = this.getProperty("_form");
-        data = _.assign(_form.getData(), data);
+        /**
+         * Для получение данных с полей формы, нужно создать форму и вызвать метод getData
+         * @type {AltrpForm}
+         */
+        const form = formsManager.registerForm(
+            this.getFormId(),
+            "",
+            this.getProperty("form_method"),
+            {
+              customRoute: ''
+            }
+        );
+        data = _.assign(form.getData(), data);
         let bulkRequests = bulk.map(async (item, idx) => {
           // return   ()=>{
           if (this.getProperty("data")) {
@@ -357,7 +378,7 @@ class AltrpAction extends AltrpModel {
               customRoute: url
             }
           );
-          return await form.submit("", "", data);
+          return await form.submit("", "", data, customHeaders);
           // }
         });
         try {
@@ -387,7 +408,7 @@ class AltrpAction extends AltrpModel {
      * @type {AltrpForm}
      */
     // let form = this.getProperty("_form");
-    if (!this.getFormURL()) {
+    if (! this.getFormURL()) {
       this.setProperty("_form", null);
       return {
         success: false
@@ -407,7 +428,7 @@ class AltrpAction extends AltrpModel {
       success: true
     };
     try {
-      const response = await form.submit("", "", data);
+      const response = await form.submit("", "", data, customHeaders);
       result = _.assign(result, response);
     } catch (error) {
       console.log(error);
@@ -665,11 +686,24 @@ class AltrpAction extends AltrpModel {
       return { success: true };
     }
 
-    const data = dataFromTable(table);
+    let data = dataFromTable(table);
+    const formattedData = [];
+
+    _.each(data, row => formattedData.push(Object.values(row)));
+    const templateName = this.getProperty("template_name");
+    const rawTemplateData = this.getProperty("template_data");
+    const parsedTemplateData = rawTemplateData
+      .split("\n")
+      .reduce((data, row) => {
+        const keyValuePair = row.split("=");
+        data[keyValuePair[0]] = keyValuePair[1];
+        return data;
+      }, {});
+    data = { ...parsedTemplateData, dataArray: formattedData };
     const filename = replaceContentWithData(this.getProperty("name", "file'"));
 
     try {
-      const blob = await dataToXLS(data, filename);
+      const blob = await dataToXLS(data, filename, templateName);
       let link = document.createElement("a");
       link.setAttribute("href", window.URL.createObjectURL(blob));
       link.setAttribute("download", filename + ".xls");
@@ -935,6 +969,31 @@ class AltrpAction extends AltrpModel {
         success: false
       };
     }
+  }
+
+  /**
+   * Отправка почты
+   */
+  async doActionEmail() {
+    let templateGUID = this.getProperty('email_template');
+    if(! templateGUID){
+      return {success: true};
+    }
+    let res = {success: false};
+    try{
+      res = await sendEmail(templateGUID,
+          this.getReplacedProperty('subject'),
+          this.getReplacedProperty('from'),
+          this.getReplacedProperty('to'),
+          this.getReplacedProperty('attachments'),
+          );
+    } catch(e){
+      console.error(e);
+      return {
+        success: false
+      };
+    }
+    return res;
   }
 }
 

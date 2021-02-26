@@ -1,4 +1,3 @@
-import styled from 'styled-components'
 import React, {Component} from 'react';
 import Dropdown from "./Dropdown";
 import {isEditor, parseURLTemplate, renderAsset} from "../../../../../../front-app/src/js/helpers";
@@ -118,14 +117,7 @@ class HorizontalVerticalMenu extends Component {
     let scale = this.props.element.getResponsiveSetting('pointer_text_scale');
     let transition = this.props.element.getResponsiveSetting('pointer_text_transition_duration');
     transition = _.get(transition, 'size', 0.3);
-    let Ul = styled.ul`
-    .altrp-nav-menu-li-animation-text{
-      transition-duration: ${transition}s
-    }
-    .altrp-nav-menu-li-animation-text:hover{
-      ${(pointerVariant === 'text') ? `transform: scale(${scale})` : ''}
-    }
-`;
+
     switch (pointerVariant) {
       case "none":
         break;
@@ -159,7 +151,7 @@ class HorizontalVerticalMenu extends Component {
     }
 
     return (
-      <Ul  className={"altrp-nav-menu-ul altrp-nav-menu-ul-" + layout} ref={this.children}>
+      <ul style={stylesUl}  className={"altrp-nav-menu-ul altrp-nav-menu-ul-" + layout} ref={this.children}>
         {
           this.state.list.map((li, idx) => {
             const tag = li.link_repeater_menu_layout || "a";
@@ -218,7 +210,7 @@ class HorizontalVerticalMenu extends Component {
             )
           })
         }
-      </Ul>
+      </ul>
     );
   }
 }

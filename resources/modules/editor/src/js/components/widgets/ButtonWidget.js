@@ -24,6 +24,9 @@ class ButtonWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
+    }
     this.onClick = this.onClick.bind(this);
   }
   /**
@@ -44,8 +47,8 @@ class ButtonWidget extends Component {
    * @return {Promise<void>}
    */
   async onClick(e) {
+    e.persist();
     if (isEditor()) {
-      console.log(this.state.settings);
       e.preventDefault();
     } else if (this.props.element.getSettings("actions", []).length) {
       e.preventDefault();
@@ -61,7 +64,8 @@ class ButtonWidget extends Component {
         this.props.element.getSettings("actions", []),
         this.props.element
       );
-    } else if (this.props.element.getForms().length) {
+    }
+    if (this.props.element.getForms().length) {
       this.setState(state => ({ ...state, pending: true }));
       this.props.element.getForms().forEach(
         /**
@@ -98,17 +102,19 @@ class ButtonWidget extends Component {
           }
         }
       );
-    } else if (
-      this.props.element.getSettings("popup_trigger_type") &&
-      this.props.element.getSettings("popup_id")
-    ) {
-      this.props.appStore.dispatch(
-        togglePopup(this.props.element.getSettings("popup_id"))
-      );
-      /**
-       * Проверим надо ли по ID скроллить к элементу
-       */
-    } else if (
+    }
+    // else      if (
+    //   this.props.element.getSettings("popup_trigger_type") &&
+    //   this.props.element.getSettings("popup_id")
+    // ) {
+    //   this.props.appStore.dispatch(
+    //     togglePopup(this.props.element.getSettings("popup_id"))
+    //   );
+    //   /**
+    //    * Проверим надо ли по ID скроллить к элементу
+    //    */
+    // }
+    else if (
       e.target.href &&
       e.target.href
         .replace(window.location.origin + window.location.pathname, "")
@@ -160,13 +166,13 @@ class ButtonWidget extends Component {
   }
 
   render() {
-    const { link_link = {} } = this.state.settings;
+    const { link_link = {}, advanced_tooltip: tooltip } = this.state.settings;
     const { back } = history;
     const background_image = this.props.element.getSettings(
       "background_image",
       {}
     );
-
+      
     let modelData = this.props.element.hasCardModel()
       ? this.props.element.getCardModel().getData()
       : this.props.currentModel.getData();
@@ -177,7 +183,6 @@ class ButtonWidget extends Component {
     }
 
     let buttonText = this.getContent("button_text") || "";
-
     let buttonMedia = { ...this.state.settings.button_icon };
     if (this.state.pending) {
       classes += " altrp-disabled";
@@ -211,6 +216,7 @@ class ButtonWidget extends Component {
         onClick={this.onClick}
         className={classes}
         id={this.state.settings.position_css_id}
+        title={tooltip || null}
       >
         {buttonText}
         <span className={"altrp-btn-icon "}>
@@ -255,6 +261,7 @@ class ButtonWidget extends Component {
             onClick={this.onClick}
             className={classes}
             target={target}
+            title={tooltip || null}
           >
             {" "}
             {buttonText || ""}
@@ -265,7 +272,7 @@ class ButtonWidget extends Component {
         );
       } else {
         link = (
-          <Link to={url} onClick={this.onClick} className={classes}>
+          <Link to={url} onClick={this.onClick} className={classes} title={tooltip || null}>
             {" "}
             {buttonText || ""}
             <span className={"altrp-btn-icon "}>
@@ -282,6 +289,7 @@ class ButtonWidget extends Component {
           onClick={() => (isEditor() ? null : back())}
           className={classes}
           id={this.state.settings.position_css_id}
+          title={tooltip || null}
         >
           {buttonText}
           <span className={"altrp-btn-icon "}>

@@ -1,6 +1,7 @@
 import decorate from "./js/decorators/element-component";
 import ElementWrapper from "./js/components/ElementWrapper";
 import _ from "lodash";
+import controllerHistory from "./js/classes/ControllerHistory";
 window._ = _;
 import("ace-builds").then(ace=>{
   window.ace = ace.default;
@@ -55,3 +56,5 @@ window.elementDecorator = decorate;
 * */
 
 window.ElementWrapper = ElementWrapper;
+
+

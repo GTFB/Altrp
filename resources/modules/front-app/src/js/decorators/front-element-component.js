@@ -71,7 +71,8 @@ function classStateDisabled(){
 
     if (conditionsChecker(conditions,
         element.getSettings('disabled_conditional_other_display') === 'AND',
-        model, true)) {
+        model,
+        true)) {
 
       return ' state-disabled ';
     }
@@ -151,7 +152,7 @@ function getContent(settingName, returnRaw = false) {
     let model = element.hasCardModel() ? element.getCardModel() : this.props.currentModel;
     if(returnRaw){
       content = content.trim().replace('{{', '').replace('}}', '');
-      content = getDataByPath(content, content, model);
+      content = getDataByPath(content, '', model);
     } else {
       content = replaceContentWithData(content, model);
     }

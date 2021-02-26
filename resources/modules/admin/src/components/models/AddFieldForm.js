@@ -214,7 +214,8 @@ class AddFieldForm extends Component {
     }
 
     if (_.isFunction(this.props.onSubmit)) {
-      this.props.onSubmit(data);
+      const isNeedToCheckName = this.fieldName && this.fieldName !== data.name;
+      this.props.onSubmit(data, isNeedToCheckName);
     }
   }
 
@@ -245,7 +246,7 @@ class AddFieldForm extends Component {
 
     if (this.props.match.params.id) {
       let value = await this.filedsResource.get(this.props.match.params.id);
-
+      this.fieldName = value.name;
       if (typeof value.calculation_logic === 'string') {
         value.calculation_logic = JSON.parse(value.calculation_logic);
       }  

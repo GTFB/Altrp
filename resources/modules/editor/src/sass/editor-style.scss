@@ -12,7 +12,8 @@
 @import "altrp-list";
 @import "default-styles";
 @import "./altrp-image-select.scss";
-
+@import "./history-panel.scss";
+@import "../../../../sass/ckeditor.scss";
 
 .editor {
     display: flex;
@@ -156,7 +157,7 @@ button {
             border-radius: 0 2px 2px 0;
         }
     }
-    &.control-group_single .btn:nth-child(n){
+    &.control-group_single .btn:nth-child(n) {
         border-radius: 2px;
     }
 }
@@ -511,8 +512,8 @@ button {
     width: 100%;
     margin-bottom: 5px;
 }
-.controller-media__asset_svg{
-  height: 100%;
+.controller-media__asset_svg {
+    height: 100%;
 }
 .controller-media {
     &-choose {
@@ -1149,13 +1150,13 @@ button {
 .control-color-colorPicker {
     z-index: 9999;
     position: absolute;
-    margin: 0px;
-    margin-right: 10px;
-    transform: translateY(60px);
+    margin-top: 60px;
 }
-.sketchPicker-none {
+
+.control-color-hide {
     display: none;
 }
+
 .control-color-header {
     display: flex;
     flex-direction: row;
@@ -1840,8 +1841,8 @@ button {
     min-height: 1px;
 }
 
-.editor-content{
-  & .altrp-posts{
-    min-height: 20px;
-  }
+.editor-content {
+    & .altrp-posts {
+        min-height: 20px;
+    }
 }

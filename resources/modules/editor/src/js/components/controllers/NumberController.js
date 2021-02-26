@@ -27,6 +27,11 @@ class NumberController extends Component {
   onBlur = e =>{
     this._changeValue(Number(e.target.value))
   };
+
+  onKeyDown = (event) => {
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
+  }
   /**
    * Изменение больше не обновляет элемент
    * @param e
@@ -50,6 +55,7 @@ class NumberController extends Component {
       </div>
       <div className="control-group">
         <input className="control-field"
+               onKeyDown={this.onKeyDown}
                onBlur={this.onBlur}
                onChange={this.changeValue} value={value} type="number" />
       </div>

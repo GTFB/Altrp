@@ -97,7 +97,6 @@ class DataStorageUpdater extends AltrpModel {
    */
   subscribeToFormsUpdate(dataSource, params) {
     let dataSources = this.getProperty('dataSourcesFormsDependent');
-    // console.log(dataSource);
     // if(dataSources.indexOf(dataSource) === -1){
     //   dataSources.push(dataSource);
     // }
@@ -120,7 +119,6 @@ class DataStorageUpdater extends AltrpModel {
      */
     let formsStore = appStore.getState().formsStore;
 
-    // if(this.getProperty('formsStore') !== formsStore){
     if (!_.isEqual(this.getProperty('formsStore'), formsStore)) {
       await this.onFormsUpdate();
       this.setProperty('formsStore', formsStore);
@@ -142,7 +140,6 @@ class DataStorageUpdater extends AltrpModel {
        * @member {Datasource} dataSource
        */
       let params = dataSource.getParams(window.currentRouterMatch.params, 'altrpforms.');
-      // console.log(oldParams);
       _.forEach(params, (paramValue, paramName) => {
         if (paramValue.toString().indexOf('altrpforms.') === 0) {
           params[paramName] = _.get(formsStore, paramValue.replace('altrpforms.', ''));
@@ -151,14 +148,12 @@ class DataStorageUpdater extends AltrpModel {
           // }
         }
       });
-      // console.log(oldParams);
-      // console.log(params);
-      // console.log(updating);
       if(updating){
         // console.error(params);
         // console.error(ds);
       }
       if (! _.isEqual(params, oldParams) && ! updating) {
+        dataSource.params = _.cloneDeep(params);
         ds.updating = true;
         let res = {};
         try{
@@ -172,7 +167,6 @@ class DataStorageUpdater extends AltrpModel {
           }
           console.error(err);
         } finally {
-          // console.log(ds.pendingParameters);
           /**
            * В случае, если во время запроса возникла необходимость обновления с новыми параметрами,
            * сделаем новый запрос
@@ -193,14 +187,13 @@ class DataStorageUpdater extends AltrpModel {
               _.unset(ds, 'pendingParameters');
             }
           }
-          dataSource.params = _.cloneDeep(params);
           ds.updating = false;
         }
         /**
          * В случае, если во время запроса возникла необходимость обновления с новыми параметрами,
          * сохраним эти параметры
          */
-      } else if(! _.isEqual(params, oldParams) && updating){
+      } else if((! _.isEqual(params, oldParams)) && updating){
         ds.pendingParameters = _.cloneDeep(params);
       }
     }

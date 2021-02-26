@@ -1,6 +1,7 @@
 import { getCurrentScreen, getElementState } from "./store/store";
 import { isEditor } from "../../../front-app/src/js/helpers";
 import CONSTANTS from "./consts";
+import controllerHistory from "./classes/ControllerHistory";
 
 export function getTemplateId() {
   return new URL(window.location).searchParams.get("template_id");
@@ -140,4 +141,3 @@ export function rgb2hex(rgb) {
         ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2)
     : "";
 }
-
