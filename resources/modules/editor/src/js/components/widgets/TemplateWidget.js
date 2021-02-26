@@ -7,8 +7,11 @@ class TemplateWidget extends Component {
     this.state = {
       templateGUID: this.props.element.getSettings('template'),
     };
-    if(window.elementDecorator){
+    if (window.elementDecorator) {
       window.elementDecorator(this);
+    }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
     }
   }
 

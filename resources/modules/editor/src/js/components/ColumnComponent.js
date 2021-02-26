@@ -13,6 +13,9 @@ class ColumnComponent extends Component {
     if(window.elementDecorator){
       window.elementDecorator(this);
     }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
+    }
     this.columnCount = 0
   }
 
@@ -52,6 +55,7 @@ class ColumnComponent extends Component {
       this.state.children.map(
         widget => <ElementWrapper key={widget.getIdForAction()}
                                   rootElement={this.props.rootElement}
+                                  baseRender={this.props.baseRender}
                                   ElementWrapper={ElementWrapper}
                                   component={widget.componentClass}
                                   element={widget}/>

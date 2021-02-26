@@ -50,6 +50,8 @@ import ExportPanelWidget from "../../components/widgets/ExportPanelWidget";
 import Html from "../elements/Html";
 import HtmlWidget from "../../components/widgets/HtmlWidget";
 import TemplateWidget from "../../components/widgets/TemplateWidget";
+import Video from "../elements/Video";
+import VideoWidget from "../../components/widgets/VideoWidget";
 
 // Websocket import
 import Notifications from "../elements/Notifications";
@@ -88,6 +90,7 @@ export default class ElementsManger {
     this.elements[Html.getName()] = Html;
     // Websocket Notifications
     this.elements[Notifications.getName()] = Notifications;
+    this.elements[Video.getName()] = Video;
 
     //список компонентов
     this.components = {};
@@ -119,6 +122,7 @@ export default class ElementsManger {
     this.components[Html.getName()] = HtmlWidget;
     // Websocket Notifications widget
     this.components[Notifications.getName()] = NotificationsWidget;
+    this.components[Video.getName()] = VideoWidget;
   }
 
   getElements() {

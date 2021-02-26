@@ -1,5 +1,5 @@
-import BaseElement from "./BaseElement";
-import TableIcon from "../../../svgs/table.svg";
+import BaseElement from './BaseElement';
+import TableIcon from '../../../svgs/table.svg';
 import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_SWITCHER,
@@ -23,30 +23,30 @@ import {
   CONTROLLER_MEDIA,
   CONTROLLER_SELECT2,
   CONTROLLER_SHADOW
-} from "../modules/ControllersManager";
-import { advancedTabControllers } from "../../decorators/register-controllers";
-import Repeater from "../Repeater";
+} from '../modules/ControllersManager';
+import { advancedTabControllers } from '../../decorators/register-controllers';
+import Repeater from '../Repeater';
 
 class Table extends BaseElement {
   static getName() {
-    return "table";
+    return 'table';
   }
   static getTitle() {
-    return "Table";
+    return 'Table';
   }
   static getIconComponent() {
     return TableIcon;
   }
   static getType() {
-    return "widget";
+    return 'widget';
   }
   _registerControls() {
     if (this.controllersRegistered) {
       return;
     }
-    this.startControlSection("table_table", {
+    this.startControlSection('table_table', {
       tab: TAB_CONTENT,
-      label: "Table"
+      label: 'Table'
     });
 
     this.addControl('table_table_header_alignment', {
@@ -74,7 +74,7 @@ class Table extends BaseElement {
 
     this.addControl('table_table_body_alignment', {
       type: CONTROLLER_CHOOSE,
-      label: 'Body alignment',
+      label: 'Body Alignment',
       // default: 'left',
       options: [
         {
@@ -97,6 +97,7 @@ class Table extends BaseElement {
 
     this.addControl('table_hover_row', {
       type: CONTROLLER_SWITCHER,
+      hideOnEmail: true,
       label: 'Hover Row',
       default: false
     });
@@ -104,15 +105,17 @@ class Table extends BaseElement {
 
     this.addControl('table_2_0', {
       type: CONTROLLER_SWITCHER,
+      hideOnEmail: true,
       label: 'Table 2.0',
       default: true
     });
 
     this.endControlSection();
 
-    this.startControlSection("table_data_settings", {
+    this.startControlSection('table_data_settings', {
       tab: TAB_CONTENT,
-      label: "Data table settings"
+      hideOnEmail: true,
+      label: 'Data Table Settings'
     });
 
     this.addControl('table_data_settings_search', {
@@ -141,12 +144,12 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("table_content_datasource", {
+    this.startControlSection('table_content_datasource', {
       tab: TAB_CONTENT,
-      label: "Data Source"
+      label: 'Data Source'
     });
 
-    this.addControl("choose_datasource", {
+    this.addControl('choose_datasource', {
       type: CONTROLLER_SELECT,
       label: 'Choose Data Source',
       options: [
@@ -162,7 +165,7 @@ class Table extends BaseElement {
       default: 'datasource',
     });
 
-    this.addControl("table_datasource", {
+    this.addControl('table_datasource', {
       label: 'Path',
       type: CONTROLLER_TEXTAREA,
       conditions: {
@@ -170,7 +173,7 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("table_query_heading", {
+    this.addControl('table_query_heading', {
       type: CONTROLLER_HEADING,
       label: 'Query',
       conditions: {
@@ -178,7 +181,7 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("table_query", {
+    this.addControl('table_query', {
       type: CONTROLLER_QUERY,
       conditions: {
         'choose_datasource': 'query',
@@ -187,30 +190,35 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("table_content_table_settings", {
+    this.startControlSection('table_content_table_settings', {
       tab: TAB_CONTENT,
-      label: "Table Settings",
+      label: 'Table Settings',
     });
 
     this.addControl('field_name_for_row_styling', {
       label: 'Field Name for Styling Rows',
+      hideOnEmail: true,
     });
 
     this.addControl('not_found_text', {
+      hideOnEmail: true,
       label: 'Not Found Text',
     });
 
     this.addControl('next_text', {
+      hideOnEmail: true,
       label: 'Next Page Text',
     });
 
     this.addControl('next_icon', {
       type: CONTROLLER_MEDIA,
+      hideOnEmail: true,
       label: 'Next Page Icon',
     });
 
     this.addControl('next_icon_position', {
       type: CONTROLLER_SELECT,
+      hideOnEmail: true,
       label: 'Next Icon Position',
       default: 'default',
       options: [
@@ -237,16 +245,19 @@ class Table extends BaseElement {
     });
 
     this.addControl('prev_text', {
+      hideOnEmail: true,
       label: 'Previous Page Text',
     });
 
     this.addControl('prev_icon', {
       type: CONTROLLER_MEDIA,
+      hideOnEmail: true,
       label: 'Prev Page Icon',
     });
 
     this.addControl('prev_icon_position', {
       type: CONTROLLER_SELECT,
+      hideOnEmail: true,
       label: 'Prev Icon Position',
       default: 'default',
       options: [
@@ -273,6 +284,7 @@ class Table extends BaseElement {
     });
 
     this.addControl('current_page_text', {
+      hideOnEmail: true,
       label: 'Current Page Text',
     });
     let repeater = new Repeater();
@@ -288,6 +300,7 @@ class Table extends BaseElement {
     repeater.addControl('group_by', {
       type: CONTROLLER_SWITCHER,
       default: false,
+      hideOnEmail: true,
       label: 'Group by',
     });
 
@@ -295,13 +308,14 @@ class Table extends BaseElement {
       type: CONTROLLER_SELECT2,
       label: 'Card Template',
       default: false,
+      hideOnEmail: true,
       prefetch_options: true,
       isClearable: true,
       options_resource: '/admin/ajax/templates/options?template_type=card&value=guid',
       nullable: true,
     });
 
-    repeater.addControl("column_cell_content_type", {
+    repeater.addControl('column_cell_content_type', {
       type: CONTROLLER_SELECT,
       label: 'Content Type',
       options: [
@@ -324,6 +338,24 @@ class Table extends BaseElement {
       label: 'Link Template',
       dynamic: false,
       description: '/path/:id',
+    });
+
+    repeater.addControl('column_external_link', {
+      label: 'External Link',
+      conditions: {
+        'column_link!' : ['', null, undefined],
+      },
+      dynamic: false,
+      type: CONTROLLER_SWITCHER,
+    });
+
+    repeater.addControl('column_blank_link', {
+      label: 'Open in New Tab',
+      conditions: {
+        'column_link!' : ['', null, undefined],
+      },
+      dynamic: false,
+      type: CONTROLLER_SWITCHER,
     });
 
     repeater.addControl('column_width', {
@@ -354,8 +386,7 @@ class Table extends BaseElement {
 
     repeater.addControl('column_body_alignment', {
       type: CONTROLLER_CHOOSE,
-      label: 'Body alignment',
-      // default: 'center',
+      label: 'Body Alignment',
       options: [
         {
           icon: 'left',
@@ -372,7 +403,7 @@ class Table extends BaseElement {
       ]
     });
 
-    repeater.addControl("column_cell_vertical_alignment", {
+    repeater.addControl('column_cell_vertical_alignment', {
       type: CONTROLLER_SELECT,
       label: 'Vertical Alignment',
       options: [
@@ -417,18 +448,21 @@ class Table extends BaseElement {
 
     repeater.addControl('column_is_sorted', {
       type: CONTROLLER_SWITCHER,
+      hideOnEmail: true,
       label: 'Is Sorted',
       default: false
     });
 
     repeater.addControl('column_is_filtered', {
       type: CONTROLLER_SWITCHER,
+      hideOnEmail: true,
       label: 'Add Filter',
       default: false
     });
 
     repeater.addControl('column_filter_type', {
       type: CONTROLLER_SELECT,
+      hideOnEmail: true,
       label: 'Filter Type',
       nullable: true,
       options: [
@@ -457,6 +491,7 @@ class Table extends BaseElement {
 
     repeater.addControl('column_text_filter_type', {
       type: CONTROLLER_SELECT,
+      hideOnEmail: true,
       label: 'Text Match',
       nullable: true,
       options: [
@@ -481,6 +516,7 @@ class Table extends BaseElement {
 
     repeater.addControl('filter_placeholder', {
       label: 'Placeholder',
+      hideOnEmail: true,
       conditions: {
         'column_is_filtered': true,
         'column_filter_type': 'text',
@@ -491,7 +527,8 @@ class Table extends BaseElement {
     });
 
     repeater.addControl('filter_min_placeholder', {
-      label: 'MinPlaceholder',
+      label: 'Min Placeholder',
+      hideOnEmail: true,
       conditions: {
         'column_is_filtered': true,
         'column_filter_type': 'min_max',
@@ -504,6 +541,7 @@ class Table extends BaseElement {
 
     repeater.addControl('filter_max_placeholder', {
       label: 'Max Placeholder',
+      hideOnEmail: true,
       conditions: {
         'column_is_filtered': true,
         'column_filter_type': 'min_max',
@@ -515,6 +553,7 @@ class Table extends BaseElement {
 
     repeater.addControl('filter_button_text', {
       label: 'Placeholder',
+      hideOnEmail: true,
       conditions: {
         'column_is_filtered': true,
         'column_filter_type': 'slider',
@@ -527,6 +566,7 @@ class Table extends BaseElement {
     repeater.addControl('aggregate', {
       type: CONTROLLER_SELECT,
       label: 'Aggregate',
+      hideOnEmail: true,
       nullable: true,
       options: [
         {
@@ -551,6 +591,7 @@ class Table extends BaseElement {
 
     repeater.addControl('aggregate_template', {
       type: CONTROLLER_TEXTAREA,
+      hideOnEmail: true,
       label: 'Aggregate Template',
       responsive: false,
       dynamic: false,
@@ -561,12 +602,14 @@ class Table extends BaseElement {
     });
 
     repeater.addControl('column_is_editable', {
+      hideOnEmail: true,
       type: CONTROLLER_SWITCHER,
       label: 'Editable',
       default: false
     });
 
     repeater.addControl('column_edit_url', {
+      hideOnEmail: true,
       label: 'Edit URL',
       description: '/ajax/models/tests/:id/title',
       default: '',
@@ -599,6 +642,7 @@ class Table extends BaseElement {
     });
 
     repeater.addControl('column_styles_field', {
+      hideOnEmail: true,
       label: 'Column Styles Field',
       default: ''
     });
@@ -676,6 +720,7 @@ class Table extends BaseElement {
     repeater.addControl('actions', {
       label: 'Actions',
       type: CONTROLLER_REPEATER,
+      hideOnEmail: true,
       fields: actionsRepeater.getControls(),
     });
 
@@ -707,6 +752,7 @@ class Table extends BaseElement {
 
     this.addControl('additional_rows', {
       label: 'Additional Heading',
+      hideOnEmail: true,
       type: CONTROLLER_REPEATER,
       fields: additionalTableHeadRowsRepeater.getControls(),
     });
@@ -714,9 +760,10 @@ class Table extends BaseElement {
     /**
      * Настройки для группировки START
      */
-    this.startControlSection("group_settings", {
+    this.startControlSection('group_settings', {
       tab: TAB_CONTENT,
-      label: "Group Settings",
+      hideOnEmail: true,
+      label: 'Group Settings',
     });
 
     this.addControl('group_by_column_name', {
@@ -767,8 +814,9 @@ class Table extends BaseElement {
      * Настройки для футера таблицы
      */
 
-    this.startControlSection("table_footer", {
-      label: "Footer"
+    this.startControlSection('table_footer', {
+      label: 'Footer',
+      hideOnEmail: true,
     });
 
     const footerRepeater = new Repeater();
@@ -820,8 +868,10 @@ class Table extends BaseElement {
      * Настройки для футера таблицы
      */
 
-    this.startControlSection("deep_customization", {
-      label: "Deep Customization"
+    this.startControlSection('deep_customization', {
+      label: 'Deep Customization',
+      hideOnEmail: true,
+
     });
 
     this.addControl('inner_page_size', {
@@ -856,7 +906,7 @@ class Table extends BaseElement {
     this.addControl('middle_buttons_count', {
       type: CONTROLLER_NUMBER,
       label: 'Middle Buttons Count',
-      min: 3, // похоже, не работает. TODO: задать минимальное значение 3      
+      min: 3, // похоже, не работает. TODO: задать минимальное значение 3
       conditions: { 'inner_page_type!': 'text', },
     });
 
@@ -1008,12 +1058,12 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("replace_text_color", {
+    this.addControl('replace_text_color', {
       type: CONTROLLER_COLOR,
-      label: "Text Color",
+      label: 'Text Color',
       default: {
-        // color: "rgb(27,27,27)",
-        // colorPickedHex: "#1B1B1B"
+        // color: 'rgb(27,27,27)',
+        // colorPickedHex: '#1B1B1B'
       },
       rules: {
         '{{ELEMENT}} .replace-text{{STATE}}': 'color: {{COLOR}}'
@@ -1029,7 +1079,7 @@ class Table extends BaseElement {
         size: 14,
         weight: 700,
         family: 'Open Sans',
-        decoration: ""
+        decoration: ''
       },
       rules: {
         '{{ELEMENT}} .replace-text{{STATE}}': [
@@ -1049,12 +1099,12 @@ class Table extends BaseElement {
     this.addControl('replace_image', {
       type: CONTROLLER_MEDIA,
       label: 'Image',
-      default: { url: "" }
+      default: { url: '' }
     });
 
-    this.addControl("replace_image_width", {
+    this.addControl('replace_image_width', {
       type: CONTROLLER_SLIDER,
-      label: "Image Width",
+      label: 'Image Width',
       units: [
         'px',
         '%',
@@ -1067,9 +1117,9 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("replace_image_height", {
+    this.addControl('replace_image_height', {
       type: CONTROLLER_SLIDER,
-      label: "Image Height",
+      label: 'Image Height',
       units: [
         'px',
         '%',
@@ -1135,8 +1185,10 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("group_icons", {
-      label: "Group Column, Expanded Row Icons"
+    this.startControlSection('group_icons', {
+      label: 'Group Column, Expanded Row Icons',
+      hideOnEmail: true,
+
     });
 
     // Grouped Column Icon
@@ -1333,22 +1385,23 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("filter_style_table", {
+    this.startControlSection('filter_style_table', {
       tab: TAB_STYLE,
-      label: "Filter"
+      hideOnEmail: true,
+      label: 'Filter',
     });
 
-    this.addControl("filter_style_table_text_color", {
+    this.addControl('filter_style_table_text_color', {
       type: CONTROLLER_COLOR,
-      label: "Text Color",
+      label: 'Text Color',
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'color: {{COLOR}} !important'
       }
     });
 
-    this.addControl("filter_style_table_background_color", {
+    this.addControl('filter_style_table_background_color', {
       type: CONTROLLER_COLOR,
-      label: "Background Color",
+      label: 'Background Color',
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'background: {{COLOR}} !important'
       }
@@ -1415,33 +1468,33 @@ class Table extends BaseElement {
     }
     );
 
-    this.addControl("filter_style_table_border_type", {
+    this.addControl('filter_style_table_border_type', {
       type: CONTROLLER_SELECT,
-      label: "Border Type",
+      label: 'Border Type',
       options: [
         {
-          value: "none",
-          label: "None"
+          value: 'none',
+          label: 'None'
         },
         {
-          value: "solid",
-          label: "Solid"
+          value: 'solid',
+          label: 'Solid'
         },
         {
-          value: "double",
-          label: "Double"
+          value: 'double',
+          label: 'Double'
         },
         {
-          value: "dotted",
-          label: "Dotted"
+          value: 'dotted',
+          label: 'Dotted'
         },
         {
-          value: "dashed",
-          label: "Dashed"
+          value: 'dashed',
+          label: 'Dashed'
         },
         {
-          value: "groove",
-          label: "Groove"
+          value: 'groove',
+          label: 'Groove'
         }
       ],
       rules: {
@@ -1449,11 +1502,11 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("filter_style_table_border_width", {
+    this.addControl('filter_style_table_border_width', {
       type: CONTROLLER_DIMENSIONS,
-      label: "Border Width",
+      label: 'Border Width',
       default: {
-        unit: "px"
+        unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
       rules: {
@@ -1461,9 +1514,9 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("filter_style_table_border_color", {
+    this.addControl('filter_style_table_border_color', {
       type: CONTROLLER_COLOR,
-      label: "Border Color",
+      label: 'Border Color',
       rules: {
         '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-color: {{COLOR}} !important'
       }
@@ -1486,9 +1539,9 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("global_filter_style_table", {
+    this.startControlSection('global_filter_style_table', {
       tab: TAB_STYLE,
-      label: "Global Filter",
+      label: 'Global Filter',
       conditions: { global_filter: true, }
     });
 
@@ -1509,9 +1562,9 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("global_filter_label_color", {
+    this.addControl('global_filter_label_color', {
       type: CONTROLLER_COLOR,
-      label: "Label Color",
+      label: 'Label Color',
       rules: {
         '{{ELEMENT}} .altrp-table-global-filter label{{STATE}}': 'color: {{COLOR}}'
       }
@@ -1535,14 +1588,14 @@ class Table extends BaseElement {
     }
     );
 
-    this.addControl("global_filter_heading", {
+    this.addControl('global_filter_heading', {
       type: CONTROLLER_HEADING,
       label: 'Input'
     });
 
-    this.addControl("global_filter_input_width", {
+    this.addControl('global_filter_input_width', {
       type: CONTROLLER_SLIDER,
-      label: "Input Width",
+      label: 'Input Width',
       units: ['px', '%', 'vh', 'vw'],
       max: 800,
       min: 0,
@@ -1551,9 +1604,9 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("global_filter_margin_left", {
+    this.addControl('global_filter_margin_left', {
       type: CONTROLLER_SLIDER,
-      label: "Spacing",
+      label: 'Spacing',
       units: ['px', '%', 'vh', 'vw'],
       max: 800,
       min: 0,
@@ -1579,17 +1632,17 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("global_filter_input_color", {
+    this.addControl('global_filter_input_color', {
       type: CONTROLLER_COLOR,
-      label: "Input Color",
+      label: 'Input Color',
       rules: {
         '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'color: {{COLOR}}'
       }
     });
 
-    this.addControl("global_filter_input_background_color", {
+    this.addControl('global_filter_input_background_color', {
       type: CONTROLLER_COLOR,
-      label: "Input Background Color",
+      label: 'Input Background Color',
       rules: {
         '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'background: {{COLOR}}'
       }
@@ -1613,33 +1666,33 @@ class Table extends BaseElement {
     }
     );
 
-    this.addControl("global_filter_input_border_type", {
+    this.addControl('global_filter_input_border_type', {
       type: CONTROLLER_SELECT,
-      label: "Input Border Type",
+      label: 'Input Border Type',
       options: [
         {
-          value: "none",
-          label: "None"
+          value: 'none',
+          label: 'None'
         },
         {
-          value: "solid",
-          label: "Solid"
+          value: 'solid',
+          label: 'Solid'
         },
         {
-          value: "double",
-          label: "Double"
+          value: 'double',
+          label: 'Double'
         },
         {
-          value: "dotted",
-          label: "Dotted"
+          value: 'dotted',
+          label: 'Dotted'
         },
         {
-          value: "dashed",
-          label: "Dashed"
+          value: 'dashed',
+          label: 'Dashed'
         },
         {
-          value: "groove",
-          label: "Groove"
+          value: 'groove',
+          label: 'Groove'
         }
       ],
       rules: {
@@ -1647,11 +1700,11 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("global_filter_input_border_width", {
+    this.addControl('global_filter_input_border_width', {
       type: CONTROLLER_DIMENSIONS,
-      label: "Input Border Width",
+      label: 'Input Border Width',
       default: {
-        unit: "px"
+        unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
       rules: {
@@ -1676,9 +1729,9 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("global_filter_input_border_color", {
+    this.addControl('global_filter_input_border_color', {
       type: CONTROLLER_COLOR,
-      label: "Input Border Color",
+      label: 'Input Border Color',
       rules: {
         '{{ELEMENT}} .altrp-table-global-filter input': 'border-color: {{COLOR}}'
       }
@@ -1698,58 +1751,61 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("table_style_table", {
+    this.startControlSection('table_style_table', {
       tab: TAB_STYLE,
-      label: "Table"
+      label: 'Table'
     });
 
     this.addControl('table_style_table_striple_style', {
       type: CONTROLLER_SWITCHER,
-      label: 'Striple style'
+      hideOnEmail: true,
+      label: 'Stripe style'
     });
     this.addControl('table_transpose', {
       type: CONTROLLER_SWITCHER,
+      hideOnEmail: true,
       default: false,
       prefixClass: 'altrp-transpose_',
       label: 'Transpose',
     });
 
-    this.addControl("table_style_table_stripe_color", {
+    this.addControl('table_style_table_stripe_color', {
+      hideOnEmail: true,
       type: CONTROLLER_COLOR,
-      label: "Stripe Color",
+      label: 'Stripe Color',
       rules: {
         '{{ELEMENT}} .altrp-table-tbody--striped tr:nth-child(2n){{STATE}}': 'background-color: {{COLOR}}',
         '{{ELEMENT}} .altrp-table-tbody--striped .altrp-table-tr:nth-child(2n){{STATE}}': 'background-color: {{COLOR}}'
       }
     });
 
-    this.addControl("table_style_table_border_type", {
+    this.addControl('table_style_table_border_type', {
       type: CONTROLLER_SELECT,
-      label: "Border Type",
+      label: 'Border Type',
       options: [
         {
-          value: "none",
-          label: "None"
+          value: 'none',
+          label: 'None'
         },
         {
-          value: "solid",
-          label: "Solid"
+          value: 'solid',
+          label: 'Solid'
         },
         {
-          value: "double",
-          label: "Double"
+          value: 'double',
+          label: 'Double'
         },
         {
-          value: "dotted",
-          label: "Dotted"
+          value: 'dotted',
+          label: 'Dotted'
         },
         {
-          value: "dashed",
-          label: "Dashed"
+          value: 'dashed',
+          label: 'Dashed'
         },
         {
-          value: "groove",
-          label: "Groove"
+          value: 'groove',
+          label: 'Groove'
         }
       ],
       rules: {
@@ -1757,11 +1813,11 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("table_style_table_border_width", {
+    this.addControl('table_style_table_border_width', {
       type: CONTROLLER_DIMENSIONS,
-      label: "Border Width",
+      label: 'Border Width',
       default: {
-        unit: "px"
+        unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
       rules: {
@@ -1769,9 +1825,9 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("table_style_table_border_color", {
+    this.addControl('table_style_table_border_color', {
       type: CONTROLLER_COLOR,
-      label: "Border Color",
+      label: 'Border Color',
       rules: {
         '{{ELEMENT}} .altrp-table{{STATE}}': 'border-color: {{COLOR}} !important'
       }
@@ -1779,9 +1835,10 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("table_style_pagination", {
+    this.startControlSection('table_style_pagination', {
       tab: TAB_STYLE,
-      label: "Pagination"
+      label: 'Pagination',
+      hideOnEmail: true,
     });
 
     this.addControl('hide_pre_page_button', {
@@ -1831,17 +1888,17 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("table_style_pagination_buttons_text_color", {
+    this.addControl('table_style_pagination_buttons_text_color', {
       type: CONTROLLER_COLOR,
-      label: "Buttons Text Color",
+      label: 'Buttons Text Color',
       rules: {
         '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'color: {{COLOR}}'
       }
     });
 
-    this.addControl("table_style_pagination_buttons_background_color", {
+    this.addControl('table_style_pagination_buttons_background_color', {
       type: CONTROLLER_COLOR,
-      label: "Buttons Background Color",
+      label: 'Buttons Background Color',
       rules: {
         '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'background-color: {{COLOR}}'
       }
@@ -1881,33 +1938,33 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("table_style_pagination_border_type", {
+    this.addControl('table_style_pagination_border_type', {
       type: CONTROLLER_SELECT,
-      label: "Buttons Border type",
+      label: 'Buttons Border type',
       options: [
         {
-          value: "none",
-          label: "None"
+          value: 'none',
+          label: 'None'
         },
         {
-          value: "solid",
-          label: "Solid"
+          value: 'solid',
+          label: 'Solid'
         },
         {
-          value: "double",
-          label: "Double"
+          value: 'double',
+          label: 'Double'
         },
         {
-          value: "dotted",
-          label: "Dotted"
+          value: 'dotted',
+          label: 'Dotted'
         },
         {
-          value: "dashed",
-          label: "Dashed"
+          value: 'dashed',
+          label: 'Dashed'
         },
         {
-          value: "groove",
-          label: "Groove"
+          value: 'groove',
+          label: 'Groove'
         }
       ],
       rules: {
@@ -1915,9 +1972,9 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("table_style_pagination_border_width", {
+    this.addControl('table_style_pagination_border_width', {
       type: CONTROLLER_DIMENSIONS,
-      label: "Buttons Border width",
+      label: 'Buttons Border width',
       units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
@@ -1941,9 +1998,9 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("table_style_pagination_border_color", {
+    this.addControl('table_style_pagination_border_color', {
       type: CONTROLLER_COLOR,
-      label: "Buttons Border Color",
+      label: 'Buttons Border Color',
       rules: {
         '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-color: {{COLOR}};',
       }
@@ -1965,9 +2022,10 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("table_style_pre_page_button", {
+    this.startControlSection('table_style_pre_page_button', {
       tab: TAB_STYLE,
-      label: "Prev Page Button",
+      label: 'Prev Page Button',
+      hideOnEmail: true,
       conditions: {
         'hide_pre_page_button!': true,
       },
@@ -2047,9 +2105,10 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("table_style_next_page_button", {
+    this.startControlSection('table_style_next_page_button', {
       tab: TAB_STYLE,
-      label: "Next Page Button",
+      label: 'Next Page Button',
+      hideOnEmail: true,
       conditions: {
         'hide_next_page_button!': true,
       },
@@ -2129,9 +2188,10 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("table_style_page_buttons", {
+    this.startControlSection('table_style_page_buttons', {
       tab: TAB_STYLE,
-      label: "Page Count Buttons",
+      hideOnEmail: true,
+      label: 'Page Count Buttons',
       conditions: {
         'hide_pages_buttons_button!': true,
       },
@@ -2171,42 +2231,42 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("table_style_pagination_count_text_color", {
+    this.addControl('table_style_pagination_count_text_color', {
       type: CONTROLLER_COLOR,
-      label: "Count Text Color",
+      label: 'Count Text Color',
       rules: {
         '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'color: {{COLOR}}',
         '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'color: {{COLOR}}'
       }
     });
 
-    this.addControl("table_style_pagination_count_background_color", {
+    this.addControl('table_style_pagination_count_background_color', {
       type: CONTROLLER_COLOR,
-      label: "Count Background Color",
+      label: 'Count Background Color',
       rules: {
         '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'background-color: {{COLOR}}'
       }
     });
 
-    this.addControl("table_style_pagination_count_item_background_color", {
+    this.addControl('table_style_pagination_count_item_background_color', {
       type: CONTROLLER_COLOR,
-      label: "Count Item background color",
+      label: 'Count Item background color',
       rules: {
         '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'background-color: {{COLOR}}'
       }
     });
 
-    this.addControl("table_style_pagination_active_count_text_color", {
+    this.addControl('table_style_pagination_active_count_text_color', {
       type: CONTROLLER_COLOR,
-      label: "Active Count text color",
+      label: 'Active Count text color',
       rules: {
         '{{ELEMENT}} .active.altrp-pagination-pages__item{{STATE}}': 'color: {{COLOR}}'
       }
     });
 
-    this.addControl("table_style_pagination_active_count_item_background_color", {
+    this.addControl('table_style_pagination_active_count_item_background_color', {
       type: CONTROLLER_COLOR,
-      label: "Active Count Item background color",
+      label: 'Active Count Item background color',
       rules: {
         '{{ELEMENT}} .active.altrp-pagination-pages__item{{STATE}}': 'background-color: {{COLOR}}'
       }
@@ -2263,33 +2323,33 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("table_style_pagination_count_item_border_type", {
+    this.addControl('table_style_pagination_count_item_border_type', {
       type: CONTROLLER_SELECT,
-      label: "Item Count Border type",
+      label: 'Item Count Border type',
       options: [
         {
-          value: "none",
-          label: "None"
+          value: 'none',
+          label: 'None'
         },
         {
-          value: "solid",
-          label: "Solid"
+          value: 'solid',
+          label: 'Solid'
         },
         {
-          value: "double",
-          label: "Double"
+          value: 'double',
+          label: 'Double'
         },
         {
-          value: "dotted",
-          label: "Dotted"
+          value: 'dotted',
+          label: 'Dotted'
         },
         {
-          value: "dashed",
-          label: "Dashed"
+          value: 'dashed',
+          label: 'Dashed'
         },
         {
-          value: "groove",
-          label: "Groove"
+          value: 'groove',
+          label: 'Groove'
         }
       ],
       rules: {
@@ -2297,9 +2357,9 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("table_style_pagination_count_item_border_width", {
+    this.addControl('table_style_pagination_count_item_border_width', {
       type: CONTROLLER_DIMENSIONS,
-      label: "Item Count Border Width",
+      label: 'Item Count Border Width',
       units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
@@ -2323,17 +2383,17 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("table_style_pagination_count_item_border_color", {
+    this.addControl('table_style_pagination_count_item_border_color', {
       type: CONTROLLER_COLOR,
-      label: "Item Count Border color",
+      label: 'Item Count Border color',
       rules: {
         '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'border-color: {{COLOR}};',
       }
     });
 
-    this.addControl("table_style_pagination_active_count_item_border_color", {
+    this.addControl('table_style_pagination_active_count_item_border_color', {
       type: CONTROLLER_COLOR,
-      label: "Active Item Count Border color",
+      label: 'Active Item Count Border color',
       rules: {
         '{{ELEMENT}} .active.altrp-pagination-pages__item{{STATE}}': 'border-color: {{COLOR}};',
       }
@@ -2351,7 +2411,7 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("ellipsis_heading", {
+    this.addControl('ellipsis_heading', {
       type: CONTROLLER_HEADING,
       label: 'Ellipsis',
       conditions: {
@@ -2379,9 +2439,9 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("ellipsis_color", {
+    this.addControl('ellipsis_color', {
       type: CONTROLLER_COLOR,
-      label: "Ellipsis Color",
+      label: 'Ellipsis Color',
       conditions: {
         'is_with_ellipsis': true,
       },
@@ -2412,9 +2472,10 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("table_style_page_input", {
+    this.startControlSection('table_style_page_input', {
       tab: TAB_STYLE,
-      label: "Page Input",
+      hideOnEmail: true,
+      label: 'Page Input',
       conditions: {
         'hide_page_input!': true,
       },
@@ -2454,21 +2515,21 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("page_input_text_color", {
+    this.addControl('page_input_text_color', {
       type: CONTROLLER_COLOR,
-      label: "Page Input text color",
+      label: 'Page Input text color',
       default: {
-        color: "",
-        colorPickedHex: ""
+        color: '',
+        colorPickedHex: ''
       },
       rules: {
         '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'color: {{COLOR}}'
       }
     });
 
-    this.addControl("page_input_background_color", {
+    this.addControl('page_input_background_color', {
       type: CONTROLLER_COLOR,
-      label: "Page Input background color",
+      label: 'Page Input background color',
       rules: {
         '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'background-color: {{COLOR}}'
       }
@@ -2491,33 +2552,33 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("page_input_border_type", {
+    this.addControl('page_input_border_type', {
       type: CONTROLLER_SELECT,
-      label: "Page Input Border type",
+      label: 'Page Input Border type',
       options: [
         {
-          value: "none",
-          label: "None"
+          value: 'none',
+          label: 'None'
         },
         {
-          value: "solid",
-          label: "Solid"
+          value: 'solid',
+          label: 'Solid'
         },
         {
-          value: "double",
-          label: "Double"
+          value: 'double',
+          label: 'Double'
         },
         {
-          value: "dotted",
-          label: "Dotted"
+          value: 'dotted',
+          label: 'Dotted'
         },
         {
-          value: "dashed",
-          label: "Dashed"
+          value: 'dashed',
+          label: 'Dashed'
         },
         {
-          value: "groove",
-          label: "Groove"
+          value: 'groove',
+          label: 'Groove'
         }
       ],
       rules: {
@@ -2525,9 +2586,9 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("page_input_border_width", {
+    this.addControl('page_input_border_width', {
       type: CONTROLLER_DIMENSIONS,
-      label: "Page Input Border width",
+      label: 'Page Input Border width',
       units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
@@ -2551,9 +2612,9 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("page_input_border_color", {
+    this.addControl('page_input_border_color', {
       type: CONTROLLER_COLOR,
-      label: "Page Input Border Color",
+      label: 'Page Input Border Color',
       rules: {
         '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'border-color: {{COLOR}};',
       }
@@ -2573,9 +2634,9 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("table_style_pagination_select", {
+    this.startControlSection('table_style_pagination_select', {
       tab: TAB_STYLE,
-      label: "Pagination Select",
+      label: 'Pagination Select',
       conditions: {
         'hide_pagination_select!': true,
         'inner_page_count_options!': ''
@@ -2644,33 +2705,33 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("pagination_select_border_type", {
+    this.addControl('pagination_select_border_type', {
       type: CONTROLLER_SELECT,
-      label: "Pagination Select Border type",
+      label: 'Pagination Select Border type',
       options: [
         {
-          value: "none",
-          label: "None"
+          value: 'none',
+          label: 'None'
         },
         {
-          value: "solid",
-          label: "Solid"
+          value: 'solid',
+          label: 'Solid'
         },
         {
-          value: "double",
-          label: "Double"
+          value: 'double',
+          label: 'Double'
         },
         {
-          value: "dotted",
-          label: "Dotted"
+          value: 'dotted',
+          label: 'Dotted'
         },
         {
-          value: "dashed",
-          label: "Dashed"
+          value: 'dashed',
+          label: 'Dashed'
         },
         {
-          value: "groove",
-          label: "Groove"
+          value: 'groove',
+          label: 'Groove'
         }
       ],
       rules: {
@@ -2678,9 +2739,9 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("pagination_select_border_width", {
+    this.addControl('pagination_select_border_width', {
       type: CONTROLLER_DIMENSIONS,
-      label: "Pagination Select Border width",
+      label: 'Pagination Select Border width',
       units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
@@ -2704,9 +2765,9 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("pagination_select_border_color", {
+    this.addControl('pagination_select_border_color', {
       type: CONTROLLER_COLOR,
-      label: "Pagination Select Border Color",
+      label: 'Pagination Select Border Color',
       rules: {
         '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'border-color: {{COLOR}};',
       }
@@ -2724,17 +2785,17 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("pagination_select_text_color", {
+    this.addControl('pagination_select_text_color', {
       type: CONTROLLER_COLOR,
-      label: "Pagination Select text color",
+      label: 'Pagination Select text color',
       rules: {
         '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'color: {{COLOR}}'
       }
     });
 
-    this.addControl("pagination_select_background_color", {
+    this.addControl('pagination_select_background_color', {
       type: CONTROLLER_COLOR,
-      label: "Pagination Select background color",
+      label: 'Pagination Select background color',
       rules: {
         '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'background-color: {{COLOR}}'
       }
@@ -2742,9 +2803,9 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("checkbox_icon_style", {
+    this.startControlSection('checkbox_icon_style', {
       tab: TAB_STYLE,
-      label: "Checkbox Icons",
+      label: 'Checkbox Icons',
       conditions: {
         row_select: true,
       },
@@ -2863,9 +2924,9 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("table_style_resize_slider", {
+    this.startControlSection('table_style_resize_slider', {
       tab: TAB_STYLE,
-      label: "Resize Slider",
+      label: 'Resize Slider',
       conditions: {
         resize_columns: true,
       },
@@ -2900,29 +2961,29 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("table_style_header", {
+    this.startControlSection('table_style_header', {
       tab: TAB_STYLE,
-      label: "Header"
+      label: 'Header'
     });
 
-    this.addControl("table_style_header_background", {
+    this.addControl('table_style_header_background', {
       type: CONTROLLER_COLOR,
-      label: "Background",
+      label: 'Background',
       default: {
-        color: "",
-        colorPickedHex: ""
+        color: '',
+        colorPickedHex: ''
       },
       rules: {
         '{{ELEMENT}} .altrp-table-head{{STATE}}': 'background: {{COLOR}}'
       }
     });
 
-    this.addControl("table_style_header_text_color", {
+    this.addControl('table_style_header_text_color', {
       type: CONTROLLER_COLOR,
-      label: "Text color",
+      label: 'Text Color',
       default: {
-        color: "",
-        colorPickedHex: ""
+        color: '',
+        colorPickedHex: ''
       },
       rules: {
         '{{ELEMENT}} .altrp-table-th{{STATE}}': 'color: {{COLOR}}'
@@ -2936,9 +2997,9 @@ class Table extends BaseElement {
       //   lineHeight: 1.5,
       //   spacing: 0,
       //   size: 14,
-      //   weight: "normal",
-      //   family: "Open Sans",
-      //   decoration: ""
+      //   weight: 'normal',
+      //   family: 'Open Sans',
+      //   decoration: ''
       // },
       rules: {
         '{{ELEMENT}} .altrp-table-th{{STATE}}': [
@@ -2954,33 +3015,33 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("table_style_header_border_type", {
+    this.addControl('table_style_header_border_type', {
       type: CONTROLLER_SELECT,
-      label: "Border type",
+      label: 'Border type',
       options: [
         {
-          value: "none",
-          label: "None"
+          value: 'none',
+          label: 'None'
         },
         {
-          value: "solid",
-          label: "Solid"
+          value: 'solid',
+          label: 'Solid'
         },
         {
-          value: "double",
-          label: "Double"
+          value: 'double',
+          label: 'Double'
         },
         {
-          value: "dotted",
-          label: "Dotted"
+          value: 'dotted',
+          label: 'Dotted'
         },
         {
-          value: "dashed",
-          label: "Dashed"
+          value: 'dashed',
+          label: 'Dashed'
         },
         {
-          value: "groove",
-          label: "Groove"
+          value: 'groove',
+          label: 'Groove'
         }
       ],
       rules: {
@@ -2988,9 +3049,9 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("table_style_header_border_width", {
+    this.addControl('table_style_header_border_width', {
       type: CONTROLLER_DIMENSIONS,
-      label: "Border width",
+      label: 'Border width',
       units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-table-th{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
@@ -2999,12 +3060,12 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("table_style_header_border_color", {
+    this.addControl('table_style_header_border_color', {
       type: CONTROLLER_COLOR,
-      label: "Border color",
+      label: 'Border color',
       default: {
-        color: "",
-        colorPickedHex: ""
+        color: '',
+        colorPickedHex: ''
       },
       rules: {
         '{{ELEMENT}} .altrp-table-th{{STATE}}': 'border-color: {{COLOR}};',
@@ -3034,38 +3095,38 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("table_style_body", {
+    this.startControlSection('table_style_body', {
       tab: TAB_STYLE,
-      label: "Body"
+      label: 'Body'
     });
 
-    this.addControl("table_style_body_border_type", {
+    this.addControl('table_style_body_border_type', {
       type: CONTROLLER_SELECT,
-      label: "Border type",
+      label: 'Border type',
       options: [
         {
-          value: "none",
-          label: "None"
+          value: 'none',
+          label: 'None'
         },
         {
-          value: "solid",
-          label: "Solid"
+          value: 'solid',
+          label: 'Solid'
         },
         {
-          value: "double",
-          label: "Double"
+          value: 'double',
+          label: 'Double'
         },
         {
-          value: "dotted",
-          label: "Dotted"
+          value: 'dotted',
+          label: 'Dotted'
         },
         {
-          value: "dashed",
-          label: "Dashed"
+          value: 'dashed',
+          label: 'Dashed'
         },
         {
-          value: "groove",
-          label: "Groove"
+          value: 'groove',
+          label: 'Groove'
         }
       ],
       rules: {
@@ -3073,9 +3134,9 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("table_style_body_border_width", {
+    this.addControl('table_style_body_border_width', {
       type: CONTROLLER_DIMENSIONS,
-      label: "Border width",
+      label: 'Border width',
       units: ['px', '%', 'vh', 'vw'],
       rules: {
         '{{ELEMENT}} .altrp-table-td{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
@@ -3084,12 +3145,12 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("table_style_body_border_color_", {
+    this.addControl('table_style_body_border_color_', {
       type: CONTROLLER_COLOR,
-      label: "Border color",
+      label: 'Border color',
       default: {
-        color: "",
-        colorPickedHex: ""
+        color: '',
+        colorPickedHex: ''
       },
       rules: {
         '{{ELEMENT}} .altrp-table-td{{STATE}}': 'border-color: {{COLOR}};',
@@ -3117,24 +3178,24 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("table_style_body_border_background", {
+    this.addControl('table_style_body_border_background', {
       type: CONTROLLER_COLOR,
-      label: "Background",
+      label: 'Background',
       default: {
-        color: "",
-        colorPickedHex: ""
+        color: '',
+        colorPickedHex: ''
       },
       rules: {
         '{{ELEMENT}} .altrp-table-tbody .altrp-table-background{{STATE}}': 'background: {{COLOR}};',
       }
     });
 
-    this.addControl("table_style_body_border_text_color", {
+    this.addControl('table_style_body_border_text_color', {
       type: CONTROLLER_COLOR,
-      label: "Text color",
+      label: 'Text Color',
       default: {
-        color: "",
-        colorPickedHex: ""
+        color: '',
+        colorPickedHex: ''
       },
       rules: {
         '{{ELEMENT}} .altrp-table-td{{STATE}}': 'color: {{COLOR}};',
@@ -3158,14 +3219,14 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("table_link_heading", {
+    this.addControl('table_link_heading', {
       type: CONTROLLER_HEADING,
       label: 'Links Styles'
     });
 
-    this.addControl("table_link_color", {
+    this.addControl('table_link_color', {
       type: CONTROLLER_COLOR,
-      label: "Text color",
+      label: 'Text Color',
       rules: {
         '{{ELEMENT}} .altrp-table-td a{{STATE}}': 'color: {{COLOR}};',
       }
@@ -3195,12 +3256,12 @@ class Table extends BaseElement {
     this.endControlSection();
 
 
-    this.startControlSection("table_style_cell", {
+    this.startControlSection('table_style_cell', {
       tab: TAB_STYLE,
-      label: "Cell"
+      label: 'Cell'
     });
 
-    this.addControl("cell_vertical_alignment", {
+    this.addControl('cell_vertical_alignment', {
       type: CONTROLLER_SELECT,
       label: 'Vertical Alignment',
       options: [
@@ -3250,14 +3311,15 @@ class Table extends BaseElement {
   });
 
     this.endControlSection();
-// <editor-fold desc="table_style_group"
+// <editor-fold desc='table_style_group'
     /**
      * Стили для заголовка группы START
      */
 
-    this.startControlSection("table_style_group", {
+    this.startControlSection('table_style_group', {
       tab: TAB_STYLE,
-      label: "Group"
+      label: 'Group',
+      hideOnEmail: true,
     });
 
     this.addControl('table_style_group_cell_padding', {
@@ -3303,24 +3365,24 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("table_style_group_border_background", {
+    this.addControl('table_style_group_border_background', {
       type: CONTROLLER_COLOR,
-      label: "Background",
+      label: 'Background',
       default: {
-        color: "",
-        colorPickedHex: ""
+        color: '',
+        colorPickedHex: ''
       },
       rules: {
         '{{ELEMENT}} .altrp-table-tbody .altrp-table-td__grouping{{STATE}}': 'background: {{COLOR}};',
       }
     });
 
-    this.addControl("table_style_group_border_text_color", {
+    this.addControl('table_style_group_border_text_color', {
       type: CONTROLLER_COLOR,
-      label: "Text color",
+      label: 'Text Color',
       default: {
-        color: "",
-        colorPickedHex: ""
+        color: '',
+        colorPickedHex: ''
       },
       rules: {
         '{{ELEMENT}} .altrp-table-td__grouping{{STATE}}': 'color: {{COLOR}};',
@@ -3344,9 +3406,9 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl("table_style_group_icon_size", {
+    this.addControl('table_style_group_icon_size', {
       type: CONTROLLER_SLIDER,
-      label: "Icon Size",
+      label: 'Icon Size',
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
@@ -3357,9 +3419,9 @@ class Table extends BaseElement {
         ],
       }
     });
-    this.addControl("table_style_group_icon_left_space", {
+    this.addControl('table_style_group_icon_left_space', {
       type: CONTROLLER_SLIDER,
-      label: "Icon Left Spacing",
+      label: 'Icon Left Spacing',
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
@@ -3369,9 +3431,9 @@ class Table extends BaseElement {
         ],
       }
     });
-    this.addControl("table_style_group_icon_right_space", {
+    this.addControl('table_style_group_icon_right_space', {
       type: CONTROLLER_SLIDER,
-      label: "Icon Right Spacing",
+      label: 'Icon Right Spacing',
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
@@ -3381,9 +3443,9 @@ class Table extends BaseElement {
         ],
       }
     });
-    this.addControl("table_style_group_icon_top", {
+    this.addControl('table_style_group_icon_top', {
       type: CONTROLLER_SLIDER,
-      label: "Top Translate",
+      label: 'Top Translate',
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: -100,
@@ -3393,9 +3455,9 @@ class Table extends BaseElement {
         ],
       }
     });
-    this.addControl("table_style_group_icon_left", {
+    this.addControl('table_style_group_icon_left', {
       type: CONTROLLER_SLIDER,
-      label: "left Translate",
+      label: 'left Translate',
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: -100,
@@ -3407,9 +3469,9 @@ class Table extends BaseElement {
     });
 
 
-    this.addControl("table_style_group_icon_color", {
+    this.addControl('table_style_group_icon_color', {
       type: CONTROLLER_COLOR,
-      label: "Icon Color",
+      label: 'Icon Color',
       rules: {
         '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': 'fill: {{COLOR}};',
         '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon path': 'fill: {{COLOR}};',
@@ -3422,14 +3484,15 @@ class Table extends BaseElement {
      *
      */
     //</editor-fold>
-    // <editor-fold desc="table_style_footer">
+    // <editor-fold desc='table_style_footer'>
     /**
      * Стили для футера группы START
      */
 
-    this.startControlSection("table_style_footer", {
+    this.startControlSection('table_style_footer', {
       tab: TAB_STYLE,
-      label: "Footer"
+      label: 'Footer',
+      hideOnEmail: true,
     });
 
     this.addControl('table_style_footer_cell_padding', {
@@ -3475,24 +3538,24 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl("table_style_footer_border_background", {
+    this.addControl('table_style_footer_border_background', {
       type: CONTROLLER_COLOR,
-      label: "Background",
+      label: 'Background',
       default: {
-        color: "",
-        colorPickedHex: ""
+        color: '',
+        colorPickedHex: ''
       },
       rules: {
         '{{ELEMENT}} .altrp-table-foot .altrp-table-td{{STATE}}': 'background: {{COLOR}};',
       }
     });
 
-    this.addControl("table_style_footer_border_text_color", {
+    this.addControl('table_style_footer_border_text_color', {
       type: CONTROLLER_COLOR,
-      label: "Text color",
+      label: 'Text Color',
       default: {
-        color: "",
-        colorPickedHex: ""
+        color: '',
+        colorPickedHex: ''
       },
       rules: {
         '{{ELEMENT}} .altrp-table-foot .altrp-table-td{{STATE}}': 'color: {{COLOR}};',

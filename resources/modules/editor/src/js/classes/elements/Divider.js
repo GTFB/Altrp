@@ -106,7 +106,7 @@ class Divider extends BaseElement {
       units: [
         'px',
         '%',
-        'vh',
+        'vw',
       ],
       rules: {
         "{{ELEMENT}} .altrp-divider-separator{{STATE}}": "width: {{SIZE}}{{UNIT}}",

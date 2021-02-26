@@ -13,6 +13,8 @@ class Mail extends Model
         'email',
         'subject',
         'user_message',
-        'status'
+        'html',
+        'status',
+        'attachments',
     ];
 }

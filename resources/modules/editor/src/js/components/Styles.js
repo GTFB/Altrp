@@ -19,7 +19,7 @@ class Styles extends Component {
    * @param {{}} prevProps
    * @param {{}} prevState
    */
-  componentDidUpdate(prevProps,prevState){
+  componentDidUpdate(prevProps, prevState){
     if(! isEditor()){
       return;
     }

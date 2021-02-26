@@ -3,6 +3,11 @@
 
 ## Changelog
 
+### 0.14.0
++ Add Accept Filed Type
++ Custom Headers to Form Action
++ Add Video Widget
+
 ### 0.13.0
 + Аdd the Template Widget
 + Аdd the Section and Column Link

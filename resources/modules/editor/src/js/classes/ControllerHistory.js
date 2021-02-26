@@ -57,7 +57,8 @@ class ControllerHistory extends AltrpModel {
   }
 }
 
+if(! window.parent.controllerHistory){
+  window.controllerHistory = new ControllerHistory;
+}
 
-window.controllerHistory = new ControllerHistory;
-
-export default window.controllerHistory;
+export default window.parent.controllerHistory;

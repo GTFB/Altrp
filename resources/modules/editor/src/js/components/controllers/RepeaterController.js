@@ -2,7 +2,7 @@ import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import controllerDecorate from "../../decorators/controller";
-import { iconsManager } from "../../helpers";
+import {getTemplateType, iconsManager} from "../../helpers";
 import Controller from "../../classes/Controller";
 import update from "immutability-helper";
 import { useDrag, useDrop } from "react-dnd";
@@ -206,7 +206,11 @@ const RepeaterItem = ({thisController, itemClasses, idx, itemController}) => {
   const {setActiveItem, duplicateItem, deleteItem, moveItem} = thisController;
   const propsController = thisController.props;
   const ref=React.useRef(null);
-
+  const fields = React.useMemo(()=>{
+    return thisController.props.fields.filter(field=>{
+      return ! (getTemplateType() === 'email' && field.hideOnEmail)
+    })
+  }, [propsController.fields]);
   const [, drop] = useDrop({
     accept: "item",
     hover(item, monitor) {
@@ -259,7 +263,7 @@ const RepeaterItem = ({thisController, itemClasses, idx, itemController}) => {
       </div>
       <div className="repeater-item-content">
         {
-          propsController.fields.map(field => {
+          fields.map(field => {
             let ControllerComponent = controllersManager.getController(field.type);
             let controller = new Controller({ ...field, repeater: thisController, itemIndex: idx });
             let value = itemController[field.controlId] || '';

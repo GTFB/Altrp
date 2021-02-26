@@ -518,6 +518,7 @@ Route::group(['prefix' => 'ajax'], function () {
    * Настройка почты
    */
   Route::post('/feedback', 'MailController@sendMail');
+  Route::post('/feedback-html', 'MailController@sendMailHTML');
 });
 
 Route::get('reports/{id}', "ReportsController@show");

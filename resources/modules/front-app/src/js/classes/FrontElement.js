@@ -1,5 +1,12 @@
 import CONSTANTS from "../../../../editor/src/js/consts";
-import {altrpRandomId, getMediaQueryByName, getResponsiveSetting, isEditor, replaceContentWithData} from "../helpers";
+import {
+  altrpRandomId,
+  getMediaQueryByName,
+  getResponsiveSetting,
+  isEditor,
+  replaceContentWithData,
+  valueReplacement
+} from "../helpers";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {addFont} from "../store/fonts-storage/actions";
 
@@ -461,6 +468,7 @@ class FrontElement {
     if(! this.elementIsDisplay()){
       return null;
     }
+    const settings = this.getSettings();
     let value = this.component.state.value;
     /**
      * Если значение динамическое и не менялось в виджете,
@@ -469,11 +477,23 @@ class FrontElement {
     if(value && value.dynamic){
       value = this.getContent('content_default_value')
     }
-    /**
-     * Если нужен массив
-     */
-    if(this.getSettings('content_type') === 'checkbox'){
-      value = _.isArray(value) ? value : (value ? [value] : []);
+    switch (this.getSettings('content_type')){
+      /**
+       * Если нужен массив
+       */
+      case 'checkbox':{
+        value = _.isArray(value) ? value : (value ? [value] : []);
+      }
+        break;
+      case 'accept':{
+        let trueValue = this.getSettings('accept_checked') || true;
+        let falseValue = this.getSettings('accept_unchecked') || false;
+        falseValue = valueReplacement(falseValue);
+        trueValue = valueReplacement(trueValue);
+        value = value ? trueValue : falseValue;
+      }
+        break;
+
     }
     return value;
   }
@@ -699,18 +719,16 @@ class FrontElement {
    * @return {*}
    */
   getResponsiveSetting(settingName, elementState = '', _default){
-    // let {currentScreen} = appStore.getState();
-    // if(currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT){
-    //   return this.getSettings(settingName, _default)
-    // }
-    // let suffix = currentScreen.name;
-    // let _settingName = `${settingName}_${suffix}`;
-    // let settings = this.getSettings(_settingName);
-    // if(! settings){
-    //   settings = this.getSettings(settingName);
-    // }
-    // return settings;
     return getResponsiveSetting(this.getSettings(), settingName, elementState, _default)
+  }
+
+  /**
+   * Возвращает текущий тип шаблона
+   * @return {string}
+   */
+  getTemplateType(){
+    const rootElement = this.getRoot();
+    return rootElement.templateType || 'content';
   }
 }
 

@@ -172,7 +172,7 @@ class Editor extends Component {
    */
   render() {
     let settingsActive = "";
-    let templateClasses = "editor ";
+    let templateClasses = `editor editor_${store.getState().templateData.template_type}`;
     if (this.state.templateStatus === CONSTANTS.TEMPLATE_SAVING) {
       templateClasses += " editor_saving";
     }
