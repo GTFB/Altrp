@@ -7,14 +7,21 @@ const fontStyleOptions = ['normal', 'italic', 'oblique'];
 class FontsForm extends Component {
   state = {
     fontFamily: '',
-    fontWeight: '400',
-    fontStyle: 'normal',
-    woffFile: null,
-    woff2File: null,
-    ttfFile: null,
-    svgFile: null,
-    eotFile: null
+    fontWeight: '',
+    fontStyle: '',
+    woffFile: '',
+    woff2File: '',
+    ttfFile: '',
+    svgFile: '',
+    eotFile: '',
+    fontsLibrary: []
   };
+
+  componentDidMount() {
+    new Resource({ route: `/admin/ajax/media?type=font` })
+      .getAll()
+      .then(fontsLibrary => this.setState({ fontsLibrary }));
+  }
 
   changeHandler = ({ target: { value, name } }) => {
     this.setState({ [name]: value });
@@ -24,28 +31,30 @@ class FontsForm extends Component {
     e.persist();
     new Resource({ route: '/admin/ajax/media' })
       .postFiles(e.target.files)
-      .then(res => this.setState({ [e.target.name]: res[0].url}));
+      .then(res => this.setState({ [e.target.name]: res[0].url, fontsLibrary: [...this.state.fontsLibrary, res[0]] }));
   }
 
   submitHandler = e => {
-    const { fontFamily, fontWeight, fontStyle, woffFile, woff2File, ttfFile, svgFile, eotFile } = this.state;
+    const { woffFile, woff2File, ttfFile, svgFile, eotFile } = this.state;
 
     e.preventDefault();
     if (!woffFile && !woff2File && !ttfFile && !svgFile && !eotFile) {
       return alert('Upload font file')
     }
 
+    const { fontsLibrary, ...restProps} = this.state;
     const data = {};
-    for (const key in this.state) {
-      if (this.state[key]) { 
-        data[key] = this.state[key];
+
+    for (const key in restProps) {
+      if (restProps[key]) {
+        data[key] = restProps[key];
       }
     }
     console.log(data)
   }
 
   render() {
-    const { fontFamily, fontWeight, fontStyle, woffFile, woff2File, ttfFile, svgFile, eotFile  } = this.state;
+    const { fontFamily, fontWeight, fontStyle, woffFile, woff2File, ttfFile, svgFile, eotFile, fontsLibrary } = this.state;
     return <div className="admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
@@ -71,12 +80,12 @@ class FontsForm extends Component {
               <label htmlFor="fontWeight">Weight</label>
               <select
                 id="fontWeight"
-                required
                 name="fontWeight"
                 value={fontWeight}
                 onChange={this.changeHandler}
                 className="form-control"
               >
+                <option value=""></option>
                 {fontWeightOptions.map(value => <option value={value} key={value}>{value}</option>)}
               </select>
             </div>
@@ -85,12 +94,12 @@ class FontsForm extends Component {
               <label htmlFor="fontStyle">Style</label>
               <select
                 id="fontStyle"
-                required
                 name="fontStyle"
                 value={fontStyle}
                 onChange={this.changeHandler}
                 className="form-control"
               >
+                <option value=""></option>
                 {fontStyleOptions.map(value => <option value={value} key={value}>{value}</option>)}
               </select>
             </div>
@@ -98,14 +107,17 @@ class FontsForm extends Component {
 
           <div className="form-group d-flex justify-content-between">
             <label>WOFF File</label>
-            <input
-              placeholder="Input URL or upload file"
-              type="text"
+            <select
               name="woffFile"
-              value={typeof woffFile === "string" ? woffFile : ''}
+              value={woffFile}
               onChange={this.changeHandler}
               className="form-control w-auto flex-grow-1 mx-2"
-            />
+            >
+              <option value="">Choose URL or upload file</option>
+              {fontsLibrary
+                .filter(({ filename }) => filename.endsWith(".woff"))
+                .map(({ filename, url }) => <option value={url} key={filename}>{filename}</option>)}
+            </select>
             <input
               id="woffFile"
               name="woffFile"
@@ -117,14 +129,17 @@ class FontsForm extends Component {
 
           <div className="form-group d-flex justify-content-between">
             <label>WOFF2 File</label>
-            <input
-              placeholder="Input URL or upload file"
-              type="text"
+            <select
               name="woff2File"
-              value={typeof woff2File === "string" ? woff2File : ''}
+              value={woff2File}
               onChange={this.changeHandler}
               className="form-control w-auto flex-grow-1 mx-2"
-            />
+            >
+              <option value="">Choose URL or upload file</option>
+              {fontsLibrary
+                .filter(({ filename }) => filename.endsWith(".woff2"))
+                .map(({ filename, url }) => <option value={url} key={filename}>{filename}</option>)}
+            </select>
             <input
               id="woff2File"
               name="woff2File"
@@ -136,14 +151,17 @@ class FontsForm extends Component {
 
           <div className="form-group d-flex justify-content-between">
             <label>TTF File</label>
-            <input
-              placeholder="Input URL or upload file"
-              type="text"
+            <select
               name="ttfFile"
-              value={typeof ttfFile === "string" ? ttfFile : ''}
+              value={ttfFile}
               onChange={this.changeHandler}
               className="form-control w-auto flex-grow-1 mx-2"
-            />
+            >
+              <option value="">Choose URL or upload file</option>
+              {fontsLibrary
+                .filter(({ filename }) => filename.endsWith(".ttf"))
+                .map(({ filename, url }) => <option value={url} key={filename}>{filename}</option>)}
+            </select>
             <input
               id="ttfFile"
               name="ttfFile"
@@ -155,14 +173,17 @@ class FontsForm extends Component {
 
           <div className="form-group d-flex justify-content-between">
             <label>SVG File</label>
-            <input
-              placeholder="Input URL or upload file"
-              type="text"
+            <select
               name="svgFile"
-              value={typeof svgFile === "string" ? svgFile : ''}
+              value={svgFile}
               onChange={this.changeHandler}
               className="form-control w-auto flex-grow-1 mx-2"
-            />
+            >
+              <option value="">Choose URL or upload file</option>
+              {fontsLibrary
+                .filter(({ filename }) => filename.endsWith(".svg"))
+                .map(({ filename, url }) => <option value={url} key={filename}>{filename}</option>)}
+            </select>
             <input
               id="svgFile"
               name="svgFile"
@@ -174,14 +195,17 @@ class FontsForm extends Component {
 
           <div className="form-group d-flex justify-content-between">
             <label>EOT File</label>
-            <input
-              placeholder="Input URL or upload file"
-              type="text"
+            <select
               name="eotFile"
-              value={typeof eotFile === "string" ? eotFile : ''}
+              value={eotFile}
               onChange={this.changeHandler}
               className="form-control w-auto flex-grow-1 mx-2"
-            />
+            >
+              <option value="">Choose URL or upload file</option>
+              {fontsLibrary
+                .filter(({ filename }) => filename.endsWith(".eot"))
+                .map(({ filename, url }) => <option value={url} key={filename}>{filename}</option>)}
+            </select>
             <input
               id="eotFile"
               name="eotFile"
