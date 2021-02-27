@@ -437,11 +437,17 @@ class FrontElement {
     if(this.getName() !== 'input'){
       return true;
     }
-    return ! (this.getSettings('content_required') && ! this.getValue());
+    if(! this.getSettings('content_required')){
+      return true;
+    }
+    if(_.has(this, 'maskIsValid')){
+      return this.getValue() && this.maskIsValid;
+    }
+    return this.getValue();
   }
 
   /**
-   * Проверяет рекурсивно (проверяет всех предков) виден ли элмент свойство elementDisplay пропсов компонента
+   * Проверяет рекурсивно (проверяет всех предков) виден ли элемент свойство elementDisplay пропсов компонента
    * @return {boolean}
    */
   elementIsDisplay(){

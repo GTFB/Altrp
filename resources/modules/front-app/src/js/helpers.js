@@ -1582,7 +1582,16 @@ export function generateButtonsArray(
   ];
 }
 
+/**
+ * Проверяем текст на соответствие маске
+ * @param {string} value
+ * @param {[]} mask
+ * @return {boolean}
+ */
 export function isValueMatchMask(value, mask) {
+  if((! value) || value.length !== mask.length){
+    return false;
+  }
   return (
     value.length &&
     value

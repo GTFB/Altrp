@@ -62,8 +62,9 @@ Route::get( '/admin/editor-reports', function (){
 // Route::get('/reports/{id}/html', "ReportsController@html");
 Route::post('/reports/generate', "ReportsController@setHtml");
 
-Route::get('/admin/robots-editor', fn() => view('robots'))->middleware('auth', 'admin')
-                                                          ->name('robots-editor');
+Route::get('/admin/robots-editor', function() {
+  return view('robots');
+})->middleware('auth', 'admin')->name('robots-editor');
 
 /**
  * Notifications routes

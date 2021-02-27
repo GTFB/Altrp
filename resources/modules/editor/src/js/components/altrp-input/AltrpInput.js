@@ -10,19 +10,30 @@ class AltrpInput extends Component {
   };
 
   checkValidity = mask => {
-    console.log(this.state.isValid);
     if (! mask) return;
-    if (this.props.value.length && ! isValueMatchMask(this.props.value, mask)) {
-      this.setState({ isValid: false });
-    } else {
-      this.setState({ isValid: true });
-    }
+    let value = this.props.value.replace(/_/g, '');
+    let isValid = ! ! (value.length && isValueMatchMask(value, mask));
+    this.setState(state => ({...state, isValid}));
+    _.set(this, 'props.element.maskIsValid', isValid);
   };
 
+  /**
+   *
+   * @param {{}} prevProps
+   * @param {{}} prevState
+   */
+  componentDidUpdate(prevProps, prevState){
+    if((! this.props.value) && this.props.settings.content_mask && this.state.isValid){
+      this.setState(state => ({...state, isValid: false}));
+      _.set(this, 'props.element.maskIsValid', false);
+    }
+  }
   render() {
     const { isValid } = this.state;
     const { content_type, content_mask, mask_mismatch_message } = this.props.settings;
-    const inputProps = { ...this.props };
+    const inputProps = {
+      ...this.props,
+    };
     switch (content_type) {
       case "file": {
         return <AltrpInputFile {...inputProps} />;
@@ -46,17 +57,17 @@ class AltrpInput extends Component {
       inputProps.guide = true;
       inputProps.onBlur = e => {
         this.props.onBlur(e);
-        if (mask_mismatch_message) {
-          this.checkValidity(mask)
-        }
+        // if (mask_mismatch_message) {
+        //   this.checkValidity(mask)
+        // }
+        this.checkValidity(mask)
       };
       inputProps.onChange = e => {
         this.props.onChange(e);
-        if (!isValid && mask_mismatch_message) {
+        if (! isValid) {
           this.checkValidity(mask)
         }
       };
-
       return (
         <React.Suspense fallback={<input {...this.props} />}>
           <MaskedInput {...inputProps} />
