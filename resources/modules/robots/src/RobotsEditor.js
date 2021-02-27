@@ -10,8 +10,6 @@ import ReactFlow, {
   isEdge
 } from "react-flow-renderer";
 import { connect } from "react-redux";
-
-
 import _ from "lodash";
 import "./sass/styles.scss";
 import Resource from "../../editor/src/js/classes/Resource";
@@ -22,7 +20,6 @@ import {
   setRobotSettingsData
 } from "./js/store/robot-settings/actions";
 import { setCurrentRobot } from "./js/store/current-robot/actions";
-
 import Sidebar from "./js/components/sidebar/Sidebar";
 import Condition from "./js/components/sidebar/nodes/Condition";
 import Begin from "./js/components/sidebar/nodes/Begin";
@@ -48,9 +45,10 @@ class RobotsEditor extends Component {
       robot: props.robot || [],
       reactFlowInstance: null,
       selected: false,
-      selectEdge: false
+      selectEdge: false,
+      activePanel: "widgets"
     };
-
+    this.changeTab = this.changeTab.bind(this);
     this.resource = new Resource({ route: "/admin/ajax/robots" });
     this.reactFlowRef = React.createRef();
   }
@@ -193,18 +191,28 @@ class RobotsEditor extends Component {
     if(isNode(element)) this.setState(s => ({ ...s, selected: element, selectEdge: false }));
     if(isEdge(element)) this.setState(s => ({ ...s, selectEdge: element, selected: false }));
     store.dispatch(setUpdatedNode(element));
+    this.setState(s => ({ ...s, activePanel: "settings" }));
   }
 
+  changeTab(index) {
+    this.setState(s => ({ ...s, activePanel: index }));
+  }
+
+
   render() {
-    // let elements = store.getState().robotSettingsData || [];
-    // console.log(elements);
     console.log(this.state.selected);
     console.log(this.state.selectEdge);
-    // console.log(this.state);
     return (
       <div className="page__content">
         <ReactFlowProvider>
-          <Sidebar robot={ this.state.robot } elements={ this.state.elements } selected={ this.state.selected } selectEdge={ this.state.selectEdge } onLoad={ this.onLoad }/>
+          <Sidebar changeTab={this.changeTab}
+                  activePanel={ this.state.activePanel }
+                  robot={ this.state.robot }
+                  elements={ this.state.elements }
+                  selected={ this.state.selected }
+                  selectEdge={ this.state.selectEdge }
+                  onLoad={ this.onLoad }
+          />
           <div className="content" ref={this.reactFlowRef }>
             <ReactFlow
               elements={ this.state.elements }

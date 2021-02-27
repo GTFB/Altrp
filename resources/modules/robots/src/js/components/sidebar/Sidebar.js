@@ -14,14 +14,10 @@ import Hamburger from "../../../../../editor/src/svgs/hamburger.svg";
 export default class Sidebar extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      activePanel: 'widgets'
     };
 
     this.resource = new Resource({ route: "/admin/ajax/robots" });
-
-    this.changeTab = this.changeTab.bind(this);
     this.update = this.update.bind(this);
   }
 
@@ -33,24 +29,19 @@ export default class Sidebar extends React.Component {
 
     robotData.chart = robotChart;
 
-
     this.resource.put(robotId, {
       data: robotData
     });
   }
 
-  changeTab(index) {
-    this.setState(s => ({ ...s, activePanel: index }));
-  }
-
   render() {
-    let activePanel = this.state.activePanel;
+    let activePanel = this.props.activePanel;
 
     return (
       <div className="left-panel">
         <div className="editor-top-panel">
           <button
-            onClick={() => this.changeTab("settings")}
+            onClick={() => this.props.changeTab("settings")}
             className="btn btn_hamburger"
           >
             <Hamburger className="icon" />
@@ -62,7 +53,7 @@ export default class Sidebar extends React.Component {
               <Logo viewBox="0 0 97 35" className="editor__logo" />
             )}
           </a>
-          <button className="btn btn_dots" onClick={() => this.changeTab('widgets')}>
+          <button className="btn btn_dots" onClick={() => this.props.changeTab('widgets')}>
             <Dots className="icon" />
           </button>
         </div>
