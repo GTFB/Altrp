@@ -72,6 +72,20 @@
     }
 }
 
+// Admin Settings telegram
+.admin_settings_telegram{
+    display: flex;
+    margin-top: 20px;
+    
+    .admin_input__label{
+        font-weight:bold;
+        margin-right: 15px;
+    }   
+    .admin_input_key{
+        min-width: 500px;
+    }  
+}
+
 // Admin Settings Websockets
 .admin_settings_websockets{
 
