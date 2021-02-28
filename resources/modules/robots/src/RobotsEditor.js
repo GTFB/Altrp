@@ -191,7 +191,7 @@ class RobotsEditor extends Component {
     if(isNode(element)) this.setState(s => ({ ...s, selected: element, selectEdge: false }));
     if(isEdge(element)) this.setState(s => ({ ...s, selectEdge: element, selected: false }));
     store.dispatch(setUpdatedNode(element));
-    this.setState(s => ({ ...s, activePanel: "settings" }));
+    this.setState(s => ({ ...s, activePanel: "selected" }));
   }
 
   changeTab(index) {

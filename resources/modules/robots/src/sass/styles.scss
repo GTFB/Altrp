@@ -226,9 +226,19 @@ body {
     width: 175px;
 }
 
+#model_id, #start_condition {
+    width: 120px;
+}
+
 .controllers-wrapper {
     display: block;
 }
 .settings-section-box {
     margin: 15px 0px;
+}
+.editor-bottom-panel{
+    justify-content: space-between;
+}
+.editor-bottom-panel .btn_grey{
+    margin-right: 10px;
 }
