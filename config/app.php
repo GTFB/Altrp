@@ -33,7 +33,7 @@ return [
     |
     */
 
-    'altrp_version' => '0.13.17',
+    'altrp_version' => '0.13.18',
 
 
     /*

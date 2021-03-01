@@ -297,6 +297,7 @@ class Table extends BaseElement {
       label: 'Column Heading',
       dynamic: false,
     });
+
     repeater.addControl('group_by', {
       type: CONTROLLER_SWITCHER,
       default: false,
@@ -645,6 +646,14 @@ class Table extends BaseElement {
       hideOnEmail: true,
       label: 'Column Styles Field',
       default: ''
+    });
+
+    repeater.addControl('header_full_width', {
+      type: CONTROLLER_SWITCHER,
+      default: false,
+      hideOnEmail: true,
+      conditionsCallback: ()=>getCurrentElement().getResponsiveSetting('table_transpose'),
+      label: 'Header Full Width',
     });
 
     const actionsRepeater = new Repeater();
@@ -1834,6 +1843,50 @@ class Table extends BaseElement {
     });
 
     this.endControlSection();
+
+// <editor-fold desc='table_style_transpose'
+    /**
+     * Стили для заголовка группы START
+     */
+    this.startControlSection('table_style_transpose', {
+      tab: TAB_STYLE,
+      label: 'Transpose',
+      conditions: {
+        table_transpose: true,
+      },
+      hideOnEmail: true,
+    });
+
+    this.addControl('table_style_main_width', {
+      type: CONTROLLER_SLIDER,
+      label: 'Main Column Width',
+      max: 1000,
+      min: 0,
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.addControl('table_style_other_width', {
+      type: CONTROLLER_SLIDER,
+      label: 'Others Columns Width',
+      max: 1000,
+      min: 0,
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.endControlSection();
+    /**
+     * Стили для футера группы END
+     *
+     */
+    //</editor-fold>
 
     this.startControlSection('table_style_pagination', {
       tab: TAB_STYLE,
@@ -3585,6 +3638,7 @@ class Table extends BaseElement {
      *
      */
     //</editor-fold>
+
     advancedTabControllers(this);
   }
 }
