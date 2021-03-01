@@ -94,8 +94,8 @@
             "php artisan modules-statuses:write",
             "php artisan make:provider AltrpRepositoryServiceProvider",
             "php artisan make:provider AltrpProviders/AppServiceProvider",
-            "php artisan provider:write App\\Providers\\AltrpProviders\\AppServiceProvider",
-            "php artisan provider:write App\\Providers\\AltrpRepositoryServiceProvider"
+            "php artisan provider:write App/Providers/AltrpProviders/AppServiceProvider",
+            "php artisan provider:write App/Providers/AltrpRepositoryServiceProvider"
         ]
     }
 }
