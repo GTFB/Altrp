@@ -30,6 +30,7 @@ class RobotNotification extends Notification implements ShouldQueue
     /**
      * RobotNotification constructor.
      * @param $node
+     * @param null $modelData
      */
     public function __construct($node, $modelData = null)
     {
@@ -158,7 +159,7 @@ class RobotNotification extends Notification implements ShouldQueue
      */
     protected function replaceColumns($subject)
     {
-        
+
         preg_match_all("#\{\{altrpdata\.(?<fields>[\w]+)\}\}#", $subject, $matches);
         if ($matches) {
             $matches = $matches['fields'];

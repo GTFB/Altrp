@@ -42,6 +42,9 @@ class Block
         $this->modelData = $modelData;
     }
 
+    /**
+     * @return string
+     */
     public function getType()
     {
         return $this->type;
@@ -103,13 +106,85 @@ class Block
         $str = '';
         $arr = [];
         foreach ($conditionBody as $item) {
-            $arr[] = ' (' . $item->operands[0] . ' ' . $item->operator . ' ' . $item->operands[1] . ') ';
+            dump(is_numeric($item->operands[0]), is_numeric($item->operands[1]));
+            $arr[] = $this->formExpression($item);
         }
         $str .= ' (' . implode($condition->operator, $arr) . ') ';
-        $str = 'if(' .$str .') { return true; } else { return false; }';
+        $str = '$model = ' . $this->modelData['record'] . '; if(' .$str .') { return true; } else { return false; }';
         return eval($str);
     }
 
+    /**
+     * @param $str
+     * @return int|string
+     */
+    protected function parseModelData($str)
+    {
+        if (!$this->modelData) return $this->checkIsNumeric($str);
+        preg_match_all("#\{\{altrpdata\.(?<fields>[\w]+)\}\}#", $str, $matches);
+        if ($matches) {
+            $matches = $matches['fields'];
+            foreach ($matches as $field) {
+                if (in_array($field, $this->modelData['columns'])) {
+                    $str = str_replace("{{altrpdata.{$field}}}", $this->modelData['record']->$field, $str);
+                }
+            }
+        }
+        return $this->checkIsNumeric($str);
+    }
+
+    /**
+     * @param $condPart
+     * @return string
+     */
+    protected function formExpression($condPart)
+    {
+        $result = '';
+        switch ($condPart->operator) {
+            case '==':
+            case '!=':
+            case '<>':
+            case '>':
+            case '<':
+            case '>=':
+            case '<=':
+                $result = ' (' . $this->parseModelData($condPart->operands[0]) . ' ' . $condPart->operator . ' ' . $this->checkIsNumeric($condPart->operands[1]) . ') ';
+                break;
+            case 'empty':
+            case 'not_empty':
+                $operatorBegin = $condPart->operator == 'empty' ? $condPart->operator . '(' : '!empty(';
+                $operatorEnd = ')';
+                $result = ' (' . $operatorBegin . $this->parseModelData($condPart->operands[0]) . $operatorEnd . ') ';
+                break;
+            case 'in':
+            case 'not_in':
+                $operatorBegin = $condPart->operator == 'in' ? '\Str::contains(' : '!\Str::contains(';
+                $operatorEnd = ')';
+                $result = ' (' . $operatorBegin . $this->parseModelData($condPart->operands[0]) . ', ' . $this->parseModelData($condPart->operands[1]) . $operatorEnd . ') ';
+                break;
+            case 'null':
+            case 'not_null':
+                $operator = $condPart->operator == 'null' ? '==' : '!=';
+                $result = ' (' . $this->parseModelData($condPart->operands[0]) . ' ' . $operator . ' null' . ') ';
+                break;
+        }
+        return $result;
+    }
+
+    /**
+     * Проверить, является ли строка числом
+     * @param $value
+     * @return int|string
+     */
+    protected function checkIsNumeric($value)
+    {
+        return (is_numeric($value)) ? $value : "'" . $value . "'";
+    }
+
+    /**
+     * @param $conditionBody
+     * @return array
+     */
     protected function getBodyForType($conditionBody)
     {
         $body = [];
