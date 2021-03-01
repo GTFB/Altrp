@@ -501,7 +501,7 @@ class ControllerGenerator extends AppGenerator
                 '--model-namespace' => $modelNamespace,
                 '--controller-namespace' => $namespace,
                 '--route-group' => $prefix,
-                '--validations' => $validations,
+//                '--validations' => $validations,
                 '--relations' => $relations,
                 '--custom-namespaces' => $this->getCustomCodeBlock($customCode, 'custom_namespaces'),
                 '--custom-traits' => $this->getCustomCodeBlock($customCode, 'custom_traits'),
@@ -643,11 +643,11 @@ class ControllerGenerator extends AppGenerator
     /**
      * Получить валидационные правила
      *
-     * @return string
+     * @return
      */
     protected function getValidationRules()
     {
-        return $this->controllerModel->validations ?? null;
+        return $this->controllerModel->model->validations ?? null;
     }
 
     /**
@@ -934,16 +934,17 @@ class ControllerGenerator extends AppGenerator
      *
      * @return string
      */
-    protected function getValidations()
+    protected function getValidations($model, $type)
     {
         $validations = [];
-        $validationRules = $this->getValidationRules();
-        if (!$validationRules) return null;
-        $validationRules = explode(';', $validationRules);
-        foreach ($validationRules as $rule) {
-            $parts = explode('#', $rule);
-            $validations[] = "'{$parts[0]}' => '" . $parts[1] . "',";
-
+        $validationFields = $this->getValidationRules();
+        if (!$validationFields) return null;
+        foreach ($validationFields as $field) {
+            if (!$field->$type || !$field->rules->toArray()) continue;
+            $rules = $field->rules->implode('rule', '|');
+            $fieldName = $field->column->name;
+            if ($field->column_name) $fieldName = $field->column_name;
+            $validations[] = "'{$fieldName}' => '" . $rules . "',";
         }
         return implode(PHP_EOL . "\t\t\t", $validations);
     }
@@ -955,18 +956,20 @@ class ControllerGenerator extends AppGenerator
      */
     public function generateRequests()
     {
-        $requests = ['Store', 'Update'];
-        $validations = $this->getValidations();
-        foreach ($requests as $name) {
-            $request = new RequestFile(
-                $this->controllerModel->model,
-                $name,
-                $validations
-            );
-            $requestWriter = new RequestFileWriter();
-            $requestWriter->write($request);
-        }
-        return true;
+        $requestFileCreated = new RequestFile(
+            $this->controllerModel->model,
+            'Store',
+            $this->getValidations($this->controllerModel->model, 'is_created')
+        );
+        $requestFileUpdated = new RequestFile(
+            $this->controllerModel->model,
+            'Update',
+            $this->getValidations($this->controllerModel->model, 'is_updated')
+        );
+        $requestFileWriter = new RequestFileWriter();
+        $resCreated = $requestFileWriter->write($requestFileCreated);
+        $resUpdated = $requestFileWriter->write($requestFileUpdated);
+        return $resCreated && $resUpdated;
     }
 
     /**

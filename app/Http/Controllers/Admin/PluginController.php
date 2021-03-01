@@ -40,7 +40,8 @@ class PluginController extends Controller
                   $modulesArr[] = [
                       'name' => $module->getName(),
                       'enabled' => $enabled,
-                      'image' => $module->json()->image
+                      'image' => $module->json()->image,
+                      'url' => '/plugins/' . strtolower($module->getName())
                   ];
               }
           }
