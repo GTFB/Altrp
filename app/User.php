@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\LaratrustUserTrait;
 
 use Laravel\Passport\HasApiTokens;
+use Modules\Oauth2\Entities\SocialAccount;
 
 class User extends Authenticatable
 {
@@ -52,6 +53,8 @@ class User extends Authenticatable
 
     protected $appends = ['full_name'];
 
+    protected $with = ['social_accounts'];
+
     /**
      * Получение данных о пользователе
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -91,5 +94,10 @@ class User extends Authenticatable
             }
         }
         return false;
+    }
+
+    public function social_accounts()
+    {
+        return $this->hasMany(SocialAccount::class, 'user_id');
     }
 }
