@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\LaratrustUserTrait;
 
 use Laravel\Passport\HasApiTokens;
+use Modules\Oauth2\Entities\SocialAccount;
 
 class User extends Authenticatable
 {
@@ -59,6 +60,8 @@ class User extends Authenticatable
 
 
     protected $appends = ['full_name'];
+
+    protected $with = ['social_accounts'];
 
     /**
      * Получение данных о пользователе
@@ -114,5 +117,9 @@ class User extends Authenticatable
     public function notifications()
     {
         return $this->morphMany(Notification::class, 'notifiable')->orderBy('created_at', 'desc');
+    }
+    public function social_accounts()
+    {
+        return $this->hasMany(SocialAccount::class, 'user_id');
     }
 }

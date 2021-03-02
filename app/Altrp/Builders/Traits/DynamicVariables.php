@@ -19,7 +19,7 @@ trait DynamicVariables
      */
     protected function replaceDynamicVars($str, $outer = false)
     {
-        $pattern = '\'?(CURRENT_[A-Z_]+|([A-Z_]+)?REQUEST)(:[a-zA-Z0-9_.]+)?(:[a-zA-Z0-9,;"%-_.()+*/|]+)?(:[A-Z_<>!=]+)?\'?';
+        $pattern = '\'?(CURRENT_[A-Z_]+|([A-Z_]+)?REQUEST)(:[a-zA-Z0-9,\'_.()]+)?(:[a-zA-Z0-9,;"%-_.()+*/|]+)?(:[A-Z_<>!=]+)?\'?';
         $str = preg_replace_callback(
             "#$pattern#",
             function($matches) use ($outer) {
@@ -95,6 +95,7 @@ trait DynamicVariables
        * Заменим префикс БД
        */
       $str = str_replace( '{{PREFIX}}', DB::getTablePrefix(), $str );
+      $str = str_replace('->->', '.', $str);
       return $str;
     }
 
