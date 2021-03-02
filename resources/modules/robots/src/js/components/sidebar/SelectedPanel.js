@@ -1,9 +1,6 @@
 import * as React from "react";
 import Scrollbars from "react-custom-scrollbars";
 import Chevron from "../../../../../editor/src/svgs/chevron.svg";
-import ContentIcon from "../../../../../editor/src/svgs/content.svg";
-import AdvancedIcon from "../../../../../editor/src/svgs/advanced.svg";
-
 import Send from "./data/Send"
 import Condition from "./data/Condition"
 import Crud from "./data/Crud"
@@ -20,7 +17,6 @@ export default class SelectedPanel extends React.Component {
       robotOptions: [],
       modelOptions: [],
       startConditionOptions: [],
-      activeTab: "content",
       activeSection: "general",
     }
     this.toggle = this.toggle.bind(this);
@@ -114,7 +110,6 @@ export default class SelectedPanel extends React.Component {
           break;
       }
     }
-
     store.dispatch(setUpdatedNode(node));
   }
 
@@ -133,24 +128,8 @@ export default class SelectedPanel extends React.Component {
   toggleChevron(type) {
     console.log(type);
   }
-
-  /**
-   * Устанавливает текущий таб
-   * @param activeTab
-   */
-  setActiveTab(item) {
-    this.setState(s =>({...s, activeTab: item }));
-  }
-
  
   render() {
-    let contentTabClasses =
-    "panel-tab d-flex " +
-    (this.state.activeTab === "content" ? "active" : "");
-  let advancedTabClasses =
-    "panel-tab d-flex " +
-    (this.state.activeTab === "advanced" ? "active" : "");
-
     const actionTypeOptions = [
       {label:'Send Notification', value: 'send_notification'},
       {label:'CRUD', value: 'crud'}
@@ -162,7 +141,7 @@ export default class SelectedPanel extends React.Component {
       {label:'smoothstep', value: 'smoothstep'},
       {label:'custom', value: 'custom'}
     ];
-    const {modelOptions, robotOptions} = this.state;
+    const {robotOptions} = this.state;
     const conditionTypeOptions = [
       {label:'Model Field', value: 'model_field'},
     ];
@@ -170,18 +149,6 @@ export default class SelectedPanel extends React.Component {
     const robot = this.props.selected.data?.props?.nodeData?.id ?? '';
     const edge = this.props.selectEdge?.type ?? '';
     const model = this.props.robot?.model_id ?? '';
-    const start = this.props.robot?.start_condition ?? '';
-
-    const startOptions = model ? [
-      {label:'created', value: 'created'},
-      {label:'updated', value: 'updated'},
-      {label:'deleted', value: 'deleted'},
-      {label:'logged_in', value: 'logged_in'},
-      {label:'action', value: 'action'}
-    ] : [
-      {label:'logged_in', value: 'logged_in'},
-      {label:'action', value: 'action'}
-    ];
 
     let value = (this.props.selectEdge?.animated === true) ?? false;
     let switcherClasses = `control-switcher control-switcher_${value ? 'on' : 'off'}`;
@@ -190,36 +157,18 @@ export default class SelectedPanel extends React.Component {
     return (
       <div className="panel settings-panel d-flex">
         <div className="panel-tabs d-flex">
-          <button
-            className={contentTabClasses}
-            onClick={() => this.setActiveTab("content")}
-          >
-            <span className="panel-tab__icon">
-              <ContentIcon />
-            </span>
-            <span className="panel-tab__text">Content</span>
-          </button>
-          <button
-            className={advancedTabClasses}
-            onClick={() => this.setActiveTab("advanced")}
-          >
-            <span className="panel-tab__icon">
-              <AdvancedIcon />
-            </span>
-            <span className="panel-tab__text">Advanced</span>
-          </button>
         </div>
 
         <div className="settings-controllers">
           <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
             <div id="settingsControllers">
-              {(this.state.activeTab === "content") && (<div>
+              <div>
                 <div className={"settings-section " + (this.state.activeSection === "general" ? 'open' : '')}>
                   <div className="settings-section__title d-flex" onClick={this.toggleChevron("general")}>
                     <div className="settings-section__icon d-flex">
                       <Chevron />
                     </div>
-                    <div className="settings-section__label">Настройки</div>
+                    <div className="settings-section__label">Настройки </div>
                   </div>
                 </div>
                 {(this.props.selected?.id || this.props.selectEdge?.id) ? (
@@ -296,26 +245,7 @@ export default class SelectedPanel extends React.Component {
                   </div> ) : (
                     "Select a node or edge to edit"
                   )}
-              </div>)}
-              {(this.state.activeTab === "advanced") && (<div>
-                <div className="controller-container controller-container_textarea">
-                <div className="controller-container__label">Modal</div>
-                <AltrpSelect id="type-action"
-                    value={_.filter(modelOptions, item => model === item.value)}
-                    onChange={e => {this.robotSelect(e, "model_id")}}
-                    options={modelOptions}
-                />
               </div>
-              <div className="controller-container controller-container_textarea">
-              <div className="controller-container__label">Start condition</div>
-              <AltrpSelect id="type-action"
-                  value={_.filter(startOptions, item => start === item.value)}
-                  onChange={e => {this.robotSelect(e, "start_condition")}}
-                  options={startOptions}
-              />
-              </div>
-
-              </div>)}
             </div>
           </Scrollbars>
         </div>

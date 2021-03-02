@@ -85,7 +85,6 @@ export default class ElementsManger {
     this.elements[Template.getName()] = Template;
     this.elements[ExportPanel.getName()] = ExportPanel;
     this.elements[Html.getName()] = Html;
-    // Websocket Notifications
     this.elements[Video.getName()] = Video;
 
     //список компонентов
@@ -116,7 +115,6 @@ export default class ElementsManger {
     this.components[Template.getName()] = TemplateWidget;
     this.components[ExportPanel.getName()] = ExportPanelWidget;
     this.components[Html.getName()] = HtmlWidget;
-    // Websocket Notifications widget
     this.components[Video.getName()] = VideoWidget;
   }
 

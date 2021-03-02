@@ -41,6 +41,7 @@ class WriteServiceProvider extends Command
     public function handle()
     {
         $spClassName = $this->argument('classname');
+        $spClassName = str_replace('/', '\\', $spClassName);
         $configContent = $this->getConfigFileContent();
         foreach ($configContent as $line => $content) {
             if (Str::contains($content, "'providers' => [")) {

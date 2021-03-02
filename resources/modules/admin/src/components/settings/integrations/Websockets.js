@@ -1,7 +1,7 @@
-import Resource from "../../../../editor/src/js/classes/Resource";
-import store from "../../js/store/store";
-import AutoUpdateInput from "../AutoUpdateInput";
-import {setWebsocketsEnabled} from "../../js/store/websockets-storage/actions";
+import Resource from "../../../../../editor/src/js/classes/Resource";
+import store from "../../../js/store/store";
+import AutoUpdateInput from "../../AutoUpdateInput";
+import {setWebsocketsEnabled} from "../../../js/store/websockets-storage/actions";
 
 class Websockets extends Component {
   constructor(props) {

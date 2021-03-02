@@ -56,12 +56,11 @@ class User extends Authenticatable
      * Always with relations
      * @var string[]
      */
-    protected $with = ['notice_settings'];
+    protected $with = ['notice_settings', 'social_accounts',];
 
 
     protected $appends = ['full_name'];
 
-    protected $with = ['social_accounts'];
 
     /**
      * Получение данных о пользователе
