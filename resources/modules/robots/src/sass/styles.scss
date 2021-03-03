@@ -104,7 +104,6 @@ body {
 }
 
 .flow-node-condition {
-    
 }
 
 .react-flow__minimap-node.condition-romb {
@@ -221,30 +220,51 @@ body {
     display: inline-block;
     width: 150px;
     height: 150px;
+    color: #fff;
     background: linear-gradient(136.65deg, #1488cc 0%, #2b32b2 100%);
     transform: rotate(45deg);
-    padding: 15px;
+    padding: 16px;
     overflow: hidden;
+    text-align: center;
     box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.08),
         0px 4px 48px rgba(0, 0, 0, 0.08);
 }
 
-.condition-text {
-    color: #fff;
+.condition-text,
+.robot-text {
     font-size: 14px;
-    transform: rotate(-45deg);
-    text-align: center;
     font-weight: bold;
+    display: block;
+    width: 100%;
+    max-height: 97px;
+    overflow: hidden;
+}
+
+.condition-type,
+.robot-type {
+    font-size: 12px;
+}
+
+.wrapper {
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    height: 120px;
-    overflow: hidden;
-
+}
+.romb .wrapper {
+    transform: rotate(-45deg);
 }
 
-.condition-type {
-    font-size: 12px;
+.circle {
+    width: 180px;
+    height: 180px;
+    border-radius: 100%;
+    overflow: hidden;
+    padding: 30px;
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+    font-weight: bold;
+    background: linear-gradient(0deg, #000c40 0%, #2b566b 100%);
 }

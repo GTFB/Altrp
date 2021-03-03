@@ -10,11 +10,6 @@ export default class Condition extends React.Component {
     // let nodeClasses = "flow-node-condition";
     let nodeClasses = "romb";
     if (this.props.selected) nodeClasses += " selected";
-    const dataLabel = this.props?.data?.label;
-
-    const trimLabel = str => {
-      return str.slice(0, 65);
-    };
 
     return (
       <div className={nodeClasses}>
@@ -23,11 +18,10 @@ export default class Condition extends React.Component {
           position="top"
           style={{ zIndex: 100, left: "0%" }}
         />
-        <div>
-          <div className="condition-text">
-            <div>{trimLabel(dataLabel)}</div>
-            <div className="condition-type">{this.props?.type}</div>
-          </div>
+        <div className="wrapper">
+          <div></div>
+          <div className="condition-text">{this.props?.data?.label}</div>
+          <div className="condition-type">{this.props?.type}</div>
         </div>
         <Handle
           type="source"
