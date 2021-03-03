@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import Chevron from "../../../../../../../editor/src/svgs/chevron.svg";
+import Chevron from "../../../../../../../../../editor/src/svgs/chevron.svg";
 
 
 class SendTelegram extends Component{
@@ -19,8 +19,8 @@ class SendTelegram extends Component{
             </div>
 
             <div className="controller-container controller-container_textarea">
-                <div className="controller-container__label">Message</div>
-                <input type="text" id="telegram-message" name="message" value={this.props.content.message ?? ''} onChange={(e) => { this.props.onSend(e, "telegram", "message") }} className="form-control" />
+                <div className="controller-container__label textcontroller-responsive">Message</div>
+                <input className="control-field" type="text" id="telegram-message" name="message" value={this.props.content.message ?? ''} onChange={(e) => { this.props.onSend(e, "telegram", "message") }}/>
             </div>
         </div>
     }

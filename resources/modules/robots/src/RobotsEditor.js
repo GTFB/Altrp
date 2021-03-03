@@ -21,13 +21,13 @@ import {
 } from "./js/store/robot-settings/actions";
 import { setCurrentRobot } from "./js/store/current-robot/actions";
 import Sidebar from "./js/components/sidebar/Sidebar";
-import Condition from "./js/components/sidebar/nodes/Condition";
-import Begin from "./js/components/sidebar/nodes/Begin";
-import Action from "./js/components/sidebar/nodes/Action";
-import Robot from "./js/components/sidebar/nodes/Robot";
-import End from "./js/components/sidebar/nodes/End";
-import CustomEdge from "./js/components/sidebar/nodes/CustomEdge";
-import ConnectionLine from './js/components/sidebar/nodes/ConnectionLine';
+import Condition from "./js/components/sidebar/modules/widgets/Condition";
+import Begin from "./js/components/sidebar/modules/widgets/Begin";
+import Action from "./js/components/sidebar/modules/widgets/Action";
+import Robot from "./js/components/sidebar/modules/widgets/Robot";
+import End from "./js/components/sidebar/modules/widgets/End";
+import CustomEdge from "./js/components/sidebar/modules/widgets/CustomEdge";
+import ConnectionLine from './js/components/sidebar/modules/widgets/ConnectionLine';
 
 const mapStateToProps = state => {
   return {
@@ -44,11 +44,13 @@ class RobotsEditor extends Component {
       elements: props.elements || [],
       robot: props.robot || [],
       reactFlowInstance: null,
-      selected: false,
+      selectNode: false,
       selectEdge: false,
-      activePanel: "widgets"
+      activePanel: "widgets",
+      btnActive: ''
     };
     this.changeTab = this.changeTab.bind(this);
+    this.btnChange = this.btnChange.bind(this);
     this.resource = new Resource({ route: "/admin/ajax/robots" });
     this.reactFlowRef = React.createRef();
   }
@@ -57,46 +59,38 @@ class RobotsEditor extends Component {
   updateRobotState() {
     const elements = store.getState()?.robotSettingsData;
     const robot = store.getState()?.currentRobot;
-    console.log(elements);
-    console.log(robot);
-    this.setState(s => ({ ...s, elements, robot }));
+    this.setState(s => ({ ...s, elements, robot, btnActive: "btn_active" }));
   }
-
-  // componentDidUpdate(prevProps, prevState){
-  //   if(!_.isEqual(prevProps.elements, this.props.elements)){
-  //     this.setState(s=> ({...s, elements: this.props.elements}));
-  //   }
-  // }
 
   async componentDidMount() {
     store.subscribe(this.updateRobotState.bind(this));
 
     const robotId = new URL(window.location).searchParams.get("robot_id");
     const robot = await this.resource.get(robotId);
-    console.log(robot);
     store.dispatch(setCurrentRobot(robot));
     if(!robot.chart) return;
     const data = JSON.parse(robot.chart) ?? [];
     store.dispatch(setRobotSettingsData(data));
+    this.btnChange('');
   }
 
-  // Удаление ноды
+  // Удаление ноды или связи
   onElementsRemove = elementsToRemove => {
     const robotStore = store.getState()?.robotSettingsData;
-    const selected = this.state.selected;
+    const selectNode = this.state.selectNode;
+    const selectEdge = this.state.selectEdge;
     const newStore = removeElements(elementsToRemove, robotStore);
     if(_.isArray(elementsToRemove)){
       elementsToRemove.map(item =>{
-        if(item.id == selected?.id) this.setState(s => ({ ...s, selected: {} }));
+        if(item.id == selectNode?.id) this.setState(s => ({ ...s, selectNode: {} }));
+        if(item.id == selectEdge?.id) this.setState(s => ({ ...s, selectEdge: {} }));
       })
     }
-    console.log(elementsToRemove);
     store.dispatch(setRobotSettingsData(newStore));
   }
 
   // Добавление связи между нодами
   onConnect = params => {
-    console.log(params);
     const robotStore = store.getState()?.robotSettingsData;
     const newStore = addEdge(params, robotStore);
     store.dispatch(setRobotSettingsData(newStore));
@@ -148,7 +142,7 @@ class RobotsEditor extends Component {
         data = {  
           "type": "condition",
           "nodeData": {
-              "type": "none",
+              "type": "",
               "operator": "",
               "body": []
           }
@@ -180,7 +174,6 @@ class RobotsEditor extends Component {
   }
 
   onEdgeUpdate = (oldEdge, newConnection) => {
-
     const robotStore = store.getState()?.robotSettingsData;
     const newStore = updateEdge(oldEdge, newConnection, robotStore);
     store.dispatch(setRobotSettingsData(newStore));
@@ -188,19 +181,26 @@ class RobotsEditor extends Component {
 
   // Запись активного элемента в state
   onElementClick = (event, element) => {
-    if(isNode(element)) this.setState(s => ({ ...s, selected: element, selectEdge: false }));
-    if(isEdge(element)) this.setState(s => ({ ...s, selectEdge: element, selected: false }));
-    store.dispatch(setUpdatedNode(element));
-    this.setState(s => ({ ...s, activePanel: "selected" }));
+    if(isNode(element)) this.setState(s => ({ ...s, selectNode: element, selectEdge: false }));
+    if(isEdge(element)) this.setState(s => ({ ...s, selectEdge: element, selectNode: false }));
+
+    const {btnActive} = this.state;
+    // Вызов принудительного рендеринга через store
+    // store.dispatch(setUpdatedNode(element));
+
+    this.setState(s => ({ ...s, activePanel: "selected", btnActive }));
   }
 
-  changeTab(index) {
-    this.setState(s => ({ ...s, activePanel: index }));
+  changeTab(item) {
+    this.setState(s => ({ ...s, activePanel: item }));
   }
 
+  btnChange(item) {
+    this.setState(s => ({ ...s, btnActive: item }));
+  }
 
   render() {
-    console.log(this.state.selected);
+    console.log(this.state.selectNode);
     console.log(this.state.selectEdge);
     return (
       <div className="page__content">
@@ -209,9 +209,11 @@ class RobotsEditor extends Component {
                   activePanel={ this.state.activePanel }
                   robot={ this.state.robot }
                   elements={ this.state.elements }
-                  selected={ this.state.selected }
+                  selectNode={ this.state.selectNode }
                   selectEdge={ this.state.selectEdge }
                   onLoad={ this.onLoad }
+                  btnActive={ this.state.btnActive }
+                  btnChange={ this.btnChange }
           />
           <div className="content" ref={this.reactFlowRef }>
             <ReactFlow

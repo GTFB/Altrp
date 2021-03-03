@@ -1,12 +1,12 @@
 import React, {Component} from "react";
-import store from "../../../store/store";
-import { setUpdatedNode } from "../../../store/robot-settings/actions";
-import AltrpSelect from "../../../../../../admin/src/components/altrp-select/AltrpSelect";
-import Resource from "../../../../../../editor/src/js/classes/Resource";
-import Chevron from "../../../../../../editor/src/svgs/chevron.svg";
+import store from "../../../../../store/store";
+import { setUpdatedNode } from "../../../../../store/robot-settings/actions";
+import AltrpSelect from "../../../../../../../../admin/src/components/altrp-select/AltrpSelect";
+import Resource from "../../../../../../../../editor/src/js/classes/Resource";
+import Chevron from "../../../../../../../../editor/src/svgs/chevron.svg";
 
 
-class Crud extends Component{
+export default class Crud extends Component{
     constructor(props){
         super(props);
         this.state = {
@@ -26,29 +26,30 @@ class Crud extends Component{
 
         let models = await this.modelsResource.getAll();
         let modelOptions = await this.modelOptionsResource.getAll();
+        console.log(modelOptions);
 
         this.setState(s =>({...s, modelOptions, models }));
     }
 
     // Запись значений select в store
     changeSelect(e, type) {
-        const node = this.props.selected;
+        const node = this.props.selectNode;
         switch(type){
             case "model_id":
                 this.setStateCrud();
                 node.data.props.nodeData.data.method = '';
                 node.data.props.nodeData.data.record_id = '';
                 node.data.props.nodeData.data.body = {};
-                node.data.props.nodeData.data[type] = e.value;    
+                node.data.props.nodeData.data[type] = e.target.value;    
                 break;
             case "method":
                 node.data.props.nodeData.data.record_id = '';
                 node.data.props.nodeData.data.body = {};
-                node.data.props.nodeData.data[type] = e.value;    
+                node.data.props.nodeData.data[type] = e.target.value;    
                 break;
             case "record_id":
                 // node.data.props.nodeData.data.body = {};
-                node.data.props.nodeData.data[type] = e.value;    
+                node.data.props.nodeData.data[type] = e.target.value;    
                 break;
             case "body":
                 if(e === null) e = [];
@@ -65,7 +66,7 @@ class Crud extends Component{
 
     // Запись значений input в store
     changeInput(e, field, fieldsData) {
-        const node = this.props.selected;
+        const node = this.props.selectNode;
         if(!node.data.props.nodeData.data.body || _.isEmpty(fieldsData)) return;
 
         fieldsData.map(item =>{
@@ -76,13 +77,13 @@ class Crud extends Component{
     }
 
     getData(type) {
-        let item = this.props.selected?.data?.props?.nodeData?.data[type] ?? '';
+        let item = this.props.selectNode?.data?.props?.nodeData?.data[type] ?? '';
 
         return item;
     }
 
     getFields() {
-        let item = this.props.selected?.data?.props?.nodeData?.data?.body ?? [];
+        let item = this.props.selectNode?.data?.props?.nodeData?.data?.body ?? [];
 
         if(_.isObject(item)) item = _.keys(item);
 
@@ -92,7 +93,7 @@ class Crud extends Component{
     }
 
     async setStateCrud(){
-        const item = this.props.selected?.data?.props?.nodeData?.data?.model_id ?? '';
+        const item = this.props.selectNode?.data?.props?.nodeData?.data?.model_id ?? '';
         console.log(item);
 
         if(item){
@@ -109,7 +110,7 @@ class Crud extends Component{
     }
 
     render(){
-        const modelOptions = this.state.modelOptions.options;
+        const modelOptions = this.state.modelOptions?.options ?? [];
         const methodOptions = [
             {label:'create', value: 'create'},
             {label:'update', value: 'update'},
@@ -122,8 +123,8 @@ class Crud extends Component{
         const record = this.getData("record_id");
         const fields = this.getFields();
 
-        console.log(fieldOptions);
-        console.log(recordOptions);
+        console.log(modelOptions);
+        console.log(fields);
 
         return <div>
             <div className={"settings-section " + (this.props.activeSection === "crud" ? '' : 'open')}>
@@ -131,37 +132,48 @@ class Crud extends Component{
                     <div className="settings-section__icon d-flex">
                         <Chevron />
                     </div>
-                    <div className="settings-section__label">Broadcast</div>
+                    <div className="settings-section__label">CRUD</div>
+                </div>
+            </div>
+            <div className="controller-container controller-container_select">
+                <div className="controller-container__label control-select__label">Model</div>
+                <div className="control-container_select-wrapper">
+                    <select className="control-select control-field"
+                        value={model || ''}
+                        onChange={e => {this.changeSelect(e, "model_id")}}
+                    >
+                        <option disabled value="" />
+                        {modelOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
+                    </select>
                 </div>
             </div>
 
-            <div className="controller-container controller-container_textarea">
-                <div className="controller-container__label">Models</div>
-                <AltrpSelect id="crud-model"
-                    value={_.filter(modelOptions, item => model == item.value)}
-                    onChange={e => {this.changeSelect(e, "model_id")}}
-                    options={modelOptions}
-                />
-            </div>
-
-            {model && <div className="controller-container controller-container_textarea">
-                <div className="controller-container__label">Method</div>
-                <AltrpSelect id="crud-method"
-                    value={_.filter(methodOptions, item => method === item.value)}
-                    onChange={e => {this.changeSelect(e, "method")}}
-                    options={methodOptions}
-                />
-            </div>}
-            {(method && method !== "create") && <div className="controller-container controller-container_textarea">
-                <div className="controller-container__label">Record</div>
-                <AltrpSelect id="crud-record"
-                    value={_.filter(recordOptions, item => record == item.value)}
-                    onChange={e => {this.changeSelect(e, "record_id")}}
-                    options={recordOptions}
-                />
-            </div>}
-            {(method && method !== "delete") && <div className="controller-container controller-container_textarea">
-                <div className="controller-container__label">Fields</div>
+            {model && <div className="controller-container controller-container_select">
+                      <div className="controller-container__label control-select__label">Method</div>
+                      <div className="control-container_select-wrapper">
+                        <select className="control-select control-field"
+                            value={method || ''}
+                            onChange={e => {this.changeSelect(e, "method")}}
+                        >
+                            <option disabled value="" />
+                            {methodOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
+                        </select>
+                      </div>
+                    </div>}
+            {(method && method !== "create") && <div className="controller-container controller-container_select">
+                      <div className="controller-container__label control-select__label">Record</div>
+                      <div className="control-container_select-wrapper">
+                        <select className="control-select control-field"
+                            value={record || ''}
+                            onChange={e => {this.changeSelect(e, "record_id")}}
+                        >
+                            <option disabled value="" />
+                            {recordOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
+                        </select>
+                      </div>
+                    </div>}
+            {(method && method !== "delete") && <div className="controller-container controller-container_select2">
+                <div className="controller-container__label textcontroller-responsive">Fields</div>
                 <AltrpSelect id="crud-fields"
                     isMulti={true}
                     value={_.filter(fieldOptions, f => fields.indexOf(f.label) >= 0)}
@@ -170,21 +182,21 @@ class Crud extends Component{
                 />
 
                 {fields.map((item, index) =>
-                <div key={index}>
-                    <div className="controller-container__label">{item}</div>
+                <div className="controller-container-input" key={index}>
+                    <div className="controller-container controller-container_textarea" >
+                      <div className="controller-container__label textcontroller-responsive">{item}</div>
                     <input
+                        className="control-field"
                         type="text"
                         id={item}
                         name={item}
-                        value={this.props.selected?.data.props.nodeData.data.body[item] ?? ''}
+                        value={this.props.selectNode?.data.props.nodeData.data.body[item] ?? ''}
                         onChange={(e) => { this.changeInput(e, item, fields) }}
-                        className="form-control"
                     />
+                    </div>
                 </div>
                 )}
             </div>}
         </div>
     }
 }
-
-export default Crud;

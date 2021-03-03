@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Chevron from "../../../../../../../editor/src/svgs/chevron.svg";
+import Chevron from "../../../../../../../../../editor/src/svgs/chevron.svg";
 
 
 class SendEmail extends Component{
@@ -19,12 +19,12 @@ class SendEmail extends Component{
             </div>
 
             <div className="controller-container controller-container_textarea">
-                <div className="controller-container__label">Subject</div>
-                <input type="text" id="email-subject" name="subject" value={this.props.content.subject ?? ''} onChange={(e) => { this.props.onSend(e, "mail", "subject") }} className="form-control" />
+                <div className="controller-container__label textcontroller-responsive">Subject</div>
+                <input className="control-field" type="text" id="email-subject" name="subject" value={this.props.content.subject ?? ''} onChange={(e) => { this.props.onSend(e, "mail", "subject") }}/>
             </div>
             <div className="controller-container controller-container_textarea">
-                <div className="controller-container__label">Message</div>
-                <input type="text" id="email-message" name="message" value={this.props.content.message ?? ''} onChange={(e) => { this.props.onSend(e, "mail", "message") }} className="form-control" />
+                <div className="controller-container__label textcontroller-responsive">Message</div>
+                <input className="control-field" type="text" id="email-message" name="message" value={this.props.content.message ?? ''} onChange={(e) => { this.props.onSend(e, "mail", "message") }}/>
             </div>
         </div>
     }

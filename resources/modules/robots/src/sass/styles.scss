@@ -216,22 +216,23 @@ body {
         }
     }
     .robot_switcher__label {
-        font-weight: bold;
-        font-size: 15px;
-        margin-right: 10px;
+        flex-grow: 1;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
     }
 }
 
-#type-action, #type-condition, #crud-method, #crud-model, #crud-record, #crud-fields, #send-users, #send-roles, #send-channels, #bit-operator, #logic-operator, #type-edge {
-    width: 175px;
+.controller-container-input, #type-action, #type-condition, #crud-method, #crud-model, #crud-record, #crud-fields, #send-users, #send-roles, #send-channels, #bit-operator, #logic-operator, #type-edge, #model_id, #start_condition {
+    width: 100%;
 }
-
-#model_id, #start_condition {
-    width: 120px;
+.controller-container-input{
+    margin-top: 15px;
 }
 
 .controllers-wrapper {
     display: block;
+    background-color: #fff;
 }
 .settings-section-box {
     margin: 15px 0px;
@@ -241,4 +242,76 @@ body {
 }
 .editor-bottom-panel .btn_grey{
     margin-right: 10px;
+}
+
+// Select
+.control-select {
+    border-radius: 3px;
+    color: #6d7882;
+}
+.controller-container_select {
+    width: auto;
+    display: flex;
+    flex-direction: row;
+}
+.control-select__label {
+    margin-right: auto;
+    height: 27px;
+}
+.control-container_select-wrapper {
+    position: relative;
+    float: right;
+}
+
+.control-field {
+    width: 100%;
+    height: 26px;
+    padding-left: 7px;
+    padding-right: 7px;
+    font-size: 12px;
+    // color: $black;
+    line-height: 24px;
+    border-radius: 0;
+    border: 1px solid $light-gray;
+    &_number {
+        width: 80px;
+    }
+}
+.control-group {
+    .control-field {
+        &:last-child {
+            border-top-right-radius: 3px;
+            border-bottom-right-radius: 3px;
+        }
+        &:first-child {
+            border-top-left-radius: 3px;
+            border-bottom-left-radius: 3px;
+        }
+    }
+    &__append {
+        width: 27px;
+        height: 26px;
+        border-right: 1px solid $light-gray;
+        border-top: 1px solid $light-gray;
+        border-bottom: 1px solid $light-gray;
+        border-radius: 0 3px 3px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+}
+.textcontroller-responsive {
+    width: 100%;
+    margin-bottom: 5px;
+}
+.control-link {
+    border-color: #e5e6ea;
+    border-style: solid;
+    border-width: 1px 0px 1px 1px;
+    width: 80%;
+    border-radius: 3px 0px 0px 3px;
+    color: #8e94aa;
+    padding-left: 7px;
 }

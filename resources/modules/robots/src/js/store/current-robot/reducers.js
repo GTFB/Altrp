@@ -1,5 +1,7 @@
-import { SET_CURRENT_ROBOT } from "./actions";
-import { SET_CHART_IN_CURRENT_ROBOT } from "./actions";
+import {
+  SET_CURRENT_ROBOT,
+  SET_CHART_IN_CURRENT_ROBOT
+ } from "./actions";
 
 export function currentRobotReducer(state, action) {
   state = state || [];
