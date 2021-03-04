@@ -103,7 +103,7 @@ export default class Condition extends Component{
         console.log(typeData);      
 
         return <div>
-            <div className="controller-container controller-container_select">
+            <div className="controller-container controller-container_select fl-column" >
                 <div className="controller-container__label control-select__label">Type</div>
                 <div className="control-container_select-wrapper">
                     <select className="control-select control-field"
@@ -115,7 +115,7 @@ export default class Condition extends Component{
                     </select>
                 </div>
             </div>
-            <div className="controller-container controller-container_select">
+            <div className="controller-container controller-container_select fl-column">
                 <div className="controller-container__label control-select__label">Operator</div>
                 <div className="control-container_select-wrapper">
                     <select className="control-select control-field"
@@ -129,7 +129,7 @@ export default class Condition extends Component{
             </div>
             <div className="controller-container controller-container_repeater repeater">                
                 <div className="control-header">                    
-                    <div className="controller-container__label">
+                    <div className="controller-container__label mt-10">
                         Compares
                     </div>
                 </div>
@@ -151,7 +151,7 @@ export default class Condition extends Component{
                                                                     selectNode={this.props.selectNode}
                                                                 />
                                 }
-                                <div className="controller-container controller-container_select">
+                                <div className="controller-container controller-container_select fl-column">
                                     <div className="controller-container__label control-select__label">Operator</div>
                                     <div className="control-container_select-wrapper">
                                         <select className="control-select control-field"
@@ -164,7 +164,7 @@ export default class Condition extends Component{
                                     </div>
                                 </div>
                                 <div className="controller-container controller-container_textarea">
-                                    <div className="controller-container__label textcontroller-responsive">
+                                    <div className="controller-container__label control-select__label">
                                         Value
                                     </div>
                                     <div className="control-group">

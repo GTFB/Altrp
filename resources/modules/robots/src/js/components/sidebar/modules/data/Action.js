@@ -70,7 +70,7 @@ export default class Action extends Component{
         const typeData = this.props.selectNode.data?.props?.nodeData?.type ?? '';
 
         return <div>
-            <div className="controller-container controller-container_select">
+            <div className="controller-container controller-container_select fl-column">
                 <div className="controller-container__label control-select__label">Type</div>
                 <div className="control-container_select-wrapper">
                     <select className="control-select control-field"

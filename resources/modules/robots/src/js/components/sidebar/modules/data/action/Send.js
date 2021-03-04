@@ -94,8 +94,8 @@ export default class Send extends Component{
                     </div>
                 </div>
                 {!value && <div className="settings-section-box">
-                    <div className="controller-container controller-container_select2">
-                        <div className="controller-container__label textcontroller-responsive">Users</div>
+                    <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                        <div className="controller-container__label control-select__label">Users</div>
                         <AltrpSelect className="control-container_select2-wrapper"
                             id="send-users"
                             isMulti={true}
@@ -104,8 +104,8 @@ export default class Send extends Component{
                             options={usersOptions}
                         />
                     </div>
-                    <div className="controller-container controller-container_select2">
-                        <div className="controller-container__label textcontroller-responsive">Roles</div>
+                    <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                        <div className="controller-container__label control-select__label">Roles</div>
                         <AltrpSelect id="send-roles"
                             isMulti={true}
                             value={_.filter(rolesOptions, r => roles.indexOf(r.value) >= 0)}
@@ -114,8 +114,8 @@ export default class Send extends Component{
                         />
                     </div>
                 </div>}
-                <div className="controller-container controller-container_select2">
-                    <div className="controller-container__label textcontroller-responsive">Channels</div>
+                <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                    <div className="controller-container__label control-select__label">Channels</div>
                     <AltrpSelect id="send-channels"
                         isMulti={true}
                         value={_.filter(channelsOptions, c => channels.indexOf(c.value) >= 0)}

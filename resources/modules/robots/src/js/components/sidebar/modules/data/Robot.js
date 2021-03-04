@@ -30,7 +30,7 @@ export default class Robot extends Component{
         const {robotOptions} = this.state;
 
         return <div>
-            <div className="controller-container controller-container_select">
+            <div className="controller-container controller-container_select fl-column">
                 <div className="controller-container__label control-select__label">Start condition</div>
                 <div className="control-container_select-wrapper">
                 <select className="control-select control-field"

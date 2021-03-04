@@ -69,13 +69,15 @@ export default class SelectedPanel extends React.Component {
                 {(this.props.selectNode?.id || this.props.selectEdge?.id) ? (
                   <div className="controllers-wrapper">
                     {this.props.selectNode && <div className="controller-container controller-container_textarea">
-                      <div className="controller-container__label textcontroller-responsive">Text</div>
-                      <input
+                      <div className="controller-container__label control-select__label">Text</div>
+                      <textarea
                         className="control-field"
                         type="text"
+                        rows="3"
+                        style={{lineHeight: '125%', height: 'auto'}}
                         onChange={(e) => { this.changeInput(e) }}
                         value={ this.props.selectNode.data?.label }
-                      ></input>
+                      ></textarea>
                     </div>}
                     {(this.props.selectNode?.type === "action") && <Action
                                                                       activeSection={this.state.activeSection}

@@ -61,7 +61,7 @@ export default class Edge extends Component{
         let switcherClasses = `control-switcher control-switcher_${value ? 'on' : 'off'}`;
       
         return <div>
-            <div className="controller-container controller-container_select">
+            <div className="controller-container controller-container_select fl-column">
                 <div className="controller-container__label control-select__label">Start condition</div>
                 <div className="control-container_select-wrapper">
                 <select className="control-select control-field"
@@ -85,12 +85,14 @@ export default class Edge extends Component{
             </div>
             <div className="controller-container controller-container_textarea">
                 <div className="controller-container__label textcontroller-responsive">Text</div>
-                <input
+                <textarea
                     className="control-field"
                     type="text"
                     onChange={(e) => { this.changeInput(e) }}
                     value={ this.props.selectEdge?.data?.text ?? '' }
-                ></input>
+                    rows="3"
+                    style={{lineHeight: '125%', height: 'auto'}}
+                ></textarea>
             </div>
         </div>
     }

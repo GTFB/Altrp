@@ -201,7 +201,7 @@ body {
 #start_condition {
     width: 100%;
 }
-.controller-container-input{
+.controller-container-input {
     margin-top: 15px;
 }
 
@@ -341,4 +341,18 @@ body {
     text-align: center;
     font-weight: bold;
     background: linear-gradient(0deg, #000c40 0%, #2b566b 100%);
+}
+.default-node__label {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+.default-node__type {
+    padding: 6px 0 0 0;
+}
+.fl-column {
+    flex-direction: column;
+}
+.mt-10 {
+    margin-top: 10px;
 }

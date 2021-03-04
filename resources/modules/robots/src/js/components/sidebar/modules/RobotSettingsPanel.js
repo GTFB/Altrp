@@ -63,7 +63,7 @@ export default class RobotSettingsPanel extends React.Component {
                   </div>
                 </div>
                 <div className="controllers-wrapper">
-                    <div className="controller-container controller-container_select">
+                    <div className="controller-container controller-container_select fl-column">
                       <div className="controller-container__label control-select__label">Model</div>
                       <div className="control-container_select-wrapper">
                         <select className="control-select control-field"
@@ -75,7 +75,7 @@ export default class RobotSettingsPanel extends React.Component {
                         </select>
                       </div>
                     </div>
-                    <div className="controller-container controller-container_select">
+                    <div className="controller-container controller-container_select fl-column" >
                       <div className="controller-container__label control-select__label">Start condition</div>
                       <div className="control-container_select-wrapper">
                         <select className="control-select control-field"
