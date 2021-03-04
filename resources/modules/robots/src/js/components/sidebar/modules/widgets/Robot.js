@@ -4,15 +4,19 @@ import { Handle } from "react-flow-renderer";
 export default class Robot extends React.Component {
   constructor(props) {
     super(props);
+    this.redirectTo = this.redirectTo.bind(this);
+  }
+
+  redirectTo(item) {
+    if (item) return window.location.href = `robots-editor?robot_id=${item}`;
   }
 
   render() {
-    // let nodeClasses = "flow-node";
     let nodeClasses = "circle";
     if (this.props.selected) nodeClasses += " selected";
 
     return (
-      <div className={nodeClasses}>
+      <div className={nodeClasses} onDoubleClick={() => this.redirectTo(this.props?.data?.props?.nodeData?.id ?? false)}>
         <Handle type="target" position="top" />
         <div className="wrapper">
           <div></div>
