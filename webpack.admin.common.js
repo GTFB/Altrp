@@ -1,6 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
   entry: "./resources/modules/admin/src/index.js",
@@ -12,9 +12,8 @@ module.exports = {
         exclude: /(node_modules|bower_components)/,
         loader: "babel-loader",
         options: {
-          presets: [
-            "@babel/env",
-          ]}
+          presets: ["@babel/env"]
+        }
       },
       // {
       //   test: /\.(js|jsx)$/,
@@ -25,12 +24,12 @@ module.exports = {
         test: /\.s[ac]ss$/i,
         use: [
           // Creates `style` nodes from JS strings
-          'style-loader',
+          "style-loader",
           // Translates CSS into CommonJS
-          'css-loader',
+          "css-loader",
           // Compiles Sass to CSS
-          'sass-loader',
-        ],
+          "sass-loader"
+        ]
       },
       {
         test: /\.svg$/,
@@ -49,20 +48,20 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|gif)$/,
-        loader:'file-loader',
+        loader: "file-loader",
         options: {
-          name: '[path][name].[ext]',
+          name: "[path][name].[ext]"
         }
-      },
+      }
     ]
   },
   resolve: {
-    extensions: ["*", ".js", ".jsx"],
+    extensions: ["*", ".js", ".jsx"]
   },
   output: {
     path: path.resolve(__dirname, "admin/"),
     publicPath: "http://localhost:3002/src/",
-    chunkFilename: '[chunkhash].bundle.js',
+    chunkFilename: "[chunkhash].bundle.js",
     filename: "bundle.js"
   },
   devServer: {
@@ -72,12 +71,10 @@ module.exports = {
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+      "Access-Control-Allow-Headers":
+        "X-Requested-With, content-type, Authorization"
     },
     hotOnly: true
   },
-  plugins: [
-      new webpack.HotModuleReplacementPlugin(),
-      new CleanWebpackPlugin(),
-  ]
+  plugins: [new webpack.HotModuleReplacementPlugin(), new CleanWebpackPlugin()]
 };

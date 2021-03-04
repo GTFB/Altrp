@@ -894,6 +894,7 @@ class InputWidget extends Component {
                 type={this.state.settings.content_type}
                 name={this.getName()}
                 value={value || ""}
+                element={this.props.element}
                 readOnly={content_readonly}
                 autoComplete={autocomplete}
                 placeholder={this.state.settings.content_placeholder}

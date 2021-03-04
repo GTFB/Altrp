@@ -34,6 +34,30 @@ module.exports = merge(common, {
             console.error(err.message);
           });
       });
+      app.get("/modules/reports-new/reports.js", function(req, res) {
+        http.get(
+          {
+            hostname: "localhost",
+            port: 3005,
+            path: "/reports-new/bundle.js",
+            agent: false // Create a new agent just for this one request
+          },
+          _res => {
+            // console.log(res);
+            // let _data =  res.();
+
+            _res.setEncoding("utf8");
+            let rawData = "";
+            _res.on("data", chunk => {
+              rawData += chunk;
+            });
+
+            _res.on("end", () => {
+              res.end(rawData);
+            });
+          }
+        );
+      });
     }
   }
 });

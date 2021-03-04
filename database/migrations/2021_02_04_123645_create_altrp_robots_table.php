@@ -15,11 +15,12 @@ class CreateAltrpRobotsTable extends Migration
     {
         Schema::create('altrp_robots', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('model_id')->unsigned()->nullable();
             $table->string('name');
-            $table->string('start_condition');
+            $table->string('start_condition')->nullable();
             $table->boolean('enabled')->default(1);
-            $table->longText('chart');
+            $table->longText('chart')->nullable();
             $table->timestamps();
         });
     }

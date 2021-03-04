@@ -212,7 +212,7 @@ class AltrpForm {
     this.fields.forEach(field => {
       try {
         if (_.isFunction(_.get(field, "component.setState"))) {
-          field.component.setState(state => ({ ...state, value: "" }));
+          // field.component.setState(state => ({ ...state, value: "" }));
         }
       } catch (error) {
         console.error(error);

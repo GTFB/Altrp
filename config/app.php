@@ -33,7 +33,7 @@ return [
     |
     */
 
-    'altrp_version' => '0.13.13',
+    'altrp_version' => '0.13.19',
 
 
     /*
@@ -180,18 +180,20 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        // App\Providers\AltrpBroadcastServiceProvider::class,
 
         Laratrust\LaratrustServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
         App\Providers\CrudGeneratorServiceProvider::class,
-
+        NotificationChannels\Telegram\TelegramServiceProvider::class,
+        
         App\Providers\RepositoryServiceProvider::class,
-        //        App\Providers\AltrpRepositoryServiceProvider::class,
-        App\Providers\PluginServiceProvider::class,
-        App\Providers\AltrpRepositoryServiceProvider::class,
+        App\Providers\PluginServiceProvider::class,        
+        // App\Providers\AltrpProviders\AppServiceProvider::class,
+        // App\Providers\AltrpRepositoryServiceProvider::class,
     ],
 
     /*

@@ -4,6 +4,7 @@
 namespace App\Altrp\Generators\Controller;
 
 
+use App\Altrp\Builders\Traits\DynamicVariables;
 use App\Altrp\Generators\Repository\RepositoryFile;
 use App\Altrp\Generators\Repository\RepositoryInterfaceFile;
 use App\Exceptions\Controller\ControllerFileException;
@@ -11,6 +12,7 @@ use Illuminate\Support\Str;
 
 class ControllerFileWriter
 {
+    use DynamicVariables;
     /**
      * @var ControllerFile
      */
@@ -148,38 +150,54 @@ class ControllerFileWriter
      * Обновить метод удаленного источника данных
      *
      * @param $oldMethodName
-     * @param $newMethodName
-     * @param $type
-     * @param $url
+     * @param $source
      * @return bool
      * @throws ControllerFileException
      */
-    public function updateSourceMethod($oldMethodName, $newMethodName, $type, $url)
+    public function updateSourceMethod($oldMethodName, $source)
     {
         $this->removeMethod($oldMethodName);
-        $this->writeDataSourceMethod($newMethodName, $type, $url);
+        $this->writeDataSourceMethod($source);
         return true;
     }
 
     /**
      * Записать метод удаленного источника данных
      *
-     * @param $name
-     * @param $type
-     * @param $url
-     * @param array $data
+     * @param $source
      * @return bool
      */
-    public function writeDataSourceMethod($name, $type, $url, $data = [])
+    public function writeDataSourceMethod($source)
     {
-        $methodContent = $this->getDataSourceMethodContent($type);
-        $this->replaceMethodName($methodContent, $name)
-            ->replaceUrl($methodContent, $url);
+        $headers = $this->getSourceHeaders($source);
+        $methodContent = $this->getDataSourceMethodContent($source->request_type);
+        $this->replaceMethodName($methodContent, $source->name)
+            ->replaceUrl($methodContent, $source->url)
+            ->replaceHeaders($methodContent, $headers);
         $controllerContent = file($this->controller->getFile(), 2);
         $result = $this->writeMethods($controllerContent, $methodContent);
         return $result;
     }
 
+    /**
+     * Получить и сформировать заголовки
+     * @param $source
+     * @return string
+     */
+    protected function getSourceHeaders($source)
+    {
+        $headers = $source->headers;
+        $headersStr = '[';
+        if ($headers) {
+            foreach ($headers as $headerKey => $headerValue) {
+                $headerValue = is_numeric($headerValue) ? $headerValue : "\"{$headerValue}\"";
+                $headersStr .= "\"{$headerKey}\" => " . $this->replaceDynamicVars($headerValue, 1) . ",";
+            }
+        }
+        $headersStr = trim($headersStr, ',');
+        $headersStr .= ']';
+        return $headersStr;
+    }
 
     /**
      * Добавить Sql метод
@@ -494,6 +512,19 @@ class ControllerFileWriter
     protected function replaceUrl(&$methodContent, $url)
     {
         $methodContent = str_replace('{{url}}', $url, $methodContent);
+        return $this;
+    }
+
+    /**
+     * Заменить заголовки
+     *
+     * @param $methodContent
+     * @param $headers
+     * @return $this
+     */
+    protected function replaceHeaders(&$methodContent, $headers)
+    {
+        $methodContent = str_replace('{{headers}}', $headers, $methodContent);
         return $this;
     }
 

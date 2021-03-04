@@ -4,9 +4,10 @@
 namespace App\Services\Robots\Blocks;
 
 
-use App\Mails\RobotsMail;
+use App\Altrp\Model;
+use App\Notifications\RobotNotification;
 use App\User;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 
 class Action
 {
@@ -16,16 +17,22 @@ class Action
     protected $node;
 
     /**
+     * @var string Запись модели
+     */
+    protected $modelData;
+
+    /**
      * Action constructor.
      * @param $node
      */
-    public function __construct($node)
+    public function __construct($node, $modelData = null)
     {
         $this->node = $node;
+        $this->modelData = $modelData;
     }
 
     /**
-     * Запусить действие в записимости от типа
+     * Запустить действие в зависимости от типа
      */
     public function runAction()
     {
@@ -35,9 +42,6 @@ class Action
                 break;
             case 'send_notification':
                 $this->sendNotification();
-                break;
-            case 'send_mail':
-                $this->sendEmail();
                 break;
         }
     }
@@ -49,11 +53,23 @@ class Action
     protected function execCrud()
     {
         $data = json_decode(json_encode($this->node->data->props->nodeData->data->body), true);
-        $model_class = '\\' . $this->node->data->props->nodeData->data->model_class;
+        $model = Model::find($this->node->data->props->nodeData->data->model_id);
+        $modelNamespace = $model->parent ? $model->parent->namespace : $model->namespace;
+        $modelClass = '\\' . $modelNamespace;
         $method = $this->node->data->props->nodeData->data->method;
-        $id = $this->node->data->props->nodeData->data->model_id;
-        $entity = $model_class::find($id);
-        return $entity->$method($data);
+        if ($method == 'create') {
+            $entity = new $modelClass($data);
+            $result = $entity->$method($data);
+        } elseif ($method == 'delete') {
+            $id = $this->node->data->props->nodeData->data->record_id;
+            $entity = $modelClass::find($id);
+            $result = $entity->$method();
+        } else {
+            $id = $this->node->data->props->nodeData->data->record_id;
+            $entity = $modelClass::find($id);
+            $result = $entity->$method($data);
+        }
+        return $result;
     }
 
     /**
@@ -62,6 +78,9 @@ class Action
      */
     protected function sendNotification()
     {
+        $entities = $this->getNodeProperties()->nodeData->data->entities;
+        $users = $this->getRequiredUsers($entities);
+        Notification::send($users, new RobotNotification($this->node, $this->modelData));
         return true;
     }
 
@@ -75,26 +94,26 @@ class Action
     }
 
     /**
-     * Отправить письмо по электронной почте
-     * @return bool
+     * Получить пользователей, которых нужно уведомить
+     * @param $entities
+     * @return User[]|\Illuminate\Database\Eloquent\Collection
      */
-    protected function sendEmail()
+    protected function getRequiredUsers($entities)
     {
-        $from = config('mail.username');
-        $users = User::whereIn('id', $this->getNodeProperties()->nodeData->data->users)->get()->toArray();
-        $message = $this->getNodeProperties()->nodeData->data->message;
-        $subject = $this->getNodeProperties()->nodeData->data->subject;
-        $data = [
-            'user_message' => $message,
-            'subject' => $subject,
-            'email' => $from,
-            'name' => $from
-        ];
-        try {
-            Mail::to($users)->send(new RobotsMail($data));
-            return true;
-        } catch (\Exception $e) {
-            return false;
+        if (is_object($entities)) {
+            $users = isset($entities->users) && !empty($entities->users) ? User::whereIn('id', $entities->users): null;
+            if (isset($entities->roles) && !empty($entities->roles)) {
+                $roles = $entities->roles;
+                $users = $users ? $users->whereHas('roles', function ($q) use ($roles){
+                    $q->whereIn('id', $roles);
+                }) : User::whereHas('roles', function ($q) use ($roles){
+                    $q->whereIn('id', $roles);
+                });
+            }
+            $users = $users->get();
+        } else {
+            $users = User::all();
         }
+        return $users;
     }
 }

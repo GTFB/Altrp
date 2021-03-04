@@ -27,7 +27,7 @@ export function iconsManager() {
 }
 
 /**
- * Устанавливаент заголовок страницы на фронтенде
+ * Устанавливает заголовок страницы на фронтенде
  * @param {string} title
  */
 export function setTitle(title) {
@@ -1582,7 +1582,16 @@ export function generateButtonsArray(
   ];
 }
 
+/**
+ * Проверяем текст на соответствие маске
+ * @param {string} value
+ * @param {[]} mask
+ * @return {boolean}
+ */
 export function isValueMatchMask(value, mask) {
+  if((! value) || value.length !== mask.length){
+    return false;
+  }
   return (
     value.length &&
     value

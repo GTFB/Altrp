@@ -29,7 +29,7 @@ class AltrpSettingsService{
       return $value;
     }
     $settings_key = $this->get_setting_key( $setting_name );
-
+  
     if( DotenvEditor::keyExists( $settings_key ) ){
       $value = DotenvEditor::getValue( $settings_key );
     }
@@ -61,12 +61,11 @@ class AltrpSettingsService{
   public function set_setting_value( $setting_name = '', $value = '', $encrypt = false )
   {
     $settings_key = $this->get_setting_key( $setting_name );
-    if( ! $setting_name ){
-      return false;
-    }
-    if( $encrypt ){
-      $value = encrypt( $value );
-    }
+
+    if( ! $setting_name ) return false;
+
+    if( $encrypt ) $value = encrypt( $value );
+
     try{
       DotenvEditor::setKey( $settings_key, $value );
       DotenvEditor::save();

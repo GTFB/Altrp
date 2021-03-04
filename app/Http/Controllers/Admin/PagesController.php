@@ -30,12 +30,13 @@ class PagesController extends Controller
     foreach ( $_pages as $page ) {
 
 //      $content_template = $page->get_content_template();
+      $user = $page->user;
       $pages[] = [
-        'user' => $page->user,
+        'user' => $user,
         'title' => $page->title,
         'id' => $page->id,
         'parent_page_id' => $page->parent_page_id,
-        'author' => $page->user->name,
+        'author' => data_get( $user, 'name' ),
 //        'template_content' => $content_template,
 //        'template_content_title' => $content_template ? $content_template->title : '',
         'url' => \url( $page->path ),
@@ -205,7 +206,7 @@ class PagesController extends Controller
     $pages = Page::where( 'title', 'like', '%' . $request->get( 's' ) . '%' )
       ->orWhere( 'path', 'like', '%' . $request->get( 's' ) . '%' )
       ->orWhere( 'id', 'like', '%' . $request->get( 's' ) . '%' )->get()->where('type',null);
-      
+
     $pages_options = [];
     foreach ( $pages as $page ) {
       $pages_options[] = [
@@ -215,7 +216,7 @@ class PagesController extends Controller
     }
     return response()->json( $pages_options );
   }
-  
+
   /**
    * Обработка запроса на получение списка отчетов
    * @param Request $request
