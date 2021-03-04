@@ -165,7 +165,7 @@ class ApiController extends Controller
      * @param $params
      * @return string|string[]|null
      */
-    protected function replaceUrlDynamicParams($url, $params)
+    public function replaceUrlDynamicParams($url, $params)
     {
         return preg_replace_callback('/\{(.*?)\}/', function ($matches) use ($params) {
             return $params[trim($matches[0], '{}')];
