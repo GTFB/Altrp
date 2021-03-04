@@ -14,7 +14,7 @@ class SendBroadcast extends Component{
                     <div className="settings-section__icon d-flex">
                         <Chevron />
                     </div>
-                    <div className="settings-section__label">Broadcast</div>
+                    <div className="settings-section__label">Push</div>
                 </div>
             </div>
 
