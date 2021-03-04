@@ -65,10 +65,9 @@ export default class SelectedPanel extends React.Component {
                     </div>
                     <div className="settings-section__label">Настройки </div>
                   </div>
-                </div>
                 {(this.props.selectNode?.id || this.props.selectEdge?.id) ? (
                   <div>
-                    <div className="controllers-wrapper">
+                    <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
                       {this.props.selectNode && <div className="controller-container controller-container_textarea">
                         <div className="controller-container__label control-select__label">Text</div>
                         <textarea
@@ -80,29 +79,31 @@ export default class SelectedPanel extends React.Component {
                           value={ this.props.selectNode.data?.label }
                         ></textarea>
                       </div>}
-                    </div>
-                    {(this.props.selectNode?.type === "action") && <Action
-                                                                      activeSection={this.state.activeSection}
-                                                                      toggleChevron={this.toggleChevron}
-                                                                      robot={ this.props.robot }
-                                                                      selectNode={this.props.selectNode || []}
-                                                                    />}
-                    {(this.props.selectNode?.type === "condition") && <Condition
+                      {(this.props.selectNode?.type === "action") && <Action
+                                                                        activeSection={this.state.activeSection}
+                                                                        toggleChevron={this.toggleChevron}
                                                                         robot={ this.props.robot }
                                                                         selectNode={this.props.selectNode || []}
                                                                       />}
-                    {(this.props.selectNode?.type === "robot") && <Robot
-                                                                    robot={ this.props.robot }
-                                                                    selectNode={this.props.selectNode || []}
-                                                                  />}
+                      {(this.props.selectNode?.type === "condition") && <Condition
+                                                                          robot={ this.props.robot }
+                                                                          selectNode={this.props.selectNode || []}
+                                                                        />}
+                      {(this.props.selectNode?.type === "robot") && <Robot
+                                                                      robot={ this.props.robot }
+                                                                      selectNode={this.props.selectNode || []}
+                                                                    />}
 
-                    {this.props.selectEdge && <Edge
-                                                robot={ this.props.robot }
-                                                selectEdge={this.props.selectEdge || []}
-                                              />}
+                      {this.props.selectEdge && <Edge
+                                                  robot={ this.props.robot }
+                                                  selectEdge={this.props.selectEdge || []}
+                                                />}
+
+                    </div>
                   </div> ) : (<div className="controllers-wrapper">
                     Select a node or edge to edit
                   </div>)}
+                </div>
               </div>
             </div>
           </Scrollbars>

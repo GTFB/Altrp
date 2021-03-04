@@ -151,9 +151,9 @@ export default class Condition extends Component{
                                                                     selectNode={this.props.selectNode}
                                                                 />
                                 }
-                                <div className="controller-container controller-container_select fl-column">
-                                    <div className="controller-container__label control-select__label">Operator</div>
-                                    <div className="control-container_select-wrapper">
+                                <div className="controller-container controller-container_select ">
+                                    <div className="controller-container__label control-select__label compares-fields" >Operator</div>
+                                    <div className="control-container_select-wrapper compares-fields">
                                         <select className="control-select control-field"
                                             value={item.operator || ''}
                                             onChange={e => {this.changeSelect(e, item.id)}}
@@ -164,10 +164,10 @@ export default class Condition extends Component{
                                     </div>
                                 </div>
                                 <div className="controller-container controller-container_textarea">
-                                    <div className="controller-container__label control-select__label">
+                                    <div className="controller-container__label control-select__label compares-fields">
                                         Value
                                     </div>
-                                    <div className="control-group">
+                                    <div className="control-group compares-fields" style={{width: '50%', minWidth: 'unset'}}>
                                         <input  className="control-field" type="text" id={`operand-2_${item.id}`} name="operand" value={item.operands[1] ?? ''} onChange={(e) => { this.changeInput(e, item.id, 1) }}/>
                                     </div>
                                 </div>
