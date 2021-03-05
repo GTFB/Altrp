@@ -4,6 +4,7 @@
 namespace App\Traits;
 
 use ErrorException;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use ReflectionClass;
 use ReflectionMethod;
@@ -28,15 +29,20 @@ trait RelationshipsTrait
             try {
                 $return = $method->invoke($model);
                 if ($return instanceof Relation) {
+                    /**
+                     * @var $return MorphToMany
+                     */
                     $relationships[$method->getName()] = [
                         'type' => (new ReflectionClass($return))->getShortName(),
                         'model' => (new ReflectionClass($return->getRelated()))->getName(),
                         'foreignKey' => (new ReflectionClass($return))->hasMethod('getForeignKey')
                             ? $return->getForeignKey()
-                            : $return->getForeignKeyName(),
+                            : ((new ReflectionClass($return))->hasMethod('getForeignKeyName') ? $return->getForeignKeyName() : $return->getForeignPivotKeyName()) ,
                     ];
                 }
-            } catch(ErrorException $e) {}
+            } catch(\Exception $e) {
+                return [];
+            }
         }
         return $relationships;
     }

@@ -8,6 +8,7 @@ const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
 
 import { getWidgetData } from "../services/getWidgetData";
 import moment from "moment";
+import TooltipPie from "./d3/TooltipPie";
 
 const DynamicPieChart = ({
   widget,
@@ -28,7 +29,9 @@ const DynamicPieChart = ({
   isDashboard = false,
   customColorSchemeChecker = false,
   customColors = [],
-  yScaleMax
+  yScaleMax,
+  widgetID,
+  useCustomTooltips
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -102,6 +105,13 @@ const DynamicPieChart = ({
               ? regagroScheme
               : { scheme: colorScheme }
           }
+          tooltip={datum => (
+            <TooltipPie
+              enable={useCustomTooltips}
+              datum={datum}
+              widgetID={widgetID}
+            ></TooltipPie>
+          )}
           innerRadius={innerRadius}
           enableSliceLabels={enableSliceLabels}
           padAngle={padAngle}

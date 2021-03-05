@@ -73,6 +73,7 @@ class BarDataSource extends Component {
         this.props.formsStore.form_data
       )
     ) {
+      //Обновление данные при смене глобальных параметров
       this.setState(state => ({
         ...state,
         countRequest: 0

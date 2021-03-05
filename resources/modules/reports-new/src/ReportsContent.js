@@ -48,13 +48,13 @@ class ReportsContent extends Component {
     window.currentRouterMatch = new AltrpModel(this.props.match);
     window.mainScrollbars = this.scrollbar.current;
 
-    let page = await pageLoader.loadPage(currentPath.id);
-    let areas = page.areas.map(area => Area.areaFabric(area));
-    this.setState(state => ({
-      ...state,
-      areas,
-      currentRoute: currentPath
-    }));
+    // let page = await pageLoader.loadPage(currentPath.id);
+    // let areas = page.areas.map(area => Area.areaFabric(area));
+    // this.setState(state => ({
+    //   ...state,
+    //   areas
+    //   // currentRoute: currentPath
+    // }));
     /**
      * Меняем текущую модель
      */
@@ -116,7 +116,7 @@ class ReportsContent extends Component {
   render() {
     return (
       <Provider store={appStore}>
-        <ExportPanel reportID={this.state.currentRoute.id} />
+        {/* <ExportPanel reportID={this.state.currentRoute.id} /> */}
         {this.state.areas.map(area => {
           return (
             <AreaComponent

@@ -17,15 +17,23 @@ import {
 import { getDataByPath } from "../../../../../front-app/src/js/helpers";
 import _ from "lodash";
 
-const AltrpDiagram = ({ settings }) => {
+const AltrpDiagram = props => {
+  const { settings, id } = props;
   const customColorSchemeChecker = settings?.isCustomColor;
   const customColors = settings?.customScheme?.map(item =>
     _.get(item, "color.colorPickedHex")
   );
-
   const yScaleMax = settings?.yScaleMax;
 
   const axisY = settings?.axisY;
+
+  const tooltipValues = settings?.repTooltips?.map(item => ({
+    label: _.get(item, "label"),
+    field: _.get(item, "value"),
+    color: _.get(item, "color")?.colorPickedHex
+  }));
+  const useCustomTooltips = settings?.customTooltip;
+
   const formattedYAxis =
     axisY?.map(item => {
       const valueFromPath = getDataByPath(item.yMarkerValue);
@@ -154,6 +162,7 @@ const AltrpDiagram = ({ settings }) => {
   const enableRadialLabels = settings?.enableRadialLabels;
   //data variable
   let data = [];
+
   //funciton for formattion data for all types
   const formatData = (data, r) => {
     return data.map(d => {
@@ -161,23 +170,36 @@ const AltrpDiagram = ({ settings }) => {
       const keyFormatted = !moment(currentKey).isValid()
         ? currentKey
         : moment(currentKey).format("DD.MM.YYYY");
+      const tooltip =
+        typeof tooltipValues !== "undefined"
+          ? tooltipValues?.map(item => {
+              return {
+                label: item?.label,
+                value: _.get(d, item.field),
+                color: item?.color
+              };
+            })
+          : [];
       switch (settings.type) {
         case LINE:
           return {
             y: Number(_.get(d, r.data)),
-            x: keyIsDate ? keyFormatted : currentKey
+            x: keyIsDate ? keyFormatted : currentKey,
+            tooltip: tooltip
           };
           break;
         case TABLE:
           return {
             y: Number(_.get(d, r.data)),
-            x: keyIsDate ? keyFormatted : currentKey
+            x: keyIsDate ? keyFormatted : currentKey,
+            tooltip: tooltip
           };
           break;
         case POINT:
           return {
             y: Number(_.get(d, r.data)),
-            x: keyIsDate ? keyFormatted : currentKey
+            x: keyIsDate ? keyFormatted : currentKey,
+            tooltip: tooltip
           };
           break;
         case BAR:
@@ -185,13 +207,15 @@ const AltrpDiagram = ({ settings }) => {
           return {
             [key]: Number(_.get(d, r.data)),
             key: key,
-            value: Number(_.get(d, r.data))
+            value: Number(_.get(d, r.data)),
+            tooltip: tooltip
           };
           break;
         case PIE:
           return {
             value: Number(_.get(d, r.data)),
-            id: keyIsDate ? keyFormatted : currentKey
+            id: keyIsDate ? keyFormatted : currentKey,
+            tooltip: tooltip
           };
           break;
 
@@ -226,7 +250,9 @@ const AltrpDiagram = ({ settings }) => {
   } else if (settings.datasource_path != null) {
     try {
       data = getDataByPath(settings.datasource_path, []);
-
+      console.log("====================================");
+      console.log(data);
+      console.log("====================================");
       if (settings.type === LINE) {
         data = _.uniqBy(data, settings.key_name);
       }
@@ -295,6 +321,8 @@ const AltrpDiagram = ({ settings }) => {
     case LINE:
       return (
         <DynamicLineChart
+          widgetID={id}
+          useCustomTooltips={useCustomTooltips}
           yScaleMax={yScaleMax}
           customColorSchemeChecker={customColorSchemeChecker}
           customColors={customColors}
@@ -335,6 +363,8 @@ const AltrpDiagram = ({ settings }) => {
     case POINT:
       return (
         <DynamicPointChart
+          widgetID={id}
+          useCustomTooltips={useCustomTooltips}
           yScaleMax={yScaleMax}
           customColorSchemeChecker={customColorSchemeChecker}
           customColors={customColors}
@@ -355,6 +385,8 @@ const AltrpDiagram = ({ settings }) => {
     case BAR:
       return (
         <DynamicBarChart
+          widgetID={id}
+          useCustomTooltips={useCustomTooltips}
           yScaleMax={yScaleMax}
           customColorSchemeChecker={customColorSchemeChecker}
           customColors={customColors}
@@ -380,6 +412,8 @@ const AltrpDiagram = ({ settings }) => {
     case PIE:
       return (
         <DynamicPieChart
+          widgetID={id}
+          useCustomTooltips={useCustomTooltips}
           yScaleMax={yScaleMax}
           customColorSchemeChecker={customColorSchemeChecker}
           customColors={customColors}
@@ -404,6 +438,8 @@ const AltrpDiagram = ({ settings }) => {
     case TABLE:
       return (
         <DynamicTableWidget
+          widgetID={id}
+          useCustomTooltips={useCustomTooltips}
           isCustomColor={isCustomColor}
           colorArray={colorArray}
           isMultiple={isMultiple}

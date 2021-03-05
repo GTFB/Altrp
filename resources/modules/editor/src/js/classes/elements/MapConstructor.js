@@ -215,6 +215,12 @@ class MapConstructor extends BaseElement {
       }
     });
 
+    this.addControl("onlyDatasource", {
+      label: "Data only from datasource",
+      type: CONTROLLER_SWITCHER,
+      default: false
+    });
+
     this.addControl("objects", {
       type: CONTROLLER_REPEATER,
       default: [],
@@ -301,7 +307,6 @@ class MapConstructor extends BaseElement {
       }
     });
 
-
     this.addControl("background_color_btn", {
       type: CONTROLLER_COLOR,
       label: "Background color button",
@@ -310,10 +315,10 @@ class MapConstructor extends BaseElement {
       //   colorPickedHex: "#343B4C",
       // },
       rules: {
-        ".{{ID}}.altrp-map__modal.modal__body-save{{STATE}}": "background-color: {{COLOR}};"
+        ".{{ID}}.altrp-map__modal.modal__body-save{{STATE}}":
+          "background-color: {{COLOR}};"
       }
     });
-
 
     this.addControl("font_typographic_btn", {
       type: CONTROLLER_TYPOGRAPHIC,
@@ -390,7 +395,8 @@ class MapConstructor extends BaseElement {
         colorPickedHex: ""
       },
       rules: {
-        ".{{ID}}.altrp-map__modal .modal__body-text label{{STATE}}": "color: {{COLOR}};"
+        ".{{ID}}.altrp-map__modal .modal__body-text label{{STATE}}":
+          "color: {{COLOR}};"
       }
     });
 

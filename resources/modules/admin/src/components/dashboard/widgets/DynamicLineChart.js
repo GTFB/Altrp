@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ResponsiveLine } from "@nivo/line";
-
+Tooltip;
 import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
@@ -9,6 +9,7 @@ const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
 
 import { getWidgetData } from "../services/getWidgetData";
 import moment from "moment";
+import Tooltip from "./d3/Tooltip";
 
 const format = "%d.%m.%Y";
 
@@ -47,7 +48,9 @@ const DynamicLineChart = ({
   customColorSchemeChecker = false,
   customColors = [],
   constantsAxises = [],
-  yScaleMax
+  yScaleMax,
+  widgetID,
+  useCustomTooltips
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -217,6 +220,28 @@ const DynamicLineChart = ({
           useMesh={true}
           enableArea={enableArea}
           enablePoints={enablePoints}
+          tooltip={datum => {
+            console.log("====================================");
+            console.log(datum);
+            console.log("====================================");
+            return (
+              <Tooltip
+                keyIsDate={keyIsDate}
+                datum={datum}
+                enable={useCustomTooltips}
+                widgetID={widgetID}
+              />
+            );
+          }}
+          // tooltip={datum => {
+          //   const tooltip = datum.point.data?.tooltip;
+          //   console.log("=============TOOLTIP==============");
+          //   console.log(tooltip);
+          //   console.log("====================================");
+          //   return tooltip.map(item => (
+          //     <div>{`${item?.label}:${item?.value}`}</div>
+          //   ));
+          // }}
           pointSize={pointSize}
           curve={curve}
           colors={

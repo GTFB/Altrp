@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
 import "./altrp-breadcrumbs.scss";
 import {isEditor, replaceContentWithData} from "../../../../../front-app/src/js/helpers";
+import AltrpImage from "../altrp-image/AltrpImage";
 
 class AltrpBreadcrumbs extends Component {
   constructor(props) {
@@ -10,46 +11,123 @@ class AltrpBreadcrumbs extends Component {
   }
 
   render() {
-    let pathname = this.props.location.pathname;
+    let breadcrumbs = [];
+    const routes = ! isEditor() ? replaceContentWithData(appStore.getState().appRoutes.routes) : [
+      {
+        title: "this",
+        id: 1,
+        path: "/thisSiteIsWonderful",
+        parent_page_id: null
+      },
+      {
+        title: "site",
+        id: 2,
+        path: "/thisSiteIsWonderful",
+        parent_page_id: 1
+      },
+      {
+        title: "is",
+        id: 3,
+        path: "/thisSiteIsWonderful",
+        parent_page_id: 2
+      },
+      {
+        title: "wonderful",
+        id: 4,
+        path: "/thisSiteIsWonderful",
+        parent_page_id: 3
+      }
+    ];
+    const currentTitle = ! isEditor() ? replaceContentWithData(appStore.getState().currentTitle) : "wonderful";
 
-    if(isEditor()) {
-      pathname = "/super/example/your_page"
+    console.log(currentTitle);
+    if(currentTitle !== routes[0].title) {
+      let idCurrent = 0;
+
+      routes.forEach((route, idx) => {
+        if(currentTitle === route.title) {
+          idCurrent = idx
+        }
+      })
+
+      let breadcrumbsClone = [];
+
+      breadcrumbsClone.push(routes[idCurrent])
+
+      function getParent(parentId) {
+        routes.forEach(route => {
+          if(route.id === parentId) {
+            breadcrumbsClone.push(route)
+            if(route.parent_page_id) {
+              getParent(route.parent_page_id)
+            }
+          }
+        })
+      }
+
+      if(routes[idCurrent].parent_page_id) {
+        getParent(routes[idCurrent].parent_page_id)
+      }
+
+      breadcrumbs = breadcrumbsClone.reverse()
+    } else {
+      breadcrumbs.push(routes[0])
     }
 
-    const breadcrumbs = pathname.split("/");
+
+    const separatorType = this.props.element.getContent("breadcrumbs_type_separator", "default");
+    let separatorClasses = "altrp-nav-breadcrumbs-separator";
+    let separator = "-";
+
+    switch (separatorType) {
+      case "text":
+        const textSeparator = this.props.element.getContent("breadcrumbs_separator_text", ">");
+        separatorClasses += " altrp-nav-breadcrumbs-separator-text";
+        separator = textSeparator;
+        break
+      case "icon":
+        const iconSeparator = this.props.element.getContent("breadcrumbs_separator_icon", {});
+        separatorClasses += " altrp-nav-breadcrumbs-separator-icon";
+        separator = <AltrpImage
+          image={iconSeparator}
+          default={{
+            assetType: "icon",
+            name: 'star',
+            iconComponent: iconsManager.renderIcon('star')
+          }}
+        />
+        break
+      default:
+        separatorClasses += " altrp-nav-breadcrumbs-separator-default";
+    }
 
     return (
       <ul className="altrp-nav-breadcrumbs">
         {
-          breadcrumbs.map((name, idx) => {
-            const to = idx === 0 ? "/" : pathname.split(name)[0] + name;
-            const label = idx === 0 ? this.props.element.getContent("breadcrumbs_label", "Home") : name;
-            const currentLabel = replaceContentWithData(appStore.getState().currentTitle);
+          breadcrumbs.map((route, idx) => {
+            const to = route.path;
+            const label = route.title;
 
             return <li className="altrp-nav-breadcrumbs-li" key={idx}>
               {
-                breadcrumbs.length - 1 !== idx && pathname !== "/" ? (
+                route.title !== currentTitle ? (
                   <Link
                     to={to}
                     onClick={isEditor() ? (e) => e.preventDefault() : null}
                     className="altrp-nav-breadcrumbs-label altrp-nav-breadcrumbs-link"
                   >
-                    {
-                      label
-                    }
+                    { label }
                   </Link>
                 ) : (
                   <div className="altrp-nav-breadcrumbs-label altrp-nav-breadcrumbs-current">
-                    {
-                      isEditor() ? label : currentLabel
-                    }
+                    { label }
                   </div>
                 )
               }
               {
-                idx !== (breadcrumbs.length - 1) && pathname !== "/" ? (
-                  <span className="altrp-nav-breadcrumbs-separator">
-                    -
+                idx !== (breadcrumbs.length - 1) ? (
+                  <span className={separatorClasses}>
+                    { separator }
                   </span>
                 ) : ""
               }

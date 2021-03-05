@@ -105,6 +105,7 @@ class Controller {
   isShow() {
 
     if(this.data.conditionsCallback){
+      console.log(this.data.conditionsCallback());
       return this.data.conditionsCallback();
     }
 

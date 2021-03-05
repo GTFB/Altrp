@@ -141,26 +141,3 @@ export function rgb2hex(rgb) {
         ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2)
     : "";
 }
-
-
-export function listenerHistory(event) {
-  if (event.ctrlKey && event.code === 'KeyZ' && event.shiftKey) { 
-    controllerHistory.redo();
-  } else if (event.ctrlKey && event.code === 'KeyZ') { 
-    controllerHistory.undo();
-  }
-}
-
-export function mountListenerHistory() {
-  if(!window.isExistListenerHistory) {
-    window.isExistListenerHistory = true;
-    window.addEventListener('keydown', listenerHistory, false);
-  }
-}
-
-export function unmountListenerHistory() {
-  if(window.isExistListenerHistory) {
-    window.isExistListenerHistory = false;
-    window.removeEventListener('keydown', listenerHistory, false);
-  }
-}

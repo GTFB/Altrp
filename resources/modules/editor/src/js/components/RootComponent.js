@@ -11,9 +11,12 @@ class RootComponent extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
+    }
   }
 
-  _componentDidMount() {
+  async _componentDidMount() {
     let hiddenElementsTriggers = this.state.settings.hidden_elements_triggers;
     // if (hiddenElementsTriggers && _.isString(hiddenElementsTriggers)) {
     //   hiddenElementsTriggers = hiddenElementsTriggers
@@ -21,6 +24,18 @@ class RootComponent extends Component {
     //     .map(item => item.trim());
     //   this.props.setDefaultTriggers(hiddenElementsTriggers);
     // }
+
+    const actionsManager = (
+        await import(
+            "../../../../front-app/src/js/classes/modules/ActionsManager.js"
+            )
+    ).default;
+    await actionsManager.callAllWidgetActions(
+        this.props.element.getIdForAction(),
+        'load',
+        this.props.element.getResponsiveSetting("page_load_actions", []),
+        this.props.element
+    );
   }
 
   render() {
@@ -30,7 +45,6 @@ class RootComponent extends Component {
     let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
     return (
       <div className={classes}>
-        {this.props.element.getSettings("test-text-4")}
         {this.state.children.map(section => {
           return(
             <ElementWrapper
@@ -38,6 +52,7 @@ class RootComponent extends Component {
               rootElement={this.props.element}
               key={section.getIdForAction()}
               component={section.componentClass}
+              baseRender={this.props.baseRender}
               element={section}
             />
           )})

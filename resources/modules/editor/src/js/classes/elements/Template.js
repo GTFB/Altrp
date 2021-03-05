@@ -1,11 +1,8 @@
 import BaseElement from "./BaseElement";
 import CodeIcon from "../../../svgs/code.svg";
 import {
-  CONTROLLER_SWITCHER,
   TAB_CONTENT,
-  CONTROLLER_REPEATER,
-  CONTROLLER_ELEMENTS,
-  CONTROLLER_TEXTAREA, CONTROLLER_SELECT2
+  CONTROLLER_SELECT2
 } from '../modules/ControllersManager';
 import {advancedTabControllers} from "../../decorators/register-controllers";
 

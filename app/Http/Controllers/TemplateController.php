@@ -48,19 +48,19 @@ class TemplateController extends Controller
         $page_count = ceil( $page_count / $page_size );
       }
       $templates = [];
-      foreach ($_templates as $template) {
+      foreach ( $_templates as $template ) {
         /**
          * @var Template $template
          */
+        $user = $template->user;
         $templates[] = [
-          'user' => $template->user,
+          'user' => $user,
           'name' => $template->name,
           'title' => $template->title,
           'id' => $template->id,
-          'author' => $template->user->name,
+          'author' => data_get( $user, 'name' ),
           'url' => '/admin/editor?template_id=' . $template->id,
           'area' => $template->area()->name,
-
         ];
 
       }

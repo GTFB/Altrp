@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Jackiedo\DotenvEditor\Facades\DotenvEditor;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -83,6 +84,9 @@ class AltrpUpdateService
     if ( $res === false ) {
       dd( 'ERROR' );
     }
+
+    // Update modules statuses
+    $this->updateModulesStatuses();
 
     // Update the current version to last version
     $this->setCurrentVersion( $version );
@@ -290,4 +294,18 @@ class AltrpUpdateService
     }
     return true;
   }
+
+    /**
+     * @return false|int
+     */
+    public function updateModulesStatuses()
+    {
+        try {
+            $exitCode = Artisan::call('modules-statuses:write');
+        } catch (\Exception $e) {
+            Log::debug($e->getMessage());
+            return false;
+        }
+        return true;
+    }
 }

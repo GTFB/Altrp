@@ -18,6 +18,9 @@ class SectionComponent extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
+    }
   }
 
   /**
@@ -86,6 +89,7 @@ class SectionComponent extends Component {
           ElementWrapper={ElementWrapper}
           key={column.getIdForAction()}
           rootElement={this.props.rootElement}
+          baseRender={this.props.baseRender}
           component={column.componentClass}
           element={column}
       />

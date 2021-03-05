@@ -19,6 +19,7 @@ import { clearElements } from "../store/elements-storage/actions";
 import { clearAllResponseData } from "../store/responses-storage/actions";
 import { clearPageState } from "../store/altrp-page-state-storage/actions";
 import {changeCurrentTitle} from "../store/current-title/actions";
+import {changeCurrentPageProperty} from "../store/current-page/actions";
 
 class RouteContent extends Component {
   constructor(props) {
@@ -43,6 +44,7 @@ class RouteContent extends Component {
    */
   async componentDidMount() {
     window.mainScrollbars = this.scrollbar.current;
+    appStore.dispatch(changeCurrentPageProperty('url', location.href));
     if (this.props.lazy && this.props.allowed) {
       let page = await pageLoader.loadPage(this.props.id);
       let areas = page.areas.map(area => Area.areaFabric(area));
@@ -127,6 +129,8 @@ class RouteContent extends Component {
         _.get(prevProps, "match.params.id")
     ) {
       this.changeRouteCurrentModel();
+      console.log(this);
+      appStore.dispatch(changeCurrentPageProperty('url', location.href));
     }
     /**
      * При изменении страницы без изменения текущего ройта
@@ -192,7 +196,7 @@ class RouteContent extends Component {
 
 const mapStateToProps = (state) => ({
   currentUser: state.currentUser
-})
+});
 
 const mapDispatchToProps = dispatch => {
   return {
