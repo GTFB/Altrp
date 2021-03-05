@@ -41,6 +41,7 @@ export default class Condition extends Component{
             case "model_field":
                 node.data.props.nodeData = {
                   "type": "model_field",
+                  "model_id": "",
                   "body": [],
                 };
                 break;
@@ -151,7 +152,7 @@ export default class Condition extends Component{
                                                                     selectNode={this.props.selectNode}
                                                                 />
                                 }
-                                <div className="controller-container controller-container_select ">
+                                <div className="controller-container controller-container_select">
                                     <div className="controller-container__label control-select__label compares-fields" >Operator</div>
                                     <div className="control-container_select-wrapper compares-fields">
                                         <select className="control-select control-field"

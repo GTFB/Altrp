@@ -6,6 +6,8 @@ import SendTelegram from "./send/SendTelegram";
 import store from "../../../../../store/store";
 import { setUpdatedNode } from "../../../../../store/robot-settings/actions";
 import AltrpSelect from "../../../../../../../../admin/src/components/altrp-select/AltrpSelect";
+import Chevron from "../../../../../../../../editor/src/svgs/chevron.svg";
+
 
 export default class Send extends Component{
     constructor(props){
@@ -83,6 +85,14 @@ export default class Send extends Component{
 
         return <div>
             <div>
+            <div className={"settings-section "}>
+            <div className="settings-section__title d-flex">
+                <div className="settings-section__icon d-flex">
+                  <Chevron />
+                </div>
+                <div className="settings-section__label">Настройки Action</div>
+            </div>
+            <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
                 <div className="robot_switcher">
                     <div className="robot_switcher__label">
                         All
@@ -123,6 +133,9 @@ export default class Send extends Component{
                         options={channelsOptions}
                     />
                 </div>
+            </div>
+          </div>
+
             </div>            
             
             {this.getTypeSend("broadcast") && <SendBroadcast activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={this.props.selectNode?.data?.props?.nodeData?.data?.content?.broadcast ?? ''}/>}

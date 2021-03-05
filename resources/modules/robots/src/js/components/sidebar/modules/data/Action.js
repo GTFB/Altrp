@@ -3,6 +3,8 @@ import store from "../../../../store/store";
 import Send from "./action/Send"
 import Crud from "./action/Crud"
 import { setUpdatedNode } from "../../../../store/robot-settings/actions";
+import Chevron from "../../../../../../../editor/src/svgs/chevron.svg";
+
 
 export default class Action extends Component{
     constructor(props){
@@ -70,18 +72,29 @@ export default class Action extends Component{
         const typeData = this.props.selectNode.data?.props?.nodeData?.type ?? '';
 
         return <div>
-            <div className="controller-container controller-container_select fl-column">
-                <div className="controller-container__label control-select__label">Type</div>
-                <div className="control-container_select-wrapper">
-                    <select className="control-select control-field"
-                        value={typeData || ''}
-                        onChange={e => {this.changeSelect(e)}}
-                    >
-                        <option disabled value="" />
-                        {actionTypeOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
-                    </select>
+          <div className={"settings-section "}>
+            <div className="settings-section__title d-flex">
+                <div className="settings-section__icon d-flex">
+                  <Chevron />
                 </div>
+                <div className="settings-section__label">Настройки Action</div>
             </div>
+            <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
+              <div className="controller-container controller-container_select fl-column">
+                  <div className="controller-container__label control-select__label">Type</div>
+                  <div className="control-container_select-wrapper">
+                      <select className="control-select control-field"
+                          value={typeData || ''}
+                          onChange={e => {this.changeSelect(e)}}
+                      >
+                          <option disabled value="" />
+                          {actionTypeOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
+                      </select>
+                  </div>
+              </div>
+            </div>
+          </div>
+
 
             {(typeData === "send_notification") && <Send
                                                       activeSection={this.props.activeSection}

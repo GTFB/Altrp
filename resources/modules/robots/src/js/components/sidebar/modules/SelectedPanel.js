@@ -57,17 +57,16 @@ export default class SelectedPanel extends React.Component {
         <div className="settings-controllers">
           <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
             <div id="settingsControllers">
-              <div>
-                <div className={"settings-section " + (this.state.activeSection === "general" ? 'open' : '')}>
-                  <div className="settings-section__title d-flex" onClick={this.toggleChevron("general")}>
-                    <div className="settings-section__icon d-flex">
-                      <Chevron />
-                    </div>
-                    <div className="settings-section__label">Настройки </div>
-                  </div>
                 {(this.props.selectNode?.id || this.props.selectEdge?.id) ? (
                   <div>
-                    <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
+                    <div className={"settings-section " + (this.state.activeSection === "general" ? 'open' : '')}>
+                      <div className="settings-section__title d-flex" onClick={this.toggleChevron("general")}>
+                        <div className="settings-section__icon d-flex">
+                          <Chevron />
+                        </div>
+                        <div className="settings-section__label">Настройки </div>
+                      </div>
+                      <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
                       {this.props.selectNode && <div className="controller-container controller-container_textarea">
                         <div className="controller-container__label control-select__label">Text</div>
                         <textarea
@@ -79,6 +78,10 @@ export default class SelectedPanel extends React.Component {
                           value={ this.props.selectNode.data?.label }
                         ></textarea>
                       </div>}
+                      </div>
+                    </div>
+
+
                       {(this.props.selectNode?.type === "action") && <Action
                                                                         activeSection={this.state.activeSection}
                                                                         toggleChevron={this.toggleChevron}
@@ -99,13 +102,10 @@ export default class SelectedPanel extends React.Component {
                                                   selectEdge={this.props.selectEdge || []}
                                                 />}
 
-                    </div>
                   </div> ) : (<div className="controllers-wrapper">
                     Select a node or edge to edit
                   </div>)}
-                </div>
               </div>
-            </div>
           </Scrollbars>
         </div>
       </div>

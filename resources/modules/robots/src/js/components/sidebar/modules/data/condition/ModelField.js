@@ -37,9 +37,9 @@ export default class ModelField extends Component{
         const fieldOptions = this.state.fieldOptions ?? [];
         console.log(item?.operands[0]);
 
-        return <div className="controller-container controller-container_select fl-column">
-            <div className="controller-container__label control-select__label">Field Name</div>
-            <div className="control-container_select-wrapper">
+        return <div className="controller-container controller-container_select">
+            <div className="controller-container__label control-select__label compares-fields">Field Name</div>
+            <div className="control-container_select-wrapper compares-fields">
                 <select className="control-select control-field"
                     id={`operand-1_${item?.id}`}
                     value={item?.operands[0]}
