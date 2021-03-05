@@ -8,5 +8,13 @@ class UserMeta extends Model
 {
     protected $table = 'user_metas';
 
+    protected $fillable = [
+        'first_name',
+        'last_name',
+        'patronymic',
+        'user_id',
+        'company_id',
+    ];
+
     public $timestamps = false;
 }
