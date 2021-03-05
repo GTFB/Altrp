@@ -28,7 +28,6 @@ const HeaderCellComponent = styled.div`${({settings, column})=>{
     }
     `
   }
-  console.log(column);
   if(header_full_width){
     styles += `
       grid-column-start: 1;

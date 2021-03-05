@@ -26,7 +26,7 @@ class DataStorageUpdater extends AltrpModel {
    *  @param {Datasource[]} dataSources
    */
   async updateCurrent(dataSources = null) {
-    if(! dataSources){
+    if(! _.get(dataSources, 'length')){
       dataSources = this.getProperty('currentDataSources');
     }
     if(! dataSources){
@@ -37,6 +37,7 @@ class DataStorageUpdater extends AltrpModel {
     /**
      * @member {Datasource} dataSource
      */
+    console.log(dataSources);
     for (let dataSource of dataSources) {
       if (dataSource.getWebUrl()) {
         appStore.dispatch(currentDataStorageLoading());

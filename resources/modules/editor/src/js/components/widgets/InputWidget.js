@@ -566,6 +566,31 @@ class InputWidget extends Component {
     }
     return options;
   }
+
+  /**
+   * Для действие по фокусу
+   * @param e
+   * @return {Promise<void>}
+   */
+
+  onFocus = async (e) => {
+    const focus_actions = this.props.element.getSettings('focus_actions');
+
+    if (focus_actions && ! isEditor()) {
+      const actionsManager = (
+          await import(
+              "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+              )
+      ).default;
+      console.log(actionsManager);
+      await actionsManager.callAllWidgetActions(
+          this.props.element.getIdForAction(),
+          'focus',
+          focus_actions,
+          this.props.element
+      );
+    }
+  };
   /**
    * Потеря фокуса для оптимизации
    * @param  e
@@ -582,7 +607,7 @@ class InputWidget extends Component {
     if (_.get(editor, 'getData')) {
       this.dispatchFieldValueToStore(editor.getData(), true);
     }
-    if (this.props.element.getSettings("actions", []) && !isEditor()) {
+    if (this.props.element.getSettings('actions', []) && ! isEditor()) {
       const actionsManager = (
         await import(
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
@@ -801,6 +826,7 @@ class InputWidget extends Component {
           input = (
             <select
               value={value || ""}
+              onFocus={this.onFocus}
               name={this.getName()}
               onChange={this.onChange}
               onBlur={this.onBlur}
@@ -905,6 +931,8 @@ class InputWidget extends Component {
                 onKeyDown={this.handleEnter}
                 onChange={this.onChange}
                 onBlur={this.onBlur}
+                onFocus={this.onFocus}
+
                 id={this.state.settings.position_css_id}
               />
               {isClearable && (
@@ -1117,6 +1145,7 @@ class InputWidget extends Component {
     }
     const select2Props = {
       className: "altrp-field-select2",
+      onFocus: this.onFocus,
       element: this.props.element,
       classNamePrefix: this.props.element.getId() + " altrp-field-select2",
       options,

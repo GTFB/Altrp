@@ -4,7 +4,7 @@ window.queryString = queryString;
 /**
  * @class Resource
  * */
-export const MAX_FILE_SIZE = 20971520;
+export const MAX_FILE_SIZE = 41943040;
 
 class Resource {
   /**

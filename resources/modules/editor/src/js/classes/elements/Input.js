@@ -660,7 +660,9 @@ class Input extends BaseElement {
 
     this.endControlSection();
 
-    actionsControllers(this);
+    actionsControllers(this, 'Blur Actions');
+    
+    actionsControllers(this, 'Focus Actions', 'focus_');
 
     // this.startControlSection('logic_section', {
     //   tab: TAB_CONTENT,

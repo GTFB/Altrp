@@ -16,7 +16,7 @@ class RootComponent extends Component {
     }
   }
 
-  _componentDidMount() {
+  async _componentDidMount() {
     let hiddenElementsTriggers = this.state.settings.hidden_elements_triggers;
     // if (hiddenElementsTriggers && _.isString(hiddenElementsTriggers)) {
     //   hiddenElementsTriggers = hiddenElementsTriggers
@@ -24,6 +24,18 @@ class RootComponent extends Component {
     //     .map(item => item.trim());
     //   this.props.setDefaultTriggers(hiddenElementsTriggers);
     // }
+
+    const actionsManager = (
+        await import(
+            "../../../../front-app/src/js/classes/modules/ActionsManager.js"
+            )
+    ).default;
+    await actionsManager.callAllWidgetActions(
+        this.props.element.getIdForAction(),
+        'load',
+        this.props.element.getResponsiveSetting("page_load_actions", []),
+        this.props.element
+    );
   }
 
   render() {

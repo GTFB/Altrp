@@ -44,6 +44,7 @@ class RouteContent extends Component {
    */
   async componentDidMount() {
     window.mainScrollbars = this.scrollbar.current;
+    appStore.dispatch(changeCurrentPageProperty('url', location.href));
     if (this.props.lazy && this.props.allowed) {
       let page = await pageLoader.loadPage(this.props.id);
       let areas = page.areas.map(area => Area.areaFabric(area));

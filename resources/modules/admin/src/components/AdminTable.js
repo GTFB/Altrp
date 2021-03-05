@@ -14,7 +14,6 @@ class AdminTable extends Component {
   };
 
   render() {
-    console.log(this.props.rows);
     const { search, sortingHandler, sortingField } = this.props;
     return (
       <div className="admin-table">
