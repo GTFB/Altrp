@@ -64,16 +64,16 @@ export default class SelectedPanel extends React.Component {
                         <div className="settings-section__icon d-flex">
                           <Chevron />
                         </div>
-                        <div className="settings-section__label">Настройки </div>
+                        <div className="settings-section__label">Settings </div>
                       </div>
                       <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
                       {this.props.selectNode && <div className="controller-container controller-container_textarea">
-                        <div className="controller-container__label control-select__label">Text</div>
+                        <div className="controller-container__label control-select__label controller-label" >Text</div>
                         <textarea
-                          className="control-field"
+                          className="control-field controller-field"
                           type="text"
-                          rows="3"
-                          style={{lineHeight: '125%', height: 'auto'}}
+                          // rows="3"
+                          style={{lineHeight: '125%'}}
                           onChange={(e) => { this.changeInput(e) }}
                           value={ this.props.selectNode.data?.label }
                         ></textarea>

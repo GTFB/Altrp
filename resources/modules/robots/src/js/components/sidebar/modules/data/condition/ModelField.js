@@ -38,8 +38,8 @@ export default class ModelField extends Component{
         console.log(item?.operands[0]);
 
         return <div className="controller-container controller-container_select">
-            <div className="controller-container__label control-select__label compares-fields">Field Name</div>
-            <div className="control-container_select-wrapper compares-fields">
+            <div className="controller-container__label control-select__label controller-label">Name</div>
+            <div className="control-container_select-wrapper controller-field">
                 <select className="control-select control-field"
                     id={`operand-1_${item?.id}`}
                     value={item?.operands[0]}

@@ -90,7 +90,7 @@ export default class Send extends Component{
                 <div className="settings-section__icon d-flex">
                   <Chevron />
                 </div>
-                <div className="settings-section__label">Настройки Action</div>
+                <div className="settings-section__label">Settings Send Notification</div>
             </div>
             <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
                 <div className="robot_switcher">
@@ -105,8 +105,8 @@ export default class Send extends Component{
                 </div>
                 {!value && <div className="settings-section-box">
                     <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
-                        <div className="controller-container__label control-select__label">Users</div>
-                        <AltrpSelect className="control-container_select2-wrapper"
+                        <div className="controller-container__label control-select__label controller-label">Users</div>
+                        <AltrpSelect className="control-container_select2-wrapper controller-field"
                             id="send-users"
                             isMulti={true}
                             value={_.filter(usersOptions, u => users.indexOf(u.value) >= 0)}
@@ -115,8 +115,9 @@ export default class Send extends Component{
                         />
                     </div>
                     <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
-                        <div className="controller-container__label control-select__label">Roles</div>
+                        <div className="controller-container__label control-select__label controller-label">Roles</div>
                         <AltrpSelect id="send-roles"
+                            className="controller-field"
                             isMulti={true}
                             value={_.filter(rolesOptions, r => roles.indexOf(r.value) >= 0)}
                             onChange={e => {this.changeSelect(e, "roles")}}
@@ -125,8 +126,9 @@ export default class Send extends Component{
                     </div>
                 </div>}
                 <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
-                    <div className="controller-container__label control-select__label">Channels</div>
+                    <div className="controller-container__label control-select__label controller-label">Channels</div>
                     <AltrpSelect id="send-channels"
+                        className="controller-field"
                         isMulti={true}
                         value={_.filter(channelsOptions, c => channels.indexOf(c.value) >= 0)}
                         onChange={e => {this.changeSelect(e, "channels")}}

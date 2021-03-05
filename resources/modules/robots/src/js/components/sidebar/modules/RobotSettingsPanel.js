@@ -54,40 +54,44 @@ export default class RobotSettingsPanel extends React.Component {
           <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
             <div id="settingsControllers">
               <div>
+
                 <div className="settings-section open">
                   <div className="settings-section__title d-flex">
                     <div className="settings-section__icon d-flex">
                       <Chevron />
                     </div>
-                    <div className="settings-section__label">Настройки Робота</div>
+                    <div className="settings-section__label">Settings Robot</div>
                   </div>
-                </div>
-                <div className="controllers-wrapper">
-                    <div className="controller-container controller-container_select fl-column">
-                      <div className="controller-container__label control-select__label">Model</div>
-                      <div className="control-container_select-wrapper">
-                        <select className="control-select control-field"
-                            value={model || ''}
-                            onChange={e => {this.changeSelect(e, "model_id")}}
-                        >
-                            <option disabled value="" />
-                            {modelOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
-                        </select>
+
+                  <div className="controllers-wrapper">
+                      <div className="controller-container controller-container_select">
+                        <div className="controller-container__label control-select__label controller-label">Model</div>
+                        <div className="control-container_select-wrapper controller-field">
+                          <select className="control-select control-field"
+                              value={model || ''}
+                              onChange={e => {this.changeSelect(e, "model_id")}}
+                          >
+                              <option disabled value="" />
+                              {modelOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
+                          </select>
+                        </div>
                       </div>
-                    </div>
-                    <div className="controller-container controller-container_select fl-column" >
-                      <div className="controller-container__label control-select__label">Start condition</div>
-                      <div className="control-container_select-wrapper">
-                        <select className="control-select control-field"
-                            value={start || ''}
-                            onChange={e => {this.changeSelect(e, "start_condition")}}
-                        >
-                            <option disabled value="" />
-                            {startOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
-                        </select>
+
+                      <div className="controller-container controller-container_select" >
+                        <div className="controller-container__label control-select__label controller-label">Start</div>
+                        <div className="control-container_select-wrapper controller-field">
+                          <select className="control-select control-field"
+                              value={start || ''}
+                              onChange={e => {this.changeSelect(e, "start_condition")}}
+                          >
+                              <option disabled value="" />
+                              {startOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
+                          </select>
+                        </div>
                       </div>
-                    </div>
-                </div>
+                  </div> {/* ./controllers-wrapper */}
+                </div> {/* ./settings-section */}
+
               </div>
             </div>
           </Scrollbars>

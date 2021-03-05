@@ -4,6 +4,7 @@ import { setUpdatedNode } from "../../../../store/robot-settings/actions";
 import {CONDITIONS_OPTIONS} from "../../../../../../../front-app/src/js/helpers";
 import {iconsManager} from "../../../../../../../editor/src/js/helpers";
 import ModelField from "./condition/ModelField";
+import Chevron from "../../../../../../../editor/src/svgs/chevron.svg";
 
 export default class Condition extends Component{
     constructor(props){
@@ -103,39 +104,50 @@ export default class Condition extends Component{
         const typeData = this.props.selectNode.data?.props?.nodeData?.type ?? '';
         console.log(typeData);      
 
-        return <div>
-            <div className="controller-container controller-container_select fl-column" >
-                <div className="controller-container__label control-select__label">Type</div>
-                <div className="control-container_select-wrapper">
-                    <select className="control-select control-field"
-                        value={typeData || ''}
-                        onChange={e => {this.changeSelectType(e)}}
-                    >
-                        <option disabled value="" />
-                        {conditionTypeOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
-                    </select>
+    return <div>
+        <div className={"settings-section "}>
+            <div className="settings-section__title d-flex">
+                <div className="settings-section__icon d-flex">
+                    <Chevron />
                 </div>
+                <div className="settings-section__label">Settings Condition</div>
             </div>
-            <div className="controller-container controller-container_select fl-column">
-                <div className="controller-container__label control-select__label">Operator</div>
-                <div className="control-container_select-wrapper">
-                    <select className="control-select control-field"
-                        value={logic || ''}
-                        onChange={e => {this.changeSelect(e, false, "operator")}}
-                    >
-                        <option disabled value="" />
-                        {logicOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
-                    </select>
-                </div>
-            </div>
-            <div className="controller-container controller-container_repeater repeater">                
-                <div className="control-header">                    
-                    <div className="controller-container__label mt-10">
-                        Compares
+
+            <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
+                <div className="controller-container controller-container_select" >
+                    <div className="controller-container__label control-select__label controller-label">Type</div>
+                    <div className="control-container_select-wrapper controller-field">
+                        <select className="control-select control-field"
+                            value={typeData || ''}
+                            onChange={e => {this.changeSelectType(e)}}
+                        >
+                            <option disabled value="" />
+                            {conditionTypeOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
+                        </select>
                     </div>
                 </div>
-                <div className="repeater-fields">
-                    {compares.map( (item, index) =>{ 
+
+                <div className="controller-container controller-container_select">
+                    <div className="controller-container__label control-select__label controller-label">Operator</div>
+                    <div className="control-container_select-wrapper controller-field">
+                        <select className="control-select control-field"
+                            value={logic || ''}
+                            onChange={e => {this.changeSelect(e, false, "operator")}}
+                        >
+                            <option disabled value="" />
+                            {logicOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
+                        </select>
+                    </div>
+                </div>
+
+                <div className="controller-container controller-container_repeater repeater">                
+                    <div className="control-header">                    
+                        <div className="controller-container__label mt-10">
+                            Compares
+                        </div>
+                    </div>
+                    <div className="repeater-fields">
+                        {compares.map( (item, index) =>{ 
                         return <div className="repeater-item repeater-item_open" key={index}>
                             <div className="repeater-item-tools">
                                 <div className="repeater-item__caption">
@@ -153,8 +165,8 @@ export default class Condition extends Component{
                                                                 />
                                 }
                                 <div className="controller-container controller-container_select">
-                                    <div className="controller-container__label control-select__label compares-fields" >Operator</div>
-                                    <div className="control-container_select-wrapper compares-fields">
+                                    <div className="controller-container__label control-select__label controller-label" >Operator</div>
+                                    <div className="control-container_select-wrapper controller-field">
                                         <select className="control-select control-field"
                                             value={item.operator || ''}
                                             onChange={e => {this.changeSelect(e, item.id)}}
@@ -164,27 +176,42 @@ export default class Condition extends Component{
                                         </select>
                                     </div>
                                 </div>
+
                                 <div className="controller-container controller-container_textarea">
-                                    <div className="controller-container__label control-select__label compares-fields">
+                                    <div className="controller-container__label control-select__label controller-label">
                                         Value
                                     </div>
-                                    <div className="control-group compares-fields" style={{width: '50%', minWidth: 'unset'}}>
-                                        <input  className="control-field" type="text" id={`operand-2_${item.id}`} name="operand" value={item.operands[1] ?? ''} onChange={(e) => { this.changeInput(e, item.id, 1) }}/>
+                                    <div className="control-group controller-field">
+                                        <textarea  
+                                        className="control-field" 
+                                        type="text" 
+                                        id={`operand-2_${item.id}`} 
+                                        name="operand" 
+                                        style={{width: '100%'}}
+                                        value={item.operands[1] ?? ''} 
+                                        onChange={(e) => { this.changeInput(e, item.id, 1) }}
+                                        />
                                     </div>
                                 </div>
-                            </div>
+
+                            </div>{/* ./repeater-item-content */}
                         </div>}
                         )}
-                </div>
-                <div className="d-flex justify-center repeater-bottom">                    
-                    <button className="altrp-btn altrp-btn_gray d-flex align-items-center" onClick={() => this.onCreate()}>
-                        {iconsManager().renderIcon('plus', {
-                            className: 'altrp-btn__icon',
-                        })}
+                    </div>
+                    <div className="d-flex justify-center repeater-bottom">                    
+                        {/* <button className="altrp-btn altrp-btn_gray d-flex align-items-center" onClick={() => this.onCreate()}> */}
+                        <button 
+                        className="btn font_montserrat font_500 btn_grey btn_active" 
+                        style={{background:'#87CA00', padding:'5px', fontSize: '10px', textTransform: 'uppercase'}} onClick={() => this.onCreate()}>
+                        {/* {iconsManager().renderIcon('plus', {
+                            className: 'altrp-btn__icon', 
+                        })}*/}
                         Add Compare
-                    </button>
-                </div>
-            </div>
-        </div>
+                        </button>
+                    </div>
+                </div>{/* ./controller-container controller-container_repeater repeater */}
+            </div>{/* ./controllers-wrapper */}
+        </div>{/* ./settings-section */}
+    </div>
     }
 }

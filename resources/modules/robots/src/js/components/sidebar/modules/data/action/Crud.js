@@ -127,76 +127,83 @@ export default class Crud extends Component{
         console.log(fields);
 
         return <div>
-            <div className={"settings-section " + (this.props.activeSection === "crud" ? '' : 'open')}>
-                <div className="settings-section__title d-flex" onClick={this.props.toggleChevron("crud")}>
-                    <div className="settings-section__icon d-flex">
-                        <Chevron />
+        <div className={"settings-section " + (this.props.activeSection === "crud" ? '' : 'open')}>
+            <div className="settings-section__title d-flex" onClick={this.props.toggleChevron("crud")}>
+                <div className="settings-section__icon d-flex">
+                    <Chevron />
+                </div>
+                <div className="settings-section__label">Settings CRUD</div>
+            </div>
+        
+        
+            <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
+                <div className="controller-container controller-container_select">
+                    <div className="controller-container__label control-select__label controller-label">Model</div>
+                    <div className="control-container_select-wrapper controller-field">
+                        <select className="control-select control-field"
+                            value={model || ''}
+                            onChange={e => {this.changeSelect(e, "model_id")}}
+                        >
+                            <option disabled value="" />
+                            {modelOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
+                        </select>
                     </div>
-                    <div className="settings-section__label">CRUD</div>
-                </div>
-            </div>
-            <div className="controller-container controller-container_select">
-                <div className="controller-container__label control-select__label">Model</div>
-                <div className="control-container_select-wrapper">
-                    <select className="control-select control-field"
-                        value={model || ''}
-                        onChange={e => {this.changeSelect(e, "model_id")}}
-                    >
-                        <option disabled value="" />
-                        {modelOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
-                    </select>
-                </div>
-            </div>
+                </div>            
 
-            {model && <div className="controller-container controller-container_select">
-                      <div className="controller-container__label control-select__label">Method</div>
-                      <div className="control-container_select-wrapper">
-                        <select className="control-select control-field"
-                            value={method || ''}
-                            onChange={e => {this.changeSelect(e, "method")}}
-                        >
-                            <option disabled value="" />
-                            {methodOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
-                        </select>
-                      </div>
-                    </div>}
-            {(method && method !== "create") && <div className="controller-container controller-container_select">
-                      <div className="controller-container__label control-select__label">Record</div>
-                      <div className="control-container_select-wrapper">
-                        <select className="control-select control-field"
-                            value={record || ''}
-                            onChange={e => {this.changeSelect(e, "record_id")}}
-                        >
-                            <option disabled value="" />
-                            {recordOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
-                        </select>
-                      </div>
-                    </div>}
-            {(method && method !== "delete") && <div className="controller-container controller-container_select2">
-                <div className="controller-container__label textcontroller-responsive">Fields</div>
-                <AltrpSelect id="crud-fields"
-                    isMulti={true}
-                    value={_.filter(fieldOptions, f => fields.indexOf(f.label) >= 0)}
-                    onChange={e => {this.changeSelect(e, "body")}}
-                    options={fieldOptions}
-                />
+                {model && <div className="controller-container controller-container_select">
+                        <div className="controller-container__label control-select__label controller-label">Method</div>
+                        <div className="control-container_select-wrapper controller-field">
+                            <select className="control-select control-field"
+                                value={method || ''}
+                                onChange={e => {this.changeSelect(e, "method")}}
+                            >
+                                <option disabled value="" />
+                                {methodOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
+                            </select>
+                        </div>
+                        </div>}
 
-                {fields.map((item, index) =>
-                <div className="controller-container-input" key={index}>
-                    <div className="controller-container controller-container_textarea" >
-                      <div className="controller-container__label textcontroller-responsive">{item}</div>
-                    <input
-                        className="control-field"
-                        type="text"
-                        id={item}
-                        name={item}
-                        value={this.props.selectNode?.data.props.nodeData.data.body[item] ?? ''}
-                        onChange={(e) => { this.changeInput(e, item, fields) }}
+                {(method && method !== "create") && <div className="controller-container controller-container_select">
+                        <div className="controller-container__label control-select__label controller-label">Record</div>
+                        <div className="control-container_select-wrapper controller-field">
+                            <select className="control-select control-field"
+                                value={record || ''}
+                                onChange={e => {this.changeSelect(e, "record_id")}}
+                            >
+                                <option disabled value="" />
+                                {recordOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
+                            </select>
+                        </div>
+                        </div>}
+
+                {(method && method !== "delete") && <div className="controller-container controller-container_select2">
+                    <div className="controller-container__label textcontroller-responsive">Fields</div>
+                    <AltrpSelect id="crud-fields"
+                        isMulti={true}
+                        value={_.filter(fieldOptions, f => fields.indexOf(f.label) >= 0)}
+                        onChange={e => {this.changeSelect(e, "body")}}
+                        options={fieldOptions}
                     />
-                    </div>
-                </div>
-                )}
-            </div>}
-        </div>
+
+                    {fields.map((item, index) =>
+                    <div className="controller-container-input" key={index}>
+                        <div className="controller-container controller-container_textarea" >
+                        <div className="controller-container__label textcontroller-responsive">{item}</div>
+                        <input
+                            className="control-field"
+                            type="text"
+                            id={item}
+                            name={item}
+                            value={this.props.selectNode?.data.props.nodeData.data.body[item] ?? ''}
+                            onChange={(e) => { this.changeInput(e, item, fields) }}
+                        />
+                        </div>
+                    </div> /* ./controller-container-input */
+                    )}
+                </div>}
+
+            </div> {/* ./controllers-wrapper */}
+        </div>  {/* ./settings-section */}
+    </div>
     }
 }

@@ -77,12 +77,12 @@ export default class Action extends Component{
                 <div className="settings-section__icon d-flex">
                   <Chevron />
                 </div>
-                <div className="settings-section__label">Настройки Action</div>
+                <div className="settings-section__label">Settings Action</div>
             </div>
             <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
-              <div className="controller-container controller-container_select fl-column">
-                  <div className="controller-container__label control-select__label">Type</div>
-                  <div className="control-container_select-wrapper">
+              <div className="controller-container controller-container_select">
+                  <div className="controller-container__label control-select__label controller-label">Type</div>
+                  <div className="control-container_select-wrapper controller-field">
                       <select className="control-select control-field"
                           value={typeData || ''}
                           onChange={e => {this.changeSelect(e)}}

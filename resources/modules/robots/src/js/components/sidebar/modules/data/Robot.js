@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import store from "../../../../store/store";
 import { setUpdatedNode } from "../../../../store/robot-settings/actions";
 import Resource from "../../../../../../../editor/src/js/classes/Resource";
+import Chevron from "../../../../../../../editor/src/svgs/chevron.svg";
 
 export default class Robot extends Component{
     constructor(props){
@@ -30,18 +31,30 @@ export default class Robot extends Component{
         const {robotOptions} = this.state;
 
         return <div>
-            <div className="controller-container controller-container_select fl-column">
-                <div className="controller-container__label control-select__label">Start condition</div>
-                <div className="control-container_select-wrapper">
-                <select className="control-select control-field"
-                    value={robot || ''}
-                    onChange={e => {this.changeSelect(e)}}
-                >
-                    <option disabled value="" />
-                    {robotOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
-                </select>
+        <div className={"settings-section "}>
+            <div className="settings-section__title d-flex">
+                <div className="settings-section__icon d-flex">
+                    <Chevron />
                 </div>
+                <div className="settings-section__label">Settings Robot</div>
             </div>
+
+            <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
+                <div className="controller-container controller-container_select">
+                    <div className="controller-container__label control-select__label controller-label">Start</div>
+                    <div className="control-container_select-wrapper controller-field">
+                    <select className="control-select control-field"
+                        value={robot || ''}
+                        onChange={e => {this.changeSelect(e)}}
+                    >
+                        <option disabled value="" />
+                        {robotOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
+                    </select>
+                    </div>
+                </div>
+            </div>{/* ./controllers-wrapper */}
+        </div> {/* ./settings-section */}
+
         </div>
     }
 }

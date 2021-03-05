@@ -356,8 +356,11 @@ body {
 .mt-10 {
     margin-top: 10px;
 }
-.compares-fields {
-    width: 50%;
-    flex-grow: unset;
-    margin-right: inherit;
+.controller-label {
+    width: 25%;
+    flex-grow: inherit;
+}
+.controller-field {
+    width: 75% !important;
+    flex-grow: inherit;
 }
