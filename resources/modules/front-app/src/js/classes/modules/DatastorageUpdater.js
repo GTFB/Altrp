@@ -26,62 +26,75 @@ class DataStorageUpdater extends AltrpModel {
    *  @param {Datasource[]} dataSources
    */
   async updateCurrent(dataSources = null) {
+    console.log(dataSources);
     if(! _.get(dataSources, 'length')){
       dataSources = this.getProperty('currentDataSources');
     }
     if(! dataSources){
       dataSources = [];
     }
-    dataSources = _.sortBy(dataSources, ['data.priority']);
+    // dataSources = _.sortBy(dataSources, ['data.priority']);
     this.setProperty('currentDataSources', dataSources);
     /**
      * @member {Datasource} dataSource
      */
-    console.log(dataSources);
-    for (let dataSource of dataSources) {
-      if (dataSource.getWebUrl()) {
-        appStore.dispatch(currentDataStorageLoading());
-        let params = dataSource.getParams(window.currentRouterMatch.params, 'altrpforms.');
-        let defaultParams = _.cloneDeep(params);
-        let needUpdateFromForms = false;
-        _.each(params, (paramValue, paramName) => {
-          if (paramValue.toString().indexOf('altrpforms.') === 0) {
-            params[paramName] = _.get(appStore.getState().formsStore, paramValue.toString().replace('altrpforms.', ''), '');
-            needUpdateFromForms = true;
-          }
-        });
-        /**
-         * Если нужно взять параметры из формы, то подписываемся на изменения полуeй формы
-         * и сохраняем параметры, с которыми уже получили данные
-         */
-        if (needUpdateFromForms) {
-          this.subscribeToFormsUpdate(dataSource, _.cloneDeep(defaultParams));
-        }
-        let res = {};
-        try {
-          if (dataSource.getType() === 'show') {
-            let id = _.get(params, 'id', _.get(this.props, 'match.params.id'));
-            if (id) {
-              res = await (new Resource({ route: dataSource.getWebUrl() })).get(id);
-            }
-          } else if (!_.isEmpty(params)) {
-            res = await (new Resource({ route: dataSource.getWebUrl() })).getQueried(params);
-            dataSource.params = _.cloneDeep(params);
-          } else {
-            res = await (new Resource({ route: dataSource.getWebUrl() })).getAll();
-          }
-        } catch (err) {
-          if(err instanceof Promise){
-            err = await err.then();
-          }
-          console.error(err);
-        }
-        res = _.get(res, 'data', res);
-        appStore.dispatch(changeCurrentDataStorage(dataSource.getAlias(), res));
-        appStore.dispatch(currentDataStorageLoaded());
+    const groupedDataSources = {};
+    dataSources.forEach(dataSource => {
+      groupedDataSources[dataSource.getProperty('priority')] = groupedDataSources[dataSource.getProperty('priority')] || [];
+      groupedDataSources[dataSource.getProperty('priority')].push(dataSource);
+    });
+    for (let groupPriority in groupedDataSources){
+      if(! groupedDataSources.hasOwnProperty(groupPriority)){
+        continue;
       }
+      let requests = groupedDataSources[groupPriority].map(async dataSource => {
+
+        if (dataSource.getWebUrl()) {
+          appStore.dispatch(currentDataStorageLoading());
+          let params = dataSource.getParams(window.currentRouterMatch.params, 'altrpforms.');
+          let defaultParams = _.cloneDeep(params);
+          let needUpdateFromForms = false;
+          _.each(params, (paramValue, paramName) => {
+            if (paramValue.toString().indexOf('altrpforms.') === 0) {
+              params[paramName] = _.get(appStore.getState().formsStore, paramValue.toString().replace('altrpforms.', ''), '');
+              needUpdateFromForms = true;
+            }
+          });
+          /**
+           * Если нужно взять параметры из формы, то подписываемся на изменения полуeй формы
+           * и сохраняем параметры, с которыми уже получили данные
+           */
+          if (needUpdateFromForms) {
+            this.subscribeToFormsUpdate(dataSource, _.cloneDeep(defaultParams));
+          }
+          let res = {};
+          try {
+            if (dataSource.getType() === 'show') {
+              let id = _.get(params, 'id', _.get(this.props, 'match.params.id'));
+              if (id) {
+                res = await (new Resource({ route: dataSource.getWebUrl() })).get(id);
+              }
+            } else if (!_.isEmpty(params)) {
+              res = await (new Resource({ route: dataSource.getWebUrl() })).getQueried(params);
+              dataSource.params = _.cloneDeep(params);
+            } else {
+              res = await (new Resource({ route: dataSource.getWebUrl() })).getAll();
+            }
+          } catch (err) {
+            if(err instanceof Promise){
+              err = await err.then();
+            }
+            console.error(err);
+          }
+          res = _.get(res, 'data', res);
+          appStore.dispatch(changeCurrentDataStorage(dataSource.getAlias(), res));
+          appStore.dispatch(currentDataStorageLoaded());
+          return res;
+        }
+      });
+      let responses = await Promise.all(requests);
     }
-    appStore.dispatch(currentDataStorageLoaded());
+    // appStore.dispatch(currentDataStorageLoaded());
   }
   /**
    * Обнуляем текущее хранилище dataStorage
