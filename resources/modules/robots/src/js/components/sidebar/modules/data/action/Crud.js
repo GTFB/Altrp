@@ -126,7 +126,7 @@ export default class Crud extends Component{
         console.log(modelOptions);
         console.log(fields);
 
-        return <div>
+    return <div>
         <div className={"settings-section " + (this.props.activeSection === "crud" ? '' : 'open')}>
             <div className="settings-section__title d-flex" onClick={this.props.toggleChevron("crud")}>
                 <div className="settings-section__icon d-flex">
@@ -176,9 +176,10 @@ export default class Crud extends Component{
                         </div>
                         </div>}
 
-                {(method && method !== "delete") && <div className="controller-container controller-container_select2">
-                    <div className="controller-container__label textcontroller-responsive">Fields</div>
+                {(method && method !== "delete") && <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                    <div className="controller-container__label control-select__label controller-label">Fields</div>
                     <AltrpSelect id="crud-fields"
+                        className="controller-field"
                         isMulti={true}
                         value={_.filter(fieldOptions, f => fields.indexOf(f.label) >= 0)}
                         onChange={e => {this.changeSelect(e, "body")}}
