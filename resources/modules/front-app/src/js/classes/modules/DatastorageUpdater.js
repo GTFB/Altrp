@@ -26,7 +26,6 @@ class DataStorageUpdater extends AltrpModel {
    *  @param {Datasource[]} dataSources
    */
   async updateCurrent(dataSources = null) {
-    console.log(dataSources);
     if(! _.get(dataSources, 'length')){
       dataSources = this.getProperty('currentDataSources');
     }
