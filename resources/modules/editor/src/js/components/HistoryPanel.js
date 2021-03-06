@@ -150,12 +150,12 @@ const ActionsTabContent = () => {
 };
 
 const RevisionTabContent = () => {
-  React.useEffect(() => {
-    unmountListenerHistory();
-    return () => {
-      mountListenerHistory();
-    };
-  });
+  // React.useEffect(() => {
+  //   unmountListenerHistory();
+  //   return () => {
+  //     mountListenerHistory();
+  //   };
+  // });
 
   return (
     <React.Fragment>

@@ -33,7 +33,7 @@
   &__title {
     padding: 10px;
 
-    border-bottom: 2px solid hsl(210deg 14% 91%);
+    border-bottom: 2px solid hsl(210deg, 14%, 91%);
     background-color: #ffffff;
     font-weight: bold;
   }
@@ -45,7 +45,7 @@
     border: 2px solid #D5DADF;
     color:  #6D7896;
 
-    display: pointer;
+    cursor: pointer;
   }
 
   &__restore-item--active {
@@ -84,14 +84,14 @@
   &__discard {
     display: flex;
     align-items: center;
-    color: hsl(0deg 1% 73%);
+    color: hsl(0deg, 1%, 73%);
     line-height: 24px;
   }
 
   &__discard-icon {
     margin-right: 7px;
     path {
-      fill: hsl(0deg 1% 73%);
+      fill: hsl(0deg, 1%, 73%);
     }
   }
 
@@ -99,7 +99,7 @@
     padding: 7px 15px;
 
     border-radius: 7px;
-    background-color: hsl(128deg 52% 47%);
+    background-color: hsl(128deg, 52%, 47%);
     color: #fff;
   }
 }
