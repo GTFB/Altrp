@@ -140,7 +140,6 @@ class BaseElement extends ControlStack {
     this.templateNeedUpdate();
     if(dispatchToHistory) {
       let index = this.children.length - 1;
-      console.log(index);
       store.dispatch(addHistoryStoreItem('ADD', {element: child, index, parent: this})); 
     }
   }
