@@ -124,6 +124,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::put('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@update");
     Route::delete('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@destroy");
 
+    Route::get('/page_source_params/{page_source_id}', 'Admin\PageSourceParameterController@getByPageDataSource');
+    Route::resource('/page_source_params', 'Admin\PageSourceParameterController')->only(['store', 'update', 'delete']);
+
     Route::get('/permissions', "Users\Permissions@getPermissions");
     Route::get('/permissions_options', "Users\Permissions@getPermissionsOptions");
     Route::get('/permissions/{permission}', "Users\Permissions@getPermission");

@@ -4,6 +4,7 @@
 namespace App;
 
 
+use App\Altrp\PageSourceParameter;
 use App\Altrp\Source;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -18,7 +19,8 @@ class PageDatasource extends Model
         'source_id',
         'alias',
         'priority',
-        'parameters'
+        'parameters',
+        'auto'
     ];
 
   /**
@@ -81,5 +83,14 @@ class PageDatasource extends Model
     public function source()
     {
         return $this->belongsTo( Source::class );
+    }
+
+    /**
+     * Связь с параметрами источника, прикреплённого к странице
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function page_source_params()
+    {
+        return $this->hasMany(PageSourceParameter::class);
     }
 }

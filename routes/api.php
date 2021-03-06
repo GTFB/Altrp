@@ -72,6 +72,9 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::put('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@update");
         Route::delete('/page_data_sources/{page_data_source_id}', "Admin\PageDatasourceController@destroy");
 
+        Route::get('/page_source_params/{page_source_id}', 'Admin\PageSourceParameterController@getByPageDataSource');
+        Route::resource('/page_source_params', 'Admin\PageSourceParameterController')->only(['store', 'update', 'delete']);
+
         Route::resource( 'pages', 'Admin\PagesController' );
         Route::resource( 'templates', 'TemplateController' );
         Route::resource( 'robots', 'RobotController' );
