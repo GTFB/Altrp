@@ -15,7 +15,9 @@ import {
   CONTROLLER_COLOR,
   CONTROLLER_NUMBER,
   CONTROLLER_RANGE,
-  CONTROLLER_DATE
+  CONTROLLER_DATE,
+  CONTROLLER_SHADOW,
+  CONTROLLER_TYPOGRAPHIC
 } from "../modules/ControllersManager";
 
 import {
@@ -103,6 +105,35 @@ class Diagram extends BaseElement {
           label: "По ключу"
         }
       ]
+    });
+
+    this.addControl("customTooltip", {
+      type: CONTROLLER_SWITCHER,
+      label: "Use custom tooltip?",
+      default: false
+    });
+
+    let repeaterTooltip = new Repeater();
+
+    repeaterTooltip.addControl("value", {
+      label: "value",
+      dynamic: false
+    });
+
+    repeaterTooltip.addControl("label", {
+      label: "label",
+      dynamic: false
+    });
+    repeaterTooltip.addControl("color", {
+      label: "color",
+      type: CONTROLLER_COLOR,
+      dynamic: false
+    });
+
+    this.addControl("repTooltips", {
+      type: CONTROLLER_REPEATER,
+      default: [],
+      fields: repeaterTooltip.getControls()
     });
 
     this.endControlSection();
@@ -486,151 +517,199 @@ class Diagram extends BaseElement {
         type: LINE
       }
     });
-    /*
-    this.addControl("yMarker", {
-      type: CONTROLLER_SWITCHER,
-      label: "Нормаль по Y",
-      default: false,
-      conditions: {
-        type: LINE
+    this.endControlSection();
+
+    this.startControlSection("Tooltip", {
+      tab: TAB_STYLE,
+      label: "Tooltip style",
+      default: "|"
+    });
+
+    this.addControl("style_margin_tooltip", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Margin",
+      default: {
+        top: 10,
+        right: 10,
+        bottom: 10,
+        left: 10,
+        unit: "px",
+        bind: true
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-dashboard__tooltip--margin{{STATE}}": [
+          "margin-top: {{TOP}}{{UNIT}};",
+          "margin-right: {{RIGHT}}{{UNIT}};",
+          "margin-bottom: {{BOTTOM}}{{UNIT}};",
+          "margin-left: {{LEFT}}{{UNIT}};"
+        ]
       }
     });
 
-    this.addControl("yMarkerLabel", {
-      type: CONTROLLER_TEXT,
-      label: "Подпись нормали по Y",
-      conditions: {
-        yMarker: true,
-        type: LINE
+    this.addControl("style_padding_tooltip", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 10,
+        right: 10,
+        bottom: 10,
+        left: 10,
+        unit: "px",
+        bind: true
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-dashboard__tooltip--font{{STATE}}": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
       }
     });
 
-    this.addControl("yMarkerValue", {
+    this.addControl("style_width_tooltip", {
       type: CONTROLLER_NUMBER,
-      label: "Значение нормали по Y",
-      conditions: {
-        yMarker: true,
-        type: LINE
+      label: "Width",
+      default: {
+        width: 350,
+        unit: "px",
+        bind: true
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-dashboard__tooltip--width{{STATE}}": [
+          "padding-top: {{WIDTH}}{{UNIT}};"
+        ]
       }
     });
 
-    this.addControl("yMarkerOrientation", {
+    this.addControl("style_font_tooltip", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic",
+      rules: {
+        "{{ELEMENT}} .altrp-dashboard__tooltip--font{{STATE}}": [
+          "font-size: {{SIZE}}px;",
+          "font-family: {{FAMILY}}",
+          "line-height: {{LINEHEIGHT}};",
+          "letter-spacing: {{SPACING}}px",
+          "font-weight: {{WEIGHT}}",
+          "text-transform: {{TRANSFORM}}",
+          "font-style: {{STYLE}}",
+          "text-decoration: {{DECORATION}}"
+        ]
+      }
+    });
+
+    this.addControl("style_font_color_tooltip", {
+      type: CONTROLLER_COLOR,
+      label: "Typographic color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-dashboard__tooltip--font-color{{STATE}}":
+          "color: {{COLOR}};"
+      }
+    });
+
+    this.addControl("style_background_color_tooltip", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "",
+        colorPickedHex: ""
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-dashboard__tooltip--label-background{{STATE}}":
+          "background-color: {{COLOR}} !important;"
+      }
+    });
+
+    this.addControl("style_background_tooltip_shadow", {
+      type: CONTROLLER_SHADOW,
+      label: "Shadow",
+      default: {
+        // blur: 0,
+        // horizontal: 0,
+        // vertical: 0,
+        // opacity: 1,
+        // spread: 0,
+        // colorRGB: 'rgb(0, 0, 0)',
+        // color: 'rgb(0, 0, 0)',
+        // colorPickedHex: '#000000',
+        // type: ""
+      },
+      presetColors: ["#eaeaea", "#9c18a8"],
+      rules: {
+        "{{ELEMENT}} .altrp-dashboard__tooltip--label-background-shadow{{STATE}}":
+          "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};"
+      }
+    });
+
+    this.addControl("border_type_tooltip", {
       type: CONTROLLER_SELECT,
-      label: "Ориентация легенды по Y",
-      default: "vertical",
+      label: "Border Type",
       options: [
-        { id: 0, value: "vertical", label: "Вертикальная" },
-        { id: 1, value: "horizontal", label: "Горизонтальная" }
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
       ],
-      conditions: {
-        yMarker: true,
-        type: LINE
+      rules: {
+        "{{ELEMENT}} .altrp-dashboard__tooltip--border-type{{STATE}}":
+          "border-style: {{VALUE}};"
       }
     });
 
-    this.addControl("yMarkerColor", {
+    this.addControl("border_width_tooltip", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border Width",
+      default: {
+        bind: true
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        "{{ELEMENT}} .altrp-dashboard__tooltip--border-width{{STATE}}":
+          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      }
+    });
+
+    this.addControl("border_color_tooltip", {
       type: CONTROLLER_COLOR,
-      label: "Цвет линии по Y",
-      conditions: {
-        yMarker: true,
-        type: LINE
+      label: "Border Color",
+      // default: {
+      //   color: "rgb(50,168,82)",
+      //   colorPickedHex: "#32a852",
+      // },
+      rules: {
+        "{{ELEMENT}} .altrp-dashboard__tooltip--border-color{{STATE}}":
+          "border-color: {{COLOR}};"
       }
     });
 
-    this.addControl("yMarkerLabelColor", {
-      type: CONTROLLER_COLOR,
-      label: "Цвет подписи по Y",
-      conditions: {
-        yMarker: true,
-        type: LINE
-      }
-    });
-
-    this.addControl("yMarkerWidth", {
-      type: CONTROLLER_NUMBER,
-      label: "Ширина линии по Y",
-      conditions: {
-        yMarker: true,
-        type: LINE
-      }
-    });
-
-    this.addControl("xMarker", {
-      type: CONTROLLER_SWITCHER,
-      label: "Нормаль по X",
-      default: false,
-      conditions: {
-        type: LINE
-      }
-    });
-    this.addControl("xMarkerLabel", {
-      type: CONTROLLER_TEXT,
-      label: "Подпись нормали по X",
-      conditions: {
-        xMarker: true,
-        type: LINE
-      }
-    });
-
-    this.addControl("xMarkerValue", {
-      type: CONTROLLER_NUMBER,
-      label: "Значение нормали по X (если ключ - число)",
-      conditions: {
-        xMarker: true,
-        type: LINE
-      }
-    });
-
-    this.addControl("xMarkerValueDate", {
-      type: CONTROLLER_DATE,
-      label: "Значение нормали по X (если ключ - дата)",
-      conditions: {
-        xMarker: true,
-        type: LINE
-      }
-    });
-
-    this.addControl("xMarkerOrientation", {
-      type: CONTROLLER_SELECT,
-      label: "Ориентация легенды по X",
-      default: "vertical",
-      options: [
-        { id: 0, value: "vertical", label: "Вертикальная" },
-        { id: 1, value: "horizontal", label: "Горизонтальная" }
-      ],
-      conditions: {
-        xMarker: true,
-        type: LINE
-      }
-    });
-
-    this.addControl("xMarkerColor", {
-      type: CONTROLLER_COLOR,
-      label: "Цвет линии по X",
-      conditions: {
-        xMarker: true,
-        type: LINE
-      }
-    });
-
-    this.addControl("xMarkerLabelColor", {
-      type: CONTROLLER_COLOR,
-      label: "Цвет подписи по X",
-      conditions: {
-        xMarker: true,
-        type: LINE
-      }
-    });
-
-    this.addControl("xMarkerWidth", {
-      type: CONTROLLER_NUMBER,
-      label: "Ширина линии по X",
-      conditions: {
-        xMarker: true,
-        type: LINE
-      }
-    });
-    */
     this.endControlSection();
 
     this.startControlSection("axisConstants", {

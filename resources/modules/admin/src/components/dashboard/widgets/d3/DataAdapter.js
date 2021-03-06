@@ -76,7 +76,12 @@ class DataAdapter {
         .filter(item => {
           const value =
             item.split("=")[1] !== "undefined" ? item.split("=")[1] : "";
-          return typeof value !== "undefined" && value !== "" && value !== null;
+          return (
+            typeof value !== "undefined" &&
+            value !== "" &&
+            value !== null &&
+            value !== "null"
+          );
         })
         .join("&");
     }

@@ -2,6 +2,7 @@
     {
         $url = "{{url}}";
         $response = \Curl::to($url)
+                    ->withHeaders({{headers}})
                     ->withData($request->all())
                     ->asJson()
                     ->put();

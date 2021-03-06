@@ -38,6 +38,8 @@ import { FixedSizeList } from "react-window";
 import ElementWrapper from "../../../../../front-app/src/js/components/ElementWrapper";
 import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput";
 import TableComponent from "./components/TableComponent";
+import HeaderCellComponent from "./components/HeaderCellComponent";
+import CellComponent from "./components/CellComponent";
 
 /**
  *
@@ -161,7 +163,13 @@ function AltrpTableWithoutUpdate(
     React.useEffect(() => {
       setValue(initialValue);
     }, [initialValue, cell]);
-    const { column_template, column_is_editable, column_edit_url, _accessor, column_cell_content_type } = column;
+    const { column_template,
+      column_is_editable,
+      column_edit_url,
+      column_external_link,
+      column_blank_link,
+      _accessor,
+      column_cell_content_type } = column;
     const [columnTemplate, setColumnTemplate] = React.useState(null);
     const columnEditUrl =
       React.useMemo(() => {
@@ -181,7 +189,9 @@ function AltrpTableWithoutUpdate(
     }, [column_template]);
     let cellContent = cell.value;
     let linkTag = isEditor() ? 'a' : Link;
-
+    if(column_external_link && ! isEditor()) {
+      linkTag = 'a';
+    }
     /**
      * Если значение объект или массив, то отобразим пустую строку
      */
@@ -217,6 +227,8 @@ function AltrpTableWithoutUpdate(
         if (column.column_link) {
           cellContent = React.createElement(linkTag, {
             to: parseURLTemplate(column.column_link, row.original),
+            href: parseURLTemplate(column.column_link, row.original),
+            target: column_blank_link ? '_blank' : '',
             className: 'altrp-inherit altrp-table-td__default-content',
             dangerouslySetInnerHTML: {
               __html: cell.value || '&nbsp;'
@@ -522,7 +534,13 @@ function AltrpTableWithoutUpdate(
         };
       }
     }
-
+    if(! _.isArray(tableSettings.data)){
+      if(_.isObject(tableSettings.data)){
+        tableSettings.data = [tableSettings.data];
+      } else {
+        tableSettings.data = [];
+      }
+    }
     return tableSettings;
   }, [inner_page_size, data, columns, stateRef, records, replace_rows, skipPageReset]);
   React.useEffect(() => {
@@ -682,6 +700,7 @@ function AltrpTableWithoutUpdate(
               {headerGroup.headers.map((column, idx) => {
                 const { column_width, column_header_alignment } = column;
                 let columnProps = column.getHeaderProps(column.getSortByToggleProps());
+                    columnProps.settings = settings;
                 const resizerProps = {
                   ...column.getResizerProps(),
                   onClick: e => { e.stopPropagation(); }
@@ -694,13 +713,14 @@ function AltrpTableWithoutUpdate(
                 }
                 let columnNameContent = column.render('column_name');
                 if (_.isString(columnNameContent)) {
-                  columnNameContent = <span dangerouslySetInnerHTML={{ __html: column.render('column_name') }} />;
+                  columnNameContent = <span dangerouslySetInnerHTML={{ __html: column.render('column_name') || '&nbsp;' }} />;
                 }
 
                 if(table_transpose){
                   _.unset(columnProps, 'style.width')
                 }
-                return <div {...columnProps}
+                return <HeaderCellComponent {...columnProps}
+                                            column={column}
                   className="altrp-table-th"
                   key={idx}>
                   {columnNameContent}
@@ -732,7 +752,7 @@ function AltrpTableWithoutUpdate(
                         }`}
                     />
                   }
-                </div>;
+                </HeaderCellComponent>;
               }
               )}
             </div>)
@@ -1214,8 +1234,9 @@ export function settingsToColumns(settings, widgetId) {
     /**
      * Колонку проказываем, если есть accessor или список actions
      */
-    if (_column.column_name && ((_column.actions && _column.actions.length) || _column.accessor)) {
+    if (((_column.actions && _column.actions.length) || _column.accessor)) {
       _column._accessor = _column.accessor;
+      _column.column_name = _column.column_name || '&nbsp;';
       if (_column.column_is_filtered) {
 
         _column.filter = 'fuzzyText';
@@ -1445,7 +1466,11 @@ const Cell = ({ cell, settings }) => {
     style.verticalAlign = cell.column.column_cell_vertical_alignment;
   }
 
-  return <div {...cellProps} style={style} className={cellClassNames.join(' ')}>{cellContent}</div>
+  return <CellComponent {...cellProps}
+                        settings={settings}
+                        column={column}
+                        style={style}
+                        className={cellClassNames.join(' ')}>{cellContent}</CellComponent>
 };
 /**
  * Компонент строки

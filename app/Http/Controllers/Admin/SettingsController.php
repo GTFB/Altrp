@@ -79,9 +79,8 @@ class SettingsController extends Controller
    */
   public function update( $setting_name, Request $request, AltrpSettingsService $settings_service )
   {
-
     if( ! $settings_service->set_setting_value( $setting_name, $request->value, $request->get( 'encrypt', false ) ) ){
-      return response()->json( ['result' => false, 'message' => 'Неудалось записать настройку ' . $setting_name], 500 );
+      return response()->json( ['result' => false, 'message' => 'Не удалось записать настройку ' . $setting_name], 500 );
     }
     return response()->json( ['result' => true] );
   }

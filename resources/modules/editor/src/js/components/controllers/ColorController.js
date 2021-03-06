@@ -1,9 +1,10 @@
 import {controllerMapStateToProps} from "../../decorators/controller";
-import React, { Component } from "react";
+import React, {Component} from "react";
 import { connect } from "react-redux";
 import { SketchPicker } from "react-color"
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
+import AltrpPopper from "../altrp-popper/AltrpPopper";
 
 class ColorController extends Component {
   constructor(props) {
@@ -11,6 +12,7 @@ class ColorController extends Component {
     controllerDecorate(this);
     this.openColorPicker = this.openColorPicker.bind(this);
     this.colorChange = this.colorChange.bind(this);
+    this.closeColorPicker = this.closeColorPicker.bind(this);
     // this.inputHex = this.inputHex.bind(this)
     let value = this.getSettings(this.props.controlId);
     if (value === null && this.props.default) {
@@ -26,6 +28,8 @@ class ColorController extends Component {
       colorPickedRGB: this.props.colorPickedRGB,
       active: false
     };
+
+    this.contentRef = React.createRef();
   }
 
   getDefaultValue() {
@@ -34,8 +38,25 @@ class ColorController extends Component {
 
   openColorPicker() {
     this.setState({
-      active: !this.state.active
+      active: true
     })
+
+    document.addEventListener("click", this.closeColorPicker)
+  }
+
+  closeColorPicker(e) {
+    if(!e.path.includes(this.contentRef.current)) {
+      this.setState({ active: false })
+      document.removeEventListener("click", this.closeColorPicker)
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if(this.state.colorPickedHex !== nextState.colorPickedHex || nextState.active !== this.state.active) {
+      return true
+    } else {
+      return false
+    }
   }
 
   colorChange(color) {
@@ -50,7 +71,6 @@ class ColorController extends Component {
       colorPickedHex: color.hex,
     });
 
-    // console.log(this.state.colorPickedRGB)
   };
 
   // inputHex(e){
@@ -74,7 +94,6 @@ class ColorController extends Component {
   // };
 
   render() {
-
     if (this.state.show === false) {
       return '';
     }
@@ -108,14 +127,9 @@ class ColorController extends Component {
           <label className="control-color-opacity" >{(this.state.opacity * 100).toFixed() + "%"}</label>
         </div>
       </div>
-      {
-        this.state.active ?
-          <div id="colorPicker" className="control-color-colorPicker" style={colorPickerPosition}>
-            <SketchPicker width="90%" presetColors={this.props.presetColors} color={this.state.colorRGB} onChange={this.colorChange} name="colorPicker" className="sketchPicker" />
-          </div>
-          : <div></div>
-      }
-      {/* sketchPicker-none */}
+        <div ref={this.contentRef} className={"control-color-colorPicker" + (!this.state.active ? " control-color-hide" : "")} style={colorPickerPosition}>
+          <SketchPicker width="200px" presetColors={this.props.presetColors} color={this.state.colorRGB} onChange={this.colorChange} name="colorPicker" className="sketchPicker" />
+        </div>
     </div>
   }
 }

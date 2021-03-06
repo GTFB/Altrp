@@ -24,6 +24,9 @@ class ButtonWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
+    }
     this.onClick = this.onClick.bind(this);
   }
   /**
@@ -44,6 +47,7 @@ class ButtonWidget extends Component {
    * @return {Promise<void>}
    */
   async onClick(e) {
+    e.persist();
     if (isEditor()) {
       e.preventDefault();
     } else if (this.props.element.getSettings("actions", []).length) {

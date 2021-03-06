@@ -42,7 +42,7 @@ class RequestFileWriter
         $dir = implode('/', $path);
 
         if(! \File::exists($dir)) {
-            \File::makeDirectory($dir, 493, true);
+            \File::makeDirectory($dir, 0775, true);
         }
         return \File::put($file, $content);
     }

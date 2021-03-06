@@ -7,7 +7,11 @@ use App\Altrp\Builders\AccessorBuilder;
 use App\Altrp\Column;
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
+use App\Altrp\Generators\Event\EventFile;
+use App\Altrp\Generators\Event\EventFileWriter;
 use App\Altrp\Generators\ModelGenerator;
+use App\Altrp\Generators\Observer\ObserverFile;
+use App\Altrp\Generators\Observer\ObserverFileWriter;
 use App\Altrp\Generators\RouteGenerator;
 use App\Altrp\Generators\TableMigrationGenerator;
 use App\Altrp\Migration;
@@ -72,6 +76,23 @@ class AltrpModelObserver
      */
     public function created(Model $model)
     {
+        $eventFile = new EventFile($model);
+        $eventWriter = new EventFileWriter($eventFile);
+
+        if (!$eventWriter->write()) {
+            throw new CommandFailedException('Failed to create event file', 500);
+        }
+
+        $observerFile = new ObserverFile($model);
+        $observerWriter = new ObserverFileWriter($observerFile);
+
+        if (! $observerWriter->write()) {
+            throw new CommandFailedException('Failed to update observer file', 500);
+        }
+        if (! $observerWriter->writeToServiceProvider()) {
+            throw new CommandFailedException('Failed to update service provider file', 500);
+        }
+
         $controller = new Controller();
         $controller->model_id = $model->id;
         if (! $controller->save()) {
@@ -249,6 +270,23 @@ class AltrpModelObserver
      */
     public function updated(Model $model)
     {
+        $eventFile = new EventFile($model);
+        $eventWriter = new EventFileWriter($eventFile);
+
+        if (! $eventWriter->write()) {
+            throw new CommandFailedException('Failed to update event file', 500);
+        }
+
+       $observerFile = new ObserverFile($model);
+       $observerWriter = new ObserverFileWriter($observerFile);
+
+       if (! $observerWriter->write()) {
+           throw new CommandFailedException('Failed to update observer file', 500);
+       }
+       if (! $observerWriter->writeToServiceProvider()) {
+           throw new CommandFailedException('Failed to update service provider file', 500);
+       }
+
         /**
          * @var Controller $controller
          */
@@ -366,6 +404,36 @@ class AltrpModelObserver
                 ]);
             }
 
+            if (!$model->hasSoftDeletes() && $model->soft_deletes) {
+                $this->createColumn([
+                    "name" => "deleted_at",
+                    "title" => "deleted_at",
+                    "description" => null,
+                    "type" => "timestamp",
+                    "size" => null,
+                    "null" => null,
+                    "default" => null,
+                    "primary" => null,
+                    "unique" => null,
+                    "user_id" => auth()->user()->id,
+                    "table_id" => $table->id,
+                    "altrp_migration_id" => $migration->id,
+                    "is_label" => 0,
+                    "is_title" => 0,
+                    "is_auth" => 0,
+                    "attribute" => null,
+                    "input_type" => null,
+                    "options" => null,
+                    "indexed" => 0,
+                    "editable" => 0,
+                    'calculation' => null,
+                    'calculation_logic' => null,
+                    "hidden" => 0,
+                    "model_id" => $model->id,
+                    "preset" => 0
+                ]);
+            }
+
             if ($model->getOriginal('time_stamps') && !$model->time_stamps) {
                 $created_at = Column::where([['name', 'created_at'], ['model_id', $model->id]])->first();
                 $updated_at = Column::where([['name', 'updated_at'], ['model_id', $model->id]])->first();
@@ -444,6 +512,12 @@ class AltrpModelObserver
 
     public function deleted(Model $model)
     {
+        $eventFile = new EventFile($model);
+        $eventWriter = new EventFileWriter($eventFile);
+
+        if (!$eventWriter->remove()) {
+            throw new CommandFailedException('Failed to delete event file', 500);
+        }
 //        $model->table->forceDelete();
     }
 

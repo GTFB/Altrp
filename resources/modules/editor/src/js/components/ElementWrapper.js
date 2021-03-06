@@ -9,7 +9,6 @@ import {
   topOrBottomHover
 } from "../helpers";
 import EditIcon from "../../svgs/edit.svg";
-import DeleteIcon from "../../svgs/delete.svg";
 import DotsIcon from "../../svgs/dots_section.svg";
 import ColumnIcon from "../../svgs/columns.svg";
 import AddIcon from "../../svgs/add.svg";
@@ -17,12 +16,10 @@ import DuplicateIcon from "../../svgs/duplicate.svg";
 import CloseIcon from "../../svgs/close.svg";
 import store from "../store/store";
 import { START_DRAG, startDrag } from "../store/element-drag/actions";
-import { setCurrentElement } from "../store/current-element/actions";
-import { changeWidthColumns } from "../store/column-width/actions";
 import { contextMenu } from "react-contexify/lib/index";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
-import { TelephoneMinus } from "react-bootstrap-icons";
 import { thresholdSturges } from "d3";
+import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -274,8 +271,8 @@ class ElementWrapper extends Component {
   }
   render() {
     const elementHideTrigger = this.props.element.settings.hide_on_trigger;
-    const { isFixed } = this.props.element.getSettings();
-
+    const { isFixed, tooltip_text, tooltip_position } = this.props.element.getSettings();
+    
     let errorContent = null;
     if (this.state.errorInfo) {
       errorContent = (
@@ -331,12 +328,17 @@ class ElementWrapper extends Component {
     if (isFixed) {
       classes += " fixed-section";
     }
+    const styles = {
 
+    };
+    if(this.props.element.getSettings('layout_column_width')){
+      styles.width = this.props.element.getSettings('layout_column_width') + '%';
+    }
     return elementHideTrigger &&
       this.props.hideTriggers.includes(elementHideTrigger) ? null : (
       <div
         className={classes}
-        style={this.props.width}
+        style={styles}
         ref={this.wrapper}
         onContextMenu={this.handleContext}
         onDragOver={this.onDragOver}
@@ -380,7 +382,6 @@ class ElementWrapper extends Component {
           </div>
         </div>
         {errorContent || React.createElement(this.props.component, {
-          ref: this.actionRef,
           element: this.props.element,
           children: this.state.children,
           currentModel: this.props.currentModel,
@@ -391,6 +392,7 @@ class ElementWrapper extends Component {
           CKEditor: CKEditor,
           wrapper: this
         })}
+        {tooltip_text && <AltrpTooltip position={tooltip_position}>{tooltip_text}</AltrpTooltip>}
         {emptyColumn}
       </div>
     );

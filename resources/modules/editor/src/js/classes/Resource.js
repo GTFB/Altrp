@@ -4,7 +4,7 @@ window.queryString = queryString;
 /**
  * @class Resource
  * */
-export const MAX_FILE_SIZE = 20971520;
+export const MAX_FILE_SIZE = 41943040;
 
 class Resource {
   /**
@@ -159,12 +159,12 @@ class Resource {
    * @return {Promise}
    * */
   post(data = {}, headers) {
-    headers = headers || {
+    headers = _.assign({
       "X-CSRF-TOKEN": _token
       // 'Content-Type': 'application/json',
       // 'Accept': 'application/json',
-    };
-    let formData = new FormData();
+    }, headers);
+      let formData = new FormData();
     let hasFile = false;
     _.each(data, (value, key) => {
       if (_.isArray(value)) {
@@ -181,7 +181,7 @@ class Resource {
         formData.append(key, value);
       }
     });
-    if (!hasFile) {
+    if (! hasFile) {
       headers["Content-Type"] = "application/json";
       headers["Accept"] = "application/json";
     }
@@ -271,11 +271,11 @@ class Resource {
    * @return {Promise}
    * */
   put(id, data, headers = null) {
-    headers = headers || {
+    headers = _.assign({
       "X-CSRF-TOKEN": _token
       // 'Content-Type': 'application/json',
       // 'Accept': 'application/json',
-    };
+    }, headers);
     let formData = new FormData();
     let hasFile = false;
 
@@ -315,15 +315,18 @@ class Resource {
     });
   }
   /**
+   * @param {string} id
+   * @param {{}} data
+   * @param {string | {}} customHeaders
    * @return {Promise}
    * */
-  delete(id = "", data = {}) {
+  delete(id = "", data = {}, customHeaders) {
     let options = {
       method: "delete",
-      headers: {
+      headers: _.assign({
         "X-CSRF-TOKEN": _token,
         "Content-Type": "application/json"
-      }
+      }, customHeaders),
     };
     if (!_.isEmpty(data)) {
       options.body = JSON.stringify(data);
@@ -358,14 +361,15 @@ class Resource {
   /**
    * GET запрос с параметрами
    * @param {object} params
+   * @param {string | {}} customHeaders
    * @return {Promise}
    * */
-  async getQueried(params, custom_headers = null) {
+  async getQueried(params, customHeaders = null) {
     let options = {
       method: "get",
-      headers: {
+      headers: _.assign({
         "Content-Type": "application/json"
-      }
+      }, customHeaders),
     };
     let _params = {};
     _.forEach(params, (paramValue, paramName) => {

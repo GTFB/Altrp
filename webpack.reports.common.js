@@ -90,7 +90,7 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, "public/"),
     port: 3005,
-    publicPath: "http://localhost:3005/src/",
+    publicPath: "http://localhost:3005/admin/",
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",

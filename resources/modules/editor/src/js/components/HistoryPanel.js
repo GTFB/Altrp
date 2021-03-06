@@ -175,6 +175,12 @@ const RevisionTabContent = () => {
   const handleClickDiscard = () => {
     getEditor().showWidgetsPanel();
   };
+  // React.useEffect(() => {
+  //   unmountListenerHistory();
+  //   return () => {
+  //     mountListenerHistory();
+  //   };
+  // });
 
   const handleClickApply = async () => {
     let response = await new Resource({

@@ -25,6 +25,7 @@ import {
 } from "../modules/ControllersManager";
   import Repeater from "../Repeater";
   import SaveImportModule from "../modules/SaveImportModule";
+  import {actionsControllers} from "../../decorators/actions-controllers";
 
 class RootElement extends BaseElement {
   constructor() {
@@ -3708,6 +3709,8 @@ class RootElement extends BaseElement {
     });
 
     this.endControlSection();
+
+    actionsControllers(this, 'Page Load Actions', 'page_load_');
     /**
      * импорт/сохранение глобальных настроек
      */

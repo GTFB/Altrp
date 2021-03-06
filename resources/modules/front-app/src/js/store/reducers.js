@@ -17,7 +17,8 @@ import { changeLocalStorageReducer } from "./user-local-storage/reducers";
 import { exportDashboard } from "./altrp-dashboard-export/reducers";
 import {mediaScreenReducer} from "./media-screen-storage/reducers";
 import {currentTitleReducer} from "./current-title/reducers";
-
+import {currentEmailTemplateReducer} from "./current-email-template/reducers";
+import {currentPageReducer} from "./current-page/reducers";
 export default combineReducers({
   appRoutes: appRoutesReducer,
   currentModel: currentModelReducer,
@@ -37,4 +38,6 @@ export default combineReducers({
   exportDashboard: exportDashboard,
   currentScreen: mediaScreenReducer,
   currentTitle: currentTitleReducer,
+  currentEmailTemplate: currentEmailTemplateReducer,
+  altrpPage: currentPageReducer,
 });

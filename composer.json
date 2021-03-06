@@ -10,7 +10,7 @@
     "require": {
         "php": "^7.2",
         "ext-json": "*",
-        "altrpaid/oauth2-module": "9999999-dev",
+        "altrpaid/oauth2-module": "dev-main",
         "beyondcode/laravel-websockets": "^1.9",
         "chrisjean/php-ico": "^1.0",
         "doctrine/dbal": "^2.10",
@@ -20,6 +20,7 @@
         "jenssegers/date": "^3.2",
         "joshbrw/laravel-module-installer": "^1.0",
         "kint-php/kint": "^3.3",
+        "laravel-notification-channels/telegram": "^0.5.1",
         "laravel/framework": "^6.2",
         "laravel/passport": "^8.4",
         "laravel/tinker": "^2.0",
@@ -90,7 +91,11 @@
         ],
         "post-install-cmd": [
             "php artisan vendor:publish --tag=public --force",
-            "php artisan modules-statuses:write"
+            "php artisan modules-statuses:write",
+            "php artisan make:provider AltrpRepositoryServiceProvider",
+            "php artisan make:provider AltrpProviders/AppServiceProvider",
+            "php artisan provider:write App/Providers/AltrpProviders/AppServiceProvider",
+            "php artisan provider:write App/Providers/AltrpRepositoryServiceProvider"
         ]
     }
 }
