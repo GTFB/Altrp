@@ -246,6 +246,46 @@ Route::group(['prefix' => 'users'], function () {
 
 });
 
+Route::group(['prefix' => 'dadata/suggestions'], function() {
+    Route::group(['prefix' => 'address'], function () {
+        Route::match(['get', 'post'],'standardization', 'API\DaDataApiController@addressStandardization');
+        Route::match(['get', 'post'],'prompt', 'API\DaDataApiController@addressPrompt');
+        Route::match(['get', 'post'],'geolocate', 'API\DaDataApiController@addressGeoLocate');
+        Route::match(['get', 'post'],'ip', 'API\DaDataApiController@addressByIp');
+        Route::match(['get', 'post'],'code', 'API\DaDataApiController@addressByCode');
+        Route::match(['get', 'post'],'postal_unit', 'API\DaDataApiController@addressPostalUnit');
+        Route::match(['get', 'post'],'postal_unit_by_code', 'API\DaDataApiController@addressPostalUnitByCode');
+        Route::match(['get', 'post'],'postal_unit_by_geo', 'API\DaDataApiController@addressPostalUnitByGeoLocate');
+        Route::match(['get', 'post'],'delivery', 'API\DaDataApiController@addressDelivery');
+        Route::match(['get', 'post'],'fias', 'API\DaDataApiController@addressByFiasCode');
+    });
+    Route::group(['prefix' => 'name'], function () {
+        Route::match(['get', 'post'],'standardization', 'API\DaDataApiController@nameStandardization');
+        Route::match(['get', 'post'],'prompt', 'API\DaDataApiController@namePrompt');
+    });
+    Route::group(['prefix' => 'email'], function () {
+        Route::match(['get', 'post'],'standardization', 'API\DaDataApiController@emailStandardization');
+        Route::match(['get', 'post'],'prompt', 'API\DaDataApiController@emailPrompt');
+    });
+    Route::group(['prefix' => 'phone'], function () {
+        Route::match(['get', 'post'],'standardization', 'API\DaDataApiController@phoneStandardization');
+        Route::match(['get', 'post'],'prompt', 'API\DaDataApiController@emailPrompt');
+    });
+    Route::group(['prefix' => 'company'], function () {
+        Route::match(['get', 'post'],'id', 'API\DaDataApiController@companyById');
+        Route::match(['get', 'post'],'prompt', 'API\DaDataApiController@companyPrompt');
+        Route::match(['get', 'post'],'affiliated', 'API\DaDataApiController@companyAffiliated');
+    });
+    Route::group(['prefix' => 'bank'], function () {
+        Route::match(['get', 'post'],'id', 'API\DaDataApiController@bankById');
+        Route::match(['get', 'post'],'prompt', 'API\DaDataApiController@bankPrompt');
+    });
+    Route::group(['prefix' => 'passport'], function () {
+        Route::match(['get', 'post'],'standardization', 'API\DaDataApiController@passportStandardization');
+        Route::match(['get', 'post'],'fms', 'API\DaDataApiController@passportByFms');
+    });
+});
+
 Route::post('/feedback', 'MailController@sendMail');
 Route::post('/write_mail_settings', 'MailController@writeSettingsToEnv');
 
