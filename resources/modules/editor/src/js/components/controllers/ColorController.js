@@ -1,10 +1,10 @@
 import {controllerMapStateToProps} from "../../decorators/controller";
 import React, {Component} from "react";
 import { connect } from "react-redux";
-import { SketchPicker } from "react-color"
+import {SketchPicker, SwatchesPicker} from "react-color"
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
-import AltrpPopper from "../altrp-popper/AltrpPopper";
+import AltrpMeta from "../../classes/AltrpMeta";
 
 class ColorController extends Component {
   constructor(props) {
@@ -30,6 +30,12 @@ class ColorController extends Component {
     };
 
     this.contentRef = React.createRef();
+  }
+  /**
+   *
+   */
+  async _componentDidMount() {
+    const userColors = await AltrpMeta.getMetaByName('user_colors');
   }
 
   getDefaultValue() {
@@ -97,7 +103,7 @@ class ColorController extends Component {
     if (this.state.show === false) {
       return '';
     }
-
+      console.log(this.props.presetColors);
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
 
     let colorPickedStyle = {
@@ -128,7 +134,16 @@ class ColorController extends Component {
         </div>
       </div>
         <div ref={this.contentRef} className={"control-color-colorPicker" + (!this.state.active ? " control-color-hide" : "")} style={colorPickerPosition}>
-          <SketchPicker width="200px" presetColors={this.props.presetColors} color={this.state.colorRGB} onChange={this.colorChange} name="colorPicker" className="sketchPicker" />
+
+          <SketchPicker width="200px"
+                        // presetColors={this.props.presetColors}
+                        presetColors={[{ color: '#f00', title: 'red' },{ color: '#f01', title: 'red' },]}
+                        color={this.state.colorRGB}
+                        onChange={this.colorChange}
+                        name="colorPicker"
+                        className="sketchPicker" >
+            <div className="asdads">dfgdfgdfg</div>
+          </SketchPicker>
         </div>
     </div>
   }
