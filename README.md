@@ -7,6 +7,7 @@
 + Add Accept Filed Type
 + Custom Headers to Form Action
 + Add Video Widget
++ Add User Preset Colors for Color & Gradient Controllers
 
 ### 0.13.0
 + Аdd the Template Widget

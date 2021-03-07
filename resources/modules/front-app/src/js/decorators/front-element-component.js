@@ -1,5 +1,12 @@
 import modelManager from "../../../../editor/src/js/classes/modules/ModelsManager";
-import {conditionsChecker, getConverter, getDataByPath, isEditor, replaceContentWithData} from "../helpers";
+import {
+  conditionsChecker,
+  getConverter,
+  getDataByPath,
+  isEditor,
+  prepareContext,
+  replaceContentWithData
+} from "../helpers";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 
 /**
@@ -150,7 +157,20 @@ function getContent(settingName, returnRaw = false) {
   }
   if((! isEditor())){//todo: сделать подгрузку данных и в редакторе
     let model = element.hasCardModel() ? element.getCardModel() : this.props.currentModel;
-    if(returnRaw){
+
+    if(settingName === 'content_default_value' && _.isString(content)){
+      let context = this.props.element.getCurrentModel().getData();
+      context = prepareContext(context);
+      let replacedContent = content
+          .replace(/}}/g, "')")
+          .replace(/{{/g, "_.get(context, '");
+      try{
+        content = eval(replacedContent);
+      } catch(e){
+        console.error(e);
+      }
+
+    } else if(returnRaw){
       content = content.trim().replace('{{', '').replace('}}', '');
       content = getDataByPath(content, '', model);
     } else {

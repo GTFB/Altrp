@@ -443,7 +443,6 @@ class RootElement extends BaseElement {
     this.addControl("section_style_background_color", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "body{{STATE}}": "background-color: {{COLOR}};"
       }
@@ -705,7 +704,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_h1_color", {
       type: CONTROLLER_COLOR,
       label: "H1 Color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "h1.altrp-heading{{STATE}}": "color: {{COLOR}};"
       }
@@ -714,7 +712,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_h2_color", {
       type: CONTROLLER_COLOR,
       label: "H2 Color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "h2.altrp-heading{{STATE}}": "color: {{COLOR}};"
       }
@@ -723,7 +720,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_h3_color", {
       type: CONTROLLER_COLOR,
       label: "H3 Color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "h3.altrp-heading{{STATE}}": "color: {{COLOR}};"
       }
@@ -732,7 +728,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_h4_color", {
       type: CONTROLLER_COLOR,
       label: "H4 Color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "h4.altrp-heading{{STATE}}": "color: {{COLOR}};"
       }
@@ -741,7 +736,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_h5_color", {
       type: CONTROLLER_COLOR,
       label: "H5 Color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "h5.altrp-heading{{STATE}}": "color: {{COLOR}};"
       }
@@ -750,7 +744,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_h6_color", {
       type: CONTROLLER_COLOR,
       label: "H6 Color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "h6.altrp-heading{{STATE}}": "color: {{COLOR}};"
       }
@@ -759,7 +752,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_p_color", {
       type: CONTROLLER_COLOR,
       label: "P Color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "p.altrp-heading{{STATE}}": "color: {{COLOR}};"
       }
@@ -920,7 +912,6 @@ class RootElement extends BaseElement {
     this.addControl("heading_default_background_color", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         ".altrp-heading{{STATE}}": "background-color: {{COLOR}};"
       }
@@ -1308,10 +1299,6 @@ class RootElement extends BaseElement {
     this.addControl('button_box_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Shadow',
-      presetColors: [
-        '#eaeaea',
-        '#9c18a8'
-      ],
       rules: {
         'div .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
       },
@@ -1816,7 +1803,6 @@ class RootElement extends BaseElement {
     this.addControl("text_style_background_color", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         ".altrp-text{{STATE}}": "background-color: {{COLOR}};"
       }
@@ -1854,7 +1840,6 @@ class RootElement extends BaseElement {
     this.addControl("text_style_font_color", {
       type: CONTROLLER_COLOR,
       label: "Color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "div.altrp-text{{STATE}}": "color: {{COLOR}};"
       }
@@ -2242,7 +2227,6 @@ class RootElement extends BaseElement {
     this.addControl("label_default_font_color", {
       type: CONTROLLER_COLOR,
       label: "Label Font Color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         ".altrp-field-label{{STATE}}": "color: {{COLOR}};"
       }
@@ -2296,7 +2280,6 @@ class RootElement extends BaseElement {
     this.addControl("field_default_color", {
       type: CONTROLLER_COLOR,
       label: "Field Font Color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         '.altrp-field-select2__single-value{{STATE}}': 'color : {{COLOR}};',
         '.altrp-field{{STATE}}': 'color : {{COLOR}};'
@@ -2371,7 +2354,6 @@ class RootElement extends BaseElement {
     this.addControl("placeholder_default_color", {
       type: CONTROLLER_COLOR,
       label: "PLaceholder Font Color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         ".altrp-field::placeholder{{STATE}}": "color: {{COLOR}};",
         ".altrp-field-select2__placeholder{{STATE}}": "color: {{COLOR}};"
@@ -2505,10 +2487,6 @@ class RootElement extends BaseElement {
     this.addControl('input_default_box_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Box shadow',
-      presetColors: [
-        '#eaeaea',
-        '#9c18a8'
-      ],
       rules: {
         '.altrp-field{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
         '.altrp-field-select2__control{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};'
@@ -3440,7 +3418,6 @@ class RootElement extends BaseElement {
     this.addControl("defaults_background_tab_style", {
       type: CONTROLLER_COLOR,
       label: "Background tabs",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         ".altrp-tab-btn-container{{STATE}}": "background-color: {{COLOR}};"
       }
@@ -3449,7 +3426,6 @@ class RootElement extends BaseElement {
     this.addControl("defaults_background_type_tab_style", {
       type: CONTROLLER_COLOR,
       label: "Background buttons",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         ".altrp-tab-btn{{STATE}}": "background-color: {{COLOR}};"
       }
@@ -3458,7 +3434,6 @@ class RootElement extends BaseElement {
     this.addControl("defaults_background_text_color_tab_style", {
       type: CONTROLLER_COLOR,
       label: "Text color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         ".altrp-tab-btn{{STATE}}": "color: {{COLOR}};"
       }
@@ -3467,10 +3442,6 @@ class RootElement extends BaseElement {
     this.addControl('defaults_box_shadow_tab_style', {
       type: CONTROLLER_SHADOW,
       label: 'Box shadow',
-      presetColors: [
-        '#eaeaea',
-        '#9c18a8'
-      ],
       rules: {
         '.altrp-tab-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
       },

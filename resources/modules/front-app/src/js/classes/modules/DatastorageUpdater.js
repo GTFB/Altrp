@@ -24,8 +24,9 @@ class DataStorageUpdater extends AltrpModel {
   /**
    *  обновление currentDataStorage
    *  @param {Datasource[]} dataSources
+   *  @param {boolean} updateStatus
    */
-  async updateCurrent(dataSources = null) {
+  async updateCurrent(dataSources = null, updateStatus = true) {
     if(! _.get(dataSources, 'length')){
       dataSources = this.getProperty('currentDataSources');
     }
@@ -49,7 +50,7 @@ class DataStorageUpdater extends AltrpModel {
       let requests = groupedDataSources[groupPriority].map(async dataSource => {
 
         if (dataSource.getWebUrl()) {
-          appStore.dispatch(currentDataStorageLoading());
+          updateStatus && appStore.dispatch(currentDataStorageLoading());;
           let params = dataSource.getParams(window.currentRouterMatch.params, 'altrpforms.');
           let defaultParams = _.cloneDeep(params);
           let needUpdateFromForms = false;
@@ -87,7 +88,7 @@ class DataStorageUpdater extends AltrpModel {
           }
           res = _.get(res, 'data', res);
           appStore.dispatch(changeCurrentDataStorage(dataSource.getAlias(), res));
-          appStore.dispatch(currentDataStorageLoaded());
+          updateStatus && appStore.dispatch(currentDataStorageLoaded());
           return res;
         }
       });
