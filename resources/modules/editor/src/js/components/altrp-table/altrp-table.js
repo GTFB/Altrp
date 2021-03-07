@@ -4,8 +4,6 @@ import {useQuery, usePaginatedQuery, queryCache} from  "react-query";
 import '../../../sass/altrp-pagination.scss';
 import {Link} from "react-router-dom";
 import {
-  extractPathFromString,
-  getDataByPath, getObjectByPrefix,
   isEditor, mbParseJSON,
   parseURLTemplate, renderAsset, replaceContentWithData
 } from "../../../../../front-app/src/js/helpers";
@@ -171,6 +169,9 @@ const AltrpTable = ({settings,
               {row.cells.map((cell, _i) => {
                 let cellContent = cell.render('Cell');
                 let linkTag = isEditor() ? 'a': Link;
+                if(columns[_i].column_external_link && ! isEditor()) {
+                  linkTag = 'a';
+                }
                 let style = cell.column.column_body_alignment ? { textAlign: cell.column.column_body_alignment } : {};
                 const cellProps = {...cell.getCellProps()};
                 let _cellContent = cell.value;
@@ -229,6 +230,8 @@ const AltrpTable = ({settings,
                 if(columns[_i].column_link){
                   cellContent = React.createElement(linkTag, {
                     to: parseURLTemplate(columns[_i].column_link, row.original),
+                    href: parseURLTemplate(columns[_i].column_link, row.original),
+                    target: columns[_i].column_blank_link ? '_blank' : '',
                     className: 'altrp-inherit altrp-table-td__default-content',
                     dangerouslySetInnerHTML: {
                       __html: cell.value

@@ -5,7 +5,6 @@ import rootReducer from "./reducers";
 let store = createStore(rootReducer, composeWithDevTools());
 window.appStore = store;
 export default store;
-
 /**
  * Возвращает текущий элемент (тот который в данный момент редлактируется)
  * @return {BaseElement}
@@ -13,7 +12,7 @@ export default store;
 export function getCurrentElement() {
   return store.getState().currentElement.currentElement;
 }
-
+window.parent.getCurrentElement = window.parent.getCurrentElement || getCurrentElement;
 export function getCurrentTab() {
   return store.getState().currentTab.currentTab;
 }

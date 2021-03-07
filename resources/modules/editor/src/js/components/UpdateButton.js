@@ -3,7 +3,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getEditor } from "../helpers";
 import CONSTANTS from "../consts";
-
+const TEMPLATE_TYPES_WITHOUT_CONDITIONS = [
+  'email',
+];
 class UpdateButton extends Component {
   constructor(props) {
     super(props);
@@ -33,14 +35,19 @@ class UpdateButton extends Component {
         }
         break;
     }
+    let showTemplateConditions = true;
+    if(this.props.templateData.template_type
+        && (TEMPLATE_TYPES_WITHOUT_CONDITIONS.indexOf(this.props.templateData.template_type) >= 0)){
+      showTemplateConditions = false;
+    }
     return (
-      <div className="control-group d-flex">
+      <div className={"control-group d-flex " + (showTemplateConditions ? '' : 'control-group_single')}>
         <button className={buttonClasses} onClick={this.saveTemplate}>
           UPDATE
         </button>
-        <button onClick={() => this.showModal()} className="btn btn_grey">
+        {showTemplateConditions && <button onClick={() => this.showModal()} className="btn btn_grey">
           <Chevron className="icon" />
-        </button>
+        </button>}
       </div>
     );
   }
@@ -48,7 +55,8 @@ class UpdateButton extends Component {
 
 function mapStateToProps(state) {
   return {
-    templateStatus: state.templateStatus.status
+    templateStatus: state.templateStatus.status,
+    templateData: state.templateData,
   };
 }
 export default connect(mapStateToProps)(UpdateButton);

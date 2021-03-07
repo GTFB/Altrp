@@ -12,29 +12,15 @@ window.React = React;
 window.ReactDOM = ReactDOM;
 window.Component = Component;
 
-// Websockets import
-// let mix = require('laravel-mix');
-// require('dotenv').config();
-// let my_env_key = process.env.MIX_PUSHER_APP_KEY;
-
-import Echo from "laravel-echo";
-window.Pusher = require("pusher-js");
-
-try {
-  window.Echo = new Echo({
-    broadcaster: "pusher",
-    key: 324345,
-    wsHost: window.location.hostname,
-    wsPort: 6001,
-    forceTLS: false,
-
-    disableStats: true
-  });
-} catch (error) {
-  console.error(error);
-}
+import {listenerHistory} from "./installing";
+import controllerHistory from "./js/classes/ControllerHistory";
 
 window._ = _;
+// let cloneDeep = _.cloneDeep;
+// _.cloneDeep = function(){
+//  console.error(arguments);
+//  return cloneDeep.apply(_, arguments);
+// };
 window.iconsManager = new IconsManager();
 
 window.stylesModulePromise = new Promise(function(resolve) {
@@ -75,7 +61,8 @@ import("./Editor.js")
 
     window.onload = () => {
       let iframe = document.getElementsByTagName("iframe")[0];
-      if (!iframe) {
+      window.EditorFrame = iframe;
+      if (! iframe) {
         return;
       }
       let editorContentTarget = iframe.contentWindow.document.getElementById(
@@ -93,7 +80,8 @@ import("./Editor.js")
         styleLink.rel = "stylesheet";
         styleLink.href = `/modules/editor/editor.css?${_altrpVersion}`;
         head.appendChild(styleLink);
-      } else {
+      }
+      else {
         let head = iframe.contentWindow.document.getElementsByTagName(
           "head"
         )[0];
@@ -102,5 +90,17 @@ import("./Editor.js")
         script.defer = "http://localhost:3000/src/bundle.js";
         head.appendChild(script);
       }
+
+      function listenerHistory(event) {
+        if (event.ctrlKey && event.code === 'KeyZ' && event.shiftKey) {
+          controllerHistory.redo();
+        } else if (event.ctrlKey && event.code === 'KeyZ') {
+          controllerHistory.undo();
+        }
+      }
+      window.addEventListener('keydown', listenerHistory, false);
+      window.EditorFrame.contentWindow.addEventListener('keydown', listenerHistory, false);
     };
   });
+
+  

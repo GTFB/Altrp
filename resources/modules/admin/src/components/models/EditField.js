@@ -23,9 +23,17 @@ class EditField extends Component {
    * отправка данных
    * @return {*}
    */
-  onSubmit = async data => {
+  onSubmit = async (data, isNeedToCheckName) => {
     const { modelId } = this.props.match.params;
     const { history } = this.props;
+    if (isNeedToCheckName) {
+      fetch(`/admin/ajax/models/${modelId}/field_name_is_free/?name=${data.name}`)
+        .then(res => res.json())
+        .then(res => {
+          if (!res.taken) return alert(`Name ${data.name} is already taken. Use another one.`);
+        });
+    }
+
     if (this.props.match.params.id) {
       let res = await this.filedsResource.put(this.props.match.params.id, data);
       history.push(`/admin/tables/models/edit/${modelId}`);

@@ -4,6 +4,7 @@ import { ResponsivePie } from "@nivo/pie";
 import ErrorBoundary from "./ErrorBoundary";
 import invert from "invert-color";
 import DataAdapter from "./DataAdapter";
+import TooltipPie from "./TooltipPie";
 
 import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
 
@@ -79,7 +80,7 @@ class PieDataSource extends Component {
     }
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     await this.getData();
   }
 
@@ -194,6 +195,13 @@ class PieDataSource extends Component {
             innerRadius={this.state.settings?.innerRadius}
             enableSliceLabels={this.state.settings?.enableSliceLabels}
             enableRadialLabels={this.state.settings?.enableRadialLabels}
+            tooltip={datum => (
+              <TooltipPie
+                enable={this.state.settings?.enableCustomTooltip}
+                datum={datum}
+                widgetID={this.props.widgetID}
+              ></TooltipPie>
+            )}
             legends={
               this.state.settings?.enableLegend
                 ? [

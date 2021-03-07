@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { ResponsiveBar } from "@nivo/bar";
+import { ResponsiveBarCanvas } from "@nivo/bar";
 import { connect } from "react-redux";
 import ErrorBoundary from "./ErrorBoundary";
 import DataAdapter from "./DataAdapter";
 import invert from "invert-color";
+import TooltipBar from "./TooltipBar";
 import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
 
 const regagroScheme = _.find(Schemes, { value: "regagro" }).colors.reverse();
@@ -72,6 +73,7 @@ class BarDataSource extends Component {
         this.props.formsStore.form_data
       )
     ) {
+      //Обновление данные при смене глобальных параметров
       this.setState(state => ({
         ...state,
         countRequest: 0
@@ -80,7 +82,7 @@ class BarDataSource extends Component {
     }
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     await this.getData();
   }
 
@@ -140,7 +142,7 @@ class BarDataSource extends Component {
       return (
         <>
           <ErrorBoundary>
-            <ResponsiveBar
+            <ResponsiveBarCanvas
               data={data}
               indexBy="key"
               enableLabel={this.state.settings?.enableSliceLabels}
@@ -160,6 +162,13 @@ class BarDataSource extends Component {
                   threshold: 0.45
                 })
               }
+              theme={{
+                tooltip: {
+                  container: {
+                    padding: "0"
+                  }
+                }
+              }}
               margin={{
                 top: this.state.settings?.margin?.top || 40,
                 right: this.state.settings?.margin?.right || 80,
@@ -172,14 +181,13 @@ class BarDataSource extends Component {
                   : this.state.settings?.colors
               }
               colorBy="index"
-              tooltip={datum => {
-                const { indexValue, value, color } = datum;
-                return (
-                  <>
-                    <span>{indexValue}</span>:<strong> {value}</strong>
-                  </>
-                );
-              }}
+              tooltip={datum => (
+                <TooltipBar
+                  enable={this.state.settings?.enableCustomTooltip}
+                  datum={datum}
+                  widgetID={this.props.widgetID}
+                ></TooltipBar>
+              )}
               axisLeft={
                 this.state.settings?.layout === "horizontal"
                   ? !this.state.settings?.reverse && {
@@ -212,7 +220,7 @@ class BarDataSource extends Component {
                     }
                   : null
               }
-              animate={Boolean(this.state.settings?.enableAnimation) || false}
+              animate={false}
               motionDamping={this.state.settings?.animationMotionDamping}
               motionStiffness={this.state.settings?.animationMotionStiffness}
               legends={

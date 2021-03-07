@@ -13,60 +13,16 @@ class TableWidget extends Component {
       TableComponent: ()=><div children="Loading..."/>
     };
     props.element.component = this;
-    if(window.elementDecorator){
+    if (window.elementDecorator) {
       window.elementDecorator(this);
+    }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
     }
     this.scrollbar = React.createRef();
   }
 
-  /**
-   * Обновиить виджет
-   * @param {{}} prevProps
-   * @param {{}} prevState
-   * @private
-   */
-  _componentDidUpdate(prevProps, prevState){
-    // console.log('table_2_0');
-    // if(this.props.element.getSettings('table_2_0') && ! this.state.table_2_0){
-    //   import('../altrp-table/altrp-table-without-update').then(res=>{
-    //     this.setState(state=>({...state,TableComponent:res.default, table_2_0: true}))
-    //   });
-    // } else {
-    //   import('../altrp-table/altrp-table').then(res=>{
-    //     this.setState(state=>({...state,TableComponent:res.default, table_2_0: false}))
-    //   });
-    // }
-  }
-
   _componentDidMount(){
-    // switch(this.props.element.getSettings('choose_datasource')){
-    //   case 'datasource':{
-    //     import('../altrp-table/altrp-table').then(res=>{
-    //       this.setState(state=>({...state,TableComponent:res.default}))
-    //     });
-    //     // import('../altrp-table/altrp-table-without-update').then(res=>{
-    //     //   this.setState(state=>({...state,TableComponent:res.default}))
-    //     // });
-    //   } break;
-    //   case 'query':{
-    //     const query = this.props.element.getSettings('table_query');
-    //     if((! query) || (! query.pageSize) || (query.pageSize <=0 )){
-    //       import('../altrp-table/altrp-table-without-update').then(res=>{
-    //         this.setState(state=>({...state,TableComponent:res.default}))
-    //       });
-    //     } else {
-    //       import('../altrp-table/altrp-table').then(res=>{
-    //         this.setState(state=>({...state,TableComponent:res.default}))
-    //       });
-    //     }
-    //   }
-    //   break;
-    //   default:{
-    //     import('../altrp-table/altrp-table').then(res=>{
-    //       this.setState(state=>({...state,TableComponent:res.default}))
-    //     });
-    //   }
-    // }
     if(this.props.element.getSettings('store_state') && getWidgetState(this.props.element.getId())){
       this.setState(state=>({...state, widgetState: getWidgetState(this.props.element.getId())}));
     } else if (this.props.element.getSettings('store_state')){
@@ -93,7 +49,7 @@ class TableWidget extends Component {
     if(! this.props.currentModel.getProperty('altrpModelUpdated')){
       return '';
     }
-    let data = null;
+    let data = [];
     if(this.props.element.getSettings('table_datasource')
         && this.props.element.getSettings('choose_datasource') === 'datasource'){
       let path = this.props.element.getSettings('table_datasource').replace(/{{/g, '').replace(/}}/g, '');

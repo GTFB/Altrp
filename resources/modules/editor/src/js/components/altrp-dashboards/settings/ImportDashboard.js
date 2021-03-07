@@ -7,8 +7,14 @@ class ImportDashboard extends Component {
 
   render() {
     return (
-      <>
+      <div
+        className={this.props.className}
+        style={{
+          display: "inline-block"
+        }}
+      >
         <button
+          className={`altrp-btn-draw`}
           style={{
             margin: "5px 5px 5px 5px"
           }}
@@ -21,7 +27,7 @@ class ImportDashboard extends Component {
           onChange={e => this.props.getFile(e)}
           accept="application/json"
         />
-      </>
+      </div>
     );
   }
 }

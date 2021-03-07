@@ -3,6 +3,28 @@
 
 ## Changelog
 
+### 0.14.0
++ Add Accept Filed Type
++ Custom Headers to Form Action
++ Add Video Widget
+
+### 0.13.0
++ Аdd the Template Widget
++ Аdd the Section and Column Link
++ Many URL Params for Pages
++ Add New Custom Code Action 
++ Setting Fields Value via Set Actions
++ Two New Text Filter in Table
++ Add History Panel in Editor
+
+### 0.12.1
++ Аdd the Adminbar
++ Insert Custom SVG to Content
+
+### 0.11.16
++ Аdd the Possibility to Delete Widgets with Errors
++ Аdd the Possibility to Hide Export Panel in Dashboard Widget
+
 ### 0.11.1
 + Add Action Update Elements & Bulk Form Action
 + Draggable Repeater Items

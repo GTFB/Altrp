@@ -3,7 +3,7 @@ import { ResponsiveScatterPlotCanvas } from "@nivo/scatterplot";
 import ErrorBoundary from "./ErrorBoundary";
 import { connect } from "react-redux";
 import DataAdapter from "./DataAdapter";
-
+import TooltipScatter from "./TooltipScatter";
 import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
 const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
 import moment from "moment";
@@ -79,7 +79,7 @@ class ScatterDataSource extends Component {
     }
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     await this.getData();
   }
 
@@ -223,6 +223,13 @@ class ScatterDataSource extends Component {
             animate={Boolean(this.state.settings?.enableAnimation) || false}
             motionDamping={this.state.settings?.animationMotionDamping}
             motionStiffness={this.state.settings?.animationMotionStiffness}
+            tooltip={datum => (
+              <TooltipScatter
+                enable={this.state.settings?.enableCustomTooltip}
+                datum={datum}
+                widgetID={this.props.widgetID}
+              />
+            )}
             legends={
               this.state.settings?.enableLegend
                 ? [

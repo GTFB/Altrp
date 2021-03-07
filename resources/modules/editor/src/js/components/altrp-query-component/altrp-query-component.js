@@ -37,6 +37,9 @@ const AltrpQueryComponent = (props)=>{
   const [sortSetting, setSortSettings] = useState(defaultSortSettings);
   const [filterSetting, setFilterSettings] = useState({});
   const fetchModels = useCallback(async (key, page = 1, sortSetting, filterSetting, params, updateToken, groupBy) => {
+    if(settings.choose_datasource === 'datasource'){
+      return data;
+    }
     let queryData = {page};
     const filterSettingJSON = JSON.stringify(filterSetting);
     if(sortSetting){
@@ -51,9 +54,6 @@ const AltrpQueryComponent = (props)=>{
     }
     if(filterSettingJSON.length > 2){
       queryData.filters = filterSettingJSON;
-    }
-    if(settings.choose_datasource === 'datasource'){
-      return data;
     }
     return await query.getQueried(queryData)
   });
@@ -85,7 +85,6 @@ const AltrpQueryComponent = (props)=>{
      */
     const {status, data, error,} = useQuery([query.dataSourceName,query.getParams(), updateToken],
       (updateToken) => {
-        console.log(updateToken);
         return query.getResource().getQueried({...sortSetting,filters: filterSettingJSON, groupBy})
       }, useQuerySettings);
     _data = data;
@@ -109,8 +108,17 @@ const AltrpQueryComponent = (props)=>{
   React.useEffect(()=>{
     setAltrpIndex(data)
   }, [data]);
+  let finalData = React.useMemo(()=>{
+    if(! _.isArray(data)){
+      if(_.isObject(data)){
+        return [data]
+      }
+      return [];
+    }
+    return data;
+  }, [data]);
   const childrenProps = {...props,
-    data,
+    data: finalData,
     _status,
     setFilterSettings,
     setSortSettings,

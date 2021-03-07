@@ -6,11 +6,8 @@ namespace App\Services\Robots;
 
 use App\Altrp\Model;
 use App\Altrp\Robot;
-use App\Mails\RobotsMail;
 use App\Services\Robots\Blocks\Block;
 use App\Services\Robots\Repositories\RobotsRepository;
-use App\User;
-use Illuminate\Support\Facades\Mail;
 
 class RobotsService
 {
@@ -56,6 +53,16 @@ class RobotsService
     public function getCurrentModelRobots(Model $model = null)
     {
         return $this->robotsRepo->getByModelRobots($model);
+    }
+
+    /**
+     * Получить всех роботов, которые привязаны к опредлённому условию запуска
+     * @param string $condition
+     * @return mixed
+     */
+    public function getStartConditionRobots(string $condition)
+    {
+        return $this->robotsRepo->getRobotsByStartConditionType($condition);
     }
 
     /**
@@ -110,11 +117,12 @@ class RobotsService
 
     /**
      * Запустить робота
+     * @param null $modelData
      * @return bool
      */
-    public function runRobot()
+    public function runRobot($modelData = null)
     {
-        $currentAction = $this->getStartBlock();
+        $currentAction = $this->getStartBlock($modelData);
 
         do {
             $currentAction->run();
@@ -128,8 +136,8 @@ class RobotsService
      * Получить стартовый блок диаграммы
      * @return Block
      */
-    protected function getStartBlock()
+    protected function getStartBlock($modelData)
     {
-        return new Block('begin', $this->edges, $this->nodes);
+        return new Block('begin', $this->edges, $this->nodes, $modelData);
     }
 }

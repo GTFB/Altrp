@@ -38,7 +38,7 @@ class DatasourceSettings extends Component {
           <Form.Control
             onChange={e => this.props.setType(e.target.value)}
             value={this.props.editElement?.settings?.type}
-            className="select-type"
+            className={`${this.props.widgetID} altrp-dashboard__drawer--select select-type`}
             name="type"
             as="select"
           >

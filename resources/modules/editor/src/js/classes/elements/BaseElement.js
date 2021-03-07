@@ -1,11 +1,12 @@
 
 import { TAB_CONTENT, TAB_STYLE } from "../modules/ControllersManager";
-import { getTemplateDataStorage, getEditor, getFactory } from "../../helpers";
+import { getTemplateDataStorage, getEditor, getFactory, editorSetCurrentElement } from "../../helpers";
 import CONSTANTS from "../../consts";
 import { changeTemplateStatus } from "../../store/template-status/actions";
 import store, {getCurrentScreen, getElementState} from "../../store/store";
 import ControlStack from "./ControlStack";
 import { isEditor } from "../../../../../front-app/src/js/helpers";
+import { addHistoryStoreItem } from "../../store/history-store/actions";
 
 /**
  * Базовый класс для методов элемента для редактора
@@ -21,6 +22,14 @@ class BaseElement extends ControlStack {
     this.controllersRegistered = false;
     this.children = [];
     this.componentClass = window.elementsManager.getComponentClass(this.getName());
+    // console.log(this)
+    // for(let key in this) {
+    //   console.log(key, this[key])
+    // }
+    // console.log('component', this.component)
+    // console.log(this)
+    // if(this.component)
+    //     console.log('added', this)
     this.initiatedDefaults = null;
 
     /**
@@ -60,9 +69,9 @@ class BaseElement extends ControlStack {
    * @param value
    */
 
- setCssClass(settingName, value) {
+  setCssClass(settingName, value) {
     this.cssClassStorage[settingName] = value;
- }
+  }
 
   getName(){
     return this.constructor.getName();
@@ -122,17 +131,50 @@ class BaseElement extends ControlStack {
    * добавлйет новый  дочерний элемент в конец
    * @param {BaseElement} child
    * */
-  appendChild(child) {
+  appendChild(child, dispatchToHistory = true) {
     this.children.push(child);
     child.setParent(this);
     if (this.component && typeof this.component.setChildren === 'function') {
       this.component.setChildren(this.children);
     }
     this.templateNeedUpdate();
+    if(dispatchToHistory) {
+      let index = this.children.length - 1;
+      console.log(index);
+      store.dispatch(addHistoryStoreItem('ADD', {element: child, index, parent: this})); 
+    }
   }
 
   insertSiblingAfter(newSibling) {
     this.parent.insertNewChildAfter(this.getId(), newSibling);
+  }
+  /**
+   * @param {number} index
+   * @param {BaseElement} child
+   * */
+  restoreChild(index, child) {
+    if (index === undefined || index > this.children.length) {
+      throw 'can not restore child';
+    }
+
+    if(child.parent === undefined) {
+      child.setParent(this);
+    }
+
+    let isHaveChild = false;
+    isHaveChild = this.children.some((childItem) => {
+      if (childItem.getId() === child.getId()) {
+        return true;
+      };
+    })
+    if (!isHaveChild) {
+      this.children.splice(index, 0, child);
+    }
+
+    this.component.setChildren(this.children);
+    editorSetCurrentElement(child);
+
+    this.templateNeedUpdate(); 
   }
 
   insertSiblingBefore(newSibling) {
@@ -156,6 +198,8 @@ class BaseElement extends ControlStack {
     this.children.splice(index + 1, 0, newChild);
     this.component.setChildren(this.children);
     this.templateNeedUpdate();
+    index += 1;
+    store.dispatch(addHistoryStoreItem('ADD', {element: newChild, index, parent: this}));
   }
   /**
    * @param {string} childId
@@ -175,6 +219,7 @@ class BaseElement extends ControlStack {
     this.children.splice(index, 0, newChild);
     this.component.setChildren(this.children);
     this.templateNeedUpdate();
+    store.dispatch(addHistoryStoreItem('ADD', {element: newChild, index, parent: this}));
   }
 
   /**
@@ -241,7 +286,7 @@ class BaseElement extends ControlStack {
    * @param {BaseElement | string} child
    * @throws Если не указан IG или сам элемент
    * */
-  deleteChild(child) {
+  deleteChild(child, dispatchToHistory = true) {
     let childExist = false;
     let childId;
     if (typeof child === 'string') {
@@ -251,10 +296,12 @@ class BaseElement extends ControlStack {
     } else {
       throw 'Delete Child can only by id or Instance';
     }
-    let newChildren = this.children.filter(item => {
+    let newChildren = this.children.filter((item, index) => {
       if (item.getId() === childId) {
         childExist = true;
         item.beforeDelete();
+        if(dispatchToHistory)
+          store.dispatch(addHistoryStoreItem('DELETE', {element: child, parent: this, index}));
         return false;
       }
       return true
@@ -299,7 +346,7 @@ class BaseElement extends ControlStack {
    */
   getSettings(settingName, _default = '') {
     this._initDefaultSettings();
-    if (!settingName) {
+    if (! settingName) {
       return _.cloneDeep(this.settings);
     }
     if (this.settings[settingName] === undefined) {
@@ -340,11 +387,24 @@ class BaseElement extends ControlStack {
     this.updateStyles();
   }
 
-  setSettingValue(settingName, value) {
-    this.settings[settingName] = value;
-    if (this.component) {
-      this.component.changeSetting(settingName, value);
-    }
+  setSettingValue(settingName, value, dispatchToHistory = true) {
+    //check change value
+    if(this.settings[settingName] !== value) {
+      if (dispatchToHistory && store.getState().templateStatus.status === CONSTANTS.TEMPLATE_NEED_UPDATE)
+        store.dispatch(
+          addHistoryStoreItem("EDIT", {
+            element: this,
+            oldValue: this.settings[settingName],
+            newValue: value,
+            settingName
+          })
+        );
+      this.settings = {...this.settings};
+      this.settings[settingName] = value;
+      if (this.component) {
+        this.component.changeSetting(settingName, value);
+      }
+    }  
   }
 
   _registerControls() {
@@ -523,12 +583,10 @@ class BaseElement extends ControlStack {
    * @param {string} fontName
    */
   addFont(settingName, fontName){
-    console.log(this.settings);
     if((! settingName) || ! fontName){
       return;
     }
     _.set(this.settings, `__altrpFonts__.${settingName}`, fontName);
-    console.log(this.settings);
 
   }
   /**
@@ -541,6 +599,19 @@ class BaseElement extends ControlStack {
       return;
     }
     _.unset(this.settings, `__altrpFonts__.${settingName}`);
+  }
+
+  /**
+   * Получить данные динамических настроек
+   * @param {string} dynamicSettingName
+   * @param {{} | null} settings
+   */
+  setDynamicSetting(dynamicSettingName, settings){
+    if(! _.isEmpty(settings)){
+      _.set(this.settings, `altrpDynamicSetting.${dynamicSettingName}`, settings);
+    } else {
+      _.unset(this.settings, `altrpDynamicSetting.${dynamicSettingName}`);
+    }
   }
 }
 

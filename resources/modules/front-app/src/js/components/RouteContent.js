@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import AreaComponent from "./AreaComponent";
-import { setTitle } from "../helpers";
+import AdminBar from "./AdminBar";
+import {replaceContentWithData, setTitle} from "../helpers";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Redirect, withRouter } from "react-router-dom";
 import pageLoader from "./../classes/PageLoader";
@@ -17,17 +18,22 @@ import dataStorageUpdater from "../classes/modules/DatastorageUpdater";
 import { clearElements } from "../store/elements-storage/actions";
 import { clearAllResponseData } from "../store/responses-storage/actions";
 import { clearPageState } from "../store/altrp-page-state-storage/actions";
+import {changeCurrentTitle} from "../store/current-title/actions";
+import {changeCurrentPageProperty} from "../store/current-page/actions";
 
 class RouteContent extends Component {
   constructor(props) {
     super(props);
-    setTitle(this.props.title);
+    let title = this.props.title;
+    appStore.dispatch(changeCurrentTitle(title));
     this.state = {
       areas: this.props.areas || []
     };
     this.scrollbar = React.createRef();
     this.isReport = window.location.href.includes("reports");
     appStore.dispatch(clearElements());
+    window.currentRouterMatch = new AltrpModel(props.match);
+    this.admin = this.props.currentUser.hasRoles('admin');
   }
 
   /**
@@ -37,9 +43,7 @@ class RouteContent extends Component {
    * @return {Promise<void>}
    */
   async componentDidMount() {
-    window.currentRouterMatch = new AltrpModel(this.props.match);
     window.mainScrollbars = this.scrollbar.current;
-    // setTitle(this.props.title);
     if (this.props.lazy && this.props.allowed) {
       let page = await pageLoader.loadPage(this.props.id);
       let areas = page.areas.map(area => Area.areaFabric(area));
@@ -53,10 +57,6 @@ class RouteContent extends Component {
      */
     this.changeRouteCurrentModel();
     /**
-     * Обнуляем текущее хранилище dataStorage
-     */
-    // dataStorageUpdater.clearCurrent();
-    /**
      * Обнуляем хранилище ответов на отправленные формы
      */
     appStore.dispatch(clearAllResponseData());
@@ -67,11 +67,17 @@ class RouteContent extends Component {
   }
 
   /**
+   * Очистим currentDataSource после удаления компонента
+   */
+  componentWillUnmount(){
+    dataStorageUpdater.clearCurrent();
+  }
+  /**
    *  обновление currentDataStorage
    *  Сброс altrpPageState
    */
   async updateAppData() {
-    dataStorageUpdater.clearCurrent();
+      dataStorageUpdater.clearCurrent();
     if(window.formsManager){
       formsManager.clearFormsStore();
     }
@@ -122,6 +128,8 @@ class RouteContent extends Component {
         _.get(prevProps, "match.params.id")
     ) {
       this.changeRouteCurrentModel();
+      console.log(this);
+      appStore.dispatch(changeCurrentPageProperty('url', location.href));
     }
     /**
      * При изменении страницы без изменения текущего ройта
@@ -146,40 +154,48 @@ class RouteContent extends Component {
       return <Redirect to={this.props.redirect || "/"} />;
     }
     return (
-      <Scrollbars
-        ref={this.scrollbar}
-        onUpdate={this.props.setScrollValue}
-        style={{ zIndex: 99999 }}
-        autoHide
-        autoHideTimeout={500}
-        autoHideDuration={200}
-        renderTrackVertical={({ style, ...props }) => {
-          return (
-            <div
-              className="altrp-scroll__vertical-track"
-              style={style}
-              {...props}
-            />
-          );
-        }}
-      >
-        <div className="route-content" id="route-content">
-          {this.state.areas.map(area => {
+      <React.Fragment>
+        {this.admin && <AdminBar areas={this.state.areas} data={this.props.currentUser.data} idPage={this.props.id} />}
+      
+        <Scrollbars
+          ref={this.scrollbar}
+          onUpdate={this.props.setScrollValue}
+          // style={{ zIndex: 99999 }}
+          autoHide
+          autoHideTimeout={500}
+          autoHideDuration={200}
+          renderTrackVertical={({ style, ...props }) => {
             return (
-              <AreaComponent
-                {...area}
-                area={area}
-                page={this.props.id}
-                models={[this.props.model]}
-                key={"appArea_" + area.id}
+              <div
+                className="altrp-scroll__vertical-track"
+                style={style}
+                {...props}
               />
             );
-          })}
-        </div>
-      </Scrollbars>
+          }}
+        >
+          <div className="route-content" id="route-content">
+            {this.state.areas.map(area => {
+              return (
+                <AreaComponent
+                  {...area}
+                  area={area}
+                  page={this.props.id}
+                  models={[this.props.model]}
+                  key={"appArea_" + area.id}
+                />
+              );
+            })}
+          </div>
+        </Scrollbars>
+      </React.Fragment>
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  currentUser: state.currentUser
+});
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -187,4 +203,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(withRouter(RouteContent));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(RouteContent));

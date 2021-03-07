@@ -8,8 +8,11 @@ class ListWidget extends Component {
       settings: props.element.getSettings()
     };
     props.element.component = this;
-    if(window.elementDecorator){
+    if (window.elementDecorator) {
       window.elementDecorator(this);
+    }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
     }
   }
 

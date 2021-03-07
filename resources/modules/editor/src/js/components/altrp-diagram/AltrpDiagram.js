@@ -15,8 +15,98 @@ import {
   POINT
 } from "../../../../../admin/src/components/dashboard/widgetTypes";
 import { getDataByPath } from "../../../../../front-app/src/js/helpers";
+import _ from "lodash";
 
-const AltrpDiagram = ({ settings }) => {
+const AltrpDiagram = props => {
+  const { settings, id } = props;
+  const customColorSchemeChecker = settings?.isCustomColor;
+  const customColors = settings?.customScheme?.map(item =>
+    _.get(item, "color.colorPickedHex")
+  );
+  const yScaleMax = settings?.yScaleMax;
+
+  const axisY = settings?.axisY;
+
+  const tooltipValues = settings?.repTooltips?.map(item => ({
+    label: _.get(item, "label"),
+    field: _.get(item, "value"),
+    color: _.get(item, "color")?.colorPickedHex
+  }));
+  const useCustomTooltips = settings?.customTooltip;
+
+  const formattedYAxis =
+    axisY?.map(item => {
+      const valueFromPath = getDataByPath(item.yMarkerValue);
+      const value =
+        valueFromPath !== null
+          ? Number(valueFromPath)
+          : Number(item.yMarkerValue);
+      const data = {
+        axis: "y",
+        value: value,
+        lineStyle: {
+          stroke:
+            item.yMarkerColor != null
+              ? item.yMarkerColor.colorPickedHex
+              : "#000000",
+          strokeWidth: item.yMarkerWidth
+        },
+        textStyle: {
+          fill:
+            item.yMarkerLabelColor != null
+              ? item.yMarkerLabelColor.colorPickedHex
+              : "#000000"
+        },
+        legend: item.yMarkerLabel,
+        legendOrientation: item.yMarkerOrientation
+      };
+      return data;
+    }) || [];
+
+  const axisX = settings?.axisX;
+  const formattedXAxis =
+    axisX?.map(item => {
+      const valueFromPath = getDataByPath(item.xMarkerValue);
+
+      const value =
+        valueFromPath !== null
+          ? valueFromPath
+          : item.xMarkerIsDate
+          ? moment(item.xMarkerValue).format("DD.MM.YYYY")
+          : item.xMarkerValue;
+
+      const data = {
+        axis: "x",
+        value: value,
+        lineStyle: {
+          stroke:
+            item.xMarkerColor != null
+              ? item.xMarkerColor.colorPickedHex
+              : "#000000",
+          strokeWidth: item.xMarkerWidth
+        },
+        textStyle: {
+          fill:
+            item.xMarkerLabelColor != null
+              ? item.xMarkerLabelColor.colorPickedHex
+              : "#000000"
+        },
+        legend: item.xMarkerLabel,
+        legendOrientation: item.xMarkerOrientation
+      };
+      return data;
+    }) || [];
+
+  let constantsAxises = [];
+  if (formattedXAxis.length > 0) {
+    constantsAxises.push(formattedXAxis);
+    constantsAxises = constantsAxises.flat();
+  }
+  if (formattedYAxis.length > 0) {
+    constantsAxises.push(formattedYAxis);
+    constantsAxises = constantsAxises.flat();
+  }
+
   const sql = settings.query?.dataSource?.value;
   const isMultiple = settings.isMultiple;
   const isCustomColor = settings.isCustomColors;
@@ -32,6 +122,7 @@ const AltrpDiagram = ({ settings }) => {
   const curve = settings?.curve || "line";
   const lineWidth = settings?.lineWidth;
   const colorScheme = settings?.colorScheme;
+
   const enableArea = settings?.enableArea;
   const enablePoints = settings?.enablePoints;
   const pointSize = settings?.pointSize;
@@ -71,6 +162,7 @@ const AltrpDiagram = ({ settings }) => {
   const enableRadialLabels = settings?.enableRadialLabels;
   //data variable
   let data = [];
+
   //funciton for formattion data for all types
   const formatData = (data, r) => {
     return data.map(d => {
@@ -78,23 +170,36 @@ const AltrpDiagram = ({ settings }) => {
       const keyFormatted = !moment(currentKey).isValid()
         ? currentKey
         : moment(currentKey).format("DD.MM.YYYY");
+      const tooltip =
+        typeof tooltipValues !== "undefined"
+          ? tooltipValues?.map(item => {
+              return {
+                label: item?.label,
+                value: _.get(d, item.field),
+                color: item?.color
+              };
+            })
+          : [];
       switch (settings.type) {
         case LINE:
           return {
             y: Number(_.get(d, r.data)),
-            x: keyIsDate ? keyFormatted : currentKey
+            x: keyIsDate ? keyFormatted : currentKey,
+            tooltip: tooltip
           };
           break;
         case TABLE:
           return {
             y: Number(_.get(d, r.data)),
-            x: keyIsDate ? keyFormatted : currentKey
+            x: keyIsDate ? keyFormatted : currentKey,
+            tooltip: tooltip
           };
           break;
         case POINT:
           return {
             y: Number(_.get(d, r.data)),
-            x: keyIsDate ? keyFormatted : currentKey
+            x: keyIsDate ? keyFormatted : currentKey,
+            tooltip: tooltip
           };
           break;
         case BAR:
@@ -102,13 +207,15 @@ const AltrpDiagram = ({ settings }) => {
           return {
             [key]: Number(_.get(d, r.data)),
             key: key,
-            value: Number(_.get(d, r.data))
+            value: Number(_.get(d, r.data)),
+            tooltip: tooltip
           };
           break;
         case PIE:
           return {
             value: Number(_.get(d, r.data)),
-            id: keyIsDate ? keyFormatted : currentKey
+            id: keyIsDate ? keyFormatted : currentKey,
+            tooltip: tooltip
           };
           break;
 
@@ -143,7 +250,9 @@ const AltrpDiagram = ({ settings }) => {
   } else if (settings.datasource_path != null) {
     try {
       data = getDataByPath(settings.datasource_path, []);
-
+      console.log("====================================");
+      console.log(data);
+      console.log("====================================");
       if (settings.type === LINE) {
         data = _.uniqBy(data, settings.key_name);
       }
@@ -212,6 +321,11 @@ const AltrpDiagram = ({ settings }) => {
     case LINE:
       return (
         <DynamicLineChart
+          widgetID={id}
+          useCustomTooltips={useCustomTooltips}
+          yScaleMax={yScaleMax}
+          customColorSchemeChecker={customColorSchemeChecker}
+          customColors={customColors}
           widget={widget}
           dataSource={data}
           keyIsDate={keyIsDate}
@@ -238,6 +352,7 @@ const AltrpDiagram = ({ settings }) => {
           xMarkerLabel={xMarkerLabel}
           yMarkerLabelColor={yMarkerLabelColor}
           xMarkerLabelColor={xMarkerLabelColor}
+          constantsAxises={constantsAxises}
           sort={sort}
           tickRotation={tickRotation}
           bottomAxis={bottomAxis}
@@ -248,7 +363,13 @@ const AltrpDiagram = ({ settings }) => {
     case POINT:
       return (
         <DynamicPointChart
+          widgetID={id}
+          useCustomTooltips={useCustomTooltips}
+          yScaleMax={yScaleMax}
+          customColorSchemeChecker={customColorSchemeChecker}
+          customColors={customColors}
           dataSource={data}
+          constantsAxises={constantsAxises}
           colorScheme={colorScheme}
           widget={widget}
           nodeSize={pointSize}
@@ -264,7 +385,13 @@ const AltrpDiagram = ({ settings }) => {
     case BAR:
       return (
         <DynamicBarChart
+          widgetID={id}
+          useCustomTooltips={useCustomTooltips}
+          yScaleMax={yScaleMax}
+          customColorSchemeChecker={customColorSchemeChecker}
+          customColors={customColors}
           isMultiple={isMultiple}
+          colorScheme={colorScheme}
           dataSource={data}
           widget={widget}
           enableLabel={enableLabel}
@@ -285,8 +412,14 @@ const AltrpDiagram = ({ settings }) => {
     case PIE:
       return (
         <DynamicPieChart
+          widgetID={id}
+          useCustomTooltips={useCustomTooltips}
+          yScaleMax={yScaleMax}
+          customColorSchemeChecker={customColorSchemeChecker}
+          customColors={customColors}
           isMultiple={isMultiple}
           dataSource={data}
+          colorScheme={colorScheme}
           widget={widget}
           width={settings.width?.size}
           innerRadius={innerRadius}
@@ -305,6 +438,8 @@ const AltrpDiagram = ({ settings }) => {
     case TABLE:
       return (
         <DynamicTableWidget
+          widgetID={id}
+          useCustomTooltips={useCustomTooltips}
           isCustomColor={isCustomColor}
           colorArray={colorArray}
           isMultiple={isMultiple}

@@ -6,12 +6,19 @@ import {isEditor} from "../../../../../front-app/src/js/helpers";
 export default function AltrpPopper(props) {
   const object = useRef();
   const [updateSettings, setUpdateSettings] = useState(props.settings.updateSettings || {});
-  const body = useMemo(() => {
-    return isEditor() ?
-      document.getElementById("editorContent").contentWindow.document.body
-      :
-      document.body
-  });
+  const [getTargetRef, setGetTargetRef] = useState(false);
+
+  let body = document.body;
+
+  if(!props.editor) {
+    body = useMemo(() => {
+      return isEditor() ?
+        document.getElementById("editorContent").contentWindow.document.body
+        :
+        document.body
+    });
+  }
+
   let placement = props.settings.placement;
   const variantPlace = [
     "bottom-start",
@@ -33,7 +40,7 @@ export default function AltrpPopper(props) {
     placement = variantPlace[0]
   }
 
-  const {styles, attributes, forceUpdate} = usePopper(props.target.current, object.current, {
+  const {styles, attributes, forceUpdate, update} = usePopper(props.target.current, object.current, {
     placement,
     modifiers: [
       {
@@ -53,7 +60,13 @@ export default function AltrpPopper(props) {
         forceUpdate()
       }
     }
-  }, [props.children, props.settings.placement]);
+
+    if(!getTargetRef && props.target.current) {
+      console.log('aann')
+      setGetTargetRef(true)
+    }
+
+  }, [props.children, placement, props.target]);
 
   if(props.portal) {
     return ReactDOM.createPortal((

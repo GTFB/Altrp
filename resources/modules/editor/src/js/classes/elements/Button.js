@@ -280,6 +280,9 @@ class Button extends BaseElement {
     this.startControlSection('dropbar_section', {
       tab: TAB_CONTENT,
       label: 'Dropbar content',
+      conditions: {
+        'link_button_type': "dropbar",
+      },
     });
 
     this.addControl('type_dropbar_section', {
@@ -325,6 +328,9 @@ class Button extends BaseElement {
     this.startControlSection('dropbar_options_section', {
       tab: TAB_CONTENT,
       label: 'Dropbar options',
+      conditions: {
+        'link_button_type': "dropbar",
+      },
     });
 
     this.addControl("position_dropbar_options", {
@@ -399,26 +405,16 @@ class Button extends BaseElement {
       ],
     });
 
-    this.addControl("width_dropbar_options", {
-      type: CONTROLLER_SLIDER,
-      label: 'Width',
-      default: {
-        unit: 'px',
-      },
-      max: 1000,
-      min: 0,
-      rules: {
-        ".{{ID}}-altrp-dropbar .altrp-dropbar-container{{STATE}}": "width: {{SIZE}}{{UNIT}}"
-      }
-    });
-
     this.addControl("show_delay_dropbar_options", {
       type: CONTROLLER_SLIDER,
       label: 'Dropbar show delay',
       default: {
         size: 0,
-        unit: 's',
+        unit: 'ms',
       },
+      units: [
+        'ms'
+      ],
       max: 1000,
       min: 0,
     });
@@ -428,8 +424,11 @@ class Button extends BaseElement {
       label: 'Dropbar hide delay',
       default: {
         size: 0,
-        unit: 's',
+        unit: 'ms',
       },
+      units: [
+        'ms'
+      ],
       max: 1000,
       min: 0,
     });
@@ -800,8 +799,7 @@ class Button extends BaseElement {
     }
     );
 
-    this.addControl(
-      'border_width', {
+    this.addControl('border_width', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Width',
       default: {
@@ -821,10 +819,6 @@ class Button extends BaseElement {
     this.addControl('border_color', {
       type: CONTROLLER_COLOR,
       label: 'Border Color',
-      // default: {
-      //   color: "rgb(50,168,82)",
-      //   colorPickedHex: "#32a852",
-      // },
       rules: {
         '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
       },
@@ -847,7 +841,7 @@ class Button extends BaseElement {
           'border-top-left-radius: {{TOP}}{{UNIT}}',
           'border-top-right-radius: {{RIGHT}}{{UNIT}}',
           'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+          'border-bottom-left-radius: {{LEFT}}{{UNIT}}'
         ]
       }
     });
@@ -855,17 +849,6 @@ class Button extends BaseElement {
     this.addControl('style_background_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Shadow',
-      default: {
-        // blur: 0,
-        // horizontal: 0,
-        // vertical: 0,
-        // opacity: 1,
-        // spread: 0,
-        // colorRGB: 'rgb(0, 0, 0)',
-        // color: 'rgb(0, 0, 0)',
-        // colorPickedHex: '#000000',
-        // type: ""
-      },
       presetColors: [
         '#eaeaea',
         '#9c18a8'
@@ -995,6 +978,76 @@ class Button extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection("btn_transition", {
+      tab: TAB_STYLE,
+      label: "Transition"
+    });
+
+    this.addControl('button_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        "{{ELEMENT}} .altrp-btn{{STATE}}": "transition-property: {{VALUE}};"
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("button_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        "{{ELEMENT}} .altrp-btn{{STATE}}": "transition-duration: {{SIZE}}s;"
+      }
+    });
+
+    this.addControl('button_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        "{{ELEMENT}} .altrp-btn{{STATE}}": "transition-timing-function: {{VALUE}};"
+      }
+    });
+
+    this.addControl("button_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        "{{ELEMENT}} .altrp-btn{{STATE}}": "transition-delay: {{SIZE}}s;"
+      }
+    });
+
+    this.endControlSection();
+
     this.startControlSection(
       'creative_link', {
       tab: TAB_STYLE,
@@ -1026,7 +1079,49 @@ class Button extends BaseElement {
 
     this.startControlSection("dropbar_content_style", {
       tab: TAB_STYLE,
-      label: "Dropbar"
+      label: "Dropbar",
+      conditions: {
+        'link_button_type': "dropbar",
+      },
+    });
+
+    this.addControl("padding_dropbar_content_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      rules: {
+        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}": [
+          "padding-top: {{TOP}}{{UNIT}};",
+          "padding-right: {{RIGHT}}{{UNIT}};",
+          "padding-bottom: {{BOTTOM}}{{UNIT}};",
+          "padding-left: {{LEFT}}{{UNIT}};"
+        ]
+      }
+    });
+
+    this.addControl("width_dropbar_options", {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default: {
+        unit: 'px',
+      },
+      units: [
+        "px",
+        "%",
+        "vw"
+      ],
+      max: 1000,
+      min: 0,
+      rules: {
+        ".{{ID}}-altrp-dropbar.altrp-dropbar-container{{STATE}}": "width: {{SIZE}}{{UNIT}}"
+      }
     });
 
     this.addControl("background_dropbar_content_style", {
@@ -1078,27 +1173,6 @@ class Button extends BaseElement {
       },
     }
     );
-
-    this.addControl("padding_dropbar_content_style", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Padding",
-      default: {
-        top: 30,
-        right: 30,
-        bottom: 30,
-        left: 30,
-        unit: "px"
-      },
-      units: ["px", "%", "vh"],
-      rules: {
-        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
-    });
 
     this.addControl("border_style_dropbar_content_style", {
       type: CONTROLLER_SELECT,

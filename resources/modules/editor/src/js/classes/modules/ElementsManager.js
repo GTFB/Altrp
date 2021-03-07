@@ -34,6 +34,7 @@ import Tabs from "../elements/Tabs";
 import Divider from "../elements/Divider";
 import Nav from "../elements/Nav";
 import Table from "../elements/Table";
+import Template from "../elements/Template";
 import Posts from "../elements/Posts";
 import Map from "../elements/Map";
 import MapConstructor from "../elements/MapConstructor";
@@ -46,9 +47,11 @@ import Tour from "../elements/Tour";
 import TourGuide from "../../components/widgets/TourGuide";
 import ExportPanel from "../elements/ExportPanel";
 import ExportPanelWidget from "../../components/widgets/ExportPanelWidget";
-// Websocket import
-import Notifications from "../elements/Notifications";
-import NotificationsWidget from "../../components/widgets/NotificationsWidget";
+import Html from "../elements/Html";
+import HtmlWidget from "../../components/widgets/HtmlWidget";
+import TemplateWidget from "../../components/widgets/TemplateWidget";
+import Video from "../elements/Video";
+import VideoWidget from "../../components/widgets/VideoWidget";
 
 
 export default class ElementsManger {
@@ -79,9 +82,10 @@ export default class ElementsManger {
     this.elements[Dashboards.getName()] = Dashboards;
     this.elements[Carousel.getName()] = Carousel;
     this.elements[Tour.getName()] = Tour;
+    this.elements[Template.getName()] = Template;
     this.elements[ExportPanel.getName()] = ExportPanel;
-    // Websocket Notifications
-    this.elements[Notifications.getName()] = Notifications;
+    this.elements[Html.getName()] = Html;
+    this.elements[Video.getName()] = Video;
 
     //список компонентов
     this.components = {};
@@ -108,10 +112,10 @@ export default class ElementsManger {
     this.components[Dashboards.getName()] = DashboardsWidget;
     this.components[Icon.getName()] = IconWidget;
     this.components[Tour.getName()] = TourGuide;
+    this.components[Template.getName()] = TemplateWidget;
     this.components[ExportPanel.getName()] = ExportPanelWidget;
-    // Websocket Notifications widget
-    this.components[Notifications.getName()] = NotificationsWidget;
-
+    this.components[Html.getName()] = HtmlWidget;
+    this.components[Video.getName()] = VideoWidget;
   }
 
   getElements() {

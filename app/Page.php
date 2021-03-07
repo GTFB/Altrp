@@ -149,10 +149,12 @@ class Page extends Model
     /** @var Page $page */
     foreach ( $_pages as $page ) {
       if( $page->allowedForUser() ){
+
         $_page = [
           'path' => $page->path,
           'id' => $page->id,
           'title' => $page->title,
+          'parent_page_id' => $page->parent_page_id,
           'allowed' => true,
           'data_sources' => $page->page_data_sources->map( function ( PageDatasource $page_data_source ){
             if( $page_data_source->source ){
@@ -286,7 +288,6 @@ class Page extends Model
         'template_type' => 'popup',
       ]),
     ];
-//    }
 
     return $areas;
   }
@@ -551,34 +552,33 @@ class Page extends Model
     } )->map( function( Area $area ){
       return $area->name;
     })->sortBy(function( $area ){
-      if( $area === 'header'){
+      if( $area === 'header' ){
         return 0;
       }
-      if( $area === 'content'){
+      if( $area === 'content' ){
         return 100;
       }
-      if( $area === 'footer'){
+      if( $area === 'footer' ){
         return 200;
       }
       return $area;
-      view('');
     })->toArray();
     if( ! count( $areas ) ){
       return $result;
     }
     $templates = [];
     foreach ( $areas as $area ) {
-      $template = Template::getTemplate([
+      $template = Template::getTemplate( [
         'page_id' => $page_id,
         'template_type' => $area,
-      ]);
+      ] );
       $template['template_type'] = $area;
       $templates[] = $template;
     }
     $important_styles = [];
     ob_start();
     ?>
-    <div class="front-app-content ">
+    <div class="front-app-content front-app-content_preloaded">
       <div class="route-content" id="route-content">
         <?php
         foreach ( $templates as $template ) {

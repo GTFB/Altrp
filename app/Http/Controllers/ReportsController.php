@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Altrp\ExportExcel;
 use App\Page;
 use App\Reports;
 use App\PagesTemplate;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Controller;
 use App\Helpers\Classes\HtmlGenerator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
+
 
 class ReportsController extends Controller
 {
@@ -34,12 +36,13 @@ class ReportsController extends Controller
       foreach ( $_pages as $page ) {
 
 //        $content_template = $page->get_content_template();
+        $user = $page->user;
         $pages[] = [
-          'user' => $page->user,
+          'user' => $user,
           'title' => $page->title,
           'id' => $page->id,
           'parent_page_id' => $page->parent_page_id,
-          'author' => $page->user->name,
+          'author' => data_get( $user, 'name' ),
 //          'template_content' => $content_template,
 //          'template_content_title' => $content_template ? $content_template->title : '',
           'url' => \url($page->path),
@@ -136,7 +139,7 @@ class ReportsController extends Controller
 
         return response($reports->html)->header('Content-Type', "text/html");
     }
-    
+
     public function html(Request $request,$id){
         $htmlString = Reports::findOrFail($id)->html;
         return $htmlString;
@@ -174,5 +177,10 @@ class ReportsController extends Controller
         ];
 
         return response()->json( $res );
+    }
+
+    public function exportToExcel(Request $request) {
+        $excel = new ExportExcel($request->data, $request->template, $request->filename);
+        $excel->export();
     }
 }

@@ -23,6 +23,7 @@ class Controller {
           this.rules.push(newRule);
           let value = currentElement.getSettings(this.getSettingName());
           if (value) {
+            // console.log(this.getSettingName(), value)
             newRule.insertValue(value);
           }
         }
@@ -104,6 +105,7 @@ class Controller {
   isShow() {
 
     if(this.data.conditionsCallback){
+      console.log(this.data.conditionsCallback());
       return this.data.conditionsCallback();
     }
 
@@ -151,10 +153,17 @@ class Controller {
    * */
   getSettingName() {
     /**
-     * Если css редактор, то добавляем суффикс
+     * Если css редактор, то не добавляем суффикс
      */
     if (this.data.controlId === "element_css_editor") {
       return "element_css_editor";
+    }
+    /**
+     * Если responsive отключен, то не добавляем суффикс
+     */
+    if (this.data.responsive === false) {
+      // console.log(this);
+      return this.data.controlId;
     }
     return this.data.controlId + getElementSettingsSuffix(this);
   }

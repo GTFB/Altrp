@@ -17,9 +17,26 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+/**
+ * Notifications routes
+ */
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::get('/notifications', 'NotificationsController@getAllNotifications');
+    Route::get('/notifications/delete_all', 'NotificationsController@deleteAllNotifications');
+    Route::get('/unread_notifications', 'NotificationsController@getAllUnreadNotifications');
+    Route::get('/unread_notifications/mark_as_read_all', 'NotificationsController@markAsReadAll');
+    Route::get('/unread_notifications/{notification_id}/mark_as_read', 'NotificationsController@markAsRead');
+
+});
+
 Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], function () {
 
     Route::group(['prefix' => 'ajax'], function () {
+        Route::get('/users/{user}/notifications', 'Admin\NoticeSettingController@index');
+        Route::post('/users/{user}/notifications', 'Admin\NoticeSettingController@store');
+        Route::put('/users/{user}/notifications/{notification}', 'Admin\NoticeSettingController@update');
+        Route::delete('/users/{user}/notifications/{notification}', 'Admin\NoticeSettingController@destroy');
+
         Route::get('/templates', "Constructor\Templates@getTemplates");
         Route::get('/templates/{template}', "Constructor\Templates@getTemplate");
         Route::post('/templates', "Constructor\Templates@insert");
@@ -57,7 +74,16 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
 
         Route::resource( 'pages', 'Admin\PagesController' );
         Route::resource( 'templates', 'TemplateController' );
+        Route::resource( 'robots', 'RobotController' );
+        Route::get( 'robots_options', 'RobotController@getOptions' );
         Route::resource( 'sql_editors', 'Admin\SQLEditorController' );
+
+        /**
+         * Получить записи из модели по её Id
+         */
+        Route::get('/models/{model_id}/records', 'Admin\ModelsController@getRecordsByModel');
+        Route::get('/models/{model_id}/records_options', 'Admin\ModelsController@getRecordsByModelOptions');
+
         /**
          * Маршруты для проверки на уникальность имени
          */
@@ -65,11 +91,14 @@ Route::group(['prefix' => 'admin', "middleware" => ["auth:api", "role:admin"]], 
         Route::get('/models/{model_id}/field_name_is_free', 'Admin\ModelsController@fieldNameIsFree');
         Route::get('/models/{model_id}/relation_name_is_free', 'Admin\ModelsController@relationNameIsFree');
         Route::get('/models/{model_id}/sql_builder_name_is_free', 'Admin\ModelsController@queryNameIsFree');
+        Route::get('/models_with_fields_options', 'Admin\ModelsController@models_with_fields_options')
+            ->name('admin.models_with_fields_options');
 
         // Models
         Route::get( '/models', 'Admin\ModelsController@getModels');
         Route::get( '/model_options', 'Admin\ModelsController@getModelOptions');
         Route::get( '/models_without_parent', 'Admin\ModelsController@getModelsWithoutParent');
+        Route::get( '/models_without_preset', 'Admin\ModelsController@getModelsWithoutPreset');
         Route::post( '/models', 'Admin\ModelsController@storeModel');
         Route::put( '/models/{model_id}', 'Admin\ModelsController@updateModel');
         Route::get( '/models/{model_id}', 'Admin\ModelsController@showModel');
@@ -179,6 +208,7 @@ Route::group(['prefix' => 'users'], function () {
     Route::delete('/roles/{role}/permissions', "Users\Roles@detachPermission");
 
     Route::get('/users', "Users\Users@getUsers");
+    Route::get('/users_options', "Users\Users@getUsersOptions");
     Route::get('/users/{user}', "Users\Users@getUser");
     Route::post('/users', "Users\Users@insert");
     Route::put('/users/{user}', "Users\Users@update");
@@ -218,3 +248,11 @@ Route::group(['prefix' => 'users'], function () {
 
 Route::post('/feedback', 'MailController@sendMail');
 Route::post('/write_mail_settings', 'MailController@writeSettingsToEnv');
+
+/**
+ * Robots
+ */
+Route::get('/altrp_run_robot/{robot_id}', 'RobotController@runRobot');
+
+ // Export to XLS
+ Route::post('export-excel', 'ReportsController@exportToExcel');

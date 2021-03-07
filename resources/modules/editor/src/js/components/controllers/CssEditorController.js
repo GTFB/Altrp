@@ -28,6 +28,10 @@ class CssEditorController extends Component {
     };
   }
 
+  onKeyDown = (event) => {
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
+  }
 
   onChange(newValue) {
     this._changeValue(newValue);
@@ -68,6 +72,9 @@ class CssEditorController extends Component {
       return '';
     }
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    if(! _.isString(value)){
+      value = '';
+    }
     return <div className="controller-container controller-container_css-editor">
       <div className="controller-container__label control-css-editor__label">
         Add your own custom CSS here
@@ -93,6 +100,7 @@ class CssEditorController extends Component {
           mode="css"
           theme="textmate"
           onChange={this.onChange}
+          onKeyDown={this.onKeyDown}
 
           name="aceEditor"
           height="15em"

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
 import {
   BrowserRouter as Router,
   Switch,
@@ -10,6 +9,7 @@ import {
 } from "react-router-dom";
 import { hot } from "react-hot-loader";
 import { Scrollbars } from "react-custom-scrollbars";
+import { connect } from "react-redux";
 
 import Bars from "./svgs/bars.svg";
 import AssetSvg from "./svgs/assets.svg";
@@ -26,8 +26,10 @@ import AdminLogo from "./components/AdminLogo";
 import AllPages from "./components/AllPages";
 import AdminSettings from "./components/AdminSettings";
 import Users from "./components/users/Users";
+import Notifications from "./components/users/Notifications/Notifications";
+import EditNotification from "./components/users/Notifications/EditNotification";
 import AddUserPage from "./components/users/AddUserPage";
-import EditUserPage from "./components/users/EditUserPage";
+import UserPage from "./components/users/UserPage";
 import UsersTools from "./components/users/UsersTools";
 import Assets from "./components/Assets";
 import Dashboard from "./components/Dashboard";
@@ -35,6 +37,7 @@ import Plugins from "./components/Plugins";
 import Reports from "./components/Reports";
 import Tables from "./components/Tables";
 import Templates from "./components/Templates";
+import Robots from "./components/Robots";
 import AdminModal from "./components/AdminModal";
 import AddPage from "./components/AddPage";
 import AddReport from "./components/AddReport";
@@ -61,34 +64,22 @@ import ModelPage from "./components/models/ModelPage";
 
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 import Resource from "../../editor/src/js/classes/Resource";
+import Echo from "laravel-echo"
 
 import store from "./js/store/store";
+import { setUserData } from "./js/store/current-user/actions";
 
 import "./sass/admin-style.scss";
+
+import {changeCurrentUser} from "../../front-app/src/js/store/current-user/actions";
+import { setWebsocketsEnabled,
+  setWebsocketsKey,
+  setWebsocketsPort
+} from "./js/store/websockets-storage/actions";
 
 window.React = React;
 window.ReactDOM = ReactDOM;
 window.Component = React.Component;
-
-// Websockets import
-// let mix = require('laravel-mix');
-// require('dotenv').config();
-// let my_env_key = process.env.MIX_PUSHER_APP_KEY;
-
-import Echo from "laravel-echo";
-window.Pusher = require("pusher-js");
-try {
-  window.Echo = new Echo({
-    broadcaster: "pusher",
-    key: 324345,
-    wsHost: window.location.hostname,
-    wsPort: 6001,
-    forceTLS: false,
-    disableStats: true
-  });
-} catch (error) {
-  console.error(error);
-}
 
 class Admin extends Component {
   constructor(props) {
@@ -108,6 +99,64 @@ class Admin extends Component {
     new Resource({ route: "/admin/ajax/model_options" })
       .getAll()
       .then(({ options }) => this.setState({ models: options }));
+
+    this.getConnect();
+  }  
+
+  // Подключение вебсокетов
+  async getConnect() {
+    // get current user
+    let currentUser = await new Resource({ route: "/ajax/current-user" }).getAll();    
+    currentUser = currentUser.data;
+    store.dispatch(changeCurrentUser(currentUser));
+
+
+    let pusherKey = await new Resource({ route: "/admin/ajax/settings" }).get("pusher_app_key");
+    let websocketsPort = await new Resource({ route: "/admin/ajax/settings" }).get("websockets_port");
+    
+    pusherKey = pusherKey?.pusher_app_key;
+    websocketsPort = websocketsPort?.websockets_port;
+
+    // Проверка наличия ключа и порта
+    if(pusherKey && websocketsPort){
+      try {
+        window.Pusher = require("pusher-js");
+        window.Echo = new Echo({
+          broadcaster: "pusher",
+          key: pusherKey,
+          wsHost: window.location.hostname,
+          wsPort: websocketsPort,
+          forceTLS: false,
+          disableStats: true
+        });
+        console.log("Вебсокеты включены");
+
+      } catch (error) {
+        console.log(error);
+      }
+
+      // Запись ключа и порта в store
+      store.dispatch(setWebsocketsKey(pusherKey));
+      store.dispatch(setWebsocketsPort(websocketsPort));
+
+      // Подключение слушателя канала
+      window.Echo.private("App.User." + currentUser.id)
+      .notification((notification) => {
+        console.log(notification);
+      });  
+
+    } else {
+     console.log("Вебсокеты выключены");
+    }
+
+    this.getPusherConnect();
+  }
+
+  // Запись в store в случае успешного соединения
+  getPusherConnect() {
+    window?.Echo?.connector?.pusher.connection.bind('connected', function() {
+        store.dispatch(setWebsocketsEnabled(true));
+    });
   }
 
   /**
@@ -119,11 +168,13 @@ class Admin extends Component {
       return { ...state, adminState: { ...adminState } };
     });
   }
+
   toggleMenu() {
     this.setState(state => {
       return { ...state, pagesMenuShow: !state.pagesMenuShow };
     });
   }
+
   render() {
     const { models } = this.state;
     let adminClasses = ["admin"];
@@ -134,62 +185,61 @@ class Admin extends Component {
       adminClasses.push("admin_pages-show");
     }
     return (
-      <Provider store={store}>
-        <div className={adminClasses.join(" ")}>
-          <Router>
-            <nav className="admin-nav">
-              <div className="admin-nav-top">
-                <AdminLogo />
-                <Bars className="admin__bars" onClick={this.toggleMenu} />
-              </div>
-              <div className="admin-nav-main">
-                {this.state.pagesMenuShow ? (
-                  <Scrollbars
-                    autoHide
-                    autoHideTimeout={500}
-                    autoHideDuration={200}
-                  >
-                    <ul className="admin-nav-list">
-                      <li>
-                        <Link
-                          to="/admin/pages"
-                          className="admin-nav-list__link"
-                        >
-                          <PagesSvg className="icon" />
-                          <span>Pages</span>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          to="/admin/reports"
-                          className="admin-nav-list__link"
-                        >
-                          <ReportSvg className="icon" />
-                          <span>Reports</span>
-                        </Link>
-                      </li>
+      <div className={adminClasses.join(" ")}>
+        <Router>
+          <nav className="admin-nav">
+            <div className="admin-nav-top">
+              <AdminLogo />
+              <Bars className="admin__bars" onClick={this.toggleMenu} />
+            </div>
+            <div className="admin-nav-main">
+              {this.state.pagesMenuShow ? (
+                <Scrollbars
+                  autoHide
+                  autoHideTimeout={500}
+                  autoHideDuration={200}
+                >
+                  <ul className="admin-nav-list">
+                    <li>
+                      <Link
+                        to="/admin/pages"
+                        className="admin-nav-list__link"
+                      >
+                        <PagesSvg className="icon" />
+                        <span>Pages</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/admin/reports"
+                        className="admin-nav-list__link"
+                      >
+                        <ReportSvg className="icon" />
+                        <span>Reports</span>
+                      </Link>
+                    </li>
                       Models
                       {models
-                        .sort((a, b) => {
-                          if (a.label.toUpperCase() < b.label.toUpperCase())
-                            return -1;
-                          if (a.label.toUpperCase() > b.label.toUpperCase())
-                            return 1;
-                          return 0;
-                        })
-                        .map(({ value: id, label }) => (
-                          <li key={id}>
-                            <Link
-                              to={`/admin/model/${id}`}
-                              className="admin-nav-list__link admin-nav-list__link--models"
-                            >
-                              {label}
-                            </Link>
-                          </li>
-                        ))}
-                    </ul>
-                  </Scrollbars>
-                ) : (
+                      .sort((a, b) => {
+                        if (a.label.toUpperCase() < b.label.toUpperCase())
+                          return -1;
+                        if (a.label.toUpperCase() > b.label.toUpperCase())
+                          return 1;
+                        return 0;
+                      })
+                      .map(({ value: id, label }) => (
+                        <li key={id}>
+                          <Link
+                            to={`/admin/model/${id}`}
+                            className="admin-nav-list__link admin-nav-list__link--models"
+                          >
+                            {label}
+                          </Link>
+                        </li>
+                      ))}
+                  </ul>
+                </Scrollbars>
+              ) : (
                   <Scrollbars
                     autoHide
                     autoHideTimeout={500}
@@ -239,16 +289,22 @@ class Admin extends Component {
                           </li>
                         </ul>
                       </li>
-                      <li>
-                        <Link
-                          to="/admin/templates"
-                          className="admin-nav-list__link"
-                        >
-                          <TemplateSvg className="icon" />
-                          <span>Templates</span>
-                        </Link>
-                      </li>
-                      {/* <li>
+                  <li>
+                    <Link
+                      to="/admin/templates"
+                      className="admin-nav-list__link"
+                    >
+                      <TemplateSvg className="icon" />
+                      <span>Templates</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/admin/robots" className="admin-nav-list__link">
+                      <TemplateSvg className="icon" />
+                      <span>Robots</span>
+                    </Link>
+                  </li>
+                  {/* <li>
                     <Link to="/admin/reports" className="admin-nav-list__link">
                       <ReportSvg className="icon" />
                       <span>Reports</span>
@@ -301,161 +357,179 @@ class Admin extends Component {
                     </ul>
                   </Scrollbars>
                 )}
+
               </div>
               <AdminVersion />
-            </nav>
-            <Switch>
-              <Route path="/admin/reports/add">
-                <AddReport />
-              </Route>
-              <Route path="/admin/" exact>
-                <Redirect to="/admin/dashboard" />
-              </Route>
-              <Route path="/admin/settings">
-                <AdminSettings />
-              </Route>
-              <Route path="/admin/users" exact>
-                <Users />
-              </Route>
-              <Route path="/admin/users/new" exact>
-                <AddUserPage />
-              </Route>
-              <Route path="/admin/users/user/:id">
-                <EditUserPage />
-              </Route>
-              <Route path="/admin/tools">
-                <UsersTools />
-              </Route>
-              <Route path="/admin/assets">
-                <Assets />
-              </Route>
-              <Route path="/admin/dashboard">
-                <Dashboard />
-              </Route>
-              <Route path="/admin/dashboard/colors">
-                <ColorSchemes />
-              </Route>
-              <Route path="/admin/plugins">
-                <Plugins />
-              </Route>
-              <Route path="/admin/reports">
-                <Reports />
-              </Route>
-              <Route path="/admin/tables" exact>
-                <Tables />
-              </Route>
-              <Route path="/admin/tables/edit/:id" component={EditTable} exact>
-                <EditTable />
-              </Route>
-              <Route
-                path="/admin/tables/edit/:id/setting"
-                component={SettingTable}
-                exact
-              />
-              <Route
-                path="/admin/tables/edit/:id/setting/migrations/add"
-                component={AddMigrationPage}
-              />
-              <Route path="/admin/tables/add">
-                <AddTable />
-              </Route>
-              <Route path="/admin/templates">
-                <Templates />
-              </Route>
-              <Route path="/admin/pages" exact>
-                <AllPages />
-              </Route>
-              <Route path="/admin/pages/edit/:id">
-                <AddPage />
-              </Route>
-              <Route path="/admin/pages/add">
-                <AddPage />
-              </Route>
-              <Route path="/admin/tables/models" exact>
-                <Models />
-              </Route>
-              <Route path="/admin/tables/sql_editors" exact>
-                <SQLEditors />
-              </Route>
-              <Route path="/admin/tables/sql_editors/add">
-                <SqlEditor />
-              </Route>
-              <Route path="/admin/tables/sql_editors/edit/:id">
-                <SqlEditor />
-              </Route>
-              <Route path="/admin/tables/models/add">
-                <EditModel />
-              </Route>
-              <Route path="/admin/tables/models/edit/:id" exact>
-                <EditModel />
-              </Route>
-              <Route path="/admin/tables/models/:modelId/fields/add">
-                <EditField />
-              </Route>
-              <Route path="/admin/tables/models/:modelId/fields/edit/:id">
-                <EditField />
-              </Route>
-              <Route path="/admin/tables/models/:modelId/remote-fields/add">
-                <EditField />
-              </Route>
-              <Route path="/admin/tables/models/:modelId/remote-fields/edit/:id">
-                <EditField />
-              </Route>
-              <Route path="/admin/tables/models/:modelId/relations/add">
-                <AddRelation />
-              </Route>
-              <Route path="/admin/tables/models/:modelId/relations/edit/:id">
-                <AddRelation />
-              </Route>
-              <Route path="/admin/tables/models/:modelId/accessors/add">
-                <AddAccessor />
-              </Route>
-              <Route path="/admin/tables/models/:modelId/accessors/edit/:id">
-                <AddAccessor />
-              </Route>
-              <Route path="/admin/tables/models/:modelId/queries/add">
-                <SQLBuilder />
-              </Route>
-              <Route path="/admin/tables/models/:modelId/queries/edit/:id">
-                <SQLBuilder />
-              </Route>
-              <Route path="/admin/tables/data-sources/add">
-                <AddDataSource />
-              </Route>
-              <Route path="/admin/tables/data-sources/edit/:id">
-                <AddDataSource />
-              </Route>
-
-              <Route path="/admin/access/roles/add">
-                <RolePage />
-              </Route>
-              <Route path="/admin/access/roles/edit/:id">
-                <RolePage />
-              </Route>
-              <Route path="/admin/access/permissions/add">
-                <PermissionPage />
-              </Route>
-              <Route path="/admin/access/permissions/edit/:id">
-                <PermissionPage />
-              </Route>
-              <Route path="/admin/access">
-                <AccessOptions />
-              </Route>
-              <Route path="/admin/model/:id">
-                <ModelPage />
-              </Route>
-            </Switch>
-          </Router>
-          <AdminModal />
-          <UserTopPanel />
-          <AssetsBrowser />
-        </div>
-      </Provider>
+          </nav>
+          <Switch>
+            <Route path="/admin/reports/add">
+              <AddReport />
+            </Route>
+            <Route path="/admin/" exact>
+              <Redirect to="/admin/dashboard" />
+            </Route>
+            <Route path="/admin/settings">
+              <AdminSettings />
+            </Route>
+            <Route path="/admin/users" exact>
+              <Users />
+            </Route>
+            <Route path="/admin/users/new" exact>
+              <AddUserPage />
+            </Route>
+            <Route path="/admin/users/user/:id" exact>
+                <UserPage />
+            </Route>
+            <Route path="/admin/users/user/:id" exact>
+              <Notifications />
+            </Route>
+            <Route path="/admin/users/user/:id/notification/:name" exact>
+              <EditNotification />
+            </Route>
+            <Route path="/admin/users/user/:id/notification/new" exact>
+              <EditNotification />
+            </Route>            <Route path="/admin/tools">
+              <UsersTools />
+            </Route>
+            <Route path="/admin/assets">
+              <Assets />
+            </Route>
+            <Route path="/admin/dashboard">
+              <Dashboard />
+            </Route>
+            <Route path="/admin/dashboard/colors">
+              <ColorSchemes />
+            </Route>
+            <Route path="/admin/plugins">
+              <Plugins />
+            </Route>
+            <Route path="/admin/reports">
+              <Reports />
+            </Route>
+            <Route path="/admin/tables" exact>
+              <Tables />
+            </Route>
+            <Route path="/admin/tables/edit/:id" component={EditTable} exact>
+              <EditTable />
+            </Route>
+            <Route
+              path="/admin/tables/edit/:id/setting"
+              component={SettingTable}
+              exact
+            />
+            <Route
+              path="/admin/tables/edit/:id/setting/migrations/add"
+              component={AddMigrationPage}
+            />
+            <Route path="/admin/tables/add">
+              <AddTable />
+            </Route>
+            <Route path="/admin/templates">
+              <Templates />
+            </Route>
+            <Route path="/admin/robots">
+                <Robots />
+            </Route>
+            <Route path="/admin/pages" exact>
+              <AllPages />
+            </Route>
+            <Route path="/admin/pages/edit/:id">
+              <AddPage />
+            </Route>
+            <Route path="/admin/pages/add">
+              <AddPage />
+            </Route>
+            <Route path="/admin/tables/models" exact>
+              <Models />
+            </Route>
+            <Route path="/admin/tables/sql_editors" exact>
+              <SQLEditors />
+            </Route>
+            <Route path="/admin/tables/sql_editors/add">
+              <SqlEditor />
+            </Route>
+            <Route path="/admin/tables/sql_editors/edit/:id">
+              <SqlEditor />
+            </Route>
+            <Route path="/admin/tables/models/add">
+              <EditModel />
+            </Route>
+            <Route path="/admin/tables/models/edit/:id" exact>
+              <EditModel />
+            </Route>
+            <Route path="/admin/tables/models/:modelId/fields/add">
+              <EditField />
+            </Route>
+            <Route path="/admin/tables/models/:modelId/fields/edit/:id">
+              <EditField />
+            </Route>
+            <Route path="/admin/tables/models/:modelId/remote-fields/add">
+              <EditField />
+            </Route>
+            <Route path="/admin/tables/models/:modelId/remote-fields/edit/:id">
+              <EditField />
+            </Route>
+            <Route path="/admin/tables/models/:modelId/relations/add">
+              <AddRelation />
+            </Route>
+            <Route path="/admin/tables/models/:modelId/relations/edit/:id">
+              <AddRelation />
+            </Route>
+            <Route path="/admin/tables/models/:modelId/accessors/add">
+              <AddAccessor />
+            </Route>
+            <Route path="/admin/tables/models/:modelId/accessors/edit/:id">
+              <AddAccessor />
+            </Route>
+            <Route path="/admin/tables/models/:modelId/queries/add">
+              <SQLBuilder />
+            </Route>
+            <Route path="/admin/tables/models/:modelId/queries/edit/:id">
+              <SQLBuilder />
+            </Route>
+            <Route path="/admin/tables/data-sources/add">
+              <AddDataSource />
+            </Route>
+            <Route path="/admin/tables/data-sources/edit/:id">
+              <AddDataSource />
+            </Route>
+            <Route path="/admin/access/roles/add">
+              <RolePage />
+            </Route>
+            <Route path="/admin/access/roles/edit/:id">
+              <RolePage />
+            </Route>
+            <Route path="/admin/access/permissions/add">
+              <PermissionPage />
+            </Route>
+            <Route path="/admin/access/permissions/edit/:id">
+              <PermissionPage />
+            </Route>
+            <Route path="/admin/access">
+              <AccessOptions />
+            </Route>
+            <Route path="/admin/model/:id">
+              <ModelPage />
+            </Route>
+          </Switch>
+        </Router>
+        <AdminModal />
+        <UserTopPanel />
+        <AssetsBrowser />
+      </div>
     );
   }
 }
 
 let _export;
+
+const mapDispatchToProps = dispatch => {
+  return {
+    setUserData: user => dispatch(setUserData(user))
+  }
+};
+
+Admin = connect(null, mapDispatchToProps)(Admin)
 if (process.env.NODE_ENV === "production") {
   _export = Admin;
 } else {

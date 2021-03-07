@@ -31,7 +31,7 @@
   <script>
   let _altrpVersion = '{{ getCurrentVersion() }}';
   </script>
-  <script src="{{ altrp_asset( '/modules/reports-new/reports.js', 'http://localhost:3005/' ) }}" crossorigin defer></script>
+  {{-- <script src="{{ altrp_asset( '/modules/reports-new/reports.js', 'http://localhost:3005/' ) }}" crossorigin defer></script> --}}
 
   <link rel="stylesheet" href="{{ asset( '/modules/reports-new/reports.css?' ) . getCurrentVersion() }}">
 </head>

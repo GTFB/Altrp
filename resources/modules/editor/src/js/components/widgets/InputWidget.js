@@ -1,21 +1,42 @@
-import React, { Component } from "react";
+import React, { Component, Suspense } from "react";
 import {
-  altrpCompare,
+  altrpCompare, convertData,
   isEditor,
   parseOptionsFromSettings,
   parseParamsFromString,
   parseURLTemplate,
   replaceContentWithData,
-  sortOptions
+  sortOptions,
+  renderAssetIcon, valueReplacement
 } from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
 import moment from "moment";
-import CKeditor from "../ckeditor/CKeditor";
+const CKeditor = React.lazy(() => import("../ckeditor/CKeditor"));
 import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 const AltrpInput = React.lazy(() => import("../altrp-input/AltrpInput"));
+import styled from 'styled-components';
+
+const AltrpFieldContainer = styled.div`
+  ${({settings:{
+  content_label_position_type
+  }})=>{
+    switch (content_label_position_type){
+      case 'left':
+      {
+        return 'display: flex'
+      }
+      case 'right':
+      {
+        return 'display:flex;flex-direction:row-reverse;justify-content:flex-end;'
+      }
+    }
+  return '';
+  }}
+`;
+
 
 class InputWidget extends Component {
   constructor(props) {
@@ -24,7 +45,10 @@ class InputWidget extends Component {
 
     this.defaultValue =
       props.element.getSettings().content_default_value ||
-      (props.element.getSettings().select2_multiple ? [] : "");
+      (this.valueMustArray() ? [] : "");
+    if(this.valueMustArray() && ! _.isArray(this.defaultValue)){
+      this.defaultValue = [];
+    }
     this.state = {
       settings: { ...props.element.getSettings() },
       value: this.defaultValue,
@@ -46,6 +70,19 @@ class InputWidget extends Component {
   }
 
   /**
+   * В некоторых случаях значение поля должно быть массивом
+   * @return {boolean}
+   */
+  valueMustArray(){
+    if((["file", "image_select", 'checkbox'].indexOf(this.props.element.getSettings('content_type')) !== -1)){
+      return true;
+    }
+    if(this.props.element.getSettings('content_type') === 'select2' && this.props.element.getSettings('select2_multiple')){
+      return true
+    }
+    return false;
+  }
+  /**
    * Чистит значение
    */
   clearValue() {
@@ -60,6 +97,7 @@ class InputWidget extends Component {
       value = [];
     }
     this.onChange(value);
+    this.dispatchFieldValueToStore(value, true);
   }
   /**
    * Метод устанавливает все опции как выбранные
@@ -130,6 +168,7 @@ class InputWidget extends Component {
     /**
      * Если динамическое значение загрузилось,
      * то используем this.getContent для получение этого динамического значения
+     * старые динамические данные
      * */
     if (
       _.get(value, "dynamic") &&
@@ -145,7 +184,7 @@ class InputWidget extends Component {
      */
     if (
       prevProps &&
-      !prevProps.currentModel.getProperty("altrpModelUpdated") &&
+      ! prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
       value = this.getContent("content_default_value");
@@ -160,7 +199,7 @@ class InputWidget extends Component {
     if (
       this.props.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
-      !this.state.contentLoaded
+      ! this.state.contentLoaded
     ) {
       value = this.getContent("content_default_value");
       this.setState(
@@ -190,6 +229,9 @@ class InputWidget extends Component {
     if (url.indexOf("/") === -1) {
       return `/ajax/models/${url}_options`;
     }
+    if (url.indexOf("{{") !== -1) {
+      url = replaceContentWithData();
+    }
     return url;
   }
   /**
@@ -199,10 +241,13 @@ class InputWidget extends Component {
     const { content_options, model_for_options } = this.state.settings;
     if (
       prevProps &&
-      !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
+      ! prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
-      let value = this.getContent("content_default_value");
+      let value = this.getContent(
+        "content_default_value",
+        this.props.element.getSettings("select2_multiple")
+      );
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
         () => {
@@ -230,10 +275,10 @@ class InputWidget extends Component {
       }
     }
     /**
-     * Если обновилась модель, то пробрасываем в стор новое значение
+     * Если обновилась модель, то пробрасываем в стор новое значение (старый источник диамических данных)
      */
     if (
-      !_.isEqual(this.props.currentModel, prevProps.currentModel) &&
+      ! _.isEqual(this.props.currentModel, prevProps.currentModel) &&
       this.state.value &&
       this.state.value.dynamic
     ) {
@@ -270,25 +315,35 @@ class InputWidget extends Component {
     let content_calculation = this.props.element.getSettings(
       "content_calculation"
     );
-    if (!content_calculation) {
-      return;
-    }
+    const altrpforms = this.props.formsStore;
     const fieldName = this.props.element.getFieldId();
     const formId = this.props.element.getFormId();
+    if (! content_calculation) {
+      /**
+       * Обновить значение, если formsStore изменилось из другого компонента
+       */
+      const path = `${formId}.${fieldName}`;
+      if((this.props.formsStore !== prevProps.formsStore) && _.get(altrpforms, path) !== this.state.value){
+        this.setState(state=>({
+            ...state,
+          value: _.get(altrpforms, path),
+        }))
+      }
+      return;
+    }
 
     const prevContext = {};
 
     const altrpdata = this.props.currentDataStorage.getData();
-    const altrpforms = this.props.formsStore;
     const altrpmodel = this.props.currentModel.getData();
     const altrpuser = this.props.currentUser.getData();
     const altrppagestate = this.props.altrpPageState.getData();
     const altrpresponses = this.props.altrpresponses.getData();
     const altrpmeta = this.props.altrpMeta.getData();
-    const context = {};
+    const context = this.props.element.getCurrentModel().getData();
     if (content_calculation.indexOf("altrpdata") !== -1) {
       context.altrpdata = altrpdata;
-      if (!altrpdata.currentDataStorageLoaded) {
+      if (! altrpdata.currentDataStorageLoaded) {
         prevContext.altrpdata = altrpdata;
       } else {
         prevContext.altrpdata = prevProps.currentDataStorage.getData();
@@ -367,7 +422,7 @@ class InputWidget extends Component {
         }
       );
     } catch (e) {
-      console.error(e);
+      console.error(e, this.props.element.getId());
     }
   }
 
@@ -386,7 +441,7 @@ class InputWidget extends Component {
       /**
        * Сохраняем параметры запроса, и если надо обновляем опции
        */
-      let options = this.state.options;
+      let options = [...this.state.options];
       if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
         if (!_.isEmpty(paramsForUpdate)) {
           if (this.props.element.getSettings("params_as_filters", false)) {
@@ -420,13 +475,12 @@ class InputWidget extends Component {
   /**
    * Изменение значения в виджете
    * @param e
+   * @param  editor для получения изменений из CKEditor
    */
-  onChange(e) {
+  onChange(e, editor = null) {
     let value = "";
-
-    console.log("====================================");
-    console.log(e.target);
-    console.log("====================================");
+    let dispatchedValue;
+    const settings = this.props.element.getSettings();
     if (e && e.target) {
       if (this.props.element.getSettings("content_type") === "checkbox") {
         let inputs = document.getElementsByName(e.target.name);
@@ -436,6 +490,13 @@ class InputWidget extends Component {
             value.push(input.value);
           }
         });
+      } else if(settings.content_type === 'accept'){
+        value = ! this.state.value;
+        let trueValue = this.props.element.getSettings('accept_checked') || true;
+        let falseValue = this.props.element.getSettings('accept_unchecked') || false;
+        falseValue = valueReplacement(falseValue);
+        trueValue = valueReplacement(trueValue);
+        dispatchedValue = value ? trueValue : falseValue;
       } else {
         value = e.target.value;
       }
@@ -443,6 +504,9 @@ class InputWidget extends Component {
 
     if (e && e.value) {
       value = e.value;
+    }
+    if (_.get(editor, 'getData')) {
+      value = `<div class="ck ck-content" style="width:100%">${editor.getData()}</div>`;
     }
     if (_.isArray(e)) {
       value = _.cloneDeep(e);
@@ -457,7 +521,7 @@ class InputWidget extends Component {
     }
     if (
       this.props.element.getSettings("content_options_nullable") &&
-      e.value === "<null>"
+      e && e.value === "<null>"
     ) {
       value = null;
     }
@@ -483,22 +547,40 @@ class InputWidget extends Component {
             this.state.settings.content_type
           ) === -1
         ) {
-          this.dispatchFieldValueToStore(value, true);
+          this.dispatchFieldValueToStore( dispatchedValue !== undefined ? dispatchedValue : value, true);
         }
       }
     );
   }
 
   /**
-   * Потеря фокуса для оптимизации
+   * получить опции
    */
-  onBlur = async e => {
+  getOptions() {
+    let options = [...this.state.options];
+    const optionsDynamicSetting = this.props.element.getDynamicSetting(
+      "content_options"
+    );
+    if (optionsDynamicSetting) {
+      options = convertData(optionsDynamicSetting, options);
+    }
+    return options;
+  }
+  /**
+   * Потеря фокуса для оптимизации
+   * @param  e
+   * @param  editor для получения изменений из CKEditor
+   */
+  onBlur = async (e, editor = null) => {
     if (
       ["text", "email", "phone", "tel", "number", "password"].indexOf(
         this.state.settings.content_type
       ) !== -1
     ) {
       this.dispatchFieldValueToStore(e.target.value, true);
+    }
+    if (_.get(editor, 'getData')) {
+      this.dispatchFieldValueToStore(editor.getData(), true);
     }
     if (this.props.element.getSettings("actions", []) && !isEditor()) {
       const actionsManager = (
@@ -508,7 +590,9 @@ class InputWidget extends Component {
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
-        "blur"
+        "blur",
+        this.props.element.getSettings("actions", []),
+        this.props.element
       );
     }
   };
@@ -520,7 +604,6 @@ class InputWidget extends Component {
   dispatchFieldValueToStore = (value, userInput = false) => {
     let formId = this.props.element.getFormId();
     let fieldName = this.props.element.getFieldId();
-
     if (fieldName.indexOf("{{") !== -1) {
       fieldName = replaceContentWithData(fieldName);
     }
@@ -602,14 +685,24 @@ class InputWidget extends Component {
     }
   };
 
+  /**
+   * Взовращает имя для атрибута name
+   * @return {string}
+   */
+  getName(){
+    return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`
+  }
+
   render() {
     let label = null;
+    const settings = this.props.element.getSettings();
     const {
       options_sorting,
       content_readonly,
       image_select_options,
-      select2_multiple: isMultiple
-    } = this.props.element.getSettings();
+      select2_multiple: isMultiple,
+      label_icon
+    } = settings;
 
     let value = this.state.value;
 
@@ -628,7 +721,8 @@ class InputWidget extends Component {
     }
     let classLabel = "";
     let styleLabel = {};
-    switch (this.state.settings.content_label_position_type) {
+    const content_label_position_type = this.props.element.getResponsiveSetting('content_label_position_type');
+    switch (content_label_position_type) {
       case "top":
         styleLabel = {
           marginBottom: this.state.settings.label_style_spacing
@@ -682,6 +776,9 @@ class InputWidget extends Component {
           >
             {this.state.settings.content_label}
           </label>
+          {label_icon && label_icon.assetType && <span className="altrp-label-icon">
+            {renderAssetIcon(label_icon)}
+          </span>}
         </div>
       );
     } else {
@@ -704,6 +801,7 @@ class InputWidget extends Component {
           input = (
             <select
               value={value || ""}
+              name={this.getName()}
               onChange={this.onChange}
               onBlur={this.onBlur}
               onKeyDown={this.handleEnter}
@@ -746,8 +844,24 @@ class InputWidget extends Component {
           input = this.renderWysiwyg();
         }
         break;
+      case "textarea":
+        input = (
+          <textarea
+            value={value || ""}
+            readOnly={content_readonly}
+            autoComplete={autocomplete}
+            placeholder={this.state.settings.content_placeholder}
+            className={
+              "altrp-field " + this.state.settings.position_css_classes
+            }
+            onChange={this.onChange}
+            onBlur={this.onBlur}
+            id={this.state.settings.position_css_id}
+          />
+        );
+        break;
       case "image_select":
-        return (
+        input = (
           <AltrpImageSelect
             options={image_select_options}
             value={this.state.value}
@@ -755,6 +869,10 @@ class InputWidget extends Component {
             isMultiple={isMultiple}
           />
         );
+        break;
+      case "accept":
+        input = this.renderAcceptInput();
+        break;
       default: {
         const isClearable = this.state.settings.content_clearable;
         const isDate = this.state.settings.content_type === "date";
@@ -774,8 +892,9 @@ class InputWidget extends Component {
             <div className="altrp-input-wrapper">
               <AltrpInput
                 type={this.state.settings.content_type}
-                name={this.props.element.getFieldId()}
+                name={this.getName()}
                 value={value || ""}
+                element={this.props.element}
                 readOnly={content_readonly}
                 autoComplete={autocomplete}
                 placeholder={this.state.settings.content_placeholder}
@@ -802,21 +921,51 @@ class InputWidget extends Component {
       }
     }
     return (
-      <div className={"altrp-field-container " + classLabel}>
-        {this.state.settings.content_label_position_type == "top" ? label : ""}
-        {this.state.settings.content_label_position_type == "left" ? label : ""}
-        {this.state.settings.content_label_position_type == "absolute"
+      <AltrpFieldContainer
+          settings={settings}
+        className={
+          this.state.settings.content_type !== "image_select"
+            ? "altrp-field-container "
+            : "" + classLabel
+        }
+      >
+        {content_label_position_type === "top" ? label : ""}
+        {content_label_position_type === "left" ? label : ""}
+        {content_label_position_type === "right" ? label : ""}
+        {content_label_position_type === "absolute"
           ? label
           : ""}
         {/* .altrp-field-label-container */}
         {input}
-        {this.state.settings.content_label_position_type == "bottom"
+        {content_label_position_type === "bottom"
           ? label
           : ""}
-      </div>
+      </AltrpFieldContainer>
     );
   }
+  /**
+   * Выводит input type=accept
+   */
+  renderAcceptInput(){
+    const settings = this.props.element.getSettings();
+    return <div
+        className={`altrp-field-option ${this.state.value ? "active" : ""}`}
+    >
+              <span className="altrp-field-option-span">
+                <input
+                    type="checkbox"
+                    name={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
+                    className={`altrp-field-option__input ${
+                        this.state.value ? "active" : ""
+                        }`}
+                    onChange={this.onChange}
+                    checked={! ! this.state.value}
+                    id={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
+                />
+              </span>
 
+    </div>
+  }
   /**
    * Выводит input type=checkbox|radio
    */
@@ -888,13 +1037,13 @@ class InputWidget extends Component {
       content_placeholder
     } = this.props.element.getSettings();
 
-    let options = this.state.options;
+    let options = this.getOptions();
     let value = this.state.value;
     if (
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getContent("content_default_value", true);
     }
     /**
      * Пока динамический контент загружается, нужно вывести пустую строку
@@ -904,12 +1053,15 @@ class InputWidget extends Component {
     }
     if (!this.props.element.getSettings("select2_multiple", false)) {
       options.forEach(option => {
+        if (!option) {
+          return;
+        }
         if (option.value === value) {
           value = { ...option };
         }
         if (_.isArray(option.options)) {
           option.options.forEach(option => {
-            if (option.value === value) {
+            if (option.value == value) {
               value = { ...option };
             }
           });
@@ -952,7 +1104,7 @@ class InputWidget extends Component {
      * Сортируем опции
      * @type {Array|*}
      */
-    options = _.sortBy(options, o => (o.label ? o.label.toString() : o));
+    options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
     if (
       content_options_nullable &&
       (this.props.element.getSettings("content_type") !== "select2" ||
@@ -963,12 +1115,6 @@ class InputWidget extends Component {
         options
       );
     }
-    console.log("====================================");
-    console.log(
-      value,
-      _.find(options, o => o.value == this.state.value)
-    );
-    console.log("====================================");
     const select2Props = {
       className: "altrp-field-select2",
       element: this.props.element,
@@ -979,7 +1125,7 @@ class InputWidget extends Component {
       settings: this.props.element.getSettings(),
       onChange: this.onChange,
       onBlur: this.onBlur,
-      value: value || _.find(options, o => o.value === this.state.value),
+      value: value || _.find(options, o => o && o.value == this.state.value),
       isOptionSelected: option => {
         if (_.isNumber(this.state.value) || _.isString(this.state.value)) {
           return this.state.value == option.value;
@@ -996,12 +1142,16 @@ class InputWidget extends Component {
 
   renderWysiwyg() {
     return (
-      <CKeditor
-        changeText={this.dispatchFieldValueToStore}
-        text={this.getContent("content_default_value")}
-        name={this.props.element.getFieldId()}
-        readOnly={this.getContent("read_only")}
-      />
+      <Suspense fallback={<div>Загрузка...</div>}>
+        <CKeditor
+          onChange={this.onChange}
+          onBlur={this.onBlur}
+          changeText={this.dispatchFieldValueToStore}
+          text={this.getContent("content_default_value")}
+          name={this.getName()}
+          readOnly={this.getContent("read_only")}
+        />
+      </Suspense>
     );
   }
 }

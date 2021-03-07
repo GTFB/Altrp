@@ -2,11 +2,10 @@ import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import controllerDecorate from "../../decorators/controller";
-import { iconsManager } from "../../helpers";
+import {getTemplateType, iconsManager} from "../../helpers";
 import Controller from "../../classes/Controller";
 import update from "immutability-helper";
-import { DndProvider, useDrag, useDrop } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { useDrag, useDrop } from "react-dnd";
 
 /**
  * @method _changeValue
@@ -138,7 +137,8 @@ class RepeaterController extends Component {
    */
   addItem() {
     let items = [...this.state.items];
-    items.push({ id: this.state.items.length });
+    let id = '_' + Math.random().toString(36).substr(2, 9);
+    items.push({ id });
     this.setState(state => {
       return {
         ...state,
@@ -163,7 +163,6 @@ class RepeaterController extends Component {
       this.setState(state => ({...state, items}))
     }
   }
-
   render() {
     if (this.state.show === false) {
       return '';
@@ -174,7 +173,6 @@ class RepeaterController extends Component {
       </div>
 
       <div className="repeater-fields">
-        <DndProvider backend={HTML5Backend}>
           {
             this.state.items.map((item, idx) => {
               let itemClasses = ['repeater-item'];
@@ -186,11 +184,10 @@ class RepeaterController extends Component {
                 thisController={this}
                 itemController={item} 
                 idx={idx}   
-                key={idx} 
+                key={item.id} 
               />
             })
           }
-        </DndProvider>
       </div>
 
       <div className="d-flex justify-center repeater-bottom">
@@ -209,7 +206,11 @@ const RepeaterItem = ({thisController, itemClasses, idx, itemController}) => {
   const {setActiveItem, duplicateItem, deleteItem, moveItem} = thisController;
   const propsController = thisController.props;
   const ref=React.useRef(null);
-
+  const fields = React.useMemo(()=>{
+    return thisController.props.fields.filter(field=>{
+      return ! (getTemplateType() === 'email' && field.hideOnEmail)
+    })
+  }, [propsController.fields]);
   const [, drop] = useDrop({
     accept: "item",
     hover(item, monitor) {
@@ -262,7 +263,7 @@ const RepeaterItem = ({thisController, itemClasses, idx, itemController}) => {
       </div>
       <div className="repeater-item-content">
         {
-          propsController.fields.map(field => {
+          fields.map(field => {
             let ControllerComponent = controllersManager.getController(field.type);
             let controller = new Controller({ ...field, repeater: thisController, itemIndex: idx });
             let value = itemController[field.controlId] || '';

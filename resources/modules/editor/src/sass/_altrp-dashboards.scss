@@ -17,30 +17,31 @@
     }
 }
 
-div[x-placement="top"] {
-    z-index: 9999999 !important;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border-radius: 4px;
-}
-div[x-placement="right"] {
-    z-index: 9999999 !important;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border-radius: 4px;
-}
-div[x-placement="bottom"] {
-    z-index: 9999999 !important;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border-radius: 4px;
-}
-div[x-placement="left"] {
-    z-index: 9999999 !important;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border-radius: 4px;
-}
+// div[x-placement="top"] {
+//     z-index: 9999999 !important;
+//     background-color: rgba(0, 0, 0, 0.5);
+//     color: white;
+//     border-radius: 4px;
+// }
+// div[x-placement="right"] {
+//     z-index: 9999999 !important;
+//     background-color: rgba(0, 0, 0, 0.5);
+//     color: white;
+//     border-radius: 4px;
+// }
+// div[x-placement="bottom"] {
+//     z-index: 9999999 !important;
+//     background-color: rgba(0, 0, 0, 0.5);
+//     color: white;
+//     border-radius: 4px;
+// }
+// div[x-placement="left"] {
+//     z-index: 9999999 !important;
+//     background-color: rgba(0, 0, 0, 0.5);
+//     color: white;
+//     border-radius: 4px;
+// }
+
 #front-app {
     transform: none !important;
     transition: none !important;
@@ -65,13 +66,15 @@ div[x-placement="left"] {
 .collapse {
     height: 0;
     opacity: 0;
-    transition: height 1s;
+    transition: all 1s;
     overflow: auto;
     &.show {
         opacity: 1;
         height: fit-content;
+        height: -moz-max-content;
         padding: 5px 0;
-        transition: height 1s;
+        transition: all 1s;
+        width: 100%;
     }
 }
 
@@ -116,6 +119,8 @@ div[x-placement="left"] {
         overflow: auto;
         z-index: 1;
         position: relative;
+        width: 100%;
+        height: 100%;
 
         & select {
             width: 100%;

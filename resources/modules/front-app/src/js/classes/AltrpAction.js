@@ -1,5 +1,4 @@
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
-import { isString } from "lodash";
 import React, { Component } from "react";
 import {
   altrpLogin,
@@ -16,11 +15,10 @@ import {
   replaceContentWithData,
   scrollToElement,
   setDataByPath,
-  altrpRandomId
+  dataToXLS
 } from "../helpers";
 import { togglePopup } from "../store/popup-trigger/actions";
-import reactDom from "react-dom";
-import Resource from "../../../../editor/src/js/classes/Resource";
+import {sendEmail} from "../helpers/sendEmail";
 
 // let  history = require('history');
 // // import {history} from 'history';
@@ -43,7 +41,7 @@ class AltrpAction extends AltrpModel {
    * @return {string}
    */
   getElementId() {
-    return this.getProperty("_widgetId");
+    return this.getProperty("_element").getId();
   }
 
   /**
@@ -62,15 +60,12 @@ class AltrpAction extends AltrpModel {
   }
 
   /**
-   * Получить id для регистрации формы
+   * Получить URL формы
    * @return {string}
    */
   getFormURL() {
     let formURL = this.getProperty("form_url");
-    if (! formURL) {
-      return formURL;
-    }
-    if(this.getType() === 'form'){
+    if (!formURL) {
       return formURL;
     }
     if (formURL.indexOf("{{") !== -1) {
@@ -129,31 +124,26 @@ class AltrpAction extends AltrpModel {
           this.setProperty("_form", null);
           return;
         }
-        const formsManager = (
-          await import(
-            "../../../../editor/src/js/classes/modules/FormsManager.js"
-          )
-        ).default;
-        const formOptions = {
-          dynamicURL: true,
-          customRoute: this.getFormURL()
-        };
+        // const formsManager = (
+        //   await import(
+        //     "../../../../editor/src/js/classes/modules/FormsManager.js"
+        //   )
+        // ).default;
+        // const formOptions = {
+        //   dynamicURL: true,
+        //   customRoute: this.getFormURL()
+        // };
 
-        const form = formsManager.registerForm(
-          this.getFormId(),
-          "",
-          this.getProperty("form_method"),
-          formOptions
-        );
-        this.setProperty("_form", form);
+        // const form = formsManager.registerForm(
+        //   this.getFormId(),
+        //   "",
+        //   this.getProperty("form_method"),
+        //   formOptions
+        // );
+        // this.setProperty("_form", form);
         return;
       }
       case "login": {
-        const formsManager = (
-          await import(
-            "../../../../editor/src/js/classes/modules/FormsManager.js"
-          )
-        ).default;
         const form = formsManager.registerForm(
           this.getFormId(),
           "login",
@@ -197,6 +187,11 @@ class AltrpAction extends AltrpModel {
       case "form":
         {
           result = await this.doActionForm();
+        }
+        break;
+      case "email":
+        {
+          result = await this.doActionEmail();
         }
         break;
       case "redirect":
@@ -264,6 +259,9 @@ class AltrpAction extends AltrpModel {
           result = await this.doActionTableToCSV();
         }
         break;
+      case "table_to_xls":
+        result = await this.doActionTableToXLS();
+        break;
       case "login":
         {
           result = await this.doActionLogin();
@@ -289,6 +287,11 @@ class AltrpAction extends AltrpModel {
           result = await this.doActionFormsManipulate();
         }
         break;
+      case "custom_code":
+        {
+          result = await this.doActionCustomCode();
+        }
+        break;
     }
     let alertText = "";
     if (result.success) {
@@ -297,6 +300,7 @@ class AltrpAction extends AltrpModel {
       alertText = this.getProperty("reject");
     }
     if (alertText) {
+      alertText = replaceContentWithData(alertText);
       alert(alertText);
     }
     return result;
@@ -306,20 +310,21 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionForm() {
-    if (!this.getProperty("_form")) {
-      return {
-        success: false,
-        message: "Нет Формы"
-      };
-    }
-    if (this.getProperty("path")) {
-      let data = getDataByPath(this.getProperty("path"));
-      if (!_.isEmpty(data)) {
-        return this.getProperty("_form").submit("", "", data);
-      }
-      return { success: true };
-    }
+    // if (! this.getProperty("_form")) {
+    //   return {
+    //     success: false,
+    //     message: "Нет Формы"
+    //   };
+    // }
+    const formsManager = (
+      await import("../../../../editor/src/js/classes/modules/FormsManager.js")
+    ).default;
+
     let data = null;
+    let customHeaders = null;
+    if(this.getProperty('custom_headers')){
+      customHeaders = parseParamsFromString(this.getProperty('custom_headers'), this.getCurrentModel());
+    }
     if (this.getProperty("data")) {
       data = parseParamsFromString(
         this.getProperty("data"),
@@ -337,10 +342,32 @@ class AltrpAction extends AltrpModel {
         _.get(getDataByPath(this.getProperty("bulk_path")), "length")
       ) {
         let bulk = getDataByPath(this.getProperty("bulk_path"));
-        let _form = this.getProperty("_form");
-        data = _.assign(_form.getData(), data);
-        let bulkRequests = bulk.map(async (item, idx)=>{
+        /**
+         * Для получение данных с полей формы, нужно создать форму и вызвать метод getData
+         * @type {AltrpForm}
+         */
+        const form = formsManager.registerForm(
+            this.getFormId(),
+            "",
+            this.getProperty("form_method"),
+            {
+              customRoute: ''
+            }
+        );
+        data = _.assign(form.getData(), data);
+        let bulkRequests = bulk.map(async (item, idx) => {
           // return   ()=>{
+          if (this.getProperty("data")) {
+            data = parseParamsFromString(
+              this.getProperty("data"),
+              getAppContext(item),
+              true
+            );
+            // if (!_.isEmpty(data)) {
+            //   return form.submit("", "", data);
+            // }
+            // return { success: true };
+          }
           let url = this.getProperty("form_url");
           url = replaceContentWithData(url, item);
           const form = formsManager.registerForm(
@@ -351,7 +378,7 @@ class AltrpAction extends AltrpModel {
               customRoute: url
             }
           );
-          return await form.submit("", "", data);
+          return await form.submit("", "", data, customHeaders);
           // }
         });
         try {
@@ -370,12 +397,46 @@ class AltrpAction extends AltrpModel {
 
       return { success: true };
     }
+    if (this.getProperty("path")) {
+      let _data = getDataByPath(this.getProperty("path"), {});
+      if (!_.isEmpty(_data)) {
+        data = _.assign(_data, data);
+      }
+    }
     /**
      *
      * @type {AltrpForm}
      */
-    let form = this.getProperty("_form");
-    return form.submit("", "", data);
+    // let form = this.getProperty("_form");
+    if (! this.getFormURL()) {
+      this.setProperty("_form", null);
+      return {
+        success: false
+      };
+    }
+    const formOptions = {
+      dynamicURL: true,
+      customRoute: this.getFormURL()
+    };
+    const form = formsManager.registerForm(
+      this.getFormId(),
+      "",
+      this.getProperty("form_method"),
+      formOptions
+    );
+    let result = {
+      success: true
+    };
+    try {
+      const response = await form.submit("", "", data, customHeaders);
+      result = _.assign(result, response);
+    } catch (error) {
+      console.log(error);
+      result.error = error;
+      result.success = false;
+    }
+
+    return result;
   }
   /**
    * Делает редирект на страницу form_url
@@ -387,24 +448,11 @@ class AltrpAction extends AltrpModel {
       if (this.getProperty("back")) {
         frontAppRouter.history.goBack();
       } else {
-        let routes = appStore.getState().appRoutes.routes || [];
-        let innerRedirect = false;
-        if (URL === "/") {
-          innerRedirect = true;
-        } else {
-          routes.forEach(route => {
-            if (!route.path) {
-              return;
-            }
-            if (route.path === URL) {
-              innerRedirect = true;
-            }
-          });
-        }
+        let innerRedirect = !this.getProperty("outer");
         if (innerRedirect) {
           frontAppRouter.history.push(URL);
         } else {
-          window.location.replace(URL);
+          window.location.assign(URL);
         }
       }
     }
@@ -622,6 +670,53 @@ class AltrpAction extends AltrpModel {
     }
   }
   /**
+   * HTML-таблицу в XLS-файл
+   * @return {Promise}
+   */
+  async doActionTableToXLS() {
+    const elementId = this.getProperty("element_id").trim();
+    if (!elementId) {
+      console.error("Element ID is not set");
+      return { success: true };
+    }
+
+    const table = getHTMLElementById(elementId);
+    if (!table) {
+      console.error("Table with provided ID is not found");
+      return { success: true };
+    }
+
+    let data = dataFromTable(table);
+    const formattedData = [];
+
+    _.each(data, row => formattedData.push(Object.values(row)));
+    const templateName = this.getProperty("template_name");
+    const rawTemplateData = this.getProperty("template_data");
+    const parsedTemplateData = rawTemplateData
+      .split("\n")
+      .reduce((data, row) => {
+        const keyValuePair = row.split("=");
+        data[keyValuePair[0]] = keyValuePair[1];
+        return data;
+      }, {});
+    data = { ...parsedTemplateData, dataArray: formattedData };
+    const filename = replaceContentWithData(this.getProperty("name", "file'"));
+
+    try {
+      const blob = await dataToXLS(data, filename, templateName);
+      let link = document.createElement("a");
+      link.setAttribute("href", window.URL.createObjectURL(blob));
+      link.setAttribute("download", filename + ".xls");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      return { success: true };
+    } catch (error) {
+      console.error(error);
+      return { success: false };
+    }
+  }
+  /**
    * действие-логин
    * @return {Promise<{}>}
    */
@@ -662,7 +757,7 @@ class AltrpAction extends AltrpModel {
     if (!path) {
       return result;
     }
-    let value = this.getProperty("value") || '';
+    let value = this.getProperty("value") || "";
     value = value.trim();
     const setType = this.getProperty("set_type");
     let count = this.getProperty("count");
@@ -830,6 +925,15 @@ class AltrpAction extends AltrpModel {
     return { success: true };
   }
   /**
+   * действие - выполнение пользовательского кода
+   * @return {Promise<{}>}
+   */
+  doActionCustomCode() {
+    let code = this.getProperty('code');
+    eval(code);
+    return { success: true };
+  }
+  /**
    * действие - обновление текущего хранилища
    * @return {Promise<{}>}
    */
@@ -865,6 +969,31 @@ class AltrpAction extends AltrpModel {
         success: false
       };
     }
+  }
+
+  /**
+   * Отправка почты
+   */
+  async doActionEmail() {
+    let templateGUID = this.getProperty('email_template');
+    if(! templateGUID){
+      return {success: true};
+    }
+    let res = {success: false};
+    try{
+      res = await sendEmail(templateGUID,
+          this.getReplacedProperty('subject'),
+          this.getReplacedProperty('from'),
+          this.getReplacedProperty('to'),
+          this.getReplacedProperty('attachments'),
+          );
+    } catch(e){
+      console.error(e);
+      return {
+        success: false
+      };
+    }
+    return res;
   }
 }
 

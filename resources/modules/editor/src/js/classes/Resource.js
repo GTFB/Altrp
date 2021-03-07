@@ -107,6 +107,26 @@ class Resource {
       return res.json();
     });
   }
+  /**
+   * простой запрос
+   * @return {Promise}
+   * */
+  getAsText() {
+    let options = {
+      method: "get",
+      headers: {
+        "Content-Type": "text/plain"
+      }
+    };
+
+    let url = this.getRoute();
+    return fetch(url, options).then(res => {
+      if (res.ok === false) {
+        return Promise.reject(res.text(), res.status);
+      }
+      return res.text();
+    });
+  }
 
   /**
    * Запрос со строкой для поиска вхождений
@@ -139,11 +159,11 @@ class Resource {
    * @return {Promise}
    * */
   post(data = {}, headers) {
-    headers = headers || {
+    headers = _.assign({
       "X-CSRF-TOKEN": _token
       // 'Content-Type': 'application/json',
       // 'Accept': 'application/json',
-    };
+    }, headers);
     let formData = new FormData();
     let hasFile = false;
     _.each(data, (value, key) => {
@@ -161,7 +181,7 @@ class Resource {
         formData.append(key, value);
       }
     });
-    if (!hasFile) {
+    if (! hasFile) {
       headers["Content-Type"] = "application/json";
       headers["Accept"] = "application/json";
     }
@@ -178,7 +198,8 @@ class Resource {
         return res.json();
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
+        return Promise.reject(err.then(), err.status);
         return err.then();
       });
   }
@@ -250,11 +271,11 @@ class Resource {
    * @return {Promise}
    * */
   put(id, data, headers = null) {
-    headers = headers || {
+    headers = _.assign({
       "X-CSRF-TOKEN": _token
       // 'Content-Type': 'application/json',
       // 'Accept': 'application/json',
-    };
+    }, headers);
     let formData = new FormData();
     let hasFile = false;
 
@@ -294,15 +315,18 @@ class Resource {
     });
   }
   /**
+   * @param {string} id
+   * @param {{}} data
+   * @param {string | {}} customHeaders
    * @return {Promise}
    * */
-  delete(id = "", data = {}) {
+  delete(id = "", data = {}, customHeaders) {
     let options = {
       method: "delete",
-      headers: {
+      headers: _.assign({
         "X-CSRF-TOKEN": _token,
         "Content-Type": "application/json"
-      }
+      }, customHeaders),
     };
     if (!_.isEmpty(data)) {
       options.body = JSON.stringify(data);
@@ -337,14 +361,15 @@ class Resource {
   /**
    * GET запрос с параметрами
    * @param {object} params
+   * @param {string | {}} customHeaders
    * @return {Promise}
    * */
-  async getQueried(params, custom_headers = null) {
+  async getQueried(params, customHeaders = null) {
     let options = {
       method: "get",
-      headers: {
+      headers: _.assign({
         "Content-Type": "application/json"
-      }
+      }, customHeaders),
     };
     let _params = {};
     _.forEach(params, (paramValue, paramName) => {

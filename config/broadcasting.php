@@ -32,7 +32,7 @@ return [
 
         'pusher' => [
             'driver' => 'pusher',
-            'key' => env('PUSHER_APP_KEY'),
+            'key' => env('ALTRP_SETTING_PUSHER_APP_KEY'),
             'secret' => env('PUSHER_APP_SECRET'),
             'app_id' => env('PUSHER_APP_ID'),
             'options' => [
@@ -40,7 +40,7 @@ return [
                 // 'useTLS' => true,
                 // 'encrypted' => true,
                 'host' => '127.0.0.1',
-                'port' => 6001,
+                'port' => env('ALTRP_SETTING_WEBSOCKETS_PORT', 6001),
                 'scheme' => 'http'
             ],
         ],

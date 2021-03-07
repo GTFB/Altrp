@@ -7,8 +7,14 @@ class ExportDashboardButton extends Component {
 
   render() {
     return (
-      <>
+      <div
+        className={this.props.className}
+        style={{
+          display: "inline-block"
+        }}
+      >
         <button
+          className={`altrp-btn-draw`}
           style={{
             margin: "5px 5px 5px 5px"
           }}
@@ -16,7 +22,7 @@ class ExportDashboardButton extends Component {
         >
           Экспорт диаграмм
         </button>
-      </>
+      </div>
     );
   }
 }

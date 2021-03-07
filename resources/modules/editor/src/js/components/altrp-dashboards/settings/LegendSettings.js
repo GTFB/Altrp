@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import ReactSelect from "react-select";
 import { connect } from "react-redux";
+import Checkbox from '@material-ui/core/Checkbox';
+import Slider from '@material-ui/core/Slider';
 
 const mapStateToProps = state => {
   return { editElement: _.cloneDeep(state.editElement) };
@@ -96,12 +98,13 @@ class LegendSettings extends Component {
             >
               Отобразить легенду
             </div>
-            <input
-              type="checkbox"
+            <Checkbox
+              disableRipple={true}
+              className={`${this.props.widgetID} altrp-dashboard__checkboxcolor`}
               defaultChecked={this.state.editElement?.settings?.enableLegend}
               checked={this.state.editElement?.settings?.enableLegend}
               onChange={this.setLedengEnable}
-            />
+              />
           </div>
           <div className="mb-3">
             <div
@@ -112,7 +115,7 @@ class LegendSettings extends Component {
             <ReactSelect
               placeholder="Выберите расположение легенды"
               options={anchors}
-              className="select-type"
+              className={`${this.props.widgetID} altrp-dashboard__drawer--select`}
               defaultValue={this.state.editElement?.settings?.legendAchor}
               defaultInputValue={this.state.editElement?.settings?.legendAchor}
               onChange={option =>
@@ -132,7 +135,7 @@ class LegendSettings extends Component {
             <ReactSelect
               placeholder="Выберите расположение легенды"
               options={directions}
-              className="select-type"
+              className={`${this.props.widgetID} altrp-dashboard__drawer--select`}
               defaultValue={this.state.editElement?.settings?.legendDirection}
               defaultInputValue={
                 this.state.editElement?.settings?.legendDirection
@@ -151,8 +154,9 @@ class LegendSettings extends Component {
             >
               Выровнять легенды
             </div>
-            <input
-              type="checkbox"
+            <Checkbox
+              disableRipple={true}
+              className={`${this.props.widgetID} altrp-dashboard__checkboxcolor`}
               defaultChecked={this.state.editElement?.settings?.legendJustify}
               checked={this.state.editElement?.settings?.legendJustify}
               onChange={this.setLegendJustify}
@@ -165,18 +169,18 @@ class LegendSettings extends Component {
             >
               Расположение легенды по X
             </div>
-            <input
+            <Slider
+              className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
               defaultValue={
                 this.state.editElement?.settings?.legendTranslateX ||
                 this.state.legendTranslateX
               }
-              onChange={e =>
-                this.setProperty(Number(e.target.value), "legendTranslateX")
+              onChange={(e, newValue) =>
+                this.setProperty(Number(newValue), "legendTranslateX")
               }
-              type="range"
-              min="-200"
-              max="200"
-              step="1"
+              min={-200}
+              max={200}
+              step={1}
             />
             (
             {this.state.editElement?.settings?.legendTranslateX ||
@@ -189,18 +193,18 @@ class LegendSettings extends Component {
             >
               Расположение легенды по Y
             </div>
-            <input
+            <Slider
+              className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
               defaultValue={
                 this.state.editElement?.settings?.legendTranslateY ||
                 this.state.legendTranslateY
               }
-              onChange={e =>
-                this.setProperty(Number(e.target.value), "legendTranslateY")
+              onChange={(e, newValue) =>
+                this.setProperty(Number(newValue), "legendTranslateY")
               }
-              type="range"
-              min="-200"
-              max="200"
-              step="1"
+              min={-200}
+              max={200}
+              step={1}
             />
             (
             {this.state.editElement?.settings?.legendTranslateY ||
@@ -213,21 +217,18 @@ class LegendSettings extends Component {
             >
               Ширина элемента легенды
             </div>
-            <input
+            <Slider
+              className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
               defaultValue={
                 this.state.editElement?.settings?.legendItemWidth ||
                 this.state.itemWidth
               }
-              onChange={e =>
-                this.setProperty(
-                  Number(e.target.value),
-                  "itemWlegendItemWidthidth"
-                )
+              onChange={(e, newValue) =>
+                this.setProperty(Number(newValue), "itemWlegendItemWidthidth")
               }
-              type="range"
-              min="10"
-              max="200"
-              step="1"
+              min={10}
+              max={200}
+              step={1}
             />
             (
             {this.state.editElement?.settings?.legendItemWidth ||
@@ -240,18 +241,18 @@ class LegendSettings extends Component {
             >
               Высота элемента легенды
             </div>
-            <input
+            <Slider
+              className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
               defaultValue={
                 this.state.editElement?.settings?.legendItemHeight ||
                 this.state.itemHeight
               }
-              onChange={e =>
-                this.setProperty(Number(e.target.value), "legendItemHeight")
+              onChange={(e, newValue) =>
+                this.setProperty(Number(newValue), "legendItemHeight")
               }
-              type="range"
-              min="10"
-              max="200"
-              step="1"
+              min={10}
+              max={200}
+              step={1}
             />
             (
             {this.state.editElement?.settings?.legendItemHeight ||
@@ -264,18 +265,18 @@ class LegendSettings extends Component {
             >
               Расстояние между элементами
             </div>
-            <input
+            <Slider
+              className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
               defaultValue={
                 this.state.editElement?.settings?.legendItemsSpacing ||
                 this.state.itemsSpacing
               }
-              onChange={e =>
-                this.setProperty(Number(e.target.value), "legendItemsSpacing")
+              onChange={(e, newValue) =>
+                this.setProperty(Number(newValue), "legendItemsSpacing")
               }
-              type="range"
-              min="0"
-              max="60"
-              step="1"
+              min={0}
+              max={60}
+              step={1}
             />
             (
             {this.state.editElement?.settings?.legendItemsSpacing ||
@@ -288,18 +289,18 @@ class LegendSettings extends Component {
             >
               Размер символа
             </div>
-            <input
+            <Slider
+              className={`${this.props.widgetID} altrp-dashboard__drawer--range-drawer-color`}
               defaultValue={
                 this.state.editElement?.settings?.legendSymbolSize ||
                 this.state.symbolSize
               }
-              onChange={e =>
-                this.setProperty(Number(e.target.value), "legendSymbolSize")
+              onChange={(e, newValue) =>
+                this.setProperty(Number(newValue), "legendSymbolSize")
               }
-              type="range"
-              min="2"
-              max="60"
-              step="1"
+              min={2}
+              max={60}
+              step={1}
             />
             (
             {this.state.editElement?.settings?.legendSymbolSize ||
@@ -316,7 +317,7 @@ class LegendSettings extends Component {
             <ReactSelect
               placeholder="Выберите направление элементов"
               options={itemDirections}
-              className="select-type"
+              className={`${this.props.widgetID} altrp-dashboard__drawer--select`}
               defaultValue={
                 this.state.editElement?.settings?.legendItemDirection
               }

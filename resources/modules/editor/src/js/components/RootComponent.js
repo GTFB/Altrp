@@ -1,7 +1,4 @@
-import React, { Component, Provider } from "react";
-import { connect } from "react-redux";
-import FrontElement from "../../../../front-app/src/js/classes/FrontElement";
-import { setDefaultTriggers } from "../../../../front-app/src/js/store/hide-triggers/actions";
+import React, { Component,  } from "react";
 
 class RootComponent extends Component {
   constructor(props) {
@@ -14,11 +11,13 @@ class RootComponent extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
+    }
   }
 
   _componentDidMount() {
     let hiddenElementsTriggers = this.state.settings.hidden_elements_triggers;
-
     // if (hiddenElementsTriggers && _.isString(hiddenElementsTriggers)) {
     //   hiddenElementsTriggers = hiddenElementsTriggers
     //     .split(",")
@@ -28,32 +27,27 @@ class RootComponent extends Component {
   }
 
   render() {
-
     let classes = `sections-wrapper ${this.props.element
       .getSelector()
       .replace(".", "")} ${this.props.element.hasCardModel() ? 'sections-wrapper_card' : ''}`;
     let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
     return (
       <div className={classes}>
-        {this.props.element.getSettings("test-text-4")}
-        {this.state.children.map(section => (
-          <ElementWrapper
-            ElementWrapper={ElementWrapper}
-            key={section.getId()}
-            component={section.componentClass}
-            element={section}
-          />
-        ))}
+        {this.state.children.map(section => {
+          return(
+            <ElementWrapper
+              ElementWrapper={ElementWrapper}
+              rootElement={this.props.element}
+              key={section.getIdForAction()}
+              component={section.componentClass}
+              baseRender={this.props.baseRender}
+              element={section}
+            />
+          )})
+        }
       </div>
     );
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    setDefaultTriggers: triggers => dispatch(setDefaultTriggers(triggers))
-  };
-};
-
-// export default connect(null, mapDispatchToProps)(RootComponent);
 export default RootComponent;

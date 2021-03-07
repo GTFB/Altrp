@@ -160,6 +160,7 @@ class QueryController extends Component {
               options={this.state.dataSourceList}
               onChange={this.onChangeDataSource}
               value={value.dataSource}
+              isClearable={true}
               styles={{
                 container: () => ({
                   width: "100%",

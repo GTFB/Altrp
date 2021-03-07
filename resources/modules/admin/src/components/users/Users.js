@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import PluginSvg from "../../svgs/plugins.svg";
 import VectorSvg from '../../svgs/vector.svg';
 import UserSvg from '../../svgs/user.svg';
@@ -6,7 +7,8 @@ import { Link } from "react-router-dom";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import Pagination from "../Pagination";
 import { filterUsers, sortUsers } from "../../js/helpers";
-export default class Users extends Component {
+
+class Users extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -93,7 +95,7 @@ export default class Users extends Component {
           <table className="table">
             <thead className="admin-users-table-head">
               <tr className="admin-table-row">
-                <td className="admin-table__td admin-table__td_check" 
+                <td className="admin-table__td admin-table__td_check"
                   onClick={() => this.setState({ sorting: { sortingField: 'name', order: order === 'ASC' ? 'DESC' : 'ASC' } })}
                 >
                   <input className="input-users" type="checkbox" />
@@ -130,7 +132,7 @@ export default class Users extends Component {
                   <td className="admin-table__td admin-table__td_check ">
                     <input className="input-users" type="checkbox" />
                     <UserSvg className="users-svg" />
-                    <Link to={"/admin/users/user/" + row.id}>{row.name}</Link>
+                    <Link to={"/admin/users/user/" + row.id}>{row.name} {row.id === this.props.userId && <span style={{ color: 'red' }}>you</span>}</Link>
                   </td>
                   <td className="admin-table__td ">{row.full_name}</td>
                   <td className="admin-table__td "><a>{row.email}</a></td>
@@ -154,5 +156,12 @@ export default class Users extends Component {
       </div>
     </div>
   }
-
 }
+
+const mapStateToProps = state => {
+  return {
+    userId: state.currentUser.id
+  }
+};
+
+export default connect(mapStateToProps)(Users);

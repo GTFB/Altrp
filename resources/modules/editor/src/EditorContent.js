@@ -17,17 +17,33 @@ import './sass/editor-content.scss';
 import 'react-image-lightbox/style.css';
 import {changeCurrentModel} from "../../front-app/src/js/store/current-model/actions";
 import FontsManager from "../../front-app/src/js/components/FontsManager";
-
+import  { StyleSheetManager } from 'styled-components';
+import {HTML5Backend} from "react-dnd-html5-backend";
+import { DndProvider, } from 'react-dnd'
 class EditorContent extends Component {
   constructor(props) {
     super(props);
     this.state = {};
     this.editorWindow = React.createRef();
     store.subscribe(this.currentElementListener.bind(this));
+    store.subscribe(this.templateStatus.bind(this));
     window.altrpEditorContent = this;
   }
 
-  currentElementListener(data){
+  /**
+   * Метод-подписчик на изменение состояния Редактора из Редакс хранилища
+   * */
+  templateStatus() {
+    let templateStatus = store.getState().templateStatus.status;
+    if (templateStatus !== this.state.templateStatus) {
+      this.setState({ ...this.state, templateStatus });
+    }
+  }
+
+  /**
+   * Метод-подписчик на изменение текущего элемента из Редакс хранилища
+   * */
+  currentElementListener(){
     let currentElement = store.getState().currentElement.currentElement;
     if(currentElement instanceof RootElement && currentElement !== this.state.rootElement){
       this.setState({
@@ -35,22 +51,6 @@ class EditorContent extends Component {
       })
     }
   }
-
-  // log(e){
-  //   e.preventDefault();
-  //   console.log(e);
-  // }
-  //
-  // onDragOver (e) {
-  //   let event = e ;
-  //   event.stopPropagation();
-  // }
-  //
-  // onDragEnter  (e) {
-  //   let event = e ;
-  //   event.stopPropagation();
-  // }
-
 
   /**
    * Компонент окна редактора загрузился
@@ -70,11 +70,14 @@ class EditorContent extends Component {
   onClick(e) {
     contextMenu.hideAll();
   }
-
   render() {
     return <Provider store={store}>
+      <StyleSheetManager target={EditorFrame.contentWindow.document.getElementsByTagName(
+          "head"
+      )[0]}>
       <Router>
-        <div className="editor-content d-flex flex-column justify-center align-content-center"
+        <DndProvider backend={HTML5Backend}>
+          <div className="editor-content d-flex flex-column justify-center align-content-center"
             onClick={this.onClick}
                     ref={this.editorWindow}>
           {
@@ -85,11 +88,13 @@ class EditorContent extends Component {
                 }
             ) : ''
           }
-          <NewSection />
-        </div>
-        <Styles/>
+            <NewSection />
+          </div>
+        </DndProvider>
+        {store.getState().templateData.template_type !== 'email' && <Styles/>}
         <ElementContextMenu/>
       </Router>
+      </StyleSheetManager>
       <FontsManager />
     </Provider>;
   }
