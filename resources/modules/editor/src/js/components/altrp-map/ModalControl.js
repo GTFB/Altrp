@@ -64,150 +64,155 @@ const ModalControl = (
     const layout = getLayer();
     const dbID = layout.feature.dbID;
     let defaultValue = (await axios.get(`${url}/${dbID}`)).data;
-    const inputs = parameters?.map((parameter, index) => {
-      let inputComponent;
-      switch (parameter?.input_type) {
-        case "select": {
-          if (!parameter.parameter_path) {
+    const inputs =
+      parameters?.map((parameter, index) => {
+        let inputComponent;
+        switch (parameter?.input_type) {
+          case "select": {
+            if (!parameter.parameter_path) {
+              inputComponent = (
+                <div className="mb-3" key={index}>
+                  Please set path to datasource in editor settings
+                </div>
+              );
+              break;
+            }
+            const data = getDataByPath(parameter.parameter_path);
+            if (data.length === 0) {
+              inputComponent = (
+                <div className="mb-3" key={index}>
+                  Empty list of parameters
+                </div>
+              );
+              break;
+            }
+            const options = data?.map(item => ({
+              value: _.get(item, parameter.parameter_value),
+              label: _.get(item, parameter.parameter_label)
+            }));
+            const defaultValueSelect = _.get(
+              defaultValue,
+              parameter.parent_field_to_save
+            );
             inputComponent = (
               <div className="mb-3" key={index}>
-                Please set path to datasource in editor settings
+                <label>
+                  {parameter?.parameter_title || ""}
+                  <Select
+                    defaultValue={options.filter(
+                      option => option.value === defaultValueSelect
+                    )}
+                    options={options}
+                    onChange={value =>
+                      handleParameterSelect(
+                        value,
+                        parameter.parent_field_to_save
+                      )
+                    }
+                  />
+                </label>
               </div>
             );
             break;
           }
-          const data = getDataByPath(parameter.parameter_path);
-          if (data.length === 0) {
+          case "text": {
+            let defaultValueText = _.get(
+              defaultValue,
+              parameter.parent_field_to_save
+            );
+            if (defaultValueText !== null) {
+              defaultValueText = defaultValueText.replace(/["']/g, "");
+            }
             inputComponent = (
-              <div className="mb-3" key={index}>
-                Empty list of parameters
+              <div className="modal__body-text">
+                <label>
+                  {parameter?.parameter_title || ""}
+                  <input
+                    type="text"
+                    defaultValue={defaultValueText}
+                    onChange={e =>
+                      handleParametersInput(e, parameter.parent_field_to_save)
+                    }
+                  />
+                </label>
               </div>
             );
             break;
           }
-          const options = data?.map(item => ({
-            value: _.get(item, parameter.parameter_value),
-            label: _.get(item, parameter.parameter_label)
-          }));
-          const defaultValueSelect = _.get(
-            defaultValue,
-            parameter.parent_field_to_save
-          );
-          inputComponent = (
-            <div className="mb-3" key={index}>
-              <label>
-                {parameter?.parameter_title || ""}
-                <Select
-                  defaultValue={options.filter(
-                    option => option.value === defaultValueSelect
-                  )}
-                  options={options}
-                  onChange={value =>
-                    handleParameterSelect(value, parameter.parent_field_to_save)
-                  }
-                />
-              </label>
-            </div>
-          );
-          break;
-        }
-        case "text": {
-          let defaultValueText = _.get(
-            defaultValue,
-            parameter.parent_field_to_save
-          );
-          if (defaultValueText !== null) {
-            defaultValueText = defaultValueText.replace(/["']/g, "");
+          case "number": {
+            let defaultValueNumber = _.get(
+              defaultValue,
+              parameter.parent_field_to_save
+            );
+            defaultValueNumber = Number(defaultValueNumber);
+            console.log("====================================");
+            console.log(defaultValueNumber);
+            console.log("====================================");
+            inputComponent = (
+              <div className="modal__body-text">
+                <label>
+                  {parameter?.parameter_title || ""}
+                  <input
+                    type="number"
+                    defaultValue={defaultValueNumber}
+                    onChange={e =>
+                      handleParametersInput(e, parameter.parent_field_to_save)
+                    }
+                  />
+                </label>
+              </div>
+            );
+            break;
           }
-          inputComponent = (
-            <div className="modal__body-text">
-              <label>
-                {parameter?.parameter_title || ""}
-                <input
-                  type="text"
-                  defaultValue={defaultValueText}
-                  onChange={e =>
-                    handleParametersInput(e, parameter.parent_field_to_save)
-                  }
-                />
-              </label>
-            </div>
-          );
-          break;
+          case "date": {
+            const defaultValueDate = _.get(
+              defaultValue,
+              parameter.parent_field_to_save
+            );
+            console.log("====================================");
+            console.log(parameter.parent_field_to_save, defaultValueDate);
+            console.log("====================================");
+            inputComponent = (
+              <div className="modal__body-text">
+                <label>
+                  {parameter?.parameter_title || ""}
+                  <input
+                    type="date"
+                    defaultValue={defaultValueDate}
+                    onChange={e =>
+                      handleParametersInput(e, parameter.parent_field_to_save)
+                    }
+                  />
+                </label>
+              </div>
+            );
+            break;
+          }
+          default: {
+            const defaultValueUnset = _.get(
+              defaultValue,
+              parameter.parent_field_to_save
+            );
+            inputComponent = (
+              <div className="mb-3" key={index}>
+                <label>
+                  {parameter?.parameter_title || ""}
+                  <input
+                    type="text"
+                    defaultValue={defaultValueUnset}
+                    onChange={e =>
+                      handleParametersInput(e, parameter.parent_field_to_save)
+                    }
+                  />
+                </label>
+              </div>
+            );
+            break;
+          }
         }
-        case "number": {
-          let defaultValueNumber = _.get(
-            defaultValue,
-            parameter.parent_field_to_save
-          );
-          defaultValueNumber = Number(defaultValueNumber);
-          console.log("====================================");
-          console.log(defaultValueNumber);
-          console.log("====================================");
-          inputComponent = (
-            <div className="modal__body-text">
-              <label>
-                {parameter?.parameter_title || ""}
-                <input
-                  type="number"
-                  defaultValue={defaultValueNumber}
-                  onChange={e =>
-                    handleParametersInput(e, parameter.parent_field_to_save)
-                  }
-                />
-              </label>
-            </div>
-          );
-          break;
-        }
-        case "date": {
-          const defaultValueDate = _.get(
-            defaultValue,
-            parameter.parent_field_to_save
-          );
-          console.log("====================================");
-          console.log(parameter.parent_field_to_save, defaultValueDate);
-          console.log("====================================");
-          inputComponent = (
-            <div className="modal__body-text">
-              <label>
-                {parameter?.parameter_title || ""}
-                <input
-                  type="date"
-                  defaultValue={defaultValueDate}
-                  onChange={e =>
-                    handleParametersInput(e, parameter.parent_field_to_save)
-                  }
-                />
-              </label>
-            </div>
-          );
-          break;
-        }
-        default: {
-          const defaultValueUnset = _.get(
-            defaultValue,
-            parameter.parent_field_to_save
-          );
-          inputComponent = (
-            <div className="mb-3" key={index}>
-              <label>
-                {parameter?.parameter_title || ""}
-                <input
-                  type="text"
-                  defaultValue={defaultValueUnset}
-                  onChange={e =>
-                    handleParametersInput(e, parameter.parent_field_to_save)
-                  }
-                />
-              </label>
-            </div>
-          );
-          break;
-        }
-      }
-      return inputComponent;
-    });
+        return inputComponent;
+      }) || [];
+
     return inputs;
   }, [parameters]);
 
