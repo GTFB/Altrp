@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { useSelector } from "react-redux";
 import { iconsManager } from "../../../../front-app/src/js/helpers";
-import { mountListenerHistory, unmountListenerHistory, getEditor, getTemplateDataStorage, getFactory } from "../helpers";
+import { getEditor, getTemplateDataStorage, getFactory } from "../helpers";
 import Resource from "../classes/Resource";
+import { setActiveHistoryStore } from "../store/history-store/actions";
 
 import UserSvg from "../../../../admin/src/svgs/user.svg";
 import StartFilled from "../../../../admin/src/svgs/start-filled.svg";
@@ -166,21 +167,15 @@ const RevisionTabContent = () => {
       setArrayRevisions(arrayRevisions.reverse());
     };
     fetchRevisions(0);
-    unmountListenerHistory();
+    window.parent.appStore.dispatch(setActiveHistoryStore(false));
     return () => {
-      mountListenerHistory();
+      window.parent.appStore.dispatch(setActiveHistoryStore(true));
     };
   }, []);
 
   const handleClickDiscard = () => {
     getEditor().showWidgetsPanel();
   };
-  // React.useEffect(() => {
-  //   unmountListenerHistory();
-  //   return () => {
-  //     mountListenerHistory();
-  //   };
-  // });
 
   const handleClickApply = async () => {
     let response = await new Resource({
@@ -189,7 +184,7 @@ const RevisionTabContent = () => {
     let revisionRootElement = JSON.parse(response.data[0].data);
     console.log(revisionRootElement);
     let rootElement = getTemplateDataStorage().rootElement;
-    console.log(revisionRootElement.children)
+    console.log(revisionRootElement.children);
     rootElement.setChildren(revisionRootElement.children);
     rootElement.setSettings(revisionRootElement.settings);
   };

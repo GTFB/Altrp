@@ -12,7 +12,6 @@ window.React = React;
 window.ReactDOM = ReactDOM;
 window.Component = Component;
 
-import {listenerHistory} from "./installing";
 import controllerHistory from "./js/classes/ControllerHistory";
 
 window._ = _;
@@ -92,11 +91,13 @@ import("./Editor.js")
       }
 
       function listenerHistory(event) {
-        if (event.ctrlKey && event.code === 'KeyZ' && event.shiftKey) {
-          controllerHistory.redo();
-        } else if (event.ctrlKey && event.code === 'KeyZ') {
-          controllerHistory.undo();
-        }
+        if(window.parent.appStore.getState().historyStore.active) {
+            if (event.ctrlKey && event.code === 'KeyZ' && event.shiftKey) {
+            controllerHistory.redo();
+          } else if (event.ctrlKey && event.code === 'KeyZ') {
+            controllerHistory.undo();
+          }
+        }    
       }
       window.addEventListener('keydown', listenerHistory, false);
       window.EditorFrame.contentWindow.addEventListener('keydown', listenerHistory, false);
