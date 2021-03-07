@@ -85,6 +85,9 @@ class AltrpUpdateService
       dd( 'ERROR' );
     }
 
+    // Write providers
+    $this->writeProviders();
+
     // Update modules statuses
     $this->updateModulesStatuses();
 
@@ -306,6 +309,17 @@ class AltrpUpdateService
             Log::debug($e->getMessage());
             return false;
         }
+        return true;
+    }
+
+    /**\
+     * Записать все необходимые провайдеры в файл app.php
+     * @return bool
+     */
+    protected function writeProviders()
+    {
+        Artisan::call('provider:write App/Providers/AltrpProviders/AppServiceProvider');
+        Artisan::call('provider:write App/Providers/AltrpRepositoryServiceProvider');
         return true;
     }
 }
