@@ -3,17 +3,16 @@ import { useSelector } from "react-redux";
 import { iconsManager } from "../../../../front-app/src/js/helpers";
 import { getEditor, getTemplateDataStorage, getFactory } from "../helpers";
 import Resource from "../classes/Resource";
-import { setActiveHistoryStore } from "../store/history-store/actions";
+import { setActiveHistoryStore, addHistoryStoreItem } from "../store/history-store/actions";
 
 import UserSvg from "../../../../admin/src/svgs/user.svg";
 import StartFilled from "../../../../admin/src/svgs/start-filled.svg";
-import ElementsFactory from "../classes/modules/ElementsFactory";
 
 class HistoryPanel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeTab: "revision"
+      activeTab: "actions"
     };
   }
 
@@ -109,7 +108,7 @@ const ActionsTabContent = () => {
       </div>
       {historyStore.map((item, index) => {
         let title = "";
-        if (item.data) {
+        if (item.data && item.data.element) {
           title = item.data.element.getTitle();
         }
 
@@ -124,6 +123,9 @@ const ActionsTabContent = () => {
           case "DELETE":
             type = "Removed";
             break;
+          case "REVISION":
+            title = "Revision";
+            break  
         }
 
         let restoreItemClasses = "history-panel__restore-item ";
@@ -160,8 +162,6 @@ const RevisionTabContent = () => {
   const [currentRevision, setCurrentRevision] = React.useState(-1);
   const [oldRootElement, setOldRootElement] = React.useState();
 
-  let elementsFactory = new ElementsFactory();
-
   React.useEffect(() => {
     setOldRootElement(_.cloneDeep(getTemplateDataStorage().rootElement));
     let templateId = appStore.getState().templateData.id;
@@ -175,7 +175,6 @@ const RevisionTabContent = () => {
     fetchRevisions(0);
     window.parent.appStore.dispatch(setActiveHistoryStore(false));
     return () => {
-      // getTemplateDataStorage().replaceAll(oldRootElement);
       window.parent.appStore.dispatch(setActiveHistoryStore(true));
     };
   }, []);
@@ -186,6 +185,12 @@ const RevisionTabContent = () => {
   };
 
   const handleClickApply = () => {
+    window.parent.appStore.dispatch(
+      addHistoryStoreItem("REVISION", {
+        old: oldRootElement,
+        new: _.cloneDeep(getTemplateDataStorage().rootElement)
+      })
+    );
     getEditor().showWidgetsPanel();
   };
 
@@ -196,8 +201,7 @@ const RevisionTabContent = () => {
     }).getAll();
     let revisionRootElement = JSON.parse(response.data[0].data);
 
-    let parsedData = elementsFactory.parseData(revisionRootElement);
-    console.log(response);
+    let parsedData = getFactory().parseData(revisionRootElement);
     getTemplateDataStorage().replaceAll(parsedData);
   };
   return (

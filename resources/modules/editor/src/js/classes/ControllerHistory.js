@@ -1,5 +1,6 @@
 import AltrpModel from "./AltrpModel";
 import { undoHistoryStore, redoHistoryStore } from "../store/history-store/actions";
+import { getTemplateDataStorage } from "../helpers";
 
 class ControllerHistory extends AltrpModel {
 
@@ -19,6 +20,8 @@ class ControllerHistory extends AltrpModel {
         case 'EDIT':
           this.restoreEdit(restoreElement.data.element, restoreElement.data.settingName, restoreElement.data.oldValue); 
           break;
+        case 'REVISION': 
+          this.restoreRevision(restoreElement.data.old);
       }
       window.parent.appStore.dispatch(undoHistoryStore(1));
     }
@@ -39,6 +42,8 @@ class ControllerHistory extends AltrpModel {
         case 'EDIT':
           this.restoreEdit(restoreElement.data.element, restoreElement.data.settingName, restoreElement.data.newValue); 
           break;
+        case 'REVISION': 
+          this.restoreRevision(restoreElement.data.new);  
       }
       window.parent.appStore.dispatch(redoHistoryStore(1));
     }
@@ -54,6 +59,10 @@ class ControllerHistory extends AltrpModel {
 
   restoreAdd(element) {
     element.parent.deleteChild(element, false);
+  }
+
+  restoreRevision(rootElement) {
+    getTemplateDataStorage().replaceAll(rootElement);
   }
 }
 
