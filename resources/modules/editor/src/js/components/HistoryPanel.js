@@ -157,12 +157,13 @@ const ActionsTabContent = () => {
 
 const RevisionTabContent = () => {
   const [arrayRevisions, setArrayRevisions] = React.useState([]);
-  const [currentRevision, setCurrentRevision] = React.useState(0);
-  let rootElement = getTemplateDataStorage().rootElement;
+  const [currentRevision, setCurrentRevision] = React.useState(-1);
+  const [oldRootElement, setOldRootElement] = React.useState();
 
   let elementsFactory = new ElementsFactory();
 
   React.useEffect(() => {
+    setOldRootElement(_.cloneDeep(getTemplateDataStorage().rootElement));
     let templateId = appStore.getState().templateData.id;
 
     const fetchRevisions = async () => {
@@ -174,12 +175,13 @@ const RevisionTabContent = () => {
     fetchRevisions(0);
     window.parent.appStore.dispatch(setActiveHistoryStore(false));
     return () => {
+      // getTemplateDataStorage().replaceAll(oldRootElement);
       window.parent.appStore.dispatch(setActiveHistoryStore(true));
     };
   }, []);
 
   const handleClickDiscard = () => {
-    getTemplateDataStorage().replaceAll(rootElement);
+    getTemplateDataStorage().replaceAll(oldRootElement);
     getEditor().showWidgetsPanel();
   };
 
@@ -187,14 +189,15 @@ const RevisionTabContent = () => {
     getEditor().showWidgetsPanel();
   };
 
-  const handleSetCurrentRevision = index => async () => {
+  const handleSetCurrentRevision = (index, item) => async () => {
     setCurrentRevision(index);
     let response = await new Resource({
-      route: `/admin/ajax/templates/${arrayRevisions[currentRevision].parent_template}/reviews/${arrayRevisions[currentRevision].id}`
+      route: `/admin/ajax/templates/${item.parent_template}/reviews/${item.id}`
     }).getAll();
     let revisionRootElement = JSON.parse(response.data[0].data);
 
     let parsedData = elementsFactory.parseData(revisionRootElement);
+    console.log(response);
     getTemplateDataStorage().replaceAll(parsedData);
   };
   return (
@@ -242,7 +245,7 @@ const RevisionTabContent = () => {
                   ? "history-panel__card-revision history-panel__card-revision--active"
                   : "history-panel__card-revision"
               }
-              onClick={handleSetCurrentRevision(index)}
+              onClick={handleSetCurrentRevision(index, item)}
               key={index}
             >
               <UserSvg className="history-panel__card-avatar" />
