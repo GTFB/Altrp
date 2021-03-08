@@ -8,6 +8,7 @@
 + Custom Headers to Form Action
 + Add Video Widget
 + Add User Preset Colors for Color & Gradient Controllers
++ Add the Interface for Setting Parameters with the Mark of Required Parameters
 
 ### 0.13.0
 + Аdd the Template Widget
