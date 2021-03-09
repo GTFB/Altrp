@@ -122,6 +122,10 @@ export function actionsControllers(element, sectionLabel = 'Actions', idPrefix =
         value: 'custom_code',
         label: 'Custom JS-Code',
       },
+      {
+        value: 'delay',
+        label: 'Delay',
+      },
     ],
   });
 
@@ -157,6 +161,18 @@ export function actionsControllers(element, sectionLabel = 'Actions', idPrefix =
     conditions: {
       type: [
         'update_current_datasources'
+      ],
+    },
+  });
+
+  actionsRepeater.addControl('milliseconds', {
+    type: CONTROLLER_NUMBER,
+    dynamic: false,
+    responsive: false,
+    label: 'Milliseconds',
+    conditions: {
+      type: [
+        'delay'
       ],
     },
   });

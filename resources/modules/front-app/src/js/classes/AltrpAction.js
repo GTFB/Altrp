@@ -15,7 +15,8 @@ import {
   replaceContentWithData,
   scrollToElement,
   setDataByPath,
-  dataToXLS
+  dataToXLS,
+  delay,
 } from "../helpers";
 import { togglePopup } from "../store/popup-trigger/actions";
 import {sendEmail} from "../helpers/sendEmail";
@@ -187,6 +188,11 @@ class AltrpAction extends AltrpModel {
       case "form":
         {
           result = await this.doActionForm();
+        }
+        break;
+      case "delay":
+        {
+          result = await this.doActionDelay();
         }
         break;
       case "email":
@@ -994,6 +1000,15 @@ class AltrpAction extends AltrpModel {
       };
     }
     return res;
+  }
+
+
+  /**
+   * Добавляем временную задержку в милисекундах
+   */
+  async doActionDelay() {
+    await delay(this.getProperty('delay') || 0);
+    return {success: true}
   }
 }
 

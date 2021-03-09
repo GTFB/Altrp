@@ -221,6 +221,7 @@
 .altrp-table-tbody,
 .altrp-table-th {
   border-collapse: separate;
+  user-select: none;
 }
 .altrp-table-td{
   //overflow: hidden;

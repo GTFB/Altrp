@@ -1726,6 +1726,9 @@ export function valueReplacement(value){
  * @return {Promise}
  */
 export function delay(ms) {
+  if(_.isString(ms)){
+    ms = Number(ms);
+  }
   return new Promise((resolve, reject) => {
     setTimeout(resolve, ms);
   });

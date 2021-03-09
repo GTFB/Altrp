@@ -442,8 +442,10 @@ Route::get('/', function () {
 
   return view('front-app', [
     'title' => 'Main',
+    'page_id' => '',
     '_frontend_route' => [],
     'preload_content' => [],
+    'page_areas' => '[]',
     'is_admin' => isAdmin(),
   ]);
 })->middleware(['web', 'installation.checker']);
