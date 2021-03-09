@@ -1007,6 +1007,7 @@
 .altrp-transpose_true{
   overflow: auto;
   & > div > div > .altrp-table{
+    width: -moz-fit-content;
     width: fit-content;
     overflow: visible;
   }

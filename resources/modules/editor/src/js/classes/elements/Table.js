@@ -871,9 +871,9 @@ class Table extends BaseElement {
      */
 
     /**
-     * Настройки для футера таблицы
+     * доп. настройки
      */
-
+    //<editor-fold description=deep_customization>
     this.startControlSection('deep_customization', {
       label: 'Deep Customization',
       hideOnEmail: true,
@@ -1190,6 +1190,8 @@ class Table extends BaseElement {
     });
 
     this.endControlSection();
+    //</editor-fold>
+
 
     this.startControlSection('group_icons', {
       label: 'Group Column, Expanded Row Icons',
@@ -3637,6 +3639,20 @@ class Table extends BaseElement {
     //</editor-fold>
 
     advancedTabControllers(this);
+
+
+    //<editor-fold description=column_responsive_settings>
+
+    this.startControlSection('column_responsive_settings', {
+      label: 'Columns Responsive Settings',
+      hideOnEmail: true,
+      tab: TAB_STYLE,
+    });
+
+
+
+    this.endControlSection();
+    //</editor-fold>
   }
 }
 
