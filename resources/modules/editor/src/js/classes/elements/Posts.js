@@ -480,10 +480,6 @@ class Table extends BaseElement {
         // colorPickedHex: '#000000',
         // type: ""
       },
-      presetColors: [
-        '#eaeaea',
-        '#9c18a8'
-      ],
       // rules: {
       //   '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
       // },
@@ -835,7 +831,6 @@ class Table extends BaseElement {
         color: "",
         colorPickedHex: "#000",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-pagination__previous{{STATE}}": "color: {{COLOR}};"
       }
@@ -950,10 +945,6 @@ class Table extends BaseElement {
       label: 'Shadow',
       default: {
       },
-      presetColors: [
-        '#eaeaea',
-        '#9c18a8'
-      ],
       rules: {
         '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
       },
@@ -1067,7 +1058,6 @@ class Table extends BaseElement {
         color: "",
         colorPickedHex: "#000",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-pagination__next{{STATE}}": "color: {{COLOR}};"
       }
@@ -1182,10 +1172,6 @@ class Table extends BaseElement {
       label: 'Shadow',
       default: {
       },
-      presetColors: [
-        '#eaeaea',
-        '#9c18a8'
-      ],
       rules: {
         '{{ELEMENT}} .altrp-pagination__next{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
       },
@@ -1451,10 +1437,6 @@ class Table extends BaseElement {
     this.addControl('pagination_count_item_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Item Count Shadow',
-      presetColors: [
-        '#eaeaea',
-        '#9c18a8'
-      ],
       rules: {
         '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
       },
@@ -1672,10 +1654,6 @@ class Table extends BaseElement {
     this.addControl('page_input_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Item Count Shadow',
-      presetColors: [
-        '#eaeaea',
-        '#9c18a8'
-      ],
       rules: {
         '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
       },
@@ -1816,10 +1794,6 @@ class Table extends BaseElement {
     this.addControl('pagination_select_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Pagination Select Shadow',
-      presetColors: [
-        '#eaeaea',
-        '#9c18a8'
-      ],
       rules: {
         '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
       },
