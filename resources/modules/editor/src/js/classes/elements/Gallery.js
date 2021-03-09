@@ -19,7 +19,7 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_NUMBER,
-  CONTROLLER_WYSIWYG, CONTROLLER_SHADOW
+  CONTROLLER_WYSIWYG, CONTROLLER_SHADOW, CONTROLLER_FILTERS
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 import {advancedTabControllers} from "../../decorators/register-controllers";
@@ -224,6 +224,166 @@ class Gallery extends BaseElement {
         'px',
       ],
       max: 100,
+      min: 0,
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('image_style_section', {
+      tab: TAB_STYLE,
+      label: 'Image',
+    });
+
+    this.addControl('border_type', {
+        type: CONTROLLER_SELECT,
+        label: 'Border type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+        rules: {
+          '{{ELEMENT}} .altrp-gallery-img{{STATE}}': 'border-style: {{VALUE}};',
+        },
+      }
+    );
+
+    this.addControl(
+      'border_width', {
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border width',
+        default: {
+          bind: true
+        },
+        units: [
+          'px',
+          '%',
+          'vh',
+        ],
+        rules: {
+          '{{ELEMENT}} .altrp-gallery-img{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        },
+      }
+    );
+
+    this.addControl('border_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Border color',
+        rules: {
+          '{{ELEMENT}} .altrp-gallery-img{{STATE}}': 'border-color: {{COLOR}};',
+        },
+      }
+    );
+
+    this.addControl('border_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border radius',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-gallery-img{{STATE}}': [
+          'border-top-left-radius: {{TOP}}{{UNIT}}',
+          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+        ]
+      }
+    });
+
+    // this.addControl('filters', {
+    //   type: CONTROLLER_FILTERS,
+    //   label: 'Filters',
+    //   default: {
+    //     blur: 0,
+    //     brightness: 100,
+    //     contrast: 100,
+    //     saturate: 100,
+    //     hue: 0,
+    //   },
+    //   rules: {
+    //     '{{ELEMENT}} .altrp-gallery-img{{STATE}}': [
+    //       'filter: blur({{BLUR}}px)  brightness({{BRIGHTNESS}}%) contrast({{CONTRAST}}%) saturate({{SATURATE}}%) hue-rotate({{HUE}}deg);'
+    //     ],
+    //   },
+    // });
+
+    this.addControl('image_hover_animation', {
+        type: CONTROLLER_SELECT,
+        label: 'Hover animation',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'zoomIn',
+            'label': 'Zoom in',
+          },
+          {
+            'value': 'zoomOut',
+            'label': 'Zoom out',
+          },
+          {
+            'value': 'moveLeft',
+            'label': 'Move left',
+          },
+          {
+            'value': 'moveRight',
+            'label': 'Move Right',
+          },
+          {
+            'value': 'moveUp',
+            'label': 'Move Up',
+          },
+          {
+            'value': 'moveDown',
+            'label': 'Move down',
+          },
+        ],
+      }
+    );
+
+    this.addControl('image_transition', {
+      type: CONTROLLER_SLIDER,
+      label: 'Animation duration (ms)',
+      default: {
+        size: 800,
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 3000,
       min: 0,
     });
 

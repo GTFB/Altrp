@@ -178,16 +178,18 @@ class Select2Controller extends Component {
         padding: 0
       }),
 
-      control: state => ({
-        display: "flex",
-        // height: 28,
-        borderRadius: 3,
-        borderWidth: 1,
-        borderStyle: "solid",
-        borderColor: "#E5E6EA",
-        color: "#8E94AA",
-        fontSize: 13
-      }),
+      control: () => {
+        return ({
+          display: "flex",
+          // height: 28,
+          borderRadius: 3,
+          borderWidth: 1,
+          borderStyle: "solid",
+          borderColor: "#E5E6EA",
+          color: "#8E94AA",
+          fontSize: 13,
+        })
+      },
 
       placeholder: () => ({
         color: "#8E94AA",
@@ -196,7 +198,7 @@ class Select2Controller extends Component {
       }),
 
       indicatorSeparator: () => ({
-        display: "none !important"
+        // display: "none !important"
       }),
 
       singleValue: () => ({
