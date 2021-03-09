@@ -3,6 +3,7 @@ import ChevronIcon from '../../svgs/chevron.svg'
 import { connect } from "react-redux";
 import { getCurrentElement, getCurrentTab, getElementState } from "../store/store";
 import { setActiveSection } from "../store/setting-section/actions";
+import {getTemplateType} from "../helpers";
 
 class SettingSection extends Component {
   constructor(props) {
@@ -98,6 +99,12 @@ class SettingSection extends Component {
       activeSectionID = this.props.settingSection[currentElementName][currentTab];
     }
     let controllers = this.props.controls || [];
+    if(this.props.hideOnEmail && getTemplateType() === 'email'){
+      return '';
+    }
+    controllers = controllers.filter(controller => {
+      return ! (controller.hideOnEmail && getTemplateType() === 'email');
+    });
     return (
       <div  className={"settings-section " + (this.props.sectionID === activeSectionID ? 'open' : '')}>
         <div className="settings-section__title d-flex" onClick={this.toggle}>

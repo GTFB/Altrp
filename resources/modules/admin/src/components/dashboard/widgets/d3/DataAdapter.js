@@ -76,7 +76,12 @@ class DataAdapter {
         .filter(item => {
           const value =
             item.split("=")[1] !== "undefined" ? item.split("=")[1] : "";
-          return typeof value !== "undefined" && value !== "" && value !== null;
+          return (
+            typeof value !== "undefined" &&
+            value !== "" &&
+            value !== null &&
+            value !== "null"
+          );
         })
         .join("&");
     }
@@ -163,7 +168,10 @@ class DataAdapter {
         return {
           key: keyIsDate ? keyFormatted : currentKey,
           value: Number(_.get(d, dataKey)),
-          [keyFormatted]: Number(_.get(d, dataKey))
+          [keyFormatted]: Number(_.get(d, dataKey)),
+          label: keyIsDate
+            ? `${keyFormatted} (${Number(_.get(d, dataKey))})`
+            : `${currentKey} (${Number(_.get(d, dataKey))})`
         };
       }) || []
     );

@@ -27,13 +27,17 @@ _ide_helper.php
 # Altrp User Activity
 /database/altrp_migrations
 /app/AltrpModels
+/app/Events/AltrpEvents
 /app/Http/Controllers/AltrpControllers
 /app/Repositories/AltrpRepositories
 /app/Http/Requests/AltrpRequests
 /app/Providers/AltrpRepositoryServiceProvider.php
+/app/Observers/AltrpObservers
+/app/Providers/AltrpProviders
 /routes/AltrpRoutes.php
 /routes/AltrpApiRoutes.php
 /routes/AltrpCustomRoutes.php
+/routes/AltrpChannels.php
 /out
 /app/Http/Requests/AltrpRequests
 /app/Plugins/*/

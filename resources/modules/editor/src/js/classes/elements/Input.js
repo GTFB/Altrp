@@ -119,6 +119,10 @@ class Input extends BaseElement {
           label: "Checkbox"
         },
         {
+          value: "accept",
+          label: "Accept"
+        },
+        {
           value: "textarea",
           label: "Textarea"
         },
@@ -127,6 +131,22 @@ class Input extends BaseElement {
           label: "wysiwyg"
         }
       ]
+    });
+
+    this.addControl("accept_checked", {
+      type: CONTROLLER_TEXT,
+      label: "Accept Checked Value",
+      conditions: {
+        content_type: ["accept",]
+      },
+    });
+
+    this.addControl("accept_unchecked", {
+      type: CONTROLLER_TEXT,
+      label: "Accept Unchecked Value",
+      conditions: {
+        content_type: ["accept",]
+      },
     });
 
     this.addControl("invalid_email_message", {
@@ -140,19 +160,19 @@ class Input extends BaseElement {
       label: "Resize",
       options: [
         {
-          label: "both",
+          label: "Both",
           value: "both"
         },
         {
-          label: "none",
+          label: "None",
           value: "none"
         },
         {
-          label: "horizontal",
+          label: "Horizontal",
           value: "horizontal"
         },
         {
-          label: "vertical",
+          label: "Vertical",
           value: "vertical"
         }
       ],
@@ -370,6 +390,10 @@ class Input extends BaseElement {
         {
           value: "left",
           label: "Left"
+        },
+        {
+          value: "right",
+          label: "Right"
         },
         {
           value: "absolute",
@@ -636,7 +660,9 @@ class Input extends BaseElement {
 
     this.endControlSection();
 
-    actionsControllers(this);
+    actionsControllers(this, 'Blur Actions');
+    
+    actionsControllers(this, 'Focus Actions', 'focus_');
 
     // this.startControlSection('logic_section', {
     //   tab: TAB_CONTENT,
@@ -773,7 +799,6 @@ class Input extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-field-label{{STATE}}": "color: {{COLOR}};"
       }
@@ -849,7 +874,7 @@ class Input extends BaseElement {
         unit: "%",
         size: null
       },
-      units: ["%"],
+      units: ["%", "px", "vw",],
       max: 100,
       min: 0,
       rules: {
@@ -993,7 +1018,6 @@ class Input extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-field-select2__single-value{{STATE}}":
           "color : {{COLOR}};",
@@ -1007,6 +1031,17 @@ class Input extends BaseElement {
     this.startControlSection("position_section", {
       tab: TAB_STYLE,
       label: "Position"
+    });
+
+    this.addControl("field_width", {
+      type: CONTROLLER_SLIDER,
+      label: "Width",
+      max: 500,
+      min: 0,
+      units: ["px", "%", "vw"],
+      rules: {
+        "{{ELEMENT}} .altrp-input-wrapper": "width: {{SIZE}}{{UNIT}}"
+      }
     });
 
     this.addControl("placeholder_and_value_alignment_position_section", {
@@ -1113,7 +1148,6 @@ class Input extends BaseElement {
     this.addControl("placeholder_style_font_color", {
       type: CONTROLLER_COLOR,
       label: "font color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-field::placeholder{{STATE}}": "color: {{COLOR}};",
         "{{ELEMENT}} .altrp-field-select2__placeholder{{STATE}}":
@@ -1158,7 +1192,6 @@ class Input extends BaseElement {
     this.addControl("required_style_font_color", {
       type: CONTROLLER_COLOR,
       label: "font color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-field-label--required::after{{STATE}}":
           "color: {{COLOR}};"
@@ -1359,7 +1392,6 @@ class Input extends BaseElement {
         colorPickedHex: "#000000",
         type: " "
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-field{{STATE}}":
           "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};",
@@ -1398,7 +1430,7 @@ class Input extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("radio-_checkbox_styles", {
+    this.startControlSection("radio_checkbox_styles", {
       tab: TAB_STYLE,
       label: "Radio Checkbox Styles"
     });
@@ -1471,7 +1503,6 @@ class Input extends BaseElement {
     this.addControl("mismatch_message_font_color", {
       type: CONTROLLER_COLOR,
       label: "Font Color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .mask-mismatch-message{{STATE}}": "color: {{COLOR}};"
       }

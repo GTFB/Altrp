@@ -7,7 +7,12 @@ class ImportDiagram extends Component {
 
   render() {
     return (
-      <>
+      <div
+        className={this.props.className}
+        style={{
+          display: "inline-block"
+        }}
+      >
         <button
           style={{
             margin: "5px 5px 5px 5px"
@@ -21,7 +26,7 @@ class ImportDiagram extends Component {
           onChange={e => this.props.getFile(e)}
           accept="application/json"
         />
-      </>
+      </div>
     );
   }
 }

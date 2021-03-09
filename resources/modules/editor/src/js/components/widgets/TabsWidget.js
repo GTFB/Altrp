@@ -13,8 +13,11 @@ class TabsWidget extends Component {
       activeTab: 0
     };
     props.element.component = this;
-    if(window.elementDecorator){
+    if (window.elementDecorator) {
       window.elementDecorator(this);
+    }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
     }
   }
 

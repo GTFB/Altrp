@@ -10,7 +10,7 @@ function componentDidUpdate(prevProps, prevState) {
     if(this.state.value !== elementValue){
       if(elementValue === null){
         elementValue = this.getDefaultValue();
-        this.props.currentElement.setSettingValue(this.props.controlId, elementValue);
+        this.props.currentElement.setSettingValue(this.props.controlId, elementValue, false);
         this.setState({
           value: elementValue
         });
@@ -31,6 +31,13 @@ function componentDidUpdate(prevProps, prevState) {
       }
     }
   } else {
+  }
+  if(this.props.historyStore !== prevProps.historyStore) {
+    // console.log('COMPONENT DID UPDATE')
+    let value = this.getSettings(this.props.controlId);
+    this.setState({
+      value
+    });
   }
   /**
    * Если в самом компоненте контроллера объвлен метод _componentDidUpdate, то его тоже вызовем
@@ -249,5 +256,7 @@ export function controllerMapStateToProps(state){
     currentState: state.currentState,
     currentScreen: state.currentScreen,
     controllerValue: state.controllerValue,
+    historyStore: state.historyStore,
+    presetColors: state.editorMetas.preset_colors,
   };
 }

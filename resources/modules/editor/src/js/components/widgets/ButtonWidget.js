@@ -10,7 +10,6 @@ import {
   renderAssetIcon,
   scrollToElement
 } from "../../../../../front-app/src/js/helpers";
-import { togglePopup } from "../../../../../front-app/src/js/store/popup-trigger/actions";
 import { toggleTrigger } from "../../../../../front-app/src/js/store/hide-triggers/actions";
 
 class ButtonWidget extends Component {
@@ -23,6 +22,9 @@ class ButtonWidget extends Component {
     props.element.component = this;
     if (window.elementDecorator) {
       window.elementDecorator(this);
+    }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
     }
     this.onClick = this.onClick.bind(this);
   }
@@ -44,8 +46,8 @@ class ButtonWidget extends Component {
    * @return {Promise<void>}
    */
   async onClick(e) {
+    e.persist();
     if (isEditor()) {
-      console.log(this.state.settings);
       e.preventDefault();
     } else if (this.props.element.getSettings("actions", []).length) {
       e.preventDefault();
@@ -61,7 +63,8 @@ class ButtonWidget extends Component {
         this.props.element.getSettings("actions", []),
         this.props.element
       );
-    } else if (this.props.element.getForms().length) {
+    }
+    if (this.props.element.getForms().length) {
       this.setState(state => ({ ...state, pending: true }));
       this.props.element.getForms().forEach(
         /**
@@ -98,17 +101,19 @@ class ButtonWidget extends Component {
           }
         }
       );
-    } else if (
-      this.props.element.getSettings("popup_trigger_type") &&
-      this.props.element.getSettings("popup_id")
-    ) {
-      this.props.appStore.dispatch(
-        togglePopup(this.props.element.getSettings("popup_id"))
-      );
-      /**
-       * Проверим надо ли по ID скроллить к элементу
-       */
-    } else if (
+    }
+    // else      if (
+    //   this.props.element.getSettings("popup_trigger_type") &&
+    //   this.props.element.getSettings("popup_id")
+    // ) {
+    //   this.props.appStore.dispatch(
+    //     togglePopup(this.props.element.getSettings("popup_id"))
+    //   );
+    //   /**
+    //    * Проверим надо ли по ID скроллить к элементу
+    //    */
+    // }
+    else if (
       e.target.href &&
       e.target.href
         .replace(window.location.origin + window.location.pathname, "")
@@ -166,7 +171,7 @@ class ButtonWidget extends Component {
       "background_image",
       {}
     );
-
+      
     let modelData = this.props.element.hasCardModel()
       ? this.props.element.getCardModel().getData()
       : this.props.currentModel.getData();
@@ -177,7 +182,6 @@ class ButtonWidget extends Component {
     }
 
     let buttonText = this.getContent("button_text") || "";
-
     let buttonMedia = { ...this.state.settings.button_icon };
     if (this.state.pending) {
       classes += " altrp-disabled";

@@ -9,7 +9,7 @@
     window.pageStorage = {};
     window.ALTRP_DEBUG = {!! json_encode( ! ! get_altrp_setting( 'altrp_debug', false ) ) !!};
 
-    var page_id = {{$page_id}};
+    var page_id = {{ $page_id }};
     var page_areas = {!! $page_areas !!};
 
     if (typeof page_id !== 'undefined' && typeof page_areas !== 'undefined') {

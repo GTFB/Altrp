@@ -9,7 +9,6 @@ import {
   topOrBottomHover
 } from "../helpers";
 import EditIcon from "../../svgs/edit.svg";
-import DeleteIcon from "../../svgs/delete.svg";
 import DotsIcon from "../../svgs/dots_section.svg";
 import ColumnIcon from "../../svgs/columns.svg";
 import AddIcon from "../../svgs/add.svg";
@@ -17,11 +16,8 @@ import DuplicateIcon from "../../svgs/duplicate.svg";
 import CloseIcon from "../../svgs/close.svg";
 import store from "../store/store";
 import { START_DRAG, startDrag } from "../store/element-drag/actions";
-import { setCurrentElement } from "../store/current-element/actions";
-import { changeWidthColumns } from "../store/column-width/actions";
 import { contextMenu } from "react-contexify/lib/index";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
-import { TelephoneMinus } from "react-bootstrap-icons";
 import { thresholdSturges } from "d3";
 import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
 
@@ -131,10 +127,12 @@ class ElementWrapper extends Component {
             }
             break;
         }
+        
       }
       if (this.props.element.getType() === "column") {
         this.props.element.appendChild(newElement);
       }
+
       editorSetCurrentElement(newElement);
     }
     /**
@@ -253,6 +251,13 @@ class ElementWrapper extends Component {
    * @param {{}} nextState
    */
   shouldComponentUpdate(nextProps, nextState) {
+    if(this.state.children) {
+      if(this.state.children.component) {
+        if(this.state.children.component.settings.button_text) {
+          console.log(this.state.children.component.settings.button_text)
+        }
+      }
+    }
     /**
      * не обновляем элемент, если изменился контроллер не текущего элемента
      */
@@ -323,12 +328,17 @@ class ElementWrapper extends Component {
     if (isFixed) {
       classes += " fixed-section";
     }
+    const styles = {
 
+    };
+    if(this.props.element.getSettings('layout_column_width')){
+      styles.width = this.props.element.getSettings('layout_column_width') + '%';
+    }
     return elementHideTrigger &&
       this.props.hideTriggers.includes(elementHideTrigger) ? null : (
       <div
         className={classes}
-        style={this.props.width}
+        style={styles}
         ref={this.wrapper}
         onContextMenu={this.handleContext}
         onDragOver={this.onDragOver}
@@ -372,7 +382,6 @@ class ElementWrapper extends Component {
           </div>
         </div>
         {errorContent || React.createElement(this.props.component, {
-          ref: this.actionRef,
           element: this.props.element,
           children: this.state.children,
           currentModel: this.props.currentModel,

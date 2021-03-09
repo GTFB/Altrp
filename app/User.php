@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Altrp\Notification;
 use App\Traits\Searchable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -9,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\LaratrustUserTrait;
 
 use Laravel\Passport\HasApiTokens;
+use Modules\Oauth2\Entities\SocialAccount;
 
 class User extends Authenticatable
 {
@@ -29,6 +31,7 @@ class User extends Authenticatable
       'email',
       'password',
       'last_name',
+      'notice_data'
     ];
 
     /**
@@ -49,8 +52,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * Always with relations
+     * @var string[]
+     */
+    protected $with = ['notice_settings', 'social_accounts',];
+
 
     protected $appends = ['full_name'];
+
 
     /**
      * Получение данных о пользователе
@@ -91,5 +101,24 @@ class User extends Authenticatable
             }
         }
         return false;
+    }
+
+    public function notice_settings()
+    {
+        return $this->morphMany('App\Altrp\NoticeSetting', 'noticed', 'noticed_type', 'noticed_id');
+    }
+
+    /**
+     * Get the entity's notifications.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'notifiable')->orderBy('created_at', 'desc');
+    }
+    public function social_accounts()
+    {
+        return $this->hasMany(SocialAccount::class, 'user_id');
     }
 }

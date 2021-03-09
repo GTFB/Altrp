@@ -41,6 +41,11 @@ class DimensionsController extends Component {
     return '';
   }
 
+  onKeyDown = (event) => {
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
+  }
+
   changeValue(e) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     if (value.bind === true) {
@@ -140,6 +145,7 @@ class DimensionsController extends Component {
       <div className="control-group">
         <div className="control-dimensions-container">
           <input className="control-field control-field-dimensions control-field-top-l"
+            onKeyDown={this.onKeyDown}
             onChange={this.changeValue}
             data-active="top"
 

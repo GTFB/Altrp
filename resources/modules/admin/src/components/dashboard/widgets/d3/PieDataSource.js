@@ -196,12 +196,12 @@ class PieDataSource extends Component {
             enableSliceLabels={this.state.settings?.enableSliceLabels}
             enableRadialLabels={this.state.settings?.enableRadialLabels}
             tooltip={datum => (
-                <TooltipPie
-                  enable={this.state.settings?.enableCustomTooltip}
-                  datum={datum}
-                  widgetID={this.props.widgetID}
-                ></TooltipPie>
-              )}
+              <TooltipPie
+                enable={this.state.settings?.enableCustomTooltip}
+                datum={datum}
+                widgetID={this.props.widgetID}
+              ></TooltipPie>
+            )}
             legends={
               this.state.settings?.enableLegend
                 ? [

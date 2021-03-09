@@ -46,6 +46,10 @@ class AdminBar extends React.Component {
     window.open(`/admin/pages/edit/${this.props.idPage}`);
   }
 
+  openPageAdmin() {
+    window.open('/admin/dashboard');
+  } 
+
   handleInput(event) {
     let value = event.target.value;
     this.setState(state => ({
@@ -55,47 +59,8 @@ class AdminBar extends React.Component {
   }
 
   renderResultSearch(resultSearch = null) {
-    console.log(JSON.stringify(getDataByPath(this.state.valueInput), null, '\t'))
+    console.log(getDataByPath(this.state.valueInput));
     return JSON.stringify(getDataByPath(this.state.valueInput), null, '\t');
-    // if (Array.isArray(resultSearch) && resultSearch.length !== 0) {
-    //   return (
-    //     <React.Fragment>
-    //       {resultSearch.map(item => (
-    //         <div className="admin-bar__search-value">
-    //           {this.renderResultSearch(item)}
-    //         </div>
-    //       ))}
-    //     </React.Fragment>
-    //   )
-
-    // } else if (typeof resultSearch === "object" &&
-    //   resultSearch !== null &&
-    //   Object.entries(resultSearch).length !== 0 ) {
-    //   return (
-    //     <React.Fragment>
-    //       {Object.keys(resultSearch).map(item=> (
-    //         <div className="admin-bar__search-item">
-    //           <div className="admin-bar__search-key">
-    //             {item}:
-    //           </div>
-              
-    //           {this.renderResultSearch(resultSearch[item])}
-    //         </div>
-    //       ))}
-    //     </React.Fragment>
-    //   )
-
-    // } else if (typeof resultSearch === "string" ||
-    //   typeof resultSearch === "number") {
-    //   return (
-    //     <div className="admin-bar__search-value">
-    //       {resultSearch}
-    //     </div>
-    //   )
-
-    // } else {
-    //   return "";
-    // }
   }
 
   handleOutsideClick(event) {
@@ -130,6 +95,9 @@ class AdminBar extends React.Component {
     return (
       <div className="admin-bar">
         <div className="admin-bar__tools">
+          <div className="admin-bar__link" onClick={this.openPageAdmin}>
+            Admin
+          </div>
           <div className="admin-bar__tool">
             <span onClick={this.toggleVisiblePopupTemplate}>
               {iconsManager.renderIcon('admin-bar1', {className: "admin-bar__tool-svg"})} Edit-Template
@@ -151,12 +119,15 @@ class AdminBar extends React.Component {
                         </div>
                       </div>
                     )
-                  else 
-                    return (
-                      <div className="admin-bar__popup-template-item" key={`template-${index}`} onClick={this.openTemplate(item.template.id)}>
-                        {item.template.name} 
-                      </div>
-                    )
+                  else {
+                    if(item.template.name)
+                      return (
+                        <div className="admin-bar__popup-template-item" key={`template-${index}`} onClick={this.openTemplate(item.template.id)}>
+                          {item.template.name}
+                        </div>
+                      )
+                  }
+                    
                 })}
               </div>
             )}

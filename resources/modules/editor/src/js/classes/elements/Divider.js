@@ -106,7 +106,7 @@ class Divider extends BaseElement {
       units: [
         'px',
         '%',
-        'vh',
+        'vw',
       ],
       rules: {
         "{{ELEMENT}} .altrp-divider-separator{{STATE}}": "width: {{SIZE}}{{UNIT}}",
@@ -255,7 +255,6 @@ class Divider extends BaseElement {
         color: "rgb(0,0,0)",
         colorPickedHex: "#000000",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
     });
 
     this.addControl("divider_style_weight", {
@@ -318,7 +317,6 @@ class Divider extends BaseElement {
         color: "rgb(0,0,0)",
         colorPickedHex: "#000000",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-divider-label{{STATE}}": "color: {{COLOR}}"
       }

@@ -2,9 +2,7 @@ import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { SketchPicker } from "react-color"
-import DynamicIcon from '../../../svgs/dynamic.svg'
 import ContentIcon from '../../../svgs/content.svg'
-import HistoryIcon from '../../../svgs/history.svg'
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
 

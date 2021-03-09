@@ -1,5 +1,5 @@
 import {controllerMapStateToProps} from "../../decorators/controller";
-import React, { Component } from "react";
+import React, {Component} from "react";
 import { connect } from "react-redux";
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
@@ -27,6 +27,7 @@ class SliderController extends Component {
       step: this.props.step || 1
     };
   }
+
   changeUnit(e) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     let unit = e.target.dataset.unit;
@@ -58,6 +59,7 @@ class SliderController extends Component {
     });
     // console.log(e.target.value)
   }
+
   render() {
     if (this.state.show === false) {
       return '';

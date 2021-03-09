@@ -601,7 +601,7 @@ class Heading extends BaseElement {
       },
       type: CONTROLLER_TEXTAREA,
       label: 'Rotating',
-      default: "Amazing~and~supser"
+      default: "Amazing\nBigger\nFaster"
     });
 
     this.addControl('text_after_animating', {
@@ -713,7 +713,6 @@ class Heading extends BaseElement {
         color: "",
         colorPickedHex: "#000",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-heading{{STATE}}": "color: {{COLOR}};"
       }
@@ -757,10 +756,6 @@ class Heading extends BaseElement {
           color: 'rgb(0, 0, 0)',
           colorPickedHex: '#000000',
         },
-        presetColors: [
-          '#eaeaea',
-          '#9c18a8'
-        ],
         rules: {
           '{{ELEMENT}} .altrp-heading{{STATE}}': 'text-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
         },
@@ -859,7 +854,6 @@ class Heading extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-heading{{STATE}}": "background-color: {{COLOR}};"
       }

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import ErrorBoundary from "./ErrorBoundary";
 import DataAdapter from "./DataAdapter";
 import invert from "invert-color";
-import TooltipBar from "./TooltipBar"
+import TooltipBar from "./TooltipBar";
 import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
 
 const regagroScheme = _.find(Schemes, { value: "regagro" }).colors.reverse();
@@ -73,6 +73,7 @@ class BarDataSource extends Component {
         this.props.formsStore.form_data
       )
     ) {
+      //Обновление данные при смене глобальных параметров
       this.setState(state => ({
         ...state,
         countRequest: 0
@@ -163,11 +164,11 @@ class BarDataSource extends Component {
               }
               theme={{
                 tooltip: {
-                    container: {
-                        padding: '0',
-                    },
-                },
-            }}
+                  container: {
+                    padding: "0"
+                  }
+                }
+              }}
               margin={{
                 top: this.state.settings?.margin?.top || 40,
                 right: this.state.settings?.margin?.right || 80,
