@@ -13,8 +13,11 @@ class TableWidget extends Component {
       TableComponent: ()=><div children="Loading..."/>
     };
     props.element.component = this;
-    if(window.elementDecorator){
+    if (window.elementDecorator) {
       window.elementDecorator(this);
+    }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
     }
     this.scrollbar = React.createRef();
   }

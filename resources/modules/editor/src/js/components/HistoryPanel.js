@@ -1,7 +1,12 @@
 import React, { Component } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import ControllerHistory from "../classes/ControllerHistory";
-import CheckIcon from "../../svgs/check.svg";
+import { useSelector } from "react-redux";
+import { iconsManager } from "../../../../front-app/src/js/helpers";
+import { getEditor, getTemplateDataStorage, getFactory } from "../helpers";
+import Resource from "../classes/Resource";
+import { setActiveHistoryStore, addHistoryStoreItem } from "../store/history-store/actions";
+
+import UserSvg from "../../../../admin/src/svgs/user.svg";
+import StartFilled from "../../../../admin/src/svgs/start-filled.svg";
 
 class HistoryPanel extends Component {
   constructor(props) {
@@ -70,23 +75,40 @@ const ActionsTabContent = () => {
 
   const handlerHistory = index => {
     return () => {
-      if(current > index) {
+      if (current > index) {
         for (let i = 0; i < current - index; i++) {
           controllerHistory.undo();
         }
-      } else if(current < index) {
+      } else if (current < index) {
         for (let i = 0; i < index - current; i++) {
           controllerHistory.redo();
         }
       }
-    }
+    };
   };
 
   return (
-    <div className="history-panel__actions-tab-content">
+    <div className="history-panel__content">
+      <div
+        key={-1}
+        className={
+          current === -1
+            ? "history-panel__restore-item history-panel__restore-item--active"
+            : "history-panel__restore-item"
+        }
+        onClick={handlerHistory(-1)}
+      >
+        <span className="history-panel__restore-item-title">start edit</span>
+        {current === -1
+          ? iconsManager().renderIcon("check", {
+              style: { width: 20, height: 20 },
+              className: "history-panel__restore-item-icon"
+            })
+          : ""}
+      </div>
       {historyStore.map((item, index) => {
         let title = "";
-        if (item.data) {
+        if (item.data && item.data.element) {
           title = item.data.element.getTitle();
         }
 
@@ -101,6 +123,9 @@ const ActionsTabContent = () => {
           case "DELETE":
             type = "Removed";
             break;
+          case "REVISION":
+            title = "Revision";
+            break  
         }
 
         let restoreItemClasses = "history-panel__restore-item ";
@@ -109,17 +134,19 @@ const ActionsTabContent = () => {
         }
 
         return (
-          <div key={index} className={restoreItemClasses} onClick={handlerHistory(index)}>
+          <div
+            key={index}
+            className={restoreItemClasses}
+            onClick={handlerHistory(index)}
+          >
             <span className="history-panel__restore-item-title">{title}</span>
             <span className="history-panel__restore-item-type">{type}</span>
-            {current === index ? (
-              <CheckIcon
-                className="history-panel__restore-item-icon"
-                style={{ width: 20, height: 20 }}
-              />
-            ) : (
-              ""
-            )}
+            {current === index
+              ? iconsManager().renderIcon("check", {
+                  style: { width: 20, height: 20 },
+                  className: "history-panel__restore-item-icon"
+                })
+              : ""}
           </div>
         );
       })}
@@ -131,7 +158,116 @@ const ActionsTabContent = () => {
 };
 
 const RevisionTabContent = () => {
-  return <div>RevisionTabContent</div>;
+  const [arrayRevisions, setArrayRevisions] = React.useState([]);
+  const [currentRevision, setCurrentRevision] = React.useState(-1);
+  const [oldRootElement, setOldRootElement] = React.useState();
+
+  React.useEffect(() => {
+    setOldRootElement(_.cloneDeep(getTemplateDataStorage().rootElement));
+    let templateId = appStore.getState().templateData.id;
+
+    const fetchRevisions = async () => {
+      let arrayRevisions = await new Resource({
+        route: `/admin/ajax/templates/${templateId}/reviews`
+      }).getAll();
+      setArrayRevisions(arrayRevisions.reverse());
+    };
+    fetchRevisions(0);
+    window.parent.appStore.dispatch(setActiveHistoryStore(false));
+    return () => {
+      window.parent.appStore.dispatch(setActiveHistoryStore(true));
+    };
+  }, []);
+
+  const handleClickDiscard = () => {
+    getTemplateDataStorage().replaceAll(oldRootElement);
+    getEditor().showWidgetsPanel();
+  };
+
+  const handleClickApply = () => {
+    window.parent.appStore.dispatch(
+      addHistoryStoreItem("REVISION", {
+        old: oldRootElement,
+        new: _.cloneDeep(getTemplateDataStorage().rootElement)
+      })
+    );
+    getEditor().showWidgetsPanel();
+  };
+
+  const handleSetCurrentRevision = (index, item) => async () => {
+    setCurrentRevision(index);
+    let response = await new Resource({
+      route: `/admin/ajax/templates/${item.parent_template}/reviews/${item.id}`
+    }).getAll();
+    let revisionRootElement = JSON.parse(response.data[0].data);
+
+    let parsedData = getFactory().parseData(revisionRootElement);
+    getTemplateDataStorage().replaceAll(parsedData);
+  };
+  return (
+    <React.Fragment>
+      <div className="history-panel__revision-actions">
+        <div className="history-panel__discard" onClick={handleClickDiscard}>
+          {iconsManager().renderIcon("deleteOne", {
+            style: { width: 14, height: 14 },
+            className: "history-panel__discard-icon"
+          })}
+          DISCARD
+        </div>
+        <div className="history-panel__apply" onClick={handleClickApply}>
+          APPLY
+        </div>
+      </div>
+      <div className="history-panel__title">Revisions</div>
+      <div className="history-panel__content">
+        {arrayRevisions.map((item, index) => {
+          let secondsAgo = (Date.now() - Date.parse(item.updated_at)) / 1000;
+          let dateString;
+          if (secondsAgo < 100) {
+            dateString = `${secondsAgo} seconds ago`;
+          } else if (secondsAgo < 6000) {
+            dateString = `${Math.floor(secondsAgo / 100)} minutes ago`;
+          } else if (secondsAgo < 144000) {
+            dateString = `${Math.floor(secondsAgo / 6000)} hours ago`;
+          } else if (secondsAgo < 4320000) {
+            dateString = `${Math.floor(secondsAgo / 144000)} days ago`;
+          } else if (secondsAgo < 51840000) {
+            dateString = `${Math.floor(secondsAgo / 4320000)} months ago`;
+          } else {
+            dateString = `${Math.floor(secondsAgo / 51840000)} years ago`;
+          }
+          let date = new Date(item.updated_at);
+          dateString += ` (${date.toLocaleString("en", {
+            month: "short"
+          })} ${date.getDate()} @ ${date.getHours()}:${
+            date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`
+          })`;
+          return (
+            <div
+              className={
+                index === currentRevision
+                  ? "history-panel__card-revision history-panel__card-revision--active"
+                  : "history-panel__card-revision"
+              }
+              onClick={handleSetCurrentRevision(index, item)}
+              key={index}
+            >
+              <UserSvg className="history-panel__card-avatar" />
+              <div className="history-panel__card-content">
+                <div className="history-panel__card-time">{dateString}</div>
+                <div className="history-panel__card-author">
+                  Revision by {item.author}
+                </div>
+              </div>
+              {index === currentRevision && (
+                <StartFilled className="history-panel__card-icon" />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </React.Fragment>
+  );
 };
 
 export default HistoryPanel;

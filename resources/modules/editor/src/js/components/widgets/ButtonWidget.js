@@ -10,7 +10,6 @@ import {
   renderAssetIcon,
   scrollToElement
 } from "../../../../../front-app/src/js/helpers";
-import { togglePopup } from "../../../../../front-app/src/js/store/popup-trigger/actions";
 import { toggleTrigger } from "../../../../../front-app/src/js/store/hide-triggers/actions";
 
 class ButtonWidget extends Component {
@@ -23,6 +22,9 @@ class ButtonWidget extends Component {
     props.element.component = this;
     if (window.elementDecorator) {
       window.elementDecorator(this);
+    }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
     }
     this.onClick = this.onClick.bind(this);
   }

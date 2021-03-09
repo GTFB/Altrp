@@ -15,14 +15,14 @@ class MediaType extends Migration
   public function up()
   {
     //
-    Schema::table( 'media', function ( Blueprint $table ){
-      $table->string( 'type', 50 )->nullable()->index();
-    } );
+    Schema::table('altrp_media', function (Blueprint $table) {
+      $table->string('type', 50)->nullable()->index();
+    });
 
-    Media::all()->each( function( Media $media ){
+    Media::all()->each(function (Media $media) {
       $media->type = 'image';
       $media->save();
-    } );
+    });
   }
 
   /**
@@ -33,8 +33,8 @@ class MediaType extends Migration
   public function down()
   {
     //
-    Schema::table( 'altrp_media', function ( Blueprint $table ){
-      $table->dropColumn( 'type' );
-    } );
+    Schema::table('altrp_media', function (Blueprint $table) {
+      $table->dropColumn('type');
+    });
   }
 }

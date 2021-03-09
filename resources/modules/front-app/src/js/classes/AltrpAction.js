@@ -15,7 +15,8 @@ import {
   replaceContentWithData,
   scrollToElement,
   setDataByPath,
-  dataToXLS
+  dataToXLS,
+  delay,
 } from "../helpers";
 import { togglePopup } from "../store/popup-trigger/actions";
 import {sendEmail} from "../helpers/sendEmail";
@@ -189,6 +190,11 @@ class AltrpAction extends AltrpModel {
           result = await this.doActionForm();
         }
         break;
+      case "delay":
+        {
+          result = await this.doActionDelay();
+        }
+        break;
       case "email":
         {
           result = await this.doActionEmail();
@@ -356,17 +362,12 @@ class AltrpAction extends AltrpModel {
         );
         data = _.assign(form.getData(), data);
         let bulkRequests = bulk.map(async (item, idx) => {
-          // return   ()=>{
           if (this.getProperty("data")) {
             data = parseParamsFromString(
               this.getProperty("data"),
               getAppContext(item),
               true
             );
-            // if (!_.isEmpty(data)) {
-            //   return form.submit("", "", data);
-            // }
-            // return { success: true };
           }
           let url = this.getProperty("form_url");
           url = replaceContentWithData(url, item);
@@ -379,7 +380,6 @@ class AltrpAction extends AltrpModel {
             }
           );
           return await form.submit("", "", data, customHeaders);
-          // }
         });
         try {
           let res = await Promise.all(bulkRequests);
@@ -938,10 +938,16 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionUpdateCurrentDatasources() {
+    let aliases = this.getProperty('aliases') || '';
+    aliases = aliases.split(',').map(alias=>alias.trim()).filter(alias=>alias);
+    const allDataSources = window.dataStorageUpdater.getProperty('currentDataSources');
+    const dataSourcesToUpdate = allDataSources.filter(dataSource=>{
+      return aliases.indexOf(dataSource.getProperty('alias')) !== -1;
+    });
     /**
      * @type {DataStorageUpdater}
      */
-    await window.dataStorageUpdater.updateCurrent();
+    await window.dataStorageUpdater.updateCurrent(dataSourcesToUpdate, false);
     return { success: true };
   }
   /**
@@ -981,7 +987,12 @@ class AltrpAction extends AltrpModel {
     }
     let res = {success: false};
     try{
-      res = await sendEmail(templateGUID);
+      res = await sendEmail(templateGUID,
+          this.getReplacedProperty('subject'),
+          this.getReplacedProperty('from'),
+          this.getReplacedProperty('to'),
+          this.getReplacedProperty('attachments'),
+          );
     } catch(e){
       console.error(e);
       return {
@@ -989,6 +1000,15 @@ class AltrpAction extends AltrpModel {
       };
     }
     return res;
+  }
+
+
+  /**
+   * Добавляем временную задержку в милисекундах
+   */
+  async doActionDelay() {
+    await delay(this.getProperty('delay') || 0);
+    return {success: true}
   }
 }
 

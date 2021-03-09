@@ -27,7 +27,7 @@ const AltrpQueryComponent = (props)=>{
    */
   const defaultSortSettings =  {};
   settings.tables_columns && settings.tables_columns.forEach(column => {
-    if(column.column_is_default_sorted && !defaultSortSettings.order_by){
+    if(column.column_is_default_sorted && ! defaultSortSettings.order_by){
       defaultSortSettings.order_by = column.accessor;
       defaultSortSettings.order = _.get(column, 'column_is_default_sorted_direction', 'ASC')
     }

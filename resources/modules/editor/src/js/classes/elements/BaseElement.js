@@ -140,7 +140,6 @@ class BaseElement extends ControlStack {
     this.templateNeedUpdate();
     if(dispatchToHistory) {
       let index = this.children.length - 1;
-      console.log(index);
       store.dispatch(addHistoryStoreItem('ADD', {element: child, index, parent: this})); 
     }
   }
@@ -298,10 +297,11 @@ class BaseElement extends ControlStack {
     }
     let newChildren = this.children.filter((item, index) => {
       if (item.getId() === childId) {
-        childExist = true;
-        item.beforeDelete();
-        if(dispatchToHistory)
+        childExist = true;   
+        if(dispatchToHistory) {
           store.dispatch(addHistoryStoreItem('DELETE', {element: child, parent: this, index}));
+          item.beforeDelete();
+        } 
         return false;
       }
       return true

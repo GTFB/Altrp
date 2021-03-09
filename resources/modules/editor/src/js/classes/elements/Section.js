@@ -486,7 +486,6 @@ class Section extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": "background-color: {{COLOR}};"
       }
@@ -495,6 +494,7 @@ class Section extends BaseElement{
     this.addControl('gradient', {
       type: CONTROLLER_GRADIENT,
       label: 'Gradient',
+      hideOnClick: true,
       default: {
         isWithGradient: false,
         firstColor: "rgba(97,206,112,1)",
@@ -773,10 +773,6 @@ class Section extends BaseElement{
           colorPickedHex: '#000000',
           type: ""
         },
-        presetColors: [
-          '#eaeaea',
-          '#9c18a8'
-        ],
         rules: {
           '{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
         },

@@ -36,12 +36,13 @@ class ReportsController extends Controller
       foreach ( $_pages as $page ) {
 
 //        $content_template = $page->get_content_template();
+        $user = $page->user;
         $pages[] = [
-          'user' => $page->user,
+          'user' => $user,
           'title' => $page->title,
           'id' => $page->id,
           'parent_page_id' => $page->parent_page_id,
-          'author' => $page->user->name,
+          'author' => data_get( $user, 'name' ),
 //          'template_content' => $content_template,
 //          'template_content_title' => $content_template ? $content_template->title : '',
           'url' => \url($page->path),

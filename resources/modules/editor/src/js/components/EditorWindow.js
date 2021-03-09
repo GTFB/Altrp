@@ -11,7 +11,7 @@ class EditorWindow extends Component {
 
   render() {
     return <div style={{ width: this.props.currentScreen.width, height: this.props.currentScreen.height }} className={"editor-window"} id="editorWindow">
-
+      {!this.props.historyStoreActive && <div className="blocking-layer"/>}
       <iframe src="/admin/editor-content" id="editorContent" width="100%" />
     </div>
   }
@@ -19,7 +19,8 @@ class EditorWindow extends Component {
 
 function mapStateToProps(state) {
   return {
-    currentScreen: state.currentScreen
+    currentScreen: state.currentScreen,
+    historyStoreActive: state.historyStore.active
   }
 }
 

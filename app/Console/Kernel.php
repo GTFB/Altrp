@@ -4,6 +4,7 @@ namespace App\Console;
 use App\Console\Commands\PluginMake;
 use App\Console\Commands\PluginMigrate;
 use App\Console\Commands\WriteModulesStatuses;
+use App\Console\Commands\WriteServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
 use App\Console\Commands\PluginMakeMigration;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -20,6 +21,7 @@ class Kernel extends ConsoleKernel
         PluginMigrate::class,
         PluginMake::class,
         WriteModulesStatuses::class,
+        WriteServiceProvider::class,
     ];
 
     /**

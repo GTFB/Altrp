@@ -50,12 +50,12 @@ export default class Plugins extends Component {
               return (
                 <div className="col-3 text-center border rounded mx-2">
                   <div className="mb-2">{item.name}</div>
-                  <img
+                  <a href={item.url}><img
                     className="mb-2"
                     src={item.image}
                     style={{ maxWidth: "150px" }}
                     alt=""
-                  ></img>
+                  ></img></a>
                   <div class="custom-control custom-switch">
                     <input
                       type="checkbox"

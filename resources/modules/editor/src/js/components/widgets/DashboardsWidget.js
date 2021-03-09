@@ -29,6 +29,9 @@ class DashboardsWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
+    }
   }
 
   async componentWillMount() {

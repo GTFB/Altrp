@@ -7,7 +7,7 @@ import {
   parseURLTemplate,
   replaceContentWithData,
   sortOptions,
-  renderAssetIcon
+  renderAssetIcon, valueReplacement
 } from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
@@ -479,6 +479,7 @@ class InputWidget extends Component {
    */
   onChange(e, editor = null) {
     let value = "";
+    let dispatchedValue;
     const settings = this.props.element.getSettings();
     if (e && e.target) {
       if (this.props.element.getSettings("content_type") === "checkbox") {
@@ -491,6 +492,11 @@ class InputWidget extends Component {
         });
       } else if(settings.content_type === 'accept'){
         value = ! this.state.value;
+        let trueValue = this.props.element.getSettings('accept_checked') || true;
+        let falseValue = this.props.element.getSettings('accept_unchecked') || false;
+        falseValue = valueReplacement(falseValue);
+        trueValue = valueReplacement(trueValue);
+        dispatchedValue = value ? trueValue : falseValue;
       } else {
         value = e.target.value;
       }
@@ -541,7 +547,7 @@ class InputWidget extends Component {
             this.state.settings.content_type
           ) === -1
         ) {
-          this.dispatchFieldValueToStore(value, true);
+          this.dispatchFieldValueToStore( dispatchedValue !== undefined ? dispatchedValue : value, true);
         }
       }
     );
@@ -560,6 +566,30 @@ class InputWidget extends Component {
     }
     return options;
   }
+
+  /**
+   * Для действие по фокусу
+   * @param e
+   * @return {Promise<void>}
+   */
+
+  onFocus = async (e) => {
+    const focus_actions = this.props.element.getSettings('focus_actions');
+
+    if (focus_actions && ! isEditor()) {
+      const actionsManager = (
+          await import(
+              "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+              )
+      ).default;
+      await actionsManager.callAllWidgetActions(
+          this.props.element.getIdForAction(),
+          'focus',
+          focus_actions,
+          this.props.element
+      );
+    }
+  };
   /**
    * Потеря фокуса для оптимизации
    * @param  e
@@ -576,7 +606,7 @@ class InputWidget extends Component {
     if (_.get(editor, 'getData')) {
       this.dispatchFieldValueToStore(editor.getData(), true);
     }
-    if (this.props.element.getSettings("actions", []) && !isEditor()) {
+    if (this.props.element.getSettings('actions', []) && ! isEditor()) {
       const actionsManager = (
         await import(
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
@@ -795,6 +825,7 @@ class InputWidget extends Component {
           input = (
             <select
               value={value || ""}
+              onFocus={this.onFocus}
               name={this.getName()}
               onChange={this.onChange}
               onBlur={this.onBlur}
@@ -888,6 +919,7 @@ class InputWidget extends Component {
                 type={this.state.settings.content_type}
                 name={this.getName()}
                 value={value || ""}
+                element={this.props.element}
                 readOnly={content_readonly}
                 autoComplete={autocomplete}
                 placeholder={this.state.settings.content_placeholder}
@@ -898,6 +930,8 @@ class InputWidget extends Component {
                 onKeyDown={this.handleEnter}
                 onChange={this.onChange}
                 onBlur={this.onBlur}
+                onFocus={this.onFocus}
+
                 id={this.state.settings.position_css_id}
               />
               {isClearable && (
@@ -1110,6 +1144,7 @@ class InputWidget extends Component {
     }
     const select2Props = {
       className: "altrp-field-select2",
+      onFocus: this.onFocus,
       element: this.props.element,
       classNamePrefix: this.props.element.getId() + " altrp-field-select2",
       options,

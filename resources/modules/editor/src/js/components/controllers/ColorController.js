@@ -1,10 +1,11 @@
 import {controllerMapStateToProps} from "../../decorators/controller";
 import React, {Component} from "react";
 import { connect } from "react-redux";
-import { SketchPicker } from "react-color"
+import {SketchPicker} from "react-color"
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
-import AltrpPopper from "../altrp-popper/AltrpPopper";
+import AltrpMeta from "../../classes/AltrpMeta";
+import PresetColors from "./PresetColors";
 
 class ColorController extends Component {
   constructor(props) {
@@ -51,9 +52,15 @@ class ColorController extends Component {
     }
   }
 
+  /**
+   *
+   * @param {{}}nextProps
+   * @param {{}}nextState
+   * @return {boolean}
+   */
   shouldComponentUpdate(nextProps, nextState) {
     if(this.state.colorPickedHex !== nextState.colorPickedHex || nextState.active !== this.state.active || nextState.show !== this.state.show) {
-      return true
+      return true;
     } else {
       return false
     }
@@ -69,6 +76,7 @@ class ColorController extends Component {
     this._changeValue({
       color: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
       colorPickedHex: color.hex,
+      colorRGB:  color.rgb,
     });
 
   };
@@ -92,14 +100,11 @@ class ColorController extends Component {
   //   console.log(this.state.colorPickedRGB)
   //   this.props.currentElement.setSettingValue(this.props.controlId, e.target.value);
   // };
-
   render() {
     if (this.state.show === false) {
       return '';
     }
-
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
-
     let colorPickedStyle = {
       backgroundColor: value.color
     };
@@ -111,7 +116,7 @@ class ColorController extends Component {
     return <div className="controller-container controller-container_color">
       <div className="control-color-header">
         <div className="controller-container__label">
-          {this.props.label}
+          {this.props.label || ''}
           <ResponsiveDdMenu className="controller-container__label-svg" width="12" />
         </div>
         {/* <div className="controller-newColor"></div> */}
@@ -128,17 +133,27 @@ class ColorController extends Component {
         </div>
       </div>
         <div ref={this.contentRef} className={"control-color-colorPicker" + (!this.state.active ? " control-color-hide" : "")} style={colorPickerPosition}>
-          <SketchPicker width="200px" presetColors={this.props.presetColors} color={this.state.colorRGB} onChange={this.colorChange} name="colorPicker" className="sketchPicker" />
+
+          <SketchPicker presetColors={[]}
+                        color={this.state.colorRGB}
+                        onChange={this.colorChange}
+                        style={{
+                          padding: 0,
+                          boxShadow: 'none',
+                        }}
+                        name="colorPicker"
+                        className="sketchPicker" >
+            <div className="asdads">dfgdfgdfg</div>
+          </SketchPicker>
+          <PresetColors presetColors={this.props.presetColors}
+                        value={this.state.value}
+                        changeValue={color=>{
+                          this._changeValue(color);
+                          this.setState(state=>({...state, colorRGB: color.colorRGB}))
+                        }}/>
         </div>
     </div>
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    currentElement: state.currentElement.currentElement,
-    currentState: state.currentState,
-    currentScreen: state.currentScreen
-  };
-}
 export default connect(controllerMapStateToProps)(ColorController);

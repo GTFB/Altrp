@@ -96,7 +96,7 @@ class AdminBar extends React.Component {
       <div className="admin-bar">
         <div className="admin-bar__tools">
           <div className="admin-bar__link" onClick={this.openPageAdmin}>
-            admin
+            Admin
           </div>
           <div className="admin-bar__tool">
             <span onClick={this.toggleVisiblePopupTemplate}>
@@ -119,12 +119,15 @@ class AdminBar extends React.Component {
                         </div>
                       </div>
                     )
-                  else 
-                    return (
-                      <div className="admin-bar__popup-template-item" key={`template-${index}`} onClick={this.openTemplate(item.template.id)}>
-                        {item.template.name} 
-                      </div>
-                    )
+                  else {
+                    if(item.template.name)
+                      return (
+                        <div className="admin-bar__popup-template-item" key={`template-${index}`} onClick={this.openTemplate(item.template.id)}>
+                          {item.template.name}
+                        </div>
+                      )
+                  }
+                    
                 })}
               </div>
             )}

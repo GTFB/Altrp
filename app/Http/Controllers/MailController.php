@@ -4,9 +4,11 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Requests\SendHTMLMailRequest;
 use App\Http\Requests\SendMailRequest;
 use App\Http\Requests\WriteMailSettingsRequest;
 use App\Mail;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Jackiedo\DotenvEditor\Facades\DotenvEditor;
@@ -48,7 +50,7 @@ class MailController extends Controller
      * @param SendMailRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function sendMail(SendMailRequest $request)
+    public function sendMail( SendMailRequest $request )
     {
       $data = $request->all();
       $from_email = $request->get('email') ? $request->get('email') : config('mail.from.address');
@@ -69,6 +71,50 @@ class MailController extends Controller
       } catch (\Exception $e) {
           $mail->delete();
           return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+      }
+
+      return response()->json(['success' => true, 'message' => 'Message sent!'], 200);
+    }
+    /**
+     * Отправить письмо
+     *
+     * @param SendMailRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function sendMailHTML( SendHTMLMailRequest $request )
+    {
+      $data = $request->all();
+      $to_email = $request->get('to') ? $request->get('to') : config('mail.from.address');
+      $subject = $request->get('subject', '');
+      $attachments = $request->get('attachments', '');
+      $from_name = $request->get('from') ? $request->get('from') : config('mail.from.name');
+      $html = $request->get('html', '');
+      $data['email'] = $to_email;
+      $data['name'] = $from_name;
+      $data['html'] = $html;
+      $adminEmail = config('mail.username');
+      $mail = new Mail($data);
+      try {
+          $mail->save();
+
+          \Mail::html( $html,
+            function( \Illuminate\Mail\Message $message ) use ( $adminEmail, $to_email, $from_name, $subject, $attachments ) {
+              $message->from( $adminEmail , $from_name );
+              $message->to( $to_email )
+                  ->subject( $subject );
+              if( $attachments ){
+                $attachments = explode( "\n", $attachments );
+                foreach ( $attachments as $attachment ) {
+                  if( File::exists( $attachment ) ){
+                    $message->attach( $attachment );
+                  }
+                }
+              }
+          });
+      } catch (\Exception $e) {
+        $mail->status = 'error';
+        $mail->save();
+        return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
       }
 
       return response()->json(['success' => true, 'message' => 'Message sent!'], 200);

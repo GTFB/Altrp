@@ -47,6 +47,11 @@ class Model extends EloquentModel
         return $this->morphMany('App\Altrp\RemoteData', 'remotable');
     }
 
+    public function altrp_robots()
+    {
+        return $this->hasMany(Robot::class);
+    }
+
   /**
    * Импортируем модели
    * @param array $imported_models
@@ -243,11 +248,21 @@ class Model extends EloquentModel
         $_models = self::all();
         foreach ($_models as $model) {
             $fields = [];
-            foreach ($model->altrp_table->columns as $column) {
-                $fields[] = [
-                    'fieldName' => $column->name,
-                    'title' => $column->title ? $column->title : $column->name,
-                ];
+            if ($model->altrp_table->columns->count() > 1) {
+                foreach ($model->altrp_table->columns as $column) {
+                    $fields[] = [
+                        'fieldName' => $column->name,
+                        'title' => $column->title ? $column->title : $column->name,
+                    ];
+                }
+            } else {
+                $columns = array_keys($model->getAttributes());
+                foreach ($columns as $column) {
+                    $fields[] = [
+                        'fieldName' => $column,
+                        'title' => $column,
+                    ];
+                }
             }
 
             foreach ($model->altrp_relationships_always_with() as $relationship) {

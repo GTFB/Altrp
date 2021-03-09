@@ -437,11 +437,17 @@ class FrontElement {
     if(this.getName() !== 'input'){
       return true;
     }
-    return ! (this.getSettings('content_required') && ! this.getValue());
+    if(! this.getSettings('content_required')){
+      return true;
+    }
+    if(_.has(this, 'maskIsValid')){
+      return this.getValue() && this.maskIsValid;
+    }
+    return this.getValue();
   }
 
   /**
-   * Проверяет рекурсивно (проверяет всех предков) виден ли элмент свойство elementDisplay пропсов компонента
+   * Проверяет рекурсивно (проверяет всех предков) виден ли элемент свойство elementDisplay пропсов компонента
    * @return {boolean}
    */
   elementIsDisplay(){
@@ -720,6 +726,15 @@ class FrontElement {
    */
   getResponsiveSetting(settingName, elementState = '', _default){
     return getResponsiveSetting(this.getSettings(), settingName, elementState, _default)
+  }
+
+  /**
+   * Возвращает текущий тип шаблона
+   * @return {string}
+   */
+  getTemplateType(){
+    const rootElement = this.getRoot();
+    return rootElement.templateType || 'content';
   }
 }
 

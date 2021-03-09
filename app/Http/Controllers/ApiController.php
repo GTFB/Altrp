@@ -27,6 +27,10 @@ class ApiController extends Controller
     public function index(ApiRequest $request)
     {
         $resources = $this->getModelsAndPageCount($request);
+//        $parts = explode('\\', $this->modelClass);
+//        $modelName = array_pop($parts);
+//        $event = '\\App\\Events\\AltrpEvents\\' . $modelName . 'Event';
+//        broadcast(new $event($resources['data'][0]));
         return response()->json($resources, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -165,7 +169,7 @@ class ApiController extends Controller
      * @param $params
      * @return string|string[]|null
      */
-    protected function replaceUrlDynamicParams($url, $params)
+    public function replaceUrlDynamicParams($url, $params)
     {
         return preg_replace_callback('/\{(.*?)\}/', function ($matches) use ($params) {
             return $params[trim($matches[0], '{}')];

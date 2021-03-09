@@ -4,7 +4,7 @@ window.queryString = queryString;
 /**
  * @class Resource
  * */
-export const MAX_FILE_SIZE = 20971520;
+export const MAX_FILE_SIZE = 41943040;
 
 class Resource {
   /**
@@ -164,7 +164,7 @@ class Resource {
       // 'Content-Type': 'application/json',
       // 'Accept': 'application/json',
     }, headers);
-    let formData = new FormData();
+      let formData = new FormData();
     let hasFile = false;
     _.each(data, (value, key) => {
       if (_.isArray(value)) {

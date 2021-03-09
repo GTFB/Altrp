@@ -12,7 +12,7 @@ export default store;
 export function getCurrentElement() {
   return store.getState().currentElement.currentElement;
 }
-
+window.parent.getCurrentElement = window.parent.getCurrentElement || getCurrentElement;
 export function getCurrentTab() {
   return store.getState().currentTab.currentTab;
 }
