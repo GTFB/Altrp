@@ -24,7 +24,7 @@
   }
 
   &__content {
-    padding: 21px;
+    padding: 20px;
     background-color: #ffffff;
     overflow: auto;
     height: 100%;
@@ -75,7 +75,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 7px 20px;
+    padding: 7px 13px;
     margin-bottom: 10px;
 
     background-color: #ffffff;
@@ -86,6 +86,9 @@
     align-items: center;
     color: hsl(0deg, 1%, 73%);
     line-height: 24px;
+    font-size: 14px;
+
+    cursor: pointer;
   }
 
   &__discard-icon {
@@ -96,10 +99,50 @@
   }
 
   &__apply {
-    padding: 7px 15px;
+    padding: 5px 14px;
 
     border-radius: 7px;
     background-color: hsl(128deg, 52%, 47%);
     color: #fff;
+
+    font-size: 14px;
+
+    cursor: pointer;
+  }
+
+  &__card-revision {
+    display: flex;
+    align-items: center;
+    padding: 7px 6px;
+    margin-bottom: 10px;
+
+    border: 2px solid hsl(213deg, 14%, 88%);
+    color: hsl(204deg, 2%, 57%);
+
+    cursor: pointer;
+  }
+
+  &__card-revision--active {
+    font-weight: bold;
+  }
+  &__card-content {
+    padding-left: 4px;
+    
+  }
+
+  &__card-time {
+    font-size: 12px;
+  }
+
+  &__card-author {
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  &__card-icon {
+    width: 10px;
+    height: 10px;
+    margin-left: 5px;
   }
 }
+

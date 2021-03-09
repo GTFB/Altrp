@@ -217,6 +217,14 @@ button {
     -ms-user-select: none;
     user-select: none;
 }
+.blocking-layer {
+    position: absolute;
+    width: calc(100vw - 295px);
+    right: 20px;
+    height: 100%;
+    z-index: 999999;
+}
+
 .editor-window {
     max-width: calc(100vw - 275px);
     display: flex;
