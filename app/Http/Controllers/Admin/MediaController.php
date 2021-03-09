@@ -92,9 +92,10 @@ class MediaController extends Controller
    * @param Media $media
    * @return \Illuminate\Http\Response
    */
-  public function show( Media $media )
+  public function show( $id, Media $media )
   {
     //
+    $media = $media->find( $id );
     return response()->json( $media->toArray() );
 
   }
@@ -105,9 +106,17 @@ class MediaController extends Controller
    * @param  int $id
    * @return \Illuminate\Http\Response
    */
-  public function edit( $id )
+  public function edit( $id, Request $request )
   {
     //
+    $media = Media::find( $id );
+
+    if( ! $media ){
+      return response()->json( ['success' => false,], 404, [], JSON_UNESCAPED_UNICODE);
+    }
+    $media->fill( $request->all() );
+    $media->save();
+    return response()->json( ['success' => true,], 200, [], JSON_UNESCAPED_UNICODE);
   }
 
   /**
@@ -120,6 +129,17 @@ class MediaController extends Controller
   public function update( Request $request, $id )
   {
     //
+    $media = Media::find( $id );
+    echo '<pre style="padding-left: 200px;">';
+    var_dump($request->all()  );
+    echo '</pre>';
+
+    if( ! $media ){
+      return response()->json( ['success' => false,], 404, [], JSON_UNESCAPED_UNICODE);
+    }
+    $media->fill( $request->all() );
+    $media->save();
+    return response()->json( ['success' => true,], 200, [], JSON_UNESCAPED_UNICODE);
   }
 
   /**
