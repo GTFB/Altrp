@@ -30,13 +30,12 @@ class DataStorageUpdater extends AltrpModel {
     if(! _.get(dataSources, 'length')){
       dataSources = this.getProperty('currentDataSources');
     }
-    if(initialUpdate){
-      dataSources = dataSources.filter(dataSource => dataSource.getProperty('autoload'));
-    }
     if(! dataSources){
       dataSources = [];
     }
-    console.log(dataSources);
+    if(initialUpdate){
+      dataSources = dataSources.filter(dataSource => dataSource.getProperty('autoload'));
+    }
 
     /**
      * Фильтруем проверяя на наличие обязательных параметров

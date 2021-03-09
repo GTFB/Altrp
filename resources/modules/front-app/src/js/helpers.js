@@ -291,7 +291,10 @@ export function parseParamsFromString(
     }
     left = left.trim();
     right = right.trim();
-    if (right.match(/{{([\s\S]+?)(?=}})/g)) {;
+    if(right.indexOf('{{')){
+      right = replaceContentWithData(right);
+    }
+    if (right.match(/{{([\s\S]+?)(?=}})/g)) {
       if (
         context.getProperty(
           right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')
