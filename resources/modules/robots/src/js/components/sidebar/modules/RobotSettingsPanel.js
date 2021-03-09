@@ -31,6 +31,12 @@ export default class RobotSettingsPanel extends React.Component {
   toggleChevron(type) {
     console.log(type);
   }
+
+  getRobots() {
+    let elements = store.getState()?.robotSettingsData;
+    elements = _.filter(elements, item => item.type === "robot");
+    return elements;
+  }
  
   render() {
     const {modelOptions} = this.state;
@@ -47,6 +53,7 @@ export default class RobotSettingsPanel extends React.Component {
       {label:'logged_in', value: 'logged_in'},
       {label:'action', value: 'action'}
     ];
+    const robots = this.getRobots();
 
     return (
       <div className="panel settings-panel d-flex">
@@ -87,6 +94,16 @@ export default class RobotSettingsPanel extends React.Component {
                               <option disabled value="" />
                               {startOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
                           </select>
+                        </div>
+                      </div>
+                      <div className="controller-container controller-container_select" >
+                        <div className="controller-container__label control-select__label controller-label">Robots:</div>
+                        <div className="control-container_select-wrapper controller-field">
+                          {robots.map((item, index) => 
+                          <div key={index}>
+                            <a href={`robots-editor?robot_id=${item.data?.props?.nodeData?.id ?? ''}`}>{item?.data?.label ?? ''}</a>
+                          </div>
+                          )}
                         </div>
                       </div>
                   </div> {/* ./controllers-wrapper */}
