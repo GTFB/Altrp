@@ -582,7 +582,6 @@ class InputWidget extends Component {
               "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
               )
       ).default;
-      console.log(actionsManager);
       await actionsManager.callAllWidgetActions(
           this.props.element.getIdForAction(),
           'focus',
