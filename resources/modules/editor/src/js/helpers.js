@@ -109,12 +109,13 @@ export function getElementSettingsSuffix(controller) {
   if (!(suffix_2 || suffix_1)) {
     return "";
   }
-  return `_${getElementState().value}_${suffix_2}`;
+  return `_${controller.stateless ? '' : getElementState().value}_${suffix_2}`;
 }
 
 /**
  * Конвертируем RGBA в HEX формат
- * @param {String} строка в формате CSS-правила
+ * @param {String} URLTemplate строка в формате CSS-правила
+ * @param {{}} object
  * @return {string}
  */
 export function parseURLTemplate(URLTemplate, object = {}) {

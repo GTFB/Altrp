@@ -409,7 +409,6 @@ class BaseElement extends ControlStack {
           this.component.changeSetting(settingName, value);
         })();
       }
-      console.log(performance.now());
     }
 
   }

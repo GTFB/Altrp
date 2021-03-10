@@ -3652,6 +3652,7 @@ class Table extends BaseElement {
     this.addControl('columns_order', {
       label: 'Columns Order',
       dynamic: false,
+      stateLess: true,
       description: '1, 3, 2'
     });
 

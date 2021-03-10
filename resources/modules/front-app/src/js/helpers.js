@@ -286,13 +286,14 @@ export function parseParamsFromString(
   const lines = string.split('\n');
   lines.forEach(line => {
     let [left, right] = line.split('|');
-    if (!left || !right) {
+    if (! left || ! right) {
       return;
     }
     left = left.trim();
     right = right.trim();
-    if(right.indexOf('{{') !== -1){
-      right = replaceContentWithData(right);
+    if(left.indexOf('{{') !== -1){
+      left = replaceContentWithData(left);
+      console.log(left);
     }
     if (right.match(/{{([\s\S]+?)(?=}})/g)) {
       if (

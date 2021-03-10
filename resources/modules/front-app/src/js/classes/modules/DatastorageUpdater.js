@@ -63,7 +63,6 @@ class DataStorageUpdater extends AltrpModel {
         return ! value;
       }));
     });
-    console.log(dataSources);
     // dataSources = _.sortBy(dataSources, ['data.priority']);
     this.setProperty('currentDataSources', dataSources);
     /**

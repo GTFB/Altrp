@@ -298,6 +298,11 @@ class AltrpAction extends AltrpModel {
           result = await this.doActionCustomCode();
         }
         break;
+      case 'play_sound':
+        {
+          result = await this.doActionPlaySound();
+        }
+        break;
     }
     let alertText = '';
     if (result.success) {
@@ -1007,7 +1012,17 @@ class AltrpAction extends AltrpModel {
    * Добавляем временную задержку в милисекундах
    */
   async doActionDelay() {
-    await delay(this.getProperty('delay') || 0);
+    await delay(this.getProperty('milliseconds') || 0);
+    return {success: true}
+  }
+  async doActionPlaySound(){
+    const duration = this.getProperty('milliseconds') || 0;
+    const url = this.getProperty('media_url');
+    const loop = this.getProperty('loop');
+    if(url){
+      const  {playSound} = await import('../helpers/sounds');
+      playSound(url, loop, duration);
+    }
     return {success: true}
   }
 }
