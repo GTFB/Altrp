@@ -576,19 +576,8 @@ function AltrpTableWithoutUpdate(
       }
       return paginationProps;
     }, [inner_page_size, pageSize, pageCount, pageIndex, settings]);
-<<<<<<< HEAD
-  const { WrapperComponent } = React.useMemo(() => {
-    return {
-      WrapperComponent: replace_rows ? React.Fragment : React.Fragment/*React.Fragment*/,
-      // wrapperProps: replace_rows ? {backend:HTML5Backend} : {backend:HTML5Backend},
-    };
-  }, [replace_rows]);
-
-  return <WrapperComponent>
-=======
 
   return <React.Fragment>
->>>>>>> front-app-dev
     {hide_columns && <div className="altrp-table-hidden">
       <div className="altrp-table-hidden__all">
         <IndeterminateCheckbox {...getToggleHideAllColumnsProps()} /> Toggle
