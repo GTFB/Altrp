@@ -92,7 +92,15 @@ class RobotsEditor extends Component {
   // Добавление связи между нодами
   onConnect = params => {
     const robotStore = store.getState()?.robotSettingsData;
+    params.data = {
+      text: 'new'
+    };
+    params.animated = true;
+    if (params.sourceHandle === 'no') params.className = 'red';
+    if (params.sourceHandle === 'yes') params.className = 'green';
     const newStore = addEdge(params, robotStore);
+    console.log(newStore);
+    console.log(params);
     store.dispatch(setRobotSettingsData(newStore));
   }
 
@@ -186,12 +194,7 @@ class RobotsEditor extends Component {
   onElementClick = (event, element) => {
     if(isNode(element)) this.setState(s => ({ ...s, selectNode: element, selectEdge: false }));
     if(isEdge(element)) this.setState(s => ({ ...s, selectEdge: element, selectNode: false }));
-
-    const {btnActive} = this.state;
-    // Вызов принудительного рендеринга через store
-    // store.dispatch(setUpdatedNode(element));
-
-    this.setState(s => ({ ...s, activePanel: "selected", btnActive }));
+    this.setState(s => ({ ...s, activePanel: "selected" }));
   }
 
   changeTab(item) {
@@ -247,17 +250,16 @@ class RobotsEditor extends Component {
               <MiniMap
                 nodeColor={node => {
                   switch (node.type) {
-                    case 'begin': return 'green';
-                    case 'condition': return 'red';
-                    case 'action': return 'blue';
-                    default: return '#999';
+                    case 'condition': return '#FF4E6E';
+                    case 'action': return '#315EFB';
+                    case 'robot': return '#87CA00';
+                    default: return '#8E94AA';
                   }
                 }}
                 nodeClassName={node => {
                   switch (node.type) {
                     case 'begin': return 'flow-node';
                     case 'condition': return 'condition-romb';
-                    // case 'action': return 'blue';
                     default: return 'flow-node';
                   }
                 }}

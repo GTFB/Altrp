@@ -15,18 +15,15 @@ export default class CustomEdge extends React.Component {
             sourcePosition,
             targetPosition,
             style = {},
-            data = {
-              text: ""
-            },
-            animated,
+            data = {},
             arrowHeadType,
             markerEndId } = this.props;
-        const edgePath = getSmoothStepPath({ sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition, data, animated });
+        const edgePath = getSmoothStepPath({ sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition});
         const markerEnd = getMarkerEnd(arrowHeadType, markerEndId);
             
       return (
         <>
-        <path id={id} style={style} className="react-flow__edge-path" d={edgePath} markerEnd={markerEnd} />
+        <path id={id} style={style} className={'react-flow__edge-path'} d={edgePath} markerEnd={markerEnd} />
         <text>
           <textPath href={`#${id}`} style={{ fontSize: '12px' }} startOffset="50%" textAnchor="middle">
             {data?.text ?? ""}

@@ -364,3 +364,19 @@ body {
     width: 75% !important;
     flex-grow: inherit;
 }
+
+// Egde
+.react-flow__edge-path {
+    stroke: $grey;
+    stroke-width: 3px;
+}
+.react-flow__edge.red{
+    .react-flow__edge-path{
+        stroke: $red;
+    }
+}
+.react-flow__edge.green{
+    .react-flow__edge-path{
+        stroke: $green;
+    }
+}
