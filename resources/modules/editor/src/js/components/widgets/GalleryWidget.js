@@ -5,6 +5,8 @@ import styled from "styled-components";
 import AltrpImage from "../altrp-image/AltrpImage";
 import {isEditor} from "../../../../../front-app/src/js/helpers";
 import AltrpLightbox from "../altrp-lightbox/AltrpLightbox";
+import HoverImage from "../animations/image/HoverImage";
+import Overlay from "../altrp-gallery/Overlay";
 
 class GalleryWidget extends Component {
   constructor(props) {
@@ -113,6 +115,11 @@ class GalleryWidget extends Component {
     const aspectRatioVariant = this.props.element.getContent("aspect_ratio_grid_settings", "1to1");
     const linkType = this.props.element.getContent("link_type_grid_settings", "none");
     const hoverAnimationType = this.props.element.getContent("image_hover_animation", "none");
+    const hoverAnimationDuration = this.props.element.getContent("image_transition", {size: 800});
+    const overlaySwitcher = this.props.element.getContent("overlay_switcher", false);
+    const overlayType = this.props.element.getContent("overlay_title_and_description", "none");
+    const overlayAnimationType = this.props.element.getContent("hover_animation_overlay", "none");
+    const overlayAnimationDuration = this.props.element.getContent("hover_animation_overlay", {size: 800});
     let simpleRepeater = this.state.simpleRepeater;
     let aspectRatio = "100%";
 
@@ -136,15 +143,30 @@ class GalleryWidget extends Component {
         break
     }
 
-    const emptyRepeater = <div className="altrp-gallery-empty">
-      <GalleryIcon className="altrp-gallery-empty-icon"/>
-    </div>;
+    const EmptyContainer = styled.div`
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background-color: #C4C4C4;
+    `;
+
+    const EmptyIcon = styled(GalleryIcon)`
+      height: 35px;
+      width: 35px;
+      opacity: 0.5;
+    `;
+
+    const emptyRepeater = <EmptyContainer>
+      <EmptyIcon/>
+    </EmptyContainer>;
 
     let images = "";
 
     if(simpleRepeater.length > 0) {
       images = simpleRepeater.map((img, idx) => {
         const url = img.simple_media_settings ? img.simple_media_settings.url : '/img/nullImage.png';
+        // console.log(img.simple_media_settings)
         const Image = styled.div`
           background-image: url(${url});
           background-size: cover;
@@ -158,7 +180,29 @@ class GalleryWidget extends Component {
           position: absolute;
         `;
 
-        return <Image className="altrp-gallery-img" data-idx={idx} onClick={linkType === "media" ? this.showLightbox : null} key={idx}/>
+        const ImageContainer = styled.div`
+          position: relative;
+          overflow: hidden;
+        `
+
+        let image = <Image className="altrp-gallery-img" data-idx={idx}  onClick={linkType === "media" ? this.showLightbox : null}/>
+
+        if(hoverAnimationType && hoverAnimationType !== "none" ) {
+          image = <HoverImage type={hoverAnimationType} transition={hoverAnimationDuration.size} component={Image} attributes={{
+            className: "altrp-gallery-img",
+            onClick: linkType === "media" ? this.showLightbox : null
+          }}
+          />
+        }
+
+        return <ImageContainer className="altrp-gallery-img-container" data-idx={idx} key={idx}>
+          {
+            image
+          }
+          {
+            overlaySwitcher ? <Overlay animation={overlayAnimationType} animationDuration={overlayAnimationDuration}/> : null
+          }
+          </ImageContainer>
       })
     }
 

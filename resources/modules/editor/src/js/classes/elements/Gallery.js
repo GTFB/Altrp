@@ -19,7 +19,7 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_NUMBER,
-  CONTROLLER_WYSIWYG, CONTROLLER_SHADOW, CONTROLLER_FILTERS
+  CONTROLLER_WYSIWYG, CONTROLLER_SHADOW, CONTROLLER_FILTERS, CONTROLLER_GRADIENT
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 import {advancedTabControllers} from "../../decorators/register-controllers";
@@ -67,7 +67,19 @@ class Gallery extends BaseElement {
 
     simpleRepeater.addControl('simple_media_settings', {
       type: CONTROLLER_MEDIA,
-      label: 'Choose icon',
+      label: 'Choose image',
+    });
+
+    simpleRepeater.addControl('simple_title_media_settings', {
+      type: CONTROLLER_TEXT,
+      label: 'Title',
+      default: 'Title'
+    });
+
+    simpleRepeater.addControl('simple_description_media_settings', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Description',
+      default: "Description"
     });
 
     this.addControl('repeater_simple_settings', {
@@ -229,6 +241,51 @@ class Gallery extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('overlay', {
+      tab: TAB_CONTENT,
+      label: 'Overlay',
+    });
+
+    this.addControl('overlay_switcher', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Overlay',
+    });
+
+    this.addControl('overlay_background', {
+      conditions: {
+        'overlay_switcher': true,
+      },
+      default: false,
+      type: CONTROLLER_SWITCHER,
+      label: 'Background',
+    });
+
+    this.addControl('overlay_title_and_description', {
+      conditions: {
+        'overlay_switcher': true,
+      },
+        type: CONTROLLER_SELECT,
+        label: 'Title and description',
+        default: 'none',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'title',
+            'label': 'Title',
+          },
+          {
+            'value': 'titleAndDescription',
+            'label': 'Title and description',
+          },
+        ],
+      }
+    );
+
+    this.endControlSection();
+
     this.startControlSection('image_style_section', {
       tab: TAB_STYLE,
       label: 'Image',
@@ -264,7 +321,7 @@ class Gallery extends BaseElement {
           },
         ],
         rules: {
-          '{{ELEMENT}} .altrp-gallery-img{{STATE}}': 'border-style: {{VALUE}};',
+          '{{ELEMENT}} .altrp-gallery-img-container{{STATE}}': 'border-style: {{VALUE}};',
         },
       }
     );
@@ -282,7 +339,7 @@ class Gallery extends BaseElement {
           'vh',
         ],
         rules: {
-          '{{ELEMENT}} .altrp-gallery-img{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+          '{{ELEMENT}} .altrp-gallery-img-container{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
         },
       }
     );
@@ -291,7 +348,7 @@ class Gallery extends BaseElement {
         type: CONTROLLER_COLOR,
         label: 'Border color',
         rules: {
-          '{{ELEMENT}} .altrp-gallery-img{{STATE}}': 'border-color: {{COLOR}};',
+          '{{ELEMENT}} .altrp-gallery-img-container{{STATE}}': 'border-color: {{COLOR}};',
         },
       }
     );
@@ -309,7 +366,7 @@ class Gallery extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-gallery-img{{STATE}}': [
+        '{{ELEMENT}} .altrp-gallery-img-container{{STATE}}': [
           'border-top-left-radius: {{TOP}}{{UNIT}}',
           'border-top-right-radius: {{RIGHT}}{{UNIT}}',
           'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
@@ -372,6 +429,211 @@ class Gallery extends BaseElement {
     );
 
     this.addControl('image_transition', {
+      type: CONTROLLER_SLIDER,
+      label: 'Animation duration (ms)',
+      default: {
+        size: 800,
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 3000,
+      min: 0,
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('overlay_style_section', {
+      tab: TAB_STYLE,
+      label: 'Overlay',
+    });
+
+    this.addControl('overlay_background_color', {
+      conditions: {
+        'overlay_background': true,
+      },
+      type: CONTROLLER_COLOR,
+      label: 'Background color',
+      // default: {
+      //   color: "rgb(52,59,76)",
+      //   colorPickedHex: "#343B4C",
+      // },
+      rules: {
+        '{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay': 'background-color: {{COLOR}};',
+      },
+    });
+
+    this.addControl('overlay_background_gradient', {
+      conditions: {
+        'overlay_background': true,
+      },
+      type: CONTROLLER_GRADIENT,
+      label: 'Gradient',
+      default: {
+        isWithGradient: false,
+        firstColor: "rgba(97,206,112,1)",
+        firstPoint: '0',
+        secondColor: "rgba(242,41,91,1)",
+        secondPoint: "100",
+        angle: "0",
+        value: ""
+      },
+      rules: {
+        "{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay": "background-image: {{VALUE}}"
+      }
+    });
+
+    this.addControl('blend_mode', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "initial",
+          label: "None"
+        },
+        {
+          value: "multiply",
+          label: "Multiply"
+        },
+        {
+          value: "screen",
+          label: "Screen"
+        },
+        {
+          value: "overlay",
+          label: "Overlay"
+        },
+        {
+          value: "darken",
+          label: "Darken"
+        },
+        {
+          value: "lighten",
+          label: "Lighten"
+        },
+        {
+          value: "color-dodge",
+          label: "Color dodge"
+        },
+        {
+          value: "color-burn",
+          label: "Color burn"
+        },
+        {
+          value: "hard-light",
+          label: "Hard light"
+        },
+        {
+          value: "soft-light",
+          label: "Soft light"
+        },
+        {
+          value: "difference",
+          label: "Difference"
+        },
+        {
+          value: "exclusion",
+          label: "Exclusion"
+        },
+        {
+          value: "hue",
+          label: "Hue"
+        },
+        {
+          value: "saturation",
+          label: "Saturation"
+        },
+        {
+          value: "color",
+          label: "Color"
+        },
+        {
+          value: "luminosity",
+          label: "Luminosity"
+        }
+      ],
+      label: 'Blend mode',
+      default: 'none',
+      rules: {
+        "{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay": "mix-blend-mode: {{VALUE}};"
+      }
+    });
+
+    this.addControl('hover_animation_overlay', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "slideInRight",
+          label: "Slide in right"
+        },
+        {
+          value: "slideInLeft",
+          label: "Slide in left"
+        },
+        {
+          value: "slideInUp",
+          label: "Slide in up"
+        },
+        {
+          value: "slideInDown",
+          label: "Slide in down"
+        },
+        {
+          value: "zoomIn",
+          label: "Zoom in"
+        },
+        {
+          value: "zoomOut",
+          label: "Zoom out"
+        },
+        {
+          value: "fadeIn",
+          label: "FadeIn"
+        },
+        {
+          value: "",
+          label: "Hard light"
+        },
+        {
+          value: "soft-light",
+          label: "Soft light"
+        },
+        {
+          value: "difference",
+          label: "Difference"
+        },
+        {
+          value: "exclusion",
+          label: "Exclusion"
+        },
+        {
+          value: "hue",
+          label: "Hue"
+        },
+        {
+          value: "saturation",
+          label: "Saturation"
+        },
+        {
+          value: "color",
+          label: "Color"
+        },
+        {
+          value: "luminosity",
+          label: "Luminosity"
+        }
+      ],
+      label: 'Hover animation',
+      default: 'none',
+    });
+
+    this.addControl('overlay_transition', {
       type: CONTROLLER_SLIDER,
       label: 'Animation duration (ms)',
       default: {

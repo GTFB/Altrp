@@ -90,7 +90,7 @@ export default class ElementsManger {
     this.elements[Gallery.getName()] = Gallery;
     this.elements[Video.getName()] = Video;
     // Websocket Notifications
-    this.elements[Notifications.getName()] = Notifications;
+    // this.elements[Notifications.getName()] = Notifications;
     //список компонентов
     this.components = {};
     this.components[RootElement.getName()] = RootComponent;
@@ -122,7 +122,7 @@ export default class ElementsManger {
     this.components[Gallery.getName()] = GalleryWidget;
     this.components[Video.getName()] = VideoWidget;
     // Websocket Notifications widget
-    this.components[Notifications.getName()] = NotificationsWidget;
+    // this.components[Notifications.getName()] = NotificationsWidget;
   }
 
   getElements() {

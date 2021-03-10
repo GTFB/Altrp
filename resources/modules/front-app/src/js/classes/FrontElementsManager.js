@@ -60,7 +60,7 @@ export default class FrontElementsManager {
     this.components["gallery"] = GalleryWidget
     this.components["video"] = VideoWidget;
   }
-  
+
   getComponentClass(name) {
     if (!this.components[name]) {
       throw "Не найден компонент с именем " + name;
