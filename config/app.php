@@ -184,6 +184,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Services\DaData\DaDataServiceProvider::class,
+        App\Services\ApiFns\ApiFnsServiceProvider::class,
         // App\Providers\AltrpBroadcastServiceProvider::class,
 
         Laratrust\LaratrustServiceProvider::class,

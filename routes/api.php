@@ -246,6 +246,9 @@ Route::group(['prefix' => 'users'], function () {
 
 });
 
+/**
+ * DaData service
+ */
 Route::group(['prefix' => 'dadata/suggestions'], function() {
     Route::group(['prefix' => 'address'], function () {
         Route::match(['get', 'post'],'standardization', 'API\DaDataApiController@addressStandardization');
@@ -284,6 +287,29 @@ Route::group(['prefix' => 'dadata/suggestions'], function() {
         Route::match(['get', 'post'],'standardization', 'API\DaDataApiController@passportStandardization');
         Route::match(['get', 'post'],'fms', 'API\DaDataApiController@passportByFms');
     });
+});
+
+/**
+ * API-FNS service
+ */
+Route::group(['prefix' => 'api-fns'], function() {
+    Route::post('config', 'API\ApiFnsController@setApiKey');
+    Route::match(['get', 'post'],'search', 'API\ApiFnsController@searchCompanies');
+    Route::match(['get', 'post'],'egr', 'API\ApiFnsController@getCompanyData');
+    Route::match(['get', 'post'],'multinfo', 'API\ApiFnsController@getGroupDetails');
+    Route::match(['get', 'post'],'multcheck', 'API\ApiFnsController@getBaseGroupDetails');
+    Route::match(['get', 'post'],'check', 'API\ApiFnsController@checkCounterParty');
+    Route::match(['get', 'post'],'nalogbi', 'API\ApiFnsController@checkAccountLocks');
+    Route::match(['get', 'post'],'changes', 'API\ApiFnsController@getChangedCompanyData');
+    Route::match(['get', 'post'],'mon', 'API\ApiFnsController@checkChangesByCompaniesList');
+    Route::match(['get', 'post'],'vyp', 'API\ApiFnsController@getCheckout');
+    Route::match(['get', 'post'],'bo', 'API\ApiFnsController@getFinancialStatements');
+    Route::match(['get', 'post'],'bo', 'API\ApiFnsController@getFinancialStatements');
+    Route::match(['get', 'post'],'bo_file', 'API\ApiFnsController@getFinancialStatementsAsFile');
+    Route::match(['get', 'post'],'innfl', 'API\ApiFnsController@getIndividualTin');
+    Route::match(['get', 'post'],'mvdpass', 'API\ApiFnsController@checkValidPassport');
+    Route::match(['get', 'post'],'fsrar', 'API\ApiFnsController@getAlcoholLicensesList');
+    Route::match(['get', 'post'],'stat', 'API\ApiFnsController@apiKeyStatistics');
 });
 
 Route::post('/feedback', 'MailController@sendMail');
