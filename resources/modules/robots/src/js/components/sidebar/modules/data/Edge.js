@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import store from "../../../../store/store";
-import { setUpdatedNode } from "../../../../store/robot-settings/actions";
+import { setUpdatedNode, setRobotSettingsData } from "../../../../store/robot-settings/actions";
 import Resource from "../../../../../../../editor/src/js/classes/Resource";
 
 export default class Edge extends Component{
@@ -23,12 +23,15 @@ export default class Edge extends Component{
         const node = this.props.selectEdge;
         console.log(node.animated);
         
-        if(node.animated === undefined) node.animated = false;
-        
+        if(node.animated === undefined) node.animated = false;        
         node.animated = !node.animated;
-        console.log(node.animated);
-    
+        console.log(node.animated);    
         store.dispatch(setUpdatedNode(node));
+
+        // вызов принудительного рендера flow
+        const elements = store.getState()?.robotSettingsData;
+        const newElements = _.cloneDeep(elements);
+        store.dispatch(setRobotSettingsData(newElements));
     }
 
     changeInput(e){
@@ -36,8 +39,13 @@ export default class Edge extends Component{
         const node = this.props.selectEdge;
         console.log(node.data);
         if(!node.data) node.data = {};
-        node.data.text = value;
+        node.label = value;
         store.dispatch(setUpdatedNode(node));
+
+        // вызов принудительного рендера flow
+        const elements = store.getState()?.robotSettingsData;
+        const newElements = _.cloneDeep(elements);
+        store.dispatch(setRobotSettingsData(newElements));
     }
 
     // Запись значений select в store
@@ -45,6 +53,11 @@ export default class Edge extends Component{
         let node = this.props.selectEdge;
         node.type = e.target.value;
         store.dispatch(setUpdatedNode(node));
+
+        // вызов принудительного рендера flow
+        const elements = store.getState()?.robotSettingsData;
+        const newElements = _.cloneDeep(elements);
+        store.dispatch(setRobotSettingsData(newElements));        
     }
 
     render(){
@@ -89,7 +102,7 @@ export default class Edge extends Component{
                     className="control-field"
                     type="text"
                     onChange={(e) => { this.changeInput(e) }}
-                    value={ this.props.selectEdge?.data?.text ?? '' }
+                    value={ this.props.selectEdge?.label ?? '' }
                     rows="3"
                     style={{lineHeight: '125%', height: 'auto'}}
                 ></textarea>

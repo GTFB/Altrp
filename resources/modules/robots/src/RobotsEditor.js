@@ -92,9 +92,8 @@ class RobotsEditor extends Component {
   // Добавление связи между нодами
   onConnect = params => {
     const robotStore = store.getState()?.robotSettingsData;
-    params.data = {
-      text: 'new'
-    };
+    params.label = '';
+    params.type = 'default';
     params.animated = true;
     if (params.sourceHandle === 'no') params.className = 'red';
     if (params.sourceHandle === 'yes') params.className = 'green';
@@ -192,8 +191,16 @@ class RobotsEditor extends Component {
 
   // Запись активного элемента в state
   onElementClick = (event, element) => {
-    if(isNode(element)) this.setState(s => ({ ...s, selectNode: element, selectEdge: false }));
-    if(isEdge(element)) this.setState(s => ({ ...s, selectEdge: element, selectNode: false }));
+    const elements = store.getState()?.robotSettingsData ?? [];
+    let elementStore = {};
+    if (_.isArray(elements)){
+      elements.map(item =>{
+        if(item.id === element.id) elementStore = item;
+      });
+    }
+
+    if(isNode(elementStore)) this.setState(s => ({ ...s, selectNode: elementStore, selectEdge: false }));
+    if(isEdge(elementStore)) this.setState(s => ({ ...s, selectEdge: elementStore, selectNode: false }));
     this.setState(s => ({ ...s, activePanel: "selected" }));
   }
 
@@ -241,7 +248,6 @@ class RobotsEditor extends Component {
               }}
               onEdgeUpdate={this.onEdgeUpdate}
               edgeTypes={{
-                default: CustomEdge,
                 custom: CustomEdge,
               }}
               connectionLineComponent={ConnectionLine}
@@ -258,8 +264,8 @@ class RobotsEditor extends Component {
                 }}
                 nodeClassName={node => {
                   switch (node.type) {
-                    case 'begin': return 'flow-node';
-                    case 'condition': return 'condition-romb';
+                    case 'robot': return 'robot-node-map';
+                    case 'condition': return 'condition-node-map';
                     default: return 'flow-node';
                   }
                 }}

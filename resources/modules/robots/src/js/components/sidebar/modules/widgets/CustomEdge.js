@@ -16,6 +16,7 @@ export default class CustomEdge extends React.Component {
             targetPosition,
             style = {},
             data = {},
+            label,
             arrowHeadType,
             markerEndId } = this.props;
         const edgePath = getSmoothStepPath({ sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition});
@@ -26,7 +27,7 @@ export default class CustomEdge extends React.Component {
         <path id={id} style={style} className={'react-flow__edge-path'} d={edgePath} markerEnd={markerEnd} />
         <text>
           <textPath href={`#${id}`} style={{ fontSize: '12px' }} startOffset="50%" textAnchor="middle">
-            {data?.text ?? ""}
+            {label ?? ""}
           </textPath>
         </text>
         </>

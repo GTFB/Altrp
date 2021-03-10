@@ -295,13 +295,17 @@ body {
     width: 150px;
     height: 150px;
     color: #fff;
-    background: linear-gradient(136.65deg, #1488cc 0%, #2b32b2 100%);
+    background: $red;
     transform: rotate(45deg);
     padding: 16px;
     overflow: hidden;
     text-align: center;
     box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.08),
         0px 4px 48px rgba(0, 0, 0, 0.08);
+    
+    &.selected{
+        border: 3px solid $dark-purple;
+    }
 }
 
 .condition-text,
@@ -340,7 +344,11 @@ body {
     font-size: 14px;
     text-align: center;
     font-weight: bold;
-    background: linear-gradient(0deg, #000c40 0%, #2b566b 100%);
+    background: $green;
+
+    &.selected{
+        border: 3px solid $dark-purple;    }
+
 }
 .default-node__label {
     margin: 0;
@@ -380,3 +388,12 @@ body {
         stroke: $green;
     }
 }
+
+// .condition-node-map {
+//     transform: rotate(-45deg);
+// }
+
+// .robot-node-map {
+//     border-radius: 100%;
+// }
+
