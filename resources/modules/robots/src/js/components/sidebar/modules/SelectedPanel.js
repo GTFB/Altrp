@@ -78,9 +78,12 @@ export default class SelectedPanel extends React.Component {
                           value={ this.props.selectNode.data?.label }
                         ></textarea>
                       </div>}
+                      {this.props.selectEdge && <Edge
+                                                  robot={ this.props.robot }
+                                                  selectEdge={this.props.selectEdge || []}
+                                                />}
                       </div>
                     </div>
-
 
                       {(this.props.selectNode?.type === "action") && <Action
                                                                         activeSection={this.state.activeSection}
@@ -95,12 +98,7 @@ export default class SelectedPanel extends React.Component {
                       {(this.props.selectNode?.type === "robot") && <Robot
                                                                       robot={ this.props.robot }
                                                                       selectNode={this.props.selectNode || []}
-                                                                    />}
-
-                      {this.props.selectEdge && <Edge
-                                                  robot={ this.props.robot }
-                                                  selectEdge={this.props.selectEdge || []}
-                                                />}
+                                                                    />}                     
 
                   </div> ) : (<div className="controllers-wrapper">
                     Select a node or edge to edit

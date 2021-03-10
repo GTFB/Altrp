@@ -73,10 +73,10 @@ export default class Edge extends Component{
         let value = (this.props.selectEdge?.animated === true) ?? false;
         let switcherClasses = `control-switcher control-switcher_${value ? 'on' : 'off'}`;
       
-        return <div>
-            <div className="controller-container controller-container_select fl-column">
-                <div className="controller-container__label control-select__label">Start condition</div>
-                <div className="control-container_select-wrapper">
+        return <div>            
+            <div className="controller-container controller-container_select">
+                <div className="controller-container__label control-select__label controller-label">Start Condition</div>
+                <div className="control-container_select-wrapper controller-field">
                 <select className="control-select control-field"
                     value={edge || ''}
                     onChange={e => {this.changeSelect(e)}}
@@ -97,13 +97,13 @@ export default class Edge extends Component{
                 </div>
             </div>
             <div className="controller-container controller-container_textarea">
-                <div className="controller-container__label textcontroller-responsive">Text</div>
+                <div className="controller-container__label control-select__label controller-label">Text</div>
                 <textarea
-                    className="control-field"
+                    className="control-field controller-field"
                     type="text"
                     onChange={(e) => { this.changeInput(e) }}
                     value={ this.props.selectEdge?.label ?? '' }
-                    rows="3"
+                    // rows="3"
                     style={{lineHeight: '125%', height: 'auto'}}
                 ></textarea>
             </div>
