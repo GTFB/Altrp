@@ -656,10 +656,7 @@ function AltrpTableWithoutUpdate(
       return paginationProps;
     }, [inner_page_size, pageSize, pageCount, pageIndex, settings]);
 
-  let tableElement = React.useRef(null);
-
-
-  return  <React.Fragment>
+  return <React.Fragment>
     {hide_columns && <div className="altrp-table-hidden">
       <div className="altrp-table-hidden__all">
         <IndeterminateCheckbox {...getToggleHideAllColumnsProps()} /> Toggle

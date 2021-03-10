@@ -211,11 +211,6 @@ const RepeaterItem = ({thisController, itemClasses, idx, itemController, fields}
   console.count()
   const {setActiveItem, duplicateItem, deleteItem, moveItem} = thisController;
   const ref=React.useRef(null);
-  const fields = React.useMemo(()=>{
-    return thisController.props.fields.filter(field=>{
-      return ! (getTemplateType() === 'email' && field.hideOnEmail)
-    })
-  }, [propsController.fields]);
   const [, drop] = useDrop({
     accept: "item",
     hover(item, monitor) {
