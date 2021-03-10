@@ -15,8 +15,10 @@ import CONSTANTS from "./js/consts";
 import { stopDrag } from "./js/store/element-drag/actions";
 import AssetsBrowser from "./js/classes/modules/AssetsBrowser";
 
-import store, { getCurrentElement, getCurrentScreen } from "../src/js/store/store";
-
+import store, {
+  getCurrentElement,
+  getCurrentScreen
+} from "../src/js/store/store";
 
 import DesktopIcon from "./svgs/desktop.svg";
 import Logo from "./svgs/logo.svg";
@@ -33,10 +35,13 @@ import { iconsManager } from "../../admin/src/js/helpers";
 import ResponsiveDdMenu from "./js/components/ResponsiveDdMenu";
 import ResponsiveDdFooter from "./js/components/ResponsiveDdFooter";
 import DialogWindow from "./js/components/DialogWindow";
-import {renderAsset} from "../../front-app/src/js/helpers";
-import {changeCurrentUser} from "../../front-app/src/js/store/current-user/actions";
+import { renderAsset } from "../../front-app/src/js/helpers";
+import { changeCurrentUser } from "../../front-app/src/js/store/current-user/actions";
 import Resource from "./js/classes/Resource";
 import appStore from "../../front-app/src/js/store/store";
+
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 /**
  * Главный класс редактора.<br/>
  * Реакт-Компонент.<br/>
@@ -54,7 +59,7 @@ class Editor extends Component {
       // activePanel: 'widgets',
       activePanel: "settings",
       templateStatus: CONSTANTS.TEMPLATE_UPDATED,
-      showDialogWindow: false,
+      showDialogWindow: false
     };
     this.openPageSettings = this.openPageSettings.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
@@ -89,18 +94,18 @@ class Editor extends Component {
   showWidgetsPanel() {
     this.setState({
       ...this.state,
-      activePanel: "widgets",
+      activePanel: "widgets"
     });
   }
 
-  /** 
+  /**
    * Показывает Dialog окно
    */
   toggleModalWindow() {
     this.setState({
       showDialogWindow: !this.state.showDialogWindow
-    })
-  };
+    });
+  }
 
   /**
    * Показывает панель с настройками текущего виджета
@@ -108,7 +113,7 @@ class Editor extends Component {
   showSettingsPanel() {
     this.setState({
       ...this.state,
-      activePanel: "settings",
+      activePanel: "settings"
     });
   }
 
@@ -124,7 +129,7 @@ class Editor extends Component {
    */
   onClick() {
     contextMenu.hideAll();
-    store.dispatch(closeDynamicContent())
+    store.dispatch(closeDynamicContent());
   }
 
   /**
@@ -153,7 +158,9 @@ class Editor extends Component {
   async componentDidMount() {
     this.initModules();
 
-    let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
+    let currentUser = await new Resource({
+      route: "/ajax/current-user"
+    }).getAll();
     currentUser = currentUser.data;
     appStore.dispatch(changeCurrentUser(currentUser));
   }
@@ -179,7 +186,7 @@ class Editor extends Component {
     if (
       store.getState().currentElement.currentElement.getType &&
       store.getState().currentElement.currentElement.getType() ===
-      "root-element" &&
+        "root-element" &&
       this.state.activePanel === "settings"
     ) {
       settingsActive = " active";
@@ -187,6 +194,7 @@ class Editor extends Component {
     return (
       <Provider store={store}>
         <DndProvider backend={HTML5Backend}>
+<<<<<<< HEAD
         <div className={templateClasses}
           onClick={this.onClick}
           onDragEnd={this.onDragEnd}
@@ -234,13 +242,77 @@ class Editor extends Component {
               </button>
               <div className="btn ">
                 <ResponsiveDdFooter />
+=======
+          <div
+            className={templateClasses}
+            onClick={this.onClick}
+            onDragEnd={this.onDragEnd}
+          >
+            <div className="left-panel">
+              <div className="editor-top-panel">
+                <button
+                  className="btn btn_hamburger"
+                  // onClick={this.showSettingsPanel}
+                >
+                  <Hamburger className="icon" />
+                </button>
+                <a href="/admin/templates" target="_blank" className="logo">
+                  {window.admin_logo ? (
+                    renderAsset(window.admin_logo, {
+                      className: "editor__logo"
+                    })
+                  ) : (
+                    <Logo viewBox="0 0 97 35" className="editor__logo" />
+                  )}
+                </a>
+                <button
+                  className="btn btn_dots"
+                  onClick={this.showWidgetsPanel}
+                >
+                  <Dots className="icon" />
+                </button>
               </div>
-              <button className="btn ">
-                <Preview className="icon" />
-              </button>
-              <UpdateButton onClick={() => this.toggleModalWindow()} toggleModalWindow={() => this.toggleModalWindow()} />
+              <div className="left-panel-main">
+                {this.state.activePanel === "widgets" && <WidgetsPanel />}
+                {this.state.activePanel === "settings" && <SettingsPanel />}
+              </div>
+              <div className="editor-bottom-panel d-flex align-content-center justify-center">
+                <button
+                  className={"btn btn_settings" + settingsActive}
+                  onClick={this.openPageSettings}
+                >
+                  <Settings className="icon" />
+                </button>
+                <button className="btn ">
+                  <Navigation className="icon" />
+                </button>
+                <button className="btn ">
+                  <History className="icon" />
+                </button>
+                <div className="btn ">
+                  <ResponsiveDdFooter />
+                </div>
+                <button className="btn ">
+                  <Preview className="icon" />
+                </button>
+                <UpdateButton
+                  onClick={() => this.toggleModalWindow()}
+                  toggleModalWindow={() => this.toggleModalWindow()}
+                />
+>>>>>>> front-app-dev
+              </div>
+            </div>
+            <div className="right-panel">
+              {this.state.showDialogWindow && (
+                <DialogWindow
+                  state={this.state.showDialogWindow}
+                  toggleModalWindow={() => this.toggleModalWindow()}
+                />
+              )}
+              <EditorWindow />
             </div>
           </div>
+<<<<<<< HEAD
           <div className="right-panel">
             {this.state.showDialogWindow &&
             <DialogWindow state={this.state.showDialogWindow}
@@ -249,6 +321,9 @@ class Editor extends Component {
           </div>
         </div>
         <AssetsBrowser />
+=======
+          <AssetsBrowser />
+>>>>>>> front-app-dev
         </DndProvider>
       </Provider>
     );
