@@ -58,7 +58,7 @@ class Controller {
      * @member {BaseElement} currentElement
      * */
     let currentElement = getCurrentElement();
-    if (!this.data.repeater) {
+    if (! this.data.repeater) {
       if (updateElement) {
         currentElement.setSettingValue(this.getSettingName(), value);
       }
@@ -105,7 +105,6 @@ class Controller {
   isShow() {
 
     if(this.data.conditionsCallback){
-      console.log(this.data.conditionsCallback());
       return this.data.conditionsCallback();
     }
 

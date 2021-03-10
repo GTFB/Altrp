@@ -365,7 +365,9 @@ class BaseElement extends ControlStack {
       return;
     }
     let controls = window.controllersManager.getControls(this.getName());
-
+    if(this.defaultSettingsIsApply){
+      return;
+    }
     for (let tabName in controls) {
       if (controls.hasOwnProperty(tabName)) {
         if (!controls[tabName].length) {
@@ -385,6 +387,7 @@ class BaseElement extends ControlStack {
       }
     }
     this.updateStyles();
+    this.defaultSettingsIsApply = true;
   }
 
   setSettingValue(settingName, value, dispatchToHistory = true) {
@@ -399,12 +402,16 @@ class BaseElement extends ControlStack {
             settingName
           })
         );
-      this.settings = {...this.settings};
+      // this.settings = {...this.settings};
       this.settings[settingName] = value;
       if (this.component) {
-        this.component.changeSetting(settingName, value);
+        (async ()=>{
+          this.component.changeSetting(settingName, value);
+        })();
       }
-    }  
+      console.log(performance.now());
+    }
+
   }
 
   _registerControls() {

@@ -3649,7 +3649,11 @@ class Table extends BaseElement {
       tab: TAB_STYLE,
     });
 
-
+    this.addControl('columns_order', {
+      label: 'Columns Order',
+      dynamic: false,
+      description: '1, 3, 2'
+    });
 
     this.endControlSection();
     //</editor-fold>
