@@ -55,15 +55,21 @@ export default class Condition extends Component{
         const node = this.props.selectNode;
 
         node.data.props.nodeData.body.map(item =>{
-            if(item.id === id) item.operands[key] = e.target.value;
+            if(item.id === id) {
+                if(key === 'name') item.name = e.target.value;
+                else item.operands[key] = e.target.value;
+            }
             return item;
         });
         store.dispatch(setUpdatedNode(node));
     }
 
-    getNewCompare(){
+    getNewCompare(count){
+        const countNew = count + 1;
+
         return {
             id: new Date().getTime(),
+            name: `Compare ${countNew}`,
             "operator": "==",
             "operands":[]
         };
@@ -75,7 +81,10 @@ export default class Condition extends Component{
 
     onCreate(){
         const node = this.props.selectNode;
-        if(_.isArray(node.data.props.nodeData.body)) node.data.props.nodeData.body.push(this.getNewCompare());
+        if(_.isArray(node.data.props.nodeData.body)) {
+            const count = node.data.props.nodeData.body.length;
+            node.data.props.nodeData.body.push(this.getNewCompare(count));
+        }
         store.dispatch(setUpdatedNode(node));
     }
 
@@ -151,7 +160,16 @@ export default class Condition extends Component{
                         return <div className="repeater-item repeater-item_open" key={index}>
                             <div className="repeater-item-tools">
                                 <div className="repeater-item__caption">
-                                    Compare #1
+                                <textarea  
+                                        className="control-field" 
+                                        type="text" 
+                                        id={`compare_${item.id}`} 
+                                        name="compare" 
+                                        style={{width: '100%'}}
+                                        value={item?.name ?? ''} 
+                                        onChange={(e) => { this.changeInput(e, item.id, 'name') }}
+                                        />
+                                    {/* {item?.name ?? 'Compare#'} */}
                                 </div>
                                 <button className="repeater-item__icon" onClick={() => this.onDelete(item)}>
                                     {iconsManager().renderIcon('times')}
@@ -199,14 +217,12 @@ export default class Condition extends Component{
                         )}
                     </div>
                     <div className="d-flex justify-center repeater-bottom">                    
-                        {/* <button className="altrp-btn altrp-btn_gray d-flex align-items-center" onClick={() => this.onCreate()}> */}
                         <button 
-                        className="btn font_montserrat font_500 btn_grey btn_active" 
-                        style={{background:'#87CA00', padding:'5px', fontSize: '10px', textTransform: 'uppercase'}} onClick={() => this.onCreate()}>
-                        {/* {iconsManager().renderIcon('plus', {
-                            className: 'altrp-btn__icon', 
-                        })}*/}
-                        Add Compare
+                            className="btn font_montserrat font_500 btn_grey btn_active" 
+                            style={{background:'#87CA00', padding:'5px', fontSize: '10px', textTransform: 'uppercase'}}
+                            onClick={() => this.onCreate()}
+                        >
+                            Add Compare
                         </button>
                     </div>
                 </div>{/* ./controller-container controller-container_repeater repeater */}
