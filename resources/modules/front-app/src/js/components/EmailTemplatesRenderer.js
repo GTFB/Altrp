@@ -1,6 +1,6 @@
-import {connect} from "react-redux";
-import React, {Component} from "react";
-import {mbParseJSON} from "../helpers";
+import {connect} from 'react-redux';
+import React, {Component} from 'react';
+import {mbParseJSON} from '../helpers';
 
 class EmailTemplatesRenderer extends Component {
   constructor(props) {
@@ -24,7 +24,7 @@ class EmailTemplatesRenderer extends Component {
    * @return {*}
    */
   render() {
-    if (!this.props.currentEmailTemplate || !this.state.baseEmailRender) {
+    if (! this.props.currentEmailTemplate || ! this.state.baseEmailRender) {
       return null
     }
     let rootElement = mbParseJSON(this.props.currentEmailTemplate.data);
@@ -36,7 +36,8 @@ class EmailTemplatesRenderer extends Component {
       baseRender: this.state.baseEmailRender,
     });
     const wrapperStyles = {
-      width: "100%"
+      width: '100%',
+      display: 'none',
     };
     return <table id="altrp-email-renderer"
                   style={wrapperStyles}

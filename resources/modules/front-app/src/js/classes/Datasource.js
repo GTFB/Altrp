@@ -3,7 +3,7 @@ import appStore from "../store/store"
  * @class Datasource
  */
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
-import {getDataByPath} from "../helpers";
+import {getDataByPath, isJSON, mbParseJSON} from "../helpers";
 
 class Datasource extends AltrpModel{
   /**
@@ -41,18 +41,26 @@ class Datasource extends AltrpModel{
     if(! parsedTemplate){
       return null;
     }
-    parsedTemplate = parsedTemplate.split('\n');
-    parsedTemplate = parsedTemplate.filter(line => line);
-    parsedTemplate = parsedTemplate.map(line=> {
-      line = line.split('|');
-      line[0] = line[0].trim();
-      if(line.length === 1){
-        line.push(line[0]);
-      } else {
-        line[1] = line[1].trim();
-      }
-      return line
-    });
+    if(isJSON(parsedTemplate)){
+      parsedTemplate = mbParseJSON(parsedTemplate, []);
+      parsedTemplate = parsedTemplate.map(param=>{
+        return [param.paramName, param.paramValue];
+      });
+
+    } else {
+      parsedTemplate = parsedTemplate.split('\n');
+      parsedTemplate = parsedTemplate.filter(line => line);
+      parsedTemplate = parsedTemplate.map(line=> {
+        line = line.split('|');
+        line[0] = line[0].trim();
+        if(line.length === 1){
+          line.push(line[0]);
+        } else {
+          line[1] = line[1].trim();
+        }
+        return line
+      });
+    }
     parsedTemplate.forEach(([left, right])=>{
       if(right.match(/{{([\s\S]+?)(?=}})/g)){
         right = right.trim();

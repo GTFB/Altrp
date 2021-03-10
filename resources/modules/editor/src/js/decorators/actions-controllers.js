@@ -1,23 +1,29 @@
 import {
-  CONTROLLER_NUMBER, CONTROLLER_REPEATER, CONTROLLER_SELECT,
+  CONTROLLER_NUMBER,
+  CONTROLLER_REPEATER,
+  CONTROLLER_SELECT,
   CONTROLLER_SELECT2,
-  CONTROLLER_SWITCHER, CONTROLLER_TEXT, CONTROLLER_TEXTAREA,
+  CONTROLLER_SWITCHER,
+  CONTROLLER_TEXT,
+  CONTROLLER_TEXTAREA,
   TAB_CONTENT
-} from "../classes/modules/ControllersManager";
-import Repeater from "../classes/Repeater";
+} from '../classes/modules/ControllersManager';
+import Repeater from '../classes/Repeater';
 
 /**
- * 
- * @param {ControlStack} element
+ * Добавляет контроллеры действия для элемента
+ * @param {BaseElement} element - элемент
+ * @param {string} sectionLabel - заголовок секции
+ * @param {string} idPrefix - префикс, который добавляется ко всем id секция и контроллеров
  */
-export function actionsControllers(element){
+export function actionsControllers(element, sectionLabel = 'Actions', idPrefix = '') {
   /**
    * Список произвольных действия для кнопки START
    */
-  element.startControlSection("actions_section", {
+  element.startControlSection(idPrefix + 'actions_section', {
     tab: TAB_CONTENT,
     hideOnEmail: true,
-    label: "Actions",
+    label: sectionLabel,
   });
 
   let actionsRepeater = new Repeater();
@@ -116,13 +122,17 @@ export function actionsControllers(element){
         value: 'custom_code',
         label: 'Custom JS-Code',
       },
+      {
+        value: 'delay',
+        label: 'Delay',
+      },
     ],
   });
 
-  actionsRepeater.addControl("email_template", {
+  actionsRepeater.addControl('email_template', {
     type: CONTROLLER_SELECT2,
     prefetch_options: true,
-    label: "Email Template",
+    label: 'Email Template',
     isClearable: true,
     options_resource: '/admin/ajax/templates/options?template_type=email&value=guid',
     nullable: true,
@@ -139,6 +149,30 @@ export function actionsControllers(element){
     conditions: {
       type: [
         'custom_code'
+      ],
+    },
+  });
+
+  actionsRepeater.addControl('aliases', {
+    type: CONTROLLER_TEXTAREA,
+    dynamic: false,
+    responsive: false,
+    label: 'Aliases',
+    conditions: {
+      type: [
+        'update_current_datasources'
+      ],
+    },
+  });
+
+  actionsRepeater.addControl('milliseconds', {
+    type: CONTROLLER_NUMBER,
+    dynamic: false,
+    responsive: false,
+    label: 'Milliseconds',
+    conditions: {
+      type: [
+        'delay'
       ],
     },
   });
@@ -507,10 +541,10 @@ export function actionsControllers(element){
     },
   });
 
-  actionsRepeater.addControl("popup_id", {
+  actionsRepeater.addControl('popup_id', {
     type: CONTROLLER_SELECT2,
     prefetch_options: true,
-    label: "Popup ID",
+    label: 'Popup ID',
     isClearable: true,
     options_resource: '/admin/ajax/templates/options?template_type=popup&value=guid',
     nullable: true,
@@ -543,7 +577,7 @@ export function actionsControllers(element){
     label: 'Reject',
   });
 
-  element.addControl('actions', {
+  element.addControl(idPrefix + 'actions', {
     label: 'Actions',
     type: CONTROLLER_REPEATER,
     responsive: false,

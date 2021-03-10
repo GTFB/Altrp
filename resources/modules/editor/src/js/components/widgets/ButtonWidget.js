@@ -10,7 +10,6 @@ import {
   renderAssetIcon,
   scrollToElement
 } from "../../../../../front-app/src/js/helpers";
-import { togglePopup } from "../../../../../front-app/src/js/store/popup-trigger/actions";
 import { toggleTrigger } from "../../../../../front-app/src/js/store/hide-triggers/actions";
 
 class ButtonWidget extends Component {

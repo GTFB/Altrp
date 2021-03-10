@@ -38,6 +38,8 @@ import { FixedSizeList } from "react-window";
 import ElementWrapper from "../../../../../front-app/src/js/components/ElementWrapper";
 import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput";
 import TableComponent from "./components/TableComponent";
+import HeaderCellComponent from "./components/HeaderCellComponent";
+import CellComponent from "./components/CellComponent";
 
 /**
  *
@@ -698,6 +700,7 @@ function AltrpTableWithoutUpdate(
               {headerGroup.headers.map((column, idx) => {
                 const { column_width, column_header_alignment } = column;
                 let columnProps = column.getHeaderProps(column.getSortByToggleProps());
+                    columnProps.settings = settings;
                 const resizerProps = {
                   ...column.getResizerProps(),
                   onClick: e => { e.stopPropagation(); }
@@ -710,13 +713,14 @@ function AltrpTableWithoutUpdate(
                 }
                 let columnNameContent = column.render('column_name');
                 if (_.isString(columnNameContent)) {
-                  columnNameContent = <span dangerouslySetInnerHTML={{ __html: column.render('column_name') }} />;
+                  columnNameContent = <span dangerouslySetInnerHTML={{ __html: column.render('column_name') || '&nbsp;' }} />;
                 }
 
                 if(table_transpose){
                   _.unset(columnProps, 'style.width')
                 }
-                return <div {...columnProps}
+                return <HeaderCellComponent {...columnProps}
+                                            column={column}
                   className="altrp-table-th"
                   key={idx}>
                   {columnNameContent}
@@ -748,7 +752,7 @@ function AltrpTableWithoutUpdate(
                         }`}
                     />
                   }
-                </div>;
+                </HeaderCellComponent>;
               }
               )}
             </div>)
@@ -1230,8 +1234,9 @@ export function settingsToColumns(settings, widgetId) {
     /**
      * Колонку проказываем, если есть accessor или список actions
      */
-    if (_column.column_name && ((_column.actions && _column.actions.length) || _column.accessor)) {
+    if (((_column.actions && _column.actions.length) || _column.accessor)) {
       _column._accessor = _column.accessor;
+      _column.column_name = _column.column_name || '&nbsp;';
       if (_column.column_is_filtered) {
 
         _column.filter = 'fuzzyText';
@@ -1461,7 +1466,11 @@ const Cell = ({ cell, settings }) => {
     style.verticalAlign = cell.column.column_cell_vertical_alignment;
   }
 
-  return <div {...cellProps} style={style} className={cellClassNames.join(' ')}>{cellContent}</div>
+  return <CellComponent {...cellProps}
+                        settings={settings}
+                        column={column}
+                        style={style}
+                        className={cellClassNames.join(' ')}>{cellContent}</CellComponent>
 };
 /**
  * Компонент строки

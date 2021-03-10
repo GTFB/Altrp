@@ -62,8 +62,9 @@ Route::get( '/admin/editor-reports', function (){
 // Route::get('/reports/{id}/html', "ReportsController@html");
 Route::post('/reports/generate', "ReportsController@setHtml");
 
-Route::get('/admin/robots-editor', fn() => view('robots'))->middleware('auth', 'admin')
-                                                          ->name('robots-editor');
+Route::get('/admin/robots-editor', function() {
+  return view('robots');
+})->middleware('auth', 'admin')->name('robots-editor');
 
 /**
  * Notifications routes
@@ -85,6 +86,11 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
   Route::group(['prefix' => 'ajax'], function () {
+    /**
+     * Роуты модели AltrpMeta
+     */
+    Route::get('/altrp_meta/{meta_name}', 'Admin\ALtrpMetaController@getMetaByName');
+    Route::put('/altrp_meta/{meta_name}', 'Admin\ALtrpMetaController@saveMeta');
 
     // Websockets
     Route::get('/websockets', 'Admin\WebsocketsController@index');
@@ -436,8 +442,10 @@ Route::get('/', function () {
 
   return view('front-app', [
     'title' => 'Main',
+    'page_id' => '',
     '_frontend_route' => [],
     'preload_content' => [],
+    'page_areas' => '[]',
     'is_admin' => isAdmin(),
   ]);
 })->middleware(['web', 'installation.checker']);

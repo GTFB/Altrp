@@ -18,7 +18,8 @@ class PageDatasource extends Model
         'source_id',
         'alias',
         'priority',
-        'parameters'
+        'autoload',
+        'parameters',
     ];
 
   /**

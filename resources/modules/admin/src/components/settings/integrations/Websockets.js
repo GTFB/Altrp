@@ -37,9 +37,6 @@ class Websockets extends Component {
 
   render() {
     let value = store.getState().websocketStore?.enabled ?? false;
-    console.log(store.getState().websocketStore);
-    console.log(window.Echo?.connector?.pusher);
-    console.log(value);
     let switcherClasses = `control-switcher control-switcher_${value ? 'on' : 'off'}`;
     return <div className="admin_settings_websockets">
       <div className="admin_settings_websockets_box">

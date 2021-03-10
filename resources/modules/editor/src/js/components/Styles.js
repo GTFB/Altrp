@@ -62,6 +62,26 @@ class Styles extends Component {
       elementStyles
     })
   }
+
+  /**
+   * @param {string} elementId
+   * */
+  removeStyleById(elementId){
+
+    let elementStyles = [...this.state.elementStyles];
+
+    elementStyles.map((element, index) => {
+      if (element.elementId === elementId) {
+        elementStyles.splice(index, 1);
+      }
+    });
+
+    this.setState({
+      elementStyles: elementStyles,
+      fonts: []
+    });
+  }
+
   render(){
     let elementStyles = _.uniqBy(this.state.elementStyles, 'elementId');
     return <div className="styles-container" id="styles-container" ref={this.stylesContainer}>

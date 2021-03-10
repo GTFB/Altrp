@@ -15,7 +15,7 @@ class CreateAltrpRobotsTable extends Migration
     {
         Schema::create('altrp_robots', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('user_id');
+            $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('model_id')->unsigned()->nullable();
             $table->string('name');
             $table->string('start_condition')->nullable();

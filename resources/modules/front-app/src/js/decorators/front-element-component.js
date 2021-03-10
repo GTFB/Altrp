@@ -1,5 +1,12 @@
 import modelManager from "../../../../editor/src/js/classes/modules/ModelsManager";
-import {conditionsChecker, getConverter, getDataByPath, isEditor, replaceContentWithData} from "../helpers";
+import {
+  conditionsChecker,
+  getConverter,
+  getDataByPath,
+  isEditor,
+  prepareContext,
+  replaceContentWithData
+} from "../helpers";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 
 /**
@@ -150,20 +157,25 @@ function getContent(settingName, returnRaw = false) {
   }
   if((! isEditor())){//todo: сделать подгрузку данных и в редакторе
     let model = element.hasCardModel() ? element.getCardModel() : this.props.currentModel;
-    if(returnRaw){
-      content = content.trim().replace('{{', '').replace('}}', '');
-      content = getDataByPath(content, '', model);
-    } else {
-      content = replaceContentWithData(content, model);
-    }
-    // let paths = _.isString(content) ? content.match(/{{([\s\S]+?)(?=}})/g) : null;
-    // if(_.isArray(paths)){
-    //   paths.forEach(path => {
-    //     path = path.replace('{{', '');
-    //     let value = getDataByPath(path, '', model);
-    //     content = content.replace(new RegExp(`{{${path}}}`, 'g'), value)
-    //   });
-    // }
+
+     if(settingName === 'content_default_value' && _.isString(content) && content.indexOf('{{{') !== -1){
+      let context = this.props.element.getCurrentModel().getData();
+      context = prepareContext(context);
+      let replacedContent = content
+          .replace(/}}}/g, "')")
+          .replace(/{{{/g, "_.get(context, '");
+      try{
+        content = eval(replacedContent);
+      } catch(e){
+        console.error(e);
+      } finally {
+      }
+    } else if(returnRaw){
+       content = content.trim().replace('{{', '').replace('}}', '');
+       content = getDataByPath(content, '', model);
+     } else {
+       content = replaceContentWithData(content, model);
+     }
 
     const contentDynamicSetting = this.props.element.getDynamicSetting(settingName);
 

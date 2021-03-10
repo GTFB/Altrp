@@ -217,6 +217,14 @@ button {
     -ms-user-select: none;
     user-select: none;
 }
+.blocking-layer {
+    position: absolute;
+    width: calc(100vw - 295px);
+    right: 20px;
+    height: 100%;
+    z-index: 999999;
+}
+
 .editor-window {
     max-width: calc(100vw - 275px);
     display: flex;
@@ -1148,9 +1156,20 @@ button {
     font-size: 12px;
 }
 .control-color-colorPicker {
-    z-index: 9999;
-    position: absolute;
-    margin-top: 60px;
+  z-index: 9999;
+  position: absolute;
+  margin-top: 60px;
+  width: 200px;
+  padding: 10px 10px 0;
+  box-sizing: initial;
+  background: rgb(255, 255, 255);
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0 0 0 1px, rgba(0, 0, 0, 0.15) 0 8px 16px;
+  & .sketch-picker{
+    box-shadow: none!important;
+    padding: 0 !important;
+
+  }
 }
 
 .control-color-hide {
@@ -1163,6 +1182,41 @@ button {
     align-items: center;
     width: 100%;
     margin-bottom: 10px;
+}
+.control-color-preset-colors{
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -10px;
+  position: relative;
+  padding-top: 5px;
+  border-top: 1px solid $light-light-gray;
+  &-wrapper{
+    width: 16px;
+    height: 16px;
+    margin: 0 10px 10px 0;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NkYGAQYcAP3uCTZhw1gGGYhAGBZIA/nYDCgBDAm9BGDWAAJyRCgLaBCAAgXwixzAS0pgAAAABJRU5ErkJggg==);
+
+  }
+  &__item{
+    background: #fff;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+    position: relative;
+    outline: none;
+    border-radius: 3px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0 0 0 1px inset;
+    &:focus{
+      box-shadow: rgba(0, 0, 0, 0.15) 0 0 0 1px, rgba(0, 0, 0, 0.15) 0 8px 16px;
+    }
+    &_add{
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #fff;
+    }
+  }
 }
 .control-dimensions-header {
     display: flex;

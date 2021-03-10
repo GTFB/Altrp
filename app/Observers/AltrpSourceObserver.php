@@ -63,7 +63,7 @@ class AltrpSourceObserver
             if ($controllerWriter->methodSourceExists($source->name)) {
                 throw new ControllerFileException('Method already exists', 403);
             }
-            $result = $controllerWriter->writeDataSourceMethod($source->name, $source->request_type, $source->url, []);
+            $result = $controllerWriter->writeDataSourceMethod($source);
             if (! $result)
                 throw new ControllerFileException('Failed to write method to the controller file', 500);
         }
@@ -130,9 +130,7 @@ class AltrpSourceObserver
             if ($controllerWriter->methodSourceExists($source->getOriginal('name'))) {
                 $result = $controllerWriter->updateSourceMethod(
                     $source->getOriginal('name'),
-                    $source->name,
-                    $source->request_type,
-                    $source->url
+                    $source
                 );
                 if (! $result)
                     throw new ControllerFileException('Failed to update method to the controller file', 500);

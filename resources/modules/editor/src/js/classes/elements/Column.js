@@ -286,7 +286,6 @@ class Column  extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} > .altrp-column{{STATE}}": "background-color: {{COLOR}};"
       }
@@ -635,10 +634,6 @@ class Column  extends BaseElement {
           colorPickedHex: '#000000',
           type: ""
         },
-        presetColors: [
-          '#eaeaea',
-          '#9c18a8'
-        ],
         rules: {
           '{{ELEMENT}} > .altrp-column{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
         },

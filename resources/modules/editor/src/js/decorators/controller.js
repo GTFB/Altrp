@@ -257,5 +257,6 @@ export function controllerMapStateToProps(state){
     currentScreen: state.currentScreen,
     controllerValue: state.controllerValue,
     historyStore: state.historyStore,
+    presetColors: state.editorMetas.preset_colors,
   };
 }

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { withRouter } from 'react-router-dom';
 import Resource from "../../../../editor/src/js/classes/Resource";
 import AltrpSelect from "../altrp-select/AltrpSelect";
+import {altrpRandomId, isJSON, mbParseJSON, parseParamsFromString} from "../../../../front-app/src/js/helpers";
+import PageDataSourceParams from "./PageDataSourceParams";
 
 class PageDataSourceForm extends Component {
   state = {
@@ -10,10 +12,15 @@ class PageDataSourceForm extends Component {
     priority: 100,
     parameters: '',
     dataSourceOptions: [],
+    autoload: true,
+    isExtendedSettings: isJSON(_.get(this.props, 'dataSource.parameters')),
     ...this.props.dataSource
   };
 
-  changeHandler = ({ target: { value, name } }) => {
+  changeHandler = ({ target: { value, name, checked } }) => {
+    if(name === 'autoload'){
+      value = checked;
+    }
     this.setState({ [name]: value });
   };
 
@@ -36,9 +43,35 @@ class PageDataSourceForm extends Component {
     }
     this.props.updateHandler();
   };
-
+  /**
+   * Переключаем тип настройки параметров с раширинных до обычных
+   */
+  toggleParamsSettings=()=>{
+    let isExtendedSettings = ! this.state.isExtendedSettings;
+    let parameters;
+    if(isExtendedSettings){
+      parameters = parseParamsFromString(this.state.parameters, {}, false, false);
+      parameters = _.map(parameters, (paramValue, paramName) => {
+        return {
+          paramValue,
+          paramName,
+          key: altrpRandomId(),
+          required: false,
+        }
+      });
+      parameters = JSON.stringify(parameters);
+    } else {
+      parameters = mbParseJSON(this.state.parameters) || [];
+      let _parameters = '';
+      parameters.forEach(param => {
+        _parameters += `${param.paramName || ''} | ${param.paramValue || ''}\n`
+      });
+      parameters = _parameters;
+    }
+    this.setState(state => ({...state, isExtendedSettings, parameters}));
+  };
   render() {
-    let { source_id, alias, priority, parameters, dataSourceOptions } = this.state;
+    let { source_id, alias, priority, parameters, dataSourceOptions, autoload, isExtendedSettings } = this.state;
     dataSourceOptions = dataSourceOptions.map(source=>({value:source.id, label:source.title || source.name}));
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="form-group">
@@ -80,14 +113,35 @@ class PageDataSourceForm extends Component {
       </div>
 
       <div className="form-group">
-        <label htmlFor="parameters">Parameters</label>
+        <label htmlFor="autoload">Autoload</label>
+        <input type="checkbox" id="autoload"
+          name="autoload"
+          checked={autoload}
+          onChange={this.changeHandler}
+          className="form-check-input position-static ml-2"
+        />
+      </div>
+      <div className="admin_switcher">
+        <div className="admin_switcher__label">Extended Params Settings</div>
+        <div className={`control-switcher ${isExtendedSettings ? 'control-switcher_on' : 'control-switcher_off'}`}
+             onClick={this.toggleParamsSettings}>
+          <div className="control-switcher__on-text">ON</div>
+          <div className="control-switcher__caret"/>
+          <div className="control-switcher__off-text">OFF</div>
+        </div>
+      </div>
+      {! isExtendedSettings && <div className="form-group">
+        <label htmlFor="parameters">Parameters:</label>
         <textarea name="parameters"
           id="parameters"
           value={parameters || ''}
           onChange={this.changeHandler}
           className="form-control"
         />
-      </div>
+      </div>}
+      {isExtendedSettings && <PageDataSourceParams parameters={parameters || ''} onChange={parameters=>{
+        this.setState(state=>({...state, parameters: JSON.stringify(parameters)}));
+      }}/>}
 
       <div className="btn__wrapper">
         <button className="btn btn_success" type="submit">Add</button>
