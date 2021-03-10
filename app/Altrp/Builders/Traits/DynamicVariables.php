@@ -19,11 +19,11 @@ trait DynamicVariables
      */
     protected function replaceDynamicVars($str, $outer = false)
     {
-        $pattern = '\'?(CURRENT_[A-Z_]+|([A-Z_]+)?REQUEST)(:[a-zA-Z0-9,\'_.()]+)?(:[a-zA-Z0-9,;"%-_.()+*/|]+)?(:[A-Z_<>!=]+)?\'?';
+        $pattern = '\'?(REQUEST)(:[a-zA-Z0-9\'_.(]+)|(CURRENT_[A-Z_]+|([A-Z_]+)?REQUEST)(:[a-zA-Z0-9,\'_.()]+)?(:[a-zA-Z0-9,;"%-_.()+*/|]+)?(:[A-Z_<>!=]+)?\'?';
         $str = preg_replace_callback(
             "#$pattern#",
-            function($matches) use ($outer) {
-                $param = $matches[0] ? explode(':',trim($matches[0], '\'')) : null;
+            function ($matches) use ($outer) {
+                $param = $matches[0] ? explode(':', trim($matches[0], '\'')) : null;
                 if ($param && $param[0] == 'REQUEST') {
                     return $this->getValue('request()->' . $param[1], $outer);
                 }
@@ -32,12 +32,12 @@ trait DynamicVariables
                     list($wrapStart, $value, $wrapEnd) = $this->checkUnixTime($param[2]);
                     list($startLike, $endLike, $operator) = isset($param[3]) && \Str::contains($param[3], 'LIKE')
                         ? $this->getSqlLikeExp($param[3])
-                        : ['','',$param[3]];
+                        : ['', '', $param[3]];
                     $param[3] = $operator;
                     $wrapStart = $wrapStart ? $wrapStart : "'\'{$endLike}' .";
                     $wrapEnd = $wrapEnd ? $wrapEnd : ". '{$startLike}\''";
                     $param[2] = $value;
-                    return $this->getValue( '(request()->' . $param[2]
+                    return $this->getValue('(request()->' . $param[2]
                         . " ? '{$param[1]} {$param[3]} ' . {$wrapStart}request()->{$param[2]}{$wrapEnd} : '')", $outer);
                 }
                 if ($param && $param[0] == 'IF_AND_REQUEST') {
@@ -45,12 +45,12 @@ trait DynamicVariables
                     list($wrapStart, $value, $wrapEnd) = $this->checkUnixTime($param[2]);
                     list($startLike, $endLike, $operator) = isset($param[3]) && \Str::contains($param[3], 'LIKE')
                         ? $this->getSqlLikeExp($param[3])
-                        : ['','',$param[3]];
+                        : ['', '', $param[3]];
                     $param[3] = $operator;
                     $wrapStart = $wrapStart ? $wrapStart : "'\'{$endLike}' .";
                     $wrapEnd = $wrapEnd ? $wrapEnd : ". '{$startLike}\''";
                     $param[2] = $value;
-                    return $this->getValue( '(request()->' . $param[2]
+                    return $this->getValue('(request()->' . $param[2]
                         . " ? ' AND {$param[1]} {$param[3]} ' . {$wrapStart}request()->{$param[2]}{$wrapEnd} : '')", $outer);
                 }
                 if ($param && $param[0] == 'CURRENT_USER') {
@@ -91,12 +91,12 @@ trait DynamicVariables
             },
             $str
         );
-      /**
-       * Заменим префикс БД
-       */
-      $str = str_replace( '{{PREFIX}}', DB::getTablePrefix(), $str );
-      $str = str_replace('->->', '.', $str);
-      return $str;
+        /**
+         * Заменим префикс БД
+         */
+        $str = str_replace('{{PREFIX}}', DB::getTablePrefix(), $str);
+        $str = str_replace('->->', '.', $str);
+        return $str;
     }
 
     /**
