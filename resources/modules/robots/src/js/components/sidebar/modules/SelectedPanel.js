@@ -6,10 +6,10 @@ import Robot from "./data/Robot"
 import Edge from "./data/Edge"
 import store from "../../../store/store"
 import {setUpdatedNode} from "../../../store/robot-settings/actions"
-import {setCurrentRobot} from "../../../store/current-robot/actions"
 import Chevron from "../../../../../../editor/src/svgs/chevron.svg";
-import Resource from "../../../../../../editor/src/js/classes/Resource";
-import AltrpSelect from "../../../../../../admin/src/components/altrp-select/AltrpSelect";
+// import {setCurrentRobot} from "../../../store/current-robot/actions"
+// import Resource from "../../../../../../editor/src/js/classes/Resource";
+// import AltrpSelect from "../../../../../../admin/src/components/altrp-select/AltrpSelect";
 
 export default class SelectedPanel extends React.Component {
   constructor(props) {

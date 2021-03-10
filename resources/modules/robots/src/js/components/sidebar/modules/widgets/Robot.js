@@ -8,7 +8,12 @@ export default class Robot extends React.Component {
   }
 
   redirectTo(item) {
-    if (item) return window.location.href = `robots-editor?robot_id=${item}`;
+    if (!item) {
+      alert('Куда перейти? Робот не указан!');
+    }
+    else {
+      if (confirm('Перейти без сохранения?')) return window.location.href = `robots-editor?robot_id=${item}`;
+    }
   }
 
   render() {

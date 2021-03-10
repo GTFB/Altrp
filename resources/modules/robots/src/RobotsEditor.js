@@ -33,21 +33,21 @@ const mapStateToProps = state => {
   return {
     elements: _.cloneDeep(state.robotSettingsData),
     robot: _.cloneDeep(state.currentRobot),
+    other: _.cloneDeep(state.otherData),
   };
 };
 
 class RobotsEditor extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      elements: props.elements || [],
-      robot: props.robot || [],
+      elements: [],
+      robot: [],
       reactFlowInstance: null,
       selectNode: false,
       selectEdge: false,
       activePanel: "widgets",
-      btnActive: ''
+      btnActive: '',
     };
     this.changeTab = this.changeTab.bind(this);
     this.btnChange = this.btnChange.bind(this);
@@ -110,10 +110,11 @@ class RobotsEditor extends Component {
       id: `${this.getId()}`,
       type,
       position,
-      data: { type: "node",
-              label: `${type}`,
-              props
-            }
+      data: {
+        type: "node",
+        label: `${type}`,
+        props
+      }
     };
 
     const robotStore = store.getState()?.robotSettingsData;
@@ -175,6 +176,8 @@ class RobotsEditor extends Component {
 
   onEdgeUpdate = (oldEdge, newConnection) => {
     const robotStore = store.getState()?.robotSettingsData;
+    console.log(oldEdge);
+    console.log(newConnection);
     const newStore = updateEdge(oldEdge, newConnection, robotStore);
     store.dispatch(setRobotSettingsData(newStore));
   }
@@ -217,7 +220,7 @@ class RobotsEditor extends Component {
           />
           <div className="content" ref={this.reactFlowRef }>
             <ReactFlow
-              elements={ this.state.elements }
+              elements={ this.props.elements }
               onConnect={ this.onConnect }
               onElementsRemove={ this.onElementsRemove }
               onElementClick={ this.onElementClick }
