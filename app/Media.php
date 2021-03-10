@@ -20,6 +20,8 @@ class Media extends Model
     'title',
     'description',
     'alternate_text',
+    'width',
+    'height',
   ];
 
   /**

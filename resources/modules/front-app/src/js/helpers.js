@@ -291,7 +291,7 @@ export function parseParamsFromString(
     }
     left = left.trim();
     right = right.trim();
-    if(right.indexOf('{{')){
+    if(right.indexOf('{{') !== -1){
       right = replaceContentWithData(right);
     }
     if (right.match(/{{([\s\S]+?)(?=}})/g)) {

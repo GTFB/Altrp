@@ -1,5 +1,7 @@
 let gulp = require('gulp');
 let zip = require('gulp-zip');
+let notify = require("gulp-notify");
+let path = require('path');
 
 function altrpZip() {
   return gulp.src([
@@ -62,7 +64,12 @@ function altrpZip() {
     '!./.phpstorm.meta.php',
     '!./s.sql',
   ]).pipe(zip('altrp.zip'))
-      .pipe(gulp.dest('../'));
+      .pipe(gulp.dest('../'))
+      .pipe(notify({
+        message:'Архив готов',
+        sound: true,
+        title: 'Altrp'
+      }));
 }
 
 exports.pack = altrpZip;

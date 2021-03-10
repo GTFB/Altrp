@@ -77,6 +77,19 @@ class MediaController extends Controller
       $media->filename =  $file->storeAs( 'media/' .  date("Y") . '/' .  date("m" ) ,
         Str::random(40) . '.' . $file->getClientOriginalExtension(),
         ['disk' => 'public'] );
+
+      $path = Storage::path( 'public/' . $media->filename );
+      $ext = pathinfo( $path, PATHINFO_EXTENSION );
+      if( $ext === 'svg' ){
+        $svg = file_get_contents( $path );
+        $svg = simplexml_load_string( $svg );
+        $media->width = ( string ) data_get( $svg->attributes(), 'width', 150 );
+        $media->height = ( string ) data_get( $svg->attributes(), 'height', 150 );
+      } else {
+        $size = getimagesize( $path );
+        $media->width = data_get( $size, '0', 0 );
+        $media->height = data_get( $size, '1', 0 );
+      }
       $media->url =  Storage::url( $media->filename );
       $media->save();
       $res[] = $media;
@@ -130,10 +143,6 @@ class MediaController extends Controller
   {
     //
     $media = Media::find( $id );
-    echo '<pre style="padding-left: 200px;">';
-    var_dump($request->all()  );
-    echo '</pre>';
-
     if( ! $media ){
       return response()->json( ['success' => false,], 404, [], JSON_UNESCAPED_UNICODE);
     }
