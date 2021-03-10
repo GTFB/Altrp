@@ -13,9 +13,12 @@ body {
 .front-app{
   position: relative;
   z-index: 50;
- &-content_test{
+  &-content_test{
    padding-bottom: 100px;
- }
+  }
+  &_admin{
+    padding-top: 25px;
+  }
 }
 
 .admin-bar {
@@ -180,6 +183,7 @@ body {
     border: 1px;
     padding: 2px 9px;
     vertical-align: top;
+    line-height: 17px;
   }
 
   &__button {

@@ -65,7 +65,6 @@ class AdminBar extends React.Component {
   }
 
   renderResultSearch(resultSearch = null) {
-    console.log(JSON.stringify(getDataByPath(this.state.valueInput), null, '\t'))
     return JSON.stringify(getDataByPath(this.state.valueInput), null, '\t');
     // if (Array.isArray(resultSearch) && resultSearch.length !== 0) {
     //   return (

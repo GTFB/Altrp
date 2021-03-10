@@ -98,6 +98,7 @@ class RepeaterController extends Component {
    * Перетаскиваем итем в повторителе
    */
   moveItem(dragIndex, hoverIndex) {
+    console.log('items', this.state.items);
     const dragItem = this.state.items[dragIndex];
     let items = update(this.state.items, {
       $splice: [
@@ -108,6 +109,8 @@ class RepeaterController extends Component {
     this.setState(state => {
       return { ...state, items }
     });
+    console.log('items', this.state.items);
+    console.log('this.props.fields', this.getSettings(this.props.fields[0].controlId));
     this._changeValue(items);
   }
   /**
@@ -157,6 +160,7 @@ class RepeaterController extends Component {
     /**
      *  если элемент другой обновим items
      */
+    console.log('componentDidUpdate')
     if(prevProps.currentElement.getId() !== this.props.currentElement.getId()){
       let items = prevProps.default || [];
       items = this.getSettings(this.props.controlId) || items;
@@ -183,6 +187,7 @@ class RepeaterController extends Component {
                 itemClasses={itemClasses}
                 thisController={this}
                 itemController={item} 
+                fields={this.props.fields}
                 idx={idx}   
                 key={item.id} 
               />
@@ -202,11 +207,10 @@ class RepeaterController extends Component {
   }
 }
 
-const RepeaterItem = ({thisController, itemClasses, idx, itemController}) => {
+const RepeaterItem = ({thisController, itemClasses, idx, itemController, fields}) => {
+  console.count()
   const {setActiveItem, duplicateItem, deleteItem, moveItem} = thisController;
-  const propsController = thisController.props;
   const ref=React.useRef(null);
-
   const [, drop] = useDrop({
     accept: "item",
     hover(item, monitor) {
@@ -259,16 +263,18 @@ const RepeaterItem = ({thisController, itemClasses, idx, itemController}) => {
       </div>
       <div className="repeater-item-content">
         {
-          propsController.fields.map(field => {
+          fields.map(field => {
             let ControllerComponent = controllersManager.getController(field.type);
-            let controller = new Controller({ ...field, repeater: thisController, itemIndex: idx });
+            let controller = new Controller({...field, repeater: thisController, itemIndex: idx });
             let value = itemController[field.controlId] || '';
-            return <ControllerComponent {...field}
+            return <ControllerComponent 
+              {...field}
               repeater={thisController}
               itemindex={idx}
               key={field.controlId}
               default={value}
-              controller={controller} />
+              controller={controller} 
+            />
           })
         }
       </div>

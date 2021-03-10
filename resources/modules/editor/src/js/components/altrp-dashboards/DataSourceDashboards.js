@@ -420,6 +420,7 @@ class DataSourceDashboards extends Component {
           saveWidget={this.saveWidgetData}
           copyWidget={this.copyWidget}
           exportCard={this.exportCard}
+          widgetID={this.state.id}
         />
       </div>
     );
@@ -465,35 +466,20 @@ class DataSourceDashboards extends Component {
           onClose={this.openSettings}
           handler={false}
         >
-          <Scrollbars
-            style={{ zIndex: 999999 }}
-            autoHide
-            autoHideTimeout={500}
-            autoHideDuration={200}
-            renderTrackVertical={({ style, ...props }) => {
-              return (
-                <div
-                  className="altrp-scroll__vertical-track"
-                  style={style}
-                  {...props}
-                />
-              );
-            }}
-          >
-            {this.state.settingsOpen && (
-              <WidgetSettings
-                widgetID={this.state.id}
-                addItemPreview={this.state.addItemPreview}
-                filter_datasource={this.state.settings.filter_datasource}
-                datasources={this.props.rep}
-                editHandler={this.onEditItem}
-                onCloseHandler={this.openSettings}
-                onAddItem={this.onAddItemCard}
-                setCardName={this.setCardName}
-                delimer={this.state.delimer}
-              />
-            )}
-          </Scrollbars>
+          {this.state.settingsOpen && (
+            <WidgetSettings
+              widgetID={this.state.id}
+              addItemPreview={this.state.addItemPreview}
+              filter_datasource={this.state.settings.filter_datasource}
+              datasources={this.props.rep}
+              editHandler={this.onEditItem}
+              checkboxColor={this.state.settings?.checkboxColor}
+              onCloseHandler={this.openSettings}
+              onAddItem={this.onAddItemCard}
+              setCardName={this.setCardName}
+              delimer={this.state.delimer}
+            />
+          )}
         </Drawer>
         {this.state.drawer != null &&
           ReactDOM.createPortal(

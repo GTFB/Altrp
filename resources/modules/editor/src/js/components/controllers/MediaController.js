@@ -83,8 +83,6 @@ class MediaController extends Component {
     } else {
       Asset = AddIcon
     }
-    console.log(Asset);
-    console.log(value);
 
     return <div className="controller-container controller-container_media">
       <div className="controller-container__label">

@@ -681,6 +681,15 @@ class FrontElement {
       appStore.dispatch(addFont(this.getId(), settingName, font));
     });
   }
+
+  /**
+   * Получить данные динамических настроек
+   * @param {string} dynamicSettingName
+   * @return {{} | null}
+   */
+  getDynamicSetting(dynamicSettingName){
+    return _.get(this.settings, `altrpDynamicSetting.${dynamicSettingName}`, null);
+  }
 }
 
 export default FrontElement

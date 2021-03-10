@@ -10,10 +10,11 @@ import { changeAppRoutes } from "./store/routes/actions";
 import Route from "./classes/Route";
 import { changePageState } from "./store/altrp-page-state-storage/actions";
 import { changeAltrpMeta } from "./store/altrp-meta-storage/actions";
-import { useDispatch } from "react-redux";
 import { altrpFontsSet, GOOGLE_FONT } from "./components/FontsManager";
 import queryString from "query-string";
 import AltrpSVG from "../../../editor/src/js/components/altrp-svg/AltrpSVG";
+import ArrayConverter from "./classes/converters/ArrayConverter";
+import DataConverter from "./classes/converters/DataConverter";
 
 export function getRoutes() {
   return import("./classes/Routes.js");
@@ -183,20 +184,6 @@ export function renderAssetIcon(asset, props = null) {
     }
     switch (asset.assetType) {
       case "icon": {
-        // if(asset.url) {
-        //   return <AltrpSVG {...props} url={asset.url} />;
-        //   window.assetsCache = window.assetsCache || {};
-        //   if (window.assetsCache[asset.url]) return window[asset.url];
-        //   fetch(asset.url)
-        //     .then(response => response.text())
-        //     .then(svg => {
-        //       svg = svg.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
-        //       window[asset.url] = (<svg {...props} dangerouslySetInnerHTML={{__html: svg }}></svg>);
-        //     })
-        //     .catch(console.error.bind(console));
-        //
-        //   return window[asset.url];
-        // }
         return iconsManager().renderIcon(asset.name);
       }
       case "image": {
@@ -275,13 +262,16 @@ export function parseParamsFromString(
   context = {},
   allowObject = false
 ) {
+  if(! (context instanceof AltrpModel)){
+    context = new AltrpModel(context);
+  }
   const params = {};
   const urlParams =
     window.currentRouterMatch instanceof AltrpModel
       ? window.currentRouterMatch.getProperty("params")
       : {};
 
-  if (!string) {
+  if (! string) {
     return params;
   }
   const lines = string.split("\n");
@@ -458,9 +448,6 @@ export function setDataByPath(path = "", value, dispatch = null) {
     if (_.isEqual(oldValue, value)) {
       return true;
     }
-    console.log("====================================");
-    console.log(value);
-    console.log("====================================");
     if (_.isFunction(dispatch)) {
       dispatch(changeCurrentUserProperty(path, value));
     } else {
@@ -475,7 +462,7 @@ export function setDataByPath(path = "", value, dispatch = null) {
  * Получить данные из окружения
  * @param {string} path
  * @param {*} _default
- * @param {AltrpModel} context
+ * @param {{} | AltrpModel | null} context
  * @param {boolean} altrpCheck - проверять ли altrp
  * @return {*}
  */
@@ -576,7 +563,6 @@ export function extractPathFromString(string = "") {
   }
   return path;
 }
-
 /**
  * Возвращает новый объект из свояств объекта, в именах которых присутствует префикс prefix
  * @param {string} prefix - строка для поиска (например 'test')
@@ -1014,6 +1000,9 @@ export function replaceContentWithData(content = "", modelContext = null) {
     paths.forEach(path => {
       path = path.replace("{{", "");
       let value = getDataByPath(path, "", modelContext);
+      if(value === 0){
+        value = '0';
+      }
       content = content.replace(new RegExp(`{{${path}}}`, "g"), value || "");
     });
   }
@@ -1071,8 +1060,6 @@ export function printElements(elements, title = "") {
  * @params {string} filename
  */
 export async function elementsToPdf(elements, filename = "") {
-  console.log(elements, filename);
-
   let html2pdf = (await import("html2pdf.js")).default;
   elements = elements.body ? elements.body : elements;
   if (!elements) {
@@ -1457,12 +1444,24 @@ export function isAltrpTestMode() {
   return window.location.href.indexOf("altrp-test=true") > 0;
 }
 
+/**
+ * лучайная строка
+ * @return {string}
+ */
 export function altrpRandomId() {
   return Math.random()
     .toString(36)
     .substr(2, 9);
 }
 
+/**
+ * Кнопки для пагинации
+ * @param pageIndex
+ * @param pageCount
+ * @param first_last_buttons_count
+ * @param middle_buttons_count
+ * @return {*[]}
+ */
 export function generateButtonsArray(pageIndex, pageCount, first_last_buttons_count, middle_buttons_count) {
   const buttonsSum = first_last_buttons_count + middle_buttons_count;
   const lastButtons = Array.from({ length: first_last_buttons_count }, (_, i) => pageCount - i - 1).reverse();
@@ -1480,4 +1479,38 @@ export function generateButtonsArray(pageIndex, pageCount, first_last_buttons_co
 
 export function isValueMatchMask (value, mask) {
   return value.length && value.split("").every((char, index) => char === mask[index] || char.match(mask[index]));
+}
+
+
+/**
+ * Вернуть экземпляр конвертера необходимого типа (array - ArrayConverter и т. д.)
+ * @return {DataConverter}
+ */
+export function getConverter(data){
+  switch(data.data_type){
+      case 'array': return new ArrayConverter(data);
+  }
+  return new DataConverter();
+}
+
+/**
+ * Конвертируются данные
+ * @param {{} | []} settings
+ * @param {*} data
+ */
+export function convertData(settings, data){
+  if(_.isArray(settings)){
+    settings.forEach(item => {
+      const converter = getConverter(item);
+      data = converter.convertData(data);
+    });
+  }
+  if(! settings.data_type){
+    const converter = getConverter(settings);
+    data = converter.convertData(data);
+  }
+  console.log(data);
+  console.log(settings);
+  return data;
+  // if()
 }

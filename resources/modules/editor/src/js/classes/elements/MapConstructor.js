@@ -11,7 +11,9 @@ import {
   TAB_STYLE,
   CONTROLLER_REPEATER,
   CONTROLLER_SELECT,
-  CONTROLLER_COLOR
+  CONTROLLER_COLOR,
+  CONTROLLER_QUERY,
+  CONTROLLER_EVENT_HANDLER
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 
@@ -97,6 +99,34 @@ class MapConstructor extends BaseElement {
       default: 6
     });
 
+    this.addControl("handler", {
+      type: CONTROLLER_EVENT_HANDLER,
+      label: "Event handler",
+      default: {
+        evt: "",
+        params: ""
+      }
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("model_to_save", {
+      tab: TAB_CONTENT,
+      label: "Model to save data"
+    });
+
+    this.addControl("url", {
+      label: "URL",
+      responsive: false,
+      dynamic: false,
+      description: "/ajax/models/tests/{{id}}"
+    });
+
+    this.addControl("field_id", {
+      type: CONTROLLER_TEXT,
+      label: "Field ID (Column Name)"
+    });
+
     this.endControlSection();
 
     this.startControlSection("objects_section", {
@@ -120,6 +150,12 @@ class MapConstructor extends BaseElement {
     repeaterObjects.addControl("latitude", {
       label: "Latitude key",
       default: "latitude",
+      dynamic: false
+    });
+
+    repeaterObjects.addControl("useCluster", {
+      label: "Unite in cluster?",
+      type: CONTROLLER_SWITCHER,
       dynamic: false
     });
 

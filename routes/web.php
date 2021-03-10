@@ -391,6 +391,7 @@ Route::get('/', function () {
     'title' => 'Main',
     '_frontend_route' => [],
     'preload_content' => [],
+    'is_admin' => isAdmin(),
   ]);
 })->middleware(['web', 'installation.checker']);
 
@@ -400,11 +401,16 @@ foreach ($frontend_routes as $_frontend_route) {
   $frontend_route = str_replace(':id', '{id}', $path);
 
   Route::get($frontend_route, function () use ($title, $_frontend_route) {
+
     $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
+
     return view('front-app', [
+      'page_areas' => json_encode(Page::get_areas_for_page($_frontend_route['id'])),
+      'page_id' => $_frontend_route['id'],
       'title' => $title,
       '_frontend_route' => $_frontend_route,
       'preload_content' => $preload_content,
+      'is_admin' => isAdmin(),
     ]);
   })->middleware(['web', 'installation.checker']);
 }

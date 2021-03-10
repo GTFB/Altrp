@@ -1,6 +1,5 @@
 import '../altrp-posts/altrp-posts.scss'
 import update from 'immutability-helper'
-import { HTML5Backend } from 'react-dnd-html5-backend'
 import '../../../sass/altrp-pagination.scss';
 import {
   recurseCount,
@@ -10,7 +9,7 @@ import {
   renderAssetIcon,
   generateButtonsArray
 } from "../../../../../front-app/src/js/helpers";
-import { DndProvider, useDrag, useDrop } from 'react-dnd'
+import { useDrag, useDrop } from 'react-dnd'
 import { Link } from "react-router-dom";
 import { renderAdditionalRows, renderCellActions, } from "./altrp-table";
 import {
@@ -130,7 +129,7 @@ function AltrpTableWithoutUpdate(
     const [value, setValue] = React.useState(initialValue);
     React.useEffect(() => {
       setValue(initialValue);
-    }, [initialValue]);
+    }, [initialValue, cell]);
     const { column_template, column_is_editable, column_edit_url, _accessor } = column;
     const [columnTemplate, setColumnTemplate] = React.useState(null);
     const columnEditUrl =
@@ -139,7 +138,7 @@ function AltrpTableWithoutUpdate(
           return null;
         }
         return parseURLTemplate(column_edit_url, row.original);
-      }, [column_edit_url, column_is_editable]);
+      }, [column_edit_url, column_is_editable, row, ]);
 
     React.useEffect(() => {
       if (column_template) {
@@ -199,6 +198,8 @@ function AltrpTableWithoutUpdate(
      * Отоборажаем инпут для редактирования данных
      */
     if (columnEditUrl) {
+      // console.log(value);
+      console.log(columnEditUrl);
       return <AutoUpdateInput className="altrp-inherit"
         route={columnEditUrl}
         resourceid={''}
@@ -575,6 +576,7 @@ function AltrpTableWithoutUpdate(
       }
       return paginationProps;
     }, [inner_page_size, pageSize, pageCount, pageIndex, settings]);
+<<<<<<< HEAD
   const { WrapperComponent } = React.useMemo(() => {
     return {
       WrapperComponent: replace_rows ? React.Fragment : React.Fragment/*React.Fragment*/,
@@ -583,6 +585,10 @@ function AltrpTableWithoutUpdate(
   }, [replace_rows]);
 
   return <WrapperComponent>
+=======
+
+  return <React.Fragment>
+>>>>>>> front-app-dev
     {hide_columns && <div className="altrp-table-hidden">
       <div className="altrp-table-hidden__all">
         <IndeterminateCheckbox {...getToggleHideAllColumnsProps()} /> Toggle
@@ -711,7 +717,7 @@ function AltrpTableWithoutUpdate(
         </div></div></div>}
     </div>
     {paginationProps && <Pagination {...paginationProps} />}
-  </WrapperComponent>
+  </React.Fragment>
 }
 const TableBody =
   ({

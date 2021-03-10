@@ -61,6 +61,14 @@ export function getTemplateDataStorage() {
 }
 
 /**
+ * @return {string}
+ * */
+export function getTemplateType() {
+  const templateDataStorage = getTemplateDataStorage();
+  return _.get(templateDataStorage, 'type', 'content')
+}
+
+/**
  *
  * @return {ElementsFactory}
  */
