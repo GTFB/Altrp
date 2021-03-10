@@ -100,10 +100,13 @@ export default class RobotSettingsPanel extends React.Component {
                         <div className="controller-container__label control-select__label controller-label">Robots:</div>
                         <div className="control-container_select-wrapper controller-field">
                           {robots.map((item, index) => 
-                          <div key={index}>
+                          <div className="controller-container__label control-select__label controller-label" key={index}>
                             <a href={`robots-editor?robot_id=${item.data?.props?.nodeData?.id ?? ''}`}>{item?.data?.label ?? ''}</a>
                           </div>
                           )}
+                          {(robots.length === 0) && <div className="controller-container__label control-select__label controller-label">
+                            Роботы не используются
+                          </div>}
                         </div>
                       </div>
                   </div> {/* ./controllers-wrapper */}

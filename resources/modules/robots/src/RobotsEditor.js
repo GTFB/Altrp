@@ -95,8 +95,14 @@ class RobotsEditor extends Component {
     params.label = '';
     params.type = 'default';
     params.animated = true;
-    if (params.sourceHandle === 'no') params.className = 'red';
-    if (params.sourceHandle === 'yes') params.className = 'green';
+    if (params.sourceHandle === 'no') {
+      params.label = 'FALSE';
+      params.className = 'red';
+    }
+    if (params.sourceHandle === 'yes') {
+      params.label = 'TRUE';
+      params.className = 'green';
+    }
     const newStore = addEdge(params, robotStore);
     console.log(newStore);
     console.log(params);
