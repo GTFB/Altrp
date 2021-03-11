@@ -25,6 +25,26 @@ trait Client
             ->withData($data)
             ->asJson()
             ->returnResponseObject()
+            ->post();
+
+        return $this->data($response);
+    }
+
+
+    /**
+     * @param $headers
+     * @param string $url
+     * @param array $data
+     * @return array|object
+     */
+    public function getData(array $headers, string $url, array $data)
+    {
+        $data['key'] = $this->secret;
+        $response = Curl::to($url)
+            ->withHeaders($headers)
+            ->withData($data)
+            ->asJson()
+            ->returnResponseObject()
             ->get();
 
         return $this->data($response);

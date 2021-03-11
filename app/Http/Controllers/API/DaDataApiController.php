@@ -7,6 +7,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Services\DaData\DaDataApiService;
 use Illuminate\Http\Request;
+use Jackiedo\DotenvEditor\Facades\DotenvEditor;
 
 class DaDataApiController extends Controller
 {
@@ -386,5 +387,32 @@ class DaDataApiController extends Controller
         $data['count'] = $data['count'] ?? 10;
         $result = $this->dadataApiService->passportByFms($data['passport'], $data['count']);
         return response()->json($result['data'], $result['status']);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function setEnvKeys(Request $request)
+    {
+        $keys = [
+            'DADATA_TOKEN',
+            'DADATA_SECRET',
+            'DADATA_TIMEOUT'
+        ];
+
+        try {
+            foreach ($keys as $key) {
+                $valueName = strtolower($key);
+                $requestVal = $request->$valueName;
+
+                DotenvEditor::setKey($key, $requestVal);
+                DotenvEditor::save();
+            }
+        } catch (\Exception $e) {}
+
+        return response()->json([
+            'success' => true
+        ], 200);
     }
 }

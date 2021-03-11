@@ -249,6 +249,7 @@ Route::group(['prefix' => 'users'], function () {
 /**
  * DaData service
  */
+Route::post('dadata/config', 'API\DaDataApiController@setEnvKeys');
 Route::group(['prefix' => 'dadata/suggestions'], function() {
     Route::group(['prefix' => 'address'], function () {
         Route::match(['get', 'post'],'standardization', 'API\DaDataApiController@addressStandardization');

@@ -52,7 +52,7 @@ class ApiFnsProvider
             'Content-Type' => 'application/json',
         ];
         $url = sprintf('%s/%s', $this->api, $method);
-        return $this->postData($headers, $url, $data);
+        return $this->getData($headers, $url, $data);
     }
 
     /**

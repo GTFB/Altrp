@@ -17,7 +17,7 @@ class ApiFns extends ApiFnsService
      */
     public function search(string $query, int $page = 1, string $filter = '')
     {
-        return $this->api()->post('search', [
+        return $this->api()->get('search', [
             'q' => $query,
             'page' => $page,
             'filter' => $filter
@@ -30,7 +30,7 @@ class ApiFns extends ApiFnsService
      */
     public function egr(string $req)
     {
-        return $this->api()->post('egr', [
+        return $this->api()->get('egr', [
             'req' => $req
         ]);
     }
@@ -41,7 +41,7 @@ class ApiFns extends ApiFnsService
      */
     public function multinfo($req)
     {
-        return $this->api()->post('multinfo', [
+        return $this->api()->get('multinfo', [
             'req' => $req
         ]);
     }
@@ -52,7 +52,7 @@ class ApiFns extends ApiFnsService
      */
     public function multcheck($req)
     {
-        return $this->api()->post('multcheck', [
+        return $this->api()->get('multcheck', [
             'req' => $req
         ]);
     }
@@ -63,7 +63,7 @@ class ApiFns extends ApiFnsService
      */
     public function check(string $req)
     {
-        return $this->api()->post('check', [
+        return $this->api()->get('check', [
             'req' => $req
         ]);
     }
@@ -74,7 +74,7 @@ class ApiFns extends ApiFnsService
      */
     public function nalogbi(string $inn)
     {
-        return $this->api()->post('nalogbi', [
+        return $this->api()->get('nalogbi', [
             'inn' => $inn
         ]);
     }
@@ -86,7 +86,7 @@ class ApiFns extends ApiFnsService
      */
     public function changes(string $req, string $dat)
     {
-        return $this->api()->post('changes', [
+        return $this->api()->get('changes', [
             'req' => $req,
             'dat' => $dat
         ]);
@@ -101,7 +101,7 @@ class ApiFns extends ApiFnsService
      */
     public function mon(string $cmd, string $req, string $dat, string $type)
     {
-        return $this->api()->post('mon', [
+        return $this->api()->get('mon', [
             'cmd' => $cmd,
             'req' => $req,
             'dat' => $dat,
@@ -126,7 +126,7 @@ class ApiFns extends ApiFnsService
      */
     public function bo(string $req)
     {
-        return $this->api()->post('bo', [
+        return $this->api()->get('bo', [
             'req' => $req
         ]);
     }
@@ -157,7 +157,7 @@ class ApiFns extends ApiFnsService
      */
     public function innfl(string $fam, string $nam, string $otch, string $bdate, string $doctype, string $docno)
     {
-        return $this->api()->post('innfl', [
+        return $this->api()->get('innfl', [
             'fam' => $fam,
             'nam' => $nam,
             'otch' => $otch,
@@ -173,7 +173,7 @@ class ApiFns extends ApiFnsService
      */
     public function mvdpass(string $docno)
     {
-        return $this->api()->post('mvdpass', [
+        return $this->api()->get('mvdpass', [
             'docno' => $docno
         ]);
     }
@@ -186,7 +186,7 @@ class ApiFns extends ApiFnsService
      */
     public function fsrar(string $inn, string $status, string $kpp)
     {
-        return $this->api()->post('fsrar', [
+        return $this->api()->get('fsrar', [
             'inn' => $inn,
             'status' => $status,
             'kpp' => $kpp,
@@ -198,6 +198,6 @@ class ApiFns extends ApiFnsService
      */
     public function stat()
     {
-        return $this->api()->post('stat', []);
+        return $this->api()->get('stat', []);
     }
 }
