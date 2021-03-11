@@ -241,7 +241,7 @@ class Editor extends Component {
               <UpdateButton onClick={() => this.toggleModalWindow()} toggleModalWindow={() => this.toggleModalWindow()} />
             </div>
           </div>
-          <div className="right-panel">zz
+          <div className="right-panel">
             {this.state.showDialogWindow &&
             <DialogWindow state={this.state.showDialogWindow}
                           toggleModalWindow={() => this.toggleModalWindow()} />}
