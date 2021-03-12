@@ -19,6 +19,7 @@ use App\Altrp\Source;
 use App\Altrp\ValidationField;
 use App\Altrp\ValidationRule;
 use App\Http\Controllers\Controller as HttpController;
+use App\Http\Requests\Admin\ModelRequest;
 use App\Permission;
 use App\Role;
 use App\SQLEditor;
@@ -395,14 +396,13 @@ class ModelsController extends HttpController
      *
      * @param ApiRequest $request
      * @return JsonResponse
-     * @throws \App\Exceptions\CommandFailedException
-     * @throws \App\Exceptions\ModelNotWrittenException
-     * @throws \App\Exceptions\PermissionNotWrittenException
-     * @throws \App\Exceptions\RelationshipNotInsertedException
-     * @throws \App\Exceptions\TableNotFoundException
      */
   function storeModel(ApiRequest $request)
   {
+    $request->validate([
+      'title' => 'required|max:32',
+      'name' => 'required|max:32'
+    ]);
     $model = new Model($request->all());
     $result = $model->save();
     if ($result) {
@@ -423,6 +423,10 @@ class ModelsController extends HttpController
      */
     public function updateModel(ApiRequest $request, $model_id)
     {
+        $request->validate([
+            'title' => 'required|max:32',
+            'name' => 'required|max:32'
+        ]);
         $model = Model::find($model_id);
         if (! $model) {
             return response()->json([
@@ -999,6 +1003,10 @@ class ModelsController extends HttpController
      */
     public function storeDataSource(ApiRequest $request)
     {
+        $request->validate([
+            'title' => 'required|max:32',
+            'name' => 'required|max:32'
+        ]);
         $dataSource = new Source($request->all());
         $result = $dataSource->save();
         if ($result) {
@@ -1019,6 +1027,10 @@ class ModelsController extends HttpController
      */
     public function updateDataSource(ApiRequest $request, $source_id)
     {
+        $request->validate([
+            'title' => 'required|max:32',
+            'name' => 'required|max:32'
+        ]);
         $dataSource = Source::find($source_id);
         $data = $request->all();
         $data['updated_at'] = Carbon::now();
