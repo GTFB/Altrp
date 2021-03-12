@@ -1899,4 +1899,7 @@ button {
     & .altrp-posts {
         min-height: 20px;
     }
+  & .altrp-element_widget .altrp-table-td > a{
+    pointer-events: none;
+  }
 }

@@ -96,7 +96,10 @@ class ElementWrapper extends Component {
    */
   componentDidUpdate(prevProps, prevState) {
     this.checkElementDisplay();
-    if(appStore.getState().currentModel.getProperty('altrpModelUpdated') && ! isEditor()){
+    if(appStore.getState().currentModel.getProperty('altrpModelUpdated') &&
+        appStore.getState().currentDataStorage.getProperty('currentDataStorageLoaded') &&
+        ! isEditor() &&
+        this.props.element.getName() === 'section'){
       let title = appStore.getState().currentTitle;
       title = replaceContentWithData(title);
       appStore.dispatch(changeCurrentPageProperty('title', title));
