@@ -24,12 +24,14 @@ class AltrpTemplate extends Component {
   async updateTemplate(){
     // console.log(this.props.element.getSettings('template'));
     const templateGUID = this.props.settings.template;
-    if(templateGUID !== this.state.templateGUID || ! this.state.template){
+    if(templateGUID !== this.state.templateGUID || ! (this.state.template || this.loading)){
       let template;
       if(! templateGUID){
         return;
       } else {
+        this.loading = true;
         template = await templateLoader.loadParsedTemplate(templateGUID);
+        this.loading = false;
       }
       this.setState(state =>({...state, template, templateGUID}));
 

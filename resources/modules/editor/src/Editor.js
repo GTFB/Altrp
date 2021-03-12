@@ -36,6 +36,8 @@ import DialogWindow from "./js/components/DialogWindow";
 import {renderAsset} from "../../front-app/src/js/helpers";
 import {changeCurrentUser} from "../../front-app/src/js/store/current-user/actions";
 import Resource from "./js/classes/Resource";
+import AltrpMeta from "./js/classes/AltrpMeta";
+import {setEditorMeta} from "./js/store/editor-metas/actions";
 import appStore from "../../front-app/src/js/store/store";
 /**
  * Главный класс редактора.<br/>
@@ -156,6 +158,8 @@ class Editor extends Component {
     let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
     currentUser = currentUser.data;
     appStore.dispatch(changeCurrentUser(currentUser));
+    const presetColors = await AltrpMeta.getMetaByName('preset_colors');
+    appStore.dispatch(setEditorMeta(presetColors));
   }
 
   /**
@@ -187,53 +191,62 @@ class Editor extends Component {
     return (
       <Provider store={store}>
         <DndProvider backend={HTML5Backend}>
-        <div className={templateClasses}
-          onClick={this.onClick}
-          onDragEnd={this.onDragEnd}
-          onKeyDown={this.onKeyDown}  
-        >
-          <div className="left-panel">
-            <div className="editor-top-panel">
-              <button
-                className="btn btn_hamburger"
-              // onClick={this.showSettingsPanel}
-              >
-                <Hamburger className="icon" />
-              </button>
-              <a href="/admin/templates" target="_blank" className="logo">
-                {
-                  window.admin_logo
-                    ? renderAsset(window.admin_logo, { className: 'editor__logo' })
-                    : <Logo viewBox="0 0 97 35" className="editor__logo" />
-                }
-              </a>
-              <button className="btn btn_dots" onClick={this.showWidgetsPanel}>
-                <Dots className="icon" />
-              </button>
-            </div>
-            <div className="left-panel-main">
-              {this.state.activePanel === "widgets" && <WidgetsPanel />}
-              {this.state.activePanel === "settings" && <SettingsPanel />}
-              {this.state.activePanel === "history" && <HistoryPanel />}
-            </div>
-            <div className="editor-bottom-panel d-flex align-content-center justify-center">
-              <button
-                className={"btn btn_settings" + settingsActive}
-                onClick={this.openPageSettings}
-              >
-                <Settings className="icon" />
-              </button>
+          <div
+            className={templateClasses}
+            onClick={this.onClick}
+            onDragEnd={this.onDragEnd}
+          >
+            <div className="left-panel">
+              <div className="editor-top-panel">
+                <button
+                  className="btn btn_hamburger"
+                  // onClick={this.showSettingsPanel}
+                >
+                  <Hamburger className="icon" />
+                </button>
+                <a href="/admin/templates" target="_blank" className="logo">
+                  {window.admin_logo ? (
+                    renderAsset(window.admin_logo, {
+                      className: "editor__logo"
+                    })
+                  ) : (
+                    <Logo viewBox="0 0 97 35" className="editor__logo" />
+                  )}
+                </a>
+                <button
+                  className="btn btn_dots"
+                  onClick={this.showWidgetsPanel}
+                >
+                  <Dots className="icon" />
+                </button>
+              </div>
+              <div className="left-panel-main">
+                {this.state.activePanel === "widgets" && <WidgetsPanel />}
+                {this.state.activePanel === "settings" && <SettingsPanel />}
+              </div>
+              <div className="editor-bottom-panel d-flex align-content-center justify-center">
+                <button
+                  className={"btn btn_settings" + settingsActive}
+                  onClick={this.openPageSettings}
+                >
+                  <Settings className="icon" />
+                </button>
+                <button className="btn ">
+                  <Navigation className="icon" />
+                </button>
+                <button className="btn ">
+                  <History className="icon" />
+                </button>
+                <div className="btn ">
+                  <ResponsiveDdFooter />
+              </div>
               <button className="btn ">
-                <Navigation className="icon" />
+                <Preview className="icon" />
               </button>
-              <button 
-                className="btn "
-                onClick={this.showHistoryPanel}
-              >
-                <History className="icon" />
-              </button>
-              <div className="btn ">
-                <ResponsiveDdFooter />
+                <UpdateButton
+                  onClick={() => this.toggleModalWindow()}
+                  toggleModalWindow={() => this.toggleModalWindow()}
+                />
               </div>
               <button className="btn ">
                 <Preview className="icon" />
@@ -241,14 +254,7 @@ class Editor extends Component {
               <UpdateButton onClick={() => this.toggleModalWindow()} toggleModalWindow={() => this.toggleModalWindow()} />
             </div>
           </div>
-          <div className="right-panel">
-            {this.state.showDialogWindow &&
-            <DialogWindow state={this.state.showDialogWindow}
-                          toggleModalWindow={() => this.toggleModalWindow()} />}
-            <EditorWindow />
-          </div>
-        </div>
-        <AssetsBrowser />
+          <AssetsBrowser />
         </DndProvider>
       </Provider>
     );

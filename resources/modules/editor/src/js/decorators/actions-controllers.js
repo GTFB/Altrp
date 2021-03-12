@@ -122,6 +122,14 @@ export function actionsControllers(element, sectionLabel = 'Actions', idPrefix =
         value: 'custom_code',
         label: 'Custom JS-Code',
       },
+      {
+        value: 'play_sound',
+        label: 'Play Sound',
+      },
+      {
+        value: 'delay',
+        label: 'Delay',
+      },
     ],
   });
 
@@ -157,6 +165,31 @@ export function actionsControllers(element, sectionLabel = 'Actions', idPrefix =
     conditions: {
       type: [
         'update_current_datasources'
+      ],
+    },
+  });
+
+  actionsRepeater.addControl('milliseconds', {
+    type: CONTROLLER_NUMBER,
+    dynamic: false,
+    responsive: false,
+    label: 'Duration in Milliseconds',
+    conditions: {
+      type: [
+        'delay',
+        'play_sound',
+      ],
+    },
+  });
+
+  actionsRepeater.addControl('loop', {
+    type: CONTROLLER_SWITCHER,
+    dynamic: false,
+    responsive: false,
+    label: 'Loop (Caution)',
+    conditions: {
+      type: [
+        'play_sound',
       ],
     },
   });
@@ -302,6 +335,17 @@ export function actionsControllers(element, sectionLabel = 'Actions', idPrefix =
       type: [
         'form',
         'redirect',
+      ],
+    },
+  });
+
+  actionsRepeater.addControl('media_url', {
+    label: 'Media URL',
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: [
+        'play_sound',
       ],
     },
   });

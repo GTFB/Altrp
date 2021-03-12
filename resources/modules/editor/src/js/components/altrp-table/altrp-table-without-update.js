@@ -8,7 +8,7 @@ import {
   scrollbarWidth, isEditor, parseURLTemplate, mbParseJSON,
   renderAssetIcon,
   generateButtonsArray,
-  renderIcon, setAltrpIndex
+  renderIcon, setAltrpIndex, getResponsiveSetting
 } from "../../../../../front-app/src/js/helpers";
 import { useDrag, useDrop } from 'react-dnd'
 import { Link } from "react-router-dom";
@@ -656,7 +656,10 @@ function AltrpTableWithoutUpdate(
       return paginationProps;
     }, [inner_page_size, pageSize, pageCount, pageIndex, settings]);
 
-  return <React.Fragment>
+  let tableElement = React.useRef(null);
+
+
+  return  <React.Fragment>
     {hide_columns && <div className="altrp-table-hidden">
       <div className="altrp-table-hidden__all">
         <IndeterminateCheckbox {...getToggleHideAllColumnsProps()} /> Toggle
@@ -1224,6 +1227,8 @@ export function settingsToColumns(settings, widgetId) {
     not_expanded_row_icon
   } = settings;
   tables_columns = tables_columns || [];
+  let columnOrder = (getResponsiveSetting(settings, 'columns_order') || '').trim();
+  columnOrder = columnOrder ? columnOrder.split(',') : [];
   /**
    * Если в колонке пустые поля, то мы их игнорируем, чтобы не было ошибки
    */
@@ -1313,6 +1318,15 @@ export function settingsToColumns(settings, widgetId) {
           </span>
         ) : null,
     });
+  }
+  if(columnOrder.length){
+    console.log(columnOrder);
+    const _column = [];
+    columnOrder.forEach(columnIndex=>{
+      columnIndex = parseInt(columnIndex) - 1;
+      columns[columnIndex] && (_column.indexOf(columns[columnIndex]) === -1) ? _column.push(columns[columnIndex]) : null;
+    });
+    columns = _column;
   }
   return columns;
 }

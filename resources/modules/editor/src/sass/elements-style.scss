@@ -221,6 +221,7 @@
 .altrp-table-tbody,
 .altrp-table-th {
   border-collapse: separate;
+  user-select: none;
 }
 .altrp-table-td{
   //overflow: hidden;
@@ -1006,6 +1007,7 @@
 .altrp-transpose_true{
   overflow: auto;
   & > div > div > .altrp-table{
+    width: -moz-fit-content;
     width: fit-content;
     overflow: visible;
   }

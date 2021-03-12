@@ -261,14 +261,17 @@ export function renderAsset(asset, props = null) {
  * @param {string} string
  * @param {AltrpModel} context
  * @param {boolean} allowObject
+ * @param {boolean} replaceRight - нужно ли подставлять в значение параметра данные или оставить сырой шаблон
  * @return {{}}
  */
 export function parseParamsFromString(
   string,
   context = {},
-  allowObject = false
+  allowObject = false,
+  replaceRight = true,
+
 ) {
-  if (!(context instanceof AltrpModel)) {
+  if (! (context instanceof AltrpModel)) {
     context = new AltrpModel(context);
   }
   const params = {};
@@ -283,11 +286,15 @@ export function parseParamsFromString(
   const lines = string.split('\n');
   lines.forEach(line => {
     let [left, right] = line.split('|');
-    if (!left || !right) {
+    if (! left || ! right) {
       return;
     }
     left = left.trim();
     right = right.trim();
+    if(left.indexOf('{{') !== -1){
+      left = replaceContentWithData(left);
+      console.log(left);
+    }
     if (right.match(/{{([\s\S]+?)(?=}})/g)) {
       if (
         context.getProperty(
@@ -300,12 +307,13 @@ export function parseParamsFromString(
             right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')
           ) || '';
       } else {
-        params[left] = urlParams[right] ? urlParams[right] : '';
+        replaceRight ? (params[left] = urlParams[right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')]
+            ? urlParams[right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')] : '') : params[left] = right;
       }
     } else {
       params[left] = right;
     }
-    if (!allowObject && _.isObject(params[left])) {
+    if (! allowObject && _.isObject(params[left])) {
       delete params[left];
     }
   });
@@ -1719,6 +1727,9 @@ export function valueReplacement(value){
  * @return {Promise}
  */
 export function delay(ms) {
+  if(_.isString(ms)){
+    ms = Number(ms);
+  }
   return new Promise((resolve, reject) => {
     setTimeout(resolve, ms);
   });
@@ -1746,4 +1757,35 @@ export function parseIDFromYoutubeURL(youtubeURL) {
   const endIndex = youtubeURL.indexOf('&', startIndex);
   
   return youtubeURL.substring(startIndex, endIndex);    
+}
+
+/**
+ * 
+ * @param {{}} context
+ * @return {{}}
+ */
+export function prepareContext(context){
+
+  context.altrpdata = appStore.getState().currentDataStorage.getData();
+  context.altrpmodel = appStore.getState().currentModel.getData();
+  context.altrpuser = appStore.getState().currentUser.getData();
+  context.altrppagestate = appStore.getState().altrpPageState.getData();
+  context.altrpresponses = appStore.getState().altrpresponses.getData();
+  context.altrpmeta = appStore.getState().altrpMeta.getData();
+  return context
+}
+
+/**
+ *
+ * Определеят явлется ли строка валидным JSON
+ * @param {string} JSONString
+ * @return {boolean}
+ */
+export function isJSON(JSONString = ''){
+  try {
+    JSON.parse(JSONString);
+    return true;
+  } catch(error){
+    return false;
+  }
 }

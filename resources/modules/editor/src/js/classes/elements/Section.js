@@ -486,7 +486,6 @@ class Section extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": "background-color: {{COLOR}};"
       }
@@ -774,10 +773,6 @@ class Section extends BaseElement{
           colorPickedHex: '#000000',
           type: ""
         },
-        presetColors: [
-          '#eaeaea',
-          '#9c18a8'
-        ],
         rules: {
           '{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
         },

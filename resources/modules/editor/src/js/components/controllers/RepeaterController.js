@@ -207,10 +207,14 @@ class RepeaterController extends Component {
   }
 }
 
-const RepeaterItem = ({thisController, itemClasses, idx, itemController, fields}) => {
-  console.count()
+const RepeaterItem = ({thisController, itemClasses, idx, itemController, fields :_fields}) => {
   const {setActiveItem, duplicateItem, deleteItem, moveItem} = thisController;
   const ref=React.useRef(null);
+  const fields = React.useMemo(()=>{
+    return thisController.props.fields.filter(field=>{
+      return ! (getTemplateType() === 'email' && field.hideOnEmail)
+    })
+  }, [_fields]);
   const [, drop] = useDrop({
     accept: "item",
     hover(item, monitor) {
@@ -265,7 +269,7 @@ const RepeaterItem = ({thisController, itemClasses, idx, itemController, fields}
         {
           fields.map(field => {
             let ControllerComponent = controllersManager.getController(field.type);
-            let controller = new Controller({...field, repeater: thisController, itemIndex: idx });
+            let controller = new Controller({ ...field, repeater: thisController, itemIndex: idx });
             let value = itemController[field.controlId] || '';
             return <ControllerComponent 
               {...field}

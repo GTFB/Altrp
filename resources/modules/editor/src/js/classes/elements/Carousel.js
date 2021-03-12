@@ -613,7 +613,6 @@ class Carousel extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-carousel-slide{{STATE}}": "background-color: {{COLOR}};"
       }

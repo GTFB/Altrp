@@ -44,7 +44,7 @@ body {
 
   &__link {
     cursor: pointer;
-    padding: 0 5px;
+    margin-left: 15px;
   }
 
   &__tools {
@@ -64,8 +64,7 @@ body {
     z-index: 1000;
   }
   &__tool {
-    width: 150px;
-    padding-left: 10px;
+    margin-left: 15px;
 
     cursor: pointer;
   }
@@ -139,6 +138,7 @@ body {
 
   &__search-bar {
     margin: 2px 0;
+    margin-left: 15px;
   }
 
   &__search-result {

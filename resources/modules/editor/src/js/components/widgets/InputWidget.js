@@ -582,7 +582,6 @@ class InputWidget extends Component {
               "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
               )
       ).default;
-      console.log(actionsManager);
       await actionsManager.callAllWidgetActions(
           this.props.element.getIdForAction(),
           'focus',
@@ -709,7 +708,30 @@ class InputWidget extends Component {
       this.setState(state => ({ ...state, isDisabled: false }));
     }
   };
+  shouldComponentUpdate(nextProps){
+    // console.log(nextProps);
 
+    // console.log(nextProps.ElementWrapper=== this.props.ElementWrapper);
+    // console.log(nextProps.altrpMeta=== this.props.altrpMeta);
+    // console.log(nextProps.altrpPageState=== this.props.altrpPageState);
+    // console.log(nextProps.altrpresponses=== this.props.altrpresponses);
+    // console.log(nextProps.appStore=== this.props.appStore);
+    // console.log(nextProps.baseRender=== this.props.baseRender);
+    // console.log(nextProps.children=== this.props.children);
+    // console.log(nextProps.currentDataStorage=== this.props.currentDataStorage);
+    // console.log(nextProps.currentModel=== this.props.currentModel);
+    // console.log(nextProps.currentScreen=== this.props.currentScreen);
+    // console.log(nextProps.currentUser=== this.props.currentUser);
+    // console.log(nextProps.element=== this.props.element);
+    // console.log(nextProps.elementDisplay=== this.props.elementDisplay);
+    // console.log(nextProps.formsStore=== this.props.formsStore);
+    // console.log(nextProps.match=== this.props.match);
+    // console.log(nextProps.match);
+    // console.log(nextProps.rootElement=== this.props.rootElement);
+    // console.log(nextProps.rootElement);
+    // console.log(nextProps.updateToken=== this.props.updateToken);
+    return true;
+  }
   /**
    * Взовращает имя для атрибута name
    * @return {string}

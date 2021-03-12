@@ -61,6 +61,7 @@ import AdminVersion from "./components/AdminVersion";
 import SQLEditors from "./components/SQLEditors";
 import ColorSchemes from "./components/dashboard/ColorSchemes";
 import ModelPage from "./components/models/ModelPage";
+import FontsForm from "./components/FontsForm";
 
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 import Resource from "../../editor/src/js/classes/Resource";
@@ -263,6 +264,16 @@ class Admin extends Component {
                           <AssetSvg className="icon" />
                           <span>Assets</span>
                         </Link>
+                        <ul className="admin-nav-list admin-nav-list--sublist">
+                          <li>
+                            <Link
+                              to="/admin/assets/custom-fonts"
+                              className="admin-nav-list__link"
+                            >
+                              <span>Custom fonts</span>
+                            </Link>
+                          </li>
+                        </ul>
                       </li>
                       <li>
                         {/*<Link to="/admin/tables" className="admin-nav-list__link">*/}
@@ -391,9 +402,12 @@ class Admin extends Component {
             </Route>            <Route path="/admin/tools">
               <UsersTools />
             </Route>
+            <Route path="/admin/assets/custom-fonts">
+              <FontsForm />
+            </Route>
             <Route path="/admin/assets">
               <Assets />
-            </Route>
+            </Route>                        
             <Route path="/admin/dashboard">
               <Dashboard />
             </Route>

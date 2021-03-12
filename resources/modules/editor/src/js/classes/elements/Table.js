@@ -4,18 +4,15 @@ import {
   CONTROLLER_TEXTAREA,
   CONTROLLER_SWITCHER,
   CONTROLLER_COLOR,
-  TAB_ADVANCED,
   CONTROLLER_DIMENSIONS,
   CONTROLLER_SELECT,
   CONTROLLER_TEXT,
   CONTROLLER_SLIDER,
   TAB_CONTENT,
   CONTROLLER_TYPOGRAPHIC,
-  CONTROLLER_LINK,
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_NUMBER,
-  CONTROLLER_WYSIWYG,
   CONTROLLER_QUERY,
   CONTROLLER_REPEATER,
   CONTROLLER_FILTERS,
@@ -874,9 +871,9 @@ class Table extends BaseElement {
      */
 
     /**
-     * Настройки для футера таблицы
+     * доп. настройки
      */
-
+    //<editor-fold description=deep_customization>
     this.startControlSection('deep_customization', {
       label: 'Deep Customization',
       hideOnEmail: true,
@@ -1193,6 +1190,8 @@ class Table extends BaseElement {
     });
 
     this.endControlSection();
+    //</editor-fold>
+
 
     this.startControlSection('group_icons', {
       label: 'Group Column, Expanded Row Icons',
@@ -3640,6 +3639,25 @@ class Table extends BaseElement {
     //</editor-fold>
 
     advancedTabControllers(this);
+
+
+    //<editor-fold description=column_responsive_settings>
+
+    this.startControlSection('column_responsive_settings', {
+      label: 'Columns Responsive Settings',
+      hideOnEmail: true,
+      tab: TAB_STYLE,
+    });
+
+    this.addControl('columns_order', {
+      label: 'Columns Order',
+      dynamic: false,
+      stateLess: true,
+      description: '1, 3, 2'
+    });
+
+    this.endControlSection();
+    //</editor-fold>
   }
 }
 
