@@ -157,7 +157,34 @@ body {
     height: 100%;
     overflow: auto;
 
+<<<<<<< HEAD
     white-space: pre;
+=======
+  }
+
+  &__autocomplete {
+    position: fixed;
+    margin-top: 21px;
+    width: 223px;
+    padding: 7px 0;
+
+    
+    z-index: 1000;
+    box-shadow: 0px 1px 2px 1px rgb(34 60 80 / 20%);
+    background-color: #ffffff;
+    border-radius: 5px;
+    color: #000000;
+  }
+
+  &__autocomplete-option {
+    padding: 2px 7px;
+
+    cursor: pointer;
+  }
+
+  &__autocomplete-option:hover {
+    background-color: #d3d2d2;
+>>>>>>> dashkin-dima
   }
 
   &__search-value {
