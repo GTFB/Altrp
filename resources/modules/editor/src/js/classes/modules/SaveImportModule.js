@@ -10,7 +10,6 @@ import store from "../../store/store";
 import { changeTemplateStatus } from "../../store/template-status/actions";
 import { setTitle } from "../../../../../front-app/src/js/helpers";
 import { setTemplateData } from "../../store/template-data/actions";
-import ElementsFactory from "./ElementsFactory";
 
 class SaveImportModule extends BaseModule {
   constructor(modules) {

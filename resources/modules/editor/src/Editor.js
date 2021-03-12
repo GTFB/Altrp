@@ -40,7 +40,6 @@ import {changeCurrentUser} from "../../front-app/src/js/store/current-user/actio
 import Resource from "./js/classes/Resource";
 import AltrpMeta from "./js/classes/AltrpMeta";
 import {setEditorMeta} from "./js/store/editor-metas/actions";
-import appStore from "../../front-app/src/js/store/store";
 
 /**
  * Главный класс редактора.<br/>

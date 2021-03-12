@@ -214,7 +214,7 @@ const RepeaterItem = ({thisController, itemClasses, idx, itemController, fields 
     return thisController.props.fields.filter(field=>{
       return ! (getTemplateType() === 'email' && field.hideOnEmail)
     })
-  }, [_fields]);
+  }, [thisController.props.fields]);
   const [, drop] = useDrop({
     accept: "item",
     hover(item, monitor) {

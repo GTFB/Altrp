@@ -166,8 +166,14 @@ function getContent(settingName, returnRaw = false) {
           .replace(/{{{/g, "_.get(context, '");
       try{
         content = eval(replacedContent);
+        if(_.isNumber(content) && ! _.isNaN(content)){
+          content += '';
+        }
+        _.isString(content) && (content = content.replace(/NaN/g, ''));
+        return content || '';
       } catch(e){
         console.error(e);
+        return '';
       } finally {
       }
     } else if(returnRaw){
@@ -178,7 +184,6 @@ function getContent(settingName, returnRaw = false) {
      }
 
     const contentDynamicSetting = this.props.element.getDynamicSetting(settingName);
-
     if(contentDynamicSetting){
       const converter = getConverter(contentDynamicSetting);
       content = converter.convertData(content);

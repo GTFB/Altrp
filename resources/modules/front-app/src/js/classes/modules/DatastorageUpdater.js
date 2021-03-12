@@ -4,7 +4,6 @@ import {
   currentDataStorageLoaded, currentDataStorageLoading
 } from "../../store/current-data-storage/actions";
 import Resource from "../../../../../editor/src/js/classes/Resource";
-import appStore from "../../store/store";
 import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
 import { isJSON, mbParseJSON, replaceContentWithData} from "../../helpers";
 
@@ -33,6 +32,7 @@ class DataStorageUpdater extends AltrpModel {
       dataSources = [];
     }
     if(initialUpdate){
+      this.setProperty('currentDataSources', dataSources);
       dataSources = dataSources.filter(dataSource => dataSource.getProperty('autoload'));
     }
 
@@ -64,7 +64,6 @@ class DataStorageUpdater extends AltrpModel {
       }));
     });
     // dataSources = _.sortBy(dataSources, ['data.priority']);
-    this.setProperty('currentDataSources', dataSources);
     /**
      * @member {Datasource} dataSource
      */
@@ -75,6 +74,7 @@ class DataStorageUpdater extends AltrpModel {
     });
     initialUpdate && appStore.dispatch(currentDataStorageLoading());
     for (let groupPriority in groupedDataSources){
+      initialUpdate && appStore.dispatch(currentDataStorageLoading());
       if(! groupedDataSources.hasOwnProperty(groupPriority)){
         continue;
       }

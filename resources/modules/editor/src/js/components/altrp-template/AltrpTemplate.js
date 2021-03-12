@@ -32,9 +32,9 @@ class AltrpTemplate extends Component {
         this.loading = true;
         template = await templateLoader.loadParsedTemplate(templateGUID);
         this.loading = false;
+        this.template = null;
       }
       this.setState(state =>({...state, template, templateGUID}));
-
     }
   }
 
@@ -43,14 +43,14 @@ class AltrpTemplate extends Component {
       return null;
     }
     if(_.get(this.state, 'template.componentClass')){
-      let template = frontElementsFabric.cloneElement(this.state.template);
+      this.template = this.template ? this.template : frontElementsFabric.cloneElement(this.state.template);
       return <div className="altrp-posts">
         <div className="altrp-post">
-          {React.createElement(template.componentClass,
+          {React.createElement(this.template.componentClass,
             {
-              element: template,
+              element: this.template,
               ElementWrapper: ElementWrapper,
-              children: template.children
+              children: this.template.children
             })}
         </div>
       </div>

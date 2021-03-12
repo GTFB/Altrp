@@ -18,9 +18,7 @@ export async function playSound(src = '', loop = false, duration = 0) {
   }
   document.body.appendChild(audioElement);
   if(duration){
-    console.log(duration);
     await delay(duration);
-    console.log(duration);
     document.body.removeChild(audioElement);
     return;
   }

@@ -1320,7 +1320,6 @@ export function settingsToColumns(settings, widgetId) {
     });
   }
   if(columnOrder.length){
-    console.log(columnOrder);
     const _column = [];
     columnOrder.forEach(columnIndex=>{
       columnIndex = parseInt(columnIndex) - 1;

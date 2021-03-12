@@ -139,8 +139,6 @@ function _changeValue(value, updateElement = true) {
     });
   }
   if(updateElement){
-    console.log(this.props.controller)
-    console.log('value: ', value)
     this.props.controller.changeValue(value, updateElement);
   }
 

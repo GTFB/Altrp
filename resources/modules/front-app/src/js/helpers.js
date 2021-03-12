@@ -3,7 +3,6 @@ import CONSTANTS from '../../../editor/src/js/consts';
 import AltrpModel from '../../../editor/src/js/classes/AltrpModel';
 import moment from 'moment';
 import Resource from '../../../editor/src/js/classes/Resource';
-import appStore from './store/store';
 import { changeCurrentUser } from './store/current-user/actions';
 import { changeCurrentUserProperty } from './store/current-user/actions';
 import { changeAppRoutes } from './store/routes/actions';
@@ -293,7 +292,6 @@ export function parseParamsFromString(
     right = right.trim();
     if(left.indexOf('{{') !== -1){
       left = replaceContentWithData(left);
-      console.log(left);
     }
     if (right.match(/{{([\s\S]+?)(?=}})/g)) {
       if (
