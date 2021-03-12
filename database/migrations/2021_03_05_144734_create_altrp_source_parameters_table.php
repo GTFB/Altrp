@@ -13,7 +13,7 @@ class CreateAltrpSourceParametersTable extends Migration
      */
     public function up()
     {
-        Schema::create('altrp_source_parameters', function (Blueprint $table) {
+        Schema::create('altrp_page_source_parameters', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('page_source_id')->unsigned();
             $table->string('name');
@@ -35,6 +35,6 @@ class CreateAltrpSourceParametersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('altrp_source_parameters');
+        Schema::dropIfExists('altrp_page_source_parameters');
     }
 }

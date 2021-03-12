@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PageSourceParameter extends Model
 {
-    protected $table = 'altrp_source_parameters';
+    protected $table = 'altrp_page_source_parameters';
 
     protected $fillable = [
         'page_source_id',
