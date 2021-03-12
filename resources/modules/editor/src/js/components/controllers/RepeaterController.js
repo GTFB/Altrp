@@ -98,7 +98,6 @@ class RepeaterController extends Component {
    * Перетаскиваем итем в повторителе
    */
   moveItem(dragIndex, hoverIndex) {
-    console.log('items', this.state.items);
     const dragItem = this.state.items[dragIndex];
     let items = update(this.state.items, {
       $splice: [
@@ -109,8 +108,6 @@ class RepeaterController extends Component {
     this.setState(state => {
       return { ...state, items }
     });
-    console.log('items', this.state.items);
-    console.log('this.props.fields', this.getSettings(this.props.fields[0].controlId));
     this._changeValue(items);
   }
   /**
@@ -160,7 +157,6 @@ class RepeaterController extends Component {
     /**
      *  если элемент другой обновим items
      */
-    console.log('componentDidUpdate')
     if(prevProps.currentElement.getId() !== this.props.currentElement.getId()){
       let items = prevProps.default || [];
       items = this.getSettings(this.props.controlId) || items;
