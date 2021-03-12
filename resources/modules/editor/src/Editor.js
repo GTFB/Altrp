@@ -36,6 +36,8 @@ import DialogWindow from "./js/components/DialogWindow";
 import {renderAsset} from "../../front-app/src/js/helpers";
 import {changeCurrentUser} from "../../front-app/src/js/store/current-user/actions";
 import Resource from "./js/classes/Resource";
+import AltrpMeta from "./js/classes/AltrpMeta";
+import {setEditorMeta} from "./js/store/editor-metas/actions";
 import appStore from "../../front-app/src/js/store/store";
 /**
  * Главный класс редактора.<br/>
@@ -156,6 +158,8 @@ class Editor extends Component {
     let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
     currentUser = currentUser.data;
     appStore.dispatch(changeCurrentUser(currentUser));
+    const presetColors = await AltrpMeta.getMetaByName('preset_colors');
+    appStore.dispatch(setEditorMeta(presetColors));
   }
 
   /**
