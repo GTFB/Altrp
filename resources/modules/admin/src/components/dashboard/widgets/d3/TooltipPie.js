@@ -30,36 +30,34 @@ class TooltipPie extends PureComponent {
           className={`${this.props.widgetID} altrp-dashboard__tooltip--font altrp-dashboard__tooltip--label-background altrp-dashboard__tooltip--width altrp-dashboard__tooltip--label-background-shadow altrp-dashboard__tooltip--border-type altrp-dashboard__tooltip--border-width altrp-dashboard__tooltip--border-color col-12`}
           style={{ padding: "5px 9px" }}
         >
-          <div>
-            {this.props.datum?.datum?.data?.tooltip === undefined &&
-              <div style={
+          <div
+            style={
               {
-                whiteSpace: "pre",
-                display: "flex",
-                alignItems: "center"
+                // whiteSpace: "pre",
+                // display: "flex",
+                // alignItems: "center"
               }
-            }>
-                <span
-                style={{
-                  display: "block",
-                  width: "12px",
-                  height: "12px",
-                  background: this.props.datum.datum.color,
-                  marginRight: "7px"
-                }}
-                ></span>
-                <div
-                  className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
-                >
-                  {this.props.datum.datum.label}:{" "}
-                  <strong
-                    className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
-                  >
-                    {this.props.datum.datum.value}
-                  </strong>
-                </div>
-              </div>
             }
+          >
+            {/* <span
+              style={{
+                display: "block",
+                width: "12px",
+                height: "12px",
+                background: this.props.datum.datum.color,
+                marginRight: "7px"
+              }}
+            ></span> */}
+            <div
+              className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
+            >
+              {this.props.datum.datum.label}:{" "}
+              <strong
+                className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
+              >
+                {this.props.datum.datum.value}
+              </strong>
+            </div>
             {this.props.datum?.datum?.data?.tooltip?.map((item, index) => {
               return (
                 <div

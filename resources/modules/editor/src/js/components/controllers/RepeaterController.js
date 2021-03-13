@@ -98,7 +98,6 @@ class RepeaterController extends Component {
    * Перетаскиваем итем в повторителе
    */
   moveItem(dragIndex, hoverIndex) {
-    console.log('items', this.state.items);
     const dragItem = this.state.items[dragIndex];
     let items = update(this.state.items, {
       $splice: [
@@ -109,8 +108,6 @@ class RepeaterController extends Component {
     this.setState(state => {
       return { ...state, items }
     });
-    console.log('items', this.state.items);
-    console.log('this.props.fields', this.getSettings(this.props.fields[0].controlId));
     this._changeValue(items);
   }
   /**
@@ -207,14 +204,14 @@ class RepeaterController extends Component {
   }
 }
 
-const RepeaterItem = ({thisController, itemClasses, idx, itemController, fields :_fields}) => {
+const RepeaterItem = ({thisController, itemClasses, idx, itemController, fields: _fields}) => {
   const {setActiveItem, duplicateItem, deleteItem, moveItem} = thisController;
   const ref=React.useRef(null);
   const fields = React.useMemo(()=>{
     return thisController.props.fields.filter(field=>{
       return ! (getTemplateType() === 'email' && field.hideOnEmail)
     })
-  }, [thisController.props.fields]);
+  }, [thisController, _fields]);
   const [, drop] = useDrop({
     accept: "item",
     hover(item, monitor) {
@@ -271,11 +268,12 @@ const RepeaterItem = ({thisController, itemClasses, idx, itemController, fields 
             let ControllerComponent = controllersManager.getController(field.type);
             let controller = new Controller({ ...field, repeater: thisController, itemIndex: idx });
             let value = itemController[field.controlId] || '';
+            let key  = '_' + Math.random().toString(36).substr(2, 9);
             return <ControllerComponent 
               {...field}
               repeater={thisController}
               itemindex={idx}
-              key={field.controlId}
+              key={key}
               default={value}
               controller={controller} 
             />

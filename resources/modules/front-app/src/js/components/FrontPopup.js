@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import connect from "react-redux/es/connect/connect";
+// import { isElementTopInViewport, getTopPosition } from "../helpers";
 import { Scrollbars } from "react-custom-scrollbars";
 import AltrpOffcanvas from "./altrp-offcanvas/AltrpOffcanvas";
 import { togglePopup } from "../store/popup-trigger/actions";

@@ -1,3 +1,4 @@
+import appStore from "../store/store"
 /**
  * @class Datasource
  */
@@ -34,6 +35,7 @@ class Datasource extends AltrpModel{
    * @return{null | {}}
    */
   getParams(urlParams = {}, excludePath = ''){
+    const {currentModel, currentDataStorage} = appStore.getState();
     let parsedTemplate = this.getProperty('parameters');
     const params = {};
     if(! parsedTemplate){

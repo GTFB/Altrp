@@ -1,14 +1,13 @@
 import {createStore} from 'redux';
 import rootReducer from './reducers'
 
-let frontAppStore = createStore(rootReducer);
-window.appStore = frontAppStore;
-
+let appStore = createStore(rootReducer);
+window.appStore = appStore;
 if(window.ALTRP_DEBUG){
-  let _dis = frontAppStore.dispatch;
-  frontAppStore.dispatch = (function(action){
+  let _dis = appStore.dispatch;
+  appStore.dispatch = (function(action){
     console.trace(action);
-    _dis.bind(frontAppStore)(action);
+    _dis.bind(appStore)(action);
   });
 }
-export default frontAppStore;
+export default appStore;

@@ -13,10 +13,8 @@ export function currentPageReducer(page, action) {
   page = page || defaultPage;
   switch (action.type) {
     case CHANGE_CURRENT_PAGE: {
-      if(page.url && ! action.page){
-        action.page.url = page.url;
-      }
       page = action.page;
+      
     }
       break;
     case CHANGE_CURRENT_PAGE_PROPERTY: {

@@ -293,6 +293,9 @@ class RootElement extends BaseElement {
 
     this.startControlSection('offcanvas_section', {
       label: 'Offcanvas',
+      conditions: {
+        "type_popup": "offcanvas"
+      }
     });
 
     this.addControl("width_offcanvas", {
@@ -3535,6 +3538,9 @@ class RootElement extends BaseElement {
     this.startControlSection('offcanvas_style', {
       tab: TAB_STYLE,
       label: 'Offcanvas',
+      conditions: {
+        "type_popup": "offcanvas"
+      }
     });
 
     this.addControl("background_offcanvas", {
