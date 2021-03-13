@@ -39,7 +39,7 @@ return [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 // 'useTLS' => true,
                 // 'encrypted' => true,
-                'host' => '127.0.0.1',
+                'host' => env('ALTRP_SETTING_PUSHER_HOST'),
                 'port' => env('ALTRP_SETTING_WEBSOCKETS_PORT', 6001),
                 'scheme' => 'http'
             ],

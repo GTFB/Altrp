@@ -18,7 +18,7 @@ export default class Crud extends Component{
 
         }
         this.modelsResource = new Resource({ route: '/admin/ajax/models' });
-        this.modelOptionsResource = new Resource({ route: '/admin/ajax/models_without_preset' });
+        this.modelOptionsResource = new Resource({ route: '/admin/ajax/model_options' });
     }
 
     async componentDidMount() {

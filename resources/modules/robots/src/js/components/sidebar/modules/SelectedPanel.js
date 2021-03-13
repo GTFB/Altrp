@@ -5,7 +5,7 @@ import Condition from "./data/Condition"
 import Robot from "./data/Robot"
 import Edge from "./data/Edge"
 import store from "../../../store/store"
-import {setUpdatedNode} from "../../../store/robot-settings/actions"
+import { setUpdatedNode, setRobotSettingsData } from "../../../store/robot-settings/actions"
 import Chevron from "../../../../../../editor/src/svgs/chevron.svg";
 // import {setCurrentRobot} from "../../../store/current-robot/actions"
 // import Resource from "../../../../../../editor/src/js/classes/Resource";
@@ -35,6 +35,12 @@ export default class SelectedPanel extends React.Component {
       node.data.text = value;
     }
     store.dispatch(setUpdatedNode(node));
+
+    // вызов принудительного рендера flow
+    const elements = store.getState()?.robotSettingsData;
+    const newElements = _.cloneDeep(elements);
+    store.dispatch(setRobotSettingsData(newElements));        
+    
   }
 
   changeSelectEdge(e, type){

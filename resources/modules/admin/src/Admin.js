@@ -114,9 +114,11 @@ class Admin extends Component {
 
     let pusherKey = await new Resource({ route: "/admin/ajax/settings" }).get("pusher_app_key");
     let websocketsPort = await new Resource({ route: "/admin/ajax/settings" }).get("websockets_port");
+    let websocketsHost = await new Resource({ route: "/admin/ajax/settings" }).get("pusher_host");
     
     pusherKey = pusherKey?.pusher_app_key;
     websocketsPort = websocketsPort?.websockets_port;
+    websocketsHost = websocketsHost?.pusher_host;
 
     // Проверка наличия ключа и порта
     if(pusherKey && websocketsPort){
@@ -128,7 +130,8 @@ class Admin extends Component {
           wsHost: window.location.hostname,
           wsPort: websocketsPort,
           forceTLS: false,
-          disableStats: true
+          disableStats: true,
+          host: websocketsHost,
         });
         console.log("Вебсокеты включены");
 

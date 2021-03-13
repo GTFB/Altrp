@@ -75,6 +75,19 @@ class Websockets extends Component {
             className="admin_input_key" />
         </div>
 
+        <div className="admin_input__label" width="10%">
+              <label htmlFor="websockets-key">
+                Host:
+              </label>
+        </div>
+        <div className="admin_input">
+          <AutoUpdateInput type="text"
+            route="/admin/ajax/settings"
+            resourceid="pusher_host"
+            id="websockets-host"
+            className="admin_input_host" />
+        </div>
+
         <div>
           <button className="btn btn_save" onClick={() => this.onReset()}>
             Reset

@@ -28,11 +28,17 @@ class WebsocketsController extends Controller
 
         if ($enadled){
             try{
-                $checkPusher = $this->checkPusher();
-                $checkKey = $this->checkKey();
+                $checkAppKey = $this->checkEnv("ALTRP_SETTING_PUSHER_APP_KEY", '123456');
+                $checkHost = $this->checkEnv("ALTRP_SETTING_PUSHER_HOST", '127.0.0.1');
+                $checkAppId = $this->checkEnv("PUSHER_APP_ID", time());
+                $checkAppSecret = $this->checkEnv("PUSHER_APP_SECRET", time());
+                $checkAppCluster = $this->checkEnv("PUSHER_APP_CLUSTER", 'mt1');
 
-                if(!$checkPusher) return response()->json(['error'=> "Ошибка записи данных пушера в env"], 500, [],JSON_UNESCAPED_UNICODE);
-                if(!$checkKey) return response()->json(['error'=> "Ошибка проверки ключа"], 500, [],JSON_UNESCAPED_UNICODE);
+                if(!$checkAppKey) return response()->json(['error'=> "Ошибка проверки ключа пушера в env"], 500, [],JSON_UNESCAPED_UNICODE);
+                if(!$checkHost) return response()->json(['error'=> "Ошибка проверки хоста пушера в env"], 500, [],JSON_UNESCAPED_UNICODE);
+                if(!$checkAppId) return response()->json(['error'=> "Ошибка проверки ID пушера в env"], 500, [],JSON_UNESCAPED_UNICODE);
+                if(!$checkAppSecret) return response()->json(['error'=> "Ошибка проверки SECRET пушера в env"], 500, [],JSON_UNESCAPED_UNICODE);
+                if(!$checkAppCluster) return response()->json(['error'=> "Ошибка проверки CLUSTER пушера в env"], 500, [],JSON_UNESCAPED_UNICODE);
                 
                 // очистка кэша
                 $exit_code = Artisan::call('config:clear');
@@ -78,6 +84,7 @@ class WebsocketsController extends Controller
     // Сброс настроек и очистка кеша
     public function resetCount(){
         try{
+            DotenvEditor::setKey( "ALTRP_SETTING_PUSHER_HOST", "127.0.0.1" );
             DotenvEditor::setKey( "ALTRP_SETTING_WEBSOCKETS_PORT", "6001" );
             DotenvEditor::setKey( "ALTRP_SETTING_PUSHER_APP_KEY", "12345678" );
             DotenvEditor::save();
@@ -88,19 +95,18 @@ class WebsocketsController extends Controller
         }
     }
 
-    // Проверка ключа
-    public function checkKey(){
-
-        $item_key = "ALTRP_SETTING_PUSHER_APP_KEY";
-        $key = false;
+    // Проверка параметров в env
+    public function checkEnv($item, $defaultValue)
+    {
+        $tempItem = false;
 
         // Получение значения ключа
-        if( DotenvEditor::keyExists( $item_key ) ) $key = DotenvEditor::getValue( $item_key );
+        if( DotenvEditor::keyExists( $item ) ) $tempItem = DotenvEditor::getValue( $item );
 
-        // При отсутствии ключа, ему присваивается дефолтное значение (12345678)
-        if(empty($key)) {
+        // При отсутствии ключа или при пустом значении, ему присваивается дефолтное значение ($defaultValue)
+        if(empty($tempItem)) {
             try{
-                DotenvEditor::setKey( $item_key, "12345678" );
+                DotenvEditor::setKey( $item, $defaultValue );
                 DotenvEditor::save();          
             } catch (Exception $e){
                 return false;
@@ -108,39 +114,4 @@ class WebsocketsController extends Controller
         }
         return true;
     }
-
-    // Проверка наличия id и secret пушера
-    public function checkPusher(){
-
-        $app_id = 'PUSHER_APP_ID';
-        $app_secret = 'PUSHER_APP_SECRET';
-        $app_cluster = 'PUSHER_APP_CLUSTER';
-     
-        if( !DotenvEditor::keyExists( $app_id ) ){
-            try{
-                DotenvEditor::setKey( $app_id, time() );
-                DotenvEditor::save();          
-            } catch (Exception $e){
-                return false;
-            }
-        }
-        if( !DotenvEditor::keyExists( $app_secret ) ){
-            try{
-                DotenvEditor::setKey( $app_secret, time() );
-                DotenvEditor::save();          
-            } catch (Exception $e){
-                return false;
-            }
-        }
-        if( !DotenvEditor::keyExists( $app_cluster ) ){
-            try{
-                DotenvEditor::setKey( $app_cluster, 'mt1' );
-                DotenvEditor::save();          
-            } catch (Exception $e){
-                return false;
-            }
-        }        
-        return true;
-    }
-
 }

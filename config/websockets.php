@@ -31,6 +31,7 @@ return [
             'capacity' => null,
             'enable_client_messages' => true,
             'enable_statistics' => true,
+            'host' => env('ALTRP_SETTING_PUSHER_HOST'),
         ],
     ],
 

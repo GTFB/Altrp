@@ -14,7 +14,7 @@ export default class RobotSettingsPanel extends React.Component {
       modelOptions: [],
     }
     this.toggleChevron = this.toggleChevron.bind(this);
-    this.modelOptionsResource = new Resource({ route: '/admin/ajax/models_without_preset' });
+    this.modelOptionsResource = new Resource({ route: '/admin/ajax/model_options' });
   }
 
   async componentDidMount() {
