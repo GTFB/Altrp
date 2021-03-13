@@ -1033,6 +1033,7 @@ class AltrpAction extends AltrpModel {
     if(url){
       const  {playSound} = await import('../helpers/sounds');
       playSound(url, loop, duration);
+      await delay(20);
     }
     return {success: true}
   }
