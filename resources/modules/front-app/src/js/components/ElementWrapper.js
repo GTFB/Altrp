@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import appStore from "../store/store";
 import {altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceContentWithData, setTitle} from "../helpers";
 import { addElement } from "../store/elements-storage/actions";
 import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";

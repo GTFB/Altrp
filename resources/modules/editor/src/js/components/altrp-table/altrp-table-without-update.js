@@ -267,7 +267,7 @@ function AltrpTableWithoutUpdate(
     /**
      * Отоборажаем инпут для редактирования данных
      */
-    if (columnEditUrl ) {
+    if (columnEditUrl && ! edit_disabled) {
       return <AutoUpdateInput className="altrp-inherit"
         route={columnEditUrl}
         resourceid={''}
