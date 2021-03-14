@@ -9,10 +9,14 @@ class AdminBar extends React.Component {
       valueInput: "",
       contentResult: <div/>,
       visibleContentResult: false,
+      visibleAutocomplete: false,
+      filteredOptions: [],
       isHttps: false
     };
     this.popupTemplateRef = React.createRef();
     this.searchContentResult = React.createRef();
+    this.autocomplete = React.createRef();
+    this.searchInput = React.createRef();
     this.toggleVisiblePopupTemplate = this.toggleVisiblePopupTemplate.bind(
       this
     );
@@ -23,6 +27,8 @@ class AdminBar extends React.Component {
     this.handleClickSearch = this.handleClickSearch.bind(this);
     this.handleDoubleClickSearch = this.handleDoubleClickSearch.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.onFocus = this.onFocus.bind(this);
+    this.handleClickOptions = this.handleClickOptions.bind(this);
   }
 
   componentDidMount() {
@@ -57,8 +63,18 @@ class AdminBar extends React.Component {
 
   handleInput(event) {
     let value = event.target.value;
+
+    let options = localStorage.getItem("admin-bar-search-autocomplete")
+      ? JSON.parse(localStorage.getItem("admin-bar-search-autocomplete"))
+      : [];
+    let filteredOptions = options.filter(
+      item => item.toLowerCase().indexOf(value.toLowerCase()) > -1
+    );
+    filteredOptions.splice(6, filteredOptions.length - 6);
+
     this.setState(state => ({
       ...state,
+      filteredOptions,
       valueInput: value
     }));
   }
@@ -92,6 +108,12 @@ class AdminBar extends React.Component {
         visibleContentResult: false
       }));
     }
+    if (!path.includes(this.autocomplete.current) && !path.includes(this.searchInput.current)) {
+      this.setState(state => ({
+        ...state,
+        visibleAutocomplete: false
+      }));
+    }
   }
 
   handleClickCopy() {
@@ -100,19 +122,44 @@ class AdminBar extends React.Component {
   }
 
   handleClickSearch() {
+    let options = localStorage.getItem("admin-bar-search-autocomplete")
+      ? JSON.parse(localStorage.getItem("admin-bar-search-autocomplete"))
+      : [];
+    options.push(this.state.valueInput);
+    localStorage.setItem(
+      "admin-bar-search-autocomplete",
+      JSON.stringify(options)
+    );
     this.setState(state => ({
       // ...state, contentResult: this.renderResultSearch(getDataByPath(this.state.valueInput)), visibleContentResult: true
       ...state,
-      contentResult: this.renderResultSearch(getDataByPath()),
+      contentResult: this.renderResultSearch(),
       visibleContentResult: true
+    }));
+  }
+
+  handleClickOptions(valueInput) {
+    return () => {
+      this.setState(state => ({
+        ...state,
+        visibleAutocomplete: false,
+        valueInput
+      }));
+      this.handleClickSearch();
+    };
+  }
+  onFocus() {
+    this.setState(state => ({
+      ...state,
+      visibleAutocomplete: true
     }));
   }
 
   handleDoubleClickSearch() {
     this.setState(state => ({
-      ...state, 
+      ...state,
       visibleContentResult: false
-    }))
+    }));
   }
 
   render() {
@@ -203,11 +250,28 @@ class AdminBar extends React.Component {
                 )}
               </div> 
             )}
-            <input 
+
+            {this.state.visibleAutocomplete &&
+              this.state.filteredOptions.length !== 0 && (
+                <div className="admin-bar__autocomplete" ref={this.autocomplete}>
+                  {this.state.filteredOptions.map((item, index) => (
+                    <div
+                      key={index}
+                      className="admin-bar__autocomplete-option"
+                      onClick={this.handleClickOptions(item)}
+                    >
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              )}
+            <input
               className="admin-bar__search"
               value={this.state.valueInput}
               onChange={this.handleInput}
               onKeyDown={this.handleKeyDown}
+              onFocus={this.onFocus}
+              ref={this.searchInput}
               placeholder="source"
             />
             <button

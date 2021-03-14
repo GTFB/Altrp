@@ -49,12 +49,6 @@ class Dashboards extends BaseElement {
       default: true
     });
 
-    this.addControl("multipleDatasource", {
-      type: CONTROLLER_SWITCHER,
-      label: "Enable multiple datasource?",
-      default: true
-    });
-
     this.addControl("showExportButton", {
       type: CONTROLLER_SWITCHER,
       label: "Show export button?",
@@ -109,39 +103,8 @@ class Dashboards extends BaseElement {
     });
 
     this.addControl("filter_datasource", {
-      label: "Choose SQL queries for filter params (DEPRECATED)",
       type: CONTROLLER_SQL_PARAMS,
       default: []
-    });
-
-    let repeaterParameter = new Repeater();
-
-    repeaterParameter.addControl("path", {
-      label: "Path",
-      dynamic: false
-    });
-    repeaterParameter.addControl("requestParam", {
-      label: "Set parameter name",
-      dynamic: false
-    });
-    repeaterParameter.addControl("title", {
-      label: "Title",
-      dynamic: false
-    });
-    repeaterParameter.addControl("value", {
-      label: "Set field as value",
-      dynamic: false
-    });
-    repeaterParameter.addControl("label", {
-      label: "Set field as label",
-      dynamic: false
-    });
-
-    this.addControl("datasource_parameters", {
-      label: "Set datasource parameters",
-      type: CONTROLLER_REPEATER,
-      default: [],
-      fields: repeaterParameter.getControls()
     });
 
     this.endControlSection();

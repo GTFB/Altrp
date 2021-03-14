@@ -1,5 +1,6 @@
 @import "../../../../sass/common";
 @import "../../../editor/src/sass/elements-style";
+@import "../../../editor/src/sass/default-styles";
 @import "../../../editor/src/sass/creative-link";
 @import "../../../editor/src/sass/creative-hover";
 @import "../../../editor/src/sass/_altrp-dashboards";
@@ -157,7 +158,30 @@ body {
     height: 100%;
     overflow: auto;
 
-    white-space: pre;
+  }
+
+  &__autocomplete {
+    position: fixed;
+    margin-top: 21px;
+    width: 223px;
+    padding: 7px 0;
+
+    
+    z-index: 1000;
+    box-shadow: 0px 1px 2px 1px rgba(34, 60, 80, .3);
+    background-color: #ffffff;
+    border-radius: 5px;
+    color: #000000;
+  }
+
+  &__autocomplete-option {
+    padding: 2px 7px;
+
+    cursor: pointer;
+  }
+
+  &__autocomplete-option:hover {
+    background-color: #d3d2d2;
   }
 
   &__search-value {

@@ -29,17 +29,19 @@ class TooltipScatter extends PureComponent {
           className={`${this.props.widgetID} altrp-dashboard__tooltip--label-background altrp-dashboard__tooltip--width altrp-dashboard__tooltip--label-background-shadow altrp-dashboard__tooltip--border-type altrp-dashboard__tooltip--border-width altrp-dashboard__tooltip--border-color col-12`}
           style={{ padding: "5px 9px" }}
         >
-          <div>
-          {this.props.datum.node.data?.tooltip === undefined &&
+          <div
+            style={
+              {
+                // whiteSpace: "pre",
+                // display: "flex",
+                // alignItems: "center"
+              }
+            }
+          >
             <div
               className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
-              style={{
-                whiteSpace: "pre",
-                display: "flex",
-                alignItems: "center"
-              }}
             >
-              <span
+              {/* <span
                 style={{
                   display: "block",
                   width: "12px",
@@ -47,8 +49,7 @@ class TooltipScatter extends PureComponent {
                   background: this.props.datum.node.style.color,
                   marginRight: "7px"
                 }}
-              >
-              </span>
+              ></span> */}
               {this.props.datum.node.data.formattedX}:{" "}
               <strong
                 className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
@@ -56,8 +57,7 @@ class TooltipScatter extends PureComponent {
                 {this.props.datum.node.data.formattedY}
               </strong>
             </div>
-          }
-              {this.props.datum.node.data?.tooltip?.map((item, index) => {
+            {this.props.datum.node.data?.tooltip?.map((item, index) => {
               return (
                 <div
                   style={{

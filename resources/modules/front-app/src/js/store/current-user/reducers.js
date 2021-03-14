@@ -7,6 +7,7 @@ import {
 } from "./actions";
 import AltrpUser from "../../../../../editor/src/js/classes/AltrpUser";
 import Resource from "../../../../../editor/src/js/classes/Resource";
+import appStore from "../store";
 
 const defaultModel = {};
 

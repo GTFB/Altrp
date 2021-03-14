@@ -13,7 +13,6 @@ import DatasourceSettings from "./settings/DatasourceSettings";
 import AxisBaseSettings from "./settings/AxisBaseSettings";
 import StiyleSettings from "./settings/StyleSettings";
 import FilterParameters from "./settings/FilterParameters";
-import FilterParametersDatasource from "./settings/FilterParametersDatasource";
 import DiagramTypeSettings from "./settings/DiagramTypeSettings";
 import LegendSettings from "./settings/LegendSettings";
 import TooltipSettings from "./settings/TooltipSettings";
@@ -27,7 +26,7 @@ const mapStateToProps = state => {
 function mapDispatchToProps(dispatch) {
   return {
     editElementDispatch: data => dispatch(editElement(data))
-  };
+  }; 
 }
 
 class WidgetSettings extends Component {
@@ -512,31 +511,18 @@ class WidgetSettings extends Component {
                     </div>
                     {this.state.filter_datasource.map((param, index) => {
                       return (
-                        <React.Fragment key={index}>
-                          <FilterParameters
-                            widgetID={this.props.widgetID}
-                            setParam={this.setParam}
-                            setCardName={this.setCardName}
-                            param={param}
-                          />
-                        </React.Fragment>
+                        <FilterParameters
+                          widgetID={this.props.widgetID}
+                          setParam={this.setParam}
+                          key={index}
+                          setCardName={this.setCardName}
+                          param={param}
+                        />
                       );
                     })}
                   </>
                 )}
-              {this.props?.datasource_parameters?.map((parameter, index) => {
-                return (
-                  <React.Fragment key={index}>
-                    <FilterParametersDatasource
-                      widgetID={this.props.widgetID}
-                      setParam={this.setParam}
-                      key={index}
-                      setCardName={this.setCardName}
-                      parameter={parameter}
-                    />
-                  </React.Fragment>
-                );
-              })}
+
               {/*
                 Настройки осей
               */}
@@ -601,10 +587,10 @@ class WidgetSettings extends Component {
             aria-expanded={this.state.openTooltipSettings}
           >
             <div className="collapse-button-content">
-              <div
+              <div 
                 className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font altrp-dashboard__drawer--font-margin`}
               >
-                Настройки подсказок
+              Настройки подсказок
               </div>
               <div>
                 {!this.state.openTooltipSettings ? <ArrowDown /> : <ArrowUp />}
