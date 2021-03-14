@@ -752,7 +752,7 @@ class FrontElement {
     }
     if(settingName){
       newSettings = {...this.settings};
-      _.set(newSettings, settingName);
+      _.set(newSettings, settingName, value);
     }
     if(newSettings){
       this.settings = newSettings;
