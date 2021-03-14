@@ -4,7 +4,6 @@ import {
   currentDataStorageLoaded, currentDataStorageLoading
 } from "../../store/current-data-storage/actions";
 import Resource from "../../../../../editor/src/js/classes/Resource";
-import appStore from "../../store/store";
 import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
 import { isJSON, mbParseJSON, replaceContentWithData} from "../../helpers";
 
