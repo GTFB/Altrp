@@ -251,13 +251,13 @@ class ElementWrapper extends Component {
    * @param {{}} nextState
    */
   shouldComponentUpdate(nextProps, nextState) {
-    if(this.state.children) {
-      if(this.state.children.component) {
-        if(this.state.children.component.settings.button_text) {
-          console.log(this.state.children.component.settings.button_text)
-        }
-      }
-    }
+    // if(this.state.children) {
+    //   if(this.state.children.component) {
+    //     if(this.state.children.component.settings.button_text) {
+    //       console.log(this.state.children.component.settings.button_text)
+    //     }
+    //   }
+    // }
     /**
      * не обновляем элемент, если изменился контроллер не текущего элемента
      */
@@ -334,6 +334,21 @@ class ElementWrapper extends Component {
     if(this.props.element.getSettings('layout_column_width')){
       styles.width = this.props.element.getSettings('layout_column_width') + '%';
     }
+    const elementProps = {
+      element: this.props.element,
+      children: this.state.children,
+      currentModel: this.props.currentModel,
+      currentUser: this.props.currentUser,
+      currentScreen: this.props.currentScreen,
+      currentDataStorage: this.props.currentDataStorage,
+      fireAction: this.fireAction,
+      CKEditor: CKEditor,
+      wrapper: this
+    };
+    // if(this.props.element.getType() !== 'root-element'){
+    //   delete elementProps.element;
+    // }
+    // console.error(performance.now());
     return elementHideTrigger &&
       this.props.hideTriggers.includes(elementHideTrigger) ? null : (
       <div
@@ -348,7 +363,7 @@ class ElementWrapper extends Component {
         onDragLeave={this.onDragLeave}
         onDragEnter={this.onDragEnter}
       >
-        <div className={overlayClasses} id="overlay" style={overlayStyles}>
+        <div className={overlayClasses} id={"overlay" + this.props.element.getId()} style={overlayStyles}>
           <div className="overlay-settings">
             <button
               className="overlay-settings__button overlay-settings__button_add "
@@ -381,17 +396,7 @@ class ElementWrapper extends Component {
             </button>
           </div>
         </div>
-        {errorContent || React.createElement(this.props.component, {
-          element: this.props.element,
-          children: this.state.children,
-          currentModel: this.props.currentModel,
-          currentUser: this.props.currentUser,
-          currentScreen: this.props.currentScreen,
-          currentDataStorage: this.props.currentDataStorage,
-          fireAction: this.fireAction,
-          CKEditor: CKEditor,
-          wrapper: this
-        })}
+        {errorContent || React.createElement(this.props.component, elementProps)}
         {tooltip_text && <AltrpTooltip position={tooltip_position}>{tooltip_text}</AltrpTooltip>}
         {emptyColumn}
       </div>
@@ -428,7 +433,7 @@ function mapStateToProps(state) {
     currentUser: state.currentUser,
     controllerValue: state.controllerValue,
     currentDataStorage: state.currentDataStorage,
-    hideTriggers: state.hideTriggers,
+    // hideTriggers: state.hideTriggers,
     currentScreen: state.currentScreen,
   };
 }

@@ -147,7 +147,7 @@ class RouteContent extends Component {
     }
     if (!_.isEqual(_.get(this.props, "match"), _.get(prevProps, "match"))) {
       window.currentRouterMatch = new AltrpModel(this.props.match);
-      appStore.dispatch(clearFormStorage());
+      // appStore.dispatch(clearFormStorage());
     }
   }
 

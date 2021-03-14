@@ -306,6 +306,9 @@ class FrontElement {
     {
       return _.cloneDeep(this.settings);
     }
+    if(_.get(this.settings, settingName) === false || _.get(this.settings, settingName) === 0){
+      return _.get(this.settings, settingName);
+    }
     return _.get(this.settings, settingName) || _default;
   }
   updateStyles(){
@@ -735,6 +738,28 @@ class FrontElement {
   getTemplateType(){
     const rootElement = this.getRoot();
     return rootElement.templateType || 'content';
+  }
+
+  /**
+   * Обновляем настройки элемента на фронте с обновлением компонента
+   * @param value
+   * @param settingName
+   */
+  updateSetting(value, settingName = ''){
+    let newSettings;
+    if(! settingName && _.isObject(value)){
+       newSettings = {..._.assign(this.settings, value)};
+    }
+    if(settingName){
+      newSettings = {...this.settings};
+      _.set(newSettings, settingName);
+    }
+    if(newSettings){
+      this.settings = newSettings;
+      if(this.component){
+        this.component.setState(state => ({...state, settings: newSettings}));
+      }
+    }
   }
 }
 

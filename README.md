@@ -10,6 +10,7 @@
 + Add User Preset Colors for Color & Gradient Controllers
 + Add the Interface for Setting Parameters with the Mark of Required Parameters
 + Add Revisions to History Panel 
++ Add the Ability to Play Sounds in Actions 
 
 ### 0.13.0
 + Аdd the Template Widget

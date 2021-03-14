@@ -157,6 +157,7 @@ class RepeaterController extends Component {
     /**
      *  если элемент другой обновим items
      */
+    console.log('componentDidUpdate')
     if(prevProps.currentElement.getId() !== this.props.currentElement.getId()){
       let items = prevProps.default || [];
       items = this.getSettings(this.props.controlId) || items;
@@ -183,6 +184,7 @@ class RepeaterController extends Component {
                 itemClasses={itemClasses}
                 thisController={this}
                 itemController={item} 
+                fields={this.props.fields}
                 idx={idx}   
                 key={item.id} 
               />
@@ -202,15 +204,14 @@ class RepeaterController extends Component {
   }
 }
 
-const RepeaterItem = ({thisController, itemClasses, idx, itemController}) => {
+const RepeaterItem = ({thisController, itemClasses, idx, itemController, fields: _fields}) => {
   const {setActiveItem, duplicateItem, deleteItem, moveItem} = thisController;
-  const propsController = thisController.props;
   const ref=React.useRef(null);
   const fields = React.useMemo(()=>{
     return thisController.props.fields.filter(field=>{
       return ! (getTemplateType() === 'email' && field.hideOnEmail)
     })
-  }, [propsController.fields]);
+  }, [thisController, _fields]);
   const [, drop] = useDrop({
     accept: "item",
     hover(item, monitor) {
@@ -267,12 +268,15 @@ const RepeaterItem = ({thisController, itemClasses, idx, itemController}) => {
             let ControllerComponent = controllersManager.getController(field.type);
             let controller = new Controller({ ...field, repeater: thisController, itemIndex: idx });
             let value = itemController[field.controlId] || '';
-            return <ControllerComponent {...field}
+            let key  = '_' + Math.random().toString(36).substr(2, 9);
+            return <ControllerComponent 
+              {...field}
               repeater={thisController}
               itemindex={idx}
-              key={field.controlId}
+              key={key}
               default={value}
-              controller={controller} />
+              controller={controller} 
+            />
           })
         }
       </div>

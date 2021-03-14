@@ -8,7 +8,7 @@ import {
   scrollbarWidth, isEditor, parseURLTemplate, mbParseJSON,
   renderAssetIcon,
   generateButtonsArray,
-  renderIcon, setAltrpIndex
+  renderIcon, setAltrpIndex, getResponsiveSetting
 } from "../../../../../front-app/src/js/helpers";
 import { useDrag, useDrop } from 'react-dnd'
 import { Link } from "react-router-dom";
@@ -169,6 +169,7 @@ function AltrpTableWithoutUpdate(
       column_external_link,
       column_blank_link,
       _accessor,
+      edit_disabled,
       column_cell_content_type } = column;
     const [columnTemplate, setColumnTemplate] = React.useState(null);
     const columnEditUrl =
@@ -266,7 +267,7 @@ function AltrpTableWithoutUpdate(
     /**
      * Отоборажаем инпут для редактирования данных
      */
-    if (columnEditUrl) {
+    if (columnEditUrl ) {
       return <AutoUpdateInput className="altrp-inherit"
         route={columnEditUrl}
         resourceid={''}
@@ -1224,9 +1225,12 @@ export function settingsToColumns(settings, widgetId) {
     hide_expanded_row_icon,
     expanded_row_icon,
     hide_not_expanded_row_icon,
+    edit_disabled,
     not_expanded_row_icon
   } = settings;
   tables_columns = tables_columns || [];
+  let columnOrder = (getResponsiveSetting(settings, 'columns_order') || '').trim();
+  columnOrder = columnOrder ? columnOrder.split(',') : [];
   /**
    * Если в колонке пустые поля, то мы их игнорируем, чтобы не было ошибки
    */
@@ -1235,6 +1239,7 @@ export function settingsToColumns(settings, widgetId) {
      * Колонку проказываем, если есть accessor или список actions
      */
     if (((_column.actions && _column.actions.length) || _column.accessor)) {
+      _column.edit_disabled = edit_disabled;
       _column._accessor = _column.accessor;
       _column.column_name = _column.column_name || '&nbsp;';
       if (_column.column_is_filtered) {
@@ -1316,6 +1321,14 @@ export function settingsToColumns(settings, widgetId) {
           </span>
         ) : null,
     });
+  }
+  if(columnOrder.length){
+    const _column = [];
+    columnOrder.forEach(columnIndex=>{
+      columnIndex = parseInt(columnIndex) - 1;
+      columns[columnIndex] && (_column.indexOf(columns[columnIndex]) === -1) ? _column.push(columns[columnIndex]) : null;
+    });
+    columns = _column;
   }
   return columns;
 }

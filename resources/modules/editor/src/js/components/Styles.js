@@ -40,22 +40,33 @@ class Styles extends Component {
    * @param {string} styles
    * */
   addElementStyles(elementId, styles){
-    if(!styles){
+    if(! styles){
       return
     }
     let elementFound = false;
-    let elementStyles = [...this.state.elementStyles];
+    let elementStyles = this.state.elementStyles;
+    let needUpdate = false;
     elementStyles.forEach(elementStyle=>{
       if(elementStyle.elementId === elementId){
         elementFound = true;
-        elementStyle.styles = styles;
+        // console.error(elementStyle.styles === styles);
+        if(elementStyle.styles !== styles){
+          elementStyle.styles = styles;
+          needUpdate = true;
+        } else {
+          // console.log(styles);
+        }
       }
     });
-    if(!elementFound){
+    if(! elementFound){
+      needUpdate = true;
       elementStyles.push({
         elementId,
         styles,
       })
+    }
+    if(! needUpdate){
+      return;
     }
     this.setState({
       ...this.state,

@@ -39,6 +39,14 @@ function componentDidUpdate(prevProps, prevState) {
       value
     });
   }
+  if(this.props.currentScreen !== prevProps.currentScreen ||
+      this.props.currentState !== prevProps.currentState){
+    const value = this.getSettings(this.props.controlId);
+    this.setState(state => ({
+      ...state,
+      value
+    }));
+  }
   /**
    * Если в самом компоненте контроллера объвлен метод _componentDidUpdate, то его тоже вызовем
    * например RepeaterController
@@ -90,8 +98,12 @@ function getSettings(settingName){
   if(this.props.responsive === false){
     return this.props.currentElement.getSettings(settingName);
   }
-  return this.props.currentElement.getSettings(settingName +
-      getElementSettingsSuffix(this.props.controller))
+  let value = this.props.currentElement.getSettings(settingName +
+      getElementSettingsSuffix(this.props.controller));
+  if(value === null){
+    value = this.props.currentElement.getSettings(settingName)
+  }
+  return value;
 }
 
 /**
@@ -127,6 +139,8 @@ function _changeValue(value, updateElement = true) {
     });
   }
   if(updateElement){
+    console.log(this.props.controller)
+    console.log('value: ', value)
     this.props.controller.changeValue(value, updateElement);
   }
 
