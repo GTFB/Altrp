@@ -30,7 +30,8 @@ export function actionsControllers(element, sectionLabel = 'Actions', idPrefix =
 
   actionsRepeater.addControl('type', {
     label: 'Type',
-    type: CONTROLLER_SELECT,
+    type: CONTROLLER_SELECT2,
+    isClearable: true,
     nullable: true,
     responsive: false,
     options: [
@@ -481,18 +482,6 @@ export function actionsControllers(element, sectionLabel = 'Actions', idPrefix =
       ],
     },
   });
-  // actionsRepeater.addControl('custom_headers', {
-  //   type: CONTROLLER_TEXTAREA,
-  //   label: 'Data',
-  //   responsive: false,
-  //   dynamic: false,
-  //   description: 'param_1 | {{altrpdata.alias}}',
-  //   conditions: {
-  //     type: [
-  //       'form',
-  //     ],
-  //   },
-  // });
 
   actionsRepeater.addControl('set_type', {
     label: 'Set Type',
@@ -568,6 +557,8 @@ export function actionsControllers(element, sectionLabel = 'Actions', idPrefix =
       ],
     },
   });
+
+
 
   actionsRepeater.addControl('popup_id', {
     type: CONTROLLER_SELECT2,

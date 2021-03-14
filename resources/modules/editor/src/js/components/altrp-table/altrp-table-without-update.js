@@ -169,6 +169,7 @@ function AltrpTableWithoutUpdate(
       column_external_link,
       column_blank_link,
       _accessor,
+      edit_disabled,
       column_cell_content_type } = column;
     const [columnTemplate, setColumnTemplate] = React.useState(null);
     const columnEditUrl =
@@ -266,7 +267,7 @@ function AltrpTableWithoutUpdate(
     /**
      * Отоборажаем инпут для редактирования данных
      */
-    if (columnEditUrl) {
+    if (columnEditUrl && ! edit_disabled) {
       return <AutoUpdateInput className="altrp-inherit"
         route={columnEditUrl}
         resourceid={''}
@@ -1224,6 +1225,7 @@ export function settingsToColumns(settings, widgetId) {
     hide_expanded_row_icon,
     expanded_row_icon,
     hide_not_expanded_row_icon,
+    edit_disabled,
     not_expanded_row_icon
   } = settings;
   tables_columns = tables_columns || [];
@@ -1237,6 +1239,7 @@ export function settingsToColumns(settings, widgetId) {
      * Колонку проказываем, если есть accessor или список actions
      */
     if (((_column.actions && _column.actions.length) || _column.accessor)) {
+      _column.edit_disabled = edit_disabled;
       _column._accessor = _column.accessor;
       _column.column_name = _column.column_name || '&nbsp;';
       if (_column.column_is_filtered) {
@@ -1320,7 +1323,6 @@ export function settingsToColumns(settings, widgetId) {
     });
   }
   if(columnOrder.length){
-    console.log(columnOrder);
     const _column = [];
     columnOrder.forEach(columnIndex=>{
       columnIndex = parseInt(columnIndex) - 1;

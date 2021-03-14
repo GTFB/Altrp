@@ -755,146 +755,152 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionSetData() {
-    let path = this.getProperty('path');
+    let paths = this.getProperty('path');
     const result = {
-      success: false
+      success: true
     };
-    if (!path) {
+    if (! paths) {
       return result;
     }
-    let value = this.getProperty('value') || '';
-    value = value.trim();
-    const setType = this.getProperty('set_type');
-    let count = this.getProperty('count');
-    switch (setType) {
-      case 'toggle':
-        {
-          value = !getDataByPath(path);
-          result.success = setDataByPath(path, value);
-        }
-        break;
-      case 'set':
-        {
-          if (
-            value.split(/\r?\n/).length === 1 &&
-            value.indexOf('{{') === 0 &&
-            value.indexOf('}}') === value.length - 2 &&
-            getDataByPath(value.replace('{{', '').replace('}}', ''))
-          ) {
-            value = getDataByPath(
-              value.replace('{{', '').replace('}}', ''),
-              null,
-              this.getCurrentModel()
-            );
-          } else {
-            value = replaceContentWithData(
-              value,
-              this.getCurrentModel().getData()
-            );
-          }
-          result.success = setDataByPath(path, value);
-        }
-        break;
-      case 'toggle_set':
-        {
-          let currentValue = getDataByPath(path);
-          value = value.split('\n').map(v => v.trim());
-          if (value.length === 1) {
-            value.push('');
-          }
-          let nextIndex = value.indexOf(currentValue) + 1;
-          if (nextIndex >= value.length) {
-            nextIndex = 0;
-          }
-          value = value[nextIndex] || '';
-          result.success = setDataByPath(path, value);
-        }
-        break;
-      case 'increment':
-        {
-          let currentValue = getDataByPath(path);
-          currentValue = currentValue
-            ? _.isNaN(Number(currentValue))
-              ? 1
-              : Number(currentValue)
-            : Number(!!currentValue);
-          count = Number(count) || 1;
-          currentValue += count;
-          result.success = setDataByPath(path, currentValue);
-        }
-        break;
-      case 'decrement':
-        {
-          let currentValue = getDataByPath(path);
-          currentValue = currentValue
-            ? _.isNaN(Number(currentValue))
-              ? 1
-              : Number(currentValue)
-            : Number(!!currentValue);
-          count = Number(count) || 1;
-          currentValue -= count;
-          result.success = setDataByPath(path, currentValue);
-        }
-        break;
-      case 'push_items':
-        {
-          let currentValue = getDataByPath(path);
-          let item = {};
-          if (!_.isArray(currentValue)) {
-            currentValue = [];
-          }
-          currentValue = [...currentValue];
-          if (_.isObject(getDataByPath(value))) {
-            item = getDataByPath(value);
-          }
-          count = Number(count) || 1;
-          if (count < 0) {
-            count = 1;
-          }
-          while (count) {
-            _.isArray(item)
-              ? currentValue.push([...item])
-              : currentValue.push({ ...item });
-            --count;
-          }
-          result.success = setDataByPath(path, currentValue);
-        }
-        break;
-      case 'remove_items':
-        {
-          let items = path.split(/\r?\n/);
-          items.forEach(i => {
-            if (!i) {
-              return;
-            }
-            i = i.trim();
-            if (!i) {
-              return;
-            }
-            if (i.indexOf('{{') !== -1) {
-              i = replaceContentWithData(i, this.getCurrentModel().getData());
-            }
-            let item = getDataByPath(i);
-            if (!item) {
-              return;
-            }
-            let listPath = i.replace(/.\d+$/, '').trim();
-            if (!listPath) {
-              return;
-            }
-            let list = getDataByPath(listPath);
-            if (!_.isArray(list)) {
-              return;
-            }
-            list = [...list];
-            list = list.filter(_item => _item !== item);
-            setDataByPath(listPath, list);
-          });
-          result.success = true;
-        }
-        break;
+    if(paths.indexOf(',') !== -1){
+      paths = paths.split(',').map(path => path.trim());
+    } else {
+      paths = [paths];
     }
-
+    for(let path of paths){
+      let value = this.getProperty('value') || '';
+      value = value.trim();
+      const setType = this.getProperty('set_type');
+      let count = this.getProperty('count');
+      switch (setType) {
+        case 'toggle':
+          {
+            value = ! getDataByPath(path);
+            result.success = setDataByPath(path, value);
+          }
+          break;
+        case 'set':
+          {
+            if (
+              value.split(/\r?\n/).length === 1 &&
+              value.indexOf('{{') === 0 &&
+              value.indexOf('}}') === value.length - 2 &&
+              getDataByPath(value.replace('{{', '').replace('}}', ''))
+            ) {
+              value = getDataByPath(
+                value.replace('{{', '').replace('}}', ''),
+                null,
+                this.getCurrentModel()
+              );
+            } else {
+              value = replaceContentWithData(
+                value,
+                this.getCurrentModel().getData()
+              );
+            }
+            result.success = setDataByPath(path, value);
+          }
+          break;
+        case 'toggle_set':
+          {
+            let currentValue = getDataByPath(path);
+            value = value.split('\n').map(v => v.trim());
+            if (value.length === 1) {
+              value.push('');
+            }
+            let nextIndex = value.indexOf(currentValue) + 1;
+            if (nextIndex >= value.length) {
+              nextIndex = 0;
+            }
+            value = value[nextIndex] || '';
+            result.success = setDataByPath(path, value);
+          }
+          break;
+        case 'increment':
+          {
+            let currentValue = getDataByPath(path);
+            currentValue = currentValue
+              ? _.isNaN(Number(currentValue))
+                ? 1
+                : Number(currentValue)
+              : Number(!!currentValue);
+            count = Number(count) || 1;
+            currentValue += count;
+            result.success = setDataByPath(path, currentValue);
+          }
+          break;
+        case 'decrement':
+          {
+            let currentValue = getDataByPath(path);
+            currentValue = currentValue
+              ? _.isNaN(Number(currentValue))
+                ? 1
+                : Number(currentValue)
+              : Number(!!currentValue);
+            count = Number(count) || 1;
+            currentValue -= count;
+            result.success = setDataByPath(path, currentValue);
+          }
+          break;
+        case 'push_items':
+          {
+            let currentValue = getDataByPath(path);
+            let item = {};
+            if (!_.isArray(currentValue)) {
+              currentValue = [];
+            }
+            currentValue = [...currentValue];
+            if (_.isObject(getDataByPath(value))) {
+              item = getDataByPath(value);
+            }
+            count = Number(count) || 1;
+            if (count < 0) {
+              count = 1;
+            }
+            while (count) {
+              _.isArray(item)
+                ? currentValue.push([...item])
+                : currentValue.push({ ...item });
+              --count;
+            }
+            result.success = setDataByPath(path, currentValue);
+          }
+          break;
+        case 'remove_items':
+          {
+            let items = path.split(/\r?\n/);
+            items.forEach(i => {
+              if (!i) {
+                return;
+              }
+              i = i.trim();
+              if (!i) {
+                return;
+              }
+              if (i.indexOf('{{') !== -1) {
+                i = replaceContentWithData(i, this.getCurrentModel().getData());
+              }
+              let item = getDataByPath(i);
+              if (!item) {
+                return;
+              }
+              let listPath = i.replace(/.\d+$/, '').trim();
+              if (!listPath) {
+                return;
+              }
+              let list = getDataByPath(listPath);
+              if (!_.isArray(list)) {
+                return;
+              }
+              list = [...list];
+              list = list.filter(_item => _item !== item);
+              setDataByPath(listPath, list);
+            });
+            result.success = true;
+          }
+          break;
+      }
+      }
     return result;
   }
   /**
@@ -1015,6 +1021,11 @@ class AltrpAction extends AltrpModel {
     await delay(this.getProperty('milliseconds') || 0);
     return {success: true}
   }
+
+  /**
+   * Воспроизводим звук
+   * @return {Promise<{success: boolean}>}
+   */
   async doActionPlaySound(){
     const duration = this.getProperty('milliseconds') || 0;
     const url = this.getProperty('media_url');
@@ -1022,6 +1033,7 @@ class AltrpAction extends AltrpModel {
     if(url){
       const  {playSound} = await import('../helpers/sounds');
       playSound(url, loop, duration);
+      await delay(20);
     }
     return {success: true}
   }

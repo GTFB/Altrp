@@ -1393,6 +1393,21 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
+    //<editor-fold description=edit_settings>
+    this.startControlSection('edit_settings', {
+      label: 'Edit',
+      hideOnEmail: true,
+
+    });
+
+    this.addControl('edit_disabled', {
+      label: 'Disable Edit in All Cells',
+      type: CONTROLLER_SWITCHER,
+    });
+
+    this.endControlSection();
+    //</editor-fold>
+
     this.startControlSection('filter_style_table', {
       tab: TAB_STYLE,
       hideOnEmail: true,
