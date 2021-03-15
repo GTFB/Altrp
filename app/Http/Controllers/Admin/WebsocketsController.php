@@ -21,6 +21,10 @@ class WebsocketsController extends Controller
         $enadled = $request->get('enabled');
         $reset = $request->get('reset');
 
+        // Проверка существования файла env
+        $file = base_path('.env');
+        if (!file_exists($file)) return response()->json(['error'=> "File .env not found!"], 500, [],JSON_UNESCAPED_UNICODE);
+
         // сброс соединения (на всякий случай)
         $exit_code = Artisan::call('websockets:restart');        
 
@@ -28,7 +32,7 @@ class WebsocketsController extends Controller
 
         if ($enadled){
             try{
-                $checkAppKey = $this->checkEnv("ALTRP_SETTING_PUSHER_APP_KEY", '123456');
+                $checkAppKey = $this->checkEnv("ALTRP_SETTING_PUSHER_APP_KEY", '12345678');
                 $checkHost = $this->checkEnv("ALTRP_SETTING_PUSHER_HOST", '127.0.0.1');
                 $checkAppId = $this->checkEnv("PUSHER_APP_ID", time());
                 $checkAppSecret = $this->checkEnv("PUSHER_APP_SECRET", time());
