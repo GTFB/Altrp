@@ -1,3 +1,4 @@
+import { head } from "lodash";
 import {isEditor, parseURLTemplate, prepareURLForEmail} from "../../../../../front-app/src/js/helpers";
 
 /**
@@ -109,7 +110,11 @@ export default function headingElementEmailRender(){
   if(settings['transform_style']) {
     headingStyles.transform = `${settings['transform_style'].function}(${settings['transform_style'].size}${settings['transform_style'].unit})`
   }
-
+  if(settings['heading_settings_alignment']) {
+    headingStyles.justifyContent = settings['heading_settings_alignment'];
+  }
+  console.log(settings);
+  console.log(headingStyles)
   let url = _.get(settings, 'link_link.url', location.origin) || '';
   url = prepareURLForEmail(url);
   const text = this.getContent('text') || '';

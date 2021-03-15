@@ -66,7 +66,6 @@ export default function textElementEmailRender(){
     // wrapperStyles.borderRadius = `${borderRadiusTop} ${borderRadiusRight} ${borderRadiusBottom} ${borderRadiusLeft}`;
     wrapperStyles.borderRadius = settings['text_style_border_radius'].size + settings['text_style_border_radius'].unit;
   }
-
   let textContent = this.getContent("text");
   const wrapperProps = {
     style: wrapperStyles,
