@@ -31,16 +31,15 @@ class UpdateAltrpSqlEditorsTable extends Migration
             function($matches) {
                 $param = $matches[0];
                 $parts = explode(':', trim($param, '\''));
-                if (\Illuminate\Support\Str::contains($param, 'CURRENT_USER')
-                    && \Illuminate\Support\Str::contains($parts[1], ')')) {
-                    $param = trim($param, ')');
+                $chars = '';
+                if ($parts[0] == 'CURRENT_USER' || $parts[0] == 'REQUEST') {
+                    preg_match('#[,)]+#', $parts[1], $matches2);
+                    if (isset($matches2[0])) {
+                        $chars .= $matches2[0];
+                        $param = trim($param, $chars);
+                    }
                 }
-                $res = '{{' . $param . '}}';
-                if (\Illuminate\Support\Str::contains($param, 'CURRENT_USER')
-                    && \Illuminate\Support\Str::contains($parts[1], ')')) {
-                    $res = $res . ')';
-                }
-                return $res;
+                return '{{' . $param . '}}' . $chars;
             },
             $str
         );
