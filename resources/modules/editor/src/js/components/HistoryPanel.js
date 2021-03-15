@@ -11,6 +11,8 @@ import {
 import UserSvg from "../../../../admin/src/svgs/user.svg";
 import StartFilled from "../../../../admin/src/svgs/start-filled.svg";
 import Scrollbars from "react-custom-scrollbars";
+import { changeTemplateStatus } from "../store/template-status/actions";
+import CONSTANTS from "../consts";
 
 class HistoryPanel extends Component {
   constructor(props) {
@@ -197,6 +199,8 @@ const RevisionTabContent = () => {
         new: _.cloneDeep(getTemplateDataStorage().rootElement)
       })
     );
+    
+    window.parent.appStore.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
     getEditor().showWidgetsPanel();
   };
 
