@@ -42,9 +42,10 @@ export default class ModelField extends Component{
             <div className="control-container_select-wrapper controller-field">
                 <select className="control-select control-field"
                     id={`operand-1_${item?.id}`}
-                    value={item?.operands[0]}
+                    value={item?.operands[0] ?? ''}
                     onChange={e => {this.changeSelect(e, item?.id)}}
                 >
+                    <option disabled value="" />
                     {fieldOptions.map(option => {
                         return  <option value={option.label} key={option.value || 'null'} >
                                     {option.label}

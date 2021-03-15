@@ -156,12 +156,12 @@ export default class Condition extends Component{
                         </div>
                     </div>
                     <div className="repeater-fields">
-                        {compares.map( (item, index) =>{ 
+                        {compares.map( (item, index) =>{
                         return <div className="repeater-item repeater-item_open" key={index}>
                             <div className="repeater-item-tools">
                                 <div className="repeater-item__caption">
-                                <textarea  
-                                        className="control-field" 
+                                <input  
+                                        className="compare-control-field" 
                                         type="text" 
                                         id={`compare_${item.id}`} 
                                         name="compare" 
@@ -169,7 +169,6 @@ export default class Condition extends Component{
                                         value={item?.name ?? ''} 
                                         onChange={(e) => { this.changeInput(e, item.id, 'name') }}
                                         />
-                                    {/* {item?.name ?? 'Compare#'} */}
                                 </div>
                                 <button className="repeater-item__icon" onClick={() => this.onDelete(item)}>
                                     {iconsManager().renderIcon('times')}
@@ -195,7 +194,12 @@ export default class Condition extends Component{
                                     </div>
                                 </div>
 
-                                <div className="controller-container controller-container_textarea">
+                                {(
+                                    item.operator != "empty" &&
+                                    item.operator != "not_empty" &&
+                                    item.operator != "null" &&
+                                    item.operator != "not_null"
+                                ) && <div className="controller-container controller-container_textarea">
                                     <div className="controller-container__label control-select__label controller-label">
                                         Value
                                     </div>
@@ -210,7 +214,7 @@ export default class Condition extends Component{
                                         onChange={(e) => { this.changeInput(e, item.id, 1) }}
                                         />
                                     </div>
-                                </div>
+                                </div>}
 
                             </div>{/* ./repeater-item-content */}
                         </div>}
