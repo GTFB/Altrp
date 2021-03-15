@@ -625,7 +625,7 @@ class InputWidget extends Component {
    * @param {*} value
    * @param {boolean} userInput true - имзенилось пользователем
    */
-  dispatchFieldValueToStore = (value, userInput = false) => {
+  dispatchFieldValueToStore = async (value, userInput = false) => {
     let formId = this.props.element.getFormId();
     let fieldName = this.props.element.getFieldId();
     if (fieldName.indexOf("{{") !== -1) {
@@ -635,6 +635,23 @@ class InputWidget extends Component {
       this.props.appStore.dispatch(
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
+      if(userInput){
+        const change_actions = this.props.element.getSettings('change_actions');
+
+        if (change_actions && ! isEditor()) {
+          const actionsManager = (
+              await import(
+                  "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+                  )
+          ).default;
+          await actionsManager.callAllWidgetActions(
+              this.props.element.getIdForAction(),
+              'change',
+              change_actions,
+              this.props.element
+          );
+        }
+      }
     }
   };
 

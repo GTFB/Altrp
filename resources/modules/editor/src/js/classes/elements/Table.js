@@ -1408,6 +1408,90 @@ class Table extends BaseElement {
     this.endControlSection();
     //</editor-fold>
 
+    this.startControlSection('table_style_table', {
+      tab: TAB_STYLE,
+      label: 'Table'
+    });
+
+    this.addControl('table_style_table_striple_style', {
+      type: CONTROLLER_SWITCHER,
+      hideOnEmail: true,
+      label: 'Stripe style'
+    });
+    this.addControl('table_transpose', {
+      type: CONTROLLER_SWITCHER,
+      hideOnEmail: true,
+      default: false,
+      prefixClass: 'altrp-transpose_',
+      label: 'Transpose',
+    });
+
+    this.addControl('table_style_table_stripe_color', {
+      hideOnEmail: true,
+      type: CONTROLLER_COLOR,
+      label: 'Stripe Color',
+      rules: {
+        '{{ELEMENT}} .altrp-table-tbody--striped tr:nth-child(2n){{STATE}}': 'background-color: {{COLOR}}',
+        '{{ELEMENT}} .altrp-table-tbody--striped .altrp-table-tr:nth-child(2n){{STATE}}': 'background-color: {{COLOR}}'
+      }
+    });
+
+    this.addControl('table_style_table_border_type', {
+      type: CONTROLLER_SELECT,
+      label: 'Border Type',
+      options: [
+        {
+          value: 'none',
+          label: 'None'
+        },
+        {
+          value: 'solid',
+          label: 'Solid'
+        },
+        {
+          value: 'double',
+          label: 'Double'
+        },
+        {
+          value: 'dotted',
+          label: 'Dotted'
+        },
+        {
+          value: 'dashed',
+          label: 'Dashed'
+        },
+        {
+          value: 'groove',
+          label: 'Groove'
+        }
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-table{{STATE}}': 'border-style: {{VALUE}} !important'
+      }
+    });
+
+    this.addControl('table_style_table_border_width', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Width',
+      default: {
+        unit: 'px'
+      },
+      units: ['px', '%', 'vh', 'vw'],
+      rules: {
+        '{{ELEMENT}} .altrp-table{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
+      }
+    });
+
+    this.addControl('table_style_table_border_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Border Color',
+      rules: {
+        '{{ELEMENT}} .altrp-table{{STATE}}': 'border-color: {{COLOR}} !important'
+      }
+    });
+
+    this.endControlSection();
+
     this.startControlSection('filter_style_table', {
       tab: TAB_STYLE,
       hideOnEmail: true,
@@ -1473,22 +1557,22 @@ class Table extends BaseElement {
     });
 
     this.addControl(
-      'filter_style_typographic', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Typographic',
-      rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
-    }
+        'filter_style_typographic', {
+          type: CONTROLLER_TYPOGRAPHIC,
+          label: 'Typographic',
+          rules: {
+            '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': [
+              'font-family: "{{FAMILY}}", sans-serif;',
+              'font-size: {{SIZE}}px;',
+              'line-height: {{LINEHEIGHT}};',
+              'letter-spacing: {{SPACING}}px',
+              'font-weight: {{WEIGHT}}',
+              'text-transform: {{TRANSFORM}}',
+              'font-style: {{STYLE}}',
+              'text-decoration: {{DECORATION}}'
+            ],
+          },
+        }
     );
 
     this.addControl('filter_style_table_border_type', {
@@ -1546,18 +1630,18 @@ class Table extends BaseElement {
     });
 
     this.addControl('filter_style_border_shadow', {
-      type: CONTROLLER_FILTERS,
-      label: 'filters',
-      rules: {
-        '{{ELEMENT}} .altrp-image{{STATE}}': [
-          'filter: blur({{BLUR}}px);',
-          'filter: brightness({{BRIGHTNESS}}%);',
-          'filter: contrast({{CONTRAST}}%);',
-          'filter: saturate({{SATURATION}}%);',
-          'filter: hue-rotate({{HUE}}deg);;'
-        ],
-      },
-    }
+          type: CONTROLLER_FILTERS,
+          label: 'filters',
+          rules: {
+            '{{ELEMENT}} .altrp-image{{STATE}}': [
+              'filter: blur({{BLUR}}px);',
+              'filter: brightness({{BRIGHTNESS}}%);',
+              'filter: contrast({{CONTRAST}}%);',
+              'filter: saturate({{SATURATION}}%);',
+              'filter: hue-rotate({{HUE}}deg);;'
+            ],
+          },
+        }
     );
 
     this.endControlSection();
@@ -1594,21 +1678,21 @@ class Table extends BaseElement {
     });
 
     this.addControl('global_filter_label_typographic', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Label Typographic',
-      rules: {
-        '{{ELEMENT}} .altrp-table-global-filter label{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
-    }
+          type: CONTROLLER_TYPOGRAPHIC,
+          label: 'Label Typographic',
+          rules: {
+            '{{ELEMENT}} .altrp-table-global-filter label{{STATE}}': [
+              'font-family: "{{FAMILY}}", sans-serif;',
+              'font-size: {{SIZE}}px;',
+              'line-height: {{LINEHEIGHT}};',
+              'letter-spacing: {{SPACING}}px',
+              'font-weight: {{WEIGHT}}',
+              'text-transform: {{TRANSFORM}}',
+              'font-style: {{STYLE}}',
+              'text-decoration: {{DECORATION}}'
+            ],
+          },
+        }
     );
 
     this.addControl('global_filter_heading', {
@@ -1672,21 +1756,21 @@ class Table extends BaseElement {
     });
 
     this.addControl('global_filter_input_typographic', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Input Typographic',
-      rules: {
-        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
-    }
+          type: CONTROLLER_TYPOGRAPHIC,
+          label: 'Input Typographic',
+          rules: {
+            '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': [
+              'font-family: "{{FAMILY}}", sans-serif;',
+              'font-size: {{SIZE}}px;',
+              'line-height: {{LINEHEIGHT}};',
+              'letter-spacing: {{SPACING}}px',
+              'font-weight: {{WEIGHT}}',
+              'text-transform: {{TRANSFORM}}',
+              'font-style: {{STYLE}}',
+              'text-decoration: {{DECORATION}}'
+            ],
+          },
+        }
     );
 
     this.addControl('global_filter_input_border_type', {
@@ -1770,90 +1854,6 @@ class Table extends BaseElement {
       rules: {
         '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
       },
-    });
-
-    this.endControlSection();
-
-    this.startControlSection('table_style_table', {
-      tab: TAB_STYLE,
-      label: 'Table'
-    });
-
-    this.addControl('table_style_table_striple_style', {
-      type: CONTROLLER_SWITCHER,
-      hideOnEmail: true,
-      label: 'Stripe style'
-    });
-    this.addControl('table_transpose', {
-      type: CONTROLLER_SWITCHER,
-      hideOnEmail: true,
-      default: false,
-      prefixClass: 'altrp-transpose_',
-      label: 'Transpose',
-    });
-
-    this.addControl('table_style_table_stripe_color', {
-      hideOnEmail: true,
-      type: CONTROLLER_COLOR,
-      label: 'Stripe Color',
-      rules: {
-        '{{ELEMENT}} .altrp-table-tbody--striped tr:nth-child(2n){{STATE}}': 'background-color: {{COLOR}}',
-        '{{ELEMENT}} .altrp-table-tbody--striped .altrp-table-tr:nth-child(2n){{STATE}}': 'background-color: {{COLOR}}'
-      }
-    });
-
-    this.addControl('table_style_table_border_type', {
-      type: CONTROLLER_SELECT,
-      label: 'Border Type',
-      options: [
-        {
-          value: 'none',
-          label: 'None'
-        },
-        {
-          value: 'solid',
-          label: 'Solid'
-        },
-        {
-          value: 'double',
-          label: 'Double'
-        },
-        {
-          value: 'dotted',
-          label: 'Dotted'
-        },
-        {
-          value: 'dashed',
-          label: 'Dashed'
-        },
-        {
-          value: 'groove',
-          label: 'Groove'
-        }
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-table{{STATE}}': 'border-style: {{VALUE}} !important'
-      }
-    });
-
-    this.addControl('table_style_table_border_width', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Border Width',
-      default: {
-        unit: 'px'
-      },
-      units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-table{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
-      }
-    });
-
-    this.addControl('table_style_table_border_color', {
-      type: CONTROLLER_COLOR,
-      label: 'Border Color',
-      rules: {
-        '{{ELEMENT}} .altrp-table{{STATE}}': 'border-color: {{COLOR}} !important'
-      }
     });
 
     this.endControlSection();
@@ -3651,6 +3651,30 @@ class Table extends BaseElement {
      * Стили для футера группы END
      *
      */
+    //</editor-fold>
+
+    //<editor-fold description=column_responsive_settings>
+
+    this.startControlSection('group_style_settings', {
+      label: 'Groups',
+      hideOnEmail: true,
+      tab: TAB_STYLE,
+    });
+
+    const groupsRepeater = new Repeater();
+
+    groupsRepeater.addControl('name', {
+      label: 'Name',
+      dynamic: false,
+    });
+
+    this.addControl('tables_groups', {
+      label: 'Groups',
+      type: CONTROLLER_REPEATER,
+      fields: groupsRepeater.getControls(),
+    });
+
+    this.endControlSection();
     //</editor-fold>
 
     advancedTabControllers(this);

@@ -292,19 +292,19 @@ export function parseParamsFromString(
     right = right.trim();
     if(left.indexOf('{{') !== -1){
       left = replaceContentWithData(left);
-      console.log(left);
     }
     if (right.match(/{{([\s\S]+?)(?=}})/g)) {
       if (
         context.getProperty(
           right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')
-        )
+        ) ||
+          getDataByPath(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', ''))
       ) {
         //todo ошибка в IOS
         params[left] =
           context.getProperty(
             right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')
-          ) || '';
+          ) || getDataByPath(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')) || '';
       } else {
         replaceRight ? (params[left] = urlParams[right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')]
             ? urlParams[right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')] : '') : params[left] = right;

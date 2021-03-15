@@ -129,7 +129,6 @@ class RouteContent extends Component {
         _.get(prevProps, "match.params.id")
     ) {
       this.changeRouteCurrentModel();
-      console.log(this);
       appStore.dispatch(changeCurrentPageProperty('url', location.href));
     }
     /**

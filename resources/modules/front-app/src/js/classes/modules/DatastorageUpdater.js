@@ -5,7 +5,7 @@ import {
 } from "../../store/current-data-storage/actions";
 import Resource from "../../../../../editor/src/js/classes/Resource";
 import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
-import { isJSON, mbParseJSON, replaceContentWithData} from "../../helpers";
+import {isJSON, mbParseJSON, replaceContentWithData} from "../../helpers";
 
 /**
  * @class DataStorageUpdater
@@ -77,6 +77,7 @@ class DataStorageUpdater extends AltrpModel {
       if(! groupedDataSources.hasOwnProperty(groupPriority)){
         continue;
       }
+      initialUpdate && appStore.dispatch(currentDataStorageLoading());
       let requests = groupedDataSources[groupPriority].map(async dataSource => {
 
         if (dataSource.getWebUrl()) {
