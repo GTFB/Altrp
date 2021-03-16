@@ -109,8 +109,17 @@ class AltrpImportExportService
      * @param $data
      */
     private function createJsonFile($path, $data) {
-        $content = json_encode( $data );
-        File::put( storage_path( $path ), $content);
+
+        $fp = fopen(storage_path( $path ), 'wb');
+        $encoder = new \Violet\StreamingJsonEncoder\StreamJsonEncoder(
+            $data,
+            function ($json) use ($fp) {
+                fwrite($fp, $json);
+            }
+        );
+
+        $encoder->encode();
+        fclose($fp);
     }
 
     /**
@@ -119,8 +128,19 @@ class AltrpImportExportService
      * @param $data
      */
     private function readJsonFile($path) {
-        $data = File::get( storage_path( $path) );
-        return json_decode( $data, true );
+
+        $listener = new \JsonStreamingParser\Listener\InMemoryListener();
+        $stream = fopen(storage_path( $path), 'r');
+        try {
+            $parser = new \JsonStreamingParser\Parser($stream, $listener);
+            $parser->parse();
+            fclose($stream);
+        } catch (Exception $e) {
+            fclose($stream);
+            throw $e;
+        }
+
+        return $listener->getJson();
     }
 
     /**
@@ -135,7 +155,7 @@ class AltrpImportExportService
             if ($template->area) {
                 $template->area_name = $_area->name;
             }
-            return $template;
+            return $template->withoutRelations();
         });
 
         $this->createJsonFile("tmp/altrp-settings/altrp-templates.json", $data->toArray());
@@ -248,10 +268,10 @@ class AltrpImportExportService
     private function createJSONModelsFile()
     {
         $data = Model::all()->filter(function($model_row) {
-            if(!$model_row->table) return false;
+            if(!$model_row->altrp_table) return false;
             return $model_row->name !== 'user';
-        })->map(function ($model, $key) {
-            $model->table_name = $model->table->name;
+        })->values()->map(function ($model, $key) {
+            $model->table_name = $model->altrp_table->name;
             return $model->withoutRelations();
         });
 
@@ -263,13 +283,14 @@ class AltrpImportExportService
      */
     private function createJSONColumnsFile()
     {
+
         $data = Column::all()->filter(function($column_row) {
-            if(!$column_row->model) return false;
-            if(!$column_row->table) return false;
+            if(!$column_row->altrp_model) return false;
+            if(!$column_row->altrp_table) return false;
             return true;
-        })->map(function ($column, $key) {
-            $column->table_name = $column->table->name;
-            $column->model_name = $column->model->name;
+        })->values()->map(function ($column, $key) {
+            $column->table_name = $column->altrp_table->name;
+            $column->model_name = $column->altrp_model->name;
             return $column->withoutRelations();
         });
 
@@ -285,7 +306,7 @@ class AltrpImportExportService
         $data = Accessor::all()->filter(function($accessor_row) {
             if(!$accessor_row->model) return false;
             return true;
-        })->map(function ($accessor, $key) {
+        })->values()->map(function ($accessor, $key) {
             $accessor->model_name = $accessor->model->name;
             return $accessor->withoutRelations();
         });
@@ -302,7 +323,7 @@ class AltrpImportExportService
         $data = PageDatasource::all()->filter(function($datasource_row) {
             if(!$datasource_row->source) return false;
             return true;
-        })->map(function ($datasource, $key) {
+        })->values()->map(function ($datasource, $key) {
             $datasource->source_url = $datasource->source->url;
             $datasource->source_type = $datasource->source->type;
             return $datasource->withoutRelations();
@@ -320,7 +341,7 @@ class AltrpImportExportService
         $data = SQLEditor::all()->filter(function($editor_row) {
             if(!$editor_row->model) return false;
             return true;
-        })->map(function ($editor, $key) {
+        })->values()->map(function ($editor, $key) {
             $editor->model_name = $editor->model->name;
             return $editor->withoutRelations();
         });
@@ -335,12 +356,12 @@ class AltrpImportExportService
     private function createJSONRelationshipsFile()
     {
         $data = Relationship::all()->filter(function($relationship) {
-            if(!$relationship->model) return false;
-            if(!$relationship->target_model) return false;
+            if(!$relationship->altrp_model) return false;
+            if(!$relationship->altrp_target_model) return false;
             return true;
-        })->map(function ($relationship, $key) {
-            $relationship->model_name = $relationship->model->name;
-            $relationship->target_model_name = $relationship->target_model->name;
+        })->values()->map(function ($relationship, $key) {
+            $relationship->model_name = $relationship->altrp_model->name;
+            $relationship->target_model_name = $relationship->altrp_target_model->name;
             return $relationship->withoutRelations();
         });
 
@@ -356,7 +377,7 @@ class AltrpImportExportService
         $data = Query::all()->filter(function($query_row) {
             if(!$query_row->model) return false;
             return true;
-        })->map(function ($query, $key) {
+        })->values()->map(function ($query, $key) {
             $query->model_name = $query->model->name;
             return $query->withoutRelations();
         });

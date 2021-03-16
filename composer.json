@@ -29,7 +29,9 @@
         "phpoffice/phpspreadsheet": "^1.16",
         "pulkitjalan/geoip": "^4.1",
         "pusher/pusher-php-server": "~3.0",
-        "santigarcor/laratrust": "5.2.*"
+        "salsify/json-streaming-parser": "^8.2",
+        "santigarcor/laratrust": "5.2.*",
+        "violet/streaming-json-encoder": "^1.1"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.7",
