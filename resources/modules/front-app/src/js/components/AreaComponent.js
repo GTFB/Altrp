@@ -4,7 +4,7 @@ import FrontPopup from "./FrontPopup";
 class AreaComponent extends Component {
 
   componentWillUnmount() {
-    window.stylesModule.removeStyleById(this.rootElement.id);
+    window.stylesModule.removeStyleById(this.rootElement?.id);
   }
 
   render() {

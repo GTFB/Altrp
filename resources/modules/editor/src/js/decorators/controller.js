@@ -39,6 +39,14 @@ function componentDidUpdate(prevProps, prevState) {
       value
     });
   }
+  if(this.props.currentScreen !== prevProps.currentScreen ||
+      this.props.currentState !== prevProps.currentState){
+    const value = this.getSettings(this.props.controlId);
+    this.setState(state => ({
+      ...state,
+      value
+    }));
+  }
   /**
    * Если в самом компоненте контроллера объвлен метод _componentDidUpdate, то его тоже вызовем
    * например RepeaterController
@@ -72,8 +80,9 @@ function getSettings(settingName){
      */
     if(this.props.controller.data.repeater.getSettings(this.props.controller.data.repeater.props.controlId)
         [this.props.controller.data.itemIndex]){
+
       return this.props.controller.data.repeater.getSettings(this.props.controller.data.repeater.props.controlId)
-          [this.props.controller.data.itemIndex][this.props.controller.data.controlId];
+          [this.props.controller.data.itemIndex][this.props.controller.data.controlId + getElementSettingsSuffix()];
     }
     /**
      * todo: пока что вернем значение по умолчанию или строку в случае бага
@@ -90,8 +99,12 @@ function getSettings(settingName){
   if(this.props.responsive === false){
     return this.props.currentElement.getSettings(settingName);
   }
-  return this.props.currentElement.getSettings(settingName +
-      getElementSettingsSuffix(this.props.controller))
+  let value = this.props.currentElement.getSettings(settingName +
+      getElementSettingsSuffix(this.props.controller));
+  if(value === null){
+    value = this.props.currentElement.getSettings(settingName)
+  }
+  return value;
 }
 
 /**

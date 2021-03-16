@@ -98,23 +98,28 @@ export function iconsManager() {
  * Генерирует суфикс для всех настроек
  * на основе elementState и разврешения
  * @param {Controller} controller
+ * @param {boolean} ignoreResponse
  * @return {string}
  */
-export function getElementSettingsSuffix(controller) {
+export function getElementSettingsSuffix(controller, ignoreResponse = false) {
   let suffix_1 = getElementState().value;
   let suffix_2 =
     getCurrentScreen().name === CONSTANTS.DEFAULT_BREAKPOINT
       ? ""
       : getCurrentScreen().name;
+  if(ignoreResponse){
+    suffix_2 = '';
+  }
   if (!(suffix_2 || suffix_1)) {
     return "";
   }
-  return `_${getElementState().value}_${suffix_2}`;
+  return `_${controller.stateless ? '' : getElementState().value}_${suffix_2}`;
 }
 
 /**
  * Конвертируем RGBA в HEX формат
- * @param {String} строка в формате CSS-правила
+ * @param {String} URLTemplate строка в формате CSS-правила
+ * @param {{}} object
  * @return {string}
  */
 export function parseURLTemplate(URLTemplate, object = {}) {

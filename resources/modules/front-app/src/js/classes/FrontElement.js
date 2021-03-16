@@ -14,6 +14,9 @@ class FrontElement {
 
   constructor(data = {}){
     this.name = data.name;
+    if(data.name === 'root-element' && window.formsManager){
+      window.formsManager.clearFieldsStorage();
+    }
     this.settings = data.settings;
     this.children = data.children;
     this.cssClassStorage = data.cssClassStorage;
@@ -305,6 +308,9 @@ class FrontElement {
     if(! settingName)
     {
       return _.cloneDeep(this.settings);
+    }
+    if(_.get(this.settings, settingName) === false || _.get(this.settings, settingName) === 0){
+      return _.get(this.settings, settingName);
     }
     return _.get(this.settings, settingName) || _default;
   }
@@ -735,6 +741,28 @@ class FrontElement {
   getTemplateType(){
     const rootElement = this.getRoot();
     return rootElement.templateType || 'content';
+  }
+
+  /**
+   * Обновляем настройки элемента на фронте с обновлением компонента
+   * @param value
+   * @param settingName
+   */
+  updateSetting(value, settingName = ''){
+    let newSettings;
+    if(! settingName && _.isObject(value)){
+       newSettings = {..._.assign(this.settings, value)};
+    }
+    if(settingName){
+      newSettings = {...this.settings};
+      _.set(newSettings, settingName, value);
+    }
+    if(newSettings){
+      this.settings = newSettings;
+      if(this.component){
+        this.component.setState(state => ({...state, settings: newSettings}));
+      }
+    }
   }
 }
 

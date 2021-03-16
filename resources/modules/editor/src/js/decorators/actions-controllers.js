@@ -30,7 +30,8 @@ export function actionsControllers(element, sectionLabel = 'Actions', idPrefix =
 
   actionsRepeater.addControl('type', {
     label: 'Type',
-    type: CONTROLLER_SELECT,
+    type: CONTROLLER_SELECT2,
+    isClearable: true,
     nullable: true,
     responsive: false,
     options: [
@@ -123,6 +124,10 @@ export function actionsControllers(element, sectionLabel = 'Actions', idPrefix =
         label: 'Custom JS-Code',
       },
       {
+        value: 'play_sound',
+        label: 'Play Sound',
+      },
+      {
         value: 'delay',
         label: 'Delay',
       },
@@ -169,10 +174,23 @@ export function actionsControllers(element, sectionLabel = 'Actions', idPrefix =
     type: CONTROLLER_NUMBER,
     dynamic: false,
     responsive: false,
-    label: 'Milliseconds',
+    label: 'Duration in Milliseconds',
     conditions: {
       type: [
-        'delay'
+        'delay',
+        'play_sound',
+      ],
+    },
+  });
+
+  actionsRepeater.addControl('loop', {
+    type: CONTROLLER_SWITCHER,
+    dynamic: false,
+    responsive: false,
+    label: 'Loop (Caution)',
+    conditions: {
+      type: [
+        'play_sound',
       ],
     },
   });
@@ -322,6 +340,17 @@ export function actionsControllers(element, sectionLabel = 'Actions', idPrefix =
     },
   });
 
+  actionsRepeater.addControl('media_url', {
+    label: 'Media URL',
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: [
+        'play_sound',
+      ],
+    },
+  });
+
   actionsRepeater.addControl('forms_bulk', {
     label: 'Bulk Requests',
     type: CONTROLLER_SWITCHER,
@@ -453,18 +482,6 @@ export function actionsControllers(element, sectionLabel = 'Actions', idPrefix =
       ],
     },
   });
-  // actionsRepeater.addControl('custom_headers', {
-  //   type: CONTROLLER_TEXTAREA,
-  //   label: 'Data',
-  //   responsive: false,
-  //   dynamic: false,
-  //   description: 'param_1 | {{altrpdata.alias}}',
-  //   conditions: {
-  //     type: [
-  //       'form',
-  //     ],
-  //   },
-  // });
 
   actionsRepeater.addControl('set_type', {
     label: 'Set Type',
@@ -540,6 +557,8 @@ export function actionsControllers(element, sectionLabel = 'Actions', idPrefix =
       ],
     },
   });
+
+
 
   actionsRepeater.addControl('popup_id', {
     type: CONTROLLER_SELECT2,

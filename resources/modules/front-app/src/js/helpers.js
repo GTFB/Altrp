@@ -3,7 +3,6 @@ import CONSTANTS from '../../../editor/src/js/consts';
 import AltrpModel from '../../../editor/src/js/classes/AltrpModel';
 import moment from 'moment';
 import Resource from '../../../editor/src/js/classes/Resource';
-import appStore from './store/store';
 import { changeCurrentUser } from './store/current-user/actions';
 import { changeCurrentUserProperty } from './store/current-user/actions';
 import { changeAppRoutes } from './store/routes/actions';
@@ -286,25 +285,26 @@ export function parseParamsFromString(
   const lines = string.split('\n');
   lines.forEach(line => {
     let [left, right] = line.split('|');
-    if (!left || !right) {
+    if (! left || ! right) {
       return;
     }
     left = left.trim();
     right = right.trim();
-    if(right.indexOf('{{')){
-      right = replaceContentWithData(right);
+    if(left.indexOf('{{') !== -1){
+      left = replaceContentWithData(left);
     }
     if (right.match(/{{([\s\S]+?)(?=}})/g)) {
       if (
         context.getProperty(
           right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')
-        )
+        ) ||
+          getDataByPath(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', ''))
       ) {
         //todo ошибка в IOS
         params[left] =
           context.getProperty(
             right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')
-          ) || '';
+          ) || getDataByPath(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')) || '';
       } else {
         replaceRight ? (params[left] = urlParams[right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')]
             ? urlParams[right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')] : '') : params[left] = right;
@@ -401,8 +401,12 @@ function conditionChecker(c, model, dataByPath = true) {
  * @return {boolean}
  */
 export function setDataByPath(path = '', value, dispatch = null) {
-  if (!path) {
+  if (! path) {
     return false;
+  }
+  if(path.indexOf(',') !== -1){
+    let result = path.split(',').map(path=>setDataByPath(path, value, dispatch));
+    return true;
   }
   path = path.replace('{{', '').replace('}}', '');
   path = path.trim();
@@ -481,7 +485,29 @@ export function setDataByPath(path = '', value, dispatch = null) {
     if (_.isEqual(oldValue, value)) {
       return true;
     }
-    appStore.dispatch(changeFormFieldValue(fieldName, value, formId, true))
+    if (_.isFunction(dispatch)) {
+      dispatch(changeCurrentUserProperty(path, value));
+    } else {
+      appStore.dispatch(changeFormFieldValue(fieldName, value, formId, true))
+    }
+  }
+  if(path.indexOf('altrpelements.') === 0){
+    const pathElements = path.split('.');
+    const[prefix, elementId, updateType, propName] = pathElements;
+    const component = getComponentByElementId(elementId);
+    if(! component){
+      return true;
+    }
+    switch(updateType){
+      case 'settings':{
+        component.props.element.updateSetting(value, propName);
+        return true;
+      }
+      default:{
+        return true;
+      }
+    }
+
   }
   return false;
 }
@@ -545,19 +571,19 @@ export function getDataByPath(
   }
   if (path.indexOf('altrpdata.') === 0) {
     path = path.replace('altrpdata.', '');
-    value = currentDataStorage.getProperty(path, _default);
+    value = currentDataStorage ? currentDataStorage.getProperty(path, _default) : '';
   } else if (path.indexOf('altrpresponses.') === 0) {
     path = path.replace('altrpresponses.', '');
-    value = altrpresponses.getProperty(path, _default);
+    value = altrpresponses ? altrpresponses.getProperty(path, _default) : '';
   } else if (path.indexOf('altrpmeta.') === 0) {
     path = path.replace('altrpmeta.', '');
-    value = altrpMeta.getProperty(path, _default);
+    value = altrpMeta ? altrpMeta.getProperty(path, _default) : '';
   } else if (path.indexOf('altrppagestate.') === 0) {
     path = path.replace('altrppagestate.', '');
-    value = altrpPageState.getProperty(path, _default);
+    value = altrpPageState ? altrpPageState.getProperty(path, _default) : '';
   } else if (path.indexOf('altrpuser.') === 0) {
     path = path.replace('altrpuser.', '');
-    value = currentUser.getProperty(path, _default);
+    value = currentUser ? currentUser.getProperty(path, _default) : '';
   } else if (path === 'altrpuser') {
     value = currentUser.getData();
   } else if (path === 'altrpmodel') {
@@ -567,7 +593,23 @@ export function getDataByPath(
   } else if (path.indexOf('altrpforms.') === 0) {
     value = _.get(formsStore, path.replace('altrpforms.', ''), _default);
   } else if (path.indexOf('altrppage.') === 0) {
-    value = altrpPage.getProperty(path.replace('altrppage.', ''), _default);
+    value = altrpPage ? altrpPage.getProperty(path.replace('altrppage.', ''), _default) : '';
+  }else if (path.indexOf('altrpelements.') === 0) {
+    const pathElements = path.split('.');
+    const[prefix, elementId, updateType, propName] = pathElements;
+    const component = getComponentByElementId(elementId);
+    if(! component){
+      value = '';
+    } else{
+      switch(updateType){
+        case 'settings':{
+          value = component.props.element.getSettings(propName);
+        } break;
+        default:{
+          value = '';
+        }
+      }
+    }
   } else {
     value = urlParams[path]
       ? urlParams[path]
@@ -973,7 +1015,7 @@ export function getHTMLElementById(elementId = '') {
  */
 export function getComponentByElementId(elementId = '') {
   let component = null;
-  if (!elementId || !elementId.trim()) {
+  if (! elementId || ! elementId.trim()) {
     return component;
   }
   elementId = elementId.trim();

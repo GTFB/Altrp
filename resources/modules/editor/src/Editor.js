@@ -18,7 +18,6 @@ import AssetsBrowser from "./js/classes/modules/AssetsBrowser";
 import store, { getCurrentElement, getCurrentScreen } from "../src/js/store/store";
 
 
-import DesktopIcon from "./svgs/desktop.svg";
 import Logo from "./svgs/logo.svg";
 import Navigation from "./svgs/navigation.svg";
 import History from "./svgs/history.svg";
@@ -27,10 +26,7 @@ import Settings from "./svgs/settings.svg";
 import Dots from "./svgs/dots.svg";
 import Hamburger from "./svgs/hamburger.svg";
 import { contextMenu } from "react-contexify";
-import DynamicContent from "./js/components/DynamicContent/DynamicContent";
 import { closeDynamicContent } from "./js/store/dynamic-content/actions";
-import { iconsManager } from "../../admin/src/js/helpers";
-import ResponsiveDdMenu from "./js/components/ResponsiveDdMenu";
 import ResponsiveDdFooter from "./js/components/ResponsiveDdFooter";
 import DialogWindow from "./js/components/DialogWindow";
 import {renderAsset} from "../../front-app/src/js/helpers";

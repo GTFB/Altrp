@@ -166,8 +166,14 @@ function getContent(settingName, returnRaw = false) {
           .replace(/{{{/g, "_.get(context, '");
       try{
         content = eval(replacedContent);
+        if(_.isNumber(content) && ! _.isNaN(content)){
+          content += '';
+        }
+        _.isString(content) && (content = content.replace(/NaN/g, ''));
+        return content || '';
       } catch(e){
         console.error(e);
+        return '';
       } finally {
       }
     } else if(returnRaw){

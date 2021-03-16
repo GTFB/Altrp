@@ -4,9 +4,8 @@ import {
   currentDataStorageLoaded, currentDataStorageLoading
 } from "../../store/current-data-storage/actions";
 import Resource from "../../../../../editor/src/js/classes/Resource";
-import appStore from "../../store/store";
 import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
-import { isJSON, mbParseJSON, replaceContentWithData} from "../../helpers";
+import {isJSON, mbParseJSON, replaceContentWithData} from "../../helpers";
 
 /**
  * @class DataStorageUpdater
@@ -33,6 +32,7 @@ class DataStorageUpdater extends AltrpModel {
       dataSources = [];
     }
     if(initialUpdate){
+      this.setProperty('currentDataSources', dataSources);
       dataSources = dataSources.filter(dataSource => dataSource.getProperty('autoload'));
     }
 
@@ -48,23 +48,22 @@ class DataStorageUpdater extends AltrpModel {
       /**
        * Находим хотя бы один обзяательный параметр, который не имеет значения
        */
-      return ! parameters.find(param=>{
-        if(! param.required){
-          return false;
-        }
-        let value = param.paramValue || '';
+      return ! (parameters && parameters.find(param=>{
         if (param.paramValue.toString().indexOf('altrpforms.') !== -1) {
           let params = dataSource.getParams(window.currentRouterMatch.params, 'altrpforms.');
           this.subscribeToFormsUpdate(dataSource, params);
         }
+        if(! param.required){
+          return false;
+        }
+        let value = param.paramValue || '';
         if(value.indexOf('{{') !== -1){
           value = replaceContentWithData(value);
         }
         return ! value;
-      });
+      }));
     });
     // dataSources = _.sortBy(dataSources, ['data.priority']);
-    this.setProperty('currentDataSources', dataSources);
     /**
      * @member {Datasource} dataSource
      */
@@ -78,6 +77,7 @@ class DataStorageUpdater extends AltrpModel {
       if(! groupedDataSources.hasOwnProperty(groupPriority)){
         continue;
       }
+      initialUpdate && appStore.dispatch(currentDataStorageLoading());
       let requests = groupedDataSources[groupPriority].map(async dataSource => {
 
         if (dataSource.getWebUrl()) {

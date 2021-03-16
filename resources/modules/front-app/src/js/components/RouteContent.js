@@ -129,7 +129,6 @@ class RouteContent extends Component {
         _.get(prevProps, "match.params.id")
     ) {
       this.changeRouteCurrentModel();
-      console.log(this);
       appStore.dispatch(changeCurrentPageProperty('url', location.href));
     }
     /**
@@ -146,7 +145,7 @@ class RouteContent extends Component {
     }
     if (!_.isEqual(_.get(this.props, "match"), _.get(prevProps, "match"))) {
       window.currentRouterMatch = new AltrpModel(this.props.match);
-      appStore.dispatch(clearFormStorage());
+      // appStore.dispatch(clearFormStorage());
     }
   }
 

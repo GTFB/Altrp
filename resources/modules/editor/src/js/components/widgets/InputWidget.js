@@ -625,7 +625,7 @@ class InputWidget extends Component {
    * @param {*} value
    * @param {boolean} userInput true - имзенилось пользователем
    */
-  dispatchFieldValueToStore = (value, userInput = false) => {
+  dispatchFieldValueToStore = async (value, userInput = false) => {
     let formId = this.props.element.getFormId();
     let fieldName = this.props.element.getFieldId();
     if (fieldName.indexOf("{{") !== -1) {
@@ -635,6 +635,23 @@ class InputWidget extends Component {
       this.props.appStore.dispatch(
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
+      if(userInput){
+        const change_actions = this.props.element.getSettings('change_actions');
+
+        if (change_actions && ! isEditor()) {
+          const actionsManager = (
+              await import(
+                  "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+                  )
+          ).default;
+          await actionsManager.callAllWidgetActions(
+              this.props.element.getIdForAction(),
+              'change',
+              change_actions,
+              this.props.element
+          );
+        }
+      }
     }
   };
 
@@ -708,7 +725,30 @@ class InputWidget extends Component {
       this.setState(state => ({ ...state, isDisabled: false }));
     }
   };
+  shouldComponentUpdate(nextProps){
+    // console.log(nextProps);
 
+    // console.log(nextProps.ElementWrapper=== this.props.ElementWrapper);
+    // console.log(nextProps.altrpMeta=== this.props.altrpMeta);
+    // console.log(nextProps.altrpPageState=== this.props.altrpPageState);
+    // console.log(nextProps.altrpresponses=== this.props.altrpresponses);
+    // console.log(nextProps.appStore=== this.props.appStore);
+    // console.log(nextProps.baseRender=== this.props.baseRender);
+    // console.log(nextProps.children=== this.props.children);
+    // console.log(nextProps.currentDataStorage=== this.props.currentDataStorage);
+    // console.log(nextProps.currentModel=== this.props.currentModel);
+    // console.log(nextProps.currentScreen=== this.props.currentScreen);
+    // console.log(nextProps.currentUser=== this.props.currentUser);
+    // console.log(nextProps.element=== this.props.element);
+    // console.log(nextProps.elementDisplay=== this.props.elementDisplay);
+    // console.log(nextProps.formsStore=== this.props.formsStore);
+    // console.log(nextProps.match=== this.props.match);
+    // console.log(nextProps.match);
+    // console.log(nextProps.rootElement=== this.props.rootElement);
+    // console.log(nextProps.rootElement);
+    // console.log(nextProps.updateToken=== this.props.updateToken);
+    return true;
+  }
   /**
    * Взовращает имя для атрибута name
    * @return {string}
