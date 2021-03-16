@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import {
   getDataByPath,
-  isEditor
+  isEditor, parseURLTemplate
 } from "../../../../../front-app/src/js/helpers";
 import AltrpImage from "../altrp-image/AltrpImage";
 import AltrpLightbox from "../altrp-lightbox/AltrpLightbox";
@@ -111,6 +111,8 @@ class ImageWidget extends Component {
         </div>
       );
     } else {
+      let linkUrl = link.url || '';
+      linkUrl = parseURLTemplate(linkUrl, this.props.element.getCurrentModel().getData());
       return (
         <div
           className={classNames}
@@ -120,11 +122,11 @@ class ImageWidget extends Component {
             }
           }}
         >
-          {link.url && !isEditor() ? (
+          {linkUrl && ! isEditor() ? (
             link.tag === "a" ? (
-              <a href={link.url}>{altrpImage}</a>
+              <a href={linkUrl}>{altrpImage}</a>
             ) : (
-              <Link to={link.url}>{altrpImage}</Link>
+              <Link to={linkUrl}>{altrpImage}</Link>
             )
           ) : (
             altrpImage

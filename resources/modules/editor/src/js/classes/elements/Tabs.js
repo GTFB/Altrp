@@ -304,7 +304,6 @@ class Tabs extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn-container{{STATE}}": "background-color: {{COLOR}};"
       }
@@ -317,7 +316,6 @@ class Tabs extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "background-color: {{COLOR}};"
       }
@@ -330,7 +328,6 @@ class Tabs extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "color: {{COLOR}};"
       }
@@ -350,10 +347,6 @@ class Tabs extends BaseElement {
         colorPickedHex: '#000000',
         type: ""
       },
-      presetColors: [
-        '#eaeaea',
-        '#9c18a8'
-      ],
       rules: {
         '{{ELEMENT}} .altrp-tab-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
       },

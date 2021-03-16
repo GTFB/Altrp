@@ -1,30 +1,37 @@
 import {
-  CONTROLLER_NUMBER, CONTROLLER_REPEATER, CONTROLLER_SELECT,
+  CONTROLLER_NUMBER,
+  CONTROLLER_REPEATER,
+  CONTROLLER_SELECT,
   CONTROLLER_SELECT2,
-  CONTROLLER_SWITCHER, CONTROLLER_TEXT, CONTROLLER_TEXTAREA,
+  CONTROLLER_SWITCHER,
+  CONTROLLER_TEXT,
+  CONTROLLER_TEXTAREA,
   TAB_CONTENT
-} from "../classes/modules/ControllersManager";
-import Repeater from "../classes/Repeater";
+} from '../classes/modules/ControllersManager';
+import Repeater from '../classes/Repeater';
 
 /**
- * 
- * @param {ControlStack} element
+ * Добавляет контроллеры действия для элемента
+ * @param {BaseElement} element - элемент
+ * @param {string} sectionLabel - заголовок секции
+ * @param {string} idPrefix - префикс, который добавляется ко всем id секция и контроллеров
  */
-export function actionsControllers(element){
+export function actionsControllers(element, sectionLabel = 'Actions', idPrefix = '') {
   /**
    * Список произвольных действия для кнопки START
    */
-  element.startControlSection("actions_section", {
+  element.startControlSection(idPrefix + 'actions_section', {
     tab: TAB_CONTENT,
     hideOnEmail: true,
-    label: "Actions",
+    label: sectionLabel,
   });
 
   let actionsRepeater = new Repeater();
 
   actionsRepeater.addControl('type', {
     label: 'Type',
-    type: CONTROLLER_SELECT,
+    type: CONTROLLER_SELECT2,
+    isClearable: true,
     nullable: true,
     responsive: false,
     options: [
@@ -116,13 +123,21 @@ export function actionsControllers(element){
         value: 'custom_code',
         label: 'Custom JS-Code',
       },
+      {
+        value: 'play_sound',
+        label: 'Play Sound',
+      },
+      {
+        value: 'delay',
+        label: 'Delay',
+      },
     ],
   });
 
-  actionsRepeater.addControl("email_template", {
+  actionsRepeater.addControl('email_template', {
     type: CONTROLLER_SELECT2,
     prefetch_options: true,
-    label: "Email Template",
+    label: 'Email Template',
     isClearable: true,
     options_resource: '/admin/ajax/templates/options?template_type=email&value=guid',
     nullable: true,
@@ -139,6 +154,43 @@ export function actionsControllers(element){
     conditions: {
       type: [
         'custom_code'
+      ],
+    },
+  });
+
+  actionsRepeater.addControl('aliases', {
+    type: CONTROLLER_TEXTAREA,
+    dynamic: false,
+    responsive: false,
+    label: 'Aliases',
+    conditions: {
+      type: [
+        'update_current_datasources'
+      ],
+    },
+  });
+
+  actionsRepeater.addControl('milliseconds', {
+    type: CONTROLLER_NUMBER,
+    dynamic: false,
+    responsive: false,
+    label: 'Duration in Milliseconds',
+    conditions: {
+      type: [
+        'delay',
+        'play_sound',
+      ],
+    },
+  });
+
+  actionsRepeater.addControl('loop', {
+    type: CONTROLLER_SWITCHER,
+    dynamic: false,
+    responsive: false,
+    label: 'Loop (Caution)',
+    conditions: {
+      type: [
+        'play_sound',
       ],
     },
   });
@@ -288,6 +340,17 @@ export function actionsControllers(element){
     },
   });
 
+  actionsRepeater.addControl('media_url', {
+    label: 'Media URL',
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: [
+        'play_sound',
+      ],
+    },
+  });
+
   actionsRepeater.addControl('forms_bulk', {
     label: 'Bulk Requests',
     type: CONTROLLER_SWITCHER,
@@ -419,18 +482,6 @@ export function actionsControllers(element){
       ],
     },
   });
-  // actionsRepeater.addControl('custom_headers', {
-  //   type: CONTROLLER_TEXTAREA,
-  //   label: 'Data',
-  //   responsive: false,
-  //   dynamic: false,
-  //   description: 'param_1 | {{altrpdata.alias}}',
-  //   conditions: {
-  //     type: [
-  //       'form',
-  //     ],
-  //   },
-  // });
 
   actionsRepeater.addControl('set_type', {
     label: 'Set Type',
@@ -507,10 +558,12 @@ export function actionsControllers(element){
     },
   });
 
-  actionsRepeater.addControl("popup_id", {
+
+
+  actionsRepeater.addControl('popup_id', {
     type: CONTROLLER_SELECT2,
     prefetch_options: true,
-    label: "Popup ID",
+    label: 'Popup ID',
     isClearable: true,
     options_resource: '/admin/ajax/templates/options?template_type=popup&value=guid',
     nullable: true,
@@ -543,7 +596,7 @@ export function actionsControllers(element){
     label: 'Reject',
   });
 
-  element.addControl('actions', {
+  element.addControl(idPrefix + 'actions', {
     label: 'Actions',
     type: CONTROLLER_REPEATER,
     responsive: false,

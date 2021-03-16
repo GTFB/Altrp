@@ -5,6 +5,7 @@ import { SketchPicker } from "react-color";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
 import controllerDecorate from "../../decorators/controller";
 import { rgb2hex } from "../../helpers"
+import PresetColors from "./PresetColors";
 class GradientController extends Component {
   constructor(props) {
     super(props);
@@ -86,7 +87,19 @@ class GradientController extends Component {
             <label className="control-color-hex">{rgb2hex(secondColor)}</label>
           </div>
           {opened2 && <div id="gradientColor" className="control-color-colorPicker">
-            <SketchPicker width="90%" color={secondColor} onChange={color => this.colorChange(color, 'secondColor')} className="sketchPicker" />
+            <SketchPicker width="100%"
+                          presetColors={[]}
+                          color={secondColor}
+                          onChange={color => this.colorChange(color, 'secondColor')}
+                          className="sketchPicker" />
+            <PresetColors presetColors={this.props.presetColors}
+                          value={secondColor}
+                          changeValue={color=>{
+                            let value = {...this.state.value};
+                            value.secondColor = color.color;
+                            this._changeValue(value);
+                            this.setState(state=>({...state, value}))
+                          }}/>
           </div>}
           <div className="control-color-opacity-container">
             {/* TODO: порефакторить */}
@@ -137,7 +150,19 @@ class GradientController extends Component {
             <label className="control-color-hex">{rgb2hex(firstColor)}</label>
           </div>
           {opened1 && <div id="gradientColor" className="control-color-colorPicker">
-            <SketchPicker width="90%" color={firstColor} onChange={color => this.colorChange(color, 'firstColor')} className="sketchPicker" />
+            <SketchPicker width="100%"
+                          presetColors={[]}
+                          color={firstColor}
+                          onChange={color => this.colorChange(color, 'firstColor')}
+                          className="sketchPicker" />
+            <PresetColors presetColors={this.props.presetColors}
+                          value={firstColor}
+                          changeValue={color=>{
+                            let value = {...this.state.value};
+                            value.firstColor = color.color;
+                            this._changeValue(value);
+                            this.setState(state=>({...state, value}))
+                          }}/>
           </div>}
           <div className="control-color-opacity-container">
             {/* TODO: порефакторить */}
@@ -203,11 +228,4 @@ class GradientController extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    currentElement: state.currentElement.currentElement,
-    currentState: state.currentState,
-    currentScreen: state.currentScreen
-  };
-}
 export default connect(controllerMapStateToProps)(GradientController);

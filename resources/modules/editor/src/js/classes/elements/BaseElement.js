@@ -140,7 +140,6 @@ class BaseElement extends ControlStack {
     this.templateNeedUpdate();
     if(dispatchToHistory) {
       let index = this.children.length - 1;
-      console.log(index);
       store.dispatch(addHistoryStoreItem('ADD', {element: child, index, parent: this})); 
     }
   }
@@ -298,10 +297,11 @@ class BaseElement extends ControlStack {
     }
     let newChildren = this.children.filter((item, index) => {
       if (item.getId() === childId) {
-        childExist = true;
-        item.beforeDelete();
-        if(dispatchToHistory)
+        childExist = true;   
+        if(dispatchToHistory) {
           store.dispatch(addHistoryStoreItem('DELETE', {element: child, parent: this, index}));
+          item.beforeDelete();
+        } 
         return false;
       }
       return true
@@ -365,7 +365,9 @@ class BaseElement extends ControlStack {
       return;
     }
     let controls = window.controllersManager.getControls(this.getName());
-
+    if(this.defaultSettingsIsApply){
+      return;
+    }
     for (let tabName in controls) {
       if (controls.hasOwnProperty(tabName)) {
         if (!controls[tabName].length) {
@@ -385,6 +387,7 @@ class BaseElement extends ControlStack {
       }
     }
     this.updateStyles();
+    this.defaultSettingsIsApply = true;
   }
 
   setSettingValue(settingName, value, dispatchToHistory = true) {
@@ -399,12 +402,15 @@ class BaseElement extends ControlStack {
             settingName
           })
         );
-      this.settings = {...this.settings};
+      // this.settings = {...this.settings};
       this.settings[settingName] = value;
       if (this.component) {
-        this.component.changeSetting(settingName, value);
+        (async ()=>{
+          this.component.changeSetting(settingName, value);
+        })();
       }
-    }  
+    }
+
   }
 
   _registerControls() {

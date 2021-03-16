@@ -9,6 +9,7 @@
  */
 import AltrpAction from "../AltrpAction";
 import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
+import {isEditor} from "../../helpers";
 
 class ActionsManager extends AltrpModel{
   /**
@@ -46,6 +47,9 @@ class ActionsManager extends AltrpModel{
    * @return {Promise<void>}
    */
   async callAllWidgetActions(widgetId, eventName = 'click', preventedActions, element){
+    if(isEditor()){
+      return
+    }
     preventedActions = preventedActions || [];
     let actions = this.getProperty(`actions.${widgetId}.${eventName}`, []);
     const errors = [];

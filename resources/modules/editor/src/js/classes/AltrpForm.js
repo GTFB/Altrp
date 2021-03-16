@@ -108,7 +108,7 @@ class AltrpForm {
       }
     }
     this.fields.forEach(field => {
-      if (!field.fieldValidate()) {
+      if (! field.fieldValidate()) {
         success = false;
       }
     });

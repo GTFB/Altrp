@@ -44,6 +44,7 @@ class RouteContent extends Component {
    */
   async componentDidMount() {
     window.mainScrollbars = this.scrollbar.current;
+    appStore.dispatch(changeCurrentPageProperty('url', location.href));
     if (this.props.lazy && this.props.allowed) {
       let page = await pageLoader.loadPage(this.props.id);
       let areas = page.areas.map(area => Area.areaFabric(area));
@@ -128,7 +129,6 @@ class RouteContent extends Component {
         _.get(prevProps, "match.params.id")
     ) {
       this.changeRouteCurrentModel();
-      console.log(this);
       appStore.dispatch(changeCurrentPageProperty('url', location.href));
     }
     /**
@@ -145,7 +145,7 @@ class RouteContent extends Component {
     }
     if (!_.isEqual(_.get(this.props, "match"), _.get(prevProps, "match"))) {
       window.currentRouterMatch = new AltrpModel(this.props.match);
-      appStore.dispatch(clearFormStorage());
+      // appStore.dispatch(clearFormStorage());
     }
   }
 

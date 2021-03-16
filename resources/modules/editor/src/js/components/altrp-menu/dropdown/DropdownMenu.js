@@ -42,7 +42,7 @@ class DropdownMenu extends Component {
           if(liParent.id !== li.id) {
             if(li.parent_id_repeater_menu_layout) {
               if(li.parent_id_repeater_menu_layout === liParent.id_repeater_menu_layout) {
-                list[li.id].childrenParent = true;
+                list[li.id] && (list[li.id].childrenParent = true);
                 children.push(li.id);
               }
             }
@@ -130,7 +130,7 @@ class DropdownMenu extends Component {
 
                 return (
                   !li.id_repeater_menu_layout ? (
-                      !li.childrenParent ? (
+                      !li?.childrenParent ? (
                         <li className="altrp-nav-menu-li-dropdown" key={idx}>
                           {
                             link
@@ -141,7 +141,7 @@ class DropdownMenu extends Component {
                         </li>
                       ) : ""
                     ) :
-                    !li.childrenParent ? <li className="altrp-nav-menu-li-dropdown altrp-nav-menu-li-sub" key={idx}>
+                    !li?.childrenParent ? <li className="altrp-nav-menu-li-dropdown altrp-nav-menu-li-sub" key={idx}>
                         <DropdownSub
                           settings={this.props.settings}
                           list={this.state.list}
