@@ -32,6 +32,7 @@ class DataStorageUpdater extends AltrpModel {
       dataSources = [];
     }
     if(initialUpdate){
+      this.setProperty('currentDataSources', dataSources);
       dataSources = dataSources.filter(dataSource => dataSource.getProperty('autoload'));
     }
 
@@ -63,7 +64,6 @@ class DataStorageUpdater extends AltrpModel {
       }));
     });
     // dataSources = _.sortBy(dataSources, ['data.priority']);
-    this.setProperty('currentDataSources', dataSources);
     /**
      * @member {Datasource} dataSource
      */

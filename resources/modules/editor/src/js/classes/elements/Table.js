@@ -300,6 +300,7 @@ class Table extends BaseElement {
       default: false,
       hideOnEmail: true,
       label: 'Group by',
+      conditionsCallback: ()=> ! getCurrentElement().getResponsiveSetting('table_2_0')
     });
 
     repeater.addControl('column_template', {
@@ -890,7 +891,12 @@ class Table extends BaseElement {
       type: CONTROLLER_SELECT,
       nullable: true,
       label: 'Paginate Type',
+      default: 'none',
       options: [
+        {
+          label: 'None',
+          value: 'none',
+        },
         {
           label: 'Text',
           value: 'text',
@@ -3653,15 +3659,83 @@ class Table extends BaseElement {
      */
     //</editor-fold>
 
-    //<editor-fold description=column_responsive_settings>
+    //<editor-fold description=group_style_settings>
 
     this.startControlSection('group_style_settings', {
-      label: 'Groups',
+      label: 'Groups Subheading Styles',
       hideOnEmail: true,
       tab: TAB_STYLE,
+      conditions: {
+        table_2_0: true,
+      },
     });
 
     const groupsRepeater = new Repeater();
+
+    groupsRepeater.addControl('padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+    });
+
+    groupsRepeater.addControl('typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'Typographic',
+    });
+
+    groupsRepeater.addControl('color', {
+      type: CONTROLLER_COLOR,
+      label: 'Color',
+    });
+
+    groupsRepeater.addControl('bg-color', {
+      type: CONTROLLER_COLOR,
+      label: 'Background Color',
+    });
+
+    groupsRepeater.addControl('border_type', {
+      type: CONTROLLER_SELECT,
+      label: 'Border Type',
+      options: [
+        {
+          value: 'none',
+          label: 'None'
+        },
+        {
+          value: 'solid',
+          label: 'Solid'
+        },
+        {
+          value: 'double',
+          label: 'Double'
+        },
+        {
+          value: 'dotted',
+          label: 'Dotted'
+        },
+        {
+          value: 'dashed',
+          label: 'Dashed'
+        },
+        {
+          value: 'groove',
+          label: 'Groove'
+        }
+      ],
+    });
+
+    groupsRepeater.addControl('border_width', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Width',
+      default: {
+        unit: 'px'
+      },
+      units: ['px', '%', 'vh', 'vw'],
+    });
+
+    groupsRepeater.addControl('border_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Border Color',
+    });
 
     groupsRepeater.addControl('name', {
       label: 'Name',
@@ -3675,6 +3749,20 @@ class Table extends BaseElement {
     });
 
     this.endControlSection();
+    //</editor-fold>
+
+
+    //<editor-fold description=group_style_settings>
+
+    // this.startControlSection('group_style_settings', {
+    //   label: 'Groups Subheading Styles',
+    //   hideOnEmail: true,
+    //   conditions: {
+    //     table_2_0: true,
+    //   },
+    // });
+    //
+    // this.endControlSection();
     //</editor-fold>
 
     advancedTabControllers(this);
