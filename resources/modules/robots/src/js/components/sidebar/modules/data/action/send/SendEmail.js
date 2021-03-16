@@ -1,13 +1,27 @@
 import React, { Component } from "react";
 import Chevron from "../../../../../../../../../editor/src/svgs/chevron.svg";
+import Resource from "../../../../../../../../../editor/src/js/classes/Resource";
+
 
 
 class SendEmail extends Component{
     constructor(props){
         super(props);
+        this.state = {
+            templateOptions: [],
+            rolesOptions: []
+        };
+        this.templateOptions = new Resource({ route: "/admin/ajax/templates/options?value=guid" });        
     }
 
+    async componentDidMount() {
+        const templateOptions = await this.templateOptions.getAll();
+        this.setState(s =>({...s, templateOptions}));
+    }
+
+
     render(){
+        const {templateOptions} = this.state;
         return <div className="settings-section-box">
             <div className={"settings-section " + (this.props.activeSection === "mail" ? '' : 'open')}>
                 <div className="settings-section__title d-flex" onClick={this.props.toggleChevron("mail")}>
@@ -18,6 +32,19 @@ class SendEmail extends Component{
                 </div>
 
                 <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
+                    <div className="controller-container controller-container_select">
+                        <div className="controller-container__label control-select__label controller-label">Template</div>
+                        <div className="control-container_select-wrapper controller-field">
+                          <select className="control-select control-field"
+                              value={this.props.content?.template ?? ''}
+                              onChange={e => {{ this.props.onSend(e, "mail", "template") }}}
+                          >
+                              <option disabled value="" />
+                              {templateOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
+                          </select>
+                        </div>
+                    </div>
+
                     <div className="controller-container controller-container_textarea">
                         <div className="controller-container__label textcontroller-responsive controller-label">Subject</div>
                         <div className='controller-field'>

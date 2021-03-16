@@ -19,10 +19,8 @@ export default class Send extends Component{
         this.toggle = this.toggle.bind(this);
         this.onSend = this.onSend.bind(this);
         this.changeSelect = this.changeSelect.bind(this);
-
         this.usersOptions = new Resource({ route: "/admin/ajax/users_options" });
         this.rolesOptions = new Resource({ route: "/admin/ajax/role_options" });
-
     }
 
     async componentDidMount() {
