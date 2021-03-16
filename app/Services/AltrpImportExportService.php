@@ -72,7 +72,28 @@ class AltrpImportExportService
    */
   private function createFiles(){
     File::ensureDirectoryExists( storage_path( 'tmp/altrp-settings' ) );
-    $this->createJSONDataFile();
+    $this->createJSONTemplatesFile();
+    $this->createJSONPagesFile();
+    $this->createJSONMediaFile();
+    $this->createJSONPageTemplatesFile();
+    $this->createJSONTemplateSettingsFile();
+    $this->createJSONSettingsFile();
+    $this->createJSONDiagramsFile();
+    $this->createJSONDashboardsFile();
+    $this->createJSONReportsFile();
+    $this->createJSONTablesFile();
+    $this->createJSONModelsFile();
+    $this->createJSONColumnsFile();;
+    $this->createJSONAccessorsFile();
+    $this->createJSONPageDatasourcesFile();
+    $this->createJSONSQLEditorsFile();
+    $this->createJSONRelationshipsFile();
+    $this->createJSONQueriesFile();
+    $this->createJSONRolesFile();
+    $this->createJSONPageRolesFile();
+    $this->createJSONPermissionRolesFile();
+
+    //$this->createJSONDataFile();
   }
   /**
    * Удаляем временные файлы
@@ -81,154 +102,307 @@ class AltrpImportExportService
   private function deleteFiles(){
     File::deleteDirectory( storage_path( 'tmp/altrp-settings' ) );
   }
-  /**
-   * Создаем json-файл данных
-   * @throws Exception
-   */
-  private function createJSONDataFile(){
-    $data = [];
-    $data['templates'] = Template::all()->toArray();
-    foreach ( $data['templates'] as $key => $template ) {
-      $_area = Area::find( $template['area'] );
-      if( $_area ){
-        $data['templates'][$key]['area_name'] = $_area->name;
-      }
-    }
-    $data['pages'] = Page::all()->toArray();
-    foreach ( $data['pages'] as $key => $page ) {
-      $_page = Page::find( $page['id'] );
-      if( $_page->model ){
-        $data['pages'][$key]['model_name'] = $_page->model->name ;
-      }
-    }
-    $data['media'] = Media::all()->toArray();
 
-    $data['pages_templates'] = PagesTemplate::all()->toArray();
-    $data['admin_logo'] = env( 'ALTRP_SETTING_ADMIN_LOGO', null );
-    $data['container_width'] = env( 'ALTRP_SETTING_CONTAINER_WIDTH', null );
-
-    $data['template_settings'] = TemplateSetting::all()->toArray();
-    foreach ( $data['template_settings'] as $key => $template_setting ) {
-      $_template = Template::find( $template_setting['template_id'] );
-      if( $_template ){
-        $data['template_settings'][$key]['template_guid'] = $_template->guid;
-      }
+    /**
+     * Создаем json файл
+     * @param $path
+     * @param $data
+     */
+    private function createJsonFile($path, $data) {
+        $content = json_encode( $data );
+        File::put( storage_path( $path ), $content);
     }
 
     /**
-     * Данные отчетов, диаграмм и пр.
+     * Читаем json файл
+     * @param $path
+     * @param $data
      */
-    $data['altrp_diagrams'] = AltrpDiagram::all()->toArray();
-    $data['dashboards'] = Dashboards::all()->toArray();
-    $data['reports'] = Reports::all()->toArray();
-
-    /**
-     * Данные моделей
-     */
-    $data['tables'] = Table::all();
-
-    $data['models'] = Model::all();
-    foreach ( $data['models'] as $key => $model ) {
-      $table = Table::find( $model['table_id'] );
-      if( ! $table ){
-        continue;
-      }
-      if( $model['name'] === 'user' ){
-        continue;
-      }
-      $data['models'][$key]['table_name'] = $table->name;
-    }
-
-    $data['columns'] = Column::where( 'type', '!=', 'calculated' )->get();
-    foreach ( $data['columns'] as $key => $column ) {
-      $model = Model::find( $column['model_id'] );
-      if( ! $model ){
-        continue;
-      }
-      $table = Table::find( $column['table_id'] );
-      if( ! $table ){
-        continue;
-      }
-      $data['columns'][$key]['table_name'] = $table->name;
-      $data['columns'][$key]['model_name'] = $model->name;
-    }
-
-    $data['altrp_accessors'] = Accessor::all();
-    foreach ( $data['altrp_accessors'] as $key => $accessor ) {
-      $model = Model::find( $accessor['model_id'] );
-      if( ! $model ){
-        continue;
-      }
-      $data['altrp_accessors'][$key]['model_name'] = $model->name;
-    }
-
-    $data['page_data_sources'] = PageDatasource::all();
-    foreach ( $data['page_data_sources'] as $key => $page_data_source ) {
-      if( ! $page_data_source->source ){
-        continue;
-      }
-      $data['page_data_sources'][$key]['source_url'] = $page_data_source->source->url;
-      $data['page_data_sources'][$key]['source_type'] = $page_data_source->source->type;
-    }
-
-    $data['s_q_l_editors'] = SQLEditor::all();
-    foreach ( $data['s_q_l_editors'] as $key => $editor ) {
-      $model = Model::find( $editor['model_id'] );
-      if( ! $model ){
-        continue;
-      }
-      $data['s_q_l_editors'][$key]['model_name'] = $model->name;
-    }
-
-    $data['relations'] = Relationship::all();
-    foreach ( $data['relations'] as $key => $relation ) {
-      $model = Model::find( $relation['model_id'] );
-      if( ! $model ){
-        continue;
-      }
-      $data['relations'][$key]['model_name'] = $model->name;
-      $target_model = Model::find( $relation['target_model_id'] );
-      if( ! $target_model ){
-        continue;
-      }
-      $data['relations'][$key]['target_model_name'] = $target_model->name;
-    }
-
-    $data['queries'] = Query::all();
-    foreach ( $data['queries'] as $key => $query ) {
-      $model = Model::find( $query['model_id'] );
-      if( ! $model ){
-        continue;
-      }
-      $data['queries'][$key]['model_name'] = $model->name;
-
+    private function readJsonFile($path) {
+        $data = File::get( storage_path( $path) );
+        return json_decode( $data, true );
     }
 
     /**
-     * Данные ролей и пр.
+     * Создаем json-файл шаблонов
+     * @throws Exception
      */
+    private function createJSONTemplatesFile()
+    {
 
-    $data['roles'] = Role::all();
-    $data['page_roles'] = DB::table( 'page_role' )->get()->toArray();
-    foreach ( $data['page_roles'] as $key => $page_role ) {
-      $role = Role::find( $page_role->role_id );
-      $page = Page::find( $page_role->page_id );
-      if( ! ( $page && $role ) ){
-        continue;
-      }
-      $data['page_roles'][$key]->page_guid = $page->guid;
-      $data['page_roles'][$key]->role_name = $role->name;
+        $data = Template::all()->map(function ($template, $key) {
+            $_area = Area::find($template->area);
+            if ($template->area) {
+                $template->area_name = $_area->name;
+            }
+            return $template;
+        });
+
+        $this->createJsonFile("tmp/altrp-settings/altrp-templates.json", $data->toArray());
     }
-    $data['permission_roles'] = DB::table( 'permission_role' )->get()->toArray();
-    foreach ( $data['permission_roles'] as $key => $permission_role ) {
-      $role = Role::find( $permission_role->role_id );
-      $permission = Permission::find( $permission_role->permission_id );
-      $data['permission_roles'][$key]->permission_name = $permission->name;
-      $data['permission_roles'][$key]->role_name = $role->name;
+
+    /**
+     * Создаем json-файл страниц
+     * @throws Exception
+     */
+    private function createJSONPagesFile()
+    {
+
+        $data = Page::all()->map(function ($page, $key) {
+            if( $page->model ){
+                $page->model_name = $page->model->name ;
+            }
+            return $page->withoutRelations();
+        });
+
+        $this->createJsonFile("tmp/altrp-settings/altrp-pages.json", $data->toArray());
     }
-    $content = json_encode( $data );
-    File::put( storage_path( 'tmp/altrp-settings/altrp-data.json' ), $content);
-  }
+
+    /**
+     * Создаем json-файл медиа
+     * @throws Exception
+     */
+    private function createJSONMediaFile()
+    {
+        $this->createJsonFile("tmp/altrp-settings/altrp-media.json", Media::all()->toArray());
+    }
+
+    /**
+     * Создаем json-файл связи страниц с шаблонами
+     * @throws Exception
+     */
+    private function createJSONPageTemplatesFile()
+    {
+        $this->createJsonFile("tmp/altrp-settings/altrp-page_templates.json", PagesTemplate::all()->toArray());
+    }
+
+    /**
+     * Создаем json-файл основных настроек
+     * @throws Exception
+     */
+    private function createJSONSettingsFile()
+    {
+        $data['admin_logo'] = env( 'ALTRP_SETTING_ADMIN_LOGO', null );
+        $data['container_width'] = env( 'ALTRP_SETTING_CONTAINER_WIDTH', null );
+
+        $this->createJsonFile("tmp/altrp-settings/altrp-settings.json", $data);
+    }
+
+    /**
+     * Создаем json-файл настройки шаблонов
+     * @throws Exception
+     */
+    private function createJSONTemplateSettingsFile()
+    {
+
+        $data = TemplateSetting::all()->map(function ($template_setting, $key) {
+            if( $template_setting->template ){
+                $template_setting->template_guid = $template_setting->template->guid;
+            }
+            return $template_setting->withoutRelations();
+        });
+
+        $this->createJsonFile("tmp/altrp-settings/altrp-template_settings.json", $data->toArray());
+    }
+
+    /**
+     * Создаем json-файл диаграмм
+     * @throws Exception
+     */
+    private function createJSONDiagramsFile()
+    {
+        $this->createJsonFile("tmp/altrp-settings/altrp-diagrams.json", AltrpDiagram::all()->toArray());
+    }
+
+    /**
+     * Создаем json-файл дашбордов
+     * @throws Exception
+     */
+    private function createJSONDashboardsFile()
+    {
+        $this->createJsonFile("tmp/altrp-settings/altrp-dashboards.json", Dashboards::all()->toArray());
+    }
+
+    /**
+     * Создаем json-файл отчетов
+     * @throws Exception
+     */
+    private function createJSONReportsFile()
+    {
+        $this->createJsonFile("tmp/altrp-settings/altrp-reports.json", Reports::all()->toArray());
+    }
+
+    /**
+     * Создаем json-файл таблиц
+     * @throws Exception
+     */
+    private function createJSONTablesFile()
+    {
+        $this->createJsonFile("tmp/altrp-settings/altrp-tables.json", Table::all()->toArray());
+    }
+
+    /**
+     * Создаем json-файл моделей
+     * @throws Exception
+     */
+    private function createJSONModelsFile()
+    {
+        $data = Model::all()->filter(function($model_row) {
+            if(!$model_row->table) return false;
+            return $model_row->name !== 'user';
+        })->map(function ($model, $key) {
+            $model->table_name = $model->table->name;
+            return $model->withoutRelations();
+        });
+
+        $this->createJsonFile("tmp/altrp-settings/altrp-models.json", $data->toArray());
+    }
+    /**
+     * Создаем json-файл полей
+     * @throws Exception
+     */
+    private function createJSONColumnsFile()
+    {
+        $data = Column::all()->filter(function($column_row) {
+            if(!$column_row->model) return false;
+            if(!$column_row->table) return false;
+            return true;
+        })->map(function ($column, $key) {
+            $column->table_name = $column->table->name;
+            $column->model_name = $column->model->name;
+            return $column->withoutRelations();
+        });
+
+        $this->createJsonFile("tmp/altrp-settings/altrp-columns.json", $data->toArray());
+    }
+
+    /**
+     * Создаем json-файл аксессоров
+     * @throws Exception
+     */
+    private function createJSONAccessorsFile()
+    {
+        $data = Accessor::all()->filter(function($accessor_row) {
+            if(!$accessor_row->model) return false;
+            return true;
+        })->map(function ($accessor, $key) {
+            $accessor->model_name = $accessor->model->name;
+            return $accessor->withoutRelations();
+        });
+
+        $this->createJsonFile("tmp/altrp-settings/altrp-accessors.json", $data->toArray());
+    }
+
+    /**
+     * Создаем json-файл подключенных к странице источников данных
+     * @throws Exception
+     */
+    private function createJSONPageDatasourcesFile()
+    {
+        $data = PageDatasource::all()->filter(function($datasource_row) {
+            if(!$datasource_row->source) return false;
+            return true;
+        })->map(function ($datasource, $key) {
+            $datasource->source_url = $datasource->source->url;
+            $datasource->source_type = $datasource->source->type;
+            return $datasource->withoutRelations();
+        });
+
+        $this->createJsonFile("tmp/altrp-settings/altrp-page_datasources.json", $data->toArray());
+    }
+
+    /**
+     * Создаем json-файл sql запросов
+     * @throws Exception
+     */
+    private function createJSONSQLEditorsFile()
+    {
+        $data = SQLEditor::all()->filter(function($editor_row) {
+            if(!$editor_row->model) return false;
+            return true;
+        })->map(function ($editor, $key) {
+            $editor->model_name = $editor->model->name;
+            return $editor->withoutRelations();
+        });
+
+        $this->createJsonFile("tmp/altrp-settings/altrp-s_q_l_editors.json", $data->toArray());
+    }
+
+    /**
+     * Создаем json-файл связей
+     * @throws Exception
+     */
+    private function createJSONRelationshipsFile()
+    {
+        $data = Relationship::all()->filter(function($relationship) {
+            if(!$relationship->model) return false;
+            if(!$relationship->target_model) return false;
+            return true;
+        })->map(function ($relationship, $key) {
+            $relationship->model_name = $relationship->model->name;
+            $relationship->target_model_name = $relationship->target_model->name;
+            return $relationship->withoutRelations();
+        });
+
+        $this->createJsonFile("tmp/altrp-settings/altrp-relationships.json", $data->toArray());
+    }
+
+    /**
+     * Создаем json-файл запросов
+     * @throws Exception
+     */
+    private function createJSONQueriesFile()
+    {
+        $data = Query::all()->filter(function($query_row) {
+            if(!$query_row->model) return false;
+            return true;
+        })->map(function ($query, $key) {
+            $query->model_name = $query->model->name;
+            return $query->withoutRelations();
+        });
+
+        $this->createJsonFile("tmp/altrp-settings/altrp-queries.json", $data->toArray());
+    }
+
+    /**
+     * Создаем json-файл ролей
+     * @throws Exception
+     */
+    private function createJSONRolesFile()
+    {
+        $this->createJsonFile("tmp/altrp-settings/altrp-roles.json", Role::all()->toArray());
+    }
+
+    /**
+     * Создаем json-файл ролей привязанных к страницам
+     * @throws Exception
+     */
+    private function createJSONPageRolesFile()
+    {
+        $data = DB::table( 'page_role' )
+            ->select('page_role.*', 'pages.guid as page_guid', 'roles.name as role_name')
+            ->join('pages', 'page_role.page_id', '=', 'pages.id')
+            ->join('roles', 'page_role.role_id', '=', 'roles.id')
+            ->get();
+
+        $this->createJsonFile("tmp/altrp-settings/altrp-page_roles.json", $data->toArray());
+    }
+
+    /**
+     * Создаем json-файл прав доступа привязанных к ролям
+     * @throws Exception
+     */
+    private function createJSONPermissionRolesFile()
+    {
+        $data = DB::table( 'permission_role' )
+            ->select('permission_role.*', 'permissions.name as permission_name', 'roles.name as role_name')
+            ->join('permissions', 'permission_role.permission_id', '=', 'permissions.id')
+            ->join('roles', 'permission_role.role_id', '=', 'roles.id')
+            ->get();
+
+
+        $this->createJsonFile("tmp/altrp-settings/altrp-permissions_roles.json", $data->toArray());
+    }
 
   /**
    * Получить имя файла
@@ -244,9 +418,14 @@ class AltrpImportExportService
    */
   private function archiveFiles( ZipArchive $zip )
   {
-    $zip->addFile( storage_path( 'tmp/altrp-settings/altrp-data.json' ),
-      'altrp-settings/altrp-data.json' );
-    $all_media = Storage::allFiles( '/public/media' );
+
+      $all_files = Storage::disk("tmp")->allFiles("altrp-settings");
+
+      foreach ( $all_files as $file ) {
+          $zip->addFile( storage_path( 'tmp/' . $file ), $file );
+      }
+
+      $all_media = Storage::allFiles( '/public/media' );
 
     foreach ( $all_media as $file ) {
       $zip->addFile( storage_path( 'app/' . $file ),
@@ -272,62 +451,128 @@ class AltrpImportExportService
     File::ensureDirectoryExists( storage_path( 'app/public/media' ) );
     $zip->extractSubdirTo( storage_path( 'app/public/media' ), 'media' );
 
-    File::ensureDirectoryExists( storage_path( 'tmp/imports' ) );
-    $zip->extractTo( storage_path( 'tmp/imports'), 'altrp-settings/altrp-data.json' );
-    $data = File::get( storage_path( 'tmp/imports/altrp-settings/altrp-data.json') );
+    File::ensureDirectoryExists( storage_path( 'tmp/imports/altrp-settings' ) );
+    $zip->extractSubdirTo( storage_path( 'tmp/imports/altrp-settings' ), 'altrp-settings' );
+    $zip->close();
+    //dd();
+    //$zip->extractTo( storage_path( 'tmp/imports'), 'altrp-settings/altrp-data.json' );
+
+    /*$data = File::get( storage_path( 'tmp/imports/altrp-settings/altrp-data.json') );
     $data = json_decode( $data, true );
-    $this->deleteFileTmp( 'imports' );
+    $this->deleteFileTmp( 'imports' );*/
     /**
      * @var AltrpSettingsService $altrp_settings
      */
     $altrp_settings = app()->make( AltrpSettingsService::class );
-    if( Arr::get( $data, 'container_width' ) ){
-      $altrp_settings->set_setting_value( 'container_width', Arr::get( $data, 'container_width' ) );
+
+    $import_setting = $this->readJsonFile("tmp/imports/altrp-settings/altrp-settings.json");
+    $this->deleteFileTmp( 'imports/altrp-settings/altrp-settings.json"' );
+
+    if( Arr::get( $import_setting, 'container_width' ) ){
+      $altrp_settings->set_setting_value( 'container_width', Arr::get( $import_setting, 'container_width' ) );
     }
-    if( Arr::get( $data, 'admin_logo' ) ){
-      $altrp_settings->set_setting_value( 'admin_logo', Arr::get( $data, 'admin_logo' ) );
+    if( Arr::get( $import_setting, 'admin_logo' ) ){
+      $altrp_settings->set_setting_value( 'admin_logo', Arr::get( $import_setting, 'admin_logo' ) );
     }
     /**
      * импортируем настройки доступов
      */
-    Role::import( Arr::get( $data, 'roles', [] ) );
+
+    $import_roles = $this->readJsonFile("tmp/imports/altrp-settings/altrp-roles.json");
+    $this->deleteFileTmp( 'imports/altrp-settings/altrp-roles.json"' );
+    Role::import($import_roles);
 
     /**
      * импортируем настройки моделей
      */
+      //    Table::import( Arr::get( $data, 'tables', [] ) );
 
-//    Table::import( Arr::get( $data, 'tables', [] ) );
-    AltrpModel::import( Arr::get( $data, 'models', [] ) );
-    Column::import( Arr::get( $data, 'columns', [] ) );
-    Accessor::import( Arr::get( $data, 'altrp_accessors', [] ) );
-    Relationship::import( Arr::get( $data, 'relations', [] ) );
-    SQLEditor::import( Arr::get( $data, 's_q_l_editors', [] ) );
-    Query::import( Arr::get( $data, 'queries', [] ) );
+      $import_models = $this->readJsonFile("tmp/imports/altrp-settings/altrp-models.json");
+      $this->deleteFileTmp( 'imports/altrp-settings/altrp-models.json"' );
+      AltrpModel::import($import_models);
+
+      $import_columns = $this->readJsonFile("tmp/imports/altrp-settings/altrp-columns.json");
+      $this->deleteFileTmp( 'imports/altrp-settings/altrp-columns.json"' );
+      Column::import($import_columns);
+
+      $import_accessors = $this->readJsonFile("tmp/imports/altrp-settings/altrp-accessors.json");
+      $this->deleteFileTmp( 'imports/altrp-settings/altrp-accessors.json"' );
+      Accessor::import($import_accessors);
+
+      $import_relationships = $this->readJsonFile("tmp/imports/altrp-settings/altrp-relationships.json");
+      $this->deleteFileTmp( 'imports/altrp-settings/altrp-relationships.json"' );
+      Relationship::import($import_relationships);
+
+      $import_SQLEditors = $this->readJsonFile("tmp/imports/altrp-settings/altrp-s_q_l_editors.json");
+      $this->deleteFileTmp( 'imports/altrp-settings/altrp-s_q_l_editors.json"' );
+      SQLEditor::import($import_SQLEditors);
+
+      $import_queries = $this->readJsonFile("tmp/imports/altrp-settings/altrp-queries.json");
+      $this->deleteFileTmp( 'imports/altrp-settings/altrp-queries.json"' );
+      Query::import($import_queries);
+
+
 
     /**
      * импортируем настройки фронт приложения
      */
-    Template::import( Arr::get( $data, 'templates', [] ) );
-    TemplateSetting::import( Arr::get( $data, 'template_settings', [] ) );
-    Media::import( Arr::get( $data, 'media', [] ) );
-    Page::import( Arr::get( $data, 'pages', [] ) );
-    PagesTemplate::import( Arr::get( $data, 'pages_templates', [] ) );
-    PageDatasource::import( Arr::get( $data, 'page_data_sources', [] ) );
+
+      $import_templates = $this->readJsonFile("tmp/imports/altrp-settings/altrp-templates.json");
+      $this->deleteFileTmp( 'imports/altrp-settings/altrp-templates.json"' );
+      Template::import($import_templates);
+
+      $import_templates_settings = $this->readJsonFile("tmp/imports/altrp-settings/altrp-template_settings.json");
+      $this->deleteFileTmp( 'imports/altrp-settings/altrp-template_settings.json"' );
+      TemplateSetting::import($import_templates_settings);
+
+      $import_media = $this->readJsonFile("tmp/imports/altrp-settings/altrp-media.json");
+      $this->deleteFileTmp( 'imports/altrp-settings/altrp-media.json"' );
+      Media::import($import_media);
+
+      $import_pages = $this->readJsonFile("tmp/imports/altrp-settings/altrp-pages.json");
+      $this->deleteFileTmp( 'imports/altrp-settings/altrp-pages.json"' );
+      Page::import($import_pages);
+
+      $import_page_templates = $this->readJsonFile("tmp/imports/altrp-settings/altrp-page_templates.json");
+      $this->deleteFileTmp( 'imports/altrp-settings/altrp-page_templates.json"' );
+      PagesTemplate::import($import_page_templates);
+
+      $import_page_datasources = $this->readJsonFile("tmp/imports/altrp-settings/altrp-page_datasources.json");
+      $this->deleteFileTmp( 'imports/altrp-settings/altrp-page_datasources.json"' );
+      PageDatasource::import($import_page_datasources);
+
     /**
      * импортируем настройки доступов
      */
-    Page::importPageRoles( Arr::get( $data, 'page_roles', [] ) );
-    Role::importPermissionRole( Arr::get( $data, 'permission_roles', [] ) );
+
+      $import_page_roles = $this->readJsonFile("tmp/imports/altrp-settings/altrp-page_roles.json");
+      $this->deleteFileTmp( 'imports/altrp-settings/altrp-page_roles.json"' );
+      Page::importPageRoles($import_page_roles);
+
+      $import_permission_roles = $this->readJsonFile("tmp/imports/altrp-settings/altrp-permissions_roles.json");
+      $this->deleteFileTmp( 'imports/altrp-settings/altrp-permissions_roles.json"' );
+      Role::importPermissionRole($import_permission_roles);
+
     /**
      * импортируем диграммы и пр.
      */
-    AltrpDiagram::import( Arr::get( $data, 'altrp_diagrams', [] ) );
-    Dashboards::import( Arr::get( $data, 'dashboards', [] ) );
-    Reports::import( Arr::get( $data, 'reports', [] ) );
+
+      $import_diagrams = $this->readJsonFile("tmp/imports/altrp-settings/altrp-diagrams.json");
+      $this->deleteFileTmp( 'imports/altrp-settings/altrp-diagrams.json"' );
+      AltrpDiagram::import($import_diagrams );
+
+      $import_dashboards = $this->readJsonFile("tmp/imports/altrp-settings/altrp-dashboards.json");
+      $this->deleteFileTmp( 'imports/altrp-settings/altrp-dashboards.json"' );
+      Dashboards::import($import_dashboards);
+
+      $import_reports = $this->readJsonFile("tmp/imports/altrp-settings/altrp-reports.json");
+      $this->deleteFileTmp( 'imports/altrp-settings/altrp-reports.json"' );
+      Reports::import($import_reports);
+
     /**
      * Удаляем архив
      */
-    $zip->close();
+    $this->deleteFileTmp( 'imports' );
     $this->deleteFileTmp( 'altrp-settings.zip' );
   }
 
