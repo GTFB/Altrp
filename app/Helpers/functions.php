@@ -465,3 +465,8 @@ function isAdmin(){
   }
   return $user->hasRole( 'admin' );
 }
+
+function getCurrentEnv(){
+    $item = App\Helpers\Classes\CurrentEnvironment::get_instance();
+    return $item;
+}

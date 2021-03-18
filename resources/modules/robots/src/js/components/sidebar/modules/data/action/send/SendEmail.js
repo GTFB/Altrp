@@ -11,7 +11,7 @@ class SendEmail extends Component{
             templateOptions: [],
             rolesOptions: []
         };
-        this.templateOptions = new Resource({ route: "/admin/ajax/templates/options?value=guid" });        
+        this.templateOptions = new Resource({ route: "/admin/ajax/templates/options?value=guid" });
     }
 
     async componentDidMount() {
@@ -32,7 +32,19 @@ class SendEmail extends Component{
                 </div>
 
                 <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
-                    <div className="controller-container controller-container_select">
+                  <div className="controller-container controller-container_textarea">
+                    <div className="controller-container__label textcontroller-responsive controller-label">From</div>
+                    <div className='controller-field'>
+                      <input className="control-field" type="text" id="email-from" name="from" value={this.props.content.from ?? ''} onChange={(e) => { this.props.onSend(e, "mail", "from") }}/>
+                    </div>
+                  </div>
+                  <div className="controller-container controller-container_textarea">
+                    <div className="controller-container__label textcontroller-responsive controller-label">Subject</div>
+                    <div className='controller-field'>
+                      <input className="control-field" type="text" id="email-subject" name="subject" value={this.props.content.subject ?? ''} onChange={(e) => { this.props.onSend(e, "mail", "subject") }}/>
+                    </div>
+                  </div>
+                  <div className="controller-container controller-container_select">
                         <div className="controller-container__label control-select__label controller-label">Template</div>
                         <div className="control-container_select-wrapper controller-field">
                           <select className="control-select control-field"
@@ -44,20 +56,7 @@ class SendEmail extends Component{
                           </select>
                         </div>
                     </div>
-
-                    <div className="controller-container controller-container_textarea">
-                        <div className="controller-container__label textcontroller-responsive controller-label">Subject</div>
-                        <div className='controller-field'>
-                            <input className="control-field" type="text" id="email-subject" name="subject" value={this.props.content.subject ?? ''} onChange={(e) => { this.props.onSend(e, "mail", "subject") }}/>
-                        </div>
-                    </div>
-                    <div className="controller-container controller-container_textarea">
-                        <div className="controller-container__label textcontroller-responsive controller-label">Message</div>
-                        <div className='controller-field'>
-                            <input className="control-field" type="text" id="email-message" name="message" value={this.props.content.message ?? ''} onChange={(e) => { this.props.onSend(e, "mail", "message") }}/>
-                        </div>
-                    </div>
-                </div>
+                </div>  {/* ./controllers-wrapper */}
             </div>  {/* ./settings-section */}
         </div>
     }
