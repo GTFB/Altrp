@@ -121,8 +121,6 @@ export default function headingElementEmailRender(){
     headingStyles.justifyContent = settings['heading_settings_alignment'];
     headingStyles.display = "flex";
   }
-  console.log(settings);
-  console.log(headingStyles)
   let url = _.get(settings, 'link_link.url', location.origin) || '';
   url = prepareURLForEmail(url);
   const text = this.getContent('text') || '';

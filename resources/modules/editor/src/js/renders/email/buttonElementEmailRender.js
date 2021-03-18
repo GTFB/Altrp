@@ -129,9 +129,16 @@ export default function buttonElementEmailRender(){
     display: 'block',
     textAlign: 'center',
   };
+
+  if(settings['button_alignment']) {
+    wrapperStyles.justifyContent = settings['button_alignment'];
+    wrapperStyles.display = "flex";
+  }
+  
   const wrapperProps = {
     style: wrapperStyles,
   };
+  
   return <div {...wrapperProps}
               children={React.createElement('a', buttonProps)}/>;
 }
