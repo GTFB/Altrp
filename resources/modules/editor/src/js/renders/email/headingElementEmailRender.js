@@ -92,6 +92,12 @@ export default function headingElementEmailRender(){
     headingStyles.borderRightWidth = settings['style_border_width'].right + settings['style_border_width'].unit;
     headingStyles.borderBottomWidth = settings['style_border_width'].bottom + settings['style_border_width'].unit;
     headingStyles.borderLeftWidth = settings['style_border_width'].left + settings['style_border_width'].unit;
+    if(settings["style_border_width"].unit==="%") {
+      headingStyles.borderTopWidth = settings['style_border_width'].top + 'vw';
+      headingStyles.borderRightWidth = settings['style_border_width'].right + 'vw';
+      headingStyles.borderBottomWidth = settings['style_border_width'].bottom + 'vw';
+      headingStyles.borderLeftWidth = settings['style_border_width'].left + 'vw';
+    }
     headingStyles.borderStyle = settings['style_border_type'];
     if(settings['style_border_color'] && settings['style_border_color'].colorPickedHex)
       headingStyles.borderColor = settings['style_border_color'].colorPickedHex;
@@ -113,6 +119,7 @@ export default function headingElementEmailRender(){
   }
   if(settings['heading_settings_alignment']) {
     headingStyles.justifyContent = settings['heading_settings_alignment'];
+    headingStyles.display = "flex";
   }
   console.log(settings);
   console.log(headingStyles)
