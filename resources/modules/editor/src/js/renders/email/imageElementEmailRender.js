@@ -66,8 +66,8 @@ export default function imageElementEmailRender(){
     wrapperStyles.backgroundImage = settings['gradient'].value.slice(0, -1);
   }
 
-  if(settings['background_image'].url) {
-    wrapperStyles.backgroundImage = `url(${settings['background_image'].url})`;
+  if(_.get(settings, 'background_image.url')) {
+    wrapperStyles.backgroundImage = `url(${prepareURLForEmail(settings['background_image'].url)})`;
   }
 
   if(settings['background_position']) {
@@ -109,8 +109,6 @@ export default function imageElementEmailRender(){
     wrapperStyles.justifyContent = settings['image_style_alignment'];
     wrapperStyles.display = "flex";
   }
-  console.log(settings)
-  console.log(wrapperStyles)
   const wrapperProps = {
     style: wrapperStyles,
   };

@@ -1,4 +1,4 @@
-import { head } from "lodash";
+import _, { head } from "lodash";
 import {isEditor, parseURLTemplate, prepareURLForEmail} from "../../../../../front-app/src/js/helpers";
 
 /**
@@ -62,9 +62,8 @@ export default function headingElementEmailRender(){
   if(settings['gradient'] && settings['gradient'].isWithGradient) {
     headingStyles.backgroundImage = settings['gradient'].value.slice(0, -1);
   }
-
-  if(settings['background_image'].url) {
-    headingStyles.backgroundImage = `url(${settings['background_image'].url})`;
+  if(_.get(settings, 'background_image.url')) {
+    headingStyles.backgroundImage = `url(${prepareURLForEmail(settings['background_image'].url)})`;
   }
 
   if(settings['background_position']) {
