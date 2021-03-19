@@ -126,7 +126,7 @@ class Users extends Controller
 
         if ($request->name) $user->name = $request->name;
         if ($request->email) $user->email = $request->email;
-        if ($request->passsword) $user->password = Hash::make($request->password);
+        if ($request->password) $user->password = Hash::make($request->password);
 
         if ($user->save()) {
             $permissions = $request->get('_permissions');

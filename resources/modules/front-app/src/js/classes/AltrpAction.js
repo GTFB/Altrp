@@ -16,7 +16,7 @@ import {
   scrollToElement,
   setDataByPath,
   dataToXLS,
-  delay,
+  delay, altrpCompare,
 } from '../helpers';
 import { togglePopup } from '../store/popup-trigger/actions';
 import {sendEmail} from '../helpers/sendEmail';
@@ -301,6 +301,11 @@ class AltrpAction extends AltrpModel {
       case 'play_sound':
         {
           result = await this.doActionPlaySound();
+        }
+        break;
+      case 'condition':
+        {
+          result = await this.doActionCondition();
         }
         break;
     }
@@ -941,8 +946,13 @@ class AltrpAction extends AltrpModel {
    */
   doActionCustomCode() {
     let code = this.getProperty('code');
-    eval(code);
-    return { success: true };
+    try{
+      eval(code);
+      return { success: true };
+    } catch(error){
+      console.error('Evaluate error in doActionCustomCode' + error.message);
+      return { success: false };
+    }
   }
   /**
    * действие - обновление текущего хранилища
@@ -1036,6 +1046,19 @@ class AltrpAction extends AltrpModel {
       await delay(20);
     }
     return {success: true}
+  }
+  /**
+   * Проверка условий
+   * @return {Promise<{success: boolean}>}
+   */
+  async doActionCondition(){
+    const compare = this.getProperty('compare');
+    let conditionLeft = this.getProperty('condition_left');
+    let conditionRight = this.getProperty('condition_right');
+    conditionLeft = getDataByPath(conditionLeft);
+    conditionRight = replaceContentWithData(conditionRight);
+    const res = altrpCompare(conditionLeft, conditionRight, compare);
+    return {success: res}
   }
 }
 

@@ -14,9 +14,6 @@ class FrontElement {
 
   constructor(data = {}){
     this.name = data.name;
-    if(data.name === 'root-element' && window.formsManager){
-      window.formsManager.clearFieldsStorage();
-    }
     this.settings = data.settings;
     this.children = data.children;
     this.cssClassStorage = data.cssClassStorage;
