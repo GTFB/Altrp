@@ -83,11 +83,11 @@ export default function buttonElementEmailRender(){
       buttonStyles.borderColor = settings['border_color'].colorPickedHex;
   }
 
-  if(settings['border_radius']) {
-    let borderRadiusTop = settings['border_radius'].top + settings['border_radius'].unit;
-    let borderRadiusRight = settings['border_radius'].right + settings['border_radius'].unit;
-    let borderRadiusBottom = settings['border_radius'].bottom + settings['border_radius'].unit;
-    let borderRadiusLeft = settings['border_radius'].left + settings['border_radius'].unit;
+  if(settings['border_radius'].top || settings['border_radius'].right || settings['border_radius'].bottom || settings['border_radius'].left) {
+    let borderRadiusTop = (settings['border_radius'].top ? settings['border_radius'].top : "0") + settings['border_radius'].unit;
+    let borderRadiusRight = (settings['border_radius'].right ? settings['border_radius'].right : "0") + settings['border_radius'].unit;
+    let borderRadiusBottom = (settings['border_radius'].bottom ? settings['border_radius'].bottom : "0") + settings['border_radius'].unit;
+    let borderRadiusLeft = (settings['border_radius'].left ?  settings['border_radius'].left  : "0")+ settings['border_radius'].unit;
     buttonStyles.borderRadius = `${borderRadiusTop} ${borderRadiusRight} ${borderRadiusBottom} ${borderRadiusLeft}`;
   }
 
@@ -115,7 +115,8 @@ export default function buttonElementEmailRender(){
   if(settings['font_color']) {
     buttonStyles.color = settings['font_color'].colorPickedHex;
   }
-
+  console.log(settings)
+  console.log(buttonStyles)
   let url = _.get(settings, 'link_link.url', location.origin) || '';
   url = prepareURLForEmail(url);
   const buttonProps = {

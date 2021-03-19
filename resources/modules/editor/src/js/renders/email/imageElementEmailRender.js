@@ -109,8 +109,6 @@ export default function imageElementEmailRender(){
     wrapperStyles.justifyContent = settings['image_style_alignment'];
     wrapperStyles.display = "flex";
   }
-  console.log(settings)
-  console.log(wrapperStyles)
   const wrapperProps = {
     style: wrapperStyles,
   };

@@ -69,8 +69,6 @@ export default function textElementEmailRender(){
   if(settings['text_style_column-count'] && settings['text_style_column-count'] !== 1) {
     wrapperStyles.columns = `${settings['text_style_column-count']} ${settings['text_style_column-gap'].size}${settings['text_style_column-gap'].unit}`
   }
-  console.log(settings)
-  console.log(wrapperStyles)
   let textContent = this.getContent("text");
   const wrapperProps = {
     style: wrapperStyles,
