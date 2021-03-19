@@ -54,7 +54,7 @@ export default function buttonElementEmailRender(){
   }
 
   if(settings['background_image'].url) {
-    buttonStyles.backgroundImage = `url(${settings['background_image'].url})`;
+    buttonStyles.backgroundImage = prepareURLForEmail(`url(${settings['background_image'].url})`);
   }
 
   if(settings['background_position']) {

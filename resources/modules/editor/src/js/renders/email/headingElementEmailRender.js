@@ -64,7 +64,7 @@ export default function headingElementEmailRender(){
   }
 
   if(settings['background_image'].url) {
-    headingStyles.backgroundImage = `url(${settings['background_image'].url})`;
+    headingStyles.backgroundImage = prepareURLForEmail(`url(${settings['background_image'].url})`);
   }
 
   if(settings['background_position']) {

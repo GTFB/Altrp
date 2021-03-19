@@ -67,7 +67,7 @@ export default function imageElementEmailRender(){
   }
 
   if(settings['background_image'].url) {
-    wrapperStyles.backgroundImage = `url(${settings['background_image'].url})`;
+    wrapperStyles.backgroundImage = prepareURLForEmail(`url(${settings['background_image'].url})`);
   }
 
   if(settings['background_position']) {
