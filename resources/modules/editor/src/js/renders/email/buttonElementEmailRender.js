@@ -53,8 +53,8 @@ export default function buttonElementEmailRender(){
     buttonStyles.backgroundImage = settings['gradient'].value.slice(0, -1);
   }
 
-  if(settings['background_image'].url) {
-    buttonStyles.backgroundImage = prepareURLForEmail(`url(${settings['background_image'].url})`);
+  if(_.get(settings, 'background_image.url')) {
+    buttonStyles.backgroundImage = `url(${prepareURLForEmail(settings['background_image'].url)})`;
   }
 
   if(settings['background_position']) {
