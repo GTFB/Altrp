@@ -16,7 +16,8 @@ class UserObserver
      */
     public function created(User $user)
     {
-       if(config('altrp.admin.send_email_new_users')) Mail::to($user)->send(new SendEmail($user));
+       if(config('altrp.admin.send_email_new_users') && config('mail.username'))
+           Mail::to($user->email)->send(new SendEmail($user));
     }
 
     /**
