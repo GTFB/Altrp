@@ -248,6 +248,7 @@ Route::group(['prefix' => 'users'], function () {
 
 Route::post('/feedback', 'MailController@sendMail');
 Route::post('/write_mail_settings', 'MailController@writeSettingsToEnv');
+Route::post('/write_send_mail', 'MailController@switchHandler');
 
 /**
  * Robots

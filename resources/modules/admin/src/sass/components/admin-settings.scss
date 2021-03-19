@@ -72,6 +72,10 @@
     }
 }
 
+.admin_input_key, .admin_input_port, .admin_input_host{
+    width: 150px;
+}
+
 // Admin Settings telegram
 .admin_settings_telegram{
     display: flex;
@@ -169,6 +173,6 @@
         margin-right: 15px;
     }    
     .admin_input{
-        margin-right: 50px;
+        margin-right: 30px;
     }    
 }

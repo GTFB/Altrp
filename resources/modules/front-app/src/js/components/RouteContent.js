@@ -98,6 +98,7 @@ class RouteContent extends Component {
       _.get(this.props, "model.modelName") &&
       _.get(this.props, "match.params.id")
     ) {
+      // window.formsManager.clearFieldsStorage();
       appStore.dispatch(changeCurrentModel({ altrpModelUpdated: false }));
       try{
 
@@ -129,7 +130,6 @@ class RouteContent extends Component {
         _.get(prevProps, "match.params.id")
     ) {
       this.changeRouteCurrentModel();
-      console.log(this);
       appStore.dispatch(changeCurrentPageProperty('url', location.href));
     }
     /**

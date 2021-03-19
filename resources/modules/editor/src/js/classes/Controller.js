@@ -88,7 +88,7 @@ class Controller {
        */
       this.data.repeater.changeValue(
         this.data.itemIndex,
-        this.data.controlId,
+        this.data.controlId + getElementSettingsSuffix(this, true),
         value
       );
     }

@@ -1,13 +1,15 @@
 import React, {Component} from "react";
-import Resource from "../../../../../../editor/src/js/classes/Resource";
+import Resource from "../../../../../../../../editor/src/js/classes/Resource";
 import SendBroadcast from "./send/SendBroadcast";
 import SendEmail from "./send/SendEmail";
 import SendTelegram from "./send/SendTelegram";
-import store from "../../../store/store";
-import { setUpdatedNode } from "../../../store/robot-settings/actions";
-import AltrpSelect from "../../../../../../admin/src/components/altrp-select/AltrpSelect";
+import store from "../../../../../store/store";
+import { setUpdatedNode } from "../../../../../store/robot-settings/actions";
+import AltrpSelect from "../../../../../../../../admin/src/components/altrp-select/AltrpSelect";
+import Chevron from "../../../../../../../../editor/src/svgs/chevron.svg";
 
-class Send extends Component{
+
+export default class Send extends Component{
     constructor(props){
         super(props);
         this.state = {
@@ -17,10 +19,8 @@ class Send extends Component{
         this.toggle = this.toggle.bind(this);
         this.onSend = this.onSend.bind(this);
         this.changeSelect = this.changeSelect.bind(this);
-
         this.usersOptions = new Resource({ route: "/admin/ajax/users_options" });
         this.rolesOptions = new Resource({ route: "/admin/ajax/role_options" });
-
     }
 
     async componentDidMount() {
@@ -28,20 +28,9 @@ class Send extends Component{
         const rolesOptions = await this.rolesOptions.getAll();
         this.setState(s =>({...s, usersOptions, rolesOptions}));
     }
-    
-
-    getData = data => {
-        const nodeData = this.props.selected?.data.props.nodeData ?? [];
-        if(nodeData instanceof Array){
-            const item = nodeData.filter(i =>{
-                if(i.type === data) return i;
-            });
-            return item[0];
-        }
-    }
 
     getTypeSend = data => {
-        const channels = this.props.selected?.data.props.nodeData?.data?.channels ?? [];
+        const channels = this.props.selectNode?.data.props.nodeData?.data?.channels ?? [];
         let result = false;
         if(channels instanceof Array){
             channels.map(item =>{
@@ -54,14 +43,14 @@ class Send extends Component{
     // Запись значений inputs в store
     onSend = (e, type, key) => {
         let value = e.target.value;
-        const node = this.props.selected;
+        const node = this.props.selectNode;
         node.data.props.nodeData.data.content[type][key] = value;
         store.dispatch(setUpdatedNode(node));
     }
 
       // Изменение положения переключателя
     toggle() {
-        const node = this.props.selected;
+        const node = this.props.selectNode;
         if(node.data.props.nodeData.data.entities === 'all') node.data.props.nodeData.data.entities = '';
         else node.data.props.nodeData.data.entities = 'all';
         store.dispatch(setUpdatedNode(node));
@@ -69,7 +58,7 @@ class Send extends Component{
 
     // Запись значений select в store
     changeSelect(e, type) {
-        const node = this.props.selected;
+        const node = this.props.selectNode;
         if(type === "channels"){
             node.data.props.nodeData.data[type] = e ? e.map(item => item.value) : [];
         } else {
@@ -79,22 +68,29 @@ class Send extends Component{
         store.dispatch(setUpdatedNode(node));
     }
 
-
     render(){
         const { usersOptions, rolesOptions } = this.state;
         const channelsOptions = [
-            {label:'broadcast', value: 'broadcast'},
+            {label:'push', value: 'broadcast'},
             {label:'telegram', value: 'telegram'},
             {label:'mail', value: 'mail'}
         ];
-        const channels = this.props.selected?.data?.props?.nodeData?.data?.channels ?? [];
-        const users = this.props.selected?.data?.props?.nodeData?.data?.entities?.users ?? [];
-        const roles = this.props.selected?.data?.props?.nodeData?.data?.entities?.roles ?? [];
-        let value = (this.props.selected?.data?.props?.nodeData?.data?.entities === "all") ?? false;
+        const channels = this.props.selectNode?.data?.props?.nodeData?.data?.channels ?? [];
+        const users = this.props.selectNode?.data?.props?.nodeData?.data?.entities?.users ?? [];
+        const roles = this.props.selectNode?.data?.props?.nodeData?.data?.entities?.roles ?? [];
+        let value = (this.props.selectNode?.data?.props?.nodeData?.data?.entities === "all") ?? false;
         let switcherClasses = `control-switcher control-switcher_${value ? 'on' : 'off'}`;
 
         return <div>
             <div>
+            <div className={"settings-section "}>
+            <div className="settings-section__title d-flex">
+                <div className="settings-section__icon d-flex">
+                  <Chevron />
+                </div>
+                <div className="settings-section__label">Settings Send Notification</div>
+            </div>
+            <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
                 <div className="robot_switcher">
                     <div className="robot_switcher__label">
                         All
@@ -106,18 +102,20 @@ class Send extends Component{
                     </div>
                 </div>
                 {!value && <div className="settings-section-box">
-                    <div className="controller-container controller-container_textarea">
-                        <div className="controller-container__label">Users</div>
-                        <AltrpSelect id="send-users"
+                    <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                        <div className="controller-container__label control-select__label controller-label">Users</div>
+                        <AltrpSelect className="control-container_select2-wrapper controller-field"
+                            id="send-users"
                             isMulti={true}
                             value={_.filter(usersOptions, u => users.indexOf(u.value) >= 0)}
                             onChange={e => {this.changeSelect(e, "users")}}
                             options={usersOptions}
                         />
                     </div>
-                    <div className="controller-container controller-container_textarea">
-                        <div className="controller-container__label">Roles</div>
+                    <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                        <div className="controller-container__label control-select__label controller-label">Roles</div>
                         <AltrpSelect id="send-roles"
+                            className="controller-field"
                             isMulti={true}
                             value={_.filter(rolesOptions, r => roles.indexOf(r.value) >= 0)}
                             onChange={e => {this.changeSelect(e, "roles")}}
@@ -125,22 +123,24 @@ class Send extends Component{
                         />
                     </div>
                 </div>}
-                <div className="controller-container controller-container_textarea">
-                    <div className="controller-container__label">Channels</div>
+                <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                    <div className="controller-container__label control-select__label controller-label">Channels</div>
                     <AltrpSelect id="send-channels"
+                        className="controller-field"
                         isMulti={true}
                         value={_.filter(channelsOptions, c => channels.indexOf(c.value) >= 0)}
                         onChange={e => {this.changeSelect(e, "channels")}}
                         options={channelsOptions}
                     />
                 </div>
+            </div>
+          </div>
+
             </div>            
             
-            {this.getTypeSend("broadcast") && <SendBroadcast activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={this.props.selected?.data?.props?.nodeData?.data?.content?.broadcast ?? ''}/>}
-            {this.getTypeSend("mail") && <SendEmail activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={this.props.selected?.data?.props?.nodeData?.data?.content?.mail ?? ''}/>}
-            {this.getTypeSend("telegram") && <SendTelegram activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={this.props.selected?.data?.props?.nodeData?.data?.content?.telegram ?? ''}/>}
+            {this.getTypeSend("broadcast") && <SendBroadcast activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={this.props.selectNode?.data?.props?.nodeData?.data?.content?.broadcast ?? ''}/>}
+            {this.getTypeSend("mail") && <SendEmail activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={this.props.selectNode?.data?.props?.nodeData?.data?.content?.mail ?? ''}/>}
+            {this.getTypeSend("telegram") && <SendTelegram activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={this.props.selectNode?.data?.props?.nodeData?.data?.content?.telegram ?? ''}/>}
         </div>
     }
 }
-
-export default Send;
