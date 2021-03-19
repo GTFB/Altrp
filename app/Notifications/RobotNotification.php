@@ -12,6 +12,9 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Telegram\TelegramChannel;
 use NotificationChannels\Telegram\TelegramMessage;
+use App\Constructor\Template;
+use DOMDocument;
+
 
 class RobotNotification extends Notification implements ShouldQueue
 {
@@ -107,8 +110,15 @@ class RobotNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+//        dump($this->templateHandler());
         $mailObj = new MailMessage;
-        $mailObj = $mailObj->line($this->replaceColumns($this->node->data->props->nodeData->data->content->mail->message));
+//        $mailObj = $mailObj->line($this->templateHandler());
+        $mailObj = $mailObj->view(
+            'emails.robotmail', ['data' => $this->templateHandler()]
+        );
+
+        $mailObj = $mailObj->from($this->replaceColumns($this->node->data->props->nodeData->data->content->mail->from));
+        $mailObj = $mailObj->subject($this->replaceColumns($this->node->data->props->nodeData->data->content->mail->subject));
         return $mailObj;
     }
 
@@ -159,9 +169,8 @@ class RobotNotification extends Notification implements ShouldQueue
      */
     protected function replaceColumns($subject)
     {
-
         preg_match_all("#\{\{altrpdata\.(?<fields>[\w]+)\}\}#", $subject, $matches);
-        if ($matches) {
+        if ($matches && !empty($this->modelData)) {
             $matches = $matches['fields'];
             foreach ($matches as $field) {
                 if (in_array($field, $this->modelData['columns'])) {
@@ -172,4 +181,20 @@ class RobotNotification extends Notification implements ShouldQueue
         return $subject;
     }
 
+    /**
+     * Получение верстки шаблона по guid
+     * @param $subject
+     * @return string|string[]
+     */
+    protected function templateHandler()
+    {
+        $result = [];
+        if (isset($this->node->data->props->nodeData->data->content->mail->template)) {
+            $template = Template::where( 'guid', $this->node->data->props->nodeData->data->content->mail->template )->first()->html_content;
+            $dom = new DOMDocument();
+            $dom->loadHTML($template);
+            $result = $template;
+        }
+         return $result;
+    }
 }

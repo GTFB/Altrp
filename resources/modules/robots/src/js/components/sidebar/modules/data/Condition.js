@@ -5,15 +5,23 @@ import {CONDITIONS_OPTIONS} from "../../../../../../../front-app/src/js/helpers"
 import {iconsManager} from "../../../../../../../editor/src/js/helpers";
 import ModelField from "./condition/ModelField";
 import Chevron from "../../../../../../../editor/src/svgs/chevron.svg";
+import Resource from "../../../../../../../editor/src/js/classes/Resource";
+
 
 export default class Condition extends Component{
     constructor(props){
         super(props);
         this.state={
+            modelOptions: [],
         }
         this.changeInput = this.changeInput.bind(this);
+        this.modelOptionsResource = new Resource({ route: '/admin/ajax/model_options' });
     }
 
+    async componentDidMount() {
+        const model = await this.modelOptionsResource.getAll();
+        this.setState(s =>({...s, modelOptions: model.options }));
+    }    
 
     // Запись значений select в store
     changeSelect(e, id, type = false) {
@@ -21,7 +29,10 @@ export default class Condition extends Component{
         const node = this.props.selectNode;
         console.log(type);
         if(type === "operator"){
-            node.data.props.nodeData.operator = value;
+            node.data.props.nodeData[type] = value;
+        } else if(type === "model_id"){
+            node.data.props.nodeData[type] = value;
+            node.data.props.nodeData.body = [];
         } else {
             node.data.props.nodeData.body.map(item => {
                 if(item.id === id) {
@@ -97,11 +108,13 @@ export default class Condition extends Component{
     }
 
     render(){
+        const {modelOptions} = this.state;
         const bitOptions = CONDITIONS_OPTIONS;
         const logicOptions = [
             {label:'AND', value: 'AND'},
             {label:'OR', value: 'OR'},
         ];
+        const model = this.props.selectNode?.data?.props?.nodeData?.model_id ?? '';
         const logic = this.props.selectNode?.data?.props?.nodeData?.operator ?? '';
         const typeCondition = this.props.selectNode?.data?.props?.nodeData?.type ?? '';
         console.log(typeCondition);
@@ -123,6 +136,19 @@ export default class Condition extends Component{
             </div>
 
             <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
+                <div className="controller-container controller-container_select">
+                    <div className="controller-container__label control-select__label controller-label">Model</div>
+                    <div className="control-container_select-wrapper controller-field">
+                        <select className="control-select control-field"
+                            value={model || ''}
+                            onChange={e => {this.changeSelect(e, false, "model_id")}}
+                        >
+                            <option disabled value="" />
+                            {modelOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
+                        </select>
+                    </div>
+                </div>
+
                 <div className="controller-container controller-container_select" >
                     <div className="controller-container__label control-select__label controller-label">Type</div>
                     <div className="control-container_select-wrapper controller-field">

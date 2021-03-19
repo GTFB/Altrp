@@ -12,14 +12,13 @@ export default class ModelField extends Component{
     }
 
     async componentDidMount() {
-        const modelId = this.props.robot?.model_id ?? '';
-
+        let modelId = this.props.selectNode?.data?.props?.nodeData?.model_id ?? '';
+        if(!modelId) modelId = this.props.robot?.model_id ?? '';
         if(modelId){
             let fields = new Resource({ route: `/admin/ajax/models/${modelId}/field_options` });
             fields = await fields.getAll();
             this.setState(s =>({...s, fieldOptions: fields.options}));
         }
-
     }
 
     // Запись значений select в store
@@ -35,7 +34,6 @@ export default class ModelField extends Component{
     render(){
         const item = this.props.item;
         const fieldOptions = this.state.fieldOptions ?? [];
-        console.log(item?.operands[0]);
 
         return <div className="controller-container controller-container_select">
             <div className="controller-container__label control-select__label controller-label">Name</div>
