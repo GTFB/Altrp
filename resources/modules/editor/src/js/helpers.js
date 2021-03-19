@@ -98,14 +98,18 @@ export function iconsManager() {
  * Генерирует суфикс для всех настроек
  * на основе elementState и разврешения
  * @param {Controller} controller
+ * @param {boolean} ignoreResponse
  * @return {string}
  */
-export function getElementSettingsSuffix(controller) {
+export function getElementSettingsSuffix(controller, ignoreResponse = false) {
   let suffix_1 = getElementState().value;
   let suffix_2 =
     getCurrentScreen().name === CONSTANTS.DEFAULT_BREAKPOINT
       ? ""
       : getCurrentScreen().name;
+  if(ignoreResponse){
+    suffix_2 = '';
+  }
   if (!(suffix_2 || suffix_1)) {
     return "";
   }

@@ -166,8 +166,14 @@ function getContent(settingName, returnRaw = false) {
           .replace(/{{{/g, "_.get(context, '");
       try{
         content = eval(replacedContent);
+        if(_.isNumber(content) && ! _.isNaN(content)){
+          content += '';
+        }
+        _.isString(content) && (content = content.replace(/NaN/g, ''));
+        return content || '';
       } catch(e){
-        console.error(e);
+        console.error('Evaluate error in getContent for input default value' + e.message);
+        return '';
       } finally {
       }
     } else if(returnRaw){

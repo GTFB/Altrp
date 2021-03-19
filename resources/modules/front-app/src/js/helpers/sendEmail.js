@@ -21,7 +21,12 @@ export async function sendEmail(emailTemplateGUID = null, subject = 'Message', f
   do{
     await delay(1500);
     if(_.get(window, 'emailTemplatesRenderer.emailTemplate.current')){
-      html = window.emailTemplatesRenderer.emailTemplate.current.outerHTML;
+      /**
+       * @var  {HTMLElement} html
+       */
+      html = window.emailTemplatesRenderer.emailTemplate.current.cloneNode(true);
+      html.style.display = 'table';
+      html = html.outerHTML;
     }
   }while(! html);
   // appStore.dispatch(changeCurrentEmailTemplate(null));

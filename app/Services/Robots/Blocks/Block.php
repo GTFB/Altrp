@@ -19,7 +19,7 @@ class Block
     protected $nodes;
 
     /**
-     * @var string Запись модели
+     * @var array Запись модели
      */
     protected $modelData;
 
@@ -106,11 +106,10 @@ class Block
         $str = '';
         $arr = [];
         foreach ($conditionBody as $item) {
-            dump(is_numeric($item->operands[0]), is_numeric($item->operands[1]));
             $arr[] = $this->formExpression($item);
         }
         $str .= ' (' . implode($condition->operator, $arr) . ') ';
-        $str = '$model = ' . $this->modelData['record'] . '; if(' .$str .') { return true; } else { return false; }';
+        $str = 'if(' .$str .') { return true; } else { return false; }';
         return eval($str);
     }
 

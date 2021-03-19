@@ -48,7 +48,6 @@ body {
             }
         }
     }
-    
 }
 
 .content {
@@ -105,53 +104,15 @@ body {
 }
 
 .flow-node-condition {
-
-    .condition-type {
-        font-size: 12px;
-        margin-left: 55px;
-        margin-top: -50px;
-    }
-    .condition-romb{
-        width: 0; 
-        height: 0;
-        border: 80px solid transparent;
-        border-bottom-color: #d1fae6;
-        position: relative; 
-        top: -80px;
-        h3{
-            margin-top: 50px;
-            font-size: 12px;
-            margin-left: -50px;
-            text-align: center;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100px;    
-            height: 55px;    
-        }    
-    }
-    .condition-romb:after {
-        content: "";
-        width: 0; 
-        height: 0;
-        position: absolute; 
-        left: -80px; 
-        top: 80px;
-        border: 80px solid transparent;
-        border-top-color: #d1fae6;
-        z-index: -10;
-
-    }
-    
 }
 
-.react-flow__minimap-node.condition-romb{
-    width: 150px; 
+.react-flow__minimap-node.condition-romb {
+    width: 150px;
     height: 150px;
 }
 
-
 // Switcher
-.robot_switcher{
+.robot_switcher {
     display: flex;
     margin-bottom: 15px;
 
@@ -216,29 +177,237 @@ body {
         }
     }
     .robot_switcher__label {
-        font-weight: bold;
-        font-size: 15px;
-        margin-right: 10px;
+        flex-grow: 1;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
     }
 }
 
-#type-action, #type-condition, #crud-method, #crud-model, #crud-record, #crud-fields, #send-users, #send-roles, #send-channels, #bit-operator, #logic-operator, #type-edge {
-    width: 175px;
+.controller-container-input,
+#type-action,
+#type-condition,
+#crud-method,
+#crud-model,
+#crud-record,
+#crud-fields,
+#send-users,
+#send-roles,
+#send-channels,
+#bit-operator,
+#logic-operator,
+#type-edge,
+#model_id,
+#start_condition {
+    width: 100%;
 }
-
-#model_id, #start_condition {
-    width: 120px;
+.controller-container-input {
+    margin-top: 15px;
 }
 
 .controllers-wrapper {
     display: block;
+    background-color: #fff;
 }
 .settings-section-box {
     margin: 15px 0px;
 }
-.editor-bottom-panel{
+.editor-bottom-panel {
     justify-content: space-between;
 }
-.editor-bottom-panel .btn_grey{
+.editor-bottom-panel .btn_grey {
     margin-right: 10px;
 }
+
+// Select
+.control-select {
+    border-radius: 3px;
+    color: #6d7882;
+}
+.controller-container_select {
+    width: auto;
+    display: flex;
+    flex-direction: row;
+}
+.control-select__label {
+    margin-right: auto;
+    height: 27px;
+}
+.control-container_select-wrapper {
+    position: relative;
+    float: right;
+}
+
+.control-field {
+    width: 100%;
+    height: 26px;
+    padding-left: 7px;
+    padding-right: 7px;
+    font-size: 12px;
+    // color: $black;
+    line-height: 24px;
+    border-radius: 0;
+    border: 1px solid $light-gray;
+    &_number {
+        width: 80px;
+    }
+}
+.compare-control-field {
+    width: 100%;
+    height: 26px;
+    padding-left: 7px;
+    padding-right: 7px;
+    font-size: 12px;
+    // color: $black;
+    line-height: 24px;
+    border-radius: 0;
+    border: none;
+    &_number {
+        width: 80px;
+    }
+}
+.control-group {
+    .control-field {
+        &:last-child {
+            border-top-right-radius: 3px;
+            border-bottom-right-radius: 3px;
+        }
+        &:first-child {
+            border-top-left-radius: 3px;
+            border-bottom-left-radius: 3px;
+        }
+    }
+    &__append {
+        width: 27px;
+        height: 26px;
+        border-right: 1px solid $light-gray;
+        border-top: 1px solid $light-gray;
+        border-bottom: 1px solid $light-gray;
+        border-radius: 0 3px 3px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+}
+.textcontroller-responsive {
+    width: 100%;
+    margin-bottom: 5px;
+}
+.control-link {
+    border-color: #e5e6ea;
+    border-style: solid;
+    border-width: 1px 0px 1px 1px;
+    width: 80%;
+    border-radius: 3px 0px 0px 3px;
+    color: #8e94aa;
+    padding-left: 7px;
+}
+.romb {
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+    color: #fff;
+    background: $red;
+    transform: rotate(45deg);
+    padding: 16px;
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.08),
+        0px 4px 48px rgba(0, 0, 0, 0.08);
+    
+    &.selected{
+        border: 3px solid $dark-purple;
+    }
+}
+
+.condition-text,
+.robot-text {
+    font-size: 14px;
+    font-weight: bold;
+    display: block;
+    width: 100%;
+    max-height: 97px;
+    overflow: hidden;
+}
+
+.condition-type,
+.robot-type {
+    font-size: 12px;
+}
+
+.wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.romb .wrapper {
+    transform: rotate(-45deg);
+}
+
+.circle {
+    width: 180px;
+    height: 180px;
+    border-radius: 100%;
+    overflow: hidden;
+    padding: 30px;
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+    font-weight: bold;
+    background: $green;
+
+    &.selected{
+        border: 3px solid $dark-purple;    }
+
+}
+.default-node__label {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+.default-node__type {
+    padding: 6px 0 0 0;
+}
+.fl-column {
+    flex-direction: column;
+}
+.mt-10 {
+    margin-top: 10px;
+}
+.controller-label {
+    width: 25%;
+    flex-grow: inherit;
+}
+.controller-field {
+    width: 75% !important;
+    flex-grow: inherit;
+}
+
+// Egde
+.react-flow__edge-path {
+    stroke: $grey;
+    stroke-width: 2px;
+}
+.react-flow__edge.red{
+    .react-flow__edge-path{
+        stroke: $red;
+    }
+}
+.react-flow__edge.green{
+    .react-flow__edge-path{
+        stroke: $green;
+    }
+}
+
+// .condition-node-map {
+//     transform: rotate(-45deg);
+// }
+
+// .robot-node-map {
+//     border-radius: 100%;
+// }
+

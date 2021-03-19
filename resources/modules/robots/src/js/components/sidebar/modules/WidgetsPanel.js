@@ -1,6 +1,6 @@
 import * as React from "react";
 import Scrollbars from "react-custom-scrollbars";
-import store from "../../store/store"
+import store from "../../../store/store"
 
 export default class WidgetsPanel extends React.Component {
   constructor(props) {
@@ -33,7 +33,6 @@ export default class WidgetsPanel extends React.Component {
       <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
         <div className="widget-panel">
         <aside>
-          <div className="description">You can drag these nodes to the pane on the right.</div>
           {begin && <div className="flow-node" onDragStart={(event) => this.onDragStart( event, 'begin' )} draggable>
             Begin
           </div>}

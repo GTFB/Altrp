@@ -363,7 +363,7 @@ class ElementWrapper extends Component {
         onDragLeave={this.onDragLeave}
         onDragEnter={this.onDragEnter}
       >
-        <div className={overlayClasses} id="overlay" style={overlayStyles}>
+        <div className={overlayClasses} id={"overlay" + this.props.element.getId()} style={overlayStyles}>
           <div className="overlay-settings">
             <button
               className="overlay-settings__button overlay-settings__button_add "
@@ -431,7 +431,7 @@ function mapStateToProps(state) {
     dragState: state.elementDrag.dragState,
     currentModel: state.currentModel,
     currentUser: state.currentUser,
-    // controllerValue: state.controllerValue,
+    controllerValue: state.controllerValue,
     currentDataStorage: state.currentDataStorage,
     // hideTriggers: state.hideTriggers,
     currentScreen: state.currentScreen,

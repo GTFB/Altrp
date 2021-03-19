@@ -4,7 +4,7 @@ window.queryString = queryString;
 /**
  * @class Resource
  * */
-export const MAX_FILE_SIZE = 41943040;
+export const MAX_FILE_SIZE = 83886080;
 
 class Resource {
   /**
@@ -56,7 +56,7 @@ class Resource {
     }
     return fetch(url, options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.json();
     });
@@ -82,7 +82,7 @@ class Resource {
     let url = route.replace(`{id}`, id);
     return fetch(url, options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.json();
     });
@@ -102,7 +102,7 @@ class Resource {
     let url = this.getRoute();
     return fetch(url, options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.json();
     });
@@ -122,7 +122,7 @@ class Resource {
     let url = this.getRoute();
     return fetch(url, options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.text();
     });
@@ -148,7 +148,7 @@ class Resource {
     }
     return fetch(url, options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.json();
     });
@@ -193,15 +193,15 @@ class Resource {
     return fetch(this.getRoute(), options)
       .then(res => {
         if (res.ok === false) {
-          return Promise.reject(res.text(), res.status);
+          return Promise.reject({res: res.text(), status: res.status});
         }
         return res.json();
       })
-      .catch(err => {
-        console.error(err);
-        return Promise.reject(err.then(), err.status);
-        return err.then();
-      });
+      // .catch(err => {
+      //   console.error(err);
+      //   return Promise.reject(err.then(), err.status);
+      //   return err.then();
+      // });
   }
   /**
    * @param {FileList} files
@@ -238,7 +238,7 @@ class Resource {
     };
     return fetch(this.getRoute(), options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.json();
     });
@@ -261,7 +261,7 @@ class Resource {
     };
     return fetch(this.getRoute(), options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.json();
     });
@@ -334,7 +334,7 @@ class Resource {
     let url = this.getRoute() + (id ? "/" + id : "");
     return fetch(url, options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.json();
     });
@@ -352,7 +352,7 @@ class Resource {
     let url = this.getRoute() + "/options";
     return fetch(url, options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.json();
     });
@@ -383,7 +383,7 @@ class Resource {
     url = `${url}?${queryString.stringify(_params)}`;
     let res = await fetch(url, options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.json();
     });

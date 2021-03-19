@@ -157,7 +157,6 @@ class RepeaterController extends Component {
     /**
      *  если элемент другой обновим items
      */
-    console.log('componentDidUpdate')
     if(prevProps.currentElement.getId() !== this.props.currentElement.getId()){
       let items = prevProps.default || [];
       items = this.getSettings(this.props.controlId) || items;

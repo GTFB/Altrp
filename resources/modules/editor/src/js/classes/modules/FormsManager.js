@@ -66,6 +66,13 @@ class FormsManager {
     }
     return form.addField(field)
   }
+
+  /**
+   * После смену страницы нужно почистить хранилище полей
+   */
+  clearFieldsStorage(){
+    this.fieldsStorage = {};
+  }
   /**
    * Отправляет форму
    * @param {string} formId

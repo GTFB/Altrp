@@ -80,8 +80,9 @@ function getSettings(settingName){
      */
     if(this.props.controller.data.repeater.getSettings(this.props.controller.data.repeater.props.controlId)
         [this.props.controller.data.itemIndex]){
+
       return this.props.controller.data.repeater.getSettings(this.props.controller.data.repeater.props.controlId)
-          [this.props.controller.data.itemIndex][this.props.controller.data.controlId];
+          [this.props.controller.data.itemIndex][this.props.controller.data.controlId + getElementSettingsSuffix()];
     }
     /**
      * todo: пока что вернем значение по умолчанию или строку в случае бага
@@ -139,8 +140,6 @@ function _changeValue(value, updateElement = true) {
     });
   }
   if(updateElement){
-    console.log(this.props.controller)
-    console.log('value: ', value)
     this.props.controller.changeValue(value, updateElement);
   }
 

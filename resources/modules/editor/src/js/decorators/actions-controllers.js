@@ -1,3 +1,4 @@
+import {CONDITIONS_OPTIONS} from "../../../../front-app/src/js/helpers";
 import {
   CONTROLLER_NUMBER,
   CONTROLLER_REPEATER,
@@ -30,7 +31,8 @@ export function actionsControllers(element, sectionLabel = 'Actions', idPrefix =
 
   actionsRepeater.addControl('type', {
     label: 'Type',
-    type: CONTROLLER_SELECT,
+    type: CONTROLLER_SELECT2,
+    isClearable: true,
     nullable: true,
     responsive: false,
     options: [
@@ -129,6 +131,10 @@ export function actionsControllers(element, sectionLabel = 'Actions', idPrefix =
       {
         value: 'delay',
         label: 'Delay',
+      },
+      {
+        value: 'condition',
+        label: 'Condition',
       },
     ],
   });
@@ -481,18 +487,43 @@ export function actionsControllers(element, sectionLabel = 'Actions', idPrefix =
       ],
     },
   });
-  // actionsRepeater.addControl('custom_headers', {
-  //   type: CONTROLLER_TEXTAREA,
-  //   label: 'Data',
-  //   responsive: false,
-  //   dynamic: false,
-  //   description: 'param_1 | {{altrpdata.alias}}',
-  //   conditions: {
-  //     type: [
-  //       'form',
-  //     ],
-  //   },
-  // });
+
+  actionsRepeater.addControl('condition_left', {
+    type: CONTROLLER_TEXTAREA,
+    label: 'Path',
+    responsive: false,
+    dynamic: false,
+    description: 'altrpdata.alias.props',
+    conditions: {
+      type: [
+        'condition',
+      ],
+    },
+  });
+
+  actionsRepeater.addControl('compare', {
+    label: 'Compare',
+    type: CONTROLLER_SELECT,
+    responsive: false,
+    nullable: true,
+    options: CONDITIONS_OPTIONS,
+    conditions: {
+      type: 'condition',
+    },
+  });
+
+  actionsRepeater.addControl('condition_right', {
+    type: CONTROLLER_TEXTAREA,
+    label: 'Value',
+    responsive: false,
+    dynamic: false,
+    description: 'Data Template ({{altrpdata.alias.props}}) or Value',
+    conditions: {
+      type: [
+        'condition',
+      ],
+    },
+  });
 
   actionsRepeater.addControl('set_type', {
     label: 'Set Type',
@@ -568,6 +599,8 @@ export function actionsControllers(element, sectionLabel = 'Actions', idPrefix =
       ],
     },
   });
+
+
 
   actionsRepeater.addControl('popup_id', {
     type: CONTROLLER_SELECT2,
