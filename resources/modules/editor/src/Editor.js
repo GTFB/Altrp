@@ -1,7 +1,7 @@
 import "./sass/editor-style.scss";
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { hot } from "react-hot-loader";
-import { Provider } from "react-redux";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
@@ -59,17 +59,17 @@ class Editor extends Component {
     this.showWidgetsPanel = this.showWidgetsPanel.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.onClick = this.onClick.bind(this);
-    store.subscribe(this.templateStatus.bind(this));
+    // store.subscribe(this.templateStatus.bind(this));
   }
   /**
    * Метод подписчик на изменение состояния Редактора из Редакс хранилища
    * */
-  templateStatus() {
-    let templateStatus = store.getState().templateStatus.status;
-    if (templateStatus !== this.state.templateStatus) {
-      this.setState({ ...this.state, templateStatus });
-    }
-  }
+  // templateStatus() {
+  //   let templateStatus = store.getState().templateStatus.status;
+  //   if (templateStatus !== this.state.templateStatus) {
+  //     this.setState({ ...this.state, templateStatus });
+  //   }
+  // }
 
   /**
    * Инициализация модулей
@@ -172,7 +172,7 @@ class Editor extends Component {
   render() {
     let settingsActive = "";
     let templateClasses = `editor editor_${store.getState().templateData.template_type}`;
-    if (this.state.templateStatus === CONSTANTS.TEMPLATE_SAVING) {
+    if (this.props.templateStatus === CONSTANTS.TEMPLATE_SAVING) {
       templateClasses += " editor_saving";
     }
     if (
@@ -184,7 +184,6 @@ class Editor extends Component {
       settingsActive = " active";
     }
     return (
-      <Provider store={store}>
         <DndProvider backend={HTML5Backend}>
         <div className={templateClasses}
           onClick={this.onClick}
@@ -249,8 +248,13 @@ class Editor extends Component {
         </div>
         <AssetsBrowser />
         </DndProvider>
-      </Provider>
     );
+  }
+}
+
+function mapStateToProps(state) {
+  return {
+    templateStatus: state.templateStatus.status
   }
 }
 
@@ -263,7 +267,7 @@ let _export;
 if (process.env.NODE_ENV === "production") {
   _export = Editor;
 } else {
-  _export = hot(module)(Editor);
+  _export = hot(module)(connect(mapStateToProps)(Editor));
 }
 
 export default _export;
