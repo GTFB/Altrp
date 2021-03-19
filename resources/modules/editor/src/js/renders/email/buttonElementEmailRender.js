@@ -115,8 +115,6 @@ export default function buttonElementEmailRender(){
   if(settings['font_color']) {
     buttonStyles.color = settings['font_color'].colorPickedHex;
   }
-  console.log(settings)
-  console.log(buttonStyles)
   let url = _.get(settings, 'link_link.url', location.origin) || '';
   url = prepareURLForEmail(url);
   const buttonProps = {

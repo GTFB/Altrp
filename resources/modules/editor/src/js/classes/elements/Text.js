@@ -91,7 +91,6 @@ class Text extends BaseElement {
     this.addControl("text_style_column-count", {
       type: CONTROLLER_NUMBER,
       label: "Column count",
-      default: 1,
       rules: {
         "{{ELEMENT}} .altrp-text{{STATE}}": "column-count: {{VALUE}}"
       }
