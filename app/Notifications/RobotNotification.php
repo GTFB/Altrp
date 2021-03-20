@@ -182,8 +182,7 @@ class RobotNotification extends Notification implements ShouldQueue
     }
 
     /**
-     * Получение верстки шаблона по guid
-     * @param $subject
+     * Получение верстки шаблона по guid и его обработка (парсинг и динамические данные)
      * @return string|string[]
      */
     protected function templateHandler()
@@ -191,10 +190,29 @@ class RobotNotification extends Notification implements ShouldQueue
         $result = [];
         if (isset($this->node->data->props->nodeData->data->content->mail->template)) {
             $template = Template::where( 'guid', $this->node->data->props->nodeData->data->content->mail->template )->first()->html_content;
+            $template = $this->setDynamicData($template);
+
             $dom = new DOMDocument();
             $dom->loadHTML($template);
             $result = $template;
         }
          return $result;
+    }
+
+    /**
+     * Заменить динамические переменные на данные из CurrentEnvironment
+     * @param string $template
+     * @return string|string[]
+     */
+    public function setDynamicData($template)
+    {
+        preg_match_all("#\{\{(?<path>(.*?)+)\}\}#", $template, $matches);
+        $matches = $matches['path'];
+        $env = getCurrentEnv();
+
+        foreach ($matches as $path){
+            $template = str_replace("{{{$path}}}", $env->getProperty($path, 'none'), $template);
+        }
+        return $template;
     }
 }

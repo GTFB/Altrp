@@ -60,10 +60,11 @@ class CurrentEnvironment
      * Получение значения по пути в массиве даных
      * @param  string|array  $path
      * @param  mixed  $default
+     * @return mixed
      */
-    public function getProperty( $path, $default = null): void
+    public function getProperty( $path, $default = null)
     {
-        data_get( $this->data, $path, $default );
+        return data_get( $this->data, $path, $default );
     }
 
     /**
