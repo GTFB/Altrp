@@ -1,74 +1,31 @@
-import { FixedSizeList } from "react-window";
-import {scrollbarWidth} from "../../../../../../front-app/src/js/helpers";
-import Row from './Row';
+import TableBodyContent from "./TableBodyContent";
+import React from "react";
 
 const TableBody =
-    ({
-       getTableBodyProps,
-       prepareRow,
-       rows,
-       visibleColumns,
-       totalColumnsWidth,
-       moveRow,
-       settings,
-       cardTemplate,
-       page,
-     }) => {
-      const scrollBarSize = React.useMemo(() => scrollbarWidth(), []);
+    (props) => {
       const {
-        virtualized_rows,
-        virtualized_height,
-        item_size,
-        table_style_table_striple_style: isStriped
-      } = settings;
-      const RenderRow = React.useCallback(
-          ({ index, style }) => {
-            const row = page ? page[index] : rows[index];
-            prepareRow(row);
-            return <Row
-                index={index}
-                row={row}
-                visibleColumns={visibleColumns}
-                moveRow={moveRow}
-                settings={settings}
-                cardTemplate={cardTemplate}
-                {...row.getRowProps({ style })}
-            />;
-
-          }, [page,
-            rows,
-            visibleColumns,
-            settings,
-            cardTemplate,
-            moveRow,
-            prepareRow,]);
-      const itemCount = React.useMemo(() => page ? page.length : rows.length, [page, rows]);
-      if (virtualized_rows) {
-        return <div className="altrp-table-scroll-body" {...getTableBodyProps()}>
-          <FixedSizeList
-              height={Number(virtualized_height) || 0}
-              itemCount={itemCount}
-              itemSize={Number(item_size) || 0}
-              width={totalColumnsWidth + scrollBarSize}
-          >
-            {RenderRow}
-          </FixedSizeList>
-        </div>
-      }
-      return <div {...getTableBodyProps()} className={`altrp-table-tbody ${isStriped ? "altrp-table-tbody--striped" : ""}`}>
-        {(page ? page : rows).map((row, i) => {
-          prepareRow(row);
-          return <Row
-              index={i}
-              row={row}
-              visibleColumns={visibleColumns}
-              moveRow={moveRow}
-              settings={settings}
-              cardTemplate={cardTemplate}
-              {...row.getRowProps()}
-          />;
-        })}
-
+        tables_settings_for_subheading,
+        table_style_table_striple_style: isStriped,
+      } = props.settings;
+      // console.log(props.rows);
+      const contentProps = {...props};
+      contentProps.rows = React.useMemo(() => {
+        if (_.isEmpty(tables_settings_for_subheading)) {
+          return props.rows;
+        }
+        const sortedColumns = [];
+        const sortedDirections = [];
+        tables_settings_for_subheading.forEach(item=>{
+          if(item.name){
+            sortedColumns.push(item.name);
+            sortedDirections.push(item.order || 'asc')
+          }
+        });
+      }, [tables_settings_for_subheading]);
+      console.log(contentProps.rows);
+      return <div {...props.getTableBodyProps()}
+                  className={`altrp-table-tbody ${isStriped ? "altrp-table-tbody--striped" : ""}`}>
+        <TableBodyContent {...contentProps}/>
       </div>
     };
 

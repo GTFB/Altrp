@@ -10,6 +10,7 @@ use App\Http\Requests\ApiRequest;
 use App\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -375,5 +376,19 @@ class ApiController extends Controller
             ];
         }
         return response()->json($_options, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Захэшировать пароль, если он существует в атрибутах
+     * @param $table
+     * @param array $attributes
+     * @return array
+     */
+    protected function hashPasswordAttributeIfExists($table, array $attributes)
+    {
+        if (isset($attributes['password']) && $table == 'users') {
+            $attributes['password'] = Hash::make($attributes['password']);
+        }
+        return $attributes;
     }
 }

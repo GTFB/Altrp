@@ -2,7 +2,7 @@
  * Имеет интерфейс для доступы к свойствам data (любой вложенности)
  * @class AltrpModel
  */
-import {cloneDeep, get, set, has, unset, isString} from "lodash";
+import {cloneDeep, get, set, has, unset, isString, isEmpty} from "lodash";
 
 class AltrpModel {
   constructor(data = {}) {
@@ -16,7 +16,7 @@ class AltrpModel {
    */
   getData(clone = true) {
     if(clone){
-      return _.cloneDeep(this.data);
+      return cloneDeep(this.data);
     }
     return this.data;
   }
@@ -25,7 +25,7 @@ class AltrpModel {
    * Пустой ли объект
    */
   isEmpty(){
-    return _.isEmpty(this.data);
+    return isEmpty(this.data);
   }
   /**
    * Возврашает значение свойства name

@@ -191,10 +191,15 @@ class AltrpForm {
             break;
         }
       } catch (error) {
-        console.log(error);
+        let status = error.status;
+        if(error.res instanceof Promise){
+          error = error.res;
+        }
         if (error instanceof Promise) {
           error = await error.then();
           error = mbParseJSON(error, error);
+          error.data && (error = error.data);
+          status && (error.data ? (error.data.__status = status) : (error.__status = status));
           this.updateResponseStorage(error);
         }
         return { success: false, error };

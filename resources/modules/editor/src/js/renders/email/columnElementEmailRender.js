@@ -19,7 +19,6 @@ export default function columnElementEmailRender(){
       backgroundColor: _.get(settings, 'column_style_background_color.colorPickedHex', ''),
     },
   };
-  console.log(elementProps.style);
   if(isEditor()){
     columnElementTag = 'div';
     delete elementProps.width;

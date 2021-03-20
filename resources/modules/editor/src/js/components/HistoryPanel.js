@@ -3,10 +3,16 @@ import { useSelector } from "react-redux";
 import { iconsManager } from "../../../../front-app/src/js/helpers";
 import { getEditor, getTemplateDataStorage, getFactory } from "../helpers";
 import Resource from "../classes/Resource";
-import { setActiveHistoryStore, addHistoryStoreItem } from "../store/history-store/actions";
+import {
+  setActiveHistoryStore,
+  addHistoryStoreItem
+} from "../store/history-store/actions";
 
 import UserSvg from "../../../../admin/src/svgs/user.svg";
 import StartFilled from "../../../../admin/src/svgs/start-filled.svg";
+import Scrollbars from "react-custom-scrollbars";
+import { changeTemplateStatus } from "../store/template-status/actions";
+import CONSTANTS from "../consts";
 
 class HistoryPanel extends Component {
   constructor(props) {
@@ -89,70 +95,72 @@ const ActionsTabContent = () => {
 
   return (
     <div className="history-panel__content">
-      <div
-        key={-1}
-        className={
-          current === -1
-            ? "history-panel__restore-item history-panel__restore-item--active"
-            : "history-panel__restore-item"
-        }
-        onClick={handlerHistory(-1)}
-      >
-        <span className="history-panel__restore-item-title">start edit</span>
-        {current === -1
-          ? iconsManager().renderIcon("check", {
-              style: { width: 20, height: 20 },
-              className: "history-panel__restore-item-icon"
-            })
-          : ""}
-      </div>
-      {historyStore.map((item, index) => {
-        let title = "";
-        if (item.data && item.data.element) {
-          title = item.data.element.getTitle();
-        }
+      <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
+        <div
+          key={-1}
+          className={
+            current === -1
+              ? "history-panel__restore-item history-panel__restore-item--active"
+              : "history-panel__restore-item"
+          }
+          onClick={handlerHistory(-1)}
+        >
+          <span className="history-panel__restore-item-title">start edit</span>
+          {current === -1
+            ? iconsManager().renderIcon("check", {
+                style: { width: 20, height: 20 },
+                className: "history-panel__restore-item-icon"
+              })
+            : ""}
+        </div>
+        {historyStore.map((item, index) => {
+          let title = "";
+          if (item.data && item.data.element) {
+            title = item.data.element.getTitle();
+          }
 
-        let type = "";
-        switch (item.type) {
-          case "ADD":
-            type = "Added";
-            break;
-          case "EDIT":
-            type = "Edited";
-            break;
-          case "DELETE":
-            type = "Removed";
-            break;
-          case "REVISION":
-            title = "Revision";
-            break  
-        }
+          let type = "";
+          switch (item.type) {
+            case "ADD":
+              type = "Added";
+              break;
+            case "EDIT":
+              type = "Edited";
+              break;
+            case "DELETE":
+              type = "Removed";
+              break;
+            case "REVISION":
+              title = "Revision";
+              break;
+          }
 
-        let restoreItemClasses = "history-panel__restore-item ";
-        if (current === index) {
-          restoreItemClasses += "history-panel__restore-item--active ";
-        }
+          let restoreItemClasses = "history-panel__restore-item ";
+          if (current === index) {
+            restoreItemClasses += "history-panel__restore-item--active ";
+          }
 
-        return (
-          <div
-            key={index}
-            className={restoreItemClasses}
-            onClick={handlerHistory(index)}
-          >
-            <span className="history-panel__restore-item-title">{title}</span>
-            <span className="history-panel__restore-item-type">{type}</span>
-            {current === index
-              ? iconsManager().renderIcon("check", {
-                  style: { width: 20, height: 20 },
-                  className: "history-panel__restore-item-icon"
-                })
-              : ""}
-          </div>
-        );
-      })}
-      <div className="history-panel__actions-tab-subscribe">
-        Switch to Revisions tab for older version
-      </div>
+          return (
+            <div
+              key={index}
+              className={restoreItemClasses}
+              onClick={handlerHistory(index)}
+            >
+              <span className="history-panel__restore-item-title">{title}</span>
+              <span className="history-panel__restore-item-type">{type}</span>
+              {current === index
+                ? iconsManager().renderIcon("check", {
+                    style: { width: 20, height: 20 },
+                    className: "history-panel__restore-item-icon"
+                  })
+                : ""}
+            </div>
+          );
+        })}
+        <div className="history-panel__actions-tab-subscribe">
+          Switch to Revisions tab for older version
+        </div>
+      </Scrollbars>
     </div>
   );
 };
@@ -191,6 +199,8 @@ const RevisionTabContent = () => {
         new: _.cloneDeep(getTemplateDataStorage().rootElement)
       })
     );
+    
+    window.parent.appStore.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
     getEditor().showWidgetsPanel();
   };
 
@@ -219,52 +229,56 @@ const RevisionTabContent = () => {
         </div>
       </div>
       <div className="history-panel__title">Revisions</div>
-      <div className="history-panel__content">
-        {arrayRevisions.map((item, index) => {
-          let secondsAgo = (Date.now() - Date.parse(item.updated_at)) / 1000;
-          let dateString;
-          if (secondsAgo < 100) {
-            dateString = `${secondsAgo} seconds ago`;
-          } else if (secondsAgo < 6000) {
-            dateString = `${Math.floor(secondsAgo / 100)} minutes ago`;
-          } else if (secondsAgo < 144000) {
-            dateString = `${Math.floor(secondsAgo / 6000)} hours ago`;
-          } else if (secondsAgo < 4320000) {
-            dateString = `${Math.floor(secondsAgo / 144000)} days ago`;
-          } else if (secondsAgo < 51840000) {
-            dateString = `${Math.floor(secondsAgo / 4320000)} months ago`;
-          } else {
-            dateString = `${Math.floor(secondsAgo / 51840000)} years ago`;
-          }
-          let date = new Date(item.updated_at);
-          dateString += ` (${date.toLocaleString("en", {
-            month: "short"
-          })} ${date.getDate()} @ ${date.getHours()}:${
-            date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`
-          })`;
-          return (
-            <div
-              className={
-                index === currentRevision
-                  ? "history-panel__card-revision history-panel__card-revision--active"
-                  : "history-panel__card-revision"
-              }
-              onClick={handleSetCurrentRevision(index, item)}
-              key={index}
-            >
-              <UserSvg className="history-panel__card-avatar" />
-              <div className="history-panel__card-content">
-                <div className="history-panel__card-time">{dateString}</div>
-                <div className="history-panel__card-author">
-                  Revision by {item.author}
+      <div className="history-panel__content history-panel__content--revision">
+        <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
+          {arrayRevisions.map((item, index) => {
+            let secondsAgo = (Date.now() - Date.parse(item.updated_at)) / 1000;
+            let dateString;
+            if (secondsAgo < 100) {
+              dateString = `${secondsAgo} seconds ago`;
+            } else if (secondsAgo < 6000) {
+              dateString = `${Math.floor(secondsAgo / 100)} minutes ago`;
+            } else if (secondsAgo < 144000) {
+              dateString = `${Math.floor(secondsAgo / 6000)} hours ago`;
+            } else if (secondsAgo < 4320000) {
+              dateString = `${Math.floor(secondsAgo / 144000)} days ago`;
+            } else if (secondsAgo < 51840000) {
+              dateString = `${Math.floor(secondsAgo / 4320000)} months ago`;
+            } else {
+              dateString = `${Math.floor(secondsAgo / 51840000)} years ago`;
+            }
+            let date = new Date(item.updated_at);
+            dateString += ` (${date.toLocaleString("en", {
+              month: "short"
+            })} ${date.getDate()} @ ${date.getHours()}:${
+              date.getMinutes() > 9
+                ? date.getMinutes()
+                : `0${date.getMinutes()}`
+            })`;
+            return (
+              <div
+                className={
+                  index === currentRevision
+                    ? "history-panel__card-revision history-panel__card-revision--active"
+                    : "history-panel__card-revision"
+                }
+                onClick={handleSetCurrentRevision(index, item)}
+                key={index}
+              >
+                <UserSvg className="history-panel__card-avatar" />
+                <div className="history-panel__card-content">
+                  <div className="history-panel__card-time">{dateString}</div>
+                  <div className="history-panel__card-author">
+                    Revision by {item.author}
+                  </div>
                 </div>
+                {index === currentRevision && (
+                  <StartFilled className="history-panel__card-icon" />
+                )}
               </div>
-              {index === currentRevision && (
-                <StartFilled className="history-panel__card-icon" />
-              )}
-            </div>
-          );
-        })}
+            );
+          })}
+        </Scrollbars>
       </div>
     </React.Fragment>
   );

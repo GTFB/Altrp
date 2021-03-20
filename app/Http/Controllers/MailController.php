@@ -9,6 +9,7 @@ use App\Http\Requests\SendMailRequest;
 use App\Http\Requests\WriteMailSettingsRequest;
 use App\Mail;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Jackiedo\DotenvEditor\Facades\DotenvEditor;
@@ -104,8 +105,8 @@ class MailController extends Controller
               if( $attachments ){
                 $attachments = explode( "\n", $attachments );
                 foreach ( $attachments as $attachment ) {
-                  if( File::exists( $attachment ) ){
-                    $message->attach( $attachment );
+                  if( Storage::exists( $attachment ) ){
+                    $message->attach( Storage::path( $attachment ) );
                   }
                 }
               }
@@ -115,7 +116,7 @@ class MailController extends Controller
         $mail->save();
         return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
       }
-
+      data_get('', '');
       return response()->json(['success' => true, 'message' => 'Message sent!'], 200);
     }
 
