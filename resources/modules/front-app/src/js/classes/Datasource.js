@@ -68,7 +68,7 @@ class Datasource extends AltrpModel{
         if(excludePath && right.indexOf(excludePath) === 0){
           right = right;
         } else {
-          right = getDataByPath(right) ? getDataByPath(right) : right;
+          right = getDataByPath(right);
         }
 
       }

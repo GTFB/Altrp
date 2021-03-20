@@ -39,7 +39,7 @@ export default function imageElementEmailRender(){
   if(settings['aspect_ratio_off']) {
     wrapperStyles.position =  "relative";
   } else {
-    wrapperStyles.position = "absolute";
+    wrapperStyles.position = "static";
   }
 
   if(settings['height_size']) {
@@ -54,9 +54,9 @@ export default function imageElementEmailRender(){
     wrapperStyles.alignContent = settings['image_style_alignment'];
   }
 
-  if(settings['image_style_text_shadow']) {
-    wrapperStyles.filter = `blur(${settings['image_style_text_shadow'].blur}) brightness(${settings['image_style_text_shadow'].brightness}) contrast(${settings['image_style_text_shadow'].contrast}) hue-rotate(${settings['image_style_text_shadow'].hue}) saturation(${settings['image_style_text_shadow'].saturate})`
-  }
+  // if(settings['image_style_text_shadow']) {
+  //   wrapperStyles.filter = `blur(${settings['image_style_text_shadow'].blur}) brightness(${settings['image_style_text_shadow'].brightness}) contrast(${settings['image_style_text_shadow'].contrast}) hue-rotate(${settings['image_style_text_shadow'].hue}) saturation(${settings['image_style_text_shadow'].saturate})`
+  // }
 
   if(settings['background_color']) {
     wrapperStyles.backgroundColor = settings['background_color'].colorPickedHex;
@@ -66,8 +66,8 @@ export default function imageElementEmailRender(){
     wrapperStyles.backgroundImage = settings['gradient'].value.slice(0, -1);
   }
 
-  if(settings['background_image'].url) {
-    wrapperStyles.backgroundImage = `url(${settings['background_image'].url})`;
+  if(_.get(settings, 'background_image.url')) {
+    wrapperStyles.backgroundImage = `url(${prepareURLForEmail(settings['background_image'].url)})`;
   }
 
   if(settings['background_position']) {
@@ -105,9 +105,17 @@ export default function imageElementEmailRender(){
     wrapperStyles.borderRadius = settings['border_radius'].size + settings['border_radius'].unit;
   }
 
+  if(settings['image_style_alignment']) {
+    wrapperStyles.justifyContent = settings['image_style_alignment'];
+    wrapperStyles.display = "flex";
+  }
   const wrapperProps = {
     style: wrapperStyles,
   };
+
+  if(settings['aspect_ratio_size']) {
+    wrapperStyles.paddingTop = settings['aspect_ratio_size'] + '%';
+  }
   let model = element.hasCardModel()
       ? element.getCardModel()
       : this.props.currentModel;

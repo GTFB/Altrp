@@ -96,6 +96,7 @@ class Styles extends Component {
   render(){
     let elementStyles = _.uniqBy(this.state.elementStyles, 'elementId');
     return <div className="styles-container" id="styles-container" ref={this.stylesContainer}>
+      {! isEditor() ? <link rel="stylesheet" href={'/modules/front-app/front-app.css?' + altrp.version} /> : null}
       {elementStyles.map(elementStyle => {
         return<style data-styles-id={elementStyle.elementId}
                      id={`altrp-styles${elementStyle.elementId}`}

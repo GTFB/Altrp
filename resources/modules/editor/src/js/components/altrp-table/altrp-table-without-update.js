@@ -622,12 +622,16 @@ function AltrpTableWithoutUpdate(
   const originalSelectedRows = React.useMemo(() => flatRows(selectedFlatRows), [selectedFlatRows]);
   const selectedIds = React.useMemo(() => flatRows(selectedFlatRows, 'id'), [selectedFlatRows]);
   React.useEffect(() => {
-    if (selected_storage) {
+    if (selected_storage &&
+        ! _.isEqual(altrpHelpers.getDataByPath(selected_storage), originalSelectedRows) &&
+        ! isEditor()) {
       setDataByPath(selected_storage, originalSelectedRows);
     }
   }, [selectedFlatRows]);
   React.useEffect(() => {
-    if (ids_storage) {
+    if (ids_storage &&
+        ! _.isEqual(altrpHelpers.getDataByPath(ids_storage), selectedIds) &&
+        ! isEditor()) {
       setDataByPath(ids_storage, selectedIds);
     }
   }, [selectedFlatRows]);

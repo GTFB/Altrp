@@ -172,7 +172,7 @@ function getContent(settingName, returnRaw = false) {
         _.isString(content) && (content = content.replace(/NaN/g, ''));
         return content || '';
       } catch(e){
-        console.error(e);
+        console.error('Evaluate error in getContent for input default value' + e.message);
         return '';
       } finally {
       }
