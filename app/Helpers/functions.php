@@ -467,6 +467,6 @@ function isAdmin(){
 }
 
 function getCurrentEnv(){
-    $item = App\Helpers\Classes\CurrentEnvironment::get_instance();
+    $item = App\Helpers\Classes\CurrentEnvironment::getInstance();
     return $item;
 }

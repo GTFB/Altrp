@@ -57,7 +57,7 @@ class MailController extends Controller
       $from_name = $request->get('name') ? $request->get('name') : config('mail.from.name');
       $data['email'] = $from_email;
       $data['name'] = $from_name;
-      $adminEmail = config('mail.username');
+      $adminEmail = config('mail.from.address');
       $mail = new Mail($data);
       try {
           $mail->save();
@@ -91,7 +91,7 @@ class MailController extends Controller
       $data['email'] = $to_email;
       $data['name'] = $from_name;
       $data['html'] = $html;
-      $adminEmail = config('mail.username');
+      $adminEmail = config('mail.from.address');
       $mail = new Mail($data);
       try {
           $mail->save();
@@ -167,12 +167,12 @@ class MailController extends Controller
         // if(empty($tempKey)) {
         //     try{
         //         DotenvEditor::setKey( $item,  );
-        //         DotenvEditor::save();          
+        //         DotenvEditor::save();
         //     } catch (Exception $e){
         //         return false;
-        //     }          
+        //     }
         // }
-        
+
 
         // dump($request);
 

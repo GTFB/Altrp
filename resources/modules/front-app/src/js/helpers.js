@@ -1455,7 +1455,7 @@ export function storeWidgetState(widgetId, state = null) {
   return saveDataToLocalStorage(path, state);
 }
 /**
- * абирает состояние из localStorage
+ * Забирает состояние из localStorage
  * Для виджетов ,которые могут сохранять состояния при смене страниц
  * @param {string} widgetId
  * @param {*} _default
@@ -1569,7 +1569,7 @@ export function isAltrpTestMode() {
 }
 
 /**
- * лучайная строка
+ * случайная строка
  * @return {string}
  */
 export function altrpRandomId() {
@@ -1796,12 +1796,12 @@ export function prepareURLForEmail(url, context = null){
 export function parseIDFromYoutubeURL(youtubeURL) {
   const startIndex = youtubeURL.indexOf('v=') + 2;
   const endIndex = youtubeURL.indexOf('&', startIndex);
-  
-  return youtubeURL.substring(startIndex, endIndex);    
+
+  return youtubeURL.substring(startIndex, endIndex);
 }
 
 /**
- * 
+ *
  * @param {{}} context
  * @return {{}}
  */
