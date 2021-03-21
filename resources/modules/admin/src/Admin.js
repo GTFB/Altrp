@@ -102,12 +102,12 @@ class Admin extends Component {
       .then(({ options }) => this.setState({ models: options }));
 
     this.getConnect();
-  }  
+  }
 
   // Подключение вебсокетов
   async getConnect() {
     // get current user
-    let currentUser = await new Resource({ route: "/ajax/current-user" }).getAll();    
+    let currentUser = await new Resource({ route: "/ajax/current-user" }).getAll();
     currentUser = currentUser.data;
     store.dispatch(changeCurrentUser(currentUser));
 
@@ -115,7 +115,7 @@ class Admin extends Component {
     let pusherKey = await new Resource({ route: "/admin/ajax/settings" }).get("pusher_app_key");
     let websocketsPort = await new Resource({ route: "/admin/ajax/settings" }).get("websockets_port");
     let websocketsHost = await new Resource({ route: "/admin/ajax/settings" }).get("pusher_host");
-    
+
     pusherKey = pusherKey?.pusher_app_key;
     websocketsPort = websocketsPort?.websockets_port;
     websocketsHost = websocketsHost?.pusher_host;
@@ -127,11 +127,10 @@ class Admin extends Component {
         window.Echo = new Echo({
           broadcaster: "pusher",
           key: pusherKey,
-          wsHost: window.location.hostname,
+          wsHost: websocketsHost,
           wsPort: websocketsPort,
           forceTLS: false,
           disableStats: true,
-          host: websocketsHost,
         });
         console.log("Вебсокеты включены");
 
@@ -147,7 +146,7 @@ class Admin extends Component {
       window.Echo.private("App.User." + currentUser.id)
       .notification((notification) => {
         console.log(notification);
-      });  
+      });
 
     } else {
      console.log("Вебсокеты выключены");
@@ -410,7 +409,7 @@ class Admin extends Component {
             </Route>
             <Route path="/admin/assets">
               <Assets />
-            </Route>                        
+            </Route>
             <Route path="/admin/dashboard">
               <Dashboard />
             </Route>

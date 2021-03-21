@@ -69,15 +69,6 @@ export default class WidgetsPanel extends React.Component {
             <RobotIcon/>
             <p>Robot</p>
           </div>
-          {/*<div className="react-flow__node-output" onDragStart={(event) => this.onDragStart( event, 'condition' )} draggable>*/}
-          {/*  Condition*/}
-          {/*</div>*/}
-          {/*<div className="react-flow__node-input" onDragStart={(event) => this.onDragStart( event, 'action' )} draggable>*/}
-          {/*  Action*/}
-          {/*</div>*/}
-          {/*<div className="react-flow__node-input" onDragStart={(event) => this.onDragStart( event, 'robot' )} draggable>*/}
-          {/*  Robot*/}
-          {/*</div>*/}
           {end && <div className="robot-widget" onDragStart={(event) => this.onDragStart( event, 'end' )} draggable>
             <FinishIcon/>
             <p>Finish</p>
