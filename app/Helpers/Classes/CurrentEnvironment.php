@@ -4,7 +4,6 @@
 namespace App\Helpers\Classes;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 
 
 class CurrentEnvironment
@@ -15,8 +14,8 @@ class CurrentEnvironment
     private function __construct()
     {
         $this->setProperty('altrpuser', Auth::user());
-        $this->setProperty('altrprequest', new Request());
-        dump($this->data);
+        $this->setProperty('altrprequest', request());
+//        dump($this->data);
     }
 
     /**

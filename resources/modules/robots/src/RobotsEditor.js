@@ -137,8 +137,7 @@ class RobotsEditor extends Component {
 
   // Получение id нового элемента (ноды)
   getId() {
-    const time = new Date().getTime();
-    return time;
+    return new Date().getTime();
   }
 
   // Получение data нового элемента (ноды)
@@ -153,7 +152,7 @@ class RobotsEditor extends Component {
         };
         break;
       case "condition":
-        data = {  
+        data = {
           "type": "condition",
           "nodeData": {
               "type": "",
@@ -163,7 +162,7 @@ class RobotsEditor extends Component {
         };
         break;
       case "robot":
-        data = {  
+        data = {
           "type": "robot",
           "nodeData": {
               "id": "",
