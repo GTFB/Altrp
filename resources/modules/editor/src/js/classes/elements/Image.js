@@ -57,12 +57,14 @@ class Image extends BaseElement {
     });
 
     this.addControl('lightbox_switch', {
+      hideOnEmail: true,
       type: CONTROLLER_SWITCHER,
       label: 'Lightbox',
       default: false
     });
 
     this.addControl('cursor_pointer', {
+      hideOnEmail: true,
       type: CONTROLLER_SWITCHER,
       label: 'Cursor pointer',
       default: false
@@ -151,6 +153,7 @@ class Image extends BaseElement {
     });
 
     this.addControl('position_z_index', {
+      hideOnEmail: true,
       type: CONTROLLER_NUMBER,
       label: 'Z-index',
       default: 0,
@@ -172,6 +175,7 @@ class Image extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('overlay_section', {
+      hideOnEmail: true,
       tab: TAB_STYLE,
       label: 'Overlay',
     });
@@ -319,6 +323,7 @@ class Image extends BaseElement {
     });
 
     this.addControl('image_style_text_shadow', {
+      hideOnEmail: true,
       type: CONTROLLER_FILTERS,
       label: 'filters',
       default: {
@@ -361,6 +366,7 @@ class Image extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('background_section', {
+      hideOnEmail: true,
       tab: TAB_STYLE,
       label: 'Background'
     });
@@ -658,6 +664,7 @@ class Image extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('creative_hover_section', {
+      hideOnEmail: true,
       tab: TAB_STYLE,
       label: 'Creative Hover'
     });

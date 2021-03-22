@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail;
+namespace App\Mails;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -17,7 +17,7 @@ class SendEmail extends Mailable implements ShouldQueue
      * @var Data
      */
     public $data;
-    
+
     /**
      * Create a new message instance.
      *

@@ -19,11 +19,12 @@ window.elementDecorator = frontDecorate;
   await import(
       "../../editor/src/js/classes/modules/FormsManager.js"
       );
+
+  window.altrpHelpers = await import('./js/helpers');
   /**
    * Библиотека для работы с датами/временем
    * @type {{iconsManager?, recurseCount?, getConverter?, setTitle?, mbParseJSON?, getTopPosition?, getComponentByElementId?, elementsToPdf?, extractPathFromString?, parseOptionsFromSettings?, isEditor?, getObjectByPrefix?, isElementTopInViewport?, prepareContext?, getWindowWidth?, startOfWeek?, storeWidgetState?, prepareURLForEmail?, altrpRandomId?, getHTMLElementById?, getDataFromLocalStorage?, setDataByPath?, conditionsChecker?, dataToXLS?, isAltrpTestMode?, parseParamsFromString?, scrollbarWidth?, startOfYear?, altrpCompare?, parseURLTemplate?, sortOptions?, renderAssetIcon?, dataFromTable?, getWidgetState?, generateButtonsArray?, getDataByPath?, parseIDFromYoutubeURL?, redirect?, isValueMatchMask?, getResponsiveSetting?, printElements?, cutString?, getMediaSettingsByName?, getTimeValue?, isJSON?, delay?, CONDITIONS_OPTIONS?, getMediaQueryByName?, getCurrentStoreState?, altrpLogin?, renderAsset?, convertData?, clearEmptyProps?, replaceContentWithData?, dataToCSV?, renderIcon?, scrollToElement?, setAltrpIndex?, startOfMonth?, getRoutes?, validateEmail?, getCurrentBreakpoint?, renderFontLink?, altrpLogout?, saveDataToLocalStorage?, valueReplacement?, getAppContext?}|*}
    */
-  window.altrpHelpers = await import('./js/helpers');
   window.altrpHelpers.moment = (await import('moment')).default;
   await import('moment/locale/ru');
   window.altrpHelpers.momentModule = (await import('moment'));

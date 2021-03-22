@@ -3737,11 +3737,6 @@ class Table extends BaseElement {
       label: 'Border Color',
     });
 
-    groupsRepeater.addControl('name', {
-      label: 'Name',
-      dynamic: false,
-    });
-
     this.addControl('tables_groups', {
       label: 'Groups',
       type: CONTROLLER_REPEATER,
@@ -3754,15 +3749,44 @@ class Table extends BaseElement {
 
     //<editor-fold description=group_style_settings>
 
-    // this.startControlSection('group_style_settings', {
-    //   label: 'Groups Subheading Styles',
-    //   hideOnEmail: true,
-    //   conditions: {
-    //     table_2_0: true,
-    //   },
-    // });
-    //
-    // this.endControlSection();
+    this.startControlSection('group_subheading_settings', {
+      label: 'Groups Subheading Settings',
+      hideOnEmail: true,
+      conditions: {
+        table_2_0: true,
+      },
+    });
+
+    const groupsSettingsRepeater = new Repeater();
+
+    groupsSettingsRepeater.addControl('name', {
+      label: 'Column Name',
+      dynamic: false,
+    });
+
+    groupsSettingsRepeater.addControl('order', {
+      label: 'Order',
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          label: 'ASC',
+          value: 'ASC',
+        },
+        {
+          label: 'DESC',
+          value: 'DESC',
+        },
+      ],
+      dynamic: false,
+    });
+
+    this.addControl('tables_settings_for_subheading', {
+      label: 'Groups',
+      type: CONTROLLER_REPEATER,
+      fields: groupsSettingsRepeater.getControls(),
+    });
+
+    this.endControlSection();
     //</editor-fold>
 
     advancedTabControllers(this);

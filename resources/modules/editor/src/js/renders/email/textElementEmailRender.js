@@ -66,7 +66,9 @@ export default function textElementEmailRender(){
     // wrapperStyles.borderRadius = `${borderRadiusTop} ${borderRadiusRight} ${borderRadiusBottom} ${borderRadiusLeft}`;
     wrapperStyles.borderRadius = settings['text_style_border_radius'].size + settings['text_style_border_radius'].unit;
   }
-
+  if(settings['text_style_column-count'] && settings['text_style_column-count'] !== 1) {
+    wrapperStyles.columns = `${settings['text_style_column-count']} ${settings['text_style_column-gap'].size}${settings['text_style_column-gap'].unit}`
+  }
   let textContent = this.getContent("text");
   const wrapperProps = {
     style: wrapperStyles,
@@ -77,12 +79,14 @@ export default function textElementEmailRender(){
 
   if (this.props.CKEditor) {
     return (
+      <div style={wrapperStyles}>
         <this.props.CKEditor
             changeText={this.changeText}
             text={textContent}
             readOnly={isEditor()}
             textWidget={true}
         />
+      </div>
     );
   }
   return <div {...wrapperProps} />;

@@ -218,7 +218,7 @@ export function advancedTabControllers(element) {
       rules: {
         'div{{ELEMENT}}.altrp-element': 'width: {{SIZE}}{{UNIT}};',
       },
-      condition: {
+      conditions: {
         'positioning_width_type': 'custom',
       }
     });

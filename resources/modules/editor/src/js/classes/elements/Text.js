@@ -38,6 +38,7 @@ class Text extends BaseElement {
       return;
     }
     this.startControlSection("text_editor", {
+      hideOnEmail: true,
       tab: TAB_CONTENT,
       label: "Text editor"
     });
@@ -65,6 +66,7 @@ class Text extends BaseElement {
     this.endControlSection();
 
     this.startControlSection("text_settings", {
+      hideOnEmail: true,
       tab: TAB_CONTENT,
       label: "Text Settings"
     });
@@ -89,7 +91,6 @@ class Text extends BaseElement {
     this.addControl("text_style_column-count", {
       type: CONTROLLER_NUMBER,
       label: "Column count",
-      default: 1,
       rules: {
         "{{ELEMENT}} .altrp-text{{STATE}}": "column-count: {{VALUE}}"
       }
@@ -160,6 +161,7 @@ class Text extends BaseElement {
     });
 
     this.addControl("text_position_z_index", {
+      hideOnEmail: true,
       type: CONTROLLER_NUMBER,
       label: "Z-index",
       default: 0,
@@ -198,6 +200,7 @@ class Text extends BaseElement {
     });
 
     this.addControl("text_style_background_opacity", {
+      hideOnEmail: true,
       type: CONTROLLER_SLIDER,
       label: "Opacity",
       // default: {

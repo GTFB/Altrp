@@ -50,25 +50,26 @@ export default class Action extends Component{
                         "message": ""
                       },
                       "mail": {
+                        "from": "",
                         "subject": "",
-                        "message": ""
+                        "template": ""
                       }
                   }
-    
+
                 }
               };
               break;
         }
-        
+
         store.dispatch(setUpdatedNode(node));
       }
-    
+
 
     render(){
         const actionTypeOptions = [
             {label:'Send Notification', value: 'send_notification'},
             {label:'CRUD', value: 'crud'}
-        ];      
+        ];
         const typeData = this.props.selectNode.data?.props?.nodeData?.type ?? '';
 
         return <div>

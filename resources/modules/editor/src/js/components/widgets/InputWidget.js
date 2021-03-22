@@ -41,10 +41,14 @@ const AltrpFieldContainer = styled.div`
 class InputWidget extends Component {
   constructor(props) {
     super(props);
+    props.element.component = this;
+    if (window.elementDecorator) {
+      window.elementDecorator(this);
+    }
     this.onChange = this.onChange.bind(this);
 
     this.defaultValue =
-      props.element.getSettings().content_default_value ||
+        this.getContent("content_default_value") ||
       (this.valueMustArray() ? [] : "");
     if(this.valueMustArray() && ! _.isArray(this.defaultValue)){
       this.defaultValue = [];
@@ -58,14 +62,10 @@ class InputWidget extends Component {
       paramsForUpdate: null
     };
     this.altrpSelectRef = React.createRef();
-    if (props.element.getSettings("content_default_value")) {
+    if (this.getContent("content_default_value")) {
       this.dispatchFieldValueToStore(
-        props.element.getSettings("content_default_value")
+          this.getContent("content_default_value")
       );
-    }
-    props.element.component = this;
-    if (window.elementDecorator) {
-      window.elementDecorator(this);
     }
   }
 
@@ -230,7 +230,7 @@ class InputWidget extends Component {
       return `/ajax/models/${url}_options`;
     }
     if (url.indexOf("{{") !== -1) {
-      url = replaceContentWithData();
+      url = replaceContentWithData(url);
     }
     return url;
   }
@@ -422,7 +422,7 @@ class InputWidget extends Component {
         }
       );
     } catch (e) {
-      console.error(e, this.props.element.getId());
+      console.error('Evaluate error in Input' + e.message, this.props.element.getId());
     }
   }
 

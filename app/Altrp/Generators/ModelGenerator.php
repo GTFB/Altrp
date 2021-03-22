@@ -513,10 +513,17 @@ class ModelGenerator extends AppGenerator
             throw new TableNotFoundException("Table not found", 500);
         }
         $columns = $this->getColumns($table);
-        if (!$columns || $columns->isEmpty()) return null;
+
+        if ((!$columns || $columns->isEmpty()) && !$this->model->parent) return null;
 //        $relations = $this->getEditableColumnsFromRelations();
         $relations = [];
         $columnsList = $this->getColumnsList($columns);
+
+        if ($this->model->parent) {
+            $namespace = '\\' . $this->model->parent->namespace;
+            $parentModel = new $namespace;
+            $columnsList = array_merge($columnsList, $parentModel->getFillable());
+        }
 //        $relationsList = $this->getColumnsList($relations, 'foreign_key');
 //        $allColumns = array_merge($columnsList, $relationsList);
         return '\'' . implode("','", array_merge( $columnsList, $relations)) . '\'';

@@ -127,7 +127,7 @@ const Row = ({ row,
   //     </tr>
   // );
   const rowStyles = React.useMemo(() => {
-    if (!resize_columns && !virtualized_rows) {
+    if (! resize_columns && ! virtualized_rows) {
       return {};
     }
     return style;

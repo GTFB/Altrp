@@ -75,6 +75,7 @@ class RobotsService
         $this->robot = $robot;
         $this->robotChartList = json_decode($robot->chart);
         $this->appointChartItems();
+        getCurrentEnv();
         return $this;
     }
 
