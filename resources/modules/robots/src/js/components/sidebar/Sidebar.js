@@ -8,6 +8,7 @@ import LogoIcon from "../../../../../editor/src/svgs/logo.svg";
 import DotsIcon from "../../../../../editor/src/svgs/dots.svg";
 import HamburgerIcon from "../../../../../editor/src/svgs/hamburger.svg";
 import SettingsIcon from "../../../../../editor/src/svgs/settings.svg";
+import {renderAsset} from "../../../../../front-app/src/js/helpers";
 
 export default class Sidebar extends React.Component {
   constructor(props) {
