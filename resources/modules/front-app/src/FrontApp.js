@@ -42,7 +42,6 @@ class FrontApp extends Component {
     websocketsPort = websocketsPort?.websockets_port;
     websocketsHost = websocketsHost?.pusher_host;
 
-
     // Проверка наличия ключа и порта
     if(pusherKey && websocketsPort){
       try {

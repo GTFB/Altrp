@@ -39,8 +39,8 @@ export default class SelectedPanel extends React.Component {
     // вызов принудительного рендера flow
     const elements = store.getState()?.robotSettingsData;
     const newElements = _.cloneDeep(elements);
-    store.dispatch(setRobotSettingsData(newElements));        
-    
+    store.dispatch(setRobotSettingsData(newElements));
+
   }
 
   changeSelectEdge(e, type){
@@ -52,7 +52,7 @@ export default class SelectedPanel extends React.Component {
   toggleChevron(type) {
     console.log(type);
   }
- 
+
   render() {
 
     return (
@@ -91,7 +91,10 @@ export default class SelectedPanel extends React.Component {
                       </div>
                     </div>
 
-                      {(this.props.selectNode?.type === "action") && <Action
+                      {(this.props.selectNode?.type === "documentAction" ||
+                        this.props.selectNode?.type === "crudAction" ||
+                        this.props.selectNode?.type === "apiAction" ||
+                        this.props.selectNode?.type === "messageAction") && <Action
                                                                         activeSection={this.state.activeSection}
                                                                         toggleChevron={this.toggleChevron}
                                                                         robot={ this.props.robot }
@@ -104,7 +107,7 @@ export default class SelectedPanel extends React.Component {
                       {(this.props.selectNode?.type === "robot") && <Robot
                                                                       robot={ this.props.robot }
                                                                       selectNode={this.props.selectNode || []}
-                                                                    />}                     
+                                                                    />}
 
                   </div> ) : (<div className="controllers-wrapper">
                     Select a node or edge to edit

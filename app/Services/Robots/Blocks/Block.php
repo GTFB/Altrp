@@ -62,7 +62,12 @@ class Block
 
         $currentNodeEdgesSource = $this->getCurrentNodeEdgesSource($currentNode, $currentNodeEdgesSources);
 
-        if ($currentNode->data->props->type == 'action') {
+        if (
+            $currentNode->data->props->type === 'documentAction' ||
+            $currentNode->data->props->type === 'crudAction' ||
+            $currentNode->data->props->type === 'apiAction' ||
+            $currentNode->data->props->type === 'messageAction'
+        ) {
             $this->doAction($currentNode);
         } elseif ($currentNode->data->props->type == 'robot') {
             $this->runRobot($currentNode);
@@ -238,6 +243,6 @@ class Block
      */
     public function isEnd()
     {
-        return self::$nextNode->data->props->type == 'end';
+        return self::$nextNode->data->props->type == 'finish';
     }
 }

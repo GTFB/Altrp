@@ -75,7 +75,7 @@ class RobotsService
         $this->robot = $robot;
         $this->robotChartList = json_decode($robot->chart);
         $this->appointChartItems();
-        getCurrentEnv();
+        $env = getCurrentEnv();
         return $this;
     }
 
@@ -95,7 +95,7 @@ class RobotsService
         $nodes = [];
         $edges = [];
         foreach ($this->robotChartList as $item) {
-            if (isset($item->data->props)) {
+            if (isset($item->data->type) && $item->data->type === 'node') {
                 $nodes[] = $item;
             } else {
                 $edges[] = $item;
@@ -103,7 +103,6 @@ class RobotsService
         }
         $this->nodes = $nodes;
         $this->edges = $edges;
-
     }
 
     /**
@@ -139,6 +138,6 @@ class RobotsService
      */
     protected function getStartBlock($modelData)
     {
-        return new Block('begin', $this->edges, $this->nodes, $modelData);
+        return new Block('start', $this->edges, $this->nodes, $modelData);
     }
 }

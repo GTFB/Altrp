@@ -35,13 +35,13 @@ export default class WidgetsPanel extends React.Component {
   }
 
   render() {
-    let begin = this.issetNode('begin');
-    let end = this.issetNode('end');
+    let start = this.issetNode('start');
+    let finish = this.issetNode('finish');
 
   return <div className="widget-panel-wrapper">
       <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
         <div className="widget-panel">
-          {begin && <div className="robot-widget" onDragStart={(event) => this.onDragStart( event, 'begin' )} draggable>
+          {start && <div className="robot-widget" onDragStart={(event) => this.onDragStart( event, 'start' )} draggable>
             <StartIcon/>
             <p>Start</p>
           </div>}
@@ -49,19 +49,19 @@ export default class WidgetsPanel extends React.Component {
             <ConditionIcon/>
             <p>Condition</p>
           </div>
-          <div className="robot-widget" onDragStart={(event) => this.onDragStart( event, 'document-action' )} draggable>
+          <div className="robot-widget" onDragStart={(event) => this.onDragStart( event, 'documentAction' )} draggable>
             <DocumentIcon/>
             <p>Document</p>
           </div>
-          <div className="robot-widget" onDragStart={(event) => this.onDragStart( event, 'crud-action' )} draggable>
+          <div className="robot-widget" onDragStart={(event) => this.onDragStart( event, 'crudAction' )} draggable>
             <CrudIcon/>
             <p>CRUD</p>
           </div>
-          <div className="robot-widget" onDragStart={(event) => this.onDragStart( event, 'api-action' )} draggable>
+          <div className="robot-widget" onDragStart={(event) => this.onDragStart( event, 'apiAction' )} draggable>
             <ApiIcon/>
             <p>API</p>
           </div>
-          <div className="robot-widget" onDragStart={(event) => this.onDragStart( event, 'message-action' )} draggable>
+          <div className="robot-widget" onDragStart={(event) => this.onDragStart( event, 'messageAction' )} draggable>
             <MessageIcon/>
             <p>Message</p>
           </div>
@@ -69,7 +69,7 @@ export default class WidgetsPanel extends React.Component {
             <RobotIcon/>
             <p>Robot</p>
           </div>
-          {end && <div className="robot-widget" onDragStart={(event) => this.onDragStart( event, 'end' )} draggable>
+          {finish && <div className="robot-widget" onDragStart={(event) => this.onDragStart( event, 'finish' )} draggable>
             <FinishIcon/>
             <p>Finish</p>
           </div>}

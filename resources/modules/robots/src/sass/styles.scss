@@ -104,8 +104,134 @@ body {
     }
 }
 
-.flow-node-condition {
+// Flow Nodes
+.flow-node-begend {
+    padding: 10px;
+    border-radius: 45px;
+    width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 12px;
+    color: #222;
+    text-align: center;
+    border: 1px solid $dark-purple;
+    &.selected {
+        border: 3px solid $dark-purple;
+    }
 }
+.flow-node-condition {
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+    color: $dark-purple;
+    transform: rotate(45deg);
+    padding: 16px;
+    text-align: center;
+    border: 1px solid $dark-purple;
+    border-radius: 5px;
+    //box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.08),
+    //0px 4px 48px rgba(0, 0, 0, 0.08);
+
+    &.selected{
+        border: 3px solid $dark-purple;
+    }
+    .wrapper {
+        transform: rotate(-45deg);
+    }
+}
+.flow-node-robot {
+    width: 180px;
+    height: 180px;
+    border-radius: 100%;
+    padding: 30px;
+    color: $dark-purple;
+    font-size: 14px;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid $dark-purple;
+
+    &.selected {
+        border: 3px solid $dark-purple;
+    }
+}
+.flow-node-document {
+    width: 0;
+    height: 0;
+    border-top: 50px solid transparent;
+    border-left: 100px solid red;
+    border-bottom: 50px solid transparent;
+    &.selected{
+        border: 3px solid $dark-purple;
+    }
+}
+.flow-node-crud {
+    padding: 10px;
+    border-radius: 5px;
+    width: 200px;
+    text-overflow: ellipsis;
+    font-size: 12px;
+    color: #222;
+    text-align: center;
+    border: 1px solid $dark-purple;
+    &.selected {
+        border: 3px solid $dark-purple;
+    }
+}
+.flow-node-api {
+    border-radius: 5px;
+    padding: 5px 10px;
+    width: 200px;
+    text-overflow: ellipsis;
+    font-size: 12px;
+    color: #222;
+    text-align: center;
+    border: 1px solid $dark-purple;
+    -webkit-transform: perspective(100px) rotateX(10deg);
+    transform: perspective(100px) rotateX(10deg);
+
+    &.selected{
+        border: 3px solid $dark-purple;
+    }
+
+    .api-text {
+        transform: perspective(30px) rotateX(-2deg);
+        font-size: 14px;
+        font-weight: bold;
+        display: block;
+        width: 100%;
+        max-height: 97px;
+        overflow: hidden;
+    }
+    .api-type {
+        font-size: 12px;
+        transform: perspective(30px) rotateX(-2deg);
+    }
+
+}
+.flow-node-message {
+    width: 0;
+    height: 0;
+    border-top: 50px solid transparent;
+    border-left: 100px solid red;
+    border-bottom: 50px solid transparent;
+    &.selected{
+        border: 3px solid $dark-purple;
+    }
+}
+.condition-text,
+.robot-text {
+    font-size: 14px;
+    font-weight: bold;
+    display: block;
+    width: 100%;
+    max-height: 97px;
+    overflow: hidden;
+}
+.condition-type,
+.robot-type {
+    font-size: 12px;
+}
+
 
 .react-flow__minimap-node.condition-romb {
     width: 150px;
@@ -305,38 +431,6 @@ body {
     color: #8e94aa;
     padding-left: 7px;
 }
-.romb {
-    display: inline-block;
-    width: 150px;
-    height: 150px;
-    color: #fff;
-    background: $red;
-    transform: rotate(45deg);
-    padding: 16px;
-    overflow: hidden;
-    text-align: center;
-    box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.08),
-        0px 4px 48px rgba(0, 0, 0, 0.08);
-
-    &.selected{
-        border: 3px solid $dark-purple;
-    }
-}
-
-.condition-text,
-.robot-text {
-    font-size: 14px;
-    font-weight: bold;
-    display: block;
-    width: 100%;
-    max-height: 97px;
-    overflow: hidden;
-}
-
-.condition-type,
-.robot-type {
-    font-size: 12px;
-}
 
 .wrapper {
     width: 100%;
@@ -345,26 +439,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
 }
-.romb .wrapper {
-    transform: rotate(-45deg);
-}
 
-.circle {
-    width: 180px;
-    height: 180px;
-    border-radius: 100%;
-    overflow: hidden;
-    padding: 30px;
-    color: #fff;
-    font-size: 14px;
-    text-align: center;
-    font-weight: bold;
-    background: $green;
-
-    &.selected{
-        border: 3px solid $dark-purple;    }
-
-}
 .default-node__label {
     margin: 0;
     padding: 0;

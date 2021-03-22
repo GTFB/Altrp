@@ -28,7 +28,7 @@
         "nwidart/laravel-modules": "^8.0",
         "phpoffice/phpspreadsheet": "^1.16",
         "pulkitjalan/geoip": "^4.1",
-        "pusher/pusher-php-server": "~3.0",
+        "pusher/pusher-php-server": "4.1.1",
         "santigarcor/laratrust": "5.2.*"
     },
     "require-dev": {

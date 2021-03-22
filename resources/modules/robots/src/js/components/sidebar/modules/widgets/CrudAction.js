@@ -1,15 +1,15 @@
 import * as React from "react";
 import { Handle } from 'react-flow-renderer';
 
-export default class Action extends React.Component {
+export default class CrudAction extends React.Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-    let nodeClasses = "react-flow__node-input";
+    let nodeClasses = "flow-node-crud";
     if (this.props.selected) nodeClasses += " selected";
-    
+
     return (
       <div className={nodeClasses}>
         <Handle type="target" position="top" />

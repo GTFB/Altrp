@@ -25,6 +25,8 @@ class RobotNotification extends Notification implements ShouldQueue
      */
     private $node;
 
+    private $dataDynamic = [];
+
     /**
      * @var object узел диаграммы робота
      */
@@ -49,6 +51,9 @@ class RobotNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
+        $this->dataDynamic = getCurrentEnv()->getData();
+        $this->dataDynamic['altrpuserto'] = $notifiable->toArray();
+
         $via = [CustomDatabaseChannel::class];
         if (isset($this->node->data->props->nodeData->data->channels)) {
             $via = array_merge($via, $this->parseChannels($this->node->data->props->nodeData->data->channels));
@@ -110,13 +115,11 @@ class RobotNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-//        dump($this->templateHandler());
+
         $mailObj = new MailMessage;
-//        $mailObj = $mailObj->line($this->templateHandler());
         $mailObj = $mailObj->view(
             'emails.robotmail', ['data' => $this->templateHandler()]
         );
-
         $mailObj = $mailObj->from($this->replaceColumns($this->node->data->props->nodeData->data->content->mail->from));
         $mailObj = $mailObj->subject($this->replaceColumns($this->node->data->props->nodeData->data->content->mail->subject));
         return $mailObj;
@@ -172,9 +175,10 @@ class RobotNotification extends Notification implements ShouldQueue
         preg_match_all("#\{\{altrpdata\.(?<fields>[\w]+)\}\}#", $subject, $matches);
         if ($matches && !empty($this->modelData)) {
             $matches = $matches['fields'];
+            $item = $this->modelData['record'];
             foreach ($matches as $field) {
-                if (in_array($field, $this->modelData['columns'])) {
-                    $subject = str_replace("{{altrpdata.{$field}}}", $this->modelData['record']->$field, $subject);
+                if ($item && in_array($field, $this->modelData['columns'])) {
+                    $subject = str_replace("{{altrpdata.{$field}}}", $item->$field, $subject);
                 }
             }
         }
@@ -190,11 +194,12 @@ class RobotNotification extends Notification implements ShouldQueue
         $result = [];
         if (isset($this->node->data->props->nodeData->data->content->mail->template)) {
             $template = Template::where( 'guid', $this->node->data->props->nodeData->data->content->mail->template )->first()->html_content;
-            $template = $this->setDynamicData($template);
-
-            $dom = new DOMDocument();
-            $dom->loadHTML($template);
-            $result = $template;
+            if($template){
+                $template = $this->setDynamicData($template);
+    //            $dom = new DOMDocument();
+    //            $dom->loadHTML($template);
+                $result = $template;
+            }
         }
          return $result;
     }
@@ -206,13 +211,17 @@ class RobotNotification extends Notification implements ShouldQueue
      */
     public function setDynamicData($template)
     {
-        preg_match_all("#\{\{(?<path>(.*?)+)\}\}#", $template, $matches);
-        $matches = $matches['path'];
-        $env = getCurrentEnv();
+        try {
+            preg_match_all("#\{\{(?<path>(.*?)+)\}\}#", $template, $matches);
+            $matches = $matches['path'];
 
-        foreach ($matches as $path){
-            $template = str_replace("{{{$path}}}", $env->getProperty($path, 'none'), $template);
+            foreach ($matches as $path){
+                    $item = data_get($this->dataDynamic, $path);
+                    $template = str_replace("{{{$path}}}", $item, $template);
+            }
+            return $template;
+        } catch (\Exception $e){
+            dump($e);
         }
-        return $template;
     }
 }

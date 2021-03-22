@@ -13,9 +13,8 @@ class CurrentEnvironment
 
     private function __construct()
     {
-        $this->setProperty('altrpuser', Auth::user());
-        $this->setProperty('altrprequest', request());
-//        dump($this->data);
+        $this->setProperty('altrpuser', Auth::user()->toArray());
+        $this->setProperty('altrprequest', request()->all());
     }
 
     /**
