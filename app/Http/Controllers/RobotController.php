@@ -27,7 +27,7 @@ class RobotController extends Controller
     public function index(Request $request): JsonResponse
     {
         $robots = Robot::with('user')->get()->each(function (Robot $robot) {
-            $robot->setAttribute('author', $robot->user->name);
+            $robot->setAttribute('author',data_get( $robot, 'user.name', ''));
         });
         return \response()->json($robots);
     }
@@ -68,7 +68,7 @@ class RobotController extends Controller
     public function getOptions(Request $reques)
     {
         $robots = Robot::with('user')->get()->each(function (Robot $robot) {
-            $robot->setAttribute('author', $robot->user->name);
+            $robot->setAttribute('author',data_get( $robot, 'user.name', ''));
         });
 
         $options = [];
