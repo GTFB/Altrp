@@ -4,6 +4,7 @@
 namespace App\Notifications;
 
 
+use App\Altrp\Source;
 use App\Notifications\Channels\CustomDatabaseChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -25,6 +26,9 @@ class RobotNotification extends Notification implements ShouldQueue
      */
     private $node;
 
+    /**
+     * @var array
+     */
     private $dataDynamic = [];
 
     /**
@@ -52,7 +56,7 @@ class RobotNotification extends Notification implements ShouldQueue
     public function via($notifiable)
     {
         $this->dataDynamic = getCurrentEnv()->getData();
-        $this->dataDynamic['altrpuserto'] = $notifiable->toArray();
+        $this->setDataDynamic($notifiable);
 
         $via = [CustomDatabaseChannel::class];
         if (isset($this->node->data->props->nodeData->data->channels)) {
@@ -115,7 +119,6 @@ class RobotNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-
         $mailObj = new MailMessage;
         $mailObj = $mailObj->view(
             'emails.robotmail', ['data' => $this->templateHandler()]
@@ -172,13 +175,13 @@ class RobotNotification extends Notification implements ShouldQueue
      */
     protected function replaceColumns($subject)
     {
-        preg_match_all("#\{\{altrpdata\.(?<fields>[\w]+)\}\}#", $subject, $matches);
+        preg_match_all("#\{\{altrpmodel\.(?<fields>[\w_]+)\}\}#", $subject, $matches);
         if ($matches && !empty($this->modelData)) {
             $matches = $matches['fields'];
             $item = $this->modelData['record'];
             foreach ($matches as $field) {
                 if ($item && in_array($field, $this->modelData['columns'])) {
-                    $subject = str_replace("{{altrpdata.{$field}}}", $item->$field, $subject);
+                    $subject = str_replace("{{altrpmodel.{$field}}}", $item->$field, $subject);
                 }
             }
         }
@@ -216,12 +219,26 @@ class RobotNotification extends Notification implements ShouldQueue
             $matches = $matches['path'];
 
             foreach ($matches as $path){
-                    $item = data_get($this->dataDynamic, $path);
-                    $template = str_replace("{{{$path}}}", $item, $template);
+                $item = data_get($this->dataDynamic, $path);
+                $template = str_replace("{{{$path}}}", $item, $template);
             }
-            return $template;
         } catch (\Exception $e){
             dump($e);
         }
+        return $template;
+    }
+
+    /**
+     * @param $notifiable
+     */
+    protected function setDataDynamic($notifiable)
+    {
+        $url = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $this->dataDynamic['altrpuserto'] = $notifiable->toArray();
+        $this->dataDynamic['altrppage']['url'] = $url;
+        $fp = fopen($url, 'rb');
+        $this->dataDynamic['altrpmeta'] = stream_get_meta_data($fp);
+        $this->dataDynamic['altrpmodel'] = $this->modelData['record'] ?? null;
+        $this->dataDynamic['altrprequest'] = request()->all();
     }
 }
