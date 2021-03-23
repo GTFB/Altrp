@@ -32,12 +32,6 @@ class UserObserver
      */
     public function updated(User $user)
     {
-        try {
-            Notification::send($user, new RegisterNotification(request()->all(), 'updated'));
-        } catch (\Exception $e) {
-            dump($e);
-        }
-
     }
 
     /**
