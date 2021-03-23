@@ -4,8 +4,9 @@ namespace App\Observers;
 
 use App\Events\NotificationEvent;
 use App\User;
-use Illuminate\Support\Facades\Mail;
-use App\Mails\SendEmail;
+use App\Notifications\RegisterNotification;
+use Illuminate\Support\Facades\Notification;
+
 class UserObserver
 {
     /**
@@ -16,8 +17,11 @@ class UserObserver
      */
     public function created(User $user)
     {
-       if(config('altrp.admin.send_email_new_users') && config('mail.username'))
-           Mail::to($user->email)->send(new SendEmail($user));
+        try {
+            Notification::send($user, new RegisterNotification(request()->all(), 'created'));
+        } catch (\Exception $e) {
+            dump($e);
+        }
     }
 
     /**
@@ -28,7 +32,12 @@ class UserObserver
      */
     public function updated(User $user)
     {
-//        if(config('altrp.admin.send_email_new_users')) Mail::to($user)->send(new SendEmail($user));
+        try {
+            Notification::send($user, new RegisterNotification(request()->all(), 'updated'));
+        } catch (\Exception $e) {
+            dump($e);
+        }
+
     }
 
     /**

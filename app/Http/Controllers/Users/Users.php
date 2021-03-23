@@ -88,6 +88,7 @@ class Users extends Controller
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->telegram_user_id = $request->telegram_user_id;
         $user->password = Hash::make($request->password);
 
         if($user->save()){
@@ -126,6 +127,7 @@ class Users extends Controller
 
         if ($request->name) $user->name = $request->name;
         if ($request->email) $user->email = $request->email;
+        if ($request->telegram_user_id) $user->telegram_user_id = $request->telegram_user_id;
         if ($request->password) $user->password = Hash::make($request->password);
 
         if ($user->save()) {
