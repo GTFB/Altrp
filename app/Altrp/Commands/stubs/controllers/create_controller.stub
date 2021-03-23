@@ -54,7 +54,7 @@ class DummyClass extends ApiController
 
         ${{crudNameSingular}} = new {{modelName}};
 
-        $data = $this->hashPasswordAttributeIfExists($data);
+        $data = $this->hashPasswordAttributeIfExists(${{crudNameSingular}}->getTable(), $data);
 
         ${{crudNameSingular}}->fill($data);
 
@@ -118,7 +118,7 @@ class DummyClass extends ApiController
             return response()->json(['success'=>false, 'message' => trans("responses.not_found.{{crudNameSingular}}")], 404, [], JSON_UNESCAPED_UNICODE);
         }
 
-        $data = $this->hashPasswordAttributeIfExists($data);
+        $data = $this->hashPasswordAttributeIfExists(${{crudNameSingular}}->getTable(), $data);
 
         $result = ${{crudNameSingular}}->update($data);
 
