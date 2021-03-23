@@ -14,19 +14,23 @@ export default class Send extends Component{
         super(props);
         this.state = {
             usersOptions: [],
-            rolesOptions: []
+            rolesOptions: [],
+            dataSources: []
         };
         this.toggle = this.toggle.bind(this);
         this.onSend = this.onSend.bind(this);
         this.changeSelect = this.changeSelect.bind(this);
         this.usersOptions = new Resource({ route: "/admin/ajax/users_options" });
         this.rolesOptions = new Resource({ route: "/admin/ajax/role_options" });
+        this.dataSources = new Resource({ route: "/admin/ajax/data_source_options" });
+
     }
 
     async componentDidMount() {
         const usersOptions = await this.usersOptions.getAll();
         const rolesOptions = await this.rolesOptions.getAll();
-        this.setState(s =>({...s, usersOptions, rolesOptions}));
+        const dataSources = await this.dataSources.getAll();
+        this.setState(s =>({...s, usersOptions, rolesOptions, dataSources: dataSources?.options ?? []}));
     }
 
     getTypeSend = data => {
@@ -59,8 +63,8 @@ export default class Send extends Component{
     // Запись значений select в store
     changeSelect(e, type) {
         const node = this.props.selectNode;
-        if(type === "channels"){
-            node.data.props.nodeData.data[type] = e ? e.map(item => item.value) : [];
+        if(type === "channels" || type === "sources") {
+          node.data.props.nodeData.data[type] = e ? e.map(item => item.value) : [];
         } else {
             if(!_.isObject(node.data.props.nodeData.data.entities)) node.data.props.nodeData.data.entities = {};
             node.data.props.nodeData.data.entities[type] = e ? e.map(item => item.value) : [];
@@ -69,7 +73,7 @@ export default class Send extends Component{
     }
 
     render(){
-        const { usersOptions, rolesOptions } = this.state;
+        const { usersOptions, rolesOptions, dataSources } = this.state;
         const channelsOptions = [
             {label:'push', value: 'broadcast'},
             {label:'telegram', value: 'telegram'},
@@ -78,6 +82,7 @@ export default class Send extends Component{
         const channels = this.props.selectNode?.data?.props?.nodeData?.data?.channels ?? [];
         const users = this.props.selectNode?.data?.props?.nodeData?.data?.entities?.users ?? [];
         const roles = this.props.selectNode?.data?.props?.nodeData?.data?.entities?.roles ?? [];
+        const sources = this.props.selectNode?.data?.props?.nodeData?.data?.sources ?? [];
         let value = (this.props.selectNode?.data?.props?.nodeData?.data?.entities === "all") ?? false;
         let switcherClasses = `control-switcher control-switcher_${value ? 'on' : 'off'}`;
 
@@ -133,11 +138,21 @@ export default class Send extends Component{
                         options={channelsOptions}
                     />
                 </div>
+                <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                    <div className="controller-container__label control-select__label controller-label">Sources</div>
+                    <AltrpSelect id="send-sources"
+                        className="controller-field"
+                        isMulti={true}
+                        value={_.filter(dataSources, s => sources.indexOf(s.value) >= 0)}
+                        onChange={e => {this.changeSelect(e, "sources")}}
+                        options={dataSources}
+                    />
+                </div>
             </div>
           </div>
 
-            </div>            
-            
+            </div>
+
             {this.getTypeSend("broadcast") && <SendBroadcast activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={this.props.selectNode?.data?.props?.nodeData?.data?.content?.broadcast ?? ''}/>}
             {this.getTypeSend("mail") && <SendEmail activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={this.props.selectNode?.data?.props?.nodeData?.data?.content?.mail ?? ''}/>}
             {this.getTypeSend("telegram") && <SendTelegram activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={this.props.selectNode?.data?.props?.nodeData?.data?.content?.telegram ?? ''}/>}

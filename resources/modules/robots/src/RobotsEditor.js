@@ -181,6 +181,7 @@ class RobotsEditor extends Component {
             "type": "send_notification",
             "data": {
               "entities": "",
+              "sources": [],
               "channels": [
                 "broadcast",
                 "telegram",
