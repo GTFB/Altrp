@@ -73,28 +73,37 @@ class Tooltip extends PureComponent {
             style={{ padding: "5px 9px" }}
           >
             <div>
-              {/* <span
-                style={{
-                  display: "block",
-                  width: "12px",
-                  height: "12px",
-                  background: this.state.point.color,
-                  marginRight: "7px"
-                }}
-              ></span> */}
-              <div
-                className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
-              >
-                {this.props.keyIsDate
-                  ? this.state.data.xFormatted
-                  : this.state.data.x}
-                :
-                <strong
+            {this.state.data?.tooltip === undefined &&
+              <div style={{
+                whiteSpace: "pre",
+                display: "flex",
+                alignItems: "center"
+              }}>
+                <span
+                  style={{
+                    display: "block",
+                    width: "12px",
+                    height: "12px",
+                    background: this.state.point.color,
+                    marginRight: "7px"
+                  }}
+                >
+                </span>
+                <div
                   className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
                 >
-                  {this.state.data.y}
-                </strong>
+                  {this.props.keyIsDate
+                  ? this.state.data.xFormatted
+                  : this.state.data.x}
+                  :
+                  <strong
+                    className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
+                  >
+                    {this.state.data.y}
+                  </strong>
+                </div>
               </div>
+              }
               {this.state.data?.tooltip?.map((item, index) => {
                 return (
                   <React.Fragment>
