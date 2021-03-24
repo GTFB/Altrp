@@ -217,7 +217,7 @@ class Gallery extends BaseElement {
         'layout_settings': 'justified',
       },
       type: CONTROLLER_SLIDER,
-      label: "Height",
+      label: "Row height",
       units:[
         'px',
       ],
@@ -596,44 +596,224 @@ class Gallery extends BaseElement {
           value: "fadeIn",
           label: "FadeIn"
         },
-        {
-          value: "",
-          label: "Hard light"
-        },
-        {
-          value: "soft-light",
-          label: "Soft light"
-        },
-        {
-          value: "difference",
-          label: "Difference"
-        },
-        {
-          value: "exclusion",
-          label: "Exclusion"
-        },
-        {
-          value: "hue",
-          label: "Hue"
-        },
-        {
-          value: "saturation",
-          label: "Saturation"
-        },
-        {
-          value: "color",
-          label: "Color"
-        },
-        {
-          value: "luminosity",
-          label: "Luminosity"
-        }
       ],
       label: 'Hover animation',
       default: 'none',
     });
 
     this.addControl('overlay_transition', {
+      type: CONTROLLER_SLIDER,
+      label: 'Animation duration (ms)',
+      default: {
+        size: 800,
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 3000,
+      min: 0,
+    });
+
+    this.addControl('overlay_content', {
+      type: CONTROLLER_HEADING,
+      label: 'Content',
+    });
+
+    this.addControl('overlay_content_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment',
+      default: 'flex-start',
+      options: [
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-gallery-overlay': 'align-items: {{VALUE}};',
+      },
+    });
+
+    this.addControl('overlay_content_vertical', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Vertical Alignment',
+      default: 'flex-start',
+      options: [
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-gallery-overlay.altrp-gallery-overlay': 'justify-content: {{VALUE}};',
+      },
+    });
+
+    this.addControl('overlay_content_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      rules: {
+        '{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
+    });
+
+    this.addControl('overlay_title_label', {
+      type: CONTROLLER_HEADING,
+      label: 'Title',
+    });
+
+    this.addControl('overlay_title_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Color',
+      rules: {
+        '{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay-title': 'color: {{COLOR}};',
+      },
+    });
+
+    this.addControl('overlay_title_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        rules: {
+          '{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay-title': [
+            'font-size: {{SIZE}}px;',
+            'font-family: {{FAMILY}}',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
+    this.addControl('overlay_title_spacing', {
+      type: CONTROLLER_SLIDER,
+      label: 'Spacing',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay-title': 'margin-bottom: {{SIZE}}{{UNIT}};',
+      },
+    });
+
+    this.addControl('overlay_description_label', {
+      type: CONTROLLER_HEADING,
+      label: 'Description',
+    });
+
+    this.addControl('overlay_description_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Color',
+      rules: {
+        '{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay-description': 'color: {{COLOR}};',
+      },
+    });
+
+    this.addControl('overlay_description_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        rules: {
+          '{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay-description': [
+            'font-size: {{SIZE}}px;',
+            'font-family: {{FAMILY}}',
+            'line-height: {{LINEHEIGHT}};',
+            'letter-spacing: {{SPACING}}px',
+            'font-weight: {{WEIGHT}}',
+            'text-transform: {{TRANSFORM}}',
+            'font-style: {{STYLE}}',
+            'text-decoration: {{DECORATION}}'
+          ],
+        },
+      }
+    );
+
+    this.addControl('overlay_content_animation', {
+      type: CONTROLLER_HEADING,
+      label: 'Animation',
+    });
+
+    this.addControl('hover_animation_overlay_content', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "slideInRight",
+          label: "Slide in right"
+        },
+        {
+          value: "slideInLeft",
+          label: "Slide in left"
+        },
+        {
+          value: "slideInUp",
+          label: "Slide in up"
+        },
+        {
+          value: "slideInDown",
+          label: "Slide in down"
+        },
+        {
+          value: "zoomIn",
+          label: "Zoom in"
+        },
+        {
+          value: "zoomOut",
+          label: "Zoom out"
+        },
+        {
+          value: "fadeIn",
+          label: "FadeIn"
+        },
+      ],
+      label: 'Hover animation',
+      default: 'none',
+    });
+
+    this.addControl('overlay_transition_content', {
       type: CONTROLLER_SLIDER,
       label: 'Animation duration (ms)',
       default: {

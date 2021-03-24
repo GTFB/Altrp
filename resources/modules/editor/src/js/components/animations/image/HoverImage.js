@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import "../../../../sass/altrp-hover-image.scss";
 
 class HoverImage extends React.Component {
   constructor(props) {
@@ -8,70 +9,36 @@ class HoverImage extends React.Component {
   }
 
   render() {
+    let classNames = this.props.className ? this.props.className : "";
 
-    switch(this.props.type) {
+    switch (this.props.type) {
       case "zoomIn":
-        const ZoomIn = styled(this.props.component)`
-          transition: transform ${this.props.transition}ms;
-          &:hover {
-            transform: scale(1.1);
-          }
-        `;
-        return <ZoomIn/>
+        classNames += " altrp-animation-img-zoom-in";
         break;
       case "zoomOut":
-        const ZoomOut = styled(this.props.component)`
-          transition: transform ${this.props.transition}ms;
-          transform: scale(1.1);
-          &:hover {
-            transform: scale(1);
-          }
-        `;
-        return <ZoomOut/>
+        classNames += " altrp-animation-img-zoom-out";
         break;
       case "moveLeft":
-        const MoveLeft = styled(this.props.component)`
-          transition: transform ${this.props.transition}ms;
-          transform: scale(1.2);
-          &:hover {
-            transform: translate(-8%, 0) scale(1.2);
-          }
-        `;
-        return <MoveLeft/>
+        classNames += " altrp-animation-img-move-left";
         break;
       case "moveRight":
-        const MoveRight = styled(this.props.component)`
-          transition: transform ${this.props.transition}ms;
-          transform: scale(1.2);
-          &:hover {
-            transform: translate(8%, 0) scale(1.2);
-          }
-        `;
-        return <MoveRight/>
+        classNames += " altrp-animation-img-move-right";
         break;
       case "moveUp":
-        const MoveUp = styled(this.props.component)`
-          transition: transform ${this.props.transition}ms;
-          transform: scale(1.2);
-          &:hover {
-            transform: translate(0, -8%) scale(1.2);
-          }
-        `;
-        return <MoveUp/>
+        classNames += " altrp-animation-img-move-up";
         break;
       case "moveDown":
-        const MoveDown = styled(this.props.component)`
-          transition: transform ${this.props.transition}ms;
-          transform: scale(1.2);
-          &:hover {
-            transform: translate(0, 8%) scale(1.2);
-          }
-        `;
-        return <MoveDown/>
+        classNames += " altrp-animation-img-move-down"
         break;
       default:
-        return ""
+        return "altrp-animation-img-zoom-in"
     }
+
+    const BasicComponent = styled(this.props.component)`
+      transition: ${this.props.transition}ms;
+    `;
+
+    return <BasicComponent className={classNames}/>
   }
 
 }

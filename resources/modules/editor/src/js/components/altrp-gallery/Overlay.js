@@ -10,15 +10,53 @@ class Overlay extends Component {
       width: 100%;
       left: 0;
       top: 0;
+      display: flex;
+      flex-direction: column;
     `;
 
-    if(this.props.animation && this.props.animation !== "none") {
-      OverlayComponent = <HoverOverlay transition={this.props.transition.size} type={this.props.animation} component={OverlayComponent}/>;
+    const overlayContent = (
+      <>
+        {
+          this.props.type !== "none" ? (
+            <div className="altrp-gallery-overlay-title">
+              {
+                this.props.title
+              }
+            </div>
+          ) : ""
+        }
+        {
+          this.props.type === "titleAndDescription" ? (
+            <div className="altrp-gallery-overlay-description">
+              {
+                this.props.description
+              }
+            </div>
+          ) : ""
+        }
+      </>
+    );
+
+    const overlayProps = {
+      className: "altrp-gallery-overlay"
     };
 
-    return (
-      <OverlayComponent className="altrp-gallery-overlay"></OverlayComponent>
-    );
+    if(this.props.animation && this.props.animation !== "none" && this.props.animationDuration) {
+      console.log(this.props.animationDuration)
+      return <HoverOverlay {...overlayProps} transition={this.props.animationDuration.size} type={this.props.animation} component={OverlayComponent}>
+        {
+          overlayContent
+        }
+      </HoverOverlay>;
+    } else {
+      return (
+        <OverlayComponent {...overlayProps}>
+          {
+            overlayContent
+          }
+        </OverlayComponent>
+      );
+    }
   }
 }
 

@@ -7,6 +7,7 @@ import {isEditor} from "../../../../../front-app/src/js/helpers";
 import AltrpLightbox from "../altrp-lightbox/AltrpLightbox";
 import HoverImage from "../animations/image/HoverImage";
 import Overlay from "../altrp-gallery/Overlay";
+import JLayout from "justified-layout";
 
 class GalleryWidget extends Component {
   constructor(props) {
@@ -110,8 +111,6 @@ class GalleryWidget extends Component {
     const layout = this.props.element.getContent("layout_settings", "grid");
     const gridGap = this.props.element.getContent("spacing_grid_settings", {size: "0", unit: "px"});
     const gridColumns = this.props.element.getContent("columns_grid_settings", 3);
-    const heightJustified = this.props.element.getContent("height_justified_settings", { size: "220", unit: "px"})
-    const widthJustified = isEditor() ? document.getElementById("editorWindow").offsetWidth : document.body.offsetWidth;
     const aspectRatioVariant = this.props.element.getContent("aspect_ratio_grid_settings", "1to1");
     const linkType = this.props.element.getContent("link_type_grid_settings", "none");
     const hoverAnimationType = this.props.element.getContent("image_hover_animation", "none");
@@ -119,11 +118,10 @@ class GalleryWidget extends Component {
     const overlaySwitcher = this.props.element.getContent("overlay_switcher", false);
     const overlayType = this.props.element.getContent("overlay_title_and_description", "none");
     const overlayAnimationType = this.props.element.getContent("hover_animation_overlay", "none");
-    const overlayAnimationDuration = this.props.element.getContent("hover_animation_overlay", {size: 800});
+    const overlayAnimationDuration = this.props.element.getContent("overlay_transition", {size: 800});
     let simpleRepeater = this.state.simpleRepeater;
     let aspectRatio = "100%";
 
-    console.log(hoverAnimationType)
 
     switch (aspectRatioVariant) {
       case "3to2":
@@ -166,7 +164,8 @@ class GalleryWidget extends Component {
     if(simpleRepeater.length > 0) {
       images = simpleRepeater.map((img, idx) => {
         const url = img.simple_media_settings ? img.simple_media_settings.url : '/img/nullImage.png';
-        // console.log(img.simple_media_settings)
+        const imgWidth = img.simple_media_settings ? img.simple_media_settings.width : 0;
+
         const Image = styled.div`
           background-image: url(${url});
           background-size: cover;
@@ -176,33 +175,64 @@ class GalleryWidget extends Component {
           transform-origin: center top;
         `;
 
-        const JustifiedImage = styled(Image)`
-          position: absolute;
-        `;
-
         const ImageContainer = styled.div`
           position: relative;
           overflow: hidden;
-        `
+        `;
 
-        let image = <Image className="altrp-gallery-img" data-idx={idx}  onClick={linkType === "media" ? this.showLightbox : null}/>
+        const imageProps = {
+          className: "altrp-gallery-img",
+          // "data-idx": idx,
+          // onClick
+        };
+
+        let containerClassNames = "altrp-gallery-img-container";
 
         if(hoverAnimationType && hoverAnimationType !== "none" ) {
-          image = <HoverImage type={hoverAnimationType} transition={hoverAnimationDuration.size} component={Image} attributes={{
-            className: "altrp-gallery-img",
-            onClick: linkType === "media" ? this.showLightbox : null
-          }}
-          />
+          containerClassNames += " altrp-hover-parent-image";
+        };
+
+        if(overlayAnimationType && overlayAnimationType !== "none" ) {
+          containerClassNames += " altrp-hover-parent-overlay";
+        };
+
+        const containerProps = {
+          className: containerClassNames,
+          onClick: linkType === "media" ? this.showLightbox : null,
+          "data-idx": idx,
+          key: idx
         }
 
-        return <ImageContainer className="altrp-gallery-img-container" data-idx={idx} key={idx}>
+        const overlayProps = {
+          animation: overlayAnimationType,
+          animationDuration: overlayAnimationDuration,
+          description: img.simple_description_media_settings,
+          title: img.simple_title_media_settings,
+          type: overlayType
+        }
+
+        let image = <ImageContainer {...containerProps}>
+          <Image {...imageProps} />
           {
-            image
+            overlaySwitcher ? <Overlay {...overlayProps}/> : null
           }
-          {
-            overlaySwitcher ? <Overlay animation={overlayAnimationType} animationDuration={overlayAnimationDuration}/> : null
-          }
+        </ImageContainer>;
+
+        switch(layout) {
+          case "justified":
+            break
+        }
+
+        if(hoverAnimationType && hoverAnimationType !== "none" ) {
+          image = <ImageContainer {...containerProps}>
+            <HoverImage type={hoverAnimationType} hoverParent="altrp-gallery-img-container" transition={hoverAnimationDuration.size} component={Image} attributes={imageProps}/>
+            {
+              overlaySwitcher ? <Overlay {...overlayProps}/> : null
+            }
           </ImageContainer>
+        }
+
+        return image
       })
     }
 
@@ -213,19 +243,10 @@ class GalleryWidget extends Component {
       position: relative;
     `;
 
-    const JusifiedLayout = styled.div`
-      padding-top: calc(${heightJustified.size} / ${widthJustified} * 100%);
-      position: relative;
-      display: flex;
-      min-height: 1px;
-      flex-wrap: wrap;
-    `;
-
     let layoutContainer = <GridLayout>{ images }</GridLayout>;
 
     switch (layout) {
       case "justified":
-        layoutContainer = <JusifiedLayout>{ images }</JusifiedLayout>;
         break
     }
 
