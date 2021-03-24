@@ -26,7 +26,6 @@ export default class Crud extends Component{
 
         let models = await this.modelsResource.getAll();
         let modelOptions = await this.modelOptionsResource.getAll();
-        console.log(modelOptions);
 
         this.setState(s =>({...s, modelOptions, models }));
     }
@@ -38,18 +37,14 @@ export default class Crud extends Component{
             case "model_id":
                 this.setStateCrud();
                 node.data.props.nodeData.data.method = '';
-                node.data.props.nodeData.data.record_id = '';
+                node.data.props.nodeData.data.record = '';
                 node.data.props.nodeData.data.body = {};
-                node.data.props.nodeData.data[type] = e.target.value;    
+                node.data.props.nodeData.data[type] = e.target.value;
                 break;
             case "method":
-                node.data.props.nodeData.data.record_id = '';
+                node.data.props.nodeData.data.record = '';
                 node.data.props.nodeData.data.body = {};
-                node.data.props.nodeData.data[type] = e.target.value;    
-                break;
-            case "record_id":
-                // node.data.props.nodeData.data.body = {};
-                node.data.props.nodeData.data[type] = e.target.value;    
+                node.data.props.nodeData.data[type] = e.target.value;
                 break;
             case "body":
                 if(e === null) e = [];
@@ -58,20 +53,23 @@ export default class Crud extends Component{
                     if(node.data.props.nodeData.data.body[item.label] === undefined) body[item.label] = '';
                     else body[item.label] = node.data.props.nodeData.data.body[item.label];
                 });
-                node.data.props.nodeData.data.body = body;    
-                break;    
+                node.data.props.nodeData.data.body = body;
+                break;
         }
         store.dispatch(setUpdatedNode(node));
     }
 
     // Запись значений input в store
-    changeInput(e, field, fieldsData) {
+    changeInput(e, field = false, fieldsData = false) {
         const node = this.props.selectNode;
-        if(!node.data.props.nodeData.data.body || _.isEmpty(fieldsData)) return;
+        if(field && fieldsData) {
+          fieldsData.map(item =>{
+              if(item == field) node.data.props.nodeData.data.body[field] = e.target.value;
+          });
+        } else {
+          node.data.props.nodeData.data.record = e.target.value;
+        }
 
-        fieldsData.map(item =>{
-            if(item == field) node.data.props.nodeData.data.body[field] = e.target.value;
-        });
 
         store.dispatch(setUpdatedNode(node));
     }
@@ -120,11 +118,8 @@ export default class Crud extends Component{
         const recordOptions = this.state.recordOptions;
         const model = this.getData("model_id");
         const method = this.getData("method");
-        const record = this.getData("record_id");
+        const record = this.getData("record");
         const fields = this.getFields();
-
-        console.log(modelOptions);
-        console.log(fields);
 
     return <div>
         <div className={"settings-section " + (this.props.activeSection === "crud" ? '' : 'open')}>
@@ -134,8 +129,8 @@ export default class Crud extends Component{
                 </div>
                 <div className="settings-section__label">Settings CRUD</div>
             </div>
-        
-        
+
+
             <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
                 <div className="controller-container controller-container_select">
                     <div className="controller-container__label control-select__label controller-label">Model</div>
@@ -148,7 +143,7 @@ export default class Crud extends Component{
                             {modelOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
                         </select>
                     </div>
-                </div>            
+                </div>
 
                 {model && <div className="controller-container controller-container_select">
                         <div className="controller-container__label control-select__label controller-label">Method</div>
@@ -166,15 +161,16 @@ export default class Crud extends Component{
                 {(method && method !== "create") && <div className="controller-container controller-container_select">
                         <div className="controller-container__label control-select__label controller-label">Record</div>
                         <div className="control-container_select-wrapper controller-field">
-                            <select className="control-select control-field"
-                                value={record || ''}
-                                onChange={e => {this.changeSelect(e, "record_id")}}
-                            >
-                                <option disabled value="" />
-                                {recordOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
-                            </select>
+                            <input
+                              className="control-field"
+                              type="text"
+                              id="flow-model-record"
+                              name="flow-model-record"
+                              value={record || ''}
+                              onChange={(e) => { this.changeInput(e) }}
+                            />
                         </div>
-                        </div>}
+                </div>}
 
                 {(method && method !== "delete") && <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
                     <div className="controller-container__label control-select__label controller-label">Fields</div>

@@ -162,7 +162,7 @@ class RobotsEditor extends Component {
             "data": {
               "method": "",
               "body": {},
-              "record_id": null,
+              "record": "",
               "model_id": ""
             }
           }
