@@ -14,6 +14,7 @@ class UserMeta extends Model
         'patronymic',
         'user_id',
         'company_id',
+        'district_id'
     ];
 
     public $timestamps = false;

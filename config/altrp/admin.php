@@ -41,4 +41,9 @@ return [
      * Путь к файлам уведомлений
      */
     'notifications_path' => 'app/Notifications/AltrpNotifications',
+
+    /*
+     * Настройка отправки email новым пользователям
+     */
+    'send_email_new_users' => env('MAIL_TO_NEW_USERS', true),
 ];

@@ -88,6 +88,7 @@ class AltrpImportExportService
   private function createJSONDataFile(){
     $data = [];
     $data['templates'] = Template::all()->toArray();
+//    $data['templates'] = Template::where( 'type', 'template' )->get()->toArray();
     foreach ( $data['templates'] as $key => $template ) {
       $_area = Area::find( $template['area'] );
       if( $_area ){

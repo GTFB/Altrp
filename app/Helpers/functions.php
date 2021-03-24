@@ -277,6 +277,7 @@ function getCurrentVersion()
     try {
       $version = \Jackiedo\DotenvEditor\Facades\DotenvEditor::getValue( 'APP_VERSION' );
     } catch ( \Exception $e ) {
+      $version = '0.0.0';
     }
   }
   $version = checkAndUseSemVer( $version );
@@ -464,4 +465,8 @@ function isAdmin(){
     return false;
   }
   return $user->hasRole( 'admin' );
+}
+
+function getCurrentEnv(){
+    return App\Helpers\Classes\CurrentEnvironment::getInstance();
 }

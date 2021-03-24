@@ -53,7 +53,7 @@
         "dom-to-image": "^2.6.0",
         "dot-prop-immutable": "^2.1.0",
         "express-session": "^1.17.1",
-        "gsap": "^3.5.1",
+        "gsap": "^3.6.0",
         "highlight.js": "^10.1.1",
         "html2pdf.js": "^0.9.2",
         "immutability-helper": "^3.1.1",
@@ -124,7 +124,7 @@
         "style-object-to-css-string": "^1.0.1",
         "styled-components": "^5.0.0",
         "text-mask-addons": "^3.8.0",
-        "tinymce": "^5.4.1"
+        "tinymce": "^5.7.1"
     },
     "devDependencies": {
         "@babel/cli": "^7.10.3",

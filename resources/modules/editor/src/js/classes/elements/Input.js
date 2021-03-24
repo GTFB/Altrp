@@ -355,6 +355,9 @@ class Input extends BaseElement {
         }
       ],
       label: "Background Position",
+      conditions: {
+        content_type: ["image_select"]
+      },
       rules: {
         "{{ELEMENT}} .altrp-image-select img{{STATE}}":
           "object-position: {{VALUE}};"
@@ -663,6 +666,8 @@ class Input extends BaseElement {
     actionsControllers(this, 'Blur Actions');
     
     actionsControllers(this, 'Focus Actions', 'focus_');
+
+    actionsControllers(this, 'Change Actions', 'change_');
 
     // this.startControlSection('logic_section', {
     //   tab: TAB_CONTENT,

@@ -5,7 +5,7 @@ import {
 } from "../../store/current-data-storage/actions";
 import Resource from "../../../../../editor/src/js/classes/Resource";
 import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
-import { isJSON, mbParseJSON, replaceContentWithData} from "../../helpers";
+import {isJSON, mbParseJSON, replaceContentWithData} from "../../helpers";
 
 /**
  * @class DataStorageUpdater
@@ -32,6 +32,8 @@ class DataStorageUpdater extends AltrpModel {
       dataSources = [];
     }
     if(initialUpdate){
+      this.setProperty('currentDataSources', dataSources);
+      this.setProperty('updated', false);
       dataSources = dataSources.filter(dataSource => dataSource.getProperty('autoload'));
     }
 
@@ -45,12 +47,14 @@ class DataStorageUpdater extends AltrpModel {
       }
       parameters = mbParseJSON(parameters, []);
       /**
-       * Находим хотя бы один обзяательный параметр, который не имеет значения
+       * Находим хотя бы один обязательный параметр, который не имеет значения
        */
       return ! (parameters && parameters.find(param=>{
         if (param.paramValue.toString().indexOf('altrpforms.') !== -1) {
           let params = dataSource.getParams(window.currentRouterMatch.params, 'altrpforms.');
           this.subscribeToFormsUpdate(dataSource, params);
+        } else {
+          return false;
         }
         if(! param.required){
           return false;
@@ -63,7 +67,6 @@ class DataStorageUpdater extends AltrpModel {
       }));
     });
     // dataSources = _.sortBy(dataSources, ['data.priority']);
-    this.setProperty('currentDataSources', dataSources);
     /**
      * @member {Datasource} dataSource
      */
@@ -77,6 +80,7 @@ class DataStorageUpdater extends AltrpModel {
       if(! groupedDataSources.hasOwnProperty(groupPriority)){
         continue;
       }
+      initialUpdate && appStore.dispatch(currentDataStorageLoading());
       let requests = groupedDataSources[groupPriority].map(async dataSource => {
 
         if (dataSource.getWebUrl()) {
@@ -90,7 +94,7 @@ class DataStorageUpdater extends AltrpModel {
             }
           });
           /**
-           * Если нужно взять параметры из формы, то подписываемся на изменения полуeй формы
+           * Если нужно взять параметры из формы, то подписываемся на изменения полeй формы
            * и сохраняем параметры, с которыми уже получили данные
            */
           if (needUpdateFromForms) {
@@ -116,6 +120,10 @@ class DataStorageUpdater extends AltrpModel {
             console.error(err);
           }
           res = _.get(res, 'data', res);
+          dataSources = dataSources.filter(ds => ds !== dataSource);
+          if(! dataSources.length){
+            this.setProperty('updated', true);
+          }
           appStore.dispatch(changeCurrentDataStorage(dataSource.getAlias(), res));
           return res;
         }
@@ -123,7 +131,10 @@ class DataStorageUpdater extends AltrpModel {
       let responses = await Promise.all(requests);
       initialUpdate && appStore.dispatch(currentDataStorageLoaded());
     }
-    // appStore.dispatch(currentDataStorageLoaded());
+    if(! dataSources.length){
+      appStore.dispatch(currentDataStorageLoaded());
+    }
+
   }
   /**
    * Обнуляем текущее хранилище dataStorage
@@ -162,9 +173,9 @@ class DataStorageUpdater extends AltrpModel {
      */
     let formsStore = appStore.getState().formsStore;
 
-    if (!_.isEqual(this.getProperty('formsStore'), formsStore)) {
-      await this.onFormsUpdate();
+    if (! _.isEqual(this.getProperty('formsStore'), formsStore) && this.getProperty('updated')) {
       this.setProperty('formsStore', formsStore);
+      await this.onFormsUpdate();
     }
   };
   /**
@@ -176,7 +187,7 @@ class DataStorageUpdater extends AltrpModel {
     let dataSources = this.getProperty('dataSourcesFormsDependent', []);
 
     /**
-     * Фильтруем проверяя на наличие обязательных параметров
+     * Фильтруем, проверяя на наличие обязательных параметров
      */
     dataSources = dataSources.filter(ds => {
       const {dataSource} = ds;
@@ -186,7 +197,7 @@ class DataStorageUpdater extends AltrpModel {
       }
       parameters = mbParseJSON(parameters, []);
       /**
-       * Находим хотя бы один обзяательный параметр, который не имеет значения
+       * Находим хотя бы один обзяательный параметр, который имеет пустое значения
        */
       return ! parameters.find(param=>{
         if(! param.required){
@@ -199,6 +210,7 @@ class DataStorageUpdater extends AltrpModel {
         return ! value;
       });
     });
+    // console.log(dataSources);
     dataSources = _.sortBy(dataSources, data_source => data_source.priority);
     let formsStore = appStore.getState().formsStore;
     for (let ds of dataSources) {

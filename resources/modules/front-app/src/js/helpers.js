@@ -15,6 +15,7 @@ import AltrpSVG from '../../../editor/src/js/components/altrp-svg/AltrpSVG';
 import ArrayConverter from './classes/converters/ArrayConverter';
 import DataConverter from './classes/converters/DataConverter';
 import {changeFormFieldValue} from './store/forms-data-storage/actions';
+import {addResponseData} from "./store/responses-storage/actions";
 export function getRoutes() {
   return import('./classes/Routes.js');
 }
@@ -292,19 +293,19 @@ export function parseParamsFromString(
     right = right.trim();
     if(left.indexOf('{{') !== -1){
       left = replaceContentWithData(left);
-      console.log(left);
     }
     if (right.match(/{{([\s\S]+?)(?=}})/g)) {
       if (
         context.getProperty(
           right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')
-        )
+        ) ||
+          getDataByPath(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', ''))
       ) {
         //todo ошибка в IOS
         params[left] =
           context.getProperty(
             right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')
-          ) || '';
+          ) || getDataByPath(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')) || '';
       } else {
         replaceRight ? (params[left] = urlParams[right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')]
             ? urlParams[right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')] : '') : params[left] = right;
@@ -1300,11 +1301,27 @@ export async function dataToXLS(data, filename = 'table', templateName = '') {
 /**
  * Логиним пользователя
  * @param {{}} data
+ * @param {string} formId
  * @return {Promise<{}>}
  */
-export async function altrpLogin(data = {}) {
+export async function altrpLogin(data = {}, formId= 'login') {
   data.altrpLogin = true;
-  let res = await new Resource({ route: '/login' }).post(data);
+  let res;
+  try{
+    res = await new Resource({ route: '/login' }).post(data);
+
+  }catch(error){
+    let status = error.status;
+    if(error.res instanceof Promise){
+      res = await error.res;
+    }
+    if(error instanceof Promise){
+      res = await error;
+    }
+    res = mbParseJSON(res, {});
+    status && (res.__status = status);
+  }
+  appStore.dispatch(addResponseData(formId, res));
   if (!(res.success || res._token)) {
     return {
       success: false
@@ -1455,7 +1472,7 @@ export function storeWidgetState(widgetId, state = null) {
   return saveDataToLocalStorage(path, state);
 }
 /**
- * абирает состояние из localStorage
+ * Забирает состояние из localStorage
  * Для виджетов ,которые могут сохранять состояния при смене страниц
  * @param {string} widgetId
  * @param {*} _default
@@ -1569,7 +1586,7 @@ export function isAltrpTestMode() {
 }
 
 /**
- * лучайная строка
+ * случайная строка
  * @return {string}
  */
 export function altrpRandomId() {
@@ -1796,12 +1813,12 @@ export function prepareURLForEmail(url, context = null){
 export function parseIDFromYoutubeURL(youtubeURL) {
   const startIndex = youtubeURL.indexOf('v=') + 2;
   const endIndex = youtubeURL.indexOf('&', startIndex);
-  
-  return youtubeURL.substring(startIndex, endIndex);    
+
+  return youtubeURL.substring(startIndex, endIndex);
 }
 
 /**
- * 
+ *
  * @param {{}} context
  * @return {{}}
  */
@@ -1829,4 +1846,48 @@ export function isJSON(JSONString = ''){
   } catch(error){
     return false;
   }
+}
+
+/**
+ * Парсит xml строку в объект
+ * @param xml
+ * @param arrayTags
+ */
+function parseXml(xml, arrayTags) {
+  let dom = null;
+  if (window.DOMParser) dom = (new DOMParser()).parseFromString(xml, "text/xml");
+  else if (window.ActiveXObject) {
+    dom = new ActiveXObject('Microsoft.XMLDOM');
+    dom.async = false;
+    if (!dom.loadXML(xml)) throw dom.parseError.reason + " " + dom.parseError.srcText;
+  }
+  else throw new Error("cannot parse xml string!");
+
+  function parseNode(xmlNode, result) {
+    if (xmlNode.nodeName === "#text") {
+      let v = xmlNode.nodeValue;
+      if (v.trim()) result['#text'] = v;
+      return;
+    }
+
+    let jsonNode = {},
+        existing = result[xmlNode.nodeName];
+    if (existing) {
+      if (!Array.isArray(existing)) result[xmlNode.nodeName] = [existing, jsonNode];
+      else result[xmlNode.nodeName].push(jsonNode);
+    }
+    else {
+      if (arrayTags && arrayTags.indexOf(xmlNode.nodeName) !== -1) result[xmlNode.nodeName] = [jsonNode];
+      else result[xmlNode.nodeName] = jsonNode;
+    }
+
+    if (xmlNode.attributes) for (let attribute of xmlNode.attributes) jsonNode[attribute.nodeName] = attribute.nodeValue;
+
+    for (let node of xmlNode.childNodes) parseNode(node, jsonNode);
+  }
+
+  let result = {};
+  for (let node of dom.childNodes) parseNode(node, result);
+
+  return result;
 }

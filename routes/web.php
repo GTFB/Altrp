@@ -89,8 +89,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     /**
      * Роуты модели AltrpMeta
      */
-    Route::get('/altrp_meta/{meta_name}', 'Admin\ALtrpMetaController@getMetaByName');
-    Route::put('/altrp_meta/{meta_name}', 'Admin\ALtrpMetaController@saveMeta');
+    Route::get('/altrp_meta/{meta_name}', 'Admin\AltrpMetaController@getMetaByName');
+    Route::put('/altrp_meta/{meta_name}', 'Admin\AltrpMetaController@saveMeta');
 
     // Websockets
     Route::get('/websockets', 'Admin\WebsocketsController@index');
@@ -406,6 +406,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
      * Настройка почты
      */
     Route::post('/write_mail_settings', 'MailController@writeSettingsToEnv');
+    Route::post('/write_send_mail', 'MailController@switchHandler');
     Route::get('/get_mail_settings', 'MailController@getSettings');
     /**
      * Роуты ипортов Админки

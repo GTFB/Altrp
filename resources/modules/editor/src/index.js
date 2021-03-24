@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Provider } from "react-redux";
 import ReactDOM from "react-dom";
 import "./installing";
 import ElementsManager from "./js/classes/modules/ElementsManager";
@@ -50,7 +51,12 @@ import("./Editor.js")
 
     let editorTarget = document.getElementById("editor");
     if (editorTarget) {
-      window.ReactDOM.render(<Editor />, editorTarget);
+      window.ReactDOM.render(
+        <Provider store={store}>
+          <Editor />
+        </Provider>,
+        editorTarget
+      );
     }
 
     return import("./EditorContent");
@@ -61,7 +67,7 @@ import("./Editor.js")
     window.onload = () => {
       let iframe = document.getElementsByTagName("iframe")[0];
       window.EditorFrame = iframe;
-      if (! iframe) {
+      if (!iframe) {
         return;
       }
       let editorContentTarget = iframe.contentWindow.document.getElementById(
@@ -79,8 +85,7 @@ import("./Editor.js")
         styleLink.rel = "stylesheet";
         styleLink.href = `/modules/editor/editor.css?${_altrpVersion}`;
         head.appendChild(styleLink);
-      }
-      else {
+      } else {
         let head = iframe.contentWindow.document.getElementsByTagName(
           "head"
         )[0];
@@ -91,17 +96,19 @@ import("./Editor.js")
       }
 
       function listenerHistory(event) {
-        if(window.parent.appStore.getState().historyStore.active) {
-            if (event.ctrlKey && event.code === 'KeyZ' && event.shiftKey) {
+        if (window.parent.appStore.getState().historyStore.active) {
+          if (event.ctrlKey && event.code === "KeyZ" && event.shiftKey) {
             controllerHistory.redo();
-          } else if (event.ctrlKey && event.code === 'KeyZ') {
+          } else if (event.ctrlKey && event.code === "KeyZ") {
             controllerHistory.undo();
           }
-        }    
+        }
       }
-      window.addEventListener('keydown', listenerHistory, false);
-      window.EditorFrame.contentWindow.addEventListener('keydown', listenerHistory, false);
+      window.addEventListener("keydown", listenerHistory, false);
+      window.EditorFrame.contentWindow.addEventListener(
+        "keydown",
+        listenerHistory,
+        false
+      );
     };
   });
-
-  
