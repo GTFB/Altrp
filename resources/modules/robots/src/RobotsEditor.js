@@ -209,7 +209,15 @@ class RobotsEditor extends Component {
         data = {
           "type": "condition",
           "nodeData": {
-              "type": "",
+              "operator": "",
+              "body": []
+          }
+        };
+        break;
+      case "start":
+        data = {
+          "type": "start",
+          "nodeData": {
               "operator": "",
               "body": []
           }
