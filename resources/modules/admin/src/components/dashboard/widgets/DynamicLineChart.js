@@ -6,6 +6,8 @@ import EmptyWidget from "./EmptyWidget";
 
 import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
 const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+const milkScheme = _.find(Schemes, { value: "milk" }).colors;
+const milkScheme2 = _.find(Schemes, { value: "milk2" }).colors;
 
 import { getWidgetData } from "../services/getWidgetData";
 import moment from "moment";
@@ -249,6 +251,10 @@ const DynamicLineChart = ({
               ? customColors
               : colorScheme === "regagro"
               ? regagroScheme
+              : colorScheme === "milk"
+              ? milkScheme
+              : colorScheme === "milk2"
+              ? milkScheme2
               : { scheme: colorScheme }
           }
           pointColor={
