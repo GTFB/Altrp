@@ -8,7 +8,7 @@ import Chevron from "../../../../../../../editor/src/svgs/chevron.svg";
 import Resource from "../../../../../../../editor/src/js/classes/Resource";
 
 
-export default class Condition extends Component{
+export default class ConditionNode extends Component{
     constructor(props){
         super(props);
         this.state={
@@ -21,7 +21,7 @@ export default class Condition extends Component{
     async componentDidMount() {
         const model = await this.modelOptionsResource.getAll();
         this.setState(s =>({...s, modelOptions: model.options }));
-    }    
+    }
 
     // Запись значений select в store
     changeSelect(e, id, type = false) {
@@ -38,7 +38,7 @@ export default class Condition extends Component{
                 if(item.id === id) {
                     if (type === "model_field") item.operands[0] = e.target.label;
                     else item.operator = value;
-                }  
+                }
                 return item;
             })
         }
@@ -124,7 +124,7 @@ export default class Condition extends Component{
             {label:'Model Field', value: 'model_field'},
         ];
         const typeData = this.props.selectNode.data?.props?.nodeData?.type ?? '';
-        console.log(typeData);      
+        console.log(typeData);
 
     return <div>
         <div className={"settings-section "}>
@@ -175,8 +175,8 @@ export default class Condition extends Component{
                     </div>
                 </div>
 
-                <div className="controller-container controller-container_repeater repeater">                
-                    <div className="control-header">                    
+                <div className="controller-container controller-container_repeater repeater">
+                    <div className="control-header">
                         <div className="controller-container__label mt-10">
                             Compares
                         </div>
@@ -186,13 +186,13 @@ export default class Condition extends Component{
                         return <div className="repeater-item repeater-item_open" key={index}>
                             <div className="repeater-item-tools">
                                 <div className="repeater-item__caption">
-                                <input  
-                                        className="compare-control-field" 
-                                        type="text" 
-                                        id={`compare_${item.id}`} 
-                                        name="compare" 
+                                <input
+                                        className="compare-control-field"
+                                        type="text"
+                                        id={`compare_${item.id}`}
+                                        name="compare"
                                         style={{width: '100%'}}
-                                        value={item?.name ?? ''} 
+                                        value={item?.name ?? ''}
                                         onChange={(e) => { this.changeInput(e, item.id, 'name') }}
                                         />
                                 </div>
@@ -230,13 +230,13 @@ export default class Condition extends Component{
                                         Value
                                     </div>
                                     <div className="control-group controller-field">
-                                        <textarea  
-                                        className="control-field" 
-                                        type="text" 
-                                        id={`operand-2_${item.id}`} 
-                                        name="operand" 
+                                        <textarea
+                                        className="control-field"
+                                        type="text"
+                                        id={`operand-2_${item.id}`}
+                                        name="operand"
                                         style={{width: '100%'}}
-                                        value={item.operands[1] ?? ''} 
+                                        value={item.operands[1] ?? ''}
                                         onChange={(e) => { this.changeInput(e, item.id, 1) }}
                                         />
                                     </div>
@@ -246,9 +246,9 @@ export default class Condition extends Component{
                         </div>}
                         )}
                     </div>
-                    <div className="d-flex justify-center repeater-bottom">                    
-                        <button 
-                            className="btn font_montserrat font_500 btn_grey btn_active" 
+                    <div className="d-flex justify-center repeater-bottom">
+                        <button
+                            className="btn font_montserrat font_500 btn_grey btn_active"
                             style={{background:'#87CA00', padding:'5px', fontSize: '10px', textTransform: 'uppercase'}}
                             onClick={() => this.onCreate()}
                         >
