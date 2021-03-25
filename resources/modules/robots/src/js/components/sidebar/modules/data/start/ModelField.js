@@ -12,8 +12,7 @@ export default class ModelField extends Component{
     }
 
     async componentDidMount() {
-        let modelId = this.props.selectNode?.data?.props?.nodeData?.model_id ?? '';
-        if(!modelId) modelId = this.props.robot?.model_id ?? '';
+        const modelId = this.props.robot?.model_id ?? '';
         if(modelId){
             let fields = new Resource({ route: `/admin/ajax/models/${modelId}/field_options` });
             fields = await fields.getAll();
@@ -36,7 +35,7 @@ export default class ModelField extends Component{
         const fieldOptions = this.state.fieldOptions ?? [];
 
         return <div className="controller-container controller-container_select">
-            <div className="controller-container__label control-select__label controller-label">Name</div>
+            <div className="controller-container__label control-select__label controller-label">Field</div>
             <div className="control-container_select-wrapper controller-field">
                 <select className="control-select control-field"
                     id={`operand-1_${item?.id}`}

@@ -151,7 +151,7 @@ class RobotsEditor extends Component {
       case "documentAction":
         data = {
           "type": "documentAction",
-          "nodeData": {}
+          "nodeData": {},
         };
         break;
       case "crudAction":
@@ -162,8 +162,8 @@ class RobotsEditor extends Component {
             "data": {
               "method": "",
               "body": {},
-              "record_id": null,
-              "model_id": ""
+              "record": "",
+              "model_id": "",
             }
           }
         };
@@ -171,7 +171,7 @@ class RobotsEditor extends Component {
       case "apiAction":
         data = {
           "type": "apiAction",
-          "nodeData": {}
+          "nodeData": {},
         };
         break;
       case "messageAction":
@@ -181,26 +181,14 @@ class RobotsEditor extends Component {
             "type": "send_notification",
             "data": {
               "entities": "",
+              "entitiesData": {
+                "users": [],
+                "roles": [],
+                "dynamicValue": "",
+              },
               "sources": [],
-              "channels": [
-                "broadcast",
-                "telegram",
-                "mail"
-              ],
-              "content": {
-                "broadcast": {
-                  "message": ""
-                },
-                "telegram": {
-                  "message": ""
-                },
-                "mail": {
-                  "from": "",
-                  "subject": "",
-                  "template": ""
-                }
-              }
-
+              "channel": "",
+              "content": {},
             }
           }
         };
@@ -209,7 +197,15 @@ class RobotsEditor extends Component {
         data = {
           "type": "condition",
           "nodeData": {
-              "type": "",
+              "operator": "",
+              "body": []
+          }
+        };
+        break;
+      case "start":
+        data = {
+          "type": "start",
+          "nodeData": {
               "operator": "",
               "body": []
           }
