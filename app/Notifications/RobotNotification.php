@@ -11,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 use NotificationChannels\Telegram\TelegramChannel;
 use NotificationChannels\Telegram\TelegramMessage;
 use App\Constructor\Template;
@@ -57,7 +58,6 @@ class RobotNotification extends Notification implements ShouldQueue
     {
         $this->dataDynamic = getCurrentEnv()->getData();
         $this->setDataDynamic($notifiable);
-
         $via = [CustomDatabaseChannel::class];
         if (isset($this->node->data->props->nodeData->data->channels)) {
             $via = array_merge($via, $this->parseChannels($this->node->data->props->nodeData->data->channels));
@@ -94,7 +94,7 @@ class RobotNotification extends Notification implements ShouldQueue
     public function toCustomDatabase($notifiable)
     {
         return [
-            'message' => $this->replaceColumns($this->node->data->props->nodeData->data->content->broadcast->message)
+            'message' => $this->setDynamicData($this->node->data->props->nodeData->data->content->broadcast->message)
         ];
     }
 
@@ -107,7 +107,7 @@ class RobotNotification extends Notification implements ShouldQueue
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'message' => $this->replaceColumns($this->node->data->props->nodeData->data->content->broadcast->message)
+            'message' => $this->setDynamicData($this->node->data->props->nodeData->data->content->broadcast->message)
         ]);
     }
 
@@ -123,8 +123,8 @@ class RobotNotification extends Notification implements ShouldQueue
         $mailObj = $mailObj->view(
             'emails.robotmail', ['data' => $this->templateHandler()]
         );
-        $mailObj = $mailObj->from($this->replaceColumns($this->node->data->props->nodeData->data->content->mail->from));
-        $mailObj = $mailObj->subject($this->replaceColumns($this->node->data->props->nodeData->data->content->mail->subject));
+        $mailObj = $mailObj->from($this->setDynamicData($this->node->data->props->nodeData->data->content->mail->from));
+        $mailObj = $mailObj->subject($this->setDynamicData($this->node->data->props->nodeData->data->content->mail->subject));
         return $mailObj;
     }
 
@@ -138,7 +138,7 @@ class RobotNotification extends Notification implements ShouldQueue
         if (!$notifiable->telegram_user_id) return false;
         $tmObj = TelegramMessage::create()
             ->to($notifiable->telegram_user_id);
-        $tmObj = $tmObj->content($this->replaceColumns($this->node->data->props->nodeData->data->content->telegram->message));
+        $tmObj = $tmObj->content($this->setDynamicData($this->node->data->props->nodeData->data->content->telegram->message));
         return $tmObj;
     }
 
@@ -223,7 +223,7 @@ class RobotNotification extends Notification implements ShouldQueue
                 $template = str_replace("{{{$path}}}", $item, $template);
             }
         } catch (\Exception $e){
-            dump($e);
+            Log::info($e->getMessage());
         }
         return $template;
     }
@@ -233,12 +233,10 @@ class RobotNotification extends Notification implements ShouldQueue
      */
     protected function setDataDynamic($notifiable)
     {
-        $url = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         $this->dataDynamic['altrpuserto'] = $notifiable->toArray();
-        $this->dataDynamic['altrppage']['url'] = $url;
-        $fp = fopen($url, 'rb');
-        $this->dataDynamic['altrpmeta'] = stream_get_meta_data($fp);
+        $this->dataDynamic['altrpuser'] = $this->modelData['app']->current_user ?? null;
         $this->dataDynamic['altrpmodel'] = $this->modelData['record'] ?? null;
-        $this->dataDynamic['altrprequest'] = request()->all();
+        $this->dataDynamic['altrpdata'] = $this->modelData['sources'] ?? null;
+        $this->dataDynamic['altrprequest'] = $this->modelData['app']->request ?? null;
     }
 }

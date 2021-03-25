@@ -24,6 +24,7 @@ class Action
     /**
      * Action constructor.
      * @param $node
+     * @param null $modelData
      */
     public function __construct($node, $modelData = null)
     {
@@ -36,14 +37,16 @@ class Action
      */
     public function runAction()
     {
+        $res = null;
         switch ($this->getNodeProperties()->nodeData->type) {
             case 'crud':
-                $this->execCrud();
+                $res = $this->execCrud();
                 break;
             case 'send_notification':
-                $this->sendNotification();
+                $res = $this->sendNotification();
                 break;
         }
+        return $res;
     }
 
     /**

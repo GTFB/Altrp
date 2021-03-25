@@ -3,17 +3,20 @@
 
 namespace App\Helpers\Classes;
 
+use App\Traits\Singleton;
 use Illuminate\Support\Facades\Auth;
 
 
 class CurrentEnvironment
 {
-    private static $instance;
+    use Singleton;
+//    private static $instance;
     private $data = [];
 
     private function __construct()
     {
-        $this->setProperty('altrprequest', request()->all());
+        $this->appData['request'] = request()->all();
+        $this->appData['current_user'] = Auth::user();
     }
 
     /**

@@ -1,6 +1,8 @@
 <?php
 namespace App\Services\Robots\Blocks;
 
+use Illuminate\Database\Eloquent\Model;
+
 class Block
 {
     /**
@@ -28,11 +30,14 @@ class Block
      */
     protected static $nextNode;
 
+    protected static $completedActions = [];
+
     /**
      * Block constructor.
      * @param string $type
      * @param $edges
      * @param $nodes
+     * @param null $modelData
      */
     public function __construct(string $type, $edges, $nodes, $modelData = null)
     {
@@ -68,7 +73,8 @@ class Block
             $currentNode->data->props->type === 'apiAction' ||
             $currentNode->data->props->type === 'messageAction'
         ) {
-            $this->doAction($currentNode);
+            $prevAction = $this->doAction($currentNode);
+            $this->savePrevAction($prevAction);
         } elseif ($currentNode->data->props->type == 'robot') {
             $this->runRobot($currentNode);
         }
@@ -76,6 +82,17 @@ class Block
         if ($currentNodeEdgesSource) {
             self::$nextNode = collect($this->nodes)->where('id', $currentNodeEdgesSource->target)->first();
         }
+
+        return self::$completedActions;
+    }
+
+    protected function savePrevAction($action)
+    {
+        if ($action instanceof Model) {
+            $className = (new \ReflectionClass($action))->getShortName();
+            self::$completedActions[strtolower(get_class($className))] = $action;
+        }
+
     }
 
     /**
@@ -203,11 +220,12 @@ class Block
     /**
      * Выполнить действие
      * @param $node
+     * @return bool|mixed|null
      */
     protected function doAction($node)
     {
         $action = new Action($node, $this->modelData);
-        $action->runAction();
+        return $action->runAction();
     }
 
     /**

@@ -24,6 +24,7 @@ class Robot
     /**
      * Action constructor.
      * @param $node
+     * @param null $modelData
      */
     public function __construct($node, $modelData = null)
     {
