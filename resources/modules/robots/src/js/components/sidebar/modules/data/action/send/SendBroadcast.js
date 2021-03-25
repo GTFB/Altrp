@@ -21,7 +21,7 @@ class SendBroadcast extends Component{
                     <div className="controller-container controller-container_textarea">
                         <div className="controller-container__label textcontroller-responsive controller-label">Message</div>
                         <div className='controller-field'>
-                            <input className="control-field" type="text" id="broadcast-message" name="message" value={this.props.content.message ?? ''} onChange={(e) => { this.props.onSend(e, "broadcast", "message") }}/>
+                            <input className="control-field" type="text" id="broadcast-message" name="message" value={this.props.content.message ?? ''} onChange={(e) => { this.props.onSend(e, "message") }}/>
                         </div>
                     </div>
                 </div>

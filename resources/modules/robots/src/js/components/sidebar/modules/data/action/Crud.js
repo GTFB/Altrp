@@ -85,8 +85,6 @@ export default class Crud extends Component{
 
         if(_.isObject(item)) item = _.keys(item);
 
-        console.log(item);
-
         return item;
     }
 
@@ -100,8 +98,6 @@ export default class Crud extends Component{
             fields = await fields.getAll();
             recordOptions = await recordOptions.getAll();
 
-            console.log(fields);
-            console.log(recordOptions);
             this.setState(s =>({...s, fieldOptions: fields.options}));
             this.setState(s =>({...s, recordOptions}));
         }
@@ -129,7 +125,6 @@ export default class Crud extends Component{
                 </div>
                 <div className="settings-section__label">Settings CRUD</div>
             </div>
-
 
             <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
                 <div className="controller-container controller-container_select">

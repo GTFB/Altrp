@@ -182,24 +182,26 @@ class RobotsEditor extends Component {
             "data": {
               "entities": "",
               "sources": [],
-              "channels": [
-                "broadcast",
-                "telegram",
-                "mail"
-              ],
-              "content": {
-                "broadcast": {
-                  "message": ""
-                },
-                "telegram": {
-                  "message": ""
-                },
-                "mail": {
-                  "from": "",
-                  "subject": "",
-                  "template": ""
-                }
-              }
+              "channel": "",
+              //   [
+              //   "broadcast",
+              //   "telegram",
+              //   "mail"
+              // ],
+              "content": {}
+              //   {
+              //   "broadcast": {
+              //     "message": ""
+              //   },
+              //   "telegram": {
+              //     "message": ""
+              //   },
+              //   "mail": {
+              //     "from": "",
+              //     "subject": "",
+              //     "template": ""
+              //   }
+              // }
 
             }
           }
