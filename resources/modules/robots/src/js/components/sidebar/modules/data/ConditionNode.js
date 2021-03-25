@@ -28,7 +28,7 @@ export default class ConditionNode extends Component{
         store.dispatch(setUpdatedNode(node));
     }
 
-    // Запись значений select в store
+    // Запись значений input в store
     changeInput(e, id, key) {
         const node = this.props.selectNode;
 

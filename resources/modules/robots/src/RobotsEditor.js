@@ -151,7 +151,7 @@ class RobotsEditor extends Component {
       case "documentAction":
         data = {
           "type": "documentAction",
-          "nodeData": {}
+          "nodeData": {},
         };
         break;
       case "crudAction":
@@ -163,7 +163,7 @@ class RobotsEditor extends Component {
               "method": "",
               "body": {},
               "record": "",
-              "model_id": ""
+              "model_id": "",
             }
           }
         };
@@ -171,7 +171,7 @@ class RobotsEditor extends Component {
       case "apiAction":
         data = {
           "type": "apiAction",
-          "nodeData": {}
+          "nodeData": {},
         };
         break;
       case "messageAction":
@@ -181,28 +181,14 @@ class RobotsEditor extends Component {
             "type": "send_notification",
             "data": {
               "entities": "",
+              "entitiesData": {
+                "users": [],
+                "roles": [],
+                "dynamicValue": "",
+              },
               "sources": [],
               "channel": "",
-              //   [
-              //   "broadcast",
-              //   "telegram",
-              //   "mail"
-              // ],
-              "content": {}
-              //   {
-              //   "broadcast": {
-              //     "message": ""
-              //   },
-              //   "telegram": {
-              //     "message": ""
-              //   },
-              //   "mail": {
-              //     "from": "",
-              //     "subject": "",
-              //     "template": ""
-              //   }
-              // }
-
+              "content": {},
             }
           }
         };
