@@ -3,6 +3,7 @@ import { NavLink, withRouter } from "react-router-dom";
 
 import {iconsManager} from "../js/helpers";
 import Resource from "../../../editor/src/js/classes/Resource";
+import {ImageDetail} from "./ImageDetail";
 
 class Assets extends Component {
   constructor(props){
@@ -20,6 +21,7 @@ class Assets extends Component {
       acceptInput: '',
       itemDeleteClasses: 'item__delete',
       activeLink: '',
+      imageId: null,
     };
     this.typesFiles = {
       images: ['png', 'gif', 'jpg', 'jpeg', 'webp'],
@@ -55,6 +57,14 @@ class Assets extends Component {
         this.filterAssets(activeLink);
       }
     })
+  }
+  getAsset = (assetId) => {
+    // get request by asset id
+    return this.resource.get(assetId)
+  }
+  updateAsset = (assetId, data) => {
+    // update request by asset id
+    return this.resource.put(assetId, data)
   }
   onDrop(e){
     e.preventDefault();
@@ -124,6 +134,9 @@ class Assets extends Component {
       this.path = arrayPathname.join('/');
       return activeLink;
     }
+  }
+  openImageDetail(imageId) {
+    this.setState({ imageId })
   }
   render() {
     let UploadIcon = iconsManager().getIconComponent('upload');
@@ -215,7 +228,7 @@ class Assets extends Component {
                     if(this.state.activeLink === 'images' ||
                       this.state.activeLink === 'svgs') 
                       return (
-                        <div className="item__background"
+                        <div onClick={() => this.openImageDetail(asset.id)} className="item__background"
                           style={{'backgroundImage': `url('${asset.url}')`}}/>
                       )
                     let typeIcon = asset.url.split('.').pop();
@@ -229,17 +242,20 @@ class Assets extends Component {
                     return <IconFile className="item__icon-background" />
                   }
                   )()}
-                  <button className={this.state.itemDeleteClasses}
+                  {/* <button className={this.state.itemDeleteClasses}
                           data-assetid={asset.id}
                           title="Delete"
                           onClick={this.deleteClick}>
                     <CloseIcon className="item__delete-icon"/>
-                  </button>
+                  </button> */}
                 </div>
               )}
             )
           }
         </div>
+      </div>
+      <div>
+        <ImageDetail updateAsset={this.updateAsset} getAsset={this.getAsset} imageId={this.state.imageId} />
       </div>
     </div>;
   }

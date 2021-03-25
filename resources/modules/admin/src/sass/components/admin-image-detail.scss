@@ -1,0 +1,60 @@
+.media-modal-content {
+    // position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    min-height: 300px;
+    background: #fff;
+}
+
+.edit-attachment-frame {
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+
+.media-frame-title {
+    left: 0;
+    right: 150px;
+}
+
+.edit-media-header {
+    overflow: hidden;
+}
+
+.media-frame-content {
+    border-bottom: none;
+    bottom: 0;
+    top: 50px;
+}
+
+.attachment-details {
+    display: flex;
+    justify-content: space-between;
+}
+
+.attachment-info {
+    width: 30%;
+}
+
+.thumbnail {
+    text-align: center;
+}
+
+.details-image {
+    margin-bottom: 20px;
+}
+
+.button {
+    background-color: white;
+    border: 1px solid blue;
+    border-radius: 4px;
+    color: blue;
+
+    &:hover {
+color: black;
+    }
+}
+
