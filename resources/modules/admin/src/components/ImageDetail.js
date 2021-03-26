@@ -1,5 +1,8 @@
 import React from 'react';
 import { Form, Field } from 'react-final-form';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import CloseIcon from '@material-ui/icons/Close';
 
 export class ImageDetail extends React.Component {
     state = {}
@@ -18,108 +21,78 @@ export class ImageDetail extends React.Component {
         const { url, description } = this.state
 
         return (
-            <div className="media-modal-content" role="document">
-                <div className="edit-attachment-frame">
-                    <div className="edit-media-header">
-                        <button class="left dashicons" disabled=""><span class="screen-reader-text">Редактировать предыдущий файл</span></button>
-                        <button class="right dashicons" disabled=""><span class="screen-reader-text">Редактировать следующий файл</span></button>
-                        <button type="button" class="media-modal-close"><span class="media-modal-icon"><span class="screen-reader-text">Закрыть окно</span></span></button>
-                    </div>
-                    <div className="media-frame-title"><h1>Информация о вложении {description}</h1></div>
-                    <Form initialValues={this.state} onSubmit={this.updateAsset}>
-                        {props => (
-                            <form onSubmit={props.handleSubmit}>
-                                <Field
-                                    name="description"
-                                    label="Description"
-                                    component="input"
-                                    type="text"
-                                />
-                                <Field
-                                    name="alternate_text"
-                                    label="alt"
-                                    component="input"
-                                    type="text"
-                                />
-                                <button type="submit">Добавить</button>
-                            </form>
-                        )}
-                    </Form>
-                    <div className="media-frame-content">
-                        <div className="attachment-details">
-                            <div className="attachment-media-view">
-                                <h2 className="screen-reader-text">Предварительный просмотр вложения</h2>
-                                <div className="thumbnail">
-                                    <img class="details-image" src={url} draggable="false" alt="" />
-                                    <div class="attachment-actions">
-                                        <button type="button" class="button">Редактировать</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="attachment-info">
-                                <span class="settings-save-status" role="status">
-                                    <span class="spinner"></span>
-                                    <span class="saved">Сохранено.</span>
-                                </span>
-                                <div class="details">
-                                    <h2 class="screen-reader-text">Подробности</h2>
-                                    <div class="uploaded"><strong>Загружен:</strong> 24.03.2021</div>
-                                    <div class="uploaded-by">
-                                        <strong>Загружено:</strong>
-                                        <a href="http://wp.demo.com/wp-admin/profile.php">stas</a>
-                                    </div>
-                                    <div class="filename"><strong>Имя файла:</strong> Без-названия.jpeg</div>
-                                    <div class="file-type"><strong>Тип файла:</strong> image/jpeg</div>
-                                    <div class="file-size"><strong>Размер файла:</strong> 7 КБ</div>
-                                    <div class="dimensions"><strong>Размеры:</strong>200 на 200 пикселей</div>
-                                    <div class="compat-meta"></div>
-                                </div>
-                                <div class="settings">
-                                    <span class="setting has-description" data-setting="alt">
-                                        <label for="attachment-details-two-column-alt-text" class="name">Атрибут alt</label>
-                                        <input type="text" id="attachment-details-two-column-alt-text" value="" aria-describedby="alt-text-description" />
-                                    </span>
-                                    <p class="description" id="alt-text-description"><a href="https://www.w3.org/WAI/tutorials/images/decision-tree" target="_blank" rel="noopener">Опишите назначение изображения<span class="screen-reader-text"> (откроется в новой вкладке)</span></a>. Оставьте пустым, если изображение является только элементом декора.</p>
-                                    <span class="setting" data-setting="title">
-                                        <label for="attachment-details-two-column-title" class="name">Заголовок</label>
-                                        <input type="text" id="attachment-details-two-column-title" value="Без названия" />
-                                    </span>
-                                    <span class="setting" data-setting="caption">
-                                        <label for="attachment-details-two-column-caption" class="name">Подпись</label>
-                                        <textarea id="attachment-details-two-column-caption"></textarea>
-                                    </span>
-                                    <span class="setting" data-setting="description">
-                                        <label for="attachment-details-two-column-description" class="name">Описание</label>
-                                        <textarea id="attachment-details-two-column-description"></textarea>
-                                    </span>
-                                    <span class="setting" data-setting="url">
-                                        <label for="attachment-details-two-column-copy-link" class="name">Ссылка на файл:</label>
-                                        <input type="text" class="attachment-details-copy-link" id="attachment-details-two-column-copy-link" value="http://wp.demo.com/wp-content/uploads/2021/03/Без-названия.jpeg" readonly="" />
-                                        <span class="copy-to-clipboard-container">
-                                            <button type="button" class="button button-small copy-attachment-url" data-clipboard-target="#attachment-details-two-column-copy-link">Скопировать URL в буфер обмена</button>
-                                            <span class="success hidden" aria-hidden="true">Скопировано!</span>
-                                        </span>
-                                    </span>
-                                    <div class="attachment-compat"><form class="compat-item"></form></div>
-                                </div>
-                                <div class="actions">
-                                    <a class="view-attachment" href="http://wp.demo.com/%d0%b1%d0%b5%d0%b7-%d0%bd%d0%b0%d0%b7%d0%b2%d0%b0%d0%bd%d0%b8%d1%8f/">Просмотреть страницу вложения</a>
-                                    <span class="links-separator">|</span>
-
-                                    <a href="http://wp.demo.com/wp-admin/post.php?post=5&amp;action=edit">Изменить другие детали</a>
-
-
-
-                                    <span class="links-separator">|</span>
-
-                                    <button type="button" class="button-link delete-attachment">Удалить навсегда</button>
-
-                                </div>
-                            </div>
-                        </div>
+            <div className="image-detail">
+                <div className="image-detail_header">
+                    <div className="image-detail__title">Информация о вложении {description}</div>
+                    <div className="image-detail__btn-nav-group">
+                        <button className="image-detail__btn-nav"><ArrowBackIosIcon fontSize="small" /></button>
+                        <button className="image-detail__btn-nav"><ArrowForwardIosIcon fontSize="small" /></button>
+                        <button className="image-detail__btn-nav image-detail__btn-nav_close"><CloseIcon fontSize="small" /></button>
                     </div>
                 </div>
-            </div>
+                <div className="image-detail__content">
+                    <div className="image-detail__image-display">
+                        <img className="image-detail__image" src={url} draggable="false" alt="" />
+                        <button className="image-detail__btn">Редактировать</button>
+                    </div>
+                    <div className="image-detail__editing-section">
+                        <div className="image-detail__image-data-wrap">
+                            <div className="image-detail__image-data">
+                                <div>Загружен: <span className="image-detail__image-data-result">24.03.2021</span></div>
+                                <div>Загружено: <span className="image-detail__image-data-result">Stas</span></div>
+                                <div>Имя файла: <span className="image-detail__image-data-result">Без-названия.jpeg</span></div>
+                                <div>Тип файла: <span className="image-detail__image-data-result">image/jpeg</span></div>
+                                <div>Размер файла: <span className="image-detail__image-data-result">7 КБ</span></div>
+                                <div>Размеры: <span className="image-detail__image-data-result">200 на 200 пикселей</span></div>
+                            </div>
+                        </div>
+                        <Form initialValues={this.state} onSubmit={this.updateAsset}>
+                            {props => (
+                                <form onSubmit={props.handleSubmit}>
+                                    <div className="image-detail__line-to-change"><span className="image-detail__name-of-changes">Атрибут alt</span><Field
+                                        name="alternate_text"
+                                        label="Alt"
+                                        component="input"
+                                        type="text"
+                                        className="image-detail__input"
+                                    /></div>
+                                    <div className="image-detail__line-to-change"><span className="image-detail__name-of-changes">Заголовок</span><Field
+                                        name="title"
+                                        label="Title"
+                                        component="input"
+                                        type="text"
+                                        className="image-detail__input"
+                                    /></div>
+                                    <div className="image-detail__line-to-change"><span className="image-detail__name-of-changes">Подпись</span><Field
+                                        name="caption"
+                                        label="Caption"
+                                        component="textarea"
+                                        type="text"
+                                        className="image-detail__textarea"
+                                    /></div>
+                                    <div className="image-detail__line-to-change"><span className="image-detail__name-of-changes">Описание</span><Field
+                                        name="description"
+                                        label="Description"
+                                        component="textarea"
+                                        type="text"
+                                        className="image-detail__textarea"
+                                    /></div>
+                                    <div className="image-detail__line-to-change"><span className="image-detail__name-of-changes">Ссылка на файл:</span><Field
+                                        name="url"
+                                        label="File URL"
+                                        component="input"
+                                        type="text"
+                                        className="image-detail__input"
+                                    /></div>
+                                    <div><button className="image-detail__btn image-detail__btn-copy-url">Скопировать URL в буфер обмена</button></div>
+                                    <div><button type="submit">Добавить</button></div>
+                                </form >
+                            )
+                            }
+                        </Form>
+                    </div >
+                </div >
+            </div >
         )
     }
 }
