@@ -81,8 +81,9 @@ class Action
      */
     protected function sendNotification()
     {
+        $entitiesData = $this->getNodeProperties()->nodeData->data->entitiesData;
         $entities = $this->getNodeProperties()->nodeData->data->entities;
-        $users = $this->getRequiredUsers($entities);
+        $users = $this->getRequiredUsers($entities, $entitiesData);
         Notification::send($users, new RobotNotification($this->node, $this->modelData));
         return true;
     }
@@ -98,25 +99,37 @@ class Action
 
     /**
      * Получить пользователей, которых нужно уведомить
+     * @param $type
      * @param $entities
      * @return User[]|\Illuminate\Database\Eloquent\Collection
      */
-    protected function getRequiredUsers($entities)
+    protected function getRequiredUsers($type, $entities)
     {
-        if (is_object($entities)) {
-            $users = isset($entities->users) && !empty($entities->users) ? User::whereIn('id', $entities->users): null;
-            if (isset($entities->roles) && !empty($entities->roles)) {
-                $roles = $entities->roles;
-                $users = $users ? $users->whereHas('roles', function ($q) use ($roles){
-                    $q->whereIn('id', $roles);
-                }) : User::whereHas('roles', function ($q) use ($roles){
-                    $q->whereIn('id', $roles);
-                });
+        if ($type == 'dynamic') {
+            $field = $entities->dynamicValue;
+            $users = [];
+            if (isset($this->modelData['record'])) {
+                $value = $this->modelData['record']->$field;
+                $users = User::where('id', $value)->get();
             }
-            $users = $users->get();
         } else {
-            $users = User::all();
+            if (is_object($entities)) {
+                $users = isset($entities->users) && !empty($entities->users) ? User::whereIn('id', $entities->users): null;
+                if (isset($entities->roles) && !empty($entities->roles)) {
+                    $roles = $entities->roles;
+                    $users = $users ? $users->whereHas('roles', function ($q) use ($roles){
+                        $q->whereIn('id', $roles);
+                    }) : User::whereHas('roles', function ($q) use ($roles){
+                        $q->whereIn('id', $roles);
+                    });
+                }
+                $users = isset($users) ? $users->get() : [];
+            } else {
+                $users = User::all();
+            }
         }
+
+
         return $users;
     }
 }

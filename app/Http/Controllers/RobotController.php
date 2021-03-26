@@ -71,17 +71,21 @@ class RobotController extends Controller
     public function update(Robot $robot, Request $request)
     {
         $data = $request->data;
-        $sources = $request->sources;
+        $sources = $request->sources ?? [];
         $sourceIds = [];
+        $sourceParams = [];
 
         foreach ($sources as $source) {
             $sourceIds[] = $source->id;
+            $sourceParams[$source->id] = $source->parameters;
         }
 
         $robot->sources()->detach($robot->sources);
 
         foreach ($sourceIds as $id) {
-            $robot->sources()->attach($id);
+            $robot->sources()->attach($id, [
+                'parameters' => $sourceParams[$id]
+            ]);
         }
 
         $result = $robot->update($data);

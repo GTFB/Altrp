@@ -58,10 +58,10 @@ class RobotNotification extends Notification implements ShouldQueue
     {
         $this->dataDynamic = getCurrentEnv()->getData();
         $this->setDataDynamic($notifiable);
-        $via = [CustomDatabaseChannel::class];
-        if (isset($this->node->data->props->nodeData->data->channels)) {
-            $via = array_merge($via, $this->parseChannels($this->node->data->props->nodeData->data->channels));
-        }
+        $via = [CustomDatabaseChannel::class, $this->node->data->props->nodeData->data->channel];
+//        if (isset($this->node->data->props->nodeData->data->channels)) {
+//            $via = array_merge($via, $this->parseChannels($this->node->data->props->nodeData->data->channels));
+//        }
         return $via;
     }
 
@@ -94,7 +94,7 @@ class RobotNotification extends Notification implements ShouldQueue
     public function toCustomDatabase($notifiable)
     {
         return [
-            'message' => $this->setDynamicData($this->node->data->props->nodeData->data->content->broadcast->message)
+            'message' => $this->setDynamicData($this->node->data->props->nodeData->data->content->message)
         ];
     }
 
@@ -107,7 +107,7 @@ class RobotNotification extends Notification implements ShouldQueue
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'message' => $this->setDynamicData($this->node->data->props->nodeData->data->content->broadcast->message)
+            'message' => $this->setDynamicData($this->node->data->props->nodeData->data->content->message)
         ]);
     }
 
@@ -123,8 +123,8 @@ class RobotNotification extends Notification implements ShouldQueue
         $mailObj = $mailObj->view(
             'emails.robotmail', ['data' => $this->templateHandler()]
         );
-        $mailObj = $mailObj->from($this->setDynamicData($this->node->data->props->nodeData->data->content->mail->from));
-        $mailObj = $mailObj->subject($this->setDynamicData($this->node->data->props->nodeData->data->content->mail->subject));
+        $mailObj = $mailObj->from($this->setDynamicData($this->node->data->props->nodeData->data->content->from));
+        $mailObj = $mailObj->subject($this->setDynamicData($this->node->data->props->nodeData->data->content->subject));
         return $mailObj;
     }
 
@@ -138,7 +138,7 @@ class RobotNotification extends Notification implements ShouldQueue
         if (!$notifiable->telegram_user_id) return false;
         $tmObj = TelegramMessage::create()
             ->to($notifiable->telegram_user_id);
-        $tmObj = $tmObj->content($this->setDynamicData($this->node->data->props->nodeData->data->content->telegram->message));
+        $tmObj = $tmObj->content($this->setDynamicData($this->node->data->props->nodeData->data->content->message));
         return $tmObj;
     }
 
@@ -196,7 +196,7 @@ class RobotNotification extends Notification implements ShouldQueue
     {
         $result = [];
         if (isset($this->node->data->props->nodeData->data->content->mail->template)) {
-            $template = Template::where( 'guid', $this->node->data->props->nodeData->data->content->mail->template )->first()->html_content;
+            $template = Template::where( 'guid', $this->node->data->props->nodeData->data->content->template )->first()->html_content;
             if($template){
                 $template = $this->setDynamicData($template);
     //            $dom = new DOMDocument();
@@ -238,5 +238,13 @@ class RobotNotification extends Notification implements ShouldQueue
         $this->dataDynamic['altrpmodel'] = $this->modelData['record'] ?? null;
         $this->dataDynamic['altrpdata'] = $this->modelData['sources'] ?? null;
         $this->dataDynamic['altrprequest'] = $this->modelData['app']->request ?? null;
+    }
+
+    /**
+     * @param \Exception $exception
+     */
+    public function failed(\Exception $exception)
+    {
+        dump($exception);
     }
 }
