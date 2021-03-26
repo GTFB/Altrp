@@ -46,6 +46,7 @@ class RobotsEditor extends Component {
     this.state = {
       elements: [],
       robot: [],
+      sources: [],
       reactFlowInstance: null,
       selectNode: false,
       selectEdge: false,
@@ -54,6 +55,7 @@ class RobotsEditor extends Component {
     };
     this.changeTab = this.changeTab.bind(this);
     this.btnChange = this.btnChange.bind(this);
+    this.setSources = this.setSources.bind(this);
     this.resource = new Resource({ route: "/admin/ajax/robots" });
     this.reactFlowRef = React.createRef();
   }
@@ -70,11 +72,30 @@ class RobotsEditor extends Component {
 
     const robotId = new URL(window.location).searchParams.get("robot_id");
     const robot = await this.resource.get(robotId);
+    console.log(robot);
     store.dispatch(setCurrentRobot(robot));
+    if (robot.sources) {
+      let sources = this.changeSources(robot.sources);
+      this.setState(s => ({ ...s, sources}));
+    }
     if(!robot.chart) return;
     const data = JSON.parse(robot.chart) ?? [];
     store.dispatch(setRobotSettingsData(data));
     this.btnChange('');
+  }
+
+  setSources(sources){
+    this.setState(s => ({...s, sources}));
+  }
+
+  changeSources(sources){
+    if(_.isArray(sources)) {
+      sources.map(item =>{
+        item.parameters = item?.pivot?.parameters ?? '';
+        return item;
+      });
+    }
+    return sources;
   }
 
   // Удаление ноды или связи
@@ -186,7 +207,6 @@ class RobotsEditor extends Component {
                 "roles": [],
                 "dynamicValue": "",
               },
-              "sources": [],
               "channel": "",
               "content": {},
             }
@@ -276,12 +296,14 @@ class RobotsEditor extends Component {
           <Sidebar changeTab={this.changeTab}
                   activePanel={ this.state.activePanel }
                   robot={ this.state.robot }
+                  sources={ this.state.sources }
                   elements={ this.state.elements }
                   selectNode={ this.state.selectNode }
                   selectEdge={ this.state.selectEdge }
                   onLoad={ this.onLoad }
                   btnActive={ this.state.btnActive }
                   btnChange={ this.btnChange }
+                  setSources={ this.setSources }
           />
           <div className="content" ref={this.reactFlowRef }>
             <ReactFlow

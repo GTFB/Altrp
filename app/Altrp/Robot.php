@@ -33,6 +33,6 @@ class Robot extends Model
 
     public function sources()
     {
-        return $this->belongsToMany(Source::class, 'altrp_robot_source');
+        return $this->belongsToMany(Source::class, 'altrp_robot_source')->withPivot(['parameters']);
     }
 }

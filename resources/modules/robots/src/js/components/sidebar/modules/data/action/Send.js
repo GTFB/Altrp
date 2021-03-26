@@ -15,22 +15,18 @@ export default class Send extends Component{
         this.state = {
             usersOptions: [],
             rolesOptions: [],
-            dataSources: []
         };
         this.onSend = this.onSend.bind(this);
         this.changeSelect = this.changeSelect.bind(this);
         this.changeInput = this.changeInput.bind(this);
         this.usersOptions = new Resource({ route: "/admin/ajax/users_options" });
         this.rolesOptions = new Resource({ route: "/admin/ajax/role_options" });
-        this.dataSources = new Resource({ route: "/admin/ajax/data_source_options" });
-
     }
 
     async componentDidMount() {
         const usersOptions = await this.usersOptions.getAll();
         const rolesOptions = await this.rolesOptions.getAll();
-        const dataSources = await this.dataSources.getAll();
-        this.setState(s =>({...s, usersOptions, rolesOptions, dataSources: dataSources?.options ?? []}));
+        this.setState(s =>({...s, usersOptions, rolesOptions}));
     }
 
     // Запись значений inputs в store
@@ -43,9 +39,7 @@ export default class Send extends Component{
     // Запись значений select в store
     changeSelect(e, type) {
         const node = this.props.selectNode;
-        if(type === "sources") {
-          node.data.props.nodeData.data[type] = e ? e.map(item => item.value) : [];
-        } else if (type === "channel"){
+        if (type === "channel"){
           node.data.props.nodeData.data[type] = e.target.value;
           switch (e.target.value){
             case 'broadcast':
@@ -97,8 +91,8 @@ export default class Send extends Component{
     }
 
 
-  render(){
-        const { usersOptions, rolesOptions, dataSources } = this.state;
+    render(){
+        const { usersOptions, rolesOptions } = this.state;
         const entitiesOptions = [
             {label:'all', value: 'all'},
             {label:'dynamic user', value: 'dynamic'},
@@ -115,7 +109,6 @@ export default class Send extends Component{
         const dynamicValue = this.props.selectNode?.data?.props?.nodeData?.data?.entitiesData?.dynamicValue ?? '';
         const users = this.props.selectNode?.data?.props?.nodeData?.data?.entitiesData?.users ?? [];
         const roles = this.props.selectNode?.data?.props?.nodeData?.data?.entitiesData?.roles ?? [];
-        const sources = this.props.selectNode?.data?.props?.nodeData?.data?.sources ?? [];
         const content = this.props.selectNode?.data?.props?.nodeData?.data?.content ?? {};
 
         return <div>
@@ -147,7 +140,7 @@ export default class Send extends Component{
 
                 {(entities === 'dynamic') && <div className="settings-section-box">
                     <div className="controller-container controller-container_textarea">
-                      <div className="controller-container__label textcontroller-responsive controller-label">Message</div>
+                      <div className="controller-container__label textcontroller-responsive controller-label">Dynamic value</div>
                       <div className='controller-field'>
                         <input
                           className="control-field"
@@ -183,16 +176,6 @@ export default class Send extends Component{
                         />
                     </div>
                 </div>}
-                <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
-                  <div className="controller-container__label control-select__label controller-label">Sources</div>
-                  <AltrpSelect id="send-sources"
-                               className="controller-field"
-                               isMulti={true}
-                               value={_.filter(dataSources, s => sources.indexOf(s.value) >= 0)}
-                               onChange={e => {this.changeSelect(e, "sources")}}
-                               options={dataSources}
-                  />
-                </div>
 
                 <div className="controller-container controller-container_select">
                   <div className="controller-container__label control-select__label controller-label">Type</div>

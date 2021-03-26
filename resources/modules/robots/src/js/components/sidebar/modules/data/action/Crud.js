@@ -116,6 +116,7 @@ export default class Crud extends Component{
         const method = this.getData("method");
         const record = this.getData("record");
         const fields = this.getFields();
+      console.log(fields);
 
     return <div>
         <div className={"settings-section " + (this.props.activeSection === "crud" ? '' : 'open')}>

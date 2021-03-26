@@ -83,7 +83,7 @@ export default class SelectedPanel extends React.Component {
                           style={{lineHeight: '125%'}}
                           onChange={(e) => { this.changeInput(e) }}
                           value={ this.props.selectNode.data?.label }
-                        ></textarea>
+                        />
                       </div>}
                       {this.props.selectEdge && <Edge
                                                   robot={ this.props.robot }

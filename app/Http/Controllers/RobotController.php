@@ -71,11 +71,15 @@ class RobotController extends Controller
     public function update(Robot $robot, Request $request)
     {
         $data = $request->data;
-        $sources = $request->sources ?? [];
+
+        $sources = isset($request->sources) ? json_decode(collect($request->sources)->toJson()) : [];
+
+//        dd(json_decode($sources->toJson()));
         $sourceIds = [];
         $sourceParams = [];
 
         foreach ($sources as $source) {
+
             $sourceIds[] = $source->id;
             $sourceParams[$source->id] = $source->parameters;
         }
