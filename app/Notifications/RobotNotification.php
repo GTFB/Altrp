@@ -58,11 +58,7 @@ class RobotNotification extends Notification implements ShouldQueue
     {
         $this->dataDynamic = getCurrentEnv()->getData();
         $this->setDataDynamic($notifiable);
-        $via = [CustomDatabaseChannel::class, $this->node->data->props->nodeData->data->channel];
-//        if (isset($this->node->data->props->nodeData->data->channels)) {
-//            $via = array_merge($via, $this->parseChannels($this->node->data->props->nodeData->data->channels));
-//        }
-        return $via;
+        return [CustomDatabaseChannel::class, $this->node->data->props->nodeData->data->channel];
     }
 
     /**
@@ -94,7 +90,7 @@ class RobotNotification extends Notification implements ShouldQueue
     public function toCustomDatabase($notifiable)
     {
         return [
-            'message' => $this->setDynamicData($this->node->data->props->nodeData->data->content->message)
+            'message' => $this->templateHandler()
         ];
     }
 
@@ -190,12 +186,12 @@ class RobotNotification extends Notification implements ShouldQueue
 
     /**
      * Получение верстки шаблона по guid и его обработка (парсинг и динамические данные)
-     * @return string|string[]
+     * @return string
      */
     protected function templateHandler()
     {
         $result = [];
-        if (isset($this->node->data->props->nodeData->data->content->mail->template)) {
+        if (isset($this->node->data->props->nodeData->data->content->template)) {
             $template = Template::where( 'guid', $this->node->data->props->nodeData->data->content->template )->first()->html_content;
             if($template){
                 $template = $this->setDynamicData($template);
