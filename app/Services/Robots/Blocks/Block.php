@@ -124,7 +124,8 @@ class Block
     {
         $condition = $node->data->props->nodeData;
         $conditionBody = $condition->body;
-        if ($condition->type === "model_field") $conditionBody = $this->getBodyForType($conditionBody);
+        if (isset($condition->type) && $condition->type === "model_field")
+            $conditionBody = $this->getBodyForType($conditionBody);
         $str = '';
         $arr = [];
         foreach ($conditionBody as $item) {

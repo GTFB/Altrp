@@ -134,7 +134,14 @@ class RobotsService
     {
         $arr = [];
         foreach ($this->robotSources as $source) {
-            $job = new SendCurl($this->getSourceUrl($source), $source->request_type, [], [], true);
+            $params = $source->pivot->parameters;
+            $params = explode(PHP_EOL, $params);
+            $data = [];
+            foreach ($params as $param) {
+                $paramParts = explode('|', $param);
+                $data[trim($paramParts[0], ' ')] = $modelData['app']->request[str_replace(['{{', '}}'], '', trim($paramParts[1], ' '))] ?? null;
+            }
+            $job = new SendCurl($this->getSourceUrl($source), $source->request_type, $data, [], true);
             $this->dispatchNow($job);
             $res = $job->getResponse();
             $name = Str::snake(strtolower($source->name));

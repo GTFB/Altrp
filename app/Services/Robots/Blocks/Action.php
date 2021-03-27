@@ -64,11 +64,11 @@ class Action
             $entity = new $modelClass($data);
             $result = $entity->$method($data);
         } elseif ($method == 'delete') {
-            $id = $this->node->data->props->nodeData->data->record_id;
+            $id = $this->node->data->props->nodeData->data->record;
             $entity = $modelClass::find($id);
             $result = $entity->$method();
         } else {
-            $id = $this->node->data->props->nodeData->data->record_id;
+            $id = $this->node->data->props->nodeData->data->record;
             $entity = $modelClass::find($id);
             $result = $entity->$method($data);
         }
