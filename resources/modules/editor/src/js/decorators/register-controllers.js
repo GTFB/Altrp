@@ -218,7 +218,7 @@ export function advancedTabControllers(element) {
       rules: {
         'div{{ELEMENT}}.altrp-element': 'width: {{SIZE}}{{UNIT}};',
       },
-      condition: {
+      conditions: {
         'positioning_width_type': 'custom',
       }
     });
@@ -481,7 +481,7 @@ export function advancedTabControllers(element) {
   });
 
   element.endControlSection();
-
+  //<editor-fold description=conditional_disabled>
   element.startControlSection(
     'conditional_disabled', {
       tab: TAB_ADVANCED,
@@ -598,6 +598,125 @@ export function advancedTabControllers(element) {
   });
 
   element.endControlSection();
+  //</editor-fold>
+  //<editor-fold description=conditional_active>
+  element.startControlSection(
+    'conditional_active', {
+      tab: TAB_ADVANCED,
+      label: 'Conditional Active',
+    }
+  );
+
+  element.addControl('conditional_active_head', {
+    type: CONTROLLER_HEADING,
+    label: 'Active when ...',
+  });
+
+  element.addControl('conditional_active_choose', {
+    type: CONTROLLER_SELECT,
+    label: 'Authorize Condition',
+    responsive: false,
+    options: [
+      {
+        label: 'all',
+        value: '',
+      },
+      {
+        value: 'guest',
+        label: 'Guest Only',
+      },
+      {
+        value: 'auth',
+        label: 'Authorized Only',
+      },
+    ],
+  });
+
+  element.addControl('conditional_active_roles', {
+    type: CONTROLLER_SELECT2,
+    label: 'User has Roles',
+    conditions: {
+      'conditional_active_choose' : 'auth',
+    },
+    options_resource: '/admin/ajax/role_options?value=name',
+    isMulti: true,
+    prefetch_options: true,
+    responsive: false,
+    isClearable: true,
+  });
+
+  element.addControl('conditional_active_permissions', {
+    type: CONTROLLER_SELECT2,
+    label: 'User has Permissions',
+    conditions: {
+      'conditional_active_choose' : 'auth',
+    },
+    options_resource: '/admin/ajax/permissions_options?value=name',
+    isMulti: true,
+    prefetch_options: true,
+    responsive: false,
+    isClearable: true,
+  });
+
+  element.addControl('active_conditional_other', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Other Conditions',
+    responsive: false,
+    default: false,
+  });
+
+  element.addControl('active_conditional_other_display', {
+    type: CONTROLLER_SELECT,
+    label: 'Display on',
+    responsive: false,
+    options: [
+      {
+        label: 'All Conditions Met',
+        value: 'AND',
+      },
+      {
+        label: 'Any Condition Met',
+        value: 'OR',
+      },
+    ],
+    default: 'AND',
+    conditions: {
+      'active_conditional_other': true,
+    },
+  });
+
+  const activeModelRepeater = new Repeater();
+
+  activeModelRepeater.addControl('conditional_model_field', {
+    responsive: false,
+    label: 'Path',
+  });
+
+  activeModelRepeater.addControl('conditional_other_operator', {
+    type: CONTROLLER_SELECT,
+    responsive: false,
+    default: 'empty',
+    options: CONDITIONS_OPTIONS,
+  });
+
+  activeModelRepeater.addControl('conditional_other_condition_value', {
+    responsive: false,
+  });
+
+  element.addControl('active_conditions', {
+    label: 'Conditions',
+    type: CONTROLLER_REPEATER,
+    responsive: false,
+    fields: activeModelRepeater.getControls(),
+    default: [
+    ],
+    conditions: {
+      'active_conditional_other': true,
+    },
+  });
+
+  element.endControlSection();
+  //</editor-fold>
 
   element.startControlSection(
     'responsive_display', {

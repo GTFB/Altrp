@@ -48,6 +48,7 @@ class Button extends BaseElement {
     }
 
     this.startControlSection('button_type_section', {
+      hideOnEmail: true,
       tab: TAB_CONTENT,
       label: 'Button type',
     });
@@ -186,6 +187,7 @@ class Button extends BaseElement {
     actionsControllers(this);
 
     this.startControlSection("form_section", {
+      hideOnEmail: true,
       tab: TAB_CONTENT,
       label: "Form Settings"
     });
@@ -447,6 +449,7 @@ class Button extends BaseElement {
     this.endControlSection();
     //<editor-fold desc="other_actions_on">
     this.startControlSection('other_actions', {
+      hideOnEmail: true,
       tab: TAB_CONTENT,
       label: 'Other Actions',
     });
@@ -533,6 +536,7 @@ class Button extends BaseElement {
     });
 
     this.addControl('position_z_index', {
+      hideOnEmail: true,
       type: CONTROLLER_NUMBER,
       label: 'Z-index',
       default: 0,
@@ -578,6 +582,7 @@ class Button extends BaseElement {
     });
 
     this.addControl('gradient', {
+      hideOnEmail: true,
       type: CONTROLLER_GRADIENT,
       label: 'Gradient',
       default: {
@@ -849,10 +854,6 @@ class Button extends BaseElement {
     this.addControl('style_background_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Shadow',
-      presetColors: [
-        '#eaeaea',
-        '#9c18a8'
-      ],
       rules: {
         '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
       },
@@ -908,6 +909,7 @@ class Button extends BaseElement {
     this.endControlSection();
 
     this.startControlSection("icon_style", {
+      hideOnEmail: true,
       tab: TAB_STYLE,
       label: "Icon"
     });
@@ -979,6 +981,7 @@ class Button extends BaseElement {
     this.endControlSection();
 
     this.startControlSection("btn_transition", {
+      hideOnEmail: true,
       tab: TAB_STYLE,
       label: "Transition"
     });
@@ -1050,6 +1053,7 @@ class Button extends BaseElement {
 
     this.startControlSection(
       'creative_link', {
+      hideOnEmail: true,
       tab: TAB_STYLE,
       label: 'Creative Link',
     }

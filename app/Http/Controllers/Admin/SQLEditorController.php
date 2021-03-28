@@ -65,17 +65,21 @@ class SQLEditorController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'title' => 'required|max:32',
+            'name' => 'required|max:32'
+        ]);
 
-      $sQLEditor = new SQLEditor( $request->all() );
+        $sQLEditor = new SQLEditor( $request->all() );
 
-      if( $sQLEditor->save() ) {
-        return response()->json( ['success' => true], 200,  [], JSON_UNESCAPED_UNICODE );
-      }
-      return response()->json( ['success' => false, 'Error on Delete'], 200,  [], JSON_UNESCAPED_UNICODE );
+        if( $sQLEditor->save() ) {
+            return response()->json( ['success' => true], 200,  [], 256 );
+        }
+        return response()->json( ['success' => false, 'Error on Delete'], 200,  [], 256 );
     }
 
   /**
@@ -111,6 +115,11 @@ class SQLEditorController extends Controller
      */
     public function update(Request $request, $sql_editor)
     {
+        $request->validate([
+            'title' => 'required|max:32',
+            'name' => 'required|max:32'
+        ]);
+
         $sQLEditor = SQLEditor::where('id',$sql_editor)
             ->with([
                 'altrp_source.source_permissions.permission',

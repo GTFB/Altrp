@@ -12,6 +12,9 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Telegram\TelegramChannel;
 use NotificationChannels\Telegram\TelegramMessage;
+use App\Constructor\Template;
+use DOMDocument;
+
 
 class RobotNotification extends Notification implements ShouldQueue
 {
@@ -21,6 +24,8 @@ class RobotNotification extends Notification implements ShouldQueue
      * @var object узел диаграммы робота
      */
     private $node;
+
+    private $dataDynamic = [];
 
     /**
      * @var object узел диаграммы робота
@@ -46,6 +51,9 @@ class RobotNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
+        $this->dataDynamic = getCurrentEnv()->getData();
+        $this->dataDynamic['altrpuserto'] = $notifiable->toArray();
+
         $via = [CustomDatabaseChannel::class];
         if (isset($this->node->data->props->nodeData->data->channels)) {
             $via = array_merge($via, $this->parseChannels($this->node->data->props->nodeData->data->channels));
@@ -107,8 +115,13 @@ class RobotNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+
         $mailObj = new MailMessage;
-        $mailObj = $mailObj->line($this->replaceColumns($this->node->data->props->nodeData->data->content->mail->message));
+        $mailObj = $mailObj->view(
+            'emails.robotmail', ['data' => $this->templateHandler()]
+        );
+        $mailObj = $mailObj->from($this->replaceColumns($this->node->data->props->nodeData->data->content->mail->from));
+        $mailObj = $mailObj->subject($this->replaceColumns($this->node->data->props->nodeData->data->content->mail->subject));
         return $mailObj;
     }
 
@@ -159,17 +172,56 @@ class RobotNotification extends Notification implements ShouldQueue
      */
     protected function replaceColumns($subject)
     {
-
         preg_match_all("#\{\{altrpdata\.(?<fields>[\w]+)\}\}#", $subject, $matches);
-        if ($matches) {
+        if ($matches && !empty($this->modelData)) {
             $matches = $matches['fields'];
+            $item = $this->modelData['record'];
             foreach ($matches as $field) {
-                if (in_array($field, $this->modelData['columns'])) {
-                    $subject = str_replace("{{altrpdata.{$field}}}", $this->modelData['record']->$field, $subject);
+                if ($item && in_array($field, $this->modelData['columns'])) {
+                    $subject = str_replace("{{altrpdata.{$field}}}", $item->$field, $subject);
                 }
             }
         }
         return $subject;
     }
 
+    /**
+     * Получение верстки шаблона по guid и его обработка (парсинг и динамические данные)
+     * @return string|string[]
+     */
+    protected function templateHandler()
+    {
+        $result = [];
+        if (isset($this->node->data->props->nodeData->data->content->mail->template)) {
+            $template = Template::where( 'guid', $this->node->data->props->nodeData->data->content->mail->template )->first()->html_content;
+            if($template){
+                $template = $this->setDynamicData($template);
+    //            $dom = new DOMDocument();
+    //            $dom->loadHTML($template);
+                $result = $template;
+            }
+        }
+         return $result;
+    }
+
+    /**
+     * Заменить динамические переменные на данные из CurrentEnvironment
+     * @param string $template
+     * @return string|string[]
+     */
+    public function setDynamicData($template)
+    {
+        try {
+            preg_match_all("#\{\{(?<path>(.*?)+)\}\}#", $template, $matches);
+            $matches = $matches['path'];
+
+            foreach ($matches as $path){
+                    $item = data_get($this->dataDynamic, $path);
+                    $template = str_replace("{{{$path}}}", $item, $template);
+            }
+            return $template;
+        } catch (\Exception $e){
+            dump($e);
+        }
+    }
 }

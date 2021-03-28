@@ -36,11 +36,11 @@ class FrontApp extends Component {
 
     let pusherKey = await new Resource({ route: "/admin/ajax/settings" }).get("pusher_app_key");
     let websocketsPort = await new Resource({ route: "/admin/ajax/settings" }).get("websockets_port");
-    
+    let websocketsHost = await new Resource({ route: "/admin/ajax/settings" }).get("pusher_host");
+
     pusherKey = pusherKey?.pusher_app_key;
     websocketsPort = websocketsPort?.websockets_port;
-
-    console.log(websocketsPort);
+    websocketsHost = websocketsHost?.pusher_host;
 
     // Проверка наличия ключа и порта
     if(pusherKey && websocketsPort){
@@ -49,12 +49,11 @@ class FrontApp extends Component {
         window.Echo = new Echo({
           broadcaster: "pusher",
           key: pusherKey,
-          wsHost: window.location.hostname,
+          wsHost: websocketsHost,
           wsPort: websocketsPort,
           forceTLS: false,
-          disableStats: true
+          disableStats: true,
         });
-        console.log("Вебсокеты включены");
 
       } catch (error) {
         console.log(error);
@@ -66,13 +65,13 @@ class FrontApp extends Component {
         // Запись пришедших по каналу уведомлений в appStore
         appStore.dispatch(setUserNotice(notification));
         console.log(appStore.getState().currentUser, 'STORE NOTICE');
-      });  
+      });
 
     } else {
      console.log("Вебсокеты выключены");
     }
   }
-  
+
   render() {
     return (
       <Provider store={appStore}>

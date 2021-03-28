@@ -9,41 +9,41 @@ use App\Http\Requests\SendMailRequest;
 use App\Http\Requests\WriteMailSettingsRequest;
 use App\Mail;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Jackiedo\DotenvEditor\Facades\DotenvEditor;
-//use PHPMailer\PHPMailer\PHPMailer;
-//use PHPMailer\PHPMailer\SMTP;
 
 class MailController extends Controller
 {
-  static $keys = [
-    'MAIL_DRIVER',
-    'MAIL_HOST',
-    'MAIL_PORT',
-    'MAIL_USERNAME',
-    'MAIL_PASSWORD',
-    'MAIL_ENCRYPTION',
-    'MAIL_FROM_ADDRESS',
-    'MAIL_FROM_NAME',
-  ];
+    static $keys = [
+      'MAIL_DRIVER',
+      'MAIL_HOST',
+      'MAIL_PORT',
+      'MAIL_USERNAME',
+      'MAIL_PASSWORD',
+      'MAIL_ENCRYPTION',
+      'MAIL_FROM_ADDRESS',
+      'MAIL_FROM_NAME',
+      'MAIL_TO_NEW_USERS'
+    ];
 
-  /**
-   * @param Request $request
-   * @throws \Jackiedo\DotenvEditor\Exceptions\KeyNotFoundException
-   */
-  public function getSettings( Request $request){
-    $settings = [];
+    /**
+     * @param Request $request
+     * @throws \Jackiedo\DotenvEditor\Exceptions\KeyNotFoundException
+     */
+    public function getSettings( Request $request){
+      $settings = [];
 
-    foreach ( self::$keys as $key ) {
-      if( DotenvEditor::keyExists( $key ) ){
-        $settings[Str::lower( $key )] = DotenvEditor::getValue( $key );
-      } else {
-        $settings[Str::lower( $key )] = '';
+      foreach ( self::$keys as $key ) {
+        if( DotenvEditor::keyExists( $key ) ){
+          $settings[Str::lower( $key )] = DotenvEditor::getValue( $key );
+        } else {
+          $settings[Str::lower( $key )] = '';
+        }
       }
+      return response()->json(['success' => true, 'data'=>$settings], 200, [], JSON_UNESCAPED_UNICODE);
     }
-    return response()->json(['success' => true, 'data'=>$settings], 200, [], JSON_UNESCAPED_UNICODE);
-  }
     /**
      * Отправить письмо
      *
@@ -58,7 +58,7 @@ class MailController extends Controller
       $from_name = $request->get('name') ? $request->get('name') : config('mail.from.name');
       $data['email'] = $from_email;
       $data['name'] = $from_name;
-      $adminEmail = config('mail.username');
+      $adminEmail = config('mail.from.address');
       $mail = new Mail($data);
       try {
           $mail->save();
@@ -92,7 +92,7 @@ class MailController extends Controller
       $data['email'] = $to_email;
       $data['name'] = $from_name;
       $data['html'] = $html;
-      $adminEmail = config('mail.username');
+      $adminEmail = config('mail.from.address');
       $mail = new Mail($data);
       try {
           $mail->save();
@@ -105,8 +105,8 @@ class MailController extends Controller
               if( $attachments ){
                 $attachments = explode( "\n", $attachments );
                 foreach ( $attachments as $attachment ) {
-                  if( File::exists( $attachment ) ){
-                    $message->attach( $attachment );
+                  if( Storage::exists( $attachment ) ){
+                    $message->attach( Storage::path( $attachment ) );
                   }
                 }
               }
@@ -116,7 +116,7 @@ class MailController extends Controller
         $mail->save();
         return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
       }
-
+      data_get('', '');
       return response()->json(['success' => true, 'message' => 'Message sent!'], 200);
     }
 
@@ -146,5 +146,44 @@ class MailController extends Controller
       }
 
       return response()->json(['success' => true, 'message' => 'Mail settings configure successfully.'], 200);
+    }
+
+    /**
+     * Записать настройки почты в .env файл
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function switchHandler(Request $request)
+    {
+        $file = base_path('.env');
+        if (!file_exists($file)) throw new \Exception('File .env not found!', 500);
+
+        $key = 'MAIL_TO_NEW_USERS';
+
+        // // Получение значения ключа
+        // if( DotenvEditor::keyExists( $key ) ) $tempKey = DotenvEditor::getValue( $key );
+
+        // // При отсутствии ключа или при пустом значении, ему присваивается дефолтное значение (true)
+        // if(empty($tempKey)) {
+        //     try{
+        //         DotenvEditor::setKey( $item,  );
+        //         DotenvEditor::save();
+        //     } catch (Exception $e){
+        //         return false;
+        //     }
+        // }
+
+
+        // dump($request);
+
+        try{
+          DotenvEditor::setKey($key, $request->data === 'true' ? 'true' : 'false');
+          DotenvEditor::save();
+        } catch (\Exception $e){
+          return response()->json(['success' => false, 'message' => 'Failed to write mail setting ' . $key], 500);
+        }
+
+      return response()->json(['success' => true], 200);
     }
 }

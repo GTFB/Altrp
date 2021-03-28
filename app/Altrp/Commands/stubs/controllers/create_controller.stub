@@ -52,7 +52,12 @@ class DummyClass extends ApiController
             }
         }
 
-        ${{crudNameSingular}} = new {{modelName}}($data);
+        ${{crudNameSingular}} = new {{modelName}};
+
+        $data = $this->hashPasswordAttributeIfExists(${{crudNameSingular}}->getTable(), $data);
+
+        ${{crudNameSingular}}->fill($data);
+
         $res = ${{crudNameSingular}}->save();
         if($res){
             return response()->json(['success'=>true, 'data'=>${{crudNameSingular}}], 200, [], JSON_UNESCAPED_UNICODE);
@@ -112,6 +117,8 @@ class DummyClass extends ApiController
         if(! ${{crudNameSingular}}) {
             return response()->json(['success'=>false, 'message' => trans("responses.not_found.{{crudNameSingular}}")], 404, [], JSON_UNESCAPED_UNICODE);
         }
+
+        $data = $this->hashPasswordAttributeIfExists(${{crudNameSingular}}->getTable(), $data);
 
         $result = ${{crudNameSingular}}->update($data);
 

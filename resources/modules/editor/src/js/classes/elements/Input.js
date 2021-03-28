@@ -355,6 +355,9 @@ class Input extends BaseElement {
         }
       ],
       label: "Background Position",
+      conditions: {
+        content_type: ["image_select"]
+      },
       rules: {
         "{{ELEMENT}} .altrp-image-select img{{STATE}}":
           "object-position: {{VALUE}};"
@@ -660,7 +663,11 @@ class Input extends BaseElement {
 
     this.endControlSection();
 
-    actionsControllers(this);
+    actionsControllers(this, 'Blur Actions');
+    
+    actionsControllers(this, 'Focus Actions', 'focus_');
+
+    actionsControllers(this, 'Change Actions', 'change_');
 
     // this.startControlSection('logic_section', {
     //   tab: TAB_CONTENT,
@@ -797,7 +804,6 @@ class Input extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-field-label{{STATE}}": "color: {{COLOR}};"
       }
@@ -1017,7 +1023,6 @@ class Input extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-field-select2__single-value{{STATE}}":
           "color : {{COLOR}};",
@@ -1148,7 +1153,6 @@ class Input extends BaseElement {
     this.addControl("placeholder_style_font_color", {
       type: CONTROLLER_COLOR,
       label: "font color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-field::placeholder{{STATE}}": "color: {{COLOR}};",
         "{{ELEMENT}} .altrp-field-select2__placeholder{{STATE}}":
@@ -1193,7 +1197,6 @@ class Input extends BaseElement {
     this.addControl("required_style_font_color", {
       type: CONTROLLER_COLOR,
       label: "font color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-field-label--required::after{{STATE}}":
           "color: {{COLOR}};"
@@ -1394,7 +1397,6 @@ class Input extends BaseElement {
         colorPickedHex: "#000000",
         type: " "
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-field{{STATE}}":
           "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};",
@@ -1506,7 +1508,6 @@ class Input extends BaseElement {
     this.addControl("mismatch_message_font_color", {
       type: CONTROLLER_COLOR,
       label: "Font Color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .mask-mismatch-message{{STATE}}": "color: {{COLOR}};"
       }

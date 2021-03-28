@@ -12,7 +12,6 @@ import { getDataByPath } from "../../../../../front-app/src/js/helpers";
 const MapDesigner = React.lazy(() => import("./MapDesigner"));
 
 function AltrpMapConstructor({ settings, id }) {
-  console.log(id);
   const [isLoading, setIsLoading] = useState(false);
   const [geoJson, setGeoJson] = useState({});
 
@@ -33,13 +32,12 @@ function AltrpMapConstructor({ settings, id }) {
     url_connect = null,
     field_first_connect = null,
     field_second_connect = null,
-    onlyDatasource = false
+    onlyDatasource = false,
+    parameters
   } = settings;
   let latitude = lat;
   let longitude = lng;
-  console.log("====================================");
-  console.log(onlyDatasource);
-  console.log("====================================");
+
   const currentDataStorage = useSelector(
     state => state.currentDataStorage.data
   );
@@ -228,6 +226,7 @@ function AltrpMapConstructor({ settings, id }) {
         url={url}
         field_id={field_id}
         center={[latitude || 50.7496449, longitude || 86.1250068]}
+        parameters={parameters}
       />
     </Suspense>
   );

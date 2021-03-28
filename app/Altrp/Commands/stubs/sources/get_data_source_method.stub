@@ -1,9 +1,11 @@
     public function {{methodName}}()
     {
+        $data = request()->all();
         $url = "{{url}}";
+        $url = $this->replaceUrlDynamicParams($url, $data);
         $response = \Curl::to($url)
                     ->withHeaders({{headers}})
-                    ->withData(request()->all())
+                    ->withData($data)
                     ->asJson()
                     ->get();
         return response()->json($response, 200, [], JSON_UNESCAPED_UNICODE);

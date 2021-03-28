@@ -61,6 +61,7 @@ import AdminVersion from "./components/AdminVersion";
 import SQLEditors from "./components/SQLEditors";
 import ColorSchemes from "./components/dashboard/ColorSchemes";
 import ModelPage from "./components/models/ModelPage";
+import FontsForm from "./components/FontsForm";
 
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 import Resource from "../../editor/src/js/classes/Resource";
@@ -101,21 +102,23 @@ class Admin extends Component {
       .then(({ options }) => this.setState({ models: options }));
 
     this.getConnect();
-  }  
+  }
 
   // Подключение вебсокетов
   async getConnect() {
     // get current user
-    let currentUser = await new Resource({ route: "/ajax/current-user" }).getAll();    
+    let currentUser = await new Resource({ route: "/ajax/current-user" }).getAll();
     currentUser = currentUser.data;
     store.dispatch(changeCurrentUser(currentUser));
 
 
     let pusherKey = await new Resource({ route: "/admin/ajax/settings" }).get("pusher_app_key");
     let websocketsPort = await new Resource({ route: "/admin/ajax/settings" }).get("websockets_port");
-    
+    let websocketsHost = await new Resource({ route: "/admin/ajax/settings" }).get("pusher_host");
+
     pusherKey = pusherKey?.pusher_app_key;
     websocketsPort = websocketsPort?.websockets_port;
+    websocketsHost = websocketsHost?.pusher_host;
 
     // Проверка наличия ключа и порта
     if(pusherKey && websocketsPort){
@@ -124,10 +127,10 @@ class Admin extends Component {
         window.Echo = new Echo({
           broadcaster: "pusher",
           key: pusherKey,
-          wsHost: window.location.hostname,
+          wsHost: websocketsHost,
           wsPort: websocketsPort,
           forceTLS: false,
-          disableStats: true
+          disableStats: true,
         });
         console.log("Вебсокеты включены");
 
@@ -143,7 +146,7 @@ class Admin extends Component {
       window.Echo.private("App.User." + currentUser.id)
       .notification((notification) => {
         console.log(notification);
-      });  
+      });
 
     } else {
      console.log("Вебсокеты выключены");
@@ -263,6 +266,16 @@ class Admin extends Component {
                           <AssetSvg className="icon" />
                           <span>Assets</span>
                         </Link>
+                        <ul className="admin-nav-list admin-nav-list--sublist">
+                          <li>
+                            <Link
+                              to="/admin/assets/custom-fonts"
+                              className="admin-nav-list__link"
+                            >
+                              <span>Custom fonts</span>
+                            </Link>
+                          </li>
+                        </ul>
                       </li>
                       <li>
                         {/*<Link to="/admin/tables" className="admin-nav-list__link">*/}
@@ -390,6 +403,9 @@ class Admin extends Component {
               <EditNotification />
             </Route>            <Route path="/admin/tools">
               <UsersTools />
+            </Route>
+            <Route path="/admin/assets/custom-fonts">
+              <FontsForm />
             </Route>
             <Route path="/admin/assets">
               <Assets />

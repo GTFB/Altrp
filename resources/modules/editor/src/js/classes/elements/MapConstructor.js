@@ -72,13 +72,13 @@ class MapConstructor extends BaseElement {
 
     this.addControl("latDs", {
       type: CONTROLLER_TEXT,
-      label: "Latitude from datasource",
+      label: "Longitude from datasource",
       conditions: { centerByDatasource: true }
     });
 
     this.addControl("lngDs", {
       type: CONTROLLER_TEXT,
-      label: "Longitude from datasource",
+      label: "Latitude from datasource",
       conditions: { centerByDatasource: true }
     });
 
@@ -126,6 +126,72 @@ class MapConstructor extends BaseElement {
     this.addControl("field_id", {
       type: CONTROLLER_TEXT,
       label: "Field ID (Column Name)"
+    });
+
+    const parameters = new Repeater();
+
+    parameters.addControl("parent_field_to_save", {
+      label: "Set field name on parent model",
+      dynamic: false
+    });
+
+    parameters.addControl("input_type", {
+      label: "Set input type",
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "select",
+          label: "Select"
+        },
+        {
+          value: "text",
+          label: "Text"
+        },
+        {
+          value: "number",
+          label: "Number"
+        },
+        {
+          value: "date",
+          label: "Date"
+        }
+      ]
+    });
+
+    parameters.addControl("parameter_path", {
+      label: "Set datasource",
+      dynamic: false,
+      conditions: {
+        input_type: ["select"]
+      }
+    });
+
+    parameters.addControl("parameter_title", {
+      label: "Set title for parameter",
+      dynamic: false
+    });
+
+    parameters.addControl("parameter_label", {
+      label: "Set field from datasource for parameter label",
+      dynamic: false,
+      conditions: {
+        input_type: ["select"]
+      }
+    });
+
+    parameters.addControl("parameter_value", {
+      label: "Set field from datasource for parameter value",
+      dynamic: false,
+      conditions: {
+        input_type: ["select"]
+      }
+    });
+
+    this.addControl("parameters", {
+      label: "Custom parameters",
+      type: CONTROLLER_REPEATER,
+      default: [],
+      fields: parameters.getControls()
     });
 
     this.addControl("url_connect", {

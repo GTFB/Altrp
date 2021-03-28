@@ -37,9 +37,6 @@ class Websockets extends Component {
 
   render() {
     let value = store.getState().websocketStore?.enabled ?? false;
-    console.log(store.getState().websocketStore);
-    console.log(window.Echo?.connector?.pusher);
-    console.log(value);
     let switcherClasses = `control-switcher control-switcher_${value ? 'on' : 'off'}`;
     return <div className="admin_settings_websockets">
       <div className="admin_settings_websockets_box">
@@ -76,6 +73,19 @@ class Websockets extends Component {
             resourceid="pusher_app_key"
             id="websockets-key"
             className="admin_input_key" />
+        </div>
+
+        <div className="admin_input__label" width="10%">
+              <label htmlFor="websockets-key">
+                Host:
+              </label>
+        </div>
+        <div className="admin_input">
+          <AutoUpdateInput type="text"
+            route="/admin/ajax/settings"
+            resourceid="pusher_host"
+            id="websockets-host"
+            className="admin_input_host" />
         </div>
 
         <div>

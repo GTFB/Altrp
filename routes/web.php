@@ -86,6 +86,11 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
   Route::group(['prefix' => 'ajax'], function () {
+    /**
+     * Роуты модели AltrpMeta
+     */
+    Route::get('/altrp_meta/{meta_name}', 'Admin\AltrpMetaController@getMetaByName');
+    Route::put('/altrp_meta/{meta_name}', 'Admin\AltrpMetaController@saveMeta');
 
     // Websockets
     Route::get('/websockets', 'Admin\WebsocketsController@index');
@@ -401,6 +406,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
      * Настройка почты
      */
     Route::post('/write_mail_settings', 'MailController@writeSettingsToEnv');
+    Route::post('/write_send_mail', 'MailController@switchHandler');
     Route::get('/get_mail_settings', 'MailController@getSettings');
     /**
      * Роуты ипортов Админки
@@ -437,8 +443,10 @@ Route::get('/', function () {
 
   return view('front-app', [
     'title' => 'Main',
+    'page_id' => '',
     '_frontend_route' => [],
     'preload_content' => [],
+    'page_areas' => '[]',
     'is_admin' => isAdmin(),
   ]);
 })->middleware(['web', 'installation.checker']);

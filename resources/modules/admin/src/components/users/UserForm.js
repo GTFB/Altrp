@@ -161,7 +161,7 @@ class UserForm extends Component {
           onChange={(e) => { this.changeValue(e) }}
           className="form-control" />
       </div>
-      
+
       <div className="form-group">
         <label htmlFor="page-title">Email</label>
         <input type="email" id="email" name="email" required={1}
@@ -204,6 +204,14 @@ class UserForm extends Component {
         <input type="text" id="second_name" name="second_name"
           value={this.state.usermeta.second_name || ''}
           onChange={(e) => { this.changeValue(e, "usermeta") }}
+          className="form-control" />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="page-description">Telegram ID</label>
+        <input type="text" id="telegram_user_id" name="telegram_user_id"
+          value={this.state.user.telegram_user_id || ''}
+          onChange={(e) => { this.changeValue(e) }}
           className="form-control" />
       </div>
 

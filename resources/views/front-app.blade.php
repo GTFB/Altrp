@@ -5,11 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <script>
+    window.altrp = {
+      version: '{{ getCurrentVersion() }}'
+    };
     /* <![CDATA[ */
     window.pageStorage = {};
     window.ALTRP_DEBUG = {!! json_encode( ! ! get_altrp_setting( 'altrp_debug', false ) ) !!};
 
-    var page_id = {{$page_id}};
+    var page_id = {{ $page_id }};
     var page_areas = {!! $page_areas !!};
 
     if (typeof page_id !== 'undefined' && typeof page_areas !== 'undefined') {
@@ -91,5 +94,4 @@ try {
   </script>
 @endif
 </body>
-<link rel="stylesheet" href="{{ asset( '/modules/front-app/front-app.css' ) . '?' . getCurrentVersion() }}" />
 </html>

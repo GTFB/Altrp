@@ -19,7 +19,7 @@ class Block
     protected $nodes;
 
     /**
-     * @var string Запись модели
+     * @var array Запись модели
      */
     protected $modelData;
 
@@ -62,7 +62,12 @@ class Block
 
         $currentNodeEdgesSource = $this->getCurrentNodeEdgesSource($currentNode, $currentNodeEdgesSources);
 
-        if ($currentNode->data->props->type == 'action') {
+        if (
+            $currentNode->data->props->type === 'documentAction' ||
+            $currentNode->data->props->type === 'crudAction' ||
+            $currentNode->data->props->type === 'apiAction' ||
+            $currentNode->data->props->type === 'messageAction'
+        ) {
             $this->doAction($currentNode);
         } elseif ($currentNode->data->props->type == 'robot') {
             $this->runRobot($currentNode);
@@ -106,11 +111,10 @@ class Block
         $str = '';
         $arr = [];
         foreach ($conditionBody as $item) {
-            dump(is_numeric($item->operands[0]), is_numeric($item->operands[1]));
             $arr[] = $this->formExpression($item);
         }
         $str .= ' (' . implode($condition->operator, $arr) . ') ';
-        $str = '$model = ' . $this->modelData['record'] . '; if(' .$str .') { return true; } else { return false; }';
+        $str = 'if(' .$str .') { return true; } else { return false; }';
         return eval($str);
     }
 
@@ -239,6 +243,6 @@ class Block
      */
     public function isEnd()
     {
-        return self::$nextNode->data->props->type == 'end';
+        return self::$nextNode->data->props->type == 'finish';
     }
 }

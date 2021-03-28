@@ -1,4 +1,5 @@
-import {isEditor, prepareURLForEmail} from "../../../../../front-app/src/js/helpers";
+import _, { head } from "lodash";
+import {isEditor, parseURLTemplate, prepareURLForEmail} from "../../../../../front-app/src/js/helpers";
 
 /**
  * Возвращает шаблон колонки для письма
@@ -61,9 +62,8 @@ export default function headingElementEmailRender(){
   if(settings['gradient'] && settings['gradient'].isWithGradient) {
     headingStyles.backgroundImage = settings['gradient'].value.slice(0, -1);
   }
-
-  if(settings['background_image'].url) {
-    headingStyles.backgroundImage = `url(${settings['background_image'].url})`;
+  if(_.get(settings, 'background_image.url')) {
+    headingStyles.backgroundImage = `url(${prepareURLForEmail(settings['background_image'].url)})`;
   }
 
   if(settings['background_position']) {
@@ -91,6 +91,12 @@ export default function headingElementEmailRender(){
     headingStyles.borderRightWidth = settings['style_border_width'].right + settings['style_border_width'].unit;
     headingStyles.borderBottomWidth = settings['style_border_width'].bottom + settings['style_border_width'].unit;
     headingStyles.borderLeftWidth = settings['style_border_width'].left + settings['style_border_width'].unit;
+    if(settings["style_border_width"].unit==="%") {
+      headingStyles.borderTopWidth = settings['style_border_width'].top + 'vw';
+      headingStyles.borderRightWidth = settings['style_border_width'].right + 'vw';
+      headingStyles.borderBottomWidth = settings['style_border_width'].bottom + 'vw';
+      headingStyles.borderLeftWidth = settings['style_border_width'].left + 'vw';
+    }
     headingStyles.borderStyle = settings['style_border_type'];
     if(settings['style_border_color'] && settings['style_border_color'].colorPickedHex)
       headingStyles.borderColor = settings['style_border_color'].colorPickedHex;
@@ -110,7 +116,10 @@ export default function headingElementEmailRender(){
   if(settings['transform_style']) {
     headingStyles.transform = `${settings['transform_style'].function}(${settings['transform_style'].size}${settings['transform_style'].unit})`
   }
-
+  if(settings['heading_settings_alignment']) {
+    headingStyles.justifyContent = settings['heading_settings_alignment'];
+    headingStyles.display = "flex";
+  }
   let url = _.get(settings, 'link_link.url', location.origin) || '';
   url = prepareURLForEmail(url);
   const text = this.getContent('text') || '';

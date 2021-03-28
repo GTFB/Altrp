@@ -77,6 +77,19 @@ class MediaController extends Controller
       $media->filename =  $file->storeAs( 'media/' .  date("Y") . '/' .  date("m" ) ,
         Str::random(40) . '.' . $file->getClientOriginalExtension(),
         ['disk' => 'public'] );
+
+      $path = Storage::path( 'public/' . $media->filename );
+      $ext = pathinfo( $path, PATHINFO_EXTENSION );
+      if( $ext === 'svg' ){
+        $svg = file_get_contents( $path );
+        $svg = simplexml_load_string( $svg );
+        $media->width = ( string ) data_get( $svg->attributes(), 'width', 150 );
+        $media->height = ( string ) data_get( $svg->attributes(), 'height', 150 );
+      } else {
+        $size = getimagesize( $path );
+        $media->width = data_get( $size, '0', 0 );
+        $media->height = data_get( $size, '1', 0 );
+      }
       $media->url =  Storage::url( $media->filename );
       $media->save();
       $res[] = $media;
@@ -92,9 +105,10 @@ class MediaController extends Controller
    * @param Media $media
    * @return \Illuminate\Http\Response
    */
-  public function show( Media $media )
+  public function show( $id, Media $media )
   {
     //
+    $media = $media->find( $id );
     return response()->json( $media->toArray() );
 
   }
@@ -105,9 +119,17 @@ class MediaController extends Controller
    * @param  int $id
    * @return \Illuminate\Http\Response
    */
-  public function edit( $id )
+  public function edit( $id, Request $request )
   {
     //
+    $media = Media::find( $id );
+
+    if( ! $media ){
+      return response()->json( ['success' => false,], 404, [], JSON_UNESCAPED_UNICODE);
+    }
+    $media->fill( $request->all() );
+    $media->save();
+    return response()->json( ['success' => true,], 200, [], JSON_UNESCAPED_UNICODE);
   }
 
   /**
@@ -120,6 +142,13 @@ class MediaController extends Controller
   public function update( Request $request, $id )
   {
     //
+    $media = Media::find( $id );
+    if( ! $media ){
+      return response()->json( ['success' => false,], 404, [], JSON_UNESCAPED_UNICODE);
+    }
+    $media->fill( $request->all() );
+    $media->save();
+    return response()->json( ['success' => true,], 200, [], JSON_UNESCAPED_UNICODE);
   }
 
   /**

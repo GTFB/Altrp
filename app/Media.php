@@ -16,6 +16,12 @@ class Media extends Model
     'media_type',
     'url',
     'type',
+    'caption',
+    'title',
+    'description',
+    'alternate_text',
+    'width',
+    'height',
   ];
 
   /**

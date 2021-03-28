@@ -1,3 +1,3 @@
 <div>
-    Message: {{ $user_message }}
+   {!! $data !!}
 </div>

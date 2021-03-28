@@ -35,7 +35,7 @@ class TextController extends Component {
   onKeyDown = (event) => {
     event.stopPropagation();
     event.nativeEvent.stopImmediatePropagation();
-  }
+  };
   /**
    * Изменение больше не обновляет элемент
    * @param e
@@ -54,6 +54,7 @@ class TextController extends Component {
     }
     // let value = this.getSettings(this.props.controlId) || this.getDefaultValue(); todo: удалить если будет работать
     let value = this.state.value || this.getDefaultValue();
+    // let value = this.getSettings(this.props.controlId);
     return <div className="controller-container controller-container_text">
       <div className="controller-container__label textcontroller-responsive">
         {this.props.label}
@@ -75,7 +76,7 @@ class TextController extends Component {
         </div> : <input className="control-field"
                         onBlur={this.onBlur}
                         onKeyDown={this.onKeyDown}
-                        onChange={this.changeValue} value={value} />
+                        onChange={this.changeValue} value={value || ''} />
         }
 
         {this.props.dynamic === false ? null : <div className="control-group__append" ref={this.dynamicButton} onClick={this.openDynamicContent}>

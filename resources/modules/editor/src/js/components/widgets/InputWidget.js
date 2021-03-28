@@ -41,10 +41,14 @@ const AltrpFieldContainer = styled.div`
 class InputWidget extends Component {
   constructor(props) {
     super(props);
+    props.element.component = this;
+    if (window.elementDecorator) {
+      window.elementDecorator(this);
+    }
     this.onChange = this.onChange.bind(this);
 
     this.defaultValue =
-      props.element.getSettings().content_default_value ||
+        this.getContent("content_default_value") ||
       (this.valueMustArray() ? [] : "");
     if(this.valueMustArray() && ! _.isArray(this.defaultValue)){
       this.defaultValue = [];
@@ -58,14 +62,10 @@ class InputWidget extends Component {
       paramsForUpdate: null
     };
     this.altrpSelectRef = React.createRef();
-    if (props.element.getSettings("content_default_value")) {
+    if (this.getContent("content_default_value")) {
       this.dispatchFieldValueToStore(
-        props.element.getSettings("content_default_value")
+          this.getContent("content_default_value")
       );
-    }
-    props.element.component = this;
-    if (window.elementDecorator) {
-      window.elementDecorator(this);
     }
   }
 
@@ -230,7 +230,7 @@ class InputWidget extends Component {
       return `/ajax/models/${url}_options`;
     }
     if (url.indexOf("{{") !== -1) {
-      url = replaceContentWithData();
+      url = replaceContentWithData(url);
     }
     return url;
   }
@@ -422,7 +422,7 @@ class InputWidget extends Component {
         }
       );
     } catch (e) {
-      console.error(e, this.props.element.getId());
+      console.error('Evaluate error in Input' + e.message, this.props.element.getId());
     }
   }
 
@@ -566,6 +566,30 @@ class InputWidget extends Component {
     }
     return options;
   }
+
+  /**
+   * Для действие по фокусу
+   * @param e
+   * @return {Promise<void>}
+   */
+
+  onFocus = async (e) => {
+    const focus_actions = this.props.element.getSettings('focus_actions');
+
+    if (focus_actions && ! isEditor()) {
+      const actionsManager = (
+          await import(
+              "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+              )
+      ).default;
+      await actionsManager.callAllWidgetActions(
+          this.props.element.getIdForAction(),
+          'focus',
+          focus_actions,
+          this.props.element
+      );
+    }
+  };
   /**
    * Потеря фокуса для оптимизации
    * @param  e
@@ -582,7 +606,7 @@ class InputWidget extends Component {
     if (_.get(editor, 'getData')) {
       this.dispatchFieldValueToStore(editor.getData(), true);
     }
-    if (this.props.element.getSettings("actions", []) && !isEditor()) {
+    if (this.props.element.getSettings('actions', []) && ! isEditor()) {
       const actionsManager = (
         await import(
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
@@ -601,7 +625,7 @@ class InputWidget extends Component {
    * @param {*} value
    * @param {boolean} userInput true - имзенилось пользователем
    */
-  dispatchFieldValueToStore = (value, userInput = false) => {
+  dispatchFieldValueToStore = async (value, userInput = false) => {
     let formId = this.props.element.getFormId();
     let fieldName = this.props.element.getFieldId();
     if (fieldName.indexOf("{{") !== -1) {
@@ -611,6 +635,23 @@ class InputWidget extends Component {
       this.props.appStore.dispatch(
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
+      if(userInput){
+        const change_actions = this.props.element.getSettings('change_actions');
+
+        if (change_actions && ! isEditor()) {
+          const actionsManager = (
+              await import(
+                  "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+                  )
+          ).default;
+          await actionsManager.callAllWidgetActions(
+              this.props.element.getIdForAction(),
+              'change',
+              change_actions,
+              this.props.element
+          );
+        }
+      }
     }
   };
 
@@ -684,7 +725,30 @@ class InputWidget extends Component {
       this.setState(state => ({ ...state, isDisabled: false }));
     }
   };
+  shouldComponentUpdate(nextProps){
+    // console.log(nextProps);
 
+    // console.log(nextProps.ElementWrapper=== this.props.ElementWrapper);
+    // console.log(nextProps.altrpMeta=== this.props.altrpMeta);
+    // console.log(nextProps.altrpPageState=== this.props.altrpPageState);
+    // console.log(nextProps.altrpresponses=== this.props.altrpresponses);
+    // console.log(nextProps.appStore=== this.props.appStore);
+    // console.log(nextProps.baseRender=== this.props.baseRender);
+    // console.log(nextProps.children=== this.props.children);
+    // console.log(nextProps.currentDataStorage=== this.props.currentDataStorage);
+    // console.log(nextProps.currentModel=== this.props.currentModel);
+    // console.log(nextProps.currentScreen=== this.props.currentScreen);
+    // console.log(nextProps.currentUser=== this.props.currentUser);
+    // console.log(nextProps.element=== this.props.element);
+    // console.log(nextProps.elementDisplay=== this.props.elementDisplay);
+    // console.log(nextProps.formsStore=== this.props.formsStore);
+    // console.log(nextProps.match=== this.props.match);
+    // console.log(nextProps.match);
+    // console.log(nextProps.rootElement=== this.props.rootElement);
+    // console.log(nextProps.rootElement);
+    // console.log(nextProps.updateToken=== this.props.updateToken);
+    return true;
+  }
   /**
    * Взовращает имя для атрибута name
    * @return {string}
@@ -801,6 +865,7 @@ class InputWidget extends Component {
           input = (
             <select
               value={value || ""}
+              onFocus={this.onFocus}
               name={this.getName()}
               onChange={this.onChange}
               onBlur={this.onBlur}
@@ -905,6 +970,8 @@ class InputWidget extends Component {
                 onKeyDown={this.handleEnter}
                 onChange={this.onChange}
                 onBlur={this.onBlur}
+                onFocus={this.onFocus}
+
                 id={this.state.settings.position_css_id}
               />
               {isClearable && (
@@ -1117,6 +1184,7 @@ class InputWidget extends Component {
     }
     const select2Props = {
       className: "altrp-field-select2",
+      onFocus: this.onFocus,
       element: this.props.element,
       classNamePrefix: this.props.element.getId() + " altrp-field-select2",
       options,

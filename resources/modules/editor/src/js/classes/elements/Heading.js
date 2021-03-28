@@ -39,6 +39,7 @@ class Heading extends BaseElement {
     }
 
     this.startControlSection("type_section", {
+      hideOnEmail: true,
       tab: TAB_CONTENT,
       label: "Heading type",
     });
@@ -76,6 +77,7 @@ class Heading extends BaseElement {
     });
 
     this.addControl('text_sub_switch', {
+      hideOnEmail: true,
       type: CONTROLLER_SWITCHER,
       label: 'Sub heading',
       default: false
@@ -160,6 +162,7 @@ class Heading extends BaseElement {
     });
 
     this.addControl('heading_settings_html_tag', {
+      hideOnEmail: true,
       type: CONTROLLER_SELECT,
       label: 'HTML tag',
       default: 'h2',
@@ -304,6 +307,7 @@ class Heading extends BaseElement {
       conditions: {
         'type': 'heading',
       },
+      hideOnEmail: true,
       tab: TAB_CONTENT,
       label: 'Advanced heading',
     });
@@ -713,7 +717,6 @@ class Heading extends BaseElement {
         color: "",
         colorPickedHex: "#000",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-heading{{STATE}}": "color: {{COLOR}};"
       }
@@ -757,10 +760,6 @@ class Heading extends BaseElement {
           color: 'rgb(0, 0, 0)',
           colorPickedHex: '#000000',
         },
-        presetColors: [
-          '#eaeaea',
-          '#9c18a8'
-        ],
         rules: {
           '{{ELEMENT}} .altrp-heading{{STATE}}': 'text-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
         },
@@ -824,6 +823,7 @@ class Heading extends BaseElement {
     });
 
     this.addControl('position_z_index', {
+      hideOnEmail: true,
       type: CONTROLLER_NUMBER,
       label: "Z-index",
       default: 0,
@@ -859,7 +859,6 @@ class Heading extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-heading{{STATE}}": "background-color: {{COLOR}};"
       }
@@ -1178,6 +1177,7 @@ class Heading extends BaseElement {
       conditions: {
         'type': 'heading',
       },
+      hideOnEmail: true,
       tab: TAB_STYLE,
       label: 'Transform',
     });
@@ -1199,6 +1199,7 @@ class Heading extends BaseElement {
       conditions: {
         'type': 'heading',
       },
+      hideOnEmail: true,
       tab: TAB_STYLE,
       label: 'Advanced heading',
     });
@@ -1400,6 +1401,7 @@ class Heading extends BaseElement {
       conditions: {
         'type': 'heading',
       },
+      hideOnEmail: true,
         tab: TAB_STYLE,
         label: 'Creative Link',
       }
@@ -1481,6 +1483,7 @@ class Heading extends BaseElement {
       conditions: {
         'type': 'heading',
       },
+      hideOnEmail: true,
       tab: TAB_STYLE,
       label: 'Sub heading',
     });

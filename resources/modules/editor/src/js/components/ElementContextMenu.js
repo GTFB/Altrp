@@ -78,19 +78,23 @@ class ElementContextMenu extends Component{
   /**
    * Сохраняем стили в locale storage
    */
-  copySettings = e => {
-    const { name, settings } = e.props.element.toObject();
-    localStorage.setItem(name, JSON.stringify(settings));
+  copyStyles = e => {
+    console.log(e.props.element);
+    const dataToStore = {
+      settings: e.props.element.getSettings(),
+      elementName: e.props.element.getName(),
+    };
+    localStorage.setItem('copied_element_settings', JSON.stringify(dataToStore));
   };
   /**
    * Применяем для выбранного элемента стили из locale storage
    */
-  pasteSettings = e => {
-    const name = e.props.element.getName();
-    const settings = JSON.parse(localStorage.getItem(name));
-
-    e.props.element.setSettings(settings);
-    e.props.element.updateStyles();
+  pasteStyles = e => {
+    let elementSettingsStore = getDataFromLocalStorage('copied_element_settings', {});
+    if(elementSettingsStore.elementName !== this.props.element.getName()){
+      return;
+    }
+    this.props.element.pasteStylesFromSettings(elementSettingsStore.settings)
   };
   /**
    * Отборажает пункт удалить, если можно удалить текущую колонку (в секции обязательна одна колонка)
@@ -108,7 +112,9 @@ class ElementContextMenu extends Component{
   }
   render() {
     let elementTitle =  this.props.element.getTitle ? this.props.element.getTitle() : '';
-    const isPasteEnable = Boolean(this.props.element.getName) && Boolean(localStorage.getItem(this.props.element.getName()));
+    let elementSettingsStore = getDataFromLocalStorage('copied_element_settings', {});
+    const stylesPasteEnable = Boolean(this.props.element.getName) && elementSettingsStore.elementName === this.props.element.getName();
+
     if( getDataFromLocalStorage('altrp_element_to_copy') ){
 
     }
@@ -121,10 +127,10 @@ class ElementContextMenu extends Component{
           <Item onClick={this.duplicateElement}>Duplicate {elementTitle}</Item>
           <Item onClick={this.onPasteElement} disabled={elementPasteDisabled}>Paste</Item>
           <Separator/>
-          <Item onClick={this.onSelectItem}>Reset Styles</Item>
-          <Item onClick={this.copySettings}>Copy Settings</Item>
-          <Item disabled={!isPasteEnable} onClick={this.pasteSettings}>
-            Paste Settings
+          <Item onClick={()=>{this.props.element.resetStyles()}}>Reset Styles</Item>
+          <Item onClick={this.copyStyles}>Copy Styles</Item>
+          <Item disabled={! stylesPasteEnable} onClick={this.pasteStyles}>
+            Paste Styles
           </Item>
           {
             this.showAddNewColumnItem() ?

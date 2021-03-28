@@ -140,7 +140,6 @@ class BaseElement extends ControlStack {
     this.templateNeedUpdate();
     if(dispatchToHistory) {
       let index = this.children.length - 1;
-      console.log(index);
       store.dispatch(addHistoryStoreItem('ADD', {element: child, index, parent: this})); 
     }
   }
@@ -298,10 +297,11 @@ class BaseElement extends ControlStack {
     }
     let newChildren = this.children.filter((item, index) => {
       if (item.getId() === childId) {
-        childExist = true;
-        item.beforeDelete();
-        if(dispatchToHistory)
+        childExist = true;   
+        if(dispatchToHistory) {
           store.dispatch(addHistoryStoreItem('DELETE', {element: child, parent: this, index}));
+          item.beforeDelete();
+        } 
         return false;
       }
       return true
@@ -365,7 +365,9 @@ class BaseElement extends ControlStack {
       return;
     }
     let controls = window.controllersManager.getControls(this.getName());
-
+    if(this.defaultSettingsIsApply){
+      return;
+    }
     for (let tabName in controls) {
       if (controls.hasOwnProperty(tabName)) {
         if (!controls[tabName].length) {
@@ -385,6 +387,7 @@ class BaseElement extends ControlStack {
       }
     }
     this.updateStyles();
+    this.defaultSettingsIsApply = true;
   }
 
   setSettingValue(settingName, value, dispatchToHistory = true) {
@@ -399,12 +402,15 @@ class BaseElement extends ControlStack {
             settingName
           })
         );
-      this.settings = {...this.settings};
+      // this.settings = {...this.settings};
       this.settings[settingName] = value;
       if (this.component) {
-        this.component.changeSetting(settingName, value);
+        (async ()=>{
+          this.component.changeSetting(settingName, value);
+        })();
       }
-    }  
+    }
+
   }
 
   _registerControls() {
@@ -613,6 +619,77 @@ class BaseElement extends ControlStack {
       _.unset(this.settings, `altrpDynamicSetting.${dynamicSettingName}`);
     }
   }
+
+  /**
+   * Обновляем стили из настроек другого элемента
+   * @param {{}} settings
+   */
+  pasteStylesFromSettings(settings){
+    if(_.isEmpty(settings) || ! _.isObject(settings)){
+      return
+    }
+    const stylesSettings = this.getStylesSettings(settings);
+    const newSettings = {..._.assign(this.settings, stylesSettings)};
+    this.settings = newSettings;
+
+    editorSetCurrentElement(this.getRoot());
+    editorSetCurrentElement(this);
+    this.component.setState(state => ({...state, settings: newSettings}));
+  }
+
+  /**
+   * Удаляем лишнии свойства, оставляем только свойства стилей
+   * @param {{}} settings
+   */
+  getStylesSettings(settings = {}){
+
+    const contentControllers = controllersManager.getControls(this.getName()).content || [];
+    contentControllers.forEach(section=>{
+      const {controls = []} = section;
+      controls.forEach(control=>{
+        delete settings[control.controlId];
+      })
+    });
+    return settings;
+  }
+
+  /**
+   * Сброс стилей элементов
+   */
+  resetStyles(){
+    let newSettings = {};
+    const contentControllers = controllersManager.getControls(this.getName()).content || [];
+    contentControllers.forEach(section=>{
+      const {controls = []} = section;
+      controls.forEach(control=>{
+        newSettings[control.controlId] = this.settings[control.controlId];
+      })
+    });
+    const styleControllers = controllersManager.getControls(this.getName()).style || [];
+    styleControllers.forEach(section=>{
+      const {controls = []} = section;
+      controls.forEach(control=>{
+        if(control.default){
+          newSettings[control.controlId] = control.default;
+        }
+      })
+    });
+    const advancedControllers = controllersManager.getControls(this.getName()).advanced || [];
+    advancedControllers.forEach(section=>{
+      const {controls = []} = section;
+      controls.forEach(control=>{
+        if(control.default){
+          newSettings[control.controlId] = control.default;
+        }
+      })
+    });
+
+    this.settings = newSettings;
+    editorSetCurrentElement(this.getRoot());
+    editorSetCurrentElement(this);
+    this.component.setState(state => ({...state, settings: newSettings}));
+  }
 }
+
 
 export default BaseElement

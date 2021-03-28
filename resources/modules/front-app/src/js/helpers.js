@@ -3,7 +3,6 @@ import CONSTANTS from '../../../editor/src/js/consts';
 import AltrpModel from '../../../editor/src/js/classes/AltrpModel';
 import moment from 'moment';
 import Resource from '../../../editor/src/js/classes/Resource';
-import appStore from './store/store';
 import { changeCurrentUser } from './store/current-user/actions';
 import { changeCurrentUserProperty } from './store/current-user/actions';
 import { changeAppRoutes } from './store/routes/actions';
@@ -16,6 +15,7 @@ import AltrpSVG from '../../../editor/src/js/components/altrp-svg/AltrpSVG';
 import ArrayConverter from './classes/converters/ArrayConverter';
 import DataConverter from './classes/converters/DataConverter';
 import {changeFormFieldValue} from './store/forms-data-storage/actions';
+import {addResponseData} from "./store/responses-storage/actions";
 export function getRoutes() {
   return import('./classes/Routes.js');
 }
@@ -261,14 +261,17 @@ export function renderAsset(asset, props = null) {
  * @param {string} string
  * @param {AltrpModel} context
  * @param {boolean} allowObject
+ * @param {boolean} replaceRight - нужно ли подставлять в значение параметра данные или оставить сырой шаблон
  * @return {{}}
  */
 export function parseParamsFromString(
   string,
   context = {},
-  allowObject = false
+  allowObject = false,
+  replaceRight = true,
+
 ) {
-  if (!(context instanceof AltrpModel)) {
+  if (! (context instanceof AltrpModel)) {
     context = new AltrpModel(context);
   }
   const params = {};
@@ -283,29 +286,34 @@ export function parseParamsFromString(
   const lines = string.split('\n');
   lines.forEach(line => {
     let [left, right] = line.split('|');
-    if (!left || !right) {
+    if (! left || ! right) {
       return;
     }
     left = left.trim();
     right = right.trim();
+    if(left.indexOf('{{') !== -1){
+      left = replaceContentWithData(left);
+    }
     if (right.match(/{{([\s\S]+?)(?=}})/g)) {
       if (
         context.getProperty(
           right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')
-        )
+        ) ||
+          getDataByPath(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', ''))
       ) {
         //todo ошибка в IOS
         params[left] =
           context.getProperty(
             right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')
-          ) || '';
+          ) || getDataByPath(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')) || '';
       } else {
-        params[left] = urlParams[right] ? urlParams[right] : '';
+        replaceRight ? (params[left] = urlParams[right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')]
+            ? urlParams[right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')] : '') : params[left] = right;
       }
     } else {
       params[left] = right;
     }
-    if (!allowObject && _.isObject(params[left])) {
+    if (! allowObject && _.isObject(params[left])) {
       delete params[left];
     }
   });
@@ -394,8 +402,12 @@ function conditionChecker(c, model, dataByPath = true) {
  * @return {boolean}
  */
 export function setDataByPath(path = '', value, dispatch = null) {
-  if (!path) {
+  if (! path) {
     return false;
+  }
+  if(path.indexOf(',') !== -1){
+    let result = path.split(',').map(path=>setDataByPath(path, value, dispatch));
+    return true;
   }
   path = path.replace('{{', '').replace('}}', '');
   path = path.trim();
@@ -474,7 +486,29 @@ export function setDataByPath(path = '', value, dispatch = null) {
     if (_.isEqual(oldValue, value)) {
       return true;
     }
-    appStore.dispatch(changeFormFieldValue(fieldName, value, formId, true))
+    if (_.isFunction(dispatch)) {
+      dispatch(changeCurrentUserProperty(path, value));
+    } else {
+      appStore.dispatch(changeFormFieldValue(fieldName, value, formId, true))
+    }
+  }
+  if(path.indexOf('altrpelements.') === 0){
+    const pathElements = path.split('.');
+    const[prefix, elementId, updateType, propName] = pathElements;
+    const component = getComponentByElementId(elementId);
+    if(! component){
+      return true;
+    }
+    switch(updateType){
+      case 'settings':{
+        component.props.element.updateSetting(value, propName);
+        return true;
+      }
+      default:{
+        return true;
+      }
+    }
+
   }
   return false;
 }
@@ -538,19 +572,19 @@ export function getDataByPath(
   }
   if (path.indexOf('altrpdata.') === 0) {
     path = path.replace('altrpdata.', '');
-    value = currentDataStorage.getProperty(path, _default);
+    value = currentDataStorage ? currentDataStorage.getProperty(path, _default) : '';
   } else if (path.indexOf('altrpresponses.') === 0) {
     path = path.replace('altrpresponses.', '');
-    value = altrpresponses.getProperty(path, _default);
+    value = altrpresponses ? altrpresponses.getProperty(path, _default) : '';
   } else if (path.indexOf('altrpmeta.') === 0) {
     path = path.replace('altrpmeta.', '');
-    value = altrpMeta.getProperty(path, _default);
+    value = altrpMeta ? altrpMeta.getProperty(path, _default) : '';
   } else if (path.indexOf('altrppagestate.') === 0) {
     path = path.replace('altrppagestate.', '');
-    value = altrpPageState.getProperty(path, _default);
+    value = altrpPageState ? altrpPageState.getProperty(path, _default) : '';
   } else if (path.indexOf('altrpuser.') === 0) {
     path = path.replace('altrpuser.', '');
-    value = currentUser.getProperty(path, _default);
+    value = currentUser ? currentUser.getProperty(path, _default) : '';
   } else if (path === 'altrpuser') {
     value = currentUser.getData();
   } else if (path === 'altrpmodel') {
@@ -560,7 +594,23 @@ export function getDataByPath(
   } else if (path.indexOf('altrpforms.') === 0) {
     value = _.get(formsStore, path.replace('altrpforms.', ''), _default);
   } else if (path.indexOf('altrppage.') === 0) {
-    value = altrpPage.getProperty(path.replace('altrppage.', ''), _default);
+    value = altrpPage ? altrpPage.getProperty(path.replace('altrppage.', ''), _default) : '';
+  }else if (path.indexOf('altrpelements.') === 0) {
+    const pathElements = path.split('.');
+    const[prefix, elementId, updateType, propName] = pathElements;
+    const component = getComponentByElementId(elementId);
+    if(! component){
+      value = '';
+    } else{
+      switch(updateType){
+        case 'settings':{
+          value = component.props.element.getSettings(propName);
+        } break;
+        default:{
+          value = '';
+        }
+      }
+    }
   } else {
     value = urlParams[path]
       ? urlParams[path]
@@ -966,7 +1016,7 @@ export function getHTMLElementById(elementId = '') {
  */
 export function getComponentByElementId(elementId = '') {
   let component = null;
-  if (!elementId || !elementId.trim()) {
+  if (! elementId || ! elementId.trim()) {
     return component;
   }
   elementId = elementId.trim();
@@ -1251,11 +1301,27 @@ export async function dataToXLS(data, filename = 'table', templateName = '') {
 /**
  * Логиним пользователя
  * @param {{}} data
+ * @param {string} formId
  * @return {Promise<{}>}
  */
-export async function altrpLogin(data = {}) {
+export async function altrpLogin(data = {}, formId= 'login') {
   data.altrpLogin = true;
-  let res = await new Resource({ route: '/login' }).post(data);
+  let res;
+  try{
+    res = await new Resource({ route: '/login' }).post(data);
+
+  }catch(error){
+    let status = error.status;
+    if(error.res instanceof Promise){
+      res = await error.res;
+    }
+    if(error instanceof Promise){
+      res = await error;
+    }
+    res = mbParseJSON(res, {});
+    status && (res.__status = status);
+  }
+  appStore.dispatch(addResponseData(formId, res));
   if (!(res.success || res._token)) {
     return {
       success: false
@@ -1406,7 +1472,7 @@ export function storeWidgetState(widgetId, state = null) {
   return saveDataToLocalStorage(path, state);
 }
 /**
- * абирает состояние из localStorage
+ * Забирает состояние из localStorage
  * Для виджетов ,которые могут сохранять состояния при смене страниц
  * @param {string} widgetId
  * @param {*} _default
@@ -1520,7 +1586,7 @@ export function isAltrpTestMode() {
 }
 
 /**
- * лучайная строка
+ * случайная строка
  * @return {string}
  */
 export function altrpRandomId() {
@@ -1719,6 +1785,9 @@ export function valueReplacement(value){
  * @return {Promise}
  */
 export function delay(ms) {
+  if(_.isString(ms)){
+    ms = Number(ms);
+  }
   return new Promise((resolve, reject) => {
     setTimeout(resolve, ms);
   });
@@ -1744,6 +1813,81 @@ export function prepareURLForEmail(url, context = null){
 export function parseIDFromYoutubeURL(youtubeURL) {
   const startIndex = youtubeURL.indexOf('v=') + 2;
   const endIndex = youtubeURL.indexOf('&', startIndex);
-  
-  return youtubeURL.substring(startIndex, endIndex);    
+
+  return youtubeURL.substring(startIndex, endIndex);
+}
+
+/**
+ *
+ * @param {{}} context
+ * @return {{}}
+ */
+export function prepareContext(context){
+
+  context.altrpdata = appStore.getState().currentDataStorage.getData();
+  context.altrpmodel = appStore.getState().currentModel.getData();
+  context.altrpuser = appStore.getState().currentUser.getData();
+  context.altrppagestate = appStore.getState().altrpPageState.getData();
+  context.altrpresponses = appStore.getState().altrpresponses.getData();
+  context.altrpmeta = appStore.getState().altrpMeta.getData();
+  return context
+}
+
+/**
+ *
+ * Определеят явлется ли строка валидным JSON
+ * @param {string} JSONString
+ * @return {boolean}
+ */
+export function isJSON(JSONString = ''){
+  try {
+    JSON.parse(JSONString);
+    return true;
+  } catch(error){
+    return false;
+  }
+}
+
+/**
+ * Парсит xml строку в объект
+ * @param xml
+ * @param arrayTags
+ */
+function parseXml(xml, arrayTags) {
+  let dom = null;
+  if (window.DOMParser) dom = (new DOMParser()).parseFromString(xml, "text/xml");
+  else if (window.ActiveXObject) {
+    dom = new ActiveXObject('Microsoft.XMLDOM');
+    dom.async = false;
+    if (!dom.loadXML(xml)) throw dom.parseError.reason + " " + dom.parseError.srcText;
+  }
+  else throw new Error("cannot parse xml string!");
+
+  function parseNode(xmlNode, result) {
+    if (xmlNode.nodeName === "#text") {
+      let v = xmlNode.nodeValue;
+      if (v.trim()) result['#text'] = v;
+      return;
+    }
+
+    let jsonNode = {},
+        existing = result[xmlNode.nodeName];
+    if (existing) {
+      if (!Array.isArray(existing)) result[xmlNode.nodeName] = [existing, jsonNode];
+      else result[xmlNode.nodeName].push(jsonNode);
+    }
+    else {
+      if (arrayTags && arrayTags.indexOf(xmlNode.nodeName) !== -1) result[xmlNode.nodeName] = [jsonNode];
+      else result[xmlNode.nodeName] = jsonNode;
+    }
+
+    if (xmlNode.attributes) for (let attribute of xmlNode.attributes) jsonNode[attribute.nodeName] = attribute.nodeValue;
+
+    for (let node of xmlNode.childNodes) parseNode(node, jsonNode);
+  }
+
+  let result = {};
+  for (let node of dom.childNodes) parseNode(node, result);
+
+  return result;
 }
