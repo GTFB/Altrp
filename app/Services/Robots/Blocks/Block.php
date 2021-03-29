@@ -2,6 +2,7 @@
 namespace App\Services\Robots\Blocks;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Block
 {
@@ -74,7 +75,7 @@ class Block
             $currentNode->data->props->type === 'messageAction'
         ) {
             $prevAction = $this->doAction($currentNode);
-            $this->savePrevAction($prevAction);
+//            $this->savePrevAction($prevAction);
         } elseif ($currentNode->data->props->type == 'robot') {
             $this->runRobot($currentNode);
         }
@@ -92,7 +93,6 @@ class Block
             $className = (new \ReflectionClass($action))->getShortName();
             self::$completedActions[strtolower(get_class($className))] = $action;
         }
-
     }
 
     /**
@@ -133,7 +133,13 @@ class Block
         }
         $str .= ' (' . implode($condition->operator, $arr) . ') ';
         $str = 'if(' .$str .') { return true; } else { return false; }';
-        return eval($str);
+
+        try {
+            return eval($str);
+        }
+        catch (\Exception $e){
+            Log::info($e->getMessage());
+        }
     }
 
     /**
@@ -143,15 +149,7 @@ class Block
     protected function parseModelData($str)
     {
         if (!$this->modelData) return $this->checkIsNumeric($str);
-        preg_match_all("#\{\{altrpdata\.(?<fields>[\w]+)\}\}#", $str, $matches);
-        if ($matches) {
-            $matches = $matches['fields'];
-            foreach ($matches as $field) {
-                if (in_array($field, $this->modelData['columns'])) {
-                    $str = str_replace("{{altrpdata.{$field}}}", $this->modelData['record']->$field, $str);
-                }
-            }
-        }
+        $str = setDynamicData($str, $this->modelData);
         return $this->checkIsNumeric($str);
     }
 

@@ -103,7 +103,7 @@ class RobotNotification extends Notification implements ShouldQueue
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'message' => $this->setDynamicData($this->node->data->props->nodeData->data->content->message)
+            'message' => setDynamicData($this->node->data->props->nodeData->data->content->message, $this->modelData)
         ]);
     }
 
@@ -119,8 +119,8 @@ class RobotNotification extends Notification implements ShouldQueue
         $mailObj = $mailObj->view(
             'emails.robotmail', ['data' => $this->templateHandler()]
         );
-        $mailObj = $mailObj->from($this->setDynamicData($this->node->data->props->nodeData->data->content->from));
-        $mailObj = $mailObj->subject($this->setDynamicData($this->node->data->props->nodeData->data->content->subject));
+        $mailObj = $mailObj->from(setDynamicData($this->node->data->props->nodeData->data->content->from, $this->modelData));
+        $mailObj = $mailObj->subject(setDynamicData($this->node->data->props->nodeData->data->content->subject, $this->modelData));
         return $mailObj;
     }
 
@@ -134,7 +134,7 @@ class RobotNotification extends Notification implements ShouldQueue
         if (!$notifiable->telegram_user_id) return false;
         $tmObj = TelegramMessage::create()
             ->to($notifiable->telegram_user_id);
-        $tmObj = $tmObj->content($this->setDynamicData($this->node->data->props->nodeData->data->content->message));
+        $tmObj = $tmObj->content(setDynamicData($this->node->data->props->nodeData->data->content->message, $this->modelData));
         return $tmObj;
     }
 
@@ -165,26 +165,6 @@ class RobotNotification extends Notification implements ShouldQueue
     }
 
     /**
-     * Заменить динамические переменные на данные из полей модели
-     * @param $subject
-     * @return string|string[]
-     */
-    protected function replaceColumns($subject)
-    {
-        preg_match_all("#\{\{altrpmodel\.(?<fields>[\w_]+)\}\}#", $subject, $matches);
-        if ($matches && !empty($this->modelData)) {
-            $matches = $matches['fields'];
-            $item = $this->modelData['record'];
-            foreach ($matches as $field) {
-                if ($item && in_array($field, $this->modelData['columns'])) {
-                    $subject = str_replace("{{altrpmodel.{$field}}}", $item->$field, $subject);
-                }
-            }
-        }
-        return $subject;
-    }
-
-    /**
      * Получение верстки шаблона по guid и его обработка (парсинг и динамические данные)
      * @return string
      */
@@ -194,7 +174,7 @@ class RobotNotification extends Notification implements ShouldQueue
         if (isset($this->node->data->props->nodeData->data->content->template)) {
             $template = Template::where( 'guid', $this->node->data->props->nodeData->data->content->template )->first()->html_content;
             if($template){
-                $template = $this->setDynamicData($template);
+                $template = setDynamicData($template, $this->modelData);
     //            $dom = new DOMDocument();
     //            $dom->loadHTML($template);
                 $result = $template;
@@ -204,36 +184,12 @@ class RobotNotification extends Notification implements ShouldQueue
     }
 
     /**
-     * Заменить динамические переменные на данные из CurrentEnvironment
-     * @param string $template
-     * @return string|string[]
-     */
-    public function setDynamicData($template)
-    {
-        try {
-            preg_match_all("#\{\{(?<path>(.*?)+)\}\}#", $template, $matches);
-            $matches = $matches['path'];
-
-            foreach ($matches as $path){
-                $item = data_get($this->dataDynamic, $path);
-                $template = str_replace("{{{$path}}}", $item, $template);
-            }
-        } catch (\Exception $e){
-            Log::info($e->getMessage());
-        }
-        return $template;
-    }
-
-    /**
      * @param $notifiable
      */
     protected function setDataDynamic($notifiable)
     {
-        $this->dataDynamic['altrpuserto'] = $notifiable->toArray();
-        $this->dataDynamic['altrpuser'] = $this->modelData['app']->current_user ?? null;
-        $this->dataDynamic['altrpmodel'] = $this->modelData['record'] ?? null;
-        $this->dataDynamic['altrpdata'] = $this->modelData['sources'] ?? null;
-        $this->dataDynamic['altrprequest'] = $this->modelData['app']->request ?? null;
+        $this->modelData['altrpuserto'] = $notifiable->toArray();
+        $this->modelData['altrpdata'] = $this->modelData['sources'];
     }
 
     /**

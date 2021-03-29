@@ -8,6 +8,7 @@ use App\Altrp\Model;
 use App\Notifications\RobotNotification;
 use App\User;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
 
 class Action
 {
@@ -64,11 +65,11 @@ class Action
             $entity = new $modelClass($data);
             $result = $entity->$method($data);
         } elseif ($method == 'delete') {
-            $id = $this->node->data->props->nodeData->data->record;
+            $id = setDynamicData($this->node->data->props->nodeData->data->record, $this->modelData);
             $entity = $modelClass::find($id);
             $result = $entity->$method();
         } else {
-            $id = $this->node->data->props->nodeData->data->record;
+            $id = setDynamicData($this->node->data->props->nodeData->data->record, $this->modelData);
             $entity = $modelClass::find($id);
             $result = $entity->$method($data);
         }
@@ -108,10 +109,10 @@ class Action
         if ($type == 'dynamic') {
             $field = $entities->dynamicValue;
             $users = [];
-            if (isset($this->modelData['record'])) {
+            $value = setDynamicData($entities->dynamicValue, $this->modelData);
+            if (isset($this->modelData['record']) && !Str::contains($field, "{{"))
                 $value = $this->modelData['record']->$field;
-                $users = User::where('id', $value)->get();
-            }
+            $users = User::where('id', $value)->get();
         } else {
             if (is_object($entities)) {
                 $users = isset($entities->users) && !empty($entities->users) ? User::whereIn('id', $entities->users): null;

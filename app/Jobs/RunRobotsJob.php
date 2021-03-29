@@ -38,7 +38,9 @@ class RunRobotsJob implements ShouldQueue
         $this->startCond = $startCond;
         $this->robotsService = $robotsService;
         $this->data = $data;
-        $this->data['app'] = $currentEnv;
+        $this->data['altrpuser'] = $currentEnv->current_user ?? null;
+        $this->data['altrpmodel'] = $data['record'] ?? null;;
+        $this->data['altrprequest'] = $currentEnv->request ?? null;
     }
 
     /**
@@ -61,6 +63,7 @@ class RunRobotsJob implements ShouldQueue
      */
     public function failed(\Exception $exception)
     {
-        Log::info($exception->getMessage());
+
+        dd($exception->getMessage());
     }
 }
