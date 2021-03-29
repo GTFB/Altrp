@@ -1,7 +1,7 @@
 import Resource from "../Resource";
 import AltrpModel from "../AltrpModel";
 import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric";
-import {mbParseJSON} from "../../../../../front-app/src/js/helpers";
+
 /**
  * @class TemplateLoader
  */
@@ -30,17 +30,56 @@ class TemplateLoader {
    * @param {*} templateId
    */
   async loadTemplate(templateId, force = false){
+
     let update = force;
     templateId = Number(templateId) ? Number(templateId) : templateId;
+
     if(! update){
       update = ! this.templatesCache.hasProperty(templateId);
     }
-    if(update){
-      let template = await this.resource.get(templateId);
-      this.templatesCache.setProperty(templateId, template);
-      return template;
+  
+    if(_.get(TemplateLoader, `statuses.${templateId}`) === 'loading'){
+      return new Promise((resolve, reject) => {
+        TemplateLoader.pendingCallbacks[templateId] = TemplateLoader.pendingCallbacks[templateId] || [];
+        TemplateLoader.pendingCallbacks[templateId].push(resolve);
+      })
     }
-    return Promise.resolve(this.templatesCache.getProperty(templateId));
+
+    TemplateLoader.statuses[templateId] = 'loading';
+
+    try {
+
+      let template = null;
+
+      if (update) {
+        template = await this.resource.get(templateId);
+        this.templatesCache.setProperty(templateId, template);
+      } else {
+        template = this.templatesCache.getProperty(templateId);
+      }
+
+      if(_.isArray(TemplateLoader.pendingCallbacks[templateId])){
+        TemplateLoader.pendingCallbacks[templateId].forEach(callback=>{
+          callback(template);
+        });
+      }
+
+      TemplateLoader.statuses[templateId] = 'loaded';
+      TemplateLoader.pendingCallbacks[templateId] = [];
+      return template;
+
+    }catch(error){
+      if(_.isArray(TemplateLoader.pendingCallbacks[templateId])){
+        TemplateLoader.pendingCallbacks[templateId].forEach(callback=>{
+          callback(null);
+        });
+      }
+      TemplateLoader.statuses[templateId] = 'loaded';
+      TemplateLoader.pendingCallbacks[templateId] = [];
+      return null;
+    }
+
+    //return Promise.resolve(this.templatesCache.getProperty(templateId));
   }
 
   /**
@@ -54,43 +93,14 @@ class TemplateLoader {
     if(! templateId){
       return null;
     }
-
     templateId = Number(templateId) ? Number(templateId) : templateId;
 
-    if(_.get(TemplateLoader, `statuses.${templateId}`) === 'loading'){
-      return new Promise((resolve, reject) => {
-        TemplateLoader.pendingCallbacks[templateId] = TemplateLoader.pendingCallbacks[templateId] || [];
-        TemplateLoader.pendingCallbacks[templateId].push(resolve);
-      })
-    }
+    let templateData = _.get((await this.loadTemplate(templateId, force)), 'data');
+    templateData = JSON.parse(templateData);
 
-    TemplateLoader.statuses[templateId] = 'loading';
-
-    try {
-      let templateData = _.get((await this.resource.get(templateId)), 'data') || null;
-      templateData = JSON.parse(templateData);
-
-      if(_.isArray(TemplateLoader.pendingCallbacks[templateId])){
-        TemplateLoader.pendingCallbacks[templateId].forEach(callback=>{
-          callback(frontElementsFabric.parseData(templateData));
-        });
-      }
-
-      TemplateLoader.statuses[templateId] = 'loaded';
-      TemplateLoader.pendingCallbacks[templateId] = [];
-      return frontElementsFabric.parseData(templateData);
-
-    }catch(error){
-      if(_.isArray(TemplateLoader.pendingCallbacks[templateId])){
-        TemplateLoader.pendingCallbacks[templateId].forEach(callback=>{
-          callback(null);
-        });
-      }
-      TemplateLoader.statuses[templateId] = 'loaded';
-      TemplateLoader.pendingCallbacks[templateId] = [];
-      return null;
-    }
+    return frontElementsFabric.parseData(templateData);
   }
+
 }
 
 const templateLoader =  new TemplateLoader();
