@@ -124,7 +124,7 @@ class Block
     {
         $condition = $node->data->props->nodeData;
         $conditionBody = $condition->body;
-        if (isset($condition->type) && $condition->type === "model_field")
+        if (isset($node->data->props->type) && $node->data->props->type === "start")
             $conditionBody = $this->getBodyForType($conditionBody);
         $str = '';
         $arr = [];
@@ -263,5 +263,19 @@ class Block
     public function isEnd()
     {
         return self::$nextNode->data->props->type == 'finish';
+    }
+
+    /**
+     * Проверить условия старта робота
+     * @return bool
+     */
+    public function toStart()
+    {
+        if (is_array($this->nodes)){
+            foreach($this->nodes as $node) {
+                if ($node->data->props->type === 'start') return $this->runCondition($node);
+            }
+        }
+        return false;
     }
 }

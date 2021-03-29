@@ -152,6 +152,8 @@ class RobotsService
 
         $currentAction = $this->getStartBlock($modelData);
 
+        if (!$currentAction->toStart()) return false;
+
         do {
             $currentAction->run();
             $currentAction = $currentAction->next();
