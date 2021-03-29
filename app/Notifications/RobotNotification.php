@@ -58,7 +58,11 @@ class RobotNotification extends Notification implements ShouldQueue
     {
         $this->dataDynamic = getCurrentEnv()->getData();
         $this->setDataDynamic($notifiable);
-        return [CustomDatabaseChannel::class, $this->node->data->props->nodeData->data->channel];
+        $channel = $this->node->data->props->nodeData->data->channel;
+        if ($channel == 'telegram') {
+            $channel = TelegramChannel::class;
+        }
+        return [CustomDatabaseChannel::class, $channel];
     }
 
     /**

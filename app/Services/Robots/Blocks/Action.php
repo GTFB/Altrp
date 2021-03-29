@@ -119,9 +119,9 @@ class Action
                 if (isset($entities->roles) && !empty($entities->roles)) {
                     $roles = $entities->roles;
                     $users = $users ? $users->whereHas('roles', function ($q) use ($roles){
-                        $q->whereIn('id', $roles);
+                        $q->whereIn('roles.id', $roles);
                     }) : User::whereHas('roles', function ($q) use ($roles){
-                        $q->whereIn('id', $roles);
+                        $q->whereIn('roles.id', $roles);
                     });
                 }
                 $users = isset($users) ? $users->get() : [];
