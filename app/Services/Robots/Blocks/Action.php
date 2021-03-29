@@ -114,7 +114,7 @@ class Action
                 $value = $this->modelData['record']->$field;
             $users = User::where('id', $value)->get();
         } else {
-            if (is_object($entities)) {
+            if (is_object($entities) && $type != 'all') {
                 $users = isset($entities->users) && !empty($entities->users) ? User::whereIn('id', $entities->users): null;
                 if (isset($entities->roles) && !empty($entities->roles)) {
                     $roles = $entities->roles;

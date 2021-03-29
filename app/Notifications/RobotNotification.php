@@ -58,31 +58,28 @@ class RobotNotification extends Notification implements ShouldQueue
     {
         $this->dataDynamic = getCurrentEnv()->getData();
         $this->setDataDynamic($notifiable);
+        $channels = [CustomDatabaseChannel::class];
         $channel = $this->node->data->props->nodeData->data->channel;
-        if ($channel == 'telegram') {
-            $channel = TelegramChannel::class;
-        }
-        return [CustomDatabaseChannel::class, $channel];
+        $channels = array_merge($channels, $this->addChannel($notifiable, $channel));
+        return $channels;
     }
 
     /**
-     * Преобразовать названия каналов
-     * @param $channels
+     * @param $user
+     * @param $channel
      * @return array
      */
-    protected function parseChannels($channels)
+    protected function addChannel($user, $channel)
     {
-        $parsedChannels = [];
-        foreach ($channels as $i => $channel) {
-            switch ($channel) {
-                case 'telegram':
-                    $parsedChannels[] = TelegramChannel::class;
-                    break;
-                default:
-                    $parsedChannels[] = $channel;
-            }
+        $channels = [];
+        if ($channel == 'telegram' && $user->telegram_user_id) {
+            $channel = TelegramChannel::class;
+            $channels[] = $channel;
         }
-        return $parsedChannels;
+        if (($channel == 'mail' && config('mail.username')) || $channel == 'broadcast') {
+            $channels[] = $channel;
+        }
+        return $channels;
     }
 
     /**
