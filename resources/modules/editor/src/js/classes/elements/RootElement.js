@@ -60,36 +60,45 @@ class RootElement extends BaseElement {
       },],
   } );
 */
-    this.startControlSection('preview_section',{
-      label: 'Preview Settings',
-    });
+    // this.startControlSection('preview_section',{
+    //   label: 'Preview Settings',
+    // });
+    //
+    // this.addControl('choose_page', {
+    //   type: CONTROLLER_SELECT2,
+    //   label: 'Choose Page',
+    //   options_resource: '/admin/ajax/pages_options',
+    // });
 
-    this.addControl('choose_page', {
-      type: CONTROLLER_SELECT2,
-      label: 'Choose Page',
-      options_resource: '/admin/ajax/pages_options',
-    });
+    // this.addControl('preview_heading', {
+    //   label: 'Model Settings',
+    //   type: CONTROLLER_HEADING
+    // });
 
-    this.addControl('preview_heading', {
-      label: 'Model Settings',
-      type: CONTROLLER_HEADING
-    });
-
-    this.addControl('preview_model', {
-      type: CONTROLLER_SELECT,
-      resource: '/admin/ajax/models_options?with_names=1&not_plural=1',
-      nullable: true,
-    });
-    this.addControl('preview_model_instance', {
-      type: CONTROLLER_SELECT2,
-      options_resource: '/ajax/models/{{preview_model}}_options',
-      conditions:{
-        'preview_model!': [null, '', undefined],
-      },
-      nullable: true,
-    });
-
-    this.endControlSection();
+    // this.addControl('preview_model', {
+    //   type: CONTROLLER_SELECT,
+    //   resource: '/admin/ajax/models_options?with_names=1&not_plural=1',
+    //   nullable: true,
+    // });
+    // this.addControl('preview_model_instance', {
+    //   type: CONTROLLER_SELECT2,
+    //   options_resource: '/ajax/models/{{preview_model}}_options',
+    //   conditions:{
+    //     'preview_model!': [null, '', undefined],
+    //   },
+    //   nullable: true,
+    // });
+    //
+    // this.endContropreview_model_instance', {
+    //   type: CONTROLLER_SELECT2,
+    //   options_resource: '/ajax/models/{{preview_model}}_options',
+    //   conditions:{
+    //     'preview_model!': [null, '', undefined],
+    //   },
+    //   nullable: true,
+    // });
+    //
+    // this.endControlSection();
 
     // this.startControlSection('default_displaying', {
     //   label: 'Default Displaying',

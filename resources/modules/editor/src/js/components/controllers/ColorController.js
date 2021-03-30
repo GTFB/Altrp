@@ -29,7 +29,6 @@ class ColorController extends Component {
       colorPickedRGB: this.props.colorPickedRGB,
       active: false
     };
-
     this.contentRef = React.createRef();
   }
 
@@ -47,7 +46,7 @@ class ColorController extends Component {
 
   closeColorPicker(e) {
     if(!e.path.includes(this.contentRef.current)) {
-      this.setState({ active: false })
+      this.setState({ active: false });
       document.removeEventListener("click", this.closeColorPicker)
     }
   }
@@ -135,7 +134,7 @@ class ColorController extends Component {
           <label className="control-color-opacity" >{(this.state.opacity * 100).toFixed() + "%"}</label>
         </div>
       </div>
-        <div ref={this.contentRef} className={"control-color-colorPicker" + (!this.state.active ? " control-color-hide" : "")} style={colorPickerPosition}>
+        <div ref={this.contentRef} className={"control-color-colorPicker" + (! this.state.active ? " control-color-hide" : "")} style={colorPickerPosition}>
 
           <SketchPicker presetColors={[]}
                         color={this.state.colorRGB}
@@ -146,7 +145,6 @@ class ColorController extends Component {
                         }}
                         name="colorPicker"
                         className="sketchPicker" >
-            <div className="asdads">dfgdfgdfg</div>
           </SketchPicker>
           <PresetColors presetColors={this.props.presetColors}
                         value={this.state.value}

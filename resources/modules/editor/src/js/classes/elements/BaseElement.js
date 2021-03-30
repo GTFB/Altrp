@@ -530,6 +530,7 @@ class BaseElement extends ControlStack {
    * */
   setStringStyles(styles) {
     styles = styles.replace(/__selector__/g, this.getSelector());
+    console.log(styles);
     this.settings.stringStyles = styles;
     this.updateStyles();
   }

@@ -948,7 +948,7 @@ class Button extends BaseElement {
         colorPickedHex: "#ffffff",
       },
       rules: {
-        '{{ELEMENT}} .altrp-btn-icon path{{STATE}}': 'fill: {{COLOR}};',
+        '{{ELEMENT}} .altrp-btn{{STATE}} path': 'fill: {{COLOR}};',
       },
     });
 
@@ -956,7 +956,7 @@ class Button extends BaseElement {
       type: CONTROLLER_COLOR,
       label: 'Background Color',
       rules: {
-        '{{ELEMENT}} .altrp-btn-icon svg{{STATE}}': 'background: {{COLOR}};',
+        '{{ELEMENT}} .altrp-btn{{STATE}} svg': 'background: {{COLOR}};',
       },
     }
     );

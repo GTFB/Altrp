@@ -97,6 +97,7 @@ class TableWidget extends Component {
                       widgetId={this.props.element.getId()}
                       widgetState={this.state.widgetState}
                       currentModel={this.props.currentModel}
+                      currentScreen={this.props.currentScreen}
                       data={data || query.getFromModel(this.state.modelData)}
                       settings={this.props.element.getSettings()}/>
     </React.Suspense>

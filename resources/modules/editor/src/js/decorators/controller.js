@@ -80,9 +80,10 @@ function getSettings(settingName){
      */
     if(this.props.controller.data.repeater.getSettings(this.props.controller.data.repeater.props.controlId)
         [this.props.controller.data.itemIndex]){
-
+      // console.log(this.props.controller.data.controlId + getElementSettingsSuffix(this.props.controller, true));
       return this.props.controller.data.repeater.getSettings(this.props.controller.data.repeater.props.controlId)
-          [this.props.controller.data.itemIndex][this.props.controller.data.controlId + getElementSettingsSuffix()];
+          [this.props.controller.data.itemIndex]
+          [this.props.controller.data.controlId + getElementSettingsSuffix(this.props.controller, true)];
     }
     /**
      * todo: пока что вернем значение по умолчанию или строку в случае бага

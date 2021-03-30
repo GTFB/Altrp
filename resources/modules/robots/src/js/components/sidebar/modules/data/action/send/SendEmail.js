@@ -35,13 +35,13 @@ class SendEmail extends Component{
                   <div className="controller-container controller-container_textarea">
                     <div className="controller-container__label textcontroller-responsive controller-label">From</div>
                     <div className='controller-field'>
-                      <input className="control-field" type="text" id="email-from" name="from" value={this.props.content.from ?? ''} onChange={(e) => { this.props.onSend(e, "mail", "from") }}/>
+                      <input className="control-field" type="text" id="email-from" name="from" value={this.props.content.from ?? ''} onChange={(e) => { this.props.onSend(e, "from") }}/>
                     </div>
                   </div>
                   <div className="controller-container controller-container_textarea">
                     <div className="controller-container__label textcontroller-responsive controller-label">Subject</div>
                     <div className='controller-field'>
-                      <input className="control-field" type="text" id="email-subject" name="subject" value={this.props.content.subject ?? ''} onChange={(e) => { this.props.onSend(e, "mail", "subject") }}/>
+                      <input className="control-field" type="text" id="email-subject" name="subject" value={this.props.content.subject ?? ''} onChange={(e) => { this.props.onSend(e, "subject") }}/>
                     </div>
                   </div>
                   <div className="controller-container controller-container_select">
@@ -49,7 +49,7 @@ class SendEmail extends Component{
                         <div className="control-container_select-wrapper controller-field">
                           <select className="control-select control-field"
                               value={this.props.content?.template ?? ''}
-                              onChange={e => {{ this.props.onSend(e, "mail", "template") }}}
+                              onChange={e => {{ this.props.onSend(e, "template") }}}
                           >
                               <option disabled value="" />
                               {templateOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}

@@ -233,7 +233,8 @@ class Section extends BaseElement{
       max: 2000,
       min: 0,
       rules: {
-        "{{ELEMENT}} > .altrp-section_boxed{{STATE}}": "width: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}}.altrp-section_boxed{{STATE}}": "width: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}}.altrp-section_section_boxed{{STATE}}": "width: {{SIZE}}{{UNIT}}",
         "{{ELEMENT}} > .altrp-section_section-boxed{{STATE}}": "padding-left: calc((100vw - {{SIZE}}{{UNIT}}) / 2);padding-right: calc((100vw - {{SIZE}}{{UNIT}}) / 2); width: 100vw;",
       }
     });

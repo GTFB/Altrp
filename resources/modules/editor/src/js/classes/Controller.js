@@ -91,6 +91,7 @@ class Controller {
         this.data.controlId + getElementSettingsSuffix(this, true),
         value
       );
+      // console.error(this.data.controlId + getElementSettingsSuffix(this, true));
     }
     if (this.getSettingName() === "element_css_editor") {
       currentElement.setStringStyles(value);
