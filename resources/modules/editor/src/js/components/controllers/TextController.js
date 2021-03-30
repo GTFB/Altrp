@@ -75,8 +75,10 @@ class TextController extends Component {
           </div>
         </div> : <input className="control-field"
                         onBlur={this.onBlur}
+                        name={this.props.controlId}
                         onKeyDown={this.onKeyDown}
-                        onChange={this.changeValue} value={value || ''} />
+                        onChange={this.changeValue}
+                        value={value || ''} />
         }
 
         {this.props.dynamic === false ? null : <div className="control-group__append" ref={this.dynamicButton} onClick={this.openDynamicContent}>

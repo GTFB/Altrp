@@ -43,3 +43,78 @@ export function verticalAlignToAlignItems(verticalAlignValue){
   });
   return alignItemsValue;
 }
+
+/**
+ * Преобразует объект, который сохраняет контроллер dimension, в строку css  для вставки в styled-компонент
+ * @param {{}} data
+ * @param {string} styleProperty - padding|margin|border-radius
+ * @return {string}
+ */
+export function dimensionsControllerToStyles(data = {}, styleProperty = 'padding'){
+  let styles = '';
+  if(_.isEmpty(data)){
+    return styles;
+  }
+  const {unit = 'px', left, right, top, bottom,} = data;
+  if(left){
+    styles += `${styleProperty}-left:${left}${unit};`;
+  }
+  if(right){
+    styles += `${styleProperty}-right:${right}${unit};`;
+  }
+  if(top){
+    styles += `${styleProperty}-top:${top}${unit};`;
+  }
+  if(bottom){
+    styles += `${styleProperty}-bottom:${bottom}${unit};`;
+  }
+  return styles;
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер typographic, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
+export function typographicControllerToStyles(data = {}){
+  let styles = '';
+  if(_.isEmpty(data)){
+    return styles;
+  }
+  const {
+    family,
+    size,
+    lineHeight,
+    spacing,
+    style,
+    transform,
+    weight,
+    decoration,
+    sizeUnit,
+  } = data;
+  if(decoration){
+    styles += `text-decoration:${decoration};`;
+  }
+  if(transform){
+    styles += `text-transform:${transform};`;
+  }
+  if(spacing){
+    styles += `letter-spacing:${spacing};`;
+  }
+  if(lineHeight){
+    styles += `line-height:${lineHeight};`;
+  }
+  if(weight){
+    styles += `font-weight:${weight};`;
+  }
+  if(style){
+    styles += `font-style:${style};`;
+  }
+  if(size){
+    styles += `font-size:${size ? (size + (sizeUnit || 'px')) : ''};`;
+  }
+  if(! _.isEmpty(family)){
+    styles += `font-family:${family};`;
+  }
+  return styles;
+}

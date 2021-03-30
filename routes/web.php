@@ -443,7 +443,7 @@ Route::get('/', function () {
 
   return view('front-app', [
     'title' => 'Main',
-    'page_id' => '',
+    'page_id' => 'null',
     '_frontend_route' => [],
     'preload_content' => [],
     'page_areas' => '[]',

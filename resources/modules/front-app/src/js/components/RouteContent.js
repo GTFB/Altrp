@@ -151,7 +151,7 @@ class RouteContent extends Component {
   }
 
   render() {
-    if (!this.props.allowed) {
+    if (! this.props.allowed) {
       return <Redirect to={this.props.redirect || "/"} />;
     }
     return (

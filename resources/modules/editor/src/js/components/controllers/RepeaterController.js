@@ -58,7 +58,10 @@ class RepeaterController extends Component {
    */
   changeValue(itemIndex, controlId, value) {
     let newValue = [...this.state.items];
+    // newValue[itemIndex] = {...newValue[itemIndex]};
     newValue[itemIndex][controlId] = value;
+    console.log(controlId);
+    console.log(newValue[itemIndex][controlId]);
     this._changeValue(newValue);
   }
   /**
@@ -267,8 +270,8 @@ const RepeaterItem = ({thisController, itemClasses, idx, itemController, fields:
             let ControllerComponent = controllersManager.getController(field.type);
             let controller = new Controller({ ...field, repeater: thisController, itemIndex: idx });
             let value = itemController[field.controlId] || '';
-            let key  = '_' + Math.random().toString(36).substr(2, 9);
-            return <ControllerComponent 
+            let key  = `${thisController.props.controlId}_${field.controlId}`;
+            return <ControllerComponent
               {...field}
               repeater={thisController}
               itemindex={idx}

@@ -437,6 +437,19 @@ button {
     width: 0px;
 }
 .repeater {
+    &-fields{
+        width: 100%;
+      & .control-field-bind{
+        padding-left: 7px;
+        padding-right: 7px;
+        width: 39px;
+      }
+      & .control-field-dimensions{
+        width: 42px;
+        padding-left: 4px;
+        padding-right: 4px;
+      }
+    }
     &-item {
         margin-bottom: 5px;
         &-tools {
@@ -679,6 +692,7 @@ button {
 .control-select {
     border-radius: 3px;
     color: #6d7882;
+    background-color: #fff;
     &::after {
         margin: 0;
         padding: 0;
