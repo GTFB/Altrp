@@ -3,6 +3,14 @@ import { Form, Field } from 'react-final-form';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import CloseIcon from '@material-ui/icons/Close';
+import AutoSave from './AutoSaveImageDetail';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+
+const save = async values => {
+  await sleep(1000)
+}
 
 export class ImageDetail extends React.Component {
     state = {}
@@ -13,79 +21,87 @@ export class ImageDetail extends React.Component {
         }
     }
 
-    updateAsset = (formData) => {
-        this.props.updateAsset(this.props.imageId, formData)
+    deleteAsset(imageId) {
+        this.props.deleteAsset(imageId)
     }
 
     render() {
-        const { url, description } = this.state
+        const { url, created_at, author, filename, media_type, height, width } = this.state
+        
+        if (!this.props.imageId) return null;
 
         return (
             <div className="image-detail">
                 <div className="image-detail_header">
-                    <div className="image-detail__title">Информация о вложении {description}</div>
+                    <div className="image-detail__title">Attachment details</div>
                     <div className="image-detail__btn-nav-group">
-                        <button className="image-detail__btn-nav"><ArrowBackIosIcon fontSize="small" /></button>
-                        <button className="image-detail__btn-nav"><ArrowForwardIosIcon fontSize="small" /></button>
-                        <button className="image-detail__btn-nav image-detail__btn-nav_close"><CloseIcon fontSize="small" /></button>
+                        {this.props.havePreviousImage 
+                        ? <button onClick={this.props.prevImageDetail} className="image-detail__btn-nav"><ArrowBackIosIcon fontSize="small" /></button> 
+                        : <button onClick={this.props.prevImageDetail} disabled className="image-detail__btn-nav"><ArrowBackIosIcon fontSize="small" /></button>}
+                        {this.props.haveNextImage 
+                        ? <button onClick={this.props.nextImageDetail} className="image-detail__btn-nav"><ArrowForwardIosIcon fontSize="small" /></button> 
+                        : <button onClick={this.props.nextImageDetail} disabled className="image-detail__btn-nav"><ArrowForwardIosIcon fontSize="small" /></button>}
+                        <button onClick={this.props.closeImageDetail} className="image-detail__btn-nav"><CloseIcon fontSize="small" /></button>
                     </div>
                 </div>
                 <div className="image-detail__content">
                     <div className="image-detail__image-display">
                         <img className="image-detail__image" src={url} draggable="false" alt="" />
-                        <button className="image-detail__btn">Редактировать</button>
+                        <button className="image-detail__btn image-detail__btn-edit-image">Edit image</button>
                     </div>
                     <div className="image-detail__editing-section">
                         <div className="image-detail__image-data-wrap">
                             <div className="image-detail__image-data">
-                                <div>Загружен: <span className="image-detail__image-data-result">24.03.2021</span></div>
-                                <div>Загружено: <span className="image-detail__image-data-result">Stas</span></div>
-                                <div>Имя файла: <span className="image-detail__image-data-result">Без-названия.jpeg</span></div>
-                                <div>Тип файла: <span className="image-detail__image-data-result">image/jpeg</span></div>
-                                <div>Размер файла: <span className="image-detail__image-data-result">7 КБ</span></div>
-                                <div>Размеры: <span className="image-detail__image-data-result">200 на 200 пикселей</span></div>
+                                <div>Uploaded on: <span className="image-detail__image-data-result">{created_at}</span></div>
+                                <div>Uploaded by: <span className="image-detail__image-data-result">{author}</span></div>
+                                <div>File name: <span className="image-detail__image-data-result">{filename}</span></div>
+                                <div>File type: <span className="image-detail__image-data-result">{media_type}</span></div>
+                                <div>File size: <span className="image-detail__image-data-result">7 KB</span></div>
+                                <div>Dimensions: <span className="image-detail__image-data-result">{height} by {width} pixels</span></div>
                             </div>
                         </div>
-                        <Form initialValues={this.state} onSubmit={this.updateAsset}>
+                        <Form initialValues={this.state} onSubmit={save}>
                             {props => (
                                 <form onSubmit={props.handleSubmit}>
-                                    <div className="image-detail__line-to-change"><span className="image-detail__name-of-changes">Атрибут alt</span><Field
+                                    <AutoSave updateAsset={this.props.updateAsset} debounce={1000} save={save} />
+                                    <div className="image-detail__line-to-change"><span className="image-detail__name-of-changes">Alternative Text</span><Field
                                         name="alternate_text"
                                         label="Alt"
                                         component="input"
                                         type="text"
                                         className="image-detail__input"
                                     /></div>
-                                    <div className="image-detail__line-to-change"><span className="image-detail__name-of-changes">Заголовок</span><Field
+                                    <div className="image-detail__line-to-change"><span className="image-detail__name-of-changes">Title</span><Field
                                         name="title"
                                         label="Title"
                                         component="input"
                                         type="text"
                                         className="image-detail__input"
                                     /></div>
-                                    <div className="image-detail__line-to-change"><span className="image-detail__name-of-changes">Подпись</span><Field
+                                    <div className="image-detail__line-to-change"><span className="image-detail__name-of-changes">Caption</span><Field
                                         name="caption"
                                         label="Caption"
                                         component="textarea"
                                         type="text"
                                         className="image-detail__textarea"
                                     /></div>
-                                    <div className="image-detail__line-to-change"><span className="image-detail__name-of-changes">Описание</span><Field
+                                    <div className="image-detail__line-to-change"><span className="image-detail__name-of-changes">Description</span><Field
                                         name="description"
                                         label="Description"
                                         component="textarea"
                                         type="text"
                                         className="image-detail__textarea"
                                     /></div>
-                                    <div className="image-detail__line-to-change"><span className="image-detail__name-of-changes">Ссылка на файл:</span><Field
+                                    <div className="image-detail__line-to-change_uploated-by">Uploated By<span className="image-detail__name-of-changes__uploated-by">{author}</span></div>
+                                    <div className="image-detail__line-to-change"><span className="image-detail__name-of-changes">File URL:</span><Field
                                         name="url"
                                         label="File URL"
                                         component="input"
                                         type="text"
                                         className="image-detail__input"
                                     /></div>
-                                    <div><button className="image-detail__btn image-detail__btn-copy-url">Скопировать URL в буфер обмена</button></div>
-                                    <div><button type="submit">Добавить</button></div>
+                                    <div><CopyToClipboard text={props.values.url}><button className="image-detail__btn image-detail__btn-copy-url">Copy URL to clipboard</button></CopyToClipboard></div>
+                                    <div className="image-detail__btn-delete-wrap"><button onClick={() => this.deleteAsset(props.values.id)} className="image-detail__btn-delete">Delete permanently</button></div>
                                 </form >
                             )
                             }

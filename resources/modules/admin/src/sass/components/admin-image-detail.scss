@@ -4,8 +4,8 @@
     left: 0;
     right: 0;
     margin: auto;
-    overflow: auto;
-    height: 95%;
+    overflow-y: hidden;
+    height: 85%;
     width: 96%;
     background: #fff;
 
@@ -28,23 +28,25 @@
     }
 
     &__btn-nav {
+        color: #787c82;
+        background-color: white;
         border: 1px solid #dcdcde;
         border-bottom: none;
-        background-color: white;
-        color: #dcdcde;
         padding: 13px 15px;
 
         &:hover {
             border-left-color: #c3c4c7;
-        }
-    }
-
-    &__btn-nav_close {
-        color: #787c82;
-
-        &:hover {
             color: #000;
             background-color: #dcdcde;
+        }
+
+        &:disabled {
+            color: #dcdcde;
+        }
+        
+        &:disabled:hover {
+            background-color: #fff;
+            cursor: default;
         }
     }
 
@@ -58,6 +60,7 @@
         display: flex;
         flex-direction: column;
         margin: 0 auto;
+        padding: 20px 30px 20px 30px;
     }
 
     &__image {
@@ -79,14 +82,20 @@
         }
     }
 
+    &__btn-edit-image {
+        width: 84px;
+        margin: 0 auto;
+    }
+
     &__editing-section {
         background-color: #f6f7f7;
-        width: 34%;
+        width: 367px;
+        height: 538px;
         border-left: 1px solid #dcdcde;
-        height: 100vh;
         padding: 11px 16px 11px 16px;
         font-size: 12px;
         color: #646970;
+        overflow-y: scroll;
     }
 
     &__image-data-wrap {
@@ -101,6 +110,7 @@
 
         &-result {
             font-weight: normal;
+            word-wrap: break-word;
         }
     }
 
@@ -109,8 +119,17 @@
         margin-bottom: 12px;
     }
 
+    &__line-to-change_uploated-by {
+        margin: 18px 0px 18px 36px;
+    }
+
     &__name-of-changes {
         margin-right: 18px;
+        vertical-align: top;
+    }
+
+    &__name-of-changes__uploated-by {
+        margin-left: 18px;
     }
 
     &__input {
@@ -133,5 +152,26 @@
 
     &__btn-copy-url {
         font-size: 11px;
+        margin-left: 117px;
+    }
+
+    &__btn-delete-wrap {
+        border-top: 1px solid #dcdcde;
+        margin-top: 24px;
+        padding-top: 15px;
+    }
+
+    &__btn-delete {
+        padding: 0;
+        background-color: #fff;
+        color: #e55a43;
+    }
+
+    &__save-notification {
+        color: #646970;
+        font-size: 12px;
+        position: absolute;
+        top: 62px;
+        right: 30px;
     }
 }
