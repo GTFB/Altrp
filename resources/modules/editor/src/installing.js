@@ -40,6 +40,15 @@ import("ace-builds").then(ace=>{
       callback(null, list);
     }
   };
+  const frameDocument = _.get(document.getElementsByTagName('iframe'), '0.contentWindow.document');
+  console.log(frameDocument);
+  if(frameDocument){
+    frameDocument.onload = ()=>{
+      console.log(frameDocument.head.appendChild(document.querySelector('[data-cke]').cloneNode(true)));
+
+    };
+    console.log(frameDocument.head);
+  }
   langTools.addCompleter(selectorCompleter);
   return import("react-ace");
 }).then(AceEditor=>{

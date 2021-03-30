@@ -10,7 +10,6 @@ class UploadAdapter {
     return new Promise((resolve, reject) => {
       this.loader.file.then(result => {
         this.resource.postFiles([result]).then(response => {
-          console.log(response);
           resolve({
             default: response[0].url
           });
