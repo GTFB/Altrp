@@ -3,17 +3,27 @@
 namespace App\Observers\AltrpObservers;
 
 use App\Altrp\Model;
-use App\Events\AltrpEvents\{{modelName}}Event;
+// use App\Events\AltrpEvents\{{modelName}}Event;
+use App\Helpers\Classes\CurrentEnvironment;
+use App\Jobs\RunRobotsJob;
 use App\Observers\BaseObserver;
 use App\Services\Robots\RobotsService;
 use {{modelNamespace}};
+use Illuminate\Foundation\Bus\DispatchesJobs;
 
 class {{modelName}}Observer extends BaseObserver
 {
+    use DispatchesJobs;
+
     /**
      * @var RobotsService
      */
     protected $robotsService;
+
+    /**
+     * @var CurrentEnvironment|mixed
+     */
+    protected $currentEnvironment;
 
     /**
      * test_postObserver constructor.
@@ -22,6 +32,7 @@ class {{modelName}}Observer extends BaseObserver
     public function __construct(RobotsService $robotsService)
     {
         $this->robotsService = $robotsService;
+        $this->currentEnvironment = CurrentEnvironment::getInstance();
     }
 
     /**
@@ -46,10 +57,13 @@ class {{modelName}}Observer extends BaseObserver
 
         $robots = $this->robotsService->getCurrentModelRobots($model);
 
-        foreach ($robots as $robot) {
-            if ($robot->start_condition != 'created' || !$robot->enabled) continue;
-            $this->robotsService->initRobot($robot)->runRobot($data);
-        }
+        $this->dispatch(new RunRobotsJob(
+            $robots,
+            $this->robotsService,
+            $data,
+            'created',
+            $this->currentEnvironment
+        ));
     }
 
     /**
@@ -74,10 +88,13 @@ class {{modelName}}Observer extends BaseObserver
 
         $robots = $this->robotsService->getCurrentModelRobots($model);
 
-        foreach ($robots as $robot) {
-            if ($robot->start_condition != 'updated' || !$robot->enabled) continue;
-            $this->robotsService->initRobot($robot)->runRobot($data);
-        }
+        $this->dispatch(new RunRobotsJob(
+            $robots,
+            $this->robotsService,
+            $data,
+            'updated',
+            $this->currentEnvironment
+        ));
     }
 
     /**
@@ -102,10 +119,13 @@ class {{modelName}}Observer extends BaseObserver
 
         $robots = $this->robotsService->getCurrentModelRobots($model);
 
-        foreach ($robots as $robot) {
-            if ($robot->start_condition != 'deleted' || !$robot->enabled) continue;
-            $this->robotsService->initRobot($robot)->runRobot($data);
-        }
+        $this->dispatch(new RunRobotsJob(
+            $robots,
+            $this->robotsService,
+            $data,
+            'deleted',
+            $this->currentEnvironment
+        ));
     }
 
     /**

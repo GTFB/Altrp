@@ -470,3 +470,28 @@ function isAdmin(){
 function getCurrentEnv(){
     return App\Helpers\Classes\CurrentEnvironment::getInstance();
 }
+
+/**
+ * Заменить динамические переменные на данные из data (CurrentEnvironment)
+ * @param string $template
+ * @param mixed $data
+ * @return string|string[]
+ */
+function setDynamicData($template, $data)
+{
+    try {
+        if ($data) {
+            preg_match_all("#\{\{(?<path>(.*?)+)\}\}#", $template, $matches);
+            $matches = $matches['path'];
+
+            foreach ($matches as $path) {
+                $item = data_get($data, $path);
+                $template = str_replace("{{{$path}}}", $item, $template);
+            }
+        }
+    } catch (\Exception $e){
+        Log::info($e->getMessage());
+    }
+    return $template;
+}
+

@@ -1,8 +1,9 @@
 import * as React from "react";
 import Scrollbars from "react-custom-scrollbars";
 import Action from "./data/Action"
-import Condition from "./data/Condition"
-import Robot from "./data/Robot"
+import ConditionNode from "./data/ConditionNode"
+import RobotNode from "./data/RobotNode"
+import StartNode from "./data/StartNode"
 import Edge from "./data/Edge"
 import store from "../../../store/store"
 import { setUpdatedNode, setRobotSettingsData } from "../../../store/robot-settings/actions"
@@ -74,7 +75,7 @@ export default class SelectedPanel extends React.Component {
                       </div>
                       <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
                       {this.props.selectNode && <div className="controller-container controller-container_textarea">
-                        <div className="controller-container__label control-select__label controller-label" >Text</div>
+                        <div className="controller-container__label control-select__label controller-label" >Name</div>
                         <textarea
                           className="control-field controller-field"
                           type="text"
@@ -82,7 +83,7 @@ export default class SelectedPanel extends React.Component {
                           style={{lineHeight: '125%'}}
                           onChange={(e) => { this.changeInput(e) }}
                           value={ this.props.selectNode.data?.label }
-                        ></textarea>
+                        />
                       </div>}
                       {this.props.selectEdge && <Edge
                                                   robot={ this.props.robot }
@@ -100,11 +101,15 @@ export default class SelectedPanel extends React.Component {
                                                                         robot={ this.props.robot }
                                                                         selectNode={this.props.selectNode || []}
                                                                       />}
-                      {(this.props.selectNode?.type === "condition") && <Condition
+                      {(this.props.selectNode?.type === "condition") && <ConditionNode
                                                                           robot={ this.props.robot }
                                                                           selectNode={this.props.selectNode || []}
                                                                         />}
-                      {(this.props.selectNode?.type === "robot") && <Robot
+                      {(this.props.selectNode?.type === "robot") && <RobotNode
+                                                                      robot={ this.props.robot }
+                                                                      selectNode={this.props.selectNode || []}
+                                                                    />}
+                      {(this.props.selectNode?.type === "start") && <StartNode
                                                                       robot={ this.props.robot }
                                                                       selectNode={this.props.selectNode || []}
                                                                     />}

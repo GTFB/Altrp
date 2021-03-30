@@ -13,40 +13,18 @@ class MailForm extends Component {
       mail_encryption: '',
       mail_from_address: '',
       mail_from_name: '',
-      mail_to_new_users: 'true'
     };
-    this.toggle = this.toggle.bind(this);
-  }  
+  }
 
   /**
    * Компонент загрузился
    */
   async componentDidMount(){
-    
+
     let settings = await (new Resource({ route: `/admin/ajax/get_mail_settings` })).getAll();
-    console.log(settings.data.mail_to_new_users === '');
-    if(settings.data.mail_to_new_users === '') settings.data.mail_to_new_users = 'true';
     this.setState(state=>({...state,...settings.data}));
   }
 
-  // Изменение положения переключателя
-  toggle() {
-    let checked = this.state.mail_to_new_users === 'true' ? 'false' : 'true';
-    this.switchHandler(checked);
-  }
-
-  // Отправка на сервер положения переключателя и запись в store
-  switchHandler = async checked => {
-    console.log(checked);
-    const resource = new Resource({ route: `/admin/ajax/write_send_mail` });
-    let res = await resource.post({ data: checked });
-    if(res.success){
-      this.setState(s => ({...s, mail_to_new_users: checked}));
-      alert(res.message || 'success');
-    }
-  };
-  
-  
   changeHandler = ({ target: { value, name } }) => {
     this.setState({ [name]: value });
   };
@@ -54,7 +32,7 @@ class MailForm extends Component {
   submitHandler = async e => {
     e.preventDefault();
     const resource = new Resource({ route: `/admin/ajax/write_mail_settings` });
-    let res = await resource.post(this.state.mail_to_new_users);
+    let res = await resource.post(this.state);
     if(res.success){
       alert(res.message || 'success');
     }
@@ -70,21 +48,9 @@ class MailForm extends Component {
       mail_encryption,
       mail_from_address,
       mail_from_name,
-      mail_to_new_users
     } = this.state;
-    let switcherClasses = `control-switcher control-switcher_${mail_to_new_users === 'true' ? 'on' : 'off'}`;
 
     return <div>
-        <div className="admin_switcher">
-          <div className="admin_switcher__label">
-          Send A Message To New Users
-          </div>
-          <div className={switcherClasses} onClick={this.toggle}>
-            <div className="control-switcher__on-text">ON</div>
-            <div className="control-switcher__caret" />
-            <div className="control-switcher__off-text">OFF</div>
-          </div>
-        </div>
 
       <form className="admin-form" onSubmit={this.submitHandler}>
         <div className="form-group">

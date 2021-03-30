@@ -406,7 +406,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
      * Настройка почты
      */
     Route::post('/write_mail_settings', 'MailController@writeSettingsToEnv');
-    Route::post('/write_send_mail', 'MailController@switchHandler');
     Route::get('/get_mail_settings', 'MailController@getSettings');
     /**
      * Роуты ипортов Админки
