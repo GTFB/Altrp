@@ -57,13 +57,17 @@ class Action
     protected function execCrud()
     {
         $data = json_decode(json_encode($this->node->data->props->nodeData->data->body), true);
+        $newData = [];
+        foreach ($data as $key => $value){
+            $newData[$key] = setDynamicData($value, $this->modelData);
+        }
         $model = Model::find($this->node->data->props->nodeData->data->model_id);
         $modelNamespace = $model->parent ? $model->parent->namespace : $model->namespace;
         $modelClass = '\\' . $modelNamespace;
         $method = $this->node->data->props->nodeData->data->method;
         if ($method == 'create') {
-            $entity = new $modelClass($data);
-            $result = $entity->$method($data);
+            $entity = new $modelClass($newData);
+            $result = $entity->$method($newData);
         } elseif ($method == 'delete') {
             $id = setDynamicData($this->node->data->props->nodeData->data->record, $this->modelData);
             $entity = $modelClass::find($id);
@@ -71,7 +75,7 @@ class Action
         } else {
             $id = setDynamicData($this->node->data->props->nodeData->data->record, $this->modelData);
             $entity = $modelClass::find($id);
-            $result = $entity->$method($data);
+            $result = $entity->$method($newData);
         }
         return $result;
     }
