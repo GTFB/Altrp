@@ -271,7 +271,10 @@ class Block
     {
         if (is_array($this->nodes)){
             foreach($this->nodes as $node) {
-                if ($node->data->props->type === 'start') return $this->runCondition($node);
+                if ($node->data->props->type === 'start') {
+                    if(empty($node->data->props->nodeData->body)) return true;
+                    else return $this->runCondition($node);
+                }
             }
         }
         return false;
