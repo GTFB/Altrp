@@ -72,7 +72,7 @@ class RobotNotification extends Notification implements ShouldQueue
     protected function addChannel($user, $channel)
     {
         $channels = [];
-        if ($channel == 'telegram' && $user->telegram_user_id) {
+        if ($channel == 'telegram' && $user->telegram_user_id && config('services.telegram-bot-api.token')) {
             $channel = TelegramChannel::class;
             $channels[] = $channel;
         }
