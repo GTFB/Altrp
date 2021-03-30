@@ -49,14 +49,13 @@ class GalleryWidget extends Component {
   }
 
   _componentDidUpdate(prevProps, prevState) {
-    const orderBy = this.props.element.getContent("order_by_settings", "default");
+    const orderBy = this.state.settings.order_by_settings || "default";
 
     this.updateRepeater();
 
     let repeater = this.props.element.getContent("repeater_simple_settings", []);
 
     if(!isEditor() && this.state.simpleRepeater.length === 0 && repeater.length !== 0) {
-
       if(orderBy === "random" && !this.state.shuffled) {
         repeater = _.shuffle(repeater)
       };
@@ -205,7 +204,7 @@ class GalleryWidget extends Component {
 
         const overlayProps = {
           animation: overlayAnimationType,
-          animationDuration: overlayAnimationDuration,
+          animationDuration: overlayAnimationDuration.size,
           description: img.simple_description_media_settings,
           title: img.simple_title_media_settings,
           type: overlayType

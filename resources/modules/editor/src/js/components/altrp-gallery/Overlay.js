@@ -4,36 +4,48 @@ import HoverOverlay from "../animations/overlay/HoverOverlay";
 
 class Overlay extends Component {
   render() {
-    let OverlayComponent = styled.div`
+    const OverlayComponent = styled.div`
       position: absolute;
       height: 100%;
       width: 100%;
-      left: 0;
-      top: 0;
       display: flex;
       flex-direction: column;
+    `;
+
+    const ContentComponent = styled.div`
+      z-index: 6;
+    `;
+
+    const BackgroundComponent = styled.div`
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      z-index: 4;
+      left: 0;
+      top: 0;
     `;
 
     const overlayContent = (
       <>
         {
           this.props.type !== "none" ? (
-            <div className="altrp-gallery-overlay-title">
+            <ContentComponent className="altrp-gallery-overlay-title">
               {
                 this.props.title
               }
-            </div>
+            </ContentComponent>
           ) : ""
         }
         {
           this.props.type === "titleAndDescription" ? (
-            <div className="altrp-gallery-overlay-description">
+            <ContentComponent className="altrp-gallery-overlay-description">
               {
                 this.props.description
               }
-            </div>
+            </ContentComponent>
           ) : ""
         }
+        <BackgroundComponent className="altrp-gallery-overlay-bg"/>
       </>
     );
 
@@ -43,7 +55,7 @@ class Overlay extends Component {
 
     if(this.props.animation && this.props.animation !== "none" && this.props.animationDuration) {
       console.log(this.props.animationDuration)
-      return <HoverOverlay {...overlayProps} transition={this.props.animationDuration.size} type={this.props.animation} component={OverlayComponent}>
+      return <HoverOverlay {...overlayProps} transition={this.props.animationDuration || 800} type={this.props.animation} component={OverlayComponent}>
         {
           overlayContent
         }

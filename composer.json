@@ -15,6 +15,7 @@
         "chrisjean/php-ico": "^1.0",
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
+        "intervention/image": "^2.5",
         "ixudra/curl": "^6.20",
         "jackiedo/dotenv-editor": "1.*",
         "jenssegers/date": "^3.2",

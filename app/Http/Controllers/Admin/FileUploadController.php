@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Intervention\Image\ImageManagerStatic;
+use Jackiedo\DotenvEditor\Facades\DotenvEditor;
 
 class FileUploadController extends Controller
 {
@@ -21,13 +24,42 @@ class FileUploadController extends Controller
             ], 422, [], JSON_UNESCAPED_UNICODE);
         }
 
+        $directory_path = storage_path('app/public/media') .'/favicons';
+
+        if(!File::exists($directory_path)) {
+            File::makeDirectory($directory_path);
+        }
+
         $file = $request->file('favicon');
+
         $source = $file->getRealPath();
 
-        $destination = public_path('favicon.ico');
-        $phpIco = new \PHP_ICO($source, [[32,32], [64,64], [128,128]]);
-        $result = $phpIco->save_ico($destination);
+        ImageManagerStatic::configure(["driver" => "imagick"]);
 
-        return response()->json(['success' => $result], $result ? 200 : 500);
+        $ico_image = new \PHP_ICO($source, [[16,16], [32,32], [48,48]]);
+        $save_ico = $ico_image->save_ico($directory_path ."/favicon.ico");
+
+        $png_sizes = [16, 32, 96, 120, 57, 60, 72, 76, 114, 120, 144, 152, 180, 192];
+
+        foreach ($png_sizes as $png_size) {
+            $png_image = ImageManagerStatic::make($source)->resize($png_size, $png_size)->encode("png");
+
+            $png_image->save($directory_path ."/" .$png_size ."_favicon.png");
+
+        }
+
+        DotenvEditor::setKey("ALTRP_CUSTOM_ICON", 1);
+        DotenvEditor::save();
+
+
+        return response()->json(['success' => $save_ico], $save_ico ? 200 : 500);
+    }
+
+    public function favicons($filename) {
+        $path = storage_path("app/public/media/favicons/" .$filename);
+
+        ImageManagerStatic::configure(["driver" => "imagick"]);
+
+        return ImageManagerStatic::make($path)->response();
     }
 }

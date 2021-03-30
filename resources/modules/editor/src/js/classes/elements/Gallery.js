@@ -462,7 +462,7 @@ class Gallery extends BaseElement {
       //   colorPickedHex: "#343B4C",
       // },
       rules: {
-        '{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay': 'background-color: {{COLOR}};',
+        '{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay-bg': 'background-color: {{COLOR}};',
       },
     });
 
@@ -482,7 +482,7 @@ class Gallery extends BaseElement {
         value: ""
       },
       rules: {
-        "{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay": "background-image: {{VALUE}}"
+        "{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay-bg": "background-image: {{VALUE}}"
       }
     });
 
@@ -557,7 +557,7 @@ class Gallery extends BaseElement {
       label: 'Blend mode',
       default: 'none',
       rules: {
-        "{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay": "mix-blend-mode: {{VALUE}};"
+        "{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay-bg": "mix-blend-mode: {{VALUE}};"
       }
     });
 
