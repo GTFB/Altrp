@@ -15,6 +15,7 @@ import AltrpSVG from '../../../editor/src/js/components/altrp-svg/AltrpSVG';
 import ArrayConverter from './classes/converters/ArrayConverter';
 import DataConverter from './classes/converters/DataConverter';
 import {changeFormFieldValue} from './store/forms-data-storage/actions';
+import {addResponseData} from "./store/responses-storage/actions";
 export function getRoutes() {
   return import('./classes/Routes.js');
 }
@@ -1300,11 +1301,27 @@ export async function dataToXLS(data, filename = 'table', templateName = '') {
 /**
  * Логиним пользователя
  * @param {{}} data
+ * @param {string} formId
  * @return {Promise<{}>}
  */
-export async function altrpLogin(data = {}) {
+export async function altrpLogin(data = {}, formId= 'login') {
   data.altrpLogin = true;
-  let res = await new Resource({ route: '/login' }).post(data);
+  let res;
+  try{
+    res = await new Resource({ route: '/login' }).post(data);
+
+  }catch(error){
+    let status = error.status;
+    if(error.res instanceof Promise){
+      res = await error.res;
+    }
+    if(error instanceof Promise){
+      res = await error;
+    }
+    res = mbParseJSON(res, {});
+    status && (res.__status = status);
+  }
+  appStore.dispatch(addResponseData(formId, res));
   if (!(res.success || res._token)) {
     return {
       success: false

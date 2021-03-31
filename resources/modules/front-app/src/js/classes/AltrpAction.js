@@ -51,7 +51,7 @@ class AltrpAction extends AltrpModel {
    */
   getFormId() {
     let formId = this.getProperty('form_id');
-    if (!formId) {
+    if (! formId) {
       return formId;
     }
     if (formId.indexOf('{{') !== -1) {
@@ -146,7 +146,7 @@ class AltrpAction extends AltrpModel {
       }
       case 'login': {
         const form = formsManager.registerForm(
-          this.getFormId(),
+          'login',
           'login',
           'POST'
         );
@@ -738,7 +738,7 @@ class AltrpAction extends AltrpModel {
     let form = this.getProperty('_form');
     let success = true;
     form.fields.forEach(field => {
-      if (!field.fieldValidate()) {
+      if (! field.fieldValidate()) {
         success = false;
       }
     });
@@ -746,7 +746,7 @@ class AltrpAction extends AltrpModel {
       return { success: false };
     }
 
-    return await altrpLogin(form.getData());
+    return await altrpLogin(form.getData(), this.getFormId());
   }
   /**
    * действие-выход из приложения
