@@ -949,6 +949,7 @@ class Button extends BaseElement {
       },
       rules: {
         '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon path': 'fill: {{COLOR}};',
+
       },
     });
 
@@ -957,6 +958,7 @@ class Button extends BaseElement {
       label: 'Background Color',
       rules: {
         '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon svg': 'background: {{COLOR}};',
+
       },
     }
     );

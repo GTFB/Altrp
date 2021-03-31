@@ -9,10 +9,14 @@ const HeaderCellComponent = styled.div`${({settings, column})=>{
   if(! table_transpose){
     return ''
   }
-  const {column_cell_vertical_alignment, header_full_width} = column;
+  const {
+    column_cell_vertical_alignment, 
+    header_full_width, 
+    header_bg} = column;
   const table_style_main_width = getResponsiveSetting(settings, 'table_style_main_width');
   const table_style_other_width = getResponsiveSetting(settings, 'table_style_other_width');
-  let styles = '&.altrp-table-th  {';
+  let styles = '&.altrp-table-th.altrp-table-cell{';
+  
   let verticalAlign = getResponsiveSetting(settings, 'cell_vertical_alignment');
   verticalAlign = verticalAlignToAlignItems(verticalAlign);
   if (column_cell_vertical_alignment) {
@@ -28,6 +32,9 @@ const HeaderCellComponent = styled.div`${({settings, column})=>{
     }
     `
   }
+  if(header_bg){
+    styles += `background-color:${header_bg.color};`;
+  }
   if(header_full_width){
     styles += `
       grid-column-start: 1;
@@ -36,11 +43,12 @@ const HeaderCellComponent = styled.div`${({settings, column})=>{
     `;
   } else {
   }
+  
   styles += `
       width: ${_.get(table_style_main_width, 'size') + (_.get(table_style_main_width, 'unit') || 'px')}
     `;    
+  
   styles += `}`;
-
   return styles;
 }}`;
 

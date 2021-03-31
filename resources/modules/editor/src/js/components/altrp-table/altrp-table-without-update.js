@@ -136,6 +136,7 @@ partialMatchTextFilterFn.autoRemove = val => ! val;
 function AltrpTableWithoutUpdate(
   {
     settings,
+    currentScreen,
     widgetId,
     query,
     data,
@@ -304,6 +305,7 @@ function AltrpTableWithoutUpdate(
     table_transpose,
     virtualized_rows,
     replace_rows,
+    tables_settings_for_subheading,
     replace_width,
     ids_storage,
     hide_grouped_column_icon,
@@ -539,8 +541,26 @@ function AltrpTableWithoutUpdate(
         tableSettings.data = [];
       }
     }
+    if(! _.isEmpty(tables_settings_for_subheading)){
+      let sortBy = tables_settings_for_subheading.map(item => {
+        return{
+          id: item.name,
+          desc: item.order === 'DESC',
+        };
+      });
+      _.set(tableSettings, 'initialState.sortBy', sortBy);
+    }
     return tableSettings;
-  }, [inner_page_size, data, columns, stateRef, records, replace_rows, skipPageReset]);
+  }, [
+      inner_page_size,
+      data,
+      columns,
+      stateRef,
+      records,
+      replace_rows,
+      skipPageReset,
+      tables_settings_for_subheading,
+  ]);
   React.useEffect(() => {
 
     if (_.isObject(stateRef.current)) {
@@ -551,6 +571,7 @@ function AltrpTableWithoutUpdate(
     tableSettings,
     ...plugins
   );
+
   /**
    * END настройки таблицы, свызов хука таблицы
    */
@@ -684,6 +705,8 @@ function AltrpTableWithoutUpdate(
       <br />
     </div>}
     <TableComponent className={"altrp-table altrp-table_columns-" + columns.length}
+                    ReactTable={ReactTable}
+                    currentScreen={currentScreen}
                     settings={settings}
                     table={tableElement}
                     ref={tableElement}
@@ -698,7 +721,7 @@ function AltrpTableWithoutUpdate(
           }
           return (
             <div {...headerGroupProps} className="altrp-table-tr">
-              {replace_rows && <div className="altrp-table-th" style={{ width: replace_width }} />}
+              {replace_rows && <div className="altrp-table-th altrp-table-cell" style={{ width: replace_width }} />}
               {headerGroup.headers.map((column, idx) => {
                 const { column_width, column_header_alignment } = column;
                 let columnProps = column.getHeaderProps(column.getSortByToggleProps());
@@ -723,7 +746,7 @@ function AltrpTableWithoutUpdate(
                 }
                 return <HeaderCellComponent {...columnProps}
                                             column={column}
-                  className="altrp-table-th"
+                  className="altrp-table-th altrp-table-cell"
                   key={idx}>
                   {columnNameContent}
                   {column.canGroupBy ? (
@@ -761,7 +784,7 @@ function AltrpTableWithoutUpdate(
         }
         )}
         {global_filter && <div className="altrp-table-tr">
-          <th className="altrp-table-th altrp-table-th_global-filter"
+          <th className="altrp-table-th altrp-table-th_global-filter altrp-table-cell"
             role="cell"
             colSpan={visibleColumns.length + replace_rows}
             style={{
@@ -1339,11 +1362,16 @@ function GlobalFilter({
 export default (props) => {
   props = { ...props };
   if(props.settings.choose_datasource === 'datasource'){
+    let length = React.useMemo(()=>{
+
+      return props.settings.inner_page_size > 0 ? 100 : 10;
+    }, [props.settings.inner_page_size]);
+
     props._status = 'success';
     if(isEditor()){
       props = {...props};
       props.settings = {...props.settings};
-      props.data = Array.from({length: 100}, () => ({}));
+      props.data = Array.from({length}, () => ({}));
       setAltrpIndex(props.data);
     }
     return <AltrpTableWithoutUpdate {...props}/>

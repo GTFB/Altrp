@@ -4,12 +4,14 @@
 namespace App\Notifications;
 
 
+use App\Altrp\Source;
 use App\Notifications\Channels\CustomDatabaseChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 use NotificationChannels\Telegram\TelegramChannel;
 use NotificationChannels\Telegram\TelegramMessage;
 use App\Constructor\Template;
@@ -25,6 +27,9 @@ class RobotNotification extends Notification implements ShouldQueue
      */
     private $node;
 
+    /**
+     * @var array
+     */
     private $dataDynamic = [];
 
     /**
@@ -52,33 +57,29 @@ class RobotNotification extends Notification implements ShouldQueue
     public function via($notifiable)
     {
         $this->dataDynamic = getCurrentEnv()->getData();
-        $this->dataDynamic['altrpuserto'] = $notifiable->toArray();
-
-        $via = [CustomDatabaseChannel::class];
-        if (isset($this->node->data->props->nodeData->data->channels)) {
-            $via = array_merge($via, $this->parseChannels($this->node->data->props->nodeData->data->channels));
-        }
-        return $via;
+        $this->setDataDynamic($notifiable);
+        $channels = [CustomDatabaseChannel::class];
+        $channel = $this->node->data->props->nodeData->data->channel;
+        $channels = array_merge($channels, $this->addChannel($notifiable, $channel));
+        return $channels;
     }
 
     /**
-     * Преобразовать названия каналов
-     * @param $channels
+     * @param $user
+     * @param $channel
      * @return array
      */
-    protected function parseChannels($channels)
+    protected function addChannel($user, $channel)
     {
-        $parsedChannels = [];
-        foreach ($channels as $i => $channel) {
-            switch ($channel) {
-                case 'telegram':
-                    $parsedChannels[] = TelegramChannel::class;
-                    break;
-                default:
-                    $parsedChannels[] = $channel;
-            }
+        $channels = [];
+        if ($channel == 'telegram' && $user->telegram_user_id && config('services.telegram-bot-api.token')) {
+            $channel = TelegramChannel::class;
+            $channels[] = $channel;
         }
-        return $parsedChannels;
+        if (($channel == 'mail' && config('mail.username')) || $channel == 'broadcast') {
+            $channels[] = $channel;
+        }
+        return $channels;
     }
 
     /**
@@ -90,7 +91,7 @@ class RobotNotification extends Notification implements ShouldQueue
     public function toCustomDatabase($notifiable)
     {
         return [
-            'message' => $this->replaceColumns($this->node->data->props->nodeData->data->content->broadcast->message)
+            'message' => $this->templateHandler()
         ];
     }
 
@@ -103,7 +104,7 @@ class RobotNotification extends Notification implements ShouldQueue
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'message' => $this->replaceColumns($this->node->data->props->nodeData->data->content->broadcast->message)
+            'message' => setDynamicData($this->node->data->props->nodeData->data->content->message, $this->modelData)
         ]);
     }
 
@@ -115,13 +116,12 @@ class RobotNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-
         $mailObj = new MailMessage;
         $mailObj = $mailObj->view(
             'emails.robotmail', ['data' => $this->templateHandler()]
         );
-        $mailObj = $mailObj->from($this->replaceColumns($this->node->data->props->nodeData->data->content->mail->from));
-        $mailObj = $mailObj->subject($this->replaceColumns($this->node->data->props->nodeData->data->content->mail->subject));
+        $mailObj = $mailObj->from(setDynamicData($this->node->data->props->nodeData->data->content->from, $this->modelData));
+        $mailObj = $mailObj->subject(setDynamicData($this->node->data->props->nodeData->data->content->subject, $this->modelData));
         return $mailObj;
     }
 
@@ -135,7 +135,7 @@ class RobotNotification extends Notification implements ShouldQueue
         if (!$notifiable->telegram_user_id) return false;
         $tmObj = TelegramMessage::create()
             ->to($notifiable->telegram_user_id);
-        $tmObj = $tmObj->content($this->replaceColumns($this->node->data->props->nodeData->data->content->telegram->message));
+        $tmObj = $tmObj->content(setDynamicData($this->node->data->props->nodeData->data->content->message, $this->modelData));
         return $tmObj;
     }
 
@@ -166,36 +166,16 @@ class RobotNotification extends Notification implements ShouldQueue
     }
 
     /**
-     * Заменить динамические переменные на данные из полей модели
-     * @param $subject
-     * @return string|string[]
-     */
-    protected function replaceColumns($subject)
-    {
-        preg_match_all("#\{\{altrpdata\.(?<fields>[\w]+)\}\}#", $subject, $matches);
-        if ($matches && !empty($this->modelData)) {
-            $matches = $matches['fields'];
-            $item = $this->modelData['record'];
-            foreach ($matches as $field) {
-                if ($item && in_array($field, $this->modelData['columns'])) {
-                    $subject = str_replace("{{altrpdata.{$field}}}", $item->$field, $subject);
-                }
-            }
-        }
-        return $subject;
-    }
-
-    /**
      * Получение верстки шаблона по guid и его обработка (парсинг и динамические данные)
-     * @return string|string[]
+     * @return string
      */
     protected function templateHandler()
     {
         $result = [];
-        if (isset($this->node->data->props->nodeData->data->content->mail->template)) {
-            $template = Template::where( 'guid', $this->node->data->props->nodeData->data->content->mail->template )->first()->html_content;
+        if (isset($this->node->data->props->nodeData->data->content->template)) {
+            $template = Template::where( 'guid', $this->node->data->props->nodeData->data->content->template )->first()->html_content;
             if($template){
-                $template = $this->setDynamicData($template);
+                $template = setDynamicData($template, $this->modelData);
     //            $dom = new DOMDocument();
     //            $dom->loadHTML($template);
                 $result = $template;
@@ -205,23 +185,19 @@ class RobotNotification extends Notification implements ShouldQueue
     }
 
     /**
-     * Заменить динамические переменные на данные из CurrentEnvironment
-     * @param string $template
-     * @return string|string[]
+     * @param $notifiable
      */
-    public function setDynamicData($template)
+    protected function setDataDynamic($notifiable)
     {
-        try {
-            preg_match_all("#\{\{(?<path>(.*?)+)\}\}#", $template, $matches);
-            $matches = $matches['path'];
+        $this->modelData['altrpuserto'] = $notifiable->toArray();
+        $this->modelData['altrpdata'] = $this->modelData['sources'];
+    }
 
-            foreach ($matches as $path){
-                    $item = data_get($this->dataDynamic, $path);
-                    $template = str_replace("{{{$path}}}", $item, $template);
-            }
-            return $template;
-        } catch (\Exception $e){
-            dump($e);
-        }
+    /**
+     * @param \Exception $exception
+     */
+    public function failed(\Exception $exception)
+    {
+        dump($exception);
     }
 }

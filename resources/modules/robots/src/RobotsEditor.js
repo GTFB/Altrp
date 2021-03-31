@@ -46,6 +46,7 @@ class RobotsEditor extends Component {
     this.state = {
       elements: [],
       robot: [],
+      sources: [],
       reactFlowInstance: null,
       selectNode: false,
       selectEdge: false,
@@ -54,6 +55,7 @@ class RobotsEditor extends Component {
     };
     this.changeTab = this.changeTab.bind(this);
     this.btnChange = this.btnChange.bind(this);
+    this.setSources = this.setSources.bind(this);
     this.resource = new Resource({ route: "/admin/ajax/robots" });
     this.reactFlowRef = React.createRef();
   }
@@ -70,11 +72,30 @@ class RobotsEditor extends Component {
 
     const robotId = new URL(window.location).searchParams.get("robot_id");
     const robot = await this.resource.get(robotId);
+    console.log(robot);
     store.dispatch(setCurrentRobot(robot));
+    if (robot.sources) {
+      let sources = this.changeSources(robot.sources);
+      this.setState(s => ({ ...s, sources}));
+    }
     if(!robot.chart) return;
     const data = JSON.parse(robot.chart) ?? [];
     store.dispatch(setRobotSettingsData(data));
     this.btnChange('');
+  }
+
+  setSources(sources){
+    this.setState(s => ({...s, sources}));
+  }
+
+  changeSources(sources){
+    if(_.isArray(sources)) {
+      sources.map(item =>{
+        item.parameters = item?.pivot?.parameters ?? '';
+        return item;
+      });
+    }
+    return sources;
   }
 
   // Удаление ноды или связи
@@ -151,7 +172,7 @@ class RobotsEditor extends Component {
       case "documentAction":
         data = {
           "type": "documentAction",
-          "nodeData": {}
+          "nodeData": {},
         };
         break;
       case "crudAction":
@@ -162,8 +183,8 @@ class RobotsEditor extends Component {
             "data": {
               "method": "",
               "body": {},
-              "record_id": null,
-              "model_id": ""
+              "record": "",
+              "model_id": "",
             }
           }
         };
@@ -171,7 +192,7 @@ class RobotsEditor extends Component {
       case "apiAction":
         data = {
           "type": "apiAction",
-          "nodeData": {}
+          "nodeData": {},
         };
         break;
       case "messageAction":
@@ -181,25 +202,13 @@ class RobotsEditor extends Component {
             "type": "send_notification",
             "data": {
               "entities": "",
-              "channels": [
-                "broadcast",
-                "telegram",
-                "mail"
-              ],
-              "content": {
-                "broadcast": {
-                  "message": ""
-                },
-                "telegram": {
-                  "message": ""
-                },
-                "mail": {
-                  "from": "",
-                  "subject": "",
-                  "template": ""
-                }
-              }
-
+              "entitiesData": {
+                "users": [],
+                "roles": [],
+                "dynamicValue": "",
+              },
+              "channel": "",
+              "content": {},
             }
           }
         };
@@ -208,7 +217,15 @@ class RobotsEditor extends Component {
         data = {
           "type": "condition",
           "nodeData": {
-              "type": "",
+              "operator": "",
+              "body": []
+          }
+        };
+        break;
+      case "start":
+        data = {
+          "type": "start",
+          "nodeData": {
               "operator": "",
               "body": []
           }
@@ -279,12 +296,14 @@ class RobotsEditor extends Component {
           <Sidebar changeTab={this.changeTab}
                   activePanel={ this.state.activePanel }
                   robot={ this.state.robot }
+                  sources={ this.state.sources }
                   elements={ this.state.elements }
                   selectNode={ this.state.selectNode }
                   selectEdge={ this.state.selectEdge }
                   onLoad={ this.onLoad }
                   btnActive={ this.state.btnActive }
                   btnChange={ this.btnChange }
+                  setSources={ this.setSources }
           />
           <div className="content" ref={this.reactFlowRef }>
             <ReactFlow

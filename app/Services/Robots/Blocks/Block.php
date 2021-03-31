@@ -1,6 +1,9 @@
 <?php
 namespace App\Services\Robots\Blocks;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
+
 class Block
 {
     /**
@@ -28,11 +31,14 @@ class Block
      */
     protected static $nextNode;
 
+    protected static $completedActions = [];
+
     /**
      * Block constructor.
      * @param string $type
      * @param $edges
      * @param $nodes
+     * @param null $modelData
      */
     public function __construct(string $type, $edges, $nodes, $modelData = null)
     {
@@ -68,13 +74,24 @@ class Block
             $currentNode->data->props->type === 'apiAction' ||
             $currentNode->data->props->type === 'messageAction'
         ) {
-            $this->doAction($currentNode);
+            $prevAction = $this->doAction($currentNode);
+//            $this->savePrevAction($prevAction);
         } elseif ($currentNode->data->props->type == 'robot') {
             $this->runRobot($currentNode);
         }
 
         if ($currentNodeEdgesSource) {
             self::$nextNode = collect($this->nodes)->where('id', $currentNodeEdgesSource->target)->first();
+        }
+
+        return self::$completedActions;
+    }
+
+    protected function savePrevAction($action)
+    {
+        if ($action instanceof Model) {
+            $className = (new \ReflectionClass($action))->getShortName();
+            self::$completedActions[strtolower(get_class($className))] = $action;
         }
     }
 
@@ -107,7 +124,8 @@ class Block
     {
         $condition = $node->data->props->nodeData;
         $conditionBody = $condition->body;
-        if ($condition->type === "model_field") $conditionBody = $this->getBodyForType($conditionBody);
+        if (isset($node->data->props->type) && $node->data->props->type === "start")
+            $conditionBody = $this->getBodyForType($conditionBody);
         $str = '';
         $arr = [];
         foreach ($conditionBody as $item) {
@@ -115,7 +133,13 @@ class Block
         }
         $str .= ' (' . implode($condition->operator, $arr) . ') ';
         $str = 'if(' .$str .') { return true; } else { return false; }';
-        return eval($str);
+
+        try {
+            return eval($str);
+        }
+        catch (\Exception $e){
+            Log::info($e->getMessage());
+        }
     }
 
     /**
@@ -125,15 +149,7 @@ class Block
     protected function parseModelData($str)
     {
         if (!$this->modelData) return $this->checkIsNumeric($str);
-        preg_match_all("#\{\{altrpdata\.(?<fields>[\w]+)\}\}#", $str, $matches);
-        if ($matches) {
-            $matches = $matches['fields'];
-            foreach ($matches as $field) {
-                if (in_array($field, $this->modelData['columns'])) {
-                    $str = str_replace("{{altrpdata.{$field}}}", $this->modelData['record']->$field, $str);
-                }
-            }
-        }
+        $str = setDynamicData($str, $this->modelData);
         return $this->checkIsNumeric($str);
     }
 
@@ -203,11 +219,12 @@ class Block
     /**
      * Выполнить действие
      * @param $node
+     * @return bool|mixed|null
      */
     protected function doAction($node)
     {
         $action = new Action($node, $this->modelData);
-        $action->runAction();
+        return $action->runAction();
     }
 
     /**
@@ -244,5 +261,22 @@ class Block
     public function isEnd()
     {
         return self::$nextNode->data->props->type == 'finish';
+    }
+
+    /**
+     * Проверить условия старта робота
+     * @return bool
+     */
+    public function toStart()
+    {
+        if (is_array($this->nodes)){
+            foreach($this->nodes as $node) {
+                if ($node->data->props->type === 'start') {
+                    if(empty($node->data->props->nodeData->body)) return true;
+                    else return $this->runCondition($node);
+                }
+            }
+        }
+        return false;
     }
 }
