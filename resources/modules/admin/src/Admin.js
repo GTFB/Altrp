@@ -68,11 +68,11 @@ import Resource from "../../editor/src/js/classes/Resource";
 import Echo from "laravel-echo"
 
 import store from "./js/store/store";
-import { setUserData } from "./js/store/current-user/actions";
+import { setUserData, setUsersOnline } from "./js/store/current-user/actions";
 
 import "./sass/admin-style.scss";
 
-import {changeCurrentUser} from "../../front-app/src/js/store/current-user/actions";
+import { changeCurrentUser } from "../../front-app/src/js/store/current-user/actions";
 import { setWebsocketsEnabled,
   setWebsocketsKey,
   setWebsocketsPort
@@ -146,6 +146,22 @@ class Admin extends Component {
       window.Echo.private("App.User." + currentUser.id)
       .notification((notification) => {
         console.log(notification);
+      });
+
+      // Подключение слушателя для получения users online
+      let presenceChannel = window.Echo.join("online");
+      let activeUsers = [];
+      presenceChannel.here((users) => {
+        activeUsers = users;
+        store.dispatch(setUsersOnline(activeUsers));
+      })
+      .joining((user) => {
+        activeUsers.push(user);
+        store.dispatch(setUsersOnline(activeUsers));
+      })
+      .leaving((user) => {
+        activeUsers.splice(activeUsers.indexOf(user), 1);
+        store.dispatch(setUsersOnline(activeUsers));
       });
 
     } else {

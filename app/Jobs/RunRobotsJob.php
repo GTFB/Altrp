@@ -37,7 +37,7 @@ class RunRobotsJob implements ShouldQueue
         $this->robotsService = $robotsService;
         $this->data = $data;
         $this->data['altrpuser'] = $currentEnv->current_user ?? null;
-        $this->data['altrpmodel'] = $data['record'] ?? null;;
+        $this->data['altrpmodel'] = $data['record'] ?? null;
         $this->data['altrprequest'] = $currentEnv->request ?? null;
     }
 
