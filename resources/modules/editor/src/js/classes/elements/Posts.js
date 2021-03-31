@@ -28,7 +28,7 @@ class Table extends BaseElement {
     return "posts";
   }
   static getTitle() {
-    return "Posts";
+    return "Cards";
   }
   static getIconComponent() {
     return TableIcon;

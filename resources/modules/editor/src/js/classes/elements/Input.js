@@ -906,7 +906,7 @@ class Input extends BaseElement {
       type: CONTROLLER_COLOR,
       label: 'Icon color',
       rules: {
-        '{{ELEMENT}} .altrp-label-icon path{{STATE}}': 'fill: {{COLOR}};',
+        '{{ELEMENT}} .altrp-label-icon{{STATE}} path': 'fill: {{COLOR}};',
       },
     });
 
@@ -914,7 +914,7 @@ class Input extends BaseElement {
       type: CONTROLLER_COLOR,
       label: 'Background Color',
       rules: {
-        '{{ELEMENT}} .altrp-label-icon svg{{STATE}}': 'background: {{COLOR}};',
+        '{{ELEMENT}} .altrp-label-icon{{STATE}} svg': 'background: {{COLOR}};',
       },
     }
     );

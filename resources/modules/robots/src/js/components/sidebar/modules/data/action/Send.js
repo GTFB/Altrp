@@ -14,11 +14,11 @@ export default class Send extends Component{
         super(props);
         this.state = {
             usersOptions: [],
-            rolesOptions: []
+            rolesOptions: [],
         };
-        this.toggle = this.toggle.bind(this);
         this.onSend = this.onSend.bind(this);
         this.changeSelect = this.changeSelect.bind(this);
+        this.changeInput = this.changeInput.bind(this);
         this.usersOptions = new Resource({ route: "/admin/ajax/users_options" });
         this.rolesOptions = new Resource({ route: "/admin/ajax/role_options" });
     }
@@ -29,60 +29,90 @@ export default class Send extends Component{
         this.setState(s =>({...s, usersOptions, rolesOptions}));
     }
 
-    getTypeSend = data => {
-        const channels = this.props.selectNode?.data.props.nodeData?.data?.channels ?? [];
-        let result = false;
-        if(channels instanceof Array){
-            channels.map(item =>{
-                if(item === data) result = true;
-            });
-        }
-        return result;
-    }
-
     // Запись значений inputs в store
-    onSend = (e, type, key) => {
-        let value = e.target.value;
+    onSend = (e, key) => {
         const node = this.props.selectNode;
-        node.data.props.nodeData.data.content[type][key] = value;
-        store.dispatch(setUpdatedNode(node));
-    }
-
-      // Изменение положения переключателя
-    toggle() {
-        const node = this.props.selectNode;
-        if(node.data.props.nodeData.data.entities === 'all') node.data.props.nodeData.data.entities = '';
-        else node.data.props.nodeData.data.entities = 'all';
+        node.data.props.nodeData.data.content[key] = e.target.value;
         store.dispatch(setUpdatedNode(node));
     }
 
     // Запись значений select в store
     changeSelect(e, type) {
         const node = this.props.selectNode;
-        if(type === "channels"){
-            node.data.props.nodeData.data[type] = e ? e.map(item => item.value) : [];
+        if (type === "channel"){
+          node.data.props.nodeData.data[type] = e.target.value;
+          switch (e.target.value){
+            case 'broadcast':
+              node.data.props.nodeData.data.content = {
+                "message": ""
+              };
+              break;
+            case 'telegram':
+              node.data.props.nodeData.data.content = {
+                "message": ""
+              };
+              break;
+            case 'mail':
+              node.data.props.nodeData.data.content = {
+                "from": "",
+                "subject": "",
+                "template": ""
+              };
+              break;
+          }
+        } else if (type === "entities") {
+            node.data.props.nodeData.data.entities = e.target.value;
+            switch (e.target.value){
+              case 'all':
+                node.data.props.nodeData.data.entitiesData.roles = [];
+                node.data.props.nodeData.data.entitiesData.users = [];
+                node.data.props.nodeData.data.entitiesData.dynamicValue = '';
+                break;
+              case 'dynamic':
+                node.data.props.nodeData.data.entitiesData.roles = [];
+                node.data.props.nodeData.data.entitiesData.users = [];
+                break;
+              case 'specific':
+                node.data.props.nodeData.data.entitiesData.dynamicValue = '';
+                break;
+            }
+
         } else {
-            if(!_.isObject(node.data.props.nodeData.data.entities)) node.data.props.nodeData.data.entities = {};
-            node.data.props.nodeData.data.entities[type] = e ? e.map(item => item.value) : [];
+          node.data.props.nodeData.data.entitiesData[type] = e ? e.map(item => item.value) : [];
         }
         store.dispatch(setUpdatedNode(node));
     }
 
+    // Запись значений input в store
+    changeInput(e) {
+      const node = this.props.selectNode;
+      node.data.props.nodeData.data.entitiesData.dynamicValue = e.target.value;
+      store.dispatch(setUpdatedNode(node));
+    }
+
+
     render(){
         const { usersOptions, rolesOptions } = this.state;
-        const channelsOptions = [
-            {label:'push', value: 'broadcast'},
-            {label:'telegram', value: 'telegram'},
-            {label:'mail', value: 'mail'}
+        const entitiesOptions = [
+            {label:'all', value: 'all'},
+            {label:'dynamic user', value: 'dynamic'},
+            {label:'specific users', value: 'specific'}
         ];
-        const channels = this.props.selectNode?.data?.props?.nodeData?.data?.channels ?? [];
-        const users = this.props.selectNode?.data?.props?.nodeData?.data?.entities?.users ?? [];
-        const roles = this.props.selectNode?.data?.props?.nodeData?.data?.entities?.roles ?? [];
-        let value = (this.props.selectNode?.data?.props?.nodeData?.data?.entities === "all") ?? false;
-        let switcherClasses = `control-switcher control-switcher_${value ? 'on' : 'off'}`;
+        const channelOptions = [
+          {label:'push', value: 'broadcast'},
+          {label:'telegram', value: 'telegram'},
+          {label:'mail', value: 'mail'}
+        ];
+
+        const entities = this.props.selectNode?.data?.props?.nodeData?.data?.entities ?? '';
+        const channel = this.props.selectNode?.data?.props?.nodeData?.data?.channel ?? [];
+        const dynamicValue = this.props.selectNode?.data?.props?.nodeData?.data?.entitiesData?.dynamicValue ?? '';
+        const users = this.props.selectNode?.data?.props?.nodeData?.data?.entitiesData?.users ?? [];
+        const roles = this.props.selectNode?.data?.props?.nodeData?.data?.entitiesData?.roles ?? [];
+        const content = this.props.selectNode?.data?.props?.nodeData?.data?.content ?? {};
 
         return <div>
-            <div>
+          <div>
             <div className={"settings-section "}>
             <div className="settings-section__title d-flex">
                 <div className="settings-section__icon d-flex">
@@ -91,17 +121,40 @@ export default class Send extends Component{
                 <div className="settings-section__label">Settings Send Notification</div>
             </div>
             <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
-                <div className="robot_switcher">
-                    <div className="robot_switcher__label">
-                        All
-                    </div>
-                    <div className={switcherClasses} onClick={this.toggle}>
-                        <div className="control-switcher__on-text">ON</div>
-                        <div className="control-switcher__caret" />
-                        <div className="control-switcher__off-text">OFF</div>
-                    </div>
+                <div className="controller-container controller-container_select">
+                  <div className="controller-container__label control-select__label controller-label">To</div>
+                  <div className="control-container_select-wrapper controller-field">
+                    <select className="control-select control-field"
+                            id={`type-message`}
+                            value={entities ?? ''}
+                            onChange={e => {this.changeSelect(e, "entities")}}
+                    >
+                      <option disabled value="" />
+                      {entitiesOptions.map(option => {
+                        return  <option value={option.value} key={option.value || 'null'} >
+                          {option.label}
+                        </option> })}
+                    </select>
+                  </div>
                 </div>
-                {!value && <div className="settings-section-box">
+
+                {(entities === 'dynamic') && <div className="settings-section-box">
+                    <div className="controller-container controller-container_textarea">
+                      <div className="controller-container__label textcontroller-responsive controller-label">Dynamic value</div>
+                      <div className='controller-field'>
+                        <input
+                          className="control-field"
+                          type="text"
+                          id="send-dynamic"
+                          name="dynamic-user"
+                          style={{width: '100%'}}
+                          value={dynamicValue ?? ''}
+                          onChange={(e) => { this.changeInput(e) }}
+                        />
+                      </div>
+                    </div>
+                </div>}
+                {(entities === 'specific') && <div className="settings-section-box">
                     <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
                         <div className="controller-container__label control-select__label controller-label">Users</div>
                         <AltrpSelect className="control-container_select2-wrapper controller-field"
@@ -123,24 +176,31 @@ export default class Send extends Component{
                         />
                     </div>
                 </div>}
-                <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
-                    <div className="controller-container__label control-select__label controller-label">Channels</div>
-                    <AltrpSelect id="send-channels"
-                        className="controller-field"
-                        isMulti={true}
-                        value={_.filter(channelsOptions, c => channels.indexOf(c.value) >= 0)}
-                        onChange={e => {this.changeSelect(e, "channels")}}
-                        options={channelsOptions}
-                    />
+
+                <div className="controller-container controller-container_select">
+                  <div className="controller-container__label control-select__label controller-label">Type</div>
+                  <div className="control-container_select-wrapper controller-field">
+                    <select className="control-select control-field"
+                            id={`type-message`}
+                            value={channel ?? ''}
+                            onChange={e => {this.changeSelect(e, 'channel')}}
+                    >
+                      <option disabled value="" />
+                      {channelOptions.map(option => {
+                        return  <option value={option.value} key={option.value || 'null'} >
+                          {option.label}
+                        </option> })}
+                    </select>
+                  </div>
                 </div>
             </div>
           </div>
 
-            </div>            
-            
-            {this.getTypeSend("broadcast") && <SendBroadcast activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={this.props.selectNode?.data?.props?.nodeData?.data?.content?.broadcast ?? ''}/>}
-            {this.getTypeSend("mail") && <SendEmail activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={this.props.selectNode?.data?.props?.nodeData?.data?.content?.mail ?? ''}/>}
-            {this.getTypeSend("telegram") && <SendTelegram activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={this.props.selectNode?.data?.props?.nodeData?.data?.content?.telegram ?? ''}/>}
+          </div>
+
+            {(channel === "broadcast") && <SendBroadcast activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={content}/>}
+            {(channel === "telegram") && <SendTelegram activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={content}/>}
+            {(channel === "mail") && <SendEmail activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={content}/>}
         </div>
     }
 }

@@ -21,7 +21,7 @@ class SendTelegram extends Component{
                     <div className="controller-container controller-container_textarea">
                         <div className="controller-container__label textcontroller-responsive controller-label">Message</div>
                         <div className='controller-field'>
-                            <input className="control-field" type="text" id="telegram-message" name="message" value={this.props.content.message ?? ''} onChange={(e) => { this.props.onSend(e, "telegram", "message") }}/>
+                            <input className="control-field" type="text" id="telegram-message" name="message" value={this.props.content.message ?? ''} onChange={(e) => { this.props.onSend(e, "message") }}/>
                         </div>
                     </div>
                 </div> {/* ./controllers-wrapper */}

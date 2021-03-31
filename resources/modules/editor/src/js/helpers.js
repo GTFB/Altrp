@@ -103,6 +103,9 @@ export function iconsManager() {
  */
 export function getElementSettingsSuffix(controller, ignoreResponse = false) {
   let suffix_1 = getElementState().value;
+  if(controller.type === 'repeater'){
+    suffix_1 = '';
+  }
   let suffix_2 =
     getCurrentScreen().name === CONSTANTS.DEFAULT_BREAKPOINT
       ? ""

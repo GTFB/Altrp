@@ -6,8 +6,8 @@ const TableBody =
       const {
         tables_settings_for_subheading,
         table_style_table_striple_style: isStriped,
+
       } = props.settings;
-      // console.log(props.rows);
       const contentProps = {...props};
       contentProps.rows = React.useMemo(() => {
         if (_.isEmpty(tables_settings_for_subheading)) {
@@ -22,7 +22,8 @@ const TableBody =
           }
         });
       }, [tables_settings_for_subheading]);
-      console.log(contentProps.rows);
+      contentProps.groupIndex = 0;
+
       return <div {...props.getTableBodyProps()}
                   className={`altrp-table-tbody ${isStriped ? "altrp-table-tbody--striped" : ""}`}>
         <TableBodyContent {...contentProps}/>

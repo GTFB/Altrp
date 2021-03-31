@@ -40,7 +40,6 @@ class AltrpBreadcrumbs extends Component {
     ];
 
     const currentId = !isEditor() ? window.currentPageId : 4;
-    console.log(currentId)
     if(currentId !== routes[0].id) {
 
 
@@ -108,8 +107,8 @@ class AltrpBreadcrumbs extends Component {
         {
           breadcrumbs.map((route, idx) => {
             const to = route.path;
-            const label = route.title;
-
+            let label = route.title;
+            label = replaceContentWithData(label);
             return <li className="altrp-nav-breadcrumbs-li" key={idx}>
               {
                 route.id !== currentId ? (

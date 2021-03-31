@@ -21,6 +21,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  &_section{
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .altrp-element > * {

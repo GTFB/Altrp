@@ -331,8 +331,12 @@ class ElementWrapper extends Component {
     const styles = {
 
     };
-    if(this.props.element.getSettings('layout_column_width')){
-      styles.width = this.props.element.getSettings('layout_column_width') + '%';
+    if(this.props.element.getResponsiveSetting('layout_column_width')){
+      if(Number(this.props.element.getResponsiveSetting('layout_column_width'))){
+        styles.width = this.props.element.getResponsiveSetting('layout_column_width') + '%';
+      } else {
+        styles.width = this.props.element.getResponsiveSetting('layout_column_width');
+      }
     }
     const elementProps = {
       element: this.props.element,

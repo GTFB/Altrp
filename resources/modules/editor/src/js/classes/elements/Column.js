@@ -32,8 +32,9 @@ class Column  extends BaseElement {
       });
 
     this.addControl('layout_column_width', {
-      type: CONTROLLER_NUMBER,
+      // type: CONTROLLER_NUMBER,
       label: 'Column width (%)',
+      dynamic: false,
       default: null,
       rules: {
         '{{ELEMENT}}.altrp-element.altrp-element_column': 'width: {{VALUE}}%',
