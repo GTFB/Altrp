@@ -151,24 +151,47 @@ class Assets extends Component {
       return activeLink;
     }
   }
+  checkingFirstOrLastImage(imageId) {
+    let indexCurrentImageInArray = this.state.assets.findIndex(item => item.id == imageId)
+    if (indexCurrentImageInArray === 0) {
+      this.setState({
+        havePreviousImage: false,
+      })
+    } else if (indexCurrentImageInArray === this.state.assets.length - 1) {
+      this.setState({
+        haveNextImage: false,
+      })
+    } else {
+      this.setState({
+        haveNextImage: true,
+        havePreviousImage: true,
+      })
+    }
+  }
   openImageDetail(imageId) {
+    this.checkingFirstOrLastImage(imageId)
     this.setState({ imageId })
   }
   closeImageDetail = () => {
-    this.setState({ imageId: null })
+    this.setState({
+      imageId: null,
+      haveNextImage: true,
+      havePreviousImage: true,
+    })
   }
   nextImageDetail = () => {
     let indexCurrentImageInArray = this.state.assets.findIndex(item => item.id == this.state.imageId)
     let indexNextImageInArray = indexCurrentImageInArray + 1
+    this.checkingFirstOrLastImage(this.state.assets[indexNextImageInArray].id)
     this.setState({ imageId: this.state.assets[indexNextImageInArray].id })
   }
   prevImageDetail = () => {
     let indexCurrentImageInArray = this.state.assets.findIndex(item => item.id == this.state.imageId)
     let indexPrevImageInArray = indexCurrentImageInArray - 1
+    this.checkingFirstOrLastImage(this.state.assets[indexPrevImageInArray].id)
     this.setState({ imageId: this.state.assets[indexPrevImageInArray].id })
   }
   render() {
-    console.log(this.state.assets)
     let UploadIcon = iconsManager().getIconComponent('upload');
     let CloseIcon = iconsManager().getIconComponent('close');
     let AviIcon = iconsManager().getIconComponent('avi');
@@ -273,10 +296,10 @@ class Assets extends Component {
                   }
                   )()}
                   <button className={this.state.itemDeleteClasses}
-                          data-assetid={asset.id}
-                          title="Delete"
-                          onClick={this.deleteClick}>
-                    <CloseIcon className="item__delete-icon"/>
+                    data-assetid={asset.id}
+                    title="Delete"
+                    onClick={this.deleteClick}>
+                    <CloseIcon className="item__delete-icon" />
                   </button>
                 </div>
               )
