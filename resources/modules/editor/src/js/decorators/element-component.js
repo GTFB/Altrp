@@ -52,10 +52,28 @@ function editorElementRender(component, defaultRender){
   return defaultRender.bind(component)
 }
 
+/**
+ *
+ * @param {{}} nextProps
+ * @param {{}} nextState
+ */
+function shouldComponentUpdate(nextProps, nextState){
+  for (let prop in nextProps){
+    if(nextProps.hasOwnProperty(prop)){
+      if(nextProps[prop] !== this.props[prop]){
+        console.log(prop);
+        console.log(this.props[prop]);
+
+      }
+    }
+  }
+  return true;
+}
 
 export default function decorate(component) {
   component.changeSetting = changeSetting.bind(component);
   component.setChildren = setChildren.bind(component);
+  // component.shouldComponentUpdate = shouldComponentUpdate.bind(component);
   component.render = editorElementRender(component, component.render);
   frontDecorate(component);
 }

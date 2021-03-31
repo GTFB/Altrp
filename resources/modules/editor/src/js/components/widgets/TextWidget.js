@@ -77,13 +77,13 @@ class TextWidget extends Component {
     }
 
     if (this.props.CKEditor) {
-      return (
+      return ( <div className="altrp-text">
         <this.props.CKEditor
           changeText={this.changeText}
           text={textContent}
           readOnly={isEditor()}
           textWidget={true}
-        />
+        /></div>
       );
     }
 

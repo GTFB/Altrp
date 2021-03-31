@@ -64,6 +64,7 @@ class RouteContent extends Component {
     /**
      * затем отправляем запросы на обновление данных и altrpPageState
      */
+    window.formsManager.clearFieldsStorage();
     this.updateAppData();
   }
 
@@ -98,7 +99,6 @@ class RouteContent extends Component {
       _.get(this.props, "model.modelName") &&
       _.get(this.props, "match.params.id")
     ) {
-      // window.formsManager.clearFieldsStorage();
       appStore.dispatch(changeCurrentModel({ altrpModelUpdated: false }));
       try{
 
@@ -151,7 +151,7 @@ class RouteContent extends Component {
   }
 
   render() {
-    if (!this.props.allowed) {
+    if (! this.props.allowed) {
       return <Redirect to={this.props.redirect || "/"} />;
     }
     return (

@@ -442,7 +442,7 @@ Route::get('/', function () {
 
   return view('front-app', [
     'title' => 'Main',
-    'page_id' => '',
+    'page_id' => 'null',
     '_frontend_route' => [],
     'preload_content' => [],
     'page_areas' => '[]',
@@ -457,7 +457,7 @@ foreach ( $frontend_routes as $_frontend_route ) {
   $pattern2 = '/:(.+)(\/)/U';
   $replacement1 = '{$1}/';
   $replacement2 = '{$1}/';
-  $frontend_route = preg_replace( $pattern1, $replacement1,  $path );
+  $frontend_route = preg_replace( $pattern1, $replacement1, $path );
 
   Route::get($frontend_route, function () use ($title, $_frontend_route, $frontend_route) {
 

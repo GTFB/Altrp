@@ -540,6 +540,21 @@ export function getDataByPath(
     return path;
   }
   path = path.trim();
+  let trueValue, falseValue;
+  if(path.indexOf('?') !== -1 && path.indexOf(':') !== -1) {
+    let [_path, _right] = path.split('?');
+    [trueValue, falseValue] = _right.split(':');
+    trueValue = trueValue.trim();
+    if(trueValue.indexOf('.') !== -1){
+      trueValue = getDataByPath(trueValue, _default, context);
+    }
+
+    falseValue = falseValue.trim();
+    if(falseValue.indexOf('.') !== -1){
+      falseValue = getDataByPath(falseValue, _default, context);
+    }
+    path = _path.trim();
+  }
   /**
    * @type {AltrpModel} currentModel
    */
@@ -621,6 +636,9 @@ export function getDataByPath(
     if (! value) {
       value = _default;
     }
+  }
+  if(trueValue || falseValue) {
+    value = value ? trueValue : falseValue;
   }
   return value;
 }
@@ -1107,6 +1125,7 @@ export function replaceContentWithData(content = '', modelContext = null) {
       if (value === 0) {
         value = '0';
       }
+      path = escapeRegExp(path);
       content = content.replace(new RegExp(`{{${path}}}`, 'g'), value || '');
     });
   }
@@ -1890,4 +1909,7 @@ function parseXml(xml, arrayTags) {
   for (let node of dom.childNodes) parseNode(node, result);
 
   return result;
+}
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
