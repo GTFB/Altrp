@@ -147,43 +147,4 @@ class MailController extends Controller
 
       return response()->json(['success' => true, 'message' => 'Mail settings configure successfully.'], 200);
     }
-
-    /**
-     * Записать настройки почты в .env файл
-     *
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Exception
-     */
-    public function switchHandler(Request $request)
-    {
-        $file = base_path('.env');
-        if (!file_exists($file)) throw new \Exception('File .env not found!', 500);
-
-        $key = 'MAIL_TO_NEW_USERS';
-
-        // // Получение значения ключа
-        // if( DotenvEditor::keyExists( $key ) ) $tempKey = DotenvEditor::getValue( $key );
-
-        // // При отсутствии ключа или при пустом значении, ему присваивается дефолтное значение (true)
-        // if(empty($tempKey)) {
-        //     try{
-        //         DotenvEditor::setKey( $item,  );
-        //         DotenvEditor::save();
-        //     } catch (Exception $e){
-        //         return false;
-        //     }
-        // }
-
-
-        // dump($request);
-
-        try{
-          DotenvEditor::setKey($key, $request->data === 'true' ? 'true' : 'false');
-          DotenvEditor::save();
-        } catch (\Exception $e){
-          return response()->json(['success' => false, 'message' => 'Failed to write mail setting ' . $key], 500);
-        }
-
-      return response()->json(['success' => true], 200);
-    }
 }

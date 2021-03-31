@@ -26,6 +26,7 @@ import MapWidget from "../../components/widgets/MapWidget";
 import MapConstructorWidget from "../../components/widgets/MapConstructorWidget";
 import DiagramWidget from "../../components/widgets/DiagramWidget";
 import DashboardsWidget from "../../components/widgets/DashboardsWidget";
+import GalleryWidget from "../../components/widgets/GalleryWidget";
 import Carousel from "../elements/Carousel";
 import Accordion from "../elements/Accordion";
 import List from "../elements/List";
@@ -43,6 +44,7 @@ import Dashboards from "../elements/Dashboards";
 import PostsWidget from "../../components/widgets/PostsWidget";
 import IconWidget from "../../components/widgets/IconWidget";
 import Icon from "../elements/Icon";
+import Gallery from "../elements/Gallery";
 import Tour from "../elements/Tour";
 import TourGuide from "../../components/widgets/TourGuide";
 import ExportPanel from "../elements/ExportPanel";
@@ -85,8 +87,10 @@ export default class ElementsManger {
     this.elements[Template.getName()] = Template;
     this.elements[ExportPanel.getName()] = ExportPanel;
     this.elements[Html.getName()] = Html;
+    this.elements[Gallery.getName()] = Gallery;
     this.elements[Video.getName()] = Video;
-
+    // Websocket Notifications
+    // this.elements[Notifications.getName()] = Notifications;
     //список компонентов
     this.components = {};
     this.components[RootElement.getName()] = RootComponent;
@@ -115,7 +119,10 @@ export default class ElementsManger {
     this.components[Template.getName()] = TemplateWidget;
     this.components[ExportPanel.getName()] = ExportPanelWidget;
     this.components[Html.getName()] = HtmlWidget;
+    this.components[Gallery.getName()] = GalleryWidget;
     this.components[Video.getName()] = VideoWidget;
+    // Websocket Notifications widget
+    // this.components[Notifications.getName()] = NotificationsWidget;
   }
 
   getElements() {

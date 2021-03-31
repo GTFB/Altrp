@@ -24,6 +24,7 @@ import TourGuide from "../../../../editor/src/js/components/widgets/TourGuide";
 import ExportPanelWindget from "../../../../editor/src/js/components/widgets/ExportPanelWidget";
 import HtmlWidget from "../../../../editor/src/js/components/widgets/HtmlWidget";
 import TemplateWidget from "../../../../editor/src/js/components/widgets/TemplateWidget";
+import GalleryWidget from "../../../../editor/src/js/components/widgets/GalleryWidget";
 import VideoWidget from "../../../../editor/src/js/components/widgets/VideoWidget";
 
 export default class FrontElementsManager {
@@ -56,6 +57,7 @@ export default class FrontElementsManager {
     this.components["export"] = ExportPanelWindget;
     this.components["html"] = HtmlWidget;
     this.components["template"] = TemplateWidget;
+    this.components["gallery"] = GalleryWidget
     this.components["video"] = VideoWidget;
   }
 

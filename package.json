@@ -63,6 +63,7 @@
         "js-beautify": "^1.13.0",
         "json2csv": "^5.0.3",
         "jspdf": "^2.1.1",
+        "justified-layout": "^4.1.0",
         "laravel-echo": "^1.9.0",
         "leaflet": "^1.6.0",
         "leaflet-draw": "^1.0.4",

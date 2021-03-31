@@ -89,17 +89,17 @@ body {
 
 .robot-widget {
     width: 120px;
-    height: 80px;
+    height: 100px;
     text-align: center;
     background-color: #FFF;
     margin: 5px;
+    padding: 20px;
     p {
         color: #343B4C;
-        font-family: Roboto;
+        font-family: Roboto, Arial, sans-serif;
         margin: 5px;
     }
     svg {
-        margin-top: 12px;
         color: #343B4C;
     }
 }

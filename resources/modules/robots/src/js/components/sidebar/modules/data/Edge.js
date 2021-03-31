@@ -16,16 +16,16 @@ export default class Edge extends Component{
 
     async componentDidMount() {
         const robotOptions = await this.robotOptionsResource.getAll();
-        this.setState(s =>({...s, robotOptions}));    
+        this.setState(s =>({...s, robotOptions}));
     }
 
     toggle() {
         const node = this.props.selectEdge;
         console.log(node.animated);
-        
-        if(node.animated === undefined) node.animated = false;        
+
+        if(node.animated === undefined) node.animated = false;
         node.animated = !node.animated;
-        console.log(node.animated);    
+        console.log(node.animated);
         store.dispatch(setUpdatedNode(node));
 
         // вызов принудительного рендера flow
@@ -57,7 +57,7 @@ export default class Edge extends Component{
         // вызов принудительного рендера flow
         const elements = store.getState()?.robotSettingsData;
         const newElements = _.cloneDeep(elements);
-        store.dispatch(setRobotSettingsData(newElements));        
+        store.dispatch(setRobotSettingsData(newElements));
     }
 
     render(){
@@ -72,8 +72,8 @@ export default class Edge extends Component{
 
         let value = (this.props.selectEdge?.animated === true) ?? false;
         let switcherClasses = `control-switcher control-switcher_${value ? 'on' : 'off'}`;
-      
-        return <div>            
+
+        return <div>
             <div className="controller-container controller-container_select">
                 <div className="controller-container__label control-select__label controller-label">Start Condition</div>
                 <div className="control-container_select-wrapper controller-field">

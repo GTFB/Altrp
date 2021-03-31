@@ -4,7 +4,7 @@ import { setUpdatedNode } from "../../../../store/robot-settings/actions";
 import Resource from "../../../../../../../editor/src/js/classes/Resource";
 import Chevron from "../../../../../../../editor/src/svgs/chevron.svg";
 
-export default class Robot extends Component{
+export default class RobotNode extends Component{
     constructor(props){
         super(props);
         this.state={
@@ -15,7 +15,7 @@ export default class Robot extends Component{
 
     async componentDidMount() {
         const robotOptions = await this.robotOptionsResource.getAll();
-        this.setState(s =>({...s, robotOptions}));    
+        this.setState(s =>({...s, robotOptions}));
     }
 
 

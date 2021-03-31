@@ -9,14 +9,17 @@ const CellComponent = styled.div`${({settings, column})=>{
   if(! table_transpose){
     return ''
   }
-  const {column_cell_vertical_alignment, header_full_width} = column;
+  const {
+    column_cell_vertical_alignment,
+    body_bg, 
+    header_full_width} = column;
   const table_style_other_width = getResponsiveSetting(settings, 'table_style_other_width');
   let verticalAlign = getResponsiveSetting(settings, 'cell_vertical_alignment');
   verticalAlign = verticalAlignToAlignItems(verticalAlign);
   if(column_cell_vertical_alignment){
     verticalAlign = verticalAlignToAlignItems(column_cell_vertical_alignment);
   }
-  let styles = '&.altrp-table-td{';
+  let styles = '&.altrp-table-td.altrp-table-cell{';
   if(verticalAlign){
     styles += `
     display: flex;
@@ -29,6 +32,9 @@ const CellComponent = styled.div`${({settings, column})=>{
   }
   if(header_full_width){
     return `&.altrp-table-td{display:none;}`
+  }
+  if(body_bg){
+    styles +=`background-color:${body_bg.color};`;
   }
   styles += `
   width: ${_.get(table_style_other_width, 'size') + (_.get(table_style_other_width, 'unit') || 'px')};

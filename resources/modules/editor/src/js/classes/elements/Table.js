@@ -654,6 +654,16 @@ class Table extends BaseElement {
       label: 'Header Full Width',
     });
 
+    repeater.addControl('header_bg', {
+      type: CONTROLLER_COLOR,
+      label: 'Header BG',
+    });
+
+    repeater.addControl('body_bg', {
+      type: CONTROLLER_COLOR,
+      label: 'Body BG',
+    });
+
     const actionsRepeater = new Repeater();
 
     actionsRepeater.addControl('icon', {
@@ -1223,7 +1233,7 @@ class Table extends BaseElement {
       label: 'Grouped Icon Padding',
       units: ['px', '%', 'vh', 'vw'],
       rules: {
-        '{{ELEMENT}} .grouped-column{{STATE}}': [
+        '{{ELEMENT}} .altrp-table-th{{STATE}} .grouped-column': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -1236,7 +1246,7 @@ class Table extends BaseElement {
       type: CONTROLLER_COLOR,
       label: 'Grouped Column Icon Color',
       rules: {
-        '{{ELEMENT}} .grouped-column path{{STATE}}': 'fill: {{COLOR}};',
+        '{{ELEMENT}} .altrp-table-th{{STATE}} path': 'fill: {{COLOR}};',
       },
     });
 
@@ -1247,9 +1257,9 @@ class Table extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        '{{ELEMENT}} .grouped-column{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .grouped-column svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .grouped-column img{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-table-th{{STATE}} .grouped-column': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-table-th{{STATE}} svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-table-th{{STATE}} img': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
       },
     });
 
@@ -1271,7 +1281,7 @@ class Table extends BaseElement {
       label: 'Not Grouped Icon Padding',
       units: ['px', '%', 'vh', 'vw'],
       rules: {
-        '{{ELEMENT}} .not-grouped-column{{STATE}}': [
+        '{{ELEMENT}} .altrp-table-th{{STATE}} .not-grouped-column': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -1284,7 +1294,7 @@ class Table extends BaseElement {
       type: CONTROLLER_COLOR,
       label: 'Not Grouped Column Icon Color',
       rules: {
-        '{{ELEMENT}} .not-grouped-column path{{STATE}}': 'fill: {{COLOR}};',
+        '{{ELEMENT}} .altrp-table-th{{STATE}} .not-grouped-column path': 'fill: {{COLOR}};',
       },
     });
 
@@ -1295,9 +1305,9 @@ class Table extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        '{{ELEMENT}} .not-grouped-column{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .not-grouped-column svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .not-grouped-column img{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-table-th{{STATE}} .not-grouped-column': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-table-th{{STATE}} .not-grouped-column svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-table-th{{STATE}} .not-grouped-column img': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
       },
     });
 
@@ -1332,7 +1342,7 @@ class Table extends BaseElement {
       type: CONTROLLER_COLOR,
       label: 'Expanded Row Icon Color',
       rules: {
-        '{{ELEMENT}} .expanded-row path{{STATE}}': 'fill: {{COLOR}};',
+        '{{ELEMENT}} .expanded-row{{STATE}} path': 'fill: {{COLOR}};',
       },
     });
 
@@ -1380,7 +1390,7 @@ class Table extends BaseElement {
       type: CONTROLLER_COLOR,
       label: 'Not Expanded Row Icon Color',
       rules: {
-        '{{ELEMENT}} .not-expanded-row path{{STATE}}': 'fill: {{COLOR}};',
+        '{{ELEMENT}} .not-expanded-row{{STATE}} path': 'fill: {{COLOR}};',
       },
     });
 
@@ -2942,7 +2952,7 @@ class Table extends BaseElement {
       type: CONTROLLER_COLOR,
       label: 'Cheked Icon color',
       rules: {
-        '{{ELEMENT}} .check-icon--checked path{{STATE}}': 'fill: {{COLOR}};',
+        '{{ELEMENT}} .check-icon--checked{{STATE}} path': 'fill: {{COLOR}};',
       },
     });
 
@@ -2950,7 +2960,7 @@ class Table extends BaseElement {
       type: CONTROLLER_COLOR,
       label: 'Unchecked Icon color',
       rules: {
-        '{{ELEMENT}} .check-icon--unchecked path{{STATE}}': 'fill: {{COLOR}};',
+        '{{ELEMENT}} .check-icon--unchecked{{STATE}} path': 'fill: {{COLOR}};',
       },
     });
 
@@ -2958,7 +2968,7 @@ class Table extends BaseElement {
       type: CONTROLLER_COLOR,
       label: 'Indeterminate Icon color',
       rules: {
-        '{{ELEMENT}} .check-icon--indeterminate path{{STATE}}': 'fill: {{COLOR}};',
+        '{{ELEMENT}} .check-icon--indeterminate{{STATE}} path': 'fill: {{COLOR}};',
       },
     });
 
@@ -3039,6 +3049,27 @@ class Table extends BaseElement {
       label: 'Header'
     });
 
+    this.addControl('table_style_header_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
+        unit: 'px'
+      },
+      units: ['px', '%', 'vh', 'vw'],
+      rules: {
+        '{{ELEMENT}} .altrp-table-th{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ],
+      },
+    });
+
     this.addControl('table_style_header_background', {
       type: CONTROLLER_COLOR,
       label: 'Background',
@@ -3047,7 +3078,8 @@ class Table extends BaseElement {
         colorPickedHex: ''
       },
       rules: {
-        '{{ELEMENT}} .altrp-table-head{{STATE}}': 'background: {{COLOR}}'
+        '{{ELEMENT}} .altrp-table-head{{STATE}}': 'background: {{COLOR}}',
+        '{{ELEMENT}} .altrp-table-th{{STATE}}': 'background: {{COLOR}}',
       }
     });
 
@@ -3145,23 +3177,51 @@ class Table extends BaseElement {
       }
     });
 
-    this.addControl('table_style_header_padding', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Padding',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px'
-      },
-      units: ['px', '%', 'vh', 'vw'],
+    this.addControl('header_cell_vertical_alignment', {
+      type: CONTROLLER_SELECT,
+      label: 'Vertical Alignment',
+      options: [
+        {
+          label: 'Default',
+          value: 'inherit',
+        },
+        {
+          label: 'Super',
+          value: 'super',
+        },
+        {
+          label: 'Top',
+          value: 'top',
+        },
+        {
+          label: 'Text Top',
+          value: 'text-top',
+        },
+        {
+          label: 'Baseline',
+          value: 'baseline',
+        },
+        {
+          label: 'Middle',
+          value: 'middle',
+        },
+        {
+          label: 'Text Bottom',
+          value: 'text-bottom',
+        },
+        {
+          label: 'Bottom',
+          value: 'bottom',
+        },
+        {
+          label: 'Sub',
+          value: 'sub',
+        },
+      ],
+
       rules: {
-        '{{ELEMENT}} .altrp-table-th{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
+        '{{ELEMENT}} div:not(.altrp-element) .altrp-table-th{{STATE}}': [
+          'vertical-align: {{VALUE}};',
         ],
       },
     });
@@ -3171,6 +3231,27 @@ class Table extends BaseElement {
     this.startControlSection('table_style_body', {
       tab: TAB_STYLE,
       label: 'Body'
+    });
+
+    this.addControl('table_style_body_cell_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Cell padding',
+      default: {
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
+        unit: 'px'
+      },
+      units: ['px', '%', 'vh', 'vw'],
+      rules: {
+        '{{ELEMENT}} .altrp-table-td{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ],
+      },
     });
 
     this.addControl('table_style_body_border_type', {
@@ -3228,27 +3309,6 @@ class Table extends BaseElement {
       rules: {
         '{{ELEMENT}} .altrp-table-td{{STATE}}': 'border-color: {{COLOR}};',
       }
-    });
-
-    this.addControl('table_style_body_cell_padding', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Cell padding',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px'
-      },
-      units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-table-td{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ],
-      },
     });
 
     this.addControl('table_style_body_border_background', {
@@ -3662,7 +3722,7 @@ class Table extends BaseElement {
     //<editor-fold description=group_style_settings>
 
     this.startControlSection('group_style_settings', {
-      label: 'Groups Subheading Styles',
+      label: 'Groups Subheading',
       hideOnEmail: true,
       tab: TAB_STYLE,
       conditions: {
@@ -3677,6 +3737,30 @@ class Table extends BaseElement {
       label: 'Padding',
     });
 
+    groupsRepeater.addControl('cell_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ],
+    });
+
+    groupsRepeater.addControl('bg_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Background Color',
+    });
+
     groupsRepeater.addControl('typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
@@ -3685,56 +3769,6 @@ class Table extends BaseElement {
     groupsRepeater.addControl('color', {
       type: CONTROLLER_COLOR,
       label: 'Color',
-    });
-
-    groupsRepeater.addControl('bg-color', {
-      type: CONTROLLER_COLOR,
-      label: 'Background Color',
-    });
-
-    groupsRepeater.addControl('border_type', {
-      type: CONTROLLER_SELECT,
-      label: 'Border Type',
-      options: [
-        {
-          value: 'none',
-          label: 'None'
-        },
-        {
-          value: 'solid',
-          label: 'Solid'
-        },
-        {
-          value: 'double',
-          label: 'Double'
-        },
-        {
-          value: 'dotted',
-          label: 'Dotted'
-        },
-        {
-          value: 'dashed',
-          label: 'Dashed'
-        },
-        {
-          value: 'groove',
-          label: 'Groove'
-        }
-      ],
-    });
-
-    groupsRepeater.addControl('border_width', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Border Width',
-      default: {
-        unit: 'px'
-      },
-      units: ['px', '%', 'vh', 'vw'],
-    });
-
-    groupsRepeater.addControl('border_color', {
-      type: CONTROLLER_COLOR,
-      label: 'Border Color',
     });
 
     this.addControl('tables_groups', {
@@ -3778,6 +3812,15 @@ class Table extends BaseElement {
         },
       ],
       dynamic: false,
+    });
+
+    groupsSettingsRepeater.addControl('transition', {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition',
+      units: [],
+      max: 1,
+      min: 0,
+      step: 0.1,
     });
 
     this.addControl('tables_settings_for_subheading', {

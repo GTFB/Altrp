@@ -101,7 +101,7 @@ class CssEditorController extends Component {
           theme="textmate"
           onChange={this.onChange}
           onKeyDown={this.onKeyDown}
-
+          width="200px"
           name="aceEditor"
           height="15em"
           setOptions={{

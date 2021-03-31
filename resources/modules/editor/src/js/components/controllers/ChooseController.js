@@ -26,17 +26,8 @@ class ChooseController extends Component {
   }
 
   change(e) {
-    let changeRemove = document.getElementsByClassName("control-container-choose-block");
     let choose = e.currentTarget.dataset.change;
     this._changeValue(choose);
-
-    for (let i = 0; i < changeRemove.length; i++) {
-      changeRemove[i].classList.remove("control-container-choose-block-active");
-      changeRemove[i].children[0].setAttribute("fill", "#8E94AA");
-    }
-    e.currentTarget.classList.add("control-container-choose-block-active");
-    e.currentTarget.children[0].setAttribute("fill", "#FFF");
-
   };
 
   render() {
@@ -53,10 +44,11 @@ class ChooseController extends Component {
         {
           this.props.options.map(option => {
             let Icon = iconsManager().getIconComponent(option.icon);
-            return <div className="control-container-choose-block"
+            const active = option.value == this.state.value;
+            return <div className={`control-container-choose-block ${active ? 'control-container-choose-block-active' : ''}`}
               key={option.value}
               data-change={option.value} onClick={this.change}>
-              <Icon fill="#8E94AA" />
+              <Icon fill={active ? '#FFF' : '#8E94AA'} />
             </div>
           }
           )

@@ -9,6 +9,7 @@ import EmailTemplatesRenderer from "./EmailTemplatesRenderer";
 class AppContent extends Component {
   constructor(props) {
     super(props);
+
     this.router = React.createRef();
   }
   componentDidMount() {
@@ -16,6 +17,7 @@ class AppContent extends Component {
       window.frontAppRouter = this.router.current;
     }
   }
+
   render() {
     return (
       <Router ref={this.router}>
