@@ -2,6 +2,7 @@ import {
   changeCurrentUser,
   changeUpdateUserNotification,
   CHANGE_CURRENT_USER,
+  SET_USERS_ONLINE,
   CHANGE_CURRENT_USER_PROPERTY,
   SET_NOTICE_FOR_USER,
 } from "./actions";
@@ -43,6 +44,12 @@ export function currentUserReducer(user, action) {
       {
         let newNotice = action.notice;
         user = { ...user, notice: [...user.data?.notice || [], newNotice] };
+      }
+      break;
+    case SET_USERS_ONLINE:
+      {
+        user = { ...user, members: action.members };
+        console.log(user);
       }
       break;
   }
