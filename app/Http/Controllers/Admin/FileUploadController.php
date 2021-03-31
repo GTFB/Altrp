@@ -54,12 +54,4 @@ class FileUploadController extends Controller
 
         return response()->json(['success' => $save_ico], $save_ico ? 200 : 500);
     }
-
-    public function favicons($filename) {
-        $path = storage_path("app/public/media/favicons/" .$filename);
-
-        ImageManagerStatic::configure(["driver" => "imagick"]);
-
-        return ImageManagerStatic::make($path)->response();
-    }
 }

@@ -474,7 +474,7 @@ function getCurrentEnv(){
 function getFavicons() {
     if(env("ALTRP_CUSTOM_ICON")) {
         $icons = [];
-        $path = Storage::url("/media/favicons");
+        $path = Storage::url("media/favicons");
         //ico
         array_push($icons, "<link type='image/x-icon' rel='shortcut icon' href='$path/favicon.ico'>");
 
