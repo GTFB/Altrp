@@ -8,11 +8,12 @@ class AltrpLightbox extends Component {
   }
 
   render() {
-    let mainSrc = this.props.settings.mainSrc;
+    let mainSrc = this.props.settings.mainSrc || null;
     let settings = this.props.settings;
 
     delete settings.mainSrc
 
+    console.log(this.props)
     if(!mainSrc) {
       mainSrc = "/img/nullImage.png"
     }

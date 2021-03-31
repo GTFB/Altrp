@@ -17,7 +17,7 @@ export default class Robot extends React.Component {
   }
 
   render() {
-    let nodeClasses = "circle";
+    let nodeClasses = "flow-node-robot";
     if (this.props.selected) nodeClasses += " selected";
 
     return (

@@ -15,6 +15,7 @@
         "chrisjean/php-ico": "^1.0",
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
+        "intervention/image": "^2.5",
         "ixudra/curl": "^6.20",
         "jackiedo/dotenv-editor": "1.*",
         "jenssegers/date": "^3.2",
@@ -28,7 +29,7 @@
         "nwidart/laravel-modules": "^8.0",
         "phpoffice/phpspreadsheet": "^1.16",
         "pulkitjalan/geoip": "^4.1",
-        "pusher/pusher-php-server": "~3.0",
+        "pusher/pusher-php-server": "4.1.1",
         "santigarcor/laratrust": "5.2.*"
     },
     "require-dev": {

@@ -254,6 +254,14 @@ class ElementWrapper extends Component {
       );
     }
     const styles = {};
+
+    if(this.props.element.getResponsiveSetting('layout_column_width')){
+      if(Number(this.props.element.getResponsiveSetting('layout_column_width'))){
+        styles.width = this.props.element.getResponsiveSetting('layout_column_width') + '%';
+      } else {
+        styles.width = this.props.element.getResponsiveSetting('layout_column_width');
+      }
+    }
     if (! this.state.elementDisplay) {
       styles.display = "none";
     }

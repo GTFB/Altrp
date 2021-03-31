@@ -3,42 +3,75 @@
 
 namespace App\Helpers\Classes;
 
+use App\Traits\Singleton;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 
 
 class CurrentEnvironment
 {
-    private static $instance;
-
+    use Singleton;
+//    private static $instance;
     private $data = [];
-
 
     private function __construct()
     {
-        $this->setData(altrpUser)
-//        $this->currentUser = Auth::user();
-//        dump($this->altrptUser);
+        $this->appData['request'] = request()->all();
+        $this->appData['current_user'] = Auth::user();
     }
 
     /**
+     * Пустой ли массив данных
+     * @return boolean
+     */
+    public function isEmpty(): bool
+    {
+        return empty($this->data);
+    }
+
+    /**
+     * Возваращает массив данных
      * @return array
      */
-    public function getArrayData(): array
+    public function getData(): array
     {
-        return $this->arrayData;
+        return $this->data;
     }
 
     /**
-     * @param array $arrayData
+     * @param array $data
      */
-    public function setData(array $arrayData): void
+    public function setData(array $data): void
     {
-        data_set();
-        $this->arrayData = $arrayData;
+        $this->data = $data;
     }
 
-    public static function get_instance() {
+    /**
+     * Запись значения по пути в массив данных
+     * @param  string|array  $path
+     * @param  mixed  $value
+     * @param  bool  $overwrite
+     */
+    public function setProperty( $path, $value, $overwrite = true): void
+    {
+        data_set( $this->data, $path, $value, $overwrite );
+    }
+
+    /**
+     * Получение значения по пути в массиве даных
+     * @param  string|array  $path
+     * @param  mixed  $default
+     * @return mixed
+     */
+    public function getProperty( $path, $default = null)
+    {
+        return data_get( $this->data, $path, $default );
+    }
+
+    /**
+     * Возвращает созданный объект класса, если такого нет, то создаёт его и возвращает
+     * @return  mixed $instance
+     */
+    public static function getInstance() {
 
         if ( ! isset( self::$instance ) && ! ( self::$instance instanceof self ) ) self::$instance = new self;
 

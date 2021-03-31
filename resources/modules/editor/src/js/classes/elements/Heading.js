@@ -1629,7 +1629,7 @@ class Heading extends BaseElement {
         type: CONTROLLER_COLOR,
         label: 'Color',
         rules: {
-          '{{ELEMENT}} .altrp-animating-highlighted-svg svg path{{STATE}}': 'stroke: {{COLOR}};',
+          '{{ELEMENT}} .altrp-animating-highlighted-svg{{STATE}} svg path': 'stroke: {{COLOR}};',
         },
       }
     );
@@ -1644,7 +1644,7 @@ class Heading extends BaseElement {
       max: 20,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-animating-highlighted-svg svg path{{STATE}}": "stroke-width: {{SIZE}}"
+        "{{ELEMENT}} .altrp-animating-highlighted-svg{{STATE}} svg path": "stroke-width: {{SIZE}}"
       }
     });
 

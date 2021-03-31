@@ -357,7 +357,7 @@ export function renderAdditionalRows(settings) {
         cell.colspan = cell.colspan || 1;
         return<th key={`additional-cell-${row.id}-${cell.id}`}
                   role="columnheader"
-                  className="altrp-table-th"
+                  className="altrp-table-th altrp-table-cell"
                   colSpan={cell.colspan}
                   rowSpan={cell.rowspan}>{cell.title}</th>
       })}

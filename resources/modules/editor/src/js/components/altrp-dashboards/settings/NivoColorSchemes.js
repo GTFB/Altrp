@@ -580,6 +580,27 @@ const Schemes = [
       "#bd0026",
       "#800026"
     ]
+  },
+   {
+    label: "Milk",
+    value: "milk",
+    colors: [
+      "#797979", 
+      "#042D5B", 
+      "#536DFE", 
+      "#7C4DFF", 
+      "#AA8D52", 
+      "#448AFF", 
+      "#A52A2A", 
+      "#FF6347", 
+      "#EE82EE", 
+      "#BDB76B"
+    ]
+  },
+  {
+    label: "Milk2",
+    value: "milk2",
+    colors: ["#004B9C", "#6F2700", "#FF6600", "#005800"]
   }
 ];
 export default Schemes;

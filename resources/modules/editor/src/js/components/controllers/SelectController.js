@@ -57,18 +57,12 @@ class SelectController extends Component {
       <div className="control-container_select-wrapper">
 
         <select className="control-select control-field" value={value || ''} onChange={this.changeValue}>
-          {this.state.options.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
+          {this.state.options.map(option => {
+            return <option value={option.value} key={option.value}>{option.label}</option> })}
         </select>
       </div>
     </div>
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    currentElement: state.currentElement.currentElement,
-    currentState: state.currentState,
-    currentScreen: state.currentScreen
-  };
-}
 export default connect(controllerMapStateToProps)(SelectController);

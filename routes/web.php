@@ -89,8 +89,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     /**
      * Роуты модели AltrpMeta
      */
-    Route::get('/altrp_meta/{meta_name}', 'Admin\ALtrpMetaController@getMetaByName');
-    Route::put('/altrp_meta/{meta_name}', 'Admin\ALtrpMetaController@saveMeta');
+    Route::get('/altrp_meta/{meta_name}', 'Admin\AltrpMetaController@getMetaByName');
+    Route::put('/altrp_meta/{meta_name}', 'Admin\AltrpMetaController@saveMeta');
 
     // Websockets
     Route::get('/websockets', 'Admin\WebsocketsController@index');
@@ -406,7 +406,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
      * Настройка почты
      */
     Route::post('/write_mail_settings', 'MailController@writeSettingsToEnv');
-    Route::post('/write_send_mail', 'MailController@switchHandler');
     Route::get('/get_mail_settings', 'MailController@getSettings');
     /**
      * Роуты ипортов Админки
@@ -443,7 +442,7 @@ Route::get('/', function () {
 
   return view('front-app', [
     'title' => 'Main',
-    'page_id' => '',
+    'page_id' => 'null',
     '_frontend_route' => [],
     'preload_content' => [],
     'page_areas' => '[]',
@@ -458,7 +457,7 @@ foreach ( $frontend_routes as $_frontend_route ) {
   $pattern2 = '/:(.+)(\/)/U';
   $replacement1 = '{$1}/';
   $replacement2 = '{$1}/';
-  $frontend_route = preg_replace( $pattern1, $replacement1,  $path );
+  $frontend_route = preg_replace( $pattern1, $replacement1, $path );
 
   Route::get($frontend_route, function () use ($title, $_frontend_route, $frontend_route) {
 

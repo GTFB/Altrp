@@ -7,8 +7,7 @@ export default class Condition extends React.Component {
   }
 
   render() {
-    // let nodeClasses = "flow-node-condition";
-    let nodeClasses = "romb";
+    let nodeClasses = "flow-node-condition";
     if (this.props.selected) nodeClasses += " selected";
 
     return (

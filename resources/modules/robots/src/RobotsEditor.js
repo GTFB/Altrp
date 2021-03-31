@@ -22,10 +22,13 @@ import {
 import { setCurrentRobot } from "./js/store/current-robot/actions";
 import Sidebar from "./js/components/sidebar/Sidebar";
 import Condition from "./js/components/sidebar/modules/widgets/Condition";
-import Begin from "./js/components/sidebar/modules/widgets/Begin";
-import Action from "./js/components/sidebar/modules/widgets/Action";
+import Start from "./js/components/sidebar/modules/widgets/Start";
+import DocumentAction from "./js/components/sidebar/modules/widgets/DocumentAction";
+import CrudAction from "./js/components/sidebar/modules/widgets/CrudAction";
+import ApiAction from "./js/components/sidebar/modules/widgets/ApiAction";
+import MessageAction from "./js/components/sidebar/modules/widgets/MessageAction";
 import Robot from "./js/components/sidebar/modules/widgets/Robot";
-import End from "./js/components/sidebar/modules/widgets/End";
+import Finish from "./js/components/sidebar/modules/widgets/Finish";
 import CustomEdge from "./js/components/sidebar/modules/widgets/CustomEdge";
 import ConnectionLine from './js/components/sidebar/modules/widgets/ConnectionLine';
 
@@ -43,6 +46,7 @@ class RobotsEditor extends Component {
     this.state = {
       elements: [],
       robot: [],
+      sources: [],
       reactFlowInstance: null,
       selectNode: false,
       selectEdge: false,
@@ -51,6 +55,7 @@ class RobotsEditor extends Component {
     };
     this.changeTab = this.changeTab.bind(this);
     this.btnChange = this.btnChange.bind(this);
+    this.setSources = this.setSources.bind(this);
     this.resource = new Resource({ route: "/admin/ajax/robots" });
     this.reactFlowRef = React.createRef();
   }
@@ -67,11 +72,30 @@ class RobotsEditor extends Component {
 
     const robotId = new URL(window.location).searchParams.get("robot_id");
     const robot = await this.resource.get(robotId);
+    console.log(robot);
     store.dispatch(setCurrentRobot(robot));
+    if (robot.sources) {
+      let sources = this.changeSources(robot.sources);
+      this.setState(s => ({ ...s, sources}));
+    }
     if(!robot.chart) return;
     const data = JSON.parse(robot.chart) ?? [];
     store.dispatch(setRobotSettingsData(data));
     this.btnChange('');
+  }
+
+  setSources(sources){
+    this.setState(s => ({...s, sources}));
+  }
+
+  changeSources(sources){
+    if(_.isArray(sources)) {
+      sources.map(item =>{
+        item.parameters = item?.pivot?.parameters ?? '';
+        return item;
+      });
+    }
+    return sources;
   }
 
   // Удаление ноды или связи
@@ -137,8 +161,7 @@ class RobotsEditor extends Component {
 
   // Получение id нового элемента (ноды)
   getId() {
-    const time = new Date().getTime();
-    return time;
+    return new Date().getTime();
   }
 
   // Получение data нового элемента (ноды)
@@ -146,24 +169,70 @@ class RobotsEditor extends Component {
     let data = { type };
 
     switch (type){
-      case "action":
+      case "documentAction":
         data = {
-          "type": "action",
-          "nodeData": {}
+          "type": "documentAction",
+          "nodeData": {},
+        };
+        break;
+      case "crudAction":
+        data = {
+          "type": "crudAction",
+          "nodeData": {
+            "type": "crud",
+            "data": {
+              "method": "",
+              "body": {},
+              "record": "",
+              "model_id": "",
+            }
+          }
+        };
+        break;
+      case "apiAction":
+        data = {
+          "type": "apiAction",
+          "nodeData": {},
+        };
+        break;
+      case "messageAction":
+        data = {
+          "type": "messageAction",
+          "nodeData": {
+            "type": "send_notification",
+            "data": {
+              "entities": "",
+              "entitiesData": {
+                "users": [],
+                "roles": [],
+                "dynamicValue": "",
+              },
+              "channel": "",
+              "content": {},
+            }
+          }
         };
         break;
       case "condition":
-        data = {  
+        data = {
           "type": "condition",
           "nodeData": {
-              "type": "",
+              "operator": "",
+              "body": []
+          }
+        };
+        break;
+      case "start":
+        data = {
+          "type": "start",
+          "nodeData": {
               "operator": "",
               "body": []
           }
         };
         break;
       case "robot":
-        data = {  
+        data = {
           "type": "robot",
           "nodeData": {
               "id": "",
@@ -227,12 +296,14 @@ class RobotsEditor extends Component {
           <Sidebar changeTab={this.changeTab}
                   activePanel={ this.state.activePanel }
                   robot={ this.state.robot }
+                  sources={ this.state.sources }
                   elements={ this.state.elements }
                   selectNode={ this.state.selectNode }
                   selectEdge={ this.state.selectEdge }
                   onLoad={ this.onLoad }
                   btnActive={ this.state.btnActive }
                   btnChange={ this.btnChange }
+                  setSources={ this.setSources }
           />
           <div className="content" ref={this.reactFlowRef }>
             <ReactFlow
@@ -246,11 +317,14 @@ class RobotsEditor extends Component {
               onNodeDragStop={ this.onNodeDragStop }
               onDragOver={ this.onDragOver }
               nodeTypes={{
-                begin: Begin,
+                start: Start,
                 condition: Condition,
-                action: Action,
+                documentAction: DocumentAction,
+                crudAction: CrudAction,
+                apiAction: ApiAction,
+                messageAction: MessageAction,
                 robot: Robot,
-                end: End,
+                finish: Finish,
               }}
               onEdgeUpdate={this.onEdgeUpdate}
               edgeTypes={{

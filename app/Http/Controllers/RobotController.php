@@ -24,14 +24,22 @@ class RobotController extends Controller
         $this->robotsService = $robotsService;
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function index(Request $request): JsonResponse
     {
         $robots = Robot::with('user')->get()->each(function (Robot $robot) {
-            $robot->setAttribute('author', $robot->user->name);
+            $robot->setAttribute('author',data_get( $robot, 'user.name', ''));
         });
         return \response()->json($robots);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function store(Request $request)
     {
         $data = $request->all();
@@ -46,18 +54,54 @@ class RobotController extends Controller
         ]);
     }
 
+    /**
+     * @param Robot $robot
+     * @return JsonResponse
+     */
     public function show(Robot $robot)
     {
         return \response()->json($robot);
     }
 
+    /**
+     * @param Robot $robot
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function update(Robot $robot, Request $request)
     {
-        $result = $robot->update($request->data);
+        $data = $request->data;
+
+        $sources = isset($request->sources) ? json_decode(collect($request->sources)->toJson()) : [];
+
+//        dd(json_decode($sources->toJson()));
+        $sourceIds = [];
+        $sourceParams = [];
+
+        foreach ($sources as $source) {
+
+            $sourceIds[] = $source->id;
+            $sourceParams[$source->id] = $source->parameters;
+        }
+
+        $robot->sources()->detach($robot->sources);
+
+        foreach ($sourceIds as $id) {
+            $robot->sources()->attach($id, [
+                'parameters' => $sourceParams[$id]
+            ]);
+        }
+
+        $result = $robot->update($data);
 
         return \response()->json(['success' => $result], $result ? 200 : 500);
     }
 
+    /**
+     * @param Robot $robot
+     * @return JsonResponse
+     * @throws \Exception
+     */
     public function destroy(Robot $robot): JsonResponse
     {
         $result = $robot->delete();
@@ -65,10 +109,14 @@ class RobotController extends Controller
         return \response()->json(['success' => $result], $result ? 200 : 500);
     }
 
-    public function getOptions(Request $reques)
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getOptions(Request $request)
     {
         $robots = Robot::with('user')->get()->each(function (Robot $robot) {
-            $robot->setAttribute('author', $robot->user->name);
+            $robot->setAttribute('author',data_get( $robot, 'user.name', ''));
         });
 
         $options = [];

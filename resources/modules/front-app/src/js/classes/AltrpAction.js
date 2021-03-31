@@ -14,8 +14,7 @@ import {
   printElements,
   replaceContentWithData,
   scrollToElement,
-  setDataByPath,
-  dataToXLS,
+  setDataByPath,dataToXLS,
   delay, altrpCompare,
 } from '../helpers';
 import { togglePopup } from '../store/popup-trigger/actions';
@@ -146,7 +145,7 @@ class AltrpAction extends AltrpModel {
       }
       case 'login': {
         const form = formsManager.registerForm(
-          'login',
+          this.getFormId(),
           'login',
           'POST'
         );

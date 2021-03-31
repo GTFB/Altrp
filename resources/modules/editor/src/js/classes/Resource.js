@@ -38,7 +38,7 @@ class Resource {
    * */
   get(id) {
     if (!id) {
-      throw 'Get only by "id"';
+      console.error('Get only by "id"');
     }
 
     let options = {
@@ -68,7 +68,7 @@ class Resource {
    * */
   getInContext(id) {
     if (!id) {
-      throw 'Get only by "id"';
+      console.error('Get only by "id"');
     }
 
     let options = {

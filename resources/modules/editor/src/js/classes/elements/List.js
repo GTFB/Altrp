@@ -188,11 +188,6 @@ class List extends BaseElement{
       min: 0,
     });
 
-    this.addControl('repeater_meta_data_section', {
-      label: 'Elements',
-      type: CONTROLLER_REPEATER,
-      fields: repeater.getControls(),
-    });
 
     this.endControlSection();
 

@@ -468,6 +468,63 @@ function isAdmin(){
 }
 
 function getCurrentEnv(){
-    $item = App\Helpers\Classes\CurrentEnvironment::get_instance();
-    return $item;
+    return App\Helpers\Classes\CurrentEnvironment::getInstance();
 }
+
+function getFavicons() {
+    if(env("ALTRP_CUSTOM_ICON")) {
+        $icons = [];
+        $path = Storage::url("media/favicons");
+        //ico
+        array_push($icons, "<link type='image/x-icon' rel='shortcut icon' href='$path/favicon.ico'>");
+
+        //png
+        $sizes = [16, 32, 96, 120, 192];
+        foreach ($sizes as $size) {
+            $href = $path ."/" .$size ."_favicon.png";
+            $size_png = $size ."x" .$size;
+            array_push($icons, "<link type='image/png' sizes='$size_png' rel='icon' href='$href'>");
+        }
+
+        //apple png
+        $sizes_apple = [57, 60, 72, 76, 114, 120, 144, 152, 180];
+
+        foreach ($sizes_apple as $size) {
+            $href = $path ."/" .$size ."_favicon.png";
+            $size_png = $size ."x" .$size;
+            array_push($icons, "<link type='image/png' sizes='$size_png' rel='apple-touch-icon' href='$href'>");
+        }
+
+        $links = "";
+
+        foreach ($icons as $icon) {
+            $links = $links . $icon;
+        }
+
+        return $links;
+    }
+}
+/**
+ * Заменить динамические переменные на данные из data (CurrentEnvironment)
+ * @param string $template
+ * @param mixed $data
+ * @return string|string[]
+ */
+function setDynamicData($template, $data)
+{
+    try {
+        if ($data) {
+            preg_match_all("#\{\{(?<path>(.*?)+)\}\}#", $template, $matches);
+            $matches = $matches['path'];
+
+            foreach ($matches as $path) {
+                $item = data_get($data, $path);
+                $template = str_replace("{{{$path}}}", $item, $template);
+            }
+        }
+    } catch (\Exception $e){
+        Log::info($e->getMessage());
+    }
+    return $template;
+}
+

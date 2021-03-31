@@ -51,6 +51,14 @@ class AltrpSelect extends Component {
 
   render(){
     const customStyles = {
+      control: (base, state) => ({
+        ...base,
+        boxShadow: "none",
+        borderColor: state.isFocused ? "hsl(0,0%,80%)" : "hsl(0,0%,80%)",
+        "&:hover": {
+          borderColor: "hsl(0,0%,80%)"
+        }
+      }),
       menuPortal: base => ({ ...base, zIndex: 99999 }),
       // option: (provided, state) => ({
       //   ...provided,
@@ -76,7 +84,7 @@ class AltrpSelect extends Component {
       isDisabled: this.state.isDisabled,
       ref: this.selectRef,
     };
-    
+
     _.assign(selectProps, this.props);
 
     if(_.isArray(selectProps.value)){

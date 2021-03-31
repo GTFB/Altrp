@@ -8,6 +8,7 @@ import LogoIcon from "../../../../../editor/src/svgs/logo.svg";
 import DotsIcon from "../../../../../editor/src/svgs/dots.svg";
 import HamburgerIcon from "../../../../../editor/src/svgs/hamburger.svg";
 import SettingsIcon from "../../../../../editor/src/svgs/settings.svg";
+import {renderAsset} from "../../../../../front-app/src/js/helpers";
 
 export default class Sidebar extends React.Component {
   constructor(props) {
@@ -24,7 +25,11 @@ export default class Sidebar extends React.Component {
     const robotData = store.getState()?.currentRobot;
     const robotChart = store.getState()?.robotSettingsData;
     robotData.chart = robotChart;
-    this.resource.put(robotId, { data: robotData });
+    console.log(this.props.sources);
+    this.resource.put(robotId, {
+      data: robotData,
+      sources: this.props.sources,
+    });
     this.props.btnChange("");
   }
 
@@ -57,6 +62,8 @@ export default class Sidebar extends React.Component {
           {activePanel === "widgets" && <WidgetsPanel />}
           {activePanel === "settings" && <RobotSettingsPanel
                                             robot={ this.props.robot }
+                                            sources={ this.props.sources }
+                                            setSources={ this.props.setSources }
                                           />}
           {activePanel === "selected" && <SelectedPanel
                                             robot={ this.props.robot }

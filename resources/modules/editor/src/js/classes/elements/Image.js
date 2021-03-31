@@ -338,8 +338,7 @@ class Image extends BaseElement {
           'filter: blur({{BLUR}}px)  brightness({{BRIGHTNESS}}%) contrast({{CONTRAST}}%) saturate({{SATURATE}}%) hue-rotate({{HUE}}deg);'
         ],
       },
-    }
-    );
+    });
     this.addControl('image_style_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',

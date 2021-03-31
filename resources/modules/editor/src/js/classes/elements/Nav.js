@@ -635,7 +635,7 @@ class Nav extends BaseElement {
       max: 50,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link-icon{{STATE}}": [
+        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}} .altrp-nav-menu-li-link-icon": [
           "margin-left: {{SIZE}}{{UNIT}}",
         ]
       }
@@ -700,7 +700,7 @@ class Nav extends BaseElement {
         colorPickedHex: "",
       },
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link-icon path{{STATE}}": "fill: {{COLOR}};"
+        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}} path": "fill: {{COLOR}};"
       }
     });
 
@@ -712,7 +712,7 @@ class Nav extends BaseElement {
         colorPickedHex: "",
       },
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link-icon path{{STATE}}": "stroke: {{COLOR}};"
+        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}} path": "stroke: {{COLOR}};"
       }
     });
 
@@ -723,7 +723,7 @@ class Nav extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link-icon svg{{STATE}}": [
+        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}} svg": [
           "height: {{SIZE}}{{UNIT}}",
           "width: {{SIZE}}{{UNIT}}"
         ]

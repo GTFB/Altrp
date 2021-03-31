@@ -1,8 +1,9 @@
 import * as React from "react";
 import Scrollbars from "react-custom-scrollbars";
 import Action from "./data/Action"
-import Condition from "./data/Condition"
-import Robot from "./data/Robot"
+import ConditionNode from "./data/ConditionNode"
+import RobotNode from "./data/RobotNode"
+import StartNode from "./data/StartNode"
 import Edge from "./data/Edge"
 import store from "../../../store/store"
 import { setUpdatedNode, setRobotSettingsData } from "../../../store/robot-settings/actions"
@@ -39,8 +40,8 @@ export default class SelectedPanel extends React.Component {
     // вызов принудительного рендера flow
     const elements = store.getState()?.robotSettingsData;
     const newElements = _.cloneDeep(elements);
-    store.dispatch(setRobotSettingsData(newElements));        
-    
+    store.dispatch(setRobotSettingsData(newElements));
+
   }
 
   changeSelectEdge(e, type){
@@ -52,7 +53,7 @@ export default class SelectedPanel extends React.Component {
   toggleChevron(type) {
     console.log(type);
   }
- 
+
   render() {
 
     return (
@@ -74,7 +75,7 @@ export default class SelectedPanel extends React.Component {
                       </div>
                       <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
                       {this.props.selectNode && <div className="controller-container controller-container_textarea">
-                        <div className="controller-container__label control-select__label controller-label" >Text</div>
+                        <div className="controller-container__label control-select__label controller-label" >Name</div>
                         <textarea
                           className="control-field controller-field"
                           type="text"
@@ -82,7 +83,7 @@ export default class SelectedPanel extends React.Component {
                           style={{lineHeight: '125%'}}
                           onChange={(e) => { this.changeInput(e) }}
                           value={ this.props.selectNode.data?.label }
-                        ></textarea>
+                        />
                       </div>}
                       {this.props.selectEdge && <Edge
                                                   robot={ this.props.robot }
@@ -91,20 +92,27 @@ export default class SelectedPanel extends React.Component {
                       </div>
                     </div>
 
-                      {(this.props.selectNode?.type === "action") && <Action
+                      {(this.props.selectNode?.type === "documentAction" ||
+                        this.props.selectNode?.type === "crudAction" ||
+                        this.props.selectNode?.type === "apiAction" ||
+                        this.props.selectNode?.type === "messageAction") && <Action
                                                                         activeSection={this.state.activeSection}
                                                                         toggleChevron={this.toggleChevron}
                                                                         robot={ this.props.robot }
                                                                         selectNode={this.props.selectNode || []}
                                                                       />}
-                      {(this.props.selectNode?.type === "condition") && <Condition
+                      {(this.props.selectNode?.type === "condition") && <ConditionNode
                                                                           robot={ this.props.robot }
                                                                           selectNode={this.props.selectNode || []}
                                                                         />}
-                      {(this.props.selectNode?.type === "robot") && <Robot
+                      {(this.props.selectNode?.type === "robot") && <RobotNode
                                                                       robot={ this.props.robot }
                                                                       selectNode={this.props.selectNode || []}
-                                                                    />}                     
+                                                                    />}
+                      {(this.props.selectNode?.type === "start") && <StartNode
+                                                                      robot={ this.props.robot }
+                                                                      selectNode={this.props.selectNode || []}
+                                                                    />}
 
                   </div> ) : (<div className="controllers-wrapper">
                     Select a node or edge to edit

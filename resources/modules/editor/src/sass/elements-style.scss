@@ -21,6 +21,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  &_section{
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .altrp-element > * {
@@ -1514,4 +1518,10 @@
 
 .altrp-label-icon, .altrp-label-icon svg, .altrp-label-icon img {
   width : 20px;
+}
+
+.altrp-field-select2__indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
