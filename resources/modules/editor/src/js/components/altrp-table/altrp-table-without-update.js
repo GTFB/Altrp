@@ -721,7 +721,7 @@ function AltrpTableWithoutUpdate(
           }
           return (
             <div {...headerGroupProps} className="altrp-table-tr">
-              {replace_rows && <div className="altrp-table-th" style={{ width: replace_width }} />}
+              {replace_rows && <div className="altrp-table-th altrp-table-cell" style={{ width: replace_width }} />}
               {headerGroup.headers.map((column, idx) => {
                 const { column_width, column_header_alignment } = column;
                 let columnProps = column.getHeaderProps(column.getSortByToggleProps());
@@ -746,7 +746,7 @@ function AltrpTableWithoutUpdate(
                 }
                 return <HeaderCellComponent {...columnProps}
                                             column={column}
-                  className="altrp-table-th"
+                  className="altrp-table-th altrp-table-cell"
                   key={idx}>
                   {columnNameContent}
                   {column.canGroupBy ? (
@@ -784,7 +784,7 @@ function AltrpTableWithoutUpdate(
         }
         )}
         {global_filter && <div className="altrp-table-tr">
-          <th className="altrp-table-th altrp-table-th_global-filter"
+          <th className="altrp-table-th altrp-table-th_global-filter altrp-table-cell"
             role="cell"
             colSpan={visibleColumns.length + replace_rows}
             style={{

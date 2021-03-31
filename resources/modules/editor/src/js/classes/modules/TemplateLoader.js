@@ -103,7 +103,6 @@ class TemplateLoader {
 
 }
 
-const templateLoader =  new TemplateLoader();
-window.templateLoader = templateLoader;
+ window.templateLoader =  new TemplateLoader();
 
-export default templateLoader;
+export default window.templateLoader;

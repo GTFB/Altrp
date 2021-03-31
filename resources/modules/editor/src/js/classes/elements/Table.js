@@ -654,6 +654,16 @@ class Table extends BaseElement {
       label: 'Header Full Width',
     });
 
+    repeater.addControl('header_bg', {
+      type: CONTROLLER_COLOR,
+      label: 'Header BG',
+    });
+
+    repeater.addControl('body_bg', {
+      type: CONTROLLER_COLOR,
+      label: 'Body BG',
+    });
+
     const actionsRepeater = new Repeater();
 
     actionsRepeater.addControl('icon', {

@@ -36,7 +36,7 @@ const Cell = ({ cell, settings }) => {
   } else if (cell.isPlaceholder) {
     cellContent = cell.render('Cell');
   }
-  const cellClassNames = ['altrp-table-td'];
+  const cellClassNames = ['altrp-table-td', 'altrp-table-cell'];
   cell.isAggregated && cellClassNames.push('altrp-table-td_aggregated');
   cell.isPlaceholder && cellClassNames.push('altrp-table-td_placeholder');
   cell.isGrouped && cellClassNames.push('altrp-table-td_grouped');
