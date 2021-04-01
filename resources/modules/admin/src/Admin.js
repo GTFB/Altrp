@@ -62,6 +62,7 @@ import SQLEditors from "./components/SQLEditors";
 import ColorSchemes from "./components/dashboard/ColorSchemes";
 import ModelPage from "./components/models/ModelPage";
 import FontsForm from "./components/FontsForm";
+import {WithRouterAdminAssetsDropList} from "./components/AdminAssetsDropList";
 
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 import Resource from "../../editor/src/js/classes/Resource";
@@ -73,7 +74,8 @@ import { setUserData, setUsersOnline } from "./js/store/current-user/actions";
 import "./sass/admin-style.scss";
 
 import { changeCurrentUser } from "../../front-app/src/js/store/current-user/actions";
-import { setWebsocketsEnabled,
+import {
+  setWebsocketsEnabled,
   setWebsocketsKey,
   setWebsocketsPort
 } from "./js/store/websockets-storage/actions";
@@ -90,7 +92,7 @@ class Admin extends Component {
         adminEnable: true
       },
       pagesMenuShow: false,
-      models: []
+      models: [],
     };
     this.toggleMenu = this.toggleMenu.bind(this);
   }
@@ -121,7 +123,7 @@ class Admin extends Component {
     websocketsHost = websocketsHost?.pusher_host;
 
     // Проверка наличия ключа и порта
-    if(pusherKey && websocketsPort){
+    if (pusherKey && websocketsPort) {
       try {
         window.Pusher = require("pusher-js");
         window.Echo = new Echo({
@@ -144,9 +146,9 @@ class Admin extends Component {
 
       // Подключение слушателя канала
       window.Echo.private("App.User." + currentUser.id)
-      .notification((notification) => {
-        console.log(notification);
-      });
+        .notification((notification) => {
+          console.log(notification);
+        });
 
       // Подключение слушателя для получения users online
       let presenceChannel = window.Echo.join("online");
@@ -155,17 +157,17 @@ class Admin extends Component {
         activeUsers = users;
         store.dispatch(setUsersOnline(activeUsers));
       })
-      .joining((user) => {
-        activeUsers.push(user);
-        store.dispatch(setUsersOnline(activeUsers));
-      })
-      .leaving((user) => {
-        activeUsers.splice(activeUsers.indexOf(user), 1);
-        store.dispatch(setUsersOnline(activeUsers));
-      });
+        .joining((user) => {
+          activeUsers.push(user);
+          store.dispatch(setUsersOnline(activeUsers));
+        })
+        .leaving((user) => {
+          activeUsers.splice(activeUsers.indexOf(user), 1);
+          store.dispatch(setUsersOnline(activeUsers));
+        });
 
     } else {
-     console.log("Вебсокеты выключены");
+      console.log("Вебсокеты выключены");
     }
 
     this.getPusherConnect();
@@ -173,8 +175,8 @@ class Admin extends Component {
 
   // Запись в store в случае успешного соединения
   getPusherConnect() {
-    window?.Echo?.connector?.pusher.connection.bind('connected', function() {
-        store.dispatch(setWebsocketsEnabled(true));
+    window?.Echo?.connector?.pusher.connection.bind('connected', function () {
+      store.dispatch(setWebsocketsEnabled(true));
     });
   }
 
@@ -192,6 +194,12 @@ class Admin extends Component {
     this.setState(state => {
       return { ...state, pagesMenuShow: !state.pagesMenuShow };
     });
+  }
+
+  assetsActive = () => {
+    this.setState({
+      isAssetsActive: true,
+    })
   }
 
   render() {
@@ -259,136 +267,127 @@ class Admin extends Component {
                   </ul>
                 </Scrollbars>
               ) : (
-                  <Scrollbars
-                    autoHide
-                    autoHideTimeout={500}
-                    autoHideDuration={200}
-                  >
-                    <ul className="admin-nav-list">
-                      <li>
-                        <Link
-                          to="/admin/dashboard"
-                          className="admin-nav-list__link"
-                        >
-                          <DashboardSvg className="icon" />
-                          <span>Dashboard</span>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          to="/admin/assets"
-                          className="admin-nav-list__link"
-                        >
-                          <AssetSvg className="icon" />
-                          <span>Assets</span>
-                        </Link>
-                        <ul className="admin-nav-list admin-nav-list--sublist">
-                          <li>
-                            <Link
-                              to="/admin/assets/custom-fonts"
-                              className="admin-nav-list__link"
-                            >
-                              <span>Custom fonts</span>
-                            </Link>
-                          </li>
-                        </ul>
-                      </li>
-                      <li>
-                        {/*<Link to="/admin/tables" className="admin-nav-list__link">*/}
-                        {/*<TableSvg className="icon"/>*/}
-                        {/*<span>Tables</span>*/}
-                        {/*</Link>*/}
+                <Scrollbars
+                  autoHide
+                  autoHideTimeout={500}
+                  autoHideDuration={200}
+                >
+                  <ul className="admin-nav-list">
+                    <li>
+                      <Link
+                        to="/admin/dashboard"
+                        className="admin-nav-list__link"
+                      >
+                        <DashboardSvg className="icon" />
+                        <span>Dashboard</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/admin/assets"
+                        className="admin-nav-list__link"
+                      >
+                        <AssetSvg className="icon" />
+                        <span>Assets</span>
+                      </Link>
+                      <WithRouterAdminAssetsDropList />
+                    </li>
+                    <li>
+                      {/*<Link to="/admin/tables" className="admin-nav-list__link">*/}
+                      {/*<TableSvg className="icon"/>*/}
+                      {/*<span>Tables</span>*/}
+                      {/*</Link>*/}
 
-                        <Link
-                          to="/admin/tables/models"
-                          className="admin-nav-list__link"
-                        >
-                          <TableSvg className="icon" />
-                          <span>Tables</span>
-                        </Link>
-                        <ul className="admin-nav-sublist">
-                          <li>
-                            <Link
-                              to="/admin/tables/sql_editors"
-                              className="admin-nav-list__link"
-                            >
-                              <TableSvg className="icon" />
-                              <span>SQL Editors</span>
-                            </Link>
-                          </li>
-                        </ul>
-                      </li>
-                  <li>
-                    <Link
-                      to="/admin/templates"
-                      className="admin-nav-list__link"
-                    >
-                      <TemplateSvg className="icon" />
-                      <span>Templates</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/admin/robots" className="admin-nav-list__link">
-                      <TemplateSvg className="icon" />
-                      <span>Robots</span>
-                    </Link>
-                  </li>
-                  {/* <li>
+                      <Link
+                        to="/admin/tables/models"
+                        className="admin-nav-list__link"
+                      >
+                        <TableSvg className="icon" />
+                        <span>Tables</span>
+                      </Link>
+                      <ul className="admin-nav-sublist">
+                        <li>
+                          <Link
+                            to="/admin/tables/sql_editors"
+                            className="admin-nav-list__link"
+                          >
+                            <TableSvg className="icon" />
+                            <span>SQL Editors</span>
+                          </Link>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <Link
+                        to="/admin/templates"
+                        className="admin-nav-list__link"
+                      >
+                        <TemplateSvg className="icon" />
+                        <span>Templates</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/admin/robots" className="admin-nav-list__link">
+                        <TemplateSvg className="icon" />
+                        <span>Robots</span>
+                      </Link>
+                    </li>
+                    {/* <li>
                     <Link to="/admin/reports" className="admin-nav-list__link">
                       <ReportSvg className="icon" />
                       <span>Reports</span>
                     </Link>
                   </li> */}
-                      <li>
-                        <Link
-                          to="/admin/users"
-                          className="admin-nav-list__link"
-                        >
-                          <UserSvg className="icon" />
-                          <span>Users</span>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          to="/admin/tools"
-                          className="admin-nav-list__link"
-                        >
-                          <span>Tools</span>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          to="/admin/access/roles"
-                          className="admin-nav-list__link"
-                        >
-                          <UserSvg className="icon" />
-                          <span>Access</span>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          to="/admin/plugins"
-                          className="admin-nav-list__link"
-                        >
-                          <PluginSvg className="icon" />
-                          <span>Plugins</span>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          to="/admin/settings"
-                          className="admin-nav-list__link"
-                        >
-                          <SettingSvg className="icon" />
-                          <span>Settings</span>
-                        </Link>
-                      </li>
-                    </ul>
-                  </Scrollbars>
-                )}
+                    <li>
+                      <Link
+                        to="/admin/users"
+                        className="admin-nav-list__link"
+                      >
+                        <UserSvg className="icon" />
+                        <span>Users</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/admin/tools"
+                        className="admin-nav-list__link"
+                      >
+                        <span>Tools</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/admin/access/roles"
+                        className="admin-nav-list__link"
+                      >
+                        <UserSvg className="icon" />
+                        <span>Access</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/admin/plugins"
+                        className="admin-nav-list__link"
+                      >
+                        <PluginSvg className="icon" />
+                        <span>Plugins</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/admin/settings"
+                        className="admin-nav-list__link"
+                      >
+                        <SettingSvg className="icon" />
+                        <span>Settings</span>
+                      </Link>
+                    </li>
+                  </ul>
+                </Scrollbars>
+              )}
 
-              </div>
-              <AdminVersion />
+            </div>
+            <AdminVersion />
           </nav>
           <Switch>
             <Route path="/admin/reports/add">
@@ -407,7 +406,7 @@ class Admin extends Component {
               <AddUserPage />
             </Route>
             <Route path="/admin/users/user/:id" exact>
-                <UserPage />
+              <UserPage />
             </Route>
             <Route path="/admin/users/user/:id" exact>
               <Notifications />
@@ -460,7 +459,7 @@ class Admin extends Component {
               <Templates />
             </Route>
             <Route path="/admin/robots">
-                <Robots />
+              <Robots />
             </Route>
             <Route path="/admin/pages" exact>
               <AllPages />
