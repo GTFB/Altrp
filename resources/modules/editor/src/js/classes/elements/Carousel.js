@@ -125,12 +125,41 @@ class Carousel extends BaseElement {
       label: '(Overlay) text',
     });
 
+    this.addControl('slides_item_source', {
+      label: 'Carousel Items',
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          label: 'Custom',
+          value: 'custom',
+        },
+        {
+          label: 'Path',
+          value: 'path',
+        },
+      ],
+      default: 'custom'
+
+    });
+
     this.addControl('slides_repeater', {
-      label: 'Tab Items',
+      label: 'Carousel Items',
       type: CONTROLLER_REPEATER,
       fields: repeater.getControls(),
       default: [
-      ]
+      ],
+      conditions: {
+        'slides_item_source': 'custom',
+      },
+    });
+
+    this.addControl('slides_path', {
+      label: 'Path to Items',
+      type: CONTROLLER_TEXT,
+      responsive: false,
+      conditions: {
+        'slides_item_source': 'path',
+      },
     });
 
     this.addControl('lightbox_slides_content', {

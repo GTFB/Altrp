@@ -30,7 +30,8 @@ class CarouselWidget extends Component {
   }
 
   render(){
-    return <this.state.AltrpCarousel {...this.props.element.getSettings()}/>
+    return <this.state.AltrpCarousel {...this.props.element.getSettings()}
+                                     currentScreen={this.props.currentScreen}/>
   }
 }
 
