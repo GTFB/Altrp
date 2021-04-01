@@ -191,6 +191,10 @@ class DummyClass extends ApiController
         return response()->json(${{crudName}}, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
+    // SQL_EDITORS_BEGIN - IMPORTANT: Don't remove this comment! Write your methods between these comments.
+    {{sqlEditors}}
+    // SQL_EDITORS_END - IMPORTANT: Don't remove this comment! Write your methods between these comments.
+
     // CUSTOM_METHODS_BEGIN - IMPORTANT: Don't remove this comment! Write your methods between these comments.
     {{customMethods}}
     // CUSTOM_METHODS_END - IMPORTANT: Don't remove this comment! Write your methods between these comments.
