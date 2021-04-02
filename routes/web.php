@@ -413,12 +413,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
      */
     Route::group(['prefix' => 'import'], function () {
       Route::post('settings', 'Admin\ImportsController@importAltrpSettings')->name('admin.download.settings');
+      Route::post('custom_settings', 'Admin\ImportsController@importCustomAltrpSettings')->name('admin.download.custom_settings');
     });
     /**
      * Роуты загрузок Админки
      */
     Route::group(['prefix' => 'downloads'], function () {
       Route::get('settings', 'Admin\DownloadsController@exportAltrpSettings')->name('admin.download.settings');
+      Route::get('stream_settings', 'Admin\DownloadsController@exportStreamAltrpSettings')->name('admin.download.stream_settings');
     });
   });
 

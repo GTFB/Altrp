@@ -22,7 +22,8 @@ class Dashboards extends Model
     public $timestamps = false;
 
   /**
-   * Импортируем 
+   * @deprecated
+   * Импортируем
    * @param array $imported_dashboards
    */
   public static function import( $imported_dashboards = [] )

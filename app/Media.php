@@ -25,6 +25,7 @@ class Media extends Model
   ];
 
   /**
+   * @deprecated
    * Импортирует медиа
    * @param array $imported_media
    */

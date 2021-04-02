@@ -19,6 +19,7 @@ class PagesTemplate extends Model
   ];
 
   /**
+   * @deprecated
    * Импортируем данный для таблицы связей страниц с шаблонами
    * @param array $imported_data
    */
