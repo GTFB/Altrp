@@ -210,63 +210,52 @@ class FrontPopup extends Component {
         classes.push("app-popup-vertical-center");
     }
 
-    let stylePopup = {};
-    if(rootElementSettings['width_popup_layout'] && rootElementSettings['width_popup_layout'].size)
-      stylePopup.width = rootElementSettings['width_popup_layout'].size + rootElementSettings['width_popup_layout'].unit;
 
-    let styleIconClose = {};
-    if(rootElementSettings.popup_close_icon_height_size && rootElementSettings.popup_close_icon_height_size.size)
-      styleIconClose.height = rootElementSettings.popup_close_icon_height_size.size + rootElementSettings.popup_close_icon_height_size.unit;
-    if(rootElementSettings.popup_close_icon_width_size && rootElementSettings.popup_close_icon_width_size.size)
-      styleIconClose.width = rootElementSettings.popup_close_icon_width_size.size + rootElementSettings.popup_close_icon_width_size.unit;
-
-    let styleButtonClose = {};
+    // let styleButtonClose = {};
     
-    if(rootElementSettings.popup_close_button_height_size && rootElementSettings.popup_close_button_height_size.size)
-      styleButtonClose.height = rootElementSettings.popup_close_button_height_size.size + rootElementSettings.popup_close_button_height_size.unit;
-    if(rootElementSettings.popup_close_button_width_size && rootElementSettings.popup_close_button_width_size.size)
-      styleButtonClose.width = rootElementSettings.popup_close_button_width_size.size + rootElementSettings.popup_close_button_width_size.unit;  
+    // if(rootElementSettings.popup_close_button_height_size && rootElementSettings.popup_close_button_height_size.size)
+    //   styleButtonClose.height = rootElementSettings.popup_close_button_height_size.size + rootElementSettings.popup_close_button_height_size.unit;
+    // if(rootElementSettings.popup_close_button_width_size && rootElementSettings.popup_close_button_width_size.size)
+    //   styleButtonClose.width = rootElementSettings.popup_close_button_width_size.size + rootElementSettings.popup_close_button_width_size.unit;  
     
-    if(rootElementSettings.popup_close_button_padding) {
-      styleButtonClose.paddingTop = rootElementSettings.popup_close_button_padding.top + rootElementSettings.popup_close_button_padding.unit;
-      styleButtonClose.paddingRight = rootElementSettings.popup_close_button_padding.right + rootElementSettings.popup_close_button_padding.unit;
-      styleButtonClose.paddingBottom = rootElementSettings.popup_close_button_padding.bottom + rootElementSettings.popup_close_button_padding.unit;
-      styleButtonClose.paddingLeft = rootElementSettings.popup_close_button_padding.left + rootElementSettings.popup_close_button_padding.unit;
-    }
+    // if(rootElementSettings.popup_close_button_padding) {
+    //   styleButtonClose.paddingTop = rootElementSettings.popup_close_button_padding.top + rootElementSettings.popup_close_button_padding.unit;
+    //   styleButtonClose.paddingRight = rootElementSettings.popup_close_button_padding.right + rootElementSettings.popup_close_button_padding.unit;
+    //   styleButtonClose.paddingBottom = rootElementSettings.popup_close_button_padding.bottom + rootElementSettings.popup_close_button_padding.unit;
+    //   styleButtonClose.paddingLeft = rootElementSettings.popup_close_button_padding.left + rootElementSettings.popup_close_button_padding.unit;
+    // }
 
-    if(rootElementSettings.popup_close_button_border_type && rootElementSettings.popup_close_button_border_type !== "none") {
-      styleButtonClose.borderTopWidth = rootElementSettings.popup_close_button_border_width.top + rootElementSettings.popup_close_button_border_width.unit;
-      styleButtonClose.borderRightWidth = rootElementSettings.popup_close_button_border_width.right + rootElementSettings.popup_close_button_border_width.unit;
-      styleButtonClose.borderBottomWidth = rootElementSettings.popup_close_button_border_width.bottom + rootElementSettings.popup_close_button_border_width.unit;
-      styleButtonClose.borderLeftWidth = rootElementSettings.popup_close_button_border_width.left + rootElementSettings.popup_close_button_border_width.unit;
-      styleButtonClose.borderStyle = rootElementSettings.popup_close_button_border_type;
-      if(rootElementSettings.popup_close_button_border_color && rootElementSettings.popup_close_button_border_color.colorPickedHex)
-        styleButtonClose.borderColor = rootElementSettings.popup_close_button_border_color.colorPickedHex;
-    }
+    // if(rootElementSettings.popup_close_button_border_type && rootElementSettings.popup_close_button_border_type !== "none") {
+    //   styleButtonClose.borderTopWidth = rootElementSettings.popup_close_button_border_width.top + rootElementSettings.popup_close_button_border_width.unit;
+    //   styleButtonClose.borderRightWidth = rootElementSettings.popup_close_button_border_width.right + rootElementSettings.popup_close_button_border_width.unit;
+    //   styleButtonClose.borderBottomWidth = rootElementSettings.popup_close_button_border_width.bottom + rootElementSettings.popup_close_button_border_width.unit;
+    //   styleButtonClose.borderLeftWidth = rootElementSettings.popup_close_button_border_width.left + rootElementSettings.popup_close_button_border_width.unit;
+    //   styleButtonClose.borderStyle = rootElementSettings.popup_close_button_border_type;
+    //   if(rootElementSettings.popup_close_button_border_color && rootElementSettings.popup_close_button_border_color.colorPickedHex)
+    //     styleButtonClose.borderColor = rootElementSettings.popup_close_button_border_color.colorPickedHex;
+    // }
     
-    if(rootElementSettings.popup_close_button_border_radius) {
-      let borderRadiusTop = (rootElementSettings.popup_close_button_border_radius.top ? rootElementSettings.popup_close_button_border_radius.top : "0") + rootElementSettings.popup_close_button_border_radius.unit;
-      let borderRadiusRight = (rootElementSettings.popup_close_button_border_radius.right ? rootElementSettings.popup_close_button_border_radius.right : "0") + rootElementSettings.popup_close_button_border_radius.unit;
-      let borderRadiusBottom = (rootElementSettings.popup_close_button_border_radius.bottom ? rootElementSettings.popup_close_button_border_radius.bottom : "0") + rootElementSettings.popup_close_button_border_radius.unit;
-      let borderRadiusLeft = (rootElementSettings.popup_close_button_border_radius.left ?  rootElementSettings.popup_close_button_border_radius.left  : "0")+ rootElementSettings.popup_close_button_border_radius.unit;
-      styleButtonClose.borderRadius = `${borderRadiusTop} ${borderRadiusRight} ${borderRadiusBottom} ${borderRadiusLeft}`;
-    }
+    // if(rootElementSettings.popup_close_button_border_radius) {
+    //   let borderRadiusTop = (rootElementSettings.popup_close_button_border_radius.top ? rootElementSettings.popup_close_button_border_radius.top : "0") + rootElementSettings.popup_close_button_border_radius.unit;
+    //   let borderRadiusRight = (rootElementSettings.popup_close_button_border_radius.right ? rootElementSettings.popup_close_button_border_radius.right : "0") + rootElementSettings.popup_close_button_border_radius.unit;
+    //   let borderRadiusBottom = (rootElementSettings.popup_close_button_border_radius.bottom ? rootElementSettings.popup_close_button_border_radius.bottom : "0") + rootElementSettings.popup_close_button_border_radius.unit;
+    //   let borderRadiusLeft = (rootElementSettings.popup_close_button_border_radius.left ?  rootElementSettings.popup_close_button_border_radius.left  : "0")+ rootElementSettings.popup_close_button_border_radius.unit;
+    //   styleButtonClose.borderRadius = `${borderRadiusTop} ${borderRadiusRight} ${borderRadiusBottom} ${borderRadiusLeft}`;
+    // }
 
-    if(rootElementSettings.popup_close_button_background_color) {
-      styleButtonClose.backgroundColor = rootElementSettings.popup_close_button_background_color.colorPickedHex;
-    }
+    // if(rootElementSettings.popup_close_button_background_color) {
+    //   styleButtonClose.backgroundColor = rootElementSettings.popup_close_button_background_color.colorPickedHex;
+    // }
 
-    if(rootElementSettings.popup_close_button_box_shadow) {
-      let type = rootElementSettings.popup_close_button_box_shadow.type;
-      let offsetX = rootElementSettings.popup_close_button_box_shadow.horizontal;
-      let offsetY = rootElementSettings.popup_close_button_box_shadow.vertical;
-      let blurRadius = rootElementSettings.popup_close_button_box_shadow.blur;
-      let spreadRadius = rootElementSettings.popup_close_button_box_shadow.spread;
-      let color = rootElementSettings.popup_close_button_box_shadow.colorPickedHex;
-      styleButtonClose.boxShadow = `${type} ${offsetX}px ${offsetY}px ${blurRadius}px ${spreadRadius} ${color}`;
-    }
-
-    console.log(rootElementSettings)
+    // if(rootElementSettings.popup_close_button_box_shadow) {
+    //   let type = rootElementSettings.popup_close_button_box_shadow.type;
+    //   let offsetX = rootElementSettings.popup_close_button_box_shadow.horizontal;
+    //   let offsetY = rootElementSettings.popup_close_button_box_shadow.vertical;
+    //   let blurRadius = rootElementSettings.popup_close_button_box_shadow.blur;
+    //   let spreadRadius = rootElementSettings.popup_close_button_box_shadow.spread;
+    //   let color = rootElementSettings.popup_close_button_box_shadow.colorPickedHex;
+    //   styleButtonClose.boxShadow = `${type} ${offsetX}px ${offsetY}px ${blurRadius}px ${spreadRadius} ${color}`;
+    // }
 
     let content = "";
     const closeButtonCondition = rootElementSettings.switcher_close_button_popup_layout || true;
@@ -283,7 +272,6 @@ class FrontPopup extends Component {
           this.setState({ isVisible: false });
           this.props.closePopup()
         }}
-        // style={styleButtonClose}
       >
         <AltrpImage
           image={rootElementSettings.popup_close_icon}
@@ -292,7 +280,6 @@ class FrontPopup extends Component {
             name: "deleteOne",
             url: "/img/nullImage.png"
           }}
-          style={styleIconClose}
           className="popup-close-button-icon"
         />
       </button>
@@ -335,7 +322,7 @@ class FrontPopup extends Component {
                 autoHideTimeout={1000}
                 autoHideDuration={200}
               >
-                <div  className="popup-content" style={stylePopup}>
+                <div  className="popup-content">
                   {React.createElement(rootElement.componentClass,
                     {
                       element: rootElement,
@@ -357,7 +344,7 @@ class FrontPopup extends Component {
         content = <AltrpOffcanvas
           close={this.close}
           show={this.state.isVisible}
-          rootElementSettings={rootElementSettings}
+          settings={rootElementSettings}
           template={rootElement}
         />;
         break
