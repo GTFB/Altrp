@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import {dimensionsControllerToStyles} from "../../../../../front-app/src/js/helpers/styles";
+import {getResponsiveSetting} from "../../../../../front-app/src/js/helpers";
 
 const AltrpCarouselWrapper = styled.div`
 & .altrp-carousel-slide{
@@ -27,11 +28,11 @@ ${(props)=>{
 ${(props)=>{
   let slideStyles = '';
   const {settings} = props;
-  const {
-    border_color_slides_style,
-    border_width_slides_style,
-    border_type_slide,
-  } = settings;
+  const 
+    border_color_slides_style = getResponsiveSetting(settings, 'border_color_slides_style', '.active'),
+    border_width_slides_style = getResponsiveSetting(settings, 'border_width_slides_style', '.active'),
+    border_type_slide = getResponsiveSetting(settings, 'border_type_slide', '.active');
+  
   if(border_color_slides_style){
     slideStyles += `border-color:${border_color_slides_style.color};`
   }

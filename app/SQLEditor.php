@@ -24,6 +24,7 @@ class SQLEditor extends Model
   ];
 
   /**
+   * @deprecated
    * @param array $imported_editors
    */
   public static function import( $imported_editors = [] )

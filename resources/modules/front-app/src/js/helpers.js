@@ -1772,14 +1772,19 @@ export function validateEmail(email) {
  */
 export function getResponsiveSetting(settings, settingName, elementState = '', _default = null){
   let {currentScreen} = window.parent.appStore.getState();
+  let _settingName = `${settingName}_${elementState}_`;
   if(currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT){
-    return _.get(settings, settingName, _default);
+    let setting = settings[_settingName];
+    if(setting === undefined){
+      setting = _.get(settings, settingName, _default);
+    }
+    return setting;
   }
   let suffix = currentScreen.name;
-  let _settingName = `${settingName}_${elementState}_${suffix}`;
-  let setting = _.get(settings, _settingName);
+  _settingName = `${settingName}_${elementState}_${suffix}`;
+  let setting = settings[_settingName];
   if(setting === undefined){
-    setting = _.get(settings, settingName);
+    setting = _.get(settings, settingName, _default);
   }
   return setting;
 }

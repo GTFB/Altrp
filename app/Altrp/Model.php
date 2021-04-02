@@ -53,6 +53,7 @@ class Model extends EloquentModel
     }
 
   /**
+   * @deprecated
    * Импортируем модели
    * @param array $imported_models
    */

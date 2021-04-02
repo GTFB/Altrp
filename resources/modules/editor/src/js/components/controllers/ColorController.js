@@ -58,7 +58,11 @@ class ColorController extends Component {
    * @return {boolean}
    */
   shouldComponentUpdate(nextProps, nextState) {
-    if(this.state.colorPickedHex !== nextState.colorPickedHex || nextState.active !== this.state.active || nextState.show !== this.state.show) {
+    if(this.state.colorPickedHex !== nextState.colorPickedHex
+        || nextState.active !== this.state.active
+        || nextState.show !== this.state.show
+        || nextProps.currentState !== this.props.currentState
+    ) {
       return true;
     } else {
       return false
