@@ -18,6 +18,7 @@ class Role extends LaratrustRole
     protected $with = ['notice_settings'];
 
   /**
+   * @deprecated
    * Импортируем роли
    * @param array $imported_roles
    */
@@ -32,6 +33,7 @@ class Role extends LaratrustRole
   }
 
   /**
+   * @deprecated
    * Импортируем связи роли и permissions
    * @param array $permission_roles
    */

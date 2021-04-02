@@ -231,7 +231,7 @@ class MigrationField{
    */
   protected function getUnsigned(){
     $unsigned = '';
-    if( ( $this->column->attribute === 'unsigned' ) && !$this->checkAttribute("attribute")) {
+    if( ( $this->column->attribute === 'unsigned' ) /* && !$this->checkAttribute("attribute")*/) {
       $unsigned = '->unsigned()';
     }
     return $unsigned;

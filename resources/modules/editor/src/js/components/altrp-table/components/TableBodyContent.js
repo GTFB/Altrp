@@ -52,18 +52,34 @@ const TableBodyContent =
           return null;
         }
         let columnName = tables_settings_for_subheading[groupIndex]?.name;
-        if (!columnName) {
+        if (! columnName) {
           return null;
         }
+
+        let leftValue, rightValue;
+        if(columnName.indexOf('?') !== -1 && columnName.indexOf(':') !== -1){
+          [leftValue, rightValue] = columnName.split('?')[1].split(':');
+          leftValue = leftValue.trim();
+          rightValue = rightValue.trim();
+          cell.value = cell.value ? leftValue : rightValue;
+          columnName = columnName.split('?')[0].trim();
+        }
+
         let _rows = page ? page : rows;
         const groups = [];
         _rows.forEach(row => {
           let currentGroup = groups.find(group => {
             return group.columnValue === row.original[columnName];
           });
-          if (!currentGroup) {
+          let columnValue;
+          if(leftValue || rightValue){
+            columnValue = row.original[columnName] ? leftValue : rightValue;
+          } else {
+            columnValue = row.original[columnName];
+          }
+          if (! currentGroup) {
             currentGroup = {
-              columnValue: row.original[columnName],
+              columnValue,
               rows: [],
             };
             groups.push(currentGroup);

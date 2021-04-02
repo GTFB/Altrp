@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Tooltip from "./Tooltip";
 import { set } from "lodash";
 import { isEditor } from "../../../../../front-app/src/js/helpers";
+import TextComponent from "./styled-components/TextComponent";
 
 class TextWidget extends Component {
   constructor(props) {
@@ -77,13 +78,13 @@ class TextWidget extends Component {
     }
 
     if (this.props.CKEditor) {
-      return ( <div className="altrp-text">
+      return ( <TextComponent className="altrp-text">
         <this.props.CKEditor
           changeText={this.changeText}
           text={textContent}
           readOnly={isEditor()}
           textWidget={true}
-        /></div>
+        /></TextComponent>
       );
     }
 
