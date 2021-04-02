@@ -50,7 +50,6 @@ class Carousel extends BaseElement {
     this.addControl('skin_slides_content', {
       type: CONTROLLER_SELECT,
       label: 'Skin',
-      default: 'solid',
       options: [
         {
           value: 'carousel',
@@ -611,6 +610,18 @@ class Carousel extends BaseElement {
     );
 
     this.endControlSection();
+    //<editor-fold description=synchronize_section>
+    this.startControlSection('synchronize_section', {
+      label: 'Synchronize',
+    });
+
+    this.addControl('synchronized_id', {
+      label: 'Another Carousel IDs',
+      dynamic: false,
+    });
+
+    this.endControlSection();
+    //</editor-fold>
 
     this.startControlSection('slides_style', {
       tab: TAB_STYLE,
@@ -647,14 +658,41 @@ class Carousel extends BaseElement {
       }
     });
 
+    this.addControl("border_type_slide", {
+      type: CONTROLLER_SELECT,
+      label: "Border Type",
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+    });
+
     this.addControl("border_width_slides_style", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-carousel-slide-img{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-      }
     });
 
     this.addControl("border_color_slides_style", {
@@ -664,9 +702,6 @@ class Carousel extends BaseElement {
         color: "rgb(50,168,82)",
         colorPickedHex: "#32a852"
       },
-      rules: {
-        "{{ELEMENT}} .altrp-carousel-slide-img{{STATE}}": "border-color: {{COLOR}};"
-      }
     });
 
     this.addControl("padding_slides_style", {

@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import Lightbox from "react-image-lightbox";
+import React, {Component} from 'react';
+import Lightbox from 'react-image-lightbox';
 import './altrp-lightbox.scss';
 
 class AltrpLightbox extends Component {
@@ -11,11 +11,10 @@ class AltrpLightbox extends Component {
     let mainSrc = this.props.settings.mainSrc || null;
     let settings = this.props.settings;
 
-    delete settings.mainSrc
+    delete settings.mainSrc;
 
-    console.log(this.props)
     if(!mainSrc) {
-      mainSrc = "/img/nullImage.png"
+      mainSrc = '/img/nullImage.png'
     }
 
     return (

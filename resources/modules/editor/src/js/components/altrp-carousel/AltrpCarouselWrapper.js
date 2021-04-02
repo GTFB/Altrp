@@ -1,0 +1,48 @@
+import styled from 'styled-components';
+import {dimensionsControllerToStyles} from "../../../../../front-app/src/js/helpers/styles";
+
+const AltrpCarouselWrapper = styled.div`
+& .altrp-carousel-slide{
+${(props)=>{
+  let slideStyles = '';
+  const {settings} = props;
+  const {
+    border_color_slides_style,
+    border_width_slides_style,
+    border_type_slide,
+  } = settings;
+  if(border_color_slides_style){
+    slideStyles += `border-color:${border_color_slides_style.color};`
+  }
+  if(border_type_slide){
+    slideStyles += `border-style:${border_type_slide};`
+  }
+  if(border_width_slides_style) {
+    slideStyles += dimensionsControllerToStyles(border_width_slides_style, 'border-width')
+  }
+  return slideStyles;
+}}
+}
+& .slick-current .altrp-carousel-slide{
+${(props)=>{
+  let slideStyles = '';
+  const {settings} = props;
+  const {
+    border_color_slides_style,
+    border_width_slides_style,
+    border_type_slide,
+  } = settings;
+  if(border_color_slides_style){
+    slideStyles += `border-color:${border_color_slides_style.color};`
+  }
+  if(border_type_slide){
+    slideStyles += `border-style:${border_type_slide};`
+  }
+  if(border_width_slides_style) {
+    slideStyles += dimensionsControllerToStyles(border_width_slides_style, 'border-width')
+  }
+  return slideStyles;
+}}
+}`;
+
+export default AltrpCarouselWrapper;
