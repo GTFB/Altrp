@@ -36,7 +36,7 @@ class AutoSave extends React.Component {
 
     render() {
         return (
-            this.state.submitting && <div className="image-detail__save-notification">Saved.</div>
+            this.state.submitting && <div className="document-detail__save-notification">Saved.</div>
         )
     }
 }

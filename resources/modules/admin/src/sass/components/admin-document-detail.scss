@@ -1,4 +1,4 @@
-.image-detail_opacity-background {
+.document-detail_opacity-background {
     background-color: #000;
     opacity: 0.7;
     z-index: 1;
@@ -9,7 +9,7 @@
     left: 0;
 }
 
-.image-detail {
+.document-detail {
     position: absolute;
     top: 30px;
     left: 0;
@@ -55,7 +55,7 @@
         &:disabled {
             color: #dcdcde;
         }
-        
+
         &:disabled:hover {
             background-color: #fff;
             cursor: default;
@@ -66,17 +66,22 @@
         display: flex;
         justify-content: space-between;
         width: 100%;
+        height: 91%;
     }
 
-    &__image-display {
+    &__display {
         display: flex;
         flex-direction: column;
+        width: 66%;
         margin: 0 auto;
         padding: 20px 30px 20px 30px;
     }
 
     &__image {
         margin-bottom: 20px;
+        object-fit: scale-down;
+        max-width: 100%;
+        max-height: 87%;
     }
 
     &__btn {
@@ -100,21 +105,20 @@
     }
 
     &__editing-section {
-        background-color: #f6f7f7;
         width: 367px;
-        height: 538px;
+        height: 100%;
         border-left: 1px solid #dcdcde;
         padding: 11px 16px 11px 16px;
         font-size: 12px;
         color: #646970;
-        overflow-y: scroll;
+        overflow-y: auto;
     }
 
-    &__image-data-wrap {
+    &__data-wrap {
         padding-right: 34px;
     }
 
-    &__image-data {
+    &__data {
         font-weight: 600;
         padding-bottom: 15px;
         margin-bottom: 16px;

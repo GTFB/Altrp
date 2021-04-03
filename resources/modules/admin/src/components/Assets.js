@@ -4,6 +4,7 @@ import { NavLink, withRouter } from "react-router-dom";
 import { iconsManager } from "../js/helpers";
 import Resource from "../../../editor/src/js/classes/Resource";
 import { ImageDetail } from "./ImageDetail";
+import {FontsDetail} from "./FontsDetail";
 
 class Assets extends Component {
   constructor(props) {
@@ -22,8 +23,11 @@ class Assets extends Component {
       itemDeleteClasses: 'item__delete',
       activeLink: '',
       imageId: null,
+      fontId: null,
       havePreviousImage: true,
       haveNextImage: true,
+      haveNextFont: true,
+      havePreviousFont: true,
     };
     this.typesFiles = {
       images: ['png', 'gif', 'jpg', 'jpeg', 'webp'],
@@ -63,6 +67,9 @@ class Assets extends Component {
   getAsset = (assetId) => {
     // get request by asset id
     return this.resource.get(assetId)
+  }
+  getAuthorList = () => {
+    return this.resource.getAuthorList()
   }
   updateAsset = (assetId, data) => {
     // update request by asset id
@@ -151,13 +158,13 @@ class Assets extends Component {
       return activeLink;
     }
   }
-  checkingFirstOrLastImage(imageId) {
-    let indexCurrentImageInArray = this.state.assets.findIndex(item => item.id == imageId)
-    if (indexCurrentImageInArray === 0) {
+  checkingFirstOrLastDocument(id) {
+    let indexCurrentDocumentInArray = this.state.assets.findIndex(item => item.id == id)
+    if (indexCurrentDocumentInArray === 0) {
       this.setState({
         havePreviousImage: false,
       })
-    } else if (indexCurrentImageInArray === this.state.assets.length - 1) {
+    } else if (indexCurrentDocumentInArray === this.state.assets.length - 1) {
       this.setState({
         haveNextImage: false,
       })
@@ -168,9 +175,21 @@ class Assets extends Component {
       })
     }
   }
-  openImageDetail(imageId) {
-    this.checkingFirstOrLastImage(imageId)
-    this.setState({ imageId })
+  openImageDetail(id) {
+    this.checkingFirstOrLastDocument(id)
+    this.setState({ imageId: id })
+  }
+  nextImageDetail = () => {
+    let indexCurrentImageInArray = this.state.assets.findIndex(item => item.id == this.state.imageId)
+    let indexNextImageInArray = indexCurrentImageInArray + 1
+    this.checkingFirstOrLastDocument(this.state.assets[indexNextImageInArray].id)
+    this.setState({ imageId: this.state.assets[indexNextImageInArray].id })
+  }
+  prevImageDetail = () => {
+    let indexCurrentImageInArray = this.state.assets.findIndex(item => item.id == this.state.imageId)
+    let indexPrevImageInArray = indexCurrentImageInArray - 1
+    this.checkingFirstOrLastDocument(this.state.assets[indexPrevImageInArray].id)
+    this.setState({ imageId: this.state.assets[indexPrevImageInArray].id })
   }
   closeImageDetail = () => {
     this.setState({
@@ -179,17 +198,28 @@ class Assets extends Component {
       havePreviousImage: true,
     })
   }
-  nextImageDetail = () => {
-    let indexCurrentImageInArray = this.state.assets.findIndex(item => item.id == this.state.imageId)
-    let indexNextImageInArray = indexCurrentImageInArray + 1
-    this.checkingFirstOrLastImage(this.state.assets[indexNextImageInArray].id)
-    this.setState({ imageId: this.state.assets[indexNextImageInArray].id })
+  openDocumentDetail(id) {
+    this.checkingFirstOrLastDocument(id)
+    this.setState({ fontId: id })
   }
-  prevImageDetail = () => {
-    let indexCurrentImageInArray = this.state.assets.findIndex(item => item.id == this.state.imageId)
-    let indexPrevImageInArray = indexCurrentImageInArray - 1
-    this.checkingFirstOrLastImage(this.state.assets[indexPrevImageInArray].id)
-    this.setState({ imageId: this.state.assets[indexPrevImageInArray].id })
+  nextFontDetail = () => {
+    let indexCurrentFontInArray = this.state.assets.findIndex(item => item.id == this.state.fontId)
+    let indexNextFontInArray = indexCurrentFontInArray + 1
+    this.checkingFirstOrLastDocument(this.state.assets[indexNextFontInArray].id)
+    this.setState({ fontId: this.state.assets[indexNextFontInArray].id })
+  }
+  prevFontDetail = () => {
+    let indexCurrentFontInArray = this.state.assets.findIndex(item => item.id == this.state.fontId)
+    let indexPrevFontInArray = indexCurrentFontInArray - 1
+    this.checkingFirstOrLastDocument(this.state.assets[indexPrevFontInArray].id)
+    this.setState({ fontId: this.state.assets[indexPrevFontInArray].id })
+  }
+  closeFontDetail = () => {
+    this.setState({
+      fontId: null,
+      haveNextFont: true,
+      havePreviousFont: true,
+    })
   }
   render() {
     let UploadIcon = iconsManager().getIconComponent('upload');
@@ -292,7 +322,7 @@ class Assets extends Component {
                         return <IconFile className="item__icon-background" />
                       }
                     });
-                    return <IconFile className="item__icon-background" />
+                    return <IconFile onClick={() => this.openDocumentDetail(asset.id)} className="item__icon-background" />
                   }
                   )()}
                   <button className={this.state.itemDeleteClasses}
@@ -309,7 +339,8 @@ class Assets extends Component {
         </div>
       </div>
       <div>
-        <ImageDetail havePreviousImage={this.state.havePreviousImage} haveNextImage={this.state.haveNextImage} updateAsset={this.updateAsset} getAsset={this.getAsset} deleteAsset={this.deleteAsset} imageId={this.state.imageId} closeImageDetail={this.closeImageDetail} nextImageDetail={this.nextImageDetail} prevImageDetail={this.prevImageDetail} />
+        <ImageDetail getAuthorList={this.getAuthorList} havePreviousImage={this.state.havePreviousImage} haveNextImage={this.state.haveNextImage} updateAsset={this.updateAsset} getAsset={this.getAsset} deleteAsset={this.deleteAsset} imageId={this.state.imageId} closeImageDetail={this.closeImageDetail} nextImageDetail={this.nextImageDetail} prevImageDetail={this.prevImageDetail} />
+        <FontsDetail nextFontDetail={this.nextFontDetail} prevFontDetail={this.prevFontDetail} closeFontDetail={this.closeFontDetail} getAuthorList={this.getAuthorList} getAsset={this.getAsset} fontId={this.state.fontId} deleteAsset={this.deleteAsset} />
       </div>
     </div>;
   }
