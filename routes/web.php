@@ -470,22 +470,50 @@ foreach ( $frontend_routes as $_frontend_route ) {
 
     $current_route = explode("/", $_frontend_route['path'])[1];
     $current_route = "/" . $current_route . "/" . implode("/", Route::current()->parameters());
+  
+    function saveRelation($route, $html) {
 
-    if (!CacheService::has($current_route)) {
-      
-      CacheService::put($title, $_frontend_route, $frontend_route, $preload_content, $current_route, $minification = true);
+      $cachePath = '../storage/app/public/storage/cache/';
+      $hash = md5($route . $html);
 
-      return view('front-app', [
-        'page_areas' => json_encode( Page::get_areas_for_page( $_frontend_route['id']) ),
-        'page_id' => $_frontend_route['id'],
-        'title' => $title,
-        '_frontend_route' => $_frontend_route,
-        'preload_content' => $preload_content,
-        'is_admin' => isAdmin(),
-      ]);
+      if (!is_dir($cachePath)) {
+        mkdir($cachePath, 0644);
+      }
+      file_put_contents($cachePath . $hash, $html);
+
+
+      if (!file_exists($cachePath . 'relations.json')) {
+        file_put_contents($cachePath . 'relations.json', '{}');
+      }
+
+      $json = file_get_contents($cachePath . 'relations.json');
+      $relations = json_decode($json, true);
+
+      $newRelation = ['hash' => $hash, "url" => $route];
+
+      if (!array_column($relations, $hash)) {
+        array_push($relations, $newRelation);
+      }
+
+      $relations = json_encode($relations);
+      file_put_contents($cachePath . 'relations.json', $relations);
     }
 
-    CacheService::get($current_route);
+    ob_start(function($html) use ($title, $_frontend_route, $frontend_route, $preload_content, $current_route ) {
+
+      saveRelation($current_route, $html);
+      return $html;
+
+    });
+
+    return view('front-app', [
+      'page_areas' => json_encode( Page::get_areas_for_page( $_frontend_route['id']) ),
+      'page_id' => $_frontend_route['id'],
+      'title' => $title,
+      '_frontend_route' => $_frontend_route,
+      'preload_content' => $preload_content,
+      'is_admin' => isAdmin(),
+    ]);
 
   })->middleware(['web', 'installation.checker']);
 }

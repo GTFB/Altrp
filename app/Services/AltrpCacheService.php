@@ -22,7 +22,7 @@ class AltrpCacheService
 				mkdir(self::CACHE_PATH, 0644);
 			}
 
-      $file = file_put_contents(self::CACHE_PATH . md5($current_route), $html);
+      $file = file_put_contents(self::CACHE_PATH . md5($html), $html);
       return $html;
 
     });
