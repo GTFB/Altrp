@@ -116,7 +116,7 @@
     transform: translate(-50%, -50%);
   }
   &_selected{
-    box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 7px $turquoise;
+    background: $turquoise;
   }
   &_icon{
     width: calc(5% - 10px);

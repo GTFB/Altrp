@@ -825,7 +825,7 @@ class InputWidget extends Component {
         break;
     }
 
-    if (this.state.settings.content_label != null) {
+    if (this.state.settings.content_label) {
       label = (
         <div
           className={"altrp-field-label-container " + classLabel}

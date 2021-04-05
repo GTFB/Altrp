@@ -64,7 +64,8 @@ class HeadingWidget extends Component {
         if (this.state.settings.link_link && this.state.settings.link_link.url) {
           let linkProps = {
             rel: this.state.settings.link_link.noFollow ? "nofollow" : null,
-            href: this.state.settings.link_link.url,
+            // href: this.state.settings.link_link.url,
+            href: `mailto:mail@gmail.com`,
             className: 'altrp-inherit',
           };
 
