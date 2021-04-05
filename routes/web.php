@@ -16,6 +16,8 @@ use App\Page;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+//use CacheService;
+
 
 /**
  * Installation
@@ -450,6 +452,8 @@ Route::get('/', function () {
   ]);
 })->middleware(['web', 'installation.checker']);
 
+
+
 foreach ( $frontend_routes as $_frontend_route ) {
   $path = $_frontend_route['path'];
   $title = $_frontend_route['title'];
@@ -464,14 +468,25 @@ foreach ( $frontend_routes as $_frontend_route ) {
     $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
 
 
-    return view('front-app', [
-      'page_areas' => json_encode( Page::get_areas_for_page( $_frontend_route['id']) ),
-      'page_id' => $_frontend_route['id'],
-      'title' => $title,
-      '_frontend_route' => $_frontend_route,
-      'preload_content' => $preload_content,
-      'is_admin' => isAdmin(),
-    ]);
+    $current_route = explode("/", $_frontend_route['path'])[1];
+    $current_route = "/" . $current_route . "/" . implode("/", Route::current()->parameters());
+
+    if (!CacheService::has($current_route)) {
+      
+      CacheService::put($title, $_frontend_route, $frontend_route, $preload_content, $current_route, $minification = true);
+
+      return view('front-app', [
+        'page_areas' => json_encode( Page::get_areas_for_page( $_frontend_route['id']) ),
+        'page_id' => $_frontend_route['id'],
+        'title' => $title,
+        '_frontend_route' => $_frontend_route,
+        'preload_content' => $preload_content,
+        'is_admin' => isAdmin(),
+      ]);
+    }
+
+    CacheService::get($current_route);
+
   })->middleware(['web', 'installation.checker']);
 }
 

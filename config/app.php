@@ -197,6 +197,7 @@ return [
         // App\Providers\AltrpProviders\AppServiceProvider::class,
         App\Providers\AltrpRepositoryServiceProvider::class,
         App\Providers\AltrpProviders\AppServiceProvider::class,
+        App\Providers\AltrpCacheServiceProvider::class,
 
     ],
 
@@ -250,6 +251,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Laratrust' => Laratrust\LaratrustFacade::class,
         'Curl' => Ixudra\Curl\Facades\Curl::class,
+        'CacheService' => App\Altrp\Facades\CacheService::class,
     ],
 
 ];
