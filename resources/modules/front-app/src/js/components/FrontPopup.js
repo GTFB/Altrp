@@ -334,10 +334,10 @@ class FrontPopup extends Component {
         </FrontPopupWrapper>
         : null
     );
-
     const type = rootElementSettings.type_popup || "popup";
     switch (type) {
       case "popup":
+        
         content = popup;
         break;
       case "offcanvas":

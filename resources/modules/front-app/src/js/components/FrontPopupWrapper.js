@@ -43,16 +43,21 @@ const FrontPopupWrapper = styled.div`
 }
 & .popup-close-button:hover {
   ${({settings}) => {
+    let styles = '';
     let popupCloseButtonPadding = getResponsiveSetting(settings, 'popup_close_button_padding', 'hover');
+    styles += popupCloseButtonPadding;
+    return styles;
   }}
 }  
 & .popup-close-button-icon {
   ${({settings}) => {
     let styles = '';
+    console.log(settings)
     if(settings.popup_close_icon_height_size && settings.popup_close_icon_height_size.size)
       styles += `height: ${settings.popup_close_icon_height_size.size}${settings.popup_close_icon_height_size.unit};`;
     if(settings.popup_close_icon_width_size && settings.popup_close_icon_width_size.size)
       styles += `width: ${settings.popup_close_icon_width_size.size}${settings.popup_close_icon_width_size.unit};`;
+    console.log(styles);  
     return styles;
   }}
 }  

@@ -5,6 +5,7 @@ import TemplateLoader from "../../../../../editor/src/js/components/template-loa
 import ReactDOM from "react-dom";
 import AltrpImage from "../../../../../editor/src/js/components/altrp-image/AltrpImage";
 import {Scrollbars} from "react-custom-scrollbars";
+import FrontPopupWrapper from '../FrontPopupWrapper';
 
 class OffcanvasWidget extends Component {
   constructor(props) {
@@ -130,44 +131,46 @@ class OffcanvasWidget extends Component {
           })
       );
     }
-
     classesWrapper += ` altrp-offcanvas-wrapper-cursor-${this.state.settings.close_cursor_offcanvas} ${this.state.settings.overflow_visible_offcanvas ? "altrp-offcanvas-wrapper-overflow-visible" : ""}`;
 
     const closeButton = this.state.settings.close_offcanvas ? (
-      <div className={"altrp-offcanvas-button" + ` altrp-offcanvas-button-${this.state.settings.close_button_position_offcanvas}`} onClick={this.hideButton}>
-        <AltrpImage image={this.state.settings.close_button_icon_offcanvas} default={{assetType: "icon", name: "deleteOne"}} className="altrp-offcanvas-button-icon"/>
+      <div className={"altrp-offcanvas-button popup-close-button" + ` altrp-offcanvas-button-${this.state.settings.popup_close_icon_alignment}`} onClick={this.hideButton}>
+        <AltrpImage image={this.state.settings.popup_close_icon} default={{assetType: "icon", name: "deleteOne"}} className="altrp-offcanvas-button-icon popup-close-button-icon"/>
       </div>
     ) : "";
     return (
+      
       <React.Fragment>
         <div className="altrp-offcanvas-ref" ref={this.offcanvasRef} />
         {
           ReactDOM.createPortal(
             (
-              <div
-                className={"altrp-offcanvas-wrapper" +
-                (this.state.show ? " altrp-offcanvas-wrapper-show" : "") +
-                ` ${this.state.elementId}-altrp-offcanvas` +
-                (this.state.hideAnimation ? " altrp-offcanvas-wrapper-animation-hide" : "") +
-                classesWrapper
-                }
-              >
-                <div className={classes} ref={this.offcanvasContentRef}>
-                  <Scrollbars
-                    autoHide
-                    autoHideTimeout={1000}
-                    autoHideDuration={200}
-                    universal={true}
-                  >
-                  {
-                    closeButton
+              <FrontPopupWrapper settings={this.state.settings}>
+                <div
+                  className={"altrp-offcanvas-wrapper" +
+                  (this.state.show ? " altrp-offcanvas-wrapper-show" : "") +
+                  ` ${this.state.elementId}-altrp-offcanvas` +
+                  (this.state.hideAnimation ? " altrp-offcanvas-wrapper-animation-hide" : "") +
+                  classesWrapper
                   }
-                  {
-                    content
-                  }
-                  </Scrollbars>
+                  style={(this.state.settings.time_offcanvas && this.state.settings.time_offcanvas.size) ?
+                    {animationDuration: `${this.state.settings.time_offcanvas.size}${this.state.settings.time_offcanvas.unit} !important`}: 
+                  {}}
+                >
+                  <div className={classes} ref={this.offcanvasContentRef}>
+                    <Scrollbars
+                      autoHide
+                      autoHideTimeout={1000}
+                      autoHideDuration={200}
+                      universal={true}
+                    >
+                      {closeButton}
+                    
+                    {content}
+                    </Scrollbars>
+                  </div>
                 </div>
-              </div>
+              </FrontPopupWrapper>
             ),
           document.getElementById("front-app")
           )
