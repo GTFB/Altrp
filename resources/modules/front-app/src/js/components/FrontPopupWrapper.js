@@ -43,7 +43,10 @@ const FrontPopupWrapper = styled.div`
 }
 & .popup-close-button:hover {
   ${({settings}) => {
+    let styles = '';
     let popupCloseButtonPadding = getResponsiveSetting(settings, 'popup_close_button_padding', 'hover');
+    styles += popupCloseButtonPadding;
+    return styles;
   }}
 }  
 & .popup-close-button-icon {
@@ -56,7 +59,15 @@ const FrontPopupWrapper = styled.div`
     return styles;
   }}
 }  
-
+& .altrp-offcanvas {
+  ${({settings}) => {
+    let styles ='';
+    if(settings.time_offcanvas  && settings.time_offcanvas.size) {
+      styles += `animation-duration: ${settings.time_offcanvas.size}${settings.time_offcanvas.unit} !important;`
+    }
+    return styles;
+  }}
+}
 `
 
 export default FrontPopupWrapper

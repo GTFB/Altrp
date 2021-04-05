@@ -394,31 +394,31 @@ class RootElement extends BaseElement {
       label: 'Close button',
     });
 
-    this.addControl('close_button_position_offcanvas', {
-      conditions: {
-        'close_offcanvas': true,
-      },
-      type: CONTROLLER_CHOOSE,
-      label: 'Alignment',
-      options: [
-        {
-          icon: 'left',
-          value: 'left',
-        },
-        {
-          icon: 'right',
-          value: 'right',
-        },
-      ],
-    });
+    // this.addControl('close_button_position_offcanvas', {
+    //   conditions: {
+    //     'close_offcanvas': true,
+    //   },
+    //   type: CONTROLLER_CHOOSE,
+    //   label: 'Alignment',
+    //   options: [
+    //     {
+    //       icon: 'left',
+    //       value: 'left',
+    //     },
+    //     {
+    //       icon: 'right',
+    //       value: 'right',
+    //     },
+    //   ],
+    // });
 
-    this.addControl('close_button_icon_offcanvas', {
-      conditions: {
-        'close_offcanvas': true,
-      },
-      type: CONTROLLER_MEDIA,
-      label: 'Background Image',
-    });
+    // this.addControl('close_button_icon_offcanvas', {
+    //   conditions: {
+    //     'close_offcanvas': true,
+    //   },
+    //   type: CONTROLLER_MEDIA,
+    //   label: 'Background Image',
+    // });
 
     this.addControl("close_cursor_offcanvas", {
       type: CONTROLLER_SELECT,
@@ -504,6 +504,18 @@ class RootElement extends BaseElement {
     this.addControl('overflow_visible_offcanvas', {
       type: CONTROLLER_SWITCHER,
       label: 'Offcanvas overflow visible',
+    });
+
+    this.addControl("time_offcanvas", {
+      type: CONTROLLER_SLIDER,
+      default: {
+        size: 200,
+        unit: 'ms',
+      },
+      label: 'Time',
+      units: ["ms"],
+      max: 5000,
+      min: 100,
     });
 
     this.endControlSection();
