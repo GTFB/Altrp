@@ -15,7 +15,7 @@ class TextWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    if(props.baseRender){
+    if (props.baseRender) {
       this.render = props.baseRender(this);
     }
     this.tooltipActive = this.tooltipActive.bind(this);
@@ -78,18 +78,22 @@ class TextWidget extends Component {
     }
 
     if (this.props.CKEditor) {
-      return ( <TextComponent className="altrp-text">
-        <this.props.CKEditor
-          changeText={this.changeText}
-          text={textContent}
-          readOnly={isEditor()}
-          textWidget={true}
-        /></TextComponent>
+      return (
+        <TextComponent className="altrp-text">
+          <this.props.CKEditor
+            changeText={this.changeText}
+            text={textContent}
+            readOnly={isEditor()}
+            textWidget={true}
+          />
+        </TextComponent>
       );
     }
 
     return React.createElement("div", {
-      className: "altrp-text " + this.state.settings.text_position_css_classes,
+      className:
+        "altrp-text ck ck-content " +
+        this.state.settings.text_position_css_classes,
       id: this.state.settings.text_position_css_id || "",
       onMouseOver: tooltipActive,
       dangerouslySetInnerHTML: {

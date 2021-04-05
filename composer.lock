@@ -12,12 +12,13 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/AkimovIgor/oauth2-module.git",
-                "reference": "f4dfc4ca28665e47a947d0ca19e5393afab8447e"
+
+                "reference": "11a1d692647788b3cddc9777432dc9574d877500"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AkimovIgor/oauth2-module/zipball/f4dfc4ca28665e47a947d0ca19e5393afab8447e",
-                "reference": "f4dfc4ca28665e47a947d0ca19e5393afab8447e",
+                "url": "https://api.github.com/repos/AkimovIgor/oauth2-module/zipball/11a1d692647788b3cddc9777432dc9574d877500",
+                "reference": "11a1d692647788b3cddc9777432dc9574d877500",
                 "shasum": ""
             },
             "require": {
@@ -61,7 +62,11 @@
                 "issues": "https://github.com/AkimovIgor/oauth2-module/issues",
                 "source": "https://github.com/AkimovIgor/oauth2-module/tree/main"
             },
+<<<<<<< HEAD
             "time": "2021-04-01T11:45:33+00:00"
+=======
+            "time": "2021-04-05T08:16:48+00:00"
+>>>>>>> origin/reports04
         },
         {
             "name": "beyondcode/laravel-websockets",
