@@ -153,9 +153,6 @@ class OffcanvasWidget extends Component {
                   (this.state.hideAnimation ? " altrp-offcanvas-wrapper-animation-hide" : "") +
                   classesWrapper
                   }
-                  style={(this.state.settings.time_offcanvas && this.state.settings.time_offcanvas.size) ?
-                    {animationDuration: `${this.state.settings.time_offcanvas.size}${this.state.settings.time_offcanvas.unit} !important`}: 
-                  {}}
                 >
                   <div className={classes} ref={this.offcanvasContentRef}>
                     <Scrollbars

@@ -508,6 +508,10 @@ class RootElement extends BaseElement {
 
     this.addControl("time_offcanvas", {
       type: CONTROLLER_SLIDER,
+      default: {
+        size: 200,
+        unit: 'ms',
+      },
       label: 'Time',
       units: ["ms"],
       max: 5000,

@@ -52,16 +52,22 @@ const FrontPopupWrapper = styled.div`
 & .popup-close-button-icon {
   ${({settings}) => {
     let styles = '';
-    console.log(settings)
     if(settings.popup_close_icon_height_size && settings.popup_close_icon_height_size.size)
       styles += `height: ${settings.popup_close_icon_height_size.size}${settings.popup_close_icon_height_size.unit};`;
     if(settings.popup_close_icon_width_size && settings.popup_close_icon_width_size.size)
       styles += `width: ${settings.popup_close_icon_width_size.size}${settings.popup_close_icon_width_size.unit};`;
-    console.log(styles);  
     return styles;
   }}
 }  
-
+& .altrp-offcanvas {
+  ${({settings}) => {
+    let styles ='';
+    if(settings.time_offcanvas  && settings.time_offcanvas.size) {
+      styles += `animation-duration: ${settings.time_offcanvas.size}${settings.time_offcanvas.unit} !important;`
+    }
+    return styles;
+  }}
+}
 `
 
 export default FrontPopupWrapper
