@@ -7,7 +7,6 @@ const settingsToStyles = ({settings})=>{
 
   styles += '&.altrp-section{';
   const position_style_position_padding = getResponsiveSetting(settings, 'position_style_position_padding');
-  console.log(position_style_position_padding);
   if(position_style_position_padding){
     styles += dimensionsControllerToStyles(position_style_position_padding);
   }

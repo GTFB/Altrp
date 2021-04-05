@@ -5,7 +5,7 @@
 
 ### 0.15.0
 + "tel" and "mailto" Links
-+ Version for the Visually Impaired Action
++ Toggle Visually Impaired Action
 
 ### 0.14.0
 + Add Accept Filed Type
