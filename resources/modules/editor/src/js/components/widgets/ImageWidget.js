@@ -72,6 +72,12 @@ class ImageWidget extends Component {
         url: media,
         name: "null"
       };
+    } else if (this.props.element.getSettings('default_url')){
+      media = {
+        assetType: "media",
+        url: this.props.element.getSettings('default_url'),
+        name: "default"
+      };
     }
 
     let altrpImage = (
@@ -113,6 +119,13 @@ class ImageWidget extends Component {
     } else {
       let linkUrl = link.url || '';
       linkUrl = parseURLTemplate(linkUrl, this.props.element.getCurrentModel().getData());
+      const linkProps = {
+
+      };
+      if(link.openInNew){
+        linkProps.target = '_blank';
+      }
+
       return (
         <div
           className={classNames}
@@ -124,9 +137,9 @@ class ImageWidget extends Component {
         >
           {linkUrl && ! isEditor() ? (
             link.tag === "a" ? (
-              <a href={linkUrl}>{altrpImage}</a>
+              <a href={linkUrl} {...linkProps}>{altrpImage}</a>
             ) : (
-              <Link to={linkUrl}>{altrpImage}</Link>
+              <Link to={linkUrl} {...linkProps}>{altrpImage}</Link>
             )
           ) : (
             altrpImage

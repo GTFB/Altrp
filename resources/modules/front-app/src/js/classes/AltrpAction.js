@@ -307,6 +307,11 @@ class AltrpAction extends AltrpModel {
           result = await this.doActionCondition();
         }
         break;
+      case 'vi_toggle':
+        {
+          result = await this.doActionVIToggle();
+        }
+        break;
     }
     let alertText = '';
     if (result.success) {
@@ -1058,6 +1063,14 @@ class AltrpAction extends AltrpModel {
     conditionRight = replaceContentWithData(conditionRight);
     const res = altrpCompare(conditionLeft, conditionRight, compare);
     return {success: res}
+  }
+
+  /**
+   * Версия сайта для слабоцидящих
+   * @return {Promise<void>}
+   */
+  async doActionVIToggle(){
+
   }
 }
 
