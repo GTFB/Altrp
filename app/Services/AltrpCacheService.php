@@ -17,7 +17,11 @@ class AltrpCacheService
 			if ($minification) {
 				$html = $this->minification($html);
 			}
-			
+
+			if (!is_dir(self::CACHE_PATH)) {
+				mkdir(self::CACHE_PATH, 0644);
+			}
+
       $file = file_put_contents(self::CACHE_PATH . md5($current_route), $html);
       return $html;
 
