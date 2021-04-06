@@ -102,6 +102,8 @@ function getSettings(settingName){
   }
   let value = this.props.currentElement.getSettings(settingName +
       getElementSettingsSuffix(this.props.controller));
+  // console.log(value);
+  // console.log(getElementSettingsSuffix(this.props.controller));
   if(value === null){
     value = this.props.currentElement.getSettings(settingName)
   }

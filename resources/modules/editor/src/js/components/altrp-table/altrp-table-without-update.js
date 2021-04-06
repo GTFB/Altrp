@@ -166,9 +166,22 @@ function AltrpTableWithoutUpdate(
       column_edit_url,
       column_external_link,
       column_blank_link,
-      _accessor,
       edit_disabled,
       column_cell_content_type } = column;
+    let {
+      _accessor,
+    } = column;
+    _accessor = _accessor.trim();
+    let leftValue, rightValue;
+    if(_accessor.indexOf('?') !== -1 && _accessor.indexOf(':') !== -1){
+      [leftValue, rightValue] = _accessor.split('?')[1].split(':');
+      leftValue = leftValue.trim();
+      rightValue = rightValue.trim();
+      cell.value = cell.value ? leftValue : rightValue;
+    }
+    if(_accessor.indexOf('"') === 0 && _accessor[_accessor.length - 1] === '"'){
+      cell.value = _accessor.substring(1, _accessor.length - 1);
+    }
     const [columnTemplate, setColumnTemplate] = React.useState(null);
     const columnEditUrl =
       React.useMemo(() => {
@@ -1199,6 +1212,9 @@ export function settingsToColumns(settings, widgetId) {
     if (((_column.actions && _column.actions.length) || _column.accessor)) {
       _column.edit_disabled = edit_disabled;
       _column._accessor = _column.accessor;
+      if(_column.accessor.indexOf('?') !== -1 && _column.accessor.indexOf(':') !== -1) {
+        _column.accessor = _column.accessor.split('?')[0].trim();
+      }
       _column.column_name = _column.column_name || '&nbsp;';
       if (_column.column_is_filtered) {
 

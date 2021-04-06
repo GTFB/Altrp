@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import AreaComponent from "./AreaComponent";
 import AdminBar from "./AdminBar";
-import {replaceContentWithData, setTitle} from "../helpers";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Redirect, withRouter } from "react-router-dom";
 import pageLoader from "./../classes/PageLoader";
@@ -12,7 +11,6 @@ import { changeCurrentModel } from "../store/current-model/actions";
 import { queryCache } from "react-query";
 import connect from "react-redux/es/connect/connect";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
-import { clearFormStorage } from "../store/forms-data-storage/actions";
 import { setScrollValue } from "../store/scroll-position/actions";
 import dataStorageUpdater from "../classes/modules/DatastorageUpdater";
 import { clearElements } from "../store/elements-storage/actions";
@@ -20,6 +18,7 @@ import { clearAllResponseData } from "../store/responses-storage/actions";
 import { clearPageState } from "../store/altrp-page-state-storage/actions";
 import {changeCurrentTitle} from "../store/current-title/actions";
 import {changeCurrentPageProperty} from "../store/current-page/actions";
+import RouteContentWrapper from "./styled-components/RouteContentWrapper";
 
 class RouteContent extends Component {
   constructor(props) {
@@ -176,7 +175,7 @@ class RouteContent extends Component {
             );
           }}
         >
-          <div className="route-content" id="route-content">
+          <RouteContentWrapper className="route-content" id="route-content">
             {this.state.areas.map(area => {
               return (
                 <AreaComponent
@@ -188,7 +187,7 @@ class RouteContent extends Component {
                 />
               );
             })}
-          </div>
+          </RouteContentWrapper>
         </Scrollbars>
       </React.Fragment>
     );

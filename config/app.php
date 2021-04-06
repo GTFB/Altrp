@@ -33,7 +33,7 @@ return [
     |
     */
 
-    'altrp_version' => '0.14.10',
+    'altrp_version' => '0.14.12',
 
 
     /*
@@ -195,8 +195,6 @@ return [
         // App\Providers\AltrpProviders\AppServiceProvider::class,
         // App\Providers\AltrpRepositoryServiceProvider::class,
         // App\Providers\AltrpProviders\AppServiceProvider::class,
-        App\Providers\AltrpRepositoryServiceProvider::class,
-        App\Providers\AltrpProviders\AppServiceProvider::class,
 
     ],
 
