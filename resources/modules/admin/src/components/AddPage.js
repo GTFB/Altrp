@@ -23,10 +23,6 @@ const columns = [
     name: "priority",
     title: "Priority"
   },
-  {
-    name: "parameters",
-    title: "Parameters"
-  }
 ];
 
 /**

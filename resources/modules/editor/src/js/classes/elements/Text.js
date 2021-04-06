@@ -38,6 +38,7 @@ class Text extends BaseElement {
       return;
     }
     this.startControlSection("text_editor", {
+      hideOnEmail: true,
       tab: TAB_CONTENT,
       label: "Text editor"
     });
@@ -65,6 +66,7 @@ class Text extends BaseElement {
     this.endControlSection();
 
     this.startControlSection("text_settings", {
+      hideOnEmail: true,
       tab: TAB_CONTENT,
       label: "Text Settings"
     });
@@ -89,7 +91,6 @@ class Text extends BaseElement {
     this.addControl("text_style_column-count", {
       type: CONTROLLER_NUMBER,
       label: "Column count",
-      default: 1,
       rules: {
         "{{ELEMENT}} .altrp-text{{STATE}}": "column-count: {{VALUE}}"
       }
@@ -160,6 +161,7 @@ class Text extends BaseElement {
     });
 
     this.addControl("text_position_z_index", {
+      hideOnEmail: true,
       type: CONTROLLER_NUMBER,
       label: "Z-index",
       default: 0,
@@ -192,13 +194,13 @@ class Text extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-text{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
     this.addControl("text_style_background_opacity", {
+      hideOnEmail: true,
       type: CONTROLLER_SLIDER,
       label: "Opacity",
       // default: {
@@ -251,7 +253,6 @@ class Text extends BaseElement {
       //   color: "rgb(0, 0, 1)",
       //   colorPickedHex: "#000000"
       // },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-text{{STATE}}": "color: {{COLOR}};"
       }
@@ -362,7 +363,6 @@ class Text extends BaseElement {
         color: "rgb(206,205,237)",
         colorPickedHex: "#CECDED"
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tooltip{{STATE}}": "background: {{COLOR}};",
         "{{ELEMENT}} .altrp-tooltip::after{{STATE}}":
@@ -377,7 +377,6 @@ class Text extends BaseElement {
         color: "rgb(0,0,0)",
         colorPickedHex: "#000000"
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-tooltip{{STATE}}": "color: {{COLOR}};"
       }

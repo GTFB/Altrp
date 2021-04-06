@@ -4,7 +4,7 @@ window.queryString = queryString;
 /**
  * @class Resource
  * */
-export const MAX_FILE_SIZE = 20971520;
+export const MAX_FILE_SIZE = 83886080;
 
 class Resource {
   /**
@@ -38,7 +38,7 @@ class Resource {
    * */
   get(id) {
     if (!id) {
-      throw 'Get only by "id"';
+      console.error('Get only by "id"');
     }
 
     let options = {
@@ -56,7 +56,7 @@ class Resource {
     }
     return fetch(url, options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.json();
     });
@@ -68,7 +68,7 @@ class Resource {
    * */
   getInContext(id) {
     if (!id) {
-      throw 'Get only by "id"';
+      console.error('Get only by "id"');
     }
 
     let options = {
@@ -82,7 +82,7 @@ class Resource {
     let url = route.replace(`{id}`, id);
     return fetch(url, options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.json();
     });
@@ -102,7 +102,7 @@ class Resource {
     let url = this.getRoute();
     return fetch(url, options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.json();
     });
@@ -122,7 +122,7 @@ class Resource {
     let url = this.getRoute();
     return fetch(url, options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.text();
     });
@@ -148,7 +148,7 @@ class Resource {
     }
     return fetch(url, options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.json();
     });
@@ -159,12 +159,12 @@ class Resource {
    * @return {Promise}
    * */
   post(data = {}, headers) {
-    headers = headers || {
+    headers = _.assign({
       "X-CSRF-TOKEN": _token
       // 'Content-Type': 'application/json',
       // 'Accept': 'application/json',
-    };
-    let formData = new FormData();
+    }, headers);
+      let formData = new FormData();
     let hasFile = false;
     _.each(data, (value, key) => {
       if (_.isArray(value)) {
@@ -181,7 +181,7 @@ class Resource {
         formData.append(key, value);
       }
     });
-    if (!hasFile) {
+    if (! hasFile) {
       headers["Content-Type"] = "application/json";
       headers["Accept"] = "application/json";
     }
@@ -193,15 +193,15 @@ class Resource {
     return fetch(this.getRoute(), options)
       .then(res => {
         if (res.ok === false) {
-          return Promise.reject(res.text(), res.status);
+          return Promise.reject({res: res.text(), status: res.status});
         }
         return res.json();
       })
-      .catch(err => {
-        console.error(err);
-        return Promise.reject(err.then(), err.status);
-        return err.then();
-      });
+      // .catch(err => {
+      //   console.error(err);
+      //   return Promise.reject(err.then(), err.status);
+      //   return err.then();
+      // });
   }
   /**
    * @param {FileList} files
@@ -238,7 +238,7 @@ class Resource {
     };
     return fetch(this.getRoute(), options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.json();
     });
@@ -261,7 +261,7 @@ class Resource {
     };
     return fetch(this.getRoute(), options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.json();
     });
@@ -271,11 +271,11 @@ class Resource {
    * @return {Promise}
    * */
   put(id, data, headers = null) {
-    headers = headers || {
+    headers = _.assign({
       "X-CSRF-TOKEN": _token
       // 'Content-Type': 'application/json',
       // 'Accept': 'application/json',
-    };
+    }, headers);
     let formData = new FormData();
     let hasFile = false;
 
@@ -315,15 +315,18 @@ class Resource {
     });
   }
   /**
+   * @param {string} id
+   * @param {{}} data
+   * @param {string | {}} customHeaders
    * @return {Promise}
    * */
-  delete(id = "", data = {}) {
+  delete(id = "", data = {}, customHeaders) {
     let options = {
       method: "delete",
-      headers: {
+      headers: _.assign({
         "X-CSRF-TOKEN": _token,
         "Content-Type": "application/json"
-      }
+      }, customHeaders),
     };
     if (!_.isEmpty(data)) {
       options.body = JSON.stringify(data);
@@ -331,7 +334,7 @@ class Resource {
     let url = this.getRoute() + (id ? "/" + id : "");
     return fetch(url, options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.json();
     });
@@ -349,7 +352,7 @@ class Resource {
     let url = this.getRoute() + "/options";
     return fetch(url, options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.json();
     });
@@ -358,14 +361,15 @@ class Resource {
   /**
    * GET запрос с параметрами
    * @param {object} params
+   * @param {string | {}} customHeaders
    * @return {Promise}
    * */
-  async getQueried(params, custom_headers = null) {
+  async getQueried(params, customHeaders = null) {
     let options = {
       method: "get",
-      headers: {
+      headers: _.assign({
         "Content-Type": "application/json"
-      }
+      }, customHeaders),
     };
     let _params = {};
     _.forEach(params, (paramValue, paramName) => {
@@ -379,7 +383,7 @@ class Resource {
     url = `${url}?${queryString.stringify(_params)}`;
     let res = await fetch(url, options).then(res => {
       if (res.ok === false) {
-        return Promise.reject(res.text(), res.status);
+        return Promise.reject({res: res.text(), status: res.status});
       }
       return res.json();
     });

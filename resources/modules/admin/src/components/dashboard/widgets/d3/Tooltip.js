@@ -1,17 +1,23 @@
-import { Component } from "react";
+import { PureComponent } from "react";
+// import { Component } from "react";
 
 /**
  * Tooltip для Line и Scatter
  */
-class Tooltip extends Component {
+class Tooltip extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      enablebar: props.datum.enable,
       enable: props.enable,
       point: props.datum.point,
       data: props.datum.point.data,
-      settings: props?.settings
+      settings: props?.settings,
+      keyIsDate: props?.keyIsDate
     };
+    console.log("====================================");
+    console.log(this.state.data);
+    console.log("====================================");
     this.containerSettings = this.containerSettings.bind(this);
   }
 
@@ -50,7 +56,7 @@ class Tooltip extends Component {
       borderRadius: `${settings?.borderRadius || "4px"}`,
       borderColor: `${settings?.borderColor || "black"}`,
       borderWidth: `${settings?.borderWidth || "1px"}`,
-      backgroundColor: `${settings?.backgroundColor || "white"}`,
+      backgroundColor: `${settings?.backgroundColor || "red"}`,
       color: "white",
       width: "fit-content",
       flexDirection: "column-reverse"
@@ -61,26 +67,61 @@ class Tooltip extends Component {
   render() {
     if (this.state.enable) {
       return (
-        <div className={`${this.props.widgetID} altrp-dashboard__tooltip--label-background col-12`}>
+        <>
           <div
-            className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
-            style={{
-              textAlign: "left",
-              // color: "red"
-            }}
+            className={`${this.props.widgetID} altrp-dashboard__tooltip--label-background altrp-dashboard__tooltip--width altrp-dashboard__tooltip--label-background-shadow altrp-dashboard__tooltip--border-type altrp-dashboard__tooltip--border-width altrp-dashboard__tooltip--border-color col-12`}
+            style={{ padding: "5px 9px" }}
           >
-            {this.state.data.x}
+            <div>
+            {this.state.data?.tooltip === undefined &&
+              <div style={{
+                whiteSpace: "pre",
+                display: "flex",
+                alignItems: "center"
+              }}>
+                <span
+                  style={{
+                    display: "block",
+                    width: "12px",
+                    height: "12px",
+                    background: this.state.point.color,
+                    marginRight: "7px"
+                  }}
+                >
+                </span>
+                <div
+                  className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
+                >
+                  {this.props.keyIsDate
+                  ? this.state.data.xFormatted
+                  : this.state.data.x}
+                  :
+                  <strong
+                    className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
+                  >
+                    {this.state.data.y}
+                  </strong>
+                </div>
+              </div>
+              }
+              {this.state.data?.tooltip?.map((item, index) => {
+                return (
+                  <React.Fragment>
+                    <div
+                      style={{
+                        color: item?.color || "#000000"
+                      }}
+                      key={index}
+                    >
+                      {`${item?.label}:`}
+                      <strong>{item.value}</strong>
+                    </div>
+                  </React.Fragment>
+                );
+              })}
+            </div>
           </div>
-          <div
-            className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
-            style={{
-              textAlign: "right",
-              // color: "blue"
-            }}
-          >
-            {this.state.data.y}
-          </div>
-        </div>
+        </>
       );
     }
     //Дефолтный тултип

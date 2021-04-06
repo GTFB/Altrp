@@ -233,7 +233,8 @@ class Section extends BaseElement{
       max: 2000,
       min: 0,
       rules: {
-        "{{ELEMENT}} > .altrp-section_boxed{{STATE}}": "width: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}}.altrp-section_boxed{{STATE}}": "width: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}}.altrp-section_section_boxed{{STATE}}": "width: {{SIZE}}{{UNIT}}",
         "{{ELEMENT}} > .altrp-section_section-boxed{{STATE}}": "padding-left: calc((100vw - {{SIZE}}{{UNIT}}) / 2);padding-right: calc((100vw - {{SIZE}}{{UNIT}}) / 2); width: 100vw;",
       }
     });
@@ -486,7 +487,6 @@ class Section extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": "background-color: {{COLOR}};"
       }
@@ -495,6 +495,7 @@ class Section extends BaseElement{
     this.addControl('gradient', {
       type: CONTROLLER_GRADIENT,
       label: 'Gradient',
+      hideOnClick: true,
       default: {
         isWithGradient: false,
         firstColor: "rgba(97,206,112,1)",
@@ -773,10 +774,6 @@ class Section extends BaseElement{
           colorPickedHex: '#000000',
           type: ""
         },
-        presetColors: [
-          '#eaeaea',
-          '#9c18a8'
-        ],
         rules: {
           '{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
         },
@@ -939,7 +936,7 @@ class Section extends BaseElement{
     if(!newColumn instanceof Column){
       throw 'Only Column can be a Child of Section';
     }
-    this.appendChild(newColumn);
+    this.appendChild(newColumn, false);
   }
 
   /**

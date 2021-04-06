@@ -7,6 +7,7 @@ class DiagramWidget extends Component {
 
     this.state = {
       settings: props.element.getSettings(),
+      id: props.element.getId()
     };
 
     props.element.component = this;
@@ -14,12 +15,15 @@ class DiagramWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
+    }
   }
 
   render() {
     return (
       <Suspense fallback={"Loading"}>
-        <AltrpDiagram settings={this.state.settings} />
+        <AltrpDiagram settings={this.state.settings} id={this.state.id} />
       </Suspense>
     );
   }

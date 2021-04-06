@@ -14,6 +14,9 @@ class TextWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
+    }
     this.tooltipActive = this.tooltipActive.bind(this);
     this.changeText = this.changeText.bind(this);
   }
@@ -74,13 +77,13 @@ class TextWidget extends Component {
     }
 
     if (this.props.CKEditor) {
-      return (
+      return ( <div className="altrp-text">
         <this.props.CKEditor
           changeText={this.changeText}
           text={textContent}
           readOnly={isEditor()}
           textWidget={true}
-        />
+        /></div>
       );
     }
 

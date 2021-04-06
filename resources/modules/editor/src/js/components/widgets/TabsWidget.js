@@ -1,210 +1,288 @@
-import React, {Component} from "react";
-import {renderAsset, renderAssetIcon} from "../../../../../front-app/src/js/helpers";
+import React, { Component } from "react";
+import {
+  renderAsset,
+  renderAssetIcon
+} from "../../../../../front-app/src/js/helpers";
 import TemplateLoader from "../template-loader/TemplateLoader";
 
 class TabsWidget extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.show = this.show.bind(this)
-    this.switcher = this.switcher.bind(this)
+    this.show = this.show.bind(this);
+    this.switcher = this.switcher.bind(this);
     this.state = {
       settings: props.element.getSettings(),
       switcher: false,
       activeTab: 0
     };
     props.element.component = this;
-    if(window.elementDecorator){
+    if (window.elementDecorator) {
       window.elementDecorator(this);
+    }
+    if (props.baseRender) {
+      this.render = props.baseRender(this);
     }
   }
 
   show(e) {
     let button = e.currentTarget;
-    let collectionTabs = button.parentNode.parentNode.getElementsByClassName("altrp-tab-content")[0];
+    let collectionTabs = button.parentNode.parentNode.getElementsByClassName(
+      "altrp-tab-content"
+    )[0];
     let currentTab = collectionTabs.children[button.dataset.key];
 
-    for(let i = 0; i < collectionTabs.children.length; i++) {
+    for (let i = 0; i < collectionTabs.children.length; i++) {
       collectionTabs.children[i].classList.remove("altrp-tab-show");
       e.currentTarget.parentNode.children[i].classList.remove("active");
     }
     currentTab.classList.add("altrp-tab-show");
     // e.currentTarget.classList.add("active");
-    this.setState(state=>({...state, activeTab: Number(button.dataset.key) || 0}))
+    this.setState(state => ({
+      ...state,
+      activeTab: Number(button.dataset.key) || 0
+    }));
+  }
+
+  showTab(tabKey) {
+    const dataKey = tabKey;
+    const button = document.querySelector(
+      "[data-key=" + "'" + dataKey + "'" + "]"
+    );
+    let collectionTabs = button.parentNode.parentNode.getElementsByClassName(
+      "altrp-tab-content"
+    )[0];
+    let currentTab = collectionTabs.children[button.dataset.key];
+
+    for (let i = 0; i < collectionTabs.children.length; i++) {
+      collectionTabs.children[i].classList.remove("altrp-tab-show");
+      button.parentNode.children[i].classList.remove("active");
+    }
+    currentTab.classList.add("altrp-tab-show");
+    this.setState(state => ({
+      ...state,
+      activeTab: Number(button.dataset.key) || 0
+    }));
+  }
+
+  fireAction(action) {
+    const regexp = /\(\s*([^)]+?)\s*\)/;
+    let parameter = regexp.exec(action);
+    let currentParameter = null;
+    if (parameter) {
+      currentParameter = parameter[1];
+      action = action.replace(regexp, "");
+    }
+
+    if (typeof this[action] !== "undefined") {
+      if (currentParameter !== null) {
+        this[action](currentParameter);
+      } else {
+        this[action]();
+      }
+    } else {
+      alert("ERROR, NOT FOUND ACTION");
+    }
   }
 
   switcher() {
-    this.setState({switcher: !this.state.switcher});
+    this.setState({ switcher: !this.state.switcher });
   }
 
-
-  render(){
+  render() {
     let tab = null;
 
-    if(this.state.settings.type_type == "tabs") {
-      let buttonClasses = ""
+    if (this.state.settings.type_type == "tabs") {
+      let buttonClasses = "";
 
       switch (this.state.settings.layout_tabs) {
         case "top":
-          buttonClasses = " altrp-tab-btn-column altrp-tab-btn-top"
-          break
+          buttonClasses = " altrp-tab-btn-column altrp-tab-btn-top";
+          break;
         case "bottom":
-          buttonClasses = " altrp-tab-btn-column altrp-tab-btn-bottom"
-          break
+          buttonClasses = " altrp-tab-btn-column altrp-tab-btn-bottom";
+          break;
         case "left":
-          buttonClasses = " altrp-tab-btn-row altrp-tab-btn-left"
-          break
+          buttonClasses = " altrp-tab-btn-row altrp-tab-btn-left";
+          break;
         case "right":
-          buttonClasses = " altrp-tab-btn-row altrp-tab-btn-right"
-          break
+          buttonClasses = " altrp-tab-btn-row altrp-tab-btn-right";
+          break;
       }
 
       let tabs = <div></div>;
-      if(this.state.settings.items_tabs) {;
+      if (this.state.settings.items_tabs) {
         tabs = this.state.settings.items_tabs.map((tab, idx) => {
-
           let iconStyles = {};
 
-          if(this.state.settings.alignment_icon_style === "left") {
-            iconStyles = {paddingRight: this.state.settings.spacing_icon_style.size + this.state.settings.spacing_icon_style.unit}
+          if (this.state.settings.alignment_icon_style === "left") {
+            iconStyles = {
+              paddingRight:
+                this.state.settings.spacing_icon_style.size +
+                this.state.settings.spacing_icon_style.unit
+            };
           } else {
-            iconStyles = {paddingLeft: this.state.settings.spacing_icon_style.size + this.state.settings.spacing_icon_style.unit}
+            iconStyles = {
+              paddingLeft:
+                this.state.settings.spacing_icon_style.size +
+                this.state.settings.spacing_icon_style.unit
+            };
           }
 
           let icon = null;
-          if(tab.icon_items) {
-            icon = <div className="altrp-tab-btn-icon" style={iconStyles}>{renderAssetIcon( tab.icon_items, {
-            })}</div>
+          if (tab.icon_items) {
+            icon = (
+              <div className="altrp-tab-btn-icon" style={iconStyles}>
+                {renderAssetIcon(tab.icon_items, {})}
+              </div>
+            );
           }
 
-          return<button data-key={idx}
-                        className={"altrp-tab-btn"
-                          + buttonClasses
-                          + (this.state.activeTab === idx ? ' active' : '') }
-                        onClick={this.show}
-                        key={idx}>{this.state.settings.alignment_icon_style == "left" ? icon : null}<p>{tab.title_and_content_items}</p>{this.state.settings.alignment_icon_style == "right" ? icon : null}</button>
+          return (
+            <button
+              data-key={idx}
+              className={
+                "altrp-tab-btn" +
+                buttonClasses +
+                (this.state.activeTab === idx ? " active" : "")
+              }
+              onClick={this.show}
+              key={idx}
+            >
+              {this.state.settings.alignment_icon_style == "left" ? icon : null}
+              <p>{tab.title_and_content_items}</p>
+              {this.state.settings.alignment_icon_style == "right"
+                ? icon
+                : null}
+            </button>
+          );
         });
-      };
+      }
 
       let tabWrapper = <div></div>;
-      if(this.state.settings.items_tabs) {
+      if (this.state.settings.items_tabs) {
         tabWrapper = this.state.settings.items_tabs.map((tab, idx) => {
           let show = "";
-          if(idx == 0) {
+          if (idx == 0) {
             show = "altrp-tab-show";
           }
 
-          return<div data-key={idx} className={"altrp-tab " + show} key={idx}>{
-            tab.card_template ?
-                <TemplateLoader templateId={tab.card_template}/>
-                : tab.wysiwyg_items
-          }</div>
+          return (
+            <div data-key={idx} className={"altrp-tab " + show} key={idx}>
+              {tab.card_template ? (
+                <TemplateLoader templateId={tab.card_template} />
+              ) : (
+                tab.wysiwyg_items
+              )}
+            </div>
+          );
         });
-      };
+      }
 
       let tabsStyles = "";
 
-      if(this.state.settings.layout_tabs == "left") {
-        tabsStyles = " altrp-tabs-left"
+      if (this.state.settings.layout_tabs == "left") {
+        tabsStyles = " altrp-tabs-left";
       }
-      if(this.state.settings.layout_tabs == "right") {
-        tabsStyles = " altrp-tabs-right"
+      if (this.state.settings.layout_tabs == "right") {
+        tabsStyles = " altrp-tabs-right";
       }
-      tab = <div className={"altrp-tabs" + tabsStyles}>
-        {
-          this.state.settings.layout_tabs == "top" || this.state.settings.layout_tabs == "left" ? <div className="altrp-tab-btn-container">{tabs}</div> : null
-        }
-        <div className="altrp-tab-content">
-          {tabWrapper}
+      tab = (
+        <div className={"altrp-tabs" + tabsStyles}>
+          {this.state.settings.layout_tabs == "top" ||
+          this.state.settings.layout_tabs == "left" ? (
+            <div className="altrp-tab-btn-container">{tabs}</div>
+          ) : null}
+          <div className="altrp-tab-content">{tabWrapper}</div>
+          {this.state.settings.layout_tabs == "bottom" ||
+          this.state.settings.layout_tabs == "right" ? (
+            <div className="altrp-tab-btn-container">{tabs}</div>
+          ) : null}
         </div>
-        {
-          this.state.settings.layout_tabs == "bottom" || this.state.settings.layout_tabs == "right" ? <div className="altrp-tab-btn-container">{tabs}</div> : null
-        }
-      </div>
+      );
     } else {
-
-      let switcherClasses=`altrp-tabs-switcher altrp-tabs-switcher_${ this.state.switcher ? 'on' : 'off' }`;
+      let switcherClasses = `altrp-tabs-switcher altrp-tabs-switcher_${
+        this.state.switcher ? "on" : "off"
+      }`;
 
       let sectionOne = null;
       switch (this.state.settings.type_section_one) {
         case "image":
-          let media = {...this.state.settings.media_section_one};
-          media.url = media.url || '/img/nullImage.png';
-          media.name = media.name || 'null';
+          let media = { ...this.state.settings.media_section_one };
+          media.url = media.url || "/img/nullImage.png";
+          media.name = media.name || "null";
           media.assetType = media.assetType || undefined;
           sectionOne = renderAsset(media, {
-            className: "altrp-tabs-switcher-section-one-img altrp-tabs-switcher-section-img"
-          })
-          break
+            className:
+              "altrp-tabs-switcher-section-one-img altrp-tabs-switcher-section-img"
+          });
+          break;
         case "text":
-          sectionOne = React.createElement('div', {
-            className: "altrp-tabs-switcher-section-one-text altrp-tabs-switcher-section-text",
+          sectionOne = React.createElement("div", {
+            className:
+              "altrp-tabs-switcher-section-one-text altrp-tabs-switcher-section-text",
             dangerouslySetInnerHTML: {
               __html: this.state.settings.wysiwyg_section_one
-            },
-          })
-          break
+            }
+          });
+          break;
       }
 
       let sectionTwo = null;
       switch (this.state.settings.type_section_two) {
         case "image":
-          let media = {...this.state.settings.media_section_two};
-          media.url = media.url || '/img/nullImage.png';
-          media.name = media.name || 'null';
+          let media = { ...this.state.settings.media_section_two };
+          media.url = media.url || "/img/nullImage.png";
+          media.name = media.name || "null";
           media.assetType = media.assetType || undefined;
           sectionTwo = renderAsset(media, {
-            className: "altrp-tabs-switcher-section-two-img altrp-tabs-switcher-section-img"
-          })
-          break
+            className:
+              "altrp-tabs-switcher-section-two-img altrp-tabs-switcher-section-img"
+          });
+          break;
         case "text":
-          sectionTwo = React.createElement('div', {
-            className: "altrp-tabs-switcher-section-two-text altrp-tabs-switcher-section-text",
+          sectionTwo = React.createElement("div", {
+            className:
+              "altrp-tabs-switcher-section-two-text altrp-tabs-switcher-section-text",
             dangerouslySetInnerHTML: {
               __html: this.state.settings.wysiwyg_section_two
-            },
-          })
-          break
+            }
+          });
+          break;
       }
 
-      tab = <div className="altrp-tabs">
-        <div className="altrp-tabs-switcher-container">
-        <div className="altrp-tabs-switcher-label altrp-tabs-switcher-label-section-one">{this.state.settings.title_section_one}</div>
+      tab = (
+        <div className="altrp-tabs">
+          <div className="altrp-tabs-switcher-container">
+            <div className="altrp-tabs-switcher-label altrp-tabs-switcher-label-section-one">
+              {this.state.settings.title_section_one}
+            </div>
 
-          <div className={switcherClasses} onClick={this.switcher}>
-            <div className="altrp-tabs-switcher__caret"/>
+            <div className={switcherClasses} onClick={this.switcher}>
+              <div className="altrp-tabs-switcher__caret" />
+            </div>
+
+            <div className="altrp-tabs-switcher-label altrp-tabs-switcher-label-section-two">
+              {this.state.settings.title_section_two}
+            </div>
           </div>
 
-        <div className="altrp-tabs-switcher-label altrp-tabs-switcher-label-section-two">{this.state.settings.title_section_two}</div>
-        </div>
-
-        <div className="altrp-tabs-switcher-wrapper">
-          {
-            !this.state.switcher ?
+          <div className="altrp-tabs-switcher-wrapper">
+            {!this.state.switcher ? (
               <div className="altrp-tabs-switcher-section-one">
-                {
-                  sectionOne
-                }
+                {sectionOne}
               </div>
-              :
+            ) : (
               <div className="altrp-tabs-switcher-section-two">
-                {
-                  sectionTwo
-                }
+                {sectionTwo}
               </div>
-
-          }
-
+            )}
+          </div>
         </div>
-      </div>
+      );
     }
 
-
-
-    return tab
+    return tab;
   }
 }
 
-export default TabsWidget
-
-
-
+export default TabsWidget;

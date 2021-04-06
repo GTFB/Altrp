@@ -57,7 +57,7 @@ class TemplateDataStorage extends BaseModule {
   }
 
   setCurrentElement(element) {
-    if (!element instanceof BaseElement) {
+    if (! element instanceof BaseElement) {
       throw "Only Base Element Can Be Set as Default";
     }
     this.currentElement = element;
@@ -69,6 +69,17 @@ class TemplateDataStorage extends BaseModule {
       return this.setCurrentRootElement();
     }
     return this.currentElement;
+  }
+
+  getElementById(elementId) {
+    let stack = [...this.rootElement.children];
+    let element;
+    while(!(stack.length === 0)) {
+        element = stack.pop()
+        if(element.id == elementId) 
+          return element;
+        stack.push(...element.children)
+    }
   }
 
   getRootElement() {

@@ -35,9 +35,11 @@ function MapDesigner({
   onTap = noob,
   url,
   field_id,
+  id,
   url_connect = null,
   field_first_connect = null,
-  field_second_connect = null
+  field_second_connect = null,
+  parameters
 }) {
   const FG = useRef(null);
   const ModalRef = useRef(null);
@@ -426,17 +428,20 @@ function MapDesigner({
         {isEditable && selected && (
           <ModalControl
             markers={markers}
+            url={url}
             url_connect={url_connect}
             field_first_connect={field_first_connect}
             field_second_connect={field_second_connect}
             updateGeoObjectToModel={updateGeoObjectToModel}
             open={open}
             selected={selected}
+            id={id}
             onClose={() => setOpen(false)}
             setState={setState}
             state={state}
             forwardRef={ModalRef}
             fg={FG.current}
+            parameters={parameters}
           />
         )}
       </Drawer>

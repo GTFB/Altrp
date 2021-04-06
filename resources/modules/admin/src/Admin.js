@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
 import {
   BrowserRouter as Router,
   Switch,
@@ -27,8 +26,10 @@ import AdminLogo from "./components/AdminLogo";
 import AllPages from "./components/AllPages";
 import AdminSettings from "./components/AdminSettings";
 import Users from "./components/users/Users";
+import Notifications from "./components/users/Notifications/Notifications";
+import EditNotification from "./components/users/Notifications/EditNotification";
 import AddUserPage from "./components/users/AddUserPage";
-import EditUserPage from "./components/users/EditUserPage";
+import UserPage from "./components/users/UserPage";
 import UsersTools from "./components/users/UsersTools";
 import Assets from "./components/Assets";
 import Dashboard from "./components/Dashboard";
@@ -36,6 +37,7 @@ import Plugins from "./components/Plugins";
 import Reports from "./components/Reports";
 import Tables from "./components/Tables";
 import Templates from "./components/Templates";
+import Robots from "./components/Robots";
 import AdminModal from "./components/AdminModal";
 import AddPage from "./components/AddPage";
 import AddReport from "./components/AddReport";
@@ -59,38 +61,26 @@ import AdminVersion from "./components/AdminVersion";
 import SQLEditors from "./components/SQLEditors";
 import ColorSchemes from "./components/dashboard/ColorSchemes";
 import ModelPage from "./components/models/ModelPage";
+import FontsForm from "./components/FontsForm";
 
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 import Resource from "../../editor/src/js/classes/Resource";
+import Echo from "laravel-echo"
 
 import store from "./js/store/store";
-import { setUserData } from "./js/store/current-user/actions";
+import { setUserData, setUsersOnline } from "./js/store/current-user/actions";
 
 import "./sass/admin-style.scss";
+
+import { changeCurrentUser } from "../../front-app/src/js/store/current-user/actions";
+import { setWebsocketsEnabled,
+  setWebsocketsKey,
+  setWebsocketsPort
+} from "./js/store/websockets-storage/actions";
 
 window.React = React;
 window.ReactDOM = ReactDOM;
 window.Component = React.Component;
-
-// Websockets import
-// let mix = require('laravel-mix');
-// require('dotenv').config();
-// let my_env_key = process.env.MIX_PUSHER_APP_KEY;
-
-import Echo from "laravel-echo";
-window.Pusher = require("pusher-js");
-try {
-  window.Echo = new Echo({
-    broadcaster: "pusher",
-    key: 324345,
-    wsHost: window.location.hostname,
-    wsPort: 6001,
-    forceTLS: false,
-    disableStats: true
-  });
-} catch (error) {
-  console.error(error);
-}
 
 class Admin extends Component {
   constructor(props) {
@@ -111,11 +101,81 @@ class Admin extends Component {
       .getAll()
       .then(({ options }) => this.setState({ models: options }));
 
-    new Resource({ route: "/ajax/current-user" })
-      .getAll()
-      .then(({ data }) => {
-        this.props.setUserData(data)
+    this.getConnect();
+  }
+
+  // Подключение вебсокетов
+  async getConnect() {
+    // get current user
+    let currentUser = await new Resource({ route: "/ajax/current-user" }).getAll();
+    currentUser = currentUser.data;
+    store.dispatch(changeCurrentUser(currentUser));
+
+
+    let pusherKey = await new Resource({ route: "/admin/ajax/settings" }).get("pusher_app_key");
+    let websocketsPort = await new Resource({ route: "/admin/ajax/settings" }).get("websockets_port");
+    let websocketsHost = await new Resource({ route: "/admin/ajax/settings" }).get("pusher_host");
+
+    pusherKey = pusherKey?.pusher_app_key;
+    websocketsPort = websocketsPort?.websockets_port;
+    websocketsHost = websocketsHost?.pusher_host;
+
+    // Проверка наличия ключа и порта
+    if(pusherKey && websocketsPort){
+      try {
+        window.Pusher = require("pusher-js");
+        window.Echo = new Echo({
+          broadcaster: "pusher",
+          key: pusherKey,
+          wsHost: websocketsHost,
+          wsPort: websocketsPort,
+          forceTLS: false,
+          disableStats: true,
+        });
+        console.log("Вебсокеты включены");
+
+      } catch (error) {
+        console.log(error);
+      }
+
+      // Запись ключа и порта в store
+      store.dispatch(setWebsocketsKey(pusherKey));
+      store.dispatch(setWebsocketsPort(websocketsPort));
+
+      // Подключение слушателя канала
+      window.Echo.private("App.User." + currentUser.id)
+      .notification((notification) => {
+        console.log(notification);
       });
+
+      // Подключение слушателя для получения users online
+      let presenceChannel = window.Echo.join("online");
+      let activeUsers = [];
+      presenceChannel.here((users) => {
+        activeUsers = users;
+        store.dispatch(setUsersOnline(activeUsers));
+      })
+      .joining((user) => {
+        activeUsers.push(user);
+        store.dispatch(setUsersOnline(activeUsers));
+      })
+      .leaving((user) => {
+        activeUsers.splice(activeUsers.indexOf(user), 1);
+        store.dispatch(setUsersOnline(activeUsers));
+      });
+
+    } else {
+     console.log("Вебсокеты выключены");
+    }
+
+    this.getPusherConnect();
+  }
+
+  // Запись в store в случае успешного соединения
+  getPusherConnect() {
+    window?.Echo?.connector?.pusher.connection.bind('connected', function() {
+        store.dispatch(setWebsocketsEnabled(true));
+    });
   }
 
   /**
@@ -127,11 +187,13 @@ class Admin extends Component {
       return { ...state, adminState: { ...adminState } };
     });
   }
+
   toggleMenu() {
     this.setState(state => {
       return { ...state, pagesMenuShow: !state.pagesMenuShow };
     });
   }
+
   render() {
     const { models } = this.state;
     let adminClasses = ["admin"];
@@ -220,6 +282,16 @@ class Admin extends Component {
                           <AssetSvg className="icon" />
                           <span>Assets</span>
                         </Link>
+                        <ul className="admin-nav-list admin-nav-list--sublist">
+                          <li>
+                            <Link
+                              to="/admin/assets/custom-fonts"
+                              className="admin-nav-list__link"
+                            >
+                              <span>Custom fonts</span>
+                            </Link>
+                          </li>
+                        </ul>
                       </li>
                       <li>
                         {/*<Link to="/admin/tables" className="admin-nav-list__link">*/}
@@ -246,16 +318,22 @@ class Admin extends Component {
                           </li>
                         </ul>
                       </li>
-                      <li>
-                        <Link
-                          to="/admin/templates"
-                          className="admin-nav-list__link"
-                        >
-                          <TemplateSvg className="icon" />
-                          <span>Templates</span>
-                        </Link>
-                      </li>
-                      {/* <li>
+                  <li>
+                    <Link
+                      to="/admin/templates"
+                      className="admin-nav-list__link"
+                    >
+                      <TemplateSvg className="icon" />
+                      <span>Templates</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/admin/robots" className="admin-nav-list__link">
+                      <TemplateSvg className="icon" />
+                      <span>Robots</span>
+                    </Link>
+                  </li>
+                  {/* <li>
                     <Link to="/admin/reports" className="admin-nav-list__link">
                       <ReportSvg className="icon" />
                       <span>Reports</span>
@@ -328,11 +406,22 @@ class Admin extends Component {
             <Route path="/admin/users/new" exact>
               <AddUserPage />
             </Route>
-            <Route path="/admin/users/user/:id">
-              <EditUserPage />
+            <Route path="/admin/users/user/:id" exact>
+                <UserPage />
             </Route>
-            <Route path="/admin/tools">
+            <Route path="/admin/users/user/:id" exact>
+              <Notifications />
+            </Route>
+            <Route path="/admin/users/user/:id/notification/:name" exact>
+              <EditNotification />
+            </Route>
+            <Route path="/admin/users/user/:id/notification/new" exact>
+              <EditNotification />
+            </Route>            <Route path="/admin/tools">
               <UsersTools />
+            </Route>
+            <Route path="/admin/assets/custom-fonts">
+              <FontsForm />
             </Route>
             <Route path="/admin/assets">
               <Assets />
@@ -369,6 +458,9 @@ class Admin extends Component {
             </Route>
             <Route path="/admin/templates">
               <Templates />
+            </Route>
+            <Route path="/admin/robots">
+                <Robots />
             </Route>
             <Route path="/admin/pages" exact>
               <AllPages />

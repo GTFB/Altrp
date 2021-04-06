@@ -26,6 +26,12 @@ class TextareaController extends Component {
    * Потеря фокуса обновляет элемент
    * @param e
    */
+
+  onKeyDown = (event) => {
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
+  }
+
   onBlur = e =>{
     this._changeValue(e.target.value)
   };
@@ -69,6 +75,7 @@ class TextareaController extends Component {
           }
         </div>
       </div> : <textarea className="controller-container__textarea"
+                         onKeyDown={this.onKeyDown}
                          onBlur={this.onBlur}
                          onChange={this.changeValue} value={value} />
       }

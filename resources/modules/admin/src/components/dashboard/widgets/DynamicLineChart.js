@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ResponsiveLine } from "@nivo/line";
-
+Tooltip;
 import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
 import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
 const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+const milkScheme = _.find(Schemes, { value: "milk" }).colors;
+const milkScheme2 = _.find(Schemes, { value: "milk2" }).colors;
 
 import { getWidgetData } from "../services/getWidgetData";
 import moment from "moment";
+import Tooltip from "./d3/Tooltip";
 
 const format = "%d.%m.%Y";
 
@@ -43,11 +46,16 @@ const DynamicLineChart = ({
   tickRotation = 0,
   bottomAxis = true,
   enableGridX = true,
-  enableGridY = true
+  enableGridY = true,
+  customColorSchemeChecker = false,
+  customColors = [],
+  constantsAxises = [],
+  yScaleMax,
+  widgetID,
+  useCustomTooltips
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
-
   const markers = () => {
     let markerY = {};
     let markerX = {};
@@ -181,13 +189,23 @@ const DynamicLineChart = ({
           data={data}
           margin={{ top: 50, right: 180, bottom: 50, left: 60 }}
           xFormat={xScaleType === "time" && "time:%d.%m.%Y"}
+          yScale={
+            yScaleMax
+              ? {
+                  max: yScaleMax,
+                  type: "linear"
+                }
+              : {
+                  type: "linear"
+                }
+          }
           xScale={
             xScaleType === "time"
               ? { type: xScaleType, format: format, precision: precision }
               : { type: xScaleType }
           }
           lineWidth={lineWidth}
-          markers={markers()}
+          markers={constantsAxises}
           enableGridX={enableGridX}
           enableGridY={enableGridY}
           axisBottom={
@@ -204,10 +222,40 @@ const DynamicLineChart = ({
           useMesh={true}
           enableArea={enableArea}
           enablePoints={enablePoints}
+          tooltip={datum => {
+            console.log("====================================");
+            console.log(datum);
+            console.log("====================================");
+            return (
+              <Tooltip
+                keyIsDate={keyIsDate}
+                datum={datum}
+                enable={useCustomTooltips}
+                widgetID={widgetID}
+              />
+            );
+          }}
+          // tooltip={datum => {
+          //   const tooltip = datum.point.data?.tooltip;
+          //   console.log("=============TOOLTIP==============");
+          //   console.log(tooltip);
+          //   console.log("====================================");
+          //   return tooltip.map(item => (
+          //     <div>{`${item?.label}:${item?.value}`}</div>
+          //   ));
+          // }}
           pointSize={pointSize}
           curve={curve}
           colors={
-            colorScheme === "regagro" ? regagroScheme : { scheme: colorScheme }
+            customColorSchemeChecker && customColors.length > 0
+              ? customColors
+              : colorScheme === "regagro"
+              ? regagroScheme
+              : colorScheme === "milk"
+              ? milkScheme
+              : colorScheme === "milk2"
+              ? milkScheme2
+              : { scheme: colorScheme }
           }
           pointColor={
             typeof pointColor !== "undefined" && pointColor !== null

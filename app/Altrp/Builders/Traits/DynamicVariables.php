@@ -11,6 +11,31 @@ use Illuminate\Support\Str;
 trait DynamicVariables
 {
     /**
+     * @var
+     */
+    protected $str;
+
+    /**
+     * @var string
+     */
+    protected $pattern = '#\{\{[^\{]*\}\}#';
+
+    /**
+     * @var
+     */
+    protected $matches;
+
+    /**
+     * @var
+     */
+    protected $match;
+
+    /**
+     * @var
+     */
+    protected $outer;
+
+    /**
      * Заменить пользовательские динамические переменные
      *
      * @param $str
@@ -19,83 +44,309 @@ trait DynamicVariables
      */
     protected function replaceDynamicVars($str, $outer = false)
     {
-        $pattern = '\'?(CURRENT_[A-Z_]+|([A-Z_]+)?REQUEST)(:[a-zA-Z0-9_.]+)?(:[a-zA-Z0-9,;"%-_.()+*/|]+)?(:[A-Z_<>!=]+)?\'?';
-        $str = preg_replace_callback(
-            "#$pattern#",
-            function($matches) use ($outer) {
-                $param = $matches[0] ? explode(':',trim($matches[0], '\'')) : null;
-                if ($param && $param[0] == 'REQUEST') {
-                    return $this->getValue('request()->' . $param[1], $outer);
-                }
-                if ($param && $param[0] == 'IF_REQUEST') {
-                    $param[3] = $param[3] ?? '=';
-                    list($wrapStart, $value, $wrapEnd) = $this->checkUnixTime($param[2]);
-                    list($startLike, $endLike, $operator) = isset($param[3]) && \Str::contains($param[3], 'LIKE')
-                        ? $this->getSqlLikeExp($param[3])
-                        : ['','',$param[3]];
-                    $param[3] = $operator;
-                    $wrapStart = $wrapStart ? $wrapStart : "'\'{$endLike}' .";
-                    $wrapEnd = $wrapEnd ? $wrapEnd : ". '{$startLike}\''";
-                    $param[2] = $value;
-                    return $this->getValue( '(request()->' . $param[2]
-                        . " ? '{$param[1]} {$param[3]} ' . {$wrapStart}request()->{$param[2]}{$wrapEnd} : '')", $outer);
-                }
-                if ($param && $param[0] == 'IF_AND_REQUEST') {
-                    $param[3] = $param[3] ?? '=';
-                    list($wrapStart, $value, $wrapEnd) = $this->checkUnixTime($param[2]);
-                    list($startLike, $endLike, $operator) = isset($param[3]) && \Str::contains($param[3], 'LIKE')
-                        ? $this->getSqlLikeExp($param[3])
-                        : ['','',$param[3]];
-                    $param[3] = $operator;
-                    $wrapStart = $wrapStart ? $wrapStart : "'\'{$endLike}' .";
-                    $wrapEnd = $wrapEnd ? $wrapEnd : ". '{$startLike}\''";
-                    $param[2] = $value;
-                    return $this->getValue( '(request()->' . $param[2]
-                        . " ? ' AND {$param[1]} {$param[3]} ' . {$wrapStart}request()->{$param[2]}{$wrapEnd} : '')", $outer);
-                }
-                if ($param && $param[0] == 'CURRENT_USER') {
-                    $relations = str_replace('.', '->', $param[1]);
-                    return $this->getValue('auth()->user()->' . $relations, $outer);
-                }
-                if ($param && $param[0] == 'CURRENT_DATE') {
-                    return $this->getValue('Carbon::now()->format(\'Y-m-d\')', $outer);
-                }
-                if ($param && $param[0] == 'CURRENT_DAY') {
-                    return $this->getValue('Carbon::now()->format(\'d\')', $outer);
-                }
-                if ($param && $param[0] == 'CURRENT_MONTH') {
-                    return $this->getValue('Carbon::now()->format(\'m\')', $outer);
-                }
-                if ($param && $param[0] == 'CURRENT_YEAR') {
-                    return $this->getValue('Carbon::now()->format(\'Y\')', $outer);
-                }
-                if ($param && $param[0] == 'CURRENT_HOUR') {
-                    return $this->getValue('Carbon::now()->format(\'H\')', $outer);
-                }
-                if ($param && $param[0] == 'CURRENT_MINUTE') {
-                    return $this->getValue('Carbon::now()->format(\'i\')', $outer);
-                }
-                if ($param && $param[0] == 'CURRENT_SECOND') {
-                    return $this->getValue('Carbon::now()->format(\'s\')', $outer);
-                }
-                if ($param && $param[0] == 'CURRENT_TIME') {
-                    return $this->getValue('Carbon::now()->format(\'H:i:s\')', $outer);
-                }
-                if ($param && $param[0] == 'CURRENT_DATETIME') {
-                    return $this->getValue('Carbon::now()->format(\'Y-m-d H:i:s\')', $outer);
-                }
-                if ($param && $param[0] == 'CURRENT_DAY_OF_WEEK') {
-                    return $this->getValue('Carbon::now()->format(\'l\')', $outer);
-                }
-                return "''";
-            },
-            $str
-        );
-      /**
-       * Заменим префикс БД
-       */
-      $str = str_replace( '{{PREFIX}}', DB::getTablePrefix(), $str );
-      return $str;
+        $this->str = $str;
+        $this->outer = $outer;
+        $this->pregMatches();
+        foreach ($this->matches as $match) {
+            $this->match = $match;
+            $this->replacePrefix()
+                ->replaceCurrentUser()
+                ->replaceRequest()
+                ->replaceAndRequest()
+                ->replaceIfAndRequest('_AND')
+                ->replaceCurrentDate()
+                ->replaceCurrentDay()
+                ->replaceCurrentDayOfWeek()
+                ->replaceCurrentDateTime()
+                ->replaceCurrentMonth()
+                ->replaceCurrentYear()
+                ->replaceCurrentHour()
+                ->replaceCurrentMinute()
+                ->replaceCurrentSecond()
+                ->replaceCurrentTime();
+        }
+        return $this->str;
+    }
+
+    /**
+     * Найти совпадения
+     */
+    public function pregMatches()
+    {
+        preg_match_all($this->pattern, $this->str, $matches);
+        $this->matches = array_unique($matches[0]);
+    }
+
+    /**
+     * Заменить переменные на данные HTTP запроса
+     * @return $this
+     */
+    public function replaceRequest()
+    {
+        if (Str::contains($this->match, 'REQUEST') && !Str::contains($this->match, 'IF_')) {
+            $trimedMatch = trim($this->match, '{}');
+            $parts = explode(':', $trimedMatch);
+            $relations = $this->getNesting(explode('.', $parts[1]));
+            $this->str = str_replace(
+                $this->match,
+                $this->getValue('request()->' . $relations, $this->outer),
+                $this->str
+            );
+        }
+        return $this;
+    }
+
+    /**
+     * @param string $and
+     * @return $this
+     */
+    protected function replaceAndRequest($and = '')
+    {
+        if (Str::contains($this->match, 'IF' . $and . '_REQUEST')) {
+            $trimedMatch = trim($this->match, '{}');
+            $parts = explode(':', $trimedMatch);
+            $parts[3] = $parts[3] ?? '=';
+            list($wrapStart, $value, $wrapEnd) = $this->checkUnixTime($parts[2]);
+            list($startLike, $endLike, $operator) = isset($parts[3]) && \Str::contains($parts[3], 'LIKE')
+                ? $this->getSqlLikeExp($parts[3])
+                : ['','',$parts[3]];
+            $parts[3] = $operator;
+            $wrapStart = $wrapStart ? $wrapStart : "'\'{$endLike}' .";
+            $wrapEnd = $wrapEnd ? $wrapEnd : ". '{$startLike}\''";
+            $parts[2] = $value;
+            $this->str = str_replace($this->match,
+                $this->getValue( '(request()->' . $parts[2]
+                . " ? ' " . ($and ? ' ' . trim($and, '_') : '')
+                . " {$parts[1]} {$parts[3]} ' . {$wrapStart}request()->{$parts[2]}{$wrapEnd} : '')", $this->outer),
+                $this->str
+            );
+        }
+        return $this;
+    }
+
+    /**
+     * @param $and
+     * @return $this
+     */
+    protected function replaceIfAndRequest($and)
+    {
+        return $this->replaceAndRequest($and);
+    }
+
+    /**
+     * Заменить на данные текущего пользователя
+     * @return $this
+     */
+    public function replaceCurrentUser()
+    {
+        if (Str::contains($this->match, 'CURRENT_USER')) {
+            $trimedMatch = trim($this->match, '{}');
+            $parts = explode(':', $trimedMatch);
+            $relations = $this->getNesting(explode('.', $parts[1]));
+            $this->str = str_replace(
+                $this->match,
+                stripslashes($this->getValue('auth()->user()->' . $relations, $this->outer)),
+                $this->str
+            );
+        }
+        return $this;
+    }
+
+    /**
+     * Заменить на префикс к таблицам в БД
+     * @return $this
+     */
+    public function replacePrefix()
+    {
+        if (Str::contains($this->match, 'PREFIX')) {
+            $this->str = str_replace($this->match, DB::getTablePrefix(), $this->str);
+        }
+        return $this;
+    }
+
+    /**
+     * Заменить текущую дату
+     * @return $this
+     */
+    protected function replaceCurrentDate()
+    {
+        if (Str::contains($this->match, 'CURRENT_DATE')) {
+            $this->str = str_replace(
+                $this->match,
+                $this->getValue('Carbon::now()->format(\'Y-m-d\')', $this->outer),
+                $this->str
+            );
+        }
+        return $this;
+    }
+
+    /**
+     * Заменить на текущий день
+     * @return $this
+     */
+    protected function replaceCurrentDay()
+    {
+        if (Str::contains($this->match, 'CURRENT_DAY')) {
+            $this->str = str_replace(
+                $this->match,
+                $this->getValue('Carbon::now()->format(\'d\')', $this->outer),
+                $this->str
+            );
+        }
+        return $this;
+    }
+
+    /**
+     * Заменить на текущий месяц
+     * @return $this
+     */
+    protected function replaceCurrentMonth()
+    {
+        if (Str::contains($this->match, 'CURRENT_MONTH')) {
+            $this->str = str_replace(
+                $this->match,
+                $this->getValue('Carbon::now()->format(\'m\')', $this->outer),
+                $this->str
+            );
+        }
+        return $this;
+    }
+
+    /**
+     * Заменить на текущий год
+     * @return $this
+     */
+    protected function replaceCurrentYear()
+    {
+        if (Str::contains($this->match, 'CURRENT_YEAR')) {
+            $this->str = str_replace(
+                $this->match,
+                $this->getValue('Carbon::now()->format(\'Y\')', $this->outer),
+                $this->str
+            );
+        }
+        return $this;
+    }
+
+    /**
+     * Заменить на текущий год
+     * @return $this
+     */
+    protected function replaceCurrentHour()
+    {
+        if (Str::contains($this->match, 'CURRENT_HOUR')) {
+            $this->str = str_replace(
+                $this->match,
+                $this->getValue('Carbon::now()->format(\'H\')', $this->outer),
+                $this->str
+            );
+        }
+        return $this;
+    }
+
+    /**
+     * Заменить на текущий год
+     * @return $this
+     */
+    protected function replaceCurrentMinute()
+    {
+        if (Str::contains($this->match, 'CURRENT_MINUTE')) {
+            $this->str = str_replace(
+                $this->match,
+                $this->getValue('Carbon::now()->format(\'i\')', $this->outer),
+                $this->str
+            );
+        }
+        return $this;
+    }
+
+    /**
+     * Заменить на текущий год
+     * @return $this
+     */
+    protected function replaceCurrentSecond()
+    {
+        if (Str::contains($this->match, 'CURRENT_SECOND')) {
+            $this->str = str_replace(
+                $this->match,
+                $this->getValue('Carbon::now()->format(\'s\')', $this->outer),
+                $this->str
+            );
+        }
+        return $this;
+    }
+
+    /**
+     * Заменить на текущее время
+     * @return $this
+     */
+    protected function replaceCurrentTime()
+    {
+        if (Str::contains($this->match, 'CURRENT_TIME')) {
+            $this->str = str_replace(
+                $this->match,
+                $this->getValue('Carbon::now()->format(\'H:i:s\')', $this->outer),
+                $this->str
+            );
+        }
+        return $this;
+    }
+
+    /**
+     * Заменить на текущий таймстемп
+     * @return $this
+     */
+    protected function replaceCurrentDateTime()
+    {
+        if (Str::contains($this->match, 'CURRENT_DATETIME')) {
+            $this->str = str_replace(
+                $this->match,
+                $this->getValue('Carbon::now()->format(\'Y-m-d H:i:s\')', $this->outer),
+                $this->str
+            );
+        }
+        return $this;
+    }
+
+    /**
+     * Заменить на название текущего дня недели
+     * @return $this
+     */
+    protected function replaceCurrentDayOfWeek()
+    {
+        if (Str::contains($this->match, 'CURRENT_DAY_OF_WEEK')) {
+            $this->str = str_replace($this->match, $this->getValue('Carbon::now()->format(\'l\')', $this->outer), $this->str);
+        }
+        return $this;
+    }
+
+    /**
+     * Получить отформатированную строку с замененными значениями
+     * @return mixed
+     */
+    public function getStr()
+    {
+        return $this->str;
+    }
+
+    /**
+     * Получить и сформировать вложенность элементов
+     * @param $elements
+     * @return string
+     */
+    protected function getNesting($elements)
+    {
+        $nesting = '';
+        for ($i = 0; $i < count($elements); $i++) {
+            if (isset($elements[$i]) && $i != 0 && is_numeric($elements[$i])) {
+                $nesting .= '[' . $elements[$i] . ']';
+            } elseif ($i == 0) {
+                $nesting .= $elements[$i];
+            } else {
+                $nesting .= '->' . $elements[$i];
+            }
+        }
+        return $nesting;
     }
 
     /**

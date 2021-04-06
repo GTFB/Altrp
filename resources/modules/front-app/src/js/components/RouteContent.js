@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import AreaComponent from "./AreaComponent";
 import AdminBar from "./AdminBar";
-import { setTitle } from "../helpers";
+import {replaceContentWithData, setTitle} from "../helpers";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Redirect, withRouter } from "react-router-dom";
 import pageLoader from "./../classes/PageLoader";
@@ -18,18 +18,22 @@ import dataStorageUpdater from "../classes/modules/DatastorageUpdater";
 import { clearElements } from "../store/elements-storage/actions";
 import { clearAllResponseData } from "../store/responses-storage/actions";
 import { clearPageState } from "../store/altrp-page-state-storage/actions";
+import {changeCurrentTitle} from "../store/current-title/actions";
+import {changeCurrentPageProperty} from "../store/current-page/actions";
 
 class RouteContent extends Component {
   constructor(props) {
     super(props);
-    setTitle(this.props.title);
+    let title = this.props.title;
+    appStore.dispatch(changeCurrentTitle(title));
     this.state = {
       areas: this.props.areas || []
     };
     this.scrollbar = React.createRef();
     this.isReport = window.location.href.includes("reports");
     appStore.dispatch(clearElements());
-
+    window.currentRouterMatch = new AltrpModel(props.match);
+    window.currentPageId = props.id
     this.admin = this.props.currentUser.hasRoles('admin');
   }
 
@@ -40,9 +44,8 @@ class RouteContent extends Component {
    * @return {Promise<void>}
    */
   async componentDidMount() {
-    window.currentRouterMatch = new AltrpModel(this.props.match);
     window.mainScrollbars = this.scrollbar.current;
-    // setTitle(this.props.title);
+    appStore.dispatch(changeCurrentPageProperty('url', location.href));
     if (this.props.lazy && this.props.allowed) {
       let page = await pageLoader.loadPage(this.props.id);
       let areas = page.areas.map(area => Area.areaFabric(area));
@@ -56,25 +59,28 @@ class RouteContent extends Component {
      */
     this.changeRouteCurrentModel();
     /**
-     * Обнуляем текущее хранилище dataStorage
-     */
-    // dataStorageUpdater.clearCurrent();
-    /**
      * Обнуляем хранилище ответов на отправленные формы
      */
     appStore.dispatch(clearAllResponseData());
     /**
      * затем отправляем запросы на обновление данных и altrpPageState
      */
+    window.formsManager.clearFieldsStorage();
     this.updateAppData();
   }
 
+  /**
+   * Очистим currentDataSource после удаления компонента
+   */
+  componentWillUnmount(){
+    dataStorageUpdater.clearCurrent();
+  }
   /**
    *  обновление currentDataStorage
    *  Сброс altrpPageState
    */
   async updateAppData() {
-    dataStorageUpdater.clearCurrent();
+      dataStorageUpdater.clearCurrent();
     if(window.formsManager){
       formsManager.clearFormsStore();
     }
@@ -125,6 +131,7 @@ class RouteContent extends Component {
         _.get(prevProps, "match.params.id")
     ) {
       this.changeRouteCurrentModel();
+      appStore.dispatch(changeCurrentPageProperty('url', location.href));
     }
     /**
      * При изменении страницы без изменения текущего ройта
@@ -140,18 +147,18 @@ class RouteContent extends Component {
     }
     if (!_.isEqual(_.get(this.props, "match"), _.get(prevProps, "match"))) {
       window.currentRouterMatch = new AltrpModel(this.props.match);
-      appStore.dispatch(clearFormStorage());
+      // appStore.dispatch(clearFormStorage());
     }
   }
 
   render() {
-    if (!this.props.allowed) {
+    if (! this.props.allowed) {
       return <Redirect to={this.props.redirect || "/"} />;
     }
     return (
       <React.Fragment>
         {this.admin && <AdminBar areas={this.state.areas} data={this.props.currentUser.data} idPage={this.props.id} />}
-      
+
         <Scrollbars
           ref={this.scrollbar}
           onUpdate={this.props.setScrollValue}
@@ -190,7 +197,7 @@ class RouteContent extends Component {
 
 const mapStateToProps = (state) => ({
   currentUser: state.currentUser
-})
+});
 
 const mapDispatchToProps = dispatch => {
   return {

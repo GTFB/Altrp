@@ -6,14 +6,21 @@ class HtmlWidget extends Component {
     this.state = {
       settings: props.element.getSettings()
     };
+    if (window.elementDecorator) {
+      window.elementDecorator(this);
+    }
+    if (props.baseRender) {
+      this.render = props.baseRender(this);
+    }
   }
 
   render() {
+    let data = this.getContent("data");
     return (
       <>
         <div
           dangerouslySetInnerHTML={{
-            __html: this.props.element.getSettings()?.data
+            __html: data
           }}
         ></div>
       </>

@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  {!!  getFavicons() !!}
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -26,10 +27,12 @@
   <script src="{{ altrp_asset( '/modules/editor/editor.js', 'http://localhost:3000/' ) }}" crossorigin defer></script>
 
   <script>
+    window.ALTRP_DEBUG = {!! json_encode( ! ! get_altrp_setting( 'altrp_debug', false ) ) !!};
     let ALTRP_CONTAINER_WIDTH = {{ get_altrp_setting( 'container_width', '1440' ) }};
   </script>
   <link rel="stylesheet" href="{{ asset( '/modules/editor/editor.css?' ) . getCurrentVersion() }}">
   {{--<link rel="dns-prefetch" href="//fonts.gstatic.com">--}}
+  <style id="styled" ></style>
 </head>
 
 <body>

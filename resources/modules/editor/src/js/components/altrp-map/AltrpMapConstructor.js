@@ -31,7 +31,9 @@ function AltrpMapConstructor({ settings, id }) {
     field_id,
     url_connect = null,
     field_first_connect = null,
-    field_second_connect = null
+    field_second_connect = null,
+    onlyDatasource = false,
+    parameters
   } = settings;
   let latitude = lat;
   let longitude = lng;
@@ -118,39 +120,52 @@ function AltrpMapConstructor({ settings, id }) {
   }, [objects, currentDataStorage]);
   // Сохраняем данные карты
   const handleSave = data => {
-    if (typeof url === "undefined" || url === null) {
-      axios.post(`/ajax/maps/${id}`, {
-        data: JSON.stringify({
-          type: "FeatureCollection",
-          features: data.features.filter(item => typeof item.id !== "undefined")
-        })
-      });
+    if (!onlyDatasource) {
+      if (typeof url === "undefined" || url === null) {
+        axios.post(`/ajax/maps/${id}`, {
+          data: JSON.stringify({
+            type: "FeatureCollection",
+            features: data.features.filter(
+              item => typeof item.id !== "undefined"
+            )
+          })
+        });
+      }
     }
   };
 
   const getData = useCallback(
     async (id, dynamicGeoObjects) => {
-      try {
-        setIsLoading(true);
-        const req = await axios(`/ajax/maps/${id}`);
-        if (req.status === 200) {
-          let responseData = _.cloneDeep(req.data);
-          let data = [];
-          let featuers = responseData.features;
-          if (_.keys(dynamicGeoObjects).length > 0) {
-            data = featuers.concat(dynamicGeoObjects);
-          }
-          req.data.features = data.length > 0 ? data : featuers;
-          setGeoJson(req.data);
-          setIsLoading(false);
-        }
-      } catch (error) {
+      if (onlyDatasource) {
         let data = {
           type: "FeatureCollection",
-          features: dynamicGeoObjectsRepeater
+          features: dynamicGeoObjects
         };
         setGeoJson(data);
         setIsLoading(false);
+      } else {
+        try {
+          setIsLoading(true);
+          const req = await axios(`/ajax/maps/${id}`);
+          if (req.status === 200) {
+            let responseData = _.cloneDeep(req.data);
+            let data = [];
+            let featuers = responseData.features;
+            if (_.keys(dynamicGeoObjects).length > 0) {
+              data = featuers.concat(dynamicGeoObjects);
+            }
+            req.data.features = data.length > 0 ? data : featuers;
+            setGeoJson(req.data);
+            setIsLoading(false);
+          }
+        } catch (error) {
+          let data = {
+            type: "FeatureCollection",
+            features: dynamicGeoObjects
+          };
+          setGeoJson(data);
+          setIsLoading(false);
+        }
       }
     },
     [id]
@@ -194,6 +209,7 @@ function AltrpMapConstructor({ settings, id }) {
         data={geoJson}
         saveData={handleSave}
         isLoading={isLoading}
+        id={id}
         url_connect={url_connect}
         field_first_connect={field_first_connect}
         field_second_connect={field_second_connect}
@@ -210,6 +226,7 @@ function AltrpMapConstructor({ settings, id }) {
         url={url}
         field_id={field_id}
         center={[latitude || 50.7496449, longitude || 86.1250068]}
+        parameters={parameters}
       />
     </Suspense>
   );

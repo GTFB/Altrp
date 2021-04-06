@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  {!!  getFavicons() !!}
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -12,6 +13,7 @@
   <!-- Scripts -->
 
   <script>
+    window.ALTRP_DEBUG = {!! json_encode( ! ! get_altrp_setting( 'altrp_debug', false ) ) !!};
     let _token = '{{ csrf_token() }}';
   </script>
   @if( env( 'ALTRP_SETTING_ADMIN_LOGO' ) )

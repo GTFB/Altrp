@@ -1,11 +1,12 @@
 
 import { TAB_CONTENT, TAB_STYLE } from "../modules/ControllersManager";
-import { getTemplateDataStorage, getEditor, getFactory } from "../../helpers";
+import { getTemplateDataStorage, getEditor, getFactory, editorSetCurrentElement } from "../../helpers";
 import CONSTANTS from "../../consts";
 import { changeTemplateStatus } from "../../store/template-status/actions";
 import store, {getCurrentScreen, getElementState} from "../../store/store";
 import ControlStack from "./ControlStack";
 import { isEditor } from "../../../../../front-app/src/js/helpers";
+import { addHistoryStoreItem } from "../../store/history-store/actions";
 
 /**
  * Базовый класс для методов элемента для редактора
@@ -21,6 +22,14 @@ class BaseElement extends ControlStack {
     this.controllersRegistered = false;
     this.children = [];
     this.componentClass = window.elementsManager.getComponentClass(this.getName());
+    // console.log(this)
+    // for(let key in this) {
+    //   console.log(key, this[key])
+    // }
+    // console.log('component', this.component)
+    // console.log(this)
+    // if(this.component)
+    //     console.log('added', this)
     this.initiatedDefaults = null;
 
     /**
@@ -122,17 +131,49 @@ class BaseElement extends ControlStack {
    * добавлйет новый  дочерний элемент в конец
    * @param {BaseElement} child
    * */
-  appendChild(child) {
+  appendChild(child, dispatchToHistory = true) {
     this.children.push(child);
     child.setParent(this);
     if (this.component && typeof this.component.setChildren === 'function') {
       this.component.setChildren(this.children);
     }
     this.templateNeedUpdate();
+    if(dispatchToHistory) {
+      let index = this.children.length - 1;
+      store.dispatch(addHistoryStoreItem('ADD', {element: child, index, parent: this})); 
+    }
   }
 
   insertSiblingAfter(newSibling) {
     this.parent.insertNewChildAfter(this.getId(), newSibling);
+  }
+  /**
+   * @param {number} index
+   * @param {BaseElement} child
+   * */
+  restoreChild(index, child) {
+    if (index === undefined || index > this.children.length) {
+      throw 'can not restore child';
+    }
+
+    if(child.parent === undefined) {
+      child.setParent(this);
+    }
+
+    let isHaveChild = false;
+    isHaveChild = this.children.some((childItem) => {
+      if (childItem.getId() === child.getId()) {
+        return true;
+      };
+    })
+    if (!isHaveChild) {
+      this.children.splice(index, 0, child);
+    }
+
+    this.component.setChildren(this.children);
+    editorSetCurrentElement(child);
+
+    this.templateNeedUpdate(); 
   }
 
   insertSiblingBefore(newSibling) {
@@ -156,6 +197,8 @@ class BaseElement extends ControlStack {
     this.children.splice(index + 1, 0, newChild);
     this.component.setChildren(this.children);
     this.templateNeedUpdate();
+    index += 1;
+    store.dispatch(addHistoryStoreItem('ADD', {element: newChild, index, parent: this}));
   }
   /**
    * @param {string} childId
@@ -175,6 +218,7 @@ class BaseElement extends ControlStack {
     this.children.splice(index, 0, newChild);
     this.component.setChildren(this.children);
     this.templateNeedUpdate();
+    store.dispatch(addHistoryStoreItem('ADD', {element: newChild, index, parent: this}));
   }
 
   /**
@@ -241,7 +285,7 @@ class BaseElement extends ControlStack {
    * @param {BaseElement | string} child
    * @throws Если не указан IG или сам элемент
    * */
-  deleteChild(child) {
+  deleteChild(child, dispatchToHistory = true) {
     let childExist = false;
     let childId;
     if (typeof child === 'string') {
@@ -251,10 +295,13 @@ class BaseElement extends ControlStack {
     } else {
       throw 'Delete Child can only by id or Instance';
     }
-    let newChildren = this.children.filter(item => {
+    let newChildren = this.children.filter((item, index) => {
       if (item.getId() === childId) {
-        childExist = true;
-        item.beforeDelete();
+        childExist = true;   
+        if(dispatchToHistory) {
+          store.dispatch(addHistoryStoreItem('DELETE', {element: child, parent: this, index}));
+          item.beforeDelete();
+        } 
         return false;
       }
       return true
@@ -299,7 +346,7 @@ class BaseElement extends ControlStack {
    */
   getSettings(settingName, _default = '') {
     this._initDefaultSettings();
-    if (!settingName) {
+    if (! settingName) {
       return _.cloneDeep(this.settings);
     }
     if (this.settings[settingName] === undefined) {
@@ -318,7 +365,9 @@ class BaseElement extends ControlStack {
       return;
     }
     let controls = window.controllersManager.getControls(this.getName());
-
+    if(this.defaultSettingsIsApply){
+      return;
+    }
     for (let tabName in controls) {
       if (controls.hasOwnProperty(tabName)) {
         if (!controls[tabName].length) {
@@ -338,13 +387,30 @@ class BaseElement extends ControlStack {
       }
     }
     this.updateStyles();
+    this.defaultSettingsIsApply = true;
   }
 
-  setSettingValue(settingName, value) {
-    this.settings[settingName] = value;
-    if (this.component) {
-      this.component.changeSetting(settingName, value);
+  setSettingValue(settingName, value, dispatchToHistory = true) {
+    //check change value
+    if(this.settings[settingName] !== value) {
+      if (dispatchToHistory && store.getState().templateStatus.status === CONSTANTS.TEMPLATE_NEED_UPDATE)
+        store.dispatch(
+          addHistoryStoreItem("EDIT", {
+            element: this,
+            oldValue: this.settings[settingName],
+            newValue: value,
+            settingName
+          })
+        );
+      // this.settings = {...this.settings};
+      this.settings[settingName] = value;
+      if (this.component) {
+        (async ()=>{
+          this.component.changeSetting(settingName, value);
+        })();
+      }
     }
+
   }
 
   _registerControls() {
@@ -464,6 +530,7 @@ class BaseElement extends ControlStack {
    * */
   setStringStyles(styles) {
     styles = styles.replace(/__selector__/g, this.getSelector());
+    console.log(styles);
     this.settings.stringStyles = styles;
     this.updateStyles();
   }
@@ -553,6 +620,77 @@ class BaseElement extends ControlStack {
       _.unset(this.settings, `altrpDynamicSetting.${dynamicSettingName}`);
     }
   }
+
+  /**
+   * Обновляем стили из настроек другого элемента
+   * @param {{}} settings
+   */
+  pasteStylesFromSettings(settings){
+    if(_.isEmpty(settings) || ! _.isObject(settings)){
+      return
+    }
+    const stylesSettings = this.getStylesSettings(settings);
+    const newSettings = {..._.assign(this.settings, stylesSettings)};
+    this.settings = newSettings;
+
+    editorSetCurrentElement(this.getRoot());
+    editorSetCurrentElement(this);
+    this.component.setState(state => ({...state, settings: newSettings}));
+  }
+
+  /**
+   * Удаляем лишнии свойства, оставляем только свойства стилей
+   * @param {{}} settings
+   */
+  getStylesSettings(settings = {}){
+
+    const contentControllers = controllersManager.getControls(this.getName()).content || [];
+    contentControllers.forEach(section=>{
+      const {controls = []} = section;
+      controls.forEach(control=>{
+        delete settings[control.controlId];
+      })
+    });
+    return settings;
+  }
+
+  /**
+   * Сброс стилей элементов
+   */
+  resetStyles(){
+    let newSettings = {};
+    const contentControllers = controllersManager.getControls(this.getName()).content || [];
+    contentControllers.forEach(section=>{
+      const {controls = []} = section;
+      controls.forEach(control=>{
+        newSettings[control.controlId] = this.settings[control.controlId];
+      })
+    });
+    const styleControllers = controllersManager.getControls(this.getName()).style || [];
+    styleControllers.forEach(section=>{
+      const {controls = []} = section;
+      controls.forEach(control=>{
+        if(control.default){
+          newSettings[control.controlId] = control.default;
+        }
+      })
+    });
+    const advancedControllers = controllersManager.getControls(this.getName()).advanced || [];
+    advancedControllers.forEach(section=>{
+      const {controls = []} = section;
+      controls.forEach(control=>{
+        if(control.default){
+          newSettings[control.controlId] = control.default;
+        }
+      })
+    });
+
+    this.settings = newSettings;
+    editorSetCurrentElement(this.getRoot());
+    editorSetCurrentElement(this);
+    this.component.setState(state => ({...state, settings: newSettings}));
+  }
 }
+
 
 export default BaseElement

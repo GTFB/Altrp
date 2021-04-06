@@ -1,6 +1,7 @@
-export const CHANGE_CURRENT_USER = "CHANGE_CURRENT_USER";
+export const CHANGE_CURRENT_USER = 'CHANGE_CURRENT_USER';
+export const SET_NOTICE_FOR_USER = 'SET_NOTICE_FOR_USER';
+export const SET_USERS_ONLINE = 'SET_USERS_ONLINE';
 export const CHANGE_CURRENT_USER_PROPERTY = "CHANGE_CURRENT_USER_PROPERTY";
-export const UPDATE_USER_NOTIFICATION = "UPDATE_USER_NOTIFICATION";
 
 export function changeCurrentUser(user) {
   return {
@@ -9,16 +10,18 @@ export function changeCurrentUser(user) {
   };
 }
 
+export function setUserNotice(notice){
+  return { type: SET_NOTICE_FOR_USER, notice }
+}
+
+export function setUsersOnline(members){
+  return { type: SET_USERS_ONLINE, members }
+}
+
 export function changeCurrentUserProperty(path, value) {
   return {
     type: CHANGE_CURRENT_USER_PROPERTY,
     path: path || "",
     value: value || ""
-  };
-}
-export function updateUserNotification(notifiction) {
-  return {
-    type: UPDATE_USER_NOTIFICATION,
-    notification: nnotifiction
   };
 }

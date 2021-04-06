@@ -4,12 +4,15 @@ import { ResponsiveScatterPlot } from "@nivo/scatterplot";
 
 import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
 const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+const milkScheme = _.find(Schemes, { value: "milk" }).colors;
+const milkScheme2 = _.find(Schemes, { value: "milk2" }).colors;
 
 import EmptyWidget from "./EmptyWidget";
 
 import { getWidgetData } from "../services/getWidgetData";
 import { customStyle } from "../widgetTypes";
 import { Spinner } from "react-bootstrap";
+import Tooltip from "./d3/TooltipScatter";
 
 import moment from "moment";
 const format = "%d.%m.%Y";
@@ -26,7 +29,13 @@ const PointChart = ({
   precision,
   enableGridX = true,
   enableGridY = true,
-  keyIsDate = false
+  keyIsDate = false,
+  customColorSchemeChecker = false,
+  customColors = [],
+  constantsAxises = [],
+  yScaleMax,
+  widgetID,
+  useCustomTooltips
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -117,8 +126,27 @@ const PointChart = ({
         <ResponsiveScatterPlot
           data={data}
           colors={
-            colorScheme === "regagro" ? regagroScheme : { scheme: colorScheme }
+            customColorSchemeChecker && customColors.length > 0
+              ? customColors
+              : colorScheme === "regagro"
+              ? regagroScheme
+              : colorScheme === "milk"
+              ? milkScheme
+              : colorScheme === "milk2"
+              ? milkScheme2
+              : { scheme: colorScheme }
           }
+          yScale={
+            yScaleMax
+              ? {
+                  max: yScaleMax,
+                  type: "linear"
+                }
+              : {
+                  type: "linear"
+                }
+          }
+          markers={constantsAxises}
           margin={{ top: 50, right: 180, bottom: 50, left: 60 }}
           xFormat={xScaleType === "time" && "time:%d.%m.%Y"}
           nodeSize={nodeSize}
@@ -127,6 +155,13 @@ const PointChart = ({
               ? { type: xScaleType, format: format, precision: precision }
               : { type: xScaleType }
           }
+          tooltip={datum => (
+            <Tooltip
+              datum={datum}
+              enable={useCustomTooltips}
+              widgetID={widgetID}
+            />
+          )}
           enableGridX={enableGridX}
           enableGridY={enableGridY}
           axisBottom={
@@ -139,6 +174,17 @@ const PointChart = ({
               : {
                   tickRotation: tickRotation
                 })
+          }
+          colors={
+            customColorSchemeChecker && customColors.length > 0
+              ? customColors
+              : colorScheme === "regagro"
+              ? regagroScheme
+              : colorScheme === "milk"
+              ? milkScheme
+              : colorScheme === "milk2"
+              ? milkScheme2
+              : { scheme: colorScheme }
           }
           legends={[
             {

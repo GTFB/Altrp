@@ -4,19 +4,26 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  {!!  getFavicons() !!}
+
   <script>
-
+    window.altrp = {
+      version: '{{ getCurrentVersion() }}'
+    };
+    /* <![CDATA[ */
     window.pageStorage = {};
+    window.ALTRP_DEBUG = {!! json_encode( ! ! get_altrp_setting( 'altrp_debug', false ) ) !!};
 
-    var page_id = 1;
-    var page_areas = [];
+    var page_id = {{ $page_id }};
+    var page_areas = {!! $page_areas !!};
 
     if (typeof page_id !== 'undefined' && typeof page_areas !== 'undefined') {
       window.pageStorage[page_id] = {areas:page_areas};
     }
-
+    /* ]]> */
   </script>
   <script>
+    /* <![CDATA[ */
     /**
      * Функция для вывода ошибок в HTML
      * @param msg
@@ -31,6 +38,7 @@
     }
 
     // window.onerror = myErrHandler;
+    /* ]]> */
   </script>
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -68,7 +76,7 @@
   @endif
 </head>
 <body class="front-app-body">
-<div id="front-app" class="front-app {{ 'front-app_admin' }}">
+<div id="front-app" class="front-app {{ $is_admin ? 'front-app_admin' : '' }}">
   {!! isset( $preload_content[ 'content'] ) ? $preload_content['content'] : ''!!}
 </div>
 <script src="{{ altrp_asset( '/modules/front-app/front-app.js', 'http://localhost:3001/' ) }}" defer></script>
@@ -81,8 +89,11 @@ try {
 }
 @endphp
 @if($value)
-  <script>{!! $value !!}</script>
+  <script>
+    /* <![CDATA[ */
+    {!! $value !!}
+    /* ]]> */
+  </script>
 @endif
 </body>
-<link rel="stylesheet" href="{{ asset( '/modules/front-app/front-app.css' ) . '?' . getCurrentVersion() }}" />
 </html>

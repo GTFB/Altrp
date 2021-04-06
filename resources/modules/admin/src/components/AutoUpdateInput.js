@@ -36,7 +36,7 @@ class AutoUpdateInput extends Component {
   }
 
   async componentDidMount(){
-    if(this.props.value !== undefined){
+    if(this.props.value !== undefined || ! this.props.resourceid){
       return;
     }
     let res = await this.resource.get(this.props.resourceid);
@@ -49,7 +49,7 @@ class AutoUpdateInput extends Component {
   }
 
   /**
-   * При нажатии на enter тоже обновдем данные
+   * При нажатии на enter тоже обновим данные
    * @param e
    */
   onKeyDown(e){

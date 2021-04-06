@@ -1,8 +1,9 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { Link, withRouter } from "react-router-dom";
 import AltrpSelect from "../altrp-select/AltrpSelect";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import { titleToName } from "../../js/helpers";
+import HeaderComponent from "./HeaderComponent"
 
 class AddDataSourceForm extends Component {
   state = {
@@ -23,7 +24,8 @@ class AddDataSourceForm extends Component {
       access: {
         roles: [],
         permissions: []
-      }
+      },
+      headers: []
     }
   }
 
@@ -39,7 +41,10 @@ class AddDataSourceForm extends Component {
 
     if (id) {
       const resource = new Resource({ route: '/admin/ajax/data_sources' });
-      resource.get(id).then(value => this.setState({ value, typeIsDisabled: value.type === 'remote' }));
+      resource.get(id).then(value => this.setState({
+        value: { ...value, headers: Object.entries(value.headers || {})},        
+        typeIsDisabled: value.type === 'remote'
+      }));
     }
   }
 
@@ -91,18 +96,55 @@ class AddDataSourceForm extends Component {
     });
   };
 
+  headerDeleteHandler = index => {
+    this.setState(state => {
+      const headers = [...state.value.headers];
+      headers.splice(index, 1);
+      return {
+        ...state,
+        value: { ...state.value, headers }
+      };
+    });
+  };
+
+  headerChangeHandler = (e, index) => {
+    const { name, value } = e.target;
+
+    this.setState(state => {
+      let headers = [...state.value.headers];
+      headers[index][+name] = value;
+      return {
+        ...state,
+        value: { ...state.value, headers }
+      };
+    });
+  };
+
+  headerAddHandler = () => {
+    this.setState(state => {
+      const headers = [...state.value.headers, ["", ""]];
+      return {
+        ...state,
+        value: { ...state.value, headers }
+      };
+    });
+  };
+
   submitHandler = e => {
     e.preventDefault();
     const resource = new Resource({ route: '/admin/ajax/data_sources' });
     const { id } = this.props.match.params;
+    const headers = Object.fromEntries(this.state.value.headers);
+    const data = { ...this.state.value, headers };
 
-    (id ? resource.put(id, this.state.value) : resource.post(this.state.value))
+    (id ? resource.put(id, data) : resource.post(data))
       .then(() => this.props.history.goBack());
   }
 
   render() {
     const { roles, permissions } = this.state.value.access;
     const { rolesOptions, permissionsOptions } = this.state;
+    const { headers } = this.state.value;
     const { id } = this.props.match.params;
 
     return <form className="admin-form" onSubmit={this.submitHandler}>
@@ -204,6 +246,23 @@ class AddDataSourceForm extends Component {
             onChange={e => { this.changeValue(e.target.value, 'api_url') }}
             className="form-control" />
         </div>
+      </div>
+
+      <h2 className="admin-form__subheader centred">Headers</h2>
+
+      {headers && headers.map((item, index) => <Fragment key={index}>
+        {index !== 0 && <hr />}
+        <div className="text-right">
+          <button className="btn btn_failure" type="button" onClick={() => this.headerDeleteHandler(index)}>
+            ✖
+          </button>
+        </div>
+        <HeaderComponent item={item} changeHandler={e => this.headerChangeHandler(e, index)} />
+      </Fragment>)}
+      <div className="centred">
+        <button className="btn btn_success" type="button" onClick={this.headerAddHandler}>
+          + New Header
+        </button>
       </div>
 
       <h2 className="admin-form__subheader centred">Access</h2>

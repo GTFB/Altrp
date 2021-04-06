@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Services\Robots\RobotsService;
+use App\Traits\AuthenticatesUsers;
 use Illuminate\Http\Request;
 
 class LoginController extends Controller
@@ -20,30 +21,33 @@ class LoginController extends Controller
   |
   */
 
-  use AuthenticatesUsers;
+    use AuthenticatesUsers;
 
-  /**
+    /**
    * Where to redirect users after login.
    *
    * @var string
    */
   protected $redirectTo = RouteServiceProvider::ADMIN;
 
-  /**
-   * Create a new controller instance.
-   *
-   * @return void
-   */
-  public function __construct()
+    private $robotsService;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @param RobotsService $robotsService
+     */
+  public function __construct(RobotsService $robotsService)
   {
     $this->middleware( 'guest' )->except( 'logout' );
+    $this->robotsService = $robotsService;
   }
 
-  /**
+    /**
    * Log the user out of the application.
    *
    * @param  \Illuminate\Http\Request $request
-   * @return \Illuminate\Http\Response
+   * @return \Illuminate\Http\JsonResponse
    */
   public function logout( Request $request )
   {
@@ -91,7 +95,6 @@ class LoginController extends Controller
     // to login and redirect the user back to the login form. Of course, when this
     // user surpasses their maximum number of attempts they will get locked out.
     $this->incrementLoginAttempts($request);
-
     return $this->sendFailedLoginResponse($request);
   }
 
@@ -99,7 +102,7 @@ class LoginController extends Controller
    * Send the response after the user was authenticated.
    *
    * @param  \Illuminate\Http\Request  $request
-   * @return \Illuminate\Http\Response
+   * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
    */
   protected function sendLoginResponse(Request $request)
   {
@@ -113,6 +116,13 @@ class LoginController extends Controller
         'success' => true,
         '_token' => csrf_token(),
       ]);
+    }
+
+    $robots = $this->robotsService->getStartConditionRobots('logged_in');
+
+    foreach ($robots as $robot) {
+      if (!$robot->enabled) continue;
+      $this->robotsService->initRobot($robot)->runRobot();
     }
 
     return $this->authenticated( $request, $this->guard()->user() )

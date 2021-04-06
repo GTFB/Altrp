@@ -12,7 +12,8 @@
 @import "altrp-list";
 @import "default-styles";
 @import "./altrp-image-select.scss";
-
+@import "./history-panel.scss";
+@import "../../../../sass/ckeditor.scss";
 
 .editor {
     display: flex;
@@ -156,7 +157,7 @@ button {
             border-radius: 0 2px 2px 0;
         }
     }
-    &.control-group_single .btn:nth-child(n){
+    &.control-group_single .btn:nth-child(n) {
         border-radius: 2px;
     }
 }
@@ -216,6 +217,14 @@ button {
     -ms-user-select: none;
     user-select: none;
 }
+.blocking-layer {
+    position: absolute;
+    width: calc(100vw - 295px);
+    right: 20px;
+    height: 100%;
+    z-index: 999999;
+}
+
 .editor-window {
     max-width: calc(100vw - 275px);
     display: flex;
@@ -428,6 +437,19 @@ button {
     width: 0px;
 }
 .repeater {
+    &-fields{
+        width: 100%;
+      & .control-field-bind{
+        padding-left: 7px;
+        padding-right: 7px;
+        width: 39px;
+      }
+      & .control-field-dimensions{
+        width: 42px;
+        padding-left: 4px;
+        padding-right: 4px;
+      }
+    }
     &-item {
         margin-bottom: 5px;
         &-tools {
@@ -511,8 +533,8 @@ button {
     width: 100%;
     margin-bottom: 5px;
 }
-.controller-media__asset_svg{
-  height: 100%;
+.controller-media__asset_svg {
+    height: 100%;
 }
 .controller-media {
     &-choose {
@@ -670,6 +692,7 @@ button {
 .control-select {
     border-radius: 3px;
     color: #6d7882;
+    background-color: #fff;
     &::after {
         margin: 0;
         padding: 0;
@@ -1147,21 +1170,67 @@ button {
     font-size: 12px;
 }
 .control-color-colorPicker {
-    z-index: 9999;
-    position: absolute;
-    margin: 0px;
-    margin-right: 10px;
-    transform: translateY(60px);
+  z-index: 9999;
+  position: absolute;
+  margin-top: 60px;
+  width: 200px;
+  padding: 10px 10px 0;
+  box-sizing: initial;
+  background: rgb(255, 255, 255);
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0 0 0 1px, rgba(0, 0, 0, 0.15) 0 8px 16px;
+  & .sketch-picker{
+    box-shadow: none!important;
+    padding: 0 !important;
+
+  }
 }
-.sketchPicker-none {
+
+.control-color-hide {
     display: none;
 }
+
 .control-color-header {
     display: flex;
     flex-direction: row;
     align-items: center;
     width: 100%;
     margin-bottom: 10px;
+}
+.control-color-preset-colors{
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -10px;
+  position: relative;
+  padding-top: 5px;
+  border-top: 1px solid $light-light-gray;
+  &-wrapper{
+    width: 16px;
+    height: 16px;
+    margin: 0 10px 10px 0;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NkYGAQYcAP3uCTZhw1gGGYhAGBZIA/nYDCgBDAm9BGDWAAJyRCgLaBCAAgXwixzAS0pgAAAABJRU5ErkJggg==);
+
+  }
+  &__item{
+    background: #fff;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+    position: relative;
+    outline: none;
+    border-radius: 3px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0 0 0 1px inset;
+    &:focus{
+      box-shadow: rgba(0, 0, 0, 0.15) 0 0 0 1px, rgba(0, 0, 0, 0.15) 0 8px 16px;
+    }
+    &_add{
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #fff;
+    }
+  }
 }
 .control-dimensions-header {
     display: flex;
@@ -1840,8 +1909,11 @@ button {
     min-height: 1px;
 }
 
-.editor-content{
-  & .altrp-posts{
-    min-height: 20px;
+.editor-content {
+    & .altrp-posts {
+        min-height: 20px;
+    }
+  & .altrp-element_widget .altrp-table-td > a{
+    pointer-events: none;
   }
 }

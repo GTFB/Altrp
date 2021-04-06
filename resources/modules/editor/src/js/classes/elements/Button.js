@@ -48,6 +48,7 @@ class Button extends BaseElement {
     }
 
     this.startControlSection('button_type_section', {
+      hideOnEmail: true,
       tab: TAB_CONTENT,
       label: 'Button type',
     });
@@ -186,6 +187,7 @@ class Button extends BaseElement {
     actionsControllers(this);
 
     this.startControlSection("form_section", {
+      hideOnEmail: true,
       tab: TAB_CONTENT,
       label: "Form Settings"
     });
@@ -447,6 +449,7 @@ class Button extends BaseElement {
     this.endControlSection();
     //<editor-fold desc="other_actions_on">
     this.startControlSection('other_actions', {
+      hideOnEmail: true,
       tab: TAB_CONTENT,
       label: 'Other Actions',
     });
@@ -533,6 +536,7 @@ class Button extends BaseElement {
     });
 
     this.addControl('position_z_index', {
+      hideOnEmail: true,
       type: CONTROLLER_NUMBER,
       label: 'Z-index',
       default: 0,
@@ -578,6 +582,7 @@ class Button extends BaseElement {
     });
 
     this.addControl('gradient', {
+      hideOnEmail: true,
       type: CONTROLLER_GRADIENT,
       label: 'Gradient',
       default: {
@@ -799,8 +804,7 @@ class Button extends BaseElement {
     }
     );
 
-    this.addControl(
-      'border_width', {
+    this.addControl('border_width', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Width',
       default: {
@@ -820,10 +824,6 @@ class Button extends BaseElement {
     this.addControl('border_color', {
       type: CONTROLLER_COLOR,
       label: 'Border Color',
-      // default: {
-      //   color: "rgb(50,168,82)",
-      //   colorPickedHex: "#32a852",
-      // },
       rules: {
         '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
       },
@@ -846,7 +846,7 @@ class Button extends BaseElement {
           'border-top-left-radius: {{TOP}}{{UNIT}}',
           'border-top-right-radius: {{RIGHT}}{{UNIT}}',
           'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+          'border-bottom-left-radius: {{LEFT}}{{UNIT}}'
         ]
       }
     });
@@ -854,21 +854,6 @@ class Button extends BaseElement {
     this.addControl('style_background_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Shadow',
-      default: {
-        // blur: 0,
-        // horizontal: 0,
-        // vertical: 0,
-        // opacity: 1,
-        // spread: 0,
-        // colorRGB: 'rgb(0, 0, 0)',
-        // color: 'rgb(0, 0, 0)',
-        // colorPickedHex: '#000000',
-        // type: ""
-      },
-      presetColors: [
-        '#eaeaea',
-        '#9c18a8'
-      ],
       rules: {
         '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
       },
@@ -924,6 +909,7 @@ class Button extends BaseElement {
     this.endControlSection();
 
     this.startControlSection("icon_style", {
+      hideOnEmail: true,
       tab: TAB_STYLE,
       label: "Icon"
     });
@@ -945,7 +931,7 @@ class Button extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-btn-icon{{STATE}}': [
+        '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -962,7 +948,8 @@ class Button extends BaseElement {
         colorPickedHex: "#ffffff",
       },
       rules: {
-        '{{ELEMENT}} .altrp-btn-icon path{{STATE}}': 'fill: {{COLOR}};',
+        '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon path': 'fill: {{COLOR}};',
+
       },
     });
 
@@ -970,7 +957,8 @@ class Button extends BaseElement {
       type: CONTROLLER_COLOR,
       label: 'Background Color',
       rules: {
-        '{{ELEMENT}} .altrp-btn-icon svg{{STATE}}': 'background: {{COLOR}};',
+        '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon svg': 'background: {{COLOR}};',
+
       },
     }
     );
@@ -986,16 +974,88 @@ class Button extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        '{{ELEMENT}} .altrp-btn-icon{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .altrp-btn-icon svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .altrp-btn-icon img{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon img': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
       },
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("btn_transition", {
+      hideOnEmail: true,
+      tab: TAB_STYLE,
+      label: "Transition"
+    });
+
+    this.addControl('button_transition_property', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Transition Property',
+      rules: {
+        "{{ELEMENT}} .altrp-btn{{STATE}}": "transition-property: {{VALUE}};"
+      },
+      description: 'Input properties, commas separated'
+    });
+
+    this.addControl("button_transition_duration", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Duration',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        "{{ELEMENT}} .altrp-btn{{STATE}}": "transition-duration: {{SIZE}}s;"
+      }
+    });
+
+    this.addControl('button_transition_timing', {
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          value: "linear",
+          label: "linear"
+        },
+        {
+          value: "ease",
+          label: "ease"
+        },
+        {
+          value: "ease-in",
+          label: "ease-in"
+        },
+        {
+          value: "ease-out",
+          label: "ease-out"
+        },
+        {
+          value: "ease-in-out",
+          label: "ease-in-out"
+        }
+      ],
+      label: 'Transition Timing Function',
+      rules: {
+        "{{ELEMENT}} .altrp-btn{{STATE}}": "transition-timing-function: {{VALUE}};"
+      }
+    });
+
+    this.addControl("button_transition_delay", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transition Delay',
+      units: [],
+      max: 5,
+      min: 0,
+      step: 0.1,
+      rules: {
+        "{{ELEMENT}} .altrp-btn{{STATE}}": "transition-delay: {{SIZE}}s;"
+      }
     });
 
     this.endControlSection();
 
     this.startControlSection(
       'creative_link', {
+      hideOnEmail: true,
       tab: TAB_STYLE,
       label: 'Creative Link',
     }

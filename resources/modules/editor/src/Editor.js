@@ -1,7 +1,9 @@
 import "./sass/editor-style.scss";
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { hot } from "react-hot-loader";
-import { Provider } from "react-redux";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 import Modules from "./js/classes/Modules";
 import WidgetsPanel from "./js/components/WidgetsPanel";
@@ -16,7 +18,6 @@ import AssetsBrowser from "./js/classes/modules/AssetsBrowser";
 import store, { getCurrentElement, getCurrentScreen } from "../src/js/store/store";
 
 
-import DesktopIcon from "./svgs/desktop.svg";
 import Logo from "./svgs/logo.svg";
 import Navigation from "./svgs/navigation.svg";
 import History from "./svgs/history.svg";
@@ -25,16 +26,14 @@ import Settings from "./svgs/settings.svg";
 import Dots from "./svgs/dots.svg";
 import Hamburger from "./svgs/hamburger.svg";
 import { contextMenu } from "react-contexify";
-import DynamicContent from "./js/components/DynamicContent/DynamicContent";
 import { closeDynamicContent } from "./js/store/dynamic-content/actions";
-import { iconsManager } from "../../admin/src/js/helpers";
-import ResponsiveDdMenu from "./js/components/ResponsiveDdMenu";
 import ResponsiveDdFooter from "./js/components/ResponsiveDdFooter";
 import DialogWindow from "./js/components/DialogWindow";
 import {renderAsset} from "../../front-app/src/js/helpers";
 import {changeCurrentUser} from "../../front-app/src/js/store/current-user/actions";
 import Resource from "./js/classes/Resource";
-import appStore from "../../front-app/src/js/store/store";
+import AltrpMeta from "./js/classes/AltrpMeta";
+import {setEditorMeta} from "./js/store/editor-metas/actions";
 /**
  * Главный класс редактора.<br/>
  * Реакт-Компонент.<br/>
@@ -56,20 +55,21 @@ class Editor extends Component {
     };
     this.openPageSettings = this.openPageSettings.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
+    this.showHistoryPanel = this.showHistoryPanel.bind(this);
     this.showWidgetsPanel = this.showWidgetsPanel.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.onClick = this.onClick.bind(this);
-    store.subscribe(this.templateStatus.bind(this));
+    // store.subscribe(this.templateStatus.bind(this));
   }
   /**
    * Метод подписчик на изменение состояния Редактора из Редакс хранилища
    * */
-  templateStatus() {
-    let templateStatus = store.getState().templateStatus.status;
-    if (templateStatus !== this.state.templateStatus) {
-      this.setState({ ...this.state, templateStatus });
-    }
-  }
+  // templateStatus() {
+  //   let templateStatus = store.getState().templateStatus.status;
+  //   if (templateStatus !== this.state.templateStatus) {
+  //     this.setState({ ...this.state, templateStatus });
+  //   }
+  // }
 
   /**
    * Инициализация модулей
@@ -109,6 +109,13 @@ class Editor extends Component {
     });
   }
 
+  showHistoryPanel() {
+    this.setState({
+      ...this.state, 
+      activePanel: "history"
+    })
+  }
+
   /**
    * Сработывает при клике
    */
@@ -146,6 +153,8 @@ class Editor extends Component {
     let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
     currentUser = currentUser.data;
     appStore.dispatch(changeCurrentUser(currentUser));
+    const presetColors = await AltrpMeta.getMetaByName('preset_colors');
+    appStore.dispatch(setEditorMeta(presetColors));
   }
 
   /**
@@ -162,8 +171,8 @@ class Editor extends Component {
    */
   render() {
     let settingsActive = "";
-    let templateClasses = "editor ";
-    if (this.state.templateStatus === CONSTANTS.TEMPLATE_SAVING) {
+    let templateClasses = `editor editor_${store.getState().templateData.template_type}`;
+    if (this.props.templateStatus === CONSTANTS.TEMPLATE_SAVING) {
       templateClasses += " editor_saving";
     }
     if (
@@ -175,10 +184,12 @@ class Editor extends Component {
       settingsActive = " active";
     }
     return (
-      <Provider store={store}>
+        <DndProvider backend={HTML5Backend}>
         <div className={templateClasses}
           onClick={this.onClick}
-          onDragEnd={this.onDragEnd}>
+          onDragEnd={this.onDragEnd}
+          onKeyDown={this.onKeyDown}  
+        >
           <div className="left-panel">
             <div className="editor-top-panel">
               <button
@@ -201,6 +212,7 @@ class Editor extends Component {
             <div className="left-panel-main">
               {this.state.activePanel === "widgets" && <WidgetsPanel />}
               {this.state.activePanel === "settings" && <SettingsPanel />}
+              {this.state.activePanel === "history" && <HistoryPanel />}
             </div>
             <div className="editor-bottom-panel d-flex align-content-center justify-center">
               <button
@@ -212,7 +224,10 @@ class Editor extends Component {
               <button className="btn ">
                 <Navigation className="icon" />
               </button>
-              <button className="btn ">
+              <button 
+                className="btn "
+                onClick={this.showHistoryPanel}
+              >
                 <History className="icon" />
               </button>
               <div className="btn ">
@@ -232,8 +247,14 @@ class Editor extends Component {
           </div>
         </div>
         <AssetsBrowser />
-      </Provider>
+        </DndProvider>
     );
+  }
+}
+
+function mapStateToProps(state) {
+  return {
+    templateStatus: state.templateStatus.status
   }
 }
 
@@ -246,7 +267,7 @@ let _export;
 if (process.env.NODE_ENV === "production") {
   _export = Editor;
 } else {
-  _export = hot(module)(Editor);
+  _export = hot(module)(connect(mapStateToProps)(Editor));
 }
 
 export default _export;

@@ -3,6 +3,7 @@ import '../../sass/section.scss';
 import { connect } from "react-redux";
 import '../../sass/section.scss'
 import {isEditor, redirect} from "../../../../front-app/src/js/helpers";
+import CONSTANTS from "../consts";
 
 class SectionComponent extends Component {
   constructor(props) {
@@ -17,6 +18,9 @@ class SectionComponent extends Component {
     props.element.component = this;
     if (window.elementDecorator) {
       window.elementDecorator(this);
+    }
+    if(props.baseRender){
+      this.render = props.baseRender(this);
     }
   }
 
@@ -44,7 +48,9 @@ class SectionComponent extends Component {
   }
 
   render() {
-    let styles = {};
+    let styles = {
+      maxWidth: '100%',
+    };
     const  background_image  = this.props.element.getSettings('background_image', {});
     const { isScrollEffect, isFixed } = this.props.element.getSettings();
     const isContentBoxed = this.props.element.getSettings().layout_content_width_type === "boxed";
@@ -74,10 +80,12 @@ class SectionComponent extends Component {
     }
     if (widthType === "section_boxed" && !isFixed) {
       sectionClasses.push('altrp-section_section-boxed');
+      delete styles.maxWidth;
     }
 
     if (widthType === "full" && !isFixed) {
       sectionClasses.push('altrp-section--full-width');
+      delete styles.maxWidth;
     }
 
     let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
@@ -86,6 +94,7 @@ class SectionComponent extends Component {
           ElementWrapper={ElementWrapper}
           key={column.getIdForAction()}
           rootElement={this.props.rootElement}
+          baseRender={this.props.baseRender}
           component={column.componentClass}
           element={column}
       />
@@ -94,6 +103,9 @@ class SectionComponent extends Component {
 
     if (this.state.settings.layout_height === "fit") {
       styles.height = "100vh"
+    }
+    if(this.props.currentScreen.name !== CONSTANTS.DEFAULT_BREAKPOINT){
+      styles.flexWrap = 'wrap';
     }
 
     return React.createElement(this.state.settings.layout_html_tag || "div",

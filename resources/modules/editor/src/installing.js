@@ -1,7 +1,13 @@
 import decorate from "./js/decorators/element-component";
 import ElementWrapper from "./js/components/ElementWrapper";
+import {get} from "./js/components/ElementWrapper";
 import _ from "lodash";
+import controllerHistory from "./js/classes/ControllerHistory";
 window._ = _;
+import('../../front-app/src/js/helpers').then(altrpHelpers=>{
+  window.parent.altrpHelpers = altrpHelpers;
+  console.log();
+});
 import("ace-builds").then(ace=>{
   window.ace = ace.default;
   ace.config.set('basePath', '/addons/ace');
@@ -34,6 +40,15 @@ import("ace-builds").then(ace=>{
       callback(null, list);
     }
   };
+  const frameDocument = _.get(document.getElementsByTagName('iframe'), '0.contentWindow.document');
+  console.log(frameDocument);
+  if(frameDocument){
+    frameDocument.onload = ()=>{
+      console.log(frameDocument.head.appendChild(document.querySelector('[data-cke]').cloneNode(true)));
+
+    };
+    console.log(frameDocument.head);
+  }
   langTools.addCompleter(selectorCompleter);
   return import("react-ace");
 }).then(AceEditor=>{
@@ -55,3 +70,5 @@ window.elementDecorator = decorate;
 * */
 
 window.ElementWrapper = ElementWrapper;
+
+

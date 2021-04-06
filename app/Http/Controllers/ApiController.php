@@ -10,6 +10,7 @@ use App\Http\Requests\ApiRequest;
 use App\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -27,6 +28,10 @@ class ApiController extends Controller
     public function index(ApiRequest $request)
     {
         $resources = $this->getModelsAndPageCount($request);
+        //        $parts = explode('\\', $this->modelClass);
+        //        $modelName = array_pop($parts);
+        //        $event = '\\App\\Events\\AltrpEvents\\' . $modelName . 'Event';
+        //        broadcast(new $event($resources['data'][0]));
         return response()->json($resources, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -46,59 +51,59 @@ class ApiController extends Controller
         $indexedColumns = $this->getIndexedColumns($modelName);
         $resource = Str::lower(Str::plural($modelName));
         $order_method = 'orderByDesc';
-        $order_column = $request->get( 'order_by', 'id' );
+        $order_column = $request->get('order_by', 'id');
         $filters = [];
-        if( $request->get( 'filters') ){
-          $_filters = json_decode( $request->get( 'filters' ), true );
-          foreach ( $_filters as $key => $value ) {
-            $filters[$key] = $value;
-          }
+        if ($request->get('filters')) {
+            $_filters = json_decode($request->get('filters'), true);
+            foreach ($_filters as $key => $value) {
+                $filters[$key] = $value;
+            }
         }
-        if( $request->get( 'order' ) === 'ASC'){
-          $order_method = 'orderBy';
+        if ($request->get('order') === 'ASC') {
+            $order_method = 'orderBy';
         }
         if ($page && $limit) {
             $modelsCount = $search
-                ? $this->modelClass::whereLike($indexedColumns, $search)->whereLikeMany( $filters )->toBase()->count()
-                : $this->modelClass::toBase()->whereLikeMany( $filters )->count();
+                ? $this->modelClass::whereLike($indexedColumns, $search)->whereLikeMany($filters)->toBase()->count()
+                : $this->modelClass::toBase()->whereLikeMany($filters)->count();
             $pageCount = ceil($modelsCount / $limit);
             $offset = $limit * ($page - 1);
             $$resource = $search
                 ? $this->modelClass::whereLike($indexedColumns, $search)
-                    ->whereLikeMany( $filters )
-                    ->$order_method( $order_column )
-                    ->skip($offset)
-                    ->take($limit)
-                    ->get()
-                : $this->modelClass::$order_method( $order_column )
-                    ->whereLikeMany( $filters )
-                    ->skip($offset)
-                    ->take($limit)
-                    ->get();
+                ->whereLikeMany($filters)
+                ->$order_method($order_column)
+                ->skip($offset)
+                ->take($limit)
+                ->get()
+                : $this->modelClass::$order_method($order_column)
+                ->whereLikeMany($filters)
+                ->skip($offset)
+                ->take($limit)
+                ->get();
         } else {
             $pageCount = 0;
             $$resource = $search
                 ? $this->modelClass::whereLike($indexedColumns, $search)
-                    ->whereLikeMany( $filters )
-                    ->$order_method( $order_column )
-                    ->get()
-                : $this->modelClass::whereLikeMany( $filters )
-                    ->$order_method( $order_column )
-                    ->get();
+                ->whereLikeMany($filters)
+                ->$order_method($order_column)
+                ->get()
+                : $this->modelClass::whereLikeMany($filters)
+                ->$order_method($order_column)
+                ->get();
         }
         $hasMore = $pageCount > $page;
 
         $model = Model::where('name', $modelName)->first();
-        $relations = Relationship::where([['model_id',$model->id],['always_with',1]])->get()->implode('name',',');
-        $relations = $relations ? explode(',',$relations) : false;
+        $relations = Relationship::where([['model_id', $model->id], ['always_with', 1]])->get()->implode('name', ',');
+        $relations = $relations ? explode(',', $relations) : false;
         if ($relations) {
             $$resource = $$resource->load($relations);
         }
 
-        $res = compact('pageCount' ,'hasMore');
+        $res = compact('pageCount', 'hasMore');
         $res['data'] = $$resource;
-        if( isset( $modelsCount ) ){
-          $res['modelsCount'] = $modelsCount;
+        if (isset($modelsCount)) {
+            $res['modelsCount'] = $modelsCount;
         }
 
         $res['data'] = $this->getRemoteData($model, $res);
@@ -165,7 +170,7 @@ class ApiController extends Controller
      * @param $params
      * @return string|string[]|null
      */
-    protected function replaceUrlDynamicParams($url, $params)
+    public function replaceUrlDynamicParams($url, $params)
     {
         return preg_replace_callback('/\{(.*?)\}/', function ($matches) use ($params) {
             return $params[trim($matches[0], '{}')];
@@ -300,16 +305,18 @@ class ApiController extends Controller
         $res = [];
         $files = [];
         foreach ($_files as $file) {
-            if($file->getSize() < config( 'filesystems.max_file_size')) {
+            if ($file->getSize() < config('filesystems.max_file_size')) {
                 $files[] = $file;
             }
         }
         foreach ($files as $file) {
             $media = new Media();
             $media->media_type = $file->getClientMimeType();
-            $media->author = auth()->user()->id;
-            $media->filename =  $file->store('media/' . date("Y") . '/' . date("m" ),
-                ['disk' => 'public'] );
+            $media->author = auth()->user()->id ?? null;
+            $media->filename =  $file->store(
+                'media/' . date("Y") . '/' . date("m"),
+                ['disk' => 'public']
+            );
             $media->url =  Storage::url($media->filename);
             $media->save();
             $res[] = $media;
@@ -317,57 +324,71 @@ class ApiController extends Controller
         return array_reverse($res);
     }
 
-  /**
-   * Список опций для селекта
-   * @param ApiRequest $request
-   */
-  public function options( ApiRequest $request )
-  {
-
-    $filters = [];
-    if( $request->get( 'filters') ){
-      $_filters = json_decode( $request->get( 'filters' ), true );
-      foreach ( $_filters as $key => $value ) {
-        $filters[$key] = $value;
-      }
-    }
     /**
-     * @var \App\AltrpModels\test $model
+     * Список опций для селекта
+     * @param ApiRequest $request
      */
-    $model = new $this->modelClass();
-    $label_name = $model->getLabelColumnName();
-    $title_name = $model->getTitleColumnName();
-    if( ! $request->get( 's' ) ){
-      if( ! count( $filters ) ){
-        $options = $model->all();
-      } else {
-        $options = $model->whereLikeMany( $filters );
-      }
-    } else {
-      $options = $model->where( 'id', 'like', '%' . $request->get( 's' ) . '%' );
+    public function options(ApiRequest $request)
+    {
 
-      if( $title_name !== 'id' ){
-        $options->orWhere( $title_name, 'like', '%' . $request->get( 's' ) . '%' );
-      }
-      if( $title_name !== $label_name ){
-        $options->orWhere( $label_name, 'like', '%' . $request->get( 's' ) . '%' );
-      }
-      $options = $options->whereLikeMany( $filters );
-//      echo '<pre style="padding-left: 200px;">';
-//      var_dump( $filters );
-//      echo '</pre>';
+        $filters = [];
+        if ($request->get('filters')) {
+            $_filters = json_decode($request->get('filters'), true);
+            foreach ($_filters as $key => $value) {
+                $filters[$key] = $value;
+            }
+        }
+        /**
+         * @var \App\AltrpModels\test $model
+         */
+        $model = new $this->modelClass();
+        $label_name = $model->getLabelColumnName();
+        $title_name = $model->getTitleColumnName();
+        if (!$request->get('s')) {
+            if (!count($filters)) {
+                $options = $model->all();
+            } else {
+                $options = $model->whereLikeMany($filters);
+            }
+        } else {
+            $options = $model->where('id', 'like', '%' . $request->get('s') . '%');
 
-      $options = $options->get();
+            if ($title_name !== 'id') {
+                $options->orWhere($title_name, 'like', '%' . $request->get('s') . '%');
+            }
+            if ($title_name !== $label_name) {
+                $options->orWhere($label_name, 'like', '%' . $request->get('s') . '%');
+            }
+            $options = $options->whereLikeMany($filters);
+            //      echo '<pre style="padding-left: 200px;">';
+            //      var_dump( $filters );
+            //      echo '</pre>';
+
+            $options = $options->get();
+        }
+        $_options = [];
+
+        foreach ($options as $option) {
+
+            $_options[] = [
+                'value' => $option->id,
+                'label' => $option->$label_name ? $option->$label_name : $option->id,
+            ];
+        }
+        return response()->json($_options, 200, [], JSON_UNESCAPED_UNICODE);
     }
-    $_options = [];
 
-    foreach ( $options as $option ) {
-
-      $_options[] = [
-        'value' => $option->id,
-        'label' => $option->$label_name ? $option->$label_name : $option->id,
-      ];
+    /**
+     * Захэшировать пароль, если он существует в атрибутах
+     * @param $table
+     * @param array $attributes
+     * @return array
+     */
+    protected function hashPasswordAttributeIfExists($table, array $attributes)
+    {
+        if (isset($attributes['password']) && $table == 'users') {
+            $attributes['password'] = Hash::make($attributes['password']);
+        }
+        return $attributes;
     }
-    return response()->json( $_options, 200, [], JSON_UNESCAPED_UNICODE );
-  }
 }

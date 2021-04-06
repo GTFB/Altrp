@@ -1,5 +1,12 @@
 import CONSTANTS from "../../../../editor/src/js/consts";
-import {altrpRandomId, getMediaQueryByName, isEditor, replaceContentWithData} from "../helpers";
+import {
+  altrpRandomId,
+  getMediaQueryByName,
+  getResponsiveSetting,
+  isEditor,
+  replaceContentWithData,
+  valueReplacement
+} from "../helpers";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {addFont} from "../store/fonts-storage/actions";
 
@@ -122,9 +129,9 @@ class FrontElement {
       } catch(e){
         console.error(e);
       }
-      if(this.getName() === 'button'){
-        return;
-      }
+      // if(this.getName() === 'button'){
+      //   return;
+      // }
     }
 
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getFormId()){
@@ -299,6 +306,9 @@ class FrontElement {
     {
       return _.cloneDeep(this.settings);
     }
+    if(_.get(this.settings, settingName) === false || _.get(this.settings, settingName) === 0){
+      return _.get(this.settings, settingName);
+    }
     return _.get(this.settings, settingName) || _default;
   }
   updateStyles(){
@@ -430,11 +440,17 @@ class FrontElement {
     if(this.getName() !== 'input'){
       return true;
     }
-    return ! (this.getSettings('content_required') && ! this.getValue());
+    if(! this.getSettings('content_required')){
+      return true;
+    }
+    if(_.has(this, 'maskIsValid')){
+      return this.getValue() && this.maskIsValid;
+    }
+    return this.getValue();
   }
 
   /**
-   * Проверяет рекурсивно (проверяет всех предков) виден ли элмент свойство elementDisplay пропсов компонента
+   * Проверяет рекурсивно (проверяет всех предков) виден ли элемент свойство elementDisplay пропсов компонента
    * @return {boolean}
    */
   elementIsDisplay(){
@@ -461,6 +477,7 @@ class FrontElement {
     if(! this.elementIsDisplay()){
       return null;
     }
+    const settings = this.getSettings();
     let value = this.component.state.value;
     /**
      * Если значение динамическое и не менялось в виджете,
@@ -469,11 +486,23 @@ class FrontElement {
     if(value && value.dynamic){
       value = this.getContent('content_default_value')
     }
-    /**
-     * Если нужен массив
-     */
-    if(this.getSettings('content_type') === 'checkbox'){
-      value = _.isArray(value) ? value : (value ? [value] : []);
+    switch (this.getSettings('content_type')){
+      /**
+       * Если нужен массив
+       */
+      case 'checkbox':{
+        value = _.isArray(value) ? value : (value ? [value] : []);
+      }
+        break;
+      case 'accept':{
+        let trueValue = this.getSettings('accept_checked') || true;
+        let falseValue = this.getSettings('accept_unchecked') || false;
+        falseValue = valueReplacement(falseValue);
+        trueValue = valueReplacement(trueValue);
+        value = value ? trueValue : falseValue;
+      }
+        break;
+
     }
     return value;
   }
@@ -693,22 +722,44 @@ class FrontElement {
 
   /**
    * значение настройки в зависимости от разрешения
-   * @param settingName
+   * @param {string} settingName
+   * @param {string} elementState
    * @param _default
    * @return {*}
    */
-  getResponsiveSetting(settingName, _default){
-    let {currentScreen} = appStore.getState();
-    if(currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT){
-      return this.getSettings(settingName, _default)
+  getResponsiveSetting(settingName, elementState = '', _default){
+    return getResponsiveSetting(this.getSettings(), settingName, elementState, _default)
+  }
+
+  /**
+   * Возвращает текущий тип шаблона
+   * @return {string}
+   */
+  getTemplateType(){
+    const rootElement = this.getRoot();
+    return rootElement.templateType || 'content';
+  }
+
+  /**
+   * Обновляем настройки элемента на фронте с обновлением компонента
+   * @param value
+   * @param settingName
+   */
+  updateSetting(value, settingName = ''){
+    let newSettings;
+    if(! settingName && _.isObject(value)){
+       newSettings = {..._.assign(this.settings, value)};
     }
-    let suffix = currentScreen.name;
-    let _settingName = `${settingName}_${suffix}`;
-    let settings = this.getSettings(_settingName);
-    if(! settings){
-      settings = this.getSettings(settingName);
+    if(settingName){
+      newSettings = {...this.settings};
+      _.set(newSettings, settingName, value);
     }
-    return settings;
+    if(newSettings){
+      this.settings = newSettings;
+      if(this.component){
+        this.component.setState(state => ({...state, settings: newSettings}));
+      }
+    }
   }
 }
 

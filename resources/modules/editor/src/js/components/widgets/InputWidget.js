@@ -7,7 +7,7 @@ import {
   parseURLTemplate,
   replaceContentWithData,
   sortOptions,
-  renderAssetIcon
+  renderAssetIcon, valueReplacement
 } from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
@@ -17,15 +17,42 @@ import moment from "moment";
 const CKeditor = React.lazy(() => import("../ckeditor/CKeditor"));
 import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 const AltrpInput = React.lazy(() => import("../altrp-input/AltrpInput"));
+import styled from 'styled-components';
+
+const AltrpFieldContainer = styled.div`
+  ${({settings:{
+  content_label_position_type
+  }})=>{
+    switch (content_label_position_type){
+      case 'left':
+      {
+        return 'display: flex'
+      }
+      case 'right':
+      {
+        return 'display:flex;flex-direction:row-reverse;justify-content:flex-end;'
+      }
+    }
+  return '';
+  }}
+`;
+
 
 class InputWidget extends Component {
   constructor(props) {
     super(props);
+    props.element.component = this;
+    if (window.elementDecorator) {
+      window.elementDecorator(this);
+    }
     this.onChange = this.onChange.bind(this);
 
     this.defaultValue =
-      props.element.getSettings().content_default_value ||
-      (props.element.getSettings().select2_multiple ? [] : "");
+        this.getContent("content_default_value") ||
+      (this.valueMustArray() ? [] : "");
+    if(this.valueMustArray() && ! _.isArray(this.defaultValue)){
+      this.defaultValue = [];
+    }
     this.state = {
       settings: { ...props.element.getSettings() },
       value: this.defaultValue,
@@ -35,17 +62,26 @@ class InputWidget extends Component {
       paramsForUpdate: null
     };
     this.altrpSelectRef = React.createRef();
-    if (props.element.getSettings("content_default_value")) {
+    if (this.getContent("content_default_value")) {
       this.dispatchFieldValueToStore(
-        props.element.getSettings("content_default_value")
+          this.getContent("content_default_value")
       );
-    }
-    props.element.component = this;
-    if (window.elementDecorator) {
-      window.elementDecorator(this);
     }
   }
 
+  /**
+   * В некоторых случаях значение поля должно быть массивом
+   * @return {boolean}
+   */
+  valueMustArray(){
+    if((["file", "image_select", 'checkbox'].indexOf(this.props.element.getSettings('content_type')) !== -1)){
+      return true;
+    }
+    if(this.props.element.getSettings('content_type') === 'select2' && this.props.element.getSettings('select2_multiple')){
+      return true
+    }
+    return false;
+  }
   /**
    * Чистит значение
    */
@@ -132,6 +168,7 @@ class InputWidget extends Component {
     /**
      * Если динамическое значение загрузилось,
      * то используем this.getContent для получение этого динамического значения
+     * старые динамические данные
      * */
     if (
       _.get(value, "dynamic") &&
@@ -147,7 +184,7 @@ class InputWidget extends Component {
      */
     if (
       prevProps &&
-      !prevProps.currentModel.getProperty("altrpModelUpdated") &&
+      ! prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
       value = this.getContent("content_default_value");
@@ -162,7 +199,7 @@ class InputWidget extends Component {
     if (
       this.props.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
-      !this.state.contentLoaded
+      ! this.state.contentLoaded
     ) {
       value = this.getContent("content_default_value");
       this.setState(
@@ -193,7 +230,7 @@ class InputWidget extends Component {
       return `/ajax/models/${url}_options`;
     }
     if (url.indexOf("{{") !== -1) {
-      url = replaceContentWithData();
+      url = replaceContentWithData(url);
     }
     return url;
   }
@@ -238,10 +275,10 @@ class InputWidget extends Component {
       }
     }
     /**
-     * Если обновилась модель, то пробрасываем в стор новое значение
+     * Если обновилась модель, то пробрасываем в стор новое значение (старый источник диамических данных)
      */
     if (
-      !_.isEqual(this.props.currentModel, prevProps.currentModel) &&
+      ! _.isEqual(this.props.currentModel, prevProps.currentModel) &&
       this.state.value &&
       this.state.value.dynamic
     ) {
@@ -260,8 +297,6 @@ class InputWidget extends Component {
     }
     if (content_options && !model_for_options) {
       let options = parseOptionsFromSettings(content_options);
-      // console.log(options);
-      // console.log(this.state.options);
       if (!_.isEqual(options, this.state.options)) {
         this.setState(state => ({ ...state, options }));
       }
@@ -280,16 +315,26 @@ class InputWidget extends Component {
     let content_calculation = this.props.element.getSettings(
       "content_calculation"
     );
-    if (! content_calculation) {
-      return;
-    }
+    const altrpforms = this.props.formsStore;
     const fieldName = this.props.element.getFieldId();
     const formId = this.props.element.getFormId();
+    if (! content_calculation) {
+      /**
+       * Обновить значение, если formsStore изменилось из другого компонента
+       */
+      const path = `${formId}.${fieldName}`;
+      if((this.props.formsStore !== prevProps.formsStore) && _.get(altrpforms, path) !== this.state.value){
+        this.setState(state=>({
+            ...state,
+          value: _.get(altrpforms, path),
+        }))
+      }
+      return;
+    }
 
     const prevContext = {};
 
     const altrpdata = this.props.currentDataStorage.getData();
-    const altrpforms = this.props.formsStore;
     const altrpmodel = this.props.currentModel.getData();
     const altrpuser = this.props.currentUser.getData();
     const altrppagestate = this.props.altrpPageState.getData();
@@ -377,7 +422,7 @@ class InputWidget extends Component {
         }
       );
     } catch (e) {
-      console.error(e, this.props.element.getId());
+      console.error('Evaluate error in Input' + e.message, this.props.element.getId());
     }
   }
 
@@ -434,6 +479,8 @@ class InputWidget extends Component {
    */
   onChange(e, editor = null) {
     let value = "";
+    let dispatchedValue;
+    const settings = this.props.element.getSettings();
     if (e && e.target) {
       if (this.props.element.getSettings("content_type") === "checkbox") {
         let inputs = document.getElementsByName(e.target.name);
@@ -443,6 +490,13 @@ class InputWidget extends Component {
             value.push(input.value);
           }
         });
+      } else if(settings.content_type === 'accept'){
+        value = ! this.state.value;
+        let trueValue = this.props.element.getSettings('accept_checked') || true;
+        let falseValue = this.props.element.getSettings('accept_unchecked') || false;
+        falseValue = valueReplacement(falseValue);
+        trueValue = valueReplacement(trueValue);
+        dispatchedValue = value ? trueValue : falseValue;
       } else {
         value = e.target.value;
       }
@@ -467,7 +521,7 @@ class InputWidget extends Component {
     }
     if (
       this.props.element.getSettings("content_options_nullable") &&
-      e.value === "<null>"
+      e && e.value === "<null>"
     ) {
       value = null;
     }
@@ -493,7 +547,7 @@ class InputWidget extends Component {
             this.state.settings.content_type
           ) === -1
         ) {
-          this.dispatchFieldValueToStore(value, true);
+          this.dispatchFieldValueToStore( dispatchedValue !== undefined ? dispatchedValue : value, true);
         }
       }
     );
@@ -512,6 +566,30 @@ class InputWidget extends Component {
     }
     return options;
   }
+
+  /**
+   * Для действие по фокусу
+   * @param e
+   * @return {Promise<void>}
+   */
+
+  onFocus = async (e) => {
+    const focus_actions = this.props.element.getSettings('focus_actions');
+
+    if (focus_actions && ! isEditor()) {
+      const actionsManager = (
+          await import(
+              "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+              )
+      ).default;
+      await actionsManager.callAllWidgetActions(
+          this.props.element.getIdForAction(),
+          'focus',
+          focus_actions,
+          this.props.element
+      );
+    }
+  };
   /**
    * Потеря фокуса для оптимизации
    * @param  e
@@ -528,7 +606,7 @@ class InputWidget extends Component {
     if (_.get(editor, 'getData')) {
       this.dispatchFieldValueToStore(editor.getData(), true);
     }
-    if (this.props.element.getSettings("actions", []) && !isEditor()) {
+    if (this.props.element.getSettings('actions', []) && ! isEditor()) {
       const actionsManager = (
         await import(
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
@@ -547,7 +625,7 @@ class InputWidget extends Component {
    * @param {*} value
    * @param {boolean} userInput true - имзенилось пользователем
    */
-  dispatchFieldValueToStore = (value, userInput = false) => {
+  dispatchFieldValueToStore = async (value, userInput = false) => {
     let formId = this.props.element.getFormId();
     let fieldName = this.props.element.getFieldId();
     if (fieldName.indexOf("{{") !== -1) {
@@ -557,6 +635,23 @@ class InputWidget extends Component {
       this.props.appStore.dispatch(
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
+      if(userInput){
+        const change_actions = this.props.element.getSettings('change_actions');
+
+        if (change_actions && ! isEditor()) {
+          const actionsManager = (
+              await import(
+                  "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+                  )
+          ).default;
+          await actionsManager.callAllWidgetActions(
+              this.props.element.getIdForAction(),
+              'change',
+              change_actions,
+              this.props.element
+          );
+        }
+      }
     }
   };
 
@@ -630,16 +725,48 @@ class InputWidget extends Component {
       this.setState(state => ({ ...state, isDisabled: false }));
     }
   };
+  shouldComponentUpdate(nextProps){
+    // console.log(nextProps);
+
+    // console.log(nextProps.ElementWrapper=== this.props.ElementWrapper);
+    // console.log(nextProps.altrpMeta=== this.props.altrpMeta);
+    // console.log(nextProps.altrpPageState=== this.props.altrpPageState);
+    // console.log(nextProps.altrpresponses=== this.props.altrpresponses);
+    // console.log(nextProps.appStore=== this.props.appStore);
+    // console.log(nextProps.baseRender=== this.props.baseRender);
+    // console.log(nextProps.children=== this.props.children);
+    // console.log(nextProps.currentDataStorage=== this.props.currentDataStorage);
+    // console.log(nextProps.currentModel=== this.props.currentModel);
+    // console.log(nextProps.currentScreen=== this.props.currentScreen);
+    // console.log(nextProps.currentUser=== this.props.currentUser);
+    // console.log(nextProps.element=== this.props.element);
+    // console.log(nextProps.elementDisplay=== this.props.elementDisplay);
+    // console.log(nextProps.formsStore=== this.props.formsStore);
+    // console.log(nextProps.match=== this.props.match);
+    // console.log(nextProps.match);
+    // console.log(nextProps.rootElement=== this.props.rootElement);
+    // console.log(nextProps.rootElement);
+    // console.log(nextProps.updateToken=== this.props.updateToken);
+    return true;
+  }
+  /**
+   * Взовращает имя для атрибута name
+   * @return {string}
+   */
+  getName(){
+    return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`
+  }
 
   render() {
     let label = null;
+    const settings = this.props.element.getSettings();
     const {
       options_sorting,
       content_readonly,
       image_select_options,
       select2_multiple: isMultiple,
       label_icon
-    } = this.props.element.getSettings();
+    } = settings;
 
     let value = this.state.value;
 
@@ -658,7 +785,8 @@ class InputWidget extends Component {
     }
     let classLabel = "";
     let styleLabel = {};
-    switch (this.state.settings.content_label_position_type) {
+    const content_label_position_type = this.props.element.getResponsiveSetting('content_label_position_type');
+    switch (content_label_position_type) {
       case "top":
         styleLabel = {
           marginBottom: this.state.settings.label_style_spacing
@@ -737,6 +865,8 @@ class InputWidget extends Component {
           input = (
             <select
               value={value || ""}
+              onFocus={this.onFocus}
+              name={this.getName()}
               onChange={this.onChange}
               onBlur={this.onBlur}
               onKeyDown={this.handleEnter}
@@ -805,6 +935,9 @@ class InputWidget extends Component {
           />
         );
         break;
+      case "accept":
+        input = this.renderAcceptInput();
+        break;
       default: {
         const isClearable = this.state.settings.content_clearable;
         const isDate = this.state.settings.content_type === "date";
@@ -824,8 +957,9 @@ class InputWidget extends Component {
             <div className="altrp-input-wrapper">
               <AltrpInput
                 type={this.state.settings.content_type}
-                name={this.props.element.getFieldId()}
+                name={this.getName()}
                 value={value || ""}
+                element={this.props.element}
                 readOnly={content_readonly}
                 autoComplete={autocomplete}
                 placeholder={this.state.settings.content_placeholder}
@@ -836,6 +970,8 @@ class InputWidget extends Component {
                 onKeyDown={this.handleEnter}
                 onChange={this.onChange}
                 onBlur={this.onBlur}
+                onFocus={this.onFocus}
+
                 id={this.state.settings.position_css_id}
               />
               {isClearable && (
@@ -852,27 +988,51 @@ class InputWidget extends Component {
       }
     }
     return (
-      <div
+      <AltrpFieldContainer
+          settings={settings}
         className={
           this.state.settings.content_type !== "image_select"
             ? "altrp-field-container "
             : "" + classLabel
         }
       >
-        {this.state.settings.content_label_position_type == "top" ? label : ""}
-        {this.state.settings.content_label_position_type == "left" ? label : ""}
-        {this.state.settings.content_label_position_type == "absolute"
+        {content_label_position_type === "top" ? label : ""}
+        {content_label_position_type === "left" ? label : ""}
+        {content_label_position_type === "right" ? label : ""}
+        {content_label_position_type === "absolute"
           ? label
           : ""}
         {/* .altrp-field-label-container */}
         {input}
-        {this.state.settings.content_label_position_type == "bottom"
+        {content_label_position_type === "bottom"
           ? label
           : ""}
-      </div>
+      </AltrpFieldContainer>
     );
   }
+  /**
+   * Выводит input type=accept
+   */
+  renderAcceptInput(){
+    const settings = this.props.element.getSettings();
+    return <div
+        className={`altrp-field-option ${this.state.value ? "active" : ""}`}
+    >
+              <span className="altrp-field-option-span">
+                <input
+                    type="checkbox"
+                    name={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
+                    className={`altrp-field-option__input ${
+                        this.state.value ? "active" : ""
+                        }`}
+                    onChange={this.onChange}
+                    checked={! ! this.state.value}
+                    id={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
+                />
+              </span>
 
+    </div>
+  }
   /**
    * Выводит input type=checkbox|radio
    */
@@ -1024,6 +1184,7 @@ class InputWidget extends Component {
     }
     const select2Props = {
       className: "altrp-field-select2",
+      onFocus: this.onFocus,
       element: this.props.element,
       classNamePrefix: this.props.element.getId() + " altrp-field-select2",
       options,
@@ -1055,7 +1216,7 @@ class InputWidget extends Component {
           onBlur={this.onBlur}
           changeText={this.dispatchFieldValueToStore}
           text={this.getContent("content_default_value")}
-          name={this.props.element.getFieldId()}
+          name={this.getName()}
           readOnly={this.getContent("read_only")}
         />
       </Suspense>

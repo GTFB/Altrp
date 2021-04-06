@@ -13,15 +13,15 @@ class CreateMediaTable extends Migration
    */
   public function up()
   {
-    Schema::create( 'media', function ( Blueprint $table ) {
-      $table->bigIncrements( 'id' );
+    Schema::create('altrp_media', function (Blueprint $table) {
+      $table->bigIncrements('id');
       $table->timestamps();
       $table->softDeletes();
-      $table->bigInteger( 'author' )->nullable()->index();
-      $table->string( 'filename' );
-      $table->string( 'url' );
-      $table->string( 'media_type', 55 )->index()->default( 'image' );
-    } );
+      $table->bigInteger('author')->nullable()->index();
+      $table->string('filename');
+      $table->string('url');
+      $table->string('media_type', 55)->index()->default('image');
+    });
   }
 
   /**
@@ -31,6 +31,6 @@ class CreateMediaTable extends Migration
    */
   public function down()
   {
-    Schema::dropIfExists( 'media' );
+    Schema::dropIfExists('altrp_media');
   }
 }

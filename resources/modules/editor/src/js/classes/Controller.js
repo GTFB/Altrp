@@ -23,6 +23,7 @@ class Controller {
           this.rules.push(newRule);
           let value = currentElement.getSettings(this.getSettingName());
           if (value) {
+            // console.log(this.getSettingName(), value)
             newRule.insertValue(value);
           }
         }
@@ -57,7 +58,7 @@ class Controller {
      * @member {BaseElement} currentElement
      * */
     let currentElement = getCurrentElement();
-    if (!this.data.repeater) {
+    if (! this.data.repeater) {
       if (updateElement) {
         currentElement.setSettingValue(this.getSettingName(), value);
       }
@@ -87,9 +88,10 @@ class Controller {
        */
       this.data.repeater.changeValue(
         this.data.itemIndex,
-        this.data.controlId,
+        this.data.controlId + getElementSettingsSuffix(this, true),
         value
       );
+      // console.error(this.data.controlId + getElementSettingsSuffix(this, true));
     }
     if (this.getSettingName() === "element_css_editor") {
       currentElement.setStringStyles(value);

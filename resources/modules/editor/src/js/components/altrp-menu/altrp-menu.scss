@@ -259,7 +259,7 @@
     display: flex;
 }
 
-.altrp-nav-menu-dropdown-button-icon {
+.altrp-nav-menu-dropdown-button svg {
     height: 20px;
     width: 20px;
 }
@@ -397,3 +397,10 @@
     flex-direction: row-reverse;
 }
 
+.altrp-nav-menu-li-animation-text {
+    transition: 0.4s;
+}
+
+.altrp-nav-menu-li-animation-text:hover {
+    transform: scale(1.4);
+}

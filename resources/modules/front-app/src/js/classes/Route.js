@@ -10,6 +10,7 @@ class Route {
     this.path = data.path;
     this.model = data.model;
     this.models = data.models;
+    this.parent_page_id = data.parent_page_id;
     if (!this.models) {
       this.models = data.model ? [data.model] : [];
     }

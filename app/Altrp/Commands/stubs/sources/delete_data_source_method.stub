@@ -2,6 +2,7 @@
     {
         $url = "{{url}}";
         $response = \Curl::to($url)
+                    ->withHeaders({{headers}})
                     ->asJson()
                     ->delete();
         return response()->json($response, 200, [], JSON_UNESCAPED_UNICODE);

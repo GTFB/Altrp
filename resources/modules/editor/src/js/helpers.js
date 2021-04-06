@@ -1,6 +1,7 @@
 import { getCurrentScreen, getElementState } from "./store/store";
 import { isEditor } from "../../../front-app/src/js/helpers";
 import CONSTANTS from "./consts";
+import controllerHistory from "./classes/ControllerHistory";
 
 export function getTemplateId() {
   return new URL(window.location).searchParams.get("template_id");
@@ -97,23 +98,31 @@ export function iconsManager() {
  * Генерирует суфикс для всех настроек
  * на основе elementState и разврешения
  * @param {Controller} controller
+ * @param {boolean} ignoreResponse
  * @return {string}
  */
-export function getElementSettingsSuffix(controller) {
+export function getElementSettingsSuffix(controller, ignoreResponse = false) {
   let suffix_1 = getElementState().value;
+  if(controller.type === 'repeater'){
+    suffix_1 = '';
+  }
   let suffix_2 =
     getCurrentScreen().name === CONSTANTS.DEFAULT_BREAKPOINT
       ? ""
       : getCurrentScreen().name;
+  if(ignoreResponse){
+    suffix_2 = '';
+  }
   if (!(suffix_2 || suffix_1)) {
     return "";
   }
-  return `_${getElementState().value}_${suffix_2}`;
+  return `_${controller.stateless ? '' : getElementState().value}_${suffix_2}`;
 }
 
 /**
  * Конвертируем RGBA в HEX формат
- * @param {String} строка в формате CSS-правила
+ * @param {String} URLTemplate строка в формате CSS-правила
+ * @param {{}} object
  * @return {string}
  */
 export function parseURLTemplate(URLTemplate, object = {}) {
@@ -140,4 +149,3 @@ export function rgb2hex(rgb) {
         ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2)
     : "";
 }
-

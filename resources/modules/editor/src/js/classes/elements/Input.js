@@ -119,6 +119,10 @@ class Input extends BaseElement {
           label: "Checkbox"
         },
         {
+          value: "accept",
+          label: "Accept"
+        },
+        {
           value: "textarea",
           label: "Textarea"
         },
@@ -127,6 +131,22 @@ class Input extends BaseElement {
           label: "wysiwyg"
         }
       ]
+    });
+
+    this.addControl("accept_checked", {
+      type: CONTROLLER_TEXT,
+      label: "Accept Checked Value",
+      conditions: {
+        content_type: ["accept",]
+      },
+    });
+
+    this.addControl("accept_unchecked", {
+      type: CONTROLLER_TEXT,
+      label: "Accept Unchecked Value",
+      conditions: {
+        content_type: ["accept",]
+      },
     });
 
     this.addControl("invalid_email_message", {
@@ -140,19 +160,19 @@ class Input extends BaseElement {
       label: "Resize",
       options: [
         {
-          label: "both",
+          label: "Both",
           value: "both"
         },
         {
-          label: "none",
+          label: "None",
           value: "none"
         },
         {
-          label: "horizontal",
+          label: "Horizontal",
           value: "horizontal"
         },
         {
-          label: "vertical",
+          label: "Vertical",
           value: "vertical"
         }
       ],
@@ -335,6 +355,9 @@ class Input extends BaseElement {
         }
       ],
       label: "Background Position",
+      conditions: {
+        content_type: ["image_select"]
+      },
       rules: {
         "{{ELEMENT}} .altrp-image-select img{{STATE}}":
           "object-position: {{VALUE}};"
@@ -370,6 +393,10 @@ class Input extends BaseElement {
         {
           value: "left",
           label: "Left"
+        },
+        {
+          value: "right",
+          label: "Right"
         },
         {
           value: "absolute",
@@ -636,7 +663,11 @@ class Input extends BaseElement {
 
     this.endControlSection();
 
-    actionsControllers(this);
+    actionsControllers(this, 'Blur Actions');
+    
+    actionsControllers(this, 'Focus Actions', 'focus_');
+
+    actionsControllers(this, 'Change Actions', 'change_');
 
     // this.startControlSection('logic_section', {
     //   tab: TAB_CONTENT,
@@ -661,58 +692,58 @@ class Input extends BaseElement {
     // });
     //
     // this.endControlSection();
-
-    this.startControlSection("form_condition_display", {
-      tab: TAB_CONTENT,
-      label: "Field Condition"
-    });
-
-    this.addControl("form_condition_display_on", {
-      type: CONTROLLER_SELECT,
-      label: "Display on",
-      responsive: false,
-      options: [
-        {
-          label: "All Conditions Met",
-          value: "AND"
-        },
-        {
-          label: "Any Condition Met",
-          value: "OR"
-        }
-      ],
-      default: "AND"
-    });
-
-    const formConditionsRepeater = new Repeater();
-
-    formConditionsRepeater.addControl("field_id", {
-      responsive: false,
-      dynamic: false,
-      label: "Field ID"
-    });
-
-    formConditionsRepeater.addControl("operator", {
-      type: CONTROLLER_SELECT,
-      responsive: false,
-      default: "empty",
-      options: CONDITIONS_OPTIONS
-    });
-
-    formConditionsRepeater.addControl("value", {
-      dynamic: false,
-      responsive: false,
-      label: "Value"
-    });
-
-    this.addControl("form_conditions", {
-      label: "Conditions",
-      type: CONTROLLER_REPEATER,
-      fields: formConditionsRepeater.getControls(),
-      default: []
-    });
-
-    this.endControlSection();
+    //
+    // this.startControlSection("form_condition_display", {
+    //   tab: TAB_CONTENT,
+    //   label: "Field Condition"
+    // });
+    //
+    // this.addControl("form_condition_display_on", {
+    //   type: CONTROLLER_SELECT,
+    //   label: "Display on",
+    //   responsive: false,
+    //   options: [
+    //     {
+    //       label: "All Conditions Met",
+    //       value: "AND"
+    //     },
+    //     {
+    //       label: "Any Condition Met",
+    //       value: "OR"
+    //     }
+    //   ],
+    //   default: "AND"
+    // });
+    //
+    // const formConditionsRepeater = new Repeater();
+    //
+    // formConditionsRepeater.addControl("field_id", {
+    //   responsive: false,
+    //   dynamic: false,
+    //   label: "Field ID"
+    // });
+    //
+    // formConditionsRepeater.addControl("operator", {
+    //   type: CONTROLLER_SELECT,
+    //   responsive: false,
+    //   default: "empty",
+    //   options: CONDITIONS_OPTIONS
+    // });
+    //
+    // formConditionsRepeater.addControl("value", {
+    //   dynamic: false,
+    //   responsive: false,
+    //   label: "Value"
+    // });
+    //
+    // this.addControl("form_conditions", {
+    //   label: "Conditions",
+    //   type: CONTROLLER_REPEATER,
+    //   fields: formConditionsRepeater.getControls(),
+    //   default: []
+    // });
+    //
+    // this.endControlSection();
 
     this.startControlSection("label_style_section", {
       tab: TAB_STYLE,
@@ -773,7 +804,6 @@ class Input extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-field-label{{STATE}}": "color: {{COLOR}};"
       }
@@ -849,7 +879,7 @@ class Input extends BaseElement {
         unit: "%",
         size: null
       },
-      units: ["%"],
+      units: ["%", "px", "vw",],
       max: 100,
       min: 0,
       rules: {
@@ -876,7 +906,7 @@ class Input extends BaseElement {
       type: CONTROLLER_COLOR,
       label: 'Icon color',
       rules: {
-        '{{ELEMENT}} .altrp-label-icon path{{STATE}}': 'fill: {{COLOR}};',
+        '{{ELEMENT}} .altrp-label-icon{{STATE}} path': 'fill: {{COLOR}};',
       },
     });
 
@@ -884,7 +914,7 @@ class Input extends BaseElement {
       type: CONTROLLER_COLOR,
       label: 'Background Color',
       rules: {
-        '{{ELEMENT}} .altrp-label-icon svg{{STATE}}': 'background: {{COLOR}};',
+        '{{ELEMENT}} .altrp-label-icon{{STATE}} svg': 'background: {{COLOR}};',
       },
     }
     );
@@ -993,7 +1023,6 @@ class Input extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-field-select2__single-value{{STATE}}":
           "color : {{COLOR}};",
@@ -1007,6 +1036,17 @@ class Input extends BaseElement {
     this.startControlSection("position_section", {
       tab: TAB_STYLE,
       label: "Position"
+    });
+
+    this.addControl("field_width", {
+      type: CONTROLLER_SLIDER,
+      label: "Width",
+      max: 500,
+      min: 0,
+      units: ["px", "%", "vw"],
+      rules: {
+        "{{ELEMENT}} .altrp-input-wrapper": "width: {{SIZE}}{{UNIT}}"
+      }
     });
 
     this.addControl("placeholder_and_value_alignment_position_section", {
@@ -1106,18 +1146,18 @@ class Input extends BaseElement {
       tab: TAB_STYLE,
       label: "Placeholder",
       conditions: {
-        "content_type!": ["image_select", "hidden", "radio", "checkbox"]
+        "content_type!": ["image_select", "hidden", "radio", "checkbox", "select"]
       }
     });
 
     this.addControl("placeholder_style_font_color", {
       type: CONTROLLER_COLOR,
       label: "font color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-field::placeholder{{STATE}}": "color: {{COLOR}};",
         "{{ELEMENT}} .altrp-field-select2__placeholder{{STATE}}":
-          "color: {{COLOR}};"
+          "color: {{COLOR}};",
+        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}": "color: {{COLOR}};",
       }
     });
 
@@ -1144,6 +1184,16 @@ class Input extends BaseElement {
           "text-transform: {{TRANSFORM}}",
           "font-style: {{STYLE}}",
           "text-decoration: {{DECORATION}}"
+        ],
+        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}": [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          "font-size: {{SIZE}}px;",
+          "line-height: {{LINEHEIGHT}};",
+          "letter-spacing: {{SPACING}}px",
+          "font-weight: {{WEIGHT}}",
+          "text-transform: {{TRANSFORM}}",
+          "font-style: {{STYLE}}",
+          "text-decoration: {{DECORATION}}"
         ]
       }
     });
@@ -1158,7 +1208,6 @@ class Input extends BaseElement {
     this.addControl("required_style_font_color", {
       type: CONTROLLER_COLOR,
       label: "font color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-field-label--required::after{{STATE}}":
           "color: {{COLOR}};"
@@ -1210,22 +1259,25 @@ class Input extends BaseElement {
       rules: {
         "{{ELEMENT}} .altrp-field{{STATE}}": "background-color: {{COLOR}};",
         "{{ELEMENT}} .altrp-field-select2__control{{STATE}}":
-          "background-color: {{COLOR}};"
+          "background-color: {{COLOR}};",
+        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}": "background-color: {{COLOR}};",
       }
     });
 
     this.addControl("option_background_color", {
       type: CONTROLLER_COLOR,
+      conditions: {
+        "content_type": "select2"
+      },
       label: "Option Background Color",
       default: {
         color: "#FFF",
         colorPickedHex: "#FFF"
       },
-      conditions: { content_type: ["select2"] },
       rules: {
         ".{{ID}}.altrp-field-select2__option{{STATE}}":
           "background-color: {{COLOR}};"
-      }
+      },
     });
 
     this.addControl("option_focused_background_color", {
@@ -1309,7 +1361,8 @@ class Input extends BaseElement {
       rules: {
         "{{ELEMENT}} .altrp-field{{STATE}}": "border-style: {{VALUE}};",
         "{{ELEMENT}} .altrp-field-select2__control{{STATE}}":
-          "border-style: {{VALUE}};"
+          "border-style: {{VALUE}};",
+        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}": "border-style: {{VALUE}};"
       }
     });
 
@@ -1327,7 +1380,9 @@ class Input extends BaseElement {
         "{{ELEMENT}} .altrp-field{{STATE}}":
           "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};",
         "{{ELEMENT}} .altrp-field-select2__control{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};",
+        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}":
+          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};",
       }
     });
 
@@ -1341,7 +1396,8 @@ class Input extends BaseElement {
       rules: {
         "{{ELEMENT}} .altrp-field{{STATE}}": "border-color: {{COLOR}};",
         "{{ELEMENT}} .altrp-field-select2__control{{STATE}}":
-          "border-color: {{COLOR}};"
+          "border-color: {{COLOR}};",
+        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}": "border-color: {{COLOR}};",
       }
     });
 
@@ -1359,12 +1415,13 @@ class Input extends BaseElement {
         colorPickedHex: "#000000",
         type: " "
       },
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .altrp-field{{STATE}}":
           "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};",
         "{{ELEMENT}} .altrp-field-select2__control{{STATE}}":
-          "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};"
+          "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};",
+        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}":
+          "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};",
       }
     });
 
@@ -1385,6 +1442,9 @@ class Input extends BaseElement {
         ],
         "{{ELEMENT}} .altrp-field-select2__control{{STATE}}": [
           "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+        ],
+        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}": [
+          "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
         ]
       }
     });
@@ -1398,9 +1458,12 @@ class Input extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("radio-_checkbox_styles", {
+    this.startControlSection("radio_checkbox_styles", {
       tab: TAB_STYLE,
-      label: "Radio Checkbox Styles"
+      label: "Radio Checkbox Styles",
+      conditions: {
+        "content_type!": "select",
+      },
     });
 
     this.addControl("input_position", {
@@ -1471,7 +1534,6 @@ class Input extends BaseElement {
     this.addControl("mismatch_message_font_color", {
       type: CONTROLLER_COLOR,
       label: "Font Color",
-      presetColors: ["#eaeaea", "#9c18a8"],
       rules: {
         "{{ELEMENT}} .mask-mismatch-message{{STATE}}": "color: {{COLOR}};"
       }

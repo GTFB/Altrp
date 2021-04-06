@@ -1,21 +1,23 @@
 import frontDecorate from '../../../../front-app/src/js/decorators/front-element-component'
 import {getTemplateType} from "../helpers";
-import rootElementEmailRender from '../renders/email/rootElementEmailRender';
-import sectionElementEmailRender from '../renders/email/sectionElementEmailRender';
+import {baseEmailRender} from "./base-email-render";
 /**
  * Обновляем state элемента при изменении настроек в редакторе
  * @param settingName
  * @param value
  */
 export function changeSetting(settingName, value) {
-  let newState = this.state;
+  let newState = {...this.state};
+  newState.settings = {...newState.settings};
   newState.settings[settingName] = value;
+
   /**
    * Если виджет поле, то обнолвяем и значение
    */
   if((settingName === 'content_default_value')){
     newState.value = value;
   }
+
   this.setState({
     ...newState
   });
@@ -51,25 +53,27 @@ function editorElementRender(component, defaultRender){
 }
 
 /**
- * Отрисовка контента элемента для писем
- * @param component
- * @return {*}
+ *
+ * @param {{}} nextProps
+ * @param {{}} nextState
  */
-function baseEmailRender(component){
-  switch(component.props.element.getName()){
-    case 'root-element':{
-      return rootElementEmailRender.bind(component);
-    }
-    case 'section':{
-      return sectionElementEmailRender.bind(component);
+function shouldComponentUpdate(nextProps, nextState){
+  for (let prop in nextProps){
+    if(nextProps.hasOwnProperty(prop)){
+      if(nextProps[prop] !== this.props[prop]){
+        console.log(prop);
+        console.log(this.props[prop]);
+
+      }
     }
   }
-  return ()=>null;
+  return true;
 }
 
 export default function decorate(component) {
   component.changeSetting = changeSetting.bind(component);
   component.setChildren = setChildren.bind(component);
+  // component.shouldComponentUpdate = shouldComponentUpdate.bind(component);
   component.render = editorElementRender(component, component.render);
   frontDecorate(component);
 }

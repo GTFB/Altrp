@@ -3,10 +3,23 @@
 
 ## Changelog
 
+### 0.14.0
++ Add Accept Filed Type
++ Custom Headers to Form Action
++ Add Video Widget
++ Add User Preset Colors for Color & Gradient Controllers
++ Add the Interface for Setting Parameters with the Mark of Required Parameters
++ Add Revisions to History Panel 
++ Add the Ability to Play Sounds in Actions 
+
 ### 0.13.0
 + Аdd the Template Widget
 + Аdd the Section and Column Link
-+ Many URL Params for Pages 
++ Many URL Params for Pages
++ Add New Custom Code Action 
++ Setting Fields Value via Set Actions
++ Two New Text Filter in Table
++ Add History Panel in Editor
 
 ### 0.12.1
 + Аdd the Adminbar

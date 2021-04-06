@@ -5,9 +5,12 @@ import EmptyWidget from "./EmptyWidget";
 
 import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
 const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
+const milkScheme = _.find(Schemes, { value: "milk" }).colors;
+const milkScheme2 = _.find(Schemes, { value: "milk2" }).colors;
 
 import { getWidgetData } from "../services/getWidgetData";
 import moment from "moment";
+import TooltipPie from "./d3/TooltipPie";
 
 const DynamicPieChart = ({
   widget,
@@ -25,7 +28,12 @@ const DynamicPieChart = ({
   tickRotation = 0,
   bottomAxis = true,
   keyIsDate = false,
-  isDashboard = false
+  isDashboard = false,
+  customColorSchemeChecker = false,
+  customColors = [],
+  yScaleMax,
+  widgetID,
+  useCustomTooltips
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -64,7 +72,7 @@ const DynamicPieChart = ({
             dataSource = _.sortBy(dataSource, ["id"]);
             break;
           default:
-            data = data;
+            dataSource = dataSource;
             break;
         }
       }
@@ -92,6 +100,24 @@ const DynamicPieChart = ({
             bottom: 80,
             left: !isDashboard ? 140 : 60
           }}
+          colors={
+            customColorSchemeChecker && customColors.length > 0
+              ? customColors
+              : colorScheme === "regagro"
+              ? regagroScheme
+              : colorScheme === "milk"
+              ? milkScheme
+              : colorScheme === "milk2"
+              ? milkScheme2
+              : { scheme: colorScheme }
+          }
+          tooltip={datum => (
+            <TooltipPie
+              enable={useCustomTooltips}
+              datum={datum}
+              widgetID={widgetID}
+            ></TooltipPie>
+          )}
           innerRadius={innerRadius}
           enableSliceLabels={enableSliceLabels}
           padAngle={padAngle}
@@ -103,7 +129,9 @@ const DynamicPieChart = ({
             }
           }
           colors={
-            colorScheme === "regagro" ? regagroScheme : { scheme: colorScheme }
+            colorScheme === "regagro" ? regagroScheme : 
+            colorScheme === "milk" ? milkScheme : 
+            colorScheme === "milk2" ? milkScheme2 : { scheme: colorScheme }
           }
           enableRadialLabels={enableRadialLabels}
           legends={

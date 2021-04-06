@@ -10,7 +10,9 @@
   margin-left: auto;
   margin-right: auto;
 }
-
+[disabled]{
+  cursor: not-allowed;
+}
 .altrp-element {
   width: 100%;
   max-width: 100%;
@@ -19,6 +21,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  &_section{
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .altrp-element > * {
@@ -87,12 +93,14 @@
 .altrp-tooltip {
   background-color: rgb(104, 102, 222);
   color: rgb(255, 255, 255);
+  border-color: transparent transparent rgb(104, 102, 222);
   font-family: Poppins, sans-serif;
   font-size: 12px;
   font-weight: 400;
   box-shadow: rgba(119, 119, 147, 0.2) 0px 20px 100px 0px;
   text-align: center;
-  display: block;
+  display: none;
+  width: auto;
   color: #fff;
   -webkit-border-radius: 2px;
   border-radius: 2px;
@@ -104,9 +112,14 @@
   box-sizing: border-box;
   line-height: 1;
   margin-top: -20px;
+  opacity: 0;
   text-transform: none;
   transition: 0.5s;
   animation: altrpTooltipAnimation 0.2s forwards;
+}
+
+.altrp-element > *:hover + .altrp-tooltip, .altrp-element > .altrp-tooltip:hover {
+  display: block;
 }
 
 @keyframes altrpTooltipAnimation {
@@ -120,28 +133,59 @@
   }
 }
 
-.altrp-tooltip-none {
-  display: none;
-  opacity: 0;
-}
-
 .altrp-tooltip::after {
-  border-width: 10px;
-  left: calc(50% - 10px);
-
-  margin-top: 0;
-  top: 100%;
-  transform: rotate(180deg);
-  left: -webkit-calc(50% - 5px);
-  left: calc(50% - 5px);
-  border-color: transparent transparent rgb(104, 102, 222);
-
-  content: "";
+  content: " ";
   position: absolute;
   border-width: 5px;
+  border-color: inherit;
   border-style: solid;
+}
 
-  box-sizing: border-box;
+.altrp-tooltip--top {
+  bottom: calc(100% + 5px);
+}
+
+.altrp-tooltip--bottom {
+  top: calc(100% + 5px);
+}
+
+.altrp-tooltip--right {
+  left: calc(100% + 5px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.altrp-tooltip--left {
+  right: calc(100% + 5px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.altrp-tooltip--top::after {  
+  top: 100%; /* At the bottom of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  transform: rotate(180deg);
+}
+
+.altrp-tooltip--bottom::after {
+  bottom: 100%;  /* At the top of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+}
+
+.altrp-tooltip--right::after {
+  top: 50%;
+  right: 100%; /* To the left of the tooltip */
+  margin-top: -5px;
+  transform: rotate(270deg);
+}
+
+.altrp-tooltip--left::after {
+  top: 50%;
+  left: 100%; /* To the right of the tooltip */
+  margin-top: -5px;
+  transform: rotate(90deg);
 }
 
 .altrp-image-container {
@@ -181,6 +225,7 @@
 .altrp-table-tbody,
 .altrp-table-th {
   border-collapse: separate;
+  user-select: none;
 }
 .altrp-table-td{
   //overflow: hidden;
@@ -234,6 +279,7 @@
     display: table-cell;
     & .altrp-inherit{
       border: none;
+      width: 100%;
     }
     &_loading{
       display: block;
@@ -965,8 +1011,16 @@
  */
 .altrp-transpose_true{
   overflow: auto;
-  & > .altrp-table{
-    width: auto;
+  & > div > div > .altrp-table{
+    width: -moz-fit-content;
+    width: fit-content;
+    overflow: visible;
+  }
+  & .altrp-scroll__horizontal-track{
+    width: 100%;
+    bottom: 0;
+    transform: scale(1, 1.2);
+    transform-origin: center 0;
   }
   & .altrp-table_columns-1{
     grid-template-rows: 1fr;
@@ -1464,4 +1518,10 @@
 
 .altrp-label-icon, .altrp-label-icon svg, .altrp-label-icon img {
   width : 20px;
+}
+
+.altrp-field-select2__indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

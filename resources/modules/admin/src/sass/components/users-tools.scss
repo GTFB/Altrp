@@ -33,13 +33,6 @@
     font-weight: bold;
     font-size: 28px;
 }
-/*
-style tabs content
-*/
-#description{
-    border-radius: 0px 3px 3px 3px;
-    border-top: none !important;
-}
 .nav{
     margin-top: 10px;
 }
@@ -65,6 +58,9 @@ style tabs content
     box-sizing: border-box;
     box-shadow: 0px 0px 0px #007CBA;
     border-radius: 2px;
+    &:focus{
+        box-shadow: none;
+    }
 }
 .form-check {
     padding-left: 1.2rem !important;

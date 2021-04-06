@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Users;
 
-use App\Events\SendNotifications;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\ApiRequest;
@@ -89,23 +88,21 @@ class Users extends Controller
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->telegram_user_id = $request->telegram_user_id;
         $user->password = Hash::make($request->password);
 
-        if ($user->save()) {
-            broadcast(new SendNotifications($user))->toOthers();
-
-
-            $permissions = $request->get('_permissions');
-            if ($permissions) {
-                $permissions = Permission::find($permissions);
-                $user->attachPermissions($permissions);
-            }
-            $roles = $request->get('_roles');
-            if ($roles) {
-                $roles = Role::find($roles);
-                $user->attachRoles($roles);
-            }
-            return response()->json($user, 200, [], JSON_UNESCAPED_UNICODE);
+        if($user->save()){
+          $permissions = $request->get( '_permissions' );
+          if( $permissions ){
+            $permissions = Permission::find( $permissions );
+            $user->attachPermissions( $permissions );
+          }
+          $roles = $request->get( '_roles' );
+          if( $roles ){
+            $roles = Role::find( $roles );
+            $user->attachRoles( $roles );
+          }
+          return response()->json($user, 200, [],JSON_UNESCAPED_UNICODE);
         }
 
         return response()->json(trans("responses.dberror"), 400, [], JSON_UNESCAPED_UNICODE);
@@ -130,7 +127,8 @@ class Users extends Controller
 
         if ($request->name) $user->name = $request->name;
         if ($request->email) $user->email = $request->email;
-        if ($request->passsword) $user->password = Hash::make($request->password);
+        if ($request->telegram_user_id) $user->telegram_user_id = $request->telegram_user_id;
+        if ($request->password) $user->password = Hash::make($request->password);
 
         if ($user->save()) {
             $permissions = $request->get('_permissions');
@@ -365,5 +363,22 @@ class Users extends Controller
             [],
             JSON_UNESCAPED_UNICODE
         );
+    }
+
+    /**
+     * Получить записи для списка опций: id, name
+     * @return mixed
+     */
+    public function getUsersOptions()
+    {
+        $users = User::all();
+        $options = [];
+        foreach ($users as $user) {
+            $options[] = [
+                'value' => $user->id,
+                'label' => $user->name,
+            ];
+        }
+        return $options;
     }
 }

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Provider } from "react-redux";
 import ReactDOM from "react-dom";
 import "./installing";
 import ElementsManager from "./js/classes/modules/ElementsManager";
@@ -12,29 +13,14 @@ window.React = React;
 window.ReactDOM = ReactDOM;
 window.Component = Component;
 
-// Websockets import
-// let mix = require('laravel-mix');
-// require('dotenv').config();
-// let my_env_key = process.env.MIX_PUSHER_APP_KEY;
-
-import Echo from "laravel-echo";
-window.Pusher = require("pusher-js");
-
-try {
-  window.Echo = new Echo({
-    broadcaster: "pusher",
-    key: 324345,
-    wsHost: window.location.hostname,
-    wsPort: 6001,
-    forceTLS: false,
-
-    disableStats: true
-  });
-} catch (error) {
-  console.error(error);
-}
+import controllerHistory from "./js/classes/ControllerHistory";
 
 window._ = _;
+// let cloneDeep = _.cloneDeep;
+// _.cloneDeep = function(){
+//  console.error(arguments);
+//  return cloneDeep.apply(_, arguments);
+// };
 window.iconsManager = new IconsManager();
 
 window.stylesModulePromise = new Promise(function(resolve) {
@@ -65,7 +51,12 @@ import("./Editor.js")
 
     let editorTarget = document.getElementById("editor");
     if (editorTarget) {
-      window.ReactDOM.render(<Editor />, editorTarget);
+      window.ReactDOM.render(
+        <Provider store={store}>
+          <Editor />
+        </Provider>,
+        editorTarget
+      );
     }
 
     return import("./EditorContent");
@@ -94,6 +85,7 @@ import("./Editor.js")
         styleLink.rel = "stylesheet";
         styleLink.href = `/modules/editor/editor.css?${_altrpVersion}`;
         head.appendChild(styleLink);
+        console.log(head.appendChild(document.querySelector('[data-cke]').cloneNode(true)));
       } else {
         let head = iframe.contentWindow.document.getElementsByTagName(
           "head"
@@ -103,5 +95,21 @@ import("./Editor.js")
         script.defer = "http://localhost:3000/src/bundle.js";
         head.appendChild(script);
       }
+
+      function listenerHistory(event) {
+        if (window.parent.appStore.getState().historyStore.active) {
+          if (event.ctrlKey && event.code === "KeyZ" && event.shiftKey) {
+            controllerHistory.redo();
+          } else if (event.ctrlKey && event.code === "KeyZ") {
+            controllerHistory.undo();
+          }
+        }
+      }
+      window.addEventListener("keydown", listenerHistory, false);
+      window.EditorFrame.contentWindow.addEventListener(
+        "keydown",
+        listenerHistory,
+        false
+      );
     };
   });

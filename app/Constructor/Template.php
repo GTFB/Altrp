@@ -429,4 +429,8 @@ class Template extends Model
 
     return $templates->toArray();
   }
+  public function getAuthorAttribute(){
+    $author = User::find( $this->user_id );
+    return data_get( $author, 'name', 'admin' );
+  }
 }

@@ -6,6 +6,7 @@ use App\Constructor\Template;
 use App\Constructor\TemplateSetting;
 use App\Page;
 use App\PagesTemplate;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
@@ -47,19 +48,19 @@ class TemplateController extends Controller
         $page_count = ceil( $page_count / $page_size );
       }
       $templates = [];
-      foreach ($_templates as $template) {
+      foreach ( $_templates as $template ) {
         /**
          * @var Template $template
          */
+        $user = $template->user;
         $templates[] = [
-          'user' => $template->user,
+          'user' => $user,
           'name' => $template->name,
           'title' => $template->title,
           'id' => $template->id,
-          'author' => $template->user->name,
+          'author' => data_get( $user, 'name' ),
           'url' => '/admin/editor?template_id=' . $template->id,
           'area' => $template->area()->name,
-
         ];
 
       }
@@ -298,7 +299,12 @@ class TemplateController extends Controller
                 'title',
                 'created_at',
                 'updated_at',
-            ])->toArray();
+                'user_id',
+            ])
+          ->map(function( Template $review ){
+            $review->author = $review->author;
+            return $review;
+          })->toArray();
         return \response()->json($reviews);
     }
 
@@ -320,6 +326,26 @@ class TemplateController extends Controller
         $result = $result->forceDelete();
       }
         return response()->json(['success' => (bool) $result]);
+    }
+
+    /**
+     * Удалить шаблоны по родителю с типом review
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getReview( Request $request )
+    {
+        $result = Template::where([
+            ['parent_template', $request->template_id],
+            ['type', 'review'],
+            ['id', $request->review_id],
+        ]);
+      if( ! $result->count() ){
+        return response()->json(['success' => 'false'], 404, [], JSON_UNESCAPED_UNICODE);
+      } else {
+        return response()->json( [ 'success' => (bool)$result, 'data' => $result->get()->toArray() ] );
+      }
     }
 
   /**
