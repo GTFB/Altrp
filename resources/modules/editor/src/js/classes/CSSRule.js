@@ -42,12 +42,9 @@ class CSSRule {
       pairs.forEach(pair => {
         if(pair[1]){
           property = property.split(`{{${pair[0].toUpperCase()}}}`).join(pair[1]);
-          return
-        }
-        if(property.indexOf('{{') !== -1 && property.indexOf('}}') !== -1){
-          property = '';
         }
       });
+      property = property.replace(/{{([\s\S]+?)}}/g, '');
       return property;
     });
   }

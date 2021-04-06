@@ -174,7 +174,7 @@ function AltrpTableWithoutUpdate(
     } = column;
     _accessor = _accessor.trim();
     let leftValue, rightValue;
-    if(_accessor.indexOf('?') !== -1 && _accessor.indexOf(':') !== -1){
+    if(_accessor && _accessor.indexOf('?') !== -1 && _accessor.indexOf(':') !== -1){
       [leftValue, rightValue] = _accessor.split('?')[1].split(':');
       leftValue = leftValue.trim();
       rightValue = rightValue.trim();
@@ -1077,7 +1077,7 @@ export function settingsToColumns(settings, widgetId) {
     if (((_column.actions && _column.actions.length) || _column.accessor)) {
       _column.edit_disabled = edit_disabled;
       _column._accessor = _column.accessor;
-      if(_column.accessor.indexOf('?') !== -1 && _column.accessor.indexOf(':') !== -1) {
+      if(_column.accessor && _column.accessor.indexOf('?') !== -1 && _column.accessor.indexOf(':') !== -1) {
         _column.accessor = _column.accessor.split('?')[0].trim();
       }
       _column.column_name = _column.column_name || '&nbsp;';
