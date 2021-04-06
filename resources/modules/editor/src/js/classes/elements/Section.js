@@ -815,22 +815,22 @@ class Section extends BaseElement{
     this.addControl("position_style_position_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit: "px"
-      },
+      // default: {
+      //   top: 0,
+      //   right: 0,
+      //   bottom: 0,
+      //   left: 0,
+      //   unit: "px"
+      // },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} > .altrp-section{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
+      // rules: {
+      //   "{{ELEMENT}} > .altrp-section{{STATE}}": [
+      //     "padding-top: {{TOP}}{{UNIT}};",
+      //     "padding-right: {{RIGHT}}{{UNIT}};",
+      //     "padding-bottom: {{BOTTOM}}{{UNIT}};",
+      //     "padding-left: {{LEFT}}{{UNIT}};"
+      //   ]
+      // }
     });
 
     this.addControl('position_style_z_index', {

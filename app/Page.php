@@ -316,6 +316,7 @@ class Page extends Model
     return $this->hasMany( PageDatasource::class, 'page_id', 'id' );
   }
   /**
+   * @deprecated
     * Импортируем связи стрнаиц с ролями
     * @param array $page_roles
   */
@@ -483,6 +484,7 @@ class Page extends Model
   }
 
   /**
+   * @deprecated
    * Испортирует страницы
    * @param array $imported_pages
    */

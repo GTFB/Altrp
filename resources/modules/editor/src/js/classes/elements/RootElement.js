@@ -269,21 +269,47 @@ class RootElement extends BaseElement {
 
     this.addControl('switcher_close_button_popup_layout', {
       type: CONTROLLER_SWITCHER,
-      label: 'Close button',
+      label: 'Custom close button',
     });
 
-    this.addControl('icon_close_button_popup_layout', {
+    // this.addControl('icon_close_button_popup_layout', {
+    //   conditions: {
+    //     'switcher_close_button_popup_layout': true,
+    //   },
+    //   type: CONTROLLER_MEDIA,
+    //   label: 'Icon',
+    // });
+
+    // this.addControl('position_close_button_popup_layout', {
+    //   type: CONTROLLER_CHOOSE,
+    //   label: 'alignment',
+    //   options: [
+    //     {
+    //       icon: 'left',
+    //       value: 'left',
+    //     },
+    //     {
+    //       icon: 'right',
+    //       value: 'right',
+    //     },
+    //   ],
+    // });
+
+    this.endControlSection();
+
+    this.startControlSection('popup_close_icon_section', {
       conditions: {
         'switcher_close_button_popup_layout': true,
       },
+      label: 'Custom close button',
+    });
+
+    this.addControl("popup_close_icon", {
       type: CONTROLLER_MEDIA,
-      label: 'Icon',
+      label: 'Close icon'
     });
 
-    this.addControl('position_close_button_popup_layout', {
-      conditions: {
-        'switcher_close_button_popup_layout': true,
-      },
+    this.addControl('popup_close_icon_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'alignment',
       options: [
@@ -298,6 +324,41 @@ class RootElement extends BaseElement {
       ],
     });
 
+    this.addControl('popup_close_icon_height_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'height icon',
+      default: {
+        size: 25,
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 1000,
+      min: 0,
+    });
+
+    this.addControl('popup_close_icon_width_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'width icon',
+      default: {
+        size: 25,
+        unit: 'px',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 1000,
+      min: 0,
+    });
+    this.addControl('popup_close_click_on_dark_area', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Close click on a dark area',
+    });
     this.endControlSection();
 
     this.startControlSection('offcanvas_section', {
@@ -333,31 +394,31 @@ class RootElement extends BaseElement {
       label: 'Close button',
     });
 
-    this.addControl('close_button_position_offcanvas', {
-      conditions: {
-        'close_offcanvas': true,
-      },
-      type: CONTROLLER_CHOOSE,
-      label: 'Alignment',
-      options: [
-        {
-          icon: 'left',
-          value: 'left',
-        },
-        {
-          icon: 'right',
-          value: 'right',
-        },
-      ],
-    });
+    // this.addControl('close_button_position_offcanvas', {
+    //   conditions: {
+    //     'close_offcanvas': true,
+    //   },
+    //   type: CONTROLLER_CHOOSE,
+    //   label: 'Alignment',
+    //   options: [
+    //     {
+    //       icon: 'left',
+    //       value: 'left',
+    //     },
+    //     {
+    //       icon: 'right',
+    //       value: 'right',
+    //     },
+    //   ],
+    // });
 
-    this.addControl('close_button_icon_offcanvas', {
-      conditions: {
-        'close_offcanvas': true,
-      },
-      type: CONTROLLER_MEDIA,
-      label: 'Background Image',
-    });
+    // this.addControl('close_button_icon_offcanvas', {
+    //   conditions: {
+    //     'close_offcanvas': true,
+    //   },
+    //   type: CONTROLLER_MEDIA,
+    //   label: 'Background Image',
+    // });
 
     this.addControl("close_cursor_offcanvas", {
       type: CONTROLLER_SELECT,
@@ -443,6 +504,18 @@ class RootElement extends BaseElement {
     this.addControl('overflow_visible_offcanvas', {
       type: CONTROLLER_SWITCHER,
       label: 'Offcanvas overflow visible',
+    });
+
+    this.addControl("time_offcanvas", {
+      type: CONTROLLER_SLIDER,
+      default: {
+        size: 200,
+        unit: 'ms',
+      },
+      label: 'Time',
+      units: ["ms"],
+      max: 5000,
+      min: 100,
     });
 
     this.endControlSection();
@@ -1284,9 +1357,6 @@ class RootElement extends BaseElement {
     this.addControl('button_border_color', {
       type: CONTROLLER_COLOR,
       label: 'Border Color',
-      rules: {
-        'div .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
-      },
     }
     );
 
@@ -1311,9 +1381,6 @@ class RootElement extends BaseElement {
     this.addControl('button_box_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Shadow',
-      rules: {
-        'div .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      },
     });
 
     this.addControl('button_background_color', {
@@ -3806,81 +3873,196 @@ class RootElement extends BaseElement {
       },
     });
 
-    this.addControl('close_button_popup_style', {
-      type: CONTROLLER_HEADING,
-      label: 'Close button',
+    // this.addControl('close_button_popup_style', {
+    //   type: CONTROLLER_HEADING,
+    //   label: 'Close button',
+    // });
+
+    // this.addControl('vertical_close_button_popup_style', {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Vertical',
+    //   units: [
+    //     'px',
+    //     '%',
+    //   ],
+    //   step: 0.1,
+    //   max: 100,
+    //   min: 0,
+    //   rules: {
+    //     '.{{ID}}-app-popup .popup-close-button{{STATE}}': 'top: {{SIZE}}{{UNIT}}',
+    //   },
+    // });
+
+    // this.addControl('horizontal_close_button_popup_style', {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Horizontal',
+    //   units: [
+    //     'px',
+    //     '%',
+    //   ],
+    //   step: 0.1,
+    //   max: 100,
+    //   min: 0,
+    //   rules: {
+    //     '.{{ID}}-app-popup .popup-close-button-right{{STATE}}': 'right: {{SIZE}}{{UNIT}}',
+    //     '.{{ID}}-app-popup .popup-close-button-left{{STATE}}': 'left: {{SIZE}}{{UNIT}}',
+    //   },
+    // });
+
+    // this.addControl('fill_close_button_popup_style', {
+    //   type: CONTROLLER_COLOR,
+    //   label: 'Fill',
+    //   rules: {
+    //     '.{{ID}}-app-popup .popup-close-button-icon fill{{STATE}}': 'fill: {{COLOR}};',
+    //   },
+    // });
+
+    // this.addControl('stroke_close_button_popup_style', {
+    //   type: CONTROLLER_COLOR,
+    //   label: 'Stroke',
+    //   rules: {
+    //     '.{{ID}}-app-popup .popup-close-button-icon stroke{{STATE}}': 'stroke: {{COLOR}};',
+    //   },
+    // });
+
+    // this.addControl('background_close_button_popup_style', {
+    //   type: CONTROLLER_COLOR,
+    //   label: 'Background color',
+    //   rules: {
+    //     '.{{ID}}-app-popup .popup-close-button{{STATE}}': 'background-color: {{COLOR}};',
+    //   },
+    // });
+
+    // this.addControl('size_close_button_popup_style', {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Size',
+    //   units: [
+    //     'px',
+    //     '%',
+    //   ],
+    //   max: 100,
+    //   min: 0,
+    //   rules: {
+    //     '.{{ID}}-app-popup .popup-close-button svg{{STATE}}': [
+    //       'height: {{SIZE}}{{UNIT}}',
+    //       'width: {{SIZE}}{{UNIT}}'
+    //     ],
+    //   },
+    // });
+
+    this.endControlSection();
+
+    this.startControlSection('popup_close_button_style', {
+      conditions: {
+        'switcher_close_button_popup_layout': true,
+      },
+      tab: TAB_STYLE,
+      label: 'Custom close button',
     });
 
-    this.addControl('vertical_close_button_popup_style', {
-      type: CONTROLLER_SLIDER,
-      label: 'Vertical',
+    this.addControl('popup_close_button_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
       units: [
         'px',
         '%',
+        'vh',
       ],
-      step: 0.1,
-      max: 100,
-      min: 0,
-      rules: {
-        '.{{ID}}-app-popup .popup-close-button{{STATE}}': 'top: {{SIZE}}{{UNIT}}',
-      },
     });
 
-    this.addControl('horizontal_close_button_popup_style', {
-      type: CONTROLLER_SLIDER,
-      label: 'Horizontal',
+    this.addControl("popup_close_button_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Border type",
+      units: ["px", "%", "vh"],
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+    });
+
+    this.addControl("popup_close_button_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border width",
+      units: ["px", "%", "vh"],
+    });
+
+    this.addControl("popup_close_button_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Border color",
+    });
+
+    this.addControl('popup_close_button_border_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Radius',
       units: [
         'px',
         '%',
+        'vh',
       ],
-      step: 0.1,
-      max: 100,
-      min: 0,
-      rules: {
-        '.{{ID}}-app-popup .popup-close-button-right{{STATE}}': 'right: {{SIZE}}{{UNIT}}',
-        '.{{ID}}-app-popup .popup-close-button-left{{STATE}}': 'left: {{SIZE}}{{UNIT}}',
-      },
     });
 
-    this.addControl('fill_close_button_popup_style', {
+    this.addControl("popup_close_button_background_color", {
       type: CONTROLLER_COLOR,
-      label: 'Fill',
-      rules: {
-        '.{{ID}}-app-popup .popup-close-button-icon fill{{STATE}}': 'fill: {{COLOR}};',
-      },
+      label: "Background color",
     });
 
-    this.addControl('stroke_close_button_popup_style', {
-      type: CONTROLLER_COLOR,
-      label: 'Stroke',
-      rules: {
-        '.{{ID}}-app-popup .popup-close-button-icon stroke{{STATE}}': 'stroke: {{COLOR}};',
-      },
+    this.addControl('popup_close_button_box_shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'Shadow',
     });
 
-    this.addControl('background_close_button_popup_style', {
-      type: CONTROLLER_COLOR,
-      label: 'Background color',
-      rules: {
-        '.{{ID}}-app-popup .popup-close-button{{STATE}}': 'background-color: {{COLOR}};',
-      },
-    });
-
-    this.addControl('size_close_button_popup_style', {
+    this.addControl('popup_close_button_height_size', {
       type: CONTROLLER_SLIDER,
-      label: 'Size',
+      label: 'height',
+      default: {
+        size: 25,
+        unit: 'px',
+      },
       units: [
         'px',
         '%',
+        'vh',
       ],
-      max: 100,
+      max: 1000,
       min: 0,
-      rules: {
-        '.{{ID}}-app-popup .popup-close-button svg{{STATE}}': [
-          'height: {{SIZE}}{{UNIT}}',
-          'width: {{SIZE}}{{UNIT}}'
-        ],
+    });
+
+    this.addControl('popup_close_button_width_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'width',
+      default: {
+        size: 25,
+        unit: 'px',
       },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 1000,
+      min: 0,
     });
 
     this.endControlSection();

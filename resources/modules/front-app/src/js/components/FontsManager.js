@@ -13,7 +13,7 @@ class FontsManager extends Component {
       fonts: [],
     };
     this.helmetRef = React.createRef();
-
+    window.helmetRef = this.helmetRef;
   }
 
   /**

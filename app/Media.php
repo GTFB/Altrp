@@ -3,11 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
 
 class Media extends Model
 {
+  use SoftDeletes;
   protected $table = 'altrp_media';
 
   protected $fillable = [
@@ -25,6 +27,7 @@ class Media extends Model
   ];
 
   /**
+   * @deprecated
    * Импортирует медиа
    * @param array $imported_media
    */

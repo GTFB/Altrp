@@ -5,6 +5,8 @@ import { Scrollbars } from "react-custom-scrollbars";
 import AltrpOffcanvas from "./altrp-offcanvas/AltrpOffcanvas";
 import { togglePopup } from "../store/popup-trigger/actions";
 import AltrpImage from "../../../../editor/src/js/components/altrp-image/AltrpImage";
+import FrontPopupWrapper from './FrontPopupWrapper';
+
 
 class FrontPopup extends Component {
   constructor(props) {
@@ -156,7 +158,7 @@ class FrontPopup extends Component {
   render() {
     const { isVisible } = this.state;
     let classes = [`app-popup`];
-    const { positioning_custom_top } = this.props.template.data.settings;
+    // const { positioning_custom_top } = this.props.template.data.rootElementSettings;
     let rootElement = this.state.rootElement;
     const rootElementSettings = rootElement.getSettings("");
     const rootElementId = rootElement.getId();
@@ -208,15 +210,63 @@ class FrontPopup extends Component {
         classes.push("app-popup-vertical-center");
     }
 
+
+    // let styleButtonClose = {};
+    
+    // if(rootElementSettings.popup_close_button_height_size && rootElementSettings.popup_close_button_height_size.size)
+    //   styleButtonClose.height = rootElementSettings.popup_close_button_height_size.size + rootElementSettings.popup_close_button_height_size.unit;
+    // if(rootElementSettings.popup_close_button_width_size && rootElementSettings.popup_close_button_width_size.size)
+    //   styleButtonClose.width = rootElementSettings.popup_close_button_width_size.size + rootElementSettings.popup_close_button_width_size.unit;  
+    
+    // if(rootElementSettings.popup_close_button_padding) {
+    //   styleButtonClose.paddingTop = rootElementSettings.popup_close_button_padding.top + rootElementSettings.popup_close_button_padding.unit;
+    //   styleButtonClose.paddingRight = rootElementSettings.popup_close_button_padding.right + rootElementSettings.popup_close_button_padding.unit;
+    //   styleButtonClose.paddingBottom = rootElementSettings.popup_close_button_padding.bottom + rootElementSettings.popup_close_button_padding.unit;
+    //   styleButtonClose.paddingLeft = rootElementSettings.popup_close_button_padding.left + rootElementSettings.popup_close_button_padding.unit;
+    // }
+
+    // if(rootElementSettings.popup_close_button_border_type && rootElementSettings.popup_close_button_border_type !== "none") {
+    //   styleButtonClose.borderTopWidth = rootElementSettings.popup_close_button_border_width.top + rootElementSettings.popup_close_button_border_width.unit;
+    //   styleButtonClose.borderRightWidth = rootElementSettings.popup_close_button_border_width.right + rootElementSettings.popup_close_button_border_width.unit;
+    //   styleButtonClose.borderBottomWidth = rootElementSettings.popup_close_button_border_width.bottom + rootElementSettings.popup_close_button_border_width.unit;
+    //   styleButtonClose.borderLeftWidth = rootElementSettings.popup_close_button_border_width.left + rootElementSettings.popup_close_button_border_width.unit;
+    //   styleButtonClose.borderStyle = rootElementSettings.popup_close_button_border_type;
+    //   if(rootElementSettings.popup_close_button_border_color && rootElementSettings.popup_close_button_border_color.colorPickedHex)
+    //     styleButtonClose.borderColor = rootElementSettings.popup_close_button_border_color.colorPickedHex;
+    // }
+    
+    // if(rootElementSettings.popup_close_button_border_radius) {
+    //   let borderRadiusTop = (rootElementSettings.popup_close_button_border_radius.top ? rootElementSettings.popup_close_button_border_radius.top : "0") + rootElementSettings.popup_close_button_border_radius.unit;
+    //   let borderRadiusRight = (rootElementSettings.popup_close_button_border_radius.right ? rootElementSettings.popup_close_button_border_radius.right : "0") + rootElementSettings.popup_close_button_border_radius.unit;
+    //   let borderRadiusBottom = (rootElementSettings.popup_close_button_border_radius.bottom ? rootElementSettings.popup_close_button_border_radius.bottom : "0") + rootElementSettings.popup_close_button_border_radius.unit;
+    //   let borderRadiusLeft = (rootElementSettings.popup_close_button_border_radius.left ?  rootElementSettings.popup_close_button_border_radius.left  : "0")+ rootElementSettings.popup_close_button_border_radius.unit;
+    //   styleButtonClose.borderRadius = `${borderRadiusTop} ${borderRadiusRight} ${borderRadiusBottom} ${borderRadiusLeft}`;
+    // }
+
+    // if(rootElementSettings.popup_close_button_background_color) {
+    //   styleButtonClose.backgroundColor = rootElementSettings.popup_close_button_background_color.colorPickedHex;
+    // }
+
+    // if(rootElementSettings.popup_close_button_box_shadow) {
+    //   let type = rootElementSettings.popup_close_button_box_shadow.type;
+    //   let offsetX = rootElementSettings.popup_close_button_box_shadow.horizontal;
+    //   let offsetY = rootElementSettings.popup_close_button_box_shadow.vertical;
+    //   let blurRadius = rootElementSettings.popup_close_button_box_shadow.blur;
+    //   let spreadRadius = rootElementSettings.popup_close_button_box_shadow.spread;
+    //   let color = rootElementSettings.popup_close_button_box_shadow.colorPickedHex;
+    //   styleButtonClose.boxShadow = `${type} ${offsetX}px ${offsetY}px ${blurRadius}px ${spreadRadius} ${color}`;
+    // }
+
     let content = "";
     const closeButtonCondition = rootElementSettings.switcher_close_button_popup_layout || true;
-    let {position_close_button_popup_layout} = rootElementSettings;
-    position_close_button_popup_layout = position_close_button_popup_layout || 'right';
+    let {popup_close_icon_alignment} = rootElementSettings;
+    popup_close_icon_alignment = popup_close_icon_alignment || 'right';
+
     const closeButton = closeButtonCondition ? (
       <button
         className={
           "popup-close-button" +
-          (position_close_button_popup_layout === "right" ? " popup-close-button-right" : " popup-close-button-left")
+          (popup_close_icon_alignment === "right" ? " popup-close-button-right" : " popup-close-button-left")
         }
         onClick={() => {
           this.setState({ isVisible: false });
@@ -224,7 +274,7 @@ class FrontPopup extends Component {
         }}
       >
         <AltrpImage
-          image={rootElementSettings.icon_close_button_popup_layout}
+          image={rootElementSettings.popup_close_icon}
           default={{
             assetType: "icon",
             name: "deleteOne",
@@ -243,20 +293,23 @@ class FrontPopup extends Component {
 
     const popup = (
       isVisible ?
-        <div
+        <FrontPopupWrapper 
+          settings = {rootElementSettings}
           className={classes.join(' ')}
           onClick={() => {
-            this.setState({ isVisible: false });
-            this.props.closePopup()
+            if(rootElementSettings.popup_close_click_on_dark_area === undefined || rootElementSettings.popup_close_click_on_dark_area){
+              this.setState({ isVisible: false });
+              this.props.closePopup()
+            }
           }}
         >
             <div className="popup-window"
                  // style={{ top: positioning_custom_top.size + positioning_custom_top.unit}}
                  onClick={e => e.stopPropagation()}
             >
-              {
-                closeButton
-              }
+
+              {closeButton}
+              
               <Scrollbars
                 autoHide
                 autoHeight
@@ -278,13 +331,13 @@ class FrontPopup extends Component {
                 </div>
               </Scrollbars>
             </div>
-        </div>
+        </FrontPopupWrapper>
         : null
     );
-
     const type = rootElementSettings.type_popup || "popup";
     switch (type) {
       case "popup":
+        
         content = popup;
         break;
       case "offcanvas":
@@ -314,3 +367,5 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(FrontPopup);
+
+

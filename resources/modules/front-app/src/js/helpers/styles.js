@@ -56,21 +56,44 @@ export function dimensionsControllerToStyles(data = {}, styleProperty = 'padding
     return styles;
   }
   const {unit = 'px', left, right, top, bottom,} = data;
-  if(left){
-    styles += `${styleProperty}-left:${left}${unit};`;
-  }
-  if(right){
-    styles += `${styleProperty}-right:${right}${unit};`;
-  }
-  if(top){
-    styles += `${styleProperty}-top:${top}${unit};`;
-  }
-  if(bottom){
-    styles += `${styleProperty}-bottom:${bottom}${unit};`;
+  switch(styleProperty){
+    case 'border-width':{
+      if(left){
+        styles += `border-left-width:${left}${unit};`;
+      }
+      if(right){
+        styles += `border-right-width:${right}${unit};`;
+      }
+      if(top){
+        styles += `border-top-width:${top}${unit};`;
+      }
+      if(bottom){
+        styles += `border-bottom-width:${bottom}${unit};`;
+      }
+
+    }break;
+    default:{
+      if(left){
+        styles += `${styleProperty}-left:${left}${unit};`;
+      }
+      if(right){
+        styles += `${styleProperty}-right:${right}${unit};`;
+      }
+      if(top){
+        styles += `${styleProperty}-top:${top}${unit};`;
+      }
+      if(bottom){
+        styles += `${styleProperty}-bottom:${bottom}${unit};`;
+      }
+    }break;
   }
   return styles;
 }
 
+export function shadowControllerToStyles(data = {}) {
+  let {type, offsetX, offsetY, blurRadius, spreadRadius, color } = data;
+  return `box-shadow: ${type} ${offsetX}px ${offsetY}px ${blurRadius}px ${spreadRadius} ${color} !important;`;
+}
 /**
  * Преобразует объект, который сохраняет контроллер typographic, в строку css для вставки в styled-компонент
  * @param {{}} data

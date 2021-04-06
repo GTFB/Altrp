@@ -2372,21 +2372,22 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl('table_style_pagination_padding_count_item', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Item Count Padding',
+    this.addControl('width_count_item', {
+      type: CONTROLLER_SLIDER,
+      label: 'Item Width',
       default: {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
+    });
+
+    this.addControl('height_count_item', {
+      type: CONTROLLER_SLIDER,
+      label: 'Item Height',
+      default: {
+        unit: 'px'
       },
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('table_style_item_count_pagination_typographic', {
