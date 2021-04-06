@@ -1,0 +1,1 @@
+{"version":3,"file":"BarDiagram.js","sourceRoot":"","sources":["../../../src/altrp-diagrams/layout/BarDiagram.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,EAAE,SAAS,EAAE,MAAM,OAAO,CAAC;AAMzC,MAAM,UAAW,SAAQ,SAAS;IAC9B,YAAY,KAAe;QACvB,KAAK,CAAC,KAAK,CAAC,CAAC;IACjB,CAAC;IAED,MAAM;QACF,OAAO,uCAAc,CAAC;IAC1B,CAAC;CACJ;AAED,eAAe,UAAU,CAAC"}
