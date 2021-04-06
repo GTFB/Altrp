@@ -164,7 +164,7 @@ class AdminBar extends React.Component {
 
   render() {
     return (
-      <div className="admin-bar">
+      <div className="admin-bar bvi-hide">
         <div className="admin-bar__tools">
           <div className="admin-bar__link" onClick={this.openPageAdmin}>
             Admin

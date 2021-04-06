@@ -44,6 +44,7 @@ class CSSRule {
           property = property.split(`{{${pair[0].toUpperCase()}}}`).join(pair[1]);
         }
       });
+      property = property.replace(/{{([\s\S]+?)}}/g, '');
       return property;
     });
   }

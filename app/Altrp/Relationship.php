@@ -46,6 +46,7 @@ class Relationship extends EloquentModel
     ];
 
   /**
+   * @deprecated
    * Импортируем связи
    * @param array $imported_relations
    */

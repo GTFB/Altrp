@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import Lightbox from "react-image-lightbox";
+import React, {Component} from 'react';
+import Lightbox from 'react-image-lightbox';
 import './altrp-lightbox.scss';
 
 class AltrpLightbox extends Component {
@@ -23,8 +23,8 @@ class AltrpLightbox extends Component {
     }
 
     if(images.length > 1) {
-      nextSrc = images[(current + 1) % images.length]
-      prevSrc = images[(current + images.length - 1) % images.length]
+      nextSrc = images[(current + 1) % images.length];
+      prevSrc = images[(current + images.length - 1) % images.length];
     }
 
     return (

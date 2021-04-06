@@ -23,6 +23,7 @@ class Accessor extends Model
     ];
 
   /**
+   * @deprecated
    * Импортируем аксесоры
    * @param array $imported_accessors
    */
