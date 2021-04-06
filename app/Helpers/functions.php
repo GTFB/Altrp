@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Requests\ApiRequest;
+use App\Media;
 use App\User;
 use Illuminate\Support\Str;
 
@@ -526,5 +527,57 @@ function setDynamicData($template, $data)
         Log::info($e->getMessage());
     }
     return $template;
+}
+
+function uploadMedia($file)
+{
+    $media = new Media();
+    $media->media_type = \Illuminate\Support\Facades\File::mimeType($file);
+    $media->author = Auth::id() ?? null;
+    $media->type = getTypeForFile($file);
+    File::ensureDirectoryExists( 'app/media/' .  date("Y") . '/' .  date("m" ), 0775 );
+    $media->filename = \Illuminate\Support\Facades\Storage::disk('public')->putFileAs(
+            'media/' .  date("Y") . '/' .  date("m" ),
+            $file,
+            \Illuminate\Support\Facades\File::name($file) .
+            '.' . \Illuminate\Support\Facades\File::extension($file)
+        );
+
+    $path = Storage::path( 'public/' . $media->filename );
+    $ext = pathinfo( $path, PATHINFO_EXTENSION );
+    if( $ext === 'svg' ){
+        $svg = file_get_contents( $path );
+        $svg = simplexml_load_string( $svg );
+        $media->width = ( string ) data_get( $svg->attributes(), 'width', 150 );
+        $media->height = ( string ) data_get( $svg->attributes(), 'height', 150 );
+    } else {
+        $size = getimagesize( $path );
+        $media->width = data_get( $size, '0', 0 );
+        $media->height = data_get( $size, '1', 0 );
+    }
+    $media->url =  Storage::url( $media->filename );
+    $media->save();
+    return $media;
+}
+
+function getTypeForFile( $file ){
+    $extension_loaded = \Illuminate\Support\Facades\File::extension($file);
+    $type = '';
+    $file_types = getFileTypes();
+    foreach ( $file_types as $file_type ){
+        if( ( ! $type ) &&  array_search($extension_loaded, $file_type['extensions'] ) !== false ){
+            $type = $file_type['name'];
+        }
+    }
+    if( ! $type ){
+        $type = 'other';
+    }
+    return $type;
+}
+
+function getFileTypes(){
+    $file_types = file_get_contents( base_path( 'config/file-types.json' ) );
+    $file_types = json_decode( $file_types, true);
+    return $file_types;
 }
 
