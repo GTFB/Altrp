@@ -42,7 +42,7 @@ class FontsForm extends Component {
       return alert('Upload font file')
     }
 
-    const { fontsLibrary, ...restProps} = this.state;
+    const { fontsLibrary, ...restProps } = this.state;
     const data = {};
 
     for (const key in restProps) {
@@ -55,6 +55,9 @@ class FontsForm extends Component {
 
   render() {
     const { fontFamily, fontWeight, fontStyle, woffFile, woff2File, ttfFile, svgFile, eotFile, fontsLibrary } = this.state;
+
+    if (!this.props.editFont) return null;
+
     return <div className="admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">

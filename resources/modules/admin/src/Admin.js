@@ -64,6 +64,7 @@ import ModelPage from "./components/models/ModelPage";
 import FontsForm from "./components/FontsForm";
 import {WithRouterAdminAssetsDropList} from "./components/AdminAssetsDropList";
 import {CustomFonts} from "./components/CustomFonts";
+import {EditFont} from "./components/EditFont";
 
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 import Resource from "../../editor/src/js/classes/Resource";
@@ -422,7 +423,9 @@ class Admin extends Component {
             </Route>
             <Route path="/admin/assets/custom-fonts">
               <CustomFonts />
-              {/* <FontsForm /> */}
+            </Route>
+            <Route path="/admin/assets/edit-font">
+              <EditFont />
             </Route>
             <Route path="/admin/assets">
               <Assets />

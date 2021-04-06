@@ -3,6 +3,16 @@
     padding: 17px 17px 15px 22px;
     background-color: #f0f0f1;
 
+    & a {
+        color: #1a74af;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: none;
+            color: #0a4b78;
+        }
+    }
+
     &__title {
         display: flex;
         font-size: 21px;
@@ -19,10 +29,11 @@
 
     &__sorting-options {
         &-name {
-            color: #1a74af;
         }
 
         &-count {
+            color: #646970;
+
             &_line {
                 border-right: 2px solid #646970;
                 padding-right: 4px;
@@ -105,12 +116,6 @@
         font-size: 14px;
         background-color: #fff;
 
-        & span {
-            &:hover {
-                cursor: pointer;
-            }
-        }
-
         & thead {
             border-bottom: 1px solid #c3c4c7;
 
@@ -192,6 +197,19 @@
 
             &:hover {
                 color: #0a4b78;
+            }
+
+            &__count {
+                position: absolute;
+                top: 12px;
+                left: 82px;
+                width: 17px;
+                height: 16px;
+                background-color: #d4dffb;
+                border-radius: 9px;
+                font-size: 9px;
+                text-align: center;
+                padding-top: 1px;
             }
         }
 

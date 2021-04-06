@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 
 export class CustomFonts extends React.Component {
     render() {
@@ -7,8 +8,8 @@ export class CustomFonts extends React.Component {
                 <div className="custom-fonts__title">Custom Fonts<button className="custom-fonts__btn custom-fonts__btn_add-new">Add new</button></div>
                 <div className="custom-fonts__table-header">
                     <div className="custom-fonts__sorting-options">
-                        <span className="custom-fonts__sorting-options-name">All </span><span className="custom-fonts__sorting-options-count custom-fonts__sorting-options-count_line">(2)</span>
-                        <span className="custom-fonts__sorting-options-name">Published </span><span className="custom-fonts__sorting-options-count">(2)</span>
+                        <Link className="custom-fonts__sorting-options-name">All <span className="custom-fonts__sorting-options-count custom-fonts__sorting-options-count_line">(2)</span></Link>
+                        <Link className="custom-fonts__sorting-options-name">Published <span className="custom-fonts__sorting-options-count">(2)</span></Link>
                     </div>
                     <div className="custom-fonts__search">
                         <input className="custom-fonts__search-input" />
@@ -37,12 +38,12 @@ export class CustomFonts extends React.Component {
                     <tbody>
                         <tr>
                             <td className="custom-fonts__table-check"><input type="checkbox" /></td>
-                            <td className="custom-fonts__table-font-family"><span>уапмииуки</span></td>
+                            <td className="custom-fonts__table-font-family"><Link to="/admin/assets/edit-font">уапмииуки</Link><div className="custom-fonts__table-font-family__count">1</div></td>
                             <td className="custom-fonts__table-preview">Elementor Is Making the Web Beautiful!!!</td>
                         </tr>
                         <tr>
                             <td className="custom-fonts__table-check"><input type="checkbox" /></td>
-                            <td className="custom-fonts__table-font-family">уапмииуки</td>
+                            <td className="custom-fonts__table-font-family"><Link to="/admin/assets/edit-font">уапмииуки</Link><div className="custom-fonts__table-font-family__count">1</div></td>
                             <td className="custom-fonts__table-preview">Elementor Is Making the Web Beautiful!!!</td>
                         </tr>
                     </tbody>
