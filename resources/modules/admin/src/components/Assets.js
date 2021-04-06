@@ -75,16 +75,16 @@ class Assets extends Component {
     // update request by asset id
     return this.resource.put(assetId, data)
   }
-  deleteAsset = (imageId) => {
+  deleteAsset = (id) => {
     this.setState(state => {
       return { ...state, itemDeleteClasses: 'item__delete altrp-disabled' }
     });
-    this.resource.delete(imageId).then(res => {
+    this.resource.delete(id).then(res => {
       if (res.success) {
         let newAssets = [...this.state.assets];
-        newAssets = _.filter(newAssets, item => !(item.id === Number(imageId)));
+        newAssets = _.filter(newAssets, item => !(item.id === Number(id)));
         this.setState(state => {
-          return { ...state, assets: newAssets, itemDeleteClasses: 'item__delete', imageId: null };
+          return { ...state, assets: newAssets, itemDeleteClasses: 'item__delete', imageId: null, fontId: null };
         })
       }
     });

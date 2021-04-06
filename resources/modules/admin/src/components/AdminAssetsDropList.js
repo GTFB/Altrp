@@ -9,7 +9,7 @@ class AdminAssetsDropList extends React.Component {
 
         return (
                 <ul className={pathmanHaveAsssets !== -1 ? "admin-nav-list admin-nav-list--sublist_active" : "admin-nav-list admin-nav-list--sublist"}>
-                    <li><Link className="admin-nav-list__link"><span>Library</span></Link></li>
+                    <li><Link to="/admin/assets" className="admin-nav-list__link"><span>Library</span></Link></li>
                     <li>
                         <Link
                             to="/admin/assets/custom-fonts"

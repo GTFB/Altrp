@@ -35,10 +35,10 @@ export class FontsDetail extends React.Component {
             })
         })
     }
-
-    // deleteAsset(id) {
-    //     this.props.deleteAsset(id)
-    // }
+    
+    deleteAsset(id) {
+        this.props.deleteAsset(id)
+    }
 
     render() {
         const { authorName, created_at, filename, media_type } = this.state
