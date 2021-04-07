@@ -257,4 +257,55 @@ class PagesController extends Controller
     return response()->json( $pages_options );
   }
 
+  /**
+   * @param string $page_id
+   * @return boolean
+   */
+  public function clearСache( $page_id = null ){
+
+    $cachePath = 'public/storage/cache';
+
+    if (!Storage::has($cachePath)) {
+      File::makeDirectory(storage_path() . '/app/' . $cachePath, 0777);
+      Storage::put($cachePath . '/relations.json', '{}');
+      return true;
+    }
+    
+    if (!$page_id) {
+      $files = Storage::allFiles($cachePath);
+      Storage::delete($files);
+      Storage::put($cachePath . '/relations.json', '{}');
+      return true;
+    }
+
+    $relationsJson = Storage::get($cachePath . '/relations.json');
+    $relations = json_decode($relationsJson, true);
+
+    $page = Page::find( $page_id );
+
+    if (!$page || !$page->path) {
+       return false;
+    }
+
+    $page->path = preg_replace("#/$#", "", $page->path);
+    $page_path = explode('/', $page->path);
+
+    foreach ($relations as $key => $relation) {
+
+      $relation['url'] = preg_replace("#/$#", "", $relation['url']);
+      $relation_path = explode('/', $relation['url']);
+
+      if (count($page_path) == count($relation_path) && $page_path[1] === $relation_path[1]) {
+        unset($relations[$key]);
+        Storage::delete($cachePath . '/' . $relation['hash']);
+        break;
+      }
+      
+    }
+
+    $relations = json_encode($relations);
+    Storage::put($cachePath . '/relations.json', $relations);
+    return true;
+  }
+
 }

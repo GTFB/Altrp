@@ -58,40 +58,4 @@ class PageController
 //    return response()->json( $res );
   }
 
-  /**
-   * @param string $route
-   * @return boolean
-   */
-  public function clearСache( $route = null ){
-
-    $cachePath = 'public/storage/cache';
-
-    if (!Storage::has($cachePath)) {
-      File::makeDirectory(storage_path() . '/app/' . $cachePath, 0777);
-      Storage::put($cachePath . '/relations.json', '{}');
-      return true;
-    }
-    
-    if (!$route) {
-      $files = Storage::allFiles($cachePath);
-      Storage::delete($files);
-      Storage::put($cachePath . '/relations.json', '{}');
-      return true;
-    }
-
-    $relationsJson = Storage::get($cachePath . '/relations.json');
-    $relations = json_decode($relationsJson, true);
-
-    foreach ($relations as $key => $relation) {
-      if ($relation['url'] === $route) {
-        unset($relations[$key]);
-        Storage::delete($cachePath . '/' . $relation['hash']);
-        break;
-      }
-    }
-
-    $relations = json_encode($relations);
-    Storage::put($cachePath . '/relations.json', $relations);
-    return true;
-  }
 }

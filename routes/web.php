@@ -123,6 +123,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/pages_options', 'Admin\PagesController@pages_options')->name('admin.pages_options.all');
     Route::get('/reports_options', 'Admin\PagesController@reports_options')->name('admin.reports_options.all');
     Route::get('/pages_options/{page_id}', 'Admin\PagesController@show_pages_options')->name('admin.pages_options.show');
+    /**
+     * Очистка кэша
+     */
+    Route::get('clear_cache/{page_id?}', 'Admin\PagesController@clearСache')->name('clear_cache');
 
 
     Route::get('/page_data_sources', 'Admin\PageDatasourceController@index');
@@ -422,6 +426,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::group(['prefix' => 'downloads'], function () {
       Route::get('settings', 'Admin\DownloadsController@exportAltrpSettings')->name('admin.download.settings');
     });
+
   });
 
 });
@@ -581,11 +586,6 @@ Route::group(['prefix' => 'ajax'], function () {
   Route::post('/feedback', 'MailController@sendMail');
   Route::post('/feedback-html', 'MailController@sendMailHTML');
 
-
-  /**
-   * Очистка кэша
-   */
-  Route::get('clear_cache/{route?}', 'Frontend\PageController@clearСache')->name('clear_cache');
 });
 
 Route::get('reports/{id}', "ReportsController@show");
