@@ -29,19 +29,6 @@ class AltrpCacheService
 
 	}
 
-	public function has($current_route){
-
-		return file_exists(self::CACHE_PATH . md5($current_route));
-
-	}
-
-	public function get($current_route){
-
-		$file = file_get_contents(self::CACHE_PATH . md5($current_route));
-		echo $file;
-
-	}
-
 	public function minification($html) {
 
 		$search = [

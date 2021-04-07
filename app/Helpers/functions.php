@@ -528,3 +528,112 @@ function setDynamicData($template, $data)
     return $template;
 }
 
+/**
+ * Сохранение кэша страниц
+ * @param string $route
+ * @param string $html
+ * @return boolean
+ */
+function saveRelation($route, $html) {
+
+    if (!$route || !$html) {
+      return false;
+    }
+
+    $html = minificationHTML($html);
+    $hash = md5($route . $html);
+
+    $cachePath = 'public/storage/cache';
+
+    if (!Storage::has($cachePath . '/relations.json') || Storage::get($cachePath . '/relations.json') == '') {
+      Storage::put($cachePath . '/relations.json', '{}');
+    }
+
+    $relationsJson = Storage::get($cachePath . '/relations.json');
+    $relations = json_decode($relationsJson, true);
+
+    $newRelation = ['hash' => $hash, "url" => $route];
+
+    $key = false;
+    foreach ($relations as $relation) {
+      if ($relation['hash'] === $hash) {
+        $key = true;
+        break;
+      }
+    }
+
+    if (!$key) {
+      array_push($relations, $newRelation);
+    }
+
+    $relations = json_encode($relations);
+    Storage::put($cachePath . '/relations.json', $relations);
+
+    if (!Storage::has($cachePath)) {
+      File::makeDirectory(storage_path() . '/app/' . $cachePath, 0777);
+    }
+    Storage::put($cachePath . '/' . $hash, $html);
+
+    return true;
+}
+
+
+/**
+ * Удаление кэша страниц
+ * @param string $route
+ * @param string $html
+ */
+function removeRelation($route, $html) {
+
+    $html = minificationHTML($html);
+    $hash = md5($route . $html);
+
+    $cachePath = 'public/storage/cache';
+
+    if (!Storage::has($cachePath)) {
+      File::makeDirectory(storage_path() . '/app/' . $cachePath, 0777);
+    }
+
+    if (!Storage::has($cachePath . '/relations.json') || Storage::get($cachePath . '/relations.json') == '') {
+      Storage::put($cachePath . '/relations.json', '{}');
+    }
+
+    $relationsJson = Storage::get($cachePath . '/relations.json');
+    $relations = json_decode($relationsJson, true);
+
+    $newRelation = ['hash' => $hash, "url" => $route];
+
+    foreach ($relations as $key => $relation) {
+      if ($relation['hash'] === $hash) {
+        unset($relations[$key]);
+        break;
+      }
+    }
+
+    $relations = json_encode($relations);
+    Storage::put($cachePath . '/relations.json', $relations);
+    Storage::delete($cachePath . '/' . $hash);
+}
+
+/**
+ * Минификация HTML
+ * @param string $html
+ */
+function minificationHTML($html) {
+    $search = [
+      '/\>[^\S ]+/s',     
+      '/[^\S ]+\</s',     
+      '/(\s)+/s',         
+      '/<!--(.|\s)*?-->/' 
+    ];
+
+    $replace = [
+      '>',
+      '<',
+      '\\1',
+      ''
+    ];
+
+    return preg_replace($search, $replace, $html);
+}
+

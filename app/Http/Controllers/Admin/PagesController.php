@@ -70,6 +70,7 @@ class PagesController extends Controller
     $page->author = auth()->user()->id;
     $page->content = '';
     $page->guid = (string)Str::uuid();
+    $page->is_cached = $request->is_cached;
     if ( $page->save() ) {
       if ( $request->template_id ) {
         $template = Template::find( $request->template_id );
@@ -144,6 +145,7 @@ class PagesController extends Controller
     $page->seo_description = $request->seo_description;
     $page->seo_keywords = $request->seo_keywords;
     $page->seo_title = $request->seo_title;
+    $page->is_cached = $request->is_cached;
     $res['page'] = $page->toArray();
 
     $pages_template = PagesTemplate::where( 'page_id', $id )->where( 'template_type', 'content' )->first();
@@ -253,5 +255,15 @@ class PagesController extends Controller
     ];
 
     return response()->json( $pages_options );
+  }
+
+  /**
+   * Включение/выключение кэширования
+   * @param string $page_id
+   * @return boolean
+   */
+  public function switch_caching( $page_id )
+  {
+    return Page::switchCaching( $page_id );
   }
 }

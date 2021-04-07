@@ -57,4 +57,25 @@ class PageController
 //
 //    return response()->json( $res );
   }
+
+
+  /**
+   * @param string $page_id
+   * @return boolean
+   */
+  public function saveСache( $route, $html ){
+
+    return saveRelation($route, $html);
+
+  }
+
+  /**
+   * @param string $page_id
+   * @return boolean
+   */
+  public function removeСache( $route, $html ){
+
+    return removeRelation($route, $html);
+    
+  }
 }

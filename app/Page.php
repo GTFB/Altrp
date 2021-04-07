@@ -43,7 +43,8 @@ class Page extends Model
     'seo_description',
     'seo_keywords',
     'seo_title',
-    'type'
+    'type',
+    'is_cached'
   ];
 
   /**
@@ -605,5 +606,38 @@ class Page extends Model
     $result['important_styles'] = implode( '', $important_styles );
 
     return $result;
+  }
+
+  /**
+   * @param string $page_id
+   * @return boolean
+   */
+  static function isCached( $page_id )
+  { 
+
+    $page = Page::find( $page_id );
+    if ($page->is_cached) {
+      return true;
+    }
+    return false;
+
+  }
+
+  /**
+   * @param string $page_id
+   * @return boolean
+   */
+  static function switchCaching( $page_id )
+  { 
+
+    $page = self::find( $page_id );
+    if ($page->is_cached) {
+      $res = false;
+    } else {
+      $res = true;
+    }
+    self::whereId($page_id)->update(['is_cached' => $res]);
+
+    return $res;
   }
 }
