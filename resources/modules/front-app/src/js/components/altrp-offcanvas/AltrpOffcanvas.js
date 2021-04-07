@@ -133,7 +133,7 @@ class OffcanvasWidget extends Component {
     }
     classesWrapper += ` altrp-offcanvas-wrapper-cursor-${this.state.settings.close_cursor_offcanvas} ${this.state.settings.overflow_visible_offcanvas ? "altrp-offcanvas-wrapper-overflow-visible" : ""}`;
 
-    const closeButton = this.state.settings.close_offcanvas ? (
+    const closeButton = this.state.settings.switcher_close_button_popup_layout ? (
       <div className={"altrp-offcanvas-button popup-close-button" + ` altrp-offcanvas-button-${this.state.settings.popup_close_icon_alignment}`} onClick={this.hideButton}>
         <AltrpImage image={this.state.settings.popup_close_icon} default={{assetType: "icon", name: "deleteOne"}} className="altrp-offcanvas-button-icon popup-close-button-icon"/>
       </div>
