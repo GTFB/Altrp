@@ -580,17 +580,17 @@ class Page extends Model
     $important_styles = [];
     ob_start();
     ?>
-    <div class="front-app-content front-app-content_preloaded">
+    <div class="front-app-content">
       <div class="route-content" id="route-content">
         <?php
         foreach ( $templates as $template ) {
 
-//          $styles = data_get( $template, 'styles' );
-//          $styles = json_decode( $styles, true );
+          $styles = data_get( $template, 'styles' );
+          $styles = json_decode( $styles, true );
 
-//          if( data_get( $styles, 'important_styles') ) {
-//            $important_styles = array_merge( $important_styles, data_get( $styles, 'important_styles', []) );
-//          }
+          if( data_get( $styles, 'important_styles') ) {
+            $important_styles = array_merge( $important_styles, data_get( $styles, 'important_styles', []) );
+          }
           ?>
           <div class="app-area app-area_<?php echo $template['template_type']; ?>">
           <?php

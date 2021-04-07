@@ -55,6 +55,7 @@
         "express-session": "^1.17.1",
         "gsap": "^3.6.0",
         "highlight.js": "^10.1.1",
+        "html-minifier": "^4.0.0",
         "html2pdf.js": "^0.9.2",
         "immutability-helper": "^3.1.1",
         "invert-color": "^2.0.0",

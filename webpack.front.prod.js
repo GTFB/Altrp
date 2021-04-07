@@ -1,7 +1,9 @@
+const WriteChunksToFrontBlade = require("./WriteChunksToFrontBlade");
 const merge = require('webpack-merge');
 const common = require('./webpack.front.common.js');
 const path = require("path");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 
 module.exports = merge(common, {
   mode: 'production',
@@ -42,7 +44,8 @@ module.exports = merge(common, {
       chunkFilename: '[chunkhash].front-app.css',
 
       filename: 'front-app.css'
-    })
+    }),
+    new WriteChunksToFrontBlade,
     //   // Options similar to the same options in webpackOptions.output
     //   // both options are optional
     //   filename: '[name].css',
@@ -50,3 +53,4 @@ module.exports = merge(common, {
     // }),
   ]
 });
+

@@ -1,8 +1,7 @@
 import styled from 'styled-components';
-import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
+import {getResponsiveSetting, isEditor} from "../../../../../../front-app/src/js/helpers";
 import {dimensionsControllerToStyles} from "../../../../../../front-app/src/js/helpers/styles";
-
-const settingsToStyles = ({settings})=>{
+const settingsToStyles = ({settings, columns = []})=>{
   let styles = '';
 
   styles += '&.altrp-section{';
@@ -12,6 +11,17 @@ const settingsToStyles = ({settings})=>{
   }
 
   styles += '}';
+  if(! isEditor()){
+    columns = columns.filter(c=>{
+      return _.get(c,'wrapper.state.elementDisplay');
+    });
+  }
+  if(columns.length){
+    styles += '& > .altrp-element_column{';
+    styles += `width:${100/columns.length}%;`;
+    styles += '}';
+
+  }
   return styles;
 };
 

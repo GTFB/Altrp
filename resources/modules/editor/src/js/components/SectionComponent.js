@@ -151,6 +151,7 @@ class SectionComponent extends Component {
       { style: styles,
         className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: "" ,
         onClick: this.onClick,
+        columns: this.props.element.children || [],
         settings: this.props.element.getSettings(),
       },
       // isScrollEffect ?

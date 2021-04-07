@@ -130,6 +130,9 @@ input[type="checkbox"] {
     text-align: inherit;
     padding: 0;
     margin: 0;
+    &.altrp-inherit_wo-border{
+        border: none;
+    }
 }
 .altrp-pointer{
     cursor: pointer;
