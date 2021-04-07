@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ExportExcel extends Model {
+class ExportExcel extends Model
+{
     const TEMPLATES_ROOT = 'modules/reports/templates/';
 
     public $data;
@@ -22,14 +23,16 @@ class ExportExcel extends Model {
 
     protected $spreadsheet;
 
-    public function __construct($data, $template, $filename) {
+    public function __construct($data, $template, $filename)
+    {
         $this->data = json_decode($data, true);
         $this->template = false;
-        if (file_exists(public_path(self::TEMPLATES_ROOT . $template)))
-            $this->template = public_path(self::TEMPLATES_ROOT . $template);
+        if (file_exists($template))
+            $this->template = $template;
         $this->filename = 'report.xlsx';
         if ($filename)
             $this->filename = $filename;
+        //echo $this->filename;
     }
 
     protected function getDelimiter($file)
@@ -44,7 +47,8 @@ class ExportExcel extends Model {
         return array_search(max($delimiters), $delimiters);
     }
 
-    protected function getStartRow() {
+    protected function getStartRow()
+    {
         $row = false;
         for ($i = 0; $i < count($this->worksheet); $i++) {
             if (!array_filter($this->worksheet[$i])) {
@@ -58,7 +62,8 @@ class ExportExcel extends Model {
         return $row;
     }
 
-    protected function parseTemplateData() {
+    protected function parseTemplateData()
+    {
         if (!empty($this->worksheet)) {
             for ($i = 0; $i < count($this->worksheet); $i++) {
                 for ($j = 0; $j < count($this->worksheet[$i]); $j++) {
@@ -69,7 +74,7 @@ class ExportExcel extends Model {
                         foreach ($data[1] as $item) {
                             $key = trim($item);
                             //вставляем одиночную переменную
-                            $this->worksheet[$i][$j] = str_replace('data:'.$item, $this->data[$key], $this->worksheet[$i][$j]);
+                            $this->worksheet[$i][$j] = str_replace('data:' . $item, $this->data[$key], $this->worksheet[$i][$j]);
                             $this->worksheet[$i][$j] = str_replace('{{', '', $this->worksheet[$i][$j]);
                             $this->worksheet[$i][$j] = str_replace('}}', '', $this->worksheet[$i][$j]);
                             $this->spreadsheet->getActiveSheet()->setCellValue($column, $this->worksheet[$i][$j]);
@@ -82,7 +87,8 @@ class ExportExcel extends Model {
         }
     }
 
-    protected function parseTemplateArray(&$offset) {
+    protected function parseTemplateArray(&$offset)
+    {
         if (!empty($this->worksheet)) {
             for ($i = 0; $i < count($this->worksheet); $i++) {
                 for ($j = 0; $j < count($this->worksheet[$i]); $j++) {
@@ -95,13 +101,12 @@ class ExportExcel extends Model {
                         $this->worksheet[$i][$j] = '';
                         if (isset($this->data[$key]) && !empty($this->data[$key])) {
                             $countRows = count($this->data[$key]) - 1;
-                            $this->sheet->insertNewRowBefore($i+2+$offset, $countRows);
+                            $this->sheet->insertNewRowBefore($i + 2 + $offset, $countRows);
                             $this->sheet->fromArray($this->data[$key], NULL, $column);
                             $offset = $offset + $countRows;
                             return;
                         }
                     }
-
                 }
             }
         } else {
@@ -134,23 +139,28 @@ class ExportExcel extends Model {
                 if (is_array($this->data['dataArray'])) {
                     $this->parseTemplateArray($offset);
                 }
-
             } else {
                 $this->spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
                 $this->sheet = $this->spreadsheet->getActiveSheet();
-                $this->sheet->fromArray($this->data['dataArray'], NULL, 'A1' );
+                $this->sheet->fromArray($this->data['dataArray'], NULL, 'A1');
             }
-
+            /*
             header('Content-Type: application/vnd.ms-excel');
             header('Content-Disposition: attachment;filename="' . $this->filename . '"');
             header('Cache-Control: max-age=0');
+            */
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment; filename="'. urlencode($this->filename).'.xlsx"');
 
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($this->spreadsheet, "Xlsx");
-            $writer->save('php://output');
-
+            //$writer->save('php://output');
+            //$writer->save('j:\NewServer\data\altrp\storage\tmp\text.xlsx');
+            $filename = storage_path() . '/tmp/' . $this->filename . '.xlsx';
+            $writer->save($filename);
+            readfile($filename);
+            unlink($filename);
         } catch (\Exception $e) {
             echo $e->getMessage();
         }
     }
-
 }
