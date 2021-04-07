@@ -27,11 +27,12 @@ class ExportExcel extends Model
     {
         $this->data = json_decode($data, true);
         $this->template = false;
-        if (file_exists(public_path(self::TEMPLATES_ROOT . $template)))
-            $this->template = public_path(self::TEMPLATES_ROOT . $template);
+        if (file_exists($template))
+            $this->template = $template;
         $this->filename = 'report.xlsx';
         if ($filename)
             $this->filename = $filename;
+        //echo $this->filename;
     }
 
     protected function getDelimiter($file)
@@ -143,13 +144,21 @@ class ExportExcel extends Model
                 $this->sheet = $this->spreadsheet->getActiveSheet();
                 $this->sheet->fromArray($this->data['dataArray'], NULL, 'A1');
             }
-
+            /*
             header('Content-Type: application/vnd.ms-excel');
             header('Content-Disposition: attachment;filename="' . $this->filename . '"');
             header('Cache-Control: max-age=0');
+            */
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment; filename="'. urlencode($this->filename).'.xlsx"');
 
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($this->spreadsheet, "Xlsx");
-            $writer->save('php://output');
+            //$writer->save('php://output');
+            //$writer->save('j:\NewServer\data\altrp\storage\tmp\text.xlsx');
+            $filename = storage_path() . '/tmp/' . $this->filename . '.xlsx';
+            $writer->save($filename);
+            readfile($filename);
+            unlink($filename);
         } catch (\Exception $e) {
             echo $e->getMessage();
         }
