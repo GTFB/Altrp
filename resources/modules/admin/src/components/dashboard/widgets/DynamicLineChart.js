@@ -17,6 +17,9 @@ const format = "%d.%m.%Y";
 
 const DynamicLineChart = ({
   widget,
+  width = `300px`,
+  height = `450px`,
+  margin,
   keyIsDate,
   dataSource = [],
   lineWidth = 2,
@@ -181,13 +184,18 @@ const DynamicLineChart = ({
     <>
       <div
         style={{
-          width: `100%`,
-          height: `${450}px`
+          width: width,
+          height: height
         }}
       >
         <ResponsiveLine
           data={data}
-          margin={{ top: 50, right: 180, bottom: 50, left: 60 }}
+          margin={{
+            top: margin.top,
+            right: margin.right,
+            bottom: margin.bottom,
+            left: margin.left
+          }}
           xFormat={xScaleType === "time" && "time:%d.%m.%Y"}
           yScale={
             yScaleMax
@@ -262,32 +270,32 @@ const DynamicLineChart = ({
               ? pointColor.colorPickedHex
               : { from: "color", modifiers: [] }
           }
-          legends={[
-            {
-              anchor: "bottom-right",
-              direction: "column",
-              justify: false,
-              translateX: 130,
-              translateY: 0,
-              itemsSpacing: 0,
-              itemDirection: "left-to-right",
-              itemWidth: 120,
-              itemHeight: 20,
-              itemOpacity: 0.75,
-              symbolSize: 12,
-              symbolShape: "circle",
-              symbolBorderColor: "rgba(0, 0, 0, .5)",
-              effects: [
-                {
-                  on: "hover",
-                  style: {
-                    itemBackground: "rgba(0, 0, 0, .03)",
-                    itemOpacity: 1
-                  }
-                }
-              ]
-            }
-          ]}
+          // legends={[
+          //   {
+          //     anchor: "bottom-right",
+          //     direction: "column",
+          //     justify: false,
+          //     translateX: 130,
+          //     translateY: 0,
+          //     itemsSpacing: 0,
+          //     itemDirection: "left-to-right",
+          //     itemWidth: 120,
+          //     itemHeight: 20,
+          //     itemOpacity: 0.75,
+          //     symbolSize: 12,
+          //     symbolShape: "circle",
+          //     symbolBorderColor: "rgba(0, 0, 0, .5)",
+          //     effects: [
+          //       {
+          //         on: "hover",
+          //         style: {
+          //           itemBackground: "rgba(0, 0, 0, .03)",
+          //           itemOpacity: 1
+          //         }
+          //       }
+          //     ]
+          //   }
+          // ]}
         />
       </div>
     </>

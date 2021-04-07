@@ -138,6 +138,19 @@ class Diagram extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection("main", {
+      tab: TAB_CONTENT,
+      dynamic: false,
+      label: "Main"
+    });
+
+    this.addControl("widget_name", {
+      dynamic: false,
+      label: "Widget name"
+    });
+
+    this.endControlSection();
+
     this.startControlSection("multiple_data", {
       dynamic: false,
       label: "Multiple data",
@@ -865,6 +878,21 @@ class Diagram extends BaseElement {
       min: 0,
       rules: {
         "{{ELEMENT}} .altrp-diagram{{STATE}}": "width: {{SIZE}}{{UNIT}}"
+      }
+    });
+
+    this.addControl("height", {
+      type: CONTROLLER_SLIDER,
+      label: "height",
+      default: {
+        size: 400,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
+      max: 1000,
+      min: 0,
+      rules: {
+        "{{ELEMENT}} .altrp-diagram{{STATE}}": "height: {{SIZE}}{{UNIT}}"
       }
     });
 

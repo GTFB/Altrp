@@ -14,8 +14,8 @@ import TooltipPie from "./d3/TooltipPie";
 
 const DynamicPieChart = ({
   widget,
-  width = 300,
-  height = 450,
+  width = "300px",
+  height = "450px",
   dataSource = [],
   colorScheme = "red_grey",
   enableSliceLabels = false,
@@ -33,7 +33,8 @@ const DynamicPieChart = ({
   customColors = [],
   yScaleMax,
   widgetID,
-  useCustomTooltips
+  useCustomTooltips,
+  margin
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -90,15 +91,15 @@ const DynamicPieChart = ({
   if (!data || data.length === 0) return <EmptyWidget />;
   return (
     <>
-      <div style={{ height: `${height}px` }}>
+      <div style={{ height: height, width: width }}>
         <ResponsivePie
           data={data}
           colors={{ scheme: colorScheme }}
           margin={{
-            top: 80,
-            right: !isDashboard ? 250 : 60,
-            bottom: 80,
-            left: !isDashboard ? 140 : 60
+            top: margin.top,
+            right: margin.right,
+            bottom: margin.bottom,
+            left: margin.left
           }}
           colors={
             customColorSchemeChecker && customColors.length > 0
@@ -129,30 +130,34 @@ const DynamicPieChart = ({
             }
           }
           colors={
-            colorScheme === "regagro" ? regagroScheme : 
-            colorScheme === "milk" ? milkScheme : 
-            colorScheme === "milk2" ? milkScheme2 : { scheme: colorScheme }
+            colorScheme === "regagro"
+              ? regagroScheme
+              : colorScheme === "milk"
+              ? milkScheme
+              : colorScheme === "milk2"
+              ? milkScheme2
+              : { scheme: colorScheme }
           }
           enableRadialLabels={enableRadialLabels}
-          legends={
-            !isDashboard
-              ? [
-                  {
-                    anchor: "right",
-                    direction: "column",
-                    translateX: 80,
-                    translateY: 0,
-                    itemsSpacing: 2,
-                    itemWidth: 60,
-                    itemHeight: 14,
-                    itemDirection: "left-to-right",
-                    itemOpacity: 1,
-                    symbolSize: 14,
-                    symbolShape: "circle"
-                  }
-                ]
-              : []
-          }
+          // legends={
+          //   !isDashboard
+          //     ? [
+          //         {
+          //           anchor: "right",
+          //           direction: "column",
+          //           translateX: 80,
+          //           translateY: 0,
+          //           itemsSpacing: 2,
+          //           itemWidth: 60,
+          //           itemHeight: 14,
+          //           itemDirection: "left-to-right",
+          //           itemOpacity: 1,
+          //           symbolSize: 14,
+          //           symbolShape: "circle"
+          //         }
+          //       ]
+          //     : []
+          // }
         />
       </div>
     </>

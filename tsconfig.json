@@ -9,7 +9,8 @@
         "jsx": "react",
         "esModuleInterop": false,
         "allowSyntheticDefaultImports": true,
-        "moduleResolution": "Node"
+        "moduleResolution": "Node",
+        "skipLibCheck": true
     },
     "include": ["resources/modules/front-app/src/ts/src/"],
     "exclude": ["node_modules"]

@@ -2,7 +2,11 @@
  * @class ArrayConverter
  */
 import DataConverter from "./DataConverter";
-import {extractPathFromString, getDataByPath, parseParamsFromString} from "../../helpers";
+import {
+  extractPathFromString,
+  getDataByPath,
+  parseParamsFromString
+} from "../../helpers";
 
 class ArrayConverter extends DataConverter {
   /**
@@ -12,12 +16,12 @@ class ArrayConverter extends DataConverter {
    */
   extract(data) {
     let argument = this.getArgument(1);
-    if (! argument) {
+    if (!argument) {
       return data;
     }
-    return data.map(item=>{
-      return getDataByPath(extractPathFromString(argument), '', item)
-    })
+    return data.map(item => {
+      return getDataByPath(extractPathFromString(argument), "", item);
+    });
   }
   /**
    * возвращает массив значений указанного свойства для массива объектов
@@ -26,12 +30,13 @@ class ArrayConverter extends DataConverter {
    */
   map(data) {
     let argument = this.getArgument(1);
-    if (! argument) {
+    if (!argument) {
       return data;
     }
-    return data.map(item=>{
-      return parseParamsFromString(argument, item, true)
-    })
+    const result = data.map(item => {
+      return parseParamsFromString(argument, item, true);
+    });
+    return result;
   }
 
   /**
@@ -39,10 +44,10 @@ class ArrayConverter extends DataConverter {
    * @param data
    * @return {boolean}
    */
-  checkData(data){
+  checkData(data) {
     super.checkData(data);
     return _.isArray(data);
   }
 }
 
-export default ArrayConverter
+export default ArrayConverter;
