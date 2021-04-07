@@ -257,13 +257,4 @@ class PagesController extends Controller
     return response()->json( $pages_options );
   }
 
-  /**
-   * Включение/выключение кэширования
-   * @param string $page_id
-   * @return boolean
-   */
-  public function switch_caching( $page_id )
-  {
-    return Page::switchCaching( $page_id );
-  }
 }

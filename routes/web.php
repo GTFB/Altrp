@@ -123,7 +123,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/pages_options', 'Admin\PagesController@pages_options')->name('admin.pages_options.all');
     Route::get('/reports_options', 'Admin\PagesController@reports_options')->name('admin.reports_options.all');
     Route::get('/pages_options/{page_id}', 'Admin\PagesController@show_pages_options')->name('admin.pages_options.show');
-    Route::post('/switch_caching/{page_id}', 'Admin\PagesController@switch_caching')->name('admin.pages_switch_caching');
+
 
     Route::get('/page_data_sources', 'Admin\PageDatasourceController@index');
     Route::get('/page_data_sources/pages/{page_id}', 'Admin\PageDatasourceController@getByPage');
@@ -464,23 +464,25 @@ foreach ( $frontend_routes as $_frontend_route ) {
   $replacement2 = '{$1}/';
   $frontend_route = preg_replace( $pattern1, $replacement1, $path );
 
+
+
   Route::get($frontend_route, function () use ($title, $_frontend_route, $frontend_route) {
 
     $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
 
-    $current_route = explode("/", $_frontend_route['path'])[1];
-    $current_route = "/" . $current_route . "/" . implode("/", Route::current()->parameters());
+    if (Page::isCached( $_frontend_route['id'] )) {
+      
+      $current_route = explode("/", $_frontend_route['path'])[1];
+      $current_route = "/" . $current_route . "/" . implode("/", Route::current()->parameters());
 
-    // ob_start(function($html) use ($title, $_frontend_route, $frontend_route, $preload_content, $current_route ) {
+      ob_start(function($html) use ($title, $_frontend_route, $frontend_route, $preload_content, $current_route ) {
+        
+        saveCache($current_route, $html);
+        
+        return $html;
 
-    //   if (Page::isCached( $_frontend_route['id'] )) {
-    //     saveRelation($current_route, $html);
-    //   } else {
-    //     removeRelation($current_route, $html);
-    //   }
-
-    //   return $html;
-    // });
+      });
+    }
 
     return view('front-app', [
       'page_areas' => json_encode( Page::get_areas_for_page( $_frontend_route['id']) ),
@@ -581,10 +583,9 @@ Route::group(['prefix' => 'ajax'], function () {
 
 
   /**
-   * Сохранение/удаление кэша
+   * Очистка кэша
    */
-  Route::get('save_cache/{route}/{html}', 'Frontend\PageController@saveСache')->name('save_cache');
-  Route::get('remove_cache/{route}/{html}', 'Frontend\PageController@removeСache')->name('remove_cache');
+  Route::get('clear_cache/{route?}', 'Frontend\PageController@clearСache')->name('clear_cache');
 });
 
 Route::get('reports/{id}', "ReportsController@show");
