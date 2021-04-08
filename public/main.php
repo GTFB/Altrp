@@ -1,5 +1,30 @@
 <?php
 
+//Render cached files
+$cachePath = '../storage/app/public/storage/cache/';
+if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
+
+	$url = $_SERVER['REQUEST_URI'];
+	$url = explode('?', $url);
+	$url = $url[0];
+
+	$cachedFiles = [];
+	$json = file_get_contents($cachePath . 'relations.json');
+	$cachedFiles = json_decode($json, true);
+
+	if (!empty($cachedFiles)) {
+		foreach ($cachedFiles as $cachedFile) {
+			if ($cachedFile['url'] === $url) {
+				$file = file_get_contents($cachePath . $cachedFile['hash']);
+				echo $file;
+				die();
+			}
+		}
+	}
+
+}
+
+
 /**
  * Laravel - A PHP Framework For Web Artisans
  *
