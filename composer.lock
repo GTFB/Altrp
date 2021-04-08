@@ -12,6 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/AkimovIgor/oauth2-module.git",
+
                 "reference": "11a1d692647788b3cddc9777432dc9574d877500"
             },
             "dist": {

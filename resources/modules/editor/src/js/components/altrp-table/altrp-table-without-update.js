@@ -37,6 +37,7 @@ import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput
 import TableComponent from "./components/TableComponent";
 import HeaderCellComponent from "./components/HeaderCellComponent";
 import TableBody from './components/TableBody';
+import Pagination from "./components/Pagination";
 
 /**
  *
@@ -173,7 +174,7 @@ function AltrpTableWithoutUpdate(
     } = column;
     _accessor = _accessor.trim();
     let leftValue, rightValue;
-    if(_accessor.indexOf('?') !== -1 && _accessor.indexOf(':') !== -1){
+    if(_accessor && _accessor.indexOf('?') !== -1 && _accessor.indexOf(':') !== -1){
       [leftValue, rightValue] = _accessor.split('?')[1].split(':');
       leftValue = leftValue.trim();
       rightValue = rightValue.trim();
@@ -837,142 +838,6 @@ function AltrpTableWithoutUpdate(
   </React.Fragment>
 }
 
-function PageButton({ index, pageIndex, gotoPage }) {
-  return <button
-    className={`altrp-pagination-pages__item ${(index === pageIndex) ? 'active' : ''}`}
-    onClick={() => gotoPage(index)}
-  >
-    {index + 1}
-  </button>
-}
-
-/**
- *
- * @param {{}}settings
- * @param {function} nextPage
- * @param {function} previousPage
- * @param {function} setPageSize
- * @param {function} gotoPage
- * @param {int} pageIndex
- * @param {int} pageCount
- * @param {int} pageSize
- * @param {string} widgetId
- * @return {*}
- */
-export function Pagination(
-  {
-    settings,
-    nextPage,
-    previousPage,
-    setPageSize,
-    pageIndex,
-    pageCount,
-    pageSize,
-    widgetId,
-    gotoPage,
-  }) {
-  const {
-    inner_page_count_options,
-    inner_page_type,
-    current_page_text,
-    inner_page_count,
-    next_icon, prev_icon,
-    first_last_buttons_count,
-    middle_buttons_count,
-    is_with_ellipsis
-  } = settings;
-  let countOptions =
-    React.useMemo(() => {
-      let countOptions = null;
-      if (inner_page_count_options) {
-        countOptions = inner_page_count_options.split('\n');
-        countOptions = countOptions.map(o => ({ value: Number(o), label: Number(o) }));
-      }
-      return countOptions
-    }, [inner_page_count_options]);
-
-  const pageText = React.useMemo(() => {
-    let pageText = current_page_text || 'Current Page: {{page}}';
-    pageText = pageText.replace('{{page}}', pageIndex + 1).replace('{{page_count}}', pageCount);
-    if (inner_page_type === 'pages') {
-      // let paginatePageCount = Number(inner_page_count) || pageCount;
-      // if (paginatePageCount <= 0 || paginatePageCount > pageCount) {
-      //   paginatePageCount = pageCount;
-      // }
-      // let array = [];
-      // for (let i = 0; i < paginatePageCount; i++) {
-      //   array.push(i);
-      // }
-      // let startIndex = (paginatePageCount === pageCount) ? 1 : (pageIndex + 1) - Math.floor(paginatePageCount / 2);
-      // if (startIndex <= 0) {
-      //   startIndex = 1;
-      // }
-      // if (startIndex + paginatePageCount > pageCount) {
-      //   startIndex = pageCount - paginatePageCount + 1;
-      // }
-      // pageText = <div className="altrp-pagination-pages">{array.map((i, idx) => {
-      //   idx += startIndex;
-      //   return <button className={`altrp-pagination-pages__item ${(idx - 1 === pageIndex) ? 'active' : ''}`}
-      //     key={idx}
-      //     onClick={() => {
-      //       gotoPage(idx - 1);
-      //     }}>
-      //     {idx}
-      //   </button>
-
-      // })}</div>
-      return <div className="altrp-pagination-pages">
-        {pageCount > first_last_buttons_count * 2 + middle_buttons_count
-          ? generateButtonsArray(pageIndex, pageCount, first_last_buttons_count, middle_buttons_count)
-            .map((item, index) => item === "ellipsis"
-              ? is_with_ellipsis ? <div key={item + index} className="altrp-pagination__ellipsis">...</div> : <span>&nbsp;</span>
-              : <PageButton key={item} index={item} pageIndex={pageIndex} gotoPage={gotoPage} />)
-          : [...Array(pageCount)].map((_, index) => <PageButton key={index} index={index} pageIndex={pageIndex} gotoPage={gotoPage} />)}
-      </div>
-    }
-    return pageText;
-  }, [current_page_text, pageIndex, pageCount, inner_page_type, inner_page_count]);
-  if(inner_page_type === 'none'){
-    return null;
-  }
-  return <div className="altrp-pagination">
-    {!settings.hide_pre_page_button && <button className={"altrp-pagination__previous"}
-      onClick={() => {
-        previousPage();
-      }}
-      disabled={pageIndex === 0}>
-      <span dangerouslySetInnerHTML={{ __html: settings.prev_text || 'Previous Page' }} />
-      {renderAssetIcon(prev_icon)}
-    </button>}
-    {!settings.hide_pages_buttons_button && <div className="altrp-pagination__count">
-      {pageText}
-    </div>}
-    {!settings.hide_next_page_button && <button className="altrp-pagination__next"
-      onClick={() => {
-        nextPage()
-      }}
-      disabled={pageCount === pageIndex + 1}>
-      <span dangerouslySetInnerHTML={{ __html: settings.next_text || 'Next Page' }} />
-      {renderAssetIcon(next_icon)}
-    </button>}
-    {!settings.hide_page_input && <input className="altrp-pagination__goto-page"
-      type="number"
-      defaultValue={pageIndex + 1}
-      onChange={(e) => {
-        const page = e.target.value ? Number(e.target.value) - 1 : 0;
-        gotoPage(page)
-      }} />}
-    {!settings.hide_pagination_select && countOptions && <AltrpSelect className="altrp-pagination__select-size"
-      options={countOptions}
-      classNamePrefix={widgetId + ' altrp-field-select2'}
-      value={countOptions.find(o => o.value === pageSize)}
-      isSearchable={false}
-      onChange={value => {
-        setPageSize(value.value)
-      }} />}
-
-  </div>
-}
 
 /**
  * Define a default UI for filtering
@@ -1212,7 +1077,7 @@ export function settingsToColumns(settings, widgetId) {
     if (((_column.actions && _column.actions.length) || _column.accessor)) {
       _column.edit_disabled = edit_disabled;
       _column._accessor = _column.accessor;
-      if(_column.accessor.indexOf('?') !== -1 && _column.accessor.indexOf(':') !== -1) {
+      if(_column.accessor && _column.accessor.indexOf('?') !== -1 && _column.accessor.indexOf(':') !== -1) {
         _column.accessor = _column.accessor.split('?')[0].trim();
       }
       _column.column_name = _column.column_name || '&nbsp;';

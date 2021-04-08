@@ -163,6 +163,14 @@ export function parseURLTemplate(URLTemplate = "", object = null) {
     protocol = "http://";
     url = url.replace("http://", "");
   }
+  if (url.indexOf("mailto:") === 0) {
+    protocol = "mailto:";
+    url = url.replace("mailto:", "");
+  }
+  if (url.indexOf("tel:") === 0) {
+    protocol = "tel:";
+    url = url.replace("tel:", "");
+  }
   // columnEditUrl = columnEditUrl.replace(':id', row.original.id);
   let idTemplates = url.match(/:([\s\S]+?)(\/|$)/g);
   if (!idTemplates) {
@@ -1047,6 +1055,24 @@ export function getHTMLElementById(elementId = "") {
   });
   return HTMLElement;
 }
+
+/**
+ * Вернет HTML  React компонента, у которого props.element = element
+ * @param {FrontElement} element
+ * @return {null | HTMLElement}
+ */
+export function getWrapperHTMLElementByElement(element) {
+  if (!element) {
+    return null;
+  }
+  let HTMLElement = null;
+  appStore.getState().elements.forEach(el => {
+    if (element === el.props.element) {
+      HTMLElement = el.elementWrapperRef.current;
+    }
+  });
+  return HTMLElement;
+}
 /**
  * Вернет HTML  React компонент, у которого elementWrapperRef.current.id = elementId
  * @param {string} elementId
@@ -1800,6 +1826,7 @@ export function getResponsiveSetting(
 ) {
   let { currentScreen } = window.parent.appStore.getState();
   let _settingName = `${settingName}_${elementState}_`;
+
   if (currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT) {
     let setting = settings[_settingName];
     if (setting === undefined) {
@@ -1810,6 +1837,21 @@ export function getResponsiveSetting(
   let suffix = currentScreen.name;
   _settingName = `${settingName}_${elementState}_${suffix}`;
   let setting = settings[_settingName];
+  if (setting === undefined) {
+    for (let screen of CONSTANTS.SCREENS) {
+      if (
+        currentScreen.id > screen.id ||
+        screen.name === CONSTANTS.DEFAULT_BREAKPOINT
+      ) {
+        continue;
+      }
+      _settingName = `${settingName}_${elementState}_${screen.name}`;
+      if (settings[_settingName]) {
+        setting = settings[_settingName];
+        break;
+      }
+    }
+  }
   if (setting === undefined) {
     setting = _.get(settings, settingName, _default);
   }

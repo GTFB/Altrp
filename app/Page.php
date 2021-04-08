@@ -585,12 +585,12 @@ class Page extends Model
         <?php
         foreach ( $templates as $template ) {
 
-          $styles = data_get( $template, 'styles' );
-          $styles = json_decode( $styles, true );
+//          $styles = data_get( $template, 'styles' );
+//          $styles = json_decode( $styles, true );
 
-          if( data_get( $styles, 'important_styles') ) {
-            $important_styles = array_merge( $important_styles, data_get( $styles, 'important_styles', []) );
-          }
+//          if( data_get( $styles, 'important_styles') ) {
+//            $important_styles = array_merge( $important_styles, data_get( $styles, 'important_styles', []) );
+//          }
           ?>
           <div class="app-area app-area_<?php echo $template['template_type']; ?>">
           <?php

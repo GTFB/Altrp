@@ -56,6 +56,14 @@ class Image extends BaseElement {
       label: 'Path',
     });
 
+
+    this.addControl('default_url', {
+      type: CONTROLLER_TEXT,
+      dynamic: false,
+      responsive: false,
+      label: 'Default Image URL',
+    });
+
     this.addControl('lightbox_switch', {
       hideOnEmail: true,
       type: CONTROLLER_SWITCHER,

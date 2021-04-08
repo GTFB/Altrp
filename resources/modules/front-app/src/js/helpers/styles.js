@@ -90,6 +90,10 @@ export function dimensionsControllerToStyles(data = {}, styleProperty = 'padding
   return styles;
 }
 
+export function shadowControllerToStyles(data = {}) {
+  let {type, offsetX, offsetY, blurRadius, spreadRadius, color } = data;
+  return `box-shadow: ${type} ${offsetX}px ${offsetY}px ${blurRadius}px ${spreadRadius} ${color} !important;`;
+}
 /**
  * Преобразует объект, который сохраняет контроллер typographic, в строку css для вставки в styled-компонент
  * @param {{}} data

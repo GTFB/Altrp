@@ -8,6 +8,8 @@ import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontEl
 import AltrpModel from "../../classes/AltrpModel";
 import ElementWrapper from "../../../../../front-app/src/js/components/ElementWrapper";
 import {getResponsiveSetting, isEditor, renderAssetIcon, setAltrpIndex} from "../../../../../front-app/src/js/helpers";
+import PostsWrapper from "./components/PostsWrapper";
+import Pagination from "../altrp-table/components/Pagination";
 
 class AltrpPosts extends React.Component {
   constructor(props) {
@@ -136,6 +138,9 @@ class AltrpPosts extends React.Component {
     if(! page){
       page = 1;
     }
+    if(page < 0){
+      page = 0;
+    }
     if(page > this.getPageCount()){
       page = this.getPageCount();
     }
@@ -144,12 +149,13 @@ class AltrpPosts extends React.Component {
     }
     this.setState(state =>({...state, currentPage: page}))
   }
+
   /**
    * Выводим пагинацию
    * @return {*}
    */
   renderPagination(){
-    const {settings} = this.props;
+    const settings = {...this.props.settings};
     let {data: posts} = this.props;
     if(! posts.length && ! isEditor()){
       return null;
@@ -158,7 +164,29 @@ class AltrpPosts extends React.Component {
     if(posts_pagination_type){
       const {currentPage} = this.state;
       const pageCount = this.getPageCount();
-      return posts_pagination_type === "prev_next" ?<div className="altrp-pagination-pages">
+      if(posts_pagination_type === 'pages'){
+        settings.hide_pagination_select = true;
+        settings.hide_page_input = true;
+        const paginationProps = {
+          settings,
+          pageCount,
+          pageIndex: this.state.currentPage - 1,
+          nextPage: ()=>{
+            this.setPage(this.state.currentPage + 1);
+          },
+          previousPage: ()=>{
+            this.setPage(this.state.currentPage - 1);
+          },
+          gotoPage: (page)=>{
+            this.setPage(page + 1);
+          },
+          pageSize: this.props.element.getResponsiveSetting('posts_per_page'),
+          widgetId: this.props.element.getId(),
+        };
+
+        return <Pagination {...paginationProps} />
+      }
+      return posts_pagination_type === "prev_next" ? <div className="altrp-pagination-pages">
         <button className={"altrp-pagination__previous " + (currentPage <= 1 ? 'state-disabled' : '')}
                 disabled={currentPage <= 1}
                 onClick={()=>{this.setPage(currentPage - 1)}}>
@@ -174,7 +202,7 @@ class AltrpPosts extends React.Component {
         </button>
       </div> :
       <div className="altrp-pagination">
-        {!settings.hide_pre_page_button && <button className={"altrp-pagination__previous"}
+        {! settings.hide_pre_page_button && <button className={"altrp-pagination__previous"}
           onClick={() => this.setPage(currentPage - 1)}
           disabled={currentPage <= 1}
         >
@@ -227,16 +255,19 @@ class AltrpPosts extends React.Component {
       posts = posts.slice(postsStart, postsStart + posts_per_page);
     }
     let columnsCount = Number(getResponsiveSetting(this.props.settings,'posts_columns')) || 1;
-    const PostsWrapper = styled.div`{
-      grid-template-columns: repeat(${columnsCount}, 1fr);
-      display: grid;    
-    }
-    `;
-    return<React.Fragment><PostsWrapper className="altrp-posts">
-      {posts.map((p, idx)=>{
-        return this.renderPost(postsStart + idx);
-      })}
-    </PostsWrapper>
+    let posts_columns_gap = getResponsiveSetting(this.props.settings,'posts_columns_gap') || '';
+    let posts_rows_gap = getResponsiveSetting(this.props.settings,'posts_rows_gap') || '';
+
+
+    return<React.Fragment>
+      <PostsWrapper columnsCount={columnsCount}
+                                        posts_columns_gap={posts_columns_gap}
+                                        posts_rows_gap={posts_rows_gap}
+                                        className="altrp-posts">
+        {posts.map((p, idx)=>{
+          return this.renderPost(postsStart + idx);
+        })}
+      </PostsWrapper>
       {this.renderPagination()}
     </React.Fragment>
   }
