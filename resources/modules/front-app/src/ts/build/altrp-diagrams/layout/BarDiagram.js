@@ -68,10 +68,10 @@ const BarDiagram = ({ widget, width = 300, height = 450, margin, dataSource = []
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { style: { height: `${height}`, width: `${width}` } },
             React.createElement(ResponsiveBar, { data: data, margin: {
-                    top: margin.top,
-                    right: margin.right,
-                    bottom: margin.bottom,
-                    left: margin.left
+                    top: (margin === null || margin === void 0 ? void 0 : margin.top) || 30,
+                    right: (margin === null || margin === void 0 ? void 0 : margin.right) || 30,
+                    bottom: (margin === null || margin === void 0 ? void 0 : margin.bottom) || 30,
+                    left: (margin === null || margin === void 0 ? void 0 : margin.left) || 30
                 }, indexBy: "key", colors: customColorSchemeChecker && customColors.length > 0
                     ? customColors
                     : colorScheme === "regagro"
