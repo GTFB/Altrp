@@ -12,6 +12,7 @@ class ElementWrapper extends Component {
     this.state = {
       elementDisplay: !this.props.element.getSettings("default_hidden")
     };
+    props.element.wrapper = this;
     this.elementWrapperRef = React.createRef();
     this.elementRef = React.createRef();
     appStore.dispatch(addElement(this));
@@ -34,6 +35,9 @@ class ElementWrapper extends Component {
    * Иногда надо обновить элемент (FrontElement)
    */
   componentDidMount() {
+    // console.log(this.props.element.getName());
+    // console.log(performance.now());
+    window.frontApp.onWidgetMount();
     if(_.isFunction(this.props.element.update)){
       this.props.element.update();
       this.props.element.updateFonts();

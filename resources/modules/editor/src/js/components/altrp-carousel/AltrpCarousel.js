@@ -399,11 +399,16 @@ class AltrpCarousel extends Component {
 
     let lightbox = "";
     if(this.props.lightbox_slides_content) {
-
+      const imagesSrcs = this.props.slides_repeater.map(img => {
+        if(img.image_slides_repeater) {
+          return img.image_slides_repeater.url
+        } else return '/img/nullImage.png'
+      });
       lightbox =  this.state.openLightBox ? (
         <AltrpLightbox
+          images={imagesSrcs}
+          current={this.state.activeSlide}
           settings={{
-            mainSrc: this.state.sliderImages[this.state.activeSlide],
             onCloseRequest: () => this.setState({openLightBox: false})
           }}
           color={this.props.color_lightbox_style}

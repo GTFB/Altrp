@@ -1,5 +1,5 @@
 import {connect} from 'react-redux';
-import React, {Component} from 'react';
+
 import {mbParseJSON} from '../helpers';
 
 class EmailTemplatesRenderer extends Component {

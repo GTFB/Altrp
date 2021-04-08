@@ -8,7 +8,6 @@ import Resource from "../../editor/src/js/classes/Resource";
 import { changeCurrentUser, setUserNotice, setUsersOnline } from "./js/store/current-user/actions";
 import FontsManager from "./js/components/FontsManager";
 import Echo from "laravel-echo";
-
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider, } from 'react-dnd'
 
@@ -17,11 +16,33 @@ class FrontApp extends Component {
     super(props);
     window.frontApp = this;
     this.getRoutes();
+    // this.onWidgetMount();
   }
   getRoutes() {
     return getRoutes().then(res => {
       this.routes = res.default;
     });
+  }
+
+  onWidgetMount(){
+    console.log(performance.now());
+    if(this.timeoutId){
+      clearTimeout(this.timeoutId);
+    }
+    this.timeoutId = setTimeout(() =>{
+      if(! document.querySelector('.front-app-content_preloaded')){
+        return;
+      }
+      const appElement = document.getElementById('front-app');
+      const target = document.getElementById('front-app-target');
+      appElement.classList.remove('front-app-content_preloaded');
+      let classes = _.toArray(target.classList);
+      classes.forEach(c=>{
+        appElement.classList.add(c);
+      });
+      target.remove();
+
+    }, 100);
   }
 
   /**

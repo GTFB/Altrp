@@ -18,8 +18,8 @@ class GalleryWidget extends Component {
     this.state = {
       settings,
       simpleRepeater: [],
+      currentImg: -1,
       lightbox: false,
-      currentImg: 0,
       shuffled: false
     };
 
@@ -30,8 +30,6 @@ class GalleryWidget extends Component {
 
     this.showLightbox = this.showLightbox.bind(this);
     this.closeLightbox = this.closeLightbox.bind(this);
-    this.nextImg = this.nextImg.bind(this);
-    this.prevImg = this.prevImg.bind(this);
     this.updateRepeater = this.updateRepeater.bind(this);
   }
 
@@ -80,30 +78,6 @@ class GalleryWidget extends Component {
 
   closeLightbox() {
     this.setState({ lightbox: false });
-  }
-
-  nextImg(simpleRepeater) {
-    this.setState((state) => {
-      let currentImg = state.currentImg + 1;
-
-      if(currentImg >= simpleRepeater.length) {
-        currentImg = 0
-      }
-
-      return {currentImg: currentImg}
-    });
-  }
-
-  prevImg(simpleRepeater) {
-    this.setState((state) => {
-      let currentImg = state.currentImg - 1;
-
-      if(currentImg <= -1) {
-        currentImg = simpleRepeater.length - 1;
-      }
-
-      return {currentImg: currentImg}
-    });
   }
 
   render() {
@@ -249,22 +223,10 @@ class GalleryWidget extends Component {
         break
     }
 
-    let nextImgSrc = "";
-    if(linkType === "media" && simpleRepeater[this.state.currentImg+1]) {
-      nextImgSrc = simpleRepeater[this.state.currentImg+1].simple_media_settings.url;
-    } else if(linkType === "media" && simpleRepeater.length > 1) {
-      nextImgSrc = simpleRepeater[0].simple_media_settings.url;
-    };
-
-    let prevImgSrc = "";
-    if(linkType === "media" && simpleRepeater[this.state.currentImg-1]) {
-      prevImgSrc = simpleRepeater[this.state.currentImg-1].simple_media_settings.url;
+    let imagesSrcs = [];
+    if(linkType === "media" && simpleRepeater.length > 0) {
+      imagesSrcs = simpleRepeater.map(img => img.simple_media_settings.url)
     }
-
-    let mainImgSrc = "";
-    if(linkType === "media" && simpleRepeater[this.state.currentImg]) {
-      mainImgSrc = simpleRepeater[this.state.currentImg].simple_media_settings.url;
-    };
 
     return simpleRepeater.length > 0 ? (
       <>
@@ -273,13 +235,11 @@ class GalleryWidget extends Component {
         }
         {
           this.state.lightbox ? (
-            <AltrpLightbox settings={{
-              mainSrc: mainImgSrc,
+            <AltrpLightbox
+              images={imagesSrcs}
+              current={this.state.currentImg}
+              settings={{
               onCloseRequest: this.closeLightbox,
-              nextSrc: nextImgSrc,
-              prevSrc: prevImgSrc,
-              onMoveNextRequest: () => this.nextImg(simpleRepeater),
-              onMovePrevRequest: () => this.prevImg(simpleRepeater)
             }}
             />
           ) : ""

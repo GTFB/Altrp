@@ -5,20 +5,45 @@ import './altrp-lightbox.scss';
 class AltrpLightbox extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      current: props.current || 0
+    }
   }
 
   render() {
-    let mainSrc = this.props.settings.mainSrc || null;
-    let settings = this.props.settings;
+    let images = this.props.images;
+    const settings = this.props.settings;
+    let nextSrc = null;
+    let prevSrc = null;
+    const current = this.state.current;
 
-    delete settings.mainSrc;
+    if(images.length === 0) {
+      images = ["/img/nullImage.png"]
+    }
 
-    if(!mainSrc) {
-      mainSrc = '/img/nullImage.png'
+    if(images.length > 1) {
+      nextSrc = images[(current + 1) % images.length];
+      prevSrc = images[(current + images.length - 1) % images.length];
     }
 
     return (
-      <Lightbox mainSrc={mainSrc} {...settings} wrapperClassName="altrp-lightbox"/>
+      <Lightbox
+        {...settings}
+        onMovePrevRequest={() => {
+          this.setState({
+            current: (current + images.length - 1) % images.length,
+          })
+        }}
+        onMoveNextRequest={() => {
+            this.setState({
+              current: (current + 1) % images.length,
+            })
+        }}
+        mainSrc={images[current]}
+        prevSrc={prevSrc} nextSrc={nextSrc}
+        wrapperClassName="altrp-lightbox"
+      />
     )
   }
 }

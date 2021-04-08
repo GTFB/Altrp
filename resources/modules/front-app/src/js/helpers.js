@@ -1,23 +1,23 @@
-import React from 'react';
-import CONSTANTS from '../../../editor/src/js/consts';
-import AltrpModel from '../../../editor/src/js/classes/AltrpModel';
-import moment from 'moment';
-import Resource from '../../../editor/src/js/classes/Resource';
-import { changeCurrentUser } from './store/current-user/actions';
-import { changeCurrentUserProperty } from './store/current-user/actions';
-import { changeAppRoutes } from './store/routes/actions';
-import Route from './classes/Route';
-import { changePageState } from './store/altrp-page-state-storage/actions';
-import { changeAltrpMeta } from './store/altrp-meta-storage/actions';
-import { altrpFontsSet, GOOGLE_FONT } from './components/FontsManager';
-import queryString from 'query-string';
-import AltrpSVG from '../../../editor/src/js/components/altrp-svg/AltrpSVG';
-import ArrayConverter from './classes/converters/ArrayConverter';
-import DataConverter from './classes/converters/DataConverter';
-import {changeFormFieldValue} from './store/forms-data-storage/actions';
-import {addResponseData} from "./store/responses-storage/actions";
+import React from "react";
+import CONSTANTS from "../../../editor/src/js/consts";
+import AltrpModel from "../../../editor/src/js/classes/AltrpModel";
+import moment from "moment";
+import Resource from "../../../editor/src/js/classes/Resource";
+import { changeCurrentUser } from "./store/current-user/actions";
+import { changeCurrentUserProperty } from "./store/current-user/actions";
+import { changeAppRoutes } from "./store/routes/actions";
+import Route from "./classes/Route";
+import { changePageState } from "./store/altrp-page-state-storage/actions";
+import { changeAltrpMeta } from "./store/altrp-meta-storage/actions";
+import { altrpFontsSet, GOOGLE_FONT } from "./components/FontsManager";
+import queryString from "query-string";
+import AltrpSVG from "../../../editor/src/js/components/altrp-svg/AltrpSVG";
+import ArrayConverter from "./classes/converters/ArrayConverter";
+import DataConverter from "./classes/converters/DataConverter";
+import { changeFormFieldValue } from "./store/forms-data-storage/actions";
+import { addResponseData } from "./store/responses-storage/actions";
 export function getRoutes() {
-  return import('./classes/Routes.js');
+  return import("./classes/Routes.js");
 }
 /**
  * @return {IconsManager}
@@ -32,10 +32,10 @@ export function iconsManager() {
  */
 export function setTitle(title) {
   let titleElement = document.title;
-  if (! defaultTitle) {
+  if (!defaultTitle) {
     defaultTitle = titleElement.innerHTML;
   }
-  if (! title) {
+  if (!title) {
     title = defaultTitle;
   }
   if (document.title !== title) {
@@ -48,7 +48,7 @@ export function setTitle(title) {
  * */
 export function isEditor() {
   const path = window.location.pathname;
-  return path.includes('/admin/editor');
+  return path.includes("/admin/editor");
 }
 
 /**
@@ -65,21 +65,21 @@ export function parseOptionsFromSettings(string) {
   if (!string) {
     return [];
   }
-  let options = string.split('\n');
+  let options = string.split("\n");
   let path = extractPathFromString(string);
   let _optionsFromData = getDataByPath(path);
   if (_.isArray(_optionsFromData)) {
     return _optionsFromData;
   }
   options = options.map(option => {
-    let value = option.split('|')[0];
+    let value = option.split("|")[0];
     value = value.trim();
     let valuePath = extractPathFromString(value);
     if (valuePath) {
       value = getDataByPath(valuePath);
     }
-    let label = option.split('|')[1] || value || '';
-    !_.isString(label) && (label = '');
+    let label = option.split("|")[1] || value || "";
+    !_.isString(label) && (label = "");
     label = label.trim();
     let labelPath = extractPathFromString(label);
     if (labelPath) {
@@ -99,7 +99,7 @@ export function parseOptionsFromSettings(string) {
  * @return {string}
  */
 export function getMediaQueryByName(screenSettingName) {
-  let mediaQuery = '';
+  let mediaQuery = "";
   CONSTANTS.SCREENS.forEach(screen => {
     if (screen.name === screenSettingName) {
       mediaQuery = screen.mediaQuery;
@@ -130,7 +130,7 @@ export function getCurrentBreakpoint() {
   const breakPoints = CONSTANTS.SCREENS;
   const breakPointsSizes = breakPoints.map(item => ({
     name: item.name,
-    size: Number(item.width.split('px')[0])
+    size: Number(item.width.split("px")[0])
   }));
   for (let breakpoint of breakPointsSizes) {
     if (breakpoint.size < currentWidth) {
@@ -142,23 +142,26 @@ export function getCurrentBreakpoint() {
  *@param {string} URLTemplate
  *@param {{} | null} object
  */
-export function parseURLTemplate(URLTemplate = '', object = null) {
+export function parseURLTemplate(URLTemplate = "", object = null) {
   let url = URLTemplate;
-  let protocol = '';
-  if(! isEditor()){
-    object = _.assign(_.cloneDeep(currentRouterMatch.getProperty('params')), object);
+  let protocol = "";
+  if (!isEditor()) {
+    object = _.assign(
+      _.cloneDeep(currentRouterMatch.getProperty("params")),
+      object
+    );
   }
   url = url.trim();
-  if(url.indexOf('{{') !== -1){
+  if (url.indexOf("{{") !== -1) {
     url = replaceContentWithData(url, object);
   }
-  if (url.indexOf('https://') === 0) {
-    protocol = 'https://';
-    url = url.replace('https://', '');
+  if (url.indexOf("https://") === 0) {
+    protocol = "https://";
+    url = url.replace("https://", "");
   }
-  if (url.indexOf('http://') === 0) {
-    protocol = 'http://';
-    url = url.replace('http://', '');
+  if (url.indexOf("http://") === 0) {
+    protocol = "http://";
+    url = url.replace("http://", "");
   }
   if (url.indexOf('mailto:') === 0) {
     protocol = 'mailto:';
@@ -170,13 +173,13 @@ export function parseURLTemplate(URLTemplate = '', object = null) {
   }
   // columnEditUrl = columnEditUrl.replace(':id', row.original.id);
   let idTemplates = url.match(/:([\s\S]+?)(\/|$)/g);
-  if (! idTemplates) {
+  if (!idTemplates) {
     return protocol + url;
   }
   idTemplates.forEach(idTemplate => {
-    let replace = object[idTemplate.replace(/:|\//g, '')] || '';
-    idTemplate = idTemplate.replace('/', '');
-    url = url.replace(new RegExp(idTemplate, 'g'), replace);
+    let replace = object[idTemplate.replace(/:|\//g, "")] || "";
+    idTemplate = idTemplate.replace("/", "");
+    url = url.replace(new RegExp(idTemplate, "g"), replace);
   });
   return protocol + url;
 }
@@ -184,31 +187,31 @@ export function parseURLTemplate(URLTemplate = '', object = null) {
 export function getWindowWidth() {
   let window;
   if (isEditor()) {
-    window = document.getElementById('editorWindow').offsetWidth;
+    window = document.getElementById("editorWindow").offsetWidth;
   } else {
-    window = document.getElementById('front-app').offsetWidth;
+    window = document.getElementById("front-app").offsetWidth;
   }
   return window;
 }
 
 export function renderAssetIcon(asset, props = null) {
   if (asset) {
-    if (asset.url && asset.type === 'svg') {
+    if (asset.url && asset.type === "svg") {
       return <AltrpSVG {...props} url={asset.url} />;
     }
     switch (asset.assetType) {
-      case 'icon': {
+      case "icon": {
         return iconsManager().renderIcon(asset.name);
       }
-      case 'image': {
-        return React.createElement('img', { ...props, src: asset.url });
+      case "image": {
+        return React.createElement("img", { ...props, src: asset.url });
       }
-      case 'media': {
-        return React.createElement('img', { ...props, src: asset.url });
+      case "media": {
+        return React.createElement("img", { ...props, src: asset.url });
       }
     }
   }
-  return '';
+  return "";
 }
 
 /**
@@ -218,7 +221,7 @@ export function renderAssetIcon(asset, props = null) {
  * @throws Исключение если иконка не найдена
  * */
 export function renderAsset(asset, props = null) {
-  if (asset.url && asset.type === 'svg') {
+  if (asset.url && asset.type === "svg") {
     return <AltrpSVG {...props} url={asset.url} />;
   }
   if (asset instanceof File) {
@@ -231,36 +234,36 @@ export function renderAsset(asset, props = null) {
         refImg.current.alt = asset.name;
       }
     };
-    return React.createElement('img', {
+    return React.createElement("img", {
       ...props,
       src: asset.url,
       ref: refImg
     });
   }
   switch (asset.assetType) {
-    case 'icon': {
+    case "icon": {
       return iconsManager().renderIcon(asset.name, props);
     }
-    case 'image': {
-      return React.createElement('img', { ...props, src: asset.url });
+    case "image": {
+      return React.createElement("img", { ...props, src: asset.url });
     }
-    case 'media': {
-      return React.createElement('img', { ...props, src: asset.url });
+    case "media": {
+      return React.createElement("img", { ...props, src: asset.url });
     }
-    case 'mediaBackground': {
-      return React.createElement('div', {
+    case "mediaBackground": {
+      return React.createElement("div", {
         ...props,
         style: { backgroundImage: `url(${asset.url})` }
       });
     }
     case undefined: {
-      return React.createElement('img', {
+      return React.createElement("img", {
         ...props,
-        src: '/img/nullImage.png'
+        src: "/img/nullImage.png"
       });
     }
   }
-  return '';
+  return "";
 }
 
 /**
@@ -276,52 +279,62 @@ export function parseParamsFromString(
   string,
   context = {},
   allowObject = false,
-  replaceRight = true,
-
+  replaceRight = true
 ) {
-  if (! (context instanceof AltrpModel)) {
+  if (!(context instanceof AltrpModel)) {
     context = new AltrpModel(context);
   }
   const params = {};
   const urlParams =
     window.currentRouterMatch instanceof AltrpModel
-      ? window.currentRouterMatch.getProperty('params')
+      ? window.currentRouterMatch.getProperty("params")
       : {};
 
   if (!string) {
     return params;
   }
-  const lines = string.split('\n');
+  const lines = string.split("\n");
   lines.forEach(line => {
-    let [left, right] = line.split('|');
-    if (! left || ! right) {
+    let [left, right] = line.split("|");
+    if (!left || !right) {
       return;
     }
     left = left.trim();
     right = right.trim();
-    if(left.indexOf('{{') !== -1){
+    if (left.indexOf("{{") !== -1) {
       left = replaceContentWithData(left);
     }
     if (right.match(/{{([\s\S]+?)(?=}})/g)) {
       if (
         context.getProperty(
-          right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')
+          right.match(/{{([\s\S]+?)(?=}})/g)[0].replace("{{", "")
         ) ||
-          getDataByPath(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', ''))
+        getDataByPath(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace("{{", ""))
       ) {
         //todo ошибка в IOS
         params[left] =
           context.getProperty(
-            right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')
-          ) || getDataByPath(right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')) || '';
+            right.match(/{{([\s\S]+?)(?=}})/g)[0].replace("{{", "")
+          ) ||
+          getDataByPath(
+            right.match(/{{([\s\S]+?)(?=}})/g)[0].replace("{{", "")
+          ) ||
+          "";
       } else {
-        replaceRight ? (params[left] = urlParams[right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')]
-            ? urlParams[right.match(/{{([\s\S]+?)(?=}})/g)[0].replace('{{', '')] : '') : params[left] = right;
+        replaceRight
+          ? (params[left] = urlParams[
+              right.match(/{{([\s\S]+?)(?=}})/g)[0].replace("{{", "")
+            ]
+              ? urlParams[
+                  right.match(/{{([\s\S]+?)(?=}})/g)[0].replace("{{", "")
+                ]
+              : "")
+          : (params[left] = right);
       }
     } else {
       params[left] = right;
     }
-    if (! allowObject && _.isObject(params[left])) {
+    if (!allowObject && _.isObject(params[left])) {
       delete params[left];
     }
   });
@@ -353,7 +366,7 @@ export function conditionsChecker(
       result += conditionChecker(c, model, dataByPath);
     }
   });
-  return ! ! result;
+  return !!result;
 }
 
 /**
@@ -368,35 +381,35 @@ function conditionChecker(c, model, dataByPath = true) {
   const { operator } = c;
   let { modelField: left, value } = c;
   if (dataByPath) {
-    value = getDataByPath(value, '', model, true);
-    left = getDataByPath(left, '', model);
+    value = getDataByPath(value, "", model, true);
+    left = getDataByPath(left, "", model);
     return altrpCompare(left, value, operator);
   }
   return altrpCompare(model.getProperty(left), value, operator);
   switch (operator) {
-    case 'empty': {
-      return !model.getProperty(modelField, '');
+    case "empty": {
+      return !model.getProperty(modelField, "");
     }
-    case 'not_empty': {
-      return !!model.getProperty(modelField, '');
+    case "not_empty": {
+      return !!model.getProperty(modelField, "");
     }
-    case '==': {
-      return _.isEqual(model.getProperty(modelField, ''), value);
+    case "==": {
+      return _.isEqual(model.getProperty(modelField, ""), value);
     }
-    case '<>': {
-      return !_.isEqual(model.getProperty(modelField, ''), value);
+    case "<>": {
+      return !_.isEqual(model.getProperty(modelField, ""), value);
     }
-    case '>': {
-      return Number(model.getProperty(modelField, '')) > Number(value);
+    case ">": {
+      return Number(model.getProperty(modelField, "")) > Number(value);
     }
-    case '>=': {
-      return Number(model.getProperty(modelField, '')) >= Number(value);
+    case ">=": {
+      return Number(model.getProperty(modelField, "")) >= Number(value);
     }
-    case '<': {
-      return Number(model.getProperty(modelField, '')) < Number(value);
+    case "<": {
+      return Number(model.getProperty(modelField, "")) < Number(value);
     }
-    case '<=': {
-      return Number(model.getProperty(modelField, '')) <= Number(value);
+    case "<=": {
+      return Number(model.getProperty(modelField, "")) <= Number(value);
     }
   }
   return result;
@@ -409,33 +422,35 @@ function conditionChecker(c, model, dataByPath = true) {
  * @param {function | null} dispatch
  * @return {boolean}
  */
-export function setDataByPath(path = '', value, dispatch = null) {
-  if (! path) {
+export function setDataByPath(path = "", value, dispatch = null) {
+  if (!path) {
     return false;
   }
-  if(path.indexOf(',') !== -1){
-    let result = path.split(',').map(path=>setDataByPath(path, value, dispatch));
+  if (path.indexOf(",") !== -1) {
+    let result = path
+      .split(",")
+      .map(path => setDataByPath(path, value, dispatch));
     return true;
   }
-  path = path.replace('{{', '').replace('}}', '');
+  path = path.replace("{{", "").replace("}}", "");
   path = path.trim();
   switch (value) {
-    case 'true':
+    case "true":
       value = true;
       break;
-    case 'false':
+    case "false":
       value = false;
       break;
-    case 'null':
+    case "null":
       value = null;
       break;
-    case 'undefined':
+    case "undefined":
       value = undefined;
       break;
   }
 
-  if (path.indexOf('altrppagestate.') === 0) {
-    path = path.replace('altrppagestate.', '');
+  if (path.indexOf("altrppagestate.") === 0) {
+    path = path.replace("altrppagestate.", "");
     if (!path) {
       return false;
     }
@@ -450,8 +465,8 @@ export function setDataByPath(path = '', value, dispatch = null) {
     }
     return true;
   }
-  if (path.indexOf('altrpmeta.') === 0) {
-    path = path.replace('altrpmeta.', '');
+  if (path.indexOf("altrpmeta.") === 0) {
+    path = path.replace("altrpmeta.", "");
     if (!path) {
       return false;
     }
@@ -466,8 +481,8 @@ export function setDataByPath(path = '', value, dispatch = null) {
     }
     return true;
   }
-  if (path.indexOf('altrpuser.local_storage.') === 0) {
-    path = path.replace('altrpuser.', '');
+  if (path.indexOf("altrpuser.local_storage.") === 0) {
+    path = path.replace("altrpuser.", "");
     if (!path) {
       return false;
     }
@@ -482,13 +497,13 @@ export function setDataByPath(path = '', value, dispatch = null) {
     }
     return true;
   }
-  if (path.indexOf('altrpforms.') === 0) {
-    path = path.replace('altrpforms.', '');
+  if (path.indexOf("altrpforms.") === 0) {
+    path = path.replace("altrpforms.", "");
     if (!path) {
       return false;
     }
-    const [formId, fieldName] = path.split('.');
-    const {formsStore} = appStore.getState();
+    const [formId, fieldName] = path.split(".");
+    const { formsStore } = appStore.getState();
 
     const oldValue = _.get(formsStore, path);
     if (_.isEqual(oldValue, value)) {
@@ -497,26 +512,25 @@ export function setDataByPath(path = '', value, dispatch = null) {
     if (_.isFunction(dispatch)) {
       dispatch(changeCurrentUserProperty(path, value));
     } else {
-      appStore.dispatch(changeFormFieldValue(fieldName, value, formId, true))
+      appStore.dispatch(changeFormFieldValue(fieldName, value, formId, true));
     }
   }
-  if(path.indexOf('altrpelements.') === 0){
-    const pathElements = path.split('.');
-    const[prefix, elementId, updateType, propName] = pathElements;
+  if (path.indexOf("altrpelements.") === 0) {
+    const pathElements = path.split(".");
+    const [prefix, elementId, updateType, propName] = pathElements;
     const component = getComponentByElementId(elementId);
-    if(! component){
+    if (!component) {
       return true;
     }
-    switch(updateType){
-      case 'settings':{
+    switch (updateType) {
+      case "settings": {
         component.props.element.updateSetting(value, propName);
         return true;
       }
-      default:{
+      default: {
         return true;
       }
     }
-
   }
   return false;
 }
@@ -530,35 +544,35 @@ export function setDataByPath(path = '', value, dispatch = null) {
  * @return {*}
  */
 export function getDataByPath(
-  path = '',
+  path = "",
   _default = null,
   context = null,
   altrpCheck = false
 ) {
-  if (! path) {
+  if (!path) {
     return _default;
   }
-  if (path.indexOf('{{') !== -1) {
+  if (path.indexOf("{{") !== -1) {
     path = replaceContentWithData(path, context);
   }
   /**
    * проверим путь
    */
-  if (altrpCheck && path.trim().indexOf('altrp') !== 0) {
+  if (altrpCheck && path.trim().indexOf("altrp") !== 0) {
     return path;
   }
   path = path.trim();
   let trueValue, falseValue;
-  if(path.indexOf('?') !== -1 && path.indexOf(':') !== -1) {
-    let [_path, _right] = path.split('?');
-    [trueValue, falseValue] = _right.split(':');
+  if (path.indexOf("?") !== -1 && path.indexOf(":") !== -1) {
+    let [_path, _right] = path.split("?");
+    [trueValue, falseValue] = _right.split(":");
     trueValue = trueValue.trim();
-    if(trueValue.indexOf('.') !== -1){
+    if (trueValue.indexOf(".") !== -1) {
       trueValue = getDataByPath(trueValue, _default, context);
     }
 
     falseValue = falseValue.trim();
-    if(falseValue.indexOf('.') !== -1){
+    if (falseValue.indexOf(".") !== -1) {
       falseValue = getDataByPath(falseValue, _default, context);
     }
     path = _path.trim();
@@ -582,7 +596,7 @@ export function getDataByPath(
   }
   let urlParams =
     window.currentRouterMatch instanceof AltrpModel
-      ? window.currentRouterMatch.getProperty('params')
+      ? window.currentRouterMatch.getProperty("params")
       : {};
 
   let queryData = queryString.parseUrl(window.location.href).query;
@@ -593,44 +607,50 @@ export function getDataByPath(
   if (!_.isString(path)) {
     return value;
   }
-  if (path.indexOf('altrpdata.') === 0) {
-    path = path.replace('altrpdata.', '');
-    value = currentDataStorage ? currentDataStorage.getProperty(path, _default) : '';
-  } else if (path.indexOf('altrpresponses.') === 0) {
-    path = path.replace('altrpresponses.', '');
-    value = altrpresponses ? altrpresponses.getProperty(path, _default) : '';
-  } else if (path.indexOf('altrpmeta.') === 0) {
-    path = path.replace('altrpmeta.', '');
-    value = altrpMeta ? altrpMeta.getProperty(path, _default) : '';
-  } else if (path.indexOf('altrppagestate.') === 0) {
-    path = path.replace('altrppagestate.', '');
-    value = altrpPageState ? altrpPageState.getProperty(path, _default) : '';
-  } else if (path.indexOf('altrpuser.') === 0) {
-    path = path.replace('altrpuser.', '');
-    value = currentUser ? currentUser.getProperty(path, _default) : '';
-  } else if (path === 'altrpuser') {
+  if (path.indexOf("altrpdata.") === 0) {
+    path = path.replace("altrpdata.", "");
+    value = currentDataStorage
+      ? currentDataStorage.getProperty(path, _default)
+      : "";
+  } else if (path.indexOf("altrpresponses.") === 0) {
+    path = path.replace("altrpresponses.", "");
+    value = altrpresponses ? altrpresponses.getProperty(path, _default) : "";
+  } else if (path.indexOf("altrpmeta.") === 0) {
+    path = path.replace("altrpmeta.", "");
+    value = altrpMeta ? altrpMeta.getProperty(path, _default) : "";
+  } else if (path.indexOf("altrppagestate.") === 0) {
+    path = path.replace("altrppagestate.", "");
+    value = altrpPageState ? altrpPageState.getProperty(path, _default) : "";
+  } else if (path.indexOf("altrpuser.") === 0) {
+    path = path.replace("altrpuser.", "");
+    value = currentUser ? currentUser.getProperty(path, _default) : "";
+  } else if (path === "altrpuser") {
     value = currentUser.getData();
-  } else if (path === 'altrpmodel') {
+  } else if (path === "altrpmodel") {
     value = currentModel.getData();
-  } else if (path.indexOf('altrptime.') === 0) {
-    value = getTimeValue(path.replace('altrptime.', ''));
-  } else if (path.indexOf('altrpforms.') === 0) {
-    value = _.get(formsStore, path.replace('altrpforms.', ''), _default);
-  } else if (path.indexOf('altrppage.') === 0) {
-    value = altrpPage ? altrpPage.getProperty(path.replace('altrppage.', ''), _default) : '';
-  }else if (path.indexOf('altrpelements.') === 0) {
-    const pathElements = path.split('.');
-    const[prefix, elementId, updateType, propName] = pathElements;
+  } else if (path.indexOf("altrptime.") === 0) {
+    value = getTimeValue(path.replace("altrptime.", ""));
+  } else if (path.indexOf("altrpforms.") === 0) {
+    value = _.get(formsStore, path.replace("altrpforms.", ""), _default);
+  } else if (path.indexOf("altrppage.") === 0) {
+    value = altrpPage
+      ? altrpPage.getProperty(path.replace("altrppage.", ""), _default)
+      : "";
+  } else if (path.indexOf("altrpelements.") === 0) {
+    const pathElements = path.split(".");
+    const [prefix, elementId, updateType, propName] = pathElements;
     const component = getComponentByElementId(elementId);
-    if(! component){
-      value = '';
-    } else{
-      switch(updateType){
-        case 'settings':{
-          value = component.props.element.getSettings(propName);
-        } break;
-        default:{
-          value = '';
+    if (!component) {
+      value = "";
+    } else {
+      switch (updateType) {
+        case "settings":
+          {
+            value = component.props.element.getSettings(propName);
+          }
+          break;
+        default: {
+          value = "";
         }
       }
     }
@@ -641,11 +661,11 @@ export function getDataByPath(
     value = currentModel.getProperty(path)
       ? currentModel.getProperty(path)
       : urlParams[path];
-    if (! value) {
+    if (!value) {
       value = _default;
     }
   }
-  if(trueValue || falseValue) {
+  if (trueValue || falseValue) {
     value = value ? trueValue : falseValue;
   }
   return value;
@@ -656,13 +676,13 @@ export function getDataByPath(
  * @param {string} string
  * @return {string}
  */
-export function extractPathFromString(string = '') {
-  let path = '';
+export function extractPathFromString(string = "") {
+  let path = "";
   if (_.isString(string)) {
     // path = string.match(/(?<={{)([\s\S]+?)(?=}})/g)[0]
-    path = _.get(string.match(/{{([\s\S]+?)(?=}})/g), '0', '').replace(
-      '{{',
-      ''
+    path = _.get(string.match(/{{([\s\S]+?)(?=}})/g), "0", "").replace(
+      "{{",
+      ""
     );
   }
   return path;
@@ -673,14 +693,14 @@ export function extractPathFromString(string = '') {
  * @param {{}} object - если в объекте есть свойство test__test то вернет {test: test__test_value}
  * @return {{}}
  */
-export function getObjectByPrefix(prefix = '', object = {}) {
+export function getObjectByPrefix(prefix = "", object = {}) {
   let result = {};
   if (!prefix) {
     return result;
   }
   _.forEach(object, (value, key) => {
-    if (key.indexOf(`${prefix}__`, '') === 0) {
-      result[key.replace(`${prefix}__`, '')] = value;
+    if (key.indexOf(`${prefix}__`, "") === 0) {
+      result[key.replace(`${prefix}__`, "")] = value;
     }
   });
   return result;
@@ -708,25 +728,25 @@ export function mbParseJSON(string, _default = null) {
  * @return {boolean}
  */
 export function altrpCompare(
-  leftValue = '',
-  rightValue = '',
-  operator = 'empty'
+  leftValue = "",
+  rightValue = "",
+  operator = "empty"
 ) {
   switch (operator) {
-    case 'empty': {
+    case "empty": {
       return _.isEmpty(leftValue);
     }
-    case 'not_empty': {
-      return ! _.isEmpty(leftValue);
+    case "not_empty": {
+      return !_.isEmpty(leftValue);
     }
-    case 'null': {
-      return ! leftValue;
+    case "null": {
+      return !leftValue;
     }
-    case 'not_null': {
-      return ! ! leftValue;
+    case "not_null": {
+      return !!leftValue;
     }
-    case '==': {
-      if (! leftValue && ! rightValue) {
+    case "==": {
+      if (!leftValue && !rightValue) {
         return true;
       }
       if (!(_.isObject(leftValue) || _.isObject(rightValue))) {
@@ -735,124 +755,124 @@ export function altrpCompare(
         return _.isEqual(leftValue, rightValue);
       }
     }
-    case '===': {
+    case "===": {
       return _.isEqual(leftValue, rightValue);
     }
-    case '<>': {
+    case "<>": {
       return !_.isEqual(leftValue, rightValue);
     }
-    case '>': {
+    case ">": {
       return Number(leftValue) > Number(rightValue);
     }
-    case '>=': {
+    case ">=": {
       return Number(leftValue) >= Number(rightValue);
     }
-    case '<': {
+    case "<": {
       return Number(leftValue) < Number(rightValue);
     }
-    case '<=': {
+    case "<=": {
       return Number(leftValue) <= Number(rightValue);
     }
-    case 'in': {
-      if(_.isString(rightValue)){
-        return (rightValue.indexOf(leftValue) !== -1);
+    case "in": {
+      if (_.isString(rightValue)) {
+        return rightValue.indexOf(leftValue) !== -1;
       }
-      if (! _.isArray(rightValue)) {
+      if (!_.isArray(rightValue)) {
         return false;
       }
       let result = false;
       rightValue.forEach(item => {
-        if (! result) {
-          result = altrpCompare(leftValue, item, '==');
+        if (!result) {
+          result = altrpCompare(leftValue, item, "==");
         }
       });
       return result;
     }
-    case 'not_in': {
-      return ! altrpCompare(leftValue, rightValue, 'in');
+    case "not_in": {
+      return !altrpCompare(leftValue, rightValue, "in");
     }
-    case 'contain': {
-      if(_.isString(leftValue)){
-        return (leftValue.indexOf(rightValue) !== -1);
+    case "contain": {
+      if (_.isString(leftValue)) {
+        return leftValue.indexOf(rightValue) !== -1;
       }
-      if (! _.isArray(leftValue)) {
+      if (!_.isArray(leftValue)) {
         return false;
       }
       let result = false;
       leftValue.forEach(item => {
-        if (! result) {
-          result = altrpCompare(rightValue, item, 'contain');
+        if (!result) {
+          result = altrpCompare(rightValue, item, "contain");
         }
       });
       return result;
     }
-    case 'not_contain': {
-      return ! altrpCompare(leftValue, rightValue, 'contain');
+    case "not_contain": {
+      return !altrpCompare(leftValue, rightValue, "contain");
     }
   }
 }
 
 export const CONDITIONS_OPTIONS = [
   {
-    value: 'empty',
-    label: 'Empty'
+    value: "empty",
+    label: "Empty"
   },
   {
-    value: 'not_empty',
-    label: 'Not Empty'
+    value: "not_empty",
+    label: "Not Empty"
   },
   {
-    value: 'null',
-    label: 'Null'
+    value: "null",
+    label: "Null"
   },
   {
-    value: 'not_null',
-    label: 'Not Null'
+    value: "not_null",
+    label: "Not Null"
   },
   {
-    value: '==',
-    label: 'Equals'
+    value: "==",
+    label: "Equals"
   },
   {
-    value: '<>',
-    label: 'Not Equals'
+    value: "<>",
+    label: "Not Equals"
   },
   {
-    value: 'between',
-    label: 'Between'
+    value: "between",
+    label: "Between"
   },
   {
-    value: '>',
-    label: '>'
+    value: ">",
+    label: ">"
   },
   {
-    value: '>=',
-    label: '>='
+    value: ">=",
+    label: ">="
   },
   {
-    value: '<',
-    label: '<'
+    value: "<",
+    label: "<"
   },
   {
-    value: '<=',
-    label: '<='
+    value: "<=",
+    label: "<="
   },
   {
-    value: 'in',
-    label: 'In'
+    value: "in",
+    label: "In"
   },
   {
-    value: 'not_in',
-    label: 'Not In'
+    value: "not_in",
+    label: "Not In"
   },
   {
-    value: 'contain',
-    label: 'Contain'
+    value: "contain",
+    label: "Contain"
   },
   {
-    value: 'not_contain',
-    label: 'Not Contain'
-  },
+    value: "not_contain",
+    label: "Not Contain"
+  }
 ];
 
 export function isElementTopInViewport(top, scrollTop, clientHeight) {
@@ -879,48 +899,48 @@ export function getTimeValue(path, defaultValue = null) {
   let value = defaultValue;
 
   switch (path) {
-    case 'now':
+    case "now":
       {
         value = _.now();
       }
       break;
-    case 'month_start':
+    case "month_start":
       {
         value = startOfMonth(new Date());
       }
       break;
-    case 'prev_month_start':
+    case "prev_month_start":
       {
         value = startOfMonth(new Date(), -1);
       }
       break;
-    case 'year_start':
+    case "year_start":
       {
         value = startOfYear(new Date());
       }
       break;
-    case 'prev_year_start':
+    case "prev_year_start":
       {
         value = startOfYear(new Date(), -1);
       }
       break;
-    case 'prev_week_start':
+    case "prev_week_start":
       {
         value = getPrevWeekStart();
       }
       break;
-    case 'next_week_start':
+    case "next_week_start":
       {
         value = getNextWeekStart();
       }
       break;
-    case 'week_start':
+    case "week_start":
       {
         value = getWeekStart();
       }
       break;
   }
-  value = moment(value).format('YYYY-MM-DD');
+  value = moment(value).format("YYYY-MM-DD");
   return value;
 }
 
@@ -1011,7 +1031,7 @@ export function scrollToElement(scrollbars, HTMLElement) {
  * @param {string} elementId
  * @return {null | HTMLElement}
  */
-export function getHTMLElementById(elementId = '') {
+export function getHTMLElementById(elementId = "") {
   let HTMLElement = null;
   if (!elementId || !elementId.trim()) {
     return HTMLElement;
@@ -1027,7 +1047,7 @@ export function getHTMLElementById(elementId = '') {
     if (
       el.elementWrapperRef.current.id
         .toString()
-        .split(' ')
+        .split(" ")
         .indexOf(elementId) !== -1
     ) {
       HTMLElement = el.elementWrapperRef.current;
@@ -1058,9 +1078,9 @@ export function getWrapperHTMLElementByElement(element){
  * @param {string} elementId
  * @return {null | HTMLElement}
  */
-export function getComponentByElementId(elementId = '') {
+export function getComponentByElementId(elementId = "") {
   let component = null;
-  if (! elementId || ! elementId.trim()) {
+  if (!elementId || !elementId.trim()) {
     return component;
   }
   elementId = elementId.trim();
@@ -1074,7 +1094,7 @@ export function getComponentByElementId(elementId = '') {
     if (
       el.elementWrapperRef.current.id
         .toString()
-        .split(' ')
+        .split(" ")
         .indexOf(elementId) !== -1
     ) {
       component = el;
@@ -1090,7 +1110,7 @@ export function getComponentByElementId(elementId = '') {
 function getNextWeekStart() {
   let today = moment();
   let daystoMonday = 7 - (today.isoWeekday() - 1);
-  return today.add(daystoMonday, 'days');
+  return today.add(daystoMonday, "days");
 }
 
 /**
@@ -1100,7 +1120,7 @@ function getNextWeekStart() {
 function getWeekStart() {
   let today = moment();
   let daystoMonday = today.isoWeekday() - 1;
-  return today.subtract(daystoMonday, 'days');
+  return today.subtract(daystoMonday, "days");
 }
 
 /**
@@ -1109,7 +1129,7 @@ function getWeekStart() {
  */
 function getNextWeekEnd() {
   let nextMonday = getNextWeekStart();
-  return nextMonday.add('days', 6);
+  return nextMonday.add("days", 6);
 }
 
 /**
@@ -1119,7 +1139,7 @@ function getNextWeekEnd() {
 function getPrevWeekStart() {
   let today = moment();
   let daystoLastMonday = today.isoWeekday() - 1 + 7;
-  return today.subtract(daystoLastMonday, 'days');
+  return today.subtract(daystoLastMonday, "days");
 }
 
 /**
@@ -1128,7 +1148,7 @@ function getPrevWeekStart() {
  */
 function getPrevWeekEnd() {
   let lastMonday = getPrevWeekStart();
-  return lastMonday.add('days', 6);
+  return lastMonday.add("days", 6);
 }
 
 /**
@@ -1142,17 +1162,17 @@ export function clearEmptyProps() {}
  * @param {{} | null} modelContext
  */
 
-export function replaceContentWithData(content = '', modelContext = null) {
+export function replaceContentWithData(content = "", modelContext = null) {
   let paths = _.isString(content) ? content.match(/{{([\s\S]+?)(?=}})/g) : null;
   if (_.isArray(paths)) {
     paths.forEach(path => {
-      path = path.replace('{{', '');
-      let value = getDataByPath(path, '', modelContext);
+      path = path.replace("{{", "");
+      let value = getDataByPath(path, "", modelContext);
       if (value === 0) {
-        value = '0';
+        value = "0";
       }
       path = escapeRegExp(path);
-      content = content.replace(new RegExp(`{{${path}}}`, 'g'), value || '');
+      content = content.replace(new RegExp(`{{${path}}}`, "g"), value || "");
     });
   }
   return content;
@@ -1187,15 +1207,15 @@ window.altrphelpers = {
  * @params {HTMLElement[]} elements
  * @params {null || HTMLElement} stylesTag
  */
-export function printElements(elements, title = '') {
-  let myWindow = window.open('', 'my div', 'height=400,width=1200');
+export function printElements(elements, title = "") {
+  let myWindow = window.open("", "my div", "height=400,width=1200");
   myWindow.document.write(`<html><head><title>${title}</title></head>`);
-  myWindow.document.write('<body >');
+  myWindow.document.write("<body >");
   elements = _.isArray(elements) ? elements : [elements];
   elements.forEach(element => {
     myWindow.document.write(element.outerHTML);
   });
-  myWindow.document.write('</body></html>');
+  myWindow.document.write("</body></html>");
   myWindow.document.close(); // necessary for IE >= 10
   myWindow.focus(); // necessary for IE >= 10
   myWindow.print();
@@ -1208,22 +1228,22 @@ export function printElements(elements, title = '') {
  * @params {HTMLElement[]} element
  * @params {string} filename
  */
-export async function elementsToPdf(elements, filename = '') {
-  let html2pdf = (await import('html2pdf.js')).default;
+export async function elementsToPdf(elements, filename = "") {
+  let html2pdf = (await import("html2pdf.js")).default;
   elements = elements.body ? elements.body : elements;
   if (!elements) {
     return {
       success: true
     };
   }
-  let myWindow = window.open('', 'my div', 'height=400,width=1440');
+  let myWindow = window.open("", "my div", "height=400,width=1440");
   myWindow.document.write(`<html><head><title></title></head>`);
-  myWindow.document.write('</head><body >');
+  myWindow.document.write("</head><body >");
   elements = _.isArray(elements) ? elements : [elements];
   elements.forEach(element => {
     myWindow.document.write(element.outerHTML);
   });
-  myWindow.document.write('</body></html>');
+  myWindow.document.write("</body></html>");
   return new Promise((resolve, reject) => {
     html2pdf()
       .from(myWindow.document.body)
@@ -1243,28 +1263,28 @@ export function dataFromTable(HTMLElement) {
   if (!(HTMLElement && HTMLElement.querySelectorAll)) {
     return data;
   }
-  let table = HTMLElement.querySelector('.altrp-table');
-  if (!table && HTMLElement.querySelector('.altrp-table-tr')) {
+  let table = HTMLElement.querySelector(".altrp-table");
+  if (!table && HTMLElement.querySelector(".altrp-table-tr")) {
     table = HTMLElement;
   }
   if (!table) {
     return data;
   }
-  const ths = table.querySelectorAll('.altrp-table-th');
+  const ths = table.querySelectorAll(".altrp-table-th");
   _.each(ths, th => {
     // if (th.innerText) {
-    headers.push(th.innerText || '');
+    headers.push(th.innerText || "");
     // }
   });
-  const rows = table.querySelectorAll('.altrp-table-tbody .altrp-table-tr');
+  const rows = table.querySelectorAll(".altrp-table-tbody .altrp-table-tr");
   _.each(rows, row => {
-    const cells = row.querySelectorAll('.altrp-table-td');
+    const cells = row.querySelectorAll(".altrp-table-td");
     const part = {};
     headers.forEach((header, idx) => {
       if (!header) {
         return;
       }
-      part[header] = cells[idx].innerText || '';
+      part[header] = cells[idx].innerText || "";
     });
     data.push(part);
   });
@@ -1277,7 +1297,7 @@ export function dataFromTable(HTMLElement) {
  * @param {string} filename
  */
 export async function dataToCSV(data = {}, filename) {
-  filename = filename || 'File';
+  filename = filename || "File";
   if (!data) {
     return { success: false };
   }
@@ -1291,33 +1311,33 @@ export async function dataToCSV(data = {}, filename) {
   let headers = _.toPairs(data[0]).map(([name, value]) => name);
   let csvContent =
     // 'data:text/csv;charset=utf-8,'
-    '' +
-    headers.join(';') +
-    '\n' +
+    "" +
+    headers.join(";") +
+    "\n" +
     data
       .map(item => {
-        let line = '';
+        let line = "";
         headers.forEach((h, idx) => {
-          let value = _.get(item, h) || '';
+          let value = _.get(item, h) || "";
           if (_.isObject(value)) {
             value = JSON.stringify(value);
           }
 
           line +=
-            (_.isString(value) ? value.replace(/\s/g, ' ') : value) +
-            (headers.length === idx + 1 ? '' : ';');
+            (_.isString(value) ? value.replace(/\s/g, " ") : value) +
+            (headers.length === idx + 1 ? "" : ";");
         });
         return line;
       })
-      .join('\n');
+      .join("\n");
   let blob = new Blob([csvContent], {
-    type: 'text/csv',
-    charset: 'windows-1251'
+    type: "text/csv",
+    charset: "windows-1251"
     // charset: 'utf-8',
   });
-  let link = document.createElement('a');
-  link.setAttribute('href', window.URL.createObjectURL(blob));
-  link.setAttribute('download', filename + '.csv');
+  let link = document.createElement("a");
+  link.setAttribute("href", window.URL.createObjectURL(blob));
+  link.setAttribute("download", filename + ".csv");
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -1329,14 +1349,14 @@ export async function dataToCSV(data = {}, filename) {
  * @param {Object data} Объект данных
  * @param {String} filename Имя файла
  */
-export async function dataToXLS(data, filename = 'table', templateName = '') {
+export async function dataToXLS(data, filename = "table", templateName = "") {
   const formData = new FormData();
-  formData.append('filename', filename);
-  formData.append('data', JSON.stringify(data));
-  formData.append('template', templateName);
+  formData.append("filename", filename);
+  formData.append("data", JSON.stringify(data));
+  formData.append("template", templateName);
 
-  const response = await fetch('/api/export-excel', {
-    method: 'POST',
+  const response = await fetch("/api/export-excel", {
+    method: "POST",
     body: formData
   });
 
@@ -1349,18 +1369,17 @@ export async function dataToXLS(data, filename = 'table', templateName = '') {
  * @param {string} formId
  * @return {Promise<{}>}
  */
-export async function altrpLogin(data = {}, formId= 'login') {
+export async function altrpLogin(data = {}, formId = "login") {
   data.altrpLogin = true;
   let res;
-  try{
-    res = await new Resource({ route: '/login' }).post(data);
-
-  }catch(error){
+  try {
+    res = await new Resource({ route: "/login" }).post(data);
+  } catch (error) {
     let status = error.status;
-    if(error.res instanceof Promise){
+    if (error.res instanceof Promise) {
       res = await error.res;
     }
-    if(error instanceof Promise){
+    if (error instanceof Promise) {
       res = await error;
     }
     res = mbParseJSON(res, {});
@@ -1375,14 +1394,14 @@ export async function altrpLogin(data = {}, formId= 'login') {
   _token = res._token;
 
   let currentUser = await new Resource({
-    route: '/ajax/current-user'
+    route: "/ajax/current-user"
   }).getAll();
   currentUser = currentUser.data;
   appStore.dispatch(changeCurrentUser(currentUser));
   let routes = [];
   try {
     let routesData = await new Resource({
-      route: '/ajax/routes'
+      route: "/ajax/routes"
     }).getAll();
 
     for (let _data of routesData.pages) {
@@ -1401,7 +1420,7 @@ export async function altrpLogin(data = {}, formId= 'login') {
  * @return {Promise<{}>}
  */
 export async function altrpLogout() {
-  let res = await new Resource({ route: '/logout' }).post();
+  let res = await new Resource({ route: "/logout" }).post();
   if (!(res.success || res._token)) {
     return {
       success: false
@@ -1410,14 +1429,14 @@ export async function altrpLogout() {
   _token = res._token;
 
   let currentUser = await new Resource({
-    route: '/ajax/current-user'
+    route: "/ajax/current-user"
   }).getAll();
   currentUser = currentUser.data;
   appStore.dispatch(changeCurrentUser(currentUser));
   let routes = [];
   try {
     let routesData = await new Resource({
-      route: '/ajax/routes'
+      route: "/ajax/routes"
     }).getAll();
 
     for (let _data of routesData.pages) {
@@ -1433,7 +1452,7 @@ export async function altrpLogout() {
 
 export function cutString(string, maxLength = 80) {
   if (string.length <= maxLength) return string;
-  return string.slice(0, maxLength) + '...';
+  return string.slice(0, maxLength) + "...";
 }
 
 export function sortOptions(options, sortDirection) {
@@ -1444,7 +1463,7 @@ export function sortOptions(options, sortDirection) {
       ? -1
       : 0
   );
-  return sortDirection === 'asc' ? options : options.reverse();
+  return sortDirection === "asc" ? options : options.reverse();
 }
 /**
  * рекурсивно считает общую длину по пути
@@ -1452,7 +1471,7 @@ export function sortOptions(options, sortDirection) {
  * @param {string} path
  * @return {number}
  */
-export function recurseCount(object = {}, path = '') {
+export function recurseCount(object = {}, path = "") {
   let count = 0;
   if (!path) {
     return count;
@@ -1478,7 +1497,7 @@ export function getAppContext(model = null) {
   const currentModelData = model ? model : currentModel.getData();
   const urlParams = _.cloneDeep(
     window.currentRouterMatch instanceof AltrpModel
-      ? window.currentRouterMatch.getProperty('params')
+      ? window.currentRouterMatch.getProperty("params")
       : {}
   );
   const context = new AltrpModel(_.assign(urlParams, currentModelData));
@@ -1492,13 +1511,13 @@ export function getAppContext(model = null) {
     formsStore
   } = appStore.getState();
 
-  context.setProperty('altrpdata', currentDataStorage);
-  context.setProperty('altrppagestate', altrpPageState);
-  context.setProperty('altrpmeta', altrpMeta);
-  context.setProperty('altrpuser', currentUser);
-  context.setProperty('altrpresponses', altrpresponses);
-  context.setProperty('altrpforms', formsStore);
-  context.setProperty('altrppage', altrpPage);
+  context.setProperty("altrpdata", currentDataStorage);
+  context.setProperty("altrppagestate", altrpPageState);
+  context.setProperty("altrpmeta", altrpMeta);
+  context.setProperty("altrpuser", currentUser);
+  context.setProperty("altrpresponses", altrpresponses);
+  context.setProperty("altrpforms", formsStore);
+  context.setProperty("altrppage", altrpPage);
   return context;
 }
 
@@ -1573,10 +1592,10 @@ export function getDataFromLocalStorage(name, _default = null) {
 }
 export function scrollbarWidth() {
   // thanks too https://davidwalsh.name/detect-scrollbar-width
-  const scrollDiv = document.createElement('div');
+  const scrollDiv = document.createElement("div");
   scrollDiv.setAttribute(
-    'style',
-    'width: 100px; height: 100px; overflow: scroll; position:absolute; top:-9999px;'
+    "style",
+    "width: 100px; height: 100px; overflow: scroll; position:absolute; top:-9999px;"
   );
   document.body.appendChild(scrollDiv);
   const scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
@@ -1598,7 +1617,7 @@ export function setAltrpIndex(array = []) {
       return;
     }
     if (item instanceof AltrpModel) {
-      item.setProperty('altrpIndex', idx);
+      item.setProperty("altrpIndex", idx);
       return;
     }
     item.altrpIndex = idx;
@@ -1614,20 +1633,20 @@ export function renderFontLink(font) {
   if (altrpFontsSet[font] !== GOOGLE_FONT) {
     return null;
   }
-  font = font.replace(/ /g, '+');
+  font = font.replace(/ /g, "+");
   font +=
-    ':100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic';
+    ":100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic";
   let fontUrl =
-    'https://fonts.googleapis.com/css?family=' + font + '&subset=cyrillic';
+    "https://fonts.googleapis.com/css?family=" + font + "&subset=cyrillic";
   fontUrl = encodeURI(fontUrl);
-  return <link rel='stylesheet' key={fontUrl} href={fontUrl} />;
+  return <link rel="stylesheet" key={fontUrl} href={fontUrl} />;
 }
 
 /**
  * Включен ли режим тестирования
  */
 export function isAltrpTestMode() {
-  return window.location.href.indexOf('altrp-test=true') > 0;
+  return window.location.href.indexOf("altrp-test=true") > 0;
 }
 
 /**
@@ -1665,7 +1684,7 @@ export function generateButtonsArray(
   );
 
   if (pageIndex + 1 < buttonsSum) {
-    return [...Array(buttonsSum).keys(), 'ellipsis', ...lastButtons];
+    return [...Array(buttonsSum).keys(), "ellipsis", ...lastButtons];
   }
   if (
     pageIndex >=
@@ -1676,7 +1695,7 @@ export function generateButtonsArray(
   ) {
     return [
       ...Array(first_last_buttons_count).keys(),
-      'ellipsis',
+      "ellipsis",
       ...Array.from(
         { length: first_last_buttons_count + middle_buttons_count },
         (_, i) => pageCount - i - 1
@@ -1686,9 +1705,9 @@ export function generateButtonsArray(
 
   return [
     ...Array(first_last_buttons_count).keys(),
-    'ellipsis',
+    "ellipsis",
     ...middleButtons,
-    'ellipsis',
+    "ellipsis",
     ...lastButtons
   ];
 }
@@ -1700,13 +1719,13 @@ export function generateButtonsArray(
  * @return {boolean}
  */
 export function isValueMatchMask(value, mask) {
-  if((! value) || value.length !== mask.length){
+  if (!value || value.length !== mask.length) {
     return false;
   }
   return (
     value.length &&
     value
-      .split('')
+      .split("")
       .every((char, index) => char === mask[index] || char.match(mask[index]))
   );
 }
@@ -1717,7 +1736,7 @@ export function isValueMatchMask(value, mask) {
  */
 export function getConverter(data) {
   switch (data.data_type) {
-    case 'array':
+    case "array":
       return new ArrayConverter(data);
   }
   return new DataConverter();
@@ -1732,6 +1751,9 @@ export function convertData(settings, data) {
   if (_.isArray(settings)) {
     settings.forEach(item => {
       const converter = getConverter(item);
+      console.log("====================================");
+      console.log(item, data);
+      console.log("====================================");
       data = converter.convertData(data);
     });
   }
@@ -1759,11 +1781,11 @@ export function renderIcon(isHidden, icon, defaultIcon, className) {
  * @param {{}} context
  */
 export function redirect(linkSettings, e, context = {}) {
-  if (_.get(linkSettings, 'toPrevPage') && frontAppRouter) {
+  if (_.get(linkSettings, "toPrevPage") && frontAppRouter) {
     frontAppRouter.history.goBack();
     return;
   }
-  if (!_.get(linkSettings, 'url')) {
+  if (!_.get(linkSettings, "url")) {
     return;
   }
   e.preventDefault();
@@ -1771,11 +1793,11 @@ export function redirect(linkSettings, e, context = {}) {
   let { url } = linkSettings;
   url = replaceContentWithData(url, context);
   if (linkSettings.openInNew) {
-    window.open(url, '_blank');
+    window.open(url, "_blank");
     return;
   }
   if (frontAppRouter) {
-    if (linkSettings.tag === 'a') {
+    if (linkSettings.tag === "a") {
       window.location.assign(url);
     } else {
       frontAppRouter.history.push(url);
@@ -1796,13 +1818,18 @@ export function validateEmail(email) {
  * @param {*} _default
  * @return {*}
  */
-export function getResponsiveSetting(settings, settingName, elementState = '', _default = null){
-  let {currentScreen} = window.parent.appStore.getState();
+export function getResponsiveSetting(
+  settings,
+  settingName,
+  elementState = "",
+  _default = null
+) {
+  let { currentScreen } = window.parent.appStore.getState();
   let _settingName = `${settingName}_${elementState}_`;
 
   if(currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT){
     let setting = settings[_settingName];
-    if(setting === undefined){
+    if (setting === undefined) {
       setting = _.get(settings, settingName, _default);
     }
     return setting;
@@ -1833,11 +1860,14 @@ export function getResponsiveSetting(settings, settingName, elementState = '', _
  * @param {string} value
  * @return {*}
  */
-export function valueReplacement(value){
-  switch(value){
-    case 'true': return true;
-    case 'false': return false;
-    case 'null': return null;
+export function valueReplacement(value) {
+  switch (value) {
+    case "true":
+      return true;
+    case "false":
+      return false;
+    case "null":
+      return null;
   }
   return value;
 }
@@ -1848,7 +1878,7 @@ export function valueReplacement(value){
  * @return {Promise}
  */
 export function delay(ms) {
-  if(_.isString(ms)){
+  if (_.isString(ms)) {
     ms = Number(ms);
   }
   return new Promise((resolve, reject) => {
@@ -1862,20 +1892,20 @@ export function delay(ms) {
  * @param {{} | null} context
  * @return {string}
  */
-export function prepareURLForEmail(url, context = null){
-  if(! _.isString(url) || ! url){
-  return url;
-}
+export function prepareURLForEmail(url, context = null) {
+  if (!_.isString(url) || !url) {
+    return url;
+  }
   url = url.trim();
-  if(url.indexOf('http') !== 0){
-  url = location.origin + url;
-}
+  if (url.indexOf("http") !== 0) {
+    url = location.origin + url;
+  }
   return parseURLTemplate(url, context);
 }
 
 export function parseIDFromYoutubeURL(youtubeURL) {
-  const startIndex = youtubeURL.indexOf('v=') + 2;
-  const endIndex = youtubeURL.indexOf('&', startIndex);
+  const startIndex = youtubeURL.indexOf("v=") + 2;
+  const endIndex = youtubeURL.indexOf("&", startIndex);
 
   return youtubeURL.substring(startIndex, endIndex);
 }
@@ -1885,15 +1915,14 @@ export function parseIDFromYoutubeURL(youtubeURL) {
  * @param {{}} context
  * @return {{}}
  */
-export function prepareContext(context){
-
+export function prepareContext(context) {
   context.altrpdata = appStore.getState().currentDataStorage.getData();
   context.altrpmodel = appStore.getState().currentModel.getData();
   context.altrpuser = appStore.getState().currentUser.getData();
   context.altrppagestate = appStore.getState().altrpPageState.getData();
   context.altrpresponses = appStore.getState().altrpresponses.getData();
   context.altrpmeta = appStore.getState().altrpMeta.getData();
-  return context
+  return context;
 }
 
 /**
@@ -1902,11 +1931,11 @@ export function prepareContext(context){
  * @param {string} JSONString
  * @return {boolean}
  */
-export function isJSON(JSONString = ''){
+export function isJSON(JSONString = "") {
   try {
     JSON.parse(JSONString);
     return true;
-  } catch(error){
+  } catch (error) {
     return false;
   }
 }
@@ -1918,33 +1947,36 @@ export function isJSON(JSONString = ''){
  */
 function parseXml(xml, arrayTags) {
   let dom = null;
-  if (window.DOMParser) dom = (new DOMParser()).parseFromString(xml, "text/xml");
+  if (window.DOMParser) dom = new DOMParser().parseFromString(xml, "text/xml");
   else if (window.ActiveXObject) {
-    dom = new ActiveXObject('Microsoft.XMLDOM');
+    dom = new ActiveXObject("Microsoft.XMLDOM");
     dom.async = false;
-    if (!dom.loadXML(xml)) throw dom.parseError.reason + " " + dom.parseError.srcText;
-  }
-  else throw new Error("cannot parse xml string!");
+    if (!dom.loadXML(xml))
+      throw dom.parseError.reason + " " + dom.parseError.srcText;
+  } else throw new Error("cannot parse xml string!");
 
   function parseNode(xmlNode, result) {
     if (xmlNode.nodeName === "#text") {
       let v = xmlNode.nodeValue;
-      if (v.trim()) result['#text'] = v;
+      if (v.trim()) result["#text"] = v;
       return;
     }
 
     let jsonNode = {},
-        existing = result[xmlNode.nodeName];
+      existing = result[xmlNode.nodeName];
     if (existing) {
-      if (!Array.isArray(existing)) result[xmlNode.nodeName] = [existing, jsonNode];
+      if (!Array.isArray(existing))
+        result[xmlNode.nodeName] = [existing, jsonNode];
       else result[xmlNode.nodeName].push(jsonNode);
-    }
-    else {
-      if (arrayTags && arrayTags.indexOf(xmlNode.nodeName) !== -1) result[xmlNode.nodeName] = [jsonNode];
+    } else {
+      if (arrayTags && arrayTags.indexOf(xmlNode.nodeName) !== -1)
+        result[xmlNode.nodeName] = [jsonNode];
       else result[xmlNode.nodeName] = jsonNode;
     }
 
-    if (xmlNode.attributes) for (let attribute of xmlNode.attributes) jsonNode[attribute.nodeName] = attribute.nodeValue;
+    if (xmlNode.attributes)
+      for (let attribute of xmlNode.attributes)
+        jsonNode[attribute.nodeName] = attribute.nodeValue;
 
     for (let node of xmlNode.childNodes) parseNode(node, jsonNode);
   }
@@ -1955,5 +1987,5 @@ function parseXml(xml, arrayTags) {
   return result;
 }
 function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }

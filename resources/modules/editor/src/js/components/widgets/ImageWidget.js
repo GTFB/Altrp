@@ -94,8 +94,8 @@ class ImageWidget extends Component {
 
     const lightbox = (
       <AltrpLightbox
+        images={[(media ? media.url : "")]}
         settings={{
-          mainSrc: (media ? media.url : ""),
           onCloseRequest: () => this.setState({lightbox: false})
         }}
         // color={this.props.color_lightbox_style}
