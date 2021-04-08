@@ -12,6 +12,7 @@
         "admin-start": "webpack-dev-server --config webpack.admin.dev.js",
         "reports-start": "webpack-dev-server --config webpack.reports.dev.js",
         "robots-start": "webpack-dev-server --config webpack.robots.dev.js",
+        "ts-compile": "tsc",
         "front-build": "webpack --config webpack.front.prod.js",
         "editor-build": "webpack --config webpack.editor.prod.js",
         "admin-build": "webpack --config webpack.admin.prod.js",
@@ -126,7 +127,8 @@
         "style-object-to-css-string": "^1.0.1",
         "styled-components": "^5.0.0",
         "text-mask-addons": "^3.8.0",
-        "tinymce": "^5.7.1"
+        "tinymce": "^5.7.1",
+        "typescript": "^4.2.3"
     },
     "devDependencies": {
         "@babel/cli": "^7.10.3",

@@ -7,7 +7,7 @@ import { Provider } from "react-redux";
 import Resource from "../../editor/src/js/classes/Resource";
 import { changeCurrentUser, setUserNotice, setUsersOnline } from "./js/store/current-user/actions";
 import FontsManager from "./js/components/FontsManager";
-import Echo from "laravel-echo";;
+import Echo from "laravel-echo";
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider, } from 'react-dnd'
 
