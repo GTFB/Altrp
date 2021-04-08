@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import {getResponsiveSetting} from "../../../../../front-app/src/js/helpers";
-import {defaultStyled, styledString} from "./styledHelpers";
+import {defaultStyled, styledString} from "../../../../../front-app/src/js/helpers/styles";
 
 export default styled.div`
   ${({settings}) => {
