@@ -70,6 +70,7 @@ class PagesController extends Controller
     $page->author = auth()->user()->id;
     $page->content = '';
     $page->guid = (string)Str::uuid();
+    $page->is_cached = $request->is_cached;
     if ( $page->save() ) {
       if ( $request->template_id ) {
         $template = Template::find( $request->template_id );
@@ -144,6 +145,7 @@ class PagesController extends Controller
     $page->seo_description = $request->seo_description;
     $page->seo_keywords = $request->seo_keywords;
     $page->seo_title = $request->seo_title;
+    $page->is_cached = $request->is_cached;
     $res['page'] = $page->toArray();
 
     $pages_template = PagesTemplate::where( 'page_id', $id )->where( 'template_type', 'content' )->first();
@@ -254,4 +256,56 @@ class PagesController extends Controller
 
     return response()->json( $pages_options );
   }
+
+  /**
+   * @param string $page_id
+   * @return boolean
+   */
+  public function clearСache( $page_id = null ){
+
+    $cachePath = 'public/storage/cache';
+
+    if (!Storage::has($cachePath)) {
+      File::makeDirectory(storage_path() . '/app/' . $cachePath, 0777);
+      Storage::put($cachePath . '/relations.json', '{}');
+      return true;
+    }
+    
+    if (!$page_id) {
+      $files = Storage::allFiles($cachePath);
+      Storage::delete($files);
+      Storage::put($cachePath . '/relations.json', '{}');
+      return true;
+    }
+
+    $relationsJson = Storage::get($cachePath . '/relations.json');
+    $relations = json_decode($relationsJson, true);
+
+    $page = Page::find( $page_id );
+
+    if (!$page || !$page->path) {
+       return false;
+    }
+
+    $page->path = preg_replace("#/$#", "", $page->path);
+    $page_path = explode('/', $page->path);
+
+    foreach ($relations as $key => $relation) {
+
+      $relation['url'] = preg_replace("#/$#", "", $relation['url']);
+      $relation_path = explode('/', $relation['url']);
+
+      if (count($page_path) == count($relation_path) && $page_path[1] === $relation_path[1]) {
+        unset($relations[$key]);
+        Storage::delete($cachePath . '/' . $relation['hash']);
+        break;
+      }
+      
+    }
+
+    $relations = json_encode($relations);
+    Storage::put($cachePath . '/relations.json', $relations);
+    return true;
+  }
+
 }

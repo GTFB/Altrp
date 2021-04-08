@@ -12,11 +12,13 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
 	$json = file_get_contents($cachePath . 'relations.json');
 	$cachedFiles = json_decode($json, true);
 
-	foreach ($cachedFiles as $cachedFile) {
-		if ($cachedFile['url'] === $url) {
-			$file = file_get_contents($cachePath . $cachedFile['hash']);
-			echo $file;
-			die();
+	if (!empty($cachedFiles)) {
+		foreach ($cachedFiles as $cachedFile) {
+			if ($cachedFile['url'] === $url) {
+				$file = file_get_contents($cachePath . $cachedFile['hash']);
+				echo $file;
+				die();
+			}
 		}
 	}
 

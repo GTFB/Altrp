@@ -123,6 +123,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/pages_options', 'Admin\PagesController@pages_options')->name('admin.pages_options.all');
     Route::get('/reports_options', 'Admin\PagesController@reports_options')->name('admin.reports_options.all');
     Route::get('/pages_options/{page_id}', 'Admin\PagesController@show_pages_options')->name('admin.pages_options.show');
+    /**
+     * Очистка кэша
+     */
+    Route::get('clear_cache/{page_id?}', 'Admin\PagesController@clearСache')->name('clear_cache');
+
 
     Route::get('/page_data_sources', 'Admin\PageDatasourceController@index');
     Route::get('/page_data_sources/pages/{page_id}', 'Admin\PageDatasourceController@getByPage');
@@ -423,6 +428,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
       Route::get('settings', 'Admin\DownloadsController@exportAltrpSettings')->name('admin.download.settings');
       Route::get('stream_settings', 'Admin\DownloadsController@exportStreamAltrpSettings')->name('admin.download.stream_settings');
     });
+
   });
 
 });
@@ -465,48 +471,25 @@ foreach ( $frontend_routes as $_frontend_route ) {
   $replacement2 = '{$1}/';
   $frontend_route = preg_replace( $pattern1, $replacement1, $path );
 
+
+
   Route::get($frontend_route, function () use ($title, $_frontend_route, $frontend_route) {
 
     $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
 
+    if (Page::isCached( $_frontend_route['id'] )) {
+      
+      $current_route = explode("/", $_frontend_route['path'])[1];
+      $current_route = "/" . $current_route . "/" . implode("/", Route::current()->parameters());
 
-    $current_route = explode("/", $_frontend_route['path'])[1];
-    $current_route = "/" . $current_route . "/" . implode("/", Route::current()->parameters());
-  
-    function saveRelation($route, $html) {
+      ob_start(function($html) use ($title, $_frontend_route, $frontend_route, $preload_content, $current_route ) {
+        
+        saveCache($current_route, $html);
+        
+        return $html;
 
-      $cachePath = '../storage/app/public/storage/cache/';
-      $hash = md5($route . $html);
-
-      if (!is_dir($cachePath)) {
-        mkdir($cachePath, 0644);
-      }
-      file_put_contents($cachePath . $hash, $html);
-
-
-      if (!file_exists($cachePath . 'relations.json')) {
-        file_put_contents($cachePath . 'relations.json', '{}');
-      }
-
-      $json = file_get_contents($cachePath . 'relations.json');
-      $relations = json_decode($json, true);
-
-      $newRelation = ['hash' => $hash, "url" => $route];
-
-      if (!array_column($relations, $hash)) {
-        array_push($relations, $newRelation);
-      }
-
-      $relations = json_encode($relations);
-      file_put_contents($cachePath . 'relations.json', $relations);
+      });
     }
-
-    ob_start(function($html) use ($title, $_frontend_route, $frontend_route, $preload_content, $current_route ) {
-
-      saveRelation($current_route, $html);
-      return $html;
-
-    });
 
     return view('front-app', [
       'page_areas' => json_encode( Page::get_areas_for_page( $_frontend_route['id']) ),
@@ -604,6 +587,7 @@ Route::group(['prefix' => 'ajax'], function () {
    */
   Route::post('/feedback', 'MailController@sendMail');
   Route::post('/feedback-html', 'MailController@sendMailHTML');
+
 });
 
 Route::get('reports/{id}', "ReportsController@show");
