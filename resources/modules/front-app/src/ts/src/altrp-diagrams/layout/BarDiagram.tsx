@@ -125,10 +125,10 @@ const BarDiagram: FunctionComponent<{
                 <ResponsiveBar
                     data={data}
                     margin={{
-                        top: margin.top,
-                        right: margin.right,
-                        bottom: margin.bottom,
-                        left: margin.left
+                        top: margin?.top || 30,
+                        right: margin?.right || 30,
+                        bottom: margin?.bottom || 30,
+                        left: margin?.left || 30
                     }}
                     indexBy="key"
                     colors={

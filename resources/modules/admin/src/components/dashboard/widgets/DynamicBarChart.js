@@ -94,7 +94,12 @@ const DynamicBarChart = ({
       <div style={{ height: `${height}px` }}>
         <ResponsiveBar
           data={data}
-          margin={{ top: 50, right: 180, bottom: 50, left: 60 }}
+          margin={{
+            top: 30,
+            right: 30,
+            bottom: 30,
+            left: 30
+          }}
           indexBy="key"
           colors={
             customColorSchemeChecker && customColors.length > 0
