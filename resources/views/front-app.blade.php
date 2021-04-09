@@ -8,67 +8,6 @@
   <link rel="preload" href="/modules/front-app/front-app.js?0.14.16" as="script">
   <link rel="preload" href="/modules/front-app/front-app.css?0.14.16" as="style">
   {{--preloads--}}
-  <link rel="preload" as="script" href="/modules/front-app/f0c34a29f05e87d02650.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/3e2d3ef80b8c31b33c05.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/9f437dfeb0f47cf4e4ee.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/218d8f163269233c5153.bundle.js">
-  <link rel="preload" as="style" href="/modules/front-app/ee202f8c6cb26765e9f2.front-app.css">
-  <link rel="preload" as="script" href="/modules/front-app/ee202f8c6cb26765e9f2.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/ee2affb14360cdf70c89.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/894338e61351d5b9df74.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/67e1642ca982633419ec.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/10bf70ec31f80f4200dc.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/65a45cb245c99f9fd772.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/225a17294cda9eed86d2.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/de9fc238a7262f0883df.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/891d657bf3111b16fbe7.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/0e53cd1708f72819c8e2.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/98f1b739f7605da7e1df.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/a01920563eb8eb1248c4.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/72459875e42f1fd4d0ff.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/ae0ecf7c00c936aeaff9.bundle.js">
-  <link rel="preload" as="style" href="/modules/front-app/724505c6f8b692d9d8b8.front-app.css">
-  <link rel="preload" as="script" href="/modules/front-app/724505c6f8b692d9d8b8.bundle.js">
-  <link rel="preload" as="style" href="/modules/front-app/d13dd38b25a191115ec8.front-app.css">
-  <link rel="preload" as="script" href="/modules/front-app/d13dd38b25a191115ec8.bundle.js">
-  <link rel="preload" as="style" href="/modules/front-app/2f3e5d3cf6af97fd2e7b.front-app.css">
-  <link rel="preload" as="script" href="/modules/front-app/2f3e5d3cf6af97fd2e7b.bundle.js">
-  <link rel="preload" as="style" href="/modules/front-app/fb32b3856ff1d2081afa.front-app.css">
-  <link rel="preload" as="script" href="/modules/front-app/fb32b3856ff1d2081afa.bundle.js">
-  <link rel="preload" as="style" href="/modules/front-app/2b8aa9a3f4f6718d8fb0.front-app.css">
-  <link rel="preload" as="script" href="/modules/front-app/2b8aa9a3f4f6718d8fb0.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/213132df873ba249cec5.bundle.js">
-  <link rel="preload" as="style" href="/modules/front-app/b695a798f6edf8bd7f8e.front-app.css">
-  <link rel="preload" as="script" href="/modules/front-app/b695a798f6edf8bd7f8e.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/aba51cf30102245d1c2a.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/217e87bb854f86b5fd56.bundle.js">
-  <link rel="preload" as="style" href="/modules/front-app/77e625c0ce50f49de14e.front-app.css">
-  <link rel="preload" as="script" href="/modules/front-app/77e625c0ce50f49de14e.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/ac8292e8e9f8a73fa3a6.bundle.js">
-  <link rel="preload" as="style" href="/modules/front-app/5af132067be46742d105.front-app.css">
-  <link rel="preload" as="script" href="/modules/front-app/5af132067be46742d105.bundle.js">
-  <link rel="preload" as="style" href="/modules/front-app/6483026601d241ec6b21.front-app.css">
-  <link rel="preload" as="script" href="/modules/front-app/6483026601d241ec6b21.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/e0d57fed54d600370bd3.bundle.js">
-  <link rel="preload" as="style" href="/modules/front-app/0a9ffaa3d493214bee8c.front-app.css">
-  <link rel="preload" as="script" href="/modules/front-app/0a9ffaa3d493214bee8c.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/143e2599e5e3f1b370d4.bundle.js">
-  <link rel="preload" as="style" href="/modules/front-app/63d052bd84535887d810.front-app.css">
-  <link rel="preload" as="script" href="/modules/front-app/63d052bd84535887d810.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/3166d808deb4a8a78c66.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/cd89369d568429991c4e.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/af87e9e3c580b8e83e0e.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/eac300d38fdfc736d469.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/a9bcf33ba0309f9cf367.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/8e26292388d6caecb40c.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/642b227c00874d4744d3.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/e6c761af9672f9608075.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/b28135bddebbc6286968.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/d1cf9b00cac4cfaaca9a.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/ca2c946a2c4db2af3cfc.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/39a23e735c80ec3cf33d.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/bf31d3ca720c8378d51b.bundle.js">
-  <link rel="preload" as="script" href="/modules/front-app/2f1f083da4e4ef2cb440.bundle.js">
   {{--preloads--}}
   <script>
     /* <![CDATA[ */
@@ -139,7 +78,6 @@
   {!! isset( $preload_content[ 'content'] ) ? $preload_content['content'] : ''!!}
 </div>
 <div id="front-app" class="front-app-content_preloaded">
-  {!! isset( $preload_content[ 'content'] ) ? $preload_content['content'] : ''!!}
 </div>
 
 <script>

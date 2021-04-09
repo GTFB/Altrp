@@ -4,6 +4,9 @@ namespace App;
 
 use App\Reports;
 use App\Altrp\Source;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
 use Mockery\Exception;
 use App\Traits\Searchable;
 use Illuminate\Support\Arr;
@@ -581,7 +584,7 @@ class Page extends Model
     $important_styles = [];
     ob_start();
     ?>
-    <div class="front-app-content">
+    <div class="front-app-content ">
       <div class="route-content" id="route-content">
         <?php
         foreach ( $templates as $template ) {
@@ -641,5 +644,55 @@ class Page extends Model
     self::whereId($page_id)->update(['is_cached' => $res]);
 
     return $res;
+  }
+
+  /**
+   * очистить кэш связанный со страницей
+   * @param string $id
+   */
+  static function clearAllCacheById( string $id ){
+    $page = self::find( $id );
+    if( ! $page ){
+      return;
+    }
+    $routes = Route::getRoutes();
+    $route = $routes->getByName( 'page_' . $id );
+    if( ! $route ){
+      return;
+    }
+
+    $cachePath = storage_path() . '/framework/cache/pages/';
+
+    if (! File::exists( $cachePath ) ) {
+      File::put( $cachePath . 'relations.json', '{}' );
+      return;
+    }
+    $relations = File::get( $cachePath . 'relations.json' );
+    $relations = json_decode( $relations, true );
+    if( ! is_array( $relations ) ){
+      $relations = [];
+    }
+
+    $relations = array_filter( $relations, function( $item ) use ($route, $cachePath) {
+
+      $request = Request::create( $item['url'] );
+      try {
+        if( $route->matches( $request ) ){
+          if( File::exists( $cachePath . $item['hash'] ) ){
+            File::delete( $cachePath . $item['hash'] );
+          }
+          return false;
+        } else {
+          return true;
+        }
+
+      }catch (\Exception $e){
+        return true;
+      }
+      return true;
+    } );
+    $relations = json_encode( $relations );
+    File::put( $cachePath . 'relations.json', $relations );
+
   }
 }

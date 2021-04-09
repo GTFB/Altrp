@@ -126,7 +126,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     /**
      * Очистка кэша
      */
-    Route::get('clear_cache/{page_id?}', 'Admin\PagesController@clearСache')->name('clear_cache');
+    Route::delete('clear_cache/{page_id?}', 'Admin\PagesController@clearCache')->name('clear_cache');
 
 
     Route::get('/page_data_sources', 'Admin\PageDatasourceController@index');
@@ -466,32 +466,21 @@ foreach ( $frontend_routes as $_frontend_route ) {
   $path = $_frontend_route['path'];
   $title = $_frontend_route['title'];
   $pattern1 = '/:(.+)((\/)|$)/U';
-  $pattern2 = '/:(.+)(\/)/U';
   $replacement1 = '{$1}/';
-  $replacement2 = '{$1}/';
   $frontend_route = preg_replace( $pattern1, $replacement1, $path );
-
-
 
   Route::get($frontend_route, function () use ($title, $_frontend_route, $frontend_route) {
 
     $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
 
     if (Page::isCached( $_frontend_route['id'] )) {
-      
-      $current_route = explode("/", $_frontend_route['path'])[1];
-      $current_route = "/" . $current_route . "/" . implode("/", Route::current()->parameters());
 
-      ob_start(function($html) use ($title, $_frontend_route, $frontend_route, $preload_content, $current_route ) {
-        
-        saveCache($current_route, $html);
-        
-        return $html;
+      global $altrp_need_cache;
+      $altrp_need_cache = true;
 
-      });
     }
 
-    return view('front-app', [
+    return view( 'front-app', [
       'page_areas' => json_encode( Page::get_areas_for_page( $_frontend_route['id']) ),
       'page_id' => $_frontend_route['id'],
       'title' => $title,
@@ -500,7 +489,7 @@ foreach ( $frontend_routes as $_frontend_route ) {
       'is_admin' => isAdmin(),
     ]);
 
-  })->middleware(['web', 'installation.checker']);
+  })->middleware(['web', 'installation.checker', 'after'])->name( 'page_' . $_frontend_route['id'] );
 }
 
 /**

@@ -530,57 +530,56 @@ function setDynamicData($template, $data)
 
 /**
  * Сохранение кэша страниц
- * @param string $route
  * @param string $html
  * @return boolean
+ * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
  */
-function saveCache($route, $html) {
+function saveCache( $html) {
 
-    if (!$route || !$html) {
-      return false;
+  if (!$html) {
+    return false;
+  }
+  $url = $_SERVER['REQUEST_URI'];
+  //$html = minificationHTML($html);
+  $hash = md5($url . $html);
+
+  $cachePath = storage_path() . '/framework/cache/pages';
+
+  File::ensureDirectoryExists( $cachePath, 0775);
+
+  if ( ! File::exists($cachePath . '/relations.json') ) {
+    File::put($cachePath . '/relations.json', '{}');
+  }
+
+  $relationsJson = File::get($cachePath . '/relations.json');
+  $relations = json_decode($relationsJson, true);
+
+  $newRelation = ['hash' => $hash, "url" => $url];
+
+  $key = false;
+  foreach ($relations as $relation) {
+    if ($relation['hash'] === $hash) {
+      $key = true;
+      break;
     }
+  }
 
-    $html = minificationHTML($html);
-    $hash = md5($route . $html);
+  if (!$key) {
+    array_push($relations, $newRelation);
+  }
 
-    $cachePath = 'public/storage/cache';
+  $relations = json_encode($relations);
 
-    if (!Storage::has($cachePath)) {
-      File::makeDirectory(storage_path() . '/app/' . $cachePath, 0777);
-    }
+  File::put($cachePath . '/relations.json', $relations);
+  File::put($cachePath . '/' . $hash, $html);
 
-    if (!Storage::has($cachePath . '/relations.json') || Storage::get($cachePath . '/relations.json') == '') {
-      Storage::put($cachePath . '/relations.json', '{}');
-    }
-
-    $relationsJson = Storage::get($cachePath . '/relations.json');
-    $relations = json_decode($relationsJson, true);
-
-    $newRelation = ['hash' => $hash, "url" => $route];
-
-    $key = false;
-    foreach ($relations as $relation) {
-      if ($relation['hash'] === $hash) {
-        $key = true;
-        break;
-      }
-    }
-
-    if (!$key) {
-      array_push($relations, $newRelation);
-    }
-
-    $relations = json_encode($relations);
-    Storage::put($cachePath . '/relations.json', $relations);
-
-    Storage::put($cachePath . '/' . $hash, $html);
-
-    return true;
+  return true;
 }
 
 /**
  * Минификация HTML
  * @param string $html
+ * @return null|string|string[]
  */
 function minificationHTML($html) {
     $search = [

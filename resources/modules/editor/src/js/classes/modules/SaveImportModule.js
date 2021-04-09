@@ -77,6 +77,15 @@ class SaveImportModule extends BaseModule {
       stylesElements = stylesElements.filter(style=> {
         return style.tagName === 'STYLE';
       });
+
+      let styledTag = window.altrpEditorContent.editorWindow.current.getRootNode().querySelector('[data-styled="active"]');
+      if(styledTag){
+        styledTag = styledTag.cloneNode(true);
+        styledTag.removeAttribute('data-styled');
+        styledTag.removeAttribute('data-styled-version');
+        stylesElements.push(styledTag)
+      }
+
       stylesElements = stylesElements.map(style => style ? style.outerHTML : '');
     }
     let templateData = getEditor().modules.templateDataStorage.getTemplateDataForSave();
