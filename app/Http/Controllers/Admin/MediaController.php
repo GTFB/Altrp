@@ -90,6 +90,8 @@ class MediaController extends Controller
         $media->width = data_get( $size, '0', 0 );
         $media->height = data_get( $size, '1', 0 );
       }
+
+      $media->main_color = getMainColor( $path );
       $media->url =  Storage::url( $media->filename );
       $media->save();
       $res[] = $media;

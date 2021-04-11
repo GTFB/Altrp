@@ -13,9 +13,10 @@ class IsAdmin
       if( ! $user ){
         return redirect('/');
       }
-      if(!$user->isAdmin()) {
+      if( ! $user->isAdmin() ) {
           return redirect('/');
       }
+
       return $next($request);
   }
 }

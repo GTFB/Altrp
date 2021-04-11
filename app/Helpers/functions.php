@@ -3,6 +3,9 @@
 use App\Http\Requests\ApiRequest;
 use App\User;
 use Illuminate\Support\Str;
+use League\ColorExtractor\Color;
+use League\ColorExtractor\ColorExtractor;
+use League\ColorExtractor\Palette;
 
 /**
  * Get the script possible URL base
@@ -599,3 +602,25 @@ function minificationHTML($html) {
     return preg_replace($search, $replace, $html);
 }
 
+/**
+ * @param $path
+ * @param int $count
+ * @return string
+ */
+if( ! function_exists( 'getMainColor' ) ){
+  function getMainColor( $path, $count = 1 ){
+
+    try{
+      $palette = Palette::fromFilename($path);
+      $extractor = new ColorExtractor($palette);
+      $colors = $extractor->extract($count);
+      $color = $colors[0];
+      $color = Color::fromIntToHex($color);
+      return $color;
+    } catch (\Exception $e){
+      Log::debug($e);
+      return '';
+    }
+
+  }
+}
