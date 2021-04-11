@@ -37,7 +37,7 @@ class ElementWrapper extends Component {
   componentDidMount() {
     // console.log(this.props.element.getName());
     // console.log(performance.now());
-    window.frontApp.onWidgetMount();
+    ! isEditor() && window.frontApp.onWidgetMount();
     if(_.isFunction(this.props.element.update)){
       this.props.element.update();
       this.props.element.updateFonts();

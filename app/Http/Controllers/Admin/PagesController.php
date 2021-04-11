@@ -276,7 +276,7 @@ class PagesController extends Controller
       $files = File::allFiles( $cachePath );
       File::delete( $files );
       File::put( $cachePath . '/relations.json', '{}' );
-      return true;
+      return response()->json( ['success' => true], 200, [], JSON_UNESCAPED_UNICODE );
     }
 
     Page::clearAllCacheById( $page_id );

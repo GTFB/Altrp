@@ -12,9 +12,13 @@
 */
 
 use App\Constructor\Template;
+use App\Media;
 use App\Page;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use League\ColorExtractor\ColorExtractor;
+use League\ColorExtractor\Palette;
+use League\ColorExtractor\Color;
 
 //use CacheService;
 
