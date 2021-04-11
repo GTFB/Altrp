@@ -1,16 +1,6 @@
 import React, { Component } from "react";
-import '../../sass/section.scss';
-import { connect } from "react-redux";
-import '../../sass/section.scss'
 import {isEditor, redirect} from "../../../../front-app/src/js/helpers";
 import CONSTANTS from "../consts";
-import {
-  ColumnArticleComponent,
-  ColumnAsideComponent, ColumnDivComponent,
-  ColumnFooterComponent,
-  ColumnHeaderComponent, ColumnMainComponent,
-  ColumnNavComponent, ColumnSectionComponent
-} from "./widgets/styled-components/ColumnComponents";
 import {
   SectionArticleComponent,
   SectionAsideComponent,

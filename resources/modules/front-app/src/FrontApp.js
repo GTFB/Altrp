@@ -35,11 +35,11 @@ class FrontApp extends Component {
       }
       const appElement = document.getElementById('front-app');
       const target = document.getElementById('front-app-target');
-      appElement.classList.remove('front-app-content_preloaded');
       let classes = _.toArray(target.classList);
       classes.forEach(c=>{
         appElement.classList.add(c);
       });
+      appElement.classList.remove('front-app-content_preloaded');
       target.remove();
 
     }, 100);

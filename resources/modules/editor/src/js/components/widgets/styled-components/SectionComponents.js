@@ -4,7 +4,7 @@ import {dimensionsControllerToStyles} from "../../../../../../front-app/src/js/h
 const settingsToStyles = ({settings, columns = []})=>{
   let styles = '';
 
-  styles += '&.altrp-section{';
+  styles += '&.altrp-section{z-index: 45;display: flex;';
   const position_style_position_padding = getResponsiveSetting(settings, 'position_style_position_padding');
   if(position_style_position_padding){
     styles += dimensionsControllerToStyles(position_style_position_padding);
