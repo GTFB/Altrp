@@ -1,3 +1,5 @@
+import {useEffect, useRef} from "react";
+
 export function isClassComponent(component) {
   return (
       typeof component === 'function' &&
@@ -29,4 +31,12 @@ export function isDOMTypeElement(element) {
 
 export function isCompositeTypeElement(element) {
   return isElement(element) && typeof element.type === 'function';
+}
+
+export function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref.current;
 }

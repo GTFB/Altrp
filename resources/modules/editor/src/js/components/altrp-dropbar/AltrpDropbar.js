@@ -8,6 +8,7 @@ class Dropbar extends Component {
 
     this.state = {
       show: false,
+      updateToken: undefined
     };
 
     this.show = this.show.bind(this);
@@ -83,6 +84,7 @@ class Dropbar extends Component {
           <AltrpPopper
             target={this.children}
             portal={true}
+            updateToken={this.state.updateToken}
             settings={{
               placement: this.props.settings.position_dropbar_options,
               offset: [0, this.props.settings.offset_dropbar_options.size],
@@ -109,8 +111,13 @@ class Dropbar extends Component {
                     }
                   )
                 ) : (
-                  <TemplateLoader templateId={this.props.settings.template_dropbar_section}
-                                  cardModel={this.props.element.getCurrentModel()}/>
+                  <TemplateLoader
+                    onLoad={() => {
+                      this.setState({ updateToken: Math.random() })
+                    }}
+                    templateId={this.props.settings.template_dropbar_section}
+                    cardModel={this.props.element.getCurrentModel()}
+                  />
                 )
               }
             </div>
