@@ -156,9 +156,9 @@ class RouteContent extends Component {
     }
     return (
       <React.Fragment>
-        {this.admin && <AdminBar areas={this.state.areas} data={this.props.currentUser.data} idPage={this.props.id} />}
-
+        {this.admin && <AdminBar areas={this.state.areas} data={this.props.currentUser.data} idPage={this.props.id} />} 
         <Scrollbars
+        className="main-content"
           ref={this.scrollbar}
           onUpdate={this.props.setScrollValue}
           // style={{ zIndex: 99999 }}

@@ -22,14 +22,23 @@ class OffcanvasWidget extends Component {
 
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
-    this.hideButton = this.hideButton.bind(this)
+    this.hideButton = this.hideButton.bind(this);
+    this.mainContent = document.getElementsByClassName('main-content')[0];
   }
 
   show() {
     this.setState({
       show: true
     });
-    document.addEventListener("click", this.hide)
+    document.addEventListener("click", this.hide);
+    if(this.state.settings.animations_offcanvas === "push") {
+      if(this.state.settings.direction_offcanvas === "left") {
+        this.mainContent.style.width = "70%";
+        this.mainContent.style.left = "30%";
+      } else if (this.state.settings.direction_offcanvas === "right") {
+        this.mainContent.style.width = "70%";
+      }
+    }
   }
 
   hide(e) {
@@ -49,6 +58,8 @@ class OffcanvasWidget extends Component {
       }, 200);
       document.removeEventListener("click", this.hide)
     }
+    this.mainContent.style.width = "100%";
+    this.mainContent.style.left = "0";
   }
 
   hideButton() {
@@ -117,7 +128,7 @@ class OffcanvasWidget extends Component {
         break;
       default:
         classesWrapper += " altrp-offcanvas-animation-slide";
-    }
+    }   
 
     let content = "";
     let rootElement = this.props.template;
