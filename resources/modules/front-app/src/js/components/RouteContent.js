@@ -87,7 +87,6 @@ class RouteContent extends Component {
      * @member {array} data_sources
      */
     let { data_sources } = this.props;
-
     dataStorageUpdater.updateCurrent(data_sources);
     appStore.dispatch(clearPageState());
   }

@@ -16,6 +16,8 @@ use App\Page;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+//use CacheService;
+
 
 /**
  * Installation
@@ -121,6 +123,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/pages_options', 'Admin\PagesController@pages_options')->name('admin.pages_options.all');
     Route::get('/reports_options', 'Admin\PagesController@reports_options')->name('admin.reports_options.all');
     Route::get('/pages_options/{page_id}', 'Admin\PagesController@show_pages_options')->name('admin.pages_options.show');
+    /**
+     * Очистка кэша
+     */
+    Route::delete('clear_cache/{page_id?}', 'Admin\PagesController@clearCache')->name('clear_cache');
+
 
     Route::get('/page_data_sources', 'Admin\PageDatasourceController@index');
     Route::get('/page_data_sources/pages/{page_id}', 'Admin\PageDatasourceController@getByPage');
@@ -421,6 +428,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
       Route::get('settings', 'Admin\DownloadsController@exportAltrpSettings')->name('admin.download.settings');
       Route::get('stream_settings', 'Admin\DownloadsController@exportStreamAltrpSettings')->name('admin.download.stream_settings');
     });
+
   });
 
 });
@@ -452,21 +460,27 @@ Route::get('/', function () {
   ]);
 })->middleware(['web', 'installation.checker']);
 
+
+
 foreach ( $frontend_routes as $_frontend_route ) {
   $path = $_frontend_route['path'];
   $title = $_frontend_route['title'];
   $pattern1 = '/:(.+)((\/)|$)/U';
-  $pattern2 = '/:(.+)(\/)/U';
   $replacement1 = '{$1}/';
-  $replacement2 = '{$1}/';
   $frontend_route = preg_replace( $pattern1, $replacement1, $path );
 
   Route::get($frontend_route, function () use ($title, $_frontend_route, $frontend_route) {
 
     $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
 
+    if (Page::isCached( $_frontend_route['id'] )) {
 
-    return view('front-app', [
+      global $altrp_need_cache;
+      $altrp_need_cache = true;
+
+    }
+
+    return view( 'front-app', [
       'page_areas' => json_encode( Page::get_areas_for_page( $_frontend_route['id']) ),
       'page_id' => $_frontend_route['id'],
       'title' => $title,
@@ -474,7 +488,8 @@ foreach ( $frontend_routes as $_frontend_route ) {
       'preload_content' => $preload_content,
       'is_admin' => isAdmin(),
     ]);
-  })->middleware(['web', 'installation.checker']);
+
+  })->middleware(['web', 'installation.checker', 'after'])->name( 'page_' . $_frontend_route['id'] );
 }
 
 /**
@@ -561,6 +576,7 @@ Route::group(['prefix' => 'ajax'], function () {
    */
   Route::post('/feedback', 'MailController@sendMail');
   Route::post('/feedback-html', 'MailController@sendMailHTML');
+
 });
 
 Route::get('reports/{id}', "ReportsController@show");

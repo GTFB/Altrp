@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Page;
 use App\PagesTemplate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class PagesController extends Controller
@@ -70,6 +71,7 @@ class PagesController extends Controller
     $page->author = auth()->user()->id;
     $page->content = '';
     $page->guid = (string)Str::uuid();
+    $page->is_cached = $request->is_cached;
     if ( $page->save() ) {
       if ( $request->template_id ) {
         $template = Template::find( $request->template_id );
@@ -144,6 +146,7 @@ class PagesController extends Controller
     $page->seo_description = $request->seo_description;
     $page->seo_keywords = $request->seo_keywords;
     $page->seo_title = $request->seo_title;
+    $page->is_cached = $request->is_cached;
     $res['page'] = $page->toArray();
 
     $pages_template = PagesTemplate::where( 'page_id', $id )->where( 'template_type', 'content' )->first();
@@ -254,4 +257,30 @@ class PagesController extends Controller
 
     return response()->json( $pages_options );
   }
+
+  /**
+   * @param string $page_id
+   * @return boolean
+   */
+  public function clearCache( $page_id = null ){
+
+    $cachePath = storage_path() . '/framework/cache/pages';
+    File::ensureDirectoryExists( $cachePath, 0775);
+
+    if (! File::exists( $cachePath ) ) {
+      File::put( $cachePath . '/relations.json', '{}' );
+      return true;
+    }
+    
+    if ( ! $page_id ) {
+      $files = File::allFiles( $cachePath );
+      File::delete( $files );
+      File::put( $cachePath . '/relations.json', '{}' );
+      return true;
+    }
+
+    Page::clearAllCacheById( $page_id );
+    return response()->json( ['success' => true], 200, [], JSON_UNESCAPED_UNICODE );
+  }
+
 }

@@ -34,6 +34,7 @@ class ReportsContent extends Component {
    * Обновляем текущего пользователя
    */
   async componentDidMount() {
+
     let currentUser = await new Resource({
       route: "/ajax/current-user"
     }).getAll();

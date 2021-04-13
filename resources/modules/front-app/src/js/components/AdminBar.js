@@ -1,5 +1,6 @@
 import React from "react";
 import { getDataByPath } from "./../helpers";
+import Resource from "../../../../editor/src/js/classes/Resource";
 
 class AdminBar extends React.Component {
   constructor(props) {
@@ -120,7 +121,20 @@ class AdminBar extends React.Component {
     JSON.stringify(getDataByPath(this.state.valueInput), null, "\t").select();
     document.execCommand("copy");
   }
+  /**
+   * Запрос на очистку кэша
+   */
+  clearCache = async () => {
+    if(! this.props.idPage){
+      return;
+    }
+    let result  = await confirm('Are You Sure');
+    if(! result){
+      return;
+    }
+    let res = await new Resource({route:'/admin/ajax/clear_cache'}).delete(this.props.idPage);
 
+  };
   handleClickSearch() {
     let options = localStorage.getItem("admin-bar-search-autocomplete")
       ? JSON.parse(localStorage.getItem("admin-bar-search-autocomplete"))
@@ -167,14 +181,14 @@ class AdminBar extends React.Component {
       <div className="admin-bar bvi-hide">
         <div className="admin-bar__tools">
           <div className="admin-bar__link" onClick={this.openPageAdmin}>
-            Admin
+            Go To Admin
           </div>
           <div className="admin-bar__tool">
             <span onClick={this.toggleVisiblePopupTemplate}>
               {iconsManager.renderIcon("admin-bar1", {
                 className: "admin-bar__tool-svg"
               })}{" "}
-              Edit-Template
+              Edit Template
             </span>
             
             {this.state.visiblePopupTemplate && (
@@ -189,7 +203,7 @@ class AdminBar extends React.Component {
                         className="admin-bar__popup-template-item admin-bar__popup-popups"
                         key={`template-${index}`}
                       >
-                        popup:{" "}
+                        Popups:{" "}
                         {iconsManager.renderIcon("chevron-admin-bar", {
                           className: "admin-bar__popup-template-chevron"
                         })}
@@ -226,7 +240,7 @@ class AdminBar extends React.Component {
             {iconsManager.renderIcon("admin-bar2", {
               className: "admin-bar__tool-svg"
             })}{" "}
-            Page-Settings
+            Page Settings
           </div>
           {/*<div className="admin-bar__tool">*/}
             {/*{iconsManager.renderIcon('admin-bar3', {className: "admin-bar__tool-svg"})} Clear Cache*/}
@@ -279,9 +293,15 @@ class AdminBar extends React.Component {
               onClick={this.handleClickSearch}
               onDoubleClick={this.handleDoubleClickSearch}
             >
-              test
+              Test
             </button>
           </div>
+          <button
+              className="admin-bar__button"
+              onClick={this.clearCache}
+          >
+            Clear Cache
+          </button>
         </div>
         <div className="admin-bar__profile">
           Hello, 

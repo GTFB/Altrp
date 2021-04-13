@@ -328,7 +328,7 @@ class Resource {
         "Content-Type": "application/json"
       }, customHeaders),
     };
-    if (!_.isEmpty(data)) {
+    if (! _.isEmpty(data)) {
       options.body = JSON.stringify(data);
     }
     let url = this.getRoute() + (id ? "/" + id : "");

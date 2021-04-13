@@ -1,13 +1,14 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import {Helmet} from "react-helmet";
-import { connect } from "react-redux";
-import {renderFontLink} from "../helpers";
+import {connect} from "react-redux";
+import {renderFontLink, delay} from "../helpers";
+
 export const GOOGLE_FONT = 'google';
 export const SYSTEM_FONT = 'system';
 
 class FontsManager extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       fonts: [],
@@ -16,23 +17,32 @@ class FontsManager extends Component {
     window.helmetRef = this.helmetRef;
   }
 
+  async componentDidMount() {
+    await delay(1000);
+    this.setState(state=>({...state, renderFonts: true}));
+  }
+
   /**
    *
    * @param {{}} prevProps
    * @param {{}} prevState
    */
-  componentDidUpdate(prevProps,prevState){
+  componentDidUpdate(prevProps, prevState) {
+    if(!this.state.renderFonts){
+      return;
+    }
     let fonts = new Set();
     const fontsPairs = _.toPairs(this.props.altrpFonts.getData());
-    fontsPairs.forEach(([key, value])=>{
+    fontsPairs.forEach(([key, value]) => {
       fonts.add(value);
     });
     fonts = _.toArray(fonts);
-    if(_.isEqual(fonts, this.state.fonts)){
+    if (_.isEqual(fonts, this.state.fonts)) {
       return;
     }
     this.setState(state => ({...state, fonts}));
   }
+
   render() {
     const {fonts} = this.state;
 
@@ -47,6 +57,7 @@ function mapStateToProps(state) {
     altrpFonts: state.altrpFonts,
   };
 }
+
 export default connect(mapStateToProps)(FontsManager);
 
 
@@ -56,13 +67,13 @@ export const altrpFontsSet =
     {
 
       // System fonts.
-      'Arial' : SYSTEM_FONT,
-      'Tahoma' : SYSTEM_FONT,
-      'Verdana' : SYSTEM_FONT,
-      'Helvetica' : SYSTEM_FONT,
-      'Times New Roman' : SYSTEM_FONT,
-      'Trebuchet MS' : SYSTEM_FONT,
-      'Georgia' : SYSTEM_FONT,
+      'Arial': SYSTEM_FONT,
+      'Tahoma': SYSTEM_FONT,
+      'Verdana': SYSTEM_FONT,
+      'Helvetica': SYSTEM_FONT,
+      'Times New Roman': SYSTEM_FONT,
+      'Trebuchet MS': SYSTEM_FONT,
+      'Georgia': SYSTEM_FONT,
 
       // Google Fonts (last update: 12/07/2020).
       'ABeeZee': GOOGLE_FONT,

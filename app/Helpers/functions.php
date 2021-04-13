@@ -528,3 +528,74 @@ function setDynamicData($template, $data)
     return $template;
 }
 
+/**
+ * Сохранение кэша страниц
+ * @param string $html
+ * @return boolean
+ * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+ */
+function saveCache( $html) {
+
+  if (!$html) {
+    return false;
+  }
+  $url = $_SERVER['REQUEST_URI'];
+  //$html = minificationHTML($html);
+  $hash = md5($url . $html);
+
+  $cachePath = storage_path() . '/framework/cache/pages';
+
+  File::ensureDirectoryExists( $cachePath, 0775);
+
+  if ( ! File::exists($cachePath . '/relations.json') ) {
+    File::put($cachePath . '/relations.json', '{}');
+  }
+
+  $relationsJson = File::get($cachePath . '/relations.json');
+  $relations = json_decode($relationsJson, true);
+
+  $newRelation = ['hash' => $hash, "url" => $url];
+
+  $key = false;
+  foreach ($relations as $relation) {
+    if ($relation['hash'] === $hash) {
+      $key = true;
+      break;
+    }
+  }
+
+  if (!$key) {
+    array_push($relations, $newRelation);
+  }
+
+  $relations = json_encode($relations);
+
+  File::put($cachePath . '/relations.json', $relations);
+  File::put($cachePath . '/' . $hash, $html);
+
+  return true;
+}
+
+/**
+ * Минификация HTML
+ * @param string $html
+ * @return null|string|string[]
+ */
+function minificationHTML($html) {
+    $search = [
+      '/\>[^\S ]+/s',     
+      '/[^\S ]+\</s',     
+      '/(\s)+/s',         
+      '/<!--(.|\s)*?-->/' 
+    ];
+
+    $replace = [
+      '>',
+      '<',
+      '\\1',
+      ''
+    ];
+
+    return preg_replace($search, $replace, $html);
+}
+

@@ -4,6 +4,9 @@ namespace App;
 
 use App\Reports;
 use App\Altrp\Source;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
 use Mockery\Exception;
 use App\Traits\Searchable;
 use Illuminate\Support\Arr;
@@ -43,7 +46,8 @@ class Page extends Model
     'seo_description',
     'seo_keywords',
     'seo_title',
-    'type'
+    'type',
+    'is_cached'
   ];
 
   /**
@@ -580,17 +584,17 @@ class Page extends Model
     $important_styles = [];
     ob_start();
     ?>
-    <div class="front-app-content front-app-content_preloaded">
+    <div class="front-app-content ">
       <div class="route-content" id="route-content">
         <?php
         foreach ( $templates as $template ) {
 
-//          $styles = data_get( $template, 'styles' );
-//          $styles = json_decode( $styles, true );
+          $styles = data_get( $template, 'styles' );
+          $styles = json_decode( $styles, true );
 
-//          if( data_get( $styles, 'important_styles') ) {
-//            $important_styles = array_merge( $important_styles, data_get( $styles, 'important_styles', []) );
-//          }
+          if( data_get( $styles, 'important_styles') ) {
+            $important_styles = array_merge( $important_styles, data_get( $styles, 'important_styles', []) );
+          }
           ?>
           <div class="app-area app-area_<?php echo $template['template_type']; ?>">
           <?php
@@ -607,5 +611,88 @@ class Page extends Model
     $result['important_styles'] = implode( '', $important_styles );
 
     return $result;
+  }
+
+  /**
+   * @param string $page_id
+   * @return boolean
+   */
+  static function isCached( $page_id )
+  { 
+
+    $page = Page::find( $page_id );
+    if ($page->is_cached) {
+      return true;
+    }
+    return false;
+
+  }
+
+  /**
+   * @param string $page_id
+   * @return boolean
+   */
+  static function switchCaching( $page_id )
+  { 
+
+    $page = self::find( $page_id );
+    if ($page->is_cached) {
+      $res = false;
+    } else {
+      $res = true;
+    }
+    self::whereId($page_id)->update(['is_cached' => $res]);
+
+    return $res;
+  }
+
+  /**
+   * очистить кэш связанный со страницей
+   * @param string $id
+   */
+  static function clearAllCacheById( string $id ){
+    $page = self::find( $id );
+    if( ! $page ){
+      return;
+    }
+    $routes = Route::getRoutes();
+    $route = $routes->getByName( 'page_' . $id );
+    if( ! $route ){
+      return;
+    }
+
+    $cachePath = storage_path() . '/framework/cache/pages/';
+
+    if (! File::exists( $cachePath ) ) {
+      File::put( $cachePath . 'relations.json', '{}' );
+      return;
+    }
+    $relations = File::get( $cachePath . 'relations.json' );
+    $relations = json_decode( $relations, true );
+    if( ! is_array( $relations ) ){
+      $relations = [];
+    }
+
+    $relations = array_filter( $relations, function( $item ) use ($route, $cachePath) {
+
+      $request = Request::create( $item['url'] );
+      try {
+        if( $route->matches( $request ) ){
+          if( File::exists( $cachePath . $item['hash'] ) ){
+            File::delete( $cachePath . $item['hash'] );
+          }
+          return false;
+        } else {
+          return true;
+        }
+
+      }catch (\Exception $e){
+        return true;
+      }
+      return true;
+    } );
+    $relations = json_encode( $relations );
+    File::put( $cachePath . 'relations.json', $relations );
+
   }
 }

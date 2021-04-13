@@ -1205,7 +1205,9 @@ class InputWidget extends Component {
       onKeyDown: this.handleEnter
       // menuIsOpen: true,
     };
-    return <AltrpSelect {...select2Props} />;
+    return <div className="altrp-input-wrapper">
+      <AltrpSelect {...select2Props} />
+    </div>;
   }
 
   renderWysiwyg() {

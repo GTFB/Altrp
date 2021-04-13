@@ -1,16 +1,6 @@
 import React, { Component } from "react";
-import '../../sass/section.scss';
-import { connect } from "react-redux";
-import '../../sass/section.scss'
 import {isEditor, redirect} from "../../../../front-app/src/js/helpers";
 import CONSTANTS from "../consts";
-import {
-  ColumnArticleComponent,
-  ColumnAsideComponent, ColumnDivComponent,
-  ColumnFooterComponent,
-  ColumnHeaderComponent, ColumnMainComponent,
-  ColumnNavComponent, ColumnSectionComponent
-} from "./widgets/styled-components/ColumnComponents";
 import {
   SectionArticleComponent,
   SectionAsideComponent,
@@ -151,6 +141,7 @@ class SectionComponent extends Component {
       { style: styles,
         className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: "" ,
         onClick: this.onClick,
+        columns: this.props.element.children || [],
         settings: this.props.element.getSettings(),
       },
       // isScrollEffect ?
