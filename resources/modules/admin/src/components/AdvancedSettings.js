@@ -180,7 +180,7 @@ class AdvancedSettings extends Component {
           <td className="admin-settings-table__td">
             <button className="btn btn_success"
                     onClick={this.clearAllCache}>
-              Update
+              Clear
             </button>
           </td>
         </tr>

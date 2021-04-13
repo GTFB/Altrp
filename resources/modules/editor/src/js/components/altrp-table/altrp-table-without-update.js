@@ -172,6 +172,7 @@ function AltrpTableWithoutUpdate(
     let {
       _accessor,
     } = column;
+    _accessor = _accessor || '';
     _accessor = _accessor.trim();
     let leftValue, rightValue;
     if(_accessor && _accessor.indexOf('?') !== -1 && _accessor.indexOf(':') !== -1){

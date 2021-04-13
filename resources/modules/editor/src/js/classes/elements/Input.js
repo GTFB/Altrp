@@ -155,6 +155,17 @@ class Input extends BaseElement {
       conditions: { content_type: ["email"] }
     });
 
+    this.addControl("sort_default", {
+      type: CONTROLLER_SWITCHER,
+      label: "Sort Default",
+      conditions: {
+        content_type: [
+          "select",
+          "select2",
+        ]
+      }
+    });
+
     this.addControl("textarea_resize", {
       type: CONTROLLER_SELECT,
       label: "Resize",

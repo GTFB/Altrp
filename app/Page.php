@@ -49,7 +49,8 @@ class Page extends Model
     'seo_keywords',
     'seo_title',
     'type',
-    'is_cached'
+    'is_cached',
+    'not_found',
   ];
 
   /**
@@ -133,6 +134,13 @@ class Page extends Model
 
     $pages = (new static)->getPagesData($_pages, $lazy);
 
+    if( self::firstWhere( 'not_found', 1 ) ){
+      $not_found_page = (new static)->getPagesData([self::firstWhere( 'not_found', 1 )], $lazy);
+      $not_found_page[0]['path'] = '*';
+
+      $pages[] = $not_found_page[0];
+    }
+
     return $pages;
   }
 
@@ -149,7 +157,12 @@ class Page extends Model
     return $pages;
   }
 
-  private function getPagesData(Collection $_pages, bool $lazy = true): Array
+  /**
+   * @param Collection | array $_pages
+   * @param bool $lazy
+   * @return Array
+   */
+  private function getPagesData( $_pages, bool $lazy = true ): Array
   {
     $pages = [];
     /** @var Page $page */
@@ -189,7 +202,7 @@ class Page extends Model
 
       $pages[] = $_page;
     }
-    return $pages;
+      return $pages;
   }
 
   /**

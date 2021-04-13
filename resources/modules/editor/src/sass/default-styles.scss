@@ -105,11 +105,15 @@
   padding-right: 2px;
   padding-bottom: 2px;
   padding-left: 2px;
-  border-width: 2px 2px 2px 2px;
-  border-color: rgb(142,148,170);
+  border-width: 1px;
+  border-color: $black;
   border-radius: 0 0 0 0;
 }
+.altrp-field-select2__control:hover{
 
+  border-width: 1px;
+  border-color: $black;
+}
 .altrp-field-container {
   margin-top: 0;
   margin-right: 0;

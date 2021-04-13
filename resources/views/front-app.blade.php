@@ -40,6 +40,7 @@
 
   <script>
     let _token = '{{ csrf_token() }}';
+    window.altrpPages = {!! json_encode( $pages ) !!};
   </script>
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">
