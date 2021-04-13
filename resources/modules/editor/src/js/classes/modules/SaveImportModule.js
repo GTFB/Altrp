@@ -60,28 +60,36 @@ class SaveImportModule extends BaseModule {
    */
   saveTemplate() {
     store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_SAVING));
-    let html_content = '';
+    let html_content = "";
     let stylesElements = [];
     let rootElement = null;
-    if(window.altrpEditorContent.editorWindow.current){
-      rootElement = window.altrpEditorContent.editorWindow.current.getElementsByClassName('sections-wrapper')[0];
-      if(rootElement){
+    if (window && window.altrpEditorContent.editorWindow.current) {
+      rootElement = window.altrpEditorContent.editorWindow.current.getElementsByClassName(
+        "sections-wrapper"
+      )[0];
+      if (rootElement) {
         rootElement = rootElement.cloneNode(true);
-        _.toArray(rootElement.getElementsByClassName('overlay')).forEach(overlayElement=>{
-          overlayElement.remove();
-        });
+        _.toArray(rootElement.getElementsByClassName("overlay")).forEach(
+          overlayElement => {
+            overlayElement.remove();
+          }
+        );
         html_content = rootElement.outerHTML;
       }
-      stylesElements = window.altrpEditorContent.editorWindow.current.getRootNode().getElementById('styles-container')?.children;
+      stylesElements = window.altrpEditorContent.editorWindow.current
+        .getRootNode()
+        .getElementById("styles-container")?.children;
       stylesElements = _.toArray(stylesElements);
-      stylesElements = stylesElements.map(style => style ? style.outerHTML : '');
+      stylesElements = stylesElements.map(style =>
+        style ? style.outerHTML : ""
+      );
     }
     let templateData = getEditor().modules.templateDataStorage.getTemplateDataForSave();
     templateData.html_content = html_content;
-    if(stylesElements.length){
+    if (stylesElements.length) {
       templateData.styles = {
         all_styles: stylesElements,
-        important_styles: stylesElements,
+        important_styles: stylesElements
       };
     }
     this.resource

@@ -119,13 +119,15 @@ class ControllersManager {
   }
 
   registerControls() {
-    let elementClasses = window.elementsManager.getElements();
-    this.elementsControls = {};
-    for (let elementClassName in elementClasses) {
-      if (elementClasses.hasOwnProperty(elementClassName)) {
-        this.elementsControls[elementClassName] = new elementClasses[
-          elementClassName
-        ]().getControls();
+    if (window) {
+      let elementClasses = window.elementsManager.getElements();
+      this.elementsControls = {};
+      for (let elementClassName in elementClasses) {
+        if (elementClasses.hasOwnProperty(elementClassName)) {
+          this.elementsControls[elementClassName] = new elementClasses[
+            elementClassName
+          ]().getControls();
+        }
       }
     }
   }

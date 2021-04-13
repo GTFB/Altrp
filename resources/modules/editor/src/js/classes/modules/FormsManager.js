@@ -3,7 +3,7 @@ import AltrpForm from "../AltrpForm";
  * Класс менеджер форм для фронтенда/редактора
  */
 class FormsManager {
-  constructor(){
+  constructor() {
     /**
      *
      * @type {AltrpForm[]}
@@ -25,21 +25,21 @@ class FormsManager {
    * @param {{}} options
    * @return {AltrpForm}
    */
-  registerForm(formId, modelName, method, options = {}){
+  registerForm(formId, modelName, method, options = {}) {
     let form = this.getForm(formId);
-    if(! form){
+    if (!form) {
       form = new AltrpForm(formId, modelName, method, options);
       /**
        * Если в хранилище есть список полей для указанной формы,
        * то передаем их в форму, а на список ссылку удаляем
        */
-      if(this.fieldsStorage[formId] && this.fieldsStorage[formId].length){
+      if (this.fieldsStorage[formId] && this.fieldsStorage[formId].length) {
         form.setFields(this.fieldsStorage[formId]);
-        delete this.fieldsStorage[formId]
+        delete this.fieldsStorage[formId];
       }
       this.forms.push(form);
-    } else if (! _.isEmpty(options)){
-      form.options = options
+    } else if (!_.isEmpty(options)) {
+      form.options = options;
     }
     return form;
   }
@@ -47,7 +47,7 @@ class FormsManager {
   /**
    * Удаляем форму по ID
    */
-  deleteFormById(formId){
+  deleteFormById(formId) {
     this.forms = this.forms.filter(form => form.formId !== formId);
   }
   /**
@@ -57,20 +57,20 @@ class FormsManager {
    * @param {FrontElement} field
    * @return {boolean}
    */
-  addField(formId, field){
+  addField(formId, field) {
     let form = this.getForm(formId);
-    if(! form){
+    if (!form) {
       this.fieldsStorage[formId] = this.fieldsStorage[formId] || [];
       this.fieldsStorage[formId].push(field);
       return true;
     }
-    return form.addField(field)
+    return form.addField(field);
   }
 
   /**
    * После смену страницы нужно почистить хранилище полей
    */
-  clearFieldsStorage(){
+  clearFieldsStorage() {
     this.fieldsStorage = {};
   }
   /**
@@ -79,9 +79,9 @@ class FormsManager {
    * @param {int | null} modelID
    * @return {boolean}
    */
-  submitForm(formId, modelID){
-    if(! this.getForm(formId)){
-      console.error('Форма не найдена');
+  submitForm(formId, modelID) {
+    if (!this.getForm(formId)) {
+      console.error("Форма не найдена");
       return false;
     }
     return this.getForm(formId).submit(modelID);
@@ -91,13 +91,13 @@ class FormsManager {
    * @param {string} formId
    * @return {AltrpForm | null}
    */
-  getForm(formId){
+  getForm(formId) {
     let _form = null;
-    this.forms.forEach(form=>{
+    this.forms.forEach(form => {
       /**
        * @member {AltrpForm}form
        */
-      if(form.formId === formId){
+      if (form.formId === formId) {
         _form = form;
       }
     });
@@ -107,10 +107,12 @@ class FormsManager {
   /**
    * Очищает все формы
    */
-  clearFormsStore(){
+  clearFormsStore() {
     this.forms = [];
   }
 }
-window.formsManager = new FormsManager();
+if (window) {
+  window.formsManager = new FormsManager();
+}
 
 export default formsManager;

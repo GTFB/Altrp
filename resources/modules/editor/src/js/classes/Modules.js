@@ -1,4 +1,4 @@
-import ElementsFactory from './modules/ElementsFactory';
+import ElementsFactory from "./modules/ElementsFactory";
 import SaveImportModule from "./modules/SaveImportModule";
 import SettingsChangeModule from "./modules/SettingsChangeModule";
 import TemplateSettingsChangeModule from "./modules/TemplateSettingsChangeModule";
@@ -8,15 +8,17 @@ class Modules {
   /**
    * @param {Editor} editor
    * */
-  constructor(editor){
+  constructor(editor) {
     this.elementsFactory = new ElementsFactory(this);
     this.saveImportModule = new SaveImportModule(this);
-    window.saveImportModule = new SaveImportModule(this);
+    if (window) {
+      window.saveImportModule = new SaveImportModule(this);
+    }
     this.settingsChangeModule = new SettingsChangeModule(this);
-    this.templateSettingsChangeModule = new  TemplateSettingsChangeModule(this);
+    this.templateSettingsChangeModule = new TemplateSettingsChangeModule(this);
     this.templateDataStorage = new TemplateDataStorage(this);
   }
-  loaded(){
+  loaded() {
     this.saveImportModule.load();
   }
 }

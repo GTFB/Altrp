@@ -3,6 +3,8 @@
     "scripts": {
         "dev": "npm run development",
         "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "ssr:build": "NODE_ENV=production webpack --config webpack.server.js --mode=production -w",
+        "ssr:start": "node ./server-dist/index.js",
         "watch": "npm run development -- --watch",
         "watch-poll": "npm run watch -- --watch-poll",
         "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
@@ -27,7 +29,6 @@
         "docs": "jsdoc resources/modules -r"
     },
     "dependencies": {
-        "@babel/plugin-proposal-class-properties": "^7.10.4",
         "@ckeditor/ckeditor5-basic-styles": "^24.0.0",
         "@ckeditor/ckeditor5-build-balloon": "^23.1.0",
         "@ckeditor/ckeditor5-ckfinder": "^24.0.0",
@@ -52,6 +53,7 @@
         "d3": "^6.2.0",
         "dom-to-image": "^2.6.0",
         "dot-prop-immutable": "^2.1.0",
+        "express": "^4.17.1",
         "express-session": "^1.17.1",
         "gsap": "^3.6.0",
         "highlight.js": "^10.1.1",
@@ -129,12 +131,17 @@
     },
     "devDependencies": {
         "@babel/cli": "^7.10.3",
-        "@babel/core": "^7.10.3",
+        "@babel/core": "^7.13.15",
+        "@babel/plugin-proposal-class-properties": "^7.13.0",
+        "@babel/plugin-proposal-object-rest-spread": "^7.13.8",
         "@babel/plugin-syntax-jsx": "^7.10.4",
-        "@babel/plugin-transform-runtime": "^7.10.3",
-        "@babel/preset-env": "^7.10.3",
+        "@babel/plugin-transform-arrow-functions": "^7.13.0",
+        "@babel/plugin-transform-async-to-generator": "^7.13.0",
+        "@babel/plugin-transform-runtime": "^7.13.15",
+        "@babel/preset-env": "^7.13.15",
         "@babel/preset-es2017": "^7.0.0-beta.53",
-        "@babel/preset-react": "^7.10.4",
+        "@babel/preset-react": "^7.13.13",
+        "@babel/register": "^7.13.14",
         "@babel/runtime": "^7.10.3",
         "@ckeditor/ckeditor5-alignment": "^23.1.0",
         "@ckeditor/ckeditor5-editor-balloon": "^23.1.0",
@@ -144,7 +151,7 @@
         "@svgr/webpack": "^5.4.0",
         "autoprefixer": "^9.8.1",
         "axios": "^0.21",
-        "babel-loader": "^8.0.2",
+        "babel-loader": "^8.2.2",
         "babel-plugin-inline-react-svg": "^1.1.1",
         "bootstrap": "^4.5.0",
         "clean-webpack-plugin": "^3.0.0",
@@ -158,6 +165,7 @@
         "gulp-clean": "^0.4.0",
         "gulp-notify": "^3.2.0",
         "gulp-zip": "^5.0.1",
+        "ignore-styles": "^5.0.1",
         "laravel-mix": "^5.0.9",
         "material-ui": "^0.20.2",
         "mini-css-extract-plugin": "^0.9.0",
@@ -175,9 +183,10 @@
         "svg-inline-loader": "^0.8.2",
         "vue": "^2.5.17",
         "vue-template-compiler": "^2.6.10",
-        "webpack": "4.42.0",
+        "webpack": "^4.42.0",
         "webpack-cli": "^3.3.12",
         "webpack-dev-server": "^3.10.3",
-        "webpack-merge": "^4.2.2"
+        "webpack-merge": "^4.2.2",
+        "webpack-node-externals": "^2.5.2"
     }
 }

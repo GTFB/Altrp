@@ -4,11 +4,15 @@ import CONSTANTS from "./consts";
 import controllerHistory from "./classes/ControllerHistory";
 
 export function getTemplateId() {
-  return new URL(window.location).searchParams.get("template_id");
+  if (window) {
+    return new URL(window.location).searchParams.get("template_id");
+  }
 }
 
 export function getReportsId() {
-  return new URL(window.location).searchParams.get("id");
+  if (window) {
+    return new URL(window.location).searchParams.get("id");
+  }
 }
 
 /**
@@ -36,18 +40,24 @@ export function settingToState(setting) {
 }
 
 export function getEditorContent() {
-  return window.frames[0].window.altrpEditorContent;
+  if (window) {
+    return window.frames[0].window.altrpEditorContent;
+  }
 }
 
 export function getReportsContent() {
-  return window.frames[0].window.altrpReportsContent;
+  if (window) {
+    return window.frames[0].window.altrpReportsContent;
+  }
 }
 
 /**
  * @return {Editor}
  * */
 export function getEditor() {
-  return window.altrpEditor || window.parent.altrpEditor;
+  if (window) {
+    return window.altrpEditor || window.parent.altrpEditor;
+  }
 }
 
 export function editorSetCurrentElement(element) {
@@ -66,7 +76,7 @@ export function getTemplateDataStorage() {
  * */
 export function getTemplateType() {
   const templateDataStorage = getTemplateDataStorage();
-  return _.get(templateDataStorage, 'type', 'content')
+  return _.get(templateDataStorage, "type", "content");
 }
 
 /**
@@ -91,7 +101,9 @@ export function topOrBottomHover(e, element) {
  * @return {IconsManager}
  * */
 export function iconsManager() {
-  return window.iconsManager;
+  if (window) {
+    return window.iconsManager;
+  }
 }
 
 /**
@@ -103,20 +115,20 @@ export function iconsManager() {
  */
 export function getElementSettingsSuffix(controller, ignoreResponse = false) {
   let suffix_1 = getElementState().value;
-  if(controller.type === 'repeater'){
-    suffix_1 = '';
+  if (controller.type === "repeater") {
+    suffix_1 = "";
   }
   let suffix_2 =
     getCurrentScreen().name === CONSTANTS.DEFAULT_BREAKPOINT
       ? ""
       : getCurrentScreen().name;
-  if(ignoreResponse){
-    suffix_2 = '';
+  if (ignoreResponse) {
+    suffix_2 = "";
   }
   if (!(suffix_2 || suffix_1)) {
     return "";
   }
-  return `_${controller.stateless ? '' : getElementState().value}_${suffix_2}`;
+  return `_${controller.stateless ? "" : getElementState().value}_${suffix_2}`;
 }
 
 /**

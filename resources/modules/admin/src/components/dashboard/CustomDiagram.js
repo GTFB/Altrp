@@ -17,7 +17,7 @@ class DashboardsWidget extends Component {
       settings: props.element.getSettings(),
       settingsData: [],
       child: {},
-      dataSource,
+      dataSource
     };
 
     this.refChild = React.createRef();
@@ -26,8 +26,10 @@ class DashboardsWidget extends Component {
 
     props.element.component = this;
 
-    if (window.elementDecorator) {
-      window.elementDecorator(this);
+    if (window) {
+      if (window.elementDecorator) {
+        window.elementDecorator(this);
+      }
     }
   }
 

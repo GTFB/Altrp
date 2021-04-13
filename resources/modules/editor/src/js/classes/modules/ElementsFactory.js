@@ -10,54 +10,56 @@ class ElementsFactory extends BaseModule {
    * @return {BaseElement}
    */
   parseData(object, parent, rewriteStyles = false) {
-    let children = [];
-    const elementsManager = window.elementsManager;
-    /**
-     * @member {BaseElement} element
-     * */
-    let element = new (elementsManager.getElementClass(object.name))();
-    if (object.children && object.children.length) {
-      for (let child of object.children) {
-        elementsManager.checkElementExists(child.name)
-          ? children.push(this.parseData(child, element, rewriteStyles))
-          : "";
+    if (window) {
+      let children = [];
+      const elementsManager = window.elementsManager;
+      /**
+       * @member {BaseElement} element
+       * */
+      let element = new (elementsManager.getElementClass(object.name))();
+      if (object.children && object.children.length) {
+        for (let child of object.children) {
+          elementsManager.checkElementExists(child.name)
+            ? children.push(this.parseData(child, element, rewriteStyles))
+            : "";
+        }
       }
-    }
-    if (rewriteStyles) {
-      let oldId = object.id;
-      element.id = element.getId();
-      object.settings = JSON.stringify(object.settings).replace(
-        RegExp(oldId, "g"),
-        element.getId()
-      );
-      object.settings = JSON.parse(object.settings);
-    } else {
-      element.id = object.id;
-    }
-    element.children = children;
-    /**
-     * Если настройки пустыe то с сервера приходит пустой массив -- меняем на пустой объект
-     * */
-    let settings = object.settings.length === 0 ? {} : object.settings;
-    element.setSettings(settings);
-    let cssClassStorage =
-      object.cssClassStorage && object.cssClassStorage.length === 0
-        ? {}
-        : object.cssClassStorage;
-    element.setCSSStorage(cssClassStorage);
-    if (object.dynamicContentSettings) {
-      element.dynamicContentSettings =
-        object.dynamicContentSettings.length === 0
+      if (rewriteStyles) {
+        let oldId = object.id;
+        element.id = element.getId();
+        object.settings = JSON.stringify(object.settings).replace(
+          RegExp(oldId, "g"),
+          element.getId()
+        );
+        object.settings = JSON.parse(object.settings);
+      } else {
+        element.id = object.id;
+      }
+      element.children = children;
+      /**
+       * Если настройки пустыe то с сервера приходит пустой массив -- меняем на пустой объект
+       * */
+      let settings = object.settings.length === 0 ? {} : object.settings;
+      element.setSettings(settings);
+      let cssClassStorage =
+        object.cssClassStorage && object.cssClassStorage.length === 0
           ? {}
-          : object.dynamicContentSettings;
-    }
+          : object.cssClassStorage;
+      element.setCSSStorage(cssClassStorage);
+      if (object.dynamicContentSettings) {
+        element.dynamicContentSettings =
+          object.dynamicContentSettings.length === 0
+            ? {}
+            : object.dynamicContentSettings;
+      }
 
-    if (parent) {
-      element.parent = parent;
+      if (parent) {
+        element.parent = parent;
+      }
+      element.update();
+      element.updateFonts();
+      return element;
     }
-    element.update();
-    element.updateFonts();
-    return element;
   }
 
   /**

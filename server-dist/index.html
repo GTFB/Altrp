@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <!-- CSRF Token -->
+        <!-- <meta name="csrf-token" content="{{ csrf_token() }}" /> -->
+
+        <!-- @isset($title)
+        <meta property="og:title" content="{{$title}}" />
+        <title>{{ $title }}</title>
+        @else
+        <meta property="og:title" content="altrp || FRONT APP" />
+        <title>altrp || FRONT APP</title>
+        @endisset -->
+        <!-- Scripts -->
+
+        <script>
+            // let _token = "{{ csrf_token() }}";
+        </script>
+        <!-- Fonts -->
+        <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+        <!-- Style -->
+        <style>
+            .app-area > .sections-wrapper {
+                width: 1440px;
+            }
+            .altrp-section--boxed {
+                padding-left: calc((100vw - 1440px) / 2);
+                padding-right: calc((100vw - 1440px) / 2);
+            }
+            .front-app-content_preloaded {
+                display: none;
+            }
+        </style>
+    </head>
+    <body class="front-app-body">
+        <div id="front-app" class="front-app"></div>
+        <script src="../public/modules/front-app/front-app.js" defer></script>
+    </body>
+</html>
