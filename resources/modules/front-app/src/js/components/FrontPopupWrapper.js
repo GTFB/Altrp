@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components';
 import { getResponsiveSetting } from '../helpers';
 import { shadowControllerToStyles, dimensionsControllerToStyles } from '../helpers/styles';
@@ -79,4 +78,4 @@ const FrontPopupWrapper = styled.div`
 }
 `
 
-export default FrontPopupWrapper
+export default FrontPopupWrapper;
