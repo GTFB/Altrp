@@ -147,6 +147,7 @@ class PagesController extends Controller
     $page->seo_keywords = $request->seo_keywords;
     $page->seo_title = $request->seo_title;
     $page->is_cached = $request->is_cached;
+    $page->not_found = $request->not_found;
     $res['page'] = $page->toArray();
 
     $pages_template = PagesTemplate::where( 'page_id', $id )->where( 'template_type', 'content' )->first();
@@ -276,7 +277,7 @@ class PagesController extends Controller
       $files = File::allFiles( $cachePath );
       File::delete( $files );
       File::put( $cachePath . '/relations.json', '{}' );
-      return true;
+      return response()->json( ['success' => true], 200, [], JSON_UNESCAPED_UNICODE );
     }
 
     Page::clearAllCacheById( $page_id );

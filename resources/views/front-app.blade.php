@@ -40,6 +40,7 @@
 
   <script>
     let _token = '{{ csrf_token() }}';
+    window.altrpPages = {!! json_encode( $pages ) !!};
   </script>
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -92,6 +93,7 @@
   if (typeof page_id !== 'undefined' && typeof page_areas !== 'undefined') {
     window.pageStorage[page_id] = {areas:page_areas};
   }
+  window.altrpImageLazy = '{{ get_altrp_setting( 'altrp_image_lazy', 'none' ) }}'
   /* ]]> */
 </script>
 <script src="{{ altrp_asset( '/modules/front-app/front-app.js', 'http://localhost:3001/' ) }}" defer></script>

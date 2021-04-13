@@ -166,16 +166,11 @@ export default class DialogConditionsTab extends Component {
     const main_options = [
       { name: "type", value: "all_site", label: "All Site" },
       { name: "type", value: "page", label: "Page" },
-      { name: "type", value: "report", label: "Report" }
+      { name: "type", value: "report", label: "Report" },
+      { name: "type", value: "404", label: "404 " },
       // { name: 'type', value: 'model', label: 'Model' },
       // { name: 'type', value: 'not_authorized_page', label: 'Not Authorized' },
       // { name: 'type', value: 'not_found_page', label: 'Not found: 404' },
-    ];
-    const model_options = [
-      { name: "model_name", value: "model1", label: "model1" },
-      { name: "model_name", value: "model2", label: "model2" },
-      { name: "model_name", value: "model3", label: "model3" },
-      { name: "model_name", value: "model4", label: "model4" }
     ];
     return (
       <div className="modal-condition-tab">

@@ -12,9 +12,13 @@
 */
 
 use App\Constructor\Template;
+use App\Media;
 use App\Page;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use League\ColorExtractor\ColorExtractor;
+use League\ColorExtractor\Palette;
+use League\ColorExtractor\Color;
 
 //use CacheService;
 
@@ -456,6 +460,7 @@ Route::get('/', function () {
     '_frontend_route' => [],
     'preload_content' => [],
     'page_areas' => '[]',
+    'pages'=>Page::get_pages_for_frontend( true ),
     'is_admin' => isAdmin(),
   ]);
 })->middleware(['web', 'installation.checker']);
@@ -481,10 +486,11 @@ foreach ( $frontend_routes as $_frontend_route ) {
     }
 
     return view( 'front-app', [
-      'page_areas' => json_encode( Page::get_areas_for_page( $_frontend_route['id']) ),
+      'page_areas' => json_encode( Page::get_areas_for_page( $_frontend_route['id'] ) ),
       'page_id' => $_frontend_route['id'],
       'title' => $title,
       '_frontend_route' => $_frontend_route,
+      'pages'=>Page::get_pages_for_frontend( true ),
       'preload_content' => $preload_content,
       'is_admin' => isAdmin(),
     ]);
@@ -503,7 +509,10 @@ foreach ($reports_routes as $report_route) {
   $report_route = str_replace( ':id', '{id}', $path );
 
   Route::get($report_route, function () use ($title){
-    return view('front-app',['title'=>$title]);
+    return view('front-app',[
+      'title'=>$title,
+      'pages'=>Page::get_pages_for_frontend( true ),
+    ]);
   })->middleware(['web','installation.checker']);
 }
 

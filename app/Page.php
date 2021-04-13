@@ -4,6 +4,8 @@ namespace App;
 
 use App\Reports;
 use App\Altrp\Source;
+use DOMDocument;
+use DOMXPath;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
@@ -47,7 +49,8 @@ class Page extends Model
     'seo_keywords',
     'seo_title',
     'type',
-    'is_cached'
+    'is_cached',
+    'not_found',
   ];
 
   /**
@@ -131,6 +134,13 @@ class Page extends Model
 
     $pages = (new static)->getPagesData($_pages, $lazy);
 
+    if( self::firstWhere( 'not_found', 1 ) ){
+      $not_found_page = (new static)->getPagesData([self::firstWhere( 'not_found', 1 )], $lazy);
+      $not_found_page[0]['path'] = '*';
+
+      $pages[] = $not_found_page[0];
+    }
+
     return $pages;
   }
 
@@ -147,7 +157,12 @@ class Page extends Model
     return $pages;
   }
 
-  private function getPagesData(Collection $_pages, bool $lazy = true): Array
+  /**
+   * @param Collection | array $_pages
+   * @param bool $lazy
+   * @return Array
+   */
+  private function getPagesData( $_pages, bool $lazy = true ): Array
   {
     $pages = [];
     /** @var Page $page */
@@ -187,7 +202,7 @@ class Page extends Model
 
       $pages[] = $_page;
     }
-    return $pages;
+      return $pages;
   }
 
   /**
@@ -242,34 +257,43 @@ class Page extends Model
 //    }
     $currentPage = Page::find($page_id);
     $contentType = $currentPage->type;
+    $header_template = Template::getTemplate([
+      'page_id' => $page_id,
+      'template_type' => 'header',
+    ]);
+    unset( $header_template['html_content'] );
+    unset( $header_template['styles'] );
     $areas[] = [
       'area_name' => 'header',
       'id' => 'header',
       'settings' => [],
-      'template' => Template::getTemplate([
-        'page_id' => $page_id,
-        'template_type' => 'header',
-      ]),
+      'template' => $header_template,
     ];
 
+    $content_template = Template::getTemplate([
+      'page_id' => $page_id,
+      'template_type' => $contentType ? 'reports' : 'content',
+    ]);
+    unset( $content_template['html_content'] );
+    unset( $content_template['styles'] );
     $areas[] = [
       'area_name' => 'content',
       'id' => 'content',
       'settings' => [],
-      'template' => Template::getTemplate([
-        'page_id' => $page_id,
-        'template_type' => $contentType ? 'reports' : 'content',
-      ]),
+      'template' => $content_template,
     ];
 
+    $footer_template = Template::getTemplate([
+      'page_id' => $page_id,
+      'template_type' => 'footer',
+    ]);
+    unset( $footer_template['html_content'] );
+    unset( $footer_template['styles'] );
     $areas[] = [
       'area_name' => 'footer',
       'id' => 'footer',
       'settings' => [],
-      'template' => Template::getTemplate([
-      'page_id' => $page_id,
-      'template_type' => 'footer',
-      ]),
+      'template' => $footer_template,
     ];
 
 //    $popups = Template::join( 'areas', 'areas.id', '=', 'templates.area' )
@@ -584,7 +608,7 @@ class Page extends Model
     $important_styles = [];
     ob_start();
     ?>
-    <div class="front-app-content ">
+    <div class="front-app-content front-app-content_preloaded">
       <div class="route-content" id="route-content">
         <?php
         foreach ( $templates as $template ) {
@@ -598,7 +622,7 @@ class Page extends Model
           ?>
           <div class="app-area app-area_<?php echo $template['template_type']; ?>">
           <?php
-          echo data_get( $template, 'html_content', '' );
+          echo self::replace_tags( data_get( $template, 'html_content', '' ) );
           ?>
           </div>
           <?php
@@ -611,6 +635,42 @@ class Page extends Model
     $result['important_styles'] = implode( '', $important_styles );
 
     return $result;
+  }
+
+  /**
+   * @param $content
+   * @return string
+   */
+  static public function replace_tags( $content ){
+    if( ! $content ){
+      return $content;
+    }
+    try {
+
+      $dom = new DOMDocument( '1.0', 'utf-8' );
+      $content   = mb_convert_encoding( $content, 'HTML-ENTITIES', 'utf-8' );
+      $dom->loadHTML( $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOERROR );
+      $altrp_image_lazy = get_altrp_setting( 'altrp_image_lazy', 'none' );
+      $finder = new DomXPath( $dom );
+
+      if( $altrp_image_lazy !== 'none' ){
+        $images = $finder->query("//*[contains(@class, ' altrp-image ')]");
+        $image_placeholders = $finder->query("//*[contains(@class, 'altrp-image-placeholder')]");
+
+        foreach ( $image_placeholders as $item ) {
+
+          $item->removeAttribute( 'style' );
+        }
+        foreach ( $images as $image ) {
+          $image->parentNode->removeChild( $image );
+        }
+      }
+      $content = $dom->saveHTML(  );
+//      $content =  mb_convert_encoding( $content );
+    } catch (\Exception $e){
+      Log::debug( $e->getMessage() );
+    }
+    return $content;
   }
 
   /**

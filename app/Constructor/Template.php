@@ -243,9 +243,15 @@ class Template extends Model
 
     foreach ( $settings as $setting ) {
       if( $setting['setting_name'] === 'conditions' ){
-        $conditions = $setting['data'];
+
+        if( is_string( $setting['data'] ) ){
+          $conditions = json_decode( $setting['data'], true ) ? json_decode( $setting['data'], true ) : [];
+        } else {
+          $conditions = $setting['data'];
+        }
       }
     }
+
     if( ! count( $conditions ) ){
       if( $this->all_site ){
         $conditions[] = [
