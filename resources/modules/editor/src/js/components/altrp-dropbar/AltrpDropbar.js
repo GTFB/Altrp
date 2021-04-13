@@ -56,6 +56,11 @@ class Dropbar extends Component {
     };
   };
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if(this.state.show !== prevState.show) {
+    }
+  }
+
   render() {
     const children = React.Children.only(this.props.children);
 
