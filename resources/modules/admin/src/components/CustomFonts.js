@@ -1,8 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import AltrpMeta from '../../../../modules/editor/src/js/classes/AltrpMeta';
+import { compose } from "redux";
+import { connect } from "react-redux";
+import { getCustomFonts } from '../js/store/custom-fonts/actions';
 
-export class CustomFonts extends React.Component {
+class CustomFonts extends React.Component {
     state = {}
+
+    deleteFont = async (id) => {
+        let fonts = this.props.metaValue
+        const currentFontId = id
+        const indexCurrentFont = this.props.metaValue.findIndex(item => item.id == currentFontId)
+        fonts.splice(indexCurrentFont, 1)
+        let meta = await AltrpMeta.getMetaByName("custom_fonts")
+        meta.setMetaValue(fonts)
+        await meta.save()
+        meta = await AltrpMeta.getMetaByName("custom_fonts")
+        const metaValue = await meta.getMetaValue()
+        this.props.getCustomFonts(metaValue)
+    }
 
     render() {
         let fonts = null;
@@ -10,9 +27,17 @@ export class CustomFonts extends React.Component {
         if (this.props.metaValue !== null) {
             fontsCount = this.props.metaValue.length
             fonts = this.props.metaValue.map(f => (
-                <tr key={f.id}>
-                    <td className="custom-fonts__table-check"><input type="checkbox" /></td>
-                    <td className="custom-fonts__table-font-family"><Link to={`/admin/assets/edit-font/${f.id}`}>{f.fontFamily}<span className="custom-fonts__table-font-family__count">{f.variations.length}</span></Link></td>
+                <tr key={f.id} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
+                    <td className="custom-fonts__table-check">
+                        <input type="checkbox" />
+                    </td>
+                    <td className="custom-fonts__table-font-family">
+                        <Link to={`/admin/assets/edit-font/${f.id}`}>{f.fontFamily}<span className="custom-fonts__table-font-family__count">{f.variations.length}</span></Link>
+                        <span className="custom-fonts__table-font-family_hover">
+                            <Link to={`/admin/assets/edit-font/${f.id}`} className="custom-fonts__table-font-family_hover_edit">Edit</Link>
+                            <span onClick={() => this.deleteFont(f.id)} className="custom-fonts__table-font-family_hover_trash">Trash</span>
+                        </span>
+                    </td>
                     <td className="custom-fonts__table-preview">Elementor Is Making the Web Beautiful!!!</td>
                 </tr>
             ))
@@ -20,17 +45,37 @@ export class CustomFonts extends React.Component {
 
         return (
             <div className="custom-fonts">
-                <div className="custom-fonts__title">Custom Fonts<Link to="/admin/assets/add-new-font"><button className="custom-fonts__btn custom-fonts__btn_add-new">Add new</button></Link></div>
+
+                <div className="custom-fonts__title">
+                    Custom Fonts
+                    <Link to="/admin/assets/add-new-font">
+                        <button className="custom-fonts__btn custom-fonts__btn_add-new">
+                            Add new
+                        </button>
+                    </Link>
+                </div>
+
                 <div className="custom-fonts__table-header">
                     <div className="custom-fonts__sorting-options">
-                        <Link className="custom-fonts__sorting-options-name">All <span className="custom-fonts__sorting-options-count custom-fonts__sorting-options-count_line">({fontsCount})</span></Link>
-                        <Link className="custom-fonts__sorting-options-name">Published <span className="custom-fonts__sorting-options-count">({fontsCount})</span></Link>
+                        <Link className="custom-fonts__sorting-options-name">All
+                            <span className="custom-fonts__sorting-options-count custom-fonts__sorting-options-count_line">
+                                {fontsCount}
+                            </span>
+                        </Link>
+                        <Link className="custom-fonts__sorting-options-name">Published
+                            <span className="custom-fonts__sorting-options-count">
+                                {fontsCount}
+                            </span>
+                        </Link>
                     </div>
                     <div className="custom-fonts__search">
                         <input className="custom-fonts__search-input" />
-                        <button onClick={this.props.getMetaName} className="custom-fonts__btn custom-fonts__btn_search">Search Font</button>
+                        <button onClick={this.props.getMetaName} className="custom-fonts__btn custom-fonts__btn_search">
+                            Search Font
+                        </button>
                     </div>
                 </div>
+
                 <div className="custom-fonts__const-part-of-table">
                     <div className="custom-fonts__possible-actions">
                         <select className="custom-fonts__possible-actions-drop-list">
@@ -38,14 +83,20 @@ export class CustomFonts extends React.Component {
                             <option>Edit</option>
                             <option>Move To Trash</option>
                         </select>
-                        <button onClick={this.props.test} className="custom-fonts__btn custom-fonts__btn_apply">Apply</button>
+                        <button onClick={this.props.test} className="custom-fonts__btn custom-fonts__btn_apply">
+                            Apply
+                        </button>
                     </div>
-                    <span className="custom-fonts__number-of-items">{fontsCount} items</span>
+                    <span className="custom-fonts__number-of-items">
+                        {fontsCount} items
+                    </span>
                 </div>
                 <table className="custom-fonts__table">
                     <thead>
                         <tr>
-                            <th className="custom-fonts__table-check"><input type="checkbox" /></th>
+                            <th className="custom-fonts__table-check">
+                                <input type="checkbox" />
+                            </th>
                             <th className="custom-fonts__table-font-family">Font Family</th>
                             <th className="custom-fonts__table-preview">Preview</th>
                         </tr>
@@ -66,12 +117,19 @@ export class CustomFonts extends React.Component {
                             <option>Edit</option>
                             <option>Move To Trash</option>
                         </select>
-                        <button className="custom-fonts__btn custom-fonts__btn_apply">Apply</button>
+                        <button className="custom-fonts__btn custom-fonts__btn_apply">
+                            Apply
+                        </button>
                     </div>
-                    <span className="custom-fonts__number-of-items">{fontsCount} items</span>
+                    <span className="custom-fonts__number-of-items">
+                        {fontsCount} items
+                    </span>
                 </div>
             </div>
         )
     }
 }
 
+export default compose(
+    connect(null, { getCustomFonts })
+)(CustomFonts);

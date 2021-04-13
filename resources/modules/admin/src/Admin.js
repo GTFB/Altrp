@@ -61,11 +61,10 @@ import AdminVersion from "./components/AdminVersion";
 import SQLEditors from "./components/SQLEditors";
 import ColorSchemes from "./components/dashboard/ColorSchemes";
 import ModelPage from "./components/models/ModelPage";
-import FontsForm from "./components/FontsForm";
 import { WithRouterAdminAssetsDropList } from "./components/AdminAssetsDropList";
-import { CustomFonts } from "./components/CustomFonts";
-import EditFontTest from "./components/EditFontTest";
-import { AddNewFont } from "./components/AddNewFont";
+import CustomFonts from "./components/CustomFonts";
+import EditFont from "./components/EditFont";
+import AddNewFont from "./components/AddNewFont";
 
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 import Resource from "../../editor/src/js/classes/Resource";
@@ -85,7 +84,6 @@ import {
 } from "./js/store/websockets-storage/actions";
 import AltrpMeta from '../../../modules/editor/src/js/classes/AltrpMeta';
 import { normalizeUnits } from "moment";
-import AddNewFontTest from './components/AddNewFontTest';
 
 window.React = React;
 window.ReactDOM = ReactDOM;
@@ -212,27 +210,6 @@ class Admin extends Component {
 
   getMetaName = async () => {
     let meta = await AltrpMeta.getMetaByName("custom_fonts")
-
-    const font = [
-      {
-        fontFamily: "testing",
-        id: 1,
-        variations: [
-          {
-            id: 1,
-            fontWeight: "bold",
-            fontStyle: "italic", 
-          },
-          // {
-          //   id: 2,
-          //   fontWeight: "500",
-          //   fontStyle: "normal", 
-          // },
-        ]
-      }
-    ]
-    meta.setMetaValue(font)
-    await meta.save()
 
     const metaValue = await meta.getMetaValue()
 
@@ -460,10 +437,10 @@ class Admin extends Component {
               <CustomFonts metaValue={(this.props.metaValue != '') ? this.props.metaValue : null} />
             </Route>
             <Route path="/admin/assets/add-new-font">
-              <AddNewFontTest metaValue={(this.props.metaValue != '') ? this.props.metaValue : null} />
+              <AddNewFont metaValue={(this.props.metaValue != '') ? this.props.metaValue : null} />
             </Route>
             <Route path="/admin/assets/edit-font/:id?">
-              <EditFontTest metaValue={(this.props.metaValue != '') ? this.props.metaValue : null} />
+              <EditFont metaValue={(this.props.metaValue != '') ? this.props.metaValue : null} />
             </Route>
             <Route path="/admin/assets">
               <Assets />

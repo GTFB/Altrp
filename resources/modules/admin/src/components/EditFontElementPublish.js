@@ -10,12 +10,12 @@ export class EditFontElementPublish extends React.Component {
                     <span className="edit-font__content-publish-title">Publish</span>
                     <div>
                         <button onClick={this.props.changePublishSizeMin} className="edit-font__content-publish-arrow"><KeyboardArrowUpIcon /></button>
-                        <button type="submit" onClick={this.props.changePublishSizeMax} className="edit-font__content-publish-arrow"><KeyboardArrowDownIcon /></button>
+                        <button onClick={this.props.changePublishSizeMax} className="edit-font__content-publish-arrow"><KeyboardArrowDownIcon /></button>
                     </div>
                 </div>
                 <div className="edit-font__content-publish-body">
-                    <span className="edit-font__content-publish-trash">Move to Trash</span>
-                    <button className="edit-font__content-publish-btn">Update</button>
+                    <button type="submit" className="edit-font__content-publish-btn">Update</button>
+                    {this.props.pathName.indexOf("edit-font") !== -1 && <span onClick={this.props.deleteFont} className="edit-font__content-publish-trash">Move to Trash</span>}
                 </div>
             </div>
         )

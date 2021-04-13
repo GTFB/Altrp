@@ -23,15 +23,13 @@
                 &:hover {
                     background-color: #767e83;
                 }
+            }
 
-                &-upload {
-                    height: 31px;
-                    padding-right: 26px;
-                    padding-left: 26px;
-                    font-size: 12px;
-                    border-radius: 3px;
-                    margin-top: 4px;
-                    margin-left: 6px;
+            &__variation-table {
+                width: 100%;
+
+                & .add-variations {
+                    width: 200px;
                 }
             }
         }
@@ -68,7 +66,7 @@
             border-bottom: 4px solid #f0f0f1;
 
             & td {
-                padding: 20px;
+                padding: 8px 20px;
             }
 
             &__element {
@@ -125,9 +123,9 @@
 
             &_min {
                 position: absolute;
-                right: -298px;
-                top: -26px;
-                width: 31%;
+                right: 22px;
+                top: 37px;
+                width: 18%;
             }
 
             &-header {
@@ -146,6 +144,7 @@
                 padding: 11px;
                 display: flex;
                 justify-content: space-between;
+                flex-direction: row-reverse;
             }
 
             &-trash {
@@ -186,9 +185,11 @@
 
 .admin-content .edit-font__content-font-editing-line__element {
     margin-right: 41px;
+    width: 200px;
 
     &_description {
         margin-right: 52px;
+        padding-left: 0px;
     }
 
     &_edit {
@@ -216,7 +217,6 @@
             letter-spacing: 0.8px;
             margin-top: 0px;
             width: 125px;
-            margin-right: 50px;
             padding-top: 12px;
             padding-left: 10px;
             color: #6d7882;
@@ -241,10 +241,18 @@
 
 .admin-form {
     background-color: #f0f0f1;
-    position: relative;
 }
 
 .font-table {
     width: 100%;
     background-color: #f0f0f1;
+}
+
+.showFontUrl {
+    width: 37%;
+    color: #495157;
+    font-size: 12px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #d5dadf;
 }
