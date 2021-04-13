@@ -23,6 +23,16 @@
                 &:hover {
                     background-color: #767e83;
                 }
+
+                &-upload {
+                    height: 31px;
+                    padding-right: 26px;
+                    padding-left: 26px;
+                    font-size: 12px;
+                    border-radius: 3px;
+                    margin-top: 4px;
+                    margin-left: 6px;
+                }
             }
         }
 
@@ -33,6 +43,10 @@
             color: #2c3338;
             border-radius: 5px;
             border: 1px solid #8c8f94;
+
+            &-add-font {
+                color: #787c82;
+            }
         }
 
         &-subtitle {
@@ -51,6 +65,11 @@
             letter-spacing: 0.6px;
             padding: 18px 35px 21px 20px;
             color: #6d7882;
+            border-bottom: 4px solid #f0f0f1;
+
+            & td {
+                padding: 20px;
+            }
 
             &__element {
                 margin-right: 76px;
@@ -64,7 +83,7 @@
                     margin-left: 15px;
                     font-size: 14px;
                     letter-spacing: 0.4px;
-                    margin-right: 113px;
+                    margin-right: 73px;
                 }
 
                 &_edit {
@@ -90,34 +109,50 @@
                         color: #b32d2e;
                     }
                 }
+
+                &-value {
+                    height: 31px;
+                    width: 81px;
+                }
             }
         }
 
         &-publish {
             border: 1px solid #c3c4c7;
-            width: 23.5%;
+            margin-top: 26px;
             background-color: #fff;
             height: 93px;
 
+            &_min {
+                position: absolute;
+                right: -298px;
+                top: -26px;
+                width: 31%;
+            }
+
             &-header {
                 border-bottom: 1px solid #c3c4c7;
-                padding: 9px 65px 5px 12px;
+                padding: 9px 3px 5px 12px;
                 font-size: 15px;
                 font-weight: bold;
+                display: flex;
+                justify-content: space-between;
             }
 
             &-title {
             }
 
             &-body {
-                padding: 14px 11px;
+                padding: 11px;
+                display: flex;
+                justify-content: space-between;
             }
 
             &-trash {
                 color: #b32d2e;
                 font-size: 13px;
                 text-decoration: underline;
-                margin-right: 105px;
+                line-height: 28px;
 
                 &:hover {
                     cursor: pointer;
@@ -132,9 +167,84 @@
                 border-radius: 4px;
 
                 &:hover {
-                    background-color: #0a4b78;;
+                    background-color: #0a4b78;
                 }
+            }
+
+            &-arrow {
+                background-color: white;
+                color: #787c82;
+                padding: 0;
             }
         }
     }
+}
+
+.admin-content.admin-content-fonts-form {
+    padding: 0px;
+}
+
+.admin-content .edit-font__content-font-editing-line__element {
+    margin-right: 41px;
+
+    &_description {
+        margin-right: 52px;
+    }
+
+    &_edit {
+        margin-left: 32px;
+        margin-right: 0;
+    }
+
+    &_delete {
+        margin-right: 0;
+    }
+}
+
+.form-group-wrap {
+    padding: 8px 40px 10px 40px;
+    background-color: #fff;
+
+    & .form-group {
+        padding-right: 20px;
+        padding-left: 20px;
+        padding-bottom: 9px;
+        border-bottom: 4px solid #f0f0f1;
+
+        &-input-label {
+            font-size: 12px;
+            letter-spacing: 0.8px;
+            margin-top: 0px;
+            width: 125px;
+            margin-right: 50px;
+            padding-top: 12px;
+            padding-left: 10px;
+            color: #6d7882;
+            font-weight: 600;
+        }
+
+        & select {
+            color: #495157;
+            font-size: 12px;
+            padding: 5px 5px;
+            height: 37px;
+        }
+    }
+}
+.add-variatons-open {
+    display: block;
+}
+
+.add-variatons-close {
+    display: none;
+}
+
+.admin-form {
+    background-color: #f0f0f1;
+    position: relative;
+}
+
+.font-table {
+    width: 100%;
+    background-color: #f0f0f1;
 }

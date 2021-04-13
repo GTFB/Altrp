@@ -6,6 +6,7 @@
     & a {
         color: #1a74af;
         text-decoration: none;
+        position: relative;
 
         &:hover {
             text-decoration: none;
@@ -201,8 +202,8 @@
 
             &__count {
                 position: absolute;
-                top: 12px;
-                left: 82px;
+                top: -3px;
+                right: -22px;
                 width: 17px;
                 height: 16px;
                 background-color: #d4dffb;

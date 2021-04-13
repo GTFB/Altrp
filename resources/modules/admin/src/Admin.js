@@ -62,9 +62,10 @@ import SQLEditors from "./components/SQLEditors";
 import ColorSchemes from "./components/dashboard/ColorSchemes";
 import ModelPage from "./components/models/ModelPage";
 import FontsForm from "./components/FontsForm";
-import {WithRouterAdminAssetsDropList} from "./components/AdminAssetsDropList";
-import {CustomFonts} from "./components/CustomFonts";
-import {EditFont} from "./components/EditFont";
+import { WithRouterAdminAssetsDropList } from "./components/AdminAssetsDropList";
+import { CustomFonts } from "./components/CustomFonts";
+import EditFontTest from "./components/EditFontTest";
+import { AddNewFont } from "./components/AddNewFont";
 
 import AssetsBrowser from "../../editor/src/js/classes/modules/AssetsBrowser";
 import Resource from "../../editor/src/js/classes/Resource";
@@ -72,6 +73,7 @@ import Echo from "laravel-echo"
 
 import store from "./js/store/store";
 import { setUserData, setUsersOnline } from "./js/store/current-user/actions";
+import { getCustomFonts } from "./js/store/custom-fonts/actions";
 
 import "./sass/admin-style.scss";
 
@@ -81,6 +83,9 @@ import {
   setWebsocketsKey,
   setWebsocketsPort
 } from "./js/store/websockets-storage/actions";
+import AltrpMeta from '../../../modules/editor/src/js/classes/AltrpMeta';
+import { normalizeUnits } from "moment";
+import AddNewFontTest from './components/AddNewFontTest';
 
 window.React = React;
 window.ReactDOM = ReactDOM;
@@ -106,6 +111,7 @@ class Admin extends Component {
       .then(({ options }) => this.setState({ models: options }));
 
     this.getConnect();
+    this.getMetaName();
   }
 
   // Подключение вебсокетов
@@ -202,6 +208,35 @@ class Admin extends Component {
     this.setState({
       isAssetsActive: true,
     })
+  }
+
+  getMetaName = async () => {
+    let meta = await AltrpMeta.getMetaByName("custom_fonts")
+
+    const font = [
+      {
+        fontFamily: "testing",
+        id: 1,
+        variations: [
+          {
+            id: 1,
+            fontWeight: "bold",
+            fontStyle: "italic", 
+          },
+          // {
+          //   id: 2,
+          //   fontWeight: "500",
+          //   fontStyle: "normal", 
+          // },
+        ]
+      }
+    ]
+    meta.setMetaValue(font)
+    await meta.save()
+
+    const metaValue = await meta.getMetaValue()
+
+    store.dispatch(getCustomFonts(metaValue))
   }
 
   render() {
@@ -422,10 +457,13 @@ class Admin extends Component {
               <UsersTools />
             </Route>
             <Route path="/admin/assets/custom-fonts">
-              <CustomFonts />
+              <CustomFonts metaValue={(this.props.metaValue != '') ? this.props.metaValue : null} />
             </Route>
-            <Route path="/admin/assets/edit-font">
-              <EditFont />
+            <Route path="/admin/assets/add-new-font">
+              <AddNewFontTest metaValue={(this.props.metaValue != '') ? this.props.metaValue : null} />
+            </Route>
+            <Route path="/admin/assets/edit-font/:id?">
+              <EditFontTest metaValue={(this.props.metaValue != '') ? this.props.metaValue : null} />
             </Route>
             <Route path="/admin/assets">
               <Assets />
@@ -559,13 +597,20 @@ class Admin extends Component {
 
 let _export;
 
+const mapStateToProps = (state) => {
+  return {
+    metaValue: state.customFonts.metaValue,
+  }
+}
+
 const mapDispatchToProps = dispatch => {
   return {
-    setUserData: user => dispatch(setUserData(user))
+    setUserData: user => dispatch(setUserData(user)),
+    getCustomFonts: metaValue => dispatch(getCustomFonts(metaValue))
   }
 };
 
-Admin = connect(null, mapDispatchToProps)(Admin)
+Admin = connect(mapStateToProps, mapDispatchToProps)(Admin)
 if (process.env.NODE_ENV === "production") {
   _export = Admin;
 } else {
