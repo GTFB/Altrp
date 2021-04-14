@@ -46,8 +46,8 @@ export default class ConditionNode extends Component{
         const countNew = count + 1;
 
         return {
-            id: new Date().getTime(),
-            name: `Compare ${countNew}`,
+            "id": new Date().getTime(),
+            "name": `Compare ${countNew}`,
             "operator": "==",
             "operands":[]
         };
@@ -83,9 +83,9 @@ export default class ConditionNode extends Component{
         const logic = this.props.selectNode?.data?.props?.nodeData?.operator ?? '';
         const compares = this.getCompares();
 
-    return <div>
+      return <div>
         <div className={"settings-section "}>
-            <div className="settings-section__title d-flex">
+            <div className="settings-section__title d-flex" onClick={() => this.props.toggleChevron("condition")}>
                 <div className="settings-section__icon d-flex">
                     <Chevron />
                 </div>
