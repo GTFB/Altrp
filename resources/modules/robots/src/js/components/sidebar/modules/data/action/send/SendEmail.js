@@ -24,7 +24,7 @@ class SendEmail extends Component{
         const {templateOptions} = this.state;
         return <div className="settings-section-box">
             <div className={"settings-section " + (this.props.activeSection === "mail" ? '' : 'open')}>
-                <div className="settings-section__title d-flex" onClick={this.props.toggleChevron("mail")}>
+                <div className="settings-section__title d-flex" onClick={() => this.props.toggleChevron("mail")}>
                     <div className="settings-section__icon d-flex">
                         <Chevron />
                     </div>

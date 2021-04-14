@@ -14,6 +14,8 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 use NotificationChannels\Telegram\TelegramChannel;
 use NotificationChannels\Telegram\TelegramMessage;
+use NotificationChannels\Telegram\TelegramFile;
+
 use App\Constructor\Template;
 use DOMDocument;
 
@@ -132,10 +134,53 @@ class RobotNotification extends Notification implements ShouldQueue
      */
     public function toTelegram($notifiable)
     {
-        if (!$notifiable->telegram_user_id) return false;
-        $tmObj = TelegramMessage::create()
-            ->to($notifiable->telegram_user_id);
-        $tmObj = $tmObj->content(setDynamicData($this->node->data->props->nodeData->data->content->message, $this->modelData));
+        $content = $this->node->data->props->nodeData->data->content;
+        if (!$notifiable->telegram_user_id || !is_array($content) || empty($content)) return false;
+
+        $tmObj = TelegramMessage::create()->to($notifiable->telegram_user_id);
+
+        foreach ($content as $item) {
+            if ($item->type === 'file' || $item->type === 'document' || $item->type === 'video' || $item->type === 'animation') {
+                $tmObj = TelegramFile::create()->to($notifiable->telegram_user_id);
+            }
+        }
+
+        $text = '';
+//        dump($tmObj);
+//        dump($content);
+
+        foreach ($content as $item) {
+            switch ($item->type){
+                case "content":
+                    $text .= setDynamicData($item->data->text, $this->modelData) . "\n";
+                    break;
+                case "link":
+                    $text .= '[' . setDynamicData($item->data->text, $this->modelData) . '](' . setDynamicData($item->data->url, $this->modelData) . ") \n";
+                    break;
+                case "button":
+                    $tmObj = $tmObj->button(setDynamicData($item->data->text, $this->modelData), setDynamicData($item->data->url, $this->modelData));
+                    break;
+                case "file":
+                    if (!empty($item->data->url)) $tmObj = $tmObj->photo(setDynamicData($item->data->url, $this->modelData));
+                    elseif (!empty($item->data->path)) $tmObj = $tmObj->file(setDynamicData($item->data->path, $this->modelData), setDynamicData($item->data->text, $this->modelData));
+                    break;
+                case "document":
+                    if (!empty($item->data->url)) $tmObj = $tmObj->document(setDynamicData($item->data->url, $this->modelData), setDynamicData($item->data->text, $this->modelData));
+                    elseif (!empty($item->data->path)) $tmObj = $tmObj->document(setDynamicData($item->data->path, $this->modelData), setDynamicData($item->data->text, $this->modelData));
+                    break;
+                case "video":
+                    if (!empty($item->data->url)) $tmObj = $tmObj->video(setDynamicData($item->data->url, $this->modelData));
+                    elseif (!empty($item->data->path)) $tmObj = $tmObj->video(setDynamicData($item->data->path, $this->modelData));
+                    $tmObj = $tmObj->video(setDynamicData($item->data->path, $this->modelData));
+                    break;
+                case "animation":
+                    if (!empty($item->data->url)) $tmObj = $tmObj->animation(setDynamicData($item->data->url, $this->modelData));
+                    elseif (!empty($item->data->path)) $tmObj = $tmObj->animation(setDynamicData($item->data->path, $this->modelData));
+                    break;
+            }
+        }
+        if ($text) $tmObj = $tmObj->content($text);
+//        dd($text);
         return $tmObj;
     }
 

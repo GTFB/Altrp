@@ -32,7 +32,7 @@ export default class RobotNode extends Component{
 
         return <div>
         <div className={"settings-section "}>
-            <div className="settings-section__title d-flex">
+            <div className="settings-section__title d-flex" onClick={() => this.props.toggleChevron("robot")}>
                 <div className="settings-section__icon d-flex">
                     <Chevron />
                 </div>
