@@ -20,7 +20,8 @@ import { contextMenu } from "react-contexify/lib/index";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
 import { thresholdSturges } from "d3";
 import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
-import GalleryComponent from "./styled-widgets/GalleryComponent";
+import CarouselComponent from "./widgets/styled-components/CarouselComponent";
+import GalleryCompnent from "./widgets/styled-components/GalleryComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -358,7 +359,10 @@ class ElementWrapper extends Component {
 
     switch (this.props.element.getName()) {
       case "gallery": {
-        WrapperComponent = GalleryComponent;
+        WrapperComponent = GalleryCompnent;
+      }
+      case "carousel": {
+        WrapperComponent = CarouselComponent;
       }
       break
     }

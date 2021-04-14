@@ -165,15 +165,17 @@ export function colorStyled(controller, style) {
  * @param {string} style
  */
 export function dimensionsStyled(controller, style) {
-  const unit = controller.unit || "px";
-  const left = controller.left || 0;
-  const right = controller.right || 0;
-  const bottom = controller.bottom || 0;
-  const top = controller.top || 0;
+  if(controller) {
+    const unit = controller.unit || "px";
+    const left = controller.left || 0;
+    const right = controller.right || 0;
+    const bottom = controller.bottom || 0;
+    const top = controller.top || 0;
 
-  if(controller.left || controller.right || controller.bottom || controller.top) {
-    return `${style}: ${top + unit} ${right + unit} ${bottom + unit} ${left + unit};`
-  } else return "";
+    if(controller.left || controller.right || controller.bottom || controller.top) {
+      return `${style}: ${top + unit} ${right + unit} ${bottom + unit} ${left + unit};`
+    } else return "";
+  }
 };
 
 
@@ -229,13 +231,18 @@ export function styledString(styles, settings) {
   styles.forEach(style => {
     if(_.isString(style)) {
       if(style !== "}") {
-        stringStyles += `& .${style} {`
+        if(style.split('')[0] === "." || style.split('')[0] === "&") {
+          stringStyles += `${style} {`;
+        } else {
+          stringStyles += `& .${style} {`
+        }
       } else {
         stringStyles += `}`
       }
     } else {
       if(_.isArray(style)) {
-        const variable = getResponsiveSetting(settings, style[1])
+        const state = style[3] || null;
+        const variable = getResponsiveSetting(settings, style[1], state)
         switch (style[2]) {
           case "dimensions":
             stringStyles += dimensionsStyled(variable, style[0]);

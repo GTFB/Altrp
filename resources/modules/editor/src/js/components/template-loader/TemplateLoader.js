@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import AltrpModel from "../../classes/AltrpModel";
+import {delay} from "../../../../../front-app/src/js/helpers";
 
 class TemplateLoader extends Component {
   constructor(props) {
@@ -40,8 +41,9 @@ class TemplateLoader extends Component {
     }
 
 
-    this.setState(state => ({...state, templateComponent}), () => {
+    this.setState(state => ({...state, templateComponent}), async () => {
       if(_.isFunction(this.props.onLoad)) {
+        // await delay(50);
         this.props.onLoad();
       };
     });

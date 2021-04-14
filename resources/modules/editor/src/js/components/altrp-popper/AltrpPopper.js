@@ -60,6 +60,12 @@ export default function AltrpPopper(props) {
     }
 
     if (Object.keys(updateSettings).length !== 0) {
+      const event = new Event("resize", {bubbles : true, cancelable : true});
+      if(isEditor()) {
+        altrpEditorContent.editorWindow.current.dispatchEvent(event)
+      } else {
+        document.dispatchEvent(event)
+      }
       if (JSON.stringify(updateSettings) !== JSON.stringify(props.settings.updateSettings)) {
         setUpdateSettings(props.settings.updateSettings);
         forceUpdate()
