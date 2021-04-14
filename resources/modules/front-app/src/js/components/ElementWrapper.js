@@ -5,7 +5,8 @@ import {altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceContent
 import { addElement } from "../store/elements-storage/actions";
 import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 import {changeCurrentPageProperty} from "../store/current-page/actions";
-import GalleryComponent from "../../../../editor/src/js/components/styled-widgets/GalleryComponent";
+import CarouselComponent from "../../../../editor/src/js/components/widgets/styled-components/CarouselComponent";
+import GalleryComponent from "../../../../editor/src/js/components/widgets/styled-components/GalleryComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -309,6 +310,9 @@ class ElementWrapper extends Component {
     switch (this.props.element.getName()) {
       case "gallery": {
         WrapperComponent = GalleryComponent;
+      }
+      case "carousel": {
+        WrapperComponent = CarouselComponent;
       }
         break
     }
