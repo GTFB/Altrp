@@ -38,7 +38,13 @@ class TemplateLoader extends Component {
             ElementWrapper: this.state.ElementWrapper
           });
     }
-    this.setState(state => ({...state, templateComponent}));
+
+
+    this.setState(state => ({...state, templateComponent}), () => {
+      if(_.isFunction(this.props.onLoad)) {
+        this.props.onLoad();
+      };
+    });
   }
 
   /**
