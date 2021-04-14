@@ -931,7 +931,7 @@ class Button extends BaseElement {
         'vh',
       ],
       rules: {
-        '{{ELEMENT}} .altrp-btn-icon{{STATE}}': [
+        '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon': [
           'padding-top: {{TOP}}{{UNIT}};',
           'padding-right: {{RIGHT}}{{UNIT}};',
           'padding-bottom: {{BOTTOM}}{{UNIT}};',
@@ -948,7 +948,8 @@ class Button extends BaseElement {
         colorPickedHex: "#ffffff",
       },
       rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}} path': 'fill: {{COLOR}};',
+        '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon path': 'fill: {{COLOR}};',
+
       },
     });
 
@@ -956,7 +957,8 @@ class Button extends BaseElement {
       type: CONTROLLER_COLOR,
       label: 'Background Color',
       rules: {
-        '{{ELEMENT}} .altrp-btn{{STATE}} svg': 'background: {{COLOR}};',
+        '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon svg': 'background: {{COLOR}};',
+
       },
     }
     );
@@ -972,9 +974,9 @@ class Button extends BaseElement {
       max: 100,
       min: 0,
       rules: {
-        '{{ELEMENT}} .altrp-btn-icon{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .altrp-btn-icon svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .altrp-btn-icon img{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+        '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon img': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
       },
     });
 

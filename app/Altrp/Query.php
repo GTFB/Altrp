@@ -36,6 +36,7 @@ class Query extends EloquentModel
     }
 
   /**
+   * @deprecated
    * ИМпортируем данные sql-buidler
    * @param array $imported_queries
    */

@@ -692,58 +692,58 @@ class Input extends BaseElement {
     // });
     //
     // this.endControlSection();
-
-    this.startControlSection("form_condition_display", {
-      tab: TAB_CONTENT,
-      label: "Field Condition"
-    });
-
-    this.addControl("form_condition_display_on", {
-      type: CONTROLLER_SELECT,
-      label: "Display on",
-      responsive: false,
-      options: [
-        {
-          label: "All Conditions Met",
-          value: "AND"
-        },
-        {
-          label: "Any Condition Met",
-          value: "OR"
-        }
-      ],
-      default: "AND"
-    });
-
-    const formConditionsRepeater = new Repeater();
-
-    formConditionsRepeater.addControl("field_id", {
-      responsive: false,
-      dynamic: false,
-      label: "Field ID"
-    });
-
-    formConditionsRepeater.addControl("operator", {
-      type: CONTROLLER_SELECT,
-      responsive: false,
-      default: "empty",
-      options: CONDITIONS_OPTIONS
-    });
-
-    formConditionsRepeater.addControl("value", {
-      dynamic: false,
-      responsive: false,
-      label: "Value"
-    });
-
-    this.addControl("form_conditions", {
-      label: "Conditions",
-      type: CONTROLLER_REPEATER,
-      fields: formConditionsRepeater.getControls(),
-      default: []
-    });
-
-    this.endControlSection();
+    //
+    // this.startControlSection("form_condition_display", {
+    //   tab: TAB_CONTENT,
+    //   label: "Field Condition"
+    // });
+    //
+    // this.addControl("form_condition_display_on", {
+    //   type: CONTROLLER_SELECT,
+    //   label: "Display on",
+    //   responsive: false,
+    //   options: [
+    //     {
+    //       label: "All Conditions Met",
+    //       value: "AND"
+    //     },
+    //     {
+    //       label: "Any Condition Met",
+    //       value: "OR"
+    //     }
+    //   ],
+    //   default: "AND"
+    // });
+    //
+    // const formConditionsRepeater = new Repeater();
+    //
+    // formConditionsRepeater.addControl("field_id", {
+    //   responsive: false,
+    //   dynamic: false,
+    //   label: "Field ID"
+    // });
+    //
+    // formConditionsRepeater.addControl("operator", {
+    //   type: CONTROLLER_SELECT,
+    //   responsive: false,
+    //   default: "empty",
+    //   options: CONDITIONS_OPTIONS
+    // });
+    //
+    // formConditionsRepeater.addControl("value", {
+    //   dynamic: false,
+    //   responsive: false,
+    //   label: "Value"
+    // });
+    //
+    // this.addControl("form_conditions", {
+    //   label: "Conditions",
+    //   type: CONTROLLER_REPEATER,
+    //   fields: formConditionsRepeater.getControls(),
+    //   default: []
+    // });
+    //
+    // this.endControlSection();
 
     this.startControlSection("label_style_section", {
       tab: TAB_STYLE,
@@ -1146,7 +1146,7 @@ class Input extends BaseElement {
       tab: TAB_STYLE,
       label: "Placeholder",
       conditions: {
-        "content_type!": ["image_select", "hidden", "radio", "checkbox"]
+        "content_type!": ["image_select", "hidden", "radio", "checkbox", "select"]
       }
     });
 
@@ -1156,7 +1156,8 @@ class Input extends BaseElement {
       rules: {
         "{{ELEMENT}} .altrp-field::placeholder{{STATE}}": "color: {{COLOR}};",
         "{{ELEMENT}} .altrp-field-select2__placeholder{{STATE}}":
-          "color: {{COLOR}};"
+          "color: {{COLOR}};",
+        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}": "color: {{COLOR}};",
       }
     });
 
@@ -1175,6 +1176,16 @@ class Input extends BaseElement {
           "text-decoration: {{DECORATION}}"
         ],
         "{{ELEMENT}} .altrp-field-select2__placeholder{{STATE}}": [
+          'font-family: "{{FAMILY}}", sans-serif;',
+          "font-size: {{SIZE}}px;",
+          "line-height: {{LINEHEIGHT}};",
+          "letter-spacing: {{SPACING}}px",
+          "font-weight: {{WEIGHT}}",
+          "text-transform: {{TRANSFORM}}",
+          "font-style: {{STYLE}}",
+          "text-decoration: {{DECORATION}}"
+        ],
+        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}": [
           'font-family: "{{FAMILY}}", sans-serif;',
           "font-size: {{SIZE}}px;",
           "line-height: {{LINEHEIGHT}};",
@@ -1248,22 +1259,25 @@ class Input extends BaseElement {
       rules: {
         "{{ELEMENT}} .altrp-field{{STATE}}": "background-color: {{COLOR}};",
         "{{ELEMENT}} .altrp-field-select2__control{{STATE}}":
-          "background-color: {{COLOR}};"
+          "background-color: {{COLOR}};",
+        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}": "background-color: {{COLOR}};",
       }
     });
 
     this.addControl("option_background_color", {
       type: CONTROLLER_COLOR,
+      conditions: {
+        "content_type": "select2"
+      },
       label: "Option Background Color",
       default: {
         color: "#FFF",
         colorPickedHex: "#FFF"
       },
-      conditions: { content_type: ["select2"] },
       rules: {
         ".{{ID}}.altrp-field-select2__option{{STATE}}":
           "background-color: {{COLOR}};"
-      }
+      },
     });
 
     this.addControl("option_focused_background_color", {
@@ -1347,7 +1361,8 @@ class Input extends BaseElement {
       rules: {
         "{{ELEMENT}} .altrp-field{{STATE}}": "border-style: {{VALUE}};",
         "{{ELEMENT}} .altrp-field-select2__control{{STATE}}":
-          "border-style: {{VALUE}};"
+          "border-style: {{VALUE}};",
+        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}": "border-style: {{VALUE}};"
       }
     });
 
@@ -1365,7 +1380,9 @@ class Input extends BaseElement {
         "{{ELEMENT}} .altrp-field{{STATE}}":
           "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};",
         "{{ELEMENT}} .altrp-field-select2__control{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};",
+        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}":
+          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};",
       }
     });
 
@@ -1379,7 +1396,8 @@ class Input extends BaseElement {
       rules: {
         "{{ELEMENT}} .altrp-field{{STATE}}": "border-color: {{COLOR}};",
         "{{ELEMENT}} .altrp-field-select2__control{{STATE}}":
-          "border-color: {{COLOR}};"
+          "border-color: {{COLOR}};",
+        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}": "border-color: {{COLOR}};",
       }
     });
 
@@ -1401,7 +1419,9 @@ class Input extends BaseElement {
         "{{ELEMENT}} .altrp-field{{STATE}}":
           "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};",
         "{{ELEMENT}} .altrp-field-select2__control{{STATE}}":
-          "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};"
+          "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};",
+        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}":
+          "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};",
       }
     });
 
@@ -1422,6 +1442,9 @@ class Input extends BaseElement {
         ],
         "{{ELEMENT}} .altrp-field-select2__control{{STATE}}": [
           "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+        ],
+        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}": [
+          "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
         ]
       }
     });
@@ -1437,7 +1460,10 @@ class Input extends BaseElement {
 
     this.startControlSection("radio_checkbox_styles", {
       tab: TAB_STYLE,
-      label: "Radio Checkbox Styles"
+      label: "Radio Checkbox Styles",
+      conditions: {
+        "content_type!": "select",
+      },
     });
 
     this.addControl("input_position", {

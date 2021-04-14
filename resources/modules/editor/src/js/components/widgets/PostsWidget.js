@@ -51,9 +51,10 @@ class PostsWidget extends Component {
       data = getDataByPath(path, []);
     }
     return <this.state.PostsComponent query={query}
-                                    currentModel={this.props.currentModel}
-                                    data={data}
-                                    settings={this.props.element.getSettings()}/>;
+                                      currentModel={this.props.currentModel}
+                                      data={data}
+                                      element={this.props.element}
+                                      settings={this.props.element.getSettings()}/>;
   }
 }
 

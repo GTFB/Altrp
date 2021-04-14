@@ -1399,7 +1399,7 @@ class Icon extends BaseElement{
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typography',
         rules: {
-          '{{ELEMENT}} .altrp-icon-body-link{{STATE}}': [
+          '{{ELEMENT}} .altrp-icon-body-label{{STATE}}': [
             'font-family: "{{FAMILY}}", sans-serif;',
             'font-size: {{SIZE}}px;',
             'line-height: {{LINEHEIGHT}};',

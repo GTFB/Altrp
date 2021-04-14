@@ -136,6 +136,10 @@ export function actionsControllers(element, sectionLabel = 'Actions', idPrefix =
         value: 'condition',
         label: 'Condition',
       },
+      {
+        value: 'vi_toggle',
+        label: 'Version for the Visually Impaired Toggle',
+      },
     ],
   });
 

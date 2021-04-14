@@ -3,6 +3,10 @@
 
 ## Changelog
 
+### 0.15.0
++ "tel" and "mailto" Links
++ Toggle Visually Impaired Action
+
 ### 0.14.0
 + Add Accept Filed Type
 + Custom Headers to Form Action

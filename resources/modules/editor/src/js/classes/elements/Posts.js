@@ -216,6 +216,43 @@ class Table extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection("posts_page_settings", {
+      label: "Pages",
+      conditions: {
+        'posts_pagination_type': 'pages',
+      },
+    });
+
+    this.addControl('first_last_buttons_count', {
+      type: CONTROLLER_NUMBER,
+      label: 'First-Last Buttons Count',
+    });
+
+    this.addControl('middle_buttons_count', {
+      type: CONTROLLER_NUMBER,
+      label: 'Middle Buttons Count',
+    });
+
+    this.addControl('is_with_ellipsis', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Show Ellipsis',
+      default: true
+    });
+
+    this.addControl('hide_pre_page_button', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hide Prev Page Button',
+      default: false
+    });
+
+    this.addControl('hide_next_page_button', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Hide Next Page Button',
+      default: false
+    });
+
+    this.endControlSection();
+
     this.startControlSection("posts_pagination_section", {
       label: "Pagination",
       conditions: {
@@ -223,7 +260,7 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl('posts_prev_text', {
+    this.addControl('prev_text', {
       label: 'Prev Text',
       default: 'Prev Page',
     });
@@ -260,7 +297,7 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl('posts_next_text', {
+    this.addControl('next_text', {
       label: 'Next Text',
       default: 'Next Page',
     });
@@ -360,17 +397,12 @@ class Table extends BaseElement {
     });
 
     this.addControl("posts_columns_gap", {
-      type: CONTROLLER_SLIDER,
       label: 'Columns Gap',
-      max: 100,
-      min: 0
     });
 
     this.addControl("posts_rows_gap", {
-      type: CONTROLLER_SLIDER,
       label: 'Rows Gap',
       max: 100,
-      min: 0
     });
 
     this.endControlSection();
@@ -692,27 +724,6 @@ class Table extends BaseElement {
       conditions: {
         'posts_pagination_type!': '',
       },
-    });
-
-    this.addControl('hide_pre_page_button', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Hide Prev Page Button',
-      default: false,
-      conditions: { posts_pagination_type: 'pages' },
-    });
-
-    this.addControl('hide_pages_buttons_button', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Hide Pages Buttons',
-      default: false,
-      conditions: { posts_pagination_type: 'pages' },
-    });
-
-    this.addControl('hide_next_page_button', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Hide Next Page Button',
-      default: false,
-      conditions: { posts_pagination_type: 'pages' },
     });
 
     this.addControl('hide_page_input', {
@@ -1324,21 +1335,22 @@ class Table extends BaseElement {
       },
     });
 
-    this.addControl('table_style_pagination_padding_count_item', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Item Count Padding',
+    this.addControl('width_count_item', {
+      type: CONTROLLER_SLIDER,
+      label: 'Item Width',
       default: {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
+    });
+
+    this.addControl('height_count_item', {
+      type: CONTROLLER_SLIDER,
+      label: 'Item Height',
+      default: {
+        unit: 'px'
       },
+      units: ['px', '%', 'vh', 'vw'],
     });
 
     this.addControl('table_style_item_count_pagination_typographic', {

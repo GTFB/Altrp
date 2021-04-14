@@ -55,6 +55,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'tmp' => [
+            'driver' => 'local',
+            'root' => storage_path('tmp'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -65,6 +72,6 @@ return [
         ],
 
     ],
-  'max_file_size' => 20971520,
+    'max_file_size' => 20971520,
 
 ];

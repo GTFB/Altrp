@@ -23,6 +23,7 @@ class PageDatasource extends Model
     ];
 
   /**
+   * @deprecated
    * Импортируем связи страниц и источников данных
    * @param array $page_data_sources
    */

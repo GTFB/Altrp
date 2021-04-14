@@ -60,6 +60,7 @@ class Template extends Model
   }
 
   /**
+   * @deprecated
    * Импортирует шаблоны
    * @param array $imported_templates
    */
