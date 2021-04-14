@@ -1,4 +1,5 @@
 import ElementWrapper from "./js/components/ElementWrapper";
+import { window } from "global";
 import frontDecorate from "./js/decorators/front-element-component";
 import CONSTANTS from "../../editor/src/js/consts";
 import { setCurrentScreen } from "./js/store/media-screen-storage/actions";

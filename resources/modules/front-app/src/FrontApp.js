@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { window } from "global";
 import { hot } from "react-hot-loader";
 import { getRoutes } from "./js/helpers";
 import appStore from "./js/store/store";

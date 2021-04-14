@@ -1,7 +1,16 @@
-require("./express");
-// ignore `.scss` imports
+const path = require("path");
 
-// transpile imports on the fly
 require("@babel/register")({
-  configFile: path.resolve(__dirname, "../.babelrc")
+  presets: ["@babel/env", "@babel/react"],
+  plugins: [
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-transform-async-to-generator",
+    "@babel/transform-arrow-functions",
+    "@babel/proposal-object-rest-spread",
+    "@babel/proposal-class-properties"
+  ]
 });
+
+require("ignore-styles");
+
+require("./express");

@@ -12,7 +12,8 @@ module.exports = {
 
   output: {
     path: path.resolve("server-dist"),
-    filename: "index.js"
+    filename: "index.js",
+    globalObject: "this"
   },
 
   module: {
@@ -45,7 +46,9 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      "process.env.BROWSER": JSON.stringify(true)
+      "process.env.NODE_ENV": '"production"',
+      "process.env.BROWSER": JSON.stringify(true),
+      __DEV__: false
     })
   ]
 };

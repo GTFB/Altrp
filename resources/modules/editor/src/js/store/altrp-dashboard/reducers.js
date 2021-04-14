@@ -1,4 +1,5 @@
 import { EDIT_ELEMENT } from "./actions";
+import _ from "lodash";
 
 const defaultState = {};
 

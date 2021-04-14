@@ -1,19 +1,13 @@
 const express = require("express");
 const fs = require("fs");
-const path = require("path");
-
 const React = require("react");
 const ReactDOMServer = require("react-dom/server");
-const FrontApp = require("../resources/modules/front-app/src/FrontApp");
-
-// const { StaticRouter } = require("react-router-dom");
 
 const app = express();
 app.get("/", (req, res) => {
+  let FrontApp = require("../resources/modules/front-app/src/FrontApp");
   FrontApp = FrontApp.default;
-  global.window = {};
-
-  const app = ReactDOMServer.renderToString(<FrontApp />);
+  const app = ReactDOMServer.renderToString(<FrontApp></FrontApp>);
 
   const indexFile = path.resolve("../server-dist/index.html");
   fs.readFile(indexFile, "utf8", (err, data) => {
