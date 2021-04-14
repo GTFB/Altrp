@@ -163,13 +163,13 @@ export function parseURLTemplate(URLTemplate = "", object = null) {
     protocol = "http://";
     url = url.replace("http://", "");
   }
-  if (url.indexOf('mailto:') === 0) {
-    protocol = 'mailto:';
-    url = url.replace('mailto:', '');
+  if (url.indexOf("mailto:") === 0) {
+    protocol = "mailto:";
+    url = url.replace("mailto:", "");
   }
-  if (url.indexOf('tel:') === 0) {
-    protocol = 'tel:';
-    url = url.replace('tel:', '');
+  if (url.indexOf("tel:") === 0) {
+    protocol = "tel:";
+    url = url.replace("tel:", "");
   }
   // columnEditUrl = columnEditUrl.replace(':id', row.original.id);
   let idTemplates = url.match(/:([\s\S]+?)(\/|$)/g);
@@ -1061,8 +1061,8 @@ export function getHTMLElementById(elementId = "") {
  * @param {FrontElement} element
  * @return {null | HTMLElement}
  */
-export function getWrapperHTMLElementByElement(element){
-  if(! element){
+export function getWrapperHTMLElementByElement(element) {
+  if (!element) {
     return null;
   }
   let HTMLElement = null;
@@ -1839,7 +1839,10 @@ export function getResponsiveSetting(
   let setting = settings[_settingName];
   if(setting === undefined) {
     for (let screen of CONSTANTS.SCREENS) {
-      if (currentScreen.id > screen.id || screen.name === CONSTANTS.DEFAULT_BREAKPOINT) {
+      if (
+        currentScreen.id > screen.id ||
+        screen.name === CONSTANTS.DEFAULT_BREAKPOINT
+      ) {
         continue;
       }
       _settingName = `${settingName}_${elementState}_${screen.name}`;
