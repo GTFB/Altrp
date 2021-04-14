@@ -11,6 +11,7 @@ import { changeTemplateStatus } from "../../store/template-status/actions";
 import { setTitle } from "../../../../../front-app/src/js/helpers";
 import { setTemplateData } from "../../store/template-data/actions";
 import ElementsFactory from "./ElementsFactory";
+import {getSheet, stringifyStylesheet} from "../../../../../front-app/src/js/helpers/elements";
 
 class SaveImportModule extends BaseModule {
   constructor(modules) {
@@ -70,10 +71,28 @@ class SaveImportModule extends BaseModule {
         _.toArray(rootElement.getElementsByClassName('overlay')).forEach(overlayElement=>{
           overlayElement.remove();
         });
+        _.forEach(rootElement.querySelectorAll('[id]'), item => {item.removeAttribute('id')});
         html_content = rootElement.outerHTML;
+
       }
       stylesElements = window.altrpEditorContent.editorWindow.current.getRootNode().getElementById('styles-container')?.children;
       stylesElements = _.toArray(stylesElements);
+      stylesElements = stylesElements.filter(style=> {
+        return style.tagName === 'STYLE';
+      });
+
+      let styledTag = window.altrpEditorContent.editorWindow.current.getRootNode().querySelector('[data-styled="active"]');
+      if(styledTag){
+        const contentDocument = styledTag.getRootNode();
+
+        const _styledTag = styledTag.cloneNode(true);
+        _styledTag.removeAttribute('data-styled');
+        _styledTag.removeAttribute('data-styled-version');
+        _styledTag.innerHTML = stringifyStylesheet(getSheet(styledTag, contentDocument));
+        console.log(_styledTag.outerHTML);
+        stylesElements.push(_styledTag)
+      }
+
       stylesElements = stylesElements.map(style => style ? style.outerHTML : '');
     }
     let templateData = getEditor().modules.templateDataStorage.getTemplateDataForSave();

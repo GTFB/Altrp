@@ -4,6 +4,11 @@ namespace App;
 
 use App\Reports;
 use App\Altrp\Source;
+use DOMDocument;
+use DOMXPath;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
 use Mockery\Exception;
 use App\Traits\Searchable;
 use Illuminate\Support\Arr;
@@ -43,7 +48,9 @@ class Page extends Model
     'seo_description',
     'seo_keywords',
     'seo_title',
-    'type'
+    'type',
+    'is_cached',
+    'not_found',
   ];
 
   /**
@@ -127,6 +134,13 @@ class Page extends Model
 
     $pages = (new static)->getPagesData($_pages, $lazy);
 
+    if( self::firstWhere( 'not_found', 1 ) ){
+      $not_found_page = (new static)->getPagesData([self::firstWhere( 'not_found', 1 )], $lazy);
+      $not_found_page[0]['path'] = '*';
+
+      $pages[] = $not_found_page[0];
+    }
+
     return $pages;
   }
 
@@ -143,7 +157,12 @@ class Page extends Model
     return $pages;
   }
 
-  private function getPagesData(Collection $_pages, bool $lazy = true): Array
+  /**
+   * @param Collection | array $_pages
+   * @param bool $lazy
+   * @return Array
+   */
+  private function getPagesData( $_pages, bool $lazy = true ): Array
   {
     $pages = [];
     /** @var Page $page */
@@ -183,7 +202,7 @@ class Page extends Model
 
       $pages[] = $_page;
     }
-    return $pages;
+      return $pages;
   }
 
   /**
@@ -238,34 +257,43 @@ class Page extends Model
 //    }
     $currentPage = Page::find($page_id);
     $contentType = $currentPage->type;
+    $header_template = Template::getTemplate([
+      'page_id' => $page_id,
+      'template_type' => 'header',
+    ]);
+    unset( $header_template['html_content'] );
+    unset( $header_template['styles'] );
     $areas[] = [
       'area_name' => 'header',
       'id' => 'header',
       'settings' => [],
-      'template' => Template::getTemplate([
-        'page_id' => $page_id,
-        'template_type' => 'header',
-      ]),
+      'template' => $header_template,
     ];
 
+    $content_template = Template::getTemplate([
+      'page_id' => $page_id,
+      'template_type' => $contentType ? 'reports' : 'content',
+    ]);
+    unset( $content_template['html_content'] );
+    unset( $content_template['styles'] );
     $areas[] = [
       'area_name' => 'content',
       'id' => 'content',
       'settings' => [],
-      'template' => Template::getTemplate([
-        'page_id' => $page_id,
-        'template_type' => $contentType ? 'reports' : 'content',
-      ]),
+      'template' => $content_template,
     ];
 
+    $footer_template = Template::getTemplate([
+      'page_id' => $page_id,
+      'template_type' => 'footer',
+    ]);
+    unset( $footer_template['html_content'] );
+    unset( $footer_template['styles'] );
     $areas[] = [
       'area_name' => 'footer',
       'id' => 'footer',
       'settings' => [],
-      'template' => Template::getTemplate([
-      'page_id' => $page_id,
-      'template_type' => 'footer',
-      ]),
+      'template' => $footer_template,
     ];
 
 //    $popups = Template::join( 'areas', 'areas.id', '=', 'templates.area' )
@@ -585,16 +613,16 @@ class Page extends Model
         <?php
         foreach ( $templates as $template ) {
 
-//          $styles = data_get( $template, 'styles' );
-//          $styles = json_decode( $styles, true );
+          $styles = data_get( $template, 'styles' );
+          $styles = json_decode( $styles, true );
 
-//          if( data_get( $styles, 'important_styles') ) {
-//            $important_styles = array_merge( $important_styles, data_get( $styles, 'important_styles', []) );
-//          }
+          if( data_get( $styles, 'important_styles') ) {
+            $important_styles = array_merge( $important_styles, data_get( $styles, 'important_styles', []) );
+          }
           ?>
           <div class="app-area app-area_<?php echo $template['template_type']; ?>">
           <?php
-          echo data_get( $template, 'html_content', '' );
+          echo self::replace_tags( data_get( $template, 'html_content', '' ) );
           ?>
           </div>
           <?php
@@ -607,5 +635,124 @@ class Page extends Model
     $result['important_styles'] = implode( '', $important_styles );
 
     return $result;
+  }
+
+  /**
+   * @param $content
+   * @return string
+   */
+  static public function replace_tags( $content ){
+    if( ! $content ){
+      return $content;
+    }
+    try {
+
+      $dom = new DOMDocument( '1.0', 'utf-8' );
+      $content   = mb_convert_encoding( $content, 'HTML-ENTITIES', 'utf-8' );
+      $dom->loadHTML( $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOERROR );
+      $altrp_image_lazy = get_altrp_setting( 'altrp_image_lazy', 'none' );
+      $finder = new DomXPath( $dom );
+
+      if( $altrp_image_lazy !== 'none' ){
+        $images = $finder->query("//*[contains(@class, ' altrp-image ')]");
+        $image_placeholders = $finder->query("//*[contains(@class, 'altrp-image-placeholder')]");
+
+        foreach ( $image_placeholders as $item ) {
+
+          $item->removeAttribute( 'style' );
+        }
+        foreach ( $images as $image ) {
+          $image->parentNode->removeChild( $image );
+        }
+      }
+      $content = $dom->saveHTML(  );
+//      $content =  mb_convert_encoding( $content );
+    } catch (\Exception $e){
+      Log::debug( $e->getMessage() );
+    }
+    return $content;
+  }
+
+  /**
+   * @param string $page_id
+   * @return boolean
+   */
+  static function isCached( $page_id )
+  { 
+
+    $page = Page::find( $page_id );
+    if ($page->is_cached) {
+      return true;
+    }
+    return false;
+
+  }
+
+  /**
+   * @param string $page_id
+   * @return boolean
+   */
+  static function switchCaching( $page_id )
+  { 
+
+    $page = self::find( $page_id );
+    if ($page->is_cached) {
+      $res = false;
+    } else {
+      $res = true;
+    }
+    self::whereId($page_id)->update(['is_cached' => $res]);
+
+    return $res;
+  }
+
+  /**
+   * очистить кэш связанный со страницей
+   * @param string $id
+   */
+  static function clearAllCacheById( string $id ){
+    $page = self::find( $id );
+    if( ! $page ){
+      return;
+    }
+    $routes = Route::getRoutes();
+    $route = $routes->getByName( 'page_' . $id );
+    if( ! $route ){
+      return;
+    }
+
+    $cachePath = storage_path() . '/framework/cache/pages/';
+
+    if (! File::exists( $cachePath ) ) {
+      File::put( $cachePath . 'relations.json', '{}' );
+      return;
+    }
+    $relations = File::get( $cachePath . 'relations.json' );
+    $relations = json_decode( $relations, true );
+    if( ! is_array( $relations ) ){
+      $relations = [];
+    }
+
+    $relations = array_filter( $relations, function( $item ) use ($route, $cachePath) {
+
+      $request = Request::create( $item['url'] );
+      try {
+        if( $route->matches( $request ) ){
+          if( File::exists( $cachePath . $item['hash'] ) ){
+            File::delete( $cachePath . $item['hash'] );
+          }
+          return false;
+        } else {
+          return true;
+        }
+
+      }catch (\Exception $e){
+        return true;
+      }
+      return true;
+    } );
+    $relations = json_encode( $relations );
+    File::put( $cachePath . 'relations.json', $relations );
+
   }
 }

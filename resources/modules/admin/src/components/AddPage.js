@@ -375,6 +375,26 @@ class AddPage extends Component {
                         className="form-control"
                       />
                     </div>
+                    <div className="row col-12">
+                    <div className="form-group col-6">
+                      <input type="checkbox" id="caching"
+                        checked={this.state.value.is_cached || ""}
+                        onChange={e => {
+                          this.changeValue(e.target.checked, "is_cached");
+                        }}
+                        className="form-check-input form-check-input_inline" />
+                      <label htmlFor="caching" className="label_checkbox">Сaching</label>
+                    </div>
+                    <div className="form-group col-6 ">
+                      <input type="checkbox" id="caching"
+                        checked={this.state.value.not_found || ""}
+                        onChange={e => {
+                          this.changeValue(e.target.checked, "not_found");
+                        }}
+                        className="form-check-input form-check-input_inline" />
+                      <label htmlFor="caching" className="label_checkbox">404</label>
+                    </div>
+                    </div>
                   </React.Fragment>
                 );
               } else if(this.state.currentTab === 'SEO') {

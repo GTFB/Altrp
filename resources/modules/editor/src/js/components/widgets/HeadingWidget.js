@@ -66,7 +66,7 @@ class HeadingWidget extends Component {
             rel: this.state.settings.link_link.noFollow ? "nofollow" : null,
             // href: this.state.settings.link_link.url,
             href: `mailto:mail@gmail.com`,
-            className: 'altrp-inherit',
+            className: 'altrp-inherit altrp-inherit_wo-border',
           };
 
           linkProps.tag = this.state.settings.link_link.tag;
@@ -225,7 +225,7 @@ class HeadingWidget extends Component {
                   React.createElement(AltrpLink, {
                     link: this.state.settings.link_link,
                     dangerouslySetInnerHTML: { __html: this.state.settings.text_sub},
-                    className: "altrp-inherit"
+                    className: "altrp-inherit altrp-inherit_wo-border"
                   })
                 )
               )

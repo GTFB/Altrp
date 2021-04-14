@@ -250,6 +250,9 @@ class TemplateController extends Controller
         $review->guid = null;
         $review->html_content = null;
         $review->styles = null;
+        if( ! User::find( $old_template->user_id ) ){
+          $review->user_id = auth()->user()->id;
+        }
         if (!$review->save()) {
             return response()->json(trans("responses.dberror"), 400, [], JSON_UNESCAPED_UNICODE);
         }
@@ -260,6 +263,7 @@ class TemplateController extends Controller
         $old_template->data = json_encode($request->data);
         $old_template->type = 'template'; //1
         $old_template->user_id = auth()->user()->id;
+
 
         if ($old_template->save()) {
             return response()->json($old_template, 200, [], JSON_UNESCAPED_UNICODE);

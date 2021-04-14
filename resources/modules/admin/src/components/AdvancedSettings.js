@@ -14,6 +14,7 @@ class AdvancedSettings extends Component {
     this.state = {
       allSiteJavascript: '',
       debugOn: false,
+      imageLazyLoading: 'none',
     }
   }
 
@@ -24,9 +25,12 @@ class AdvancedSettings extends Component {
     const allSiteJavascript = (await new Resource({route: '/admin/ajax/settings'}).get('all_site_js?decrypt=true')).all_site_js || '';
     // let debugOn = ! ! (await new Resource({route:'/admin/ajax/settings'}).get('altrp_debug').altrp_debug);
     let debugOn = ! ! (await new Resource({route:'/admin/ajax/settings'}).get('altrp_debug')).altrp_debug;
+    let imageLazyLoading = (await new Resource({route:'/admin/ajax/settings'}).get('altrp_image_lazy')).altrp_image_lazy;
     this.setState(state => ({...state,
       allSiteJavascript,
-      debugOn}));
+      imageLazyLoading,
+      debugOn,
+    }));
   }
 
   /**
@@ -55,6 +59,22 @@ class AdvancedSettings extends Component {
       debugOn: value,
     }))
   };
+  /**
+   * Изменить ленивую загрузку
+   * @param e
+   * @return {Promise<void>}
+   */
+
+  updateImageLazyLoading = async (e)=>{
+    // await new Resource({route:'/admin/ajax/settings'}).put('admin_logo', {value: JSON.stringify(value)});
+    // this.dispatch(setAdminLogo(value));
+    let value = e.target.value;
+    await new Resource({route:'/admin/ajax/settings'}).put('altrp_image_lazy', {value});
+    this.setState(state=>({
+      ...state,
+      imageLazyLoading: value,
+    }))
+  };
 
   /**
    * Удалить всю историю всех шаблонов
@@ -74,6 +94,17 @@ class AdvancedSettings extends Component {
   };
 
   /**
+   * Запрос на очистку кэша
+   */
+  clearAllCache = async (e) =>{
+    let result  = await confirm('Are You Sure');
+    if(! result){
+      return;
+    }
+    let res = await new Resource({route:'/admin/ajax/clear_cache'}).delete();
+
+  };
+  /**
    * Обновить всех ресурсы на бкенде (модели, шаблоны, контроллеры и т.д.)
    * @param e
    */
@@ -91,6 +122,7 @@ class AdvancedSettings extends Component {
     store.dispatch(setAdminEnable());
   };
   render() {
+    const {imageLazyLoading} = this.state;
     return <div className="admin-styles-settings">
       <table>
         <tbody className="admin-settings-table-row">
@@ -125,6 +157,30 @@ class AdvancedSettings extends Component {
             <button className="btn btn_success"
                     onClick={this.updateAllBackendResources}>
               Update
+            </button>
+          </td>
+        </tr>
+        <tr className="admin-settings-table-row">
+          <td className="admin-settings-table__td row-text" width="10%">
+            Image Lazy Loading
+          </td>
+          <td className="admin-settings-table__td">
+            <div className="form-group w-25">
+              <select className="form-control" value={imageLazyLoading} onChange={this.updateImageLazyLoading}>
+                <option value="none">None</option>
+                <option value="color">Color</option>
+                <option value="skeleton">Skeleton</option>
+            </select></div>
+          </td>
+        </tr>
+        <tr className="admin-settings-table-row">
+          <td className="admin-settings-table__td row-text" width="10%">
+            Clear All Cache
+          </td>
+          <td className="admin-settings-table__td">
+            <button className="btn btn_success"
+                    onClick={this.clearAllCache}>
+              Clear
             </button>
           </td>
         </tr>

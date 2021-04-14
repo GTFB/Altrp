@@ -7,7 +7,7 @@ import {
   parseURLTemplate,
   replaceContentWithData,
   sortOptions,
-  renderAssetIcon, valueReplacement
+  renderAssetIcon, valueReplacement, parseStringValue
 } from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
@@ -479,7 +479,7 @@ class InputWidget extends Component {
    */
   onChange(e, editor = null) {
     let value = "";
-    let dispatchedValue;
+    let valueToDispatch;
     const settings = this.props.element.getSettings();
     if (e && e.target) {
       if (this.props.element.getSettings("content_type") === "checkbox") {
@@ -491,12 +491,12 @@ class InputWidget extends Component {
           }
         });
       } else if(settings.content_type === 'accept'){
-        value = ! this.state.value;
+        let _value = e.target.checked;
         let trueValue = this.props.element.getSettings('accept_checked') || true;
         let falseValue = this.props.element.getSettings('accept_unchecked') || false;
         falseValue = valueReplacement(falseValue);
         trueValue = valueReplacement(trueValue);
-        dispatchedValue = value ? trueValue : falseValue;
+        valueToDispatch = _value ? trueValue : falseValue;
       } else {
         value = e.target.value;
       }
@@ -547,7 +547,7 @@ class InputWidget extends Component {
             this.state.settings.content_type
           ) === -1
         ) {
-          this.dispatchFieldValueToStore( dispatchedValue !== undefined ? dispatchedValue : value, true);
+          this.dispatchFieldValueToStore( valueToDispatch !== undefined ? valueToDispatch : value, true);
         }
       }
     );
@@ -563,6 +563,9 @@ class InputWidget extends Component {
     );
     if (optionsDynamicSetting) {
       options = convertData(optionsDynamicSetting, options);
+    }
+    if(! this.props.element.getSettings('sort_default')){
+      options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
     }
     return options;
   }
@@ -860,8 +863,7 @@ class InputWidget extends Component {
     switch (this.state.settings.content_type) {
       case "select":
         {
-          let options = this.state.options || [];
-          // options = _.sortBy(options, (o => o.label ? o.label.toString() : o));
+          let options = this.getOptions();
           input = (
             <select
               value={value || ""}
@@ -1015,18 +1017,26 @@ class InputWidget extends Component {
    */
   renderAcceptInput(){
     const settings = this.props.element.getSettings();
+    let value = this.state.value;
+    let trueValue = this.props.element.getSettings('accept_checked') || true;
+    let falseValue = this.props.element.getSettings('accept_unchecked') || false;
+    if(value === trueValue){
+      value = true;
+    } else if(value === falseValue){
+      value = false;
+    }
     return <div
-        className={`altrp-field-option ${this.state.value ? "active" : ""}`}
+        className={`altrp-field-option ${value ? "active" : ""}`}
     >
               <span className="altrp-field-option-span">
                 <input
                     type="checkbox"
                     name={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
                     className={`altrp-field-option__input ${
-                        this.state.value ? "active" : ""
+                        value ? "active" : ""
                         }`}
                     onChange={this.onChange}
-                    checked={! ! this.state.value}
+                    checked={! ! value}
                     id={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
                 />
               </span>
@@ -1171,7 +1181,6 @@ class InputWidget extends Component {
      * Сортируем опции
      * @type {Array|*}
      */
-    options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
     if (
       content_options_nullable &&
       (this.props.element.getSettings("content_type") !== "select2" ||
@@ -1205,7 +1214,9 @@ class InputWidget extends Component {
       onKeyDown: this.handleEnter
       // menuIsOpen: true,
     };
-    return <AltrpSelect {...select2Props} />;
+    return <div className="altrp-input-wrapper">
+      <AltrpSelect {...select2Props} />
+    </div>;
   }
 
   renderWysiwyg() {

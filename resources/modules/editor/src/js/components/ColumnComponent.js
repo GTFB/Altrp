@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import '../../sass/column.scss'
+// import '../../sass/column.scss'
 import {isEditor, redirect} from "../../../../front-app/src/js/helpers";
 import {
   ColumnArticleComponent,

@@ -33,7 +33,7 @@ return [
     |
     */
 
-    'altrp_version' => '0.14.16',
+    'altrp_version' => '0.14.21',
 
 
     /*
@@ -195,7 +195,10 @@ return [
         // App\Providers\AltrpProviders\AppServiceProvider::class,
         // App\Providers\AltrpRepositoryServiceProvider::class,
         // App\Providers\AltrpProviders\AppServiceProvider::class,
+        App\Providers\AltrpCacheServiceProvider::class,
 
+        App\Providers\AltrpProviders\AppServiceProvider::class,
+        App\Providers\AltrpRepositoryServiceProvider::class,
     ],
 
     /*
@@ -248,6 +251,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Laratrust' => Laratrust\LaratrustFacade::class,
         'Curl' => Ixudra\Curl\Facades\Curl::class,
+        'CacheService' => App\Altrp\Facades\CacheService::class,
     ],
 
 ];

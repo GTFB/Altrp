@@ -32,7 +32,8 @@ class RouteContent extends Component {
     this.isReport = window.location.href.includes("reports");
     appStore.dispatch(clearElements());
     window.currentRouterMatch = new AltrpModel(props.match);
-    window.currentPageId = props.id
+    window.currentPageId = props.id;
+    console.log(this.props.currentUser.hasRoles('admin'));
     this.admin = this.props.currentUser.hasRoles('admin');
   }
 
@@ -87,7 +88,6 @@ class RouteContent extends Component {
      * @member {array} data_sources
      */
     let { data_sources } = this.props;
-
     dataStorageUpdater.updateCurrent(data_sources);
     appStore.dispatch(clearPageState());
   }
