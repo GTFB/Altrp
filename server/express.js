@@ -20,7 +20,11 @@ app.get("/", (req, res) => {
   console.log("App");
   console.log(typeof App === "undefined");
   console.log("====================================");
-  const app = ReactDOMServer.renderToString(<App />);
+  const app = ReactDOMServer.renderToString(
+    <StaticRouter locality={req.originalUrl}>
+      <App />
+    </StaticRouter>
+  );
 
   const indexFile = path.resolve("./server-dist/index.html");
   fs.readFile(indexFile, "utf8", (err, data) => {
