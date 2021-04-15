@@ -131,6 +131,6 @@ class Dropbar extends Component {
       </div>
     );
   };
-};
+}
 
 export default Dropbar

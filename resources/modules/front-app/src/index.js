@@ -29,8 +29,6 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 (async function(){
-  await import('./js/classes/Route');
-  console.log(window.Route);
   import ("./installing");
   window.React = (await import ( "react")).default;
   window.Component = window.React.Component;

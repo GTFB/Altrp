@@ -33,7 +33,6 @@ class RouteContent extends Component {
     appStore.dispatch(clearElements());
     window.currentRouterMatch = new AltrpModel(props.match);
     window.currentPageId = props.id;
-    console.log(this.props.currentUser.hasRoles('admin'));
     this.admin = this.props.currentUser.hasRoles('admin');
   }
 

@@ -41,7 +41,6 @@ export default function AltrpPopper(props) {
     console.log(placement)
     placement = variantPlace[0]
   }
-
   const {styles, attributes, forceUpdate, update} = usePopper(props.target.current, object.current, {
     placement,
     modifiers: [
@@ -56,16 +55,19 @@ export default function AltrpPopper(props) {
 
   useEffect(() => {
     if(props.updateToken !== prevUpdateToken) {
-      forceUpdate()
+      forceUpdate();
+      const event = new Event("resize", {bubbles : true, cancelable : true});
+      if(isEditor()) {
+        // altrpEditorContent.editorWindow.current.dispatchEvent(event)
+        update();
+      } else {
+        console.log();
+        // window.dispatchEvent(event)
+        update();
+      }
     }
 
     if (Object.keys(updateSettings).length !== 0) {
-      const event = new Event("resize", {bubbles : true, cancelable : true});
-      if(isEditor()) {
-        altrpEditorContent.editorWindow.current.dispatchEvent(event)
-      } else {
-        document.dispatchEvent(event)
-      }
       if (JSON.stringify(updateSettings) !== JSON.stringify(props.settings.updateSettings)) {
         setUpdateSettings(props.settings.updateSettings);
         forceUpdate()
