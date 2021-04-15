@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { StaticRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import RouteContent from "./RouteContent";
 import Styles from "../../../../editor/src/js/components/Styles";
-import {isAltrpTestMode} from "../helpers";
+import { isAltrpTestMode } from "../helpers";
 import EmailTemplatesRenderer from "./EmailTemplatesRenderer";
 
 class AppContent extends Component {
@@ -21,8 +21,12 @@ class AppContent extends Component {
   render() {
     return (
       <Router ref={this.router}>
-        <EmailTemplatesRenderer/>
-        <div className={`front-app-content ${isAltrpTestMode() ? 'front-app-content_test' : ''}`}>
+        <EmailTemplatesRenderer />
+        <div
+          className={`front-app-content ${
+            isAltrpTestMode() ? "front-app-content_test" : ""
+          }`}
+        >
           <Switch>
             {this.props.routes.map(route => (
               <Route

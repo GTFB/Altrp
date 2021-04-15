@@ -1,15 +1,28 @@
 const express = require("express");
 const fs = require("fs");
+const fetch = require("node-fetch");
+const path = require("path");
+const _ = require("lodash");
 const React = require("react");
 const ReactDOMServer = require("react-dom/server");
+const FrontApp = require("../resources/modules/front-app/src/FrontApp");
+const { StaticRouter } = require("react-redux");
 
 const app = express();
-app.get("/", (req, res) => {
-  let FrontApp = require("../resources/modules/front-app/src/FrontApp");
-  FrontApp = FrontApp.default;
-  const app = ReactDOMServer.renderToString(<FrontApp></FrontApp>);
+console.log("====================================");
+console.log(__dirname);
+console.log("====================================");
+app.use(express.static("public"));
 
-  const indexFile = path.resolve("../server-dist/index.html");
+app.get("/", (req, res) => {
+  console.log("====================================");
+  const App = FrontApp.default;
+  console.log("App");
+  console.log(typeof App === "undefined");
+  console.log("====================================");
+  const app = ReactDOMServer.renderToString(<App />);
+
+  const indexFile = path.resolve("./server-dist/index.html");
   fs.readFile(indexFile, "utf8", (err, data) => {
     if (err) {
       console.error("Something went wrong:", err);

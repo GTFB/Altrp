@@ -16,6 +16,11 @@ import ArrayConverter from "./classes/converters/ArrayConverter";
 import DataConverter from "./classes/converters/DataConverter";
 import { changeFormFieldValue } from "./store/forms-data-storage/actions";
 import { addResponseData } from "./store/responses-storage/actions";
+
+if (typeof window === "undefined") {
+  global.window = {};
+}
+
 export function getRoutes() {
   return import("./classes/Routes.js");
 }
@@ -47,8 +52,8 @@ export function setTitle(title) {
  * @return {boolean}
  * */
 export function isEditor() {
-  const path = window.location.pathname;
-  return path.includes("/admin/editor");
+  const path = window?.location?.pathname;
+  return path?.includes("/admin/editor") || false;
 }
 
 /**

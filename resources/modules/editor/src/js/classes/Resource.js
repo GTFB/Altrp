@@ -1,8 +1,9 @@
 import queryString from "query-string";
-import { window } from "global";
 import { replaceContentWithData } from "../../../../front-app/src/js/helpers";
-if (window) {
-  window.queryString = queryString;
+if (typeof window === "undefined") {
+  global.window = {};
+  global.window.queryString = queryString;
+  const fetch = require("node-fetch");
 }
 /**
  * @class Resource

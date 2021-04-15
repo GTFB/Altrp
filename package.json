@@ -73,6 +73,7 @@
         "match-sorter": "^5.0.0",
         "moment": "^2.29.1",
         "nivo": "^0.31.0",
+        "node-fetch": "^2.6.1",
         "passport": "^0.4.1",
         "pusher-js": "^7.0.2",
         "query-string": "^6.13.1",

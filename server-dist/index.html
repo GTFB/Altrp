@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html>
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -15,10 +15,6 @@
         <title>altrp || FRONT APP</title>
         @endisset -->
         <!-- Scripts -->
-
-        <script>
-            // let _token = "{{ csrf_token() }}";
-        </script>
         <!-- Fonts -->
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
         <!-- Style -->
@@ -37,6 +33,7 @@
     </head>
     <body class="front-app-body">
         <div id="front-app" class="front-app"></div>
-        <script src="../public/modules/front-app/front-app.js" defer></script>
+        <!-- <script src="./index.js"></script> -->
+        <script src="/public/modules/front-app/front-app.js" defer></script>
     </body>
 </html>

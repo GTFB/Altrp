@@ -17,8 +17,12 @@ import Echo from "laravel-echo";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
 
-if (window) {
+if (typeof window === "undefined") {
   global.window = {};
+  global.window.stylesModulePromise = new Promise(function(resolve) {
+    window.stylesModuleResolve = resolve;
+  });
+  global._ = require("lodash");
 }
 class FrontApp extends Component {
   constructor(props) {
