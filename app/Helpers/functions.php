@@ -562,12 +562,32 @@ function saveCache( $html) {
     $relations = [];
   }
 
-  $newRelation = ['hash' => $hash, "url" => $url];
-  // $newRelation = [
-  //   'hash' => $hash,
-  //   "url" => $url,
-  //   "roles" => Auth::user()->getUserRoles()
-  // ];
+  $roles = [];
+  if (Auth::user()) {
+    $roles = Auth::user()->getUserRoles();
+  }
+  $plainRoles = implode(",", $roles);
+
+  $encryption_key = getenv('APP_KEY');
+  $iv_size = 16; // 128 bits
+  $iv = openssl_random_pseudo_bytes($iv_size, $strong);
+
+  $cipherRoles = openssl_encrypt(
+      $plainRoles,
+      'AES-256-CBC',
+      $encryption_key,
+      0,
+      $iv
+  );
+
+  setcookie("roles", $cipherRoles, time()+3600);
+
+  $newRelation = [
+    'hash' => $hash,
+    "url" => $url,
+    "roles" => $roles,
+    "iv" => base64_encode($iv)
+  ];
 
   $key = false;
   foreach ($relations as $relation) {
