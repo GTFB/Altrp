@@ -15,10 +15,6 @@ const GlobalStyle = createGlobalStyle`
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-const save = async values => {
-    await sleep(1000)
-}
-
 export class ImageDetail extends React.Component {
     state = {}
 
@@ -39,6 +35,20 @@ export class ImageDetail extends React.Component {
 
     deleteAsset(imageId) {
         this.props.deleteAsset(imageId)
+    }
+
+    save = async values => {
+        if (values.width !== undefined) {
+            this.setState({
+                width: values.width
+            })
+        }
+        if (values.height !== undefined) {
+            this.setState({
+                height: values.height
+            })
+        }
+        await sleep(1000)
     }
 
     render() {
@@ -65,7 +75,7 @@ export class ImageDetail extends React.Component {
                     </div>
                     <div className="document-detail__content">
                         <div className="document-detail__display">
-                            <img className="document-detail__image" src={url} draggable="false" alt="" />
+                            <img className="document-detail__image" width={width} height={height} src={url} draggable="false" alt="" />
                             <button className="document-detail__btn document-detail__btn-edit-image">Edit image</button>
                         </div>
                         <div className="document-detail__editing-section">
@@ -79,10 +89,10 @@ export class ImageDetail extends React.Component {
                                     <div>Dimensions: <span className="document-detail__data-result">{height} by {width} pixels</span></div>
                                 </div>
                             </div>
-                            <Form initialValues={this.state} onSubmit={save}>
+                            <Form initialValues={this.state} onSubmit={this.save}>
                                 {props => (
                                     <form onSubmit={props.handleSubmit}>
-                                        <AutoSave updateAsset={this.props.updateAsset} debounce={1000} save={save} />
+                                        <AutoSave updateAsset={this.props.updateAsset} debounce={1000} save={this.save} />
                                         <div className="document-detail__line-to-change"><span className="document-detail__name-of-changes">Alternative Text</span><Field
                                             name="alternate_text"
                                             label="Alt"
@@ -110,6 +120,20 @@ export class ImageDetail extends React.Component {
                                             component="textarea"
                                             type="text"
                                             className="document-detail__textarea"
+                                        /></div>
+                                        <div className="document-detail__line-to-change"><span className="document-detail__name-of-changes">Width</span><Field
+                                            name="width"
+                                            label="Width"
+                                            component="input"
+                                            type="text"
+                                            className="document-detail__input"
+                                        /></div>
+                                        <div className="document-detail__line-to-change"><span className="document-detail__name-of-changes">Height</span><Field
+                                            name="height"
+                                            label="Height"
+                                            component="input"
+                                            type="text"
+                                            className="document-detail__input"
                                         /></div>
                                         <div className="document-detail__line-to-change_uploated-by">Uploated By<span className="document-detail__name-of-changes__uploated-by">{authorName}</span></div>
                                         <div className="document-detail__line-to-change"><span className="document-detail__name-of-changes">File URL:</span><Field
