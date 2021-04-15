@@ -1,11 +1,13 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import { NavLink, withRouter } from "react-router-dom";
 
-import {iconsManager} from "../js/helpers";
+import { iconsManager } from "../js/helpers";
 import Resource from "../../../editor/src/js/classes/Resource";
+import { ImageDetail } from "./ImageDetail";
+import {FontsDetail} from "./FontsDetail";
 
 class Assets extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.onDragOver = this.onDragOver.bind(this);
     this.onDragLeave = this.onDragLeave.bind(this);
@@ -20,6 +22,12 @@ class Assets extends Component {
       acceptInput: '',
       itemDeleteClasses: 'item__delete',
       activeLink: '',
+      imageId: null,
+      fontId: null,
+      havePreviousImage: true,
+      haveNextImage: true,
+      haveNextFont: true,
+      havePreviousFont: true,
     };
     this.typesFiles = {
       images: ['png', 'gif', 'jpg', 'jpeg', 'webp'],
@@ -30,85 +38,110 @@ class Assets extends Component {
       medias: ['wav', 'mp3', 'mp4', 'avi', 'webm'],
       others: ['']
     };
-    this.resource  = new Resource({route: '/admin/ajax/media'});
+    this.resource = new Resource({ route: '/admin/ajax/media' });
   }
-  
-  deleteClick(e){
+
+  deleteClick(e) {
     let assetId = e.currentTarget.dataset.assetid;
-    this.setState(state=>{
-      return{...state, itemDeleteClasses: 'item__delete altrp-disabled'}
+    this.setState(state => {
+      return { ...state, itemDeleteClasses: 'item__delete altrp-disabled' }
     });
-    this.resource.delete(assetId).then(res=>{
-      if(res.success){
+    this.resource.delete(assetId).then(res => {
+      if (res.success) {
         let newAssets = [...this.state.assets];
-        newAssets = _.filter(newAssets, item => !(item.id===Number(assetId)));
-        this.setState(state=>{
-          return{...state, assets: newAssets, itemDeleteClasses: 'item__delete'};
+        newAssets = _.filter(newAssets, item => !(item.id === Number(assetId)));
+        this.setState(state => {
+          return { ...state, assets: newAssets, itemDeleteClasses: 'item__delete' };
         })
       }
     });
   }
-  updateAssets(files){
-    this.resource.postFiles(files).then(res=>{
-      if(res.length){
+  updateAssets(files) {
+    this.resource.postFiles(files).then(res => {
+      if (res.length) {
         const activeLink = this.changeUrlForTab();
         this.filterAssets(activeLink);
       }
     })
   }
-  onDrop(e){
+  getAsset = (assetId) => {
+    // get request by asset id
+    return this.resource.get(assetId)
+  }
+  getAuthorList = () => {
+    return this.resource.getAuthorList()
+  }
+  updateAsset = (assetId, data) => {
+    // update request by asset id
+    return this.resource.put(assetId, data)
+  }
+  deleteAsset = (id) => {
+    this.setState(state => {
+      return { ...state, itemDeleteClasses: 'item__delete altrp-disabled' }
+    });
+    this.resource.delete(id).then(res => {
+      if (res.success) {
+        let newAssets = [...this.state.assets];
+        newAssets = _.filter(newAssets, item => !(item.id === Number(id)));
+        this.setState(state => {
+          return { ...state, assets: newAssets, itemDeleteClasses: 'item__delete', imageId: null, fontId: null };
+        })
+      }
+    });
+  }
+  onDrop(e) {
     e.preventDefault();
     e.stopPropagation();
     this.updateAssets(e.dataTransfer.files);
-    this.setState(state=>{
-      return {...state, uploaderClasses: 'admin-assets__uploader uploader'}
+    this.setState(state => {
+      return { ...state, uploaderClasses: 'admin-assets__uploader uploader' }
     });
   }
-  componentDidMount(){
+  componentDidMount() {
     const activeLink = this.changeUrlForTab();
     this.filterAssets(activeLink);
   }
-  componentDidUpdate(){
+  componentDidUpdate() {
     this.changeUrlForTab();
   }
-  onChange(e){
+  onChange(e) {
     this.updateAssets(e.target.files);
   }
-  onDragOver(e){
+  onDragOver(e) {
     e.preventDefault();
     e.stopPropagation();
-    this.setState(state=>{
-      return {...state, uploaderClasses: 'admin-assets__uploader uploader uploader_drag-over'}
+    this.setState(state => {
+      return { ...state, uploaderClasses: 'admin-assets__uploader uploader uploader_drag-over' }
     });
   }
-  onDragLeave(){
-    this.setState(state=>{
-      return {...state, uploaderClasses: 'admin-assets__uploader uploader'}
+  onDragLeave() {
+    this.setState(state => {
+      return { ...state, uploaderClasses: 'admin-assets__uploader uploader' }
     });
   }
   isActiveLink(linkName) {
     return (_, location) => {
       const arrayPathname = location.pathname.split('/');
       const currentLink = arrayPathname[arrayPathname.length - 1];
-      if(currentLink === linkName) return true;
+      if (currentLink === linkName) return true;
       return false;
     }
   }
   onFilterAssets(activeLink) {
     return () => this.filterAssets(activeLink);
-    
+
   }
   filterAssets(activeLink) {
     this.setState(state => {
-      return {...state, acceptInput: `.${this.typesFiles[activeLink].join(', .')}` }
+      return { ...state, acceptInput: `.${this.typesFiles[activeLink].join(', .')}` }
     });
-    let filterResource = new Resource({route: `/admin/ajax/media?type=${activeLink.slice(0, -1)}`});
-    filterResource.getAll().then(res=>{
-      this.setState(state=>{
-        return {...state, assets: res}
+    let filterResource = new Resource({ route: `/admin/ajax/media?type=${activeLink.slice(0, -1)}` });
+    filterResource.getAll().then(res => {
+      this.setState(state => {
+        return { ...state, assets: res }
       })
     });
-    this.setState((state=> {
+    this.setState((state => {
       return { ...state, activeLink }
     }));
   }
@@ -116,7 +149,7 @@ class Assets extends Component {
     const { location, history } = this.props;
     this.path = location.pathname;
     const arrayPathname = location.pathname.split('/');
-    if(arrayPathname[arrayPathname.length -1] === 'assets'){
+    if (arrayPathname[arrayPathname.length - 1] === 'assets') {
       history.push(`${this.path}/images`);
       return 'images';
     } else {
@@ -125,10 +158,73 @@ class Assets extends Component {
       return activeLink;
     }
   }
+  checkingFirstOrLastDocument(id) {
+    let indexCurrentDocumentInArray = this.state.assets.findIndex(item => item.id == id)
+    if (indexCurrentDocumentInArray === 0) {
+      this.setState({
+        havePreviousImage: false,
+      })
+    } else if (indexCurrentDocumentInArray === this.state.assets.length - 1) {
+      this.setState({
+        haveNextImage: false,
+      })
+    } else {
+      this.setState({
+        haveNextImage: true,
+        havePreviousImage: true,
+      })
+    }
+  }
+  openImageDetail(id) {
+    this.checkingFirstOrLastDocument(id)
+    this.setState({ imageId: id })
+  }
+  nextImageDetail = () => {
+    let indexCurrentImageInArray = this.state.assets.findIndex(item => item.id == this.state.imageId)
+    let indexNextImageInArray = indexCurrentImageInArray + 1
+    this.checkingFirstOrLastDocument(this.state.assets[indexNextImageInArray].id)
+    this.setState({ imageId: this.state.assets[indexNextImageInArray].id })
+  }
+  prevImageDetail = () => {
+    let indexCurrentImageInArray = this.state.assets.findIndex(item => item.id == this.state.imageId)
+    let indexPrevImageInArray = indexCurrentImageInArray - 1
+    this.checkingFirstOrLastDocument(this.state.assets[indexPrevImageInArray].id)
+    this.setState({ imageId: this.state.assets[indexPrevImageInArray].id })
+  }
+  closeImageDetail = () => {
+    this.setState({
+      imageId: null,
+      haveNextImage: true,
+      havePreviousImage: true,
+    })
+  }
+  openDocumentDetail(id) {
+    this.checkingFirstOrLastDocument(id)
+    this.setState({ fontId: id })
+  }
+  nextFontDetail = () => {
+    let indexCurrentFontInArray = this.state.assets.findIndex(item => item.id == this.state.fontId)
+    let indexNextFontInArray = indexCurrentFontInArray + 1
+    this.checkingFirstOrLastDocument(this.state.assets[indexNextFontInArray].id)
+    this.setState({ fontId: this.state.assets[indexNextFontInArray].id })
+  }
+  prevFontDetail = () => {
+    let indexCurrentFontInArray = this.state.assets.findIndex(item => item.id == this.state.fontId)
+    let indexPrevFontInArray = indexCurrentFontInArray - 1
+    this.checkingFirstOrLastDocument(this.state.assets[indexPrevFontInArray].id)
+    this.setState({ fontId: this.state.assets[indexPrevFontInArray].id })
+  }
+  closeFontDetail = () => {
+    this.setState({
+      fontId: null,
+      haveNextFont: true,
+      havePreviousFont: true,
+    })
+  }
   render() {
     let UploadIcon = iconsManager().getIconComponent('upload');
     let CloseIcon = iconsManager().getIconComponent('close');
-    let AviIcon =  iconsManager().getIconComponent('avi');
+    let AviIcon = iconsManager().getIconComponent('avi');
     return <div className="admin-assets admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
@@ -139,68 +235,68 @@ class Assets extends Component {
       </div>
       <div className="admin-content">
         <div className={this.state.uploaderClasses}
-             onDragLeave={this.onDragLeave}
-             onDrop={this.onDrop}
-             onDragOver={this.onDragOver}>
+          onDragLeave={this.onDragLeave}
+          onDrop={this.onDrop}
+          onDragOver={this.onDragOver}>
           <label className="uploader__label d-flex flex-column align-items-center">
-            <UploadIcon width={100} height={100} className="icon"/>
-            <input 
+            <UploadIcon width={100} height={100} className="icon" />
+            <input
               type="file"
               accept={this.state.acceptInput}
               multiple={true}
               onChange={this.onChange}
-              className="uploader__input"/>
+              className="uploader__input" />
             <span className="uploader__text text text_bold">
               Drag or Choose File
             </span>
           </label>
         </div>
         <div className="custom-tab__tabs mt-4">
-          <NavLink 
-            className="custom-tab__tab" 
-            activeClassName="custom-tab__tab--selected"  
+          <NavLink
+            className="custom-tab__tab"
+            activeClassName="custom-tab__tab--selected"
             to={`${this.path}/images`}
             isActive={this.isActiveLink('images')}
             onClick={this.onFilterAssets('images')}
           >IMAGES</NavLink>
-          <NavLink 
-            className="custom-tab__tab" 
+          <NavLink
+            className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"
             to={`${this.path}/documents`}
             isActive={this.isActiveLink('documents')}
             onClick={this.onFilterAssets('documents')}
           >DOCUMENTS</NavLink>
-          <NavLink 
-            className="custom-tab__tab" 
+          <NavLink
+            className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"
             to={`${this.path}/fonts`}
             isActive={this.isActiveLink('fonts')}
             onClick={this.onFilterAssets('fonts')}
           >FONTS</NavLink>
-          <NavLink 
-            className="custom-tab__tab" 
-            activeClassName="custom-tab__tab--selected" 
+          <NavLink
+            className="custom-tab__tab"
+            activeClassName="custom-tab__tab--selected"
             to={`${this.path}/svgs`}
             isActive={this.isActiveLink('svgs')}
             onClick={this.onFilterAssets('svgs')}
           >SVGS</NavLink>
-          <NavLink 
-            className="custom-tab__tab" 
-            activeClassName="custom-tab__tab--selected" 
+          <NavLink
+            className="custom-tab__tab"
+            activeClassName="custom-tab__tab--selected"
             to={`${this.path}/archives`}
             isActive={this.isActiveLink('archives')}
             onClick={this.onFilterAssets('archives')}
           >ARCHIVES</NavLink>
-          <NavLink 
-            className="custom-tab__tab" 
+          <NavLink
+            className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"
             to={`${this.path}/medias`}
             isActive={this.isActiveLink('medias')}
             onClick={this.onFilterAssets('medias')}
           >MEDIAS</NavLink>
-          <NavLink 
-            className="custom-tab__tab" 
-            activeClassName="custom-tab__tab--selected" 
+          <NavLink
+            className="custom-tab__tab"
+            activeClassName="custom-tab__tab--selected"
             to={`${this.path}/others`}
             isActive={this.isActiveLink('others')}
             onClick={this.onFilterAssets('others')}
@@ -208,38 +304,43 @@ class Assets extends Component {
         </div>
         <div className="admin-assets__list custom-tab__tab-panel p-4 assets-list d-flex flex-wrap">
           {
-            this.state.assets.map(asset=>{
+            this.state.assets.map(asset => {
               return (
                 <div className="assets-list__item item col-1" key={asset.id} >
                   {(() => {
-                    if(this.state.activeLink === 'images' ||
-                      this.state.activeLink === 'svgs') 
+                    if (this.state.activeLink === 'images' ||
+                      this.state.activeLink === 'svgs')
                       return (
-                        <div className="item__background"
-                          style={{'backgroundImage': `url('${asset.url}')`}}/>
+                        <div onClick={() => this.openImageDetail(asset.id)} className="item__background"
+                          style={{ 'backgroundImage': `url('${asset.url}')` }} />
                       )
                     let typeIcon = asset.url.split('.').pop();
                     let IconFile = iconsManager().getIconComponent('file');
                     this.typesFiles[this.state.activeLink].forEach((type) => {
-                      if(typeIcon === type) {
+                      if (typeIcon === type) {
                         IconFile = iconsManager().getIconComponent(typeIcon);
                         return <IconFile className="item__icon-background" />
                       }
                     });
-                    return <IconFile className="item__icon-background" />
+                    return <IconFile onClick={() => this.openDocumentDetail(asset.id)} className="item__icon-background" />
                   }
                   )()}
                   <button className={this.state.itemDeleteClasses}
-                          data-assetid={asset.id}
-                          title="Delete"
-                          onClick={this.deleteClick}>
-                    <CloseIcon className="item__delete-icon"/>
+                    data-assetid={asset.id}
+                    title="Delete"
+                    onClick={this.deleteClick}>
+                    <CloseIcon className="item__delete-icon" />
                   </button>
                 </div>
-              )}
+              )
+            }
             )
           }
         </div>
+      </div>
+      <div>
+        <ImageDetail getAuthorList={this.getAuthorList} havePreviousImage={this.state.havePreviousImage} haveNextImage={this.state.haveNextImage} updateAsset={this.updateAsset} getAsset={this.getAsset} deleteAsset={this.deleteAsset} imageId={this.state.imageId} closeImageDetail={this.closeImageDetail} nextImageDetail={this.nextImageDetail} prevImageDetail={this.prevImageDetail} />
+        <FontsDetail nextFontDetail={this.nextFontDetail} prevFontDetail={this.prevFontDetail} closeFontDetail={this.closeFontDetail} getAuthorList={this.getAuthorList} getAsset={this.getAsset} fontId={this.state.fontId} deleteAsset={this.deleteAsset} />
       </div>
     </div>;
   }
