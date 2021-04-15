@@ -130,8 +130,11 @@ export default class DialogConditionsTab extends Component {
   handleIdsSelect = (ids, conditionId) => {
     let value = _.cloneDeep(this.state.value);
     value.forEach(v => {
-      if (v.id === conditionId) {
+      if (v.id === conditionId && ids !== null) {
         v.object_ids = ids.map(id => id.value);
+      }
+      if (v.id === conditionId && ids === null) {
+        v.object_ids = [];
       }
     });
     this.setState(state => ({
@@ -156,7 +159,7 @@ export default class DialogConditionsTab extends Component {
       value
     }));
   };
-  handleSelect(e) {}
+  handleSelect(e) { }
 
   render() {
     const logic_options = [
@@ -213,7 +216,7 @@ export default class DialogConditionsTab extends Component {
                       _.find(main_options, o => o.value === test.object_type) ||
                       main_options[0]
                     }
-                    // defaultValue={main_options[0]}
+                  // defaultValue={main_options[0]}
                   />
                   {/*{*/}
                   {/*(test.include[0]) &&*/}
