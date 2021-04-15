@@ -20,14 +20,13 @@ class AutoSave extends React.Component {
             await this.promise
         }
         const { values, save } = this.props
-        
+
         const difference = diff(this.state.values, values)
         if (Object.keys(difference).length) {
             this.setState({ submitting: true, values })
             this.promise = save(difference)
             await this.promise
             delete this.promise
-
             this.props.updateAsset(this.state.values.id, this.state.values)
 
             this.setState({ submitting: false })
