@@ -70,6 +70,7 @@ class MediaController extends Controller
 
     foreach ( $files as $file ) {
       $media = new Media();
+      $media->title = $file->getClientOriginalName();
       $media->media_type = $file->getClientMimeType();
       $media->author = Auth::user()->id;
       $media->type = self::getTypeForFile( $file );

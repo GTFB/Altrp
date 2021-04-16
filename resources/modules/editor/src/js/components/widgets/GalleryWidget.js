@@ -1,13 +1,10 @@
 import React, {Component} from "react";
 import GalleryIcon from "../../../svgs/widget_gallery.svg";
 import "../../../sass/altrp-gallery.scss";
-import styled from "styled-components";
-import AltrpImage from "../altrp-image/AltrpImage";
 import {isEditor} from "../../../../../front-app/src/js/helpers";
 import AltrpLightbox from "../altrp-lightbox/AltrpLightbox";
 import HoverImage from "../animations/image/HoverImage";
 import Overlay from "../altrp-gallery/Overlay";
-import JLayout from "justified-layout";
 
 class GalleryWidget extends Component {
   constructor(props) {
@@ -82,9 +79,6 @@ class GalleryWidget extends Component {
 
   render() {
     const layout = this.props.element.getContent("layout_settings", "grid");
-    const gridGap = this.props.element.getContent("spacing_grid_settings", {size: "0", unit: "px"});
-    const gridColumns = this.props.element.getContent("columns_grid_settings", 3);
-    const aspectRatioVariant = this.props.element.getContent("aspect_ratio_grid_settings", "1to1");
     const linkType = this.props.element.getContent("link_type_grid_settings", "none");
     const hoverAnimationType = this.props.element.getContent("image_hover_animation", "none");
     const hoverAnimationDuration = this.props.element.getContent("image_transition", {size: 800});
@@ -93,70 +87,20 @@ class GalleryWidget extends Component {
     const overlayAnimationType = this.props.element.getContent("hover_animation_overlay", "none");
     const overlayAnimationDuration = this.props.element.getContent("overlay_transition", {size: 800});
     let simpleRepeater = this.state.simpleRepeater;
-    let aspectRatio = "100%";
 
-
-    switch (aspectRatioVariant) {
-      case "3to2":
-        aspectRatio = "66.6667%";
-        break
-      case "4to3":
-        aspectRatio = "75%";
-        break
-      case "9to16":
-        aspectRatio = "177.778%";
-        break
-      case "16to9":
-        aspectRatio = "56.25%";
-        break
-      case "21to9":
-        aspectRatio = "42.8571%";
-        break
-    }
-
-    const EmptyContainer = styled.div`
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      background-color: #C4C4C4;
-    `;
-
-    const EmptyIcon = styled(GalleryIcon)`
-      height: 35px;
-      width: 35px;
-      opacity: 0.5;
-    `;
-
-    const emptyRepeater = <EmptyContainer>
-      <EmptyIcon/>
-    </EmptyContainer>;
+    const emptyRepeater = <div className="altrp-gallery-empty-container">
+      <GalleryIcon className="altrp-gallery-icon"/>
+    </div>;
 
     let images = "";
 
     if(simpleRepeater.length > 0) {
       images = simpleRepeater.map((img, idx) => {
         const url = img.simple_media_settings ? img.simple_media_settings.url : '/img/nullImage.png';
-        const imgWidth = img.simple_media_settings ? img.simple_media_settings.width : 0;
-
-        const Image = styled.div`
-          background-image: url(${url});
-          background-size: cover;
-          padding-bottom: ${aspectRatio};
-          background-position: center center;
-          width: 100%;
-          transform-origin: center top;
-        `;
-
-        const ImageContainer = styled.div`
-          position: relative;
-          overflow: hidden;
-        `;
 
         const imageProps = {
           className: "altrp-gallery-img",
-          // "data-idx": idx,
-          // onClick
+          style: { backgroundImage: `url(${url})` }
         };
 
         let containerClassNames = "altrp-gallery-img-container";
@@ -184,12 +128,12 @@ class GalleryWidget extends Component {
           type: overlayType
         }
 
-        let image = <ImageContainer {...containerProps}>
-          <Image {...imageProps} />
+        let image = <div {...containerProps}>
+          <div {...imageProps} />
           {
             overlaySwitcher ? <Overlay {...overlayProps}/> : null
           }
-        </ImageContainer>;
+        </div>;
 
         switch(layout) {
           case "justified":
@@ -197,26 +141,23 @@ class GalleryWidget extends Component {
         }
 
         if(hoverAnimationType && hoverAnimationType !== "none" ) {
-          image = <ImageContainer {...containerProps}>
+          image = <div {...containerProps}>
             <HoverImage type={hoverAnimationType} hoverParent="altrp-gallery-img-container" transition={hoverAnimationDuration.size} component={Image} attributes={imageProps}/>
             {
               overlaySwitcher ? <Overlay {...overlayProps}/> : null
             }
-          </ImageContainer>
+          </div>
         }
 
         return image
       })
     }
 
-    const GridLayout = styled.div`
-      display: grid;
-      grid-gap: ${gridGap.size}px ${gridGap.size}px;
-      grid-template-columns: repeat(${gridColumns}, 1fr);
-      position: relative;
-    `;
-
-    let layoutContainer = <GridLayout>{ images }</GridLayout>;
+    let layoutContainer =
+      <div className="altrp-gallery-grid">
+        { images }
+      </div>
+    ;
 
     switch (layout) {
       case "justified":

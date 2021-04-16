@@ -5,6 +5,8 @@ import {altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceContent
 import { addElement } from "../store/elements-storage/actions";
 import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 import {changeCurrentPageProperty} from "../store/current-page/actions";
+import CarouselComponent from "../../../../editor/src/js/components/widgets/styled-components/CarouselComponent";
+import GalleryComponent from "../../../../editor/src/js/components/widgets/styled-components/GalleryComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -302,16 +304,30 @@ class ElementWrapper extends Component {
         {content}
       </>
     }
+
+    let WrapperComponent = "div";
+
+    switch (this.props.element.getName()) {
+      case "gallery": {
+        WrapperComponent = GalleryComponent;
+      }
+      case "carousel": {
+        WrapperComponent = CarouselComponent;
+      }
+        break
+    }
+
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
-      <div
+      <WrapperComponent
         className={classes}
         ref={this.elementWrapperRef}
+        settings={this.props.element.getSettings()}
         style={styles}
         id={this.CSSId}
       >
         {content}
         {tooltip_text && <AltrpTooltip position={tooltip_position}>{tooltip_text}</AltrpTooltip>}
-      </div>
+      </WrapperComponent>
     );
   }
 }
