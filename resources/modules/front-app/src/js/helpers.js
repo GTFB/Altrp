@@ -532,6 +532,13 @@ export function setDataByPath(path = "", value, dispatch = null) {
       }
     }
   }
+  if (path.indexOf("altrpstorage.") === 0) {
+    path = path.replace("altrpstorage.", "");
+    const currentStorage = getDataFromLocalStorage("altrpstorage", {});
+    _.set(currentStorage, path, value);
+    saveDataToLocalStorage("altrpstorage", currentStorage);
+    return true;
+  }
   return false;
 }
 
@@ -654,6 +661,10 @@ export function getDataByPath(
         }
       }
     }
+  } else if (path.indexOf("altrpstorage.") === 0) {
+    path = path.replace("altrpstorage.", "");
+    value = getDataFromLocalStorage("altrpstorage", {});
+    value = _.get(value, path, _default);
   } else {
     value = urlParams[path]
       ? urlParams[path]
