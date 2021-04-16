@@ -9,7 +9,8 @@ import {
   replaceContentWithData,
   sortOptions,
   renderAssetIcon,
-  valueReplacement
+  valueReplacement,
+  getDataFromLocalStorage
 } from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
