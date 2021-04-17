@@ -159,7 +159,8 @@ class FrontPopup extends Component {
     const { isVisible } = this.state;
     let classes = [`app-popup`];
     // const { positioning_custom_top } = this.props.template.data.rootElementSettings;
-    let rootElement = this.state.rootElement;
+    const rootElement = this.state.rootElement;
+    rootElement.popupGUID = _.get(this.props, 'template.guid');
     const rootElementSettings = rootElement.getSettings("");
     const rootElementId = rootElement.getId();
 

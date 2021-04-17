@@ -87,6 +87,7 @@ class ImageWidget extends Component {
       <AltrpImage
         image={media}
         width={width}
+        element={this.props.element}
         height={height}
         id={this.state.settings.position_css_id}
         className={

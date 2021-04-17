@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 const ImagePlaceholder = styled.div`& {
+  position: relative;
   max-width: 100%;
   overflow: hidden;
   width: ${props => {
@@ -26,6 +27,14 @@ const ImagePlaceholder = styled.div`& {
   }
   return style;
 }};
+}
+&& .altrp-skeleton,
+&& .altrp-image{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;  
 }
 `;
 
