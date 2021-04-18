@@ -1,25 +1,51 @@
 import styled from 'styled-components';
+import {getResponsiveSetting} from "../../../../../front-app/src/js/helpers";
 
 const ImagePlaceholder = styled.div`& {
   position: relative;
   max-width: 100%;
   overflow: hidden;
-  width: ${props => {
-    if(_.isNumber(props.width)) {
-      return props.width + 'px'; 
-    }
-    return props.width ? props.width : '100%'
-  }};  
-  height: ${props => props.height ? props.height : ''}; 
+  width:${props => {
+  if (_.isNumber(props.width)) {
+    return props.width + 'px';
+  }
+  return props.width ? props.width : '100%'
+}};  
+${(props) => {
+  const {settings} = props;
+  const aspect_ratio_size = getResponsiveSetting(settings, 'aspect_ratio_size');
+  if(Number(aspect_ratio_size) !== 0 && aspect_ratio_size === 'custom'|| Number(aspect_ratio_size)){
+    return 'height:auto;'
+  }
+  if(props.height.indexOf('%') !== -1) {
+    return 'height:auto;'
+  }
+  return `height:${props.height ? props.height : 'auto'};`;
+}}
+  
   background-color: ${props => props.color ? props.color : '#fff'}; 
 }
 &::before{
   display: block;
   content: '';
   width: 100%;
-  ${(props) => {
+${(props) => {
+  const {settings, height} = props;
   let style = '';
-  if(props.height && _.isString(props.height) && props.height.indexOf('%') === -1) {
+  const aspect_ratio_size = getResponsiveSetting(settings, 'aspect_ratio_size');
+  if(Number(aspect_ratio_size) !== 0) {
+    if(aspect_ratio_size === 'custom') {
+      let custom_aspect = getResponsiveSetting(settings, 'custom_aspect');
+      custom_aspect = Number(custom_aspect) || 100;
+      style += `padding-top:${custom_aspect}%;`;
+    } else if(Number(aspect_ratio_size)){
+      style += `padding-top:${aspect_ratio_size}%;`;
+      console.log(style);
+      
+    }
+    return style;
+  }
+  if (height && _.isString(height) && height.indexOf('%') === -1) {
     return style;
   }
   if (Number(props.mediaWidth) && Number(props.mediaHeight)) {
@@ -35,6 +61,7 @@ const ImagePlaceholder = styled.div`& {
   left: 0;
   right: 0;
   bottom: 0;  
+  height: 100%;
 }
 `;
 

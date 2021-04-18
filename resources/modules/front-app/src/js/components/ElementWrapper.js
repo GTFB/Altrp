@@ -5,6 +5,7 @@ import {altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceContent
 import { addElement } from "../store/elements-storage/actions";
 import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 import {changeCurrentPageProperty} from "../store/current-page/actions";
+import ImageComponent from "../../../../editor/src/js/components/widgets/styled-components/ImageComponent";
 import CarouselComponent from "../../../../editor/src/js/components/widgets/styled-components/CarouselComponent";
 import GalleryComponent from "../../../../editor/src/js/components/widgets/styled-components/GalleryComponent";
 
@@ -311,10 +312,15 @@ class ElementWrapper extends Component {
       case "gallery": {
         WrapperComponent = GalleryComponent;
       }
+        break;
       case "carousel": {
         WrapperComponent = CarouselComponent;
       }
-        break
+        break;
+      case "image": {
+        WrapperComponent = ImageComponent;
+      }
+        break;
     }
 
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (

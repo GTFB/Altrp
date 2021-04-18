@@ -13,21 +13,23 @@ class AltrpImage extends Component {
     let visible = true;
     if (isEditor()) {
 
-    } else if (window.altrpImageLazy && window.altrpImageLazy !== 'none') {
+    } else if (window.altrpImageLazy
+        && window.altrpImageLazy !== 'none'
+        && ! this.props.element.getResponsiveSetting('lazyload_disable')) {
       visible = false;
     }
     this.state = {
       visible,
       update: 0,
     };
-    this.intervalId = setTimeout(() => this.setState(state => ({...state, update: state.update++})), 500);
+    this.timeoutId = setTimeout(() => this.setState(state => ({...state, update: state.update++})), 500);
   }
 
   /**
    * очищаем обновление
    */
   componentWillUnmount() {
-    clearTimeout(this.intervalId);
+    clearTimeout(this.timeoutId);
   }
 
   /**
@@ -38,7 +40,7 @@ class AltrpImage extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if(this.state.visible){
-      clearTimeout(this.intervalId);
+      clearTimeout(this.timeoutId);
     }
     if (this.state.visible || ! this.imageRef.current) {
       return;
@@ -50,8 +52,8 @@ class AltrpImage extends Component {
       return;
     }
     if (checkElementInViewBox(this.imageRef.current, window.mainScrollbars)) {
-      clearTimeout(this.intervalId);
-      // this.setState(state => ({...state, visible: true}));
+      clearTimeout(this.timeoutId);
+      this.setState(state => ({...state, visible: true}));
     }
   }
 
@@ -62,29 +64,6 @@ class AltrpImage extends Component {
 
     let width = this.props.width;
     let height = this.props.height;
-    let image = renderAsset(media);
-    if(this.state.visible || window.altrpImageLazy === 'skeleton'){
-      placeholderStyles.background = 'transparent';
-    }
-    let placeholder = <ImagePlaceholder color={media.main_color}
-                                        className={'altrp-image-placeholder '}
-                                        ref={this.imageRef}
-                                        height={height}
-                                        width={width}
-                                        style={placeholderStyles}
-                                        mediaWidth={media.width}
-                                        mediaHeight={media.height}>
-      {window.altrpImageLazy === 'skeleton'
-        && ! this.state.visible
-        && <SkeletonTheme color="#111"
-          highlightColor="#f00"><Skeleton className="altrp-skeleton"
-                     /></SkeletonTheme>}
-      {this.state.visible && cloneElement(image, {
-        className: this.props.className,
-        id: this.props.id || null,
-        style: this.props.style,
-      })}
-      </ImagePlaceholder>;
     if (this.props.image instanceof File) {
       media = this.props.image
     } else {
@@ -100,6 +79,31 @@ class AltrpImage extends Component {
         media.assetType = media.assetType || undefined;
       }
     }
+    let image = renderAsset(media);
+    if(this.state.visible || window.altrpImageLazy === 'skeleton'){
+      placeholderStyles.background = 'transparent';
+    }
+    let placeholder = <ImagePlaceholder color={media.main_color}
+                                        className={'altrp-image-placeholder '}
+                                        ref={this.imageRef}
+                                        settings={this.props.element.getSettings()}
+                                        height={height}
+                                        width={width}
+                                        style={placeholderStyles}
+                                        mediaWidth={media.width || 100}
+                                        mediaHeight={media.height || 75}>
+      {window.altrpImageLazy === 'skeleton'
+        && ! this.state.visible
+        && <SkeletonTheme color={window.altrpSkeletonColor}
+                          highlightColor={window.altrpSkeletonHighlightColor}>
+          <Skeleton className="altrp-skeleton"/>
+        </SkeletonTheme>}
+      {this.state.visible && cloneElement(image, {
+        className: this.props.className,
+        id: this.props.id || null,
+        style: this.props.style,
+      })}
+      </ImagePlaceholder>;
 
     return <React.Fragment>
       {/*{this.state.visible && cloneElement(image, {*/}

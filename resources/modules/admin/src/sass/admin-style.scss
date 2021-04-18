@@ -258,3 +258,15 @@ a {
 .ace_editor {
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
 }
+
+.admin-skeleton{
+  .altrp-skeleton{
+    width: 220px;
+    height: 240px;
+  }
+  &-settings{
+    .sketch-picker{
+    }
+  }
+}
+

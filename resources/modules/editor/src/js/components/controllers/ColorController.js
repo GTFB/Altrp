@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import {SketchPicker} from "react-color"
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
-import AltrpMeta from "../../classes/AltrpMeta";
 import PresetColors from "./PresetColors";
 
 class ColorController extends Component {
