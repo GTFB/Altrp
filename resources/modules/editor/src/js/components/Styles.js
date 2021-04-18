@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { isEditor, renderFontLink } from "../../../../front-app/src/js/helpers";
-import { connect } from "react-redux";
+import { createStore } from "redux";
+import { connect, Provider } from "react-redux";
 if (typeof window === "undefined") {
   global.window = {};
   global.window.stylesModulePromise = new Promise(function(resolve) {

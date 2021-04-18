@@ -3,7 +3,7 @@ import { window } from "global";
 import { hot } from "react-hot-loader";
 import { getRoutes } from "./js/helpers";
 import appStore from "./js/store/store";
-import AppContent from "./js/components/AppContent";
+import AppContentServer from "./js/components/AppContentServer";
 import { Provider } from "react-redux";
 import Resource from "../../editor/src/js/classes/Resource";
 import {
@@ -30,12 +30,6 @@ class FrontApp extends Component {
     if (window) {
       window.frontApp = this;
     }
-    this.getRoutes();
-  }
-  getRoutes() {
-    return getRoutes().then(res => {
-      this.routes = res.default;
-    });
   }
 
   /**
@@ -114,7 +108,7 @@ class FrontApp extends Component {
     return (
       <Provider store={appStore}>
         <DndProvider backend={HTML5Backend}>
-          <AppContent />
+          <AppContentServer routes={this.props.routes} />
         </DndProvider>
         <FontsManager />
       </Provider>

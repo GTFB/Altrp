@@ -48,9 +48,9 @@ Route::get('/admin/editor-content', function () {
   return view('editor-content');
 })->middleware('auth')->name('editor-content');
 
-Route::get( '/admin/editor-reports', function (){
-  return view( 'editor-reports' );
-} )->middleware( 'auth' )->name('editor-reports');
+Route::get('/admin/editor-reports', function () {
+  return view('editor-reports');
+})->middleware('auth')->name('editor-reports');
 //Route::get('/admin/reports-editor',fn()=>view('reports'));
 //Route::get('/admin/reports-content',fn()=>view('reports-content'));
 
@@ -62,7 +62,7 @@ Route::get( '/admin/editor-reports', function (){
 // Route::get('/reports/{id}/html', "ReportsController@html");
 Route::post('/reports/generate', "ReportsController@setHtml");
 
-Route::get('/admin/robots-editor', function() {
+Route::get('/admin/robots-editor', function () {
   return view('robots');
 })->middleware('auth', 'admin')->name('robots-editor');
 
@@ -70,13 +70,13 @@ Route::get('/admin/robots-editor', function() {
  * Notifications routes
  */
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/notifications', 'NotificationsController@getAllNotifications');
-    Route::get('/notifications/{notification_id}', 'NotificationsController@getNotification');
-    Route::get('/notifications/delete_all', 'NotificationsController@deleteAllNotifications');
-    Route::get('/notifications/delete/{notification_id}', 'NotificationsController@deleteNotification');
-    Route::get('/unread_notifications', 'NotificationsController@getAllUnreadNotifications');
-    Route::get('/unread_notifications/mark_as_read_all', 'NotificationsController@markAsReadAll');
-    Route::get('/unread_notifications/{notification_id}/mark_as_read', 'NotificationsController@markAsRead');
+  Route::get('/notifications', 'NotificationsController@getAllNotifications');
+  Route::get('/notifications/{notification_id}', 'NotificationsController@getNotification');
+  Route::get('/notifications/delete_all', 'NotificationsController@deleteAllNotifications');
+  Route::get('/notifications/delete/{notification_id}', 'NotificationsController@deleteNotification');
+  Route::get('/unread_notifications', 'NotificationsController@getAllUnreadNotifications');
+  Route::get('/unread_notifications/mark_as_read_all', 'NotificationsController@markAsReadAll');
+  Route::get('/unread_notifications/{notification_id}/mark_as_read', 'NotificationsController@markAsRead');
 });
 
 /**
@@ -137,8 +137,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::delete('/permissions/{permission}', "Users\Permissions@delete");
 
     Route::get('/roles', "Users\Roles@getRoles");
-    Route::resource( 'robots', 'RobotController' );
-    Route::get( 'robots_options', 'RobotController@getOptions' );
+    Route::resource('robots', 'RobotController');
+    Route::get('robots_options', 'RobotController@getOptions');
 
     /**
      * URL: /admin/ajax/role_options?s=search_string
@@ -247,8 +247,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
       ->name('admin.models_with_fields_options');
 
     /**
-    * Получить записи из модели по её Id
-    */
+     * Получить записи из модели по её Id
+     */
     Route::get('/models/{model_id}/records', 'Admin\ModelsController@getRecordsByModel');
     Route::get('/models/{model_id}/records_options', 'Admin\ModelsController@getRecordsByModelOptions');
 
@@ -266,7 +266,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/models', 'Admin\ModelsController@getModels');
     Route::get('/model_options', 'Admin\ModelsController@getModelOptions');
     Route::get('/models_without_parent', 'Admin\ModelsController@getModelsWithoutParent');
-    Route::get( '/models_without_preset', 'Admin\ModelsController@getModelsWithoutPreset');
+    Route::get('/models_without_preset', 'Admin\ModelsController@getModelsWithoutPreset');
     Route::post('/models', 'Admin\ModelsController@storeModel');
     Route::put('/models/{model_id}', 'Admin\ModelsController@updateModel');
     Route::get('/models/{model_id}', 'Admin\ModelsController@showModel');
@@ -385,10 +385,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
 
     // Remote data
-    Route::get( '/remote_data/{remotable_type}/{remotable_id}', 'Admin\RemoteDataController@index');
-    Route::post( '/remote_data/{remotable_type}/{remotable_id}', 'Admin\RemoteDataController@store');
-    Route::put( '/remote_data/{remotable_type}/{remotable_id}/{id}', 'Admin\RemoteDataController@update');
-    Route::delete( '/remote_data/{id}', 'Admin\RemoteDataController@destroy');
+    Route::get('/remote_data/{remotable_type}/{remotable_id}', 'Admin\RemoteDataController@index');
+    Route::post('/remote_data/{remotable_type}/{remotable_id}', 'Admin\RemoteDataController@store');
+    Route::put('/remote_data/{remotable_type}/{remotable_id}/{id}', 'Admin\RemoteDataController@update');
+    Route::delete('/remote_data/{id}', 'Admin\RemoteDataController@destroy');
 
     /**
      * Роут для загрузки favicon
@@ -422,7 +422,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
       Route::get('stream_settings', 'Admin\DownloadsController@exportStreamAltrpSettings')->name('admin.download.stream_settings');
     });
   });
-
 });
 
 //Route::resource( 'admin/ajax/areas', 'Admin\AreasController' );
@@ -452,22 +451,22 @@ Route::get('/', function () {
   ]);
 })->middleware(['web', 'installation.checker']);
 
-foreach ( $frontend_routes as $_frontend_route ) {
+
+foreach ($frontend_routes as $_frontend_route) {
   $path = $_frontend_route['path'];
   $title = $_frontend_route['title'];
   $pattern1 = '/:(.+)((\/)|$)/U';
   $pattern2 = '/:(.+)(\/)/U';
   $replacement1 = '{$1}/';
   $replacement2 = '{$1}/';
-  $frontend_route = preg_replace( $pattern1, $replacement1, $path );
+  $frontend_route = preg_replace($pattern1, $replacement1, $path);
 
   Route::get($frontend_route, function () use ($title, $_frontend_route, $frontend_route) {
-
-    $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
+    $preload_content = Page::getPreloadPageContent($_frontend_route['id']);
 
 
     return view('front-app', [
-      'page_areas' => json_encode( Page::get_areas_for_page( $_frontend_route['id']) ),
+      'page_areas' => json_encode(Page::get_areas_for_page($_frontend_route['id'])),
       'page_id' => $_frontend_route['id'],
       'title' => $title,
       '_frontend_route' => $_frontend_route,
@@ -485,11 +484,11 @@ foreach ($reports_routes as $report_route) {
   $path = $report_route['path'];
   $title = $report_route['title'];
 
-  $report_route = str_replace( ':id', '{id}', $path );
+  $report_route = str_replace(':id', '{id}', $path);
 
-  Route::get($report_route, function () use ($title){
-    return view('front-app',['title'=>$title]);
-  })->middleware(['web','installation.checker']);
+  Route::get($report_route, function () use ($title) {
+    return view('front-app', ['title' => $title]);
+  })->middleware(['web', 'installation.checker']);
 }
 
 /**

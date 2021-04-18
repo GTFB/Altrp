@@ -3,7 +3,7 @@ import AreaComponent from "./AreaComponent";
 import AdminBar from "./AdminBar";
 // import { Scrollbars } from "react-custom-scrollbars";
 import { Redirect, withRouter } from "react-router-dom";
-import pageLoader from "./../classes/PageLoader";
+import pageLoader from "../classes/PageLoader";
 import Area from "../classes/Area";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import appStore from "../store/store";
@@ -22,7 +22,7 @@ import RouteContentWrapper from "./styled-components/RouteContentWrapper";
 if (typeof document === "undefined") {
   global.document = {};
 }
-class RouteContent extends Component {
+class RouteContentServer extends Component {
   constructor(props) {
     super(props);
     let title = this.props.title;
@@ -51,8 +51,11 @@ class RouteContent extends Component {
     window.mainScrollbars = this.scrollbar.current;
     appStore.dispatch(changeCurrentPageProperty("url", location.href));
     if (this.props.lazy && this.props.allowed) {
-      let page = await pageLoader.loadPage(this.props.id);
-      let areas = page.areas.map(area => Area.areaFabric(area));
+      // let page = await pageLoader.loadPage(this.props.id);
+      console.log("====================================");
+      console.log(this.props.areas);
+      console.log("====================================");
+      let areas = this.props.areas.map(area => Area.areaFabric(area));
       this.setState(state => ({
         ...state,
         areas
@@ -169,7 +172,7 @@ class RouteContent extends Component {
         )}
 
         <RouteContentWrapper className="route-content" id="route-content">
-          {this.props.areas.map(area => {
+          {this.state.areas.map(area => {
             return (
               <AreaComponent
                 {...area}
@@ -199,4 +202,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(RouteContent));
+)(withRouter(RouteContentServer));

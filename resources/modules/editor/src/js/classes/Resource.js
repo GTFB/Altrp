@@ -3,7 +3,9 @@ import { replaceContentWithData } from "../../../../front-app/src/js/helpers";
 if (typeof window === "undefined") {
   global.window = {};
   global.window.queryString = queryString;
-  const fetch = require("node-fetch");
+}
+if (typeof fetch === "undefined") {
+  global.fetch = require("node-fetch");
 }
 /**
  * @class Resource
@@ -58,6 +60,9 @@ class Resource {
     } else {
       url = route + "/" + id;
     }
+    if (typeof window === "undefined") {
+      url = "http://altrp.nz" + url;
+    }
     return fetch(url, options).then(res => {
       if (res.ok === false) {
         return Promise.reject({ res: res.text(), status: res.status });
@@ -104,6 +109,8 @@ class Resource {
     };
 
     let url = this.getRoute();
+
+    url = "http://altrp.nz" + url;
     return fetch(url, options).then(res => {
       if (res.ok === false) {
         return Promise.reject({ res: res.text(), status: res.status });

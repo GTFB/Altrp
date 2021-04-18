@@ -53,6 +53,7 @@
         "d3": "^6.2.0",
         "dom-to-image": "^2.6.0",
         "dot-prop-immutable": "^2.1.0",
+        "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "express-session": "^1.17.1",
         "global": "^4.4.0",
@@ -128,6 +129,7 @@
         "slick-carousel": "^1.8.1",
         "style-object-to-css-string": "^1.0.1",
         "styled-components": "^5.0.0",
+        "sync-fetch": "^0.3.0",
         "text-mask-addons": "^3.8.0",
         "tinymce": "^5.7.1"
     },

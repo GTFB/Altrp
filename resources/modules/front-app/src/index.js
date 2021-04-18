@@ -27,5 +27,5 @@ import("../../editor/src/js/classes/modules/IconsManager").then(
 );
 import("./FrontApp").then(FrontApp => {
   FrontApp = FrontApp.default;
-  ReactDOM.render(<FrontApp />, document.getElementById("front-app"));
+  ReactDOM.hydrate(<FrontApp />, document.getElementById("front-app"));
 });
