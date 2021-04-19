@@ -5,7 +5,7 @@ import { dimensionsControllerToStyles } from "../../../../../../front-app/src/js
 const settingsToStyles = ({ settings }) => {
   let styles = '';
 
-  styles += '&.altrp-column{';
+  styles += '&&.altrp-column{';
   const style_position_padding = getResponsiveSetting(settings, 'style_position_padding');
   if (style_position_padding) {
     styles += dimensionsControllerToStyles(style_position_padding);

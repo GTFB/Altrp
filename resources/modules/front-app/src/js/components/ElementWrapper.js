@@ -5,9 +5,11 @@ import { altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceConten
 import { addElement } from "../store/elements-storage/actions";
 import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 import { changeCurrentPageProperty } from "../store/current-page/actions";
+import { ElementWrapperDivComponent } from "../../../../editor/src/js/components/widgets/styled-components/ElementWrapperComponent";
+import ImageComponent from "../../../../editor/src/js/components/widgets/styled-components/ImageComponent";
 import CarouselComponent from "../../../../editor/src/js/components/widgets/styled-components/CarouselComponent";
 import GalleryComponent from "../../../../editor/src/js/components/widgets/styled-components/GalleryComponent";
-import { ElementWrapperDivComponent } from "../../../../editor/src/js/components/widgets/styled-components/ElementWrapperComponent";
+import ButtonComponent from "../../../../editor/src/js/components/widgets/styled-components/ButtonComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -38,8 +40,6 @@ class ElementWrapper extends Component {
    * Иногда надо обновить элемент (FrontElement)
    */
   componentDidMount() {
-    // console.log(this.props.element.getName());
-    // console.log(performance.now());
     !isEditor() && window.frontApp.onWidgetMount();
     if (_.isFunction(this.props.element.update)) {
       this.props.element.update();
@@ -277,7 +277,11 @@ class ElementWrapper extends Component {
     if (this.CSSId !== CSSId) {
       this.CSSId = CSSId;
     }
-    const content = React.createElement(this.props.component, {
+    let ContentComponent = this.props.component;
+    if (['root-element', 'section', 'column'].indexOf(this.props.element.getName()) === -1) {
+      // ContentComponent = 'div';
+    }
+    const content = React.createElement(ContentComponent, {
       ref: this.elementRef,
       rootElement: this.props.rootElement,
       ElementWrapper: this.props.ElementWrapper,
@@ -312,10 +316,19 @@ class ElementWrapper extends Component {
       case "gallery": {
         WrapperComponent = GalleryComponent;
       }
+        break;
       case "carousel": {
         WrapperComponent = CarouselComponent;
       }
-        break
+        break;
+      case "image": {
+        WrapperComponent = ImageComponent;
+      }
+        break;
+      case "button": {
+        WrapperComponent = ButtonComponent;
+      }
+        break;
     }
 
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (

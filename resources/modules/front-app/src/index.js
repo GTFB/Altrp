@@ -47,6 +47,6 @@ if (process.env.NODE_ENV !== "production") {
   );
   import("./FrontApp").then(FrontApp => {
     FrontApp = FrontApp.default;
-    ReactDOM.render(<FrontApp />, document.getElementById("front-app"));
+    ReactDOM.render(<FrontApp />, document.getElementById('front-app'));
   });
 })();

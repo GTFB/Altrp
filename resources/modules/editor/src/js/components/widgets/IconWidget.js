@@ -75,6 +75,7 @@ class IconWidget extends Component {
           name: "arrow",
           iconComponent: iconsManager.renderIcon("arrow")
         }}
+        element={this.props.element}
         style={pos}
         image={this.state.settings.icon_indicator_content}
         className="altrp-icon-indicator"
@@ -242,6 +243,7 @@ class IconWidget extends Component {
       let ReadMoreIcon = (props) => Object.keys(this.state.settings.icon_read_more_content).length !== 0 ? (
         <AltrpImage
           image={this.state.settings.icon_read_more_content}
+          element={this.props.element}
           className={"altrp-icon-read-more-icon" + " altrp-icon-read-more-icon-" + props.pos}
         />
       ) : "";
@@ -309,6 +311,7 @@ class IconWidget extends Component {
             <div className="altrp-icon-i-wrapper">
               <AltrpImage
                 image={this.state.settings.media_icon_box_content}
+                element={this.props.element}
                 default={{
                   assetType: "icon",
                   name: 'star',

@@ -222,8 +222,8 @@ export function sliderStyled(controller) {
 /**
  * принимает настройки виджета settings и принимает массив стилей для преобразования в строку css для styled-components
  * @return {string}
- * @param {[]} styles
- * @param {{}} settings
+ * @param {[]} styles - массив стилей
+ * @param {{}} settings - настройки виджета
  */
 export function styledString(styles, settings) {
   let stringStyles = "";

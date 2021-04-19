@@ -112,11 +112,18 @@ class Action
     {
         if ($type == 'dynamic') {
             $field = $entities->dynamicValue;
+            $columnName = 'id';
             $users = [];
             $value = setDynamicData($entities->dynamicValue, $this->modelData);
             if (isset($this->modelData['record']) && !Str::contains($field, "{{"))
                 $value = $this->modelData['record']->$field;
-            $users = User::where('id', $value)->get();
+            if (isset($this->modelData['record']) && Str::contains($field, "|")){
+                $field = explode('|', $field);
+                $fieldOne = str_replace(' ', '', $field[1]);
+                $value = $this->modelData['record']->$fieldOne;
+                $columnName = str_replace(' ', '', $field[0]);
+            }
+            $users = User::where($columnName, $value)->get();
         } else {
             if (is_object($entities) && $type != 'all') {
                 $users = isset($entities->users) && !empty($entities->users) ? User::whereIn('id', $entities->users): null;
@@ -133,8 +140,6 @@ class Action
                 $users = User::all();
             }
         }
-
-
         return $users;
     }
 }
