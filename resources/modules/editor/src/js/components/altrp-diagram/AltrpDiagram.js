@@ -34,7 +34,6 @@ const AltrpDiagram = props => {
   const yScaleMax = settings?.yScaleMax;
 
   const axisY = settings?.axisY;
-
   const tooltipValues = settings?.repTooltips?.map(item => ({
     label: _.get(item, "label"),
     field: _.get(item, "value"),
@@ -363,6 +362,9 @@ const AltrpDiagram = props => {
       setLegend(legend);
     }
   }, [legend]);
+  console.log("====================================");
+  console.log(data);
+  console.log("====================================");
   switch (settings.type) {
     case LINE:
       return (
@@ -514,4 +516,7 @@ const AltrpDiagram = props => {
       return <></>;
   }
 };
-export default connect()(AltrpDiagram);
+const mapStateToProps = state => ({
+  currentDataStorage: state.currentDataStorage
+});
+export default connect(mapStateToProps)(AltrpDiagram);

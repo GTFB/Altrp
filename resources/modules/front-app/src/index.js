@@ -29,12 +29,12 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 (async function(){
-   import ("./installing");
+  import ("./installing");
   window.React = (await import ( "react")).default;
   window.Component = window.React.Component;
 
   window.ReactDOM = (await import ("react-dom")).default;
-   import ("./js/classes/FrontElementsFabric");
+   await import ("./js/classes/FrontElementsFabric");
    import ("./js/classes/FrontElementsManager");
   // window.iconsManager = new (await import ("../../editor/src/js/classes/modules/IconsManager")).default;
   // const FrontApp = (await import ("./FrontApp")).default;
@@ -47,6 +47,6 @@ if (process.env.NODE_ENV !== "production") {
   );
   import("./FrontApp").then(FrontApp => {
     FrontApp = FrontApp.default;
-    ReactDOM.render(<FrontApp />, document.getElementById("front-app"));
+    ReactDOM.render(<FrontApp />, document.getElementById('front-app'));
   });
 })();

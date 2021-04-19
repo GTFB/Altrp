@@ -32,7 +32,7 @@ class RouteContent extends Component {
     this.isReport = window.location.href.includes("reports");
     appStore.dispatch(clearElements());
     window.currentRouterMatch = new AltrpModel(props.match);
-    window.currentPageId = props.id
+    window.currentPageId = props.id;
     this.admin = this.props.currentUser.hasRoles('admin');
   }
 

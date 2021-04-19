@@ -263,8 +263,15 @@ class ModelsController extends HttpController
     {
         $search = $request->get('s');
         $page = $request->get('page');
+
         $model = Model::find($request->model_id);
+        $ns = '\\' . $model->namespace;
         $count = $model->altrp_table->columns->count();
+        /**
+         * @var $model \Illuminate\Database\Eloquent\Model
+         */
+        $model = new $ns;
+
         if (! $page && $count > 1) {
             $pageCount = 0;
             $fields = $search
@@ -281,7 +288,7 @@ class ModelsController extends HttpController
                 ? Column::getBySearchWithPaginate($search, $request->model_id, $offset, $limit)
                 : Column::getWithPaginate($request->model_id, $offset, $limit);
         } else {
-            $fields = array_keys($model->getAttributes());
+            $fields = $model->getFillable();
             $pageCount = 0;
         }
         return compact('pageCount', 'fields');

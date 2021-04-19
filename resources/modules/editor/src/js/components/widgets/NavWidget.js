@@ -31,7 +31,7 @@ class NavWidget extends Component {
                              element={this.props.element}/>;
         break;
       case "breadCrumbs":
-        content = <AltrpBreadcrumbs element={this.props.element} />
+        content = <AltrpBreadcrumbs element={this.props.element} />;
         break
     }
 

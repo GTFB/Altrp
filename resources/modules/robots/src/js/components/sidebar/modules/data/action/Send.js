@@ -48,9 +48,7 @@ export default class Send extends Component{
               };
               break;
             case 'telegram':
-              node.data.props.nodeData.data.content = {
-                "message": ""
-              };
+              node.data.props.nodeData.data.content = [];
               break;
             case 'mail':
               node.data.props.nodeData.data.content = {
@@ -90,7 +88,6 @@ export default class Send extends Component{
       store.dispatch(setUpdatedNode(node));
     }
 
-
     render(){
         const { usersOptions, rolesOptions } = this.state;
         const entitiesOptions = [
@@ -105,7 +102,7 @@ export default class Send extends Component{
         ];
 
         const entities = this.props.selectNode?.data?.props?.nodeData?.data?.entities ?? '';
-        const channel = this.props.selectNode?.data?.props?.nodeData?.data?.channel ?? [];
+        const channel = this.props.selectNode?.data?.props?.nodeData?.data?.channel ?? '';
         const dynamicValue = this.props.selectNode?.data?.props?.nodeData?.data?.entitiesData?.dynamicValue ?? '';
         const users = this.props.selectNode?.data?.props?.nodeData?.data?.entitiesData?.users ?? [];
         const roles = this.props.selectNode?.data?.props?.nodeData?.data?.entitiesData?.roles ?? [];
@@ -114,7 +111,7 @@ export default class Send extends Component{
         return <div>
           <div>
             <div className={"settings-section "}>
-            <div className="settings-section__title d-flex">
+            <div className="settings-section__title d-flex" onClick={() => this.props.toggleChevron("send")}>
                 <div className="settings-section__icon d-flex">
                   <Chevron />
                 </div>
@@ -198,9 +195,24 @@ export default class Send extends Component{
 
           </div>
 
-            {(channel === "broadcast") && <SendBroadcast activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={content}/>}
-            {(channel === "telegram") && <SendTelegram activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={content}/>}
-            {(channel === "mail") && <SendEmail activeSection={this.props.activeSection} toggleChevron={this.props.toggleChevron} onSend={this.onSend} content={content}/>}
+            {(channel === "broadcast") && <SendBroadcast
+              activeSection={this.props.activeSection}
+              toggleChevron={this.props.toggleChevron}
+              onSend={this.onSend}
+              content={content}
+            />}
+            {(channel === "telegram") && <SendTelegram
+              activeSection={this.props.activeSection}
+              toggleChevron={this.props.toggleChevron}
+              selectNode={this.props.selectNode || []}
+              content={content}
+            />}
+            {(channel === "mail") && <SendEmail
+              activeSection={this.props.activeSection}
+              toggleChevron={this.props.toggleChevron}
+              onSend={this.onSend}
+              content={content}
+            />}
         </div>
     }
 }

@@ -76,10 +76,13 @@ class DropdownMenu extends Component {
         break;
       default:
     }
-
+    const icon_dropdown_menu_layout = this.props.element.getResponsiveSetting('icon_dropdown_menu_layout');
+    console.log(icon_dropdown_menu_layout);
+    const active_icon_dropdown_menu_layout = this.props.element.getResponsiveSetting('icon_dropdown_menu_layout');
     let iconButton = (
       <AltrpImage
-        image={this.props.settings.icon_dropdown_menu_layout}
+        image={icon_dropdown_menu_layout}
+        element={this.props.element}
         default={{
           name: "in_width",
           assetType: "icon",
@@ -89,10 +92,11 @@ class DropdownMenu extends Component {
       />
     );
 
-    if(this.state.show && this.props.settings.active_icon_dropdown_menu_layout) {
+    if(this.state.show && active_icon_dropdown_menu_layout) {
       iconButton = (
         <AltrpImage
-          image={this.props.settings.active_icon_dropdown_menu_layout}
+          image={active_icon_dropdown_menu_layout}
+          element={this.props.element}
           default={{
             name: "add",
             assetType: "icon",

@@ -10,7 +10,7 @@ class SendBroadcast extends Component{
     render(){
         return <div className="settings-section-box">
             <div className={"settings-section " + (this.props.activeSection === "broadcast" ? '' : 'open')}>
-                <div className="settings-section__title d-flex" onClick={this.props.toggleChevron("broadcast")}>
+                <div className="settings-section__title d-flex" onClick={() => this.props.toggleChevron("broadcast")}>
                     <div className="settings-section__icon d-flex">
                         <Chevron />
                     </div>

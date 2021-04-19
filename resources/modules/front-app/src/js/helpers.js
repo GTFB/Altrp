@@ -163,13 +163,13 @@ export function parseURLTemplate(URLTemplate = "", object = null) {
     protocol = "http://";
     url = url.replace("http://", "");
   }
-  if (url.indexOf('mailto:') === 0) {
-    protocol = 'mailto:';
-    url = url.replace('mailto:', '');
+  if (url.indexOf("mailto:") === 0) {
+    protocol = "mailto:";
+    url = url.replace("mailto:", "");
   }
-  if (url.indexOf('tel:') === 0) {
-    protocol = 'tel:';
-    url = url.replace('tel:', '');
+  if (url.indexOf("tel:") === 0) {
+    protocol = "tel:";
+    url = url.replace("tel:", "");
   }
   // columnEditUrl = columnEditUrl.replace(':id', row.original.id);
   let idTemplates = url.match(/:([\s\S]+?)(\/|$)/g);
@@ -532,6 +532,13 @@ export function setDataByPath(path = "", value, dispatch = null) {
       }
     }
   }
+  if (path.indexOf("altrpstorage.") === 0) {
+    path = path.replace("altrpstorage.", "");
+    const currentStorage = getDataFromLocalStorage("altrpstorage", {});
+    _.set(currentStorage, path, value);
+    saveDataToLocalStorage("altrpstorage", currentStorage);
+    return true;
+  }
   return false;
 }
 
@@ -654,6 +661,10 @@ export function getDataByPath(
         }
       }
     }
+  } else if (path.indexOf("altrpstorage.") === 0) {
+    path = path.replace("altrpstorage.", "");
+    value = getDataFromLocalStorage("altrpstorage", {});
+    value = _.get(value, path, _default);
   } else {
     value = urlParams[path]
       ? urlParams[path]
@@ -1061,8 +1072,8 @@ export function getHTMLElementById(elementId = "") {
  * @param {FrontElement} element
  * @return {null | HTMLElement}
  */
-export function getWrapperHTMLElementByElement(element){
-  if(! element){
+export function getWrapperHTMLElementByElement(element) {
+  if (!element) {
     return null;
   }
   let HTMLElement = null;
@@ -1839,7 +1850,10 @@ export function getResponsiveSetting(
   let setting = settings[_settingName];
   if(setting === undefined) {
     for (let screen of CONSTANTS.SCREENS) {
-      if (currentScreen.id > screen.id || screen.name === CONSTANTS.DEFAULT_BREAKPOINT) {
+      if (
+        currentScreen.id > screen.id ||
+        screen.name === CONSTANTS.DEFAULT_BREAKPOINT
+      ) {
         continue;
       }
       _settingName = `${settingName}_${elementState}_${screen.name}`;
@@ -1988,4 +2002,34 @@ function parseXml(xml, arrayTags) {
 }
 function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+}
+
+/**
+ * Вернуть значение из строки
+ * @param string
+ */
+export function parseStringValue(string){
+  let value = string;
+
+  if(Number(value)){
+    return Number(value);
+  }
+  switch (value){
+    case 'true':{
+      return true;
+    }
+    case 'false':{
+      return false;
+    }
+    case 'null':{
+      return null;
+    }
+    case 'undefined':{
+      return undefined;
+    }
+    case '0':{
+      return 0;
+    }
+  }
+  return value;
 }

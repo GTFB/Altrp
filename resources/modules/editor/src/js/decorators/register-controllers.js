@@ -189,7 +189,7 @@ export function advancedTabControllers(element) {
 
     element.addControl('positioning_width_type', {
       type: CONTROLLER_SELECT,
-      label: 'Width',
+      label: 'Width (not for Columns)',
       default: 'default',
       options: [
         {

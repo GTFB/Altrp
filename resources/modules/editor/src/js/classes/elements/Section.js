@@ -859,10 +859,10 @@ class Section extends BaseElement{
       label: "Fixed Positioning"
     });
 
-    this.addControl('isFixed', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Enable Fixed',
-    });
+    // this.addControl('isFixed', {
+    //   type: CONTROLLER_SWITCHER,
+    //   label: 'Enable Fixed',
+    // });
 
     this.addControl("position_top", {
       type: CONTROLLER_TEXT,

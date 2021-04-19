@@ -1,3 +1,5 @@
+import {getResponsiveSetting} from "../helpers";
+
 const ALIGN_ITEMS = [
   {
     verticalAlignValues :  [
@@ -140,4 +142,133 @@ export function typographicControllerToStyles(data = {}){
     styles += `font-family:${family};`;
   }
   return styles;
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер color, в строку css для вставки в styled-компонент
+ * @return {string}
+ * @param {{}} controller
+ * @param {string} style
+ */
+export function colorStyled(controller, style) {
+  if(controller) {
+    if(controller.color) {
+      return `${style}: ${controller.color};`
+    } else return "";
+  } else return "";
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер dimensions, в строку css для вставки в styled-компонент
+ * @return {string}
+ * @param {{}} controller
+ * @param {string} style
+ */
+export function dimensionsStyled(controller, style) {
+  if(controller) {
+    const unit = controller.unit || "px";
+    const left = controller.left || 0;
+    const right = controller.right || 0;
+    const bottom = controller.bottom || 0;
+    const top = controller.top || 0;
+
+    if(controller.left || controller.right || controller.bottom || controller.top) {
+      return `${style}: ${top + unit} ${right + unit} ${bottom + unit} ${left + unit};`
+    } else return "";
+  }
+};
+
+
+/**
+ * Преобразует объект, который сохраняет контроллер gradient, в строку css для вставки в styled-компонент
+ * @return {string}
+ * @param {{}} controller
+ */
+export function gradientStyled(controller) {
+  if(controller.isWithGradient) {
+    return `background-image: ${controller.value};`;
+  } else {
+    return ""
+  };
+}
+
+/**
+ * проверяет наличичие значения select или number
+ * @return {string}
+ * @param {string} controller
+ */
+export function defaultStyled(controller) {
+  if(controller) {
+    return controller
+  } else {
+    return ""
+  }
+}
+
+/**
+ * проверяет наличичие значения slider
+ * @return {string}
+ * @param {{}} controller
+ */
+export function sliderStyled(controller) {
+  if(controller) {
+    if(controller.size) {
+      const unit = controller.unit || "px";
+      return controller.size + unit
+    } else return "";
+  } else return "";
+}
+
+/**
+ * принимает настройки виджета settings и принимает массив стилей для преобразования в строку css для styled-components
+ * @return {string}
+ * @param {[]} styles - массив стилей
+ * @param {{}} settings - настройки виджета
+ */
+export function styledString(styles, settings) {
+  let stringStyles = "";
+
+  styles.forEach(style => {
+    if(_.isString(style)) {
+      if(style !== "}") {
+        if(style.split('')[0] === "." || style.split('')[0] === "&") {
+          stringStyles += `${style} {`;
+        } else {
+          stringStyles += `& .${style} {`
+        }
+      } else {
+        stringStyles += `}`
+      }
+    } else {
+      if(_.isArray(style)) {
+        const state = style[3] || null;
+        const variable = getResponsiveSetting(settings, style[1], state)
+        switch (style[2]) {
+          case "dimensions":
+            stringStyles += dimensionsStyled(variable, style[0]);
+            break;
+          case "color":
+            stringStyles += colorStyled(variable, style[0]);
+            break;
+          case "gradient":
+            stringStyles += gradientStyled(variable);
+            break;
+          case "typographic":
+            stringStyles += typographicControllerToStyles(variable);
+            break;
+          case "slider":
+            stringStyles += `${style[0]}: ${sliderStyled(variable)};`
+            break;
+          default:
+            stringStyles += `${style[0]}: ${defaultStyled(variable)};`
+        }
+      }
+
+      if(_.isFunction(style)) {
+        stringStyles += style()
+      }
+    }
+  })
+
+  return stringStyles
 }

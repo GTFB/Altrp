@@ -147,6 +147,7 @@ class PagesController extends Controller
     $page->seo_keywords = $request->seo_keywords;
     $page->seo_title = $request->seo_title;
     $page->is_cached = $request->is_cached;
+    $page->not_found = $request->not_found;
     $res['page'] = $page->toArray();
 
     $pages_template = PagesTemplate::where( 'page_id', $id )->where( 'template_type', 'content' )->first();
