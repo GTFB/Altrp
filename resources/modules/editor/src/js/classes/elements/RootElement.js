@@ -270,6 +270,7 @@ class RootElement extends BaseElement {
     this.addControl('switcher_close_button_popup_layout', {
       type: CONTROLLER_SWITCHER,
       label: 'Custom close button',
+      default: true
     });
 
     // this.addControl('icon_close_button_popup_layout', {

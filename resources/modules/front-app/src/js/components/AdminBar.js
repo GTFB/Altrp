@@ -1,6 +1,6 @@
 import React from "react";
 import { getDataByPath } from "./../helpers";
-
+import AdminBarWrapper from './AdminBarWrapper';
 class AdminBar extends React.Component {
   constructor(props) {
     super(props);
@@ -164,133 +164,135 @@ class AdminBar extends React.Component {
 
   render() {
     return (
-      <div className="admin-bar bvi-hide">
-        <div className="admin-bar__tools">
-          <div className="admin-bar__link" onClick={this.openPageAdmin}>
-            Admin
-          </div>
-          <div className="admin-bar__tool">
-            <span onClick={this.toggleVisiblePopupTemplate}>
-              {iconsManager.renderIcon("admin-bar1", {
-                className: "admin-bar__tool-svg"
-              })}{" "}
-              Edit-Template
-            </span>
-            
-            {this.state.visiblePopupTemplate && (
-              <div
-                className="admin-bar__popup-template"
-                ref={this.popupTemplateRef}
-              >
-                {this.props.areas.map((item, index) => {
-                  if(item.id === "popups") 
-                    return (
-                      <div
-                        className="admin-bar__popup-template-item admin-bar__popup-popups"
-                        key={`template-${index}`}
-                      >
-                        popup:{" "}
-                        {iconsManager.renderIcon("chevron-admin-bar", {
-                          className: "admin-bar__popup-template-chevron"
-                        })}
-                        <div className="admin-bar__popup-popups-items">
-                          {item.templates.map((item, index) => (
-                            <div
-                              className="admin-bar__popup-popups-item"
-                              onClick={this.openTemplate(item.id)}
-                              key={`popup-${index}`}
-                            >
-                              {item.name}
-                            </div>  
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  else {
-                    if(item.template.name)
+      <AdminBarWrapper>
+        <div className="admin-bar bvi-hide">
+          <div className="admin-bar__tools">
+            <div className="admin-bar__link" onClick={this.openPageAdmin}>
+              Admin
+            </div>
+            <div className="admin-bar__tool">
+              <span onClick={this.toggleVisiblePopupTemplate}>
+                {iconsManager.renderIcon("admin-bar1", {
+                  className: "admin-bar__tool-svg"
+                })}{" "}
+                Edit-Template
+              </span>
+              
+              {this.state.visiblePopupTemplate && (
+                <div
+                  className="admin-bar__popup-template"
+                  ref={this.popupTemplateRef}
+                >
+                  {this.props.areas.map((item, index) => {
+                    if(item.id === "popups") 
                       return (
                         <div
-                          className="admin-bar__popup-template-item"
+                          className="admin-bar__popup-template-item admin-bar__popup-popups"
                           key={`template-${index}`}
-                          onClick={this.openTemplate(item.template.id)}
                         >
-                          {item.template.name}
+                          popup:{" "}
+                          {iconsManager.renderIcon("chevron-admin-bar", {
+                            className: "admin-bar__popup-template-chevron"
+                          })}
+                          <div className="admin-bar__popup-popups-items">
+                            {item.templates.map((item, index) => (
+                              <div
+                                className="admin-bar__popup-popups-item"
+                                onClick={this.openTemplate(item.id)}
+                                key={`popup-${index}`}
+                              >
+                                {item.name}
+                              </div>  
+                            ))}
+                          </div>
                         </div>
                       );
-                  }
-                })}
-              </div>
-            )}
-          </div>
-          <div className="admin-bar__tool" onClick={this.openPageSettings}>
-            {iconsManager.renderIcon("admin-bar2", {
-              className: "admin-bar__tool-svg"
-            })}{" "}
-            Page-Settings
-          </div>
-          {/*<div className="admin-bar__tool">*/}
-            {/*{iconsManager.renderIcon('admin-bar3', {className: "admin-bar__tool-svg"})} Clear Cache*/}
-          {/*</div>*/}
-          <div className="admin-bar__search-bar" ref={this.searchContentResult}>
-            {this.state.visibleContentResult && (
-              <div className="admin-bar__search-result">
-                <div
-                  className="admin-bar__search-content"
-                  style={this.state.isHttps ? { paddingBottom: "22px" } : {}}
-                >
-                  {this.state.contentResult}
-                </div>
-                { this.state.isHttps && (
-                  <div
-                    className="admin-bar__search-button"
-                    onClick={this.handleClickCopy}
-                  >
-                    copy result {iconsManager.renderIcon("copy-icon")}
-                  </div>
-                )}
-              </div> 
-            )}
-
-            {this.state.visibleAutocomplete &&
-              this.state.filteredOptions.length !== 0 && (
-                <div className="admin-bar__autocomplete" ref={this.autocomplete}>
-                  {this.state.filteredOptions.map((item, index) => (
-                    <div
-                      key={index}
-                      className="admin-bar__autocomplete-option"
-                      onClick={this.handleClickOptions(item)}
-                    >
-                      {item}
-                    </div>
-                  ))}
+                    else {
+                      if(item.template.name)
+                        return (
+                          <div
+                            className="admin-bar__popup-template-item"
+                            key={`template-${index}`}
+                            onClick={this.openTemplate(item.template.id)}
+                          >
+                            {item.template.name}
+                          </div>
+                        );
+                    }
+                  })}
                 </div>
               )}
-            <input
-              className="admin-bar__search"
-              value={this.state.valueInput}
-              onChange={this.handleInput}
-              onKeyDown={this.handleKeyDown}
-              onFocus={this.onFocus}
-              ref={this.searchInput}
-              placeholder="source"
-            />
-            <button
-              className="admin-bar__button"
-              onClick={this.handleClickSearch}
-              onDoubleClick={this.handleDoubleClickSearch}
-            >
-              test
-            </button>
+            </div>
+            <div className="admin-bar__tool" onClick={this.openPageSettings}>
+              {iconsManager.renderIcon("admin-bar2", {
+                className: "admin-bar__tool-svg"
+              })}{" "}
+              Page-Settings
+            </div>
+            {/*<div className="admin-bar__tool">*/}
+              {/*{iconsManager.renderIcon('admin-bar3', {className: "admin-bar__tool-svg"})} Clear Cache*/}
+            {/*</div>*/}
+            <div className="admin-bar__search-bar" ref={this.searchContentResult}>
+              {this.state.visibleContentResult && (
+                <div className="admin-bar__search-result">
+                  <div
+                    className="admin-bar__search-content"
+                    style={this.state.isHttps ? { paddingBottom: "22px" } : {}}
+                  >
+                    {this.state.contentResult}
+                  </div>
+                  { this.state.isHttps && (
+                    <div
+                      className="admin-bar__search-button"
+                      onClick={this.handleClickCopy}
+                    >
+                      copy result {iconsManager.renderIcon("copy-icon")}
+                    </div>
+                  )}
+                </div> 
+              )}
+
+              {this.state.visibleAutocomplete &&
+                this.state.filteredOptions.length !== 0 && (
+                  <div className="admin-bar__autocomplete" ref={this.autocomplete}>
+                    {this.state.filteredOptions.map((item, index) => (
+                      <div
+                        key={index}
+                        className="admin-bar__autocomplete-option"
+                        onClick={this.handleClickOptions(item)}
+                      >
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              <input
+                className="admin-bar__search"
+                value={this.state.valueInput}
+                onChange={this.handleInput}
+                onKeyDown={this.handleKeyDown}
+                onFocus={this.onFocus}
+                ref={this.searchInput}
+                placeholder="source"
+              />
+              <button
+                className="admin-bar__button"
+                onClick={this.handleClickSearch}
+                onDoubleClick={this.handleDoubleClickSearch}
+              >
+                test
+              </button>
+            </div>
+          </div>
+          <div className="admin-bar__profile">
+            Hello, 
+            {this.props.data.name ? this.props.data.name : this.props.data.email} 
+            {iconsManager.renderIcon("admin-bar4", {
+              className: "admin-bar__profile-svg"
+            })}
           </div>
         </div>
-        <div className="admin-bar__profile">
-          Hello, 
-          {this.props.data.name ? this.props.data.name : this.props.data.email} 
-          {iconsManager.renderIcon("admin-bar4", {
-            className: "admin-bar__profile-svg"
-          })}
-        </div>
-      </div>
+      </AdminBarWrapper>
     );
   }
 }

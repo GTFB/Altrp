@@ -62,11 +62,7 @@
                 "issues": "https://github.com/AkimovIgor/oauth2-module/issues",
                 "source": "https://github.com/AkimovIgor/oauth2-module/tree/main"
             },
-<<<<<<< HEAD
             "time": "2021-04-01T11:45:33+00:00"
-=======
-            "time": "2021-04-05T08:16:48+00:00"
->>>>>>> origin/reports04
         },
         {
             "name": "beyondcode/laravel-websockets",
