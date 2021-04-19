@@ -57,6 +57,7 @@ class DropdownSub extends Component {
           </span>
           <AltrpImage
             image={this.props.settings.chevron_dropdown_menu_section}
+            element={this.props.element}
             default={{
               assetType: "icon",
               name: 'chevron',

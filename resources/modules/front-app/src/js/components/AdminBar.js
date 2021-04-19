@@ -1,6 +1,8 @@
 import React from "react";
 import { getDataByPath } from "./../helpers";
 import AdminBarWrapper from './AdminBarWrapper';
+import Resource from "../../../../editor/src/js/classes/Resource";
+
 class AdminBar extends React.Component {
   constructor(props) {
     super(props);
@@ -120,7 +122,25 @@ class AdminBar extends React.Component {
     JSON.stringify(getDataByPath(this.state.valueInput), null, "\t").select();
     document.execCommand("copy");
   }
+  /**
+   * Запрос на очистку кэша
+   */
+  clearCache = async () => {
+    if(! this.props.idPage){
+      return;
+    }
+    let result  = await confirm('Are You Sure');
+    if(! result){
+      return;
+    }
+    try{
+      let res = await new Resource({route:'/admin/ajax/clear_cache'}).delete(this.props.idPage);
+    } catch(error){
+      await confirm('Error');
 
+    }
+    await confirm('Done');
+  };
   handleClickSearch() {
     let options = localStorage.getItem("admin-bar-search-autocomplete")
       ? JSON.parse(localStorage.getItem("admin-bar-search-autocomplete"))
@@ -184,7 +204,7 @@ class AdminBar extends React.Component {
                   ref={this.popupTemplateRef}
                 >
                   {this.props.areas.map((item, index) => {
-                    if(item.id === "popups") 
+                    if(item.id === "popups")
                       return (
                         <div
                           className="admin-bar__popup-template-item admin-bar__popup-popups"
@@ -281,6 +301,12 @@ class AdminBar extends React.Component {
                 onDoubleClick={this.handleDoubleClickSearch}
               >
                 test
+              </button>
+              <button
+                  className="admin-bar__button"
+                  onClick={this.clearCache}
+              >
+                Clear Cache
               </button>
             </div>
           </div>

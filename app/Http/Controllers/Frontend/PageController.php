@@ -57,4 +57,5 @@ class PageController
 //
 //    return response()->json( $res );
   }
+
 }

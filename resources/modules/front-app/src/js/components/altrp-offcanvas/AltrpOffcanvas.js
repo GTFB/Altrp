@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+
 import {isEditor} from "../../helpers";
 import "./altrp-offcanvas.scss";
 import TemplateLoader from "../../../../../editor/src/js/components/template-loader/TemplateLoader";

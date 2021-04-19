@@ -1,7 +1,5 @@
 import { getCurrentScreen, getElementState } from "./store/store";
-import { isEditor } from "../../../front-app/src/js/helpers";
 import CONSTANTS from "./consts";
-import controllerHistory from "./classes/ControllerHistory";
 
 export function getTemplateId() {
   return new URL(window.location).searchParams.get("template_id");

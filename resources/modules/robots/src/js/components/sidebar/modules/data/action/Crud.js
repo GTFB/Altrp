@@ -120,7 +120,7 @@ export default class Crud extends Component{
 
     return <div>
         <div className={"settings-section " + (this.props.activeSection === "crud" ? '' : 'open')}>
-            <div className="settings-section__title d-flex" onClick={this.props.toggleChevron("crud")}>
+            <div className="settings-section__title d-flex" onClick={() => this.props.toggleChevron("crud")}>
                 <div className="settings-section__icon d-flex">
                     <Chevron />
                 </div>

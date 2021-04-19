@@ -79,10 +79,16 @@ class ImageWidget extends Component {
         name: "default"
       };
     }
-
+    let width = this.props.element.getResponsiveSetting('width_size');
+    let height = this.props.element.getResponsiveSetting('height_size');
+    width = _.get(width, 'size', '100') + _.get(width, 'unit', '%');
+    height = _.get(height, 'size', '100') + _.get(height, 'unit', '%');
     let altrpImage = (
       <AltrpImage
         image={media}
+        width={width}
+        element={this.props.element}
+        height={height}
         id={this.state.settings.position_css_id}
         className={
           this.state.settings.position_css_classes +
@@ -94,8 +100,8 @@ class ImageWidget extends Component {
 
     const lightbox = (
       <AltrpLightbox
+        images={[(media ? media.url : "")]}
         settings={{
-          mainSrc: (media ? media.url : ""),
           onCloseRequest: () => this.setState({lightbox: false})
         }}
         // color={this.props.color_lightbox_style}

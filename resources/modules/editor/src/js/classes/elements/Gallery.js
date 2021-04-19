@@ -320,9 +320,6 @@ class Gallery extends BaseElement {
             'label': 'Groove',
           },
         ],
-        rules: {
-          '{{ELEMENT}} .altrp-gallery-img-container{{STATE}}': 'border-style: {{VALUE}};',
-        },
       }
     );
 
@@ -338,18 +335,12 @@ class Gallery extends BaseElement {
           '%',
           'vh',
         ],
-        rules: {
-          '{{ELEMENT}} .altrp-gallery-img-container{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-        },
       }
     );
 
     this.addControl('border_color', {
         type: CONTROLLER_COLOR,
         label: 'Border color',
-        rules: {
-          '{{ELEMENT}} .altrp-gallery-img-container{{STATE}}': 'border-color: {{COLOR}};',
-        },
       }
     );
 
@@ -365,14 +356,6 @@ class Gallery extends BaseElement {
         '%',
         'vh',
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-gallery-img-container{{STATE}}': [
-          'border-top-left-radius: {{TOP}}{{UNIT}}',
-          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
-        ]
-      }
     });
 
     // this.addControl('filters', {
@@ -461,9 +444,6 @@ class Gallery extends BaseElement {
       //   color: "rgb(52,59,76)",
       //   colorPickedHex: "#343B4C",
       // },
-      rules: {
-        '{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay-bg': 'background-color: {{COLOR}};',
-      },
     });
 
     this.addControl('overlay_background_gradient', {
@@ -481,9 +461,6 @@ class Gallery extends BaseElement {
         angle: "0",
         value: ""
       },
-      rules: {
-        "{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay-bg": "background-image: {{VALUE}}"
-      }
     });
 
     this.addControl('blend_mode', {
@@ -556,9 +533,6 @@ class Gallery extends BaseElement {
       ],
       label: 'Blend mode',
       default: 'none',
-      rules: {
-        "{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay-bg": "mix-blend-mode: {{VALUE}};"
-      }
     });
 
     this.addControl('hover_animation_overlay', {
@@ -640,9 +614,6 @@ class Gallery extends BaseElement {
           value: 'flex-end',
         },
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-gallery-overlay': 'align-items: {{VALUE}};',
-      },
     });
 
     this.addControl('overlay_content_vertical', {
@@ -663,9 +634,6 @@ class Gallery extends BaseElement {
           value: 'flex-end',
         },
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-gallery-overlay.altrp-gallery-overlay': 'justify-content: {{VALUE}};',
-      },
     });
 
     this.addControl('overlay_content_padding', {
@@ -681,14 +649,6 @@ class Gallery extends BaseElement {
         '%',
         'vh',
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
     });
 
     this.addControl('overlay_title_label', {
@@ -699,26 +659,11 @@ class Gallery extends BaseElement {
     this.addControl('overlay_title_color', {
       type: CONTROLLER_COLOR,
       label: 'Color',
-      rules: {
-        '{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay-title': 'color: {{COLOR}};',
-      },
     });
 
     this.addControl('overlay_title_typographic', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
-        rules: {
-          '{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay-title': [
-            'font-size: {{SIZE}}px;',
-            'font-family: {{FAMILY}}',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
       }
     );
 
@@ -732,9 +677,6 @@ class Gallery extends BaseElement {
       ],
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay-title': 'margin-bottom: {{SIZE}}{{UNIT}};',
-      },
     });
 
     this.addControl('overlay_description_label', {
@@ -745,26 +687,11 @@ class Gallery extends BaseElement {
     this.addControl('overlay_description_color', {
       type: CONTROLLER_COLOR,
       label: 'Color',
-      rules: {
-        '{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay-description': 'color: {{COLOR}};',
-      },
     });
 
     this.addControl('overlay_description_typographic', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
-        rules: {
-          '{{ELEMENT}} .altrp-gallery-img-container{{STATE}} .altrp-gallery-overlay-description': [
-            'font-size: {{SIZE}}px;',
-            'font-family: {{FAMILY}}',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
       }
     );
 

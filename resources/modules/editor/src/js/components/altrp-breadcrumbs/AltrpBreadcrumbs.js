@@ -91,6 +91,7 @@ class AltrpBreadcrumbs extends Component {
         separatorClasses += " altrp-nav-breadcrumbs-separator-icon";
         separator = <AltrpImage
           image={iconSeparator}
+          element={this.props.element}
           default={{
             assetType: "icon",
             name: 'star',

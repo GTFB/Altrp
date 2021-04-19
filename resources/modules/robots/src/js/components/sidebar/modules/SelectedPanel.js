@@ -67,7 +67,7 @@ export default class SelectedPanel extends React.Component {
                 {(this.props.selectNode?.id || this.props.selectEdge?.id) ? (
                   <div>
                     <div className={"settings-section " + (this.state.activeSection === "general" ? 'open' : '')}>
-                      <div className="settings-section__title d-flex" onClick={this.toggleChevron("general")}>
+                      <div className="settings-section__title d-flex" onClick={() => this.toggleChevron("general")}>
                         <div className="settings-section__icon d-flex">
                           <Chevron />
                         </div>
@@ -102,14 +102,20 @@ export default class SelectedPanel extends React.Component {
                                                                         selectNode={this.props.selectNode || []}
                                                                       />}
                       {(this.props.selectNode?.type === "condition") && <ConditionNode
+                                                                          activeSection={this.state.activeSection}
+                                                                          toggleChevron={this.toggleChevron}
                                                                           robot={ this.props.robot }
                                                                           selectNode={this.props.selectNode || []}
                                                                         />}
                       {(this.props.selectNode?.type === "robot") && <RobotNode
+                                                                      activeSection={this.state.activeSection}
+                                                                      toggleChevron={this.toggleChevron}
                                                                       robot={ this.props.robot }
                                                                       selectNode={this.props.selectNode || []}
                                                                     />}
                       {(this.props.selectNode?.type === "start") && <StartNode
+                                                                      activeSection={this.state.activeSection}
+                                                                      toggleChevron={this.toggleChevron}
                                                                       robot={ this.props.robot }
                                                                       selectNode={this.props.selectNode || []}
                                                                     />}

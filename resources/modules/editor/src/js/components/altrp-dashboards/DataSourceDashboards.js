@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { Scrollbars } from "react-custom-scrollbars";
 import { editElement } from "../../store/altrp-dashboard/actions";
 import { exportDashboard } from "../../../../../front-app/src/js/store/altrp-dashboard-export/actions";
-
 import axios from "axios";
 import Drawer from "rc-drawer";
 
@@ -463,7 +462,6 @@ class DataSourceDashboards extends Component {
         >
           {_.map(this.state.items, (el, key) => this.createElement(el, key))}
         </ResponsiveReactGridLayout>
-
         <Drawer
           getContainer={document.body}
           placement="right"

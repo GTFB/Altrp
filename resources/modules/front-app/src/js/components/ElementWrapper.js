@@ -5,6 +5,10 @@ import {altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceContent
 import { addElement } from "../store/elements-storage/actions";
 import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 import {changeCurrentPageProperty} from "../store/current-page/actions";
+import ImageComponent from "../../../../editor/src/js/components/widgets/styled-components/ImageComponent";
+import CarouselComponent from "../../../../editor/src/js/components/widgets/styled-components/CarouselComponent";
+import GalleryComponent from "../../../../editor/src/js/components/widgets/styled-components/GalleryComponent";
+import ButtonComponent from "../../../../editor/src/js/components/widgets/styled-components/ButtonComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -12,6 +16,7 @@ class ElementWrapper extends Component {
     this.state = {
       elementDisplay: !this.props.element.getSettings("default_hidden")
     };
+    props.element.wrapper = this;
     this.elementWrapperRef = React.createRef();
     this.elementRef = React.createRef();
     appStore.dispatch(addElement(this));
@@ -34,6 +39,7 @@ class ElementWrapper extends Component {
    * Иногда надо обновить элемент (FrontElement)
    */
   componentDidMount() {
+    ! isEditor() && window.frontApp.onWidgetMount();
     if(_.isFunction(this.props.element.update)){
       this.props.element.update();
       this.props.element.updateFonts();
@@ -270,7 +276,11 @@ class ElementWrapper extends Component {
     if(this.CSSId !== CSSId){
       this.CSSId = CSSId;
     }
-    const content = React.createElement(this.props.component, {
+    let ContentComponent = this.props.component;
+    if(['root-element', 'section', 'column'].indexOf(this.props.element.getName()) === -1){
+      // ContentComponent = 'div';
+    }
+    const content = React.createElement(ContentComponent, {
       ref: this.elementRef,
       rootElement: this.props.rootElement,
       ElementWrapper: this.props.ElementWrapper,
@@ -298,16 +308,39 @@ class ElementWrapper extends Component {
         {content}
       </>
     }
+
+    let WrapperComponent = "div";
+
+    switch (this.props.element.getName()) {
+      case "gallery": {
+        WrapperComponent = GalleryComponent;
+      }
+        break;
+      case "carousel": {
+        WrapperComponent = CarouselComponent;
+      }
+        break;
+      case "image": {
+        WrapperComponent = ImageComponent;
+      }
+        break;
+      case "button": {
+        WrapperComponent = ButtonComponent;
+      }
+        break;
+    }
+
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
-      <div
+      <WrapperComponent
         className={classes}
         ref={this.elementWrapperRef}
+        settings={this.props.element.getSettings()}
         style={styles}
         id={this.CSSId}
       >
         {content}
         {tooltip_text && <AltrpTooltip position={tooltip_position}>{tooltip_text}</AltrpTooltip>}
-      </div>
+      </WrapperComponent>
     );
   }
 }

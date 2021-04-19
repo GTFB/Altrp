@@ -36,6 +36,22 @@ class Resource {
   /**
    * @return {Promise}
    * */
+
+  getAuthorList() {
+    let options = {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    };
+    return fetch("/admin/ajax/users", options).then(res => {
+      if (res.ok === false) {
+        return Promise.reject({res: res.text(), status: res.status});
+      }
+      return res.json();
+    });
+  }
+
   get(id) {
     if (!id) {
       console.error('Get only by "id"');
@@ -225,7 +241,6 @@ class Resource {
           files[i].size > MAX_FILE_SIZE
             // ||          files[i].type.indexOf(fileType) === -1
         ) {
-          console.log(files[i]);
           continue;
         }
         formData.append(`files[${i}]`, files[i]);
@@ -328,7 +343,7 @@ class Resource {
         "Content-Type": "application/json"
       }, customHeaders),
     };
-    if (!_.isEmpty(data)) {
+    if (! _.isEmpty(data)) {
       options.body = JSON.stringify(data);
     }
     let url = this.getRoute() + (id ? "/" + id : "");

@@ -1,17 +1,27 @@
 import styled from 'styled-components';
-import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
+import {getResponsiveSetting, isEditor} from "../../../../../../front-app/src/js/helpers";
 import {dimensionsControllerToStyles} from "../../../../../../front-app/src/js/helpers/styles";
-
-const settingsToStyles = ({settings})=>{
+const settingsToStyles = ({settings, columns = []})=>{
   let styles = '';
 
-  styles += '&.altrp-section{';
+  styles += '&&.altrp-section{z-index: 45;display: flex;';
   const position_style_position_padding = getResponsiveSetting(settings, 'position_style_position_padding');
   if(position_style_position_padding){
     styles += dimensionsControllerToStyles(position_style_position_padding);
   }
 
   styles += '}';
+  if(! isEditor()){
+    columns = columns.filter(c=>{
+      return _.get(c,'wrapper.state.elementDisplay');
+    });
+  }
+  if(columns.length){
+    styles += '& > .altrp-element_column{';
+    styles += `width:${100/columns.length}%;`;
+    styles += '}';
+
+  }
   return styles;
 };
 

@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import templateLoader from "../../classes/modules/TemplateLoader";
 import ElementWrapper from "../../../../../front-app/src/js/components/ElementWrapper";
 import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric";
@@ -7,13 +7,13 @@ class AltrpTemplate extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      templateGUID: this.props.settings.template,
+      templateGUID: this.props.settings.template
     };
   }
-  componentDidMount(){
+  componentDidMount() {
     this.updateTemplate();
   }
-  componentDidUpdate(){
+  componentDidUpdate() {
     this.updateTemplate();
   }
 
@@ -21,12 +21,15 @@ class AltrpTemplate extends Component {
    * Обновляем данные шалона
    * @return {Promise<void>}
    */
-  async updateTemplate(){
+  async updateTemplate() {
     // console.log(this.props.element.getSettings('template'));
     const templateGUID = this.props.settings.template;
-    if(templateGUID !== this.state.templateGUID || ! (this.state.template || this.loading)){
+    if (
+      templateGUID !== this.state.templateGUID ||
+      !(this.state.template || this.loading)
+    ) {
       let template;
-      if(! templateGUID){
+      if (!templateGUID) {
         return;
       } else {
         this.loading = true;
@@ -34,31 +37,32 @@ class AltrpTemplate extends Component {
         this.loading = false;
         this.template = null;
       }
-      this.setState(state =>({...state, template, templateGUID}));
-
+      this.setState(state => ({ ...state, template, templateGUID }));
     }
   }
 
   render() {
-    if(! this.props.settings.template){
+    if (!this.props.settings.template) {
       return null;
     }
-    if(_.get(this.state, 'template.componentClass')){
-      let template = this.template || frontElementsFabric.cloneElement(this.state.template);
+    if (_.get(this.state, "template.componentClass")) {
+      let template =
+        this.template || frontElementsFabric.cloneElement(this.state.template);
       this.template = template;
-      return <div className="altrp-posts">
-        <div className="altrp-post">
-          {React.createElement(template.componentClass,
-            {
+      return (
+        <div className="altrp-posts">
+          <div className="altrp-post">
+            {React.createElement(template.componentClass, {
               element: template,
               ElementWrapper: ElementWrapper,
               children: template.children
             })}
+          </div>
         </div>
-      </div>
+      );
     }
     return null;
   }
 }
 
-export default AltrpTemplate
+export default AltrpTemplate;

@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { changePageState } from "../../../../../front-app/src/js/store/altrp-page-state-storage/actions";
+import { connect, useDispatch } from "react-redux";
 import moment from "moment";
 
-import DynamicBarChart from "../../../../../admin/src/components/dashboard/widgets/DynamicBarChart";
+import BarDiagram from "../../../../../front-app/src/ts/build/altrp-diagrams/layout/BarDiagram";
 import DynamicPieChart from "../../../../../admin/src/components/dashboard/widgets/DynamicPieChart";
 import DynamicLineChart from "../../../../../admin/src/components/dashboard/widgets/DynamicLineChart";
 import DynamicTableWidget from "../../../../../admin/src/components/dashboard/widgets/DynamicTableWidget";
 import DynamicPointChart from "../../../../../admin/src/components/dashboard/widgets/DynamicPointChart";
+
+import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
 
 import {
   BAR,
@@ -16,9 +20,13 @@ import {
 } from "../../../../../admin/src/components/dashboard/widgetTypes";
 import { getDataByPath } from "../../../../../front-app/src/js/helpers";
 import _ from "lodash";
+import { color } from "d3";
 
 const AltrpDiagram = props => {
   const { settings, id } = props;
+  const dispatch = useDispatch();
+  const margin = settings?.margin;
+  const widgetName = settings?.widget_name || id;
   const customColorSchemeChecker = settings?.isCustomColor;
   const customColors = settings?.customScheme?.map(item =>
     _.get(item, "color.colorPickedHex")
@@ -26,7 +34,6 @@ const AltrpDiagram = props => {
   const yScaleMax = settings?.yScaleMax;
 
   const axisY = settings?.axisY;
-
   const tooltipValues = settings?.repTooltips?.map(item => ({
     label: _.get(item, "label"),
     field: _.get(item, "value"),
@@ -165,7 +172,7 @@ const AltrpDiagram = props => {
 
   //funciton for formattion data for all types
   const formatData = (data, r) => {
-    return data.map(d => {
+    return data.map((d, index) => {
       const currentKey = _.get(d, r.key);
       const keyFormatted = !moment(currentKey).isValid()
         ? currentKey
@@ -181,28 +188,31 @@ const AltrpDiagram = props => {
             })
           : [];
       switch (settings.type) {
-        case LINE:
+        case LINE: {
           return {
             y: Number(_.get(d, r.data)),
             x: keyIsDate ? keyFormatted : currentKey,
             tooltip: tooltip
           };
           break;
-        case TABLE:
+        }
+        case TABLE: {
           return {
             y: Number(_.get(d, r.data)),
             x: keyIsDate ? keyFormatted : currentKey,
             tooltip: tooltip
           };
           break;
-        case POINT:
+        }
+        case POINT: {
           return {
             y: Number(_.get(d, r.data)),
             x: keyIsDate ? keyFormatted : currentKey,
             tooltip: tooltip
           };
           break;
-        case BAR:
+        }
+        case BAR: {
           let key = keyIsDate ? keyFormatted : currentKey;
           return {
             [key]: Number(_.get(d, r.data)),
@@ -211,23 +221,30 @@ const AltrpDiagram = props => {
             tooltip: tooltip
           };
           break;
-        case PIE:
+        }
+        case PIE: {
           return {
             value: Number(_.get(d, r.data)),
             id: keyIsDate ? keyFormatted : currentKey,
             tooltip: tooltip
           };
           break;
+        }
 
         default:
           break;
       }
     });
   };
+  let legend = [];
+  const currentColors = isCustomColor
+    ? customColors
+    : _.find(Schemes, { value: settings?.colorScheme }).colors;
+  const colorsCount = currentColors.length;
 
   if (isMultiple) {
     let repeater = _.cloneDeep(settings.rep, []);
-    data = repeater.map(r => {
+    data = repeater.map((r, index) => {
       let innerData = getDataByPath(r.path, []);
       if (innerData.length > 0) {
         //Исключаем дублирование ключей, т.к. это приводит к ошибкам рендера всех диаграм
@@ -239,6 +256,12 @@ const AltrpDiagram = props => {
       if (settings.type === PIE || settings.type === BAR) {
         return innerData;
       }
+      if (settings.type !== PIE) {
+        legend.push({
+          color: currentColors[index % colorsCount],
+          label: r.title || r.path
+        });
+      }
       return {
         id: r.title || r.path,
         data: innerData
@@ -246,13 +269,17 @@ const AltrpDiagram = props => {
     });
     if (settings.type === PIE || settings.type === BAR) {
       data = [].concat(...data);
+      legend = data?.map((item, i) => ({
+        color:
+          settings.type === BAR
+            ? currentColors[0]
+            : currentColors[i % colorsCount],
+        label: item.id || item.key
+      }));
     }
   } else if (settings.datasource_path != null) {
     try {
       data = getDataByPath(settings.datasource_path, []);
-      console.log("====================================");
-      console.log(data);
-      console.log("====================================");
       if (settings.type === LINE) {
         data = _.uniqBy(data, settings.key_name);
       }
@@ -263,7 +290,18 @@ const AltrpDiagram = props => {
 
       if (settings.type === PIE || settings.type === BAR) {
         data = formatData(data, r);
+        legend = data?.map((item, i) => ({
+          color:
+            settings.type === BAR
+              ? currentColors[0]
+              : currentColors[i % colorsCount],
+          label: item.id || item.key
+        }));
       } else {
+        legend.push({
+          color: currentColors[0],
+          label: settings.datasource_title || settings.datasource_path
+        });
         data = [
           {
             id: settings.datasource_title || settings.datasource_path,
@@ -288,7 +326,6 @@ const AltrpDiagram = props => {
     let repeaterColor = _.cloneDeep(settings.repcolor, []);
     var colorArray = repeaterColor.map(r => r.color.colorPickedHex);
   }
-
   if (!sql && data.length === 0) {
     return (
       <div className={`altrp-chart ${settings.legendPosition}`}>
@@ -317,11 +354,23 @@ const AltrpDiagram = props => {
     filter: {}
   };
 
+  const setLegend = legend =>
+    dispatch(changePageState(widgetName, { legend: legend }));
+
+  useEffect(() => {
+    if (legend.length > 0) {
+      setLegend(legend);
+    }
+  }, [legend]);
+  console.log("====================================");
+  console.log(data);
+  console.log("====================================");
   switch (settings.type) {
     case LINE:
       return (
         <DynamicLineChart
           widgetID={id}
+          margin={margin}
           useCustomTooltips={useCustomTooltips}
           yScaleMax={yScaleMax}
           customColorSchemeChecker={customColorSchemeChecker}
@@ -339,6 +388,8 @@ const AltrpDiagram = props => {
           pointColor={pointColor}
           pointSize={pointSize}
           yMarker={yMarker}
+          width={`${settings.width?.size}${settings.width?.unit}`}
+          height={`${settings.height?.size}${settings.height?.unit}`}
           yMarkerValue={yMarkerValue}
           yMarkerOrientation={yMarkerOrientation}
           yMarkerColor={yMarkerColor}
@@ -364,6 +415,7 @@ const AltrpDiagram = props => {
       return (
         <DynamicPointChart
           widgetID={id}
+          margin={margin}
           useCustomTooltips={useCustomTooltips}
           yScaleMax={yScaleMax}
           customColorSchemeChecker={customColorSchemeChecker}
@@ -371,6 +423,8 @@ const AltrpDiagram = props => {
           dataSource={data}
           constantsAxises={constantsAxises}
           colorScheme={colorScheme}
+          width={`${settings.width?.size}${settings.width?.unit}`}
+          height={`${settings.height?.size}${settings.height?.unit}`}
           widget={widget}
           nodeSize={pointSize}
           xScaleType={xScaleType}
@@ -384,8 +438,9 @@ const AltrpDiagram = props => {
       );
     case BAR:
       return (
-        <DynamicBarChart
+        <BarDiagram
           widgetID={id}
+          margin={margin}
           useCustomTooltips={useCustomTooltips}
           yScaleMax={yScaleMax}
           customColorSchemeChecker={customColorSchemeChecker}
@@ -395,7 +450,8 @@ const AltrpDiagram = props => {
           dataSource={data}
           widget={widget}
           enableLabel={enableLabel}
-          width={settings.width?.size}
+          width={`${settings.width?.size}${settings.width?.unit}`}
+          height={`${settings.height?.size}${settings.height?.unit}`}
           layout={layout}
           groupMode={groupMode}
           reverse={reverse}
@@ -413,6 +469,7 @@ const AltrpDiagram = props => {
       return (
         <DynamicPieChart
           widgetID={id}
+          margin={margin}
           useCustomTooltips={useCustomTooltips}
           yScaleMax={yScaleMax}
           customColorSchemeChecker={customColorSchemeChecker}
@@ -421,7 +478,8 @@ const AltrpDiagram = props => {
           dataSource={data}
           colorScheme={colorScheme}
           widget={widget}
-          width={settings.width?.size}
+          width={`${settings.width?.size}${settings.width?.unit}`}
+          height={`${settings.height?.size}${settings.height?.unit}`}
           innerRadius={innerRadius}
           enableSliceLabels={enableSliceLabels}
           padAngle={padAngle}
@@ -458,5 +516,7 @@ const AltrpDiagram = props => {
       return <></>;
   }
 };
-
-export default AltrpDiagram;
+const mapStateToProps = state => ({
+  currentDataStorage: state.currentDataStorage
+});
+export default connect(mapStateToProps)(AltrpDiagram);

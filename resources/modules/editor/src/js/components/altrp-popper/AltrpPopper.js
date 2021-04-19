@@ -2,11 +2,13 @@ import React, {useEffect, useRef, useState, useMemo} from "react";
 import ReactDOM from "react-dom";
 import {usePopper} from "react-popper";
 import {isEditor} from "../../../../../front-app/src/js/helpers";
+import { usePrevious } from "../../../../../front-app/src/js/helpers/react";
 
 export default function AltrpPopper(props) {
   const object = useRef();
   const [updateSettings, setUpdateSettings] = useState(props.settings.updateSettings || {});
   const [getTargetRef, setGetTargetRef] = useState(false);
+  const prevUpdateToken = usePrevious(props.updateToken);
 
   let body = document.body;
 
@@ -39,7 +41,6 @@ export default function AltrpPopper(props) {
     console.log(placement)
     placement = variantPlace[0]
   }
-
   const {styles, attributes, forceUpdate, update} = usePopper(props.target.current, object.current, {
     placement,
     modifiers: [
@@ -53,6 +54,18 @@ export default function AltrpPopper(props) {
   });
 
   useEffect(() => {
+    if(props.updateToken !== prevUpdateToken) {
+      forceUpdate();
+      const event = new Event("resize", {bubbles : true, cancelable : true});
+      if(isEditor()) {
+        // altrpEditorContent.editorWindow.current.dispatchEvent(event)
+        update();
+      } else {
+        console.log();
+        // window.dispatchEvent(event)
+        update();
+      }
+    }
 
     if (Object.keys(updateSettings).length !== 0) {
       if (JSON.stringify(updateSettings) !== JSON.stringify(props.settings.updateSettings)) {
@@ -66,7 +79,8 @@ export default function AltrpPopper(props) {
       setGetTargetRef(true)
     }
 
-  }, [props.children, placement, props.target]);
+
+  }, [props.children, placement, props.target, props.updateToken]);
 
   if(props.portal) {
     return ReactDOM.createPortal((

@@ -6,6 +6,8 @@
 ### 0.15.0
 + "tel" and "mailto" Links
 + Toggle Visually Impaired Action
++ Cache for Pages
++ Page for 404 
 
 ### 0.14.0
 + Add Accept Filed Type

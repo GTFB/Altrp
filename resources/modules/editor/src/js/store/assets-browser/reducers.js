@@ -17,7 +17,7 @@ export function assetsSettingsReducer(state, action) {
     } break;
     case ASSETS_TOGGLE: {
       state = { ...state };
-      state.active = !state.active;
+      state.active = false;
     } break;
   }
   return state;

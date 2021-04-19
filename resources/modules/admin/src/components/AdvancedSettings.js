@@ -26,7 +26,8 @@ class AdvancedSettings extends Component {
     let debugOn = ! ! (await new Resource({route:'/admin/ajax/settings'}).get('altrp_debug')).altrp_debug;
     this.setState(state => ({...state,
       allSiteJavascript,
-      debugOn}));
+      debugOn,
+    }));
   }
 
   /**
@@ -73,6 +74,17 @@ class AdvancedSettings extends Component {
     store.dispatch(setAdminEnable());
   };
 
+  /**
+   * Запрос на очистку кэша
+   */
+  clearAllCache = async (e) =>{
+    let result  = await confirm('Are You Sure');
+    if(! result){
+      return;
+    }
+    let res = await new Resource({route:'/admin/ajax/clear_cache'}).delete();
+
+  };
   /**
    * Обновить всех ресурсы на бкенде (модели, шаблоны, контроллеры и т.д.)
    * @param e
@@ -125,6 +137,17 @@ class AdvancedSettings extends Component {
             <button className="btn btn_success"
                     onClick={this.updateAllBackendResources}>
               Update
+            </button>
+          </td>
+        </tr>
+        <tr className="admin-settings-table-row">
+          <td className="admin-settings-table__td row-text" width="10%">
+            Clear All Cache
+          </td>
+          <td className="admin-settings-table__td">
+            <button className="btn btn_success"
+                    onClick={this.clearAllCache}>
+              Clear
             </button>
           </td>
         </tr>

@@ -13,7 +13,6 @@ import {
   CONTROLLER_COLOR,
   TAB_CONTENT,
   TAB_STYLE,
-  TAB_ADVANCED,
   CONTROLLER_LINK,
   CONTROLLER_SWITCHER,
   CONTROLLER_CREATIVE_HOVER,
@@ -78,6 +77,14 @@ class Image extends BaseElement {
       default: false
     });
 
+
+    this.addControl('lazyload_disable', {
+      hideOnEmail: true,
+      type: CONTROLLER_SWITCHER,
+      label: 'Lazyload Disable',
+      default: false
+    });
+
     this.endControlSection();
 
     this.startControlSection("link", {
@@ -105,7 +112,132 @@ class Image extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection('postion_style_section', {
+    this.startControlSection('size_section', {
+      tab: TAB_STYLE,
+      label: 'Size',
+    });
+
+    this.addControl('image_fit_size', {
+          type: CONTROLLER_SELECT,
+          label: 'Image fit',
+          // default: "cover",
+          options: [
+            {
+              'value': 'fill',
+              'label': 'Fill',
+            },
+            {
+              'value': 'contain',
+              'label': 'Contain',
+            },
+            {
+              'value': 'cover',
+              'label': 'Cover',
+            },
+            {
+              'value': 'none',
+              'label': 'None',
+            },
+            {
+              'value': 'scale-down',
+              'label': 'Scale down',
+            }
+          ],
+          rules: {
+            '{{ELEMENT}} .altrp-image{{STATE}}': 'object-fit: {{VALUE}};',
+          },
+        }
+    );
+
+    // this.addControl('aspect_ratio_off', {
+    //   type: CONTROLLER_SWITCHER,
+    //   label: 'Aspect Ratio Off',
+    //   default: true,
+    //   prefixClass: 'aspect-ratio-off_'
+    // });
+
+
+    this.addControl('aspect_ratio_size', {
+          type: CONTROLLER_SELECT,
+          label: 'Aspect Ratio',
+          default: '0',
+          options: [
+            {
+              'value': '0',
+              'label': 'None',
+            },
+            {
+              'value': '100',
+              'label': '1:1',
+            },
+            {
+              'value': '56.25',
+              'label': '16:9',
+            },
+            {
+              'value': '75',
+              'label': '4:3',
+            },
+            {
+              'value': '133.33',
+              'label': '3:4',
+            },
+            {
+              'value': '177.78',
+              'label': '9:16',
+            },
+            {
+              'value': 'custom',
+              'label': 'Custom',
+            },
+          ],
+        }
+    );
+
+    this.addControl('custom_aspect', {
+      label: 'Aspect Ratio Value',
+      dynamic: false,
+      conditions: {
+        'aspect_ratio_size': 'custom',
+      },
+    });
+
+    this.addControl('height_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Height',
+      units: [
+        'px',
+        'vh',
+      ],
+      max: 1000,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-image{{STATE}}': 'height: {{SIZE}}{{UNIT}}',
+      },
+    });
+
+    this.addControl('width_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Width',
+      default: {
+        size: 100,
+        unit: '%',
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 1000,
+      min: 0,
+      rules: {
+        '{{ELEMENT}} .altrp-image{{STATE}}': 'width: {{SIZE}}{{UNIT}}',
+      },
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('position_style_section', {
       tab: TAB_STYLE,
       label: 'Position'
     });
@@ -150,14 +282,6 @@ class Image extends BaseElement {
         '%',
         'vh',
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-image-container{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
     });
 
     this.addControl('position_z_index', {
@@ -199,127 +323,6 @@ class Image extends BaseElement {
       step: 0.01,
       rules: {
         '{{ELEMENT}} .altrp-image{{STATE}}': 'opacity: {{SIZE}}',
-      },
-    });
-
-    this.endControlSection();
-
-    this.startControlSection('size_section', {
-      tab: TAB_STYLE,
-      label: 'Size',
-    });
-
-    this.addControl('image_fit_size', {
-      type: CONTROLLER_SELECT,
-      label: 'Image fit',
-      // default: "cover",
-      options: [
-        {
-          'value': 'fill',
-          'label': 'Fill',
-        },
-        {
-          'value': 'contain',
-          'label': 'Contain',
-        },
-        {
-          'value': 'cover',
-          'label': 'Cover',
-        },
-        {
-          'value': 'none',
-          'label': 'None',
-        },
-        {
-          'value': 'scale-down',
-          'label': 'Scale down',
-        }
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-image{{STATE}}': 'object-fit: {{VALUE}};',
-      },
-    }
-    );
-
-    this.addControl('aspect_ratio_off', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Aspect Ratio Off',
-      default: true,
-      prefixClass: 'aspect-ratio-off_'
-    });
-
-
-    this.addControl('aspect_ratio_size', {
-      type: CONTROLLER_SELECT,
-      label: 'Aspect Ratio',
-      default: '0',
-      options: [
-        {
-          'value': '0',
-          'label': 'None',
-        },
-        {
-          'value': '100',
-          'label': '1:1',
-        },
-        {
-          'value': '56.25',
-          'label': '16:9',
-        },
-        {
-          'value': '75',
-          'label': '4:3',
-        },
-        {
-          'value': '133.33',
-          'label': '3:4',
-        },
-        {
-          'value': '177.78',
-          'label': '9:16',
-        }
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-image-container{{STATE}}': 'padding-top: {{VALUE}}%',
-      },
-    }
-    );
-
-    this.addControl('height_size', {
-      type: CONTROLLER_SLIDER,
-      label: 'height',
-      default: {
-        size: 100,
-        unit: '%',
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-      max: 1000,
-      min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-image{{STATE}}': 'height: {{SIZE}}{{UNIT}}',
-      },
-    });
-
-    this.addControl('width_size', {
-      type: CONTROLLER_SLIDER,
-      label: 'width',
-      default: {
-        size: 100,
-        unit: '%',
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-      max: 1000,
-      min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-image{{STATE}}': 'width: {{SIZE}}{{UNIT}}',
       },
     });
 

@@ -17,7 +17,9 @@ use App\Observers\AltrpSourceObserver;
 use App\Observers\AltrpSQLEditorObserver;
 use App\Observers\AltrpValidationFieldObserver;
 use App\Observers\AltrpValidationRuleObserver;
+use App\Observers\PageObserver;
 use App\Observers\UserObserver;
+use App\Page;
 use App\Services\AltrpImportExportService;
 use App\Services\AltrpSettingsService;
 use App\Services\AltrpUpdateService;
@@ -81,6 +83,7 @@ class AppServiceProvider extends ServiceProvider
         ValidationRule::observe(AltrpValidationRuleObserver::class);
         ValidationField::observe(AltrpValidationFieldObserver::class);
         User::observe(UserObserver::class);
+        Page::observe(PageObserver::class);
 
         Builder::macro('whereLike', function ($attributes, string $searchTerm) {
             $this->where(function (Builder $query) use ($attributes, $searchTerm) {
