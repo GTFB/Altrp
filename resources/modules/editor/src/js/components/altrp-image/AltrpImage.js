@@ -52,7 +52,7 @@ class AltrpImage extends Component {
     if (prevProps.scrollPosition === this.props.scrollPosition && prevState.update === this.state.update) {
       return;
     }
-    if (checkElementInViewBox(this.imageRef.current, window.mainScrollbars)) {
+    if (this.imageRef.current && checkElementInViewBox(this.imageRef.current, window.mainScrollbars)) {
       clearTimeout(this.timeoutId);
       this.setState(state => ({...state, visible: true}));
     }

@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components';
 import { getResponsiveSetting } from '../helpers';
 import { shadowControllerToStyles, dimensionsControllerToStyles } from '../helpers/styles';
@@ -20,23 +19,28 @@ const FrontPopupWrapper = styled.div`
     let styles = "";
     styles += dimensionsControllerToStyles(getResponsiveSetting(settings, 'popup_close_button_padding'));
 
-    if(settings.popup_close_button_height_size && settings.popup_close_button_height_size.size)
-    styles += `height: ${settings.popup_close_button_height_size.size}${settings.popup_close_button_height_size.unit};`;
-    if(settings.popup_close_button_width_size && settings.popup_close_button_width_size.size)
-    styles += `width: ${settings.popup_close_button_width_size.size}${settings.popup_close_button_width_size.unit};`; 
+    if(settings.popup_close_button_height_size && settings.popup_close_button_height_size.size) {
+      let {size, unit} = getResponsiveSetting(settings, 'popup_close_button_height_size');
+      styles += `height: ${size}${unit};`;
+    }
+      
+    if(settings.popup_close_button_width_size && settings.popup_close_button_width_size.size) {
+      let {size, unit} = getResponsiveSetting(settings, 'popup_close_button_width_size');
+      styles += `width: ${size}${unit};`
+    }
 
     if(settings.popup_close_button_border_type) {
-      styles += dimensionsControllerToStyles(settings.popup_close_button_border_width, "border");
-      styles += `border-style: ${settings.popup_close_button_border_type};`;
+      styles += dimensionsControllerToStyles(getResponsiveSetting(settings, "popup_close_button_border_width"), "border");
+      styles += `border-style: ${getResponsiveSetting(settings, "popup_close_button_border_type")};`;
       if(settings.popup_close_button_border_color && settings.popup_close_button_border_color.colorPickedHex)
-        styles += `border-color: ${settings.popup_close_button_border_color.colorPickedHex};`;
+        styles += `border-color: ${getResponsiveSetting(settings, "popup_close_button_border_color.colorPickedHex")};`;
     }
-    styles += dimensionsControllerToStyles(settings.popup_close_button_border_radius, "border-radius");
+    styles += dimensionsControllerToStyles(getResponsiveSetting(settings, "popup_close_button_border_radius"), "border-radius");
     if(settings.popup_close_button_background_color) {
-      styles += `background-color: ${settings.popup_close_button_background_color.colorPickedHex} !important;`;
+      styles += `background-color: ${getResponsiveSetting(settings, "popup_close_button_background_color").colorPickedHex} !important;`;
     }
     
-    styles += shadowControllerToStyles(settings.popup_close_button_box_shadow);
+    styles += shadowControllerToStyles(getResponsiveSetting(settings, "popup_close_button_box_shadow"));
 
     return styles;
   }}
@@ -52,10 +56,14 @@ const FrontPopupWrapper = styled.div`
 & .popup-close-button-icon {
   ${({settings}) => {
     let styles = '';
-    if(settings.popup_close_icon_height_size && settings.popup_close_icon_height_size.size)
-      styles += `height: ${settings.popup_close_icon_height_size.size}${settings.popup_close_icon_height_size.unit};`;
-    if(settings.popup_close_icon_width_size && settings.popup_close_icon_width_size.size)
-      styles += `width: ${settings.popup_close_icon_width_size.size}${settings.popup_close_icon_width_size.unit};`;
+    if(settings.popup_close_icon_height_size && settings.popup_close_icon_height_size.size) {
+      let {size, unit} = getResponsiveSetting(settings, 'popup_close_icon_height_size');
+      styles += `height: ${size}${unit};`
+    }
+    if(settings.popup_close_icon_width_size && settings.popup_close_icon_width_size.size) {
+      let {size, unit} = getResponsiveSetting(settings, 'popup_close_icon_width_size');
+      styles += `width: ${size}${unit};`
+    }
     return styles;
   }}
 }  
@@ -70,4 +78,4 @@ const FrontPopupWrapper = styled.div`
 }
 `
 
-export default FrontPopupWrapper
+export default FrontPopupWrapper;

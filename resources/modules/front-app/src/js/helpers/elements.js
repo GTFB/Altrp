@@ -35,6 +35,9 @@ export function getOffsetTopInElement(element, targetElement){
   }
   let offsetTop = 0;
   do{
+    if(! element){
+      return false;
+    }
     offsetTop += element.offsetTop;
     // console.log(element.offsetTop);
   } while((element = element.offsetParent) !== targetElement);
