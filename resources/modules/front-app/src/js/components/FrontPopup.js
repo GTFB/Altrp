@@ -276,6 +276,7 @@ class FrontPopup extends Component {
       >
         <AltrpImage
           image={rootElementSettings.popup_close_icon}
+          lazy={false}
           default={{
             assetType: "icon",
             name: "deleteOne",

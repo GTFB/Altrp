@@ -23,6 +23,7 @@ import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
 import CarouselComponent from "./widgets/styled-components/CarouselComponent";
 import GalleryCompnent from "./widgets/styled-components/GalleryComponent";
 import ImageComponent from "./widgets/styled-components/ImageComponent";
+import ButtonComponent from "./widgets/styled-components/ButtonComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -369,6 +370,10 @@ class ElementWrapper extends Component {
         break;
       case "image": {
         WrapperComponent = ImageComponent;
+      }
+        break;
+      case "button": {
+        WrapperComponent = ButtonComponent;
       }
         break;
     }

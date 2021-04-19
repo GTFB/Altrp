@@ -11,11 +11,12 @@ class AltrpImage extends Component {
     super(props);
     this.imageRef = React.createRef();
     let visible = true;
-    if (isEditor()) {
+    if (isEditor() || props.lazy === false) {
 
     } else if (window.altrpImageLazy
         && window.altrpImageLazy !== 'none'
-        && ! this.props.element.getResponsiveSetting('lazyload_disable')) {
+        && props.element
+        && ! props.element?.getResponsiveSetting('lazyload_disable')) {
       visible = false;
     }
     this.state = {
@@ -45,7 +46,7 @@ class AltrpImage extends Component {
     if (this.state.visible || ! this.imageRef.current) {
       return;
     }
-    if(this.props.element.getRoot().popupGUID && this.props.element.getRoot().popupGUID === this.props.popupTrigger.popupID){
+    if(this.props?.element.getRoot().popupGUID && this.props.element.getRoot().popupGUID === this.props.popupTrigger.popupID){
       this.setState(state => ({...state, visible: true}));
     }
     if (prevProps.scrollPosition === this.props.scrollPosition && prevState.update === this.state.update) {
@@ -86,7 +87,7 @@ class AltrpImage extends Component {
     let placeholder = <ImagePlaceholder color={media.main_color}
                                         className={'altrp-image-placeholder '}
                                         ref={this.imageRef}
-                                        settings={this.props.element.getSettings()}
+                                        settings={this.props.element?.getSettings() || {}}
                                         height={height}
                                         width={width}
                                         style={placeholderStyles}

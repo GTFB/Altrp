@@ -8,6 +8,7 @@ import {changeCurrentPageProperty} from "../store/current-page/actions";
 import ImageComponent from "../../../../editor/src/js/components/widgets/styled-components/ImageComponent";
 import CarouselComponent from "../../../../editor/src/js/components/widgets/styled-components/CarouselComponent";
 import GalleryComponent from "../../../../editor/src/js/components/widgets/styled-components/GalleryComponent";
+import ButtonComponent from "../../../../editor/src/js/components/widgets/styled-components/ButtonComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -38,8 +39,6 @@ class ElementWrapper extends Component {
    * Иногда надо обновить элемент (FrontElement)
    */
   componentDidMount() {
-    // console.log(this.props.element.getName());
-    // console.log(performance.now());
     ! isEditor() && window.frontApp.onWidgetMount();
     if(_.isFunction(this.props.element.update)){
       this.props.element.update();
@@ -277,7 +276,11 @@ class ElementWrapper extends Component {
     if(this.CSSId !== CSSId){
       this.CSSId = CSSId;
     }
-    const content = React.createElement(this.props.component, {
+    let ContentComponent = this.props.component;
+    if(['root-element', 'section', 'column'].indexOf(this.props.element.getName()) === -1){
+      // ContentComponent = 'div';
+    }
+    const content = React.createElement(ContentComponent, {
       ref: this.elementRef,
       rootElement: this.props.rootElement,
       ElementWrapper: this.props.ElementWrapper,
@@ -319,6 +322,10 @@ class ElementWrapper extends Component {
         break;
       case "image": {
         WrapperComponent = ImageComponent;
+      }
+        break;
+      case "button": {
+        WrapperComponent = ButtonComponent;
       }
         break;
     }

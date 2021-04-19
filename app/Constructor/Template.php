@@ -440,4 +440,36 @@ class Template extends Model
     $author = User::find( $this->user_id );
     return data_get( $author, 'name', 'admin' );
   }
+
+  /**
+   * Очистить пустые значения
+   * @param * $data
+   * @return array
+   */
+  public static function sanitizeSettings( $data = [] ){
+    return $data; //todo: to test
+    if( is_string( $data ) ){
+      $data = json_decode( $data, true );
+      if( ! $data ){
+        $data = array();
+      }
+    }
+    if( ! is_array( $data ) ){
+       $data = (array) $data;
+    }
+    if( is_array( $data['children'] ) ){
+      foreach ( $data['children'] as $index => $child ) {
+        $data['children'][$index] = self::sanitizeSettings( $child );
+      }
+    }
+    if( is_array( $data['settings'] ) ){
+      foreach ( $data['settings'] as $index => $setting ) {
+        if( empty( $setting ) ){
+
+          unset( $data['settings'][$index] );
+        }
+      }
+    }
+    return $data;
+  }
 }

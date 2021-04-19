@@ -17,7 +17,7 @@ ${(props) => {
   if(Number(aspect_ratio_size) !== 0 && aspect_ratio_size === 'custom'|| Number(aspect_ratio_size)){
     return 'height:auto;'
   }
-  if(props.height.indexOf('%') !== -1) {
+  if(! props.height || props.height.indexOf('%') !== -1) {
     return 'height:auto;'
   }
   return `height:${props.height ? props.height : 'auto'};`;
@@ -40,8 +40,6 @@ ${(props) => {
       style += `padding-top:${custom_aspect}%;`;
     } else if(Number(aspect_ratio_size)){
       style += `padding-top:${aspect_ratio_size}%;`;
-      console.log(style);
-      
     }
     return style;
   }
