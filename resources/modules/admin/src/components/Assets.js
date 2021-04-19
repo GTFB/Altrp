@@ -4,7 +4,7 @@ import { NavLink, withRouter } from "react-router-dom";
 import { iconsManager } from "../js/helpers";
 import Resource from "../../../editor/src/js/classes/Resource";
 import { ImageDetail } from "./ImageDetail";
-import {FontsDetail} from "./FontsDetail";
+import { FontsDetail } from "./FontsDetail";
 
 class Assets extends Component {
   constructor(props) {
@@ -64,8 +64,6 @@ class Assets extends Component {
       }
     })
   }
-<<<<<<< HEAD
-=======
   getAsset = (assetId) => {
     // get request by asset id
     return this.resource.get(assetId)
@@ -91,7 +89,6 @@ class Assets extends Component {
       }
     });
   }
->>>>>>> speed
   onDrop(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -314,11 +311,7 @@ class Assets extends Component {
                     if (this.state.activeLink === 'images' ||
                       this.state.activeLink === 'svgs')
                       return (
-<<<<<<< HEAD
-                        <div className="item__background"
-=======
                         <div onClick={() => this.openImageDetail(asset.id)} className="item__background"
->>>>>>> speed
                           style={{ 'backgroundImage': `url('${asset.url}')` }} />
                       )
                     let typeIcon = asset.url.split('.').pop();
