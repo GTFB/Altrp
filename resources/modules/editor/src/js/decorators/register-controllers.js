@@ -129,6 +129,19 @@ export function advancedTabControllers(element) {
   if(element.getType() !== 'section') {
 
     element.startControlSection(
+        'element_size', {
+          tab: TAB_ADVANCED,
+          label: 'Size',
+        }
+    );
+
+    element.addControl('custom_width', {
+      label: 'Width',
+    });
+
+    element.endControlSection();
+
+    element.startControlSection(
         'element_positioning', {
           tab: TAB_ADVANCED,
           label: 'Positioning',

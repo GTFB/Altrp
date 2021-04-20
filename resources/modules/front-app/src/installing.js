@@ -2,6 +2,7 @@ import ElementWrapper from "./js/components/ElementWrapper";
 import frontDecorate from './js/decorators/front-element-component';
 import CONSTANTS from "../../editor/src/js/consts";
 import {setCurrentScreen} from "./js/store/media-screen-storage/actions";
+import {loadVIPlugin} from "./js/helpers/plugins";
 /**
  * Elements Wrapper
  * */
@@ -34,6 +35,14 @@ window.elementDecorator = frontDecorate;
       dow : 1,
     }
   });
+  /**
+   * Проверка на включение BVI
+   */
+  window.Cookies = (await import('js-cookie')).default;
+  if(window.Cookies.get('bvi-theme')){
+    await loadVIPlugin(false);
+    $.bvi();
+  }
 })();
 window.addEventListener('resize', e=>{
   const {currentMediaScreen} = appStore.getState();

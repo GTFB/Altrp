@@ -2,20 +2,10 @@
 
 namespace App\Http\Requests\AltrpRequests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\AltrpFormRequest;
 
-class taskStoreRequest extends FormRequest
+class taskStoreRequest extends AltrpFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return auth()->check();
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *

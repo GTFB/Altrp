@@ -1144,33 +1144,6 @@ class Heading extends BaseElement {
       }
     });
 
-    this.addControl("style_border_text_decoration", {
-      type: CONTROLLER_SELECT,
-      label: "text decoration",
-      default: "none",
-      options: [
-        {
-          value: "none",
-          label: "none"
-        },
-        {
-          value: "line-through",
-          label: "line through"
-        },
-        {
-          value: "overline",
-          label: "overline"
-        },
-        {
-          value: "underline",
-          label: "underline"
-        },
-      ],
-      rules: {
-        "{{ELEMENT}} .altrp-heading{{STATE}}": "text-decoration: {{VALUE}};"
-      }
-    });
-
     this.endControlSection();
 
     this.startControlSection('transform_style_font', {

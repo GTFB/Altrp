@@ -24,6 +24,7 @@ class Table extends Model
     ];
 
   /**
+   * @deprecated
    * @param array $imported_tables
    */
   public static function import( $imported_tables = [] )

@@ -491,14 +491,14 @@ class Column  extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}}.altrp-element_column.altrp-element > .altrp-column{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
+      // rules: {
+      //   "{{ELEMENT}}.altrp-element_column.altrp-element > .altrp-column{{STATE}}": [
+      //     "padding-top: {{TOP}}{{UNIT}};",
+      //     "padding-right: {{RIGHT}}{{UNIT}};",
+      //     "padding-bottom: {{BOTTOM}}{{UNIT}};",
+      //     "padding-left: {{LEFT}}{{UNIT}};"
+      //   ]
+      // }
     });
 
     this.addControl('style_position_margin', {
