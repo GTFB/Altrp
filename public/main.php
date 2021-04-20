@@ -36,9 +36,10 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
         );
         $roles = explode(",", $roles);
 
-        if ($cachedFile['url'] === $url && $cachedFile['roles'] == $roles) {
+        if ($cachedFile['url'] === $url) {
 
           if( file_exists($cachePath . $cachedFile['hash']) ){
+
             $file = file_get_contents($cachePath . $cachedFile['hash']);
 
             echo $file;

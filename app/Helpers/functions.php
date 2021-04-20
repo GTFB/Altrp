@@ -543,7 +543,7 @@ function saveCache( $html) {
     return false;
   }
   $url = $_SERVER['REQUEST_URI'];
-  $html = minificationHTML($html);
+//  $html = minificationHTML($html);
   $hash = md5($url . $html);
 
   $cachePath = storage_path() . '/framework/cache/pages';
