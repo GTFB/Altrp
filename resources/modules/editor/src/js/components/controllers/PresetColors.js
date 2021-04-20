@@ -47,7 +47,7 @@ class PresetColors extends Component {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                this.props?.changeValue(color);
+                this.props.changeValue(color);
               }}
               onContextMenu={e => {
                 e.stopPropagation();
