@@ -298,14 +298,12 @@ function altrp_asset( $path, $domain = 'http://localhost:3002/' )
 {
   if ( env( 'APP_ENV', 'production' ) !== 'local' ) {
     return asset( $path ) . '?' . env( 'APP_VERSION' );
-//    return asset( $path ) . '?' . env( 'APP_VERSION', config( 'altrp_version' ) );
   }
   $client = new \GuzzleHttp\Client();
   try {
     $client->get( $domain )->getStatusCode();
   } catch ( Exception $e ) {
     return asset( $path ) . '?' . env( 'APP_VERSION' );
-//    return asset( $path ) . '?' . env( 'APP_VERSION', config( 'altrp_version' ) );
   }
 
   return $domain . 'src/bundle.js';

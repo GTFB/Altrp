@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import { Menu, Item, Separator } from "react-contexify";
 
-import "react-contexify/scss/main.scss";
+import ("react-contexify/scss/main.scss");
 import {connect} from "react-redux";
 import Column from "../classes/elements/Column";
 import {getFactory,} from "../helpers";

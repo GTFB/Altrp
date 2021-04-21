@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./altrp-input.scss";
+import ("./altrp-input.scss");
 import AltrpInputFile from "./AltrpInputFile";
 import { isValueMatchMask, validateEmail } from "../../../../../front-app/src/js/helpers";
 const MaskedInput = React.lazy(() => import("react-text-mask"));

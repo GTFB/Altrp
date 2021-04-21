@@ -261,7 +261,6 @@ class FrontPopup extends Component {
     const closeButtonCondition = rootElementSettings.switcher_close_button_popup_layout || true;
     let {popup_close_icon_alignment} = rootElementSettings;
     popup_close_icon_alignment = popup_close_icon_alignment || 'right';
-    console.log(rootElementSettings.popup_close_icon);
     const closeButton = closeButtonCondition ? (
       <button
         className={

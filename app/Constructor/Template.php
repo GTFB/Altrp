@@ -158,7 +158,7 @@ class Template extends Model
 
   /**
    * Рекурсивно Проверяем условия отоборажения в дочерних элементах
-   * @param array $children
+   * @param array $element_data
    * @return array
    */
   public function recursively_children_check_conditions( $element_data = [] ){

@@ -8,7 +8,7 @@ import UnderlineZigzagIcon from "../../../../../svgs/highlighted/underline_zigza
 import DiagonalIcon from "../../../../../svgs/highlighted/diagonal.svg";
 import StrikethroughIcon from "../../../../../svgs/highlighted/strikethrough.svg";
 import XIcon from "../../../../../svgs/highlighted/x.svg";
-import "./highlighted.scss";
+import ("./highlighted.scss");
 
 class Highlighted extends Component {
   render() {

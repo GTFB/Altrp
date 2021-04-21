@@ -802,7 +802,9 @@ class AltrpAction extends AltrpModel {
               value.split(/\r?\n/).length === 1 &&
               value.indexOf("{{") === 0 &&
               value.indexOf("}}") === value.length - 2 &&
-              getDataByPath(value.replace("{{", "").replace("}}", ""))
+              getDataByPath(value.replace("{{", "").replace("}}", ""),
+                  null,
+                  this.getCurrentModel())
             ) {
               value = getDataByPath(
                 value.replace("{{", "").replace("}}", ""),

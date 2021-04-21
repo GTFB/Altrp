@@ -586,6 +586,14 @@ Route::group(['prefix' => 'ajax'], function () {
   Route::post('/feedback', 'MailController@sendMail');
   Route::post('/feedback-html', 'MailController@sendMailHTML');
 
+  /**
+   * Получение токена
+   */
+  Route::get( '/_token', function ( Request $request ){
+
+    return response()->json( [ 'success' => true, '_token' => csrf_token()], 200, [], JSON_UNESCAPED_UNICODE );
+
+  } );
 });
 
 Route::get('reports/{id}', "ReportsController@show");

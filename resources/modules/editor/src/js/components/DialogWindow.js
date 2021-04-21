@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Logo from "../../svgs/logo.svg";
-import '../../sass/dialog-content.scss'
+import ('../../sass/dialog-content.scss');
 import DialogTab from './DialogTab';
 import DialogConditionsTab from './DialogConditionsTab';
 import DialogTriggersTab from './DialogTriggersTab';
