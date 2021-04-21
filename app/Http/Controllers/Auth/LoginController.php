@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\Classes\CurrentEnvironment;
 use App\Http\Controllers\Controller;
+use App\Jobs\RunRobotsJob;
 use App\Providers\RouteServiceProvider;
 use App\Services\Robots\RobotsService;
 use App\Traits\AuthenticatesUsers;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-  /*
+    use DispatchesJobs;
+
+    /*
   |--------------------------------------------------------------------------
   | Login Controller
   |--------------------------------------------------------------------------
@@ -120,10 +125,13 @@ class LoginController extends Controller
 
     $robots = $this->robotsService->getStartConditionRobots('logged_in');
 
-    foreach ($robots as $robot) {
-      if (!$robot->enabled) continue;
-      $this->robotsService->initRobot($robot)->runRobot();
-    }
+      $this->dispatch(new RunRobotsJob(
+          $robots,
+          $this->robotsService,
+          [],
+          'logged_in',
+          CurrentEnvironment::getInstance()
+      ));
 
     return $this->authenticated( $request, $this->guard()->user() )
       ? : ( ( $request->get( 'altrp_ajax' ) ) ? response()->json([

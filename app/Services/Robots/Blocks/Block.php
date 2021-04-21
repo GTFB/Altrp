@@ -84,9 +84,7 @@ class Block
             self::$nextNode = collect($this->nodes)->where('id', $currentNodeEdgesSource->target)->first();
         }
 
-        $this->modelData['altrpresponse'] = self::$completedActions;
-
-//        dump($this->modelData['altrpresponse']);
+        $this->modelData['altrpapi'] = self::$completedActions;
 
         return self::$completedActions;
     }
