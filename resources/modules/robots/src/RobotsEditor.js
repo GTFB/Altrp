@@ -172,7 +172,11 @@ class RobotsEditor extends Component {
       case "documentAction":
         data = {
           "type": "documentAction",
-          "nodeData": {},
+          "nodeData": {
+            "type": "document",
+            "data": {
+            }
+          },
         };
         break;
       case "crudAction":
@@ -192,7 +196,17 @@ class RobotsEditor extends Component {
       case "apiAction":
         data = {
           "type": "apiAction",
-          "nodeData": {},
+          "nodeData": {
+            "type": "api",
+            "data": {
+                "source": "",
+                "method": "",
+                "headers": "",
+                "name": "",
+                "url": "",
+                "data": ""
+            }
+          },
         };
         break;
       case "messageAction":
