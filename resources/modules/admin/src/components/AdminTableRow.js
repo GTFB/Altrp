@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Resource from "../../../editor/src/js/classes/Resource";
 
-export class TableRow extends React.Component {
+export class AdminTableRow extends React.Component {
    render() {
       const { row } = this.props;
 

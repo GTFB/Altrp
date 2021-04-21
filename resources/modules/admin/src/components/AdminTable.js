@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import SortableHeader from "./AdminTableComponents/SortableHeader";
-import { TableRow } from "./TableRow";
+import { AdminTableRow } from "./AdminTableRow";
 
 class AdminTable extends Component {
   /**
@@ -56,7 +56,7 @@ class AdminTable extends Component {
           </thead>
           <tbody className="admin-table-body">
             {this.props.rows.map(row => (
-              <TableRow key={row.id} row={row} {...this.props} />
+              <AdminTableRow key={row.id} row={row} {...this.props} />
             ))}
           </tbody>
         </table>
