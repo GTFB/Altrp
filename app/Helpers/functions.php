@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use League\ColorExtractor\Color;
 use League\ColorExtractor\ColorExtractor;
 use League\ColorExtractor\Palette;
+use App\Page;
 
 /**
  * Get the script possible URL base
@@ -535,13 +536,13 @@ function setDynamicData($template, $data)
  * @return boolean
  * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
  */
-function saveCache( $html) {
+function saveCache( $html, $page_id ) {
 
   if (!$html) {
     return false;
   }
   $url = $_SERVER['REQUEST_URI'];
-//  $html = minificationHTML($html);
+  //  $html = minificationHTML($html);
   $hash = md5($url . $html);
 
   $cachePath = storage_path() . '/framework/cache/pages';
@@ -560,31 +561,12 @@ function saveCache( $html) {
     $relations = [];
   }
 
-  $roles = [];
-  if (Auth::user()) {
-    $roles = Auth::user()->getUserRoles();
-  }
-  $plainRoles = implode(",", $roles);
-
-  $encryption_key = getenv('APP_KEY');
-  $iv_size = 16; // 128 bits
-  $iv = openssl_random_pseudo_bytes($iv_size, $strong);
-
-  $cipherRoles = openssl_encrypt(
-      $plainRoles,
-      'AES-256-CBC',
-      $encryption_key,
-      0,
-      $iv
-  );
-
-  setcookie("roles", $cipherRoles, time()+3600);
+  $roles = Page::getRolesToCache( $page_id );
 
   $newRelation = [
     'hash' => $hash,
     "url" => $url,
-    "roles" => $roles,
-    "iv" => base64_encode($iv)
+    "roles" => $roles
   ];
 
   $key = false;
