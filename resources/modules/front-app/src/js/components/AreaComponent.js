@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+
 import FrontPopup from "./FrontPopup";
 
 class AreaComponent extends Component {

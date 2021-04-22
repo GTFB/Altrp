@@ -1,6 +1,10 @@
+import React, {Component} from "react";
+import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 
-import store from "./js/store/store";
+window.React = React;
+window.Component = Component;
+window.ReactDOM = ReactDOM;
 
 if (process.env.NODE_ENV !== 'production') {
   console.log('Looks like we are in development mode!');
@@ -21,8 +25,10 @@ import('react').then((_export) => {
 }).then((_export) => {
   window.iconsManager = new _export.default();
   return import('./Admin.js')
-}).then((_export) => {
+}).then(async (_export) => {
   window.Admin = _export.default;
+  let store = (await import("./js/store/store")).default;
+
   ReactDOM.render(<Provider store={store}>
     <Admin />
   </Provider>, document.getElementById('admin'));

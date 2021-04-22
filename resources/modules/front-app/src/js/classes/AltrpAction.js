@@ -1,5 +1,5 @@
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
-import React, { Component } from "react";
+
 import {
   altrpLogin,
   altrpLogout,

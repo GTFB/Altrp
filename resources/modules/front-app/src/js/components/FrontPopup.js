@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+
 import connect from "react-redux/es/connect/connect";
 import { Scrollbars } from "react-custom-scrollbars";
 import AltrpOffcanvas from "./altrp-offcanvas/AltrpOffcanvas";

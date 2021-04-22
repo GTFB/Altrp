@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import {altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceContentWithData, setTitle} from "../helpers";

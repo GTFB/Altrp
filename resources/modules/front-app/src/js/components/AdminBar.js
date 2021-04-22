@@ -1,4 +1,3 @@
-import React from "react";
 import { getDataByPath } from "./../helpers";
 import AdminBarWrapper from './AdminBarWrapper';
 import Resource from "../../../../editor/src/js/classes/Resource";
