@@ -22,14 +22,23 @@ class OffcanvasWidget extends Component {
 
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
-    this.hideButton = this.hideButton.bind(this)
+    this.hideButton = this.hideButton.bind(this);
+    this.mainContent = document.getElementsByClassName('main-content')[0];
   }
 
   show() {
     this.setState({
       show: true
     });
-    document.addEventListener("click", this.hide)
+    document.addEventListener("click", this.hide);
+    if(this.state.settings.animations_offcanvas === "push") {
+      if(this.state.settings.direction_offcanvas === "left") {
+        this.mainContent.style.width = "70%";
+        this.mainContent.style.left = "30%";
+      } else if (this.state.settings.direction_offcanvas === "right") {
+        this.mainContent.style.width = "70%";
+      }
+    }
   }
 
   hide(e) {
@@ -49,6 +58,8 @@ class OffcanvasWidget extends Component {
       }, 200);
       document.removeEventListener("click", this.hide)
     }
+    this.mainContent.style.width = "100%";
+    this.mainContent.style.left = "0";
   }
 
   hideButton() {
@@ -117,7 +128,7 @@ class OffcanvasWidget extends Component {
         break;
       default:
         classesWrapper += " altrp-offcanvas-animation-slide";
-    }
+    }   
 
     let content = "";
     let rootElement = this.props.template;
@@ -133,7 +144,7 @@ class OffcanvasWidget extends Component {
     }
     classesWrapper += ` altrp-offcanvas-wrapper-cursor-${this.state.settings.close_cursor_offcanvas} ${this.state.settings.overflow_visible_offcanvas ? "altrp-offcanvas-wrapper-overflow-visible" : ""}`;
 
-    const closeButton = this.state.settings.close_offcanvas ? (
+    const closeButton = this.state.settings.switcher_close_button_popup_layout ? (
       <div className={"altrp-offcanvas-button popup-close-button" + ` altrp-offcanvas-button-${this.state.settings.popup_close_icon_alignment}`} onClick={this.hideButton}>
         <AltrpImage image={this.state.settings.popup_close_icon} default={{assetType: "icon", name: "deleteOne"}} className="altrp-offcanvas-button-icon popup-close-button-icon"/>
       </div>

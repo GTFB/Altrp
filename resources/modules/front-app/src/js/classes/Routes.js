@@ -11,14 +11,14 @@ class Routes {
     this.loadRoutes();
   }
   loadRoutes() {
-    // if(window.altrpPages){
-    //   let routes = [];
-    //   for (let _data of window.altrpPages) {
-    //     routes.push(Route.routeFabric(_data));
-    //   }
-    //   appStore.dispatch(changeAppRoutes(routes));
-    //   return
-    // }
+    if(window.altrpPages){
+      let routes = [];
+      for (let _data of window.altrpPages) {
+        routes.push(Route.routeFabric(_data));
+      }
+      appStore.dispatch(changeAppRoutes(routes));
+      return
+    }
     this.resource
       .getAll()
       .then(routesData => {
@@ -33,5 +33,4 @@ class Routes {
       });
   }
 }
-
 export default new Routes();

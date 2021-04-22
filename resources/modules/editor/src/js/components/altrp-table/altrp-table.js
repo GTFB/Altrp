@@ -1,7 +1,6 @@
-import React, {useCallback, useState, useEffect} from "react";
-import {useTable, useGroupBy} from "react-table";
-import {useQuery, usePaginatedQuery, queryCache} from  "react-query";
-import '../../../sass/altrp-pagination.scss';
+import React, { useState, } from "react";
+import {useTable, } from "react-table";
+import ('../../../sass/altrp-pagination.scss');
 import {Link} from "react-router-dom";
 import {
   isEditor, mbParseJSON,

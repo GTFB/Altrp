@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import "../../../../sass/altrp-hover-image.scss";
+import ("../../../../sass/altrp-hover-image.scss");
 
 class HoverImage extends React.Component {
   constructor(props) {

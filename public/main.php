@@ -3,6 +3,14 @@
 //Render cached files
 $cachePath = '../storage/framework/cache/pages/';
 
+$env = file('../.env');
+$encryption_key = "";
+foreach ( $env as $setting ) {
+  if ( strpos($setting,'APP_KEY',0) !==false ) {
+    $encryption_key = str_replace("APP_KEY=", "", $setting);
+  }
+}
+
 if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
 
 	$url = $_SERVER['REQUEST_URI'];
@@ -17,15 +25,29 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
     $hash_to_delete = '';
 
     if (!empty($cachedFiles)) {
-      foreach ($cachedFiles as $cachedFile) {
+      foreach ($cachedFiles as $key =>  $cachedFile) {
+
+        $roles = openssl_decrypt(
+            $_COOKIE['roles'],
+            'AES-256-CBC',
+            $encryption_key,
+            0,
+            base64_decode($cachedFile['iv'])
+        );
+        $roles = explode(",", $roles);
+
         if ($cachedFile['url'] === $url) {
+
           if( file_exists($cachePath . $cachedFile['hash']) ){
+
             $file = file_get_contents($cachePath . $cachedFile['hash']);
+
             echo $file;
             die();
           } else {
             $hash_to_delete = $cachedFile['hash'];
           }
+
         }
       }
     }

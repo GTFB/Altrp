@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React, { Component, Suspense } from "react";
 import AreaComponent from "./AreaComponent";
-import AdminBar from "./AdminBar";
+const AdminBar = React.lazy(() => import("./AdminBar"));
 import { Scrollbars } from "react-custom-scrollbars";
 import { Redirect, withRouter } from "react-router-dom";
 import pageLoader from "./../classes/PageLoader";
@@ -26,16 +26,21 @@ class RouteContent extends Component {
     let title = this.props.title;
     appStore.dispatch(changeCurrentTitle(title));
     this.state = {
-      areas: this.props.areas || []
+      areas: this.props.areas || [],
+      admin: this.props.currentUser.hasRoles('admin')
     };
     this.scrollbar = React.createRef();
     this.isReport = window.location.href.includes("reports");
     appStore.dispatch(clearElements());
     window.currentRouterMatch = new AltrpModel(props.match);
     window.currentPageId = props.id;
-    this.admin = this.props.currentUser.hasRoles('admin');
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState((state) => ({
+      ...state, admin: nextProps.currentUser.hasRoles('admin')
+    }))
+  }
   /**
    * Меняем заголовок страницы
    * лениво подгружаем области, если необходимо и страница доступна к просмотру
@@ -148,16 +153,16 @@ class RouteContent extends Component {
       // appStore.dispatch(clearFormStorage());
     }
   }
-
+  
   render() {
     if (! this.props.allowed) {
       return <Redirect to={this.props.redirect || "/"} />;
     }
     return (
       <React.Fragment>
-        {this.admin && <AdminBar areas={this.state.areas} data={this.props.currentUser.data} idPage={this.props.id} />}
-
+        <Suspense fallback={<div/>}>{this.state.admin && <AdminBar areas={this.state.areas} data={this.props.currentUser.data} idPage={this.props.id} />} </Suspense>
         <Scrollbars
+        className="main-content"
           ref={this.scrollbar}
           onUpdate={this.props.setScrollValue}
           // style={{ zIndex: 99999 }}

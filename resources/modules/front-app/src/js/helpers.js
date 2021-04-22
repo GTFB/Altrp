@@ -499,18 +499,20 @@ export function setDataByPath(path = "", value, dispatch = null) {
   }
   if (path.indexOf("altrpforms.") === 0) {
     path = path.replace("altrpforms.", "");
-    if (!path) {
+    if (! path) {
       return false;
     }
     const [formId, fieldName] = path.split(".");
     const { formsStore } = appStore.getState();
 
     const oldValue = _.get(formsStore, path);
+    console.log(value);
     if (_.isEqual(oldValue, value)) {
       return true;
     }
+    console.log(value);
     if (_.isFunction(dispatch)) {
-      dispatch(changeCurrentUserProperty(path, value));
+      dispatch(changeFormFieldValue(path, value));
     } else {
       appStore.dispatch(changeFormFieldValue(fieldName, value, formId, true));
     }
@@ -666,13 +668,10 @@ export function getDataByPath(
     value = getDataFromLocalStorage("altrpstorage", {});
     value = _.get(value, path, _default);
   } else {
-    value = urlParams[path]
-      ? urlParams[path]
-      : currentModel.getProperty(path, _default);
     value = currentModel.getProperty(path)
       ? currentModel.getProperty(path)
       : urlParams[path];
-    if (!value) {
+    if (! value) {
       value = _default;
     }
   }
