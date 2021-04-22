@@ -476,12 +476,14 @@ foreach ( $frontend_routes as $_frontend_route ) {
 
   Route::get($frontend_route, function () use ($title, $_frontend_route, $frontend_route) {
 
-    $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
+    $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] ); 
 
     if (Page::isCached( $_frontend_route['id'] )) {
 
       global $altrp_need_cache;
       $altrp_need_cache = true;
+      global $altrp_route_id;
+      $altrp_route_id = $_frontend_route['id'];
 
     }
 
