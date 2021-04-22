@@ -589,6 +589,56 @@ function saveCache( $html, $page_id ) {
   return true;
 }
 
+
+function saveTemplateCache( $json, $template_id ) {
+
+  if (!$json || !$template_id) {
+    return false;
+  }
+
+  $hash = md5($json);
+
+  $cachePath = storage_path() . '/framework/cache/templates';
+
+  File::ensureDirectoryExists( $cachePath, 0775);
+
+  if ( ! File::exists($cachePath . '/relations.json') ) {
+    File::put($cachePath . '/relations.json', '{}');
+  }
+
+  $relationsJson = File::get($cachePath . '/relations.json');
+  $relations = json_decode($relationsJson, true);
+
+  if ( ! is_array($relations) ) {
+    File::put($cachePath . '/relations.json', '{}');
+    $relations = [];
+  }
+
+  $newRelation = [
+    'hash' => $hash,
+    'template_id' => $template_id
+  ];
+
+  $key = false;
+  foreach ($relations as $relation) {
+    if ($relation['hash'] === $hash) {
+      $key = true;
+      break;
+    }
+  }
+
+  if (!$key) {
+    array_push($relations, $newRelation);
+  }
+
+  $relations = json_encode($relations);
+
+  File::put($cachePath . '/relations.json', $relations);
+  File::put($cachePath . '/' . $hash, $json);
+
+  return true;
+}
+
 /**
  * Минификация HTML
  * @param string $html
