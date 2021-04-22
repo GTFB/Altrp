@@ -1,7 +1,7 @@
-import {controllerMapStateToProps} from "../../decorators/controller";
-import React, {Component} from "react";
+import { controllerMapStateToProps } from "../../decorators/controller";
+import React, { Component } from "react";
 import { connect } from "react-redux";
-import {SketchPicker} from "react-color"
+import { SketchPicker } from "react-color"
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
 import PresetColors from "./PresetColors";
@@ -44,7 +44,7 @@ class ColorController extends Component {
   }
 
   closeColorPicker(e) {
-    if(!e.path.includes(this.contentRef.current)) {
+    if (!e.path.includes(this.contentRef.current)) {
       this.setState({ active: false });
       document.removeEventListener("click", this.closeColorPicker)
     }
@@ -57,10 +57,10 @@ class ColorController extends Component {
    * @return {boolean}
    */
   shouldComponentUpdate(nextProps, nextState) {
-    if(this.state.colorPickedHex !== nextState.colorPickedHex
-        || nextState.active !== this.state.active
-        || nextState.show !== this.state.show
-        || nextProps.currentState !== this.props.currentState
+    if (this.state.colorPickedHex !== nextState.colorPickedHex
+      || nextState.active !== this.state.active
+      || nextState.show !== this.state.show
+      || nextProps.currentState !== this.props.currentState
     ) {
       return true;
     } else {
@@ -78,10 +78,24 @@ class ColorController extends Component {
     this._changeValue({
       color: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
       colorPickedHex: color.hex,
-      colorRGB:  color.rgb,
+      colorRGB: color.rgb,
     });
 
   };
+
+  colorChangeFromPreset(color) {
+    this.setState({
+      colorPickedHex: color.colorPickedHex,
+      colorPickedRGB: `rgba(${color.colorRGB.r}, ${color.colorRGB.g}, ${color.colorRGB.b}, ${color.colorRGB.a})`,
+      opacity: color.colorRGB.a,
+      colorRGB: color.colorRGB
+    });
+    this._changeValue({
+      color: `rgba(${color.colorRGB.r}, ${color.colorRGB.g}, ${color.colorRGB.b}, ${color.colorRGB.a})`,
+      colorPickedHex: color.colorPickedHex,
+      colorRGB: color.colorRGB,
+    });
+  }
 
   // inputHex(e){
   //   let hexToRGB = parseInt(this.state.colorPickedHex.split("#")[1], 16)
@@ -134,25 +148,26 @@ class ColorController extends Component {
           <label className="control-color-opacity" >{(this.state.opacity * 100).toFixed() + "%"}</label>
         </div>
       </div>
-        <div ref={this.contentRef} className={"control-color-colorPicker" + (! this.state.active ? " control-color-hide" : "")} style={colorPickerPosition}>
+      <div ref={this.contentRef} className={"control-color-colorPicker" + (!this.state.active ? " control-color-hide" : "")} style={colorPickerPosition}>
 
-          <SketchPicker presetColors={[]}
-                        color={this.state.colorRGB}
-                        onChange={this.colorChange}
-                        style={{
-                          padding: 0,
-                          boxShadow: 'none',
-                        }}
-                        name="colorPicker"
-                        className="sketchPicker" >
-          </SketchPicker>
-          <PresetColors presetColors={this.props.presetColors}
-                        value={this.state.value}
-                        changeValue={color=>{
-                          this._changeValue(color);
-                          this.setState(state=>({...state, colorRGB: color.colorRGB}))
-                        }}/>
-        </div>
+        <SketchPicker presetColors={[]}
+          color={this.state.colorRGB}
+          onChange={this.colorChange}
+          style={{
+            padding: 0,
+            boxShadow: 'none',
+          }}
+          name="colorPicker"
+          className="sketchPicker" >
+        </SketchPicker>
+        <PresetColors presetColors={this.props.presetColors}
+          value={this.state.value}
+          changeValue={color => {
+            this.colorChangeFromPreset(color)
+            // this._changeValue(color);
+            // this.setState(state=>({...state, colorRGB: color.colorRGB}))
+          }} />
+      </div>
     </div>
   }
 }

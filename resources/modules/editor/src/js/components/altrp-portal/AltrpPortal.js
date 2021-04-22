@@ -1,7 +1,12 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import ReactDOM from "react-dom";
+<<<<<<< HEAD
+import "./altrp-portal.scss";
+import { isEditor } from "../../../../../front-app/src/js/helpers";
+=======
 import ("./altrp-portal.scss");
 import {isEditor} from "../../../../../front-app/src/js/helpers";
+>>>>>>> origin/speed
 
 class AltrpPortal extends Component {
   constructor(props) {
@@ -16,7 +21,7 @@ class AltrpPortal extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if(prevProps.childrenRefs !== this.props.childrenRef && !prevState.renderComponent) {
+    if (prevProps.childrenRefs !== this.props.childrenRef && !prevState.renderComponent) {
       this.setState({ renderComponent: true })
     }
   }
@@ -24,12 +29,12 @@ class AltrpPortal extends Component {
   render() {
     let frame = document.body;
 
-    if(isEditor()) {
+    if (isEditor()) {
       frame = document.getElementById("editorContent").contentWindow.document.body
     }
     let position = {};
 
-    if(this.props.childrenRef) {
+    if (this.props.childrenRef) {
       let boundingRect = this.props.childrenRef.getBoundingClientRect();
       // let positionType = this.props.position;
 
@@ -42,7 +47,7 @@ class AltrpPortal extends Component {
     let show = this.props.show || false;
 
     let children = (
-      <div className={ this.props.id + "-altrp-portal altrp-portal " + (!show ? "altrp-portal-display-block" : "altrp-portal-display-none")} style={position} ref={this.object}>
+      <div className={this.props.id + "-altrp-portal altrp-portal " + (!show ? "altrp-portal-display-block" : "altrp-portal-display-none")} style={position} ref={this.object}>
         {
           this.props.children
         }

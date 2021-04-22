@@ -45,6 +45,7 @@ class ElementWrapper extends Component {
     this.wrapper = React.createRef();
   }
   onDragLeave(e) {
+    e.preventDefault();
     this.setState(state => {
       return { ...state, dragOver: false, cursorPos: false };
     });
@@ -131,7 +132,7 @@ class ElementWrapper extends Component {
             }
             break;
         }
-        
+
       }
       if (this.props.element.getType() === "column") {
         this.props.element.appendChild(newElement);
@@ -178,6 +179,7 @@ class ElementWrapper extends Component {
    * событие начало перетаскивания
    */
   onDragStart(e) {
+    e.preventDefault();
     store.dispatch(startDrag(this.props.element));
     e.dataTransfer.effectAllowed = "copy";
     e.dataTransfer.setData("altrp-element", this.props.element);
@@ -189,7 +191,8 @@ class ElementWrapper extends Component {
   /**
    * событие остановки перетаскивания
    */
-  onDragEnd() {
+  onDragEnd(e) {
+    e.preventDefault();
     this.stopDrag();
   }
 
@@ -276,7 +279,7 @@ class ElementWrapper extends Component {
   render() {
     const elementHideTrigger = this.props.element.settings.hide_on_trigger;
     const { isFixed, tooltip_text, tooltip_position } = this.props.element.getSettings();
-    
+
     let errorContent = null;
     if (this.state.errorInfo) {
       errorContent = (
@@ -335,8 +338,8 @@ class ElementWrapper extends Component {
     const styles = {
 
     };
-    if(this.props.element.getResponsiveSetting('layout_column_width')){
-      if(Number(this.props.element.getResponsiveSetting('layout_column_width'))){
+    if (this.props.element.getResponsiveSetting('layout_column_width')) {
+      if (Number(this.props.element.getResponsiveSetting('layout_column_width'))) {
         styles.width = this.props.element.getResponsiveSetting('layout_column_width') + '%';
       } else {
         styles.width = this.props.element.getResponsiveSetting('layout_column_width');

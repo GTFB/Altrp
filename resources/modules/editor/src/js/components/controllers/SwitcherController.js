@@ -1,4 +1,4 @@
-import {controllerMapStateToProps} from "../../decorators/controller";
+import { controllerMapStateToProps } from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import controllerDecorate from "../../decorators/controller";
