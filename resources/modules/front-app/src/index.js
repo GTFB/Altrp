@@ -5,6 +5,18 @@ import './sass/front-style.scss';
 /**
  * Параллельно загружаем все необходимые модули
  */
+
+import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElementsManager').then(module=>{
+  import (/* webpackChunkName: 'FrontElementsFabric' */'./js/classes/FrontElementsFabric').then(module=>{
+    console.log('LOAD FrontElementsFabric: ',performance.now());
+    loadingCallback();
+  });
+  return window.frontElementsManager.loadComponents();
+}).then(components=>{
+  // window.frontElementsManager.loadNotUsedComponent();
+  console.log('LOAD FrontElementsManager: ',performance.now());
+  loadingCallback();
+});
 import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element-component').then(module=>{
   window.elementDecorator = module.default;
   console.log('LOAD elementDecorator: ',performance.now());
@@ -19,11 +31,6 @@ import (/* webpackChunkName: 'React' */'react').then(module=>{
 import (/* webpackChunkName: 'FrontApp' */'./FrontApp').then(module=>{
   window.FrontApp = module.default;
   console.log('LOAD FrontApp: ',performance.now());
-  loadingCallback();
-});
-import (/* webpackChunkName: 'FrontElementsFabric' */'./js/classes/FrontElementsFabric').then(module=>{
-  console.log('LOAD FrontElementsFabric: ',performance.now());
-
   loadingCallback();
 });
 import (/* webpackChunkName: 'ReactDOM' */'react-dom').then(module=>{
@@ -46,10 +53,12 @@ import (/* webpackChunkName: 'FormsManager' */'../../editor/src/js/classes/modul
  * Рендерим главный компонент после загрузки основных модулей
  */
 function loadingCallback(){
-  if(window.React 
+  if(window.React
       && window.Component
       && window.ReactDOM
       && window.frontElementsFabric
+      && window.frontElementsManager
+      && window.frontElementsManager.componentsIsLoaded()
       && window.FrontApp
       && window.elementDecorator
       && window.ElementWrapper

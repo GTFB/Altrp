@@ -51,6 +51,7 @@ class Page extends Model
     'type',
     'is_cached',
     'not_found',
+    'sections_count',
   ];
 
   /**
@@ -207,9 +208,10 @@ class Page extends Model
 
   /**
    * @param $page_id
+   * @param bool $sections_limit
    * @return array
    */
-  public static function get_areas_for_page( $page_id ){
+  public static function get_areas_for_page( $page_id, $sections_limit = false ){
     $areas = [];
 //    $header = Template::where( 'area', 2 )->where( 'type', 'template' )->first();
 //    if( $header ){
@@ -255,14 +257,23 @@ class Page extends Model
 //        ],
 //      ];
 //    }
-    $currentPage = Page::find($page_id);
+    $currentPage = Page::find( $page_id );
     $contentType = $currentPage->type;
-    $header_template = Template::getTemplate([
+    if( $currentPage->sections_count && $sections_limit ){
+      $sections_count = $currentPage->sections_count;
+    }
+
+    $header_template = Template::getTemplate( [
       'page_id' => $page_id,
       'template_type' => 'header',
-    ]);
+    ] );
     unset( $header_template['html_content'] );
     unset( $header_template['styles'] );
+
+    if( isset( $sections_count ) && $header_template['data'] ){
+      $header_template['data'] = self::spliceSections( $header_template['data'], $sections_count );
+    }
+
     $areas[] = [
       'area_name' => 'header',
       'id' => 'header',
@@ -270,10 +281,16 @@ class Page extends Model
       'template' => $header_template,
     ];
 
+
     $content_template = Template::getTemplate([
       'page_id' => $page_id,
       'template_type' => $contentType ? 'reports' : 'content',
     ]);
+
+    if( isset( $sections_count ) && $content_template['data'] ){
+      $content_template['data'] = self::spliceSections( $content_template['data'], $sections_count );
+    }
+
     unset( $content_template['html_content'] );
     unset( $content_template['styles'] );
     $areas[] = [
@@ -287,6 +304,10 @@ class Page extends Model
       'page_id' => $page_id,
       'template_type' => 'footer',
     ]);
+
+    if( isset( $sections_count ) && $footer_template['data'] ){
+      $footer_template['data'] = self::spliceSections( $footer_template['data'], $sections_count );
+    }
     unset( $footer_template['html_content'] );
     unset( $footer_template['styles'] );
     $areas[] = [
@@ -318,6 +339,30 @@ class Page extends Model
     ];
 
     return $areas;
+  }
+
+  /**
+   * @param string $data
+   * @param int $sections_count
+   * @return string
+   */
+  public static function spliceSections( $data , &$sections_count = 0 ){
+    if( ! isset( $sections_count ) || ! $data ){
+      return $data;
+    }
+    $data = json_decode( $data, true );
+    if( count( $data['children'] ) < $sections_count ){
+      $sections_count -= count( $data['children'] );
+
+    } else if( count( $data['children'] ) > $sections_count ){
+      $data['children'] = array_slice( $data['children'], 0, $sections_count );
+      $sections_count = 0;
+    } else {
+      $sections_count = 0;
+    }
+
+    $data = json_encode( $data );
+    return $data;
   }
 
   /**

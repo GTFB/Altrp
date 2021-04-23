@@ -456,6 +456,8 @@ $frontend_routes = \App\Page::get_frontend_routes();
 Route::get('/', function () {
 
   return view('front-app', [
+
+    'elements_list' => json_encode( [] ),
     'title' => 'Main',
     'page_id' => 'null',
     '_frontend_route' => [],
@@ -475,10 +477,15 @@ foreach ( $frontend_routes as $_frontend_route ) {
   $replacement1 = '{$1}/';
   $frontend_route = preg_replace( $pattern1, $replacement1, $path );
 
-  Route::get($frontend_route, function () use ($title, $_frontend_route, $frontend_route) {
+  Route::get( $frontend_route, function () use ( $title, $_frontend_route, $frontend_route ) {
 
     $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
+//    echo '<pre style="padding-left: 200px;">';
+//    var_dump( $preload_content );
+//    echo '</pre>';
 
+    $page_areas = Page::get_areas_for_page( $_frontend_route['id'], true );
+    $elements_list = extractElementsNames( $page_areas );
     if (Page::isCached( $_frontend_route['id'] )) {
 
       global $altrp_need_cache;
@@ -487,7 +494,8 @@ foreach ( $frontend_routes as $_frontend_route ) {
     }
 
     return view( 'front-app', [
-      'page_areas' => json_encode( Page::get_areas_for_page( $_frontend_route['id'] ) ),
+      'page_areas' => json_encode( $page_areas ),
+      'elements_list' => json_encode( $elements_list ),
       'page_id' => $_frontend_route['id'],
       'title' => $title,
       '_frontend_route' => $_frontend_route,

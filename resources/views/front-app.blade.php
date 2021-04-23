@@ -89,6 +89,7 @@
   window.altrp = {
     version: '{{ getCurrentVersion() }}'
   };
+  window.altrpElementsLists = {!! $elements_list !!};
   window.pageStorage = {};
   window.ALTRP_DEBUG = {!! json_encode( ! ! get_altrp_setting( 'altrp_debug', false ) ) !!};
   var page_id = {{ $page_id }};

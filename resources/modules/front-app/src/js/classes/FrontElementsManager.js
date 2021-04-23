@@ -1,104 +1,242 @@
-import RootComponent from "../../../../editor/src/js/components/RootComponent";
-import SectionComponent from "../../../../editor/src/js/components/SectionComponent";
-import ColumnComponent from "../../../../editor/src/js/components/ColumnComponent";
-import HeadingWidget from "../../../../editor/src/js/components/widgets/HeadingWidget";
-import InputWidget from "../../../../editor/src/js/components/widgets/InputWidget";
-import ButtonWidget from "../../../../editor/src/js/components/widgets/ButtonWidget";
-import TextWidget from "../../../../editor/src/js/components/widgets/TextWidget";
-import ImageWidget from "../../../../editor/src/js/components/widgets/ImageWidget";
-import TableWidget from "../../../../editor/src/js/components/widgets/TableWidget";
-import NavWidget from "../../../../editor/src/js/components/widgets/NavWidget";
-import DividerWidget from "../../../../editor/src/js/components/widgets/DividerWidget";
-import TabsWidget from "../../../../editor/src/js/components/widgets/TabsWidget";
-import PosterWidget from "../../../../editor/src/js/components/widgets/PosterWidget";
-import ListWidget from "../../../../editor/src/js/components/widgets/ListWidget";
-import AccordionWidget from "../../../../editor/src/js/components/widgets/AccordionWidget";
-import CarouselWidget from "../../../../editor/src/js/components/widgets/CarouselWidget";
-import MapWidget from "../../../../editor/src/js/components/widgets/MapWidget";
-import MapConstructorWidget from "../../../../editor/src/js/components/widgets/MapConstructorWidget";
-import DiagramWidget from "../../../../editor/src/js/components/widgets/DiagramWidget";
-import DashboardsWidget from "../../../../editor/src/js/components/widgets/DashboardsWidget";
-import PostsWidget from "../../../../editor/src/js/components/widgets/PostsWidget";
-import IconWidget from "../../../../editor/src/js/components/widgets/IconWidget";
-import TourGuide from "../../../../editor/src/js/components/widgets/TourGuide";
-import ExportPanelWidget from "../../../../editor/src/js/components/widgets/ExportPanelWidget";
-import HtmlWidget from "../../../../editor/src/js/components/widgets/HtmlWidget";
-import TemplateWidget from "../../../../editor/src/js/components/widgets/TemplateWidget";
-import GalleryWidget from "../../../../editor/src/js/components/widgets/GalleryWidget";
-import VideoWidget from "../../../../editor/src/js/components/widgets/VideoWidget";
-
 export default class FrontElementsManager {
   constructor() {
     //список компонентов
-    this.components = {};
-    this.components["root-element"] = RootComponent;
-    this.components["heading"] = HeadingWidget;
-    this.components["section"] = SectionComponent;
-    this.components["column"] = ColumnComponent;
-    this.components["input"] = InputWidget;
-    this.components["button"] = ButtonWidget;
-    this.components["text"] = TextWidget;
-    this.components["image"] = ImageWidget;
-    this.components["table"] = TableWidget;
-    this.components["posts"] = PostsWidget;
-    this.components["nav"] = NavWidget;
-    this.components["divider"] = DividerWidget;
-    this.components["tabs"] = TabsWidget;
-    this.components["poster"] = PosterWidget;
-    this.components["list"] = ListWidget;
-    this.components["accordion"] = AccordionWidget;
-    this.components["carousel"] = CarouselWidget;
-    this.components["map"] = MapWidget;
-    this.components["map_builder"] = MapConstructorWidget;
-    this.components["diagram"] = DiagramWidget;
-    this.components["dashboards"] = DashboardsWidget;
-    this.components["tour"] = TourGuide;
-    this.components["icon"] = IconWidget;
-    this.components["export"] = ExportPanelWidget;
-    this.components["html"] = HtmlWidget;
-    this.components["template"] = TemplateWidget;
-    this.components["gallery"] = GalleryWidget
-    this.components["video"] = VideoWidget;
 
-    // this.components["root-element"] = RootComponent;
-    // this.components["section"] = SectionComponent;
-    // this.components["column"] = ColumnComponent;
-    // this.components["heading"] = ColumnComponent;
-    // this.components["input"] = ColumnComponent;
-    // this.components["button"] = ColumnComponent;
-    // this.components["text"] = ColumnComponent;
-    // this.components["image"] = ColumnComponent;
-    // this.components["table"] = ColumnComponent;
-    // this.components["posts"] = ColumnComponent;
-    // this.components["nav"] = ColumnComponent;
-    // this.components["divider"] = ColumnComponent;
-    // this.components["tabs"] = ColumnComponent;
-    // this.components["poster"] = ColumnComponent;
-    // this.components["list"] = ColumnComponent;
-    // this.components["accordion"] = ColumnComponent;
-    // this.components["carousel"] = ColumnComponent;
-    // this.components["map"] = ColumnComponent;
-    // this.components["map_builder"] = ColumnComponent;
-    // this.components["diagram"] = ColumnComponent;
-    // this.components["dashboards"] = ColumnComponent;
-    // this.components["tour"] = ColumnComponent;
-    // this.components["icon"] = ColumnComponent;
-    // this.components["export"] = ColumnComponent;
-    // this.components["html"] = ColumnComponent;
-    // this.components["template"] = ColumnComponent;
-    // this.components["gallery"] = ColumnComponent;
-    // this.components["video"] = ColumnComponent;
+    this.ELEMENTS = [
+      {
+        name: 'root-element',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'RootComponent' */'../../../../editor/src/js/components/RootComponent');
+        },
+      },
+      {
+        name: 'heading',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'HeadingWidget' */'../../../../editor/src/js/components/widgets/HeadingWidget');
+        },
+      },
+      {
+        name: 'section',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'SectionComponent' */'../../../../editor/src/js/components/SectionComponent');
+        },
+      },
+      {
+        name: 'column',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'ColumnComponent' */'../../../../editor/src/js/components/ColumnComponent');
+        },
+      },
+      {
+        name: 'input',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'InputWidget' */'../../../../editor/src/js/components/widgets/InputWidget');
+        },
+      },
+      {
+        name: 'button',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'ButtonWidget' */'../../../../editor/src/js/components/widgets/ButtonWidget');
+        },
+      },
+      {
+        name: 'text',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'TextWidget' */'../../../../editor/src/js/components/widgets/TextWidget');
+        },
+      },
+      {
+        name: 'image',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'ImageWidget' */'../../../../editor/src/js/components/widgets/ImageWidget');
+        },
+      },
+      {
+        name: 'table',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'TableWidget' */'../../../../editor/src/js/components/widgets/TableWidget');
+        },
+      },
+      {
+        name: 'posts',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'PostsWidget' */'../../../../editor/src/js/components/widgets/PostsWidget');
+        },
+      },
+      {
+        name: 'nav',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'NavWidget' */'../../../../editor/src/js/components/widgets/NavWidget');
+        },
+      },
+      {
+        name: 'divider',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'DividerWidget' */'../../../../editor/src/js/components/widgets/DividerWidget');
+        },
+      },
+      {
+        name: 'tabs',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'TabsWidget' */'../../../../editor/src/js/components/widgets/TabsWidget');
+        },
+      },
+      {
+        name: 'poster',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'PosterWidget' */'../../../../editor/src/js/components/widgets/PosterWidget');
+        },
+      },
+      {
+        name: 'list',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'ListWidget' */'../../../../editor/src/js/components/widgets/ListWidget');
+        },
+      },
+      {
+        name: 'accordion',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'AccordionWidget' */'../../../../editor/src/js/components/widgets/AccordionWidget');
+        },
+      },
+      {
+        name: 'carousel',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'CarouselWidget' */'../../../../editor/src/js/components/widgets/CarouselWidget');
+        },
+      },
+      {
+        name: 'map',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'MapWidget' */'../../../../editor/src/js/components/widgets/MapWidget');
+        },
+      },
+      {
+        name: 'map_builder',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'MapConstructorWidget' */'../../../../editor/src/js/components/widgets/MapConstructorWidget');
+        },
+      },
+      {
+        name: 'diagram',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'DiagramWidget' */'../../../../editor/src/js/components/widgets/DiagramWidget');
+        },
+      },
+      {
+        name: 'dashboards',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'DashboardsWidget' */'../../../../editor/src/js/components/widgets/DashboardsWidget');
+        },
+      },
+      {
+        name: 'tour',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'TourGuide' */'../../../../editor/src/js/components/widgets/TourGuide');
+        },
+      },
+      {
+        name: 'icon',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'IconWidget' */'../../../../editor/src/js/components/widgets/IconWidget');
+        },
+      },
+      {
+        name: 'export',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'ExportPanelWidget' */'../../../../editor/src/js/components/widgets/ExportPanelWidget');
+        },
+      },
+      {
+        name: 'html',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'HtmlWidget' */'../../../../editor/src/js/components/widgets/HtmlWidget');
+        },
+      },
+      {
+        name: 'template',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'TemplateWidget' */'../../../../editor/src/js/components/widgets/TemplateWidget');
+        },
+      },
+      {
+        name: 'gallery',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'GalleryWidget' */'../../../../editor/src/js/components/widgets/GalleryWidget');
+        },
+      },
+      {
+        name: 'video',
+        import:  async ()=>{
+          return await import(/* webpackChunkName: 'VideoWidget' */'../../../../editor/src/js/components/widgets/VideoWidget');
+        },
+      },
+    ];
+    this.components = {};
   }
 
+  /**
+   * 
+   * @return {Promise<void>}
+   */
+  async loadComponents(){
+    let componentsToLoad;
+    if(window.altrpElementsLists){
+      componentsToLoad = this.ELEMENTS.filter(el=>{
+        return window.altrpElementsLists.indexOf(el.name) !== -1;
+      });
+      componentsToLoad = componentsToLoad.map(async el => {
+        return this.components[el.name] = (await el.import(/* webpackChunkName: 'FrontElementsFabric' */)).default;
+      });
+    } else {
+      componentsToLoad = this.ELEMENTS.map(async el => {
+        return this.components[el.name] = (await el.import(/* webpackChunkName: 'FrontElementsFabric' */)).default;
+      });
+    }
+    return await Promise.all(componentsToLoad);
+  }
+
+  /**
+   * Загружаем оставшиеся компоненты
+   * @return {Promise<void>}
+   */
+  async loadNotUsedComponent(){
+    if(! window.altrpElementsLists){
+      return;
+    }
+    let componentsToLoad = this.ELEMENTS.filter(el=>{
+      return window.altrpElementsLists.indexOf(el.name) === -1;
+    });
+    componentsToLoad = componentsToLoad.map(async el => {
+      this.components[el.name] = (await el.import(/* webpackChunkName: 'FrontElementsFabric' */)).default;
+    });
+    await Promise.all(componentsToLoad);
+  }
+  /**
+   * проверяем все ли виджеты из window.altrpElementsLists загрузились
+   */
+  componentsIsLoaded(){
+    if(! window.altrpElementsLists){
+      return _.keys(this.components).length === this.ELEMENTS.length;
+    }
+    return _.keys(this.components).length === window.altrpElementsLists.length;
+  }
+
+  /**
+   * 
+   * @param name
+   * @return {*}
+   */
   getComponentClass(name) {
     if (!this.components[name]) {
-      throw "Не найден компонент с именем " + name;
+      console.error( 'Не найден компонент с именем ' + name);
+      return 'div';
     }
     return this.components[name];
   }
 
   checkElementExists(elementName) {
-    return !!this.components[elementName];
+    return ! ! this.components[elementName];
   }
 }
 window.frontElementsManager = new FrontElementsManager();
