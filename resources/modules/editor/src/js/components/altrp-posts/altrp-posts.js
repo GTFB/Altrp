@@ -1,7 +1,6 @@
-import styled from 'styled-components'
 import React from "react";
-import '../../../sass/altrp-pagination.scss';
-import './altrp-posts.scss'
+import ('../../../sass/altrp-pagination.scss');
+import ('./altrp-posts.scss');
 import AltrpQueryComponent from "../altrp-query-component/altrp-query-component";
 import templateLoader from "../../classes/modules/TemplateLoader"
 import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric"

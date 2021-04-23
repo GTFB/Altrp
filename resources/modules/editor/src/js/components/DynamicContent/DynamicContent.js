@@ -1,6 +1,6 @@
 import React, {Component} from "react";
-import './DynamicContent.scss';
-import './../../../sass/altrp-menu.scss';
+import ('./DynamicContent.scss');
+import ('./../../../sass/altrp-menu.scss');
 import {connect} from "react-redux";
 import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";

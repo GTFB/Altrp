@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Lightbox from 'react-image-lightbox';
-import './altrp-lightbox.scss';
+import ('./altrp-lightbox.scss');
 
 class AltrpLightbox extends Component {
   constructor(props) {

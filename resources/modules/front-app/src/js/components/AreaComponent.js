@@ -1,8 +1,13 @@
-import React, { Component } from "react";
+
 import FrontPopup from "./FrontPopup";
 
 class AreaComponent extends Component {
 
+  constructor(props){
+    super(props);
+    console.log('AreaComponent: ', performance.now());
+
+  }
   componentWillUnmount() {
     window.stylesModule.removeStyleById(this.rootElement?.id);
   }
@@ -13,7 +18,7 @@ class AreaComponent extends Component {
      * Если это попап
      */
     if (this.props.area.getTemplates().length) {
-      return (
+      let popus =  (
         <div className={classes.join(" ")}>
           {this.props.area.getTemplates().map(template => {
             return (
@@ -22,6 +27,7 @@ class AreaComponent extends Component {
           })}
         </div>
       );
+      return popus;
     }
     /**
      * Если шаблон привязанный к странице удалили, то ничего не отрисовываем
@@ -36,7 +42,7 @@ class AreaComponent extends Component {
       this.props.models
     );
     this.rootElement = rootElement;
-    return (
+    let template =  (
       <div className={classes.join(" ")}>
         {React.createElement(this.rootElement.componentClass, {
           element: this.rootElement,
@@ -44,6 +50,7 @@ class AreaComponent extends Component {
         })}
       </div>
     );
+    return template;
   }
 }
 

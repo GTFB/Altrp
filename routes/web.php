@@ -237,6 +237,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
      */
     Route::post('check_update', 'Admin\UpdateController@check_update')->name('admin.check_update');
     Route::post('update_altrp', 'Admin\UpdateController@update_altrp')->name('admin.update_altrp');
+    Route::post('install_test_altrp', 'Admin\UpdateController@install_test_altrp')->name('admin.install_test_altrp');
 
     /**
      * Запрос на обновление всех пользовательских контроллеров
@@ -586,6 +587,14 @@ Route::group(['prefix' => 'ajax'], function () {
   Route::post('/feedback', 'MailController@sendMail');
   Route::post('/feedback-html', 'MailController@sendMailHTML');
 
+  /**
+   * Получение токена
+   */
+  Route::get( '/_token', function ( Request $request ){
+
+    return response()->json( [ 'success' => true, '_token' => csrf_token()], 200, [], JSON_UNESCAPED_UNICODE );
+
+  } );
 });
 
 Route::get('reports/{id}', "ReportsController@show");

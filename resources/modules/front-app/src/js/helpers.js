@@ -1,4 +1,4 @@
-import React from "react";
+
 import CONSTANTS from "../../../editor/src/js/consts";
 import AltrpModel from "../../../editor/src/js/classes/AltrpModel";
 import moment from "moment";
@@ -163,13 +163,13 @@ export function parseURLTemplate(URLTemplate = "", object = null) {
     protocol = "http://";
     url = url.replace("http://", "");
   }
-  if (url.indexOf('mailto:') === 0) {
-    protocol = 'mailto:';
-    url = url.replace('mailto:', '');
+  if (url.indexOf("mailto:") === 0) {
+    protocol = "mailto:";
+    url = url.replace("mailto:", "");
   }
-  if (url.indexOf('tel:') === 0) {
-    protocol = 'tel:';
-    url = url.replace('tel:', '');
+  if (url.indexOf("tel:") === 0) {
+    protocol = "tel:";
+    url = url.replace("tel:", "");
   }
   // columnEditUrl = columnEditUrl.replace(':id', row.original.id);
   let idTemplates = url.match(/:([\s\S]+?)(\/|$)/g);
@@ -499,18 +499,20 @@ export function setDataByPath(path = "", value, dispatch = null) {
   }
   if (path.indexOf("altrpforms.") === 0) {
     path = path.replace("altrpforms.", "");
-    if (!path) {
+    if (! path) {
       return false;
     }
     const [formId, fieldName] = path.split(".");
     const { formsStore } = appStore.getState();
 
     const oldValue = _.get(formsStore, path);
+    console.log(value);
     if (_.isEqual(oldValue, value)) {
       return true;
     }
+    console.log(value);
     if (_.isFunction(dispatch)) {
-      dispatch(changeCurrentUserProperty(path, value));
+      dispatch(changeFormFieldValue(path, value));
     } else {
       appStore.dispatch(changeFormFieldValue(fieldName, value, formId, true));
     }
@@ -531,6 +533,13 @@ export function setDataByPath(path = "", value, dispatch = null) {
         return true;
       }
     }
+  }
+  if (path.indexOf("altrpstorage.") === 0) {
+    path = path.replace("altrpstorage.", "");
+    const currentStorage = getDataFromLocalStorage("altrpstorage", {});
+    _.set(currentStorage, path, value);
+    saveDataToLocalStorage("altrpstorage", currentStorage);
+    return true;
   }
   return false;
 }
@@ -654,14 +663,15 @@ export function getDataByPath(
         }
       }
     }
+  } else if (path.indexOf("altrpstorage.") === 0) {
+    path = path.replace("altrpstorage.", "");
+    value = getDataFromLocalStorage("altrpstorage", {});
+    value = _.get(value, path, _default);
   } else {
-    value = urlParams[path]
-      ? urlParams[path]
-      : currentModel.getProperty(path, _default);
     value = currentModel.getProperty(path)
       ? currentModel.getProperty(path)
       : urlParams[path];
-    if (!value) {
+    if (! value) {
       value = _default;
     }
   }
@@ -1061,8 +1071,8 @@ export function getHTMLElementById(elementId = "") {
  * @param {FrontElement} element
  * @return {null | HTMLElement}
  */
-export function getWrapperHTMLElementByElement(element){
-  if(! element){
+export function getWrapperHTMLElementByElement(element) {
+  if (!element) {
     return null;
   }
   let HTMLElement = null;
@@ -1839,7 +1849,10 @@ export function getResponsiveSetting(
   let setting = settings[_settingName];
   if(setting === undefined) {
     for (let screen of CONSTANTS.SCREENS) {
-      if (currentScreen.id > screen.id || screen.name === CONSTANTS.DEFAULT_BREAKPOINT) {
+      if (
+        currentScreen.id > screen.id ||
+        screen.name === CONSTANTS.DEFAULT_BREAKPOINT
+      ) {
         continue;
       }
       _settingName = `${settingName}_${elementState}_${screen.name}`;

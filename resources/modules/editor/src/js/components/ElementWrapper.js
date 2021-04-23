@@ -20,6 +20,10 @@ import { contextMenu } from "react-contexify/lib/index";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
 import { thresholdSturges } from "d3";
 import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
+import CarouselComponent from "./widgets/styled-components/CarouselComponent";
+import GalleryCompnent from "./widgets/styled-components/GalleryComponent";
+import ImageComponent from "./widgets/styled-components/ImageComponent";
+import ButtonComponent from "./widgets/styled-components/ButtonComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -353,9 +357,30 @@ class ElementWrapper extends Component {
     //   delete elementProps.element;
     // }
     // console.error(performance.now());
+    let WrapperComponent = "div";
+
+    switch (this.props.element.getName()) {
+      case "gallery": {
+        WrapperComponent = GalleryCompnent;
+      }
+        break;
+      case "carousel": {
+        WrapperComponent = CarouselComponent;
+      }
+        break;
+      case "image": {
+        WrapperComponent = ImageComponent;
+      }
+        break;
+      case "button": {
+        WrapperComponent = ButtonComponent;
+      }
+        break;
+    }
+
     return elementHideTrigger &&
       this.props.hideTriggers.includes(elementHideTrigger) ? null : (
-      <div
+      <WrapperComponent
         className={classes}
         style={styles}
         ref={this.wrapper}
@@ -363,6 +388,7 @@ class ElementWrapper extends Component {
         onDragOver={this.onDragOver}
         onClick={this.chooseElement}
         onDrop={this.onDrop}
+        settings={this.props.element.getSettings()}
         onDragEnd={this.onDragEnd}
         onDragLeave={this.onDragLeave}
         onDragEnter={this.onDragEnter}
@@ -403,7 +429,7 @@ class ElementWrapper extends Component {
         {errorContent || React.createElement(this.props.component, elementProps)}
         {tooltip_text && <AltrpTooltip position={tooltip_position}>{tooltip_text}</AltrpTooltip>}
         {emptyColumn}
-      </div>
+      </WrapperComponent>
     );
   }
 

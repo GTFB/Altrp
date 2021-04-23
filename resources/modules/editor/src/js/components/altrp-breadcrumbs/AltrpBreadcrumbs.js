@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
-import "./altrp-breadcrumbs.scss";
+import ("./altrp-breadcrumbs.scss");
 import {isEditor, replaceContentWithData} from "../../../../../front-app/src/js/helpers";
 import AltrpImage from "../altrp-image/AltrpImage";
 
@@ -91,6 +91,7 @@ class AltrpBreadcrumbs extends Component {
         separatorClasses += " altrp-nav-breadcrumbs-separator-icon";
         separator = <AltrpImage
           image={iconSeparator}
+          element={this.props.element}
           default={{
             assetType: "icon",
             name: 'star',
