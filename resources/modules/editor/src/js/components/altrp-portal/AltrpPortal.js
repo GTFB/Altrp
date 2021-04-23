@@ -1,12 +1,7 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import ReactDOM from "react-dom";
-<<<<<<< HEAD
-import "./altrp-portal.scss";
-import { isEditor } from "../../../../../front-app/src/js/helpers";
-=======
-import ("./altrp-portal.scss");
+import("./altrp-portal.scss");
 import {isEditor} from "../../../../../front-app/src/js/helpers";
->>>>>>> origin/speed
 
 class AltrpPortal extends Component {
   constructor(props) {
