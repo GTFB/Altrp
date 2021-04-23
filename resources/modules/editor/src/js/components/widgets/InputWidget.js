@@ -127,9 +127,10 @@ class InputWidget extends Component {
       let options = [...this.state.options];
       if (!_.isArray(options)) {
         options = [];
-      }
-      if (optionsDynamicSetting) {
-        options = convertData(optionsDynamicSetting, options);
+      } else {
+        if (optionsDynamicSetting) {
+          options = convertData(optionsDynamicSetting, options);
+        }
       }
       this.onChange(options);
     }
