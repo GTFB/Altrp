@@ -38,8 +38,6 @@ class Kernel extends ConsoleKernel
     {
          // CUSTOM_SCHEDULES_BEGIN
 
-         $schedule->command('robot:run 1')->dailyAt('13:00')->weekdays()->between('8:00', '13:00');
-         $schedule->command('robot:run 2')->everyMinute();
          // CUSTOM_SCHEDULES_END
     }
 

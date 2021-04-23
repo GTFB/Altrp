@@ -324,7 +324,9 @@ class AltrpUpdateService
           }
 
           if ($robot->start_condition == 'cron') {
-              $config = json_decode($robot->start_config);
+              $config = is_string($robot->start_config)
+                  ? json_decode($robot->start_config)
+                  : json_decode(json_encode($robot->start_config));
               $writer->write(
                   'robot:run ' . $robot->id,
                   $config->period,

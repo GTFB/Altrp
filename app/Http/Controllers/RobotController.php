@@ -108,7 +108,9 @@ class RobotController extends Controller
         }
 
         if ($data['start_condition'] == 'cron') {
-            $config = json_decode($data['start_config']);
+            $config = is_string($data['start_config'])
+                ? json_decode($data['start_config'])
+                : json_decode(json_encode($data['start_config']));
             $writer->write(
                 'robot:run ' . $robot->id,
                 $config->period,
