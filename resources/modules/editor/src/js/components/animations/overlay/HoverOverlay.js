@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import "../../../../sass/altrp-hover-overlay.scss";
+import ("../../../../sass/altrp-hover-overlay.scss");
 import styled from "styled-components";
 
 class HoverOverlay extends Component {

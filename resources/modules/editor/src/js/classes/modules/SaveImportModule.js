@@ -89,7 +89,6 @@ class SaveImportModule extends BaseModule {
         _styledTag.removeAttribute('data-styled');
         _styledTag.removeAttribute('data-styled-version');
         _styledTag.innerHTML = stringifyStylesheet(getSheet(styledTag, contentDocument));
-        console.log(_styledTag.outerHTML);
         stylesElements.push(_styledTag)
       }
 

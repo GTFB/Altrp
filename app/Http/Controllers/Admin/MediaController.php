@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use Intervention\Image\ImageManagerStatic;
 
 class MediaController extends Controller
 {
@@ -70,6 +71,7 @@ class MediaController extends Controller
 
     foreach ( $files as $file ) {
       $media = new Media();
+      $media->title = $file->getClientOriginalName();
       $media->media_type = $file->getClientMimeType();
       $media->author = Auth::user()->id;
       $media->type = self::getTypeForFile( $file );
@@ -78,6 +80,14 @@ class MediaController extends Controller
         Str::random(40) . '.' . $file->getClientOriginalExtension(),
         ['disk' => 'public'] );
 
+      if ($file->getClientOriginalExtension() == "heic") {
+        $media->title = explode('.', $file->getClientOriginalName())[0] . '.jpg';
+        $media->media_type = "image/jpeg";
+        $media->author = Auth::user()->id;
+        $media->type = "image";
+        $media->filename = self::storeHeicToJpeg( $file );
+      }
+      
       $path = Storage::path( 'public/' . $media->filename );
       $ext = pathinfo( $path, PATHINFO_EXTENSION );
       if( $ext === 'svg' ){
@@ -206,5 +216,30 @@ class MediaController extends Controller
       self::$file_types = $file_types;
     }
     return  self::$file_types;
+  }
+
+  /**
+   * Converting and store HEIC file to JPG
+   * @param \Illuminate\Http\UploadedFile $file
+   * @return string
+   */
+  public static function storeHeicToJpeg( $file ){
+
+    ImageManagerStatic::configure(["driver" => "imagick"]);
+
+    $source = $file->getRealPath();
+
+    $image = new \Imagick($source);
+    $image->setImageFormat("jpeg");
+    $image->setImageCompressionQuality(100);
+
+    $store_directory = storage_path('app/public/media') . '/' .  date("Y") . '/' .  date("m") . '/';
+    $filename = Str::random(40) . ".jpg";
+
+    $image->writeImage($store_directory . $filename);
+
+    $media_filename = '/media/' .  date("Y") . '/' .  date("m") . '/' . $filename;
+
+    return $media_filename;
   }
 }

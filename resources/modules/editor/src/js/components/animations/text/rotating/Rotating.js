@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import "./rotating.scss";
+import ("./rotating.scss");
 
 class Rotating extends Component {
   constructor(props) {

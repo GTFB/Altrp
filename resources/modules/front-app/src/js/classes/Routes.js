@@ -12,7 +12,6 @@ class Routes {
   }
   loadRoutes() {
     if(window.altrpPages){
-      console.log(altrpPages);
       let routes = [];
       for (let _data of window.altrpPages) {
         routes.push(Route.routeFabric(_data));
@@ -34,5 +33,4 @@ class Routes {
       });
   }
 }
-
 export default new Routes();

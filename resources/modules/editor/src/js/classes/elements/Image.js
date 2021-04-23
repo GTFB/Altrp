@@ -77,6 +77,14 @@ class Image extends BaseElement {
       default: false
     });
 
+
+    this.addControl('lazyload_disable', {
+      hideOnEmail: true,
+      type: CONTROLLER_SWITCHER,
+      label: 'Lazyload Disable',
+      default: false
+    });
+
     this.endControlSection();
 
     this.startControlSection("link", {
@@ -141,12 +149,12 @@ class Image extends BaseElement {
         }
     );
 
-    this.addControl('aspect_ratio_off', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Aspect Ratio Off',
-      default: true,
-      prefixClass: 'aspect-ratio-off_'
-    });
+    // this.addControl('aspect_ratio_off', {
+    //   type: CONTROLLER_SWITCHER,
+    //   label: 'Aspect Ratio Off',
+    //   default: true,
+    //   prefixClass: 'aspect-ratio-off_'
+    // });
 
 
     this.addControl('aspect_ratio_size', {
@@ -177,24 +185,28 @@ class Image extends BaseElement {
             {
               'value': '177.78',
               'label': '9:16',
-            }
+            },
+            {
+              'value': 'custom',
+              'label': 'Custom',
+            },
           ],
-          rules: {
-            '{{ELEMENT}} .altrp-image-container{{STATE}}': 'padding-top: {{VALUE}}%',
-          },
         }
     );
+
+    this.addControl('custom_aspect', {
+      label: 'Aspect Ratio Value',
+      dynamic: false,
+      conditions: {
+        'aspect_ratio_size': 'custom',
+      },
+    });
 
     this.addControl('height_size', {
       type: CONTROLLER_SLIDER,
       label: 'Height',
-      default: {
-        size: 100,
-        unit: '%',
-      },
       units: [
         'px',
-        '%',
         'vh',
       ],
       max: 1000,
@@ -270,14 +282,6 @@ class Image extends BaseElement {
         '%',
         'vh',
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-image-container{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
     });
 
     this.addControl('position_z_index', {

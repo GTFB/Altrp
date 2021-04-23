@@ -20,7 +20,9 @@
 @import url("https://fonts.googleapis.com/css?family=Montserrat:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic&subset=cyrillic");
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic&subset=cyrillic");
 @import url("https://fonts.googleapis.com/css?family=PT+Sans:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic&subset=cyrillic");
-
+@import "components/admin-document-detail";
+@import "components/admin-custom-fonts";
+@import "components/admin-edit-font";
 
 .admin {
   display: flex;
@@ -40,6 +42,7 @@
   }
   &-nav {
     position: fixed;
+    z-index: 1;
     top: 0;
     left: 0;
     bottom: 0;
@@ -65,7 +68,9 @@
     }
     &-list {
       margin-top: 10px;
+
       &__link {
+        position: relative;
         display: flex;
         padding: 6px;
         color: #fff;
@@ -79,6 +84,14 @@
           & path {
             fill: $green;
           }
+        }
+        &:hover::before {
+          content: "";
+          position: absolute;
+          left: 1px;
+          top: 3px;
+          border-left: 4px solid #7eb223;
+          height: 28px;
         }
         & svg {
           position: relative;
@@ -97,11 +110,68 @@
         transform: translate(100%, 0);
         transition-duration: 0.3s;
       }
+
+      .admin-nav-list--sublist_active {
+        &::after {
+          content: "";
+          position: absolute;
+          right: 0;
+          top: 62px;
+          border: 8px solid transparent;
+          border-right: 8px solid #f7f8f9;
+          display: block;
+          width: 0;
+          height: 0;
+        }
+
+        & li {
+          background-color: #677289;
+          position: relative;
+
+          &:hover {
+            background-color: #677289;
+          }
+        }
+
+        & .admin-nav-list__link {
+          font-size: 13px;
+          text-decoration: none;
+          padding: 8px 12px 8px 12px;
+        }
+      }
+
       &.admin-nav-list--sublist {
-        margin-left: 55px;
+        /* margin-left: 55px; */
         display: none;
+        position: fixed;
+        left: 271px;
+        top: 81px;
+
+        &::before {
+          content: "";
+          position: fixed;
+          left: 255px;
+          top: 102px;
+          border: 8px solid transparent;
+          border-right: 8px solid #677289;
+          display: block;
+          width: 0;
+          height: 0;
+        }
+
+        & li {
+          background-color: #677289;
+          position: relative;
+
+          &:hover {
+            background-color: #677289;
+          }
+        }
+
         .admin-nav-list__link {
-          font-size: 14px;
+          font-size: 13px;
+          padding: 8px 67px 8px 19px;
+          text-decoration: none;
         }
       }
       & li:hover &.admin-nav-list--sublist {
@@ -188,3 +258,15 @@ a {
 .ace_editor {
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
 }
+
+.admin-skeleton{
+  .altrp-skeleton{
+    width: 220px;
+    height: 240px;
+  }
+  &-settings{
+    .sketch-picker{
+    }
+  }
+}
+

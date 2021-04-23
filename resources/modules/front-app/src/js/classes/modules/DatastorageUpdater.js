@@ -6,6 +6,8 @@ import {
 import Resource from "../../../../../editor/src/js/classes/Resource";
 import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
 import {isJSON, mbParseJSON, replaceContentWithData} from "../../helpers";
+import appStore from "../../store/store";
+import {changeCurrentUser} from "../../store/current-user/actions";
 
 /**
  * @class DataStorageUpdater
@@ -25,6 +27,11 @@ class DataStorageUpdater extends AltrpModel {
    *  @param {boolean} initialUpdate
    */
   async updateCurrent(dataSources = null, initialUpdate = true) {
+    if(appStore.getState().currentUser.isEmpty()){
+      let currentUser = await new Resource({ route: "/ajax/current-user" }).getAll();
+      currentUser = currentUser.data;
+      appStore.dispatch(changeCurrentUser(currentUser));
+    }
     if(! _.get(dataSources, 'length')){
       dataSources = this.getProperty('currentDataSources');
     }

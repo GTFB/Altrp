@@ -1,3 +1,5 @@
+import Skeleton, {SkeletonTheme} from 'react-loading-skeleton';
+
 import {connect} from "react-redux";
 import React, {cloneElement, Component} from 'react';
 import {isEditor, renderAsset} from "../../../../../front-app/src/js/helpers";
@@ -8,25 +10,27 @@ class AltrpImage extends Component {
   constructor(props) {
     super(props);
     this.imageRef = React.createRef();
-    console.log(window.altrpImageLazy);
     let visible = true;
-    if (isEditor()) {
+    if (isEditor() || props.lazy === false) {
 
-    } else if (window.altrpImageLazy && window.altrpImageLazy !== 'none') {
+    } else if (window.altrpImageLazy
+        && window.altrpImageLazy !== 'none'
+        && props.element
+        && ! props.element?.getResponsiveSetting('lazyload_disable')) {
       visible = false;
     }
     this.state = {
       visible,
       update: 0,
     };
-    this.intervalId = setInterval(() => this.setState(state => ({...state, update: state.update++})), 100);
+    this.timeoutId = setTimeout(() => this.setState(state => ({...state, update: state.update++})), 500);
   }
 
   /**
    * очищаем обновление
    */
   componentWillUnmount() {
-    clearInterval(this.intervalId);
+    clearTimeout(this.timeoutId);
   }
 
   /**
@@ -36,14 +40,20 @@ class AltrpImage extends Component {
    */
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.visible || !this.imageRef.current) {
+    if(this.state.visible){
+      clearTimeout(this.timeoutId);
+    }
+    if (this.state.visible || ! this.imageRef.current) {
       return;
+    }
+    if(this.props?.element.getRoot().popupGUID && this.props.element.getRoot().popupGUID === this.props.popupTrigger.popupID){
+      this.setState(state => ({...state, visible: true}));
     }
     if (prevProps.scrollPosition === this.props.scrollPosition && prevState.update === this.state.update) {
       return;
     }
-    if (checkElementInViewBox(this.imageRef.current, window.mainScrollbars)) {
-      clearInterval(this.intervalId);
+    if (this.imageRef.current && checkElementInViewBox(this.imageRef.current, window.mainScrollbars)) {
+      clearTimeout(this.timeoutId);
       this.setState(state => ({...state, visible: true}));
     }
   }
@@ -51,20 +61,10 @@ class AltrpImage extends Component {
   render() {
     let media = {...this.props.image};
     const noDefault = this.props.noDefault || false;
-    const placeholderStyles = {display: 'none'};
-    if (!this.state.visible) {
-      delete placeholderStyles.display;
-    }
+    const placeholderStyles = {};
+
     let width = this.props.width;
     let height = this.props.height;
-    let placeholder = <ImagePlaceholder color={media.main_color}
-                                        className={'altrp-image-placeholder '}
-                                        ref={this.imageRef}
-                                        height={height}
-                                        width={width}
-                                        style={placeholderStyles}
-                                        mediaWidth={media.width}
-                                        mediaHeight={media.height}/>;
     if (this.props.image instanceof File) {
       media = this.props.image
     } else {
@@ -80,13 +80,38 @@ class AltrpImage extends Component {
         media.assetType = media.assetType || undefined;
       }
     }
-
     let image = renderAsset(media);
-    return <React.Fragment>{this.state.visible && cloneElement(image, {
-      className: this.props.className,
-      id: this.props.id || null,
-      style: this.props.style,
-    })}
+    if(this.state.visible || window.altrpImageLazy === 'skeleton'){
+      placeholderStyles.background = 'transparent';
+    }
+    let placeholder = <ImagePlaceholder color={media.main_color}
+                                        className={'altrp-image-placeholder '}
+                                        ref={this.imageRef}
+                                        settings={this.props.element?.getSettings() || {}}
+                                        height={height}
+                                        width={width}
+                                        style={placeholderStyles}
+                                        mediaWidth={media.width || 100}
+                                        mediaHeight={media.height || 75}>
+      {window.altrpImageLazy === 'skeleton'
+        && ! this.state.visible
+        && <SkeletonTheme color={window.altrpSkeletonColor}
+                          highlightColor={window.altrpSkeletonHighlightColor}>
+          <Skeleton className="altrp-skeleton"/>
+        </SkeletonTheme>}
+      {this.state.visible && cloneElement(image, {
+        className: this.props.className,
+        id: this.props.id || null,
+        style: this.props.style,
+      })}
+      </ImagePlaceholder>;
+
+    return <React.Fragment>
+      {/*{this.state.visible && cloneElement(image, {*/}
+      {/*className: this.props.className,*/}
+      {/*id: this.props.id || null,*/}
+      {/*style: this.props.style,*/}
+    {/*})}*/}
       {placeholder}
     </React.Fragment>
   }
@@ -100,6 +125,7 @@ if (isEditor()) {
   function mapStateToProps(state) {
     return {
       scrollPosition: state.scrollPosition,
+      popupTrigger: state.popupTrigger,
     };
   }
 

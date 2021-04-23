@@ -59,7 +59,7 @@ export default class Api extends Component{
 
             <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
                 <div className="controller-container controller-container_select">
-                    <div className="controller-container__label control-select__label controller-label">Model</div>
+                    <div className="controller-container__label control-select__label controller-label">Source</div>
                     <div className="control-container_select-wrapper controller-field">
                         <select className="control-select control-field"
                             value={source || ''}
@@ -97,7 +97,7 @@ export default class Api extends Component{
                         </div>
                     <div className="controller-container__label control-select__label controller-label">Url</div>
                         <div className="control-container_select-wrapper controller-field">
-                            <input
+                            <textarea
                               className="control-field"
                               type="text"
                               id="api-url"
@@ -125,7 +125,7 @@ export default class Api extends Component{
                 </div>
               </div>
               <div className="controller-container controller-container_select">
-                <div className="controller-container__label control-select__label controller-label">Name</div>
+                <div className="controller-container__label control-select__label controller-label">Data</div>
                 <div className="control-container_select-wrapper controller-field">
                             <textarea
                               className="control-field"

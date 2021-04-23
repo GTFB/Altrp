@@ -325,9 +325,6 @@ class Carousel extends BaseElement {
       ],
       max: 1000,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-carousel-slide{{STATE}}": "height: {{SIZE}}{{UNIT}}"
-      }
     });
 
     this.addControl("width_slides_content", {
@@ -343,9 +340,6 @@ class Carousel extends BaseElement {
       ],
       max: 1000,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .slick-list{{STATE}}": "width: {{SIZE}}{{UNIT}}"
-      }
     });
 
     this.endControlSection();
@@ -603,9 +597,6 @@ class Carousel extends BaseElement {
           'label': 'auto',
         },
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-carousel-slide-img{{STATE}}': 'background-size: {{VALUE}};',
-      },
     }
     );
 
@@ -637,13 +628,6 @@ class Carousel extends BaseElement {
       },
       max: 50,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .slick-slide{{STATE}}': 'padding: 0 {{SIZE}}{{UNIT}}',
-        '{{ELEMENT}} .altrp-carousel-dots{{STATE}}': [
-          'padding-left: {{SIZE}}{{UNIT}}',
-          'padding-right: {{SIZE}}{{UNIT}}',
-        ],
-      },
     });
 
     this.addControl("background_slides_style", {
@@ -653,9 +637,6 @@ class Carousel extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-carousel-slide{{STATE}}": "background-color: {{COLOR}};"
-      }
     });
 
     this.addControl("border_type_slide", {
@@ -715,14 +696,6 @@ class Carousel extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-carousel-slide{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
     });
 
     this.addControl("border_radius_slides_style", {
@@ -736,9 +709,6 @@ class Carousel extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-carousel-slide{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
-      }
     });
 
     this.endControlSection();
@@ -768,12 +738,6 @@ class Carousel extends BaseElement {
       },
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-carousel-arrow svg{{STATE}}': [
-          'width: {{SIZE}}{{UNIT}}',
-          'height: {{SIZE}}{{UNIT}}',
-        ],
-      },
     });
 
     this.addControl("arrows_background_navigation_style", {
@@ -786,9 +750,6 @@ class Carousel extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      rules: {
-        "{{ELEMENT}} .altrp-carousel-arrow{{STATE}}": "background-color: {{COLOR}};"
-      }
     });
 
     this.addControl("arrows_color_navigation_style", {
@@ -801,9 +762,6 @@ class Carousel extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      rules: {
-        "{{ELEMENT}} .altrp-carousel-arrow{{STATE}} svg path": "stroke: {{COLOR}};"
-      }
     });
 
     this.addControl('padding_arrows_navigation_style', {
@@ -825,14 +783,6 @@ class Carousel extends BaseElement {
         '%',
         'vh',
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-carousel-arrow{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
     });
 
     this.addControl('border_radius_arrows_navigation_style', {
@@ -854,9 +804,6 @@ class Carousel extends BaseElement {
         '%',
         'vh',
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-carousel-arrow{{STATE}}': 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-      },
     });
 
     this.addControl('horizontal_offset_arrows_navigation_style', {
@@ -872,10 +819,6 @@ class Carousel extends BaseElement {
       },
       max: 400,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-carousel-arrow-prev{{STATE}}': 'left: {{SIZE}}{{UNIT}}',
-        '{{ELEMENT}} .altrp-carousel-arrow-next{{STATE}}': 'right: {{SIZE}}{{UNIT}}',
-      },
     });
 
     this.addControl('vertical_no_center_offset_arrows_navigation_style', {
@@ -890,9 +833,6 @@ class Carousel extends BaseElement {
       },
       max: 200,
       min: -200,
-      rules: {
-        '{{ELEMENT}} .altrp-carousel-arrows-container{{STATE}}': 'transform: translateY({{SIZE}}{{UNIT}})',
-      },
     });
 
     // this.addControl('horizontal_no_center_offset_arrows_navigation_style', {
@@ -932,13 +872,6 @@ class Carousel extends BaseElement {
       },
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-carousel-paging{{STATE}}': [
-          'width: {{SIZE}}{{UNIT}}',
-          'height: {{SIZE}}{{UNIT}}',
-        ],
-        '{{ELEMENT}} .altrp-carousel-dots li{{STATE}}': 'margin-left: calc({{SIZE}}{{UNIT}} * 0.5)',
-      },
     });
 
     this.addControl('background_color_dots_navigation_style', {
@@ -951,9 +884,6 @@ class Carousel extends BaseElement {
         color: "rgb(164,164,164)",
         colorPickedHex: "#a4a4a4",
       },
-      rules: {
-        '{{ELEMENT}} .altrp-carousel-paging{{STATE}}': 'background-color: {{COLOR}};',
-      },
     });
 
     this.addControl('background_color_active_dots_navigation_style', {
@@ -965,9 +895,6 @@ class Carousel extends BaseElement {
       default: {
         color: "rgb(19,106,237)",
         colorPickedHex: "#136aed",
-      },
-      rules: {
-        '{{ELEMENT}} .altrp-carousel-dots .slick-active .altrp-carousel-paging{{STATE}}': 'background-color: {{COLOR}};',
       },
     });
 
@@ -983,9 +910,6 @@ class Carousel extends BaseElement {
       },
       max: 200,
       min: -200,
-      rules: {
-        '{{ELEMENT}} .altrp-carousel-dots{{STATE}}': 'left: {{SIZE}}{{UNIT}}',
-      },
     });
 
     this.addControl('vertical_no_center_offset_dots_navigation_style', {
@@ -1000,9 +924,6 @@ class Carousel extends BaseElement {
       },
       max: 200,
       min: -200,
-      rules: {
-        '{{ELEMENT}} .altrp-carousel-dots{{STATE}}': 'transform: translateY({{SIZE}}{{UNIT}})',
-      },
     });
 
     this.endControlSection();
@@ -1019,9 +940,6 @@ class Carousel extends BaseElement {
         color: "rgb(255, 255, 255)",
         colorPickedHex: "#FFFFFF",
       },
-      rules: {
-        '{{ELEMENT}} .altrp-carousel-slide-overlay{{STATE}}': 'background-color: {{COLOR}};',
-      },
     }
     );
 
@@ -1032,9 +950,6 @@ class Carousel extends BaseElement {
         color: "rgb(0, 0, 0)",
         colorPickedHex: "#000000",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-carousel-slide-overlay-text{{STATE}}": "color: {{COLOR}};"
-      }
     });
 
     this.addControl('typographic_overlay', {
@@ -1047,18 +962,6 @@ class Carousel extends BaseElement {
         weight: "normal",
         family: '"roboto"',
         decoration: ""
-      },
-      rules: {
-        '{{ELEMENT}} .altrp-carousel-slide-overlay-text{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
       },
     }
     );

@@ -1,4 +1,3 @@
-import React, { Component } from "react";
 import { hot } from "react-hot-loader";
 import { getRoutes } from "./js/helpers";
 import appStore from "./js/store/store";
@@ -17,6 +16,7 @@ class FrontApp extends Component {
     window.frontApp = this;
     this.getRoutes();
     // this.onWidgetMount();
+    console.log('FRONT APP: ',performance.now());
   }
   getRoutes() {
     return getRoutes().then(res => {
@@ -49,11 +49,6 @@ class FrontApp extends Component {
    * Обновляем текущего пользователя
    */
   async componentDidMount() {
-    // get current user
-    let currentUser = await new Resource({ route: "/ajax/current-user" }).getAll();
-    currentUser = currentUser.data;
-    appStore.dispatch(changeCurrentUser(currentUser));
-
 
     let pusherKey = await new Resource({ route: "/admin/ajax/settings" }).get("pusher_app_key");
     let websocketsPort = await new Resource({ route: "/admin/ajax/settings" }).get("websockets_port");
@@ -79,7 +74,7 @@ class FrontApp extends Component {
       } catch (error) {
         console.log(error);
       }
-
+      const {currentUser} = appStore.getState();
       // Подключение слушателя канала
       window.Echo.private("App.User." + currentUser.id)
       .notification((notification) => {

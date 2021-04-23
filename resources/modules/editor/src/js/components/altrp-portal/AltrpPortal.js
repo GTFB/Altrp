@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import ReactDOM from "react-dom";
-import "./altrp-portal.scss";
+import ("./altrp-portal.scss");
 import {isEditor} from "../../../../../front-app/src/js/helpers";
 
 class AltrpPortal extends Component {

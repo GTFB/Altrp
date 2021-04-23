@@ -1,8 +1,9 @@
-import React from "react";
-import ReactDOM from "react-dom";
+
 import lodash from 'lodash';
 import store from "./js/store/store";
 import {setAceEditor} from "./js/store/ace-editor/actions";
+import {setAdminProperty} from "./js/store/admin-state/actions";
+window.adminStore = store;
 import("ace-builds").then(ace=>{
   window.ace = ace.default;
   ace.config.set('basePath', '/addons/ace');
@@ -50,5 +51,13 @@ import("ace-builds").then(ace=>{
   AceEditor = AceEditor.default;
   window.AceEditor = AceEditor;
   store.dispatch(setAceEditor(AceEditor));
+});
+
+window.addEventListener('keydown', e=>{
+  if(e.keyCode === 65 && e.altKey){
+    e.preventDefault();
+    let currentTestEnable = adminStore.getState().adminState.testEnable;
+    adminStore.dispatch(setAdminProperty('testEnable', ! currentTestEnable));
+  }
 });
 window._ = lodash;

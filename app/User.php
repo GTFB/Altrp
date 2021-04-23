@@ -12,6 +12,8 @@ use Laratrust\Traits\LaratrustUserTrait;
 use Laravel\Passport\HasApiTokens;
 use Modules\Oauth2\Entities\SocialAccount;
 
+use Illuminate\Support\Facades\DB;
+
 class User extends Authenticatable
 {
     use LaratrustUserTrait;
@@ -123,4 +125,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(SocialAccount::class, 'user_id');
     }
+
+
+    public function getUserRoles(){
+      
+      $roles_ = DB::table( 'role_user' )->where( 'user_id', $this->id )
+        ->select('role_id')->get();
+
+      $roles = [];
+      if ($roles_) {
+        foreach ($roles_ as $key => $role) {
+          $roles[$key] = $role->role_id;
+        }
+      }
+      return $roles;
+    }
+
 }
