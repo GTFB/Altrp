@@ -118,6 +118,7 @@ class User extends Authenticatable
     {
         return $this->morphMany(Notification::class, 'notifiable')->orderBy('created_at', 'desc');
     }
+
     public function social_accounts()
     {
         return $this->hasMany(SocialAccount::class, 'user_id');
