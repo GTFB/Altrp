@@ -106,8 +106,15 @@ class InputWidget extends Component {
    * Метод устанавливает все опции как выбранные
    */
   selectAll() {
+    const optionsDynamicSetting = this.props.element.getDynamicSetting(
+      "content_options"
+    );
     if (this.props.element.getSettings("content_type") === "checkbox") {
       let options = [...this.state.options];
+
+      if (optionsDynamicSetting) {
+        options = convertData(optionsDynamicSetting, options);
+      }
       options = options.map(({ value }) => value);
       this.onChange(options);
     }
@@ -120,6 +127,9 @@ class InputWidget extends Component {
       let options = [...this.state.options];
       if (!_.isArray(options)) {
         options = [];
+      }
+      if (optionsDynamicSetting) {
+        options = convertData(optionsDynamicSetting, options);
       }
       this.onChange(options);
     }
@@ -1155,6 +1165,9 @@ class InputWidget extends Component {
       /**
        * Если включен мультиселект
        */
+      console.log("====================================");
+      console.log(this.state.value);
+      console.log("====================================");
       value = value ? (_.isArray(value) ? value : [value]) : [];
       value = value.map(v => {
         let _v = v;
