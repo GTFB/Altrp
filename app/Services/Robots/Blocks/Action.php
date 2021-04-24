@@ -176,10 +176,10 @@ class Action
             $value = setDynamicData($entities->dynamicValue, $this->modelData);
             if (isset($this->modelData['record']) && !Str::contains($field, "{{"))
                 $value = $this->modelData['record']->$field;
-            if (isset($this->modelData['record']) && Str::contains($field, "|")){
+            if (Str::contains($field, "|")){
                 $field = explode('|', $field);
                 $fieldOne = str_replace(' ', '', $field[1]);
-                $value = $this->modelData['record']->$fieldOne;
+                $value = setDynamicData($fieldOne, $this->modelData);
                 $columnName = str_replace(' ', '', $field[0]);
             }
             $users = User::where($columnName, $value)->get();
