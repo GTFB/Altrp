@@ -761,7 +761,6 @@ function clearPageCache( $page_id ) {
         File::delete($cachePath . '/' . $relation['hash']);
       }
       unset($relations[$key]);
-      break;
     }
   }
 
