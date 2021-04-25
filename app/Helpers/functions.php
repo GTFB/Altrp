@@ -682,8 +682,6 @@ function removeWhiteSpace($str) {
   return $str;
 }
 
-
-
 function saveTemplateCache( $json, $template_id ) {
 
   if (!$json || !$template_id) {
@@ -732,6 +730,16 @@ function saveTemplateCache( $json, $template_id ) {
 
   return true;
 }
+
+function clearAllCache() {
+  $cachePath = storage_path() . '/framework/cache/pages';
+  if( File::exists( storage_path() . '/framework/cache/pages' ) ){
+    File::cleanDirectory( storage_path() . '/framework/cache/pages' );
+    File::put($cachePath . '/relations.json', '{}');
+  }
+  return true;
+}
+
 
 /**
  * Минификация HTML

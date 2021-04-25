@@ -139,6 +139,8 @@ class AltrpUpdateService
     if( File::exists( public_path( 'modules' ) ) ){
       File::cleanDirectory( public_path( 'modules' ) );
     }
+    clearAllCache();
+
     return $archive->extractTo( base_path() );
   }
 
