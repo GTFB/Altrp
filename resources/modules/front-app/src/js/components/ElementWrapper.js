@@ -9,6 +9,8 @@ import ImageComponent from "../../../../editor/src/js/components/widgets/styled-
 import CarouselComponent from "../../../../editor/src/js/components/widgets/styled-components/CarouselComponent";
 import GalleryComponent from "../../../../editor/src/js/components/widgets/styled-components/GalleryComponent";
 import ButtonComponent from "../../../../editor/src/js/components/widgets/styled-components/ButtonComponent";
+import DividerComponent from "../../../../editor/src/js/components/widgets/styled-components/DividerComponent";
+import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -312,22 +314,24 @@ class ElementWrapper extends Component {
     let WrapperComponent = "div";
 
     switch (this.props.element.getName()) {
-      case "gallery": {
+      case "gallery":
         WrapperComponent = GalleryComponent;
-      }
-        break;
-      case "carousel": {
-        WrapperComponent = CarouselComponent;
-      }
-        break;
-      case "image": {
+        break
+      case "image":
         WrapperComponent = ImageComponent;
-      }
-        break;
-      case "button": {
+        break
+      case "button":
         WrapperComponent = ButtonComponent;
-      }
-        break;
+        break
+      case "carousel":
+        WrapperComponent = CarouselComponent;
+        break
+      case "divider":
+        WrapperComponent = DividerComponent;
+        break
+      case "accordion":
+        WrapperComponent = AccordionComponent;
+        break
     }
 
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
