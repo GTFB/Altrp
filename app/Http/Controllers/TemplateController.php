@@ -273,9 +273,20 @@ class TemplateController extends Controller
     $old_template->type = 'template'; //1
     $old_template->user_id = auth()->user()->id;
 
-
     if ( $old_template->save() ) {
+
+      if ($old_template->all_site) {
+        clearAllCache();
+      } else {
+        $pages = Page::getPagesByTemplateId( $old_template->id );
+        if ($pages) {
+          foreach ($pages as $page) {
+            clearPageCache( $page->page_id );
+          }
+        }
+      }
       return response()->json( $old_template, 200, [], JSON_UNESCAPED_UNICODE );
+      
     }
 
     return response()->json( trans( "responses.dberror" ), 400, [], JSON_UNESCAPED_UNICODE );

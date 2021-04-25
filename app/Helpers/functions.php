@@ -593,7 +593,6 @@ function saveCache( $html, $page_id ) {
   return true;
 }
 
-
 function minifyHTML($html) {
 
   // Settings
@@ -737,6 +736,38 @@ function clearAllCache() {
     File::cleanDirectory( storage_path() . '/framework/cache/pages' );
     File::put($cachePath . '/relations.json', '{}');
   }
+  return true;
+}
+
+function clearPageCache( $page_id ) {
+
+  $cachePath = storage_path() . '/framework/cache/pages';
+
+  if ( !File::exists($cachePath . '/relations.json') ) {
+    File::put($cachePath . '/relations.json', '{}');
+  }
+
+  $relationsJson = File::get($cachePath . '/relations.json');
+  $relations = json_decode($relationsJson, true);
+
+  if ( ! is_array($relations) ) {
+    File::put($cachePath . '/relations.json', '{}');
+    $relations = [];
+  }
+
+  foreach ($relations as $key => $relation) {
+    if ($relation['page_id'] === $page_id) {
+      if ( File::exists($cachePath . '/' . $relation['hash']) ) {
+        File::delete($cachePath . '/' . $relation['hash']);
+      }
+      unset($relations[$key]);
+      break;
+    }
+  }
+
+  $relations = json_encode($relations);
+  File::put($cachePath . '/relations.json', $relations);
+
   return true;
 }
 
