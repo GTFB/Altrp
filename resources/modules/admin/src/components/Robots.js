@@ -29,6 +29,14 @@ export default class Robots extends Component {
   async fetchData() {
     const robots = await this.resource.getAll();
 
+    if (_.isArray(robots)) {
+      robots.map(item =>{
+        item.url = `/admin/robots-editor?robot_id=${item.id}`;
+        return item;
+      });
+    }
+    console.log(robots);
+
     this.setState(state => ({ ...state, robots }));
   }
 
@@ -107,20 +115,14 @@ export default class Robots extends Component {
               {
                 name: "author",
                 title: "Author",
-                url: true,
-                target: "_blank"
               },
               {
                 name: "model_id",
                 title: "Model",
-                url: true,
-                target: "_blank"
               },
               {
                 name: "start_condition",
                 title: "Start Condition",
-                url: true,
-                target: "_blank"
               }
             ]}
             rows={this.state.robots}
@@ -132,8 +134,12 @@ export default class Robots extends Component {
                   target: "_blank"
                 },
                 title: "Edit"
-              },
-              {
+              }, {
+                tag: 'button',
+                route: '',
+                method: 'delete',
+                title: 'Disable'
+              }, {
                 tag: "button",
                 route: "/admin/ajax/robots/:id",
                 method: "delete",

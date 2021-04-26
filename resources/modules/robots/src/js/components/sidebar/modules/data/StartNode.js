@@ -188,6 +188,7 @@ export default class StartNode extends React.Component {
       {label: 'каждые 10 минут', value: 'everyTenMinutes'},
       {label: 'каждые 30 минут', value: 'everyThirtyMinutes'},
       {label: 'каждый час', value: 'hourly'},
+      {label: 'каждый час в -- минут', value: 'hourlyAt'},
       {label: 'каждый день в полночь', value: 'daily'},
       {label: 'каждый день в', value: 'dailyAt'},
       {label: 'каждую неделю', value: 'weekly'},
@@ -208,6 +209,7 @@ export default class StartNode extends React.Component {
       {label: 'по субботам', value: 'saturdays'},
       {label: 'по воскресеням', value: 'sundays'},
       {label: 'между', value: 'between'},
+      {label: 'При условии', value: 'when'},
     ];
 
     const logicOptions = [
@@ -422,6 +424,24 @@ export default class StartNode extends React.Component {
                 </div>
               </div>}
 
+              {(period === "hourlyAt") && <div className="controller-container controller-container_select">
+                <div className="controller-container__label control-select__label controller-label">Minute</div>
+                <div className="control-container_select-wrapper controller-field">
+                  <input
+                    className="control-field"
+                    type="number"
+                    max={60}
+                    min={1}
+                    id="cron-period-number"
+                    name="cron-period-number"
+                    value={periodTime || ''}
+                    onChange={(e) => {
+                      this.changeInputRobot(e, 'period')
+                    }}
+                  />
+                </div>
+              </div>}
+
               <div className="controller-container controller-container_repeater repeater">
                 <div className="control-header">
                   <div className="controller-container__label mt-10">
@@ -483,6 +503,25 @@ export default class StartNode extends React.Component {
                               value={item?.time?.end ?? ''}
                               onChange={(e) => {
                                 this.changeInputRobot(e, 'restrictions', 'end', item.id)
+                              }}
+                            />
+                          </div>
+                        </div>}
+                        {(item.name === 'when') && <div className="ontroller-container controller-container_select">
+                          <div className="controller-container__label control-select__label controller-label">
+                            Condition
+                          </div>
+                          <div className="control-container_select-wrapper controller-field">
+                            <textarea
+                              className="control-field"
+                              type="time"
+                              rows="3"
+                              id={`restriction_when_${item.id}`}
+                              name="restriction_when"
+                              style={{width: '100%'}}
+                              value={item?.time?.condition ?? ''}
+                              onChange={(e) => {
+                                this.changeInputRobot(e, 'restrictions', 'condition', item.id)
                               }}
                             />
                           </div>
