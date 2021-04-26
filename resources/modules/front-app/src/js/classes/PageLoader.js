@@ -9,7 +9,6 @@ class PageLoader {
     this.resource = new Resource({
       route: "/ajax/pages"
     });
-    this.pagesStorage = {};
   }
 
   /**

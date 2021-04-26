@@ -277,10 +277,7 @@ class ElementWrapper extends Component {
     if (this.CSSId !== CSSId) {
       this.CSSId = CSSId;
     }
-    let ContentComponent = this.props.component;
-    if (['root-element', 'section', 'column'].indexOf(this.props.element.getName()) === -1) {
-      // ContentComponent = 'div';
-    }
+    let ContentComponent = frontElementsManager.getComponentClass(this.props.element.getName());
     const content = React.createElement(ContentComponent, {
       ref: this.elementRef,
       rootElement: this.props.rootElement,
@@ -357,6 +354,7 @@ function mapStateToProps(state) {
     altrpMeta: state.altrpMeta,
     altrpPageState: state.altrpPageState,
     currentScreen: state.currentScreen,
+    altrpComponents: state.altrpComponents,
   };
 }
 

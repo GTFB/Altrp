@@ -456,11 +456,14 @@ $frontend_routes = \App\Page::get_frontend_routes();
 Route::get('/', function () {
 
   return view('front-app', [
+
+    'elements_list' => json_encode( [] ),
     'title' => 'Main',
     'page_id' => 'null',
     '_frontend_route' => [],
     'preload_content' => [],
     'page_areas' => '[]',
+    'lazy_sections' => '[]',
     'pages'=>Page::get_pages_for_frontend( true ),
     'is_admin' => isAdmin(),
   ]);
@@ -475,10 +478,13 @@ foreach ( $frontend_routes as $_frontend_route ) {
   $replacement1 = '{$1}/';
   $frontend_route = preg_replace( $pattern1, $replacement1, $path );
 
-  Route::get($frontend_route, function () use ($title, $_frontend_route, $frontend_route) {
+  Route::get( $frontend_route, function () use ( $title, $_frontend_route, $frontend_route ) {
 
-    $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] ); 
+    $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
 
+    $page_areas = Page::get_areas_for_page( $_frontend_route['id'], true );
+    $lazy_sections = Page::get_lazy_sections_for_page( $_frontend_route['id'] );
+    $elements_list = extractElementsNames( $page_areas );
     if (Page::isCached( $_frontend_route['id'] )) {
 
       global $altrp_need_cache;
@@ -487,9 +493,10 @@ foreach ( $frontend_routes as $_frontend_route ) {
       $altrp_route_id = $_frontend_route['id'];
 
     }
-
     return view( 'front-app', [
-      'page_areas' => json_encode( Page::get_areas_for_page( $_frontend_route['id'] ) ),
+      'page_areas' => json_encode( $page_areas ),
+      'lazy_sections' => json_encode( $lazy_sections ),
+      'elements_list' => json_encode( $elements_list ),
       'page_id' => $_frontend_route['id'],
       'title' => $title,
       '_frontend_route' => $_frontend_route,

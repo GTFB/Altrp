@@ -105,14 +105,14 @@ class AddPage extends Component {
    * @return {Promise<void>}
    */
   async savePage(e) {
-    if(this.state.value.path === undefined || 
+    if(this.state.value.path === undefined ||
       this.state.value.path === ''  ||
-      this.state.value.title === undefined || 
+      this.state.value.title === undefined ||
       this.state.value.title === '') {
         this.setState(state => {
           return {...state, currentTab: 'content'}
         });
-        return;  
+        return;
       }
 
     e.preventDefault();
@@ -220,16 +220,16 @@ class AddPage extends Component {
         <div className="admin-content">
           <div className="custom-tab__tabs">
             <button
-              className={this.state.currentTab === "content" ? 
-              "custom-tab__tab custom-tab__tab--selected" : 
+              className={this.state.currentTab === "content" ?
+              "custom-tab__tab custom-tab__tab--selected" :
               "custom-tab__tab"}
               onClick={this.changeCurrentTab('content')}
             >
               content
             </button>
             <button
-              className={this.state.currentTab === "SEO" ? 
-              "custom-tab__tab custom-tab__tab--selected" : 
+              className={this.state.currentTab === "SEO" ?
+              "custom-tab__tab custom-tab__tab--selected" :
               "custom-tab__tab"}
               onClick={this.changeCurrentTab('SEO')}
             >
@@ -237,13 +237,13 @@ class AddPage extends Component {
             </button>
           </div>
           <div className="custom-tab__tab-panel">
-            <form                 
+            <form
               className="admin-form mb-2"
               onSubmit={this.savePage}
             >
               {(() => {
                 if(this.state.currentTab === 'content') {
-                return ( 
+                return (
                   <React.Fragment>
                     <div className="form-group">
                       <label htmlFor="page-title">Title</label>
@@ -376,24 +376,33 @@ class AddPage extends Component {
                       />
                     </div>
                     <div className="row col-12">
-                    <div className="form-group col-6">
-                      <input type="checkbox" id="caching"
-                        checked={this.state.value.is_cached || ""}
-                        onChange={e => {
-                          this.changeValue(e.target.checked, "is_cached");
-                        }}
-                        className="form-check-input form-check-input_inline" />
-                      <label htmlFor="caching" className="label_checkbox">Сaching</label>
-                    </div>
-                    <div className="form-group col-6 ">
-                      <input type="checkbox" id="caching"
-                        checked={this.state.value.not_found || ""}
-                        onChange={e => {
-                          this.changeValue(e.target.checked, "not_found");
-                        }}
-                        className="form-check-input form-check-input_inline" />
-                      <label htmlFor="caching" className="label_checkbox">404</label>
-                    </div>
+                      <div className="form-group col-4">
+                        <input type="checkbox" id="caching"
+                          checked={this.state.value.is_cached || ""}
+                          onChange={e => {
+                            this.changeValue(e.target.checked, "is_cached");
+                          }}
+                          className="form-check-input form-check-input_inline" />
+                        <label htmlFor="caching" className="label_checkbox">Сaching</label>
+                      </div>
+                      <div className="form-group col-4 ">
+                        <input type="checkbox" id="caching"
+                          checked={this.state.value.not_found || ""}
+                          onChange={e => {
+                            this.changeValue(e.target.checked, "not_found");
+                          }}
+                          className="form-check-input form-check-input_inline" />
+                        <label htmlFor="caching" className="label_checkbox">404</label>
+                      </div>
+                      <div className="form-group col-4 ">
+                        <label htmlFor="sections_count" className="label_checkbox">Sections Count:</label>
+                        <input type="number" id="sections_count"
+                          value={this.state.value.sections_count || ""}
+                          onChange={e => {
+                            this.changeValue(e.target.value, "sections_count");
+                          }}
+                          className="form-control" />
+                      </div>
                     </div>
                   </React.Fragment>
                 );
@@ -444,7 +453,7 @@ class AddPage extends Component {
               </button>
             </form>
           </div>
-          
+
           {Boolean(dataSources.length) && <AdminTable
             columns={columns}
             quickActions={[
