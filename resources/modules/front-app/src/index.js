@@ -13,7 +13,7 @@ import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElement
   });
   return window.frontElementsManager.loadComponents();
 }).then(components=>{
-  // window.frontElementsManager.loadNotUsedComponent();
+  window.frontElementsManager.loadNotUsedComponent();
   console.log('LOAD FrontElementsManager: ',performance.now());
   loadingCallback();
 });

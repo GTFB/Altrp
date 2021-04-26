@@ -211,52 +211,77 @@ class Page extends Model
    * @param bool $sections_limit
    * @return array
    */
+  public static function get_lazy_sections_for_page( $page_id ){
+    $lazy_sections = [];
+
+    $currentPage = Page::find( $page_id );
+    if( ! $currentPage || ! $currentPage->sections_count ){
+      return $lazy_sections;
+    }
+    $sections_count = $currentPage->sections_count;
+    $header_template = Template::getTemplate( [
+      'page_id' => $page_id,
+      'template_type' => 'header',
+    ] );
+    if( $header_template['data'] ){
+      $data =  $header_template['data'];
+      if( isset( $data['children'] ) && is_array( $data['children'] ) ){
+        $header_lazy_sections = array_map( function( $item ) use( $data ) {
+          return [
+            'parent_id' => $data['id'],
+            'area_name' => 'header',
+            'element' => $item
+          ];
+        }, $data['children']  );
+        $lazy_sections = array_merge( $lazy_sections, $header_lazy_sections );
+      }
+    }
+    $content_template = Template::getTemplate( [
+      'page_id' => $page_id,
+      'template_type' => 'content',
+    ] );
+    if( $content_template['data'] ){
+      $data = $content_template['data'];
+      if( isset( $data['children'] ) && is_array( $data['children'] ) ){
+        $content_lazy_sections = array_map( function( $item ) use( $data ) {
+          return [
+            'parent_id' => $data['id'],
+            'area_name' => 'content',
+            'element' => $item
+          ];
+        }, $data['children']  );
+        $lazy_sections = array_merge( $lazy_sections, $content_lazy_sections );
+      }
+    }
+    $footer_template = Template::getTemplate( [
+      'page_id' => $page_id,
+      'template_type' => 'footer',
+    ] );
+    if( $footer_template['data'] ){
+      $data =  $footer_template['data'];
+      if( isset( $data['children'] ) && is_array( $data['children'] ) ){
+        $footer_lazy_sections = array_map( function( $item ) use( $data ) {
+          return [
+            'parent_id' => $data['id'],
+            'area_name' => 'footer',
+            'element' => $item
+          ];
+        }, $data['children']  );
+        $lazy_sections = array_merge( $lazy_sections, $footer_lazy_sections );
+      }
+    }
+
+    array_splice( $lazy_sections, 0, $sections_count );
+    return $lazy_sections;
+  }
+  /**
+   * @param $page_id
+   * @param bool $sections_limit
+   * @return array
+   */
   public static function get_areas_for_page( $page_id, $sections_limit = false ){
     $areas = [];
-//    $header = Template::where( 'area', 2 )->where( 'type', 'template' )->first();
-//    if( $header ){
-//      $header->check_elements_conditions();
-//      $areas[] = [
-//        'area_name' => 'header',
-//        'id' => 'header',
-//        'settings' => [],
-//        'template' => $header
-//      ];
-//    }
-    /**
-     * @var Template $content
-     */
-//    $content = PagesTemplate::where( 'page_id', $page_id )
-//      ->where( 'template_type', 'content' )
-//      ->where( 'condition_type', 'include' )
-//      ->first();
-//    if( $content ){
-//      $content = $content->template;
-//      $content->check_elements_conditions();
-//      $areas[] = [
-//        'area_name' => 'content',
-//        'id' => 'content',
-//        'settings' => [],
-//        'template' => $content,
-//      ];
-//    } else {
-//      /**
-//       * Пустой контент, если страницы нет
-//       */
-//      $areas[] = [
-//        'area_name' => 'content',
-//        'id' => 'content',
-//        'settings' => [],
-//        'template' => [
-//          'data' => json_encode([
-//            "name"=>"root-element",
-//            "type"=>"root-element",
-//            "children"=> [],
-//            'settings' => [],
-//          ])
-//        ],
-//      ];
-//    }
+
     $currentPage = Page::find( $page_id );
     $contentType = $currentPage->type;
     if( $currentPage->sections_count && $sections_limit ){
@@ -342,15 +367,14 @@ class Page extends Model
   }
 
   /**
-   * @param string $data
+   * @param [] $data
    * @param int $sections_count
-   * @return string
+   * @return []
    */
   public static function spliceSections( $data , &$sections_count = 0 ){
     if( ! isset( $sections_count ) || ! $data ){
       return $data;
     }
-    $data = json_decode( $data, true );
     if( count( $data['children'] ) < $sections_count ){
       $sections_count -= count( $data['children'] );
 
@@ -361,7 +385,6 @@ class Page extends Model
       $sections_count = 0;
     }
 
-    $data = json_encode( $data );
     return $data;
   }
 

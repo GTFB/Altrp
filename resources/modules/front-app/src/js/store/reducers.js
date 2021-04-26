@@ -19,6 +19,8 @@ import { mediaScreenReducer } from "./media-screen-storage/reducers";
 import { currentTitleReducer } from "./current-title/reducers";
 import { currentEmailTemplateReducer } from "./current-email-template/reducers";
 import { currentPageReducer } from "./current-page/reducers";
+import {componentsReducer} from "./components/reducers";
+
 export default combineReducers({
   appRoutes: appRoutesReducer,
   currentModel: currentModelReducer,
@@ -39,5 +41,6 @@ export default combineReducers({
   currentScreen: mediaScreenReducer,
   currentTitle: currentTitleReducer,
   currentEmailTemplate: currentEmailTemplateReducer,
-  altrpPage: currentPageReducer
+  altrpPage: currentPageReducer,
+  altrpComponents: componentsReducer,
 });

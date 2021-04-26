@@ -463,6 +463,7 @@ Route::get('/', function () {
     '_frontend_route' => [],
     'preload_content' => [],
     'page_areas' => '[]',
+    'lazy_sections' => '[]',
     'pages'=>Page::get_pages_for_frontend( true ),
     'is_admin' => isAdmin(),
   ]);
@@ -485,6 +486,7 @@ foreach ( $frontend_routes as $_frontend_route ) {
 //    echo '</pre>';
 
     $page_areas = Page::get_areas_for_page( $_frontend_route['id'], true );
+    $lazy_sections = Page::get_lazy_sections_for_page( $_frontend_route['id'] );
     $elements_list = extractElementsNames( $page_areas );
     if (Page::isCached( $_frontend_route['id'] )) {
 
@@ -492,9 +494,9 @@ foreach ( $frontend_routes as $_frontend_route ) {
       $altrp_need_cache = true;
 
     }
-
     return view( 'front-app', [
       'page_areas' => json_encode( $page_areas ),
+      'lazy_sections' => json_encode( $lazy_sections ),
       'elements_list' => json_encode( $elements_list ),
       'page_id' => $_frontend_route['id'],
       'title' => $title,

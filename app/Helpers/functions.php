@@ -775,7 +775,7 @@ function extractElementsNames( $areas = []){
 //    echo '<pre style="padding-left: 200px;">';
 //    var_dump( $area );
 //    echo '</pre>';
-    $data = json_decode( $area['template']['data'], true );
+    $data = $area['template']['data'];
     _extractElementsNames( $data, $elementNames );
   }
 
