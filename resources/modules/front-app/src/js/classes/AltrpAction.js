@@ -811,7 +811,7 @@ class AltrpAction extends AltrpModel {
                 null,
                 this.getCurrentModel()
               );
-            } else {
+            } else if( value.indexOf("|") !== -1){
               // value = replaceContentWithData(
               //   value,
               //   this.getCurrentModel().getData()
