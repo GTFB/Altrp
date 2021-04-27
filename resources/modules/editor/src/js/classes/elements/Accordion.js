@@ -388,6 +388,7 @@ class Accordion extends BaseElement {
       },
       rules: {
         '{{ELEMENT}} .altrp-accordion-item-label{{STATE}}': [
+          'font-family: {{FAMILY}};',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',
@@ -560,6 +561,7 @@ class Accordion extends BaseElement {
       },
       rules: {
         '{{ELEMENT}} .altrp-accordion-item-content-show{{STATE}}': [
+          'font-family: {{FAMILY}};',
           'font-size: {{SIZE}}px;',
           'line-height: {{LINEHEIGHT}};',
           'letter-spacing: {{SPACING}}px',
