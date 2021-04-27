@@ -1,4 +1,4 @@
-import React from "react";
+
 import CONSTANTS from "../../../editor/src/js/consts";
 import AltrpModel from "../../../editor/src/js/classes/AltrpModel";
 import moment from "moment";

@@ -1,5 +1,5 @@
-import React, { Component } from "react";
 import FrontPopup from "./FrontPopup";
+import {connect} from "react-redux";
 
 class AreaComponent extends Component {
 
@@ -9,6 +9,25 @@ class AreaComponent extends Component {
 
   }
   componentWillUnmount() {
+
+    /**
+     * Перенесем все секции для ленивой подгрузки в хранилище страниц (текущая стрнаца)
+     */
+    if( _.isArray(window.lazySections)){
+      for(let pageId in window.pageStorage){
+        if(window.pageStorage.hasOwnProperty(pageId) ){
+          let page = window.pageStorage[pageId];
+
+          window.lazySections.forEach(section => {
+            let area = page.areas.find(area => area.id === section.area_name);
+            if(area){
+              area.template.data.children.push(section.element)
+            }
+          });
+        }
+      }
+      window.lazySections = null;
+    }
     window.stylesModule.removeStyleById(this.rootElement?.id);
   }
 
@@ -42,6 +61,8 @@ class AreaComponent extends Component {
       this.props.models
     );
     this.rootElement = rootElement;
+    window[`${this.props.id}_root_element`] = this.rootElement;
+    console.log();
     let template =  (
       <div className={classes.join(" ")}>
         {React.createElement(this.rootElement.componentClass, {
@@ -54,4 +75,10 @@ class AreaComponent extends Component {
   }
 }
 
-export default AreaComponent;
+function mapStateToProps(state) {
+  return {
+    scrollPosition: state.scrollPosition,
+  };
+}
+
+export default connect(mapStateToProps)(AreaComponent);

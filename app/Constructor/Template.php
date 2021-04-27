@@ -44,19 +44,20 @@ class Template extends Model
     'styles',
     'all_site'
   ];
+//  public $area;
 
   /**
    * Вернуть json для data пустого шаблона для front-app
-   * @return string
+   * @return []
    */
   private static function getDefaultData()
   {
-    return json_encode([
+    return [
       "name"=>"root-element",
       "type"=>"root-element",
       "children"=> [],
       'settings' => [],
-    ]);
+    ];
   }
 
   /**
@@ -335,6 +336,7 @@ class Template extends Model
     $template = new Template( ['data'=> self::getDefaultData()] );
 
     $template_type = Arr::get( $param, 'template_type', 'content' );
+
     $page_id = Arr::get( $param, 'page_id' );
     $page = Page::find( $page_id );
 
@@ -354,7 +356,10 @@ class Template extends Model
 
     if( $_template ){
       $_template->check_elements_conditions();
-      return $_template->toArray();
+      $_template = $_template->toArray();
+      $_template['data'] = json_decode( $_template['data'], true );
+
+      return $_template;
     }
 
     /**
@@ -373,7 +378,9 @@ class Template extends Model
       ->where( 'pages_templates.page_guid', $page->guid )
       ->where( 'pages_templates.template_type', $template_type )->first() ){
       $_template->check_elements_conditions();
-      return $_template->toArray();
+      $_template = $_template->toArray();
+      $_template['data'] =  json_decode( $_template['data'], true );
+      return $_template;
     }
 
     return $template->toArray();
@@ -428,10 +435,12 @@ class Template extends Model
 
     $templates->each( function( Template $_template ){
       $_template->check_elements_conditions();
+
       if( $_template->template_type === 'popup' ){
         $_template->triggers = $_template->triggers;
-
       }
+      $_template->data = json_decode( $_template->data, true );
+
     } );
 
     return $templates->toArray();

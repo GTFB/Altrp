@@ -2,7 +2,7 @@ import decorate from "./js/decorators/element-component";
 import ElementWrapper from "./js/components/ElementWrapper";
 import {get} from "./js/components/ElementWrapper";
 import _ from "lodash";
-import controllerHistory from "./js/classes/ControllerHistory";
+
 window._ = _;
 import('../../front-app/src/js/helpers').then(altrpHelpers=>{
   window.parent.altrpHelpers = altrpHelpers;

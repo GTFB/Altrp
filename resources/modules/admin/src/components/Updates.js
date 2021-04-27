@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import Resource from "../../../editor/src/js/classes/Resource";
 import {setAdminDisable, setAdminEnable} from "../js/store/admin-state/actions";
 import store from '../js/store/store';
+import {connect} from "react-redux";
 import {pageReload} from "../js/helpers";
 
 /**
@@ -42,18 +43,33 @@ class Updates extends Component {
       return {...state, needUpdate: false};
     })
   }
+  async installTestAltrp(){
 
+    store.dispatch(setAdminDisable());
+    try{
+      let res = await (new Resource({route:'/admin/ajax/install_test_altrp'})).post( {});
+      setTimeout(()=>{
+            res.result ? pageReload() : this.setNeedUpdate();
+          }
+          ,1300);
+    } catch(error){
+      store.dispatch(setAdminEnable());
+    }
+  }
   /**
    * Отправляет запрос на обноление приложения
    */
   async updateAltrp(){
     store.dispatch(setAdminDisable());
-    let res = await (new Resource({route:'/admin/ajax/update_altrp'})).post( {});
+    try{
+      let res = await (new Resource({route:'/admin/ajax/update_altrp'})).post( {});
     setTimeout(()=>{
           res.result ? pageReload() : this.setNeedUpdate();
         }
     ,1300);
-    // store.dispatch(setAdminEnable());
+    } catch(error) {
+      store.dispatch(setAdminEnable());
+    }
   }
 
   render() {
@@ -63,6 +79,7 @@ class Updates extends Component {
     if (this.state.needUpdate) {
       data.updateMessage = 'A fresh version of Altrp is available for updating.';
     }
+    const {testEnable} = this.props.adminState;
     return <div className="admin-updates p-4">
       <div className="admin-caption mt-1">
         {data.updateMessage}
@@ -71,9 +88,19 @@ class Updates extends Component {
         this.state.needUpdate ?
           <button className="btn_success btn" onClick={this.updateAltrp}>Update</button>
           :  <button className="btn"  onClick={this.updateAltrp}>Re-install Now</button>}
+      {testEnable && <React.Fragment>
+
+        <div className="admin-caption mt-1">
+          Install Test Version of Altrp
+        </div>
+        <button className="btn_success btn" onClick={this.installTestAltrp}>Install Test</button>
+
+      </React.Fragment>}
     </div>
 
   }
 }
-
-export default Updates;
+function mapStateToProps(state) {
+  return{adminState: state.adminState}
+}
+export default connect(mapStateToProps)(Updates);

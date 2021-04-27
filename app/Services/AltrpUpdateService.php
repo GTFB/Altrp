@@ -24,6 +24,7 @@ class AltrpUpdateService
   const UPDATE_DOMAIN = 'https://up.altrp.com/';
   //  const UPDATE_DOMAIN = 'http://altrp-servise.nz/';
   const PRODUCT_NAME = 'altrp';
+  const TEST_PRODUCT_NAME = 'altrp-test';
   private $client;
 
   public function __construct()
@@ -32,19 +33,20 @@ class AltrpUpdateService
   }
 
   /**
+   * @param bool $test - если true, то устанавливает тестовую версию
    * @return string
    * @throws \HttpException
-   * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
    */
-  public function update()
+  public function update( $test = false)
   {
     if ( env( 'APP_ENV', 'local' ) === 'local' ) {
       return true;
     }
     set_time_limit( 0 );
-    $version = $this->get_version();
+    $version = $this->get_version( $test );
 
-    $file = $this->client->get( self::UPDATE_DOMAIN . 'download/' . self::PRODUCT_NAME . '/' . $version )->getBody()->getContents();
+    $url = self::UPDATE_DOMAIN . 'download/' . ( $test ? self::TEST_PRODUCT_NAME : self::PRODUCT_NAME ) . '/' . $version;
+    $file = $this->client->get( $url )->getBody()->getContents();
 
     if ( ! $this->write_public_permissions() ) {
       throw new \HttpException( 'Не удалось обновить режим чтения файлов' );
@@ -101,12 +103,15 @@ class AltrpUpdateService
   }
 
   /**
+   * @param bool $test
    * @return string
-   * @throws NotFoundHttpException
    */
-  public function get_version()
+  public function get_version( $test = false )
   {
-    $res = $this->client->post( self::UPDATE_DOMAIN . 'version/' . self::PRODUCT_NAME )->getBody()->getContents();
+    $url = self::UPDATE_DOMAIN . 'version/' . ( $test ? self::TEST_PRODUCT_NAME : self::PRODUCT_NAME );
+
+
+    $res = $this->client->post( $url )->getBody()->getContents();
     $res = json_decode( $res, true );
     if ( ! isset( $res['product_version'] ) ) {
       throw new NotFoundHttpException( 'Не возможно прочитать версию с сервиса обновления Альтерпи' );

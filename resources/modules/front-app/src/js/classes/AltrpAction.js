@@ -1,5 +1,5 @@
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
-import React, { Component } from "react";
+
 import {
   altrpLogin,
   altrpLogout,
@@ -811,7 +811,7 @@ class AltrpAction extends AltrpModel {
                 null,
                 this.getCurrentModel()
               );
-            } else {
+            } else if( value.indexOf("|") !== -1){
               // value = replaceContentWithData(
               //   value,
               //   this.getCurrentModel().getData()

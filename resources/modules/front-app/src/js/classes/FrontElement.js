@@ -1,9 +1,7 @@
 import CONSTANTS from "../../../../editor/src/js/consts";
 import {
   altrpRandomId,
-  getMediaQueryByName,
   getResponsiveSetting,
-  isEditor,
   replaceContentWithData,
   valueReplacement
 } from "../helpers";

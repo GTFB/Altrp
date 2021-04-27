@@ -761,3 +761,46 @@ if( ! function_exists( 'getMainColor' ) ){
 
   }
 }
+/**
+ * @param array $areas
+ * @return array
+ */
+function extractElementsNames( $areas = []){
+  $elementNames = [];
+
+  foreach ( $areas as $area ) {
+    if( ! isset( $area['template']['data'] ) ){
+      continue;
+    }
+//    echo '<pre style="padding-left: 200px;">';
+//    var_dump( $area );
+//    echo '</pre>';
+    $data = $area['template']['data'];
+    _extractElementsNames( $data, $elementNames );
+  }
+
+  return $elementNames;
+}
+
+/**
+ * @param array $element
+ * @param $elementNames
+ */
+function _extractElementsNames( $element = [],  &$elementNames ){
+  if( ! is_array( $elementNames ) ){
+    $elementNames = [];
+  }
+  if( ! isset( $element['name'] ) || ! is_string( $element['name'] ) ){
+    return;
+  }
+
+
+  if( array_search( $element['name'], $elementNames ) === false){
+    $elementNames[] = $element['name'];
+  }
+  if( isset( $element['children'] ) && is_array( $element['children'] ) ){
+    foreach ( $element['children'] as $child ) {
+      _extractElementsNames( $child, $elementNames );
+    }
+  }
+}

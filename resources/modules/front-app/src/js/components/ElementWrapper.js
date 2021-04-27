@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceContentWithData, setTitle } from "../helpers";
@@ -277,10 +277,12 @@ class ElementWrapper extends Component {
     if (this.CSSId !== CSSId) {
       this.CSSId = CSSId;
     }
-    let ContentComponent = this.props.component;
-    if (['root-element', 'section', 'column'].indexOf(this.props.element.getName()) === -1) {
-      // ContentComponent = 'div';
-    }
+    let ContentComponent = frontElementsManager.getComponentClass(this.props.element.getName());
+    // console.log(ContentComponent);
+    // console.log(this.props.component === frontElementsManager.getComponentClass(this.props.element.getName()));
+    // if(['root-element', 'section', 'column'].indexOf(this.props.element.getName()) === -1){
+    //   // ContentComponent = 'div';
+    // }
     const content = React.createElement(ContentComponent, {
       ref: this.elementRef,
       rootElement: this.props.rootElement,
@@ -357,6 +359,7 @@ function mapStateToProps(state) {
     altrpMeta: state.altrpMeta,
     altrpPageState: state.altrpPageState,
     currentScreen: state.currentScreen,
+    altrpComponents: state.altrpComponents,
   };
 }
 

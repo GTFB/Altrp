@@ -28,7 +28,14 @@
   }
 })();
 /**
- * Смена расширения
+ * Запускаем обновление списка страниц
+ */
+(async function () {
+  const pageUpdater = (await import('./js/classes/modules/PageUpdater')).default;
+  pageUpdater.startUpdating();
+})();
+/**
+ * Смена Разрешения
  */
 (async function (){
   const  setCurrentScreen =  (await import('./js/store/media-screen-storage/actions')).setCurrentScreen;
