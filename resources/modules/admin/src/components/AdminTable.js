@@ -4,7 +4,7 @@ import Resource from "../../../editor/src/js/classes/Resource";
 import SortableHeader from "./AdminTableComponents/SortableHeader";
 class AdminTable extends Component {
   /**
-   * Фильтр по ыыеденной строк
+   * Фильтр по введенной строке
    * @param {{}} e
    */
   filterByKeyboard = e => {
@@ -196,6 +196,11 @@ class AdminTable extends Component {
                                                 response = await resource[
                                                   quickAction.method
                                                 ](row.id);
+                                                break;
+                                              case "put":
+                                                response = await resource[
+                                                  quickAction.method
+                                                ](row.id, quickAction.data);
                                                 break;
 
                                               default:

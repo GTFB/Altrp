@@ -77,11 +77,16 @@ class RobotController extends Controller
      */
     public function update(Robot $robot, Request $request)
     {
+        if (isset($request->power)){
+            $robot->enabled = $robot->enabled ? 0 : 1;
+            $result = $robot->save();
+            return \response()->json(['success' => $result], $result ? 200 : 500);
+        }
+
         $data = $request->data;
 
         $sources = isset($request->sources) ? json_decode(collect($request->sources)->toJson()) : [];
 
-//        dd(json_decode($sources->toJson()));
         $sourceIds = [];
         $sourceParams = [];
 

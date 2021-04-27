@@ -51,8 +51,6 @@ export default class Robots extends Component {
       submit: data =>
         this.resource.post({
           name: data.name,
-          // model_id: data.model_id,
-          // start_condition: data.start_condition
         }),
       fields: [
         {
@@ -60,16 +58,6 @@ export default class Robots extends Component {
           label: "Robot name",
           required: true
         },
-        // {
-        //   name: "model_id",
-        //   label: "Model",
-        //   required: true
-        // },
-        // {
-        //   name: "start_condition",
-        //   label: "Start condition",
-        //   required: true
-        // }
       ],
       active: true,
       success: res => {
@@ -123,6 +111,10 @@ export default class Robots extends Component {
               {
                 name: "start_condition",
                 title: "Start Condition",
+              },
+              {
+                name: "enabled",
+                title: "Enabled",
               }
             ]}
             rows={this.state.robots}
@@ -135,10 +127,12 @@ export default class Robots extends Component {
                 },
                 title: "Edit"
               }, {
-                tag: 'button',
-                route: '',
-                method: 'delete',
-                title: 'Disable'
+                tag: "button",
+                route: '/admin/ajax/robots',
+                method: 'put',
+                data: {power: 1},
+                after: () => this.fetchData(),
+                title: 'Power'
               }, {
                 tag: "button",
                 route: "/admin/ajax/robots/:id",

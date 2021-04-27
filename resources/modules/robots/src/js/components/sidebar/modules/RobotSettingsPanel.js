@@ -2,6 +2,7 @@ import * as React from "react";
 import Scrollbars from "react-custom-scrollbars";
 import Chevron from "../../../../../../editor/src/svgs/chevron.svg";
 import store from "../../../store/store";
+import {setCurrentRobot} from "../../../store/current-robot/actions";
 import AltrpSelect from "../../../../../../admin/src/components/altrp-select/AltrpSelect";
 import Resource from "../../../../../../editor/src/js/classes/Resource";
 
@@ -13,6 +14,7 @@ export default class RobotSettingsPanel extends React.Component {
       dataSources: []
     };
     this.toggleChevron = this.toggleChevron.bind(this);
+    this.toggle = this.toggle.bind(this);
     this.dataSources = new Resource({ route: "/admin/ajax/data_source_options" });
   }
 
@@ -23,6 +25,13 @@ export default class RobotSettingsPanel extends React.Component {
 
   toggleChevron(type) {
     console.log(type);
+  }
+
+  // Изменение положения переключателя
+  toggle() {
+    let robot = this.props.robot;
+    robot.enabled = robot.enabled ? 0 : 1 ;
+    store.dispatch(setCurrentRobot(robot));
   }
 
   // Запись значений select в store
@@ -65,7 +74,6 @@ export default class RobotSettingsPanel extends React.Component {
     this.props.setSources(sourcesData);
   }
 
-
   getRobots() {
     let elements = store.getState()?.robotSettingsData;
     elements = _.filter(elements, item => item.type === "robot");
@@ -87,6 +95,9 @@ export default class RobotSettingsPanel extends React.Component {
     const sources = this.getSources();
     const sourcesData = this.props.sources ?? [];
 
+    let value = this.props.robot?.enabled ?? false;
+    let switcherClasses = `control-switcher control-switcher_${value ? 'on' : 'off'}`;
+
     return (
       <div className="panel settings-panel d-flex">
         <div className="settings-controllers">
@@ -103,6 +114,17 @@ export default class RobotSettingsPanel extends React.Component {
                   </div>
 
                   <div className="controllers-wrapper">
+                    <div className="robot_switcher">
+                      <div className="robot_switcher__label">
+                        Robot power
+                      </div>
+                      <div className={switcherClasses} onClick={this.toggle}>
+                        <div className="control-switcher__on-text">ON</div>
+                        <div className="control-switcher__caret" />
+                        <div className="control-switcher__off-text">OFF</div>
+                      </div>
+                    </div>
+
                     <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
                       <div className="controller-container__label control-select__label controller-label">Sources</div>
                       <AltrpSelect id="crud-fields"
