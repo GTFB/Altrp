@@ -386,13 +386,13 @@ class AddPage extends Component {
                         <label htmlFor="caching" className="label_checkbox">Сaching</label>
                       </div>
                       <div className="form-group col-4 ">
-                        <input type="checkbox" id="caching"
+                        <input type="checkbox" id="404"
                           checked={this.state.value.not_found || ""}
                           onChange={e => {
                             this.changeValue(e.target.checked, "not_found");
                           }}
                           className="form-check-input form-check-input_inline" />
-                        <label htmlFor="caching" className="label_checkbox">404</label>
+                        <label htmlFor="404" className="label_checkbox">404</label>
                       </div>
                       <div className="form-group col-4 ">
                         <label htmlFor="sections_count" className="label_checkbox">Sections Count:</label>

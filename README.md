@@ -8,6 +8,7 @@
 + Toggle Visually Impaired Action
 + Cache for Pages
 + Page for 404 
++ Lazy Sections for Pages
 
 ### 0.14.0
 + Add Accept Filed Type
