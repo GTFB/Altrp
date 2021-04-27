@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use League\ColorExtractor\Color;
 use League\ColorExtractor\ColorExtractor;
 use League\ColorExtractor\Palette;
+use App\Page;
 
 /**
  * Get the script possible URL base
@@ -535,13 +536,16 @@ function setDynamicData($template, $data)
  * @return boolean
  * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
  */
-function saveCache( $html) {
+function saveCache( $html, $page_id ) {
 
   if (!$html) {
     return false;
   }
   $url = $_SERVER['REQUEST_URI'];
-//  $html = minificationHTML($html);
+
+  //  $html = minificationHTML($html);
+  $html = minifyHTML($html);
+  
   $hash = md5($url . $html);
 
   $cachePath = storage_path() . '/framework/cache/pages';
@@ -560,31 +564,13 @@ function saveCache( $html) {
     $relations = [];
   }
 
-  $roles = [];
-  if (Auth::user()) {
-    $roles = Auth::user()->getUserRoles();
-  }
-  $plainRoles = implode(",", $roles);
-
-  $encryption_key = getenv('APP_KEY');
-  $iv_size = 16; // 128 bits
-  $iv = openssl_random_pseudo_bytes($iv_size, $strong);
-
-  $cipherRoles = openssl_encrypt(
-      $plainRoles,
-      'AES-256-CBC',
-      $encryption_key,
-      0,
-      $iv
-  );
-
-  setcookie("roles", $cipherRoles, time()+3600);
+  $roles = Page::getRolesToCache( $page_id );
 
   $newRelation = [
     'hash' => $hash,
     "url" => $url,
-    "roles" => $roles,
-    "iv" => base64_encode($iv)
+    "page_id" => $page_id,
+    "roles" => $roles
   ];
 
   $key = false;
@@ -606,6 +592,184 @@ function saveCache( $html) {
 
   return true;
 }
+
+function minifyHTML($html) {
+
+  // Settings
+  $compress_css = true;
+  $compress_js = true;
+  $remove_comments = true;
+
+  $pattern = '/<(?<script>script).*?<\/script\s*>|<(?<style>style).*?<\/style\s*>|<!(?<comment>--).*?-->|<(?<tag>[\/\w.:-]*)(?:".*?"|\'.*?\'|[^\'">]+)*>|(?<text>((<[^!\/\w.:-])?[^<]*)+)|/si';
+  preg_match_all($pattern, $html, $matches, PREG_SET_ORDER);
+
+  $overriding = false;
+  $raw_tag = false;
+
+  // Variable reused for output
+  $html = '';
+
+  foreach ($matches as $token) {
+    $tag = (isset($token['tag'])) ? strtolower($token['tag']) : null;
+
+    $content = $token[0];
+
+    if (is_null($tag)) {
+      if ( !empty($token['script']) ) {
+        $strip = $compress_js;
+      }
+      else if ( !empty($token['style']) ) {
+        $strip = $compress_css;
+      }
+      else if ($content == '<!--wp-html-compression no compression-->') {
+        $overriding = !$overriding;
+
+        // Don't print the comment
+        continue;
+      }
+      else if ($remove_comments) {
+        if (!$overriding && $raw_tag != 'textarea') {
+          // Remove any HTML comments, except MSIE conditional comments
+          $content = preg_replace('/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->/s', '', $content);
+        }
+      }
+    }
+    else {
+      if ($tag == 'pre' || $tag == 'textarea') {
+        $raw_tag = $tag;
+      }
+      else if ($tag == '/pre' || $tag == '/textarea') {
+        $raw_tag = false;
+      }
+      else {
+        if ($raw_tag || $overriding) {
+          $strip = false;
+        }
+        else {
+          $strip = true;
+
+          // Remove any empty attributes, except:
+          // action, alt, content, src
+          $content = preg_replace('/(\s+)(\w++(?<!\baction|\balt|\bcontent|\bsrc)="")/', '$1', $content);
+
+          // Remove any space before the end of self-closing XHTML tags
+          // JavaScript excluded
+          $content = str_replace(' />', '/>', $content);
+        }
+      }
+    }
+
+    if ($strip) {
+      $content = removeWhiteSpace($content);
+    }
+
+    $html .= $content;
+  }
+
+  return $html;
+}
+
+function removeWhiteSpace($str) {
+  $str = str_replace("\t", ' ', $str);
+  $str = str_replace("\n",  '', $str);
+  $str = str_replace("\r",  '', $str);
+
+  while (stristr($str, '  ')) {
+    $str = str_replace('  ', ' ', $str);
+  }
+
+  return $str;
+}
+
+function saveTemplateCache( $json, $template_id ) {
+
+  if (!$json || !$template_id) {
+    return false;
+  }
+
+  $hash = md5($json);
+
+  $cachePath = storage_path() . '/framework/cache/templates';
+
+  File::ensureDirectoryExists( $cachePath, 0775);
+
+  if ( ! File::exists($cachePath . '/relations.json') ) {
+    File::put($cachePath . '/relations.json', '{}');
+  }
+
+  $relationsJson = File::get($cachePath . '/relations.json');
+  $relations = json_decode($relationsJson, true);
+
+  if ( ! is_array($relations) ) {
+    File::put($cachePath . '/relations.json', '{}');
+    $relations = [];
+  }
+
+  $newRelation = [
+    'hash' => $hash,
+    'template_id' => $template_id
+  ];
+
+  $key = false;
+  foreach ($relations as $relation) {
+    if ($relation['hash'] === $hash) {
+      $key = true;
+      break;
+    }
+  }
+
+  if (!$key) {
+    array_push($relations, $newRelation);
+  }
+
+  $relations = json_encode($relations);
+
+  File::put($cachePath . '/relations.json', $relations);
+  File::put($cachePath . '/' . $hash, $json);
+
+  return true;
+}
+
+function clearAllCache() {
+  $cachePath = storage_path() . '/framework/cache/pages';
+  if( File::exists( storage_path() . '/framework/cache/pages' ) ){
+    File::cleanDirectory( storage_path() . '/framework/cache/pages' );
+    File::put($cachePath . '/relations.json', '{}');
+  }
+  return true;
+}
+
+function clearPageCache( $page_id ) {
+
+  $cachePath = storage_path() . '/framework/cache/pages';
+
+  if ( !File::exists($cachePath . '/relations.json') ) {
+    File::put($cachePath . '/relations.json', '{}');
+  }
+
+  $relationsJson = File::get($cachePath . '/relations.json');
+  $relations = json_decode($relationsJson, true);
+
+  if ( ! is_array($relations) ) {
+    File::put($cachePath . '/relations.json', '{}');
+    $relations = [];
+  }
+
+  foreach ($relations as $key => $relation) {
+    if ($relation['page_id'] === $page_id) {
+      if ( File::exists($cachePath . '/' . $relation['hash']) ) {
+        File::delete($cachePath . '/' . $relation['hash']);
+      }
+      unset($relations[$key]);
+    }
+  }
+
+  $relations = json_encode($relations);
+  File::put($cachePath . '/relations.json', $relations);
+
+  return true;
+}
+
 
 /**
  * Минификация HTML

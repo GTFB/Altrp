@@ -823,4 +823,37 @@ class Page extends Model
     File::put( $cachePath . 'relations.json', $relations );
 
   }
+
+  /**
+   * @return array
+   */
+  static function getRolesToCache( $page_id ){
+    if ( ! $page_id ){
+      return[];
+    }
+    $page_role_table = DB::table( 'page_role' );
+    $page_roles = $page_role_table->where( 'page_id', $page_id )->get();
+    $roles = [];
+    foreach ( $page_roles as $key => $page_role ) {
+      $roles[$key] = $page_role->role_id;
+    }
+
+    $page = Page::find($page_id);
+    if( $page->for_guest ){
+      array_push($roles, 'guest');
+    }
+    return $roles;
+  }
+
+
+  /**
+   * @return array
+   */
+  static function getPagesByTemplateId( $template_id ){
+    if ( ! $template_id ){
+      return[];
+    }
+    $pages = DB::table( 'pages_templates' )->where( 'template_id', $template_id )->get();
+    return $pages;
+  }
 }

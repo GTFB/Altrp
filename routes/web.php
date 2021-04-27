@@ -481,9 +481,6 @@ foreach ( $frontend_routes as $_frontend_route ) {
   Route::get( $frontend_route, function () use ( $title, $_frontend_route, $frontend_route ) {
 
     $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
-//    echo '<pre style="padding-left: 200px;">';
-//    var_dump( $preload_content );
-//    echo '</pre>';
 
     $page_areas = Page::get_areas_for_page( $_frontend_route['id'], true );
     $lazy_sections = Page::get_lazy_sections_for_page( $_frontend_route['id'] );
@@ -492,6 +489,8 @@ foreach ( $frontend_routes as $_frontend_route ) {
 
       global $altrp_need_cache;
       $altrp_need_cache = true;
+      global $altrp_route_id;
+      $altrp_route_id = $_frontend_route['id'];
 
     }
     return view( 'front-app', [
