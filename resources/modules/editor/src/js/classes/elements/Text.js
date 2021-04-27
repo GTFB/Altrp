@@ -224,6 +224,8 @@ class Text extends BaseElement {
     this.addControl("text_style_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
       label: "Typographic",
+      // units: ["px", "%", "vh", "em", "rem", "vw"],
+
       // default:{
       //   lineHeight: 1.5,
       //   spacing: 0,
