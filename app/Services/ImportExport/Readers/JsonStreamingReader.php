@@ -17,7 +17,7 @@ class JsonStreamingReader implements IReader
     public function readJsonFile(string $path)
     {
         $listener = new InMemoryListener();
-        $stream = fopen(storage_path( $path), 'r');
+        $stream = fopen( $path, 'r');
         try {
             $parser = new Parser($stream, $listener);
             $parser->parse();

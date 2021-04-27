@@ -43,7 +43,10 @@ class PageTemplatesFile extends ImportExportFile implements IImportExportFile
 
         $pages_data = Page::all();
 
-        $templates_data = Template::with("template_area")->has("template_area")->get();
+        //Убираем data, html_content и styles. Уменьшаем размер переменной, что бы не получить Out of memory
+        $templates_data = Template::with("template_area")->has("template_area")->get(
+            ["id", "name", "title", "type", "user_id", "created_at", "updated_at", "deleted_at", "parent_template", "area", "all_site", "guid"]
+        );
 
         $inserted = [];
         $deleted = [];
