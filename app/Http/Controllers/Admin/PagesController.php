@@ -139,6 +139,7 @@ class PagesController extends Controller
       'success' => false
     ];
     $page = Page::find( $id );
+
     $page->path = $request->path;
     $page->title = $request->title;
     $page->model_id = $request->model_id;
@@ -179,6 +180,8 @@ class PagesController extends Controller
     if ( $page->save() ) {
       $res['success'] = true;
     }
+
+    clearPageCache( $page->id );
 
     return response()->json( $res );
   }

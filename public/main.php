@@ -3,6 +3,47 @@
 //Render cached files
 $cachePath = '../storage/framework/cache/pages/';
 
+if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
+
+  $url = $_SERVER['REQUEST_URI'];
+  $url = explode('?', $url);
+  $url = $url[0];
+
+  $cachedFiles = [];
+  $json = file_get_contents($cachePath . 'relations.json');
+  if( $json ){
+    $cachedFiles = json_decode($json, true);
+
+    $hash_to_delete = '';
+
+    if (!empty($cachedFiles)) {
+
+      foreach ($cachedFiles as $key => $cachedFile) {
+
+        if ( $cachedFile['url'] === $url ) {
+
+          if( file_exists($cachePath . $cachedFile['hash']) ){
+            $file = file_get_contents($cachePath . $cachedFile['hash']);
+            echo $file;
+            die();
+          } else {
+            $hash_to_delete = $cachedFile['hash'];
+          }
+
+        }
+      }
+    }
+    if( $hash_to_delete ){
+      $cachedFiles = array_filter( $cachedFiles, function ( $file ) use ( $hash_to_delete ){
+        return $file['hash'] !== $hash_to_delete;
+      } );
+      $json = json_encode( $cachedFiles );
+      file_put_contents( $cachePath . 'relations.json', $json );
+    }
+  }
+}
+
+
 /**
  * Laravel - A PHP Framework For Web Artisans
  *
@@ -57,57 +98,9 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 
 $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
-
 $response = $kernel->handle(
    $request = Illuminate\Http\Request::capture()
 );
-
-use Illuminate\Support\Facades\Auth;
-
-if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
-
-  $url = $_SERVER['REQUEST_URI'];
-  $url = explode('?', $url);
-  $url = $url[0];
-
-  $cachedFiles = [];
-  $json = file_get_contents($cachePath . 'relations.json');
-  if( $json ){
-    $cachedFiles = json_decode($json, true);
-
-    $hash_to_delete = '';
-
-    if (!empty($cachedFiles)) {
-
-      foreach ($cachedFiles as $key => $cachedFile) {
-
-        $userRoles = [];
-        if (Auth::user()) {
-          $userRoles = array_intersect(Auth::user()->getUserRoles(), $cachedFile['roles']);
-        }
-
-        if ( ( $cachedFile['url'] === $url && !empty($userRoles) ) || ( $cachedFile['url'] === $url && !Auth::user() && array_search('guest', $cachedFile['roles']) ) ) {
-
-          if( file_exists($cachePath . $cachedFile['hash']) ){
-            $file = file_get_contents($cachePath . $cachedFile['hash']);
-            echo $file;
-            die();
-          } else {
-            $hash_to_delete = $cachedFile['hash'];
-          }
-
-        }
-      }
-    }
-    if( $hash_to_delete ){
-      $cachedFiles = array_filter( $cachedFiles, function ( $file ) use ( $hash_to_delete ){
-        return $file['hash'] !== $hash_to_delete;
-      } );
-      $json = json_encode( $cachedFiles );
-      file_put_contents( $cachePath . 'relations.json', $json );
-    }
-  }
-}
 
 $response->send();
 

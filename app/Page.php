@@ -844,4 +844,16 @@ class Page extends Model
     }
     return $roles;
   }
+
+
+  /**
+   * @return array
+   */
+  static function getPagesByTemplateId( $template_id ){
+    if ( ! $template_id ){
+      return[];
+    }
+    $pages = DB::table( 'pages_templates' )->where( 'template_id', $template_id )->get();
+    return $pages;
+  }
 }
