@@ -39,7 +39,7 @@ class ScheduleFileWriter extends BaseFileWriter
         $end = '()';
         if ($period->name == 'hourlyAt') {
             $end = '(' . $period->time . ')';
-        } elseif ($period->name == 'dailyAt') {
+        } elseif ($period->name == 'dailyAt' || $period->name == 'timezone') {
             $end = "('" . $period->time . "')";
         }
 
@@ -64,6 +64,8 @@ class ScheduleFileWriter extends BaseFileWriter
                 }
 
                 $restrictionList .= $start . $restriction->name . $end;
+            } elseif ($restriction->name == 'when') {
+                $restrictionList .= $start . $restriction->name . '(function () { return ' . $restriction->time->condition . ';})';
             } else {
                 $restrictionList .= $start . $restriction->name . $end;
             }
