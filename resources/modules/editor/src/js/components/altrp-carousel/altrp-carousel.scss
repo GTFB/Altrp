@@ -180,7 +180,6 @@
     width: calc(100% - 40px);
     margin: 20px;
     top: 0;
-    transition: 0.5s;
     opacity: 0;
     display: flex;
     justify-content: center;
@@ -192,6 +191,7 @@
     background-color: #ffffff;
     z-index: 4;
     position: absolute;
+    transition: 0.5s;
 }
 
 .altrp-carousel-slide:hover .altrp-carousel-slide-overlay {
