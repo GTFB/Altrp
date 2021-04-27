@@ -35,21 +35,23 @@ class AccordionWidget extends Component {
 
     if(!this.state.settings.multiple_additional_content) {
       for (let i = 0; i<this.state.activeItem.id.length; i++) {
-        this.setState((state) => {
-          state.activeItem.id[i] = false;
-          return {
-            ...state
-          };
-        });
+        if (i === activeItem) {
+          this.setState((state) => {
+            state.activeItem.id[activeItem] = !state.activeItem.id[activeItem];
+            return {
+              ...state
+            };
+          });
+        } else {
+          this.setState((state) => {
+            state.activeItem.id[i] = false;
+            return {
+              ...state
+            };
+          });
+        }
       };
     };
-
-    this.setState((state) => {
-      state.activeItem.id[activeItem] = !state.activeItem.id[activeItem];
-      return {
-        ...state
-      };
-    });
   };
 
   render(){

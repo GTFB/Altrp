@@ -350,6 +350,18 @@ class Accordion extends BaseElement {
         family: "Open Sans",
         decoration: ""
       },
+      rules: {
+        '{{ELEMENT}} .altrp-accordion-item-label{{STATE}}': [
+          'font-family: {{FAMILY}};',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
+      },
     }
     );
 
@@ -478,6 +490,18 @@ class Accordion extends BaseElement {
         weight: "normal",
         family: "Open Sans",
         decoration: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-accordion-item-content-show{{STATE}}': [
+          'font-family: {{FAMILY}};',
+          'font-size: {{SIZE}}px;',
+          'line-height: {{LINEHEIGHT}};',
+          'letter-spacing: {{SPACING}}px',
+          'font-weight: {{WEIGHT}}',
+          'text-transform: {{TRANSFORM}}',
+          'font-style: {{STYLE}}',
+          'text-decoration: {{DECORATION}}'
+        ],
       },
     }
     );
