@@ -4,6 +4,7 @@
 class PagesUpdater {
   /**
    * Получить все внутренние ссылки на странице
+   * todo: можно усовершенствовать: загружать в первую очередь те страницы, на которые на текущей странице ведут ссылки
    * @return {Array}
    */
   getLinks(){
@@ -14,17 +15,22 @@ class PagesUpdater {
     return links;
   }
 
-  _startUpdating(){
-    const links = this.getLinks();
-    if(_.empty(links)){
-      this.updating = false;
-      return
-    }
+  async _startUpdating(){
+    // const links = this.getLinks();
+    // if(_.isEmpty(links)){
+    //   this.updating = false;
+    //   return
+    // }
+    let pages = window.altrpPages.map(page => page.id);
+    pages = pages.filter((id, idx) => ! window.pageStorage[id] && pages.indexOf(id) === idx);
+    pages = pages.map(id => window.pageLoader.loadPage(id));
+    pages = await Promise.all(pages);
   }
-  startUpdating(){
+  async startUpdating(){
     if(! this.updating){
       this.updating = true;
-      this._startUpdating();
+      await this._startUpdating();
+      this.updating = false;
     }
 
   }

@@ -119,7 +119,7 @@ class Handler extends ExceptionHandler
           $preload_content = Page::getPreloadPageContent( $not_found_page['id'] );
 
           return response( view( 'front-app', [
-            'page_areas' => json_encode( Page::get_areas_for_page( $not_found_page['id'], true ) ),
+            'page_areas' => json_encode( Page::get_areas_for_page( $not_found_page['id'] ) ),
             'page_id' => $not_found_page['id'],
             'title' => $not_found_page['title'],
             '_frontend_route' => $not_found_page,

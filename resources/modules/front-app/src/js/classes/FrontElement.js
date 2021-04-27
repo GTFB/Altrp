@@ -13,6 +13,7 @@ class FrontElement {
   constructor(data = {}){
     this.name = data.name;
     this.settings = data.settings;
+    this.lazySection = data.lazySection;
     this.children = data.children;
     this.cssClassStorage = data.cssClassStorage;
     this.type = data.type;

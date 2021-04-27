@@ -279,12 +279,12 @@ class Page extends Model
    * @param bool $sections_limit
    * @return array
    */
-  public static function get_areas_for_page( $page_id, $sections_limit = false ){
+  public static function get_areas_for_page( $page_id ){
     $areas = [];
 
     $currentPage = Page::find( $page_id );
     $contentType = $currentPage->type;
-    if( $currentPage->sections_count && $sections_limit ){
+    if( $currentPage->sections_count ){
       $sections_count = $currentPage->sections_count;
     }
 
@@ -379,7 +379,14 @@ class Page extends Model
       $sections_count -= count( $data['children'] );
 
     } else if( count( $data['children'] ) > $sections_count ){
-      $data['children'] = array_slice( $data['children'], 0, $sections_count );
+//      $data['children'] = array_slice( $data['children'], 0, $sections_count );
+      for( $i = $sections_count; $i < count( $data['children'] ); $i++ ){
+//        echo '<pre style="padding-left: 200px;">';
+//        var_dump( $data['children'][$i] );
+//        echo '</pre>';
+
+        $data['children'][$i]['lazySection'] = true;
+      }
       $sections_count = 0;
     } else {
       $sections_count = 0;
