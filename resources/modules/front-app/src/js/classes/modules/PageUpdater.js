@@ -10,7 +10,6 @@ class PagesUpdater {
   getLinks(){
     let links = document.querySelectorAll('a');
     links = _.map(links, link => link.href);
-    console.log(links);
 
     return links;
   }
