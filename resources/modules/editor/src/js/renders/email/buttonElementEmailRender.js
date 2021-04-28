@@ -33,7 +33,7 @@ export default function buttonElementEmailRender(){
 
   if(settings['position_margin']) {
     buttonStyles.marginTop = settings['position_margin'].top ? (settings['position_margin'].top + settings['position_margin'].unit) : buttonStyles.marginTop;
-    buttonStyles.marginRight = settings['position_margin'].right ? (settings['position_margin'].right + settings['position_margin'].unit) : buttonStyles.marginRight; 
+    buttonStyles.marginRight = settings['position_margin'].right ? (settings['position_margin'].right + settings['position_margin'].unit) : buttonStyles.marginRight;
     buttonStyles.marginBottom = settings['position_margin'].bottom ? (settings['position_margin'].bottom + settings['position_margin'].unit) : buttonStyles.marginBottom;
     buttonStyles.marginLeft = settings['position_margin'].left ? (settings['position_margin'].left + settings['position_margin'].unit) : buttonStyles.marginLeft ;
   }
@@ -119,7 +119,7 @@ export default function buttonElementEmailRender(){
   url = prepareURLForEmail(url);
   const buttonProps = {
     style: buttonStyles,
-    href: isEditor() ? null : url,
+    href: url,
     dangerouslySetInnerHTML:{
       __html: text,
     },
@@ -133,11 +133,11 @@ export default function buttonElementEmailRender(){
     wrapperStyles.justifyContent = settings['button_alignment'];
     wrapperStyles.display = "flex";
   }
-  
+
   const wrapperProps = {
     style: wrapperStyles,
   };
-  
+
   return <div {...wrapperProps}
               children={React.createElement('a', buttonProps)}/>;
 }

@@ -75,7 +75,7 @@ class Block
             $currentNode->data->props->type === 'messageAction'
         ) {
             $prevAction = $this->doAction($currentNode);
-//            $this->savePrevAction($prevAction);
+            $this->savePrevAction($prevAction);
         } elseif ($currentNode->data->props->type == 'robot') {
             $this->runRobot($currentNode);
         }
@@ -84,15 +84,18 @@ class Block
             self::$nextNode = collect($this->nodes)->where('id', $currentNodeEdgesSource->target)->first();
         }
 
+        $this->modelData['altrpapi'] = self::$completedActions;
+
         return self::$completedActions;
     }
 
     protected function savePrevAction($action)
     {
-        if ($action instanceof Model) {
-            $className = (new \ReflectionClass($action))->getShortName();
-            self::$completedActions[strtolower(get_class($className))] = $action;
-        }
+//        if ($action instanceof Model) {
+//            $className = (new \ReflectionClass($action))->getShortName();
+//            self::$completedActions[strtolower(get_class($className))] = $action;
+//        }
+        self::$completedActions[strtolower($action['name'])] = $action['value'];
     }
 
     /**

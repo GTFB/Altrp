@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import SortableHeader from "./AdminTableComponents/SortableHeader";
-import { AdminTableRow } from "./AdminTableRow";
-
+import AdminTableRow from "./AdminTableRow";
 class AdminTable extends Component {
   /**
-   * Фильтр по ыыеденной строк
+   * Фильтр по введенной строке
    * @param {{}} e
    */
 

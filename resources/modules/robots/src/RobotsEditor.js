@@ -71,7 +71,8 @@ class RobotsEditor extends Component {
     store.subscribe(this.updateRobotState.bind(this));
 
     const robotId = new URL(window.location).searchParams.get("robot_id");
-    const robot = await this.resource.get(robotId);
+    const robot = await this.resource.get(robotId)
+    if (_.isString(robot.start_config)) robot.start_config = JSON.parse(robot.start_config);
     console.log(robot);
     store.dispatch(setCurrentRobot(robot));
     if (robot.sources) {
@@ -172,7 +173,11 @@ class RobotsEditor extends Component {
       case "documentAction":
         data = {
           "type": "documentAction",
-          "nodeData": {},
+          "nodeData": {
+            "type": "document",
+            "data": {
+            }
+          },
         };
         break;
       case "crudAction":
@@ -192,7 +197,17 @@ class RobotsEditor extends Component {
       case "apiAction":
         data = {
           "type": "apiAction",
-          "nodeData": {},
+          "nodeData": {
+            "type": "api",
+            "data": {
+                "source": "",
+                "method": "",
+                "headers": "",
+                "name": "",
+                "url": "",
+                "data": ""
+            }
+          },
         };
         break;
       case "messageAction":

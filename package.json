@@ -22,7 +22,7 @@
         "pack": "npm run front-build && npm run editor-build && npm run admin-build && npm run robots-build && gulp pack",
         "packTest": "npm run front-build && npm run editor-build && npm run admin-build && npm run robots-build && gulp packTest",
         "only-pack": "gulp pack",
-        "run-all": "npm-run-all --parallel admin-start editor-start front-start",
+        "run-all": "npm-run-all --parallel admin-start editor-start front-start robots-start",
         "reports:dev": "cd resources/modules/altrp-reports && PORT=3010 react-scripts start",
         "reports:build": "rm -rf public/modules/altrp-reports && cd resources/modules/altrp-reports && PUBLIC_URL=/modules/reports/ react-scripts build",
         "reports:move": "mv -f resources/modules/altrp-reports/build public/modules/reports",
@@ -135,7 +135,11 @@
         "styled-components": "^5.0.0",
         "text-mask-addons": "^3.8.0",
         "tinymce": "^5.7.1",
-        "typescript": "^4.2.3"
+        "typescript": "^4.2.3",
+        "workbox-cacheable-response": "^6.1.5",
+        "workbox-expiration": "^6.1.5",
+        "workbox-routing": "^6.1.5",
+        "workbox-strategies": "^6.1.5"
     },
     "devDependencies": {
         "@babel/cli": "^7.10.3",

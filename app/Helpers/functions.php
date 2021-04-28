@@ -306,7 +306,9 @@ function altrp_asset( $path, $domain = 'http://localhost:3002/' )
   } catch ( Exception $e ) {
     return asset( $path ) . '?' . env( 'APP_VERSION' );
   }
-
+  if( $domain === 'http://localhost:3001/' ){
+    return $domain . 'src/bundle.front-app.js';
+  }
   return $domain . 'src/bundle.js';
 }
 
@@ -538,7 +540,7 @@ function setDynamicData($template, $data)
  */
 function saveCache( $html, $page_id ) {
 
-  if (!$html) {
+  if ( ! $html ) {
     return false;
   }
   $url = $_SERVER['REQUEST_URI'];
@@ -596,6 +598,7 @@ function saveCache( $html, $page_id ) {
 function minifyHTML($html) {
 
   // Settings
+  return $html;
   $compress_css = true;
   $compress_js = true;
   $remove_comments = true;

@@ -482,7 +482,7 @@ foreach ( $frontend_routes as $_frontend_route ) {
 
     $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
 
-    $page_areas = Page::get_areas_for_page( $_frontend_route['id'], true );
+    $page_areas = Page::get_areas_for_page( $_frontend_route['id'] );
     $lazy_sections = Page::get_lazy_sections_for_page( $_frontend_route['id'] );
     $elements_list = extractElementsNames( $page_areas );
     if (Page::isCached( $_frontend_route['id'] )) {
