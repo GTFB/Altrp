@@ -1,5 +1,9 @@
 import { EDIT_ELEMENT } from "./actions";
 
+if (typeof _ === "undefined") {
+  global._ = require("lodash");
+}
+
 const defaultState = {};
 
 export function elementReducer(state, action) {
