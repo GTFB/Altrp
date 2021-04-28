@@ -7,6 +7,7 @@ use League\ColorExtractor\Color;
 use League\ColorExtractor\ColorExtractor;
 use League\ColorExtractor\Palette;
 use App\Page;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Get the script possible URL base
@@ -543,9 +544,8 @@ function saveCache( $html, $page_id ) {
   }
   $url = $_SERVER['REQUEST_URI'];
 
-  //  $html = minificationHTML($html);
-  $html = minifyHTML($html);
-  
+  // $html = minificationHTML($html);
+  // $html = minifyHTML($html);
   $hash = md5($url . $html);
 
   $cachePath = storage_path() . '/framework/cache/pages';
@@ -570,7 +570,7 @@ function saveCache( $html, $page_id ) {
     'hash' => $hash,
     "url" => $url,
     "page_id" => $page_id,
-    "roles" => $roles
+    "roles" => $roles,
   ];
 
   $key = false;
@@ -590,8 +590,11 @@ function saveCache( $html, $page_id ) {
   File::put($cachePath . '/relations.json', $relations);
   File::put($cachePath . '/' . $hash, $html);
 
+  setUserCookie();
+
   return true;
 }
+
 
 function minifyHTML($html) {
 
