@@ -72,9 +72,11 @@ class Action
         if ($source) {
             $url = $source->url;
             $method = $source->request_type;
+            $name = $source->name;
         } else {
             $url = $this->getNodeProperties()->nodeData->data->url;
             $method = $this->getNodeProperties()->nodeData->data->method;
+            $name = $this->getNodeProperties()->nodeData->data->name;
         }
 
         $params = $this->getNodeProperties()->nodeData->data->data;
@@ -95,7 +97,7 @@ class Action
         $this->dispatchNow($job);
         $res = $job->getResponse();
 
-        $source = strtolower(implode('_', explode(' ', $source->name)));
+        $source = strtolower(implode('_', explode(' ', $name)));
 
         return [
             'name' => $source,
