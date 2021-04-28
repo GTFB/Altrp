@@ -1,9 +1,7 @@
 import CONSTANTS from "../../../../editor/src/js/consts";
 import {
   altrpRandomId,
-  getMediaQueryByName,
   getResponsiveSetting,
-  isEditor,
   replaceContentWithData,
   valueReplacement
 } from "../helpers";
@@ -15,6 +13,7 @@ class FrontElement {
   constructor(data = {}){
     this.name = data.name;
     this.settings = data.settings;
+    this.lazySection = data.lazySection;
     this.children = data.children;
     this.cssClassStorage = data.cssClassStorage;
     this.type = data.type;

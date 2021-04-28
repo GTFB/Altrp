@@ -10,4 +10,4 @@ export const scrollReducer = (state = initialState, { type, payload }) => {
     default:
       return state;
   }
-}
+};

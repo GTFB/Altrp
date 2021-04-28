@@ -3,21 +3,13 @@
 //Render cached files
 $cachePath = '../storage/framework/cache/pages/';
 
-$env = file('../.env');
-$encryption_key = "";
-foreach ( $env as $setting ) {
-  if ( strpos($setting,'APP_KEY',0) !==false ) {
-    $encryption_key = str_replace("APP_KEY=", "", $setting);
-  }
-}
-
 if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
 
-	$url = $_SERVER['REQUEST_URI'];
-	$url = explode('?', $url);
-	$url = $url[0];
+  $url = $_SERVER['REQUEST_URI'];
+  $url = explode('?', $url);
+  $url = $url[0];
 
-	$cachedFiles = [];
+  $cachedFiles = [];
   $json = file_get_contents($cachePath . 'relations.json');
   if( $json ){
     $cachedFiles = json_decode($json, true);
@@ -25,23 +17,13 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
     $hash_to_delete = '';
 
     if (!empty($cachedFiles)) {
-      foreach ($cachedFiles as $key =>  $cachedFile) {
 
-        $roles = openssl_decrypt(
-            $_COOKIE['roles'],
-            'AES-256-CBC',
-            $encryption_key,
-            0,
-            base64_decode($cachedFile['iv'])
-        );
-        $roles = explode(",", $roles);
+      foreach ($cachedFiles as $key => $cachedFile) {
 
-        if ($cachedFile['url'] === $url) {
+        if ( $cachedFile['url'] === $url ) {
 
           if( file_exists($cachePath . $cachedFile['hash']) ){
-
             $file = file_get_contents($cachePath . $cachedFile['hash']);
-
             echo $file;
             die();
           } else {
@@ -72,6 +54,8 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
 define('LARAVEL_START', microtime(true));
 global $altrp_need_cache;
 $altrp_need_cache = false;
+global $altrp_route_id;
+$altrp_route_id = false;
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
@@ -115,10 +99,9 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
 $response = $kernel->handle(
-    $request = Illuminate\Http\Request::capture()
+   $request = Illuminate\Http\Request::capture()
 );
 
 $response->send();
-
 
 $kernel->terminate($request, $response);

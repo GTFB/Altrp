@@ -10,8 +10,11 @@ class Area {
     area.id = areaData.id;
     area.template = new Template();
     area.template.data = areaData.template
-      ? JSON.parse(areaData.template.data)
+      ? areaData.template.data
       : null;
+    if(_.isString(area.template.data)){
+      area.template.data = JSON.parse(area.template.data);
+    }
     area.template.id = areaData.template ? areaData.template.id : null;
     area.template.name =  areaData.template ?  areaData.template.name : '';
     if (areaData.area_name === "popups") {
@@ -21,7 +24,10 @@ class Area {
       areaData.templates = areaData.templates || [];
       areaData.templates.forEach(_t => {
         let template = new Template();
-        template.data = _t ? JSON.parse(_t.data) : null;
+        template.data = _t ? _t.data : null;
+        if(_.isString(template.data)){
+          template.data = JSON.parse(template.data);
+        }
         template.name = _t ? _t.name : '';
         template.id = _t ? JSON.parse(_t.id) : null;
         template.guid = _t ? _t.guid : null;

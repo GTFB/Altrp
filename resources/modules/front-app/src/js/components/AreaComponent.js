@@ -1,5 +1,5 @@
-
 import FrontPopup from "./FrontPopup";
+import {connect} from "react-redux";
 
 class AreaComponent extends Component {
 
@@ -9,6 +9,28 @@ class AreaComponent extends Component {
 
   }
   componentWillUnmount() {
+
+    /**
+     * Перенесем все секции для ленивой подгрузки в хранилище страниц (текущая стрнаца)
+     */
+    // if( _.isArray(window.lazySections)){
+    //   if(window.pageStorage.hasOwnProperty(page_id) ){
+    //     let page = window.pageStorage[page_id];
+    //
+    //     window.lazySections.forEach(section => {
+    //       let area = page.areas.find(area => area.id === section.area_name);
+    //       if(area){
+    //         section.element.lazySection = true;
+    //         area.template.data.children.push(section.element)
+    //       }
+    //     });
+    //   }
+    //   window.lazySections = null;
+    // }
+
+    if(window.pageUpdater){
+      window.pageUpdater.startUpdating();
+    }
     window.stylesModule.removeStyleById(this.rootElement?.id);
   }
 
@@ -42,11 +64,20 @@ class AreaComponent extends Component {
       this.props.models
     );
     this.rootElement = rootElement;
+    window[`${this.props.id}_root_element`] = this.rootElement;
+    if(this.props.scrollPosition.top > 0){
+      this.rootElement.children.forEach(section => {
+        section.lazySection = false
+      });
+
+    }
+    let {children} = this.rootElement;
+    children = children.filter(child => ! child.lazySection);
     let template =  (
       <div className={classes.join(" ")}>
         {React.createElement(this.rootElement.componentClass, {
           element: this.rootElement,
-          children: this.rootElement.children
+          children,
         })}
       </div>
     );
@@ -54,4 +85,10 @@ class AreaComponent extends Component {
   }
 }
 
-export default AreaComponent;
+function mapStateToProps(state) {
+  return {
+    scrollPosition: state.scrollPosition,
+  };
+}
+
+export default connect(mapStateToProps)(AreaComponent);

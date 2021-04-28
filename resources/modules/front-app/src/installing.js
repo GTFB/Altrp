@@ -28,7 +28,20 @@
   }
 })();
 /**
- * Смена расширения
+ * Запускаем обновление списка страниц
+ */
+(async function () {
+  const pageUpdater = (await import('./js/classes/modules/PageUpdater')).default;
+  function updater(){
+    pageUpdater.startUpdating();
+    window.removeEventListener('mouseover', updater);
+    window.removeEventListener('touchstart', updater);
+  }
+  window.addEventListener('mouseover', updater);
+  window.addEventListener('touchstart', updater);
+})();
+/**
+ * Смена Разрешения
  */
 (async function (){
   const  setCurrentScreen =  (await import('./js/store/media-screen-storage/actions')).setCurrentScreen;
@@ -47,4 +60,16 @@
       appStore.dispatch(setCurrentScreen(changedScreen));
     }
   });
+})();
+/**
+ * Регистрируем сервис-воркеры
+ */
+(async function (){
+  let filename = '/sw/front-app.sw.js';
+
+  // if ('serviceWorker' in navigator) {
+  //   // Use the window load event to keep the page load performant
+  //   navigator.serviceWorker.register(filename);
+  //
+  // }
 })();

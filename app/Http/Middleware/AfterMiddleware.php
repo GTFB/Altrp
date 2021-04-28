@@ -23,10 +23,12 @@ class AfterMiddleware
     global $altrp_need_cache;
     $response = $next($request);
 
+    global $altrp_route_id;
 
-    if( $altrp_need_cache ){
+    if( $altrp_need_cache && $altrp_route_id ){
 
-      saveCache( $response->getContent() );
+      saveCache( $response->getContent(), $altrp_route_id );
+
     }
     // Выполнение действия
 

@@ -51,6 +51,7 @@ class Page extends Model
     'type',
     'is_cached',
     'not_found',
+    'sections_count',
   ];
 
   /**
@@ -207,62 +208,97 @@ class Page extends Model
 
   /**
    * @param $page_id
+   * @param bool $sections_limit
+   * @return array
+   */
+  public static function get_lazy_sections_for_page( $page_id ){
+    $lazy_sections = [];
+
+    $currentPage = Page::find( $page_id );
+    if( ! $currentPage || ! $currentPage->sections_count ){
+      return $lazy_sections;
+    }
+    $sections_count = $currentPage->sections_count;
+    $header_template = Template::getTemplate( [
+      'page_id' => $page_id,
+      'template_type' => 'header',
+    ] );
+    if( $header_template['data'] ){
+      $data =  $header_template['data'];
+      if( isset( $data['children'] ) && is_array( $data['children'] ) ){
+        $header_lazy_sections = array_map( function( $item ) use( $data ) {
+          return [
+            'parent_id' => $data['id'],
+            'area_name' => 'header',
+            'element' => $item
+          ];
+        }, $data['children']  );
+        $lazy_sections = array_merge( $lazy_sections, $header_lazy_sections );
+      }
+    }
+    $content_template = Template::getTemplate( [
+      'page_id' => $page_id,
+      'template_type' => 'content',
+    ] );
+    if( $content_template['data'] ){
+      $data = $content_template['data'];
+      if( isset( $data['children'] ) && is_array( $data['children'] ) ){
+        $content_lazy_sections = array_map( function( $item ) use( $data ) {
+          return [
+            'parent_id' => $data['id'],
+            'area_name' => 'content',
+            'element' => $item
+          ];
+        }, $data['children']  );
+        $lazy_sections = array_merge( $lazy_sections, $content_lazy_sections );
+      }
+    }
+    $footer_template = Template::getTemplate( [
+      'page_id' => $page_id,
+      'template_type' => 'footer',
+    ] );
+    if( $footer_template['data'] ){
+      $data =  $footer_template['data'];
+      if( isset( $data['children'] ) && is_array( $data['children'] ) ){
+        $footer_lazy_sections = array_map( function( $item ) use( $data ) {
+          return [
+            'parent_id' => $data['id'],
+            'area_name' => 'footer',
+            'element' => $item
+          ];
+        }, $data['children']  );
+        $lazy_sections = array_merge( $lazy_sections, $footer_lazy_sections );
+      }
+    }
+
+    array_splice( $lazy_sections, 0, $sections_count );
+    return $lazy_sections;
+  }
+  /**
+   * @param $page_id
+   * @param bool $sections_limit
    * @return array
    */
   public static function get_areas_for_page( $page_id ){
     $areas = [];
-//    $header = Template::where( 'area', 2 )->where( 'type', 'template' )->first();
-//    if( $header ){
-//      $header->check_elements_conditions();
-//      $areas[] = [
-//        'area_name' => 'header',
-//        'id' => 'header',
-//        'settings' => [],
-//        'template' => $header
-//      ];
-//    }
-    /**
-     * @var Template $content
-     */
-//    $content = PagesTemplate::where( 'page_id', $page_id )
-//      ->where( 'template_type', 'content' )
-//      ->where( 'condition_type', 'include' )
-//      ->first();
-//    if( $content ){
-//      $content = $content->template;
-//      $content->check_elements_conditions();
-//      $areas[] = [
-//        'area_name' => 'content',
-//        'id' => 'content',
-//        'settings' => [],
-//        'template' => $content,
-//      ];
-//    } else {
-//      /**
-//       * Пустой контент, если страницы нет
-//       */
-//      $areas[] = [
-//        'area_name' => 'content',
-//        'id' => 'content',
-//        'settings' => [],
-//        'template' => [
-//          'data' => json_encode([
-//            "name"=>"root-element",
-//            "type"=>"root-element",
-//            "children"=> [],
-//            'settings' => [],
-//          ])
-//        ],
-//      ];
-//    }
-    $currentPage = Page::find($page_id);
+
+    $currentPage = Page::find( $page_id );
     $contentType = $currentPage->type;
-    $header_template = Template::getTemplate([
+    if( $currentPage->sections_count ){
+      $sections_count = $currentPage->sections_count;
+    }
+
+    $header_template = Template::getTemplate( [
       'page_id' => $page_id,
       'template_type' => 'header',
-    ]);
+    ] );
     unset( $header_template['html_content'] );
     unset( $header_template['styles'] );
+
+    if( isset( $sections_count ) && $header_template['data'] ){
+      $header_template['data'] = self::spliceSections( $header_template['data'], $sections_count );
+    }
+
     $areas[] = [
       'area_name' => 'header',
       'id' => 'header',
@@ -270,10 +306,16 @@ class Page extends Model
       'template' => $header_template,
     ];
 
+
     $content_template = Template::getTemplate([
       'page_id' => $page_id,
       'template_type' => $contentType ? 'reports' : 'content',
     ]);
+
+    if( isset( $sections_count ) && $content_template['data'] ){
+      $content_template['data'] = self::spliceSections( $content_template['data'], $sections_count );
+    }
+
     unset( $content_template['html_content'] );
     unset( $content_template['styles'] );
     $areas[] = [
@@ -287,6 +329,10 @@ class Page extends Model
       'page_id' => $page_id,
       'template_type' => 'footer',
     ]);
+
+    if( isset( $sections_count ) && $footer_template['data'] ){
+      $footer_template['data'] = self::spliceSections( $footer_template['data'], $sections_count );
+    }
     unset( $footer_template['html_content'] );
     unset( $footer_template['styles'] );
     $areas[] = [
@@ -318,6 +364,35 @@ class Page extends Model
     ];
 
     return $areas;
+  }
+
+  /**
+   * @param [] $data
+   * @param int $sections_count
+   * @return []
+   */
+  public static function spliceSections( $data , &$sections_count = 0 ){
+    if( ! isset( $sections_count ) || ! $data ){
+      return $data;
+    }
+    if( count( $data['children'] ) < $sections_count ){
+      $sections_count -= count( $data['children'] );
+
+    } else if( count( $data['children'] ) > $sections_count ){
+//      $data['children'] = array_slice( $data['children'], 0, $sections_count );
+      for( $i = $sections_count; $i < count( $data['children'] ); $i++ ){
+//        echo '<pre style="padding-left: 200px;">';
+//        var_dump( $data['children'][$i] );
+//        echo '</pre>';
+
+        $data['children'][$i]['lazySection'] = true;
+      }
+      $sections_count = 0;
+    } else {
+      $sections_count = 0;
+    }
+
+    return $data;
   }
 
   /**
@@ -754,5 +829,38 @@ class Page extends Model
     $relations = json_encode( $relations );
     File::put( $cachePath . 'relations.json', $relations );
 
+  }
+
+  /**
+   * @return array
+   */
+  static function getRolesToCache( $page_id ){
+    if ( ! $page_id ){
+      return[];
+    }
+    $page_role_table = DB::table( 'page_role' );
+    $page_roles = $page_role_table->where( 'page_id', $page_id )->get();
+    $roles = [];
+    foreach ( $page_roles as $key => $page_role ) {
+      $roles[$key] = $page_role->role_id;
+    }
+
+    $page = Page::find($page_id);
+    if( $page->for_guest ){
+      array_push($roles, 'guest');
+    }
+    return $roles;
+  }
+
+
+  /**
+   * @return array
+   */
+  static function getPagesByTemplateId( $template_id ){
+    if ( ! $template_id ){
+      return[];
+    }
+    $pages = DB::table( 'pages_templates' )->where( 'template_id', $template_id )->get();
+    return $pages;
   }
 }

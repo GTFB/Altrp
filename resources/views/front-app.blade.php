@@ -89,10 +89,12 @@
   window.altrp = {
     version: '{{ getCurrentVersion() }}'
   };
+  window.altrpElementsLists = {!! $elements_list !!};
   window.pageStorage = {};
   window.ALTRP_DEBUG = {!! json_encode( ! ! get_altrp_setting( 'altrp_debug', false ) ) !!};
   var page_id = {{ $page_id }};
-  var page_areas = {!! $page_areas !!};
+  window.page_areas = {!! $page_areas !!};
+  window.lazySections = {!! $lazy_sections !!};
   if (typeof page_id !== 'undefined' && typeof page_areas !== 'undefined') {
     window.pageStorage[page_id] = {areas:page_areas};
   }

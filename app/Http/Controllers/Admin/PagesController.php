@@ -72,6 +72,7 @@ class PagesController extends Controller
     $page->content = '';
     $page->guid = (string)Str::uuid();
     $page->is_cached = $request->is_cached;
+    $page->sections_count = $request->sections_count;
     if ( $page->save() ) {
       if ( $request->template_id ) {
         $template = Template::find( $request->template_id );
@@ -138,6 +139,7 @@ class PagesController extends Controller
       'success' => false
     ];
     $page = Page::find( $id );
+
     $page->path = $request->path;
     $page->title = $request->title;
     $page->model_id = $request->model_id;
@@ -148,6 +150,7 @@ class PagesController extends Controller
     $page->seo_title = $request->seo_title;
     $page->is_cached = $request->is_cached;
     $page->not_found = $request->not_found;
+    $page->sections_count = $request->sections_count;
     $res['page'] = $page->toArray();
 
     $pages_template = PagesTemplate::where( 'page_id', $id )->where( 'template_type', 'content' )->first();
@@ -177,6 +180,8 @@ class PagesController extends Controller
     if ( $page->save() ) {
       $res['success'] = true;
     }
+
+    clearPageCache( $page->id );
 
     return response()->json( $res );
   }

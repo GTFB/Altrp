@@ -49,6 +49,10 @@ class RouteContent extends Component {
    */
   async componentDidMount() {
     window.mainScrollbars = this.scrollbar.current;
+
+    /**
+     * Запускаем обновление списка страниц
+     */
     appStore.dispatch(changeCurrentPageProperty('url', location.href));
     if (this.props.lazy && this.props.allowed) {
       let page = await pageLoader.loadPage(this.props.id);
@@ -58,6 +62,7 @@ class RouteContent extends Component {
         areas
       }));
     }
+
     /**
      * Меняем текущую модель
      */
