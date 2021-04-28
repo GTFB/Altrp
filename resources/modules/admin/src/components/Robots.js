@@ -132,7 +132,7 @@ export default class Robots extends Component {
                 method: 'put',
                 data: {power: 1},
                 after: () => this.fetchData(),
-                title: 'Power'
+                title: 'Enable'
               }, {
                 tag: "button",
                 route: "/admin/ajax/robots/:id",

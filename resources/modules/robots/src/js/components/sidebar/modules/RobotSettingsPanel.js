@@ -116,7 +116,7 @@ export default class RobotSettingsPanel extends React.Component {
                   <div className="controllers-wrapper">
                     <div className="robot_switcher">
                       <div className="robot_switcher__label">
-                        Robot power
+                        Robot enable
                       </div>
                       <div className={switcherClasses} onClick={this.toggle}>
                         <div className="control-switcher__on-text">ON</div>
