@@ -38,7 +38,27 @@ class UpdateController extends Controller
   }
 
   /**
-   * Обработка запроса проверки нужно ли обнолвение
+   * Установка тестовой версии Altrp
+   * @param AltrpUpdateService $updateService
+   * @return \Illuminate\Http\JsonResponse
+   * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+   */
+  public function install_test_altrp( AltrpUpdateService $updateService ){
+    if( env( 'APP_ENV', 'local' ) === 'local'){
+      return response()->json( ['result' => false] );
+    }
+    try {
+      Artisan::call( 'down' );
+      $result = $updateService->update( true );
+    }catch ( \HttpException $e ) {
+      Artisan::call( 'up' );
+      return response()->json( ['message' => $e->getMessage()], 500 );
+    }
+    Artisan::call( 'up' );
+    return response()->json( ['result' => $result] );
+  }
+  /**
+   * Обновление Altrp
    * @param AltrpUpdateService $updateService
    * @return \Illuminate\Http\JsonResponse
    * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException

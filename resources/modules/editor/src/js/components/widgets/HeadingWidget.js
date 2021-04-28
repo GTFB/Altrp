@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import AltrpLink from "../altrp-link/AltrpLink";
 import {isEditor, parseURLTemplate} from "../../../../../front-app/src/js/helpers";
-import "../../../sass/altrp-heading.scss";
+import ("../../../sass/altrp-heading.scss");
 import Animating from "../altrp-heading/Animating";
 
 class HeadingWidget extends Component {

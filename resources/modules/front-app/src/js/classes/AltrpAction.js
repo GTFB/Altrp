@@ -1,5 +1,5 @@
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
-import React, { Component } from "react";
+
 import {
   altrpLogin,
   altrpLogout,
@@ -802,14 +802,16 @@ class AltrpAction extends AltrpModel {
               value.split(/\r?\n/).length === 1 &&
               value.indexOf("{{") === 0 &&
               value.indexOf("}}") === value.length - 2 &&
-              getDataByPath(value.replace("{{", "").replace("}}", ""))
+              getDataByPath(value.replace("{{", "").replace("}}", ""),
+                  null,
+                  this.getCurrentModel())
             ) {
               value = getDataByPath(
                 value.replace("{{", "").replace("}}", ""),
                 null,
                 this.getCurrentModel()
               );
-            } else {
+            } else if( value.indexOf("|") !== -1){
               // value = replaceContentWithData(
               //   value,
               //   this.getCurrentModel().getData()

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../../sass/dialog-content.scss';
+import ('../../sass/dialog-content.scss');
 import { iconsManager } from '../../../../front-app/src/js/helpers';
 import { getTemplateId } from '../helpers';
 import Resource from '../classes/Resource';

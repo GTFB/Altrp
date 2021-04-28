@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   {!!  getFavicons() !!}
-  <link rel="preload" href="/modules/front-app/front-app.js?0.14.16" as="script">
-  <link rel="preload" href="/modules/front-app/front-app.css?0.14.16" as="style">
+  <link rel="preload" href="/modules/front-app/front-app.js?{{ getCurrentVersion() }}" as="script">
+  {{--<link rel="preload" href="/modules/front-app/front-app.css?0.14.16" as="style">--}}
   {{--preloads--}}
   {{--preloads--}}
   <script>
     /* <![CDATA[ */
+    console.log('START: ',performance.now());
     /**
      * Функция для вывода ошибок в HTML
      * @param msg
@@ -39,7 +40,7 @@
 <!-- Scripts -->
 
   <script>
-    let _token = '{{ csrf_token() }}';
+    window._token = '{{ csrf_token() }}';
     window.altrpPages = {!! json_encode( $pages ) !!};
   </script>
   <!-- Fonts -->
@@ -71,25 +72,29 @@
   </style>
 
   @if( isset( $preload_content[ 'important_styles'] ) )
-    {!! $preload_content[ 'important_styles'] !!}
+    {!! '' !!}
+{{--    {!! $preload_content[ 'important_styles'] !!}--}}
   @endif
 </head>
 <body class="front-app-body">
 <div id="front-app-target" class="front-app {{ $is_admin ? 'front-app_admin' : '' }}">
-  {!! isset( $preload_content[ 'content'] ) ? $preload_content['content'] : ''!!}
+  {!! isset( $preload_content[ 'content'] ) ? '' : ''!!}
+{{--  {!! isset( $preload_content[ 'content'] ) ? $preload_content['content'] : ''!!}--}}
 </div>
 <div id="front-app" class="front-app-content_preloaded">
 </div>
 
 <script>
+  /* <![CDATA[ */
   window.altrp = {
     version: '{{ getCurrentVersion() }}'
   };
-  /* <![CDATA[ */
+  window.altrpElementsLists = {!! $elements_list !!};
   window.pageStorage = {};
   window.ALTRP_DEBUG = {!! json_encode( ! ! get_altrp_setting( 'altrp_debug', false ) ) !!};
   var page_id = {{ $page_id }};
   var page_areas = {!! $page_areas !!};
+  var lazySections = {!! $lazy_sections !!};
   if (typeof page_id !== 'undefined' && typeof page_areas !== 'undefined') {
     window.pageStorage[page_id] = {areas:page_areas};
   }

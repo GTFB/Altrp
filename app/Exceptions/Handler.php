@@ -115,19 +115,18 @@ class Handler extends ExceptionHandler
       if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException)
       {
         $not_found_page = Page::firstWhere( 'not_found', 1 );
-
-        if( $not_found_page ){
+        if( $not_found_page && strpos( $request->url(), 'favicon.ico' ) === false  ){
           $preload_content = Page::getPreloadPageContent( $not_found_page['id'] );
 
-          return response(view( 'front-app', [
-            'page_areas' => json_encode( Page::get_areas_for_page( $not_found_page['id'] ) ),
+          return response( view( 'front-app', [
+            'page_areas' => json_encode( Page::get_areas_for_page( $not_found_page['id'], true ) ),
             'page_id' => $not_found_page['id'],
             'title' => $not_found_page['title'],
             '_frontend_route' => $not_found_page,
             'preload_content' => $preload_content,
             'pages'=>Page::get_pages_for_frontend( true ),
             'is_admin' => isAdmin(),
-          ]), 200);
+          ]), 200 );
         }
       }
 

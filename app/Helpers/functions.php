@@ -298,14 +298,12 @@ function altrp_asset( $path, $domain = 'http://localhost:3002/' )
 {
   if ( env( 'APP_ENV', 'production' ) !== 'local' ) {
     return asset( $path ) . '?' . env( 'APP_VERSION' );
-//    return asset( $path ) . '?' . env( 'APP_VERSION', config( 'altrp_version' ) );
   }
   $client = new \GuzzleHttp\Client();
   try {
     $client->get( $domain )->getStatusCode();
   } catch ( Exception $e ) {
     return asset( $path ) . '?' . env( 'APP_VERSION' );
-//    return asset( $path ) . '?' . env( 'APP_VERSION', config( 'altrp_version' ) );
   }
 
   return $domain . 'src/bundle.js';
@@ -543,7 +541,7 @@ function saveCache( $html) {
     return false;
   }
   $url = $_SERVER['REQUEST_URI'];
-  $html = minificationHTML($html);
+//  $html = minificationHTML($html);
   $hash = md5($url . $html);
 
   $cachePath = storage_path() . '/framework/cache/pages';
@@ -761,5 +759,48 @@ if( ! function_exists( 'getMainColor' ) ){
       return '';
     }
 
+  }
+}
+/**
+ * @param array $areas
+ * @return array
+ */
+function extractElementsNames( $areas = []){
+  $elementNames = [];
+
+  foreach ( $areas as $area ) {
+    if( ! isset( $area['template']['data'] ) ){
+      continue;
+    }
+//    echo '<pre style="padding-left: 200px;">';
+//    var_dump( $area );
+//    echo '</pre>';
+    $data = $area['template']['data'];
+    _extractElementsNames( $data, $elementNames );
+  }
+
+  return $elementNames;
+}
+
+/**
+ * @param array $element
+ * @param $elementNames
+ */
+function _extractElementsNames( $element = [],  &$elementNames ){
+  if( ! is_array( $elementNames ) ){
+    $elementNames = [];
+  }
+  if( ! isset( $element['name'] ) || ! is_string( $element['name'] ) ){
+    return;
+  }
+
+
+  if( array_search( $element['name'], $elementNames ) === false){
+    $elementNames[] = $element['name'];
+  }
+  if( isset( $element['children'] ) && is_array( $element['children'] ) ){
+    foreach ( $element['children'] as $child ) {
+      _extractElementsNames( $child, $elementNames );
+    }
   }
 }

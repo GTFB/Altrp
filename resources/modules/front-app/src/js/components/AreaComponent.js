@@ -1,9 +1,33 @@
-import React, { Component } from "react";
 import FrontPopup from "./FrontPopup";
+import {connect} from "react-redux";
 
 class AreaComponent extends Component {
 
+  constructor(props){
+    super(props);
+    console.log('AreaComponent: ', performance.now());
+
+  }
   componentWillUnmount() {
+
+    /**
+     * Перенесем все секции для ленивой подгрузки в хранилище страниц (текущая стрнаца)
+     */
+    if( _.isArray(window.lazySections)){
+      for(let pageId in window.pageStorage){
+        if(window.pageStorage.hasOwnProperty(pageId) ){
+          let page = window.pageStorage[pageId];
+
+          window.lazySections.forEach(section => {
+            let area = page.areas.find(area => area.id === section.area_name);
+            if(area){
+              area.template.data.children.push(section.element)
+            }
+          });
+        }
+      }
+      window.lazySections = null;
+    }
     window.stylesModule.removeStyleById(this.rootElement?.id);
   }
 
@@ -13,7 +37,7 @@ class AreaComponent extends Component {
      * Если это попап
      */
     if (this.props.area.getTemplates().length) {
-      return (
+      let popus =  (
         <div className={classes.join(" ")}>
           {this.props.area.getTemplates().map(template => {
             return (
@@ -22,6 +46,7 @@ class AreaComponent extends Component {
           })}
         </div>
       );
+      return popus;
     }
     /**
      * Если шаблон привязанный к странице удалили, то ничего не отрисовываем
@@ -36,7 +61,9 @@ class AreaComponent extends Component {
       this.props.models
     );
     this.rootElement = rootElement;
-    return (
+    window[`${this.props.id}_root_element`] = this.rootElement;
+    console.log();
+    let template =  (
       <div className={classes.join(" ")}>
         {React.createElement(this.rootElement.componentClass, {
           element: this.rootElement,
@@ -44,7 +71,14 @@ class AreaComponent extends Component {
         })}
       </div>
     );
+    return template;
   }
 }
 
-export default AreaComponent;
+function mapStateToProps(state) {
+  return {
+    scrollPosition: state.scrollPosition,
+  };
+}
+
+export default connect(mapStateToProps)(AreaComponent);

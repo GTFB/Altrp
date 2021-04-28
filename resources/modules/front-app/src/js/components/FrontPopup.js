@@ -1,6 +1,5 @@
-import React, { Component } from "react";
+
 import connect from "react-redux/es/connect/connect";
-// import { isElementTopInViewport, getTopPosition } from "../helpers";
 import { Scrollbars } from "react-custom-scrollbars";
 import AltrpOffcanvas from "./altrp-offcanvas/AltrpOffcanvas";
 import { togglePopup } from "../store/popup-trigger/actions";
@@ -262,7 +261,6 @@ class FrontPopup extends Component {
     const closeButtonCondition = rootElementSettings.switcher_close_button_popup_layout || true;
     let {popup_close_icon_alignment} = rootElementSettings;
     popup_close_icon_alignment = popup_close_icon_alignment || 'right';
-
     const closeButton = closeButtonCondition ? (
       <button
         className={

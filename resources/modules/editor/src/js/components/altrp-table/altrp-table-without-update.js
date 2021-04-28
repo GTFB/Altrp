@@ -1,6 +1,6 @@
-import '../altrp-posts/altrp-posts.scss'
+import ('../altrp-posts/altrp-posts.scss');
 import update from 'immutability-helper'
-import '../../../sass/altrp-pagination.scss';
+import ('../../../sass/altrp-pagination.scss');
 import {
   setDataByPath,
   storeWidgetState,
