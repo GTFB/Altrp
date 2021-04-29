@@ -693,17 +693,34 @@ class Page extends Model
     }
     $important_styles = [];
     $client = new Client(['base_uri' => "http://localhost:9000/"]);
-    $result = $client->request('GET')->getStatusCode();
-    $postExpress = new Client([
-      'base_uri' => "http://localhost:9000/",
-      'defaults' => [
-        'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
-      ]
-    ]);
+    try {
+
+      $test_result = $client->request('GET')->getStatusCode();
+      $postExpress = new Client([
+        'base_uri' => "http://localhost:9000/",
+        'defaults' => [
+            'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+        ]
+      ]);
     $postResult = $postExpress->request('POST', '', [
-      'form_params' => ['template' => json_encode(static::get_areas_for_page($page_id))]
+        'form_params' => [
+            'json' =>
+                json_encode(
+                    [
+                        'page' => static::get_areas_for_page($page_id),
+                        'page_id' => $page_id,]
+                ),
+
+        ]
     ]);
-    dd($postResult);
+//    dd($postResult);
+    $result['content'] = $postResult->getBody();
+    return $result;
+    } catch (\Exception $e){
+        dd($e);
+
+    }
+
     ob_start();
 ?>
     <div class="front-app-content front-app-content_preloaded">

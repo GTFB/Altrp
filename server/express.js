@@ -1,52 +1,19 @@
 if (typeof performance === "undefined") {
   global.performance = require("perf_hooks").performance;
 }
-if (typeof window === "undefined") {
-  global.window = {};
-  const FrontElementsManager = require("../resources/modules/front-app/src/js/classes/FrontElementsManager")
-    .default;
-  global.window.frontElementsManager = FrontElementsManager();
-  const 
-  import(
-    /* webpackChunkName: 'FrontElementsManager' */ "./js/classes/FrontElementsManager"
-  )
-    .then(module => {
-      import(
-        /* webpackChunkName: 'FrontElementsFabric' */ "./js/classes/FrontElementsFabric"
-      ).then(module => {
-        console.log("LOAD FrontElementsFabric: ", performance.now());
-        loadingCallback();
-      });
-      return global.window.frontElementsManager.loadComponents();
-    })
-    .then(components => {
-      global.window.frontElementsManager.loadNotUsedComponent();
-      console.log("LOAD FrontElementsManager: ", performance.now());
-      loadingCallback();
-    });
-  import(
-    /* webpackChunkName: 'elementDecorator' */ "./js/decorators/front-element-component"
-  ).then(module => {
-    global.window.elementDecorator = module.default;
-    console.log("LOAD elementDecorator: ", performance.now());
-    loadingCallback();
-  });
+global.window = {};
+require("../resources/modules/front-app/src/js/classes/FrontElementsManager");
+window.React = require("react");
+window.Component = window.React.Component;
+window.frontElementsFabric = require("../resources/modules/front-app/src/js/classes/FrontElementsFabric").default;
+require("../resources/modules/editor/src/js/classes/modules/FormsManager.js");
+window.elementDecorator = require("../resources/modules/front-app/src/js/decorators/front-element-component").default;
+window.ElementWrapper = require("../resources/modules/front-app/src/js/components/ElementWrapper").default;
 
-  import(
-    /* webpackChunkName: 'ElementWrapper' */ "./js/components/ElementWrapper"
-  ).then(module => {
-    global.window.ElementWrapper = module.default;
-    console.log("LOAD ElementWrapper: ", performance.now());
-    loadingCallback();
-  });
+window.stylesModulePromise = new Promise(function(resolve) {
+  window.stylesModuleResolve = resolve;
+});
 
-  import(
-    /* webpackChunkName: 'FormsManager' */ "../../editor/src/js/classes/modules/FormsManager.js"
-  ).then(module => {
-    console.log("LOAD FormsManager: ", performance.now());
-    loadingCallback();
-  });
-}
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
@@ -54,13 +21,13 @@ const fetch = require("node-fetch");
 const { Provider } = require("react-redux");
 require("dotenv").config();
 const appStore = require("../resources/modules/front-app/src/js/store/store");
+// import appStore from "../resources/modules/front-app/src/js/store/store";
 const React = require("react");
 const ReactDOMServer = require("react-dom/server");
 const AreaComponent = require("../resources/modules/front-app/src/js/components/AreaComponent");
-const RouteContent = require("../resources/modules/front-app/src/js/components/RouteContent");
-const { StaticRouter } = require("react-router");
-const { HTML5Backend } = require("react-dnd-html5-backend");
-const { DndProvider } = require("react-dnd");
+// const { StaticRouter } = require("react-router");
+// const { HTML5Backend } = require("react-dnd-html5-backend");
+// const { DndProvider } = require("react-dnd");
 const {
   default: RouteContentWrapper
 } = require("../resources/modules/front-app/src/js/components/styled-components/RouteContentWrapper");
@@ -89,37 +56,33 @@ app.get("/*", (req, res) => {
     try {
       const routes = (
         await (await fetch(`${process.env.APP_URL}/ajax/routes?lazy=0`)).json()
-      )?.pages;
+      ).pages;
       const page = routes.filter(item => item.path === req.originalUrl)[0];
       delete page.areas[3];
       console.log("====================================");
       console.log(page);
       console.log("====================================");
       const app = ReactDOMServer.renderToString(
-        <StaticRouter location={req.originalUrl}>
-          <Provider store={store}>
-            <DndProvider backend={HTML5Backend}>
-              <div className={`front-app-content`}>
-                <RouteContentWrapper
-                  className="route-content"
-                  id="route-content"
-                >
-                  {page.areas.map(area => {
-                    return (
-                      <AreaComponent.default
-                        {...area}
-                        area={area}
-                        page={page.id}
-                        models={[page.model]}
-                        key={"appArea_" + area.id}
-                      />
-                    );
-                  })}
-                </RouteContentWrapper>
-              </div>
-            </DndProvider>
-          </Provider>
-        </StaticRouter>
+        <Provider store={store}>
+          <div className={`front-app-content`}>
+            <RouteContentWrapper
+              className="route-content"
+              id="route-content"
+            >
+              {page.areas.map(area => {
+                return (
+                  <AreaComponent.default
+                    {...area}
+                    area={area}
+                    page={page.id}
+                    models={[page.model]}
+                    key={"appArea_" + area.id}
+                  />
+                );
+              })}
+            </RouteContentWrapper>
+          </div>
+        </Provider>
       );
       return renderHTML(req, res, data, app, page, preloadedState);
     } catch (error) {
@@ -133,8 +96,11 @@ app.get("/*", (req, res) => {
 });
 /**
  *
+ * @param {Request} req
  * @param {Response} res
+ * @param {string}data
  * @param {any} component
+ * @param page
  * @param {any} store
  */
 function renderHTML(req, res, data, component, page, store) {
@@ -149,9 +115,9 @@ function renderHTML(req, res, data, component, page, store) {
       )}
       window.pageStorage = {};
       window.ALTRP_DEBUG = false;
-      var page_id = ${page?.id};
-      var page_areas = ${JSON.stringify(page?.areas)?.replace(/</g, "\\u003c")}
-  
+      var page_id = ${page.id};
+      var page_areas = ${JSON.stringify(page).replace(/</g, "\\u003c")}
+
       if (typeof page_id !== 'undefined' && typeof page_areas !== 'undefined') {
         window.pageStorage[page_id] = {areas:page_areas};
       }
@@ -161,12 +127,42 @@ function renderHTML(req, res, data, component, page, store) {
 }
 
 app.post("/", (req, res) => {
-  let template = JSON.parse(req.body?.template) || [];
-  delete template[3];
 
-  console.log("====================================");
-  console.log(template);
-  console.log("====================================");
+  const store = window.appStore;
+  const preloadedState = store.getState();
+  const body = req.body;
+  let json = JSON.parse(req.body.json) || [];
+  let page = json.page || [];
+  let page_id = json.page_id || '';
+  let page_model = json.page_model || {};
+  delete page[3];
+
+  const app = ReactDOMServer.renderToString(
+    <Provider store={window.appStore}>
+      <div className={`front-app-content`}>
+        <RouteContentWrapper
+          className="route-content"
+          id="route-content"
+        >
+          {page.map(area => {
+            return (
+              <AreaComponent.default
+                {...area}
+                area={area}
+                page={page_id}
+                models={[page_model]}
+                key={"appArea_" + area.id}
+              />
+            );
+          })}
+        </RouteContentWrapper>
+      </div>
+    </Provider>
+  );
+  const indexFile = path.resolve("./server-build/index.html");
+  fs.readFile(indexFile, "utf8", async (err, data) => {
+    return renderHTML(req, res, data, app, page, preloadedState);
+  })
   return res.send(true);
 });
 

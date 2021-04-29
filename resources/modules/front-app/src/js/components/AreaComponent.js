@@ -2,9 +2,6 @@ import React, { Component } from "react";
 import FrontPopup from "./FrontPopup";
 import { connect } from "react-redux";
 
-if (typeof performance === "undefined") {
-  global.performance = require("perf_hooks").performance;
-}
 class AreaComponent extends Component {
   constructor(props) {
     super(props);

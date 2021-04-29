@@ -30,7 +30,7 @@ class FrontElementsFabric {
     }
     if( object.children && object.children.length ){
       for( let child of object.children){
-        frontElementsManager.checkElementExists(child.name) ?
+        window.frontElementsManager.checkElementExists(child.name) ?
             children.push( this.parseData(child, element) ) : '';
       }
     }

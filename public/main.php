@@ -30,7 +30,7 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
     if (!empty($cachedFiles)) {
 
       $users = [];
-      $usersJson = file_get_contents($cachePath . 'users.json');
+      $usersJson = file_exists( $cachePath . 'users.json' ) ? file_get_contents($cachePath . 'users.json') : '';
       if ($usersJson) {
         $users = json_decode($usersJson, true);
       }
