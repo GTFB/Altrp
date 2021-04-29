@@ -8,6 +8,7 @@ use League\ColorExtractor\ColorExtractor;
 use League\ColorExtractor\Palette;
 use App\Page;
 use Illuminate\Support\Facades\Auth;
+use App\Altrp\Facades\CacheService;
 
 /**
  * Get the script possible URL base
@@ -592,7 +593,7 @@ function saveCache( $html, $page_id ) {
   File::put($cachePath . '/relations.json', $relations);
   File::put($cachePath . '/' . $hash, $html);
 
-  setUserCookie();
+  CacheService::setUserCookie();
 
   return true;
 }
