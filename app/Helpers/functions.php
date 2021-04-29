@@ -591,7 +591,9 @@ function saveCache( $html, $page_id ) {
   File::put($cachePath . '/relations.json', $relations);
   File::put($cachePath . '/' . $hash, $html);
 
-  CacheService::setUserCookie();
+  if (Auth::user()) {
+    CacheService::setUserCookie();
+  }
 
   return true;
 }
