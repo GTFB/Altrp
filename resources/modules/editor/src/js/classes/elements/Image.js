@@ -406,7 +406,7 @@ class Image extends BaseElement {
         value: ""
       },
       rules: {
-        "{{ELEMENT}} .altrp-image{{STATE}}": "background-image: {{VALUE}}"
+        "{{ELEMENT}} .altrp-image{{STATE}}": "background-image: {{VALUE}}",
       }
     });
 
