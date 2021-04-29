@@ -1,15 +1,16 @@
+import React, { Component } from "react";
 import FrontPopup from "./FrontPopup";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 
+if (typeof performance === "undefined") {
+  global.performance = require("perf_hooks").performance;
+}
 class AreaComponent extends Component {
-
-  constructor(props){
+  constructor(props) {
     super(props);
-    console.log('AreaComponent: ', performance.now());
-
+    console.log("AreaComponent: ", performance.now());
   }
   componentWillUnmount() {
-
     /**
      * Перенесем все секции для ленивой подгрузки в хранилище страниц (текущая стрнаца)
      */
@@ -28,7 +29,7 @@ class AreaComponent extends Component {
     //   window.lazySections = null;
     // }
 
-    if(window.pageUpdater){
+    if (window.pageUpdater) {
       window.pageUpdater.startUpdating();
     }
     window.stylesModule.removeStyleById(this.rootElement?.id);
@@ -39,13 +40,14 @@ class AreaComponent extends Component {
     /**
      * Если это попап
      */
-    if (this.props.area.getTemplates().length) {
-      let popus =  (
+    if (
+      typeof this.props.area.getTemplates !== "undefined" &&
+      this.props.area.getTemplates().length
+    ) {
+      let popus = (
         <div className={classes.join(" ")}>
           {this.props.area.getTemplates().map(template => {
-            return (
-              <FrontPopup key={template.id} template={template} />
-            )
+            return <FrontPopup key={template.id} template={template} />;
           })}
         </div>
       );
@@ -54,30 +56,31 @@ class AreaComponent extends Component {
     /**
      * Если шаблон привязанный к странице удалили, то ничего не отрисовываем
      */
-    if (! this.props.template.data) {
+    if (!this.props.template.data) {
       return <div className={classes.join(" ")} />;
     }
-    let rootElement = this.rootElement ? this.rootElement : window.frontElementsFabric.parseData(
-      this.props.template.data,
-      null,
-      this.props.page,
-      this.props.models
-    );
+    let rootElement = this.rootElement
+      ? this.rootElement
+      : window.frontElementsFabric.parseData(
+          this.props.template.data,
+          null,
+          this.props.page,
+          this.props.models
+        );
     this.rootElement = rootElement;
     window[`${this.props.id}_root_element`] = this.rootElement;
-    if(this.props.scrollPosition.top > 0){
+    if (this.props.scrollPosition.top > 0) {
       this.rootElement.children.forEach(section => {
-        section.lazySection = false
+        section.lazySection = false;
       });
-
     }
-    let {children} = this.rootElement;
-    children = children.filter(child => ! child.lazySection);
-    let template =  (
+    let { children } = this.rootElement;
+    children = children.filter(child => !child.lazySection);
+    let template = (
       <div className={classes.join(" ")}>
         {React.createElement(this.rootElement.componentClass, {
           element: this.rootElement,
-          children,
+          children
         })}
       </div>
     );
@@ -87,7 +90,7 @@ class AreaComponent extends Component {
 
 function mapStateToProps(state) {
   return {
-    scrollPosition: state.scrollPosition,
+    scrollPosition: state.scrollPosition
   };
 }
 

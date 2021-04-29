@@ -14,15 +14,16 @@ class RouteController extends Controller
    *
    * @return \Illuminate\Http\Response
    */
-  public function index()
+  public function index(Request $request)
   {
-    $res['pages'] = Page::get_pages_for_frontend( true );
-    $reports = Page::get_reports_for_frontend(true);
-    if(count($reports)>0){
-      $res['pages'] = array_merge($res['pages'],Page::get_reports_for_frontend(true));
+    $lazy = $request->lazy !== null ? (bool) $request->lazy : true;
+    $res['pages'] = Page::get_pages_for_frontend($lazy);
+    $reports = Page::get_reports_for_frontend($lazy);
+    if (count($reports) > 0) {
+      $res['pages'] = array_merge($res['pages'], Page::get_reports_for_frontend($lazy));
     }
-    
-    return response()->json( $res );
+
+    return response()->json($res);
   }
 
   /**
@@ -41,7 +42,7 @@ class RouteController extends Controller
    * @param  \Illuminate\Http\Request $request
    * @return \Illuminate\Http\Response
    */
-  public function store( Request $request )
+  public function store(Request $request)
   {
     //
   }
@@ -52,7 +53,7 @@ class RouteController extends Controller
    * @param  int $id
    * @return \Illuminate\Http\Response
    */
-  public function show( $id )
+  public function show($id)
   {
     //
   }
@@ -63,7 +64,7 @@ class RouteController extends Controller
    * @param  int $id
    * @return \Illuminate\Http\Response
    */
-  public function edit( $id )
+  public function edit($id)
   {
     //
   }
@@ -75,7 +76,7 @@ class RouteController extends Controller
    * @param  int $id
    * @return \Illuminate\Http\Response
    */
-  public function update( Request $request, $id )
+  public function update(Request $request, $id)
   {
     //
   }
@@ -86,7 +87,7 @@ class RouteController extends Controller
    * @param  int $id
    * @return \Illuminate\Http\Response
    */
-  public function destroy( $id )
+  public function destroy($id)
   {
     //
   }
