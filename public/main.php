@@ -50,8 +50,8 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
 
         if (
           ( $cachedFile['url'] === $url && isset($_COOKIE['uid']) && !empty($userPageRoles) && $userPageRoles == $cachedFile['roles'] )
-          ||
-          ( $cachedFile['url'] === $url && isset($_COOKIE['uid']) && empty($userPageRoles) && empty($cachedFile['roles']) )
+          // ||
+          // ( $cachedFile['url'] === $url && isset($_COOKIE['uid']) && empty($userPageRoles) && empty($cachedFile['roles']) )
           ||
           ( $cachedFile['url'] === $url && !isset($_COOKIE['uid']) && in_array('guest', $cachedFile['roles']) )
           ||
