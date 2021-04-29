@@ -92,6 +92,8 @@ class AltrpCacheService
 
 	  $user = User::find( $user_id );
 
+	  event('auth.logout', [$user]);//logout user
+
 	  $roles = [];
 	  if ($user->roles) {
 	   $roles = $user->roles->toArray();

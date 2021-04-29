@@ -11,7 +11,6 @@ foreach ( $env as $setting ) {
   }
 }
 
-
 if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
 
   //Current URL
@@ -30,7 +29,7 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
     if (!empty($cachedFiles)) {
 
       $users = [];
-      $usersJson = file_get_contents($cachePath . 'users.json');
+      $usersJson = file_exists($cachePath . 'users.json') ? file_get_contents($cachePath . 'users.json') : '';
       if ($usersJson) {
         $users = json_decode($usersJson, true);
       }
@@ -49,7 +48,15 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
 
         $userPageRoles = array_intersect($userRoles, $cachedFile['roles']);
 
-        if ( ( $cachedFile['url'] === $url && !empty($userPageRoles) ) || ( $cachedFile['url'] === $url && !isset($_COOKIE['uid']) && in_array('guest', $cachedFile['roles']) ) ) {
+        if (
+          ( $cachedFile['url'] === $url && isset($_COOKIE['uid']) && !empty($userPageRoles) && $userPageRoles == $cachedFile['roles'] )
+          ||
+          ( $cachedFile['url'] === $url && isset($_COOKIE['uid']) && empty($userPageRoles) && empty($cachedFile['roles']) )
+          ||
+          ( $cachedFile['url'] === $url && !isset($_COOKIE['uid']) && in_array('guest', $cachedFile['roles']) )
+          ||
+          ( $cachedFile['url'] === $url && !isset($_COOKIE['uid']) && empty($cachedFile['roles']) )
+        ) { 
 
           if( file_exists($cachePath . $cachedFile['hash']) ){
             $file = file_get_contents($cachePath . $cachedFile['hash']);
