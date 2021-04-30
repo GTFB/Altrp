@@ -1,6 +1,6 @@
 console.log('FIRST SCRIPT: ',performance.now());
 import './sass/front-style.scss';
-
+window.sSr = false;
 
 /**
  * Параллельно загружаем все необходимые модули

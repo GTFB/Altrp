@@ -185,7 +185,7 @@ class RouteContent extends Component {
     // );
     return (
       <React.Fragment>
-        {/* <Suspense fallback={<div />}>
+        <Suspense fallback={<div />}>
           {this.state.admin && (
             <AdminBar
               areas={this.state.areas}
@@ -193,8 +193,8 @@ class RouteContent extends Component {
               idPage={this.props.id}
             />
           )}{" "}
-        </Suspense> */}
-        {/* <Scrollbars
+        </Suspense>
+        <Scrollbars
           className="main-content"
           universal={true}
           ref={this.scrollbar}
@@ -213,21 +213,21 @@ class RouteContent extends Component {
             );
           }}
         >
-          
-        </Scrollbars> */}
-        <RouteContentWrapper className="route-content" id="route-content">
-          {this.state.areas.map(area => {
-            return (
-              <AreaComponent
-                {...area}
-                area={area}
-                page={this.props.id}
-                models={[this.props.model]}
-                key={"appArea_" + area.id}
-              />
-            );
-          })}
-        </RouteContentWrapper>
+
+          <RouteContentWrapper className="route-content" id="route-content">
+            {this.state.areas.map(area => {
+              return (
+                <AreaComponent
+                  {...area}
+                  area={area}
+                  page={this.props.id}
+                  models={[this.props.model]}
+                  key={"appArea_" + area.id}
+                />
+              );
+            })}
+          </RouteContentWrapper>
+        </Scrollbars>
       </React.Fragment>
     );
   }

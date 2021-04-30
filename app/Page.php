@@ -652,7 +652,10 @@ class Page extends Model
       'content' => '',
       'important_styles' => '',
     ];
-    if (!$page_id) {
+    if (1) {
+      return $result;
+    }
+    if ( ! $page_id ) {
       return $result;
     }
     /** @var Page $page */
@@ -694,31 +697,42 @@ class Page extends Model
     $important_styles = [];
     $client = new Client(['base_uri' => "http://localhost:9000/"]);
     try {
-
       $test_result = $client->request('GET')->getStatusCode();
+      if( $test_result === 200 ) {
+
       $postExpress = new Client([
-        'base_uri' => "http://localhost:9000/",
-        'defaults' => [
-            'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+          'base_uri' => "http://localhost:9000/",
+          'defaults' => [
+              'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+          ]
+      ]);
+      $postResult = $postExpress->request('POST', '', [
+        'form_params' => [
+          'json' =>
+            json_encode(
+            [
+              'page' => static::get_areas_for_page($page_id),
+              'page_id' => $page_id,
+              'altrp' => [
+                'version' => getCurrentVersion()
+                ],
+              'altrpImageLazy'=> get_altrp_setting( 'altrp_image_lazy', 'none' ),
+              'altrpSkeletonColor'=> get_altrp_setting( 'altrp_skeleton_color', '#ccc' ),
+              'altrpSkeletonHighlightColor'=> get_altrp_setting( 'altrp_skeleton_highlight_color', '#d0d0d0' ),
+            ]
+          ),
+
         ]
       ]);
-    $postResult = $postExpress->request('POST', '', [
-        'form_params' => [
-            'json' =>
-                json_encode(
-                    [
-                        'page' => static::get_areas_for_page($page_id),
-                        'page_id' => $page_id,]
-                ),
+//        dd($postResult->getBody()->getContents());
+      $result = $postResult->getBody()->getContents();
+      $result = json_decode($result, true);
 
-        ]
-    ]);
-//    dd($postResult);
-    $result['content'] = $postResult->getBody();
-    return $result;
+      return $result;
+      }
     } catch (\Exception $e){
-        dd($e);
-
+//        dd($e);
+        logger( $e->getMessage() );
     }
 
     ob_start();

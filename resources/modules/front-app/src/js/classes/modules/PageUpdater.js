@@ -1,6 +1,8 @@
 /**
  * @class PageUpdater
  */
+import {loadLazySections} from "../../helpers/optimization";
+
 class PagesUpdater {
   /**
    * Получить все внутренние ссылки на странице
@@ -20,16 +22,19 @@ class PagesUpdater {
     //   this.updating = false;
     //   return
     // }
+
     let pages = window.altrpPages.map(page => page.id);
     pages = pages.filter((id, idx) => ! window.pageStorage[id] && pages.indexOf(id) === idx);
-    pages = pages.map(id => window.pageLoader.loadPage(id));
-    pages = await Promise.all(pages);
+    pages = pages.map(id => async ()=>{return window.pageLoader.loadPage(id)});
+    for (const page of pages) {
+      let res = await page();
+    }
   }
   async startUpdating(){
-    if(! this.updating){
-      this.updating = true;
+    if(! this.updated){
+      loadLazySections();
+      this.updated = true;
       await this._startUpdating();
-      this.updating = false;
     }
 
   }

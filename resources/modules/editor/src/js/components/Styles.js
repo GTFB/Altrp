@@ -6,7 +6,7 @@ class Styles extends Component {
   constructor(props){
     super(props);
     this.state = {
-      elementStyles: [],
+      elementStyles: this.props.elementStyles || [],
       fonts: [],
     };
     this.stylesContainer = React.createRef();

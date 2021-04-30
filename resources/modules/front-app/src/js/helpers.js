@@ -18,6 +18,15 @@ import { addResponseData } from "./store/responses-storage/actions";
 export function getRoutes() {
   return import("./classes/Routes.js");
 }
+
+export function isSSR(){
+  try {
+    return sSR;
+
+  } catch (e) {
+    return false;
+  }
+}
 /**
  * @return {IconsManager}
  * */
@@ -223,7 +232,7 @@ export function renderAsset(asset, props = null) {
   if (asset.url && asset.type === "svg") {
     return <AltrpSVG {...props} url={asset.url} />;
   }
-  if (asset instanceof File) {
+  if (! isSSR() && asset instanceof File) {
     let refImg = React.createRef();
     let fr = new FileReader();
     fr.readAsDataURL(asset);

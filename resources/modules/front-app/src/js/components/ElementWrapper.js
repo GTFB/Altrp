@@ -10,7 +10,7 @@ import CarouselComponent from "../../../../editor/src/js/components/widgets/styl
 import GalleryComponent from "../../../../editor/src/js/components/widgets/styled-components/GalleryComponent";
 import ButtonComponent from "../../../../editor/src/js/components/widgets/styled-components/ButtonComponent";
 
-class ElementWrapper extends window.Component {
+class ElementWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {

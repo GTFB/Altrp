@@ -277,11 +277,12 @@ class PagesController extends Controller
       File::put( $cachePath . '/relations.json', '{}' );
       return true;
     }
-    
+
     if ( ! $page_id ) {
       $files = File::allFiles( $cachePath );
       File::delete( $files );
-      File::put( $cachePath . '/relations.json', '{}' );
+      File::put( $cachePath . '/relations.json', '[]' );
+      File::put( $cachePath . '/users.json', '[]' );
       return response()->json( ['success' => true], 200, [], JSON_UNESCAPED_UNICODE );
     }
 

@@ -72,13 +72,13 @@
   </style>
 
   @if( isset( $preload_content[ 'important_styles'] ) )
-    {!! '' !!}
+    {!! $preload_content[ 'important_styles'] !!}
 {{--    {!! $preload_content[ 'important_styles'] !!}--}}
   @endif
 </head>
 <body class="front-app-body">
 <div id="front-app-target" class="front-app {{ $is_admin ? 'front-app_admin' : '' }}">
-  {!! isset( $preload_content[ 'content'] ) ? '' : ''!!}
+  {!! isset( $preload_content[ 'content'] ) ? $preload_content[ 'content']  : ''!!}
 {{--  {!! isset( $preload_content[ 'content'] ) ? $preload_content['content'] : ''!!}--}}
 </div>
 <div id="front-app" class="front-app-content_preloaded">
@@ -119,7 +119,7 @@
     /* ]]> */
   </script>
 @endif
-<link rel="stylesheet" href="/modules/front-app/front-app.css?0.14.16">
+<link rel="stylesheet" href="/modules/front-app/front-app.css?{{getCurrentVersion()}}">
 
 </body>
 </html>

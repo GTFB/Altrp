@@ -773,7 +773,7 @@ function clearPageCache( $page_id ) {
   }
 
   foreach ($relations as $key => $relation) {
-    if ($relation['page_id'] === $page_id) {
+    if (isset($relation['page_id']) && $relation['page_id'] === $page_id) {
       if ( File::exists($cachePath . '/' . $relation['hash']) ) {
         File::delete($cachePath . '/' . $relation['hash']);
       }
@@ -972,6 +972,10 @@ function _extractElementsNames( $element = [],  &$elementNames ){
     $elementNames = [];
   }
   if( ! isset( $element['name'] ) || ! is_string( $element['name'] ) ){
+    return;
+  }
+
+  if( isset( $element['lazySection'] ) && $element['lazySection'] ){
     return;
   }
 

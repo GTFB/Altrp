@@ -4,7 +4,7 @@ import appStore from "./js/store/store";
 import AppContent from "./js/components/AppContent";
 import { Provider } from "react-redux";
 import Resource from "../../editor/src/js/classes/Resource";
-import { changeCurrentUser, setUserNotice, setUsersOnline } from "./js/store/current-user/actions";
+import { setUserNotice, setUsersOnline } from "./js/store/current-user/actions";
 import FontsManager from "./js/components/FontsManager";
 import Echo from "laravel-echo";
 import { HTML5Backend } from 'react-dnd-html5-backend'
