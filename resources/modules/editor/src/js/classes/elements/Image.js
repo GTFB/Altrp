@@ -282,6 +282,14 @@ class Image extends BaseElement {
         '%',
         'vh',
       ],
+      rules: {
+        '{{ELEMENT}} .altrp-image{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
     });
 
     this.addControl('position_z_index', {
