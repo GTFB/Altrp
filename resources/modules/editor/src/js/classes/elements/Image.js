@@ -397,7 +397,7 @@ class Image extends BaseElement {
         colorPickedHex: "",
       },
       rules: {
-        "{{ELEMENT}} .altrp-image{{STATE}},{{ELEMENT}}": "background-color: {{COLOR}};"
+        "{{ELEMENT}} .altrp-image{{STATE}}": "background-color: {{COLOR}};"
       }
     });
 
