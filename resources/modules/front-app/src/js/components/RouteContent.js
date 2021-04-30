@@ -53,9 +53,6 @@ class RouteContent extends Component {
     /**
      * Запускаем обновление списка страниц
      */
-    if(window.pageUpdater){
-      window.pageUpdater.startUpdating();
-    }
     appStore.dispatch(changeCurrentPageProperty('url', location.href));
     if (this.props.lazy && this.props.allowed) {
       let page = await pageLoader.loadPage(this.props.id);
@@ -65,6 +62,7 @@ class RouteContent extends Component {
         areas
       }));
     }
+
     /**
      * Меняем текущую модель
      */

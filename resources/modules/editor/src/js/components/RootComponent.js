@@ -4,7 +4,6 @@ class RootComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      children: props.children,
       settings: props.element.getSettings()
     };
     props.element.component = this;
@@ -45,7 +44,7 @@ class RootComponent extends Component {
     let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
     return (
       <div className={classes}>
-        {this.state.children.map(section => {
+        {this.props.children.map(section => {
           return(
             <ElementWrapper
               ElementWrapper={ElementWrapper}

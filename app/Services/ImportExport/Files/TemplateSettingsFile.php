@@ -39,7 +39,10 @@ class TemplateSettingsFile extends ImportExportFile implements IImportExportFile
         $import_data = collect($reader->readJsonFile($path));
 
         $data = TemplateSetting::with("template")->get();
-        $templates_data = Template::all();
+        //Убираем data, html_content и styles. Уменьшаем размер переменной, что бы не получить Out of memory
+        $templates_data = Template::with("template_area")->get(
+            ["id", "name", "title", "type", "user_id", "created_at", "updated_at", "deleted_at", "parent_template", "area", "all_site", "guid"]
+        );
 
         $updated = [];
         $inserted = [];

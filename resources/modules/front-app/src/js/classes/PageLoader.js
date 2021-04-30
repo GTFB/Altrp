@@ -28,5 +28,5 @@ class PageLoader {
   }
 }
 
-const pageLoader = new PageLoader();
-export default pageLoader;
+window.pageLoader = new PageLoader();
+export default window.pageLoader;

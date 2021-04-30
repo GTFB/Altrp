@@ -35,7 +35,7 @@ module.exports = merge(common, {
     publicPath: "/modules/front-app/",
     chunkFilename: "[contenthash].[name].bundle.js",
 
-    filename: "front-app.js"
+    filename: "[name].js"
   },
 
   plugins: [

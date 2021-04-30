@@ -13,20 +13,23 @@ class AreaComponent extends Component {
     /**
      * Перенесем все секции для ленивой подгрузки в хранилище страниц (текущая стрнаца)
      */
-    if( _.isArray(window.lazySections)){
-      for(let pageId in window.pageStorage){
-        if(window.pageStorage.hasOwnProperty(pageId) ){
-          let page = window.pageStorage[pageId];
+    // if( _.isArray(window.lazySections)){
+    //   if(window.pageStorage.hasOwnProperty(page_id) ){
+    //     let page = window.pageStorage[page_id];
+    //
+    //     window.lazySections.forEach(section => {
+    //       let area = page.areas.find(area => area.id === section.area_name);
+    //       if(area){
+    //         section.element.lazySection = true;
+    //         area.template.data.children.push(section.element)
+    //       }
+    //     });
+    //   }
+    //   window.lazySections = null;
+    // }
 
-          window.lazySections.forEach(section => {
-            let area = page.areas.find(area => area.id === section.area_name);
-            if(area){
-              area.template.data.children.push(section.element)
-            }
-          });
-        }
-      }
-      window.lazySections = null;
+    if(window.pageUpdater){
+      window.pageUpdater.startUpdating();
     }
     window.stylesModule.removeStyleById(this.rootElement?.id);
   }
@@ -62,12 +65,19 @@ class AreaComponent extends Component {
     );
     this.rootElement = rootElement;
     window[`${this.props.id}_root_element`] = this.rootElement;
-    console.log();
+    if(this.props.scrollPosition.top > 0){
+      this.rootElement.children.forEach(section => {
+        section.lazySection = false
+      });
+
+    }
+    let {children} = this.rootElement;
+    children = children.filter(child => ! child.lazySection);
     let template =  (
       <div className={classes.join(" ")}>
         {React.createElement(this.rootElement.componentClass, {
           element: this.rootElement,
-          children: this.rootElement.children
+          children,
         })}
       </div>
     );

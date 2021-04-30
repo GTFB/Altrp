@@ -279,12 +279,12 @@ class Page extends Model
    * @param bool $sections_limit
    * @return array
    */
-  public static function get_areas_for_page( $page_id, $sections_limit = false ){
+  public static function get_areas_for_page( $page_id ){
     $areas = [];
 
     $currentPage = Page::find( $page_id );
     $contentType = $currentPage->type;
-    if( $currentPage->sections_count && $sections_limit ){
+    if( $currentPage->sections_count ){
       $sections_count = $currentPage->sections_count;
     }
 
@@ -379,7 +379,14 @@ class Page extends Model
       $sections_count -= count( $data['children'] );
 
     } else if( count( $data['children'] ) > $sections_count ){
-      $data['children'] = array_slice( $data['children'], 0, $sections_count );
+//      $data['children'] = array_slice( $data['children'], 0, $sections_count );
+      for( $i = $sections_count; $i < count( $data['children'] ); $i++ ){
+//        echo '<pre style="padding-left: 200px;">';
+//        var_dump( $data['children'][$i] );
+//        echo '</pre>';
+
+        $data['children'][$i]['lazySection'] = true;
+      }
       $sections_count = 0;
     } else {
       $sections_count = 0;
@@ -822,5 +829,38 @@ class Page extends Model
     $relations = json_encode( $relations );
     File::put( $cachePath . 'relations.json', $relations );
 
+  }
+
+  /**
+   * @return array
+   */
+  static function getRolesToCache( $page_id ){
+    if ( ! $page_id ){
+      return[];
+    }
+    $page_role_table = DB::table( 'page_role' );
+    $page_roles = $page_role_table->where( 'page_id', $page_id )->get();
+    $roles = [];
+    foreach ( $page_roles as $key => $page_role ) {
+      $roles[$key] = $page_role->role_id;
+    }
+
+    $page = Page::find($page_id);
+    if( $page->for_guest ){
+      array_push($roles, 'guest');
+    }
+    return $roles;
+  }
+
+
+  /**
+   * @return array
+   */
+  static function getPagesByTemplateId( $template_id ){
+    if ( ! $template_id ){
+      return[];
+    }
+    $pages = DB::table( 'pages_templates' )->where( 'template_id', $template_id )->get();
+    return $pages;
   }
 }
