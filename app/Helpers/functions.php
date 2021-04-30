@@ -567,25 +567,10 @@ function saveCache( $html, $page_id ) {
     $relations = [];
   }
 
-  $roles = Page::getRolesToCache( $page_id );//Page roles
-
-  $userRoles = [];
-  if (Auth::user()) {
-    $userRoles = Auth::user()->getUserRoles();
-    CacheService::setUserCookie();
-  }
-  $userPageRoles = array_intersect($userRoles, $roles);
-
-  if ( empty($userPageRoles) && !empty($userRoles) && !empty($roles) && !in_array('guest', $roles) ) {
-    return true;
-  }
-
   $newRelation = [
     'hash' => $hash,
     "url" => $url,
-    "page_id" => $page_id,
-    //"roles" => $userPageRoles,
-    "roles" => $userRoles,
+    "page_id" => $page_id
   ];
 
   $key = false;
