@@ -396,9 +396,9 @@ class Image extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-image{{STATE}}": "background-color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-image{{STATE}}": "background-color: {{COLOR}};"
+      // }
     });
 
     this.addControl('gradient', {
@@ -413,9 +413,9 @@ class Image extends BaseElement {
         angle: "0",
         value: ""
       },
-      rules: {
-        "{{ELEMENT}} .altrp-image{{STATE}}": "background-image: {{VALUE}}",
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-image{{STATE}}": "background-image: {{VALUE}}",
+      // }
     });
 
 

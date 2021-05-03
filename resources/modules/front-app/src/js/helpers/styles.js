@@ -98,6 +98,38 @@ export function shadowControllerToStyles(data) {
     return `box-shadow: ${type} ${offsetX}px ${offsetY}px ${blurRadius}px ${spreadRadius} ${color} !important;`;
   }
 }
+
+/**
+ * Преобразует объект, который сохраняет контроллер Color, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
+export function backgroundColorControllerToStyles(data) {
+  let styles = '';
+  if (_.isEmpty(data)) {
+    return styles;
+  }
+
+  if (data) {
+    let { colorPickedHex } = data;
+    return `background-color: ${colorPickedHex}; `;
+  }
+}
+
+export function gradientControllerToStyles(data) {
+  let styles = '';
+  if (_.isEmpty(data)) {
+    return styles;
+  }
+
+  if (data.isWithGradient) {
+    let { angle, firstColor, firstPoint, secondColor, secondPoint } = data;
+    return `background-image: linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%); `;
+  } else {
+    return ''
+  }
+}
+
 /**
  * Преобразует объект, который сохраняет контроллер typographic, в строку css для вставки в styled-компонент
  * @param {{}} data
