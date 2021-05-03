@@ -43,7 +43,7 @@ export default function headingElementEmailRender(){
 
   if(settings['style_position_margin']) {
     headingStyles.marginTop = settings['style_position_margin'].top ? (settings['style_position_margin'].top + settings['style_position_margin'].unit) : headingStyles.marginTop;
-    headingStyles.marginRight = settings['style_position_margin'].right ? (settings['style_position_margin'].right + settings['style_position_margin'].unit) : headingStyles.marginRight; 
+    headingStyles.marginRight = settings['style_position_margin'].right ? (settings['style_position_margin'].right + settings['style_position_margin'].unit) : headingStyles.marginRight;
     headingStyles.marginBottom = settings['style_position_margin'].bottom ? (settings['style_position_margin'].bottom + settings['style_position_margin'].unit) : headingStyles.marginBottom;
     headingStyles.marginLeft = settings['style_position_margin'].left ? (settings['style_position_margin'].left + settings['style_position_margin'].unit) : headingStyles.marginLeft ;
   }
@@ -120,6 +120,7 @@ export default function headingElementEmailRender(){
     headingStyles.justifyContent = settings['heading_settings_alignment'];
     headingStyles.display = "flex";
   }
+
   let url = _.get(settings, 'link_link.url', location.origin) || '';
   url = prepareURLForEmail(url);
   const text = this.getContent('text') || '';
@@ -127,7 +128,7 @@ export default function headingElementEmailRender(){
     dangerouslySetInnerHTML:{
       __html: text,
     },
-    href: isEditor() ? null : url,
+    href: url,
     style: headingStyles,
   };
   const wrapperStyles = {

@@ -24,7 +24,7 @@ export default function rootElementEmailRender() {
     elementProps.className = 'sections-wrapper';
   }
   let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
-  let childrenComponents = this.state.children.map(section => (
+  let childrenComponents = this.props.children.map(section => (
       <ElementWrapper
           ElementWrapper={ElementWrapper}
           key={section.getId()}

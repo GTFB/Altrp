@@ -3,6 +3,8 @@
 namespace App\Console;
 use App\Console\Commands\PluginMake;
 use App\Console\Commands\PluginMigrate;
+use App\Console\Commands\RunRobotCommand;
+use App\Console\Commands\ScheduleWorkCommand;
 use App\Console\Commands\WriteModulesStatuses;
 use App\Console\Commands\WriteServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
@@ -22,6 +24,8 @@ class Kernel extends ConsoleKernel
         PluginMake::class,
         WriteModulesStatuses::class,
         WriteServiceProvider::class,
+        RunRobotCommand::class,
+        ScheduleWorkCommand::class
     ];
 
     /**
@@ -32,8 +36,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+         // CUSTOM_SCHEDULES_BEGIN
+
+         // CUSTOM_SCHEDULES_END
     }
 
     /**

@@ -5,13 +5,18 @@ namespace App\Services\Robots\Blocks;
 
 
 use App\Altrp\Model;
+use App\Altrp\Source;
+use App\Jobs\SendCurl;
 use App\Notifications\RobotNotification;
 use App\User;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 class Action
 {
+    use DispatchesJobs;
+
     /**
      * @var object Узел диаграммы
      */
@@ -38,7 +43,10 @@ class Action
      */
     public function runAction()
     {
-        $res = null;
+        $res = [
+            'name' => '',
+            'value' => ''
+        ];
         switch ($this->getNodeProperties()->nodeData->type) {
             case 'crud':
                 $res = $this->execCrud();
@@ -46,8 +54,55 @@ class Action
             case 'send_notification':
                 $res = $this->sendNotification();
                 break;
+            case 'api':
+                $res = $this->sendApiRequest();
+                break;
         }
         return $res;
+    }
+
+    /**
+     * Отправить API запрос
+     * @return array
+     */
+    protected function sendApiRequest()
+    {
+        $source = Source::find($this->getNodeProperties()->nodeData->data->source);
+        $res = [];
+        if ($source) {
+            $url = $source->url;
+            $method = $source->request_type;
+            $name = $source->name;
+        } else {
+            $url = $this->getNodeProperties()->nodeData->data->url;
+            $method = $this->getNodeProperties()->nodeData->data->method;
+            $name = $this->getNodeProperties()->nodeData->data->name;
+        }
+
+        $params = $this->getNodeProperties()->nodeData->data->data;
+        $data = [];
+
+        if ($params) {
+            $params = explode(PHP_EOL, $params);
+            foreach ($params as $param) {
+                $paramParts = explode('|', $param);
+                $val = setDynamicData(trim($paramParts[1], ' '), $this->modelData);
+                $default = $paramParts[2] ?? null;
+                $data[trim($paramParts[0], ' ')] = $val != null ? $val : $default; // $modelData['app']->request[str_replace(['{{', '}}'], '', trim($paramParts[1], ' '))] ?? null;
+            }
+        }
+
+        $job = new SendCurl($url, $method, $data, [], true);
+        $job->delay(2);
+        $this->dispatchNow($job);
+        $res = $job->getResponse();
+
+        $source = strtolower(implode('_', explode(' ', $name)));
+
+        return [
+            'name' => $source,
+            'value' => $res
+        ];
     }
 
     /**
@@ -77,12 +132,15 @@ class Action
             $entity = $modelClass::find($id);
             $result = $entity->$method($newData);
         }
-        return $result;
+        return [
+            'name' => $model->name,
+            'value' => $result
+        ];
     }
 
     /**
      * Отправить уведомление
-     * @return bool
+     * @return array
      */
     protected function sendNotification()
     {
@@ -90,7 +148,10 @@ class Action
         $entities = $this->getNodeProperties()->nodeData->data->entities;
         $users = $this->getRequiredUsers($entities, $entitiesData);
         Notification::send($users, new RobotNotification($this->node, $this->modelData));
-        return true;
+        return [
+            'name' => 'notice',
+            'value' => true
+        ];
     }
 
     /**
@@ -117,10 +178,10 @@ class Action
             $value = setDynamicData($entities->dynamicValue, $this->modelData);
             if (isset($this->modelData['record']) && !Str::contains($field, "{{"))
                 $value = $this->modelData['record']->$field;
-            if (isset($this->modelData['record']) && Str::contains($field, "|")){
+            if (Str::contains($field, "|")){
                 $field = explode('|', $field);
                 $fieldOne = str_replace(' ', '', $field[1]);
-                $value = $this->modelData['record']->$fieldOne;
+                $value = setDynamicData($fieldOne, $this->modelData);
                 $columnName = str_replace(' ', '', $field[0]);
             }
             $users = User::where($columnName, $value)->get();

@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import store from "../../../../store/store";
 import Send from "./action/Send"
 import Crud from "./action/Crud"
+import Api from "./action/Api";
 import { setUpdatedNode } from "../../../../store/robot-settings/actions";
 import Chevron from "../../../../../../../editor/src/svgs/chevron.svg";
 
@@ -103,6 +104,11 @@ export default class Action extends Component{
                                                       selectNode={this.props.selectNode || []}
                                                     />}
             {(typeData === "crud") && <Crud
+                                         activeSection={this.props.activeSection}
+                                         toggleChevron={this.props.toggleChevron}
+                                         selectNode={this.props.selectNode || []}
+                                      />}
+            {(typeData === "api") && <Api
                                          activeSection={this.props.activeSection}
                                          toggleChevron={this.props.toggleChevron}
                                          selectNode={this.props.selectNode || []}

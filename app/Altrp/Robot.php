@@ -15,6 +15,7 @@ class Robot extends Model
         'model_id',
         'user_id',
         'start_condition',
+        'start_config',
         'enabled',
         'chart'
     ];
