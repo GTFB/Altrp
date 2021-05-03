@@ -1,4 +1,3 @@
-
 import CONSTANTS from "../../../editor/src/js/consts";
 import AltrpModel from "../../../editor/src/js/classes/AltrpModel";
 import moment from "moment";
@@ -18,6 +17,15 @@ import { changeFormFieldValue } from "./store/forms-data-storage/actions";
 import { addResponseData } from "./store/responses-storage/actions";
 export function getRoutes() {
   return import("./classes/Routes.js");
+}
+
+export function isSSR(){
+  try {
+    return sSR;
+
+  } catch (e) {
+    return false;
+  }
 }
 /**
  * @return {IconsManager}
@@ -47,8 +55,8 @@ export function setTitle(title) {
  * @return {boolean}
  * */
 export function isEditor() {
-  const path = window.location.pathname;
-  return path.includes("/admin/editor");
+  const path = window.location?.pathname;
+  return path?.includes("/admin/editor") || false;
 }
 
 /**
@@ -224,7 +232,7 @@ export function renderAsset(asset, props = null) {
   if (asset.url && asset.type === "svg") {
     return <AltrpSVG {...props} url={asset.url} />;
   }
-  if (asset instanceof File) {
+  if (! isSSR() && asset instanceof File) {
     let refImg = React.createRef();
     let fr = new FileReader();
     fr.readAsDataURL(asset);
@@ -499,7 +507,7 @@ export function setDataByPath(path = "", value, dispatch = null) {
   }
   if (path.indexOf("altrpforms.") === 0) {
     path = path.replace("altrpforms.", "");
-    if (! path) {
+    if (!path) {
       return false;
     }
     const [formId, fieldName] = path.split(".");
@@ -671,7 +679,7 @@ export function getDataByPath(
     value = currentModel.getProperty(path)
       ? currentModel.getProperty(path)
       : urlParams[path];
-    if (! value) {
+    if (!value) {
       value = _default;
     }
   }
@@ -1837,7 +1845,7 @@ export function getResponsiveSetting(
   let { currentScreen } = window.parent.appStore.getState();
   let _settingName = `${settingName}_${elementState}_`;
 
-  if(currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT){
+  if (currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT) {
     let setting = settings[_settingName];
     if (setting === undefined) {
       setting = _.get(settings, settingName, _default);
@@ -1847,7 +1855,7 @@ export function getResponsiveSetting(
   let suffix = currentScreen.name;
   _settingName = `${settingName}_${elementState}_${suffix}`;
   let setting = settings[_settingName];
-  if(setting === undefined) {
+  if (setting === undefined) {
     for (let screen of CONSTANTS.SCREENS) {
       if (
         currentScreen.id > screen.id ||
@@ -1862,7 +1870,7 @@ export function getResponsiveSetting(
       }
     }
   }
-  if(setting === undefined) {
+  if (setting === undefined) {
     setting = _.get(settings, settingName, _default);
   }
   return setting;
@@ -2007,26 +2015,26 @@ function escapeRegExp(string) {
  * Вернуть значение из строки
  * @param string
  */
-export function parseStringValue(string){
+export function parseStringValue(string) {
   let value = string;
 
-  if(Number(value)){
+  if (Number(value)) {
     return Number(value);
   }
-  switch (value){
-    case 'true':{
+  switch (value) {
+    case "true": {
       return true;
     }
-    case 'false':{
+    case "false": {
       return false;
     }
-    case 'null':{
+    case "null": {
       return null;
     }
-    case 'undefined':{
+    case "undefined": {
       return undefined;
     }
-    case '0':{
+    case "0": {
       return 0;
     }
   }

@@ -9,7 +9,7 @@ import {
 import AltrpUser from "../../../../../editor/src/js/classes/AltrpUser";
 import Resource from "../../../../../editor/src/js/classes/Resource";
 
-const defaultModel = {};
+const defaultModel = window.current_user || {};
 
 export function currentUserReducer(user, action) {
   user = user || defaultModel;

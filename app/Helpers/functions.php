@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Requests\ApiRequest;
+use App\Role;
 use App\User;
 use Illuminate\Support\Str;
 use League\ColorExtractor\Color;
 use League\ColorExtractor\ColorExtractor;
 use League\ColorExtractor\Palette;
 use App\Page;
+use Illuminate\Support\Facades\Auth;
+use App\Altrp\Facades\CacheService;
 
 /**
  * Get the script possible URL base
@@ -545,9 +548,8 @@ function saveCache( $html, $page_id ) {
   }
   $url = $_SERVER['REQUEST_URI'];
 
-  //  $html = minificationHTML($html);
-  $html = minifyHTML($html);
-  
+  // $html = minificationHTML($html);
+  // $html = minifyHTML($html);
   $hash = md5($url . $html);
 
   $cachePath = storage_path() . '/framework/cache/pages';
@@ -566,13 +568,25 @@ function saveCache( $html, $page_id ) {
     $relations = [];
   }
 
-  $roles = Page::getRolesToCache( $page_id );
+  $roles = Page::getRolesToCache( $page_id );//Page roles
+
+  $userRoles = [];
+  if (Auth::user()) {
+    $userRoles = Auth::user()->getUserRoles();
+    CacheService::setUserCookie();
+  }
+  $userPageRoles = array_intersect($userRoles, $roles);
+
+  if ( empty($userPageRoles) && !empty($userRoles) && !empty($roles) && !in_array('guest', $roles) ) {
+    return true;
+  }
 
   $newRelation = [
     'hash' => $hash,
     "url" => $url,
     "page_id" => $page_id,
-    "roles" => $roles
+    //"roles" => $userPageRoles,
+    "roles" => $userRoles,
   ];
 
   $key = false;
@@ -594,6 +608,7 @@ function saveCache( $html, $page_id ) {
 
   return true;
 }
+
 
 function minifyHTML($html) {
 
@@ -759,7 +774,7 @@ function clearPageCache( $page_id ) {
   }
 
   foreach ($relations as $key => $relation) {
-    if ($relation['page_id'] === $page_id) {
+    if (isset($relation['page_id']) && $relation['page_id'] === $page_id) {
       if ( File::exists($cachePath . '/' . $relation['hash']) ) {
         File::delete($cachePath . '/' . $relation['hash']);
       }
@@ -961,6 +976,10 @@ function _extractElementsNames( $element = [],  &$elementNames ){
     return;
   }
 
+  if( isset( $element['lazySection'] ) && $element['lazySection'] ){
+    return;
+  }
+
 
   if( array_search( $element['name'], $elementNames ) === false){
     $elementNames[] = $element['name'];
@@ -970,4 +989,25 @@ function _extractElementsNames( $element = [],  &$elementNames ){
       _extractElementsNames( $child, $elementNames );
     }
   }
+}
+
+/**
+ * Получить данные текущего пользователя, либо [is_guest => true] если не залогинен
+ * @return array
+ */
+function getCurrentUser(): array
+{
+  $user = Auth::user();
+  if ( ! $user ) {
+    return ['is_guest' => true];
+  }
+  $user = $user->toArray();
+  $user['roles'] = Auth::user()->roles->map(function (Role $role) {
+    $_role = $role->toArray();
+    $_role['permissions'] = $role->permissions;
+    return $_role;
+  });
+  $user['local_storage'] = json_decode($user['local_storage'], 255);
+  $user['permissions'] = Auth::user()->permissions;
+  return $user;
 }
