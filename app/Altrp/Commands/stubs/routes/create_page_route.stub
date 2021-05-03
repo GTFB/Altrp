@@ -1,0 +1,13 @@
+Route::get( {{frontend_route}}, function () {
+                return view( 'front-app', [
+                    'page_areas' => json_encode( {{page_areas}} ),
+                    'lazy_sections' => json_encode( {{lazy_sections}} ),
+                    'elements_list' => json_encode( {{elements_list}} ),
+                    'page_id' => {{page_id}},
+                    'title' => '{{title}}',
+                    '_frontend_route' => {{_frontend_route}},
+                    'pages'=> {{pages}},
+                    'preload_content' => {{preload_content}},
+                    'is_admin' => {{is_admin}},
+                ]);
+})->middleware(['web', 'installation.checker', 'after'])->name( 'page_' . {{page_id}} );

@@ -37,6 +37,7 @@ class RouteServiceProvider extends ServiceProvider
         $route_file->createFile();
         $route_file->createApiFile();
         $route_file->createCustomRouteFile();
+        $route_file->createRouteFile(base_path(config('altrp.admin.page_routes')), 'Routes for pages');
         parent::boot();
     }
 
@@ -49,6 +50,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->mapApiRoutes();
         $this->mapWebRoutes();
+        $this->mapPageRoutes();
         $this->mapApiAltrpRoutes();
         $this->mapAltrpRoutes();
         $this->mapCustomAltrpRoutes();
@@ -113,5 +115,12 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('web')
             ->namespace($this->namespace)
             ->group(base_path('routes/AltrpCustomRoutes.php'));
+    }
+
+    protected function mapPageRoutes()
+    {
+        Route::middleware('web')
+            ->namespace($this->namespace)
+            ->group(base_path(config('altrp.admin.page_routes')));
     }
 }

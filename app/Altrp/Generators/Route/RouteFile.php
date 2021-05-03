@@ -77,6 +77,14 @@ class RouteFile
         return false;
     }
 
+    public function createRouteFile($path, $description = 'Routes')
+    {
+        if(!file_exists($path)) {
+            return file_put_contents($path, "<?php\n/*{$description}*/");
+        }
+        return false;
+    }
+
     public function isApi()
     {
         return $this->api;

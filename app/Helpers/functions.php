@@ -547,7 +547,7 @@ function saveCache( $html, $page_id ) {
 
   //  $html = minificationHTML($html);
   $html = minifyHTML($html);
-  
+
   $hash = md5($url . $html);
 
   $cachePath = storage_path() . '/framework/cache/pages';
@@ -970,4 +970,34 @@ function _extractElementsNames( $element = [],  &$elementNames ){
       _extractElementsNames( $child, $elementNames );
     }
   }
+}
+
+/**
+ * Convert array to string
+ * @param $data
+ * @return string
+ */
+function array2string($data) {
+    $log_a = "[";
+    try {
+        foreach ($data as $key => $value) {
+            if (is_array($value))
+                $log_a .= "'".$key."' => " . array2string($value) . ",";
+            elseif (is_object($value))
+                $log_a .= "'".$key."' => " . array2string(json_encode(json_decode($value))) . ",";
+            elseif (is_bool($value))
+                $log_a .= "'".$key."' => " . ($value ? 'true' : 'false') . ",";
+            elseif (is_string($value))
+                $log_a .= "'".$key."' => '" . $value . "',";
+            elseif (is_null($value))
+                $log_a .= "'".$key."' => null,";
+            else
+                $log_a .= "'".$key."' => " . $value . ",";
+        }
+    } catch (\Exception $exception) {
+        array2string(json_decode($data));
+    }
+
+    $log_a = trim($log_a, ",");
+    return $log_a . ']';
 }
