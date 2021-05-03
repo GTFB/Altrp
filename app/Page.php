@@ -68,7 +68,7 @@ class Page extends Model
       return $pages;
     }
     try {
-      $pages = Page::all()->map->only(['path', 'title', 'id'])
+      $pages = Page::all()->map->only(['path', 'title', 'id', 'model'])
         //        ->map( function ( $path ) {
         //
         //        return [
@@ -917,5 +917,9 @@ class Page extends Model
     }
     $pages = DB::table('pages_templates')->where('template_id', $template_id)->get();
     return $pages;
+  }
+
+  static public function getPageModel(){
+
   }
 }

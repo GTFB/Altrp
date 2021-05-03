@@ -1,8 +1,8 @@
 import {CHANGE_CURRENT_MODEL} from './actions'
 import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
 
-const defaultModel = {
-  
+const defaultModel = window.model_data || {
+
 };
 
 export function currentModelReducer(model, action) {

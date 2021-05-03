@@ -101,6 +101,8 @@
   window.altrpImageLazy = '{{ get_altrp_setting( 'altrp_image_lazy', 'none' ) }}';
   window.altrpSkeletonColor = '{{ get_altrp_setting( 'altrp_skeleton_color', '#ccc' ) }}';
   window.altrpSkeletonHighlightColor = '{{ get_altrp_setting( 'altrp_skeleton_highlight_color', '#d0d0d0' ) }}';
+  window.current_user = {!! json_encode( getCurrentUser() ) !!};
+  window.model_data = {!! json_encode( $model_data ) !!};
   /* ]]> */
 </script>
 <script src="{{ altrp_asset( '/modules/front-app/front-app.js', 'http://localhost:3001/' ) }}" defer></script>

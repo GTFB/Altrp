@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Requests\ApiRequest;
+use App\Role;
 use App\User;
 use Illuminate\Support\Str;
 use League\ColorExtractor\Color;
@@ -988,4 +989,25 @@ function _extractElementsNames( $element = [],  &$elementNames ){
       _extractElementsNames( $child, $elementNames );
     }
   }
+}
+
+/**
+ * Получить данные текущего пользователя, либо [is_guest => true] если не залогинен
+ * @return array
+ */
+function getCurrentUser(): array
+{
+  $user = Auth::user();
+  if ( ! $user ) {
+    return ['is_guest' => true];
+  }
+  $user = $user->toArray();
+  $user['roles'] = Auth::user()->roles->map(function (Role $role) {
+    $_role = $role->toArray();
+    $_role['permissions'] = $role->permissions;
+    return $_role;
+  });
+  $user['local_storage'] = json_decode($user['local_storage'], 255);
+  $user['permissions'] = Auth::user()->permissions;
+  return $user;
 }

@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 class AreaComponent extends Component {
   constructor(props) {
     super(props);
-    console.log("AreaComponent: ", performance.now());
+    // console.log("AreaComponent: ", performance.now());
   }
   componentWillUnmount() {
     /**

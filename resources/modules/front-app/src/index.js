@@ -134,3 +134,14 @@ if (process.env.NODE_ENV !== 'production') {
     window._token = _token._token;
   }
 })();
+
+/**
+ * Регистрируем сервис-воркеры
+ */
+
+let filename = '/front-app.sw.js';
+
+if ('serviceWorker' in navigator) {
+  // Use the window load event to keep the page load performant
+  navigator.serviceWorker.register(filename, {scope: '/'});
+}

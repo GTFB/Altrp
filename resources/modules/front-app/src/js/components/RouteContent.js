@@ -124,7 +124,10 @@ class RouteContent extends Component {
         let model = await new Resource({
           route: `/ajax/models/${this.props.model.modelName}`
         }).get(this.props.match.params.id);
+        let oldModel = appStore.getState().currentModel.getData();
         model.altrpModelUpdated = true;
+        console.log(model);
+        console.log(appStore.getState().currentModel.getData());
         appStore.dispatch(changeCurrentModel(model));
       } catch (e) {
         console.error(e);
@@ -173,16 +176,6 @@ class RouteContent extends Component {
     if (!this.props.allowed) {
       return <Redirect to={this.props.redirect || "/"} />;
     }
-    console.log("====================================");
-    console.log(this.state.areas);
-    console.log("====================================");
-    // console.log(
-    //   this.state.areas.map(item => {
-    //     console.log("====================================");
-    //     console.log(item.getTemplates());
-    //     console.log("====================================");
-    //   })
-    // );
     return (
       <React.Fragment>
         <Suspense fallback={<div />}>

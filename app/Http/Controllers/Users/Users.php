@@ -106,7 +106,7 @@ class Users extends Controller
           }
 
           CacheService::saveUserJson($user->id);
-          
+
           return response()->json($user, 200, [],JSON_UNESCAPED_UNICODE);
         }
 
@@ -321,29 +321,7 @@ class Users extends Controller
      */
     public function getCurrentUser(ApiRequest $request)
     {
-        $user = Auth::user();
-        if (!$user) {
-            return response()->json(
-                ['data' => ['is_guest' => true]],
-                200,
-                [],
-                JSON_UNESCAPED_UNICODE
-            );
-        }
-        $user = $user->toArray();
-        $user['roles'] = Auth::user()->roles->map(function (Role $role) {
-            $_role = $role->toArray();
-            $_role['permissions'] = $role->permissions;
-            return $_role;
-        });
-        $user['local_storage'] = json_decode($user['local_storage'], 255);
-        $user['permissions'] = Auth::user()->permissions;
-        return response()->json(
-            ['data' => $user],
-            200,
-            [],
-            JSON_UNESCAPED_UNICODE
-        );
+       return response()->json( ['data' => getCurrentUser()], 200, [], JSON_UNESCAPED_UNICODE );
     }
     /**
      * Обновление данных в local_storage текущего пользователя

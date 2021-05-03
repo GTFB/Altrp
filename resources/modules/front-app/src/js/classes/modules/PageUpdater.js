@@ -34,7 +34,7 @@ class PagesUpdater {
     if(! this.updated){
       loadLazySections();
       this.updated = true;
-      await this._startUpdating();
+      // await this._startUpdating();
     }
 
   }
