@@ -2,7 +2,7 @@ import Skeleton, {SkeletonTheme} from 'react-loading-skeleton';
 
 import {connect} from "react-redux";
 import React, {cloneElement, Component} from 'react';
-import {isEditor, renderAsset} from "../../../../../front-app/src/js/helpers";
+import {isEditor, isSSR, renderAsset} from "../../../../../front-app/src/js/helpers";
 import ImagePlaceholder from "./ImagePlaceholder";
 import {checkElementInViewBox} from "../../../../../front-app/src/js/helpers/elements";
 
@@ -11,7 +11,9 @@ class AltrpImage extends Component {
     super(props);
     this.imageRef = React.createRef();
     let visible = true;
-    if (isEditor() || props.lazy === false) {
+    if(isSSR()){
+      visible = false;
+    } else if (isEditor() || props.lazy === false) {
 
     } else if (window.altrpImageLazy
         && window.altrpImageLazy !== 'none'
@@ -65,7 +67,7 @@ class AltrpImage extends Component {
 
     let width = this.props.width;
     let height = this.props.height;
-    if (this.props.image instanceof File) {
+    if (! isSSR() && this.props.image instanceof File) {
       media = this.props.image
     } else {
       if (this.props.default) {

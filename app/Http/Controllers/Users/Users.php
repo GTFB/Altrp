@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ApiRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Altrp\Facades\CacheService;
+
 
 use App\User;
 use App\Permission;
@@ -102,6 +104,9 @@ class Users extends Controller
             $roles = Role::find( $roles );
             $user->attachRoles( $roles );
           }
+
+          CacheService::saveUserJson($user->id);
+
           return response()->json($user, 200, [],JSON_UNESCAPED_UNICODE);
         }
 
@@ -143,6 +148,9 @@ class Users extends Controller
                 $roles = Role::find($roles);
                 $user->attachRoles($roles);
             }
+
+            CacheService::saveUserJson($user->id);
+
             return response()->json($user, 200, [], JSON_UNESCAPED_UNICODE);
         }
 
@@ -166,6 +174,8 @@ class Users extends Controller
         if ($user->delete()) {
             return response()->json(trans("responses.delete.user"), 200, [], JSON_UNESCAPED_UNICODE);
         }
+
+        CacheService::removeUserJson( $user->id );
 
         return response()->json(trans("deleteerror"), 400, [], JSON_UNESCAPED_UNICODE);
     }
@@ -273,6 +283,8 @@ class Users extends Controller
 
         $result = $user->attachRole($role);
 
+        CacheService::saveUserJson($user->id);
+
         return response()->json($result, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -297,6 +309,8 @@ class Users extends Controller
 
         $result = $user->detachRole($role);
 
+        CacheService::saveUserJson($user->id);
+
         return response()->json($result, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -307,29 +321,7 @@ class Users extends Controller
      */
     public function getCurrentUser(ApiRequest $request)
     {
-        $user = Auth::user();
-        if (!$user) {
-            return response()->json(
-                ['data' => ['is_guest' => true]],
-                200,
-                [],
-                JSON_UNESCAPED_UNICODE
-            );
-        }
-        $user = $user->toArray();
-        $user['roles'] = Auth::user()->roles->map(function (Role $role) {
-            $_role = $role->toArray();
-            $_role['permissions'] = $role->permissions;
-            return $_role;
-        });
-        $user['local_storage'] = json_decode($user['local_storage'], 255);
-        $user['permissions'] = Auth::user()->permissions;
-        return response()->json(
-            ['data' => $user],
-            200,
-            [],
-            JSON_UNESCAPED_UNICODE
-        );
+       return response()->json( ['data' => getCurrentUser()], 200, [], JSON_UNESCAPED_UNICODE );
     }
     /**
      * Обновление данных в local_storage текущего пользователя

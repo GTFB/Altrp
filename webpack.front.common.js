@@ -11,7 +11,7 @@ module.exports = {
   // ],
   entry: {
     'front-app':"./resources/modules/front-app/src/index.js",
-    'sw': "./resources/modules/front-app/src/js/sw/sw.js",
+    // 'sw': "./resources/modules/front-app/src/js/sw/sw.js",
   },
 
 

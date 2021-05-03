@@ -72,13 +72,13 @@
   </style>
 
   @if( isset( $preload_content[ 'important_styles'] ) )
-    {!! '' !!}
+    {!! $preload_content[ 'important_styles'] !!}
 {{--    {!! $preload_content[ 'important_styles'] !!}--}}
   @endif
 </head>
 <body class="front-app-body">
 <div id="front-app-target" class="front-app {{ $is_admin ? 'front-app_admin' : '' }}">
-  {!! isset( $preload_content[ 'content'] ) ? '' : ''!!}
+  {!! isset( $preload_content[ 'content'] ) ? $preload_content[ 'content']  : ''!!}
 {{--  {!! isset( $preload_content[ 'content'] ) ? $preload_content['content'] : ''!!}--}}
 </div>
 <div id="front-app" class="front-app-content_preloaded">
@@ -101,6 +101,8 @@
   window.altrpImageLazy = '{{ get_altrp_setting( 'altrp_image_lazy', 'none' ) }}';
   window.altrpSkeletonColor = '{{ get_altrp_setting( 'altrp_skeleton_color', '#ccc' ) }}';
   window.altrpSkeletonHighlightColor = '{{ get_altrp_setting( 'altrp_skeleton_highlight_color', '#d0d0d0' ) }}';
+  window.current_user = {!! json_encode( getCurrentUser() ) !!};
+  window.model_data = {!! json_encode( $model_data ) !!};
   /* ]]> */
 </script>
 <script src="{{ altrp_asset( '/modules/front-app/front-app.js', 'http://localhost:3001/' ) }}" defer></script>
@@ -119,7 +121,7 @@
     /* ]]> */
   </script>
 @endif
-<link rel="stylesheet" href="/modules/front-app/front-app.css?0.14.16">
+<link rel="stylesheet" href="/modules/front-app/front-app.css?{{getCurrentVersion()}}">
 
 </body>
 </html>

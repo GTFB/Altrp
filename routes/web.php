@@ -465,11 +465,16 @@ Route::get('/', function () {
     'page_areas' => '[]',
     'lazy_sections' => '[]',
     'pages'=>Page::get_pages_for_frontend( true ),
+    'model_data' => null,
     'is_admin' => isAdmin(),
   ]);
 })->middleware(['web', 'installation.checker']);
 
-
+//Route::get('/test/{id}/test/{test}', function($test, $id){
+//  echo '<pre style="padding-left: 200px;">';
+//  var_dump( func_get_args() );
+//  echo '</pre>';
+//});
 
 foreach ( $frontend_routes as $_frontend_route ) {
   $path = $_frontend_route['path'];
@@ -477,8 +482,30 @@ foreach ( $frontend_routes as $_frontend_route ) {
   $pattern1 = '/:(.+)((\/)|$)/U';
   $replacement1 = '{$1}/';
   $frontend_route = preg_replace( $pattern1, $replacement1, $path );
+  $pattern2 = '/:(.+)((\/)|$)/U';
+  preg_match_all( $pattern2, $path, $matches );
+  $argument_index = false;
+  foreach ($matches[0] as $idx => $item) {
+    if( strpos( $item, ':id') !== false ) {
+      $argument_index = $idx;
+    }
+  }
 
-  Route::get( $frontend_route, function () use ( $title, $_frontend_route, $frontend_route ) {
+  Route::get( $frontend_route, function () use ( $title, $_frontend_route, $frontend_route, $argument_index ) {
+
+    if( $argument_index !== false && $_frontend_route['model'] ) {
+      $model = $_frontend_route['model']->toArray();
+      if( isset( $model['namespace'] ) ){
+        try {
+          $model = new $model['namespace'];
+          $model_data = $model->find( func_get_arg( $argument_index ) )->toArray();
+        } catch( Exception $e ) {
+          $model_data = null;
+        }
+      }
+    } else {
+      $model_data = null;
+    }
 
     $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
 
@@ -502,6 +529,7 @@ foreach ( $frontend_routes as $_frontend_route ) {
       '_frontend_route' => $_frontend_route,
       'pages'=>Page::get_pages_for_frontend( true ),
       'preload_content' => $preload_content,
+      'model_data' => $model_data,
       'is_admin' => isAdmin(),
     ]);
 

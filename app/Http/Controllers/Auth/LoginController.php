@@ -10,6 +10,7 @@ use App\Services\Robots\RobotsService;
 use App\Traits\AuthenticatesUsers;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Request;
+use App\Altrp\Facades\CacheService;
 
 class LoginController extends Controller
 {
@@ -55,7 +56,11 @@ class LoginController extends Controller
    * @return \Illuminate\Http\JsonResponse
    */
   public function logout( Request $request )
-  {
+  { 
+
+    unset($_COOKIE['uid']);
+    setcookie('uid', null, -1, '/');
+
     $this->guard()->logout();
 
     $request->session()->invalidate();
@@ -93,6 +98,9 @@ class LoginController extends Controller
     }
 
     if ($this->attemptLogin($request)) {
+      
+      CacheService::setUserCookie();
+
       return $this->sendLoginResponse($request);
     }
 
