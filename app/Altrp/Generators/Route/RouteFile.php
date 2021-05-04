@@ -4,6 +4,8 @@
 namespace App\Altrp\Generators\Route;
 
 
+use App\Page;
+use App\Services\PageService;
 use Illuminate\Database\Eloquent\Model;
 
 class RouteFile
@@ -80,7 +82,10 @@ class RouteFile
     public function createRouteFile($path, $description = 'Routes')
     {
         if(!file_exists($path)) {
-            return file_put_contents($path, "<?php\n/*{$description}*/");
+            $pageService = app(PageService::class);
+            file_put_contents($path, "<?php\n/*{$description}*/");
+            $page = Page::all()->first();
+            return $pageService->updatePageRoutes($page);
         }
         return false;
     }
