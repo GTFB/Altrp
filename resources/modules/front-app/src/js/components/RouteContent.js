@@ -119,16 +119,16 @@ class RouteContent extends Component {
       _.get(this.props, "model.modelName") &&
       _.get(this.props, "match.params.id")
     ) {
-      appStore.dispatch(changeCurrentModel({ altrpModelUpdated: false }));
       try {
         let model = await new Resource({
           route: `/ajax/models/${this.props.model.modelName}`
         }).get(this.props.match.params.id);
         let oldModel = appStore.getState().currentModel.getData();
         model.altrpModelUpdated = true;
-        console.log(model);
-        console.log(appStore.getState().currentModel.getData());
-        appStore.dispatch(changeCurrentModel(model));
+        if(! _.isEqual(model, oldModel)){
+          appStore.dispatch(changeCurrentModel({ altrpModelUpdated: false }));
+          appStore.dispatch(changeCurrentModel(model));
+        }
       } catch (e) {
         console.error(e);
         appStore.dispatch(changeCurrentModel({ altrpModelUpdated: true }));

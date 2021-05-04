@@ -11,6 +11,7 @@
 |
 */
 
+use App\Altrp\Relationship;
 use App\Constructor\Template;
 use App\Media;
 use App\Page;
@@ -497,8 +498,14 @@ foreach ( $frontend_routes as $_frontend_route ) {
       $model = $_frontend_route['model']->toArray();
       if( isset( $model['namespace'] ) ){
         try {
+          $relations = Relationship::where( [['model_id',$model['id']],['always_with',1]] )->get()->implode( 'name', ',' );
+          $relations = $relations ? explode( ',',$relations ) : false;
           $model = new $model['namespace'];
-          $model_data = $model->find( func_get_arg( $argument_index ) )->toArray();
+          $model = $model->find( func_get_arg( $argument_index ) );
+          if ( $relations ) {
+            $model = $model->load( $relations );
+          }
+          $model_data = $model->toArray();
         } catch( Exception $e ) {
           $model_data = null;
         }
