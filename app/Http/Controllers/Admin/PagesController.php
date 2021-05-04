@@ -296,6 +296,7 @@ class PagesController extends Controller
     }
 
     Page::clearAllCacheById( $page_id );
+    PagesTemplate::clearAllCacheById( $page_id );
     return response()->json( ['success' => true], 200, [], JSON_UNESCAPED_UNICODE );
   }
 

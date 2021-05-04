@@ -210,9 +210,9 @@ class TemplateController extends Controller
   public function show_frontend( string $template_id )
   {
  
-    if (self::loadCachedTemplate( $template_id )) {
-      return self::loadCachedTemplate( $template_id );
-    }
+    // if (self::loadCachedTemplate( $template_id )) {
+    //    return self::loadCachedTemplate( $template_id );
+    // }
 
     if ( Uuid::isValid( $template_id ) ) {
       $template = Template::where( 'guid', $template_id )->first();
@@ -223,7 +223,7 @@ class TemplateController extends Controller
       return response()->json( [ 'success' => false, 'message' => 'Template not found' ], 404, [], JSON_UNESCAPED_UNICODE );
     }
     $template->check_elements_conditions();
-    saveTemplateCache( json_encode($template->toArray()), $template_id);
+    //saveTemplateCache( json_encode($template->toArray()), $template_id);
     return response()->json( $template->toArray() );
   }
 

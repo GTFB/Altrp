@@ -9,6 +9,7 @@ use DOMXPath;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Cache;
 use Mockery\Exception;
 use App\Traits\Searchable;
 use Illuminate\Support\Arr;
@@ -282,7 +283,12 @@ class Page extends Model
    * @return array
    */
   public static function get_areas_for_page($page_id)
-  {
+  { 
+
+    if ( Cache::has('areas_' . $page_id) ) {
+      return Cache::get('areas_' . $page_id);
+    }
+
     $areas = [];
 
     $currentPage = Page::find($page_id);
@@ -365,6 +371,18 @@ class Page extends Model
         'template_type' => 'popup',
       ]),
     ];
+
+    foreach ($areas as $key => $area) {
+      if (isset($area['template'])) {
+        $areas[$key]['template']['data'] = Template::recursively_children_check_conditions($area['template']['data']);
+      }
+    }
+
+    foreach ($areas[3]['templates'] as $key => $template) {
+      $areas[3]['templates'][$key]['data'] = Template::recursively_children_check_conditions($template['data']);
+    }
+
+    Cache::put( 'areas_' . $page_id, $areas, 86400);
 
     return $areas;
   }
