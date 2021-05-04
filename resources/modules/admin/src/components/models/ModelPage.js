@@ -64,7 +64,7 @@ class ModelPage extends Component {
         <div className="admin-breadcrumbs">
           <Link className="admin-breadcrumbs__link" to="/admin/pages">Model</Link>
           <span className="admin-breadcrumbs__separator">/</span>
-          <span className="admin-breadcrumbs__current">{this.props.match.params.id}</span>
+          <span className="admin-breadcrumbs__current">{this.props.location.propsSearch}</span>
         </div>
       </div>
       <div className="admin-content">

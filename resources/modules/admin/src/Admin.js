@@ -271,7 +271,10 @@ class Admin extends Component {
                       .map(({ value: id, label }) => (
                         <li key={id}>
                           <Link
-                            to={`/admin/model/${id}`}
+                            to={{
+                              pathname: `/admin/model/${id}`,
+                              propsSearch: label,
+                            }}
                             className="admin-nav-list__link admin-nav-list__link--models"
                           >
                             {label}

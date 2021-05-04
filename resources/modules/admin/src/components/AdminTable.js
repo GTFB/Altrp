@@ -6,6 +6,7 @@ class AdminTable extends Component {
    * Фильтр по введенной строке
    * @param {{}} e
    */
+
   filterByKeyboard = e => {
     if (_.isFunction(this.props.filterByKeyboard)) {
       this.props.filterByKeyboard(e.target.value);

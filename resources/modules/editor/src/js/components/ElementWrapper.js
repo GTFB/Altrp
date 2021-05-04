@@ -21,9 +21,11 @@ import { setCurrentContextElement } from "../store/current-context-element/actio
 import { thresholdSturges } from "d3";
 import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
 import CarouselComponent from "./widgets/styled-components/CarouselComponent";
-import GalleryCompnent from "./widgets/styled-components/GalleryComponent";
 import ImageComponent from "./widgets/styled-components/ImageComponent";
 import ButtonComponent from "./widgets/styled-components/ButtonComponent";
+import DividerComponent from "./widgets/styled-components/DividerComponent";
+import AccordionComponent from "./widgets/styled-components/AccordionComponent";
+import GalleryComponent from "./widgets/styled-components/GalleryComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -45,6 +47,7 @@ class ElementWrapper extends Component {
     this.wrapper = React.createRef();
   }
   onDragLeave(e) {
+    e.preventDefault();
     this.setState(state => {
       return { ...state, dragOver: false, cursorPos: false };
     });
@@ -131,7 +134,7 @@ class ElementWrapper extends Component {
             }
             break;
         }
-        
+
       }
       if (this.props.element.getType() === "column") {
         this.props.element.appendChild(newElement);
@@ -178,6 +181,7 @@ class ElementWrapper extends Component {
    * событие начало перетаскивания
    */
   onDragStart(e) {
+    e.preventDefault();
     store.dispatch(startDrag(this.props.element));
     e.dataTransfer.effectAllowed = "copy";
     e.dataTransfer.setData("altrp-element", this.props.element);
@@ -189,7 +193,8 @@ class ElementWrapper extends Component {
   /**
    * событие остановки перетаскивания
    */
-  onDragEnd() {
+  onDragEnd(e) {
+    e.preventDefault();
     this.stopDrag();
   }
 
@@ -276,7 +281,7 @@ class ElementWrapper extends Component {
   render() {
     const elementHideTrigger = this.props.element.settings.hide_on_trigger;
     const { isFixed, tooltip_text, tooltip_position } = this.props.element.getSettings();
-    
+
     let errorContent = null;
     if (this.state.errorInfo) {
       errorContent = (
@@ -335,8 +340,8 @@ class ElementWrapper extends Component {
     const styles = {
 
     };
-    if(this.props.element.getResponsiveSetting('layout_column_width')){
-      if(Number(this.props.element.getResponsiveSetting('layout_column_width'))){
+    if (this.props.element.getResponsiveSetting('layout_column_width')) {
+      if (Number(this.props.element.getResponsiveSetting('layout_column_width'))) {
         styles.width = this.props.element.getResponsiveSetting('layout_column_width') + '%';
       } else {
         styles.width = this.props.element.getResponsiveSetting('layout_column_width');
@@ -358,24 +363,25 @@ class ElementWrapper extends Component {
     // }
     // console.error(performance.now());
     let WrapperComponent = "div";
-
     switch (this.props.element.getName()) {
-      case "gallery": {
-        WrapperComponent = GalleryCompnent;
-      }
-        break;
-      case "carousel": {
-        WrapperComponent = CarouselComponent;
-      }
-        break;
-      case "image": {
+      case "gallery":
+        WrapperComponent = GalleryComponent;
+        break
+      case "image":
         WrapperComponent = ImageComponent;
-      }
-        break;
-      case "button": {
+        break
+      case "button":
         WrapperComponent = ButtonComponent;
-      }
-        break;
+        break
+      case "carousel":
+        WrapperComponent = CarouselComponent;
+        break
+      case "divider":
+        WrapperComponent = DividerComponent;
+        break
+      case "accordion":
+        WrapperComponent = AccordionComponent;
+        break
     }
 
     return elementHideTrigger &&
