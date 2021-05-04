@@ -34,6 +34,7 @@ class RouteWriter extends BaseFileWriter
             ->replaceRoute($stubContent, array2string($viewData['_frontend_route']))
             ->replacePages($stubContent, array2string($viewData['pages']))
             ->replacePreloadContent($stubContent, array2string($viewData['preload_content']))
+            ->replaceModelData($stubContent, array2string($viewData['model_data']))
             ->replaceIsAdmin($stubContent, $viewData['is_admin']);
 
         return implode(PHP_EOL, $stubContent);
@@ -96,6 +97,12 @@ class RouteWriter extends BaseFileWriter
     protected function replaceIsAdmin(&$stubContent, $isAdmin)
     {
         $stubContent = str_replace('{{is_admin}}', $isAdmin, $stubContent);
+        return $this;
+    }
+
+    protected function replaceModelData(&$stubContent, $modelData)
+    {
+        $stubContent = str_replace('{{model_data}}', $modelData, $stubContent);
         return $this;
     }
 }

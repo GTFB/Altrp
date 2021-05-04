@@ -112,15 +112,13 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapCustomAltrpRoutes()
     {
-        Route::middleware('web')
-            ->namespace($this->namespace)
+        Route::namespace($this->namespace)
             ->group(base_path('routes/AltrpCustomRoutes.php'));
     }
 
     protected function mapPageRoutes()
     {
-        Route::middleware('web')
-            ->namespace($this->namespace)
+        Route::namespace($this->namespace)
             ->group(base_path(config('altrp.admin.page_routes')));
     }
 }
