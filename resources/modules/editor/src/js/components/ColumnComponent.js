@@ -81,8 +81,6 @@ class ColumnComponent extends Component {
       } break;
     }
 
-    console.log(this.state.children)
-
     return React.createElement(component,
       {
         className,
