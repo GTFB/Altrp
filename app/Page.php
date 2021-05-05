@@ -283,106 +283,102 @@ class Page extends Model
    * @return array
    */
   public static function get_areas_for_page($page_id)
-  { 
+  {
+    $currentPage = Page::find($page_id);
 
     if ( Cache::has('areas_' . $page_id) ) {
-      return Cache::get('areas_' . $page_id);
+      $areas = Cache::get('areas_' . $page_id);
+    } else {
+
+      $areas = [];
+
+      $contentType = $currentPage->type;
+
+      $header_template = Template::getTemplate([
+        'page_id' => $page_id,
+        'template_type' => 'header',
+      ]);
+      unset($header_template['html_content']);
+      unset($header_template['styles']);
+
+
+      $areas[] = [
+        'area_name' => 'header',
+        'id' => 'header',
+        'settings' => [],
+        'template' => $header_template,
+      ];
+
+
+      $content_template = Template::getTemplate([
+        'page_id' => $page_id,
+        'template_type' => $contentType ? 'reports' : 'content',
+      ]);
+
+      unset($content_template['html_content']);
+      unset($content_template['styles']);
+      $areas[] = [
+        'area_name' => 'content',
+        'id' => 'content',
+        'settings' => [],
+        'template' => $content_template,
+      ];
+
+      $footer_template = Template::getTemplate([
+        'page_id' => $page_id,
+        'template_type' => 'footer',
+      ]);
+
+      unset($footer_template['html_content']);
+      unset($footer_template['styles']);
+      $areas[] = [
+        'area_name' => 'footer',
+        'id' => 'footer',
+        'settings' => [],
+        'template' => $footer_template,
+      ];
+
+      //    $popups = Template::join( 'areas', 'areas.id', '=', 'templates.area' )
+      //      ->where( 'areas.name', '=', 'popup' )
+      //      ->where( 'type', 'template' )->get( 'templates.*' );
+      //
+      //
+      //
+      //    if( $popups->count() ){
+      //      foreach ( $popups as $key => $popup ) {
+      //        $popups[$key]->template_settings = $popup->template_settings();
+      //
+      //      }
+      $areas[] = [
+        'area_name' => 'popups',
+        'id' => 'popups',
+        'settings' => [],
+        'templates' => Template::getTemplates([
+          'page_id' => $page_id,
+          'template_type' => 'popup',
+        ]),
+      ];
+      Cache::put( 'areas_' . $page_id, $areas, 86400 );
+
     }
 
-    $areas = [];
-
-    $currentPage = Page::find($page_id);
-    $contentType = $currentPage->type;
     if ($currentPage->sections_count) {
       $sections_count = $currentPage->sections_count;
     }
-
-    $header_template = Template::getTemplate([
-      'page_id' => $page_id,
-      'template_type' => 'header',
-    ]);
-    unset($header_template['html_content']);
-    unset($header_template['styles']);
-
-    if (isset($sections_count) && $header_template['data']) {
-      $header_template['data'] = self::spliceSections($header_template['data'], $sections_count);
-    }
-
-    $areas[] = [
-      'area_name' => 'header',
-      'id' => 'header',
-      'settings' => [],
-      'template' => $header_template,
-    ];
-
-
-    $content_template = Template::getTemplate([
-      'page_id' => $page_id,
-      'template_type' => $contentType ? 'reports' : 'content',
-    ]);
-
-    if (isset($sections_count) && $content_template['data']) {
-      $content_template['data'] = self::spliceSections($content_template['data'], $sections_count);
-    }
-
-    unset($content_template['html_content']);
-    unset($content_template['styles']);
-    $areas[] = [
-      'area_name' => 'content',
-      'id' => 'content',
-      'settings' => [],
-      'template' => $content_template,
-    ];
-
-    $footer_template = Template::getTemplate([
-      'page_id' => $page_id,
-      'template_type' => 'footer',
-    ]);
-
-    if (isset($sections_count) && $footer_template['data']) {
-      $footer_template['data'] = self::spliceSections($footer_template['data'], $sections_count);
-    }
-    unset($footer_template['html_content']);
-    unset($footer_template['styles']);
-    $areas[] = [
-      'area_name' => 'footer',
-      'id' => 'footer',
-      'settings' => [],
-      'template' => $footer_template,
-    ];
-
-    //    $popups = Template::join( 'areas', 'areas.id', '=', 'templates.area' )
-    //      ->where( 'areas.name', '=', 'popup' )
-    //      ->where( 'type', 'template' )->get( 'templates.*' );
-    //
-    //
-    //
-    //    if( $popups->count() ){
-    //      foreach ( $popups as $key => $popup ) {
-    //        $popups[$key]->template_settings = $popup->template_settings();
-    //
-    //      }
-    $areas[] = [
-      'area_name' => 'popups',
-      'id' => 'popups',
-      'settings' => [],
-      'templates' => Template::getTemplates([
-        'page_id' => $page_id,
-        'template_type' => 'popup',
-      ]),
-    ];
-
     foreach ($areas as $key => $area) {
       if (isset($area['template'])) {
         $areas[$key]['template']['data'] = Template::recursively_children_check_conditions($area['template']['data']);
+
+        if (isset($sections_count) && $areas[$key]['template']['data']) {
+          $areas[$key]['template']['data'] = self::spliceSections($areas[$key]['template']['data'], $sections_count);
+        }
       }
     }
-
-    foreach ($areas[3]['templates'] as $key => $template) {
-      $areas[3]['templates'][$key]['data'] = Template::recursively_children_check_conditions($template['data']);
+    if( isset( $areas[3] ) ) {
+      foreach ($areas[3]['templates'] as $key => $template) {
+        $areas[3]['templates'][$key]['data'] = Template::recursively_children_check_conditions($template['data']);
+      }
     }
-
-    Cache::put( 'areas_' . $page_id, $areas, 86400);
 
     return $areas;
   }
@@ -900,6 +896,8 @@ class Page extends Model
     });
     $relations = json_encode($relations);
     File::put($cachePath . 'relations.json', $relations);
+    Cache::delete( 'areas_' . $id );
+
   }
 
   /**

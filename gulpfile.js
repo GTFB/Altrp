@@ -28,6 +28,7 @@ const excludes = [
   '!./routes/AltrpRoutes.php',
   '!./routes/AltrpApiRoutes.php',
   '!./routes/AltrpCustomRoutes.php',
+  '!./routes/page_routes.php',
   '!./storage/app/public/**',
   '!./storage/installed',
   '!./storage/logs/**',

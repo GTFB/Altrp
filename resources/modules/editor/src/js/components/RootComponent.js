@@ -44,7 +44,7 @@ class RootComponent extends Component {
     let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
     return (
       <div className={classes}>
-        {this.props.children.map(section => {
+        {this.props.element.children.map(section => {
           return(
             <ElementWrapper
               ElementWrapper={ElementWrapper}

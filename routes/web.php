@@ -476,7 +476,6 @@ Route::get('/', function () {
 //  var_dump( func_get_args() );
 //  echo '</pre>';
 //});
-
 foreach ( $frontend_routes as $_frontend_route ) {
   $path = $_frontend_route['path'];
   $title = $_frontend_route['title'];
@@ -517,7 +516,7 @@ foreach ( $frontend_routes as $_frontend_route ) {
     $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
 
     $page_areas = Page::get_areas_for_page( $_frontend_route['id'] );
-    $lazy_sections = Page::get_lazy_sections_for_page( $_frontend_route['id'] );
+    $lazy_sections = [];
     $elements_list = extractElementsNames( $page_areas );
     if (Page::isCached( $_frontend_route['id'] )) {
 

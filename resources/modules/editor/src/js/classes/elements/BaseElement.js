@@ -140,7 +140,7 @@ class BaseElement extends ControlStack {
     this.templateNeedUpdate();
     if(dispatchToHistory) {
       let index = this.children.length - 1;
-      store.dispatch(addHistoryStoreItem('ADD', {element: child, index, parent: this})); 
+      store.dispatch(addHistoryStoreItem('ADD', {element: child, index, parent: this}));
     }
   }
 
@@ -173,7 +173,7 @@ class BaseElement extends ControlStack {
     this.component.setChildren(this.children);
     editorSetCurrentElement(child);
 
-    this.templateNeedUpdate(); 
+    this.templateNeedUpdate();
   }
 
   insertSiblingBefore(newSibling) {
@@ -283,6 +283,7 @@ class BaseElement extends ControlStack {
   }
   /**
    * @param {BaseElement | string} child
+   * @param {boolean} dispatchToHistory
    * @throws Если не указан IG или сам элемент
    * */
   deleteChild(child, dispatchToHistory = true) {
@@ -297,16 +298,16 @@ class BaseElement extends ControlStack {
     }
     let newChildren = this.children.filter((item, index) => {
       if (item.getId() === childId) {
-        childExist = true;   
+        childExist = true;
         if(dispatchToHistory) {
           store.dispatch(addHistoryStoreItem('DELETE', {element: child, parent: this, index}));
           item.beforeDelete();
-        } 
+        }
         return false;
       }
       return true
     });
-    if (!childExist) {
+    if (! childExist) {
       throw 'Element not Found for Delete'
     }
     this.updateChildren(newChildren);

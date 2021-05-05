@@ -3,6 +3,7 @@
 use App\Http\Requests\ApiRequest;
 use App\Role;
 use App\User;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use League\ColorExtractor\Color;
 use League\ColorExtractor\ColorExtractor;
@@ -739,6 +740,11 @@ function clearAllCache() {
     File::cleanDirectory( storage_path() . '/framework/cache/pages' );
     File::put($cachePath . '/relations.json', '{}');
   }
+  $pages = Page::all();
+  foreach($pages as $page ){
+    Cache::delete( 'areas_' . $page->id );
+  }
+
   return true;
 }
 
@@ -769,6 +775,8 @@ function clearPageCache( $page_id ) {
 
   $relations = json_encode($relations);
   File::put($cachePath . '/relations.json', $relations);
+
+  Cache::delete( 'areas_' . $page_id );
 
   return true;
 }
