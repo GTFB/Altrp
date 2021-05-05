@@ -113,7 +113,7 @@ class ElementWrapper extends Component {
      * @member {HTMLElement} target
      * @member {ElementsManger} elementsManager
      * */
-    // e.stopPropagation();`
+    e.stopPropagation();
     e.preventDefault();
     let newWidgetName = e.dataTransfer.getData("text/plain");
     if (newWidgetName) {

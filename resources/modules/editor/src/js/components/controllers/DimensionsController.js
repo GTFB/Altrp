@@ -117,6 +117,12 @@ class DimensionsController extends Component {
     if (this.state.show === false) {
       return '';
     }
+
+    if (this.props.currentElement.getName() === 'image' &&
+      this.props.controlId === "position_margin") {
+      return '';
+    }
+
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
 
     return <div className="controller-container controller-container_dimensions">
