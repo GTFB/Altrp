@@ -49,7 +49,7 @@ class ButtonWidget extends Component {
     e.persist();
     if (isEditor()) {
       e.preventDefault();
-    } else if (this.props.element.getSettings("actions", []).length) {
+    } else if (this.props.element.getResponsiveSetting("actions", null, []).length) {
       e.preventDefault();
       e.stopPropagation();
       const actionsManager = (
@@ -73,7 +73,7 @@ class ButtonWidget extends Component {
           try {
             let res = await form.submit(
               this.getModelId(),
-              this.props.element.getSettings("form_confirm")
+              this.props.element.getResponsiveSetting("form_confirm")
             );
             if (res.success) {
               let {
@@ -88,8 +88,8 @@ class ButtonWidget extends Component {
                 return this.props.history.push(redirect_after);
               }
 
-              if (this.props.element.getSettings("text_after", "")) {
-                alert(this.props.element.getSettings("text_after", ""));
+              if (this.props.element.getResponsiveSetting("text_after", null,"")) {
+                alert(this.props.element.getResponsiveSetting("text_after", null, ""));
               }
             } else if (res.message) {
               alert(res.message);
@@ -127,16 +127,16 @@ class ButtonWidget extends Component {
         e.preventDefault();
         scrollToElement(mainScrollbars, element);
       }
-    } else if (this.props.element.getSettings("hide_elements_trigger")) {
+    } else if (this.props.element.getResponsiveSetting("hide_elements_trigger")) {
       this.props.toggleTrigger(
-        this.props.element.getSettings("hide_elements_trigger")
+        this.props.element.getResponsiveSetting("hide_elements_trigger")
       );
     } else if (
       this.props.element
-        .getSettings("other_action_type", [])
+        .getResponsiveSetting("other_action_type", null,[])
         .includes("print_elements")
     ) {
-      let IDs = this.props.element.getSettings("print_elements_ids", "");
+      let IDs = this.props.element.getResponsiveSetting("print_elements_ids", null,"");
       IDs = IDs.split(",");
       let elementsToPrint = [];
       IDs.forEach(elementId => {
@@ -167,8 +167,9 @@ class ButtonWidget extends Component {
   render() {
     const { link_link = {}, advanced_tooltip: tooltip } = this.state.settings;
     const { back } = history;
-    const background_image = this.props.element.getSettings(
+    const background_image = this.props.element.getResponsiveSetting(
       "background_image",
+      null,
       {}
     );
       
@@ -181,7 +182,7 @@ class ButtonWidget extends Component {
       classes += " altrp-background-image";
     }
 
-    let buttonText = this.getContent("button_text") || "";
+    let buttonText = this.props.element.getResponsiveSetting("button_text", null, "");
     let buttonMedia = { ...this.state.settings.button_icon };
     if (this.state.pending) {
       classes += " altrp-disabled";
@@ -224,7 +225,7 @@ class ButtonWidget extends Component {
       </button>
     );
 
-    switch (this.props.element.getSettings("link_button_type", "none")) {
+    switch (this.props.element.getResponsiveSetting("link_button_type", null,"none")) {
       case "dropbar":
         button = (
           <Suspense fallback={<div>Загрузка...</div>}>
