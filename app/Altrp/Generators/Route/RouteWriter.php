@@ -22,20 +22,12 @@ class RouteWriter extends BaseFileWriter
     public function getWritableContent($data)
     {
         $stubContent = $this->getStubFileContent($this->stubFile);
-        $route = "'{$data['frontend_route']}'";
-        $viewData = $data['view_data'];
-
-        $this->replaceFrontendRoute($stubContent, $route)
-            ->replacePageAreas($stubContent, array2string($viewData['page_areas']))
-            ->replaceLazySections($stubContent, array2string($viewData['lazy_sections']))
-            ->replaceElementsList($stubContent, array2string($viewData['elements_list']))
-            ->replacePageId($stubContent, $viewData['page_id'])
-            ->replaceTitle($stubContent, $viewData['title'])
-            ->replaceRoute($stubContent, array2string($viewData['_frontend_route']))
-            ->replacePages($stubContent, array2string($viewData['pages']))
-            ->replacePreloadContent($stubContent, array2string($viewData['preload_content']))
-            ->replaceModelData($stubContent, array2string($viewData['model_data']))
-            ->replaceIsAdmin($stubContent, $viewData['is_admin']);
+        $this->replacePageId($stubContent, $data['frontend_route_id'])
+          ->replaceTitle($stubContent, $data['title'])
+          ->replaceFrontendRoute($stubContent, $data['frontend_route'])
+          ->replaceArgumentIndex($stubContent, $data['argument_index'])
+          ->replaceParams($stubContent, $data['params'])
+          ->replaceModelId($stubContent, $data['model_id']);
 
         return implode(PHP_EOL, $stubContent);
     }
@@ -43,24 +35,6 @@ class RouteWriter extends BaseFileWriter
     protected function replaceFrontendRoute(&$stubContent, $route)
     {
         $stubContent = str_replace('{{frontend_route}}', $route, $stubContent);
-        return $this;
-    }
-
-    protected function replacePageAreas(&$stubContent, $pageAreas)
-    {
-        $stubContent = str_replace('{{page_areas}}', $pageAreas, $stubContent);
-        return $this;
-    }
-
-    protected function replaceLazySections(&$stubContent, $lazySections)
-    {
-        $stubContent = str_replace('{{lazy_sections}}', $lazySections, $stubContent);
-        return $this;
-    }
-
-    protected function replaceElementsList(&$stubContent, $elementsList)
-    {
-        $stubContent = str_replace('{{elements_list}}', $elementsList, $stubContent);
         return $this;
     }
 
@@ -76,33 +50,21 @@ class RouteWriter extends BaseFileWriter
         return $this;
     }
 
-    protected function replaceRoute(&$stubContent, $route)
+    protected function replaceParams(&$stubContent, $params)
     {
-        $stubContent = str_replace('{{_frontend_route}}', $route, $stubContent);
+        $stubContent = str_replace('{{params}}', $params, $stubContent);
         return $this;
     }
 
-    protected function replacePages(&$stubContent, $pages)
+    protected function replaceArgumentIndex(&$stubContent, $argIndex)
     {
-        $stubContent = str_replace('{{pages}}', $pages, $stubContent);
+        $stubContent = str_replace('{{argument_index}}', $argIndex, $stubContent);
         return $this;
     }
 
-    protected function replacePreloadContent(&$stubContent, $preloadContent)
+    protected function replaceModelId(&$stubContent, $modelId)
     {
-        $stubContent = str_replace('{{preload_content}}', $preloadContent, $stubContent);
-        return $this;
-    }
-
-    protected function replaceIsAdmin(&$stubContent, $isAdmin)
-    {
-        $stubContent = str_replace('{{is_admin}}', $isAdmin, $stubContent);
-        return $this;
-    }
-
-    protected function replaceModelData(&$stubContent, $modelData)
-    {
-        $stubContent = str_replace('{{model_data}}', $modelData, $stubContent);
+        $stubContent = str_replace('{{model_id}}', $modelId, $stubContent);
         return $this;
     }
 }

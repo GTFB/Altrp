@@ -451,7 +451,20 @@ Route::view('/admin/{path?}', 'admin')
  * Frontend
  */
 
-
+Route::get('/', function () {
+  return view('front-app', [
+    'elements_list' => json_encode( [] ),
+    'title' => 'Main',
+    'page_id' => 'null',
+    '_frontend_route' => [],
+    'preload_content' => [],
+    'page_areas' => '[]',
+    'lazy_sections' => '[]',
+    'pages'=>Page::get_pages_for_frontend( true ),
+    'model_data' => null,
+    'is_admin' => isAdmin(),
+  ]);
+})->middleware(['web', 'installation.checker']);
 
 /**
  * Reports
