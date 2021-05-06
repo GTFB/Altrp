@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
-import { dimensionsControllerToStyles, backgroundColorControllerToStyles, gradientControllerToStyles } from "../../../../../../front-app/src/js/helpers/styles";
+import { dimensionsControllerToStyles, backgroundColorControllerToStyles, gradientControllerToStyles, filtersControllerToStyles } from "../../../../../../front-app/src/js/helpers/styles";
 
 export default styled.div`
 && .altrp-image-container{
@@ -29,7 +29,14 @@ ${props=>{
     styles += gradientControllerToStyles(gradient);
   }
 
+  const filters = getResponsiveSetting(settings, 'image_style_text_shadow')
+
+  if (filters) {
+    styles += filtersControllerToStyles(filters);
+  }
+
   return styles;
 }
 }
 `;
+

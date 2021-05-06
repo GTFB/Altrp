@@ -352,11 +352,11 @@ class Image extends BaseElement {
         saturate: 100,
         hue: 0,
       },
-      rules: {
-        '{{ELEMENT}} .altrp-image{{STATE}}': [
-          'filter: blur({{BLUR}}px)  brightness({{BRIGHTNESS}}%) contrast({{CONTRAST}}%) saturate({{SATURATE}}%) hue-rotate({{HUE}}deg);'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-image{{STATE}}': [
+      //     'filter: blur({{BLUR}}px)  brightness({{BRIGHTNESS}}%) contrast({{CONTRAST}}%) saturate({{SATURATE}}%) hue-rotate({{HUE}}deg);'
+      //   ],
+      // },
     });
     this.addControl('image_style_alignment', {
       type: CONTROLLER_CHOOSE,

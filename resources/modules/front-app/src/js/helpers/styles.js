@@ -131,6 +131,24 @@ export function gradientControllerToStyles(data) {
 }
 
 /**
+ * Преобразует объект, который сохраняет контроллер Filters, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
+
+export function filtersControllerToStyles(data) {
+  let styles = '';
+  if (_.isEmpty(data)) {
+    return styles;
+  }
+
+  let { blur, brightness, contrast, hue, saturate } = data;
+
+  return `& .altrp-image {filter: blur(${blur}px) brightness(${brightness}%) contrast(${contrast}%) saturate(${saturate}%) hue-rotate(${hue}deg);} `;
+
+}
+
+/**
  * Преобразует объект, который сохраняет контроллер typographic, в строку css для вставки в styled-компонент
  * @param {{}} data
  * @return {string}
