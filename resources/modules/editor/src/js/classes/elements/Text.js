@@ -232,18 +232,18 @@ class Text extends BaseElement {
       //   family: "Open Sans",
       //   decoration: ""
       // },
-      rules: {
-        "{{ELEMENT}} .altrp-text{{STATE}}": [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          "font-size: {{SIZE}}px;",
-          "line-height: {{LINEHEIGHT}};",
-          "letter-spacing: {{SPACING}}px",
-          "font-weight: {{WEIGHT}}",
-          "text-transform: {{TRANSFORM}}",
-          "font-style: {{STYLE}}",
-          "text-decoration: {{DECORATION}}"
-        ]
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-text{{STATE}}": [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     "font-size: {{SIZE}}px;",
+      //     "line-height: {{LINEHEIGHT}};",
+      //     "letter-spacing: {{SPACING}}px",
+      //     "font-weight: {{WEIGHT}}",
+      //     "text-transform: {{TRANSFORM}}",
+      //     "font-style: {{STYLE}}",
+      //     "text-decoration: {{DECORATION}}"
+      //   ]
+      // }
     });
 
     this.addControl("text_style_font_color", {

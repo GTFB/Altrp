@@ -158,6 +158,7 @@ export function typographicControllerToStyles(data = {}){
   if(_.isEmpty(data)){
     return styles;
   }
+
   const {
     family,
     size,
@@ -168,6 +169,7 @@ export function typographicControllerToStyles(data = {}){
     weight,
     decoration,
     sizeUnit,
+    lineHeightUnit,
   } = data;
   if(decoration){
     styles += `text-decoration:${decoration};`;
@@ -176,10 +178,10 @@ export function typographicControllerToStyles(data = {}){
     styles += `text-transform:${transform};`;
   }
   if(spacing){
-    styles += `letter-spacing:${spacing};`;
+    styles += `letter-spacing:${spacing}px;`;
   }
   if(lineHeight){
-    styles += `line-height:${lineHeight};`;
+    styles += `line-height:${lineHeightUnit ? (lineHeight + lineHeightUnit) : lineHeight};`;
   }
   if(weight){
     styles += `font-weight:${weight};`;

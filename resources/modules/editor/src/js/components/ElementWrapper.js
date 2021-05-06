@@ -24,6 +24,7 @@ import CarouselComponent from "./widgets/styled-components/CarouselComponent";
 import GalleryCompnent from "./widgets/styled-components/GalleryComponent";
 import ImageComponent from "./widgets/styled-components/ImageComponent";
 import ButtonComponent from "./widgets/styled-components/ButtonComponent";
+import TextComponent from "./widgets/styled-components/TextComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -377,6 +378,10 @@ class ElementWrapper extends Component {
         break;
       case "button": {
         WrapperComponent = ButtonComponent;
+      }
+        break;
+      case "text": {
+        WrapperComponent = TextComponent;
       }
         break;
     }
