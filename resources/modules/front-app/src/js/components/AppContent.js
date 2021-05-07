@@ -2,10 +2,10 @@
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import RouteContent from "./RouteContent";
-import Styles from "../../../../editor/src/js/components/Styles";
+// import Styles from "../../../../editor/src/js/components/Styles";
 import {isAltrpTestMode} from "../helpers";
 import EmailTemplatesRenderer from "./EmailTemplatesRenderer";
-
+const Styles = React.lazy(()=>import("../../../../editor/src/js/components/Styles"))
 class AppContent extends Component {
   constructor(props) {
     super(props);
@@ -34,7 +34,9 @@ class AppContent extends Component {
             ))}
           </Switch>
         </div>
-        <Styles />
+        <React.Suspense fallback={''}>
+          <Styles />
+        </React.Suspense>
       </Router>
     );
   }

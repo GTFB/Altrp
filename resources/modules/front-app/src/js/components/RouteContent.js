@@ -187,6 +187,7 @@ class RouteContent extends Component {
             />
           )}{" "}
         </Suspense>
+
         <Scrollbars
           className="main-content"
           universal={true}
@@ -206,9 +207,8 @@ class RouteContent extends Component {
             );
           }}
         >
-
           <RouteContentWrapper className="route-content" id="route-content">
-            {this.state.areas.map(area => {
+            {this.state.areas.map((area, idx) => {
               return (
                 <AreaComponent
                   {...area}

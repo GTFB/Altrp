@@ -102,7 +102,7 @@ app.post("/", (req, res) => {
   let page = json.page || [];
   let page_id = json.page_id || '';
   let page_model = json.page_model || {};
-  delete page[3];
+  // delete page[3];
   global.altrp = json.altrp || {};
   // global.window.altrpImageLazy = json.altrpImageLazy || 'none';
   // global.window.altrpSkeletonColor = json.altrpSkeletonColor || '#ccc';
@@ -125,14 +125,14 @@ app.post("/", (req, res) => {
     elementId: element.getId(),
   }));
   const app = ReactDOMServer.renderToString(sheet.collectStyles(
-    <Provider store={window.appStore}>
-      <div className={`front-app-content`}>
+    <Provider store={window.appStore}><div className={`front-app-content `}>
         <StaticRouter>
           <RouteContentWrapper
             className="route-content"
             id="route-content"
           >
-            {page.map(area => {
+            {page.map((area, idx) => {
+
               return (
                 <AreaComponent
                   {...area}
@@ -151,6 +151,7 @@ app.post("/", (req, res) => {
     ));
 
   const styleTags = sheet.getStyleTags()
+  // sheet.seal();
   const result = {
     important_styles: unEntity(styleTags),
     content:  unEntity(app),

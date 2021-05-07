@@ -666,9 +666,9 @@ class Page extends Model
       'content' => '',
       'important_styles' => '',
     ];
-    if (1) {
-      return $result;
-    }
+//    if (1) {
+//      return $result;
+//    }
     if ( ! $page_id ) {
       return $result;
     }
@@ -680,6 +680,43 @@ class Page extends Model
     if (!$page->allowedForUser()) {
       return $result;
     }
+    $client = new Client(['base_uri' => "http://localhost:9000/"]);
+    try {
+      $test_result = $client->request('GET')->getStatusCode();
+      if( $test_result === 200 ) {
+
+      $postExpress = new Client([
+          'base_uri' => "http://localhost:9000/",
+          'defaults' => [
+              'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+          ]
+      ]);
+      $postResult = $postExpress->request('POST', '', [
+        'form_params' => [
+          'json' =>
+            json_encode(
+            [
+              'page' => static::get_areas_for_page( $page_id ),
+              'page_id' => $page_id,
+              'altrp' => [
+                'version' => getCurrentVersion()
+                ],
+              'altrpImageLazy'=> get_altrp_setting( 'altrp_image_lazy', 'none' ),
+              'altrpSkeletonColor'=> get_altrp_setting( 'altrp_skeleton_color', '#ccc' ),
+              'altrpSkeletonHighlightColor'=> get_altrp_setting( 'altrp_skeleton_highlight_color', '#d0d0d0' ),
+            ]
+          ),
+
+        ]
+      ]);
+      $result = $postResult->getBody()->getContents();
+      $result = json_decode( $result, true );
+      return $result;
+      }
+    } catch (\Exception $e){
+        logger( $e );
+    }
+
     $areas = Area::all()->filter(function (Area $area) {
       return !in_array($area->name,  Area::NOT_CONTENT_AREAS);
     })->map(function (Area $area) {
@@ -709,46 +746,6 @@ class Page extends Model
       $templates[] = $template;
     }
     $important_styles = [];
-    $client = new Client(['base_uri' => "http://localhost:9000/"]);
-    try {
-      $test_result = $client->request('GET')->getStatusCode();
-      if( $test_result === 200 ) {
-
-      $postExpress = new Client([
-          'base_uri' => "http://localhost:9000/",
-          'defaults' => [
-              'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
-          ]
-      ]);
-      $postResult = $postExpress->request('POST', '', [
-        'form_params' => [
-          'json' =>
-            json_encode(
-            [
-              'page' => static::get_areas_for_page($page_id),
-              'page_id' => $page_id,
-              'altrp' => [
-                'version' => getCurrentVersion()
-                ],
-              'altrpImageLazy'=> get_altrp_setting( 'altrp_image_lazy', 'none' ),
-              'altrpSkeletonColor'=> get_altrp_setting( 'altrp_skeleton_color', '#ccc' ),
-              'altrpSkeletonHighlightColor'=> get_altrp_setting( 'altrp_skeleton_highlight_color', '#d0d0d0' ),
-            ]
-          ),
-
-        ]
-      ]);
-//        dd($postResult->getBody()->getContents());
-      $result = $postResult->getBody()->getContents();
-      $result = json_decode($result, true);
-
-      return $result;
-      }
-    } catch (\Exception $e){
-//        dd($e);
-        logger( $e->getMessage() );
-    }
-
     ob_start();
 ?>
     <div class="front-app-content front-app-content_preloaded">

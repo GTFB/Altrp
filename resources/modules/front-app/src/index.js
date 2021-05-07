@@ -64,7 +64,8 @@ function loadingCallback(){
       && window.ElementWrapper
       && window.formsManager
   ){
-    ReactDOM.render(<FrontApp />, document.getElementById('front-app'));
+    ReactDOM.hydrate(<FrontApp />, document.getElementById('front-app'));
+    // ReactDOM.render(<FrontApp />, document.getElementById('front-app'));
   }
 }
 // import ReactDOM from 'react-dom';

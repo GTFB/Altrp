@@ -53,7 +53,7 @@ class AreaComponent extends Component {
     /**
      * Если шаблон привязанный к странице удалили, то ничего не отрисовываем
      */
-    if (!this.props.template.data) {
+    if (! this.props?.template?.data) {
       return <div className={classes.join(" ")} />;
     }
     let rootElement = this.rootElement
