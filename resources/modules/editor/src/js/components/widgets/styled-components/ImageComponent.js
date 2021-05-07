@@ -3,7 +3,7 @@ import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
 import { dimensionsControllerToStyles, backgroundColorControllerToStyles, gradientControllerToStyles, filtersControllerToStyles } from "../../../../../../front-app/src/js/helpers/styles";
 
 export default styled.div`
-&& .altrp-image-container{
+
 ${props=>{
   const {settings} = props;
   let styles = '';
@@ -21,6 +21,12 @@ ${props=>{
 
   if (background_color) {
     styles += backgroundColorControllerToStyles(background_color);
+  }
+
+  const background_color_hover = getResponsiveSetting(settings, 'background_color_:hover_')
+
+  if (background_color_hover) {
+    styles += backgroundColorControllerToStyles(background_color_hover, 'hover');
   }
 
   const gradient = getResponsiveSetting(settings, 'gradient');

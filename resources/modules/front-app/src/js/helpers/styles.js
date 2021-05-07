@@ -104,7 +104,7 @@ export function shadowControllerToStyles(data) {
  * @param {{}} data
  * @return {string}
  */
-export function backgroundColorControllerToStyles(data) {
+export function backgroundColorControllerToStyles(data, pseudoClass) {
   let styles = '';
   if (_.isEmpty(data)) {
     return styles;
@@ -112,8 +112,16 @@ export function backgroundColorControllerToStyles(data) {
 
   if (data) {
     let { colorPickedHex } = data;
+
+    if (pseudoClass !== undefined) {
+      return `&:${pseudoClass} {background-color: ${colorPickedHex};} `;
+    }
+
     return `background-color: ${colorPickedHex}; `;
+
   }
+
+  return styles;
 }
 
 export function gradientControllerToStyles(data) {
@@ -124,10 +132,11 @@ export function gradientControllerToStyles(data) {
 
   if (data.isWithGradient) {
     let { angle, firstColor, firstPoint, secondColor, secondPoint } = data;
+
     return `background-image: linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%); `;
-  } else {
-    return ''
   }
+
+  return styles;
 }
 
 /**

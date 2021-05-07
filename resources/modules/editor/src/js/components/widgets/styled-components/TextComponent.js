@@ -1,4 +1,3 @@
-import { CloudSleet } from 'react-bootstrap-icons';
 import styled from 'styled-components';
 import { getResponsiveSetting } from "../../../../../../front-app/src/js/helpers";
 import { typographicControllerToStyles } from "../../../../../../front-app/src/js/helpers/styles";
