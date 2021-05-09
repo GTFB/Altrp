@@ -15,6 +15,7 @@
         "ts-compile": "tsc",
         "front-build": "webpack --config webpack.front.prod.js",
         "editor-build": "webpack --config webpack.editor.prod.js",
+        "server-build": "webpack --config webpack.server.js",
         "admin-build": "webpack --config webpack.admin.prod.js",
         "reports-build": "webpack --config webpack.reports.prod.js",
         "robots-build": "webpack --config webpack.robots.prod.js",
@@ -195,6 +196,7 @@
         "webpack": "4.42.0",
         "webpack-cli": "^3.3.12",
         "webpack-dev-server": "^3.10.3",
-        "webpack-merge": "^4.2.2"
+        "webpack-merge": "^4.2.2",
+        "webpack-node-externals": "^3.0.0"
     }
 }

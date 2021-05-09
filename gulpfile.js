@@ -49,7 +49,6 @@ const excludes = [
   '!./webpack.reports.dev.js',
   '!./webpack.reports.prod.js',
   '!./webpack.mix.js',
-  '!./package.json',
   '!./package-lock.json',
   '!./.env',
   '!./.babelrc',

@@ -96,8 +96,6 @@ function renderHTML(req, res, data, component, page, store) {
 app.post("/", (req, res) => {
 
   const store = window.appStore;
-  const preloadedState = store.getState();
-  const body = req.body;
   let json = JSON.parse(req.body.json) || [];
   let page = json.page || [];
   let page_id = json.page_id || '';

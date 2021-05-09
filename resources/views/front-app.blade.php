@@ -105,8 +105,14 @@
 {{--    {!! $preload_content[ 'important_styles'] !!}--}}
   @endif
 </head>
-<body class="front-app-body">
-<div id="front-app" class="front-app {{ $is_admin ? 'front-app_admin' : '' }}">{!! isset( $preload_content[ 'content'] ) ? $preload_content[ 'content']  : ''!!}</div>
+<body class="front-app-body" style="overflow:auto;">
+
+<div id="front-app" style="display:none" class="front-app {{ $is_admin ? 'front-app_admin' : '' }}">
+{{--  {!! isset( $preload_content[ 'content'] ) ? $preload_content[ 'content']  : ''!!}--}}
+</div>
+<div id="front-app-server" class="front-app {{ $is_admin ? 'front-app_admin' : '' }}">
+  {!! isset( $preload_content[ 'content'] ) ? $preload_content[ 'content']  : ''!!}
+</div>
 {{--  {!! isset( $preload_content[ 'content'] ) ? $preload_content['content'] : ''!!}--}}
 {{--<div id="front-app" class="front-app-content_preloaded">--}}
 {{--</div>--}}

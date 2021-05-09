@@ -188,25 +188,25 @@ class RouteContent extends Component {
           )}{" "}
         </Suspense>
 
-        <Scrollbars
-          className="main-content"
-          universal={true}
-          ref={this.scrollbar}
-          onUpdate={this.props.setScrollValue}
-          // style={{ zIndex: 99999 }}
-          autoHide
-          autoHideTimeout={500}
-          autoHideDuration={200}
-          renderTrackVertical={({ style, ...props }) => {
-            return (
-              <div
-                className="altrp-scroll__vertical-track"
-                style={style}
-                {...props}
-              />
-            );
-          }}
-        >
+        {/*<Scrollbars*/}
+        {/*  className="main-content"*/}
+        {/*  universal={true}*/}
+        {/*  ref={this.scrollbar}*/}
+        {/*  onUpdate={this.props.setScrollValue}*/}
+        {/*  // style={{ zIndex: 99999 }}*/}
+        {/*  autoHide*/}
+        {/*  autoHideTimeout={500}*/}
+        {/*  autoHideDuration={200}*/}
+        {/*  renderTrackVertical={({ style, ...props }) => {*/}
+        {/*    return (*/}
+        {/*      <div*/}
+        {/*        className="altrp-scroll__vertical-track"*/}
+        {/*        style={style}*/}
+        {/*        {...props}*/}
+        {/*      />*/}
+        {/*    );*/}
+        {/*  }}*/}
+        {/*>*/}
           <RouteContentWrapper className="route-content" id="route-content">
             {this.state.areas.map((area, idx) => {
               return (
@@ -220,7 +220,7 @@ class RouteContent extends Component {
               );
             })}
           </RouteContentWrapper>
-        </Scrollbars>
+        {/*</Scrollbars>*/}
       </React.Fragment>
     );
   }
