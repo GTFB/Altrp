@@ -1,4 +1,4 @@
-export default class FrontElementsManager {
+class FrontElementsManager {
   constructor() {
     //список компонентов
 
@@ -257,11 +257,24 @@ export default class FrontElementsManager {
   }
 
   /**
+   * Загружаем все компоненты
+   * @return {Promise<void>}
+   */
+  async loadAllComponents() {
+
+    const componentsToLoad = this.ELEMENTS.map(async el => {
+      this.components[el.name] = (
+        await el.import(/* webpackChunkName: 'FrontElementsFabric' */)
+      ).default;
+    });
+    await Promise.all(componentsToLoad);
+  }
+  /**
    * Загружаем оставшиеся компоненты
    * @return {Promise<void>}
    */
   async loadNotUsedComponent() {
-    if (!window.altrpElementsLists) {
+    if (! window.altrpElementsLists) {
       return;
     }
     let componentsToLoad = this.ELEMENTS.filter(el => {
@@ -298,7 +311,8 @@ export default class FrontElementsManager {
   }
 
   checkElementExists(elementName) {
-    return !!this.components[elementName];
+    return ! ! this.components[elementName];
   }
 }
 window.frontElementsManager = new FrontElementsManager();
+export default window.frontElementsManager;

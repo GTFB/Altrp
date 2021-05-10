@@ -27,7 +27,6 @@ class DataStorageUpdater extends AltrpModel {
    *  @param {boolean} initialUpdate
    */
   async updateCurrent(dataSources = null, initialUpdate = true) {
-    console.log(dataSources);
     if(appStore.getState().currentUser.isEmpty()){
       let currentUser = await new Resource({ route: "/ajax/current-user" }).getAll();
       currentUser = currentUser.data;

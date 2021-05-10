@@ -70,8 +70,12 @@ function loadingCallback(){
         window.removeEventListener('mouseover', renderAltrp);
       });
     }
-    window.addEventListener('mouseover', renderAltrp);
-    window.addEventListener('touchstart', renderAltrp);
+    if(window.ALTRP_LOAD_BY_USER){
+      window.addEventListener('mouseover', renderAltrp);
+      window.addEventListener('touchstart', renderAltrp);
+    } else {
+      renderAltrp();
+    }
   }
 }
 // import ReactDOM from 'react-dom';

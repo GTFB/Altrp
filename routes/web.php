@@ -514,6 +514,9 @@ foreach ( $frontend_routes as $_frontend_route ) {
     }
 
     $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
+    if( $model_data ){
+      $preload_content['content'] = replaceContentWithData( $preload_content['content'], $model_data );
+    }
 
     $page_areas = Page::get_areas_for_page( $_frontend_route['id'] );
     $lazy_sections = [];

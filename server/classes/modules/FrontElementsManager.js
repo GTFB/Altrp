@@ -35,35 +35,35 @@ class FrontElementsManager {
     this.components["heading"] = HeadingWidget;
     this.components["section"] = SectionComponent;
     this.components["column"] = ColumnComponent;
-    this.components["input"] = InputWidget;
+    // this.components["input"] = InputWidget;
     this.components["button"] = ButtonWidget;
     this.components["text"] = TextWidget;
     this.components["image"] = ImageWidget;
     this.components["table"] = TableWidget;
     this.components["posts"] = PostsWidget;
-    this.components["nav"] = NavWidget;
+    // this.components["nav"] = NavWidget;
     this.components["divider"] = DividerWidget;
     this.components["tabs"] = TabsWidget;
     this.components["poster"] = PosterWidget;
     this.components["list"] = ListWidget;
     this.components["accordion"] = AccordionWidget;
     this.components["carousel"] = CarouselWidget;
-    this.components["map"] = MapWidget;
-    this.components["map_builder"] = MapConstructorWidget;
-    this.components["diagram"] = DiagramWidget;
-    this.components["dashboards"] = DashboardsWidget;
+    // this.components["map"] = MapWidget;
+    // this.components["map_builder"] = MapConstructorWidget;
+    // this.components["diagram"] = DiagramWidget;
+    // this.components["dashboards"] = DashboardsWidget;
     // this.components["tour"] = TourGuide;
-    this.components["icon"] = IconWidget;
-    this.components["export"] = ExportPanelWindget;
+    // this.components["icon"] = IconWidget;
+    // this.components["export"] = ExportPanelWindget;
     this.components["html"] = HtmlWidget;
-    this.components["template"] = TemplateWidget;
-    this.components["gallery"] = GalleryWidget
+    // this.components["template"] = TemplateWidget;
+    // this.components["gallery"] = GalleryWidget
     this.components["video"] = VideoWidget;
   }
 
   getComponentClass(name) {
     if (!this.components[name]) {
-      throw "Не найден компонент с именем " + name;
+      console.error( "Не найден компонент с именем " + name);
     }
     return this.components[name];
   }

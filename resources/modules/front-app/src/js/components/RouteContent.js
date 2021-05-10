@@ -229,14 +229,14 @@ class RouteContent extends Component {
 const mapStateToProps = state => ({
   currentUser: state.currentUser
 });
-
-const mapDispatchToProps = dispatch => {
-  return {
-    setScrollValue: topPosition => dispatch(setScrollValue(topPosition))
-  };
-};
+//
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     setScrollValue: topPosition => dispatch(setScrollValue(topPosition))
+//   };
+// };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  // mapDispatchToProps
 )(withRouter(RouteContent));

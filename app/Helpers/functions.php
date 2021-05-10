@@ -1004,3 +1004,24 @@ function getCurrentUser(): array
   $user['permissions'] = Auth::user()->permissions;
   return $user;
 }
+
+/**
+ * Заменяет в тексте конструкции типа {{path_to_data...}} на данные
+ * @param string $content
+ * @param array | null $modelContext
+ * @return string
+ */
+function replaceContentWithData( $content, $modelContext = null ){
+  if( ! $modelContext ){
+    return $content;
+  }
+  is_string( $content ) ? preg_match_all( '/{{([\s\S]+?)(?=}})/', $content, $path ) : null;
+  if( ! isset( $path ) || ! isset( $path[1] )){
+    return $content;
+  }
+  foreach ($path[1] as $item) {
+    $value = data_get( $modelContext, $item, '');
+    $content = str_replace( '{{' . $item . '}}', $value, $content );
+  }
+  return $content;
+}
