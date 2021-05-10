@@ -14,5 +14,6 @@ class DatabaseSeeder extends Seeder
         // $this->call(UsersTableSeeder::class);
         $this->call(AltrpTablesTableSeeder::class);
         $this->call(AltrpModelsTableSeeder::class);
+        $this->call(PagesSeeder::class);
     }
 }

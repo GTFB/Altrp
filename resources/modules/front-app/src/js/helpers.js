@@ -1014,8 +1014,6 @@ export function scrollToElement(scrollbars, element) {
   let { container } = scrollbars;
   if(scrollbars instanceof HTMLElement){
     container = scrollbars;
-    console.log(element);
-    console.log(scrollbars);
     let scroll = getOffsetTopInElement(element, scrollbars);
     if(scroll){
       scrollbars.scrollTop =scroll;

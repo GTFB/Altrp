@@ -39,6 +39,7 @@ _ide_helper.php
 /routes/AltrpApiRoutes.php
 /routes/AltrpCustomRoutes.php
 /routes/AltrpChannels.php
+/routes/page_routes.php
 /out
 /app/Http/Requests/AltrpRequests
 /app/Plugins/*/

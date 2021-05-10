@@ -13,7 +13,7 @@ abstract class BaseFileWriter
 
     public function getStubFile($filename)
     {
-        return app_path($filename);
+
     }
 
     /**
@@ -23,7 +23,7 @@ abstract class BaseFileWriter
      * @param $content
      * @return bool|int
      */
-    protected function writeToFile($file, $content)
+    public function writeToFile($file, $content)
     {
         $path = explode('/', $file);
         array_pop($path);

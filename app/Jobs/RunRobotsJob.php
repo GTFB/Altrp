@@ -62,6 +62,6 @@ class RunRobotsJob implements ShouldQueue
      */
     public function failed(\Exception $exception)
     {
-        dump($exception);
+        \Log::info($exception);
     }
 }
