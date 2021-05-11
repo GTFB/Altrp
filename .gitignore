@@ -3,6 +3,7 @@ launch.json
 /node_modules
 /public/hot
 /public/storage
+/server-dist
 /storage/*.key
 /vendor
 .env
@@ -38,12 +39,14 @@ _ide_helper.php
 /routes/AltrpApiRoutes.php
 /routes/AltrpCustomRoutes.php
 /routes/AltrpChannels.php
+/routes/page_routes.php
 /out
 /app/Http/Requests/AltrpRequests
 /app/Plugins/*/
 /Modules/*/
 /app/Plugins/plugins.json
 public/modules/
+/config/telebot.php
 =======
 
 #bundles

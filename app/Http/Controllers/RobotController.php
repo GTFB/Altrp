@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Altrp\Generators\Schedule\ScheduleFileWriter;
 use App\Altrp\Robot;
+use App\Helpers\Classes\CurrentEnvironment;
+use App\Jobs\RunRobotsJob;
 use App\Services\Robots\RobotsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+
 
 class RobotController extends Controller
 {
+    use DispatchesJobs;
+
     /**
      * @var RobotsService
      */
@@ -70,11 +77,16 @@ class RobotController extends Controller
      */
     public function update(Robot $robot, Request $request)
     {
+        if (isset($request->power)){
+            $robot->enabled = $robot->enabled ? 0 : 1;
+            $result = $robot->save();
+            return \response()->json(['success' => $result], $result ? 200 : 500);
+        }
+
         $data = $request->data;
 
         $sources = isset($request->sources) ? json_decode(collect($request->sources)->toJson()) : [];
 
-//        dd(json_decode($sources->toJson()));
         $sourceIds = [];
         $sourceParams = [];
 
@@ -93,6 +105,23 @@ class RobotController extends Controller
         }
 
         $result = $robot->update($data);
+
+        $writer = new ScheduleFileWriter(app_path('Console/Kernel.php'));
+        $command = 'robot:run ' . $robot->id;
+        if ($writer->scheduleExists($command)) {
+            $writer->removeSchedule($command);
+        }
+
+        if ($data['start_condition'] == 'cron') {
+            $config = is_string($data['start_config'])
+                ? json_decode($data['start_config'])
+                : json_decode(json_encode($data['start_config']));
+            $writer->write(
+                'robot:run ' . $robot->id,
+                $config->period,
+                $config->restrictions
+            );
+        }
 
         return \response()->json(['success' => $result], $result ? 200 : 500);
     }
@@ -140,8 +169,17 @@ class RobotController extends Controller
             ['id', $robot_id],
             ['start_condition', 'action']
         ])->first();
+
+
         if ($robot && $robot->enabled) {
-            $result = $this->robotsService->initRobot($robot)->runRobot();
+//            $result = $this->robotsService->initRobot($robot)->runRobot();
+            $result = $this->dispatch(new RunRobotsJob(
+                [$robot],
+                $this->robotsService,
+                [],
+                'action',
+                CurrentEnvironment::getInstance()
+            ));
             return response()->json(['success' => $result], $result ? 200 : 500);
         }
         return response()->json(['success' => false], 404);

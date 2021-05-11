@@ -1,32 +1,33 @@
+import React, { Component } from "react";
 import FrontPopup from "./FrontPopup";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 
 class AreaComponent extends Component {
-
-  constructor(props){
+  constructor(props) {
     super(props);
-    console.log('AreaComponent: ', performance.now());
-
+    // console.log("AreaComponent: ", performance.now());
   }
   componentWillUnmount() {
-
     /**
      * Перенесем все секции для ленивой подгрузки в хранилище страниц (текущая стрнаца)
      */
-    if( _.isArray(window.lazySections)){
-      for(let pageId in window.pageStorage){
-        if(window.pageStorage.hasOwnProperty(pageId) ){
-          let page = window.pageStorage[pageId];
+    // if( _.isArray(window.lazySections)){
+    //   if(window.pageStorage.hasOwnProperty(page_id) ){
+    //     let page = window.pageStorage[page_id];
+    //
+    //     window.lazySections.forEach(section => {
+    //       let area = page.areas.find(area => area.id === section.area_name);
+    //       if(area){
+    //         section.element.lazySection = true;
+    //         area.template.data.children.push(section.element)
+    //       }
+    //     });
+    //   }
+    //   window.lazySections = null;
+    // }
 
-          window.lazySections.forEach(section => {
-            let area = page.areas.find(area => area.id === section.area_name);
-            if(area){
-              area.template.data.children.push(section.element)
-            }
-          });
-        }
-      }
-      window.lazySections = null;
+    if (window.pageUpdater) {
+      window.pageUpdater.startUpdating();
     }
     window.stylesModule.removeStyleById(this.rootElement?.id);
   }
@@ -36,13 +37,14 @@ class AreaComponent extends Component {
     /**
      * Если это попап
      */
-    if (this.props.area.getTemplates().length) {
-      let popus =  (
+    if (
+      typeof this.props.area.getTemplates !== "undefined" &&
+      this.props.area.getTemplates().length
+    ) {
+      let popus = (
         <div className={classes.join(" ")}>
           {this.props.area.getTemplates().map(template => {
-            return (
-              <FrontPopup key={template.id} template={template} />
-            )
+            return <FrontPopup key={template.id} template={template} />;
           })}
         </div>
       );
@@ -51,23 +53,34 @@ class AreaComponent extends Component {
     /**
      * Если шаблон привязанный к странице удалили, то ничего не отрисовываем
      */
-    if (! this.props.template.data) {
+    if (! this.props?.template?.data) {
       return <div className={classes.join(" ")} />;
     }
-    let rootElement = this.rootElement ? this.rootElement : window.frontElementsFabric.parseData(
-      this.props.template.data,
-      null,
-      this.props.page,
-      this.props.models
-    );
+    if(this.props.id === 'footer'){
+      this.props.template.data.lastElement = true;
+    }
+    let rootElement = this.rootElement
+      ? this.rootElement
+      : window.frontElementsFabric.parseData(
+          this.props.template.data,
+          null,
+          this.props.page,
+          this.props.models
+        );
     this.rootElement = rootElement;
     window[`${this.props.id}_root_element`] = this.rootElement;
-    console.log();
-    let template =  (
+    if (this.props.scrollPosition.top > 0) {
+      this.rootElement.children.forEach(section => {
+        section.lazySection = false;
+      });
+    }
+    let { children } = this.rootElement;
+    children = children.filter(child => ! child.lazySection);
+    let template = (
       <div className={classes.join(" ")}>
         {React.createElement(this.rootElement.componentClass, {
           element: this.rootElement,
-          children: this.rootElement.children
+          children
         })}
       </div>
     );
@@ -77,7 +90,7 @@ class AreaComponent extends Component {
 
 function mapStateToProps(state) {
   return {
-    scrollPosition: state.scrollPosition,
+    scrollPosition: state.scrollPosition
   };
 }
 

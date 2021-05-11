@@ -20,3 +20,27 @@ export async function updateWidgetInCache(widgetContent, widgetId){
     return;
   }
 }
+
+/**
+ * отрисовать все секции
+ */
+export function loadLazySections(){
+  let rootElement = window.header_root_element;
+  if(rootElement){
+    rootElement.children.forEach(section => {
+      section.lazySection = false;
+    });
+  }
+  rootElement = window.content_root_element;
+  if(rootElement){
+    rootElement.children.forEach(section => {
+      section.lazySection = false;
+    });
+  }
+  rootElement = window.footer_root_element;
+  if(rootElement){
+    rootElement.children.forEach(section => {
+      section.lazySection = false;
+    });
+  }
+}

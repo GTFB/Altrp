@@ -1,11 +1,16 @@
 <?php
 
 use App\Http\Requests\ApiRequest;
+use App\Role;
 use App\User;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use League\ColorExtractor\Color;
 use League\ColorExtractor\ColorExtractor;
 use League\ColorExtractor\Palette;
+use App\Page;
+use Illuminate\Support\Facades\Auth;
+use App\Altrp\Facades\CacheService;
 
 /**
  * Get the script possible URL base
@@ -305,7 +310,9 @@ function altrp_asset( $path, $domain = 'http://localhost:3002/' )
   } catch ( Exception $e ) {
     return asset( $path ) . '?' . env( 'APP_VERSION' );
   }
-
+  if( $domain === 'http://localhost:3001/' ){
+    return $domain . 'src/bundle.front-app.js';
+  }
   return $domain . 'src/bundle.js';
 }
 
@@ -535,13 +542,15 @@ function setDynamicData($template, $data)
  * @return boolean
  * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
  */
-function saveCache( $html) {
+function saveCache( $html, $page_id ) {
 
-  if (!$html) {
+  if ( ! $html ) {
     return false;
   }
   $url = $_SERVER['REQUEST_URI'];
-//  $html = minificationHTML($html);
+
+  // $html = minificationHTML($html);
+  // $html = minifyHTML($html);
   $hash = md5($url . $html);
 
   $cachePath = storage_path() . '/framework/cache/pages';
@@ -560,31 +569,10 @@ function saveCache( $html) {
     $relations = [];
   }
 
-  $roles = [];
-  if (Auth::user()) {
-    $roles = Auth::user()->getUserRoles();
-  }
-  $plainRoles = implode(",", $roles);
-
-  $encryption_key = getenv('APP_KEY');
-  $iv_size = 16; // 128 bits
-  $iv = openssl_random_pseudo_bytes($iv_size, $strong);
-
-  $cipherRoles = openssl_encrypt(
-      $plainRoles,
-      'AES-256-CBC',
-      $encryption_key,
-      0,
-      $iv
-  );
-
-  setcookie("roles", $cipherRoles, time()+3600);
-
   $newRelation = [
     'hash' => $hash,
     "url" => $url,
-    "roles" => $roles,
-    "iv" => base64_encode($iv)
+    "page_id" => $page_id
   ];
 
   $key = false;
@@ -606,6 +594,193 @@ function saveCache( $html) {
 
   return true;
 }
+
+
+function minifyHTML($html) {
+
+  // Settings
+  return $html;
+  $compress_css = true;
+  $compress_js = true;
+  $remove_comments = true;
+
+  $pattern = '/<(?<script>script).*?<\/script\s*>|<(?<style>style).*?<\/style\s*>|<!(?<comment>--).*?-->|<(?<tag>[\/\w.:-]*)(?:".*?"|\'.*?\'|[^\'">]+)*>|(?<text>((<[^!\/\w.:-])?[^<]*)+)|/si';
+  preg_match_all($pattern, $html, $matches, PREG_SET_ORDER);
+
+  $overriding = false;
+  $raw_tag = false;
+
+  // Variable reused for output
+  $html = '';
+
+  foreach ($matches as $token) {
+    $tag = (isset($token['tag'])) ? strtolower($token['tag']) : null;
+
+    $content = $token[0];
+
+    if (is_null($tag)) {
+      if ( !empty($token['script']) ) {
+        $strip = $compress_js;
+      }
+      else if ( !empty($token['style']) ) {
+        $strip = $compress_css;
+      }
+      else if ($content == '<!--wp-html-compression no compression-->') {
+        $overriding = !$overriding;
+
+        // Don't print the comment
+        continue;
+      }
+      else if ($remove_comments) {
+        if (!$overriding && $raw_tag != 'textarea') {
+          // Remove any HTML comments, except MSIE conditional comments
+          $content = preg_replace('/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->/s', '', $content);
+        }
+      }
+    }
+    else {
+      if ($tag == 'pre' || $tag == 'textarea') {
+        $raw_tag = $tag;
+      }
+      else if ($tag == '/pre' || $tag == '/textarea') {
+        $raw_tag = false;
+      }
+      else {
+        if ($raw_tag || $overriding) {
+          $strip = false;
+        }
+        else {
+          $strip = true;
+
+          // Remove any empty attributes, except:
+          // action, alt, content, src
+          $content = preg_replace('/(\s+)(\w++(?<!\baction|\balt|\bcontent|\bsrc)="")/', '$1', $content);
+
+          // Remove any space before the end of self-closing XHTML tags
+          // JavaScript excluded
+          $content = str_replace(' />', '/>', $content);
+        }
+      }
+    }
+
+    if ($strip) {
+      $content = removeWhiteSpace($content);
+    }
+
+    $html .= $content;
+  }
+
+  return $html;
+}
+
+function removeWhiteSpace($str) {
+  $str = str_replace("\t", ' ', $str);
+  $str = str_replace("\n",  '', $str);
+  $str = str_replace("\r",  '', $str);
+
+  while (stristr($str, '  ')) {
+    $str = str_replace('  ', ' ', $str);
+  }
+
+  return $str;
+}
+
+function saveTemplateCache( $json, $template_id ) {
+
+  if (!$json || !$template_id) {
+    return false;
+  }
+
+  $hash = md5($json);
+
+  $cachePath = storage_path() . '/framework/cache/templates';
+
+  File::ensureDirectoryExists( $cachePath, 0775);
+
+  if ( ! File::exists($cachePath . '/relations.json') ) {
+    File::put($cachePath . '/relations.json', '{}');
+  }
+
+  $relationsJson = File::get($cachePath . '/relations.json');
+  $relations = json_decode($relationsJson, true);
+
+  if ( ! is_array($relations) ) {
+    File::put($cachePath . '/relations.json', '{}');
+    $relations = [];
+  }
+
+  $newRelation = [
+    'hash' => $hash,
+    'template_id' => $template_id
+  ];
+
+  $key = false;
+  foreach ($relations as $relation) {
+    if ($relation['hash'] === $hash) {
+      $key = true;
+      break;
+    }
+  }
+
+  if (!$key) {
+    array_push($relations, $newRelation);
+  }
+
+  $relations = json_encode($relations);
+
+  File::put($cachePath . '/relations.json', $relations);
+  File::put($cachePath . '/' . $hash, $json);
+
+  return true;
+}
+
+function clearAllCache() {
+  $cachePath = storage_path() . '/framework/cache/pages';
+  if( File::exists( storage_path() . '/framework/cache/pages' ) ){
+    File::cleanDirectory( storage_path() . '/framework/cache/pages' );
+    File::put($cachePath . '/relations.json', '{}');
+  }
+  $pages = Page::all();
+  foreach($pages as $page ){
+    Cache::delete( 'areas_' . $page->id );
+  }
+
+  return true;
+}
+
+function clearPageCache( $page_id ) {
+
+  $cachePath = storage_path() . '/framework/cache/pages';
+
+  if ( !File::exists($cachePath . '/relations.json') ) {
+    File::put($cachePath . '/relations.json', '{}');
+  }
+
+  $relationsJson = File::get($cachePath . '/relations.json');
+  $relations = json_decode($relationsJson, true);
+
+  if ( ! is_array($relations) ) {
+    File::put($cachePath . '/relations.json', '{}');
+    $relations = [];
+  }
+
+  foreach ($relations as $key => $relation) {
+    if (isset($relation['page_id']) && $relation['page_id'] === $page_id) {
+      if ( File::exists($cachePath . '/' . $relation['hash']) ) {
+        File::delete($cachePath . '/' . $relation['hash']);
+      }
+      unset($relations[$key]);
+    }
+  }
+
+  $relations = json_encode($relations);
+  File::put($cachePath . '/relations.json', $relations);
+
+  Cache::delete( 'areas_' . $page_id );
+
+  return true;
+}
+
 
 /**
  * Минификация HTML
@@ -794,6 +969,10 @@ function _extractElementsNames( $element = [],  &$elementNames ){
     return;
   }
 
+  if( isset( $element['lazySection'] ) && $element['lazySection'] ){
+    return;
+  }
+
 
   if( array_search( $element['name'], $elementNames ) === false){
     $elementNames[] = $element['name'];
@@ -803,4 +982,78 @@ function _extractElementsNames( $element = [],  &$elementNames ){
       _extractElementsNames( $child, $elementNames );
     }
   }
+}
+
+/**
+ * Получить данные текущего пользователя, либо [is_guest => true] если не залогинен
+ * @return array
+ */
+function getCurrentUser(): array
+{
+  $user = Auth::user();
+  if ( ! $user ) {
+    return ['is_guest' => true];
+  }
+  $user = $user->toArray();
+  $user['roles'] = Auth::user()->roles->map(function (Role $role) {
+    $_role = $role->toArray();
+    $_role['permissions'] = $role->permissions;
+    return $_role;
+  });
+  $user['local_storage'] = json_decode($user['local_storage'], 255);
+  $user['permissions'] = Auth::user()->permissions;
+  return $user;
+}
+
+/**
+ * Заменяет в тексте конструкции типа {{path_to_data...}} на данные
+ * @param string $content
+ * @param array | null $modelContext
+ * @return string
+ */
+function replaceContentWithData( $content, $modelContext = null ){
+  if( ! $modelContext ){
+    return $content;
+  }
+  is_string( $content ) ? preg_match_all( '/{{([\s\S]+?)(?=}})/', $content, $path ) : null;
+  if( ! isset( $path ) || ! isset( $path[1] )){
+    return $content;
+  }
+  foreach ($path[1] as $item) {
+    $value = data_get( $modelContext, $item, '');
+    $content = str_replace( '{{' . $item . '}}', $value, $content );
+  }
+  return $content;
+}
+/**
+ * Convert array to string
+ * @param $data
+ * @return string
+ */
+function array2string($data) {
+  $log_a = "[";
+  try {
+    foreach ($data as $key => $value) {
+      if (!is_numeric($key)) $key = "'{$key}'";
+      if (is_array($value))
+        $log_a .= $key." => " . array2string($value) . ",";
+      elseif (is_object($value))
+        $log_a .= $key." => " . array2string(json_encode(json_decode($value))) . ",";
+      elseif (is_bool($value))
+        $log_a .= $key." => " . ($value ? 'true' : 'false') . ",";
+      elseif (is_string($value))
+        $log_a .= $key." => '" . $value . "',";
+      elseif (is_null($value))
+        $log_a .= $key." => null,";
+      else
+        $log_a .= $key." => " . $value . ",";
+    }
+  } catch (\Exception $exception) {
+    $data = json_decode($data);
+    if (is_array($data))
+      array2string($data);
+  }
+
+  $log_a = trim($log_a, ",");
+  return $log_a . ']';
 }

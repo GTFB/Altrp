@@ -1,10 +1,11 @@
 
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import {altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceContentWithData, setTitle} from "../helpers";
+import { altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceContentWithData, setTitle } from "../helpers";
 import { addElement } from "../store/elements-storage/actions";
 import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
-import {changeCurrentPageProperty} from "../store/current-page/actions";
+import { changeCurrentPageProperty } from "../store/current-page/actions";
+import { ElementWrapperDivComponent } from "../../../../editor/src/js/components/widgets/styled-components/ElementWrapperComponent";
 import ImageComponent from "../../../../editor/src/js/components/widgets/styled-components/ImageComponent";
 import CarouselComponent from "../../../../editor/src/js/components/widgets/styled-components/CarouselComponent";
 import GalleryComponent from "../../../../editor/src/js/components/widgets/styled-components/GalleryComponent";
@@ -41,8 +42,8 @@ class ElementWrapper extends Component {
    * Иногда надо обновить элемент (FrontElement)
    */
   componentDidMount() {
-    ! isEditor() && window.frontApp.onWidgetMount();
-    if(_.isFunction(this.props.element.update)){
+    !isEditor() && window.frontApp.onWidgetMount();
+    if (_.isFunction(this.props.element.update)) {
       this.props.element.update();
       this.props.element.updateFonts();
     }
@@ -104,13 +105,13 @@ class ElementWrapper extends Component {
    */
   componentDidUpdate(prevProps, prevState) {
     this.checkElementDisplay();
-    if(appStore.getState().currentModel.getProperty('altrpModelUpdated') &&
-        appStore.getState().currentDataStorage.getProperty('currentDataStorageLoaded') &&
-        ! isEditor() &&
-        this.props.element.getName() === 'section'){
+    if (appStore.getState().currentModel.getProperty('altrpModelUpdated') &&
+      appStore.getState().currentDataStorage.getProperty('currentDataStorageLoaded') &&
+      !isEditor() &&
+      this.props.element.getName() === 'section') {
       let title = appStore.getState().currentTitle;
       title = replaceContentWithData(title);
-      if(appStore.getState().altrpPage.getProperty('title') !== title){
+      if (appStore.getState().altrpPage.getProperty('title') !== title) {
         appStore.dispatch(changeCurrentPageProperty('title', title));
       }
       setTitle(title);
@@ -120,8 +121,8 @@ class ElementWrapper extends Component {
   /**
    * Обновить элемент изменив this.state.updateToken
    */
-  updateElement(){
-    this.setState(state=>({...state, updateToken: altrpRandomId()}))
+  updateElement() {
+    this.setState(state => ({ ...state, updateToken: altrpRandomId() }))
   }
 
   /**
@@ -134,7 +135,7 @@ class ElementWrapper extends Component {
      * @member {FrontElement} element
      */
     const { element } = this.props;
-    if (! element.getSettings("conditional_other")) {
+    if (!element.getSettings("conditional_other")) {
       return;
     }
     let conditions = element.getSettings("conditions", []);
@@ -162,7 +163,7 @@ class ElementWrapper extends Component {
     }
 
     this.setState(state => ({
-        ...state,
+      ...state,
       elementDisplay
     }));
   }
@@ -173,7 +174,7 @@ class ElementWrapper extends Component {
   toggleElementDisplay() {
     this.setState(state => ({
       ...state,
-      elementDisplay: ! state.elementDisplay
+      elementDisplay: !state.elementDisplay
     }));
   }
   /**
@@ -263,27 +264,22 @@ class ElementWrapper extends Component {
     }
     const styles = {};
 
-    if(this.props.element.getResponsiveSetting('layout_column_width')){
-      if(Number(this.props.element.getResponsiveSetting('layout_column_width'))){
+    if (this.props.element.getResponsiveSetting('layout_column_width')) {
+      if (Number(this.props.element.getResponsiveSetting('layout_column_width'))) {
         styles.width = this.props.element.getResponsiveSetting('layout_column_width') + '%';
       } else {
         styles.width = this.props.element.getResponsiveSetting('layout_column_width');
       }
     }
-    if (! this.state.elementDisplay) {
+    if (!this.state.elementDisplay) {
       styles.display = "none";
     }
     let CSSId = this.props.element.getSettings("advanced_element_id", "");
     CSSId = replaceContentWithData(CSSId, this.props.element.getCurrentModel().getData());
-    if(this.CSSId !== CSSId){
+    if (this.CSSId !== CSSId) {
       this.CSSId = CSSId;
     }
     let ContentComponent = frontElementsManager.getComponentClass(this.props.element.getName());
-    // console.log(ContentComponent);
-    // console.log(this.props.component === frontElementsManager.getComponentClass(this.props.element.getName()));
-    // if(['root-element', 'section', 'column'].indexOf(this.props.element.getName()) === -1){
-    //   // ContentComponent = 'div';
-    // }
     const content = React.createElement(ContentComponent, {
       ref: this.elementRef,
       rootElement: this.props.rootElement,
@@ -304,8 +300,8 @@ class ElementWrapper extends Component {
       baseRender: this.props.baseRender,
       appStore
     });
-    if(this.props.element.getTemplateType() === 'email'){
-      if (! this.state.elementDisplay) {
+    if (this.props.element.getTemplateType() === 'email') {
+      if (!this.state.elementDisplay) {
         return null;
       }
       return <>
@@ -313,7 +309,7 @@ class ElementWrapper extends Component {
       </>
     }
 
-    let WrapperComponent = "div";
+    let WrapperComponent = ElementWrapperDivComponent;
 
     switch (this.props.element.getName()) {
       case "gallery":

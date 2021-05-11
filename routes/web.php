@@ -11,6 +11,7 @@
 |
 */
 
+use App\Altrp\Relationship;
 use App\Constructor\Template;
 use App\Media;
 use App\Page;
@@ -451,12 +452,8 @@ Route::view('/admin/{path?}', 'admin')
  * Frontend
  */
 
-$frontend_routes = \App\Page::get_frontend_routes();
-
 Route::get('/', function () {
-
   return view('front-app', [
-
     'elements_list' => json_encode( [] ),
     'title' => 'Main',
     'page_id' => 'null',
@@ -465,49 +462,84 @@ Route::get('/', function () {
     'page_areas' => '[]',
     'lazy_sections' => '[]',
     'pages'=>Page::get_pages_for_frontend( true ),
+    'model_data' => null,
     'is_admin' => isAdmin(),
   ]);
 })->middleware(['web', 'installation.checker']);
 
-
-
-foreach ( $frontend_routes as $_frontend_route ) {
-  $path = $_frontend_route['path'];
-  $title = $_frontend_route['title'];
-  $pattern1 = '/:(.+)((\/)|$)/U';
-  $replacement1 = '{$1}/';
-  $frontend_route = preg_replace( $pattern1, $replacement1, $path );
-
-  Route::get( $frontend_route, function () use ( $title, $_frontend_route, $frontend_route ) {
-
-    $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
-//    echo '<pre style="padding-left: 200px;">';
-//    var_dump( $preload_content );
-//    echo '</pre>';
-
-    $page_areas = Page::get_areas_for_page( $_frontend_route['id'], true );
-    $lazy_sections = Page::get_lazy_sections_for_page( $_frontend_route['id'] );
-    $elements_list = extractElementsNames( $page_areas );
-    if (Page::isCached( $_frontend_route['id'] )) {
-
-      global $altrp_need_cache;
-      $altrp_need_cache = true;
-
-    }
-    return view( 'front-app', [
-      'page_areas' => json_encode( $page_areas ),
-      'lazy_sections' => json_encode( $lazy_sections ),
-      'elements_list' => json_encode( $elements_list ),
-      'page_id' => $_frontend_route['id'],
-      'title' => $title,
-      '_frontend_route' => $_frontend_route,
-      'pages'=>Page::get_pages_for_frontend( true ),
-      'preload_content' => $preload_content,
-      'is_admin' => isAdmin(),
-    ]);
-
-  })->middleware(['web', 'installation.checker', 'after'])->name( 'page_' . $_frontend_route['id'] );
-}
+//Route::get('/test/{id}/test/{test}', function($test, $id){
+//  echo '<pre style="padding-left: 200px;">';
+//  var_dump( func_get_args() );
+//  echo '</pre>';
+//});
+//foreach ( $frontend_routes as $_frontend_route ) {
+//  $path = $_frontend_route['path'];
+//  $title = $_frontend_route['title'];
+//  $pattern1 = '/:(.+)((\/)|$)/U';
+//  $replacement1 = '{$1}/';
+//  $frontend_route = preg_replace( $pattern1, $replacement1, $path );
+//  $pattern2 = '/:(.+)((\/)|$)/U';
+//  preg_match_all( $pattern2, $path, $matches );
+//  $argument_index = false;
+//  foreach ($matches[0] as $idx => $item) {
+//    if( strpos( $item, ':id') !== false ) {
+//      $argument_index = $idx;
+//    }
+//  }
+//
+//  Route::get( $frontend_route, function () use ( $title, $_frontend_route, $frontend_route, $argument_index ) {
+//
+//    if( $argument_index !== false && $_frontend_route['model'] ) {
+//      $model = $_frontend_route['model']->toArray();
+//      if( isset( $model['namespace'] ) ){
+//        try {
+//          $relations = Relationship::where( [['model_id',$model['id']],['always_with',1]] )->get()->implode( 'name', ',' );
+//          $relations = $relations ? explode( ',',$relations ) : false;
+//          $model = new $model['namespace'];
+//          $model = $model->find( func_get_arg( $argument_index ) );
+//          if ( $relations ) {
+//            $model = $model->load( $relations );
+//          }
+//          $model_data = $model->toArray();
+//        } catch( Exception $e ) {
+//          $model_data = null;
+//        }
+//      }
+//    } else {
+//      $model_data = null;
+//    }
+//
+//    $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
+//    if( $model_data ){
+//      $preload_content['content'] = replaceContentWithData( $preload_content['content'], $model_data );
+//    }
+//
+//    $page_areas = Page::get_areas_for_page( $_frontend_route['id'] );
+//    $lazy_sections = [];
+//    $elements_list = extractElementsNames( $page_areas );
+//    if (Page::isCached( $_frontend_route['id'] )) {
+//
+//      global $altrp_need_cache;
+//      $altrp_need_cache = true;
+//      global $altrp_route_id;
+//      $altrp_route_id = $_frontend_route['id'];
+//
+//    }
+//    return view( 'front-app', [
+//      'page_areas' => json_encode( $page_areas ),
+//      'lazy_sections' => json_encode( $lazy_sections ),
+//      'elements_list' => json_encode( $elements_list ),
+//      'page_id' => $_frontend_route['id'],
+//      'title' => $title,
+//      '_frontend_route' => $_frontend_route,
+//      'pages'=>Page::get_pages_for_frontend( true ),
+//      'preload_content' => $preload_content,
+//      'model_data' => $model_data,
+//      'is_admin' => isAdmin(),
+//    ]);
+//
+//  })->middleware(['web', 'installation.checker', 'after'])->name( 'page_' . $_frontend_route['id'] );
+//}
 
 /**
  * Reports

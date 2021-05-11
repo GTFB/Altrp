@@ -2,15 +2,21 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\Classes\CurrentEnvironment;
 use App\Http\Controllers\Controller;
+use App\Jobs\RunRobotsJob;
 use App\Providers\RouteServiceProvider;
 use App\Services\Robots\RobotsService;
 use App\Traits\AuthenticatesUsers;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Request;
+use App\Altrp\Facades\CacheService;
 
 class LoginController extends Controller
 {
-  /*
+    use DispatchesJobs;
+
+    /*
   |--------------------------------------------------------------------------
   | Login Controller
   |--------------------------------------------------------------------------
@@ -50,7 +56,11 @@ class LoginController extends Controller
    * @return \Illuminate\Http\JsonResponse
    */
   public function logout( Request $request )
-  {
+  { 
+
+    unset($_COOKIE['uid']);
+    setcookie('uid', null, -1, '/');
+
     $this->guard()->logout();
 
     $request->session()->invalidate();
@@ -88,6 +98,9 @@ class LoginController extends Controller
     }
 
     if ($this->attemptLogin($request)) {
+      
+      CacheService::setUserCookie();
+
       return $this->sendLoginResponse($request);
     }
 
@@ -120,10 +133,13 @@ class LoginController extends Controller
 
     $robots = $this->robotsService->getStartConditionRobots('logged_in');
 
-    foreach ($robots as $robot) {
-      if (!$robot->enabled) continue;
-      $this->robotsService->initRobot($robot)->runRobot();
-    }
+      $this->dispatch(new RunRobotsJob(
+          $robots,
+          $this->robotsService,
+          [],
+          'logged_in',
+          CurrentEnvironment::getInstance()
+      ));
 
     return $this->authenticated( $request, $this->guard()->user() )
       ? : ( ( $request->get( 'altrp_ajax' ) ) ? response()->json([

@@ -4,7 +4,7 @@ import { NavLink, withRouter } from "react-router-dom";
 import { iconsManager } from "../js/helpers";
 import Resource from "../../../editor/src/js/classes/Resource";
 import { ImageDetail } from "./ImageDetail";
-import {FontsDetail} from "./FontsDetail";
+import { FontsDetail } from "./FontsDetail";
 
 class Assets extends Component {
   constructor(props) {

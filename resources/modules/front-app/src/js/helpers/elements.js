@@ -1,26 +1,38 @@
 /**
  *
  * @param {HTMLElement} element
- * @param scrollbars
+ * @param {{} | HTMLElement}scrollbars
  * @return {boolean}
  */
 export function checkElementInViewBox(element, scrollbars){
-  if(! element || ! scrollbars.view){
+  let view;
+  if(scrollbars instanceof HTMLElement){
+    view = scrollbars;
+  } else {
+    view = scrollbars.view;
+  }
+  if(! element || ! view){
     return false;
   }
   // while (element = element.parentNode) {
   //   if (x.id == "a") console.log("FOUND");
   // }
-  if(! scrollbars.view.contains(element)){
+  if(! view.contains(element)){
     return false
   }
   // console.log(element);
   // console.log(scrollbars.view);
-  let offsetTop = getOffsetTopInElement(element, scrollbars.view);
+  let offsetTop = getOffsetTopInElement(element, view);
   if(offsetTop === false){
     return false
   }
-  return offsetTop < (scrollbars.getScrollTop() + scrollbars.view.offsetHeight + 50);
+  let scrollTop = 0;
+  if(scrollbars.getScrollTop){
+    scrollTop = scrollbars.getScrollTop();
+  } else {
+    scrollTop = view.scrollTop;
+  }
+  return offsetTop < (scrollTop + view.offsetHeight + 50);
 }
 
 /**
@@ -36,7 +48,7 @@ export function getOffsetTopInElement(element, targetElement){
   let offsetTop = 0;
   do{
     if(! element){
-      return false;
+      return offsetTop;
     }
     offsetTop += element.offsetTop;
     // console.log(element.offsetTop);

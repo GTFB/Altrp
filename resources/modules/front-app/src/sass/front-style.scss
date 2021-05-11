@@ -8,9 +8,6 @@
 @import "./responsive.scss";
 @import "../../../../sass/ckeditor.scss";
 
-body {
-  overflow: hidden;
-}
 
 .front-app {
     position: relative;
@@ -166,7 +163,7 @@ body {
 //     width: 223px;
 //     padding: 7px 0;
 
-    
+
 //     z-index: 1000;
 //     box-shadow: 0px 1px 2px 1px rgba(34, 60, 80, .3);
 //     background-color: #ffffff;
@@ -238,18 +235,18 @@ body {
 //     width: 12px;
 //     background: #F4F4F4;
 //   }
-  
+
 //   &::-webkit-scrollbar-track {
-//     background: #f1f1f1; 
+//     background: #f1f1f1;
 //   }
-   
+
 //   &::-webkit-scrollbar-thumb {
-//     background: #888; 
+//     background: #888;
 //     height: 45px;
 //   }
-  
+
 //   &::-webkit-scrollbar-thumb:hover {
-//     background: #555; 
+//     background: #555;
 //   }
 // }
 

@@ -222,21 +222,21 @@ function AltrpTableWithoutUpdate(
           href: `mailto:${cell.value}`,
           className: 'altrp-inherit altrp-table-td__default-content',
           dangerouslySetInnerHTML: {
-            __html: cell.value || '&nbsp;'
+            __html: cell.value === 0 ? '0' : (cell.value || '&nbsp;')
           }
         });
         break;
-        
+
       case 'phone':
         cellContent = React.createElement('a', {
           href: `tel:${cell.value}`,
           className: 'altrp-inherit altrp-table-td__default-content',
           dangerouslySetInnerHTML: {
-            __html: cell.value || '&nbsp;'
+            __html: cell.value === 0 ? '0' : (cell.value || '&nbsp;')
           }
         });
         break;
-    
+
       default:
         if (column.column_link) {
           cellContent = React.createElement(linkTag, {
@@ -245,7 +245,7 @@ function AltrpTableWithoutUpdate(
             target: column_blank_link ? '_blank' : '',
             className: 'altrp-inherit altrp-table-td__default-content',
             dangerouslySetInnerHTML: {
-              __html: cell.value || '&nbsp;'
+              __html: cell.value === 0 ? '0' : (cell.value || '&nbsp;')
             }
           })
         } else {
@@ -253,13 +253,13 @@ function AltrpTableWithoutUpdate(
             href,
             className: 'altrp-inherit altrp-table-td__default-content',
             dangerouslySetInnerHTML: {
-              __html: cell.value || '&nbsp;'
+              __html: cell.value === 0 ? '0' : (cell.value || '&nbsp;')
             }
           })
         }
         break;
     }
-    
+
     const columnTemplateContent = React.useMemo(() => {
       if (! columnTemplate) {
         return null;

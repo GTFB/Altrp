@@ -139,6 +139,7 @@ class PagesController extends Controller
       'success' => false
     ];
     $page = Page::find( $id );
+
     $page->path = $request->path;
     $page->title = $request->title;
     $page->model_id = $request->model_id;
@@ -179,6 +180,8 @@ class PagesController extends Controller
     if ( $page->save() ) {
       $res['success'] = true;
     }
+
+    clearPageCache( $page->id );
 
     return response()->json( $res );
   }
@@ -268,21 +271,32 @@ class PagesController extends Controller
   public function clearCache( $page_id = null ){
 
     $cachePath = storage_path() . '/framework/cache/pages';
+    $cacheTemplatePath = storage_path() . '/framework/cache/templates';
     File::ensureDirectoryExists( $cachePath, 0775);
+    File::ensureDirectoryExists( $cacheTemplatePath, 0775);
 
     if (! File::exists( $cachePath ) ) {
       File::put( $cachePath . '/relations.json', '{}' );
       return true;
     }
-    
+    if (! File::exists( $cacheTemplatePath ) ) {
+      File::put( $cacheTemplatePath . '/relations.json', '{}' );
+      return true;
+    }
+
     if ( ! $page_id ) {
       $files = File::allFiles( $cachePath );
       File::delete( $files );
-      File::put( $cachePath . '/relations.json', '{}' );
+      $files = File::allFiles( $cacheTemplatePath );
+      File::delete( $files );
+      File::put( $cachePath . '/relations.json', '[]' );
+      File::put( $cacheTemplatePath . '/relations.json', '[]' );
+      File::put( $cachePath . '/users.json', '[]' );
       return response()->json( ['success' => true], 200, [], JSON_UNESCAPED_UNICODE );
     }
 
     Page::clearAllCacheById( $page_id );
+    PagesTemplate::clearAllCacheById( $page_id );
     return response()->json( ['success' => true], 200, [], JSON_UNESCAPED_UNICODE );
   }
 

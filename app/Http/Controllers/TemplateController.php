@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Facades\File;
 
 class TemplateController extends Controller
 {
@@ -208,6 +209,11 @@ class TemplateController extends Controller
    */
   public function show_frontend( string $template_id )
   {
+
+    // if (self::loadCachedTemplate( $template_id )) {
+    //    return self::loadCachedTemplate( $template_id );
+    // }
+
     if ( Uuid::isValid( $template_id ) ) {
       $template = Template::where( 'guid', $template_id )->first();
     } else {
@@ -217,6 +223,7 @@ class TemplateController extends Controller
       return response()->json( [ 'success' => false, 'message' => 'Template not found' ], 404, [], JSON_UNESCAPED_UNICODE );
     }
     $template->check_elements_conditions();
+    //saveTemplateCache( json_encode($template->toArray()), $template_id);
     return response()->json( $template->toArray() );
   }
 
@@ -266,9 +273,21 @@ class TemplateController extends Controller
     $old_template->type = 'template'; //1
     $old_template->user_id = auth()->user()->id;
 
-
     if ( $old_template->save() ) {
+
+      if ($old_template->all_site) {
+        clearAllCache();
+      } else {
+        $pages = Page::getPagesByTemplateId( $old_template->id );
+
+        if ($pages) {
+          foreach ($pages as $page) {
+            clearPageCache( $page->page_id );
+          }
+        }
+      }
       return response()->json( $old_template, 200, [], JSON_UNESCAPED_UNICODE );
+
     }
 
     return response()->json( trans( "responses.dberror" ), 400, [], JSON_UNESCAPED_UNICODE );
@@ -311,9 +330,6 @@ class TemplateController extends Controller
         $review->author = $review->author;
         return $review;
       } )->toArray();
-    echo '<pre style="padding-left: 200px;">';
-    var_dump( $template_id );
-    echo '</pre>';
 
     return \response()->json( $reviews );
   }
@@ -567,5 +583,55 @@ class TemplateController extends Controller
       }
     }
     return response()->json( [ 'success' => true ], 200, [], JSON_UNESCAPED_UNICODE );
+  }
+
+  /**
+   * Загрузка кэшированного шаблона
+   * @param $template_id
+   */
+  public static function loadCachedTemplate( string $template_id )
+  {
+    if ( !$template_id ) {
+      return false;
+    }
+
+    $cachePath = storage_path() . '/framework/cache/templates';
+
+    if ( ! File::exists($cachePath . '/relations.json') ) {
+      return false;
+    }
+
+    $cachedFiles = [];
+    $relationsJson = File::get($cachePath . '/relations.json');
+
+    if( $relationsJson ){
+
+      $cachedFiles = json_decode($relationsJson, true);
+
+      $hash_to_delete = '';
+      if (!empty($cachedFiles)) {
+        foreach ($cachedFiles as $key => $cachedFile) {
+          if ( $cachedFile['template_id'] === $template_id ) {
+            if ( File::exists($cachePath . '/' . $cachedFile['hash']) ) {
+              $file = File::get($cachePath . '/' . $cachedFile['hash']);
+              return $file;
+            } else {
+              $hash_to_delete = $cachedFile['hash'];
+            }
+          }
+        }
+      }
+      if( $hash_to_delete ){
+        $cachedFiles = array_filter( $cachedFiles, function ( $file ) use ( $hash_to_delete ){
+          return $file['hash'] !== $hash_to_delete;
+        } );
+        $json = json_encode( $cachedFiles );
+
+        File::put($cachePath . '/relations.json', $json);
+      }
+    }
+
+    return false;
+
   }
 }

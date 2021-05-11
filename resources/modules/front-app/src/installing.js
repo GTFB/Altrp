@@ -31,8 +31,14 @@
  * Запускаем обновление списка страниц
  */
 (async function () {
+  fetch
   const pageUpdater = (await import('./js/classes/modules/PageUpdater')).default;
-  pageUpdater.startUpdating();
+  function updater(){
+    pageUpdater.startUpdating();
+    window.removeEventListener('render-altrp', updater);
+  }
+  window.addEventListener('render-altrp', replaceApp);
+  window.addEventListener('render-altrp', updater);
 })();
 /**
  * Смена Разрешения
@@ -55,3 +61,15 @@
     }
   });
 })();
+
+function replaceApp(){
+
+  if(! document.getElementById('front-app-server')){
+    return;
+  }
+  const appElement = document.getElementById('front-app');
+  const appServer = document.getElementById('front-app-server');
+  appServer.remove();
+  appElement.removeAttribute('style');
+  window.removeEventListener('render-altrp', replaceApp);
+}

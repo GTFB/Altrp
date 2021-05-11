@@ -4,7 +4,7 @@ let Dropbar = React.lazy(() => import("../altrp-dropbar/AltrpDropbar"));
 import {
   getComponentByElementId,
   getHTMLElementById,
-  isEditor,
+  isEditor, isSSR,
   parseURLTemplate,
   printElements,
   renderAssetIcon,
@@ -172,7 +172,7 @@ class ButtonWidget extends Component {
       null,
       {}
     );
-      
+
     let modelData = this.props.element.hasCardModel()
       ? this.props.element.getCardModel().getData()
       : this.props.currentModel.getData();
@@ -219,9 +219,9 @@ class ButtonWidget extends Component {
         title={tooltip || null}
       >
         {buttonText}
-        <span className={"altrp-btn-icon "}>
+        {! isSSR() && <span className={"altrp-btn-icon "}>
           {renderAssetIcon(buttonMedia)}{" "}
-        </span>
+        </span>}
       </button>
     );
 
@@ -265,9 +265,9 @@ class ButtonWidget extends Component {
           >
             {" "}
             {buttonText || ""}
-            <span className={"altrp-btn-icon "}>
+            {! isSSR() && <span className={"altrp-btn-icon "}>
               {renderAssetIcon(buttonMedia)}{" "}
-            </span>
+            </span>}
           </a>
         );
       } else {
@@ -275,9 +275,9 @@ class ButtonWidget extends Component {
           <Link to={url} onClick={this.onClick} className={classes} title={tooltip || null}>
             {" "}
             {buttonText || ""}
-            <span className={"altrp-btn-icon "}>
+            {! isSSR() && <span className={"altrp-btn-icon "}>
               {renderAssetIcon(buttonMedia)}{" "}
-            </span>
+            </span>}
           </Link>
         );
       }
@@ -292,9 +292,9 @@ class ButtonWidget extends Component {
           title={tooltip || null}
         >
           {buttonText}
-          <span className={"altrp-btn-icon "}>
+          {! isSSR() && <span className={"altrp-btn-icon "}>
             {renderAssetIcon(buttonMedia)}{" "}
-          </span>
+          </span>}
         </button>
       );
     }

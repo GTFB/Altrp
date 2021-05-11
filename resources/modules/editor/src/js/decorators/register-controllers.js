@@ -13,7 +13,7 @@ import {
   CONTROLLER_TYPOGRAPHIC
 } from "../classes/modules/ControllersManager";
 import Repeater from "../classes/Repeater";
-import {CONDITIONS_OPTIONS} from "../../../../front-app/src/js/helpers";
+import { CONDITIONS_OPTIONS } from "../../../../front-app/src/js/helpers";
 /**
  * Функция декорирует элемент неободимыми контроллерами
  * @param {BaseElement} element
@@ -78,13 +78,13 @@ export function advancedTabControllers(element) {
   // element.endControlSection();
 
   element.startControlSection(
-      'advanced', {
-        tab: TAB_ADVANCED,
-        label: 'Advanced',
-      }
+    'advanced', {
+    tab: TAB_ADVANCED,
+    label: 'Advanced',
+  }
   );
 
-  element.addControl('advanced_element_id',{
+  element.addControl('advanced_element_id', {
     label: 'CSS ID',
 
   });
@@ -126,13 +126,13 @@ export function advancedTabControllers(element) {
 
   element.endControlSection();
 
-  if(element.getType() !== 'section') {
+  if (element.getType() !== 'section') {
 
     element.startControlSection(
-        'element_size', {
-          tab: TAB_ADVANCED,
-          label: 'Size',
-        }
+      'element_size', {
+      tab: TAB_ADVANCED,
+      label: 'Size',
+    }
     );
 
     element.addControl('custom_width', {
@@ -142,10 +142,10 @@ export function advancedTabControllers(element) {
     element.endControlSection();
 
     element.startControlSection(
-        'element_positioning', {
-          tab: TAB_ADVANCED,
-          label: 'Positioning',
-        }
+      'element_positioning', {
+      tab: TAB_ADVANCED,
+      label: 'Positioning',
+    }
     );
 
     element.addControl("positioning_padding", {
@@ -172,7 +172,7 @@ export function advancedTabControllers(element) {
       //   left: 0,
       //   unit:'px'
       // },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -305,23 +305,23 @@ export function advancedTabControllers(element) {
     });
 
     element.addControl('positioning_horizontal_offset', {
-          type: CONTROLLER_SLIDER,
-          label: 'offset',
-          default: {
-            size: "0",
-            unit: 'px'
-          },
-          units: [
-            'px',
-            '%',
-            'vh',
-          ],
-          max: 1000,
-          min: -1000,
-          rules: {
-            '{{ELEMENT}}': 'left: {{SIZE}}{{UNIT}};',
-          },
-        }
+      type: CONTROLLER_SLIDER,
+      label: 'offset',
+      default: {
+        size: "0",
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 1000,
+      min: -1000,
+      rules: {
+        '{{ELEMENT}}': 'left: {{SIZE}}{{UNIT}};',
+      },
+    }
     );
 
     element.addControl('positioning_vertical_orientation', {
@@ -341,37 +341,37 @@ export function advancedTabControllers(element) {
     });
 
     element.addControl('positioning_vertical_offset', {
-          type: CONTROLLER_SLIDER,
-          label: 'offset',
-          default: {
-            size: "0",
-            unit: 'px'
-          },
-          units: [
-            'px',
-            '%',
-            'vh',
-          ],
-          max: 1000,
-          min: -1000,
-          rules: {
-            '{{ELEMENT}}': 'bottom: {{SIZE}}{{UNIT}};',
-          },
-        }
+      type: CONTROLLER_SLIDER,
+      label: 'offset',
+      default: {
+        size: "0",
+        unit: 'px'
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 1000,
+      min: -1000,
+      rules: {
+        '{{ELEMENT}}': 'bottom: {{SIZE}}{{UNIT}};',
+      },
+    }
     );
     element.endControlSection();
 
     element.startControlSection(
-        'element_css', {
-          tab: TAB_ADVANCED,
-          label: 'CSS editor',
-        }
+      'element_css', {
+      tab: TAB_ADVANCED,
+      label: 'CSS editor',
+    }
     );
 
     element.addControl(
-        'element_css_editor', {
-          type: CONTROLLER_CSSEDITOR,
-        }
+      'element_css_editor', {
+      type: CONTROLLER_CSSEDITOR,
+    }
     );
 
     element.endControlSection();
@@ -379,9 +379,9 @@ export function advancedTabControllers(element) {
 
   element.startControlSection(
     'conditional_display', {
-      tab: TAB_ADVANCED,
-      label: 'Conditional Display',
-    }
+    tab: TAB_ADVANCED,
+    label: 'Conditional Display',
+  }
   );
 
   element.addControl('conditional_display_choose', {
@@ -408,7 +408,7 @@ export function advancedTabControllers(element) {
     type: CONTROLLER_SELECT2,
     label: 'Allowed for Roles',
     conditions: {
-      'conditional_display_choose' : 'auth',
+      'conditional_display_choose': 'auth',
     },
     options_resource: '/admin/ajax/role_options?value=name',
     isMulti: true,
@@ -421,7 +421,7 @@ export function advancedTabControllers(element) {
     type: CONTROLLER_SELECT2,
     label: 'Allowed for Permissions',
     conditions: {
-      'conditional_display_choose' : 'auth',
+      'conditional_display_choose': 'auth',
     },
     options_resource: '/admin/ajax/permissions_options?value=name',
     isMulti: true,
@@ -475,7 +475,7 @@ export function advancedTabControllers(element) {
     type: CONTROLLER_SELECT,
     responsive: false,
     default: 'empty',
-    options:  CONDITIONS_OPTIONS,
+    options: CONDITIONS_OPTIONS,
   });
 
   modelRepeater.addControl('conditional_other_condition_value', {
@@ -497,9 +497,9 @@ export function advancedTabControllers(element) {
   //<editor-fold description=conditional_disabled>
   element.startControlSection(
     'conditional_disabled', {
-      tab: TAB_ADVANCED,
-      label: 'Conditional Disabled',
-    }
+    tab: TAB_ADVANCED,
+    label: 'Conditional Disabled',
+  }
   );
 
   element.addControl('conditional_disabled_head', {
@@ -531,7 +531,7 @@ export function advancedTabControllers(element) {
     type: CONTROLLER_SELECT2,
     label: 'User has Roles',
     conditions: {
-      'conditional_disabled_choose' : 'auth',
+      'conditional_disabled_choose': 'auth',
     },
     options_resource: '/admin/ajax/role_options?value=name',
     isMulti: true,
@@ -544,7 +544,7 @@ export function advancedTabControllers(element) {
     type: CONTROLLER_SELECT2,
     label: 'User has Permissions',
     conditions: {
-      'conditional_disabled_choose' : 'auth',
+      'conditional_disabled_choose': 'auth',
     },
     options_resource: '/admin/ajax/permissions_options?value=name',
     isMulti: true,
@@ -615,9 +615,9 @@ export function advancedTabControllers(element) {
   //<editor-fold description=conditional_active>
   element.startControlSection(
     'conditional_active', {
-      tab: TAB_ADVANCED,
-      label: 'Conditional Active',
-    }
+    tab: TAB_ADVANCED,
+    label: 'Conditional Active',
+  }
   );
 
   element.addControl('conditional_active_head', {
@@ -649,7 +649,7 @@ export function advancedTabControllers(element) {
     type: CONTROLLER_SELECT2,
     label: 'User has Roles',
     conditions: {
-      'conditional_active_choose' : 'auth',
+      'conditional_active_choose': 'auth',
     },
     options_resource: '/admin/ajax/role_options?value=name',
     isMulti: true,
@@ -662,7 +662,7 @@ export function advancedTabControllers(element) {
     type: CONTROLLER_SELECT2,
     label: 'User has Permissions',
     conditions: {
-      'conditional_active_choose' : 'auth',
+      'conditional_active_choose': 'auth',
     },
     options_resource: '/admin/ajax/permissions_options?value=name',
     isMulti: true,
@@ -741,31 +741,37 @@ export function advancedTabControllers(element) {
   element.addControl('hide_on_wide_screen', {
     type: CONTROLLER_SWITCHER,
     label: 'Hide On Wide Screen',
+    responsive: false,
   });
 
   element.addControl('hide_on_desktop', {
     type: CONTROLLER_SWITCHER,
     label: 'Hide On Desktop',
+    responsive: false,
   });
 
   element.addControl('hide_on_laptop', {
     type: CONTROLLER_SWITCHER,
     label: 'Hide On Laptop',
+    responsive: false,
   });
 
   element.addControl('hide_on_tablet', {
     type: CONTROLLER_SWITCHER,
     label: 'Hide On Tablet',
+    responsive: false,
   });
 
   element.addControl('hide_on_big_phone', {
     type: CONTROLLER_SWITCHER,
     label: 'Hide On Big-Phone',
+    responsive: false,
   });
 
   element.addControl('hide_on_small_phone', {
     type: CONTROLLER_SWITCHER,
     label: 'Hide On Mobile',
+    responsive: false,
   });
 
   element.endControlSection();

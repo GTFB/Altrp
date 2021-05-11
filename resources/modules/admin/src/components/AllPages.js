@@ -18,6 +18,9 @@ export default class AllPages extends Component {
   }
 
   getPages = async s => {
+    if (typeof s === 'object') {
+      s = undefined;
+    }
     let res = await this.resource.getQueried({ s });
     this.setState(state => {
       return { ...state, pages: res, pagesSearch: s };
@@ -92,6 +95,7 @@ export default class AllPages extends Component {
               value: pagesSearch || "",
               changeHandler: this.changeSearchHandler
             }}
+            getPages={this.getPages}
           />
           <Pagination
             pageCount={Math.ceil(pages.length / this.itemsPerPage) || 1}

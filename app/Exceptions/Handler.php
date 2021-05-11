@@ -115,16 +115,27 @@ class Handler extends ExceptionHandler
       if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException)
       {
         $not_found_page = Page::firstWhere( 'not_found', 1 );
-        if( $not_found_page && strpos( $request->url(), 'favicon.ico' ) === false  ){
+        if( $not_found_page && strpos( $request->url(), 'favicon.ico' ) === false
+          && strpos( $request->url(), '/ajax' ) === false
+          && strpos( $request->url(), '/%7B%7BURL%7D%7D' ) === false
+          && strpos( $request->url(), '/storage/' ) === false
+        ){
+          logger('URL:' . $request->url());
           $preload_content = Page::getPreloadPageContent( $not_found_page['id'] );
+          $lazy_sections = [];
+          $page_areas = Page::get_areas_for_page( $not_found_page['id'] );
+          $elements_list = extractElementsNames( $page_areas );
 
           return response( view( 'front-app', [
-            'page_areas' => json_encode( Page::get_areas_for_page( $not_found_page['id'], true ) ),
+            'page_areas' => json_encode( $page_areas ),
             'page_id' => $not_found_page['id'],
+            'lazy_sections' => json_encode( $lazy_sections ),
+            'elements_list' => json_encode( $elements_list ),
             'title' => $not_found_page['title'],
             '_frontend_route' => $not_found_page,
             'preload_content' => $preload_content,
             'pages'=>Page::get_pages_for_frontend( true ),
+            'model_data' => null,
             'is_admin' => isAdmin(),
           ]), 200 );
         }

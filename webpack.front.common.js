@@ -5,7 +5,17 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
-  entry: "./resources/modules/front-app/src/index.js",
+  // entry: [
+  //     "./resources/modules/front-app/src/index.js",
+  //     "./resources/modules/front-app/src/js/sw/sw.js",
+  // ],
+  entry: {
+    'front-app':"./resources/modules/front-app/src/index.js",
+    // 'sw': "./resources/modules/front-app/src/js/sw/sw.js",
+  },
+
+
+  // ],
   mode: "development",
   module: {
     rules: [
@@ -85,7 +95,7 @@ module.exports = {
     path: path.resolve(__dirname, "editor/"),
     publicPath: "http://localhost:3001/src/",
     chunkFilename: "[contenthash].[name].bundle.js",
-    filename: "bundle.js"
+    filename: "bundle.[name].js",
   },
   devServer: {
     contentBase: path.join(__dirname, "resources/modules/front-app/public/"),

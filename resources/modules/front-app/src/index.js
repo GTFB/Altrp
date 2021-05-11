@@ -1,6 +1,6 @@
 console.log('FIRST SCRIPT: ',performance.now());
 import './sass/front-style.scss';
-
+window.sSr = false;
 
 /**
  * Параллельно загружаем все необходимые модули
@@ -64,7 +64,18 @@ function loadingCallback(){
       && window.ElementWrapper
       && window.formsManager
   ){
-    ReactDOM.render(<FrontApp />, document.getElementById('front-app'));
+    function renderAltrp(){
+      ReactDOM.render(<FrontApp />, document.getElementById('front-app'), function (){
+        window.removeEventListener('touchstart', renderAltrp);
+        window.removeEventListener('mouseover', renderAltrp);
+      });
+    }
+    if(window.ALTRP_LOAD_BY_USER){
+      window.addEventListener('mouseover', renderAltrp);
+      window.addEventListener('touchstart', renderAltrp);
+    } else {
+      renderAltrp();
+    }
   }
 }
 // import ReactDOM from 'react-dom';
@@ -134,3 +145,14 @@ if (process.env.NODE_ENV !== 'production') {
     window._token = _token._token;
   }
 })();
+
+/**
+ * Регистрируем сервис-воркеры
+ */
+
+let filename = '/front-app.sw.js';
+
+if ('serviceWorker' in navigator) {
+  // Use the window load event to keep the page load performant
+  navigator.serviceWorker.register(filename, {scope: '/'});
+}

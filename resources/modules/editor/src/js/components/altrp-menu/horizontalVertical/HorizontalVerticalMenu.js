@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Dropdown from "./Dropdown";
-import {isEditor, parseURLTemplate, renderAsset} from "../../../../../../front-app/src/js/helpers";
+import { isEditor, parseURLTemplate, renderAsset } from "../../../../../../front-app/src/js/helpers";
 import AltrpLink from "../../altrp-link/AltrpLink";
 import LinkMenu from "../LinkMenu";
 
@@ -22,20 +22,20 @@ class HorizontalVerticalMenu extends Component {
   setStateList() {
     let list = this.props.settings.repeater_menu_layout;
     list.forEach(liParent => {
-      if(liParent.id_repeater_menu_layout) {
+      if (liParent.id_repeater_menu_layout) {
         let children = [];
         list.forEach(li => {
-          if(liParent.id !== li.id) {
-            if(li.parent_id_repeater_menu_layout) {
-              if(li.parent_id_repeater_menu_layout === liParent.id_repeater_menu_layout) {
+          if (liParent.id !== li.id) {
+            if (li.parent_id_repeater_menu_layout) {
+              if (li.parent_id_repeater_menu_layout === liParent.id_repeater_menu_layout) {
                 children.push(li.id);
               }
             }
           }
         });
-        if(list[liParent.id]) {
+        if (list[liParent.id]) {
           list[liParent.id].children = children;
-          if(liParent.id_repeater_menu_layout) {
+          if (liParent.id_repeater_menu_layout) {
             list[liParent.id].showDropdown = false;
           }
         }
@@ -60,8 +60,8 @@ class HorizontalVerticalMenu extends Component {
   showDropdown(id) {
     this.setState(state => {
       let list = state.list;
-      console.log(list[id])
       list[id].showDropdown = true;
+      console.log(list[id])
 
       return {
         ...this.state,
@@ -82,7 +82,6 @@ class HorizontalVerticalMenu extends Component {
   }
 
   render() {
-
     let layout = this.props.settings.menu_layout;
     let classesLi = "altrp-nav-menu-li";
 
@@ -146,20 +145,20 @@ class HorizontalVerticalMenu extends Component {
 
     let chevronMedia = this.props.settings.chevron_media_main_menu_style;
 
-    if(chevronMedia && Object.keys(chevronMedia).length !== 0) {
+    if (chevronMedia && Object.keys(chevronMedia).length !== 0) {
       chevron = renderAsset(chevronMedia);
     }
 
     return (
-      <ul style={stylesUl}  className={"altrp-nav-menu-ul altrp-nav-menu-ul-" + layout} ref={this.children}>
+      <ul style={stylesUl} className={"altrp-nav-menu-ul altrp-nav-menu-ul-" + layout} ref={this.children}>
         {
           this.state.list.map((li, idx) => {
             const tag = li.link_repeater_menu_layout || "a";
 
             let link = <LinkMenu
-              defaultChildren={(<div className="altrp-nav-menu-li-link"/>)}
+              defaultChildren={(<div className="altrp-nav-menu-li-link" />)}
               modelData={this.props.modelData}
-              modelId={(tag === 'Link') && ! isEditor() ? this.props.modelId : null}
+              modelId={(tag === 'Link') && !isEditor() ? this.props.modelId : null}
               link={li.link_repeater_menu_layout}
               className="altrp-nav-menu-li-link"
             >
@@ -203,7 +202,7 @@ class HorizontalVerticalMenu extends Component {
                       id={li.id_repeater_menu_layout}
                       childrenRef={this.children}
                       children={li.children}
-                      list={this.state.list}/> : ""
+                      list={this.state.list} /> : ""
                   }
                 </li>
               ) : ""
