@@ -21,10 +21,12 @@ import { setCurrentContextElement } from "../store/current-context-element/actio
 import { thresholdSturges } from "d3";
 import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
 import CarouselComponent from "./widgets/styled-components/CarouselComponent";
-import GalleryCompnent from "./widgets/styled-components/GalleryComponent";
 import ImageComponent from "./widgets/styled-components/ImageComponent";
 import ButtonComponent from "./widgets/styled-components/ButtonComponent";
 import TextComponent from "./widgets/styled-components/TextComponent";
+import DividerComponent from "./widgets/styled-components/DividerComponent";
+import AccordionComponent from "./widgets/styled-components/AccordionComponent";
+import GalleryComponent from "./widgets/styled-components/GalleryComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -362,21 +364,14 @@ class ElementWrapper extends Component {
     // }
     // console.error(performance.now());
     let WrapperComponent = "div";
-
     switch (this.props.element.getName()) {
-      case "gallery": {
-        WrapperComponent = GalleryCompnent;
-      }
-        break;
-      case "carousel": {
-        WrapperComponent = CarouselComponent;
-      }
-        break;
-      case "image": {
+      case "gallery":
+        WrapperComponent = GalleryComponent;
+        break
+      case "image":
         WrapperComponent = ImageComponent;
-      }
-        break;
-      case "button": {
+        break
+      case "button":
         WrapperComponent = ButtonComponent;
       }
         break;
@@ -384,6 +379,15 @@ class ElementWrapper extends Component {
         WrapperComponent = TextComponent;
       }
         break;
+      case "carousel":
+        WrapperComponent = CarouselComponent;
+        break
+      case "divider":
+        WrapperComponent = DividerComponent;
+        break
+      case "accordion":
+        WrapperComponent = AccordionComponent;
+        break
     }
 
     return elementHideTrigger &&

@@ -1,7 +1,5 @@
 import React, {Component} from "react";
-import HorizontalVerticalMenu from "./horizontalVertical/HorizontalVerticalMenu";
 import DropdownMenu from "./dropdown/DropdownMenu";
-
 import ("./altrp-menu.scss");
 import {isEditor} from "../../../../../front-app/src/js/helpers";
 
@@ -20,8 +18,12 @@ class AltrpMenu extends Component {
     }
   }
 
+  async _componentDidMount(){
+    const HorizontalVerticalMenu = (await import("./horizontalVertical/HorizontalVerticalMenu")).default;
+    this.setState(state => ({...state, HorizontalVerticalMenu}));
+  }
   render() {
-    let content = <div>create menu</div>;
+    let content = <div>{isEditor() ? 'create menu' : ''}</div>;
     let layout = this.state.settings.menu_layout;
     let currentBreakpoint = {};
     let breakpoint = this.state.settings.breakpoint_dropdown_menu_layout;
@@ -59,10 +61,9 @@ class AltrpMenu extends Component {
         layout = "dropdown"
       }
     }
-
-    if(this.state.settings.repeater_menu_layout) {
+    if(this.state.settings.repeater_menu_layout && this.state.HorizontalVerticalMenu) {
       content = layout !== "dropdown" ?
-        <HorizontalVerticalMenu modelId={this.props.modelId}
+        <this.state.HorizontalVerticalMenu modelId={this.props.modelId}
                                 currentScreen={this.props.currentScreen}
                                 modelData={this.props.modelData}
                                 settings={this.props.element.getSettings()}

@@ -29,6 +29,14 @@ export default class Robots extends Component {
   async fetchData() {
     const robots = await this.resource.getAll();
 
+    if (_.isArray(robots)) {
+      robots.map(item =>{
+        item.url = `/admin/robots-editor?robot_id=${item.id}`;
+        return item;
+      });
+    }
+    console.log(robots);
+
     this.setState(state => ({ ...state, robots }));
   }
 
@@ -43,8 +51,6 @@ export default class Robots extends Component {
       submit: data =>
         this.resource.post({
           name: data.name,
-          // model_id: data.model_id,
-          // start_condition: data.start_condition
         }),
       fields: [
         {
@@ -52,16 +58,6 @@ export default class Robots extends Component {
           label: "Robot name",
           required: true
         },
-        // {
-        //   name: "model_id",
-        //   label: "Model",
-        //   required: true
-        // },
-        // {
-        //   name: "start_condition",
-        //   label: "Start condition",
-        //   required: true
-        // }
       ],
       active: true,
       success: res => {
@@ -107,20 +103,18 @@ export default class Robots extends Component {
               {
                 name: "author",
                 title: "Author",
-                url: true,
-                target: "_blank"
               },
               {
                 name: "model_id",
                 title: "Model",
-                url: true,
-                target: "_blank"
               },
               {
                 name: "start_condition",
                 title: "Start Condition",
-                url: true,
-                target: "_blank"
+              },
+              {
+                name: "enabled",
+                title: "Enabled",
               }
             ]}
             rows={this.state.robots}
@@ -132,8 +126,14 @@ export default class Robots extends Component {
                   target: "_blank"
                 },
                 title: "Edit"
-              },
-              {
+              }, {
+                tag: "button",
+                route: '/admin/ajax/robots',
+                method: 'put',
+                data: {power: 1},
+                after: () => this.fetchData(),
+                title: 'Enable'
+              }, {
                 tag: "button",
                 route: "/admin/ajax/robots/:id",
                 method: "delete",

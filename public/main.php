@@ -5,23 +5,22 @@ $cachePath = '../storage/framework/cache/pages/';
 
 if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
 
+  //Current URL
   $url = $_SERVER['REQUEST_URI'];
   $url = explode('?', $url);
   $url = $url[0];
 
   $cachedFiles = [];
   $json = file_get_contents($cachePath . 'relations.json');
+
   if( $json ){
     $cachedFiles = json_decode($json, true);
 
     $hash_to_delete = '';
 
     if (!empty($cachedFiles)) {
-
       foreach ($cachedFiles as $key => $cachedFile) {
-
         if ( $cachedFile['url'] === $url ) {
-
           if( file_exists($cachePath . $cachedFile['hash']) ){
             $file = file_get_contents($cachePath . $cachedFile['hash']);
             echo $file;
@@ -29,10 +28,10 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
           } else {
             $hash_to_delete = $cachedFile['hash'];
           }
-
         }
       }
     }
+
     if( $hash_to_delete ){
       $cachedFiles = array_filter( $cachedFiles, function ( $file ) use ( $hash_to_delete ){
         return $file['hash'] !== $hash_to_delete;

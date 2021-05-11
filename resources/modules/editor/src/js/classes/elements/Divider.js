@@ -108,9 +108,6 @@ class Divider extends BaseElement {
         '%',
         'vw',
       ],
-      rules: {
-        "{{ELEMENT}} .altrp-divider-separator{{STATE}}": "width: {{SIZE}}{{UNIT}}",
-      }
     });
 
     this.addControl('divider_alignment', {
@@ -131,9 +128,6 @@ class Divider extends BaseElement {
           value: 'right',
         }
       ],
-      rules: {
-        '{{ELEMENT}}': 'align-items: {{VALUE}};',
-      },
     });
 
     this.addControl('divider_add_element', {
@@ -185,14 +179,6 @@ class Divider extends BaseElement {
         '%',
         'vh',
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-divider{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
     });
 
     this.addControl('position_padding', {
@@ -211,23 +197,12 @@ class Divider extends BaseElement {
         '%',
         'vh',
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-divider{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
     });
 
     this.addControl('position_z_index', {
       type: CONTROLLER_NUMBER,
       label: 'Z-index',
       default: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-divider{{STATE}}': 'z-index: {{VALUE}}'
-      }
     });
 
     this.addControl('position_css_id', {
@@ -298,9 +273,6 @@ class Divider extends BaseElement {
       },
       max: 50,
       min: 2,
-      rules: {
-        "{{ELEMENT}} .altrp-divider{{STATE}}": ["padding-bottom: {{SIZE}}px", "padding-top: {{SIZE}}px"]
-      }
     });
 
     this.endControlSection();
@@ -317,9 +289,6 @@ class Divider extends BaseElement {
         color: "rgb(0,0,0)",
         colorPickedHex: "#000000",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-divider-label{{STATE}}": "color: {{COLOR}}"
-      }
     });
 
     this.addControl('text_style_typographic', {
@@ -332,18 +301,6 @@ class Divider extends BaseElement {
         weight: "normal",
         family: "Open Sans",
         decoration: ""
-      },
-      rules: {
-        '{{ELEMENT}} .altrp-divider-label{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
       },
     }
     );

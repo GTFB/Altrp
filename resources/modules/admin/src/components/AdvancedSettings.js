@@ -24,9 +24,11 @@ class AdvancedSettings extends Component {
     const allSiteJavascript = (await new Resource({route: '/admin/ajax/settings'}).get('all_site_js?decrypt=true')).all_site_js || '';
     // let debugOn = ! ! (await new Resource({route:'/admin/ajax/settings'}).get('altrp_debug').altrp_debug);
     let debugOn = ! ! (await new Resource({route:'/admin/ajax/settings'}).get('altrp_debug')).altrp_debug;
+    let loadByUser = ! ! (await new Resource({route:'/admin/ajax/settings'}).get('altrp_user_load')).altrp_user_load;
     this.setState(state => ({...state,
       allSiteJavascript,
       debugOn,
+      loadByUser,
     }));
   }
 
@@ -54,6 +56,22 @@ class AdvancedSettings extends Component {
     this.setState(state=>({
       ...state,
       debugOn: value,
+    }))
+  };
+  /**
+   * Включить дебаг на фронте
+   * @param e
+   * @return {Promise<void>}
+   */
+
+  toggleLoadingOption = async (e)=>{
+    // await new Resource({route:'/admin/ajax/settings'}).put('admin_logo', {value: JSON.stringify(value)});
+    // this.dispatch(setAdminLogo(value));
+    let value = e.target.checked;
+    await new Resource({route:'/admin/ajax/settings'}).put('altrp_user_load', {value});
+    this.setState(state=>({
+      ...state,
+      loadByUser: value,
     }))
   };
 
@@ -175,6 +193,18 @@ class AdvancedSettings extends Component {
                    onChange={this.toggleDebug}
                    // value={this.state.debugOn}
                    checked={this.state.debugOn}
+                   type="checkbox"/>
+          </td>
+        </tr>
+        <tr className="admin-settings-table-row">
+          <td className="admin-settings-table__td row-text" width="10%">
+            Load App on User Action
+          </td>
+          <td className="admin-settings-table__td">
+            <input className="admin-table__td_check"
+                   onChange={this.toggleLoadingOption}
+                   // value={this.state.debugOn}
+                   checked={this.state.loadByUser}
                    type="checkbox"/>
           </td>
         </tr>

@@ -205,6 +205,10 @@ function componentDidMount() {
   if(typeof this._componentDidMount === 'function'){
     this._componentDidMount();
   }
+  if(this.props.element.lastElement){
+    const renderEvent = new Event('render-altrp');
+    window.dispatchEvent(renderEvent);
+  }
   // this.subscribeToModels(this.getModelId());
 }
 /**

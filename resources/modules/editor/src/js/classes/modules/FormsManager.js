@@ -113,4 +113,4 @@ class FormsManager {
 }
 window.formsManager = new FormsManager();
 
-export default formsManager;
+export default window.formsManager;

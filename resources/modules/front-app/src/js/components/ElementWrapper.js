@@ -10,6 +10,8 @@ import ImageComponent from "../../../../editor/src/js/components/widgets/styled-
 import CarouselComponent from "../../../../editor/src/js/components/widgets/styled-components/CarouselComponent";
 import GalleryComponent from "../../../../editor/src/js/components/widgets/styled-components/GalleryComponent";
 import ButtonComponent from "../../../../editor/src/js/components/widgets/styled-components/ButtonComponent";
+import DividerComponent from "../../../../editor/src/js/components/widgets/styled-components/DividerComponent";
+import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -278,11 +280,6 @@ class ElementWrapper extends Component {
       this.CSSId = CSSId;
     }
     let ContentComponent = frontElementsManager.getComponentClass(this.props.element.getName());
-    // console.log(ContentComponent);
-    // console.log(this.props.component === frontElementsManager.getComponentClass(this.props.element.getName()));
-    // if(['root-element', 'section', 'column'].indexOf(this.props.element.getName()) === -1){
-    //   // ContentComponent = 'div';
-    // }
     const content = React.createElement(ContentComponent, {
       ref: this.elementRef,
       rootElement: this.props.rootElement,
@@ -315,22 +312,24 @@ class ElementWrapper extends Component {
     let WrapperComponent = ElementWrapperDivComponent;
 
     switch (this.props.element.getName()) {
-      case "gallery": {
+      case "gallery":
         WrapperComponent = GalleryComponent;
-      }
-        break;
-      case "carousel": {
-        WrapperComponent = CarouselComponent;
-      }
-        break;
-      case "image": {
+        break
+      case "image":
         WrapperComponent = ImageComponent;
-      }
-        break;
-      case "button": {
+        break
+      case "button":
         WrapperComponent = ButtonComponent;
-      }
-        break;
+        break
+      case "carousel":
+        WrapperComponent = CarouselComponent;
+        break
+      case "divider":
+        WrapperComponent = DividerComponent;
+        break
+      case "accordion":
+        WrapperComponent = AccordionComponent;
+        break
     }
 
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (

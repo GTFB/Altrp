@@ -110,7 +110,7 @@ class AltrpPosts extends React.Component {
       <div className="altrp-post">{PostContentComponent}
         {hoverTemplateId && <div className={`altrp-post altrp-post--hover altrp-post--hover--${transitionType}`}>{PostContentComponent}</div>}
       </div>
-      
+
     </React.Fragment>
   };
 
@@ -221,7 +221,7 @@ class AltrpPosts extends React.Component {
         {/* {!settings.hide_page_input && <input className="altrp-pagination__goto-page"
           type="number"
           defaultValue={pageIndex + 1}
-          onChange={e => this.setPage(+e.target.value)} 
+          onChange={e => this.setPage(+e.target.value)}
         />}
         {!settings.hide_pagination_select && countOptions && <AltrpSelect className="altrp-pagination__select-size"
           options={countOptions}

@@ -283,6 +283,21 @@ export function sliderStyled(controller) {
 }
 
 /**
+ * проверяет наличичие значения slider
+ * @return {string}
+ * @param {{}} controller
+ */
+export function shadowStyled(controller = {}) {
+  const type = controller.type || "";
+  const horizontal = controller.horizontal || 0;
+  const vertical = controller.vertical || 0;
+  const blur = controller.blur || 0;
+  const spread = controller.spread || 0;
+  const color = controller.color || "";
+  return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread} ${color};`;
+}
+
+/**
  * принимает настройки виджета settings и принимает массив стилей для преобразования в строку css для styled-components
  * @return {string}
  * @param {[]} styles - массив стилей
@@ -322,6 +337,8 @@ export function styledString(styles, settings) {
           case "slider":
             stringStyles += `${style[0]}: ${sliderStyled(variable)};`
             break;
+          case "shadow":
+            stringStyles += shadowStyled(variable)
           default:
             stringStyles += `${style[0]}: ${defaultStyled(variable)};`
         }

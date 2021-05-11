@@ -4,7 +4,7 @@ import appStore from "./js/store/store";
 import AppContent from "./js/components/AppContent";
 import { Provider } from "react-redux";
 import Resource from "../../editor/src/js/classes/Resource";
-import { changeCurrentUser, setUserNotice, setUsersOnline } from "./js/store/current-user/actions";
+import {changeCurrentUser, setUserNotice, setUsersOnline} from "./js/store/current-user/actions";
 import FontsManager from "./js/components/FontsManager";
 import Echo from "laravel-echo";
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -25,23 +25,11 @@ class FrontApp extends Component {
   }
 
   onWidgetMount(){
-    console.log(performance.now());
+    // console.log(performance.now());
     if(this.timeoutId){
       clearTimeout(this.timeoutId);
     }
     this.timeoutId = setTimeout(() =>{
-      if(! document.querySelector('.front-app-content_preloaded')){
-        return;
-      }
-      const appElement = document.getElementById('front-app');
-      const target = document.getElementById('front-app-target');
-      let classes = _.toArray(target.classList);
-      classes.forEach(c=>{
-        appElement.classList.add(c);
-      });
-      appElement.classList.remove('front-app-content_preloaded');
-      target.remove();
-
     }, 100);
   }
 
@@ -49,7 +37,11 @@ class FrontApp extends Component {
    * Обновляем текущего пользователя
    */
   async componentDidMount() {
-
+    new Resource({ route: '/ajax/' }).get('current-user').then(res=>{
+      if(! _.isEqual(appStore.getState().currentUser.getData(), res.data)){
+        appStore.dispatch(changeCurrentUser(res.data));
+      }
+    })
     let pusherKey = await new Resource({ route: "/admin/ajax/settings" }).get("pusher_app_key");
     let websocketsPort = await new Resource({ route: "/admin/ajax/settings" }).get("websockets_port");
     let websocketsHost = await new Resource({ route: "/admin/ajax/settings" }).get("pusher_host");

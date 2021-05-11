@@ -5,6 +5,7 @@ namespace App;
 use App\Constructor\Template;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
 
 class PagesTemplate extends Model
 {
@@ -69,5 +70,47 @@ class PagesTemplate extends Model
     return $this->belongsTo( Page::class, 'page_id' );
   }
 
+
+  /**
+   * очистить кэш шаблонов связанных со страницей
+   * @param string $id
+   */
+  static function clearAllCacheById(string $id)
+  {
+    $templates = self::where( 'page_id', $id )->get();
+    if (!$templates) {
+      return;
+    }
+
+    $cachePath = storage_path() . '/framework/cache/templates/';
+
+    if (!File::exists($cachePath)) {
+      File::put($cachePath . 'relations.json', '{}');
+      return;
+    }
+    $relations = File::get($cachePath . 'relations.json');
+    $relations = json_decode($relations, true);
+    if (!is_array($relations)) {
+      $relations = [];
+    }
+
+    // foreach ($templates as $template) {
+    //   $key = array_search($template->template_guid, array_column($relations, 'template_id'));
+    //   if (gettype($key) === "integer" && array_key_exists($key, $relations)) {
+    //     if (File::exists($cachePath . $relations[$key]['hash'])) {
+    //       File::delete($cachePath . $relations[$key]['hash']);
+    //     }
+    //     unset($relations[$key]);
+    //   }
+    // }
+    // $relations = json_encode($relations);
+    // File::put($cachePath . 'relations.json', $relations);
+
+    if( File::exists( $cachePath ) ){
+      File::cleanDirectory( $cachePath );
+      File::put($cachePath . 'relations.json', '{}');
+    }
+
+  }
 
 }

@@ -5,7 +5,9 @@ namespace App\Services;
 
 use App\Altrp\Controller;
 use App\Altrp\Generators\ControllerGenerator;
+use App\Altrp\Generators\Schedule\ScheduleFileWriter;
 use App\Altrp\Model;
+use App\Altrp\Robot;
 use App\Altrp\Source;
 use App\Altrp\SourcePermission;
 use App\Exceptions\CommandFailedException;
@@ -297,12 +299,43 @@ class AltrpUpdateService
    */
   public function upgradeAllResources()
   {
-    $models = Model::all();
-    if (! $models) return true;
-    foreach ($models as $model) {
-      $model->update(['last_upgrade' => Carbon::now()]);
-    }
+    $this->updateAllModels();
+    $this->updateAllRobotsSchedules();
     return true;
+  }
+
+  protected function updateAllModels()
+  {
+      $models = Model::all();
+      if (! $models) return true;
+      foreach ($models as $model) {
+          $model->update(['last_upgrade' => Carbon::now()]);
+      }
+      return true;
+  }
+
+  protected function updateAllRobotsSchedules()
+  {
+      $robots = Robot::all();
+      $writer = new ScheduleFileWriter(app_path('Console/Kernel.php'));
+
+      foreach ($robots as $robot) {
+          $command = 'robot:run ' . $robot->id;
+          if ($writer->scheduleExists($command)) {
+              $writer->removeSchedule($command);
+          }
+
+          if ($robot->start_condition == 'cron') {
+              $config = is_string($robot->start_config)
+                  ? json_decode($robot->start_config)
+                  : json_decode(json_encode($robot->start_config));
+              $writer->write(
+                  'robot:run ' . $robot->id,
+                  $config->period,
+                  $config->restrictions
+              );
+          }
+      }
   }
 
     /**

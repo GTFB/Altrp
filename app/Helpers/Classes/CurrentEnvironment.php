@@ -4,19 +4,37 @@
 namespace App\Helpers\Classes;
 
 use App\Traits\Singleton;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 
 
 class CurrentEnvironment
 {
     use Singleton;
-//    private static $instance;
+
     private $data = [];
 
     private function __construct()
     {
-        $this->appData['request'] = request()->all();
+        $this->appData['request'] = $this->filterFilesInRequest(request()->all());
         $this->appData['current_user'] = Auth::user();
+    }
+
+    /**
+     * Исключить все файлы из запроса
+     * @param $data
+     * @return array
+     */
+    protected function filterFilesInRequest($data)
+    {
+        $requestData = [];
+        foreach ($data as $key => $value) {
+            if (is_array($value) && !empty($value) && $value[0] instanceof UploadedFile) {
+                continue;
+            }
+            $requestData[$key] = $value;
+        }
+        return $requestData;
     }
 
     /**

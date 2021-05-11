@@ -209,10 +209,10 @@ class TemplateController extends Controller
    */
   public function show_frontend( string $template_id )
   {
- 
-    if (self::loadCachedTemplate( $template_id )) {
-      return self::loadCachedTemplate( $template_id );
-    }
+
+    // if (self::loadCachedTemplate( $template_id )) {
+    //    return self::loadCachedTemplate( $template_id );
+    // }
 
     if ( Uuid::isValid( $template_id ) ) {
       $template = Template::where( 'guid', $template_id )->first();
@@ -223,7 +223,7 @@ class TemplateController extends Controller
       return response()->json( [ 'success' => false, 'message' => 'Template not found' ], 404, [], JSON_UNESCAPED_UNICODE );
     }
     $template->check_elements_conditions();
-    saveTemplateCache( json_encode($template->toArray()), $template_id);
+    //saveTemplateCache( json_encode($template->toArray()), $template_id);
     return response()->json( $template->toArray() );
   }
 
@@ -279,6 +279,7 @@ class TemplateController extends Controller
         clearAllCache();
       } else {
         $pages = Page::getPagesByTemplateId( $old_template->id );
+
         if ($pages) {
           foreach ($pages as $page) {
             clearPageCache( $page->page_id );
@@ -286,7 +287,7 @@ class TemplateController extends Controller
         }
       }
       return response()->json( $old_template, 200, [], JSON_UNESCAPED_UNICODE );
-      
+
     }
 
     return response()->json( trans( "responses.dberror" ), 400, [], JSON_UNESCAPED_UNICODE );
@@ -329,9 +330,6 @@ class TemplateController extends Controller
         $review->author = $review->author;
         return $review;
       } )->toArray();
-    echo '<pre style="padding-left: 200px;">';
-    var_dump( $template_id );
-    echo '</pre>';
 
     return \response()->json( $reviews );
   }
@@ -607,7 +605,7 @@ class TemplateController extends Controller
     $relationsJson = File::get($cachePath . '/relations.json');
 
     if( $relationsJson ){
-      
+
       $cachedFiles = json_decode($relationsJson, true);
 
       $hash_to_delete = '';

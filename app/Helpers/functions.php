@@ -1,12 +1,16 @@
 <?php
 
 use App\Http\Requests\ApiRequest;
+use App\Role;
 use App\User;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use League\ColorExtractor\Color;
 use League\ColorExtractor\ColorExtractor;
 use League\ColorExtractor\Palette;
 use App\Page;
+use Illuminate\Support\Facades\Auth;
+use App\Altrp\Facades\CacheService;
 
 /**
  * Get the script possible URL base
@@ -545,9 +549,8 @@ function saveCache( $html, $page_id ) {
   }
   $url = $_SERVER['REQUEST_URI'];
 
-  //  $html = minificationHTML($html);
-  $html = minifyHTML($html);
-  
+  // $html = minificationHTML($html);
+  // $html = minifyHTML($html);
   $hash = md5($url . $html);
 
   $cachePath = storage_path() . '/framework/cache/pages';
@@ -566,13 +569,10 @@ function saveCache( $html, $page_id ) {
     $relations = [];
   }
 
-  $roles = Page::getRolesToCache( $page_id );
-
   $newRelation = [
     'hash' => $hash,
     "url" => $url,
-    "page_id" => $page_id,
-    "roles" => $roles
+    "page_id" => $page_id
   ];
 
   $key = false;
@@ -594,6 +594,7 @@ function saveCache( $html, $page_id ) {
 
   return true;
 }
+
 
 function minifyHTML($html) {
 
@@ -739,6 +740,11 @@ function clearAllCache() {
     File::cleanDirectory( storage_path() . '/framework/cache/pages' );
     File::put($cachePath . '/relations.json', '{}');
   }
+  $pages = Page::all();
+  foreach($pages as $page ){
+    Cache::delete( 'areas_' . $page->id );
+  }
+
   return true;
 }
 
@@ -759,7 +765,7 @@ function clearPageCache( $page_id ) {
   }
 
   foreach ($relations as $key => $relation) {
-    if ($relation['page_id'] === $page_id) {
+    if (isset($relation['page_id']) && $relation['page_id'] === $page_id) {
       if ( File::exists($cachePath . '/' . $relation['hash']) ) {
         File::delete($cachePath . '/' . $relation['hash']);
       }
@@ -769,6 +775,8 @@ function clearPageCache( $page_id ) {
 
   $relations = json_encode($relations);
   File::put($cachePath . '/relations.json', $relations);
+
+  Cache::delete( 'areas_' . $page_id );
 
   return true;
 }
@@ -961,6 +969,10 @@ function _extractElementsNames( $element = [],  &$elementNames ){
     return;
   }
 
+  if( isset( $element['lazySection'] ) && $element['lazySection'] ){
+    return;
+  }
+
 
   if( array_search( $element['name'], $elementNames ) === false){
     $elementNames[] = $element['name'];
@@ -970,4 +982,78 @@ function _extractElementsNames( $element = [],  &$elementNames ){
       _extractElementsNames( $child, $elementNames );
     }
   }
+}
+
+/**
+ * Получить данные текущего пользователя, либо [is_guest => true] если не залогинен
+ * @return array
+ */
+function getCurrentUser(): array
+{
+  $user = Auth::user();
+  if ( ! $user ) {
+    return ['is_guest' => true];
+  }
+  $user = $user->toArray();
+  $user['roles'] = Auth::user()->roles->map(function (Role $role) {
+    $_role = $role->toArray();
+    $_role['permissions'] = $role->permissions;
+    return $_role;
+  });
+  $user['local_storage'] = json_decode($user['local_storage'], 255);
+  $user['permissions'] = Auth::user()->permissions;
+  return $user;
+}
+
+/**
+ * Заменяет в тексте конструкции типа {{path_to_data...}} на данные
+ * @param string $content
+ * @param array | null $modelContext
+ * @return string
+ */
+function replaceContentWithData( $content, $modelContext = null ){
+  if( ! $modelContext ){
+    return $content;
+  }
+  is_string( $content ) ? preg_match_all( '/{{([\s\S]+?)(?=}})/', $content, $path ) : null;
+  if( ! isset( $path ) || ! isset( $path[1] )){
+    return $content;
+  }
+  foreach ($path[1] as $item) {
+    $value = data_get( $modelContext, $item, '');
+    $content = str_replace( '{{' . $item . '}}', $value, $content );
+  }
+  return $content;
+}
+/**
+ * Convert array to string
+ * @param $data
+ * @return string
+ */
+function array2string($data) {
+  $log_a = "[";
+  try {
+    foreach ($data as $key => $value) {
+      if (!is_numeric($key)) $key = "'{$key}'";
+      if (is_array($value))
+        $log_a .= $key." => " . array2string($value) . ",";
+      elseif (is_object($value))
+        $log_a .= $key." => " . array2string(json_encode(json_decode($value))) . ",";
+      elseif (is_bool($value))
+        $log_a .= $key." => " . ($value ? 'true' : 'false') . ",";
+      elseif (is_string($value))
+        $log_a .= $key." => '" . $value . "',";
+      elseif (is_null($value))
+        $log_a .= $key." => null,";
+      else
+        $log_a .= $key." => " . $value . ",";
+    }
+  } catch (\Exception $exception) {
+    $data = json_decode($data);
+    if (is_array($data))
+      array2string($data);
+  }
+
+  $log_a = trim($log_a, ",");
+  return $log_a . ']';
 }

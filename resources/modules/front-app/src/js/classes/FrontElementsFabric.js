@@ -30,11 +30,12 @@ class FrontElementsFabric {
     }
     if( object.children && object.children.length ){
       for( let child of object.children){
-        frontElementsManager.checkElementExists(child.name) ?
+        window.frontElementsManager.checkElementExists(child.name) ?
             children.push( this.parseData(child, element) ) : '';
       }
     }
     element.id = object.id;
+    element.lastElement = object.lastElement;
     element.children = children;
     element.settings = object.settings;
     element.name = object.name;
