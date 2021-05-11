@@ -373,11 +373,9 @@ class ElementWrapper extends Component {
         break
       case "button":
         WrapperComponent = ButtonComponent;
-      }
         break;
-      case "text": {
+      case "text":
         WrapperComponent = TextComponent;
-      }
         break;
       case "carousel":
         WrapperComponent = CarouselComponent;
