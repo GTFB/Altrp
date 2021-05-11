@@ -320,7 +320,7 @@ class Carousel extends BaseElement {
       },
       units: [
         'px',
-        '%',
+        'vw',
         'vh',
       ],
       max: 1000,

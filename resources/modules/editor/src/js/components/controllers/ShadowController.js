@@ -5,6 +5,7 @@ import { SketchPicker } from "react-color"
 import ContentIcon from '../../../svgs/content.svg'
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
+import PresetColors from "./PresetColors";
 
 class ShadowController extends Component {
   constructor(props) {
@@ -222,8 +223,15 @@ class ShadowController extends Component {
           {
             this.state.active ?
               <div id="colorPicker" className="control-color-colorPicker">
-                <SketchPicker width="90%" presetColors={this.props.presetColors} color={value.colorRGB}
+                <SketchPicker width="90%" presetColors={[]} color={value.colorRGB}
                   onChange={this.colorChange} className="sketchPicker" />
+                <PresetColors presetColors={this.props.presetColors}
+                  value={this.state.value}
+                  changeValue={color => {
+                    this.colorChange(color)
+                    // this._changeValue(color);
+                    // this.setState(state=>({...state, colorRGB: color.colorRGB}))
+                  }} />
               </div>
               : <div></div>
           }

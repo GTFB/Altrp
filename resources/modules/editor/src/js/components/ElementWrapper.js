@@ -26,6 +26,7 @@ import ButtonComponent from "./widgets/styled-components/ButtonComponent";
 import DividerComponent from "./widgets/styled-components/DividerComponent";
 import AccordionComponent from "./widgets/styled-components/AccordionComponent";
 import GalleryComponent from "./widgets/styled-components/GalleryComponent";
+import TextComponent from "./widgets/styled-components/TextComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -115,7 +116,7 @@ class ElementWrapper extends Component {
      * @member {HTMLElement} target
      * @member {ElementsManger} elementsManager
      * */
-    // e.stopPropagation();`
+    e.stopPropagation();
     e.preventDefault();
     let newWidgetName = e.dataTransfer.getData("text/plain");
     if (newWidgetName) {
@@ -382,6 +383,10 @@ class ElementWrapper extends Component {
       case "accordion":
         WrapperComponent = AccordionComponent;
         break
+      case "text": {
+        WrapperComponent = TextComponent;
+      }
+        break;
     }
 
     return elementHideTrigger &&

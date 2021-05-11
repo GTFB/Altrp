@@ -37,6 +37,19 @@ class Users extends Component {
     });
   }
 
+  getUsersEmail = async () => {
+    let users_result = await this.resource.getAuthorList();
+    let users_result_email = [];
+    for (let i = 0; i < users_result.length; i++) {
+      if (users_result[i].email.includes(this.state.search)) {
+        users_result_email.push(users_result[i])
+      }
+    }
+    this.setState(state => {
+      return { ...state, data: users_result_email };
+    });
+  }
+
   render() {
     const { currentPage, data, search, roles, roleFilter } = this.state;
     const { sortingField, order } = this.state.sorting;
@@ -88,6 +101,7 @@ class Users extends Component {
           <form className="admin-users-form form-bulk-search" >
             <input className="form-control input-sm" value={search} onChange={e => this.setState({ search: e.target.value })} />
             <button type="button" onClick={this.getUsers} className="btn btn_bare admin-users-button">Search Users</button>
+            <button type="button" onClick={this.getUsersEmail} className="btn btn_bare admin-users-button">Search Email</button>
           </form>
         </div>
 

@@ -106,10 +106,12 @@ class GalleryWidget extends Component {
         let containerClassNames = "altrp-gallery-img-container";
 
         if(hoverAnimationType && hoverAnimationType !== "none" ) {
+          console.log(hoverAnimationType)
           containerClassNames += " altrp-hover-parent-image";
         };
 
         if(overlayAnimationType && overlayAnimationType !== "none" ) {
+          console.log(overlayAnimationType)
           containerClassNames += " altrp-hover-parent-overlay";
         };
 
