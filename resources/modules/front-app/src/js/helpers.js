@@ -23,7 +23,6 @@ export function getRoutes() {
 export function isSSR(){
   try {
     return window.SSR;
-
   } catch (e) {
     return false;
   }

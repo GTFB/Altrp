@@ -49,6 +49,9 @@ class AltrpSVG extends Component {
   render(){
     let props = _.assign(this.state.props, this.props);
     _.unset(props, 'url');
+    if(! this.state.svg){
+      return '';
+    }
     return <svg {...props}  dangerouslySetInnerHTML={{__html: this.state.svg}}/>
   }
 }

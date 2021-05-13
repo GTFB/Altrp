@@ -2,6 +2,7 @@
 // =======> {{frontend_route}} <=======
 Route::get({{frontend_route}}, function ({{params}}) {
   $_frontend_route = \App\Page::find({{page_id}});;
+    $model_data = [];
 
   if( {{argument_index}} !== false && $_frontend_route['model'] ) {
     $model = $_frontend_route['model']->toArray();
@@ -18,14 +19,12 @@ Route::get({{frontend_route}}, function ({{params}}) {
         $model_data = [];
       }
     }
-  } else {
-    $model_data = [];
   }
 
   $preload_content = \App\Page::getPreloadPageContent( $_frontend_route['id'] );
-  if( $model_data ){
-    $preload_content['content'] = replaceContentWithData( $preload_content['content'], $model_data );
-  }
+
+  $preload_content['content'] = replaceContentWithData( $preload_content['content'], $model_data );
+
 
   $page_areas = \App\Page::get_areas_for_page( $_frontend_route['id'] );
   $lazy_sections = [];

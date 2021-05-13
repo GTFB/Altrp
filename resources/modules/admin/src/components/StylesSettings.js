@@ -1,4 +1,4 @@
-import Skeleton, {SkeletonTheme} from 'react-loading-skeleton';
+import Skeleton from '../../../editor/src/js/components/altrp-image/Skeleton';
 import React, {Component} from "react";
 import AutoUpdateInput from "./AutoUpdateInput";
 import {iconsManager} from "../js/helpers";
@@ -171,11 +171,10 @@ class StylesSettings extends Component {
                                   className="sketchPicker">
                     </SketchPicker>
                   </div>
-                  <div className="admin-skeleton pr-5">
-                    <SkeletonTheme color={skeletonColor}
-                                   highlightColor={skeletonHighlightColor}>
-                      <Skeleton className="altrp-skeleton"/>
-                    </SkeletonTheme>
+                  <div className="admin-skeleton pr-5 position-relative">
+                      <Skeleton className="altrp-skeleton"
+                                color={skeletonColor}
+                                highlightColor={skeletonHighlightColor}/>
                   </div>
                   <button className="admin-media-input__button btn btn_success align-self-end" onClick={async()=>{
                     await this.skeletonHighlightColorChange('#d0d0d0');

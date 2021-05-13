@@ -13,6 +13,7 @@ import "slick-carousel/slick/slick.scss";
 import "slick-carousel/slick/slick-theme.scss";
 import './js/components/altrp-carousel/altrp-carousel.scss';
 import './js/components/altrp-lightbox/altrp-lightbox.scss';
+import './js/components/altrp-menu/altrp-menu.scss';
 import './sass/editor-content.scss';
 import 'react-image-lightbox/style.css';
 import {changeCurrentModel} from "../../front-app/src/js/store/current-model/actions";

@@ -144,6 +144,9 @@ class AssetsBrowser extends Component {
     } else {
       buttonClasses += " btn_success";
     }
+    if(! this.props.active){
+      return  '';
+    }
     return (
       <div className={classes}>
         <div className="assets-browser__bg" onClick={this.toggleBrowser} />
@@ -188,7 +191,7 @@ class AssetsBrowser extends Component {
                     asset.name = asset.filename;
                     assetProps.src = asset.url;
                   }
-                  
+
                   classes += " asset-choose_icon";
                   // assetProps.viewBox = '0 0 20 20';
                   // assetProps.viewport = '0 0 10 10';

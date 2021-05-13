@@ -135,7 +135,9 @@ class DataStorageUpdater extends AltrpModel {
           return res;
         }
       });
+      console.log('Update Datasource Start: ',performance.now());
       let responses = await Promise.all(requests);
+      console.log('Update Datasource End: ',performance.now());
       initialUpdate && appStore.dispatch(currentDataStorageLoaded());
     }
     if(! dataSources.length){

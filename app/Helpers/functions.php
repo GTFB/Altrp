@@ -1012,14 +1012,14 @@ function getCurrentUser(): array
  * @return string
  */
 function replaceContentWithData( $content, $modelContext = null ){
-  if( ! $modelContext ){
-    return $content;
-  }
+//  if( ! $modelContext ){
+//    return $content;
+//  }
   is_string( $content ) ? preg_match_all( '/{{([\s\S]+?)(?=}})/', $content, $path ) : null;
   if( ! isset( $path ) || ! isset( $path[1] )){
     return $content;
   }
-  foreach ($path[1] as $item) {
+  foreach ( $path[1] as $item ) {
     $value = data_get( $modelContext, $item, '');
     $content = str_replace( '{{' . $item . '}}', $value, $content );
   }

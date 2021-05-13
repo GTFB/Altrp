@@ -147,6 +147,9 @@ class AltrpUpdateService
       File::cleanDirectory( public_path( 'modules' ) );
     }
     clearAllCache();
+    if( File::exists( app_path( 'routes/page_routes.php' ) ) ){
+      File::delete( app_path( 'routes/page_routes.php') );
+    }
 
     return $archive->extractTo( base_path() );
   }
