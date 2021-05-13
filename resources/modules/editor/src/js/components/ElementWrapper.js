@@ -26,6 +26,7 @@ import ButtonComponent from "./widgets/styled-components/ButtonComponent";
 import DividerComponent from "./widgets/styled-components/DividerComponent";
 import AccordionComponent from "./widgets/styled-components/AccordionComponent";
 import GalleryComponent from "./widgets/styled-components/GalleryComponent";
+import Column from "../classes/elements/Column";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -121,7 +122,15 @@ class ElementWrapper extends Component {
     if (newWidgetName) {
       e.stopPropagation();
       let newElement = new (elementsManager.getElementClass(newWidgetName))();
-      if (this.props.element.getType() === "widget") {
+
+      if (newWidgetName === "section_widget") {
+        let column = new Column();
+        newElement.appendChild(column, false);
+      }
+      if (
+        this.props.element.getType() === "widget" &&
+        this.props.element.getName() !== "section_widget"
+      ) {
         switch (this.state.cursorPos) {
           case "top":
             {
@@ -134,7 +143,6 @@ class ElementWrapper extends Component {
             }
             break;
         }
-
       }
       if (this.props.element.getType() === "column") {
         this.props.element.appendChild(newElement);
@@ -280,7 +288,11 @@ class ElementWrapper extends Component {
   }
   render() {
     const elementHideTrigger = this.props.element.settings.hide_on_trigger;
-    const { isFixed, tooltip_text, tooltip_position } = this.props.element.getSettings();
+    const {
+      isFixed,
+      tooltip_text,
+      tooltip_position
+    } = this.props.element.getSettings();
 
     let errorContent = null;
     if (this.state.errorInfo) {
@@ -311,6 +323,7 @@ class ElementWrapper extends Component {
     let deleteText = `Delete ${this.props.element.getTitle()}`;
     let _EditIcon = EditIcon;
     classes += this.getClasses();
+
     switch (this.props.element.getType()) {
       case "section":
         {
@@ -337,14 +350,17 @@ class ElementWrapper extends Component {
     if (isFixed) {
       classes += " fixed-section";
     }
-    const styles = {
-
-    };
-    if (this.props.element.getResponsiveSetting('layout_column_width')) {
-      if (Number(this.props.element.getResponsiveSetting('layout_column_width'))) {
-        styles.width = this.props.element.getResponsiveSetting('layout_column_width') + '%';
+    const styles = {};
+    if (this.props.element.getResponsiveSetting("layout_column_width")) {
+      if (
+        Number(this.props.element.getResponsiveSetting("layout_column_width"))
+      ) {
+        styles.width =
+          this.props.element.getResponsiveSetting("layout_column_width") + "%";
       } else {
-        styles.width = this.props.element.getResponsiveSetting('layout_column_width');
+        styles.width = this.props.element.getResponsiveSetting(
+          "layout_column_width"
+        );
       }
     }
     const elementProps = {
@@ -366,22 +382,22 @@ class ElementWrapper extends Component {
     switch (this.props.element.getName()) {
       case "gallery":
         WrapperComponent = GalleryComponent;
-        break
+        break;
       case "image":
         WrapperComponent = ImageComponent;
-        break
+        break;
       case "button":
         WrapperComponent = ButtonComponent;
-        break
+        break;
       case "carousel":
         WrapperComponent = CarouselComponent;
-        break
+        break;
       case "divider":
         WrapperComponent = DividerComponent;
-        break
+        break;
       case "accordion":
         WrapperComponent = AccordionComponent;
-        break
+        break;
     }
 
     return elementHideTrigger &&
@@ -399,7 +415,11 @@ class ElementWrapper extends Component {
         onDragLeave={this.onDragLeave}
         onDragEnter={this.onDragEnter}
       >
-        <div className={overlayClasses} id={"overlay" + this.props.element.getId()} style={overlayStyles}>
+        <div
+          className={overlayClasses}
+          id={"overlay" + this.props.element.getId()}
+          style={overlayStyles}
+        >
           <div className="overlay-settings">
             <button
               className="overlay-settings__button overlay-settings__button_add "
@@ -432,8 +452,13 @@ class ElementWrapper extends Component {
             </button>
           </div>
         </div>
-        {errorContent || React.createElement(this.props.component, elementProps)}
-        {tooltip_text && <AltrpTooltip position={tooltip_position}>{tooltip_text}</AltrpTooltip>}
+        {errorContent ||
+          React.createElement(this.props.component, elementProps)}
+        {tooltip_text && (
+          <AltrpTooltip position={tooltip_position}>
+            {tooltip_text}
+          </AltrpTooltip>
+        )}
         {emptyColumn}
       </WrapperComponent>
     );
@@ -470,7 +495,7 @@ function mapStateToProps(state) {
     controllerValue: state.controllerValue,
     currentDataStorage: state.currentDataStorage,
     // hideTriggers: state.hideTriggers,
-    currentScreen: state.currentScreen,
+    currentScreen: state.currentScreen
   };
 }
 
