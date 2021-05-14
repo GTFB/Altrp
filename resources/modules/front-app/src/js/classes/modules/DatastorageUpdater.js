@@ -109,7 +109,13 @@ class DataStorageUpdater extends AltrpModel {
           }
           let res = {};
           try {
-            if (dataSource.getType() === 'show') {
+            const preloadedData = _.get(window.altrpPreloadedDatasources, dataSource.getAlias());
+            console.log(preloadedData);
+            if(preloadedData){
+              res = preloadedData;
+              _.unset(window.altrpPreloadedDatasources, dataSource.getAlias());
+            } else
+              if (dataSource.getType() === 'show') {
               let id = _.get(params, 'id', _.get(this.props, 'match.params.id'));
               if (id) {
                 res = await (new Resource({ route: dataSource.getWebUrl() })).get(id);

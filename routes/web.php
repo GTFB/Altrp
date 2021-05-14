@@ -663,4 +663,4 @@ Route::get('/altrp_run_robot/{robot_id}', 'RobotController@runRobot');
  */
 Route::post('update-all-resources', 'Admin\UpdateController@upgradeAllResources');
 
-//dd( json_decode((new testController())->show( 422 )->getContent(), true) );
+
