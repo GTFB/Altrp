@@ -373,7 +373,10 @@ class ElementWrapper extends Component {
         break
       case "button":
         WrapperComponent = ButtonComponent;
-        break
+        break;
+      case "text":
+        WrapperComponent = TextComponent;
+        break;
       case "carousel":
         WrapperComponent = CarouselComponent;
         break
@@ -383,10 +386,6 @@ class ElementWrapper extends Component {
       case "accordion":
         WrapperComponent = AccordionComponent;
         break
-      case "text": {
-        WrapperComponent = TextComponent;
-      }
-        break;
     }
 
     return elementHideTrigger &&

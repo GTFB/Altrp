@@ -297,6 +297,8 @@ class ShadowController extends Component {
           </div>
           {/* конец slider vertical displacement */}
           {/* начало slider spread */}
+          {this.props.currentElement.getName() !== 'heading' &&
+            <>
           <div className="control-slider-header">
             <div className="control-slider-label">
               spread
@@ -315,6 +317,7 @@ class ShadowController extends Component {
                 value={value.spread ? value.spread : 0} name="spreadNumber" onChange={this.spreadChange} />
             </div>
           </div>
+            </>}
           {/* конец slider vertical displacement */}
           <div className="controller-container controller-container_select controller-container_select_typographic">
             <div className="controller-container__label control-select__label">
