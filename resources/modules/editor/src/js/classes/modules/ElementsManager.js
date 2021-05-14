@@ -54,7 +54,8 @@ import HtmlWidget from "../../components/widgets/HtmlWidget";
 import TemplateWidget from "../../components/widgets/TemplateWidget";
 import Video from "../elements/Video";
 import VideoWidget from "../../components/widgets/VideoWidget";
-
+import SectionWidget from "../elements/SectionWidget";
+import SectionWidgetComponent from "../../components/SectionWidgetComponent";
 
 export default class ElementsManger {
   constructor() {
@@ -89,6 +90,7 @@ export default class ElementsManger {
     this.elements[Html.getName()] = Html;
     this.elements[Gallery.getName()] = Gallery;
     this.elements[Video.getName()] = Video;
+    this.elements[SectionWidget.getName()] = SectionWidget;
     // Websocket Notifications
     // this.elements[Notifications.getName()] = Notifications;
     //список компонентов
@@ -96,6 +98,7 @@ export default class ElementsManger {
     this.components[RootElement.getName()] = RootComponent;
     this.components[HeadingElement.getName()] = HeadingWidget;
     this.components[Section.getName()] = SectionComponent;
+    this.components[SectionWidget.getName()] = SectionComponent;
     this.components[Column.getName()] = ColumnComponent;
     this.components[Button.getName()] = ButtonWidget;
     this.components[Input.getName()] = InputWidget;
