@@ -188,7 +188,6 @@ class ElementWrapper extends Component {
    * событие начало перетаскивания
    */
   onDragStart(e) {
-    e.preventDefault();
     store.dispatch(startDrag(this.props.element));
     e.dataTransfer.effectAllowed = "copy";
     e.dataTransfer.setData("altrp-element", this.props.element);
