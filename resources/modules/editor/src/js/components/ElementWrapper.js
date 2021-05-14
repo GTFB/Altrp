@@ -18,7 +18,6 @@ import store from "../store/store";
 import { START_DRAG, startDrag } from "../store/element-drag/actions";
 import { contextMenu } from "react-contexify/lib/index";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
-import { thresholdSturges } from "d3";
 import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
 import CarouselComponent from "./widgets/styled-components/CarouselComponent";
 import ImageComponent from "./widgets/styled-components/ImageComponent";
@@ -190,7 +189,6 @@ class ElementWrapper extends Component {
    * событие начало перетаскивания
    */
   onDragStart(e) {
-    e.preventDefault();
     store.dispatch(startDrag(this.props.element));
     e.dataTransfer.effectAllowed = "copy";
     e.dataTransfer.setData("altrp-element", this.props.element);
@@ -352,16 +350,19 @@ class ElementWrapper extends Component {
       classes += " fixed-section";
     }
     const styles = {};
+    let layout_column_width = this.props.element.getResponsiveSetting(
+      "layout_column_width"
+    );
     if (this.props.element.getResponsiveSetting("layout_column_width")) {
       if (
         Number(this.props.element.getResponsiveSetting("layout_column_width"))
       ) {
-        styles.width =
+        layout_column_width =
           this.props.element.getResponsiveSetting("layout_column_width") + "%";
       } else {
-        styles.width = this.props.element.getResponsiveSetting(
+        layout_column_width = `${this.props.element.getResponsiveSetting(
           "layout_column_width"
-        );
+        )}`;
       }
     }
     const elementProps = {
@@ -408,7 +409,7 @@ class ElementWrapper extends Component {
       this.props.hideTriggers.includes(elementHideTrigger) ? null : (
       <WrapperComponent
         className={classes}
-        style={styles}
+        style={{ ...styles, width: layout_column_width }}
         ref={this.wrapper}
         onContextMenu={this.handleContext}
         onDragOver={this.onDragOver}

@@ -137,6 +137,7 @@
   window.altrpSkeletonHighlightColor = '{{ get_altrp_setting( 'altrp_skeleton_highlight_color', '#d0d0d0' ) }}';
   window.current_user = {!! json_encode( getCurrentUser() ) !!};
   window.model_data = {!! json_encode( $model_data ) !!};
+  window.altrpPreloadedDatasources = {!! json_encode( $datasources ) !!};
   /* ]]> */
 </script>
 <script src="{{ altrp_asset( '/modules/front-app/front-app.js', 'http://localhost:3001/' ) }}" defer></script>

@@ -563,6 +563,9 @@ foreach ($reports_routes as $report_route) {
 /**
  * AJAX routes for frontend
  */
+echo '<pre style="padding-left: 200px;">';
+var_dump( base_path( 'routes/page_routes.php') );
+echo '</pre>';
 
 Route::group(['prefix' => 'ajax'], function () {
 
@@ -663,4 +666,4 @@ Route::get('/altrp_run_robot/{robot_id}', 'RobotController@runRobot');
  */
 Route::post('update-all-resources', 'Admin\UpdateController@upgradeAllResources');
 
-//dd( json_decode((new testController())->show( 422 )->getContent(), true) );
+

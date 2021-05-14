@@ -748,6 +748,12 @@ function clearAllCache() {
   return true;
 }
 
+/**
+ * @param $page_id
+ * @return bool
+ * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+ * @throws \Psr\SimpleCache\InvalidArgumentException
+ */
 function clearPageCache( $page_id ) {
 
   $cachePath = storage_path() . '/framework/cache/pages';
@@ -1008,19 +1014,22 @@ function getCurrentUser(): array
 /**
  * Заменяет в тексте конструкции типа {{path_to_data...}} на данные
  * @param string $content
- * @param array | null $modelContext
  * @return string
  */
-function replaceContentWithData( $content, $modelContext = null ){
+function replaceContentWithData( $content ){
 //  if( ! $modelContext ){
 //    return $content;
 //  }
+  global $altrp_env;
+  if( ! isset( $altrp_env['altrpuser'] ) ){
+    data_set( $altrp_env, 'altrpuser', getCurrentUser() );
+  }
   is_string( $content ) ? preg_match_all( '/{{([\s\S]+?)(?=}})/', $content, $path ) : null;
   if( ! isset( $path ) || ! isset( $path[1] )){
     return $content;
   }
   foreach ( $path[1] as $item ) {
-    $value = data_get( $modelContext, $item, '');
+    $value = data_get( $altrp_env, $item, '');
     $content = str_replace( '{{' . $item . '}}', $value, $content );
   }
   return $content;
@@ -1056,4 +1065,100 @@ function array2string($data) {
 
   $log_a = trim($log_a, ",");
   return $log_a . ']';
+}
+
+/**
+ * @param int $page_id
+ * @param array $params
+ * @param string $params_string
+ * @return [] | null
+ */
+function getDataSources( $page_id, $params = array(), $params_string = '' ){
+  global $altrp_env;
+  $altrp_env['altrpdata'] = [];
+  $datasources = [];
+
+  $page = Page::find( $page_id );
+  if( ! $page ){
+    return $datasources;
+  }
+
+//  dd($page->data_sources->get(0)->model->altrp_controller->toArray());
+  try{
+    if( ! $page->data_sources ){
+      return $datasources;
+    }
+    $default_params = [];
+    if( $params_string ){
+      foreach ( explode( ',', $params_string ) as $idx => $item) {
+        $item = trim( $item );
+        $item = str_replace( '$', '', $item );
+        $default_params[$item] = $params[$idx];
+      }
+    }
+    if( count( $default_params ) ){
+      $altrp_env = array_merge( $default_params, $altrp_env );
+    }
+    $page_data_sources = $page->page_data_sources->filter( function ( $ds ){
+      return $ds->server_side;
+    } );
+    $page_data_sources = $page_data_sources->sortBy( 'priority' );
+
+    foreach ( $page_data_sources as $ds ) {
+      if( ! $ds->source || ! $ds->source->model || ! $ds->alias ){
+        continue;
+      }
+      if( $ds->parameters ){
+        $_request_parameters = json_decode( replaceContentWithData( $ds->parameters ), true );
+
+        if( ! $_request_parameters ){
+          $_request_parameters = explode( "\n", replaceContentWithData( $ds->parameters ) );
+          $_request_parameters = array_map( function( $item ){
+            $item = explode( '|', $item );
+            $item = array_map( function( $i ){
+              return trim( $i );
+            }, $item );
+            if( ! isset( $item[1] ) ){
+              $item[1] = $item[0];
+            }
+            return [
+              'paramName' => $item[0],
+              'paramValue' => $item[1],
+            ];
+          }, $_request_parameters );
+        }
+        $request_parameters = [];
+        foreach ( $_request_parameters as $request_parameter ) {
+          $request_parameters[$request_parameter['paramName']] = replaceContentWithData( $request_parameter['paramValue'] );
+        }
+      }
+
+      $classname = '\App\Http\Controllers\AltrpControllers\\' . $ds->source->model->name . 'Controller' ;
+      $controllerInstance = new $classname;
+
+      $request = new ApiRequest( $request_parameters );
+
+      if ($ds->source->type == 'get') $method = 'index';
+      elseif ($ds->source->type == 'filters') $method = 'getIndexedColumnsValueWithCount';
+      elseif ($ds->source->source->type == 'add') $method = 'store';
+      elseif ($ds->source->type == 'update_column') $method = 'updateColumn';
+      elseif ($ds->source->type == 'delete') $method = 'destroy';
+      else $method = $ds->source->type;
+      $result = call_user_func( [$controllerInstance, $method], $request );
+      if( $result ){
+        $result = $result->getContent();
+        $result = json_decode( $result, true );
+        $datasources[$ds->alias] = $result;
+        if( isset( $result['data'] ) ){
+          $result = array_merge( $result, $result['data'] );
+          unset( $result['data'] );
+        }
+        data_set( $altrp_env['altrpdata'], $ds->alias, $result );
+      }
+
+    }
+  } catch( Exception $e ){
+    return $datasources;
+  }
+  return $datasources;
 }
