@@ -110,7 +110,6 @@ class DataStorageUpdater extends AltrpModel {
           let res = {};
           try {
             const preloadedData = _.get(window.altrpPreloadedDatasources, dataSource.getAlias());
-            console.log(preloadedData);
             if(preloadedData){
               res = preloadedData;
               _.unset(window.altrpPreloadedDatasources, dataSource.getAlias());

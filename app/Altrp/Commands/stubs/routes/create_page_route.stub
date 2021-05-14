@@ -24,7 +24,7 @@ Route::get({{frontend_route}}, function ({{params}}) {
   }
 
   $preload_content = \App\Page::getPreloadPageContent( $_frontend_route['id'] );
-  $preload_content['content'] = replaceContentWithData( $preload_content['content'], $model_data );
+  $preload_content['content'] = replaceContentWithData( $preload_content['content'] );
 
   $datasources = getDataSources( $_frontend_route['id'], func_get_args(), $params_string );
 

@@ -563,6 +563,9 @@ foreach ($reports_routes as $report_route) {
 /**
  * AJAX routes for frontend
  */
+echo '<pre style="padding-left: 200px;">';
+var_dump( base_path( 'routes/page_routes.php') );
+echo '</pre>';
 
 Route::group(['prefix' => 'ajax'], function () {
 

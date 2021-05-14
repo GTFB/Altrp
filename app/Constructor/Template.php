@@ -353,9 +353,7 @@ class Template extends Model
       ->where( 'templates.type', 'template' )
       ->where( 'pages_templates.page_guid', $page->guid )
       ->where( 'pages_templates.template_type', $template_type )->get( 'templates.*' )->first();
-
     if( $_template ){
-      //$_template->check_elements_conditions();
       $_template = $_template->toArray();
       $_template['data'] = json_decode( $_template['data'], true );
 

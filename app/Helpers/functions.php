@@ -748,6 +748,12 @@ function clearAllCache() {
   return true;
 }
 
+/**
+ * @param $page_id
+ * @return bool
+ * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+ * @throws \Psr\SimpleCache\InvalidArgumentException
+ */
 function clearPageCache( $page_id ) {
 
   $cachePath = storage_path() . '/framework/cache/pages';
@@ -1015,6 +1021,9 @@ function replaceContentWithData( $content ){
 //    return $content;
 //  }
   global $altrp_env;
+  if( ! isset( $altrp_env['altrpuser'] ) ){
+    data_set( $altrp_env, 'altrpuser', getCurrentUser() );
+  }
   is_string( $content ) ? preg_match_all( '/{{([\s\S]+?)(?=}})/', $content, $path ) : null;
   if( ! isset( $path ) || ! isset( $path[1] )){
     return $content;
