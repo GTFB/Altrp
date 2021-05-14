@@ -1,5 +1,5 @@
-import Skeleton, {SkeletonTheme} from 'react-loading-skeleton';
-
+// import Skeleton, {SkeletonTheme} from 'react-loading-skeleton';
+import Skeleton from './Skeleton';
 import {connect} from "react-redux";
 import React, {cloneElement, Component} from 'react';
 import {isEditor, isSSR, renderAsset} from "../../../../../front-app/src/js/helpers";
@@ -11,7 +11,7 @@ class AltrpImage extends Component {
     super(props);
     this.imageRef = React.createRef();
     let visible = true;
-    if(isSSR()){
+    if(isSSR() && ! props.element?.getResponsiveSetting('lazyload_disable')){
       visible = false;
     } else if (isEditor() || props.lazy === false) {
 
@@ -101,10 +101,12 @@ class AltrpImage extends Component {
                                         mediaHeight={media.height || 75}>
       {window.altrpImageLazy === 'skeleton'
         && ! this.state.visible
-        && <SkeletonTheme color={window.altrpSkeletonColor}
-                          highlightColor={window.altrpSkeletonHighlightColor}>
-          <Skeleton className="altrp-skeleton"/>
-        </SkeletonTheme>}
+        &&
+          <Skeleton className="altrp-skeleton"
+                    color={window.altrpSkeletonColor}
+                    highlightColor={window.altrpSkeletonHighlightColor}/>
+
+      }
       {this.state.visible && cloneElement(image, {
         className: this.props.className,
         id: this.props.id || null,

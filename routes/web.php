@@ -13,6 +13,7 @@
 
 use App\Altrp\Relationship;
 use App\Constructor\Template;
+use App\Http\Controllers\AltrpControllers\testController;
 use App\Media;
 use App\Page;
 use Illuminate\Support\Facades\Auth;
@@ -661,3 +662,5 @@ Route::get('/altrp_run_robot/{robot_id}', 'RobotController@runRobot');
  * Обновление всех ресурсов бэкенда
  */
 Route::post('update-all-resources', 'Admin\UpdateController@upgradeAllResources');
+
+//dd( json_decode((new testController())->show( 422 )->getContent(), true) );

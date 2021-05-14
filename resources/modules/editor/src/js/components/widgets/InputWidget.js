@@ -985,7 +985,7 @@ class InputWidget extends Component {
           }
         }
         input = (
-          <React.Suspense fallback={<input />}>
+          <React.Suspense fallback={''}>
             <div className="altrp-input-wrapper">
               <AltrpInput
                 type={this.state.settings.content_type}

@@ -25,7 +25,7 @@ class FrontApp extends Component {
   }
 
   onWidgetMount(){
-    // console.log(performance.now());
+    console.log(performance.now());
     if(this.timeoutId){
       clearTimeout(this.timeoutId);
     }
