@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import {isClassComponent} from "../../../../../front-app/src/js/helpers/react";
 
 class CarouselWidget extends Component {
   constructor(props){
@@ -14,6 +15,7 @@ class CarouselWidget extends Component {
     if(props.baseRender){
       this.render = props.baseRender(this);
     }
+    this.carousel = React.createRef();
   }
 
   /**
@@ -30,7 +32,15 @@ class CarouselWidget extends Component {
   }
 
   render(){
-    return <this.state.AltrpCarousel {...this.props.element.getSettings()}/>
+    const carouselProps = {
+      ...this.props.element.getSettings(),
+      currentScreen: this.props.currentScreen,
+      elementId: this.props.element.getId(),
+    };
+    if(isClassComponent(this.state.AltrpCarousel)){
+      carouselProps.ref = this.carousel;
+    }
+    return <this.state.AltrpCarousel {...carouselProps}/>
   }
 }
 

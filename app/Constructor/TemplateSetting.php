@@ -20,6 +20,7 @@ class TemplateSetting extends Model
   ];
 
   /**
+   * @deprecated
    * Импортируем настройки шаблонов
    * @param array $imported_settings
    */

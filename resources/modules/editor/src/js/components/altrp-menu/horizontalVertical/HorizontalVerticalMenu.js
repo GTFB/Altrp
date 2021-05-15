@@ -60,7 +60,7 @@ class HorizontalVerticalMenu extends Component {
   showDropdown(id) {
     this.setState(state => {
       let list = state.list;
-
+      console.log(list[id])
       list[id].showDropdown = true;
 
       return {
@@ -183,8 +183,8 @@ class HorizontalVerticalMenu extends Component {
                   style={stylesLi}
                   key={idx}
                   className={classesLi}
-                  onMouseEnter={() => this.showDropdown(li.id)}
-                  onMouseLeave={() => this.hideDropdown(li.id)}
+                  onMouseEnter={() => this.showDropdown(idx)}
+                  onMouseLeave={() => this.hideDropdown(idx)}
                   data-key={li.id_repeater_menu_layout ? li.id_repeater_menu_layout : ""}
                 >
                   <div className="altrp-nav-menu-li-link-wrapper">

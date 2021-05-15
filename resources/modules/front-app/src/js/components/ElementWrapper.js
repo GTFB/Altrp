@@ -265,7 +265,11 @@ class ElementWrapper extends Component {
     if (! this.state.elementDisplay) {
       styles.display = "none";
     }
-    const CSSId = this.props.element.getSettings("advanced_element_id", "");
+    let CSSId = this.props.element.getSettings("advanced_element_id", "");
+    CSSId = replaceContentWithData(CSSId, this.props.element.getCurrentModel().getData());
+    if(this.CSSId !== CSSId){
+      this.CSSId = CSSId;
+    }
     const content = React.createElement(this.props.component, {
       ref: this.elementRef,
       rootElement: this.props.rootElement,
@@ -299,7 +303,7 @@ class ElementWrapper extends Component {
         className={classes}
         ref={this.elementWrapperRef}
         style={styles}
-        id={CSSId}
+        id={this.CSSId}
       >
         {content}
         {tooltip_text && <AltrpTooltip position={tooltip_position}>{tooltip_text}</AltrpTooltip>}

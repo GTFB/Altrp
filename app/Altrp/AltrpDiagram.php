@@ -19,6 +19,7 @@ class AltrpDiagram extends Model
     ];
 
   /**
+   * @deprecated
    * Импортируем диаграммы
    * @param array $imported_diagrams
    */

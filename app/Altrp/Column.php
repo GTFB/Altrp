@@ -41,6 +41,7 @@ class Column extends Model
     ];
 
   /**
+   * @deprecated
    * Импотритруем колонки
    * @param array $imported_columns
    */

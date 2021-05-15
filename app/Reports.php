@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Schema;
 use Mockery\Exception;
 
+/**
+ * @todo Комплексно избавится от класса
+ * Class Reports
+ * @package App
+ */
 class Reports extends Model
 {
   protected $fillable = [
@@ -19,6 +24,7 @@ class Reports extends Model
   ];
 
   /**
+   * @deprecated
    * Импортируем отчеты
    * @param array $imported_reports
    */

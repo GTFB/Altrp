@@ -14,11 +14,12 @@ import {
   printElements,
   replaceContentWithData,
   scrollToElement,
-  setDataByPath,dataToXLS,
-  delay, altrpCompare,
+  setDataByPath, dataToXLS,
+  delay, altrpCompare, getWrapperHTMLElementByElement,
 } from '../helpers';
 import { togglePopup } from '../store/popup-trigger/actions';
 import {sendEmail} from '../helpers/sendEmail';
+import {loadVIPlugin} from "../helpers/plugins";
 
 // let  history = require('history');
 // // import {history} from 'history';
@@ -305,6 +306,11 @@ class AltrpAction extends AltrpModel {
       case 'condition':
         {
           result = await this.doActionCondition();
+        }
+        break;
+      case 'vi_toggle':
+        {
+          result = await this.doActionVIToggle();
         }
         break;
     }
@@ -1058,6 +1064,35 @@ class AltrpAction extends AltrpModel {
     conditionRight = replaceContentWithData(conditionRight);
     const res = altrpCompare(conditionLeft, conditionRight, compare);
     return {success: res}
+  }
+
+  /**
+   * Версия сайта для слабовидящих
+   * @return {Promise<void>}
+   */
+  async doActionVIToggle(){
+    try{
+      await loadVIPlugin();
+    } catch(error){
+      return {
+        success: false,
+      }
+    }
+    // console.log($);
+    let HTMLWrapper = getWrapperHTMLElementByElement(this.getElement());
+    // if(HTMLWrapper){
+    //   HTMLWrapper.classList.add('bvi-hide');
+    // }
+
+
+// $.bvi({
+    //   bvi_target: '.altrp-btn',
+    //
+    // });
+
+    return {
+      success: true,
+    }
   }
 }
 

@@ -4,6 +4,19 @@ import { connect } from "react-redux";
 import '../../sass/section.scss'
 import {isEditor, redirect} from "../../../../front-app/src/js/helpers";
 import CONSTANTS from "../consts";
+import {
+  ColumnArticleComponent,
+  ColumnAsideComponent, ColumnDivComponent,
+  ColumnFooterComponent,
+  ColumnHeaderComponent, ColumnMainComponent,
+  ColumnNavComponent, ColumnSectionComponent
+} from "./widgets/styled-components/ColumnComponents";
+import {
+  SectionArticleComponent,
+  SectionAsideComponent,
+  SectionDivComponent, SectionFooterComponent, SectionHeaderComponent, SectionMainComponent,
+  SectionNavComponent, SectionSectionComponent
+} from "./widgets/styled-components/SectionComponents";
 
 class SectionComponent extends Component {
   constructor(props) {
@@ -107,11 +120,38 @@ class SectionComponent extends Component {
     if(this.props.currentScreen.name !== CONSTANTS.DEFAULT_BREAKPOINT){
       styles.flexWrap = 'wrap';
     }
+    const layout_html_tag = this.props.element.getSettings('layout_html_tag') || 'div';
 
-    return React.createElement(this.state.settings.layout_html_tag || "div",
+    let component = SectionDivComponent;
+
+    switch(layout_html_tag){
+      case 'aside': {
+        component = SectionAsideComponent;
+      }break;
+      case 'nav': {
+        component = SectionNavComponent;
+      }break;
+      case 'section': {
+        component = SectionSectionComponent;
+      }break;
+      case 'article': {
+        component = SectionArticleComponent;
+      }break;
+      case 'main': {
+        component = SectionMainComponent;
+      }break;
+      case 'footer': {
+        component = SectionFooterComponent;
+      }break;
+      case 'header': {
+        component = SectionHeaderComponent;
+      }break;
+    }
+    return React.createElement(component,
       { style: styles,
         className: sectionClasses.join(' ') + " " + this.state.settings.position_style_css_classes, id: "" ,
         onClick: this.onClick,
+        settings: this.props.element.getSettings(),
       },
       // isScrollEffect ?
       // <>
