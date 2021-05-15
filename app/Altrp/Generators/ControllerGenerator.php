@@ -501,12 +501,12 @@ class ControllerGenerator extends AppGenerator
                 '--model-namespace' => $modelNamespace,
                 '--controller-namespace' => $namespace,
                 '--route-group' => $prefix,
-//                '--validations' => $validations,
                 '--relations' => $relations,
                 '--custom-namespaces' => $this->getCustomCodeBlock($customCode, 'custom_namespaces'),
                 '--custom-traits' => $this->getCustomCodeBlock($customCode, 'custom_traits'),
                 '--custom-properties' => $this->getCustomCodeBlock($customCode, 'custom_properties'),
                 '--custom-methods' => $this->getCustomCodeBlock($customCode, 'custom_methods'),
+//                '--sql-editors' => $this->getCustomCodeBlock($customCode, 'sql_editors'),
                 '--options' => $options
             ]);
         } catch (\Exception $e) {

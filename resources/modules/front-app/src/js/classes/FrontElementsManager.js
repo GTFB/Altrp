@@ -298,10 +298,10 @@ class FrontElementsManager {
    * проверяем все ли виджеты из window.altrpElementsLists загрузились
    */
   componentsIsLoaded() {
-    if (!window.altrpElementsLists) {
+    if (! window.altrpElementsLists) {
       return _.keys(this.components).length === this.ELEMENTS.length;
     }
-    return _.keys(this.components).length === window.altrpElementsLists.length;
+    return _.keys(this.components).length >= window.altrpElementsLists.length;
   }
 
   /**
