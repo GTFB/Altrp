@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Altrp\Plugin;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class WriteModulesStatuses extends Command
 {
@@ -40,6 +41,11 @@ class WriteModulesStatuses extends Command
     {
         $modulesStatusesFile = base_path('modules_statuses.json');
         $content = '';
+        try {
+            DB::connection()->getPdo();
+        } catch (\Exception $e) {
+            return true;
+        }
         $plugins = Plugin::all();
         foreach ($plugins as $plugin) {
             $enabled = $plugin->enabled ? 'true' : 'false';
