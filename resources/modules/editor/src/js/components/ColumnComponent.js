@@ -1,6 +1,6 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 // import '../../sass/column.scss'
-import {isEditor, redirect} from "../../../../front-app/src/js/helpers";
+import { isEditor, redirect } from "../../../../front-app/src/js/helpers";
 import {
   ColumnArticleComponent,
   ColumnAsideComponent,
@@ -9,17 +9,17 @@ import {
 } from "./widgets/styled-components/ColumnComponents";
 
 class ColumnComponent extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state={
+    this.state = {
       children: props.children || [],
       settings: props.element.getSettings()
     };
     props.element.component = this;
-    if(window.elementDecorator){
+    if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    if(props.baseRender){
+    if (props.baseRender) {
       this.render = props.baseRender(this);
     }
     this.columnCount = 0
@@ -30,7 +30,7 @@ class ColumnComponent extends Component {
    * @param e
    */
   onClick = (e) => {
-    if(isEditor()){
+    if (isEditor()) {
       return;
     }
     const columnLink = this.props.element.getSettings('link_link');
@@ -41,15 +41,15 @@ class ColumnComponent extends Component {
    * Курсор для ссылки
    * @return {boolean}
    */
-  columnIsLink(){
-    return ! ! _.get(this, 'props.element.settings.link_link.url');
+  columnIsLink() {
+    return ! !_.get(this, 'props.element.settings.link_link.url');
   }
 
-  render(){
+  render() {
     const background_image = this.props.element.getSettings('background_image', {});
     let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
     let className = "altrp-column " + (this.state.settings.position_style_css_classes || "") + (background_image.url ? ' altrp-background-image' : '');
-    if(this.columnIsLink()){
+    if (this.columnIsLink()) {
       className += ' altrp-pointer';
     }
 
@@ -57,44 +57,44 @@ class ColumnComponent extends Component {
 
     let component = ColumnDivComponent;
 
-    switch(layout_html_tag){
+    switch (layout_html_tag) {
       case 'aside': {
         component = ColumnAsideComponent;
-      }break;
+      } break;
       case 'nav': {
         component = ColumnNavComponent;
-      }break;
+      } break;
       case 'section': {
         component = ColumnSectionComponent;
-      }break;
+      } break;
       case 'article': {
         component = ColumnArticleComponent;
-      }break;
+      } break;
       case 'main': {
         component = ColumnMainComponent;
-      }break;
+      } break;
       case 'footer': {
         component = ColumnFooterComponent;
-      }break;
+      } break;
       case 'header': {
         component = ColumnHeaderComponent;
-      }break;
+      } break;
     }
 
     return React.createElement(component,
       {
-        className ,
-        id :this.state.settings.position_style_css_id || "",
+        className,
+        id: this.state.settings.position_style_css_id || "",
         onClick: this.onClick,
         settings: this.props.element.getSettings()
       },
       this.state.children.map(
         widget => <ElementWrapper key={widget.getIdForAction()}
-                                  rootElement={this.props.rootElement}
-                                  baseRender={this.props.baseRender}
-                                  ElementWrapper={ElementWrapper}
-                                  component={widget.componentClass}
-                                  element={widget}/>
+          rootElement={this.props.rootElement}
+          baseRender={this.props.baseRender}
+          ElementWrapper={ElementWrapper}
+          component={widget.componentClass}
+          element={widget} />
       )
     );
   }

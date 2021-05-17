@@ -4,7 +4,6 @@ export const SET_USERS_ONLINE = 'SET_USERS_ONLINE';
 export const CHANGE_CURRENT_USER_PROPERTY = "CHANGE_CURRENT_USER_PROPERTY";
 
 export function changeCurrentUser(user) {
-  console.error(user);
   return {
     type: CHANGE_CURRENT_USER,
     user: user || {}

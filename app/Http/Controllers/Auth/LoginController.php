@@ -6,6 +6,7 @@ use App\Helpers\Classes\CurrentEnvironment;
 use App\Http\Controllers\Controller;
 use App\Jobs\RunRobotsJob;
 use App\Providers\RouteServiceProvider;
+use App\Services\ChatService;
 use App\Services\Robots\RobotsService;
 use App\Traits\AuthenticatesUsers;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -122,6 +123,10 @@ class LoginController extends Controller
     $request->session()->regenerate();
 
     $this->clearLoginAttempts($request);
+
+    if ($this->guard()->user()) {
+        $res = ChatService::authInChat($this->guard()->user()->email);
+    }
 
     if( ( ! $this->authenticated( $request, $this->guard()->user() ) ) && $request->get( 'altrpLogin' ) ){
 

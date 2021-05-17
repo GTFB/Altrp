@@ -188,10 +188,6 @@ class Accordion extends BaseElement {
           value: 'right',
         },
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-accordion-item-label{{STATE}}': 'text-align: {{VALUE}};',
-        '{{ELEMENT}} .altrp-accordion-item-content{{STATE}}': 'text-align: {{VALUE}}'
-      },
     });
 
     this.addControl('spacing_item_style', {
@@ -203,9 +199,6 @@ class Accordion extends BaseElement {
       },
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-accordion-item{{STATE}}': 'margin-top: {{SIZE}}{{UNIT}}',
-      },
     });
 
     this.endControlSection();
@@ -222,9 +215,6 @@ class Accordion extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        '{{ELEMENT}} .altrp-accordion-item-button{{STATE}}': 'background-color: {{COLOR}};',
-      },
     }
     );
 
@@ -234,9 +224,6 @@ class Accordion extends BaseElement {
       default: {
         color: "",
         colorPickedHex: "",
-      },
-      rules: {
-        '{{ELEMENT}} .altrp-accordion-item-label{{STATE}}': 'color: {{COLOR}};',
       },
     }
     );
@@ -259,9 +246,6 @@ class Accordion extends BaseElement {
         '#eaeaea',
         '#9c18a8'
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-accordion-item-button{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      },
     }
     );
 
@@ -277,14 +261,6 @@ class Accordion extends BaseElement {
         '%',
         'vh',
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-accordion-item-button{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
     });
 
     this.addControl('border_type_title_style', {
@@ -316,9 +292,6 @@ class Accordion extends BaseElement {
           'label': 'Groove',
         },
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-accordion-item-button{{STATE}}': 'border-style: {{VALUE}};',
-      },
     }
     );
 
@@ -334,9 +307,6 @@ class Accordion extends BaseElement {
         '%',
         'vh',
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-accordion-item-button{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-      },
     }
     );
 
@@ -346,9 +316,6 @@ class Accordion extends BaseElement {
       default: {
         color: "rgb(50,168,82)",
         colorPickedHex: "#32a852",
-      },
-      rules: {
-        '{{ELEMENT}} .altrp-accordion-item-button{{STATE}}': 'border-color: {{COLOR}};',
       },
     }
     );
@@ -370,9 +337,6 @@ class Accordion extends BaseElement {
       ],
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-accordion-item-button{{STATE}}': 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
-      },
     });
 
     this.addControl('font_typographic_title_style', {
@@ -422,9 +386,6 @@ class Accordion extends BaseElement {
           value: 'row',
         },
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-accordion-item-button{{STATE}}': 'flex-direction: {{VALUE}};',
-      },
     });
 
     this.addControl('color_icon_style', {
@@ -433,9 +394,6 @@ class Accordion extends BaseElement {
       default: {
         color: "",
         colorPickedHex: "",
-      },
-      rules: {
-        '{{ELEMENT}} .altrp-accordion-item-icon{{STATE}} path': 'fill: {{COLOR}};',
       },
     }
     );
@@ -449,12 +407,6 @@ class Accordion extends BaseElement {
       },
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-accordion-item-label{{STATE}}': [
-          'margin-left: {{SIZE}}{{UNIT}}',
-          'margin-right: {{SIZE}}{{UNIT}}'
-        ],
-      },
     });
 
     this.endControlSection();
@@ -471,9 +423,6 @@ class Accordion extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        '{{ELEMENT}} .altrp-accordion-item-content{{STATE}}': 'background-color: {{COLOR}};',
-      },
     }
     );
 
@@ -483,9 +432,6 @@ class Accordion extends BaseElement {
       default: {
         color: "",
         colorPickedHex: "",
-      },
-      rules: {
-        '{{ELEMENT}} .altrp-accordion-item-content{{STATE}}': 'color: {{COLOR}};',
       },
     }
     );
@@ -507,9 +453,6 @@ class Accordion extends BaseElement {
       ],
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-accordion-item-content{{STATE}}': 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
-      },
     });
 
     this.addControl('padding_content_style', {
@@ -524,14 +467,6 @@ class Accordion extends BaseElement {
         '%',
         'vh',
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-accordion-item-content-show{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
     });
 
     this.addControl('spacing_content_style', {
@@ -543,9 +478,6 @@ class Accordion extends BaseElement {
       },
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-accordion-item-content-show{{STATE}}': 'margin-top: {{SIZE}}{{UNIT}}',
-      },
     });
 
     this.addControl('typographic_content_style', {

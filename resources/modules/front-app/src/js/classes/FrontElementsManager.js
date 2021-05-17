@@ -1,4 +1,4 @@
-export default class FrontElementsManager {
+class FrontElementsManager {
   constructor() {
     //список компонентов
 
@@ -21,6 +21,14 @@ export default class FrontElementsManager {
       },
       {
         name: "section",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'SectionComponent' */ "../../../../editor/src/js/components/SectionComponent"
+          );
+        }
+      },
+      {
+        name: "section_widget",
         import: async () => {
           return await import(
             /* webpackChunkName: 'SectionComponent' */ "../../../../editor/src/js/components/SectionComponent"
@@ -257,6 +265,18 @@ export default class FrontElementsManager {
   }
 
   /**
+   * Загружаем все компоненты
+   * @return {Promise<void>}
+   */
+  async loadAllComponents() {
+    const componentsToLoad = this.ELEMENTS.map(async el => {
+      this.components[el.name] = (
+        await el.import(/* webpackChunkName: 'FrontElementsFabric' */)
+      ).default;
+    });
+    await Promise.all(componentsToLoad);
+  }
+  /**
    * Загружаем оставшиеся компоненты
    * @return {Promise<void>}
    */
@@ -278,10 +298,10 @@ export default class FrontElementsManager {
    * проверяем все ли виджеты из window.altrpElementsLists загрузились
    */
   componentsIsLoaded() {
-    if (!window.altrpElementsLists) {
+    if (! window.altrpElementsLists) {
       return _.keys(this.components).length === this.ELEMENTS.length;
     }
-    return _.keys(this.components).length === window.altrpElementsLists.length;
+    return _.keys(this.components).length >= window.altrpElementsLists.length;
   }
 
   /**
@@ -302,3 +322,4 @@ export default class FrontElementsManager {
   }
 }
 window.frontElementsManager = new FrontElementsManager();
+export default window.frontElementsManager;

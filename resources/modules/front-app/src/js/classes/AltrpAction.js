@@ -578,8 +578,12 @@ class AltrpAction extends AltrpModel {
     }
     elementId = elementId.trim();
     const element = getHTMLElementById(elementId);
+    let scroller = mainScrollbars;
+    if(! scroller){
+      scroller = document.querySelector('.front-app-content');
+    }
     if (element) {
-      scrollToElement(mainScrollbars, element);
+      scrollToElement(scroller, element);
     }
     return {
       success: true

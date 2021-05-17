@@ -23,6 +23,10 @@ const columns = [
     name: "priority",
     title: "Priority"
   },
+  {
+    name: "server_side",
+    title: "Server Side",
+  },
 ];
 
 /**
@@ -383,7 +387,7 @@ class AddPage extends Component {
                             this.changeValue(e.target.checked, "is_cached");
                           }}
                           className="form-check-input form-check-input_inline" />
-                        <label htmlFor="caching" className="label_checkbox">Сaching</label>
+                        <label htmlFor="caching" className="label_checkbox">Сaching (Only for Static Pages)</label>
                       </div>
                       <div className="form-group col-4 ">
                         <input type="checkbox" id="404"

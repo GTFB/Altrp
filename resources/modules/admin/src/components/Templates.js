@@ -1,14 +1,14 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
 import store from "../js/store/store";
-import {setModalSettings} from "../js/store/modal-settings/actions";
+import { setModalSettings } from "../js/store/modal-settings/actions";
 import { generateId, redirect, objectDeepCleaning } from "../js/helpers";
 import Pagination from "./Pagination";
 
 
-export default class Templates extends Component{
-  constructor(props){
+export default class Templates extends Component {
+  constructor(props) {
     super(props);
     this.state = {
       templates: [],
@@ -31,11 +31,11 @@ export default class Templates extends Component{
     this.changeActiveArea = this.changeActiveArea.bind(this);
     this.generateTemplateJSON = this.generateTemplateJSON.bind(this);
   }
-  changeActiveArea(e){
+  changeActiveArea(e) {
     let areaId = parseInt(e.target.dataset.area);
     let activeTemplateArea = {};
-    this.state.templateAreas.forEach(area=>{
-      if(area.id === areaId){
+    this.state.templateAreas.forEach(area => {
+      if (area.id === areaId) {
         activeTemplateArea = area;
       }
     });
@@ -45,19 +45,19 @@ export default class Templates extends Component{
   /**
    * Смена текущей страницы
    */
-  changePage(currentPage){
+  changePage(currentPage) {
     this.updateTemplates(currentPage, this.state.activeTemplateArea);
-    this.setState(state => ({ ...state, currentPage}));
+    this.setState(state => ({ ...state, currentPage }));
   }
 
   /**
    * Сменить текущую область шаблона (вкладка)
    * @param activeTemplateArea
    */
-  setActiveArea(activeTemplateArea){
+  setActiveArea(activeTemplateArea) {
     this.updateTemplates(1, activeTemplateArea);
-    this.setState(state=>{
-      return{...state, activeTemplateArea};
+    this.setState(state => {
+      return { ...state, activeTemplateArea };
     })
   }
 
@@ -73,8 +73,8 @@ export default class Templates extends Component{
       pageSize: 10,
       s: this.state.templateSearch,
       ...this.state.sorting
-    }).then(res=>{
-      this.setState(state=> {
+    }).then(res => {
+      this.setState(state => {
         return {
           ...state,
           pageCount: res.pageCount,
@@ -114,11 +114,11 @@ export default class Templates extends Component{
   /**
    * Компонент загрузился
    */
-  async componentDidMount(){
+  async componentDidMount() {
     let templateAreas = await this.templateTypesResource.getAll();
     this.setActiveArea(templateAreas[0]);
-    this.setState(state=>{
-      return{...state,templateAreas}
+    this.setState(state => {
+      return { ...state, templateAreas }
     });
     this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea)
   }
@@ -126,36 +126,37 @@ export default class Templates extends Component{
   /**
    * Показываем/скрываем форму импорта
    */
-  toggleImportForm = ()=>{
-    this.setState(state=>({...state,showImportForm: ! this.state.showImportForm}))
+  toggleImportForm = () => {
+    this.setState(state => ({ ...state, showImportForm: !this.state.showImportForm }))
   };
   /**
    * Импортируем шаблон из файла
    */
-  importTemplate = (e)=>{
+  importTemplate = (e) => {
     e.preventDefault();
     let files = _.get(e, 'target.files.files', []);
     let uploadedFilesCount = 0;
-    if(files.length){
-      _.forEach(files, f =>{
+    if (files.length) {
+      _.forEach(files, f => {
         let fr = new FileReader();
-        fr.onload = async (e) =>{
+        fr.onload = async (e) => {
           let importedTemplateData = _.get(e, 'target.result', '{}');
           importedTemplateData = JSON.parse(importedTemplateData);
           let areaExists = false;
-          this.state.templateAreas.forEach(ta=>{
-            if(ta.name === importedTemplateData.area){
+          this.state.templateAreas.forEach(ta => {
+            if (ta.name === importedTemplateData.area) {
               importedTemplateData.area = ta.id;
               areaExists = true;
             }
           });
-          if(! areaExists){
-            importedTemplateData.area = _.filter(this.state.templateAreas,ta=>{
+          if (!areaExists) {
+            importedTemplateData.area = _.filter(this.state.templateAreas, ta => {
               return ta.name === 'content';
             });
           }
           // let res = await this.templateImportModule.importTemplate(importedTemplateData)
           let res = await this.resource.post(importedTemplateData);
+          this.updateTemplates(this.state.currentPage)
         };
 
         fr.readAsText(f);
@@ -163,16 +164,16 @@ export default class Templates extends Component{
     }
   };
 
-  onClick(){
+  onClick() {
     let modalSettings = {
       title: 'Add New Template',
       submitButton: 'Add',
-      submit: function(formData){
+      submit: function (formData) {
         let data = {
           name: formData.title,
           title: formData.title,
           area: formData.area,
-          data:{
+          data: {
             children: [],
             id: generateId(),
             name: "root-element",
@@ -180,7 +181,7 @@ export default class Templates extends Component{
             type: "root-element",
           }
         };
-        return (new Resource({route:'/admin/ajax/templates'})).post(data)
+        return (new Resource({ route: '/admin/ajax/templates' })).post(data)
       },
       fields: [
         {
@@ -197,8 +198,8 @@ export default class Templates extends Component{
           defaultValue: this.state.activeTemplateArea.id
         }
       ],
-      success: function(res){
-        if(res.redirect && res.url){
+      success: function (res) {
+        if (res.redirect && res.url) {
           redirect(res.url)
         }
       },
@@ -206,16 +207,16 @@ export default class Templates extends Component{
     };
     store.dispatch(setModalSettings(modalSettings));
   }
-  getAreasOptions(){
+  getAreasOptions() {
     return this.state.templateAreas;
   }
-  setTemplates(templates){
+  setTemplates(templates) {
     let allTemplates = templates;
-    templates = templates.filter(template=>{
+    templates = templates.filter(template => {
       return template.area === this.state.activeTemplateArea.name;
     });
-    this.setState(state=>{
-      return{...state, templates, allTemplates};
+    this.setState(state => {
+      return { ...state, templates, allTemplates };
     });
   }
 
@@ -228,7 +229,7 @@ export default class Templates extends Component{
     this.updateTemplates();
   }
 
-  render(){
+  render() {
     const { templateSearch, sorting } = this.state
     return <div className="admin-templates admin-page">
       <div className="admin-heading">
@@ -244,26 +245,26 @@ export default class Templates extends Component{
         </div>
       </div>
       <div className="admin-content">
-        {this.state.showImportForm &&<form className={"admin-form justify-content-center" + (this.state.showImportForm ? ' d-flex' : ' d-none')}
-              onSubmit={this.importTemplate}>
+        {this.state.showImportForm && <form className={"admin-form justify-content-center" + (this.state.showImportForm ? ' d-flex' : ' d-none')}
+          onSubmit={this.importTemplate}>
           <input type="file"
-                 name="files"
-                 multiple={true}
-                 required={true}
-                 accept="application/json"
-                 className="form__input"/>
-          <button  className="btn">Import</button>
+            name="files"
+            multiple={true}
+            required={true}
+            accept="application/json"
+            className="form__input" />
+          <button className="btn">Import</button>
         </form>}
         <ul className="nav nav-pills admin-pills">
-          {this.state.templateAreas.map(area=>{
+          {this.state.templateAreas.map(area => {
             let tabClasses = ['nav-link',];
-            if(this.state.activeTemplateArea.name === area.name){
+            if (this.state.activeTemplateArea.name === area.name) {
               tabClasses.push('active');
             }
-            return<li className="nav-item" key={area.id}>
+            return <li className="nav-item" key={area.id}>
               <button className={tabClasses.join(' ')}
-                      onClick={this.changeActiveArea}
-                      data-area={area.id}>{area.title}</button>
+                onClick={this.changeActiveArea}
+                data-area={area.id}>{area.title}</button>
             </li>
           })}
         </ul>
@@ -282,12 +283,13 @@ export default class Templates extends Component{
             name: 'author',
             title: 'Author',
           },
-          ]}
+        ]}
           rows={this.state.templates}
-          quickActions={[{ tag: 'a', props: {
-            href: '/admin/editor?template_id=:id',
-            target: '_blank',
-            // className: ''
+          quickActions={[{
+            tag: 'a', props: {
+              href: '/admin/editor?template_id=:id',
+              target: '_blank',
+              // className: ''
             },
             title: 'Edit'
           }, {
@@ -315,9 +317,9 @@ export default class Templates extends Component{
           sortingField={sorting.order_by}
         />
         <Pagination pageCount={this.state.pageCount || 1}
-                    currentPage={this.state.currentPage}
-                    changePage={this.changePage}
-                    itemsCount={this.state.templates.length }
+          currentPage={this.state.currentPage}
+          changePage={this.changePage}
+          itemsCount={this.state.templates.length}
         />
       </div>
     </div>;

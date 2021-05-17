@@ -5,6 +5,7 @@ namespace App;
 use App\Constructor\Template;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
 
 class PagesTemplate extends Model
 {

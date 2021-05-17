@@ -2,7 +2,9 @@
 
 use App\Http\Requests\ApiRequest;
 use App\Role;
+use App\Media;
 use App\User;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use League\ColorExtractor\Color;
 use League\ColorExtractor\ColorExtractor;
@@ -568,25 +570,10 @@ function saveCache( $html, $page_id ) {
     $relations = [];
   }
 
-  $roles = Page::getRolesToCache( $page_id );//Page roles
-
-  $userRoles = [];
-  if (Auth::user()) {
-    $userRoles = Auth::user()->getUserRoles();
-    CacheService::setUserCookie();
-  }
-  $userPageRoles = array_intersect($userRoles, $roles);
-
-  if ( empty($userPageRoles) && !empty($userRoles) && !empty($roles) && !in_array('guest', $roles) ) {
-    return true;
-  }
-
   $newRelation = [
     'hash' => $hash,
     "url" => $url,
-    "page_id" => $page_id,
-    //"roles" => $userPageRoles,
-    "roles" => $userRoles,
+    "page_id" => $page_id
   ];
 
   $key = false;
@@ -754,9 +741,20 @@ function clearAllCache() {
     File::cleanDirectory( storage_path() . '/framework/cache/pages' );
     File::put($cachePath . '/relations.json', '{}');
   }
+  $pages = Page::all();
+  foreach($pages as $page ){
+    Cache::delete( 'areas_' . $page->id );
+  }
+
   return true;
 }
 
+/**
+ * @param $page_id
+ * @return bool
+ * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+ * @throws \Psr\SimpleCache\InvalidArgumentException
+ */
 function clearPageCache( $page_id ) {
 
   $cachePath = storage_path() . '/framework/cache/pages';
@@ -784,6 +782,8 @@ function clearPageCache( $page_id ) {
 
   $relations = json_encode($relations);
   File::put($cachePath . '/relations.json', $relations);
+
+  Cache::delete( 'areas_' . $page_id );
 
   return true;
 }
@@ -1012,36 +1012,206 @@ function getCurrentUser(): array
   return $user;
 }
 
-
+/**
+ * Заменяет в тексте конструкции типа {{path_to_data...}} на данные
+ * @param string $content
+ * @return string
+ */
+function replaceContentWithData( $content ){
+//  if( ! $modelContext ){
+//    return $content;
+//  }
+  global $altrp_env;
+  if( ! isset( $altrp_env['altrpuser'] ) ){
+    data_set( $altrp_env, 'altrpuser', getCurrentUser() );
+  }
+  is_string( $content ) ? preg_match_all( '/{{([\s\S]+?)(?=}})/', $content, $path ) : null;
+  if( ! isset( $path ) || ! isset( $path[1] )){
+    return $content;
+  }
+  foreach ( $path[1] as $item ) {
+    $value = data_get( $altrp_env, $item, '');
+    $content = str_replace( '{{' . $item . '}}', $value, $content );
+  }
+  return $content;
+}
 /**
  * Convert array to string
  * @param $data
  * @return string
  */
 function array2string($data) {
-    $log_a = "[";
-    try {
-        foreach ($data as $key => $value) {
-            if (!is_numeric($key)) $key = "'{$key}'";
-            if (is_array($value))
-                $log_a .= $key." => " . array2string($value) . ",";
-            elseif (is_object($value))
-                $log_a .= $key." => " . array2string(json_encode(json_decode($value))) . ",";
-            elseif (is_bool($value))
-                $log_a .= $key." => " . ($value ? 'true' : 'false') . ",";
-            elseif (is_string($value))
-                $log_a .= $key." => '" . $value . "',";
-            elseif (is_null($value))
-                $log_a .= $key." => null,";
-            else
-                $log_a .= $key." => " . $value . ",";
-        }
-    } catch (\Exception $exception) {
-        $data = json_decode($data);
-        if (is_array($data))
-          array2string($data);
+  $log_a = "[";
+  try {
+    foreach ($data as $key => $value) {
+      if (!is_numeric($key)) $key = "'{$key}'";
+      if (is_array($value))
+        $log_a .= $key." => " . array2string($value) . ",";
+      elseif (is_object($value))
+        $log_a .= $key." => " . array2string(json_encode(json_decode($value))) . ",";
+      elseif (is_bool($value))
+        $log_a .= $key." => " . ($value ? 'true' : 'false') . ",";
+      elseif (is_string($value))
+        $log_a .= $key." => '" . $value . "',";
+      elseif (is_null($value))
+        $log_a .= $key." => null,";
+      else
+        $log_a .= $key." => " . $value . ",";
     }
+  } catch (\Exception $exception) {
+    $data = json_decode($data);
+    if (is_array($data))
+      array2string($data);
+  }
 
-    $log_a = trim($log_a, ",");
-    return $log_a . ']';
+  $log_a = trim($log_a, ",");
+  return $log_a . ']';
 }
+
+/**
+ * @param int $page_id
+ * @param array $params
+ * @param string $params_string
+ * @return [] | null
+ */
+function getDataSources( $page_id, $params = array(), $params_string = '' ){
+  global $altrp_env;
+  $altrp_env['altrpdata'] = [];
+  $datasources = [];
+
+  $page = Page::find( $page_id );
+  if( ! $page ){
+    return $datasources;
+  }
+
+//  dd($page->data_sources->get(0)->model->altrp_controller->toArray());
+  try{
+    if( ! $page->data_sources ){
+      return $datasources;
+    }
+    $default_params = [];
+    if( $params_string ){
+      foreach ( explode( ',', $params_string ) as $idx => $item) {
+        $item = trim( $item );
+        $item = str_replace( '$', '', $item );
+        $default_params[$item] = $params[$idx];
+      }
+    }
+    if( count( $default_params ) ){
+      $altrp_env = array_merge( $default_params, $altrp_env );
+    }
+    $page_data_sources = $page->page_data_sources->filter( function ( $ds ){
+      return $ds->server_side;
+    } );
+    $page_data_sources = $page_data_sources->sortBy( 'priority' );
+
+    foreach ( $page_data_sources as $ds ) {
+      if( ! $ds->source || ! $ds->source->model || ! $ds->alias ){
+        continue;
+      }
+      if( $ds->parameters ){
+        $_request_parameters = json_decode( replaceContentWithData( $ds->parameters ), true );
+
+        if( ! $_request_parameters ){
+          $_request_parameters = explode( "\n", replaceContentWithData( $ds->parameters ) );
+          $_request_parameters = array_map( function( $item ){
+            $item = explode( '|', $item );
+            $item = array_map( function( $i ){
+              return trim( $i );
+            }, $item );
+            if( ! isset( $item[1] ) ){
+              $item[1] = $item[0];
+            }
+            return [
+              'paramName' => $item[0],
+              'paramValue' => $item[1],
+            ];
+          }, $_request_parameters );
+        }
+        $request_parameters = [];
+        foreach ( $_request_parameters as $request_parameter ) {
+          $request_parameters[$request_parameter['paramName']] = replaceContentWithData( $request_parameter['paramValue'] );
+        }
+      }
+
+      $classname = '\App\Http\Controllers\AltrpControllers\\' . $ds->source->model->name . 'Controller' ;
+      $controllerInstance = new $classname;
+
+      $request = new ApiRequest( $request_parameters );
+
+      if ($ds->source->type == 'get') $method = 'index';
+      elseif ($ds->source->type == 'filters') $method = 'getIndexedColumnsValueWithCount';
+      elseif ($ds->source->source->type == 'add') $method = 'store';
+      elseif ($ds->source->type == 'update_column') $method = 'updateColumn';
+      elseif ($ds->source->type == 'delete') $method = 'destroy';
+      else $method = $ds->source->type;
+      $result = call_user_func( [$controllerInstance, $method], $request );
+      if( $result ){
+        $result = $result->getContent();
+        $result = json_decode( $result, true );
+        $datasources[$ds->alias] = $result;
+        if( isset( $result['data'] ) ){
+          $result = array_merge( $result, $result['data'] );
+          unset( $result['data'] );
+        }
+        data_set( $altrp_env['altrpdata'], $ds->alias, $result );
+      }
+
+    }
+  } catch( Exception $e ){
+    return $datasources;
+  }
+  return $datasources;
+}
+function uploadMedia($file)
+{
+    $media = new Media();
+    $media->media_type = \Illuminate\Support\Facades\File::mimeType($file);
+    $media->author = Auth::id() ?? null;
+    $media->type = getTypeForFile($file);
+    File::ensureDirectoryExists( 'app/media/' .  date("Y") . '/' .  date("m" ), 0775 );
+    $media->filename = \Illuminate\Support\Facades\Storage::disk('public')->putFileAs(
+            'media/' .  date("Y") . '/' .  date("m" ),
+            $file,
+            \Illuminate\Support\Facades\File::name($file) .
+            '.' . \Illuminate\Support\Facades\File::extension($file)
+        );
+
+    $path = Storage::path( 'public/' . $media->filename );
+    $ext = pathinfo( $path, PATHINFO_EXTENSION );
+    if( $ext === 'svg' ){
+        $svg = file_get_contents( $path );
+        $svg = simplexml_load_string( $svg );
+        $media->width = ( string ) data_get( $svg->attributes(), 'width', 150 );
+        $media->height = ( string ) data_get( $svg->attributes(), 'height', 150 );
+    } else {
+        $size = getimagesize( $path );
+        $media->width = data_get( $size, '0', 0 );
+        $media->height = data_get( $size, '1', 0 );
+    }
+    $media->url =  Storage::url( $media->filename );
+    $media->save();
+    return $media;
+}
+
+function getTypeForFile( $file ){
+    $extension_loaded = \Illuminate\Support\Facades\File::extension($file);
+    $type = '';
+    $file_types = getFileTypes();
+    foreach ( $file_types as $file_type ){
+        if( ( ! $type ) &&  array_search($extension_loaded, $file_type['extensions'] ) !== false ){
+            $type = $file_type['name'];
+        }
+    }
+    if( ! $type ){
+        $type = 'other';
+    }
+    return $type;
+}
+
+function getFileTypes(){
+    $file_types = file_get_contents( base_path( 'config/file-types.json' ) );
+    $file_types = json_decode( $file_types, true);
+    return $file_types;
+}
+

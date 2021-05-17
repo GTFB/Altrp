@@ -35,8 +35,9 @@ class PageService
       preg_match_all( $pattern2, $path, $matches );
       $argument_index = false;
       foreach ($matches[0] as $idx => $item) {
+
         if( strpos( $item, ':id') !== false ) {
-          $argument_index = $idx;
+          $argument_index = true;
         }
       }
 
@@ -55,7 +56,7 @@ class PageService
         'frontend_route_id' => $_frontend_route['id'],
         'title' => "'$title'",
         'frontend_route' => "'$frontend_route'",
-        'argument_index' => $argument_index ?: 'false',
+        'argument_index' => $argument_index ? $argument_index : 'false',
         'params' => $params,
         'model_id'  => $id ?: '0'
       ];

@@ -1,46 +1,46 @@
 import store from '../store/store';
-import {toggleDynamicContent} from "../store/dynamic-content/actions";
-import {getElementSettingsSuffix} from "../helpers";
+import { toggleDynamicContent } from "../store/dynamic-content/actions";
+import { getElementSettingsSuffix } from "../helpers";
 /**
  * Обновление значения в компоненте контроллера при загрузке нового экземпляра того же элемента
  */
 function componentDidUpdate(prevProps, prevState) {
-  if(!this.props.repeater){
+  if (!this.props.repeater) {
     let elementValue = this.props.currentElement.getSettings(this.props.controlId);
-    if(this.state.value !== elementValue){
-      if(elementValue === null){
+    if (this.state.value !== elementValue) {
+      if (elementValue === null) {
         elementValue = this.getDefaultValue();
         this.props.currentElement.setSettingValue(this.props.controlId, elementValue, false);
         this.setState({
           value: elementValue
         });
       }
-      if(prevProps.currentElement !== this.props.currentElement){
+      if (prevProps.currentElement !== this.props.currentElement) {
         this.setState({
           value: elementValue
         });
       }
     }
-    if(prevProps.currentElement.getId() !== this.props.currentElement.getId()){
+    if (prevProps.currentElement.getId() !== this.props.currentElement.getId()) {
       /**
        * обновляем компонент контроллера, если изменился элемент
        */
       this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController();
-      if(_.isFunction(this._componentDidMount)){
+      if (_.isFunction(this._componentDidMount)) {
         this._componentDidMount();
       }
     }
   } else {
   }
-  if(this.props.historyStore !== prevProps.historyStore) {
+  if (this.props.historyStore !== prevProps.historyStore) {
     // console.log('COMPONENT DID UPDATE')
     let value = this.getSettings(this.props.controlId);
     this.setState({
       value
     });
   }
-  if(this.props.currentScreen !== prevProps.currentScreen ||
-      this.props.currentState !== prevProps.currentState){
+  if (this.props.currentScreen !== prevProps.currentScreen ||
+    this.props.currentState !== prevProps.currentState) {
     const value = this.getSettings(this.props.controlId);
     this.setState(state => ({
       ...state,
@@ -51,10 +51,10 @@ function componentDidUpdate(prevProps, prevState) {
    * Если в самом компоненте контроллера объвлен метод _componentDidUpdate, то его тоже вызовем
    * например RepeaterController
    */
-  if(_.isFunction(this._componentDidUpdate)){
+  if (_.isFunction(this._componentDidUpdate)) {
     this._componentDidUpdate(prevProps, prevState);
   }
-  if(_.isFunction(this.conditionSubscriber)){
+  if (_.isFunction(this.conditionSubscriber)) {
     this.conditionSubscriber();
   }
 }
@@ -65,25 +65,25 @@ function componentDidUpdate(prevProps, prevState) {
  * @param {string }settingName
  * @return {*}
  */
-function getSettings(settingName){
-  if(! this.props.currentElement){
+function getSettings(settingName) {
+  if (!this.props.currentElement) {
     return '';
   }
   /**
    * Если внутри репитера, то берем свойство из репитера, а не элемента
    */
-  if(this.props.controller.data.repeater){
+  if (this.props.controller.data.repeater) {
     /**
      * todo: баг - если два одинаковых элемента с репитером,
      * todo: при смене элементов может быть не соответствие this.props.controller.data.itemIndex и новым репитером
      * todo: пока что вернем значение по умолчанию или строку
      */
-    if(this.props.controller.data.repeater.getSettings(this.props.controller.data.repeater.props.controlId)
-        [this.props.controller.data.itemIndex]){
+    if (this.props.controller.data.repeater.getSettings(this.props.controller.data.repeater.props.controlId)
+    [this.props.controller.data.itemIndex]) {
       // console.log(this.props.controller.data.controlId + getElementSettingsSuffix(this.props.controller, true));
       return this.props.controller.data.repeater.getSettings(this.props.controller.data.repeater.props.controlId)
-          [this.props.controller.data.itemIndex]
-          [this.props.controller.data.controlId + getElementSettingsSuffix(this.props.controller, true)];
+      [this.props.controller.data.itemIndex]
+      [this.props.controller.data.controlId + getElementSettingsSuffix(this.props.controller, true)];
     }
     /**
      * todo: пока что вернем значение по умолчанию или строку в случае бага
@@ -94,17 +94,17 @@ function getSettings(settingName){
   /**
    * Repeater не может менять своё значение при смене разрешения
    */
-  if(this.props.type === 'repeater'){
+  if (this.props.type === 'repeater') {
     return this.props.currentElement.getSettings(settingName);
   }
-  if(this.props.responsive === false){
+  if (this.props.responsive === false) {
     return this.props.currentElement.getSettings(settingName);
   }
   let value = this.props.currentElement.getSettings(settingName +
-      getElementSettingsSuffix(this.props.controller));
+    getElementSettingsSuffix(this.props.controller));
   // console.log(value);
   // console.log(getElementSettingsSuffix(this.props.controller));
-  if(value === null){
+  if (value === null) {
     value = this.props.currentElement.getSettings(settingName)
   }
   return value;
@@ -120,29 +120,29 @@ function getSettings(settingName){
  * @param {boolean} updateElement - по умолчанию обновляем текущий элемент тоже
  */
 function _changeValue(value, updateElement = true) {
-  if(typeof value === 'object' && value.length !== undefined){
+  if (typeof value === 'object' && value.length !== undefined) {
     value = [...value];
-  }else if(typeof value === 'object'){
-    value = {...value};
+  } else if (typeof value === 'object') {
+    value = { ...value };
   }
 
-  if(value && value.dynamic){
-    this.setState((state)=>{
+  if (value && value.dynamic) {
+    this.setState((state) => {
       return {
         ...state,
-        value:'',
+        value: '',
         dynamicValue: value,
       }
     });
   } else {
-    this.setState((state)=>{
+    this.setState((state) => {
       return {
         ...state,
         value,
       }
     });
   }
-  if(updateElement){
+  if (updateElement) {
     this.props.controller.changeValue(value, updateElement);
   }
 
@@ -154,7 +154,7 @@ function _changeValue(value, updateElement = true) {
  */
 
 function conditionSubscriber() {
-  if(this.props.conditions) {
+  if (this.props.conditions) {
     const controllerValue = store.getState().controllerValue;
     /**
      * Надло проверить, есть ли условие с ! на конце если есть то удалим !
@@ -162,16 +162,16 @@ function conditionSubscriber() {
      * @type {string[]}
      */
     let keys = Object.keys(this.props.conditions);
-    keys = keys.map(key=>{
-      if(key.indexOf('!') === -1){
+    keys = keys.map(key => {
+      if (key.indexOf('!') === -1) {
         return key;
       } else {
         return key.replace('!', '');
       }
     });
     // if(keys.indexOf(controllerValue.controlId)>=0){
-    if(this.props.controller.isShow() !== this.state.show){
-      this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController() ;
+    if (this.props.controller.isShow() !== this.state.show) {
+      this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController();
     }
     // }
   }
@@ -180,23 +180,23 @@ function conditionSubscriber() {
 /**
  * Метод вызывается, когда компонент контроллера загружается
  */
-async function  controllerComponentDidMount() {
+async function controllerComponentDidMount() {
   /**
    * Сначала проверим нужно ли отрисовывать контроллер по умолчанию
    */
   this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController();
 
-  if(this.resource){
+  if (this.resource) {
     let options = await this.resource.getAll();
-    if(this.props.nullable){
-      options = _.concat([{'':''}], options);
+    if (this.props.nullable) {
+      options = _.concat([{ '': '' }], options);
     }
-    this.setState(state=>({...state, options}));
-    if(options[0].value) {
+    this.setState(state => ({ ...state, options }));
+    if (options[0].value) {
       this._changeValue(options[0].value);
     }
   }
-  if(typeof this._componentDidMount === 'function'){
+  if (typeof this._componentDidMount === 'function') {
     this._componentDidMount();
   }
 }
@@ -206,7 +206,7 @@ async function  controllerComponentDidMount() {
  * удаляем свойство у текущего элемента
  */
 function hideComponentController() {
-  this.setState(state=>({
+  this.setState(state => ({
     ...state,
     show: false,
   }));
@@ -219,8 +219,8 @@ function hideComponentController() {
  * удаляем свойство у текущего элемента
  */
 function showComponentController() {
-  this.setState(state=>({
-      ...state,
+  this.setState(state => ({
+    ...state,
     show: true,
   }));
 }
@@ -231,7 +231,7 @@ function showComponentController() {
 function removeDynamicSettings() {
   this._changeValue(this.getDefaultValue());
   this.props.currentElement.removeModelSettings(this.props.controlId);
-  this.setState(state=>({
+  this.setState(state => ({
     ...state,
     dynamicValue: null
   }));
@@ -266,7 +266,7 @@ let controllerDecorate = function elementWrapperDecorate(component) {
 export default controllerDecorate;
 
 
-export function controllerMapStateToProps(state){
+export function controllerMapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
     currentState: state.currentState,

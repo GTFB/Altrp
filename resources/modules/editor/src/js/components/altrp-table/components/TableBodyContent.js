@@ -99,7 +99,9 @@ const TableBodyContent =
             <SubheadingRow className="altrp-table-tr altrp-table-tr_group-subheading"
                            groupIndex={_props.groupIndex}
                            settings={settings}>
-              <td colSpan={visibleColumns.length || 1} className="altrp-table-td" dangerouslySetInnerHTML={{__html: group.columnValue || '&nbsp;'}}/>
+              <td colSpan={visibleColumns.length || 1}
+                  className="altrp-table-td"
+                  dangerouslySetInnerHTML={{__html: group.columnValue === 0 ? '0' : (group.columnValue || '&nbsp;')}}/>
             </SubheadingRow>
             <TableBodyContent {..._props}/>
           </React.Fragment>

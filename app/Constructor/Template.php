@@ -162,12 +162,12 @@ class Template extends Model
    * @param array $element_data
    * @return array
    */
-  public function recursively_children_check_conditions( $element_data = [] ){
+  public static function recursively_children_check_conditions( $element_data = [] ){
     $_element_data = $element_data;
     $_element_data['children'] = [];
     foreach ( $element_data['children'] as $child ) {
-      if( $this->show_element( $child['settings'] ) ){
-        $child = $this->recursively_children_check_conditions( $child );
+      if( self::show_element( $child['settings'] ) ){
+        $child = self::recursively_children_check_conditions( $child );
         $_element_data['children'][] = $child;
       }
     }
@@ -179,7 +179,7 @@ class Template extends Model
    * @param array $settings
    * @return bool
    */
-  public  function show_element( $settings ){
+  public static function show_element( $settings ){
     if( ! isset( $settings['conditional_display_choose'] ) ){
       return true;
     }
@@ -191,7 +191,7 @@ class Template extends Model
       return ! Auth::check();
     }
     if( $settings['conditional_display_choose'] === 'auth' ){
-      return $this->check_auth_conditions( $settings );
+      return self::check_auth_conditions( $settings );
     }
     return true;
   }
@@ -201,7 +201,7 @@ class Template extends Model
    * @param array $settings
    * @return boolean
    */
-  public function check_auth_conditions( $settings = [] ){
+  public static function check_auth_conditions( $settings = [] ){
     $result = true;
     if( ! ( isset( $settings['conditional_roles'] ) && $settings['conditional_roles']
       || isset( $settings['conditional_permissions'] ) && $settings['conditional_permissions'] ) ){
@@ -353,11 +353,12 @@ class Template extends Model
       ->where( 'templates.type', 'template' )
       ->where( 'pages_templates.page_guid', $page->guid )
       ->where( 'pages_templates.template_type', $template_type )->get( 'templates.*' )->first();
-
     if( $_template ){
-      $_template->check_elements_conditions();
       $_template = $_template->toArray();
       $_template['data'] = json_decode( $_template['data'], true );
+
+
+      //$_template['data'] = self::recursively_children_check_conditions($_template['data']);
 
       return $_template;
     }
@@ -377,7 +378,7 @@ class Template extends Model
       ->where( 'pages_templates.condition_type', 'exclude' )
       ->where( 'pages_templates.page_guid', $page->guid )
       ->where( 'pages_templates.template_type', $template_type )->first() ){
-      $_template->check_elements_conditions();
+      //$_template->check_elements_conditions();
       $_template = $_template->toArray();
       $_template['data'] =  json_decode( $_template['data'], true );
       return $_template;
@@ -434,7 +435,7 @@ class Template extends Model
 
 
     $templates->each( function( Template $_template ){
-      $_template->check_elements_conditions();
+      //$_template->check_elements_conditions();
 
       if( $_template->template_type === 'popup' ){
         $_template->triggers = $_template->triggers;

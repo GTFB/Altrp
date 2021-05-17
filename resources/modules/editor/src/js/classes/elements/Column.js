@@ -14,31 +14,31 @@ import {
 } from "../modules/ControllersManager";
 import { advancedTabControllers } from "../../decorators/register-controllers";
 
-class Column  extends BaseElement {
+class Column extends BaseElement {
 
-  static getName(){
+  static getName() {
     return 'column';
   }
-  static getTitle(){
+  static getTitle() {
     return 'Column';
   }
-  static getType(){
+  static getType() {
     return 'column';
   }
-  _registerControls(){
+  _registerControls() {
 
-    this.startControlSection('layout',{
+    this.startControlSection('layout', {
       label: 'Layout'
-      });
+    });
 
     this.addControl('layout_column_width', {
       // type: CONTROLLER_NUMBER,
       label: 'Column width (%)',
       dynamic: false,
       default: null,
-      rules: {
-        '{{ELEMENT}}.altrp-element.altrp-element_column': 'width: {{VALUE}}%',
-      }
+      // rules: {
+      //   '{{ELEMENT}}.altrp-element.altrp-element_column': 'width: {{VALUE}}%',
+      // }
     });
 
     this.addControl(
@@ -97,84 +97,84 @@ class Column  extends BaseElement {
 
     this.addControl(
       'layout_type', {
-        type: CONTROLLER_SELECT,
-        label: 'Vertical align',
-        options:[
-          {
-            'value' : 'normal',
-            'label' : 'default',
-          },
-          {
-            'value' : 'flex-start',
-            'label' : 'top'
-          },
-          {
-            'value' : 'center',
-            'label' : 'center'
-          },
-          {
-            'value' : 'flex-end',
-            'label' : 'bottom'
-          },
-          {
-            'value' : 'space-between',
-            'label' : 'space between'
-          },
-          {
-            'value' : 'space-around',
-            'label' : 'space around'
-          },
-          {
-            'value' : 'space-evenly',
-            'label' : 'space evenly'
-          }
-        ],
-        rules: {
-          '{{ELEMENT}} > .altrp-column{{STATE}}': ['align-content: {{VALUE}};',
-            'align-items: {{VALUE}};'
-          ],
+      type: CONTROLLER_SELECT,
+      label: 'Vertical align',
+      options: [
+        {
+          'value': 'normal',
+          'label': 'default',
         },
-      }
+        {
+          'value': 'flex-start',
+          'label': 'top'
+        },
+        {
+          'value': 'center',
+          'label': 'center'
+        },
+        {
+          'value': 'flex-end',
+          'label': 'bottom'
+        },
+        {
+          'value': 'space-between',
+          'label': 'space between'
+        },
+        {
+          'value': 'space-around',
+          'label': 'space around'
+        },
+        {
+          'value': 'space-evenly',
+          'label': 'space evenly'
+        }
+      ],
+      rules: {
+        '{{ELEMENT}} > .altrp-column{{STATE}}': ['align-content: {{VALUE}};',
+          'align-items: {{VALUE}};'
+        ],
+      },
+    }
     );
 
     this.addControl(
       'layout_justify_content', {
-        type: CONTROLLER_SELECT,
-        label: 'Horizontal align',
-        options:[
-          {
-            'value' : '',
-            'label' : 'default',
-          },
-          {
-            'value' : 'flex-start',
-            'label' : 'start'
-          },
-          {
-            'value' : 'center',
-            'label' : 'center'
-          },
-          {
-            'value' : 'flex-end',
-            'label' : 'end'
-          },
-          {
-            'value' : 'space-between',
-            'label' : 'space between'
-          },
-          {
-            'value' : 'space-around',
-            'label' : 'space around'
-          },
-          {
-            'value' : 'space-evenly',
-            'label' : 'space evenly'
-          }
-        ],
-        rules: {
-          '{{ELEMENT}} > .altrp-column{{STATE}}': 'justify-content: {{VALUE}} !important;',
+      type: CONTROLLER_SELECT,
+      label: 'Horizontal align',
+      options: [
+        {
+          'value': '',
+          'label': 'default',
         },
-      }
+        {
+          'value': 'flex-start',
+          'label': 'start'
+        },
+        {
+          'value': 'center',
+          'label': 'center'
+        },
+        {
+          'value': 'flex-end',
+          'label': 'end'
+        },
+        {
+          'value': 'space-between',
+          'label': 'space between'
+        },
+        {
+          'value': 'space-around',
+          'label': 'space around'
+        },
+        {
+          'value': 'space-evenly',
+          'label': 'space evenly'
+        }
+      ],
+      rules: {
+        '{{ELEMENT}} > .altrp-column{{STATE}}': 'justify-content: {{VALUE}} !important;',
+      },
+    }
     );
 
     this.addControl('layout_widgets-space', {
@@ -504,14 +504,14 @@ class Column  extends BaseElement {
     this.addControl('style_position_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
-      default:{
+      default: {
         top: 0,
         right: 0,
         bottom: 0,
         left: 0,
-        unit:'px'
+        unit: 'px'
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -605,11 +605,11 @@ class Column  extends BaseElement {
     this.addControl("column_style_border_radius", {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
-      default:{
+      default: {
         size: 0,
         unit: 'px',
       },
-      units:[
+      units: [
         'px',
         '%',
         'vh',
@@ -622,23 +622,23 @@ class Column  extends BaseElement {
     });
 
     this.addControl('column_style_box_shadow', {
-        type: CONTROLLER_SHADOW,
-        label: 'Shadow',
-        default:{
-          blur: 0,
-          horizontal: 0,
-          vertical: 0,
-          spread: 0,
-          opacity: 1,
-          colorRGB: 'rgb(0, 0, 0)',
-          color: 'rgb(0, 0, 0)',
-          colorPickedHex: '#000000',
-          type: ""
-        },
-        rules: {
-          '{{ELEMENT}} > .altrp-column{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-        },
-      }
+      type: CONTROLLER_SHADOW,
+      label: 'Shadow',
+      default: {
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        spread: 0,
+        opacity: 1,
+        colorRGB: 'rgb(0, 0, 0)',
+        color: 'rgb(0, 0, 0)',
+        colorPickedHex: '#000000',
+        type: ""
+      },
+      rules: {
+        '{{ELEMENT}} > .altrp-column{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    }
     );
 
     this.endControlSection();
@@ -647,7 +647,7 @@ class Column  extends BaseElement {
   }
 
   appendWidget(newWidget) {
-    if(newWidget.getType() !== 'widget'){
+    if (newWidget.getType() !== 'widget') {
       throw 'Only Widget can be a Child of Column';
     }
     this.appendChild(newWidget, false);
@@ -656,7 +656,7 @@ class Column  extends BaseElement {
   /**
    * Вставляет новую колонку после текущей колонки
    */
-  insertNewColumnAfter(){
+  insertNewColumnAfter() {
     let column = new Column();
     this.insertSiblingAfter(column);
   }
@@ -665,7 +665,7 @@ class Column  extends BaseElement {
    * Проверяет можно ли удалить текущую колонку (в секции обязательна одна колонка)
    * @return {boolean}
    */
-  canDeleteThis(){
+  canDeleteThis() {
     return this.parent.children.length > 1
   }
 

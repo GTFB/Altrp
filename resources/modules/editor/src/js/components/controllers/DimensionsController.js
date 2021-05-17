@@ -1,4 +1,4 @@
-import {controllerMapStateToProps} from "../../decorators/controller";
+import { controllerMapStateToProps } from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import DynamicIcon from "../../../svgs/dynamic.svg";
@@ -149,7 +149,7 @@ class DimensionsController extends Component {
             onChange={this.changeValue}
             data-active="top"
 
-            value={value.top || 0}
+            value={value.top || ''}
             type="number" />
           <label className="control-field-top-l-label control-field-dimensions-label">TOP</label>
         </div>
@@ -158,7 +158,7 @@ class DimensionsController extends Component {
             onChange={this.changeValue}
             data-active="right"
 
-            value={value.right || 0}
+            value={value.right || ''}
             type="number" />
           <label className="control-field-top-r-label control-field-dimensions-label">RIGHT</label>
         </div>
@@ -166,7 +166,7 @@ class DimensionsController extends Component {
           <input className="control-field control-field-dimensions control-field-bot-l"
             onChange={this.changeValue}
             data-active="bottom"
-            value={value.bottom || 0}
+            value={value.bottom || ''}
             type="number" />
           <label className="control-field-bot-l-label control-field-dimensions-label">BOTTOM</label>
         </div>
@@ -174,7 +174,7 @@ class DimensionsController extends Component {
           <input className="control-field control-field-dimensions control-field-bot-r"
             onChange={this.changeValue}
             data-active="left"
-            value={value.left || 0}
+            value={value.left || ''}
             type="number" />
           <label className="control-field-bot-r-label control-field-dimensions-label">LEFT</label>
         </div>

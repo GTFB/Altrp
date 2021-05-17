@@ -1,7 +1,7 @@
 import { ServerStyleSheet } from 'styled-components'
 import AltrpModel from "../resources/modules/editor/src/js/classes/AltrpModel";
 const sheet = new ServerStyleSheet();
-
+import { parse } from 'node-html-parser';
 if (typeof performance === "undefined") {
   global.performance = require("perf_hooks").performance;
 }
@@ -12,7 +12,8 @@ if (typeof performance === "undefined") {
 global.window = {
   parent: {},
 };
-global.sSR = true;
+global.SSR = true;
+global.window.SSR = true;
 // global.document = {
 //   addEventListener: () => {
 //   },
@@ -96,17 +97,19 @@ function renderHTML(req, res, data, component, page, store) {
 app.post("/", (req, res) => {
 
   const store = window.appStore;
-  const preloadedState = store.getState();
-  const body = req.body;
   let json = JSON.parse(req.body.json) || [];
   let page = json.page || [];
   let page_id = json.page_id || '';
   let page_model = json.page_model || {};
-  delete page[3];
+  // delete page[3];
   global.altrp = json.altrp || {};
-  // global.window.altrpImageLazy = json.altrpImageLazy || 'none';
-  // global.window.altrpSkeletonColor = json.altrpSkeletonColor || '#ccc';
-  // global.window.altrpSkeletonHighlightColor = json.altrpSkeletonHighlightColor || '#d0d0d0';
+  /**
+   * todo: починить серверную отрисовку для склетона
+   * @type {*[]}
+   */
+  global.window.altrpImageLazy = json.altrpImageLazy || 'none';
+  global.window.altrpSkeletonColor = json.altrpSkeletonColor || '#ccc';
+  global.window.altrpSkeletonHighlightColor = json.altrpSkeletonHighlightColor || '#d0d0d0';
   let elements = [];
   global.window.location = {
     href: req.protocol + '://' + req.get('host') + req.originalUrl,
@@ -124,15 +127,15 @@ app.post("/", (req, res) => {
     styles: element.getStringifyStyles(),
     elementId: element.getId(),
   }));
-  const app = ReactDOMServer.renderToString(sheet.collectStyles(
-    <Provider store={window.appStore}>
-      <div className={`front-app-content`}>
+  let app = ReactDOMServer.renderToString(sheet.collectStyles(
+    <Provider store={window.appStore}><div className={`front-app-content `}>
         <StaticRouter>
           <RouteContentWrapper
             className="route-content"
             id="route-content"
           >
-            {page.map(area => {
+            {page.map((area, idx) => {
+
               return (
                 <AreaComponent
                   {...area}
@@ -150,7 +153,14 @@ app.post("/", (req, res) => {
     </Provider>
     ));
 
-  const styleTags = sheet.getStyleTags()
+  let styleTags = sheet.getStyleTags();
+  let _app = parse(app);
+  if(_app.querySelector('.styles-container')){
+    styleTags += `<style>${_app.querySelector('.styles-container').textContent}</style>`;
+    _app.removeChild(_app.querySelector('.styles-container'));
+    app = _app.toString();
+  }
+  // sheet.seal();
   const result = {
     important_styles: unEntity(styleTags),
     content:  unEntity(app),

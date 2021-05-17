@@ -35,6 +35,7 @@ class FrontElementsFabric {
       }
     }
     element.id = object.id;
+    element.lastElement = object.lastElement;
     element.children = children;
     element.settings = object.settings;
     element.name = object.name;

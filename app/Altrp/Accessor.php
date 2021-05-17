@@ -6,7 +6,6 @@ namespace App\Altrp;
 use Illuminate\Database\Eloquent\Model;
 use App\Altrp\Model as AltrpModel;
 use Illuminate\Support\Facades\Log;
-
 class Accessor extends Model
 {
     protected $table = 'altrp_accessors';

@@ -3,14 +3,6 @@
 //Render cached files
 $cachePath = '../storage/framework/cache/pages/';
 
-$env = file('../.env');
-$encryption_key = "";
-foreach ( $env as $setting ) {
-  if ( strpos($setting,'APP_KEY', 0) !== false ) {
-    $encryption_key = str_replace("APP_KEY=", "", $setting);
-  }
-}
-
 if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
 
   //Current URL
@@ -27,38 +19,8 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
     $hash_to_delete = '';
 
     if (!empty($cachedFiles)) {
-
-      $users = [];
-      $usersJson = file_exists( $cachePath . 'users.json' ) ? file_get_contents($cachePath . 'users.json') : '';
-
-      if ($usersJson) {
-        $users = json_decode($usersJson, true);
-      }
-
-      $userRoles = [];
-      if (isset($_COOKIE['uid'])) {
-        $key = array_search($_COOKIE['uid'], array_column($users, 'cipher_user_id'));
-
-        if (gettype($key) === "integer" && array_key_exists($key, $users)) {
-          $userRoles = $users[$key]["roles"];
-        }
-
-      }
-
       foreach ($cachedFiles as $key => $cachedFile) {
-
-        $userPageRoles = array_intersect($userRoles, $cachedFile['roles']);
-
-        if (
-          ( $cachedFile['url'] === $url && isset($_COOKIE['uid']) && !empty($userPageRoles) && $userPageRoles == $cachedFile['roles'] )
-          // ||
-          // ( $cachedFile['url'] === $url && isset($_COOKIE['uid']) && empty($userPageRoles) && empty($cachedFile['roles']) )
-          ||
-          ( $cachedFile['url'] === $url && !isset($_COOKIE['uid']) && in_array('guest', $cachedFile['roles']) )
-          ||
-          ( $cachedFile['url'] === $url && !isset($_COOKIE['uid']) && empty($cachedFile['roles']) )
-        ) {
-
+        if ( $cachedFile['url'] === $url ) {
           if( file_exists($cachePath . $cachedFile['hash']) ){
             $file = file_get_contents($cachePath . $cachedFile['hash']);
             echo $file;
@@ -67,9 +29,7 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
             $hash_to_delete = $cachedFile['hash'];
           }
         }
-
       }
-
     }
 
     if( $hash_to_delete ){
@@ -91,6 +51,8 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
  */
 
 define('LARAVEL_START', microtime(true));
+global $altrp_env;
+$altrp_env = [];
 global $altrp_need_cache;
 $altrp_need_cache = false;
 global $altrp_route_id;

@@ -9,6 +9,7 @@ use DOMXPath;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Cache;
 use Mockery\Exception;
 use App\Traits\Searchable;
 use Illuminate\Support\Arr;
@@ -283,89 +284,101 @@ class Page extends Model
    */
   public static function get_areas_for_page($page_id)
   {
-    $areas = [];
-
     $currentPage = Page::find($page_id);
-    $contentType = $currentPage->type;
+
+    if ( 0 ) {
+      $areas = Cache::get('areas_' . $page_id);
+    } else {
+
+      $areas = [];
+
+      $contentType = $currentPage->type;
+
+      $header_template = Template::getTemplate([
+        'page_id' => $page_id,
+        'template_type' => 'header',
+      ]);
+      unset($header_template['html_content']);
+      unset($header_template['styles']);
+
+
+      $areas[] = [
+        'area_name' => 'header',
+        'id' => 'header',
+        'settings' => [],
+        'template' => $header_template,
+      ];
+
+
+      $content_template = Template::getTemplate([
+        'page_id' => $page_id,
+        'template_type' => $contentType ? 'reports' : 'content',
+      ]);
+      unset($content_template['html_content']);
+      unset($content_template['styles']);
+      $areas[] = [
+        'area_name' => 'content',
+        'id' => 'content',
+        'settings' => [],
+        'template' => $content_template,
+      ];
+
+      $footer_template = Template::getTemplate([
+        'page_id' => $page_id,
+        'template_type' => 'footer',
+      ]);
+
+      unset($footer_template['html_content']);
+      unset($footer_template['styles']);
+      $areas[] = [
+        'area_name' => 'footer',
+        'id' => 'footer',
+        'settings' => [],
+        'template' => $footer_template,
+      ];
+
+      //    $popups = Template::join( 'areas', 'areas.id', '=', 'templates.area' )
+      //      ->where( 'areas.name', '=', 'popup' )
+      //      ->where( 'type', 'template' )->get( 'templates.*' );
+      //
+      //
+      //
+      //    if( $popups->count() ){
+      //      foreach ( $popups as $key => $popup ) {
+      //        $popups[$key]->template_settings = $popup->template_settings();
+      //
+      //      }
+      $areas[] = [
+        'area_name' => 'popups',
+        'id' => 'popups',
+        'settings' => [],
+        'templates' => Template::getTemplates([
+          'page_id' => $page_id,
+          'template_type' => 'popup',
+        ]),
+      ];
+
+      Cache::put( 'areas_' . $page_id, $areas, 86400 );
+
+    }
+
     if ($currentPage->sections_count) {
       $sections_count = $currentPage->sections_count;
     }
+    foreach ($areas as $key => $area) {
+      if (isset($area['template'])) {
+        $areas[$key]['template']['data'] = Template::recursively_children_check_conditions($area['template']['data']);
 
-    $header_template = Template::getTemplate([
-      'page_id' => $page_id,
-      'template_type' => 'header',
-    ]);
-    unset($header_template['html_content']);
-    unset($header_template['styles']);
-
-    if (isset($sections_count) && $header_template['data']) {
-      $header_template['data'] = self::spliceSections($header_template['data'], $sections_count);
+        if (isset($sections_count) && $areas[$key]['template']['data']) {
+          $areas[$key]['template']['data'] = self::spliceSections($areas[$key]['template']['data'], $sections_count);
+        }
+      }
     }
-
-    $areas[] = [
-      'area_name' => 'header',
-      'id' => 'header',
-      'settings' => [],
-      'template' => $header_template,
-    ];
-
-
-    $content_template = Template::getTemplate([
-      'page_id' => $page_id,
-      'template_type' => $contentType ? 'reports' : 'content',
-    ]);
-
-    if (isset($sections_count) && $content_template['data']) {
-      $content_template['data'] = self::spliceSections($content_template['data'], $sections_count);
+    if( isset( $areas[3] ) ) {
+      foreach ($areas[3]['templates'] as $key => $template) {
+        $areas[3]['templates'][$key]['data'] = Template::recursively_children_check_conditions($template['data']);
+      }
     }
-
-    unset($content_template['html_content']);
-    unset($content_template['styles']);
-    $areas[] = [
-      'area_name' => 'content',
-      'id' => 'content',
-      'settings' => [],
-      'template' => $content_template,
-    ];
-
-    $footer_template = Template::getTemplate([
-      'page_id' => $page_id,
-      'template_type' => 'footer',
-    ]);
-
-    if (isset($sections_count) && $footer_template['data']) {
-      $footer_template['data'] = self::spliceSections($footer_template['data'], $sections_count);
-    }
-    unset($footer_template['html_content']);
-    unset($footer_template['styles']);
-    $areas[] = [
-      'area_name' => 'footer',
-      'id' => 'footer',
-      'settings' => [],
-      'template' => $footer_template,
-    ];
-
-    //    $popups = Template::join( 'areas', 'areas.id', '=', 'templates.area' )
-    //      ->where( 'areas.name', '=', 'popup' )
-    //      ->where( 'type', 'template' )->get( 'templates.*' );
-    //
-    //
-    //
-    //    if( $popups->count() ){
-    //      foreach ( $popups as $key => $popup ) {
-    //        $popups[$key]->template_settings = $popup->template_settings();
-    //
-    //      }
-    $areas[] = [
-      'area_name' => 'popups',
-      'id' => 'popups',
-      'settings' => [],
-      'templates' => Template::getTemplates([
-        'page_id' => $page_id,
-        'template_type' => 'popup',
-      ]),
-    ];
-
     return $areas;
   }
 
@@ -652,9 +665,9 @@ class Page extends Model
       'content' => '',
       'important_styles' => '',
     ];
-    if (1) {
-      return $result;
-    }
+//    if (1) {
+//      return $result;
+//    }
     if ( ! $page_id ) {
       return $result;
     }
@@ -666,6 +679,43 @@ class Page extends Model
     if (!$page->allowedForUser()) {
       return $result;
     }
+    $client = new Client(['base_uri' => "http://localhost:9000/"]);
+    try {
+      $test_result = $client->request('GET')->getStatusCode();
+      if( $test_result === 200 ) {
+
+      $postExpress = new Client([
+          'base_uri' => "http://localhost:9000/",
+          'defaults' => [
+              'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+          ]
+      ]);
+      $postResult = $postExpress->request('POST', '', [
+        'form_params' => [
+          'json' =>
+            json_encode(
+            [
+              'page' => static::get_areas_for_page( $page_id ),
+              'page_id' => $page_id,
+              'altrp' => [
+                'version' => getCurrentVersion()
+                ],
+              'altrpImageLazy'=> get_altrp_setting( 'altrp_image_lazy', 'none' ),
+              'altrpSkeletonColor'=> get_altrp_setting( 'altrp_skeleton_color', '#ccc' ),
+              'altrpSkeletonHighlightColor'=> get_altrp_setting( 'altrp_skeleton_highlight_color', '#d0d0d0' ),
+            ]
+          ),
+
+        ]
+      ]);
+      $result = $postResult->getBody()->getContents();
+      $result = json_decode( $result, true );
+      return $result;
+      }
+    } catch (\Exception $e){
+        logger( $e );
+    }
+
     $areas = Area::all()->filter(function (Area $area) {
       return !in_array($area->name,  Area::NOT_CONTENT_AREAS);
     })->map(function (Area $area) {
@@ -695,46 +745,6 @@ class Page extends Model
       $templates[] = $template;
     }
     $important_styles = [];
-    $client = new Client(['base_uri' => "http://localhost:9000/"]);
-    try {
-      $test_result = $client->request('GET')->getStatusCode();
-      if( $test_result === 200 ) {
-
-      $postExpress = new Client([
-          'base_uri' => "http://localhost:9000/",
-          'defaults' => [
-              'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
-          ]
-      ]);
-      $postResult = $postExpress->request('POST', '', [
-        'form_params' => [
-          'json' =>
-            json_encode(
-            [
-              'page' => static::get_areas_for_page($page_id),
-              'page_id' => $page_id,
-              'altrp' => [
-                'version' => getCurrentVersion()
-                ],
-              'altrpImageLazy'=> get_altrp_setting( 'altrp_image_lazy', 'none' ),
-              'altrpSkeletonColor'=> get_altrp_setting( 'altrp_skeleton_color', '#ccc' ),
-              'altrpSkeletonHighlightColor'=> get_altrp_setting( 'altrp_skeleton_highlight_color', '#d0d0d0' ),
-            ]
-          ),
-
-        ]
-      ]);
-//        dd($postResult->getBody()->getContents());
-      $result = $postResult->getBody()->getContents();
-      $result = json_decode($result, true);
-
-      return $result;
-      }
-    } catch (\Exception $e){
-//        dd($e);
-        logger( $e->getMessage() );
-    }
-
     ob_start();
 ?>
     <div class="front-app-content front-app-content_preloaded">
@@ -882,6 +892,8 @@ class Page extends Model
     });
     $relations = json_encode($relations);
     File::put($cachePath . 'relations.json', $relations);
+    Cache::delete( 'areas_' . $id );
+
   }
 
   /**

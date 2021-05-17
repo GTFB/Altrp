@@ -64,7 +64,18 @@ function loadingCallback(){
       && window.ElementWrapper
       && window.formsManager
   ){
-    ReactDOM.render(<FrontApp />, document.getElementById('front-app'));
+    function renderAltrp(){
+      ReactDOM.render(<FrontApp />, document.getElementById('front-app'), function (){
+        window.removeEventListener('touchstart', renderAltrp);
+        window.removeEventListener('mouseover', renderAltrp);
+      });
+    }
+    if(window.ALTRP_LOAD_BY_USER){
+      window.addEventListener('mouseover', renderAltrp);
+      window.addEventListener('touchstart', renderAltrp);
+    } else {
+      renderAltrp();
+    }
   }
 }
 // import ReactDOM from 'react-dom';

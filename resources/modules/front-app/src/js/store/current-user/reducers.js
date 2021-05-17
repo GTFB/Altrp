@@ -53,8 +53,16 @@ export function currentUserReducer(user, action) {
       }
       break;
   }
-  if (user instanceof AltrpUser) {
-    return user;
+  if (! (user instanceof AltrpUser)) {
+    user = new AltrpUser(user);
   }
-  return new AltrpUser(user);
+  if(! window.SSR){
+    const rootElement = document.getElementById('front-app');
+    if(user.hasRoles('admin')){
+      rootElement && rootElement.classList.add('front-app_admin')
+    } else{
+      rootElement && rootElement.classList.remove('front-app_admin');
+    }
+  }
+  return user;
 }
