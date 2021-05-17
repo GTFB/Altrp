@@ -74,7 +74,7 @@ class RobotNotification extends Notification implements ShouldQueue
     protected function addChannel($user, $channel)
     {
         $channels = [];
-        if ($channel == 'telegram' && $user->telegram_user_id && config('services.telegram-bot-api.token')) {
+        if ($channel == 'telegram' && ($user->telegram_user_id || $this->node->data->props->nodeData->data->telegram_id) && config('services.telegram-bot-api.token')) {
             $channel = TelegramChannel::class;
             $channels[] = $channel;
         }
@@ -135,13 +135,18 @@ class RobotNotification extends Notification implements ShouldQueue
     public function toTelegram($notifiable)
     {
         $content = $this->node->data->props->nodeData->data->content;
-        if (!$notifiable->telegram_user_id || !is_array($content) || empty($content)) return false;
+        $toId = setDynamicData($this->node->data->props->nodeData->data->telegram_id, $this->modelData);
+        if ((!$notifiable->telegram_user_id && !$toId) || !is_array($content) || empty($content) ) return false;
 
-        $tmObj = TelegramMessage::create()->to($notifiable->telegram_user_id);
+        $tmObj = TelegramMessage::create();
+        if ($notifiable->telegram_user_id) $tmObj->to($notifiable->telegram_user_id);
+        if ($toId) $tmObj->to($toId);
 
         foreach ($content as $item) {
             if ($item->type === 'file' || $item->type === 'document' || $item->type === 'video' || $item->type === 'animation') {
-                $tmObj = TelegramFile::create()->to($notifiable->telegram_user_id);
+              $tmObj = TelegramFile::create();
+              if ($notifiable->telegram_user_id) $tmObj->to($notifiable->telegram_user_id);
+              if ($toId) $tmObj->to($toId);
             }
         }
 
