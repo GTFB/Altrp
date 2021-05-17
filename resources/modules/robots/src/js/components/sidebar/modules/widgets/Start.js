@@ -14,7 +14,7 @@ export default class Start extends React.Component {
       <div className={nodeClasses}>
         <div><h3 className='default-node__label'>{this.props?.data?.label}</h3></div>
         <div className='default-node__type'>{this.props?.type}</div>
-        <Handle type="source" position="bottom"/>
+        <Handle type="source" position={this.props?.sourcePosition ?? 'bottom'}/>
       </div>
     );
   }

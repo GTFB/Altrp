@@ -9,6 +9,7 @@ import ReactFlow, {
   isNode,
   isEdge
 } from "react-flow-renderer";
+import dagre from 'dagre';
 import { connect } from "react-redux";
 import _ from "lodash";
 import "./sass/styles.scss";
@@ -56,8 +57,12 @@ class RobotsEditor extends Component {
     this.changeTab = this.changeTab.bind(this);
     this.btnChange = this.btnChange.bind(this);
     this.setSources = this.setSources.bind(this);
+    this.getLayoutedElements = this.getLayoutedElements.bind(this);
+    this.onLayout = this.onLayout.bind(this);
     this.resource = new Resource({ route: "/admin/ajax/robots" });
     this.reactFlowRef = React.createRef();
+    this.dagreGraph = new dagre.graphlib.Graph();
+
   }
 
   // Записьв store в state
@@ -83,6 +88,8 @@ class RobotsEditor extends Component {
     const data = JSON.parse(robot.chart) ?? [];
     store.dispatch(setRobotSettingsData(data));
     this.btnChange('');
+
+    this.dagreGraph.setDefaultEdgeLabel(() => ({}));
   }
 
   setSources(sources){
@@ -144,10 +151,13 @@ class RobotsEditor extends Component {
       x: event.clientX - reactFlowBounds.left,
       y: event.clientY - reactFlowBounds.top
     });
+    const handleMap = this.getPosition();
     const newNode = {
       id: `${this.getId()}`,
       type,
       position,
+      targetPosition: handleMap === 'vertical' ? 'top' : 'left',
+      sourcePosition: handleMap === 'vertical' ? 'bottom' : 'right',
       data: {
         type: "node",
         label: `${type}`,
@@ -163,6 +173,19 @@ class RobotsEditor extends Component {
   // Получение id нового элемента (ноды)
   getId() {
     return new Date().getTime();
+  }
+
+  // Получение настроек отображения нод (горизонтально или вертикально)
+  getPosition() {
+    const elements = store.getState()?.robotSettingsData;
+    let position = 'vertical';
+    if (_.isArray(elements)){
+      elements.map(item => {
+        if (item?.targetPosition === 'left') position = 'horizontal';
+        else if (item?.sourcePosition === 'right') position = 'horizontal';
+      });
+    }
+    return position;
   }
 
   // Получение data нового элемента (ноды)
@@ -263,8 +286,9 @@ class RobotsEditor extends Component {
     event.dataTransfer.dropEffect = "move";
   }
 
-  onLoad = _reactFlowInstance => {
-    this.setState(s => ({ ...s, reactFlowInstance: _reactFlowInstance }));
+  onLoad = (reactFlowInstance) => {
+    reactFlowInstance.fitView({ includeHiddenNodes: true });
+    this.setState(s => ({ ...s, reactFlowInstance }));
   }
 
   onNodeDragStop(event, node) {
@@ -302,6 +326,53 @@ class RobotsEditor extends Component {
     this.setState(s => ({ ...s, btnActive: item }));
   }
 
+  onLayout(item) {
+    const elements = store.getState()?.robotSettingsData;
+    // const newElements = _.cloneDeep(elements);
+
+    const layoutedElements = this.getLayoutedElements(elements, item);
+    console.log(layoutedElements);
+    store.dispatch(setRobotSettingsData(layoutedElements));
+  }
+
+  getLayoutedElements(elements, direction = 'TB') {
+    const isHorizontal = direction === 'LR';
+    this.dagreGraph.setGraph({ rankdir: direction });
+
+    const nodeWidth = 172;
+    const nodeHeight = 36;
+
+    elements.forEach((el) => {
+      if (isNode(el)) {
+        this.dagreGraph.setNode(el.id, { width: nodeWidth, height: nodeHeight });
+      } else {
+        this.dagreGraph.setEdge(el.source, el.target);
+      }
+    });
+
+    dagre.layout(this.dagreGraph);
+
+    return elements.map((el) => {
+      if (isNode(el)) {
+        const nodeWithPosition = this.dagreGraph.node(el.id);
+        el.targetPosition = isHorizontal ? 'left' : 'top';
+        el.sourcePosition = isHorizontal ? 'right' : 'bottom';
+        console.log(el);
+
+        // unfortunately we need this little hack to pass a slighltiy different position
+        // to notify react flow about the change. More over we are shifting the dagre node position
+        // (anchor=center center) to the top left so it matches the react flow node anchor point (top left).
+        el.position = {
+          x: nodeWithPosition.x - nodeWidth / 2 + Math.random() / 1000,
+          y: nodeWithPosition.y - nodeHeight / 2,
+        };
+      }
+
+      return el;
+    });
+  }
+
+
   render() {
     console.log(this.state.selectNode);
     console.log(this.state.selectEdge);
@@ -319,6 +390,7 @@ class RobotsEditor extends Component {
                   btnActive={ this.state.btnActive }
                   btnChange={ this.btnChange }
                   setSources={ this.setSources }
+                   onLayout={ this.onLayout }
           />
           <div className="content" ref={this.reactFlowRef }>
             <ReactFlow
@@ -346,6 +418,7 @@ class RobotsEditor extends Component {
                 custom: CustomEdge,
               }}
               connectionLineComponent={ConnectionLine}
+              selectNodesOnDrag={false}
             >
               <Controls />
               <MiniMap
