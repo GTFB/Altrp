@@ -1,6 +1,7 @@
 const path = require("path");
+const register = require("@babel/register");
 
-require("@babel/register")({
+register({
   presets: ["@babel/env", "@babel/react"],
   plugins: [
     "@babel/plugin-transform-runtime",

@@ -49,7 +49,6 @@ const excludes = [
   '!./webpack.reports.dev.js',
   '!./webpack.reports.prod.js',
   '!./webpack.mix.js',
-  '!./package.json',
   '!./package-lock.json',
   '!./.env',
   '!./.babelrc',
@@ -59,10 +58,12 @@ const excludes = [
   '!./.editorconfig',
   '!./.styleci.yml',
   '!./.yarn.lock',
+  '!./yarn.lock',
   '!./.composer.lock',
   '!./_ide_helper.php',
   '!./.phpstorm.meta.php',
   '!./s.sql',
+  '!./WriteChunksToFrontBlade.js',
 ];
 
 function altrpZip(filename = 'altrp.zip') {

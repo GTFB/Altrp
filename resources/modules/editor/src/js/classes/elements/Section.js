@@ -435,7 +435,11 @@ class Section extends BaseElement{
         {
           value: 'nav',
           label: 'nav'
-        }
+        },
+        {
+          value: 'form',
+          label: 'form',
+        },
       ]
     });
 

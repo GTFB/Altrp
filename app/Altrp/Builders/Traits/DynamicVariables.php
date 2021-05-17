@@ -114,10 +114,17 @@ trait DynamicVariables
             $wrapStart = $wrapStart ? $wrapStart : "'\'{$endLike}' .";
             $wrapEnd = $wrapEnd ? $wrapEnd : ". '{$startLike}\''";
             $parts[2] = $value;
+            $request = "request()->{$parts[2]}";
+            if (Str::contains($parts[3], 'IN')) {
+                $wrapStart = '';
+                $parts[3] .= '(';
+                $wrapEnd = " . ')'";
+                $request = "'\"' . implode('\",\"', explode(',', request()->name )). '\"'";
+            }
             $this->str = str_replace($this->match,
                 $this->getValue( '(request()->' . $parts[2]
                 . " ? ' " . ($and ? ' ' . trim($and, '_') : '')
-                . " {$parts[1]} {$parts[3]} ' . {$wrapStart}request()->{$parts[2]}{$wrapEnd} : '')", $this->outer),
+                . " {$parts[1]} {$parts[3]} ' . {$wrapStart}{$request}{$wrapEnd} : '')", $this->outer),
                 $this->str
             );
         }
@@ -379,6 +386,9 @@ trait DynamicVariables
             $wrapStart = "'{$result[0]}' . ";
             $value = $result[1];
             $wrapEnd = " . '{$result[2]}'";
+        }
+        if (Str::contains($value, 'IN')) {
+            \Log::info($value);
         }
         return [$wrapStart, $value, $wrapEnd];
     }

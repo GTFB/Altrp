@@ -53,8 +53,11 @@ class AreaComponent extends Component {
     /**
      * Если шаблон привязанный к странице удалили, то ничего не отрисовываем
      */
-    if (!this.props.template.data) {
+    if (! this.props?.template?.data) {
       return <div className={classes.join(" ")} />;
+    }
+    if(this.props.id === 'footer'){
+      this.props.template.data.lastElement = true;
     }
     let rootElement = this.rootElement
       ? this.rootElement
@@ -72,7 +75,7 @@ class AreaComponent extends Component {
       });
     }
     let { children } = this.rootElement;
-    children = children.filter(child => !child.lazySection);
+    children = children.filter(child => ! child.lazySection);
     let template = (
       <div className={classes.join(" ")}>
         {React.createElement(this.rootElement.componentClass, {

@@ -20,7 +20,7 @@ class NewSection extends Component {
     /**
      * @member {HTMLElement} target
      * */
-    console.log("DROP ELEMENT");
+
     let newWidgetName = e.dataTransfer.getData("text/plain");
     e.preventDefault();
     e.stopPropagation();

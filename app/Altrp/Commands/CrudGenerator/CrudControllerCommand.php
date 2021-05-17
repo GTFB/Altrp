@@ -28,6 +28,7 @@ class CrudControllerCommand extends GeneratorCommand
                             {--custom-traits= : Custom traits of the controller.}
                             {--custom-properties= : Custom props of the controller.}
                             {--custom-methods= : Custom methods of the controller.}
+                            {--sql-editors= : Methods with sql queries in the controller.}
                             {--options= : Resource data for select options.}';
 
     /**
@@ -110,6 +111,7 @@ class CrudControllerCommand extends GeneratorCommand
         $customTraits = $this->option('custom-traits') ?? '';
         $customProperties = $this->option('custom-properties') ?? '';
         $customMethods = $this->option('custom-methods') ?? '';
+        $sqlEditors = $this->option('sql-editors') ?? '';
         $options = $this->option('options') ?? '';
 
         $storeRequest = $modelName . 'StoreRequest';
@@ -191,7 +193,6 @@ EOD;
             ->replaceRouteGroup($stub, $routeGroup)
             ->replaceRoutePrefix($stub, $routePrefix)
             ->replaceRoutePrefixCap($stub, $routePrefixCap)
-//            ->replaceValidationRules($stub, $validationRules)
             ->replaceStoreRequest($stub, $storeRequest)
             ->replaceUpdateRequest($stub, $updateRequest)
             ->replaceRequestNamespaces($stub, $requestNamespaces)
@@ -200,6 +201,7 @@ EOD;
             ->replaceCustomTraits($stub, $customTraits)
             ->replaceCustomProperties($stub, $customProperties)
             ->replaceCustomMethods($stub, $customMethods)
+            ->replaceSqlEditors($stub, $sqlEditors)
             ->replaceOptions($stub, $options)
             ->replacePaginationNumber($stub, $perPage)
             ->replaceFileSnippet($stub, $fileSnippet)
@@ -514,6 +516,20 @@ EOD;
     protected function replaceWhereSnippet(&$stub, $whereSnippet)
     {
         $stub = str_replace('{{whereSnippet}}', $whereSnippet, $stub);
+
+        return $this;
+    }
+
+    /**
+     * Replace the sql editors
+     *
+     * @param $stub
+     * @param $sqlEditors
+     * @return $this
+     */
+    protected function replaceSqlEditors(&$stub, $sqlEditors)
+    {
+        $stub = str_replace('{{sqlEditors}}', $sqlEditors, $stub);
 
         return $this;
     }

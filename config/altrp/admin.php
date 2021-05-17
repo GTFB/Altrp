@@ -8,6 +8,11 @@ return [
     'route_prefix' => 'admin',
 
     /*
+     * Файл маршрутов для страниц
+     */
+    'page_routes' => 'routes/page_routes.php',
+
+    /*
      * Название папки для миграций
      */
     'migrations_folder_name' => 'altrp_migrations',

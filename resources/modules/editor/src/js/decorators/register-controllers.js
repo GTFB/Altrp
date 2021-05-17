@@ -936,4 +936,21 @@ export function advancedTabControllers(element) {
   });
 
   element.endControlSection();
+
+  element.startControlSection('skeleton', {
+    tab: TAB_ADVANCED,
+    label: 'Skeleton Settings',
+  });
+
+  element.addControl('skeleton_width', {
+    label: "Width",
+    dynamic: false,
+  });
+
+  element.addControl('skeleton_height', {
+    label: "Height",
+    dynamic: false,
+  });
+
+  element.endControlSection();
 }

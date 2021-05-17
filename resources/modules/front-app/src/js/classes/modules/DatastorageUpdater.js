@@ -27,7 +27,6 @@ class DataStorageUpdater extends AltrpModel {
    *  @param {boolean} initialUpdate
    */
   async updateCurrent(dataSources = null, initialUpdate = true) {
-    console.log(dataSources);
     if(appStore.getState().currentUser.isEmpty()){
       let currentUser = await new Resource({ route: "/ajax/current-user" }).getAll();
       currentUser = currentUser.data;
@@ -110,7 +109,12 @@ class DataStorageUpdater extends AltrpModel {
           }
           let res = {};
           try {
-            if (dataSource.getType() === 'show') {
+            const preloadedData = _.get(window.altrpPreloadedDatasources, dataSource.getAlias());
+            if(preloadedData){
+              res = preloadedData;
+              _.unset(window.altrpPreloadedDatasources, dataSource.getAlias());
+            } else
+              if (dataSource.getType() === 'show') {
               let id = _.get(params, 'id', _.get(this.props, 'match.params.id'));
               if (id) {
                 res = await (new Resource({ route: dataSource.getWebUrl() })).get(id);
@@ -136,7 +140,9 @@ class DataStorageUpdater extends AltrpModel {
           return res;
         }
       });
+      console.log('Update Datasource Start: ',performance.now());
       let responses = await Promise.all(requests);
+      console.log('Update Datasource End: ',performance.now());
       initialUpdate && appStore.dispatch(currentDataStorageLoaded());
     }
     if(! dataSources.length){

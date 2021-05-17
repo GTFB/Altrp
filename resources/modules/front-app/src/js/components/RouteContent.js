@@ -44,9 +44,33 @@ class RouteContent extends Component {
     appStore.dispatch(clearElements());
     window.currentRouterMatch = new AltrpModel(props.match);
     window.currentPageId = props.id;
+    console.log('Route constructor: ', performance.now());
+    this.updateAppData();
   }
 
-  componentWillReceiveProps(nextProps) {
+  async componentWillReceiveProps(nextProps) {
+    queryCache.clear();
+    if (
+      _.get(this.props, "model.modelName") !==
+      _.get(nextProps, "model.modelName") ||
+      _.get(this.props, "match.params.id") !==
+      _.get(nextProps, "match.params.id")
+    ) {
+      await this.changeRouteCurrentModel(nextProps);
+      appStore.dispatch(changeCurrentPageProperty("url", location.href));
+    }
+    /**
+     * При изменении страницы без изменения текущего роута
+     * отправляем запросы на обновление данных и altrpPageState
+     */
+    if (
+      !_.isEqual(
+        _.get(this.props, "match.params"),
+        _.get(nextProps, "match.params")
+      )
+    ) {
+      this.updateAppData();
+    }
     this.setState(state => ({
       ...state,
       admin: nextProps.currentUser.hasRoles("admin")
@@ -86,7 +110,7 @@ class RouteContent extends Component {
      * затем отправляем запросы на обновление данных и altrpPageState
      */
     window.formsManager.clearFieldsStorage();
-    this.updateAppData();
+    console.log('Route Mounted: ', performance.now());
   }
 
   /**
@@ -114,15 +138,16 @@ class RouteContent extends Component {
   /**
    * Меняем текущую модель
    */
-  async changeRouteCurrentModel() {
+  async changeRouteCurrentModel(nextProps) {
     if (
       _.get(this.props, "model.modelName") &&
       _.get(this.props, "match.params.id")
     ) {
+      let props = nextProps ? nextProps : this.props
       try {
         let model = await new Resource({
-          route: `/ajax/models/${this.props.model.modelName}`
-        }).get(this.props.match.params.id);
+          route: `/ajax/models/${props.model.modelName}`
+        }).get(props.match.params.id);
         let oldModel = appStore.getState().currentModel.getData();
         model.altrpModelUpdated = true;
         if(! _.isEqual(model, oldModel)){
@@ -144,28 +169,7 @@ class RouteContent extends Component {
    * @return {Promise<void>}
    */
   async componentDidUpdate(prevProps) {
-    queryCache.clear();
-    if (
-      _.get(this.props, "model.modelName") !==
-        _.get(prevProps, "model.modelName") ||
-      _.get(this.props, "match.params.id") !==
-        _.get(prevProps, "match.params.id")
-    ) {
-      this.changeRouteCurrentModel();
-      appStore.dispatch(changeCurrentPageProperty("url", location.href));
-    }
-    /**
-     * При изменении страницы без изменения текущего ройта
-     * отправляем запросы на обновление данных и altrpPageState
-     */
-    if (
-      !_.isEqual(
-        _.get(this.props, "match.params"),
-        _.get(prevProps, "match.params")
-      )
-    ) {
-      this.updateAppData();
-    }
+
     if (!_.isEqual(_.get(this.props, "match"), _.get(prevProps, "match"))) {
       window.currentRouterMatch = new AltrpModel(this.props.match);
       // appStore.dispatch(clearFormStorage());
@@ -187,28 +191,28 @@ class RouteContent extends Component {
             />
           )}{" "}
         </Suspense>
-        <Scrollbars
-          className="main-content"
-          universal={true}
-          ref={this.scrollbar}
-          onUpdate={this.props.setScrollValue}
-          // style={{ zIndex: 99999 }}
-          autoHide
-          autoHideTimeout={500}
-          autoHideDuration={200}
-          renderTrackVertical={({ style, ...props }) => {
-            return (
-              <div
-                className="altrp-scroll__vertical-track"
-                style={style}
-                {...props}
-              />
-            );
-          }}
-        >
 
+        {/*<Scrollbars*/}
+        {/*  className="main-content"*/}
+        {/*  universal={true}*/}
+        {/*  ref={this.scrollbar}*/}
+        {/*  onUpdate={this.props.setScrollValue}*/}
+        {/*  // style={{ zIndex: 99999 }}*/}
+        {/*  autoHide*/}
+        {/*  autoHideTimeout={500}*/}
+        {/*  autoHideDuration={200}*/}
+        {/*  renderTrackVertical={({ style, ...props }) => {*/}
+        {/*    return (*/}
+        {/*      <div*/}
+        {/*        className="altrp-scroll__vertical-track"*/}
+        {/*        style={style}*/}
+        {/*        {...props}*/}
+        {/*      />*/}
+        {/*    );*/}
+        {/*  }}*/}
+        {/*>*/}
           <RouteContentWrapper className="route-content" id="route-content">
-            {this.state.areas.map(area => {
+            {this.state.areas.map((area, idx) => {
               return (
                 <AreaComponent
                   {...area}
@@ -220,7 +224,7 @@ class RouteContent extends Component {
               );
             })}
           </RouteContentWrapper>
-        </Scrollbars>
+        {/*</Scrollbars>*/}
       </React.Fragment>
     );
   }
@@ -229,14 +233,14 @@ class RouteContent extends Component {
 const mapStateToProps = state => ({
   currentUser: state.currentUser
 });
-
-const mapDispatchToProps = dispatch => {
-  return {
-    setScrollValue: topPosition => dispatch(setScrollValue(topPosition))
-  };
-};
+//
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     setScrollValue: topPosition => dispatch(setScrollValue(topPosition))
+//   };
+// };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  // mapDispatchToProps
 )(withRouter(RouteContent));

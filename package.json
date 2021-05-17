@@ -15,12 +15,13 @@
         "ts-compile": "tsc",
         "front-build": "webpack --config webpack.front.prod.js",
         "editor-build": "webpack --config webpack.editor.prod.js",
+        "server-build": "webpack --config webpack.server.js",
         "admin-build": "webpack --config webpack.admin.prod.js",
         "reports-build": "webpack --config webpack.reports.prod.js",
         "robots-build": "webpack --config webpack.robots.prod.js",
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "pack": "npm run front-build && npm run editor-build && npm run admin-build && npm run robots-build && gulp pack",
-        "packTest": "npm run front-build && npm run editor-build && npm run admin-build && npm run robots-build && gulp packTest",
+        "pack": "npm run server-build && npm run front-build && npm run editor-build && npm run admin-build && npm run robots-build && gulp pack",
+        "packTest": "npm run server-build && npm run front-build && npm run editor-build && npm run admin-build && npm run robots-build && gulp packTest",
         "only-pack": "gulp pack",
         "run-all": "npm-run-all --parallel admin-start editor-start front-start robots-start",
         "reports:dev": "cd resources/modules/altrp-reports && PORT=3010 react-scripts start",
@@ -71,10 +72,11 @@
         "laravel-echo": "^1.9.0",
         "leaflet": "^1.6.0",
         "leaflet-draw": "^1.0.4",
-        "lodash": "^4.17.19",
+        "lodash": "^4.17.21",
         "match-sorter": "^5.0.0",
         "moment": "^2.29.1",
         "nivo": "^0.31.0",
+        "node-html-parser": "^3.2.0",
         "object-diff": "^0.0.4",
         "passport": "^0.4.1",
         "pusher-js": "^7.0.2",
@@ -195,6 +197,7 @@
         "webpack": "4.42.0",
         "webpack-cli": "^3.3.12",
         "webpack-dev-server": "^3.10.3",
-        "webpack-merge": "^4.2.2"
+        "webpack-merge": "^4.2.2",
+        "webpack-node-externals": "^3.0.0"
     }
 }

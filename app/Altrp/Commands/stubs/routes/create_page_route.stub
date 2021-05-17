@@ -1,0 +1,55 @@
+
+// =======> {{frontend_route}} <=======
+Route::get({{frontend_route}}, function ({{params}}) {
+  global $altrp_env;
+  $_frontend_route = \App\Page::find({{page_id}});;
+  $model_data = [];
+  $params_string = '{{params}}';
+  if( {{argument_index}} !== false && $_frontend_route['model'] ) {
+    $model = $_frontend_route['model']->toArray();
+    if( isset( $model['namespace'] ) ){
+      try {
+        $relations = App\Altrp\Relationship::where( [['model_id',$model['id']],['always_with',1]] )->get()->implode( 'name', ',' );
+        $relations = $relations ? explode( ',',$relations ) : false;
+        $model = new $model['namespace'];
+        if ( $relations ) {
+          $model = $model->load( $relations );
+        }
+        $model_data = $model->find( {{model_id}} )->toArray();
+        $altrp_env = $model_data;
+      } catch( Exception $e ) {
+        $model_data = [];
+      }
+    }
+  }
+
+  $preload_content = \App\Page::getPreloadPageContent( $_frontend_route['id'] );
+  $preload_content['content'] = replaceContentWithData( $preload_content['content'] );
+
+  $datasources = getDataSources( $_frontend_route['id'], func_get_args(), $params_string );
+
+  $page_areas = \App\Page::get_areas_for_page( $_frontend_route['id'] );
+  $lazy_sections = [];
+  $elements_list = extractElementsNames( $page_areas );
+
+  if (\App\Page::isCached( $_frontend_route['id'] )) {
+    global $altrp_need_cache;
+    $altrp_need_cache = true;
+    global $altrp_route_id;
+    $altrp_route_id = $_frontend_route['id'];
+  }
+
+  return view( 'front-app', [
+    'page_areas' => json_encode( $page_areas ),
+    'lazy_sections' => json_encode( $lazy_sections ),
+    'elements_list' => json_encode( $elements_list ),
+    'page_id' => $_frontend_route['id'],
+    'title' => {{title}},
+    '_frontend_route' => $_frontend_route,
+    'pages'=> \App\Page::get_pages_for_frontend( true ),
+    'preload_content' => $preload_content,
+    'model_data' => $model_data,
+    'datasources' => $datasources,
+    'is_admin' => isAdmin(),
+  ]);
+})->middleware(['web', 'installation.checker', 'after'])->name( 'page_' . {{page_id}});
