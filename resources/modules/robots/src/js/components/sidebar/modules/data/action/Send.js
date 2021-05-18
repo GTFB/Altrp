@@ -49,6 +49,7 @@ export default class Send extends Component{
               break;
             case 'telegram':
               node.data.props.nodeData.data.content = [];
+              node.data.props.nodeData.data.telegram_id = '';
               break;
             case 'mail':
               node.data.props.nodeData.data.content = {
