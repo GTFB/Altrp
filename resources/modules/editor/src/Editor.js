@@ -10,13 +10,16 @@ import WidgetsPanel from "./js/components/WidgetsPanel";
 import SettingsPanel from "./js/components/SettingsPanel";
 import EditorWindow from "./js/components/EditorWindow";
 import HistoryPanel from "./js/components/HistoryPanel";
+import NavigationPanel from "./js/components/NavigationPanel";
 import UpdateButton from "./js/components/UpdateButton";
 import CONSTANTS from "./js/consts";
 import { stopDrag } from "./js/store/element-drag/actions";
 import AssetsBrowser from "./js/classes/modules/AssetsBrowser";
 
-import store, { getCurrentElement, getCurrentScreen } from "../src/js/store/store";
-
+import store, {
+  getCurrentElement,
+  getCurrentScreen
+} from "../src/js/store/store";
 
 import Logo from "./svgs/logo.svg";
 import Navigation from "./svgs/navigation.svg";
@@ -29,11 +32,11 @@ import { contextMenu } from "react-contexify";
 import { closeDynamicContent } from "./js/store/dynamic-content/actions";
 import ResponsiveDdFooter from "./js/components/ResponsiveDdFooter";
 import DialogWindow from "./js/components/DialogWindow";
-import {renderAsset} from "../../front-app/src/js/helpers";
-import {changeCurrentUser} from "../../front-app/src/js/store/current-user/actions";
+import { renderAsset } from "../../front-app/src/js/helpers";
+import { changeCurrentUser } from "../../front-app/src/js/store/current-user/actions";
 import Resource from "./js/classes/Resource";
 import AltrpMeta from "./js/classes/AltrpMeta";
-import {setEditorMeta} from "./js/store/editor-metas/actions";
+import { setEditorMeta } from "./js/store/editor-metas/actions";
 /**
  * Главный класс редактора.<br/>
  * Реакт-Компонент.<br/>
@@ -51,10 +54,12 @@ class Editor extends Component {
       // activePanel: 'widgets',
       activePanel: "settings",
       templateStatus: CONSTANTS.TEMPLATE_UPDATED,
-      showDialogWindow: false,
+      showDialogWindow: false
     };
     this.openPageSettings = this.openPageSettings.bind(this);
+    this.openNavigratonPanel = this.openNavigratonPanel.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
+    this.showNavigationPanel = this.showNavigationPanel.bind(this);
     this.showHistoryPanel = this.showHistoryPanel.bind(this);
     this.showWidgetsPanel = this.showWidgetsPanel.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
@@ -86,18 +91,18 @@ class Editor extends Component {
   showWidgetsPanel() {
     this.setState({
       ...this.state,
-      activePanel: "widgets",
+      activePanel: "widgets"
     });
   }
 
-  /** 
+  /**
    * Показывает Dialog окно
    */
   toggleModalWindow() {
     this.setState({
       showDialogWindow: !this.state.showDialogWindow
-    })
-  };
+    });
+  }
 
   /**
    * Показывает панель с настройками текущего виджета
@@ -105,15 +110,24 @@ class Editor extends Component {
   showSettingsPanel() {
     this.setState({
       ...this.state,
-      activePanel: "settings",
+      activePanel: "settings"
+    });
+  }
+  /**
+   * Показывает панель с деревом компоненов
+   */
+  showNavigationPanel() {
+    this.setState({
+      ...this.state,
+      activePanel: "navigation"
     });
   }
 
   showHistoryPanel() {
     this.setState({
-      ...this.state, 
+      ...this.state,
       activePanel: "history"
-    })
+    });
   }
 
   /**
@@ -121,7 +135,7 @@ class Editor extends Component {
    */
   onClick() {
     contextMenu.hideAll();
-    store.dispatch(closeDynamicContent())
+    store.dispatch(closeDynamicContent());
   }
 
   /**
@@ -150,10 +164,12 @@ class Editor extends Component {
   async componentDidMount() {
     this.initModules();
 
-    let currentUser = await (new Resource({route: '/ajax/current-user'})).getAll();
+    let currentUser = await new Resource({
+      route: "/ajax/current-user"
+    }).getAll();
     currentUser = currentUser.data;
     appStore.dispatch(changeCurrentUser(currentUser));
-    const presetColors = await AltrpMeta.getMetaByName('preset_colors');
+    const presetColors = await AltrpMeta.getMetaByName("preset_colors");
     appStore.dispatch(setEditorMeta(presetColors));
   }
 
@@ -166,44 +182,61 @@ class Editor extends Component {
     this.showSettingsPanel();
   }
 
+  openNavigratonPanel() {
+    this.modules.templateDataStorage.setCurrentRootElement();
+    this.showNavigationPanel();
+  }
+
   /**
    * Отрисовка Компонента
    */
   render() {
     let settingsActive = "";
-    let templateClasses = `editor editor_${store.getState().templateData.template_type}`;
+    let navigationActive = "";
+    let templateClasses = `editor editor_${
+      store.getState().templateData.template_type
+    }`;
     if (this.props.templateStatus === CONSTANTS.TEMPLATE_SAVING) {
       templateClasses += " editor_saving";
     }
     if (
       store.getState().currentElement.currentElement.getType &&
       store.getState().currentElement.currentElement.getType() ===
-      "root-element" &&
+        "root-element" &&
       this.state.activePanel === "settings"
     ) {
       settingsActive = " active";
     }
+    if (
+      store.getState().currentElement.currentElement.getType &&
+      store.getState().currentElement.currentElement.getType() ===
+        "root-element" &&
+      this.state.activePanel === "navigation"
+    ) {
+      navigationActive = " active";
+    }
     return (
-        <DndProvider backend={HTML5Backend}>
-        <div className={templateClasses}
+      <DndProvider backend={HTML5Backend}>
+        <div
+          className={templateClasses}
           onClick={this.onClick}
           onDragEnd={this.onDragEnd}
-          onKeyDown={this.onKeyDown}  
+          onKeyDown={this.onKeyDown}
         >
           <div className="left-panel">
             <div className="editor-top-panel">
               <button
                 className="btn btn_hamburger"
-              // onClick={this.showSettingsPanel}
+                // onClick={this.showSettingsPanel}
               >
                 <Hamburger className="icon" />
               </button>
               <a href="/admin/templates" target="_blank" className="logo">
-                {
-                  window.admin_logo
-                    ? renderAsset(window.admin_logo, { className: 'editor__logo' })
-                    : <Logo viewBox="0 0 97 35" className="editor__logo" />
-                }
+                {window.admin_logo ? (
+                  renderAsset(window.admin_logo, { className: "editor__logo" })
+                ) : (
+                  <Logo viewBox="0 0 97 35" className="editor__logo" />
+                )}
               </a>
               <button className="btn btn_dots" onClick={this.showWidgetsPanel}>
                 <Dots className="icon" />
@@ -213,6 +246,7 @@ class Editor extends Component {
               {this.state.activePanel === "widgets" && <WidgetsPanel />}
               {this.state.activePanel === "settings" && <SettingsPanel />}
               {this.state.activePanel === "history" && <HistoryPanel />}
+              {this.state.activePanel === "navigation" && <NavigationPanel />}
             </div>
             <div className="editor-bottom-panel d-flex align-content-center justify-center">
               <button
@@ -221,13 +255,13 @@ class Editor extends Component {
               >
                 <Settings className="icon" />
               </button>
-              <button className="btn ">
+              <button
+                className={"btn btn_settings" + navigationActive}
+                onClick={this.openNavigratonPanel}
+              >
                 <Navigation className="icon" />
               </button>
-              <button 
-                className="btn "
-                onClick={this.showHistoryPanel}
-              >
+              <button className="btn " onClick={this.showHistoryPanel}>
                 <History className="icon" />
               </button>
               <div className="btn ">
@@ -236,18 +270,24 @@ class Editor extends Component {
               <button className="btn ">
                 <Preview className="icon" />
               </button>
-              <UpdateButton onClick={() => this.toggleModalWindow()} toggleModalWindow={() => this.toggleModalWindow()} />
+              <UpdateButton
+                onClick={() => this.toggleModalWindow()}
+                toggleModalWindow={() => this.toggleModalWindow()}
+              />
             </div>
           </div>
           <div className="right-panel">
-            {this.state.showDialogWindow &&
-            <DialogWindow state={this.state.showDialogWindow}
-                          toggleModalWindow={() => this.toggleModalWindow()} />}
+            {this.state.showDialogWindow && (
+              <DialogWindow
+                state={this.state.showDialogWindow}
+                toggleModalWindow={() => this.toggleModalWindow()}
+              />
+            )}
             <EditorWindow />
           </div>
         </div>
         <AssetsBrowser />
-        </DndProvider>
+      </DndProvider>
     );
   }
 }
@@ -255,7 +295,7 @@ class Editor extends Component {
 function mapStateToProps(state) {
   return {
     templateStatus: state.templateStatus.status
-  }
+  };
 }
 
 /**
