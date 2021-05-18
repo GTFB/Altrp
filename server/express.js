@@ -1,7 +1,7 @@
-import { ServerStyleSheet } from 'styled-components'
+import { ServerStyleSheet } from "styled-components";
 import AltrpModel from "../resources/modules/editor/src/js/classes/AltrpModel";
 const sheet = new ServerStyleSheet();
-import { parse } from 'node-html-parser';
+import { parse } from "node-html-parser";
 if (typeof performance === "undefined") {
   global.performance = require("perf_hooks").performance;
 }
@@ -10,7 +10,7 @@ if (typeof performance === "undefined") {
  * @type {{parent: {}}}
  */
 global.window = {
-  parent: {},
+  parent: {}
 };
 global.SSR = true;
 global.window.SSR = true;
@@ -21,33 +21,35 @@ global.window.SSR = true;
 global.frontElementsManager = require("./classes/modules/FrontElementsManager").default;
 global.React = require("react");
 global.history = {
-  back() {
-  }
+  back() {}
 };
-global.iconsManager = new (require("../resources/modules/editor/src/js/classes/modules/IconsManager").default);
+global.iconsManager = new (require("../resources/modules/editor/src/js/classes/modules/IconsManager").default)();
 global.currentRouterMatch = new AltrpModel({});
 global.Component = global.React.Component;
 window.frontElementsFabric = require("../resources/modules/front-app/src/js/classes/FrontElementsFabric").default;
-const FrontElement = require("../resources/modules/front-app/src/js/classes/FrontElement").default;
+const FrontElement = require("../resources/modules/front-app/src/js/classes/FrontElement")
+  .default;
 require("../resources/modules/editor/src/js/classes/modules/FormsManager.js");
 window.elementDecorator = require("../resources/modules/front-app/src/js/decorators/front-element-component").default;
 window.ElementWrapper = require("../resources/modules/front-app/src/js/components/ElementWrapper").default;
 
-window.stylesModulePromise = new Promise(function (resolve) {
+window.stylesModulePromise = new Promise(function(resolve) {
   window.stylesModuleResolve = resolve;
 });
 
 const express = require("express");
-
-const {Provider} = require("react-redux");
+let PORT = process.env.SSR_PORT || 9000;
+const { Provider } = require("react-redux");
 require("dotenv").config();
 global.appStore = require("../resources/modules/front-app/src/js/store/store").default;
 window.parent.appStore = global.appStore;
 const ReactDOMServer = require("react-dom/server");
-const AreaComponent = require("../resources/modules/front-app/src/js/components/AreaComponent").default;
-const Styles = require("../resources/modules/editor/src/js/components/Styles").default;
+const AreaComponent = require("../resources/modules/front-app/src/js/components/AreaComponent")
+  .default;
+const Styles = require("../resources/modules/editor/src/js/components/Styles")
+  .default;
 
-const {StaticRouter} = require("react-router");
+const { StaticRouter } = require("react-router");
 // const { HTML5Backend } = require("react-dnd-html5-backend");
 // const { DndProvider } = require("react-dnd");
 const {
@@ -56,7 +58,7 @@ const {
 
 var bodyParser = require("body-parser");
 const app = express();
-app.use(bodyParser.json({limit: "500mb", extended: true}));
+app.use(bodyParser.json({ limit: "500mb", extended: true }));
 app.use(
   bodyParser.urlencoded({
     limit: "500mb",
@@ -66,7 +68,7 @@ app.use(
 
 app.use(express.static("public"));
 app.get("/*", (req, res) => {
-  return res.json({success: true});
+  return res.json({ success: true });
 });
 
 /**
@@ -95,11 +97,10 @@ function renderHTML(req, res, data, component, page, store) {
 }
 
 app.post("/", (req, res) => {
-
   const store = window.appStore;
   let json = JSON.parse(req.body.json) || [];
   let page = json.page || [];
-  let page_id = json.page_id || '';
+  let page_id = json.page_id || "";
   let page_model = json.page_model || {};
   // delete page[3];
   global.altrp = json.altrp || {};
@@ -107,82 +108,87 @@ app.post("/", (req, res) => {
    * todo: починить серверную отрисовку для склетона
    * @type {*[]}
    */
-  global.window.altrpImageLazy = json.altrpImageLazy || 'none';
-  global.window.altrpSkeletonColor = json.altrpSkeletonColor || '#ccc';
-  global.window.altrpSkeletonHighlightColor = json.altrpSkeletonHighlightColor || '#d0d0d0';
+  global.window.altrpImageLazy = json.altrpImageLazy || "none";
+  global.window.altrpSkeletonColor = json.altrpSkeletonColor || "#ccc";
+  global.window.altrpSkeletonHighlightColor =
+    json.altrpSkeletonHighlightColor || "#d0d0d0";
   let elements = [];
   global.window.location = {
-    href: req.protocol + '://' + req.get('host') + req.originalUrl,
+    href: req.protocol + "://" + req.get("host") + req.originalUrl
   };
-  page.forEach(area=>{
-    if(area?.template?.data?.children){
+  page.forEach(area => {
+    if (area?.template?.data?.children) {
       area.template.data.id && elements.push(area.template.data);
-      area.template.data.children.forEach(item=>{
-        extractChildren(item, elements)
-      })
+      area.template.data.children.forEach(item => {
+        extractChildren(item, elements);
+      });
     }
   });
   elements = elements.map(item => new FrontElement(item));
   const elementStyles = elements.map(element => ({
     styles: element.getStringifyStyles(),
-    elementId: element.getId(),
+    elementId: element.getId()
   }));
-  let app = ReactDOMServer.renderToString(sheet.collectStyles(
-    <Provider store={window.appStore}><div className={`front-app-content `}>
-        <StaticRouter>
-          <RouteContentWrapper
-            className="route-content"
-            id="route-content"
-          >
-            {page.map((area, idx) => {
-
-              return (
-                <AreaComponent
-                  {...area}
-                  area={area}
-                  page={page_id}
-                  models={[page_model]}
-                  key={"appArea_" + area.id}
-                />
-              );
-            })}
-          </RouteContentWrapper>
-        </StaticRouter>
-      </div>
-      <Styles elementStyles={elementStyles} />
-    </Provider>
-    ));
+  let app = ReactDOMServer.renderToString(
+    sheet.collectStyles(
+      <Provider store={window.appStore}>
+        <div className={`front-app-content `}>
+          <StaticRouter>
+            <RouteContentWrapper className="route-content" id="route-content">
+              {page.map((area, idx) => {
+                return (
+                  <AreaComponent
+                    {...area}
+                    area={area}
+                    page={page_id}
+                    models={[page_model]}
+                    key={"appArea_" + area.id}
+                  />
+                );
+              })}
+            </RouteContentWrapper>
+          </StaticRouter>
+        </div>
+        <Styles elementStyles={elementStyles} />
+      </Provider>
+    )
+  );
 
   let styleTags = sheet.getStyleTags();
   let _app = parse(app);
-  if(_app.querySelector('.styles-container')){
-    styleTags += `<style>${_app.querySelector('.styles-container').textContent}</style>`;
-    _app.removeChild(_app.querySelector('.styles-container'));
+  if (_app.querySelector(".styles-container")) {
+    styleTags += `<style>${
+      _app.querySelector(".styles-container").textContent
+    }</style>`;
+    _app.removeChild(_app.querySelector(".styles-container"));
     app = _app.toString();
   }
   // sheet.seal();
   const result = {
     important_styles: unEntity(styleTags),
-    content:  unEntity(app),
+    content: unEntity(app)
   };
- return res.json(result);
+  return res.json(result);
 });
 
 app.use(express.static("../server-build"));
 
-app.listen("9000", () => {
-  console.log("Express server started at http://localhost:9000");
+app.listen(PORT, () => {
+  console.log(`Express server started at http://localhost:${PORT}`);
 });
 
-function extractChildren(item, list){
+function extractChildren(item, list) {
   list = list || [];
   list.push(item);
-  if(item?.children?.length){
-    item.children.forEach(item=>{
+  if (item?.children?.length) {
+    item.children.forEach(item => {
       extractChildren(item, list);
-    })
+    });
   }
 }
-function unEntity(str){
-  return str.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+function unEntity(str) {
+  return str
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
 }
