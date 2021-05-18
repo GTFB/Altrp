@@ -107,9 +107,9 @@ app.post("/", (req, res) => {
    * todo: починить серверную отрисовку для склетона
    * @type {*[]}
    */
-  // global.window.altrpImageLazy = json.altrpImageLazy || 'none';
-  // global.window.altrpSkeletonColor = json.altrpSkeletonColor || '#ccc';
-  // global.window.altrpSkeletonHighlightColor = json.altrpSkeletonHighlightColor || '#d0d0d0';
+  global.window.altrpImageLazy = json.altrpImageLazy || 'none';
+  global.window.altrpSkeletonColor = json.altrpSkeletonColor || '#ccc';
+  global.window.altrpSkeletonHighlightColor = json.altrpSkeletonHighlightColor || '#d0d0d0';
   let elements = [];
   global.window.location = {
     href: req.protocol + '://' + req.get('host') + req.originalUrl,

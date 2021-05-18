@@ -20,6 +20,7 @@ class PageDatasource extends Model
         'priority',
         'autoload',
         'parameters',
+        'server_side',
     ];
 
   /**

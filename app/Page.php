@@ -286,7 +286,7 @@ class Page extends Model
   {
     $currentPage = Page::find($page_id);
 
-    if ( Cache::has('areas_' . $page_id) ) {
+    if ( 0 ) {
       $areas = Cache::get('areas_' . $page_id);
     } else {
 
@@ -314,7 +314,6 @@ class Page extends Model
         'page_id' => $page_id,
         'template_type' => $contentType ? 'reports' : 'content',
       ]);
-
       unset($content_template['html_content']);
       unset($content_template['styles']);
       $areas[] = [
@@ -358,6 +357,7 @@ class Page extends Model
           'template_type' => 'popup',
         ]),
       ];
+
       Cache::put( 'areas_' . $page_id, $areas, 86400 );
 
     }
@@ -379,7 +379,6 @@ class Page extends Model
         $areas[3]['templates'][$key]['data'] = Template::recursively_children_check_conditions($template['data']);
       }
     }
-
     return $areas;
   }
 

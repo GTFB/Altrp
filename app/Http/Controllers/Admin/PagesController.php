@@ -106,7 +106,7 @@ class PagesController extends Controller
     //
     $page = Page::find( $id );
     if ( $page ) {
-      $page->template_id = $page->get_content_template() ? $page->get_content_template()->id : null;
+//      $page->template_id = $page->get_content_template() ? $page->get_content_template()->id : null;
       $page->roles = $page->getRoles();
     }
     return response()->json( $page->toArray() );
@@ -296,7 +296,6 @@ class PagesController extends Controller
     }
 
     Page::clearAllCacheById( $page_id );
-    PagesTemplate::clearAllCacheById( $page_id );
     return response()->json( ['success' => true], 200, [], JSON_UNESCAPED_UNICODE );
   }
 

@@ -63,8 +63,8 @@
 })();
 
 function replaceApp(){
-
   if(! document.getElementById('front-app-server')){
+    console.error(document.getElementById('front-app-server'));
     return;
   }
   const appElement = document.getElementById('front-app');

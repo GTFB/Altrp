@@ -12,7 +12,7 @@ import {
   SectionSectionComponent
 } from "./widgets/styled-components/SectionComponents";
 
-class SectionComponent extends Component {
+class SectionWidgetComponent extends Component {
   constructor(props) {
     super(props);
     if (!props.children.length) {
@@ -88,6 +88,7 @@ class SectionComponent extends Component {
 
     if (widthType === "boxed" && !isFixed) {
       sectionClasses.push("altrp-section_boxed");
+      ("DROP ELEMENT");
     }
     if (widthType === "section_boxed" && !isFixed) {
       sectionClasses.push("altrp-section_section-boxed");
@@ -159,6 +160,9 @@ class SectionComponent extends Component {
         }
         break;
     }
+    console.log("====================================");
+    console.log(component);
+    console.log("====================================");
     return React.createElement(
       component,
       {
@@ -169,25 +173,10 @@ class SectionComponent extends Component {
           this.state.settings.position_style_css_classes,
         id: "",
         onClick: this.onClick,
-        columns: this.props.element.children || [],
         settings: this.props.element.getSettings()
       },
-      // isScrollEffect ?
-      // <>
-      //   <div className="motion-effects-container" onScroll={this.handleScroll}>
-      //       <div className="altrp-background-image" style={{ width: '100%', height: '130%', transform: 'translateY(110px)' }} />
-      //   </div>
-      //   <div className={"get-column-count " + `altrp-element-column-count${this.props.element.id}`} id="columnCount" />
-      // </> :
-      /*<div className={"get-column-count " + `altrp-element-column-count${this.props.element.id}`} id="columnCount" />,*/
       sectionWrapper
     );
-
-    // let fullFill = null
-    // if(this.state.settings.layout_content_width_type == "full-fill") {
-    //   fullFill = section
-    //   // <div className="full-fill" style={{width: getWindowWidth() + "px"}}>{section}</div>
-    // }
   }
 }
 
@@ -196,7 +185,5 @@ function mapStateToProps(state) {
     changeWidthColumns: state.columnWidth
   };
 }
-// export default connect(mapStateToProps, null, null, {
-//   forwardRef: true
-// })(SectionComponent);
-export default SectionComponent;
+
+export default SectionWidgetComponent;

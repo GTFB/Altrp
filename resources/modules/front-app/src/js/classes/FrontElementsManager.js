@@ -28,6 +28,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "section_widget",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'SectionComponent' */ "../../../../editor/src/js/components/SectionComponent"
+          );
+        }
+      },
+      {
         name: "column",
         import: async () => {
           return await import(
@@ -261,7 +269,6 @@ class FrontElementsManager {
    * @return {Promise<void>}
    */
   async loadAllComponents() {
-
     const componentsToLoad = this.ELEMENTS.map(async el => {
       this.components[el.name] = (
         await el.import(/* webpackChunkName: 'FrontElementsFabric' */)
@@ -274,7 +281,7 @@ class FrontElementsManager {
    * @return {Promise<void>}
    */
   async loadNotUsedComponent() {
-    if (! window.altrpElementsLists) {
+    if (!window.altrpElementsLists) {
       return;
     }
     let componentsToLoad = this.ELEMENTS.filter(el => {
@@ -291,10 +298,10 @@ class FrontElementsManager {
    * проверяем все ли виджеты из window.altrpElementsLists загрузились
    */
   componentsIsLoaded() {
-    if (!window.altrpElementsLists) {
+    if (! window.altrpElementsLists) {
       return _.keys(this.components).length === this.ELEMENTS.length;
     }
-    return _.keys(this.components).length === window.altrpElementsLists.length;
+    return _.keys(this.components).length >= window.altrpElementsLists.length;
   }
 
   /**
@@ -311,7 +318,7 @@ class FrontElementsManager {
   }
 
   checkElementExists(elementName) {
-    return ! ! this.components[elementName];
+    return !!this.components[elementName];
   }
 }
 window.frontElementsManager = new FrontElementsManager();

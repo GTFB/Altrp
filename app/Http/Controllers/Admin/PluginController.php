@@ -69,7 +69,14 @@ class PluginController extends Controller
           }
 
           $plugin = Plugin::where('name', ucfirst($moduleName))->first();
-          $plugin->update(['enabled' => $value]);
+          if (!$plugin) {
+              $plugin = new Plugin();
+          }
+          $plugin->fill([
+              'enabled' => $value,
+              'name' => ucfirst($moduleName)
+          ]);
+          $plugin->save();
 
             if ($value) {
                   return response()->json([

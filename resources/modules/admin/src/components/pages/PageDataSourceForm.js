@@ -18,7 +18,7 @@ class PageDataSourceForm extends Component {
   };
 
   changeHandler = ({ target: { value, name, checked } }) => {
-    if(name === 'autoload'){
+    if(name === 'autoload' || name === 'server_side'){
       value = checked;
     }
     this.setState({ [name]: value });
@@ -71,7 +71,7 @@ class PageDataSourceForm extends Component {
     this.setState(state => ({...state, isExtendedSettings, parameters}));
   };
   render() {
-    let { source_id, alias, priority, parameters, dataSourceOptions, autoload, isExtendedSettings } = this.state;
+    let { source_id, alias, priority, parameters, dataSourceOptions, autoload, isExtendedSettings, server_side } = this.state;
     dataSourceOptions = dataSourceOptions.map(source=>({value:source.id, label:source.title || source.name}));
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="form-group">
@@ -117,6 +117,15 @@ class PageDataSourceForm extends Component {
         <input type="checkbox" id="autoload"
           name="autoload"
           checked={autoload}
+          onChange={this.changeHandler}
+          className="form-check-input position-static ml-2"
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="server_side">Server Side</label>
+        <input type="checkbox" id="server_side"
+          name="server_side"
+          checked={server_side}
           onChange={this.changeHandler}
           className="form-check-input position-static ml-2"
         />

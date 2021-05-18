@@ -16,197 +16,202 @@ import {
   CONTROLLER_GRADIENT,
   CONTROLLER_MEDIA
 } from "../modules/ControllersManager";
-import {advancedTabControllers} from "../../decorators/register-controllers";
+import RowIcon from "../../../svgs/row.svg";
+import { advancedTabControllers } from "../../decorators/register-controllers";
 
-class Section extends BaseElement{
+class SectionWidget extends BaseElement {
+  static getName() {
+    return "section_widget";
+  }
+  static getTitle() {
+    return "SectionWidget";
+  }
 
-  static getName(){
-    return 'section';
+  static getIconComponent() {
+    return RowIcon;
   }
-  static getTitle(){
-    return 'Section';
-  }
-  static getType(){
-    return 'section';
-  }
-  _registerControls(){
 
-    this.startControlSection('Layout',{
-      label: 'Layout'
+  static getType() {
+    return "widget";
+  }
+  _registerControls() {
+    if (this.controllersRegistered) {
+      return;
+    }
+    this.startControlSection("Layout", {
+      label: "Layout"
     });
 
-    this.addControl('layout_content_width_type', {
+    this.addControl("layout_content_width_type", {
       type: CONTROLLER_SELECT,
-      label: 'Content width',
-      default: 'boxed',
+      label: "Content width",
+      default: "boxed",
       options: [
         {
-          value: 'boxed',
-          label: 'boxed'
+          value: "boxed",
+          label: "boxed"
         },
         {
-          value: 'full',
-          label: 'full width'
+          value: "full",
+          label: "full width"
         },
         {
-          value: 'section_boxed',
-          label: 'section-boxed'
-        },
+          value: "section_boxed",
+          label: "section-boxed"
+        }
         // {
         //   value: 'full-fill',
         //   label: 'full fill'
         // }
       ],
-      prefixClass: 'altrp-section_'
+      prefixClass: "altrp-section_"
     });
 
-    this.addControl(
-      'layout_flex_wrap_content', {
-        type: CONTROLLER_SELECT,
-        label: 'Column wrap',
-        options:[
-          {
-            'value' : 'nowrap',
-            'label' : 'nowrap'
-          },
-          {
-            'value' : 'wrap',
-            'label' : 'wrap'
-          },
-          {
-            'value' : 'wrap-reverse',
-            'label' : 'wrap reverse'
-          }
-        ],
-        rules: {
-          "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": "flex-wrap: {{VALUE}} !important",
-        },
-      }
-    );
-
-    this.addControl('layout_column_position', {
+    this.addControl("layout_flex_wrap_content", {
       type: CONTROLLER_SELECT,
-      label: 'Vertical Alignment',
+      label: "Column wrap",
       options: [
         {
-          'value': 'stretch',
-          'label': 'Stretch'
+          value: "nowrap",
+          label: "nowrap"
         },
         {
-          'value': 'baseline',
-          'label': 'Baseline'
+          value: "wrap",
+          label: "wrap"
         },
         {
-          'value': 'center',
-          'label': 'Center'
+          value: "wrap-reverse",
+          label: "wrap reverse"
+        }
+      ],
+      rules: {
+        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}":
+          "flex-wrap: {{VALUE}} !important"
+      }
+    });
+
+    this.addControl("layout_column_position", {
+      type: CONTROLLER_SELECT,
+      label: "Vertical Alignment",
+      options: [
+        {
+          value: "stretch",
+          label: "Stretch"
         },
         {
-          'value': 'flex-start',
-          'label': 'Flex Start'
+          value: "baseline",
+          label: "Baseline"
         },
         {
-          'value': 'flex-end',
-          'label': 'Flex End'
+          value: "center",
+          label: "Center"
         },
         {
-          'value': 'space-around',
-          'label': 'Space Around'
+          value: "flex-start",
+          label: "Flex Start"
         },
         {
-          'value': 'space-between',
-          'label': 'Space Between'
+          value: "flex-end",
+          label: "Flex End"
         },
         {
-          'value': 'space-evenly',
-          'label': 'Space Evenly'
+          value: "space-around",
+          label: "Space Around"
         },
         {
-          'value': 'unset',
-          'label': 'Unset'
+          value: "space-between",
+          label: "Space Between"
         },
+        {
+          value: "space-evenly",
+          label: "Space Evenly"
+        },
+        {
+          value: "unset",
+          label: "Unset"
+        }
       ],
       rules: {
         "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": [
           "align-content: {{VALUE}}",
           "align-items: {{VALUE}}"
-        ],
-      },
-    }
-    );
-
-    this.addControl('layout_justify_content', {
-        type: CONTROLLER_SELECT,
-        label: 'Horizontal Alignment',
-        options: [
-          {
-            'value': 'baseline',
-            'label': 'baseline'
-          },
-          {
-            'value': 'center',
-            'label': 'center'
-          },
-          {
-            'value': 'flex-start',
-            'label': 'flex-start'
-          },
-          {
-            'value': 'flex-end',
-            'label': 'flex-end'
-          },
-          {
-            'value': 'space-around',
-            'label': 'space-around'
-          },
-          {
-            'value': 'space-between',
-            'label': 'space-between'
-          },
-          {
-            'value': 'space-evenly',
-            'label': 'space-evenly'
-          },
-          {
-            'value': 'unset',
-            'label': 'unset'
-          },
-        ],
-        rules: {
-          "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": "justify-content: {{VALUE}}",
-        },
+        ]
       }
-    );
+    });
 
-    this.addControl('layout_column_direction', {
-        type: CONTROLLER_SELECT,
-        label: 'Direction',
-        options: [
-          {
-            'value': 'row',
-            'label': 'row'
-          },
-          {
-            'value': 'row-reverse',
-            'label': 'row reverse'
-          },
-          {
-            'value': 'column',
-            'label': 'column'
-          },
-          {
-            'value': 'column-reverse',
-            'label': 'column-reverse'
-          },
-          {
-            'value': 'unset',
-            'label': 'unset'
-          },
-        ],
-        rules: {
-          "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": "flex-direction: {{VALUE}}"
+    this.addControl("layout_justify_content", {
+      type: CONTROLLER_SELECT,
+      label: "Horizontal Alignment",
+      options: [
+        {
+          value: "baseline",
+          label: "baseline"
         },
+        {
+          value: "center",
+          label: "center"
+        },
+        {
+          value: "flex-start",
+          label: "flex-start"
+        },
+        {
+          value: "flex-end",
+          label: "flex-end"
+        },
+        {
+          value: "space-around",
+          label: "space-around"
+        },
+        {
+          value: "space-between",
+          label: "space-between"
+        },
+        {
+          value: "space-evenly",
+          label: "space-evenly"
+        },
+        {
+          value: "unset",
+          label: "unset"
+        }
+      ],
+      rules: {
+        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}":
+          "justify-content: {{VALUE}}"
       }
-    );
+    });
+
+    this.addControl("layout_column_direction", {
+      type: CONTROLLER_SELECT,
+      label: "Direction",
+      options: [
+        {
+          value: "row",
+          label: "row"
+        },
+        {
+          value: "row-reverse",
+          label: "row reverse"
+        },
+        {
+          value: "column",
+          label: "column"
+        },
+        {
+          value: "column-reverse",
+          label: "column-reverse"
+        },
+        {
+          value: "unset",
+          label: "unset"
+        }
+      ],
+      rules: {
+        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}":
+          "flex-direction: {{VALUE}}"
+      }
+    });
 
     // this.addControl("layout_content_full_width", {
     //   type: CONTROLLER_SLIDER,
@@ -234,64 +239,67 @@ class Section extends BaseElement{
       min: 0,
       rules: {
         "{{ELEMENT}}.altrp-section_boxed{{STATE}}": "width: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}}.altrp-section_section_boxed{{STATE}}": "width: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}} > .altrp-section_section-boxed{{STATE}}": "padding-left: calc((100vw - {{SIZE}}{{UNIT}}) / 2);padding-right: calc((100vw - {{SIZE}}{{UNIT}}) / 2); width: 100vw;",
+        "{{ELEMENT}}.altrp-section_section_boxed{{STATE}}":
+          "width: {{SIZE}}{{UNIT}}",
+        "{{ELEMENT}} > .altrp-section_section-boxed{{STATE}}":
+          "padding-left: calc((100vw - {{SIZE}}{{UNIT}}) / 2);padding-right: calc((100vw - {{SIZE}}{{UNIT}}) / 2); width: 100vw;"
       }
     });
 
-    this.addControl('layout_columns_gap', {
+    this.addControl("layout_columns_gap", {
       type: CONTROLLER_SELECT,
-      label: 'Columns gap',
-      default: 'none',
+      label: "Columns gap",
+      default: "none",
       options: [
         {
-          value: '',
-          label: 'none'
+          value: "",
+          label: "none"
         },
         {
-          value: '0',
-          label: 'No gap'
+          value: "0",
+          label: "No gap"
         },
         {
-          value: '5',
-          label: 'Narrow'
+          value: "5",
+          label: "Narrow"
         },
         {
-          value: '15',
-          label: 'Extended'
+          value: "15",
+          label: "Extended"
         },
         {
-          value: '20',
-          label: 'Wide'
+          value: "20",
+          label: "Wide"
         },
         {
-          value: '30',
-          label: 'Winder'
+          value: "30",
+          label: "Winder"
         }
       ],
       rules: {
-        "{{ELEMENT}} > .altrp-section{{STATE}} .altrp-column{{STATE}}": "padding: {{VALUE}}px"
+        "{{ELEMENT}} > .altrp-section{{STATE}} .altrp-column{{STATE}}":
+          "padding: {{VALUE}}px"
       }
     });
 
-    this.addControl('layout_height', {
+    this.addControl("layout_height", {
       type: CONTROLLER_SELECT,
-      label: 'Height',
-      default: 'default',
+      label: "Height",
+      default: "default",
       options: [
         {
-          value: 'default',
-          label: 'default'
+          value: "default",
+          label: "default"
         },
         {
-          value: 'fit',
-          label: 'fit to screen'
+          value: "fit",
+          label: "fit to screen"
         },
         {
-          value: 'min_height',
-          label: 'min height'
+          value: "min_height",
+          label: "min height"
         }
-      ],
+      ]
     });
 
     this.addControl("label_style_min_height", {
@@ -305,7 +313,8 @@ class Section extends BaseElement{
       max: 1440,
       min: 0,
       rules: {
-        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": "min-height: {{SIZE}}{{UNIT}} "
+        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}":
+          "min-height: {{SIZE}}{{UNIT}} "
       }
     });
 
@@ -380,66 +389,63 @@ class Section extends BaseElement{
     //   }
     // );
 
-    this.addControl('layout_overflow', {
+    this.addControl("layout_overflow", {
       type: CONTROLLER_SELECT,
-      label: 'overflow',
-      default: 'visible',
+      label: "overflow",
+      default: "visible",
       options: [
         {
-          value: 'visible',
-          label: 'default'
+          value: "visible",
+          label: "default"
         },
         {
-          value: 'hidden',
-          label: 'hidden'
+          value: "hidden",
+          label: "hidden"
         }
       ],
       rules: {
-        '{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}': 'overflow: {{VALUE}};',
+        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}":
+          "overflow: {{VALUE}};"
       }
     });
 
-    this.addControl('layout_html_tag', {
+    this.addControl("layout_html_tag", {
       type: CONTROLLER_SELECT,
-      label: 'HTML tag',
-      default: 'div',
+      label: "HTML tag",
+      default: "div",
       options: [
         {
-          value: 'div',
-          label: 'default'
+          value: "div",
+          label: "default"
         },
         {
-          value: 'header',
-          label: 'header'
+          value: "header",
+          label: "header"
         },
         {
-          value: 'footer',
-          label: 'footer'
+          value: "footer",
+          label: "footer"
         },
         {
-          value: 'main',
-          label: 'main'
+          value: "main",
+          label: "main"
         },
         {
-          value: 'article',
-          label: 'article'
+          value: "article",
+          label: "article"
         },
         {
-          value: 'section',
-          label: 'section'
+          value: "section",
+          label: "section"
         },
         {
-          value: 'aside',
-          label: 'aside'
+          value: "aside",
+          label: "aside"
         },
         {
-          value: 'nav',
-          label: 'nav'
-        },
-        {
-          value: 'form',
-          label: 'form',
-        },
+          value: "nav",
+          label: "nav"
+        }
       ]
     });
 
@@ -450,14 +456,14 @@ class Section extends BaseElement{
       label: "Section Link"
     });
 
-    this.addControl('link_link', {
+    this.addControl("link_link", {
       type: CONTROLLER_LINK,
       default: {
         url: "",
         attributes: "",
         noFollow: false
       },
-      label: 'Link',
+      label: "Link"
     });
 
     this.endControlSection();
@@ -466,15 +472,15 @@ class Section extends BaseElement{
      * Разработка структуры ширины
      */
 
-    this.startControlSection('Structure', {
+    this.startControlSection("Structure", {
       tab: TAB_CONTENT,
-      label: 'Structure',
+      label: "Structure"
     });
 
-    this.addControl('layout_colwidth', {
+    this.addControl("layout_colwidth", {
       type: CONTROLLER_COLWIDTH,
-      label: 'Column width',
-      prefixClass: 'column-structure_',
+      label: "Column width",
+      prefixClass: "column-structure_"
     });
 
     this.endControlSection();
@@ -489,21 +495,22 @@ class Section extends BaseElement{
       label: "Background color",
       default: {
         color: "",
-        colorPickedHex: "",
+        colorPickedHex: ""
       },
       rules: {
-        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": "background-color: {{COLOR}};"
+        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}":
+          "background-color: {{COLOR}};"
       }
     });
 
-    this.addControl('gradient', {
+    this.addControl("gradient", {
       type: CONTROLLER_GRADIENT,
-      label: 'Gradient',
+      label: "Gradient",
       hideOnClick: true,
       default: {
         isWithGradient: false,
         firstColor: "rgba(97,206,112,1)",
-        firstPoint: '100',
+        firstPoint: "100",
         secondColor: "rgba(242,41,91,1)",
         secondPoint: "0",
         angle: "0",
@@ -514,16 +521,17 @@ class Section extends BaseElement{
       }
     });
 
-    this.addControl('background_image', {
+    this.addControl("background_image", {
       type: CONTROLLER_MEDIA,
-      label: 'Background Image',
-      default: {url: ""},
+      label: "Background Image",
+      default: { url: "" },
       rules: {
-        "{{ELEMENT}} > .altrp-section.altrp-background-image{{STATE}}": "background-image: url({{URL}});"
+        "{{ELEMENT}} > .altrp-section.altrp-background-image{{STATE}}":
+          "background-image: url({{URL}});"
       }
     });
 
-    this.addControl('background_position', {
+    this.addControl("background_position", {
       type: CONTROLLER_SELECT,
       options: [
         {
@@ -563,14 +571,15 @@ class Section extends BaseElement{
           label: "center"
         }
       ],
-      label: 'Background Position',
-      default: 'top left',
+      label: "Background Position",
+      default: "top left",
       rules: {
-        "{{ELEMENT}} > .altrp-section.altrp-background-image{{STATE}}": "background-position: {{VALUE}};"
+        "{{ELEMENT}} > .altrp-section.altrp-background-image{{STATE}}":
+          "background-position: {{VALUE}};"
       }
     });
 
-    this.addControl('background_attachment', {
+    this.addControl("background_attachment", {
       type: CONTROLLER_SELECT,
       options: [
         {
@@ -586,14 +595,15 @@ class Section extends BaseElement{
           label: "local"
         }
       ],
-      label: 'Background Attachment',
-      default: 'scroll',
+      label: "Background Attachment",
+      default: "scroll",
       rules: {
-        "{{ELEMENT}} > .altrp-section.altrp-background-image{{STATE}}": "background-attachment: {{VALUE}};"
+        "{{ELEMENT}} > .altrp-section.altrp-background-image{{STATE}}":
+          "background-attachment: {{VALUE}};"
       }
     });
 
-    this.addControl('background_repeat', {
+    this.addControl("background_repeat", {
       type: CONTROLLER_SELECT,
       options: [
         {
@@ -621,36 +631,34 @@ class Section extends BaseElement{
           label: "no-repeat"
         }
       ],
-      label: 'Background Repeat',
-      default: 'repeat',
+      label: "Background Repeat",
+      default: "repeat",
       rules: {
-        "{{ELEMENT}} > .altrp-section.altrp-background-image{{STATE}}": "background-repeat: {{VALUE}};"
+        "{{ELEMENT}} > .altrp-section.altrp-background-image{{STATE}}":
+          "background-repeat: {{VALUE}};"
       }
     });
 
     this.addControl("background_image_width", {
       type: CONTROLLER_SLIDER,
-      label: 'Width',
+      label: "Width",
       default: {
         size: 100,
-        unit: 'px',
+        unit: "px"
       },
       conditions: {
-        'background_size': [''],
+        background_size: [""]
       },
-      units: [
-        'px',
-        '%',
-        'vw',
-      ],
+      units: ["px", "%", "vw"],
       max: 1000,
       min: 0,
       rules: {
-        "{{ELEMENT}} > .altrp-section.altrp-background-image{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
+        "{{ELEMENT}} > .altrp-section.altrp-background-image{{STATE}}":
+          "background-size: {{SIZE}}{{UNIT}};"
       }
     });
 
-    this.addControl('background_size', {
+    this.addControl("background_size", {
       type: CONTROLLER_SELECT,
       options: [
         {
@@ -668,18 +676,19 @@ class Section extends BaseElement{
         {
           value: "",
           label: "set width"
-        },
+        }
       ],
-      label: 'Background Size',
-      default: 'unset',
+      label: "Background Size",
+      default: "unset",
       rules: {
-        "{{ELEMENT}} > .altrp-section.altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
+        "{{ELEMENT}} > .altrp-section.altrp-background-image{{STATE}}":
+          "background-size: {{VALUE}};"
       }
     });
 
-    this.addControl('isScrollEffect', {
+    this.addControl("isScrollEffect", {
       type: CONTROLLER_SWITCHER,
-      label: 'Scroll Effects',
+      label: "Scroll Effects"
     });
 
     this.endControlSection();
@@ -719,7 +728,8 @@ class Section extends BaseElement{
         }
       ],
       rules: {
-        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": "border-style: {{VALUE}};"
+        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}":
+          "border-style: {{VALUE}};"
       }
     });
 
@@ -741,48 +751,46 @@ class Section extends BaseElement{
         colorPickedHex: "#32a852"
       },
       rules: {
-        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": "border-color: {{COLOR}};"
+        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}":
+          "border-color: {{COLOR}};"
       }
     });
 
     this.addControl("section_style_border_radius", {
       type: CONTROLLER_SLIDER,
-      label: 'Border radius',
-      default:{
+      label: "Border radius",
+      default: {
         size: 0,
-        unit: 'px',
+        unit: "px"
       },
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ["px", "%", "vh"],
       max: 100,
       min: 0,
       rules: {
-        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
+        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}":
+          "border-radius: {{SIZE}}{{UNIT}}"
       }
     });
 
-    this.addControl('section_style_box_shadow', {
-        type: CONTROLLER_SHADOW,
-        label: 'Shadow',
-        default:{
-          blur: 0,
-          horizontal: 0,
-          vertical: 0,
-          opacity: 1,
-          spread: 0,
-          colorRGB: 'rgb(0, 0, 0)',
-          color: 'rgb(0, 0, 0)',
-          colorPickedHex: '#000000',
-          type: ""
-        },
-        rules: {
-          '{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-        },
+    this.addControl("section_style_box_shadow", {
+      type: CONTROLLER_SHADOW,
+      label: "Shadow",
+      default: {
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        opacity: 1,
+        spread: 0,
+        colorRGB: "rgb(0, 0, 0)",
+        color: "rgb(0, 0, 0)",
+        colorPickedHex: "#000000",
+        type: ""
+      },
+      rules: {
+        "{{ELEMENT}} > .altrp-section{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}":
+          "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};"
       }
-    );
+    });
 
     this.endControlSection();
 
@@ -791,29 +799,25 @@ class Section extends BaseElement{
       label: "Position"
     });
 
-    this.addControl('position_style_position_margin', {
+    this.addControl("position_style_position_margin", {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Margin',
-      default:{
+      label: "Margin",
+      default: {
         top: 0,
         right: 0,
         bottom: 0,
         left: 0,
-        unit:'px'
+        unit: "px"
       },
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
+      units: ["px", "%", "vh"],
       rules: {
-        '{{ELEMENT}}{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
+        "{{ELEMENT}}{{STATE}},{{ELEMENT}} > .altrp-section-full-fill{{STATE}}": [
+          "margin-top: {{TOP}}{{UNIT}};",
+          "margin-right: {{RIGHT}}{{UNIT}};",
+          "margin-bottom: {{BOTTOM}}{{UNIT}};",
+          "margin-left: {{LEFT}}{{UNIT}};"
         ]
-      },
+      }
     });
 
     this.addControl("position_style_position_padding", {
@@ -826,7 +830,7 @@ class Section extends BaseElement{
       //   left: 0,
       //   unit: "px"
       // },
-      units: ["px", "%", "vh"],
+      units: ["px", "%", "vh"]
       // rules: {
       //   "{{ELEMENT}} > .altrp-section{{STATE}}": [
       //     "padding-top: {{TOP}}{{UNIT}};",
@@ -837,7 +841,7 @@ class Section extends BaseElement{
       // }
     });
 
-    this.addControl('position_style_z_index', {
+    this.addControl("position_style_z_index", {
       type: CONTROLLER_NUMBER,
       label: "Z-index",
       default: 0,
@@ -871,62 +875,63 @@ class Section extends BaseElement{
     this.addControl("position_top", {
       type: CONTROLLER_TEXT,
       label: "Top",
-      default: 'auto',
+      default: "auto",
       conditions: {
-        'isFixed': [true],
+        isFixed: [true]
       },
       rules: {
-          '{{ELEMENT}} > .altrp-section{{STATE}}': 'top: {{VALUE}}',
-        },
+        "{{ELEMENT}} > .altrp-section{{STATE}}": "top: {{VALUE}}"
+      }
     });
 
     this.addControl("position_right", {
       type: CONTROLLER_TEXT,
       label: "Right",
-      default: 'auto',
+      default: "auto",
       conditions: {
-        'isFixed': [true],
+        isFixed: [true]
       },
       rules: {
-        '{{ELEMENT}} > .altrp-section{{STATE}}': 'right: {{VALUE}}',
-      },
+        "{{ELEMENT}} > .altrp-section{{STATE}}": "right: {{VALUE}}"
+      }
     });
 
     this.addControl("position_left", {
       type: CONTROLLER_TEXT,
       label: "Left",
-      default: 'auto',
+      default: "auto",
       conditions: {
-        'isFixed': [true],
+        isFixed: [true]
       },
       rules: {
-        '{{ELEMENT}} > .altrp-section{{STATE}}': 'left: {{VALUE}}',
-      },
+        "{{ELEMENT}} > .altrp-section{{STATE}}": "left: {{VALUE}}"
+      }
     });
 
     this.addControl("position_bottom", {
       type: CONTROLLER_TEXT,
       label: "Bottom",
-      default: 'auto',
+      default: "auto",
       conditions: {
-        'isFixed': [true],
+        isFixed: [true]
       },
       rules: {
-        '{{ELEMENT}} > .altrp-section{{STATE}}': 'bottom: {{VALUE}}',
-      },
+        "{{ELEMENT}} > .altrp-section{{STATE}}": "bottom: {{VALUE}}"
+      }
     });
 
-    this.addControl("custom_width", {
+    /*this.addControl("custom_width", {
       type: CONTROLLER_TEXT,
       label: "Width",
-      default: 'auto',
+      default: "auto",
       conditions: {
-        'isFixed': [true],
+        isFixed: [true]
       },
       rules: {
-        '{{ELEMENT}}.fixed-section > .altrp-section{{STATE}}': 'width: {{VALUE}}',
-      },
-    });
+        "{{ELEMENT}}.fixed-section > .altrp-section{{STATE}}":
+          "width: {{VALUE}}"
+      }
+    });*/
 
     this.endControlSection();
 
@@ -937,8 +942,8 @@ class Section extends BaseElement{
    * Добавлйет новую колонку в конец
    */
   appendColumn(newColumn) {
-    if(!newColumn instanceof Column){
-      throw 'Only Column can be a Child of Section';
+    if (!newColumn instanceof Column) {
+      throw "Only Column can be a Child of Section";
     }
     this.appendChild(newColumn, false);
   }
@@ -947,9 +952,9 @@ class Section extends BaseElement{
    * Возвращает количество колонок в секции
    * @return {int}
    */
-  getColumnsCount(){
+  getColumnsCount() {
     return this.children.length;
   }
 }
 
-export default Section
+export default SectionWidget;

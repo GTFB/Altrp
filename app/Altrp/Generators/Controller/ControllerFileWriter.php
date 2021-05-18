@@ -103,10 +103,11 @@ class ControllerFileWriter
      * Удалить метод из контроллера
      *
      * @param $methodName
+     * @param string $startBlockName
      * @return bool|int
      * @throws ControllerFileException
      */
-    public function removeMethod($methodName)
+    public function removeMethod($methodName, $startBlockName = 'CUSTOM_METHODS_BEGIN')
     {
         $controllerFile = $this->controller->getFile();
         if (! file_exists($controllerFile)) {
@@ -114,7 +115,7 @@ class ControllerFileWriter
         }
         $controllerContent = file($controllerFile, 2);
         if ($line = $this->methodExists($controllerContent, $methodName)) {
-            if (!Str::contains($controllerContent[$line-1],'CUSTOM_METHODS_BEGIN')) {
+            if (!Str::contains($controllerContent[$line-1], $startBlockName)) {
                 $line = $line - 1;
             }
             for ($i = $line; true; $i++) {
@@ -217,8 +218,7 @@ class ControllerFileWriter
             ->replaceSqlEditorIsObject($methodContent, $is_object);
 
         $controllerContent = file($this->controller->getFile(), 2);
-        $result = $this->writeMethods($controllerContent, $methodContent);
-        return $result;
+        return $this->writeMethods($controllerContent, $methodContent, 'SQL_EDITORS_END');
     }
 
     /**
@@ -233,7 +233,7 @@ class ControllerFileWriter
      */
     public function updateSqlMethod($oldName, $name, $sql, $is_object)
     {
-        $this->removeMethod( $oldName);
+        $this->removeMethod($oldName, 'SQL_EDITORS_BEGIN');
         $this->writeSqlMethod($name, $sql, $is_object);
         return true;
     }
@@ -247,7 +247,7 @@ class ControllerFileWriter
      */
     public function deleteSqlMethod($name)
     {
-        return $this->removeMethod($name);
+        return $this->removeMethod($name, 'SQL_EDITORS_BEGIN');
     }
 
     /**
@@ -348,12 +348,13 @@ class ControllerFileWriter
      *
      * @param $controllerContent
      * @param $methodContent
+     * @param string $blockName
      * @return bool
      */
-    protected function writeMethods($controllerContent, $methodContent)
+    protected function writeMethods($controllerContent, $methodContent, $blockName = 'CUSTOM_METHODS_END')
     {
         foreach ($controllerContent as $line => $content) {
-            if (Str::contains($content, 'CUSTOM_METHODS_END')) {
+            if (Str::contains($content, $blockName)) {
                 if (! $methodContent) break;
                 array_splice($controllerContent, $line, 0, "");
                 foreach ($methodContent as $l => $c) {
