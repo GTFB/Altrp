@@ -12,16 +12,13 @@ export default class ApiAction extends React.Component {
 
     return (
       <div className={nodeClasses}>
-        <Handle type="target" position="top" />
+        <Handle type="target" position={this.props?.targetPosition ?? 'top'} />
         <div className="wrapper">
           <div></div>
           <div className="api-text">{this.props?.data?.label}</div>
           <div className="api-type">{this.props?.type}</div>
         </div>
-
-        {/*<div><h3 className='default-node__label'>{this.props?.data?.label}</h3></div>*/}
-        {/*<div className='default-node__type'>{this.props?.type}</div>*/}
-        <Handle type="source" position="bottom" style={{ borderRadius: 0 }} />
+        <Handle type="source" position={this.props?.sourcePosition ?? 'bottom'} style={{ borderRadius: 0 }} />
       </div>
     );
   }
