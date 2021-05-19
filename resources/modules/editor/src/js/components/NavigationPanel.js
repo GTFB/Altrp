@@ -1,16 +1,19 @@
 import React, { Component } from "react";
-import { Tree, Icon, TreeNode } from "@blueprintjs/core";
+import { Tree, Icon } from "@blueprintjs/core";
+import store from "../../js/store/store";
 import { connect } from "react-redux";
 import NavigationItem from "./NavigationItem";
+import RootElement from "../classes/elements/RootElement";
 import {
   editorSetCurrentElementByID,
   deleteCurrentElementByID,
   getEditor
 } from "../helpers";
+import BaseElement from "../classes/elements/BaseElement";
 
 const mapStateToProps = state => {
   return {
-    templateData: JSON.parse(state.templateData.data)
+    templateData: getEditor().modules.templateDataStorage.getRootElement()
   };
 };
 
@@ -41,7 +44,6 @@ class NavigationPanel extends Component {
     this.handleCollapse = this.handleCollapse.bind(this);
     this.showItem = this.showItem.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
-    this.findItem = this.findItem.bind(this);
   }
 
   handleExpand(node, nodePath) {
@@ -58,104 +60,69 @@ class NavigationPanel extends Component {
     this.setState(s => ({ ...s, template: currentTree }));
   }
 
-  showItem(e, elementID) {
-    e.preventDefault();
-    editorSetCurrentElementByID(elementID);
+  showItem(node, nodePath) {
+    editorSetCurrentElementByID(node.id);
     getEditor().showSettingsPanel();
   }
 
   deleteItem(e, elementID) {
+    const confirm = window.confirm("Are you shure?");
     e.preventDefault();
-    const success = deleteCurrentElementByID(elementID);
-    if (success) {
-      let currentTree = _.cloneDeep(this.state.template);
-      let currentNode = this.findItem(elementID, currentTree[0]);
-      this.setState(s => ({ ...s, template: currentTree }));
-    }
-  }
-
-  findItem(id, currentNode) {
-    let i, currentChild, result;
-    if (id == currentNode.id) {
-      return currentNode;
-    } else {
-      for (i = 0; i < currentNode.childNodes.length; i += 1) {
-        currentChild = currentNode.childNodes[i];
-        result = this.findItem(id, currentChild);
-        if (result !== false) {
-          return result;
-        }
+    if (confirm) {
+      const success = deleteCurrentElementByID(elementID);
+      if (success) {
+        let currentTree = _.cloneDeep(this.state.template);
+        let newTree = this.removeElementFromArray(currentTree, elementID);
+        this.setState(s => ({ ...s, template: newTree }));
       }
-      return false;
     }
   }
 
-  onDragItem(e) {
-    console.log("====================================");
-    console.log(e);
-    console.log("====================================");
+  removeElementFromArray(template, elementID) {
+    return template.filter(function f(item) {
+      if (item.childNodes.length > 0) {
+        return (item.childNodes = item.childNodes.filter(f)).length;
+      } else if (item.id === elementID) return false;
+      else return true;
+    });
   }
 
-  parseTemplate(template, parent = null) {
-    const expandable = isExpandable(template.name);
-    return TreeNode.apply({
+  /**
+   *
+   * @param {BaseElement} template
+   */
+  parseTemplate(template) {
+    const expandable = isExpandable(template.getName());
+    return {
       label: (
         <NavigationItem
           key={template.id}
-          text={template.name}
+          text={template.getName()}
           id={template.id}
         ></NavigationItem>
       ),
+      depth: 2,
+      name: template.getName(),
       icon: expandable && "folder-close",
-      childNodes: template.children.map(item => this.parseTemplate(item)),
+      childNodes: template.children.map((item, index) =>
+        this.parseTemplate(item)
+      ),
       hasCaret: expandable,
       key: template.id,
       isExpanded: expandable,
       id: template.id,
+      onClick: (node, e) => this.showItem(e, node.id),
       [parent != null && "parent"]: parent,
       secondaryLabel: template.name !== "root-element" && (
         <div>
           <Icon
-            icon="eye-open"
-            style={{ cursor: "pointer" }}
-            onClick={e => this.showItem(e, template.id)}
-          />{" "}
-          <Icon
             icon="trash"
             style={{ cursor: "pointer" }}
             onClick={e => this.deleteItem(e, template.id)}
           />
         </div>
       )
-    }); /* {
-      label: (
-        <NavigationItem
-          key={template.id}
-          text={template.name}
-          id={template.id}
-        ></NavigationItem>
-      ),
-      icon: expandable && "folder-close",
-      childNodes: template.children.map(item => this.parseTemplate(item)),
-      hasCaret: expandable,
-      key: template.id,
-      isExpanded: expandable,
-      id: template.id,
-      secondaryLabel: template.name !== "root-element" && (
-        <div>
-          <Icon
-            icon="eye-open"
-            style={{ cursor: "pointer" }}
-            onClick={e => this.showItem(e, template.id)}
-          />{" "}
-          <Icon
-            icon="trash"
-            style={{ cursor: "pointer" }}
-            onClick={e => this.deleteItem(e, template.id)}
-          />
-        </div>
-      )
-    };*/
+    };
   }
 
   render() {
@@ -165,6 +132,7 @@ class NavigationPanel extends Component {
           contents={this.state.template}
           onNodeExpand={this.handleExpand}
           onNodeCollapse={this.handleCollapse}
+          onNodeDoubleClick={this.showItem}
         />
       </div>
     );
