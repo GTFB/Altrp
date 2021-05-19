@@ -56,6 +56,16 @@ class Page extends Model
     'sections_count',
   ];
 
+  const DEFAULT_AREAS = [
+    'content',
+    'footer',
+    'header',
+    'popup',
+    'email',
+    'card',
+    'reports',
+  ];
+
   /**
    * @return array
    */
