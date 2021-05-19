@@ -160,7 +160,7 @@ const TextComponent = styled.div`
   }
   }
 
-  && .altrp-tooltip {
+  /* && .altrp-tooltip {
   ${props => {
     const { settings } = props;
     let styles = '';
@@ -177,12 +177,22 @@ const TextComponent = styled.div`
       styles += colorPropertyStyled(fontColor, 'color');
     }
 
-    console.log(styles)
+  //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
+
+  let typographic;
+
+  if (settings !== undefined) {
+    typographic = getResponsiveSetting(settings, 'tooltip_font_typographic');
+  }
+
+  if (typographic) {
+    styles += typographicControllerToStyles(typographic);
+  }
 
     return styles;
 
   }
-  }
+  } */
 
   & .altrp-text img{
     max-width: 100%;

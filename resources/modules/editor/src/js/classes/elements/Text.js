@@ -363,14 +363,13 @@ class Text extends BaseElement {
         color: "rgb(206,205,237)",
         colorPickedHex: "#CECDED"
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tooltip{{STATE}}": "background: {{COLOR}};",
-        "{{ELEMENT}} .altrp-tooltip::after{{STATE}}":
-          "border-color: transparent transparent {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tooltip{{STATE}}": "background: {{COLOR}};",
+      //   "{{ELEMENT}} .altrp-tooltip::after{{STATE}}":
+      //     "border-color: transparent transparent {{COLOR}};"
+      // }
     });
 
-    //другой запрос tooltip_font_color 
     this.addControl("text_advanced_tooltip_font_color", {
       type: CONTROLLER_COLOR,
       label: "Font color",
@@ -413,19 +412,19 @@ class Text extends BaseElement {
           label: "Groove"
         }
       ],
-      rules: {
-        "{{ELEMENT}} .altrp-tooltip{{STATE}}": "border-style: {{VALUE}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tooltip{{STATE}}": "border-style: {{VALUE}};"
+      // }
     });
 
     this.addControl("text_advanced_tooltip_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-tooltip{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tooltip{{STATE}}":
+      //     "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      // }
     });
 
     this.addControl("text_advanced_tooltip_border_color", {
@@ -435,9 +434,9 @@ class Text extends BaseElement {
         color: "rgb(50,168,82)",
         colorPickedHex: "#32a852"
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tooltip{{STATE}}": "border-color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tooltip{{STATE}}": "border-color: {{COLOR}};"
+      // }
     });
 
     this.addControl("text_advanced_tooltip_border_radius", {
@@ -450,9 +449,9 @@ class Text extends BaseElement {
       units: ["px", "%", "vh"],
       max: 100,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-tooltip{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tooltip{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
+      // }
     });
 
     this.addControl("text_advanced_tooltip_font", {
@@ -474,9 +473,9 @@ class Text extends BaseElement {
           label: "Lato"
         }
       ],
-      rules: {
-        "{{ELEMENT}} .altrp-tooltip{{STATE}}": "font-family: {{VALUE}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tooltip{{STATE}}": "font-family: {{VALUE}}"
+      // }
     });
 
     this.endControlSection();
