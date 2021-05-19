@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import { Tree, Icon } from "@blueprintjs/core";
-import store from "../../js/store/store";
 import { connect } from "react-redux";
 import NavigationItem from "./NavigationItem";
-import RootElement from "../classes/elements/RootElement";
 import {
   editorSetCurrentElementByID,
   deleteCurrentElementByID,
