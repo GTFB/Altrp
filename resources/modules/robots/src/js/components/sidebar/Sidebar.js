@@ -64,6 +64,7 @@ export default class Sidebar extends React.Component {
                                             robot={ this.props.robot }
                                             sources={ this.props.sources }
                                             setSources={ this.props.setSources }
+                                            onLayout={ this.props.onLayout }
                                           />}
           {activePanel === "selected" && <SelectedPanel
                                             robot={ this.props.robot }

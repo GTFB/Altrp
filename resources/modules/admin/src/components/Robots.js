@@ -127,12 +127,20 @@ export default class Robots extends Component {
                 },
                 title: "Edit"
               }, {
+                // tag: "button",
+                // route: "/admin/ajax/robots",
+                // method: "put",
+                // data: {name: 1},
+                // after: () => this.fetchData(),
+                // title: "Rename"
+
+
                 tag: "button",
-                route: '/admin/ajax/robots',
-                method: 'put',
+                route: "/admin/ajax/robots",
+                method: "put",
                 data: {power: 1},
                 after: () => this.fetchData(),
-                title: 'Enable'
+                title: "Enable"
               }, {
                 tag: "button",
                 route: "/admin/ajax/robots/:id",
