@@ -8,6 +8,7 @@ import {
   getEditor
 } from "../helpers";
 import BaseElement from "../classes/elements/BaseElement";
+import store from "../store/store";
 
 const mapStateToProps = state => {
   return {
@@ -42,6 +43,7 @@ class NavigationPanel extends Component {
     this.handleCollapse = this.handleCollapse.bind(this);
     this.showItem = this.showItem.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
+    store.subscribe(this.storeListener.bind(this));
   }
 
   handleExpand(node, nodePath) {
@@ -61,6 +63,18 @@ class NavigationPanel extends Component {
   showItem(node, nodePath) {
     editorSetCurrentElementByID(node.id);
     getEditor().showSettingsPanel();
+  }
+
+  storeListener() {
+    const newTemplate = [
+      this.parseTemplate(
+        getEditor().modules.templateDataStorage.getRootElement()
+      )
+    ];
+    const currentTemplate = _.cloneDeep(this.state.template, []);
+    if (!_.isEqual(newTemplate, currentTemplate)) {
+      this.setState(s => ({ ...s, template: newTemplate }));
+    }
   }
 
   deleteItem(e, elementID) {
