@@ -154,16 +154,40 @@ const TextComponent = styled.div`
     styles += borderRadiusStyled(borderRadius);
   }
 
-  console.log(styles)
-
-  return styles;
+    return styles;
 
   }
+  }
+  }
+
+  && .altrp-tooltip {
+  ${props => {
+    const { settings } = props;
+    let styles = '';
+
+    //Получаем значения font-color из контроллера, обрабатываем и добавляем в styles
+
+    let fontColor;
+
+    if (settings !== undefined) {
+      fontColor = getResponsiveSetting(settings, 'tooltip_font_color');
     }
+
+    if (fontColor) {
+      styles += colorPropertyStyled(fontColor, 'color');
+    }
+
+    console.log(styles)
+
+    return styles;
+
   }
+  }
+
   & .altrp-text img{
     max-width: 100%;
   }
+
   & .ck.ck-editor__editable_inline{
     padding: 0;
   }

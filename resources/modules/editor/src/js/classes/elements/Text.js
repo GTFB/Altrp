@@ -370,6 +370,7 @@ class Text extends BaseElement {
       }
     });
 
+    //другой запрос tooltip_font_color 
     this.addControl("text_advanced_tooltip_font_color", {
       type: CONTROLLER_COLOR,
       label: "Font color",
@@ -377,9 +378,9 @@ class Text extends BaseElement {
         color: "rgb(0,0,0)",
         colorPickedHex: "#000000"
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tooltip{{STATE}}": "color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tooltip{{STATE}}": "color: {{COLOR}};"
+      // }
     });
 
     this.addControl("text_advanced_tooltip_border_type", {
