@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Tree, Icon } from "@blueprintjs/core";
+import { Tree, Icon, TreeNode } from "@blueprintjs/core";
 import { connect } from "react-redux";
 import NavigationItem from "./NavigationItem";
 import {
@@ -41,6 +41,7 @@ class NavigationPanel extends Component {
     this.handleCollapse = this.handleCollapse.bind(this);
     this.showItem = this.showItem.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
+    this.findItem = this.findItem.bind(this);
   }
 
   handleExpand(node, nodePath) {
@@ -65,7 +66,28 @@ class NavigationPanel extends Component {
 
   deleteItem(e, elementID) {
     e.preventDefault();
-    deleteCurrentElementByID(elementID);
+    const success = deleteCurrentElementByID(elementID);
+    if (success) {
+      let currentTree = _.cloneDeep(this.state.template);
+      let currentNode = this.findItem(elementID, currentTree[0]);
+      this.setState(s => ({ ...s, template: currentTree }));
+    }
+  }
+
+  findItem(id, currentNode) {
+    let i, currentChild, result;
+    if (id == currentNode.id) {
+      return currentNode;
+    } else {
+      for (i = 0; i < currentNode.childNodes.length; i += 1) {
+        currentChild = currentNode.childNodes[i];
+        result = this.findItem(id, currentChild);
+        if (result !== false) {
+          return result;
+        }
+      }
+      return false;
+    }
   }
 
   onDragItem(e) {
@@ -74,9 +96,38 @@ class NavigationPanel extends Component {
     console.log("====================================");
   }
 
-  parseTemplate(template) {
+  parseTemplate(template, parent = null) {
     const expandable = isExpandable(template.name);
-    return {
+    return TreeNode.apply({
+      label: (
+        <NavigationItem
+          key={template.id}
+          text={template.name}
+          id={template.id}
+        ></NavigationItem>
+      ),
+      icon: expandable && "folder-close",
+      childNodes: template.children.map(item => this.parseTemplate(item)),
+      hasCaret: expandable,
+      key: template.id,
+      isExpanded: expandable,
+      id: template.id,
+      [parent != null && "parent"]: parent,
+      secondaryLabel: template.name !== "root-element" && (
+        <div>
+          <Icon
+            icon="eye-open"
+            style={{ cursor: "pointer" }}
+            onClick={e => this.showItem(e, template.id)}
+          />{" "}
+          <Icon
+            icon="trash"
+            style={{ cursor: "pointer" }}
+            onClick={e => this.deleteItem(e, template.id)}
+          />
+        </div>
+      )
+    }); /* {
       label: (
         <NavigationItem
           key={template.id}
@@ -104,7 +155,7 @@ class NavigationPanel extends Component {
           />
         </div>
       )
-    };
+    };*/
   }
 
   render() {

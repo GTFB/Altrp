@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PlusIcon from "../../svgs/plus.svg";
 import FolderIcon from "../../svgs/folder.svg";
 import { getEditor } from "../helpers";
+import Column from "../classes/elements/Column";
 
 class NewSection extends Component {
   onDragOver(e) {

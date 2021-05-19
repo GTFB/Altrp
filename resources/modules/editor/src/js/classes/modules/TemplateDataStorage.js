@@ -57,7 +57,7 @@ class TemplateDataStorage extends BaseModule {
   }
 
   setCurrentElement(element) {
-    if (! element instanceof BaseElement) {
+    if (!element instanceof BaseElement) {
       throw "Only Base Element Can Be Set as Default";
     }
     this.currentElement = element;
@@ -74,11 +74,10 @@ class TemplateDataStorage extends BaseModule {
   getElementById(elementId) {
     let stack = [...this.rootElement.children];
     let element;
-    while(!(stack.length === 0)) {
-        element = stack.pop()
-        if(element.id == elementId) 
-          return element;
-        stack.push(...element.children)
+    while (!(stack.length === 0)) {
+      element = stack.pop();
+      if (element.id == elementId) return element;
+      stack.push(...element.children);
     }
   }
 
@@ -95,7 +94,14 @@ class TemplateDataStorage extends BaseModule {
 
     let newWidget = new (window.elementsManager.getElementClass(elementName))();
     this.elementsIds.push(newWidget.getId());
-
+    if (elementName === "section_widget") {
+      newSection.appendColumn(newColumn);
+      this.rootElement.appendNewSection(newSection);
+      this.setCurrentElement(newSection);
+      store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
+      getEditor().showSettingsPanel();
+      return;
+    }
     newColumn.appendWidget(newWidget);
     newSection.appendColumn(newColumn);
     this.rootElement.appendNewSection(newSection);
