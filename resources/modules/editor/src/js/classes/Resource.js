@@ -402,7 +402,7 @@ class Resource {
       }
       return res.json();
     });
-    // console.log(res);
+    // console.log(res)
     return res;
   }
 }

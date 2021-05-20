@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { WidthProvider, Responsive } from "react-grid-layout";
 import { connect } from "react-redux";
-import { Scrollbars } from "react-custom-scrollbars";
 import { editElement } from "../../store/altrp-dashboard/actions";
 import { exportDashboard } from "../../../../../front-app/src/js/store/altrp-dashboard-export/actions";
 import axios from "axios";

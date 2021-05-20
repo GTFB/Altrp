@@ -12,7 +12,7 @@ import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElement
     loadingCallback();
   });
   return window.frontElementsManager.loadComponents();
-}).then(components=>{
+}).then(async components=>{
   window.frontElementsManager.loadNotUsedComponent();
   console.log('LOAD FrontElementsManager: ',performance.now());
   loadingCallback();
@@ -78,33 +78,6 @@ function loadingCallback(){
     }
   }
 }
-// import ReactDOM from 'react-dom';
-// import './js/classes/FrontElementsFabric';
-// import ElementWrapper from './js/components/ElementWrapper';
-// import frontDecorate from './js/decorators/front-element-component';
-/**
- * Elements Wrapper
- * */
-// window.ElementWrapper = ElementWrapper;
-//
-// /**
-//  * Elements Decorator for Front/Editor
-//  * */
-//
-// window.elementDecorator = frontDecorate;
-// window.React = React;
-// window.ReactDOM = ReactDOM;
-// window.Component = Component;
-// import './js/classes/FrontElementsManager';
-// (async function(){
-//   await import ('./installing');
-//   await import ( 'react');
-//   await import ('react-dom');
-//   await import ('./sass/front-style.scss');
-//   await import ('./js/classes/FrontElementsFabric');
-//   await import ('./js/classes/FrontElementsManager');
-// })();
-
 window.stylesModulePromise = new Promise(function(resolve) {
   window.stylesModuleResolve = resolve;
 });

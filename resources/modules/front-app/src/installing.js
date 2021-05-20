@@ -46,6 +46,7 @@
 (async function (){
   const  setCurrentScreen =  (await import('./js/store/media-screen-storage/actions')).setCurrentScreen;
   const  CONSTANTS =  (await import('../../editor/src/js/consts')).default;
+  window.CONSTANTS = CONSTANTS;
   window.addEventListener('resize', e=>{
     const {currentMediaScreen} = appStore.getState();
     const changedScreen = CONSTANTS.SCREENS.find(screen=>{
