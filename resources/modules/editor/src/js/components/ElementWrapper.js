@@ -22,10 +22,10 @@ import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
 import CarouselComponent from "./widgets/styled-components/CarouselComponent";
 import ImageComponent from "./widgets/styled-components/ImageComponent";
 import ButtonComponent from "./widgets/styled-components/ButtonComponent";
-import TextComponent from "./widgets/styled-components/TextComponent";
 import DividerComponent from "./widgets/styled-components/DividerComponent";
 import AccordionComponent from "./widgets/styled-components/AccordionComponent";
 import GalleryComponent from "./widgets/styled-components/GalleryComponent";
+import TextComponent from "./widgets/styled-components/TextComponent";
 import Column from "../classes/elements/Column";
 
 class ElementWrapper extends Component {

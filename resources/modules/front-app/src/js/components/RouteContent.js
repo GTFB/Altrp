@@ -211,12 +211,13 @@ class RouteContent extends Component {
         {/*    );*/}
         {/*  }}*/}
         {/*>*/}
-          <RouteContentWrapper className="route-content" id="route-content">
+          <RouteContentWrapper className="route-content" id="route-content" areas={this.state.areas}>
             {this.state.areas.map((area, idx) => {
               return (
                 <AreaComponent
                   {...area}
                   area={area}
+                  areas={this.state.areas}
                   page={this.props.id}
                   models={[this.props.model]}
                   key={"appArea_" + area.id}

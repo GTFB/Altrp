@@ -3,6 +3,15 @@ const CONSTANTS = {
   TEMPLATE_NEED_UPDATE: "TEMPLATE_NEED_UPDATE",
   TEMPLATE_SAVING: "TEMPLATE_SAVING",
   DEFAULT_BREAKPOINT: "DEFAULT_BREAKPOINT",
+  DEFAULT_AREAS: [
+    'content',
+    'footer',
+    'header',
+    'popup',
+    'email',
+    'card',
+    'reports',
+  ],
   SCREENS: [
     {
       icon: "wide_screen",

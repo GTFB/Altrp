@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Media;
 use App\Page;
 use App\PagesTemplate;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -39,7 +40,7 @@ class AreasController extends Controller
    * Store a newly created resource in storage.
    *
    * @param  \Illuminate\Http\Request $request
-   * @return \Illuminate\Http\Response
+   * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
    */
   public function store( Request $request )
   {
@@ -58,11 +59,18 @@ class AreasController extends Controller
    * Display the specified resource.
    *
    * @param string $id
-   * @return \Illuminate\Http\Response
+   * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
    */
   public function show(  $id )
   {
     //
+
+    $area = Area::find( $id );
+
+    if( ! $area ){
+      return response()->json( ['message' => 'Area not Found'], 404, [], JSON_UNESCAPED_UNICODE );
+    }
+    return response()->json( $area->toArray(), 200, [], JSON_UNESCAPED_UNICODE );
 
   }
 
@@ -71,7 +79,7 @@ class AreasController extends Controller
    *
    * @param  int $id
    * @param Request $request
-   * @return \Illuminate\Http\Response
+   * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
    */
   public function edit( $id, Request $request )
   {
@@ -83,7 +91,7 @@ class AreasController extends Controller
    *
    * @param  \Illuminate\Http\Request $request
    * @param  int $id
-   * @return \Illuminate\Http\Response
+   * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
    */
   public function update( Request $request, $id )
   {
@@ -94,7 +102,8 @@ class AreasController extends Controller
     if( ! $area ){
       return response()->json( ['message' => 'Area not Found'], 404, [], JSON_UNESCAPED_UNICODE );
     }
-    $area->fill( $request->toArray() );
+
+    $area->fill( $request->all() );
 
     if( ! $area->save() ){
       return response()->json( ['message' => 'Area not Saved'], 500, [], JSON_UNESCAPED_UNICODE );
@@ -109,9 +118,9 @@ class AreasController extends Controller
    * @param string $id
    * @return \Illuminate\Http\JsonResponse
    */
-  public function destroy( Area $area, $id )
+  public function destroy(  $id )
   {
-    $area = $area->find( $id );
+    $area = Area::find( $id );
     if( ! $area ){
       return response()->json( ['message' => 'Area not Found'], 404, [], JSON_UNESCAPED_UNICODE );
     }

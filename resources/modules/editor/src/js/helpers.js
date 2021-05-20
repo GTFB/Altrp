@@ -63,10 +63,11 @@ export function deleteCurrentElementByID(elementID) {
   const currentElement = getEditor().modules.templateDataStorage.getElementById(
     elementID
   );
-  console.log("====================================");
-  console.log(currentElement);
-  console.log("====================================");
-  currentElement && currentElement.deleteThisElement();
+  if (currentElement) {
+    currentElement.deleteThisElement();
+    return true;
+  }
+  return false;
 }
 
 /**
