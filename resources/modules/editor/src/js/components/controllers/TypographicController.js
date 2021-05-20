@@ -114,6 +114,14 @@ class TypographicController extends Component {
     });
   };
 
+  changeLineHeightUnit = unit => {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    this._changeValue({
+      ...value,
+      lineHeightUnit: unit
+    });
+  };
+
   blurChange(e) {
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     this._changeValue({
@@ -474,8 +482,16 @@ class TypographicController extends Component {
         {/* конец select decoration */}
         {/* начало slider Line-Height */}
         <div className="control-slider-header controller-container_slider_typographic_top">
-          <div className="control-slider-label">
+          <div className="control-slider-label control-slider-label--typographic">
             Line-Height
+            <div className="control-slider-type-label__wrapper">
+              <button
+                onClick={() => this.changeLineHeightUnit('px')}
+                className={`control-slider-type-label ${this.state.value.lineHeightUnit === 'px' ? 'control-slider-type-label--active' : ''}`}
+              >
+                px
+              </button>
+            </div>
         </div>
         </div>
         <div className="control-slider-input-wrapper">

@@ -330,6 +330,8 @@ class CreativeHoverController extends Component {
       menuList: () => ({
         margin: 0,
         padding: 0,
+        height: 200,
+        overflow: "scroll",
       }),
 
       control: (state) => ({

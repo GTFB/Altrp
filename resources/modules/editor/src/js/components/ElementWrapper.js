@@ -25,6 +25,7 @@ import ButtonComponent from "./widgets/styled-components/ButtonComponent";
 import DividerComponent from "./widgets/styled-components/DividerComponent";
 import AccordionComponent from "./widgets/styled-components/AccordionComponent";
 import GalleryComponent from "./widgets/styled-components/GalleryComponent";
+import TextComponent from "./widgets/styled-components/TextComponent";
 import Column from "../classes/elements/Column";
 
 class ElementWrapper extends Component {
@@ -115,7 +116,7 @@ class ElementWrapper extends Component {
      * @member {HTMLElement} target
      * @member {ElementsManger} elementsManager
      * */
-    // e.stopPropagation();`
+    e.stopPropagation();
     e.preventDefault();
     let newWidgetName = e.dataTransfer.getData("text/plain");
     if (newWidgetName) {
@@ -389,6 +390,9 @@ class ElementWrapper extends Component {
         break;
       case "button":
         WrapperComponent = ButtonComponent;
+        break;
+      case "text":
+        WrapperComponent = TextComponent;
         break;
       case "carousel":
         WrapperComponent = CarouselComponent;

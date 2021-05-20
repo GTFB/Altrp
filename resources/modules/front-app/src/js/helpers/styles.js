@@ -98,6 +98,65 @@ export function shadowControllerToStyles(data) {
     return `box-shadow: ${type} ${offsetX}px ${offsetY}px ${blurRadius}px ${spreadRadius} ${color} !important;`;
   }
 }
+
+/**
+ * Преобразует объект, который сохраняет контроллер Color, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
+export function backgroundColorControllerToStyles(data, pseudoClass) {
+  let styles = '';
+  if (_.isEmpty(data)) {
+    return styles;
+  }
+
+  if (data) {
+    let { colorPickedHex } = data;
+
+    if (pseudoClass !== undefined) {
+      return `&:${pseudoClass} {background-color: ${colorPickedHex};} `;
+    }
+
+    return `background-color: ${colorPickedHex}; `;
+
+  }
+
+  return styles;
+}
+
+export function gradientControllerToStyles(data) {
+  let styles = '';
+  if (_.isEmpty(data)) {
+    return styles;
+  }
+
+  if (data.isWithGradient) {
+    let { angle, firstColor, firstPoint, secondColor, secondPoint } = data;
+
+    return `background-image: linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%); `;
+  }
+
+  return styles;
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер Filters, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
+
+export function filtersControllerToStyles(data) {
+  let styles = '';
+  if (_.isEmpty(data)) {
+    return styles;
+  }
+
+  let { blur, brightness, contrast, hue, saturate } = data;
+
+  return `& .altrp-image {filter: blur(${blur}px) brightness(${brightness}%) contrast(${contrast}%) saturate(${saturate}%) hue-rotate(${hue}deg);} `;
+
+}
+
 /**
  * Преобразует объект, который сохраняет контроллер typographic, в строку css для вставки в styled-компонент
  * @param {{}} data
@@ -108,6 +167,7 @@ export function typographicControllerToStyles(data = {}){
   if(_.isEmpty(data)){
     return styles;
   }
+
   const {
     family,
     size,
@@ -118,6 +178,7 @@ export function typographicControllerToStyles(data = {}){
     weight,
     decoration,
     sizeUnit,
+    lineHeightUnit,
   } = data;
   if(decoration){
     styles += `text-decoration:${decoration};`;
@@ -126,10 +187,10 @@ export function typographicControllerToStyles(data = {}){
     styles += `text-transform:${transform};`;
   }
   if(spacing){
-    styles += `letter-spacing:${spacing};`;
+    styles += `letter-spacing:${spacing}px;`;
   }
   if(lineHeight){
-    styles += `line-height:${lineHeight};`;
+    styles += `line-height:${lineHeightUnit ? (lineHeight + lineHeightUnit) : lineHeight};`;
   }
   if(weight){
     styles += `font-weight:${weight};`;

@@ -50,7 +50,6 @@ class MediaController extends Component {
   }
 
   render() {
-
     if (this.state.show === false) {
       return '';
     }

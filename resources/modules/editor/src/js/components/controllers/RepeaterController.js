@@ -60,8 +60,8 @@ class RepeaterController extends Component {
     let newValue = [...this.state.items];
     // newValue[itemIndex] = {...newValue[itemIndex]};
     newValue[itemIndex][controlId] = value;
-    console.log(controlId);
-    console.log(newValue[itemIndex][controlId]);
+    // console.log(controlId);
+    // console.log(newValue[itemIndex][controlId]);
     this._changeValue(newValue);
   }
   /**
@@ -142,6 +142,7 @@ class RepeaterController extends Component {
     let items = [...this.state.items];
     let id = '_' + Math.random().toString(36).substr(2, 9);
     items.push({ id });
+    items[items.length - 1].switch_slides_repeater = false;
     this.setState(state => {
       return {
         ...state,
