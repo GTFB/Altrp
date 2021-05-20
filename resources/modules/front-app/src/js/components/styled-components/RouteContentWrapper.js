@@ -48,6 +48,13 @@ const RouteContentWrapper = styled.div`
     styles += '& .app-area_header{grid-area:header;}'
     styles += '& .app-area_footer{grid-area:footer;}'
     styles += '& .app-area_content{grid-area:content;}'
+    if(rightSidebar){
+      styles += rightSidebar.getCustomCSS();
+    }
+    if(leftSidebar){
+      styles += leftSidebar.getCustomCSS();
+      console.log(leftSidebar.getCustomCSS());
+    }
     return  styles;
   }}
 `;

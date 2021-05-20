@@ -64,10 +64,24 @@ class Area {
       return this.CSSclasses;
     }
     this.CSSclasses = [];
-    this.CSSclasses.push(`app-area_id-${this.settings.area_type}`);
+    this.CSSclasses.push(`app-area_id-${this.id}`);
     this.settings.sidebar_type && this.CSSclasses.push(`app-area_${this.settings.sidebar_type}`);
     this.settings.sidebar_location && this.CSSclasses.push(`app-area_sidebar-location-${this.settings.sidebar_location}`);
     return this.CSSclasses;
+  }
+
+  /**
+   * Получить пользовательские стили, если они есть
+   * @return {string}
+   */
+  getCustomCSS(){
+    let styles = '';
+
+    if(! _.isString(this.settings.custom_css)){
+      return styles;
+    }
+    styles = this.settings.custom_css.replace(/__selector__/g, `.app-area_id-${this.id}`);
+    return  styles;
   }
 }
 
