@@ -12,6 +12,7 @@ import GalleryComponent from "../../../../editor/src/js/components/widgets/style
 import ButtonComponent from "../../../../editor/src/js/components/widgets/styled-components/ButtonComponent";
 import DividerComponent from "../../../../editor/src/js/components/widgets/styled-components/DividerComponent";
 import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
+import TextComponent from "../../../../editor/src/js/components/widgets/styled-components/TextComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -321,6 +322,9 @@ class ElementWrapper extends Component {
       case "button":
         WrapperComponent = ButtonComponent;
         break
+      case "text":
+        WrapperComponent = TextComponent;
+        break;
       case "carousel":
         WrapperComponent = CarouselComponent;
         break

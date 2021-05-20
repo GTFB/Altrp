@@ -8,17 +8,12 @@ const RouteContentWrapper = styled.div`
   ${({areas}) => {
     // console.log(FRONT_DEFAULT_AREAS);
     areas = areas.filter(area=>FRONT_DEFAULT_AREAS.indexOf(area.id) === -1)
-    console.log(areas);
     let styles = '';
     if(! areas.length){
       return styles;
     }
     styles += '&&{display:grid;grid-template-rows:auto 1fr auto;'
 
-    let columnsCount = areas.filter(area=>area.settings.area_type === 'sidebar'
-      && area.settings.sidebar_location === 'left' ).length ? 1 : 0;
-    columnsCount +=areas.filter(area=>area.settings.area_type === 'sidebar'
-      && area.settings.sidebar_location === 'right' ).length ? 1 : 0;
     // console.log(columnsCount);
     let columnsGrid = '';
     let rightSidebar = areas.find(area=>area.settings.area_type === 'sidebar'

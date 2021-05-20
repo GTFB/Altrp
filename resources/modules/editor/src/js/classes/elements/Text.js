@@ -91,9 +91,9 @@ class Text extends BaseElement {
     this.addControl("text_style_column-count", {
       type: CONTROLLER_NUMBER,
       label: "Column count",
-      rules: {
-        "{{ELEMENT}} .altrp-text{{STATE}}": "column-count: {{VALUE}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-text{{STATE}}": "column-count: {{VALUE}}"
+      // }
     });
 
     this.addControl("text_style_column-gap", {
@@ -106,9 +106,9 @@ class Text extends BaseElement {
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-text": "column-gap: {{SIZE}}{{UNIT}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-text": "column-gap: {{SIZE}}{{UNIT}}"
+      // }
     });
 
     this.endControlSection();
@@ -129,14 +129,14 @@ class Text extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-text{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-text{{STATE}}": [
+      //     "padding-top: {{TOP}}{{UNIT}};",
+      //     "padding-right: {{RIGHT}}{{UNIT}};",
+      //     "padding-bottom: {{BOTTOM}}{{UNIT}};",
+      //     "padding-left: {{LEFT}}{{UNIT}};"
+      //   ]
+      // }
     });
 
     this.addControl("text_style_position_margin", {
@@ -150,14 +150,14 @@ class Text extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-text{{STATE}}": [
-          "margin-top: {{TOP}}{{UNIT}};",
-          "margin-right: {{RIGHT}}{{UNIT}};",
-          "margin-bottom: {{BOTTOM}}{{UNIT}};",
-          "margin-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-text{{STATE}}": [
+      //     "margin-top: {{TOP}}{{UNIT}};",
+      //     "margin-right: {{RIGHT}}{{UNIT}};",
+      //     "margin-bottom: {{BOTTOM}}{{UNIT}};",
+      //     "margin-left: {{LEFT}}{{UNIT}};"
+      //   ]
+      // }
     });
 
     this.addControl("text_position_z_index", {
@@ -165,9 +165,9 @@ class Text extends BaseElement {
       type: CONTROLLER_NUMBER,
       label: "Z-index",
       default: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-text{{STATE}}": "z-index: {{VALUE}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-text{{STATE}}": "z-index: {{VALUE}}"
+      // }
     });
 
     this.addControl("text_position_css_id", {
@@ -194,9 +194,9 @@ class Text extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      rules: {
-        "{{ELEMENT}} .altrp-text{{STATE}}": "background-color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-text{{STATE}}": "background-color: {{COLOR}};"
+      // }
     });
 
     this.addControl("text_style_background_opacity", {
@@ -209,9 +209,9 @@ class Text extends BaseElement {
       max: 1,
       min: 0,
       step: 0.01,
-      rules: {
-        "{{ELEMENT}} .altrp-text{{STATE}}": "opacity: {{SIZE}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-text{{STATE}}": "opacity: {{SIZE}}"
+      // }
     });
 
     this.endControlSection();
@@ -253,9 +253,9 @@ class Text extends BaseElement {
       //   color: "rgb(0, 0, 1)",
       //   colorPickedHex: "#000000"
       // },
-      rules: {
-        "{{ELEMENT}} .altrp-text{{STATE}}": "color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-text{{STATE}}": "color: {{COLOR}};"
+      // }
     });
 
     this.endControlSection();
@@ -295,19 +295,19 @@ class Text extends BaseElement {
           label: "Groove"
         }
       ],
-      rules: {
-        "{{ELEMENT}} .altrp-text{{STATE}}": "border-style: {{VALUE}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-text{{STATE}}": "border-style: {{VALUE}};"
+      // }
     });
 
     this.addControl("text_style_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-text{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-text{{STATE}}":
+      //     "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      // }
     });
 
     this.addControl("text_style_border_color", {
@@ -317,9 +317,9 @@ class Text extends BaseElement {
       //   color: "rgb(50,168,82)",
       //   colorPickedHex: "#32a852"
       // },
-      rules: {
-        "{{ELEMENT}} .altrp-text{{STATE}}": "border-color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-text{{STATE}}": "border-color: {{COLOR}};"
+      // }
     });
 
     this.addControl("text_style_border_radius", {
@@ -332,9 +332,9 @@ class Text extends BaseElement {
       units: ["px", "%", "vh"],
       max: 100,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-text{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-text{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
+      // }
     });
 
     this.endControlSection();
@@ -363,11 +363,11 @@ class Text extends BaseElement {
         color: "rgb(206,205,237)",
         colorPickedHex: "#CECDED"
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tooltip{{STATE}}": "background: {{COLOR}};",
-        "{{ELEMENT}} .altrp-tooltip::after{{STATE}}":
-          "border-color: transparent transparent {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tooltip{{STATE}}": "background: {{COLOR}};",
+      //   "{{ELEMENT}} .altrp-tooltip::after{{STATE}}":
+      //     "border-color: transparent transparent {{COLOR}};"
+      // }
     });
 
     this.addControl("text_advanced_tooltip_font_color", {
@@ -377,9 +377,9 @@ class Text extends BaseElement {
         color: "rgb(0,0,0)",
         colorPickedHex: "#000000"
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tooltip{{STATE}}": "color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tooltip{{STATE}}": "color: {{COLOR}};"
+      // }
     });
 
     this.addControl("text_advanced_tooltip_border_type", {
@@ -412,19 +412,19 @@ class Text extends BaseElement {
           label: "Groove"
         }
       ],
-      rules: {
-        "{{ELEMENT}} .altrp-tooltip{{STATE}}": "border-style: {{VALUE}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tooltip{{STATE}}": "border-style: {{VALUE}};"
+      // }
     });
 
     this.addControl("text_advanced_tooltip_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-tooltip{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tooltip{{STATE}}":
+      //     "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      // }
     });
 
     this.addControl("text_advanced_tooltip_border_color", {
@@ -434,9 +434,9 @@ class Text extends BaseElement {
         color: "rgb(50,168,82)",
         colorPickedHex: "#32a852"
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tooltip{{STATE}}": "border-color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tooltip{{STATE}}": "border-color: {{COLOR}};"
+      // }
     });
 
     this.addControl("text_advanced_tooltip_border_radius", {
@@ -449,9 +449,9 @@ class Text extends BaseElement {
       units: ["px", "%", "vh"],
       max: 100,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-tooltip{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tooltip{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
+      // }
     });
 
     this.addControl("text_advanced_tooltip_font", {
@@ -473,9 +473,9 @@ class Text extends BaseElement {
           label: "Lato"
         }
       ],
-      rules: {
-        "{{ELEMENT}} .altrp-tooltip{{STATE}}": "font-family: {{VALUE}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tooltip{{STATE}}": "font-family: {{VALUE}}"
+      // }
     });
 
     this.endControlSection();
