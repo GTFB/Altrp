@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers\Admin  ;
 
+use App\Altrp\Builders\Traits\DynamicVariables;
 use App\Http\Controllers\Controller;
 use App\Altrp\Model;
+use App\Http\Requests\ApiRequest;
 use App\SQLEditor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class SQLEditorController extends Controller
 {
+
+  use DynamicVariables;
     /**
      * Display a listing of the resource.
      *
@@ -148,5 +152,19 @@ class SQLEditorController extends Controller
       }
       return response()->json( ['success' => false, 'Error on Delete'],200,  [], JSON_UNESCAPED_UNICODE );
 
+    }
+
+    public function test(ApiRequest $request) {
+      $sql = request()->sql;
+      if (empty($sql))
+        return json_encode(['error' => 'Нет запроса для проверки']);
+
+      try {
+        $sql = $this->replaceDynamicVars($sql, true);
+        $res = selectForSQLEditor($sql, [], [], $request);
+        return json_encode(['success' => $res]);
+      } catch (\Exception $e) {
+        return json_encode(['error' => $e->getMessage()]);
+      }
     }
 }

@@ -37,13 +37,18 @@ class SqlEditor extends Component {
       },
       modelsOptions: [],
       AceEditor: storeState.aceEditorReducer.AceEditor,
+      AceEditorResponse: storeState.aceEditorReducer.AceEditor,
       remoteFields: [],
       editingRemoteField: null,
-      isFieldRemoteModalOpened: false
+      isFieldRemoteModalOpened: false,
+      testResponse: '',
+      testParams: {}
     };
     this.sqlEditorResource = new Resource({route: `/admin/ajax/sql_editors`});
+    this.sqlEditorTest = new Resource({route: `/admin/ajax/sql_editors/test`});
     this.modelsResource = new Resource({ route: '/admin/ajax/model_options' });
     this.remoteFieldsResource = new Resource({ route: `/admin/ajax/remote_data/sql_editor/${this.props.match.params.id}` });
+    this.onTest = this.onTest.bind(this);
     store.subscribe(this.aceEditorObserver);
   }
 
@@ -100,6 +105,21 @@ class SqlEditor extends Component {
       if(field === 'title') {
         state.value.name = titleToName(value);
       }
+      if(field === 'test') {
+        state.value.test = value;
+        let res = {};
+        const arr = value.split('&');
+        if (arr.length > 0) {
+          for(let item of arr) {
+            const a = item.split('=');
+            if (a[0]) {
+              res[a[0]] = a[1];
+            }
+          }
+        }
+        state.testParams = res;
+        state.testParams.sql = state.value.sql;
+      }
       return state
     })
   }
@@ -125,6 +145,20 @@ class SqlEditor extends Component {
       alert(res.message);
     }
   };
+
+  onTest = async () => {
+    this.state.testParams.sql = this.state.value.sql;
+    let testResponse = await this.sqlEditorTest.post(this.state.testParams);
+    if (testResponse.success)
+      testResponse = JSON.stringify(testResponse.success);
+    if (testResponse.error)
+      testResponse = JSON.stringify(testResponse.error);
+    this.setState(state => ({
+      ...state,
+      testResponse
+    }))
+
+  }
 
   render() {
     const {id} = this.props.match.params;
@@ -255,10 +289,39 @@ class SqlEditor extends Component {
                   }}
                   enableLiveAutocompletion={true} />))}
             </div>
+            <div className="form-group col-12">
+              <label htmlFor="field-name">Test Result</label>
+              <this.state.AceEditorResponse
+                mode="javascript"
+                theme="textmate"
+                onChange={value => {
+                  //this.changeValue(value, 'sql')
+                }}
+                className="field-ace"
+                name="aceEditorResponse"
+                height="15em"
+                wrapEnabled={true}
+                setOptions={{
+                  value: this.state.testResponse || ''
+                }}
+                showPrintMargin={false}
+                style={{
+                  width: '100%'
+                }}
+                enableLiveAutocompletion={false} />
+            </div>
           </div>
+
           <div className="btn__wrapper btn_add">
             <button className="btn btn_success" type="submit">Add</button>
             <Link className="btn" to={`/admin/tables/sql_editors`}>Cancel</Link>
+            <button className="btn btn_success" type="button" onClick={this.onTest}>Test</button>
+            <input type="text" id="field-test"
+                   value={this.state.value.test  || ''}
+                   onChange={e => {
+                     this.changeValue(e.target.value, 'test')
+                   }}
+            />
             {/* TODO: отображать кнопку если в форме редактируются данные
           повесить обработчик удаления
         <button className="btn btn_failure">Delete</button> */}
