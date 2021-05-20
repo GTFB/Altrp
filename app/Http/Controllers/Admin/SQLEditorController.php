@@ -158,11 +158,10 @@ class SQLEditorController extends Controller
       $sql = request()->sql;
       if (empty($sql))
         return json_encode(['error' => 'Нет запроса для проверки']);
-
       try {
         $sql = $this->replaceDynamicVars($sql, true);
         $res = selectForSQLEditor($sql, [], [], $request);
-        return json_encode(['success' => $res]);
+        return json_encode(['success' => $res['data']]);
       } catch (\Exception $e) {
         return json_encode(['error' => $e->getMessage()]);
       }
