@@ -2,16 +2,7 @@ import React, {Component} from "react";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import AdminTable from "../AdminTable";
 import {Link} from "react-router-dom";
-
-export const DEFAULT_AREAS = [
-  'content',
-  'footer',
-  'header',
-  'popup',
-  'email',
-  'card',
-  'reports',
-];
+import CONSTANTS from '../../../../editor/src/js/consts'
 
 class Areas extends Component {
   constructor(props) {
@@ -28,7 +19,7 @@ class Areas extends Component {
   updateAreas = async () => {
     const resource = new Resource({route: '/admin/ajax/areas'});
     let areas = await resource.getAll();
-    areas = areas.filter(area => DEFAULT_AREAS.indexOf(area.name) === -1)
+    areas = areas.filter(area => CONSTANTS.DEFAULT_AREAS.indexOf(area.name) === -1)
     this.setState(state => ({...state, areas}))
   }
 

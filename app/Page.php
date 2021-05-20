@@ -368,6 +368,36 @@ class Page extends Model
         ]),
       ];
 
+      $custom_areas = Area::whereNotIn( 'name', self::DEFAULT_AREAS )->get();
+
+
+      if( $custom_areas->count() ){
+        foreach ($custom_areas as $custom_area) {
+
+          $custom_template = Template::getTemplate([
+            'page_id' => $page_id,
+            'template_type' => $custom_area->name,
+          ]);
+//          echo '<pre style="padding-left: 200px;">';
+//          var_dump( $custom_template );
+//          echo '</pre>';
+//
+          if( ! data_get( $custom_template, 'id' ) ){
+            continue;
+          }
+
+          unset($custom_template['html_content']);
+          unset($custom_template['styles']);
+          $areas[] = [
+            'area_name' => $custom_area->name,
+            'id' => $custom_area->name,
+            'settings' => $custom_area->settings,
+            'template' => $custom_template,
+          ];
+        }
+      }
+
+
       Cache::put( 'areas_' . $page_id, $areas, 86400 );
 
     }

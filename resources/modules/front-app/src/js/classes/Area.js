@@ -47,6 +47,28 @@ class Area {
     this.templates = this.templates || [];
     return this.templates;
   }
+
+  /**
+   * Проверка является ли область пользовательской
+   * @return {boolean}
+   */
+  isCustomArea(){
+    return ! ! _.get(this.settings, 'area_type');
+  }
+  /**
+   * Проверка является ли область пользовательской
+   * @return {[string]}
+   */
+  getAreaClasses(){
+    if(this.CSSclasses){
+      return this.CSSclasses;
+    }
+    this.CSSclasses = [];
+    this.CSSclasses.push(`app-area_id-${this.settings.area_type}`);
+    this.settings.sidebar_type && this.CSSclasses.push(`app-area_${this.settings.sidebar_type}`);
+    this.settings.sidebar_location && this.CSSclasses.push(`app-area_sidebar-location-${this.settings.sidebar_location}`);
+    return this.CSSclasses;
+  }
 }
 
 export default Area;
