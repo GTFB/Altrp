@@ -170,6 +170,7 @@ class SQLEditorController extends Controller
         @unlink(storage_path('tmp') . '/' . 'sqltest.php');
         return json_encode(['success' => $result]);
       } catch (\Exception $e) {
+        @unlink(storage_path('tmp') . '/' . 'sqltest.php');
         return json_encode(['error' => $e->getMessage()]);
       }
     }
