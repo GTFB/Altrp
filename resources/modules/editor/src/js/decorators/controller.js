@@ -1,4 +1,4 @@
-import store from '../store/store';
+import store from "../store/store";
 import { toggleDynamicContent } from "../store/dynamic-content/actions";
 import { getElementSettingsSuffix } from "../helpers";
 /**
@@ -6,11 +6,17 @@ import { getElementSettingsSuffix } from "../helpers";
  */
 function componentDidUpdate(prevProps, prevState) {
   if (!this.props.repeater) {
-    let elementValue = this.props.currentElement.getSettings(this.props.controlId);
+    let elementValue = this.props.currentElement.getSettings(
+      this.props.controlId
+    );
     if (this.state.value !== elementValue) {
       if (elementValue === null) {
         elementValue = this.getDefaultValue();
-        this.props.currentElement.setSettingValue(this.props.controlId, elementValue, false);
+        this.props.currentElement.setSettingValue(
+          this.props.controlId,
+          elementValue,
+          false
+        );
         this.setState({
           value: elementValue
         });
@@ -21,11 +27,15 @@ function componentDidUpdate(prevProps, prevState) {
         });
       }
     }
-    if (prevProps.currentElement.getId() !== this.props.currentElement.getId()) {
+    if (
+      prevProps.currentElement.getId() !== this.props.currentElement.getId()
+    ) {
       /**
        * обновляем компонент контроллера, если изменился элемент
        */
-      this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController();
+      this.props.controller.isShow()
+        ? this.showComponentController()
+        : this.hideComponentController();
       if (_.isFunction(this._componentDidMount)) {
         this._componentDidMount();
       }
@@ -39,8 +49,10 @@ function componentDidUpdate(prevProps, prevState) {
       value
     });
   }
-  if (this.props.currentScreen !== prevProps.currentScreen ||
-    this.props.currentState !== prevProps.currentState) {
+  if (
+    this.props.currentScreen !== prevProps.currentScreen ||
+    this.props.currentState !== prevProps.currentState
+  ) {
     const value = this.getSettings(this.props.controlId);
     this.setState(state => ({
       ...state,
@@ -67,7 +79,7 @@ function componentDidUpdate(prevProps, prevState) {
  */
 function getSettings(settingName) {
   if (!this.props.currentElement) {
-    return '';
+    return "";
   }
   /**
    * Если внутри репитера, то берем свойство из репитера, а не элемента
@@ -78,34 +90,41 @@ function getSettings(settingName) {
      * todo: при смене элементов может быть не соответствие this.props.controller.data.itemIndex и новым репитером
      * todo: пока что вернем значение по умолчанию или строку
      */
-    if (this.props.controller.data.repeater.getSettings(this.props.controller.data.repeater.props.controlId)
-    [this.props.controller.data.itemIndex]) {
+    if (
+      this.props.controller.data.repeater.getSettings(
+        this.props.controller.data.repeater.props.controlId
+      )[this.props.controller.data.itemIndex]
+    ) {
       // console.log(this.props.controller.data.controlId + getElementSettingsSuffix(this.props.controller, true));
-      return this.props.controller.data.repeater.getSettings(this.props.controller.data.repeater.props.controlId)
-      [this.props.controller.data.itemIndex]
-      [this.props.controller.data.controlId + getElementSettingsSuffix(this.props.controller, true)];
+      return this.props.controller.data.repeater.getSettings(
+        this.props.controller.data.repeater.props.controlId
+      )[this.props.controller.data.itemIndex][
+        this.props.controller.data.controlId +
+          getElementSettingsSuffix(this.props.controller, true)
+      ];
     }
     /**
      * todo: пока что вернем значение по умолчанию или строку в случае бага
      * проблему, вроде решил, но на всякий случай оставим
      */
-    return _.isFunction(this.getDefaultValue) ? this.getDefaultValue() : '';
+    return _.isFunction(this.getDefaultValue) ? this.getDefaultValue() : "";
   }
   /**
    * Repeater не может менять своё значение при смене разрешения
    */
-  if (this.props.type === 'repeater') {
+  if (this.props.type === "repeater") {
     return this.props.currentElement.getSettings(settingName);
   }
   if (this.props.responsive === false) {
     return this.props.currentElement.getSettings(settingName);
   }
-  let value = this.props.currentElement.getSettings(settingName +
-    getElementSettingsSuffix(this.props.controller));
+  let value = this.props.currentElement.getSettings(
+    settingName + getElementSettingsSuffix(this.props.controller)
+  );
   // console.log(value);
   // console.log(getElementSettingsSuffix(this.props.controller));
   if (value === null) {
-    value = this.props.currentElement.getSettings(settingName)
+    value = this.props.currentElement.getSettings(settingName);
   }
   return value;
 }
@@ -120,32 +139,31 @@ function getSettings(settingName) {
  * @param {boolean} updateElement - по умолчанию обновляем текущий элемент тоже
  */
 function _changeValue(value, updateElement = true) {
-  if (typeof value === 'object' && value.length !== undefined) {
+  if (typeof value === "object" && value.length !== undefined) {
     value = [...value];
-  } else if (typeof value === 'object') {
+  } else if (typeof value === "object") {
     value = { ...value };
   }
 
   if (value && value.dynamic) {
-    this.setState((state) => {
+    this.setState(state => {
       return {
         ...state,
-        value: '',
-        dynamicValue: value,
-      }
+        value: "",
+        dynamicValue: value
+      };
     });
   } else {
-    this.setState((state) => {
+    this.setState(state => {
       return {
         ...state,
-        value,
-      }
+        value
+      };
     });
   }
   if (updateElement) {
     this.props.controller.changeValue(value, updateElement);
   }
-
 }
 
 /**
@@ -163,15 +181,17 @@ function conditionSubscriber() {
      */
     let keys = Object.keys(this.props.conditions);
     keys = keys.map(key => {
-      if (key.indexOf('!') === -1) {
+      if (key.indexOf("!") === -1) {
         return key;
       } else {
-        return key.replace('!', '');
+        return key.replace("!", "");
       }
     });
     // if(keys.indexOf(controllerValue.controlId)>=0){
     if (this.props.controller.isShow() !== this.state.show) {
-      this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController();
+      this.props.controller.isShow()
+        ? this.showComponentController()
+        : this.hideComponentController();
     }
     // }
   }
@@ -184,19 +204,21 @@ async function controllerComponentDidMount() {
   /**
    * Сначала проверим нужно ли отрисовывать контроллер по умолчанию
    */
-  this.props.controller.isShow() ? this.showComponentController() : this.hideComponentController();
+  this.props.controller.isShow()
+    ? this.showComponentController()
+    : this.hideComponentController();
 
   if (this.resource) {
     let options = await this.resource.getAll();
     if (this.props.nullable) {
-      options = _.concat([{ '': '' }], options);
+      options = _.concat([{ "": "" }], options);
     }
     this.setState(state => ({ ...state, options }));
     if (options[0].value) {
       this._changeValue(options[0].value);
     }
   }
-  if (typeof this._componentDidMount === 'function') {
+  if (typeof this._componentDidMount === "function") {
     this._componentDidMount();
   }
 }
@@ -208,7 +230,7 @@ async function controllerComponentDidMount() {
 function hideComponentController() {
   this.setState(state => ({
     ...state,
-    show: false,
+    show: false
   }));
   this.props.currentElement.deleteSetting();
   // this.props.controller.changeValue(null);todo: нельзя пробрасывать значение сразу, а то меняется только один контроллер в другие передаются данные с удаленного по условию
@@ -221,7 +243,7 @@ function hideComponentController() {
 function showComponentController() {
   this.setState(state => ({
     ...state,
-    show: true,
+    show: true
   }));
 }
 
@@ -242,14 +264,19 @@ function removeDynamicSettings() {
  */
 function openDynamicContent(e) {
   e.stopPropagation();
-  this.props.dispatch(toggleDynamicContent({
-    type: 'text',
-    settingName: this.props.controlId,
-    onSelect: (dynamicValue) => {
-      this._changeValue(dynamicValue);
-      this.props.currentElement.component.subscribeToModels();
-    }
-  }, this.dynamicButton.current))
+  this.props.dispatch(
+    toggleDynamicContent(
+      {
+        type: "text",
+        settingName: this.props.controlId,
+        onSelect: dynamicValue => {
+          this._changeValue(dynamicValue);
+          this.props.currentElement.component.subscribeToModels();
+        }
+      },
+      this.dynamicButton.current
+    )
+  );
 }
 let controllerDecorate = function elementWrapperDecorate(component) {
   component.componentDidUpdate = componentDidUpdate.bind(component);
@@ -265,7 +292,6 @@ let controllerDecorate = function elementWrapperDecorate(component) {
 };
 export default controllerDecorate;
 
-
 export function controllerMapStateToProps(state) {
   return {
     currentElement: state.currentElement.currentElement,
@@ -274,5 +300,6 @@ export function controllerMapStateToProps(state) {
     controllerValue: state.controllerValue,
     historyStore: state.historyStore,
     presetColors: state.editorMetas.preset_colors,
+    globalColors: state.globalStyles.colors
   };
 }

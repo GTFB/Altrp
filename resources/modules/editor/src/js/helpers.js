@@ -1,5 +1,11 @@
 import { getCurrentScreen, getElementState } from "./store/store";
 import CONSTANTS from "./consts";
+const {
+  uniqueNamesGenerator,
+  adjectives,
+  colors,
+  animals
+} = require("unique-names-generator");
 
 export function getTemplateId() {
   return new URL(window.location).searchParams.get("template_id");
@@ -68,6 +74,28 @@ export function deleteCurrentElementByID(elementID) {
     return true;
   }
   return false;
+}
+
+export function createGlobalColor() {
+  const randomName = uniqueNamesGenerator({
+    dictionaries: [adjectives, colors, animals],
+    separator: "",
+    style: "capital"
+  });
+  const color = `rgba(255, 255, 255, 1)`;
+  const colorPickedHex = "#FFFFFF";
+  const colorRGB = {
+    r: 255,
+    g: 255,
+    b: 255,
+    a: 1
+  };
+  return {
+    name: randomName,
+    color: color,
+    colorPickedHex: colorPickedHex,
+    colorRGB: colorRGB
+  };
 }
 
 /**

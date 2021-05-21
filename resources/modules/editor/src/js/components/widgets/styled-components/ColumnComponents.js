@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import { getResponsiveSetting } from "../../../../../../front-app/src/js/helpers";
-import { dimensionsControllerToStyles } from "../../../../../../front-app/src/js/helpers/styles";
+import {
+  colorStyled,
+  dimensionsControllerToStyles
+} from "../../../../../../front-app/src/js/helpers/styles";
 
 const settingsToStyles = ({ settings }) => {
   let styles = "";
