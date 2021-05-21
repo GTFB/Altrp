@@ -222,7 +222,7 @@ class ShadowController extends Component {
           {
             this.state.active ?
               <div id="colorPicker" className="control-color-colorPicker">
-                <SketchPicker width="90%" presetColors={this.props.presetColors} color={value.colorRGB}
+                <SketchPicker width="90%" color={value.colorRGB}
                   onChange={this.colorChange} className="sketchPicker" />
               </div>
               : <div></div>

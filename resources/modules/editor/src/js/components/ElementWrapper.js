@@ -390,6 +390,7 @@ class ElementWrapper extends Component {
         className={classes}
         style={styles}
         ref={this.wrapper}
+        element={this.props.element.getId()}
         onContextMenu={this.handleContext}
         onDragOver={this.onDragOver}
         onClick={this.chooseElement}

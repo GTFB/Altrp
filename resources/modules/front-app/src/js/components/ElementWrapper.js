@@ -339,6 +339,7 @@ class ElementWrapper extends Component {
         settings={this.props.element.getSettings()}
         style={styles}
         id={this.CSSId}
+        element={this.props.element.getId()}
       >
         {content}
         {tooltip_text && <AltrpTooltip position={tooltip_position}>{tooltip_text}</AltrpTooltip>}

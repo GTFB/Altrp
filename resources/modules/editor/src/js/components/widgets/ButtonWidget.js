@@ -184,6 +184,8 @@ class ButtonWidget extends Component {
 
     let buttonText = this.props.element.getResponsiveSetting("button_text", null, "");
     let buttonMedia = { ...this.state.settings.button_icon };
+    const showIcon = buttonMedia.url;
+
     if (this.state.pending) {
       classes += " altrp-disabled";
     }
@@ -194,7 +196,7 @@ class ButtonWidget extends Component {
         : "";
 
     let icon =
-      buttonMedia && buttonMedia.assetType ? (
+      buttonMedia && showIcon && buttonMedia.assetType ? (
         <span className={"altrp-btn-icon "}>
           {renderAssetIcon(buttonMedia)}{" "}
         </span>
@@ -219,9 +221,13 @@ class ButtonWidget extends Component {
         title={tooltip || null}
       >
         {buttonText}
-        {! isSSR() && <span className={"altrp-btn-icon "}>
+        {
+          showIcon ? (
+            ! isSSR() && <span className={"altrp-btn-icon "}>
           {renderAssetIcon(buttonMedia)}{" "}
-        </span>}
+          </span>
+          ) : ""
+        }
       </button>
     );
 
@@ -265,9 +271,13 @@ class ButtonWidget extends Component {
           >
             {" "}
             {buttonText || ""}
-            {! isSSR() && <span className={"altrp-btn-icon "}>
-              {renderAssetIcon(buttonMedia)}{" "}
-            </span>}
+            {
+              showIcon ? (
+                ! isSSR() && <span className={"altrp-btn-icon "}>
+                  {renderAssetIcon(buttonMedia)}{" "}
+                </span>
+              ) : ""
+            }
           </a>
         );
       } else {
@@ -275,9 +285,13 @@ class ButtonWidget extends Component {
           <Link to={url} onClick={this.onClick} className={classes} title={tooltip || null}>
             {" "}
             {buttonText || ""}
-            {! isSSR() && <span className={"altrp-btn-icon "}>
-              {renderAssetIcon(buttonMedia)}{" "}
-            </span>}
+            {
+              showIcon ? (
+                ! isSSR() && <span className={"altrp-btn-icon "}>
+                  {renderAssetIcon(buttonMedia)}{" "}
+                </span>
+              ) : ""
+            }
           </Link>
         );
       }
@@ -292,14 +306,20 @@ class ButtonWidget extends Component {
           title={tooltip || null}
         >
           {buttonText}
-          {! isSSR() && <span className={"altrp-btn-icon "}>
-            {renderAssetIcon(buttonMedia)}{" "}
-          </span>}
+          {
+            showIcon ? (
+              ! isSSR() && <span className={"altrp-btn-icon "}>
+                {renderAssetIcon(buttonMedia)}{" "}
+              </span>
+            ) : ""
+          }
         </button>
       );
     }
 
-    return link || button || buttonMedia;
+    return <div className="altrp-btn-wrapper">
+      { link || button || buttonMedia }
+    </div>;
     // return React.createElement(tag, buttonProps, <>{this.state.settings.button_text}{icon}</>);
   }
 }

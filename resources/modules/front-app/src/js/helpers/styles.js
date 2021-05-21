@@ -222,18 +222,37 @@ export function sliderStyled(controller) {
 }
 
 /**
- * проверяет наличичие значения slider
+ * проверяет наличичие значения shadow
  * @return {string}
  * @param {{}} controller
  */
 export function shadowStyled(controller = {}) {
-  const type = controller.type || "";
-  const horizontal = controller.horizontal || 0;
-  const vertical = controller.vertical || 0;
-  const blur = controller.blur || 0;
-  const spread = controller.spread || 0;
-  const color = controller.color || "";
-  return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread} ${color};`;
+  if(controller) {
+    const type = controller.type || "";
+    const horizontal = controller.horizontal || 0;
+    const vertical = controller.vertical || 0;
+    const blur = controller.blur || 0;
+    const spread = controller.spread || 0;
+    const color = controller.color || "";
+    return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread} ${color};`;
+  } else {
+    return ""
+  }
+}
+
+/**
+ * проверяет наличичие значения media, в основном используется для background-image
+ * @return {string}
+ * @param {{}} controller
+ */
+export function mediaStyled(controller = {}) {
+  let url = "none";
+
+  if(controller.url) {
+    url = `url("${controller.url}")`
+  }
+
+  return `background-image: ${url};`
 }
 
 /**
@@ -278,6 +297,10 @@ export function styledString(styles, settings) {
             break;
           case "shadow":
             stringStyles += shadowStyled(variable)
+            break;
+          case "media":
+            stringStyles += mediaStyled(variable)
+            break;
           default:
             stringStyles += `${style[0]}: ${defaultStyled(variable)};`
         }
