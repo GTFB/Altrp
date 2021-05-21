@@ -42,16 +42,20 @@ class DropdownMenu extends Component {
           if(liParent.id !== li.id) {
             if(li.parent_id_repeater_menu_layout) {
               if(li.parent_id_repeater_menu_layout === liParent.id_repeater_menu_layout) {
-                list[li.id] && (list[li.id].childrenParent = true);
+                const indexInArray = list.findIndex(item => item.id == li.id);
+                list[indexInArray] && (list[indexInArray].childrenParent = true);
+                // list[li.id] && (list[li.id].childrenParent = true);
                 children.push(li.id);
               }
             }
           }
         });
-        if(list[liParent.id]) {
-          list[liParent.id].children = children;
-          if(liParent.id_repeater_menu_layout) {
-          }
+        const parentIdRepeater = liParent.id_repeater_menu_layout;
+        const parentIndexInArray = list.findIndex(item => item.id_repeater_menu_layout == parentIdRepeater);
+        if (list[parentIndexInArray]) {
+          list[parentIndexInArray].children = children;
+          // if(liParent.id_repeater_menu_layout) {
+          // }
         }
       }
     });
@@ -76,9 +80,8 @@ class DropdownMenu extends Component {
         break;
       default:
     }
-    const icon_dropdown_menu_layout = this.props.element.getResponsiveSetting('icon_dropdown_menu_layout');
-    console.log(icon_dropdown_menu_layout);
-    const active_icon_dropdown_menu_layout = this.props.element.getResponsiveSetting('icon_dropdown_menu_layout');
+    const icon_dropdown_menu_layout = this.props.element?.getResponsiveSetting('icon_dropdown_menu_layout');
+    const active_icon_dropdown_menu_layout = this.props.element?.getResponsiveSetting('icon_dropdown_menu_layout');
     let iconButton = (
       <AltrpImage
         image={icon_dropdown_menu_layout}

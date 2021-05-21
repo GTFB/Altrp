@@ -124,6 +124,10 @@ export default class RobotSettingsPanel extends React.Component {
                         <div className="control-switcher__off-text">OFF</div>
                       </div>
                     </div>
+                    <div className="controller-container controller-container_select2">
+                      <button className={"btn font_montserrat font_500 btn_grey"} style={{margin: '10px'}} onClick={() => this.props.onLayout('TB')}>vertical</button>
+                      <button className={"btn font_montserrat font_500 btn_grey"} style={{margin: '10px'}} onClick={() => this.props.onLayout('LR')}>horizontal</button>
+                    </div>
 
                     <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
                       <div className="controller-container__label control-select__label controller-label">Sources</div>

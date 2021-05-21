@@ -282,6 +282,14 @@ class Image extends BaseElement {
         '%',
         'vh',
       ],
+      rules: {
+        '{{ELEMENT}} .altrp-image{{STATE}}': [
+          'padding-top: {{TOP}}{{UNIT}};',
+          'padding-right: {{RIGHT}}{{UNIT}};',
+          'padding-bottom: {{BOTTOM}}{{UNIT}};',
+          'padding-left: {{LEFT}}{{UNIT}};'
+        ]
+      },
     });
 
     this.addControl('position_z_index', {
@@ -344,11 +352,11 @@ class Image extends BaseElement {
         saturate: 100,
         hue: 0,
       },
-      rules: {
-        '{{ELEMENT}} .altrp-image{{STATE}}': [
-          'filter: blur({{BLUR}}px)  brightness({{BRIGHTNESS}}%) contrast({{CONTRAST}}%) saturate({{SATURATE}}%) hue-rotate({{HUE}}deg);'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-image{{STATE}}': [
+      //     'filter: blur({{BLUR}}px)  brightness({{BRIGHTNESS}}%) contrast({{CONTRAST}}%) saturate({{SATURATE}}%) hue-rotate({{HUE}}deg);'
+      //   ],
+      // },
     });
     this.addControl('image_style_alignment', {
       type: CONTROLLER_CHOOSE,
@@ -388,9 +396,9 @@ class Image extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-image{{STATE}},{{ELEMENT}}": "background-color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-image{{STATE}}": "background-color: {{COLOR}};"
+      // }
     });
 
     this.addControl('gradient', {
@@ -405,9 +413,9 @@ class Image extends BaseElement {
         angle: "0",
         value: ""
       },
-      rules: {
-        "{{ELEMENT}} .altrp-image{{STATE}}": "background-image: {{VALUE}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-image{{STATE}}": "background-image: {{VALUE}}",
+      // }
     });
 
 

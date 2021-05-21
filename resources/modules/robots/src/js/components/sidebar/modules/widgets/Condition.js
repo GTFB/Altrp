@@ -6,16 +6,25 @@ export default class Condition extends React.Component {
     super(props);
   }
 
+  getPosition(){
+    let position = 'vertical';
+    if (this.props?.targetPosition === 'left') position = 'horizontal';
+    return position;
+  }
+
   render() {
     let nodeClasses = "flow-node-condition";
     if (this.props.selected) nodeClasses += " selected";
+    const handleMap = this.getPosition();
+    const topStyle = handleMap === 'vertical' ? '0%' : '100%';
+    const bottomStyle = handleMap === 'vertical' ? '100%' : '0%';
 
     return (
       <div className={nodeClasses}>
         <Handle
           type="target"
-          position="top"
-          style={{ zIndex: 100, left: "0%" }}
+          position="left"
+          style={{ zIndex: 100, top: topStyle }}
         />
         <div className="wrapper">
           <div></div>
@@ -24,15 +33,15 @@ export default class Condition extends React.Component {
         </div>
         <Handle
           type="source"
-          position="left"
+          position="bottom"
           id="no"
-          style={{ top: "100%", borderRadius: 0 }}
+          style={{ left: topStyle, borderRadius: 0 }}
         />
         <Handle
           type="source"
-          position="right"
+          position="top"
           id="yes"
-          style={{ top: "0%", borderRadius: 0 }}
+          style={{ left: bottomStyle, borderRadius: 0 }}
         />
       </div>
     );
