@@ -160,8 +160,15 @@ class SQLEditorController extends Controller
         return json_encode(['error' => 'Нет запроса для проверки']);
       try {
         $sql = $this->replaceDynamicVars($sql, true);
-        $res = selectForSQLEditor($sql, [], [], $request);
-        return json_encode(['success' => $res['data']]);
+        $fp = fopen(storage_path('tmp') . '/' . 'sqltest.php', 'w');
+        fwrite($fp, "<?php \$sql = \"" . $sql ."\";\n \$res = DB::select(\$sql);\n return \$res;");
+        if (!file_exists(storage_path('tmp') . '/' . 'sqltest.php')) {
+          return json_encode(['error' => 'Нет доступа к временной папке tmp']);
+        }
+        $result = require storage_path('tmp') . '/' . 'sqltest.php';
+        fclose($fp);
+        @unlink(storage_path('tmp') . '/' . 'sqltest.php');
+        return json_encode(['success' => $result]);
       } catch (\Exception $e) {
         return json_encode(['error' => $e->getMessage()]);
       }

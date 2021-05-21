@@ -157,7 +157,6 @@ class SqlEditor extends Component {
       ...state,
       testResponse
     }))
-
   }
 
   render() {
@@ -289,21 +288,34 @@ class SqlEditor extends Component {
                   }}
                   enableLiveAutocompletion={true} />))}
             </div>
+            <div className="row col-12">
+              <div className="form-group col-11">
+                <input type="text" id="field-test"
+                       value={this.state.value.test  || ''}
+                       placeholder='Parametr for test (task_id=3&id=1)'
+                       onChange={e => {
+                         this.changeValue(e.target.value, 'test')
+                       }}
+                       className="form-control"
+                />
+              </div>
+              <div className="form-group col-1">
+                <button className="btn btn_success" type="button" onClick={this.onTest}>Test</button>
+              </div>
+            </div>
             <div className="form-group col-12">
               <label htmlFor="field-name">Test Result</label>
               <this.state.AceEditorResponse
                 mode="javascript"
                 theme="textmate"
                 onChange={value => {
-                  //this.changeValue(value, 'sql')
+                  //this.changeValue(value, 'test')
                 }}
                 className="field-ace"
                 name="aceEditorResponse"
                 height="15em"
                 wrapEnabled={true}
-                setOptions={{
-                  value: this.state.testResponse || ''
-                }}
+                value={this.state.testResponse || ''}
                 showPrintMargin={false}
                 style={{
                   width: '100%'
@@ -315,13 +327,8 @@ class SqlEditor extends Component {
           <div className="btn__wrapper btn_add">
             <button className="btn btn_success" type="submit">Add</button>
             <Link className="btn" to={`/admin/tables/sql_editors`}>Cancel</Link>
-            <button className="btn btn_success" type="button" onClick={this.onTest}>Test</button>
-            <input type="text" id="field-test"
-                   value={this.state.value.test  || ''}
-                   onChange={e => {
-                     this.changeValue(e.target.value, 'test')
-                   }}
-            />
+
+
             {/* TODO: отображать кнопку если в форме редактируются данные
           повесить обработчик удаления
         <button className="btn btn_failure">Delete</button> */}
