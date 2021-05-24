@@ -86,6 +86,8 @@ import AltrpMeta from '../../../modules/editor/src/js/classes/AltrpMeta';
 import Areas from "./components/areas/Areas";
 import AreaAdd from "./components/areas/AreaAdd";
 import AreaEdit from "./components/areas/AreaEdit";
+import MenuList from "./components/menu-builder/MenuList";
+import MenuBuilder from "./components/menu-builder/MenuBuilder";
 
 window.React = React;
 window.ReactDOM = ReactDOM;
@@ -500,6 +502,12 @@ class Admin extends Component {
             </Route>
             <Route path="/admin/areas">
               <Areas />
+            </Route>
+            <Route path="/admin/menus/:id">
+              <MenuBuilder />
+            </Route>
+            <Route path="/admin/menus">
+              <MenuList />
             </Route>
             <Route path="/admin/robots">
               <Robots />

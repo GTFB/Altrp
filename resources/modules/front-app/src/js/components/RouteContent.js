@@ -44,6 +44,7 @@ class RouteContent extends Component {
     appStore.dispatch(clearElements());
     window.currentRouterMatch = new AltrpModel(props.match);
     window.currentPageId = props.id;
+    window.currentRouteComponent = this;
     console.log('Route constructor: ', performance.now());
     this.updateAppData();
   }

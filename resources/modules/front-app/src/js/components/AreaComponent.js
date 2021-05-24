@@ -6,6 +6,7 @@ class AreaComponent extends Component {
   constructor(props) {
     super(props);
     // console.log("AreaComponent: ", performance.now());
+    props.area.component = this;
   }
   componentWillUnmount() {
     /**

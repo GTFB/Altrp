@@ -83,6 +83,28 @@ class Area {
     styles = this.settings.custom_css.replace(/__selector__/g, `.app-area_id-${this.id}`);
     return  styles;
   }
+
+  /**
+   * Обновить значение настройки
+   */
+  setSetting(settingName, value){
+    if(this.getSetting(settingName) === value){
+      return;
+    }
+    _.set(this.settings, settingName, value);
+    if(this.component){
+      this.component.setState(state=>({...state, settings: {...this.settings}}))
+    }
+    if(window.currentRouteComponent){
+      window.currentRouteComponent.setState(state=>({...state, updateToken: Math.random()}))
+    }
+  }
+  /**
+   * Получить значение настройки
+   */
+  getSetting(settingName, _default){
+    return _.get(this.settings, settingName, _default);
+  }
 }
 
 export default Area;
