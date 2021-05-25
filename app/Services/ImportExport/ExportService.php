@@ -19,7 +19,9 @@ use App\Services\ImportExport\Files\PermissionRolesFile;
 use App\Services\ImportExport\Files\QueriesFile;
 use App\Services\ImportExport\Files\RelationshipsFile;
 use App\Services\ImportExport\Files\RemoteDataFile;
-use App\Services\ImportExport\Files\RemoteDataSources;
+use App\Services\ImportExport\Files\RemoteDataSourcesFile;
+use App\Services\ImportExport\Files\DataSourcesPermissionsFile;
+use App\Services\ImportExport\Files\DataSourcesRolesFile;
 use App\Services\ImportExport\Files\ReportsFile;
 use App\Services\ImportExport\Files\RolesFile;
 use App\Services\ImportExport\Files\SettingsFile;
@@ -163,8 +165,28 @@ class ExportService
      * @return $this
      */
     public function exportRemoteDataSources() {
-      $remote_data = new RemoteDataSources();
-      $this->addFile($remote_data->export($this->writer, self::EXPORT_PATH));
+      $remote_datasource = new RemoteDataSourcesFile();
+      $this->addFile($remote_datasource->export($this->writer, self::EXPORT_PATH));
+      return $this;
+    }
+
+    /**
+     * Экспорт данных о правах для удаленных источников данных
+     * @return $this
+     */
+    public function exportDataSourcesRoles() {
+      $datasource_roles = new DataSourcesRolesFile();
+      $this->addFile($datasource_roles->export($this->writer, self::EXPORT_PATH));
+      return $this;
+    }
+
+    /**
+     * Экспорт данных о разрешениях для удаленных источников данных
+     * @return $this
+     */
+    public function exportDataSourcesPremissions() {
+      $datasource_permissions = new DataSourcesPermissionsFile();
+      $this->addFile($datasource_permissions->export($this->writer, self::EXPORT_PATH));
       return $this;
     }
 

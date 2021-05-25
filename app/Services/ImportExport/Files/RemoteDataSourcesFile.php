@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\DB;
  * Class RemoteDataFile
  * @package App\Services\ImportExport\Files
  */
-class RemoteDataSources extends ImportExportFile implements IImportExportFile
+class RemoteDataSourcesFile extends ImportExportFile implements IImportExportFile
 {
     /**
      * Путь к файлу в архиве
@@ -46,13 +46,9 @@ class RemoteDataSources extends ImportExportFile implements IImportExportFile
         $import_data = collect($reader->readJsonFile($path));
 
         $data = DB::table( 'altrp_sources' )
-            ->select('altrp_sources.*', 'altrp_models.name as model_name', 'altrp_controllers.namespace as controller_namespace', 'permissions.name as permission_name', 'roles.name as role_name')
+            ->select('altrp_sources.*', 'altrp_models.name as model_name', 'altrp_controllers.namespace as controller_namespace')
             ->leftJoin('altrp_models', 'altrp_sources.model_id', '=', 'altrp_models.id')
             ->leftJoin('altrp_controllers', 'altrp_sources.controller_id', '=', 'altrp_controllers.id')
-            ->leftJoin('altrp_sources_permissions', 'altrp_sources.id', '=', 'altrp_sources_permissions.source_id')
-            ->leftJoin('altrp_sources_roles', 'altrp_sources.id', '=', 'altrp_sources_roles.source_id')
-            ->leftJoin('roles', 'altrp_sources_roles.role_id', '=', 'roles.id')
-            ->leftJoin('permissions', 'altrp_sources_permissions.permission_id', '=', 'permissions.id')
             ->havingRaw('type = "remote"')
             ->get();
 
@@ -102,13 +98,9 @@ class RemoteDataSources extends ImportExportFile implements IImportExportFile
     public function export(IWriter $writer, string $path)
     {
       $data = DB::table( 'altrp_sources' )
-        ->select('altrp_sources.*', 'altrp_models.name as model_name', 'altrp_controllers.namespace as controller_namespace', 'permissions.name as permission_name', 'roles.name as role_name')
+        ->select('altrp_sources.*', 'altrp_models.name as model_name', 'altrp_controllers.namespace as controller_namespace')
         ->leftJoin('altrp_models', 'altrp_sources.model_id', '=', 'altrp_models.id')
         ->leftJoin('altrp_controllers', 'altrp_sources.controller_id', '=', 'altrp_controllers.id')
-        ->leftJoin('altrp_sources_permissions', 'altrp_sources.id', '=', 'altrp_sources_permissions.source_id')
-        ->leftJoin('altrp_sources_roles', 'altrp_sources.id', '=', 'altrp_sources_roles.source_id')
-        ->leftJoin('roles', 'altrp_sources_roles.role_id', '=', 'roles.id')
-        ->leftJoin('permissions', 'altrp_sources_permissions.permission_id', '=', 'permissions.id')
         ->havingRaw('type = "remote"')
         ->get();
 
