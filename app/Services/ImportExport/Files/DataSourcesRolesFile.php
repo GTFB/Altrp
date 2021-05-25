@@ -45,7 +45,7 @@ class DataSourcesRolesFile extends ImportExportFile implements IImportExportFile
             ->join('roles', 'altrp_sources_roles.role_id', '=', 'roles.id')
             ->get();
 
-        $source_data = Source::where('type', 'remote')->all();
+        $source_data = DB::table( 'altrp_sources' )->where('type', '=', 'remote')->get();
         $roles_data = Role::all();
 
         $inserted = [];

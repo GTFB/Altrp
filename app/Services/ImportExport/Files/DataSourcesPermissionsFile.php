@@ -46,8 +46,8 @@ class DataSourcesPermissionsFile extends ImportExportFile implements IImportExpo
             ->join('permissions', 'altrp_sources_permissions.permission_id', '=', 'permissions.id')
             ->get();
 
-        $source_data = Source::where('type', 'remote')->all();
-        $permission_data = Permissions::all();
+        $source_data = DB::table( 'altrp_sources' )->where('type', '=', 'remote')->get();
+        $permission_data = DB::table( 'altrp_sources_permissions' )->get();
 
         $inserted = [];
 
