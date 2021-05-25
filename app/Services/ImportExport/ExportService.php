@@ -104,6 +104,8 @@ class ExportService
             ->exportPermissionRoles()
             ->exportRemoteData()
             ->exportRemoteDataSources()
+            ->exportDataSourcesRoles()
+            ->exportDataSourcesPremissions()
             ->exportValidationFields()
             ->exportValidationRules();
 

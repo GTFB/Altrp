@@ -105,6 +105,8 @@ class ImportService
             ->importPermissionRoles()
             ->importRemoteData()
             ->importRemoteDataSources()
+            ->importRemoteDataSourcesRules()
+            ->importRemoteDataSourcesPermissions()
             ->importTemplates()
             ->importPageTemplates()
             ->importTemplateSettings()
