@@ -59,7 +59,7 @@ class DataSourcesRolesFile extends ImportExportFile implements IImportExportFile
 
         foreach ( $import_data as $source_role ) {
             $role = $roles_data->where( 'name', data_get( $source_role, 'role_name' ) )->first();
-            $source = $source_data->where( 'name', data_get( $source_role, 'name' ) )->first();
+            $source = $source_data->where( 'name', data_get( $source_role, 'source_name' ) )->first();
             if( !$source || !$role ){
                 continue;
             }
@@ -87,7 +87,7 @@ class DataSourcesRolesFile extends ImportExportFile implements IImportExportFile
     public function export(IWriter $writer, string $path)
     {
         $data = DB::table( 'altrp_sources_roles' )
-            ->select('altrp_sources_roles.*', 'roles.name as role_name')
+            ->select('altrp_sources_roles.*', 'roles.name as role_name', 'altrp_sources.name as source_name')
             ->join('altrp_sources', 'altrp_sources_roles.source_id', '=', 'altrp_sources.id')
             ->join('roles', 'altrp_sources_roles.role_id', '=', 'roles.id')
             ->get();

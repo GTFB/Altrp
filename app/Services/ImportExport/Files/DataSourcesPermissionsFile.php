@@ -47,7 +47,7 @@ class DataSourcesPermissionsFile extends ImportExportFile implements IImportExpo
             ->get();
 
         $source_data = DB::table( 'altrp_sources' )->where('type', '=', 'remote')->get();
-        $permission_data = DB::table( 'altrp_sources_permissions' )->get();
+        $permission_data = DB::table( 'permissions' )->get();
 
         $inserted = [];
 
@@ -59,7 +59,7 @@ class DataSourcesPermissionsFile extends ImportExportFile implements IImportExpo
 
         foreach ( $import_data as $source_permission ) {
             $permission = $permission_data->where( 'name', data_get( $source_permission, 'permission_name' ) )->first();
-            $source = $source_data->where( 'name', data_get( $source_permission, 'name' ) )->first();
+            $source = $source_data->where( 'name', data_get( $source_permission, 'source_name' ) )->first();
             if( !$source || !$permission ){
                 continue;
             }
@@ -87,7 +87,7 @@ class DataSourcesPermissionsFile extends ImportExportFile implements IImportExpo
     public function export(IWriter $writer, string $path)
     {
         $data = DB::table( 'altrp_sources_permissions' )
-            ->select('altrp_sources_permissions.*', 'permissions.name as permission_name')
+            ->select('altrp_sources_permissions.*', 'permissions.name as permission_name', 'altrp_sources.name as source_name')
             ->join('altrp_sources', 'altrp_sources_permissions.source_id', '=', 'altrp_sources.id')
             ->join('permissions', 'altrp_sources_permissions.permission_id', '=', 'permissions.id')
             ->get();
