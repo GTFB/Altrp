@@ -19,6 +19,7 @@ use App\Services\ImportExport\Files\PermissionRolesFile;
 use App\Services\ImportExport\Files\QueriesFile;
 use App\Services\ImportExport\Files\RelationshipsFile;
 use App\Services\ImportExport\Files\RemoteDataFile;
+use App\Services\ImportExport\Files\RemoteDataSources;
 use App\Services\ImportExport\Files\ReportsFile;
 use App\Services\ImportExport\Files\RolesFile;
 use App\Services\ImportExport\Files\SettingsFile;
@@ -82,6 +83,7 @@ class ImportService
      */
     public function importAll() {
         $this->extractArchive();
+
         $this->importMedia()
             ->importSettings()
             ->importDiagrams()
@@ -100,6 +102,7 @@ class ImportService
             ->importPageDatasources()
             ->importPermissionRoles()
             ->importRemoteData()
+            ->importRemoteDataSources()
             ->importTemplates()
             ->importPageTemplates()
             ->importTemplateSettings()

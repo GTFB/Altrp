@@ -19,6 +19,7 @@ use App\Services\ImportExport\Files\PermissionRolesFile;
 use App\Services\ImportExport\Files\QueriesFile;
 use App\Services\ImportExport\Files\RelationshipsFile;
 use App\Services\ImportExport\Files\RemoteDataFile;
+use App\Services\ImportExport\Files\RemoteDataSources;
 use App\Services\ImportExport\Files\ReportsFile;
 use App\Services\ImportExport\Files\RolesFile;
 use App\Services\ImportExport\Files\SettingsFile;
@@ -78,6 +79,7 @@ class ExportService
      * @return string
      */
     public function exportAll() {
+
         $this->exportTemplates()
             ->exportPages()
             ->exportMedia()
@@ -99,6 +101,7 @@ class ExportService
             ->exportPageRoles()
             ->exportPermissionRoles()
             ->exportRemoteData()
+            ->exportRemoteDataSources()
             ->exportValidationFields()
             ->exportValidationRules();
 
@@ -153,6 +156,16 @@ class ExportService
         $remote_data = new RemoteDataFile();
         $this->addFile($remote_data->export($this->writer, self::EXPORT_PATH));
         return $this;
+    }
+
+    /**
+     * Экспорт данных о удаленных источниках данных
+     * @return $this
+     */
+    public function exportRemoteDataSources() {
+      $remote_data = new RemoteDataSources();
+      $this->addFile($remote_data->export($this->writer, self::EXPORT_PATH));
+      return $this;
     }
 
     /**
