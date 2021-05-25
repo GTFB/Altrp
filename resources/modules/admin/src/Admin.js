@@ -414,7 +414,7 @@ class Admin extends Component {
                     </li>
                     <li>
                       <Link
-                        to="/admin/menus/1"
+                        to="/admin/menus"
                         className="admin-nav-list__link"
                       >
                         <SettingSvg className="icon" />

@@ -39,7 +39,15 @@
       color: #666666;
     }
   }
-
+  &_danger{
+    border-color: $red;
+    color: #fff;
+    background-color: $red;
+    &:hover {
+      background-color: #fff;
+      color: $red;
+    }
+  }
 }
 
 .form{

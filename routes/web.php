@@ -198,6 +198,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
      * Areas Routes
      */
     Route::resource('areas', 'Admin\AreasController');
+    Route::resource('menus', 'Admin\MenuController');
     /**
      * Templates Routes
      */

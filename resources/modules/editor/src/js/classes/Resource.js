@@ -346,7 +346,8 @@ class Resource {
       headers: _.assign(
         {
           "X-CSRF-TOKEN": _token,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Accept": "application/json",
         },
         customHeaders
       )
