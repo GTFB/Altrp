@@ -53,7 +53,7 @@ class TableWidget extends Component {
     if(this.props.element.getSettings('table_datasource')
         && this.props.element.getSettings('choose_datasource') === 'datasource'){
       let path = this.props.element.getSettings('table_datasource').replace(/{{/g, '').replace(/}}/g, '');
-      data = getDataByPath(path)
+      data = getDataByPath(path, [], this.props.element.getCurrentModel().getData())
     }
     let query = new Query(this.props.element.getSettings().table_query || {}, this);
     if(! this.showTable(query)){

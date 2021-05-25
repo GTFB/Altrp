@@ -21,6 +21,15 @@
       border-color: $purple
     }
   }
+  &_link{
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    &:hover{
+      background-color: transparent;
+      text-decoration: underline;
+    }
+  }
   &_disable {
     background-color: #cccccc;
     color: #666666;
@@ -139,7 +148,7 @@ input[type="text"].form__input{
   }
 
   &__tab:hover {
-    background-color: #f1f3f5; 
+    background-color: #f1f3f5;
 
     color: #8992b4;
     text-decoration: none;
@@ -151,13 +160,13 @@ input[type="text"].form__input{
     background-color: #fff;
     border-bottom-color: #fff;
 
-    color: #343b4c; 
+    color: #343b4c;
   }
 
   &__tab--selected:hover {
     background-color: #fff;
 
-    color: #343b4c; 
+    color: #343b4c;
   }
 
   &__tab-panel {
