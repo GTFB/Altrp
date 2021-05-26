@@ -55,7 +55,7 @@ class DummyClass extends ApiController
 
         ${{crudNameSingular}} = new {{modelName}};
 
-        $regChat = ChatService::registerInChat($user->getTable(), $data);
+        $regChat = ChatService::registerInChat(${{crudNameSingular}}->getTable(), $data);
 
         $data = $this->hashPasswordAttributeIfExists(${{crudNameSingular}}->getTable(), $data);
 

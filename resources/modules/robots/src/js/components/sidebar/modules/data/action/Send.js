@@ -108,7 +108,6 @@ export default class Send extends Component{
         const users = this.props.selectNode?.data?.props?.nodeData?.data?.entitiesData?.users ?? [];
         const roles = this.props.selectNode?.data?.props?.nodeData?.data?.entitiesData?.roles ?? [];
         const content = this.props.selectNode?.data?.props?.nodeData?.data?.content ?? {};
-
         return <div>
           <div>
             <div className={"settings-section "}>

@@ -179,7 +179,7 @@ class Select2Controller extends Component {
       }),
 
       control: () => {
-        return ({
+        return {
           display: "flex",
           // height: 28,
           borderRadius: 3,
@@ -187,8 +187,8 @@ class Select2Controller extends Component {
           borderStyle: "solid",
           borderColor: "#E5E6EA",
           color: "#8E94AA",
-          fontSize: 13,
-        })
+          fontSize: 13
+        };
       },
 
       placeholder: () => ({
@@ -254,11 +254,15 @@ class Select2Controller extends Component {
       isClearable: this.props.isClearable
       // menuIsOpen: true,
     };
-
     let SelectComponent = Select;
     if (this.props.options_resource && !this.props.prefetch_options) {
       SelectComponent = AsyncSelect;
       selectProps.loadOptions = this.loadOptions;
+    }
+    let id = null;
+    if (this.props.prefetch_options) {
+      id = _.find(this.state.options, item => item.value === this.state.value)
+        ?.id;
     }
     return (
       <div className="controller-container controller-container_select2">
@@ -267,6 +271,11 @@ class Select2Controller extends Component {
         </div>
         <div className="control-container_select2-wrapper">
           <SelectComponent isClearable={true} {...selectProps} />
+          {id != null && typeof id != "undefined" && (
+            <a target="_blank" href={`/admin/editor?template_id=${id}`}>
+              Go to template
+            </a>
+          )}
         </div>
       </div>
     );

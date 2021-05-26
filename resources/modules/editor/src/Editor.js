@@ -11,6 +11,8 @@ import SettingsPanel from "./js/components/SettingsPanel";
 import EditorWindow from "./js/components/EditorWindow";
 import HistoryPanel from "./js/components/HistoryPanel";
 import NavigationPanel from "./js/components/NavigationPanel";
+import CommonPanel from "./js/components/CommonPanel";
+import GlobalColors from "./js/components/GlobalColors";
 import UpdateButton from "./js/components/UpdateButton";
 import CONSTANTS from "./js/consts";
 import { stopDrag } from "./js/store/element-drag/actions";
@@ -37,6 +39,8 @@ import { changeCurrentUser } from "../../front-app/src/js/store/current-user/act
 import Resource from "./js/classes/Resource";
 import AltrpMeta from "./js/classes/AltrpMeta";
 import { setEditorMeta } from "./js/store/editor-metas/actions";
+import { setGlobalColors } from "./js/store/altrp-global-colors/actions";
+
 /**
  * Главный класс редактора.<br/>
  * Реакт-Компонент.<br/>
@@ -62,6 +66,9 @@ class Editor extends Component {
     this.showNavigationPanel = this.showNavigationPanel.bind(this);
     this.showHistoryPanel = this.showHistoryPanel.bind(this);
     this.showWidgetsPanel = this.showWidgetsPanel.bind(this);
+    this.showCommonPanel = this.showCommonPanel.bind(this);
+    this.showGlobalColorsPanel = this.showGlobalColorsPanel.bind(this);
+    this.showGlobalFontsPanel = this.showGlobalFontsPanel.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.onClick = this.onClick.bind(this);
     // store.subscribe(this.templateStatus.bind(this));
@@ -130,6 +137,27 @@ class Editor extends Component {
     });
   }
 
+  showCommonPanel() {
+    this.setState({
+      ...this.state,
+      activePanel: "common"
+    });
+  }
+
+  showGlobalColorsPanel() {
+    this.setState({
+      ...this.state,
+      activePanel: "global_colors"
+    });
+  }
+
+  showGlobalFontsPanel() {
+    this.setState({
+      ...this.state,
+      activePanel: "global_fonts"
+    });
+  }
+
   /**
    * Сработывает при клике
    */
@@ -171,6 +199,18 @@ class Editor extends Component {
     appStore.dispatch(changeCurrentUser(currentUser));
     const presetColors = await AltrpMeta.getMetaByName("preset_colors");
     appStore.dispatch(setEditorMeta(presetColors));
+    const globalStyles = await new Resource({
+      route: "/admin/ajax/global_template_styles"
+    }).getAll();
+    appStore.dispatch(
+      setGlobalColors(
+        globalStyles.color?.map(color => ({
+          id: color.id,
+          guid: color.guid,
+          ...color.settings
+        })) || []
+      )
+    );
   }
 
   /**
@@ -227,7 +267,7 @@ class Editor extends Component {
             <div className="editor-top-panel">
               <button
                 className="btn btn_hamburger"
-                // onClick={this.showSettingsPanel}
+                onClick={this.showCommonPanel}
               >
                 <Hamburger className="icon" />
               </button>
@@ -247,6 +287,13 @@ class Editor extends Component {
               {this.state.activePanel === "settings" && <SettingsPanel />}
               {this.state.activePanel === "history" && <HistoryPanel />}
               {this.state.activePanel === "navigation" && <NavigationPanel />}
+              {this.state.activePanel === "common" && (
+                <CommonPanel
+                  showGlobalColorsPanel={this.showGlobalColorsPanel}
+                  showGlobalFontsPanel={this.showGlobalFontsPanel}
+                />
+              )}
+              {this.state.activePanel === "global_colors" && <GlobalColors />}
             </div>
             <div className="editor-bottom-panel d-flex align-content-center justify-center">
               <button
