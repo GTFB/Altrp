@@ -26,6 +26,7 @@ import DividerComponent from "./widgets/styled-components/DividerComponent";
 import AccordionComponent from "./widgets/styled-components/AccordionComponent";
 import GalleryComponent from "./widgets/styled-components/GalleryComponent";
 import TextComponent from "./widgets/styled-components/TextComponent";
+import TableComponent from "./widgets/styled-components/TableComponent";
 import Column from "../classes/elements/Column";
 
 class ElementWrapper extends Component {
@@ -380,6 +381,7 @@ class ElementWrapper extends Component {
     //   delete elementProps.element;
     // }
     // console.error(performance.now());
+
     let WrapperComponent = "div";
     switch (this.props.element.getName()) {
       case "gallery":
@@ -402,6 +404,9 @@ class ElementWrapper extends Component {
         break;
       case "accordion":
         WrapperComponent = AccordionComponent;
+        break;
+      case "table":
+        WrapperComponent = TableComponent;
         break;
     }
 

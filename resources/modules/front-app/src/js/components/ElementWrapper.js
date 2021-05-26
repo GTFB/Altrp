@@ -13,6 +13,7 @@ import ButtonComponent from "../../../../editor/src/js/components/widgets/styled
 import DividerComponent from "../../../../editor/src/js/components/widgets/styled-components/DividerComponent";
 import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 import TextComponent from "../../../../editor/src/js/components/widgets/styled-components/TextComponent";
+import TableComponent from "../../../../editor/src/js/components/widgets/styled-components/TableComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -324,7 +325,7 @@ class ElementWrapper extends Component {
         break
       case "text":
         WrapperComponent = TextComponent;
-        break;
+        break
       case "carousel":
         WrapperComponent = CarouselComponent;
         break
@@ -333,6 +334,9 @@ class ElementWrapper extends Component {
         break
       case "accordion":
         WrapperComponent = AccordionComponent;
+        break
+      case "table":
+        WrapperComponent = TableComponent;
         break
     }
 

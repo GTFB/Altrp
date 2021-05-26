@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {dimensionsControllerToStyles} from "../../../../../front-app/src/js/helpers/styles";
+import {dimensionsControllerToStyles, borderWidthStyled} from "../../../../../front-app/src/js/helpers/styles";
 import {getResponsiveSetting} from "../../../../../front-app/src/js/helpers";
 
 const AltrpCarouselWrapper = styled.div`
@@ -19,7 +19,7 @@ ${(props)=>{
     slideStyles += `border-style:${border_type_slide};`
   }
   if(border_width_slides_style) {
-    slideStyles += dimensionsControllerToStyles(border_width_slides_style, 'border-width')
+    slideStyles += borderWidthStyled(border_width_slides_style)
   }
   return slideStyles;
 }}
@@ -40,7 +40,7 @@ ${(props)=>{
     slideStyles += `border-style:${border_type_slide};`
   }
   if(border_width_slides_style) {
-    slideStyles += dimensionsControllerToStyles(border_width_slides_style, 'border-width')
+    slideStyles += borderWidthStyled(border_width_slides_style)
   }
   return slideStyles;
 }}

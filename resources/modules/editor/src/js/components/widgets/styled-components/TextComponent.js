@@ -153,7 +153,6 @@ const TextComponent = styled.div`
   if (borderRadius) {
     styles += borderRadiusStyled(borderRadius);
   }
-  console.log('test')
 
     return styles;
 
