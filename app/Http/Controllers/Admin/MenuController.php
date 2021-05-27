@@ -9,7 +9,6 @@ use Illuminate\Support\Str;
 
 class MenuController extends Controller
 {
-  private static $file_types;
 
   /**
    * Display a listing of the resource.

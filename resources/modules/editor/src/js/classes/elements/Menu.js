@@ -10,7 +10,7 @@ import {
   CONTROLLER_QUERY,
   CONTROLLER_EVENT_HANDLER,
   TAB_CONTENT,
-  TAB_STYLE, CONTROLLER_SELECT2, CONTROLLER_SELECT,
+  TAB_STYLE, CONTROLLER_SELECT2, CONTROLLER_SELECT, CONTROLLER_COLOR,
 } from '../modules/ControllersManager';
 
 class Map extends BaseElement {
@@ -53,19 +53,35 @@ class Map extends BaseElement {
       type: CONTROLLER_SELECT,
       options: [
         {
-          'label': 'Horizontal',
-          'value': 'horizontal',
-        },
-        {
           'label': 'Vertical',
           'value': 'vertical',
         },
+        {
+          'label': 'Horizontal',
+          'value': 'horizontal',
+        },
       ],
-      default: 'horizontal'
+      default: 'vertical'
     })
 
     this.endControlSection();
 
+    this.startControlSection('color_styles', {
+      tab: TAB_STYLE,
+      label: 'Colors',
+    });
+
+    this.addControl('bg',{
+      label: 'Background Color',
+      type: CONTROLLER_COLOR,
+    })
+
+    this.addControl('color',{
+      label: 'Text Color',
+      type: CONTROLLER_COLOR,
+    })
+
+    this.endControlSection();
     advancedTabControllers(this);
   }
 }

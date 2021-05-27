@@ -300,6 +300,7 @@ class ElementWrapper extends Component {
       updateToken: this.state.updateToken,
       currentScreen: this.props.currentScreen,
       baseRender: this.props.baseRender,
+      history: this.props.history,
       appStore
     });
     if (this.props.element.getTemplateType() === 'email') {
@@ -344,6 +345,7 @@ class ElementWrapper extends Component {
       <WrapperComponent
         className={classes}
         ref={this.elementWrapperRef}
+        elementId={this.props.element.getId()}
         settings={this.props.element.getSettings()}
         style={styles}
         id={this.CSSId}
