@@ -56,9 +56,9 @@ Route::get('/admin/editor-content', function () {
   return view('editor-content');
 })->middleware('auth')->name('editor-content');
 
-Route::get( '/admin/editor-reports', function (){
-  return view( 'editor-reports' );
-} )->middleware( 'auth' )->name('editor-reports');
+Route::get('/admin/editor-reports', function () {
+  return view('editor-reports');
+})->middleware('auth')->name('editor-reports');
 //Route::get('/admin/reports-editor',fn()=>view('reports'));
 //Route::get('/admin/reports-content',fn()=>view('reports-content'));
 
@@ -70,7 +70,7 @@ Route::get( '/admin/editor-reports', function (){
 // Route::get('/reports/{id}/html', "ReportsController@html");
 Route::post('/reports/generate', "ReportsController@setHtml");
 
-Route::get('/admin/robots-editor', function() {
+Route::get('/admin/robots-editor', function () {
   return view('robots');
 })->middleware('auth', 'admin')->name('robots-editor');
 
@@ -78,13 +78,13 @@ Route::get('/admin/robots-editor', function() {
  * Notifications routes
  */
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/notifications', 'NotificationsController@getAllNotifications');
-    Route::get('/notifications/{notification_id}', 'NotificationsController@getNotification');
-    Route::get('/notifications/delete_all', 'NotificationsController@deleteAllNotifications');
-    Route::get('/notifications/delete/{notification_id}', 'NotificationsController@deleteNotification');
-    Route::get('/unread_notifications', 'NotificationsController@getAllUnreadNotifications');
-    Route::get('/unread_notifications/mark_as_read_all', 'NotificationsController@markAsReadAll');
-    Route::get('/unread_notifications/{notification_id}/mark_as_read', 'NotificationsController@markAsRead');
+  Route::get('/notifications', 'NotificationsController@getAllNotifications');
+  Route::get('/notifications/{notification_id}', 'NotificationsController@getNotification');
+  Route::get('/notifications/delete_all', 'NotificationsController@deleteAllNotifications');
+  Route::get('/notifications/delete/{notification_id}', 'NotificationsController@deleteNotification');
+  Route::get('/unread_notifications', 'NotificationsController@getAllUnreadNotifications');
+  Route::get('/unread_notifications/mark_as_read_all', 'NotificationsController@markAsReadAll');
+  Route::get('/unread_notifications/{notification_id}/mark_as_read', 'NotificationsController@markAsRead');
 });
 
 /**
@@ -150,8 +150,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::delete('/permissions/{permission}', "Users\Permissions@delete");
 
     Route::get('/roles', "Users\Roles@getRoles");
-    Route::resource( 'robots', 'RobotController' );
-    Route::get( 'robots_options', 'RobotController@getOptions' );
+    Route::resource('robots', 'RobotController');
+    Route::get('robots_options', 'RobotController@getOptions');
 
     /**
      * URL: /admin/ajax/role_options?s=search_string
@@ -198,10 +198,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
      * Areas Routes
      */
     Route::resource('areas', 'Admin\AreasController');
+    Route::resource('menus', 'Admin\MenuController');
     /**
      * Templates Routes
      */
     Route::resource('templates', 'TemplateController');
+
+    Route::resource('global_template_styles', 'GlobalTemplateStylesController');
     /**
      * templates settings
      */
@@ -232,6 +235,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::resource('settings', 'Admin\SettingsController');
     Route::resource('diagrams', 'Admin\AltrpDiagramController');
     Route::get('sql_editors/list', 'Admin\SQLEditorController@listByName');
+    Route::post( '/sql_editors/test', 'Admin\SQLEditorController@test' );
     Route::resource('sql_editors', 'Admin\SQLEditorController');
 
     /**
@@ -261,8 +265,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
       ->name('admin.models_with_fields_options');
 
     /**
-    * Получить записи из модели по её Id
-    */
+     * Получить записи из модели по её Id
+     */
     Route::get('/models/{model_id}/records', 'Admin\ModelsController@getRecordsByModel');
     Route::get('/models/{model_id}/records_options', 'Admin\ModelsController@getRecordsByModelOptions');
 
@@ -280,7 +284,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/models', 'Admin\ModelsController@getModels');
     Route::get('/model_options', 'Admin\ModelsController@getModelOptions');
     Route::get('/models_without_parent', 'Admin\ModelsController@getModelsWithoutParent');
-    Route::get( '/models_without_preset', 'Admin\ModelsController@getModelsWithoutPreset');
+    Route::get('/models_without_preset', 'Admin\ModelsController@getModelsWithoutPreset');
     Route::post('/models', 'Admin\ModelsController@storeModel');
     Route::put('/models/{model_id}', 'Admin\ModelsController@updateModel');
     Route::get('/models/{model_id}', 'Admin\ModelsController@showModel');
@@ -399,10 +403,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::post('/tables/{table}/controller', "Admin\TableController@saveController");
 
     // Remote data
-    Route::get( '/remote_data/{remotable_type}/{remotable_id}', 'Admin\RemoteDataController@index');
-    Route::post( '/remote_data/{remotable_type}/{remotable_id}', 'Admin\RemoteDataController@store');
-    Route::put( '/remote_data/{remotable_type}/{remotable_id}/{id}', 'Admin\RemoteDataController@update');
-    Route::delete( '/remote_data/{id}', 'Admin\RemoteDataController@destroy');
+    Route::get('/remote_data/{remotable_type}/{remotable_id}', 'Admin\RemoteDataController@index');
+    Route::post('/remote_data/{remotable_type}/{remotable_id}', 'Admin\RemoteDataController@store');
+    Route::put('/remote_data/{remotable_type}/{remotable_id}/{id}', 'Admin\RemoteDataController@update');
+    Route::delete('/remote_data/{id}', 'Admin\RemoteDataController@destroy');
 
     /**
      * Роут для загрузки favicon
@@ -435,9 +439,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
       Route::get('settings', 'Admin\DownloadsController@exportAltrpSettings')->name('admin.download.settings');
       Route::get('stream_settings', 'Admin\DownloadsController@exportStreamAltrpSettings')->name('admin.download.stream_settings');
     });
-
   });
-
 });
 
 //Route::resource( 'admin/ajax/areas', 'Admin\AreasController' );
@@ -455,14 +457,14 @@ Route::view('/admin/{path?}', 'admin')
 
 Route::get('/', function () {
   return view('front-app', [
-    'elements_list' => json_encode( [] ),
+    'elements_list' => json_encode([]),
     'title' => 'Main',
     'page_id' => 'null',
     '_frontend_route' => [],
     'preload_content' => [],
     'page_areas' => '[]',
     'lazy_sections' => '[]',
-    'pages'=>Page::get_pages_for_frontend( true ),
+    'pages' => Page::get_pages_for_frontend(true),
     'model_data' => null,
     'is_admin' => isAdmin(),
   ]);
@@ -550,14 +552,14 @@ foreach ($reports_routes as $report_route) {
   $path = $report_route['path'];
   $title = $report_route['title'];
 
-  $report_route = str_replace( ':id', '{id}', $path );
+  $report_route = str_replace(':id', '{id}', $path);
 
-  Route::get($report_route, function () use ($title){
-    return view('front-app',[
-      'title'=>$title,
-      'pages'=>Page::get_pages_for_frontend( true ),
+  Route::get($report_route, function () use ($title) {
+    return view('front-app', [
+      'title' => $title,
+      'pages' => Page::get_pages_for_frontend(true),
     ]);
-  })->middleware(['web','installation.checker']);
+  })->middleware(['web', 'installation.checker']);
 }
 
 /**
@@ -622,6 +624,10 @@ Route::group(['prefix' => 'ajax'], function () {
    * Отдает данные отчётов
    */
   Route::get('reports/{id}/result', 'ReportsController@report_template')->name('front.reports-for-routes');
+  /**
+   * Отдает данные menu
+   */
+  Route::get('menus/{guid}', 'Admin\MenuController@getByGuid')->name('menu.front-app');
 
   /**
    * Настройка почты
@@ -632,11 +638,10 @@ Route::group(['prefix' => 'ajax'], function () {
   /**
    * Получение токена
    */
-  Route::get( '/_token', function ( Request $request ){
+  Route::get('/_token', function (Request $request) {
 
-    return response()->json( [ 'success' => true, '_token' => csrf_token()], 200, [], JSON_UNESCAPED_UNICODE );
-
-  } );
+    return response()->json(['success' => true, '_token' => csrf_token()], 200, [], JSON_UNESCAPED_UNICODE);
+  });
 });
 
 Route::get('reports/{id}', "ReportsController@show");
@@ -661,5 +666,3 @@ Route::get('/altrp_run_robot/{robot_id}', 'RobotController@runRobot');
  * Обновление всех ресурсов бэкенда
  */
 Route::post('update-all-resources', 'Admin\UpdateController@upgradeAllResources');
-
-

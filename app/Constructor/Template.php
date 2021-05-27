@@ -48,7 +48,7 @@ class Template extends Model
 
   /**
    * Вернуть json для data пустого шаблона для front-app
-   * @return []
+   * @return array
    */
   private static function getDefaultData()
   {

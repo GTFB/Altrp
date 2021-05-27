@@ -10,7 +10,7 @@ import { settingSectionMenuReducer } from "./setting-section/reducers";
 import { currentTabReducer } from "./active-settings-tab/reducers";
 import { currentStateReducer } from "./state-section/reducers";
 import { currentScreenReducer } from "./responsive-switcher/reducers";
-import { historyStoreReducer } from './history-store/reducers';
+import { historyStoreReducer } from "./history-store/reducers";
 import { currentModelReducer } from "../../../../front-app/src/js/store/current-model/reducers";
 import { templateDataReducer } from "./template-data/reducers";
 import { currentUserReducer } from "../../../../front-app/src/js/store/current-user/reducers";
@@ -22,9 +22,11 @@ import { altrpMetaReducer } from "../../../../front-app/src/js/store/altrp-meta-
 import { altrpPageStateReducer } from "../../../../front-app/src/js/store/altrp-page-state-storage/reducers";
 import { fontsReducer } from "../../../../front-app/src/js/store/fonts-storage/reducers";
 import { exportDashboard } from "../../../../front-app/src/js/store/altrp-dashboard-export/reducers";
-import {mediaScreenReducer} from "../../../../front-app/src/js/store/media-screen-storage/reducers";
-import {editorMetasReducer} from "./editor-metas/reducers";
-import {currentPageReducer} from "../../../../front-app/src/js/store/current-page/reducers";
+import { mediaScreenReducer } from "../../../../front-app/src/js/store/media-screen-storage/reducers";
+import { editorMetasReducer } from "./editor-metas/reducers";
+import { currentPageReducer } from "../../../../front-app/src/js/store/current-page/reducers";
+import { globalStyleReducer } from "./altrp-global-colors/reducers";
+import {menusReducer} from "../../../../front-app/src/js/store/menus-storage/reducers";
 
 export default combineReducers({
   currentElement: currentElementReducer,
@@ -53,4 +55,6 @@ export default combineReducers({
   currentMediaScreen: mediaScreenReducer,
   editorMetas: editorMetasReducer,
   altrpPage: currentPageReducer,
+  globalStyles: globalStyleReducer,
+  altrpMenus: menusReducer,
 });

@@ -22,7 +22,7 @@ const RouteContentWrapper = styled.div`
       && area.settings.sidebar_location === 'left');
 
     columnsGrid += leftSidebar ? `${leftSidebar.settings.sidebar_width}` : '0';
-    columnsGrid += ` auto `;
+    columnsGrid += ` calc(100% - ${leftSidebar ? `${leftSidebar.settings.sidebar_width}` : '0'} - ${rightSidebar ? `${rightSidebar.settings.sidebar_width}` : '0'}) `;
     columnsGrid += rightSidebar ? `${rightSidebar.settings.sidebar_width}` : '0';
 
     let contentRow = '';
@@ -38,17 +38,17 @@ const RouteContentWrapper = styled.div`
     // let gridTemplateAreas = ['header', 'header', 'header', con];
     // if(leftSidebar.setting.sidebar_type === 'content_sidebar'){}
     styles += '}'
-    styles += '& .app-area_sidebar-location-left{grid-area:left-sidebar;}'
-    styles += '& .app-area_sidebar-location-right{grid-area:right-sidebar;}'
+    styles += '& .app-area_sidebar-location-left{grid-area:left-sidebar;overflow:hidden;}'
+    styles += '& .app-area_sidebar-location-right{grid-area:right-sidebar;overflow:hidden;}'
     styles += '& .app-area_header{grid-area:header;}'
     styles += '& .app-area_footer{grid-area:footer;}'
     styles += '& .app-area_content{grid-area:content;}'
+    styles += '& .altrp-section.altrp-section--full-width,& .altrp-section.altrp-section--boxed{max-width:100%;} & .sections-wrapper{max-width: 100%;width: 100%;}'
     if(rightSidebar){
       styles += rightSidebar.getCustomCSS();
     }
     if(leftSidebar){
       styles += leftSidebar.getCustomCSS();
-      console.log(leftSidebar.getCustomCSS());
     }
     return  styles;
   }}

@@ -119,6 +119,9 @@ class Handler extends ExceptionHandler
           && strpos( $request->url(), '/ajax' ) === false
           && strpos( $request->url(), '/%7B%7BURL%7D%7D' ) === false
           && strpos( $request->url(), '/storage/' ) === false
+          && strpos( $request->url(), '/modules/admin/' ) === false
+          && strpos( $request->url(), '/modules/editor/' ) === false
+          && strpos( $request->url(), '/modules/front-app/' ) === false
         ){
           logger('URL:' . $request->url());
           $preload_content = Page::getPreloadPageContent( $not_found_page['id'] );
