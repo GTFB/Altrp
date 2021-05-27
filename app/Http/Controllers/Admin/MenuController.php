@@ -62,9 +62,28 @@ class MenuController extends Controller
    * @param Menu $menu
    * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
    */
-  public function show( $id )
+  public function show( $id, Request $request )
   {
     //
+
+    if( $id === 'options' ){
+      $menus = Menu::all();
+
+      $menus = $menus->map( function( $menu ) use ( $request ){
+        $result = [];
+        if( $request->value && data_get( $menu, $request->value ) ){
+          $result['value'] = data_get( $menu, $request->value );
+          $result['label'] = data_get( $menu, 'name' );
+        } else {
+
+          $result['value'] = data_get( $menu, 'id' );
+          $result['label'] = data_get( $menu, 'name' );
+        }
+        return $result;
+      } );
+      return response()->json( $menus->toArray(), 200, [], JSON_UNESCAPED_UNICODE);
+
+    }
     $menu = Menu::find( $id );
     return response()->json( $menu->toArray(), 200, [], JSON_UNESCAPED_UNICODE);
 
@@ -132,12 +151,12 @@ class MenuController extends Controller
   }
 
   /**
-   * Получить тип файла для сохранения в БД
+   * Получить меню
    * @param \Illuminate\Http\UploadedFile $file
-   * @return string
    */
-  public static function getByGuid( $guid ){
-   $menu = Menu::where( 'guid', $guid)->get();
+  public static function getByGuid( $guid )
+  {
+   $menu = Menu::first( 'guid', $guid )->first();
    if( ! $menu ){
      return response()->json( ['success' => false,'message'=>'Menu Not Found'], 404, [], JSON_UNESCAPED_UNICODE);
    }

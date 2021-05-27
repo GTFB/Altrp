@@ -13,6 +13,7 @@ import ButtonComponent from "../../../../editor/src/js/components/widgets/styled
 import DividerComponent from "../../../../editor/src/js/components/widgets/styled-components/DividerComponent";
 import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 import TextComponent from "../../../../editor/src/js/components/widgets/styled-components/TextComponent";
+import MenuComponent from "../../../../editor/src/js/components/widgets/styled-components/MenuComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -334,6 +335,9 @@ class ElementWrapper extends Component {
       case "accordion":
         WrapperComponent = AccordionComponent;
         break
+      case "menu":
+        WrapperComponent = MenuComponent;
+        break;
     }
 
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
@@ -362,7 +366,6 @@ function mapStateToProps(state) {
     altrpMeta: state.altrpMeta,
     altrpPageState: state.altrpPageState,
     currentScreen: state.currentScreen,
-    altrpComponents: state.altrpComponents,
   };
 }
 

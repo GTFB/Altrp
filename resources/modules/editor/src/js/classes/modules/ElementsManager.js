@@ -38,6 +38,7 @@ import Table from "../elements/Table";
 import Template from "../elements/Template";
 import Posts from "../elements/Posts";
 import Map from "../elements/Map";
+import Menu from "../elements/Menu";
 import MapConstructor from "../elements/MapConstructor";
 import Diagram from "../elements/Diagram";
 import Dashboards from "../elements/Dashboards";
@@ -55,6 +56,7 @@ import TemplateWidget from "../../components/widgets/TemplateWidget";
 import Video from "../elements/Video";
 import VideoWidget from "../../components/widgets/VideoWidget";
 import SectionWidget from "../elements/SectionWidget";
+import MenuWidget from "../../components/widgets/MenuWidget";
 import SectionWidgetComponent from "../../components/SectionWidgetComponent";
 
 export default class ElementsManger {
@@ -81,6 +83,7 @@ export default class ElementsManger {
     this.elements[Accordion.getName()] = Accordion;
     this.elements[Map.getName()] = Map;
     this.elements[MapConstructor.getName()] = MapConstructor;
+    this.elements[Menu.getName()] = Menu;
     this.elements[Diagram.getName()] = Diagram;
     this.elements[Dashboards.getName()] = Dashboards;
     this.elements[Carousel.getName()] = Carousel;
@@ -115,6 +118,7 @@ export default class ElementsManger {
     this.components[Carousel.getName()] = CarouselWidget;
     this.components[Map.getName()] = MapWidget;
     this.components[MapConstructor.getName()] = MapConstructorWidget;
+    this.components[Menu.getName()] = MenuWidget;
     this.components[Diagram.getName()] = DiagramWidget;
     this.components[Dashboards.getName()] = DashboardsWidget;
     this.components[Icon.getName()] = IconWidget;

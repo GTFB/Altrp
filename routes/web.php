@@ -624,6 +624,10 @@ Route::group(['prefix' => 'ajax'], function () {
    * Отдает данные отчётов
    */
   Route::get('reports/{id}/result', 'ReportsController@report_template')->name('front.reports-for-routes');
+  /**
+   * Отдает данные menu
+   */
+  Route::get('menus/{guid}', 'Admin\MenuController@getByGuid')->name('menu.front-app');
 
   /**
    * Настройка почты
