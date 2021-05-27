@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
-import { dimensionsControllerToStyles, backgroundColorControllerToStyles, gradientControllerToStyles, filtersControllerToStyles } from "../../../../../../front-app/src/js/helpers/styles";
+import { dimensionsControllerToStyles, backgroundColorControllerToStyles, gradientStyled, filtersControllerToStyles } from "../../../../../../front-app/src/js/helpers/styles";
 
 export default styled.div`
 
@@ -32,7 +32,7 @@ ${props=>{
   const gradient = getResponsiveSetting(settings, 'gradient');
 
   if (gradient) {
-    styles += gradientControllerToStyles(gradient);
+    styles += gradientStyled(gradient);
   }
 
   const filters = getResponsiveSetting(settings, 'image_style_text_shadow')

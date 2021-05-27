@@ -14,6 +14,7 @@ import DividerComponent from "../../../../editor/src/js/components/widgets/style
 import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 import TextComponent from "../../../../editor/src/js/components/widgets/styled-components/TextComponent";
 import TableComponent from "../../../../editor/src/js/components/widgets/styled-components/TableComponent";
+import HeadingComponent from "../../../../editor/src/js/components/widgets/styled-components/HeadingComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -337,6 +338,9 @@ class ElementWrapper extends Component {
         break
       case "table":
         WrapperComponent = TableComponent;
+        break
+      case "heading":
+        WrapperComponent = HeadingComponent;
         break
     }
 

@@ -77,16 +77,42 @@ export function dimensionsControllerToStyles(data = {}, styleProperty = 'padding
   return styles;
 }
 
+/**
+ * Преобразует объект, который сохраняет контроллер box-shadow, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
 export function shadowControllerToStyles(data) {
+
   if(data) {
-    let {type, offsetX, offsetY, blurRadius, spreadRadius, color } = data;
-    return `box-shadow: ${type} ${offsetX}px ${offsetY}px ${blurRadius}px ${spreadRadius} ${color} !important;`;
+    const {type, offsetX, offsetY, blurRadius, spreadRadius, color } = data;
+
+    return `box-shadow: ${type} ${offsetX}px ${offsetY}px ${blurRadius}px ${spreadRadius} ${color} !important; `;
   }
+
+  return '';
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер text-shadow, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
+export function textShadowControllerToStyles(data) {
+
+  if(data) {
+    const {blur, colorPickedHex, horizontal, opacity, vertical } = data;
+
+    return `text-shadow: ${horizontal}px ${vertical}px ${blur}px ${colorPickedHex}; `;
+  }
+
+  return '';
 }
 
 /**
  * Преобразует объект, который сохраняет контроллер Color, в строку css для вставки в styled-компонент
  * @param {{}} data
+ * @param {string} pseudoClass
  * @return {string}
  */
 export function backgroundColorControllerToStyles(data, pseudoClass) {
@@ -109,19 +135,21 @@ export function backgroundColorControllerToStyles(data, pseudoClass) {
   return styles;
 }
 
-export function gradientControllerToStyles(data) {
+/**
+ * Преобразует объект, который сохраняет контроллер background-image, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
+ export function backgroundImageControllerToStyles(data) {
   let styles = '';
-  if (_.isEmpty(data)) {
+
+  if (_.isEmpty(data) || data.url === null) {
     return styles;
   }
 
-  if (data.isWithGradient) {
-    let { angle, firstColor, firstPoint, secondColor, secondPoint } = data;
+  const { url } = data;
 
-    return `background-image: linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%); `;
-  }
-
-  return styles;
+  return `background-image: url('${url}'); `;;
 }
 
 /**
@@ -235,7 +263,27 @@ export function columnGapStyled(data = {}) {
 
   const { size, unit } = data;
 
-  styles = `${property}: ${size + unit}; `;
+  styles = `${property}: ${size + (unit || '')}; `;
+
+  return styles;
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер Translate, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
+ 
+ export function translateStyled(data = {}) {
+  let styles = '';
+
+  if (_.isEmpty(data) || isNaN(data.size) || !data.size) {
+    return styles;
+  }
+
+  const { size, unit } = data;
+
+  styles = `transform: ${data.function}(${size + unit}); `;
 
   return styles;
 }
@@ -441,7 +489,7 @@ export function dimensionsStyled(controller, style) {
  */
 export function gradientStyled(controller) {
   if(controller.isWithGradient) {
-    return `background-image: ${controller.value};`;
+    return `background-image: ${controller.value} `;
   } else {
     return ""
   };

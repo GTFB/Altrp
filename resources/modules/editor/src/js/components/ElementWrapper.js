@@ -27,6 +27,7 @@ import AccordionComponent from "./widgets/styled-components/AccordionComponent";
 import GalleryComponent from "./widgets/styled-components/GalleryComponent";
 import TextComponent from "./widgets/styled-components/TextComponent";
 import TableComponent from "./widgets/styled-components/TableComponent";
+import HeadingComponent from "./widgets/styled-components/HeadingComponent";
 import Column from "../classes/elements/Column";
 
 class ElementWrapper extends Component {
@@ -408,6 +409,9 @@ class ElementWrapper extends Component {
         break;
       case "table":
         WrapperComponent = TableComponent;
+        break;
+      case "heading":
+        WrapperComponent = HeadingComponent;
         break;
     }
 
