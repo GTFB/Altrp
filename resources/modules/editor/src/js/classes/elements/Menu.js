@@ -2,15 +2,14 @@ import BaseElement from './BaseElement';
 import NavIcon from '../../../svgs/nav-menu.svg';
 import { advancedTabControllers } from '../../decorators/register-controllers';
 import {
-  CONTROLLER_TEXT,
-  CONTROLLER_SWITCHER,
-  CONTROLLER_NUMBER,
   CONTROLLER_DIMENSIONS,
-  CONTROLLER_SLIDER,
-  CONTROLLER_QUERY,
-  CONTROLLER_EVENT_HANDLER,
   TAB_CONTENT,
-  TAB_STYLE, CONTROLLER_SELECT2, CONTROLLER_SELECT, CONTROLLER_COLOR,
+  TAB_STYLE,
+  CONTROLLER_SELECT2,
+  CONTROLLER_SELECT,
+  CONTROLLER_COLOR,
+  CONTROLLER_TYPOGRAPHIC,
+  CONTROLLER_SHADOW,
 } from '../modules/ControllersManager';
 
 class Map extends BaseElement {
@@ -71,6 +70,54 @@ class Map extends BaseElement {
       label: 'Colors',
     });
 
+
+    this.endControlSection();
+
+    this.startControlSection('menu_styles', {
+      tab: TAB_STYLE,
+      label: 'Menu',
+    });
+
+    this.addControl('menu_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      stateless: true,
+      label: 'Padding',
+    })
+
+    this.addControl('menu_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+    })
+
+    this.addControl('menu_bg',{
+      label: 'Background Color',
+      type: CONTROLLER_COLOR,
+    })
+
+    this.endControlSection();
+
+    this.startControlSection('items', {
+      tab: TAB_STYLE,
+      label: 'Items',
+    });
+
+    this.addControl('gap', {
+      label: 'Items Gap',
+      dynamic: false,
+      stateless: true,
+      description: '3px etc.'
+    })
+
+    this.addControl('padding', {
+      type: CONTROLLER_DIMENSIONS,
+      stateless: true,
+      label: 'Padding',
+    })
+
+    this.addControl('typographic', {
+      type: CONTROLLER_TYPOGRAPHIC,
+    })
+
     this.addControl('bg',{
       label: 'Background Color',
       type: CONTROLLER_COLOR,
@@ -82,6 +129,35 @@ class Map extends BaseElement {
     })
 
     this.endControlSection();
+
+    this.startControlSection('sub_menu_styles', {
+      tab: TAB_STYLE,
+      label: 'Sub Menu',
+    });
+
+    this.addControl('sub_menu_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      stateless: true,
+      label: 'Padding',
+    })
+
+    this.addControl('sub_menu_bg',{
+      label: 'Background Color',
+      type: CONTROLLER_COLOR,
+    })
+
+    this.addControl('sub_menu_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+    })
+
+    this.addControl('sub_menu_shadow',{
+      label: 'Shadow',
+      type: CONTROLLER_SHADOW,
+    })
+
+    this.endControlSection();
+
     advancedTabControllers(this);
   }
 }

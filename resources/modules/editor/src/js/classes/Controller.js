@@ -167,6 +167,14 @@ class Controller {
     }
     return this.data.controlId + getElementSettingsSuffix(this);
   }
+
+  /**
+   *
+   * @return {boolean}
+   */
+  isStateless(){
+    return ! ! this.data.stateless
+  }
 }
 
 export default Controller;

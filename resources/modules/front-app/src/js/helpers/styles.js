@@ -74,6 +74,21 @@ export function dimensionsControllerToStyles(data = {}, styleProperty = 'padding
       }
 
     }break;
+    case 'border-radius':{
+      if(top){
+        styles += `border-top-left-radius: ${top}${unit}; `;
+      }
+      if(right){
+        styles += `border-top-right-radius: ${right}${unit}; `;
+      }
+      if(bottom){
+        styles += `border-bottom-right-radius: ${bottom}${unit}; `;
+      }
+      if(left){
+        styles += `border-bottom-left-radius: ${left}${unit}; `;
+      }
+
+    }break;
     default:{
       if(left){
         styles += `${styleProperty}-left: ${left}${unit}; `;
@@ -92,11 +107,18 @@ export function dimensionsControllerToStyles(data = {}, styleProperty = 'padding
   return styles;
 }
 
+/**
+ *
+ * @param {{}}data
+ * @return {string}
+ */
 export function shadowControllerToStyles(data) {
   if(data) {
-    let {type, offsetX, offsetY, blurRadius, spreadRadius, color } = data;
-    return `box-shadow: ${type} ${offsetX}px ${offsetY}px ${blurRadius}px ${spreadRadius} ${color} !important;`;
+    let {type = 'outline', offsetX,horizontal, offsetY, vertical, blurRadius,blur,spread, spreadRadius, color } = data;
+    console.log(data);
+    return `box-shadow: ${type || ' '} ${offsetX||horizontal || 0}px ${offsetY || vertical || 0}px ${blurRadius || blur || 0}px ${spreadRadius ||spread || 0}px ${color};`;
   }
+  return  '';
 }
 
 /**

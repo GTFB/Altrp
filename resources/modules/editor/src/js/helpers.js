@@ -147,7 +147,7 @@ export function iconsManager() {
  */
 export function getElementSettingsSuffix(controller, ignoreResponse = false) {
   let suffix_1 = getElementState().value;
-  if (controller.type === "repeater") {
+  if (controller.type === "repeater" || controller.isStateless()) {
     suffix_1 = "";
   }
   let suffix_2 =
@@ -160,7 +160,7 @@ export function getElementSettingsSuffix(controller, ignoreResponse = false) {
   if (!(suffix_2 || suffix_1)) {
     return "";
   }
-  return `_${controller.stateless ? "" : getElementState().value}_${suffix_2}`;
+  return `_${suffix_1}_${suffix_2}`;
 }
 
 /**
