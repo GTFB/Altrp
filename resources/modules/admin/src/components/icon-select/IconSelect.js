@@ -6,8 +6,8 @@ import styled from "styled-components";
 
 const IconSelectWrapper = styled.div`
   & svg{
-    max-width: 200px;
-    max-height: 200px;
+    max-width: ${({maxWidth}) => maxWidth || '200px'};
+    max-height: ${({maxHeight}) => maxHeight || '200px'};
   }
   & .altrp-icon-select__content{
     padding: 20px;
@@ -22,19 +22,31 @@ class IconSelect extends Component {
     const assetsSettings = {
       tabs: ['icons'],
       onChoose: async (icon)=>{
-        try {
-          fetch(icon.url).then(res => res.text()).then(res=>{
-            this.props.onChange && this.props.onChange(res)
-          });
-        }catch (e) {
-          console.error(e);
+        let returnType = this.props.returnType;
+        if(! returnType){
+          returnType = 'object';
+        }
+        switch (returnType){
+          case 'object':{
+            this.props.onChange && this.props.onChange(icon)
+          }break;
+          case 'text':{
+            try {
+              fetch(icon.url).then(res => res.text()).then(res=>{
+                this.props.onChange && this.props.onChange(res)
+              });
+            }catch (e) {
+              console.error(e);
+              this.props.onChange && this.props.onChange('')
+            }
+          }break;
         }
       }
     };
     store.dispatch(assetsShow(assetsSettings))
   }
   render(){
-    return <IconSelectWrapper className="altrp-icon-select" onClick={this.openAssetsBrowser}>
+    return <IconSelectWrapper className="altrp-icon-select" onClick={this.openAssetsBrowser} {...this.props}>
       {this.props.value ?
         <div className="altrp-icon-select__content " dangerouslySetInnerHTML={{__html: this.props.value}}/>
         : iconsManager().renderIcon('add')}

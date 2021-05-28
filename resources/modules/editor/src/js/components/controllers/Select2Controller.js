@@ -273,9 +273,10 @@ class Select2Controller extends Component {
           <SelectComponent isClearable={true} {...selectProps} />
           {id != null && typeof id != "undefined" && (
             <a target="_blank" href={`/admin/editor?template_id=${id}`}>
-              Go to template
+              Go to Template
             </a>
           )}
+          {this.props.after}
         </div>
       </div>
     );

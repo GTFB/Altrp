@@ -19,6 +19,7 @@
   @if( env( 'ALTRP_SETTING_ADMIN_LOGO' ) )
   <script>
     window.admin_logo = {!! env( 'ALTRP_SETTING_ADMIN_LOGO' ) !!};
+    window.altrpMenus = [];
   </script>
   @endif
   <script>

@@ -14,6 +14,7 @@ if (typeof performance === "undefined") {
 global.window = {
   parent: {}
 };
+global.window.altrpMenus = [];
 global.SSR = true;
 global.window.SSR = true;
 // global.document = {

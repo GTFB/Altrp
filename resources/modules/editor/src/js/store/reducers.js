@@ -26,6 +26,7 @@ import { mediaScreenReducer } from "../../../../front-app/src/js/store/media-scr
 import { editorMetasReducer } from "./editor-metas/reducers";
 import { currentPageReducer } from "../../../../front-app/src/js/store/current-page/reducers";
 import { globalStyleReducer } from "./altrp-global-colors/reducers";
+import {menusReducer} from "../../../../front-app/src/js/store/menus-storage/reducers";
 
 export default combineReducers({
   currentElement: currentElementReducer,
@@ -54,5 +55,6 @@ export default combineReducers({
   currentMediaScreen: mediaScreenReducer,
   editorMetas: editorMetasReducer,
   altrpPage: currentPageReducer,
-  globalStyles: globalStyleReducer
+  globalStyles: globalStyleReducer,
+  altrpMenus: menusReducer,
 });

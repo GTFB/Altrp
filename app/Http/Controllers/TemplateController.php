@@ -536,6 +536,7 @@ class TemplateController extends Controller
                   JSON_UNESCAPED_UNICODE
                 );
               }
+              clearAllCache();
             }
             break;
           case 'page'; {
@@ -557,6 +558,7 @@ class TemplateController extends Controller
                     JSON_UNESCAPED_UNICODE
                   );
                 }
+                clearPageCache( $id );
               }
             }
             break;
@@ -579,6 +581,7 @@ class TemplateController extends Controller
                     JSON_UNESCAPED_UNICODE
                   );
                 }
+                clearPageCache( $id );
               }
             }
             break;

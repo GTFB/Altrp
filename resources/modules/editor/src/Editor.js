@@ -334,6 +334,7 @@ class Editor extends Component {
           </div>
         </div>
         <AssetsBrowser />
+
       </DndProvider>
     );
   }

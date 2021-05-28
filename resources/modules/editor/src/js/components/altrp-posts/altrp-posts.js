@@ -95,7 +95,7 @@ class AltrpPosts extends React.Component {
     const hoverTemplateId = _.get(this.props.settings, 'posts_card_hover_template', null);
     const transitionType = _.get(this.props.settings, 'posts_transition_type', null);
     let post = _.cloneDeep(this.props.data[idx] || this.props.data);
-    let PostContentComponent = post.component || <h2>{post.title || post.id || ''}</h2>;
+    let PostContentComponent = post.component || '';
     if(this.state.simpleTemplate){
       let template = frontElementsFabric.cloneElement(this.state.simpleTemplate);
       template.setCardModel(new AltrpModel(post), idx);

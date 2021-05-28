@@ -164,6 +164,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "menu",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'MenuWidget' */ "../../../../editor/src/js/components/widgets/MenuWidget"
+          );
+        }
+      },
+      {
         name: "diagram",
         import: async () => {
           return await import(

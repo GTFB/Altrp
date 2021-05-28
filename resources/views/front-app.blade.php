@@ -138,6 +138,7 @@
   window.current_user = {!! json_encode( getCurrentUser() ) !!};
   window.model_data = {!! json_encode( $model_data ) !!};
   window.altrpPreloadedDatasources = {!! json_encode( $datasources ?? '' ) !!};
+  window.altrpMenus = [];
   /* ]]> */
 </script>
 <script src="{{ altrp_asset( '/modules/front-app/front-app.js', 'http://localhost:3001/' ) }}" defer></script>

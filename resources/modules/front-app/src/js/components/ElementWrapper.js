@@ -15,6 +15,7 @@ import AccordionComponent from "../../../../editor/src/js/components/widgets/sty
 import TextComponent from "../../../../editor/src/js/components/widgets/styled-components/TextComponent";
 import TableComponent from "../../../../editor/src/js/components/widgets/styled-components/TableComponent";
 import HeadingComponent from "../../../../editor/src/js/components/widgets/styled-components/HeadingComponent";
+import MenuComponent from "../../../../editor/src/js/components/widgets/styled-components/MenuComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -301,6 +302,7 @@ class ElementWrapper extends Component {
       updateToken: this.state.updateToken,
       currentScreen: this.props.currentScreen,
       baseRender: this.props.baseRender,
+      history: this.props.history,
       appStore
     });
     if (this.props.element.getTemplateType() === 'email') {
@@ -342,12 +344,16 @@ class ElementWrapper extends Component {
       case "heading":
         WrapperComponent = HeadingComponent;
         break
+      case "menu":
+        WrapperComponent = MenuComponent;
+        break;
     }
 
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
       <WrapperComponent
         className={classes}
         ref={this.elementWrapperRef}
+        elementId={this.props.element.getId()}
         settings={this.props.element.getSettings()}
         style={styles}
         id={this.CSSId}
@@ -370,7 +376,6 @@ function mapStateToProps(state) {
     altrpMeta: state.altrpMeta,
     altrpPageState: state.altrpPageState,
     currentScreen: state.currentScreen,
-    altrpComponents: state.altrpComponents,
   };
 }
 

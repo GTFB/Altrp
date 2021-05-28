@@ -8,13 +8,11 @@ import store from "../src/js/store/store";
 import _ from "lodash";
 import IconsManager from "./js/classes/modules/IconsManager";
 import "./sass/editor-style.scss";
-console.log(window.React ?? {});
+import controllerHistory from "./js/classes/ControllerHistory";
 
 window.React = React;
 window.ReactDOM = ReactDOM;
 window.Component = Component;
-console.log(window.React ?? {});
-import controllerHistory from "./js/classes/ControllerHistory";
 
 window._ = _;
 // let cloneDeep = _.cloneDeep;
