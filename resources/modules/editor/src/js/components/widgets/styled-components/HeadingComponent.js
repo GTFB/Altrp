@@ -6,11 +6,7 @@ import {
   colorPropertyStyled,
   dimensionsControllerToStyles,
   typographicControllerToStyles,
-  filtersControllerToStyles,
-  marginTopLeftStyled,
-  iconSizeStyled,
   sizeStyled,
-  shadowControllerToStyles,
   textShadowControllerToStyles,
   opacityStyled,
   gradientStyled,
@@ -744,7 +740,7 @@ const HeadingComponent = styled.div`
         styles += colorPropertyStyled(color, 'stroke');
       }
 
-      console.log(styles)
+      console.log('84578')
 
       return styles;
 

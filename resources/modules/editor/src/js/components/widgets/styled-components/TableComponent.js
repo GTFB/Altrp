@@ -2643,27 +2643,30 @@ const TableComponent = styled.div`
     }
   }
 
-  ${props => {
+  && .altrp-image {
+     
+    ${props => {
 
-    const { settings } = props;
-    let styles = '';
+      const { settings } = props;
+      let styles = '';
 
-    let filters;
+      let filters;
 
-    //Получаем значения filters из контроллера, обрабатываем и добавляем в styles
+      //Получаем значения filters из контроллера, обрабатываем и добавляем в styles
 
-    if (settings !== undefined) {
-      filters = getResponsiveSetting(settings, 'filter_style_border_shadow');
+      if (settings !== undefined) {
+        filters = getResponsiveSetting(settings, 'filter_style_border_shadow');
+      }
+
+      if (filters) {
+        styles += filtersControllerToStyles(filters);
+      }
+
+      return styles; 
+
+      }
+      }
     }
-
-    if (filters) {
-      styles += filtersControllerToStyles(filters);
-    }
-
-    return styles;  //возвращается строка с селектором "& .altrp-image"
-
-    }
-  }
 `;
 
 export default TableComponent;

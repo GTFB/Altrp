@@ -166,7 +166,7 @@ export function filtersControllerToStyles(data) {
 
   let { blur = '0', brightness = '100', contrast = '100', hue = '0', saturate, saturation } = data;
 
-  return `& .altrp-image {filter: blur(${blur}px) brightness(${brightness}%) contrast(${contrast}%) saturate(${saturate || saturation || '100'}%) hue-rotate(${hue}deg);} `;
+  return `filter: blur(${blur}px) brightness(${brightness}%) contrast(${contrast}%) saturate(${saturate || saturation || '100'}%) hue-rotate(${hue}deg); `;
 
 }
 
@@ -257,11 +257,17 @@ export function columnGapStyled(data = {}) {
  export function sizeStyled(data = {}, property) {
   let styles = '';
 
-  if (_.isEmpty(data)) {
+  if (_.isEmpty(data) || data.size === undefined) {
     return styles;
   }
 
   const { size, unit } = data;
+
+  if (property === 'transition-duration' || property === 'animation-duration') {
+    styles = `${property}: ${size}s; `;
+
+    return styles;
+  }
 
   styles = `${property}: ${size + (unit || '')}; `;
 
