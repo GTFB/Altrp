@@ -515,7 +515,7 @@ class CreativeLinkController extends Component {
         {
           this.state.activeColor ?
             <div id="colorPicker" className="control-color-colorPicker">
-              <SketchPicker width="90%" presetColors={this.props.presetColors} color={value.colorRGB}
+              <SketchPicker width="90%" presetColors={[]} color={value.colorRGB}
                             onChange={this.colorChange} className="sketchPicker" />
             </div>
             : ""
@@ -539,7 +539,7 @@ class CreativeLinkController extends Component {
         {
           this.state.secondActiveColor ?
             <div id="colorPicker" className="control-color-colorPicker">
-              <SketchPicker width="90%" presetColors={this.props.presetColors} color={value.secondColorRGB}
+              <SketchPicker width="90%" presetColors={[]} color={value.secondColorRGB}
                             onChange={this.secondColorChange} className="sketchPicker" />
             </div>
             : ""
@@ -563,7 +563,7 @@ class CreativeLinkController extends Component {
         {
           this.state.thirdActiveColor ?
             <div id="colorPicker" className="control-color-colorPicker">
-              <SketchPicker width="90%" presetColors={this.props.presetColors} color={value.thirdColorRGB}
+              <SketchPicker width="90%" presetColors={[]} color={value.thirdColorRGB}
                             onChange={this.thirdColorChange} className="sketchPicker" />
             </div>
             : ""
@@ -587,7 +587,7 @@ class CreativeLinkController extends Component {
         {
           this.state.fourthActiveColor ?
             <div id="colorPicker" className="control-color-colorPicker">
-              <SketchPicker width="90%" presetColors={this.props.presetColors} color={value.fourthColorRGB}
+              <SketchPicker width="90%" presetColors={[]} color={value.fourthColorRGB}
                             onChange={this.fourthColorChange} className="sketchPicker" />
             </div>
             : ""
@@ -611,7 +611,7 @@ class CreativeLinkController extends Component {
         {
           this.state.activeBackground ?
             <div id="backgroundPicker" className="control-color-backgroundPicker">
-              <SketchPicker width="90%" presetColors={this.props.presetColors} background={value.backgroundRGB}
+              <SketchPicker width="90%" presetColors={[]} background={value.backgroundRGB}
                             onChange={this.backgroundChange} className="sketchPicker" />
             </div>
             : <div></div>
