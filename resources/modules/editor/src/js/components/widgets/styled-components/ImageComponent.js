@@ -47,7 +47,7 @@ export default styled.div`
       //Получаем значения background-color:hover из контроллера, обрабатываем и добавляем в styles
       
       if (settings !== undefined) {
-        backgroundColorHover = getResponsiveSetting(settings, 'background_color_:hover_');
+        backgroundColorHover = getResponsiveSetting(settings, 'background_color', ':hover');
       }
       
       if (backgroundColorHover) {
