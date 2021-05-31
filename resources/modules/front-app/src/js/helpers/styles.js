@@ -110,32 +110,6 @@ export function textShadowControllerToStyles(data) {
 }
 
 /**
- * Преобразует объект, который сохраняет контроллер Color, в строку css для вставки в styled-компонент
- * @param {{}} data
- * @param {string} pseudoClass
- * @return {string}
- */
-export function backgroundColorControllerToStyles(data, pseudoClass) {
-  let styles = '';
-  if (_.isEmpty(data)) {
-    return styles;
-  }
-
-  if (data) {
-    let { colorPickedHex } = data;
-
-    if (pseudoClass !== undefined) {
-      return `&:${pseudoClass} {background-color: ${colorPickedHex};} `;
-    }
-
-    return `background-color: ${colorPickedHex}; `;
-
-  }
-
-  return styles;
-}
-
-/**
  * Преобразует объект, который сохраняет контроллер background-image, в строку css для вставки в styled-компонент
  * @param {{}} data
  * @return {string}
@@ -199,8 +173,10 @@ export function simplePropertyStyled(style, styleProperty, declaration = '') {
 
 export function colorPropertyStyled(data, styleProperty, declaration = '') {
 
-  if (data.colorPickedHex) {
-    return `${styleProperty}: ${data.colorPickedHex + declaration}; `;
+  const {colorPickedHex} = data;
+
+  if (colorPickedHex) {
+    return `${styleProperty}: ${colorPickedHex + declaration}; `;
   } 
   
   return '';

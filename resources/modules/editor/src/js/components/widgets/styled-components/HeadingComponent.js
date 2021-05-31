@@ -756,6 +756,61 @@ const HeadingComponent = styled.div`
     }
   }
 
+  && .altrp-heading {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let borderType, borderWidth, borderColor, borderRadius;
+
+      //Получаем значения border-type из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderType = getResponsiveSetting(settings, 'style_border_type');
+      }
+
+      if (borderType) {
+        styles += simplePropertyStyled(borderType, 'border-style');
+      }
+
+      //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderWidth = getResponsiveSetting(settings, 'style_border_width');
+      }
+
+      if (borderWidth) {
+        styles += borderWidthStyled(borderWidth);
+      }
+
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderColor = getResponsiveSetting(settings, 'style_border_color');
+      }
+
+      if (borderColor) {
+        styles += colorPropertyStyled(borderColor, 'border-color');
+      }
+
+      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        borderRadius = getResponsiveSetting(settings, 'style_border_radius');
+      }
+
+      if (borderRadius) {
+        styles += sizeStyled(borderRadius, 'border-radius');
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .altrp-heading,
   && .altrp-heading a {
 
@@ -764,7 +819,7 @@ const HeadingComponent = styled.div`
       const { settings } = props;
       let styles = '';
 
-      let color, typographic, textShadow, margin, padding, zIndex, backgroundColor, opacity, gradient, borderType, borderWidth, borderColor, borderRadius, transform;
+      let color, typographic, textShadow, margin, padding, zIndex, backgroundColor, opacity, gradient, transform;
 
       //Получаем значения color из контроллера, обрабатываем и добавляем в styles
 
@@ -854,46 +909,6 @@ const HeadingComponent = styled.div`
 
       if (gradient) {
         styles += gradientStyled(gradient);
-      }
-
-      //Получаем значения border-type из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        borderType = getResponsiveSetting(settings, 'style_border_type');
-      }
-
-      if (borderType) {
-        styles += simplePropertyStyled(borderType, 'border-style');
-      }
-
-      //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        borderWidth = getResponsiveSetting(settings, 'style_border_width');
-      }
-
-      if (borderWidth) {
-        styles += borderWidthStyled(borderWidth);
-      }
-
-      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        borderColor = getResponsiveSetting(settings, 'style_border_color');
-      }
-
-      if (borderColor) {
-        styles += colorPropertyStyled(borderColor, 'border-color');
-      }
-
-      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles 
-
-      if (settings !== undefined) {
-        borderRadius = getResponsiveSetting(settings, 'style_border_radius');
-      }
-
-      if (borderRadius) {
-        styles += sizeStyled(borderRadius, 'border-radius');
       }
 
       //Получаем значения transform из контроллера, обрабатываем и добавляем в styles 

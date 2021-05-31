@@ -59,6 +59,51 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-table:hover {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let borderType, borderWidth, borderColor;
+
+      //Получаем значения border-type из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderType = getResponsiveSetting(settings, 'table_style_table_border_type', ':hover');
+      }
+
+      if (borderType) {
+        styles += simplePropertyStyled(borderType, 'border-style', '!important');
+      }
+
+      //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderWidth = getResponsiveSetting(settings, 'table_style_table_border_width', ':hover');
+      }
+
+      if (borderWidth) {
+        styles += borderWidthStyled(borderWidth, '!important');
+      }
+
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderColor = getResponsiveSetting(settings, 'table_style_table_border_color', ':hover');
+      }
+
+      if (borderColor) {
+        styles += colorPropertyStyled(borderColor, 'border-color', '!important');
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .altrp-pagination__next {
 
     ${props => {
@@ -82,6 +127,41 @@ const TableComponent = styled.div`
 
       if (settings !== undefined) {
         margin = getResponsiveSetting(settings, 'next_page_button_margin');
+      }
+
+      if (margin) {
+        styles += dimensionsControllerToStyles(margin, 'margin');
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
+  && .altrp-pagination__next:hover {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let flexDirection, margin;
+
+      //Получаем значения flex-direction из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        flexDirection = getResponsiveSetting(settings, 'next_icon_position', ':hover');
+      }
+
+      if (flexDirection) {
+        styles += simplePropertyStyled(flexDirection, 'flex-direction');
+      }
+
+      //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        margin = getResponsiveSetting(settings, 'next_page_button_margin', ':hover');
       }
 
       if (margin) {
@@ -129,6 +209,41 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-pagination__next:hover svg {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let margin, iconSize;
+
+      //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        margin = getResponsiveSetting(settings, 'next_icon_margin', ':hover');
+      }
+
+      if (margin) {
+        styles += dimensionsControllerToStyles(margin, 'margin');
+      }
+
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        iconSize = getResponsiveSetting(settings, 'next_icon_size', ':hover');
+      }
+
+      if (iconSize) {
+        styles += iconSizeStyled(iconSize);
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .altrp-pagination__next img {
 
     ${props => {
@@ -154,6 +269,31 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-pagination__next:hover img {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let iconSize;
+
+      //Получаем значения width из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        iconSize = getResponsiveSetting(settings, 'next_icon_size', ':hover');
+      }
+
+      if (iconSize) {
+        styles += sizeStyled(iconSize, 'width');
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .altrp-pagination__next path {
 
     ${props => {
@@ -167,6 +307,31 @@ const TableComponent = styled.div`
 
       if (settings !== undefined) {
         iconFill = getResponsiveSetting(settings, 'next_icon_color');
+      }
+
+      if (iconFill) {
+        styles += colorPropertyStyled(iconFill, 'fill');
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
+  && .altrp-pagination__next:hover path {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let iconFill;
+
+      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        iconFill = getResponsiveSetting(settings, 'next_icon_color', ':hover');
       }
 
       if (iconFill) {
@@ -214,6 +379,41 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-pagination__previous:hover {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let flexDirection, margin;
+
+      //Получаем значения flex-direction из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        flexDirection = getResponsiveSetting(settings, 'prev_icon_position', ':hover');
+      }
+
+      if (flexDirection) {
+        styles += simplePropertyStyled(flexDirection, 'flex-direction');
+      }
+
+      //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        margin = getResponsiveSetting(settings, 'prev_page_button_margin', ':hover');
+      }
+
+      if (margin) {
+        styles += dimensionsControllerToStyles(margin, 'margin');
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .altrp-pagination__previous svg {
 
     ${props => {
@@ -249,6 +449,41 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-pagination__previous:hover svg {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let margin, iconSize;
+
+      //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        margin = getResponsiveSetting(settings, 'prev_icon_padding', ':hover');
+      }
+
+      if (margin) {
+        styles += dimensionsControllerToStyles(margin, 'margin');
+      }
+
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        iconSize = getResponsiveSetting(settings, 'prev_icon_size', ':hover');
+      }
+
+      if (iconSize) {
+        styles += iconSizeStyled(iconSize);
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .altrp-pagination__previous img {
 
     ${props => {
@@ -264,6 +499,31 @@ const TableComponent = styled.div`
         iconSize = getResponsiveSetting(settings, 'prev_icon_size');
       }
   
+      if (iconSize) {
+        styles += sizeStyled(iconSize, 'width');
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
+  && .altrp-pagination__previous:hover img {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let iconSize;
+
+      //Получаем значения width из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        iconSize = getResponsiveSetting(settings, 'prev_icon_size', ':hover');
+      }
+
       if (iconSize) {
         styles += sizeStyled(iconSize, 'width');
       }
@@ -299,6 +559,31 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-pagination__previous:hover path {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let iconFill;
+
+      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        iconFill = getResponsiveSetting(settings, 'prev_icon_color', ':hover');
+      }
+
+      if (iconFill) {
+        styles += colorPropertyStyled(iconFill, 'fill');
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .replace-text {
 
     ${props => {
@@ -322,6 +607,41 @@ const TableComponent = styled.div`
 
       if (settings !== undefined) {
         typographic = getResponsiveSetting(settings, 'replace_text_typographic');
+      }
+
+      if (typographic) {
+        styles += typographicControllerToStyles(typographic);
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
+  && .replace-text:hover {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let color, typographic;
+
+      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'replace_text_color', ':hover');
+      }
+
+      if (color) {
+        styles += colorPropertyStyled(color, 'color');
+      }
+
+      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        typographic = getResponsiveSetting(settings, 'replace_text_typographic', ':hover');
       }
 
       if (typographic) {
@@ -394,6 +714,31 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-table-th:hover .grouped-column {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let padding;
+
+      //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        padding = getResponsiveSetting(settings, 'grouped_column_icon_padding', ':hover');
+      }
+
+      if (padding) {
+        styles += dimensionsControllerToStyles(padding);
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .altrp-table-th path {
 
     ${props => {
@@ -409,6 +754,31 @@ const TableComponent = styled.div`
         iconFill = getResponsiveSetting(settings, 'grouped_column_icon_color');
       }
   
+      if (iconFill) {
+        styles += colorPropertyStyled(iconFill, 'fill');
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
+  && .altrp-table-th:hover path {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let iconFill;
+
+      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        iconFill = getResponsiveSetting(settings, 'grouped_column_icon_color', ':hover');
+      }
+
       if (iconFill) {
         styles += colorPropertyStyled(iconFill, 'fill');
       }
@@ -446,6 +816,33 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-table-th:hover .grouped-column,
+  && .altrp-table-th:hover svg,
+  && .altrp-table-th:hover img {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let iconSize;
+
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+  
+      if (settings !== undefined) {
+        iconSize = getResponsiveSetting(settings, 'grouped_column_icon_size', ':hover');
+      }
+  
+      if (iconSize) {
+        styles += iconSizeStyled(iconSize);
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .altrp-table-th .not-grouped-column {
 
     ${props => {
@@ -471,6 +868,31 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-table-th:hover .not-grouped-column {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let padding;
+
+      //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        padding = getResponsiveSetting(settings, 'not_grouped_column_icon_padding', ':hover');
+      }
+
+      if (padding) {
+        styles += dimensionsControllerToStyles(padding);
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .altrp-table-th .not-grouped-column path {
 
     ${props => {
@@ -484,6 +906,31 @@ const TableComponent = styled.div`
 
       if (settings !== undefined) {
         iconFill = getResponsiveSetting(settings, 'not_grouped_column_icon_color');
+      }
+
+      if (iconFill) {
+        styles += colorPropertyStyled(iconFill, 'fill');
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
+  && .altrp-table-th:hover .not-grouped-column path {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let iconFill;
+
+      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        iconFill = getResponsiveSetting(settings, 'not_grouped_column_icon_color', ':hover');
       }
 
       if (iconFill) {
@@ -523,6 +970,33 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-table-th:hover .not-grouped-column,
+  && .altrp-table-th:hover .not-grouped-column svg,
+  && .altrp-table-th:hover .not-grouped-column img {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let iconSize;
+
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+  
+      if (settings !== undefined) {
+        iconSize = getResponsiveSetting(settings, 'not_grouped_column_icon_size', ':hover');
+      }
+  
+      if (iconSize) {
+        styles += iconSizeStyled(iconSize);
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .expanded-row {
 
     ${props => {
@@ -548,6 +1022,31 @@ const TableComponent = styled.div`
     }
   }
 
+  && .expanded-row:hover {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let padding;
+
+      //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        padding = getResponsiveSetting(settings, 'expanded_row_icon_padding', ':hover');
+      }
+
+      if (padding) {
+        styles += dimensionsControllerToStyles(padding);
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .expanded-row path {
 
     ${props => {
@@ -561,6 +1060,31 @@ const TableComponent = styled.div`
 
       if (settings !== undefined) {
         iconFill = getResponsiveSetting(settings, 'expanded_row_icon_color');
+      }
+
+      if (iconFill) {
+        styles += colorPropertyStyled(iconFill, 'fill');
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
+  && .expanded-row:hover path {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let iconFill;
+
+      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        iconFill = getResponsiveSetting(settings, 'expanded_row_icon_color', ':hover');
       }
 
       if (iconFill) {
@@ -600,6 +1124,33 @@ const TableComponent = styled.div`
     }
   }
 
+  && .expanded-row:hover,
+  && .expanded-row svg:hover,
+  && .expanded-row img:hover {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let iconSize;
+
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+  
+      if (settings !== undefined) {
+        iconSize = getResponsiveSetting(settings, 'expanded_row_icon_size', ':hover');
+      }
+  
+      if (iconSize) {
+        styles += iconSizeStyled(iconSize);
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .not-expanded-row {
 
     ${props => {
@@ -625,6 +1176,31 @@ const TableComponent = styled.div`
     }
   }
 
+  && .not-expanded-row:hover {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let padding;
+
+      //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        padding = getResponsiveSetting(settings, 'not_expanded_row_icon_padding', ':hover');
+      }
+
+      if (padding) {
+        styles += dimensionsControllerToStyles(padding);
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .not-expanded-row path {
 
     ${props => {
@@ -638,6 +1214,31 @@ const TableComponent = styled.div`
 
       if (settings !== undefined) {
         iconFill = getResponsiveSetting(settings, 'not_expanded_row_icon_color');
+      }
+
+      if (iconFill) {
+        styles += colorPropertyStyled(iconFill, 'fill');
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
+  && .not-expanded-row:hover path {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let iconFill;
+
+      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        iconFill = getResponsiveSetting(settings, 'not_expanded_row_icon_color', ':hover');
       }
 
       if (iconFill) {
@@ -677,7 +1278,35 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-tbody--striped tr:nth-child(2n) {
+  && .not-expanded-row:hover,
+  && .not-expanded-row svg:hover,
+  && .not-expanded-row img:hover {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let iconSize;
+
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        iconSize = getResponsiveSetting(settings, 'not_expanded_row_icon_size', ':hover');
+      }
+
+      if (iconSize) {
+        styles += iconSizeStyled(iconSize);
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
+  && .altrp-table-tbody--striped tr:nth-child(2n),
+  && .altrp-table-tbody--striped .altrp-table-tr:nth-child(2n) {
 
     ${props => {
 
@@ -702,7 +1331,8 @@ const TableComponent = styled.div`
     }
   }
 
-  && .altrp-table-tbody--striped .altrp-table-tr:nth-child(2n) {
+  && .altrp-table-tbody--striped tr:nth-child(2n):hover,
+  && .altrp-table-tbody--striped .altrp-table-tr:nth-child(2n):hover {
 
     ${props => {
 
@@ -714,7 +1344,7 @@ const TableComponent = styled.div`
       //Получаем значения stripe-color из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
-        color = getResponsiveSetting(settings, 'table_style_table_stripe_color');
+        color = getResponsiveSetting(settings, 'table_style_table_stripe_color', ':hover');
       }
 
       if (color) {
@@ -814,6 +1444,92 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-field:hover, 
+  && .altrp-table__filter-select:hover>.altrp-field-select2__control {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let color, backgroundColor, inputPadding, typographic, borderType, borderWidth, borderColor;
+
+      //Получаем значения filter-color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'filter_style_table_text_color', ':hover');
+      }
+
+      if (color) {
+        styles += colorPropertyStyled(color, 'color', '!important');
+      }
+
+      //Получаем значения filter-background-color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        backgroundColor = getResponsiveSetting(settings, 'filter_style_table_background_color', ':hover');
+      }
+
+      if (backgroundColor) {
+        styles += colorPropertyStyled(backgroundColor, 'background-color', '!important');
+      }
+
+      //Получаем значения filter-input-padding из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        inputPadding = getResponsiveSetting(settings, 'filter_padding', ':hover');
+      }
+
+      if (inputPadding) {
+        styles += dimensionsControllerToStyles(inputPadding);
+      }
+
+      //Получаем значения filter-typographic из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        typographic = getResponsiveSetting(settings, 'filter_style_typographic', ':hover');
+      }
+
+      if (typographic) {
+        styles += typographicControllerToStyles(typographic);
+      }
+
+      //Получаем значения filter-border-type из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderType = getResponsiveSetting(settings, 'filter_style_table_border_type', ':hover');
+      }
+
+      if (borderType) {
+        styles += simplePropertyStyled(borderType, 'border-style', '!important');
+      }
+
+      //Получаем значения filter-border-width из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderWidth = getResponsiveSetting(settings, 'filter_style_table_border_width', ':hover');
+      }
+
+      if (borderWidth) {
+        styles += borderWidthStyled(borderWidth, '!important');
+      }
+
+      //Получаем значения filter-border-color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderColor = getResponsiveSetting(settings, 'filter_style_table_border_color', ':hover');
+      }
+
+      if (borderColor) {
+        styles += colorPropertyStyled(borderColor, 'border-color', '!important');
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .altrp-label {
 
     ${props => {
@@ -827,6 +1543,31 @@ const TableComponent = styled.div`
 
       if (settings !== undefined) {
         labelPadding = getResponsiveSetting(settings, 'label_padding');
+      }
+
+      if (labelPadding) {
+        styles += dimensionsControllerToStyles(labelPadding);
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
+  && .altrp-label:hover {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let labelPadding;
+
+      //Получаем значения filter-label-padding из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        labelPadding = getResponsiveSetting(settings, 'label_padding', ':hover');
       }
 
       if (labelPadding) {
@@ -934,6 +1675,101 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-table-th:hover {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let typographic, color, padding, borderType, borderColor, borderWidth, backgroundColor, textAlign;
+
+      //Получаем значения text-align из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        textAlign = getResponsiveSetting(settings, 'table_table_header_alignment', ':hover'); 
+      }
+
+      if (textAlign) {
+        styles += simplePropertyStyled(textAlign, 'text-align');
+      }
+
+      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        typographic = getResponsiveSetting(settings, 'table_style_header_font', ':hover');
+      }
+
+      if (typographic) {
+        styles += typographicControllerToStyles(typographic);
+      }
+
+      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'table_style_header_text_color', ':hover');
+      }
+
+      if (color) {
+        styles += colorPropertyStyled(color, 'color');
+      }
+
+      //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        padding = getResponsiveSetting(settings, 'table_style_header_padding', ':hover');
+      }
+
+      if (padding) {
+        styles += dimensionsControllerToStyles(padding);
+      }
+
+      //Получаем значения border-type из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderType = getResponsiveSetting(settings, 'table_style_header_border_type', ':hover');
+      }
+
+      if (borderType) {
+        styles += simplePropertyStyled(borderType, 'border-style');
+      }
+
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderColor = getResponsiveSetting(settings, 'table_style_header_border_color', ':hover');
+      }
+
+      if (borderColor) {
+        styles += colorPropertyStyled(borderColor, 'border-color');
+      }
+
+      //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderWidth = getResponsiveSetting(settings, 'table_style_header_border_width', ':hover');
+      }
+
+      if (borderWidth) {
+        styles += borderWidthStyled(borderWidth);
+      }
+
+      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        backgroundColor = getResponsiveSetting(settings, 'table_style_header_background', ':hover');
+      }
+
+      if (backgroundColor) {
+        styles += colorPropertyStyled(backgroundColor, 'background');
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .altrp-table-head {
 
     ${props => {
@@ -947,6 +1783,31 @@ const TableComponent = styled.div`
 
       if (settings !== undefined) {
         backgroundColor = getResponsiveSetting(settings, 'table_style_header_background');
+      }
+
+      if (backgroundColor) {
+        styles += colorPropertyStyled(backgroundColor, 'background');
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
+  && .altrp-table-head:hover {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let backgroundColor;
+
+      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        backgroundColor = getResponsiveSetting(settings, 'table_style_header_background', ':hover');
       }
 
       if (backgroundColor) {
@@ -984,6 +1845,31 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-transpose_true .altrp-table-th:not(:first-child):hover {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let borderWidth;
+
+      //Получаем значения border-width-top из контроллера, обрабатываем и добавляем в styles свойство margin-top с таким же значением, но отритцательным 
+
+      if (settings !== undefined) {
+        borderWidth = getResponsiveSetting(settings, 'table_style_header_border_width', ':hover');
+      }
+
+      if (borderWidth) {
+        styles += marginTopLeftStyled(borderWidth, 'top'); //здесь вернется строка вида: "margin-top: -10px"
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .altrp-transpose_true .altrp-table-tr:not(:first-child) .altrp-table-th {
      
     ${props => {
@@ -1009,6 +1895,31 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-transpose_true .altrp-table-tr:not(:first-child) .altrp-table-th:hover {
+     
+    ${props => {
+ 
+      const { settings } = props;
+      let styles = '';
+ 
+      let borderWidth;
+ 
+      //Получаем значения border-width-left из контроллера, обрабатываем и добавляем в styles свойство margin-left с таким же значением, но отритцательным 
+ 
+      if (settings !== undefined) {
+        borderWidth = getResponsiveSetting(settings, 'table_style_header_border_width', ':hover');
+      }
+ 
+      if (borderWidth) {
+        styles += marginTopLeftStyled(borderWidth, 'left'); //здесь вернется строка вида: "margin-left: -10px"
+      }
+ 
+      return styles;
+ 
+    }
+    }
+  }
+
   && div:not(.altrp-element) .altrp-table-th {
 
     ${props => {
@@ -1022,6 +1933,31 @@ const TableComponent = styled.div`
 
       if (settings !== undefined) {
         verticalAlign = getResponsiveSetting(settings, 'header_cell_vertical_alignment');
+      }
+
+      if (verticalAlign) {
+        styles += simplePropertyStyled(verticalAlign, 'vertical-align');
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
+  && div:not(.altrp-element) .altrp-table-th:hover {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let verticalAlign;
+
+      //Получаем значения vertical-align из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        verticalAlign = getResponsiveSetting(settings, 'header_cell_vertical_alignment', ':hover');
       }
 
       if (verticalAlign) {
@@ -1119,6 +2055,91 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-table-td:hover {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let padding, borderType, borderColor, color, typographic, borderWidth, textAlign;
+
+      //Получаем значения text-align из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        textAlign = getResponsiveSetting(settings, 'table_table_body_alignment', ':hover'); 
+      }
+
+      if (textAlign) {
+        styles += simplePropertyStyled(textAlign, 'text-align');
+      }
+
+      //Получаем значения padding из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        padding = getResponsiveSetting(settings, 'table_style_body_cell_padding', ':hover');
+      }
+
+      if (padding) {
+        styles += dimensionsControllerToStyles(padding);
+      }
+
+      //Получаем значения border-type из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderType = getResponsiveSetting(settings, 'table_style_body_border_type', ':hover');
+      }
+
+      if (borderType) {
+        styles += simplePropertyStyled(borderType, 'border-style');
+      }
+
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderColor = getResponsiveSetting(settings, 'table_style_body_border_color_', ':hover');
+      }
+
+      if (borderColor) {
+        styles += colorPropertyStyled(borderColor, 'border-color');
+      }
+
+      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'table_style_body_border_text_color', ':hover');
+      }
+
+      if (color) {
+        styles += colorPropertyStyled(color, 'color');
+      }
+
+      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        typographic = getResponsiveSetting(settings, 'table_style_body_font', ':hover');
+      }
+
+      if (typographic) {
+        styles += typographicControllerToStyles(typographic);
+      }
+
+      //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderWidth = getResponsiveSetting(settings, 'table_style_body_border_width', ':hover');
+      }
+
+      if (borderWidth) {
+        styles += borderWidthStyled(borderWidth);
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .altrp-table-td a {
 
     ${props => {
@@ -1142,6 +2163,41 @@ const TableComponent = styled.div`
 
       if (settings !== undefined) {
         typographic = getResponsiveSetting(settings, 'table_link_font');
+      }
+
+      if (typographic) {
+        styles += typographicControllerToStyles(typographic);
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
+  && .altrp-table-td a:hover {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let color, typographic;
+
+      //Получаем значения color из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'table_link_color', ':hover');
+      }
+
+      if (color) {
+        styles += colorPropertyStyled(color, 'color');
+      }
+
+      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        typographic = getResponsiveSetting(settings, 'table_link_font', ':hover');
       }
 
       if (typographic) {
@@ -1179,6 +2235,31 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-table-tbody .altrp-table-background:hover {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let backgroundColor;
+
+      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        backgroundColor = getResponsiveSetting(settings, 'table_style_body_border_background', ':hover');
+      }
+
+      if (backgroundColor) {
+        styles += colorPropertyStyled(backgroundColor, 'background-color');
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .altrp-transpose_true .altrp-table-td:not(:first-child) {
      
     ${props => {
@@ -1200,6 +2281,31 @@ const TableComponent = styled.div`
  
       return styles;
  
+    }
+    }
+  }
+
+  && .altrp-transpose_true .altrp-table-td:not(:first-child):hover {
+     
+    ${props => {
+  
+      const { settings } = props;
+      let styles = '';
+  
+      let borderWidth;
+  
+      //Получаем значения border-width-top из контроллера, обрабатываем и добавляем в styles свойство margin-top с таким же значением, но отритцательным 
+  
+      if (settings !== undefined) {
+        borderWidth = getResponsiveSetting(settings, 'table_style_body_border_width', ':hover');
+      }
+  
+      if (borderWidth) {
+        styles += marginTopLeftStyled(borderWidth, 'top'); //здесь вернется строка вида: "margin-top: -10px"
+      }
+  
+      return styles;
+  
     }
     }
   }
@@ -1228,6 +2334,31 @@ const TableComponent = styled.div`
      }
      }
    }
+
+   && .altrp-transpose_true .altrp-table-tr:not(:first-child) .altrp-table-td:hover {
+     
+    ${props => {
+  
+      const { settings } = props;
+      let styles = '';
+  
+      let borderWidth;
+  
+      //Получаем значения border-width-left из контроллера, обрабатываем и добавляем в styles свойство margin-left с таким же значением, но отритцательным 
+  
+      if (settings !== undefined) {
+        borderWidth = getResponsiveSetting(settings, 'table_style_body_border_width', ':hover');
+      }
+  
+      if (borderWidth) {
+        styles += marginTopLeftStyled(borderWidth, 'left'); //здесь вернется строка вида: "margin-left: -10px"
+      }
+  
+      return styles;
+  
+    }
+    }
+  }
 
    && .altrp-table-td__grouping {
      
@@ -1274,6 +2405,51 @@ const TableComponent = styled.div`
      }
    }
 
+   && .altrp-table-td__grouping:hover {
+     
+    ${props => {
+ 
+      const { settings } = props;
+      let styles = '';
+ 
+      let color, typographic, padding;
+ 
+      //Получаем значения color из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'table_style_group_border_text_color', ':hover');
+      }
+
+      if (color) {
+        styles += colorPropertyStyled(color, 'color');
+      }
+
+      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        typographic = getResponsiveSetting(settings, 'table_style_group_font', ':hover');
+      }
+
+      if (typographic) {
+        styles += typographicControllerToStyles(typographic);
+      }
+
+      //Получаем значения padding из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        padding = getResponsiveSetting(settings, 'table_style_group_cell_padding', ':hover');
+      }
+
+      if (padding) {
+        styles += dimensionsControllerToStyles(padding);
+      }
+ 
+      return styles;
+ 
+    }
+    }
+  }
+
   && .altrp-table-tbody .altrp-table-td__grouping {
      
     ${props => {
@@ -1309,6 +2485,41 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-table-tbody .altrp-table-td__grouping:hover {
+     
+    ${props => {
+  
+      const { settings } = props;
+      let styles = '';
+   
+      let backgroundColor, textAlign;
+   
+      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles 
+ 
+      if (settings !== undefined) {
+        backgroundColor = getResponsiveSetting(settings, 'table_style_group_border_background', ':hover');
+      }
+ 
+      if (backgroundColor) {
+        styles += colorPropertyStyled(backgroundColor, 'background-color');
+      }
+ 
+      //Получаем значения text-align из контроллера, обрабатываем и добавляем в styles 
+ 
+      if (settings !== undefined) {
+        textAlign = getResponsiveSetting(settings, 'table_style_group_cell_alignment', ':hover');
+      }
+ 
+      if (textAlign) {
+        styles += simplePropertyStyled(textAlign, 'text-align');
+      }
+   
+      return styles;
+  
+    }
+    }
+  }
+
   && div:not(.altrp-element) .altrp-table-td {
      
     ${props => {
@@ -1330,6 +2541,31 @@ const TableComponent = styled.div`
   
       return styles;
  
+    }
+    }
+  }
+
+  && div:not(.altrp-element) .altrp-table-td:hover {
+     
+    ${props => {
+  
+      const { settings } = props;
+      let styles = '';
+   
+      let verticalAlign;
+ 
+      //Получаем значения vertical-align из контроллера, обрабатываем и добавляем в styles 
+ 
+      if (settings !== undefined) {
+        verticalAlign = getResponsiveSetting(settings, 'cell_vertical_alignment', ':hover');
+      }
+ 
+      if (verticalAlign) {
+        styles += simplePropertyStyled(verticalAlign, 'vertical-align');
+      }
+   
+      return styles;
+  
     }
     }
   }
@@ -1399,6 +2635,71 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-table-td__grouping:hover .altrp-table__collapse-icon svg {
+     
+    ${props => {
+   
+      const { settings } = props;
+      let styles = '';
+     
+      let iconSize, iconLeftSpace, iconRightSpace, iconTopTranslate, iconLeftTranslate;
+   
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+   
+      if (settings !== undefined) {
+        iconSize = getResponsiveSetting(settings, 'table_style_group_icon_size', ':hover');
+      }
+   
+      if (iconSize) {
+        styles += iconSizeStyled(iconSize);
+      }
+ 
+      //Получаем значения margin-left из контроллера, обрабатываем и добавляем в styles 
+   
+      if (settings !== undefined) {
+        iconLeftSpace = getResponsiveSetting(settings, 'table_style_group_icon_left_space', ':hover');
+      }
+   
+      if (iconLeftSpace) {
+        styles += sizeStyled(iconLeftSpace, 'margin-left');
+      }
+ 
+      //Получаем значения margin-right из контроллера, обрабатываем и добавляем в styles 
+   
+      if (settings !== undefined) {
+        iconRightSpace = getResponsiveSetting(settings, 'table_style_group_icon_right_space', ':hover');
+      }
+   
+      if (iconRightSpace) {
+        styles += sizeStyled(iconRightSpace, 'margin-right');
+      }
+ 
+      //Получаем значения top из контроллера, обрабатываем и добавляем в styles 
+   
+      if (settings !== undefined) {
+        iconTopTranslate = getResponsiveSetting(settings, 'table_style_group_icon_top', ':hover');
+      }
+   
+      if (iconTopTranslate) {
+        styles += sizeStyled(iconTopTranslate, 'top');
+      }
+ 
+      //Получаем значения left из контроллера, обрабатываем и добавляем в styles 
+   
+      if (settings !== undefined) {
+        iconLeftTranslate = getResponsiveSetting(settings, 'table_style_group_icon_left', ':hover');
+      }
+   
+      if (iconLeftTranslate) {
+        styles += sizeStyled(iconLeftTranslate, 'left');
+      }
+     
+      return styles;
+   
+    }
+    }
+  }
+
   && .altrp-table-td__grouping .altrp-table__collapse-icon svg,
   && .altrp-table-td__grouping .altrp-table__collapse-icon path {
      
@@ -1413,6 +2714,32 @@ const TableComponent = styled.div`
   
       if (settings !== undefined) {
         iconFill = getResponsiveSetting(settings, 'table_style_group_icon_color');
+      }
+  
+      if (iconFill) {
+        styles += colorPropertyStyled(iconFill, 'fill');
+      }
+    
+      return styles;
+  
+    }
+    }
+  }
+
+  && .altrp-table-td__grouping:hover .altrp-table__collapse-icon svg,
+  && .altrp-table-td__grouping:hover .altrp-table__collapse-icon path {
+     
+    ${props => {
+  
+      const { settings } = props;
+      let styles = '';
+    
+      let iconFill;
+  
+      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles 
+  
+      if (settings !== undefined) {
+        iconFill = getResponsiveSetting(settings, 'table_style_group_icon_color', ':hover');
       }
   
       if (iconFill) {
@@ -1490,6 +2817,71 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-table-foot .altrp-table-td:hover {
+     
+    ${props => {
+   
+      const { settings } = props;
+      let styles = '';
+     
+      let padding, textAlign, backgroundColor, color, typographic;
+   
+      //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        padding = getResponsiveSetting(settings, 'table_style_footer_cell_padding', ':hover');
+      }
+ 
+      if (padding) {
+        styles += dimensionsControllerToStyles(padding);
+      }
+ 
+      //Получаем значения text-align из контроллера, обрабатываем и добавляем в styles 
+ 
+      if (settings !== undefined) {
+        textAlign = getResponsiveSetting(settings, 'table_style_footer_cell_alignment', ':hover');
+      }
+ 
+      if (textAlign) {
+        styles += simplePropertyStyled(textAlign, 'text-align');
+      }
+ 
+      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        backgroundColor = getResponsiveSetting(settings, 'table_style_footer_border_background', ':hover');
+      }
+ 
+      if (backgroundColor) {
+        styles += colorPropertyStyled(backgroundColor, 'background-color');
+      }
+ 
+      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'table_style_footer_border_text_color', ':hover');
+      }
+ 
+      if (color) {
+        styles += colorPropertyStyled(color, 'color');
+      }
+ 
+      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        typographic = getResponsiveSetting(settings, 'table_style_footer_font', ':hover');
+      }
+ 
+      if (typographic) {
+        styles += typographicControllerToStyles(typographic);
+      }
+     
+      return styles;
+   
+    }
+    }
+  }
+
   && .altrp-table-global-filter label {
 
     ${props => {
@@ -1523,6 +2915,51 @@ const TableComponent = styled.div`
 
       if (settings !== undefined) {
         typographic = getResponsiveSetting(settings, 'global_filter_label_typographic');
+      }
+
+      if (typographic) {
+        styles += typographicControllerToStyles(typographic);
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
+  && .altrp-table-global-filter label:hover {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let padding, color, typographic;
+
+      //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        padding = getResponsiveSetting(settings, 'global_filter_label_padding', ':hover');
+      }
+
+      if (padding) {
+        styles += dimensionsControllerToStyles(padding);
+      }
+
+      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'global_filter_label_color', ':hover');
+      }
+
+      if (color) {
+        styles += colorPropertyStyled(color, 'color');
+      }
+
+      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        typographic = getResponsiveSetting(settings, 'global_filter_label_typographic', ':hover');
       }
 
       if (typographic) {
@@ -1660,6 +3097,131 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-table-global-filter input:hover {
+
+    ${props => {
+
+      const { settings } = props;
+      let styles = '';
+
+      let padding, color, backgroundColor, typographic, width, marginLeft, borderType, borderWidth, borderRadius, borderColor, boxShadow;
+
+      //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        padding = getResponsiveSetting(settings, 'global_filter_input_padding', ':hover');
+      }
+
+      if (padding) {
+        styles += dimensionsControllerToStyles(padding);
+      }
+
+      //Получаем значения width из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        width = getResponsiveSetting(settings, 'global_filter_input_width', ':hover');
+      }
+
+      if (width) {
+        styles += sizeStyled(width, 'width');
+      }
+
+      //Получаем значения margin-left из контроллера, обрабатываем и добавляем в styles 
+
+      if (settings !== undefined) {
+        marginLeft = getResponsiveSetting(settings, 'global_filter_margin_left', ':hover');
+      }
+
+      if (marginLeft) {
+        styles += sizeStyled(marginLeft, 'margin-left');
+      }
+
+      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'global_filter_input_color', ':hover');
+      }
+
+      if (color) {
+        styles += colorPropertyStyled(color, 'color');
+      }
+
+      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        backgroundColor = getResponsiveSetting(settings, 'global_filter_input_background_color', ':hover');
+      }
+
+      if (backgroundColor) {
+        styles += colorPropertyStyled(backgroundColor, 'background');
+      }
+
+      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        typographic = getResponsiveSetting(settings, 'global_filter_input_typographic', ':hover');
+      }
+
+      if (typographic) {
+        styles += typographicControllerToStyles(typographic);
+      }
+
+      //Получаем значения border-type из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderType = getResponsiveSetting(settings, 'global_filter_input_border_type', ':hover');
+      }
+
+      if (borderType) {
+        styles += simplePropertyStyled(borderType, 'border-style');
+      }
+
+      //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderWidth = getResponsiveSetting(settings, 'global_filter_input_border_width', ':hover');
+      }
+
+      if (borderWidth) {
+        styles += borderWidthStyled(borderWidth);
+      }
+
+      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderRadius = getResponsiveSetting(settings, 'global_filter_input_border_radius', ':hover');
+      }
+
+      if (borderRadius) {
+        styles += dimensionsControllerToStyles(borderRadius, 'border-radius');
+      }
+
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderColor = getResponsiveSetting(settings, 'global_filter_input_border_color', ':hover');
+      }
+
+      if (borderColor) {
+        styles += colorPropertyStyled(borderColor, 'border-color');
+      }
+
+      //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        boxShadow = getResponsiveSetting(settings, 'global_filter_input_shadow', ':hover');
+      }
+
+      if (boxShadow) {
+        styles += shadowControllerToStyles(boxShadow);
+      }
+
+      return styles;
+
+    }
+    }
+  }
+
   && .altrp-pagination {
      
     ${props => {
@@ -1682,6 +3244,32 @@ const TableComponent = styled.div`
     
       return styles;
   
+    }
+    }
+  }
+
+  && .altrp-pagination:hover {
+     
+    ${props => {
+   
+      const { settings } = props;
+      let styles = '';
+ 
+      let padding;
+     
+      //Получаем значения padding из контроллера, обрабатываем и добавляем в styles 
+ 
+      if (settings !== undefined) {
+        padding = getResponsiveSetting(settings, 'table_style_pagination_padding', ':hover');
+      }
+ 
+      if (padding) {
+        styles += dimensionsControllerToStyles(padding);
+      }
+ 
+     
+      return styles;
+   
     }
     }
   }
@@ -1711,6 +3299,31 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-pagination .altrp-pagination__previous:hover {
+     
+    ${props => {
+    
+      const { settings } = props;
+      let styles = '';
+  
+      let typographic;
+      
+      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        typographic = getResponsiveSetting(settings, 'table_style_prev_btn_pagination_typographic', ':hover');
+      }
+ 
+      if (typographic) {
+        styles += typographicControllerToStyles(typographic);
+      }
+      
+      return styles;
+    
+    }
+    }
+  }
+
   && .altrp-pagination .altrp-pagination__next {
      
     ${props => {
@@ -1736,6 +3349,31 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-pagination .altrp-pagination__next:hover {
+     
+    ${props => {
+     
+      const { settings } = props;
+      let styles = '';
+   
+      let typographic;
+       
+      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
+  
+      if (settings !== undefined) {
+        typographic = getResponsiveSetting(settings, 'table_style_next_btn_pagination_typographic', ':hover');
+      }
+  
+      if (typographic) {
+        styles += typographicControllerToStyles(typographic);
+      }
+       
+      return styles;
+     
+    }
+    }
+  }
+
   && .altrp-pagination .altrp-pagination-pages__item {
      
     ${props => {
@@ -1757,6 +3395,31 @@ const TableComponent = styled.div`
        
       return styles;
      
+    }
+    }
+  }
+
+  && .altrp-pagination .altrp-pagination-pages__item:hover {
+     
+    ${props => {
+      
+      const { settings } = props;
+      let styles = '';
+    
+      let typographic;
+        
+      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
+   
+      if (settings !== undefined) {
+        typographic = getResponsiveSetting(settings, 'table_style_item_count_pagination_typographic', ':hover');
+      }
+   
+      if (typographic) {
+        styles += typographicControllerToStyles(typographic);
+      }
+        
+      return styles;
+      
     }
     }
   }
@@ -1857,6 +3520,102 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-pagination__previous:hover, 
+  && .altrp-pagination__next:hover {
+     
+    ${props => {
+   
+      const { settings } = props;
+      let styles = '';
+ 
+      let color, backgroundColor, padding, borderType, borderWidth, borderRadius, borderColor, boxShadow;
+
+      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'table_style_pagination_buttons_text_color', ':hover');
+      }
+
+      if (color) {
+        styles += colorPropertyStyled(color, 'color');
+      }
+
+      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        backgroundColor = getResponsiveSetting(settings, 'table_style_pagination_buttons_background_color', ':hover');
+      }
+
+      if (backgroundColor) {
+        styles += colorPropertyStyled(backgroundColor, 'background-color');
+      }
+
+      //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        padding = getResponsiveSetting(settings, 'table_style_pagination_padding_buttons', ':hover');
+      }
+
+      if (padding) {
+        styles += dimensionsControllerToStyles(padding);
+      }
+
+      //Получаем значения border-type из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderType = getResponsiveSetting(settings, 'table_style_pagination_border_type', ':hover');
+      }
+
+      if (borderType) {
+        styles += simplePropertyStyled(borderType, 'border-style');
+      }
+
+      //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderWidth = getResponsiveSetting(settings, 'table_style_pagination_border_width', ':hover');
+      }
+
+      if (borderWidth) {
+        styles += borderWidthStyled(borderWidth);
+      }
+
+      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderRadius = getResponsiveSetting(settings, 'table_style_pagination_border_radius', ':hover');
+      }
+
+      if (borderRadius) {
+        styles += dimensionsControllerToStyles(borderRadius, 'border-radius');
+      }
+
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderColor = getResponsiveSetting(settings, 'table_style_pagination_border_color', ':hover');
+      }
+
+      if (borderColor) {
+        styles += colorPropertyStyled(borderColor, 'border-color');
+      }
+
+      //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        boxShadow = getResponsiveSetting(settings, 'pagination_buttons_shadow', ':hover');
+      }
+
+      if (boxShadow) {
+        styles += shadowControllerToStyles(boxShadow);
+      }
+     
+      return styles;
+   
+    }
+    }
+  }
+
   && .altrp-pagination__next, 
   && .altrp-pagination-pages__item, 
   && .altrp-pagination__count, 
@@ -1875,6 +3634,37 @@ const TableComponent = styled.div`
 
       if (settings !== undefined) {
         typographic = getResponsiveSetting(settings, 'table_style_pagination_typographic');
+      }
+
+      if (typographic) {
+        styles += typographicControllerToStyles(typographic);
+      }
+ 
+     
+      return styles;
+   
+    }
+    }
+  }
+
+  && .altrp-pagination__next:hover, 
+  && .altrp-pagination-pages__item:hover, 
+  && .altrp-pagination__count:hover, 
+  && .altrp-pagination__previous:hover, 
+  && .altrp-pagination__goto-page:hover, 
+  && .altrp-pagination__select-size:hover {
+     
+    ${props => {
+   
+      const { settings } = props;
+      let styles = '';
+ 
+      let typographic;
+     
+      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        typographic = getResponsiveSetting(settings, 'table_style_pagination_typographic', ':hover');
       }
 
       if (typographic) {
@@ -1939,6 +3729,61 @@ const TableComponent = styled.div`
  
       return styles;
    
+    }
+    }
+  }
+
+  && .altrp-pagination__count:hover {
+     
+    ${props => {
+    
+      const { settings } = props;
+      let styles = '';
+  
+      let margin, color, backgroundColor, padding;
+      
+      //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        margin = getResponsiveSetting(settings, 'count_buttons_margin', ':hover');
+      }
+ 
+      if (margin) {
+        styles += dimensionsControllerToStyles(margin, 'margin');
+      }
+ 
+      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'table_style_pagination_count_text_color', ':hover');
+      }
+ 
+      if (color) {
+        styles += colorPropertyStyled(color, 'color');
+      }
+ 
+      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        backgroundColor = getResponsiveSetting(settings, 'table_style_pagination_count_background_color', ':hover');
+      }
+ 
+      if (backgroundColor) {
+        styles += colorPropertyStyled(backgroundColor, 'background-color');
+      }
+ 
+      //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        padding = getResponsiveSetting(settings, 'table_style_pagination_padding_count', ':hover');
+      }
+ 
+      if (padding) {
+        styles += dimensionsControllerToStyles(padding);
+      }
+  
+      return styles;
+    
     }
     }
   }
@@ -2028,6 +3873,91 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-pagination-pages__item:hover {
+     
+    ${props => {
+     
+      const { settings } = props;
+      let styles = '';
+   
+      let margin, backgroundColor, borderType, borderWidth, borderRadius, borderColor, boxShadow;
+       
+      //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
+  
+      if (settings !== undefined) {
+        margin = getResponsiveSetting(settings, 'count_button_item_margin', ':hover');
+      }
+  
+      if (margin) {
+        styles += dimensionsControllerToStyles(margin, 'margin');
+      }
+ 
+      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        backgroundColor = getResponsiveSetting(settings, 'table_style_pagination_count_item_background_color', ':hover');
+      }
+ 
+      if (backgroundColor) {
+        styles += colorPropertyStyled(backgroundColor, 'background-color');
+      }
+ 
+      //Получаем значения border-type из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        borderType = getResponsiveSetting(settings, 'table_style_pagination_count_item_border_type', ':hover');
+      }
+ 
+      if (borderType) {
+        styles += simplePropertyStyled(borderType, 'border-style');
+      }
+ 
+      //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        borderWidth = getResponsiveSetting(settings, 'table_style_pagination_count_item_border_width', ':hover');
+      }
+ 
+      if (borderWidth) {
+        styles += borderWidthStyled(borderWidth);
+      }
+ 
+      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        borderRadius = getResponsiveSetting(settings, 'table_style_count_item_border_radius', ':hover');
+      }
+ 
+      if (borderRadius) {
+        styles += dimensionsControllerToStyles(borderRadius, 'border-radius');
+      }
+ 
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        borderColor = getResponsiveSetting(settings, 'table_style_pagination_count_item_border_color', ':hover');
+      }
+ 
+      if (borderColor) {
+        styles += colorPropertyStyled(borderColor, 'border-color');
+      }
+ 
+      //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        boxShadow = getResponsiveSetting(settings, 'pagination_count_item_shadow', ':hover');
+      }
+ 
+      if (boxShadow) {
+        styles += shadowControllerToStyles(boxShadow);
+      }
+   
+      return styles;
+     
+    }
+    }
+  }
+
   && .active.altrp-pagination-pages__item {
      
     ${props => {
@@ -2073,6 +4003,51 @@ const TableComponent = styled.div`
     }
   }
 
+  && .active.altrp-pagination-pages__item:hover {
+     
+    ${props => {
+      
+      const { settings } = props;
+      let styles = '';
+    
+      let color, backgroundColor, borderColor;
+        
+      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'table_style_pagination_active_count_text_color', ':hover');
+      }
+ 
+      if (color) {
+        styles += colorPropertyStyled(color, 'color');
+      }
+  
+      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+  
+      if (settings !== undefined) {
+        backgroundColor = getResponsiveSetting(settings, 'table_style_pagination_active_count_item_background_color', ':hover');
+      }
+  
+      if (backgroundColor) {
+        styles += colorPropertyStyled(backgroundColor, 'background-color');
+      }
+ 
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        borderColor = getResponsiveSetting(settings, 'table_style_pagination_active_count_item_border_color', ':hover');
+      }
+ 
+      if (borderColor) {
+        styles += colorPropertyStyled(borderColor, 'border-color');
+      }
+    
+      return styles;
+      
+    }
+    }
+  }
+
   && .altrp-pagination__ellipsis {
      
     ${props => {
@@ -2114,6 +4089,51 @@ const TableComponent = styled.div`
  
       return styles;
    
+    }
+    }
+  }
+
+  && .altrp-pagination__ellipsis:hover {
+     
+    ${props => {
+    
+      const { settings } = props;
+      let styles = '';
+ 
+      let margin, color, typographic;
+  
+      //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        margin = getResponsiveSetting(settings, 'ellipsis_margin', ':hover');
+      }
+ 
+      if (margin) {
+        styles += dimensionsControllerToStyles(margin, 'margin');
+      }
+ 
+      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'ellipsis_color', ':hover');
+      }
+ 
+      if (color) {
+        styles += colorPropertyStyled(color, 'color');
+      }
+ 
+      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        typographic = getResponsiveSetting(settings, 'ellipsis_typographic', ':hover');
+      }
+ 
+      if (typographic) {
+        styles += typographicControllerToStyles(typographic);
+      }
+  
+      return styles;
+    
     }
     }
   }
@@ -2223,6 +4243,111 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-pagination__goto-page:hover {
+     
+    ${props => {
+     
+      const { settings } = props;
+      let styles = '';
+  
+      let margin, color, padding, backgroundColor, borderType, borderWidth, borderRadius, borderColor, boxShadow;
+   
+      //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
+  
+      if (settings !== undefined) {
+        margin = getResponsiveSetting(settings, 'goto-page_margin', ':hover');
+      }
+  
+      if (margin) {
+        styles += dimensionsControllerToStyles(margin, 'margin');
+      }
+ 
+      //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+  
+      if (settings !== undefined) {
+        padding = getResponsiveSetting(settings, 'page_input_padding', ':hover');
+      }
+  
+      if (padding) {
+        styles += dimensionsControllerToStyles(padding);
+      }
+  
+      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
+  
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'page_input_text_color', ':hover');
+      }
+  
+      if (color) {
+        styles += colorPropertyStyled(color, 'color');
+      }
+ 
+      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+  
+      if (settings !== undefined) {
+        backgroundColor = getResponsiveSetting(settings, 'page_input_background_color', ':hover');
+      }
+  
+      if (backgroundColor) {
+        styles += colorPropertyStyled(backgroundColor, 'background-color');
+      }
+ 
+      //Получаем значения border-type из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        borderType = getResponsiveSetting(settings, 'page_input_border_type', ':hover');
+      }
+ 
+      if (borderType) {
+        styles += simplePropertyStyled(borderType, 'border-style');
+      }
+ 
+      //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        borderWidth = getResponsiveSetting(settings, 'page_input_border_width', ':hover');
+      }
+ 
+      if (borderWidth) {
+        styles += borderWidthStyled(borderWidth);
+      }
+ 
+      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        borderRadius = getResponsiveSetting(settings, 'page_input_border_radius', ':hover');
+      }
+ 
+      if (borderRadius) {
+        styles += dimensionsControllerToStyles(borderRadius, 'border-radius');
+      }
+ 
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
+  
+      if (settings !== undefined) {
+        borderColor = getResponsiveSetting(settings, 'page_input_border_color', ':hover');
+      }
+  
+      if (borderColor) {
+        styles += colorPropertyStyled(borderColor, 'border-color');
+      }
+ 
+      //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        boxShadow = getResponsiveSetting(settings, 'page_input_shadow', ':hover');
+      }
+ 
+      if (boxShadow) {
+        styles += shadowControllerToStyles(boxShadow);
+      }
+   
+      return styles;
+     
+    }
+    }
+  }
+
   && .altrp-pagination .altrp-pagination__goto-page {
      
     ${props => {
@@ -2244,6 +4369,31 @@ const TableComponent = styled.div`
  
       return styles;
    
+    }
+    }
+  }
+
+  && .altrp-pagination .altrp-pagination__goto-page:hover {
+     
+    ${props => {
+    
+      const { settings } = props;
+      let styles = '';
+  
+      let typographic;
+      
+      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        typographic = getResponsiveSetting(settings, 'table_style_page_input_pagination_typographic', ':hover');
+      }
+ 
+      if (typographic) {
+        styles += typographicControllerToStyles(typographic);
+      }
+  
+      return styles;
+    
     }
     }
   }
@@ -2353,6 +4503,111 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-pagination__select-size .altrp-field-select2__control:hover {
+     
+    ${props => {
+     
+      const { settings } = props;
+      let styles = '';
+ 
+      let width, padding, borderType, borderWidth, borderRadius, borderColor, boxShadow, color, backgroundColor;
+   
+      //Получаем значения width из контроллера, обрабатываем и добавляем в styles 
+   
+      if (settings !== undefined) {
+        width = getResponsiveSetting(settings, 'pagination_select_width', ':hover');
+      }
+   
+      if (width) {
+        styles += sizeStyled(width, 'width');
+      }
+ 
+      //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+  
+      if (settings !== undefined) {
+        padding = getResponsiveSetting(settings, 'pagination_select_padding', ':hover');
+      }
+  
+      if (padding) {
+        styles += dimensionsControllerToStyles(padding);
+      }
+ 
+      //Получаем значения border-type из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        borderType = getResponsiveSetting(settings, 'pagination_select_border_type', ':hover');
+      }
+ 
+      if (borderType) {
+        styles += simplePropertyStyled(borderType, 'border-style');
+      }
+ 
+      //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        borderWidth = getResponsiveSetting(settings, 'pagination_select_border_width', ':hover');
+      }
+ 
+      if (borderWidth) {
+        styles += borderWidthStyled(borderWidth);
+      }
+ 
+      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        borderRadius = getResponsiveSetting(settings, 'pagination_select_border_radius', ':hover');
+      }
+ 
+      if (borderRadius) {
+        styles += dimensionsControllerToStyles(borderRadius, 'border-radius');
+      }
+ 
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
+  
+      if (settings !== undefined) {
+        borderColor = getResponsiveSetting(settings, 'pagination_select_border_color', ':hover');
+      }
+  
+      if (borderColor) {
+        styles += colorPropertyStyled(borderColor, 'border-color');
+      }
+ 
+      //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        boxShadow = getResponsiveSetting(settings, 'pagination_select_shadow', ':hover');
+      }
+ 
+      if (boxShadow) {
+        styles += shadowControllerToStyles(boxShadow);
+      }
+ 
+      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
+  
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'pagination_select_text_color', ':hover');
+      }
+  
+      if (color) {
+        styles += colorPropertyStyled(color, 'color');
+      }
+ 
+      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+  
+      if (settings !== undefined) {
+        backgroundColor = getResponsiveSetting(settings, 'pagination_select_background_color', ':hover');
+      }
+  
+      if (backgroundColor) {
+        styles += colorPropertyStyled(backgroundColor, 'background-color');
+      }
+ 
+      return styles;
+     
+    }
+    }
+  }
+
   && .altrp-pagination .altrp-pagination__select-size {
      
     ${props => {
@@ -2378,6 +4633,31 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-pagination .altrp-pagination__select-size:hover {
+     
+    ${props => {
+     
+      const { settings } = props;
+      let styles = '';
+   
+      let typographic;
+       
+      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
+  
+      if (settings !== undefined) {
+        typographic = getResponsiveSetting(settings, 'table_style_pagination_select__pagination_typographic', ':hover');
+      }
+  
+      if (typographic) {
+        styles += typographicControllerToStyles(typographic);
+      }
+   
+      return styles;
+     
+    }
+    }
+  }
+
   && .altrp-pagination__select-size {
      
     ${props => {
@@ -2399,6 +4679,31 @@ const TableComponent = styled.div`
    
       return styles;
      
+    }
+    }
+  }
+
+  && .altrp-pagination__select-size:hover {
+     
+    ${props => {
+      
+      const { settings } = props;
+      let styles = '';
+ 
+      let margin;
+    
+      //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
+  
+      if (settings !== undefined) {
+        margin = getResponsiveSetting(settings, 'pagination_select_margin', ':hover');
+      }
+  
+      if (margin) {
+        styles += dimensionsControllerToStyles(margin, 'margin');
+      }
+    
+      return styles;
+      
     }
     }
   }
@@ -2438,6 +4743,41 @@ const TableComponent = styled.div`
     }
   }
 
+  && .check-icon--checked svg:hover {
+     
+    ${props => {
+      
+      const { settings } = props;
+      let styles = '';
+ 
+      let margin, size;
+    
+      //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
+  
+      if (settings !== undefined) {
+        margin = getResponsiveSetting(settings, 'checked_icon_margin', ':hover');
+      }
+  
+      if (margin) {
+        styles += dimensionsControllerToStyles(margin, 'margin');
+      }
+ 
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+ 
+      if (settings !== undefined) {
+        size = getResponsiveSetting(settings, 'checked_size', ':hover');
+      }
+ 
+      if (size) {
+        styles += iconSizeStyled(size);
+      }
+    
+      return styles;
+      
+    }
+    }
+  }
+
   && .check-icon--unchecked svg {
      
     ${props => {
@@ -2469,6 +4809,41 @@ const TableComponent = styled.div`
     
       return styles;
       
+    }
+    }
+  }
+
+  && .check-icon--unchecked svg:hover {
+     
+    ${props => {
+       
+      const { settings } = props;
+      let styles = '';
+  
+      let margin, size;
+     
+      //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
+   
+      if (settings !== undefined) {
+        margin = getResponsiveSetting(settings, 'unchecked_icon_margin', ':hover');
+      }
+  
+      if (margin) {
+        styles += dimensionsControllerToStyles(margin, 'margin');
+      }
+  
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+  
+      if (settings !== undefined) {
+        size = getResponsiveSetting(settings, 'unchecked_size', ':hover');
+      }
+  
+      if (size) {
+        styles += iconSizeStyled(size);
+      }
+     
+      return styles;
+       
     }
     }
   }
@@ -2508,6 +4883,41 @@ const TableComponent = styled.div`
     }
   }
 
+  && .check-icon--indeterminate svg:hover {
+     
+    ${props => {
+        
+      const { settings } = props;
+      let styles = '';
+   
+      let margin, size;
+      
+      //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
+    
+      if (settings !== undefined) {
+        margin = getResponsiveSetting(settings, 'indeterminate_icon_margin', ':hover');
+      }
+    
+      if (margin) {
+        styles += dimensionsControllerToStyles(margin, 'margin');
+      }
+   
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+   
+      if (settings !== undefined) {
+        size = getResponsiveSetting(settings, 'indeterminate_size', ':hover');
+      }
+   
+      if (size) {
+        styles += iconSizeStyled(size);
+      }
+      
+      return styles;
+        
+    }
+    }
+  }
+
   && .check-icon--checked path {
      
     ${props => {
@@ -2529,6 +4939,31 @@ const TableComponent = styled.div`
       
       return styles;
         
+    }
+    }
+  }
+
+  && .check-icon--checked:hover path {
+     
+    ${props => {
+         
+      const { settings } = props;
+      let styles = '';
+ 
+      let iconFill;
+    
+      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles 
+ 
+      if (settings !== undefined) {
+        iconFill = getResponsiveSetting(settings, 'checked_icon_color', ':hover');
+      }
+ 
+      if (iconFill) {
+        styles += colorPropertyStyled(iconFill, 'fill');
+      }
+       
+      return styles;
+         
     }
     }
   }
@@ -2558,6 +4993,31 @@ const TableComponent = styled.div`
     }
   }
 
+  && .check-icon--unchecked:hover path {
+     
+    ${props => {
+          
+      const { settings } = props;
+      let styles = '';
+  
+      let iconFill;
+     
+      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles 
+  
+      if (settings !== undefined) {
+        iconFill = getResponsiveSetting(settings, 'unchecked_icon_color', ':hover');
+      }
+  
+      if (iconFill) {
+        styles += colorPropertyStyled(iconFill, 'fill');
+      }
+        
+      return styles;
+          
+    }
+    }
+  }
+
   && .check-icon--indeterminate path {
      
     ${props => {
@@ -2579,6 +5039,31 @@ const TableComponent = styled.div`
         
       return styles;
           
+    }
+    }
+  }
+
+  && .check-icon--indeterminate:hover path {
+     
+    ${props => {
+           
+      const { settings } = props;
+      let styles = '';
+   
+      let iconFill;
+      
+      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles 
+   
+      if (settings !== undefined) {
+        iconFill = getResponsiveSetting(settings, 'indeterminate_icon_color', ':hover');
+      }
+   
+      if (iconFill) {
+        styles += colorPropertyStyled(iconFill, 'fill');
+      }
+         
+      return styles;
+           
     }
     }
   }
@@ -2618,6 +5103,41 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-table__resizer:hover {
+     
+    ${props => {
+            
+      const { settings } = props;
+      let styles = '';
+    
+      let sliderSize, backgroundColor;
+ 
+      //Получаем значения width из контроллера, обрабатываем и добавляем в styles 
+ 
+      if (settings !== undefined) {
+        sliderSize = getResponsiveSetting(settings, 'resize_slider_size', ':hover');
+      }
+ 
+      if (sliderSize) {
+        styles += sizeStyled(sliderSize, 'width');
+      }
+ 
+      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+  
+      if (settings !== undefined) {
+        backgroundColor = getResponsiveSetting(settings, 'resize_slider_color', ':hover');
+      }
+  
+      if (backgroundColor) {
+        styles += colorPropertyStyled(backgroundColor, 'background-color');
+      }
+          
+      return styles;
+            
+    }
+    }
+  }
+
   && .altrp-table__resizer.altrp-table__resizer_resizing {
      
     ${props => {
@@ -2643,6 +5163,31 @@ const TableComponent = styled.div`
     }
   }
 
+  && .altrp-table__resizer.altrp-table__resizer_resizing:hover {
+     
+    ${props => {
+             
+      const { settings } = props;
+      let styles = '';
+ 
+      let backgroundColor;
+     
+      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+  
+      if (settings !== undefined) {
+        backgroundColor = getResponsiveSetting(settings, 'active_resize_slider_color', ':hover');
+      }
+  
+      if (backgroundColor) {
+        styles += colorPropertyStyled(backgroundColor, 'background-color');
+      }
+           
+      return styles;
+             
+    }
+    }
+  }
+
   && .altrp-image {
      
     ${props => {
@@ -2664,6 +5209,31 @@ const TableComponent = styled.div`
 
       return styles; 
 
+      }
+      }
+    }
+
+  && .altrp-image:hover {
+     
+    ${props => {
+ 
+      const { settings } = props;
+      let styles = '';
+ 
+      let filters;
+ 
+      //Получаем значения filters из контроллера, обрабатываем и добавляем в styles
+ 
+      if (settings !== undefined) {
+        filters = getResponsiveSetting(settings, 'filter_style_border_shadow', ':hover');
+      }
+ 
+      if (filters) {
+        styles += filtersControllerToStyles(filters);
+      }
+ 
+      return styles; 
+ 
       }
       }
     }
