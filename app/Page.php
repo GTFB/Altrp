@@ -56,6 +56,16 @@ class Page extends Model
     'sections_count',
   ];
 
+  const DEFAULT_AREAS = [
+    'content',
+    'footer',
+    'header',
+    'popup',
+    'email',
+    'card',
+    'reports',
+  ];
+
   /**
    * @return array
    */
@@ -286,7 +296,7 @@ class Page extends Model
   {
     $currentPage = Page::find($page_id);
 
-    if ( Cache::has('areas_' . $page_id) ) {
+    if ( 0 ) {
       $areas = Cache::get('areas_' . $page_id);
     } else {
 
@@ -314,7 +324,6 @@ class Page extends Model
         'page_id' => $page_id,
         'template_type' => $contentType ? 'reports' : 'content',
       ]);
-
       unset($content_template['html_content']);
       unset($content_template['styles']);
       $areas[] = [
@@ -358,6 +367,37 @@ class Page extends Model
           'template_type' => 'popup',
         ]),
       ];
+
+      $custom_areas = Area::whereNotIn( 'name', self::DEFAULT_AREAS )->get();
+
+
+      if( $custom_areas->count() ){
+        foreach ($custom_areas as $custom_area) {
+
+          $custom_template = Template::getTemplate([
+            'page_id' => $page_id,
+            'template_type' => $custom_area->name,
+          ]);
+//          echo '<pre style="padding-left: 200px;">';
+//          var_dump( $custom_template );
+//          echo '</pre>';
+//
+          if( ! data_get( $custom_template, 'id' ) ){
+            continue;
+          }
+
+          unset($custom_template['html_content']);
+          unset($custom_template['styles']);
+          $areas[] = [
+            'area_name' => $custom_area->name,
+            'id' => $custom_area->name,
+            'settings' => $custom_area->settings,
+            'template' => $custom_template,
+          ];
+        }
+      }
+
+
       Cache::put( 'areas_' . $page_id, $areas, 86400 );
 
     }
@@ -379,7 +419,6 @@ class Page extends Model
         $areas[3]['templates'][$key]['data'] = Template::recursively_children_check_conditions($template['data']);
       }
     }
-
     return $areas;
   }
 

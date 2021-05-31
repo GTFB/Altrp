@@ -12,6 +12,8 @@ import GalleryComponent from "../../../../editor/src/js/components/widgets/style
 import ButtonComponent from "../../../../editor/src/js/components/widgets/styled-components/ButtonComponent";
 import DividerComponent from "../../../../editor/src/js/components/widgets/styled-components/DividerComponent";
 import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
+import TextComponent from "../../../../editor/src/js/components/widgets/styled-components/TextComponent";
+import MenuComponent from "../../../../editor/src/js/components/widgets/styled-components/MenuComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -298,6 +300,7 @@ class ElementWrapper extends Component {
       updateToken: this.state.updateToken,
       currentScreen: this.props.currentScreen,
       baseRender: this.props.baseRender,
+      history: this.props.history,
       appStore
     });
     if (this.props.element.getTemplateType() === 'email') {
@@ -321,6 +324,9 @@ class ElementWrapper extends Component {
       case "button":
         WrapperComponent = ButtonComponent;
         break
+      case "text":
+        WrapperComponent = TextComponent;
+        break;
       case "carousel":
         WrapperComponent = CarouselComponent;
         break
@@ -330,12 +336,16 @@ class ElementWrapper extends Component {
       case "accordion":
         WrapperComponent = AccordionComponent;
         break
+      case "menu":
+        WrapperComponent = MenuComponent;
+        break;
     }
 
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
       <WrapperComponent
         className={classes}
         ref={this.elementWrapperRef}
+        elementId={this.props.element.getId()}
         settings={this.props.element.getSettings()}
         style={styles}
         id={this.CSSId}
@@ -359,7 +369,6 @@ function mapStateToProps(state) {
     altrpMeta: state.altrpMeta,
     altrpPageState: state.altrpPageState,
     currentScreen: state.currentScreen,
-    altrpComponents: state.altrpComponents,
   };
 }
 

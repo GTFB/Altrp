@@ -5,6 +5,7 @@ import { SketchPicker } from "react-color"
 import ContentIcon from '../../../svgs/content.svg'
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
+import PresetColors from "./PresetColors";
 
 class ShadowController extends Component {
   constructor(props) {
@@ -183,7 +184,7 @@ class ShadowController extends Component {
       },
       {
         value: "inset",
-        label: "inset",
+        label: "Inset",
         key: 1
       }
     ]
@@ -195,8 +196,8 @@ class ShadowController extends Component {
         </div>
       </div>
       <div className="control-group control-group-shadow">
-        <div className="control-shadow-toggle control-shadow-toggle-active" 
-          onClick={() => this.setState({ isMenuOpened: !isMenuOpened})} 
+        <div className="control-shadow-toggle control-shadow-toggle-active"
+          onClick={() => this.setState({ isMenuOpened: !isMenuOpened})}
           fill="#8E94AA"
         >
           <ContentIcon id="shadowContentIcon" className="control-shadow-svg-content" fill="#8E94AA" width="16"
@@ -222,8 +223,15 @@ class ShadowController extends Component {
           {
             this.state.active ?
               <div id="colorPicker" className="control-color-colorPicker">
-                <SketchPicker width="90%" color={value.colorRGB}
+                <SketchPicker width="90%" presetColors={[]} color={value.colorRGB}
                   onChange={this.colorChange} className="sketchPicker" />
+                <PresetColors presetColors={this.props.presetColors}
+                  value={this.state.value}
+                  changeValue={color => {
+                    this.colorChange(color)
+                    // this._changeValue(color);
+                    // this.setState(state=>({...state, colorRGB: color.colorRGB}))
+                  }} />
               </div>
               : <div></div>
           }
@@ -289,6 +297,8 @@ class ShadowController extends Component {
           </div>
           {/* конец slider vertical displacement */}
           {/* начало slider spread */}
+          {this.props.currentElement.getName() !== 'heading' &&
+            <>
           <div className="control-slider-header">
             <div className="control-slider-label">
               spread
@@ -307,6 +317,7 @@ class ShadowController extends Component {
                 value={value.spread ? value.spread : 0} name="spreadNumber" onChange={this.spreadChange} />
             </div>
           </div>
+            </>}
           {/* конец slider vertical displacement */}
           <div className="controller-container controller-container_select controller-container_select_typographic">
             <div className="controller-container__label control-select__label">

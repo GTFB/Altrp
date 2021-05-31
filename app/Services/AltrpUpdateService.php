@@ -66,6 +66,9 @@ class AltrpUpdateService
     if ( ! $this->delete_archive() ) {
       throw new \HttpException( 'Не удалось удалить архив' );
     }
+    if( File::exists( base_path( 'routes/page_routes.php' ) ) ){
+      File::delete( base_path( 'routes/page_routes.php') );
+    }
 
     /**
      * Проверяем нужно ли производить агрейд
@@ -147,7 +150,6 @@ class AltrpUpdateService
       File::cleanDirectory( public_path( 'modules' ) );
     }
     clearAllCache();
-
     return $archive->extractTo( base_path() );
   }
 

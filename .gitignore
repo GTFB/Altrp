@@ -41,7 +41,6 @@ _ide_helper.php
 /routes/AltrpChannels.php
 /routes/page_routes.php
 /out
-/app/Http/Requests/AltrpRequests
 /app/Plugins/*/
 /Modules/*/
 /app/Plugins/plugins.json
@@ -56,4 +55,3 @@ public/modules/front-app
 public/modules/editor
 public/modules/reports
 public/modules/reports-new
-/routes/AltrpCustomRoutes.php

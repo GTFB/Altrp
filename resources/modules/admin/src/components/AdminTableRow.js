@@ -16,10 +16,14 @@ export default class AdminTableRow extends Component {
         </td>
         {this.props.columns.map((column, index) => {
           let tag = "span";
+          let text = _.get(row, column.name, '')
+          if(column.default && ! text){
+            text = column.default
+          }
           let props = {
             className: "td__content",
             // children: [row[column.name]],
-            children: _.get(row, column.name, "")
+            children: text
           };
           if (column.url && row.url) {
             tag = "a";

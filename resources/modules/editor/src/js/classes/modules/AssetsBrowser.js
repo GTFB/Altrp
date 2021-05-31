@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import { connect } from "react-redux";
 import Times from "../../../svgs/times.svg";
 import { assetsToggle } from "../../store/assets-browser/actions";
-import { iconsManager } from "../../helpers";
 import Resource from "../Resource";
 import '../../../sass/assets-browser.scss';
 
@@ -46,6 +45,24 @@ class AssetsBrowser extends Component {
     this.svgResource  =new Resource({ route: "/admin/ajax/media?type=svg" });
     this.videoResource = new Resource({ route: "/admin/ajax/media?type=media" });
   }
+
+  componentDidUpdate(prevProps, nextContext) {
+    if(this.props.tabs && prevProps.tabs !== this.props.tabs) {
+      let tabs = [...this.state.tabs];
+      let activeTab;
+      tabs = tabs.filter(tab=>{
+        if(this.props.tabs.indexOf(tab.name) !== -1 && ! activeTab){
+          activeTab = tab.name;
+        }
+        return this.props.tabs.indexOf(tab.name) !== -1;
+      });
+      if(! activeTab){
+        activeTab = 'media';
+      }
+      this.setState(state=>({...state, tabs, activeTab }), ()=>{this.setActiveTab(activeTab)})
+    }
+  }
+
   async componentDidMount() {
     try {
       this.videoResource.getAll()
@@ -75,7 +92,7 @@ class AssetsBrowser extends Component {
     });
   }
   getAssets(tab) {
-    if (!tab) {
+    if (! tab) {
       tab = this.state.activeTab;
     }
 
@@ -144,6 +161,9 @@ class AssetsBrowser extends Component {
     } else {
       buttonClasses += " btn_success";
     }
+    if(! this.props.active){
+      return  '';
+    }
     return (
       <div className={classes}>
         <div className="assets-browser__bg" onClick={this.toggleBrowser} />
@@ -188,7 +208,7 @@ class AssetsBrowser extends Component {
                     asset.name = asset.filename;
                     assetProps.src = asset.url;
                   }
-                  
+
                   classes += " asset-choose_icon";
                   // assetProps.viewBox = '0 0 20 20';
                   // assetProps.viewport = '0 0 10 10';

@@ -59,7 +59,7 @@ class DropdownSub extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(prevProps.list !== this.props.list || prevProps.children.length !==  this.props.children.length) {
+    if (prevProps.list !== this.props.list || prevProps.children?.length !== this.props.children?.length) {
       this.setList()
     }
   }

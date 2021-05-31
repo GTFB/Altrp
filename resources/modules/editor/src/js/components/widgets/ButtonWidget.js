@@ -182,7 +182,7 @@ class ButtonWidget extends Component {
       classes += " altrp-background-image";
     }
 
-    let buttonText = this.props.element.getResponsiveSetting("button_text", null, "");
+    let buttonText = this.props.element.getContent("button_text");
     let buttonMedia = { ...this.state.settings.button_icon };
     const showIcon = buttonMedia.url;
 

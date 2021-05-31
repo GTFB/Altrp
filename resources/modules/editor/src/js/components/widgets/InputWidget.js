@@ -38,6 +38,8 @@ const AltrpFieldContainer = styled.div`
 `;
 
 class InputWidget extends Component {
+  timeInput = null;
+
   constructor(props) {
     super(props);
     props.element.component = this;
@@ -45,6 +47,7 @@ class InputWidget extends Component {
       window.elementDecorator(this);
     }
     this.onChange = this.onChange.bind(this);
+    this.debounceDispatch = this.debounceDispatch.bind(this);
 
     this.defaultValue =
       this.getContent("content_default_value") ||
@@ -515,10 +518,12 @@ class InputWidget extends Component {
             value.push(input.value);
           }
         });
-      } else if(settings.content_type === 'accept'){
+      } else if (settings.content_type === "accept") {
         let _value = e.target.checked;
-        let trueValue = this.props.element.getSettings('accept_checked') || true;
-        let falseValue = this.props.element.getSettings('accept_unchecked') || false;
+        let trueValue =
+          this.props.element.getSettings("accept_checked") || true;
+        let falseValue =
+          this.props.element.getSettings("accept_unchecked") || false;
         falseValue = valueReplacement(falseValue);
         trueValue = valueReplacement(trueValue);
         valueToDispatch = _value ? trueValue : falseValue;
@@ -558,7 +563,6 @@ class InputWidget extends Component {
     if (isDate && timestamp && value != "") {
       value = new Date(value).getTime(); // timestamp
     }
-
     this.setState(
       state => ({
         ...state,
@@ -568,17 +572,51 @@ class InputWidget extends Component {
         /**
          * Обновляем хранилище только если не текстовое поле
          */
+
+        const change_actions = this.props.element.getSettings("change_actions");
+        const change_change_end = this.props.element.getSettings(
+          "change_change_end"
+        );
+        const change_change_end_delay = this.props.element.getSettings(
+          "change_change_end_delay"
+        );
+
         if (
           ["text", "email", "phone", "tel", "number", "password"].indexOf(
             this.state.settings.content_type
           ) === -1
         ) {
-          this.dispatchFieldValueToStore( valueToDispatch !== undefined ? valueToDispatch : value, true);
+          this.dispatchFieldValueToStore(
+            valueToDispatch !== undefined ? valueToDispatch : value,
+            true
+          );
+        }
+        if (change_actions && !change_change_end && !isEditor()) {
+          this.debounceDispatch(
+            valueToDispatch !== undefined ? valueToDispatch : value
+          );
+        }
+        if (change_actions && change_change_end && !isEditor()) {
+          this.timeInput && clearTimeout(this.timeInput);
+          this.timeInput = setTimeout(() => {
+            this.debounceDispatch(
+              valueToDispatch !== undefined ? valueToDispatch : value
+            );
+          }, change_change_end_delay);
         }
       }
     );
   }
 
+  debounceDispatch = _.debounce(
+    value => this.dispatchFieldValueToStore(value, true),
+    150
+  );
+
+  inputKeyBetween = setTimeout(
+    value => this.dispatchFieldValueToStore(value, true),
+    this.props.element.getSettings("change_change_end_delay")
+  );
   /**
    * получить опции
    */
@@ -590,7 +628,7 @@ class InputWidget extends Component {
     if (optionsDynamicSetting) {
       options = convertData(optionsDynamicSetting, options);
     }
-    if(! this.props.element.getSettings('sort_default')){
+    if (!this.props.element.getSettings("sort_default")) {
       options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
     }
     return options;
@@ -985,7 +1023,7 @@ class InputWidget extends Component {
           }
         }
         input = (
-          <React.Suspense fallback={<input />}>
+          <React.Suspense fallback={''}>
             <div className="altrp-input-wrapper">
               <AltrpInput
                 type={this.state.settings.content_type}
@@ -1043,29 +1081,28 @@ class InputWidget extends Component {
   renderAcceptInput() {
     const settings = this.props.element.getSettings();
     let value = this.state.value;
-    let trueValue = this.props.element.getSettings('accept_checked') || true;
-    let falseValue = this.props.element.getSettings('accept_unchecked') || false;
-    if(value === trueValue){
+    let trueValue = this.props.element.getSettings("accept_checked") || true;
+    let falseValue =
+      this.props.element.getSettings("accept_unchecked") || false;
+    if (value === trueValue) {
       value = true;
-    } else if(value === falseValue){
+    } else if (value === falseValue) {
       value = false;
     }
-    return <div
-        className={`altrp-field-option ${value ? "active" : ""}`}>
-          <span className="altrp-field-option-span">
-            <input
-                type="checkbox"
-                name={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
-                className={`altrp-field-option__input ${
-                    value ? "active" : ""
-                    }`}
-                onChange={this.onChange}
-                checked={! ! value}
-                id={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
-            />
-          </span>
-
-    </div>
+    return (
+      <div className={`altrp-field-option ${value ? "active" : ""}`}>
+        <span className="altrp-field-option-span">
+          <input
+            type="checkbox"
+            name={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
+            className={`altrp-field-option__input ${value ? "active" : ""}`}
+            onChange={this.onChange}
+            checked={!!value}
+            id={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
+          />
+        </span>
+      </div>
+    );
   }
   /**
    * Выводит input type=checkbox|radio
@@ -1172,9 +1209,6 @@ class InputWidget extends Component {
       /**
        * Если включен мультиселект
        */
-      console.log("====================================");
-      console.log(this.state.value);
-      console.log("====================================");
       value = value ? (_.isArray(value) ? value : [value]) : [];
       value = value.map(v => {
         let _v = v;
@@ -1241,9 +1275,11 @@ class InputWidget extends Component {
       onKeyDown: this.handleEnter
       // menuIsOpen: true,
     };
-    return <div className="altrp-input-wrapper">
-      <AltrpSelect {...select2Props} />
-    </div>;
+    return (
+      <div className="altrp-input-wrapper">
+        <AltrpSelect {...select2Props} />
+      </div>
+    );
   }
 
   renderWysiwyg() {

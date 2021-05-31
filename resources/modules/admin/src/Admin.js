@@ -83,7 +83,11 @@ import {
   setWebsocketsPort
 } from "./js/store/websockets-storage/actions";
 import AltrpMeta from '../../../modules/editor/src/js/classes/AltrpMeta';
-import { normalizeUnits } from "moment";
+import Areas from "./components/areas/Areas";
+import AreaAdd from "./components/areas/AreaAdd";
+import AreaEdit from "./components/areas/AreaEdit";
+import MenuPage from "./components/menu-builder/MenuPage";
+import MenusList from "./components/menu-builder/MenusList";
 
 window.React = React;
 window.ReactDOM = ReactDOM;
@@ -344,6 +348,15 @@ class Admin extends Component {
                       </Link>
                     </li>
                     <li>
+                      <Link
+                        to="/admin/areas"
+                        className="admin-nav-list__link"
+                      >
+                        <TemplateSvg className="icon" />
+                        <span>Custom Areas</span>
+                      </Link>
+                    </li>
+                    <li>
                       <Link to="/admin/robots" className="admin-nav-list__link">
                         <TemplateSvg className="icon" />
                         <span>Robots</span>
@@ -397,6 +410,15 @@ class Admin extends Component {
                       >
                         <SettingSvg className="icon" />
                         <span>Settings</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/admin/menus"
+                        className="admin-nav-list__link"
+                      >
+                        <SettingSvg className="icon" />
+                        <span>Menus</span>
                       </Link>
                     </li>
                   </ul>
@@ -480,6 +502,21 @@ class Admin extends Component {
             </Route>
             <Route path="/admin/templates">
               <Templates />
+            </Route>
+            <Route path="/admin/areas/add">
+              <AreaAdd />
+            </Route>
+            <Route path="/admin/areas/:id">
+              <AreaEdit />
+            </Route>
+            <Route path="/admin/areas">
+              <Areas />
+            </Route>
+            <Route path="/admin/menus/:id">
+              <MenuPage />
+            </Route>
+            <Route path="/admin/menus">
+              <MenusList />
             </Route>
             <Route path="/admin/robots">
               <Robots />

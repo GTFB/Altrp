@@ -1111,25 +1111,25 @@ class Button extends BaseElement {
       }
     });
 
-    // this.addControl('box_shadow_dropbar_content_style', {
-    //   type: CONTROLLER_SHADOW,
-    //   label: 'Box shadow',
-    //   default:{
-    //     blur: 0,
-    //     horizontal: 0,
-    //     vertical: 0,
-    //     opacity: 1,
-    //     spread: 0,
-    //     colorRGB: 'rgb(0, 0, 0)',
-    //     color: 'rgb(0, 0, 0)',
-    //     colorPickedHex: '#000000',
-    //     type: ""
-    //     },
-    //     rules: {
-    //       '{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-    //     },
-    //   }
-    // );
+    this.addControl('box_shadow_dropbar_content_style', {
+      type: CONTROLLER_SHADOW,
+      label: 'Box shadow',
+      default: {
+        blur: 0,
+        horizontal: 0,
+        vertical: 0,
+        opacity: 1,
+        spread: 0,
+        colorRGB: 'rgb(0, 0, 0)',
+        color: 'rgb(0, 0, 0)',
+        colorPickedHex: '#000000',
+        type: ""
+      },
+      rules: {
+        '{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      },
+    }
+    );
 
     this.addControl("border_radius_dropbar_content_style", {
       type: CONTROLLER_DIMENSIONS,

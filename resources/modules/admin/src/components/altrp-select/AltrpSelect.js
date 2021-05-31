@@ -79,7 +79,7 @@ class AltrpSelect extends Component {
       menuPlacement: 'auto',
       menuPosition: 'absolute',
       onKeyDown : this.onKeyDown,
-      components: { MenuList: renderScrollbar },
+      components: { MenusList: renderScrollbar },
       captureMenuScroll: false,
       isDisabled: this.state.isDisabled,
       ref: this.selectRef,

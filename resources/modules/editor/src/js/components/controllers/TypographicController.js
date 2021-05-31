@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import ContentIcon from '../../../svgs/content.svg'
 import Select from "react-select";
 import controllerDecorate from "../../decorators/controller";
-import ResponsiveDdMenu from "../ResponsiveDdMenu";
 import { addFont, removeFont } from "../../../../../front-app/src/js/store/fonts-storage/actions";
 import { altrpFontsSet } from "../../../../../front-app/src/js/components/FontsManager";
 import { renderScrollbar } from "../../../../../admin/src/components/altrp-select/AltrpSelect";
@@ -111,6 +110,14 @@ class TypographicController extends Component {
     this._changeValue({
       ...value,
       sizeUnit: unit
+    });
+  };
+
+  changeLineHeightUnit = unit => {
+    let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
+    this._changeValue({
+      ...value,
+      lineHeightUnit: unit
     });
   };
 
@@ -474,8 +481,16 @@ class TypographicController extends Component {
         {/* конец select decoration */}
         {/* начало slider Line-Height */}
         <div className="control-slider-header controller-container_slider_typographic_top">
-          <div className="control-slider-label">
+          <div className="control-slider-label control-slider-label--typographic">
             Line-Height
+            <div className="control-slider-type-label__wrapper">
+              <button
+                onClick={() => this.changeLineHeightUnit('px')}
+                className={`control-slider-type-label ${this.state.value.lineHeightUnit === 'px' ? 'control-slider-type-label--active' : ''}`}
+              >
+                px
+              </button>
+            </div>
         </div>
         </div>
         <div className="control-slider-input-wrapper">
@@ -522,9 +537,6 @@ class TypographicController extends Component {
     return <div className="controller-container controller-container_shadow">
       <div className="controller-container__label control-shadow-label">
         {this.props.label}
-        <div className="responsive-absolute">
-          <ResponsiveDdMenu />
-        </div>
       </div>
       <div className="control-group control-group-shadow">
         <div className="control-shadow-toggle control-shadow-toggle-active" onClick={this.openTypographic} fill="#8E94AA">

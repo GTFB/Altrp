@@ -6,6 +6,7 @@ class AreaComponent extends Component {
   constructor(props) {
     super(props);
     // console.log("AreaComponent: ", performance.now());
+    props.area.component = this;
   }
   componentWillUnmount() {
     /**
@@ -76,15 +77,17 @@ class AreaComponent extends Component {
     }
     let { children } = this.rootElement;
     children = children.filter(child => ! child.lazySection);
-    let template = (
-      <div className={classes.join(" ")}>
-        {React.createElement(this.rootElement.componentClass, {
-          element: this.rootElement,
-          children
-        })}
-      </div>
-    );
-    return template;
+
+    if(this.props.area.isCustomArea()){
+      classes = classes.concat(this.props.area.getAreaClasses())
+    }
+
+    return React.createElement('div', {
+      className:classes.join(" "),
+    }, React.createElement(this.rootElement.componentClass, {
+      element: this.rootElement,
+      children
+    }));
   }
 }
 

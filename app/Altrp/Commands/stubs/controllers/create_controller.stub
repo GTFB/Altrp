@@ -9,6 +9,7 @@ use DummyRootNamespaceHttp\Controllers\ApiController;
 
 use DummyRootNamespace{{modelNamespace}}{{modelName}};
 use App\Http\Requests\ApiRequest;
+use App\Services\ChatService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 {{requestNamespaces}}
@@ -53,6 +54,8 @@ class DummyClass extends ApiController
         }
 
         ${{crudNameSingular}} = new {{modelName}};
+
+        $regChat = ChatService::registerInChat(${{crudNameSingular}}->getTable(), $data);
 
         $data = $this->hashPasswordAttributeIfExists(${{crudNameSingular}}->getTable(), $data);
 
@@ -190,6 +193,10 @@ class DummyClass extends ApiController
                             ->get();
         return response()->json(${{crudName}}, 200, [], JSON_UNESCAPED_UNICODE);
     }
+
+    // SQL_EDITORS_BEGIN - IMPORTANT: Don't remove this comment! Write your methods between these comments.
+    {{sqlEditors}}
+    // SQL_EDITORS_END - IMPORTANT: Don't remove this comment! Write your methods between these comments.
 
     // CUSTOM_METHODS_BEGIN - IMPORTANT: Don't remove this comment! Write your methods between these comments.
     {{customMethods}}

@@ -61,43 +61,184 @@ export function dimensionsControllerToStyles(data = {}, styleProperty = 'padding
   switch(styleProperty){
     case 'border-width':{
       if(left){
-        styles += `border-left-width:${left}${unit};`;
+        styles += `border-left-width: ${left}${unit}; `;
       }
       if(right){
-        styles += `border-right-width:${right}${unit};`;
+        styles += `border-right-width: ${right}${unit}; `;
       }
       if(top){
-        styles += `border-top-width:${top}${unit};`;
+        styles += `border-top-width: ${top}${unit}; `;
       }
       if(bottom){
-        styles += `border-bottom-width:${bottom}${unit};`;
+        styles += `border-bottom-width: ${bottom}${unit}; `;
+      }
+
+    }break;
+    case 'border-radius':{
+      if(top){
+        styles += `border-top-left-radius: ${top}${unit}; `;
+      }
+      if(right){
+        styles += `border-top-right-radius: ${right}${unit}; `;
+      }
+      if(bottom){
+        styles += `border-bottom-right-radius: ${bottom}${unit}; `;
+      }
+      if(left){
+        styles += `border-bottom-left-radius: ${left}${unit}; `;
       }
 
     }break;
     default:{
       if(left){
-        styles += `${styleProperty}-left:${left}${unit};`;
+        styles += `${styleProperty}-left: ${left}${unit}; `;
       }
       if(right){
-        styles += `${styleProperty}-right:${right}${unit};`;
+        styles += `${styleProperty}-right: ${right}${unit}; `;
       }
       if(top){
-        styles += `${styleProperty}-top:${top}${unit};`;
+        styles += `${styleProperty}-top: ${top}${unit}; `;
       }
       if(bottom){
-        styles += `${styleProperty}-bottom:${bottom}${unit};`;
+        styles += `${styleProperty}-bottom: ${bottom}${unit}; `;
       }
     }break;
   }
   return styles;
 }
 
+/**
+ *
+ * @param {{}}data
+ * @return {string}
+ */
 export function shadowControllerToStyles(data) {
   if(data) {
-    let {type, offsetX, offsetY, blurRadius, spreadRadius, color } = data;
-    return `box-shadow: ${type} ${offsetX}px ${offsetY}px ${blurRadius}px ${spreadRadius} ${color} !important;`;
+    let {type = 'outline', offsetX,horizontal, offsetY, vertical, blurRadius,blur,spread, spreadRadius, color } = data;
+    console.log(data);
+    return `box-shadow: ${type || ' '} ${offsetX||horizontal || 0}px ${offsetY || vertical || 0}px ${blurRadius || blur || 0}px ${spreadRadius ||spread || 0}px ${color};`;
   }
+  return  '';
 }
+
+/**
+ * Преобразует объект, который сохраняет контроллер Color, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
+export function backgroundColorControllerToStyles(data, pseudoClass) {
+  let styles = '';
+  if (_.isEmpty(data)) {
+    return styles;
+  }
+
+  if (data) {
+    let { colorPickedHex } = data;
+
+    if (pseudoClass !== undefined) {
+      return `&:${pseudoClass} {background-color: ${colorPickedHex};} `;
+    }
+
+    return `background-color: ${colorPickedHex}; `;
+
+  }
+
+  return styles;
+}
+
+export function gradientControllerToStyles(data) {
+  let styles = '';
+  if (_.isEmpty(data)) {
+    return styles;
+  }
+
+  if (data.isWithGradient) {
+    let { angle, firstColor, firstPoint, secondColor, secondPoint } = data;
+
+    return `background-image: linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%); `;
+  }
+
+  return styles;
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер Filters, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
+
+export function filtersControllerToStyles(data) {
+  let styles = '';
+  if (_.isEmpty(data)) {
+    return styles;
+  }
+
+  let { blur, brightness, contrast, hue, saturate } = data;
+
+  return `& .altrp-image {filter: blur(${blur}px) brightness(${brightness}%) contrast(${contrast}%) saturate(${saturate}%) hue-rotate(${hue}deg);} `;
+
+}
+
+/**
+ * Преобразует значение одного из свойств, перечисленных ниже, в строку css для вставки в styled-компонент
+ * Варианты принимаемых свойств: column-count, z-index, border-style
+ * @param {string} style
+ * @param {string} styleProperty
+ * @return {string}
+ */
+
+export function simplePropertyStyled(style, styleProperty) {
+  if (style) {
+    return `${styleProperty}: ${style}; `;
+  } else return "";
+}
+
+/**
+ * Преобразует значение одного из свойств, перечисленных ниже, в строку css для вставки в styled-компонент
+ * Варианты принимаемых свойств: color, background-color, border-color
+ * @param {string} style
+ * @param {string} styleProperty
+ * @return {string}
+ */
+
+export function colorPropertyStyled(style, styleProperty) {
+  if (style) {
+    return `${styleProperty}: ${style.colorPickedHex}; `;
+  } else return "";
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер column-gap, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
+
+export function columnGapStyled(data = {}) {
+  let styles = '';
+
+  if (_.isEmpty(data)) {
+    return styles;
+  }
+
+  const { size, unit } = data;
+
+  styles = `column-gap: ${size + unit}; `;
+
+  return styles;
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер opacity, в строку css для вставки в styled-компонент
+ * @param {string} style
+ * @return {string}
+ */
+
+export function opacityStyled(style) {
+  if (style) {
+    return `opacity: ${style.size}; `;
+  } else return "";
+}
+
 /**
  * Преобразует объект, который сохраняет контроллер typographic, в строку css для вставки в styled-компонент
  * @param {{}} data
@@ -105,9 +246,11 @@ export function shadowControllerToStyles(data) {
  */
 export function typographicControllerToStyles(data = {}){
   let styles = '';
+
   if(_.isEmpty(data)){
     return styles;
   }
+
   const {
     family,
     size,
@@ -118,30 +261,32 @@ export function typographicControllerToStyles(data = {}){
     weight,
     decoration,
     sizeUnit,
+    lineHeightUnit,
   } = data;
+
   if(decoration){
-    styles += `text-decoration:${decoration};`;
+    styles += `text-decoration: ${decoration}; `;
   }
   if(transform){
-    styles += `text-transform:${transform};`;
+    styles += `text-transform: ${transform}; `;
   }
   if(spacing){
-    styles += `letter-spacing:${spacing};`;
+    styles += `letter-spacing: ${spacing}px; `;
   }
   if(lineHeight){
-    styles += `line-height:${lineHeight};`;
+    styles += `line-height: ${lineHeightUnit ? (lineHeight + lineHeightUnit) : lineHeight}; `;
   }
   if(weight){
-    styles += `font-weight:${weight};`;
+    styles += `font-weight: ${weight}; `;
   }
   if(style){
-    styles += `font-style:${style};`;
+    styles += `font-style: ${style}; `;
   }
   if(size){
-    styles += `font-size:${size ? (size + (sizeUnit || 'px')) : ''};`;
+    styles += `font-size: ${size ? (size + (sizeUnit || 'px')) : ''}; `;
   }
   if(! _.isEmpty(family)){
-    styles += `font-family:${family};`;
+    styles += `font-family: ${family}; `;
   }
   return styles;
 }
@@ -158,6 +303,68 @@ export function colorStyled(controller, style) {
       return `${style}: ${controller.color};`
     } else return "";
   } else return "";
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер border-width, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
+
+export function borderWidthStyled(data = {}) {
+  let styles = '';
+
+  if (_.isEmpty(data)) {
+    return styles;
+  }
+
+  const {
+    bottom,
+    left,
+    right,
+    top,
+    unit,
+  } = data;
+
+  if (top !== '') {
+    styles += `border-top-width: ${top + unit} ;`;
+  }
+
+  if (right !== '') {
+    styles += `border-right-width: ${right + unit} ;`;
+  }
+
+  if (bottom !== '') {
+    styles += `border-bottom-width: ${bottom + unit} ;`;
+  }
+
+  if (left !== '') {
+    styles += `border-left-width: ${left + unit} ;`;
+  }
+
+  return styles;
+
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер border-radius, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
+
+export function borderRadiusStyled(data = {}) {
+  let styles = '';
+
+  if (_.isEmpty(data)) {
+    return styles;
+  }
+
+  const { size, unit } = data;
+
+  styles = `border-radius: ${size + unit}; `;
+
+  return styles;
+
 }
 
 /**

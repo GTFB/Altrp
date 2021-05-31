@@ -33,6 +33,7 @@ class ResponsiveDdFooter extends Component {
               return <button
                 className={"responsive-footer-submenu__item " + (this.props.currentScreen.id === screen.id ? "responsive-footer-submenu__item__active" : '')}
                 onClick={() => this.setCurrentScreen(screen)}
+                title={screen.name}
                 key={screen.id}>
                 {iconsManager().renderIcon(screen.icon)}
               </button>

@@ -51,6 +51,8 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
  */
 
 define('LARAVEL_START', microtime(true));
+global $altrp_env;
+$altrp_env = [];
 global $altrp_need_cache;
 $altrp_need_cache = false;
 global $altrp_route_id;
