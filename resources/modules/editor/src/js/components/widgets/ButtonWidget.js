@@ -304,11 +304,4 @@ class ButtonWidget extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    toggleTrigger: string => dispatch(toggleTrigger(string))
-  };
-};
-
-// export default connect(null, mapDispatchToProps)(withRouter(ButtonWidget));
 export default ButtonWidget;

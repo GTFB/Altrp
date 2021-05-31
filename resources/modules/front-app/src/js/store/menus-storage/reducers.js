@@ -1,7 +1,6 @@
 import {ADD_MENU, } from './actions'
-import {mbParseJSON} from "../../helpers";
 
-const defaultMenus = window.altrpMenus;
+const defaultMenus = window.altrpMenus || [];
 /**
  *
  * @param {[]} menus

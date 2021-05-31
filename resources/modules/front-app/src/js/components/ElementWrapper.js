@@ -14,6 +14,7 @@ import DividerComponent from "../../../../editor/src/js/components/widgets/style
 import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 import TextComponent from "../../../../editor/src/js/components/widgets/styled-components/TextComponent";
 import MenuComponent from "../../../../editor/src/js/components/widgets/styled-components/MenuComponent";
+import BreadcrumbsComponent from "../../../../editor/src/js/components/widgets/styled-components/BreadcrumbsComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -44,7 +45,7 @@ class ElementWrapper extends Component {
    * Иногда надо обновить элемент (FrontElement)
    */
   componentDidMount() {
-    !isEditor() && window.frontApp.onWidgetMount();
+    ! isEditor() && window.frontApp.onWidgetMount();
     if (_.isFunction(this.props.element.update)) {
       this.props.element.update();
       this.props.element.updateFonts();
@@ -338,6 +339,9 @@ class ElementWrapper extends Component {
         break
       case "menu":
         WrapperComponent = MenuComponent;
+        break;
+      case "breadcrumbs":
+        WrapperComponent = BreadcrumbsComponent;
         break;
     }
 
