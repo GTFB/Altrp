@@ -14,6 +14,7 @@
 
   <script>
     window.ALTRP_DEBUG = {!! json_encode( ! ! get_altrp_setting( 'altrp_debug', false ) ) !!};
+    window.altrpMenus = [];
     let _token = '{{ csrf_token() }}';
   </script>
   @if( env( 'ALTRP_SETTING_ADMIN_LOGO' ) )
@@ -24,6 +25,9 @@
   @endif
   <script>
     let altrp_version = '{!! config( 'app.altrp_version' ) !!}';
+
+    window.altrpMenus = [];
+    
   </script>
 
   <script src="{{ altrp_asset( '/modules/admin/admin.js', 'http://localhost:3002/' ) }}" defer></script>

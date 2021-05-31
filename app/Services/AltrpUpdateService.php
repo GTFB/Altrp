@@ -48,7 +48,11 @@ class AltrpUpdateService
     $version = $this->get_version( $test );
 
     $url = self::UPDATE_DOMAIN . 'download/' . ( $test ? self::TEST_PRODUCT_NAME : self::PRODUCT_NAME ) . '/' . $version;
-    $file = $this->client->get( $url )->getBody()->getContents();
+    try {
+      $file = $this->client->get( $url )->getBody()->getContents();
+    } catch (\Exception $e){
+      return false;
+    }
 
     if ( ! $this->write_public_permissions() ) {
       throw new \HttpException( 'Не удалось обновить режим чтения файлов' );
