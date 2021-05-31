@@ -226,9 +226,11 @@ class ElementWrapper extends Component {
       hide_on_small_phone,
       hide_on_trigger,
       isFixed,
-      tooltip_text,
       tooltip_position
     } = this.props.element.settings;
+    let {
+      tooltip_text,
+    } = this.props.element.settings
     let classes = `altrp-element altrp-element${this.props.element.getId()} altrp-element_${this.props.element.getType()}`;
     classes += this.props.element.getPrefixClasses() + " ";
     if (this.props.element.getType() === "widget") {
@@ -352,7 +354,7 @@ class ElementWrapper extends Component {
         WrapperComponent = BreadcrumbsComponent;
         break;
     }
-
+    tooltip_text = replaceContentWithData(tooltip_text, this.props.element.getCurrentModel().getData())
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
       <WrapperComponent
         className={classes}
