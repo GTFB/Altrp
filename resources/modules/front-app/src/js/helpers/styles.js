@@ -58,39 +58,75 @@ export function dimensionsControllerToStyles(data = {}, styleProperty = 'padding
   if(_.isEmpty(data)){
     return styles;
   }
+  const {left, top, right, bottom, unit} = data;
+  switch(styleProperty){
+    case 'border-width':{
+      if(left){
+        styles += `border-left-width: ${left}${unit}; `;
+      }
+      if(right){
+        styles += `border-right-width: ${right}${unit}; `;
+      }
+      if(top){
+        styles += `border-top-width: ${top}${unit}; `;
+      }
+      if(bottom){
+        styles += `border-bottom-width: ${bottom}${unit}; `;
+      }
 
-  const {unit = 'px', left, right, top, bottom} = data;
+    }break;
+    case 'border-radius':{
+      if(top){
+        styles += `border-top-left-radius: ${top}${unit}; `;
+      }
+      if(right){
+        styles += `border-top-right-radius: ${right}${unit}; `;
+      }
+      if(bottom){
+        styles += `border-bottom-right-radius: ${bottom}${unit}; `;
+      }
+      if(left){
+        styles += `border-bottom-left-radius: ${left}${unit}; `;
+      }
 
-  if(left){
-    styles += `${styleProperty}-left: ${left + unit}; `;
-  }
-  if(right){
-    styles += `${styleProperty}-right: ${right + unit}; `;
-  }
-  if(top){
-    styles += `${styleProperty}-top: ${top + unit}; `;
-  }
-  if(bottom){
-    styles += `${styleProperty}-bottom: ${bottom + unit}; `;
+    }break;
+    default:{
+      if(left){
+        styles += `${styleProperty}-left: ${left}${unit}; `;
+      }
+      if(right){
+        styles += `${styleProperty}-right: ${right}${unit}; `;
+      }
+      if(top){
+        styles += `${styleProperty}-top: ${top}${unit}; `;
+      }
+      if(bottom){
+        styles += `${styleProperty}-bottom: ${bottom}${unit}; `;
+      }
+    }break;
   }
 
   return styles;
 }
 
 /**
+<<<<<<< HEAD
  * Преобразует объект, который сохраняет контроллер box-shadow, в строку css для вставки в styled-компонент
  * @param {{}} data
+=======
+ *
+ * @param {{}}data
+>>>>>>> front-app-dev
  * @return {string}
  */
 export function shadowControllerToStyles(data) {
 
   if(data) {
-    const {type, offsetX, offsetY, blurRadius, spreadRadius, color } = data;
 
-    return `box-shadow: ${type} ${offsetX}px ${offsetY}px ${blurRadius}px ${spreadRadius} ${color} !important; `;
+    let {type = 'outline', offsetX,horizontal, offsetY, vertical, blurRadius,blur,spread, spreadRadius, color } = data;
+    return `box-shadow: ${type || ' '} ${offsetX||horizontal || 0}px ${offsetY || vertical || 0}px ${blurRadius || blur || 0}px ${spreadRadius ||spread || 0}px ${color};`;
   }
-
-  return '';
+  return  '';
 }
 
 /**
@@ -157,8 +193,8 @@ export function simplePropertyStyled(style, styleProperty, declaration = '') {
 
   if (style) {
     return `${styleProperty}: ${style + declaration}; `;
-  } 
-  
+  }
+
   return '';
 }
 
@@ -177,8 +213,8 @@ export function colorPropertyStyled(data, styleProperty, declaration = '') {
 
   if (colorPickedHex) {
     return `${styleProperty}: ${colorPickedHex + declaration}; `;
-  } 
-  
+  }
+
   return '';
 }
 
@@ -223,13 +259,13 @@ export function columnGapStyled(data = {}) {
 }
 
 /**
- * Преобразует объект, который сохраняет контроллер Size | Icon Left Spacing | Icon Right Spacing | Top Translate | Left Translate, 
+ * Преобразует объект, который сохраняет контроллер Size | Icon Left Spacing | Icon Right Spacing | Top Translate | Left Translate,
  * в строку css для вставки в styled-компонент
  * @param {{}} data
  * @param {string} property
  * @return {string}
  */
- 
+
  export function sizeStyled(data = {}, property) {
   let styles = '';
 
@@ -255,7 +291,7 @@ export function columnGapStyled(data = {}) {
  * @param {{}} data
  * @return {string}
  */
- 
+
  export function translateStyled(data = {}) {
   let styles = '';
 
@@ -391,7 +427,7 @@ export function borderWidthStyled(data = {}, declaration = '') {
 }
 
 /**
- * Преобразует объект, который сохраняет контроллер border-width, в строку css со свойством margin-top или margin-left с таким же значением, но отритцательным 
+ * Преобразует объект, который сохраняет контроллер border-width, в строку css со свойством margin-top или margin-left с таким же значением, но отритцательным
  * @param {{}} data
  * @param {string} position
  * @return {string}

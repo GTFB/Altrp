@@ -30,6 +30,7 @@ import TableComponent from "./widgets/styled-components/TableComponent";
 import HeadingComponent from "./widgets/styled-components/HeadingComponent";
 import Column from "../classes/elements/Column";
 import MenuComponent from "./widgets/styled-components/MenuComponent";
+import BreadcrumbsComponent from "./widgets/styled-components/BreadcrumbsComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -416,6 +417,9 @@ class ElementWrapper extends Component {
         break;
       case "menu":
         WrapperComponent = MenuComponent;
+        break;
+      case "breadcrumbs":
+        WrapperComponent = BreadcrumbsComponent;
         break;
     }
 

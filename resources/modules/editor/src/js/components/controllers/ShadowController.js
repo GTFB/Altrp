@@ -184,7 +184,7 @@ class ShadowController extends Component {
       },
       {
         value: "inset",
-        label: "inset",
+        label: "Inset",
         key: 1
       }
     ]
@@ -196,8 +196,8 @@ class ShadowController extends Component {
         </div>
       </div>
       <div className="control-group control-group-shadow">
-        <div className="control-shadow-toggle control-shadow-toggle-active" 
-          onClick={() => this.setState({ isMenuOpened: !isMenuOpened})} 
+        <div className="control-shadow-toggle control-shadow-toggle-active"
+          onClick={() => this.setState({ isMenuOpened: !isMenuOpened})}
           fill="#8E94AA"
         >
           <ContentIcon id="shadowContentIcon" className="control-shadow-svg-content" fill="#8E94AA" width="16"
