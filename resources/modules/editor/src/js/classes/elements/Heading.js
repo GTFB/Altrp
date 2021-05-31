@@ -124,6 +124,10 @@ class Heading extends BaseElement {
         }
       ],
       prefixClass: 'altrp-alignment_',
+      // rules: {
+      //   '{{ELEMENT}} .altrp-heading': 'justify-content: {{VALUE}};',
+      //   '{{ELEMENT}} .altrp-heading-wrapper': 'justify-content: {{VALUE}};',
+      // },
     });
 
     this.addControl('sub_heading_settings_alignment', {
@@ -152,6 +156,9 @@ class Heading extends BaseElement {
         }
       ],
       prefixClass: 'altrp-alignment_',
+      // rules: {
+      //   '{{ELEMENT}} .altrp-heading-sub': 'justify-content: {{VALUE}};',
+      // },
     });
 
     this.addControl('heading_settings_html_tag', {
@@ -336,6 +343,9 @@ class Heading extends BaseElement {
           value: 'right',
         }
       ],
+      // rules: {
+      //   '{{ELEMENT}} .altrp-heading-advanced-wrapper': "text-align: {{VALUE}};",
+      // },
     });
 
     this.addControl("horizontal_offset_advanced_heading_content", {
@@ -365,10 +375,6 @@ class Heading extends BaseElement {
     this.addControl("rotate_offset_advanced_heading_content", {
       type: CONTROLLER_SLIDER,
       label: 'Rotate',
-      default: {
-        unit: "deg"
-      },
-      units: ["deg"],
       max: 360,
       min: -360,
       // rules: {
@@ -443,6 +449,9 @@ class Heading extends BaseElement {
             'label' : 'Mobile (768)',
           },
         ],
+        rules: {
+          '.{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
+        },
       }
     );
 
@@ -708,11 +717,34 @@ class Heading extends BaseElement {
         color: "",
         colorPickedHex: "#000",
       },
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading{{STATE}}": "color: {{COLOR}};"
+      // }
     });
 
     this.addControl('heading_style_typographic', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
+        // default:{
+        //   lineHeight: 1.5,
+        //   spacing: 0,
+        //   size: 36,
+        //   weight: "normal",
+        //   family: "Open Sans",
+        //   decoration: ""
+        // },
+        // rules: {
+        //   '{{ELEMENT}} .altrp-heading{{STATE}}': [
+        //     'font-family: "{{FAMILY}}", sans-serif;',
+        //     'font-size: {{SIZE}}px;',
+        //     'line-height: {{LINEHEIGHT}};',
+        //     'letter-spacing: {{SPACING}}px',
+        //     'font-weight: {{WEIGHT}}',
+        //     'text-transform: {{TRANSFORM}}',
+        //     'font-style: {{STYLE}}',
+        //     'text-decoration: {{DECORATION}}'
+        //   ],
+        // },
       }
     );
 
@@ -728,6 +760,9 @@ class Heading extends BaseElement {
           color: 'rgb(0, 0, 0)',
           colorPickedHex: '#000000',
         },
+        // rules: {
+        //   '{{ELEMENT}} .altrp-heading{{STATE}}': 'text-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
+        // },
       }
     );
 
@@ -744,23 +779,47 @@ class Heading extends BaseElement {
     this.addControl('style_position_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
-      default:{
-        unit:'px'
-      },
+      // default:{
+        // top: 5,
+        // right: 0,
+        // bottom: 5,
+        // left: 0,
+        // unit:'px'
+      // },
       units:[
         'px',
         '%',
         'vh',
       ],
+      // rules: {
+      //   '{{ELEMENT}} .altrp-heading{{STATE}}': [
+      //     'margin-top: {{TOP}}{{UNIT}};',
+      //     'margin-right: {{RIGHT}}{{UNIT}};',
+      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'margin-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl("style_position_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: "px"
       },
       units: ["px", "%", "vh"],
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading{{STATE}}": [
+      //     "padding-top: {{TOP}}{{UNIT}};",
+      //     "padding-right: {{RIGHT}}{{UNIT}};",
+      //     "padding-bottom: {{BOTTOM}}{{UNIT}};",
+      //     "padding-left: {{LEFT}}{{UNIT}};"
+      //   ]
+      // }
     });
 
     this.addControl('position_z_index', {
@@ -768,6 +827,9 @@ class Heading extends BaseElement {
       type: CONTROLLER_NUMBER,
       label: "Z-index",
       default: 0,
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading{{STATE}}": "z-index: {{VALUE}}"
+      // }
     });
 
     this.addControl("position_css_id", {
@@ -797,6 +859,9 @@ class Heading extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading{{STATE}}": "background-color: {{COLOR}};"
+      // }
     });
 
     this.addControl("style_background_opacity", {
@@ -808,6 +873,9 @@ class Heading extends BaseElement {
       max: 1,
       min: 0,
       step: 0.01,
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading{{STATE}}": "opacity: {{SIZE}}"
+      // }
     });
 
     this.addControl('gradient', {
@@ -822,12 +890,18 @@ class Heading extends BaseElement {
         angle: "0",
         value: ""
       },
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading{{STATE}}": "background-image: {{VALUE}}"
+      // }
     });
 
     this.addControl('background_image', {
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
       default: { url: "" },
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading.altrp-background-image{{STATE}}": "background-image: url({{URL}});"
+      // }
     });
 
     this.addControl('background_position', {
@@ -872,6 +946,9 @@ class Heading extends BaseElement {
       ],
       label: 'Background Position',
       default: 'top left',
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading.altrp-background-image{{STATE}}": "background-position: {{VALUE}};"
+      // }
     });
 
     this.addControl('background_attachment', {
@@ -892,6 +969,9 @@ class Heading extends BaseElement {
       ],
       label: 'Background Attachment',
       default: 'scroll',
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading.altrp-background-image{{STATE}}": "background-attachment: {{VALUE}};"
+      // }
     });
 
     this.addControl('background_repeat', {
@@ -924,6 +1004,9 @@ class Heading extends BaseElement {
       ],
       label: 'Background Repeat',
       default: 'repeat',
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading.altrp-background-image{{STATE}}": "background-repeat: {{VALUE}};"
+      // }
     });
 
     this.addControl("background_image_width", {
@@ -943,6 +1026,9 @@ class Heading extends BaseElement {
       ],
       max: 1000,
       min: 0,
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading.altrp-background-image{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
+      // }
     });
 
     this.addControl('background_size', {
@@ -967,6 +1053,9 @@ class Heading extends BaseElement {
       ],
       label: 'Background Size',
       default: 'unset',
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading.altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
+      // }
     });
 
 
@@ -1009,12 +1098,19 @@ class Heading extends BaseElement {
           label: "Groove"
         }
       ],
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading{{STATE}}": "border-style: {{VALUE}};"
+      // }
     });
 
     this.addControl("style_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
       units: ["px", "%", "vh"],
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading{{STATE}}":
+      //     "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      // }
     });
 
     this.addControl("style_border_color", {
@@ -1024,6 +1120,9 @@ class Heading extends BaseElement {
         color: "rgb(50,168,82)",
         colorPickedHex: "#32a852"
       },
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading{{STATE}}": "border-color: {{COLOR}};"
+      // }
     });
 
     this.addControl("style_border_radius", {
@@ -1040,6 +1139,9 @@ class Heading extends BaseElement {
       ],
       max: 100,
       min: 0,
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
+      // }
     });
 
     this.endControlSection();
@@ -1059,6 +1161,9 @@ class Heading extends BaseElement {
       default: {
         size: 0,
       },
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading{{STATE}}": "transform: {{FUNCTION}}({{SIZE}}{{UNIT}})"
+      // }
     });
 
     this.endControlSection();
@@ -1084,6 +1189,9 @@ class Heading extends BaseElement {
         //   color: "rgb(255,255,255)",
         //   colorPickedHex: "#FFF",
         // },
+        // rules: {
+        //   '{{ELEMENT}} .altrp-heading-advanced{{STATE}}': 'background-color: {{COLOR}};',
+        // },
       }
     );
 
@@ -1093,6 +1201,9 @@ class Heading extends BaseElement {
         // default: {
         //   color: "rgb(255,255,255)",
         //   colorPickedHex: "#FFF",
+        // },
+        // rules: {
+        //   '{{ELEMENT}} .altrp-heading-advanced{{STATE}}': 'color: {{COLOR}};',
         // },
       }
     );
@@ -1105,11 +1216,31 @@ class Heading extends BaseElement {
         '%',
         'vh',
       ],
+      // rules: {
+      //   '{{ELEMENT}} .altrp-heading-advanced{{STATE}}': [
+      //     'padding-top: {{TOP}}{{UNIT}};',
+      //     'padding-right: {{RIGHT}}{{UNIT}};',
+      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'padding-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl('typography_advanced_heading_style', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typography',
+        // rules: {
+        //   '{{ELEMENT}} .altrp-heading-advanced{{STATE}}': [
+        //     'font-family: "{{FAMILY}}", sans-serif;',
+        //     'font-size: {{SIZE}}px;',
+        //     'line-height: {{LINEHEIGHT}};',
+        //     'letter-spacing: {{SPACING}}px',
+        //     'font-weight: {{WEIGHT}}',
+        //     'text-transform: {{TRANSFORM}}',
+        //     'font-style: {{STYLE}}',
+        //     'text-decoration: {{DECORATION}}'
+        //   ],
+        // },
       }
     );
 
@@ -1127,6 +1258,9 @@ class Heading extends BaseElement {
           colorPickedHex: '#000000',
           type: "outline"
         },
+        // rules: {
+        //   '{{ELEMENT}} .altrp-heading-advanced{{STATE}}': 'text-shadow: {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
+        // },
       }
     );
 
@@ -1164,6 +1298,9 @@ class Heading extends BaseElement {
             'label' : 'Groove',
           },
         ],
+        // rules: {
+        //   '{{ELEMENT}} .altrp-heading-advanced{{STATE}}': 'border-style: {{VALUE}};',
+        // },
       }
     );
 
@@ -1175,12 +1312,18 @@ class Heading extends BaseElement {
           '%',
           'vh',
         ],
+        // rules: {
+        //   '{{ELEMENT}} .altrp-heading-advanced{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        // },
       }
     );
 
     this.addControl('border_color_advanced_heading_style', {
         type: CONTROLLER_COLOR,
         label: 'Color',
+        // rules: {
+        //   '{{ELEMENT}} .altrp-heading-advanced{{STATE}}': 'border-color: {{COLOR}};',
+        // },
       }
     );
 
@@ -1188,6 +1331,9 @@ class Heading extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Radius",
       units: ["px", "%", "vh"],
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading-advanced{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
+      // }
     });
 
     // this.addControl('box_shadow_advanced_heading_style', {
@@ -1216,6 +1362,10 @@ class Heading extends BaseElement {
       max: 1,
       step: 0.05,
       min: 0,
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading-advanced{{STATE}}": "opacity: {{SIZE}};"
+
+      // }
     });
 
     this.endControlSection();
@@ -1324,6 +1474,12 @@ class Heading extends BaseElement {
       ],
       max: 1200,
       min: 0,
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading-wrapper-sub-bottom .altrp-heading-sub{{STATE}}": "margin-top: {{SIZE}}{{UNIT}};",
+      //   "{{ELEMENT}} .altrp-heading-wrapper-sub-top .altrp-heading-sub{{STATE}}": "margin-bottom: {{SIZE}}{{UNIT}};",
+      //   "{{ELEMENT}} .altrp-heading-wrapper-sub-left .altrp-heading-sub{{STATE}}": "margin-right: {{SIZE}}{{UNIT}};",
+      //   "{{ELEMENT}} .altrp-heading-wrapper-sub-right .altrp-heading-sub{{STATE}}": "margin-left: {{SIZE}}{{UNIT}};",
+      // }
     });
 
     this.addControl("width_sub_heading", {
@@ -1337,18 +1493,27 @@ class Heading extends BaseElement {
       ],
       max: 100,
       min: 0,
+      // rules: {
+      //   "{{ELEMENT}} .altrp-heading-sub{{STATE}}": "width: {{SIZE}}{{UNIT}};",
+      // }
     });
 
 
     this.addControl('bg_sub_heading', {
         type: CONTROLLER_COLOR,
         label: 'Background color',
+        // rules: {
+        //   '{{ELEMENT}} .altrp-heading-sub{{STATE}}': 'background-color: {{COLOR}};',
+        // },
       }
     );
 
     this.addControl('color_sub_heading', {
         type: CONTROLLER_COLOR,
         label: 'text color',
+        // rules: {
+        //   '{{ELEMENT}} .altrp-heading-sub{{STATE}}': 'color: {{COLOR}};',
+        // },
       }
     );
 
@@ -1364,6 +1529,14 @@ class Heading extends BaseElement {
         '%',
         'vh',
       ],
+      // rules: {
+      //   '{{ELEMENT}} .altrp-heading-sub{{STATE}}': [
+      //     'padding-top: {{TOP}}{{UNIT}};',
+      //     'padding-right: {{RIGHT}}{{UNIT}};',
+      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'padding-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl('typographic_sub_heading', {
@@ -1377,6 +1550,18 @@ class Heading extends BaseElement {
           family: 'roboto',
           decoration: ""
         },
+        // rules: {
+        //   '{{ELEMENT}} .altrp-heading-sub{{STATE}}': [
+        //     'font-family: "{{FAMILY}}", sans-serif;',
+        //     'font-size: {{SIZE}}px;',
+        //     'line-height: {{LINEHEIGHT}};',
+        //     'letter-spacing: {{SPACING}}px',
+        //     'font-weight: {{WEIGHT}}',
+        //     'text-transform: {{TRANSFORM}}',
+        //     'font-style: {{STYLE}}',
+        //     'text-decoration: {{DECORATION}}'
+        //   ],
+        // },
       }
     );
 
@@ -1394,6 +1579,9 @@ class Heading extends BaseElement {
         colorPickedHex: '#000000',
         type: ""
         },
+        // rules: {
+        //   '{{ELEMENT}} .altrp-heading-sub{{STATE}}': 'text-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{COLOR}};',
+        // },
       }
     );
 
@@ -1413,6 +1601,9 @@ class Heading extends BaseElement {
     this.addControl('color_shape_animating', {
         type: CONTROLLER_COLOR,
         label: 'Color',
+        // rules: {
+        //   '{{ELEMENT}} .altrp-animating-highlighted-svg{{STATE}} svg path': 'stroke: {{COLOR}};',
+        // },
       }
     );
 
@@ -1425,6 +1616,9 @@ class Heading extends BaseElement {
       },
       max: 20,
       min: 0,
+      // rules: {
+      //   "{{ELEMENT}} .altrp-animating-highlighted-svg{{STATE}} svg path": "stroke-width: {{SIZE}}"
+      // }
     });
 
     this.addControl('bring_to_front_shape_animating', {
@@ -1452,12 +1646,35 @@ class Heading extends BaseElement {
     this.addControl('text_color_headline_animating_style', {
         type: CONTROLLER_COLOR,
         label: 'Color',
+        // rules: {
+        //   '{{ELEMENT}} .altrp-heading-no-animating-text{{STATE}}': 'color: {{COLOR}};',
+        // },
       }
     );
 
     this.addControl('text_headline_animating_style', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
+        // default:{
+        //   lineHeight: 1,
+        //   spacing: 0,
+        //   size: 16,
+        //   weight: "normal",
+        //   family: "Open Sans",
+        //   decoration: ""
+        // },
+        // rules: {
+        //   '{{ELEMENT}} .altrp-heading-no-animating-text{{STATE}}': [
+        //     'font-size: {{SIZE}}px;',
+        //     'font-family: {{FAMILY}}',
+        //     'line-height: {{LINEHEIGHT}};',
+        //     'letter-spacing: {{SPACING}}px',
+        //     'font-weight: {{WEIGHT}}',
+        //     'text-transform: {{TRANSFORM}}',
+        //     'font-style: {{STYLE}}',
+        //     'text-decoration: {{DECORATION}}'
+        //   ],
+        // },
       }
     );
 
@@ -1469,12 +1686,35 @@ class Heading extends BaseElement {
     this.addControl('animated_text_color_headline_animating_style', {
         type: CONTROLLER_COLOR,
         label: 'Color',
+        // rules: {
+        //   '{{ELEMENT}} .altrp-animating-text{{STATE}}': 'color: {{COLOR}};',
+        // },
       }
     );
 
     this.addControl('animated_text_headline_animating_style', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typographic',
+        // default:{
+        //   lineHeight: 1,
+        //   spacing: 0,
+        //   size: 16,
+        //   weight: "normal",
+        //   family: "Open Sans",
+        //   decoration: ""
+        // },
+        // rules: {
+        //   '{{ELEMENT}} .altrp-animating-text{{STATE}}': [
+        //     'font-size: {{SIZE}}px;',
+        //     'font-family: {{FAMILY}}',
+        //     'line-height: {{LINEHEIGHT}};',
+        //     'letter-spacing: {{SPACING}}px',
+        //     'font-weight: {{WEIGHT}}',
+        //     'text-transform: {{TRANSFORM}}',
+        //     'font-style: {{STYLE}}',
+        //     'text-decoration: {{DECORATION}}'
+        //   ],
+        // },
       }
     );
 

@@ -54,76 +54,65 @@ export function verticalAlignToAlignItems(verticalAlignValue){
  */
 export function dimensionsControllerToStyles(data = {}, styleProperty = 'padding'){
   let styles = '';
+
   if(_.isEmpty(data)){
     return styles;
   }
-  const {unit = 'px', left, right, top, bottom,} = data;
-  switch(styleProperty){
-    case 'border-width':{
-      if(left){
-        styles += `border-left-width: ${left}${unit}; `;
-      }
-      if(right){
-        styles += `border-right-width: ${right}${unit}; `;
-      }
-      if(top){
-        styles += `border-top-width: ${top}${unit}; `;
-      }
-      if(bottom){
-        styles += `border-bottom-width: ${bottom}${unit}; `;
-      }
 
-    }break;
-    case 'border-radius':{
-      if(top){
-        styles += `border-top-left-radius: ${top}${unit}; `;
-      }
-      if(right){
-        styles += `border-top-right-radius: ${right}${unit}; `;
-      }
-      if(bottom){
-        styles += `border-bottom-right-radius: ${bottom}${unit}; `;
-      }
-      if(left){
-        styles += `border-bottom-left-radius: ${left}${unit}; `;
-      }
+  const {unit = 'px', left, right, top, bottom} = data;
 
-    }break;
-    default:{
-      if(left){
-        styles += `${styleProperty}-left: ${left}${unit}; `;
-      }
-      if(right){
-        styles += `${styleProperty}-right: ${right}${unit}; `;
-      }
-      if(top){
-        styles += `${styleProperty}-top: ${top}${unit}; `;
-      }
-      if(bottom){
-        styles += `${styleProperty}-bottom: ${bottom}${unit}; `;
-      }
-    }break;
+  if(left){
+    styles += `${styleProperty}-left: ${left + unit}; `;
   }
+  if(right){
+    styles += `${styleProperty}-right: ${right + unit}; `;
+  }
+  if(top){
+    styles += `${styleProperty}-top: ${top + unit}; `;
+  }
+  if(bottom){
+    styles += `${styleProperty}-bottom: ${bottom + unit}; `;
+  }
+
   return styles;
 }
 
 /**
- *
- * @param {{}}data
+ * Преобразует объект, который сохраняет контроллер box-shadow, в строку css для вставки в styled-компонент
+ * @param {{}} data
  * @return {string}
  */
 export function shadowControllerToStyles(data) {
+
   if(data) {
-    let {type = 'outline', offsetX,horizontal, offsetY, vertical, blurRadius,blur,spread, spreadRadius, color } = data;
-    console.log(data);
-    return `box-shadow: ${type || ' '} ${offsetX||horizontal || 0}px ${offsetY || vertical || 0}px ${blurRadius || blur || 0}px ${spreadRadius ||spread || 0}px ${color};`;
+    const {type, offsetX, offsetY, blurRadius, spreadRadius, color } = data;
+
+    return `box-shadow: ${type} ${offsetX}px ${offsetY}px ${blurRadius}px ${spreadRadius} ${color} !important; `;
   }
-  return  '';
+
+  return '';
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер text-shadow, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
+export function textShadowControllerToStyles(data) {
+
+  if(data) {
+    const {blur, colorPickedHex, horizontal, opacity, vertical } = data;
+
+    return `text-shadow: ${horizontal}px ${vertical}px ${blur}px ${colorPickedHex}; `;
+  }
+
+  return '';
 }
 
 /**
  * Преобразует объект, который сохраняет контроллер Color, в строку css для вставки в styled-компонент
  * @param {{}} data
+ * @param {string} pseudoClass
  * @return {string}
  */
 export function backgroundColorControllerToStyles(data, pseudoClass) {
@@ -146,23 +135,25 @@ export function backgroundColorControllerToStyles(data, pseudoClass) {
   return styles;
 }
 
-export function gradientControllerToStyles(data) {
+/**
+ * Преобразует объект, который сохраняет контроллер background-image, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
+ export function backgroundImageControllerToStyles(data) {
   let styles = '';
-  if (_.isEmpty(data)) {
+
+  if (_.isEmpty(data) || data.url === null) {
     return styles;
   }
 
-  if (data.isWithGradient) {
-    let { angle, firstColor, firstPoint, secondColor, secondPoint } = data;
+  const { url } = data;
 
-    return `background-image: linear-gradient(${angle}deg, ${firstColor} ${firstPoint}%, ${secondColor} ${secondPoint}%); `;
-  }
-
-  return styles;
+  return `background-image: url('${url}'); `;;
 }
 
 /**
- * Преобразует объект, который сохраняет контроллер Filters, в строку css для вставки в styled-компонент
+ * Преобразует объект, который сохраняет контроллер Filters, в строку css сразу с селектором '& .altrp-image' для вставки в styled-компонент
  * @param {{}} data
  * @return {string}
  */
@@ -173,9 +164,9 @@ export function filtersControllerToStyles(data) {
     return styles;
   }
 
-  let { blur, brightness, contrast, hue, saturate } = data;
+  let { blur = '0', brightness = '100', contrast = '100', hue = '0', saturate, saturation } = data;
 
-  return `& .altrp-image {filter: blur(${blur}px) brightness(${brightness}%) contrast(${contrast}%) saturate(${saturate}%) hue-rotate(${hue}deg);} `;
+  return `filter: blur(${blur}px) brightness(${brightness}%) contrast(${contrast}%) saturate(${saturate || saturation || '100'}%) hue-rotate(${hue}deg); `;
 
 }
 
@@ -184,27 +175,35 @@ export function filtersControllerToStyles(data) {
  * Варианты принимаемых свойств: column-count, z-index, border-style
  * @param {string} style
  * @param {string} styleProperty
+ * @param {string} declaration
  * @return {string}
  */
 
-export function simplePropertyStyled(style, styleProperty) {
+export function simplePropertyStyled(style, styleProperty, declaration = '') {
+
   if (style) {
-    return `${styleProperty}: ${style}; `;
-  } else return "";
+    return `${styleProperty}: ${style + declaration}; `;
+  }
+
+  return '';
 }
 
 /**
  * Преобразует значение одного из свойств, перечисленных ниже, в строку css для вставки в styled-компонент
  * Варианты принимаемых свойств: color, background-color, border-color
- * @param {string} style
+ * @param {{}} data
  * @param {string} styleProperty
+ * @param {string} declaration
  * @return {string}
  */
 
-export function colorPropertyStyled(style, styleProperty) {
-  if (style) {
-    return `${styleProperty}: ${style.colorPickedHex}; `;
-  } else return "";
+export function colorPropertyStyled(data, styleProperty, declaration = '') {
+
+  if (data.colorPickedHex) {
+    return `${styleProperty}: ${data.colorPickedHex + declaration}; `;
+  }
+
+  return '';
 }
 
 /**
@@ -223,6 +222,74 @@ export function columnGapStyled(data = {}) {
   const { size, unit } = data;
 
   styles = `column-gap: ${size + unit}; `;
+
+  return styles;
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер icon-size, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
+
+ export function iconSizeStyled(data = {}) {
+  let styles = '';
+
+  if (_.isEmpty(data)) {
+    return styles;
+  }
+
+  const { size, unit } = data;
+
+  styles = `width: ${size + unit}; height: ${size + unit}; `;
+
+  return styles;
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер Size | Icon Left Spacing | Icon Right Spacing | Top Translate | Left Translate,
+ * в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @param {string} property
+ * @return {string}
+ */
+
+ export function sizeStyled(data = {}, property) {
+  let styles = '';
+
+  if (_.isEmpty(data) || data.size === undefined) {
+    return styles;
+  }
+
+  const { size, unit } = data;
+
+  if (property === 'transition-duration' || property === 'animation-duration') {
+    styles = `${property}: ${size}s; `;
+
+    return styles;
+  }
+
+  styles = `${property}: ${size + (unit || '')}; `;
+
+  return styles;
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер Translate, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
+
+ export function translateStyled(data = {}) {
+  let styles = '';
+
+  if (_.isEmpty(data) || isNaN(data.size) || !data.size) {
+    return styles;
+  }
+
+  const { size, unit } = data;
+
+  styles = `transform: ${data.function}(${size + unit}); `;
 
   return styles;
 }
@@ -308,10 +375,11 @@ export function colorStyled(controller, style) {
 /**
  * Преобразует объект, который сохраняет контроллер border-width, в строку css для вставки в styled-компонент
  * @param {{}} data
+ * @param {string} declaration
  * @return {string}
  */
 
-export function borderWidthStyled(data = {}) {
+export function borderWidthStyled(data = {}, declaration = '') {
   let styles = '';
 
   if (_.isEmpty(data)) {
@@ -326,20 +394,52 @@ export function borderWidthStyled(data = {}) {
     unit,
   } = data;
 
-  if (top !== '') {
-    styles += `border-top-width: ${top + unit} ;`;
+  if (top && top !== '') {
+    styles += `border-top-width: ${top + unit + declaration}; `;
   }
 
-  if (right !== '') {
-    styles += `border-right-width: ${right + unit} ;`;
+  if (right && right !== '') {
+    styles += `border-right-width: ${right + unit + declaration}; `;
   }
 
-  if (bottom !== '') {
-    styles += `border-bottom-width: ${bottom + unit} ;`;
+  if (bottom && bottom !== '') {
+    styles += `border-bottom-width: ${bottom + unit + declaration}; `;
   }
 
-  if (left !== '') {
-    styles += `border-left-width: ${left + unit} ;`;
+  if (left && left !== '') {
+    styles += `border-left-width: ${left + unit + declaration}; `;
+  }
+
+  return styles;
+
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер border-width, в строку css со свойством margin-top или margin-left с таким же значением, но отритцательным
+ * @param {{}} data
+ * @param {string} position
+ * @return {string}
+ */
+
+ export function marginTopLeftStyled(data = {}, position) {
+  let styles = '';
+
+  if (_.isEmpty(data)) {
+    return styles;
+  }
+
+  const {
+    top,
+    left,
+    unit,
+  } = data;
+
+  if (top && top !== '' && position === 'top') {
+    styles += `margin-top: -${top + unit}; `;
+  }
+
+  if (top && top !== '' && position === 'left') {
+    styles += `margin-left: -${left + unit}; `;
   }
 
   return styles;
@@ -397,7 +497,7 @@ export function dimensionsStyled(controller, style) {
  */
 export function gradientStyled(controller) {
   if(controller.isWithGradient) {
-    return `background-image: ${controller.value};`;
+    return `background-image: ${controller.value} `;
   } else {
     return ""
   };

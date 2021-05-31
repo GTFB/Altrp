@@ -64,9 +64,9 @@ class Table extends BaseElement {
           value: 'right',
         },
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-table-th{{STATE}}': 'text-align: {{VALUE}}',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-th{{STATE}}': 'text-align: {{VALUE}}',
+      // },
     });
 
     this.addControl('table_table_body_alignment', {
@@ -87,9 +87,9 @@ class Table extends BaseElement {
           value: 'right',
         },
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-table-td{{STATE}}': 'text-align: {{VALUE}}',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-td{{STATE}}': 'text-align: {{VALUE}}',
+      // },
     });
 
     this.addControl('table_hover_row', {
@@ -236,9 +236,9 @@ class Table extends BaseElement {
           label: 'Top'
         },
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__next{{STATE}}': 'flex-direction: {{VALUE}};'
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__next{{STATE}}': 'flex-direction: {{VALUE}};'
+      // },
     });
 
     this.addControl('prev_text', {
@@ -275,9 +275,9 @@ class Table extends BaseElement {
           label: 'Top'
         },
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': 'flex-direction: {{VALUE}};'
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': 'flex-direction: {{VALUE}};'
+      // },
     });
 
     this.addControl('current_page_text', {
@@ -1087,9 +1087,9 @@ class Table extends BaseElement {
         // color: 'rgb(27,27,27)',
         // colorPickedHex: '#1B1B1B'
       },
-      rules: {
-        '{{ELEMENT}} .replace-text{{STATE}}': 'color: {{COLOR}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .replace-text{{STATE}}': 'color: {{COLOR}}'
+      // }
     });
 
     this.addControl('replace_text_typographic', {
@@ -1103,18 +1103,18 @@ class Table extends BaseElement {
         family: 'Open Sans',
         decoration: ''
       },
-      rules: {
-        '{{ELEMENT}} .replace-text{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .replace-text{{STATE}}': [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
     }
     );
 
@@ -1134,9 +1134,9 @@ class Table extends BaseElement {
       ],
       max: 800,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .replace-picture': 'width: {{SIZE}}{{UNIT}};'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .replace-picture': 'width: {{SIZE}}{{UNIT}};'
+      // }
     });
 
     this.addControl('replace_image_height', {
@@ -1149,9 +1149,9 @@ class Table extends BaseElement {
       ],
       max: 800,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .replace-picture': 'height: {{SIZE}}{{UNIT}};'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .replace-picture': 'height: {{SIZE}}{{UNIT}};'
+      // }
     });
 
     this.addControl('replace_width', {
@@ -1232,22 +1232,22 @@ class Table extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Grouped Icon Padding',
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-table-th{{STATE}} .grouped-column': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-th{{STATE}} .grouped-column': [
+      //     'padding-top: {{TOP}}{{UNIT}};',
+      //     'padding-right: {{RIGHT}}{{UNIT}};',
+      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'padding-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl('grouped_column_icon_color', {
       type: CONTROLLER_COLOR,
       label: 'Grouped Column Icon Color',
-      rules: {
-        '{{ELEMENT}} .altrp-table-th{{STATE}} path': 'fill: {{COLOR}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-th{{STATE}} path': 'fill: {{COLOR}};',
+      // },
     });
 
     this.addControl('grouped_column_icon_size', {
@@ -1256,11 +1256,11 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-table-th{{STATE}} .grouped-column': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .altrp-table-th{{STATE}} svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .altrp-table-th{{STATE}} img': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-th{{STATE}} .grouped-column': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      //   '{{ELEMENT}} .altrp-table-th{{STATE}} svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      //   '{{ELEMENT}} .altrp-table-th{{STATE}} img': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      // },
     });
 
     // Not Grouped Column Icon
@@ -1280,22 +1280,22 @@ class Table extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Not Grouped Icon Padding',
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-table-th{{STATE}} .not-grouped-column': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-th{{STATE}} .not-grouped-column': [
+      //     'padding-top: {{TOP}}{{UNIT}};',
+      //     'padding-right: {{RIGHT}}{{UNIT}};',
+      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'padding-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl('not_grouped_column_icon_color', {
       type: CONTROLLER_COLOR,
       label: 'Not Grouped Column Icon Color',
-      rules: {
-        '{{ELEMENT}} .altrp-table-th{{STATE}} .not-grouped-column path': 'fill: {{COLOR}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-th{{STATE}} .not-grouped-column path': 'fill: {{COLOR}};',
+      // },
     });
 
     this.addControl('not_grouped_column_icon_size', {
@@ -1304,11 +1304,11 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-table-th{{STATE}} .not-grouped-column': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .altrp-table-th{{STATE}} .not-grouped-column svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .altrp-table-th{{STATE}} .not-grouped-column img': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-th{{STATE}} .not-grouped-column': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      //   '{{ELEMENT}} .altrp-table-th{{STATE}} .not-grouped-column svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      //   '{{ELEMENT}} .altrp-table-th{{STATE}} .not-grouped-column img': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      // },
     });
 
     // Expanded Row Icon
@@ -1328,22 +1328,22 @@ class Table extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Expanded Row Icon Padding',
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .expanded-row{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
+      // rules: {
+      //   '{{ELEMENT}} .expanded-row{{STATE}}': [
+      //     'padding-top: {{TOP}}{{UNIT}};',
+      //     'padding-right: {{RIGHT}}{{UNIT}};',
+      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'padding-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl('expanded_row_icon_color', {
       type: CONTROLLER_COLOR,
       label: 'Expanded Row Icon Color',
-      rules: {
-        '{{ELEMENT}} .expanded-row{{STATE}} path': 'fill: {{COLOR}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .expanded-row{{STATE}} path': 'fill: {{COLOR}};',
+      // },
     });
 
     this.addControl('expanded_row_icon_size', {
@@ -1352,11 +1352,11 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .expanded-row{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .expanded-row svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .expanded-row img{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .expanded-row{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      //   '{{ELEMENT}} .expanded-row svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      //   '{{ELEMENT}} .expanded-row img{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      // },
     });
 
     // Not Expanded Row Icon
@@ -1376,22 +1376,22 @@ class Table extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Not Expanded Row Icon Padding',
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .not-expanded-row{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
+      // rules: {
+      //   '{{ELEMENT}} .not-expanded-row{{STATE}}': [
+      //     'padding-top: {{TOP}}{{UNIT}};',
+      //     'padding-right: {{RIGHT}}{{UNIT}};',
+      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'padding-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl('not_expanded_row_icon_color', {
       type: CONTROLLER_COLOR,
       label: 'Not Expanded Row Icon Color',
-      rules: {
-        '{{ELEMENT}} .not-expanded-row{{STATE}} path': 'fill: {{COLOR}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .not-expanded-row{{STATE}} path': 'fill: {{COLOR}};',
+      // },
     });
 
     this.addControl('not_expanded_row_icon_size', {
@@ -1400,11 +1400,11 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .not-expanded-row{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .not-expanded-row svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .not-expanded-row img{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .not-expanded-row{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      //   '{{ELEMENT}} .not-expanded-row svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      //   '{{ELEMENT}} .not-expanded-row img{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      // },
     });
 
     this.endControlSection();
@@ -1446,10 +1446,10 @@ class Table extends BaseElement {
       hideOnEmail: true,
       type: CONTROLLER_COLOR,
       label: 'Stripe Color',
-      rules: {
-        '{{ELEMENT}} .altrp-table-tbody--striped tr:nth-child(2n){{STATE}}': 'background-color: {{COLOR}}',
-        '{{ELEMENT}} .altrp-table-tbody--striped .altrp-table-tr:nth-child(2n){{STATE}}': 'background-color: {{COLOR}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-tbody--striped tr:nth-child(2n){{STATE}}': 'background-color: {{COLOR}}',
+      //   '{{ELEMENT}} .altrp-table-tbody--striped .altrp-table-tr:nth-child(2n){{STATE}}': 'background-color: {{COLOR}}'
+      // }
     });
 
     this.addControl('table_style_table_border_type', {
@@ -1481,9 +1481,9 @@ class Table extends BaseElement {
           label: 'Groove'
         }
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-table{{STATE}}': 'border-style: {{VALUE}} !important'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table{{STATE}}': 'border-style: {{VALUE}} !important'
+      // }
     });
 
     this.addControl('table_style_table_border_width', {
@@ -1493,17 +1493,17 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-table{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
+      // }
     });
 
     this.addControl('table_style_table_border_color', {
       type: CONTROLLER_COLOR,
       label: 'Border Color',
-      rules: {
-        '{{ELEMENT}} .altrp-table{{STATE}}': 'border-color: {{COLOR}} !important'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table{{STATE}}': 'border-color: {{COLOR}} !important'
+      // }
     });
 
     this.endControlSection();
@@ -1517,17 +1517,17 @@ class Table extends BaseElement {
     this.addControl('filter_style_table_text_color', {
       type: CONTROLLER_COLOR,
       label: 'Text Color',
-      rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'color: {{COLOR}} !important'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'color: {{COLOR}} !important'
+      // }
     });
 
     this.addControl('filter_style_table_background_color', {
       type: CONTROLLER_COLOR,
       label: 'Background Color',
-      rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'background: {{COLOR}} !important'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'background: {{COLOR}} !important'
+      // }
     });
 
     this.addControl('filter_padding', {
@@ -1541,14 +1541,14 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': [
+      //     'padding-top: {{TOP}}{{UNIT}};',
+      //     'padding-right: {{RIGHT}}{{UNIT}};',
+      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'padding-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl('label_padding', {
@@ -1562,32 +1562,32 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-label{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-label{{STATE}}': [
+      //     'padding-top: {{TOP}}{{UNIT}};',
+      //     'padding-right: {{RIGHT}}{{UNIT}};',
+      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'padding-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl(
         'filter_style_typographic', {
           type: CONTROLLER_TYPOGRAPHIC,
           label: 'Typographic',
-          rules: {
-            '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': [
-              'font-family: "{{FAMILY}}", sans-serif;',
-              'font-size: {{SIZE}}px;',
-              'line-height: {{LINEHEIGHT}};',
-              'letter-spacing: {{SPACING}}px',
-              'font-weight: {{WEIGHT}}',
-              'text-transform: {{TRANSFORM}}',
-              'font-style: {{STYLE}}',
-              'text-decoration: {{DECORATION}}'
-            ],
-          },
+          // rules: {
+          //   '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': [
+          //     'font-family: "{{FAMILY}}", sans-serif;',
+          //     'font-size: {{SIZE}}px;',
+          //     'line-height: {{LINEHEIGHT}};',
+          //     'letter-spacing: {{SPACING}}px',
+          //     'font-weight: {{WEIGHT}}',
+          //     'text-transform: {{TRANSFORM}}',
+          //     'font-style: {{STYLE}}',
+          //     'text-decoration: {{DECORATION}}'
+          //   ],
+          // },
         }
     );
 
@@ -1620,9 +1620,9 @@ class Table extends BaseElement {
           label: 'Groove'
         }
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-style: {{VALUE}} !important'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-style: {{VALUE}} !important'
+      // }
     });
 
     this.addControl('filter_style_table_border_width', {
@@ -1632,31 +1632,31 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}} !important'
+      // }
     });
 
     this.addControl('filter_style_table_border_color', {
       type: CONTROLLER_COLOR,
       label: 'Border Color',
-      rules: {
-        '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-color: {{COLOR}} !important'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-field{{STATE}}, .altrp-table__filter-select{{STATE}}>.altrp-field-select2__control, .altrp-label_slider>.altrp-btn': 'border-color: {{COLOR}} !important'
+      // }
     });
 
     this.addControl('filter_style_border_shadow', {
           type: CONTROLLER_FILTERS,
           label: 'filters',
-          rules: {
-            '{{ELEMENT}} .altrp-image{{STATE}}': [
-              'filter: blur({{BLUR}}px);',
-              'filter: brightness({{BRIGHTNESS}}%);',
-              'filter: contrast({{CONTRAST}}%);',
-              'filter: saturate({{SATURATION}}%);',
-              'filter: hue-rotate({{HUE}}deg);;'
-            ],
-          },
+          // rules: {
+          //   '{{ELEMENT}} .altrp-image{{STATE}}': [
+          //     'filter: blur({{BLUR}}px);',
+          //     'filter: brightness({{BRIGHTNESS}}%);',
+          //     'filter: contrast({{CONTRAST}}%);',
+          //     'filter: saturate({{SATURATION}}%);',
+          //     'filter: hue-rotate({{HUE}}deg);;'
+          //   ],
+          // },
         }
     );
 
@@ -1675,39 +1675,39 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-table-global-filter label{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-global-filter label{{STATE}}': [
+      //     'padding-top: {{TOP}}{{UNIT}};',
+      //     'padding-right: {{RIGHT}}{{UNIT}};',
+      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'padding-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl('global_filter_label_color', {
       type: CONTROLLER_COLOR,
       label: 'Label Color',
-      rules: {
-        '{{ELEMENT}} .altrp-table-global-filter label{{STATE}}': 'color: {{COLOR}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-global-filter label{{STATE}}': 'color: {{COLOR}}'
+      // }
     });
 
     this.addControl('global_filter_label_typographic', {
           type: CONTROLLER_TYPOGRAPHIC,
           label: 'Label Typographic',
-          rules: {
-            '{{ELEMENT}} .altrp-table-global-filter label{{STATE}}': [
-              'font-family: "{{FAMILY}}", sans-serif;',
-              'font-size: {{SIZE}}px;',
-              'line-height: {{LINEHEIGHT}};',
-              'letter-spacing: {{SPACING}}px',
-              'font-weight: {{WEIGHT}}',
-              'text-transform: {{TRANSFORM}}',
-              'font-style: {{STYLE}}',
-              'text-decoration: {{DECORATION}}'
-            ],
-          },
+          // rules: {
+          //   '{{ELEMENT}} .altrp-table-global-filter label{{STATE}}': [
+          //     'font-family: "{{FAMILY}}", sans-serif;',
+          //     'font-size: {{SIZE}}px;',
+          //     'line-height: {{LINEHEIGHT}};',
+          //     'letter-spacing: {{SPACING}}px',
+          //     'font-weight: {{WEIGHT}}',
+          //     'text-transform: {{TRANSFORM}}',
+          //     'font-style: {{STYLE}}',
+          //     'text-decoration: {{DECORATION}}'
+          //   ],
+          // },
         }
     );
 
@@ -1722,9 +1722,9 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 800,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'width: {{SIZE}}{{UNIT}};'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'width: {{SIZE}}{{UNIT}};'
+      // }
     });
 
     this.addControl('global_filter_margin_left', {
@@ -1733,9 +1733,9 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 800,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'margin-left: {{SIZE}}{{UNIT}};'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'margin-left: {{SIZE}}{{UNIT}};'
+      // }
     });
 
     this.addControl('global_filter_input_padding', {
@@ -1745,47 +1745,47 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-table-global-filter input': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-global-filter input': [
+      //     'padding-top: {{TOP}}{{UNIT}};',
+      //     'padding-right: {{RIGHT}}{{UNIT}};',
+      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'padding-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl('global_filter_input_color', {
       type: CONTROLLER_COLOR,
       label: 'Input Color',
-      rules: {
-        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'color: {{COLOR}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'color: {{COLOR}}'
+      // }
     });
 
     this.addControl('global_filter_input_background_color', {
       type: CONTROLLER_COLOR,
       label: 'Input Background Color',
-      rules: {
-        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'background: {{COLOR}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'background: {{COLOR}}'
+      // }
     });
 
     this.addControl('global_filter_input_typographic', {
           type: CONTROLLER_TYPOGRAPHIC,
           label: 'Input Typographic',
-          rules: {
-            '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': [
-              'font-family: "{{FAMILY}}", sans-serif;',
-              'font-size: {{SIZE}}px;',
-              'line-height: {{LINEHEIGHT}};',
-              'letter-spacing: {{SPACING}}px',
-              'font-weight: {{WEIGHT}}',
-              'text-transform: {{TRANSFORM}}',
-              'font-style: {{STYLE}}',
-              'text-decoration: {{DECORATION}}'
-            ],
-          },
+          // rules: {
+          //   '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': [
+          //     'font-family: "{{FAMILY}}", sans-serif;',
+          //     'font-size: {{SIZE}}px;',
+          //     'line-height: {{LINEHEIGHT}};',
+          //     'letter-spacing: {{SPACING}}px',
+          //     'font-weight: {{WEIGHT}}',
+          //     'text-transform: {{TRANSFORM}}',
+          //     'font-style: {{STYLE}}',
+          //     'text-decoration: {{DECORATION}}'
+          //   ],
+          // },
         }
     );
 
@@ -1818,9 +1818,9 @@ class Table extends BaseElement {
           label: 'Groove'
         }
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-table-global-filter input': 'border-style: {{VALUE}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-global-filter input': 'border-style: {{VALUE}}'
+      // }
     });
 
     this.addControl('global_filter_input_border_width', {
@@ -1830,9 +1830,9 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-table-global-filter input': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-global-filter input': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}}  {{BOTTOM}}{{UNIT}}  {{LEFT}}{{UNIT}}'
+      // }
     });
 
     this.addControl('global_filter_input_border_radius', {
@@ -1842,22 +1842,22 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': [
-          'border-top-left-radius: {{TOP}}{{UNIT}}',
-          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
-        ]
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': [
+      //     'border-top-left-radius: {{TOP}}{{UNIT}}',
+      //     'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+      //     'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+      //     'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+      //   ]
+      // }
     });
 
     this.addControl('global_filter_input_border_color', {
       type: CONTROLLER_COLOR,
       label: 'Input Border Color',
-      rules: {
-        '{{ELEMENT}} .altrp-table-global-filter input': 'border-color: {{COLOR}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-global-filter input': 'border-color: {{COLOR}}'
+      // }
     });
 
     this.addControl('global_filter_input_shadow', {
@@ -1867,9 +1867,9 @@ class Table extends BaseElement {
         '#eaeaea',
         '#9c18a8'
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-global-filter input{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      // },
     });
 
     this.endControlSection();
@@ -1961,30 +1961,30 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination{{STATE}}': [
+      //     'padding-top: {{TOP}}{{UNIT}};',
+      //     'padding-right: {{RIGHT}}{{UNIT}};',
+      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'padding-left: {{LEFT}}{{UNIT}};'
+      //   ],
+      // },
     });
 
     this.addControl('table_style_pagination_buttons_text_color', {
       type: CONTROLLER_COLOR,
       label: 'Buttons Text Color',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'color: {{COLOR}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'color: {{COLOR}}'
+      // }
     });
 
     this.addControl('table_style_pagination_buttons_background_color', {
       type: CONTROLLER_COLOR,
       label: 'Buttons Background Color',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'background-color: {{COLOR}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'background-color: {{COLOR}}'
+      // }
     });
 
     this.addControl('table_style_pagination_padding_buttons', {
@@ -1994,31 +1994,31 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': [
+      //     'padding-top: {{TOP}}{{UNIT}};',
+      //     'padding-right: {{RIGHT}}{{UNIT}};',
+      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'padding-left: {{LEFT}}{{UNIT}};'
+      //   ],
+      // },
     });
 
     this.addControl('table_style_pagination_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__next{{STATE}}, .altrp-pagination-pages__item{{STATE}}, .altrp-pagination__count{{STATE}}, .altrp-pagination__previous{{STATE}}, .altrp-pagination__goto-page{{STATE}}, .altrp-pagination__select-size{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__next{{STATE}}, .altrp-pagination-pages__item{{STATE}}, .altrp-pagination__count{{STATE}}, .altrp-pagination__previous{{STATE}}, .altrp-pagination__goto-page{{STATE}}, .altrp-pagination__select-size{{STATE}}': [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
     });
 
     this.addControl('table_style_pagination_border_type', {
@@ -2050,18 +2050,18 @@ class Table extends BaseElement {
           label: 'Groove'
         }
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-style: {{VALUE}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-style: {{VALUE}};',
+      // }
     });
 
     this.addControl('table_style_pagination_border_width', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Buttons Border width',
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      // }
     });
 
     this.addControl('table_style_pagination_border_radius', {
@@ -2071,22 +2071,22 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': [
-          'border-top-left-radius: {{TOP}}{{UNIT}}',
-          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
-        ]
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': [
+      //     'border-top-left-radius: {{TOP}}{{UNIT}}',
+      //     'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+      //     'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+      //     'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+      //   ]
+      // }
     });
 
     this.addControl('table_style_pagination_border_color', {
       type: CONTROLLER_COLOR,
       label: 'Buttons Border Color',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-color: {{COLOR}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'border-color: {{COLOR}};',
+      // }
     });
 
     this.addControl('pagination_buttons_shadow', {
@@ -2098,9 +2098,9 @@ class Table extends BaseElement {
         '#eaeaea',
         '#9c18a8'
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}}, .altrp-pagination__next{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      // },
     });
 
     this.endControlSection();
@@ -2121,14 +2121,14 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': [
+      //     'margin-top: {{TOP}}{{UNIT}};',
+      //     'margin-right: {{RIGHT}}{{UNIT}};',
+      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'margin-left: {{LEFT}}{{UNIT}};'
+      //   ],
+      // },
     });
 
     this.addControl('prev_icon_padding', {
@@ -2139,14 +2139,14 @@ class Table extends BaseElement {
         bind: true
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}} svg': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}} svg': [
+      //     'margin-top: {{TOP}}{{UNIT}};',
+      //     'margin-right: {{RIGHT}}{{UNIT}};',
+      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'margin-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl('prev_icon_size', {
@@ -2155,35 +2155,35 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}} svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}} img': 'width: {{SIZE}}{{UNIT}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}} svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}} img': 'width: {{SIZE}}{{UNIT}};',
+      // },
     });
 
     this.addControl('prev_icon_color', {
       type: CONTROLLER_COLOR,
       label: 'Prev Icon Color',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__previous{{STATE}} path': 'fill: {{COLOR}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}} path': 'fill: {{COLOR}};',
+      // },
     });
 
     this.addControl('table_style_prev_btn_pagination_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Previous Page Button Typographic',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination .altrp-pagination__previous{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination .altrp-pagination__previous{{STATE}}': [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
     });
 
     this.endControlSection();
@@ -2204,14 +2204,14 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__next{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__next{{STATE}}': [
+      //     'margin-top: {{TOP}}{{UNIT}};',
+      //     'margin-right: {{RIGHT}}{{UNIT}};',
+      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'margin-left: {{LEFT}}{{UNIT}};'
+      //   ],
+      // },
     });
 
     this.addControl('next_icon_margin', {
@@ -2222,14 +2222,14 @@ class Table extends BaseElement {
         bind: true
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__next{{STATE}} svg': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__next{{STATE}} svg': [
+      //     'margin-top: {{TOP}}{{UNIT}};',
+      //     'margin-right: {{RIGHT}}{{UNIT}};',
+      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'margin-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl('next_icon_size', {
@@ -2238,35 +2238,35 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__next{{STATE}} svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .altrp-pagination__next{{STATE}} img': 'width: {{SIZE}}{{UNIT}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__next{{STATE}} svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      //   '{{ELEMENT}} .altrp-pagination__next{{STATE}} img': 'width: {{SIZE}}{{UNIT}};',
+      // },
     });
 
     this.addControl('next_icon_color', {
       type: CONTROLLER_COLOR,
       label: 'Next Icon Color',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__next{{STATE}} path': 'fill: {{COLOR}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__next{{STATE}} path': 'fill: {{COLOR}};',
+      // },
     });
 
     this.addControl('table_style_next_btn_pagination_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Next Page Button Typographic',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination .altrp-pagination__next{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination .altrp-pagination__next{{STATE}}': [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
     });
 
     this.endControlSection();
@@ -2287,14 +2287,14 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__count{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__count{{STATE}}': [
+      //     'margin-top: {{TOP}}{{UNIT}};',
+      //     'margin-right: {{RIGHT}}{{UNIT}};',
+      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'margin-left: {{LEFT}}{{UNIT}};'
+      //   ],
+      // },
     });
 
     this.addControl('count_button_item_margin', {
@@ -2304,55 +2304,55 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': [
+      //     'margin-top: {{TOP}}{{UNIT}};',
+      //     'margin-right: {{RIGHT}}{{UNIT}};',
+      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'margin-left: {{LEFT}}{{UNIT}};'
+      //   ],
+      // },
     });
 
     this.addControl('table_style_pagination_count_text_color', {
       type: CONTROLLER_COLOR,
       label: 'Count Text Color',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'color: {{COLOR}}',
-        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'color: {{COLOR}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'color: {{COLOR}}',
+      //   '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'color: {{COLOR}}'
+      // }
     });
 
     this.addControl('table_style_pagination_count_background_color', {
       type: CONTROLLER_COLOR,
       label: 'Count Background Color',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'background-color: {{COLOR}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'background-color: {{COLOR}}'
+      // }
     });
 
     this.addControl('table_style_pagination_count_item_background_color', {
       type: CONTROLLER_COLOR,
       label: 'Count Item background color',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'background-color: {{COLOR}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'background-color: {{COLOR}}'
+      // }
     });
 
     this.addControl('table_style_pagination_active_count_text_color', {
       type: CONTROLLER_COLOR,
       label: 'Active Count text color',
-      rules: {
-        '{{ELEMENT}} .active.altrp-pagination-pages__item{{STATE}}': 'color: {{COLOR}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .active.altrp-pagination-pages__item{{STATE}}': 'color: {{COLOR}}'
+      // }
     });
 
     this.addControl('table_style_pagination_active_count_item_background_color', {
       type: CONTROLLER_COLOR,
       label: 'Active Count Item background color',
-      rules: {
-        '{{ELEMENT}} .active.altrp-pagination-pages__item{{STATE}}': 'background-color: {{COLOR}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .active.altrp-pagination-pages__item{{STATE}}': 'background-color: {{COLOR}}'
+      // }
     });
 
     this.addControl('table_style_pagination_padding_count', {
@@ -2362,14 +2362,14 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__count{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__count{{STATE}}': [
+      //     'padding-top: {{TOP}}{{UNIT}};',
+      //     'padding-right: {{RIGHT}}{{UNIT}};',
+      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'padding-left: {{LEFT}}{{UNIT}};'
+      //   ],
+      // },
     });
 
     this.addControl('width_count_item', {
@@ -2393,18 +2393,18 @@ class Table extends BaseElement {
     this.addControl('table_style_item_count_pagination_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Item Count Typographic',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination .altrp-pagination-pages__item{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination .altrp-pagination-pages__item{{STATE}}': [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
     });
 
     this.addControl('table_style_pagination_count_item_border_type', {
@@ -2436,18 +2436,18 @@ class Table extends BaseElement {
           label: 'Groove'
         }
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'border-style: {{VALUE}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'border-style: {{VALUE}};',
+      // }
     });
 
     this.addControl('table_style_pagination_count_item_border_width', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Item Count Border Width',
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      // }
     });
 
     this.addControl('table_style_count_item_border_radius', {
@@ -2457,30 +2457,30 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': [
-          'border-top-left-radius: {{TOP}}{{UNIT}}',
-          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
-        ]
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': [
+      //     'border-top-left-radius: {{TOP}}{{UNIT}}',
+      //     'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+      //     'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+      //     'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+      //   ]
+      // }
     });
 
     this.addControl('table_style_pagination_count_item_border_color', {
       type: CONTROLLER_COLOR,
       label: 'Item Count Border color',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'border-color: {{COLOR}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'border-color: {{COLOR}};',
+      // }
     });
 
     this.addControl('table_style_pagination_active_count_item_border_color', {
       type: CONTROLLER_COLOR,
       label: 'Active Item Count Border color',
-      rules: {
-        '{{ELEMENT}} .active.altrp-pagination-pages__item{{STATE}}': 'border-color: {{COLOR}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .active.altrp-pagination-pages__item{{STATE}}': 'border-color: {{COLOR}};',
+      // }
     });
 
     this.addControl('pagination_count_item_shadow', {
@@ -2490,9 +2490,9 @@ class Table extends BaseElement {
         '#eaeaea',
         '#9c18a8'
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      // },
     });
 
     this.addControl('ellipsis_heading', {
@@ -2513,14 +2513,14 @@ class Table extends BaseElement {
       conditions: {
         'is_with_ellipsis': true,
       },
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__ellipsis{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__ellipsis{{STATE}}': [
+      //     'margin-top: {{TOP}}{{UNIT}};',
+      //     'margin-right: {{RIGHT}}{{UNIT}};',
+      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'margin-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl('ellipsis_color', {
@@ -2529,9 +2529,9 @@ class Table extends BaseElement {
       conditions: {
         'is_with_ellipsis': true,
       },
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__ellipsis{{STATE}}': 'color: {{COLOR}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__ellipsis{{STATE}}': 'color: {{COLOR}}'
+      // }
     });
 
     this.addControl('ellipsis_typographic', {
@@ -2540,18 +2540,18 @@ class Table extends BaseElement {
       conditions: {
         'is_with_ellipsis': true,
       },
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__ellipsis{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__ellipsis{{STATE}}': [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
     });
 
     this.endControlSection();
@@ -2572,14 +2572,14 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': [
+      //     'margin-top: {{TOP}}{{UNIT}};',
+      //     'margin-right: {{RIGHT}}{{UNIT}};',
+      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'margin-left: {{LEFT}}{{UNIT}};'
+      //   ],
+      // },
     });
 
     this.addControl('page_input_padding', {
@@ -2589,14 +2589,14 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': [
+      //     'padding-top: {{TOP}}{{UNIT}};',
+      //     'padding-right: {{RIGHT}}{{UNIT}};',
+      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'padding-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl('page_input_text_color', {
@@ -2606,34 +2606,34 @@ class Table extends BaseElement {
         color: '',
         colorPickedHex: ''
       },
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'color: {{COLOR}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'color: {{COLOR}}'
+      // }
     });
 
     this.addControl('page_input_background_color', {
       type: CONTROLLER_COLOR,
       label: 'Page Input background color',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'background-color: {{COLOR}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'background-color: {{COLOR}}'
+      // }
     });
 
     this.addControl('table_style_page_input_pagination_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Page Input Typographic',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination .altrp-pagination__goto-page{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination .altrp-pagination__goto-page{{STATE}}': [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
     });
 
     this.addControl('page_input_border_type', {
@@ -2665,18 +2665,18 @@ class Table extends BaseElement {
           label: 'Groove'
         }
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'border-style: {{VALUE}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'border-style: {{VALUE}};',
+      // }
     });
 
     this.addControl('page_input_border_width', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Page Input Border width',
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      // }
     });
 
     this.addControl('page_input_border_radius', {
@@ -2686,22 +2686,22 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': [
-          'border-top-left-radius: {{TOP}}{{UNIT}}',
-          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
-        ]
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': [
+      //     'border-top-left-radius: {{TOP}}{{UNIT}}',
+      //     'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+      //     'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+      //     'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+      //   ]
+      // }
     });
 
     this.addControl('page_input_border_color', {
       type: CONTROLLER_COLOR,
       label: 'Page Input Border Color',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'border-color: {{COLOR}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'border-color: {{COLOR}};',
+      // }
     });
 
     this.addControl('page_input_shadow', {
@@ -2711,9 +2711,9 @@ class Table extends BaseElement {
         '#eaeaea',
         '#9c18a8'
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      // },
     });
 
     this.endControlSection();
@@ -2733,9 +2733,9 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 150,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'width: {{SIZE}}{{UNIT}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'width: {{SIZE}}{{UNIT}};',
+      // },
     });
 
     this.addControl('pagination_select_margin', {
@@ -2745,14 +2745,14 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__select-size{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__select-size{{STATE}}': [
+      //     'margin-top: {{TOP}}{{UNIT}};',
+      //     'margin-right: {{RIGHT}}{{UNIT}};',
+      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'margin-left: {{LEFT}}{{UNIT}};'
+      //   ],
+      // },
     });
 
     this.addControl('pagination_select_padding', {
@@ -2762,31 +2762,31 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': [
+      //     'padding-top: {{TOP}}{{UNIT}};',
+      //     'padding-right: {{RIGHT}}{{UNIT}};',
+      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'padding-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl('table_style_pagination_select__pagination_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Pagination Select Typographic',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination .altrp-pagination__select-size{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination .altrp-pagination__select-size{{STATE}}': [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
     });
 
     this.addControl('pagination_select_border_type', {
@@ -2818,18 +2818,18 @@ class Table extends BaseElement {
           label: 'Groove'
         }
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'border-style: {{VALUE}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'border-style: {{VALUE}};',
+      // }
     });
 
     this.addControl('pagination_select_border_width', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Pagination Select Border width',
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      // }
     });
 
     this.addControl('pagination_select_border_radius', {
@@ -2839,22 +2839,22 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': [
-          'border-top-left-radius: {{TOP}}{{UNIT}}',
-          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
-        ]
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': [
+      //     'border-top-left-radius: {{TOP}}{{UNIT}}',
+      //     'border-top-right-radius: {{RIGHT}}{{UNIT}}',
+      //     'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
+      //     'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
+      //   ]
+      // }
     });
 
     this.addControl('pagination_select_border_color', {
       type: CONTROLLER_COLOR,
       label: 'Pagination Select Border Color',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'border-color: {{COLOR}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'border-color: {{COLOR}};',
+      // }
     });
 
     this.addControl('pagination_select_shadow', {
@@ -2864,25 +2864,25 @@ class Table extends BaseElement {
         '#eaeaea',
         '#9c18a8'
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      // },
     });
 
     this.addControl('pagination_select_text_color', {
       type: CONTROLLER_COLOR,
       label: 'Pagination Select text color',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'color: {{COLOR}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'color: {{COLOR}}'
+      // }
     });
 
     this.addControl('pagination_select_background_color', {
       type: CONTROLLER_COLOR,
       label: 'Pagination Select background color',
-      rules: {
-        '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'background-color: {{COLOR}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'background-color: {{COLOR}}'
+      // }
     });
 
     this.endControlSection();
@@ -2903,14 +2903,14 @@ class Table extends BaseElement {
         bind: true
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .check-icon--checked svg{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
+      // rules: {
+      //   '{{ELEMENT}} .check-icon--checked svg{{STATE}}': [
+      //     'margin-top: {{TOP}}{{UNIT}};',
+      //     'margin-right: {{RIGHT}}{{UNIT}};',
+      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'margin-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl('unchecked_icon_margin', {
@@ -2921,14 +2921,14 @@ class Table extends BaseElement {
         bind: true
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .check-icon--unchecked svg{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
+      // rules: {
+      //   '{{ELEMENT}} .check-icon--unchecked svg{{STATE}}': [
+      //     'margin-top: {{TOP}}{{UNIT}};',
+      //     'margin-right: {{RIGHT}}{{UNIT}};',
+      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'margin-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl('indeterminate_icon_margin', {
@@ -2939,38 +2939,38 @@ class Table extends BaseElement {
         bind: true
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .check-icon--indeterminate svg{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
+      // rules: {
+      //   '{{ELEMENT}} .check-icon--indeterminate svg{{STATE}}': [
+      //     'margin-top: {{TOP}}{{UNIT}};',
+      //     'margin-right: {{RIGHT}}{{UNIT}};',
+      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'margin-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl('checked_icon_color', {
       type: CONTROLLER_COLOR,
       label: 'Cheked Icon color',
-      rules: {
-        '{{ELEMENT}} .check-icon--checked{{STATE}} path': 'fill: {{COLOR}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .check-icon--checked{{STATE}} path': 'fill: {{COLOR}};',
+      // },
     });
 
     this.addControl('unchecked_icon_color', {
       type: CONTROLLER_COLOR,
       label: 'Unchecked Icon color',
-      rules: {
-        '{{ELEMENT}} .check-icon--unchecked{{STATE}} path': 'fill: {{COLOR}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .check-icon--unchecked{{STATE}} path': 'fill: {{COLOR}};',
+      // },
     });
 
     this.addControl('indeterminate_icon_color', {
       type: CONTROLLER_COLOR,
       label: 'Indeterminate Icon color',
-      rules: {
-        '{{ELEMENT}} .check-icon--indeterminate{{STATE}} path': 'fill: {{COLOR}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .check-icon--indeterminate{{STATE}} path': 'fill: {{COLOR}};',
+      // },
     });
 
     this.addControl('checked_size', {
@@ -2979,9 +2979,9 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .check-icon--checked svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .check-icon--checked svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      // },
     });
 
     this.addControl('unchecked_size', {
@@ -2990,9 +2990,9 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .check-icon--unchecked svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .check-icon--unchecked svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      // },
     });
 
     this.addControl('indeterminate_size', {
@@ -3001,9 +3001,9 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .check-icon--indeterminate svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .check-icon--indeterminate svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+      // },
     });
 
     this.endControlSection();
@@ -3022,25 +3022,25 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-table__resizer{{STATE}}': 'width: {{SIZE}}{{UNIT}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table__resizer{{STATE}}': 'width: {{SIZE}}{{UNIT}};',
+      // },
     });
 
     this.addControl('resize_slider_color', {
       type: CONTROLLER_COLOR,
       label: 'Slider Color',
-      rules: {
-        '{{ELEMENT}} .altrp-table__resizer{{STATE}}': 'background: {{COLOR}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table__resizer{{STATE}}': 'background: {{COLOR}};',
+      // },
     });
 
     this.addControl('active_resize_slider_color', {
       type: CONTROLLER_COLOR,
       label: 'Active Slider Color',
-      rules: {
-        '{{ELEMENT}} .altrp-table__resizer.altrp-table__resizer_resizing{{STATE}}': 'background: {{COLOR}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table__resizer.altrp-table__resizer_resizing{{STATE}}': 'background: {{COLOR}};',
+      // },
     });
 
     this.endControlSection();
@@ -3061,14 +3061,14 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-table-th{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-th{{STATE}}': [
+      //     'padding-top: {{TOP}}{{UNIT}};',
+      //     'padding-right: {{RIGHT}}{{UNIT}};',
+      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'padding-left: {{LEFT}}{{UNIT}};'
+      //   ],
+      // },
     });
 
     this.addControl('table_style_header_background', {
@@ -3078,10 +3078,10 @@ class Table extends BaseElement {
         color: '',
         colorPickedHex: ''
       },
-      rules: {
-        '{{ELEMENT}} .altrp-table-head{{STATE}}': 'background: {{COLOR}}',
-        '{{ELEMENT}} .altrp-table-th{{STATE}}': 'background: {{COLOR}}',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-head{{STATE}}': 'background: {{COLOR}}',
+      //   '{{ELEMENT}} .altrp-table-th{{STATE}}': 'background: {{COLOR}}',
+      // }
     });
 
     this.addControl('table_style_header_text_color', {
@@ -3091,9 +3091,9 @@ class Table extends BaseElement {
         color: '',
         colorPickedHex: ''
       },
-      rules: {
-        '{{ELEMENT}} .altrp-table-th{{STATE}}': 'color: {{COLOR}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-th{{STATE}}': 'color: {{COLOR}}'
+      // }
     });
 
     this.addControl('table_style_header_font', {
@@ -3107,18 +3107,18 @@ class Table extends BaseElement {
       //   family: 'Open Sans',
       //   decoration: ''
       // },
-      rules: {
-        '{{ELEMENT}} .altrp-table-th{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-th{{STATE}}': [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
     });
 
     this.addControl('table_style_header_border_type', {
@@ -3150,21 +3150,21 @@ class Table extends BaseElement {
           label: 'Groove'
         }
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-table-th{{STATE}}': 'border-style: {{VALUE}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-th{{STATE}}': 'border-style: {{VALUE}};',
+      // }
     });
 
     this.addControl('table_style_header_border_width', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border width',
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-table-th{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-        '{{ELEMENT}}.altrp-transpose_true .altrp-table-th:not(:first-child){{STATE}}': 'margin-top: -{{TOP}}{{UNIT}};',
-        '{{ELEMENT}}.altrp-transpose_true .altrp-table-tr:not(:first-child) .altrp-table-th{{STATE}}': 'margin-left: -{{LEFT}}{{UNIT}};',
-      }
-    });
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-th{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      //   '{{ELEMENT}}.altrp-transpose_true .altrp-table-th:not(:first-child){{STATE}}': 'margin-top: -{{TOP}}{{UNIT}};',
+      //   '{{ELEMENT}}.altrp-transpose_true .altrp-table-tr:not(:first-child) .altrp-table-th{{STATE}}': 'margin-left: -{{LEFT}}{{UNIT}};',
+      // }
+    });  
 
     this.addControl('table_style_header_border_color', {
       type: CONTROLLER_COLOR,
@@ -3173,9 +3173,9 @@ class Table extends BaseElement {
         color: '',
         colorPickedHex: ''
       },
-      rules: {
-        '{{ELEMENT}} .altrp-table-th{{STATE}}': 'border-color: {{COLOR}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-th{{STATE}}': 'border-color: {{COLOR}};',
+      // }
     });
 
     this.addControl('header_cell_vertical_alignment', {
@@ -3220,11 +3220,11 @@ class Table extends BaseElement {
         },
       ],
 
-      rules: {
-        '{{ELEMENT}} div:not(.altrp-element) .altrp-table-th{{STATE}}': [
-          'vertical-align: {{VALUE}};',
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} div:not(.altrp-element) .altrp-table-th{{STATE}}': [
+      //     'vertical-align: {{VALUE}};',
+      //   ],
+      // },
     });
 
     this.endControlSection();
@@ -3245,14 +3245,14 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-table-td{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-td{{STATE}}': [
+      //     'padding-top: {{TOP}}{{UNIT}};',
+      //     'padding-right: {{RIGHT}}{{UNIT}};',
+      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'padding-left: {{LEFT}}{{UNIT}};'
+      //   ],
+      // },
     });
 
     this.addControl('table_style_body_border_type', {
@@ -3284,20 +3284,20 @@ class Table extends BaseElement {
           label: 'Groove'
         }
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-table-td{{STATE}}': 'border-style: {{VALUE}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-td{{STATE}}': 'border-style: {{VALUE}};',
+      // }
     });
 
     this.addControl('table_style_body_border_width', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border width',
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-table-td{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-        '{{ELEMENT}}.altrp-transpose_true .altrp-table-td:not(:first-child){{STATE}}': 'margin-top: -{{TOP}}{{UNIT}};',
-        '{{ELEMENT}}.altrp-transpose_true .altrp-table-tr:not(:first-child) .altrp-table-td{{STATE}}': 'margin-left: -{{LEFT}}{{UNIT}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-td{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+      //   '{{ELEMENT}}.altrp-transpose_true .altrp-table-td:not(:first-child){{STATE}}': 'margin-top: -{{TOP}}{{UNIT}};',
+      //   '{{ELEMENT}}.altrp-transpose_true .altrp-table-tr:not(:first-child) .altrp-table-td{{STATE}}': 'margin-left: -{{LEFT}}{{UNIT}};',
+      // }
     });
 
     this.addControl('table_style_body_border_color_', {
@@ -3307,9 +3307,9 @@ class Table extends BaseElement {
         color: '',
         colorPickedHex: ''
       },
-      rules: {
-        '{{ELEMENT}} .altrp-table-td{{STATE}}': 'border-color: {{COLOR}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-td{{STATE}}': 'border-color: {{COLOR}};',
+      // }
     });
 
     this.addControl('table_style_body_border_background', {
@@ -3319,9 +3319,9 @@ class Table extends BaseElement {
         color: '',
         colorPickedHex: ''
       },
-      rules: {
-        '{{ELEMENT}} .altrp-table-tbody .altrp-table-background{{STATE}}': 'background: {{COLOR}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-tbody .altrp-table-background{{STATE}}': 'background: {{COLOR}};',
+      // }
     });
 
     this.addControl('table_style_body_border_text_color', {
@@ -3331,26 +3331,26 @@ class Table extends BaseElement {
         color: '',
         colorPickedHex: ''
       },
-      rules: {
-        '{{ELEMENT}} .altrp-table-td{{STATE}}': 'color: {{COLOR}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-td{{STATE}}': 'color: {{COLOR}};',
+      // }
     });
 
     this.addControl('table_style_body_font', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      rules: {
-        '{{ELEMENT}} .altrp-table-td{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-td{{STATE}}': [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
     });
 
     this.addControl('table_link_heading', {
@@ -3361,9 +3361,9 @@ class Table extends BaseElement {
     this.addControl('table_link_color', {
       type: CONTROLLER_COLOR,
       label: 'Text Color',
-      rules: {
-        '{{ELEMENT}} .altrp-table-td a{{STATE}}': 'color: {{COLOR}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-td a{{STATE}}': 'color: {{COLOR}};',
+      // }
     });
 
 
@@ -3371,18 +3371,18 @@ class Table extends BaseElement {
     this.addControl('table_link_font', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      rules: {
-        '{{ELEMENT}} .altrp-table-td a{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-td a{{STATE}}': [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
     });
 
 
@@ -3437,11 +3437,11 @@ class Table extends BaseElement {
         },
       ],
 
-      rules: {
-        '{{ELEMENT}} div:not(.altrp-element) .altrp-table-td{{STATE}}': [
-          'vertical-align: {{VALUE}};',
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} div:not(.altrp-element) .altrp-table-td{{STATE}}': [
+      //     'vertical-align: {{VALUE}};',
+      //   ],
+      // },
   });
 
     this.endControlSection();
@@ -3467,14 +3467,14 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-td__grouping{{STATE}}': [
+      //     'padding-top: {{TOP}}{{UNIT}};',
+      //     'padding-right: {{RIGHT}}{{UNIT}};',
+      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'padding-left: {{LEFT}}{{UNIT}};'
+      //   ],
+      // },
     });
 
     this.addControl('table_style_group_cell_alignment', {
@@ -3494,9 +3494,9 @@ class Table extends BaseElement {
           value: 'right',
         },
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-table-tbody .altrp-table-td__grouping{{STATE}}': 'text-align: {{VALUE}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-tbody .altrp-table-td__grouping{{STATE}}': 'text-align: {{VALUE}};',
+      // }
     });
 
     this.addControl('table_style_group_border_background', {
@@ -3506,9 +3506,9 @@ class Table extends BaseElement {
         color: '',
         colorPickedHex: ''
       },
-      rules: {
-        '{{ELEMENT}} .altrp-table-tbody .altrp-table-td__grouping{{STATE}}': 'background: {{COLOR}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-tbody .altrp-table-td__grouping{{STATE}}': 'background: {{COLOR}};',
+      // }
     });
 
     this.addControl('table_style_group_border_text_color', {
@@ -3518,26 +3518,26 @@ class Table extends BaseElement {
         color: '',
         colorPickedHex: ''
       },
-      rules: {
-        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}}': 'color: {{COLOR}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-td__grouping{{STATE}}': 'color: {{COLOR}};',
+      // }
     });
 
     this.addControl('table_style_group_font', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      rules: {
-        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-td__grouping{{STATE}}': [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
     });
 
     this.addControl('table_style_group_icon_size', {
@@ -3546,12 +3546,12 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
-          'width: {{SIZE}}{{UNIT}};',
-          'height: {{SIZE}}{{UNIT}};',
-        ],
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
+      //     'width: {{SIZE}}{{UNIT}};',
+      //     'height: {{SIZE}}{{UNIT}};',
+      //   ],
+      // }
     });
     this.addControl('table_style_group_icon_left_space', {
       type: CONTROLLER_SLIDER,
@@ -3559,11 +3559,11 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
-          'margin-left: {{SIZE}}{{UNIT}};',
-        ],
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
+      //     'margin-left: {{SIZE}}{{UNIT}};',
+      //   ],
+      // }
     });
     this.addControl('table_style_group_icon_right_space', {
       type: CONTROLLER_SLIDER,
@@ -3571,11 +3571,11 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
-          'margin-right: {{SIZE}}{{UNIT}};',
-        ],
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
+      //     'margin-right: {{SIZE}}{{UNIT}};',
+      //   ],
+      // }
     });
     this.addControl('table_style_group_icon_top', {
       type: CONTROLLER_SLIDER,
@@ -3583,11 +3583,11 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: -100,
-      rules: {
-        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
-          'top: {{SIZE}}{{UNIT}};',
-        ],
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
+      //     'top: {{SIZE}}{{UNIT}};',
+      //   ],
+      // }
     });
     this.addControl('table_style_group_icon_left', {
       type: CONTROLLER_SLIDER,
@@ -3595,21 +3595,21 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: -100,
-      rules: {
-        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
-          'left: {{SIZE}}{{UNIT}};',
-        ],
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': [
+      //     'left: {{SIZE}}{{UNIT}};',
+      //   ],
+      // }
     });
 
 
     this.addControl('table_style_group_icon_color', {
       type: CONTROLLER_COLOR,
       label: 'Icon Color',
-      rules: {
-        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': 'fill: {{COLOR}};',
-        '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon path': 'fill: {{COLOR}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon svg': 'fill: {{COLOR}};',
+      //   '{{ELEMENT}} .altrp-table-td__grouping{{STATE}} .altrp-table__collapse-icon path': 'fill: {{COLOR}};',
+      // }
     });
 
     this.endControlSection();
@@ -3640,14 +3640,14 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-table-foot .altrp-table-td{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-foot .altrp-table-td{{STATE}}': [
+      //     'padding-top: {{TOP}}{{UNIT}};',
+      //     'padding-right: {{RIGHT}}{{UNIT}};',
+      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'padding-left: {{LEFT}}{{UNIT}};'
+      //   ],
+      // },
     });
 
     this.addControl('table_style_footer_cell_alignment', {
@@ -3667,9 +3667,9 @@ class Table extends BaseElement {
           value: 'right',
         },
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-table-foot .altrp-table-td{{STATE}}': 'text-align: {{VALUE}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-foot .altrp-table-td{{STATE}}': 'text-align: {{VALUE}};',
+      // }
     });
 
     this.addControl('table_style_footer_border_background', {
@@ -3679,9 +3679,9 @@ class Table extends BaseElement {
         color: '',
         colorPickedHex: ''
       },
-      rules: {
-        '{{ELEMENT}} .altrp-table-foot .altrp-table-td{{STATE}}': 'background: {{COLOR}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-foot .altrp-table-td{{STATE}}': 'background: {{COLOR}};',
+      // }
     });
 
     this.addControl('table_style_footer_border_text_color', {
@@ -3691,26 +3691,26 @@ class Table extends BaseElement {
         color: '',
         colorPickedHex: ''
       },
-      rules: {
-        '{{ELEMENT}} .altrp-table-foot .altrp-table-td{{STATE}}': 'color: {{COLOR}};',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-table-foot .altrp-table-td{{STATE}}': 'color: {{COLOR}};',
+      // }
     });
 
     this.addControl('table_style_footer_font', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      rules: {
-        '{{ELEMENT}}  .altrp-table-foot .altrp-table-td{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}}  .altrp-table-foot .altrp-table-td{{STATE}}': [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
     });
 
     this.endControlSection();
