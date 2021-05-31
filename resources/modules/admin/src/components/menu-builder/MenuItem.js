@@ -55,6 +55,7 @@ class MenuItem extends Component {
           </button>
           <IconSelect
             value={this.props.item.icon}
+            returnType="text"
             onChange={(icon) => {
               let value = icon;
               let path = this.props.indexes.map(((index) => {

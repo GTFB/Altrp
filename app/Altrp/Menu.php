@@ -11,6 +11,7 @@ class Menu extends Model
   protected $fillable = [
     'name',
     'children',
+    'settings',
   ];
   use SoftDeletes;
 }

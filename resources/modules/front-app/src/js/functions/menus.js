@@ -11,6 +11,5 @@ export async function getMenuByGUID(guid = ''){
   }
   const resource = new Resource({route: '/ajax/menus'})
   let data = await resource.get(guid);
-  console.log(data);
   return data;
 }

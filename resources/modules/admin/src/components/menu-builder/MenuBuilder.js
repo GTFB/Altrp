@@ -6,11 +6,15 @@ import {generateId} from "../../js/helpers";
 import MenuItem from "./MenuItem";
 import mutate from "dot-prop-immutable";
 import {mbParseJSON} from "../../../../front-app/src/js/helpers";
+import IconSelect from "../icon-select/IconSelect";
 
 
 const defaultValue = {
   name: '',
   children: [],
+  settings: {
+    toggle_icon: ''
+  },
 };
 const Wrapper = styled.div`
   & {
@@ -110,6 +114,11 @@ class MenuBuilder extends Component {
       if(! menu.name){
         menu.name = '';
       }
+      if(! menu.settings){
+        menu.settings = {toggle_icon: ''};
+      } else {
+        menu.settings = mbParseJSON(menu.settings, {toggle_icon: ''});
+      }
       this.setState(state => ({...state, value: menu}));
     } catch (e) {
       // console.error(e);
@@ -134,6 +143,7 @@ class MenuBuilder extends Component {
     try {
       let value = {...this.state.value};
       value.children = JSON.stringify(value.children);
+      value.settings = JSON.stringify(value.settings);
       let res = await this.resource.put(this.props.menuId, value)
       if (res.success) {
         alert('Success');
@@ -191,10 +201,20 @@ class MenuBuilder extends Component {
           onChange={(e)=>{
             let inputValue = e.target.value;
             let value = mutate.set(this.state.value, 'name', inputValue);
-            console.log(value);
             this.setState(state=>({...state, value}));
           }}
           className="form-control"/>
+        <label htmlFor="toggle-icon" className="mb-0 mr-3 ml-3">Toggle Icon</label>
+        <IconSelect
+          id="toggle-icon"
+          returnType="text"
+          value={this.state.value.settings.toggle_icon}
+          maxWidth="50px"
+          maxHeight="50px"
+          onChange={(icon) => {
+            let value = mutate.set(this.state.value, 'settings.toggle_icon', icon);
+            this.setState(state=>({...state, value}));
+          }}/>
       </div>
 
       <div className="d-flex altrp-menu-builder-add align-items-center align-content-start p-3 flex-wrap">

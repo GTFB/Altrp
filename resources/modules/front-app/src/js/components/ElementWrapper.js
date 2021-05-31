@@ -14,6 +14,7 @@ import DividerComponent from "../../../../editor/src/js/components/widgets/style
 import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 import TextComponent from "../../../../editor/src/js/components/widgets/styled-components/TextComponent";
 import MenuComponent from "../../../../editor/src/js/components/widgets/styled-components/MenuComponent";
+import BreadcrumbsComponent from "../../../../editor/src/js/components/widgets/styled-components/BreadcrumbsComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -44,7 +45,7 @@ class ElementWrapper extends Component {
    * Иногда надо обновить элемент (FrontElement)
    */
   componentDidMount() {
-    !isEditor() && window.frontApp.onWidgetMount();
+    ! isEditor() && window.frontApp.onWidgetMount();
     if (_.isFunction(this.props.element.update)) {
       this.props.element.update();
       this.props.element.updateFonts();
@@ -300,6 +301,7 @@ class ElementWrapper extends Component {
       updateToken: this.state.updateToken,
       currentScreen: this.props.currentScreen,
       baseRender: this.props.baseRender,
+      history: this.props.history,
       appStore
     });
     if (this.props.element.getTemplateType() === 'email') {
@@ -338,12 +340,16 @@ class ElementWrapper extends Component {
       case "menu":
         WrapperComponent = MenuComponent;
         break;
+      case "breadcrumbs":
+        WrapperComponent = BreadcrumbsComponent;
+        break;
     }
 
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
       <WrapperComponent
         className={classes}
         ref={this.elementWrapperRef}
+        elementId={this.props.element.getId()}
         settings={this.props.element.getSettings()}
         style={styles}
         id={this.CSSId}
