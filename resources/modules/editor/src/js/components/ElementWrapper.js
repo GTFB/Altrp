@@ -28,6 +28,7 @@ import GalleryComponent from "./widgets/styled-components/GalleryComponent";
 import TextComponent from "./widgets/styled-components/TextComponent";
 import Column from "../classes/elements/Column";
 import MenuComponent from "./widgets/styled-components/MenuComponent";
+import HeadingComponent from "./widgets/styled-components/HeadingComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -407,6 +408,9 @@ class ElementWrapper extends Component {
         break;
       case "menu":
         WrapperComponent = MenuComponent;
+        break;
+      case "heading":
+        WrapperComponent = HeadingComponent;
         break;
     }
 
