@@ -4,12 +4,16 @@ import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
 
 export default styled.div`
 ${({settings, element}) => {
-  console.log(`.${element}-altrp-dropbar`)
   const styles = [
     
-    `.${element}-altrp-dropbar`,
-      ["padding", "padding_dropbar_content_style", "dimensions"],
-    "}",
+    // `.${element}-altrp-dropbar`,
+    //   ["padding", "padding_dropbar_content_style", "dimensions"],
+    //   ["background-color", "background_dropbar_content_style", "color"],
+    // "}",
+    
+    // "&",
+    //   ["font-family", "button_advanced_tooltip_font"],
+    // "}",
     
     "altrp-btn-wrapper",
 
@@ -94,7 +98,6 @@ ${({settings, element}) => {
       ["background-size", "background_image_width", "slider"],
     "}",
   ];
-  console.log(styledString(styles, settings))
   return styledString(styles, settings)
 }}
 
