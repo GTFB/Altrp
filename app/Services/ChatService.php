@@ -17,12 +17,12 @@ class ChatService
             $response = Curl::to($authUrl)
                 ->withData([
                     'action' => 'loginuser',
-                    'token' => '7e3rfcr53grh4tgdwcwdqe76tgdvcb',
+                    'token' => '7e3rfcr53grh4tgdwcwdqe76tgdvcb==',
                     'username' => $login
                 ])
                 ->withHeaders([])
-                ->asJson()
-                ->asJsonResponse()
+                //->asJson()
+                //->asJsonResponse()
                 ->get();
             return $response;
         }
@@ -38,13 +38,16 @@ class ChatService
             $response = Curl::to($regUrl)
                 ->withData([
                     'action' => 'registeruser',
-                    'token' => '7e3rfcr53grh4tgdwcwdqe76tgdvcb',
+                    'token' => '7e3rfcr53grh4tgdwcwdqe76tgdvcb==',
                     'username' => $login,
                     'password' => $password
                 ])
                 ->withHeaders([])
-                ->asJson()
-                ->asJsonResponse()
+                //->asJson(true)
+                //->asJsonResponse()
+                //->returnResponseObject()
+                ->allowRedirect()
+                //->enableDebug(base_path('curl.log'))
                 ->get();
             return $response;
         }
