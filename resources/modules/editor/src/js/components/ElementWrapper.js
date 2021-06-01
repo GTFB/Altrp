@@ -28,6 +28,7 @@ import GalleryComponent from "./widgets/styled-components/GalleryComponent";
 import TextComponent from "./widgets/styled-components/TextComponent";
 import TableComponent from "./widgets/styled-components/TableComponent";
 import HeadingComponent from "./widgets/styled-components/HeadingComponent";
+import NavComponent from "./widgets/styled-components/NavComponent";
 import Column from "../classes/elements/Column";
 import MenuComponent from "./widgets/styled-components/MenuComponent";
 import BreadcrumbsComponent from "./widgets/styled-components/BreadcrumbsComponent";
@@ -420,6 +421,9 @@ class ElementWrapper extends Component {
         break;
       case "breadcrumbs":
         WrapperComponent = BreadcrumbsComponent;
+        break;
+      case "nav":
+        WrapperComponent = NavComponent;
         break;
     }
 
