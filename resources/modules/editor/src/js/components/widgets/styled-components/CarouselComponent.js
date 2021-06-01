@@ -170,10 +170,7 @@ export default styled.div`
 
 
     "& .altrp-carousel-slide-overlay-text",
-
     ["color", "font_color_overlay", "color", ":hover"],
-    ["", "typographic_overlay", "typographic", ":hover"],
-
     "}",
 
     "}"
