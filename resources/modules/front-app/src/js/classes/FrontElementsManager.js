@@ -60,6 +60,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "breadcrumbs",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'BreadcrumbsWidget' */ "../../../../editor/src/js/components/widgets/BreadcrumbsWidget"
+          );
+        }
+      },
+      {
         name: "text",
         import: async () => {
           return await import(

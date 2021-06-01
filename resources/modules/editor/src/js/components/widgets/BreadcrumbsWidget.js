@@ -1,4 +1,4 @@
-import React, { Component, Suspense } from "react";
+import React, { Component } from "react";
 
 
 class BreadcrumbsWidget extends Component {
@@ -16,7 +16,6 @@ class BreadcrumbsWidget extends Component {
     if(props.baseRender){
       this.render = props.baseRender(this);
     }
-    this.onClick = this.onClick.bind(this);
   }
 
 

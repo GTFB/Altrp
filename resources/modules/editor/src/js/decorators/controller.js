@@ -1,4 +1,4 @@
-import store from "../store/store";
+import store, {getCurrentScreen, getElementState} from "../store/store";
 import { toggleDynamicContent } from "../store/dynamic-content/actions";
 import { getElementSettingsSuffix } from "../helpers";
 /**
@@ -118,14 +118,13 @@ function getSettings(settingName) {
   if (this.props.responsive === false) {
     return this.props.currentElement.getSettings(settingName);
   }
-  let value = this.props.currentElement.getSettings(
-    settingName + getElementSettingsSuffix(this.props.controller)
-  );
-  // console.log(value);
+  let _settingName = this.props.controller.getSettingName()
+  let value = this.props.currentElement.getResponsiveSetting(settingName);
   // console.log(getElementSettingsSuffix(this.props.controller));
-  if (value === null) {
-    value = this.props.currentElement.getSettings(settingName);
-  }
+  console.log(value);
+  // if (value === null || value === undefined) {
+  //   value = this.props.currentElement.getSettings(settingName);
+  // }
   return value;
 }
 

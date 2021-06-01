@@ -6,4 +6,4 @@ export function setCurrentState(title, value) {
     title,
     value,
   };
-};
+}

@@ -52,9 +52,6 @@ class ColorController extends Component {
   }
 
   setGlobal(guid) {
-    console.log("====================================");
-    console.log(guid);
-    console.log("====================================");
     getCurrentElement().setGlobalStyle(
       guid,
       this.props.controller.getSettingName()
@@ -111,9 +108,6 @@ class ColorController extends Component {
       colorPickedHex: color.colorPickedHex,
       colorRGB: color.colorRGB
     });
-    console.log("====================================");
-    console.log(color);
-    console.log("====================================");
     if (color?.guid) {
       this.setGlobal(color.guid);
     }

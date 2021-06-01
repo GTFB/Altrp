@@ -9,10 +9,10 @@ import {
   CONTROLLER_SELECT,
   CONTROLLER_COLOR,
   CONTROLLER_TYPOGRAPHIC,
-  CONTROLLER_SHADOW,
+  CONTROLLER_SHADOW, CONTROLLER_SWITCHER,
 } from '../modules/ControllersManager';
 
-class Map extends BaseElement {
+class Menu extends BaseElement {
   static getName() {
     return 'menu';
   }
@@ -50,6 +50,7 @@ class Map extends BaseElement {
 
     this.addControl('type', {
       type: CONTROLLER_SELECT,
+      label: 'Type',
       options: [
         {
           'label': 'Vertical',
@@ -63,13 +64,18 @@ class Map extends BaseElement {
       default: 'vertical'
     })
 
+
+    this.addControl('button', {
+      label: 'Toggle Button',
+      type: CONTROLLER_SWITCHER,
+    })
+
     this.endControlSection();
 
     this.startControlSection('color_styles', {
       tab: TAB_STYLE,
       label: 'Colors',
     });
-
 
     this.endControlSection();
 
@@ -161,4 +167,4 @@ class Map extends BaseElement {
     advancedTabControllers(this);
   }
 }
-export default Map;
+export default Menu;
