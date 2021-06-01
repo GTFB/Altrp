@@ -31,6 +31,7 @@ import HeadingComponent from "./widgets/styled-components/HeadingComponent";
 import Column from "../classes/elements/Column";
 import MenuComponent from "./widgets/styled-components/MenuComponent";
 import VideoComponent from "./widgets/styled-components/VideoComponent";
+import ListComponent from "./widgets/styled-components/ListComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -420,6 +421,9 @@ class ElementWrapper extends Component {
         break;
       case "video":
         WrapperComponent = VideoComponent;
+        break;
+      case "list":
+        WrapperComponent = ListComponent;
         break;
     }
 
