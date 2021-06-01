@@ -41,6 +41,7 @@ class UpgradeController extends Controller
       return redirect( '/install' );
     }
 
+
     // Get eventual new version value & the current (installed) version value
     $lastVersion = getLatestVersion();
     $currentVersion = getCurrentVersion();
@@ -52,6 +53,7 @@ class UpgradeController extends Controller
 
 
     // Go to maintenance with DOWN status
+    \Log::info(date('d.m.Y H:i:s') . " | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
     Artisan::call( 'down' );
 
     // Clear all the cache

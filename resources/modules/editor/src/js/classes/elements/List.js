@@ -188,6 +188,13 @@ class List extends BaseElement{
       min: 0,
     });
 
+    this.addControl('repeater_meta_data_section', {
+      label: 'List items',
+      type: CONTROLLER_REPEATER,
+      fields: repeater.getControls(),
+      default: []
+    });
+
 
     this.endControlSection();
 
@@ -212,14 +219,6 @@ class List extends BaseElement{
         '%',
         'vh',
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-list{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
     });
 
     this.addControl('position_padding', {
@@ -238,23 +237,12 @@ class List extends BaseElement{
         '%',
         'vh',
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-list{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
     });
 
     this.addControl('position_z_index', {
       type: CONTROLLER_NUMBER,
       label: 'Z-index',
       default: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-list{{STATE}}': 'z-index: {{VALUE}}'
-      }
     });
 
     this.addControl('position_css_id', {
@@ -304,10 +292,6 @@ class List extends BaseElement{
           value: 'flex-end',
         }
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-list-ul-inline{{STATE}}': 'justify-content: {{VALUE}};',
-        '{{ELEMENT}} .altrp-list-ul-default .altrp-list-li{{STATE}}': 'justify-content: {{VALUE}};'
-      },
     });
 
     this.addControl('divider_switcher_list_style', {
@@ -340,10 +324,6 @@ class List extends BaseElement{
           label: 'dashed'
         }
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-list-li-divider-default{{STATE}}': 'border-top-style: {{VALUE}}',
-        '{{ELEMENT}} .altrp-list-li-divider-inline{{STATE}}': 'border-right-style: {{VALUE}}'
-      },
     });
 
     this.addControl('divider_weight_list_style', {
@@ -358,10 +338,6 @@ class List extends BaseElement{
       },
       max: 20,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-list-li-divider-default{{STATE}}': 'border-top-width: {{SIZE}}{{UNIT}}',
-        '{{ELEMENT}} .altrp-list-li-divider-inline{{STATE}}': 'border-right-width: {{SIZE}}{{UNIT}}'
-      },
     });
 
     this.addControl('divider_width_list_style', {
@@ -380,9 +356,6 @@ class List extends BaseElement{
       ],
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-list-li-divider{{STATE}}': 'width: {{SIZE}}{{UNIT}}',
-      },
     });
 
     this.addControl('divider_color_list_style', {
@@ -394,9 +367,6 @@ class List extends BaseElement{
       default: {
         color: "",
         colorPickedHex: "",
-      },
-      rules: {
-        '{{ELEMENT}} .altrp-list-li-divider{{STATE}}': 'border-color: {{COLOR}};',
       },
       }
     );
@@ -412,16 +382,11 @@ class List extends BaseElement{
       type: CONTROLLER_SLIDER,
       label: 'Size',
       default:{
-        size: null,
+        size: 25,
         unit: 'px',
       },
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-list-icon{{STATE}}': ['width: {{SIZE}}{{UNIT}}', 'height: {{SIZE}}{{UNIT}}'],
-        '{{ELEMENT}} .altrp-list-icon svg{{STATE}}': ['width: {{SIZE}}{{UNIT}}', 'height: {{SIZE}}{{UNIT}}'],
-
-      },
     });
 
     this.addControl("fill_icon_style", {
@@ -431,9 +396,6 @@ class List extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-list-icon{{STATE}} path": "fill: {{COLOR}};"
-      }
     });
 
     this.addControl("background_icon_style", {
@@ -443,9 +405,6 @@ class List extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-list-icon{{STATE}}": "background-color: {{COLOR}};"
-      }
     });
 
     this.addControl('padding_icon_style', {
@@ -463,34 +422,6 @@ class List extends BaseElement{
         '%',
         'vh',
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-list-icon{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
-    });
-
-    this.addControl('border-radius_icon_style', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Border radius',
-      default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit:'px'
-      },
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-list-icon{{STATE}}': 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-      },
     });
 
     this.addControl("border-type_icon_style", {
@@ -522,27 +453,34 @@ class List extends BaseElement{
           label: "Groove"
         }
       ],
-      rules: {
-        "{{ELEMENT}} .altrp-list-icon{{STATE}}": "border-style: {{VALUE}};"
-      }
     });
 
     this.addControl("border-width_icon_style", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-list-icon{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-      }
     });
 
     this.addControl("border_color_icon_style", {
       type: CONTROLLER_COLOR,
       label: "Border color",
-      rules: {
-        "{{ELEMENT}} .altrp-list-icon{{STATE}}": "border-color: {{COLOR}};"
-      }
+    });
+
+    this.addControl('border-radius_icon_style', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border radius',
+      default:{
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
     });
 
     this.endControlSection();
@@ -561,9 +499,6 @@ class List extends BaseElement{
       },
       max: 50,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-list-label{{STATE}}": "margin-left: {{SIZE}}{{UNIT}}"
-      }
     });
 
     this.addControl("color_text_style", {
@@ -573,9 +508,6 @@ class List extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-list-label{{STATE}}": "color: {{COLOR}};"
-      }
     });
 
     this.addControl("background_color_text_style", {
@@ -585,9 +517,6 @@ class List extends BaseElement{
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-list-label{{STATE}}": "background-color: {{COLOR}};"
-      }
     });
 
     this.addControl('padding_text_style', {
@@ -605,34 +534,6 @@ class List extends BaseElement{
         '%',
         'vh',
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-list-label{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
-    });
-
-    this.addControl('border-radius_text_style', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Border radius',
-      default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit:'px'
-      },
-      units:[
-        'px',
-        '%',
-        'vh',
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-list-label{{STATE}}': 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-      },
     });
 
     this.addControl("border-type_text_style", {
@@ -664,28 +565,36 @@ class List extends BaseElement{
           label: "Groove"
         }
       ],
-      rules: {
-        "{{ELEMENT}} .altrp-list-label{{STATE}}": "border-style: {{VALUE}};"
-      }
     });
 
     this.addControl("border-width_text_style", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-list-label{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-      }
     });
 
     this.addControl("border_color_text_style", {
       type: CONTROLLER_COLOR,
       label: "Border color",
-      rules: {
-        "{{ELEMENT}} .altrp-list-label{{STATE}}": "border-color: {{COLOR}};"
-      }
     });
+
+    this.addControl('border-radius_text_style', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border radius',
+      default:{
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit:'px'
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
 
     this.addControl('typographic_text_style', {
         type: CONTROLLER_TYPOGRAPHIC,
@@ -698,18 +607,6 @@ class List extends BaseElement{
         //   family: "Open Sans",
         //   decoration: ""
         // },
-        rules: {
-          '{{ELEMENT}} .altrp-list-label{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
       }
     );
 
@@ -735,9 +632,6 @@ class List extends BaseElement{
           label: "line-through"
         },
       ],
-      rules: {
-        "{{ELEMENT}} .altrp-list-li-link{{STATE}}": "text-decoration: {{VALUE}};"
-      }
     });
 
     this.endControlSection();

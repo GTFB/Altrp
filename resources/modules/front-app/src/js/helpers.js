@@ -1899,12 +1899,14 @@ export function getResponsiveSetting(
       }
 
       _settingName = `${settingName}_${elementState}_${screen.name}`;
-      if (settings[_settingName]) {
+
+      if (settings[_settingName] !== undefined) {
         setting = settings[_settingName];
         break;
       }
     }
   }
+
   if (setting === undefined) {
     setting = _.get(settings, settingName, _default);
   }

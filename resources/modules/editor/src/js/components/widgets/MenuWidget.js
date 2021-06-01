@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {Button, ButtonGroup, Menu, MenuItem, Position} from "@blueprintjs/core";
+import { Popover2 } from "@blueprintjs/popover2";
 import {getMenuByGUID} from "../../../../../front-app/src/js/functions/menus";
 import {addMenu} from "../../../../../front-app/src/js/store/menus-storage/actions";
 import {getResponsiveSetting, isEditor, mbParseJSON} from "../../../../../front-app/src/js/helpers";
@@ -129,8 +130,59 @@ const GlobalStyles = createGlobalStyle`
     }
     styles += '}';
 
-    console.log(styles);
+    return styles;
+  }}
 
+  ${({elementId, settings})=>{
+    let styles= `.altrp-portal${elementId} .altrp-menu{`;
+
+    const menuPadding = getResponsiveSetting(settings, 'menu_padding');
+    if (menuPadding) {
+      styles += dimensionsControllerToStyles(menuPadding);
+    }
+    let menuBg = getResponsiveSetting(settings, 'menu_bg');
+    if (menuBg && menuBg.color) {
+      styles += `background-color: ${menuBg.color};`;
+    }
+    let menu_radius = getResponsiveSetting(settings, 'menu_radius');
+    if (menu_radius) {
+      styles += dimensionsControllerToStyles(menu_radius, 'border-radius');
+    }
+    let gap = getResponsiveSetting(settings, 'gap');
+    if(gap){
+      gap = gap.replace(',', '.')
+      styles += `& > li:not(:last-child) { margin-${
+        getResponsiveSetting(settings, 'type') === 'horizontal' ? 'right' : 'bottom'
+      }: ${gap}}`;
+    }
+    styles += '}';
+
+    /**
+     * стили для ховера
+     * @type {string}
+     */
+    styles += `.altrp-portal${elementId} .altrp-menu:hover{`;
+
+    menu_radius = getResponsiveSetting(settings, 'menu_radius', ':hover');
+    if (menu_radius) {
+      styles += dimensionsControllerToStyles(menu_radius, 'border-radius');
+    }
+
+    menuBg = getResponsiveSetting(settings, 'menu_bg', ':hover');
+    if (menuBg && menuBg.color) {
+      styles += `background-color: ${menuBg.color};`;
+    }
+
+    styles += '}';
+    let renderButton = getResponsiveSetting(settings, 'button');
+    if (renderButton) {
+      styles += `.altrp-portal_main.altrp-portal${elementId} .altrp-menu{`;
+      let mainPortalWidth = getResponsiveSetting(settings, 'width');
+      if(mainPortalWidth){
+        styles += `max-width:${mainPortalWidth};width:${mainPortalWidth};`;
+      }
+      styles += '}';
+    }
     return styles;
   }}
   .altrp-menu-item__icon svg {
@@ -156,16 +208,17 @@ class MenuWidget extends Component {
   }
 
   getMenuData = async () => {
-    if (this.state.menuData || this.loading) {
+    let menuGUID = this.props.element.getResponsiveSetting('menu')
+    if (this.state.menuData || this.loading || ! menuGUID) {
       return
     }
     this.loading = true;
     const menus = appStore.getState().altrpMenus;
-    let menuGUID = this.props.element.getResponsiveSetting('menu')
     let menuData = menus.find(menu => menu.guid === menuGUID)
     if (!menuData) {
       menuData = await getMenuByGUID(menuGUID);
       menuData.children = mbParseJSON(menuData.children)
+      menuData.settings = mbParseJSON(menuData.settings)
       appStore.dispatch(addMenu(menuData));
     }
     this.setState(state => ({...state, menuData}), () => {
@@ -177,7 +230,7 @@ class MenuWidget extends Component {
     this.getMenuData();
     const {menuData} = this.state;
     if (!menuData) {
-      return null;
+      return 'Select Menu';
     }
     return <ButtonGroup fill={true} alignText="left">
       {menuData.children.map(item => {
@@ -204,10 +257,9 @@ class MenuWidget extends Component {
     this.getMenuData();
     const {menuData} = this.state;
     if (!menuData) {
-      return null;
+      return 'Select Menu';
     }
     return <Menu className={this.getMenuClasses()}>
-      <GlobalStyles {...this.props} settings={this.props.element.getSettings()} elementId={this.elementId}/>
       {/*{menuData.children.map(child)}*/}
       {this.renderSubItems(menuData.children, 1)}
     </Menu>
@@ -219,11 +271,6 @@ class MenuWidget extends Component {
   getMenuClasses = () => {
     let classes = ['altrp-menu'];
 
-    const {element} = this.props;
-
-    // if(element.getResponsiveSetting('type') === 'horizontal'){
-    //   classes.push('bp3-horizontal');
-    // }
     return classes.join(' ');
   }
   /**
@@ -243,27 +290,10 @@ class MenuWidget extends Component {
       portalClassName: `altrp-portal altrp-portal${this.elementId}`,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
-    if (depth === 1 && element.getResponsiveSetting('type') === 'horizontal') {
-      // popoverProps.placement = Position.BOTTOM_LEFT;
-      popoverProps.position = Position.BOTTOM_LEFT;
-      // popoverProps.fill = true;
-      // popoverProps.targetTagName = 'div';
-      // popoverProps.modifiers =  {
-      //   computeStyle: {
-      //     fn: (...props)=>{
-      //       console.log(props);
-      //       return props[0];
-      //     }
-      //
-      //   }
-      // };
-      // popoverProps.onInteraction = function (nextOpenState, e){
-      //   if(nextOpenState){
-      //     console.log(e.target);
-      //   }
-      // };
-      // console.log(popoverProps);
+    let renderButton = this.props.element.getResponsiveSetting('button');
 
+    if (depth === 1 && element.getResponsiveSetting('type') === 'horizontal' && ! renderButton) {
+      popoverProps.position = Position.BOTTOM_LEFT;
     }
     return <>
       {items.map((item) => {
@@ -291,14 +321,46 @@ class MenuWidget extends Component {
     </>
   }
 
+
+
+  renderButton = ()=>{
+   const {menuData} = this.state;
+    if(! menuData){
+      return null;
+    }
+    let toggle_icon = _ .get(menuData, 'settings.toggle_icon', '')
+    return <Popover2 content={this.renderVerticalMenu()}
+                     className="altrp-popover"
+                     portalContainer={ window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body}
+                     portalClassName={ `altrp-portal altrp-portal_main altrp-portal${this.elementId}`}
+                     minimal={true} >
+      <Button  text={toggle_icon ?
+        <span className="altrp-menu-item__icon" dangerouslySetInnerHTML={{__html: toggle_icon}}/> : ''} />
+    </Popover2>
+  }
+
   render() {
-    let type = this.props.element.getResponsiveSetting('type')
+    this.getMenuData();
+    let type = this.props.element.getResponsiveSetting('type');
+    let renderButton = this.props.element.getResponsiveSetting('button');
+    if(renderButton){
+      return <>
+        <GlobalStyles {...this.props} settings={this.props.element.getSettings()} elementId={this.elementId}/>
+        {this.renderButton()}
+      </>
+    }
     switch (type) {
       case 'horizontal': {
-        return this.renderVerticalMenu()
+        return <>
+          <GlobalStyles {...this.props} settings={this.props.element.getSettings()} elementId={this.elementId}/>
+          {this.renderVerticalMenu()}
+        </>
       }
       default: {
-        return this.renderVerticalMenu();
+        return <>
+          <GlobalStyles {...this.props} settings={this.props.element.getSettings()} elementId={this.elementId}/>
+          {this.renderVerticalMenu()}
+        </>;
       }
     }
   }

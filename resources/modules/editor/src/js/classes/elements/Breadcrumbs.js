@@ -12,7 +12,7 @@ import {
   CONTROLLER_SHADOW,
 } from '../modules/ControllersManager';
 
-class Map extends BaseElement {
+class Breadcrumbs extends BaseElement {
   static getName() {
     return 'breadcrumbs';
   }
@@ -35,4 +35,4 @@ class Map extends BaseElement {
     advancedTabControllers(this);
   }
 }
-export default Map;
+export default Breadcrumbs;

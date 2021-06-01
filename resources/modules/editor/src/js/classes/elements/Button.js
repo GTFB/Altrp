@@ -126,10 +126,6 @@ class Button extends BaseElement {
           value: 'stretch',
         }
       ],
-      // rules: {
-      //   '{{ELEMENT}}.altrp-element': 'align-items: {{VALUE}};',
-      //   '{{ELEMENT}} .altrp-dropbar': 'align-items: {{VALUE}};',
-      // },
     });
 
     this.addControl('button_icon', {
@@ -159,9 +155,6 @@ class Button extends BaseElement {
           label: 'Top'
         },
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}}': 'flex-direction: {{VALUE}};'
-      // },
     });
 
     this.endControlSection();
@@ -499,14 +492,6 @@ class Button extends BaseElement {
         '%',
         'vh',
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}}': [
-      //     'margin-top: {{TOP}}{{UNIT}};',
-      //     'margin-right: {{RIGHT}}{{UNIT}};',
-      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'margin-left: {{LEFT}}{{UNIT}};'
-      //   ]
-      // },
     });
 
     this.addControl('position_padding', {
@@ -525,14 +510,6 @@ class Button extends BaseElement {
         '%',
         'vh',
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}}': [
-      //     'padding-top: {{TOP}}{{UNIT}};',
-      //     'padding-right: {{RIGHT}}{{UNIT}};',
-      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'padding-left: {{LEFT}}{{UNIT}};'
-      //   ]
-      // },
     });
 
     this.addControl('position_z_index', {
@@ -540,9 +517,6 @@ class Button extends BaseElement {
       type: CONTROLLER_NUMBER,
       label: 'Z-index',
       default: 0,
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}}': 'z-index: {{VALUE}}'
-      // }
     });
 
     this.addControl('position_css_classes', {
@@ -557,9 +531,6 @@ class Button extends BaseElement {
       step: 0.01,
       min: 0,
       max: 1,
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}}': 'opacity: {{SIZE}};'
-      // },
     });
 
     this.endControlSection();
@@ -576,9 +547,6 @@ class Button extends BaseElement {
       //   color: "rgb(52,59,76)",
       //   colorPickedHex: "#343B4C",
       // },
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
-      // },
     });
 
     this.addControl('gradient', {
@@ -594,18 +562,12 @@ class Button extends BaseElement {
         angle: "0",
         value: ""
       },
-      // rules: {
-      //   "{{ELEMENT}} .altrp-btn{{STATE}}": "background-image: {{VALUE}}"
-      // }
     });
 
     this.addControl('background_image', {
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
       default: { url: "" },
-      // rules: {
-      //   "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-image: url({{URL}});"
-      // }
     });
 
     this.addControl('background_position', {
@@ -649,10 +611,7 @@ class Button extends BaseElement {
         }
       ],
       label: 'Background Position',
-      default: 'top left',
-      // rules: {
-      //   "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-position: {{VALUE}};"
-      // }
+      default: 'center',
     });
 
     this.addControl('background_attachment', {
@@ -672,10 +631,6 @@ class Button extends BaseElement {
         }
       ],
       label: 'Background Attachment',
-      default: 'scroll',
-      // rules: {
-      //   "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-attachment: {{VALUE}};"
-      // }
     });
 
     this.addControl('background_repeat', {
@@ -707,19 +662,11 @@ class Button extends BaseElement {
         }
       ],
       label: 'Background Repeat',
-      default: 'repeat',
-      // rules: {
-      //   "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-repeat: {{VALUE}};"
-      // }
     });
 
     this.addControl("background_image_width", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default: {
-        size: 100,
-        unit: 'px',
-      },
       conditions: {
         'background_size': [''],
       },
@@ -730,9 +677,6 @@ class Button extends BaseElement {
       ],
       max: 1000,
       min: 0,
-      // rules: {
-      //   "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
-      // }
     });
 
     this.addControl('background_size', {
@@ -756,10 +700,7 @@ class Button extends BaseElement {
         },
       ],
       label: 'Background Size',
-      default: 'unset',
-      // rules: {
-      //   "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
-      // }
+      default: 'cover',
     });
 
     this.endControlSection();
@@ -798,9 +739,6 @@ class Button extends BaseElement {
           'label': 'Groove',
         },
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-style: {{VALUE}};',
-      // },
     }
     );
 
@@ -808,25 +746,23 @@ class Button extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Width',
       default: {
-        bind: true
+        bind: true,
+        top: 2,
+        left: 2,
+        right: 2,
+        bottom: 2,
       },
       units: [
         'px',
         '%',
         'vh',
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-      // },
     }
     );
 
     this.addControl('border_color', {
       type: CONTROLLER_COLOR,
       label: 'Border Color',
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
-      // },
     }
     );
 
@@ -834,29 +770,23 @@ class Button extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Radius',
       default: {
-        unit: 'px'
+        unit: 'px',
+        bind: true,
+        top: 6,
+        left: 6,
+        right: 6,
+        bottom: 6,
       },
       units: [
         'px',
         '%',
         'vh',
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}}': [
-      //     'border-top-left-radius: {{TOP}}{{UNIT}}',
-      //     'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-      //     'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-      //     'border-bottom-left-radius: {{LEFT}}{{UNIT}}'
-      //   ]
-      // }
     });
 
     this.addControl('style_background_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Shadow',
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      // },
     });
 
 
@@ -878,18 +808,6 @@ class Button extends BaseElement {
         //   family: "Open Sans",
         //   decoration: ""
         // },
-        // rules: {
-        //   '{{ELEMENT}} .altrp-btn{{STATE}}': [
-        //     'font-size: {{SIZE}}px;',
-        //     'font-family: {{FAMILY}}',
-        //     'line-height: {{LINEHEIGHT}};',
-        //     'letter-spacing: {{SPACING}}px',
-        //     'font-weight: {{WEIGHT}}',
-        //     'text-transform: {{TRANSFORM}}',
-        //     'font-style: {{STYLE}}',
-        //     'text-decoration: {{DECORATION}}'
-        //   ],
-        // },
       }
     );
 
@@ -899,9 +817,6 @@ class Button extends BaseElement {
         // default: {
         //   color: "rgb(255,255,255)",
         //   colorPickedHex: "#FFF",
-        // },
-        // rules: {
-        //   '{{ELEMENT}} .altrp-btn{{STATE}}': 'color: {{COLOR}};',
         // },
       }
     );
@@ -930,42 +845,30 @@ class Button extends BaseElement {
         '%',
         'vh',
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon': [
-      //     'padding-top: {{TOP}}{{UNIT}};',
-      //     'padding-right: {{RIGHT}}{{UNIT}};',
-      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'padding-left: {{LEFT}}{{UNIT}};'
-      //   ]
-      // },
     });
 
     this.addControl('icon_color', {
       type: CONTROLLER_COLOR,
-      label: 'Icon color',
-      default: {
-        color: "rgb(255,255,255)",
-        colorPickedHex: "#ffffff",
-      },
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon path': 'fill: {{COLOR}};',
+      label: 'Icon color fill',
+    });
 
-      // },
+    this.addControl('icon_color_stroke', {
+      type: CONTROLLER_COLOR,
+      label: 'Icon color stroke',
     });
 
     this.addControl('icon_color_background', {
       type: CONTROLLER_COLOR,
       label: 'Background Color',
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon svg': 'background: {{COLOR}};',
-
-      // },
     }
     );
 
     this.addControl('icon_size', {
       type: CONTROLLER_SLIDER,
       label: 'Icon Size',
+      default: {
+        size: 25
+      },
       units: [
         'px',
         '%',
@@ -973,11 +876,6 @@ class Button extends BaseElement {
       ],
       max: 100,
       min: 0,
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-      //   '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-      //   '{{ELEMENT}} .altrp-btn{{STATE}} .altrp-btn-icon img': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-      // },
     });
 
     this.endControlSection();
@@ -991,9 +889,6 @@ class Button extends BaseElement {
     this.addControl('button_transition_property', {
       type: CONTROLLER_TEXTAREA,
       label: 'Transition Property',
-      // rules: {
-      //   "{{ELEMENT}} .altrp-btn{{STATE}}": "transition-property: {{VALUE}};"
-      // },
       description: 'Input properties, commas separated'
     });
 
@@ -1004,9 +899,6 @@ class Button extends BaseElement {
       max: 5,
       min: 0,
       step: 0.1,
-      // rules: {
-      //   "{{ELEMENT}} .altrp-btn{{STATE}}": "transition-duration: {{SIZE}}s;"
-      // }
     });
 
     this.addControl('button_transition_timing', {
@@ -1034,9 +926,6 @@ class Button extends BaseElement {
         }
       ],
       label: 'Transition Timing Function',
-      // rules: {
-      //   "{{ELEMENT}} .altrp-btn{{STATE}}": "transition-timing-function: {{VALUE}};"
-      // }
     });
 
     this.addControl("button_transition_delay", {
@@ -1046,9 +935,6 @@ class Button extends BaseElement {
       max: 5,
       min: 0,
       step: 0.1,
-      // rules: {
-      //   "{{ELEMENT}} .altrp-btn{{STATE}}": "transition-delay: {{SIZE}}s;"
-      // }
     });
 
     this.endControlSection();
@@ -1061,25 +947,25 @@ class Button extends BaseElement {
     }
     );
 
-    this.addControl('creative_link_controller', {
-      type: CONTROLLER_CREATIVE_LINK,
-      label: 'Creative Link',
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn:after{{STATE}}': [
-      //     'transition-duration: {{SIZE}}s;',
-      //     'height: {{LINEHEIGHT}}px;',
-      //     'color: {{COLOR}};',
-      //     'background: {{BACKGROUND}};',
-      //   ],
-      //   '{{ELEMENT}} .altrp-btn:before{{STATE}}': [
-      //     'transition-duration: {{SIZE}}s;',
-      //     'height: {{LINEHEIGHT}}px;',
-      //     'color: {{COLOR}};',
-      //     'background: {{BACKGROUND}};',
-      //   ],
-      // },
-    }
-    );
+    // this.addControl('creative_link_controller', {
+    //   type: CONTROLLER_CREATIVE_LINK,
+    //   label: 'Creative Link',
+    //   rules: {
+    //     '{{ELEMENT}} .altrp-btn:after{{STATE}}': [
+    //       'transition-duration: {{SIZE}}s;',
+    //       'height: {{LINEHEIGHT}}px;',
+    //       'color: {{COLOR}};',
+    //       'background: {{BACKGROUND}};',
+    //     ],
+    //     '{{ELEMENT}} .altrp-btn:before{{STATE}}': [
+    //       'transition-duration: {{SIZE}}s;',
+    //       'height: {{LINEHEIGHT}}px;',
+    //       'color: {{COLOR}};',
+    //       'background: {{BACKGROUND}};',
+    //     ],
+    //   },
+    // }
+    // );
 
     this.endControlSection();
 
@@ -1102,14 +988,6 @@ class Button extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"],
-      rules: {
-        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
     });
 
     this.addControl("width_dropbar_options", {
@@ -1125,9 +1003,6 @@ class Button extends BaseElement {
       ],
       max: 1000,
       min: 0,
-      rules: {
-        ".{{ID}}-altrp-dropbar.altrp-dropbar-container{{STATE}}": "width: {{SIZE}}{{UNIT}}"
-      }
     });
 
     this.addControl("background_dropbar_content_style", {

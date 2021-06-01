@@ -19,44 +19,22 @@ const MenuComponent = styled.div`
       styles += '.bp3-submenu{flex-grow:1}';
       styles += '.bp3-icon-caret-right{transform: rotate(90deg);}';
     }
-    const menuPadding = getResponsiveSetting(settings, 'menu_padding');
-    if (menuPadding) {
-      styles += dimensionsControllerToStyles(menuPadding);
-    }
-    let menuBg = getResponsiveSetting(settings, 'menu_bg');
-    if (menuBg && menuBg.color) {
-      styles += `background-color: ${menuBg.color};`;
-    }
-    let menu_radius = getResponsiveSetting(settings, 'menu_radius');
-    if (menu_radius) {
-      styles += dimensionsControllerToStyles(menu_radius, 'border-radius');
-    }
-    let gap = getResponsiveSetting(settings, 'gap');
-    if(gap){
-      gap = gap.replace(',', '.')
-      styles += `& > li:not(:last-child) { margin-${
-        getResponsiveSetting(settings, 'type') === 'horizontal' ? 'right' : 'bottom'
-      }: ${gap}}`;
-    }
+
     styles += '}';
     /**
-     * стили для ховера
+     * Ститли поповера для кнопки
      * @type {string}
      */
-    styles += `.altrp-menu:hover{`;
-
-    menu_radius = getResponsiveSetting(settings, 'menu_radius', ':hover');
-    if (menu_radius) {
-      styles += dimensionsControllerToStyles(menu_radius, 'border-radius');
+    let renderButton = getResponsiveSetting(settings, 'button');
+    if (renderButton) {
+      styles += '.altrp-popover{display:flex;';
+      let alignment = getResponsiveSetting(settings, 'alignment')
+      styles += `justify-content:${alignment};`;
+      if(alignment === 'stretch') {
+        styles += `.bp3-button{flex-grow:1;}`;
+      }
+      styles += '}';
     }
-
-    menuBg = getResponsiveSetting(settings, 'menu_bg', ':hover');
-    if (menuBg && menuBg.color) {
-      styles += `background-color: ${menuBg.color};`;
-    }
-
-    styles += '}';
-
     return styles;
   }}
 `;
