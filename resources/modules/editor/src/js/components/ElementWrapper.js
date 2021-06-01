@@ -30,7 +30,7 @@ import TableComponent from "./widgets/styled-components/TableComponent";
 import HeadingComponent from "./widgets/styled-components/HeadingComponent";
 import Column from "../classes/elements/Column";
 import MenuComponent from "./widgets/styled-components/MenuComponent";
-import HeadingComponent from "./widgets/styled-components/HeadingComponent";
+import VideoComponent from "./widgets/styled-components/VideoComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -418,8 +418,8 @@ class ElementWrapper extends Component {
       case "menu":
         WrapperComponent = MenuComponent;
         break;
-      case "heading":
-        WrapperComponent = HeadingComponent;
+      case "video":
+        WrapperComponent = VideoComponent;
         break;
     }
 

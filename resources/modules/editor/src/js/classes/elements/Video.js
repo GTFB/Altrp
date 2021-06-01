@@ -66,9 +66,6 @@ class Video extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 1000,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-video{{STATE}}': 'width: {{SIZE}}{{UNIT}};',
-      },
     });
 
     this.addControl('video_height', {
@@ -77,9 +74,6 @@ class Video extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 1000,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-video{{STATE}}': 'height: {{SIZE}}{{UNIT}};',
-      },
     });
 
     advancedTabControllers(this);

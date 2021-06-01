@@ -16,7 +16,7 @@ import TextComponent from "../../../../editor/src/js/components/widgets/styled-c
 import TableComponent from "../../../../editor/src/js/components/widgets/styled-components/TableComponent";
 import HeadingComponent from "../../../../editor/src/js/components/widgets/styled-components/HeadingComponent";
 import MenuComponent from "../../../../editor/src/js/components/widgets/styled-components/MenuComponent";
-import HeadingComponent from "../../../../editor/src/js/components/widgets/styled-components/HeadingComponent";
+import VideoComponent from "../../../../editor/src/js/components/widgets/styled-components/VideoComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -348,9 +348,8 @@ class ElementWrapper extends Component {
       case "menu":
         WrapperComponent = MenuComponent;
         break;
-      case "heading":
-        WrapperComponent = HeadingComponent;
-        break;
+      case "video":
+        WrapperComponent = VideoComponent;
     }
 
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
