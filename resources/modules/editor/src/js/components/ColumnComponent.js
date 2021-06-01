@@ -80,7 +80,6 @@ class ColumnComponent extends Component {
         component = ColumnHeaderComponent;
       } break;
     }
-
     return React.createElement(component,
       {
         className,

@@ -334,7 +334,7 @@ class MenuWidget extends Component {
                      portalContainer={ window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body}
                      portalClassName={ `altrp-portal altrp-portal_main altrp-portal${this.elementId}`}
                      minimal={true} >
-      <Button  text={toggle_icon ?
+      <Button className="altrp-menu-toggle" text={toggle_icon ?
         <span className="altrp-menu-item__icon" dangerouslySetInnerHTML={{__html: toggle_icon}}/> : ''} />
     </Popover2>
   }

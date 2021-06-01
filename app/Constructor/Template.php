@@ -170,7 +170,6 @@ class Template extends Model
         $child = self::recursively_children_check_conditions( $child );
         $_element_data['children'][] = $child;
       }
-      $_element_data['settings'] = [];
     }
     return $_element_data;
   }
