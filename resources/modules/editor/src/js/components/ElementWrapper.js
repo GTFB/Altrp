@@ -27,6 +27,8 @@ import AccordionComponent from "./widgets/styled-components/AccordionComponent";
 import GalleryComponent from "./widgets/styled-components/GalleryComponent";
 import TextComponent from "./widgets/styled-components/TextComponent";
 import Column from "../classes/elements/Column";
+import MenuComponent from "./widgets/styled-components/MenuComponent";
+import BreadcrumbsComponent from "./widgets/styled-components/BreadcrumbsComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -372,6 +374,7 @@ class ElementWrapper extends Component {
       currentUser: this.props.currentUser,
       currentScreen: this.props.currentScreen,
       currentDataStorage: this.props.currentDataStorage,
+      globalStyles: this.props.globalStyles,
       fireAction: this.fireAction,
       CKEditor: CKEditor,
       wrapper: this
@@ -402,6 +405,12 @@ class ElementWrapper extends Component {
         break;
       case "accordion":
         WrapperComponent = AccordionComponent;
+        break;
+      case "menu":
+        WrapperComponent = MenuComponent;
+        break;
+      case "breadcrumbs":
+        WrapperComponent = BreadcrumbsComponent;
         break;
     }
 
@@ -500,7 +509,8 @@ function mapStateToProps(state) {
     controllerValue: state.controllerValue,
     currentDataStorage: state.currentDataStorage,
     // hideTriggers: state.hideTriggers,
-    currentScreen: state.currentScreen
+    currentScreen: state.currentScreen,
+    globalStyles: state.globalStyles
   };
 }
 

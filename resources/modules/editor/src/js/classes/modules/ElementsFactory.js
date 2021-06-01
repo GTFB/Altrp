@@ -16,6 +16,7 @@ class ElementsFactory extends BaseModule {
      * @member {BaseElement} element
      * */
     let element = new (elementsManager.getElementClass(object.name))();
+    // element.name = object.name;
     if (object.children && object.children.length) {
       for (let child of object.children) {
         elementsManager.checkElementExists(child.name)

@@ -3,6 +3,9 @@
 
 ## Changelog
 
+### 0.16.0
++ Menu Widget and Menu Builder
+
 ### 0.15.0
 + "tel" and "mailto" Links
 + Toggle Visually Impaired Action

@@ -1573,12 +1573,12 @@
     "lodash" "^4.17.5"
     "to-fast-properties" "^2.0.0"
 
-"@blueprintjs/core@^3.44.2":
-  "integrity" "sha512-rxw0KU0Trdnf5HoILyWrEYpfubC1+VyfpbqcD4pG3iA79oGfo1q5x4S16YTeZpVXRm8VK3TBob4RDRXDd+/4PQ=="
-  "resolved" "https://registry.npmjs.org/@blueprintjs/core/-/core-3.44.2.tgz"
-  "version" "3.44.2"
+"@blueprintjs/core@^3.44.2", "@blueprintjs/core@^3.44.3":
+  "integrity" "sha512-95BYF5xI7d47jKJKQFXJ+UkJ8pS6qT6/U4Hj/UCuHPJhtBTfUQKaCeHYroA+LtCAEEb9p9oFkQwlXI+QHMmZeA=="
+  "resolved" "https://registry.npmjs.org/@blueprintjs/core/-/core-3.44.3.tgz"
+  "version" "3.44.3"
   dependencies:
-    "@blueprintjs/icons" "^3.26.0"
+    "@blueprintjs/icons" "^3.26.1"
     "@types/dom4" "^2.0.1"
     "classnames" "^2.2"
     "dom4" "^2.1.5"
@@ -1590,12 +1590,25 @@
     "resize-observer-polyfill" "^1.5.1"
     "tslib" "~1.13.0"
 
-"@blueprintjs/icons@^3.26.0":
-  "integrity" "sha512-1+yhYH1Fjj5qGx8drZUL2L1R42MiN0WVHTTKYqGEV9TAzhvFHCSZgALD7WNQa+FEibw/8B4U+79IRgUPJNEjow=="
-  "resolved" "https://registry.npmjs.org/@blueprintjs/icons/-/icons-3.26.0.tgz"
-  "version" "3.26.0"
+"@blueprintjs/icons@^3.26.1":
+  "integrity" "sha512-qxAnqhzt5WqYuWN+7p3Pk7bOrhj56YXzD8n79Met8+VIQ14IpKnxr7YAYmNB5X/dVweqXpEk6tKyUjnDjBhulw=="
+  "resolved" "https://registry.npmjs.org/@blueprintjs/icons/-/icons-3.26.1.tgz"
+  "version" "3.26.1"
   dependencies:
     "classnames" "^2.2"
+    "tslib" "~1.13.0"
+
+"@blueprintjs/popover2@^0.9.0":
+  "integrity" "sha512-eyWHGDRuZF23O3FQXfotnHA/eX9ZDFki1oBUw2GF47xmWtJuAGLSD31iRADq/3y8MiacioGDdWdUrVp+ZphWRg=="
+  "resolved" "https://registry.npmjs.org/@blueprintjs/popover2/-/popover2-0.9.0.tgz"
+  "version" "0.9.0"
+  dependencies:
+    "@blueprintjs/core" "^3.44.3"
+    "@popperjs/core" "^2.5.4"
+    "classnames" "^2.2"
+    "dom4" "^2.1.5"
+    "react-popper" "^2.2.4"
+    "resize-observer-polyfill" "^1.5.1"
     "tslib" "~1.13.0"
 
 "@ckeditor/ckeditor5-adapter-ckfinder@^24.0.0":
@@ -2512,7 +2525,7 @@
     "lodash" "^4.17.11"
     "react-motion" "^0.5.2"
 
-"@nivo/core@^0.69.0":
+"@nivo/core@^0.69.0", "@nivo/core@0.69.0":
   "integrity" "sha512-xo8dOcLaZe8DB5PJ5kBnvRwL9JYZKVicWiQ2HXBaEAhnTETT10rdUja9yTWGRhWgSXni0292L0jw2+SP4Wm3bA=="
   "resolved" "https://registry.npmjs.org/@nivo/core/-/core-0.69.0.tgz"
   "version" "0.69.0"
@@ -3159,6 +3172,11 @@
   dependencies:
     "@types/prop-types" "*"
     "csstype" "^3.0.2"
+
+"@types/sortablejs@^1.10.0":
+  "integrity" "sha512-QRz8Z+uw2Y4Gwrtxw8hD782zzuxxugdcq8X/FkPsXUa1kfslhGzy13+4HugO9FXNo+jlWVcE6DYmmegniIQ30A=="
+  "resolved" "https://registry.npmjs.org/@types/sortablejs/-/sortablejs-1.10.6.tgz"
+  "version" "1.10.6"
 
 "@types/source-list-map@*":
   "integrity" "sha512-K5K+yml8LTo9bWJI/rECfIPrGgxdpeNbj+d53lwN4QjW1MCwlkhUms+gtdzigTeUyBr09+u8BwOIY3MXvHdcsA=="
@@ -13845,7 +13863,7 @@
     "react-is" "^16.3.2"
     "warning" "^4.0.0"
 
-"prop-types@^15.0.0", "prop-types@^15.5.0", "prop-types@^15.5.10", "prop-types@^15.5.6", "prop-types@^15.5.7", "prop-types@^15.5.8", "prop-types@^15.6.0", "prop-types@^15.6.1", "prop-types@^15.6.2", "prop-types@^15.7.2", "prop-types@15.7.2", "prop-types@15.x":
+"prop-types@^15.0.0", "prop-types@^15.5.0", "prop-types@^15.5.10", "prop-types@^15.5.6", "prop-types@^15.5.7", "prop-types@^15.5.8", "prop-types@^15.6.0", "prop-types@^15.6.1", "prop-types@^15.6.2", "prop-types@^15.7.2", "prop-types@>= 15.5.10 < 16.0.0", "prop-types@15.7.2", "prop-types@15.x":
   "integrity" "sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ=="
   "resolved" "https://registry.npmjs.org/prop-types/-/prop-types-15.7.2.tgz"
   "version" "15.7.2"
@@ -14313,7 +14331,7 @@
     "dnd-core" "^11.1.3"
     "hoist-non-react-statics" "^3.3.0"
 
-"react-dom@^16.13.1":
+"react-dom@^15.3.0 || 16 || 17", "react-dom@^16.13.1", "react-dom@^16.9.0", "react-dom@>=16.8":
   "integrity" "sha512-81PIMmVLnCNLO/fFOQxdQkvEq/+Hfpv24XNJfpyZhTRfO0QcmQIF/PgCa1zCOj2w1hrn12MFLyaJ/G0+Mxtfag=="
   "resolved" "https://registry.npmjs.org/react-dom/-/react-dom-16.13.1.tgz"
   "version" "16.13.1"
@@ -14591,10 +14609,10 @@
     "typed-styles" "^0.0.7"
     "warning" "^4.0.2"
 
-"react-popper@^2.2.3":
-  "integrity" "sha512-mOEiMNT1249js0jJvkrOjyHsGvqcJd3aGW/agkiMoZk3bZ1fXN1wQszIQSjHIai48fE67+zwF8Cs+C4fWqlfjw=="
-  "resolved" "https://registry.npmjs.org/react-popper/-/react-popper-2.2.3.tgz"
-  "version" "2.2.3"
+"react-popper@^2.2.3", "react-popper@^2.2.4":
+  "integrity" "sha512-kxGkS80eQGtLl18+uig1UIf9MKixFSyPxglsgLBxlYnyDf65BiY9B3nZSc6C9XUNDgStROB0fMQlTEz1KxGddw=="
+  "resolved" "https://registry.npmjs.org/react-popper/-/react-popper-2.2.5.tgz"
+  "version" "2.2.5"
   dependencies:
     "react-fast-compare" "^3.0.1"
     "warning" "^4.0.2"
@@ -14762,6 +14780,14 @@
     "lodash.debounce" "^4.0.8"
     "resize-observer-polyfill" "^1.5.0"
 
+"react-sortablejs@^6.0.0":
+  "integrity" "sha512-vzi+TWOnofcYg+dYnC/Iz/ZZkBGG76uM6KaLwuAqBk0349JQxIy3PZizbK0TJdLlK6NnLt4CiEyyQXSSnVYvEw=="
+  "resolved" "https://registry.npmjs.org/react-sortablejs/-/react-sortablejs-6.0.0.tgz"
+  "version" "6.0.0"
+  dependencies:
+    "classnames" "^2.2.6"
+    "tiny-invariant" "^1.1.0"
+
 "react-spring@9.1.2":
   "integrity" "sha512-xLmkierisElCQShCqAH3PpepjHhCyOK1wGSTdpvG7GGD+SbfG4Sac7wj6wrKTT5A5NUFM5OnVQUXZLe5HScIfA=="
   "resolved" "https://registry.npmjs.org/react-spring/-/react-spring-9.1.2.tgz"
@@ -14861,7 +14887,7 @@
     "@babel/runtime" "^7.0.0"
     "memoize-one" ">=3.1.1 <6"
 
-"react@^16.11.0", "react@^16.13.1", "react@^16.2.0":
+"react@^15.3.0 || 16 || 17", "react@^16.11.0", "react@^16.13.1", "react@^16.2.0", "react@^16.8.0 || ^17", "react@^16.9.0", "react@>= 16.8.4 < 18.0.0", "react@>= 16.8.4 <= 17.0.0", "react@>=16.11", "react@>=16.8":
   "integrity" "sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w=="
   "resolved" "https://registry.npmjs.org/react/-/react-16.13.1.tgz"
   "version" "16.13.1"
@@ -16073,6 +16099,11 @@
   dependencies:
     "is-plain-obj" "^1.0.0"
 
+"sortablejs@^1.10.0", "sortablejs@^1.13.0":
+  "integrity" "sha512-RBJirPY0spWCrU5yCmWM1eFs/XgX2J5c6b275/YyxFRgnzPhKl/TDeU2hNR8Dt7ITq66NRPM4UlOt+e5O4CFHg=="
+  "resolved" "https://registry.npmjs.org/sortablejs/-/sortablejs-1.13.0.tgz"
+  "version" "1.13.0"
+
 "source-list-map@^2.0.0":
   "integrity" "sha512-qnQ7gVMxGNxsiL4lEuJwe/To8UnK7fAnmbGEEH8RpLouuKbeEm0lhbQVFIrNSuB+G7tVrAlVsZgETT5nljf+Iw=="
   "resolved" "https://registry.npmjs.org/source-list-map/-/source-list-map-2.0.1.tgz"
@@ -16878,7 +16909,7 @@
   "resolved" "https://registry.npmjs.org/timsort/-/timsort-0.3.0.tgz"
   "version" "0.3.0"
 
-"tiny-invariant@^1.0.2":
+"tiny-invariant@^1.0.2", "tiny-invariant@^1.1.0":
   "integrity" "sha512-ytxQvrb1cPc9WBEI/HSeYYoGD0kWnGEOR8RY6KomWLBVhqz0RgTwVO9dLrGz7dC+nN9llyI7OKAgRq8Vq4ZBSw=="
   "resolved" "https://registry.npmjs.org/tiny-invariant/-/tiny-invariant-1.1.0.tgz"
   "version" "1.1.0"
@@ -17261,6 +17292,11 @@
   "version" "1.1.1"
   dependencies:
     "unique-slug" "^2.0.0"
+
+"unique-names-generator@^4.5.0":
+  "integrity" "sha512-GaiWvo3rKIHi1SyYP8/9cDrPMPSwEiYDUo2p0NQHeCHDXzLn8P6p8bttSS3lX7HHS3Yl5vnw/ulybO4GN85CgQ=="
+  "resolved" "https://registry.npmjs.org/unique-names-generator/-/unique-names-generator-4.5.0.tgz"
+  "version" "4.5.0"
 
 "unique-slug@^2.0.0":
   "integrity" "sha512-zoWr9ObaxALD3DOPfjPSqxt4fnZiWblxHIgeWqW8x7UqDzEtHEQLzji2cuJYQFCU6KmoJikOYAZlrTHHebjx2w=="

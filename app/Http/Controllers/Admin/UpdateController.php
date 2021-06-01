@@ -19,6 +19,7 @@ class UpdateController extends Controller
   public function check_update( AltrpUpdateService $updateService ){
     Artisan::call( 'config:clear' );
     try {
+      \Log::error(date('d.m.Y H:i:s') . " | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
       $new_version = $updateService->get_version();
     } catch ( NotFoundHttpException $e ){
       return response()->json( ['message' => $e->getMessage()], 404 );
@@ -44,10 +45,12 @@ class UpdateController extends Controller
    * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
    */
   public function install_test_altrp( AltrpUpdateService $updateService ){
+
     if( env( 'APP_ENV', 'local' ) === 'local'){
       return response()->json( ['result' => false] );
     }
     try {
+      \Log::info(date('d.m.Y H:i:s') . " | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
       Artisan::call( 'down' );
       $result = $updateService->update( true );
     }catch ( \HttpException $e ) {
@@ -68,6 +71,7 @@ class UpdateController extends Controller
       return response()->json( ['result' => false] );
     }
     try {
+      \Log::info(date('d.m.Y H:i:s') . " | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
       Artisan::call( 'down' );
       $result = $updateService->update();
     }catch ( \HttpException $e ) {

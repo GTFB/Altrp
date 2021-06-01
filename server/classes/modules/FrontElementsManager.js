@@ -26,8 +26,9 @@ import HtmlWidget from "../../../resources/modules/editor/src/js/components/widg
 // import TemplateWidget from "../../../resources/modules/editor/src/js/components/widgets/TemplateWidget";
 // import GalleryWidget from "../../../resources/modules/editor/src/js/components/widgets/GalleryWidget";
 import VideoWidget from "../../../resources/modules/editor/src/js/components/widgets/VideoWidget";
-import Skeleton from "../../../resources/modules/editor/src/js/components/altrp-image/Skeleton";
+// import Skeleton from "../../../resources/modules/editor/src/js/components/altrp-image/Skeleton";
 import SkeletonPlaceholder from "../components/SkeletonPlaceholder";
+// import MenuWidget from "../../../resources/modules/editor/src/js/components/widgets/MenuWidget";
 
 class FrontElementsManager {
   constructor() {
@@ -52,6 +53,7 @@ class FrontElementsManager {
     this.components["carousel"] = CarouselWidget;
     this.components["map"] = SkeletonPlaceholder;
     this.components["map_builder"] = SkeletonPlaceholder;
+    this.components["menu"] = SkeletonPlaceholder;
     this.components["diagram"] = SkeletonPlaceholder;
     this.components["dashboards"] = SkeletonPlaceholder;
     this.components["tour"] = SkeletonPlaceholder;

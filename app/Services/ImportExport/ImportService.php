@@ -19,6 +19,9 @@ use App\Services\ImportExport\Files\PermissionRolesFile;
 use App\Services\ImportExport\Files\QueriesFile;
 use App\Services\ImportExport\Files\RelationshipsFile;
 use App\Services\ImportExport\Files\RemoteDataFile;
+use App\Services\ImportExport\Files\RemoteDataSourcesFile;
+use App\Services\ImportExport\Files\DataSourcesRolesFile;
+use App\Services\ImportExport\Files\DataSourcesPermissionsFile;
 use App\Services\ImportExport\Files\ReportsFile;
 use App\Services\ImportExport\Files\RolesFile;
 use App\Services\ImportExport\Files\SettingsFile;
@@ -82,6 +85,7 @@ class ImportService
      */
     public function importAll() {
         $this->extractArchive();
+
         $this->importMedia()
             ->importSettings()
             ->importDiagrams()
@@ -100,6 +104,9 @@ class ImportService
             ->importPageDatasources()
             ->importPermissionRoles()
             ->importRemoteData()
+            ->importRemoteDataSources()
+            ->importRemoteDataSourcesRules()
+            ->importRemoteDataSourcesPermissions()
             ->importTemplates()
             ->importPageTemplates()
             ->importTemplateSettings()
@@ -161,6 +168,48 @@ class ImportService
         );
         return $this;
     }
+
+    /**
+     * Импорт данных о удаленных источниках данных
+     * @return $this
+     */
+    public function importRemoteDataSources() {
+      $remote_datasource = new RemoteDataSourcesFile();
+      $remote_datasource->import(
+        $this->reader,
+        storage_path(self::EXTRACT_PATH . "/" . $remote_datasource->getArchivePath() . "/" . $remote_datasource->getFileName()),
+        $this->with_delete
+      );
+      return $this;
+    }
+
+      /**
+       * Импорт данных о ролях для удаленных источников данных
+       * @return $this
+       */
+      public function importRemoteDataSourcesRules() {
+        $remote_datasource_role = new DataSourcesRolesFile();
+        $remote_datasource_role->import(
+          $this->reader,
+          storage_path(self::EXTRACT_PATH . "/" . $remote_datasource_role->getArchivePath() . "/" . $remote_datasource_role->getFileName()),
+          $this->with_delete
+        );
+        return $this;
+      }
+
+      /**
+       * Импорт данных о разрешениях для удаленных источников данных
+       * @return $this
+       */
+      public function importRemoteDataSourcesPermissions() {
+        $remote_datasource_permission = new DataSourcesPermissionsFile();
+        $remote_datasource_permission->import(
+          $this->reader,
+          storage_path(self::EXTRACT_PATH . "/" . $remote_datasource_permission->getArchivePath() . "/" . $remote_datasource_permission->getFileName()),
+          $this->with_delete
+        );
+        return $this;
+      }
 
     /**
      * Импорт данных о доступных для ролей действий

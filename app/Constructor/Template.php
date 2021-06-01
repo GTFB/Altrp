@@ -48,7 +48,7 @@ class Template extends Model
 
   /**
    * Вернуть json для data пустого шаблона для front-app
-   * @return []
+   * @return array
    */
   private static function getDefaultData()
   {
@@ -170,6 +170,7 @@ class Template extends Model
         $child = self::recursively_children_check_conditions( $child );
         $_element_data['children'][] = $child;
       }
+      $_element_data['settings'] = [];
     }
     return $_element_data;
   }

@@ -16,6 +16,7 @@ import DataConverter from "./classes/converters/DataConverter";
 import { changeFormFieldValue } from "./store/forms-data-storage/actions";
 import { addResponseData } from "./store/responses-storage/actions";
 import {getOffsetTopInElement} from "./helpers/elements";
+import Area from "./classes/Area";
 export function getRoutes() {
   return import("./classes/Routes.js");
 }
@@ -542,6 +543,17 @@ export function setDataByPath(path = "", value, dispatch = null) {
       }
     }
   }
+  if (path.indexOf("altrpareas.") === 0) {
+    const pathElements = path.split(".");
+    const [prefix,  areaName,  updateType, propName] = pathElements;
+    let area = window.page_areas.find(area => area.id === areaName);
+    if(area && updateType === 'settings'){
+      if(! (area instanceof Area)){
+        area = Area.areaFabric(area);
+      }
+      area.setSetting(propName, value);
+    }
+  }
   if (path.indexOf("altrpstorage.") === 0) {
     path = path.replace("altrpstorage.", "");
     const currentStorage = getDataFromLocalStorage("altrpstorage", {});
@@ -675,6 +687,16 @@ export function getDataByPath(
     path = path.replace("altrpstorage.", "");
     value = getDataFromLocalStorage("altrpstorage", {});
     value = _.get(value, path, _default);
+  } else if (path.indexOf("altrpareas.") === 0) {
+    const pathElements = path.split(".");
+    const [prefix,  areaName,  updateType, propName] = pathElements;
+    let area = window.page_areas.find(area => area.id === areaName);
+    if(area && updateType === 'settings'){
+      if(! (area instanceof Area)){
+        area = Area.areaFabric(area);
+      }
+      value = area.getSetting(propName, _default);
+    }
   } else {
     value = currentModel.getProperty(path)
       ? currentModel.getProperty(path)
@@ -1868,13 +1890,14 @@ export function getResponsiveSetting(
   _settingName = `${settingName}_${elementState}_${suffix}`;
   let setting = settings[_settingName];
   if (setting === undefined) {
-    for (let screen of CONSTANTS.SCREENS) {
+    for (let screen of [...CONSTANTS.SCREENS].reverse()) {
       if (
-        currentScreen.id > screen.id ||
+        currentScreen.id < screen.id ||
         screen.name === CONSTANTS.DEFAULT_BREAKPOINT
       ) {
         continue;
       }
+
       _settingName = `${settingName}_${elementState}_${screen.name}`;
       if (settings[_settingName]) {
         setting = settings[_settingName];
