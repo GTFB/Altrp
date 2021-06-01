@@ -25,7 +25,7 @@ class ExportExcel extends Model
 
     public function __construct($data, $template, $filename)
     {
-        $this->data = json_decode($data, true);
+      $this->data = json_decode($data, true);
         $this->template = false;
         if (file_exists($template))
             $this->template = $template;
@@ -114,7 +114,7 @@ class ExportExcel extends Model
         }
     }
 
-    public function export()
+    public function export($type = false)
     {
         try {
             if ($this->template) {
@@ -156,9 +156,10 @@ class ExportExcel extends Model
             //$writer->save('php://output');
             //$writer->save('j:\NewServer\data\altrp\storage\tmp\text.xlsx');
             $filename = storage_path() . '/tmp/' . $this->filename . '.xlsx';
+            if ($type === 'robot') $filename = storage_path() . '/document/' . $this->filename . '.xlsx';
             $writer->save($filename);
             readfile($filename);
-            unlink($filename);
+            if ($type !== 'robot') unlink($filename);
         } catch (\Exception $e) {
             echo $e->getMessage();
         }

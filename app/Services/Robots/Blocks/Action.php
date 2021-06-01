@@ -4,8 +4,10 @@
 namespace App\Services\Robots\Blocks;
 
 
+use App\Altrp\ExportExcel;
 use App\Altrp\Model;
 use App\Altrp\Source;
+use App\Constructor\Template;
 use App\Jobs\SendCurl;
 use App\Notifications\RobotNotification;
 use App\User;
@@ -56,6 +58,9 @@ class Action
                 break;
             case 'api':
                 $res = $this->sendApiRequest();
+                break;
+            case 'document':
+                $res = $this->generateDocument();
                 break;
         }
         return $res;
@@ -155,6 +160,63 @@ class Action
     }
 
     /**
+     * Сгенерировать документ
+     * @return array
+     */
+    protected function generateDocument()
+    {
+        $docData = $this->getNodeProperties()->nodeData->data->docData;
+
+      $model = Model::where('name', $docData)->first();
+      $modelNamespace = $model->parent ? $model->parent->namespace : $model->namespace;
+      $modelClass = '\\' . $modelNamespace;
+      $dataArray = [];
+      foreach ($modelClass::all()->toArray() as $item){
+//        dd(isset($item['deleted_at']));
+        unset($item['deleted_at']);
+        $internalArray = [];
+        foreach ($item as $it){
+          $internalArray[] = $it;
+        }
+        $dataArray[] = $internalArray;
+      }
+      $resultData = [
+        'dataArray' => $dataArray
+      ];
+      $resultData = json_encode($resultData);
+//      dd($resultData);
+
+
+        $element = $this->getNodeProperties()->nodeData->data->element;
+        $fileName = $this->getNodeProperties()->nodeData->data->fileName;
+        $template = $this->templateHandler();
+
+        $document = new ExportExcel($resultData, $template, $fileName);
+        $document->export('robot');
+
+        return [
+              'name' => 'document',
+              'value' => true
+          ];
+    }
+
+    /**
+     * Получение верстки шаблона по guid и его обработка (парсинг и динамические данные)
+     * @return string
+     */
+    protected function templateHandler()
+    {
+      $result = [];
+      $guid_template = $this->getNodeProperties()->nodeData->data->template;
+      if (isset($guid_template)) {
+        $template = Template::where( 'guid', $guid_template )->first()->html_content;
+        if($template) $result = $template;
+      }
+      return $result;
+    }
+
+
+  /**
      * Получить свойства узла
      * @return mixed
      */
