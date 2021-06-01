@@ -52,8 +52,7 @@ export default styled.div`
     "& .altrp-divider-label",
     
     ["color", "text_style_color", "color", ":hover"],
-    ["", "text_style_typographic", "typographic", ":hover"],
-          
+    
     "}",
           
     "}"

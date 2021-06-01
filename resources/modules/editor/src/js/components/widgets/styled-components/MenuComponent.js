@@ -21,7 +21,20 @@ const MenuComponent = styled.div`
     }
 
     styles += '}';
-
+    /**
+     * Ститли поповера для кнопки
+     * @type {string}
+     */
+    let renderButton = getResponsiveSetting(settings, 'button');
+    if (renderButton) {
+      styles += '.altrp-popover{display:flex;';
+      let alignment = getResponsiveSetting(settings, 'alignment')
+      styles += `justify-content:${alignment};`;
+      if(alignment === 'stretch') {
+        styles += `.bp3-button{flex-grow:1;}`;
+      }
+      styles += '}';
+    }
     return styles;
   }}
 `;

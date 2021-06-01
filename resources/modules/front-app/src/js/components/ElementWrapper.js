@@ -17,6 +17,8 @@ import TableComponent from "../../../../editor/src/js/components/widgets/styled-
 import HeadingComponent from "../../../../editor/src/js/components/widgets/styled-components/HeadingComponent";
 import MenuComponent from "../../../../editor/src/js/components/widgets/styled-components/MenuComponent";
 import BreadcrumbsComponent from "../../../../editor/src/js/components/widgets/styled-components/BreadcrumbsComponent";
+import VideoComponent from "../../../../editor/src/js/components/widgets/styled-components/VideoComponent";
+import ListComponent from "../../../../editor/src/js/components/widgets/styled-components/ListComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -353,6 +355,12 @@ class ElementWrapper extends Component {
       case "breadcrumbs":
         WrapperComponent = BreadcrumbsComponent;
         break;
+      case "video":
+        WrapperComponent = VideoComponent;
+        break;
+      case "list":
+        WrapperComponent = ListComponent;
+        break;
     }
     tooltip_text = replaceContentWithData(tooltip_text, this.props.element.getCurrentModel().getData())
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
@@ -363,6 +371,7 @@ class ElementWrapper extends Component {
         settings={this.props.element.getSettings()}
         style={styles}
         id={this.CSSId}
+        element={this.props.element.getId()}
       >
         {content}
         {tooltip_text && <AltrpTooltip position={tooltip_position}>{tooltip_text}</AltrpTooltip>}

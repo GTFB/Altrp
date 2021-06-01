@@ -73,7 +73,6 @@ export function dimensionsControllerToStyles(data = {}, styleProperty = 'padding
       if(bottom){
         styles += `border-bottom-width: ${bottom}${unit}; `;
       }
-
     }break;
     case 'border-radius':{
       if(top){
@@ -110,19 +109,13 @@ export function dimensionsControllerToStyles(data = {}, styleProperty = 'padding
 }
 
 /**
-<<<<<<< HEAD
  * Преобразует объект, который сохраняет контроллер box-shadow, в строку css для вставки в styled-компонент
  * @param {{}} data
-=======
- *
- * @param {{}}data
->>>>>>> front-app-dev
  * @return {string}
  */
 export function shadowControllerToStyles(data) {
 
   if(data) {
-
     let {type = 'outline', offsetX,horizontal, offsetY, vertical, blurRadius,blur,spread, spreadRadius, color } = data;
     return `box-shadow: ${type || ' '} ${offsetX||horizontal || 0}px ${offsetY || vertical || 0}px ${blurRadius || blur || 0}px ${spreadRadius ||spread || 0}px ${color};`;
   }
@@ -143,6 +136,32 @@ export function textShadowControllerToStyles(data) {
   }
 
   return '';
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер Color, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @param {string} pseudoClass
+ * @return {string}
+ */
+export function backgroundColorControllerToStyles(data, pseudoClass) {
+  let styles = '';
+  if (_.isEmpty(data)) {
+    return styles;
+  }
+
+  if (data) {
+    let { colorPickedHex } = data;
+
+    if (pseudoClass !== undefined) {
+      return `&:${pseudoClass} {background-color: ${colorPickedHex};} `;
+    }
+
+    return `background-color: ${colorPickedHex}; `;
+
+  }
+
+  return styles;
 }
 
 /**
@@ -496,6 +515,8 @@ export function dimensionsStyled(controller, style) {
     if(controller.left || controller.right || controller.bottom || controller.top) {
       return `${style}: ${top + unit} ${right + unit} ${bottom + unit} ${left + unit};`
     } else return "";
+  } else {
+    return ""
   }
 };
 
@@ -541,18 +562,72 @@ export function sliderStyled(controller) {
 }
 
 /**
- * проверяет наличичие значения slider
+ * проверяет наличичие значения shadow
  * @return {string}
  * @param {{}} controller
  */
 export function shadowStyled(controller = {}) {
-  const type = controller.type || "";
-  const horizontal = controller.horizontal || 0;
-  const vertical = controller.vertical || 0;
-  const blur = controller.blur || 0;
-  const spread = controller.spread || 0;
-  const color = controller.color || "";
-  return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread} ${color};`;
+  if(controller) {
+    const type = controller.type || "";
+    const horizontal = controller.horizontal || 0;
+    const vertical = controller.vertical || 0;
+    const blur = controller.blur || 0;
+    const spread = controller.spread || 0;
+    const color = controller.color || "";
+    return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread} ${color};`;
+  } else {
+    return ""
+  }
+}
+
+/**
+ * проверяет наличичие значения text shadow
+ * @return {string}
+ * @param {{}} controller
+ */
+export function textShadowStyled(controller = {}) {
+  if(controller) {
+    const horizontal = controller.horizontal || 0;
+    const vertical = controller.vertical || 0;
+    const blur = controller.blur || 0;
+    const color = controller.color || "";
+    if(horizontal || vertical || blur || color) {
+      return `text-shadow: ${horizontal}px ${vertical}px ${blur}px ${color};`;
+    } else {
+      return ""
+    }
+  } else {
+    return ""
+  }
+}
+
+
+/**
+ * проверяет наличичие значения creative_media
+ * @return {string}
+ * @param {{}} controller
+ */
+export function creativeLinkStyled(controller = {}) {
+  if(
+    controller
+  ) {
+    return ``;
+  } else {
+    return "";
+  }
+}
+
+/**
+ * проверяет наличичие значения media, в основном используется для background-image
+ * @return {string}
+ * @param {{}} controller
+ */
+export function mediaStyled(controller = {}) {
+  if(controller.url) {
+    return `background-image: url("${controller.url}");`;
+  } else {
+    return "";
+  }
 }
 
 /**
@@ -578,7 +653,7 @@ export function styledString(styles, settings) {
     } else {
       if(_.isArray(style)) {
         const state = style[3] || null;
-        const variable = getResponsiveSetting(settings, style[1], state)
+        const variable = getResponsiveSetting(settings, style[1], state);
         switch (style[2]) {
           case "dimensions":
             stringStyles += dimensionsStyled(variable, style[0]);
@@ -593,10 +668,20 @@ export function styledString(styles, settings) {
             stringStyles += typographicControllerToStyles(variable);
             break;
           case "slider":
-            stringStyles += `${style[0]}: ${sliderStyled(variable)};`
+            stringStyles += `${style[0]}: ${sliderStyled(variable)};`;
             break;
           case "shadow":
-            stringStyles += shadowStyled(variable)
+            stringStyles += shadowStyled(variable);
+            break;
+          case "text-shadow":
+            stringStyles += textShadowStyled(variable);
+            break;
+          case "media":
+            stringStyles += mediaStyled(variable);
+            break;
+          case "creative-link":
+            stringStyles += creativeLinkStyled(variable);
+            break;
           default:
             stringStyles += `${style[0]}: ${defaultStyled(variable)};`
         }

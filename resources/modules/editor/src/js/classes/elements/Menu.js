@@ -9,7 +9,7 @@ import {
   CONTROLLER_SELECT,
   CONTROLLER_COLOR,
   CONTROLLER_TYPOGRAPHIC,
-  CONTROLLER_SHADOW, CONTROLLER_SWITCHER,
+  CONTROLLER_SHADOW, CONTROLLER_SWITCHER, CONTROLLER_CHOOSE,
 } from '../modules/ControllersManager';
 
 class Menu extends BaseElement {
@@ -65,9 +65,45 @@ class Menu extends BaseElement {
     })
 
 
+
+    this.endControlSection();
+
+    this.startControlSection('toggle', {
+      label: 'Toggle Main Menu',
+    });
+
     this.addControl('button', {
       label: 'Toggle Button',
       type: CONTROLLER_SWITCHER,
+    })
+
+    this.addControl('alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Toggle Button Alignment',
+      default: 'center',
+      options: [
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+        {
+          icon: 'in_width',
+          value: 'stretch',
+        }
+      ],
+    });
+
+    this.addControl('width', {
+      label: 'Main Menu Width',
+      dynamic: false,
     })
 
     this.endControlSection();
@@ -161,6 +197,14 @@ class Menu extends BaseElement {
       label: 'Shadow',
       type: CONTROLLER_SHADOW,
     })
+
+    this.endControlSection();
+
+    this.startControlSection('toggle_styles', {
+      label: 'Toggle Button',
+    });
+
+
 
     this.endControlSection();
 

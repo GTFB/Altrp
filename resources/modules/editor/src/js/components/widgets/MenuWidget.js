@@ -174,6 +174,15 @@ const GlobalStyles = createGlobalStyle`
     }
 
     styles += '}';
+    let renderButton = getResponsiveSetting(settings, 'button');
+    if (renderButton) {
+      styles += `.altrp-portal_main.altrp-portal${elementId} .altrp-menu{`;
+      let mainPortalWidth = getResponsiveSetting(settings, 'width');
+      if(mainPortalWidth){
+        styles += `max-width:${mainPortalWidth};width:${mainPortalWidth};`;
+      }
+      styles += '}';
+    }
     return styles;
   }}
   .altrp-menu-item__icon svg {
@@ -321,8 +330,9 @@ class MenuWidget extends Component {
     }
     let toggle_icon = _ .get(menuData, 'settings.toggle_icon', '')
     return <Popover2 content={this.renderVerticalMenu()}
+                     className="altrp-popover"
                      portalContainer={ window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body}
-                     portalClassName={ `altrp-portal altrp-portal${this.elementId}`}
+                     portalClassName={ `altrp-portal altrp-portal_main altrp-portal${this.elementId}`}
                      minimal={true} >
       <Button  text={toggle_icon ?
         <span className="altrp-menu-item__icon" dangerouslySetInnerHTML={{__html: toggle_icon}}/> : ''} />

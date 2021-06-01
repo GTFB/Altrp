@@ -31,6 +31,8 @@ import HeadingComponent from "./widgets/styled-components/HeadingComponent";
 import Column from "../classes/elements/Column";
 import MenuComponent from "./widgets/styled-components/MenuComponent";
 import BreadcrumbsComponent from "./widgets/styled-components/BreadcrumbsComponent";
+import VideoComponent from "./widgets/styled-components/VideoComponent";
+import ListComponent from "./widgets/styled-components/ListComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -420,6 +422,12 @@ class ElementWrapper extends Component {
         break;
       case "breadcrumbs":
         WrapperComponent = BreadcrumbsComponent;
+      break;
+      case "video":
+        WrapperComponent = VideoComponent;
+        break;
+      case "list":
+        WrapperComponent = ListComponent;
         break;
     }
 
@@ -429,6 +437,7 @@ class ElementWrapper extends Component {
         className={classes}
         style={{ ...styles, width: layout_column_width }}
         ref={this.wrapper}
+        element={this.props.element.getId()}
         onContextMenu={this.handleContext}
         onDragOver={this.onDragOver}
         onClick={this.chooseElement}

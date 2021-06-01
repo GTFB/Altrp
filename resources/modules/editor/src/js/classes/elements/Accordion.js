@@ -70,7 +70,7 @@ class Accordion extends BaseElement {
       default: "I Am Advanced Text"
     });
 
-    this.addControl('repeater_accordion_content', {
+    this.addControl('repeater_meta_data_section', {
       label: 'Accordion items',
       type: CONTROLLER_REPEATER,
       fields: repeater.getControls(),
