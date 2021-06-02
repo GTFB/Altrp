@@ -68,8 +68,6 @@ export default styled.div`
       ["color", "slider_range_color", "color", ":hover"],
     "}",
   ];
-  
-  console.log(styledString(styles, settings))
   return styledString(styles, settings)
 }}
 `;
