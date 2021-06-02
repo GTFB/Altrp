@@ -42,7 +42,7 @@ class AltrpUpdateService
   public function update( $test = false)
   {
     if ( env( 'APP_ENV', 'local' ) === 'local' ) {
-      //return true;
+      return true;
     }
     set_time_limit( 0 );
     $version = $this->get_version( $test );
@@ -152,7 +152,7 @@ class AltrpUpdateService
    */
   private function update_files()
   {
-    //Artisan::call( 'config:cache' );
+    Artisan::call( 'config:clear' );
     $file_path = storage_path( 'app/' . self::PRODUCT_NAME . '.zip' );
 
     $archive = new ZipArchive();
