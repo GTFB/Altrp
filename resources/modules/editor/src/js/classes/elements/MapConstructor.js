@@ -268,7 +268,6 @@ class MapConstructor extends BaseElement {
     repeaterObjects.addControl("icon", {
       label: "Popup key",
       type: CONTROLLER_SELECT,
-      label: "Choose Icon",
       options: icons,
       dynamic: false
     });

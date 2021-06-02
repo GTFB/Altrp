@@ -355,7 +355,7 @@ class AltrpAction extends AltrpModel {
     if (this.getProperty("data")) {
       data = parseParamsFromString(
         this.getProperty("data"),
-        getAppContext(),
+        getAppContext(this.getCurrentModel()),
         true
       );
       // if (!_.isEmpty(data)) {
