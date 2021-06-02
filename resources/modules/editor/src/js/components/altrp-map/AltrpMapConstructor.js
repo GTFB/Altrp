@@ -210,6 +210,7 @@ function AltrpMapConstructor({ settings, id }) {
         saveData={handleSave}
         isLoading={isLoading}
         id={id}
+        settings={settings}
         url_connect={url_connect}
         field_first_connect={field_first_connect}
         field_second_connect={field_second_connect}

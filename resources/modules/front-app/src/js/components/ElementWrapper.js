@@ -19,6 +19,8 @@ import MenuComponent from "../../../../editor/src/js/components/widgets/styled-c
 import BreadcrumbsComponent from "../../../../editor/src/js/components/widgets/styled-components/BreadcrumbsComponent";
 import VideoComponent from "../../../../editor/src/js/components/widgets/styled-components/VideoComponent";
 import ListComponent from "../../../../editor/src/js/components/widgets/styled-components/ListComponent";
+import MapConstructorComponent
+  from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -360,6 +362,9 @@ class ElementWrapper extends Component {
         break;
       case "list":
         WrapperComponent = ListComponent;
+        break;
+      case "map_builder":
+        WrapperComponent = MapConstructorComponent;
         break;
     }
     tooltip_text = replaceContentWithData(tooltip_text, this.props.element.getCurrentModel().getData())

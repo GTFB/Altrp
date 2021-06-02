@@ -33,6 +33,7 @@ import MenuComponent from "./widgets/styled-components/MenuComponent";
 import BreadcrumbsComponent from "./widgets/styled-components/BreadcrumbsComponent";
 import VideoComponent from "./widgets/styled-components/VideoComponent";
 import ListComponent from "./widgets/styled-components/ListComponent";
+import MapConstructorComponent from "./widgets/styled-components/MapConstructorComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -428,6 +429,9 @@ class ElementWrapper extends Component {
         break;
       case "list":
         WrapperComponent = ListComponent;
+        break;
+      case "map_builder":
+        WrapperComponent = MapConstructorComponent;
         break;
     }
 

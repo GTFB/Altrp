@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import L, { CRS } from "leaflet";
 import axios from "axios";
 import Drawer from "rc-drawer";
+import { createPortal } from "react-dom";
 import MarkerCluster from "./MarkerCluster";
 
 import { Map, FeatureGroup, TileLayer } from "react-leaflet";
@@ -18,6 +19,7 @@ import ModalControl from "./ModalControl";
 import Loader from "./Loader";
 
 import MemoPaintIcon from "./Icons/PaintIcon";
+import {isEditor} from "../../../../../front-app/src/js/helpers";
 
 function noob() {}
 
@@ -39,7 +41,8 @@ function MapDesigner({
   url_connect = null,
   field_first_connect = null,
   field_second_connect = null,
-  parameters
+  parameters,
+  settings,
 }) {
   const FG = useRef(null);
   const ModalRef = useRef(null);
@@ -358,6 +361,16 @@ function MapDesigner({
     }
   }, [data]);
 
+  let parent = useState(document.body);
+
+  React.useEffect(() => {
+    if(isEditor()) {
+      parent[1](document.getElementById("editorContent").contentWindow.document.body)
+    }
+  }, []);
+
+  console.log(isEditor());
+  console.log(parent)
   return (
     <div className="altrp-map" style={style}>
       {isLoading && <Loader />}
@@ -415,36 +428,40 @@ function MapDesigner({
         )}
       </Map>
 
-      <Drawer
-        getContainer={document.body}
-        placement="right"
-        defaultOpen={true}
-        maskClosable={true}
-        width={"400px"}
-        open={open}
-        onClose={() => setOpen(false)}
-        handler={false}
-      >
-        {isEditable && selected && (
-          <ModalControl
-            markers={markers}
-            url={url}
-            url_connect={url_connect}
-            field_first_connect={field_first_connect}
-            field_second_connect={field_second_connect}
-            updateGeoObjectToModel={updateGeoObjectToModel}
+      {
+        createPortal(
+          <Drawer
+            getContainer={null}
+            placement="right"
+            defaultOpen={true}
+            maskClosable={true}
+            width={"400px"}
             open={open}
-            selected={selected}
-            id={id}
             onClose={() => setOpen(false)}
-            setState={setState}
-            state={state}
-            forwardRef={ModalRef}
-            fg={FG.current}
-            parameters={parameters}
-          />
-        )}
-      </Drawer>
+            handler={false}
+          >
+            {isEditable && selected && (
+              <ModalControl
+                markers={markers}
+                settings={settings}
+                url={url}
+                url_connect={url_connect}
+                field_first_connect={field_first_connect}
+                field_second_connect={field_second_connect}
+                updateGeoObjectToModel={updateGeoObjectToModel}
+                open={open}
+                selected={selected}
+                id={id}
+                onClose={() => setOpen(false)}
+                setState={setState}
+                state={state}
+                forwardRef={ModalRef}
+                fg={FG.current}
+                parameters={parameters}
+              />
+            )}
+          </Drawer>, parent[0])
+      }
     </div>
   );
 }

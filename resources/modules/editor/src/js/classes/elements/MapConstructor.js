@@ -268,7 +268,6 @@ class MapConstructor extends BaseElement {
     repeaterObjects.addControl("icon", {
       label: "Popup key",
       type: CONTROLLER_SELECT,
-      label: "Choose Icon",
       options: icons,
       dynamic: false
     });
@@ -310,9 +309,6 @@ class MapConstructor extends BaseElement {
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-image{{STATE}}": "height: {{SIZE}}{{UNIT}}"
-      }
     });
 
     this.addControl("style_margin", {
@@ -327,14 +323,6 @@ class MapConstructor extends BaseElement {
         bind: true
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-btn{{STATE}}": [
-          "margin-top: {{TOP}}{{UNIT}};",
-          "margin-right: {{RIGHT}}{{UNIT}};",
-          "margin-bottom: {{BOTTOM}}{{UNIT}};",
-          "margin-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
     });
 
     this.endControlSection();
@@ -346,19 +334,15 @@ class MapConstructor extends BaseElement {
 
     this.addControl("styles_font_drawer", {
       type: CONTROLLER_TYPOGRAPHIC,
+      default:{
+        lineHeight: 1,
+        spacing: 0,
+        size: 21,
+        weight: "normal",
+        // family: "Georgia, serif",
+        decoration: ""
+      },
       label: "Typographic",
-      rules: {
-        ".{{ID}}.altrp-custom--typographic{{STATE}}": [
-          "font-size: {{SIZE}}px;",
-          "font-family: {{FAMILY}}",
-          "line-height: {{LINEHEIGHT}};",
-          "letter-spacing: {{SPACING}}px",
-          "font-weight: {{WEIGHT}}",
-          "text-transform: {{TRANSFORM}}",
-          "font-style: {{STYLE}}",
-          "text-decoration: {{DECORATION}}"
-        ]
-      }
     });
 
     this.addControl("styles_font_color_drawer", {
@@ -368,47 +352,28 @@ class MapConstructor extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      rules: {
-        ".{{ID}}.altrp-custom--typographic{{STATE}}": "color: {{COLOR}};"
-      }
     });
 
     this.addControl("background_color_btn", {
       type: CONTROLLER_COLOR,
       label: "Background color button",
-      // default: {
-      //   color: "rgb(52,59,76)",
-      //   colorPickedHex: "#343B4C",
-      // },
-      rules: {
-        ".{{ID}}.altrp-map__modal.modal__body-save{{STATE}}":
-          "background-color: {{COLOR}};"
-      }
+      default: {
+        color: "rgb(52,59,76)",
+        colorPickedHex: "#343B4C",
+      },
     });
 
     this.addControl("font_typographic_btn", {
       type: CONTROLLER_TYPOGRAPHIC,
       label: "Typographic button",
-      // default:{
-      //   lineHeight: 1,
-      //   spacing: 0,
-      //   size: 16,
-      //   weight: "normal",
-      //   family: "Open Sans",
-      //   decoration: ""
-      // },
-      rules: {
-        ".{{ID}}.modal__body-save{{STATE}}": [
-          "font-size: {{SIZE}}px;",
-          "font-family: {{FAMILY}}",
-          "line-height: {{LINEHEIGHT}};",
-          "letter-spacing: {{SPACING}}px",
-          "font-weight: {{WEIGHT}}",
-          "text-transform: {{TRANSFORM}}",
-          "font-style: {{STYLE}}",
-          "text-decoration: {{DECORATION}}"
-        ]
-      }
+      default:{
+        lineHeight: 1,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        // family: "Georgia, serif",
+        decoration: ""
+      },
     });
 
     this.addControl("font_color_btn", {
@@ -418,9 +383,6 @@ class MapConstructor extends BaseElement {
       //   color: "rgb(255,255,255)",
       //   colorPickedHex: "#FFF",
       // },
-      rules: {
-        ".{{ID}}.modal__body-save{{STATE}}": "color: {{COLOR}};"
-      }
     });
 
     this.addControl("slider_range_color", {
@@ -430,27 +392,19 @@ class MapConstructor extends BaseElement {
         color: "black",
         colorPickedHex: ""
       },
-      rules: {
-        ".{{ID}}.altrp-dashboard__edit--range-edit-color.MuiSlider-root{{STATE}}":
-          "color: {{COLOR}};"
-      }
     });
 
     this.addControl("styles_font_drawer_label", {
       type: CONTROLLER_TYPOGRAPHIC,
+      default:{
+        lineHeight: 1,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        // family: "Georgia, serif",
+        decoration: ""
+      },
       label: "Typographic label",
-      rules: {
-        ".{{ID}}.altrp-map__modal .modal__body-text label{{STATE}}": [
-          "font-size: {{SIZE}}px;",
-          "font-family: {{FAMILY}}",
-          "line-height: {{LINEHEIGHT}};",
-          "letter-spacing: {{SPACING}}px",
-          "font-weight: {{WEIGHT}}",
-          "text-transform: {{TRANSFORM}}",
-          "font-style: {{STYLE}}",
-          "text-decoration: {{DECORATION}}"
-        ]
-      }
     });
 
     this.addControl("styles_font_color_drawer_label", {
@@ -460,10 +414,6 @@ class MapConstructor extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      rules: {
-        ".{{ID}}.altrp-map__modal .modal__body-text label{{STATE}}":
-          "color: {{COLOR}};"
-      }
     });
 
     // .altrp-map__modal .modal__body-text label

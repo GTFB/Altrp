@@ -15,6 +15,7 @@ import axios from "axios";
 import Slider from "@material-ui/core/Slider";
 import { getDataByPath } from "../../../../../front-app/src/js/helpers";
 import { useGetLatest } from "react-table";
+import ModalComponent from "./ModalComponent";
 
 const ModalControl = (
   {
@@ -31,7 +32,8 @@ const ModalControl = (
     field_second_connect = null,
     id,
     parameters,
-    url
+    url,
+    settings,
   },
   ref
 ) => {
@@ -643,7 +645,7 @@ const ModalControl = (
   console.log(properties);
   return (
     <div className="altrp-map__modal modal">
-      <div className={!open ? "modal__body" : "modal__body open"}>
+      <ModalComponent settings={settings} className={!open ? "modal__body" : "modal__body open"}>
         <h3 className={`${id} altrp-custom--typographic`}>Настройки</h3>
         <div className="modal__body-text">
           <label>
@@ -764,7 +766,7 @@ const ModalControl = (
             </button>
           </div>
         </div>
-      </div>
+      </ModalComponent>
     </div>
   );
 };
