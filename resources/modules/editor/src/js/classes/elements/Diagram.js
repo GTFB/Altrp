@@ -416,7 +416,6 @@ class Diagram extends BaseElement {
       type: CONTROLLER_RANGE,
       label: "Ширина рамки",
       default: 0,
-      default: 0,
       min: 0,
       max: 20,
       step: 1,
