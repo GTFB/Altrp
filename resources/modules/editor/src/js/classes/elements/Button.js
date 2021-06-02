@@ -1012,9 +1012,6 @@ class Button extends BaseElement {
         color: "rgb(52,59,76)",
         colorPickedHex: "#343B4C",
       },
-      rules: {
-        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}": "background-color: {{COLOR}};"
-      }
     });
 
     this.addControl("text_color_dropbar_content_style", {
@@ -1024,9 +1021,6 @@ class Button extends BaseElement {
         color: "rgb(255,255,255)",
         colorPickedHex: "#FFFFFF",
       },
-      rules: {
-        ".{{ID}}-altrp-dropbar .altrp-dropbar-btn-content{{STATE}}": "color: {{COLOR}};"
-      }
     });
 
     this.addControl('typographic_text_dropbar_content_style', {
@@ -1039,18 +1033,6 @@ class Button extends BaseElement {
         weight: "normal",
         family: 'roboto',
         decoration: ""
-      },
-      rules: {
-        '.{{ID}}-altrp-dropbar.altrp-dropbar-btn-content{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
       },
     }
     );
@@ -1084,19 +1066,12 @@ class Button extends BaseElement {
           label: "Groove"
         }
       ],
-      rules: {
-        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}": "border-style: {{VALUE}};"
-      }
     });
 
     this.addControl("border_width_dropbar_content_style", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
       units: ["px", "%", "vh"],
-      rules: {
-        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-      }
     });
 
     this.addControl("border_color_dropbar_content_style", {
@@ -1106,9 +1081,19 @@ class Button extends BaseElement {
         color: "rgb(50,168,82)",
         colorPickedHex: "#32a852"
       },
-      rules: {
-        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}": "border-color: {{COLOR}};"
-      }
+    });
+
+    this.addControl("border_radius_dropbar_content_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border radius",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
+      },
+      units: ["px", "%", "vh"],
     });
 
     this.addControl('box_shadow_dropbar_content_style', {
@@ -1125,28 +1110,8 @@ class Button extends BaseElement {
         colorPickedHex: '#000000',
         type: ""
       },
-      rules: {
-        '{{ELEMENT}} .altrp-dropbar-btn-containter{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      },
     }
     );
-
-    this.addControl("border_radius_dropbar_content_style", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Border radius",
-      default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit: "px"
-      },
-      units: ["px", "%", "vh"],
-      rules: {
-        ".{{ID}}-altrp-dropbar.altrp-dropbar-btn-containter{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
-      }
-    });
-
 
     this.endControlSection();
 
@@ -1170,9 +1135,9 @@ class Button extends BaseElement {
           label: 'Lato'
         },
       ],
-      rules: {
-        '{{ELEMENT}}': 'font-family: {{VALUE}}'
-      }
+      // rules: {
+      //   '{{ELEMENT}}': 'font-family: {{VALUE}}'
+      // }
     });
 
     this.endControlSection();
