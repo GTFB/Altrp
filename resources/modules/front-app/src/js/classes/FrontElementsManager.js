@@ -262,6 +262,10 @@ class FrontElementsManager {
   async loadComponents() {
     let componentsToLoad;
     if (window.altrpElementsLists) {
+      window.altrpElementsLists = window.altrpElementsLists.filter(elementName =>{
+        return this.ELEMENTS.find(element => elementName === element.name);
+      })
+      console.log(window.altrpElementsLists);
       componentsToLoad = this.ELEMENTS.filter(el => {
         return window.altrpElementsLists.indexOf(el.name) !== -1;
       });
@@ -305,7 +309,7 @@ class FrontElementsManager {
     });
     componentsToLoad = componentsToLoad.map(async el => {
       this.components[el.name] = (
-        await el.import(/* webpackChunkName: 'FrontElementsFabric' */)
+        await el.import()
       ).default;
     });
     await Promise.all(componentsToLoad);
