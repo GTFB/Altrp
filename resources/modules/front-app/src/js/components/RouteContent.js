@@ -116,9 +116,10 @@ class RouteContent extends Component {
 
   /**
    * Очистим currentDataSource после удаления компонента
+   * todo: отключили очищение так как componentWillUnmount вызывается после загрузки другого RouteContent
    */
   componentWillUnmount() {
-    dataStorageUpdater.clearCurrent();
+    // dataStorageUpdater.clearCurrent();
   }
   /**
    *  обновление currentDataStorage
