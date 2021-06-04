@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import AltrpPopper from "../altrp-popper/AltrpPopper";
 import TemplateLoader from "../template-loader/TemplateLoader";
+import DropbarComponent from "../widgets/styled-components/DropbarComponent";
 
 class Dropbar extends Component {
   constructor(props) {
@@ -66,7 +67,6 @@ class Dropbar extends Component {
 
     let mainClass = "altrp-dropbar-" +
       this.props.className;
-
     let type = this.props.settings.type_dropbar_section || "text";
     let content_dropbar_section = this.props.getContent('content_dropbar_section');
     return (
@@ -98,7 +98,7 @@ class Dropbar extends Component {
               }
             }}
           >
-            <div
+            <DropbarComponent settings={this.props.element.getSettings()}
               className={"altrp-dropbar-container " +
               (` ${this.props.elemenentId}-altrp-dropbar `) +
               mainClass +
@@ -125,7 +125,7 @@ class Dropbar extends Component {
                   />
                 )
               }
-            </div>
+            </DropbarComponent>
           </AltrpPopper>
         </span>
       </div>

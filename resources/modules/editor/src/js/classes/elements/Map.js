@@ -90,9 +90,6 @@ class Map extends BaseElement {
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-image{{STATE}}": "height: {{SIZE}}{{UNIT}}",
-      },
     });
 
     this.addControl("style_margin", {
@@ -107,14 +104,6 @@ class Map extends BaseElement {
         bind: true,
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-btn{{STATE}}": [
-          "margin-top: {{TOP}}{{UNIT}};",
-          "margin-right: {{RIGHT}}{{UNIT}};",
-          "margin-bottom: {{BOTTOM}}{{UNIT}};",
-          "margin-left: {{LEFT}}{{UNIT}};",
-        ],
-      },
     });
 
     advancedTabControllers(this);

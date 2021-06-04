@@ -19,6 +19,11 @@ import MenuComponent from "../../../../editor/src/js/components/widgets/styled-c
 import BreadcrumbsComponent from "../../../../editor/src/js/components/widgets/styled-components/BreadcrumbsComponent";
 import VideoComponent from "../../../../editor/src/js/components/widgets/styled-components/VideoComponent";
 import ListComponent from "../../../../editor/src/js/components/widgets/styled-components/ListComponent";
+import MapConstructorComponent
+  from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
+import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
+import Diagram from "../../../../editor/src/js/classes/elements/Diagram";
+import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -360,6 +365,15 @@ class ElementWrapper extends Component {
         break;
       case "list":
         WrapperComponent = ListComponent;
+        break;
+      case "map_builder":
+        WrapperComponent = MapConstructorComponent;
+        break;
+      case "map":
+        WrapperComponent = MapComponent;
+        break;
+      case "diagram":
+        WrapperComponent = DiagramComponent;
         break;
     }
     tooltip_text = replaceContentWithData(tooltip_text, this.props.element.getCurrentModel().getData())

@@ -73,12 +73,6 @@
           border: 0;
         }
         &-color {
-          label {
-            color: #919191;
-            display: flex;
-            flex-direction: column;
-            font-size: 0.9rem;
-          }
           button {
             border: 0;
             width: 30px;
@@ -95,10 +89,10 @@
         }
         &-text {
           label {
-            color: #919191;
-            display: flex;
-            flex-direction: column;
-            font-size: 0.9rem;
+            //color: #919191;
+            //display: flex;
+            //flex-direction: column;
+            //font-size: 0.9rem;
             textarea,
             input {
               margin: 10px 0 20px;
@@ -122,18 +116,6 @@
             &.active {
               border: 1px solid #343a40;
             }
-          }
-        }
-        &-save {
-          cursor: pointer;
-          display: block;
-          border: 0;
-          background-color: #6c757d;
-          padding: 10px 15px;
-          color: #fff;
-          //margin: 15px 0;
-          &:hover {
-            background-color: #343a40;
           }
         }
       }
