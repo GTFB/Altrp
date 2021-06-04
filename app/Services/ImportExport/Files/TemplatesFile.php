@@ -101,13 +101,21 @@ class TemplatesFile extends ImportExportFile implements IImportExportFile
      * @param string $path
      * @return mixed
      */
-    public function export(IWriter $writer, string $path)
+    public function export(IWriter $writer, string $path, array $params = [])
     {
+        $where = '';
+        if (!empty($params)) {
+          $p = implode(',', $params);
+          $where = "id IN ({$p})";
+        }
         $data = DB::table( 'templates' )
             ->select('templates.*', 'areas.name as area_name')
             ->leftJoin('areas', 'templates.area', '=', 'areas.id')
             ->where("type", "=", "template")
             ->havingRaw('area_name IS NOT NULL')
+            ->when(!empty($params), function ($query) use ($where) {
+              return $query->havingRaw($where);
+            })
             ->get();
 
         $writer->createJsonFile($path, self::FILENAME, $data->toArray());

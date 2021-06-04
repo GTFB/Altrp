@@ -68,10 +68,18 @@ class MediaFile extends ImportExportFile implements IImportExportFile
      * @param string $path
      * @return mixed
      */
-    public function export(IWriter $writer, string $path)
+    public function export(IWriter $writer, string $path, array $params = [])
     {
+        $where = '';
+        if (!empty($params)) {
+          $p = implode(',', $params);
+          $where = "id IN ({$p})";
+        }
         $data = DB::table( 'altrp_media' )
             ->select('altrp_media.*')
+            ->when(!empty($params), function ($query) use ($where) {
+              return $query->havingRaw($where);
+            })
             ->get();
 
         $writer->createJsonFile($path, self::FILENAME, $data->toArray());

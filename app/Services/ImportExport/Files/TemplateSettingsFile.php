@@ -99,11 +99,19 @@ class TemplateSettingsFile extends ImportExportFile implements IImportExportFile
      * @param string $path
      * @return mixed
      */
-    public function export(IWriter $writer, string $path)
+    public function export(IWriter $writer, string $path, array $params = [])
     {
+        $where = '';
+        if (!empty($params)) {
+          $p = implode(',', $params);
+          $where = "template_id IN ({$p})";
+        }
         $data = DB::table( 'template_settings' )
             ->select('template_settings.*', 'templates.guid as template_guid')
             ->leftJoin('templates', 'template_settings.template_id', '=', 'templates.id')
+            ->when(!empty($params), function ($query) use ($where) {
+              return $query->havingRaw($where);
+            })
             ->get();
 
         $writer->createJsonFile($path, self::FILENAME,  $data->toArray());

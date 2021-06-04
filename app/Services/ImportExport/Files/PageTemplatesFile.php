@@ -80,10 +80,18 @@ class PageTemplatesFile extends ImportExportFile implements IImportExportFile
      * @param string $path
      * @return mixed
      */
-    public function export(IWriter $writer, string $path)
+    public function export(IWriter $writer, string $path, array $params = [])
     {
+        $where = '';
+        if (!empty($params)) {
+          $p = implode(',', $params);
+          $where = "page_id IN ({$p})";
+        }
         $data = DB::table( 'pages_templates' )
             ->select('pages_templates.*')
+            ->when(!empty($params), function ($query) use ($where) {
+              return $query->havingRaw($where);
+            })
             ->get();
 
         $writer->createJsonFile($path, self::FILENAME,  $data->toArray());

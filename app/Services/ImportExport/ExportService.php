@@ -34,6 +34,7 @@ use App\Services\ImportExport\Files\ValidationRulesFile;
 use App\Services\ImportExport\Writers\IWriter;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 use ZipArchive;
 
 /**
@@ -197,8 +198,9 @@ class ExportService
      * @return $this
      */
     public function exportTemplates() {
+        $params = \Request::post('exportTemplates');
         $templates = new TemplatesFile();
-        $this->addFile($templates->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($templates->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -207,8 +209,9 @@ class ExportService
      * @return $this
      */
     public function exportPages() {
+        $params = \Request::post('exportPages');
         $pages = new PagesFile();
-        $this->addFile($pages->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($pages->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -217,8 +220,9 @@ class ExportService
      * @return $this
      */
     public function exportMedia() {
+        $params = \Request::post('exportMedia');
         $media = new MediaFile();
-        $this->addFile($media->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($media->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -227,8 +231,9 @@ class ExportService
      * @return $this
      */
     public function exportPageTemplates() {
+        $params = \Request::post('exportPages');
         $page_templates = new PageTemplatesFile();
-        $this->addFile($page_templates->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($page_templates->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -237,8 +242,9 @@ class ExportService
      * @return $this
      */
     public function exportTemplateSettings() {
+        $params = \Request::post('exportTemplates');
         $template_settings = new TemplateSettingsFile();
-        $this->addFile($template_settings->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($template_settings->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -277,8 +283,9 @@ class ExportService
      * @return $this
      */
     public function exportReports() {
+        $params = \Request::post('exportTemplates');
         $reports = new ReportsFile();
-        $this->addFile($reports->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($reports->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -287,8 +294,9 @@ class ExportService
      * @return $this
      */
     public function exportTables() {
+        $params = \Request::post('exportTables');
         $tables = new TablesFile();
-        $this->addFile($tables->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($tables->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -327,8 +335,9 @@ class ExportService
      * @return $this
      */
     public function exportPageDatasources() {
+        $params = \Request::post('exportPages');
         $page_datasources = new PageDatasourcesFile();
-        $this->addFile($page_datasources->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($page_datasources->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -377,8 +386,9 @@ class ExportService
      * @return $this
      */
     public function exportPageRoles() {
+        $params = \Request::post('exportPages');
         $page_roles = new PageRolesFile();
-        $this->addFile($page_roles->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($page_roles->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
