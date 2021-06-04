@@ -72,7 +72,7 @@ const MenuComponent = styled.div`
       border = getResponsiveSetting(settings, 'border', ':hover');
       if(border){
         styles += `border-style:${border};`;
-        styles += dimensionsControllerToStyles(getResponsiveSetting(settings, 'border_width'), 'border-width');
+        styles += dimensionsControllerToStyles(getResponsiveSetting(settings, 'border_width', ':hover'), 'border-width');
         let borderColor = getResponsiveSetting(settings, 'border_color', ':hover')
         if(borderColor && borderColor.color){
           styles += `border-color:${borderColor.color};`;

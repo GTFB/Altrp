@@ -8,6 +8,7 @@ class Route {
   constructor(data) {
     this.id = data.id;
     this.path = data.path;
+    this.icon = data.icon;
     this.model = data.model;
     this.models = data.models;
     this.parent_page_id = data.parent_page_id;

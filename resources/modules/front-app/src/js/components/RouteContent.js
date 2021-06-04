@@ -45,6 +45,7 @@ class RouteContent extends Component {
     window.currentRouterMatch = new AltrpModel(props.match);
     window.currentPageId = props.id;
     window.currentRouteComponent = this;
+    window.altrpHistory = this.props.history;
     console.log('Route constructor: ', performance.now());
     this.updateAppData();
   }

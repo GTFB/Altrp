@@ -32,7 +32,7 @@ class DataStorageUpdater extends AltrpModel {
       currentUser = currentUser.data;
       appStore.dispatch(changeCurrentUser(currentUser));
     }
-    if(! _.get(dataSources, 'length')){
+    if(!initialUpdate && !_.get(dataSources, 'length')){
       dataSources = this.getProperty('currentDataSources');
     }
     if(! dataSources){

@@ -54,6 +54,7 @@ class Page extends Model
     'is_cached',
     'not_found',
     'sections_count',
+    'icon',
   ];
 
   const DEFAULT_AREAS = [
@@ -186,6 +187,7 @@ class Page extends Model
           'path' => $page->path,
           'id' => $page->id,
           'title' => $page->title,
+          'icon' => $page->icon,
           'parent_page_id' => $page->parent_page_id,
           'allowed' => true,
           'data_sources' => $page->page_data_sources->map(function (PageDatasource $page_data_source) {
