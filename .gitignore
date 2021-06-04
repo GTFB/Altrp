@@ -18,6 +18,8 @@ yarn-error.log
 storage/installed
 s.sql
 modules_statuses.json
+webpack.editor.common.js
+webpack.front.common.js
 
 # IDE helpers
 /config/ide-helper.php
