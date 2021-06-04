@@ -22,7 +22,6 @@ import ListComponent from "../../../../editor/src/js/components/widgets/styled-c
 import MapConstructorComponent
   from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
 import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
-import Diagram from "../../../../editor/src/js/classes/elements/Diagram";
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
 
 class ElementWrapper extends Component {

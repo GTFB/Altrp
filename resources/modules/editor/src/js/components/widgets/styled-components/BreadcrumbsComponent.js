@@ -31,6 +31,23 @@ const BreadcrumbsComponent = styled.div`
       styles += `background:url(${delimiter.url}) no-repeat center;`
       styles += `background-size:contain;`
     }
+    const delimiter_width = getResponsiveSetting(settings, 'delimiter_width');
+    if(delimiter_width){
+      styles += `width:${delimiter_width};`
+    }
+    const delimiter_height = getResponsiveSetting(settings, 'delimiter_height');
+    if(delimiter_height){
+      styles += `height:${delimiter_height};`
+    }
+    const delimiter_ml = getResponsiveSetting(settings, 'delimiter_ml');
+    if(delimiter_ml){
+      styles += `margin-left:${delimiter_ml};`
+    }
+    const delimiter_mr = getResponsiveSetting(settings, 'delimiter_mr');
+    if(delimiter_mr){
+      styles += `margin-right:${delimiter_mr};`
+    }
+
     styles += `}`;
     styles += `.bp3-breadcrumb:not(.bp3-breadcrumb-current){`;
 
@@ -66,18 +83,17 @@ const BreadcrumbsComponent = styled.div`
 
     if(current_color && current_color.color){
       styles += `color:${current_color.color};`;
-      styles += `svg, path {fill: ${current_color.color};`;
+      styles += `svg, path {fill: ${current_color.color};}`;
     }
 
     let current_font = getResponsiveSetting(settings, 'current_font');
 
     if(current_font){
       styles += typographicControllerToStyles(current_font);
+      console.log(styles);
     }
 
     styles += `}`;
-
-
 
     return styles;
   }}

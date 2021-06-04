@@ -145,6 +145,37 @@ class Breadcrumbs extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('delimiter_section', {
+      label: 'Delimiter',
+      tab: TAB_STYLE,
+    });
+
+    this.addControl('delimiter_width', {
+      label: 'Width',
+      stateless: true,
+      dynamic: false,
+    });
+
+    this.addControl('delimiter_height', {
+      label: 'Height',
+      stateless: true,
+      dynamic: false,
+    });
+
+    this.addControl('delimiter_ml', {
+      label: 'Margin Left',
+      stateless: true,
+      dynamic: false,
+    });
+
+    this.addControl('delimiter_mr', {
+      label: 'Margin Right',
+      stateless: true,
+      dynamic: false,
+    });
+
+    this.endControlSection();
+
     advancedTabControllers(this);
   }
 }

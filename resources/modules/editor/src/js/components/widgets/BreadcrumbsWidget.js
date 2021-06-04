@@ -12,7 +12,7 @@ import {typographicControllerToStyles} from "../../../../../front-app/src/js/hel
 
 const GlobalStyles = createGlobalStyle`
   ${({elementId, settings})=>{
-    let styles = `.altrp-portal${elementId}{`;
+    let styles = `.altrp-portal.altrp-portal${elementId}{`;
 
     styles += `.bp3-menu-item:not(.bp3-disabled){`;
 
