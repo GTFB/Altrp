@@ -58,4 +58,22 @@ class PageController
 //    return response()->json( $res );
   }
 
+  /**
+   * Вернуть js файл скомпилировнный для altrp
+   * @param $page_id
+   */
+  public function app( $page_id ){
+    /**
+     * @var $page Page
+     */
+    $page = Page::find( $page_id );
+
+    if ( ! $page ){
+      return response()->json( ['success' => false,], 404, [], JSON_UNESCAPED_UNICODE );
+    }
+
+    return response( $page->getAppString(), 200, [
+      'Content-Type' => 'application/javascript; charset=UTF-8',
+    ] );
+  }
 }

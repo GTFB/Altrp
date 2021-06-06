@@ -7,22 +7,24 @@ import TextComponent from "./styled-components/TextComponent";
 class TextWidget extends Component {
   constructor(props) {
     super(props);
+    let {element, elementId, baseRender} = props;
+    if(! element && elementId && window.altrpElements[elementId || '']){
+      element = window.altrpElements[elementId || ''];
+    }
     this.state = {
-      settings: props.element.getSettings(),
-      tooltipActiveValue: false
+      settings: element?.getSettings() || {},
     };
-    props.element.component = this;
+    element.component = this;
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    if (props.baseRender) {
-      this.render = props.baseRender(this);
+    if(baseRender){
+      this.render = baseRender(this);
     }
-    this.tooltipActive = this.tooltipActive.bind(this);
-    this.changeText = this.changeText.bind(this);
+    this.element = element;
   }
 
-  tooltipActive() {
+  tooltipActive = ()=> {
     if (this.state.tooltipActiveValue) {
       this.setState({
         tooltipActiveValue: !this.state.tooltipActiveValue
@@ -36,11 +38,11 @@ class TextWidget extends Component {
     }
   }
 
-  changeText(value) {
-    let settings = this.props.element.settings;
+  changeText = (value) =>{
+    let settings = this.element.settings;
     settings.text = value;
-    this.props.element.setSettings(settings);
-    this.props.element.templateNeedUpdate();
+    this.element.setSettings(settings);
+    this.element.templateNeedUpdate();
   }
 
   render() {

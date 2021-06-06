@@ -7,22 +7,29 @@ import {
   ColumnDivComponent, ColumnFooterComponent, ColumnHeaderComponent, ColumnMainComponent,
   ColumnNavComponent, ColumnSectionComponent
 } from "./widgets/styled-components/ColumnComponents";
+import SectionComponent from "./SectionComponent";
 
 class ColumnComponent extends Component {
   constructor(props) {
     super(props);
+
+    let {element, elementId, baseRender} = props;
+    if(! element && elementId && window.altrpElements[elementId || '']){
+      element = window.altrpElements[elementId || ''];
+    }
     this.state = {
       children: props.children || [],
-      settings: props.element.getSettings()
+      settings: element.getSettings()
     };
-    props.element.component = this;
+    element.component = this;
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    if (props.baseRender) {
-      this.render = props.baseRender(this);
+    if (baseRender) {
+      this.render = baseRender(this);
     }
     this.columnCount = 0
+    this.element = element;
   }
 
   /**
@@ -99,4 +106,5 @@ class ColumnComponent extends Component {
   }
 }
 
-export default ColumnComponent
+export default ColumnComponent;
+(window.altrpComponents = window.altrpComponents || {})['ColumnComponent'] = ColumnComponent;

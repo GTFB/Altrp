@@ -91,7 +91,8 @@ class FrontApp extends Component {
         appStore.dispatch(setUsersOnline(activeUsers));
       });
 
-    } else {
+    }
+    else {
      console.log("Вебсокеты выключены");
     }
   }

@@ -62,7 +62,7 @@ class Input extends BaseElement {
     });
 
     this.addControl("content_type", {
-      type: CONTROLLER_SELECT,
+      type: CONTROLLER_SELECT2,
       label: "Type",
       default: "text",
       options: [
@@ -675,7 +675,7 @@ class Input extends BaseElement {
     this.endControlSection();
 
     actionsControllers(this, 'Blur Actions');
-    
+
     actionsControllers(this, 'Focus Actions', 'focus_');
 
     actionsControllers(this, 'Change Actions', 'change_');

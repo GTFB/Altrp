@@ -5,7 +5,7 @@ class TemplateWidget extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      templateGUID: this.props.element.getSettings('template'),
+      templateGUID: this.element.getSettings('template'),
     };
     if (window.elementDecorator) {
       window.elementDecorator(this);
@@ -17,7 +17,7 @@ class TemplateWidget extends Component {
 
   render() {
     return <React.Suspense fallback={''}>
-      <AltrpTemplate settings={this.props.element.getSettings() || {}}/>
+      <AltrpTemplate settings={this.element.getSettings() || {}}/>
     </React.Suspense>
   }
 }

@@ -18,17 +18,24 @@ class SectionComponent extends Component {
     if (!props.children.length) {
       throw `Section Component Must Contain at Least One Column as Child`;
     }
+
+    let {element, elementId, baseRender} = props;
+    if(! element && elementId && window.altrpElements[elementId || '']){
+      element = window.altrpElements[elementId || ''];
+    }
     this.state = {
-      children: props.children,
-      settings: props.element.getSettings()
+      children: props.children || [],
+      settings: element.getSettings()
     };
-    props.element.component = this;
+    element.component = this;
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    if (props.baseRender) {
-      this.render = props.baseRender(this);
+    if (baseRender) {
+      this.render = baseRender(this);
     }
+    this.columnCount = 0
+    this.element = element;
   }
 
   /**
@@ -200,3 +207,4 @@ function mapStateToProps(state) {
 //   forwardRef: true
 // })(SectionComponent);
 export default SectionComponent;
+(window.altrpComponents = window.altrpComponents || {})['SectionComponent'] = SectionComponent;

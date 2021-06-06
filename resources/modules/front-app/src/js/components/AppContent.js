@@ -35,14 +35,17 @@ class AppContent extends Component {
         <EmailTemplatesRenderer/>
         <div ref={this.mainScroller} className={`front-app-content ${isAltrpTestMode() ? 'front-app-content_test' : ''}`}>
           <Switch>
-            {this.props.routes.map(route => (
-              <Route
-                key={route.id}
-                children={<RouteContent {...route} />}
-                path={route.path}
-                exact
-              />
-            ))}
+            {this.props.routes.map(route => {
+              console.log('Route Switch: ', performance.now(), route);
+              return(
+                  <Route
+                    key={route.id}
+                    children={<RouteContent {...route} />}
+                    path={route.path}
+                    exact
+                  />)
+              }
+            )}
           </Switch>
         </div>
         <React.Suspense fallback={''}>

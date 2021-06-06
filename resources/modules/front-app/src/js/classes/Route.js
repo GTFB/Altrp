@@ -6,6 +6,7 @@ import Datasource from "./Datasource";
 
 class Route {
   constructor(data) {
+    console.log('Route constructor: ' + data.id, performance.now());
     this.id = data.id;
     this.path = data.path;
     this.model = data.model;

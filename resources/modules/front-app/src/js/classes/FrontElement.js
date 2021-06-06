@@ -1,13 +1,13 @@
 import CONSTANTS from "../../../../editor/src/js/consts";
 import {
   altrpRandomId,
-  getResponsiveSetting,
+  getResponsiveSetting, isEditor,
   replaceContentWithData,
   valueReplacement
 } from "../helpers";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {addFont} from "../store/fonts-storage/actions";
-
+const   FIELD_WIDGETS = ['input', 'switcher']
 class FrontElement {
 
   constructor(data = {}){
@@ -55,6 +55,10 @@ class FrontElement {
      *  * @type {array}
      */
     this.modelsList = []
+
+    if(! isEditor()){
+      (window.altrpElements = window.altrpElements || {})[this.getId() || ''] = this;
+    }
   }
 
   /**
@@ -114,10 +118,12 @@ class FrontElement {
     let widgetsForForm = [
         'button',
         'input',
+        'switcher',
     ];
     let widgetsWithActions = [
         'button',
         'input',
+        'switcher',
     ];
     /**
      * Инициация событий в первую очередь
@@ -157,6 +163,10 @@ class FrontElement {
       break;
       case 'input':{
         actionsManager.registerWidgetActions(this.getIdForAction(), this.getSettings('actions', []), 'blur', this);
+      }
+        break;
+      case 'switcher':{
+        actionsManager.registerWidgetActions(this.getIdForAction(), this.getSettings('actions', []), 'change', this);
       }
     }
 
@@ -236,6 +246,10 @@ class FrontElement {
       }
       break;
       case 'input': {
+        formsManager.addField(this.getFormId(), this);
+      }
+        break;
+      case 'switcher': {
         formsManager.addField(this.getFormId(), this);
       }
       break;
@@ -436,7 +450,7 @@ class FrontElement {
    *  @return {boolean}
    */
   fieldValidate(){
-    if(this.getName() !== 'input'){
+    if(FIELD_WIDGETS.indexOf(this.getName()) === -1){
       return true;
     }
     if(! this.getSettings('content_required')){
@@ -470,7 +484,7 @@ class FrontElement {
    */
   getValue(){
 
-    if(this.getName() !== 'input'){
+    if(FIELD_WIDGETS.indexOf(this.getName()) === -1){
       return null;
     }
     if(! this.elementIsDisplay()){

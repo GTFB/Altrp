@@ -3,16 +3,21 @@ import React, { Component,  } from "react";
 class RootComponent extends Component {
   constructor(props) {
     super(props);
+    let {element, elementId, baseRender} = props;
+    if(! element && elementId && window.altrpElements[elementId || '']){
+      element = window.altrpElements[elementId || ''];
+    }
     this.state = {
-      settings: props.element.getSettings()
+      settings: element?.getSettings() || {},
     };
-    props.element.component = this;
+    element.component = this;
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    if(props.baseRender){
-      this.render = props.baseRender(this);
+    if(baseRender){
+      this.render = baseRender(this);
     }
+    this.element = element;
   }
 
   async _componentDidMount() {
@@ -30,25 +35,25 @@ class RootComponent extends Component {
             )
     ).default;
     await actionsManager.callAllWidgetActions(
-        this.props.element.getIdForAction(),
+        this.element.getIdForAction(),
         'load',
-        this.props.element.getResponsiveSetting("page_load_actions", []),
-        this.props.element
+        this.element.getResponsiveSetting("page_load_actions", []),
+        this.element
     );
   }
 
   render() {
-    let classes = `sections-wrapper ${this.props.element
+    let classes = `sections-wrapper ${this.element
       .getSelector()
-      .replace(".", "")} ${this.props.element.hasCardModel() ? 'sections-wrapper_card' : ''}`;
+      .replace(".", "")} ${this.element.hasCardModel() ? 'sections-wrapper_card' : ''}`;
     let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
     return (
       <div className={classes}>
-        {this.props.element.children.map(section => {
+        {this.element.children.map(section => {
           return(
             <ElementWrapper
               ElementWrapper={ElementWrapper}
-              rootElement={this.props.element}
+              rootElement={this.element}
               key={section.getIdForAction()}
               component={section.componentClass}
               baseRender={this.props.baseRender}
@@ -62,3 +67,4 @@ class RootComponent extends Component {
 }
 
 export default RootComponent;
+(window.altrpComponents = window.altrpComponents || {})['RootComponent'] = RootComponent;

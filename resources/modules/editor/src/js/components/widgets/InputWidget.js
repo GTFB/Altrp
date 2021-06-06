@@ -42,11 +42,24 @@ class InputWidget extends Component {
 
   constructor(props) {
     super(props);
-    props.element.component = this;
+    let {element, elementId, baseRender} = props;
+
+    if(! element && elementId && window.altrpElements[elementId || '']){
+      element = window.altrpElements[elementId || ''];
+    }
+    this.element = element;
+
+    this.inputKeyBetween = setTimeout(
+      value => this.dispatchFieldValueToStore(value, true),
+      this.element.getSettings("change_change_end_delay")
+    );
+    this.element.component = this;
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    this.onChange = this.onChange.bind(this);
+    if(baseRender){
+      this.render = baseRender(this);
+    }
     this.debounceDispatch = this.debounceDispatch.bind(this);
 
     this.defaultValue =
@@ -56,7 +69,7 @@ class InputWidget extends Component {
       this.defaultValue = [];
     }
     this.state = {
-      settings: { ...props.element.getSettings() },
+      settings: element?.getSettings() || {},
       value: this.defaultValue,
       options: parseOptionsFromSettings(
         props.element.getSettings("content_options")
@@ -76,14 +89,14 @@ class InputWidget extends Component {
   valueMustArray() {
     if (
       ["file", "image_select", "checkbox"].indexOf(
-        this.props.element.getSettings("content_type")
+        this.element.getSettings("content_type")
       ) !== -1
     ) {
       return true;
     }
     if (
-      this.props.element.getSettings("content_type") === "select2" &&
-      this.props.element.getSettings("select2_multiple")
+      this.element.getSettings("content_type") === "select2" &&
+      this.element.getSettings("select2_multiple")
     ) {
       return true;
     }
@@ -95,11 +108,11 @@ class InputWidget extends Component {
   clearValue() {
     let value = "";
     if (
-      this.props.element.getSettings("content_type") === "checkbox" ||
+      this.element.getSettings("content_type") === "checkbox" ||
       (["select2", "image_select"].indexOf(
-        this.props.element.getSettings("content_type")
+        this.element.getSettings("content_type")
       ) >= 0 &&
-        this.props.element.getSettings("select2_multiple"))
+        this.element.getSettings("select2_multiple"))
     ) {
       value = [];
     }
@@ -110,10 +123,10 @@ class InputWidget extends Component {
    * Метод устанавливает все опции как выбранные
    */
   selectAll() {
-    const optionsDynamicSetting = this.props.element.getDynamicSetting(
+    const optionsDynamicSetting = this.element.getDynamicSetting(
       "content_options"
     );
-    if (this.props.element.getSettings("content_type") === "checkbox") {
+    if (this.element.getSettings("content_type") === "checkbox") {
       let options = [...this.state.options];
 
       if (optionsDynamicSetting) {
@@ -124,9 +137,9 @@ class InputWidget extends Component {
     }
     if (
       ["select2", "image_select"].indexOf(
-        this.props.element.getSettings("content_type")
+        this.element.getSettings("content_type")
       ) >= 0 &&
-      this.props.element.getSettings("select2_multiple")
+      this.element.getSettings("select2_multiple")
     ) {
       let options = [...this.state.options];
       if (!_.isArray(options)) {
@@ -154,7 +167,7 @@ class InputWidget extends Component {
         create_allowed,
         create_label,
         create_url
-      } = this.props.element.getSettings();
+      } = this.element.getSettings();
       if (create_allowed && create_label && create_url) {
         this.createItem(e);
       }
@@ -167,9 +180,9 @@ class InputWidget extends Component {
    * @param {{}} prevState
    */
   async _componentDidMount(prevProps, prevState) {
-    if (this.props.element.getSettings("content_options")) {
+    if (this.element.getSettings("content_options")) {
       let options = parseOptionsFromSettings(
-        this.props.element.getSettings("content_options")
+        this.element.getSettings("content_options")
       );
 
       this.setState(state => ({ ...state, options }));
@@ -242,7 +255,7 @@ class InputWidget extends Component {
    * Получить url для запросов
    */
   getRoute() {
-    let url = this.props.element.getSettings("model_for_options");
+    let url = this.element.getSettings("model_for_options");
 
     if (url.indexOf("/") === -1) {
       return `/ajax/models/${url}_options`;
@@ -264,7 +277,7 @@ class InputWidget extends Component {
     ) {
       let value = this.getContent(
         "content_default_value",
-        this.props.element.getSettings("select2_multiple")
+        this.element.getSettings("select2_multiple")
       );
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
@@ -274,8 +287,8 @@ class InputWidget extends Component {
       );
     }
     if (
-      this.props.element.getSettings("content_type") === "select" &&
-      this.props.element.getSettings("model_for_options")
+      this.element.getSettings("content_type") === "select" &&
+      this.element.getSettings("model_for_options")
     ) {
       if (
         !(
@@ -330,12 +343,12 @@ class InputWidget extends Component {
     if (isEditor()) {
       return;
     }
-    let content_calculation = this.props.element.getSettings(
+    let content_calculation = this.element.getSettings(
       "content_calculation"
     );
     const altrpforms = this.props.formsStore;
-    const fieldName = this.props.element.getFieldId();
-    const formId = this.props.element.getFormId();
+    const fieldName = this.element.getFieldId();
+    const formId = this.element.getFormId();
     if (!content_calculation) {
       /**
        * Обновить значение, если formsStore изменилось из другого компонента
@@ -361,7 +374,7 @@ class InputWidget extends Component {
     const altrppagestate = this.props.altrpPageState.getData();
     const altrpresponses = this.props.altrpresponses.getData();
     const altrpmeta = this.props.altrpMeta.getData();
-    const context = this.props.element.getCurrentModel().getData();
+    const context = this.element.getCurrentModel().getData();
     if (content_calculation.indexOf("altrpdata") !== -1) {
       context.altrpdata = altrpdata;
       if (!altrpdata.currentDataStorageLoaded) {
@@ -449,7 +462,7 @@ class InputWidget extends Component {
     } catch (e) {
       console.error(
         "Evaluate error in Input" + e.message,
-        this.props.element.getId()
+        this.element.getId()
       );
     }
   }
@@ -459,8 +472,8 @@ class InputWidget extends Component {
    */
   async updateOptions() {
     {
-      let formId = this.props.element.getFormId();
-      let paramsForUpdate = this.props.element.getSettings("params_for_update");
+      let formId = this.element.getFormId();
+      let paramsForUpdate = this.element.getSettings("params_for_update");
       let formData = _.get(this.props.formsStore, [formId], {});
       paramsForUpdate = parseParamsFromString(
         paramsForUpdate,
@@ -472,7 +485,7 @@ class InputWidget extends Component {
       let options = [...this.state.options];
       if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
         if (!_.isEmpty(paramsForUpdate)) {
-          if (this.props.element.getSettings("params_as_filters", false)) {
+          if (this.element.getSettings("params_as_filters", false)) {
             paramsForUpdate = JSON.stringify(paramsForUpdate);
             options = await new Resource({
               route: this.getRoute()
@@ -505,12 +518,12 @@ class InputWidget extends Component {
    * @param e
    * @param  editor для получения изменений из CKEditor
    */
-  onChange(e, editor = null) {
+  onChange = (e, editor = null) => {
     let value = "";
     let valueToDispatch;
-    const settings = this.props.element.getSettings();
+    const settings = this.element.getSettings();
     if (e && e.target) {
-      if (this.props.element.getSettings("content_type") === "checkbox") {
+      if (this.element.getSettings("content_type") === "checkbox") {
         let inputs = document.getElementsByName(e.target.name);
         value = [];
         inputs.forEach(input => {
@@ -521,9 +534,9 @@ class InputWidget extends Component {
       } else if (settings.content_type === "accept") {
         let _value = e.target.checked;
         let trueValue =
-          this.props.element.getSettings("accept_checked") || true;
+          this.element.getSettings("accept_checked") || true;
         let falseValue =
-          this.props.element.getSettings("accept_unchecked") || false;
+          this.element.getSettings("accept_unchecked") || false;
         falseValue = valueReplacement(falseValue);
         trueValue = valueReplacement(trueValue);
         valueToDispatch = _value ? trueValue : falseValue;
@@ -541,23 +554,23 @@ class InputWidget extends Component {
     if (_.isArray(e)) {
       value = _.cloneDeep(e);
     }
-    if (this.props.element.getSettings("content_type") === "select2") {
-      if (this.props.element.getSettings("select2_multiple", false) && !e) {
+    if (this.element.getSettings("content_type") === "select2") {
+      if (this.element.getSettings("select2_multiple", false) && !e) {
         value = [];
       }
-      if (this.props.element.getSettings("select2_multiple", false)) {
+      if (this.element.getSettings("select2_multiple", false)) {
         value = value.map(item => item.value);
       }
     }
     if (
-      this.props.element.getSettings("content_options_nullable") &&
+      this.element.getSettings("content_options_nullable") &&
       e &&
       e.value === "<null>"
     ) {
       value = null;
     }
 
-    let timestamp = this.props.element.getSettings("content_timestamp");
+    let timestamp = this.element.getSettings("content_timestamp");
     let isDate = this.state.settings.content_type === "date";
 
     if (isDate && timestamp && value != "") {
@@ -573,11 +586,11 @@ class InputWidget extends Component {
          * Обновляем хранилище только если не текстовое поле
          */
 
-        const change_actions = this.props.element.getSettings("change_actions");
-        const change_change_end = this.props.element.getSettings(
+        const change_actions = this.element.getSettings("change_actions");
+        const change_change_end = this.element.getSettings(
           "change_change_end"
         );
-        const change_change_end_delay = this.props.element.getSettings(
+        const change_change_end_delay = this.element.getSettings(
           "change_change_end_delay"
         );
 
@@ -613,22 +626,18 @@ class InputWidget extends Component {
     150
   );
 
-  inputKeyBetween = setTimeout(
-    value => this.dispatchFieldValueToStore(value, true),
-    this.props.element.getSettings("change_change_end_delay")
-  );
   /**
    * получить опции
    */
   getOptions() {
     let options = [...this.state.options];
-    const optionsDynamicSetting = this.props.element.getDynamicSetting(
+    const optionsDynamicSetting = this.element.getDynamicSetting(
       "content_options"
     );
     if (optionsDynamicSetting) {
       options = convertData(optionsDynamicSetting, options);
     }
-    if (!this.props.element.getSettings("sort_default")) {
+    if (!this.element.getSettings("sort_default")) {
       options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
     }
     return options;
@@ -641,7 +650,7 @@ class InputWidget extends Component {
    */
 
   onFocus = async e => {
-    const focus_actions = this.props.element.getSettings("focus_actions");
+    const focus_actions = this.element.getSettings("focus_actions");
 
     if (focus_actions && !isEditor()) {
       const actionsManager = (
@@ -650,10 +659,10 @@ class InputWidget extends Component {
         )
       ).default;
       await actionsManager.callAllWidgetActions(
-        this.props.element.getIdForAction(),
+        this.element.getIdForAction(),
         "focus",
         focus_actions,
-        this.props.element
+        this.element
       );
     }
   };
@@ -673,17 +682,17 @@ class InputWidget extends Component {
     if (_.get(editor, "getData")) {
       this.dispatchFieldValueToStore(editor.getData(), true);
     }
-    if (this.props.element.getSettings("actions", []) && !isEditor()) {
+    if (this.element.getSettings("actions", []) && !isEditor()) {
       const actionsManager = (
         await import(
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
         )
       ).default;
       await actionsManager.callAllWidgetActions(
-        this.props.element.getIdForAction(),
+        this.element.getIdForAction(),
         "blur",
-        this.props.element.getSettings("actions", []),
-        this.props.element
+        this.element.getSettings("actions", []),
+        this.element
       );
     }
   };
@@ -693,8 +702,8 @@ class InputWidget extends Component {
    * @param {boolean} userInput true - имзенилось пользователем
    */
   dispatchFieldValueToStore = async (value, userInput = false) => {
-    let formId = this.props.element.getFormId();
-    let fieldName = this.props.element.getFieldId();
+    let formId = this.element.getFormId();
+    let fieldName = this.element.getFieldId();
     if (fieldName.indexOf("{{") !== -1) {
       fieldName = replaceContentWithData(fieldName);
     }
@@ -703,7 +712,7 @@ class InputWidget extends Component {
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
       if (userInput) {
-        const change_actions = this.props.element.getSettings("change_actions");
+        const change_actions = this.element.getSettings("change_actions");
 
         if (change_actions && !isEditor()) {
           const actionsManager = (
@@ -712,10 +721,10 @@ class InputWidget extends Component {
             )
           ).default;
           await actionsManager.callAllWidgetActions(
-            this.props.element.getIdForAction(),
+            this.element.getIdForAction(),
             "change",
             change_actions,
-            this.props.element
+            this.element
           );
         }
       }
@@ -737,11 +746,11 @@ class InputWidget extends Component {
       create_label,
       create_data,
       select2_multiple
-    } = this.props.element.getSettings();
+    } = this.element.getSettings();
     if (!create_label && !create_url) {
       return;
     }
-    const currentModel = this.props.element.getCurrentModel();
+    const currentModel = this.element.getCurrentModel();
     let data = parseParamsFromString(create_data, currentModel, true);
     data[create_label] = inputValue;
     let url = parseURLTemplate(create_url, currentModel.getData());
@@ -806,8 +815,8 @@ class InputWidget extends Component {
     // console.log(nextProps.currentModel=== this.props.currentModel);
     // console.log(nextProps.currentScreen=== this.props.currentScreen);
     // console.log(nextProps.currentUser=== this.props.currentUser);
-    // console.log(nextProps.element=== this.props.element);
-    // console.log(nextProps.elementDisplay=== this.props.elementDisplay);
+    // console.log(nextProps.element=== this.element);
+    // console.log(nextProps.elementDisplay=== this.elementDisplay);
     // console.log(nextProps.formsStore=== this.props.formsStore);
     // console.log(nextProps.match=== this.props.match);
     // console.log(nextProps.match);
@@ -821,12 +830,12 @@ class InputWidget extends Component {
    * @return {string}
    */
   getName() {
-    return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
+    return `${this.element.getFormId()}[${this.element.getFieldId()}]`;
   }
 
   render() {
     let label = null;
-    const settings = this.props.element.getSettings();
+    const settings = this.element.getSettings();
     const {
       options_sorting,
       content_readonly,
@@ -852,7 +861,7 @@ class InputWidget extends Component {
     }
     let classLabel = "";
     let styleLabel = {};
-    const content_label_position_type = this.props.element.getResponsiveSetting(
+    const content_label_position_type = this.element.getResponsiveSetting(
       "content_label_position_type"
     );
     switch (content_label_position_type) {
@@ -1011,7 +1020,7 @@ class InputWidget extends Component {
       default: {
         const isClearable = this.state.settings.content_clearable;
         const isDate = this.state.settings.content_type === "date";
-        const timestamp = this.props.element.getSettings("content_timestamp");
+        const timestamp = this.element.getSettings("content_timestamp");
         if (isDate && timestamp) {
           const isValid = moment.unix(value).isValid();
           if (isValid) {
@@ -1029,14 +1038,14 @@ class InputWidget extends Component {
                 type={this.state.settings.content_type}
                 name={this.getName()}
                 value={value || ""}
-                element={this.props.element}
+                element={this.element}
                 readOnly={content_readonly}
                 autoComplete={autocomplete}
                 placeholder={this.state.settings.content_placeholder}
                 className={
                   "altrp-field " + this.state.settings.position_css_classes
                 }
-                settings={this.props.element.getSettings()}
+                settings={this.element.getSettings()}
                 onKeyDown={this.handleEnter}
                 onChange={this.onChange}
                 onBlur={this.onBlur}
@@ -1079,11 +1088,11 @@ class InputWidget extends Component {
    * Выводит input type=accept
    */
   renderAcceptInput() {
-    const settings = this.props.element.getSettings();
+    const settings = this.element.getSettings();
     let value = this.state.value;
-    let trueValue = this.props.element.getSettings("accept_checked") || true;
+    let trueValue = this.element.getSettings("accept_checked") || true;
     let falseValue =
-      this.props.element.getSettings("accept_unchecked") || false;
+      this.element.getSettings("accept_unchecked") || false;
     if (value === trueValue) {
       value = true;
     } else if (value === falseValue) {
@@ -1094,11 +1103,11 @@ class InputWidget extends Component {
         <span className="altrp-field-option-span">
           <input
             type="checkbox"
-            name={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
+            name={`${this.element.getFormId()}[${this.element.getFieldId()}]`}
             className={`altrp-field-option__input ${value ? "active" : ""}`}
             onChange={this.onChange}
             checked={!!value}
-            id={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
+            id={`${this.element.getFormId()}[${this.element.getFieldId()}]`}
           />
         </span>
       </div>
@@ -1111,16 +1120,16 @@ class InputWidget extends Component {
     const { options = [] } = this.state;
     let { value = "" } = this.state;
     const fieldName =
-      this.props.element.getFieldId() ||
+      this.element.getFieldId() ||
       Math.random()
         .toString(36)
         .substr(2, 9);
     const formID =
-      this.props.element.getFormId() ||
+      this.element.getFormId() ||
       Math.random()
         .toString(36)
         .substr(2, 9);
-    const inputType = this.props.element.getSettings("content_type", "radio");
+    const inputType = this.element.getSettings("content_type", "radio");
     return (
       <div className="altrp-field-subgroup">
         {options.map((option, idx) => {
@@ -1173,7 +1182,7 @@ class InputWidget extends Component {
       content_options_nullable,
       nulled_option_title,
       content_placeholder
-    } = this.props.element.getSettings();
+    } = this.element.getSettings();
 
     let options = this.getOptions();
     let value = this.state.value;
@@ -1189,7 +1198,7 @@ class InputWidget extends Component {
     if (value && value.dynamic) {
       value = "";
     }
-    if (!this.props.element.getSettings("select2_multiple", false)) {
+    if (!this.element.getSettings("select2_multiple", false)) {
       options.forEach(option => {
         if (!option) {
           return;
@@ -1244,8 +1253,8 @@ class InputWidget extends Component {
      */
     if (
       content_options_nullable &&
-      (this.props.element.getSettings("content_type") !== "select2" ||
-        this.props.element.getSettings("select2_multiple") !== true)
+      (this.element.getSettings("content_type") !== "select2" ||
+        this.element.getSettings("select2_multiple") !== true)
     ) {
       options = _.union(
         [{ label: nulled_option_title, value: "<null>" }],
@@ -1255,12 +1264,12 @@ class InputWidget extends Component {
     const select2Props = {
       className: "altrp-field-select2",
       onFocus: this.onFocus,
-      element: this.props.element,
-      classNamePrefix: this.props.element.getId() + " altrp-field-select2",
+      element: this.element,
+      classNamePrefix: this.element.getId() + " altrp-field-select2",
       options,
-      name: this.props.element.getFieldId(),
+      name: this.element.getFieldId(),
       ref: this.altrpSelectRef,
-      settings: this.props.element.getSettings(),
+      settings: this.element.getSettings(),
       onChange: this.onChange,
       onBlur: this.onBlur,
       value: value || _.find(options, o => o && o.value == this.state.value),
@@ -1271,7 +1280,7 @@ class InputWidget extends Component {
         return this.state.value && this.state.value.includes(option.value);
       },
       placeholder: content_placeholder,
-      isMulti: this.props.element.getSettings("select2_multiple", false),
+      isMulti: this.element.getSettings("select2_multiple", false),
       onKeyDown: this.handleEnter
       // menuIsOpen: true,
     };

@@ -61,7 +61,7 @@ class TemplateController extends Controller
         'id' => $template->id,
         'author' => data_get($user, 'name'),
         'url' => '/admin/editor?template_id=' . $template->id,
-        'area' => $template->area()->name,
+        'area' => $template->area() ? $template->area()->name : ' content',
       ];
     }
     return \response()->json([

@@ -36,7 +36,7 @@ class DashboardsWidget extends Component {
 
   async componentWillMount() {
     try {
-      const id = this.props.element.getId();
+      const id = this.element.getId();
       const req = await axios.get(`/ajax/dashboards/datasource/${id}/data`, {
         headers: {
           "X-CSRF-TOKEN": document
@@ -64,12 +64,12 @@ class DashboardsWidget extends Component {
   }
 
   calculateDrawerWidth() {
-    const allKeys = _.keys(this.props.element.getSettings());
+    const allKeys = _.keys(this.element.getSettings());
     const currentBreakpoint = getCurrentBreakpoint();
     let result = false;
     let keyData = "";
     let keys = allKeys.filter(item => item.includes("drawerWidth"));
-    let drawer = this.props.element.getSettings().drawerWidth;
+    let drawer = this.element.getSettings().drawerWidth;
     for (let key of keys) {
       let names = key.split("_");
       const name = names[names.length - 1];
@@ -80,19 +80,19 @@ class DashboardsWidget extends Component {
       }
     }
     if (result) {
-      drawer = this.props.element.getSettings(keyData);
+      drawer = this.element.getSettings(keyData);
     }
     return drawer?.size + drawer?.unit || "30%";
   }
 
   render() {
-    const containerWidth = this.props.element.getSettings()
+    const containerWidth = this.element.getSettings()
       .positioning_custom_width.size;
-    const dataByDataSource = this.props.element.getSettings().dataSource;
-    const settings = this.props.element.getSettings();
+    const dataByDataSource = this.element.getSettings().dataSource;
+    const settings = this.element.getSettings();
     const global_parameter = this.state.settings.global_parameter;
-    const showButton = this.props.element.getSettings().showButton;
-    const showExportButton = this.props.element.getSettings().showExportButton;
+    const showButton = this.element.getSettings().showButton;
+    const showExportButton = this.element.getSettings().showExportButton;
     const currentUser = this.props.currentUser.data;
     const drawerWidth = this.calculateDrawerWidth();
     const settingsData = this.state.settingsData;
@@ -100,25 +100,25 @@ class DashboardsWidget extends Component {
       <Suspense fallback={"Loading"}>
         {!dataByDataSource ? (
           <AltrpDashboards
-            settings={this.props.element.getSettings()}
+            settings={this.element.getSettings()}
             globalParameter={global_parameter}
             currentUser={currentUser}
             //  currentDataStorage={this.props.currentDataStorage}
-            id={this.props.element.getId()}
+            id={this.element.getId()}
           />
         ) : (
           <DataSourceDashboards
             ref={this.refChild}
             showButton={showButton}
             showExportButton={showExportButton}
-            settings={this.props.element.getSettings()}
-            id={this.props.element.getId()}
+            settings={this.element.getSettings()}
+            id={this.element.getId()}
             containerWidth={containerWidth}
             items={settingsData.items}
             counter={settingsData.newCounter}
             drawerWidth={drawerWidth}
-            delimer={this.props.element.getSettings("delimer")}
-            rep={this.props.element.getSettings("rep", [])}
+            delimer={this.element.getSettings("delimer")}
+            rep={this.element.getSettings("rep", [])}
           />
         )}
       </Suspense>

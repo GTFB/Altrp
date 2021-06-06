@@ -283,6 +283,10 @@ class ElementWrapper extends Component {
       this.CSSId = CSSId;
     }
     let ContentComponent = frontElementsManager.getComponentClass(this.props.element.getName());
+    if(_.isObject(ContentComponent) && ! _.isFunction(ContentComponent)){
+      console.error(this.props.element.getName());
+
+    }
     const content = React.createElement(ContentComponent, {
       ref: this.elementRef,
       rootElement: this.props.rootElement,

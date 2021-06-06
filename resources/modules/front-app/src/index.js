@@ -53,7 +53,6 @@ import (/* webpackChunkName: 'FormsManager' */'../../editor/src/js/classes/modul
  * Рендерим главный компонент после загрузки основных модулей
  */
 function loadingCallback(){
-  console.log(window.frontElementsManager.componentsIsLoaded());
   if(window.React
       && window.Component
       && window.ReactDOM
@@ -70,6 +69,7 @@ function loadingCallback(){
         window.removeEventListener('touchstart', renderAltrp);
         window.removeEventListener('mouseover', renderAltrp);
       });
+
     }
     if(window.ALTRP_LOAD_BY_USER){
       window.addEventListener('mouseover', renderAltrp);
@@ -100,10 +100,6 @@ if (process.env.NODE_ENV !== 'production') {
         window.iconsManager = new IconsManager.default();
       }
   );
-  // import('./FrontApp').then(FrontApp => {
-  //   FrontApp = FrontApp.default;
-  //   ReactDOM.render(<FrontApp />, document.getElementById('front-app'));
-  // });
   let _token = await fetch('/ajax/_token', {
     method: 'get',
     headers: {

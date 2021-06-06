@@ -8,23 +8,26 @@ import TemplateLoader from "../template-loader/TemplateLoader";
 class TabsWidget extends Component {
   constructor(props) {
     super(props);
-    this.show = this.show.bind(this);
-    this.switcher = this.switcher.bind(this);
+    let {element, elementId, baseRender} = props;
+    if(! element && elementId && window.altrpElements[elementId || '']){
+      element = window.altrpElements[elementId || ''];
+    }
     this.state = {
-      settings: props.element.getSettings(),
+      settings: element?.getSettings() || {},
       switcher: false,
       activeTab: 0
     };
-    props.element.component = this;
+    element.component = this;
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    if (props.baseRender) {
-      this.render = props.baseRender(this);
+    if(baseRender){
+      this.render = baseRender(this);
     }
+    this.element = element;
   }
 
-  show(e) {
+  show = (e) => {
     let button = e.currentTarget;
     let collectionTabs = button.parentNode.parentNode.getElementsByClassName(
       "altrp-tab-content"
@@ -84,7 +87,7 @@ class TabsWidget extends Component {
     }
   }
 
-  switcher() {
+  switcher = ()=> {
     this.setState({ switcher: !this.state.switcher });
   }
 

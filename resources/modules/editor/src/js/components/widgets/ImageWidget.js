@@ -10,25 +10,29 @@ import AltrpLightbox from "../altrp-lightbox/AltrpLightbox";
 class ImageWidget extends Component {
   constructor(props) {
     super(props);
+    let {element, elementId, baseRender} = props;
+    if(! element && elementId && window.altrpElements[elementId || '']){
+      element = window.altrpElements[elementId || ''];
+    }
     this.state = {
-      settings: props.element.getSettings(),
-      lightbox: false
+      settings: element?.getSettings() || {},
     };
-    props.element.component = this;
+    element.component = this;
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    if(props.baseRender){
-      this.render = props.baseRender(this);
+    if(baseRender){
+      this.render = baseRender(this);
     }
+    this.element = element;
   }
 
   render() {
     const { element } = this.props;
     const link = this.state.settings.image_link || {};
-    const activeLightbox = this.props.element.getSettings("lightbox_switch", false);
-    const cursorPointer = this.props.element.getSettings("cursor_pointer", false);
-    const background_image = this.props.element.getSettings(
+    const activeLightbox = this.element.getSettings("lightbox_switch", false);
+    const cursorPointer = this.element.getSettings("cursor_pointer", false);
+    const background_image = this.element.getSettings(
       "background_image",
       {}
     );
@@ -72,22 +76,22 @@ class ImageWidget extends Component {
         url: media,
         name: "null"
       };
-    } else if (this.props.element.getSettings('default_url')){
+    } else if (this.element.getSettings('default_url')){
       media = {
         assetType: "media",
-        url: this.props.element.getSettings('default_url'),
+        url: this.element.getSettings('default_url'),
         name: "default"
       };
     }
-    let width = this.props.element.getResponsiveSetting('width_size');
-    let height = this.props.element.getResponsiveSetting('height_size');
+    let width = this.element.getResponsiveSetting('width_size');
+    let height = this.element.getResponsiveSetting('height_size');
     width = _.get(width, 'size', '100') + _.get(width, 'unit', '%');
     height = _.get(height, 'size', '100') + _.get(height, 'unit', '%');
     let altrpImage = (
       <AltrpImage
         image={media}
         width={width}
-        element={this.props.element}
+        element={this.element}
         height={height}
         id={this.state.settings.position_css_id}
         className={
@@ -124,7 +128,7 @@ class ImageWidget extends Component {
       );
     } else {
       let linkUrl = link.url || '';
-      linkUrl = parseURLTemplate(linkUrl, this.props.element.getCurrentModel().getData());
+      linkUrl = parseURLTemplate(linkUrl, this.element.getCurrentModel().getData());
       const linkProps = {
 
       };

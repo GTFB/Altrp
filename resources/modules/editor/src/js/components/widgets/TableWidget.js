@@ -23,10 +23,10 @@ class TableWidget extends Component {
   }
 
   _componentDidMount(){
-    if(this.props.element.getSettings('store_state') && getWidgetState(this.props.element.getId())){
-      this.setState(state=>({...state, widgetState: getWidgetState(this.props.element.getId())}));
-    } else if (this.props.element.getSettings('store_state')){
-      storeWidgetState(this.props.element.getId(), null);
+    if(this.element.getSettings('store_state') && getWidgetState(this.element.getId())){
+      this.setState(state=>({...state, widgetState: getWidgetState(this.element.getId())}));
+    } else if (this.element.getSettings('store_state')){
+      storeWidgetState(this.element.getId(), null);
     }
   }
 
@@ -36,7 +36,7 @@ class TableWidget extends Component {
    * @return {boolean}
    */
   showTable(query = {}){
-    if( this.props.element.getSettings('choose_datasource') === 'datasource' ){
+    if( this.element.getSettings('choose_datasource') === 'datasource' ){
       return true;
     }
     if(! query.modelName && ! query.dataSource){
@@ -45,17 +45,17 @@ class TableWidget extends Component {
     return true;
   }
   render(){
-    const settings = this.props.element.getSettings();
+    const settings = this.element.getSettings();
     if(! this.props.currentModel.getProperty('altrpModelUpdated')){
       return '';
     }
     let data = [];
-    if(this.props.element.getSettings('table_datasource')
-        && this.props.element.getSettings('choose_datasource') === 'datasource'){
-      let path = this.props.element.getSettings('table_datasource').replace(/{{/g, '').replace(/}}/g, '');
-      data = getDataByPath(path, [], this.props.element.getCurrentModel().getData())
+    if(this.element.getSettings('table_datasource')
+        && this.element.getSettings('choose_datasource') === 'datasource'){
+      let path = this.element.getSettings('table_datasource').replace(/{{/g, '').replace(/}}/g, '');
+      data = getDataByPath(path, [], this.element.getCurrentModel().getData())
     }
-    let query = new Query(this.props.element.getSettings().table_query || {}, this);
+    let query = new Query(this.element.getSettings().table_query || {}, this);
     if(! this.showTable(query)){
       return <div children="Please Choose Source"/>
     }
@@ -69,7 +69,7 @@ class TableWidget extends Component {
         return<div className="altrp-scroll__vertical-track" style={style} {...props} />
       },
     };
-    if(this.props.element.getSettings('table_transpose', false)){
+    if(this.element.getSettings('table_transpose', false)){
       scrollbarsProps.autoHeight = true;
       scrollbarsProps.autoHeightMax = 10000;
     }
@@ -77,7 +77,7 @@ class TableWidget extends Component {
     if (! (_.get(settings,'tables_columns.length'))) {
       return <div children="Please Add Column"/>
     }
-    const TableComponent = this.props.element.getSettings('table_2_0') ? AltrpTableWithoutUpdate : AltrpTable;
+    const TableComponent = this.element.getSettings('table_2_0') ? AltrpTableWithoutUpdate : AltrpTable;
     return <Scrollbars
         ref={this.scrollbar}
         style={{zIndex: 99999}}
@@ -94,12 +94,12 @@ class TableWidget extends Component {
     ><React.Suspense fallback={''}>
       <TableComponent query={query}
                       updateToken={this.props.updateToken}
-                      widgetId={this.props.element.getId()}
+                      widgetId={this.element.getId()}
                       widgetState={this.state.widgetState}
                       currentModel={this.props.currentModel}
                       currentScreen={this.props.currentScreen}
                       data={data || query.getFromModel(this.state.modelData)}
-                      settings={this.props.element.getSettings()}/>
+                      settings={this.element.getSettings()}/>
     </React.Suspense>
     </Scrollbars>;
   }

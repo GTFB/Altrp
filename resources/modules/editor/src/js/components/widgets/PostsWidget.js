@@ -28,7 +28,7 @@ class PostsWidget extends Component {
    * @return {boolean}
    */
   showPosts(query = {}){
-    if( this.props.element.getSettings('choose_datasource') === 'datasource' ){
+    if( this.element.getSettings('choose_datasource') === 'datasource' ){
       return true;
     }
     if(! query.modelName && ! query.dataSource){
@@ -40,21 +40,21 @@ class PostsWidget extends Component {
     if(! this.props.currentModel.getProperty('altrpModelUpdated')){
       return '';
     }
-    let query = new Query(this.props.element.getSettings().table_query || {}, this);
+    let query = new Query(this.element.getSettings().table_query || {}, this);
     if(! this.showPosts(query)){
       return <div children="Please Choose Source"/>
     }
     let data = query.getFromModel(this.state.modelData) || [];
-    if(this.props.element.getSettings('choose_datasource') === 'datasource') {
-      let path = this.props.element.getSettings('posts_datasource', '');
+    if(this.element.getSettings('choose_datasource') === 'datasource') {
+      let path = this.element.getSettings('posts_datasource', '');
       path = path.replace(/}}/g, '').replace(/{{/g, '');
-      data = getDataByPath(path, [], this.props.element.getCurrentModel().getData());
+      data = getDataByPath(path, [], this.element.getCurrentModel().getData());
     }
     return <this.state.PostsComponent query={query}
                                       currentModel={this.props.currentModel}
                                       data={data}
-                                      element={this.props.element}
-                                      settings={this.props.element.getSettings()}/>;
+                                      element={this.element}
+                                      settings={this.element.getSettings()}/>;
   }
 }
 

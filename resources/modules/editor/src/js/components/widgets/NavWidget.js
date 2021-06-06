@@ -19,19 +19,19 @@ class NavWidget extends Component {
 
   render() {
     let content;
-    let modelData = this.props.element.hasCardModel()
-      ? this.props.element.getCardModel().getData()
+    let modelData = this.element.hasCardModel()
+      ? this.element.getCardModel().getData()
       : this.props.currentModel.getData();
 
-    switch (this.props.element.getContent("type_type", "menu")) {
+    switch (this.element.getContent("type_type", "menu")) {
       case "menu":
         content = <AltrpMenu modelData={modelData}
                              currentScreen={this.props.currentScreen}
                              modelId={this.getModelId()}
-                             element={this.props.element}/>;
+                             element={this.element}/>;
         break;
       case "breadCrumbs":
-        content = <AltrpBreadcrumbs element={this.props.element} />;
+        content = <AltrpBreadcrumbs element={this.element} />;
         break
     }
 

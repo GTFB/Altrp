@@ -19,10 +19,10 @@ class DividerWidget extends Component {
     let styleSeparator = {};
     let labelStyle = {};
 
-    let borderColor = this.props.element.getResponsiveSetting("divider_style_color", null, { color: "#000" }).color;
-    let borderWidth = this.props.element.getResponsiveSetting("divider_style_weight", null, { size: 1 }).size + "px";
-    let imageSize = this.props.element.getResponsiveSetting("divider_style_size", null, { size: 20 }).size + "px";
-    let imageAmount =  this.props.element.getResponsiveSetting("divider_style_amount", null, { size: 20 }).size + "px";
+    let borderColor = this.element.getResponsiveSetting("divider_style_color", null, { color: "#000" }).color;
+    let borderWidth = this.element.getResponsiveSetting("divider_style_weight", null, { size: 1 }).size + "px";
+    let imageSize = this.element.getResponsiveSetting("divider_style_size", null, { size: 20 }).size + "px";
+    let imageAmount =  this.element.getResponsiveSetting("divider_style_amount", null, { size: 20 }).size + "px";
 
     switch (this.state.settings.divider_style_type) {
       case "solid":
@@ -62,7 +62,7 @@ class DividerWidget extends Component {
         break;
     }
 
-    let dividerAlignment = this.props.element.getResponsiveSetting("divider_alignment", null, "center");;
+    let dividerAlignment = this.element.getResponsiveSetting("divider_alignment", null, "center");;
     switch (dividerAlignment) {
       case "left":
         styleSeparator = {

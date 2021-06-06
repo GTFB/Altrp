@@ -126,11 +126,11 @@
   window.pageStorage = {};
   window.ALTRP_DEBUG = {!! json_encode( ! ! get_altrp_setting( 'altrp_debug', false ) ) !!};
   window.ALTRP_LOAD_BY_USER = {!! json_encode( ! ! get_altrp_setting( 'altrp_user_load', false ) ) !!};
-  var page_id = {{ $page_id }};
+  window.page_id = {{ $page_id }};
   window.page_areas = {!! $page_areas !!};
   window.lazySections = {!! $lazy_sections !!};
-  if (typeof page_id !== 'undefined' && typeof page_areas !== 'undefined') {
-    window.pageStorage[page_id] = {areas:page_areas};
+  if (typeof window.page_id !== 'undefined' && typeof page_areas !== 'undefined') {
+    window.pageStorage[window.page_id] = {areas:page_areas};
   }
   window.altrpImageLazy = '{{ get_altrp_setting( 'altrp_image_lazy', 'none' ) }}';
   window.altrpSkeletonColor = '{{ get_altrp_setting( 'altrp_skeleton_color', '#ccc' ) }}';
@@ -157,6 +157,12 @@
     /* ]]> */
   </script>
 @endif
+
+<script>
+  /* <![CDATA[ */
+  {!! $altrp_renders !!}
+    /* ]]> */
+</script>
 <link rel="stylesheet" href="/modules/front-app/front-app.css?{{getCurrentVersion()}}">
 
 </body>

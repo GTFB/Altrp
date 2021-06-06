@@ -568,6 +568,12 @@ foreach ($reports_routes as $report_route) {
 Route::group(['prefix' => 'ajax'], function () {
 
   /**
+   * Шбалон в виде JS
+   */
+
+  Route::get('app/{page_id}', "Frontend\PageController@app")->name('page.app');
+
+  /**
    * Роут текущий пользователь
    */
   Route::get('current-user', "Users\Users@getCurrentUser")->name('users.current-user');

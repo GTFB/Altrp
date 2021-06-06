@@ -81,7 +81,9 @@ class AreaComponent extends Component {
     if(this.props.area.isCustomArea()){
       classes = classes.concat(this.props.area.getAreaClasses())
     }
-
+    if(window.altrpRenders && window.altrpRenders[`rootRender${this.rootElement.getId()}`]){
+      return window.altrpRenders[`rootRender${this.rootElement.getId()}`]();
+    }
     return React.createElement('div', {
       className:classes.join(" "),
     }, React.createElement(this.rootElement.componentClass, {

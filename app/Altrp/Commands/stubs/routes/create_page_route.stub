@@ -50,6 +50,7 @@ Route::get({{frontend_route}}, function ({{params}}) {
     'preload_content' => $preload_content,
     'model_data' => $model_data,
     'datasources' => $datasources,
+    'altrp_renders' => \App\Page::getPageRenders( $_frontend_route['id'] ),
     'is_admin' => isAdmin(),
   ]);
 })->middleware(['web', 'installation.checker', 'after'])->name( 'page_' . {{page_id}});

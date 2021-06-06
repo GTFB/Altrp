@@ -18,7 +18,7 @@ import { addResponseData } from "./store/responses-storage/actions";
 import {getOffsetTopInElement} from "./helpers/elements";
 import Area from "./classes/Area";
 export function getRoutes() {
-  return import("./classes/Routes.js");
+  return import(/* webpackChunkName: 'Routes.js' */"./classes/Routes.js");
 }
 
 export function isSSR(){

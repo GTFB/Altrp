@@ -7,16 +7,21 @@ import Animating from "../altrp-heading/Animating";
 class HeadingWidget extends Component {
   constructor(props) {
     super(props);
+    let {element, elementId, baseRender} = props;
+    if(! element && elementId && window.altrpElements[elementId || '']){
+      element = window.altrpElements[elementId || ''];
+    }
     this.state = {
-      settings: props.element.getSettings()
+      settings: element?.getSettings() || {},
     };
-    props.element.component = this;
+    element.component = this;
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    if(props.baseRender){
-      this.render = props.baseRender(this);
+    if(baseRender){
+      this.render = baseRender(this);
     }
+    this.element = element;
   }
 
   render() {
@@ -25,11 +30,11 @@ class HeadingWidget extends Component {
       Loading...
     </div>;
 
-    switch (this.props.element.getSettings("type", 'heading')) {
+    switch (this.element.getSettings("type", 'heading')) {
       case "heading":
 
-        let modelData = this.props.element.getCurrentModel().getData();
-        const  background_image = this.props.element.getSettings('background_image', {});
+        let modelData = this.element.getCurrentModel().getData();
+        const  background_image = this.element.getSettings('background_image', {});
         let text = this.getContent('text');
         let link;
         const className = "altrp-heading altrp-heading--link " +
@@ -155,7 +160,7 @@ class HeadingWidget extends Component {
 
           let classes = "altrp-heading-advanced";
 
-          if(this.props.element.getSettings("main_fill_advanced_heading_style")) {
+          if(this.element.getSettings("main_fill_advanced_heading_style")) {
             classes += " altrp-heading-advanced-main-fill"
           }
           advancedHeading = (
@@ -267,5 +272,5 @@ class HeadingWidget extends Component {
     return heading
   }
 }
-
+(window.altrpComponents = window.altrpComponents || {})['HeadingWidget'] = HeadingWidget;
 export default HeadingWidget

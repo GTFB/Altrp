@@ -161,7 +161,7 @@ class MenuWidget extends Component {
     }
     this.loading = true;
     const menus = appStore.getState().altrpMenus;
-    let menuGUID = this.props.element.getResponsiveSetting('menu')
+    let menuGUID = this.element.getResponsiveSetting('menu')
     let menuData = menus.find(menu => menu.guid === menuGUID)
     if (!menuData) {
       menuData = await getMenuByGUID(menuGUID);
@@ -207,7 +207,7 @@ class MenuWidget extends Component {
       return null;
     }
     return <Menu className={this.getMenuClasses()}>
-      <GlobalStyles {...this.props} settings={this.props.element.getSettings()} elementId={this.elementId}/>
+      <GlobalStyles {...this.props} settings={this.element.getSettings()} elementId={this.elementId}/>
       {/*{menuData.children.map(child)}*/}
       {this.renderSubItems(menuData.children, 1)}
     </Menu>
@@ -292,7 +292,7 @@ class MenuWidget extends Component {
   }
 
   render() {
-    let type = this.props.element.getResponsiveSetting('type')
+    let type = this.element.getResponsiveSetting('type')
     switch (type) {
       case 'horizontal': {
         return this.renderVerticalMenu()

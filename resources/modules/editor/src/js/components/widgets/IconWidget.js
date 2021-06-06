@@ -75,7 +75,7 @@ class IconWidget extends Component {
           name: "arrow",
           iconComponent: iconsManager.renderIcon("arrow")
         }}
-        element={this.props.element}
+        element={this.element}
         style={pos}
         image={this.state.settings.icon_indicator_content}
         className="altrp-icon-indicator"
@@ -151,8 +151,8 @@ class IconWidget extends Component {
     let bodyStyles = {};
     let footerStyles = {};
     let headerStyles = {};
-    let bodyAlignment = this.props.element.getSettings("header_alignment_content_style", "center");
-    let footerAligment = this.props.element.getSettings("description_alignment_content_style", "center");
+    let bodyAlignment = this.element.getSettings("header_alignment_content_style", "center");
+    let footerAligment = this.element.getSettings("description_alignment_content_style", "center");
 
     switch (this.state.settings.icon_position_desktop_position_style) {
       case "row":
@@ -243,7 +243,7 @@ class IconWidget extends Component {
       let ReadMoreIcon = (props) => Object.keys(this.state.settings.icon_read_more_content).length !== 0 ? (
         <AltrpImage
           image={this.state.settings.icon_read_more_content}
-          element={this.props.element}
+          element={this.element}
           className={"altrp-icon-read-more-icon" + " altrp-icon-read-more-icon-" + props.pos}
         />
       ) : "";
@@ -311,7 +311,7 @@ class IconWidget extends Component {
             <div className="altrp-icon-i-wrapper">
               <AltrpImage
                 image={this.state.settings.media_icon_box_content}
-                element={this.props.element}
+                element={this.element}
                 default={{
                   assetType: "icon",
                   name: 'star',

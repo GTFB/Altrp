@@ -125,6 +125,7 @@ class Handler extends ExceptionHandler
         ){
           logger('URL:' . $request->url());
           $preload_content = Page::getPreloadPageContent( $not_found_page['id'] );
+          $preload_content['content'] = replaceContentWithData( $preload_content['content'] );
           $lazy_sections = [];
           $page_areas = Page::get_areas_for_page( $not_found_page['id'] );
           $elements_list = extractElementsNames( $page_areas );
@@ -139,6 +140,7 @@ class Handler extends ExceptionHandler
             'preload_content' => $preload_content,
             'pages'=>Page::get_pages_for_frontend( true ),
             'model_data' => null,
+            'altrp_renders' => Page::getPageRenders( $not_found_page['id'] ),
             'is_admin' => isAdmin(),
           ]), 200 );
         }

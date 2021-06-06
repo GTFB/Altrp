@@ -25,7 +25,7 @@ class MapConstructorWidget extends Component {
   render() {
     return (
       <Suspense fallback={"Loading"}>
-        <AltrpMap settings={this.state.settings} id={this.props.element.id} />
+        <AltrpMap settings={this.state.settings} id={this.element.id} />
       </Suspense>
     );
   }

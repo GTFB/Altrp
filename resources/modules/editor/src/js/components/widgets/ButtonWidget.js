@@ -15,18 +15,21 @@ import { toggleTrigger } from "../../../../../front-app/src/js/store/hide-trigge
 class ButtonWidget extends Component {
   constructor(props) {
     super(props);
+    let {element, elementId, baseRender} = props;
+    if(! element && elementId && window.altrpElements[elementId || '']){
+      element = window.altrpElements[elementId || ''];
+    }
     this.state = {
-      settings: props.element.getSettings(),
-      pending: false
+      settings: element?.getSettings() || {},
     };
-    props.element.component = this;
+    element.component = this;
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    if(props.baseRender){
-      this.render = props.baseRender(this);
+    if(baseRender){
+      this.render = baseRender(this);
     }
-    this.onClick = this.onClick.bind(this);
+    this.element = element;
   }
   /**
    * Компонент удаляется со страницы
@@ -45,7 +48,7 @@ class ButtonWidget extends Component {
    * @param e
    * @return {Promise<void>}
    */
-  async onClick(e) {
+  onClick = async (e) =>{
     e.persist();
     if (isEditor()) {
       e.preventDefault();

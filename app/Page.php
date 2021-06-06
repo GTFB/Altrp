@@ -36,6 +36,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Page extends Model
 {
   //
+  protected static $react_components = [];
+
   use SoftDeletes, Searchable;
   protected $fillable = [
     'title',
@@ -702,9 +704,9 @@ class Page extends Model
       'content' => '',
       'important_styles' => '',
     ];
-//    if (1) {
-//      return $result;
-//    }
+    if (1) {
+      return $result;
+    }
     if ( ! $page_id ) {
       return $result;
     }
@@ -971,4 +973,110 @@ class Page extends Model
   static public function getPageModel(){
 
   }
+
+  /**
+   * @return string
+   */
+  public function getAppString(){
+    $app = 'window.altrpRenders = window.altrpRenders || {};';
+
+    $areas = self::get_areas_for_page( $this->id );
+    foreach ( $areas as $area ) {
+      $template_data = data_get( $area, 'template.data' );
+      $app .=
+        'window.altrpRenders["rootRender' . data_get( $template_data, 'id', '' ) . '"] = function rootRender' .
+        data_get( $template_data, 'id', '' ) .
+        '(){return React.createElement(window.altrpComponents.RootComponent,{elementId:' .
+        self::renderElementId( data_get( $template_data, 'id' ) ) .
+        ',key:' .
+        self::renderElementId( data_get( $template_data, 'id' ) ) .
+        '},' . self::renderChildrenApp( data_get( $template_data, 'children', '""' ) ) . ');};';
+    }
+    return $app;
+  }
+  /**
+   * @return []
+   */
+  public function getAreaRenders(){
+    $renders = [];
+
+    $areas = self::get_areas_for_page( $this->id );
+    foreach ( $areas as $area ) {
+      $template_data = data_get( $area, 'template.data' );
+      $renders[] =
+        'function rootRender' .
+        data_get( $template_data, 'id', '' ) .
+        '(){return React.createElement(RootComponent,{elementId:' .
+        self::renderElementId( data_get( $template_data, 'id' ) ) . ',key:' .
+        self::renderElementId( data_get( $template_data, 'id' ) ) .
+        '},' . self::renderChildrenApp( data_get( $template_data, 'children', '""' ) ) . ');}';
+    }
+    return $renders;
+  }
+
+  /**
+   * @param array $children
+   * @return string
+   */
+  static private function renderChildrenApp( $children = []){
+    $app = '[';
+    if( is_string( $children ) ){
+      return $children;
+    }
+    foreach ( $children as $child ) {
+      $app .=
+        'React.createElement(' . self::getComponentName( $child['name'] ) .
+        ',{elementId:' .
+        self::renderElementId( data_get( $child, 'id' ) ) . ',key:' .
+        self::renderElementId( data_get( $child, 'id' ) ) .
+        '},' . self::renderChildrenApp( $child['children'] ) . '),';
+    }
+    $app .= ']';
+    return $app;
+  }
+
+  /**
+   * @param string $element_name
+   * @return string
+   */
+  static private function getComponentName( $element_name = '' ){
+    if( ! $element_name ){
+      return '"div"';
+    }
+    if( empty( self::$react_components ) ){
+      $react_components = File::get( resource_path( 'react-components.json' ) );
+      $react_components = json_decode( $react_components, true );
+      self::$react_components = $react_components;
+    }
+    return data_get( self::$react_components, 'window.altrpComponents.' . $element_name, '"div"');
+  }
+
+  /**
+   * @param $id
+   * @return string
+   */
+  private static function renderElementId( $id )
+  {
+    if(! $id ){
+      return 'null';
+    }
+    return "\"$id\"";
+  }
+
+  /**
+   * @param $page_id
+   * @return string
+   */
+  static public function getPageRenders( $page_id ){
+    /**
+     * @var $page Page
+     */
+    $page = self::find( $page_id );
+    if( ! $page ){
+      return '';
+    }
+
+    return $page->getAppString();
+  }
+
 }

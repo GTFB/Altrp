@@ -33,9 +33,9 @@ class CarouselWidget extends Component {
 
   render(){
     const carouselProps = {
-      ...this.props.element.getSettings(),
+      ...this.element.getSettings(),
       currentScreen: this.props.currentScreen,
-      elementId: this.props.element.getId(),
+      elementId: this.element.getId(),
     };
     if(isClassComponent(this.state.AltrpCarousel)){
       carouselProps.ref = this.carousel;

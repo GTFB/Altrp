@@ -16,12 +16,12 @@ function componentWillUnmount(){
   // if(this.model){
   //   this.model.uns
   // }
-  window.actionsManager && actionsManager.unregisterWidgetActions(this.props.element.getIdForAction());
-  if(! this.props.element.dynamicContentSettings){
+  window.actionsManager && actionsManager.unregisterWidgetActions(this.element.getIdForAction());
+  if(! this.element.dynamicContentSettings){
     return
   }
-  this.props.element.dynamicContentSettings.forEach(modelsSetting=>{
-    let modelInfo = this.props.element.getModelsInfoByModelName(modelsSetting.modelName);
+  this.element.dynamicContentSettings.forEach(modelsSetting=>{
+    let modelInfo = this.element.getModelsInfoByModelName(modelsSetting.modelName);
     if(modelInfo && ! modelInfo.relation) {
       modelManager.unsubscribe(modelInfo.modelName, modelInfo.modelId ||this.getModelId(), this);
     } else if( modelInfo && modelInfo.relation ){
@@ -113,12 +113,12 @@ function subscribeToModels(id){
   /**
    * ЕСли в элементе нет настроек для динамического контента, то на изменения моделей не подписываемся
    */
-  if(! this.props.element.dynamicContentSettings){
+  if(! this.element.dynamicContentSettings){
     return
   }
 
-  this.props.element.dynamicContentSettings.forEach(modelsSetting=>{
-    let modelInfo = this.props.element.getModelsInfoByModelName(modelsSetting.modelName);
+  this.element.dynamicContentSettings.forEach(modelsSetting=>{
+    let modelInfo = this.element.getModelsInfoByModelName(modelsSetting.modelName);
     if(modelInfo && ! modelInfo.relation) {
       this.model = modelManager.subscribeToModelUpdates(modelInfo.modelName, modelInfo.modelId || id, this);
     } else if( modelInfo && modelInfo.relation ){
@@ -145,10 +145,10 @@ function getContent(settingName, returnRaw = false) {
   /**
    * @member {FrontElement} element
    */
-  const element = this.props.element;
- // return this.props.element.getContent(settingName);
+  const element = this.element;
+ // return this.element.getContent(settingName);
 
-  let content = this.props.element.getSettings(settingName);
+  let content = this.element.getSettings(settingName);
   if(content && content.dynamic && this.props.currentModel.getProperty('altrpModelUpdated')){
     // console.log(element.getRoot());
     let model = element.hasCardModel() ? element.getCardModel() : this.props.currentModel;
@@ -159,7 +159,7 @@ function getContent(settingName, returnRaw = false) {
     let model = element.hasCardModel() ? element.getCardModel() : this.props.currentModel;
 
      if(settingName === 'content_default_value' && _.isString(content) && content.indexOf('{{{') !== -1){
-      let context = this.props.element.getCurrentModel().getData();
+      let context = this.element.getCurrentModel().getData();
       context = prepareContext(context);
       let replacedContent = content
           .replace(/}}}/g, "')")
@@ -183,7 +183,7 @@ function getContent(settingName, returnRaw = false) {
        content = replaceContentWithData(content, model);
      }
 
-    const contentDynamicSetting = this.props.element.getDynamicSetting(settingName);
+    const contentDynamicSetting = this.element.getDynamicSetting(settingName);
 
     if(contentDynamicSetting){
       const converter = getConverter(contentDynamicSetting);
@@ -205,7 +205,7 @@ function componentDidMount() {
   if(typeof this._componentDidMount === 'function'){
     this._componentDidMount();
   }
-  if(this.props.element.lastElement){
+  if(this.element.lastElement){
     const renderEvent = new Event('render-altrp');
     window.dispatchEvent(renderEvent);
   }
@@ -221,9 +221,9 @@ function componentDidMount() {
  * @params {{}} prevState
  */
 function componentDidUpdate(prevProps, prevState) {
-  if(this.props.element !== prevProps.element){
+  if(this.element !== prevProps.element){
     // console.log('updated');
-    this.setState(state => ({...state, children: this.props.element.children}));
+    this.setState(state => ({...state, children: this.element.children}));
   }
   if(_.isFunction(this._componentDidUpdate)){
     this._componentDidUpdate(prevProps, prevState);
