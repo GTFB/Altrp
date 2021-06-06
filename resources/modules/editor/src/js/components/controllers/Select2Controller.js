@@ -156,7 +156,6 @@ class Select2Controller extends Component {
         padding: 5,
         height: 20
       }),
-
       menu: () => ({
         margin: 0,
         padding: 0,
@@ -244,14 +243,14 @@ class Select2Controller extends Component {
       onChange: this.change,
       onInputChange: this.change,
       options: this.state.options,
-      styles: customStyles,
+      // styles: customStyles,
       placeholder: this.props.placeholder,
       loadOptions: this.loadOptions,
       noOptionsMessage: () => "no found",
       value,
       isMulti: this.props.isMulti,
       closeMenuOnSelect: !this.props.isMulti,
-      isClearable: this.props.isClearable
+      isClearable: this.props.isClearable,
       // menuIsOpen: true,
     };
     let SelectComponent = Select;
