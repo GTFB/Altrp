@@ -14,186 +14,291 @@ import {
 const TextComponent = styled.div`
   && .altrp-text {
 
-  ${props => {
-    const { settings } = props;
-    let styles = '';
+    ${props => {
+      const { settings } = props;
+      let styles = '';
 
-    let columnCount, columnGap, padding, margin, typographic, color, borderStyle, borderWidth, borderColor, borderRadius, zIndex, backgroundColor, opacity;
+      let columnCount, columnGap, padding, margin, typographic, color, borderStyle, borderWidth, borderColor, borderRadius, zIndex, backgroundColor, opacity;
 
-    //Получаем значения column-count из контроллера, обрабатываем и добавляем в styles
+      //Получаем значения column-count из контроллера, обрабатываем и добавляем в styles
 
-    if (settings !== undefined) {
-      columnCount = getResponsiveSetting(settings, 'text_style_column-count');
-    }
+      if (settings !== undefined) {
+        columnCount = getResponsiveSetting(settings, 'text_style_column-count');
+      }
 
-    if (columnCount) {
-      styles += simplePropertyStyled(columnCount, 'column-count');
-    }
+      if (columnCount) {
+        styles += simplePropertyStyled(columnCount, 'column-count');
+      }
 
-    //Получаем значения column-gap из контроллера, обрабатываем и добавляем в styles
+      //Получаем значения column-gap из контроллера, обрабатываем и добавляем в styles
 
-    if (settings !== undefined) {
-      columnGap = getResponsiveSetting(settings, 'text_style_column-gap');
-    }
+      if (settings !== undefined) {
+        columnGap = getResponsiveSetting(settings, 'text_style_column-gap');
+      }
 
-    if (columnGap) {
-      styles += columnGapStyled(columnGap);
-    }
+      if (columnGap) {
+        styles += columnGapStyled(columnGap);
+      }
 
-    //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+      //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
 
-    if (settings !== undefined) {
-      padding = getResponsiveSetting(settings, 'text_style_position_padding');
-    }
+      if (settings !== undefined) {
+        padding = getResponsiveSetting(settings, 'text_style_position_padding');
+      }
 
-    if (padding) {
-      styles += dimensionsControllerToStyles(padding);
-    }
+      if (padding) {
+        styles += dimensionsControllerToStyles(padding);
+      }
 
-    //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
+      //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
 
-    if (settings !== undefined) {
-      margin = getResponsiveSetting(settings, 'text_style_position_margin');
-    }
+      if (settings !== undefined) {
+        margin = getResponsiveSetting(settings, 'text_style_position_margin');
+      }
 
-    if (margin) {
-      styles += dimensionsControllerToStyles(margin, 'margin');
-    }
+      if (margin) {
+        styles += dimensionsControllerToStyles(margin, 'margin');
+      }
 
-    //Получаем значения z-index из контроллера, обрабатываем и добавляем в styles
+      //Получаем значения z-index из контроллера, обрабатываем и добавляем в styles
 
-    if (settings !== undefined) {
-      zIndex = getResponsiveSetting(settings, 'text_position_z_index');
-    }
+      if (settings !== undefined) {
+        zIndex = getResponsiveSetting(settings, 'text_position_z_index');
+      }
 
-    if (zIndex) {
-      styles += simplePropertyStyled(zIndex, 'z-index');
-    }
+      if (zIndex) {
+        styles += simplePropertyStyled(zIndex, 'z-index');
+      }
 
-    //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
 
-    if (settings !== undefined) {
-      backgroundColor = getResponsiveSetting(settings, 'text_style_background_color');
-    }
+      if (settings !== undefined) {
+        backgroundColor = getResponsiveSetting(settings, 'text_style_background_color');
+      }
 
-    if (backgroundColor) {
-      styles += colorPropertyStyled(backgroundColor, 'background-color');
-    }
+      if (backgroundColor) {
+        styles += colorPropertyStyled(backgroundColor, 'background-color');
+      }
 
-    //Получаем значения opacity из контроллера, обрабатываем и добавляем в styles
+      //Получаем значения opacity из контроллера, обрабатываем и добавляем в styles
 
-    if (settings !== undefined) {
-      opacity = getResponsiveSetting(settings, 'text_style_background_opacity');
-    }
+      if (settings !== undefined) {
+        opacity = getResponsiveSetting(settings, 'text_style_background_opacity');
+      }
 
-    if (opacity) {
-      styles += opacityStyled(opacity, 'opacity');
-    }
+      if (opacity) {
+        styles += opacityStyled(opacity, 'opacity');
+      }
 
-    //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
+      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
 
-    if (settings !== undefined) {
-      typographic = getResponsiveSetting(settings, 'text_style_font_typographic');
-    }
+      if (settings !== undefined) {
+        typographic = getResponsiveSetting(settings, 'text_style_font_typographic');
+      }
 
-    if (typographic) {
-      styles += typographicControllerToStyles(typographic);
-    }
+      if (typographic) {
+        styles += typographicControllerToStyles(typographic);
+      }
 
-    //Получаем значения color из контроллера, обрабатываем и добавляем в styles
-
-
-    if (settings !== undefined) {
-      color = getResponsiveSetting(settings, 'text_style_font_color');
-    }
-
-    if (color) {
-      styles += colorPropertyStyled(color, 'color');
-    }
-
-    //Получаем значения border-style из контроллера, обрабатываем и добавляем в styles
+      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
 
 
-    if (settings !== undefined) {
-      borderStyle = getResponsiveSetting(settings, 'text_style_border_type');
-    }
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'text_style_font_color');
+      }
 
-    if (borderStyle) {
-      styles += simplePropertyStyled(borderStyle, 'border-style');
-    }
+      if (color) {
+        styles += colorPropertyStyled(color, 'color');
+      }
 
-    //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
-
-
-    if (settings !== undefined) {
-      borderWidth = getResponsiveSetting(settings, 'text_style_border_width');
-    }
-
-    if (borderWidth) {
-      styles += borderWidthStyled(borderWidth);
-    }
-
-    //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
+      //Получаем значения border-style из контроллера, обрабатываем и добавляем в styles
 
 
-    if (settings !== undefined) {
-      borderColor = getResponsiveSetting(settings, 'text_style_border_color');
-    }
+      if (settings !== undefined) {
+        borderStyle = getResponsiveSetting(settings, 'text_style_border_type');
+      }
 
-    if (borderColor) {
-      styles += colorPropertyStyled(borderColor, 'border-color');
-    }
+      if (borderStyle) {
+        styles += simplePropertyStyled(borderStyle, 'border-style');
+      }
 
-    //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
+      //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
 
 
-    if (settings !== undefined) {
-      borderRadius = getResponsiveSetting(settings, 'text_style_border_radius');
-    }
+      if (settings !== undefined) {
+        borderWidth = getResponsiveSetting(settings, 'text_style_border_width');
+      }
 
-    if (borderRadius) {
-      styles += borderRadiusStyled(borderRadius);
-    }
+      if (borderWidth) {
+        styles += borderWidthStyled(borderWidth);
+      }
 
-    return styles;
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
+
+
+      if (settings !== undefined) {
+        borderColor = getResponsiveSetting(settings, 'text_style_border_color');
+      }
+
+      if (borderColor) {
+        styles += colorPropertyStyled(borderColor, 'border-color');
+      }
+
+      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
+
+
+      if (settings !== undefined) {
+        borderRadius = getResponsiveSetting(settings, 'text_style_border_radius');
+      }
+
+      if (borderRadius) {
+        styles += borderRadiusStyled(borderRadius);
+      }
+
+      return styles;
+
+      }
+      }
+  }
+
+  && .altrp-text:hover {
+
+    ${props => {
+      const { settings } = props;
+      let styles = '';
+
+      let columnCount, padding, margin, typographic, color, borderStyle, borderWidth, borderColor, borderRadius, zIndex, backgroundColor, opacity;
+
+      //Получаем значения column-count из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        columnCount = getResponsiveSetting(settings, 'text_style_column-count', ':hover');
+      }
+
+      if (columnCount) {
+        styles += simplePropertyStyled(columnCount, 'column-count');
+      }
+
+      //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        padding = getResponsiveSetting(settings, 'text_style_position_padding', ':hover');
+      }
+
+      if (padding) {
+        styles += dimensionsControllerToStyles(padding);
+      }
+
+      //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        margin = getResponsiveSetting(settings, 'text_style_position_margin', ':hover');
+      }
+
+      if (margin) {
+        styles += dimensionsControllerToStyles(margin, 'margin');
+      }
+
+      //Получаем значения z-index из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        zIndex = getResponsiveSetting(settings, 'text_position_z_index', ':hover');
+      }
+
+      if (zIndex) {
+        styles += simplePropertyStyled(zIndex, 'z-index');
+      }
+
+      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        backgroundColor = getResponsiveSetting(settings, 'text_style_background_color', ':hover');
+      }
+
+      if (backgroundColor) {
+        styles += colorPropertyStyled(backgroundColor, 'background-color');
+      }
+
+      //Получаем значения opacity из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        opacity = getResponsiveSetting(settings, 'text_style_background_opacity', ':hover');
+      }
+
+      if (opacity) {
+        styles += opacityStyled(opacity, 'opacity');
+      }
+
+      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        typographic = getResponsiveSetting(settings, 'text_style_font_typographic', ':hover');
+      }
+
+      if (typographic) {
+        styles += typographicControllerToStyles(typographic);
+      }
+
+      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
+
+
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'text_style_font_color', ':hover');
+      }
+
+      if (color) {
+        styles += colorPropertyStyled(color, 'color');
+      }
+
+      //Получаем значения border-style из контроллера, обрабатываем и добавляем в styles
+
+
+      if (settings !== undefined) {
+        borderStyle = getResponsiveSetting(settings, 'text_style_border_type', ':hover');
+      }
+
+      if (borderStyle) {
+        styles += simplePropertyStyled(borderStyle, 'border-style');
+      }
+
+      //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
+
+
+      if (settings !== undefined) {
+        borderWidth = getResponsiveSetting(settings, 'text_style_border_width', ':hover');
+      }
+
+      if (borderWidth) {
+        styles += borderWidthStyled(borderWidth);
+      }
+
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
+
+
+      if (settings !== undefined) {
+        borderColor = getResponsiveSetting(settings, 'text_style_border_color', ':hover');
+      }
+
+      if (borderColor) {
+        styles += colorPropertyStyled(borderColor, 'border-color');
+      }
+
+      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
+
+
+      if (settings !== undefined) {
+        borderRadius = getResponsiveSetting(settings, 'text_style_border_radius', ':hover');
+      }
+
+      if (borderRadius) {
+        styles += borderRadiusStyled(borderRadius);
+      }
+
+      return styles;
 
     }
     }
   }
-
-  /* && .altrp-tooltip {
-  ${props => {
-    const { settings } = props;
-    let styles = '';
-
-    //Получаем значения font-color из контроллера, обрабатываем и добавляем в styles
-
-    let fontColor;
-
-    if (settings !== undefined) {
-      fontColor = getResponsiveSetting(settings, 'tooltip_font_color');
-    }
-
-    if (fontColor) {
-      styles += colorPropertyStyled(fontColor, 'color');
-    }
-
-  //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
-
-  let typographic;
-
-  if (settings !== undefined) {
-    typographic = getResponsiveSetting(settings, 'tooltip_font_typographic');
-  }
-
-  if (typographic) {
-    styles += typographicControllerToStyles(typographic);
-  }
-
-    return styles;
-
-  }
-  } */
 
   & .altrp-text img{
     max-width: 100%;

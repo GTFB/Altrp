@@ -159,9 +159,9 @@ class Tabs extends BaseElement {
           value: 'space-between',
         },
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-tab-btn-container{{STATE}}': 'justify-content: {{VALUE}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-tab-btn-container{{STATE}}': 'justify-content: {{VALUE}};',
+      // },
     });
 
     this.addControl("spacing_column_tabs", {
@@ -174,10 +174,10 @@ class Tabs extends BaseElement {
       units: ["px", "%", "vh"],
       max: 100,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-tab-btn-column{{STATE}}": "margin-right: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-tab-btn-row{{STATE}}": "margin-bottom: {{SIZE}}{{UNIT}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tab-btn-column{{STATE}}": "margin-right: {{SIZE}}{{UNIT}}",
+      //   "{{ELEMENT}} .altrp-tab-btn-row{{STATE}}": "margin-bottom: {{SIZE}}{{UNIT}}"
+      // }
     });
 
     this.addControl("spacing_content_tabs", {
@@ -190,12 +190,12 @@ class Tabs extends BaseElement {
       units: ["px", "%", "vh"],
       max: 100,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-tab-btn-top{{STATE}}": "margin-bottom: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-tab-btn-bottom{{STATE}}": "margin-top: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-tab-btn-left{{STATE}}": "margin-right: {{SIZE}}{{UNIT}}",
-        "{{ELEMENT}} .altrp-tab-btn-right{{STATE}}": "margin-left: {{SIZE}}{{UNIT}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tab-btn-top{{STATE}}": "margin-bottom: {{SIZE}}{{UNIT}}",
+      //   "{{ELEMENT}} .altrp-tab-btn-bottom{{STATE}}": "margin-top: {{SIZE}}{{UNIT}}",
+      //   "{{ELEMENT}} .altrp-tab-btn-left{{STATE}}": "margin-right: {{SIZE}}{{UNIT}}",
+      //   "{{ELEMENT}} .altrp-tab-btn-right{{STATE}}": "margin-left: {{SIZE}}{{UNIT}}"
+      // }
     });
 
     this.endControlSection();
@@ -304,9 +304,9 @@ class Tabs extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tab-btn-container{{STATE}}": "background-color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tab-btn-container{{STATE}}": "background-color: {{COLOR}};"
+      // }
     });
 
     this.addControl("background_type_tab_style", {
@@ -316,9 +316,9 @@ class Tabs extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "background-color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "background-color: {{COLOR}};"
+      // }
     });
 
     this.addControl("background_text_color_tab_style", {
@@ -328,9 +328,9 @@ class Tabs extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "color: {{COLOR}};"
+      // }
     });
 
     this.addControl('box_shadow_tab_style', {
@@ -347,9 +347,9 @@ class Tabs extends BaseElement {
         colorPickedHex: '#000000',
         type: ""
       },
-      rules: {
-        '{{ELEMENT}} .altrp-tab-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-tab-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      // },
     }
     );
 
@@ -364,14 +364,14 @@ class Tabs extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-tab-btn{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tab-btn{{STATE}}": [
+      //     "padding-top: {{TOP}}{{UNIT}};",
+      //     "padding-right: {{RIGHT}}{{UNIT}};",
+      //     "padding-bottom: {{BOTTOM}}{{UNIT}};",
+      //     "padding-left: {{LEFT}}{{UNIT}};"
+      //   ]
+      // }
     });
 
     this.addControl("border_type_tab_style", {
@@ -404,19 +404,19 @@ class Tabs extends BaseElement {
           label: "Groove"
         }
       ],
-      rules: {
-        "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "border-style: {{VALUE}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "border-style: {{VALUE}};"
+      // }
     });
 
     this.addControl("border_width_tab_style", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-tab-btn{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tab-btn{{STATE}}":
+      //     "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      // }
     });
 
     this.addControl("border_color_tab_style", {
@@ -426,9 +426,9 @@ class Tabs extends BaseElement {
         // color: "rgb(50,168,82)",
         // colorPickedHex: "#32a852"
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "border-color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "border-color: {{COLOR}};"
+      // }
     });
 
     this.addControl("border_radius_tab_style", {
@@ -445,9 +445,9 @@ class Tabs extends BaseElement {
       ],
       max: 100,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tab-btn{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
+      // }
     });
 
     this.addControl('typographic_tab_style', {
@@ -461,18 +461,18 @@ class Tabs extends BaseElement {
         family: "Open Sans",
         decoration: ""
       },
-      rules: {
-        '{{ELEMENT}} .altrp-tab-btn{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-tab-btn{{STATE}}': [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
     }
     );
 
@@ -491,9 +491,9 @@ class Tabs extends BaseElement {
         colorPickedHex: "",
       },
       presetColors: ["#eaeaea", "#9c18a8"],
-      rules: {
-        "{{ELEMENT}} .altrp-tab-content{{STATE}}": "background-color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tab-content{{STATE}}": "background-color: {{COLOR}};"
+      // }
     });
 
     this.addControl("text_color_content_style", {
@@ -504,9 +504,9 @@ class Tabs extends BaseElement {
         colorPickedHex: "",
       },
       presetColors: ["#eaeaea", "#9c18a8"],
-      rules: {
-        "{{ELEMENT}} .altrp-tab-content div{{STATE}}": "color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tab-content div{{STATE}}": "color: {{COLOR}};"
+      // }
     });
 
     this.addControl("padding_content_style", {
@@ -520,14 +520,14 @@ class Tabs extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-tab-content{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tab-content{{STATE}}": [
+      //     "padding-top: {{TOP}}{{UNIT}};",
+      //     "padding-right: {{RIGHT}}{{UNIT}};",
+      //     "padding-bottom: {{BOTTOM}}{{UNIT}};",
+      //     "padding-left: {{LEFT}}{{UNIT}};"
+      //   ]
+      // }
     });
 
     this.addControl("border_type_content_style", {
@@ -560,19 +560,19 @@ class Tabs extends BaseElement {
           label: "Groove"
         }
       ],
-      rules: {
-        "{{ELEMENT}} .altrp-tab-content{{STATE}}": "border-style: {{VALUE}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tab-content{{STATE}}": "border-style: {{VALUE}};"
+      // }
     });
 
     this.addControl("border_width_content_style", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-tab-content{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tab-content{{STATE}}":
+      //     "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      // }
     });
 
     this.addControl("border_color_content_style", {
@@ -582,9 +582,9 @@ class Tabs extends BaseElement {
         color: "rgb(50,168,82)",
         colorPickedHex: "#32a852"
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tab-content{{STATE}}": "border-color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tab-content{{STATE}}": "border-color: {{COLOR}};"
+      // }
     });
 
     this.addControl("border_radius_content_style", {
@@ -601,9 +601,9 @@ class Tabs extends BaseElement {
       ],
       max: 100,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-tab-content{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tab-content{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
+      // }
     });
 
     this.addControl('typographic_content_style', {
@@ -617,18 +617,18 @@ class Tabs extends BaseElement {
         family: "Open Sans",
         decoration: ""
       },
-      rules: {
-        '{{ELEMENT}} .altrp-tab-content div{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-tab-content div{{STATE}}': [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
     }
     );
 
@@ -662,9 +662,9 @@ class Tabs extends BaseElement {
         color: "rgb(50,168,82)",
         colorPickedHex: "#32a852"
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tab-btn-icon{{STATE}} svg path": "fill: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tab-btn-icon{{STATE}} svg path": "fill: {{COLOR}};"
+      // }
     });
 
     this.addControl("spacing_icon_style", {
@@ -693,9 +693,9 @@ class Tabs extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tabs-switcher_off": "background: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tabs-switcher_off": "background: {{COLOR}};"
+      // }
     });
 
     this.addControl("box_around_color_before_switch_button_style", {
@@ -705,9 +705,9 @@ class Tabs extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tabs-switcher_on": "background: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tabs-switcher_on": "background: {{COLOR}};"
+      // }
     });
 
     this.addControl("switch_after_color_switch_button_style", {
@@ -717,9 +717,9 @@ class Tabs extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tabs-switcher__caret": "background: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tabs-switcher__caret": "background: {{COLOR}};"
+      // }
     });
 
     this.addControl("switch_before_color_switch_button_style", {
@@ -729,9 +729,9 @@ class Tabs extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tabs-switcher_on .altrp-tabs-switcher__caret": "background: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tabs-switcher_on .altrp-tabs-switcher__caret": "background: {{COLOR}};"
+      // }
     });
 
     // https://prnt.sc/tk4s77
@@ -745,9 +745,9 @@ class Tabs extends BaseElement {
       },
       max: 100,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-tabs-switcher-container": "font-size: {{SIZE}}{{UNIT}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tabs-switcher-container": "font-size: {{SIZE}}{{UNIT}}"
+      // }
     });
 
     this.addControl("spacing_switch_button_style", {
@@ -759,12 +759,12 @@ class Tabs extends BaseElement {
       },
       max: 100,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-tabs-switcher": [
-          "margin-left: {{SIZE}}{{UNIT}}",
-          "margin-right: {{SIZE}}{{UNIT}}",
-        ]
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tabs-switcher": [
+      //     "margin-left: {{SIZE}}{{UNIT}}",
+      //     "margin-right: {{SIZE}}{{UNIT}}",
+      //   ]
+      // }
     });
 
     this.addControl("margin_bottom_switch_button_style", {
@@ -776,9 +776,9 @@ class Tabs extends BaseElement {
       },
       max: 100,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-tabs-switcher-container": "margin-bottom: {{SIZE}}{{UNIT}}",
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tabs-switcher-container": "margin-bottom: {{SIZE}}{{UNIT}}",
+      // }
     });
 
     this.addControl('border_radius_box_switch_button_style', {
@@ -795,9 +795,9 @@ class Tabs extends BaseElement {
       ],
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-tabs-switcher': 'border-radius: {{SIZE}}{{UNIT}}',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-tabs-switcher': 'border-radius: {{SIZE}}{{UNIT}}',
+      // },
     });
 
     this.addControl('border_radius_switch_switch_button_style', {
@@ -814,9 +814,9 @@ class Tabs extends BaseElement {
       ],
       max: 100,
       min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-tabs-switcher__caret': 'border-radius: {{SIZE}}{{UNIT}}',
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-tabs-switcher__caret': 'border-radius: {{SIZE}}{{UNIT}}',
+      // },
     });
     this.endControlSection();
 
@@ -841,18 +841,18 @@ class Tabs extends BaseElement {
         family: "Open Sans",
         decoration: ""
       },
-      rules: {
-        '{{ELEMENT}} .altrp-tabs-switcher-label-section-one': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-tabs-switcher-label-section-one': [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
     }
     );
 
@@ -863,9 +863,9 @@ class Tabs extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tabs-switcher-label-section-one": "color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tabs-switcher-label-section-one": "color: {{COLOR}};"
+      // }
     });
 
     this.addControl('heading_content_section_one_style', {
@@ -884,18 +884,18 @@ class Tabs extends BaseElement {
         family: "Open Sans",
         decoration: ""
       },
-      rules: {
-        '{{ELEMENT}} .altrp-tabs-switcher-section-one-text p': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-tabs-switcher-section-one-text p': [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
     }
     );
 
@@ -906,9 +906,9 @@ class Tabs extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tabs-switcher-section-one-text": "color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tabs-switcher-section-one-text": "color: {{COLOR}};"
+      // }
     });
 
     this.endControlSection();
@@ -934,18 +934,18 @@ class Tabs extends BaseElement {
         family: "Open Sans",
         decoration: ""
       },
-      rules: {
-        '{{ELEMENT}} .altrp-tabs-switcher-label-section-two': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-tabs-switcher-label-section-two': [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
     }
     );
 
@@ -956,9 +956,9 @@ class Tabs extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tabs-switcher-label-section-two": "color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tabs-switcher-label-section-two": "color: {{COLOR}};"
+      // }
     });
 
     this.addControl('heading_content_section_two_style', {
@@ -977,18 +977,18 @@ class Tabs extends BaseElement {
         family: "Open Sans",
         decoration: ""
       },
-      rules: {
-        '{{ELEMENT}} .altrp-tabs-switcher-section-two-text p': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} .altrp-tabs-switcher-section-two-text p': [
+      //     'font-family: "{{FAMILY}}", sans-serif;',
+      //     'font-size: {{SIZE}}px;',
+      //     'line-height: {{LINEHEIGHT}};',
+      //     'letter-spacing: {{SPACING}}px',
+      //     'font-weight: {{WEIGHT}}',
+      //     'text-transform: {{TRANSFORM}}',
+      //     'font-style: {{STYLE}}',
+      //     'text-decoration: {{DECORATION}}'
+      //   ],
+      // },
     }
     );
 
@@ -999,9 +999,9 @@ class Tabs extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-tabs-switcher-section-two-text": "color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-tabs-switcher-section-two-text": "color: {{COLOR}};"
+      // }
     });
 
     this.endControlSection();

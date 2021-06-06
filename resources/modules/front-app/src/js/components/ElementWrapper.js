@@ -14,6 +14,10 @@ import DividerComponent from "../../../../editor/src/js/components/widgets/style
 import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 import TextComponent from "../../../../editor/src/js/components/widgets/styled-components/TextComponent";
 import TableComponent from "../../../../editor/src/js/components/widgets/styled-components/TableComponent";
+import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
+import TabsComponent from "../../../../editor/src/js/components/widgets/styled-components/TabsComponent";
+import SectionWidgetComponent from "../../../../editor/src/js/components/widgets/styled-components/SectionWidgetComponent";
+import PostsComponent from "../../../../editor/src/js/components/widgets/styled-components/PostsComponent";
 import HeadingComponent from "../../../../editor/src/js/components/widgets/styled-components/HeadingComponent";
 import MenuComponent from "../../../../editor/src/js/components/widgets/styled-components/MenuComponent";
 import BreadcrumbsComponent from "../../../../editor/src/js/components/widgets/styled-components/BreadcrumbsComponent";
@@ -359,6 +363,9 @@ class ElementWrapper extends Component {
       case "breadcrumbs":
         WrapperComponent = BreadcrumbsComponent;
         break;
+      case "nav":
+        WrapperComponent = NavComponent;
+        break;
       case "video":
         WrapperComponent = VideoComponent;
         break;
@@ -373,6 +380,15 @@ class ElementWrapper extends Component {
         break;
       case "diagram":
         WrapperComponent = DiagramComponent;
+        break;
+      case "tabs":
+        WrapperComponent = TabsComponent;
+        break;
+      case "section":
+        WrapperComponent = SectionWidgetComponent;
+        break;
+      case "posts":
+        WrapperComponent = PostsComponent;
         break;
     }
     tooltip_text = replaceContentWithData(tooltip_text, this.props.element.getCurrentModel().getData())
