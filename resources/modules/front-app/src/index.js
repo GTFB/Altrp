@@ -53,6 +53,7 @@ import (/* webpackChunkName: 'FormsManager' */'../../editor/src/js/classes/modul
  * Рендерим главный компонент после загрузки основных модулей
  */
 function loadingCallback(){
+  console.log(window.frontElementsManager.componentsIsLoaded());
   if(window.React
       && window.Component
       && window.ReactDOM

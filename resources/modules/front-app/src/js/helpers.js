@@ -1546,6 +1546,9 @@ export function recurseCount(object = {}, path = "") {
  */
 export function getAppContext(model = null) {
   const { currentModel } = appStore.getState();
+  if(model instanceof AltrpModel){
+    model = model.getData();
+  }
   const currentModelData = model ? model : currentModel.getData();
   const urlParams = _.cloneDeep(
     window.currentRouterMatch instanceof AltrpModel

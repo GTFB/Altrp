@@ -378,9 +378,6 @@ class Page extends Model
             'page_id' => $page_id,
             'template_type' => $custom_area->name,
           ]);
-//          echo '<pre style="padding-left: 200px;">';
-//          var_dump( $custom_template );
-//          echo '</pre>';
 //
           if( ! data_get( $custom_template, 'id' ) ){
             continue;
