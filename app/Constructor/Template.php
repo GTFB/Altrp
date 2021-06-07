@@ -356,7 +356,9 @@ class Template extends Model
     if( $_template ){
       $_template = $_template->toArray();
       $_template['data'] = json_decode( $_template['data'], true );
-
+      if( empty( $_template['data'] ) ){
+        $_template['data'] = self::getDefaultData();
+      }
 
       //$_template['data'] = self::recursively_children_check_conditions($_template['data']);
 
@@ -381,9 +383,14 @@ class Template extends Model
       //$_template->check_elements_conditions();
       $_template = $_template->toArray();
       $_template['data'] =  json_decode( $_template['data'], true );
+      if( empty( $_template['data'] ) ){
+        $_template['data'] = self::getDefaultData();
+      }
       return $_template;
     }
-
+    if( empty( $_template->data ) ){
+      $_template->data = self::getDefaultData();
+    }
     return $template->toArray();
   }
   /**
