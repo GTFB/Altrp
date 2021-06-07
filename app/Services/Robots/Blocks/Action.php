@@ -166,26 +166,40 @@ class Action
     protected function generateDocument()
     {
         $docData = $this->getNodeProperties()->nodeData->data->docData;
+        $resultData = [];
 
-      $model = Model::where('name', $docData)->first();
-      $modelNamespace = $model->parent ? $model->parent->namespace : $model->namespace;
-      $modelClass = '\\' . $modelNamespace;
-      $dataArray = [];
-      foreach ($modelClass::all()->toArray() as $item){
-//        dd(isset($item['deleted_at']));
-        unset($item['deleted_at']);
-        $internalArray = [];
-        foreach ($item as $it){
-          $internalArray[] = $it;
+        try {
+            if ($docData) {
+                preg_match("#\{\{([^{}]+):([^{}]+)\}\}#", $docData, $matches);
+                if($matches[1] === 'altrpmodel'){
+                    $model = Model::where('name', $matches[2] )->first();
+                    $modelNamespace = $model->parent ? $model->parent->namespace : $model->namespace;
+                    $modelClass = '\\' . $modelNamespace;
+                    $resultData = [
+                        'dataArray' => $modelClass::all()->toArray()
+                    ];
+                    $resultData = json_encode($resultData);
+                }
+                if($matches[1]  === 'altrpsource'){
+                    $source = Source::where('name', $matches[2] )->first();
+                    $url = $source->url;
+                    $method = $source->request_type;
+
+                    $job = new SendCurl($url, $method, [], [], true);
+
+                    $job->delay(2);
+                    $this->dispatchNow($job);
+                    $res = $job->getResponse();
+
+                    $resultData = [
+                        'dataArray' => $res
+                    ];
+                    $resultData = json_encode($resultData);
+                }
+            }
+        } catch (\Exception $e){
+            Log::info($e->getMessage());
         }
-        $dataArray[] = $internalArray;
-      }
-      $resultData = [
-        'dataArray' => $dataArray
-      ];
-      $resultData = json_encode($resultData);
-//      dd($resultData);
-
 
         $element = $this->getNodeProperties()->nodeData->data->element;
         $fileName = $this->getNodeProperties()->nodeData->data->fileName;
