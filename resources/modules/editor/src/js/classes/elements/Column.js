@@ -59,9 +59,9 @@ class Column extends BaseElement {
           'label': 'wrap reverse'
         }
       ],
-      rules: {
-        "{{ELEMENT}} > .altrp-column{{STATE}}": "flex-wrap: {{VALUE}}",
-      },
+      // rules: {
+      //   "{{ELEMENT}} > .altrp-column{{STATE}}": "flex-wrap: {{VALUE}}",
+      // },
     }
     );
     this.addControl('layout_column_direction', {
@@ -89,9 +89,9 @@ class Column extends BaseElement {
           'label': 'unset'
         },
       ],
-      rules: {
-        "{{ELEMENT}} > .altrp-column{{STATE}}": "flex-direction: {{VALUE}}"
-      },
+      // rules: {
+      //   "{{ELEMENT}} > .altrp-column{{STATE}}": "flex-direction: {{VALUE}}"
+      // },
     }
     );
 
@@ -129,11 +129,11 @@ class Column extends BaseElement {
           'label': 'space evenly'
         }
       ],
-      rules: {
-        '{{ELEMENT}} > .altrp-column{{STATE}}': ['align-content: {{VALUE}};',
-          'align-items: {{VALUE}};'
-        ],
-      },
+      // rules: {
+      //   '{{ELEMENT}} > .altrp-column{{STATE}}': ['align-content: {{VALUE}};',
+      //     'align-items: {{VALUE}};'
+      //   ],
+      // },
     }
     );
 
@@ -171,9 +171,9 @@ class Column extends BaseElement {
           'label': 'space evenly'
         }
       ],
-      rules: {
-        '{{ELEMENT}} > .altrp-column{{STATE}}': 'justify-content: {{VALUE}} !important;',
-      },
+      // rules: {
+      //   '{{ELEMENT}} > .altrp-column{{STATE}}': 'justify-content: {{VALUE}} !important;',
+      // },
     }
     );
 
@@ -181,9 +181,9 @@ class Column extends BaseElement {
       type: CONTROLLER_NUMBER,
       label: 'Widgets space (px)',
       default: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-element:not(:last-child){{STATE}}': 'margin-bottom: {{VALUE}}px',
-      }
+      // rules: {
+      //   '{{ELEMENT}} .altrp-element:not(:last-child){{STATE}}': 'margin-bottom: {{VALUE}}px',
+      // }
     });
 
     this.addControl('layout_overflow', {
@@ -211,9 +211,9 @@ class Column extends BaseElement {
           label: 'default'
         }
       ],
-      rules: {
-        '{{ELEMENT}} > .altrp-column{{STATE}}': 'overflow: {{VALUE}}',
-      },
+      // rules: {
+      //   '{{ELEMENT}} > .altrp-column{{STATE}}': 'overflow: {{VALUE}}',
+      // },
     });
 
     this.addControl('layout_html_tag', {
@@ -287,9 +287,9 @@ class Column extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} > .altrp-column{{STATE}}": "background-color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} > .altrp-column{{STATE}}": "background-color: {{COLOR}};"
+      // }
     });
 
     this.addControl('gradient', {
@@ -305,18 +305,18 @@ class Column extends BaseElement {
         angle: "0",
         value: ""
       },
-      rules: {
-        "{{ELEMENT}} > .altrp-column{{STATE}}": "background-image: {{VALUE}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} > .altrp-column{{STATE}}": "background-image: {{VALUE}}"
+      // }
     });
 
     this.addControl('background_image', {
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
       default: { url: "" },
-      rules: {
-        "{{ELEMENT}} > .altrp-column.altrp-background-image{{STATE}}": "background-image: url({{URL}});"
-      }
+      // rules: {
+      //   "{{ELEMENT}} > .altrp-column.altrp-background-image{{STATE}}": "background-image: url({{URL}});"
+      // }
     });
 
     this.addControl('background_position', {
@@ -361,9 +361,9 @@ class Column extends BaseElement {
       ],
       label: 'Background Position',
       default: 'top left',
-      rules: {
-        "{{ELEMENT}} > .altrp-column.altrp-background-image{{STATE}}": "background-position: {{VALUE}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} > .altrp-column.altrp-background-image{{STATE}}": "background-position: {{VALUE}};"
+      // }
     });
 
     this.addControl('background_attachment', {
@@ -384,9 +384,9 @@ class Column extends BaseElement {
       ],
       label: 'Background Attachment',
       default: 'scroll',
-      rules: {
-        "{{ELEMENT}} > .altrp-column.altrp-background-image{{STATE}}": "background-attachment: {{VALUE}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} > .altrp-column.altrp-background-image{{STATE}}": "background-attachment: {{VALUE}};"
+      // }
     });
 
     this.addControl('background_repeat', {
@@ -419,9 +419,9 @@ class Column extends BaseElement {
       ],
       label: 'Background Repeat',
       default: 'repeat',
-      rules: {
-        "{{ELEMENT}} > .altrp-column.altrp-background-image{{STATE}}": "background-repeat: {{VALUE}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} > .altrp-column.altrp-background-image{{STATE}}": "background-repeat: {{VALUE}};"
+      // }
     });
 
     this.addControl("background_image_width", {
@@ -441,9 +441,9 @@ class Column extends BaseElement {
       ],
       max: 1000,
       min: 0,
-      rules: {
-        "{{ELEMENT}} > .altrp-column.altrp-background-image{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} > .altrp-column.altrp-background-image{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
+      // }
     });
 
     this.addControl('background_size', {
@@ -468,9 +468,9 @@ class Column extends BaseElement {
       ],
       label: 'Background Size',
       default: 'unset',
-      rules: {
-        "{{ELEMENT}} > .altrp-column.altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} > .altrp-column.altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
+      // }
     });
 
     this.endControlSection();
@@ -516,23 +516,23 @@ class Column extends BaseElement {
         '%',
         'vh',
       ],
-      rules: {
-        '{{ELEMENT}}.altrp-element_column.altrp-element > .altrp-column{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
+      // rules: {
+      //   '{{ELEMENT}}.altrp-element_column.altrp-element > .altrp-column{{STATE}}': [
+      //     'margin-top: {{TOP}}{{UNIT}};',
+      //     'margin-right: {{RIGHT}}{{UNIT}};',
+      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
+      //     'margin-left: {{LEFT}}{{UNIT}};'
+      //   ]
+      // },
     });
 
     this.addControl('position_z_index', {
       type: CONTROLLER_NUMBER,
       label: "Z-index",
       default: 0,
-      rules: {
-        "{{ELEMENT}} > .altrp-column{{STATE}}": "z-index: {{VALUE}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} > .altrp-column{{STATE}}": "z-index: {{VALUE}}"
+      // }
     });
 
     this.endControlSection();
@@ -572,9 +572,9 @@ class Column extends BaseElement {
           label: "Groove"
         }
       ],
-      rules: {
-        "{{ELEMENT}} > .altrp-column{{STATE}}": "border-style: {{VALUE}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} > .altrp-column{{STATE}}": "border-style: {{VALUE}};"
+      // }
     });
 
     this.addControl("column_style_border_width", {
@@ -584,10 +584,10 @@ class Column extends BaseElement {
         bind: true
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} > .altrp-column{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} > .altrp-column{{STATE}}":
+      //     "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      // }
     });
 
     this.addControl("column_style_border_color", {
@@ -597,9 +597,9 @@ class Column extends BaseElement {
         color: "rgb(50,168,82)",
         colorPickedHex: "#32a852"
       },
-      rules: {
-        "{{ELEMENT}} > .altrp-column{{STATE}}": "border-color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} > .altrp-column{{STATE}}": "border-color: {{COLOR}};"
+      // }
     });
 
     this.addControl("column_style_border_radius", {
@@ -616,9 +616,9 @@ class Column extends BaseElement {
       ],
       max: 100,
       min: 0,
-      rules: {
-        "{{ELEMENT}} > .altrp-column{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} > .altrp-column{{STATE}}": "border-radius: {{SIZE}}{{UNIT}}"
+      // }
     });
 
     this.addControl('column_style_box_shadow', {
@@ -635,9 +635,9 @@ class Column extends BaseElement {
         colorPickedHex: '#000000',
         type: ""
       },
-      rules: {
-        '{{ELEMENT}} > .altrp-column{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      },
+      // rules: {
+      //   '{{ELEMENT}} > .altrp-column{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
+      // },
     }
     );
 
