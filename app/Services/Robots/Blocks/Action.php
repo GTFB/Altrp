@@ -5,9 +5,9 @@ namespace App\Services\Robots\Blocks;
 
 
 use App\Altrp\ExportExcel;
+use App\Altrp\ExportWord;
 use App\Altrp\Model;
 use App\Altrp\Source;
-use App\Constructor\Template;
 use App\Jobs\SendCurl;
 use App\Notifications\RobotNotification;
 use App\User;
@@ -186,7 +186,6 @@ class Action
                     $method = $source->request_type;
 
                     $job = new SendCurl($url, $method, [], [], true);
-
                     $job->delay(2);
                     $this->dispatchNow($job);
                     $res = $job->getResponse();
@@ -198,19 +197,30 @@ class Action
                 }
             }
         } catch (\Exception $e){
-            Log::info($e->getMessage());
+            \Log::info($e->getMessage());
         }
 
-        $element = $this->getNodeProperties()->nodeData->data->element;
         $fileName = $this->getNodeProperties()->nodeData->data->fileName;
+        $type = $this->getNodeProperties()->nodeData->data->type;
         $template = $this->templateHandler();
 
-        $document = new ExportExcel($resultData, $template, $fileName);
-        $document->export('robot');
+        if ($type === 'excel') {
+            $document = new ExportExcel($resultData, $template, $fileName);
+            $document->export('robot');
+
+            return [ 'name' => 'document', 'value' => true ];
+        }
+
+        if ($type === 'word') {
+            $document = new ExportWord($resultData, $template, $fileName);
+            $document->export('robot');
+
+            return [ 'name' => 'document', 'value' => true ];
+        }
 
         return [
               'name' => 'document',
-              'value' => true
+              'value' => false
           ];
     }
 
@@ -220,12 +230,16 @@ class Action
      */
     protected function templateHandler()
     {
-      $result = [];
-      $guid_template = $this->getNodeProperties()->nodeData->data->template;
-      if (isset($guid_template)) {
-        $template = Template::where( 'guid', $guid_template )->first()->html_content;
-        if($template) $result = $template;
-      }
+      $result = '';
+      $template_name = $this->getNodeProperties()->nodeData->data->template;
+      $type = $this->getNodeProperties()->nodeData->data->type;
+
+      $template_path = public_path() . '/storage/' . $template_name . ($type === 'excel' ? '.xls' : '.doc');
+      $template_path_x = public_path() . '/storage/' . $template_name . ($type === 'excel' ? '.xlsx' : '.docx');
+
+      if (file_exists($template_path)) $result = $template_path;
+      if (file_exists($template_path_x)) $result = $template_path_x;
+
       return $result;
     }
 

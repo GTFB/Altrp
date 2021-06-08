@@ -155,17 +155,22 @@ class ExportExcel extends Model
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($this->spreadsheet, "Xlsx");
             //$writer->save('php://output');
             //$writer->save('j:\NewServer\data\altrp\storage\tmp\text.xlsx');
+
             if (!file_exists(storage_path() . '/tmp/')) mkdir(storage_path() . '/tmp/');
             $filename = storage_path() . '/tmp/' . $this->filename . '.xlsx';
+
             if ($type === 'robot') {
                 if (!file_exists(storage_path() . '/document/')) mkdir(storage_path() . '/document/');
                 $filename = storage_path() . '/document/' . $this->filename . '.xlsx';
             }
+
             $writer->save($filename);
             readfile($filename);
+
             if ($type !== 'robot') unlink($filename);
+
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            \Log::info($e->getMessage());
         }
     }
 }
