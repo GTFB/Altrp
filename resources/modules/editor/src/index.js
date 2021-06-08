@@ -84,7 +84,7 @@ import("./Editor.js")
         styleLink.rel = "stylesheet";
         styleLink.href = `/modules/editor/editor.css?${_altrpVersion}`;
         head.appendChild(styleLink);
-        console.log(head.appendChild(document.querySelector('[data-cke]').cloneNode(true)));
+        head.appendChild(document.querySelector('[data-cke]').cloneNode(true));
       } else {
         let head = iframe.contentWindow.document.getElementsByTagName(
           "head"

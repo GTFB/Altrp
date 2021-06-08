@@ -213,7 +213,6 @@ class TemplateController extends Controller
     // if (self::loadCachedTemplate( $template_id )) {
     //    return self::loadCachedTemplate( $template_id );
     // }
-
     if (Uuid::isValid($template_id)) {
       $template = Template::where('guid', $template_id)->first();
     } else {
@@ -269,6 +268,7 @@ class TemplateController extends Controller
     $old_template->title = $request->title;
     $old_template->html_content = $request->html_content;
     $old_template->styles = $request->styles ? json_encode($request->styles) : null;
+
     $old_template->data = json_encode(Template::sanitizeSettings($request->data));
     $old_template->type = 'template'; //1
     $old_template->user_id = auth()->user()->id;
