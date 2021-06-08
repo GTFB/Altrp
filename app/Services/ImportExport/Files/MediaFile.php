@@ -70,15 +70,10 @@ class MediaFile extends ImportExportFile implements IImportExportFile
      */
     public function export(IWriter $writer, string $path, array $params = [])
     {
-        $where = '';
-        if (!empty($params)) {
-          $p = implode(',', $params);
-          $where = "id IN ({$p})";
-        }
         $data = DB::table( 'altrp_media' )
             ->select('altrp_media.*')
-            ->when(!empty($params), function ($query) use ($where) {
-              return $query->havingRaw($where);
+            ->when(!empty($params), function ($query) use ($params) {
+              return $query->whereIn('altrp_media.id', $params);
             })
             ->get();
 

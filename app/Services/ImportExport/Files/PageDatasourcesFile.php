@@ -82,17 +82,12 @@ class PageDatasourcesFile extends ImportExportFile implements IImportExportFile
      */
     public function export(IWriter $writer, string $path, array $params = [])
     {
-        $where = '';
-        if (!empty($params)) {
-          $p = implode(',', $params);
-          $where = "page_id IN ({$p})";
-        }
         $data = DB::table( 'page_data_sources' )
             ->select('page_data_sources.*', 'altrp_sources.url as source_url', 'altrp_sources.type as source_type')
             ->leftJoin('altrp_sources', 'page_data_sources.source_id', '=', 'altrp_sources.id')
             ->havingRaw('source_url IS NOT NULL')
-            ->when(!empty($params), function ($query) use ($where) {
-              return $query->havingRaw($where);
+            ->when(!empty($params), function ($query) use ($params) {
+              return $query->whereIn('page_data_sources.page_id', $params);
             })
             ->get();
 

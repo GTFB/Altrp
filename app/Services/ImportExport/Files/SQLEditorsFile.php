@@ -95,12 +95,15 @@ class SQLEditorsFile extends ImportExportFile implements IImportExportFile
      * @param string $path
      * @return mixed
      */
-    public function export(IWriter $writer, string $path)
+    public function export(IWriter $writer, string $path, array $params = [])
     {
         $data = DB::table( 's_q_l_editors' )
             ->select('s_q_l_editors.*', 'altrp_models.name as model_name')
             ->leftJoin('altrp_models', 's_q_l_editors.model_id', '=', 'altrp_models.id')
             ->havingRaw('model_name IS NOT NULL')
+            ->when(!empty($params), function ($query) use ($params) {
+              return $query->whereIn('s_q_l_editors.id', $params);
+            })
             ->get();
 
         $writer->createJsonFile($path, self::FILENAME, $data->toArray());

@@ -82,15 +82,10 @@ class PageTemplatesFile extends ImportExportFile implements IImportExportFile
      */
     public function export(IWriter $writer, string $path, array $params = [])
     {
-        $where = '';
-        if (!empty($params)) {
-          $p = implode(',', $params);
-          $where = "page_id IN ({$p})";
-        }
         $data = DB::table( 'pages_templates' )
             ->select('pages_templates.*')
-            ->when(!empty($params), function ($query) use ($where) {
-              return $query->havingRaw($where);
+            ->when(!empty($params), function ($query) use ($params) {
+              return $query->whereIn('pages_templates.id', $params);
             })
             ->get();
 

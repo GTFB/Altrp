@@ -86,15 +86,10 @@ class ReportsFile extends ImportExportFile implements IImportExportFile
      */
     public function export(IWriter $writer, string $path, array $params = [])
     {
-        $where = '';
-        if (!empty($params)) {
-          $p = implode(',', $params);
-          $where = "id IN ({$p})";
-        }
         $data = DB::table( 'reports' )
             ->select('reports.*')
-            ->when(!empty($params), function ($query) use ($where) {
-              return $query->havingRaw($where);
+            ->when(!empty($params), function ($query) use ($params) {
+              return $query->whereIn('reports.id', $params);
             })
             ->get();
 

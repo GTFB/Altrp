@@ -255,8 +255,8 @@ class Export extends Component {
       //{name: 'Template Settings', value: 'exportTemplateSettings'},
 
       {name: 'Media', value: 'exportMedia', uri: '/admin/ajax/media'},
-      //{name: 'Settings', value: 'exportSettings', uri: '/admin/ajax/settings'},
-      //{name: 'Diagrams', value: 'exportDiagrams', uri: '/admin/ajax/diagrams'},
+      {name: 'Settings', value: 'exportSettings', uri: false},
+      {name: 'Diagrams', value: 'exportDiagrams', uri: '/admin/ajax/diagrams'},
       //{name: 'Dashboards', value: 'exportDashboards', uri: '/admin/ajax/dashboards'},
       {name: 'Reports', value: 'exportReports', uri: '/admin/ajax/reports'},
       {name: 'Tables', value: 'exportTables', uri: '/admin/ajax/tables'},
@@ -269,7 +269,7 @@ class Export extends Component {
       //{name: 'Roles', value: 'exportRoles', uri: '/admin/ajax/roles'},
       //{name: 'Permission Roles', value: 'exportPermissionRoles', uri: '/admin/ajax/permissionroles'},
       //{name: 'Remote Data', value: 'exportRemoteData', uri: '/admin/ajax/remotedata'},
-      //{name: 'Remote DataSources', value: 'exportRemoteDataSources', uri: '/admin/ajax/remotedatasources'},
+      {name: 'Remote DataSources', value: 'exportRemoteDataSources', uri: '/admin/ajax/ajax/data_sources'},
       //{name: 'Remote DataSources Roles', value: 'exportDataSourcesRoles'},
       //{name: 'Remote DataSources Permissions', value: 'exportDataSourcesPremissions'},
       //{name: 'Validation Fields', value: 'exportValidationFields', uri: '/admin/ajax/validationfields'},
@@ -282,7 +282,7 @@ class Export extends Component {
       props: {},
       value: {},
     };
-    this.resourceOut = new Resource({route: '/admin/ajax/downloads/settings'});
+    this.resourceOut = new Resource({route: '/admin/ajax/downloads/filtered_settings'});
     //this.toggleMainItem = this.toggleMainItem.bind(this);
     this.submitData = this.submitData.bind(this);
   }
@@ -298,15 +298,19 @@ class Export extends Component {
     let elements = [];
     let open = {};
     for (let item of this.items) {
+      let element = {};
       if (item.uri) {
         open[item.value] = false;
         // elements[item.value] = [];
-        resource[item.value] = new Resource({route: item.uri});
-        // elements[item.value]['name'] = '';
+        if (item.uri)
+          resource[item.value] = new Resource({route: item.uri});
+        else
+          resource[item.value] = [];
+            // elements[item.value]['name'] = '';
         // elements[item.value]['name'] = item.name;
         // elements[item.value]['items'] = [];
         // elements[item.value]['items'] = await resource[item.value].getAll();
-        let element = {
+        element = {
           value: item.value,
           name: item.name || '',
         };
@@ -323,7 +327,7 @@ class Export extends Component {
             return {...i, title: i.filename}
           })
         }
-        elements.push(element);
+
         // if (item.value == 'exportMedia') {
         //   for(let j in elements[item.value]['items']) {
         //     elements[item.value]['items'][j].title = elements[item.value]['items'][j].filename;
@@ -332,7 +336,17 @@ class Export extends Component {
         // if (item.field) {
         //   elements[item.value]['items'] = elements[item.value]['items'][item.field];
         // }
+      } else {
+        element = {
+          value: item.value,
+          name: item.name || '',
+        };
+        element.items = [];
+        if (item.value == 'exportSettings') {
+          element.items = [{id: 'admin_logo', title: 'admin_logo'}, {id: 'container_width', title: 'container_width'}];
+        }
       }
+      elements.push(element);
     }
 
 
@@ -362,7 +376,23 @@ class Export extends Component {
   changeMainItem(id, line) {
     console.log(id, line, this);
     let newValue = {...this.state.value};
-    //newValue[id] = []
+    const props = {...this.state.props};
+    props[line] = ! props[line];
+    console.log(props);
+    if (props[line]) {
+      newValue[line] = [];
+    } else {
+      newValue[line] = newValue[line];
+    }
+    this.setState(state =>({...state, props, value: newValue}));
+    /*
+    if (newValue.length == 0) {
+      for(let item of newValue) {
+
+      }
+    }
+
+     */
   }
 
   changeItem(id, line) {
@@ -380,7 +410,32 @@ class Export extends Component {
   async submitData() {
     //const data = '?exportPages=' + JSON.stringify([1, 2]) + '&exportTemplates=' + JSON.stringify([13, 15]);
     const data = this.state.value;
-    let res = await this.resourceOut.post(data);
+    let url = '/admin/ajax/downloads/filtered_settings';
+    //let res = await this.resourceOut.post(data);
+
+    await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        //'Content-Type': 'application/zip',
+        'X-CSRF-TOKEN': _token
+      },
+      body: JSON.stringify(data)
+    }).then(resp => resp.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        // the filename you want
+        a.download = 'altrp.zip';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        alert('Export File Downloaded!'); // or you know, something with better UX...
+      })
+      .catch((e) => alert('Error! '+ e.message));
+
   }
 
 
@@ -389,13 +444,24 @@ class Export extends Component {
 
     const { elements, open } =  this.state;
 
+    const Style = {
+      dt: {
+        width: '100%',
+        borderBottom: '1px solid #000000',
+      },
+      dd: {
+        width: '100%',
+        borderBottom: '1px solid #cccccc',
+      }
+    };
+
     let temp = [];
     let i = 0;
     for(let key in elements) {
       //this.props[key] = true;
       const template = <React.Fragment key={i}>
         <dl >
-          <dt>
+          <dt style={Style.dt}>
             <input
               type="checkbox"
               className="form-check-input mr-1 ml-0 mt-0 position-static"
@@ -406,14 +472,14 @@ class Export extends Component {
             <a onClick={()=>{ this.toggleLine(elements[key].name)}}>{elements[key].name}</a>
           </dt>
           {this.state.open[elements[key].name] && elements[key]?.items?.map((item, index) =>
-            <dd
+            <dd style={Style.dd}
               className={(open[key] === false) ? "d-none" : null}
               key={index}>
               <input
                 type="checkbox"
                 className="form-check-input mr-1 ml-0 mt-0 position-static"
                 onChange={e=>this.changeItem(item.id, elements[key].value)}
-                checked={this.state.value[elements[key].value].indexOf(item.id) !== -1}/>{item.title}
+                checked={this.state.value[elements[key].value] && this.state.value[elements[key].value].indexOf(item.id) !== -1}/>{item.title}
 
             </dd>
           )}
@@ -431,14 +497,17 @@ class Export extends Component {
         {temp}
       </div>
       <div>
-        <a className="btn_success btn"
-           onClick={this.submitData}
-        >Download ZIP Archive (JSON)</a>
+        <button className="btn_success btn" onClick={this.submitData}>Download Filtered ZIP Archive (JSON)</button>
       </div>
       <div className="mt-1">
         <a className="btn_success btn"
+           href="/admin/ajax/downloads/settings"
+        >Download ZIP Archive (JSON)</a>
+        <a className="btn_success btn ml-3"
            href="/admin/ajax/downloads/stream_settings"
+
         >Download ZIP Archive (JSON Stream)</a>
+
       </div>
     </div>
   }

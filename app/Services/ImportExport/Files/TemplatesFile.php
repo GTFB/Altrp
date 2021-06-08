@@ -103,18 +103,13 @@ class TemplatesFile extends ImportExportFile implements IImportExportFile
      */
     public function export(IWriter $writer, string $path, array $params = [])
     {
-        $where = '';
-        if (!empty($params)) {
-          $p = implode(',', $params);
-          $where = "id IN ({$p})";
-        }
         $data = DB::table( 'templates' )
             ->select('templates.*', 'areas.name as area_name')
             ->leftJoin('areas', 'templates.area', '=', 'areas.id')
             ->where("type", "=", "template")
             ->havingRaw('area_name IS NOT NULL')
-            ->when(!empty($params), function ($query) use ($where) {
-              return $query->havingRaw($where);
+            ->when(!empty($params), function ($query) use ($params) {
+              return $query->whereIn('templates.id', $params);
             })
             ->get();
 

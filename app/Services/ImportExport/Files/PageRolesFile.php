@@ -81,17 +81,13 @@ class PageRolesFile extends ImportExportFile implements IImportExportFile
      */
     public function export(IWriter $writer, string $path, array $params = [])
     {
-        $where = '';
-        if (!empty($params)) {
-          $p = implode(',', $params);
-          $where = "page_id IN ({$p})";
-        }
+
         $data = DB::table( 'page_role' )
             ->select('page_role.*', 'pages.guid as page_guid', 'roles.name as role_name')
             ->join('pages', 'page_role.page_id', '=', 'pages.id')
             ->join('roles', 'page_role.role_id', '=', 'roles.id')
-            ->when(!empty($params), function ($query) use ($where) {
-              return $query->havingRaw($where);
+            ->when(!empty($params), function ($query) use ($params) {
+              return $query->whereIn('page_role.page_id', $params);
             })
             ->get();
 

@@ -436,7 +436,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
      * Роуты загрузок Админки
      */
     Route::group(['prefix' => 'downloads'], function () {
-      Route::post('settings', 'Admin\DownloadsController@exportAltrpSettings')->name('admin.download.settings');
+      Route::get('settings', 'Admin\DownloadsController@exportAltrpSettings')->name('admin.download.settings');
+      Route::post('filtered_settings', 'Admin\DownloadsController@exportAltrpFilteredSettings')->name('admin.download.filtered_settings');
       Route::get('stream_settings', 'Admin\DownloadsController@exportStreamAltrpSettings')->name('admin.download.stream_settings');
     });
   });
