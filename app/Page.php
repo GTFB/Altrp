@@ -702,9 +702,9 @@ class Page extends Model
       'content' => '',
       'important_styles' => '',
     ];
-//    if (1) {
-//      return $result;
-//    }
+    if ( get_altrp_setting( 'altrp_ssr_disabled' ) ) {
+      return $result;
+    }
     if ( ! $page_id ) {
       return $result;
     }
@@ -750,7 +750,13 @@ class Page extends Model
       return $result;
       }
     } catch (\Exception $e){
-        logger( $e );
+      logger( $e );
+
+        return [
+          'content' => '',
+          'important_styles' => '',
+        ];
+
     }
 
     $areas = Area::all()->filter(function (Area $area) {
