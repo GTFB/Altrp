@@ -292,9 +292,6 @@ class Table extends BaseElement {
           label: 'Top'
         },
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': 'flex-direction: {{VALUE}};'
-      // },
     });
 
     this.addControl('next_text', {
@@ -329,9 +326,6 @@ class Table extends BaseElement {
           label: 'Top'
         },
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__next{{STATE}}': 'flex-direction: {{VALUE}};'
-      // },
     });
 
     this.endControlSection();
@@ -355,8 +349,6 @@ class Table extends BaseElement {
           value: 'flex-end',
         }
       ],
-      // rules: {
-      // },
     });
 
     this.addControl('position_padding', {
@@ -371,14 +363,6 @@ class Table extends BaseElement {
         '%',
         'vh',
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-posts{{STATE}}': [
-      //     'padding-top: {{TOP}}{{UNIT}};',
-      //     'padding-right: {{RIGHT}}{{UNIT}};',
-      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'padding-left: {{LEFT}}{{UNIT}};'
-      //   ]
-      // },
     });
 
     this.addControl("posts_bottom_space", {
@@ -441,9 +425,6 @@ class Table extends BaseElement {
           'label': 'Groove',
         },
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-style: {{VALUE}};',
-      // },
     }
     );
 
@@ -458,22 +439,12 @@ class Table extends BaseElement {
         '%',
         'vh',
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-      // },
     }
     );
 
     this.addControl('posts_border_color', {
       type: CONTROLLER_COLOR,
       label: 'Border Color',
-      // default: {
-      //   color: "rgb(50,168,82)",
-      //   colorPickedHex: "#32a852",
-      // },
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}}': 'border-color: {{COLOR}};',
-      // },
     }
     );
 
@@ -488,14 +459,6 @@ class Table extends BaseElement {
         '%',
         'vh',
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}}': [
-      //     'border-top-left-radius: {{TOP}}{{UNIT}}',
-      //     'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-      //     'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-      //     'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
-      //   ]
-      // }
     });
 
     this.addControl('style_background_shadow', {
@@ -512,9 +475,6 @@ class Table extends BaseElement {
         // colorPickedHex: '#000000',
         // type: ""
       },
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      // },
     });
 
     this.endControlSection();
@@ -527,13 +487,6 @@ class Table extends BaseElement {
     this.addControl('posts_background_color', {
       type: CONTROLLER_COLOR,
       label: 'Background color',
-      // default: {
-      //   color: "rgb(52,59,76)",
-      //   colorPickedHex: "#343B4C",
-      // },
-      // rules: {
-      //   '{{ELEMENT}} .altrp-btn{{STATE}}': 'background-color: {{COLOR}};',
-      // },
     });
 
     this.addControl('gradient', {
@@ -548,18 +501,12 @@ class Table extends BaseElement {
         angle: "0",
         value: ""
       },
-      // rules: {
-      //   "{{ELEMENT}} .altrp-btn{{STATE}}": "background-image: {{VALUE}}"
-      // }
     });
 
     this.addControl('posts_background_image', {
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
       default: { url: "" },
-      // rules: {
-      //   "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-image: url({{URL}});"
-      // }
     });
 
     this.addControl('background_position', {
@@ -604,9 +551,6 @@ class Table extends BaseElement {
       ],
       label: 'Background Position',
       default: 'top left',
-      // rules: {
-      //   "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-position: {{VALUE}};"
-      // }
     });
 
     this.addControl('background_attachment', {
@@ -627,9 +571,6 @@ class Table extends BaseElement {
       ],
       label: 'Background Attachment',
       default: 'scroll',
-      // rules: {
-      //   "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-attachment: {{VALUE}};"
-      // }
     });
 
     this.addControl('background_repeat', {
@@ -662,9 +603,6 @@ class Table extends BaseElement {
       ],
       label: 'Background Repeat',
       default: 'repeat',
-      // rules: {
-      //   "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-repeat: {{VALUE}};"
-      // }
     });
 
     this.addControl("background_image_width", {
@@ -684,9 +622,6 @@ class Table extends BaseElement {
       ],
       max: 1000,
       min: 0,
-      // rules: {
-      //   "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
-      // }
     });
 
     this.addControl('background_size', {
@@ -711,9 +646,6 @@ class Table extends BaseElement {
       ],
       label: 'Background Size',
       default: 'unset',
-      // rules: {
-      //   "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
-      // }
     });
 
     this.endControlSection();
@@ -752,32 +684,12 @@ class Table extends BaseElement {
         '%',
         'vh',
       ],
-      // rules: {
-      //   '{{ELEMENT}} > .altrp-pagination-pages{{STATE}}': [
-      //     'padding-top: {{TOP}}{{UNIT}};',
-      //     'padding-right: {{RIGHT}}{{UNIT}};',
-      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'padding-left: {{LEFT}}{{UNIT}};'
-      //   ]
-      // },
     });
 
     this.addControl('table_style_pagination_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
       conditions: { posts_pagination_type: 'pages' },
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__next{{STATE}}, .altrp-pagination-pages__item{{STATE}}, .altrp-pagination__count{{STATE}}, .altrp-pagination__previous{{STATE}}, .altrp-pagination__goto-page{{STATE}}, .altrp-pagination__select-size{{STATE}}': [
-      //     'font-family: "{{FAMILY}}", sans-serif;',
-      //     'font-size: {{SIZE}}px;',
-      //     'line-height: {{LINEHEIGHT}};',
-      //     'letter-spacing: {{SPACING}}px',
-      //     'font-weight: {{WEIGHT}}',
-      //     'text-transform: {{TRANSFORM}}',
-      //     'font-style: {{STYLE}}',
-      //     'text-decoration: {{DECORATION}}'
-      //   ],
-      // },
     });
 
     this.endControlSection();
@@ -803,14 +715,6 @@ class Table extends BaseElement {
         '%',
         'vh',
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': [
-      //     'margin-top: {{TOP}}{{UNIT}};',
-      //     'margin-right: {{RIGHT}}{{UNIT}};',
-      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'margin-left: {{LEFT}}{{UNIT}};'
-      //   ]
-      // },
     });
 
     this.addControl('posts_prev_padding', {
@@ -825,14 +729,6 @@ class Table extends BaseElement {
         '%',
         'vh',
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': [
-      //     'padding-top: {{TOP}}{{UNIT}};',
-      //     'padding-right: {{RIGHT}}{{UNIT}};',
-      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'padding-left: {{LEFT}}{{UNIT}};'
-      //   ]
-      // },
     });
 
     this.addControl("posts_prev_color", {
@@ -842,26 +738,11 @@ class Table extends BaseElement {
         color: "",
         colorPickedHex: "#000",
       },
-      // rules: {
-      //   "{{ELEMENT}} .altrp-pagination__previous{{STATE}}": "color: {{COLOR}};"
-      // }
     });
 
     this.addControl('posts_prev_typographic', {
           type: CONTROLLER_TYPOGRAPHIC,
           label: 'Typographic',
-          // rules: {
-          //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': [
-          //     'font-family: "{{FAMILY}}", sans-serif;',
-          //     'font-size: {{SIZE}}px;',
-          //     'line-height: {{LINEHEIGHT}};',
-          //     'letter-spacing: {{SPACING}}px',
-          //     'font-weight: {{WEIGHT}}',
-          //     'text-transform: {{TRANSFORM}}',
-          //     'font-style: {{STYLE}}',
-          //     'text-decoration: {{DECORATION}}'
-          //   ],
-          // },
         }
     );
 
@@ -894,9 +775,6 @@ class Table extends BaseElement {
               'label': 'Groove',
             },
           ],
-          // rules: {
-          //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': 'border-style: {{VALUE}};',
-          // },
         }
     );
 
@@ -911,22 +789,12 @@ class Table extends BaseElement {
             '%',
             'vh',
           ],
-          // rules: {
-          //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-          // },
         }
     );
 
     this.addControl('posts_prev_border_color', {
           type: CONTROLLER_COLOR,
           label: 'Border Color',
-          // default: {
-          //   color: "rgb(50,168,82)",
-          //   colorPickedHex: "#32a852",
-          // },
-          // rules: {
-          //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': 'border-color: {{COLOR}};',
-          // },
         }
     );
 
@@ -941,14 +809,6 @@ class Table extends BaseElement {
         '%',
         'vh',
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': [
-      //     'border-top-left-radius: {{TOP}}{{UNIT}}',
-      //     'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-      //     'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-      //     'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
-      //   ]
-      // }
     });
 
     this.addControl('style_prev_background_shadow', {
@@ -956,9 +816,6 @@ class Table extends BaseElement {
       label: 'Shadow',
       default: {
       },
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      // },
     });
 
     this.addControl('prev_icon_padding', {
@@ -969,20 +826,6 @@ class Table extends BaseElement {
         bind: true
       },
       units: ['px', '%', 'vh', 'vw'],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}} svg': [
-      //     'margin-top: {{TOP}}{{UNIT}};',
-      //     'margin-right: {{RIGHT}}{{UNIT}};',
-      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'margin-left: {{LEFT}}{{UNIT}};'
-      //   ],
-      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}} img': [
-      //     'margin-top: {{TOP}}{{UNIT}};',
-      //     'margin-right: {{RIGHT}}{{UNIT}};',
-      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'margin-left: {{LEFT}}{{UNIT}};'
-      //   ]
-      // },
     });
 
     this.addControl('prev_icon_size', {
@@ -991,18 +834,11 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}} svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}} img': 'height: {{SIZE}}{{UNIT}};',
-      // },
     });
 
     this.addControl('prev_icon_color', {
       type: CONTROLLER_COLOR,
       label: 'Prev Icon Color',
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__previous{{STATE}} path': 'fill: {{COLOR}};',
-      // },
     });
 
     this.endControlSection();
@@ -1030,14 +866,6 @@ class Table extends BaseElement {
         '%',
         'vh',
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__next{{STATE}}': [
-      //     'margin-top: {{TOP}}{{UNIT}};',
-      //     'margin-right: {{RIGHT}}{{UNIT}};',
-      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'margin-left: {{LEFT}}{{UNIT}};'
-      //   ]
-      // },
     });
 
     this.addControl('posts_next_padding', {
@@ -1052,14 +880,6 @@ class Table extends BaseElement {
         '%',
         'vh',
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__next{{STATE}}': [
-      //     'padding-top: {{TOP}}{{UNIT}};',
-      //     'padding-right: {{RIGHT}}{{UNIT}};',
-      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'padding-left: {{LEFT}}{{UNIT}};'
-      //   ]
-      // },
     });
 
     this.addControl("posts_next_color", {
@@ -1069,26 +889,11 @@ class Table extends BaseElement {
         color: "",
         colorPickedHex: "#000",
       },
-      // rules: {
-      //   "{{ELEMENT}} .altrp-pagination__next{{STATE}}": "color: {{COLOR}};"
-      // }
     });
 
     this.addControl('posts_next_typographic', {
           type: CONTROLLER_TYPOGRAPHIC,
           label: 'Typographic',
-          // rules: {
-          //   '{{ELEMENT}} .altrp-pagination__next{{STATE}}': [
-          //     'font-family: "{{FAMILY}}", sans-serif;',
-          //     'font-size: {{SIZE}}px;',
-          //     'line-height: {{LINEHEIGHT}};',
-          //     'letter-spacing: {{SPACING}}px',
-          //     'font-weight: {{WEIGHT}}',
-          //     'text-transform: {{TRANSFORM}}',
-          //     'font-style: {{STYLE}}',
-          //     'text-decoration: {{DECORATION}}'
-          //   ],
-          // },
         }
     );
 
@@ -1121,9 +926,6 @@ class Table extends BaseElement {
               'label': 'Groove',
             },
           ],
-          // rules: {
-          //   '{{ELEMENT}} .altrp-pagination__next{{STATE}}': 'border-style: {{VALUE}};',
-          // },
         }
     );
 
@@ -1138,22 +940,12 @@ class Table extends BaseElement {
             '%',
             'vh',
           ],
-          // rules: {
-          //   '{{ELEMENT}} .altrp-pagination__next{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-          // },
         }
     );
 
     this.addControl('posts_next_border_color', {
           type: CONTROLLER_COLOR,
           label: 'Border Color',
-          // default: {
-          //   color: "rgb(50,168,82)",
-          //   colorPickedHex: "#32a852",
-          // },
-          // rules: {
-          //   '{{ELEMENT}} .altrp-pagination__next{{STATE}}': 'border-color: {{COLOR}};',
-          // },
         }
     );
 
@@ -1168,14 +960,6 @@ class Table extends BaseElement {
         '%',
         'vh',
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__next{{STATE}}': [
-      //     'border-top-left-radius: {{TOP}}{{UNIT}}',
-      //     'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-      //     'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-      //     'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
-      //   ]
-      // }
     });
 
     this.addControl('style_next_background_shadow', {
@@ -1183,9 +967,6 @@ class Table extends BaseElement {
       label: 'Shadow',
       default: {
       },
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__next{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      // },
     });
 
     this.addControl('next_icon_margin', {
@@ -1196,20 +977,6 @@ class Table extends BaseElement {
         bind: true
       },
       units: ['px', '%', 'vh', 'vw'],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__next{{STATE}} svg': [
-      //     'margin-top: {{TOP}}{{UNIT}};',
-      //     'margin-right: {{RIGHT}}{{UNIT}};',
-      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'margin-left: {{LEFT}}{{UNIT}};'
-      //   ],
-      //   '{{ELEMENT}} .altrp-pagination__next{{STATE}} img': [
-      //     'margin-top: {{TOP}}{{UNIT}};',
-      //     'margin-right: {{RIGHT}}{{UNIT}};',
-      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'margin-left: {{LEFT}}{{UNIT}};'
-      //   ]
-      // },
     });
 
     this.addControl('next_icon_size', {
@@ -1218,18 +985,11 @@ class Table extends BaseElement {
       units: ['px', '%', 'vh', 'vw'],
       max: 100,
       min: 0,
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__next{{STATE}} svg': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-      //   '{{ELEMENT}} .altrp-pagination__next{{STATE}} img': 'width: {{SIZE}}{{UNIT}};',
-      // },
     });
 
     this.addControl('next_icon_color', {
       type: CONTROLLER_COLOR,
       label: 'Next Icon Color',
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__next{{STATE}} path': 'fill: {{COLOR}};',
-      // },
     });
 
     this.endControlSection();
@@ -1250,14 +1010,6 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__count{{STATE}}': [
-      //     'margin-top: {{TOP}}{{UNIT}};',
-      //     'margin-right: {{RIGHT}}{{UNIT}};',
-      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'margin-left: {{LEFT}}{{UNIT}};'
-      //   ],
-      // },
     });
 
     this.addControl('count_button_item_margin', {
@@ -1267,55 +1019,31 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': [
-      //     'margin-top: {{TOP}}{{UNIT}};',
-      //     'margin-right: {{RIGHT}}{{UNIT}};',
-      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'margin-left: {{LEFT}}{{UNIT}};'
-      //   ],
-      // },
     });
 
     this.addControl("table_style_pagination_count_text_color", {
       type: CONTROLLER_COLOR,
       label: "Count Text Color",
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'color: {{COLOR}}',
-      //   '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'color: {{COLOR}}'
-      // }
     });
 
     this.addControl("table_style_pagination_count_background_color", {
       type: CONTROLLER_COLOR,
       label: "Count Background Color",
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__count{{STATE}}': 'background-color: {{COLOR}}'
-      // }
     });
 
     this.addControl("table_style_pagination_count_item_background_color", {
       type: CONTROLLER_COLOR,
       label: "Count Item background color",
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'background-color: {{COLOR}}'
-      // }
     });
 
     this.addControl("table_style_pagination_active_count_text_color", {
       type: CONTROLLER_COLOR,
       label: "Active Count text color",
-      // rules: {
-      //   '{{ELEMENT}} .active.altrp-pagination-pages__item{{STATE}}': 'color: {{COLOR}}'
-      // }
     });
 
     this.addControl("table_style_pagination_active_count_item_background_color", {
       type: CONTROLLER_COLOR,
       label: "Active Count Item background color",
-      // rules: {
-      //   '{{ELEMENT}} .active.altrp-pagination-pages__item{{STATE}}': 'background-color: {{COLOR}}'
-      // }
     });
 
     this.addControl('table_style_pagination_padding_count', {
@@ -1325,14 +1053,6 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__count{{STATE}}': [
-      //     'padding-top: {{TOP}}{{UNIT}};',
-      //     'padding-right: {{RIGHT}}{{UNIT}};',
-      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'padding-left: {{LEFT}}{{UNIT}};'
-      //   ],
-      // },
     });
 
     this.addControl('width_count_item', {
@@ -1356,18 +1076,6 @@ class Table extends BaseElement {
     this.addControl('table_style_item_count_pagination_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Item Count Typographic',
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination .altrp-pagination-pages__item{{STATE}}': [
-      //     'font-family: "{{FAMILY}}", sans-serif;',
-      //     'font-size: {{SIZE}}px;',
-      //     'line-height: {{LINEHEIGHT}};',
-      //     'letter-spacing: {{SPACING}}px',
-      //     'font-weight: {{WEIGHT}}',
-      //     'text-transform: {{TRANSFORM}}',
-      //     'font-style: {{STYLE}}',
-      //     'text-decoration: {{DECORATION}}'
-      //   ],
-      // },
     });
 
     this.addControl("table_style_pagination_count_item_border_type", {
@@ -1399,18 +1107,12 @@ class Table extends BaseElement {
           label: "Groove"
         }
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'border-style: {{VALUE}};',
-      // }
     });
 
     this.addControl("table_style_pagination_count_item_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Item Count Border Width",
       units: ['px', '%', 'vh', 'vw'],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-      // }
     });
 
     this.addControl('table_style_count_item_border_radius', {
@@ -1420,38 +1122,21 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': [
-      //     'border-top-left-radius: {{TOP}}{{UNIT}}',
-      //     'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-      //     'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-      //     'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
-      //   ]
-      // }
     });
 
     this.addControl("table_style_pagination_count_item_border_color", {
       type: CONTROLLER_COLOR,
       label: "Item Count Border color",
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'border-color: {{COLOR}};',
-      // }
     });
 
     this.addControl("table_style_pagination_active_count_item_border_color", {
       type: CONTROLLER_COLOR,
       label: "Active Item Count Border color",
-      // rules: {
-      //   '{{ELEMENT}} .active.altrp-pagination-pages__item{{STATE}}': 'border-color: {{COLOR}};',
-      // }
     });
 
     this.addControl('pagination_count_item_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Item Count Shadow',
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination-pages__item{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      // },
     });
 
     this.addControl("ellipsis_heading", {
@@ -1472,14 +1157,6 @@ class Table extends BaseElement {
       conditions: {
         'is_with_ellipsis': true,
       },
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__ellipsis{{STATE}}': [
-      //     'margin-top: {{TOP}}{{UNIT}};',
-      //     'margin-right: {{RIGHT}}{{UNIT}};',
-      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'margin-left: {{LEFT}}{{UNIT}};'
-      //   ]
-      // },
     });
 
     this.addControl("ellipsis_color", {
@@ -1488,9 +1165,6 @@ class Table extends BaseElement {
       conditions: {
         'is_with_ellipsis': true,
       },
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__ellipsis{{STATE}}': 'color: {{COLOR}}'
-      // }
     });
 
     this.addControl('ellipsis_typographic', {
@@ -1499,18 +1173,6 @@ class Table extends BaseElement {
       conditions: {
         'is_with_ellipsis': true,
       },
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__ellipsis{{STATE}}': [
-      //     'font-family: "{{FAMILY}}", sans-serif;',
-      //     'font-size: {{SIZE}}px;',
-      //     'line-height: {{LINEHEIGHT}};',
-      //     'letter-spacing: {{SPACING}}px',
-      //     'font-weight: {{WEIGHT}}',
-      //     'text-transform: {{TRANSFORM}}',
-      //     'font-style: {{STYLE}}',
-      //     'text-decoration: {{DECORATION}}'
-      //   ],
-      // },
     });
 
     this.endControlSection();
@@ -1531,14 +1193,6 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': [
-      //     'margin-top: {{TOP}}{{UNIT}};',
-      //     'margin-right: {{RIGHT}}{{UNIT}};',
-      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'margin-left: {{LEFT}}{{UNIT}};'
-      //   ],
-      // },
     });
 
     this.addControl('page_input_padding', {
@@ -1548,14 +1202,6 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': [
-      //     'padding-top: {{TOP}}{{UNIT}};',
-      //     'padding-right: {{RIGHT}}{{UNIT}};',
-      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'padding-left: {{LEFT}}{{UNIT}};'
-      //   ]
-      // },
     });
 
     this.addControl("page_input_text_color", {
@@ -1565,34 +1211,16 @@ class Table extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'color: {{COLOR}}'
-      // }
     });
 
     this.addControl("page_input_background_color", {
       type: CONTROLLER_COLOR,
       label: "Page Input background color",
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'background-color: {{COLOR}}'
-      // }
     });
 
     this.addControl('table_style_page_input_pagination_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Page Input Typographic',
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination .altrp-pagination__goto-page{{STATE}}': [
-      //     'font-family: "{{FAMILY}}", sans-serif;',
-      //     'font-size: {{SIZE}}px;',
-      //     'line-height: {{LINEHEIGHT}};',
-      //     'letter-spacing: {{SPACING}}px',
-      //     'font-weight: {{WEIGHT}}',
-      //     'text-transform: {{TRANSFORM}}',
-      //     'font-style: {{STYLE}}',
-      //     'text-decoration: {{DECORATION}}'
-      //   ],
-      // },
     });
 
     this.addControl("page_input_border_type", {
@@ -1624,18 +1252,12 @@ class Table extends BaseElement {
           label: "Groove"
         }
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'border-style: {{VALUE}};',
-      // }
     });
 
     this.addControl("page_input_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Page Input Border width",
       units: ['px', '%', 'vh', 'vw'],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-      // }
     });
 
     this.addControl('page_input_border_radius', {
@@ -1645,30 +1267,16 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': [
-      //     'border-top-left-radius: {{TOP}}{{UNIT}}',
-      //     'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-      //     'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-      //     'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
-      //   ]
-      // }
     });
 
     this.addControl("page_input_border_color", {
       type: CONTROLLER_COLOR,
       label: "Page Input Border Color",
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'border-color: {{COLOR}};',
-      // }
     });
 
     this.addControl('page_input_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Item Count Shadow',
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__goto-page{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      // },
     });
 
     this.endControlSection();
@@ -1690,14 +1298,6 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__select-size{{STATE}}': [
-      //     'margin-top: {{TOP}}{{UNIT}};',
-      //     'margin-right: {{RIGHT}}{{UNIT}};',
-      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'margin-left: {{LEFT}}{{UNIT}};'
-      //   ],
-      // },
     });
 
     this.addControl('pagination_select_padding', {
@@ -1707,32 +1307,12 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': [
-      //     'padding-top: {{TOP}}{{UNIT}};',
-      //     'padding-right: {{RIGHT}}{{UNIT}};',
-      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'padding-left: {{LEFT}}{{UNIT}};'
-      //   ]
-      // },
     });
 
 
     this.addControl('table_style_pagination_select__pagination_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Pagination Select Typographic',
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination .altrp-pagination__select-size{{STATE}}': [
-      //     'font-family: "{{FAMILY}}", sans-serif;',
-      //     'font-size: {{SIZE}}px;',
-      //     'line-height: {{LINEHEIGHT}};',
-      //     'letter-spacing: {{SPACING}}px',
-      //     'font-weight: {{WEIGHT}}',
-      //     'text-transform: {{TRANSFORM}}',
-      //     'font-style: {{STYLE}}',
-      //     'text-decoration: {{DECORATION}}'
-      //   ],
-      // },
     });
 
     this.addControl("pagination_select_border_type", {
@@ -1764,18 +1344,12 @@ class Table extends BaseElement {
           label: "Groove"
         }
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'border-style: {{VALUE}};',
-      // }
     });
 
     this.addControl("pagination_select_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Pagination Select Border width",
       units: ['px', '%', 'vh', 'vw'],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-      // }
     });
 
     this.addControl('pagination_select_border_radius', {
@@ -1785,46 +1359,26 @@ class Table extends BaseElement {
         unit: 'px'
       },
       units: ['px', '%', 'vh', 'vw'],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': [
-      //     'border-top-left-radius: {{TOP}}{{UNIT}}',
-      //     'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-      //     'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-      //     'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
-      //   ]
-      // }
     });
 
     this.addControl("pagination_select_border_color", {
       type: CONTROLLER_COLOR,
       label: "Pagination Select Border Color",
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'border-color: {{COLOR}};',
-      // }
     });
 
     this.addControl('pagination_select_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Pagination Select Shadow',
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-      // },
     });
 
     this.addControl("pagination_select_text_color", {
       type: CONTROLLER_COLOR,
       label: "Pagination Select text color",
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'color: {{COLOR}}'
-      // }
     });
 
     this.addControl("pagination_select_background_color", {
       type: CONTROLLER_COLOR,
       label: "Pagination Select background color",
-      // rules: {
-      //   '{{ELEMENT}} .altrp-pagination__select-size .altrp-field-select2__control{{STATE}}': 'background-color: {{COLOR}}'
-      // }
     });
 
     this.endControlSection();

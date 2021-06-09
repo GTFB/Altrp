@@ -947,25 +947,6 @@ class Button extends BaseElement {
     }
     );
 
-    // this.addControl('creative_link_controller', {
-    //   type: CONTROLLER_CREATIVE_LINK,
-    //   label: 'Creative Link',
-    //   rules: {
-    //     '{{ELEMENT}} .altrp-btn:after{{STATE}}': [
-    //       'transition-duration: {{SIZE}}s;',
-    //       'height: {{LINEHEIGHT}}px;',
-    //       'color: {{COLOR}};',
-    //       'background: {{BACKGROUND}};',
-    //     ],
-    //     '{{ELEMENT}} .altrp-btn:before{{STATE}}': [
-    //       'transition-duration: {{SIZE}}s;',
-    //       'height: {{LINEHEIGHT}}px;',
-    //       'color: {{COLOR}};',
-    //       'background: {{BACKGROUND}};',
-    //     ],
-    //   },
-    // }
-    // );
 
     this.endControlSection();
 
@@ -1135,9 +1116,6 @@ class Button extends BaseElement {
           label: 'Lato'
         },
       ],
-      // rules: {
-      //   '{{ELEMENT}}': 'font-family: {{VALUE}}'
-      // }
     });
 
     this.endControlSection();
