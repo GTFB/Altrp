@@ -24,6 +24,7 @@ import MapConstructorComponent
 import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
 import Diagram from "../../../../editor/src/js/classes/elements/Diagram";
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
+import DashboardComponent from "../../../../editor/src/js/components/widgets/styled-components/DashboardComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -325,7 +326,6 @@ class ElementWrapper extends Component {
     }
 
     let WrapperComponent = ElementWrapperDivComponent;
-
     switch (this.props.element.getName()) {
       case "gallery":
         WrapperComponent = GalleryComponent;
@@ -375,7 +375,11 @@ class ElementWrapper extends Component {
       case "diagram":
         WrapperComponent = DiagramComponent;
         break;
+      case "dashboards":
+        WrapperComponent = DashboardComponent;
+        break;
     }
+
     tooltip_text = replaceContentWithData(tooltip_text, this.props.element.getCurrentModel().getData())
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
       <WrapperComponent

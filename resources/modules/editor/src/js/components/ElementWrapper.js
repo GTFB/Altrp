@@ -36,6 +36,7 @@ import ListComponent from "./widgets/styled-components/ListComponent";
 import MapConstructorComponent from "./widgets/styled-components/MapConstructorComponent";
 import MapComponent from "./widgets/styled-components/MapComponent";
 import DiagramComponent from "./widgets/styled-components/DiagramComponent";
+import DashboardComponent from "./widgets/styled-components/DashboardComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -440,6 +441,9 @@ class ElementWrapper extends Component {
         break;
       case "diagram":
         WrapperComponent = DiagramComponent;
+        break;
+      case "dashboards":
+        WrapperComponent = DashboardComponent;
         break;
     }
 
