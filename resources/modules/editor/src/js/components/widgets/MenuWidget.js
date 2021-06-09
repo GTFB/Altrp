@@ -1,15 +1,14 @@
 import React, {Component} from 'react'
-import {Button, ButtonGroup, Menu, MenuItem, Position} from "@blueprintjs/core";
-import { Popover2 } from "@blueprintjs/popover2";
 import {getMenuByGUID} from "../../../../../front-app/src/js/functions/menus";
 import {addMenu} from "../../../../../front-app/src/js/store/menus-storage/actions";
 import {getResponsiveSetting, isEditor, mbParseJSON} from "../../../../../front-app/src/js/helpers";
 import {createGlobalStyle} from 'styled-components';
-import '../../../sass/blueprint.scss'
 import {
   dimensionsControllerToStyles, shadowControllerToStyles,
   typographicControllerToStyles
 } from "../../../../../front-app/src/js/helpers/styles";
+const {Button, ButtonGroup, Menu, MenuItem, Position} = window.altrpLibs.Blueprint;
+const {Popover2} = window.altrpLibs.Popover2;
 
 const GlobalStyles = createGlobalStyle`
   ${({elementId, settings}) => {

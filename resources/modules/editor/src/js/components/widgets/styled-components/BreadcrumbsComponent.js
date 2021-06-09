@@ -90,7 +90,6 @@ const BreadcrumbsComponent = styled.div`
 
     if(current_font){
       styles += typographicControllerToStyles(current_font);
-      console.log(styles);
     }
 
     styles += `}`;

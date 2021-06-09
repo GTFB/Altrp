@@ -1,7 +1,23 @@
 console.log('FIRST SCRIPT: ',performance.now());
 import './sass/front-style.scss';
 window.sSr = false;
-
+window.libsLoaded = [];
+const libs = [
+  {
+    name: 'blueprint',
+    import: async () => {
+      await import(/* webpackChunkName: 'Blueprint' */'./js/libs/blueprint');
+      window.libsLoaded.push('blueprint')
+    },
+  },
+  {
+    name: 'blueprint.popover2',
+    import: async() => {
+      await import(/* webpackChunkName: 'Popover2' */'./js/libs/blueprint.popover2');
+      window.libsLoaded.push('blueprint.popover2')
+    },
+  }
+];
 /**
  * Параллельно загружаем все необходимые модули
  */
@@ -17,25 +33,18 @@ import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElement
   console.log('LOAD FrontElementsManager: ',performance.now());
   loadingCallback();
 });
+import (/* webpackChunkName: 'React_ReactDom_Lodash' */'./js/libs/react-lodash').then(module=>{
+  console.log('LOAD React_ReactDom_Lodash: ',performance.now());
+  loadingCallback();
+});
 import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element-component').then(module=>{
   window.elementDecorator = module.default;
   console.log('LOAD elementDecorator: ',performance.now());
   loadingCallback();
 });
-import (/* webpackChunkName: 'React' */'react').then(module=>{
-  window.React = module.default;
-  window.Component = module.Component;
-  console.log('LOAD React: ',performance.now());
-  loadingCallback();
-});
 import (/* webpackChunkName: 'FrontApp' */'./FrontApp').then(module=>{
   window.FrontApp = module.default;
   console.log('LOAD FrontApp: ',performance.now());
-  loadingCallback();
-});
-import (/* webpackChunkName: 'ReactDOM' */'react-dom').then(module=>{
-  window.ReactDOM = module.default;
-  console.log('LOAD ReactDOM: ',performance.now());
   loadingCallback();
 });
 import (/* webpackChunkName: 'ElementWrapper' */'./js/components/ElementWrapper').then(module=>{
@@ -100,10 +109,6 @@ if (process.env.NODE_ENV !== 'production') {
         window.iconsManager = new IconsManager.default();
       }
   );
-  // import('./FrontApp').then(FrontApp => {
-  //   FrontApp = FrontApp.default;
-  //   ReactDOM.render(<FrontApp />, document.getElementById('front-app'));
-  // });
   let _token = await fetch('/ajax/_token', {
     method: 'get',
     headers: {

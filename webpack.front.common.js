@@ -110,7 +110,7 @@ module.exports = {
     hotOnly: true
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    // new webpack.HotModuleReplacementPlugin(),
     new CleanWebpackPlugin()
     // new ExtractTextPlugin('style.css'),
     // new MiniCssExtractPlugin({

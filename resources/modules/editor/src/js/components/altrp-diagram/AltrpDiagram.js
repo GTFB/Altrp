@@ -19,7 +19,6 @@ import {
   POINT
 } from "../../../../../admin/src/components/dashboard/widgetTypes";
 import { getDataByPath } from "../../../../../front-app/src/js/helpers";
-import _ from "lodash";
 import { color } from "d3";
 
 const AltrpDiagram = props => {
