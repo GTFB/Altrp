@@ -166,10 +166,10 @@ class Dashboards extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__card--background{{STATE}}":
-          "background-color: {{COLOR}} !important;"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-dashboard__card--background{{STATE}}":
+      //     "background-color: {{COLOR}} !important;"
+      // }
     });
 
     this.addControl("style_settings_tooltip_background_color", {
@@ -179,10 +179,10 @@ class Dashboards extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__card--settings-tooltip-background{{STATE}}":
-          "background-color: {{COLOR}} !important;"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-dashboard__card--settings-tooltip-background{{STATE}}":
+      //     "background-color: {{COLOR}} !important;"
+      // }
     });
 
     this.addControl("style_settings_tooltip_icon_background_color", {
@@ -192,11 +192,11 @@ class Dashboards extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__card--settings-tooltip-icon-background{{STATE}}": [
-          "background-color: {{COLOR}} !important;"
-        ]
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-dashboard__card--settings-tooltip-icon-background{{STATE}}": [
+      //     "background-color: {{COLOR}} !important;"
+      //   ]
+      // }
     });
 
     this.addControl("style_border_color", {
@@ -206,10 +206,10 @@ class Dashboards extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__card--border-color{{STATE}}":
-          "border-color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-dashboard__card--border-color{{STATE}}":
+      //     "border-color: {{COLOR}};"
+      // }
     });
 
     this.addControl("style_border_style", {
@@ -241,10 +241,10 @@ class Dashboards extends BaseElement {
           label: "Groove"
         }
       ],
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__card--border-style{{STATE}}":
-          "border-style: {{VALUE}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-dashboard__card--border-style{{STATE}}":
+      //     "border-style: {{VALUE}}"
+      // }
     });
     this.addControl("style_border_width", {
       type: CONTROLLER_SLIDER,
@@ -256,10 +256,10 @@ class Dashboards extends BaseElement {
       units: ["px", "%"],
       max: 50,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__card--border{{STATE}}":
-          "border-width: {{SIZE}}{{UNIT}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-dashboard__card--border{{STATE}}":
+      //     "border-width: {{SIZE}}{{UNIT}}"
+      // }
     });
 
     this.addControl("style_border_radius", {
@@ -272,23 +272,23 @@ class Dashboards extends BaseElement {
       units: ["px", "%"],
       max: 50,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__card--border-radius{{STATE}}":
-          "border-radius: {{SIZE}}{{UNIT}}"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-dashboard__card--border-radius{{STATE}}":
+      //     "border-radius: {{SIZE}}{{UNIT}}"
+      // }
     });
 
     this.addControl("style_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
       label: "Typographic",
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}": [
-          'font-family: "{{FAMILY}}", sans-serif !important;'
-        ],
-        "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}} text": [
-          'font-family: "{{FAMILY}}", sans-serif !important;'
-        ]
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}": [
+      //     'font-family: "{{FAMILY}}", sans-serif !important;'
+      //   ],
+      //   "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}} text": [
+      //     'font-family: "{{FAMILY}}", sans-serif !important;'
+      //   ]
+      // }
     });
 
     this.addControl("style_font_color", {
@@ -298,10 +298,10 @@ class Dashboards extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__card--font-color{{STATE}}":
-          "color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-dashboard__card--font-color{{STATE}}":
+      //     "color: {{COLOR}};"
+      // }
     });
 
     this.addControl("style_font_size", {
@@ -314,10 +314,10 @@ class Dashboards extends BaseElement {
       units: ["px", "%"],
       max: 72,
       min: 4,
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__card--font-size{{STATE}}":
-          "font-size: {{SIZE}}{{UNIT}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-dashboard__card--font-size{{STATE}}":
+      //     "font-size: {{SIZE}}{{UNIT}};"
+      // }
     });
 
     this.addControl("style_font_weight", {
@@ -328,10 +328,10 @@ class Dashboards extends BaseElement {
       },
       max: 900,
       min: 100,
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__card--font-weight{{STATE}}":
-          "font-weight: {{WEIGHT}} !important;"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-dashboard__card--font-weight{{STATE}}":
+      //     "font-weight: {{WEIGHT}} !important;"
+      // }
     });
     // Border <--------------------------!--------------------------->
 
@@ -364,10 +364,10 @@ class Dashboards extends BaseElement {
           label: "Groove"
         }
       ],
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}":
-          "border-style: {{VALUE}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}":
+      //     "border-style: {{VALUE}};"
+      // }
     });
 
     this.addControl("border_width_card", {
@@ -377,10 +377,10 @@ class Dashboards extends BaseElement {
         bind: true
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}":
+      //     "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      // }
     });
 
     this.addControl("border_color_card", {
@@ -390,10 +390,10 @@ class Dashboards extends BaseElement {
       //   color: "rgb(50,168,82)",
       //   colorPickedHex: "#32a852",
       // },
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}":
-          "border-color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}":
+      //     "border-color: {{COLOR}};"
+      // }
     });
 
     this.addControl("border_radius_card", {
@@ -403,14 +403,14 @@ class Dashboards extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}": [
-          "border-top-left-radius: {{TOP}}{{UNIT}}",
-          "border-top-right-radius: {{RIGHT}}{{UNIT}}",
-          "border-bottom-right-radius: {{BOTTOM}}{{UNIT}}",
-          "border-bottom-left-radius:  {{LEFT}}{{UNIT}}"
-        ]
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}": [
+      //     "border-top-left-radius: {{TOP}}{{UNIT}}",
+      //     "border-top-right-radius: {{RIGHT}}{{UNIT}}",
+      //     "border-bottom-right-radius: {{BOTTOM}}{{UNIT}}",
+      //     "border-bottom-left-radius:  {{LEFT}}{{UNIT}}"
+      //   ]
+      // }
     });
 
     this.addControl("style_background_shadow", {
@@ -427,10 +427,10 @@ class Dashboards extends BaseElement {
         // colorPickedHex: '#000000',
         // type: ""
       },
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}":
-          "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}":
+      //     "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};"
+      // }
     });
 
     this.endControlSection();
