@@ -835,22 +835,6 @@ class Carousel extends BaseElement {
       min: -200,
     });
 
-    // this.addControl('horizontal_no_center_offset_arrows_navigation_style', {
-    //   conditions: {
-    //     'arrows_navigation_content' : true,
-    //   },
-    //   type: CONTROLLER_SLIDER,
-    //   label: 'Horizontal offset (no center)',
-    //   default:{
-    //     size: 0,
-    //     unit: 'px',
-    //   },
-    //   max: 200,
-    //   min: -200,
-    //   rules: {
-    //     '{{ELEMENT}} .altrp-carousel-arrows-container{{STATE}}': 'transform: translateX({{SIZE}}{{UNIT}})',
-    //   },
-    // });
 
     this.addControl('dots_heading_navigation_style', {
       conditions: {

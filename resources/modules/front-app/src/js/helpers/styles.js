@@ -117,7 +117,7 @@ export function shadowControllerToStyles(data) {
 
   if(data) {
     let {type = 'outline', offsetX,horizontal, offsetY, vertical, blurRadius,blur,spread, spreadRadius, color } = data;
-    return `box-shadow: ${type || ' '} ${offsetX||horizontal || 0}px ${offsetY || vertical || 0}px ${blurRadius || blur || 0}px ${spreadRadius ||spread || 0}px ${color};`;
+    return `box-shadow: ${type || ' '} ${offsetX||horizontal || 0}px ${offsetY || vertical || 0}px ${blurRadius || blur || 0}px ${spreadRadius ||spread || 0}px ${color}; `;
   }
   return  '';
 }
@@ -480,7 +480,7 @@ export function borderWidthStyled(data = {}, declaration = '') {
     left,
     right,
     top,
-    unit,
+    unit = 'px',
   } = data;
 
   if (top && top !== '') {
