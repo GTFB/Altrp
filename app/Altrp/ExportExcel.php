@@ -87,7 +87,7 @@ class ExportExcel extends Model
         }
     }
 
-    protected function parseTemplateArray(&$offset)
+    protected function parseTemplateArray(&$offset, $rows)
     {
         if (!empty($this->worksheet)) {
             for ($i = 0; $i < count($this->worksheet); $i++) {
@@ -99,10 +99,10 @@ class ExportExcel extends Model
                         $key = trim($data[1]);
                         //вставляем массив
                         $this->worksheet[$i][$j] = '';
-                        if (isset($this->data[$key]) && !empty($this->data[$key])) {
-                            $countRows = count($this->data[$key]) - 1;
+                        if (isset($rows[$key]) && !empty($rows[$key])) {
+                            $countRows = count($rows[$key]) - 1;
                             $this->sheet->insertNewRowBefore($i + 2 + $offset, $countRows);
-                            $this->sheet->fromArray($this->data[$key], NULL, $column);
+                            $this->sheet->fromArray($rows[$key], NULL, $column);
                             $offset = $offset + $countRows;
                             return;
                         }
@@ -135,10 +135,14 @@ class ExportExcel extends Model
 
                 $this->parseTemplateData();
                 $offset = 0;
-
-                if (is_array($this->data['dataArray'])) {
-                    $this->parseTemplateArray($offset);
+                if ($this->data && is_array($this->data)) {
+                  foreach ($this->data as $key => $data) {
+                    if (is_array($data)) {
+                      $this->parseTemplateArray($offset, $data);
+                    }
+                  }
                 }
+
             } else {
                 $this->spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
                 $this->sheet = $this->spreadsheet->getActiveSheet();
