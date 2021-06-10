@@ -149,7 +149,7 @@ class FrontElement {
     /**
      * @member {ActionsManager|*} actionsManager
      */
-    const actionsManager = (await import('./modules/ActionsManager.js')).default;
+    const actionsManager = (await import(/* webpackChunkName: 'ActionsManager' */'./modules/ActionsManager.js')).default;
     switch (this.getName()){
       case 'button':{
         actionsManager.registerWidgetActions(this.getIdForAction(), this.getSettings('actions', []), 'click', this);
@@ -176,7 +176,7 @@ class FrontElement {
       return
     }
     this.formsIsInit = true;
-    let formsManager = await import('../../../../editor/src/js/classes/modules/FormsManager.js');
+    let formsManager = await import(/* webpackChunkName: 'FromsManager' */'../../../../editor/src/js/classes/modules/FormsManager.js');
     formsManager = formsManager.default;
 
     switch (this.getName()) {

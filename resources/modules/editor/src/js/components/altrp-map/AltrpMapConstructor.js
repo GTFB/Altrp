@@ -9,7 +9,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { getDataByPath } from "../../../../../front-app/src/js/helpers";
 
-const MapDesigner = React.lazy(() => import("./MapDesigner"));
+const MapDesigner = React.lazy(() => import(/* webpackChunkName: 'MapDesigner' */"./MapDesigner"));
 
 function AltrpMapConstructor({ settings, id }) {
   const [isLoading, setIsLoading] = useState(false);

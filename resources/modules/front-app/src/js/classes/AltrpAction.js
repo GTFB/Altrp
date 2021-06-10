@@ -341,7 +341,7 @@ class AltrpAction extends AltrpModel {
     //   };
     // }
     const formsManager = (
-      await import('../../../../editor/src/js/classes/modules/FormsManager.js')
+      await import(/* webpackChunkName: 'formsManager' */'../../../../editor/src/js/classes/modules/FormsManager.js')
     ).default;
 
     let data = null;
@@ -1070,7 +1070,7 @@ class AltrpAction extends AltrpModel {
     const url = this.getProperty('media_url');
     const loop = this.getProperty('loop');
     if (url) {
-      const { playSound } = await import('../helpers/sounds');
+      const { playSound } = await import(/* webpackChunkName: 'helpers-sounds' */'../helpers/sounds');
       playSound(url, loop, duration);
       await delay(20);
     }

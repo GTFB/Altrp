@@ -148,7 +148,7 @@ class AltrpForm {
                   customHeaders
                 );
                 console.log(res);
-                import("./modules/ModelsManager").then(modelsManager => {
+                import(/* webpackChunkName: 'ModelsManager' */"./modules/ModelsManager").then(modelsManager => {
                   modelsManager.default.updateModelWithData(
                     this.modelName,
                     modelID,

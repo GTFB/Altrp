@@ -1,5 +1,7 @@
 import '../../front-app/src/js/libs/blueprint'
 import '../../front-app/src/js/libs/react-lodash'
+import '../../front-app/src/js/libs/altrp'
+import '../../front-app/src/js/libs/moment'
 import { Provider } from "react-redux";
 import "./installing";
 import ElementsManager from "./js/classes/modules/ElementsManager";

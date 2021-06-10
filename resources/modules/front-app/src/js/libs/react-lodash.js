@@ -1,4 +1,3 @@
-
 import ReactDom from 'react-dom';
 import React, {Component} from 'react';
 import cloneDeep from 'lodash.cloneDeep';
@@ -21,7 +20,8 @@ import each from 'lodash.foreach';
 import toPairs from 'lodash.topairs';
 import keys from 'lodash.keys';
 import toArray from 'lodash.toarray';
-import uniqby  from 'lodash.uniqby';
+import uniqBy  from 'lodash.uniqby';
+import map  from 'lodash.map';
 window._ = {
   cloneDeep,
   get,
@@ -43,9 +43,11 @@ window._ = {
   debounce,
   isNumber,
   isFunction,
-  uniqby,
+  uniqBy,
+  map,
   forEach: each,
 };
 window.ReactDOM = ReactDom;
 window.React = React;
 window.Component = Component;
+

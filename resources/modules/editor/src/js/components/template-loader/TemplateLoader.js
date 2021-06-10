@@ -14,9 +14,9 @@ class TemplateLoader extends Component {
    * @return {Promise<void>}
    */
   async componentDidMount() {
-    const templateLoader = (await import("../../classes/modules/TemplateLoader")).default;
-    const frontElementsFabric = (await import( "../../../../../front-app/src/js/classes/FrontElementsFabric")).default;
-    const ElementWrapper = (await import( "../../../../../front-app/src/js/components/ElementWrapper")).default;
+    const templateLoader = (await import(/* webpackChunkName: 'TemplateLoader' */"../../classes/modules/TemplateLoader")).default;
+    const frontElementsFabric = (await import( /* webpackChunkName: 'FrontElementsFabric' */"../../../../../front-app/src/js/classes/FrontElementsFabric")).default;
+    const ElementWrapper = (await import( /* webpackChunkName: 'ElementWrapper' */"../../../../../front-app/src/js/components/ElementWrapper")).default;
     this.setState(state => ({...state, templateLoader, frontElementsFabric, ElementWrapper}), this.loadTemplate);
   }
   /**

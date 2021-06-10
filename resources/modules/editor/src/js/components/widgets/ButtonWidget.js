@@ -1,6 +1,6 @@
 import React, { Component, Suspense } from "react";
 import { Link, Redirect, withRouter } from "react-router-dom";
-let Dropbar = React.lazy(() => import("../altrp-dropbar/AltrpDropbar"));
+let Dropbar = React.lazy(() => import(/* webpackChunkName: 'AltrpDropbar' */"../altrp-dropbar/AltrpDropbar"));
 import {
   getComponentByElementId,
   getHTMLElementById,
@@ -33,7 +33,7 @@ class ButtonWidget extends Component {
    */
   async _componentWillUnmount() {
     const actionsManager = (
-      await import(
+      await import(/* webpackChunkName: 'ActionsManager' */
         "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
       )
     ).default;
@@ -53,7 +53,7 @@ class ButtonWidget extends Component {
       e.preventDefault();
       e.stopPropagation();
       const actionsManager = (
-        await import(
+        await import(/* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
         )
       ).default;

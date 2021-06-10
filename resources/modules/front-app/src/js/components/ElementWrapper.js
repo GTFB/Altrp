@@ -1,7 +1,5 @@
-
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceContentWithData, setTitle } from "../helpers";
 import { addElement } from "../store/elements-storage/actions";
 import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 import { changeCurrentPageProperty } from "../store/current-page/actions";
@@ -27,6 +25,7 @@ import MapConstructorComponent
   from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
 import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
+const { altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceContentWithData, setTitle } = window.altrpHelpers;
 
 class ElementWrapper extends Component {
   constructor(props) {

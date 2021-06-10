@@ -23,7 +23,7 @@ class CarouselWidget extends Component {
    * @private
    */
   async _componentDidMount(){
-    let AltrpCarousel = await import('../altrp-carousel/AltrpCarousel');
+    let AltrpCarousel = await import(/* webpackChunkName: 'AltrpCarousel' */'../altrp-carousel/AltrpCarousel');
     AltrpCarousel = AltrpCarousel.default;
     this.setState(state=>({
         ...state,

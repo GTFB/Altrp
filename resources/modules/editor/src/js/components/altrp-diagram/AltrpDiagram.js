@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { changePageState } from "../../../../../front-app/src/js/store/altrp-page-state-storage/actions";
 import { connect, useDispatch } from "react-redux";
-import moment from "moment";
 
 import BarDiagram from "../../../../../front-app/src/ts/build/altrp-diagrams/layout/BarDiagram";
 import DynamicPieChart from "../../../../../admin/src/components/dashboard/widgets/DynamicPieChart";
@@ -20,6 +19,8 @@ import {
 } from "../../../../../admin/src/components/dashboard/widgetTypes";
 import { getDataByPath } from "../../../../../front-app/src/js/helpers";
 import { color } from "d3";
+
+const {moment} = window.altrpHelpers;
 
 const AltrpDiagram = props => {
   const { settings, id } = props;

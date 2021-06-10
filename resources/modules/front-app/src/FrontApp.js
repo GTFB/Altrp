@@ -1,15 +1,12 @@
-import { hot } from "react-hot-loader";
-import { getRoutes } from "./js/helpers";
 import appStore from "./js/store/store";
 import AppContent from "./js/components/AppContent";
 import { Provider } from "react-redux";
-import Resource from "../../editor/src/js/classes/Resource";
 import {changeCurrentUser, setUserNotice, setUsersOnline} from "./js/store/current-user/actions";
 import FontsManager from "./js/components/FontsManager";
 import Echo from "laravel-echo";
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider, } from 'react-dnd'
-
+const {getRoutes, Resource} = window.altrpHelpers;
 class FrontApp extends Component {
   constructor(props) {
     super(props);
@@ -108,11 +105,4 @@ class FrontApp extends Component {
   }
 }
 
-let _export;
-if (process.env.NODE_ENV === "production") {
-  _export = FrontApp;
-} else {
-  _export = hot(module)(FrontApp);
-}
-
-export default _export;
+export default window.__hot(module)(FrontApp);

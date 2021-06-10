@@ -18,9 +18,9 @@ import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpS
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
 import moment from "moment";
-const CKeditor = React.lazy(() => import("../ckeditor/CKeditor"));
+const CKeditor = React.lazy(() => import(/* webpackChunkName: 'CKeditor' */"../ckeditor/CKeditor"));
 import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
-const AltrpInput = React.lazy(() => import("../altrp-input/AltrpInput"));
+const AltrpInput = React.lazy(() => import(/* webpackChunkName: 'AltrpInput' */"../altrp-input/AltrpInput"));
 import styled from "styled-components";
 
 const AltrpFieldContainer = styled.div`
@@ -645,7 +645,7 @@ class InputWidget extends Component {
 
     if (focus_actions && !isEditor()) {
       const actionsManager = (
-        await import(
+        await import(/* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
         )
       ).default;
@@ -675,7 +675,7 @@ class InputWidget extends Component {
     }
     if (this.props.element.getSettings("actions", []) && !isEditor()) {
       const actionsManager = (
-        await import(
+        await import(/* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
         )
       ).default;
@@ -707,7 +707,7 @@ class InputWidget extends Component {
 
         if (change_actions && !isEditor()) {
           const actionsManager = (
-            await import(
+            await import(/* webpackChunkName: 'ActionsManager' */
               "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
             )
           ).default;

@@ -3,11 +3,10 @@ import {
   clearCurrentDataStorage,
   currentDataStorageLoaded, currentDataStorageLoading
 } from "../../store/current-data-storage/actions";
-import Resource from "../../../../../editor/src/js/classes/Resource";
 import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
-import {isJSON, mbParseJSON, replaceContentWithData} from "../../helpers";
 import appStore from "../../store/store";
 import {changeCurrentUser} from "../../store/current-user/actions";
+const { Resource, isJSON, mbParseJSON, replaceContentWithData} = window.altrpHelpers;
 
 /**
  * @class DataStorageUpdater

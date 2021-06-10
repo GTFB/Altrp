@@ -14,7 +14,7 @@ export async function sendEmail(emailTemplateGUID = null, subject = 'Message', f
   if(! emailTemplateGUID){
     return {success: true};
   }
-  let templateLoader = (await import('../../../../editor/src/js/classes/modules/TemplateLoader')).default;
+  let templateLoader = (await import(/* webpackChunkName: 'TemplateLoader' */'../../../../editor/src/js/classes/modules/TemplateLoader')).default;
   let template = await templateLoader.loadTemplate(emailTemplateGUID);
   appStore.dispatch(changeCurrentEmailTemplate(template));
   let html = '';
