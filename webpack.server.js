@@ -1,14 +1,13 @@
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const webpack = require("webpack");
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
 module.exports = {
+  mode: 'production',
   entry: "./server/index.js",
 
   target: "node",
 
-  externals: [nodeExternals()],
 
   output: {
     path: path.resolve("server-dist"),
@@ -20,7 +19,16 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        use: "babel-loader"
+        exclude: path.resolve(__dirname, 'node_modules/@babel'),
+        loader: "babel-loader",
+        options: {
+          presets: ["@babel/env", "@babel/preset-react"],
+          plugins: ["@babel/plugin-syntax-jsx", "inline-react-svg"]
+        },
+      },
+      {
+        test:  path.resolve(__dirname, 'node_modules/@babel'),
+        loader: "file-loader",
       },
       {
         test: /\.s[ac]ss$/i,
@@ -46,10 +54,14 @@ module.exports = {
     ]
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": '"production"',
       "process.env.BROWSER": JSON.stringify(true),
       __DEV__: false
-    })
+    }),
+    new webpack.IgnorePlugin({
+      resourceRegExp: /\.ttf|\.woff|\.otf|\.woff2|\.s[ac]ss$/,
+    }),
   ]
 };

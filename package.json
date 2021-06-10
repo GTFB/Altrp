@@ -156,6 +156,7 @@
         "redux-thunk": "^2.3.0",
         "redux-undo": "^1.0.1",
         "renamer": "^1.1.4",
+        "request": "^2.79.0",
         "session-file-store": "^1.4.0",
         "slick-carousel": "^1.8.1",
         "sortablejs": "^1.13.0",

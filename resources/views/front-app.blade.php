@@ -103,11 +103,9 @@
 </head>
 <body class="front-app-body" >
 
-<div id="front-app" style="display:none" class="front-app {{ $is_admin ? 'front-app_admin' : '' }}">
+<div id="front-app" style="" class="front-app {{ $is_admin ? 'front-app_admin' : '' }}">{!! isset( $preload_content[ 'content'] ) ? $preload_content[ 'content']  : ''!!}</div>
+<div id="front-app-server" style="display: none;" class="front-app {{ $is_admin ? 'front-app_admin' : '' }}" style="overflow:auto;">
 {{--  {!! isset( $preload_content[ 'content'] ) ? $preload_content[ 'content']  : ''!!}--}}
-</div>
-<div id="front-app-server" class="front-app {{ $is_admin ? 'front-app_admin' : '' }}" style="overflow:auto;">
-  {!! isset( $preload_content[ 'content'] ) ? $preload_content[ 'content']  : ''!!}
 </div>
 {{--  {!! isset( $preload_content[ 'content'] ) ? $preload_content['content'] : ''!!}--}}
 {{--<div id="front-app" class="front-app-content_preloaded">--}}

@@ -1,17 +1,25 @@
+import AltrpModel from "../../editor/src/js/classes/AltrpModel";
+
 console.log('FIRST SCRIPT: ', performance.now());
+import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 import './sass/front-style.scss';
+import RouteContentWrapper from "./js/components/styled-components/RouteContentWrapper";
+import AreaComponent from "./js/components/AreaComponent";
+import Area from "./js/classes/Area";
+import appStore from "./js/store/store";
+import {Provider} from "react-redux";
 
 window.sSr = false;
 window.libsLoaded = [];
 const LIBS = {
-  'blueprint':  () => {
-    return  import(/* webpackChunkName: 'Blueprint' */'./js/libs/blueprint').then(res=>{
+  'blueprint': () => {
+    return import(/* webpackChunkName: 'Blueprint' */'./js/libs/blueprint').then(res => {
       window.libsLoaded.push('blueprint')
       return Promise.resolve(res)
     });
   },
-  'moment':  () => {
-    return  import(/* webpackChunkName: 'moment' */'./js/libs/moment').then(res=>{
+  'moment': () => {
+    return import(/* webpackChunkName: 'moment' */'./js/libs/moment').then(res => {
       window.libsLoaded.push('moment')
       return Promise.resolve(res)
     });
@@ -30,7 +38,7 @@ const WIDGETS_DEPENDS = {
 }
 
 const libsToLoad = [];
-if(window.altrpElementsLists){
+if (window.altrpElementsLists) {
   window.altrpElementsLists.forEach(el => {
     if (WIDGETS_DEPENDS[el] && WIDGETS_DEPENDS[el].length && libsToLoad.indexOf(el) === -1) {
       WIDGETS_DEPENDS[el].forEach(lib => {
@@ -41,7 +49,7 @@ if(window.altrpElementsLists){
     }
   })
 } else {
-  LIBS.forEach(lib=>{
+  LIBS.forEach(lib => {
     libsToLoad.push(lib())
   })
 }
@@ -76,17 +84,17 @@ import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element
 });
 
 if (process.env.NODE_ENV === 'production') {
-  window.__hot = ()=> C => C;
+  window.__hot = () => C => C;
   import (/* webpackChunkName: 'FrontApp' */'./FrontApp').then(module => {
-  window.FrontApp = module.default;
-  console.log('LOAD FrontApp: ', performance.now());
-  loadingCallback();
-});
+    window.FrontApp = module.default;
+    console.log('LOAD FrontApp: ', performance.now());
+    loadingCallback();
+  });
 
 } else {
-  import(/* webpackChunkName: 'react-hot-loader' */'react-hot-loader').then(({hot})=>{
+  import(/* webpackChunkName: 'react-hot-loader' */'react-hot-loader').then(({hot}) => {
     window.__hot = hot;
-    return  import (/* webpackChunkName: 'FrontApp' */'./FrontApp')
+    return import (/* webpackChunkName: 'FrontApp' */'./FrontApp')
   }).then(module => {
     window.FrontApp = module.default;
     console.log('LOAD FrontApp: ', performance.now());
@@ -126,13 +134,46 @@ function loadingCallback() {
     && (window.altrpElementsLists && (libsToLoad.length === libsLoaded.length))
   ) {
     function renderAltrp() {
-      ReactDOM.render(<FrontApp/>, document.getElementById('front-app'), function () {
-        window.removeEventListener('touchstart', renderAltrp);
-        window.removeEventListener('mouseover', renderAltrp);
-        window.removeEventListener('mousemove', renderAltrp);
-        window.removeEventListener('click', renderAltrp);
-        window.removeEventListener('scroll', renderAltrp);
-      });
+      // ReactDOM.render(<FrontApp/>, document.getElementById('front-app'), function () {
+      //   window.removeEventListener('touchstart', renderAltrp);
+      //   window.removeEventListener('mouseover', renderAltrp);
+      //   window.removeEventListener('mousemove', renderAltrp);
+      //   window.removeEventListener('click', renderAltrp);
+      //   window.removeEventListener('scroll', renderAltrp);
+      // });
+      let page = page_areas.map(area => (Area.areaFabric(area)))
+
+      window.currentRouterMatch = new AltrpModel({});
+      ReactDOM.hydrate(
+        <Router>
+          <Switch>
+            <Route path='*' exact>
+              <Provider store={appStore}>
+                <RouteContentWrapper className="route-content" id="route-content" areas={page}>
+                  {page.map((area, idx) => {
+                    return (
+                      <AreaComponent
+                        {...area}
+                        area={area}
+                        areas={page}
+                        page={page_id}
+                        models={[model_data]}
+                        key={"appArea_" + area.id}
+                      />
+                    );
+                  })}
+                </RouteContentWrapper>
+              </Provider>
+            </Route>
+          </Switch>
+        </Router>
+        , document.getElementById('front-app'), function () {
+          window.removeEventListener('touchstart', renderAltrp);
+          window.removeEventListener('mouseover', renderAltrp);
+          window.removeEventListener('mousemove', renderAltrp);
+          window.removeEventListener('click', renderAltrp);
+          window.removeEventListener('scroll', renderAltrp);
+        });
     }
 
     if (window.ALTRP_LOAD_BY_USER) {
