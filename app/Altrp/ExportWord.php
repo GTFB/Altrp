@@ -4,7 +4,7 @@ namespace App\Altrp;
 
 use Illuminate\Database\Eloquent\Model;
 
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use \PhpOffice\PhpWord\TemplateProcessor;
 
 class ExportWord extends Model
 {
@@ -22,19 +22,17 @@ class ExportWord extends Model
         $this->template = false;
         if (file_exists($template))
             $this->template = $template;
-        $this->filename = 'report.docx';
+        $this->filename = 'report';
         if ($filename)
             $this->filename = $filename;
-        //echo $this->filename;
     }
 
     public function export($type = false)
     {
         try {
             if ($this->template) {
-
                 if (!empty($this->data)) {
-                    $_doc = new \PhpOffice\PhpWord\TemplateProcessor($this->template);
+                    $_doc = new TemplateProcessor($this->template);
                     foreach ($this->data as $key => $dd) {
                         if (is_array($dd)) {
                             $firstKey = array_key_first($dd[0]);
@@ -70,9 +68,10 @@ class ExportWord extends Model
             readfile($filename);
 
             if ($type !== 'robot') unlink($filename);
-
+            
         } catch (\Exception $e) {
             \Log::info($e->getMessage());
+
         }
     }
 }

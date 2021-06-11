@@ -176,8 +176,9 @@ class Action
                     $modelNamespace = $model->parent ? $model->parent->namespace : $model->namespace;
                     $modelClass = '\\' . $modelNamespace;
                     $resultData = [
-                        'dataArray' => $modelClass::all()->toArray()
+                        'data' => $modelClass::all()->toArray()
                     ];
+
                     $resultData = json_encode($resultData);
                 }
                 if($matches[1]  === 'altrpsource'){
@@ -188,11 +189,11 @@ class Action
                     $job = new SendCurl($url, $method, [], [], true);
                     $job->delay(2);
                     $this->dispatchNow($job);
-                    $res = $job->getResponse();
-
+                    $resultData = $job->getResponse();
                     $resultData = [
-                        'dataArray' => $res
+                        'data' => $resultData
                     ];
+
                     $resultData = json_encode($resultData);
                 }
             }

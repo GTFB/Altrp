@@ -25,7 +25,7 @@ class ExportExcel extends Model
 
     public function __construct($data, $template, $filename)
     {
-      $this->data = json_decode($data, true);
+        $this->data = json_decode($data, true);
         $this->template = false;
         if (file_exists($template))
             $this->template = $template;
@@ -87,7 +87,7 @@ class ExportExcel extends Model
         }
     }
 
-    protected function parseTemplateArray(&$offset)
+    protected function parseTemplateArray(&$offset, $rows)
     {
         if (!empty($this->worksheet)) {
             for ($i = 0; $i < count($this->worksheet); $i++) {
@@ -99,10 +99,10 @@ class ExportExcel extends Model
                         $key = trim($data[1]);
                         //вставляем массив
                         $this->worksheet[$i][$j] = '';
-                        if (isset($this->data[$key]) && !empty($this->data[$key])) {
-                            $countRows = count($this->data[$key]) - 1;
+                        if (isset($rows[$key]) && !empty($rows[$key])) {
+                            $countRows = count($rows[$key]) - 1;
                             $this->sheet->insertNewRowBefore($i + 2 + $offset, $countRows);
-                            $this->sheet->fromArray($this->data[$key], NULL, $column);
+                            $this->sheet->fromArray($rows[$key], NULL, $column);
                             $offset = $offset + $countRows;
                             return;
                         }
@@ -112,6 +112,17 @@ class ExportExcel extends Model
         } else {
             throw new \Exception('Не удалось вставить массив');
         }
+    }
+
+    private function recursionHandler($array = false, $offset = 0)
+    {
+        if (!is_array($array)) return;
+
+        $this->parseTemplateArray($offset, $array);
+        foreach ($array as $key => $data) {
+          if (is_array($data)) $this->recursionHandler($data, $offset);
+        }
+
     }
 
     public function export($type = false)
@@ -134,11 +145,9 @@ class ExportExcel extends Model
                 $this->worksheet = $this->sheet->toArray();
 
                 $this->parseTemplateData();
-                $offset = 0;
 
-                if (is_array($this->data['dataArray'])) {
-                    $this->parseTemplateArray($offset);
-                }
+                if ($this->data && is_array($this->data)) $this->recursionHandler($this->data);
+
             } else {
                 $this->spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
                 $this->sheet = $this->spreadsheet->getActiveSheet();
@@ -168,7 +177,7 @@ class ExportExcel extends Model
             readfile($filename);
 
             if ($type !== 'robot') unlink($filename);
-
+            
         } catch (\Exception $e) {
             \Log::info($e->getMessage());
         }
