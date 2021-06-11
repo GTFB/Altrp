@@ -46,37 +46,50 @@ class AltrpUpdateService
     }
     set_time_limit( 0 );
     $version = $this->get_version( $test );
+    \Log::info(date('d.m.Y H:i:s') . " - Get Last Version | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
 
     $url = self::UPDATE_DOMAIN . 'download/' . ( $test ? self::TEST_PRODUCT_NAME : self::PRODUCT_NAME ) . '/' . $version;
     $file = $this->client->get( $url )->getBody()->getContents();
+
+    \Log::info(date('d.m.Y H:i:s') . " - Download Last Version | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
 
     if ( ! $this->write_public_permissions() ) {
       throw new \HttpException( 'Не удалось обновить режим чтения файлов' );
     }
 
+    \Log::info(date('d.m.Y H:i:s') . " - Write Public Permissions | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
+
     if ( ! $this->save_archive( $file ) ) {
       throw new \HttpException( 'Не удалось сохранить архив' );
     }
+
+    \Log::info(date('d.m.Y H:i:s') . " - Saved Archive | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
+
     if ( ! $this->update_files() ) {
       throw new \HttpException( 'Не удалось обновить файлы' );
     }
+    \Log::info(date('d.m.Y H:i:s') . " - Updated Files | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
     if ( ! $this->write_public_permissions( 'public' ) ) {
       throw new \HttpException( 'Не удалось обновить режим чтения файлов' );
     }
+    \Log::info(date('d.m.Y H:i:s') . " - Write Public Permissions | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
     if ( ! $this->delete_archive() ) {
       throw new \HttpException( 'Не удалось удалить архив' );
     }
+    \Log::info(date('d.m.Y H:i:s') . " - Deleted Archive File | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
     if( File::exists( base_path( 'routes/page_routes.php' ) ) ){
       File::delete( base_path( 'routes/page_routes.php') );
     }
-
+    \Log::info(date('d.m.Y H:i:s') . " - Deleted Page Routes | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
     /**
      * Проверяем нужно ли производить агрейд
      */
     $this->checkVersion( $version );
+    \Log::info(date('d.m.Y H:i:s') . " - Check Version | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
 
     // Lunch the installation if the /.env file doesn't exists
     if ( ! File::exists( base_path( '.env' ) ) ) {
+      \Log::info(date('d.m.Y H:i:s') . " - Missing File .env - Go To Install | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
       return redirect( '/install' );
     }
 
@@ -85,25 +98,26 @@ class AltrpUpdateService
     Artisan::call( 'config:clear' );
     // Clear all the cache
     $this->clearCache();
+    \Log::info(date('d.m.Y H:i:s') . " - Cache Cleared  | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
 
     // Upgrade the Database
     $res = $this->upgradeDatabase();
     if ( $res === false ) {
       dd( 'ERROR' );
     }
-
+    \Log::info(date('d.m.Y H:i:s') . " - Upgraded Database  | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
     // Write providers
     $this->writeProviders();
-
+    \Log::info(date('d.m.Y H:i:s') . " - Written Providers  | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
     // Update modules statuses
     $this->updateModulesStatuses();
-
+    \Log::info(date('d.m.Y H:i:s') . " - Updated Module Statuses  | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
     // Update the current version to last version
     $this->setCurrentVersion( $version );
-
+    \Log::info(date('d.m.Y H:i:s') . " - Set Current Version  | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
     // Clear all the cache
     $this->clearCache();
-
+    \Log::info(date('d.m.Y H:i:s') . " - Cache Cleared  | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
     return true;
   }
 
@@ -138,7 +152,7 @@ class AltrpUpdateService
    */
   private function update_files()
   {
-    Artisan::call( 'config:cache' );
+    Artisan::call( 'config:clear' );
     $file_path = storage_path( 'app/' . self::PRODUCT_NAME . '.zip' );
 
     $archive = new ZipArchive();
