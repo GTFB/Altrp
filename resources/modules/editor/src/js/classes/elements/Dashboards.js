@@ -281,6 +281,14 @@ class Dashboards extends BaseElement {
     this.addControl("style_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
       label: "Typographic",
+      default:{
+        lineHeight: 1,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
       // rules: {
       //   "{{ELEMENT}} .altrp-dashboard__card--font{{STATE}}": [
       //     'font-family: "{{FAMILY}}", sans-serif !important;'
@@ -444,18 +452,26 @@ class Dashboards extends BaseElement {
     this.addControl("style_font_drawer_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
       label: "Typographic",
-      rules: {
-        ".{{ID}}.altrp-dashboard__drawer--font{{STATE}}": [
-          "font-size: {{SIZE}}px;",
-          "font-family: {{FAMILY}}",
-          "line-height: {{LINEHEIGHT}};",
-          "letter-spacing: {{SPACING}}px",
-          "font-weight: {{WEIGHT}}",
-          "text-transform: {{TRANSFORM}}",
-          "font-style: {{STYLE}}",
-          "text-decoration: {{DECORATION}}"
-        ]
-      }
+      default:{
+        lineHeight: 1,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      // rules: {
+      //   ".{{ID}}.altrp-dashboard__drawer--font{{STATE}}": [
+      //     "font-size: {{SIZE}}px;",
+      //     "font-family: {{FAMILY}}",
+      //     "line-height: {{LINEHEIGHT}};",
+      //     "letter-spacing: {{SPACING}}px",
+      //     "font-weight: {{WEIGHT}}",
+      //     "text-transform: {{TRANSFORM}}",
+      //     "font-style: {{STYLE}}",
+      //     "text-decoration: {{DECORATION}}"
+      //   ]
+      // }
     });
 
     this.addControl("style_font_color_typographic", {
@@ -465,9 +481,9 @@ class Dashboards extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      rules: {
-        ".{{ID}}.altrp-dashboard__drawer--font{{STATE}}": "color: {{COLOR}};"
-      }
+      // rules: {
+      //   ".{{ID}}.altrp-dashboard__drawer--font{{STATE}}": "color: {{COLOR}};"
+      // }
     });
 
     this.addControl("style_background_color_typographic", {
@@ -477,27 +493,35 @@ class Dashboards extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      rules: {
-        ".{{ID}}.altrp-dashboard__drawer--font{{STATE}}":
-          "background-color: {{COLOR}} !important;"
-      }
+      // rules: {
+      //   ".{{ID}}.altrp-dashboard__drawer--font{{STATE}}":
+      //     "background-color: {{COLOR}} !important;"
+      // }
     });
 
     this.addControl("style_font_drawer_typographic_input", {
       type: CONTROLLER_TYPOGRAPHIC,
       label: "Typographic input",
-      rules: {
-        ".{{ID}}.altrp-dashboard__drawer--font-input{{STATE}}": [
-          "font-size: {{SIZE}}px;",
-          "font-family: {{FAMILY}}",
-          "line-height: {{LINEHEIGHT}};",
-          "letter-spacing: {{SPACING}}px",
-          "font-weight: {{WEIGHT}}",
-          "text-transform: {{TRANSFORM}}",
-          "font-style: {{STYLE}}",
-          "text-decoration: {{DECORATION}}"
-        ]
-      }
+      default:{
+        lineHeight: 1,
+        spacing: 0,
+        size: 16,
+        weight: "normal",
+        family: "Open Sans",
+        decoration: ""
+      },
+      // rules: {
+      //   ".{{ID}}.altrp-dashboard__drawer--font-input{{STATE}}": [
+      //     "font-size: {{SIZE}}px;",
+      //     "font-family: {{FAMILY}}",
+      //     "line-height: {{LINEHEIGHT}};",
+      //     "letter-spacing: {{SPACING}}px",
+      //     "font-weight: {{WEIGHT}}",
+      //     "text-transform: {{TRANSFORM}}",
+      //     "font-style: {{STYLE}}",
+      //     "text-decoration: {{DECORATION}}"
+      //   ]
+      // }
     });
 
     this.addControl("style_font_size_drawer_section", {
@@ -510,11 +534,11 @@ class Dashboards extends BaseElement {
       units: ["px", "%"],
       max: 72,
       min: 4,
-      rules: {
-        ".{{ID}}.altrp-dashboard__drawer--section-font-size{{STATE}}": [
-          "font-size: {{SIZE}}{{UNIT}};"
-        ]
-      }
+      // rules: {
+      //   ".{{ID}}.altrp-dashboard__drawer--section-font-size{{STATE}}": [
+      //     "font-size: {{SIZE}}{{UNIT}};"
+      //   ]
+      // }
     });
 
     this.addControl("style_font_size_drawer_label", {
@@ -527,11 +551,11 @@ class Dashboards extends BaseElement {
       units: ["px", "%"],
       max: 72,
       min: 4,
-      rules: {
-        ".{{ID}}.altrp-dashboard__drawer--label-font-size{{STATE}}": [
-          "font-size: {{SIZE}}{{UNIT}};"
-        ]
-      }
+      // rules: {
+      //   ".{{ID}}.altrp-dashboard__drawer--label-font-size{{STATE}}": [
+      //     "font-size: {{SIZE}}{{UNIT}};"
+      //   ]
+      // }
     });
 
     this.addControl("style_margin_subheading", {
@@ -546,14 +570,14 @@ class Dashboards extends BaseElement {
         bind: true
       },
       units: ["px", "%", "vh"],
-      rules: {
-        ".{{ID}}.altrp-dashboard__drawer--font-margin{{STATE}}": [
-          "margin-top: {{TOP}}{{UNIT}};",
-          "margin-right: {{RIGHT}}{{UNIT}};",
-          "margin-bottom: {{BOTTOM}}{{UNIT}};",
-          "margin-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
+      // rules: {
+      //   ".{{ID}}.altrp-dashboard__drawer--font-margin{{STATE}}": [
+      //     "margin-top: {{TOP}}{{UNIT}};",
+      //     "margin-right: {{RIGHT}}{{UNIT}};",
+      //     "margin-bottom: {{BOTTOM}}{{UNIT}};",
+      //     "margin-left: {{LEFT}}{{UNIT}};"
+      //   ]
+      // }
     });
 
     // << ЦВЕТ ЧЕКОБОКСА
@@ -565,12 +589,12 @@ class Dashboards extends BaseElement {
         color: "black",
         colorPickedHex: ""
       },
-      rules: {
-        ".{{ID}}.altrp-dashboard__checkboxcolor.MuiCheckbox-colorSecondary.Mui-checked{{STATE}}": [
-          "color: {{COLOR}};",
-          "background-color: transparent !important"
-        ]
-      }
+      // rules: {
+      //   ".{{ID}}.altrp-dashboard__checkboxcolor.MuiCheckbox-colorSecondary.Mui-checked{{STATE}}": [
+      //     "color: {{COLOR}};",
+      //     "background-color: transparent !important"
+      //   ]
+      // }
     });
 
     this.addControl("slider_range_color", {
@@ -580,10 +604,10 @@ class Dashboards extends BaseElement {
         color: "black",
         colorPickedHex: ""
       },
-      rules: {
-        ".{{ID}}.altrp-dashboard__drawer--range-drawer-color.MuiSlider-root{{STATE}}":
-          "color: {{COLOR}};"
-      }
+      // rules: {
+      //   ".{{ID}}.altrp-dashboard__drawer--range-drawer-color.MuiSlider-root{{STATE}}":
+      //     "color: {{COLOR}};"
+      // }
     });
 
     this.addControl("background_color_btn", {
@@ -593,9 +617,9 @@ class Dashboards extends BaseElement {
       //   color: "rgb(52,59,76)",
       //   colorPickedHex: "#343B4C",
       // },
-      rules: {
-        ".{{ID}}.altrp-btn-draw{{STATE}}": "background-color: {{COLOR}};"
-      }
+      // rules: {
+      //   ".{{ID}}.altrp-btn-draw{{STATE}}": "background-color: {{COLOR}};"
+      // }
     });
 
     this.addControl("font_typographic_btn", {
@@ -609,18 +633,18 @@ class Dashboards extends BaseElement {
       //   family: "Open Sans",
       //   decoration: ""
       // },
-      rules: {
-        ".{{ID}}.altrp-btn-draw{{STATE}}": [
-          "font-size: {{SIZE}}px;",
-          "font-family: {{FAMILY}}",
-          "line-height: {{LINEHEIGHT}};",
-          "letter-spacing: {{SPACING}}px",
-          "font-weight: {{WEIGHT}}",
-          "text-transform: {{TRANSFORM}}",
-          "font-style: {{STYLE}}",
-          "text-decoration: {{DECORATION}}"
-        ]
-      }
+      // rules: {
+      //   ".{{ID}}.altrp-btn-draw{{STATE}}": [
+      //     "font-size: {{SIZE}}px;",
+      //     "font-family: {{FAMILY}}",
+      //     "line-height: {{LINEHEIGHT}};",
+      //     "letter-spacing: {{SPACING}}px",
+      //     "font-weight: {{WEIGHT}}",
+      //     "text-transform: {{TRANSFORM}}",
+      //     "font-style: {{STYLE}}",
+      //     "text-decoration: {{DECORATION}}"
+      //   ]
+      // }
     });
 
     this.addControl("font_color_btn", {
@@ -630,9 +654,9 @@ class Dashboards extends BaseElement {
       //   color: "rgb(255,255,255)",
       //   colorPickedHex: "#FFF",
       // },
-      rules: {
-        ".{{ID}}.altrp-btn-draw{{STATE}}": "color: {{COLOR}};"
-      }
+      // rules: {
+      //   ".{{ID}}.altrp-btn-draw{{STATE}}": "color: {{COLOR}};"
+      // }
     });
 
     this.addControl("border_type_select", {
@@ -664,10 +688,10 @@ class Dashboards extends BaseElement {
           label: "Groove"
         }
       ],
-      rules: {
-        ".{{ID}}.altrp-dashboard__drawer--select{{STATE}}":
-          "border-style: {{VALUE}};"
-      }
+      // rules: {
+      //   ".{{ID}}.altrp-dashboard__drawer--select{{STATE}}":
+      //     "border-style: {{VALUE}};"
+      // }
     });
 
     this.addControl("border_width_select", {
@@ -677,10 +701,10 @@ class Dashboards extends BaseElement {
         bind: true
       },
       units: ["px", "%", "vh"],
-      rules: {
-        ".{{ID}}.altrp-dashboard__drawer--select{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-      }
+      // rules: {
+      //   ".{{ID}}.altrp-dashboard__drawer--select{{STATE}}":
+      //     "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      // }
     });
 
     this.addControl("border_color_select", {
@@ -690,10 +714,10 @@ class Dashboards extends BaseElement {
       //   color: "rgb(50,168,82)",
       //   colorPickedHex: "#32a852",
       // },
-      rules: {
-        ".{{ID}}.altrp-dashboard__drawer--select{{STATE}}":
-          "border-color: {{COLOR}};"
-      }
+      // rules: {
+      //   ".{{ID}}.altrp-dashboard__drawer--select{{STATE}}":
+      //     "border-color: {{COLOR}};"
+      // }
     });
 
     // this.addControl("style_range_drawer_color", {
@@ -750,14 +774,14 @@ class Dashboards extends BaseElement {
         bind: true
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}}.altrp-dashboard__tooltip--label-background{{STATE}}": [
-          "margin-top: {{TOP}}{{UNIT}};",
-          "margin-right: {{RIGHT}}{{UNIT}};",
-          "margin-bottom: {{BOTTOM}}{{UNIT}};",
-          "margin-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
+      // rules: {
+      //   "{{ELEMENT}}.altrp-dashboard__tooltip--label-background{{STATE}}": [
+      //     "margin-top: {{TOP}}{{UNIT}};",
+      //     "margin-right: {{RIGHT}}{{UNIT}};",
+      //     "margin-bottom: {{BOTTOM}}{{UNIT}};",
+      //     "margin-left: {{LEFT}}{{UNIT}};"
+      //   ]
+      // }
     });
 
     this.addControl("style_padding_tooltip", {
@@ -772,31 +796,31 @@ class Dashboards extends BaseElement {
         bind: true
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}}.altrp-dashboard__tooltip--font{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
+      // rules: {
+      //   "{{ELEMENT}}.altrp-dashboard__tooltip--font{{STATE}}": [
+      //     "padding-top: {{TOP}}{{UNIT}};",
+      //     "padding-right: {{RIGHT}}{{UNIT}};",
+      //     "padding-bottom: {{BOTTOM}}{{UNIT}};",
+      //     "padding-left: {{LEFT}}{{UNIT}};"
+      //   ]
+      // }
     });
 
     this.addControl("style_font_tooltip", {
       type: CONTROLLER_TYPOGRAPHIC,
       label: "Typographic",
-      rules: {
-        ".{{ID}}.altrp-dashboard__tooltip--font{{STATE}}": [
-          "font-size: {{SIZE}}px;",
-          "font-family: {{FAMILY}}",
-          "line-height: {{LINEHEIGHT}};",
-          "letter-spacing: {{SPACING}}px",
-          "font-weight: {{WEIGHT}}",
-          "text-transform: {{TRANSFORM}}",
-          "font-style: {{STYLE}}",
-          "text-decoration: {{DECORATION}}"
-        ]
-      }
+      // rules: {
+      //   ".{{ID}}.altrp-dashboard__tooltip--font{{STATE}}": [
+      //     "font-size: {{SIZE}}px;",
+      //     "font-family: {{FAMILY}}",
+      //     "line-height: {{LINEHEIGHT}};",
+      //     "letter-spacing: {{SPACING}}px",
+      //     "font-weight: {{WEIGHT}}",
+      //     "text-transform: {{TRANSFORM}}",
+      //     "font-style: {{STYLE}}",
+      //     "text-decoration: {{DECORATION}}"
+      //   ]
+      // }
     });
 
     this.addControl("style_font_color_tooltip", {
@@ -806,9 +830,9 @@ class Dashboards extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      rules: {
-        ".{{ID}}.altrp-dashboard__tooltip--font{{STATE}}": "color: {{COLOR}};"
-      }
+      // rules: {
+      //   ".{{ID}}.altrp-dashboard__tooltip--font{{STATE}}": "color: {{COLOR}};"
+      // }
     });
 
     this.addControl("style_background_color_tooltip", {
@@ -818,10 +842,10 @@ class Dashboards extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      rules: {
-        ".{{ID}}.altrp-dashboard__tooltip--label-background{{STATE}}":
-          "background-color: {{COLOR}} !important;"
-      }
+      // rules: {
+      //   ".{{ID}}.altrp-dashboard__tooltip--label-background{{STATE}}":
+      //     "background-color: {{COLOR}} !important;"
+      // }
     });
 
     this.addControl("style_background_tooltip_shadow", {
@@ -838,10 +862,10 @@ class Dashboards extends BaseElement {
         // colorPickedHex: '#000000',
         // type: ""
       },
-      rules: {
-        "{{ELEMENT}}.altrp-dashboard__tooltip--label-background{{STATE}}":
-          "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}}.altrp-dashboard__tooltip--label-background{{STATE}}":
+      //     "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};"
+      // }
     });
 
     this.addControl("border_type_tooltip", {
@@ -873,10 +897,10 @@ class Dashboards extends BaseElement {
           label: "Groove"
         }
       ],
-      rules: {
-        "{{ELEMENT}}.altrp-dashboard__tooltip--label-background{{STATE}}":
-          "border-style: {{VALUE}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}}.altrp-dashboard__tooltip--label-background{{STATE}}":
+      //     "border-style: {{VALUE}};"
+      // }
     });
 
     this.addControl("border_width_tooltip", {
@@ -886,10 +910,10 @@ class Dashboards extends BaseElement {
         bind: true
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}}.altrp-dashboard__tooltip--label-background{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}}.altrp-dashboard__tooltip--label-background{{STATE}}":
+      //     "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
+      // }
     });
 
     this.addControl("border_color_tooltip", {
@@ -899,10 +923,10 @@ class Dashboards extends BaseElement {
       //   color: "rgb(50,168,82)",
       //   colorPickedHex: "#32a852",
       // },
-      rules: {
-        "{{ELEMENT}}.altrp-dashboard__tooltip--label-background{{STATE}}":
-          "border-color: {{COLOR}};"
-      }
+      // rules: {
+      //   "{{ELEMENT}}.altrp-dashboard__tooltip--label-background{{STATE}}":
+      //     "border-color: {{COLOR}};"
+      // }
     });
 
     this.endControlSection();

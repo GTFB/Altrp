@@ -394,11 +394,12 @@ export function typographicControllerToStyles(data = {}){
  * @return {string}
  * @param {{}} controller
  * @param {string} style
+ * @param {string} important
  */
-export function colorStyled(controller, style) {
+export function colorStyled(controller, style, important) {
   if(controller) {
     if(controller.color) {
-      return `${style}: ${controller.color};`
+      return `${style}: ${controller.color} ${important};`
     } else return "";
   } else return "";
 }
@@ -503,8 +504,9 @@ export function borderRadiusStyled(data = {}) {
  * @return {string}
  * @param {{}} controller
  * @param {string} style
+ * @param {string} important
  */
-export function dimensionsStyled(controller, style) {
+export function dimensionsStyled(controller, style, important) {
   if(controller) {
     const unit = controller.unit || "px";
     const left = controller.left || 0;
@@ -513,7 +515,7 @@ export function dimensionsStyled(controller, style) {
     const top = controller.top || 0;
 
     if(controller.left || controller.right || controller.bottom || controller.top) {
-      return `${style}: ${top + unit} ${right + unit} ${bottom + unit} ${left + unit};`
+      return `${style}: ${top + unit} ${right + unit} ${bottom + unit} ${left + unit} ${important};`
     } else return "";
   } else {
     return ""
@@ -565,8 +567,9 @@ export function sliderStyled(controller) {
  * проверяет наличичие значения shadow
  * @return {string}
  * @param {{}} controller
+ * @param {string} important
  */
-export function shadowStyled(controller = {}) {
+export function shadowStyled(controller = {}, important) {
   if(controller) {
     const type = controller.type || "";
     const horizontal = controller.horizontal || 0;
@@ -574,7 +577,7 @@ export function shadowStyled(controller = {}) {
     const blur = controller.blur || 0;
     const spread = controller.spread || 0;
     const color = controller.color || "";
-    return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread} ${color};`;
+    return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread} ${color} ${important};`;
   } else {
     return ""
   }
@@ -584,15 +587,16 @@ export function shadowStyled(controller = {}) {
  * проверяет наличичие значения text shadow
  * @return {string}
  * @param {{}} controller
+ * @param {string} important
  */
-export function textShadowStyled(controller = {}) {
+export function textShadowStyled(controller = {}, important) {
   if(controller) {
     const horizontal = controller.horizontal || 0;
     const vertical = controller.vertical || 0;
     const blur = controller.blur || 0;
     const color = controller.color || "";
     if(horizontal || vertical || blur || color) {
-      return `text-shadow: ${horizontal}px ${vertical}px ${blur}px ${color};`;
+      return `text-shadow: ${horizontal}px ${vertical}px ${blur}px ${color} ${important};`;
     } else {
       return ""
     }
@@ -653,13 +657,14 @@ export function styledString(styles, settings) {
     } else {
       if(_.isArray(style)) {
         const state = style[3] || null;
-        const variable = getResponsiveSetting(settings, style[1], state);
+        const important = style[4] ? "!important" : "";
+        const variable = getResponsiveSetting(settings, style[1], state, important);
         switch (style[2]) {
           case "dimensions":
-            stringStyles += dimensionsStyled(variable, style[0]);
+            stringStyles += dimensionsStyled(variable, style[0], important);
             break;
           case "color":
-            stringStyles += colorStyled(variable, style[0]);
+            stringStyles += colorStyled(variable, style[0], important);
             break;
           case "gradient":
             stringStyles += gradientStyled(variable);
@@ -668,13 +673,13 @@ export function styledString(styles, settings) {
             stringStyles += typographicControllerToStyles(variable);
             break;
           case "slider":
-            stringStyles += `${style[0]}: ${sliderStyled(variable)};`;
+            stringStyles += `${style[0]}: ${sliderStyled(variable)} ${important};`;
             break;
           case "shadow":
-            stringStyles += shadowStyled(variable);
+            stringStyles += shadowStyled(variable, important);
             break;
           case "text-shadow":
-            stringStyles += textShadowStyled(variable);
+            stringStyles += textShadowStyled(variable, important);
             break;
           case "media":
             stringStyles += mediaStyled(variable);
@@ -683,7 +688,7 @@ export function styledString(styles, settings) {
             stringStyles += creativeLinkStyled(variable);
             break;
           default:
-            stringStyles += `${style[0]}: ${defaultStyled(variable)};`
+            stringStyles += `${style[0]}: ${defaultStyled(variable)} ${important};`
         }
       }
 

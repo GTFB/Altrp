@@ -18,6 +18,7 @@ import LegendSettings from "./settings/LegendSettings";
 import TooltipSettings from "./settings/TooltipSettings";
 import AnimationSettings from "./settings/AnimationSettings";
 import SortData from "./settings/SortData";
+import DrawerComponent from "./DrawerComponent";
 
 const mapStateToProps = state => {
   return { editElement: _.cloneDeep(state.editElement) };
@@ -26,7 +27,7 @@ const mapStateToProps = state => {
 function mapDispatchToProps(dispatch) {
   return {
     editElementDispatch: data => dispatch(editElement(data))
-  }; 
+  };
 }
 
 class WidgetSettings extends Component {
@@ -456,12 +457,13 @@ class WidgetSettings extends Component {
 
   render() {
     return (
-      <div
+      <DrawerComponent
+        settings={this.props.settings}
         className={`col ${this.props.widgetID} altrp-dashboard__drawer--font`}
       >
         <div className="row">
           <div className="mx-auto">
-            <h3>Настройка диаграммы</h3>
+            <h3 className="altrp-dashboard__drawer--font">Настройка диаграммы</h3>
           </div>
         </div>
         <div className="row">
@@ -587,7 +589,7 @@ class WidgetSettings extends Component {
             aria-expanded={this.state.openTooltipSettings}
           >
             <div className="collapse-button-content">
-              <div 
+              <div
                 className={`${this.props.widgetID} altrp-dashboard__drawer--section-font-size altrp-dashboard__drawer--font altrp-dashboard__drawer--font-margin`}
               >
               Настройки подсказок
@@ -706,7 +708,7 @@ class WidgetSettings extends Component {
             </div>
           </div>
         )}
-      </div>
+      </DrawerComponent>
     );
   }
 }

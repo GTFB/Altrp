@@ -382,6 +382,12 @@ class TypographicController extends Component {
     };
     // конец стилей для select2
 
+    let weight = 100;
+
+    if(this.state.value) {
+      weight = this.state.value.weight
+    }
+
     let typographic = "";
 
     if (this.state.activeTypographic === true) {
@@ -437,7 +443,7 @@ class TypographicController extends Component {
             Weight
         </div>
           <div className="control-container_select-wrapper">
-            <select name="weightSelect" value={this.state.value.weight || 100} className="control-select control-field" onChange={this.weightChange}>
+            <select name="weightSelect" value={weight} className="control-select control-field" onChange={this.weightChange}>
               {weightOptions.map(option => { return <option value={option.value} key={option.value}>{option.label}</option> })}
             </select>
           </div>
