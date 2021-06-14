@@ -119,7 +119,7 @@ function getSettings(settingName) {
     return this.props.currentElement.getSettings(settingName);
   }
   let _settingName = this.props.controller.getSettingName()
-  let value = this.props.currentElement.getResponsiveSetting(settingName);
+  let value = this.props.currentElement.getResponsiveSetting(settingName, getElementState().value);
   // console.log(getElementSettingsSuffix(this.props.controller));
   // if (value === null || value === undefined) {
   //   value = this.props.currentElement.getSettings(settingName);

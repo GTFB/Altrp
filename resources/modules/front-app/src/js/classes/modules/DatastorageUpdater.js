@@ -32,7 +32,7 @@ class DataStorageUpdater extends AltrpModel {
       currentUser = currentUser.data;
       appStore.dispatch(changeCurrentUser(currentUser));
     }
-    if(! _.get(dataSources, 'length')){
+    if(!initialUpdate && !_.get(dataSources, 'length')){
       dataSources = this.getProperty('currentDataSources');
     }
     if(! dataSources){
@@ -59,7 +59,7 @@ class DataStorageUpdater extends AltrpModel {
       return ! (parameters && parameters.find(param=>{
         if (param.paramValue.toString().indexOf('altrpforms.') !== -1) {
           let params = dataSource.getParams(window.currentRouterMatch.params, 'altrpforms.');
-          this.subscribeToFormsUpdate(dataSource, params);
+          initialUpdate && this.subscribeToFormsUpdate(dataSource, params);
         } else {
           return false;
         }
@@ -105,7 +105,7 @@ class DataStorageUpdater extends AltrpModel {
            * и сохраняем параметры, с которыми уже получили данные
            */
           if (needUpdateFromForms) {
-            this.subscribeToFormsUpdate(dataSource, _.cloneDeep(defaultParams));
+            initialUpdate && this.subscribeToFormsUpdate(dataSource, _.cloneDeep(defaultParams));
           }
           let res = {};
           try {

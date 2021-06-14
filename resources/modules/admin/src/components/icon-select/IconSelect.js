@@ -18,6 +18,12 @@ const IconSelectWrapper = styled.div`
 `;
 
 class IconSelect extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: props.value,
+    }
+  }
   openAssetsBrowser = ()=>{
     const assetsSettings = {
       tabs: ['icons'],
@@ -45,8 +51,37 @@ class IconSelect extends Component {
     };
     store.dispatch(assetsShow(assetsSettings))
   }
+
+  updateValue(){
+    if(this.state.value && ! _.isString(this.state.value)){
+      fetch(icon.url).then(res => res.text()).then(res=>{
+        this.setState(state =>({...state, value: res}))
+      });
+    }
+  }
+
+  componentDidMount() {
+    this.updateValue();
+  }
+
+  /**
+   *
+   * @param {{}} prevProps
+   * @param {{}} prevState
+   */
+  componentDidUpdate(prevProps, prevState) {
+    if(this.props.value !== prevProps.value){
+      this.setState(state =>({...state, value: this.props.value}), ()=>{
+        this.updateValue();
+      });
+    }
+  }
+
   render(){
-    return <IconSelectWrapper className="altrp-icon-select" onClick={this.openAssetsBrowser} {...this.props}>
+    return <IconSelectWrapper
+      className={"altrp-icon-select " + this.props.className || ''}
+      id={this.props.id}
+      onClick={this.openAssetsBrowser} {...this.props}>
       {this.props.value ?
         <div className="altrp-icon-select__content " dangerouslySetInnerHTML={{__html: this.props.value}}/>
         : iconsManager().renderIcon('add')}

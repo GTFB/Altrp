@@ -8525,7 +8525,7 @@ span.bp3-icon:empty::before {
 
 .bp3-menu-item.bp3-disabled {
   background-color: inherit !important;
-  color: rgba(92, 112, 128, 0.6) !important;
+  color: rgba(92, 112, 128, 0.6);
   cursor: not-allowed !important;
   outline: none !important;
 }

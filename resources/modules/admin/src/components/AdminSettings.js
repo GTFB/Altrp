@@ -6,6 +6,7 @@ import Import from "./settings/Import";
 import Export from "./settings/Export";
 import Websockets from "./settings/integrations/Websockets";
 import Telegram from "./settings/integrations/Telegram";
+import Resource from "../../../editor/src/js/classes/Resource";
 const AdvancedSettings = React.lazy(()=>import('./AdvancedSettings'));
 const MailForm = React.lazy(()=>import('./settings/MailForm'));
 
@@ -15,10 +16,26 @@ export default class AdminSettings extends Component {
     super(props);
     this.switchTab = this.switchTab.bind(this);
     this.state = {
+      SSREnabled: false,
       activeTab: parseInt(window.location.hash[1]) || 0,
     };
   }
 
+  toggleSSREnabled = async (e)=>{
+    let value = e.target.checked;
+    await new Resource({route:'/admin/ajax/settings'}).put('altrp_ssr_disabled', {value});
+    this.setState(state=>({
+      ...state,
+      SSREnabled: value,
+    }))
+  };
+
+  async componentDidMount() {
+    let SSREnabled = ! ! (await new Resource({route:'/admin/ajax/settings'}).get('altrp_ssr_disabled')).altrp_ssr_disabled;
+    this.setState(state => ({...state,
+      SSREnabled,
+    }));
+  }
   switchTab(activeTab){
     window.location.hash = activeTab + '';
     this.setState(state=>{return{ ...state,activeTab }})
@@ -65,10 +82,12 @@ export default class AdminSettings extends Component {
             <table>
               <tbody className="admin-table-body">
               <tr className="admin-settings-table-row">
-                <td className="admin-settings-table__td row-text">Post Types</td>
+                <td className="admin-settings-table__td row-text">SSR</td>
                 <td className="admin-settings-table__td ">
-                  <input className="admin-table__td_check" type="checkbox"/>Pages<br/>
-                  <input className="admin-table__td_check" type="checkbox"/>News
+                  <input className="admin-table__td_check"
+                         checked={this.state.SSREnabled}
+                         onChange={this.toggleSSREnabled}
+                         type="checkbox"/>Hide Server Side Content
                 </td>
               </tr>
               <tr className="admin-settings-table-row">
@@ -93,11 +112,6 @@ export default class AdminSettings extends Component {
                 <td className="admin-settings-table__td ">
                   <input className="admin-table__td_check" type="checkbox"/>Become a super contributor by
                   opting in to share non-sensitive plugin data and to get our updates. Learn more
-                </td>
-              </tr>
-              <tr className="admin-settings-table-row">
-                <td className="admin-settings-table__td">
-                  <button className="admin-settings-button btn btn-sm" type="button">Save Changes</button>
                 </td>
               </tr>
 

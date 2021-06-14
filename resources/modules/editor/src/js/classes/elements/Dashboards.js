@@ -720,39 +720,6 @@ class Dashboards extends BaseElement {
       // }
     });
 
-    // this.addControl("style_range_drawer_color", {
-    //   type: CONTROLLER_COLOR,
-    //   label: "Цвет range",
-    //   default: {
-    //     color: "",
-    //     colorPickedHex: ""
-    //   },
-    //   rules: {
-    //     ".{{ID}}.altrp-dashboard__drawer--range-drawer-color{{STATE}}": [
-    //       "background-color: {{COLOR}};",
-    //       "-webkit-appearance: none;",
-    //       "border-radius: 10px"
-    //     ],
-    //     ".{{ID}}.altrp-dashboard__drawer--range-drawer-color::-webkit-slider-runnable-track{{STATE}}": [
-    //       // "background-color: {{COLOR}};",
-    //       // "height: 10px;",
-    //       "border-radius: 10px",
-    //       "-webkit-appearance: none;",
-    //       "margin-top: 5px"
-    //       // "color: #13bba4;",
-    //     ],
-    //     ".{{ID}}.altrp-dashboard__drawer--range-drawer-color:--webkit-slider-thumb{{STATE}}": [
-    //       // "background-color: {{COLOR}};",
-    //       // "width: 10px;",
-    //       "-webkit-appearance: none;",
-    //       "border-radius: 10px",
-    //       // "height: 10px;",
-    //       "cursor: pointer;",
-    //       "background: {{COLOR}};",
-    //       "color: {{COLOR}};"
-    //     ]
-    //   }
-    // });
 
     this.endControlSection();
 

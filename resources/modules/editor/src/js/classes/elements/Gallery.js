@@ -358,22 +358,6 @@ class Gallery extends BaseElement {
       ],
     });
 
-    // this.addControl('filters', {
-    //   type: CONTROLLER_FILTERS,
-    //   label: 'Filters',
-    //   default: {
-    //     blur: 0,
-    //     brightness: 100,
-    //     contrast: 100,
-    //     saturate: 100,
-    //     hue: 0,
-    //   },
-    //   rules: {
-    //     '{{ELEMENT}} .altrp-gallery-img{{STATE}}': [
-    //       'filter: blur({{BLUR}}px)  brightness({{BRIGHTNESS}}%) contrast({{CONTRAST}}%) saturate({{SATURATE}}%) hue-rotate({{HUE}}deg);'
-    //     ],
-    //   },
-    // });
 
     this.addControl('image_hover_animation', {
         type: CONTROLLER_SELECT,

@@ -208,7 +208,6 @@ class TypographicController extends Component {
     }
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     const { familyOptions } = this.state;
-
     const weightOptions = [
       {
         value: '100',
@@ -382,12 +381,6 @@ class TypographicController extends Component {
     };
     // конец стилей для select2
 
-    let weight = 100;
-
-    if(this.state.value) {
-      weight = this.state.value.weight
-    }
-
     let typographic = "";
 
     if (this.state.activeTypographic === true) {
@@ -443,7 +436,7 @@ class TypographicController extends Component {
             Weight
         </div>
           <div className="control-container_select-wrapper">
-            <select name="weightSelect" value={weight} className="control-select control-field" onChange={this.weightChange}>
+            <select name="weightSelect" value={value.weight || 100} className="control-select control-field" onChange={this.weightChange}>
               {weightOptions.map(option => { return <option value={option.value} key={option.value}>{option.label}</option> })}
             </select>
           </div>
@@ -455,7 +448,7 @@ class TypographicController extends Component {
             Transform
         </div>
           <div className="control-container_select-wrapper">
-            <select name="weightSelect" value={this.state.value.transform || 'default'} className="control-select control-field" onChange={this.transformChange}>
+            <select name="weightSelect" value={value.transform || 'default'} className="control-select control-field" onChange={this.transformChange}>
               {transformOptions.map(option => { return <option value={option.value} key={option.key}>{option.label}</option> })}
             </select>
           </div>
@@ -467,7 +460,7 @@ class TypographicController extends Component {
             Style
         </div>
           <div className="control-container_select-wrapper">
-            <select name="weightSelect" value={this.state.value.style || 'normal'} className="control-select control-field" onChange={this.styleChange}>
+            <select name="weightSelect" value={value.style || 'normal'} className="control-select control-field" onChange={this.styleChange}>
               {styleOptions.map(option => { return <option value={option.value} key={option.key}>{option.label}</option> })}
             </select>
           </div>
@@ -479,7 +472,7 @@ class TypographicController extends Component {
             Decoration
         </div>
           <div className="control-container_select-wrapper">
-            <select name="weightSelect" value={this.state.value.decoration || 'none'} className="control-select control-field" onChange={this.decorationChange}>
+            <select name="weightSelect" value={value.decoration || 'none'} className="control-select control-field" onChange={this.decorationChange}>
               {decorationOptions.map(option => { return <option value={option.value} key={option.key}>{option.label}</option> })}
             </select>
           </div>
@@ -492,7 +485,7 @@ class TypographicController extends Component {
             <div className="control-slider-type-label__wrapper">
               <button
                 onClick={() => this.changeLineHeightUnit('px')}
-                className={`control-slider-type-label ${this.state.value.lineHeightUnit === 'px' ? 'control-slider-type-label--active' : ''}`}
+                className={`control-slider-type-label ${value.lineHeightUnit === 'px' ? 'control-slider-type-label--active' : ''}`}
               >
                 px
               </button>

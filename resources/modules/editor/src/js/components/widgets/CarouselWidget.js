@@ -37,6 +37,9 @@ class CarouselWidget extends Component {
       currentScreen: this.props.currentScreen,
       elementId: this.props.element.getId(),
     };
+    if(! carouselProps.slides_repeater){
+      carouselProps.slides_repeater = [];
+    }
     if(isClassComponent(this.state.AltrpCarousel)){
       carouselProps.ref = this.carousel;
     }

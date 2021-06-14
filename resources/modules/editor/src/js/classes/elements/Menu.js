@@ -201,10 +201,71 @@ class Menu extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('toggle_styles', {
+      tab: TAB_STYLE,
       label: 'Toggle Button',
     });
 
+    this.addControl('button_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      stateless: true,
+      label: 'Padding',
+    })
 
+    this.addControl('button_bg',{
+      label: 'Background Color',
+      type: CONTROLLER_COLOR,
+    })
+
+    this.addControl('button_color',{
+      label: 'Icon Fill Color',
+      type: CONTROLLER_COLOR,
+    })
+
+    this.addControl('border',{
+      type: CONTROLLER_SELECT,
+      label: 'Border Type',
+      options: [
+        {
+          'value': 'none',
+          'label': 'None',
+        },
+        {
+          'value': 'solid',
+          'label': 'Solid',
+        },
+        {
+          'value': 'double',
+          'label': 'Double',
+        },
+        {
+          'value': 'dotted',
+          'label': 'Dotted',
+        },
+        {
+          'value': 'dashed',
+          'label': 'Dashed',
+        },
+        {
+          'value': 'groove',
+          'label': 'Groove',
+        },
+      ],
+    })
+
+    this.addControl('border_color',{
+      label: 'Border Color',
+      type: CONTROLLER_COLOR,
+    })
+
+    this.addControl('border_width', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Width',
+    })
+
+    this.addControl('button_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+    })
 
     this.endControlSection();
 

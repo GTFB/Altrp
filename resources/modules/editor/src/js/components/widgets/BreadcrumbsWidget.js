@@ -1,5 +1,67 @@
-import React, { Component } from "react";
+import '../../../sass/blueprint.scss'
+import React, { Component } from 'react';
+import {Breadcrumbs} from '@blueprintjs/core';
+import {
+  getBreadcrumbsItems,
+  getResponsiveSetting,
+  isEditor,
+  replaceContentWithData
+} from '../../../../../front-app/src/js/helpers';
+import {createGlobalStyle} from 'styled-components'
+import {typographicControllerToStyles} from "../../../../../front-app/src/js/helpers/styles";
 
+const GlobalStyles = createGlobalStyle`
+  ${({elementId, settings})=>{
+    let styles = `.altrp-portal.altrp-portal${elementId}{`;
+
+    styles += `.bp3-menu-item:not(.bp3-disabled){`;
+
+    let color = getResponsiveSetting(settings, 'color');
+
+    if(color && color.color){
+      styles += `color:${color.color};`;
+    }
+    let font = getResponsiveSetting(settings, 'font');
+    if(font){
+      styles += typographicControllerToStyles(font);
+    }
+    styles += `}`;
+    styles += `.bp3-menu-item:not(.bp3-disabled):hover{`;
+
+    color = getResponsiveSetting(settings, 'color', ':hover');
+
+    if(color && color.color){
+      styles += `color:${color.color};`;
+    }
+    font = getResponsiveSetting(settings, 'font', ':hover');
+
+    if(font){
+      styles += typographicControllerToStyles(font);
+    }
+    styles += `}`;
+
+
+    styles += `.bp3-menu-item.bp3-disabled{`;
+
+    let current_color = getResponsiveSetting(settings, 'current_color');
+
+    if(current_color && current_color.color){
+      styles += `color:${current_color.color};`;
+    }
+
+    let current_font = getResponsiveSetting(settings, 'current_font');
+
+    if(current_font){
+      styles += typographicControllerToStyles(current_font);
+    }
+
+    styles += `}`;
+
+    styles += '}';
+
+    return styles
+  }}
+`;
 
 class BreadcrumbsWidget extends Component {
   constructor(props) {
@@ -8,7 +70,8 @@ class BreadcrumbsWidget extends Component {
       settings: props.element.getSettings(),
       pending: false
     };
-
+    this.element = props.element;
+    this.elementId = props.element.getId();
     props.element.component = this;
     if (window.elementDecorator) {
       window.elementDecorator(this);
@@ -18,9 +81,62 @@ class BreadcrumbsWidget extends Component {
     }
   }
 
+  /**
+   * @return {[]}
+   */
+  getBreadcrumbsItems(){
+    let data  =[];
+    if(isEditor()){
+      data = [
+        {
+          href: '#',
+          icon: 'folder-close',
+          text: 'Main',
+        },
+        {
+          href: '#',
+          icon: 'derive-column',
+          text: 'Second Item',
+        },
+        {
+          icon: 'endorsed',
+          text: 'Last Item',
+        },
+      ];
+    } else {
+      data = getBreadcrumbsItems()
+      data = data.map((item, idx) =>{
+        const newItem = {
+          text: replaceContentWithData(item.title, this.props.element.getCurrentModel()),
+        };
+        if(item.icon){
+          newItem.icon = <span className="altrp-menu-item__icon bp3-icon" dangerouslySetInnerHTML={{__html: item.icon}}/>
+        }
+        if(idx + 1 < data.length){
+          newItem.href = item.path
+          newItem.onClick = e => {
+            e.preventDefault();
+            window.altrpHistory?.push(item.path)
+          };
+        }
+        return newItem;
+      });
+    }
+    return  data;
+  }
 
   render() {
-    return null;
+    const breadcrumbsProps = {
+      items: this.getBreadcrumbsItems(),
+      collapseFrom: this.element.getResponsiveSetting('collapse') || 'start',
+      popoverProps: {
+        portalClassName: `altrp-portal altrp-portal${this.elementId}`,
+      },
+    };
+    return <>
+      <GlobalStyles settings={this.element.getSettings()} elementId={this.elementId}/>
+      <Breadcrumbs {...breadcrumbsProps}/>
+    </>;
   }
 }
 

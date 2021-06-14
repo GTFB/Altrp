@@ -7,7 +7,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = merge(common, {
   mode: 'production',
-  devtool: 'source-map',
   module: {
     rules: [
       // {
@@ -32,7 +31,7 @@ module.exports = merge(common, {
   },
   output: {
     path: path.resolve(__dirname, "public/modules/front-app/"),
-    publicPath: "/modules/front-app/",
+    publicPath: "https://up.altrp.com/modules/front-app/",
     chunkFilename: "[contenthash].[name].bundle.js",
 
     filename: "[name].js"

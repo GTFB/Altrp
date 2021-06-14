@@ -117,7 +117,7 @@ export function shadowControllerToStyles(data) {
 
   if(data) {
     let {type = 'outline', offsetX,horizontal, offsetY, vertical, blurRadius,blur,spread, spreadRadius, color } = data;
-    return `box-shadow: ${type || ' '} ${offsetX||horizontal || 0}px ${offsetY || vertical || 0}px ${blurRadius || blur || 0}px ${spreadRadius ||spread || 0}px ${color};`;
+    return `box-shadow: ${type || ' '} ${offsetX||horizontal || 0}px ${offsetY || vertical || 0}px ${blurRadius || blur || 0}px ${spreadRadius ||spread || 0}px ${color}; `;
   }
   return  '';
 }
@@ -238,6 +238,24 @@ export function colorPropertyStyled(data, styleProperty, declaration = '') {
 }
 
 /**
+ * Преобразует объект, который сохраняет значение background-color из контроллера creative_link_controller, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @param {string} styleProperty
+ * @return {string}
+ */
+
+ export function backgroundCreativeLinkStyled(data) {
+
+  const {backgroundPickedHex} = data;
+
+  if (backgroundPickedHex) {
+    return `background-color: ${backgroundPickedHex}; `;
+  }
+
+  return '';
+}
+
+/**
  * Преобразует объект, который сохраняет контроллер column-gap, в строку css для вставки в styled-компонент
  * @param {{}} data
  * @return {string}
@@ -294,13 +312,33 @@ export function columnGapStyled(data = {}) {
 
   const { size, unit } = data;
 
-  if (property === 'transition-duration' || property === 'animation-duration') {
+  if (property === 'transition-duration' || property === 'animation-duration' || property === 'transition-delay') {
     styles = `${property}: ${size}s; `;
 
     return styles;
   }
 
   styles = `${property}: ${size + (unit || '')}; `;
+
+  return styles;
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер height в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
+
+ export function heightCalcStyled(data = {}) {
+  let styles = '';
+
+  if (_.isEmpty(data) || data.size === undefined) {
+    return styles;
+  }
+
+  const { size, unit } = data;
+
+  styles = `height: calc${(size + unit)} * 2; `;
 
   return styles;
 }
@@ -321,6 +359,26 @@ export function columnGapStyled(data = {}) {
   const { size, unit } = data;
 
   styles = `transform: ${data.function}(${size + unit}); `;
+
+  return styles;
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер transform rotate, в строку css для вставки в styled-компонент
+ * @param {{}} data
+ * @return {string}
+ */
+
+ export function transformRotateStyled(data = {}) {
+  let styles = '';
+
+  if (_.isEmpty(data) || isNaN(data.size) || !data.size) {
+    return styles;
+  }
+
+  const { size } = data;
+
+  styles = `transform: rotate(${size}deg); `;
 
   return styles;
 }
@@ -423,7 +481,7 @@ export function borderWidthStyled(data = {}, declaration = '') {
     left,
     right,
     top,
-    unit,
+    unit = 'px',
   } = data;
 
   if (top && top !== '') {

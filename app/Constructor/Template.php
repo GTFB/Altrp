@@ -388,8 +388,8 @@ class Template extends Model
       }
       return $_template;
     }
-    if( empty( $_template->data ) ){
-      $_template->data = self::getDefaultData();
+    if( empty( $template->data ) ){
+      $template->data = self::getDefaultData();
     }
     return $template->toArray();
   }
@@ -479,11 +479,15 @@ class Template extends Model
         $data['children'][$index] = self::sanitizeSettings( $child );
       }
     }
+    $data['settings']['styles']  = [];
+
     if( is_array( $data['settings'] ) ){
       foreach ( $data['settings'] as $index => $setting ) {
         if( empty( $setting ) ){
 
           unset( $data['settings'][$index] );
+        } else {
+
         }
       }
     }

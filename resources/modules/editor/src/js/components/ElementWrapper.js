@@ -28,6 +28,10 @@ import GalleryComponent from "./widgets/styled-components/GalleryComponent";
 import TextComponent from "./widgets/styled-components/TextComponent";
 import TableComponent from "./widgets/styled-components/TableComponent";
 import HeadingComponent from "./widgets/styled-components/HeadingComponent";
+import NavComponent from "./widgets/styled-components/NavComponent";
+import TabsComponent from "./widgets/styled-components/TabsComponent";
+import SectionWidgetComponent from "./widgets/styled-components/SectionWidgetComponent";
+import PostsComponent from "./widgets/styled-components/PostsComponent";
 import Column from "../classes/elements/Column";
 import MenuComponent from "./widgets/styled-components/MenuComponent";
 import BreadcrumbsComponent from "./widgets/styled-components/BreadcrumbsComponent";
@@ -444,6 +448,18 @@ class ElementWrapper extends Component {
         break;
       case "dashboards":
         WrapperComponent = DashboardComponent;
+        break;
+      case "nav":
+        WrapperComponent = NavComponent;
+        break;
+      case "tabs":
+        WrapperComponent = TabsComponent;
+        break;
+      case "section":
+        WrapperComponent = SectionWidgetComponent;
+        break;
+      case "posts":
+        WrapperComponent = PostsComponent;
         break;
     }
 

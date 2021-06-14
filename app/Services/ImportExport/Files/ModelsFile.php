@@ -100,7 +100,7 @@ class ModelsFile extends ImportExportFile implements IImportExportFile
      * @param string $path
      * @return mixed
      */
-    public function export(IWriter $writer, string $path)
+    public function export(IWriter $writer, string $path, array $params = [])
     {
         $data = DB::table( 'altrp_models' )
             ->select('altrp_models.*', 'tables.name as table_name', 'parent_models.name as parent_model_name')
@@ -109,6 +109,9 @@ class ModelsFile extends ImportExportFile implements IImportExportFile
             ->where("altrp_models.preset", "=", 0)
             ->whereNotIn('altrp_models.name', self::EXCEPT_MODELS)
             ->havingRaw('table_name IS NOT NULL')
+            ->when(!empty($params), function ($query) use ($params) {
+              return $query->whereIn('altrp_models.id', $params);
+            })
             ->get();
 
         $writer->createJsonFile($path, self::FILENAME, $data->toArray());

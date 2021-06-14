@@ -143,9 +143,6 @@ class Image extends BaseElement {
               'label': 'Scale down',
             }
           ],
-          // rules: {
-          //   '{{ELEMENT}} .altrp-image{{STATE}}': 'object-fit: {{VALUE}};',
-          // },
         }
     );
 
@@ -211,9 +208,6 @@ class Image extends BaseElement {
       ],
       max: 1000,
       min: 0,
-      // rules: {
-      //   '{{ELEMENT}} .altrp-image{{STATE}}': 'height: {{SIZE}}{{UNIT}}',
-      // },
     });
 
     this.addControl('width_size', {
@@ -230,9 +224,6 @@ class Image extends BaseElement {
       ],
       max: 1000,
       min: 0,
-      // rules: {
-      //   '{{ELEMENT}} .altrp-image{{STATE}}': 'width: {{SIZE}}{{UNIT}}',
-      // },
     });
 
     this.endControlSection();
@@ -257,14 +248,6 @@ class Image extends BaseElement {
         '%',
         'vh',
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-image{{STATE}}': [
-      //     'margin-top: {{TOP}}{{UNIT}};',
-      //     'margin-right: {{RIGHT}}{{UNIT}};',
-      //     'margin-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'margin-left: {{LEFT}}{{UNIT}};'
-      //   ]
-      // },
     });
 
     this.addControl('position_padding', {
@@ -282,14 +265,6 @@ class Image extends BaseElement {
         '%',
         'vh',
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-image{{STATE}}': [
-      //     'padding-top: {{TOP}}{{UNIT}};',
-      //     'padding-right: {{RIGHT}}{{UNIT}};',
-      //     'padding-bottom: {{BOTTOM}}{{UNIT}};',
-      //     'padding-left: {{LEFT}}{{UNIT}};'
-      //   ]
-      // },
     });
 
     this.addControl('position_z_index', {
@@ -297,9 +272,6 @@ class Image extends BaseElement {
       type: CONTROLLER_NUMBER,
       label: 'Z-index',
       default: 0,
-      // rules: {
-      //   '{{ELEMENT}} .altrp-image{{STATE}}': 'z-index: {{VALUE}}'
-      // }
     });
 
     this.addControl('position_css_id', {
@@ -329,9 +301,6 @@ class Image extends BaseElement {
       max: 1,
       min: 0,
       step: 0.01,
-      // rules: {
-      //   '{{ELEMENT}} .altrp-image{{STATE}}': 'opacity: {{SIZE}}',
-      // },
     });
 
     this.endControlSection();
@@ -352,11 +321,6 @@ class Image extends BaseElement {
         saturate: 100,
         hue: 0,
       },
-      // rules: {
-      //   '{{ELEMENT}} .altrp-image{{STATE}}': [
-      //     'filter: blur({{BLUR}}px)  brightness({{BRIGHTNESS}}%) contrast({{CONTRAST}}%) saturate({{SATURATE}}%) hue-rotate({{HUE}}deg);'
-      //   ],
-      // },
     });
     this.addControl('image_style_alignment', {
       type: CONTROLLER_CHOOSE,
@@ -376,9 +340,6 @@ class Image extends BaseElement {
           value: 'flex-end',
         },
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-image-container{{STATE}}': 'justify-content: {{VALUE}};',
-      // },
     });
 
     this.endControlSection();
@@ -396,9 +357,6 @@ class Image extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      // rules: {
-      //   "{{ELEMENT}} .altrp-image{{STATE}}": "background-color: {{COLOR}};"
-      // }
     });
 
     this.addControl('gradient', {
@@ -413,9 +371,6 @@ class Image extends BaseElement {
         angle: "0",
         value: ""
       },
-      // rules: {
-      //   "{{ELEMENT}} .altrp-image{{STATE}}": "background-image: {{VALUE}}",
-      // }
     });
 
 
@@ -423,9 +378,6 @@ class Image extends BaseElement {
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
       default: { url: "" },
-      // rules: {
-      //   "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-image: url({{URL}});"
-      // }
     });
 
     this.addControl('background_position', {
@@ -470,9 +422,6 @@ class Image extends BaseElement {
       ],
       label: 'Background Position',
       default: 'top left',
-      // rules: {
-      //   "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-position: {{VALUE}};"
-      // }
     });
 
     this.addControl('background_attachment', {
@@ -493,9 +442,6 @@ class Image extends BaseElement {
       ],
       label: 'Background Attachment',
       default: 'scroll',
-      // rules: {
-      //   "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-attachment: {{VALUE}};"
-      // }
     });
 
     this.addControl('background_repeat', {
@@ -528,9 +474,6 @@ class Image extends BaseElement {
       ],
       label: 'Background Repeat',
       default: 'repeat',
-      // rules: {
-      //   "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-repeat: {{VALUE}};"
-      // }
     });
 
     this.addControl("background_image_width", {
@@ -550,9 +493,6 @@ class Image extends BaseElement {
       ],
       max: 1000,
       min: 0,
-      // rules: {
-      //   "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-size: {{SIZE}}{{UNIT}};"
-      // }
     });
 
     this.addControl('background_size', {
@@ -577,9 +517,6 @@ class Image extends BaseElement {
       ],
       label: 'Background Size',
       default: 'unset',
-      // rules: {
-      //   "{{ELEMENT}} .altrp-background-image{{STATE}}": "background-size: {{VALUE}};"
-      // }
     });
 
 
@@ -624,9 +561,6 @@ class Image extends BaseElement {
           'label': 'Groove',
         },
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-image{{STATE}}': 'border-style: {{VALUE}};',
-      // },
     }
     );
 
@@ -638,25 +572,12 @@ class Image extends BaseElement {
         '%',
         'vh',
       ],
-      // rules: {
-      //   '{{ELEMENT}} .altrp-image{{STATE}}': `border-top-width: {{TOP}}{{UNIT}};
-      //       border-right-width: {{RIGHT}}{{UNIT}};
-      //       border-bottom-width: {{BOTTOM}}{{UNIT}};
-      //       border-left-width: {{LEFT}}{{UNIT}};`,
-      // },
     }
     );
 
     this.addControl('border_color', {
       type: CONTROLLER_COLOR,
       label: 'Border Color',
-      // default: {
-      //   color: "rgb(50,168,82)",
-      //   colorPickedHex: "#32a852",
-      // },
-      // rules: {
-      //   '{{ELEMENT}} .altrp-image{{STATE}}': 'border-color: {{COLOR}};',
-      // },
     }
     );
 
@@ -674,9 +595,6 @@ class Image extends BaseElement {
       ],
       max: 100,
       min: 0,
-      // rules: {
-      //   '{{ELEMENT}} .altrp-image{{STATE}}': 'border-radius: {{SIZE}}{{UNIT}}',
-      // },
     });
 
     this.endControlSection();
@@ -690,12 +608,6 @@ class Image extends BaseElement {
     this.addControl('creative_hover_controller', {
       type: CONTROLLER_CREATIVE_HOVER,
       label: 'Creative Hover',
-      // rules: {
-      //   '{{ELEMENT}} .altrp-image{{STATE}}': [
-      //     'transition-duration: {{SIZE}}s;',
-      //     'animation-duration: {{SIZE}}s'
-      //   ],
-      // },
     }
     );
 

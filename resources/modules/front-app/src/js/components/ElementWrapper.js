@@ -14,6 +14,10 @@ import DividerComponent from "../../../../editor/src/js/components/widgets/style
 import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 import TextComponent from "../../../../editor/src/js/components/widgets/styled-components/TextComponent";
 import TableComponent from "../../../../editor/src/js/components/widgets/styled-components/TableComponent";
+import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
+import TabsComponent from "../../../../editor/src/js/components/widgets/styled-components/TabsComponent";
+import SectionWidgetComponent from "../../../../editor/src/js/components/widgets/styled-components/SectionWidgetComponent";
+import PostsComponent from "../../../../editor/src/js/components/widgets/styled-components/PostsComponent";
 import HeadingComponent from "../../../../editor/src/js/components/widgets/styled-components/HeadingComponent";
 import MenuComponent from "../../../../editor/src/js/components/widgets/styled-components/MenuComponent";
 import BreadcrumbsComponent from "../../../../editor/src/js/components/widgets/styled-components/BreadcrumbsComponent";
@@ -22,7 +26,6 @@ import ListComponent from "../../../../editor/src/js/components/widgets/styled-c
 import MapConstructorComponent
   from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
 import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
-import Diagram from "../../../../editor/src/js/classes/elements/Diagram";
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
 import DashboardComponent from "../../../../editor/src/js/components/widgets/styled-components/DashboardComponent";
 
@@ -360,6 +363,9 @@ class ElementWrapper extends Component {
       case "breadcrumbs":
         WrapperComponent = BreadcrumbsComponent;
         break;
+      case "nav":
+        WrapperComponent = NavComponent;
+        break;
       case "video":
         WrapperComponent = VideoComponent;
         break;
@@ -377,6 +383,15 @@ class ElementWrapper extends Component {
         break;
       case "dashboards":
         WrapperComponent = DashboardComponent;
+        break;
+      case "tabs":
+        WrapperComponent = TabsComponent;
+        break;
+      case "section":
+        WrapperComponent = SectionWidgetComponent;
+        break;
+      case "posts":
+        WrapperComponent = PostsComponent;
         break;
     }
 

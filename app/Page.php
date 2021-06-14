@@ -54,6 +54,7 @@ class Page extends Model
     'is_cached',
     'not_found',
     'sections_count',
+    'icon',
   ];
 
   const DEFAULT_AREAS = [
@@ -186,6 +187,7 @@ class Page extends Model
           'path' => $page->path,
           'id' => $page->id,
           'title' => $page->title,
+          'icon' => $page->icon,
           'parent_page_id' => $page->parent_page_id,
           'allowed' => true,
           'data_sources' => $page->page_data_sources->map(function (PageDatasource $page_data_source) {
@@ -702,9 +704,9 @@ class Page extends Model
       'content' => '',
       'important_styles' => '',
     ];
-//    if (1) {
-//      return $result;
-//    }
+    if ( get_altrp_setting( 'altrp_ssr_disabled' ) ) {
+      return $result;
+    }
     if ( ! $page_id ) {
       return $result;
     }
@@ -750,7 +752,13 @@ class Page extends Model
       return $result;
       }
     } catch (\Exception $e){
-        logger( $e );
+      logger( $e );
+
+        return [
+          'content' => '',
+          'important_styles' => '',
+        ];
+
     }
 
     $areas = Area::all()->filter(function (Area $area) {
