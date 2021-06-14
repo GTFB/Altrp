@@ -26,10 +26,10 @@ module.exports = {
           plugins: ["@babel/plugin-syntax-jsx", "inline-react-svg"]
         },
       },
-      {
-        test:  path.resolve(__dirname, 'node_modules/@babel'),
-        loader: "file-loader",
-      },
+      // {
+      //   test:  path.resolve(__dirname, 'node_modules/@babel'),
+      //   loader: "file-loader",
+      // },
       {
         test: /\.s[ac]ss$/i,
 

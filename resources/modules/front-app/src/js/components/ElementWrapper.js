@@ -30,9 +30,13 @@ const { altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceContent
 class ElementWrapper extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      elementDisplay: !this.props.element.getSettings("default_hidden")
+      elementDisplay: !this.props.element.getSettings("default_hidden"),
     };
+    this.reactElement = this.props.element.getSettings("react_element");
+    this.elementId = this.props.element.getId();
+    this.settings = this.props.element.getSettings();
     props.element.wrapper = this;
     this.elementWrapperRef = React.createRef();
     this.elementRef = React.createRef();
@@ -391,14 +395,21 @@ class ElementWrapper extends Component {
         break;
     }
     tooltip_text = replaceContentWithData(tooltip_text, this.props.element.getCurrentModel().getData())
+    const wrapperProps = {
+      className: classes,
+      ref: this.elementWrapperRef,
+      elementId: this.elementId,
+      settings: this.settings,
+      style: styles,
+      id: this.CSSId
+    };
+
+    if(this.reactElement){
+      wrapperProps['data-react-element'] = this.reactElement;
+    }
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
       <WrapperComponent
-        className={classes}
-        ref={this.elementWrapperRef}
-        elementId={this.props.element.getId()}
-        settings={this.props.element.getSettings()}
-        style={styles}
-        id={this.CSSId}
+        {...wrapperProps}
         element={this.props.element.getId()}
       >
         {content}
