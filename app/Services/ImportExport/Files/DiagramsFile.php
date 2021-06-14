@@ -84,10 +84,13 @@ class DiagramsFile extends ImportExportFile implements IImportExportFile
      * @param string $path
      * @return mixed
      */
-    public function export(IWriter $writer, string $path)
+    public function export(IWriter $writer, string $path, array $params = [])
     {
         $data = DB::table( 'altrp_diagrams' )
             ->select('altrp_diagrams.*')
+            ->when(!empty($params), function ($query) use ($params) {
+              return $query->whereIn('altrp_diagrams.id', $params);
+            })
             ->get();
 
         $writer->createJsonFile($path, self::FILENAME, $data->toArray());

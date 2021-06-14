@@ -114,13 +114,16 @@ class ColumnsFile extends ImportExportFile implements IImportExportFile
      * @param string $path
      * @return mixed
      */
-    public function export(IWriter $writer, string $path)
+    public function export(IWriter $writer, string $path, array $params = [])
     {
         $data = DB::table( 'altrp_columns' )
             ->select('altrp_columns.*', 'tables.name as table_name', 'altrp_models.name as model_name')
             ->leftJoin('altrp_models', 'altrp_columns.model_id', '=', 'altrp_models.id')
             ->leftJoin('tables', 'altrp_columns.table_id', '=', 'tables.id')
             ->havingRaw('table_name IS NOT NULL AND model_name IS NOT NULL')
+            ->when(!empty($params), function ($query) use ($params) {
+              return $query->whereIn('altrp_columns.table_id', $params);
+            })
             ->get();
 
         $writer->createJsonFile($path, self::FILENAME, $data->toArray());

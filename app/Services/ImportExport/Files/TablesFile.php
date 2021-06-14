@@ -62,10 +62,13 @@ class TablesFile extends ImportExportFile implements IImportExportFile
      * @param string $path
      * @return mixed
      */
-    public function export(IWriter $writer, string $path)
+    public function export(IWriter $writer, string $path, array $params = [])
     {
         $data = DB::table( 'tables' )
             ->select('tables.*')
+            ->when(!empty($params), function ($query) use ($params) {
+              return $query->whereIn('tables.id', $params);
+            })
             ->get();
 
         $writer->createJsonFile($path, self::FILENAME, $data->toArray());
