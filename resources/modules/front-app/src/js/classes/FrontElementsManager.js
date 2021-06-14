@@ -52,6 +52,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "select",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputSelectWidget' */ "../../../../editor/src/js/components/widgets/InputSelectWidget"
+          );
+        }
+      },
+      {
         name: "button",
         import: async () => {
           return await import(

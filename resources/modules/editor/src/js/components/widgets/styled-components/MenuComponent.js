@@ -85,6 +85,8 @@ const MenuComponent = styled.div`
       styles += '}';
     }
 
+  console.log(styles)
+
     return styles;
   }}
 `;

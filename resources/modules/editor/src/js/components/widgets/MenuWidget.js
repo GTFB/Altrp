@@ -134,7 +134,7 @@ const GlobalStyles = createGlobalStyle`
   }}
 
   ${({elementId, settings})=>{
-    let styles= `.altrp-portal${elementId} .altrp-menu{`;
+  let styles = `.altrp-element${elementId}.altrp-widget_menu {`; // было .altrp-portal${elementId} .altrp-menu
 
     const menuPadding = getResponsiveSetting(settings, 'menu_padding');
     if (menuPadding) {
@@ -161,7 +161,7 @@ const GlobalStyles = createGlobalStyle`
      * стили для ховера
      * @type {string}
      */
-    styles += `.altrp-portal${elementId} .altrp-menu:hover{`;
+  styles += `.altrp-element${elementId}.altrp-widget_menu:hover{`; // было .altrp-portal${elementId} .altrp-menu:hover
 
     menu_radius = getResponsiveSetting(settings, 'menu_radius', ':hover');
     if (menu_radius) {
@@ -183,6 +183,8 @@ const GlobalStyles = createGlobalStyle`
       }
       styles += '}';
     }
+
+  console.log(styles)
     return styles;
   }}
   .altrp-menu-item__icon svg {

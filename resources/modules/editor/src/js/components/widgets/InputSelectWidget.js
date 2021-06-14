@@ -8,7 +8,6 @@ import {
   parseURLTemplate,
   replaceContentWithData,
   sortOptions,
-  parseStringValue,
   renderAssetIcon,
   valueReplacement,
   getDataFromLocalStorage
@@ -19,7 +18,6 @@ import { changeFormFieldValue } from "../../../../../front-app/src/js/store/form
 import AltrpModel from "../../classes/AltrpModel";
 import moment from "moment";
 const CKeditor = React.lazy(() => import("../ckeditor/CKeditor"));
-import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 const AltrpInput = React.lazy(() => import("../altrp-input/AltrpInput"));
 import styled from "styled-components";
 
@@ -37,7 +35,7 @@ const AltrpFieldContainer = styled.div`
   }}
 `;
 
-class InputWidget extends Component {
+class InputSelectWidget extends Component {
   timeInput = null;
 
   constructor(props) {
@@ -793,27 +791,6 @@ class InputWidget extends Component {
     }
   };
   shouldComponentUpdate(nextProps) {
-    // console.log(nextProps);
-
-    // console.log(nextProps.ElementWrapper=== this.props.ElementWrapper);
-    // console.log(nextProps.altrpMeta=== this.props.altrpMeta);
-    // console.log(nextProps.altrpPageState=== this.props.altrpPageState);
-    // console.log(nextProps.altrpresponses=== this.props.altrpresponses);
-    // console.log(nextProps.appStore=== this.props.appStore);
-    // console.log(nextProps.baseRender=== this.props.baseRender);
-    // console.log(nextProps.children=== this.props.children);
-    // console.log(nextProps.currentDataStorage=== this.props.currentDataStorage);
-    // console.log(nextProps.currentModel=== this.props.currentModel);
-    // console.log(nextProps.currentScreen=== this.props.currentScreen);
-    // console.log(nextProps.currentUser=== this.props.currentUser);
-    // console.log(nextProps.element=== this.props.element);
-    // console.log(nextProps.elementDisplay=== this.props.elementDisplay);
-    // console.log(nextProps.formsStore=== this.props.formsStore);
-    // console.log(nextProps.match=== this.props.match);
-    // console.log(nextProps.match);
-    // console.log(nextProps.rootElement=== this.props.rootElement);
-    // console.log(nextProps.rootElement);
-    // console.log(nextProps.updateToken=== this.props.updateToken);
     return true;
   }
   /**
@@ -860,7 +837,7 @@ class InputWidget extends Component {
         styleLabel = {
           marginBottom: this.state.settings.label_style_spacing
             ? this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit
+            this.state.settings.label_style_spacing.unit
             : 2 + "px"
         };
         classLabel = "";
@@ -869,7 +846,7 @@ class InputWidget extends Component {
         styleLabel = {
           marginTop: this.state.settings.label_style_spacing
             ? this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit
+            this.state.settings.label_style_spacing.unit
             : 2 + "px"
         };
         classLabel = "";
@@ -878,7 +855,7 @@ class InputWidget extends Component {
         styleLabel = {
           marginRight: this.state.settings.label_style_spacing
             ? this.state.settings.label_style_spacing.size +
-              this.state.settings.label_style_spacing.unit
+            this.state.settings.label_style_spacing.unit
             : 2 + "px"
         };
         classLabel = "altrp-field-label-container-left";
@@ -901,11 +878,10 @@ class InputWidget extends Component {
           style={styleLabel}
         >
           <label
-            className={`altrp-field-label ${
-              this.state.settings.content_required
-                ? "altrp-field-label--required"
-                : ""
-            }`}
+            className={`altrp-field-label ${this.state.settings.content_required
+              ? "altrp-field-label--required"
+              : ""
+              }`}
           >
             {this.state.settings.content_label}
           </label>
@@ -962,51 +938,6 @@ class InputWidget extends Component {
             </select>
           );
         }
-        break;
-      case "select2":
-        {
-          input = this.renderSelect2();
-        }
-        break;
-      case "radio":
-      case "checkbox":
-        {
-          input = this.renderRepeatedInput();
-        }
-        break;
-      case "wysiwyg":
-        {
-          input = this.renderWysiwyg();
-        }
-        break;
-      case "textarea":
-        input = (
-          <textarea
-            value={value || ""}
-            readOnly={content_readonly}
-            autoComplete={autocomplete}
-            placeholder={this.state.settings.content_placeholder}
-            className={
-              "altrp-field " + this.state.settings.position_css_classes
-            }
-            onChange={this.onChange}
-            onBlur={this.onBlur}
-            id={this.state.settings.position_css_id}
-          />
-        );
-        break;
-      case "image_select":
-        input = (
-          <AltrpImageSelect
-            options={image_select_options}
-            value={this.state.value}
-            changeHandler={value => this.setState({ value })}
-            isMultiple={isMultiple}
-          />
-        );
-        break;
-      case "accept":
-        input = this.renderAcceptInput();
         break;
       default: {
         const isClearable = this.state.settings.content_clearable;
@@ -1075,227 +1006,6 @@ class InputWidget extends Component {
       </AltrpFieldContainer>
     );
   }
-  /**
-   * Выводит input type=accept
-   */
-  renderAcceptInput() {
-    const settings = this.props.element.getSettings();
-    let value = this.state.value;
-    let trueValue = this.props.element.getSettings("accept_checked") || true;
-    let falseValue =
-      this.props.element.getSettings("accept_unchecked") || false;
-    if (value === trueValue) {
-      value = true;
-    } else if (value === falseValue) {
-      value = false;
-    }
-    return (
-      <div className={`altrp-field-option ${value ? "active" : ""}`}>
-        <span className="altrp-field-option-span">
-          <input
-            type="checkbox"
-            name={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
-            className={`altrp-field-option__input ${value ? "active" : ""}`}
-            onChange={this.onChange}
-            checked={!!value}
-            id={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
-          />
-        </span>
-      </div>
-    );
-  }
-  /**
-   * Выводит input type=checkbox|radio
-   */
-  renderRepeatedInput() {
-    const { options = [] } = this.state;
-    let { value = "" } = this.state;
-    const fieldName =
-      this.props.element.getFieldId() ||
-      Math.random()
-        .toString(36)
-        .substr(2, 9);
-    const formID =
-      this.props.element.getFormId() ||
-      Math.random()
-        .toString(36)
-        .substr(2, 9);
-    const inputType = this.props.element.getSettings("content_type", "radio");
-    return (
-      <div className="altrp-field-subgroup">
-        {options.map((option, idx) => {
-          let checked = false;
-          /**
-           * Если значение или опция число, то приведем к числу перед сравнением
-           */
-          if (inputType === "radio") {
-            checked = altrpCompare(value, option.value, "==");
-          } else {
-            value = _.isArray(value) ? value : value ? [value] : [];
-            checked = altrpCompare(option.value, value, "in");
-          }
-          return (
-            <div
-              className={`altrp-field-option ${checked ? "active" : ""}`}
-              key={`${fieldName}-${idx}`}
-            >
-              <span className="altrp-field-option-span">
-                <input
-                  type={inputType}
-                  value={option.value}
-                  name={`${formID}-${fieldName}`}
-                  className={`altrp-field-option__input ${
-                    checked ? "active" : ""
-                  }`}
-                  onChange={this.onChange}
-                  checked={checked}
-                  id={`${formID}-${fieldName}-${idx}`}
-                />
-              </span>
-              <label
-                htmlFor={`${formID}-${fieldName}-${idx}`}
-                className="altrp-field-option__label"
-              >
-                {option.label}
-              </label>
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
-
-  /**
-   * Выводит инпут-select2, используя компонент AltrpSelect
-   */
-  renderSelect2() {
-    const {
-      content_options_nullable,
-      nulled_option_title,
-      content_placeholder
-    } = this.props.element.getSettings();
-
-    let options = this.getOptions();
-    let value = this.state.value;
-    if (
-      _.get(value, "dynamic") &&
-      this.props.currentModel.getProperty("altrpModelUpdated")
-    ) {
-      value = this.getContent("content_default_value", true);
-    }
-    /**
-     * Пока динамический контент загружается, нужно вывести пустую строку
-     */
-    if (value && value.dynamic) {
-      value = "";
-    }
-    if (!this.props.element.getSettings("select2_multiple", false)) {
-      options.forEach(option => {
-        if (!option) {
-          return;
-        }
-        if (option.value === value) {
-          value = { ...option };
-        }
-        if (_.isArray(option.options)) {
-          option.options.forEach(option => {
-            if (option.value == value) {
-              value = { ...option };
-            }
-          });
-        }
-      });
-    } else {
-      /**
-       * Если включен мультиселект
-       */
-      value = value ? (_.isArray(value) ? value : [value]) : [];
-      value = value.map(v => {
-        let _v = v;
-        options.forEach(option => {
-          if (option.value && option.value.toString() === _v.toString()) {
-            _v = { ...option };
-          }
-          if (_.isArray(option.options)) {
-            option.options.forEach(option => {
-              if (option.value && option.value.toString() === _v.toString()) {
-                _v = { ...option };
-              }
-            });
-          }
-        });
-        return _v;
-      });
-      /**
-       * Добавим опцию, если для какого-то значения ее нет
-       */
-      value.forEach(valueItem => {
-        if (!_.isObject(valueItem)) {
-          options.push({
-            value: valueItem,
-            label: valueItem
-          });
-        }
-      });
-    }
-    /**
-     * Сортируем опции
-     * @type {Array|*}
-     */
-    if (
-      content_options_nullable &&
-      (this.props.element.getSettings("content_type") !== "select2" ||
-        this.props.element.getSettings("select2_multiple") !== true)
-    ) {
-      options = _.union(
-        [{ label: nulled_option_title, value: "<null>" }],
-        options
-      );
-    }
-    const select2Props = {
-      className: "altrp-field-select2",
-      onFocus: this.onFocus,
-      element: this.props.element,
-      classNamePrefix: this.props.element.getId() + " altrp-field-select2",
-      options,
-      name: this.props.element.getFieldId(),
-      ref: this.altrpSelectRef,
-      settings: this.props.element.getSettings(),
-      onChange: this.onChange,
-      onBlur: this.onBlur,
-      value: value || _.find(options, o => o && o.value == this.state.value),
-      isOptionSelected: option => {
-        if (_.isNumber(this.state.value) || _.isString(this.state.value)) {
-          return this.state.value == option.value;
-        }
-        return this.state.value && this.state.value.includes(option.value);
-      },
-      placeholder: content_placeholder,
-      isMulti: this.props.element.getSettings("select2_multiple", false),
-      onKeyDown: this.handleEnter
-      // menuIsOpen: true,
-    };
-    return (
-      <div className="altrp-input-wrapper">
-        <AltrpSelect {...select2Props} />
-      </div>
-    );
-  }
-
-  renderWysiwyg() {
-    return (
-      <Suspense fallback={<div>Загрузка...</div>}>
-        <CKeditor
-          onChange={this.onChange}
-          onBlur={this.onBlur}
-          changeText={this.dispatchFieldValueToStore}
-          text={this.getContent("content_default_value")}
-          name={this.getName()}
-          readOnly={this.getContent("read_only")}
-        />
-      </Suspense>
-    );
-  }
 }
 
-export default InputWidget;
+export default InputSelectWidget;

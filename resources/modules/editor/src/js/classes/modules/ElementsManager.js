@@ -16,6 +16,7 @@ import Image from "../elements/Image";
 import ImageWidget from "../../components/widgets/ImageWidget";
 import TextWidget from "../../components/widgets/TextWidget";
 import InputWidget from "../../components/widgets/InputWidget";
+import InputSelectWidget from "../../components/widgets/InputSelectWidget";
 import TableWidget from "../../components/widgets/TableWidget";
 import NavWidget from "../../components/widgets/NavWidget";
 import DividerWidget from "../../components/widgets/DividerWidget";
