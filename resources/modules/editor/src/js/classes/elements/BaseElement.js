@@ -11,6 +11,7 @@ import store, { getCurrentScreen, getElementState } from "../../store/store";
 import ControlStack from "./ControlStack";
 import { isEditor } from "../../../../../front-app/src/js/helpers";
 import { addHistoryStoreItem } from "../../store/history-store/actions";
+import {addSettings} from "../../../../../front-app/src/js/store/elements-settings/actions";
 
 /**
  * Базовый класс для методов элемента для редактора
@@ -27,14 +28,6 @@ class BaseElement extends ControlStack {
     this.componentClass = window.elementsManager.getComponentClass(
       this.getName()
     );
-    // console.log(this)
-    // for(let key in this) {
-    //   console.log(key, this[key])
-    // }
-    // console.log('component', this.component)
-    // console.log(this)
-    // if(this.component)
-    //     console.log('added', this)
     this.initiatedDefaults = null;
 
     /**
@@ -50,6 +43,7 @@ class BaseElement extends ControlStack {
    * @param settings
    */
   setSettings(settings) {
+    appStore.dispatch(addSettings(this.getId(), this.getName(), {...settings}))
     this.settings = settings || this.settings;
   }
 
@@ -61,6 +55,11 @@ class BaseElement extends ControlStack {
   setCSSStorage(cssClassStorage) {
     this.cssClassStorage = _.cloneDeep(cssClassStorage);
   }
+
+  /**
+   *
+   * @returns {string}
+   */
   getId() {
     if (!this.id) {
       this.id = BaseElement.generateId();
@@ -78,6 +77,10 @@ class BaseElement extends ControlStack {
     this.cssClassStorage[settingName] = value;
   }
 
+  /**
+   *
+   * @returns {string}
+   */
   getName() {
     return this.constructor.getName();
   }
@@ -274,6 +277,8 @@ class BaseElement extends ControlStack {
    * Удаляет текущий элемент у родителя
    */
   deleteThisElement() {
+    console.log(this);
+    appStore.dispatch(addSettings(this.getId(), this.getName(), {}))
     this.parent.deleteChild(this);
   }
 
@@ -337,6 +342,7 @@ class BaseElement extends ControlStack {
   }
 
   beforeDelete() {
+    appStore.dispatch(addSettings(this.getId(), this.getName(), {}));
     this.children.map(item => {
       item.beforeDelete();
     });
@@ -446,6 +452,7 @@ class BaseElement extends ControlStack {
         })();
       }
     }
+    appStore.dispatch(addSettings(this.getId(), this.getName(), {...this.settings}));
   }
 
   _registerControls() {
@@ -569,7 +576,6 @@ class BaseElement extends ControlStack {
    * */
   setStringStyles(styles) {
     styles = styles.replace(/__selector__/g, this.getSelector());
-    console.log(styles);
     this.settings.stringStyles = styles;
     this.updateStyles();
   }

@@ -65,4 +65,30 @@ class DownloadsController extends Controller{
 
     }
 
+  public function exportAltrpFilteredSettings(Request $request){
+
+    set_time_limit(0);
+
+    $writer = new EncodeWriter();
+    $export_service = new ExportService($writer);
+
+    try {
+      $params = $request->all();
+      $filename = $export_service->exportFilteredAll($params);
+    }
+    catch( \Exception $e ) {
+      return response()->json(
+        ['success' => false,
+          'error' => $e->getMessage(),
+          'stack' => $e->getTrace(),
+        ],
+        500,
+        [],
+        JSON_UNESCAPED_UNICODE
+      );
+    }
+
+    return response()->download( $filename )->deleteFileAfterSend();
+  }
+
 }

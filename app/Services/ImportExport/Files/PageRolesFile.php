@@ -79,12 +79,16 @@ class PageRolesFile extends ImportExportFile implements IImportExportFile
      * @param string $path
      * @return mixed
      */
-    public function export(IWriter $writer, string $path)
+    public function export(IWriter $writer, string $path, array $params = [])
     {
+
         $data = DB::table( 'page_role' )
             ->select('page_role.*', 'pages.guid as page_guid', 'roles.name as role_name')
             ->join('pages', 'page_role.page_id', '=', 'pages.id')
             ->join('roles', 'page_role.role_id', '=', 'roles.id')
+            ->when(!empty($params), function ($query) use ($params) {
+              return $query->whereIn('page_role.page_id', $params);
+            })
             ->get();
 
         $writer->createJsonFile($path, self::FILENAME, $data->toArray());
