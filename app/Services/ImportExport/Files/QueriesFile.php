@@ -118,12 +118,15 @@ class QueriesFile extends ImportExportFile implements IImportExportFile
      * @param string $path
      * @return mixed
      */
-    public function export(IWriter $writer, string $path)
+    public function export(IWriter $writer, string $path, array $params = [])
     {
         $data = DB::table( 'altrp_queries' )
             ->select('altrp_queries.*', 'altrp_models.name as model_name')
             ->leftJoin('altrp_models', 'altrp_queries.model_id', '=', 'altrp_models.id')
             ->havingRaw('model_name IS NOT NULL')
+            ->when(!empty($params), function ($query) use ($params) {
+              return $query->whereIn('altrp_queries.model_id', $params);
+            })
             ->get();
 
         $writer->createJsonFile($path, self::FILENAME, $data->toArray());

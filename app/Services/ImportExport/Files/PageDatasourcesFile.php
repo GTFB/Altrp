@@ -80,12 +80,15 @@ class PageDatasourcesFile extends ImportExportFile implements IImportExportFile
      * @param string $path
      * @return mixed
      */
-    public function export(IWriter $writer, string $path)
+    public function export(IWriter $writer, string $path, array $params = [])
     {
         $data = DB::table( 'page_data_sources' )
             ->select('page_data_sources.*', 'altrp_sources.url as source_url', 'altrp_sources.type as source_type')
             ->leftJoin('altrp_sources', 'page_data_sources.source_id', '=', 'altrp_sources.id')
             ->havingRaw('source_url IS NOT NULL')
+            ->when(!empty($params), function ($query) use ($params) {
+              return $query->whereIn('page_data_sources.page_id', $params);
+            })
             ->get();
 
         $writer->createJsonFile($path, self::FILENAME, $data->toArray());

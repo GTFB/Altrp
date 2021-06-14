@@ -34,6 +34,7 @@ use App\Services\ImportExport\Files\ValidationRulesFile;
 use App\Services\ImportExport\Writers\IWriter;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 use ZipArchive;
 
 /**
@@ -113,6 +114,83 @@ class ExportService
     }
 
     /**
+     * Функция экспорта всех данных
+     * @return string
+     */
+    public function exportFilteredAll($params) {
+
+      if (isset($params['exportPages']) && !empty($params['exportPages'])) {
+        $this->exportPages($params['exportPages'])
+          ->exportPageTemplates($params['exportPages'])
+          ->exportPageDatasources($params['exportPages'])
+          ->exportPageRoles($params['exportPages']);
+      }
+      if (isset($params['exportTemplates']) && !empty($params['exportTemplates'])) {
+        $this->exportTemplates($params['exportTemplates'])
+          ->exportTemplateSettings($params['exportTemplates']);
+      }
+      if (isset($params['exportMedia']) && !empty($params['exportMedia'])) {
+        $this->exportMedia($params['exportMedia']);
+      }
+      if (isset($params['exportSettings']) && !empty($params['exportSettings'])) {
+        $this->exportSettings($params['exportSettings']);
+      }
+      if (isset($params['exportDiagrams']) && !empty($params['exportDiagrams'])) {
+        $this->exportDiagrams($params['exportDiagrams']);
+      }
+      if (isset($params['exportReports']) && !empty($params['exportReports'])) {
+        $this->exportReports($params['exportReports']);
+      }
+      if (isset($params['exportTables']) && !empty($params['exportTables'])) {
+        $this->exportTables($params['exportTables'])
+          ->exportColumns($params['exportTables']);
+      }
+      if (isset($params['exportModels']) && !empty($params['exportModels'])) {
+        $this->exportModels($params['exportModels'])
+          ->exportAccessors($params['exportModels'])
+          ->exportRelationships($params['exportModels'])
+          ->exportQueries($params['exportModels']);
+      }
+      if (isset($params['exportSQLEditors']) && !empty($params['exportSQLEditors'])) {
+        $this->exportSQLEditors($params['exportSQLEditors']);
+      }
+      if (isset($params['exportRemoteDataSources']) && !empty($params['exportRemoteDataSources'])) {
+        $this->exportRemoteDataSources($params['exportRemoteDataSources'])
+          ->exportDataSourcesRoles($params['exportRemoteDataSources'])
+          ->exportDataSourcesPremissions($params['exportRemoteDataSources']);
+      }
+
+      $this//->exportTemplates()
+        //->exportPages()
+        //->exportMedia()
+        //->exportPageTemplates()
+        //->exportTemplateSettings()
+        //->exportSettings()
+        //->exportDiagrams()
+        ->exportDashboards()
+        //->exportReports()
+        //->exportTables()
+        //->exportModels()
+        //->exportColumns()
+        //->exportAccessors()
+        //->exportPageDatasources()
+        //->exportSQLEditors()
+        //->exportRelationships()
+        //->exportQueries()
+        ->exportRoles()
+        //->exportPageRoles()
+        ->exportPermissionRoles()
+        ->exportRemoteData()
+        //->exportRemoteDataSources()
+        //->exportDataSourcesRoles()
+        //->exportDataSourcesPremissions()
+        ->exportValidationFields()
+        ->exportValidationRules();
+
+      return $this->createArchive();
+    }
+
+    /**
      * Функция создания архива с файлами
      * @return string
      */
@@ -136,7 +214,7 @@ class ExportService
      * Экспорт данных о правилах валидации
      * @return $this
      */
-    public function exportValidationRules() {
+    public function exportValidationRules(array $params = []) {
         $rules = new ValidationRulesFile();
         $this->addFile($rules->export($this->writer, self::EXPORT_PATH));
         return $this;
@@ -146,7 +224,7 @@ class ExportService
      * Экспорт данных о колонках валидации
      * @return $this
      */
-    public function exportValidationFields() {
+    public function exportValidationFields(array $params = []) {
         $fields = new ValidationFieldsFile();
         $this->addFile($fields->export($this->writer, self::EXPORT_PATH));
         return $this;
@@ -156,7 +234,7 @@ class ExportService
      * Экспорт данных о удаленных справочниках
      * @return $this
      */
-    public function exportRemoteData() {
+    public function exportRemoteData(array $params = []) {
         $remote_data = new RemoteDataFile();
         $this->addFile($remote_data->export($this->writer, self::EXPORT_PATH));
         return $this;
@@ -166,9 +244,9 @@ class ExportService
      * Экспорт данных о удаленных источниках данных
      * @return $this
      */
-    public function exportRemoteDataSources() {
+    public function exportRemoteDataSources(array $params = []) {
       $remote_datasource = new RemoteDataSourcesFile();
-      $this->addFile($remote_datasource->export($this->writer, self::EXPORT_PATH));
+      $this->addFile($remote_datasource->export($this->writer, self::EXPORT_PATH, $params));
       return $this;
     }
 
@@ -176,9 +254,9 @@ class ExportService
      * Экспорт данных о правах для удаленных источников данных
      * @return $this
      */
-    public function exportDataSourcesRoles() {
+    public function exportDataSourcesRoles(array $params = []) {
       $datasource_roles = new DataSourcesRolesFile();
-      $this->addFile($datasource_roles->export($this->writer, self::EXPORT_PATH));
+      $this->addFile($datasource_roles->export($this->writer, self::EXPORT_PATH, $params));
       return $this;
     }
 
@@ -186,9 +264,9 @@ class ExportService
      * Экспорт данных о разрешениях для удаленных источников данных
      * @return $this
      */
-    public function exportDataSourcesPremissions() {
+    public function exportDataSourcesPremissions(array $params = []) {
       $datasource_permissions = new DataSourcesPermissionsFile();
-      $this->addFile($datasource_permissions->export($this->writer, self::EXPORT_PATH));
+      $this->addFile($datasource_permissions->export($this->writer, self::EXPORT_PATH, $params));
       return $this;
     }
 
@@ -196,9 +274,9 @@ class ExportService
      * Экспорт данных о шаблонах
      * @return $this
      */
-    public function exportTemplates() {
+    public function exportTemplates(array $params = []) {
         $templates = new TemplatesFile();
-        $this->addFile($templates->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($templates->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -206,9 +284,9 @@ class ExportService
      * Экспорт данных о страницах
      * @return $this
      */
-    public function exportPages() {
+    public function exportPages(array $params = []) {
         $pages = new PagesFile();
-        $this->addFile($pages->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($pages->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -216,9 +294,9 @@ class ExportService
      * Экспорт данных о медиа
      * @return $this
      */
-    public function exportMedia() {
+    public function exportMedia(array $params = []) {
         $media = new MediaFile();
-        $this->addFile($media->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($media->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -226,9 +304,9 @@ class ExportService
      * Экспорт данных о подключенных к странице шаблонах
      * @return $this
      */
-    public function exportPageTemplates() {
+    public function exportPageTemplates(array $params = []) {
         $page_templates = new PageTemplatesFile();
-        $this->addFile($page_templates->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($page_templates->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -236,9 +314,9 @@ class ExportService
      * Экспорт данных о настройках шаблонов
      * @return $this
      */
-    public function exportTemplateSettings() {
+    public function exportTemplateSettings(array $params = []) {
         $template_settings = new TemplateSettingsFile();
-        $this->addFile($template_settings->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($template_settings->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -256,9 +334,9 @@ class ExportService
      * Экспорт данных о диаграммах
      * @return $this
      */
-    public function exportDiagrams() {
+    public function exportDiagrams(array $params = []) {
         $diagrams = new DiagramsFile();
-        $this->addFile($diagrams->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($diagrams->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -276,9 +354,9 @@ class ExportService
      * Экспорт данных о отчетах
      * @return $this
      */
-    public function exportReports() {
+    public function exportReports(array $params = []) {
         $reports = new ReportsFile();
-        $this->addFile($reports->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($reports->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -286,9 +364,9 @@ class ExportService
      * Экспорт данных о таблицах
      * @return $this
      */
-    public function exportTables() {
+    public function exportTables(array $params = []) {
         $tables = new TablesFile();
-        $this->addFile($tables->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($tables->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -296,9 +374,9 @@ class ExportService
      * Экспорт данных о моделях
      * @return $this
      */
-    public function exportModels() {
+    public function exportModels(array $params = []) {
         $models = new ModelsFile();
-        $this->addFile($models->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($models->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -306,9 +384,9 @@ class ExportService
      * Экспорт данных о колонах
      * @return $this
      */
-    public function exportColumns() {
+    public function exportColumns(array $params = []) {
         $columns = new ColumnsFile();
-        $this->addFile($columns->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($columns->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -316,9 +394,9 @@ class ExportService
      * Экспорт данных о аксессорах
      * @return $this
      */
-    public function exportAccessors() {
+    public function exportAccessors(array $params = []) {
         $accessors = new AccessorsFile();
-        $this->addFile($accessors->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($accessors->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -326,9 +404,9 @@ class ExportService
      * Экспорт данных о подключенных к странице источниках данных
      * @return $this
      */
-    public function exportPageDatasources() {
+    public function exportPageDatasources(array $params = []) {
         $page_datasources = new PageDatasourcesFile();
-        $this->addFile($page_datasources->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($page_datasources->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -336,9 +414,9 @@ class ExportService
      * Экспорт данных о sql запросах
      * @return $this
      */
-    public function exportSQLEditors() {
+    public function exportSQLEditors(array $params = []) {
         $sql_editors = new SQLEditorsFile();
-        $this->addFile($sql_editors->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($sql_editors->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -346,9 +424,9 @@ class ExportService
      * Экспорт данных о связях
      * @return $this
      */
-    public function exportRelationships() {
+    public function exportRelationships(array $params = []) {
         $relationships = new RelationshipsFile();
-        $this->addFile($relationships->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($relationships->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -356,9 +434,9 @@ class ExportService
      * Экспорт данных о sql builder
      * @return $this
      */
-    public function exportQueries() {
+    public function exportQueries(array $params = []) {
         $queries = new QueriesFile();
-        $this->addFile($queries->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($queries->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
@@ -376,9 +454,9 @@ class ExportService
      * Экспорт данных о доступных для страниц ролях
      * @return $this
      */
-    public function exportPageRoles() {
+    public function exportPageRoles(array $params = []) {
         $page_roles = new PageRolesFile();
-        $this->addFile($page_roles->export($this->writer, self::EXPORT_PATH));
+        $this->addFile($page_roles->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 
