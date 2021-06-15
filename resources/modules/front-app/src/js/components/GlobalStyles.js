@@ -1,13 +1,18 @@
-import {createGlobalStyle} from 'styled-components'
-import {connect} from "react-redux";
+import { createGlobalStyle } from 'styled-components'
+import { connect } from 'react-redux';
+import { getResponsiveSetting } from '../helpers';
+import { colorPropertyStyled } from '../helpers/styles';
 
 const GlobalStyles = createGlobalStyle`${({elementsSettings})=>{
   let styles = '';
-  _.each(elementsSettings,(item, id)=>{
-    console.log(item);
-    console.log(id);
+
+  _.each(elementsSettings, (item, id) => {
+
   });
-  return styles
+
+  styles += `}`;
+
+  return styles;
 }}`;
 
 function mapStateToProps(state) {
@@ -15,3 +20,4 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(GlobalStyles)
+
