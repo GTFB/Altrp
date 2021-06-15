@@ -102,7 +102,8 @@ class FrontElement {
     if (this.getType() === type){
       return this;
     }
-    if(!this.parent){
+    if(! this.parent){
+      return null;
       // console.log(type);
       // console.log(this);
     }
@@ -661,6 +662,9 @@ class FrontElement {
    */
   hasCardModel(){
     let rootElement = this.getRoot();
+    if(! rootElement){
+      return false;
+    }
     return ! ! (rootElement.cardModel && rootElement.isCard)
   }
   /**

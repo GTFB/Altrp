@@ -8,7 +8,6 @@ if (typeof document === "undefined") {
 import React, { Component, Suspense } from "react";
 import AreaComponent from "./AreaComponent";
 const AdminBar = React.lazy(() => import(/* webpackChunkName: 'AdminBar' */"./AdminBar"));
-import { Scrollbars } from "react-custom-scrollbars";
 import { Redirect, withRouter } from "react-router-dom";
 import pageLoader from "./../classes/PageLoader";
 import Area from "../classes/Area";

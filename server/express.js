@@ -3,6 +3,7 @@ import AltrpModel from "../resources/modules/editor/src/js/classes/AltrpModel";
 import Area from "../resources/modules/front-app/src/js/classes/Area";
 const sheet = new ServerStyleSheet();
 import { parse } from "node-html-parser";
+import{Link} from "react-router-dom"
 import React from "react";
 import {StaticRouter as Router, Route, Switch} from "react-router-dom";
 if (typeof performance === "undefined") {
@@ -13,7 +14,8 @@ if (typeof performance === "undefined") {
  * @type {{parent: {}}}
  */
 global.window = {
-  parent: {}
+  parent: {},
+  Link,
 };
 
 global.window.altrpMenus = [];

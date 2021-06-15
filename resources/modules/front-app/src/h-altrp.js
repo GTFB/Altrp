@@ -1,8 +1,13 @@
+import  queryString from 'query-string';
 import WIDGETS_DEPENDS from "./js/constants/WIDGETS_DEPENDS";
-import {Link} from 'react-router-dom';
-window.Link = Link;
+import  "./js/functions/mount-elements";
+import appStore from "./js/store/store";
+import {setScrollValue} from "./js/store/scroll-position/actions";
 console.log('FIRST SCRIPT: ', performance.now());
-import './sass/front-style.scss';
+
+window.currentRouterMatch = {
+  params:queryString.parseUrl(window.location.href).query
+};
 
 window.sSr = false;
 window.libsLoaded = [];
@@ -19,10 +24,6 @@ const LIBS = {
       return Promise.resolve(res)
     });
   },
-  // 'blueprint': import(/* webpackChunkName: 'Blueprint' */'./js/libs/blueprint').then(res=>{
-  //   console.log(res);
-  //       window.libsLoaded.push('blueprint')
-  //     }),
 
 };
 
@@ -51,6 +52,7 @@ Promise.all(libsToLoad).then(res => {
  */
 import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
   loadingCallback();
+  // loadDatastorageUpdater();
 })
 import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElementsManager').then(module => {
   import (/* webpackChunkName: 'FrontElementsFabric' */'./js/classes/FrontElementsFabric').then(module => {
@@ -59,13 +61,17 @@ import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElement
   });
   return window.frontElementsManager.loadComponents();
 }).then(async components => {
-  // window.frontElementsManager.loadNotUsedComponent();
   console.log('LOAD FrontElementsManager: ', performance.now());
   loadingCallback();
 });
+
 import (/* webpackChunkName: 'React_ReactDom_Lodash' */'./js/libs/react-lodash').then(module => {
   console.log('LOAD React_ReactDom_Lodash: ', performance.now());
-  loadingCallback();
+  import (/* webpackChunkName: 'SimpleElementWrapper' */'./js/components/SimpleElementWrapper').then(module => {
+    window.ElementWrapper = module.default;
+    console.log('LOAD SimpleElementWrapper: ', performance.now());
+    loadingCallback();
+  });
 });
 import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element-component').then(module => {
   window.elementDecorator = module.default;
@@ -73,33 +79,10 @@ import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element
   loadingCallback();
 });
 
-if (process.env.NODE_ENV === 'production') {
-  window.__hot = () => C => C;
-  import (/* webpackChunkName: 'FrontApp' */'./FrontApp').then(module => {
-    window.FrontApp = module.default;
-    console.log('LOAD FrontApp: ', performance.now());
-    loadingCallback();
-  });
-
-} else {
-  import(/* webpackChunkName: 'react-hot-loader' */'react-hot-loader').then(({hot}) => {
-    window.__hot = hot;
-    return import (/* webpackChunkName: 'FrontApp' */'./FrontApp')
-  }).then(module => {
-    window.FrontApp = module.default;
-    console.log('LOAD FrontApp: ', performance.now());
-    loadingCallback();
-  });
-}
-import (/* webpackChunkName: 'ElementWrapper' */'./js/components/ElementWrapper').then(module => {
-  window.ElementWrapper = module.default;
-  console.log('LOAD ElementWrapper: ', performance.now());
-  loadingCallback();
-});
 
 import (/* webpackChunkName: 'FormsManager' */'../../editor/src/js/classes/modules/FormsManager.js').then(module => {
   console.log('LOAD FormsManager: ', performance.now());
-  loadingCallback();
+  // loadingCallback();
 });
 
 /**
@@ -112,10 +95,9 @@ function loadingCallback() {
     && window.frontElementsFabric
     && window.frontElementsManager
     && window.frontElementsManager.componentsIsLoaded()
-    && window.FrontApp
     && window.elementDecorator
     && window.ElementWrapper
-    && window.formsManager
+    // && window.formsManager
     && window.altrpHelpers
     && window._
     /**
@@ -123,26 +105,10 @@ function loadingCallback() {
      */
     && (window.altrpElementsLists && (libsToLoad.length === libsLoaded.length))
   ) {
-    function renderAltrp() {
-      ReactDOM.render(<FrontApp/>, document.getElementById('front-app'), function () {
-        window.removeEventListener('touchstart', renderAltrp);
-        window.removeEventListener('mouseover', renderAltrp);
-        window.removeEventListener('mousemove', renderAltrp);
-        window.removeEventListener('click', renderAltrp);
-        window.removeEventListener('scroll', renderAltrp);
-      });
-    }
+    console.log('h-altrp LOADED: ', performance.now());
 
-    if (window.ALTRP_LOAD_BY_USER) {
-      window.addEventListener('touchstart', renderAltrp);
-      window.addEventListener('mouseover', renderAltrp);
-      window.addEventListener('mousemove', renderAltrp);
-      window.addEventListener('click', renderAltrp);
-      window.addEventListener('scroll', renderAltrp);
-    } else {
-      renderAltrp();
-    }
-  }
+    const hAltrpLoadedEvent = new Event('h-altrp-loaded');
+    window.dispatchEvent(hAltrpLoadedEvent);  }
 }
 
 window.stylesModulePromise = new Promise(function (resolve) {
@@ -191,3 +157,22 @@ if ('serviceWorker' in navigator) {
   // Use the window load event to keep the page load performant
   navigator.serviceWorker.register(filename, {scope: '/'});
 }
+
+/**
+ * Изменение скролла для загрузки ленивых изображений
+ */
+const frontAppContainer = document.getElementById('front-app');
+
+frontAppContainer.addEventListener('scroll', e=>{
+  appStore.dispatch(setScrollValue({top: e.target.scrollTop}))
+})
+
+function loadDatastorageUpdater(){
+    import(/* webpackChunkName: 'DatastorageUpdater' */'./js/classes/modules/DatastorageUpdater').then(module => {
+      const dataStorageUpdater = window.dataStorageUpdater;
+      console.log(currentPage?.data_sources);
+      dataStorageUpdater.updateCurrent(currentPage?.data_sources || []);
+    });
+
+}
+

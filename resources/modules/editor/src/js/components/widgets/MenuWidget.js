@@ -8,7 +8,7 @@ import {
   typographicControllerToStyles
 } from "../../../../../front-app/src/js/helpers/styles";
 const {Button, ButtonGroup, Menu, MenuItem, Position} = window.altrpLibs.Blueprint;
-const {Popover2} = window.altrpLibs.Popover2;
+const Popover2 = window.altrpLibs.Popover2;
 
 const GlobalStyles = createGlobalStyle`
   ${({elementId, settings}) => {
@@ -243,6 +243,7 @@ class MenuWidget extends Component {
           onClick={(e) => {
             e.preventDefault();
             if (isEditor() || !this.props.history) {
+              window.location.href = item.url
               return
             }
             this.props.history.push(item.url);
@@ -306,6 +307,7 @@ class MenuWidget extends Component {
           onClick={(e) => {
             e.preventDefault();
             if (isEditor() || !this.props.history) {
+              window.location.href = item.url
               return
             }
             this.props.history.push(item.url);

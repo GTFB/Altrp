@@ -30,9 +30,9 @@ module.exports = merge(common, {
   },
   output: {
     path: path.resolve(__dirname, "public/modules/front-app/"),
-    publicPath: "https://up.altrp.com/modules/front-app/",
-    // publicPath: "/modules/front-app/",
-    chunkFilename: "[contenthash].[name].bundle.js",
+    // publicPath: "https://up.altrp.com/modules/front-app/",
+    publicPath: "/modules/front-app/",
+    chunkFilename: "[name].[contenthash].bundle.js",
 
     filename: "[name].js"
   },

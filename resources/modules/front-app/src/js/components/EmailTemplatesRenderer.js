@@ -1,6 +1,5 @@
 import {connect} from 'react-redux';
 
-import {mbParseJSON} from '../helpers';
 
 class EmailTemplatesRenderer extends window.Component {
   constructor(props) {
@@ -21,7 +20,7 @@ class EmailTemplatesRenderer extends window.Component {
     if (! this.props.currentEmailTemplate || ! this.state.baseEmailRender) {
       return null
     }
-    let rootElement = mbParseJSON(this.props.currentEmailTemplate.data);
+    let rootElement = window.altrpHelpers.mbParseJSON(this.props.currentEmailTemplate.data);
     rootElement = window.frontElementsFabric.parseData(rootElement);
     rootElement.templateType = 'email';
     let content = React.createElement(rootElement.componentClass, {

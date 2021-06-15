@@ -1,5 +1,4 @@
 import React, { Component, Suspense } from "react";
-import { Link, Redirect, withRouter } from "react-router-dom";
 let Dropbar = React.lazy(() => import(/* webpackChunkName: 'AltrpDropbar' */"../altrp-dropbar/AltrpDropbar"));
 import {
   getComponentByElementId,
@@ -11,6 +10,7 @@ import {
   scrollToElement
 } from "../../../../../front-app/src/js/helpers";
 import { toggleTrigger } from "../../../../../front-app/src/js/store/hide-triggers/actions";
+const Link = window.Link
 
 class ButtonWidget extends Component {
   constructor(props) {

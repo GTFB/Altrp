@@ -90,7 +90,7 @@ export function advancedTabControllers(element) {
 
 
   element.addControl('react_element', {
-    label: 'React Element',
+    label: 'Dynamic Element',
     type: CONTROLLER_SWITCHER,
     responsive: false,
     stateless: true,

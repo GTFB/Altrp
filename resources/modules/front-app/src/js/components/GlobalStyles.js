@@ -1,7 +1,5 @@
 import { createGlobalStyle } from 'styled-components'
 import { connect } from 'react-redux';
-import { getResponsiveSetting } from '../helpers';
-import { colorPropertyStyled } from '../helpers/styles';
 
 const GlobalStyles = createGlobalStyle`${({elementsSettings})=>{
   let styles = '';
@@ -10,7 +8,6 @@ const GlobalStyles = createGlobalStyle`${({elementsSettings})=>{
 
   });
 
-  styles += `}`;
 
   return styles;
 }}`;

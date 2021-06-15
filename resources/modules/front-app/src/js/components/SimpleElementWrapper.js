@@ -1,4 +1,3 @@
-import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { addElement } from "../store/elements-storage/actions";
 import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
@@ -25,17 +24,15 @@ import MapConstructorComponent
   from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
 import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
-import DEFAULT_REACT_ELEMENTS from "../constants/DEFAULT_REACT_ELEMENTS";
 const { altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceContentWithData, setTitle } = window.altrpHelpers;
 
-class ElementWrapper extends Component {
+class SimpleElementWrapper extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       elementDisplay: !this.props.element.getSettings("default_hidden"),
     };
-    this.reactElement = this.props.element.getSettings("react_element");
     this.elementId = this.props.element.getId();
     this.settings = this.props.element.getSettings();
     props.element.wrapper = this;
@@ -322,14 +319,6 @@ class ElementWrapper extends Component {
       history: this.props.history,
       appStore
     });
-    if (this.props.element.getTemplateType() === 'email') {
-      if (!this.state.elementDisplay) {
-        return null;
-      }
-      return <>
-        {content}
-      </>
-    }
 
     let WrapperComponent = ElementWrapperDivComponent;
 
@@ -405,9 +394,6 @@ class ElementWrapper extends Component {
       id: this.CSSId
     };
 
-    if(this.reactElement || DEFAULT_REACT_ELEMENTS.indexOf(this.props.element.getName()) !== -1){
-      wrapperProps['data-react-element'] = this.props.element.getId();
-    }
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
       <WrapperComponent
         {...wrapperProps}
@@ -436,4 +422,4 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, null, null, {
   forwardRef: true
-})(withRouter(ElementWrapper));
+})(SimpleElementWrapper);

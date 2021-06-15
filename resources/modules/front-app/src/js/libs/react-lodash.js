@@ -1,5 +1,6 @@
 import ReactDom from 'react-dom';
 import React, {Component} from 'react';
+import {Provider} from 'react-redux'
 import cloneDeep from 'lodash.cloneDeep';
 import get from 'lodash.get';
 import set from 'lodash.set';
@@ -50,4 +51,4 @@ window._ = {
 window.ReactDOM = ReactDom;
 window.React = React;
 window.Component = Component;
-
+window.Provider = Provider;
