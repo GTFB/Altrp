@@ -84,12 +84,15 @@ class DataSourcesRolesFile extends ImportExportFile implements IImportExportFile
      * @param string $path
      * @return mixed
      */
-    public function export(IWriter $writer, string $path)
+    public function export(IWriter $writer, string $path, array $params = [])
     {
         $data = DB::table( 'altrp_sources_roles' )
             ->select('altrp_sources_roles.*', 'roles.name as role_name', 'altrp_sources.name as source_name')
             ->join('altrp_sources', 'altrp_sources_roles.source_id', '=', 'altrp_sources.id')
             ->join('roles', 'altrp_sources_roles.role_id', '=', 'roles.id')
+            ->when(!empty($params), function ($query) use ($params) {
+              return $query->whereIn('altrp_sources_roles.source_id', $params);
+            })
             ->get();
 
         $writer->createJsonFile($path, self::FILENAME, $data->toArray());

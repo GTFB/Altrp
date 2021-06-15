@@ -96,13 +96,15 @@ class PagesFile extends ImportExportFile implements IImportExportFile
      * @param string $path
      * @return mixed
      */
-    public function export(IWriter $writer, string $path)
+    public function export(IWriter $writer, string $path, array $params = [])
     {
-         $data = DB::table( 'pages' )
+        $data = DB::table( 'pages' )
             ->select('pages.*', 'altrp_models.name as model_name')
             ->leftJoin('altrp_models', 'pages.model_id', '=', 'altrp_models.id')
+            ->when(!empty($params), function ($query) use ($params) {
+              return $query->whereIn('pages.id', $params);
+            })
             ->get();
-
         $writer->createJsonFile($path, self::FILENAME, $data->toArray());
         return $this;
     }

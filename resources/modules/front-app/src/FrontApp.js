@@ -7,6 +7,8 @@ import Echo from "laravel-echo";
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider, } from 'react-dnd'
 const {getRoutes, Resource} = window.altrpHelpers;
+import GlobalStyles from "./js/components/GlobalStyles";
+
 class FrontApp extends Component {
   constructor(props) {
     super(props);
@@ -100,6 +102,7 @@ class FrontApp extends Component {
           <AppContent />
         </DndProvider>
         <FontsManager />
+        <GlobalStyles/>
       </Provider>
     );
   }

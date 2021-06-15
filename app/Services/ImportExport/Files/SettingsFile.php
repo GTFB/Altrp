@@ -55,13 +55,20 @@ class SettingsFile extends ImportExportFile implements IImportExportFile
      * @param string $path
      * @return mixed
      */
-    public function export(IWriter $writer, string $path)
+    public function export(IWriter $writer, string $path, array $params = [])
     {
         $data = [
             "admin_logo" => env( 'ALTRP_SETTING_ADMIN_LOGO', null ),
             "container_width" => env( 'ALTRP_SETTING_CONTAINER_WIDTH', null )
         ];
-
+        if (!empty($params)) {
+          foreach ($params as $param) {
+            if (!array_key_exists($param, $data)) {
+              if (isset($data[$param]))
+                unset($data[$param]);
+            }
+          }
+        }
         $writer->createJsonFile($path, self::FILENAME,  $data);
         return $this;
     }

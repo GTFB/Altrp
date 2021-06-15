@@ -20,6 +20,7 @@ s.sql
 modules_statuses.json
 webpack.editor.common.js
 webpack.front.common.js
+.babelrc
 
 # IDE helpers
 /config/ide-helper.php
@@ -48,6 +49,7 @@ _ide_helper.php
 /app/Plugins/plugins.json
 public/modules/
 /config/telebot.php
+
 =======
 
 #bundles
