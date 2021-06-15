@@ -70,6 +70,7 @@ class Editor extends Component {
     this.showCommonPanel = this.showCommonPanel.bind(this);
     this.showGlobalColorsPanel = this.showGlobalColorsPanel.bind(this);
     this.showGlobalFontsPanel = this.showGlobalFontsPanel.bind(this);
+    this.showGlobalEffectsPanel = this.showGlobalEffectsPanel.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.onClick = this.onClick.bind(this);
     // store.subscribe(this.templateStatus.bind(this));
@@ -156,6 +157,13 @@ class Editor extends Component {
     this.setState({
       ...this.state,
       activePanel: "global_fonts"
+    });
+  }
+
+  showGlobalEffectsPanel() {
+    this.setState({
+      ...this.state,
+      activePanel: "global_effects"
     });
   }
 
@@ -292,6 +300,7 @@ class Editor extends Component {
                 <CommonPanel
                   showGlobalColorsPanel={this.showGlobalColorsPanel}
                   showGlobalFontsPanel={this.showGlobalFontsPanel}
+                  showGlobalEffectsPanel={this.showGlobalEffectsPanel}
                 />
               )}
               {this.state.activePanel === "global_colors" && <GlobalColors />}
@@ -335,7 +344,7 @@ class Editor extends Component {
           </div>
         </div>
         <AssetsBrowser />
-        <GlobalStyles/>
+        <GlobalStyles />
       </DndProvider>
     );
   }

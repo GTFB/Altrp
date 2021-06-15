@@ -11,7 +11,7 @@ import store, { getCurrentScreen, getElementState } from "../../store/store";
 import ControlStack from "./ControlStack";
 import { isEditor } from "../../../../../front-app/src/js/helpers";
 import { addHistoryStoreItem } from "../../store/history-store/actions";
-import {addSettings} from "../../../../../front-app/src/js/store/elements-settings/actions";
+import { addSettings } from "../../../../../front-app/src/js/store/elements-settings/actions";
 
 /**
  * Базовый класс для методов элемента для редактора
@@ -43,7 +43,9 @@ class BaseElement extends ControlStack {
    * @param settings
    */
   setSettings(settings) {
-    appStore.dispatch(addSettings(this.getId(), this.getName(), {...settings}))
+    appStore.dispatch(
+      addSettings(this.getId(), this.getName(), { ...settings })
+    );
     this.settings = settings || this.settings;
   }
 
@@ -278,7 +280,7 @@ class BaseElement extends ControlStack {
    */
   deleteThisElement() {
     console.log(this);
-    appStore.dispatch(addSettings(this.getId(), this.getName(), {}))
+    appStore.dispatch(addSettings(this.getId(), this.getName(), {}));
     this.parent.deleteChild(this);
   }
 
@@ -452,7 +454,9 @@ class BaseElement extends ControlStack {
         })();
       }
     }
-    appStore.dispatch(addSettings(this.getId(), this.getName(), {...this.settings}));
+    appStore.dispatch(
+      addSettings(this.getId(), this.getName(), { ...this.settings })
+    );
   }
 
   _registerControls() {
@@ -786,6 +790,9 @@ class BaseElement extends ControlStack {
       `global_styles_storage.${guid}`,
       []
     );
+    console.log("====================================");
+    console.log(currentPropsList);
+    console.log("====================================");
     if (currentPropsList.indexOf(settingName) === -1) {
       currentPropsList.push(settingName);
       _.set(this.settings, `global_styles_storage.${guid}`, [
