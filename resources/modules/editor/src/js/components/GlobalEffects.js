@@ -2,12 +2,14 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import {
   ControlGroup,
+  FormGroup,
   InputGroup,
   Button,
   Divider,
-  Collapse,
-  Icon
+  Slider,
+  Collapse
 } from "@blueprintjs/core";
+import { Select } from "@blueprintjs/select";
 import { SketchPicker } from "react-color";
 import invert from "invert-color";
 import Resource from "../classes/Resource";
@@ -18,7 +20,7 @@ import BaseElement from "../classes/elements/BaseElement";
 
 const Panel = styled.div`
   background-color: #fff;
-  padding: 25px 15px;
+  padding: 25px 20px;
   width: 100%;
   margin: 20px 0;
   overflow: auto;
@@ -170,18 +172,52 @@ class GlobalEffects extends Component {
     return (
       <Panel>
         <Collapse isOpen={true}>
-          <ControlGroup>
-            <div className={!item?.colorPanelOpen ? " control-color-hide" : ""}>
+          <ControlGroup vertical>
+            <FormGroup label="Enter Effect Name">
+              <InputGroup id="text-input" placeholder="Enter Effect Name" />
+            </FormGroup>
+
+            <FormGroup label="Choose Effect Color">
               <SketchPicker
                 presetColors={[]}
-                color={item.color}
-                onChange={color => this.colorChange(color, item.id)}
+                // onChange={color => this.colorChange(color, item.id)}
                 style={{
                   padding: 0,
                   boxShadow: "none"
                 }}
               ></SketchPicker>
-            </div>
+            </FormGroup>
+            <FormGroup label="Blur">
+              <Slider
+                min={0}
+                max={100}
+                stepSize={1}
+                labelStepSize={10}
+                showTrackFill={true}
+              />
+            </FormGroup>
+            <FormGroup label="Horizontal displacement">
+              <Slider
+                min={-100}
+                max={100}
+                stepSize={1}
+                labelRenderer={false}
+                showTrackFill={true}
+              />
+            </FormGroup>
+            <FormGroup label="Vertical displacement">
+              <Slider
+                min={-100}
+                max={100}
+                stepSize={1}
+                labelRenderer={false}
+                showTrackFill={true}
+              />
+            </FormGroup>
+            <FormGroup label="Position"></FormGroup>
+            <FormGroup>
+              <Button style={{ width: "100%" }}>Save</Button>
+            </FormGroup>
           </ControlGroup>
         </Collapse>
         <Divider></Divider>
