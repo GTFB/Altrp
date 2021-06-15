@@ -2,7 +2,12 @@ import {createGlobalStyle} from 'styled-components'
 import {connect} from "react-redux";
 
 const GlobalStyles = createGlobalStyle`${({elementsSettings})=>{
-  console.log(elementsSettings);
+  let styles = '';
+  _.each(elementsSettings,(item, id)=>{
+    console.log(item);
+    console.log(id);
+  });
+  return styles
 }}`;
 
 function mapStateToProps(state) {
