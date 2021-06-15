@@ -41,7 +41,6 @@ import Resource from "./js/classes/Resource";
 import AltrpMeta from "./js/classes/AltrpMeta";
 import { setEditorMeta } from "./js/store/editor-metas/actions";
 import { setGlobalColors } from "./js/store/altrp-global-colors/actions";
-import GlobalStyles from "../../front-app/src/js/components/GlobalStyles";
 
 /**
  * Главный класс редактора.<br/>
@@ -346,7 +345,6 @@ class Editor extends Component {
           </div>
         </div>
         <AssetsBrowser />
-        <GlobalStyles />
       </DndProvider>
     );
   }
