@@ -700,61 +700,64 @@ export function mediaStyled(controller = {}) {
  */
 export function styledString(styles, settings) {
   let stringStyles = "";
+  console.log(settings)
 
-  styles.forEach(style => {
-    if(_.isString(style)) {
-      if(style !== "}") {
-        if(style.split('')[0] === "." || style.split('')[0] === "&") {
-          stringStyles += `${style} {`;
+  if(_.keys(settings).length !== 0) {
+    styles.forEach(style => {
+      if(_.isString(style)) {
+        if(style !== "}") {
+          if(style.split('')[0] === "." || style.split('')[0] === "&") {
+            stringStyles += `${style} {`;
+          } else {
+            stringStyles += `& .${style}{`
+          }
         } else {
-          stringStyles += `& .${style}{`
+          stringStyles += `}`
         }
       } else {
-        stringStyles += `}`
-      }
-    } else {
-      if(_.isArray(style)) {
-        const state = style[3] || null;
-        const important = style[4] ? "!important" : "";
-        const variable = getResponsiveSetting(settings, style[1], state, important);
-        switch (style[2]) {
-          case "dimensions":
-            stringStyles += dimensionsStyled(variable, style[0], important);
-            break;
-          case "color":
-            stringStyles += colorStyled(variable, style[0], important);
-            break;
-          case "gradient":
-            stringStyles += gradientStyled(variable);
-            break;
-          case "typographic":
-            stringStyles += typographicControllerToStyles(variable);
-            break;
-          case "slider":
-            stringStyles += `${style[0]}:${sliderStyled(variable)} ${important};`;
-            break;
-          case "shadow":
-            stringStyles += shadowStyled(variable, important);
-            break;
-          case "text-shadow":
-            stringStyles += textShadowStyled(variable, important);
-            break;
-          case "media":
-            stringStyles += mediaStyled(variable);
-            break;
-          case "creative-link":
-            stringStyles += creativeLinkStyled(variable);
-            break;
-          default:
-            stringStyles += `${style[0]}:${defaultStyled(variable)} ${important};`
+        if(_.isArray(style)) {
+          const state = style[3] || null;
+          const important = style[4] ? "!important" : "";
+          const variable = getResponsiveSetting(settings, style[1], state, important);
+          switch (style[2]) {
+            case "dimensions":
+              stringStyles += dimensionsStyled(variable, style[0], important);
+              break;
+            case "color":
+              stringStyles += colorStyled(variable, style[0], important);
+              break;
+            case "gradient":
+              stringStyles += gradientStyled(variable);
+              break;
+            case "typographic":
+              stringStyles += typographicControllerToStyles(variable);
+              break;
+            case "slider":
+              stringStyles += `${style[0]}:${sliderStyled(variable)} ${important};`;
+              break;
+            case "shadow":
+              stringStyles += shadowStyled(variable, important);
+              break;
+            case "text-shadow":
+              stringStyles += textShadowStyled(variable, important);
+              break;
+            case "media":
+              stringStyles += mediaStyled(variable);
+              break;
+            case "creative-link":
+              stringStyles += creativeLinkStyled(variable);
+              break;
+            default:
+              stringStyles += `${style[0]}:${defaultStyled(variable)} ${important};`
+          }
+        }
+
+        if(_.isFunction(style)) {
+          stringStyles += style()
         }
       }
-
-      if(_.isFunction(style)) {
-        stringStyles += style()
-      }
-    }
-  })
+    })
+  }
 
   return stringStyles
 }

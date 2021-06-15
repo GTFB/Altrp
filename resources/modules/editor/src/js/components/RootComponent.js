@@ -57,7 +57,6 @@ class RootComponent extends Component {
             />
           )})
         }
-        <GlobalStyles/>
       </div>
     );
   }
