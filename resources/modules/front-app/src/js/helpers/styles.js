@@ -707,7 +707,7 @@ export function styledString(styles, settings) {
         if(style.split('')[0] === "." || style.split('')[0] === "&") {
           stringStyles += `${style} {`;
         } else {
-          stringStyles += `& .${style} {`
+          stringStyles += `& .${style}{`
         }
       } else {
         stringStyles += `}`
@@ -731,7 +731,7 @@ export function styledString(styles, settings) {
             stringStyles += typographicControllerToStyles(variable);
             break;
           case "slider":
-            stringStyles += `${style[0]}: ${sliderStyled(variable)} ${important};`;
+            stringStyles += `${style[0]}:${sliderStyled(variable)} ${important};`;
             break;
           case "shadow":
             stringStyles += shadowStyled(variable, important);
@@ -746,7 +746,7 @@ export function styledString(styles, settings) {
             stringStyles += creativeLinkStyled(variable);
             break;
           default:
-            stringStyles += `${style[0]}: ${defaultStyled(variable)} ${important};`
+            stringStyles += `${style[0]}:${defaultStyled(variable)} ${important};`
         }
       }
 

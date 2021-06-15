@@ -335,7 +335,7 @@ class Editor extends Component {
           </div>
         </div>
         <AssetsBrowser />
-        <GlobalStyles/>
+        {/*<GlobalStyles/>*/}
       </DndProvider>
     );
   }
