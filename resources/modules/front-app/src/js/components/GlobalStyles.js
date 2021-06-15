@@ -1,20 +1,42 @@
-import {createGlobalStyle} from 'styled-components'
-import {connect} from "react-redux";
-import ButtonComponent from "../../../../editor/src/js/components/widgets/styled-components/ButtonComponent";
+import { createGlobalStyle } from 'styled-components'
+import { connect } from 'react-redux';
+import { getResponsiveSetting } from '../helpers';
+import { colorPropertyStyled } from '../helpers/styles';
 
 const GlobalStyles = createGlobalStyle`${({elementsSettings})=>{
   let styles = '';
-  _.each(elementsSettings,(item, id)=>{
+  let settingsHeading;
+  let elementId;
 
-    console.log(item);
-    console.log(id);
-    
-    
+  _.each(elementsSettings, (item, id) => {
+    if (item.name === 'heading') {
+      settingsHeading = item.settings;
+      elementId = id;
+    }
   });
-  return styles
+
+  if (settingsHeading === undefined) {
+    return styles;
+  }
+
+  styles += `.altrp-element${elementId} .altrp-heading, .altrp-element${elementId} .altrp-heading a {`;
+
+  const color = getResponsiveSetting(settingsHeading, 'heading_style_color');
+
+  if (color) {
+    styles += colorPropertyStyled(color, 'color');
+  }
+
+  styles += `} `;
+
+  console.log(styles);
+
+  return styles;
 }}`;
+
 function mapStateToProps(state) {
   return {elementsSettings: state.elementsSettings}
 }
 
 export default connect(mapStateToProps)(GlobalStyles)
+

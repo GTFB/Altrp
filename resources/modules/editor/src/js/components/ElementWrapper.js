@@ -23,7 +23,7 @@ import ImageComponent from "./widgets/styled-components/ImageComponent";
 import AccordionComponent from "./widgets/styled-components/AccordionComponent";
 import TextComponent from "./widgets/styled-components/TextComponent";
 import TableComponent from "./widgets/styled-components/TableComponent";
-import HeadingComponent from "./widgets/styled-components/HeadingComponent";
+// import HeadingComponent from "./widgets/styled-components/HeadingComponent";
 import NavComponent from "./widgets/styled-components/NavComponent";
 import TabsComponent from "./widgets/styled-components/TabsComponent";
 import SectionWidgetComponent from "./widgets/styled-components/SectionWidgetComponent";
@@ -401,11 +401,11 @@ class ElementWrapper extends Component {
       case "accordion":
         WrapperComponent = AccordionComponent;
         break;
+      // case "heading":
+      //   WrapperComponent = HeadingComponent;
+      //   break;
       case "table":
         WrapperComponent = TableComponent;
-        break;
-      case "heading":
-        WrapperComponent = HeadingComponent;
         break;
       case "menu":
         WrapperComponent = MenuComponent;
