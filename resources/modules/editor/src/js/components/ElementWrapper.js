@@ -429,7 +429,7 @@ class ElementWrapper extends Component {
         break;
       case "breadcrumbs":
         WrapperComponent = BreadcrumbsComponent;
-      break;
+        break;
       case "video":
         WrapperComponent = VideoComponent;
         break;

@@ -75,6 +75,9 @@ class ShadowController extends Component {
       // opacity: color.rgb.a,
       // colorRGB: color.rgb
     });
+    console.log("====================================");
+    console.log(color);
+    console.log("====================================");
     this._changeValue({
       ...this.defaultValues,
       ...value,
