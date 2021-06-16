@@ -12,8 +12,10 @@ class AccordionWidget extends Component {
       }
     };
 
-    for (let i = 0; i<settings.repeater_accordion_content.length; i++) {
-      if(i !== Number(settings.active_item_additional_content - 1)) {
+    const metaData = props.element.getSettings("repeater_meta_data_section", []);
+    const activeItem = props.element.getSettings("active_item_additional_content", 0);
+    for (let i = 0; i<metaData.length; i++) {
+      if(i !== Number(activeItem - 1)) {
         this.state.activeItem.id.push(false)
       } else {
         this.state.activeItem.id.push(true)
@@ -55,7 +57,7 @@ class AccordionWidget extends Component {
   };
 
   render(){
-    let items = this.state.settings.repeater_accordion_content || []
+    let items = this.state.settings.repeater_meta_data_section || [];
     let icon = "";
     let active_icon = "";
 

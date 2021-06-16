@@ -369,8 +369,6 @@ function MapDesigner({
     }
   }, []);
 
-  console.log(isEditor());
-  console.log(parent)
   return (
     <div className="altrp-map" style={style}>
       {isLoading && <Loader />}

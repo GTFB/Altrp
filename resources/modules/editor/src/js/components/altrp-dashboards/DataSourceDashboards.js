@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { editElement } from "../../store/altrp-dashboard/actions";
 import { exportDashboard } from "../../../../../front-app/src/js/store/altrp-dashboard-export/actions";
 import axios from "axios";
+import { createPortal } from "react-dom";
 import Drawer from "rc-drawer";
 
 import "react-grid-layout/css/styles.css";
@@ -16,6 +17,7 @@ import AddItemButton from "./settings/AddItemButton";
 import ExportDashboardButton from "./settings/ExportDashboardButton";
 import ImportDashboard from "./settings/ImportDashboard";
 import ImportDiagram from "./settings/ImportDiagram";
+import {isEditor} from "../../../../../front-app/src/js/helpers";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -55,7 +57,8 @@ class DataSourceDashboards extends Component {
       datasources: null,
       delimer: props.delimer,
       importData: [],
-      importWidget: []
+      importWidget: [],
+      parentDrawer: document.body
     };
 
     this.export = this.export.bind(this);
@@ -77,6 +80,15 @@ class DataSourceDashboards extends Component {
     this.setCardName = this.setCardName.bind(this);
     this.onDragStop = this.onDragStop.bind(this);
     this.copyWidget = this.copyWidget.bind(this);
+  }
+
+  componentDidMount() {
+    if(isEditor()) {
+      this.setState((state) => ({
+        ...state,
+        parentDrawer: document.getElementById("editorContent").contentWindow.document.body
+      }))
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -424,6 +436,8 @@ class DataSourceDashboards extends Component {
     );
   }
 
+
+
   render() {
     return (
       <div>
@@ -461,31 +475,36 @@ class DataSourceDashboards extends Component {
         >
           {_.map(this.state.items, (el, key) => this.createElement(el, key))}
         </ResponsiveReactGridLayout>
-        <Drawer
-          getContainer={document.body}
-          placement="right"
-          open={true}
-          defaultOpen={true}
-          width={this.props.drawerWidth}
-          open={this.state.settingsOpen}
-          onClose={this.openSettings}
-          handler={false}
-        >
-          {this.state.settingsOpen && (
-            <WidgetSettings
-              widgetID={this.state.id}
-              addItemPreview={this.state.addItemPreview}
-              filter_datasource={this.state.settings.filter_datasource}
-              datasources={this.props.rep}
-              editHandler={this.onEditItem}
-              checkboxColor={this.state.settings?.checkboxColor}
-              onCloseHandler={this.openSettings}
-              onAddItem={this.onAddItemCard}
-              setCardName={this.setCardName}
-              delimer={this.state.delimer}
-            />
-          )}
-        </Drawer>
+        {
+          createPortal(
+            <Drawer
+              getContainer={null}
+              placement="right"
+              defaultOpen={true}
+              width={this.props.drawerWidth}
+              open={this.state.settingsOpen}
+              onClose={this.openSettings}
+              handler={false}
+            >
+              {this.state.settingsOpen && (
+                <WidgetSettings
+                  widgetID={this.state.id}
+                  settings={this.props.settings}
+                  addItemPreview={this.state.addItemPreview}
+                  filter_datasource={this.state.settings.filter_datasource}
+                  datasources={this.props.rep}
+                  editHandler={this.onEditItem}
+                  checkboxColor={this.state.settings?.checkboxColor}
+                  onCloseHandler={this.openSettings}
+                  onAddItem={this.onAddItemCard}
+                  setCardName={this.setCardName}
+                  delimer={this.state.delimer}
+                />
+              )}
+            </Drawer>,
+            this.state.parentDrawer
+          )
+        }
         {this.state.drawer != null &&
           ReactDOM.createPortal(
             <WidgetPreview

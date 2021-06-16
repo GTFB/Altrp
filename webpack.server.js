@@ -4,7 +4,7 @@ const path = require("path");
 const nodeExternals = require("webpack-node-externals");
 module.exports = {
   mode: 'production',
-  entry: "./server/index.js",
+  entry: ['@babel/polyfill', "./server/index.js"],
 
   target: "node",
 
@@ -22,6 +22,7 @@ module.exports = {
         exclude: path.resolve(__dirname, 'node_modules/@babel'),
         loader: "babel-loader",
         options: {
+          minified:false,
           presets: ["@babel/env", "@babel/preset-react"],
           plugins: ["@babel/plugin-syntax-jsx", "inline-react-svg"]
         },
@@ -50,7 +51,28 @@ module.exports = {
         options: {
           name: "[path][name].[ext]"
         }
-      }
+      },
+      {
+        test: path.resolve(__dirname, 'node_modules/@babel'),
+        loader: "file-loader",
+        options: {
+          name: "[path][name].[ext]"
+        }
+      },
+      {
+        test: path.resolve(__dirname, 'node_modules/ignore-styles'),
+        loader: "file-loader",
+        options: {
+          name: "[path][name].[ext]"
+        }
+      },
+      {
+        test: path.resolve(__dirname, 'node_modules/express'),
+        loader: "file-loader",
+        options: {
+          name: "[path][name].[ext]"
+        }
+      },
     ]
   },
   plugins: [

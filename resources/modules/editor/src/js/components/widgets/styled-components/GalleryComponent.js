@@ -2,8 +2,11 @@ import styled from "styled-components";
 import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
 import {defaultStyled, styledString} from "../../../../../../front-app/src/js/helpers/styles";
 
-export default styled.div`
-  ${({settings}) => {
+/**
+ * @return {string}
+ */
+
+export default function GalleryComponent(settings) {
   const styles = [
     "altrp-gallery-img",
 
@@ -124,6 +127,6 @@ export default styled.div`
 
     "}"
   ];
+
   return styledString(styles, settings)
-}}
-`;
+}

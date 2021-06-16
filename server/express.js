@@ -1,5 +1,4 @@
 import { ServerStyleSheet } from "styled-components";
-import AltrpModel from "../resources/modules/editor/src/js/classes/AltrpModel";
 import Area from "../resources/modules/front-app/src/js/classes/Area";
 const sheet = new ServerStyleSheet();
 import { parse } from "node-html-parser";
@@ -17,7 +16,7 @@ global.window = {
   parent: {},
   Link,
 };
-
+const AltrpModel = require('../resources/modules/editor/src/js/classes/AltrpModel').default
 global.window.altrpMenus = [];
 global.SSR = true;
 global.window.SSR = true;

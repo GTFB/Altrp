@@ -5,10 +5,6 @@ import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/Alt
 import { changeCurrentPageProperty } from "../store/current-page/actions";
 import { ElementWrapperDivComponent } from "../../../../editor/src/js/components/widgets/styled-components/ElementWrapperComponent";
 import ImageComponent from "../../../../editor/src/js/components/widgets/styled-components/ImageComponent";
-import CarouselComponent from "../../../../editor/src/js/components/widgets/styled-components/CarouselComponent";
-import GalleryComponent from "../../../../editor/src/js/components/widgets/styled-components/GalleryComponent";
-import ButtonComponent from "../../../../editor/src/js/components/widgets/styled-components/ButtonComponent";
-import DividerComponent from "../../../../editor/src/js/components/widgets/styled-components/DividerComponent";
 import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 import TextComponent from "../../../../editor/src/js/components/widgets/styled-components/TextComponent";
 import TableComponent from "../../../../editor/src/js/components/widgets/styled-components/TableComponent";
@@ -19,14 +15,13 @@ import PostsComponent from "../../../../editor/src/js/components/widgets/styled-
 import HeadingComponent from "../../../../editor/src/js/components/widgets/styled-components/HeadingComponent";
 import MenuComponent from "../../../../editor/src/js/components/widgets/styled-components/MenuComponent";
 import BreadcrumbsComponent from "../../../../editor/src/js/components/widgets/styled-components/BreadcrumbsComponent";
-import VideoComponent from "../../../../editor/src/js/components/widgets/styled-components/VideoComponent";
-import ListComponent from "../../../../editor/src/js/components/widgets/styled-components/ListComponent";
 import MapConstructorComponent
   from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
 import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
 import DEFAULT_REACT_ELEMENTS from "../constants/DEFAULT_REACT_ELEMENTS";
 const { altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceContentWithData, setTitle } = window.altrpHelpers;
+import DashboardComponent from "../../../../editor/src/js/components/widgets/styled-components/DashboardComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -332,25 +327,12 @@ class ElementWrapper extends Component {
     }
 
     let WrapperComponent = ElementWrapperDivComponent;
-
     switch (this.props.element.getName()) {
-      case "gallery":
-        WrapperComponent = GalleryComponent;
-        break
       case "image":
         WrapperComponent = ImageComponent;
         break
-      case "button":
-        WrapperComponent = ButtonComponent;
-        break
       case "text":
         WrapperComponent = TextComponent;
-        break
-      case "carousel":
-        WrapperComponent = CarouselComponent;
-        break
-      case "divider":
-        WrapperComponent = DividerComponent;
         break
       case "accordion":
         WrapperComponent = AccordionComponent;
@@ -370,12 +352,6 @@ class ElementWrapper extends Component {
       case "nav":
         WrapperComponent = NavComponent;
         break;
-      case "video":
-        WrapperComponent = VideoComponent;
-        break;
-      case "list":
-        WrapperComponent = ListComponent;
-        break;
       case "map_builder":
         WrapperComponent = MapConstructorComponent;
         break;
@@ -384,6 +360,9 @@ class ElementWrapper extends Component {
         break;
       case "diagram":
         WrapperComponent = DiagramComponent;
+        break;
+      case "dashboards":
+        WrapperComponent = DashboardComponent;
         break;
       case "tabs":
         WrapperComponent = TabsComponent;
@@ -395,6 +374,7 @@ class ElementWrapper extends Component {
         WrapperComponent = PostsComponent;
         break;
     }
+
     tooltip_text = replaceContentWithData(tooltip_text, this.props.element.getCurrentModel().getData())
     const wrapperProps = {
       className: classes,

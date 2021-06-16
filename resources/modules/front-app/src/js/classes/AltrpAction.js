@@ -465,7 +465,7 @@ class AltrpAction extends AltrpModel {
    */
   async doActionRedirect() {
     let URL = this.getFormURL();
-    if (frontAppRouter) {
+    if (window.frontAppRouter) {
       if (this.getProperty('back')) {
         frontAppRouter.history.goBack();
       } else {
@@ -476,6 +476,8 @@ class AltrpAction extends AltrpModel {
           window.location.assign(URL);
         }
       }
+    } else {
+      window.location.href = URL;
     }
     return {
       success: true

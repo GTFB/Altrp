@@ -1,13 +1,9 @@
 import  queryString from 'query-string';
 import WIDGETS_DEPENDS from "./js/constants/WIDGETS_DEPENDS";
 import  "./js/functions/mount-elements";
-import appStore from "./js/store/store";
 import {setScrollValue} from "./js/store/scroll-position/actions";
 console.log('FIRST SCRIPT: ', performance.now());
 
-window.currentRouterMatch = {
-  params:queryString.parseUrl(window.location.href).query
-};
 
 window.sSr = false;
 window.libsLoaded = [];
@@ -15,12 +11,14 @@ const LIBS = {
   'blueprint': () => {
     return import(/* webpackChunkName: 'Blueprint' */'./js/libs/blueprint').then(res => {
       window.libsLoaded.push('blueprint')
+      console.log('LOAD Blueprint: ', performance.now());
       return Promise.resolve(res)
     });
   },
   'moment': () => {
     return import(/* webpackChunkName: 'moment' */'./js/libs/moment').then(res => {
       window.libsLoaded.push('moment')
+      console.log('LOAD moment: ', performance.now());
       return Promise.resolve(res)
     });
   },
@@ -52,7 +50,7 @@ Promise.all(libsToLoad).then(res => {
  */
 import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
   loadingCallback();
-  // loadDatastorageUpdater();
+  loadDatastorageUpdater();
 })
 import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElementsManager').then(module => {
   import (/* webpackChunkName: 'FrontElementsFabric' */'./js/classes/FrontElementsFabric').then(module => {
@@ -72,6 +70,10 @@ import (/* webpackChunkName: 'React_ReactDom_Lodash' */'./js/libs/react-lodash')
     console.log('LOAD SimpleElementWrapper: ', performance.now());
     loadingCallback();
   });
+});
+import (/* webpackChunkName: 'React_ReactDom_Lodash' */'./js/store/store').then(module => {
+  console.log('LOAD appStore: ', performance.now());
+  loadingCallback();
 });
 import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element-component').then(module => {
   window.elementDecorator = module.default;
@@ -99,6 +101,7 @@ function loadingCallback() {
     && window.ElementWrapper
     // && window.formsManager
     && window.altrpHelpers
+    && window.appStore
     && window._
     /**
      * Проверим подгрузку необходимых библиотек
@@ -107,6 +110,9 @@ function loadingCallback() {
   ) {
     console.log('h-altrp LOADED: ', performance.now());
 
+    window.currentRouterMatch = new window.AltrpModel({
+      params:queryString.parseUrl(window.location.href).query
+    });
     const hAltrpLoadedEvent = new Event('h-altrp-loaded');
     window.dispatchEvent(hAltrpLoadedEvent);  }
 }
@@ -168,11 +174,9 @@ frontAppContainer.addEventListener('scroll', e=>{
 })
 
 function loadDatastorageUpdater(){
-    import(/* webpackChunkName: 'DatastorageUpdater' */'./js/classes/modules/DatastorageUpdater').then(module => {
-      const dataStorageUpdater = window.dataStorageUpdater;
-      console.log(currentPage?.data_sources);
-      dataStorageUpdater.updateCurrent(currentPage?.data_sources || []);
-    });
-
+  import(/* webpackChunkName: 'DatastorageUpdater' */'./js/classes/modules/DatastorageUpdater').then(module => {
+    const dataStorageUpdater = window.dataStorageUpdater;
+    dataStorageUpdater.updateCurrent(currentPage?.data_sources || []);
+  });
 }
 

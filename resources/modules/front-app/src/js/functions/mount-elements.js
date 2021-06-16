@@ -1,5 +1,4 @@
-import {Provider} from "react-redux";
-import appStore from "../store/store";
+
 
 export default function mountElements(){
 
@@ -16,15 +15,15 @@ export default function mountElements(){
       element: element,
     }
     console.log('Loading Element:', performance.now());
-    window.ReactDOM.render(<Provider store={appStore}>
+    window.ReactDOM.render(<window.Provider store={window.appStore}>
       <window.ElementWrapper {...props} />
-    </Provider>,  container, ()=>{
+    </window.Provider>,  container, ()=>{
       console.log('Load Element:', performance.now());
     })
   })
 
-  // loadEmailRenderer();
-  // loadAdminBar();
+  loadEmailRenderer();
+  loadAdminBar();
   window.removeEventListener('h-altrp-loaded', mountElements);
 
 }
@@ -87,7 +86,7 @@ function loadEmailRenderer(){
     const EmailTemplatesRenderer = module.default;
     const emailContainer = document.createElement('div');
     document.body.appendChild(emailContainer);
-    ReactDOM.render(<window.Provider store={appStore}>
+    ReactDOM.render(<window.Provider store={window.appStore}>
       <EmailTemplatesRenderer/>
     </window.Provider>, emailContainer)
   });
@@ -97,7 +96,7 @@ function loadEmailRenderer(){
  * Загрузка админбара
  */
 function loadAdminBar() {
-  let isAdmin = appStore.getState().currentUser.hasRoles(['admin']);
+  let isAdmin = window.appStore.getState().currentUser.hasRoles(['admin']);
   if(!isAdmin && document.querySelector('.front-app_admin')){
     document.querySelector('.front-app_admin').classList.remove('front-app_admin')
   } else if(isAdmin && ! document.querySelector('.front-app_admin')){

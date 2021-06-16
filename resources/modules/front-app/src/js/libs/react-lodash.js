@@ -22,11 +22,13 @@ import toPairs from 'lodash.topairs';
 import keys from 'lodash.keys';
 import toArray from 'lodash.toarray';
 import uniqBy  from 'lodash.uniqby';
+import sortBy  from 'lodash.sortby';
 import map  from 'lodash.map';
 window._ = {
   cloneDeep,
   get,
   set,
+  sortBy,
   has,
   unset,
   isEmpty,

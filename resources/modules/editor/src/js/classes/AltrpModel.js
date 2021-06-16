@@ -72,5 +72,5 @@ class AltrpModel {
     return unset(this.data, name);
   }
 }
-
+window.AltrpModel = AltrpModel;
 export default AltrpModel
