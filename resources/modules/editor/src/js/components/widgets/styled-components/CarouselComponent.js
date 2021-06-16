@@ -82,7 +82,7 @@ export default function CarouselComponent(settings) {
       const value = getResponsiveSetting(settings, "vertical_no_center_offset_arrows_navigation_style");
       const slider = sliderStyled(value);
       return `
-      & .altrp-carousel-arrow { transform: translateY(${slider}); }
+      & .altrp-carousel-arrow { top:${slider}; }
       `
     },
 
