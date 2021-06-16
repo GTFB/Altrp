@@ -20,13 +20,11 @@ import { contextMenu } from "react-contexify/lib/index";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
 import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
 import ImageComponent from "./widgets/styled-components/ImageComponent";
-import AccordionComponent from "./widgets/styled-components/AccordionComponent";
 import TextComponent from "./widgets/styled-components/TextComponent";
 import TableComponent from "./widgets/styled-components/TableComponent";
 // import HeadingComponent from "./widgets/styled-components/HeadingComponent";
 import NavComponent from "./widgets/styled-components/NavComponent";
 import TabsComponent from "./widgets/styled-components/TabsComponent";
-import SectionWidgetComponent from "./widgets/styled-components/SectionWidgetComponent";
 import PostsComponent from "./widgets/styled-components/PostsComponent";
 import Column from "../classes/elements/Column";
 import MenuComponent from "./widgets/styled-components/MenuComponent";
@@ -398,9 +396,6 @@ class ElementWrapper extends Component {
       case "text":
         WrapperComponent = TextComponent;
         break;
-      case "accordion":
-        WrapperComponent = AccordionComponent;
-        break;
       // case "heading":
       //   WrapperComponent = HeadingComponent;
       //   break;
@@ -430,9 +425,6 @@ class ElementWrapper extends Component {
         break;
       case "tabs":
         WrapperComponent = TabsComponent;
-        break;
-      case "section":
-        WrapperComponent = SectionWidgetComponent;
         break;
       case "posts":
         WrapperComponent = PostsComponent;

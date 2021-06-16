@@ -14,7 +14,6 @@ export default function AdvancedComponent(settings) {
       const value = getResponsiveSetting(settings, "advanced_opacity");
 
       if(value && value.size) {
-        console.log(`opacity: ${value.size};`);
         return `opacity: ${value.size};`
       } else {
         return ''
@@ -65,21 +64,23 @@ export default function AdvancedComponent(settings) {
       const value = getResponsiveSetting(settings, "arrow_size");
       const slider = sliderStyled(value);
 
-      return `
-        & > .altrp-tooltip::after { border-width: ${slider}; }
-        & > .altrp-tooltip--top { bottom: calc(100% + ${slider}); }
-        & > .altrp-tooltip--bottom { top: calc(100% + ${slider}); }
-        & > .altrp-tooltip--right { left: calc(100% + ${slider}); }
-        & > .altrp-tooltip--left { right: calc(100% + ${slider}); }
-        & > .altrp-tooltip--top::after { margin-left: -${slider}; }
-        & > .altrp-tooltip--bottom::after { margin-left: -${slider}; }
-        & > .altrp-tooltip--right::after { margin-top: -${slider}; }
-        & > .altrp-tooltip--left::after { margin-top: -${slider}; }
-      `
+      if(slider) {
+        return `
+          & > .altrp-tooltip::after { border-width: ${slider}; }
+          & > .altrp-tooltip--top { bottom: calc(100% + ${slider}); }
+          & > .altrp-tooltip--bottom { top: calc(100% + ${slider}); }
+          & > .altrp-tooltip--right { left: calc(100% + ${slider}); }
+          & > .altrp-tooltip--left { right: calc(100% + ${slider}); }
+          & > .altrp-tooltip--top::after { margin-left: -${slider}; }
+          & > .altrp-tooltip--bottom::after { margin-left: -${slider}; }
+          & > .altrp-tooltip--right::after { margin-top: -${slider}; }
+          & > .altrp-tooltip--left::after { margin-top: -${slider}; }
+        `
+      } else {
+        return ""
+      }
     },
   ];
-
-  console.log(styledString(styles, settings));
 
   return "width:100%;" + styledString(styles, settings)
 }
