@@ -748,7 +748,9 @@ export function styledString(styles, settings) {
               stringStyles += creativeLinkStyled(variable);
               break;
             default:
-              stringStyles += `${style[0]}:${defaultStyled(variable)} ${important};`
+              if(defaultStyled(variable)) {
+                stringStyles += `${style[0]}:${defaultStyled(variable)} ${important};`
+              }
           }
         }
 

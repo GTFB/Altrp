@@ -8,6 +8,7 @@ import GalleryComponent from "../../../../editor/src/js/components/widgets/style
 import DividerComponent from "../../../../editor/src/js/components/widgets/styled-components/DividerComponent";
 import VideoComponent from "../../../../editor/src/js/components/widgets/styled-components/VideoComponent";
 import ListComponent from "../../../../editor/src/js/components/widgets/styled-components/ListComponent";
+import AdvancedComponent from "../../../../editor/src/js/components/widgets/styled-components/AdvancedComponent";
 
 const GlobalStyles = createGlobalStyle`${({elementsSettings})=>{
   let styles = '';
@@ -42,6 +43,7 @@ const GlobalStyles = createGlobalStyle`${({elementsSettings})=>{
           styles += `.${prefix}${id} {${ListComponent(item.settings)}}`;
           break;
       }
+      styles += `.${prefix}${id} {${AdvancedComponent(item.settings)}}`
     }
   });
 
@@ -59,7 +61,7 @@ const GlobalStyles = createGlobalStyle`${({elementsSettings})=>{
 
   styles += `} `;
 
-  console.log(styles);
+  // console.log(styles);
 
   return styles;
 }}`;
