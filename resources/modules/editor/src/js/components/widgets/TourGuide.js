@@ -19,17 +19,14 @@ class TourGuide extends Component {
 
   render() {
     let show = this.props.element.settings.showTutorial;
-
-    if (!isEditor() && this.props.element.settings.steps.length === 0) {
+    if (!isEditor() && this.props.element.getResponsiveSetting('steps', '', []).length === 0) {
       return <></>
     }
-    console.log(this.props.element.settings.steps);
     let steps = this.props.element.settings.steps.map(step => ({
       selector: `.altrp-element${_.get(step, 'element')}`,
       content: _.get(step, 'text'),
       startAt: 1000
     }));
-    console.log(steps);
     if (isEditor()) {
       show = false;
     }

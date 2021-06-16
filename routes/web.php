@@ -657,6 +657,12 @@ Route::get('/linkstorage', function () {
  */
 Route::group(['prefix' => 'ajax', 'middleware' => 'auth'], function () {
 });
+/**
+ * Роуты для зарегистрированных пользователей
+ */
+Route::group(['prefix' => 'data', ], function () {
+  Route::get('current-user', "Users\Users@getCurrentUserData");
+});
 
 /**
  * Robots

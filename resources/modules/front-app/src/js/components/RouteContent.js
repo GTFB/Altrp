@@ -7,8 +7,7 @@ if (typeof document === "undefined") {
 }
 import React, { Component, Suspense } from "react";
 import AreaComponent from "./AreaComponent";
-const AdminBar = React.lazy(() => import("./AdminBar"));
-import { Scrollbars } from "react-custom-scrollbars";
+const AdminBar = React.lazy(() => import(/* webpackChunkName: 'AdminBar' */"./AdminBar"));
 import { Redirect, withRouter } from "react-router-dom";
 import pageLoader from "./../classes/PageLoader";
 import Area from "../classes/Area";
@@ -113,6 +112,9 @@ class RouteContent extends Component {
      */
     window.formsManager.clearFieldsStorage();
     console.log('Route Mounted: ', performance.now());
+    const renderEvent = new Event('render-altrp');
+    window.dispatchEvent(renderEvent);
+
   }
 
   /**

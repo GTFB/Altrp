@@ -341,7 +341,7 @@ class AltrpAction extends AltrpModel {
     //   };
     // }
     const formsManager = (
-      await import('../../../../editor/src/js/classes/modules/FormsManager.js')
+      await import(/* webpackChunkName: 'formsManager' */'../../../../editor/src/js/classes/modules/FormsManager.js')
     ).default;
 
     let data = null;
@@ -465,7 +465,7 @@ class AltrpAction extends AltrpModel {
    */
   async doActionRedirect() {
     let URL = this.getFormURL();
-    if (frontAppRouter) {
+    if (window.frontAppRouter) {
       if (this.getProperty('back')) {
         frontAppRouter.history.goBack();
       } else {
@@ -476,6 +476,8 @@ class AltrpAction extends AltrpModel {
           window.location.assign(URL);
         }
       }
+    } else {
+      window.location.href = URL;
     }
     return {
       success: true
@@ -1070,7 +1072,7 @@ class AltrpAction extends AltrpModel {
     const url = this.getProperty('media_url');
     const loop = this.getProperty('loop');
     if (url) {
-      const { playSound } = await import('../helpers/sounds');
+      const { playSound } = await import(/* webpackChunkName: 'helpers-sounds' */'../helpers/sounds');
       playSound(url, loop, duration);
       await delay(20);
     }

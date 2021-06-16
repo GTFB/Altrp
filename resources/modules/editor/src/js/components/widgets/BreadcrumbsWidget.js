@@ -1,6 +1,4 @@
-import '../../../sass/blueprint.scss'
 import React, { Component } from 'react';
-import {Breadcrumbs} from '@blueprintjs/core';
 import {
   getBreadcrumbsItems,
   getResponsiveSetting,
@@ -9,6 +7,7 @@ import {
 } from '../../../../../front-app/src/js/helpers';
 import {createGlobalStyle} from 'styled-components'
 import {typographicControllerToStyles} from "../../../../../front-app/src/js/helpers/styles";
+const {Breadcrumbs} = window.altrpLibs.Blueprint;
 
 const GlobalStyles = createGlobalStyle`
   ${({elementId, settings})=>{

@@ -3,19 +3,17 @@ import {
   clearCurrentDataStorage,
   currentDataStorageLoaded, currentDataStorageLoading
 } from "../../store/current-data-storage/actions";
-import Resource from "../../../../../editor/src/js/classes/Resource";
 import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
-import {isJSON, mbParseJSON, replaceContentWithData} from "../../helpers";
-import appStore from "../../store/store";
 import {changeCurrentUser} from "../../store/current-user/actions";
+import Datasource from "../Datasource";
+const { Resource, isJSON, mbParseJSON, replaceContentWithData} = window.altrpHelpers;
 
 /**
  * @class DataStorageUpdater
  */
 class DataStorageUpdater extends AltrpModel {
 
-  constructor(data) {
-    super(data);
+  constructor(data) {    super(data);
     this.setProperty('dataSourcesFormsDependent', []);
     this.setProperty('formsStore', appStore.getState().formsStore);
     appStore.subscribe(this.onStoreUpdate)
@@ -27,6 +25,12 @@ class DataStorageUpdater extends AltrpModel {
    *  @param {boolean} initialUpdate
    */
   async updateCurrent(dataSources = null, initialUpdate = true) {
+    dataSources = dataSources.map(ds => {
+      if(ds instanceof Datasource){
+        return ds;
+      }
+      return new Datasource(ds)
+    });
     if(appStore.getState().currentUser.isEmpty()){
       let currentUser = await new Resource({ route: "/ajax/current-user" }).getAll();
       currentUser = currentUser.data;

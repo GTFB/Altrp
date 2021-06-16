@@ -1,6 +1,5 @@
 import CONSTANTS from "../../../editor/src/js/consts";
 import AltrpModel from "../../../editor/src/js/classes/AltrpModel";
-import moment from "moment";
 import Resource from "../../../editor/src/js/classes/Resource";
 import { changeCurrentUser } from "./store/current-user/actions";
 import { changeCurrentUserProperty } from "./store/current-user/actions";
@@ -18,7 +17,8 @@ import { addResponseData } from "./store/responses-storage/actions";
 import {getOffsetTopInElement} from "./helpers/elements";
 import Area from "./classes/Area";
 export function getRoutes() {
-  return import("./classes/Routes.js");
+
+  return import(/* webpackChunkName: 'Routes' */"./classes/Routes.js");
 }
 
 export function isSSR(){
@@ -980,6 +980,7 @@ export function getTimeValue(path, defaultValue = null) {
       }
       break;
   }
+  const {moment} = window.altrpHelpers;
   value = moment(value).format("YYYY-MM-DD");
   return value;
 }
@@ -1009,6 +1010,7 @@ export function startOfYear(date, yearShift = 0) {
  * @return {Date}
  */
 export function startOfWeek(date, weekShift = 0) {
+  const {moment} = window.altrpHelpers;
   return moment(
     new Date(
       date.getFullYear(),
@@ -1157,6 +1159,7 @@ export function getComponentByElementId(elementId = "") {
  * @return {moment.Moment}
  */
 function getNextWeekStart() {
+  const {moment} = window.altrpHelpers;
   let today = moment();
   let daystoMonday = 7 - (today.isoWeekday() - 1);
   return today.add(daystoMonday, "days");
@@ -1167,6 +1170,7 @@ function getNextWeekStart() {
  * @return {moment.Moment}
  */
 function getWeekStart() {
+  const {moment} = window.altrpHelpers;
   let today = moment();
   let daystoMonday = today.isoWeekday() - 1;
   return today.subtract(daystoMonday, "days");
@@ -1186,6 +1190,7 @@ function getNextWeekEnd() {
  * @return {moment.Moment}
  */
 function getPrevWeekStart() {
+  const {moment} = window.altrpHelpers;
   let today = moment();
   let daystoLastMonday = today.isoWeekday() - 1 + 7;
   return today.subtract(daystoLastMonday, "days");
@@ -1281,7 +1286,7 @@ export function printElements(elements, title = "") {
  * @params {string} filename
  */
 export async function elementsToPdf(elements, filename = "") {
-  let html2pdf = (await import("html2pdf.js")).default;
+  let html2pdf = (await import(/* webpackChunkName: 'html2pdf' */"html2pdf.js")).default;
   elements = elements.body ? elements.body : elements;
   if (!elements) {
     return {

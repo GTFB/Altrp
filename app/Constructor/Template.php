@@ -464,7 +464,7 @@ class Template extends Model
    * @return array
    */
   public static function sanitizeSettings( $data = [] ){
-    return $data; //todo: to test
+//    return $data; //todo: to test
     if( is_string( $data ) ){
       $data = json_decode( $data, true );
       if( ! $data ){

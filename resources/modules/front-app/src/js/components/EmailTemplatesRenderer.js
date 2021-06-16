@@ -1,23 +1,16 @@
 import {connect} from 'react-redux';
 
-import {mbParseJSON} from '../helpers';
 
-class EmailTemplatesRenderer extends Component {
+class EmailTemplatesRenderer extends window.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      baseEmailRender: window.baseEmailRender
+    };
     this.emailTemplate = React.createRef();
     window.emailTemplatesRenderer = this;
   }
 
-  /**
-   * Нам надо загрузить baseEmailRender, для передачи рендеров компонентов для всем компонентам элементов через props
-   * @return {Promise<void>}
-   */
-  async componentDidMount() {
-    const baseEmailRender = (await import('../../../../editor/src/js/decorators/base-email-render')).baseEmailRender;
-    this.setState(state => ({...state, baseEmailRender}));
-  }
 
   /**
    *
@@ -27,7 +20,7 @@ class EmailTemplatesRenderer extends Component {
     if (! this.props.currentEmailTemplate || ! this.state.baseEmailRender) {
       return null
     }
-    let rootElement = mbParseJSON(this.props.currentEmailTemplate.data);
+    let rootElement = window.altrpHelpers.mbParseJSON(this.props.currentEmailTemplate.data);
     rootElement = window.frontElementsFabric.parseData(rootElement);
     rootElement.templateType = 'email';
     let content = React.createElement(rootElement.componentClass, {

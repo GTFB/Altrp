@@ -22,7 +22,7 @@ class AltrpMeta extends AltrpModel{
    */
   constructor(metaName, metaValue){
     const data = {metaValue, metaName};
-    
+
     super(data);
   }
 
@@ -55,7 +55,7 @@ class AltrpMeta extends AltrpModel{
     if(_.isObject(metaValue)){
       metaValue = JSON.stringify(metaValue);
     }
-    const Resource = (await import( './Resource')).default;
+    const Resource = (await import(/* webpackChunkName: 'Resource' */ './Resource')).default;
     const resource = new Resource({ route: `/admin/ajax/altrp_meta`});
     return (await resource.put(metaName, {meta_value:metaValue}));
 
@@ -77,7 +77,7 @@ class AltrpMeta extends AltrpModel{
       })
     }
     AltrpMeta.statuses[metaName] = 'loading';
-    const Resource = (await import( './Resource')).default;
+    const Resource = (await import(/* webpackChunkName: 'Resource' */ './Resource')).default;
     const resource = new Resource({ route: `/admin/ajax/altrp_meta`});
     try {
       let metaValue = _.get((await resource.get(metaName)), 'data.meta_value') || null;

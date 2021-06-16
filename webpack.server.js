@@ -1,14 +1,13 @@
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const webpack = require("webpack");
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
 module.exports = {
-  entry: "./server/index.js",
+  mode: 'production',
+  entry: ['@babel/polyfill', "./server/index.js"],
 
   target: "node",
 
-  externals: [nodeExternals()],
 
   output: {
     path: path.resolve("server-dist"),
@@ -20,8 +19,18 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        use: "babel-loader"
+        exclude: path.resolve(__dirname, 'node_modules/@babel'),
+        loader: "babel-loader",
+        options: {
+          minified:false,
+          presets: ["@babel/env", "@babel/preset-react"],
+          plugins: ["@babel/plugin-syntax-jsx", "inline-react-svg"]
+        },
       },
+      // {
+      //   test:  path.resolve(__dirname, 'node_modules/@babel'),
+      //   loader: "file-loader",
+      // },
       {
         test: /\.s[ac]ss$/i,
 
@@ -42,14 +51,39 @@ module.exports = {
         options: {
           name: "[path][name].[ext]"
         }
-      }
+      },
+      {
+        test: path.resolve(__dirname, 'node_modules/@babel'),
+        loader: "file-loader",
+        options: {
+          name: "[path][name].[ext]"
+        }
+      },
+      {
+        test: path.resolve(__dirname, 'node_modules/ignore-styles'),
+        loader: "file-loader",
+        options: {
+          name: "[path][name].[ext]"
+        }
+      },
+      {
+        test: path.resolve(__dirname, 'node_modules/express'),
+        loader: "file-loader",
+        options: {
+          name: "[path][name].[ext]"
+        }
+      },
     ]
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": '"production"',
       "process.env.BROWSER": JSON.stringify(true),
       __DEV__: false
-    })
+    }),
+    new webpack.IgnorePlugin({
+      resourceRegExp: /\.ttf|\.woff|\.otf|\.woff2|\.s[ac]ss$/,
+    }),
   ]
 };

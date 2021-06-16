@@ -9,7 +9,6 @@ import {
   generateButtonsArray,
   renderIcon, setAltrpIndex, getResponsiveSetting
 } from "../../../../../front-app/src/js/helpers";
-import { Link } from "react-router-dom";
 import { renderAdditionalRows, renderCellActions, } from "./altrp-table";
 import {
   useSortBy,
@@ -38,6 +37,8 @@ import TableComponent from "./components/TableComponent";
 import HeaderCellComponent from "./components/HeaderCellComponent";
 import TableBody from './components/TableBody';
 import Pagination from "./components/Pagination";
+const Link = window.Link;
+
 
 /**
  *

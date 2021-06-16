@@ -1,16 +1,10 @@
-
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceContentWithData, setTitle } from "../helpers";
 import { addElement } from "../store/elements-storage/actions";
 import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 import { changeCurrentPageProperty } from "../store/current-page/actions";
 import { ElementWrapperDivComponent } from "../../../../editor/src/js/components/widgets/styled-components/ElementWrapperComponent";
 import ImageComponent from "../../../../editor/src/js/components/widgets/styled-components/ImageComponent";
-import CarouselComponent from "../../../../editor/src/js/components/widgets/styled-components/CarouselComponent";
-import GalleryComponent from "../../../../editor/src/js/components/widgets/styled-components/GalleryComponent";
-import ButtonComponent from "../../../../editor/src/js/components/widgets/styled-components/ButtonComponent";
-import DividerComponent from "../../../../editor/src/js/components/widgets/styled-components/DividerComponent";
 import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 import TextComponent from "../../../../editor/src/js/components/widgets/styled-components/TextComponent";
 import TableComponent from "../../../../editor/src/js/components/widgets/styled-components/TableComponent";
@@ -21,19 +15,24 @@ import PostsComponent from "../../../../editor/src/js/components/widgets/styled-
 import HeadingComponent from "../../../../editor/src/js/components/widgets/styled-components/HeadingComponent";
 import MenuComponent from "../../../../editor/src/js/components/widgets/styled-components/MenuComponent";
 import BreadcrumbsComponent from "../../../../editor/src/js/components/widgets/styled-components/BreadcrumbsComponent";
-import VideoComponent from "../../../../editor/src/js/components/widgets/styled-components/VideoComponent";
-import ListComponent from "../../../../editor/src/js/components/widgets/styled-components/ListComponent";
 import MapConstructorComponent
   from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
 import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
+import DEFAULT_REACT_ELEMENTS from "../constants/DEFAULT_REACT_ELEMENTS";
+const { altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceContentWithData, setTitle } = window.altrpHelpers;
+import DashboardComponent from "../../../../editor/src/js/components/widgets/styled-components/DashboardComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      elementDisplay: !this.props.element.getSettings("default_hidden")
+      elementDisplay: !this.props.element.getSettings("default_hidden"),
     };
+    this.reactElement = this.props.element.getSettings("react_element");
+    this.elementId = this.props.element.getId();
+    this.settings = this.props.element.getSettings();
     props.element.wrapper = this;
     this.elementWrapperRef = React.createRef();
     this.elementRef = React.createRef();
@@ -57,7 +56,7 @@ class ElementWrapper extends Component {
    * Иногда надо обновить элемент (FrontElement)
    */
   componentDidMount() {
-    ! isEditor() && window.frontApp.onWidgetMount();
+    ! isEditor() && window?.frontApp?.onWidgetMount();
     if (_.isFunction(this.props.element.update)) {
       this.props.element.update();
       this.props.element.updateFonts();
@@ -328,25 +327,12 @@ class ElementWrapper extends Component {
     }
 
     let WrapperComponent = ElementWrapperDivComponent;
-
     switch (this.props.element.getName()) {
-      case "gallery":
-        WrapperComponent = GalleryComponent;
-        break
       case "image":
         WrapperComponent = ImageComponent;
         break
-      case "button":
-        WrapperComponent = ButtonComponent;
-        break
       case "text":
         WrapperComponent = TextComponent;
-        break
-      case "carousel":
-        WrapperComponent = CarouselComponent;
-        break
-      case "divider":
-        WrapperComponent = DividerComponent;
         break
       case "accordion":
         WrapperComponent = AccordionComponent;
@@ -366,12 +352,6 @@ class ElementWrapper extends Component {
       case "nav":
         WrapperComponent = NavComponent;
         break;
-      case "video":
-        WrapperComponent = VideoComponent;
-        break;
-      case "list":
-        WrapperComponent = ListComponent;
-        break;
       case "map_builder":
         WrapperComponent = MapConstructorComponent;
         break;
@@ -380,6 +360,9 @@ class ElementWrapper extends Component {
         break;
       case "diagram":
         WrapperComponent = DiagramComponent;
+        break;
+      case "dashboards":
+        WrapperComponent = DashboardComponent;
         break;
       case "tabs":
         WrapperComponent = TabsComponent;
@@ -391,15 +374,23 @@ class ElementWrapper extends Component {
         WrapperComponent = PostsComponent;
         break;
     }
+
     tooltip_text = replaceContentWithData(tooltip_text, this.props.element.getCurrentModel().getData())
+    const wrapperProps = {
+      className: classes,
+      ref: this.elementWrapperRef,
+      elementId: this.elementId,
+      settings: this.settings,
+      style: styles,
+      id: this.CSSId
+    };
+
+    if(this.reactElement || DEFAULT_REACT_ELEMENTS.indexOf(this.props.element.getName()) !== -1){
+      wrapperProps['data-react-element'] = this.props.element.getId();
+    }
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
       <WrapperComponent
-        className={classes}
-        ref={this.elementWrapperRef}
-        elementId={this.props.element.getId()}
-        settings={this.props.element.getSettings()}
-        style={styles}
-        id={this.CSSId}
+        {...wrapperProps}
         element={this.props.element.getId()}
       >
         {content}

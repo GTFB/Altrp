@@ -678,68 +678,6 @@ class Gallery extends BaseElement {
         label: 'Typographic',
       }
     );
-
-    this.addControl('overlay_content_animation', {
-      type: CONTROLLER_HEADING,
-      label: 'Animation',
-    });
-
-    this.addControl('hover_animation_overlay_content', {
-      type: CONTROLLER_SELECT,
-      options: [
-        {
-          value: "none",
-          label: "None"
-        },
-        {
-          value: "slideInRight",
-          label: "Slide in right"
-        },
-        {
-          value: "slideInLeft",
-          label: "Slide in left"
-        },
-        {
-          value: "slideInUp",
-          label: "Slide in up"
-        },
-        {
-          value: "slideInDown",
-          label: "Slide in down"
-        },
-        {
-          value: "zoomIn",
-          label: "Zoom in"
-        },
-        {
-          value: "zoomOut",
-          label: "Zoom out"
-        },
-        {
-          value: "fadeIn",
-          label: "FadeIn"
-        },
-      ],
-      label: 'Hover animation',
-      default: 'none',
-    });
-
-    this.addControl('overlay_transition_content', {
-      type: CONTROLLER_SLIDER,
-      label: 'Animation duration (ms)',
-      default: {
-        size: 800,
-        unit: 'px',
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-      max: 3000,
-      min: 0,
-    });
-
     this.endControlSection();
 
     advancedTabControllers(this);

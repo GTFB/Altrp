@@ -1,6 +1,6 @@
 import React, { Component, Suspense } from "react";
 
-const AltrpMap = React.lazy(() => import("../altrp-map/AltrpMapConstructor"));
+const AltrpMap = React.lazy(() => import(/* webpackChunkName: 'AltrpMapConstructor' */"../altrp-map/AltrpMapConstructor"));
 
 import ("../../../sass/altrp-map.scss");
 

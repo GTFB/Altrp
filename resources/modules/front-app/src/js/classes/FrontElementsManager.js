@@ -270,13 +270,13 @@ class FrontElementsManager {
       });
       componentsToLoad = componentsToLoad.map(async el => {
         return (this.components[el.name] = (
-          await el.import(/* webpackChunkName: 'FrontElementsFabric' */)
+          await el.import()
         ).default);
       });
     } else {
       componentsToLoad = this.ELEMENTS.map(async el => {
         return (this.components[el.name] = (
-          await el.import(/* webpackChunkName: 'FrontElementsFabric' */)
+          await el.import()
         ).default);
       });
     }

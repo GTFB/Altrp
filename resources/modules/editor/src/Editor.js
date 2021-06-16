@@ -18,7 +18,7 @@ import UpdateButton from "./js/components/UpdateButton";
 import CONSTANTS from "./js/consts";
 import { stopDrag } from "./js/store/element-drag/actions";
 import AssetsBrowser from "./js/classes/modules/AssetsBrowser";
-
+window.Link = 'a';
 import store, {
   getCurrentElement,
   getCurrentScreen

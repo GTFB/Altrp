@@ -1,9 +1,10 @@
 import { ServerStyleSheet } from "styled-components";
-import AltrpModel from "../resources/modules/editor/src/js/classes/AltrpModel";
 import Area from "../resources/modules/front-app/src/js/classes/Area";
 const sheet = new ServerStyleSheet();
 import { parse } from "node-html-parser";
+import{Link} from "react-router-dom"
 import React from "react";
+import {StaticRouter as Router, Route, Switch} from "react-router-dom";
 if (typeof performance === "undefined") {
   global.performance = require("perf_hooks").performance;
 }
@@ -12,8 +13,10 @@ if (typeof performance === "undefined") {
  * @type {{parent: {}}}
  */
 global.window = {
-  parent: {}
+  parent: {},
+  Link,
 };
+const AltrpModel = require('../resources/modules/editor/src/js/classes/AltrpModel').default
 global.window.altrpMenus = [];
 global.SSR = true;
 global.window.SSR = true;
@@ -21,6 +24,9 @@ global.window.SSR = true;
 //   addEventListener: () => {
 //   },
 // };
+
+require('../resources/modules/front-app/src/js/libs/altrp');
+require( '../resources/modules/front-app/src/js/libs/react-lodash');
 global.frontElementsManager = require("./classes/modules/FrontElementsManager").default;
 global.React = require("react");
 global.history = {
@@ -132,30 +138,32 @@ app.post("/", (req, res) => {
     styles: element.getStringifyStyles(),
     elementId: element.getId()
   }));
+  window.currentRouterMatch = new AltrpModel({});
   page = page.map(area => (Area.areaFabric(area)))
   let app = ReactDOMServer.renderToString(
     sheet.collectStyles(
-      <Provider store={window.appStore}>
-        <div className={`front-app-content `}>
-          <StaticRouter>
-            <RouteContentWrapper className="route-content" id="route-content" areas={page}>
-              {page.map((area, idx) => {
-                return (
-                  <AreaComponent
-                    {...area}
-                    area={area}
-                    areas={page}
-                    page={page_id}
-                    models={[page_model]}
-                    key={"appArea_" + area.id}
-                  />
-                );
-              })}
-            </RouteContentWrapper>
-          </StaticRouter>
-        </div>
-        <Styles elementStyles={elementStyles} />
-      </Provider>
+      <Router>
+        <Switch>
+          <Route path='*' exact>
+            <Provider store={store}>
+              <RouteContentWrapper className="route-content" id="route-content" areas={page}>
+                {page.map((area, idx) => {
+                  return (
+                    <AreaComponent
+                      {...area}
+                      area={area}
+                      areas={page}
+                      page={page_id}
+                      models={[page_model]}
+                      key={"appArea_" + area.id}
+                    />
+                  );
+                })}
+              </RouteContentWrapper>
+            </Provider>
+          </Route>
+        </Switch>
+      </Router>
     )
   );
 

@@ -1,6 +1,5 @@
-const WriteChunksToFrontBlade = require("./WriteChunksToFrontBlade");
-const merge = require("webpack-merge");
-const common = require("./webpack.front.common.js");
+const merge = require('webpack-merge');
+const common = require('./webpack.front.common.js');
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
@@ -26,8 +25,9 @@ module.exports = merge(common, {
   },
   output: {
     path: path.resolve(__dirname, "public/modules/front-app/"),
+    // publicPath: "https://up.altrp.com/modules/front-app/",
     publicPath: "/modules/front-app/",
-    chunkFilename: "[contenthash].[name].bundle.js",
+    chunkFilename: "[name].[contenthash].bundle.js",
 
     filename: "[name].js"
   },
@@ -47,5 +47,13 @@ module.exports = merge(common, {
     //   filename: '[name].css',
     //   chunkFilename: '[id].css',
     // }),
-  ]
+  ],
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        vendors: false,
+      },
+    },
+  }
 });
