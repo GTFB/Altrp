@@ -597,18 +597,6 @@ export default function SectionWidgetComponent(settings) {
   function altrpSectionBoxedHover() {
     let styles = '';
 
-    let width;
-
-    //Получаем значения width в точных юнитах из контроллера, обрабатываем и добавляем в styles
-
-    if (settings !== undefined) {
-      width = getResponsiveSetting(settings, 'layout_content_width', ':hover');
-    }
-
-    if (width) {
-      styles += sizeStyled(width, 'width');
-    }
-
     return styles;
   }
 

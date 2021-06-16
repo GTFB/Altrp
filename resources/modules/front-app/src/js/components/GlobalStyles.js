@@ -12,6 +12,7 @@ import AdvancedComponent from "../../../../editor/src/js/components/widgets/styl
 import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 import SectionWidgetComponent
   from "../../../../editor/src/js/components/widgets/styled-components/SectionWidgetComponent";
+import ColumnComponent from "../../../../editor/src/js/components/widgets/styled-components/ColumnComponents";
 
 const GlobalStyles = createGlobalStyle`${({elementsSettings})=>{
   let styles = '';
@@ -22,6 +23,7 @@ const GlobalStyles = createGlobalStyle`${({elementsSettings})=>{
 
   _.each(elementsSettings, (item, id) => {
     if(item) {
+      console.log(item.name)
       switch (item.name) {
         case "heading":
           settingsHeading = item.settings;
@@ -50,6 +52,9 @@ const GlobalStyles = createGlobalStyle`${({elementsSettings})=>{
           break;
         case "section":
           styles += `.${prefix}${id} {${SectionWidgetComponent(item.settings)}}`;
+          break;
+        case "column":
+          styles += `.${prefix}${id} {${ColumnComponent(item.settings)}}`;
           break;
       }
       styles += `.${prefix}${id} {${AdvancedComponent(item.settings)}}`
