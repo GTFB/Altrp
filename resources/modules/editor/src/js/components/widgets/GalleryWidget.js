@@ -1,4 +1,3 @@
-import React, {Component} from "react";
 import GalleryIcon from "../../../svgs/widget_gallery.svg";
 import ("../../../sass/altrp-gallery.scss");
 import {isEditor} from "../../../../../front-app/src/js/helpers";

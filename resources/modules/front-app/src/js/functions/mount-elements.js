@@ -1,7 +1,6 @@
 
 
 export default function mountElements(){
-
   const elementContainers = document.querySelectorAll('[data-react-element]');
   _.each(elementContainers, container =>{
     if(! container?.dataset?.reactElement){
@@ -12,9 +11,12 @@ export default function mountElements(){
       return;
     }
     const props = {
-      element: element,
+      element,
+      elementWrapperRef:{
+        current: container
+      }
     }
-    console.log('Loading Element:', performance.now());
+    console.log('Loading Element: ', performance.now());
     window.ReactDOM.render(<window.Provider store={window.appStore}>
       <window.ElementWrapper {...props} />
     </window.Provider>,  container, ()=>{
@@ -22,8 +24,9 @@ export default function mountElements(){
     })
   })
 
-  loadEmailRenderer();
-  loadAdminBar();
+  // loadEmailRenderer();
+  // loadAdminBar();
+  // loadGlobalStyles();
   window.removeEventListener('h-altrp-loaded', mountElements);
 
 }
@@ -89,6 +92,20 @@ function loadEmailRenderer(){
     ReactDOM.render(<window.Provider store={window.appStore}>
       <EmailTemplatesRenderer/>
     </window.Provider>, emailContainer)
+  });
+}
+
+/**
+ * Загрузка отрисовщика email
+ */
+function loadGlobalStyles(){
+  import(/* webpackChunkName: 'EmailTemplatesRenderer' */'../components/GlobalStyles').then(module => {
+    const GlobalStyles = module.default;
+    const stylesContainer = document.createElement('div');
+    document.body.appendChild(stylesContainer);
+    ReactDOM.render(<window.Provider store={window.appStore}>
+      <GlobalStyles/>
+    </window.Provider>, stylesContainer)
   });
 }
 

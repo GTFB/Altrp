@@ -1,8 +1,6 @@
-import React, {Component} from 'react'
 import {getMenuByGUID} from "../../../../../front-app/src/js/functions/menus";
 import {addMenu} from "../../../../../front-app/src/js/store/menus-storage/actions";
 import {getResponsiveSetting, isEditor, mbParseJSON} from "../../../../../front-app/src/js/helpers";
-import {createGlobalStyle} from 'styled-components';
 import {
   dimensionsControllerToStyles, shadowControllerToStyles,
   typographicControllerToStyles

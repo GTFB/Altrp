@@ -1,7 +1,6 @@
-import styled from "styled-components";
 import { getResponsiveSetting } from "../../../../../../front-app/src/js/helpers";
 import {
-  dimensionsControllerToStyles, 
+  dimensionsControllerToStyles,
   simplePropertyStyled,
   borderWidthStyled,
   colorPropertyStyled,
@@ -22,7 +21,7 @@ const settingsToStyles = ({ settings }) => {
   styles += "&&.altrp-column {";
 
   //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
- 
+
   if (settings !== undefined) {
     padding = getResponsiveSetting(settings, "style_position_padding");
   }
@@ -46,7 +45,7 @@ const settingsToStyles = ({ settings }) => {
   // }
 
   //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
- 
+
   if (settings !== undefined) {
     margin = getResponsiveSetting(settings, 'style_position_margin');
   }
@@ -156,7 +155,7 @@ const settingsToStyles = ({ settings }) => {
     styles += borderWidthStyled(borderWidth);
   }
 
-  //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles 
+  //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
 
   if (settings !== undefined) {
     borderColor = getResponsiveSetting(settings, 'column_style_border_color');
@@ -185,7 +184,7 @@ const settingsToStyles = ({ settings }) => {
   if (boxShadow) {
     styles += shadowStyled(boxShadow);
   }
-  
+
   styles += "} ";
 
   //hover
@@ -193,7 +192,7 @@ const settingsToStyles = ({ settings }) => {
   styles += "&&.altrp-column:hover {";
 
   //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
- 
+
   if (settings !== undefined) {
     paddingH = getResponsiveSetting(settings, "style_position_padding", ':hover');
   }
@@ -203,7 +202,7 @@ const settingsToStyles = ({ settings }) => {
   }
 
   //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
- 
+
   if (settings !== undefined) {
     marginH = getResponsiveSetting(settings, 'style_position_margin');
   }
@@ -313,7 +312,7 @@ const settingsToStyles = ({ settings }) => {
     styles += borderWidthStyled(borderWidthH);
   }
 
-  //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles 
+  //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
 
   if (settings !== undefined) {
     borderColorH = getResponsiveSetting(settings, 'column_style_border_color', ':hover');
@@ -342,7 +341,7 @@ const settingsToStyles = ({ settings }) => {
   if (boxShadowH) {
     styles += shadowStyled(boxShadowH);
   }
-  
+
   styles += "} ";
 
   styles += "&& .altrp-element:not(:last-child) {";

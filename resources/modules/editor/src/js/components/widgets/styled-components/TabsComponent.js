@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import { getResponsiveSetting } from "../../../../../../front-app/src/js/helpers";
 import {
   simplePropertyStyled,
@@ -45,7 +44,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-btn-container:hover {
 
@@ -80,7 +79,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-btn {
 
@@ -161,7 +160,7 @@ const TabsComponent = styled.div`
         styles += colorPropertyStyled(borderColor, 'border-color');
       }
 
-      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         borderRadius = getResponsiveSetting(settings, 'border_radius_tab_style');
@@ -185,7 +184,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-btn:hover {
 
@@ -266,7 +265,7 @@ const TabsComponent = styled.div`
         styles += colorPropertyStyled(borderColor, 'border-color');
       }
 
-      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         borderRadius = getResponsiveSetting(settings, 'border_radius_tab_style', ':hover');
@@ -290,7 +289,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-content {
 
@@ -365,7 +364,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-content:hover {
 
@@ -440,7 +439,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-content div {
 
@@ -475,7 +474,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-content div:hover {
 
@@ -510,7 +509,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-btn-icon svg path {
 
@@ -535,7 +534,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-btn-icon:hover svg path {
 
@@ -560,7 +559,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tabs-switcher_off {
 
@@ -945,7 +944,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-btn-column:hover {
 
@@ -970,7 +969,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-btn-row {
 
@@ -995,7 +994,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-btn-row:hover {
 
@@ -1020,7 +1019,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-btn-top {
 
@@ -1045,7 +1044,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-btn-top:hover {
 
@@ -1070,7 +1069,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-btn-bottom {
 
@@ -1095,7 +1094,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-btn-bottom:hover {
 
@@ -1120,7 +1119,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-btn-left {
 
@@ -1145,7 +1144,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-btn-left:hover {
 
@@ -1170,7 +1169,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-btn-right {
 
@@ -1195,7 +1194,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-tab-btn-right:hover {
 
@@ -1220,7 +1219,7 @@ const TabsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
 `;
 

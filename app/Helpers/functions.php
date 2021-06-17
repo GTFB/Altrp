@@ -980,6 +980,7 @@ function _extractElementsNames( $element = [],  &$elementNames, $only_react_elem
     'input',
     'breadcrumbs',
     'map',
+    'text',
     'map_builder',
     'menu',
     'diagram',

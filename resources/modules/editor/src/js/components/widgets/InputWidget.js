@@ -1,4 +1,3 @@
-import React, { Component, Suspense } from "react";
 import {
   altrpCompare,
   convertData,
@@ -8,7 +7,6 @@ import {
   parseURLTemplate,
   replaceContentWithData,
   sortOptions,
-  parseStringValue,
   renderAssetIcon,
   valueReplacement,
   getDataFromLocalStorage
@@ -21,7 +19,6 @@ import moment from "moment";
 const CKeditor = React.lazy(() => import(/* webpackChunkName: 'CKeditor' */"../ckeditor/CKeditor"));
 import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 const AltrpInput = React.lazy(() => import(/* webpackChunkName: 'AltrpInput' */"../altrp-input/AltrpInput"));
-import styled from "styled-components";
 
 const AltrpFieldContainer = styled.div`
   ${({ settings: { content_label_position_type } }) => {

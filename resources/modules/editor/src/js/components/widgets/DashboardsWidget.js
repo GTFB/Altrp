@@ -1,5 +1,3 @@
-import React, { Component, Suspense } from "react";
-
 import axios from "axios";
 import { getCurrentBreakpoint } from "../../../../../front-app/src/js/helpers";
 

@@ -1,7 +1,7 @@
-import styled from 'styled-components';
+
 import {getResponsiveSetting, isEditor} from "../../../../../../front-app/src/js/helpers";
 import {
-  dimensionsControllerToStyles, 
+  dimensionsControllerToStyles,
   simplePropertyStyled,
   borderWidthStyled,
   colorPropertyStyled,
@@ -300,7 +300,7 @@ const settingsToStyles = ({settings, columns = []})=>{
   if (width) {
     styles += sizeStyled(width, 'width');
   }
-  
+
   styles += '} ';
 
   //hover
@@ -318,7 +318,7 @@ const settingsToStyles = ({settings, columns = []})=>{
   if (widthH) {
     styles += sizeStyled(widthH, 'width');
   }
-  
+
   styles += '} ';
 
   styles += '& > .altrp-section_section-boxed {';
@@ -364,7 +364,7 @@ const settingsToStyles = ({settings, columns = []})=>{
   if (padding) {
     styles += `padding: ${padding}px; `;
   }
-  
+
   styles += '} ';
 
   //hover
@@ -382,7 +382,7 @@ const settingsToStyles = ({settings, columns = []})=>{
   if (paddingH) {
     styles += `padding: ${paddingH}px; `;
   }
-  
+
   styles += '} ';
 
   let gradient, zIndex, top, right, left, bottom;

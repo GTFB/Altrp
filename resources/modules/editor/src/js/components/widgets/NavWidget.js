@@ -1,4 +1,3 @@
-import React, { Component } from "react";
 import AltrpMenu from "../altrp-menu/AltrpMenu";
 import AltrpBreadcrumbs from "../altrp-breadcrumbs/AltrpBreadcrumbs";
 

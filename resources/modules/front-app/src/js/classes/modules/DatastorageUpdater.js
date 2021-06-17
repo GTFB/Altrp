@@ -62,7 +62,7 @@ class DataStorageUpdater extends AltrpModel {
        */
       return ! (parameters && parameters.find(param=>{
         if (param.paramValue.toString().indexOf('altrpforms.') !== -1) {
-          let params = dataSource.getParams(window.currentRouterMatch.params, 'altrpforms.');
+          let params = dataSource.getParams(window.currentRouterMatch.data.params, 'altrpforms.');
           initialUpdate && this.subscribeToFormsUpdate(dataSource, params);
         } else {
           return false;

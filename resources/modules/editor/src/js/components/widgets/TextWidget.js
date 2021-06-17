@@ -1,4 +1,3 @@
-import React, { Component } from "react";
 import Tooltip from "./Tooltip";
 import { isEditor } from "../../../../../front-app/src/js/helpers";
 import TextComponent from "./styled-components/TextComponent";

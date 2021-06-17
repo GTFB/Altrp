@@ -1,4 +1,3 @@
-import React, {Component} from "react";
 import {isClassComponent} from "../../../../../front-app/src/js/helpers/react";
 
 class CarouselWidget extends Component {

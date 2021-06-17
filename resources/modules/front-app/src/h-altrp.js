@@ -1,54 +1,57 @@
 import  queryString from 'query-string';
 import WIDGETS_DEPENDS from "./js/constants/WIDGETS_DEPENDS";
-import  "./js/functions/mount-elements";
+// import  "./js/functions/mount-elements";
 import {setScrollValue} from "./js/store/scroll-position/actions";
 console.log('FIRST SCRIPT: ', performance.now());
 
 
 window.sSr = false;
 window.libsLoaded = [];
-const LIBS = {
-  'blueprint': () => {
-    return import(/* webpackChunkName: 'Blueprint' */'./js/libs/blueprint').then(res => {
-      window.libsLoaded.push('blueprint')
-      console.log('LOAD Blueprint: ', performance.now());
-      return Promise.resolve(res)
-    });
-  },
-  'moment': () => {
-    return import(/* webpackChunkName: 'moment' */'./js/libs/moment').then(res => {
-      window.libsLoaded.push('moment')
-      console.log('LOAD moment: ', performance.now());
-      return Promise.resolve(res)
-    });
-  },
-
-};
-
-
-const libsToLoad = [];
-if (window.altrpElementsLists) {
-  window.altrpElementsLists.forEach(el => {
-    if (WIDGETS_DEPENDS[el] && WIDGETS_DEPENDS[el].length && libsToLoad.indexOf(el) === -1) {
-      WIDGETS_DEPENDS[el].forEach(lib => {
-        if (LIBS[lib]) {
-          libsToLoad.push(LIBS[lib]())
-        }
-      });
-    }
-  })
-} else {
-  LIBS.forEach(lib => {
-    libsToLoad.push(lib())
-  })
-}
-Promise.all(libsToLoad).then(res => {
-  loadingCallback();
-});
+// const LIBS = {
+//   'blueprint': () => {
+//     return import(/* webpackChunkName: 'Blueprint' */'./js/libs/blueprint').then(res => {
+//       window.libsLoaded.push('blueprint')
+//       console.log('LOAD Blueprint: ', performance.now());
+//       return Promise.resolve(res)
+//     });
+//   },
+//   'moment': () => {
+//     return import(/* webpackChunkName: 'moment' */'./js/libs/moment').then(res => {
+//       window.libsLoaded.push('moment')
+//       console.log('LOAD moment: ', performance.now());
+//       return Promise.resolve(res)
+//     });
+//   },
+//
+// };
+//
+//
+// const libsToLoad = [];
+// if (window.altrpElementsLists) {
+//   window.altrpElementsLists.forEach(el => {
+//     if (WIDGETS_DEPENDS[el] && WIDGETS_DEPENDS[el].length && libsToLoad.indexOf(el) === -1) {
+//       WIDGETS_DEPENDS[el].forEach(lib => {
+//         if (LIBS[lib]) {
+//           libsToLoad.push(LIBS[lib]())
+//         }
+//       });
+//     }
+//   })
+// } else {
+//   LIBS.forEach(lib => {
+//     libsToLoad.push(lib())
+//   })
+// }
+// Promise.all(libsToLoad).then(res => {
+//   loadingCallback();
+// });
 /**
  * Параллельно загружаем все необходимые модули
  */
 import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
+  window.currentRouterMatch = new window.AltrpModel({
+    params:queryString.parseUrl(window.location.href).query
+  });
   loadingCallback();
   loadDatastorageUpdater();
 })
@@ -58,7 +61,8 @@ import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElement
     loadingCallback();
   });
   return window.frontElementsManager.loadComponents();
-}).then(async components => {
+})
+  .then(async components => {
   console.log('LOAD FrontElementsManager: ', performance.now());
   loadingCallback();
 });
@@ -110,9 +114,6 @@ function loadingCallback() {
   ) {
     console.log('h-altrp LOADED: ', performance.now());
 
-    window.currentRouterMatch = new window.AltrpModel({
-      params:queryString.parseUrl(window.location.href).query
-    });
     const hAltrpLoadedEvent = new Event('h-altrp-loaded');
     window.dispatchEvent(hAltrpLoadedEvent);  }
 }

@@ -1,4 +1,3 @@
-import React, {Component} from "react";
 import Query from "../../classes/Query";
 import {getDataByPath} from "../../../../../front-app/src/js/helpers";
 

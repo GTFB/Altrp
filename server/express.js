@@ -1,4 +1,4 @@
-import { ServerStyleSheet } from "styled-components";
+import styled,  { ServerStyleSheet, createGlobalStyle } from "styled-components";
 import Area from "../resources/modules/front-app/src/js/classes/Area";
 const sheet = new ServerStyleSheet();
 import { parse } from "node-html-parser";
@@ -8,6 +8,8 @@ import {StaticRouter as Router, Route, Switch} from "react-router-dom";
 if (typeof performance === "undefined") {
   global.performance = require("perf_hooks").performance;
 }
+global.styled = styled;
+global.createGlobalStyle = createGlobalStyle;
 /**
  * Эмулируем окружение клиента
  * @type {{parent: {}}}
@@ -16,7 +18,6 @@ global.window = {
   parent: {},
   Link,
 };
-const AltrpModel = require('../resources/modules/editor/src/js/classes/AltrpModel').default
 global.window.altrpMenus = [];
 global.SSR = true;
 global.window.SSR = true;
@@ -33,6 +34,7 @@ global.history = {
   back() {}
 };
 global.iconsManager = new (require("../resources/modules/editor/src/js/classes/modules/IconsManager").default)();
+const AltrpModel = require('../resources/modules/editor/src/js/classes/AltrpModel').default
 global.currentRouterMatch = new AltrpModel({});
 global.Component = global.React.Component;
 window.frontElementsFabric = require("../resources/modules/front-app/src/js/classes/FrontElementsFabric").default;
@@ -66,6 +68,8 @@ const {
 } = require("../resources/modules/front-app/src/js/components/styled-components/RouteContentWrapper");
 
 var bodyParser = require("body-parser");
+const GlobalStyles = require('../resources/modules/front-app/src/js/components/GlobalStyles').default
+
 const app = express();
 app.use(bodyParser.json({ limit: "500mb", extended: true }));
 app.use(
@@ -159,6 +163,7 @@ app.post("/", (req, res) => {
                     />
                   );
                 })}
+                <GlobalStyles/>
               </RouteContentWrapper>
             </Provider>
           </Route>

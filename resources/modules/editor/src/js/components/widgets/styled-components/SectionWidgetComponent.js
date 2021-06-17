@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import { getResponsiveSetting } from "../../../../../../front-app/src/js/helpers";
 import {
   simplePropertyStyled,
@@ -33,7 +32,7 @@ const SectionWidgetComponent = styled.div`
         styles += colorPropertyStyled(backgroundColor, 'background');
       }
 
-      //Получаем значения flex-wrap из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения flex-wrap из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         flexWrap = getResponsiveSetting(settings, 'layout_flex_wrap_content');
@@ -43,7 +42,7 @@ const SectionWidgetComponent = styled.div`
         styles += simplePropertyStyled(flexWrap, 'flex-wrap', '!important');
       }
 
-      //Получаем значения vertical-align из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения vertical-align из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         verticalAlign = getResponsiveSetting(settings, 'layout_column_position');
@@ -54,7 +53,7 @@ const SectionWidgetComponent = styled.div`
         styles += simplePropertyStyled(verticalAlign, 'align-items');
       }
 
-      //Получаем значения gorizontal-align из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения gorizontal-align из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         gorizontalAlign = getResponsiveSetting(settings, 'layout_justify_content');
@@ -64,7 +63,7 @@ const SectionWidgetComponent = styled.div`
         styles += simplePropertyStyled(gorizontalAlign, 'justify-content');
       }
 
-      //Получаем значения flex-direction из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения flex-direction из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         flexDirection = getResponsiveSetting(settings, 'layout_column_direction');
@@ -74,17 +73,17 @@ const SectionWidgetComponent = styled.div`
         styles += simplePropertyStyled(flexDirection, 'flex-direction');
       }
 
-      //Получаем значения min-height из контроллера, обрабатываем и добавляем в styles 
-  
+      //Получаем значения min-height из контроллера, обрабатываем и добавляем в styles
+
       if (settings !== undefined) {
         minHeight = getResponsiveSetting(settings, 'label_style_min_height');
       }
-  
+
       if (minHeight) {
         styles += sizeStyled(minHeight, 'min-height');
       }
 
-      //Получаем значения overflow из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения overflow из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         overflow = getResponsiveSetting(settings, 'layout_overflow');
@@ -94,7 +93,7 @@ const SectionWidgetComponent = styled.div`
         styles += simplePropertyStyled(overflow, 'overflow');
       }
 
-      //Получаем значения border-style из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения border-style из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         borderStyle = getResponsiveSetting(settings, 'section_style_border_type');
@@ -124,12 +123,12 @@ const SectionWidgetComponent = styled.div`
         styles += colorPropertyStyled(borderColor, 'border-color');
       }
 
-      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles 
-  
+      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
+
       if (settings !== undefined) {
         borderRadius = getResponsiveSetting(settings, 'section_style_border_radius');
       }
-  
+
       if (borderRadius) {
         styles += sizeStyled(borderRadius, 'border-radius');
       }
@@ -148,7 +147,7 @@ const SectionWidgetComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && > .altrp-section:hover,
   && > .altrp-section-full-fill:hover {
@@ -170,7 +169,7 @@ const SectionWidgetComponent = styled.div`
         styles += colorPropertyStyled(backgroundColor, 'background');
       }
 
-      //Получаем значения flex-wrap из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения flex-wrap из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         flexWrap = getResponsiveSetting(settings, 'layout_flex_wrap_content', ':hover');
@@ -180,7 +179,7 @@ const SectionWidgetComponent = styled.div`
         styles += simplePropertyStyled(flexWrap, 'flex-wrap', '!important');
       }
 
-      //Получаем значения vertical-align из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения vertical-align из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         verticalAlign = getResponsiveSetting(settings, 'layout_column_position', ':hover');
@@ -191,7 +190,7 @@ const SectionWidgetComponent = styled.div`
         styles += simplePropertyStyled(verticalAlign, 'align-items');
       }
 
-      //Получаем значения gorizontal-align из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения gorizontal-align из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         gorizontalAlign = getResponsiveSetting(settings, 'layout_justify_content', ':hover');
@@ -201,7 +200,7 @@ const SectionWidgetComponent = styled.div`
         styles += simplePropertyStyled(gorizontalAlign, 'justify-content');
       }
 
-      //Получаем значения flex-direction из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения flex-direction из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         flexDirection = getResponsiveSetting(settings, 'layout_column_direction', ':hover');
@@ -211,17 +210,17 @@ const SectionWidgetComponent = styled.div`
         styles += simplePropertyStyled(flexDirection, 'flex-direction');
       }
 
-      //Получаем значения min-height из контроллера, обрабатываем и добавляем в styles 
-  
+      //Получаем значения min-height из контроллера, обрабатываем и добавляем в styles
+
       if (settings !== undefined) {
         minHeight = getResponsiveSetting(settings, 'label_style_min_height', ':hover');
       }
-  
+
       if (minHeight) {
         styles += sizeStyled(minHeight, 'min-height');
       }
 
-      //Получаем значения overflow из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения overflow из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         overflow = getResponsiveSetting(settings, 'layout_overflow', ':hover');
@@ -231,7 +230,7 @@ const SectionWidgetComponent = styled.div`
         styles += simplePropertyStyled(overflow, 'overflow');
       }
 
-      //Получаем значения border-style из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения border-style из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         borderStyle = getResponsiveSetting(settings, 'section_style_border_type', ':hover');
@@ -261,12 +260,12 @@ const SectionWidgetComponent = styled.div`
         styles += colorPropertyStyled(borderColor, 'border-color');
       }
 
-      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles 
-  
+      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
+
       if (settings !== undefined) {
         borderRadius = getResponsiveSetting(settings, 'section_style_border_radius', ':hover');
       }
-  
+
       if (borderRadius) {
         styles += sizeStyled(borderRadius, 'border-radius');
       }
@@ -285,7 +284,7 @@ const SectionWidgetComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && > .altrp-section .altrp-column {
 
@@ -620,7 +619,7 @@ const SectionWidgetComponent = styled.div`
       if (backgroundImage) {
         styles += backgroundImageControllerToStyles(backgroundImage);
       }
-      
+
       return styles;
 
     }

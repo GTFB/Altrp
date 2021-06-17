@@ -7,7 +7,6 @@ import { changeAppRoutes } from "./store/routes/actions";
 import Route from "./classes/Route";
 import { changePageState } from "./store/altrp-page-state-storage/actions";
 import { changeAltrpMeta } from "./store/altrp-meta-storage/actions";
-import { altrpFontsSet, GOOGLE_FONT } from "./components/FontsManager";
 import queryString from "query-string";
 import AltrpSVG from "../../../editor/src/js/components/altrp-svg/AltrpSVG";
 import ArrayConverter from "./classes/converters/ArrayConverter";
@@ -16,6 +15,7 @@ import { changeFormFieldValue } from "./store/forms-data-storage/actions";
 import { addResponseData } from "./store/responses-storage/actions";
 import {getOffsetTopInElement} from "./helpers/elements";
 import Area from "./classes/Area";
+import {altrpFontsSet, GOOGLE_FONT} from "./constants/fonts";
 export function getRoutes() {
 
   return import(/* webpackChunkName: 'Routes' */"./classes/Routes.js");

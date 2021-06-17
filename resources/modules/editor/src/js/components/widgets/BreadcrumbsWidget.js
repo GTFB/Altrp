@@ -1,11 +1,9 @@
-import React, { Component } from 'react';
 import {
   getBreadcrumbsItems,
   getResponsiveSetting,
   isEditor,
   replaceContentWithData
 } from '../../../../../front-app/src/js/helpers';
-import {createGlobalStyle} from 'styled-components'
 import {typographicControllerToStyles} from "../../../../../front-app/src/js/helpers/styles";
 const {Breadcrumbs} = window.altrpLibs.Blueprint;
 

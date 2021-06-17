@@ -1,8 +1,6 @@
-import { connect } from "react-redux";
 import { addElement } from "../store/elements-storage/actions";
-import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 import { changeCurrentPageProperty } from "../store/current-page/actions";
-import { ElementWrapperDivComponent } from "../../../../editor/src/js/components/widgets/styled-components/ElementWrapperComponent";
+import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 import ImageComponent from "../../../../editor/src/js/components/widgets/styled-components/ImageComponent";
 import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 import TextComponent from "../../../../editor/src/js/components/widgets/styled-components/TextComponent";
@@ -27,11 +25,10 @@ class SimpleElementWrapper extends Component {
     this.state = {
       elementDisplay: !this.props.element.getSettings("default_hidden"),
     };
-    this.elementId = this.props.element.getId();
-    this.settings = this.props.element.getSettings();
     props.element.wrapper = this;
-    this.elementWrapperRef = React.createRef();
+    this.elementWrapperRef = this.props.elementWrapperRef;
     this.elementRef = React.createRef();
+    this.settings = props.element.getSettings();
     appStore.dispatch(addElement(this));
   }
 
@@ -223,45 +220,13 @@ class SimpleElementWrapper extends Component {
 
   render() {
     const {
-      hide_on_wide_screen,
-      hide_on_desktop,
-      hide_on_laptop,
-      hide_on_tablet,
-      hide_on_big_phone,
-      hide_on_small_phone,
       hide_on_trigger,
-      isFixed,
       tooltip_position
     } = this.props.element.settings;
     let {
       tooltip_text,
     } = this.props.element.settings
-    let classes = `altrp-element altrp-element${this.props.element.getId()} altrp-element_${this.props.element.getType()}`;
-    classes += this.props.element.getPrefixClasses() + " ";
-    if (this.props.element.getType() === "widget") {
-      classes += ` altrp-widget_${this.props.element.getName()}`;
-    }
-    if (hide_on_wide_screen) {
-      classes += " hide_on_wide_screen";
-    }
-    if (hide_on_desktop) {
-      classes += " hide_on_desktop";
-    }
-    if (hide_on_laptop) {
-      classes += " hide_on_laptop";
-    }
-    if (hide_on_tablet) {
-      classes += " hide_on_tablet";
-    }
-    if (hide_on_big_phone) {
-      classes += " hide_on_big_phone";
-    }
-    if (hide_on_small_phone) {
-      classes += " hide_on_small_phone";
-    }
-    if (isFixed) {
-      classes += " fixed-section";
-    }
+
     if (this.state.errorInfo) {
       return (
         <div className="altrp-error" data-eltype={this.props.element.getType()}>
@@ -314,7 +279,7 @@ class SimpleElementWrapper extends Component {
       appStore
     });
 
-    let WrapperComponent = ElementWrapperDivComponent;
+    let WrapperComponent = React.Fragment;
 
     switch (this.props.element.getName()) {
       case "image":
@@ -362,19 +327,15 @@ class SimpleElementWrapper extends Component {
     }
     tooltip_text = replaceContentWithData(tooltip_text, this.props.element.getCurrentModel().getData())
     const wrapperProps = {
-      className: classes,
-      ref: this.elementWrapperRef,
       elementId: this.elementId,
       settings: this.settings,
-      style: styles,
-      id: this.CSSId
     };
-
+    if(WrapperComponent === React.Fragment){
+      delete  wrapperProps.elementId;
+      delete  wrapperProps.settings;
+    }
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
-      <WrapperComponent
-        {...wrapperProps}
-        element={this.props.element.getId()}
-      >
+      <WrapperComponent {...wrapperProps} >
         {content}
         {tooltip_text && <AltrpTooltip position={tooltip_position}>{tooltip_text}</AltrpTooltip>}
       </WrapperComponent>
@@ -396,6 +357,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, null, null, {
-  forwardRef: true
-})(SimpleElementWrapper);
+export default window.reactRedux.connect(mapStateToProps)(SimpleElementWrapper);

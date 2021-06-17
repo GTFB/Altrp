@@ -1,12 +1,10 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import {
   getDataByPath,
   isEditor, parseURLTemplate
 } from "../../../../../front-app/src/js/helpers";
 import AltrpImage from "../altrp-image/AltrpImage";
 import AltrpLightbox from "../altrp-lightbox/AltrpLightbox";
-
+const Link = window.Link
 class ImageWidget extends Component {
   constructor(props) {
     super(props);

@@ -1,6 +1,7 @@
 import ReactDom from 'react-dom';
-import React, {Component} from 'react';
-import {Provider} from 'react-redux'
+import React, {Component, Suspense, Fragment} from 'react';
+import * as reactRedux  from 'react-redux'
+import styled, {createGlobalStyle} from 'styled-components'
 import cloneDeep from 'lodash.cloneDeep';
 import get from 'lodash.get';
 import set from 'lodash.set';
@@ -53,4 +54,9 @@ window._ = {
 window.ReactDOM = ReactDom;
 window.React = React;
 window.Component = Component;
-window.Provider = Provider;
+window.Suspense = Suspense;
+window.Fragment = Fragment;
+window.Provider = reactRedux.Provider;
+window.reactRedux = reactRedux;
+window.styled = styled;
+window.createGlobalStyle = createGlobalStyle;
