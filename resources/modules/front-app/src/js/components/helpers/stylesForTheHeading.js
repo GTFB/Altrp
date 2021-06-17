@@ -613,6 +613,46 @@ export function getHeadingStyles(settings, id) {
 
   styles += `} `;
 
+  styles += `${parentClass} .altrp-heading.altrp-background-image:hover {`;
+
+  const backgroundImageHover = getResponsiveSetting(settings, 'background_image', ':hover');
+
+  if (backgroundImageHover) {
+    styles += backgroundImageControllerToStyles(backgroundImageHover);
+  }
+
+  const backgroundPositionHover = getResponsiveSetting(settings, 'background_position', ':hover');
+
+  if (backgroundPositionHover) {
+    styles += simplePropertyStyled(backgroundPositionHover, 'background-position');
+  }
+
+  const backgroundAttachmentHover = getResponsiveSetting(settings, 'background_attachment', ':hover');
+
+  if (backgroundAttachmentHover) {
+    styles += simplePropertyStyled(backgroundAttachmentHover, 'background-attachment');
+  }
+
+  const backgroundRepeatHover = getResponsiveSetting(settings, 'background_repeat', ':hover');
+
+  if (backgroundRepeatHover) {
+    styles += simplePropertyStyled(backgroundRepeatHover, 'background-repeat');
+  }
+
+  const backgroundSizeInUnitsHover = getResponsiveSetting(settings, 'background_image_width', ':hover');
+
+  if (backgroundSizeInUnitsHover) {
+    styles += sizeStyled(backgroundSizeInUnitsHover, 'background-size');
+  }
+
+  const backgroundSizeHover = getResponsiveSetting(settings, 'background_size', ':hover');
+
+  if (backgroundSizeHover) {
+    styles += simplePropertyStyled(backgroundSizeHover, 'background-size');
+  }
+
+  styles += `} `;
+
   styles += `${parentClass} .altrp-animating-text {`;
 
   const typographicAnimating = getResponsiveSetting(settings, 'animated_text_headline_animating_style');
@@ -708,8 +748,6 @@ export function getHeadingStyles(settings, id) {
   }
 
   styles += `} `;
-
-  console.log(styles);
 
   return styles;
 }

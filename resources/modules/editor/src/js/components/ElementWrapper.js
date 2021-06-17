@@ -25,13 +25,13 @@ import ButtonComponent from "./widgets/styled-components/ButtonComponent";
 import DividerComponent from "./widgets/styled-components/DividerComponent";
 import AccordionComponent from "./widgets/styled-components/AccordionComponent";
 import GalleryComponent from "./widgets/styled-components/GalleryComponent";
-import TextComponent from "./widgets/styled-components/TextComponent";
-import TableComponent from "./widgets/styled-components/TableComponent";
+// import TextComponent from "./widgets/styled-components/TextComponent";
+// import TableComponent from "./widgets/styled-components/TableComponent";
 // import HeadingComponent from "./widgets/styled-components/HeadingComponent";
 import NavComponent from "./widgets/styled-components/NavComponent";
 import TabsComponent from "./widgets/styled-components/TabsComponent";
 import SectionWidgetComponent from "./widgets/styled-components/SectionWidgetComponent";
-import PostsComponent from "./widgets/styled-components/PostsComponent";
+// import PostsComponent from "./widgets/styled-components/PostsComponent";
 import Column from "../classes/elements/Column";
 import MenuComponent from "./widgets/styled-components/MenuComponent";
 import BreadcrumbsComponent from "./widgets/styled-components/BreadcrumbsComponent";
@@ -406,9 +406,9 @@ class ElementWrapper extends Component {
       case "button":
         WrapperComponent = ButtonComponent;
         break;
-      case "text":
-        WrapperComponent = TextComponent;
-        break;
+      // case "text":
+      //   WrapperComponent = TextComponent;
+      //   break;
       case "carousel":
         WrapperComponent = CarouselComponent;
         break;
@@ -421,9 +421,9 @@ class ElementWrapper extends Component {
       // case "heading":
       //   WrapperComponent = HeadingComponent;
       //   break;
-      case "table":
-        WrapperComponent = TableComponent;
-        break;
+      // case "table":
+      //   WrapperComponent = TableComponent;
+      //   break;
       case "menu":
         WrapperComponent = MenuComponent;
         break;
@@ -454,9 +454,9 @@ class ElementWrapper extends Component {
       case "section":
         WrapperComponent = SectionWidgetComponent;
         break;
-      case "posts":
-        WrapperComponent = PostsComponent;
-        break;
+      // case "posts":
+      //   WrapperComponent = PostsComponent;
+      //   break;
     }
 
     return elementHideTrigger &&
