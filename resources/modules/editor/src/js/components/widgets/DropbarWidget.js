@@ -8,7 +8,7 @@ import {
   renderAssetIcon, scrollToElement
 } from "../../../../../front-app/src/js/helpers";
 import {Link} from "react-router-dom";
-let Dropbar = React.lazy(() => import("../altrp-dropbar/AltrpDropbar"));
+import AltrpDropbar from "../altrp-dropbar/AltrpDropbar";
 
 class DropbarWidget extends Component {
   constructor(props) {
@@ -210,18 +210,16 @@ class DropbarWidget extends Component {
       </button>
     );
     return <div className="altrp-btn-wrapper">
-      <Suspense fallback={<div>Загрузка...</div>}>
-        <Dropbar
-          elemenentId={this.props.element.getId()}
-          settings={this.props.element.getSettings()}
-          className="btn"
-          element={this.props.element}
-          getContent={this.getContent}
-          showDelay={dropbarDelay}
-        >
-          {buttonTemplate}
-        </Dropbar>
-      </Suspense>
+      <AltrpDropbar
+        elemenentId={this.props.element.getId()}
+        settings={this.props.element.getSettings()}
+        className="btn"
+        element={this.props.element}
+        getContent={this.getContent}
+        showDelay={dropbarDelay}
+      >
+        {buttonTemplate}
+      </AltrpDropbar>
     </div>
   }
 }
