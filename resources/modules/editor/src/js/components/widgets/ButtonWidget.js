@@ -190,19 +190,19 @@ class ButtonWidget extends Component {
       classes += " altrp-disabled";
     }
 
-    classes +=
-      this.state.settings.link_button_type === "dropbar"
-        ? "altrp-btn-dropbar"
-        : "";
+    // classes +=
+    //   this.state.settings.link_button_type === "dropbar"
+    //     ? "altrp-btn-dropbar"
+    //     : "";
 
-    let icon =
-      buttonMedia && showIcon && buttonMedia.assetType ? (
-        <span className={"altrp-btn-icon "}>
-          {renderAssetIcon(buttonMedia)}{" "}
-        </span>
-      ) : (
-        ""
-      );
+    // let icon =
+    //   buttonMedia && showIcon && buttonMedia.assetType ? (
+    //     <span className={"altrp-btn-icon "}>
+    //       {renderAssetIcon(buttonMedia)}{" "}
+    //     </span>
+    //   ) : (
+    //     ""
+    //   );
 
     let url = link_link.url
       ? link_link.url.replace(":id", this.getModelId() || "")
@@ -212,45 +212,59 @@ class ButtonWidget extends Component {
     }
 
     classes += this.classStateDisabled();
-    let button;
-    let buttonTemplate = (
-      <button
-        onClick={this.onClick}
-        className={classes}
-        id={this.state.settings.position_css_id}
-        title={tooltip || null}
-      >
-        {buttonText}
-        {
-          showIcon ? (
-            ! isSSR() && <span className={"altrp-btn-icon "}>
+    let button = <button
+      onClick={this.onClick}
+      className={classes}
+      id={this.state.settings.position_css_id}
+      title={tooltip || null}
+    >
+      {buttonText}
+      {
+        showIcon ? (
+          ! isSSR() && <span className={"altrp-btn-icon "}>
           {renderAssetIcon(buttonMedia)}{" "}
           </span>
-          ) : ""
-        }
-      </button>
-    );
+        ) : ""
+      }
+    </button>;
+    // let buttonTemplate = (
+    //   <button
+    //     onClick={this.onClick}
+    //     className={classes}
+    //     id={this.state.settings.position_css_id}
+    //     title={tooltip || null}
+    //   >
+    //     {buttonText}
+    //     {
+    //       showIcon ? (
+    //         ! isSSR() && <span className={"altrp-btn-icon "}>
+    //       {renderAssetIcon(buttonMedia)}{" "}
+    //       </span>
+    //       ) : ""
+    //     }
+    //   </button>
+    // );
 
-    switch (this.props.element.getResponsiveSetting("link_button_type", null,"none")) {
-      case "dropbar":
-        button = (
-          <Suspense fallback={<div>Загрузка...</div>}>
-            <Dropbar
-              elemenentId={this.props.element.getId()}
-              settings={this.props.element.getSettings()}
-              className="btn"
-              element={this.props.element}
-              getContent={this.getContent}
-              showDelay={this.state.settings.show_delay_dropbar_options}
-            >
-              {buttonTemplate}
-            </Dropbar>
-          </Suspense>
-        );
-        break;
-      default:
-        button = buttonTemplate;
-    }
+    // switch (this.props.element.getResponsiveSetting("link_button_type", null,"none")) {
+    //   case "dropbar":
+    //     button = (
+    //       <Suspense fallback={<div>Загрузка...</div>}>
+    //         <Dropbar
+    //           elemenentId={this.props.element.getId()}
+    //           settings={this.props.element.getSettings()}
+    //           className="btn"
+    //           element={this.props.element}
+    //           getContent={this.getContent}
+    //           showDelay={this.state.settings.show_delay_dropbar_options}
+    //         >
+    //           {buttonTemplate}
+    //         </Dropbar>
+    //       </Suspense>
+    //     );
+    //     break;
+    //   default:
+    //     button = buttonTemplate;
+    // }
 
     let link = null;
     if (

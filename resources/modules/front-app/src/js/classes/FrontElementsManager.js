@@ -250,6 +250,14 @@ class FrontElementsManager {
             /* webpackChunkName: 'VideoWidget' */ "../../../../editor/src/js/components/widgets/VideoWidget"
           );
         }
+      },
+      {
+        name: "dropbar",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'DropbarWidget' */ "../../../../editor/src/js/components/widgets/DropbarWidget"
+            );
+        }
       }
     ];
     this.components = {};

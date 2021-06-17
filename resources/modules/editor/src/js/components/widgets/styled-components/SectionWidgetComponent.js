@@ -16,8 +16,6 @@ import {
  */
 
 export default function SectionWidgetComponent(settings) {
-
-  console.log(settings)
   function altrpSection() {
     let styles = '';
 
@@ -144,7 +142,6 @@ export default function SectionWidgetComponent(settings) {
       styles += shadowControllerToStyles(boxShadow);
     }
 
-    console.log(styles)
     return styles;
   }
 

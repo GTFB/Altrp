@@ -26,14 +26,15 @@ import {
 import Repeater from "../Repeater";
 import {actionsControllers} from "../../decorators/actions-controllers";
 import {getTemplateDataStorage} from "../../helpers";
+import Button from "./Button";
 
-class Button extends BaseElement {
+class Dropbar extends BaseElement {
 
   static getName() {
-    return 'button';
+    return 'dropbar';
   }
   static getTitle() {
-    return 'Button';
+    return 'Dropbar';
   }
 
   static getIconComponent() {
@@ -55,7 +56,7 @@ class Button extends BaseElement {
     this.addControl('button_text', {
       type: CONTROLLER_TEXTAREA,
       label: 'Button Text',
-      default: 'Click Me'
+      default: `Show dropdown`
     });
 
     this.addControl('button_alignment', {
@@ -113,115 +114,47 @@ class Button extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("link", {
+    this.startControlSection('dropbar_section', {
       tab: TAB_CONTENT,
-      label: "Link"
+      label: 'Dropbar content',
     });
 
-    this.addControl('link_link', {
-      type: CONTROLLER_LINK,
-      default: {
-        url: "",
-        attributes: "",
-        noFollow: false,
-        tag: 'Link'
+    this.addControl('type_dropbar_section', {
+        type: CONTROLLER_SELECT,
+        label: 'Type',
+        default: 'text',
+        options: [
+          {
+            'value': 'text',
+            'label': 'Text',
+          },
+          {
+            'value': 'card',
+            'label': 'Card',
+          },
+        ],
+      }
+    );
+
+    this.addControl("content_dropbar_section", {
+      conditions: {
+        'type_dropbar_section': "text",
       },
-      label: 'Link',
+      type: CONTROLLER_WYSIWYG,
+      label: "Content",
+      default: "I Am Text in dropbar"
     });
 
-    this.endControlSection();
-
-    actionsControllers(this);
-
-    this.startControlSection("form_section", {
-      hideOnEmail: true,
-      tab: TAB_CONTENT,
-      label: "Form Settings"
-    });
-
-    this.addControl('form_id', {
-      label: 'Form ID',
-      placeholder: 'Form ID'
-    });
-
-    this.addControl('form_actions', {
+    this.addControl("template_dropbar_section", {
+      conditions: {
+        'type_dropbar_section': "card",
+      },
       type: CONTROLLER_SELECT2,
-      label: 'Form Actions',
-      options: [
-        {
-          value: 'null',
-          label: 'Null',
-        },
-        {
-          value: 'add_new',
-          label: 'Add New',
-        },
-        {
-          value: 'delete',
-          label: 'Delete',
-        },
-        {
-          value: 'edit',
-          label: 'Edit',
-        },
-        {
-          value: 'login',
-          label: 'Login',
-        },
-        {
-          value: 'logout',
-          label: 'Logout',
-        },
-        {
-          value: 'email',
-          label: 'Email',
-        },
-      ],
-    });
-
-    this.addControl('form_confirm', {
-      type: CONTROLLER_TEXTAREA,
-      label: 'Confirm Submit Form Text',
-      default: '',
-    });
-
-    this.addControl('email_subject', {
-      conditions: {
-        'form_actions': 'email',
-      },
-      type: CONTROLLER_TEXTAREA,
-      label: 'Subject',
-      default: '',
-    });
-
-    this.addControl('text_after', {
-      type: CONTROLLER_TEXTAREA,
-      label: 'Text After Sending',
-      default: '',
-    });
-
-    this.addControl('choose_model', {
-      conditions: {
-        'form_actions': 'add_new',
-      },
-      label: 'Choose Model',
-      responsive: false,
-      type: CONTROLLER_SELECT,
-      resource: '/admin/ajax/models_options?with_names=true',
-    });
-
-    this.addControl('redirect_after', {
-      label: 'Redirect After',
-    });
-
-    this.addControl('redirect_to_prev_page', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Redirect To Prev Page',
-    });
-
-    this.addControl('close_popups', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Close all Popups',
+      prefetch_options: true,
+      label: "Template",
+      isClearable: true,
+      options_resource: '/admin/ajax/templates/options?value=guid',
+      nullable: true,
     });
 
     this.endControlSection();
@@ -229,9 +162,6 @@ class Button extends BaseElement {
     this.startControlSection('dropbar_options_section', {
       tab: TAB_CONTENT,
       label: 'Dropbar options',
-      conditions: {
-        'link_button_type': "dropbar",
-      },
     });
 
     this.addControl("position_dropbar_options", {
@@ -346,7 +276,102 @@ class Button extends BaseElement {
     });
 
     this.endControlSection();
-    //<editor-fold desc="other_actions_on">
+
+    actionsControllers(this);
+
+    this.startControlSection("form_section", {
+      hideOnEmail: true,
+      tab: TAB_CONTENT,
+      label: "Form Settings"
+    });
+
+    this.addControl('form_id', {
+      label: 'Form ID',
+      placeholder: 'Form ID'
+    });
+
+    this.addControl('form_actions', {
+      type: CONTROLLER_SELECT2,
+      label: 'Form Actions',
+      options: [
+        {
+          value: 'null',
+          label: 'Null',
+        },
+        {
+          value: 'add_new',
+          label: 'Add New',
+        },
+        {
+          value: 'delete',
+          label: 'Delete',
+        },
+        {
+          value: 'edit',
+          label: 'Edit',
+        },
+        {
+          value: 'login',
+          label: 'Login',
+        },
+        {
+          value: 'logout',
+          label: 'Logout',
+        },
+        {
+          value: 'email',
+          label: 'Email',
+        },
+      ],
+    });
+
+    this.addControl('form_confirm', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Confirm Submit Form Text',
+      default: '',
+    });
+
+    this.addControl('email_subject', {
+      conditions: {
+        'form_actions': 'email',
+      },
+      type: CONTROLLER_TEXTAREA,
+      label: 'Subject',
+      default: '',
+    });
+
+    this.addControl('text_after', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Text After Sending',
+      default: '',
+    });
+
+    this.addControl('choose_model', {
+      conditions: {
+        'form_actions': 'add_new',
+      },
+      label: 'Choose Model',
+      responsive: false,
+      type: CONTROLLER_SELECT,
+      resource: '/admin/ajax/models_options?with_names=true',
+    });
+
+    this.addControl('redirect_after', {
+      label: 'Redirect After',
+    });
+
+    this.addControl('redirect_to_prev_page', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Redirect To Prev Page',
+    });
+
+    this.addControl('close_popups', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Close all Popups',
+    });
+
+    this.endControlSection();
+
     this.startControlSection('other_actions', {
       hideOnEmail: true,
       tab: TAB_CONTENT,
@@ -375,7 +400,6 @@ class Button extends BaseElement {
     });
 
     this.endControlSection();
-    //</editor-fold>
 
     this.startControlSection('position_section', {
       tab: TAB_STYLE,
@@ -617,59 +641,59 @@ class Button extends BaseElement {
     });
 
     this.addControl('border_type', {
-      type: CONTROLLER_SELECT,
-      label: 'Border Type',
-      options: [
-        {
-          'value': 'none',
-          'label': 'None',
-        },
-        {
-          'value': 'solid',
-          'label': 'Solid',
-        },
-        {
-          'value': 'double',
-          'label': 'Double',
-        },
-        {
-          'value': 'dotted',
-          'label': 'Dotted',
-        },
-        {
-          'value': 'dashed',
-          'label': 'Dashed',
-        },
-        {
-          'value': 'groove',
-          'label': 'Groove',
-        },
-      ],
-    }
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+      }
     );
 
     this.addControl('border_width', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Border Width',
-      default: {
-        bind: true,
-        top: 2,
-        left: 2,
-        right: 2,
-        bottom: 2,
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-    }
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        default: {
+          bind: true,
+          top: 2,
+          left: 2,
+          right: 2,
+          bottom: 2,
+        },
+        units: [
+          'px',
+          '%',
+          'vh',
+        ],
+      }
     );
 
     this.addControl('border_color', {
-      type: CONTROLLER_COLOR,
-      label: 'Border Color',
-    }
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+      }
     );
 
     this.addControl('border_radius', {
@@ -764,9 +788,9 @@ class Button extends BaseElement {
     });
 
     this.addControl('icon_color_background', {
-      type: CONTROLLER_COLOR,
-      label: 'Background Color',
-    }
+        type: CONTROLLER_COLOR,
+        label: 'Background Color',
+      }
     );
 
     this.addControl('icon_size', {
@@ -845,23 +869,9 @@ class Button extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection(
-      'creative_link', {
-      hideOnEmail: true,
-      tab: TAB_STYLE,
-      label: 'Creative Link',
-    }
-    );
-
-
-    this.endControlSection();
-
     this.startControlSection("dropbar_content_style", {
       tab: TAB_STYLE,
       label: "Dropbar",
-      conditions: {
-        'link_button_type': "dropbar",
-      },
     });
 
     this.addControl("padding_dropbar_content_style", {
@@ -911,17 +921,17 @@ class Button extends BaseElement {
     });
 
     this.addControl('typographic_text_dropbar_content_style', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Typographic',
-      default: {
-        lineHeight: 1,
-        spacing: 0,
-        size: 16,
-        weight: "normal",
-        family: 'roboto',
-        decoration: ""
-      },
-    }
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+        default: {
+          lineHeight: 1,
+          spacing: 0,
+          size: 16,
+          weight: "normal",
+          family: 'roboto',
+          decoration: ""
+        },
+      }
     );
 
     this.addControl("border_style_dropbar_content_style", {
@@ -984,45 +994,21 @@ class Button extends BaseElement {
     });
 
     this.addControl('box_shadow_dropbar_content_style', {
-      type: CONTROLLER_SHADOW,
-      label: 'Box shadow',
-      default: {
-        blur: 0,
-        horizontal: 0,
-        vertical: 0,
-        opacity: 1,
-        spread: 0,
-        colorRGB: 'rgb(0, 0, 0)',
-        color: 'rgb(0, 0, 0)',
-        colorPickedHex: '#000000',
-        type: ""
-      },
-    }
+        type: CONTROLLER_SHADOW,
+        label: 'Box shadow',
+        default: {
+          blur: 0,
+          horizontal: 0,
+          vertical: 0,
+          opacity: 1,
+          spread: 0,
+          colorRGB: 'rgb(0, 0, 0)',
+          color: 'rgb(0, 0, 0)',
+          colorPickedHex: '#000000',
+          type: ""
+        },
+      }
     );
-
-    this.endControlSection();
-
-    this.startControlSection('button_advanced_tooltip', {
-      tab: TAB_ADVANCED,
-      label: 'Tooltip'
-    });
-
-    this.addControl('button_advanced_tooltip_font', {
-      type: CONTROLLER_SELECT2,
-      label: 'Font',
-      placeholder: 'Lato',
-      default: '"Lato"',
-      options: [
-        {
-          value: '"Roboto"',
-          label: 'Roboto'
-        },
-        {
-          value: '"Lato"',
-          label: 'Lato'
-        },
-      ],
-    });
 
     this.endControlSection();
 
@@ -1030,4 +1016,4 @@ class Button extends BaseElement {
   }
 }
 
-export default Button
+export default Dropbar

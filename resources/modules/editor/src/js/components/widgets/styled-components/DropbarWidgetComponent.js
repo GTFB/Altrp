@@ -1,0 +1,21 @@
+import {sliderStyled, styledString} from "../../../../../../front-app/src/js/helpers/styles";
+import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
+import {btnStyles} from "./ButtonComponent";
+
+/**
+ * @return {string}
+ */
+export default function DropbarWidgetComponent(settings) {
+
+  const styles = [
+    "altrp-dropbar",
+
+    ["align-items", "button_alignment"],
+
+    "}",
+
+    ...btnStyles(settings)
+  ];
+
+  return styledString(styles, settings) + "& .altrp-btn-wrapper{display:flex;flex-direction:column;}";
+}

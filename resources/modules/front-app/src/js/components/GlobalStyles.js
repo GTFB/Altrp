@@ -13,6 +13,8 @@ import AccordionComponent from "../../../../editor/src/js/components/widgets/sty
 import SectionWidgetComponent
   from "../../../../editor/src/js/components/widgets/styled-components/SectionWidgetComponent";
 import ColumnComponent from "../../../../editor/src/js/components/widgets/styled-components/ColumnComponents";
+import DropbarWidgetComponent
+  from "../../../../editor/src/js/components/widgets/styled-components/DropbarWidgetComponent";
 
 const GlobalStyles = createGlobalStyle`${({elementsSettings})=>{
   let styles = '';
@@ -54,6 +56,9 @@ const GlobalStyles = createGlobalStyle`${({elementsSettings})=>{
           break;
         case "column":
           styles += `.${prefix}${id} {${ColumnComponent(item.settings)}}`;
+          break;
+        case "dropbar":
+          styles += `.${prefix}${id} {${DropbarWidgetComponent(item.settings)}}`;
           break;
       }
       styles += `.${prefix}${id} {${AdvancedComponent(item.settings)}}`
