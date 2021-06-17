@@ -230,5 +230,10 @@
         "webpack-dev-server": "^3.10.3",
         "webpack-merge": "^4.2.2",
         "webpack-node-externals": "^3.0.0"
-    }
+    },
+    "browserslist": [
+        ">0.2%",
+        "not dead",
+        "not op_mini all"
+    ]
 }

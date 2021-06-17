@@ -75,16 +75,13 @@ class ShadowController extends Component {
       // opacity: color.rgb.a,
       // colorRGB: color.rgb
     });
-    console.log("====================================");
-    console.log(color);
-    console.log("====================================");
     this._changeValue({
       ...this.defaultValues,
       ...value,
-      color: `rgb(${color.colorRGB.r}, ${color.colorRGB.g}, ${color.colorRGB.b}, ${color.colorRGB.a})`,
-      colorRGB: `rgb(${color.colorRGB.r}, ${color.colorRGB.g}, ${color.colorRGB.b}, ${color.colorRGB.a})`,
+      color: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+      colorRGB: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
       colorPickedHex: color.colorPickedHex,
-      opacity: color.colorRGB.a
+      opacity: color.rgb.a
     });
     if (color?.guid) {
       this.setGlobal(color.guid);
