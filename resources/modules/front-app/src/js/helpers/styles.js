@@ -700,7 +700,6 @@ export function mediaStyled(controller = {}) {
  */
 export function styledString(styles, settings) {
   let stringStyles = "";
-  console.log(settings)
 
   if(_.keys(settings).length !== 0) {
     styles.forEach(style => {

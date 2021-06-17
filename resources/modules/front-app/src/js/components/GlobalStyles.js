@@ -23,7 +23,6 @@ const GlobalStyles = createGlobalStyle`${({elementsSettings})=>{
 
   _.each(elementsSettings, (item, id) => {
     if(item) {
-      console.log(item.name)
       switch (item.name) {
         case "heading":
           settingsHeading = item.settings;
