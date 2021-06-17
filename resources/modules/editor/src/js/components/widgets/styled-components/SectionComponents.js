@@ -8,7 +8,7 @@ import {
   sizeStyled,
   gradientStyled,
   shadowStyled,
-  backgroundImageControllerToStyles,
+  backgroundImageControllerToStyles, sliderStyled,
 } from "../../../../../../front-app/src/js/helpers/styles";
 const settingsToStyles = ({settings, columns = []})=>{
   let styles = '';
@@ -298,7 +298,8 @@ const settingsToStyles = ({settings, columns = []})=>{
   }
 
   if (width) {
-    styles += sizeStyled(width, 'width');
+    width = sliderStyled(width);
+    styles += `width: ${width} !important`;
   }
 
   styles += '} ';
@@ -308,16 +309,6 @@ const settingsToStyles = ({settings, columns = []})=>{
   let widthH;
 
   styles += '&&.altrp-section_boxed:hover, &&.altrp-section_section_boxed:hover {';
-
-  //Получаем значения width в точных юнитах из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    widthH = getResponsiveSetting(settings, 'layout_content_width', ':hover');
-  }
-
-  if (widthH) {
-    styles += sizeStyled(widthH, 'width');
-  }
 
   styles += '} ';
 

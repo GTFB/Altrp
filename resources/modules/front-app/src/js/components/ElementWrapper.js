@@ -5,12 +5,10 @@ import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/Alt
 import { changeCurrentPageProperty } from "../store/current-page/actions";
 import { ElementWrapperDivComponent } from "../../../../editor/src/js/components/widgets/styled-components/ElementWrapperComponent";
 import ImageComponent from "../../../../editor/src/js/components/widgets/styled-components/ImageComponent";
-import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 import TextComponent from "../../../../editor/src/js/components/widgets/styled-components/TextComponent";
 import TableComponent from "../../../../editor/src/js/components/widgets/styled-components/TableComponent";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
 import TabsComponent from "../../../../editor/src/js/components/widgets/styled-components/TabsComponent";
-import SectionWidgetComponent from "../../../../editor/src/js/components/widgets/styled-components/SectionWidgetComponent";
 import PostsComponent from "../../../../editor/src/js/components/widgets/styled-components/PostsComponent";
 import HeadingComponent from "../../../../editor/src/js/components/widgets/styled-components/HeadingComponent";
 import MenuComponent from "../../../../editor/src/js/components/widgets/styled-components/MenuComponent";
@@ -334,9 +332,6 @@ class ElementWrapper extends Component {
       case "text":
         WrapperComponent = TextComponent;
         break
-      case "accordion":
-        WrapperComponent = AccordionComponent;
-        break
       case "table":
         WrapperComponent = TableComponent;
         break
@@ -366,9 +361,6 @@ class ElementWrapper extends Component {
         break;
       case "tabs":
         WrapperComponent = TabsComponent;
-        break;
-      case "section":
-        WrapperComponent = SectionWidgetComponent;
         break;
       case "posts":
         WrapperComponent = PostsComponent;

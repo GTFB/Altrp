@@ -1,8 +1,11 @@
 import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
 import {defaultStyled, sliderStyled, styledString} from "../../../../../../front-app/src/js/helpers/styles";
 
-export default styled.div`
-  ${({settings}) => {
+/**
+ * @return {string}
+ */
+
+export default function AccordionComponent(settings) {
   const styles = [
     "altrp-accordion-item-label",
 
@@ -107,6 +110,6 @@ export default styled.div`
 
     "}",
   ];
+
   return styledString(styles, settings)
-}}
-`;
+}

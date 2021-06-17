@@ -10,7 +10,7 @@ import {
   backgroundImageControllerToStyles,
 } from "../../../../../../front-app/src/js/helpers/styles";
 
-const settingsToStyles = ({ settings }) => {
+const ColumnComponent = (settings) => {
   let styles = "";
 
   let flexWrap, flexDirection, align, justifyContent, overflow, backgroundColor, gradient, zIndex, borderType, borderWidth, borderColor, borderRadius, boxShadow;
@@ -18,7 +18,7 @@ const settingsToStyles = ({ settings }) => {
   let marginBottom, marginBottomH, backgroundImage, backgroundPosition, backgroundAttachment, backgroundRepeat, backgroundSizeInUnits, backgroundSize;
   let backgroundImageH, backgroundPositionH, backgroundAttachmentH, backgroundRepeatH, backgroundSizeInUnitsH, backgroundSizeH, margin, marginH, padding, paddingH, width;
 
-  styles += "&&.altrp-column {";
+  styles += "& .altrp-column {";
 
   //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
 
@@ -189,7 +189,7 @@ const settingsToStyles = ({ settings }) => {
 
   //hover
 
-  styles += "&&.altrp-column:hover {";
+  styles += "& .altrp-column:hover {";
 
   //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
 
@@ -344,7 +344,7 @@ const settingsToStyles = ({ settings }) => {
 
   styles += "} ";
 
-  styles += "&& .altrp-element:not(:last-child) {";
+  styles += "& .altrp-element:not(:last-child) {";
 
   if (settings !== undefined) {
     marginBottom = getResponsiveSetting(settings, 'layout_widgets-space');
@@ -358,7 +358,7 @@ const settingsToStyles = ({ settings }) => {
 
   //hover
 
-  styles += "&& .altrp-element:not(:last-child):hover {";
+  styles += "& .altrp-element:not(:last-child):hover {";
 
   if (settings !== undefined) {
     marginBottomH = getResponsiveSetting(settings, 'layout_widgets-space', ':hover');
@@ -370,7 +370,7 @@ const settingsToStyles = ({ settings }) => {
 
   styles += "} ";
 
-  styles += "&&.altrp-column.altrp-background-image {";
+  styles += "& .altrp-column.altrp-background-image {";
 
   //Получаем значения background-image из контроллера, обрабатываем и добавляем в styles
 
@@ -436,7 +436,7 @@ const settingsToStyles = ({ settings }) => {
 
   //hover
 
-  styles += "&&.altrp-column.altrp-background-image:hover {";
+  styles += "& .altrp-column.altrp-background-image:hover {";
 
   //Получаем значения background-image из контроллера, обрабатываем и добавляем в styles
 
@@ -503,27 +503,4 @@ const settingsToStyles = ({ settings }) => {
   return styles;
 };
 
-export const ColumnDivComponent = styled.div`
-  ${settingsToStyles}
-`;
-export const ColumnHeaderComponent = styled.header`
-  ${settingsToStyles}
-`;
-export const ColumnFooterComponent = styled.footer`
-  ${settingsToStyles}
-`;
-export const ColumnMainComponent = styled.main`
-  ${settingsToStyles}
-`;
-export const ColumnArticleComponent = styled.article`
-  ${settingsToStyles}
-`;
-export const ColumnSectionComponent = styled.section`
-  ${settingsToStyles}
-`;
-export const ColumnAsideComponent = styled.aside`
-  ${settingsToStyles}
-`;
-export const ColumnNavComponent = styled.nav`
-  ${settingsToStyles}
-`;
+export default ColumnComponent

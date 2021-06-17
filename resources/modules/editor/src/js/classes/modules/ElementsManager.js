@@ -56,6 +56,8 @@ import VideoWidget from "../../components/widgets/VideoWidget";
 import SectionWidget from "../elements/SectionWidget";
 import MenuWidget from "../../components/widgets/MenuWidget";
 import SectionWidgetComponent from "../../components/SectionWidgetComponent";
+import DropbarWidget from "../../components/widgets/DropbarWidget";
+import Dropbar from "../elements/Dropbar";
 
 export default class ElementsManger {
   constructor() {
@@ -91,6 +93,7 @@ export default class ElementsManger {
     this.elements[Gallery.getName()] = Gallery;
     this.elements[Video.getName()] = Video;
     this.elements[SectionWidget.getName()] = SectionWidget;
+    this.elements[Dropbar.getName()] = Dropbar;
     // Websocket Notifications
     // this.elements[Notifications.getName()] = Notifications;
     //список компонентов
@@ -124,6 +127,7 @@ export default class ElementsManger {
     this.components[Html.getName()] = HtmlWidget;
     this.components[Gallery.getName()] = GalleryWidget;
     this.components[Video.getName()] = VideoWidget;
+    this.components[Dropbar.getName()] = DropbarWidget;
     // Websocket Notifications widget
     // this.components[Notifications.getName()] = NotificationsWidget;
   }

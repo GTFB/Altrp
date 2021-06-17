@@ -1,6 +1,5 @@
 import styled,  { ServerStyleSheet, createGlobalStyle } from "styled-components";
 import Area from "../resources/modules/front-app/src/js/classes/Area";
-const sheet = new ServerStyleSheet();
 import { parse } from "node-html-parser";
 import{Link} from "react-router-dom"
 import React from "react";
@@ -108,6 +107,7 @@ function renderHTML(req, res, data, component, page, store) {
 }
 
 app.post("/", (req, res) => {
+  const sheet = new ServerStyleSheet();
   const store = window.appStore;
   let json = JSON.parse(req.body.json) || [];
   let page = json.page || [];
@@ -179,7 +179,7 @@ app.post("/", (req, res) => {
     _app.removeChild(_app.querySelector(".styles-container"));
     app = _app.toString();
   }
-  // sheet.seal();
+  sheet.seal();
   const result = {
     important_styles: unEntity(styleTags),
     content: unEntity(app)

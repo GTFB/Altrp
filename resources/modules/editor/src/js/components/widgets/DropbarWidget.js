@@ -1,16 +1,16 @@
-let Dropbar = React.lazy(() => import(/* webpackChunkName: 'AltrpDropbar' */"../altrp-dropbar/AltrpDropbar"));
+import React, {Component, Suspense} from "react";
 import {
   getComponentByElementId,
   getHTMLElementById,
-  isEditor, isSSR,
-  parseURLTemplate,
-  printElements,
-  renderAssetIcon,
-  scrollToElement
+  isEditor,
+  isSSR,
+  parseURLTemplate, printElements,
+  renderAssetIcon, scrollToElement
 } from "../../../../../front-app/src/js/helpers";
-const Link = window.Link
+import {Link} from "react-router-dom";
+import AltrpDropbar from "../altrp-dropbar/AltrpDropbar";
 
-class ButtonWidget extends Component {
+class DropbarWidget extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -26,14 +26,15 @@ class ButtonWidget extends Component {
     }
     this.onClick = this.onClick.bind(this);
   }
+
   /**
    * Компонент удаляется со страницы
    */
   async _componentWillUnmount() {
     const actionsManager = (
-      await import(/* webpackChunkName: 'ActionsManager' */
+      await import(
         "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-      )
+        )
     ).default;
     actionsManager.unregisterWidgetActions(this.props.element.getId());
   }
@@ -51,9 +52,9 @@ class ButtonWidget extends Component {
       e.preventDefault();
       e.stopPropagation();
       const actionsManager = (
-        await import(/* webpackChunkName: 'ActionsManager' */
+        await import(
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-        )
+          )
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
@@ -142,7 +143,7 @@ class ButtonWidget extends Component {
           return;
         }
         getHTMLElementById(elementId.trim()) &&
-          elementsToPrint.push(getHTMLElementById(elementId));
+        elementsToPrint.push(getHTMLElementById(elementId));
         if (getComponentByElementId(elementId.trim())?.getStylesHTMLElement) {
           let stylesElement = getComponentByElementId(
             elementId.trim()
@@ -163,177 +164,65 @@ class ButtonWidget extends Component {
   }
 
   render() {
-    const { link_link = {}, advanced_tooltip: tooltip } = this.state.settings;
-    const { back } = history;
+    const buttonText = this.props.element.getResponsiveSetting("button_text", "", "");
+    const id = this.props.element.getResponsiveSetting("position_css_id", "", "")
+    const customClasses = this.props.element.getResponsiveSetting("position_css_classes", "", null);
     const background_image = this.props.element.getResponsiveSetting(
       "background_image",
       null,
       {}
     );
+    const buttonMedia = this.props.element.getResponsiveSetting("button_icon", "", {});
+    const dropbarDelay = this.props.element.getResponsiveSetting("show_delay_dropbar_options");
 
-    let modelData = this.props.element.hasCardModel()
-      ? this.props.element.getCardModel().getData()
-      : this.props.currentModel.getData();
-    let classes =
-      "altrp-btn " + (this.state.settings.position_css_classes || "");
-    if (background_image.url) {
-      classes += " altrp-background-image";
-    }
-
-    let buttonText = this.props.element.getContent("button_text");
-    let buttonMedia = { ...this.state.settings.button_icon };
     const showIcon = buttonMedia.url;
 
     if (this.state.pending) {
-      classes += " altrp-disabled";
+      classes.push("altrp-disabled");
     }
 
-    // classes +=
-    //   this.state.settings.link_button_type === "dropbar"
-    //     ? "altrp-btn-dropbar"
-    //     : "";
+    const classes = ["altrp-btn", "dropbar"];
 
-    // let icon =
-    //   buttonMedia && showIcon && buttonMedia.assetType ? (
-    //     <span className={"altrp-btn-icon "}>
-    //       {renderAssetIcon(buttonMedia)}{" "}
-    //     </span>
-    //   ) : (
-    //     ""
-    //   );
-
-    let url = link_link.url
-      ? link_link.url.replace(":id", this.getModelId() || "")
-      : "";
-    if (_.isObject(this.props.currentModel)) {
-      url = parseURLTemplate(link_link.url || "", modelData);
+    if(customClasses) {
+      classes.push(customClasses)
     }
 
-    classes += this.classStateDisabled();
-    let button = <button
-      onClick={this.onClick}
-      className={classes}
-      id={this.state.settings.position_css_id}
-      title={tooltip || null}
-    >
-      {buttonText}
-      {
-        showIcon ? (
-          ! isSSR() && <span className={"altrp-btn-icon "}>
+    if (background_image.url) {
+      classes.push("altrp-background-image");
+    }
+
+    classes.push(this.classStateDisabled());
+
+    const buttonTemplate = (
+      <button
+        onClick={this.onClick}
+        className={_.join(classes, " ")}
+        id={id}
+      >
+        {buttonText}
+        {
+          showIcon ? (
+            ! isSSR() && <span className="altrp-btn-icon">
           {renderAssetIcon(buttonMedia)}{" "}
           </span>
-        ) : ""
-      }
-    </button>;
-    // let buttonTemplate = (
-    //   <button
-    //     onClick={this.onClick}
-    //     className={classes}
-    //     id={this.state.settings.position_css_id}
-    //     title={tooltip || null}
-    //   >
-    //     {buttonText}
-    //     {
-    //       showIcon ? (
-    //         ! isSSR() && <span className={"altrp-btn-icon "}>
-    //       {renderAssetIcon(buttonMedia)}{" "}
-    //       </span>
-    //       ) : ""
-    //     }
-    //   </button>
-    // );
-
-    // switch (this.props.element.getResponsiveSetting("link_button_type", null,"none")) {
-    //   case "dropbar":
-    //     button = (
-    //       <Suspense fallback={<div>Загрузка...</div>}>
-    //         <Dropbar
-    //           elemenentId={this.props.element.getId()}
-    //           settings={this.props.element.getSettings()}
-    //           className="btn"
-    //           element={this.props.element}
-    //           getContent={this.getContent}
-    //           showDelay={this.state.settings.show_delay_dropbar_options}
-    //         >
-    //           {buttonTemplate}
-    //         </Dropbar>
-    //       </Suspense>
-    //     );
-    //     break;
-    //   default:
-    //     button = buttonTemplate;
-    // }
-
-    let link = null;
-    if (
-      this.state.settings.link_link?.url &&
-      !this.state.settings.link_link.toPrevPage
-    ) {
-      if (this.state.settings.link_link.tag === "a" || isEditor()) {
-        let target = _.get(this.state.settings, "link_link.openInNew")
-          ? "blank"
-          : "";
-        link = (
-          <a
-            href={url}
-            onClick={this.onClick}
-            className={classes}
-            target={target}
-            title={tooltip || null}
-          >
-            {" "}
-            {buttonText || ""}
-            {
-              showIcon ? (
-                ! isSSR() && <span className={"altrp-btn-icon "}>
-                  {renderAssetIcon(buttonMedia)}{" "}
-                </span>
-              ) : ""
-            }
-          </a>
-        );
-      } else {
-        link = (
-          <Link to={url} onClick={this.onClick} className={classes} title={tooltip || null}>
-            {" "}
-            {buttonText || ""}
-            {
-              showIcon ? (
-                ! isSSR() && <span className={"altrp-btn-icon "}>
-                  {renderAssetIcon(buttonMedia)}{" "}
-                </span>
-              ) : ""
-            }
-          </Link>
-        );
-      }
-    }
-
-    if (_.get(this.state, "settings.link_link.toPrevPage")) {
-      link = (
-        <button
-          onClick={() => (isEditor() ? null : back())}
-          className={classes}
-          id={this.state.settings.position_css_id}
-          title={tooltip || null}
-        >
-          {buttonText}
-          {
-            showIcon ? (
-              ! isSSR() && <span className={"altrp-btn-icon "}>
-                {renderAssetIcon(buttonMedia)}{" "}
-              </span>
-            ) : ""
-          }
-        </button>
-      );
-    }
-
+          ) : ""
+        }
+      </button>
+    );
     return <div className="altrp-btn-wrapper">
-      { link || button || buttonMedia }
-    </div>;
-    // return React.createElement(tag, buttonProps, <>{this.state.settings.button_text}{icon}</>);
+      <AltrpDropbar
+        elemenentId={this.props.element.getId()}
+        settings={this.props.element.getSettings()}
+        className="btn"
+        element={this.props.element}
+        getContent={this.getContent}
+        showDelay={dropbarDelay}
+      >
+        {buttonTemplate}
+      </AltrpDropbar>
+    </div>
   }
 }
 
-export default ButtonWidget;
+
+export default DropbarWidget;
