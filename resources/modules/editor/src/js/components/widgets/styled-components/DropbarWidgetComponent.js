@@ -8,12 +8,6 @@ import {btnStyles} from "./ButtonComponent";
 export default function DropbarWidgetComponent(settings) {
 
   const styles = [
-    "altrp-dropbar",
-
-    ["align-items", "button_alignment"],
-
-    "}",
-
     ...btnStyles(settings)
   ];
 

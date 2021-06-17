@@ -209,19 +209,20 @@ class DropbarWidget extends Component {
         }
       </button>
     );
-
-    return <Suspense fallback={<div>Загрузка...</div>}>
-      <Dropbar
-        elemenentId={this.props.element.getId()}
-        settings={this.props.element.getSettings()}
-        className="btn"
-        element={this.props.element}
-        getContent={this.getContent}
-        showDelay={dropbarDelay}
-      >
-        {buttonTemplate}
-      </Dropbar>
-    </Suspense>
+    return <div className="altrp-btn-wrapper">
+      <Suspense fallback={<div>Загрузка...</div>}>
+        <Dropbar
+          elemenentId={this.props.element.getId()}
+          settings={this.props.element.getSettings()}
+          className="btn"
+          element={this.props.element}
+          getContent={this.getContent}
+          showDelay={dropbarDelay}
+        >
+          {buttonTemplate}
+        </Dropbar>
+      </Suspense>
+    </div>
   }
 }
 

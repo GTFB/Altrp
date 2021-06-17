@@ -3,6 +3,12 @@ import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
 
 export function btnStyles(settings) {
   return [
+    "altrp-btn-wrapper",
+
+    ["align-items", "button_alignment"],
+
+    "}",
+
     "altrp-btn",
     ["flex-direction", "button_icon_position"],
     ["margin", "position_margin", "dimensions"],
@@ -124,21 +130,6 @@ export function btnStyles(settings) {
 export default function ButtonComponent(settings) {
 
   const styles = [
-
-    // `.${element}-altrp-dropbar`,
-    //   ["padding", "padding_dropbar_content_style", "dimensions"],
-    //   ["background-color", "background_dropbar_content_style", "color"],
-    // "}",
-
-    // "&",
-    //   ["font-family", "button_advanced_tooltip_font"],
-    // "}",
-
-    "altrp-btn-wrapper",
-
-    ["align-items", "button_alignment"],
-
-    "}",
 
     ...btnStyles(settings)
   ];
