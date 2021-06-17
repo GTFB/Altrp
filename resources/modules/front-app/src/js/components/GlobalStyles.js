@@ -1,5 +1,3 @@
-import { createGlobalStyle } from 'styled-components'
-import { connect } from 'react-redux';
 import ButtonComponent from "../../../../editor/src/js/components/widgets/styled-components/ButtonComponent";
 import CarouselComponent from "../../../../editor/src/js/components/widgets/styled-components/CarouselComponent";
 import GalleryComponent from "../../../../editor/src/js/components/widgets/styled-components/GalleryComponent";
@@ -8,7 +6,7 @@ import VideoComponent from "../../../../editor/src/js/components/widgets/styled-
 import ListComponent from "../../../../editor/src/js/components/widgets/styled-components/ListComponent";
 import AdvancedComponent from "../../../../editor/src/js/components/widgets/styled-components/AdvancedComponent";
 
-const GlobalStyles = createGlobalStyle`${({elementsSettings})=>{
+const GlobalStyles = window.createGlobalStyle`${({elementsSettings})=>{
   let styles = '';
 
   let prefix = "altrp-element";
@@ -46,5 +44,5 @@ function mapStateToProps(state) {
   return {elementsSettings: state.elementsSettings}
 }
 
-export default connect(mapStateToProps)(GlobalStyles)
+export default window.reactRedux.connect(mapStateToProps)(GlobalStyles)
 

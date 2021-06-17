@@ -3,7 +3,6 @@ import {
   clearCurrentDataStorage,
   currentDataStorageLoaded, currentDataStorageLoading
 } from "../../store/current-data-storage/actions";
-import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
 import {changeCurrentUser} from "../../store/current-user/actions";
 import Datasource from "../Datasource";
 const { Resource, isJSON, mbParseJSON, replaceContentWithData} = window.altrpHelpers;

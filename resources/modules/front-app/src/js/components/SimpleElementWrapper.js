@@ -16,7 +16,6 @@ import MapConstructorComponent
   from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
 import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
-const { altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceContentWithData, setTitle } = window.altrpHelpers;
 
 class SimpleElementWrapper extends Component {
   constructor(props) {
@@ -49,7 +48,7 @@ class SimpleElementWrapper extends Component {
    * Иногда надо обновить элемент (FrontElement)
    */
   componentDidMount() {
-    ! isEditor() && window?.frontApp?.onWidgetMount();
+    ! window.altrpHelpers.isEditor() && window?.frontApp?.onWidgetMount();
     if (_.isFunction(this.props.element.update)) {
       this.props.element.update();
       this.props.element.updateFonts();
@@ -114,14 +113,14 @@ class SimpleElementWrapper extends Component {
     this.checkElementDisplay();
     if (appStore.getState().currentModel.getProperty('altrpModelUpdated') &&
       appStore.getState().currentDataStorage.getProperty('currentDataStorageLoaded') &&
-      !isEditor() &&
+      !window.altrpHelpers.isEditor() &&
       this.props.element.getName() === 'section') {
       let title = appStore.getState().currentTitle;
-      title = replaceContentWithData(title);
+      title = window.altrpHelpers.replaceContentWithData(title);
       if (appStore.getState().altrpPage.getProperty('title') !== title) {
         appStore.dispatch(changeCurrentPageProperty('title', title));
       }
-      setTitle(title);
+      window.altrpHelpers.setTitle(title);
     }
   }
 
@@ -129,7 +128,7 @@ class SimpleElementWrapper extends Component {
    * Обновить элемент изменив this.state.updateToken
    */
   updateElement() {
-    this.setState(state => ({ ...state, updateToken: altrpRandomId() }))
+    this.setState(state => ({ ...state, updateToken: window.altrpHelpers.altrpRandomId() }))
   }
 
   /**
@@ -158,7 +157,7 @@ class SimpleElementWrapper extends Component {
         value
       };
     });
-    let elementDisplay = conditionsChecker(
+    let elementDisplay = window.altrpHelpers.conditionsChecker(
       conditions,
       element.getSettings("conditional_other_display") === "AND",
       this.props.element.getCurrentModel(),
@@ -202,13 +201,13 @@ class SimpleElementWrapper extends Component {
     let display = true;
     formConditions.forEach(c => {
       if (logic === "AND") {
-        display *= altrpCompare(
+        display *= window.altrpHelpers.altrpCompare(
           _.get(formsStore, `${formId}.${c.field_id}`),
           c.value,
           c.operator
         );
       } else {
-        display += altrpCompare(
+        display += window.altrpHelpers.altrpCompare(
           _.get(formsStore, `${formId}.${c.field_id}`),
           c.value,
           c.operator
@@ -252,7 +251,7 @@ class SimpleElementWrapper extends Component {
       styles.display = "none";
     }
     let CSSId = this.props.element.getSettings("advanced_element_id", "");
-    CSSId = replaceContentWithData(CSSId, this.props.element.getCurrentModel().getData());
+    CSSId = window.altrpHelpers.replaceContentWithData(CSSId, this.props.element.getCurrentModel().getData());
     if (this.CSSId !== CSSId) {
       this.CSSId = CSSId;
     }
@@ -325,7 +324,7 @@ class SimpleElementWrapper extends Component {
         WrapperComponent = PostsComponent;
         break;
     }
-    tooltip_text = replaceContentWithData(tooltip_text, this.props.element.getCurrentModel().getData())
+    tooltip_text = window.altrpHelpers.replaceContentWithData(tooltip_text, this.props.element.getCurrentModel().getData())
     const wrapperProps = {
       elementId: this.elementId,
       settings: this.settings,

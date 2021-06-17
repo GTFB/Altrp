@@ -25,11 +25,9 @@ global.window.SSR = true;
 //   addEventListener: () => {
 //   },
 // };
-
-require('../resources/modules/front-app/src/js/libs/altrp');
 require( '../resources/modules/front-app/src/js/libs/react-lodash');
+require('../resources/modules/front-app/src/js/libs/altrp');
 global.frontElementsManager = require("./classes/modules/FrontElementsManager").default;
-global.React = require("react");
 global.history = {
   back() {}
 };

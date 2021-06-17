@@ -110,6 +110,11 @@ module.exports = {
     hotOnly: true
   },
   plugins: [
+
+    new webpack.DefinePlugin({
+      "process.env": "{}",
+      global: {}
+    }),
     // new webpack.HotModuleReplacementPlugin(),
     new CleanWebpackPlugin()
     // new ExtractTextPlugin('style.css'),

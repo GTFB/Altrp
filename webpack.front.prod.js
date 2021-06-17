@@ -2,6 +2,7 @@ const merge = require('webpack-merge');
 const common = require('./webpack.front.common.js');
 const path = require("path");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const webpack = require("webpack");
 
 
 module.exports = merge(common, {
@@ -47,6 +48,10 @@ module.exports = merge(common, {
 
       filename: 'front-app.css'
     }),
+    new webpack.DefinePlugin({
+      "process.env": "{}",
+      global: {}
+    })
     // new WriteChunksToFrontBlade,
     //   // Options similar to the same options in webpackOptions.output
     //   // both options are optional
@@ -54,13 +59,13 @@ module.exports = merge(common, {
     //   chunkFilename: '[id].css',
     // }),
   ],
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-      cacheGroups: {
-        vendors: false,
-      },
-    },
-  }
+  // optimization: {
+  //   splitChunks: {
+  //     chunks: 'all',
+  //     cacheGroups: {
+  //       defaultVendors: false,
+  //     },
+  //   },
+  // }
 });
 

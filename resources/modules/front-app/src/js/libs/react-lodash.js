@@ -60,3 +60,14 @@ window.Provider = reactRedux.Provider;
 window.reactRedux = reactRedux;
 window.styled = styled;
 window.createGlobalStyle = createGlobalStyle;
+if(window.SSR){
+  global.ReactDOM = ReactDom;
+  global.React = React;
+  global.Component = Component;
+  global.Suspense = Suspense;
+  global.Fragment = Fragment;
+  global.Provider = reactRedux.Provider;
+  global.reactRedux = reactRedux;
+  global.styled = styled;
+  global.createGlobalStyle = createGlobalStyle;
+}
