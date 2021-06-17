@@ -3,11 +3,11 @@ const webpack = require("webpack");
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
 module.exports = {
-  mode: 'production',
-  entry: ['@babel/polyfill', "./server/index.js"],
+  entry: "./server/index.js",
 
   target: "node",
 
+  externals: [nodeExternals()],
 
   output: {
     path: path.resolve("server-dist"),
@@ -19,18 +19,8 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        exclude: path.resolve(__dirname, 'node_modules/@babel'),
-        loader: "babel-loader",
-        options: {
-          minified:false,
-          presets: ["@babel/env", "@babel/preset-react"],
-          plugins: ["@babel/plugin-syntax-jsx", "inline-react-svg"]
-        },
+        use: "babel-loader"
       },
-      // {
-      //   test:  path.resolve(__dirname, 'node_modules/@babel'),
-      //   loader: "file-loader",
-      // },
       {
         test: /\.s[ac]ss$/i,
 
@@ -51,28 +41,7 @@ module.exports = {
         options: {
           name: "[path][name].[ext]"
         }
-      },
-      {
-        test: path.resolve(__dirname, 'node_modules/@babel'),
-        loader: "file-loader",
-        options: {
-          name: "[path][name].[ext]"
-        }
-      },
-      {
-        test: path.resolve(__dirname, 'node_modules/ignore-styles'),
-        loader: "file-loader",
-        options: {
-          name: "[path][name].[ext]"
-        }
-      },
-      {
-        test: path.resolve(__dirname, 'node_modules/express'),
-        loader: "file-loader",
-        options: {
-          name: "[path][name].[ext]"
-        }
-      },
+      }
     ]
   },
   plugins: [
@@ -82,8 +51,8 @@ module.exports = {
       "process.env.BROWSER": JSON.stringify(true),
       __DEV__: false
     }),
-    new webpack.IgnorePlugin({
-      resourceRegExp: /\.ttf|\.woff|\.otf|\.woff2|\.s[ac]ss$/,
-    }),
+    // new webpack.IgnorePlugin({
+    //   resourceRegExp: /\.ttf|\.woff|\.otf|\.woff2|\.s[ac]ss$/,
+    // }),
   ]
 };

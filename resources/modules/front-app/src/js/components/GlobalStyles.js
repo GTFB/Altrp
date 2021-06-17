@@ -1,3 +1,7 @@
+import {getHeadingStyles} from "./helpers/stylesForTheHeading";
+import {getTextStyles} from "./helpers/stylesForTheText";
+import {getTableStyles} from "./helpers/stylesForTheTable";
+import {getPostsStyles} from "./helpers/stylesForThePosts";
 import ButtonComponent from "../../../../editor/src/js/components/widgets/styled-components/ButtonComponent";
 import CarouselComponent from "../../../../editor/src/js/components/widgets/styled-components/CarouselComponent";
 import GalleryComponent from "../../../../editor/src/js/components/widgets/styled-components/GalleryComponent";
@@ -51,6 +55,23 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
         case "dropbar":
           styles += `.${prefix}${id} {${DropbarWidgetComponent(item.settings)}}`;
           break;
+
+        case 'heading': {
+          styles += getHeadingStyles(item.settings, id);
+        }
+          break;
+        case 'text': {
+          styles += getTextStyles(item.settings, id);
+        }
+          break;
+        case 'table': {
+          styles += getTableStyles(item.settings, id);
+        }
+          break;
+        case 'posts': {
+          styles += getPostsStyles(item.settings, id);
+        }
+          break;
         case "input":
           {
             switch (item.settings?.content_type) {
@@ -75,12 +96,12 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
       styles += `.${prefix}${id}.${prefix}${id} {${AdvancedComponent(
         item.settings
       )}}`;
+
     }
   });
 
   return styles;
 }}`;
-
 function mapStateToProps(state) {
   return { elementsSettings: state.elementsSettings };
 }

@@ -13,7 +13,7 @@ module.exports ={
     'front-app':"./resources/modules/front-app/src/index.js",
     // 'sw': "./resources/modules/front-app/src/js/sw/sw.js",
   },
-  // devtool: 'source-map',
+  devtool: 'source-map',
   module: {
     rules: [
       {
