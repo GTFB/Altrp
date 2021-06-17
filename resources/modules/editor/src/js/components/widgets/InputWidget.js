@@ -1,4 +1,4 @@
-import React, { Component, Suspense } from "react";
+import React, { Component } from "react";
 import {
   altrpCompare,
   convertData,
@@ -18,9 +18,9 @@ import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpS
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
 import moment from "moment";
-const CKeditor = React.lazy(() => import(/* webpackChunkName: 'CKeditor' */"../ckeditor/CKeditor"));
+import CKeditor from "../ckeditor/CKeditor";
 import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
-const AltrpInput = React.lazy(() => import(/* webpackChunkName: 'AltrpInput' */"../altrp-input/AltrpInput"));
+import AltrpInput from "../altrp-input/AltrpInput";
 import styled from "styled-components";
 
 const AltrpFieldContainer = styled.div`
@@ -645,7 +645,8 @@ class InputWidget extends Component {
 
     if (focus_actions && !isEditor()) {
       const actionsManager = (
-        await import(/* webpackChunkName: 'ActionsManager' */
+        await import(
+          /* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
         )
       ).default;
@@ -675,7 +676,8 @@ class InputWidget extends Component {
     }
     if (this.props.element.getSettings("actions", []) && !isEditor()) {
       const actionsManager = (
-        await import(/* webpackChunkName: 'ActionsManager' */
+        await import(
+          /* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
         )
       ).default;
@@ -707,7 +709,8 @@ class InputWidget extends Component {
 
         if (change_actions && !isEditor()) {
           const actionsManager = (
-            await import(/* webpackChunkName: 'ActionsManager' */
+            await import(
+              /* webpackChunkName: 'ActionsManager' */
               "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
             )
           ).default;
@@ -1023,36 +1026,34 @@ class InputWidget extends Component {
           }
         }
         input = (
-          <React.Suspense fallback={''}>
-            <div className="altrp-input-wrapper">
-              <AltrpInput
-                type={this.state.settings.content_type}
-                name={this.getName()}
-                value={value || ""}
-                element={this.props.element}
-                readOnly={content_readonly}
-                autoComplete={autocomplete}
-                placeholder={this.state.settings.content_placeholder}
-                className={
-                  "altrp-field " + this.state.settings.position_css_classes
-                }
-                settings={this.props.element.getSettings()}
-                onKeyDown={this.handleEnter}
-                onChange={this.onChange}
-                onBlur={this.onBlur}
-                onFocus={this.onFocus}
-                id={this.state.settings.position_css_id}
-              />
-              {isClearable && (
-                <button
-                  className="input-clear-btn"
-                  onClick={() => this.setState({ value: this.defaultValue })}
-                >
-                  ✖
-                </button>
-              )}
-            </div>
-          </React.Suspense>
+          <div className="altrp-input-wrapper">
+            <AltrpInput
+              type={this.state.settings.content_type}
+              name={this.getName()}
+              value={value || ""}
+              element={this.props.element}
+              readOnly={content_readonly}
+              autoComplete={autocomplete}
+              placeholder={this.state.settings.content_placeholder}
+              className={
+                "altrp-field " + this.state.settings.position_css_classes
+              }
+              settings={this.props.element.getSettings()}
+              onKeyDown={this.handleEnter}
+              onChange={this.onChange}
+              onBlur={this.onBlur}
+              onFocus={this.onFocus}
+              id={this.state.settings.position_css_id}
+            />
+            {isClearable && (
+              <button
+                className="input-clear-btn"
+                onClick={() => this.setState({ value: this.defaultValue })}
+              >
+                ✖
+              </button>
+            )}
+          </div>
         );
       }
     }
@@ -1284,16 +1285,14 @@ class InputWidget extends Component {
 
   renderWysiwyg() {
     return (
-      <Suspense fallback={<div>Загрузка...</div>}>
-        <CKeditor
-          onChange={this.onChange}
-          onBlur={this.onBlur}
-          changeText={this.dispatchFieldValueToStore}
-          text={this.getContent("content_default_value")}
-          name={this.getName()}
-          readOnly={this.getContent("read_only")}
-        />
-      </Suspense>
+      <CKeditor
+        onChange={this.onChange}
+        onBlur={this.onBlur}
+        changeText={this.dispatchFieldValueToStore}
+        text={this.getContent("content_default_value")}
+        name={this.getName()}
+        readOnly={this.getContent("read_only")}
+      />
     );
   }
 }
