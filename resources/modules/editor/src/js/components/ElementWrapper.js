@@ -33,6 +33,7 @@ import MapConstructorComponent from "./widgets/styled-components/MapConstructorC
 import MapComponent from "./widgets/styled-components/MapComponent";
 import DiagramComponent from "./widgets/styled-components/DiagramComponent";
 import DashboardComponent from "./widgets/styled-components/DashboardComponent";
+import FormComponent from "./widgets/styled-components/FormComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -407,7 +408,7 @@ class ElementWrapper extends Component {
         break;
       case "breadcrumbs":
         WrapperComponent = BreadcrumbsComponent;
-      break;
+        break;
       case "map_builder":
         WrapperComponent = MapConstructorComponent;
         break;

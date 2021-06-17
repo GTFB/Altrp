@@ -137,16 +137,16 @@ class Input extends BaseElement {
       type: CONTROLLER_TEXT,
       label: "Accept Checked Value",
       conditions: {
-        content_type: ["accept",]
-      },
+        content_type: ["accept"]
+      }
     });
 
     this.addControl("accept_unchecked", {
       type: CONTROLLER_TEXT,
       label: "Accept Unchecked Value",
       conditions: {
-        content_type: ["accept",]
-      },
+        content_type: ["accept"]
+      }
     });
 
     this.addControl("invalid_email_message", {
@@ -159,10 +159,7 @@ class Input extends BaseElement {
       type: CONTROLLER_SWITCHER,
       label: "Sort Default",
       conditions: {
-        content_type: [
-          "select",
-          "select2",
-        ]
+        content_type: ["select", "select2"]
       }
     });
 
@@ -187,10 +184,7 @@ class Input extends BaseElement {
           value: "vertical"
         }
       ],
-      conditions: { content_type: ["textarea"] },
-      rules: {
-        "{{ELEMENT}} .altrp-field": "resize: {{VALUE}};"
-      }
+      conditions: { content_type: ["textarea"] }
     });
 
     this.addControl("justify_options", {
@@ -224,9 +218,6 @@ class Input extends BaseElement {
       ],
       conditions: {
         content_type: ["image_select"]
-      },
-      rules: {
-        "{{ELEMENT}} .altrp-image-select": "justify-content: {{VALUE}};"
       }
     });
 
@@ -266,10 +257,6 @@ class Input extends BaseElement {
       default: { unit: "px" },
       conditions: {
         content_type: ["image_select"]
-      },
-      rules: {
-        "{{ELEMENT}} .altrp-image-select>.altrp-field{{STATE}}":
-          "width: {{SIZE}}{{UNIT}};"
       }
     });
 
@@ -281,14 +268,11 @@ class Input extends BaseElement {
       units: ["px", "%", "vh"],
       default: { unit: "px" },
       conditions: {
-        'content_type': ['image_select']
-      },
-      rules: {
-        "{{ELEMENT}} .altrp-image-select>.altrp-field{{STATE}}": 'height: {{SIZE}}{{UNIT}};'
+        content_type: ["image_select"]
       }
     });
 
-    this.addControl('image_select_image_fit', {
+    this.addControl("image_select_image_fit", {
       type: CONTROLLER_SELECT,
       options: [
         {
@@ -319,9 +303,6 @@ class Input extends BaseElement {
       label: "Background Size",
       conditions: {
         content_type: ["image_select"]
-      },
-      rules: {
-        "{{ELEMENT}} .altrp-image-select img{{STATE}}": "object-fit: {{VALUE}};"
       }
     });
 
@@ -368,14 +349,10 @@ class Input extends BaseElement {
       label: "Background Position",
       conditions: {
         content_type: ["image_select"]
-      },
-      rules: {
-        "{{ELEMENT}} .altrp-image-select img{{STATE}}":
-          "object-position: {{VALUE}};"
       }
     });
 
-    this.addControl('content_accept', {
+    this.addControl("content_accept", {
       type: CONTROLLER_TEXT,
       label: "Accept",
       conditions: {
@@ -416,39 +393,36 @@ class Input extends BaseElement {
       ]
     });
 
-    this.addControl('label_icon', {
+    this.addControl("label_icon", {
       type: CONTROLLER_MEDIA,
-      label: 'Choose Icon',
+      label: "Choose Icon"
     });
 
-    this.addControl('label_icon_position', {
+    this.addControl("label_icon_position", {
       type: CONTROLLER_SELECT,
-      label: 'Icon Position',
-      default: 'default',
+      label: "Icon Position",
+      default: "default",
       options: [
         {
-          value: 'row',
-          label: 'Right'
+          value: "row",
+          label: "Right"
         },
         {
-          value: 'row-reverse',
-          label: 'Left'
+          value: "row-reverse",
+          label: "Left"
         },
         {
-          value: 'column',
-          label: 'Bottom'
+          value: "column",
+          label: "Bottom"
         },
         {
-          value: 'column-reverse',
-          label: 'Top'
-        },
-      ],
-      rules: {
-        '{{ELEMENT}} .altrp-field-label-container{{STATE}}': 'flex-direction: {{VALUE}};'
-      },
+          value: "column-reverse",
+          label: "Top"
+        }
+      ]
     });
 
-    this.addControl('content_placeholder', {
+    this.addControl("content_placeholder", {
       type: CONTROLLER_TEXT,
       label: "Placeholder",
       default: "Placeholder"
@@ -466,7 +440,7 @@ class Input extends BaseElement {
       type: CONTROLLER_TEXT,
       label: "Validation Error Message",
       conditions: {
-        content_type: ["text", "tel", "email"],
+        content_type: ["text", "tel", "email"]
       }
     });
 
@@ -674,11 +648,11 @@ class Input extends BaseElement {
 
     this.endControlSection();
 
-    actionsControllers(this, 'Blur Actions');
-    
-    actionsControllers(this, 'Focus Actions', 'focus_');
+    actionsControllers(this, "Blur Actions");
 
-    actionsControllers(this, 'Change Actions', 'change_');
+    actionsControllers(this, "Focus Actions", "focus_");
+
+    actionsControllers(this, "Change Actions", "change_");
 
     // this.startControlSection('logic_section', {
     //   tab: TAB_CONTENT,
@@ -780,10 +754,6 @@ class Input extends BaseElement {
       default: {
         color: "",
         colorPickedHex: ""
-      },
-      rules: {
-        "{{ELEMENT}} .altrp-field-label-container{{STATE}}":
-          "background-color: {{COLOR}};"
       }
     });
 
@@ -791,21 +761,9 @@ class Input extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        // top: 2,
-        // right: 2,
-        // bottom: 2,
-        // left: 2,
         unit: "px"
       },
-      units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-field-label-container{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
+      units: ["px", "%", "vh"]
     });
 
     this.addControl("label_style_font_color", {
@@ -814,35 +772,12 @@ class Input extends BaseElement {
       default: {
         color: "",
         colorPickedHex: ""
-      },
-      rules: {
-        "{{ELEMENT}} .altrp-field-label{{STATE}}": "color: {{COLOR}};"
       }
     });
 
     this.addControl("label_style_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic",
-      // default:{
-      //   lineHeight: 1.5,
-      //   spacing: 0,
-      //   size: 16,
-      //   weight: "normal",
-      //   family: "Open Sans",
-      //   decoration: ""
-      // },
-      rules: {
-        "{{ELEMENT}} .altrp-field-label{{STATE}}": [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          "font-size: {{SIZE}}px;",
-          "line-height: {{LINEHEIGHT}};",
-          "letter-spacing: {{SPACING}}px",
-          "font-weight: {{WEIGHT}}",
-          "text-transform: {{TRANSFORM}}",
-          "font-style: {{STYLE}}",
-          "text-decoration: {{DECORATION}}"
-        ]
-      }
+      label: "Typographic"
     });
 
     this.addControl("label_position_top", {
@@ -857,11 +792,11 @@ class Input extends BaseElement {
       },
       units: ["px", "%", "vh"],
       max: 100,
-      min: -100,
-      rules: {
-        "{{ELEMENT}} .altrp-field-label-container{{STATE}}":
-          "top: {{SIZE}}{{UNIT}};"
-      }
+      min: -100
+      // rules: {
+      //   "{{ELEMENT}} .altrp-field-label-container{{STATE}}":
+      //     "top: {{SIZE}}{{UNIT}};"
+      // }
     });
 
     this.addControl("label_position_left", {
@@ -876,11 +811,11 @@ class Input extends BaseElement {
       },
       units: ["px", "%", "vh"],
       max: 100,
-      min: -100,
-      rules: {
-        "{{ELEMENT}} .altrp-field-label-container{{STATE}}":
-          "left: {{SIZE}}{{UNIT}};"
-      }
+      min: -100
+      // rules: {
+      //   "{{ELEMENT}} .altrp-field-label-container{{STATE}}":
+      //     "left: {{SIZE}}{{UNIT}};"
+      // }
     });
 
     this.addControl("label_width", {
@@ -890,60 +825,42 @@ class Input extends BaseElement {
         unit: "%",
         size: null
       },
-      units: ["%", "px", "vw",],
+      units: ["%", "px", "vw"],
       max: 100,
-      min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-field-label-container{{STATE}}":
-          "width: {{SIZE}}%; flex-shrink: 0;"
-      }
+      min: 0
     });
 
-    this.addControl('icon_padding', {
+    this.addControl("icon_padding", {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Icon Padding',
-      units: ['px', '%', 'vh', 'vw'],
-      rules: {
-        '{{ELEMENT}} .altrp-label-icon{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
+      label: "Icon Padding",
+      units: ["px", "%", "vh", "vw"]
     });
 
-    this.addControl('icon_color', {
+    this.addControl("icon_color", {
       type: CONTROLLER_COLOR,
-      label: 'Icon color',
-      rules: {
-        '{{ELEMENT}} .altrp-label-icon{{STATE}} path': 'fill: {{COLOR}};',
-      },
+      label: "Icon color"
+      // rules: {
+      //   "{{ELEMENT}} .altrp-label-icon{{STATE}} path": "fill: {{COLOR}};"
+      // }
     });
 
-    this.addControl('icon_color_background', {
+    this.addControl("icon_color_background", {
       type: CONTROLLER_COLOR,
-      label: 'Background Color',
-      rules: {
-        '{{ELEMENT}} .altrp-label-icon{{STATE}} svg': 'background: {{COLOR}};',
-      },
-    }
-    );
+      label: "Background Color"
+      // rules: {
+      //   "{{ELEMENT}} .altrp-label-icon{{STATE}} svg": "background: {{COLOR}};"
+      // }
+    });
 
-    this.addControl('icon_size', {
+    this.addControl("icon_size", {
       type: CONTROLLER_SLIDER,
-      label: 'Icon Size',
-      units: ['px', '%', 'vh', 'vw'],
+      label: "Icon Size",
+      units: ["px", "%", "vh", "vw"],
       max: 100,
-      min: 0,
-      rules: {
-        '{{ELEMENT}} .altrp-label-icon{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .altrp-label-icon svg{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-        '{{ELEMENT}} .altrp-label-icon img{{STATE}}': 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-      },
+      min: 0
     });
 
-    this.addControl('cross_color', {
+    this.addControl("cross_color", {
       type: CONTROLLER_COLOR,
       label: "Cross Color",
       default: {
@@ -952,9 +869,6 @@ class Input extends BaseElement {
       },
       conditions: {
         content_clearable: [true]
-      },
-      rules: {
-        "{{ELEMENT}} .input-clear-btn{{STATE}}": "color: {{COLOR}};"
       }
     });
 
@@ -969,10 +883,10 @@ class Input extends BaseElement {
         content_clearable: [true]
       },
       max: 50,
-      min: 0,
-      rules: {
-        "{{ELEMENT}} .input-clear-btn{{STATE}}": "font-size: {{SIZE}}px;"
-      }
+      min: 0
+      // rules: {
+      //   "{{ELEMENT}} .input-clear-btn{{STATE}}": "font-size: {{SIZE}}px;"
+      // }
     });
 
     this.endControlSection();
@@ -984,47 +898,7 @@ class Input extends BaseElement {
 
     this.addControl("field_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic",
-      // default: {
-      //   lineHeight: 1.5,
-      //   spacing: 0,
-      //   size: 16,
-      //   weight: "normal",
-      //   family: "Open Sans",
-      //   decoration: ""
-      // },
-      rules: {
-        "{{ELEMENT}} .altrp-field-select2__single-value{{STATE}}": [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          "font-size: {{SIZE}}px;",
-          "line-height: {{LINEHEIGHT}};",
-          "letter-spacing: {{SPACING}}px;",
-          "font-weight: {{WEIGHT}};",
-          "text-transform: {{TRANSFORM}};",
-          "font-style: {{STYLE}};",
-          "text-decoration: {{DECORATION}};"
-        ],
-        "{{ELEMENT}} .altrp-field{{STATE}}": [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          "font-size: {{SIZE}}px;",
-          "line-height: {{LINEHEIGHT}};",
-          "letter-spacing: {{SPACING}}px;",
-          "font-weight: {{WEIGHT}};",
-          "text-transform: {{TRANSFORM}};",
-          "font-style: {{STYLE}};",
-          "text-decoration: {{DECORATION}};"
-        ],
-        "{{ELEMENT}} .altrp-image-select__label{{STATE}}": [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          "font-size: {{SIZE}}px;",
-          "line-height: {{LINEHEIGHT}};",
-          "letter-spacing: {{SPACING}}px;",
-          "font-weight: {{WEIGHT}};",
-          "text-transform: {{TRANSFORM}};",
-          "font-style: {{STYLE}};",
-          "text-decoration: {{DECORATION}};"
-        ]
-      }
+      label: "Typographic"
     });
 
     this.addControl("field_font_color", {
@@ -1033,12 +907,6 @@ class Input extends BaseElement {
       default: {
         color: "",
         colorPickedHex: ""
-      },
-      rules: {
-        "{{ELEMENT}} .altrp-field-select2__single-value{{STATE}}":
-          "color : {{COLOR}};",
-        "{{ELEMENT}} .altrp-field{{STATE}}": "color : {{COLOR}};",
-        "{{ELEMENT}} .altrp-image-select__label{{STATE}}": "color : {{COLOR}};"
       }
     });
 
@@ -1054,10 +922,7 @@ class Input extends BaseElement {
       label: "Width",
       max: 500,
       min: 0,
-      units: ["px", "%", "vw"],
-      rules: {
-        "{{ELEMENT}} .altrp-input-wrapper": "width: {{SIZE}}{{UNIT}}"
-      }
+      units: ["px", "%", "vw"]
     });
 
     this.addControl("placeholder_and_value_alignment_position_section", {
@@ -1076,14 +941,7 @@ class Input extends BaseElement {
           icon: "right",
           value: "right"
         }
-      ],
-      rules: {
-        "{{ELEMENT}} .altrp-field{{STATE}}": "text-align: {{VALUE}};",
-        "{{ELEMENT}} .altrp-field-select2__control{{STATE}}":
-          "text-align: {{VALUE}};",
-        "{{ELEMENT}} .altrp-image-select__label{{STATE}}":
-          "text-align: {{VALUE}};"
-      }
+      ]
     });
 
     this.addControl("position_margin", {
@@ -1092,53 +950,22 @@ class Input extends BaseElement {
       default: {
         unit: "px"
       },
-      units: ["px", "%", "vh"],
-      rules: {
-        '{{ELEMENT}} .altrp-field-container{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ],
-        '{{ELEMENT}} .altrp-image-select{{STATE}}': [
-          'margin-right: -{{RIGHT}}{{UNIT}};',
-          'margin-left: -{{LEFT}}{{UNIT}};'
-        ]
-      }
+      units: ["px", "%", "vh"]
     });
 
     this.addControl("position_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        unit: 'px'
+        unit: "px"
       },
-      units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-field{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ],
-        "{{ELEMENT}} .altrp-field-select2__control{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
+      units: ["px", "%", "vh"]
     });
 
     this.addControl("position_z_index", {
       type: CONTROLLER_NUMBER,
       label: "Z-index",
-      default: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-field{{STATE}}": "z-index: {{VALUE}}",
-        "{{ELEMENT}} .altrp-field-select2__control{{STATE}}":
-          "z-index: {{VALUE}}"
-      }
+      default: 0
     });
 
     this.addControl("position_css_id", {
@@ -1157,56 +984,24 @@ class Input extends BaseElement {
       tab: TAB_STYLE,
       label: "Placeholder",
       conditions: {
-        "content_type!": ["image_select", "hidden", "radio", "checkbox", "select"]
+        "content_type!": [
+          "image_select",
+          "hidden",
+          "radio",
+          "checkbox",
+          "select"
+        ]
       }
     });
 
     this.addControl("placeholder_style_font_color", {
       type: CONTROLLER_COLOR,
-      label: "font color",
-      rules: {
-        "{{ELEMENT}} .altrp-field::placeholder{{STATE}}": "color: {{COLOR}};",
-        "{{ELEMENT}} .altrp-field-select2__placeholder{{STATE}}":
-          "color: {{COLOR}};",
-        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}": "color: {{COLOR}};",
-      }
+      label: "font color"
     });
 
     this.addControl("placeholder_style_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic",
-      rules: {
-        "{{ELEMENT}} .altrp-field::placeholder{{STATE}}": [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          "font-size: {{SIZE}}px;",
-          "line-height: {{LINEHEIGHT}};",
-          "letter-spacing: {{SPACING}}px",
-          "font-weight: {{WEIGHT}}",
-          "text-transform: {{TRANSFORM}}",
-          "font-style: {{STYLE}}",
-          "text-decoration: {{DECORATION}}"
-        ],
-        "{{ELEMENT}} .altrp-field-select2__placeholder{{STATE}}": [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          "font-size: {{SIZE}}px;",
-          "line-height: {{LINEHEIGHT}};",
-          "letter-spacing: {{SPACING}}px",
-          "font-weight: {{WEIGHT}}",
-          "text-transform: {{TRANSFORM}}",
-          "font-style: {{STYLE}}",
-          "text-decoration: {{DECORATION}}"
-        ],
-        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}": [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          "font-size: {{SIZE}}px;",
-          "line-height: {{LINEHEIGHT}};",
-          "letter-spacing: {{SPACING}}px",
-          "font-weight: {{WEIGHT}}",
-          "text-transform: {{TRANSFORM}}",
-          "font-style: {{STYLE}}",
-          "text-decoration: {{DECORATION}}"
-        ]
-      }
+      label: "Typographic"
     });
 
     this.endControlSection();
@@ -1218,11 +1013,7 @@ class Input extends BaseElement {
 
     this.addControl("required_style_font_color", {
       type: CONTROLLER_COLOR,
-      label: "font color",
-      rules: {
-        "{{ELEMENT}} .altrp-field-label--required::after{{STATE}}":
-          "color: {{COLOR}};"
-      }
+      label: "font color"
     });
 
     this.addControl("required_style_font_typographic", {
@@ -1235,18 +1026,6 @@ class Input extends BaseElement {
         weight: "normal",
         family: "Open Sans",
         decoration: ""
-      },
-      rules: {
-        "{{ELEMENT}} .altrp-field-label--required::after{{STATE}}": [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          "font-size: {{SIZE}}px;",
-          "line-height: {{LINEHEIGHT}};",
-          "letter-spacing: {{SPACING}}px",
-          "font-weight: {{WEIGHT}}",
-          "text-transform: {{TRANSFORM}}",
-          "font-style: {{STYLE}}",
-          "text-decoration: {{DECORATION}}"
-        ]
       }
     });
 
@@ -1266,29 +1045,19 @@ class Input extends BaseElement {
 
     this.addControl("background_style_background_color", {
       type: CONTROLLER_COLOR,
-      label: "Background Color",
-      rules: {
-        "{{ELEMENT}} .altrp-field{{STATE}}": "background-color: {{COLOR}};",
-        "{{ELEMENT}} .altrp-field-select2__control{{STATE}}":
-          "background-color: {{COLOR}};",
-        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}": "background-color: {{COLOR}};",
-      }
+      label: "Background Color"
     });
 
     this.addControl("option_background_color", {
       type: CONTROLLER_COLOR,
       conditions: {
-        "content_type": "select2"
+        content_type: "select2"
       },
       label: "Option Background Color",
       default: {
         color: "#FFF",
         colorPickedHex: "#FFF"
-      },
-      rules: {
-        ".{{ID}}.altrp-field-select2__option{{STATE}}":
-          "background-color: {{COLOR}};"
-      },
+      }
     });
 
     this.addControl("option_focused_background_color", {
@@ -1298,11 +1067,7 @@ class Input extends BaseElement {
         color: "#DEEBFF",
         colorPickedHex: "#DEEBFF"
       },
-      conditions: { content_type: ["select2"] },
-      rules: {
-        ".{{ID}}.altrp-field-select2__option.altrp-field-select2__option--is-focused{{STATE}}":
-          "background-color: {{COLOR}};"
-      }
+      conditions: { content_type: ["select2"] }
     });
 
     this.addControl("option_selected_background_color", {
@@ -1312,11 +1077,7 @@ class Input extends BaseElement {
         color: "#2684FF",
         colorPickedHex: "#2684FF"
       },
-      conditions: { content_type: ["select2"] },
-      rules: {
-        ".{{ID}}.altrp-field-select2__option.altrp-field-select2__option--is-selected{{STATE}}":
-          "background-color: {{COLOR}};"
-      }
+      conditions: { content_type: ["select2"] }
     });
 
     this.addControl("background_section_opacity", {
@@ -1327,10 +1088,7 @@ class Input extends BaseElement {
       },
       max: 1,
       min: 0,
-      step: 0.01,
-      rules: {
-        "{{ELEMENT}}": "opacity: {{SIZE}}"
-      }
+      step: 0.01
     });
 
     this.endControlSection();
@@ -1368,48 +1126,18 @@ class Input extends BaseElement {
           value: "groove",
           label: "Groove"
         }
-      ],
-      rules: {
-        "{{ELEMENT}} .altrp-field{{STATE}}": "border-style: {{VALUE}};",
-        "{{ELEMENT}} .altrp-field-select2__control{{STATE}}":
-          "border-style: {{VALUE}};",
-        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}": "border-style: {{VALUE}};"
-      }
+      ]
     });
 
     this.addControl("border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
-      units: ["px", "%", "vh"],
-      // default: {
-      //   top: 2,
-      //   right: 2,
-      //   bottom: 2,
-      //   left: 2
-      // },
-      rules: {
-        "{{ELEMENT}} .altrp-field{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};",
-        "{{ELEMENT}} .altrp-field-select2__control{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};",
-        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};",
-      }
+      units: ["px", "%", "vh"]
     });
 
     this.addControl("border_color", {
       type: CONTROLLER_COLOR,
-      label: "Border Color",
-      // default: {
-      //   color: "rgb(142,148,170)",
-      //   colorPickedHex: "#8E94AA",
-      // },
-      rules: {
-        "{{ELEMENT}} .altrp-field{{STATE}}": "border-color: {{COLOR}};",
-        "{{ELEMENT}} .altrp-field-select2__control{{STATE}}":
-          "border-color: {{COLOR}};",
-        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}": "border-color: {{COLOR}};",
-      }
+      label: "Border Color"
     });
 
     this.addControl("box_shadow", {
@@ -1425,14 +1153,6 @@ class Input extends BaseElement {
         color: "rgb(0, 0, 0)",
         colorPickedHex: "#000000",
         type: " "
-      },
-      rules: {
-        "{{ELEMENT}} .altrp-field{{STATE}}":
-          "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};",
-        "{{ELEMENT}} .altrp-field-select2__control{{STATE}}":
-          "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};",
-        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}":
-          "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};",
       }
     });
 
@@ -1440,24 +1160,9 @@ class Input extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Radius",
       default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
         unit: "px"
       },
-      units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-field{{STATE}}": [
-          "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-        ],
-        "{{ELEMENT}} .altrp-field-select2__control{{STATE}}": [
-          "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-        ],
-        "{{ELEMENT}} .altrp-field-file__placeholder{{STATE}}": [
-          "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-        ]
-      }
+      units: ["px", "%", "vh"]
     });
 
     this.endControlSection();
@@ -1473,8 +1178,8 @@ class Input extends BaseElement {
       tab: TAB_STYLE,
       label: "Radio Checkbox Styles",
       conditions: {
-        "content_type!": "select",
-      },
+        "content_type!": "select"
+      }
     });
 
     this.addControl("input_position", {
@@ -1498,10 +1203,7 @@ class Input extends BaseElement {
           value: "column-reverse"
         }
       ],
-      default: "left",
-      rules: {
-        "{{ELEMENT}} .altrp-field-option{{STATE}}": "flex-direction:{{VALUE}};"
-      }
+      default: "left"
     });
 
     this.endControlSection();
@@ -1516,55 +1218,24 @@ class Input extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
       default: { unit: "px" },
-      units: ["px", "%", "vh", "vw"],
-      rules: {
-        "{{ELEMENT}} .mask-mismatch-message{{STATE}}": [
-          "margin-top: {{TOP}}{{UNIT}};",
-          "margin-right: {{RIGHT}}{{UNIT}};",
-          "margin-bottom: {{BOTTOM}}{{UNIT}};",
-          "margin-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
+      units: ["px", "%", "vh", "vw"]
     });
 
     this.addControl("mismatch_message_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: { unit: "px" },
-      units: ["px", "%", "vh", "vw"],
-      rules: {
-        "{{ELEMENT}} .mask-mismatch-message{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
+      units: ["px", "%", "vh", "vw"]
     });
 
     this.addControl("mismatch_message_font_color", {
       type: CONTROLLER_COLOR,
-      label: "Font Color",
-      rules: {
-        "{{ELEMENT}} .mask-mismatch-message{{STATE}}": "color: {{COLOR}};"
-      }
+      label: "Font Color"
     });
 
     this.addControl("mismatch_message_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic",
-      rules: {
-        "{{ELEMENT}} .mask-mismatch-message{{STATE}}": [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          "font-size: {{SIZE}}px;",
-          "line-height: {{LINEHEIGHT}};",
-          "letter-spacing: {{SPACING}}px",
-          "font-weight: {{WEIGHT}}",
-          "text-transform: {{TRANSFORM}}",
-          "font-style: {{STYLE}}",
-          "text-decoration: {{DECORATION}}"
-        ]
-      }
+      label: "Typographic"
     });
 
     this.endControlSection();
