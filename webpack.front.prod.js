@@ -3,13 +3,38 @@ const common = require('./webpack.front.common.js');
 const path = require("path");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require("webpack");
+const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 
 
-module.exports = merge(common, {
+// module.exports = merge(common, {
+module.exports ={
   mode: 'production',
-  devtool: 'source-map',
+  entry: {
+    'front-app':"./resources/modules/front-app/src/index.js",
+    // 'sw': "./resources/modules/front-app/src/js/sw/sw.js",
+  },
+  // devtool: 'source-map',
   module: {
     rules: [
+      {
+        test: /\.css$/,
+        // loader: "css-loader",
+        use: [
+          // Creates `style` nodes from JS strings
+          "style-loader",
+          // Translates CSS into CommonJS
+          "css-loader"
+        ]
+      },
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: "babel-loader",
+        options: {
+          presets: ["@babel/env", "@babel/preset-react"],
+          plugins: ["@babel/plugin-syntax-jsx", "inline-react-svg"]
+        }
+      },
       // {
       //   test: /\.(js|jsx)$/,
       //   use: 'react-hot-loader/webpack',
@@ -23,6 +48,18 @@ module.exports = merge(common, {
         //   fallback: 'style-loader',
         //   use: ['css-loader', 'sass-loader'],
         // }),
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
+        loader: "file-loader",
+        options: {
+          name: "[path][name].[ext]"
+        }
+      },
+
+      {
+        test: /(\.(woff|woff2|eot|ttf|otf)|slick.svg|spritesheet.svg)$/,
+        use: ["file-loader"]
       }
     ]
   },
@@ -37,7 +74,7 @@ module.exports = merge(common, {
 
   plugins: [
     // new webpack.HotModuleReplacementPlugin(),
-    // new CleanWebpackPlugin(),
+    new CleanWebpackPlugin(),
     // new ExtractTextPlugin('style.css'),
     new MiniCssExtractPlugin({
       chunkFilename: "[chunkhash].front-app.css",
@@ -53,13 +90,6 @@ module.exports = merge(common, {
     //   filename: '[name].css',
     //   chunkFilename: '[id].css',
     // }),
-  ],
-  // optimization: {
-  //   splitChunks: {
-  //     chunks: 'all',
-  //     cacheGroups: {
-  //       defaultVendors: false,
-  //     },
-  //   },
-  // }
-});
+  ]
+}
+
