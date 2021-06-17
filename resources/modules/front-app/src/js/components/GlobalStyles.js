@@ -12,6 +12,7 @@ import ColumnComponent from "../../../../editor/src/js/components/widgets/styled
 import DropbarWidgetComponent
   from "../../../../editor/src/js/components/widgets/styled-components/DropbarWidgetComponent";
 import FormComponent from "../../../../editor/src/js/components/widgets/styled-components/FormComponent";
+import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 
 const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
   let styles = "";

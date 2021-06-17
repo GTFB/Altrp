@@ -2,32 +2,35 @@ console.log('FIRST SCRIPT: ', performance.now());
 import  queryString from 'query-string';
 import WIDGETS_DEPENDS from "./js/constants/WIDGETS_DEPENDS";
 import  "./js/functions/mount-elements";
-import  './js/classes/FrontElementsManager';
-import  './js/classes/FrontElementsFabric';
-import  './js/libs/react-lodash';
-import  "./js/functions/mount-elements";
 import {setScrollValue} from "./js/store/scroll-position/actions";
-import styled,  { ServerStyleSheet, createGlobalStyle } from "styled-components";
-const sheet = new ServerStyleSheet();
-console.log(sheet);
-import (/* webpackChunkName: 'SimpleElementWrapper' */'./js/components/SimpleElementWrapper').then(module => {
-  window.ElementWrapper = module.default;
-  console.log('LOAD SimpleElementWrapper: ', performance.now());
-  loadingCallback();
-});
 
-import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
-  window.currentRouterMatch = new window.AltrpModel({
-    params:queryString.parseUrl(window.location.href).query
-  });
-  loadingCallback();
-  loadDatastorageUpdater();
-})
-window.frontElementsManager.loadComponents()
-  .then(async components => {
-    console.log('LOAD FrontElementsManager: ', performance.now());
+import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElementsManager').then(module => {
+  import (/* webpackChunkName: 'FrontElementsFabric' */'./js/classes/FrontElementsFabric').then(module => {
+    console.log('LOAD FrontElementsFabric: ', performance.now());
     loadingCallback();
   });
+  return window.frontElementsManager.loadComponents();
+}).then(async components => {
+  console.log('LOAD FrontElementsManager: ', performance.now());
+  loadingCallback();
+});
+import (/* webpackChunkName: 'React_Lodash' */'./js/libs/react-lodash').then(module => {
+  console.log('LOAD React_Lodash: ', performance.now());
+  import (/* webpackChunkName: 'SimpleElementWrapper' */'./js/components/SimpleElementWrapper').then(module => {
+    window.ElementWrapper = module.default;
+    console.log('LOAD SimpleElementWrapper: ', performance.now());
+    loadingCallback();
+  });
+  import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
+    window.currentRouterMatch = new window.AltrpModel({
+      params:queryString.parseUrl(window.location.href).query
+    });
+    console.log(window.altrpHelpers.replaceContentWithData);
+    loadingCallback();
+    loadDatastorageUpdater();
+  })
+});
+
 
 function loadDatastorageUpdater(){
   import(/* webpackChunkName: 'DatastorageUpdater' */'./js/classes/modules/DatastorageUpdater').then(module => {
@@ -50,6 +53,7 @@ function loadingCallback() {
     && window.ElementWrapper
     // && window.formsManager
     && window.altrpHelpers
+    && window.altrpHelpers.replaceContentWithData
     && window.appStore
     && window._
     /**

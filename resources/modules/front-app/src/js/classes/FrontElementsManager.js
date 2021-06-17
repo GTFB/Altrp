@@ -281,21 +281,16 @@ class FrontElementsManager {
       //     await el.import()
       //   ).default);
       // });
-      // componentsToLoad = componentsToLoad.map(el => {
-      //   console.log(el.name, performance.now());
-      //   return new Promise((resolve, reject) => {
-      //     el.import().then(res=>{
-      //       console.log(el.name, performance.now());
-      //       this.components[el.name] = res.default
-      //       resolve(res);
-      //     })
-      //   })
-      // });
-      for (let el of componentsToLoad){
-          console.log(el.name, performance.now());
-        this.components[el.name] = (await el.import()).default;
-          console.log(el.name, performance.now());
-      }
+      componentsToLoad = componentsToLoad.map(el => {
+        console.log(el.name, performance.now());
+        return new Promise((resolve, reject) => {
+          el.import().then(res=>{
+            console.log(el.name, performance.now());
+            this.components[el.name] = res.default
+            resolve(res);
+          })
+        })
+      });
     } else {
       componentsToLoad = this.ELEMENTS.map(async el => {
         return (this.components[el.name] = (
@@ -303,9 +298,8 @@ class FrontElementsManager {
         ).default);
       });
     }
-    console.log( performance.now());
-    // return await Promise.all(componentsToLoad);
-    return true;
+    return await Promise.all(componentsToLoad);
+    // return true;
   }
 
   /**

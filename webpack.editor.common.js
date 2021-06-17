@@ -87,6 +87,7 @@ module.exports = {
     chunkFilename: "[chunkhash].bundle.js",
     filename: "bundle.js",
   },
+
   devServer: {
     contentBase: path.join(__dirname, "public/"),
     port: 3000,
@@ -99,6 +100,11 @@ module.exports = {
     hotOnly: true,
   },
   plugins: [
+
+    new webpack.DefinePlugin({
+      "process.env": "{}",
+      global: {}
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new CleanWebpackPlugin(),
     // new ExtractTextPlugin('style.css'),

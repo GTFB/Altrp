@@ -1,5 +1,4 @@
 import FrontElement from "./FrontElement";
-console.error('test');
 class FrontElementsFabric {
   /**
    * парсим данные шаблона
