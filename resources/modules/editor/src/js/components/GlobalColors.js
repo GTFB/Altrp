@@ -198,7 +198,7 @@ class GlobalColors extends Component {
         {this.state.colors.length > 0 ? (
           this.state.colors.map(item => {
             return (
-              <>
+              <React.Fragment key={item.id}>
                 <ControlGroup
                   key={item.id}
                   style={{
@@ -244,7 +244,7 @@ class GlobalColors extends Component {
                     }}
                   ></SketchPicker>
                 </div>
-              </>
+              </React.Fragment>
             );
           })
         ) : (

@@ -84,11 +84,32 @@ class GlobalTemplateStylesController extends Controller
                 $data['colorRGB'] = $request->settings['colorRGB'] ?? $data['colorRGB'];
                 $style->settings = json_encode($data);
                 break;
+            case 'effect':
+                $data = $style->settings;
+                $data['name'] = $request->settings['name'] ?? $data['name'];
+                $data['color'] = $request->settings['color'] ?? $data['color'];
+                $data['colorPickedHex'] = $request->settings['colorPickedHex'] ?? $data['colorPickedHex'];
+                $data['colorRGB'] = $request->settings['colorRGB'] ?? $data['colorRGB'];
+                $data['blur'] = $request->settings['blur'] ?? $data['blur'];
+                $data['horizontal'] = $request->settings['horizontal'] ?? $data['horizontal'];
+                $data['opacity'] = $request->settings['opacity'] ?? $data['opacity'];
+                $data['spread'] = $request->settings['spread'] ?? $data['spread'];
+                $data['type'] = $request->settings['type'] ?? $data['type'];
+                $data['vertical'] = $request->settings['vertical'] ?? $data['vertical'];
+                $style->settings = json_encode($data);
             case 'font':
-                //...implementation
-            default:
-                # code...
-                break;
+                $data = $style->settings;
+                $data['name'] = $request->settings['name'] ?? $data['name'];
+                $data['color'] = $request->settings['color'] ?? $data['color'];
+                $data['colorPickedHex'] = $request->settings['colorPickedHex'] ?? $data['colorPickedHex'];
+                $data['colorRGB'] = $request->settings['colorRGB'] ?? $data['colorRGB'];
+                $data['blur'] = $request->settings['blur'] ?? $data['blur'];
+                $data['horizontal'] = $request->settings['horizontal'] ?? $data['horizontal'];
+                $data['opacity'] = $request->settings['opacity'] ?? $data['opacity'];
+                $data['spread'] = $request->settings['spread'] ?? $data['spread'];
+                $data['type'] = $request->settings['type'] ?? $data['type'];
+                $data['vertical'] = $request->settings['vertical'] ?? $data['vertical'];
+                $style->settings = json_encode($data);
         }
         if (!$style->save()) {
             return response()->json(['message' => 'Save failed'], 409);
