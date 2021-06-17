@@ -3,6 +3,7 @@ const common = require('./webpack.editor.common.js');
 const path = require("path");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const webpack = require("webpack");
 
 module.exports = merge(common, {
   mode: 'production',
@@ -43,6 +44,10 @@ module.exports = merge(common, {
       chunkFilename: '[chunkhash].editor.css',
 
       filename: 'editor.css',
+    }),
+    new webpack.DefinePlugin({
+      "process.env": "{}",
+      global: {}
     }),
     new CopyWebpackPlugin({
       patterns: [

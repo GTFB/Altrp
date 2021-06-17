@@ -1,6 +1,4 @@
-import styled from 'styled-components';
-import { getResponsiveSetting } from '../helpers';
-import { shadowControllerToStyles, dimensionsControllerToStyles } from '../helpers/styles';
+
 
 const AdminBarWrapper = styled.div`
 & .admin-bar {
@@ -142,7 +140,7 @@ const AdminBarWrapper = styled.div`
   width: 223px;
   padding: 7px 0;
 
-  
+
   z-index: 1000;
   box-shadow: 0px 1px 2px 1px rgba(34, 60, 80, .3);
   background-color: #ffffff;
@@ -208,15 +206,15 @@ const AdminBarWrapper = styled.div`
   background: #F4F4F4;
 }
 & .admin-bar__search-content::-webkit-scrollbar-track {
-  background: #f1f1f1; 
-} 
+  background: #f1f1f1;
+}
 & .admin-bar__search-content::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #888;
   height: 45px;
 }
 
 & .admin-bar__search-content::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  background: #555;
 }
 `;
 

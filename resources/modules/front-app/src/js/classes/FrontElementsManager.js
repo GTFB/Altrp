@@ -250,6 +250,14 @@ class FrontElementsManager {
             /* webpackChunkName: 'VideoWidget' */ "../../../../editor/src/js/components/widgets/VideoWidget"
           );
         }
+      },
+      {
+        name: "dropbar",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'DropbarWidget' */ "../../../../editor/src/js/components/widgets/DropbarWidget"
+            );
+        }
       }
     ];
     this.components = {};
@@ -268,19 +276,30 @@ class FrontElementsManager {
       componentsToLoad = this.ELEMENTS.filter(el => {
         return window.altrpElementsLists.indexOf(el.name) !== -1;
       });
-      componentsToLoad = componentsToLoad.map(async el => {
-        return (this.components[el.name] = (
-          await el.import(/* webpackChunkName: 'FrontElementsFabric' */)
-        ).default);
+      // componentsToLoad = componentsToLoad.map(async el => {
+      //   return (this.components[el.name] = (
+      //     await el.import()
+      //   ).default);
+      // });
+      componentsToLoad = componentsToLoad.map(el => {
+        console.log(el.name, performance.now());
+        return new Promise((resolve, reject) => {
+          el.import().then(res=>{
+            console.log(el.name, performance.now());
+            this.components[el.name] = res.default
+            resolve(res);
+          })
+        })
       });
     } else {
       componentsToLoad = this.ELEMENTS.map(async el => {
         return (this.components[el.name] = (
-          await el.import(/* webpackChunkName: 'FrontElementsFabric' */)
+          await el.import()
         ).default);
       });
     }
     return await Promise.all(componentsToLoad);
+    // return true;
   }
 
   /**

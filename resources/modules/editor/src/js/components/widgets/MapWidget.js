@@ -1,6 +1,5 @@
-import React, { Component, Suspense } from "react";
 
-const AltrpMap = React.lazy(() => import("../altrp-map/AltrpMap"));
+const AltrpMap = React.lazy(() => import(/* webpackChunkName: 'AltrpMap' */"../altrp-map/AltrpMap"));
 
 import ("../../../sass/altrp-map.scss");
 class MapWidget extends Component {

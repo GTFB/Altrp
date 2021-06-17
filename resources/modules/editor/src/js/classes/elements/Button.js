@@ -47,52 +47,6 @@ class Button extends BaseElement {
       return
     }
 
-    this.startControlSection('button_type_section', {
-      hideOnEmail: true,
-      tab: TAB_CONTENT,
-      label: 'Button type',
-    });
-
-    this.addControl('link_button_type', {
-      type: CONTROLLER_SELECT,
-      label: 'Link type',
-      default: 'none',
-      options: [
-        {
-          value: 'none',
-          label: 'None'
-        },
-        {
-          value: 'dropbar',
-          label: 'Dropbar'
-        },
-      ],
-    });
-
-    // this.addControl('popup_trigger_type', {
-    //   type: CONTROLLER_SWITCHER,
-    //   label: 'Popup trigger',
-    // });
-    //
-    // this.addControl("popup_id", {
-    //   type: CONTROLLER_SELECT2,
-    //   prefetch_options: true,
-    //   label: "Popup ID",
-    //   isClearable: true,
-    //   options_resource: '/admin/ajax/templates/options?template_type=popup&value=guid',
-    //   nullable: nullable: true,
-    //   conditions: {
-    //     'popup_trigger_type': true,
-    //   },
-    // });
-    //
-    // this.addControl('hide_elements_trigger', {
-    //   type: CONTROLLER_TEXT,
-    //   label: 'Hide Elements Trigger'
-    // });
-
-    this.endControlSection();
-
     this.startControlSection('content_section', {
       tab: TAB_CONTENT,
       label: 'Content',
@@ -268,54 +222,6 @@ class Button extends BaseElement {
     this.addControl('close_popups', {
       type: CONTROLLER_SWITCHER,
       label: 'Close all Popups',
-    });
-
-    this.endControlSection();
-
-    this.startControlSection('dropbar_section', {
-      tab: TAB_CONTENT,
-      label: 'Dropbar content',
-      conditions: {
-        'link_button_type': "dropbar",
-      },
-    });
-
-    this.addControl('type_dropbar_section', {
-      type: CONTROLLER_SELECT,
-      label: 'Type',
-      default: 'text',
-      options: [
-        {
-          'value': 'text',
-          'label': 'Text',
-        },
-        {
-          'value': 'card',
-          'label': 'Card',
-        },
-      ],
-      }
-    );
-
-    this.addControl("content_dropbar_section", {
-      conditions: {
-        'type_dropbar_section': "text",
-      },
-      type: CONTROLLER_WYSIWYG,
-      label: "Content",
-      default: "I Am Text in dropbar"
-    });
-
-    this.addControl("template_dropbar_section", {
-      conditions: {
-        'type_dropbar_section': "card",
-      },
-      type: CONTROLLER_SELECT2,
-      prefetch_options: true,
-      label: "Template",
-      isClearable: true,
-      options_resource: '/admin/ajax/templates/options?value=guid',
-      nullable: true,
     });
 
     this.endControlSection();

@@ -1,8 +1,6 @@
 import Frame3 from "../../../svgs/Frame 3.svg";
 import Code from "../../../svgs/code.svg";
-import React, { Component } from "react";
 import Resource from "../../classes/Resource";
-import _ from "lodash";
 import beautify from "js-beautify";
 import { getRoutes } from "../../../../../front-app/src/js/helpers";
 

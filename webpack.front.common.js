@@ -11,7 +11,7 @@ module.exports = {
   // ],
   entry: {
     'front-app':"./resources/modules/front-app/src/index.js",
-    // 'sw': "./resources/modules/front-app/src/js/sw/sw.js",
+    'h-altrp': "./resources/modules/front-app/src/h-altrp.js",
   },
 
 
@@ -21,7 +21,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        exclude: /node_modules\/(?!(@react-leaflet)\/|bower_components).*/,
+        exclude: /(node_modules|bower_components).*/,
         loader: "babel-loader",
         options: {
           presets: ["@babel/env", "@babel/preset-react"],
@@ -94,7 +94,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "editor/"),
     publicPath: "http://localhost:3001/src/",
-    chunkFilename: "[contenthash].[name].bundle.js",
+    chunkFilename: "[name].[contenthash].bundle.js",
     filename: "bundle.[name].js",
   },
   devServer: {
@@ -110,7 +110,12 @@ module.exports = {
     hotOnly: true
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+
+    new webpack.DefinePlugin({
+      "process.env": "{}",
+      global: {}
+    }),
+    // new webpack.HotModuleReplacementPlugin(),
     new CleanWebpackPlugin()
     // new ExtractTextPlugin('style.css'),
     // new MiniCssExtractPlugin({

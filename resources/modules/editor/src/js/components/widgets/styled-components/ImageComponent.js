@@ -1,11 +1,9 @@
-import styled from "styled-components";
 import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
-import { 
-  dimensionsControllerToStyles, 
-  backgroundColorControllerToStyles, 
-  gradientStyled, 
-  filtersControllerToStyles, 
-  simplePropertyStyled, 
+import {
+  dimensionsControllerToStyles,
+  gradientStyled,
+  filtersControllerToStyles,
+  simplePropertyStyled,
   colorPropertyStyled,
   sizeStyled,
   opacityStyled,
@@ -92,7 +90,7 @@ export default styled.div`
       }
 
       if (margin) {
-        styles += dimensionsControllerToStyles(margin, 'margin'); 
+        styles += dimensionsControllerToStyles(margin, 'margin');
       }
 
       //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
@@ -102,7 +100,7 @@ export default styled.div`
       }
 
       if (padding) {
-        styles += dimensionsControllerToStyles(padding); 
+        styles += dimensionsControllerToStyles(padding);
       }
 
       //Получаем значения z-index из контроллера, обрабатываем и добавляем в styles
@@ -155,7 +153,7 @@ export default styled.div`
         styles += colorPropertyStyled(borderColor, 'border-color');
       }
 
-      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         borderRadius = getResponsiveSetting(settings, 'border_radius');
@@ -269,7 +267,7 @@ export default styled.div`
       }
 
       if (margin) {
-        styles += dimensionsControllerToStyles(margin, 'margin'); 
+        styles += dimensionsControllerToStyles(margin, 'margin');
       }
 
       //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
@@ -279,7 +277,7 @@ export default styled.div`
       }
 
       if (padding) {
-        styles += dimensionsControllerToStyles(padding); 
+        styles += dimensionsControllerToStyles(padding);
       }
 
       //Получаем значения z-index из контроллера, обрабатываем и добавляем в styles
@@ -332,7 +330,7 @@ export default styled.div`
         styles += colorPropertyStyled(borderColor, 'border-color');
       }
 
-      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         borderRadius = getResponsiveSetting(settings, 'border_radius', ':hover');

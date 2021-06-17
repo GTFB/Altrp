@@ -43,8 +43,6 @@ import MapConstructor from "../elements/MapConstructor";
 import Diagram from "../elements/Diagram";
 import Dashboards from "../elements/Dashboards";
 import PostsWidget from "../../components/widgets/PostsWidget";
-import IconWidget from "../../components/widgets/IconWidget";
-import Icon from "../elements/Icon";
 import Gallery from "../elements/Gallery";
 import Tour from "../elements/Tour";
 import TourGuide from "../../components/widgets/TourGuide";
@@ -58,6 +56,8 @@ import VideoWidget from "../../components/widgets/VideoWidget";
 import SectionWidget from "../elements/SectionWidget";
 import MenuWidget from "../../components/widgets/MenuWidget";
 import SectionWidgetComponent from "../../components/SectionWidgetComponent";
+import DropbarWidget from "../../components/widgets/DropbarWidget";
+import Dropbar from "../elements/Dropbar";
 
 export default class ElementsManger {
   constructor() {
@@ -69,7 +69,6 @@ export default class ElementsManger {
     this.elements[Image.getName()] = Image;
     this.elements[Breadcrumbs.getName()] = Breadcrumbs;
     this.elements[Button.getName()] = Button;
-    this.elements[Icon.getName()] = Icon;
     this.elements[Text.getName()] = Text;
     this.elements[Divider.getName()] = Divider;
     this.elements[Column.getName()] = Column;
@@ -94,6 +93,7 @@ export default class ElementsManger {
     this.elements[Gallery.getName()] = Gallery;
     this.elements[Video.getName()] = Video;
     this.elements[SectionWidget.getName()] = SectionWidget;
+    this.elements[Dropbar.getName()] = Dropbar;
     // Websocket Notifications
     // this.elements[Notifications.getName()] = Notifications;
     //список компонентов
@@ -121,13 +121,13 @@ export default class ElementsManger {
     this.components[Menu.getName()] = MenuWidget;
     this.components[Diagram.getName()] = DiagramWidget;
     this.components[Dashboards.getName()] = DashboardsWidget;
-    this.components[Icon.getName()] = IconWidget;
     this.components[Tour.getName()] = TourGuide;
     this.components[Template.getName()] = TemplateWidget;
     this.components[ExportPanel.getName()] = ExportPanelWidget;
     this.components[Html.getName()] = HtmlWidget;
     this.components[Gallery.getName()] = GalleryWidget;
     this.components[Video.getName()] = VideoWidget;
+    this.components[Dropbar.getName()] = DropbarWidget;
     // Websocket Notifications widget
     // this.components[Notifications.getName()] = NotificationsWidget;
   }

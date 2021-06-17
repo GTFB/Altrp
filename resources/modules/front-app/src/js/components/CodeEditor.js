@@ -2,7 +2,6 @@ import { Component } from "react";
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-html";
 import "ace-builds/src-noconflict/theme-solarized_dark";
-import _ from "lodash";
 import beautify from "js-beautify";
 import Resource from "../../../../editor/src/js/classes/Resource";
 

@@ -875,7 +875,7 @@ class Carousel extends BaseElement {
         'dots_navigation_content': true,
       },
       type: CONTROLLER_COLOR,
-      label: 'Active dots color',
+      label: 'Active dot color',
       default: {
         color: "rgb(19,106,237)",
         colorPickedHex: "#136aed",

@@ -14,7 +14,6 @@
   cursor: not-allowed;
 }
 .altrp-element {
-  width: 100%;
   max-width: 100%;
   //min-height: 1px;
   position: relative;
@@ -900,7 +899,7 @@ textarea.altrp-field{
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: auto;
 }
 
 .altrp-dropbar-children-wrapper {
@@ -1285,73 +1284,73 @@ textarea.altrp-field{
 
 .column-structure_30_70 {
   .altrp-element_column:nth-child(even) {
-    flex-basis: 30%;
+    flex-basis: 70%;
   }
   .altrp-element_column:nth-child(odd) {
-    flex-basis: 70%;
+    flex-basis: 30%;
   }
 }
 
 .column-structure_25_75 {
   .altrp-element_column:nth-child(even) {
-    flex-basis: 25%;
+    flex-basis: 75%;
   }
   .altrp-element_column:nth-child(odd) {
-    flex-basis: 75%;
+    flex-basis: 25%;
   }
 }
 
 .column-structure_20_80 {
   .altrp-element_column:nth-child(even) {
-    flex-basis: 20%;
+    flex-basis: 80%;
   }
   .altrp-element_column:nth-child(odd) {
-    flex-basis: 80%;
+    flex-basis: 20%;
   }
 }
 
 .column-structure_15_85 {
   .altrp-element_column:nth-child(even) {
-    flex-basis: 15%;
+    flex-basis: 85%;
   }
   .altrp-element_column:nth-child(odd) {
-    flex-basis: 85%;
+    flex-basis: 15%;
   }
 }
 
 .column-structure_85_15 {
   .altrp-element_column:nth-child(even) {
-    flex-basis: 85%;
-  }
-  .altrp-element_column:nth-child(odd) {
     flex-basis: 15%;
   }
+  .altrp-element_column:nth-child(odd) {
+    flex-basis: 85%;
+  }
 }
-
+//////
 .column-structure_80_20 {
   .altrp-element_column:nth-child(even) {
-    flex-basis: 80%;
+    flex-basis: 20%;
   }
   .altrp-element_column:nth-child(odd) {
-    flex-basis: 20%;
+    flex-basis: 80%;
   }
 }
 
 .column-structure_75_25 {
   .altrp-element_column:nth-child(even) {
-    flex-basis: 75%;
+    flex-basis: 25%;
   }
   .altrp-element_column:nth-child(odd) {
-    flex-basis: 25%;
+    flex-basis: 75%;
   }
 }
 
 .column-structure_70_30 {
   .altrp-element_column:nth-child(even) {
-    flex-basis: 70%;
+    flex-basis: 30%;
   }
   .altrp-element_column:nth-child(odd) {
-    flex-basis: 30%;
+    flex-basis: 70%;
   }
 }
 
@@ -1361,25 +1360,25 @@ textarea.altrp-field{
 
 .column-structure_50_25_25 {
   .altrp-element_column:nth-child(2) {
-    flex-basis: 50%;
+    flex-basis: 25%;
   }
   .altrp-element_column:nth-child(3) {
     flex-basis: 25%;
   }
-  .altrp-element_column:nth-child(4) {
-    flex-basis: 25%;
+  .altrp-element_column:nth-child(1) {
+    flex-basis: 50%;
   }
 }
 
 .column-structure_25_50_25 {
+  .altrp-element_column:nth-child(1) {
+    flex-basis: 25%;
+  }
   .altrp-element_column:nth-child(2) {
     flex-basis: 25%;
   }
   .altrp-element_column:nth-child(3) {
     flex-basis: 50%;
-  }
-  .altrp-element_column:nth-child(4) {
-    flex-basis: 25%;
   }
 }
 
@@ -1388,81 +1387,81 @@ textarea.altrp-field{
     flex-basis: 25%;
   }
   .altrp-element_column:nth-child(3) {
-    flex-basis: 25%;
-  }
-  .altrp-element_column:nth-child(4) {
     flex-basis: 50%;
+  }
+  .altrp-element_column:nth-child(1) {
+    flex-basis: 25%;
   }
 }
 
 .column-structure_60_20_20 {
   .altrp-element_column:nth-child(2) {
-    flex-basis: 60%;
+    flex-basis: 20%;
   }
   .altrp-element_column:nth-child(3) {
     flex-basis: 20%;
   }
-  .altrp-element_column:nth-child(4) {
-    flex-basis: 20%;
+  .altrp-element_column:nth-child(1) {
+    flex-basis: 60%;
   }
 }
 
 .column-structure_20_60_20 {
-  .altrp-element_column:nth-child(2) {
+  .altrp-element_column:nth-child(1) {
     flex-basis: 20%;
   }
-  .altrp-element_column:nth-child(3) {
+  .altrp-element_column:nth-child(2) {
     flex-basis: 60%;
   }
-  .altrp-element_column:nth-child(4) {
+  .altrp-element_column:nth-child(3) {
     flex-basis: 20%;
   }
 }
 
 .column-structure_20_20_60 {
+  .altrp-element_column:nth-child(1) {
+    flex-basis: 20%;
+  }
   .altrp-element_column:nth-child(2) {
     flex-basis: 20%;
   }
   .altrp-element_column:nth-child(3) {
-    flex-basis: 20%;
-  }
-  .altrp-element_column:nth-child(4) {
     flex-basis: 60%;
   }
 }
 
 .column-structure_70_15_15 {
-  .altrp-element_column:nth-child(2) {
+  .altrp-element_column:nth-child(1) {
     flex-basis: 70%;
   }
-  .altrp-element_column:nth-child(3) {
+  .altrp-element_column:nth-child(2) {
     flex-basis: 15%;
   }
-  .altrp-element_column:nth-child(4) {
+  .altrp-element_column:nth-child(3) {
     flex-basis: 15%;
   }
 }
 
 .column-structure_15_70_15 {
-  .altrp-element_column:nth-child(2) {
+  .altrp-element_column:nth-child(1) {
     flex-basis: 15%;
   }
-  .altrp-element_column:nth-child(3) {
+  .altrp-element_column:nth-child(2) {
     flex-basis: 70%;
   }
-  .altrp-element_column:nth-child(4) {
+  .altrp-element_column:nth-child(3) {
     flex-basis: 15%;
   }
 }
 
 .column-structure_15_15_70 {
+  .altrp-element_column:nth-child(1) {
+    flex-basis: 15%;
+  }
   .altrp-element_column:nth-child(2) {
     flex-basis: 15%;
   }
   .altrp-element_column:nth-child(3) {
-    flex-basis: 15%;
-  }
-  .altrp-element_column:nth-child(4) {
     flex-basis: 70%;
   }
 }

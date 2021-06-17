@@ -1,34 +1,22 @@
-import {getResponsiveSetting} from "../helpers";
+import { getResponsiveSetting } from "../helpers";
 
 const ALIGN_ITEMS = [
   {
-    verticalAlignValues :  [
-      'super',
-      'top',
-      'text-top',
-    ],
-    alignItemsValue: 'flex-start',
+    verticalAlignValues: ["super", "top", "text-top"],
+    alignItemsValue: "flex-start"
   },
   {
-    verticalAlignValues :  [
-      'middle',
-    ],
-    alignItemsValue: 'center',
+    verticalAlignValues: ["middle"],
+    alignItemsValue: "center"
   },
   {
-    verticalAlignValues :  [
-      'baseline',
-    ],
-    alignItemsValue: 'baseline',
+    verticalAlignValues: ["baseline"],
+    alignItemsValue: "baseline"
   },
   {
-    verticalAlignValues :  [
-      'sub',
-      'bottom',
-      'text-bottom',
-    ],
-    alignItemsValue: 'flex-end',
-  },
+    verticalAlignValues: ["sub", "bottom", "text-bottom"],
+    alignItemsValue: "flex-end"
+  }
 ];
 
 /**
@@ -36,10 +24,10 @@ const ALIGN_ITEMS = [
  * @param {string} verticalAlignValue
  * @return {string}
  */
-export function verticalAlignToAlignItems(verticalAlignValue){
-  let alignItemsValue = '';
-  ALIGN_ITEMS.forEach(items=>{
-    if(items.verticalAlignValues.indexOf(verticalAlignValue) !== -1){
+export function verticalAlignToAlignItems(verticalAlignValue) {
+  let alignItemsValue = "";
+  ALIGN_ITEMS.forEach(items => {
+    if (items.verticalAlignValues.indexOf(verticalAlignValue) !== -1) {
       alignItemsValue = items.alignItemsValue;
     }
   });
@@ -48,61 +36,69 @@ export function verticalAlignToAlignItems(verticalAlignValue){
 
 /**
  * Преобразует объект, который сохраняет контроллер dimension, в строку css  для вставки в styled-компонент
- * @param {{}} data
+ * @param {{}} data - settings
  * @param {string} styleProperty - padding|margin|border-radius
  * @return {string}
  */
-export function dimensionsControllerToStyles(data = {}, styleProperty = 'padding'){
-  let styles = '';
+export function dimensionsControllerToStyles(
+  data = {},
+  styleProperty = "padding"
+) {
+  let styles = "";
 
-  if(_.isEmpty(data)){
+  if (_.isEmpty(data)) {
     return styles;
   }
-  const {left, top, right, bottom, unit} = data;
-  switch(styleProperty){
-    case 'border-width':{
-      if(left){
-        styles += `border-left-width: ${left}${unit}; `;
+  const { left, top, right, bottom, unit } = data;
+  switch (styleProperty) {
+    case "border-width":
+      {
+        if (left) {
+          styles += `border-left-width: ${left}${unit}; `;
+        }
+        if (right) {
+          styles += `border-right-width: ${right}${unit}; `;
+        }
+        if (top) {
+          styles += `border-top-width: ${top}${unit}; `;
+        }
+        if (bottom) {
+          styles += `border-bottom-width: ${bottom}${unit}; `;
+        }
       }
-      if(right){
-        styles += `border-right-width: ${right}${unit}; `;
+      break;
+    case "border-radius":
+      {
+        if (top) {
+          styles += `border-top-left-radius: ${top}${unit}; `;
+        }
+        if (right) {
+          styles += `border-top-right-radius: ${right}${unit}; `;
+        }
+        if (bottom) {
+          styles += `border-bottom-right-radius: ${bottom}${unit}; `;
+        }
+        if (left) {
+          styles += `border-bottom-left-radius: ${left}${unit}; `;
+        }
       }
-      if(top){
-        styles += `border-top-width: ${top}${unit}; `;
+      break;
+    default:
+      {
+        if (left) {
+          styles += `${styleProperty}-left: ${left}${unit}; `;
+        }
+        if (right) {
+          styles += `${styleProperty}-right: ${right}${unit}; `;
+        }
+        if (top) {
+          styles += `${styleProperty}-top: ${top}${unit}; `;
+        }
+        if (bottom) {
+          styles += `${styleProperty}-bottom: ${bottom}${unit}; `;
+        }
       }
-      if(bottom){
-        styles += `border-bottom-width: ${bottom}${unit}; `;
-      }
-    }break;
-    case 'border-radius':{
-      if(top){
-        styles += `border-top-left-radius: ${top}${unit}; `;
-      }
-      if(right){
-        styles += `border-top-right-radius: ${right}${unit}; `;
-      }
-      if(bottom){
-        styles += `border-bottom-right-radius: ${bottom}${unit}; `;
-      }
-      if(left){
-        styles += `border-bottom-left-radius: ${left}${unit}; `;
-      }
-
-    }break;
-    default:{
-      if(left){
-        styles += `${styleProperty}-left: ${left}${unit}; `;
-      }
-      if(right){
-        styles += `${styleProperty}-right: ${right}${unit}; `;
-      }
-      if(top){
-        styles += `${styleProperty}-top: ${top}${unit}; `;
-      }
-      if(bottom){
-        styles += `${styleProperty}-bottom: ${bottom}${unit}; `;
-      }
-    }break;
+      break;
   }
 
   return styles;
@@ -114,12 +110,26 @@ export function dimensionsControllerToStyles(data = {}, styleProperty = 'padding
  * @return {string}
  */
 export function shadowControllerToStyles(data) {
-
-  if(data) {
-    let {type = 'outline', offsetX,horizontal, offsetY, vertical, blurRadius,blur,spread, spreadRadius, color } = data;
-    return `box-shadow: ${type || ' '} ${offsetX||horizontal || 0}px ${offsetY || vertical || 0}px ${blurRadius || blur || 0}px ${spreadRadius ||spread || 0}px ${color}; `;
+  if (data) {
+    let {
+      type = "outline",
+      offsetX,
+      horizontal,
+      offsetY,
+      vertical,
+      blurRadius,
+      blur,
+      spread,
+      spreadRadius,
+      color
+    } = data;
+    return `box-shadow: ${type || " "} ${offsetX ||
+      horizontal ||
+      0}px ${offsetY || vertical || 0}px ${blurRadius ||
+      blur ||
+      0}px ${spreadRadius || spread || 0}px ${color}; `;
   }
-  return  '';
+  return "";
 }
 
 /**
@@ -128,14 +138,13 @@ export function shadowControllerToStyles(data) {
  * @return {string}
  */
 export function textShadowControllerToStyles(data) {
-
-  if(data) {
-    const {blur, colorPickedHex, horizontal, opacity, vertical } = data;
+  if (data) {
+    const { blur, colorPickedHex, horizontal, opacity, vertical } = data;
 
     return `text-shadow: ${horizontal}px ${vertical}px ${blur}px ${colorPickedHex}; `;
   }
 
-  return '';
+  return "";
 }
 
 /**
@@ -145,7 +154,7 @@ export function textShadowControllerToStyles(data) {
  * @return {string}
  */
 export function backgroundColorControllerToStyles(data, pseudoClass) {
-  let styles = '';
+  let styles = "";
   if (_.isEmpty(data)) {
     return styles;
   }
@@ -158,7 +167,6 @@ export function backgroundColorControllerToStyles(data, pseudoClass) {
     }
 
     return `background-color: ${colorPickedHex}; `;
-
   }
 
   return styles;
@@ -169,8 +177,8 @@ export function backgroundColorControllerToStyles(data, pseudoClass) {
  * @param {{}} data
  * @return {string}
  */
- export function backgroundImageControllerToStyles(data) {
-  let styles = '';
+export function backgroundImageControllerToStyles(data) {
+  let styles = "";
 
   if (_.isEmpty(data) || data.url === null) {
     return styles;
@@ -178,7 +186,7 @@ export function backgroundColorControllerToStyles(data, pseudoClass) {
 
   const { url } = data;
 
-  return `background-image: url('${url}'); `;;
+  return `background-image: url('${url}'); `;
 }
 
 /**
@@ -188,15 +196,23 @@ export function backgroundColorControllerToStyles(data, pseudoClass) {
  */
 
 export function filtersControllerToStyles(data) {
-  let styles = '';
+  let styles = "";
   if (_.isEmpty(data)) {
     return styles;
   }
 
-  let { blur = '0', brightness = '100', contrast = '100', hue = '0', saturate, saturation } = data;
+  let {
+    blur = "0",
+    brightness = "100",
+    contrast = "100",
+    hue = "0",
+    saturate,
+    saturation
+  } = data;
 
-  return `filter: blur(${blur}px) brightness(${brightness}%) contrast(${contrast}%) saturate(${saturate || saturation || '100'}%) hue-rotate(${hue}deg); `;
-
+  return `filter: blur(${blur}px) brightness(${brightness}%) contrast(${contrast}%) saturate(${saturate ||
+    saturation ||
+    "100"}%) hue-rotate(${hue}deg); `;
 }
 
 /**
@@ -208,13 +224,12 @@ export function filtersControllerToStyles(data) {
  * @return {string}
  */
 
-export function simplePropertyStyled(style, styleProperty, declaration = '') {
-
+export function simplePropertyStyled(style, styleProperty, declaration = "") {
   if (style) {
     return `${styleProperty}: ${style + declaration}; `;
   }
 
-  return '';
+  return "";
 }
 
 /**
@@ -226,15 +241,14 @@ export function simplePropertyStyled(style, styleProperty, declaration = '') {
  * @return {string}
  */
 
-export function colorPropertyStyled(data, styleProperty, declaration = '') {
-
-  const {colorPickedHex} = data;
+export function colorPropertyStyled(data, styleProperty, declaration = "") {
+  const { colorPickedHex } = data;
 
   if (colorPickedHex) {
     return `${styleProperty}: ${colorPickedHex + declaration}; `;
   }
 
-  return '';
+  return "";
 }
 
 /**
@@ -244,15 +258,14 @@ export function colorPropertyStyled(data, styleProperty, declaration = '') {
  * @return {string}
  */
 
- export function backgroundCreativeLinkStyled(data) {
-
-  const {backgroundPickedHex} = data;
+export function backgroundCreativeLinkStyled(data) {
+  const { backgroundPickedHex } = data;
 
   if (backgroundPickedHex) {
     return `background-color: ${backgroundPickedHex}; `;
   }
 
-  return '';
+  return "";
 }
 
 /**
@@ -262,7 +275,7 @@ export function colorPropertyStyled(data, styleProperty, declaration = '') {
  */
 
 export function columnGapStyled(data = {}) {
-  let styles = '';
+  let styles = "";
 
   if (_.isEmpty(data)) {
     return styles;
@@ -281,8 +294,8 @@ export function columnGapStyled(data = {}) {
  * @return {string}
  */
 
- export function iconSizeStyled(data = {}) {
-  let styles = '';
+export function iconSizeStyled(data = {}) {
+  let styles = "";
 
   if (_.isEmpty(data)) {
     return styles;
@@ -303,8 +316,8 @@ export function columnGapStyled(data = {}) {
  * @return {string}
  */
 
- export function sizeStyled(data = {}, property) {
-  let styles = '';
+export function sizeStyled(data = {}, property) {
+  let styles = "";
 
   if (_.isEmpty(data) || data.size === undefined) {
     return styles;
@@ -312,13 +325,17 @@ export function columnGapStyled(data = {}) {
 
   const { size, unit } = data;
 
-  if (property === 'transition-duration' || property === 'animation-duration' || property === 'transition-delay') {
+  if (
+    property === "transition-duration" ||
+    property === "animation-duration" ||
+    property === "transition-delay"
+  ) {
     styles = `${property}: ${size}s; `;
 
     return styles;
   }
 
-  styles = `${property}: ${size + (unit || '')}; `;
+  styles = `${property}: ${size + (unit || "")}; `;
 
   return styles;
 }
@@ -329,8 +346,8 @@ export function columnGapStyled(data = {}) {
  * @return {string}
  */
 
- export function heightCalcStyled(data = {}) {
-  let styles = '';
+export function heightCalcStyled(data = {}) {
+  let styles = "";
 
   if (_.isEmpty(data) || data.size === undefined) {
     return styles;
@@ -338,7 +355,7 @@ export function columnGapStyled(data = {}) {
 
   const { size, unit } = data;
 
-  styles = `height: calc${(size + unit)} * 2; `;
+  styles = `height: calc${size + unit} * 2; `;
 
   return styles;
 }
@@ -349,8 +366,8 @@ export function columnGapStyled(data = {}) {
  * @return {string}
  */
 
- export function translateStyled(data = {}) {
-  let styles = '';
+export function translateStyled(data = {}) {
+  let styles = "";
 
   if (_.isEmpty(data) || isNaN(data.size) || !data.size) {
     return styles;
@@ -369,8 +386,8 @@ export function columnGapStyled(data = {}) {
  * @return {string}
  */
 
- export function transformRotateStyled(data = {}) {
-  let styles = '';
+export function transformRotateStyled(data = {}) {
+  let styles = "";
 
   if (_.isEmpty(data) || isNaN(data.size) || !data.size) {
     return styles;
@@ -400,10 +417,10 @@ export function opacityStyled(style) {
  * @param {{}} data
  * @return {string}
  */
-export function typographicControllerToStyles(data = {}){
-  let styles = '';
+export function typographicControllerToStyles(data = {}) {
+  let styles = "";
 
-  if(_.isEmpty(data)){
+  if (_.isEmpty(data)) {
     return styles;
   }
 
@@ -417,31 +434,33 @@ export function typographicControllerToStyles(data = {}){
     weight,
     decoration,
     sizeUnit,
-    lineHeightUnit,
+    lineHeightUnit
   } = data;
 
-  if(decoration){
+  if (decoration) {
     styles += `text-decoration: ${decoration}; `;
   }
-  if(transform){
+  if (transform) {
     styles += `text-transform: ${transform}; `;
   }
-  if(spacing){
+  if (spacing) {
     styles += `letter-spacing: ${spacing}px; `;
   }
-  if(lineHeight){
-    styles += `line-height: ${lineHeightUnit ? (lineHeight + lineHeightUnit) : lineHeight}; `;
+  if (lineHeight) {
+    styles += `line-height: ${
+      lineHeightUnit ? lineHeight + lineHeightUnit : lineHeight
+    }; `;
   }
-  if(weight){
+  if (weight) {
     styles += `font-weight: ${weight}; `;
   }
-  if(style){
+  if (style) {
     styles += `font-style: ${style}; `;
   }
-  if(size){
-    styles += `font-size: ${size ? (size + (sizeUnit || 'px')) : ''}; `;
+  if (size) {
+    styles += `font-size: ${size ? size + (sizeUnit || "px") : ""}; `;
   }
-  if(! _.isEmpty(family)){
+  if (!_.isEmpty(family)) {
     styles += `font-family: ${family}; `;
   }
   return styles;
@@ -452,11 +471,12 @@ export function typographicControllerToStyles(data = {}){
  * @return {string}
  * @param {{}} controller
  * @param {string} style
+ * @param {string} important
  */
-export function colorStyled(controller, style) {
-  if(controller) {
-    if(controller.color) {
-      return `${style}: ${controller.color};`
+export function colorStyled(controller, style, important) {
+  if (controller) {
+    if (controller.color) {
+      return `${style}: ${controller.color} ${important};`;
     } else return "";
   } else return "";
 }
@@ -468,39 +488,32 @@ export function colorStyled(controller, style) {
  * @return {string}
  */
 
-export function borderWidthStyled(data = {}, declaration = '') {
-  let styles = '';
+export function borderWidthStyled(data = {}, declaration = "") {
+  let styles = "";
 
   if (_.isEmpty(data)) {
     return styles;
   }
 
-  const {
-    bottom,
-    left,
-    right,
-    top,
-    unit = 'px',
-  } = data;
+  const { bottom, left, right, top, unit = "px" } = data;
 
-  if (top && top !== '') {
+  if (top && top !== "") {
     styles += `border-top-width: ${top + unit + declaration}; `;
   }
 
-  if (right && right !== '') {
+  if (right && right !== "") {
     styles += `border-right-width: ${right + unit + declaration}; `;
   }
 
-  if (bottom && bottom !== '') {
+  if (bottom && bottom !== "") {
     styles += `border-bottom-width: ${bottom + unit + declaration}; `;
   }
 
-  if (left && left !== '') {
+  if (left && left !== "") {
     styles += `border-left-width: ${left + unit + declaration}; `;
   }
 
   return styles;
-
 }
 
 /**
@@ -510,29 +523,24 @@ export function borderWidthStyled(data = {}, declaration = '') {
  * @return {string}
  */
 
- export function marginTopLeftStyled(data = {}, position) {
-  let styles = '';
+export function marginTopLeftStyled(data = {}, position) {
+  let styles = "";
 
   if (_.isEmpty(data)) {
     return styles;
   }
 
-  const {
-    top,
-    left,
-    unit,
-  } = data;
+  const { top, left, unit } = data;
 
-  if (top && top !== '' && position === 'top') {
+  if (top && top !== "" && position === "top") {
     styles += `margin-top: -${top + unit}; `;
   }
 
-  if (top && top !== '' && position === 'left') {
+  if (top && top !== "" && position === "left") {
     styles += `margin-left: -${left + unit}; `;
   }
 
   return styles;
-
 }
 
 /**
@@ -542,7 +550,7 @@ export function borderWidthStyled(data = {}, declaration = '') {
  */
 
 export function borderRadiusStyled(data = {}) {
-  let styles = '';
+  let styles = "";
 
   if (_.isEmpty(data)) {
     return styles;
@@ -553,7 +561,6 @@ export function borderRadiusStyled(data = {}) {
   styles = `border-radius: ${size + unit}; `;
 
   return styles;
-
 }
 
 /**
@@ -561,23 +568,29 @@ export function borderRadiusStyled(data = {}) {
  * @return {string}
  * @param {{}} controller
  * @param {string} style
+ * @param {string} important
  */
-export function dimensionsStyled(controller, style) {
-  if(controller) {
+export function dimensionsStyled(controller, style, important) {
+  if (controller) {
     const unit = controller.unit || "px";
     const left = controller.left || 0;
     const right = controller.right || 0;
     const bottom = controller.bottom || 0;
     const top = controller.top || 0;
 
-    if(controller.left || controller.right || controller.bottom || controller.top) {
-      return `${style}: ${top + unit} ${right + unit} ${bottom + unit} ${left + unit};`
+    if (
+      controller.left ||
+      controller.right ||
+      controller.bottom ||
+      controller.top
+    ) {
+      return `${style}: ${top + unit} ${right + unit} ${bottom + unit} ${left +
+        unit} ${important};`;
     } else return "";
   } else {
-    return ""
+    return "";
   }
-};
-
+}
 
 /**
  * Преобразует объект, который сохраняет контроллер gradient, в строку css для вставки в styled-компонент
@@ -585,11 +598,11 @@ export function dimensionsStyled(controller, style) {
  * @param {{}} controller
  */
 export function gradientStyled(controller) {
-  if(controller.isWithGradient) {
+  if (controller.isWithGradient) {
     return `background-image: ${controller.value} `;
   } else {
-    return ""
-  };
+    return "";
+  }
 }
 
 /**
@@ -598,10 +611,10 @@ export function gradientStyled(controller) {
  * @param {string} controller
  */
 export function defaultStyled(controller) {
-  if(controller) {
-    return controller
+  if (controller) {
+    return controller;
   } else {
-    return ""
+    return "";
   }
 }
 
@@ -611,10 +624,10 @@ export function defaultStyled(controller) {
  * @param {{}} controller
  */
 export function sliderStyled(controller) {
-  if(controller) {
-    if(controller.size) {
+  if (controller) {
+    if (controller.size) {
       const unit = controller.unit || "px";
-      return controller.size + unit
+      return controller.size + unit;
     } else return "";
   } else return "";
 }
@@ -623,18 +636,19 @@ export function sliderStyled(controller) {
  * проверяет наличичие значения shadow
  * @return {string}
  * @param {{}} controller
+ * @param {string} important
  */
-export function shadowStyled(controller = {}) {
-  if(controller) {
+export function shadowStyled(controller = {}, important) {
+  if (controller) {
     const type = controller.type || "";
     const horizontal = controller.horizontal || 0;
     const vertical = controller.vertical || 0;
     const blur = controller.blur || 0;
     const spread = controller.spread || 0;
     const color = controller.color || "";
-    return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread} ${color};`;
+    return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread} ${color} ${important};`;
   } else {
-    return ""
+    return "";
   }
 }
 
@@ -642,23 +656,23 @@ export function shadowStyled(controller = {}) {
  * проверяет наличичие значения text shadow
  * @return {string}
  * @param {{}} controller
+ * @param {string} important
  */
-export function textShadowStyled(controller = {}) {
-  if(controller) {
+export function textShadowStyled(controller = {}, important) {
+  if (controller) {
     const horizontal = controller.horizontal || 0;
     const vertical = controller.vertical || 0;
     const blur = controller.blur || 0;
     const color = controller.color || "";
-    if(horizontal || vertical || blur || color) {
-      return `text-shadow: ${horizontal}px ${vertical}px ${blur}px ${color};`;
+    if (horizontal || vertical || blur || color) {
+      return `text-shadow: ${horizontal}px ${vertical}px ${blur}px ${color} ${important};`;
     } else {
-      return ""
+      return "";
     }
   } else {
-    return ""
+    return "";
   }
 }
-
 
 /**
  * проверяет наличичие значения creative_media
@@ -666,9 +680,7 @@ export function textShadowStyled(controller = {}) {
  * @param {{}} controller
  */
 export function creativeLinkStyled(controller = {}) {
-  if(
-    controller
-  ) {
+  if (controller) {
     return ``;
   } else {
     return "";
@@ -681,7 +693,7 @@ export function creativeLinkStyled(controller = {}) {
  * @param {{}} controller
  */
 export function mediaStyled(controller = {}) {
-  if(controller.url) {
+  if (controller.url) {
     return `background-image: url("${controller.url}");`;
   } else {
     return "";
@@ -697,59 +709,74 @@ export function mediaStyled(controller = {}) {
 export function styledString(styles, settings) {
   let stringStyles = "";
 
-  styles.forEach(style => {
-    if(_.isString(style)) {
-      if(style !== "}") {
-        if(style.split('')[0] === "." || style.split('')[0] === "&") {
-          stringStyles += `${style} {`;
+  if (_.keys(settings).length !== 0) {
+    styles.forEach(style => {
+      if (_.isString(style)) {
+        if (style !== "}") {
+          if (style.split("")[0] === "." || style.split("")[0] === "&") {
+            stringStyles += `${style} {`;
+          } else {
+            stringStyles += `& .${style}{`;
+          }
         } else {
-          stringStyles += `& .${style} {`
+          stringStyles += `}`;
         }
       } else {
-        stringStyles += `}`
-      }
-    } else {
-      if(_.isArray(style)) {
-        const state = style[3] || null;
-        const variable = getResponsiveSetting(settings, style[1], state);
-        switch (style[2]) {
-          case "dimensions":
-            stringStyles += dimensionsStyled(variable, style[0]);
-            break;
-          case "color":
-            stringStyles += colorStyled(variable, style[0]);
-            break;
-          case "gradient":
-            stringStyles += gradientStyled(variable);
-            break;
-          case "typographic":
-            stringStyles += typographicControllerToStyles(variable);
-            break;
-          case "slider":
-            stringStyles += `${style[0]}: ${sliderStyled(variable)};`;
-            break;
-          case "shadow":
-            stringStyles += shadowStyled(variable);
-            break;
-          case "text-shadow":
-            stringStyles += textShadowStyled(variable);
-            break;
-          case "media":
-            stringStyles += mediaStyled(variable);
-            break;
-          case "creative-link":
-            stringStyles += creativeLinkStyled(variable);
-            break;
-          default:
-            stringStyles += `${style[0]}: ${defaultStyled(variable)};`
+        if (_.isArray(style)) {
+          const settingName = style[1];
+          const state = style[3] || null;
+          const important = style[4] ? "!important" : "";
+          const variable = getResponsiveSetting(
+            settings,
+            settingName,
+            state,
+            important
+          );
+          switch (style[2]) {
+            case "dimensions":
+              stringStyles += dimensionsStyled(variable, style[0], important);
+              break;
+            case "color":
+              stringStyles += colorStyled(variable, style[0], important);
+              break;
+            case "gradient":
+              stringStyles += gradientStyled(variable);
+              break;
+            case "typographic":
+              stringStyles += typographicControllerToStyles(variable);
+              break;
+            case "slider":
+              stringStyles += `${style[0]}:${sliderStyled(
+                variable
+              )} ${important};`;
+              break;
+            case "shadow":
+              stringStyles += shadowStyled(variable, important);
+              break;
+            case "text-shadow":
+              stringStyles += textShadowStyled(variable, important);
+              break;
+            case "media":
+              stringStyles += mediaStyled(variable);
+              break;
+            case "creative-link":
+              stringStyles += creativeLinkStyled(variable);
+              break;
+            default:
+              if (defaultStyled(variable)) {
+                stringStyles += `${style[0]}:${defaultStyled(
+                  variable
+                )} ${important};`;
+              }
+          }
+        }
+
+        if (_.isFunction(style)) {
+          stringStyles += style();
         }
       }
+    });
+  }
 
-      if(_.isFunction(style)) {
-        stringStyles += style()
-      }
-    }
-  })
-
-  return stringStyles
+  return stringStyles;
 }

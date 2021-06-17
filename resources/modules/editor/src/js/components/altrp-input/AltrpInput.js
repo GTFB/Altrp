@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ("./altrp-input.scss");
 import AltrpInputFile from "./AltrpInputFile";
 import { isValueMatchMask, validateEmail } from "../../../../../front-app/src/js/helpers";
-const MaskedInput = React.lazy(() => import("react-text-mask"));
+const MaskedInput = React.lazy(() => import(/* webpackChunkName: 'react-text-mask' */"react-text-mask"));
 
 class AltrpInput extends Component {
   state = {
@@ -72,7 +72,7 @@ class AltrpInput extends Component {
         <React.Suspense fallback={<input {...this.props} />}>
           <MaskedInput {...inputProps} />
           {!isValid && mask_mismatch_message && <p className="mask-mismatch-message">{mask_mismatch_message}</p>}
-          
+
         </React.Suspense>
       );
     }

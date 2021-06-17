@@ -549,14 +549,6 @@ class Diagram extends BaseElement {
         bind: true
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__tooltip--margin{{STATE}}": [
-          "margin-top: {{TOP}}{{UNIT}};",
-          "margin-right: {{RIGHT}}{{UNIT}};",
-          "margin-bottom: {{BOTTOM}}{{UNIT}};",
-          "margin-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
     });
 
     this.addControl("style_padding_tooltip", {
@@ -571,14 +563,6 @@ class Diagram extends BaseElement {
         bind: true
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__tooltip--font{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
     });
 
     this.addControl("style_width_tooltip", {
@@ -590,28 +574,11 @@ class Diagram extends BaseElement {
         bind: true
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__tooltip--width{{STATE}}": [
-          "padding-top: {{WIDTH}}{{UNIT}};"
-        ]
-      }
     });
 
     this.addControl("style_font_tooltip", {
       type: CONTROLLER_TYPOGRAPHIC,
       label: "Typographic",
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__tooltip--font{{STATE}}": [
-          "font-size: {{SIZE}}px;",
-          "font-family: {{FAMILY}}",
-          "line-height: {{LINEHEIGHT}};",
-          "letter-spacing: {{SPACING}}px",
-          "font-weight: {{WEIGHT}}",
-          "text-transform: {{TRANSFORM}}",
-          "font-style: {{STYLE}}",
-          "text-decoration: {{DECORATION}}"
-        ]
-      }
     });
 
     this.addControl("style_font_color_tooltip", {
@@ -621,10 +588,6 @@ class Diagram extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__tooltip--font-color{{STATE}}":
-          "color: {{COLOR}};"
-      }
     });
 
     this.addControl("style_background_color_tooltip", {
@@ -634,10 +597,6 @@ class Diagram extends BaseElement {
         color: "",
         colorPickedHex: ""
       },
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__tooltip--label-background{{STATE}}":
-          "background-color: {{COLOR}} !important;"
-      }
     });
 
     this.addControl("style_background_tooltip_shadow", {
@@ -654,10 +613,6 @@ class Diagram extends BaseElement {
         // colorPickedHex: '#000000',
         // type: ""
       },
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__tooltip--label-background-shadow{{STATE}}":
-          "box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};"
-      }
     });
 
     this.addControl("border_type_tooltip", {
@@ -689,10 +644,6 @@ class Diagram extends BaseElement {
           label: "Groove"
         }
       ],
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__tooltip--border-type{{STATE}}":
-          "border-style: {{VALUE}};"
-      }
     });
 
     this.addControl("border_width_tooltip", {
@@ -702,10 +653,6 @@ class Diagram extends BaseElement {
         bind: true
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__tooltip--border-width{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-      }
     });
 
     this.addControl("border_color_tooltip", {
@@ -715,10 +662,6 @@ class Diagram extends BaseElement {
       //   color: "rgb(50,168,82)",
       //   colorPickedHex: "#32a852",
       // },
-      rules: {
-        "{{ELEMENT}} .altrp-dashboard__tooltip--border-color{{STATE}}":
-          "border-color: {{COLOR}};"
-      }
     });
 
     this.endControlSection();
@@ -875,9 +818,6 @@ class Diagram extends BaseElement {
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-diagram{{STATE}}": "width: {{SIZE}}{{UNIT}}"
-      }
     });
 
     this.addControl("height", {
@@ -890,9 +830,6 @@ class Diagram extends BaseElement {
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-diagram{{STATE}}": "height: {{SIZE}}{{UNIT}}"
-      }
     });
 
     this.addControl("margin", {
@@ -907,14 +844,6 @@ class Diagram extends BaseElement {
         bind: true
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-btn{{STATE}}": [
-          "margin-top: {{TOP}}{{UNIT}};",
-          "margin-right: {{RIGHT}}{{UNIT}};",
-          "margin-bottom: {{BOTTOM}}{{UNIT}};",
-          "margin-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
     });
 
     advancedTabControllers(this);

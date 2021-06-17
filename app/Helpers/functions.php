@@ -312,6 +312,10 @@ function altrp_asset( $path, $domain = 'http://localhost:3002/' )
     return asset( $path ) . '?' . env( 'APP_VERSION' );
   }
   if( $domain === 'http://localhost:3001/' ){
+    if( strpos( $path, 'h-altrp.js') !== false){
+      return $domain . 'src/bundle.h-altrp.js';
+
+    }
     return $domain . 'src/bundle.front-app.js';
   }
   return $domain . 'src/bundle.js';
@@ -945,9 +949,10 @@ if( ! function_exists( 'getMainColor' ) ){
 }
 /**
  * @param array $areas
+ * @param boolean $only_react_elements
  * @return array
  */
-function extractElementsNames( $areas = []){
+function extractElementsNames( $areas = [], $only_react_elements = false){
   $elementNames = [];
 
   foreach ( $areas as $area ) {
@@ -958,7 +963,7 @@ function extractElementsNames( $areas = []){
 //    var_dump( $area );
 //    echo '</pre>';
     $data = $area['template']['data'];
-    _extractElementsNames( $data, $elementNames );
+    _extractElementsNames( $data, $elementNames, $only_react_elements );
   }
 
   return $elementNames;
@@ -966,9 +971,29 @@ function extractElementsNames( $areas = []){
 
 /**
  * @param array $element
+ * @param array $elementNames
+ * @param boolean $only_react_elements
  * @param $elementNames
  */
-function _extractElementsNames( $element = [],  &$elementNames ){
+function _extractElementsNames( $element = [],  &$elementNames, $only_react_elements ){
+  $DEFAULT_REACT_ELEMENTS = [
+    'input',
+    'breadcrumbs',
+    'map',
+    'text',
+    'map_builder',
+    'menu',
+    'diagram',
+    'input',
+    'nav',
+    'breadcrumbs',
+    'dashboards',
+    'tour',
+    'icon',
+    'export',
+    'template',
+    'gallery',
+  ];
   if( ! is_array( $elementNames ) ){
     $elementNames = [];
   }
@@ -980,13 +1005,23 @@ function _extractElementsNames( $element = [],  &$elementNames ){
     return;
   }
 
+//echo '<pre style="padding-left: 200px;">';
+//var_dump( array_search( $element['name'], $elementNames ) === false
+//  && ! ( $only_react_elements
+//    && (! data_get( $element, 'settings.react_element' ) )
+//    || array_search( $DEFAULT_REACT_ELEMENTS, $elementNames ) !== false )  );
+//echo '</pre>';
 
-  if( array_search( $element['name'], $elementNames ) === false){
+
+  if( array_search( $element['name'], $elementNames ) === false
+    && ! ( $only_react_elements
+      && ! ( data_get( $element, 'settings.react_element' )
+        || array_search(  $element['name'], $DEFAULT_REACT_ELEMENTS ) !== false ) ) ){
     $elementNames[] = $element['name'];
   }
   if( isset( $element['children'] ) && is_array( $element['children'] ) ){
     foreach ( $element['children'] as $child ) {
-      _extractElementsNames( $child, $elementNames );
+      _extractElementsNames( $child, $elementNames, $only_react_elements );
     }
   }
 }
@@ -1029,8 +1064,10 @@ function replaceContentWithData( $content ){
   if( ! isset( $path ) || ! isset( $path[1] )){
     return $content;
   }
+
   foreach ( $path[1] as $item ) {
     $value = data_get( $altrp_env, $item, '');
+
     $content = str_replace( '{{' . $item . '}}', $value, $content );
   }
   return $content;

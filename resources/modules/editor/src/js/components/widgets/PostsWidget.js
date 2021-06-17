@@ -1,4 +1,3 @@
-import React, {Component} from "react";
 import Query from "../../classes/Query";
 import {getDataByPath} from "../../../../../front-app/src/js/helpers";
 
@@ -18,7 +17,7 @@ class PostsWidget extends Component {
     }
   }
   _componentDidMount(){
-    import('../altrp-posts/altrp-posts').then(res=>{
+    import(/* webpackChunkName: 'altrp-posts' */'../altrp-posts/altrp-posts').then(res=>{
       this.setState(state=>({...state,PostsComponent:res.default}))
     })
   }

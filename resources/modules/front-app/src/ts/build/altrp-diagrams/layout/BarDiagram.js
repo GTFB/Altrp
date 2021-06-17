@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import React, { useState, useEffect, useCallback } from "react";
-import _ from "lodash";
+
 import Spinner from "../../../../../../admin/src/components/dashboard/widgets/Spinner";
 import EmptyWidget from "../../../../../../admin/src/components/dashboard/widgets/EmptyWidget";
 import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";

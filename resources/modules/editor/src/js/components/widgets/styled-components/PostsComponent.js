@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import { getResponsiveSetting } from "../../../../../../front-app/src/js/helpers";
 import {
   simplePropertyStyled,
@@ -7,8 +6,6 @@ import {
   dimensionsControllerToStyles,
   typographicControllerToStyles,
   sizeStyled,
-  heightCalcStyled,
-  transformRotateStyled,
   iconSizeStyled,
   shadowControllerToStyles
 } from "../../../../../../front-app/src/js/helpers/styles";
@@ -92,9 +89,9 @@ const PostsComponent = styled.div`
 
       if (borderWidth) {
         styles += borderWidthStyled(borderWidth);
-      } 
+      }
 
-      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         borderColor = getResponsiveSetting(settings, 'posts_prev_border_color');
@@ -128,7 +125,7 @@ const PostsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-pagination__previous:hover {
 
@@ -207,9 +204,9 @@ const PostsComponent = styled.div`
 
       if (borderWidth) {
         styles += borderWidthStyled(borderWidth);
-      } 
+      }
 
-      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         borderColor = getResponsiveSetting(settings, 'posts_prev_border_color', ':hover');
@@ -243,7 +240,7 @@ const PostsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-pagination__previous svg,
   && .altrp-pagination__previous img {
@@ -263,7 +260,7 @@ const PostsComponent = styled.div`
 
       if (margin) {
         styles += dimensionsControllerToStyles(margin, 'margin');
-      }   
+      }
 
       return styles;
 
@@ -289,7 +286,7 @@ const PostsComponent = styled.div`
 
       if (margin) {
         styles += dimensionsControllerToStyles(margin, 'margin');
-      }   
+      }
 
       return styles;
 
@@ -306,7 +303,7 @@ const PostsComponent = styled.div`
 
       let size;
 
-      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         size = getResponsiveSetting(settings, 'prev_icon_size');
@@ -331,7 +328,7 @@ const PostsComponent = styled.div`
 
       let size;
 
-      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         size = getResponsiveSetting(settings, 'prev_icon_size', ':hover');
@@ -356,7 +353,7 @@ const PostsComponent = styled.div`
 
       let height;
 
-      //Получаем значения height из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения height из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         height = getResponsiveSetting(settings, 'prev_icon_size');
@@ -381,7 +378,7 @@ const PostsComponent = styled.div`
 
       let height;
 
-      //Получаем значения height из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения height из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         height = getResponsiveSetting(settings, 'prev_icon_size', ':hover');
@@ -406,7 +403,7 @@ const PostsComponent = styled.div`
 
       let fill;
 
-      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         fill = getResponsiveSetting(settings, 'prev_icon_color');
@@ -431,7 +428,7 @@ const PostsComponent = styled.div`
 
       let fill;
 
-      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         fill = getResponsiveSetting(settings, 'prev_icon_color', ':hover');
@@ -524,9 +521,9 @@ const PostsComponent = styled.div`
 
       if (borderWidth) {
         styles += borderWidthStyled(borderWidth);
-      } 
+      }
 
-      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         borderColor = getResponsiveSetting(settings, 'posts_next_border_color');
@@ -560,7 +557,7 @@ const PostsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-pagination__next:hover {
 
@@ -639,9 +636,9 @@ const PostsComponent = styled.div`
 
       if (borderWidth) {
         styles += borderWidthStyled(borderWidth);
-      } 
+      }
 
-      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         borderColor = getResponsiveSetting(settings, 'posts_next_border_color',':hover');
@@ -675,7 +672,7 @@ const PostsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-pagination__next svg,
   && .altrp-pagination__next img {
@@ -695,7 +692,7 @@ const PostsComponent = styled.div`
 
       if (margin) {
         styles += dimensionsControllerToStyles(margin, 'margin');
-      }   
+      }
 
       return styles;
 
@@ -721,7 +718,7 @@ const PostsComponent = styled.div`
 
       if (margin) {
         styles += dimensionsControllerToStyles(margin, 'margin');
-      }   
+      }
 
       return styles;
 
@@ -738,7 +735,7 @@ const PostsComponent = styled.div`
 
       let size;
 
-      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         size = getResponsiveSetting(settings, 'next_icon_size');
@@ -763,7 +760,7 @@ const PostsComponent = styled.div`
 
       let size;
 
-      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         size = getResponsiveSetting(settings, 'next_icon_size', ':hover');
@@ -788,7 +785,7 @@ const PostsComponent = styled.div`
 
       let height;
 
-      //Получаем значения height из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения height из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         height = getResponsiveSetting(settings, 'next_icon_size');
@@ -813,7 +810,7 @@ const PostsComponent = styled.div`
 
       let height;
 
-      //Получаем значения height из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения height из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         height = getResponsiveSetting(settings, 'next_icon_size', ':hover');
@@ -838,7 +835,7 @@ const PostsComponent = styled.div`
 
       let fill;
 
-      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         fill = getResponsiveSetting(settings, 'next_icon_color');
@@ -863,7 +860,7 @@ const PostsComponent = styled.div`
 
       let fill;
 
-      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         fill = getResponsiveSetting(settings, 'next_icon_color', ':hover');
@@ -899,21 +896,21 @@ const PostsComponent = styled.div`
       }
 
       //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
-  
+
       if (settings !== undefined) {
         backgroundColor = getResponsiveSetting(settings, 'table_style_pagination_count_background_color');
       }
-  
+
       if (backgroundColor) {
         styles += colorPropertyStyled(backgroundColor, 'background-color');
       }
 
       //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
- 
+
       if (settings !== undefined) {
         padding = getResponsiveSetting(settings, 'table_style_pagination_padding_count');
       }
- 
+
       if (padding) {
         styles += dimensionsControllerToStyles(padding);
       }
@@ -980,14 +977,14 @@ const PostsComponent = styled.div`
       let color;
 
       //Получаем значения color из контроллера, обрабатываем и добавляем в styles
- 
+
       if (settings !== undefined) {
         color = getResponsiveSetting(settings, 'table_style_pagination_count_text_color');
       }
- 
+
       if (color) {
         styles += colorPropertyStyled(color, 'color');
-      }     
+      }
 
       return styles;
 
@@ -1006,14 +1003,14 @@ const PostsComponent = styled.div`
       let color;
 
       //Получаем значения color из контроллера, обрабатываем и добавляем в styles
- 
+
       if (settings !== undefined) {
         color = getResponsiveSetting(settings, 'table_style_pagination_count_text_color', ':hover');
       }
- 
+
       if (color) {
         styles += colorPropertyStyled(color, 'color');
-      }     
+      }
 
       return styles;
 
@@ -1029,23 +1026,23 @@ const PostsComponent = styled.div`
       let styles = '';
 
       let margin, backgroundColor, borderType, borderWidth, borderRadius, borderColor, boxShadow;
-   
+
       //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
- 
+
       if (settings !== undefined) {
         margin = getResponsiveSetting(settings, 'count_button_item_margin');
       }
- 
+
       if (margin) {
         styles += dimensionsControllerToStyles(margin, 'margin');
       }
 
       //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
- 
+
       if (settings !== undefined) {
         backgroundColor = getResponsiveSetting(settings, 'table_style_pagination_count_item_background_color');
       }
- 
+
       if (backgroundColor) {
         styles += colorPropertyStyled(backgroundColor, 'background-color');
       }
@@ -1484,9 +1481,9 @@ const PostsComponent = styled.div`
 
       if (borderWidth) {
         styles += borderWidthStyled(borderWidth);
-      } 
+      }
 
-      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         borderColor = getResponsiveSetting(settings, 'page_input_border_color');
@@ -1520,7 +1517,7 @@ const PostsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-pagination__goto-page:hover {
 
@@ -1589,9 +1586,9 @@ const PostsComponent = styled.div`
 
       if (borderWidth) {
         styles += borderWidthStyled(borderWidth);
-      } 
+      }
 
-      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         borderColor = getResponsiveSetting(settings, 'page_input_border_color', ':hover');
@@ -1625,7 +1622,7 @@ const PostsComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-posts {
 
@@ -1777,9 +1774,9 @@ const PostsComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__next, 
-  && .altrp-pagination-pages__item, 
-  && .altrp-pagination__count, 
+  && .altrp-pagination__next,
+  && .altrp-pagination-pages__item,
+  && .altrp-pagination__count,
   && .altrp-pagination__previous {
 
     ${props => {
@@ -1805,9 +1802,9 @@ const PostsComponent = styled.div`
     }
   }
 
-  && .altrp-pagination__next:hover, 
-  && .altrp-pagination-pages__item:hover, 
-  && .altrp-pagination__count:hover, 
+  && .altrp-pagination__next:hover,
+  && .altrp-pagination-pages__item:hover,
+  && .altrp-pagination__count:hover,
   && .altrp-pagination__previous:hover {
 
     ${props => {
@@ -2023,11 +2020,11 @@ const PostsComponent = styled.div`
       }
 
       //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
- 
+
       if (settings !== undefined) {
         borderColor = getResponsiveSetting(settings, 'pagination_select_border_color');
       }
- 
+
       if (borderColor) {
         styles += colorPropertyStyled(borderColor, 'border-color');
       }
@@ -2043,21 +2040,21 @@ const PostsComponent = styled.div`
       }
 
       //Получаем значения color из контроллера, обрабатываем и добавляем в styles
-  
+
       if (settings !== undefined) {
         color = getResponsiveSetting(settings, 'pagination_select_text_color');
       }
-  
+
       if (color) {
         styles += colorPropertyStyled(color, 'color');
       }
 
       //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
-  
+
       if (settings !== undefined) {
         backgroundColor = getResponsiveSetting(settings, 'pagination_select_background_color');
       }
-  
+
       if (backgroundColor) {
         styles += colorPropertyStyled(backgroundColor, 'background-color');
       }

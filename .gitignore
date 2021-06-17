@@ -47,7 +47,9 @@ _ide_helper.php
 /app/Plugins/plugins.json
 public/modules/
 /config/telebot.php
-
+.babelrc
+webpack.editor.common.js
+webpack.front.common.js
 =======
 
 #bundles

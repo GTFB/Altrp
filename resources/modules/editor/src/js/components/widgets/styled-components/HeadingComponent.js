@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+
 import { getResponsiveSetting } from "../../../../../../front-app/src/js/helpers";
 import {
   simplePropertyStyled,
@@ -795,7 +795,7 @@ const HeadingComponent = styled.div`
         styles += colorPropertyStyled(borderColor, 'border-color');
       }
 
-      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         borderRadius = getResponsiveSetting(settings, 'style_border_radius');
@@ -911,7 +911,7 @@ const HeadingComponent = styled.div`
         styles += gradientStyled(gradient);
       }
 
-      //Получаем значения transform из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения transform из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         transform = getResponsiveSetting(settings, 'transform_style');
@@ -1056,7 +1056,7 @@ const HeadingComponent = styled.div`
         styles += colorPropertyStyled(borderColor, 'border-color');
       }
 
-      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         borderRadius = getResponsiveSetting(settings, 'style_border_radius', ':hover');
@@ -1066,7 +1066,7 @@ const HeadingComponent = styled.div`
         styles += sizeStyled(borderRadius, 'border-radius');
       }
 
-      //Получаем значения transform из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения transform из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         transform = getResponsiveSetting(settings, 'transform_style', ':hover');

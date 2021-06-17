@@ -19,27 +19,21 @@ import { START_DRAG, startDrag } from "../store/element-drag/actions";
 import { contextMenu } from "react-contexify/lib/index";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
 import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
-import CarouselComponent from "./widgets/styled-components/CarouselComponent";
 import ImageComponent from "./widgets/styled-components/ImageComponent";
-import ButtonComponent from "./widgets/styled-components/ButtonComponent";
-import DividerComponent from "./widgets/styled-components/DividerComponent";
-import AccordionComponent from "./widgets/styled-components/AccordionComponent";
-import GalleryComponent from "./widgets/styled-components/GalleryComponent";
 import TextComponent from "./widgets/styled-components/TextComponent";
 import TableComponent from "./widgets/styled-components/TableComponent";
 // import HeadingComponent from "./widgets/styled-components/HeadingComponent";
 import NavComponent from "./widgets/styled-components/NavComponent";
 import TabsComponent from "./widgets/styled-components/TabsComponent";
-import SectionWidgetComponent from "./widgets/styled-components/SectionWidgetComponent";
 import PostsComponent from "./widgets/styled-components/PostsComponent";
 import Column from "../classes/elements/Column";
 import MenuComponent from "./widgets/styled-components/MenuComponent";
 import BreadcrumbsComponent from "./widgets/styled-components/BreadcrumbsComponent";
-import VideoComponent from "./widgets/styled-components/VideoComponent";
-import ListComponent from "./widgets/styled-components/ListComponent";
 import MapConstructorComponent from "./widgets/styled-components/MapConstructorComponent";
 import MapComponent from "./widgets/styled-components/MapComponent";
 import DiagramComponent from "./widgets/styled-components/DiagramComponent";
+import DashboardComponent from "./widgets/styled-components/DashboardComponent";
+import FormComponent from "./widgets/styled-components/FormComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -397,26 +391,11 @@ class ElementWrapper extends Component {
 
     let WrapperComponent = "div";
     switch (this.props.element.getName()) {
-      case "gallery":
-        WrapperComponent = GalleryComponent;
-        break;
       case "image":
         WrapperComponent = ImageComponent;
         break;
-      case "button":
-        WrapperComponent = ButtonComponent;
-        break;
       case "text":
         WrapperComponent = TextComponent;
-        break;
-      case "carousel":
-        WrapperComponent = CarouselComponent;
-        break;
-      case "divider":
-        WrapperComponent = DividerComponent;
-        break;
-      case "accordion":
-        WrapperComponent = AccordionComponent;
         break;
       // case "heading":
       //   WrapperComponent = HeadingComponent;
@@ -430,12 +409,6 @@ class ElementWrapper extends Component {
       case "breadcrumbs":
         WrapperComponent = BreadcrumbsComponent;
         break;
-      case "video":
-        WrapperComponent = VideoComponent;
-        break;
-      case "list":
-        WrapperComponent = ListComponent;
-        break;
       case "map_builder":
         WrapperComponent = MapConstructorComponent;
         break;
@@ -445,14 +418,14 @@ class ElementWrapper extends Component {
       case "diagram":
         WrapperComponent = DiagramComponent;
         break;
+      case "dashboards":
+        WrapperComponent = DashboardComponent;
+        break;
       case "nav":
         WrapperComponent = NavComponent;
         break;
       case "tabs":
         WrapperComponent = TabsComponent;
-        break;
-      case "section":
-        WrapperComponent = SectionWidgetComponent;
         break;
       case "posts":
         WrapperComponent = PostsComponent;

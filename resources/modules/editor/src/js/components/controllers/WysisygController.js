@@ -2,7 +2,7 @@ import React, { Suspense, useState, useEffect } from "react";
 import {connect, useSelector} from "react-redux";
 import DynamicIcon from "../../../svgs/dynamic.svg";
 import {controllerMapStateToProps} from "../../decorators/controller";
-const TinyMCE = React.lazy(() => import("../tinymce/TinyMCE"));
+const TinyMCE = React.lazy(() => import(/* webpackChunkName: 'TinyMCE' */"../tinymce/TinyMCE"));
 
 const WysiwygController = ({ controller, controlId, label }) => {
   const currentElement = useSelector((state) => state.currentElement.currentElement);
@@ -41,7 +41,7 @@ const WysiwygController = ({ controller, controlId, label }) => {
         <DynamicIcon />
       </div>
       <Suspense fallback={<div>Loading...</div>}>
-        <TinyMCE 
+        <TinyMCE
           onChange={(value) => setContent(value)} value={content}
           onKeyDown={onKeyDown}
         />

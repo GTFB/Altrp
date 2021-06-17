@@ -1,6 +1,6 @@
-import { getDataByPath } from "./../helpers";
 import AdminBarWrapper from './AdminBarWrapper';
-import Resource from "../../../../editor/src/js/classes/Resource";
+// import Resource from "../../../../editor/src/js/classes/Resource";
+const {getDataByPath}= window.altrpHelpers;
 
 class AdminBar extends React.Component {
   constructor(props) {
@@ -60,7 +60,7 @@ class AdminBar extends React.Component {
 
   openPageAdmin() {
     window.open("/admin/dashboard");
-  } 
+  }
 
   handleInput(event) {
     let value = event.target.value;
@@ -196,7 +196,7 @@ class AdminBar extends React.Component {
                 })}{" "}
                 Edit-Template
               </span>
-              
+
               {this.state.visiblePopupTemplate && (
                 <div
                   className="admin-bar__popup-template"
@@ -221,7 +221,7 @@ class AdminBar extends React.Component {
                                 key={`popup-${index}`}
                               >
                                 {item.name}
-                              </div>  
+                              </div>
                             ))}
                           </div>
                         </div>
@@ -268,7 +268,7 @@ class AdminBar extends React.Component {
                       copy result {iconsManager.renderIcon("copy-icon")}
                     </div>
                   )}
-                </div> 
+                </div>
               )}
 
               {this.state.visibleAutocomplete &&
@@ -310,8 +310,8 @@ class AdminBar extends React.Component {
             </div>
           </div>
           <div className="admin-bar__profile">
-            Hello, 
-            {this.props.data.name ? this.props.data.name : this.props.data.email} 
+            Hello,
+            {this.props.data.name ? this.props.data.name : this.props.data.email}
             {iconsManager.renderIcon("admin-bar4", {
               className: "admin-bar__profile-svg"
             })}
