@@ -103,7 +103,7 @@ class GlobalTemplateStylesController extends Controller
 
     private function updateStylesInAllTemplates($style)
     {
-        $templates = Template::where('id', 64);
+        $templates = Template::all();
         $templates->each(function ($template) use ($style) {
             $this->replaceGlobalStyles($template, $style->guid, $style->settings);
         });

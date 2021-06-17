@@ -92,11 +92,6 @@ class ColorController extends Component {
   }
 
   colorChangeFromPreset(color) {
-    const data = {
-      color: `rgba(${color.colorRGB.r}, ${color.colorRGB.g}, ${color.colorRGB.b}, ${color.colorRGB.a})`,
-      colorPickedHex: color.colorPickedHex,
-      colorRGB: color.colorRGB
-    };
     this.setState({
       colorPickedHex: color.colorPickedHex,
       colorPickedRGB: `rgba(${color.colorRGB.r}, ${color.colorRGB.g}, ${color.colorRGB.b}, ${color.colorRGB.a})`,

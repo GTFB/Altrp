@@ -13,6 +13,7 @@ import HistoryPanel from "./js/components/HistoryPanel";
 import NavigationPanel from "./js/components/NavigationPanel";
 import CommonPanel from "./js/components/CommonPanel";
 import GlobalColors from "./js/components/GlobalColors";
+import GlobalEffects from "./js/components/GlobalEffects";
 import UpdateButton from "./js/components/UpdateButton";
 import CONSTANTS from "./js/consts";
 import { stopDrag } from "./js/store/element-drag/actions";
@@ -69,6 +70,7 @@ class Editor extends Component {
     this.showCommonPanel = this.showCommonPanel.bind(this);
     this.showGlobalColorsPanel = this.showGlobalColorsPanel.bind(this);
     this.showGlobalFontsPanel = this.showGlobalFontsPanel.bind(this);
+    this.showGlobalEffectsPanel = this.showGlobalEffectsPanel.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.onClick = this.onClick.bind(this);
     // store.subscribe(this.templateStatus.bind(this));
@@ -155,6 +157,13 @@ class Editor extends Component {
     this.setState({
       ...this.state,
       activePanel: "global_fonts"
+    });
+  }
+
+  showGlobalEffectsPanel() {
+    this.setState({
+      ...this.state,
+      activePanel: "global_effects"
     });
   }
 
@@ -291,9 +300,11 @@ class Editor extends Component {
                 <CommonPanel
                   showGlobalColorsPanel={this.showGlobalColorsPanel}
                   showGlobalFontsPanel={this.showGlobalFontsPanel}
+                  showGlobalEffectsPanel={this.showGlobalEffectsPanel}
                 />
               )}
               {this.state.activePanel === "global_colors" && <GlobalColors />}
+              {this.state.activePanel === "global_effects" && <GlobalEffects />}
             </div>
             <div className="editor-bottom-panel d-flex align-content-center justify-center">
               <button

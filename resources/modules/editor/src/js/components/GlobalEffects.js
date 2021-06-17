@@ -2,36 +2,39 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import {
   ControlGroup,
+  FormGroup,
   InputGroup,
   Button,
   Divider,
-  Icon
+  Slider,
+  Collapse
 } from "@blueprintjs/core";
+import { Select } from "@blueprintjs/select";
 import { SketchPicker } from "react-color";
 import invert from "invert-color";
 import Resource from "../classes/Resource";
 import { connect } from "react-redux";
-import { setGlobalColors } from "../store/altrp-global-colors/actions";
+import { setGlobalEffect } from "../store/altrp-global-colors/actions";
 import { createGlobalColor, getTemplateDataStorage } from "../helpers";
 import BaseElement from "../classes/elements/BaseElement";
 
 const Panel = styled.div`
   background-color: #fff;
-  padding: 25px 15px;
+  padding: 25px 20px;
   width: 100%;
   margin: 20px 0;
   overflow: auto;
 `;
 
 const mapStateToProps = state => ({
-  colors: state.globalStyles.colors
+  effects: state.globalStyles.effects
 });
 
 const mapDispatchToProps = dispatch => ({
-  setColors: colors => dispatch(setGlobalColors(colors))
+  setEffect: effect => dispatch(setGlobalEffect(effect))
 });
 
-class GlobalColors extends Component {
+class GlobalEffects extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -67,7 +70,7 @@ class GlobalColors extends Component {
     currentColor.colorRGB = rgb;
     this.setState(
       s => ({ ...s, colors: colors }),
-      () => this.props.setColors(colors)
+      () => this.props.setEffect(colors)
     );
     const data = {
       color: rgba,
@@ -94,37 +97,11 @@ class GlobalColors extends Component {
   }, 50);
 
   /**
-   *
    * @param {BaseElement} template
    * @param {String} guid
    * @param {*} color
    */
   recursiveWalkTree(template, guid, color) {
-    if (Array.isArray(template)) {
-      template?.forEach(
-        /**
-         * @param {BaseElement} templateItem
-         */
-        templateItem => {
-          const hasGlobal = Boolean(templateItem.hasGlobal(guid));
-          if (hasGlobal) {
-            templateItem.updateAllGlobals(guid, color);
-          }
-          this.recursiveWalkTree(templateItem, guid, color);
-        }
-      );
-    } else this.recursiveUpdate(template, guid, color);
-  }
-
-  /**
-   * @param {BaseElement} template
-   * @param {String} guid
-   * @param {*} color
-   */
-  recursiveUpdate(template, guid, color) {
-    if (template.hasGlobal(guid)) {
-      template.updateAllGlobals(guid, color);
-    }
     template.children?.forEach(
       /**
        * @param {BaseElement} child
@@ -133,7 +110,6 @@ class GlobalColors extends Component {
         if (child.hasGlobal(guid)) {
           child.updateAllGlobals(guid, color);
         }
-
         child.children.length > 0 &&
           this.recursiveWalkTree(child.children, guid, color);
       }
@@ -147,7 +123,7 @@ class GlobalColors extends Component {
     color.name = value;
     this.setState(
       s => ({ ...s, colors: colors }),
-      () => this.props.setColors(colors)
+      () => this.props.setEffect(colors)
     );
     this.debounceChangeName(value, id);
   };
@@ -174,7 +150,7 @@ class GlobalColors extends Component {
       ];
       this.setState(
         s => ({ ...s, colors: colors }),
-        () => this.props.setColors(colors)
+        () => this.props.setEffect(colors)
       );
     });
   }
@@ -186,7 +162,7 @@ class GlobalColors extends Component {
       colors = colors.filter(item => item.id !== id);
       this.setState(
         s => ({ ...s, colors: colors }),
-        () => this.props.setColors(colors)
+        () => this.props.setEffect(colors)
       );
       this.globalStyleResource.delete(id);
     }
@@ -195,61 +171,55 @@ class GlobalColors extends Component {
   render() {
     return (
       <Panel>
-        {this.state.colors.length > 0 ? (
-          this.state.colors.map(item => {
-            return (
-              <>
-                <ControlGroup
-                  key={item.id}
-                  style={{
-                    marginBottom: "10px"
-                  }}
-                >
-                  <InputGroup
-                    style={{
-                      width: "140px"
-                    }}
-                    onChange={e => this.nameChange(e.target.value, item.id)}
-                    value={item.name}
-                  ></InputGroup>
+        <Collapse isOpen={true}>
+          <ControlGroup vertical>
+            <FormGroup label="Enter Effect Name">
+              <InputGroup id="text-input" placeholder="Enter Effect Name" />
+            </FormGroup>
 
-                  <Button onClick={e => this.deleteItem(item.id)}>
-                    <Icon icon="trash"></Icon>
-                  </Button>
-                  <Button
-                    onClick={e => this.toggleColorPanel(item.id)}
-                    style={{
-                      backgroundColor: item.color,
-                      width: "70px",
-                      color: invert(item.colorPickedHex, {
-                        black: "#000000",
-                        white: "#FFFFFF",
-                        threshold: 0.45
-                      })
-                    }}
-                  >
-                    {item.colorPickedHex}
-                  </Button>
-                </ControlGroup>
-                <div
-                  className={!item.colorPanelOpen ? " control-color-hide" : ""}
-                >
-                  <SketchPicker
-                    presetColors={[]}
-                    color={item.color}
-                    onChange={color => this.colorChange(color, item.id)}
-                    style={{
-                      padding: 0,
-                      boxShadow: "none"
-                    }}
-                  ></SketchPicker>
-                </div>
-              </>
-            );
-          })
-        ) : (
-          <div>Color list empty</div>
-        )}
+            <FormGroup label="Choose Effect Color">
+              <SketchPicker
+                presetColors={[]}
+                // onChange={color => this.colorChange(color, item.id)}
+                style={{
+                  padding: 0,
+                  boxShadow: "none"
+                }}
+              ></SketchPicker>
+            </FormGroup>
+            <FormGroup label="Blur">
+              <Slider
+                min={0}
+                max={100}
+                stepSize={1}
+                labelStepSize={10}
+                showTrackFill={true}
+              />
+            </FormGroup>
+            <FormGroup label="Horizontal displacement">
+              <Slider
+                min={-100}
+                max={100}
+                stepSize={1}
+                labelRenderer={false}
+                showTrackFill={true}
+              />
+            </FormGroup>
+            <FormGroup label="Vertical displacement">
+              <Slider
+                min={-100}
+                max={100}
+                stepSize={1}
+                labelRenderer={false}
+                showTrackFill={true}
+              />
+            </FormGroup>
+            <FormGroup label="Position"></FormGroup>
+            <FormGroup>
+              <Button style={{ width: "100%" }}>Save</Button>
+            </FormGroup>
+          </ControlGroup>
+        </Collapse>
         <Divider></Divider>
         <Button style={{ width: "100%" }} onClick={this.addItem}>
           Add Item
@@ -258,4 +228,4 @@ class GlobalColors extends Component {
     );
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(GlobalColors);
+export default connect(mapStateToProps, mapDispatchToProps)(GlobalEffects);
