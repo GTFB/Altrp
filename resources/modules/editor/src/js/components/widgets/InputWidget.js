@@ -610,10 +610,10 @@ class InputWidget extends Component {
     150
   );
 
-  inputKeyBetween = setTimeout(
-    value => this.dispatchFieldValueToStore(value, true),
-    this.props.element.getSettings("change_change_end_delay")
-  );
+  // inputKeyBetween = setTimeout(
+  //   value => this.dispatchFieldValueToStore(value, true),
+  //   this.props.element.getSettings("change_change_end_delay")
+  // );
   /**
    * получить опции
    */
@@ -792,7 +792,7 @@ class InputWidget extends Component {
       this.setState(state => ({ ...state, isDisabled: false }));
     }
   };
-  shouldComponentUpdate(nextProps) {
+  // shouldComponentUpdate(nextProps) {
     // console.log(nextProps);
 
     // console.log(nextProps.ElementWrapper=== this.props.ElementWrapper);
@@ -814,8 +814,8 @@ class InputWidget extends Component {
     // console.log(nextProps.rootElement=== this.props.rootElement);
     // console.log(nextProps.rootElement);
     // console.log(nextProps.updateToken=== this.props.updateToken);
-    return true;
-  }
+  //   return true;
+  // }
   /**
    * Взовращает имя для атрибута name
    * @return {string}

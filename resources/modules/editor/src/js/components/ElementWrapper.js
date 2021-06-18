@@ -16,16 +16,13 @@ import DuplicateIcon from "../../svgs/duplicate.svg";
 import CloseIcon from "../../svgs/close.svg";
 import store from "../store/store";
 import { START_DRAG, startDrag } from "../store/element-drag/actions";
-import { contextMenu } from "react-contexify/lib/index";
+import { contextMenu } from "react-contexify";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
 import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
 import ImageComponent from "./widgets/styled-components/ImageComponent";
-import TextComponent from "./widgets/styled-components/TextComponent";
-import TableComponent from "./widgets/styled-components/TableComponent";
-// import HeadingComponent from "./widgets/styled-components/HeadingComponent";
+import PostsComponent from "./widgets/styled-components/PostsComponent";
 import NavComponent from "./widgets/styled-components/NavComponent";
 import TabsComponent from "./widgets/styled-components/TabsComponent";
-import PostsComponent from "./widgets/styled-components/PostsComponent";
 import Column from "../classes/elements/Column";
 import MenuComponent from "./widgets/styled-components/MenuComponent";
 import BreadcrumbsComponent from "./widgets/styled-components/BreadcrumbsComponent";
@@ -33,7 +30,6 @@ import MapConstructorComponent from "./widgets/styled-components/MapConstructorC
 import MapComponent from "./widgets/styled-components/MapComponent";
 import DiagramComponent from "./widgets/styled-components/DiagramComponent";
 import DashboardComponent from "./widgets/styled-components/DashboardComponent";
-import FormComponent from "./widgets/styled-components/FormComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -394,15 +390,6 @@ class ElementWrapper extends Component {
       case "image":
         WrapperComponent = ImageComponent;
         break;
-      case "text":
-        WrapperComponent = TextComponent;
-        break;
-      // case "heading":
-      //   WrapperComponent = HeadingComponent;
-      //   break;
-      case "table":
-        WrapperComponent = TableComponent;
-        break;
       case "menu":
         WrapperComponent = MenuComponent;
         break;
@@ -426,9 +413,6 @@ class ElementWrapper extends Component {
         break;
       case "tabs":
         WrapperComponent = TabsComponent;
-        break;
-      case "posts":
-        WrapperComponent = PostsComponent;
         break;
     }
 

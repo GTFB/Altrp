@@ -65,6 +65,7 @@ export function btnStyles(settings) {
     ["border-radius", "border_radius", "dimensions", ":hover"],
     ["", "style_background_shadow", "shadow", ":hover"],
     ["color", "font_color", "color", ":hover"],
+    ["", "background_image", "media", ":hover"],
 
     "& .altrp-btn-icon",
     ["padding", "icon_padding", "dimensions", ":hover"],

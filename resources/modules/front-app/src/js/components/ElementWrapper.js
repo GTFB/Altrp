@@ -5,12 +5,8 @@ import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/Alt
 import { changeCurrentPageProperty } from "../store/current-page/actions";
 import { ElementWrapperDivComponent } from "../../../../editor/src/js/components/widgets/styled-components/ElementWrapperComponent";
 import ImageComponent from "../../../../editor/src/js/components/widgets/styled-components/ImageComponent";
-import TextComponent from "../../../../editor/src/js/components/widgets/styled-components/TextComponent";
-import TableComponent from "../../../../editor/src/js/components/widgets/styled-components/TableComponent";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
 import TabsComponent from "../../../../editor/src/js/components/widgets/styled-components/TabsComponent";
-import PostsComponent from "../../../../editor/src/js/components/widgets/styled-components/PostsComponent";
-import HeadingComponent from "../../../../editor/src/js/components/widgets/styled-components/HeadingComponent";
 import MenuComponent from "../../../../editor/src/js/components/widgets/styled-components/MenuComponent";
 import BreadcrumbsComponent from "../../../../editor/src/js/components/widgets/styled-components/BreadcrumbsComponent";
 import MapConstructorComponent from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
@@ -345,23 +341,11 @@ class ElementWrapper extends Component {
       case "image":
         WrapperComponent = ImageComponent;
         break;
-      case "text":
-        WrapperComponent = TextComponent;
-        break;
-      case "table":
-        WrapperComponent = TableComponent;
-        break;
-      case "heading":
-        WrapperComponent = HeadingComponent;
-        break;
       case "menu":
         WrapperComponent = MenuComponent;
         break;
       case "breadcrumbs":
         WrapperComponent = BreadcrumbsComponent;
-        break;
-      case "nav":
-        WrapperComponent = NavComponent;
         break;
       case "map_builder":
         WrapperComponent = MapConstructorComponent;
@@ -375,11 +359,11 @@ class ElementWrapper extends Component {
       case "dashboards":
         WrapperComponent = DashboardComponent;
         break;
+      case "nav":
+        WrapperComponent = NavComponent;
+        break;
       case "tabs":
         WrapperComponent = TabsComponent;
-        break;
-      case "posts":
-        WrapperComponent = PostsComponent;
         break;
     }
 

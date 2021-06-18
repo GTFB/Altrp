@@ -16,7 +16,9 @@ export default function AccordionComponent(settings) {
       const value = getResponsiveSetting(settings, "spacing_icon_style");
       const slider = sliderStyled(value);
 
-      return `margin-left: ${slider}; margin-right: ${slider};`
+      if(slider) {
+        return `margin-left: ${slider}; margin-right: ${slider};`
+      }
     },
 
     "}",
@@ -71,7 +73,9 @@ export default function AccordionComponent(settings) {
       const value = getResponsiveSetting(settings, "spacing_icon_style", ":hover");
       const slider = sliderStyled(value);
 
-      return `margin-left: ${slider}; margin-right: ${slider};`
+      if(slider) {
+        return `margin-left: ${slider}; margin-right: ${slider};`
+      }
     },
 
     "}",

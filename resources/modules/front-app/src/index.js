@@ -1,8 +1,9 @@
+console.log('FIRST SCRIPT: ', performance.now());
 import WIDGETS_DEPENDS from "./js/constants/WIDGETS_DEPENDS";
 import {Link} from 'react-router-dom';
 window.Link = Link;
-console.log('FIRST SCRIPT: ', performance.now());
 import './sass/front-style.scss';
+import './js/libs/react-lodash';
 
 window.sSr = false;
 window.libsLoaded = [];
@@ -60,19 +61,19 @@ import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElement
   console.log('LOAD FrontElementsManager: ', performance.now());
   loadingCallback();
 });
-import (/* webpackChunkName: 'React_ReactDom_Lodash' */'./js/libs/react-lodash').then(module => {
-  console.log('LOAD React_ReactDom_Lodash: ', performance.now());
+// import (/* webpackChunkName: 'React_ReactDom_Lodash' */'./js/libs/react-lodash').then(module => {
+//   console.log('LOAD React_ReactDom_Lodash: ', performance.now());
 
-  import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
-    loadingCallback();
-  })
+import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
+  loadingCallback();
+})
 
-  import (/* webpackChunkName: 'ElementWrapper' */'./js/components/ElementWrapper').then(module => {
-    window.ElementWrapper = module.default;
-    console.log('LOAD ElementWrapper: ', performance.now());
-    loadingCallback();
+import (/* webpackChunkName: 'ElementWrapper' */'./js/components/ElementWrapper').then(module => {
+  window.ElementWrapper = module.default;
+  console.log('LOAD ElementWrapper: ', performance.now());
+  loadingCallback();
   });
-});
+// });
 import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element-component').then(module => {
   window.elementDecorator = module.default;
   console.log('LOAD elementDecorator: ', performance.now());

@@ -109,12 +109,13 @@ module.exports = {
     hotOnly: true
   },
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new CleanWebpackPlugin(),
+
     new webpack.DefinePlugin({
       "process.env": "{}",
       global: {}
-    }),
-    // new webpack.HotModuleReplacementPlugin(),
-    new CleanWebpackPlugin()
+    })
     // new ExtractTextPlugin('style.css'),
     // new MiniCssExtractPlugin({
     //   // Options similar to the same options in webpackOptions.output

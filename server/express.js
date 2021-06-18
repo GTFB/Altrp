@@ -79,6 +79,7 @@ app.use(
 app.use(express.static("public"));
 app.get("/*", (req, res) => {
   return res.json({ success: true });
+
 });
 
 /**

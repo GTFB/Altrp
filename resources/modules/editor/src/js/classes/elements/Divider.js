@@ -181,24 +181,6 @@ class Divider extends BaseElement {
       ],
     });
 
-    this.addControl('position_padding', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Padding',
-      default: {
-        top: 20,
-        right: 25,
-        bottom: 20,
-        left: 25,
-        unit: 'px',
-        bind: true
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-    });
-
     this.addControl('position_z_index', {
       type: CONTROLLER_NUMBER,
       label: 'Z-index',
@@ -252,6 +234,9 @@ class Divider extends BaseElement {
       max: 100,
       min: 0,
       step: 0.01,
+      conditions: {
+        'divider_style_type': ["curly", "curved", "slashes", "squared", "wavy", "zigzag"],
+      },
     });
 
     this.addControl("divider_style_amount", {
@@ -263,6 +248,9 @@ class Divider extends BaseElement {
       max: 100,
       min: 0,
       step: 0.01,
+      conditions: {
+        'divider_style_type': ["curly", "curved", "slashes", "squared", "wavy", "zigzag"],
+      },
     });
 
     this.addControl("divider_style_gap", {

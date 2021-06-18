@@ -2,20 +2,15 @@ import { addElement } from "../store/elements-storage/actions";
 import { changeCurrentPageProperty } from "../store/current-page/actions";
 import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 import ImageComponent from "../../../../editor/src/js/components/widgets/styled-components/ImageComponent";
-import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
-import TextComponent from "../../../../editor/src/js/components/widgets/styled-components/TextComponent";
-import TableComponent from "../../../../editor/src/js/components/widgets/styled-components/TableComponent";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
 import TabsComponent from "../../../../editor/src/js/components/widgets/styled-components/TabsComponent";
-import SectionWidgetComponent from "../../../../editor/src/js/components/widgets/styled-components/SectionWidgetComponent";
-import PostsComponent from "../../../../editor/src/js/components/widgets/styled-components/PostsComponent";
-import HeadingComponent from "../../../../editor/src/js/components/widgets/styled-components/HeadingComponent";
 import MenuComponent from "../../../../editor/src/js/components/widgets/styled-components/MenuComponent";
 import BreadcrumbsComponent from "../../../../editor/src/js/components/widgets/styled-components/BreadcrumbsComponent";
 import MapConstructorComponent
   from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
 import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
+import DashboardComponent from "../../../../editor/src/js/components/widgets/styled-components/DashboardComponent";
 
 class SimpleElementWrapper extends Component {
   constructor(props) {
@@ -283,27 +278,12 @@ class SimpleElementWrapper extends Component {
     switch (this.props.element.getName()) {
       case "image":
         WrapperComponent = ImageComponent;
-        break
-      case "text":
-        WrapperComponent = TextComponent;
-        break
-      case "accordion":
-        WrapperComponent = AccordionComponent;
-        break
-      case "table":
-        WrapperComponent = TableComponent;
-        break
-      case "heading":
-        WrapperComponent = HeadingComponent;
-        break
+        break;
       case "menu":
         WrapperComponent = MenuComponent;
         break;
       case "breadcrumbs":
         WrapperComponent = BreadcrumbsComponent;
-        break;
-      case "nav":
-        WrapperComponent = NavComponent;
         break;
       case "map_builder":
         WrapperComponent = MapConstructorComponent;
@@ -314,14 +294,14 @@ class SimpleElementWrapper extends Component {
       case "diagram":
         WrapperComponent = DiagramComponent;
         break;
+      case "dashboards":
+        WrapperComponent = DashboardComponent;
+        break;
+      case "nav":
+        WrapperComponent = NavComponent;
+        break;
       case "tabs":
         WrapperComponent = TabsComponent;
-        break;
-      case "section":
-        WrapperComponent = SectionWidgetComponent;
-        break;
-      case "posts":
-        WrapperComponent = PostsComponent;
         break;
     }
     tooltip_text = window.altrpHelpers.replaceContentWithData(tooltip_text, this.props.element.getCurrentModel().getData())

@@ -9,6 +9,11 @@ export default function ListComponent(settings) {
     ["z-index", "position_z_index"],
     "}",
 
+    "altrp-list:hover",
+    ["margin", "position_margin", "dimensions", ":hover"],
+    ["padding", "position_padding", "dimensions", ":hover"],
+    "}",
+
     "altrp-list-ul-inline, & .altrp-list-ul-default .altrp-list-li",
     ["justify-content", "alignment_list_style"],
     "}",
