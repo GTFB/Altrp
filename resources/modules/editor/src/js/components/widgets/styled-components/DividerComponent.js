@@ -22,13 +22,14 @@ export default function DividerComponent(settings) {
     "altrp-divider",
 
     ["margin", "position_margin", "dimensions"],
-    ["padding", "position_padding", "dimensions"],
     ["z-index", "position_z_index"],
     () => {
       const value = getResponsiveSetting(settings, "divider_style_gap");
       const slider = sliderStyled(value);
 
-      return ` padding-top: ${slider}; padding-bottom: ${slider}; `
+      if(slider) {
+        return ` padding-top: ${slider}; padding-bottom: ${slider}; `
+      }
     },
 
     "}",
@@ -43,12 +44,13 @@ export default function DividerComponent(settings) {
     "altrp-divider:hover",
 
     ["margin", "position_margin", "dimensions", ":hover"],
-    ["padding", "position_padding", "dimensions", ":hover"],
     () => {
       const value = getResponsiveSetting(settings, "divider_style_gap", ":hover");
       const slider = sliderStyled(value);
 
-      return ` padding-top: ${slider}; padding-bottom: ${slider}; `
+      if(slider) {
+        return ` padding-top: ${slider}; padding-bottom: ${slider}; `
+      }
     },
 
     "& .altrp-divider-label",

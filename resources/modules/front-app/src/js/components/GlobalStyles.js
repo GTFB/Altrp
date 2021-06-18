@@ -100,6 +100,8 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
     }
   });
 
+  styles += `} `;
+
   return styles;
 }}`;
 function mapStateToProps(state) {

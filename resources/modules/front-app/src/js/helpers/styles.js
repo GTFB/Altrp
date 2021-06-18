@@ -110,26 +110,24 @@ export function dimensionsControllerToStyles(
  * @return {string}
  */
 export function shadowControllerToStyles(data) {
-  if (data) {
-    let {
-      type = "outline",
-      offsetX,
-      horizontal,
-      offsetY,
-      vertical,
-      blurRadius,
-      blur,
-      spread,
-      spreadRadius,
-      color
-    } = data;
-    return `box-shadow: ${type || " "} ${offsetX ||
-      horizontal ||
-      0}px ${offsetY || vertical || 0}px ${blurRadius ||
-      blur ||
-      0}px ${spreadRadius || spread || 0}px ${color}; `;
+
+
+  if(data) {
+    let {type = 'outline', offsetX,horizontal, offsetY, vertical, blurRadius,blur,spread, spreadRadius, color } = data;
+
+    if(
+      offsetX !== 0 ||
+      offsetY !== 0 ||
+      horizontal !== 0 ||
+      vertical !== 0 ||
+      blur !== 0 ||
+      blurRadius !== 0 ||
+      spread !== 0 ||
+      spreadRadius !== 0) {
+      return `box-shadow: ${type || ' '} ${offsetX||horizontal || 0}px ${offsetY || vertical || 0}px ${blurRadius || blur || 0}px ${spreadRadius ||spread || 0}px ${color}; `;
+    }
   }
-  return "";
+  return  '';
 }
 
 /**
@@ -186,7 +184,11 @@ export function backgroundImageControllerToStyles(data) {
 
   const { url } = data;
 
-  return `background-image: url('${url}'); `;
+  if(url) {
+    return `background-image: url('${url}'); `;
+  } else {
+    return ""
+  }
 }
 
 /**
@@ -335,7 +337,9 @@ export function sizeStyled(data = {}, property) {
     return styles;
   }
 
-  styles = `${property}: ${size + (unit || "")}; `;
+  if(size) {
+    styles = `${property}: ${size + (unit || '')}; `;
+  }
 
   return styles;
 }
@@ -646,10 +650,11 @@ export function shadowStyled(controller = {}, important) {
     const blur = controller.blur || 0;
     const spread = controller.spread || 0;
     const color = controller.color || "";
-    return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread} ${color} ${important};`;
-  } else {
-    return "";
-  }
+
+    if(horizontal !== 0 || vertical !== 0 || blur !== 0 || spread !== 0) {
+      return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread} ${color} ${important};`;
+    } else return ""
+  } else return ""
 }
 
 /**
@@ -709,11 +714,11 @@ export function mediaStyled(controller = {}) {
 export function styledString(styles, settings) {
   let stringStyles = "";
 
-  if (_.keys(settings).length !== 0) {
-    styles.forEach(style => {
-      if (_.isString(style)) {
-        if (style !== "}") {
-          if (style.split("")[0] === "." || style.split("")[0] === "&") {
+  if(_.keys(settings).length !== 0) {
+    styles.forEach((style, idx) => {
+      if(_.isString(style)) {
+        if(style !== "}") {
+          if(style.split('')[0] === "." || style.split('')[0] === "&") {
             stringStyles += `${style} {`;
           } else {
             stringStyles += `& .${style}{`;
@@ -746,9 +751,10 @@ export function styledString(styles, settings) {
               stringStyles += typographicControllerToStyles(variable);
               break;
             case "slider":
-              stringStyles += `${style[0]}:${sliderStyled(
-                variable
-              )} ${important};`;
+
+              if(sliderStyled(variable)) {
+                stringStyles += `${style[0]}:${sliderStyled(variable)} ${important};`;
+              }
               break;
             case "shadow":
               stringStyles += shadowStyled(variable, important);

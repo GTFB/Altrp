@@ -15,8 +15,8 @@ import { getResponsiveSetting } from '../../helpers';
 
 /**
  * Преобразует объект стилей, который задается в виджете Heading в строку css для вставки в GlobalStyles
- * @param {{}} settings 
- * @param {string} id 
+ * @param {{}} settings
+ * @param {string} id
  * @return {string}
  */
 

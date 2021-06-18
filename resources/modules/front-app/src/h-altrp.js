@@ -25,7 +25,6 @@ import (/* webpackChunkName: 'React_Lodash' */'./js/libs/react-lodash').then(mod
     window.currentRouterMatch = new window.AltrpModel({
       params:queryString.parseUrl(window.location.href).query
     });
-    console.log(window.altrpHelpers.replaceContentWithData);
     loadingCallback();
     loadDatastorageUpdater();
   })
