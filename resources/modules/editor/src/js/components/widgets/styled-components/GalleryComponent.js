@@ -122,7 +122,11 @@ export default function GalleryComponent(settings) {
     ["grid-gap", "spacing_grid_settings", "slider"],
     () => {
       const value = getResponsiveSetting(settings, "columns_grid_settings");
-      return `grid-template-columns: repeat(${defaultStyled(value)}, 1fr);`
+      const def = defaultStyled(value);
+
+      if(def) {
+        return `grid-template-columns: repeat(${def}, 1fr);`
+      }
     },
 
     "}"

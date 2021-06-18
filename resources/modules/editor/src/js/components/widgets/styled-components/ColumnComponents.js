@@ -19,7 +19,7 @@ const ColumnComponent = (settings) => {
   let marginBottom, marginBottomH, backgroundImage, backgroundPosition, backgroundAttachment, backgroundRepeat, backgroundSizeInUnits, backgroundSize;
   let backgroundImageH, backgroundPositionH, backgroundAttachmentH, backgroundRepeatH, backgroundSizeInUnitsH, backgroundSizeH, margin, marginH, padding, paddingH, width;
 
-  styles += "& .altrp-column {";
+  styles += "& div.altrp-column.altrp-column-priority {";
 
   //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
 
@@ -93,7 +93,7 @@ const ColumnComponent = (settings) => {
   }
 
   if (justifyContent) {
-    styles += simplePropertyStyled(justifyContent, 'justify-content', '!important');
+    styles += simplePropertyStyled(justifyContent, 'justify-content');
   }
 
   //Получаем значения overflow из контроллера, обрабатываем и добавляем в styles
@@ -190,7 +190,7 @@ const ColumnComponent = (settings) => {
 
   //hover
 
-  styles += "& .altrp-column:hover {";
+  styles += "& div.altrp-column.altrp-column-priority:hover {";
 
   //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
 
@@ -250,7 +250,7 @@ const ColumnComponent = (settings) => {
   }
 
   if (justifyContentH) {
-    styles += simplePropertyStyled(justifyContentH, 'justify-content', '!important');
+    styles += simplePropertyStyled(justifyContentH, 'justify-content');
   }
 
   //Получаем значения overflow из контроллера, обрабатываем и добавляем в styles

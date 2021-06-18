@@ -63,8 +63,8 @@ export default function AdvancedComponent(settings) {
     () => {
       const value = getResponsiveSetting(settings, "arrow_size");
       const slider = sliderStyled(value);
-
-      if(slider) {
+      console.log(slider);
+      if(slider !== "") {
         return `
           & > .altrp-tooltip::after { border-width: ${slider}; }
           & > .altrp-tooltip--top { bottom: calc(100% + ${slider}); }

@@ -41,10 +41,12 @@ export default function CarouselComponent(settings) {
       const value = getResponsiveSetting(settings, "space_between_slides_style");
       const slider = sliderStyled(value);
 
-      return `
-      & .slick-slide { padding: 0 ${slider}; }
-      & .altrp-carousel-dots { padding 0 ${slider}; }
-      `
+      if(slider) {
+        return `
+        & .slick-slide { padding: 0 ${slider}; }
+        & .altrp-carousel-dots { padding 0 ${slider}; }
+        `
+      }
     },
 
     "altrp-carousel-arrow",
@@ -56,7 +58,9 @@ export default function CarouselComponent(settings) {
       const value = getResponsiveSetting(settings, "arrows_size_navigation_style");
       const slider = sliderStyled(value);
 
-      return `svg {height: ${slider}; width: ${slider};}`
+      if(slider) {
+        return `svg {height: ${slider}; width: ${slider};}`
+      }
     },
 
     "& svg path",
@@ -72,18 +76,23 @@ export default function CarouselComponent(settings) {
       const value = getResponsiveSetting(settings, "horizontal_offset_arrows_navigation_style");
       const slider = sliderStyled(value);
 
-      return `
-      & .altrp-carousel-arrow-prev { left: ${slider}; }
-      & .altrp-carousel-arrow-next { right: ${slider}; }
-      `
+      if(slider) {
+        return `
+        & .altrp-carousel-arrow-prev { left: ${slider}; }
+        & .altrp-carousel-arrow-next { right: ${slider}; }
+        `
+      }
     },
 
     () => {
       const value = getResponsiveSetting(settings, "vertical_no_center_offset_arrows_navigation_style");
       const slider = sliderStyled(value);
-      return `
-      & .altrp-carousel-arrow { top:${slider}; }
-      `
+
+      if(slider) {
+        return `
+        & .altrp-carousel-arrow { top:${slider}; }
+        `
+      }
     },
 
     "altrp-carousel-arrow:hover",
@@ -102,7 +111,9 @@ export default function CarouselComponent(settings) {
       const value = getResponsiveSetting(settings, "arrows_size_navigation_style", ":hover");
       const slider = sliderStyled(value);
 
-      return `& svg { height: ${slider}; width: ${slider}; }`
+      if(slider) {
+        return `& svg { height: ${slider}; width: ${slider}; }`
+      }
     },
 
     "}",
@@ -110,9 +121,12 @@ export default function CarouselComponent(settings) {
     () => {
       const value = getResponsiveSetting(settings, "dots_size_navigation_style");
       const slider = sliderStyled(value);
-      return `
-      & .altrp-carousel-paging { width: ${slider}; height: ${slider}; }
-      `
+
+      if(slider) {
+        return `
+        & .altrp-carousel-paging { width: ${slider}; height: ${slider}; }
+        `
+      }
       // & .altrp-carousel-dots li { margin-left: calc(${slider} * 0.1); }
     },
 
@@ -146,9 +160,12 @@ export default function CarouselComponent(settings) {
     () => {
       const value = getResponsiveSetting(settings, "vertical_no_center_offset_dots_navigation_style");
       const slider = sliderStyled(value);
-      return `
+
+      if(slider) {
+        return `
       transform: translateY(${slider})
       `
+      }
     },
 
     "}",

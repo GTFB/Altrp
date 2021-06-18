@@ -653,10 +653,6 @@ class Button extends BaseElement {
       label: 'Border Width',
       default: {
         bind: true,
-        top: 2,
-        left: 2,
-        right: 2,
-        bottom: 2,
       },
       units: [
         'px',

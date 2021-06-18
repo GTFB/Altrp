@@ -28,7 +28,9 @@ export default function DividerComponent(settings) {
       const value = getResponsiveSetting(settings, "divider_style_gap");
       const slider = sliderStyled(value);
 
-      return ` padding-top: ${slider}; padding-bottom: ${slider}; `
+      if(slider) {
+        return ` padding-top: ${slider}; padding-bottom: ${slider}; `
+      }
     },
 
     "}",
@@ -47,7 +49,9 @@ export default function DividerComponent(settings) {
       const value = getResponsiveSetting(settings, "divider_style_gap", ":hover");
       const slider = sliderStyled(value);
 
-      return ` padding-top: ${slider}; padding-bottom: ${slider}; `
+      if(slider) {
+        return ` padding-top: ${slider}; padding-bottom: ${slider}; `
+      }
     },
 
     "& .altrp-divider-label",

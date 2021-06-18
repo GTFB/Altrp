@@ -79,8 +79,6 @@ const GlobalStyles = createGlobalStyle`${({elementsSettings})=>{
 
   styles += `} `;
 
-  // console.log(styles);
-
   return styles;
 }}`;
 

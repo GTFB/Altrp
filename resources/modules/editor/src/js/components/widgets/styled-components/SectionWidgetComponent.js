@@ -38,7 +38,7 @@ export default function SectionWidgetComponent(settings) {
     }
 
     if (flexWrap) {
-      styles += simplePropertyStyled(flexWrap, 'flex-wrap', '!important');
+      styles += simplePropertyStyled(flexWrap, 'flex-wrap');
     }
 
     //Получаем значения vertical-align из контроллера, обрабатываем и добавляем в styles
@@ -167,7 +167,7 @@ export default function SectionWidgetComponent(settings) {
     }
 
     if (flexWrap) {
-      styles += simplePropertyStyled(flexWrap, 'flex-wrap', '!important');
+      styles += simplePropertyStyled(flexWrap, 'flex-wrap');
     }
 
     //Получаем значения vertical-align из контроллера, обрабатываем и добавляем в styles
@@ -441,6 +441,17 @@ export default function SectionWidgetComponent(settings) {
 
     let backgroundSize, backgroundRepeat, backgroundSizeInUnit, backgroundAttachment, backgroundPosition, backgroundImage;
 
+
+    //Получаем значения background-image из контроллера, обрабатываем и добавляем в styles
+
+    if (settings !== undefined) {
+      backgroundImage = getResponsiveSetting(settings, 'background_image');
+    }
+
+    if (backgroundImage) {
+      backgroundImage = backgroundImageControllerToStyles(backgroundImage);
+    }
+
     //Получаем значения background-size из контроллера, обрабатываем и добавляем в styles
 
     if (settings !== undefined) {
@@ -489,16 +500,6 @@ export default function SectionWidgetComponent(settings) {
 
     if (backgroundPosition) {
       styles += simplePropertyStyled(backgroundPosition, 'background-position');
-    }
-
-    //Получаем значения background-image из контроллера, обрабатываем и добавляем в styles
-
-    if (settings !== undefined) {
-      backgroundImage = getResponsiveSetting(settings, 'background_image');
-    }
-
-    if (backgroundImage) {
-      styles += backgroundImageControllerToStyles(backgroundImage);
     }
 
     return styles;
@@ -585,7 +586,7 @@ export default function SectionWidgetComponent(settings) {
 
     if (width) {
       width = sliderStyled(width);
-      styles += `width: ${width} !important`;
+      styles += `width: ${width}`;
     }
 
     return styles;
@@ -671,65 +672,65 @@ export default function SectionWidgetComponent(settings) {
 
   return `
 
-  & .altrp-section,
-  & .altrp-section-full-fill {
+  & div.altrp-section,
+  & div.altrp-section-full-fill {
     ${altrpSection()}
   } 
 
-  & .altrp-section:hover,
-  & .altrp-section-full-fill:hover {
+  & div.altrp-section:hover,
+  & div.altrp-section-full-fill:hover {
     ${altrpSectionHover()}
   } 
 
-  & .altrp-section .altrp-column {
+  & div.altrp-section div.altrp-column {
     ${altrpSectionColumn()}
   }
 
-  & .altrp-section:hover .altrp-column:hover {
+  & div.altrp-section:hover div.altrp-column:hover {
     ${altrpSectionColumnHover()}
   }
 
-  & .altrp-section {
+  & div.altrp-section {
     ${altrpSectionSecond()}
   }
 
-  & .altrp-section:hover {
+  & div.altrp-section:hover {
     ${altrpSectionSecondHover()}
   }
 
-  & .altrp-section.altrp-background-image {
+  & div.altrp-section.altrp-background-image {
     ${altrpBackgroundImage()}
   }
 
-  & .altrp-section.altrp-background-image:hover {
+  & div.altrp-section.altrp-background-image:hover {
     ${altrpBackgroundImageHover()}
   }
 
-  &.altrp-section_boxed,
-  &.altrp-section_section_boxed {
+  & div.altrp-section_boxed,
+  & div.altrp-section_section_boxed {
     ${altrpSectionBoxed()}
   }
 
-  &.altrp-section_boxed:hover,
-  &.altrp-section_section_boxed:hover {
+  & div.altrp-section_boxed:hover,
+  & div.altrp-section_section_boxed:hover {
     ${altrpSectionBoxedHover()}
   }
 
-  & .altrp-section_section-boxed {
+  & div.altrp-section_section-boxed {
     ${altrpSectionSectionBoxed()}
   }
 
-  & .altrp-section_section-boxed:hover {
+  & div.altrp-section_section-boxed:hover {
     ${altrpSectionSectionBoxedHover()}
   }
 
   &,
-  & .altrp-section-full-fill {
+  & div.altrp-section-full-fill {
     ${altrpSectionFull()}
   }
 
   &:hover,
-  & .altrp-section-full-fill:hover {
+  & div.altrp-section-full-fill:hover {
     ${altrpSectionFullHover()}
   }
 
