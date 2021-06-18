@@ -790,9 +790,6 @@ class BaseElement extends ControlStack {
       `global_styles_storage.${guid}`,
       []
     );
-    console.log("====================================");
-    console.log(currentPropsList);
-    console.log("====================================");
     if (currentPropsList.indexOf(settingName) === -1) {
       currentPropsList.push(settingName);
       _.set(this.settings, `global_styles_storage.${guid}`, [

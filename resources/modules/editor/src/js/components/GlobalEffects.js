@@ -10,6 +10,7 @@ import {
 import BaseElement from "../classes/elements/BaseElement";
 import GlobalEffectItemAdd from "./GlobalEffectItemAdd";
 import GlobalEffectItem from "./GlobalEffectItem";
+import { getTemplateDataStorage } from "../helpers";
 
 const Panel = styled.div`
   background-color: #fff;
@@ -39,24 +40,25 @@ class GlobalEffects extends Component {
     this.addItem = this.addItem.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
     this.onSaveEffect = this.onSaveEffect.bind(this);
+    this.updateAllTree = this.updateAllTree.bind(this);
   }
 
   /**
    * @param {BaseElement} template
    * @param {String} guid
-   * @param {*} color
+   * @param {*} effect
    */
-  recursiveWalkTree(template, guid, color) {
+  recursiveWalkTree(template, guid, effect) {
     template.children?.forEach(
       /**
        * @param {BaseElement} child
        */
       child => {
         if (child.hasGlobal(guid)) {
-          child.updateAllGlobals(guid, color);
+          child.updateAllGlobals(guid, effect);
         }
         child.children.length > 0 &&
-          this.recursiveWalkTree(child.children, guid, color);
+          this.recursiveWalkTree(child.children, guid, effect);
       }
     );
   }
@@ -76,6 +78,17 @@ class GlobalEffects extends Component {
       );
       this.globalStyleResource.delete(id);
     }
+  }
+  /**
+   * Рекурсивно обновляет эффект во всех элементах
+   * @param {*} effect
+   */
+  updateAllTree(effect) {
+    getTemplateDataStorage()
+      .getRootElement()
+      .children.forEach(child => {
+        this.recursiveWalkTree(child, effect.guid, effect);
+      });
   }
 
   /**
@@ -104,6 +117,7 @@ class GlobalEffects extends Component {
                 editEffect={this.props.editEffect}
                 deleteEffect={this.props.deleteEffect}
                 onSaveEffectClose={this.onSaveEffect}
+                updateAllTree={this.updateAllTree}
               />
             </div>
           ))

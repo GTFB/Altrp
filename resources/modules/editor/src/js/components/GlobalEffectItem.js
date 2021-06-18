@@ -109,7 +109,10 @@ class GlobalEffectItem extends Component {
     };
     this.globalStyleResource.put(effect.id, send).then(success => {
       this.props.editEffect(effect);
-      this.setState(s => ({ ...s, edit: false }));
+      this.setState(
+        s => ({ ...s, edit: false }),
+        () => this.props.updateAllTree(effect)
+      );
     });
   }
   onDeleteEffect(event) {

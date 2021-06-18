@@ -6,7 +6,7 @@ import ContentIcon from "../../../svgs/content.svg";
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
 import GlobalPresetColors from "./GlobalPresetColors";
-import PresetColors from "./PresetColors";
+import PresetGlobalEffects from "./PresetGlobalEffects";
 
 class ShadowController extends Component {
   constructor(props) {
@@ -23,6 +23,7 @@ class ShadowController extends Component {
     this.inputSpreadUpdate = this.inputSpreadUpdate.bind(this);
     this.type = this.type.bind(this);
     this.inputVerUpdate = this.inputVerUpdate.bind(this);
+    this.setGlobal = this.setGlobal.bind(this);
     this.defaultValues = {
       blur: 0,
       color: "rgb(0, 0, 0)",
@@ -59,10 +60,25 @@ class ShadowController extends Component {
   }
 
   setGlobal(guid) {
-    getCurrentElement().setGlobalStyle(
-      guid,
-      this.props.controller.getSettingName()
-    );
+    const globalEffects = this.props.globalEffects;
+    const guidEffect = globalEffects.filter(effect => effect.guid == guid)[0];
+    console.log(guid);
+    console.log(guidEffect);
+    if (guidEffect) {
+      this.setState(
+        s => ({ ...s, value: guidEffect }),
+        () => {
+          getCurrentElement().setGlobalStyle(
+            guid,
+            this.props.controller.getSettingName()
+          );
+          getCurrentElement().updateAllGlobals(
+            guid,
+            this.props.controller.getSettingName()
+          );
+        }
+      );
+    }
   }
   //начало color
 
@@ -83,9 +99,9 @@ class ShadowController extends Component {
       colorPickedHex: color.colorPickedHex,
       opacity: color.rgb.a
     });
-    if (color?.guid) {
-      this.setGlobal(color.guid);
-    }
+    // if (color?.guid) {
+    //   this.setGlobal(color.guid);
+    // }
   }
 
   openColorPicker() {
@@ -236,6 +252,7 @@ class ShadowController extends Component {
               id="shadowContainer"
               className="control-shadow-wrapper control-shadow-wrapper-none control-shadow-active"
             >
+              <PresetGlobalEffects setEffect={this.setGlobal} />
               {/* начало color */}
               <div className="control-color-header">
                 <div className="controller-container__label">color</div>
