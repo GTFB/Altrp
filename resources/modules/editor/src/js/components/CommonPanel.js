@@ -42,6 +42,9 @@ class CommonPanel extends Component {
               Global Colors
             </Item>
             <Item onClick={this.props.showGlobalFontsPanel}>Global Fonts</Item>
+            <Item onClick={this.props.showGlobalEffectsPanel}>
+              Global Effects
+            </Item>
           </MenuItems>
         </MenuGroup>
       </StyledWrapper>

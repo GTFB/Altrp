@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
 import {defaultStyled, sliderStyled, styledString} from "../../../../../../front-app/src/js/helpers/styles";
 
@@ -9,15 +8,15 @@ export default styled.div`
       ["margin", "style_margin_tooltip", "dimensions"],
       ["padding", "style_padding_tooltip", "dimensions"],
     "}",
-    
+
     "altrp-dashboard__tooltip--width",
       ["padding-top", "style_width_tooltip"],
     "}",
-    
+
     "altrp-dashboard__tooltip--font",
       ["", "style_font_tooltip", "typographic"],
     "}",
-    
+
     "altrp-dashboard__tooltip--font-color",
       ["color", "style_font_color_tooltip", "color"],
     "}",
@@ -41,12 +40,12 @@ export default styled.div`
     "altrp-dashboard__tooltip--border-color",
       ["border-color", "border_color_tooltip", "color"],
     "}",
-    
+
     "altrp-diagram",
       ["width", "width", "slider"],
       ["height", "height", "slider"],
     "}",
-    
+
     "altrp-btn",
       ["margin", "margin", "dimensions"],
     "}",

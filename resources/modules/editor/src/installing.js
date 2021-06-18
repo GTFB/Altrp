@@ -1,12 +1,10 @@
 import decorate from "./js/decorators/element-component";
 import ElementWrapper from "./js/components/ElementWrapper";
-import {get} from "./js/components/ElementWrapper";
 import _ from "lodash";
 
 window._ = _;
 import('../../front-app/src/js/helpers').then(altrpHelpers=>{
   window.parent.altrpHelpers = altrpHelpers;
-  console.log();
 });
 import("ace-builds").then(ace=>{
   window.ace = ace.default;

@@ -1,85 +1,152 @@
-console.log('FIRST SCRIPT: ',performance.now());
+import WIDGETS_DEPENDS from "./js/constants/WIDGETS_DEPENDS";
+import {Link} from 'react-router-dom';
+window.Link = Link;
+console.log('FIRST SCRIPT: ', performance.now());
 import './sass/front-style.scss';
-window.sSr = false;
 
+window.sSr = false;
+window.libsLoaded = [];
+const LIBS = {
+  'blueprint': () => {
+    return import(/* webpackChunkName: 'Blueprint' */'./js/libs/blueprint').then(res => {
+      window.libsLoaded.push('blueprint')
+      return Promise.resolve(res)
+    });
+  },
+  'moment': () => {
+    return import(/* webpackChunkName: 'moment' */'./js/libs/moment').then(res => {
+      window.libsLoaded.push('moment')
+      return Promise.resolve(res)
+    });
+  },
+  // 'blueprint': import(/* webpackChunkName: 'Blueprint' */'./js/libs/blueprint').then(res=>{
+  //   console.log(res);
+  //       window.libsLoaded.push('blueprint')
+  //     }),
+
+};
+
+
+const libsToLoad = [];
+if (window.altrpElementsLists) {
+  window.altrpElementsLists.forEach(el => {
+    if (WIDGETS_DEPENDS[el] && WIDGETS_DEPENDS[el].length && libsToLoad.indexOf(el) === -1) {
+      WIDGETS_DEPENDS[el].forEach(lib => {
+        if (LIBS[lib]) {
+          libsToLoad.push(LIBS[lib]())
+        }
+      });
+    }
+  })
+} else {
+  LIBS.forEach(lib => {
+    libsToLoad.push(lib())
+  })
+}
+Promise.all(libsToLoad).then(res => {
+  loadingCallback();
+});
 /**
  * Параллельно загружаем все необходимые модули
  */
-
-import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElementsManager').then(module=>{
-  import (/* webpackChunkName: 'FrontElementsFabric' */'./js/classes/FrontElementsFabric').then(module=>{
-    console.log('LOAD FrontElementsFabric: ',performance.now());
+import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElementsManager').then(module => {
+  import (/* webpackChunkName: 'FrontElementsFabric' */'./js/classes/FrontElementsFabric').then(module => {
+    console.log('LOAD FrontElementsFabric: ', performance.now());
     loadingCallback();
   });
   return window.frontElementsManager.loadComponents();
-}).then(async components=>{
-  window.frontElementsManager.loadNotUsedComponent();
-  console.log('LOAD FrontElementsManager: ',performance.now());
+}).then(async components => {
+  // window.frontElementsManager.loadNotUsedComponent();
+  console.log('LOAD FrontElementsManager: ', performance.now());
   loadingCallback();
 });
-import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element-component').then(module=>{
+import (/* webpackChunkName: 'React_ReactDom_Lodash' */'./js/libs/react-lodash').then(module => {
+  console.log('LOAD React_ReactDom_Lodash: ', performance.now());
+
+  import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
+    loadingCallback();
+  })
+
+  import (/* webpackChunkName: 'ElementWrapper' */'./js/components/ElementWrapper').then(module => {
+    window.ElementWrapper = module.default;
+    console.log('LOAD ElementWrapper: ', performance.now());
+    loadingCallback();
+  });
+});
+import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element-component').then(module => {
   window.elementDecorator = module.default;
-  console.log('LOAD elementDecorator: ',performance.now());
-  loadingCallback();
-});
-import (/* webpackChunkName: 'React' */'react').then(module=>{
-  window.React = module.default;
-  window.Component = module.Component;
-  console.log('LOAD React: ',performance.now());
-  loadingCallback();
-});
-import (/* webpackChunkName: 'FrontApp' */'./FrontApp').then(module=>{
-  window.FrontApp = module.default;
-  console.log('LOAD FrontApp: ',performance.now());
-  loadingCallback();
-});
-import (/* webpackChunkName: 'ReactDOM' */'react-dom').then(module=>{
-  window.ReactDOM = module.default;
-  console.log('LOAD ReactDOM: ',performance.now());
-  loadingCallback();
-});
-import (/* webpackChunkName: 'ElementWrapper' */'./js/components/ElementWrapper').then(module=>{
-  window.ElementWrapper = module.default;
-  console.log('LOAD ElementWrapper: ',performance.now());
+  console.log('LOAD elementDecorator: ', performance.now());
   loadingCallback();
 });
 
-import (/* webpackChunkName: 'FormsManager' */'../../editor/src/js/classes/modules/FormsManager.js').then(module=>{
-  console.log('LOAD FormsManager: ',performance.now());
+if (process.env.NODE_ENV === 'production') {
+  window.__hot = () => C => C;
+  import (/* webpackChunkName: 'FrontApp' */'./FrontApp').then(module => {
+    window.FrontApp = module.default;
+    console.log('LOAD FrontApp: ', performance.now());
+    loadingCallback();
+  });
+
+} else {
+  import(/* webpackChunkName: 'react-hot-loader' */'react-hot-loader').then(({hot}) => {
+    window.__hot = hot;
+    return import (/* webpackChunkName: 'FrontApp' */'./FrontApp')
+  }).then(module => {
+    window.FrontApp = module.default;
+    console.log('LOAD FrontApp: ', performance.now());
+    loadingCallback();
+  });
+}
+
+import (/* webpackChunkName: 'FormsManager' */'../../editor/src/js/classes/modules/FormsManager.js').then(module => {
+  console.log('LOAD FormsManager: ', performance.now());
   loadingCallback();
 });
 
 /**
  * Рендерим главный компонент после загрузки основных модулей
  */
-function loadingCallback(){
-  console.log(window.frontElementsManager.componentsIsLoaded());
-  if(window.React
-      && window.Component
-      && window.ReactDOM
-      && window.frontElementsFabric
-      && window.frontElementsManager
-      && window.frontElementsManager.componentsIsLoaded()
-      && window.FrontApp
-      && window.elementDecorator
-      && window.ElementWrapper
-      && window.formsManager
-  ){
-    function renderAltrp(){
-      ReactDOM.render(<FrontApp />, document.getElementById('front-app'), function (){
+function loadingCallback() {
+  if (window.React
+    && window.Component
+    && window.ReactDOM
+    && window.frontElementsFabric
+    && window.frontElementsManager
+    && window.frontElementsManager.componentsIsLoaded()
+    && window.FrontApp
+    && window.elementDecorator
+    && window.ElementWrapper
+    && window.formsManager
+    && window.altrpHelpers
+    && window._
+    /**
+     * Проверим подгрузку необходимых библиотек
+     */
+    && (window.altrpElementsLists && (libsToLoad.length === libsLoaded.length))
+  ) {
+    function renderAltrp() {
+      ReactDOM.render(<FrontApp/>, document.getElementById('front-app'), function () {
         window.removeEventListener('touchstart', renderAltrp);
         window.removeEventListener('mouseover', renderAltrp);
+        window.removeEventListener('mousemove', renderAltrp);
+        window.removeEventListener('click', renderAltrp);
+        window.removeEventListener('scroll', renderAltrp);
       });
     }
-    if(window.ALTRP_LOAD_BY_USER){
-      window.addEventListener('mouseover', renderAltrp);
+
+    if (window.ALTRP_LOAD_BY_USER) {
       window.addEventListener('touchstart', renderAltrp);
+      window.addEventListener('mouseover', renderAltrp);
+      window.addEventListener('mousemove', renderAltrp);
+      window.addEventListener('click', renderAltrp);
+      window.addEventListener('scroll', renderAltrp);
     } else {
       renderAltrp();
     }
   }
 }
-window.stylesModulePromise = new Promise(function(resolve) {
+
+window.stylesModulePromise = new Promise(function (resolve) {
   window.stylesModuleResolve = resolve;
 });
 
@@ -92,30 +159,25 @@ if (process.env.NODE_ENV !== 'production') {
   );
 }
 
-(async function(){
-  import ('./installing');
+(async function () {
 
-  import('../../editor/src/js/classes/modules/IconsManager').then(
-      IconsManager => {
-        window.iconsManager = new IconsManager.default();
-      }
+  import(/* webpackChunkName: 'IconsManager' */'../../editor/src/js/classes/modules/IconsManager').then(
+    IconsManager => {
+      window.iconsManager = new IconsManager.default();
+    }
   );
-  // import('./FrontApp').then(FrontApp => {
-  //   FrontApp = FrontApp.default;
-  //   ReactDOM.render(<FrontApp />, document.getElementById('front-app'));
-  // });
   let _token = await fetch('/ajax/_token', {
     method: 'get',
     headers: {
       'Content-Type': 'application/json'
     }
-  }).then(res=>{
+  }).then(res => {
     if (res.ok === false) {
       return Promise.reject({res: res.text(), status: res.status});
     }
     return res.json();
   });
-  if(_token.success){
+  if (_token.success) {
     window._token = _token._token;
   }
 })();

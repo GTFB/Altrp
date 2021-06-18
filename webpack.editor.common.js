@@ -11,7 +11,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        exclude: /node_modules\/(?!(@react-leaflet)\/|bower_components).*/,
+        exclude: /(node_modules|bower_components).*/,
         loader: "babel-loader",
         options: {
           presets: ["@babel/env", "@babel/preset-react"],
@@ -87,6 +87,7 @@ module.exports = {
     chunkFilename: "[chunkhash].bundle.js",
     filename: "bundle.js",
   },
+
   devServer: {
     contentBase: path.join(__dirname, "public/"),
     port: 3000,
@@ -99,8 +100,18 @@ module.exports = {
     hotOnly: true,
   },
   plugins: [
+
+    new webpack.DefinePlugin({
+      "process.env": "{}",
+      global: {}
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new CleanWebpackPlugin(),
+
+    new webpack.DefinePlugin({
+      "process.env": "{}",
+      global: {}
+    })
     // new ExtractTextPlugin('style.css'),
     // new MiniCssExtractPlugin({
     //   // Options similar to the same options in webpackOptions.output

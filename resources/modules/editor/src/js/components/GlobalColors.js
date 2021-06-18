@@ -100,6 +100,31 @@ class GlobalColors extends Component {
    * @param {*} color
    */
   recursiveWalkTree(template, guid, color) {
+    if (Array.isArray(template)) {
+      template?.forEach(
+        /**
+         * @param {BaseElement} templateItem
+         */
+        templateItem => {
+          const hasGlobal = Boolean(templateItem.hasGlobal(guid));
+          if (hasGlobal) {
+            templateItem.updateAllGlobals(guid, color);
+          }
+          this.recursiveWalkTree(templateItem, guid, color);
+        }
+      );
+    } else this.recursiveUpdate(template, guid, color);
+  }
+
+  /**
+   * @param {BaseElement} template
+   * @param {String} guid
+   * @param {*} color
+   */
+  recursiveUpdate(template, guid, color) {
+    if (template.hasGlobal(guid)) {
+      template.updateAllGlobals(guid, color);
+    }
     template.children?.forEach(
       /**
        * @param {BaseElement} child
@@ -108,6 +133,7 @@ class GlobalColors extends Component {
         if (child.hasGlobal(guid)) {
           child.updateAllGlobals(guid, color);
         }
+
         child.children.length > 0 &&
           this.recursiveWalkTree(child.children, guid, color);
       }

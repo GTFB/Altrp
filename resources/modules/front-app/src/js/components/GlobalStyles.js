@@ -1,7 +1,7 @@
-import { createGlobalStyle } from 'styled-components'
-import { connect } from 'react-redux';
-import { getResponsiveSetting } from '../helpers';
-import { colorPropertyStyled } from '../helpers/styles';
+import {getHeadingStyles} from "./helpers/stylesForTheHeading";
+import {getTextStyles} from "./helpers/stylesForTheText";
+import {getTableStyles} from "./helpers/stylesForTheTable";
+import {getPostsStyles} from "./helpers/stylesForThePosts";
 import ButtonComponent from "../../../../editor/src/js/components/widgets/styled-components/ButtonComponent";
 import CarouselComponent from "../../../../editor/src/js/components/widgets/styled-components/CarouselComponent";
 import GalleryComponent from "../../../../editor/src/js/components/widgets/styled-components/GalleryComponent";
@@ -9,27 +9,22 @@ import DividerComponent from "../../../../editor/src/js/components/widgets/style
 import VideoComponent from "../../../../editor/src/js/components/widgets/styled-components/VideoComponent";
 import ListComponent from "../../../../editor/src/js/components/widgets/styled-components/ListComponent";
 import AdvancedComponent from "../../../../editor/src/js/components/widgets/styled-components/AdvancedComponent";
-import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 import SectionWidgetComponent
   from "../../../../editor/src/js/components/widgets/styled-components/SectionWidgetComponent";
 import ColumnComponent from "../../../../editor/src/js/components/widgets/styled-components/ColumnComponents";
 import DropbarWidgetComponent
   from "../../../../editor/src/js/components/widgets/styled-components/DropbarWidgetComponent";
+import FormComponent from "../../../../editor/src/js/components/widgets/styled-components/FormComponent";
+import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 
-const GlobalStyles = createGlobalStyle`${({elementsSettings})=>{
-  let styles = '';
-  let settingsHeading;
-  let elementId;
-  
+const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
+  let styles = "";
+
   let prefix = "altrp-element";
 
   _.each(elementsSettings, (item, id) => {
-    if(item) {
+    if (item) {
       switch (item.name) {
-        case "heading":
-          settingsHeading = item.settings;
-          elementId = id;
-          break;
         case "button":
           styles += `.${prefix}${id} {${ButtonComponent(item.settings)}}`;
           break;
@@ -60,11 +55,51 @@ const GlobalStyles = createGlobalStyle`${({elementsSettings})=>{
         case "dropbar":
           styles += `.${prefix}${id} {${DropbarWidgetComponent(item.settings)}}`;
           break;
+
+        case 'heading': {
+          styles += getHeadingStyles(item.settings, id);
+        }
+          break;
+        case 'text': {
+          styles += getTextStyles(item.settings, id);
+        }
+          break;
+        case 'table': {
+          styles += getTableStyles(item.settings, id);
+        }
+          break;
+        case 'posts': {
+          styles += getPostsStyles(item.settings, id);
+        }
+          break;
+        case "input":
+          {
+            switch (item.settings?.content_type) {
+              case "select2":
+                styles += `.${prefix}${id} {${FormComponent.FormComponent(
+                  item.settings,
+                  id
+                )}}`;
+                //select2 options style
+                styles += `${FormComponent.select2Options(item.settings, id)}}`;
+                break;
+              default:
+                styles += `.${prefix}${id} {${FormComponent.FormComponent(
+                  item.settings,
+                  id
+                )}}`;
+                break;
+            }
+          }
+          break;
       }
-      styles += `.${prefix}${id} {${AdvancedComponent(item.settings)}}`
+      styles += `.${prefix}${id}.${prefix}${id} {${AdvancedComponent(
+        item.settings
+      )}}`;
+
     }
   });
-
+  
   if (settingsHeading === undefined) {
     return styles;
   }
@@ -78,13 +113,12 @@ const GlobalStyles = createGlobalStyle`${({elementsSettings})=>{
   }
 
   styles += `} `;
-
+  
   return styles;
 }}`;
-
 function mapStateToProps(state) {
-  return {elementsSettings: state.elementsSettings}
+  return { elementsSettings: state.elementsSettings };
 }
 
-export default connect(mapStateToProps)(GlobalStyles)
+export default window.reactRedux.connect(mapStateToProps)(GlobalStyles)
 

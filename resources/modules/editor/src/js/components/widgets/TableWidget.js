@@ -1,9 +1,8 @@
-import React, {Component} from "react";
 import Query from "../../classes/Query";
 import {Scrollbars} from "react-custom-scrollbars";
 import {getDataByPath, getWidgetState, storeWidgetState} from "../../../../../front-app/src/js/helpers";
-const AltrpTableWithoutUpdate = React.lazy(() => import('../altrp-table/altrp-table-without-update'));
-const AltrpTable = React.lazy(() => import('../altrp-table/altrp-table'));
+const AltrpTableWithoutUpdate = React.lazy(() => import(/* webpackChunkName: 'altrp-table-without-update' */'../altrp-table/altrp-table-without-update'));
+const AltrpTable = React.lazy(() => import(/* webpackChunkName: 'altrp-table' */'../altrp-table/altrp-table'));
 
 class TableWidget extends Component {
   constructor(props){

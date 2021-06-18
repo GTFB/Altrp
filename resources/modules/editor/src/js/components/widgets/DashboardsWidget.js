@@ -1,13 +1,11 @@
-import React, { Component, Suspense } from "react";
-
 import axios from "axios";
 import { getCurrentBreakpoint } from "../../../../../front-app/src/js/helpers";
 
 const AltrpDashboards = React.lazy(() =>
-  import("../altrp-dashboards/AltrpDashboards")
+  import(/* webpackChunkName: 'AltrpDashboards' */"../altrp-dashboards/AltrpDashboards")
 );
 const DataSourceDashboards = React.lazy(() =>
-  import("../altrp-dashboards/DataSourceDashboards")
+  import(/* webpackChunkName: 'DataSourceDashboards' */"../altrp-dashboards/DataSourceDashboards")
 );
 
 class DashboardsWidget extends Component {

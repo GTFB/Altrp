@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+
 import { getResponsiveSetting } from "../../../../../../front-app/src/js/helpers";
 import {
   simplePropertyStyled,
@@ -15,7 +15,7 @@ import {
 } from "../../../../../../front-app/src/js/helpers/styles";
 
 const HeadingComponent = styled.div`
-  && .altrp-heading,
+  /* && .altrp-heading,
   && .altrp-heading-wrapper {
 
     ${props => {
@@ -39,9 +39,9 @@ const HeadingComponent = styled.div`
 
     }
     }
-  }
+  } */
 
-  && .altrp-heading-sub {
+  /* && .altrp-heading-sub {
 
     ${props => {
 
@@ -209,9 +209,9 @@ const HeadingComponent = styled.div`
 
     }
     }
-  }
+  } */
 
-  && .altrp-heading-wrapper-sub-bottom .altrp-heading-sub {
+  /* && .altrp-heading-wrapper-sub-bottom .altrp-heading-sub {
 
     ${props => {
 
@@ -259,9 +259,9 @@ const HeadingComponent = styled.div`
 
     }
     }
-  }
+  } */
 
-  && .altrp-heading-wrapper-sub-top .altrp-heading-sub {
+  /* && .altrp-heading-wrapper-sub-top .altrp-heading-sub {
 
     ${props => {
 
@@ -309,9 +309,9 @@ const HeadingComponent = styled.div`
 
     }
     }
-  }
+  } */
 
-  && .altrp-heading-wrapper-sub-left .altrp-heading-sub {
+  /* && .altrp-heading-wrapper-sub-left .altrp-heading-sub {
 
     ${props => {
 
@@ -359,9 +359,9 @@ const HeadingComponent = styled.div`
 
     }
     }
-  }
+  } */
 
-  && .altrp-heading-wrapper-sub-right .altrp-heading-sub {
+  /* && .altrp-heading-wrapper-sub-right .altrp-heading-sub {
 
     ${props => {
 
@@ -409,9 +409,9 @@ const HeadingComponent = styled.div`
 
     }
     }
-  }
+  } */
 
-  && .altrp-heading-advanced-wrapper {
+  /* && .altrp-heading-advanced-wrapper {
 
     ${props => {
 
@@ -434,9 +434,9 @@ const HeadingComponent = styled.div`
 
     }
     }
-  }
+  } */
 
-  && .altrp-heading-advanced {
+  /* && .altrp-heading-advanced {
 
     ${props => {
 
@@ -664,9 +664,9 @@ const HeadingComponent = styled.div`
 
     }
     }
-  }
+  } */
 
-  && .altrp-icon-header {
+  /* && .altrp-icon-header {
 
     ${props => {
 
@@ -754,9 +754,9 @@ const HeadingComponent = styled.div`
 
     }
     }
-  }
+  } */
 
-  && .altrp-heading {
+  /* && .altrp-heading {
 
     ${props => {
 
@@ -795,7 +795,7 @@ const HeadingComponent = styled.div`
         styles += colorPropertyStyled(borderColor, 'border-color');
       }
 
-      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         borderRadius = getResponsiveSetting(settings, 'style_border_radius');
@@ -809,9 +809,9 @@ const HeadingComponent = styled.div`
 
     }
     }
-  }
+  } */
 
-  && .altrp-heading,
+  /* && .altrp-heading,
   && .altrp-heading a {
 
     ${props => {
@@ -911,7 +911,7 @@ const HeadingComponent = styled.div`
         styles += gradientStyled(gradient);
       }
 
-      //Получаем значения transform из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения transform из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         transform = getResponsiveSetting(settings, 'transform_style');
@@ -925,9 +925,9 @@ const HeadingComponent = styled.div`
 
     }
     }
-  }
+  } */
 
-  && .altrp-heading:hover {
+  /* && .altrp-heading:hover {
 
     ${props => {
 
@@ -1056,7 +1056,7 @@ const HeadingComponent = styled.div`
         styles += colorPropertyStyled(borderColor, 'border-color');
       }
 
-      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         borderRadius = getResponsiveSetting(settings, 'style_border_radius', ':hover');
@@ -1066,7 +1066,7 @@ const HeadingComponent = styled.div`
         styles += sizeStyled(borderRadius, 'border-radius');
       }
 
-      //Получаем значения transform из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения transform из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         transform = getResponsiveSetting(settings, 'transform_style', ':hover');
@@ -1080,9 +1080,9 @@ const HeadingComponent = styled.div`
 
     }
     }
-  }
+  } */
 
-  && .altrp-heading.altrp-background-image {
+  /* && .altrp-heading.altrp-background-image {
 
     ${props => {
 
@@ -1155,9 +1155,9 @@ const HeadingComponent = styled.div`
 
     }
     }
-  }
+  } */
 
-  && .altrp-animating-text {
+  /* && .altrp-animating-text {
 
     ${props => {
 
@@ -1190,9 +1190,9 @@ const HeadingComponent = styled.div`
 
     }
     }
-  }
+  } */
 
-  && .altrp-animating-text:hover {
+  /* && .altrp-animating-text:hover {
 
     ${props => {
 
@@ -1225,9 +1225,9 @@ const HeadingComponent = styled.div`
 
     }
     }
-  }
+  } */
 
-  && .altrp-heading-no-animating-text {
+  /* && .altrp-heading-no-animating-text {
 
     ${props => {
 
@@ -1295,9 +1295,9 @@ const HeadingComponent = styled.div`
 
     }
     }
-  }
+  } */
 
-  && .altrp-animating-highlighted-svg svg path {
+  /* && .altrp-animating-highlighted-svg svg path {
 
     ${props => {
 
@@ -1365,7 +1365,7 @@ const HeadingComponent = styled.div`
 
     }
     }
-  }
+  } */
 
 `;
 

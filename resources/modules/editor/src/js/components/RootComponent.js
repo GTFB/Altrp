@@ -1,5 +1,4 @@
 import React, { Component,  } from "react";
-import GlobalStyles from "../../../../front-app/src/js/components/GlobalStyles";
 
 class RootComponent extends Component {
   constructor(props) {
@@ -27,7 +26,7 @@ class RootComponent extends Component {
 
     const actionsManager = (
         await import(
-            "../../../../front-app/src/js/classes/modules/ActionsManager.js"
+          /* webpackChunkName: 'ActionsManager' */"../../../../front-app/src/js/classes/modules/ActionsManager.js"
             )
     ).default;
     await actionsManager.callAllWidgetActions(

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+
 import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
 import {dimensionsControllerToStyles} from "../../../../../../front-app/src/js/helpers/styles";
 

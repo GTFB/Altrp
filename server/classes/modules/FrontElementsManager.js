@@ -28,42 +28,34 @@ import HtmlWidget from '../../../resources/modules/editor/src/js/components/widg
 import VideoWidget from '../../../resources/modules/editor/src/js/components/widgets/VideoWidget';
 // import Skeleton from '../../../resources/modules/editor/src/js/components/altrp-image/Skeleton';
 import SkeletonPlaceholder from '../components/SkeletonPlaceholder';
+import DEFAULT_REACT_ELEMENTS from "../../../resources/modules/front-app/src/js/constants/DEFAULT_REACT_ELEMENTS";
 // import BreadcrumbsWidget from '../../../resources/modules/editor/src/js/components/widgets/BreadcrumbsWidget';
 // import MenuWidget from '../../../resources/modules/editor/src/js/components/widgets/MenuWidget';
+
 
 class FrontElementsManager {
   constructor() {
     //список компонентов
     this.components = {};
+    DEFAULT_REACT_ELEMENTS.forEach(el=>{
+      this.components[el] = SkeletonPlaceholder;
+    })
     this.components['root-element'] = RootComponent;
     this.components['heading'] = HeadingWidget;
     this.components['section'] = SectionComponent;
     this.components['column'] = ColumnComponent;
-    this.components['input'] = SkeletonPlaceholder;
     this.components['button'] = ButtonWidget;
-    this.components['breadcrumbs'] = SkeletonPlaceholder;
     this.components['text'] = TextWidget;
     this.components['image'] = ImageWidget;
     this.components['table'] = TableWidget;
     this.components['posts'] = PostsWidget;
-    this.components['nav'] = SkeletonPlaceholder;
     this.components['divider'] = DividerWidget;
     this.components['tabs'] = TabsWidget;
     this.components['poster'] = PosterWidget;
     this.components['list'] = ListWidget;
     this.components['accordion'] = AccordionWidget;
     this.components['carousel'] = CarouselWidget;
-    this.components['map'] = SkeletonPlaceholder;
-    this.components['map_builder'] = SkeletonPlaceholder;
-    this.components['menu'] = SkeletonPlaceholder;
-    this.components['diagram'] = SkeletonPlaceholder;
-    this.components['dashboards'] = SkeletonPlaceholder;
-    this.components['tour'] = SkeletonPlaceholder;
-    this.components['icon'] = SkeletonPlaceholder;
-    this.components['export'] = SkeletonPlaceholder;
     this.components['html'] = HtmlWidget;
-    this.components['template'] = SkeletonPlaceholder;
-    this.components['gallery'] = SkeletonPlaceholder
     this.components['video'] = VideoWidget;
   }
 

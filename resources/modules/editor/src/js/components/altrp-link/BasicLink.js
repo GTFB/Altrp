@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {isEditor} from "../../../../../front-app/src/js/helpers";
-import {Link} from "react-router-dom";
+const Link = window.Link
 
 class BasicLink extends Component {
   render() {

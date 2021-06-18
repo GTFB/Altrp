@@ -1,4 +1,3 @@
-import React, { Component } from "react";
 
 class HtmlWidget extends Component {
   constructor(props) {

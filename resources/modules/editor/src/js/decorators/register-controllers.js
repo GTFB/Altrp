@@ -86,7 +86,14 @@ export function advancedTabControllers(element) {
 
   element.addControl('advanced_element_id', {
     label: 'CSS ID',
+  });
 
+
+  element.addControl('react_element', {
+    label: 'Dynamic Element',
+    type: CONTROLLER_SWITCHER,
+    responsive: false,
+    stateless: true,
   });
 
   // element.addControl('hide_on_trigger', {

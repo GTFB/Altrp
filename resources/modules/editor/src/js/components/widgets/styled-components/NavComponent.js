@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import { getResponsiveSetting } from "../../../../../../front-app/src/js/helpers";
 import {
   simplePropertyStyled,
@@ -37,7 +36,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-link-label {
 
@@ -72,7 +71,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-link-label:hover {
 
@@ -107,7 +106,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-link {
 
@@ -154,7 +153,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-link:hover {
 
@@ -201,7 +200,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-link path {
 
@@ -211,23 +210,23 @@ const NavComponent = styled.div`
       let styles = '';
 
       let fill, stroke;
-  
-      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles 
-  
+
+      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles
+
       if (settings !== undefined) {
         fill = getResponsiveSetting(settings, 'fill_chevron_main_menu_style');
       }
-  
+
       if (fill) {
         styles += colorPropertyStyled(fill, 'fill');
       }
 
-      //Получаем значения stroke из контроллера, обрабатываем и добавляем в styles 
-  
+      //Получаем значения stroke из контроллера, обрабатываем и добавляем в styles
+
       if (settings !== undefined) {
         stroke = getResponsiveSetting(settings, 'stroke_chevron_main_menu_style');
       }
-  
+
       if (stroke) {
         styles += colorPropertyStyled(stroke, 'stroke');
       }
@@ -236,7 +235,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-link:hover path {
 
@@ -247,7 +246,7 @@ const NavComponent = styled.div`
 
       let fill, stroke;
 
-      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         fill = getResponsiveSetting(settings, 'fill_chevron_main_menu_style', ':hover');
@@ -257,12 +256,12 @@ const NavComponent = styled.div`
         styles += colorPropertyStyled(fill, 'fill');
       }
 
-      //Получаем значения stroke из контроллера, обрабатываем и добавляем в styles 
-  
+      //Получаем значения stroke из контроллера, обрабатываем и добавляем в styles
+
       if (settings !== undefined) {
         stroke = getResponsiveSetting(settings, 'stroke_chevron_main_menu_style', ':hover');
       }
-  
+
       if (stroke) {
         styles += colorPropertyStyled(stroke, 'stroke');
       }
@@ -282,7 +281,7 @@ const NavComponent = styled.div`
 
       let size;
 
-      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         size = getResponsiveSetting(settings, 'size_chevron_main_menu_style');
@@ -296,7 +295,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-link:hover svg {
 
@@ -307,7 +306,7 @@ const NavComponent = styled.div`
 
       let size;
 
-      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         size = getResponsiveSetting(settings, 'size_chevron_main_menu_style', ':hover');
@@ -321,7 +320,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li {
 
@@ -346,7 +345,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li:hover {
 
@@ -371,7 +370,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-link .altrp-nav-menu-li-link-icon {
 
@@ -406,7 +405,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-link:hover .altrp-nav-menu-li-link-icon {
 
@@ -441,7 +440,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-overline:before,
   && .altrp-nav-menu-li-underLine:after,
@@ -471,7 +470,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-overline:hover::before,
   && .altrp-nav-menu-li-underLine:hover::after,
@@ -501,7 +500,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-animation-text:hover .altrp-nav-menu-li-link-label {
 
@@ -526,7 +525,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-underline:after,
   && .altrp-nav-menu-li-overline:before,
@@ -553,7 +552,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-framed:hover::after {
 
@@ -579,7 +578,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-framed:hover:before {
 
@@ -605,7 +604,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-doubleLine:after {
 
@@ -630,7 +629,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-link-label-dropdown {
 
@@ -665,7 +664,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-link-label-dropdown:hover {
 
@@ -700,7 +699,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-link-dropdown {
 
@@ -737,7 +736,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-link-dropdown:hover {
 
@@ -774,7 +773,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-dropdown-s-content-divider {
 
@@ -819,7 +818,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-dropdown-s-content-divider:hover {
 
@@ -864,7 +863,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-link-chevron-dropdown {
 
@@ -875,7 +874,7 @@ const NavComponent = styled.div`
 
       let size, transformRotate;
 
-      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         size = getResponsiveSetting(settings, 'chevron_width_dropdown_menu_section');
@@ -899,7 +898,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-link-chevron-dropdown:hover {
 
@@ -910,7 +909,7 @@ const NavComponent = styled.div`
 
       let size, transformRotate;
 
-      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         size = getResponsiveSetting(settings, 'chevron_width_dropdown_menu_section', ':hover');
@@ -959,7 +958,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-link-active-chevron-dropdown:hover {
 
@@ -984,7 +983,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-dropdown-button svg {
 
@@ -995,7 +994,7 @@ const NavComponent = styled.div`
 
       let size;
 
-      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         size = getResponsiveSetting(settings, 'size_toggle_button_dropdown_menu_section');
@@ -1009,7 +1008,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-dropdown-button:hover svg {
 
@@ -1020,7 +1019,7 @@ const NavComponent = styled.div`
 
       let size;
 
-      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         size = getResponsiveSetting(settings, 'size_toggle_button_dropdown_menu_section', ':hover');
@@ -1034,7 +1033,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
 
   && .altrp-nav-menu-dropdown-button svg path {
@@ -1045,23 +1044,23 @@ const NavComponent = styled.div`
       let styles = '';
 
       let fill, stroke;
-  
-      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles 
-  
+
+      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles
+
       if (settings !== undefined) {
         fill = getResponsiveSetting(settings, 'color_toggle_button_fill_dropdown_menu_section');
       }
-  
+
       if (fill) {
         styles += colorPropertyStyled(fill, 'fill');
       }
 
-      //Получаем значения stroke из контроллера, обрабатываем и добавляем в styles 
-  
+      //Получаем значения stroke из контроллера, обрабатываем и добавляем в styles
+
       if (settings !== undefined) {
         stroke = getResponsiveSetting(settings, 'color_toggle_button_stroke_dropdown_menu_section');
       }
-  
+
       if (stroke) {
         styles += colorPropertyStyled(stroke, 'stroke');
       }
@@ -1070,7 +1069,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-dropdown-button:hover svg path {
 
@@ -1081,7 +1080,7 @@ const NavComponent = styled.div`
 
       let fill, stroke;
 
-      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения fill из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         fill = getResponsiveSetting(settings, 'color_toggle_button_fill_dropdown_menu_section', ':hover');
@@ -1091,7 +1090,7 @@ const NavComponent = styled.div`
         styles += colorPropertyStyled(fill, 'fill');
       }
 
-      //Получаем значения stroke из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения stroke из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         stroke = getResponsiveSetting(settings, 'color_toggle_button_stroke_dropdown_menu_section', ':hover');
@@ -1105,7 +1104,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-dropdown-button {
 
@@ -1116,7 +1115,7 @@ const NavComponent = styled.div`
 
       let backgroundColor, padding, borderType, borderWidth, borderColor, borderRadius;
 
-      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         backgroundColor = getResponsiveSetting(settings, 'background_color_toggle_button_dropdown_menu_section');
@@ -1154,9 +1153,9 @@ const NavComponent = styled.div`
 
       if (borderWidth) {
         styles += borderWidthStyled(borderWidth);
-      } 
+      }
 
-      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         borderColor = getResponsiveSetting(settings, 'border_color_toggle_button_dropdown_menu_section');
@@ -1180,7 +1179,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-dropdown-button:hover {
 
@@ -1191,7 +1190,7 @@ const NavComponent = styled.div`
 
       let backgroundColor, padding, borderType, borderWidth, borderColor, borderRadius;
 
-      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         backgroundColor = getResponsiveSetting(settings, 'background_color_toggle_button_dropdown_menu_section', ':hover');
@@ -1231,7 +1230,7 @@ const NavComponent = styled.div`
         styles += borderWidthStyled(borderWidth);
       }
 
-      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         borderColor = getResponsiveSetting(settings, 'border_color_toggle_button_dropdown_menu_section', ':hover');
@@ -1255,7 +1254,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-breadcrumbs {
 
@@ -1290,7 +1289,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-breadcrumbs-link {
 
@@ -1325,7 +1324,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-breadcrumbs-link:hover {
 
@@ -1360,7 +1359,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-breadcrumbs-link:visited {
 
@@ -1385,7 +1384,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-breadcrumbs-separator-default,
   && .altrp-nav-breadcrumbs-separator-text {
@@ -1421,7 +1420,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-breadcrumbs-separator-default:hover,
   && .altrp-nav-breadcrumbs-separator-text:hover {
@@ -1457,7 +1456,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-breadcrumbs-separator-icon svg {
 
@@ -1478,7 +1477,7 @@ const NavComponent = styled.div`
         styles += colorPropertyStyled(stroke, 'stroke');
       }
 
-      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         size = getResponsiveSetting(settings, 'breadcrumbs_separator_icon_width_style');
@@ -1492,7 +1491,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-breadcrumbs-separator-icon:hover svg {
 
@@ -1517,7 +1516,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-breadcrumbs-separator-icon svg:hover {
 
@@ -1528,7 +1527,7 @@ const NavComponent = styled.div`
 
       let size;
 
-      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения width и height из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         size = getResponsiveSetting(settings, 'breadcrumbs_separator_icon_width_style', ':hover');
@@ -1542,7 +1541,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-breadcrumbs-current {
 
@@ -1577,7 +1576,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-breadcrumbs-current:hover {
 
@@ -1612,7 +1611,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-breadcrumbs-separator-icon svg path {
 
@@ -1637,7 +1636,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-breadcrumbs-separator-icon:hover svg path {
 
@@ -1662,7 +1661,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-breadcrumbs-label {
 
@@ -1688,7 +1687,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-breadcrumbs-label:hover {
 
@@ -1714,7 +1713,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-link-chevron-dropdown path {
 
@@ -1724,13 +1723,13 @@ const NavComponent = styled.div`
       let styles = '';
 
       let color;
-  
-      //Получаем значения fill и color  из контроллера, обрабатываем и добавляем в styles 
-  
+
+      //Получаем значения fill и color  из контроллера, обрабатываем и добавляем в styles
+
       if (settings !== undefined) {
         color = getResponsiveSetting(settings, 'chevron_color_dropdown_menu_section');
       }
-  
+
       if (color) {
         styles += colorPropertyStyled(color, 'fill');
         styles += colorPropertyStyled(color, 'color');
@@ -1740,7 +1739,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-link-chevron-dropdown:hover path {
 
@@ -1751,7 +1750,7 @@ const NavComponent = styled.div`
 
       let color;
 
-      //Получаем значения fill и color  из контроллера, обрабатываем и добавляем в styles 
+      //Получаем значения fill и color  из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
         color = getResponsiveSetting(settings, 'chevron_color_dropdown_menu_section', ':hover');
@@ -1766,7 +1765,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-dropdown {
 
@@ -1791,7 +1790,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-dropdown:hover {
 
@@ -1816,7 +1815,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-sub {
 
@@ -1851,7 +1850,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   && .altrp-nav-menu-li-sub:hover {
 
@@ -1886,7 +1885,7 @@ const NavComponent = styled.div`
 
     }
     }
-  } 
+  }
 
   ${props => {
 
@@ -1896,7 +1895,7 @@ const NavComponent = styled.div`
       return '';
     }
 
-    let transformRotate, typographic, color, stroke, backgroundColor, width, borderType, borderWidth, borderColor, borderRadius, marginTop, borderRadiusTopRight; 
+    let transformRotate, typographic, color, stroke, backgroundColor, width, borderType, borderWidth, borderColor, borderRadius, marginTop, borderRadiusTopRight;
     let borderRadiusBottomLeft, marginLeft, typographicSubmenu, colorSubmenu, strokeSubmenu, background, widthSubmenu, borderTypeSubmenu, borderWidthSubmenu;
     let borderColorSubmenu, borderRadiusSubmenu, marginRight, borderTopStyle, borderTopWidth, borderRadiusSubmenu2, borderRadiusTopRight2, borderRadiusBottomLeft2, borderTop2;
 
@@ -2619,9 +2618,9 @@ const NavComponent = styled.div`
     if (borderTop2) {
       styles += `border-top: none; `;
     }
-    
+
     styles += `} `;
-    
+
     return styles;
     }
   }

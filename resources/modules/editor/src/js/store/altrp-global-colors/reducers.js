@@ -1,6 +1,10 @@
 import Resource from "../../classes/Resource";
 import { createGlobalColor } from "../../helpers";
-import { SET_GLOBAL_COLORS, ADD_GLOBAL_COLOR } from "./actions";
+import {
+  SET_GLOBAL_COLORS,
+  ADD_GLOBAL_COLOR,
+  SET_GLOBAL_EFFECT
+} from "./actions";
 
 const defaultState = [];
 
@@ -23,6 +27,10 @@ export function globalStyleReducer(state, action) {
         color.type = "color";
         globalColorsResource.post(color);
         state = { ...state, colors: [...state.colors, color] };
+      }
+      break;
+    case SET_GLOBAL_EFFECT:
+      {
       }
       break;
   }

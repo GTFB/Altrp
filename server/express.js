@@ -1,18 +1,21 @@
-import { ServerStyleSheet } from "styled-components";
-import AltrpModel from "../resources/modules/editor/src/js/classes/AltrpModel";
+import styled,  { ServerStyleSheet, createGlobalStyle } from "styled-components";
 import Area from "../resources/modules/front-app/src/js/classes/Area";
-const sheet = new ServerStyleSheet();
 import { parse } from "node-html-parser";
+import{Link} from "react-router-dom"
 import React from "react";
+import {StaticRouter as Router, Route, Switch} from "react-router-dom";
 if (typeof performance === "undefined") {
   global.performance = require("perf_hooks").performance;
 }
+global.styled = styled;
+global.createGlobalStyle = createGlobalStyle;
 /**
  * Эмулируем окружение клиента
  * @type {{parent: {}}}
  */
 global.window = {
-  parent: {}
+  parent: {},
+  Link,
 };
 global.window.altrpMenus = [];
 global.SSR = true;
@@ -21,12 +24,14 @@ global.window.SSR = true;
 //   addEventListener: () => {
 //   },
 // };
+require( '../resources/modules/front-app/src/js/libs/react-lodash');
+require('../resources/modules/front-app/src/js/libs/altrp');
 global.frontElementsManager = require("./classes/modules/FrontElementsManager").default;
-global.React = require("react");
 global.history = {
   back() {}
 };
 global.iconsManager = new (require("../resources/modules/editor/src/js/classes/modules/IconsManager").default)();
+const AltrpModel = require('../resources/modules/editor/src/js/classes/AltrpModel').default
 global.currentRouterMatch = new AltrpModel({});
 global.Component = global.React.Component;
 window.frontElementsFabric = require("../resources/modules/front-app/src/js/classes/FrontElementsFabric").default;
@@ -60,6 +65,8 @@ const {
 } = require("../resources/modules/front-app/src/js/components/styled-components/RouteContentWrapper");
 
 var bodyParser = require("body-parser");
+const GlobalStyles = require('../resources/modules/front-app/src/js/components/GlobalStyles').default
+
 const app = express();
 app.use(bodyParser.json({ limit: "500mb", extended: true }));
 app.use(
@@ -100,6 +107,7 @@ function renderHTML(req, res, data, component, page, store) {
 }
 
 app.post("/", (req, res) => {
+  const sheet = new ServerStyleSheet();
   const store = window.appStore;
   let json = JSON.parse(req.body.json) || [];
   let page = json.page || [];
@@ -132,30 +140,33 @@ app.post("/", (req, res) => {
     styles: element.getStringifyStyles(),
     elementId: element.getId()
   }));
+  window.currentRouterMatch = new AltrpModel({});
   page = page.map(area => (Area.areaFabric(area)))
   let app = ReactDOMServer.renderToString(
     sheet.collectStyles(
-      <Provider store={window.appStore}>
-        <div className={`front-app-content `}>
-          <StaticRouter>
-            <RouteContentWrapper className="route-content" id="route-content" areas={page}>
-              {page.map((area, idx) => {
-                return (
-                  <AreaComponent
-                    {...area}
-                    area={area}
-                    areas={page}
-                    page={page_id}
-                    models={[page_model]}
-                    key={"appArea_" + area.id}
-                  />
-                );
-              })}
-            </RouteContentWrapper>
-          </StaticRouter>
-        </div>
-        <Styles elementStyles={elementStyles} />
-      </Provider>
+      <Router>
+        <Switch>
+          <Route path='*' exact>
+            <Provider store={store}>
+              <RouteContentWrapper className="route-content" id="route-content" areas={page}>
+                {page.map((area, idx) => {
+                  return (
+                    <AreaComponent
+                      {...area}
+                      area={area}
+                      areas={page}
+                      page={page_id}
+                      models={[page_model]}
+                      key={"appArea_" + area.id}
+                    />
+                  );
+                })}
+                <GlobalStyles/>
+              </RouteContentWrapper>
+            </Provider>
+          </Route>
+        </Switch>
+      </Router>
     )
   );
 
@@ -168,7 +179,7 @@ app.post("/", (req, res) => {
     _app.removeChild(_app.querySelector(".styles-container"));
     app = _app.toString();
   }
-  // sheet.seal();
+  sheet.seal();
   const result = {
     important_styles: unEntity(styleTags),
     content: unEntity(app)

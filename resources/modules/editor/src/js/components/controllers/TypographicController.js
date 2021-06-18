@@ -5,8 +5,8 @@ import ContentIcon from '../../../svgs/content.svg'
 import Select from "react-select";
 import controllerDecorate from "../../decorators/controller";
 import { addFont, removeFont } from "../../../../../front-app/src/js/store/fonts-storage/actions";
-import { altrpFontsSet } from "../../../../../front-app/src/js/components/FontsManager";
 import { renderScrollbar } from "../../../../../admin/src/components/altrp-select/AltrpSelect";
+import {altrpFontsSet} from "../../../../../front-app/src/js/constants/fonts";
 
 class TypographicController extends Component {
   constructor(props) {

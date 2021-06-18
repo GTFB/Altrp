@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+
 import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
 import {typographicControllerToStyles} from "../../../../../../front-app/src/js/helpers/styles";
 
@@ -90,7 +90,6 @@ const BreadcrumbsComponent = styled.div`
 
     if(current_font){
       styles += typographicControllerToStyles(current_font);
-      console.log(styles);
     }
 
     styles += `}`;

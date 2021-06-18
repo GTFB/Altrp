@@ -1,8 +1,7 @@
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const webpack = require("webpack");
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
 module.exports = {
   entry: "./server/index.js",
 
@@ -46,10 +45,14 @@ module.exports = {
     ]
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": '"production"',
       "process.env.BROWSER": JSON.stringify(true),
       __DEV__: false
-    })
+    }),
+    // new webpack.IgnorePlugin({
+    //   resourceRegExp: /\.ttf|\.woff|\.otf|\.woff2|\.s[ac]ss$/,
+    // }),
   ]
 };

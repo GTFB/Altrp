@@ -18,8 +18,6 @@ yarn-error.log
 storage/installed
 s.sql
 modules_statuses.json
-webpack.editor.common.js
-webpack.front.common.js
 .babelrc
 
 # IDE helpers
@@ -49,7 +47,9 @@ _ide_helper.php
 /app/Plugins/plugins.json
 public/modules/
 /config/telebot.php
-
+.babelrc
+webpack.editor.common.js
+webpack.front.common.js
 =======
 
 #bundles
