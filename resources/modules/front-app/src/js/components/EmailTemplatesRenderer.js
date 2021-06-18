@@ -1,4 +1,3 @@
-import {connect} from 'react-redux';
 
 
 class EmailTemplatesRenderer extends window.Component {
@@ -65,4 +64,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(EmailTemplatesRenderer)
+export default window.reactRedux.connect(mapStateToProps)(EmailTemplatesRenderer)

@@ -1,4 +1,3 @@
-import React, { Component } from "react";
 import {
   altrpCompare,
   convertData,
@@ -8,7 +7,6 @@ import {
   parseURLTemplate,
   replaceContentWithData,
   sortOptions,
-  parseStringValue,
   renderAssetIcon,
   valueReplacement,
   getDataFromLocalStorage
@@ -17,11 +15,10 @@ import Resource from "../../classes/Resource";
 import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
-import moment from "moment";
 import CKeditor from "../ckeditor/CKeditor";
 import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 import AltrpInput from "../altrp-input/AltrpInput";
-import styled from "styled-components";
+const {moment} = window.altrpHelpers;
 
 const AltrpFieldContainer = styled.div`
   ${({ settings: { content_label_position_type } }) => {

@@ -1,4 +1,3 @@
-import React, {Component} from "react";
 import Query from "../../classes/Query";
 import {Scrollbars} from "react-custom-scrollbars";
 import {getDataByPath, getWidgetState, storeWidgetState} from "../../../../../front-app/src/js/helpers";

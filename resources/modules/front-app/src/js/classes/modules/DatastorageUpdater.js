@@ -3,7 +3,6 @@ import {
   clearCurrentDataStorage,
   currentDataStorageLoaded, currentDataStorageLoading
 } from "../../store/current-data-storage/actions";
-import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
 import {changeCurrentUser} from "../../store/current-user/actions";
 import Datasource from "../Datasource";
 const { Resource, isJSON, mbParseJSON, replaceContentWithData} = window.altrpHelpers;
@@ -62,7 +61,7 @@ class DataStorageUpdater extends AltrpModel {
        */
       return ! (parameters && parameters.find(param=>{
         if (param.paramValue.toString().indexOf('altrpforms.') !== -1) {
-          let params = dataSource.getParams(window.currentRouterMatch.params, 'altrpforms.');
+          let params = dataSource.getParams(window.currentRouterMatch.data.params, 'altrpforms.');
           initialUpdate && this.subscribeToFormsUpdate(dataSource, params);
         } else {
           return false;

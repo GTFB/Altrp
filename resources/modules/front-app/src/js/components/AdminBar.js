@@ -1,5 +1,5 @@
 import AdminBarWrapper from './AdminBarWrapper';
-import Resource from "../../../../editor/src/js/classes/Resource";
+// import Resource from "../../../../editor/src/js/classes/Resource";
 const {getDataByPath}= window.altrpHelpers;
 
 class AdminBar extends React.Component {

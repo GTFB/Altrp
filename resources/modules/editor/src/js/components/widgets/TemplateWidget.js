@@ -1,4 +1,3 @@
-import React, {Component} from "react";
 const AltrpTemplate = React.lazy(() => import ('../altrp-template/AltrpTemplate'));
 
 class TemplateWidget extends Component {

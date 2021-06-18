@@ -1,6 +1,4 @@
-import React, { Component } from "react";
 import { isEditor, renderFontLink } from "../../../../front-app/src/js/helpers";
-import { connect } from "react-redux";
 
 class Styles extends Component {
   constructor(props) {
@@ -137,4 +135,4 @@ function mapStateToProps(state) {
     altrpFonts: state.altrpFonts
   };
 }
-export default connect(mapStateToProps)(Styles);
+export default window.reactRedux.connect(mapStateToProps)(Styles);

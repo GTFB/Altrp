@@ -1,23 +1,8 @@
 import {sliderStyled, styledString} from "../../../../../../front-app/src/js/helpers/styles";
 import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
 
-/**
- * @return {string}
- */
-
-export default function ButtonComponent(settings) {
-
-  const styles = [
-
-    // `.${element}-altrp-dropbar`,
-    //   ["padding", "padding_dropbar_content_style", "dimensions"],
-    //   ["background-color", "background_dropbar_content_style", "color"],
-    // "}",
-
-    // "&",
-    //   ["font-family", "button_advanced_tooltip_font"],
-    // "}",
-
+export function btnStyles(settings) {
+  return [
     "altrp-btn-wrapper",
 
     ["align-items", "button_alignment"],
@@ -135,6 +120,18 @@ export default function ButtonComponent(settings) {
     ["background-size", "background_size"],
     ["background-size", "background_image_width", "slider"],
     "}",
+  ]
+}
+
+/**
+ * @return {string}
+ */
+
+export default function ButtonComponent(settings) {
+
+  const styles = [
+
+    ...btnStyles(settings)
   ];
 
   return styledString(styles, settings) + "& .altrp-btn-wrapper{display:flex;flex-direction:column;}& img{max-width:100%;}";

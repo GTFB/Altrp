@@ -59,10 +59,16 @@ export function globalStyleReducer(state, action) {
     case DELETE_GLOBAL_EFFECT:
       {
         const deletedEffect = action.effect;
+        console.log("before");
+        console.log(state.effects);
+        console.log("after");
+        console.log(
+          state.effects.filter(effect => effect.id !== deletedEffect.id)
+        );
         state = {
           ...state,
           effects: state.effects.filter(
-            effect => effect.guid == deletedEffect.guid
+            effect => effect.id === deletedEffect.id
           )
         };
       }

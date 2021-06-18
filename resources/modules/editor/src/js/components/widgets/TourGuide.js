@@ -1,4 +1,3 @@
-import React, {Component, Suspense} from "react";
 import AltrpTour from '../altrp-tour/AltrpTour';
 import {isEditor} from "../../../../../front-app/src/js/helpers";
 

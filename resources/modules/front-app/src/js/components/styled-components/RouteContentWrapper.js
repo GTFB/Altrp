@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+
 
 const FRONT_DEFAULT_AREAS = [
   'content', 'footer', 'header', 'popups',

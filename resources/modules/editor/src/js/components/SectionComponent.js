@@ -111,8 +111,9 @@ class SectionComponent extends Component {
       />
     ));
 
-    if (this.state.settings.layout_height === "fit") {
-      styles.height = "100vh";
+    const fitToContent = this.props.element.getResponsiveSetting("layout_height", "", "default")
+    if (fitToContent === "fit") {
+      sectionClasses.push("section-fit-to-content");
     }
     if (this.props.currentScreen.name !== CONSTANTS.DEFAULT_BREAKPOINT) {
       styles.flexWrap = "wrap";

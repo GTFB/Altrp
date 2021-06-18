@@ -1,14 +1,14 @@
-import styled from 'styled-components';
+
 import {getResponsiveSetting, isEditor} from "../../../../../../front-app/src/js/helpers";
 import {
-  dimensionsControllerToStyles, 
+  dimensionsControllerToStyles,
   simplePropertyStyled,
   borderWidthStyled,
   colorPropertyStyled,
   sizeStyled,
   gradientStyled,
   shadowStyled,
-  backgroundImageControllerToStyles,
+  backgroundImageControllerToStyles, sliderStyled,
 } from "../../../../../../front-app/src/js/helpers/styles";
 const settingsToStyles = ({settings, columns = []})=>{
   let styles = '';
@@ -298,9 +298,10 @@ const settingsToStyles = ({settings, columns = []})=>{
   }
 
   if (width) {
-    styles += sizeStyled(width, 'width');
+    width = sliderStyled(width);
+    styles += `width: ${width} !important`;
   }
-  
+
   styles += '} ';
 
   //hover
@@ -309,16 +310,6 @@ const settingsToStyles = ({settings, columns = []})=>{
 
   styles += '&&.altrp-section_boxed:hover, &&.altrp-section_section_boxed:hover {';
 
-  //Получаем значения width в точных юнитах из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    widthH = getResponsiveSetting(settings, 'layout_content_width', ':hover');
-  }
-
-  if (widthH) {
-    styles += sizeStyled(widthH, 'width');
-  }
-  
   styles += '} ';
 
   styles += '& > .altrp-section_section-boxed {';
@@ -364,7 +355,7 @@ const settingsToStyles = ({settings, columns = []})=>{
   if (padding) {
     styles += `padding: ${padding}px; `;
   }
-  
+
   styles += '} ';
 
   //hover
@@ -382,7 +373,7 @@ const settingsToStyles = ({settings, columns = []})=>{
   if (paddingH) {
     styles += `padding: ${paddingH}px; `;
   }
-  
+
   styles += '} ';
 
   let gradient, zIndex, top, right, left, bottom;

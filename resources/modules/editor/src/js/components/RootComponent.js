@@ -1,5 +1,4 @@
 import React, { Component,  } from "react";
-import GlobalStyles from "../../../../front-app/src/js/components/GlobalStyles";
 
 class RootComponent extends Component {
   constructor(props) {

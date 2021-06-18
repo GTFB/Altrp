@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import {sliderStyled, styledString} from "../../../../../../front-app/src/js/helpers/styles";
 import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
 

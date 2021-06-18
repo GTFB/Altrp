@@ -18,7 +18,7 @@ class FrontApp extends Component {
     console.log('FRONT APP: ',performance.now());
   }
   getRoutes() {
-    return getRoutes().then(res => {
+    return window.altrpHelpers.getRoutes().then(res => {
       this.routes = res.default;
     });
   }

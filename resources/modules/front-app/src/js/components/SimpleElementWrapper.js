@@ -1,8 +1,6 @@
-import { connect } from "react-redux";
 import { addElement } from "../store/elements-storage/actions";
-import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 import { changeCurrentPageProperty } from "../store/current-page/actions";
-import { ElementWrapperDivComponent } from "../../../../editor/src/js/components/widgets/styled-components/ElementWrapperComponent";
+import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 import ImageComponent from "../../../../editor/src/js/components/widgets/styled-components/ImageComponent";
 import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 import TextComponent from "../../../../editor/src/js/components/widgets/styled-components/TextComponent";
@@ -18,7 +16,6 @@ import MapConstructorComponent
   from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
 import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
-const { altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceContentWithData, setTitle } = window.altrpHelpers;
 
 class SimpleElementWrapper extends Component {
   constructor(props) {
@@ -27,11 +24,10 @@ class SimpleElementWrapper extends Component {
     this.state = {
       elementDisplay: !this.props.element.getSettings("default_hidden"),
     };
-    this.elementId = this.props.element.getId();
-    this.settings = this.props.element.getSettings();
     props.element.wrapper = this;
-    this.elementWrapperRef = React.createRef();
+    this.elementWrapperRef = this.props.elementWrapperRef;
     this.elementRef = React.createRef();
+    this.settings = props.element.getSettings();
     appStore.dispatch(addElement(this));
   }
 
@@ -52,7 +48,7 @@ class SimpleElementWrapper extends Component {
    * Иногда надо обновить элемент (FrontElement)
    */
   componentDidMount() {
-    ! isEditor() && window?.frontApp?.onWidgetMount();
+    ! window.altrpHelpers.isEditor() && window?.frontApp?.onWidgetMount();
     if (_.isFunction(this.props.element.update)) {
       this.props.element.update();
       this.props.element.updateFonts();
@@ -117,14 +113,14 @@ class SimpleElementWrapper extends Component {
     this.checkElementDisplay();
     if (appStore.getState().currentModel.getProperty('altrpModelUpdated') &&
       appStore.getState().currentDataStorage.getProperty('currentDataStorageLoaded') &&
-      !isEditor() &&
+      !window.altrpHelpers.isEditor() &&
       this.props.element.getName() === 'section') {
       let title = appStore.getState().currentTitle;
-      title = replaceContentWithData(title);
+      title = window.altrpHelpers.replaceContentWithData(title);
       if (appStore.getState().altrpPage.getProperty('title') !== title) {
         appStore.dispatch(changeCurrentPageProperty('title', title));
       }
-      setTitle(title);
+      window.altrpHelpers.setTitle(title);
     }
   }
 
@@ -132,7 +128,7 @@ class SimpleElementWrapper extends Component {
    * Обновить элемент изменив this.state.updateToken
    */
   updateElement() {
-    this.setState(state => ({ ...state, updateToken: altrpRandomId() }))
+    this.setState(state => ({ ...state, updateToken: window.altrpHelpers.altrpRandomId() }))
   }
 
   /**
@@ -161,7 +157,7 @@ class SimpleElementWrapper extends Component {
         value
       };
     });
-    let elementDisplay = conditionsChecker(
+    let elementDisplay = window.altrpHelpers.conditionsChecker(
       conditions,
       element.getSettings("conditional_other_display") === "AND",
       this.props.element.getCurrentModel(),
@@ -205,13 +201,13 @@ class SimpleElementWrapper extends Component {
     let display = true;
     formConditions.forEach(c => {
       if (logic === "AND") {
-        display *= altrpCompare(
+        display *= window.altrpHelpers.altrpCompare(
           _.get(formsStore, `${formId}.${c.field_id}`),
           c.value,
           c.operator
         );
       } else {
-        display += altrpCompare(
+        display += window.altrpHelpers.altrpCompare(
           _.get(formsStore, `${formId}.${c.field_id}`),
           c.value,
           c.operator
@@ -223,45 +219,13 @@ class SimpleElementWrapper extends Component {
 
   render() {
     const {
-      hide_on_wide_screen,
-      hide_on_desktop,
-      hide_on_laptop,
-      hide_on_tablet,
-      hide_on_big_phone,
-      hide_on_small_phone,
       hide_on_trigger,
-      isFixed,
       tooltip_position
     } = this.props.element.settings;
     let {
       tooltip_text,
     } = this.props.element.settings
-    let classes = `altrp-element altrp-element${this.props.element.getId()} altrp-element_${this.props.element.getType()}`;
-    classes += this.props.element.getPrefixClasses() + " ";
-    if (this.props.element.getType() === "widget") {
-      classes += ` altrp-widget_${this.props.element.getName()}`;
-    }
-    if (hide_on_wide_screen) {
-      classes += " hide_on_wide_screen";
-    }
-    if (hide_on_desktop) {
-      classes += " hide_on_desktop";
-    }
-    if (hide_on_laptop) {
-      classes += " hide_on_laptop";
-    }
-    if (hide_on_tablet) {
-      classes += " hide_on_tablet";
-    }
-    if (hide_on_big_phone) {
-      classes += " hide_on_big_phone";
-    }
-    if (hide_on_small_phone) {
-      classes += " hide_on_small_phone";
-    }
-    if (isFixed) {
-      classes += " fixed-section";
-    }
+
     if (this.state.errorInfo) {
       return (
         <div className="altrp-error" data-eltype={this.props.element.getType()}>
@@ -287,7 +251,7 @@ class SimpleElementWrapper extends Component {
       styles.display = "none";
     }
     let CSSId = this.props.element.getSettings("advanced_element_id", "");
-    CSSId = replaceContentWithData(CSSId, this.props.element.getCurrentModel().getData());
+    CSSId = window.altrpHelpers.replaceContentWithData(CSSId, this.props.element.getCurrentModel().getData());
     if (this.CSSId !== CSSId) {
       this.CSSId = CSSId;
     }
@@ -314,7 +278,7 @@ class SimpleElementWrapper extends Component {
       appStore
     });
 
-    let WrapperComponent = ElementWrapperDivComponent;
+    let WrapperComponent = React.Fragment;
 
     switch (this.props.element.getName()) {
       case "image":
@@ -360,21 +324,17 @@ class SimpleElementWrapper extends Component {
         WrapperComponent = PostsComponent;
         break;
     }
-    tooltip_text = replaceContentWithData(tooltip_text, this.props.element.getCurrentModel().getData())
+    tooltip_text = window.altrpHelpers.replaceContentWithData(tooltip_text, this.props.element.getCurrentModel().getData())
     const wrapperProps = {
-      className: classes,
-      ref: this.elementWrapperRef,
       elementId: this.elementId,
       settings: this.settings,
-      style: styles,
-      id: this.CSSId
     };
-
+    if(WrapperComponent === React.Fragment){
+      delete  wrapperProps.elementId;
+      delete  wrapperProps.settings;
+    }
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
-      <WrapperComponent
-        {...wrapperProps}
-        element={this.props.element.getId()}
-      >
+      <WrapperComponent {...wrapperProps} >
         {content}
         {tooltip_text && <AltrpTooltip position={tooltip_position}>{tooltip_text}</AltrpTooltip>}
       </WrapperComponent>
@@ -396,6 +356,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, null, null, {
-  forwardRef: true
-})(SimpleElementWrapper);
+export default window.reactRedux.connect(mapStateToProps)(SimpleElementWrapper);

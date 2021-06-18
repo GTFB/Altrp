@@ -1,4 +1,3 @@
-import React, { Component, Suspense } from "react";
 
 const AltrpMap = React.lazy(() => import(/* webpackChunkName: 'AltrpMap' */"../altrp-map/AltrpMap"));
 

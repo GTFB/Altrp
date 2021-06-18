@@ -109,7 +109,7 @@ class GlobalEffectItem extends Component {
     };
     this.globalStyleResource.put(effect.id, send).then(success => {
       this.props.editEffect(effect);
-      this.props.onSaveEffectClose();
+      this.setState(s => ({ ...s, edit: false }));
     });
   }
   onDeleteEffect(event) {
@@ -119,7 +119,7 @@ class GlobalEffectItem extends Component {
       const { effect } = this.state;
       this.globalStyleResource.delete(effect.id).then(success => {
         this.props.deleteEffect(effect);
-        this.props.onSaveEffectClose();
+        // this.props.onSaveEffectClose();
       });
     }
   }

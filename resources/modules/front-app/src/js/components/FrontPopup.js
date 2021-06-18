@@ -1,5 +1,3 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
 import { Scrollbars } from "react-custom-scrollbars";
 import AltrpOffcanvas from "./altrp-offcanvas/AltrpOffcanvas";
 import { togglePopup } from "../store/popup-trigger/actions";
@@ -390,4 +388,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(FrontPopup);
+export default window.reactRedux.connect(mapStateToProps, mapDispatchToProps)(FrontPopup);

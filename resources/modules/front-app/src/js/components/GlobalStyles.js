@@ -1,5 +1,3 @@
-import { createGlobalStyle } from "styled-components";
-import { connect } from "react-redux";
 import ButtonComponent from "../../../../editor/src/js/components/widgets/styled-components/ButtonComponent";
 import CarouselComponent from "../../../../editor/src/js/components/widgets/styled-components/CarouselComponent";
 import GalleryComponent from "../../../../editor/src/js/components/widgets/styled-components/GalleryComponent";
@@ -7,7 +5,13 @@ import DividerComponent from "../../../../editor/src/js/components/widgets/style
 import VideoComponent from "../../../../editor/src/js/components/widgets/styled-components/VideoComponent";
 import ListComponent from "../../../../editor/src/js/components/widgets/styled-components/ListComponent";
 import AdvancedComponent from "../../../../editor/src/js/components/widgets/styled-components/AdvancedComponent";
+import SectionWidgetComponent
+  from "../../../../editor/src/js/components/widgets/styled-components/SectionWidgetComponent";
+import ColumnComponent from "../../../../editor/src/js/components/widgets/styled-components/ColumnComponents";
+import DropbarWidgetComponent
+  from "../../../../editor/src/js/components/widgets/styled-components/DropbarWidgetComponent";
 import FormComponent from "../../../../editor/src/js/components/widgets/styled-components/FormComponent";
+import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 
 const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
   let styles = "";
@@ -35,6 +39,18 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
         case "list":
           styles += `.${prefix}${id} {${ListComponent(item.settings)}}`;
           break;
+        case "accordion":
+          styles += `.${prefix}${id} {${AccordionComponent(item.settings)}}`;
+          break;
+        case "section":
+          styles += `.${prefix}${id} {${SectionWidgetComponent(item.settings)}}`;
+          break;
+        case "column":
+          styles += `.${prefix}${id} {${ColumnComponent(item.settings)}}`;
+          break;
+        case "dropbar":
+          styles += `.${prefix}${id} {${DropbarWidgetComponent(item.settings)}}`;
+          break;
         case "input":
           {
             switch (item.settings?.content_type) {
@@ -61,6 +77,7 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
       )}}`;
     }
   });
+
   return styles;
 }}`;
 
@@ -68,4 +85,5 @@ function mapStateToProps(state) {
   return { elementsSettings: state.elementsSettings };
 }
 
-export default connect(mapStateToProps)(GlobalStyles);
+export default window.reactRedux.connect(mapStateToProps)(GlobalStyles)
+

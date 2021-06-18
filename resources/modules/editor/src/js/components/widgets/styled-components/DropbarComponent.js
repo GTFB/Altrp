@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
 import {defaultStyled, sliderStyled, styledString} from "../../../../../../front-app/src/js/helpers/styles";
 
@@ -7,7 +6,7 @@ export default styled.div`
   const styles = [
     "&.altrp-dropbar-btn-containter",
       ["width", "width_dropbar_options", "slider"],
-    
+
       ["padding", "padding_dropbar_content_style", "dimensions"],
       ["background-color", "background_dropbar_content_style", "color"],
       ["border-style", "border_style_dropbar_content_style"],
@@ -16,7 +15,7 @@ export default styled.div`
       ["border-radius", "border_radius_dropbar_content_style", "dimensions"],
       ["box-shadow", "box_shadow_dropbar_content_style", "shadow"],
     "}",
-    
+
     "altrp-dropbar-btn-content",
       ["color", "text_color_dropbar_content_style", "color"],
       ["", "typographic_text_dropbar_content_style", "typographic"],

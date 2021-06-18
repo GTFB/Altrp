@@ -49,9 +49,6 @@ Promise.all(libsToLoad).then(res => {
 /**
  * Параллельно загружаем все необходимые модули
  */
-import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
-  loadingCallback();
-})
 import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElementsManager').then(module => {
   import (/* webpackChunkName: 'FrontElementsFabric' */'./js/classes/FrontElementsFabric').then(module => {
     console.log('LOAD FrontElementsFabric: ', performance.now());
@@ -65,7 +62,16 @@ import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElement
 });
 import (/* webpackChunkName: 'React_ReactDom_Lodash' */'./js/libs/react-lodash').then(module => {
   console.log('LOAD React_ReactDom_Lodash: ', performance.now());
-  loadingCallback();
+
+  import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
+    loadingCallback();
+  })
+
+  import (/* webpackChunkName: 'ElementWrapper' */'./js/components/ElementWrapper').then(module => {
+    window.ElementWrapper = module.default;
+    console.log('LOAD ElementWrapper: ', performance.now());
+    loadingCallback();
+  });
 });
 import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element-component').then(module => {
   window.elementDecorator = module.default;
@@ -91,11 +97,6 @@ if (process.env.NODE_ENV === 'production') {
     loadingCallback();
   });
 }
-import (/* webpackChunkName: 'ElementWrapper' */'./js/components/ElementWrapper').then(module => {
-  window.ElementWrapper = module.default;
-  console.log('LOAD ElementWrapper: ', performance.now());
-  loadingCallback();
-});
 
 import (/* webpackChunkName: 'FormsManager' */'../../editor/src/js/classes/modules/FormsManager.js').then(module => {
   console.log('LOAD FormsManager: ', performance.now());
