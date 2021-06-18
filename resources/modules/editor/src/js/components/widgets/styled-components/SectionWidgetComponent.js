@@ -449,7 +449,7 @@ export default function SectionWidgetComponent(settings) {
     }
 
     if (backgroundImage) {
-      backgroundImage = backgroundImageControllerToStyles(backgroundImage);
+      styles = backgroundImageControllerToStyles(backgroundImage);
     }
 
     //Получаем значения background-size из контроллера, обрабатываем и добавляем в styles
@@ -669,6 +669,8 @@ export default function SectionWidgetComponent(settings) {
 
     return styles;
   }
+
+  console.log(altrpSectionBoxedHover())
 
   return `
 

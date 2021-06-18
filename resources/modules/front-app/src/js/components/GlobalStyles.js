@@ -16,6 +16,9 @@ import DropbarWidgetComponent
   from "../../../../editor/src/js/components/widgets/styled-components/DropbarWidgetComponent";
 import FormComponent from "../../../../editor/src/js/components/widgets/styled-components/FormComponent";
 import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
+import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
+import MapConstructorComponent
+  from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
 
 const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
   let styles = "";
@@ -92,6 +95,12 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
             }
           }
           break;
+        case "map":
+          styles += `.${prefix}${id} {${MapComponent(item.settings)}}`;
+          break;
+        case "map_builder":
+          styles += `.${prefix}${id} {${MapConstructorComponent(item.settings)}}`;
+          break;
       }
       styles += `.${prefix}${id}.${prefix}${id} {${AdvancedComponent(
         item.settings
@@ -99,20 +108,6 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
 
     }
   });
-  
-  if (settingsHeading === undefined) {
-    return styles;
-  }
-
-  styles += `.${prefix}${elementId} .altrp-heading, .${prefix}${elementId} .altrp-heading a {`;
-
-  const color = getResponsiveSetting(settingsHeading, 'heading_style_color');
-
-  if (color) {
-    styles += colorPropertyStyled(color, 'color');
-  }
-
-  styles += `} `;
   
   return styles;
 }}`;
