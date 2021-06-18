@@ -37,9 +37,11 @@ class GlobalTemplateStylesController extends Controller
             'settings' => 'required',
         ]);
         try {
-            $color = new GlobalStyle($data);
-            $color->save();
-            return response()->json($color, 201);
+            $style = new GlobalStyle($data);
+            $style->save();
+            //just for guid
+            $style = GlobalStyle::find($style->id);
+            return response()->json($style, 201);
         } catch (\Throwable $th) {
             dd($th);
             return response()->json([
@@ -84,11 +86,32 @@ class GlobalTemplateStylesController extends Controller
                 $data['colorRGB'] = $request->settings['colorRGB'] ?? $data['colorRGB'];
                 $style->settings = json_encode($data);
                 break;
+            case 'effect':
+                $data = $style->settings;
+                $data['name'] = $request->settings['name'] ?? $data['name'];
+                $data['color'] = $request->settings['color'] ?? $data['color'];
+                $data['colorPickedHex'] = $request->settings['colorPickedHex'] ?? $data['colorPickedHex'];
+                $data['colorRGB'] = $request->settings['colorRGB'] ?? $data['colorRGB'];
+                $data['blur'] = $request->settings['blur'] ?? $data['blur'];
+                $data['horizontal'] = $request->settings['horizontal'] ?? $data['horizontal'];
+                $data['opacity'] = $request->settings['opacity'] ?? $data['opacity'];
+                $data['spread'] = $request->settings['spread'] ?? $data['spread'];
+                $data['type'] = $request->settings['type'] ?? $data['type'];
+                $data['vertical'] = $request->settings['vertical'] ?? $data['vertical'];
+                $style->settings = json_encode($data);
             case 'font':
-                //...implementation
-            default:
-                # code...
-                break;
+                $data = $style->settings;
+                $data['name'] = $request->settings['name'] ?? $data['name'];
+                $data['color'] = $request->settings['color'] ?? $data['color'];
+                $data['colorPickedHex'] = $request->settings['colorPickedHex'] ?? $data['colorPickedHex'];
+                $data['colorRGB'] = $request->settings['colorRGB'] ?? $data['colorRGB'];
+                $data['blur'] = $request->settings['blur'] ?? $data['blur'];
+                $data['horizontal'] = $request->settings['horizontal'] ?? $data['horizontal'];
+                $data['opacity'] = $request->settings['opacity'] ?? $data['opacity'];
+                $data['spread'] = $request->settings['spread'] ?? $data['spread'];
+                $data['type'] = $request->settings['type'] ?? $data['type'];
+                $data['vertical'] = $request->settings['vertical'] ?? $data['vertical'];
+                $style->settings = json_encode($data);
         }
         if (!$style->save()) {
             return response()->json(['message' => 'Save failed'], 409);

@@ -18,7 +18,7 @@ import UpdateButton from "./js/components/UpdateButton";
 import CONSTANTS from "./js/consts";
 import { stopDrag } from "./js/store/element-drag/actions";
 import AssetsBrowser from "./js/classes/modules/AssetsBrowser";
-window.Link = 'a';
+window.Link = "a";
 import store, {
   getCurrentElement,
   getCurrentScreen
@@ -40,7 +40,10 @@ import { changeCurrentUser } from "../../front-app/src/js/store/current-user/act
 import Resource from "./js/classes/Resource";
 import AltrpMeta from "./js/classes/AltrpMeta";
 import { setEditorMeta } from "./js/store/editor-metas/actions";
-import { setGlobalColors } from "./js/store/altrp-global-colors/actions";
+import {
+  setGlobalColors,
+  setGlobalEffects
+} from "./js/store/altrp-global-colors/actions";
 
 /**
  * Главный класс редактора.<br/>
@@ -217,6 +220,15 @@ class Editor extends Component {
           id: color.id,
           guid: color.guid,
           ...color.settings
+        })) || []
+      )
+    );
+    appStore.dispatch(
+      setGlobalEffects(
+        globalStyles.effect?.map(effect => ({
+          id: effect.id,
+          guid: effect.guid,
+          ...effect.settings
         })) || []
       )
     );

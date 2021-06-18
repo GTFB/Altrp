@@ -6,8 +6,6 @@ import {
   colorPropertyStyled,
   borderWidthStyled,
   shadowControllerToStyles,
-  borderRadiusStyled,
-  columnGapStyled,
   sizeStyled
 } from "../../../../../../front-app/src/js/helpers/styles";
 
