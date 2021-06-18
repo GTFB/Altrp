@@ -155,6 +155,7 @@ class GlobalEffectItem extends Component {
 
               <FormGroup label="Choose Effect Color">
                 <SketchPicker
+                  presetColors={[]}
                   color={effect.color}
                   onChange={color => this.colorChange(color)}
                   style={{

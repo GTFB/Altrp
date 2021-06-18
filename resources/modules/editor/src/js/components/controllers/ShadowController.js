@@ -7,6 +7,9 @@ import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
 import GlobalPresetColors from "./GlobalPresetColors";
 import PresetGlobalEffects from "./PresetGlobalEffects";
+import store from "../../store/store";
+import { changeTemplateStatus } from "../../store/template-status/actions";
+import CONSTANTS from "../../consts";
 
 class ShadowController extends Component {
   constructor(props) {
@@ -59,25 +62,46 @@ class ShadowController extends Component {
     return {};
   }
 
+  hasGlobal(guid) {
+    return getCurrentElement().hasGlobal(guid);
+  }
+
   setGlobal(guid) {
     const globalEffects = this.props.globalEffects;
     const guidEffect = globalEffects.filter(effect => effect.guid == guid)[0];
-    console.log(guid);
-    console.log(guidEffect);
+    const {
+      blur,
+      color,
+      colorPickedHex,
+      colorRGB,
+      horizontal,
+      opacity,
+      spread,
+      type,
+      vertical
+    } = guidEffect;
+    const effectValue = {
+      blur: blur,
+      color: color,
+      colorPickedHex: colorPickedHex,
+      colorRGB: colorRGB,
+      horizontal: horizontal,
+      opacity: opacity,
+      spread: spread,
+      type: type,
+      vertical: vertical
+    };
     if (guidEffect) {
-      this.setState(
-        s => ({ ...s, value: guidEffect }),
-        () => {
-          getCurrentElement().setGlobalStyle(
-            guid,
-            this.props.controller.getSettingName()
-          );
-          getCurrentElement().updateAllGlobals(
-            guid,
-            this.props.controller.getSettingName()
-          );
-        }
+      this._changeValue({
+        ...this.defaultValues,
+        ...effectValue
+      });
+      getCurrentElement().setGlobalStyle(
+        guid,
+        this.props.controller.getSettingName()
       );
+      getCurrentElement().updateAllGlobals(guid, effectValue);
+      store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
     }
   }
   //начало color
@@ -252,7 +276,10 @@ class ShadowController extends Component {
               id="shadowContainer"
               className="control-shadow-wrapper control-shadow-wrapper-none control-shadow-active"
             >
-              <PresetGlobalEffects setEffect={this.setGlobal} />
+              <PresetGlobalEffects
+                setEffect={this.setGlobal}
+                checkGlobal={this.hasGlobal}
+              />
               {/* начало color */}
               <div className="control-color-header">
                 <div className="controller-container__label">color</div>

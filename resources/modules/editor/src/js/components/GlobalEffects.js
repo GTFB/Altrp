@@ -49,6 +49,32 @@ class GlobalEffects extends Component {
    * @param {*} effect
    */
   recursiveWalkTree(template, guid, effect) {
+    console.log(template);
+    if (Array.isArray(template)) {
+      template?.forEach(
+        /**
+         * @param {BaseElement} templateItem
+         */
+        templateItem => {
+          const hasGlobal = Boolean(templateItem.hasGlobal(guid));
+          if (hasGlobal) {
+            templateItem.updateAllGlobals(guid, effect);
+          }
+          this.recursiveWalkTree(templateItem, guid, effect);
+        }
+      );
+    } else this.recursiveUpdate(template, guid, effect);
+  }
+
+  /**
+   * @param {BaseElement} template
+   * @param {String} guid
+   * @param {*} effect
+   */
+  recursiveUpdate(template, guid, effect) {
+    if (template.hasGlobal(guid)) {
+      template.updateAllGlobals(guid, effect);
+    }
     template.children?.forEach(
       /**
        * @param {BaseElement} child
@@ -57,6 +83,7 @@ class GlobalEffects extends Component {
         if (child.hasGlobal(guid)) {
           child.updateAllGlobals(guid, effect);
         }
+
         child.children.length > 0 &&
           this.recursiveWalkTree(child.children, guid, effect);
       }

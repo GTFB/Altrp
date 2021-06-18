@@ -763,6 +763,7 @@ class BaseElement extends ControlStack {
       `global_styles_storage.${guid}`,
       []
     );
+    console.log(currentPropsList);
     currentPropsList.forEach(settingName => {
       // this.settings[settingName] = value;
       this.setSettingValue(settingName, value);

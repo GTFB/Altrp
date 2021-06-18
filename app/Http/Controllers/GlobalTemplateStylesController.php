@@ -37,9 +37,11 @@ class GlobalTemplateStylesController extends Controller
             'settings' => 'required',
         ]);
         try {
-            $color = new GlobalStyle($data);
-            $color->save();
-            return response()->json($color, 201);
+            $style = new GlobalStyle($data);
+            $style->save();
+            //just for guid
+            $style = GlobalStyle::find($style->id);
+            return response()->json($style, 201);
         } catch (\Throwable $th) {
             dd($th);
             return response()->json([

@@ -13,12 +13,18 @@ import PostsComponent from "../../../../editor/src/js/components/widgets/styled-
 import HeadingComponent from "../../../../editor/src/js/components/widgets/styled-components/HeadingComponent";
 import MenuComponent from "../../../../editor/src/js/components/widgets/styled-components/MenuComponent";
 import BreadcrumbsComponent from "../../../../editor/src/js/components/widgets/styled-components/BreadcrumbsComponent";
-import MapConstructorComponent
-  from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
+import MapConstructorComponent from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
 import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
 import DEFAULT_REACT_ELEMENTS from "../constants/DEFAULT_REACT_ELEMENTS";
-const { altrpCompare, altrpRandomId, conditionsChecker, isEditor, replaceContentWithData, setTitle } = window.altrpHelpers;
+const {
+  altrpCompare,
+  altrpRandomId,
+  conditionsChecker,
+  isEditor,
+  replaceContentWithData,
+  setTitle
+} = window.altrpHelpers;
 import DashboardComponent from "../../../../editor/src/js/components/widgets/styled-components/DashboardComponent";
 
 class ElementWrapper extends Component {
@@ -26,7 +32,7 @@ class ElementWrapper extends Component {
     super(props);
 
     this.state = {
-      elementDisplay: !this.props.element.getSettings("default_hidden"),
+      elementDisplay: !this.props.element.getSettings("default_hidden")
     };
     this.reactElement = this.props.element.getSettings("react_element");
     this.elementId = this.props.element.getId();
@@ -54,7 +60,7 @@ class ElementWrapper extends Component {
    * Иногда надо обновить элемент (FrontElement)
    */
   componentDidMount() {
-    ! isEditor() && window?.frontApp?.onWidgetMount();
+    !isEditor() && window?.frontApp?.onWidgetMount();
     if (_.isFunction(this.props.element.update)) {
       this.props.element.update();
       this.props.element.updateFonts();
@@ -117,14 +123,18 @@ class ElementWrapper extends Component {
    */
   componentDidUpdate(prevProps, prevState) {
     this.checkElementDisplay();
-    if (appStore.getState().currentModel.getProperty('altrpModelUpdated') &&
-      appStore.getState().currentDataStorage.getProperty('currentDataStorageLoaded') &&
+    if (
+      appStore.getState().currentModel.getProperty("altrpModelUpdated") &&
+      appStore
+        .getState()
+        .currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !isEditor() &&
-      this.props.element.getName() === 'section') {
+      this.props.element.getName() === "section"
+    ) {
       let title = appStore.getState().currentTitle;
       title = replaceContentWithData(title);
-      if (appStore.getState().altrpPage.getProperty('title') !== title) {
-        appStore.dispatch(changeCurrentPageProperty('title', title));
+      if (appStore.getState().altrpPage.getProperty("title") !== title) {
+        appStore.dispatch(changeCurrentPageProperty("title", title));
       }
       setTitle(title);
     }
@@ -134,7 +144,7 @@ class ElementWrapper extends Component {
    * Обновить элемент изменив this.state.updateToken
    */
   updateElement() {
-    this.setState(state => ({ ...state, updateToken: altrpRandomId() }))
+    this.setState(state => ({ ...state, updateToken: altrpRandomId() }));
   }
 
   /**
@@ -235,9 +245,7 @@ class ElementWrapper extends Component {
       isFixed,
       tooltip_position
     } = this.props.element.settings;
-    let {
-      tooltip_text,
-    } = this.props.element.settings
+    let { tooltip_text } = this.props.element.settings;
     let classes = `altrp-element altrp-element${this.props.element.getId()} altrp-element_${this.props.element.getType()}`;
     classes += this.props.element.getPrefixClasses() + " ";
     if (this.props.element.getType() === "widget") {
@@ -278,22 +286,32 @@ class ElementWrapper extends Component {
     }
     const styles = {};
 
-    if (this.props.element.getResponsiveSetting('layout_column_width')) {
-      if (Number(this.props.element.getResponsiveSetting('layout_column_width'))) {
-        styles.width = this.props.element.getResponsiveSetting('layout_column_width') + '%';
+    if (this.props.element.getResponsiveSetting("layout_column_width")) {
+      if (
+        Number(this.props.element.getResponsiveSetting("layout_column_width"))
+      ) {
+        styles.width =
+          this.props.element.getResponsiveSetting("layout_column_width") + "%";
       } else {
-        styles.width = this.props.element.getResponsiveSetting('layout_column_width');
+        styles.width = this.props.element.getResponsiveSetting(
+          "layout_column_width"
+        );
       }
     }
     if (!this.state.elementDisplay) {
       styles.display = "none";
     }
     let CSSId = this.props.element.getSettings("advanced_element_id", "");
-    CSSId = replaceContentWithData(CSSId, this.props.element.getCurrentModel().getData());
+    CSSId = replaceContentWithData(
+      CSSId,
+      this.props.element.getCurrentModel().getData()
+    );
     if (this.CSSId !== CSSId) {
       this.CSSId = CSSId;
     }
-    let ContentComponent = frontElementsManager.getComponentClass(this.props.element.getName());
+    let ContentComponent = frontElementsManager.getComponentClass(
+      this.props.element.getName()
+    );
     const content = React.createElement(ContentComponent, {
       ref: this.elementRef,
       rootElement: this.props.rootElement,
@@ -315,29 +333,27 @@ class ElementWrapper extends Component {
       history: this.props.history,
       appStore
     });
-    if (this.props.element.getTemplateType() === 'email') {
+    if (this.props.element.getTemplateType() === "email") {
       if (!this.state.elementDisplay) {
         return null;
       }
-      return <>
-        {content}
-      </>
+      return <>{content}</>;
     }
 
     let WrapperComponent = ElementWrapperDivComponent;
     switch (this.props.element.getName()) {
       case "image":
         WrapperComponent = ImageComponent;
-        break
+        break;
       case "text":
         WrapperComponent = TextComponent;
-        break
+        break;
       case "table":
         WrapperComponent = TableComponent;
-        break
+        break;
       case "heading":
         WrapperComponent = HeadingComponent;
-        break
+        break;
       case "menu":
         WrapperComponent = MenuComponent;
         break;
@@ -367,7 +383,10 @@ class ElementWrapper extends Component {
         break;
     }
 
-    tooltip_text = replaceContentWithData(tooltip_text, this.props.element.getCurrentModel().getData())
+    tooltip_text = replaceContentWithData(
+      tooltip_text,
+      this.props.element.getCurrentModel().getData()
+    );
     const wrapperProps = {
       className: classes,
       ref: this.elementWrapperRef,
@@ -377,16 +396,20 @@ class ElementWrapper extends Component {
       id: this.CSSId
     };
 
-    if(this.reactElement || DEFAULT_REACT_ELEMENTS.indexOf(this.props.element.getName()) !== -1){
-      wrapperProps['data-react-element'] = this.props.element.getId();
+    if (
+      this.reactElement ||
+      DEFAULT_REACT_ELEMENTS.indexOf(this.props.element.getName()) !== -1
+    ) {
+      wrapperProps["data-react-element"] = this.props.element.getId();
     }
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
-      <WrapperComponent
-        {...wrapperProps}
-        element={this.props.element.getId()}
-      >
+      <WrapperComponent {...wrapperProps} element={this.props.element.getId()}>
         {content}
-        {tooltip_text && <AltrpTooltip position={tooltip_position}>{tooltip_text}</AltrpTooltip>}
+        {tooltip_text && (
+          <AltrpTooltip position={tooltip_position}>
+            {tooltip_text}
+          </AltrpTooltip>
+        )}
       </WrapperComponent>
     );
   }
@@ -402,7 +425,7 @@ function mapStateToProps(state) {
     currentUser: state.currentUser,
     altrpMeta: state.altrpMeta,
     altrpPageState: state.altrpPageState,
-    currentScreen: state.currentScreen,
+    currentScreen: state.currentScreen
   };
 }
 

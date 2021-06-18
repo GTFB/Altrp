@@ -136,6 +136,7 @@ class GlobalEffectItemAdd extends Component {
             <FormGroup label="Choose Effect Color">
               <SketchPicker
                 color={effect.color}
+                presetColors={[]}
                 onChange={color => this.colorChange(color)}
                 style={{
                   padding: 0,
