@@ -341,15 +341,6 @@ class ElementWrapper extends Component {
       case "image":
         WrapperComponent = ImageComponent;
         break;
-      case "text":
-        WrapperComponent = TextComponent;
-        break;
-      case "table":
-        WrapperComponent = TableComponent;
-        break;
-      case "heading":
-        WrapperComponent = HeadingComponent;
-        break;
       case "menu":
         WrapperComponent = MenuComponent;
         break;
