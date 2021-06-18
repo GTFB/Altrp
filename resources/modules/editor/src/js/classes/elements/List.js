@@ -324,6 +324,9 @@ class List extends BaseElement{
           label: 'dashed'
         }
       ],
+      conditions: {
+        'divider_switcher_list_style': true,
+      },
     });
 
     this.addControl('divider_weight_list_style', {
@@ -338,6 +341,9 @@ class List extends BaseElement{
       },
       max: 20,
       min: 0,
+      conditions: {
+        'divider_switcher_list_style': true,
+      },
     });
 
     this.addControl('divider_width_list_style', {
@@ -356,6 +362,9 @@ class List extends BaseElement{
       ],
       max: 100,
       min: 0,
+      conditions: {
+        'divider_switcher_list_style': true,
+      },
     });
 
     this.addControl('divider_color_list_style', {
@@ -367,6 +376,9 @@ class List extends BaseElement{
       default: {
         color: "",
         colorPickedHex: "",
+      },
+      conditions: {
+        'divider_switcher_list_style': true,
       },
       }
     );
