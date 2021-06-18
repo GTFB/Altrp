@@ -133,7 +133,7 @@ class AdminBar extends React.Component {
       return;
     }
     try{
-      let res = await new Resource({route:'/admin/ajax/clear_cache'}).delete(this.props.idPage);
+      let res = await new window.altrpHelpers.Resource({route:'/admin/ajax/clear_cache'}).delete(this.props.idPage);
     } catch(error){
       await confirm('Error');
 
