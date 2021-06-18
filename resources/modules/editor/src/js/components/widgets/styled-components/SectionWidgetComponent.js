@@ -449,7 +449,6 @@ export default function SectionWidgetComponent(settings) {
     }
 
     if (backgroundImage) {
-      console.log(backgroundImage);
       styles += backgroundImageControllerToStyles(backgroundImage);
     }
 

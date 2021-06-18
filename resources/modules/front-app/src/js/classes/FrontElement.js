@@ -7,7 +7,6 @@ import {
 } from "../helpers";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {addFont} from "../store/fonts-storage/actions";
-import {addSettings} from "../store/elements-settings/actions";
 
 class FrontElement {
 
@@ -56,9 +55,6 @@ class FrontElement {
      *  * @type {array}
      */
     this.modelsList = []
-    if(this.getId()){
-      appStore.dispatch(addSettings(this.getId(), this.getName(), {...this.settings}))
-    }
   }
 
   /**
