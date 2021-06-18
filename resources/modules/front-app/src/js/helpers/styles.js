@@ -751,7 +751,6 @@ export function styledString(styles, settings) {
               stringStyles += typographicControllerToStyles(variable);
               break;
             case "slider":
-
               if(sliderStyled(variable)) {
                 stringStyles += `${style[0]}:${sliderStyled(variable)} ${important};`;
               }
