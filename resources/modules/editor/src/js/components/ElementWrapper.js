@@ -20,7 +20,6 @@ import { contextMenu } from "react-contexify";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
 import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
 import ImageComponent from "./widgets/styled-components/ImageComponent";
-import PostsComponent from "./widgets/styled-components/PostsComponent";
 import NavComponent from "./widgets/styled-components/NavComponent";
 import TabsComponent from "./widgets/styled-components/TabsComponent";
 import Column from "../classes/elements/Column";
@@ -380,10 +379,6 @@ class ElementWrapper extends Component {
       CKEditor: CKEditor,
       wrapper: this
     };
-    // if(this.props.element.getType() !== 'root-element'){
-    //   delete elementProps.element;
-    // }
-    // console.error(performance.now());
 
     let WrapperComponent = "div";
     switch (this.props.element.getName()) {

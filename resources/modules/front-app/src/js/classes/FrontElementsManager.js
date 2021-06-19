@@ -322,6 +322,10 @@ class FrontElementsManager {
     if (!window.altrpElementsLists) {
       return;
     }
+    if(window.LIBS){
+      console.log(LIBS);
+      await Promise.all(Object.values(window.LIBS).map(l=>l()));
+    }
     let componentsToLoad = this.ELEMENTS.filter(el => {
       return window.altrpElementsLists.indexOf(el.name) === -1;
     });

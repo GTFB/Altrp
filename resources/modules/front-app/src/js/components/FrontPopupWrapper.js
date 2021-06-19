@@ -3,7 +3,7 @@ import { getResponsiveSetting } from '../helpers';
 import { shadowControllerToStyles, dimensionsControllerToStyles } from '../helpers/styles';
 
 
-const FrontPopupWrapper = styled.div`
+const FrontPopupWrapper = window.styled.div`
 & .popup-content {
   ${({settings}) => {
     let styles = "";

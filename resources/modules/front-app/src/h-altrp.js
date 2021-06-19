@@ -2,33 +2,9 @@ console.log('FIRST SCRIPT: ', performance.now());
 import  queryString from 'query-string';
 import WIDGETS_DEPENDS from "./js/constants/WIDGETS_DEPENDS";
 import  "./js/functions/mount-elements";
+import  './js/libs/react-lodash';
 import {setScrollValue} from "./js/store/scroll-position/actions";
 
-import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElementsManager').then(module => {
-  import (/* webpackChunkName: 'FrontElementsFabric' */'./js/classes/FrontElementsFabric').then(module => {
-    console.log('LOAD FrontElementsFabric: ', performance.now());
-    loadingCallback();
-  });
-  return window.frontElementsManager.loadComponents();
-}).then(async components => {
-  console.log('LOAD FrontElementsManager: ', performance.now());
-  loadingCallback();
-});
-import (/* webpackChunkName: 'React_Lodash' */'./js/libs/react-lodash').then(module => {
-  console.log('LOAD React_Lodash: ', performance.now());
-  import (/* webpackChunkName: 'SimpleElementWrapper' */'./js/components/SimpleElementWrapper').then(module => {
-    window.ElementWrapper = module.default;
-    console.log('LOAD SimpleElementWrapper: ', performance.now());
-    loadingCallback();
-  });
-  import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
-    window.currentRouterMatch = new window.AltrpModel({
-      params:queryString.parseUrl(window.location.href).query
-    });
-    loadingCallback();
-    loadDatastorageUpdater();
-  })
-});
 
 
 function loadDatastorageUpdater(){
@@ -70,7 +46,7 @@ function loadingCallback() {
 
 window.sSr = false;
 window.libsLoaded = [];
-const LIBS = {
+window.LIBS = {
   'blueprint': () => {
     return import(/* webpackChunkName: 'Blueprint' */'./js/libs/blueprint').then(res => {
       window.libsLoaded.push('blueprint')
@@ -112,10 +88,34 @@ Promise.all(libsToLoad).then(res => {
 /**
  * Параллельно загружаем все необходимые модули
  */
-import (/* webpackChunkName: 'appStore' */'./js/store/store').then(module => {
-  console.log('LOAD appStore: ', performance.now());
+
+import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElementsManager').then(module => {
+  import (/* webpackChunkName: 'FrontElementsFabric' */'./js/classes/FrontElementsFabric').then(module => {
+    console.log('LOAD FrontElementsFabric: ', performance.now());
+    loadingCallback();
+  });
+  return window.frontElementsManager.loadComponents();
+}).then(async components => {
+  console.log('LOAD FrontElementsManager: ', performance.now());
   loadingCallback();
 });
+import (/* webpackChunkName: 'SimpleElementWrapper' */'./js/components/SimpleElementWrapper').then(module => {
+  window.ElementWrapper = module.default;
+  console.log('LOAD SimpleElementWrapper: ', performance.now());
+  loadingCallback();
+});
+import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
+  window.currentRouterMatch = new window.AltrpModel({
+    params:queryString.parseUrl(window.location.href).query
+  });
+  import (/* webpackChunkName: 'appStore' */'./js/store/store').then(module => {
+    console.log('LOAD appStore: ', performance.now());
+    loadingCallback();
+    loadDatastorageUpdater();
+  });
+  console.log('LOAD altrp: ', performance.now());
+  loadingCallback();
+})
 import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element-component').then(module => {
   window.elementDecorator = module.default;
   console.log('LOAD elementDecorator: ', performance.now());
@@ -181,6 +181,6 @@ if ('serviceWorker' in navigator) {
 const frontAppContainer = document.getElementById('front-app');
 
 frontAppContainer.addEventListener('scroll', e=>{
-  appStore.dispatch(setScrollValue({top: e.target.scrollTop}))
+  appStore && appStore.dispatch(setScrollValue({top: e.target.scrollTop}))
 })
 

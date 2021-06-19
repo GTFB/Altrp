@@ -1,5 +1,4 @@
 import { withRouter } from "react-router-dom";
-import { connect } from "react-redux";
 import { addElement } from "../store/elements-storage/actions";
 import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 import { changeCurrentPageProperty } from "../store/current-page/actions";
@@ -412,7 +411,12 @@ function mapStateToProps(state) {
     currentScreen: state.currentScreen
   };
 }
-
-export default connect(mapStateToProps, null, null, {
+let _export;
+if(window['h-altrp']){
+  _export = ElementWrapper;
+} else {
+  _export = withRouter(ElementWrapper)
+}
+export default window.reactRedux.connect(mapStateToProps, null, null, {
   forwardRef: true
-})(withRouter(ElementWrapper));
+})(_export);
