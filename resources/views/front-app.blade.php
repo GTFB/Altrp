@@ -138,6 +138,12 @@
 </script>
 <script src="/data/current-user" defer></script>
 @if( ! get_altrp_setting( 'altrp_ssr_disabled' ) && isset( $preload_content[ 'content'] ) && $preload_content[ 'content'] )
+
+  <script>
+    /* <![CDATA[ */
+    window['h-altrp'] = true;
+    /* ]]> */
+  </script>
   <script src="{{ altrp_asset( '/modules/front-app/h-altrp.js', 'http://localhost:3001/' ) }}" defer></script>
 @else
   <script src="{{ altrp_asset( '/modules/front-app/front-app.js', 'http://localhost:3001/' ) }}" defer></script>

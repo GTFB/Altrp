@@ -11,7 +11,7 @@ module.exports ={
   mode: 'production',
   entry: {
     'front-app':"./resources/modules/front-app/src/index.js",
-    // 'sw': "./resources/modules/front-app/src/js/sw/sw.js",
+    'h-altrp': "./resources/modules/front-app/src/h-altrp",
   },
   devtool: 'source-map',
   module: {

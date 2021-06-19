@@ -8,7 +8,7 @@ export  default  function loadGlobalStyles(){
     const GlobalStyles = module.default;
     const stylesContainer = document.createElement('div');
     document.body.appendChild(stylesContainer);
-    ReactDOM.render(<window.Provider store={window.appStore}>
+    window.ReactDOM.render(<window.Provider store={window.appStore}>
       <GlobalStyles/>
     </window.Provider>, stylesContainer)
   });

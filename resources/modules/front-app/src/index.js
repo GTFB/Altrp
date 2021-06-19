@@ -65,14 +65,13 @@ import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElement
 //   console.log('LOAD React_ReactDom_Lodash: ', performance.now());
 
 import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
-  loadingCallback();
+  import (/* webpackChunkName: 'ElementWrapper' */'./js/components/ElementWrapper').then(module => {
+    window.ElementWrapper = module.default;
+    console.log('LOAD ElementWrapper: ', performance.now());
+    loadingCallback();
+  });
 })
 
-import (/* webpackChunkName: 'ElementWrapper' */'./js/components/ElementWrapper').then(module => {
-  window.ElementWrapper = module.default;
-  console.log('LOAD ElementWrapper: ', performance.now());
-  loadingCallback();
-  });
 // });
 import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element-component').then(module => {
   window.elementDecorator = module.default;
