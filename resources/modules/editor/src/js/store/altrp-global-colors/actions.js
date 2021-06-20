@@ -50,29 +50,29 @@ export function deleteGlobalEffect(effect) {
   };
 }
 
-export function setGlobalFonts(effects) {
+export function setGlobalFonts(fonts) {
   return {
     type: SET_GLOBAL_FONTS,
-    effects
+    fonts
   };
 }
 
-export function addGlobalFont(effect) {
+export function addGlobalFont(font) {
   return {
     type: ADD_GLOBAL_FONT,
-    effect
+    font
   };
 }
 
-export function editGlobalFont(effect) {
+export function editGlobalFont(font) {
   return {
     type: EDIT_GLOBAL_FONT,
-    effect
+    font
   };
 }
-export function deleteGlobalFont(effect) {
+export function deleteGlobalFont(font) {
   return {
     type: DELETE_GLOBAL_FONT,
-    effect
+    font
   };
 }

@@ -102,15 +102,15 @@ class GlobalTemplateStylesController extends Controller
             case 'font':
                 $data = $style->settings;
                 $data['name'] = $request->settings['name'] ?? $data['name'];
-                $data['color'] = $request->settings['color'] ?? $data['color'];
-                $data['colorPickedHex'] = $request->settings['colorPickedHex'] ?? $data['colorPickedHex'];
-                $data['colorRGB'] = $request->settings['colorRGB'] ?? $data['colorRGB'];
-                $data['blur'] = $request->settings['blur'] ?? $data['blur'];
-                $data['horizontal'] = $request->settings['horizontal'] ?? $data['horizontal'];
-                $data['opacity'] = $request->settings['opacity'] ?? $data['opacity'];
-                $data['spread'] = $request->settings['spread'] ?? $data['spread'];
-                $data['type'] = $request->settings['type'] ?? $data['type'];
-                $data['vertical'] = $request->settings['vertical'] ?? $data['vertical'];
+                $data['decoration'] = $request->settings['decoration'] ?? $data['decoration'];
+                $data['family'] = $request->settings['family'] ?? $data['family'];
+                $data['lineHeight'] = $request->settings['lineHeight'] ?? $data['lineHeight'];
+                $data['size'] = $request->settings['size'] ?? $data['size'];
+                $data['spacing'] = $request->settings['spacing'] ?? $data['spacing'];
+                $data['sizeUnit'] = $request->settings['sizeUnit'] ?? $data['sizeUnit'];
+                $data['weight'] = $request->settings['weight'] ?? $data['weight'];
+                $data['style'] = $request->settings['style'] ?? $data['style'];
+                $data['transform'] = $request->settings['transform'] ?? $data['transform'];
                 $style->settings = json_encode($data);
         }
         if (!$style->save()) {

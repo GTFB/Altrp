@@ -97,6 +97,45 @@ const transformOptions = [
     key: 3
   }
 ];
+const styleOptions = [
+  {
+    value: "normal",
+    label: "normal",
+    key: 0
+  },
+  {
+    value: "italic",
+    label: "italic",
+    key: 1
+  },
+  {
+    value: "oblique",
+    label: "oblique",
+    key: 2
+  }
+];
+const decorationOptions = [
+  {
+    value: "none",
+    label: "none",
+    key: 0
+  },
+  {
+    value: "underline",
+    label: "underline",
+    key: 1
+  },
+  {
+    value: "overline",
+    label: "overline",
+    key: 3
+  },
+  {
+    value: "line-through",
+    label: "line-through",
+    key: 4
+  }
+];
 class GlobalFontItemAdd extends Component {
   constructor(props) {
     super(props);
@@ -123,6 +162,9 @@ class GlobalFontItemAdd extends Component {
     this.changeSize = this.changeSize.bind(this);
     this.changeWeight = this.changeWeight.bind(this);
     this.changeTransform = this.changeTransform.bind(this);
+    this.changeStyle = this.changeStyle.bind(this);
+    this.changeDecoration = this.changeDecoration.bind(this);
+    this.changeLineHeight = this.changeLineHeight.bind(this);
     this.onSaveFont = this.onSaveFont.bind(this);
     this.globalStyleResource = new Resource({
       route: "/admin/ajax/global_template_styles"
@@ -160,8 +202,8 @@ class GlobalFontItemAdd extends Component {
         guid: success.guid,
         ...success.settings
       };
-      this.props.addEffect(font);
-      this.props.onSaveEffectClose();
+      this.props.addFont(font);
+      this.props.onSaveFontClose();
     });
   }
 
@@ -170,9 +212,16 @@ class GlobalFontItemAdd extends Component {
     this.setState(s => ({ ...s, font: { ...s.font, sizeUnit: unit } }));
   }
 
-  changeSize(event) {
-    const size = event.target.value;
-    this.setState(s => ({ ...s, font: { ...s.font, size: size } }));
+  changeSize(value) {
+    this.setState(s => ({ ...s, font: { ...s.font, size: value } }));
+  }
+
+  changeLineHeight(value) {
+    this.setState(s => ({ ...s, font: { ...s.font, lineHeight: value } }));
+  }
+
+  changeSpacing(value) {
+    this.setState(s => ({ ...s, font: { ...s.font, spacing: value } }));
   }
 
   changeWeight(event) {
@@ -185,20 +234,29 @@ class GlobalFontItemAdd extends Component {
     this.setState(s => ({ ...s, font: { ...s.font, transform: transform } }));
   }
 
+  changeStyle(event) {
+    const style = event.target.value;
+    this.setState(s => ({ ...s, font: { ...s.font, style: style } }));
+  }
+
+  changeDecoration(event) {
+    const decoration = event.target.value;
+    this.setState(s => ({ ...s, font: { ...s.font, decoration: decoration } }));
+  }
+
   render() {
     const { font } = this.state;
-    console.log(font.sizeUnit);
     return (
       <>
         <ControlGroup vertical>
           <form onSubmit={this.onSaveFont}>
-            <FormGroup label="Enter Effect Name">
+            <FormGroup label="Enter Font Name">
               <InputGroup
                 required
                 name="name"
                 id="text-input"
-                placeholder="Enter Effect Name"
-                defaultValue={font.name}
+                placeholder="Enter Font Name"
+                defaultValue={font?.name || ""}
                 onChange={this.nameChange}
               />
             </FormGroup>
@@ -232,10 +290,11 @@ class GlobalFontItemAdd extends Component {
                   style={{
                     width: "100px"
                   }}
+                  value={font.size}
                   placeholder="Enter size"
                   min={0}
-                  max={108}
-                  onChange={this.changeSize}
+                  max={200}
+                  onValueChange={this.changeSize}
                 />
                 <HTMLSelect
                   onChange={this.changeUnit}
@@ -262,6 +321,56 @@ class GlobalFontItemAdd extends Component {
                   options={transformOptions}
                   defaultChecked={font.transform}
                   value={font.transform}
+                />
+              </ControlGroup>
+            </FormGroup>
+            <FormGroup label="Style" inline={true}>
+              <ControlGroup fill={true} vertical={false}>
+                <HTMLSelect
+                  onChange={this.changeStyle}
+                  options={styleOptions}
+                  defaultChecked={font.style}
+                  value={font.style}
+                />
+              </ControlGroup>
+            </FormGroup>
+            <FormGroup label="Decoration" inline={true}>
+              <ControlGroup fill={true} vertical={false}>
+                <HTMLSelect
+                  onChange={this.changeDecoration}
+                  options={decorationOptions}
+                  defaultChecked={font.decoration}
+                  value={font.decoration}
+                />
+              </ControlGroup>
+            </FormGroup>
+            <FormGroup label="Line height" inline={true}>
+              <ControlGroup fill={true} vertical={false}>
+                <NumericInput
+                  style={{
+                    width: "100px"
+                  }}
+                  value={font.lineHeight}
+                  placeholder="Enter line height"
+                  stepSize={0.1}
+                  min={0.1}
+                  max={10}
+                  onValueChange={this.changeLineHeight}
+                />
+              </ControlGroup>
+            </FormGroup>
+            <FormGroup label="Letter spacing" inline={true}>
+              <ControlGroup fill={true} vertical={false}>
+                <NumericInput
+                  style={{
+                    width: "100px"
+                  }}
+                  value={font.spacing}
+                  placeholder="Enter letter spacing"
+                  stepSize={0.1}
+                  min={-5}
+                  max={10}
+                  onValueChange={this.changeSpacing}
                 />
               </ControlGroup>
             </FormGroup>

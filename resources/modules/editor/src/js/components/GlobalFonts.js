@@ -39,7 +39,7 @@ class GlobalFonts extends Component {
     };
     this.addItem = this.addItem.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
-    this.onSaveEffect = this.onSaveEffect.bind(this);
+    this.onSaveFont = this.onSaveFont.bind(this);
     this.updateAllTree = this.updateAllTree.bind(this);
   }
 
@@ -127,35 +127,37 @@ class GlobalFonts extends Component {
    *
    * @param {Event} e
    */
-  onSaveEffect() {
+  onSaveFont() {
     this.setState(s => ({ ...s, new: false }));
   }
 
   render() {
+    console.log(this.props.fonts);
     return (
       <Panel>
         <Collapse isOpen={this.state.new}>
           <GlobalFontItemAdd
-            addEffect={this.props.addEffect}
-            onSaveEffectClose={this.onSaveEffect}
+            addFont={this.props.addFont}
+            onSaveFontClose={this.onSaveFont}
             isNew={true}
           />
         </Collapse>
-        {!this.state.new && this.props.fonts.length > 0 ? (
-          this.props.fonts.map((item, index) => (
-            <div key={index} style={{ marginBottom: "10px" }}>
-              <GlobalFontItem
-                effect={item}
-                editEffect={this.props.editEffect}
-                deleteEffect={this.props.deleteEffect}
-                onSaveEffectClose={this.onSaveEffect}
-                updateAllTree={this.updateAllTree}
-              />
-            </div>
-          ))
-        ) : (
-          <div>Font list empty</div>
-        )}
+        {!this.state.new &&
+          (this.props.fonts.length > 0 ? (
+            this.props.fonts.map((item, index) => (
+              <div key={index} style={{ marginBottom: "10px" }}>
+                <GlobalFontItem
+                  font={item}
+                  editFont={this.props.editFont}
+                  deleteFont={this.props.deleteFont}
+                  onSaveFontClose={this.onSaveFont}
+                  updateAllTree={this.updateAllTree}
+                />
+              </div>
+            ))
+          ) : (
+            <div>Font list empty</div>
+          ))}
         <Divider></Divider>
         <Button style={{ width: "100%" }} onClick={this.addItem}>
           {!this.state.new ? "Add Item" : "Cancel"}

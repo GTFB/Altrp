@@ -43,7 +43,8 @@ import AltrpMeta from "./js/classes/AltrpMeta";
 import { setEditorMeta } from "./js/store/editor-metas/actions";
 import {
   setGlobalColors,
-  setGlobalEffects
+  setGlobalEffects,
+  setGlobalFonts
 } from "./js/store/altrp-global-colors/actions";
 
 /**
@@ -237,11 +238,11 @@ class Editor extends Component {
     );
     //global fonts
     appStore.dispatch(
-      setGlobalEffects(
-        globalStyles.font?.map(effect => ({
-          id: effect.id,
-          guid: effect.guid,
-          ...effect.settings
+      setGlobalFonts(
+        globalStyles.font?.map(font => ({
+          id: font.id,
+          guid: font.guid,
+          ...font.settings
         })) || []
       )
     );

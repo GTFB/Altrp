@@ -136,21 +136,22 @@ class GlobalEffects extends Component {
             isNew={true}
           />
         </Collapse>
-        {!this.state.new && this.props.effects.length > 0 ? (
-          this.props.effects.map((item, index) => (
-            <div key={index} style={{ marginBottom: "10px" }}>
-              <GlobalEffectItem
-                effect={item}
-                editEffect={this.props.editEffect}
-                deleteEffect={this.props.deleteEffect}
-                onSaveEffectClose={this.onSaveEffect}
-                updateAllTree={this.updateAllTree}
-              />
-            </div>
-          ))
-        ) : (
-          <div>Effects list empty</div>
-        )}
+        {!this.state.new &&
+          (this.props.effects.length > 0 ? (
+            this.props.effects.map((item, index) => (
+              <div key={index} style={{ marginBottom: "10px" }}>
+                <GlobalEffectItem
+                  effect={item}
+                  editEffect={this.props.editEffect}
+                  deleteEffect={this.props.deleteEffect}
+                  onSaveEffectClose={this.onSaveEffect}
+                  updateAllTree={this.updateAllTree}
+                />
+              </div>
+            ))
+          ) : (
+            <div>Effects list empty</div>
+          ))}
         <Divider></Divider>
         <Button style={{ width: "100%" }} onClick={this.addItem}>
           {!this.state.new ? "Add Item" : "Cancel"}
