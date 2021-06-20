@@ -33,6 +33,7 @@ class TypographicController extends Component {
         value: font
       };
     });
+    console.log(this.props.default);
     this.units = ["px", "em", "rem", "%", "vw", "vh"];
     let value = this.getSettings(this.props.controlId);
     if (value === null && this.props.default) {
@@ -54,6 +55,8 @@ class TypographicController extends Component {
       spacingMax: this.props.spacingMax || 10,
       spacingMin: this.props.spacingMin || -5
     };
+    console.log("Default typographics");
+    console.log(value);
   }
   getDefaultValue() {
     return {

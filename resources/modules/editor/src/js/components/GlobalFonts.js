@@ -8,8 +8,8 @@ import {
   deleteGlobalFont
 } from "../store/altrp-global-colors/actions";
 import BaseElement from "../classes/elements/BaseElement";
-import GlobalEffectItemAdd from "./GlobalEffectItemAdd";
-import GlobalEffectItem from "./GlobalEffectItem";
+import GlobalFontItemAdd from "./GlobalFontItemAdd";
+import GlobalFontItem from "./GlobalFontItem";
 import { getTemplateDataStorage } from "../helpers";
 
 const Panel = styled.div`
@@ -91,7 +91,12 @@ class GlobalFonts extends Component {
   }
 
   addItem(e) {
-    this.setState(s => ({ new: !s.new }));
+    this.setState(
+      s => ({ new: !s.new }),
+      () => {
+        console.log(this.state.new);
+      }
+    );
   }
 
   deleteItem(id) {
@@ -130,7 +135,7 @@ class GlobalFonts extends Component {
     return (
       <Panel>
         <Collapse isOpen={this.state.new}>
-          <GlobalEffectItemAdd
+          <GlobalFontItemAdd
             addEffect={this.props.addEffect}
             onSaveEffectClose={this.onSaveEffect}
             isNew={true}
@@ -139,7 +144,7 @@ class GlobalFonts extends Component {
         {!this.state.new && this.props.fonts.length > 0 ? (
           this.props.fonts.map((item, index) => (
             <div key={index} style={{ marginBottom: "10px" }}>
-              <GlobalEffectItem
+              <GlobalFontItem
                 effect={item}
                 editEffect={this.props.editEffect}
                 deleteEffect={this.props.deleteEffect}
