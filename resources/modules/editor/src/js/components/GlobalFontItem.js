@@ -168,6 +168,7 @@ class GlobalFontItem extends Component {
     this.changeStyle = this.changeStyle.bind(this);
     this.changeDecoration = this.changeDecoration.bind(this);
     this.changeLineHeight = this.changeLineHeight.bind(this);
+    this.changeSpacing = this.changeSpacing.bind(this);
     this.onSaveFont = this.onSaveFont.bind(this);
     this.onDeleteFont = this.onDeleteFont.bind(this);
     this.globalStyleResource = new Resource({
