@@ -9,7 +9,8 @@ import {
   DELETE_GLOBAL_EFFECT,
   SET_GLOBAL_FONTS,
   ADD_GLOBAL_FONT,
-  EDIT_GLOBAL_FONT
+  EDIT_GLOBAL_FONT,
+  DELETE_GLOBAL_FONT
 } from "./actions";
 
 const defaultState = [];
@@ -61,15 +62,9 @@ export function globalStyleReducer(state, action) {
       break;
     case DELETE_GLOBAL_EFFECT: {
       const deletedEffect = action.effect;
-      console.log("before");
-      console.log(state.effects);
-      console.log("after");
-      console.log(
-        state.effects.filter(effect => effect.id !== deletedEffect.id)
-      );
       state = {
         ...state,
-        effects: state.effects.filter(effect => effect.id === deletedEffect.id)
+        effects: state.effects.filter(effect => effect.id !== deletedEffect.id)
       };
     }
     case SET_GLOBAL_FONTS:
@@ -79,7 +74,8 @@ export function globalStyleReducer(state, action) {
       break;
     case ADD_GLOBAL_FONT:
       {
-        state = { ...state, fonts: [...state.font, action.font] };
+        console.log(action.font);
+        state = { ...state, fonts: [...state.fonts, action.font] };
       }
       break;
     case EDIT_GLOBAL_FONT:
@@ -93,6 +89,15 @@ export function globalStyleReducer(state, action) {
             }
             return font;
           })
+        };
+      }
+      break;
+    case DELETE_GLOBAL_FONT:
+      {
+        const deletedFont = action.font;
+        state = {
+          ...state,
+          fonts: state.fonts.filter(font => font.guid != deletedFont.guid)
         };
       }
       break;

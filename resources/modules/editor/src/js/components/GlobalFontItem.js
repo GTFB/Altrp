@@ -408,6 +408,15 @@ class GlobalFontItem extends Component {
                   Save
                 </Button>
               </FormGroup>
+              <FormGroup>
+                <Button
+                  intent="danger"
+                  onClick={this.onDeleteFont}
+                  style={{ width: "100%" }}
+                >
+                  Delete
+                </Button>
+              </FormGroup>
             </form>
           </ControlGroup>
         </Collapse>
