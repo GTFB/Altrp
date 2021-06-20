@@ -10,6 +10,8 @@ import {
 } from "../../../../../front-app/src/js/store/fonts-storage/actions";
 import { renderScrollbar } from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import { altrpFontsSet } from "../../../../../front-app/src/js/constants/fonts";
+import PresetGlobalFonts from "./PresetGlobalFonts";
+import store from "../../store/store";
 
 class TypographicController extends Component {
   constructor(props) {
@@ -26,6 +28,7 @@ class TypographicController extends Component {
     this.inputHorUpdate = this.inputHorUpdate.bind(this);
     this.horChange = this.horChange.bind(this);
     this.verChange = this.verChange.bind(this);
+    this.setGlobal = this.setGlobal.bind(this);
     this.inputVerUpdate = this.inputVerUpdate.bind(this);
     const familyOptions = _.toPairs(altrpFontsSet).map(([font, type]) => {
       return {
@@ -62,6 +65,49 @@ class TypographicController extends Component {
     return {
       family: {}
     };
+  }
+
+  hasGlobal(guid) {
+    return getCurrentElement().hasGlobal(guid);
+  }
+
+  setGlobal(guid) {
+    const globalFonts = this.props.globalFonts;
+    const guidFont = globalFonts.filter(font => font.guid == guid)[0];
+    const {
+      decoration,
+      family,
+      lineHeight,
+      size,
+      spacing,
+      sizeUnit,
+      weight,
+      style,
+      transform
+    } = guidFont;
+    const fontValue = {
+      decoration: decoration,
+      family: family,
+      lineHeight: lineHeight,
+      size: size,
+      spacing: spacing,
+      sizeUnit: sizeUnit,
+      weight: weight,
+      style: style,
+      transform: transform
+    };
+    if (guidFont) {
+      this._changeValue({
+        ...this.defaultValues,
+        ...fontValue
+      });
+      getCurrentElement().setGlobalStyle(
+        guid,
+        this.props.controller.getSettingName()
+      );
+      getCurrentElement().updateAllGlobals(guid, fontValue);
+      store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
+    }
   }
 
   openTypographic() {
@@ -422,6 +468,10 @@ class TypographicController extends Component {
           id="typographicContainer"
           className="control-typographic-wrapper control-shadow-wrapper-none"
         >
+          <PresetGlobalFonts
+            setFont={this.setGlobal}
+            checkGlobal={this.hasGlobal}
+          />
           {/* начало select2 */}
           <div className="controller-container controller-container_select2">
             <div className="control-select2-header">
