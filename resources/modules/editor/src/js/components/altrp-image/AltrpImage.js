@@ -58,6 +58,9 @@ class AltrpImage extends Component {
     if(! scroller){
       scroller = document.querySelector('.front-app-content');
     }
+    if(! scroller){
+      scroller = document.querySelector('.front-app');
+    }
     if (this.imageRef.current && checkElementInViewBox(this.imageRef.current, scroller)) {
       clearTimeout(this.timeoutId);
       this.setState(state => ({...state, visible: true}));

@@ -2,6 +2,8 @@ import {getHeadingStyles} from "./helpers/stylesForTheHeading";
 import {getTextStyles} from "./helpers/stylesForTheText";
 import {getTableStyles} from "./helpers/stylesForTheTable";
 import {getPostsStyles} from "./helpers/stylesForThePosts";
+import getImageStyles from "./helpers/stylesForTheImage";
+import getTabsStyles from "./helpers/stylesForTheTabs";
 import ButtonComponent from "../../../../editor/src/js/components/widgets/styled-components/ButtonComponent";
 import CarouselComponent from "../../../../editor/src/js/components/widgets/styled-components/CarouselComponent";
 import GalleryComponent from "../../../../editor/src/js/components/widgets/styled-components/GalleryComponent";
@@ -16,6 +18,7 @@ import DropbarWidgetComponent
   from "../../../../editor/src/js/components/widgets/styled-components/DropbarWidgetComponent";
 import FormComponent from "../../../../editor/src/js/components/widgets/styled-components/FormComponent";
 import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
+import ImageComponent from "../../../../editor/src/js/components/widgets/styled-components/ImageComponent";
 
 const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
   let styles = "";
@@ -55,7 +58,12 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
         case "dropbar":
           styles += `.${prefix}${id} {${DropbarWidgetComponent(item.settings)}}`;
           break;
-
+        case "image":
+          styles+=getImageStyles(item.settings,id);
+          break;
+        case "tabs":
+          styles+=getTabsStyles(item.settings, id);
+          break;
         case 'heading': {
           styles += getHeadingStyles(item.settings, id);
         }

@@ -14,5 +14,6 @@ const DEFAULT_REACT_ELEMENTS = [
   'export',
   'template',
   'gallery',
+  'dropbar',
 ]
 export default DEFAULT_REACT_ELEMENTS

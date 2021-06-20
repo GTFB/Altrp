@@ -16,6 +16,8 @@ import { addResponseData } from "./store/responses-storage/actions";
 import {getOffsetTopInElement} from "./helpers/elements";
 import Area from "./classes/Area";
 import {altrpFontsSet, GOOGLE_FONT} from "./constants/fonts";
+import {addSettings} from "./store/elements-settings/actions";
+import mutate from "dot-prop-immutable";
 export function getRoutes() {
 
   return import(/* webpackChunkName: 'Routes' */"./classes/Routes.js");
@@ -525,24 +527,30 @@ export function setDataByPath(path = "", value, dispatch = null) {
     } else {
       appStore.dispatch(changeFormFieldValue(fieldName, value, formId, true));
     }
-  }
+  } else
   if (path.indexOf("altrpelements.") === 0) {
     const pathElements = path.split(".");
-    const [prefix, elementId, updateType, propName] = pathElements;
+    let [prefix, elementId, updateType, ...propName] = pathElements;
     const component = getComponentByElementId(elementId);
     if (!component) {
       return true;
     }
+    propName =  propName.join('.');
     switch (updateType) {
       case "settings": {
         component.props.element.updateSetting(value, propName);
+        if(window['h-altrp']){
+          let settings = component.props.element.settings;
+          settings = mutate.set(settings, propName, value)
+          appStore.dispatch(addSettings(component.props.element.getId(), component.props.element.getName(), settings));
+        }
         return true;
       }
       default: {
         return true;
       }
     }
-  }
+  } else
   if (path.indexOf("altrpareas.") === 0) {
     const pathElements = path.split(".");
     const [prefix,  areaName,  updateType, propName] = pathElements;
@@ -1632,7 +1640,7 @@ export function saveDataToLocalStorage(name, data) {
  * @param {*} _default
  * @return {*}
  */
-export function getDataFromLocalStorage(name, _default = null) {
+export function getDataFromLocalStorage(name, _default = undefined) {
   if (!name) {
     return _default;
   }

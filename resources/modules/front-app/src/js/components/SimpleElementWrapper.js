@@ -308,10 +308,17 @@ class SimpleElementWrapper extends Component {
     const wrapperProps = {
       elementId: this.elementId,
       settings: this.settings,
+      styles
     };
     if(WrapperComponent === React.Fragment){
       delete  wrapperProps.elementId;
       delete  wrapperProps.settings;
+      delete  wrapperProps.styles;
+      if(this.state.elementDisplay){
+        this.elementWrapperRef.current.style.display = null;
+      } else {
+        this.elementWrapperRef.current.style.display = 'none';
+      }
     }
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
       <WrapperComponent {...wrapperProps} >

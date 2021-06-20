@@ -3,8 +3,8 @@
  * Проверка на включение BVI
  */
 (async function (){
-  console.log(window.AltrpCookies);
-  if(window.AltrpCookies.get('bvi-theme')){
+  console.log(window.Cookies);
+  if(window.Cookies.get('bvi-theme')){
     const  loadVIPlugin =  (await import(/* webpackChunkName: 'altrp-js-plugins' */'./js/helpers/plugins')).loadVIPlugin;
     await loadVIPlugin(false);
     $.bvi();
