@@ -99,6 +99,7 @@ class GlobalTemplateStylesController extends Controller
                 $data['type'] = $request->settings['type'] ?? $data['type'];
                 $data['vertical'] = $request->settings['vertical'] ?? $data['vertical'];
                 $style->settings = json_encode($data);
+                break;
             case 'font':
                 $data = $style->settings;
                 $data['name'] = $request->settings['name'] ?? $data['name'];
@@ -112,6 +113,7 @@ class GlobalTemplateStylesController extends Controller
                 $data['style'] = $request->settings['style'] ?? $data['style'];
                 $data['transform'] = $request->settings['transform'] ?? $data['transform'];
                 $style->settings = json_encode($data);
+                break;
         }
         if (!$style->save()) {
             return response()->json(['message' => 'Save failed'], 409);
