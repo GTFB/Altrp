@@ -18,10 +18,13 @@ import DropbarWidgetComponent
   from "../../../../editor/src/js/components/widgets/styled-components/DropbarWidgetComponent";
 import FormComponent from "../../../../editor/src/js/components/widgets/styled-components/FormComponent";
 import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
+import getRouteStyles from "../functions/get-route-styles";
 
-const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
+const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
   let styles = "";
-
+  if(areas){
+    styles += getRouteStyles(areas);
+  }
   let prefix = "altrp-element";
 
   _.each(elementsSettings, (item, id) => {
@@ -112,7 +115,10 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
   return styles;
 }}`;
 function mapStateToProps(state) {
-  return { elementsSettings: state.elementsSettings };
+  return {
+    elementsSettings: state.elementsSettings,
+    areas: state.areas,
+  };
 }
 
 export default window.reactRedux.connect(mapStateToProps)(GlobalStyles)

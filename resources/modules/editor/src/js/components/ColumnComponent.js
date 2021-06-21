@@ -1,11 +1,5 @@
-import React, { Component } from "react";
 import { isEditor, redirect } from "../../../../front-app/src/js/helpers";
-import {
-  ColumnArticleComponent,
-  ColumnAsideComponent,
-  ColumnDivComponent, ColumnFooterComponent, ColumnHeaderComponent, ColumnMainComponent,
-  ColumnNavComponent, ColumnSectionComponent
-} from "./widgets/styled-components/ColumnComponents";
+
 
 class ColumnComponent extends Component {
   constructor(props) {
@@ -79,7 +73,7 @@ class ColumnComponent extends Component {
     //     component = ColumnHeaderComponent;
     //   } break;
     // }
-    return React.createElement("div",
+    return React.createElement(layout_html_tag,
       {
         className,
         id: this.state.settings.position_style_css_id || "",

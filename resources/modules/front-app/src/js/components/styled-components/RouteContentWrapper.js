@@ -1,8 +1,5 @@
 
 
-const FRONT_DEFAULT_AREAS = [
-  'content', 'footer', 'header', 'popups',
-];
 const RouteContentWrapper = styled.div`
   position: relative;
   ${({areas}) => {

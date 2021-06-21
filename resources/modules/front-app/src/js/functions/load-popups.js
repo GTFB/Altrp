@@ -3,7 +3,6 @@ export default async function loadPopups(){
     return;
   }
   let templates = (page_areas || []).find(area => _.get(area, 'templates'))?.templates || [];
-  console.log(templates);
 
   if(!templates?.length){
     return;

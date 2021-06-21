@@ -557,11 +557,11 @@ export function setDataByPath(path = "", value, dispatch = null) {
     let area = window.page_areas.find(area => area.id === areaName);
     if(area && updateType === 'settings'){
       if(! (area instanceof Area)){
-        area = Area.areaFabric(area);
+        area = Area.areaFactory(area);
       }
       area.setSetting(propName, value);
     }
-  }
+  } else
   if (path.indexOf("altrpstorage.") === 0) {
     path = path.replace("altrpstorage.", "");
     const currentStorage = getDataFromLocalStorage("altrpstorage", {});
@@ -701,7 +701,7 @@ export function getDataByPath(
     let area = window.page_areas.find(area => area.id === areaName);
     if(area && updateType === 'settings'){
       if(! (area instanceof Area)){
-        area = Area.areaFabric(area);
+        area = Area.areaFactory(area);
       }
       value = area.getSetting(propName, _default);
     }
@@ -2110,7 +2110,6 @@ export function getBreadcrumbsItems(){
   const {routes} = appStore.getState().appRoutes
   let breadcrumbsClone = [];
   let idCurrent = 0;
-  console.log(currentId);
   routes.forEach((route, idx) => {
     if(currentId === route.id) {
       idCurrent = idx

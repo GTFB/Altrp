@@ -30,7 +30,7 @@ class Route {
     route.areas = [];
     data.areas = data.areas || [];
     for (let _area of data.areas) {
-      route.areas.push(Area.areaFabric(_area));
+      route.areas.push(Area.areaFactory(_area));
     }
     return route;
   }

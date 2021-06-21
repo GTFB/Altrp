@@ -50,7 +50,7 @@ class ReportsContent extends Component {
     window.mainScrollbars = this.scrollbar.current;
 
     // let page = await pageLoader.loadPage(currentPath.id);
-    // let areas = page.areas.map(area => Area.areaFabric(area));
+    // let areas = page.areas.map(area => Area.areaFactory(area));
     // this.setState(state => ({
     //   ...state,
     //   areas

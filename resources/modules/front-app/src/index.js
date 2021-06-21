@@ -20,11 +20,6 @@ const LIBS = {
       return Promise.resolve(res)
     });
   },
-  // 'blueprint': import(/* webpackChunkName: 'Blueprint' */'./js/libs/blueprint').then(res=>{
-  //   console.log(res);
-  //       window.libsLoaded.push('blueprint')
-  //     }),
-
 };
 
 
@@ -45,22 +40,21 @@ if (window.altrpElementsLists) {
   })
 }
 Promise.all(libsToLoad).then(res => {
-  loadingCallback();
+  import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElementsManager').then(module => {
+    import (/* webpackChunkName: 'FrontElementsFabric' */'./js/classes/FrontElementsFabric').then(module => {
+      console.log('LOAD FrontElementsFabric: ', performance.now());
+      loadingCallback();
+    });
+    return window.frontElementsManager.loadComponents();
+  }).then(async components => {
+    // window.frontElementsManager.loadNotUsedComponent();
+    console.log('LOAD FrontElementsManager: ', performance.now());
+    loadingCallback();
+  });
 });
 /**
  * Параллельно загружаем все необходимые модули
  */
-import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElementsManager').then(module => {
-  import (/* webpackChunkName: 'FrontElementsFabric' */'./js/classes/FrontElementsFabric').then(module => {
-    console.log('LOAD FrontElementsFabric: ', performance.now());
-    loadingCallback();
-  });
-  return window.frontElementsManager.loadComponents();
-}).then(async components => {
-  // window.frontElementsManager.loadNotUsedComponent();
-  console.log('LOAD FrontElementsManager: ', performance.now());
-  loadingCallback();
-});
 // import (/* webpackChunkName: 'React_ReactDom_Lodash' */'./js/libs/react-lodash').then(module => {
 //   console.log('LOAD React_ReactDom_Lodash: ', performance.now());
 

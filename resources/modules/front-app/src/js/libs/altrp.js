@@ -5,6 +5,7 @@ import Resource from "../../../../editor/src/js/classes/Resource";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import Styles from '../../../../editor/src/js/components/Styles';
 import {baseEmailRender} from '../../../../editor/src/js/decorators/base-email-render';
+import Area from "../classes/Area";
 window.altrpHelpers = window.altrpHelpers || {};
 window.baseEmailRender = baseEmailRender;
 window.Cookies = Cookies
@@ -15,6 +16,7 @@ window.altrpHelpers = {
   styles,
   Resource,
   AltrpModel,
+  Area
 };
 /**
  * Install

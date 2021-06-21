@@ -27,6 +27,7 @@
         "reports:dev": "cd resources/modules/altrp-reports && PORT=3010 react-scripts start",
         "reports:build": "rm -rf public/modules/altrp-reports && cd resources/modules/altrp-reports && PUBLIC_URL=/modules/reports/ react-scripts build",
         "reports:move": "mv -f resources/modules/altrp-reports/build public/modules/reports",
+        "server:start": "node server-dist/index",
         "docs": "jsdoc resources/modules -r"
     },
     "dependencies": {
