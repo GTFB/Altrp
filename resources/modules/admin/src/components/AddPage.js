@@ -398,15 +398,15 @@ class AddPage extends Component {
                           className="form-check-input mr-1 form-check-input_inline" />
                         <label htmlFor="404" className="label_checkbox">404</label>
                       </div>
-                      <div className="form-group col-3 position-static ml-0 align-self-start">
-                        <label htmlFor="sections_count" className="label_checkbox">Sections Count:</label>
-                        <input type="number" id="sections_count"
-                          value={this.state.value.sections_count || ""}
-                          onChange={e => {
-                            this.changeValue(e.target.value, "sections_count");
-                          }}
-                          className="form-control" />
-                      </div>
+                      {/*<div className="form-group col-3 position-static ml-0 align-self-start">*/}
+                      {/*  <label htmlFor="sections_count" className="label_checkbox">Sections Count:</label>*/}
+                      {/*  <input type="number" id="sections_count"*/}
+                      {/*    value={this.state.value.sections_count || ""}*/}
+                      {/*    onChange={e => {*/}
+                      {/*      this.changeValue(e.target.value, "sections_count");*/}
+                      {/*    }}*/}
+                      {/*    className="form-control" />*/}
+                      {/*</div>*/}
                       <div className="form-group col-5 position-static ml-0 align-self-start">
                         <label htmlFor="icon" className="label_checkbox">Page Icon</label>
                         <IconSelect

@@ -18,7 +18,6 @@ export function elementsSettingsReducer(elementSettings, action) {
     }
     break;
     case REPLACE_SETTINGS: {
-      console.log(elementSettings);
       elementSettings = action.settings;
     }
     break;

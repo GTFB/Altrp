@@ -113,6 +113,10 @@ class BreadcrumbsWidget extends Component {
           newItem.href = item.path
           newItem.onClick = e => {
             e.preventDefault();
+            if (isEditor() || !this.props.history) {
+              window.location.href = item.path
+              return
+            }
             window.altrpHistory?.push(item.path)
           };
         }
