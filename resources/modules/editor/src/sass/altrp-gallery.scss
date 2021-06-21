@@ -1,13 +1,16 @@
 
 
 .altrp-gallery-overlay {
-    left: 0;
-    top: 0;
+  left: 0;
+  top: 0;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .altrp-gallery-grid {
   display: grid;
   position: relative;
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .altrp-gallery-img {

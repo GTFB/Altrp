@@ -13,9 +13,33 @@
 
 .altrp-carousel-slide {
     overflow: hidden;
-    height: 100%;
+    height: 220px;
     position: relative;
 }
+
+.slick-list {
+  height: 100%;
+}
+
+.altrp-carousel-arrow svg {
+  width: 50px;
+  height: 50px;
+}
+
+.slick-slide, .altrp-carousel-dots {
+  padding: 0 15px;
+}
+
+.altrp-carousel-paging {
+  width: 10px;
+  height: 10px;
+  background-color: #a4a4a4;
+}
+
+.altrp-carousel-slide-overlay {
+  background-color: rgb(255, 255, 255);
+}
+
 
 //.altrp-carousel-prev {
 //    background-color: blue;
@@ -184,7 +208,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    perspective: 20px; 
+    perspective: 20px;
     height: calc(100% - 40px);
     padding: 10px;
     cursor: grab;

@@ -586,7 +586,7 @@ export default function SectionWidgetComponent(settings) {
 
     if (width) {
       width = sliderStyled(width);
-      styles += `width: ${width}`;
+      styles += `width: ${width};`;
     }
 
     return styles;
@@ -610,7 +610,9 @@ export default function SectionWidgetComponent(settings) {
     }
 
     if (padding) {
-      styles += `padding-left: calc((100vw - ${padding.size + padding.unit}) / 2); padding-right: calc((100vw - ${padding.size + padding.unit}) / 2); width: 100vw; `;
+      if(padding.size) {
+        styles += `padding-left: calc((100vw - ${padding.size + padding.unit}) / 2); padding-right: calc((100vw - ${padding.size + padding.unit}) / 2); width: 100vw; `;
+      }
     }
 
     return styles;
@@ -628,7 +630,9 @@ export default function SectionWidgetComponent(settings) {
     }
 
     if (padding) {
-      styles += `padding-left: calc((100vw - ${padding.size + padding.unit}) / 2); padding-right: calc((100vw - ${padding.size + padding.unit}) / 2); width: 100vw; `;
+      if(padding.size) {
+        styles += `padding-left: calc((100vw - ${padding.size + padding.unit}) / 2); padding-right: calc((100vw - ${padding.size + padding.unit}) / 2); width: 100vw; `;
+      }
     }
 
     return styles;
@@ -669,8 +673,6 @@ export default function SectionWidgetComponent(settings) {
 
     return styles;
   }
-
-  console.log(altrpSectionBoxedHover())
 
   return `
 

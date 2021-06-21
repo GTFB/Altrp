@@ -28,7 +28,7 @@ export default function AdvancedComponent(settings) {
 
     ["align-self", "positioning_vertical_align"],
 
-    ["position", "positioning_position_type", "", "", true],
+    ["position", "positioning_position_type", "", ""],
 
     ["left", "positioning_horizontal_offset", "slider"],
     ["bottom", "positioning_vertical_offset", "slider"],
@@ -81,5 +81,5 @@ export default function AdvancedComponent(settings) {
     },
   ];
 
-  return "width:100%;" + styledString(styles, settings)
+  return styledString(styles, settings)
 }

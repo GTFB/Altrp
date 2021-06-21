@@ -61,7 +61,6 @@ class Button extends BaseElement {
     this.addControl('button_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: 'center',
       options: [
         {
           icon: 'left',
@@ -90,7 +89,6 @@ class Button extends BaseElement {
     this.addControl('button_icon_position', {
       type: CONTROLLER_SELECT,
       label: 'Icon Position',
-      default: 'default',
       options: [
         {
           value: 'row',
@@ -226,126 +224,6 @@ class Button extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection('dropbar_options_section', {
-      tab: TAB_CONTENT,
-      label: 'Dropbar options',
-      conditions: {
-        'link_button_type': "dropbar",
-      },
-    });
-
-    this.addControl("position_dropbar_options", {
-      type: CONTROLLER_SELECT,
-      label: "Position",
-      default: "bottom-start",
-      options: [
-        {
-          value: "bottom-start",
-          label: "Bottom left"
-        },
-        {
-          value: "bottom",
-          label: "Bottom center"
-        },
-        {
-          value: "bottom-end",
-          label: "Bottom right"
-        },
-        {
-          value: "top-start",
-          label: "Top left"
-        },
-        {
-          value: "top",
-          label: "Top center"
-        },
-        {
-          value: "top-end",
-          label: "Top right"
-        },
-        {
-          value: "left-start",
-          label: "Left top"
-        },
-        {
-          value: "left",
-          label: "Left center"
-        },
-        {
-          value: "left-end",
-          label: "Left bottom"
-        },
-        {
-          value: "right-start",
-          label: "Right top"
-        },
-        {
-          value: "right",
-          label: "Right center"
-        },
-        {
-          value: "right-end",
-          label: "Right bottom"
-        },
-      ],
-    });
-
-    this.addControl("mode_dropbar_options", {
-      type: CONTROLLER_SELECT,
-      label: "Mode",
-      default: "click",
-      options: [
-        {
-          value: "click",
-          label: "Click"
-        },
-        {
-          value: "hover",
-          label: "Hover"
-        }
-      ],
-    });
-
-    this.addControl("show_delay_dropbar_options", {
-      type: CONTROLLER_SLIDER,
-      label: 'Dropbar show delay',
-      default: {
-        size: 0,
-        unit: 'ms',
-      },
-      units: [
-        'ms'
-      ],
-      max: 1000,
-      min: 0,
-    });
-
-    this.addControl("hide_delay_dropbar_options", {
-      type: CONTROLLER_SLIDER,
-      label: 'Dropbar hide delay',
-      default: {
-        size: 0,
-        unit: 'ms',
-      },
-      units: [
-        'ms'
-      ],
-      max: 1000,
-      min: 0,
-    });
-
-    this.addControl("offset_dropbar_options", {
-      type: CONTROLLER_SLIDER,
-      label: 'Dropbar offset',
-      default: {
-        size: 15,
-        unit: 'px',
-      },
-      max: 100,
-      min: -100,
-    });
-
-    this.endControlSection();
     //<editor-fold desc="other_actions_on">
     this.startControlSection('other_actions', {
       hideOnEmail: true,
@@ -386,10 +264,6 @@ class Button extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
         unit: 'px',
         bind: true
       },
@@ -404,10 +278,6 @@ class Button extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default: {
-        // top: 20,
-        // right: 25,
-        // bottom: 20,
-        // left: 25,
         unit: 'px',
         bind: true
       },
@@ -422,7 +292,6 @@ class Button extends BaseElement {
       hideOnEmail: true,
       type: CONTROLLER_NUMBER,
       label: 'Z-index',
-      default: 0,
     });
 
     this.addControl('position_css_classes', {
@@ -517,7 +386,6 @@ class Button extends BaseElement {
         }
       ],
       label: 'Background Position',
-      default: 'center',
     });
 
     this.addControl('background_attachment', {
@@ -606,7 +474,6 @@ class Button extends BaseElement {
         },
       ],
       label: 'Background Size',
-      default: 'cover',
     });
 
     this.endControlSection();
@@ -674,10 +541,6 @@ class Button extends BaseElement {
       default: {
         unit: 'px',
         bind: true,
-        top: 6,
-        left: 6,
-        right: 6,
-        bottom: 6,
       },
       units: [
         'px',
@@ -735,10 +598,6 @@ class Button extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
         unit: 'px',
         bind: true
       },
@@ -768,9 +627,6 @@ class Button extends BaseElement {
     this.addControl('icon_size', {
       type: CONTROLLER_SLIDER,
       label: 'Icon Size',
-      default: {
-        size: 25
-      },
       units: [
         'px',
         '%',
@@ -864,10 +720,6 @@ class Button extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
         unit: "px"
       },
       units: ["px", "%", "vh"],
@@ -892,8 +744,8 @@ class Button extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Background color",
       default: {
-        color: "rgb(52,59,76)",
-        colorPickedHex: "#343B4C",
+        color: "",
+        colorPickedHex: "",
       },
     });
 
@@ -901,22 +753,14 @@ class Button extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Text color",
       default: {
-        color: "rgb(255,255,255)",
-        colorPickedHex: "#FFFFFF",
+        color: "",
+        colorPickedHex: "",
       },
     });
 
     this.addControl('typographic_text_dropbar_content_style', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      default: {
-        lineHeight: 1,
-        spacing: 0,
-        size: 16,
-        weight: "normal",
-        family: 'roboto',
-        decoration: ""
-      },
     }
     );
 
@@ -961,8 +805,8 @@ class Button extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Border color",
       default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852"
+        color: "",
+        colorPickedHex: ""
       },
     });
 
@@ -970,10 +814,6 @@ class Button extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Border radius",
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
         unit: "px"
       },
       units: ["px", "%", "vh"],
@@ -982,17 +822,6 @@ class Button extends BaseElement {
     this.addControl('box_shadow_dropbar_content_style', {
       type: CONTROLLER_SHADOW,
       label: 'Box shadow',
-      default: {
-        blur: 0,
-        horizontal: 0,
-        vertical: 0,
-        opacity: 1,
-        spread: 0,
-        colorRGB: 'rgb(0, 0, 0)',
-        color: 'rgb(0, 0, 0)',
-        colorPickedHex: '#000000',
-        type: ""
-      },
     }
     );
 

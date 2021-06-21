@@ -18,7 +18,7 @@ export default function ListComponent(settings) {
     ["justify-content", "alignment_list_style"],
     "}",
 
-    "altrp-list-li-divider-default",
+    "& div.altrp-list-li-divider-default",
     ["border-top-style", "divider_style_list_style"],
     ["border-top-width", "divider_weight_list_style", "slider"],
     "}",
@@ -28,7 +28,7 @@ export default function ListComponent(settings) {
     ["border-right-width", "divider_weight_list_style", "slider"],
     "}",
 
-    "altrp-list-li-divider",
+    "& div.altrp-list-li-divider",
     ["border-color", "divider_color_list_style", "color"],
     ["width", "divider_width_list_style", "slider"],
     "}",

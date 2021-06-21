@@ -110,7 +110,7 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
           styles += `.${prefix}${id} {${MapConstructorComponent(item.settings)}}`;
           break;
       }
-      styles += `.${prefix}${id}.${prefix}${id} {${AdvancedComponent(
+      styles += `div.${prefix}${id}.${prefix}${id} {${AdvancedComponent(
         item.settings
       )}}`;
 
@@ -119,16 +119,7 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
 
   styles += `} `;
 
-
-  // console.log("sadasdsa", styles);
-  //
-  // let stylesToArray = [];
-  //
-  // let selectors = styles.match(/(.*?{.*?)({.*)/);;
-  //
-  // console.log("array ", selectors)
-  //
-  //
+  
   return styles;
 }}`;
 function mapStateToProps(state) {

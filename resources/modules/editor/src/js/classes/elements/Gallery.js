@@ -137,7 +137,6 @@ class Gallery extends BaseElement {
       },
       type: CONTROLLER_NUMBER,
       label: 'Columns',
-      default: 3,
     });
 
     this.addControl("spacing_grid_settings", {
@@ -149,7 +148,7 @@ class Gallery extends BaseElement {
       units:[
         'px',
       ],
-      default: { size: 0, unit: "px"},
+      default: {unit: "px"},
       max: 100,
       min: 0,
     });
@@ -583,7 +582,6 @@ class Gallery extends BaseElement {
     this.addControl('overlay_content_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: 'flex-start',
       options: [
         {
           icon: 'left',
@@ -603,7 +601,6 @@ class Gallery extends BaseElement {
     this.addControl('overlay_content_vertical', {
       type: CONTROLLER_CHOOSE,
       label: 'Vertical Alignment',
-      default: 'flex-start',
       options: [
         {
           icon: 'left',

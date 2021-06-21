@@ -458,6 +458,7 @@ textarea.altrp-field{
   padding-bottom: 15px;
   line-height: 0;
   font-size: 0;
+  margin: 10px;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -468,6 +469,10 @@ textarea.altrp-field{
   display: block;
   height: 1px;
   width: 100%;
+}
+
+.altrp-btn-wrapper {
+  align-items: center;
 }
 
 .altrp-divider-label {
@@ -680,7 +685,13 @@ textarea.altrp-field{
 
 .altrp-list-li-divider-default {
   position: absolute;
+  border-top-style: solid;
+  border-top-width: 1px;
   bottom: 0;
+}
+
+.altrp-list-li-divider {
+  width: 100%
 }
 
 .altrp-list-li:last-child .altrp-list-li-divider-default {
@@ -702,6 +713,11 @@ textarea.altrp-field{
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.altrp-list-icon, .altrp-list-icon svg {
+  height: 25px;
+  width: 25px;
 }
 
 .altrp-accordion-item-button {
@@ -733,6 +749,7 @@ textarea.altrp-field{
   flex-wrap: wrap;
   transition: 250ms ease-in-out;
   z-index: 0;
+  text-align: left;
   top: -1em;
   height: 0px;
 }
@@ -909,6 +926,18 @@ textarea.altrp-field{
 
 .altrp-btn-dropbar {
   width: 100%;
+}
+
+.altrp-btn {
+  border-radius: 6px;
+  flex-direction: row;
+  background-color: #343B4C;
+  color: #FFFFFF;
+
+  & svg {
+    height: 25px;
+    width: 25px;
+  }
 }
 
 .altrp-dropbar-container {
