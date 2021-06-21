@@ -1008,7 +1008,7 @@ export function getTableStyles(settings, id) {
 
   styles += `} `;
 
-  styles += `${parentClass} .altrp-table-tbody .altrp-table-background {`;
+  styles += `${parentClass} .altrp-table-tbody {`;
 
   const backgroundColorTbodyBackground = getResponsiveSetting(settings, 'table_style_body_border_background');
 
@@ -1018,7 +1018,7 @@ export function getTableStyles(settings, id) {
 
   styles += `} `;
 
-  styles += `${parentClass} .altrp-table-tbody .altrp-table-background:hover {`;
+  styles += `${parentClass} .altrp-table-tbody:hover {`;
 
   const backgroundColorTbodyBackgroundHover = getResponsiveSetting(settings, 'table_style_body_border_background', ':hover');
 
