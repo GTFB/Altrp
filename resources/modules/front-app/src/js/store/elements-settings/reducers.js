@@ -1,4 +1,4 @@
-import { CHANGE_SETTINGS} from "./actions";
+import { CHANGE_SETTINGS, REPLACE_SETTINGS} from "./actions";
 import mutate from "dot-prop-immutable";
 
 const defaultSettings = {};
@@ -7,10 +7,19 @@ export function elementsSettingsReducer(elementSettings, action) {
   elementSettings = elementSettings || defaultSettings;
   switch (action.type) {
     case CHANGE_SETTINGS: {
+      if(elementSettings[action.elementId]){
+        mutate.delete( elementSettings,action.elementId);
+      }
+
       elementSettings = mutate.set(elementSettings, action.elementId, {
-        settings: action.settings,
+        settings: {...action.settings},
         name: action.elementName,
       });
+    }
+    break;
+    case REPLACE_SETTINGS: {
+      console.log(elementSettings);
+      elementSettings = action.settings;
     }
     break;
   }

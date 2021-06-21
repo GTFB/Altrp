@@ -449,7 +449,7 @@ export default function SectionWidgetComponent(settings) {
     }
 
     if (backgroundImage) {
-      styles = backgroundImageControllerToStyles(backgroundImage);
+      styles += backgroundImageControllerToStyles(backgroundImage);
     }
 
     //Получаем значения background-size из контроллера, обрабатываем и добавляем в styles
@@ -677,12 +677,12 @@ export default function SectionWidgetComponent(settings) {
   & div.altrp-section,
   & div.altrp-section-full-fill {
     ${altrpSection()}
-  } 
+  }
 
   & div.altrp-section:hover,
   & div.altrp-section-full-fill:hover {
     ${altrpSectionHover()}
-  } 
+  }
 
   & div.altrp-section div.altrp-column {
     ${altrpSectionColumn()}

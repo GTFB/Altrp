@@ -7,7 +7,7 @@ import FrontPopupWrapper from "./FrontPopupWrapper";
 class FrontPopup extends Component {
   constructor(props) {
     super(props);
-
+    this.ElementWrapper = props.ElementWrapper || window.ElementWrapper;
     this.state = {
       isVisible: false,
       rootElement: window.frontElementsFabric.parseData(
@@ -348,6 +348,7 @@ class FrontPopup extends Component {
             <div className="popup-content">
               {React.createElement(rootElement.componentClass, {
                 element: rootElement,
+                ElementWrapper :this.ElementWrapper,
                 children: rootElement.children
               })}
             </div>

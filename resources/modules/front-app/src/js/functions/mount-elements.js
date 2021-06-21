@@ -1,3 +1,4 @@
+import loadGlobalStyles from "./load-global-styles";
 
 
 export default function mountElements(){
@@ -95,19 +96,6 @@ function loadEmailRenderer(){
   });
 }
 
-/**
- * Загрузка отрисовщика email
- */
-function loadGlobalStyles(){
-  import(/* webpackChunkName: 'EmailTemplatesRenderer' */'../components/GlobalStyles').then(module => {
-    const GlobalStyles = module.default;
-    const stylesContainer = document.createElement('div');
-    document.body.appendChild(stylesContainer);
-    ReactDOM.render(<window.Provider store={window.appStore}>
-      <GlobalStyles/>
-    </window.Provider>, stylesContainer)
-  });
-}
 
 /**
  * Загрузка админбара

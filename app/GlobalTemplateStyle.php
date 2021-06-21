@@ -27,4 +27,8 @@ class GlobalTemplateStyle extends Model
   {
     return json_decode($value, true);
   }
+
+  public function getGuidAttribute($value){
+    return $value;
+  }
 }

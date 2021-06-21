@@ -1,22 +1,16 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import {
-  ControlGroup,
-  FormGroup,
-  InputGroup,
-  Button,
-  Divider,
-  Slider,
-  Collapse
-} from "@blueprintjs/core";
-import { Select } from "@blueprintjs/select";
-import { SketchPicker } from "react-color";
-import invert from "invert-color";
-import Resource from "../classes/Resource";
+import { Button, Divider, Collapse } from "@blueprintjs/core";
 import { connect } from "react-redux";
-import { setGlobalEffect } from "../store/altrp-global-colors/actions";
-import { createGlobalColor, getTemplateDataStorage } from "../helpers";
+import {
+  addGlobalEffect,
+  editGlobalEffect,
+  deleteGlobalEffect
+} from "../store/altrp-global-colors/actions";
 import BaseElement from "../classes/elements/BaseElement";
+import GlobalEffectItemAdd from "./GlobalEffectItemAdd";
+import GlobalEffectItem from "./GlobalEffectItem";
+import { getTemplateDataStorage } from "../helpers";
 
 const Panel = styled.div`
   background-color: #fff;
@@ -27,202 +21,139 @@ const Panel = styled.div`
 `;
 
 const mapStateToProps = state => ({
-  effects: state.globalStyles.effects
+  effects: state.globalStyles.effects || []
 });
 
 const mapDispatchToProps = dispatch => ({
-  setEffect: effect => dispatch(setGlobalEffect(effect))
+  addEffect: effect => dispatch(addGlobalEffect(effect)),
+  editEffect: effect => dispatch(editGlobalEffect(effect)),
+  deleteEffect: effect => dispatch(deleteGlobalEffect(effect))
 });
 
 class GlobalEffects extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      colors: props.colors
+      new: false,
+      effects: props.effects
     };
-    this.toggleColorPanel = this.toggleColorPanel.bind(this);
-    this.colorChange = this.colorChange.bind(this);
-    this.nameChange = this.nameChange.bind(this);
     this.addItem = this.addItem.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
-    this.debounceChangeColor = this.debounceChangeColor.bind(this);
-    this.debounceChangeName = this.debounceChangeName.bind(this);
-    this.globalStyleResource = new Resource({
-      route: "/admin/ajax/global_template_styles"
-    });
+    this.onSaveEffect = this.onSaveEffect.bind(this);
+    this.updateAllTree = this.updateAllTree.bind(this);
   }
-
-  toggleColorPanel(id) {
-    const colors = _.cloneDeep(this.state.colors, []);
-    let color = _.find(colors, color => color.id === id);
-    color.colorPanelOpen = !color.colorPanelOpen;
-    this.setState(s => ({ ...s, colors: colors }));
-  }
-
-  colorChange = (value, id) => {
-    const rgba = `rgba(${value.rgb.r}, ${value.rgb.g}, ${value.rgb.b}, ${value.rgb.a})`;
-    const hex = value.hex;
-    const rgb = value.rgb;
-    const colors = _.cloneDeep(this.state.colors, []);
-    let currentColor = _.find(colors, color => color.id === id);
-    currentColor.color = rgba;
-    currentColor.colorPickedHex = hex;
-    currentColor.colorRGB = rgb;
-    this.setState(
-      s => ({ ...s, colors: colors }),
-      () => this.props.setEffect(colors)
-    );
-    const data = {
-      color: rgba,
-      colorPickedHex: hex,
-      colorRGB: rgb,
-      guid: currentColor.guid
-    };
-    this.debounceChangeColor(data, id);
-  };
-
-  debounceChangeColor = _.debounce((color, id) => {
-    this.globalStyleResource
-      .put(id, {
-        settings: { ...color },
-        type: "color"
-      })
-      .then(res => {
-        getTemplateDataStorage()
-          .getRootElement()
-          .children.forEach(child => {
-            this.recursiveWalkTree(child, color.guid, color);
-          });
-      });
-  }, 50);
 
   /**
    * @param {BaseElement} template
    * @param {String} guid
-   * @param {*} color
+   * @param {*} effect
    */
-  recursiveWalkTree(template, guid, color) {
+  recursiveWalkTree(template, guid, effect) {
+    console.log(template);
+    if (Array.isArray(template)) {
+      template?.forEach(
+        /**
+         * @param {BaseElement} templateItem
+         */
+        templateItem => {
+          const hasGlobal = Boolean(templateItem.hasGlobal(guid));
+          if (hasGlobal) {
+            templateItem.updateAllGlobals(guid, effect);
+          }
+          this.recursiveWalkTree(templateItem, guid, effect);
+        }
+      );
+    } else this.recursiveUpdate(template, guid, effect);
+  }
+
+  /**
+   * @param {BaseElement} template
+   * @param {String} guid
+   * @param {*} effect
+   */
+  recursiveUpdate(template, guid, effect) {
+    if (template.hasGlobal(guid)) {
+      template.updateAllGlobals(guid, effect);
+    }
     template.children?.forEach(
       /**
        * @param {BaseElement} child
        */
       child => {
         if (child.hasGlobal(guid)) {
-          child.updateAllGlobals(guid, color);
+          child.updateAllGlobals(guid, effect);
         }
+
         child.children.length > 0 &&
-          this.recursiveWalkTree(child.children, guid, color);
+          this.recursiveWalkTree(child.children, guid, effect);
       }
     );
   }
 
-  nameChange = (value, id) => {
-    if (value.length === 0) throw "Value cannot be empty";
-    const colors = _.cloneDeep(this.state.colors, []);
-    let color = _.find(colors, color => color.id === id);
-    color.name = value;
-    this.setState(
-      s => ({ ...s, colors: colors }),
-      () => this.props.setEffect(colors)
-    );
-    this.debounceChangeName(value, id);
-  };
-
-  debounceChangeName = _.debounce((value, id) => {
-    this.globalStyleResource.put(id, {
-      settings: { name: value },
-      type: "color"
-    });
-  }, 150);
-
   addItem(e) {
-    const color = {};
-    color.settings = JSON.stringify(createGlobalColor());
-    color.type = "color";
-    this.globalStyleResource.post(color).then(response => {
-      const colors = [
-        ...this.state.colors,
-        {
-          id: response.id,
-          guid: response.guid,
-          ...response.settings
-        }
-      ];
-      this.setState(
-        s => ({ ...s, colors: colors }),
-        () => this.props.setEffect(colors)
-      );
-    });
+    this.setState(s => ({ new: !s.new }));
   }
 
   deleteItem(id) {
     const confirm = window.confirm("Are you shure?");
     if (confirm) {
-      let colors = _.cloneDeep(this.state.colors, []);
-      colors = colors.filter(item => item.id !== id);
+      let effects = _.cloneDeep(this.state.effects, []);
+      effects = effects.filter(item => item.id !== id);
       this.setState(
-        s => ({ ...s, colors: colors }),
-        () => this.props.setEffect(colors)
+        s => ({ ...s, effects: effects }),
+        () => this.props.setEffect(effects)
       );
       this.globalStyleResource.delete(id);
     }
+  }
+  /**
+   * Рекурсивно обновляет эффект во всех элементах
+   * @param {*} effect
+   */
+  updateAllTree(effect) {
+    getTemplateDataStorage()
+      .getRootElement()
+      .children.forEach(child => {
+        this.recursiveWalkTree(child, effect.guid, effect);
+      });
+  }
+
+  /**
+   *
+   * @param {Event} e
+   */
+  onSaveEffect() {
+    this.setState(s => ({ ...s, new: false }));
   }
 
   render() {
     return (
       <Panel>
-        <Collapse isOpen={true}>
-          <ControlGroup vertical>
-            <FormGroup label="Enter Effect Name">
-              <InputGroup id="text-input" placeholder="Enter Effect Name" />
-            </FormGroup>
-
-            <FormGroup label="Choose Effect Color">
-              <SketchPicker
-                presetColors={[]}
-                // onChange={color => this.colorChange(color, item.id)}
-                style={{
-                  padding: 0,
-                  boxShadow: "none"
-                }}
-              ></SketchPicker>
-            </FormGroup>
-            <FormGroup label="Blur">
-              <Slider
-                min={0}
-                max={100}
-                stepSize={1}
-                labelStepSize={10}
-                showTrackFill={true}
-              />
-            </FormGroup>
-            <FormGroup label="Horizontal displacement">
-              <Slider
-                min={-100}
-                max={100}
-                stepSize={1}
-                labelRenderer={false}
-                showTrackFill={true}
-              />
-            </FormGroup>
-            <FormGroup label="Vertical displacement">
-              <Slider
-                min={-100}
-                max={100}
-                stepSize={1}
-                labelRenderer={false}
-                showTrackFill={true}
-              />
-            </FormGroup>
-            <FormGroup label="Position"></FormGroup>
-            <FormGroup>
-              <Button style={{ width: "100%" }}>Save</Button>
-            </FormGroup>
-          </ControlGroup>
+        <Collapse isOpen={this.state.new}>
+          <GlobalEffectItemAdd
+            addEffect={this.props.addEffect}
+            onSaveEffectClose={this.onSaveEffect}
+            isNew={true}
+          />
         </Collapse>
+        {!this.state.new && this.props.effects.length > 0 ? (
+          this.props.effects.map((item, index) => (
+            <div key={index} style={{ marginBottom: "10px" }}>
+              <GlobalEffectItem
+                effect={item}
+                editEffect={this.props.editEffect}
+                deleteEffect={this.props.deleteEffect}
+                onSaveEffectClose={this.onSaveEffect}
+                updateAllTree={this.updateAllTree}
+              />
+            </div>
+          ))
+        ) : (
+          <div>Effects list empty</div>
+        )}
         <Divider></Divider>
         <Button style={{ width: "100%" }} onClick={this.addItem}>
-          Add Item
+          {!this.state.new ? "Add Item" : "Cancel"}
         </Button>
       </Panel>
     );

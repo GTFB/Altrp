@@ -63,7 +63,6 @@ export default function AdvancedComponent(settings) {
     () => {
       const value = getResponsiveSetting(settings, "arrow_size");
       const slider = sliderStyled(value);
-      console.log(slider);
       if(slider !== "") {
         return `
           & > .altrp-tooltip::after { border-width: ${slider}; }

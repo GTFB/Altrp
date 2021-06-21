@@ -10,10 +10,9 @@ module.exports = {
   //     "./resources/modules/front-app/src/js/sw/sw.js",
   // ],
   entry: {
-    'front-app':"./resources/modules/front-app/src/index.js",
-    'h-altrp': "./resources/modules/front-app/src/h-altrp.js",
+    "front-app": "./resources/modules/front-app/src/index.js",
+    "h-altrp": "./resources/modules/front-app/src/h-altrp.js"
   },
-
 
   // ],
   mode: "development",
@@ -95,7 +94,7 @@ module.exports = {
     path: path.resolve(__dirname, "editor/"),
     publicPath: "http://localhost:3001/src/",
     chunkFilename: "[name].[contenthash].bundle.js",
-    filename: "bundle.[name].js",
+    filename: "bundle.[name].js"
   },
   devServer: {
     contentBase: path.join(__dirname, "resources/modules/front-app/public/"),
@@ -112,7 +111,6 @@ module.exports = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new CleanWebpackPlugin(),
-
     new webpack.DefinePlugin({
       "process.env": "{}",
       global: {}

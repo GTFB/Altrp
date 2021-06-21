@@ -1,4 +1,4 @@
-import store, {getCurrentScreen, getElementState} from "../store/store";
+import store, { getCurrentScreen, getElementState } from "../store/store";
 import { toggleDynamicContent } from "../store/dynamic-content/actions";
 import { getElementSettingsSuffix } from "../helpers";
 /**
@@ -118,8 +118,11 @@ function getSettings(settingName) {
   if (this.props.responsive === false) {
     return this.props.currentElement.getSettings(settingName);
   }
-  let _settingName = this.props.controller.getSettingName()
-  let value = this.props.currentElement.getResponsiveSetting(settingName, getElementState().value);
+  let _settingName = this.props.controller.getSettingName();
+  let value = this.props.currentElement.getResponsiveSetting(
+    settingName,
+    getElementState().value
+  );
   // console.log(getElementSettingsSuffix(this.props.controller));
   // if (value === null || value === undefined) {
   //   value = this.props.currentElement.getSettings(settingName);
@@ -298,6 +301,7 @@ export function controllerMapStateToProps(state) {
     controllerValue: state.controllerValue,
     historyStore: state.historyStore,
     presetColors: state.editorMetas.preset_colors,
-    globalColors: state.globalStyles.colors
+    globalColors: state.globalStyles.colors,
+    globalEffects: state.globalStyles.effects
   };
 }

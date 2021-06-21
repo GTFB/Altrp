@@ -2,6 +2,8 @@ import {getHeadingStyles} from "./helpers/stylesForTheHeading";
 import {getTextStyles} from "./helpers/stylesForTheText";
 import {getTableStyles} from "./helpers/stylesForTheTable";
 import {getPostsStyles} from "./helpers/stylesForThePosts";
+import getImageStyles from "./helpers/stylesForTheImage";
+import getTabsStyles from "./helpers/stylesForTheTabs";
 import ButtonComponent from "../../../../editor/src/js/components/widgets/styled-components/ButtonComponent";
 import CarouselComponent from "../../../../editor/src/js/components/widgets/styled-components/CarouselComponent";
 import GalleryComponent from "../../../../editor/src/js/components/widgets/styled-components/GalleryComponent";
@@ -19,6 +21,7 @@ import AccordionComponent from "../../../../editor/src/js/components/widgets/sty
 import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
 import MapConstructorComponent
   from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
+import ImageComponent from "../../../../editor/src/js/components/widgets/styled-components/ImageComponent";
 
 const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
   let styles = "";
@@ -58,7 +61,12 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
         case "dropbar":
           styles += `.${prefix}${id} {${DropbarWidgetComponent(item.settings)}}`;
           break;
-
+        case "image":
+          styles+=getImageStyles(item.settings,id);
+          break;
+        case "tabs":
+          styles+=getTabsStyles(item.settings, id);
+          break;
         case 'heading': {
           styles += getHeadingStyles(item.settings, id);
         }
@@ -108,7 +116,19 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings }) => {
 
     }
   });
-  
+
+  styles += `} `;
+
+
+  // console.log("sadasdsa", styles);
+  //
+  // let stylesToArray = [];
+  //
+  // let selectors = styles.match(/(.*?{.*?)({.*)/);;
+  //
+  // console.log("array ", selectors)
+  //
+  //
   return styles;
 }}`;
 function mapStateToProps(state) {
