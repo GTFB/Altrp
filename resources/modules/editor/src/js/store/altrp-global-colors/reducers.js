@@ -10,7 +10,8 @@ import {
   SET_GLOBAL_FONTS,
   ADD_GLOBAL_FONT,
   EDIT_GLOBAL_FONT,
-  DELETE_GLOBAL_FONT
+  DELETE_GLOBAL_FONT,
+  EDIT_GLOBAL_COLOR
 } from "./actions";
 
 const defaultState = [];
@@ -25,6 +26,20 @@ export function globalStyleReducer(state, action) {
     case SET_GLOBAL_COLORS:
       {
         state = { ...state, colors: action.colors };
+      }
+      break;
+    case EDIT_GLOBAL_COLOR:
+      {
+        const editedColor = action.color;
+        state = {
+          ...state,
+          colors: state.colors.map(color => {
+            if (color.guid == editedColor.guid) {
+              color = editedColor;
+            }
+            return color;
+          })
+        };
       }
       break;
     case ADD_GLOBAL_COLOR:

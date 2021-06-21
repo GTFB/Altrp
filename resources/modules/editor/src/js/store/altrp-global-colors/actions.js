@@ -1,4 +1,5 @@
 export const SET_GLOBAL_COLORS = "SET_GLOBAL_COLORS";
+export const EDIT_GLOBAL_COLOR = "EDIT_GLOBAL_COLOR";
 export const ADD_GLOBAL_COLOR = "ADD_GLOBAL_COLOR";
 export const SET_GLOBAL_EFFECTS = "SET_GLOBAL_EFFECTS";
 export const ADD_GLOBAL_EFFECT = "ADD_GLOBAL_EFFECT";
@@ -13,6 +14,12 @@ export function setGlobalColors(colors) {
   return {
     type: SET_GLOBAL_COLORS,
     colors
+  };
+}
+export function editGlobalColor(color) {
+  return {
+    type: EDIT_GLOBAL_COLOR,
+    color
   };
 }
 

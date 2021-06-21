@@ -13,6 +13,7 @@ import Resource from "../classes/Resource";
 import { connect } from "react-redux";
 import {
   setGlobalColors,
+  editGlobalColor,
   editGlobalEffect
 } from "../store/altrp-global-colors/actions";
 import { createGlobalColor, getTemplateDataStorage } from "../helpers";
@@ -33,6 +34,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   setColors: colors => dispatch(setGlobalColors(colors)),
+  editColor: color => dispatch(editGlobalColor(color)),
   editEffect: effect => dispatch(editGlobalEffect(effect))
 });
 
@@ -42,6 +44,7 @@ class GlobalColors extends Component {
     this.state = {
       colors: props.colors
     };
+    console.log(props.effectRef);
     this.toggleColorPanel = this.toggleColorPanel.bind(this);
     this.colorChange = this.colorChange.bind(this);
     this.nameChange = this.nameChange.bind(this);
@@ -91,6 +94,7 @@ class GlobalColors extends Component {
         type: "color"
       })
       .then(res => {
+        this.props.editColor({ ...color, id: id });
         this.updateEffectColors(color);
         getTemplateDataStorage()
           .getRootElement()
@@ -100,6 +104,10 @@ class GlobalColors extends Component {
       });
   }, 50);
 
+  /**
+   * Обновление цвета в эффекте
+   * @param {*} color
+   */
   updateEffectColors(color) {
     const guid = color.guid;
     this.props.effects.forEach(effect => {
@@ -114,10 +122,17 @@ class GlobalColors extends Component {
         this.globalStyleResource
           .put(effect.id, { settings: newEffectColor })
           .then(res => {
-            this.props.editGlobalEffect(effect);
+            this.props.editEffect(newEffectColor);
+            getTemplateDataStorage()
+              .getRootElement()
+              .children.forEach(child => {
+                this.recursiveWalkTree(
+                  child,
+                  newEffectColor.guid,
+                  newEffectColor
+                );
+              });
           });
-        console.log(color);
-        console.log(effect);
       }
       // this.globalStyleResource.put();
     });
