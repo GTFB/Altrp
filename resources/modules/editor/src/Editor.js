@@ -14,6 +14,7 @@ import NavigationPanel from "./js/components/NavigationPanel";
 import CommonPanel from "./js/components/CommonPanel";
 import GlobalColors from "./js/components/GlobalColors";
 import GlobalEffects from "./js/components/GlobalEffects";
+import GlobalFonts from "./js/components/GlobalFonts";
 import UpdateButton from "./js/components/UpdateButton";
 import CONSTANTS from "./js/consts";
 import { stopDrag } from "./js/store/element-drag/actions";
@@ -42,7 +43,8 @@ import AltrpMeta from "./js/classes/AltrpMeta";
 import { setEditorMeta } from "./js/store/editor-metas/actions";
 import {
   setGlobalColors,
-  setGlobalEffects
+  setGlobalEffects,
+  setGlobalFonts
 } from "./js/store/altrp-global-colors/actions";
 
 /**
@@ -214,6 +216,7 @@ class Editor extends Component {
     const globalStyles = await new Resource({
       route: "/admin/ajax/global_template_styles"
     }).getAll();
+    //global colors
     appStore.dispatch(
       setGlobalColors(
         globalStyles.color?.map(color => ({
@@ -223,12 +226,23 @@ class Editor extends Component {
         })) || []
       )
     );
+    //global effects
     appStore.dispatch(
       setGlobalEffects(
         globalStyles.effect?.map(effect => ({
           id: effect.id,
           guid: effect.guid,
           ...effect.settings
+        })) || []
+      )
+    );
+    //global fonts
+    appStore.dispatch(
+      setGlobalFonts(
+        globalStyles.font?.map(font => ({
+          id: font.id,
+          guid: font.guid,
+          ...font.settings
         })) || []
       )
     );
@@ -316,6 +330,7 @@ class Editor extends Component {
                 />
               )}
               {this.state.activePanel === "global_colors" && <GlobalColors />}
+              {this.state.activePanel === "global_fonts" && <GlobalFonts />}
               {this.state.activePanel === "global_effects" && <GlobalEffects />}
             </div>
             <div className="editor-bottom-panel d-flex align-content-center justify-center">

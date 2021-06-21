@@ -1,5 +1,3 @@
-const merge = require('webpack-merge');
-const common = require('./webpack.front.common.js');
 const path = require("path");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require("webpack");
@@ -11,7 +9,7 @@ module.exports ={
   mode: 'production',
   entry: {
     'front-app':"./resources/modules/front-app/src/index.js",
-    // 'sw': "./resources/modules/front-app/src/js/sw/sw.js",
+    'h-altrp': "./resources/modules/front-app/src/h-altrp",
   },
   devtool: 'source-map',
   module: {

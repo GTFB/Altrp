@@ -1,12 +1,9 @@
 import { withRouter } from "react-router-dom";
-import { connect } from "react-redux";
 import { addElement } from "../store/elements-storage/actions";
 import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 import { changeCurrentPageProperty } from "../store/current-page/actions";
 import { ElementWrapperDivComponent } from "../../../../editor/src/js/components/widgets/styled-components/ElementWrapperComponent";
-import ImageComponent from "../../../../editor/src/js/components/widgets/styled-components/ImageComponent";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
-import TabsComponent from "../../../../editor/src/js/components/widgets/styled-components/TabsComponent";
 import MenuComponent from "../../../../editor/src/js/components/widgets/styled-components/MenuComponent";
 import BreadcrumbsComponent from "../../../../editor/src/js/components/widgets/styled-components/BreadcrumbsComponent";
 import MapConstructorComponent from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
@@ -338,9 +335,6 @@ class ElementWrapper extends Component {
 
     let WrapperComponent = ElementWrapperDivComponent;
     switch (this.props.element.getName()) {
-      case "image":
-        WrapperComponent = ImageComponent;
-        break;
       case "menu":
         WrapperComponent = MenuComponent;
         break;
@@ -361,9 +355,6 @@ class ElementWrapper extends Component {
         break;
       case "nav":
         WrapperComponent = NavComponent;
-        break;
-      case "tabs":
-        WrapperComponent = TabsComponent;
         break;
     }
 
@@ -412,7 +403,12 @@ function mapStateToProps(state) {
     currentScreen: state.currentScreen
   };
 }
-
-export default connect(mapStateToProps, null, null, {
+let _export;
+if(window['h-altrp']){
+  _export = ElementWrapper;
+} else {
+  _export = withRouter(ElementWrapper)
+}
+export default window.reactRedux.connect(mapStateToProps, null, null, {
   forwardRef: true
-})(withRouter(ElementWrapper));
+})(_export);

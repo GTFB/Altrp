@@ -1,9 +1,7 @@
 import { addElement } from "../store/elements-storage/actions";
 import { changeCurrentPageProperty } from "../store/current-page/actions";
 import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
-import ImageComponent from "../../../../editor/src/js/components/widgets/styled-components/ImageComponent";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
-import TabsComponent from "../../../../editor/src/js/components/widgets/styled-components/TabsComponent";
 import MenuComponent from "../../../../editor/src/js/components/widgets/styled-components/MenuComponent";
 import BreadcrumbsComponent from "../../../../editor/src/js/components/widgets/styled-components/BreadcrumbsComponent";
 import MapConstructorComponent
@@ -276,9 +274,6 @@ class SimpleElementWrapper extends Component {
     let WrapperComponent = React.Fragment;
 
     switch (this.props.element.getName()) {
-      case "image":
-        WrapperComponent = ImageComponent;
-        break;
       case "menu":
         WrapperComponent = MenuComponent;
         break;
@@ -300,18 +295,22 @@ class SimpleElementWrapper extends Component {
       case "nav":
         WrapperComponent = NavComponent;
         break;
-      case "tabs":
-        WrapperComponent = TabsComponent;
-        break;
     }
     tooltip_text = window.altrpHelpers.replaceContentWithData(tooltip_text, this.props.element.getCurrentModel().getData())
     const wrapperProps = {
       elementId: this.elementId,
       settings: this.settings,
+      styles
     };
     if(WrapperComponent === React.Fragment){
       delete  wrapperProps.elementId;
       delete  wrapperProps.settings;
+      delete  wrapperProps.styles;
+      if(this.state.elementDisplay){
+        this.elementWrapperRef.current.style.display = null;
+      } else {
+        this.elementWrapperRef.current.style.display = 'none';
+      }
     }
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
       <WrapperComponent {...wrapperProps} >

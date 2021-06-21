@@ -7,8 +7,12 @@ export function elementsSettingsReducer(elementSettings, action) {
   elementSettings = elementSettings || defaultSettings;
   switch (action.type) {
     case CHANGE_SETTINGS: {
+      if(elementSettings[action.elementId]){
+        mutate.delete( elementSettings,action.elementId);
+      }
+
       elementSettings = mutate.set(elementSettings, action.elementId, {
-        settings: action.settings,
+        settings: {...action.settings},
         name: action.elementName,
       });
     }

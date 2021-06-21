@@ -2,17 +2,19 @@ import * as altrpHelpers from '../helpers';
 import * as styles from '../helpers/styles';
 import  Cookies from 'js-cookie';
 import Resource from "../../../../editor/src/js/classes/Resource";
+import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import Styles from '../../../../editor/src/js/components/Styles';
 import {baseEmailRender} from '../../../../editor/src/js/decorators/base-email-render';
 window.altrpHelpers = window.altrpHelpers || {};
 window.baseEmailRender = baseEmailRender;
-window.AltrpCookies = Cookies
+window.Cookies = Cookies
 window.StylesComponent = Styles;
 window.altrpHelpers = {
   ...window.altrpHelpers,
   ...altrpHelpers,
   styles,
   Resource,
+  AltrpModel,
 };
 /**
  * Install
@@ -22,7 +24,7 @@ window.altrpHelpers = {
  * Проверка на включение BVI
  */
 (async function (){
-  if(window.AltrpCookies.get('bvi-theme')){
+  if(window.Cookies.get('bvi-theme')){
     const  loadVIPlugin =  (await import(/* webpackChunkName: 'altrp-js-plugins' */'../../js/helpers/plugins')).loadVIPlugin;
     await loadVIPlugin(false);
     $.bvi();

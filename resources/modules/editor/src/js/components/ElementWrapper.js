@@ -19,10 +19,7 @@ import { START_DRAG, startDrag } from "../store/element-drag/actions";
 import { contextMenu } from "react-contexify";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
 import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
-import ImageComponent from "./widgets/styled-components/ImageComponent";
-import PostsComponent from "./widgets/styled-components/PostsComponent";
 import NavComponent from "./widgets/styled-components/NavComponent";
-import TabsComponent from "./widgets/styled-components/TabsComponent";
 import Column from "../classes/elements/Column";
 import MenuComponent from "./widgets/styled-components/MenuComponent";
 import BreadcrumbsComponent from "./widgets/styled-components/BreadcrumbsComponent";
@@ -380,16 +377,9 @@ class ElementWrapper extends Component {
       CKEditor: CKEditor,
       wrapper: this
     };
-    // if(this.props.element.getType() !== 'root-element'){
-    //   delete elementProps.element;
-    // }
-    // console.error(performance.now());
 
     let WrapperComponent = "div";
     switch (this.props.element.getName()) {
-      case "image":
-        WrapperComponent = ImageComponent;
-        break;
       case "menu":
         WrapperComponent = MenuComponent;
         break;
@@ -410,9 +400,6 @@ class ElementWrapper extends Component {
         break;
       case "nav":
         WrapperComponent = NavComponent;
-        break;
-      case "tabs":
-        WrapperComponent = TabsComponent;
         break;
     }
 

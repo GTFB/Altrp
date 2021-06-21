@@ -302,6 +302,7 @@ export function controllerMapStateToProps(state) {
     historyStore: state.historyStore,
     presetColors: state.editorMetas.preset_colors,
     globalColors: state.globalStyles.colors,
-    globalEffects: state.globalStyles.effects
+    globalEffects: state.globalStyles.effects,
+    globalFonts: state.globalStyles.fonts
   };
 }

@@ -1,6 +1,7 @@
 import AltrpModel from '../../../../editor/src/js/classes/AltrpModel';
-
-import {
+import { togglePopup } from '../store/popup-trigger/actions';
+import { sendEmail } from '../helpers/sendEmail';
+const {
   altrpLogin,
   altrpLogout,
   dataFromTable,
@@ -19,10 +20,7 @@ import {
   delay,
   altrpCompare,
   getWrapperHTMLElementByElement
-} from '../helpers';
-import { togglePopup } from '../store/popup-trigger/actions';
-import { sendEmail } from '../helpers/sendEmail';
-import { loadVIPlugin } from '../helpers/plugins';
+} = window.altrpHelpers;
 
 // let  history = require('history');
 // // import {history} from 'history';
@@ -489,6 +487,7 @@ class AltrpAction extends AltrpModel {
    */
   async doActionToggleElements() {
     let IDs = this.getProperty('elements_ids');
+
     if (!IDs) {
       return { success: true };
     }
@@ -515,6 +514,10 @@ class AltrpAction extends AltrpModel {
       return {
         success: true
       };
+    }
+    if(window['h-altrp']){
+      const loadPopups = (await import(/* webpackChunkName: 'load-popups' */"../functions/load-popups")).default;
+      await loadPopups();
     }
     appStore.dispatch(togglePopup(id));
 
@@ -580,9 +583,12 @@ class AltrpAction extends AltrpModel {
     }
     elementId = elementId.trim();
     const element = getHTMLElementById(elementId);
-    let scroller = mainScrollbars;
+    let scroller = window.mainScrollbars;
     if(! scroller){
       scroller = document.querySelector('.front-app-content');
+    }
+    if(! scroller){
+      scroller = document.querySelector('.front-app');
     }
     if (element) {
       scrollToElement(scroller, element);
@@ -596,7 +602,19 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionScrollToTop() {
-    mainScrollbars.scrollTop(0);
+    if(window.mainScrollbars){
+      window.mainScrollbars.scrollTop(0);
+      return {
+        success: true
+      };
+    }
+    let scroller = document.querySelector('.front-app-content');
+
+    if(! scroller){
+      scroller = document.querySelector('.front-app');
+    }
+    scroller.scrollTo(0,0)
+
     return {
       success: true
     };
@@ -612,7 +630,19 @@ class AltrpAction extends AltrpModel {
         success: true
       };
     }
-    mainScrollbars.scrollTop(routeContent.offsetHeight);
+    if(window.mainScrollbars){
+      window.mainScrollbars.scrollTop(routeContent.offsetHeight);
+      return {
+        success: true
+      };
+    }
+
+    let scroller = document.querySelector('.front-app-content');
+
+    if(! scroller){
+      scroller = document.querySelector('.front-app');
+    }
+    scroller.scrollTo(0,document.querySelector('.route-content').offsetHeight)
     return {
       success: true
     };
@@ -1098,6 +1128,7 @@ class AltrpAction extends AltrpModel {
    */
   async doActionVIToggle() {
     try {
+      const {loadVIPlugin} = (await import(/* webpackChunkName 'loadVIPlugin' */'../helpers/plugins'))
       await loadVIPlugin();
     } catch (error) {
       return {

@@ -984,7 +984,6 @@ function _extractElementsNames( $element = [],  &$elementNames, $only_react_elem
     'map_builder',
     'menu',
     'diagram',
-    'input',
     'nav',
     'breadcrumbs',
     'dashboards',
@@ -1001,9 +1000,9 @@ function _extractElementsNames( $element = [],  &$elementNames, $only_react_elem
     return;
   }
 
-  if( isset( $element['lazySection'] ) && $element['lazySection'] ){
-    return;
-  }
+//  if( isset( $element['lazySection'] ) && $element['lazySection'] ){
+//    return;
+//  }
 
 //echo '<pre style="padding-left: 200px;">';
 //var_dump( array_search( $element['name'], $elementNames ) === false
