@@ -747,7 +747,7 @@ export function getTableStyles(settings, id) {
   const backgroundColorTableTh = getResponsiveSetting(settings, 'table_style_header_background');
 
   if (backgroundColorTableTh) {
-    styles += colorPropertyStyled(backgroundColorTableTh, 'background');
+    styles += `background-color: ${backgroundColorTableTh.color}: `;
   }
 
   styles += `} `;
@@ -809,7 +809,7 @@ export function getTableStyles(settings, id) {
   const backgroundColorTableHead = getResponsiveSetting(settings, 'table_style_header_background');
 
   if (backgroundColorTableHead) {
-    styles += colorPropertyStyled(backgroundColorTableHead, 'background');
+    styles += `background-color: ${backgroundColorTableHead.color}; `;
   }
 
   styles += `} `;
