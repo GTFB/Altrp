@@ -66,6 +66,7 @@ class Editor extends Component {
       templateStatus: CONSTANTS.TEMPLATE_UPDATED,
       showDialogWindow: false
     };
+    this.effectRef = React.createRef();
     this.openPageSettings = this.openPageSettings.bind(this);
     this.openNavigratonPanel = this.openNavigratonPanel.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
