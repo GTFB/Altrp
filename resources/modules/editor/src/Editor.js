@@ -332,7 +332,7 @@ class Editor extends Component {
               )}
               {this.state.activePanel === "global_colors" && <GlobalColors />}
               {this.state.activePanel === "global_fonts" && <GlobalFonts />}
-              {this.state.activePanel === "global_effects" && <GlobalEffect />}
+              {this.state.activePanel === "global_effects" && <GlobalEffects />}
             </div>
             <div className="editor-bottom-panel d-flex align-content-center justify-center">
               <button
