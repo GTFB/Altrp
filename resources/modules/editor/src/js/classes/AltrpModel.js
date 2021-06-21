@@ -2,7 +2,7 @@
  * Имеет интерфейс для доступы к свойствам data (любой вложенности)
  * @class AltrpModel
  */
-import cloneDeep from 'lodash.cloneDeep';
+import cloneDeep from 'lodash.clonedeep';
 import get from 'lodash.get';
 import set from 'lodash.set';
 import has from 'lodash.has';
