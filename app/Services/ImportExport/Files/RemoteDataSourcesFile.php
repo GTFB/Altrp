@@ -95,13 +95,16 @@ class RemoteDataSourcesFile extends ImportExportFile implements IImportExportFil
      * @param string $path
      * @return mixed
      */
-    public function export(IWriter $writer, string $path)
+    public function export(IWriter $writer, string $path, array $params = [])
     {
       $data = DB::table( 'altrp_sources' )
         ->select('altrp_sources.*', 'altrp_models.name as model_name', 'altrp_controllers.namespace as controller_namespace')
         ->leftJoin('altrp_models', 'altrp_sources.model_id', '=', 'altrp_models.id')
         ->leftJoin('altrp_controllers', 'altrp_sources.controller_id', '=', 'altrp_controllers.id')
         ->havingRaw('type = "remote"')
+        ->when(!empty($params), function ($query) use ($params) {
+          return $query->whereIn('altrp_sources.id', $params);
+        })
         ->get();
 
         $writer->createJsonFile($path, self::FILENAME, $data->toArray());

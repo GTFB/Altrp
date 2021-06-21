@@ -98,13 +98,16 @@ class RelationshipsFile extends ImportExportFile implements IImportExportFile
      * @param string $path
      * @return mixed
      */
-    public function export(IWriter $writer, string $path)
+    public function export(IWriter $writer, string $path, array $params = [])
     {
         $data = DB::table( 'altrp_relationships' )
             ->select('altrp_relationships.*', 'models.name as model_name', 'target_models.name as target_model_name' )
             ->leftJoin('altrp_models as models', 'altrp_relationships.model_id', '=', 'models.id')
             ->leftJoin('altrp_models as target_models', 'altrp_relationships.target_model_id', '=', 'target_models.id')
             ->havingRaw('model_name IS NOT NULL AND target_model_name IS NOT NULL')
+            ->when(!empty($params), function ($query) use ($params) {
+              return $query->whereIn('altrp_relationships.model_id', $params);
+            })
             ->get();
 
         $writer->createJsonFile($path, self::FILENAME, $data->toArray());

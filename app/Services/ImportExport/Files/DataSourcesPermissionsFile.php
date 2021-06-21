@@ -84,12 +84,15 @@ class DataSourcesPermissionsFile extends ImportExportFile implements IImportExpo
      * @param string $path
      * @return mixed
      */
-    public function export(IWriter $writer, string $path)
+    public function export(IWriter $writer, string $path, array $params = [])
     {
         $data = DB::table( 'altrp_sources_permissions' )
             ->select('altrp_sources_permissions.*', 'permissions.name as permission_name', 'altrp_sources.name as source_name')
             ->join('altrp_sources', 'altrp_sources_permissions.source_id', '=', 'altrp_sources.id')
             ->join('permissions', 'altrp_sources_permissions.permission_id', '=', 'permissions.id')
+            ->when(!empty($params), function ($query) use ($params) {
+              return $query->whereIn('altrp_sources_permissions.source_id', $params);
+            })
             ->get();
 
         $writer->createJsonFile($path, self::FILENAME, $data->toArray());

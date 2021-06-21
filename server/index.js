@@ -8,7 +8,24 @@ register({
     "@babel/plugin-transform-async-to-generator",
     "@babel/transform-arrow-functions",
     "@babel/proposal-object-rest-spread",
-    "@babel/proposal-class-properties"
+    [
+      "@babel/plugin-proposal-class-properties",
+      {
+        "loose": true
+      }
+    ],
+    [
+      "@babel/plugin-proposal-private-property-in-object",
+      {
+        "loose": true
+      }
+    ],
+    [
+      "@babel/plugin-proposal-private-methods",
+      {
+        "loose": true
+      }
+    ]
   ]
 });
 

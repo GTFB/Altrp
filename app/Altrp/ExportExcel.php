@@ -145,8 +145,14 @@ class ExportExcel extends Model
                 $this->worksheet = $this->sheet->toArray();
 
                 $this->parseTemplateData();
-
-                if ($this->data && is_array($this->data)) $this->recursionHandler($this->data);
+                $offset = 0;
+                if ($this->data && is_array($this->data)) {
+                  foreach ($this->data as $key => $data) {
+                    if (is_array($data)) {
+                      $this->parseTemplateArray($offset, $data);
+                    }
+                  }
+                }
 
             } else {
                 $this->spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();

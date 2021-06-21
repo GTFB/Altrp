@@ -311,9 +311,9 @@ class FrontElementsManager {
    */
   componentsIsLoaded() {
     if (! window.altrpElementsLists) {
-      return _.keys(this.components).length === this.ELEMENTS.length;
+      return Object.keys(this.components).length === this.ELEMENTS.length;
     }
-    return _.keys(this.components).length >= window.altrpElementsLists.length;
+    return Object.keys(this.components).length >= window.altrpElementsLists.length;
   }
 
   /**
