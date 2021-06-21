@@ -11,7 +11,10 @@ import { SketchPicker } from "react-color";
 import invert from "invert-color";
 import Resource from "../classes/Resource";
 import { connect } from "react-redux";
-import { setGlobalColors } from "../store/altrp-global-colors/actions";
+import {
+  setGlobalColors,
+  editGlobalEffect
+} from "../store/altrp-global-colors/actions";
 import { createGlobalColor, getTemplateDataStorage } from "../helpers";
 import BaseElement from "../classes/elements/BaseElement";
 
@@ -24,11 +27,13 @@ const Panel = styled.div`
 `;
 
 const mapStateToProps = state => ({
-  colors: state.globalStyles.colors
+  colors: state.globalStyles.colors,
+  effects: state.globalStyles.effects
 });
 
 const mapDispatchToProps = dispatch => ({
-  setColors: colors => dispatch(setGlobalColors(colors))
+  setColors: colors => dispatch(setGlobalColors(colors)),
+  editEffect: effect => dispatch(editGlobalEffect(effect))
 });
 
 class GlobalColors extends Component {
@@ -44,6 +49,7 @@ class GlobalColors extends Component {
     this.deleteItem = this.deleteItem.bind(this);
     this.debounceChangeColor = this.debounceChangeColor.bind(this);
     this.debounceChangeName = this.debounceChangeName.bind(this);
+    this.updateEffectColors = this.updateEffectColors.bind(this);
     this.globalStyleResource = new Resource({
       route: "/admin/ajax/global_template_styles"
     });
@@ -85,6 +91,7 @@ class GlobalColors extends Component {
         type: "color"
       })
       .then(res => {
+        this.updateEffectColors(color);
         getTemplateDataStorage()
           .getRootElement()
           .children.forEach(child => {
@@ -92,6 +99,29 @@ class GlobalColors extends Component {
           });
       });
   }, 50);
+
+  updateEffectColors(color) {
+    const guid = color.guid;
+    this.props.effects.forEach(effect => {
+      const check = effect.globalColor == guid;
+      if (check) {
+        const newEffectColor = {
+          ...effect,
+          colorRGB: color.colorRGB,
+          color: color.color,
+          colorPickedHex: color.colorPickedHex
+        };
+        this.globalStyleResource
+          .put(effect.id, { settings: newEffectColor })
+          .then(res => {
+            this.props.editGlobalEffect(effect);
+          });
+        console.log(color);
+        console.log(effect);
+      }
+      // this.globalStyleResource.put();
+    });
+  }
 
   /**
    *
