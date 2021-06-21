@@ -21,7 +21,11 @@ Route::get({{frontend_route}}, function ({{params}}) {
         if ( $relations ) {
           $model = $model->load( $relations );
         }
-        $model_data = $model->find( {{model_id}} )->toArray();
+        $model = $model->find( {{model_id}} );
+        if( ! $model ){
+          throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException( 'Model not found' );
+        }
+        $model_data = $model->toArray();
         $altrp_env = $model_data;
       } catch( Exception $e ) {
         $model_data = [];

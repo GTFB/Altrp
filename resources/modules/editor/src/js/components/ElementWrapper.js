@@ -19,7 +19,6 @@ import { START_DRAG, startDrag } from "../store/element-drag/actions";
 import { contextMenu } from "react-contexify";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
 import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
-import ImageComponent from "./widgets/styled-components/ImageComponent";
 import NavComponent from "./widgets/styled-components/NavComponent";
 import Column from "../classes/elements/Column";
 import MenuComponent from "./widgets/styled-components/MenuComponent";

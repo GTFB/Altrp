@@ -181,7 +181,7 @@ class FrontElement {
       return
     }
     this.formsIsInit = true;
-    let formsManager = await import(/* webpackChunkName: 'FromsManager' */'../../../../editor/src/js/classes/modules/FormsManager.js');
+    let formsManager = await import(/* webpackChunkName: 'FormsManager' */'../../../../editor/src/js/classes/modules/FormsManager.js');
     formsManager = formsManager.default;
 
     switch (this.getName()) {
