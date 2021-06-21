@@ -76,7 +76,7 @@ export function getTableStyles(settings, id) {
 
   const flexDirection = getResponsiveSetting(settings, 'next_icon_position');
 
-  if (flexDirection) {
+  if (flexDirection && flexDirection !== 'default') {
     styles += simplePropertyStyled(flexDirection, 'flex-direction');
   }
 
@@ -92,7 +92,7 @@ export function getTableStyles(settings, id) {
 
   const flexDirectionHover = getResponsiveSetting(settings, 'next_icon_position', ':hover');
 
-  if (flexDirectionHover) {
+  if (flexDirectionHover && flexDirectionHover !== 'default') {
     styles += simplePropertyStyled(flexDirectionHover, 'flex-direction');
   }
 
@@ -180,7 +180,7 @@ export function getTableStyles(settings, id) {
 
   const flexDirectionPaginationPrev = getResponsiveSetting(settings, 'prev_icon_position');
 
-  if (flexDirectionPaginationPrev) {
+  if (flexDirectionPaginationPrev && flexDirectionPaginationPrev !== 'default') {
     styles += simplePropertyStyled(flexDirectionPaginationPrev, 'flex-direction');
   }
 
@@ -196,7 +196,7 @@ export function getTableStyles(settings, id) {
 
   const flexDirectionPaginationPrevHover = getResponsiveSetting(settings, 'prev_icon_position', ':hover');
 
-  if (flexDirectionPaginationPrevHover) {
+  if (flexDirectionPaginationPrevHover && flexDirectionPaginationPrevHover !== 'default') {
     styles += simplePropertyStyled(flexDirectionPaginationPrevHover, 'flex-direction');
   }
 
