@@ -5,20 +5,18 @@ import {
   parseParamsFromString,
   parseURLTemplate,
   replaceContentWithData,
-  sortOptions,
   renderAssetIcon,
   getDataFromLocalStorage
 } from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
+import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
 import AltrpInput from "../altrp-input/AltrpInput";
-
 const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`
  /*здесь css стилей по умолчанию с селекторами*/
 `)
-
 const AltrpFieldContainer = styled.div`
   ${({ settings: { content_label_position_type } }) => {
     switch (content_label_position_type) {
@@ -33,7 +31,7 @@ const AltrpFieldContainer = styled.div`
   }}
 `;
 
-class InputSelectWidget extends Component {
+class InputSelect2Widget extends Component {
   timeInput = null;
 
   constructor(props) {
@@ -83,10 +81,41 @@ class InputSelectWidget extends Component {
    */
   clearValue() {
     let value = "";
+    if (
+      ["input-select2"].indexOf(
+        this.props.element.getName()
+      ) >= 0 &&
+      this.props.element.getSettings("select2_multiple")
+    ) {
+      value = [];
+    }
     this.onChange(value);
     this.dispatchFieldValueToStore(value, true);
   }
-
+  /**
+   * Метод устанавливает все опции как выбранные
+   */
+  selectAll() {
+    const optionsDynamicSetting = this.props.element.getDynamicSetting(
+      "content_options"
+    );
+    if (
+      ["input-select2"].indexOf(
+        this.props.element.getName()
+      ) >= 0 &&
+      this.props.element.getSettings("select2_multiple")
+    ) {
+      let options = [...this.state.options];
+      if (!_.isArray(options)) {
+        options = [];
+      } else {
+        if (optionsDynamicSetting) {
+          options = convertData(optionsDynamicSetting, options);
+        }
+      }
+      this.onChange(options);
+    }
+  }
   /**
    * Обработка нажатия клавиши
    * @param {{}} e
@@ -122,7 +151,7 @@ class InputSelectWidget extends Component {
 
       this.setState(state => ({ ...state, options }));
     } else if (
-      ["input-select"].indexOf(this.props.element.getName()) >= 0 &&
+      ["input-select2"].indexOf(this.props.element.getName()) >= 0 &&
       this.state.settings.model_for_options
     ) {
       let options = await new Resource({ route: this.getRoute() }).getAll();
@@ -131,7 +160,6 @@ class InputSelectWidget extends Component {
       this.setState(state => ({ ...state, options }));
     }
     let value = this.state.value;
-
     /**
      * Если динамическое значение загрузилось,
      * то используем this.getContent для получение этого динамического значения
@@ -144,9 +172,6 @@ class InputSelectWidget extends Component {
       value = this.getContent("content_default_value");
     }
 
-    /**
-     * Если модель обновилась при смене URL
-     */
     if (
       prevProps &&
       !prevProps.currentModel.getProperty("altrpModelUpdated") &&
@@ -219,25 +244,6 @@ class InputSelectWidget extends Component {
           this.dispatchFieldValueToStore(value);
         }
       );
-    }
-    if (
-      this.props.element.getName() === "input-select" &&
-      this.props.element.getSettings("model_for_options")
-    ) {
-      if (
-        !(
-          this.state.settings.model_for_options ===
-          prevProps.element.getSettings("model_for_options")
-        )
-      ) {
-        let model_for_options = prevProps.element.getSettings(
-          "model_for_options"
-        );
-        let options = await new Resource({ route: this.getRoute() }).getAll();
-        options = !_.isArray(options) ? options.data : options;
-        options = _.isArray(options) ? options : [];
-        this.setState(state => ({ ...state, options, model_for_options }));
-      }
     }
     /**
      * Если обновилась модель, то пробрасываем в стор новое значение (старый источник диамических данных)
@@ -450,7 +456,9 @@ class InputSelectWidget extends Component {
     let value = "";
     let valueToDispatch;
     const settings = this.props.element.getSettings();
-    value = e.target.value;
+    if (e && e.target) {
+      value = e.target.value;
+    }
 
     if (e && e.value) {
       value = e.value;
@@ -460,6 +468,14 @@ class InputSelectWidget extends Component {
     }
     if (_.isArray(e)) {
       value = _.cloneDeep(e);
+    }
+    if (this.props.element.getName() === "input-select2") {
+      if (this.props.element.getSettings("select2_multiple", false) && !e) {
+        value = [];
+      }
+      if (this.props.element.getSettings("select2_multiple", false)) {
+        value = value.map(item => item.value);
+      }
     }
     if (
       this.props.element.getSettings("content_options_nullable") &&
@@ -566,13 +582,6 @@ class InputSelectWidget extends Component {
    * @param  editor для получения изменений из CKEditor
    */
   onBlur = async (e, editor = null) => {
-    if (
-      ["text", "email", "phone", "tel", "number", "password"].indexOf(
-        this.state.settings.content_type
-      ) !== -1
-    ) {
-      this.dispatchFieldValueToStore(e.target.value, true);
-    }
     if (_.get(editor, "getData")) {
       this.dispatchFieldValueToStore(editor.getData(), true);
     }
@@ -710,8 +719,8 @@ class InputSelectWidget extends Component {
     let label = null;
     const settings = this.props.element.getSettings();
     const {
-      options_sorting,
       content_readonly,
+      select2_multiple: isMultiple,
       label_icon
     } = settings;
 
@@ -808,43 +817,25 @@ class InputSelectWidget extends Component {
 
     let input = null;
     switch (this.props.element.getName()) {
-      case "input-select":
+      case "input-select2":
         {
-          let options = this.getOptions();
-          input = (
-            <select
-              value={value || ""}
-              onFocus={this.onFocus}
-              name={this.getName()}
-              onChange={this.onChange}
-              onBlur={this.onBlur}
-              onKeyDown={this.handleEnter}
-              id={this.state.settings.position_css_id}
-              className={
-                "altrp-field " + this.state.settings.position_css_classes
-              }
-            >
-              {this.state.settings.content_options_nullable ? (
-                <option value="" />
-              ) : (
-                ""
-              )}
-
-              {(options_sorting
-                ? sortOptions(options, options_sorting)
-                : options
-              ).map(option => (
-                <option value={option.value} key={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          );
+          input = this.renderSelect2();
         }
         break;
       default: {
         const isClearable = this.state.settings.content_clearable;
-
+        const isDate = this.state.settings.content_type === "date";
+        const timestamp = this.props.element.getSettings("content_timestamp");
+        if (isDate && timestamp) {
+          const isValid = moment.unix(value).isValid();
+          if (isValid) {
+            try {
+              value = moment.unix(value / 1000).format("YYYY-MM-DD");
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        }
         input = (
           <div className="altrp-input-wrapper">
             <AltrpInput
@@ -892,6 +883,123 @@ class InputSelectWidget extends Component {
       </AltrpFieldContainer>
     );
   }
+
+  /**
+   * Выводит инпут-select2, используя компонент AltrpSelect
+   */
+  renderSelect2() {
+    const {
+      content_options_nullable,
+      nulled_option_title,
+      content_placeholder
+    } = this.props.element.getSettings();
+
+    let options = this.getOptions();
+    let value = this.state.value;
+    if (
+      _.get(value, "dynamic") &&
+      this.props.currentModel.getProperty("altrpModelUpdated")
+    ) {
+      value = this.getContent("content_default_value", true);
+    }
+    /**
+     * Пока динамический контент загружается, нужно вывести пустую строку
+     */
+    if (value && value.dynamic) {
+      value = "";
+    }
+    if (!this.props.element.getSettings("select2_multiple", false)) {
+      options.forEach(option => {
+        if (!option) {
+          return;
+        }
+        if (option.value === value) {
+          value = { ...option };
+        }
+        if (_.isArray(option.options)) {
+          option.options.forEach(option => {
+            if (option.value == value) {
+              value = { ...option };
+            }
+          });
+        }
+      });
+    } else {
+      /**
+       * Если включен мультиселект
+       */
+      value = value ? (_.isArray(value) ? value : [value]) : [];
+      value = value.map(v => {
+        let _v = v;
+        options.forEach(option => {
+          if (option.value && option.value.toString() === _v.toString()) {
+            _v = { ...option };
+          }
+          if (_.isArray(option.options)) {
+            option.options.forEach(option => {
+              if (option.value && option.value.toString() === _v.toString()) {
+                _v = { ...option };
+              }
+            });
+          }
+        });
+        return _v;
+      });
+      /**
+       * Добавим опцию, если для какого-то значения ее нет
+       */
+      value.forEach(valueItem => {
+        if (!_.isObject(valueItem)) {
+          options.push({
+            value: valueItem,
+            label: valueItem
+          });
+        }
+      });
+    }
+    /**
+     * Сортируем опции
+     * @type {Array|*}
+     */
+    if (
+      content_options_nullable &&
+      (this.props.element.getName() !== "input-select2" ||
+        this.props.element.getSettings("select2_multiple") !== true)
+    ) {
+      options = _.union(
+        [{ label: nulled_option_title, value: "<null>" }],
+        options
+      );
+    }
+    const select2Props = {
+      className: "altrp-field-select2",
+      onFocus: this.onFocus,
+      element: this.props.element,
+      classNamePrefix: this.props.element.getId() + " altrp-field-select2",
+      options,
+      name: this.props.element.getFieldId(),
+      ref: this.altrpSelectRef,
+      settings: this.props.element.getSettings(),
+      onChange: this.onChange,
+      onBlur: this.onBlur,
+      value: value || _.find(options, o => o && o.value == this.state.value),
+      isOptionSelected: option => {
+        if (_.isNumber(this.state.value) || _.isString(this.state.value)) {
+          return this.state.value == option.value;
+        }
+        return this.state.value && this.state.value.includes(option.value);
+      },
+      placeholder: content_placeholder,
+      isMulti: this.props.element.getSettings("select2_multiple", false),
+      onKeyDown: this.handleEnter
+      // menuIsOpen: true,
+    };
+    return (
+      <div className="altrp-input-wrapper">
+        <AltrpSelect {...select2Props} />
+      </div>
+    );
+  }
 }
 
-export default InputSelectWidget;
+export default InputSelect2Widget;

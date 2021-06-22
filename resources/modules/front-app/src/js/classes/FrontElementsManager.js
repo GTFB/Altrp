@@ -52,10 +52,18 @@ class FrontElementsManager {
       //   }
       // },
       {
-        name: "input",
+        name: "input-select",
         import: async () => {
           return await import(
-            /* webpackChunkName: 'InputWidget' */ "../../../../editor/src/js/components/widgets/InputSelectWidget"
+            /* webpackChunkName: 'InputSelectWidget' */ "../../../../editor/src/js/components/widgets/InputSelectWidget"
+          );
+        }
+      },
+      {
+        name: "input-select2",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputSelect2Widget' */ "../../../../editor/src/js/components/widgets/InputSelect2Widget"
           );
         }
       },

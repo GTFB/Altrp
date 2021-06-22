@@ -1,4 +1,6 @@
 import Input from "../elements/Input";
+import InputSelect from "../elements/InputSelect";
+import InputSelect2 from "../elements/InputSelect2";
 import RootElement from "../elements/RootElement";
 import RootComponent from "../../components/RootComponent";
 import HeadingElement from "../elements/Heading";
@@ -17,6 +19,7 @@ import ImageWidget from "../../components/widgets/ImageWidget";
 import TextWidget from "../../components/widgets/TextWidget";
 // import InputWidget from "../../components/widgets/InputWidget";
 import InputSelectWidget from "../../components/widgets/InputSelectWidget";
+import InputSelect2Widget from "../../components/widgets/InputSelect2Widget";
 import TableWidget from "../../components/widgets/TableWidget";
 import NavWidget from "../../components/widgets/NavWidget";
 import DividerWidget from "../../components/widgets/DividerWidget";
@@ -76,7 +79,9 @@ export default class ElementsManger {
     this.elements[Section.getName()] = Section;
     this.elements[List.getName()] = List;
     this.elements[Nav.getName()] = Nav;
-    this.elements[Input.getName()] = Input;
+    // this.elements[Input.getName()] = Input;
+    this.elements[InputSelect.getName()] = InputSelect;
+    this.elements[InputSelect2.getName()] = InputSelect2;
     this.elements[Table.getName()] = Table;
     this.elements[Posts.getName()] = Posts;
     this.elements[Tabs.getName()] = Tabs;
@@ -107,7 +112,8 @@ export default class ElementsManger {
     this.components[Breadcrumbs.getName()] = BreadcrumbsWidget;
     this.components[Button.getName()] = ButtonWidget;
     // this.components[Input.getName()] = InputWidget;
-    this.components[Input.getName()] = InputSelectWidget;
+    this.components[InputSelect.getName()] = InputSelectWidget;
+    this.components[InputSelect2.getName()] = InputSelect2Widget;
     this.components[Text.getName()] = TextWidget;
     this.components[Image.getName()] = ImageWidget;
     this.components[Table.getName()] = TableWidget;
