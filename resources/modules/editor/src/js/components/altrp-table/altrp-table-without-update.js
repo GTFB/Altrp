@@ -739,7 +739,8 @@ function AltrpTableWithoutUpdate(
             <div {...headerGroupProps} className="altrp-table-tr">
               {replace_rows && <div className="altrp-table-th altrp-table-cell" style={{ width: replace_width }} />}
               {headerGroup.headers.map((column, idx) => {
-                const { column_width, column_header_alignment } = column;
+                const { column_width, column_header_alignment, header_bg } = column;
+
                 let columnProps = column.getHeaderProps(column.getSortByToggleProps());
                     columnProps.settings = settings;
                 const resizerProps = {
@@ -751,6 +752,7 @@ function AltrpTableWithoutUpdate(
                   columnProps.style = {};
                   if (column_width) columnProps.style.width = column_width + '%';
                   if (column_header_alignment) columnProps.style.textAlign = column_header_alignment;
+                  if (header_bg) columnProps.style.backgroundColor = header_bg.color;
                 }
                 let columnNameContent = column.render('column_name');
                 if (_.isString(columnNameContent)) {

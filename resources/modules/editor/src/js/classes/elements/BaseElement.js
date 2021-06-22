@@ -763,17 +763,40 @@ class BaseElement extends ControlStack {
       `global_styles_storage.${guid}`,
       []
     );
-    console.log(currentPropsList);
     currentPropsList.forEach(settingName => {
       // this.settings[settingName] = value;
-      if(settingName.indexOf('gradient-first-color:')){
-        settingName = settingName.replace('gradient-first-color:' ,'');
-        if(! _.isObject(this.settings[settingName])){
-          return
+
+      if (settingName.indexOf("gradient-first-color:") >= 0) {
+        settingName = settingName.replace("gradient-first-color:", "");
+        if (
+          typeof settingName == "undefined" &&
+          !_.isObject(this.settings[settingName])
+        ) {
+          return;
         }
         let currentValue = this.settings[settingName];
-        currentValue.value = currentValue.value.replace(currentValue.firstColor, value);
-        currentValue.firstColor = value;
+        currentValue.value = currentValue.value.replace(
+          currentValue.firstColor,
+          value.color
+        );
+        currentValue.firstColor = value.color;
+        value = currentValue;
+      }
+      if (settingName.indexOf("gradient-second-color:") >= 0) {
+        settingName = settingName.replace("gradient-second-color:", "");
+        if (
+          typeof settingName == "undefined" &&
+          !_.isObject(this.settings[settingName])
+        ) {
+          return;
+        }
+        let currentValue = this.settings[settingName];
+        currentValue.value = currentValue.value.replace(
+          currentValue.secondColor,
+          value.color
+        );
+        currentValue.secondColor = value.color;
+        value = currentValue;
       }
       this.setSettingValue(settingName, value);
     });

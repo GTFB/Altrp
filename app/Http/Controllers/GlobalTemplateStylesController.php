@@ -175,15 +175,44 @@ class GlobalTemplateStylesController extends Controller
     static public function recursiveReplaceGlobalStyles($element, $guid, $style)
     {
         $globalStyleList = data_get($element, 'settings.global_styles_storage.' . $guid, []);
+
         if (count($globalStyleList) > 0) {
             foreach ($globalStyleList as $item) {
                 if (!is_null($item)) {
+                    if (strpos($item, 'gradient-first-color:') !== false) {
+                        $currentSetting = str_replace('gradient-first-color:', '', $item);
+                        $item = $currentSetting;
+                        $dataSettings = data_get($element, "settings.$currentSetting");
+                        if (!is_array($dataSettings) && count($dataSettings) <= 0) return;
+                        $newColor = $style['color'];
+                        $oldColor = $dataSettings['firstColor'];
+                        $newValue = str_replace($oldColor, $newColor, $dataSettings['value']);
+                        $dataSettings['secondColor'] = $newColor;
+                        $dataSettings['value'] = $newValue;
+                        $style = $dataSettings;
+                    }
+                    if (strpos($item, 'gradient-second-color:') !== false) {
+                        $currentSetting = str_replace('gradient-second-color:', '', $item);
+                        $item = $currentSetting;
+                        $dataSettings = data_get($element, "settings.$currentSetting");
+                        if (!is_array($dataSettings) && count($dataSettings) <= 0) return;
+                        $newColor = $style['color'];
+                        $oldColor = $dataSettings['secondColor'];
+                        $newValue = str_replace($oldColor, $newColor, $dataSettings['value']);
+                        $dataSettings['secondColor'] = $newColor;
+                        $dataSettings['value'] = $newValue;
+                        $style = $dataSettings;
+                    }
                     data_set($element, 'settings.' . $item, $style);
                 }
             }
         }
-        foreach ($element['children'] as $idx => $child) {
-            $element['children'][$idx] = self::recursiveReplaceGlobalStyles($child, $guid, $style);
+        if (count($element['children']) > 0) {
+            foreach ($element['children'] as $idx => $child) {
+                if ($child !== null) {
+                    $element['children'][$idx] = self::recursiveReplaceGlobalStyles($child, $guid, $style);
+                }
+            }
         }
         return $element;
     }

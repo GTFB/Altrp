@@ -13,6 +13,7 @@ const HeaderCellComponent = styled.div`${({settings, column})=>{
     column_cell_vertical_alignment, 
     header_full_width, 
     header_bg} = column;
+
   const table_style_main_width = getResponsiveSetting(settings, 'table_style_main_width');
   const table_style_other_width = getResponsiveSetting(settings, 'table_style_other_width');
   let styles = '&.altrp-table-th.altrp-table-cell{';

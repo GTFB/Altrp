@@ -4,6 +4,7 @@ import { parse } from "node-html-parser";
 import{Link} from "react-router-dom"
 import React from "react";
 import {StaticRouter as Router, Route, Switch} from "react-router-dom";
+import {setAreas} from "../resources/modules/front-app/src/js/store/areas/actions";
 if (typeof performance === "undefined") {
   global.performance = require("perf_hooks").performance;
 }
@@ -142,7 +143,8 @@ app.post("/", (req, res) => {
     elementId: element.getId()
   }));
   window.currentRouterMatch = new AltrpModel({});
-  page = page.map(area => (Area.areaFactory(area)))
+  page = page.map(area => (Area.areaFactory(area)));
+  store.dispatch(setAreas(page));
   let app = ReactDOMServer.renderToString(
     sheet.collectStyles(
       <Router>
