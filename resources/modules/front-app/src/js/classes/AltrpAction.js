@@ -705,7 +705,7 @@ class AltrpAction extends AltrpModel {
     if (this.getProperty('all_sources')){
       const all_sources_path = this.getProperty('all_sources_path');
       if (all_sources_path) data = getDataByPath(all_sources_path, {});
-      data = { dataArray: data };
+      data = { data };
 
     } else {
       const elementId = this.getProperty('element_id').trim();
@@ -737,11 +737,9 @@ class AltrpAction extends AltrpModel {
           }, {});
           data = { ...parsedTemplateData, data: formattedData };
       } else {
-        data = { dataArray: data };
+        data = { data };
       }
     }
-
-    console.log(data);
 
     const filename = replaceContentWithData(this.getProperty('name', 'file'));
     const templateName = this.getProperty('template_name');
