@@ -62,6 +62,11 @@ class SectionWidgetComponent extends Component {
       "background_image",
       {}
     );
+    const background_image_hover = this.props.element.getResponsiveSetting(
+      "background_image",
+      ":hover",
+      {},
+    );
     const { isScrollEffect, isFixed } = this.props.element.getSettings();
     const isContentBoxed =
       this.props.element.getSettings().layout_content_width_type === "boxed";
@@ -82,7 +87,7 @@ class SectionWidgetComponent extends Component {
     if (this.sectionIsLink()) {
       sectionClasses.push("altrp-pointer");
     }
-    if (background_image.url /*  && !isScrollEffect */) {
+    if (background_image.url || background_image_hover.url /*  && !isScrollEffect */) {
       sectionClasses.push("altrp-background-image");
     }
 

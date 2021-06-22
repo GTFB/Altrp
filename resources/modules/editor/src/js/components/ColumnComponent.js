@@ -46,8 +46,13 @@ class ColumnComponent extends Component {
 
   render() {
     const background_image = this.props.element.getSettings('background_image', {});
+    const background_image_hover = this.props.element.getResponsiveSetting(
+      "background_image",
+      ":hover",
+      {},
+    );
     let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
-    let className = "altrp-column altrp-column-priority " + (this.state.settings.position_style_css_classes || "") + (background_image.url ? ' altrp-background-image' : '');
+    let className = "altrp-column altrp-column-priority " + (this.state.settings.position_style_css_classes || "") + (background_image.url || background_image_hover.url ? ' altrp-background-image' : '');
     if (this.columnIsLink()) {
       className += ' altrp-pointer';
     }
