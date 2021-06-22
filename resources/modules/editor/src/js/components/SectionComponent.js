@@ -1,16 +1,6 @@
 import React, { Component } from "react";
 import { isEditor, redirect } from "../../../../front-app/src/js/helpers";
 import CONSTANTS from "../consts";
-import {
-  SectionArticleComponent,
-  SectionAsideComponent,
-  SectionDivComponent,
-  SectionFooterComponent,
-  SectionHeaderComponent,
-  SectionMainComponent,
-  SectionNavComponent,
-  SectionSectionComponent
-} from "./widgets/styled-components/SectionComponents";
 
 class SectionComponent extends Component {
   constructor(props) {
@@ -121,42 +111,42 @@ class SectionComponent extends Component {
     const layout_html_tag =
       this.props.element.getSettings("layout_html_tag") || "div";
 
-    let component = SectionDivComponent;
+    let component = "div";
 
     switch (layout_html_tag) {
       case "aside":
         {
-          component = SectionAsideComponent;
+          component = "header";
         }
         break;
       case "nav":
         {
-          component = SectionNavComponent;
+          component = "nav";
         }
         break;
       case "section":
         {
-          component = SectionSectionComponent;
+          component = "section";
         }
         break;
       case "article":
         {
-          component = SectionArticleComponent;
+          component = "article";
         }
         break;
       case "main":
         {
-          component = SectionMainComponent;
+          component = "main";
         }
         break;
       case "footer":
         {
-          component = SectionFooterComponent;
+          component = "footer";
         }
         break;
       case "header":
         {
-          component = SectionHeaderComponent;
+          component = "header";
         }
         break;
     }

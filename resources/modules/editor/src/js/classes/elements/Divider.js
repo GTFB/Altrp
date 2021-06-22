@@ -98,7 +98,6 @@ class Divider extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "Width",
       default: {
-        size: 100,
         unit: "%"
       },
       max: 1000,
@@ -167,10 +166,6 @@ class Divider extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default: {
-        top: 10,
-        right: 10,
-        bottom: 10,
-        left: 10,
         unit: 'px',
         bind: true
       },
@@ -184,7 +179,6 @@ class Divider extends BaseElement {
     this.addControl('position_z_index', {
       type: CONTROLLER_NUMBER,
       label: 'Z-index',
-      default: 0,
     });
 
     this.addControl('position_css_id', {
@@ -209,8 +203,8 @@ class Divider extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Color",
       default: {
-        color: "rgb(0,0,0)",
-        colorPickedHex: "#000000",
+        color: "",
+        colorPickedHex: "",
       },
     });
 
@@ -256,9 +250,6 @@ class Divider extends BaseElement {
     this.addControl("divider_style_gap", {
       type: CONTROLLER_SLIDER,
       label: "Gap",
-      default: {
-        size: 15
-      },
       max: 50,
       min: 2,
     });
@@ -274,22 +265,14 @@ class Divider extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Color",
       default: {
-        color: "rgb(0,0,0)",
-        colorPickedHex: "#000000",
+        color: "",
+        colorPickedHex: "",
       },
     });
 
     this.addControl('text_style_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      default: {
-        lineHeight: "normal",
-        spacing: 0,
-        size: "medium",
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
     }
     );
 

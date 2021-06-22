@@ -975,7 +975,7 @@ function extractElementsNames( $areas = [], $only_react_elements = false){
  * @param boolean $only_react_elements
  * @param $elementNames
  */
-function _extractElementsNames( $element = [],  &$elementNames, $only_react_elements ){
+function _extractElementsNames( $element,  &$elementNames, $only_react_elements ){
   $DEFAULT_REACT_ELEMENTS = [
     'input',
     'breadcrumbs',

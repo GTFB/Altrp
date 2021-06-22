@@ -76,7 +76,7 @@ export function getTableStyles(settings, id) {
 
   const flexDirection = getResponsiveSetting(settings, 'next_icon_position');
 
-  if (flexDirection) {
+  if (flexDirection && flexDirection !== 'default') {
     styles += simplePropertyStyled(flexDirection, 'flex-direction');
   }
 
@@ -92,7 +92,7 @@ export function getTableStyles(settings, id) {
 
   const flexDirectionHover = getResponsiveSetting(settings, 'next_icon_position', ':hover');
 
-  if (flexDirectionHover) {
+  if (flexDirectionHover && flexDirectionHover !== 'default') {
     styles += simplePropertyStyled(flexDirectionHover, 'flex-direction');
   }
 
@@ -180,7 +180,7 @@ export function getTableStyles(settings, id) {
 
   const flexDirectionPaginationPrev = getResponsiveSetting(settings, 'prev_icon_position');
 
-  if (flexDirectionPaginationPrev) {
+  if (flexDirectionPaginationPrev && flexDirectionPaginationPrev !== 'default') {
     styles += simplePropertyStyled(flexDirectionPaginationPrev, 'flex-direction');
   }
 
@@ -196,7 +196,7 @@ export function getTableStyles(settings, id) {
 
   const flexDirectionPaginationPrevHover = getResponsiveSetting(settings, 'prev_icon_position', ':hover');
 
-  if (flexDirectionPaginationPrevHover) {
+  if (flexDirectionPaginationPrevHover && flexDirectionPaginationPrevHover !== 'default') {
     styles += simplePropertyStyled(flexDirectionPaginationPrevHover, 'flex-direction');
   }
 
@@ -747,7 +747,7 @@ export function getTableStyles(settings, id) {
   const backgroundColorTableTh = getResponsiveSetting(settings, 'table_style_header_background');
 
   if (backgroundColorTableTh) {
-    styles += colorPropertyStyled(backgroundColorTableTh, 'background');
+    styles += `background-color: ${backgroundColorTableTh.color}: `;
   }
 
   styles += `} `;
@@ -809,7 +809,7 @@ export function getTableStyles(settings, id) {
   const backgroundColorTableHead = getResponsiveSetting(settings, 'table_style_header_background');
 
   if (backgroundColorTableHead) {
-    styles += colorPropertyStyled(backgroundColorTableHead, 'background');
+    styles += `background-color: ${backgroundColorTableHead.color}; `;
   }
 
   styles += `} `;
@@ -1008,7 +1008,7 @@ export function getTableStyles(settings, id) {
 
   styles += `} `;
 
-  styles += `${parentClass} .altrp-table-tbody .altrp-table-background {`;
+  styles += `${parentClass} .altrp-table-tbody {`;
 
   const backgroundColorTbodyBackground = getResponsiveSetting(settings, 'table_style_body_border_background');
 
@@ -1018,7 +1018,7 @@ export function getTableStyles(settings, id) {
 
   styles += `} `;
 
-  styles += `${parentClass} .altrp-table-tbody .altrp-table-background:hover {`;
+  styles += `${parentClass} .altrp-table-tbody:hover {`;
 
   const backgroundColorTbodyBackgroundHover = getResponsiveSetting(settings, 'table_style_body_border_background', ':hover');
 

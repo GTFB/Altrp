@@ -96,7 +96,7 @@ class GradientController extends Component {
   setGlobal(guid) {
     getCurrentElement().setGlobalStyle(
       guid,
-      this.props.controller.getSettingName()
+      `gradient-fill-color:${this.props.controller.getSettingName()}`
     );
   }
 

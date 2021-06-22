@@ -91,6 +91,8 @@ export default function CarouselComponent(settings) {
         return `
         & .altrp-carousel-arrow { top:${slider}; }
         `
+      } else {
+        return ""
       }
     },
 
@@ -112,6 +114,8 @@ export default function CarouselComponent(settings) {
 
       if(slider) {
         return `& svg { height: ${slider}; width: ${slider}; }`
+      } else {
+        return ""
       }
     },
 
@@ -125,6 +129,8 @@ export default function CarouselComponent(settings) {
         return `
         & .altrp-carousel-paging { width: ${slider}; height: ${slider}; }
         `
+      } else {
+        return ""
       }
       // & .altrp-carousel-dots li { margin-left: calc(${slider} * 0.1); }
     },

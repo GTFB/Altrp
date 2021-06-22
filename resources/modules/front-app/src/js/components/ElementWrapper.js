@@ -341,12 +341,6 @@ class ElementWrapper extends Component {
       case "breadcrumbs":
         WrapperComponent = BreadcrumbsComponent;
         break;
-      case "map_builder":
-        WrapperComponent = MapConstructorComponent;
-        break;
-      case "map":
-        WrapperComponent = MapComponent;
-        break;
       case "diagram":
         WrapperComponent = DiagramComponent;
         break;

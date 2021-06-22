@@ -1456,6 +1456,8 @@ button {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  position: relative;
+  width: 100%;
   &_drag-over {
     &.altrp-element_column .column-empty-plus {
       &::after {
@@ -1902,6 +1904,16 @@ button {
 .altrp-section {
   position: relative;
   z-index: 50;
+  top: auto;
+  right: auto;
+  left: auto;
+  bottom: auto;
+}
+
+.altrp-section_section-boxed {
+  padding-left: calc((100vw - 1440px) / 2);
+  padding-right: calc((100vw - 1440px) / 2);
+  width: 100vw;
 }
 
 .assigning-types {

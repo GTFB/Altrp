@@ -436,17 +436,7 @@ const ColumnComponent = (settings) => {
 
   //hover
 
-  styles += "& .altrp-column.altrp-background-image:hover {";
-
-  //Получаем значения background-image из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    backgroundImageH = getResponsiveSetting(settings, 'background_image', ':hover');
-  }
-
-  if (backgroundImageH) {
-    styles += backgroundImageControllerToStyles(backgroundImageH);
-  }
+  styles += "& div.altrp-column.altrp-background-image:hover {";
 
   //Получаем значения background-position из контроллера, обрабатываем и добавляем в styles
 
@@ -498,7 +488,18 @@ const ColumnComponent = (settings) => {
     styles += simplePropertyStyled(backgroundSizeH, 'background-size');
   }
 
+  //Получаем значения background-image из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundImageH = getResponsiveSetting(settings, 'background_image', ':hover');
+  }
+
+  if (backgroundImageH) {
+    styles += backgroundImageControllerToStyles(backgroundImageH);
+  }
+
   styles += "} ";
+
 
   return styles;
 };

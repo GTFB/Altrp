@@ -10,6 +10,7 @@ import {
 import { Select } from "@blueprintjs/select";
 import { SketchPicker } from "react-color";
 import Resource from "../classes/Resource";
+import GlobalPresetColors from "./controllers/GlobalPresetColors";
 
 const typeOptions = [
   {
@@ -37,6 +38,7 @@ class GlobalEffectItemAdd extends Component {
         b: 255,
         a: 1
       },
+      globalColor: "",
       horizontal: 0,
       opacity: 1,
       spread: 0,
@@ -53,11 +55,30 @@ class GlobalEffectItemAdd extends Component {
     this.colorChange = this.colorChange.bind(this);
     this.onSlide = this.onSlide.bind(this);
     this.onSelect = this.onSelect.bind(this);
+    this.globalColor = this.globalColor.bind(this);
     this.onSaveEffect = this.onSaveEffect.bind(this);
     this.globalStyleResource = new Resource({
       route: "/admin/ajax/global_template_styles"
     });
   }
+
+  globalColor = value => {
+    const guid = value.guid;
+    console.log(value);
+    const rgba = `rgba(${value.colorRGB.r}, ${value.colorRGB.g}, ${value.colorRGB.b}, ${value.colorRGB.a})`;
+    const hex = value.colorPickedHex;
+    const rgb = value.colorRGB;
+    this.setState(s => ({
+      ...s,
+      effect: {
+        ...s.effect,
+        color: rgba,
+        colorPickedHex: hex,
+        colorRGB: rgb,
+        globalColor: guid
+      }
+    }));
+  };
 
   colorChange = value => {
     const rgba = `rgba(${value.rgb.r}, ${value.rgb.g}, ${value.rgb.b}, ${value.rgb.a})`;
@@ -69,7 +90,8 @@ class GlobalEffectItemAdd extends Component {
         ...s.effect,
         color: rgba,
         colorPickedHex: hex,
-        colorRGB: rgb
+        colorRGB: rgb,
+        globalColor: ""
       }
     }));
   };
@@ -134,15 +156,31 @@ class GlobalEffectItemAdd extends Component {
             </FormGroup>
 
             <FormGroup label="Choose Effect Color">
-              <SketchPicker
-                color={effect.color}
-                presetColors={[]}
-                onChange={color => this.colorChange(color)}
+              <div
+                className={"control-color-colorPicker"}
                 style={{
-                  padding: 0,
-                  boxShadow: "none"
+                  position: "relative",
+                  marginTop: `0`
                 }}
-              ></SketchPicker>
+              >
+                <SketchPicker
+                  color={effect.color}
+                  presetColors={[]}
+                  onChange={color => this.colorChange(color)}
+                  style={{
+                    padding: 0,
+                    boxShadow: "none"
+                  }}
+                ></SketchPicker>
+                <GlobalPresetColors
+                  changeValue={color => {
+                    console.log(color);
+                    this.globalColor(color);
+                    // this._changeValue(color);
+                    // this.setState(state=>({...state, colorRGB: color.colorRGB}))
+                  }}
+                ></GlobalPresetColors>
+              </div>
             </FormGroup>
             <FormGroup label="Blur">
               <Slider

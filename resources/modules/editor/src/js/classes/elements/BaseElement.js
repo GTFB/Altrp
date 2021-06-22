@@ -766,6 +766,15 @@ class BaseElement extends ControlStack {
     console.log(currentPropsList);
     currentPropsList.forEach(settingName => {
       // this.settings[settingName] = value;
+      if(settingName.indexOf('gradient-first-color:')){
+        settingName = settingName.replace('gradient-first-color:' ,'');
+        if(! _.isObject(this.settings[settingName])){
+          return
+        }
+        let currentValue = this.settings[settingName];
+        currentValue.value = currentValue.value.replace(currentValue.firstColor, value);
+        currentValue.firstColor = value;
+      }
       this.setSettingValue(settingName, value);
     });
     this.updateStyles();

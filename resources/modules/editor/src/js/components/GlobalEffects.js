@@ -21,7 +21,8 @@ const Panel = styled.div`
 `;
 
 const mapStateToProps = state => ({
-  effects: state.globalStyles.effects || []
+  effects: state.globalStyles.effects || [],
+  colors: state.globalStyles.colors || []
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -41,6 +42,17 @@ class GlobalEffects extends Component {
     this.deleteItem = this.deleteItem.bind(this);
     this.onSaveEffect = this.onSaveEffect.bind(this);
     this.updateAllTree = this.updateAllTree.bind(this);
+  }
+
+  componentDidUpdate(prevState, prevProps) {
+    if (
+      !_.isEqual(
+        JSON.stringify(prevProps.colors),
+        JSON.stringify(this.props.colors)
+      )
+    ) {
+      console.log("IM WATCHING UPDATES");
+    }
   }
 
   /**
