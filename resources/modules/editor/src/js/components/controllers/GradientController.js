@@ -93,10 +93,12 @@ class GradientController extends Component {
     return {};
   }
 
-  setGlobal(guid) {
+  setGlobal(guid, settingName) {
     getCurrentElement().setGlobalStyle(
       guid,
-      this.props.controller.getSettingName()
+      typeof settingName != "undefined"
+        ? `${settingName}:${this.props.controller.getSettingName()}`
+        : this.props.controller.getSettingName()
     );
   }
 
@@ -168,11 +170,10 @@ class GradientController extends Component {
                   presetColors={this.props.globalColors}
                   value={secondColor}
                   changeValue={color => {
-                    console.log("HERE1");
                     let value = { ...this.state.value };
                     value.secondColor = color.color;
                     if (color?.guid) {
-                      this.setGlobal(color.guid);
+                      this.setGlobal(color.guid, "gradient-second-color");
                     }
                     this._changeValue(value);
                     this.setState(state => ({ ...state, value }));
@@ -263,11 +264,10 @@ class GradientController extends Component {
                   presetColors={this.props.globalColors}
                   value={firstColor}
                   changeValue={color => {
-                    console.log("HERE2");
                     let value = { ...this.state.value };
                     value.firstColor = color.color;
                     if (color?.guid) {
-                      this.setGlobal(color.guid);
+                      this.setGlobal(color.guid, "gradient-first-color");
                     }
                     this._changeValue(value);
                     this.setState(state => ({ ...state, value }));
