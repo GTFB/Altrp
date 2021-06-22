@@ -128,6 +128,7 @@ function mapStateToProps(state) {
   return {
     elementsSettings: state.elementsSettings,
     areas: state.areas,
+    currentScreen: state.currentScreen,
   };
 }
 

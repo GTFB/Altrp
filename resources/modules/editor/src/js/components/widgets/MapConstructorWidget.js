@@ -1,14 +1,13 @@
+import AltrpMap from "../altrp-map/AltrpMapConstructor";
 
-const AltrpMap = React.lazy(() => import(/* webpackChunkName: 'AltrpMapConstructor' */"../altrp-map/AltrpMapConstructor"));
-
-import ("../../../sass/altrp-map.scss");
+import("../../../sass/altrp-map.scss");
 
 class MapConstructorWidget extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      settings: props.element.getSettings(),
+      settings: props.element.getSettings()
     };
 
     props.element.component = this;
@@ -16,16 +15,14 @@ class MapConstructorWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    if(props.baseRender){
+    if (props.baseRender) {
       this.render = props.baseRender(this);
     }
   }
 
   render() {
     return (
-      <Suspense fallback={"Loading"}>
-        <AltrpMap settings={this.state.settings} id={this.props.element.id} />
-      </Suspense>
+      <AltrpMap settings={this.state.settings} id={this.props.element.id} />
     );
   }
 }
