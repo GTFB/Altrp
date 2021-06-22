@@ -3,6 +3,7 @@ const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const WebpackBuildNotifierPlugin = require("webpack-build-notifier");
 
 module.exports = {
   entry: "./resources/modules/editor/src/index.js",
@@ -104,6 +105,9 @@ module.exports = {
     new webpack.DefinePlugin({
       "process.env": "{}",
       global: {}
+    }),
+    new WebpackBuildNotifierPlugin({
+      title: "Editor"
     }),
     new webpack.HotModuleReplacementPlugin(),
     new CleanWebpackPlugin(),

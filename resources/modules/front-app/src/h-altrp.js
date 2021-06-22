@@ -82,28 +82,23 @@ if (window.altrpElementsLists) {
   })
 }
 Promise.all(libsToLoad).then(res => {
-  loadingCallback();
+
+  import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElementsManager').then(module => {
+    import (/* webpackChunkName: 'FrontElementsFabric' */'./js/classes/FrontElementsFabric').then(module => {
+      console.log('LOAD FrontElementsFabric: ', performance.now());
+      loadingCallback();
+    });
+    return window.frontElementsManager.loadComponents();
+  }).then(async components => {
+    console.log('LOAD FrontElementsManager: ', performance.now());
+    loadingCallback();
+  });
 });
 
 /**
  * Параллельно загружаем все необходимые модули
  */
 
-import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElementsManager').then(module => {
-  import (/* webpackChunkName: 'FrontElementsFabric' */'./js/classes/FrontElementsFabric').then(module => {
-    console.log('LOAD FrontElementsFabric: ', performance.now());
-    loadingCallback();
-  });
-  return window.frontElementsManager.loadComponents();
-}).then(async components => {
-  console.log('LOAD FrontElementsManager: ', performance.now());
-  loadingCallback();
-});
-import (/* webpackChunkName: 'SimpleElementWrapper' */'./js/components/SimpleElementWrapper').then(module => {
-  window.ElementWrapper = module.default;
-  console.log('LOAD SimpleElementWrapper: ', performance.now());
-  loadingCallback();
-});
 import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
   window.currentRouterMatch = new window.AltrpModel({
     params:queryString.parseUrl(window.location.href).query
@@ -113,14 +108,20 @@ import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
     loadingCallback();
     loadDatastorageUpdater();
   });
+
+  import (/* webpackChunkName: 'SimpleElementWrapper' */'./js/components/SimpleElementWrapper').then(module => {
+    window.ElementWrapper = module.default;
+    console.log('LOAD SimpleElementWrapper: ', performance.now());
+    loadingCallback();
+  });
+
+  import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element-component').then(module => {
+    window.elementDecorator = module.default;
+    console.log('LOAD elementDecorator: ', performance.now());
+    loadingCallback();
+  });
   console.log('LOAD altrp: ', performance.now());
-  loadingCallback();
 })
-import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element-component').then(module => {
-  window.elementDecorator = module.default;
-  console.log('LOAD elementDecorator: ', performance.now());
-  loadingCallback();
-});
 
 
 import (/* webpackChunkName: 'FormsManager' */'../../editor/src/js/classes/modules/FormsManager.js').then(module => {

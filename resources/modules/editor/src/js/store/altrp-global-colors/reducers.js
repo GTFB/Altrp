@@ -6,7 +6,12 @@ import {
   SET_GLOBAL_EFFECTS,
   ADD_GLOBAL_EFFECT,
   EDIT_GLOBAL_EFFECT,
-  DELETE_GLOBAL_EFFECT
+  DELETE_GLOBAL_EFFECT,
+  SET_GLOBAL_FONTS,
+  ADD_GLOBAL_FONT,
+  EDIT_GLOBAL_FONT,
+  DELETE_GLOBAL_FONT,
+  EDIT_GLOBAL_COLOR
 } from "./actions";
 
 const defaultState = [];
@@ -21,6 +26,20 @@ export function globalStyleReducer(state, action) {
     case SET_GLOBAL_COLORS:
       {
         state = { ...state, colors: action.colors };
+      }
+      break;
+    case EDIT_GLOBAL_COLOR:
+      {
+        const editedColor = action.color;
+        state = {
+          ...state,
+          colors: state.colors.map(color => {
+            if (color.guid == editedColor.guid) {
+              color = editedColor;
+            }
+            return color;
+          })
+        };
       }
       break;
     case ADD_GLOBAL_COLOR:
@@ -56,20 +75,44 @@ export function globalStyleReducer(state, action) {
         };
       }
       break;
-    case DELETE_GLOBAL_EFFECT:
+    case DELETE_GLOBAL_EFFECT: {
+      const deletedEffect = action.effect;
+      state = {
+        ...state,
+        effects: state.effects.filter(effect => effect.id !== deletedEffect.id)
+      };
+    }
+    case SET_GLOBAL_FONTS:
       {
-        const deletedEffect = action.effect;
-        console.log("before");
-        console.log(state.effects);
-        console.log("after");
-        console.log(
-          state.effects.filter(effect => effect.id !== deletedEffect.id)
-        );
+        state = { ...state, fonts: action.fonts };
+      }
+      break;
+    case ADD_GLOBAL_FONT:
+      {
+        console.log(action.font);
+        state = { ...state, fonts: [...state.fonts, action.font] };
+      }
+      break;
+    case EDIT_GLOBAL_FONT:
+      {
+        const editedFont = action.font;
         state = {
           ...state,
-          effects: state.effects.filter(
-            effect => effect.id === deletedEffect.id
-          )
+          fonts: state.fonts.map(font => {
+            if (font.guid === editedFont.guid) {
+              font = editedFont;
+            }
+            return font;
+          })
+        };
+      }
+      break;
+    case DELETE_GLOBAL_FONT:
+      {
+        const deletedFont = action.font;
+        state = {
+          ...state,
+          fonts: state.fonts.filter(font => font.guid != deletedFont.guid)
         };
       }
       break;

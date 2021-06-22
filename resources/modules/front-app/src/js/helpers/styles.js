@@ -110,7 +110,11 @@ export function dimensionsControllerToStyles(
  * @return {string}
  */
 export function shadowControllerToStyles(data) {
+  let styles = "";
 
+  if (_.isEmpty(data)) {
+    return styles;
+  }
 
   if(data) {
     let {type = 'outline', offsetX,horizontal, offsetY, vertical, blurRadius,blur,spread, spreadRadius, color } = data;
@@ -124,10 +128,10 @@ export function shadowControllerToStyles(data) {
       blurRadius !== 0 ||
       spread !== 0 ||
       spreadRadius !== 0) {
-      return `box-shadow: ${type || ' '} ${offsetX||horizontal || 0}px ${offsetY || vertical || 0}px ${blurRadius || blur || 0}px ${spreadRadius ||spread || 0}px ${color}; `;
+      styles += `box-shadow: ${type || ' '} ${offsetX || horizontal || 0}px ${offsetY || vertical || 0}px ${blurRadius || blur || 0}px ${spreadRadius || spread || 0}px ${color}; `;
     }
   }
-  return  '';
+  return styles;
 }
 
 /**

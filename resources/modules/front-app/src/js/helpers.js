@@ -557,11 +557,11 @@ export function setDataByPath(path = "", value, dispatch = null) {
     let area = window.page_areas.find(area => area.id === areaName);
     if(area && updateType === 'settings'){
       if(! (area instanceof Area)){
-        area = Area.areaFabric(area);
+        area = Area.areaFactory(area);
       }
       area.setSetting(propName, value);
     }
-  }
+  } else
   if (path.indexOf("altrpstorage.") === 0) {
     path = path.replace("altrpstorage.", "");
     const currentStorage = getDataFromLocalStorage("altrpstorage", {});
@@ -701,7 +701,7 @@ export function getDataByPath(
     let area = window.page_areas.find(area => area.id === areaName);
     if(area && updateType === 'settings'){
       if(! (area instanceof Area)){
-        area = Area.areaFabric(area);
+        area = Area.areaFactory(area);
       }
       value = area.getSetting(propName, _default);
     }
@@ -2099,16 +2099,17 @@ export function parseStringValue(string) {
  * @return {*[]}
  */
 export function getBreadcrumbsItems(){
+  if(window['h-altrp'] && window.breadcrumbsItems){
+    return window.breadcrumbsItems;
+  }
   let items = [];
   if(isEditor(0)){
     return items;
   }
-  const currentId = window.currentPageId
+  const currentId = window['h-altrp'] ? window.page_id : window.currentPageId
   const {routes} = appStore.getState().appRoutes
   let breadcrumbsClone = [];
-
   let idCurrent = 0;
-
   routes.forEach((route, idx) => {
     if(currentId === route.id) {
       idCurrent = idx
@@ -2133,5 +2134,8 @@ export function getBreadcrumbsItems(){
   }
 
   items = breadcrumbsClone.reverse()
+  if(window['h-altrp']){
+    window.breadcrumbsItems = items;
+  }
   return items;
 }

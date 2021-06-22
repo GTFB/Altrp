@@ -1,3 +1,5 @@
+import {setAreas} from "../store/areas/actions";
+
 if (typeof window === "undefined") {
   global.window = {};
   global.window.ssr = true;
@@ -5,7 +7,6 @@ if (typeof window === "undefined") {
 if (typeof document === "undefined") {
   global.document = {};
 }
-import React, { Component, Suspense } from "react";
 import AreaComponent from "./AreaComponent";
 const AdminBar = React.lazy(() => import(/* webpackChunkName: 'AdminBar' */"./AdminBar"));
 import { Redirect, withRouter } from "react-router-dom";
@@ -17,14 +18,12 @@ import { changeCurrentModel } from "../store/current-model/actions";
 import { queryCache } from "react-query";
 import { connect } from "react-redux";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
-import { setScrollValue } from "../store/scroll-position/actions";
 import dataStorageUpdater from "../classes/modules/DatastorageUpdater";
 import { clearElements } from "../store/elements-storage/actions";
 import { clearAllResponseData } from "../store/responses-storage/actions";
 import { clearPageState } from "../store/altrp-page-state-storage/actions";
 import { changeCurrentTitle } from "../store/current-title/actions";
 import { changeCurrentPageProperty } from "../store/current-page/actions";
-import RouteContentWrapper from "./styled-components/RouteContentWrapper";
 
 class RouteContent extends Component {
   constructor(props) {
@@ -34,7 +33,7 @@ class RouteContent extends Component {
     this.state = {
       areas:
         window.ssr === true
-          ? this.props.areas.map(area => Area.areaFabric(area))
+          ? this.props.areas.map(area => Area.areaFactory(area))
           : this.props.areas || [],
       admin: this.props.currentUser.hasRoles("admin")
     };
@@ -92,7 +91,8 @@ class RouteContent extends Component {
     appStore.dispatch(changeCurrentPageProperty("url", location.href));
     if (this.props.lazy && this.props.allowed) {
       let page = await pageLoader.loadPage(this.props.id);
-      let areas = page.areas.map(area => Area.areaFabric(area));
+      let areas = page.areas.map(area => Area.areaFactory(area));
+      appStore.dispatch(setAreas(areas))
       this.setState(state => ({
         ...state,
         areas
@@ -216,7 +216,7 @@ class RouteContent extends Component {
         {/*    );*/}
         {/*  }}*/}
         {/*>*/}
-          <RouteContentWrapper className="route-content" id="route-content" areas={this.state.areas}>
+          <div className="route-content" id="route-content">
             {this.state.areas.map((area, idx) => {
               return (
                 <AreaComponent
@@ -229,7 +229,7 @@ class RouteContent extends Component {
                 />
               );
             })}
-          </RouteContentWrapper>
+          </div>
         {/*</Scrollbars>*/}
       </React.Fragment>
     );

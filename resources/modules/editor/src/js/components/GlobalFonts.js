@@ -3,13 +3,13 @@ import styled from "styled-components";
 import { Button, Divider, Collapse } from "@blueprintjs/core";
 import { connect } from "react-redux";
 import {
-  addGlobalEffect,
-  editGlobalEffect,
-  deleteGlobalEffect
+  addGlobalFont,
+  editGlobalFont,
+  deleteGlobalFont
 } from "../store/altrp-global-colors/actions";
 import BaseElement from "../classes/elements/BaseElement";
-import GlobalEffectItemAdd from "./GlobalEffectItemAdd";
-import GlobalEffectItem from "./GlobalEffectItem";
+import GlobalFontItemAdd from "./GlobalFontItemAdd";
+import GlobalFontItem from "./GlobalFontItem";
 import { getTemplateDataStorage } from "../helpers";
 
 const Panel = styled.div`
@@ -21,46 +21,34 @@ const Panel = styled.div`
 `;
 
 const mapStateToProps = state => ({
-  effects: state.globalStyles.effects || [],
-  colors: state.globalStyles.colors || []
+  fonts: state.globalStyles.fonts || []
 });
 
 const mapDispatchToProps = dispatch => ({
-  addEffect: effect => dispatch(addGlobalEffect(effect)),
-  editEffect: effect => dispatch(editGlobalEffect(effect)),
-  deleteEffect: effect => dispatch(deleteGlobalEffect(effect))
+  addFont: font => dispatch(addGlobalFont(font)),
+  editFont: font => dispatch(editGlobalFont(font)),
+  deleteFont: font => dispatch(deleteGlobalFont(font))
 });
 
-class GlobalEffects extends Component {
+class GlobalFonts extends Component {
   constructor(props) {
     super(props);
     this.state = {
       new: false,
-      effects: props.effects
+      fonts: props.fonts
     };
     this.addItem = this.addItem.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
-    this.onSaveEffect = this.onSaveEffect.bind(this);
+    this.onSaveFont = this.onSaveFont.bind(this);
     this.updateAllTree = this.updateAllTree.bind(this);
-  }
-
-  componentDidUpdate(prevState, prevProps) {
-    if (
-      !_.isEqual(
-        JSON.stringify(prevProps.colors),
-        JSON.stringify(this.props.colors)
-      )
-    ) {
-      console.log("IM WATCHING UPDATES");
-    }
   }
 
   /**
    * @param {BaseElement} template
    * @param {String} guid
-   * @param {*} effect
+   * @param {*} font
    */
-  recursiveWalkTree(template, guid, effect) {
+  recursiveWalkTree(template, guid, font) {
     console.log(template);
     if (Array.isArray(template)) {
       template?.forEach(
@@ -70,22 +58,22 @@ class GlobalEffects extends Component {
         templateItem => {
           const hasGlobal = Boolean(templateItem.hasGlobal(guid));
           if (hasGlobal) {
-            templateItem.updateAllGlobals(guid, effect);
+            templateItem.updateAllGlobals(guid, font);
           }
-          this.recursiveWalkTree(templateItem, guid, effect);
+          this.recursiveWalkTree(templateItem, guid, font);
         }
       );
-    } else this.recursiveUpdate(template, guid, effect);
+    } else this.recursiveUpdate(template, guid, font);
   }
 
   /**
    * @param {BaseElement} template
    * @param {String} guid
-   * @param {*} effect
+   * @param {*} font
    */
-  recursiveUpdate(template, guid, effect) {
+  recursiveUpdate(template, guid, font) {
     if (template.hasGlobal(guid)) {
-      template.updateAllGlobals(guid, effect);
+      template.updateAllGlobals(guid, font);
     }
     template.children?.forEach(
       /**
@@ -93,17 +81,22 @@ class GlobalEffects extends Component {
        */
       child => {
         if (child.hasGlobal(guid)) {
-          child.updateAllGlobals(guid, effect);
+          child.updateAllGlobals(guid, font);
         }
 
         child.children.length > 0 &&
-          this.recursiveWalkTree(child.children, guid, effect);
+          this.recursiveWalkTree(child.children, guid, font);
       }
     );
   }
 
   addItem(e) {
-    this.setState(s => ({ new: !s.new }));
+    this.setState(
+      s => ({ new: !s.new }),
+      () => {
+        console.log(this.state.new);
+      }
+    );
   }
 
   deleteItem(id) {
@@ -134,35 +127,36 @@ class GlobalEffects extends Component {
    *
    * @param {Event} e
    */
-  onSaveEffect() {
+  onSaveFont() {
     this.setState(s => ({ ...s, new: false }));
   }
 
   render() {
+    console.log(this.props.fonts);
     return (
       <Panel>
         <Collapse isOpen={this.state.new}>
-          <GlobalEffectItemAdd
-            addEffect={this.props.addEffect}
-            onSaveEffectClose={this.onSaveEffect}
+          <GlobalFontItemAdd
+            addFont={this.props.addFont}
+            onSaveFontClose={this.onSaveFont}
             isNew={true}
           />
         </Collapse>
         {!this.state.new &&
-          (this.props.effects.length > 0 ? (
-            this.props.effects.map((item, index) => (
+          (this.props.fonts.length > 0 ? (
+            this.props.fonts.map((item, index) => (
               <div key={index} style={{ marginBottom: "10px" }}>
-                <GlobalEffectItem
-                  effect={item}
-                  editEffect={this.props.editEffect}
-                  deleteEffect={this.props.deleteEffect}
-                  onSaveEffectClose={this.onSaveEffect}
+                <GlobalFontItem
+                  font={item}
+                  editFont={this.props.editFont}
+                  deleteFont={this.props.deleteFont}
+                  onSaveFontClose={this.onSaveFont}
                   updateAllTree={this.updateAllTree}
                 />
               </div>
             ))
           ) : (
-            <div>Effects list empty</div>
+            <div>Font list empty</div>
           ))}
         <Divider></Divider>
         <Button style={{ width: "100%" }} onClick={this.addItem}>
@@ -172,4 +166,4 @@ class GlobalEffects extends Component {
     );
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(GlobalEffects);
+export default connect(mapStateToProps, mapDispatchToProps)(GlobalFonts);

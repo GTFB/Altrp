@@ -46,7 +46,7 @@ class AreaForm extends Component {
   }
 
   render() {
-    const {title, settings} = this.state.value;
+    const {title, settings, name} = this.state.value;
     return <form method="post" action="/ajax/areas/add" onSubmit={this.submitForm}>
       <div className="form-group">
         <label htmlFor="title">Title</label>
@@ -56,6 +56,15 @@ class AreaForm extends Component {
                onChange={e => {
                  this.changeValue(e.target.value, 'title')
                }}
+               className="form-control"
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="title">Name</label>
+        <input type="text" id="title" required
+               name="title"
+               disabled={true}
+               value={name}
                className="form-control"
         />
       </div>

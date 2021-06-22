@@ -21,6 +21,7 @@ import { currentEmailTemplateReducer } from "./current-email-template/reducers";
 import { currentPageReducer } from "./current-page/reducers";
 import {menusReducer} from "./menus-storage/reducers";
 import {elementsSettingsReducer} from "./elements-settings/reducers";
+import {areasReducer} from "./areas/reducers";
 
 export default combineReducers({
   appRoutes: appRoutesReducer,
@@ -45,4 +46,5 @@ export default combineReducers({
   altrpPage: currentPageReducer,
   altrpMenus: menusReducer,
   elementsSettings: elementsSettingsReducer,
+  areas: areasReducer,
 });

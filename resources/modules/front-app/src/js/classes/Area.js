@@ -1,10 +1,11 @@
 import Template from "./Template";
+import {setAreas} from "../store/areas/actions";
 /**
  * @property {Template} template
  * @property {Object} settings
  * */
 class Area {
-  static areaFabric(areaData) {
+  static areaFactory(areaData) {
     let area = new Area();
     area.settings = areaData.settings;
     area.id = areaData.id;
@@ -96,7 +97,10 @@ class Area {
       this.component.setState(state=>({...state, settings: {...this.settings}}))
     }
     if(window.currentRouteComponent){
-      window.currentRouteComponent.setState(state=>({...state, updateToken: Math.random()}))
+      window.currentRouteComponent.setState(state=>({...state, updateToken: Math.random()}));
+      appStore.dispatch(setAreas([...appStore.getState().areas]))
+    } else {
+      appStore.dispatch(setAreas([...appStore.getState().areas]))
     }
   }
   /**

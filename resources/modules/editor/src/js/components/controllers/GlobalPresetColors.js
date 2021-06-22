@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import AltrpMeta from "../../classes/AltrpMeta";
-import { setEditorMeta } from "../../store/editor-metas/actions";
+import { connect } from "react-redux";
 import AddIcon from "../../../svgs/add.svg";
 
+const mapStateToProps = state => ({
+  colors: state.globalStyles.colors
+});
 class GlobalPresetColors extends Component {
   /**
    * Добавляем в палитру текущий цвет
@@ -43,7 +45,7 @@ class GlobalPresetColors extends Component {
   };
 
   render() {
-    let presetColors = this.props.presetColors || [];
+    let presetColors = this.props.colors || [];
     return (
       <div className="flexbox-fix control-color-preset-colors">
         {presetColors.map(color => {
@@ -86,4 +88,4 @@ class GlobalPresetColors extends Component {
   }
 }
 
-export default GlobalPresetColors;
+export default connect(mapStateToProps)(GlobalPresetColors);

@@ -1,5 +1,5 @@
 import ReactDom from 'react-dom';
-import React, {Component, Suspense, Fragment} from 'react';
+import React, {Component, Suspense, Fragment,} from 'react';
 import * as reactRedux  from 'react-redux'
 import styled, {createGlobalStyle} from 'styled-components'
 import cloneDeep from 'lodash.clonedeep';

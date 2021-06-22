@@ -32,7 +32,7 @@ export function getPostsStyles(settings, id) {
 
   const flexDirectionPaginPrev = getResponsiveSetting(settings, 'prev_icon_position');
 
-  if (flexDirectionPaginPrev) {
+  if (flexDirectionPaginPrev && flexDirectionPaginPrev !== 'default') {
     styles += simplePropertyStyled(flexDirectionPaginPrev, 'flex-direction');
   }
 
@@ -96,7 +96,7 @@ export function getPostsStyles(settings, id) {
 
   const flexDirectionPaginPrevHover = getResponsiveSetting(settings, 'prev_icon_position', ':hover');
 
-  if (flexDirectionPaginPrevHover) {
+  if (flexDirectionPaginPrevHover && flexDirectionPaginPrevHover !== 'default') {
     styles += simplePropertyStyled(flexDirectionPaginPrevHover, 'flex-direction');
   }
 
@@ -240,7 +240,7 @@ export function getPostsStyles(settings, id) {
 
   const flexDirectionPaginNext = getResponsiveSetting(settings, 'next_icon_position');
 
-  if (flexDirectionPaginNext) {
+  if (flexDirectionPaginNext && flexDirectionPaginNext !== 'default') {
     styles += simplePropertyStyled(flexDirectionPaginNext, 'flex-direction');
   }
 
@@ -304,7 +304,7 @@ export function getPostsStyles(settings, id) {
 
   const flexDirectionPaginNextHover = getResponsiveSetting(settings, 'next_icon_position', ':hover');
 
-  if (flexDirectionPaginNextHover) {
+  if (flexDirectionPaginNextHover && flexDirectionPaginNextHover !== 'default') {
     styles += simplePropertyStyled(flexDirectionPaginNextHover, 'flex-direction');
   }
 
