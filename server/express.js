@@ -142,14 +142,14 @@ app.post("/", (req, res) => {
     elementId: element.getId()
   }));
   window.currentRouterMatch = new AltrpModel({});
-  page = page.map(area => (Area.areaFabric(area)))
+  page = page.map(area => (Area.areaFactory(area)))
   let app = ReactDOMServer.renderToString(
     sheet.collectStyles(
       <Router>
         <Switch>
           <Route path='*' exact>
             <Provider store={store}>
-              <RouteContentWrapper className="route-content" id="route-content" areas={page}>
+              <div className="route-content" id="route-content" areas={page}>
                 {page.map((area, idx) => {
                   return (
                     <AreaComponent
@@ -163,7 +163,7 @@ app.post("/", (req, res) => {
                   );
                 })}
                 <GlobalStyles/>
-              </RouteContentWrapper>
+              </div>
             </Provider>
           </Route>
         </Switch>

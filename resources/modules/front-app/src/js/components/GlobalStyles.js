@@ -19,6 +19,9 @@ import DropbarWidgetComponent
 import FormComponent from "../../../../editor/src/js/components/widgets/styled-components/FormComponent";
 import AccordionComponent from "../../../../editor/src/js/components/widgets/styled-components/AccordionComponent";
 import getRouteStyles from "../functions/get-route-styles";
+import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
+import MapConstructorComponent
+  from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
 
 const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
   let styles = "";
@@ -102,8 +105,14 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
             }
           }
           break;
+        case "map":
+          styles += `.${prefix}${id} {${MapComponent(item.settings)}}`;
+          break;
+        case "map_builder":
+          styles += `.${prefix}${id} {${MapConstructorComponent(item.settings)}}`;
+          break;
       }
-      styles += `.${prefix}${id}.${prefix}${id} {${AdvancedComponent(
+      styles += `div.${prefix}${id}.${prefix}${id} {${AdvancedComponent(
         item.settings
       )}}`;
 
@@ -111,6 +120,7 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
   });
 
   styles += `} `;
+
 
   return styles;
 }}`;

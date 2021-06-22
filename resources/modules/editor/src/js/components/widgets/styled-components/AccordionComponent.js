@@ -75,6 +75,8 @@ export default function AccordionComponent(settings) {
 
       if(slider) {
         return `margin-left: ${slider}; margin-right: ${slider};`
+      } else {
+        return ""
       }
     },
 

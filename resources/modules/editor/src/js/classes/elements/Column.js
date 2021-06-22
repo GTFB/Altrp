@@ -163,7 +163,6 @@ class Column extends BaseElement {
     this.addControl('layout_widgets-space', {
       type: CONTROLLER_NUMBER,
       label: 'Widgets space (px)',
-      default: 0,
     });
 
     this.addControl('layout_overflow', {
@@ -328,7 +327,6 @@ class Column extends BaseElement {
         }
       ],
       label: 'Background Position',
-      default: 'top left',
     });
 
     this.addControl('background_attachment', {
@@ -348,7 +346,6 @@ class Column extends BaseElement {
         }
       ],
       label: 'Background Attachment',
-      default: 'scroll',
     });
 
     this.addControl('background_repeat', {
@@ -380,14 +377,12 @@ class Column extends BaseElement {
         }
       ],
       label: 'Background Repeat',
-      default: 'repeat',
     });
 
     this.addControl("background_image_width", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
       default: {
-        size: 100,
         unit: 'px',
       },
       conditions: {
@@ -423,7 +418,6 @@ class Column extends BaseElement {
         },
       ],
       label: 'Background Size',
-      default: 'unset',
     });
 
     this.endControlSection();
@@ -437,10 +431,6 @@ class Column extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        top: 10,
-        right: 10,
-        bottom: 10,
-        left: 10,
         unit: "px"
       },
       units: ["px", "%", "vh"],
@@ -450,10 +440,6 @@ class Column extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
         unit: 'px'
       },
       units: [
@@ -466,7 +452,6 @@ class Column extends BaseElement {
     this.addControl('position_z_index', {
       type: CONTROLLER_NUMBER,
       label: "Z-index",
-      default: 0,
     });
 
     this.endControlSection();
@@ -521,8 +506,8 @@ class Column extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Border Color",
       default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852"
+        color: "",
+        colorPickedHex: ""
       },
     });
 
@@ -530,7 +515,6 @@ class Column extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
       default: {
-        size: 0,
         unit: 'px',
       },
       units: [
@@ -545,17 +529,6 @@ class Column extends BaseElement {
     this.addControl('column_style_box_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Shadow',
-      default: {
-        blur: 0,
-        horizontal: 0,
-        vertical: 0,
-        spread: 0,
-        opacity: 1,
-        colorRGB: 'rgb(0, 0, 0)',
-        color: 'rgb(0, 0, 0)',
-        colorPickedHex: '#000000',
-        type: ""
-      },
     }
     );
 

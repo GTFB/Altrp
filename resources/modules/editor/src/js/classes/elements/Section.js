@@ -197,7 +197,6 @@ class Section extends BaseElement{
       type: CONTROLLER_SLIDER,
       label: "Width",
       default: {
-        size: ALTRP_CONTAINER_WIDTH,
         unit: "px"
       },
       units: ["px", "%", "vw", "vh"],
@@ -261,7 +260,6 @@ class Section extends BaseElement{
       type: CONTROLLER_SLIDER,
       label: "Minimum height",
       default: {
-        size: 0,
         unit: "px"
       },
       units: ["px", "vh"],
@@ -273,7 +271,6 @@ class Section extends BaseElement{
     this.addControl('layout_overflow', {
       type: CONTROLLER_SELECT,
       label: 'overflow',
-      default: 'visible',
       options: [
         {
           value: 'visible',
@@ -442,7 +439,6 @@ class Section extends BaseElement{
         }
       ],
       label: 'Background Position',
-      default: 'top left',
     });
 
     this.addControl('background_attachment', {
@@ -462,7 +458,6 @@ class Section extends BaseElement{
         }
       ],
       label: 'Background Attachment',
-      default: 'scroll',
     });
 
     this.addControl('background_repeat', {
@@ -494,14 +489,12 @@ class Section extends BaseElement{
         }
       ],
       label: 'Background Repeat',
-      default: 'repeat',
     });
 
     this.addControl("background_image_width", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
       default: {
-        size: 100,
         unit: 'px',
       },
       conditions: {
@@ -537,7 +530,6 @@ class Section extends BaseElement{
         },
       ],
       label: 'Background Size',
-      default: 'unset',
     });
 
     this.addControl('isScrollEffect', {
@@ -593,8 +585,8 @@ class Section extends BaseElement{
       type: CONTROLLER_COLOR,
       label: "Border color",
       default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852"
+        color: "",
+        colorPickedHex: ""
       },
     });
 
@@ -602,7 +594,6 @@ class Section extends BaseElement{
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
       default:{
-        size: 0,
         unit: 'px',
       },
       units:[
@@ -617,17 +608,6 @@ class Section extends BaseElement{
     this.addControl('section_style_box_shadow', {
         type: CONTROLLER_SHADOW,
         label: 'Shadow',
-        default:{
-          blur: 0,
-          horizontal: 0,
-          vertical: 0,
-          opacity: 1,
-          spread: 0,
-          colorRGB: 'rgb(0, 0, 0)',
-          color: 'rgb(0, 0, 0)',
-          colorPickedHex: '#000000',
-          type: ""
-        },
       }
     );
 
@@ -642,10 +622,6 @@ class Section extends BaseElement{
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
         unit:'px'
       },
       units:[
@@ -671,7 +647,6 @@ class Section extends BaseElement{
     this.addControl('position_style_z_index', {
       type: CONTROLLER_NUMBER,
       label: "Z-index",
-      default: 0,
     });
 
     this.addControl("position_style_css_id", {
@@ -699,7 +674,6 @@ class Section extends BaseElement{
     this.addControl("position_top", {
       type: CONTROLLER_TEXT,
       label: "Top",
-      default: 'auto',
       conditions: {
         'isFixed': [true],
       },
@@ -708,7 +682,6 @@ class Section extends BaseElement{
     this.addControl("position_right", {
       type: CONTROLLER_TEXT,
       label: "Right",
-      default: 'auto',
       conditions: {
         'isFixed': [true],
       },
@@ -717,7 +690,6 @@ class Section extends BaseElement{
     this.addControl("position_left", {
       type: CONTROLLER_TEXT,
       label: "Left",
-      default: 'auto',
       conditions: {
         'isFixed': [true],
       },
@@ -726,7 +698,6 @@ class Section extends BaseElement{
     this.addControl("position_bottom", {
       type: CONTROLLER_TEXT,
       label: "Bottom",
-      default: 'auto',
       conditions: {
         'isFixed': [true],
       },
@@ -735,7 +706,6 @@ class Section extends BaseElement{
     this.addControl("custom_width", {
       type: CONTROLLER_TEXT,
       label: "Width",
-      default: 'auto',
       conditions: {
         'isFixed': [true],
       },

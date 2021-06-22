@@ -415,9 +415,11 @@ const settingsToStyles = ({ settings, columns = [] }) => {
   }
 
   if (widthH) {
-    styles += `padding-left: calc((100vw - ${widthH.size +
+    if(widthH.size) {
+      styles += `padding-left: calc((100vw - ${widthH.size +
       widthH.unit}) / 2); padding-right: calc((100vw - ${widthH.size +
       widthH.unit}) / 2); width: 100vw; `;
+    }
   }
 
   styles += "} ";

@@ -242,7 +242,6 @@ class List extends BaseElement{
     this.addControl('position_z_index', {
       type: CONTROLLER_NUMBER,
       label: 'Z-index',
-      default: 0,
     });
 
     this.addControl('position_css_id', {
@@ -253,7 +252,6 @@ class List extends BaseElement{
     this.addControl('position_css_classes', {
       type: CONTROLLER_TEXT,
       label: 'CSS Classes',
-      default: ''
     });
 
     this.endControlSection();
@@ -277,7 +275,6 @@ class List extends BaseElement{
     this.addControl('alignment_list_style', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: '',
       options:[
         {
           icon: 'left',
@@ -305,7 +302,6 @@ class List extends BaseElement{
       // },
       type: CONTROLLER_SELECT,
       label: 'Style',
-      default: 'solid',
       options: [
         {
           value: 'solid',
@@ -336,7 +332,6 @@ class List extends BaseElement{
       type: CONTROLLER_SLIDER,
       label: 'Weight',
       default:{
-        size: 1,
         unit: 'px',
       },
       max: 20,
@@ -346,6 +341,22 @@ class List extends BaseElement{
       },
     });
 
+    this.addControl('divider_color_list_style', {
+        // conditions: {
+        //   'divider_switcher_list_style': true,
+        // },
+        type: CONTROLLER_COLOR,
+        label: 'Color',
+        default: {
+          color: "",
+          colorPickedHex: "",
+        },
+        conditions: {
+          'divider_switcher_list_style': true,
+        },
+      }
+    );
+
     this.addControl('divider_width_list_style', {
       // conditions: {
       //   'divider_switcher_list_style': true,
@@ -353,7 +364,6 @@ class List extends BaseElement{
       type: CONTROLLER_SLIDER,
       label: 'Width',
       default:{
-        size: 100,
         unit: '%',
       },
       units:[
@@ -367,22 +377,6 @@ class List extends BaseElement{
       },
     });
 
-    this.addControl('divider_color_list_style', {
-      // conditions: {
-      //   'divider_switcher_list_style': true,
-      // },
-      type: CONTROLLER_COLOR,
-      label: 'Color',
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
-      conditions: {
-        'divider_switcher_list_style': true,
-      },
-      }
-    );
-
     this.endControlSection();
 
     this.startControlSection('icon_style', {
@@ -394,7 +388,6 @@ class List extends BaseElement{
       type: CONTROLLER_SLIDER,
       label: 'Size',
       default:{
-        size: 25,
         unit: 'px',
       },
       max: 100,
@@ -423,10 +416,6 @@ class List extends BaseElement{
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
         unit:'px'
       },
       units:[
@@ -482,10 +471,6 @@ class List extends BaseElement{
       type: CONTROLLER_DIMENSIONS,
       label: 'Border radius',
       default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
         unit:'px'
       },
       units:[
@@ -594,10 +579,6 @@ class List extends BaseElement{
       type: CONTROLLER_DIMENSIONS,
       label: 'Border radius',
       default:{
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
         unit:'px'
       },
       units:[

@@ -10,7 +10,7 @@ import {
   SectionMainComponent,
   SectionNavComponent,
   SectionSectionComponent
-} from "./widgets/styled-components/SectionComponents";
+} from "./widgets/styled-components/SectionComponents(deprecated)";
 
 class SectionWidgetComponent extends Component {
   constructor(props) {

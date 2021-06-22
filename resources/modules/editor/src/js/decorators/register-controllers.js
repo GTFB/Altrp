@@ -175,7 +175,6 @@ export function advancedTabControllers(element) {
     element.addControl('positioning_width_type', {
       type: CONTROLLER_SELECT,
       label: 'Width (not for Columns)',
-      default: 'default',
       options: [
         {
           value: 'default',
@@ -200,8 +199,7 @@ export function advancedTabControllers(element) {
       type: CONTROLLER_SLIDER,
       label: 'Custom width',
       default: {
-        size: "100%",
-        unit: 'px'
+        unit: '%'
       },
       units: [
         'px',
@@ -219,7 +217,6 @@ export function advancedTabControllers(element) {
       element.addControl('positioning_vertical_align', {
         type: CONTROLLER_CHOOSE,
         label: 'Vertical Align',
-        default: 'flex-start',
         options: [
           {
             icon: 'block_top',
@@ -240,7 +237,6 @@ export function advancedTabControllers(element) {
     element.addControl('positioning_position_type', {
       type: CONTROLLER_SELECT,
       label: 'Position',
-      default: 'relative',
       options: [
         {
           value: 'relative',
@@ -264,7 +260,6 @@ export function advancedTabControllers(element) {
     element.addControl('positioning_horizontal_orientation', {
       type: CONTROLLER_CHOOSE,
       label: 'Horizontal Align',
-      default: 'flex-start',
       options: [
         {
           icon: 'block_left',
@@ -280,10 +275,6 @@ export function advancedTabControllers(element) {
     element.addControl('positioning_horizontal_offset', {
       type: CONTROLLER_SLIDER,
       label: 'offset',
-      default: {
-        size: "0",
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -297,7 +288,6 @@ export function advancedTabControllers(element) {
     element.addControl('positioning_vertical_orientation', {
       type: CONTROLLER_CHOOSE,
       label: 'Vertical align',
-      default: 'flex-start',
       options: [
         {
           icon: 'block_top',
@@ -313,10 +303,6 @@ export function advancedTabControllers(element) {
     element.addControl('positioning_vertical_offset', {
       type: CONTROLLER_SLIDER,
       label: 'offset',
-      default: {
-        size: "0",
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -453,8 +439,7 @@ export function advancedTabControllers(element) {
     label: 'Conditions',
     type: CONTROLLER_REPEATER,
     fields: modelRepeater.getControls(),
-    default: [
-    ],
+    default: [],
     conditions: {
       'conditional_other': true,
     },
@@ -819,9 +804,6 @@ export function advancedTabControllers(element) {
   element.addControl('tooltip_border_radius', {
     type: CONTROLLER_DIMENSIONS,
     label: 'Border Radius',
-    default: {
-      unit: 'px'
-    },
     units: ['px', '%', 'vh', 'vw'],
   });
 

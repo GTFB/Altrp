@@ -232,6 +232,7 @@ export function filtersControllerToStyles(data) {
 
 export function simplePropertyStyled(style, styleProperty, declaration = "") {
   if (style) {
+
     return `${styleProperty}: ${style + declaration}; `;
   }
 
@@ -481,10 +482,10 @@ export function typographicControllerToStyles(data = {}) {
  * @param {string} style
  * @param {string} important
  */
-export function colorStyled(controller, style, important) {
+export function colorStyled(controller, style) {
   if (controller) {
     if (controller.color) {
-      return `${style}: ${controller.color} ${important};`;
+      return `${style}: ${controller.color};`;
     } else return "";
   } else return "";
 }
@@ -578,7 +579,7 @@ export function borderRadiusStyled(data = {}) {
  * @param {string} style
  * @param {string} important
  */
-export function dimensionsStyled(controller, style, important) {
+export function dimensionsStyled(controller, style) {
   if (controller) {
     const unit = controller.unit || "px";
     const left = controller.left || 0;
@@ -593,7 +594,7 @@ export function dimensionsStyled(controller, style, important) {
       controller.top
     ) {
       return `${style}: ${top + unit} ${right + unit} ${bottom + unit} ${left +
-        unit} ${important};`;
+        unit};`;
     } else return "";
   } else {
     return "";
@@ -734,19 +735,17 @@ export function styledString(styles, settings) {
         if (_.isArray(style)) {
           const settingName = style[1];
           const state = style[3] || null;
-          const important = style[4] ? "!important" : "";
           const variable = getResponsiveSetting(
             settings,
             settingName,
             state,
-            important
           );
           switch (style[2]) {
             case "dimensions":
-              stringStyles += dimensionsStyled(variable, style[0], important);
+              stringStyles += dimensionsStyled(variable, style[0]);
               break;
             case "color":
-              stringStyles += colorStyled(variable, style[0], important);
+              stringStyles += colorStyled(variable, style[0]);
               break;
             case "gradient":
               stringStyles += gradientStyled(variable);
@@ -756,14 +755,14 @@ export function styledString(styles, settings) {
               break;
             case "slider":
               if(sliderStyled(variable)) {
-                stringStyles += `${style[0]}:${sliderStyled(variable)} ${important};`;
+                stringStyles += `${style[0]}:${sliderStyled(variable)};`;
               }
               break;
             case "shadow":
-              stringStyles += shadowStyled(variable, important);
+              stringStyles += shadowStyled(variable);
               break;
             case "text-shadow":
-              stringStyles += textShadowStyled(variable, important);
+              stringStyles += textShadowStyled(variable);
               break;
             case "media":
               stringStyles += mediaStyled(variable);
@@ -775,13 +774,15 @@ export function styledString(styles, settings) {
               if (defaultStyled(variable)) {
                 stringStyles += `${style[0]}:${defaultStyled(
                   variable
-                )} ${important};`;
+                )};`;
               }
           }
         }
 
         if (_.isFunction(style)) {
-          stringStyles += style();
+          if(style()) {
+            stringStyles += style();
+          }
         }
       }
     });
