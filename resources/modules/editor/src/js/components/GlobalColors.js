@@ -44,7 +44,6 @@ class GlobalColors extends Component {
     this.state = {
       colors: props.colors
     };
-    console.log(props.effectRef);
     this.toggleColorPanel = this.toggleColorPanel.bind(this);
     this.colorChange = this.colorChange.bind(this);
     this.nameChange = this.nameChange.bind(this);
@@ -88,6 +87,7 @@ class GlobalColors extends Component {
   };
 
   debounceChangeColor = _.debounce((color, id) => {
+    console.log(color);
     this.globalStyleResource
       .put(id, {
         settings: { ...color },

@@ -775,8 +775,6 @@ class BaseElement extends ControlStack {
           return;
         }
         let currentValue = this.settings[settingName];
-        console.log(settingName);
-        console.log(currentValue);
         currentValue.value = currentValue.value.replace(
           currentValue.firstColor,
           value.color
@@ -793,9 +791,9 @@ class BaseElement extends ControlStack {
         ) {
           return;
         }
-        console.log(settingName);
-        console.log(value);
         let currentValue = this.settings[settingName];
+        console.log(currentValue);
+        console.log(value);
         currentValue.value = currentValue.value.replace(
           currentValue.secondColor,
           value.color
