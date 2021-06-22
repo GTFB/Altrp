@@ -170,6 +170,7 @@ const AltrpTable = ({settings,
                 if(columns[_i].column_external_link && ! isEditor()) {
                   linkTag = 'a';
                 }
+
                 let style = cell.column.column_body_alignment ? { textAlign: cell.column.column_body_alignment } : {};
                 const cellProps = {...cell.getCellProps()};
                 let _cellContent = cell.value;

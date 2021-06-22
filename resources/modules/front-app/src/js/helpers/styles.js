@@ -249,10 +249,10 @@ export function simplePropertyStyled(style, styleProperty, declaration = "") {
  */
 
 export function colorPropertyStyled(data, styleProperty, declaration = "") {
-  const { colorPickedHex } = data;
+  const { color } = data;
 
-  if (colorPickedHex) {
-    return `${styleProperty}: ${colorPickedHex + declaration}; `;
+  if (color) {
+    return `${styleProperty}: ${color + declaration}; `;
   }
 
   return "";
