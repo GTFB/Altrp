@@ -958,7 +958,7 @@ function extractElementsNames( $areas = []){
 //    var_dump( $area );
 //    echo '</pre>';
     $data = $area['template']['data'];
-    _extractElementsNames( $data, $elementNames );
+    _extractElementsNames( $elementNames, $data );
   }
 
   return $elementNames;
@@ -968,7 +968,7 @@ function extractElementsNames( $areas = []){
  * @param array $element
  * @param $elementNames
  */
-function _extractElementsNames( $element = [],  &$elementNames ){
+function _extractElementsNames( &$elementNames, $element = [] ){
   if( ! is_array( $elementNames ) ){
     $elementNames = [];
   }
@@ -986,7 +986,7 @@ function _extractElementsNames( $element = [],  &$elementNames ){
   }
   if( isset( $element['children'] ) && is_array( $element['children'] ) ){
     foreach ( $element['children'] as $child ) {
-      _extractElementsNames( $child, $elementNames );
+      _extractElementsNames( $elementNames, $child );
     }
   }
 }
