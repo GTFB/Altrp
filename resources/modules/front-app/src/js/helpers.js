@@ -605,7 +605,7 @@ export function getDataByPath(
       falseValue = getDataByPath(falseValue, _default, context);
     }
     path = _path.trim();
-  }
+  }  
   /**
    * @type {AltrpModel} currentModel
    */
@@ -1201,7 +1201,7 @@ function getPrevWeekEnd() {
 }
 
 /**
- * Elfkztn gecnst cdjqcndf d j,]trnf[
+ * Удаляет пустые свойства в объектах
  */
 export function clearEmptyProps() {}
 
