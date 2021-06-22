@@ -67,7 +67,7 @@ class ExportExcel extends Model
         if (!empty($this->worksheet)) {
             for ($i = 0; $i < count($this->worksheet); $i++) {
                 for ($j = 0; $j < count($this->worksheet[$i]); $j++) {
-                    preg_match_all('/\{\{*.data:([^{}]+)\}\}/im', trim($this->worksheet[$i][$j]), $data);
+                    preg_match_all('/\$\{*.data:([^{}]+)\}/im', trim($this->worksheet[$i][$j]), $data);
                     if (!empty($data[1])) {
                         $ColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($j + 1);
                         $column = $ColumnIndex . ($i + 1);
@@ -75,8 +75,8 @@ class ExportExcel extends Model
                             $key = trim($item);
                             //вставляем одиночную переменную
                             $this->worksheet[$i][$j] = str_replace('data:' . $item, $this->data[$key], $this->worksheet[$i][$j]);
-                            $this->worksheet[$i][$j] = str_replace('{{', '', $this->worksheet[$i][$j]);
-                            $this->worksheet[$i][$j] = str_replace('}}', '', $this->worksheet[$i][$j]);
+                            $this->worksheet[$i][$j] = str_replace('${', '', $this->worksheet[$i][$j]);
+                                $this->worksheet[$i][$j] = str_replace('}', '', $this->worksheet[$i][$j]);
                             $this->spreadsheet->getActiveSheet()->setCellValue($column, $this->worksheet[$i][$j]);
                         }
                     }
@@ -92,7 +92,7 @@ class ExportExcel extends Model
         if (!empty($this->worksheet)) {
             for ($i = 0; $i < count($this->worksheet); $i++) {
                 for ($j = 0; $j < count($this->worksheet[$i]); $j++) {
-                    preg_match('/\{\{*.array:([^{}]+)\}\}/im', trim($this->worksheet[$i][$j]), $data);
+                    preg_match('/\$\{*.array:([^{}]+)\}/im', trim($this->worksheet[$i][$j]), $data);
                     if (!empty($data[1])) {
                         $ColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($j + 1);
                         $column = $ColumnIndex . ($i + 1 + $offset);
@@ -112,17 +112,6 @@ class ExportExcel extends Model
         } else {
             throw new \Exception('Не удалось вставить массив');
         }
-    }
-
-    private function recursionHandler($array = false, $offset = 0)
-    {
-        if (!is_array($array)) return;
-
-        $this->parseTemplateArray($offset, $array);
-        foreach ($array as $key => $data) {
-          if (is_array($data)) $this->recursionHandler($data, $offset);
-        }
-
     }
 
     public function export($type = false)

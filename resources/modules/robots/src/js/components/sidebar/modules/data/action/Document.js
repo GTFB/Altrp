@@ -27,6 +27,7 @@ export default class Document extends Component{
         const typeOptions = [
           {label:'excel', value: 'excel'},
           {label:'word', value: 'word'},
+          {label:'presentation', value: 'presentation'},
         ];
 
         const type = this.props.selectNode?.data?.props?.nodeData?.data?.type ?? '';

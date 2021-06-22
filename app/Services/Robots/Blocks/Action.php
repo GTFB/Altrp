@@ -137,6 +137,7 @@ class Action
             $entity = $modelClass::find($id);
             $result = $entity->$method($newData);
         }
+
         return [
             'name' => $model->name,
             'value' => $result
@@ -190,9 +191,6 @@ class Action
                     $job->delay(2);
                     $this->dispatchNow($job);
                     $resultData = $job->getResponse();
-                    $resultData = [
-                        'data' => $resultData
-                    ];
 
                     $resultData = json_encode($resultData);
                 }
@@ -218,6 +216,8 @@ class Action
 
             return [ 'name' => 'document', 'value' => true ];
         }
+        if ($type === 'presentation') {
+        }
 
         return [
               'name' => 'document',
@@ -234,9 +234,22 @@ class Action
       $result = '';
       $template_name = $this->getNodeProperties()->nodeData->data->template;
       $type = $this->getNodeProperties()->nodeData->data->type;
+      $template_path = '';
+      $template_path_x = '';
 
-      $template_path = public_path() . '/storage/' . $template_name . ($type === 'excel' ? '.xls' : '.doc');
-      $template_path_x = public_path() . '/storage/' . $template_name . ($type === 'excel' ? '.xlsx' : '.docx');
+      if ($type === 'excel') {
+        $template_path = public_path() . '/storage/' . $template_name . '.xls';
+        $template_path_x = public_path() . '/storage/' . $template_name . '.xlsx';
+  
+      }
+      if ($type === 'word') {
+        $template_path = public_path() . '/storage/' . $template_name . '.doc';
+        $template_path_x = public_path() . '/storage/' . $template_name . '.docx';
+  
+      }
+      if ($type === 'presentation') {
+      }
+
 
       if (file_exists($template_path)) $result = $template_path;
       if (file_exists($template_path_x)) $result = $template_path_x;
