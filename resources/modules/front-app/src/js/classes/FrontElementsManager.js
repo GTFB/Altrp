@@ -108,6 +108,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-accept",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputAccept' */ "../../../../editor/src/js/components/widgets/InputAcceptWidget"
+          );
+        }
+      },
+      {
         name: "button",
         import: async () => {
           return await import(

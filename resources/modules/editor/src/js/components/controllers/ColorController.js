@@ -35,11 +35,11 @@ class ColorController extends Component {
     return "";
   }
 
-  openColorPicker() {
+  openColorPicker(e) {
     this.setState({
       active: true
     });
-
+    e.stopPropagation();
     document.addEventListener("click", this.closeColorPicker);
   }
 

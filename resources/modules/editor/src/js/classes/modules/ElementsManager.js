@@ -1,4 +1,4 @@
-import Input from "../elements/Input";
+// import Input from "../elements/Input";
 import InputSelect from "../elements/InputSelect";
 import InputSelect2 from "../elements/InputSelect2";
 import InputRadio from "../elements/InputRadio";
@@ -6,6 +6,7 @@ import InputCheckbox from "../elements/InputCheckbox";
 import InputWysiwyg from "../elements/InputWysiwyg";
 import InputTextarea from "../elements/InputTextarea";
 import InputImageSelect from "../elements/InputImageSelect";
+import InputAccept from "../elements/InputAccept";
 import RootElement from "../elements/RootElement";
 import RootComponent from "../../components/RootComponent";
 import HeadingElement from "../elements/Heading";
@@ -30,6 +31,7 @@ import InputCheckboxWidget from "../../components/widgets/InputCheckboxWidget";
 import InputWysiwygWidget from "../../components/widgets/InputWysiwygWidget";
 import InputTextareaWidget from "../../components/widgets/InputTextareaWidget";
 import InputImageSelectWidget from "../../components/widgets/InputImageSelectWidget";
+import InputAcceptWidget from "../../components/widgets/InputAcceptWidget";
 import TableWidget from "../../components/widgets/TableWidget";
 import NavWidget from "../../components/widgets/NavWidget";
 import DividerWidget from "../../components/widgets/DividerWidget";
@@ -97,6 +99,7 @@ export default class ElementsManger {
     this.elements[InputCheckbox.getName()] = InputCheckbox;
     this.elements[InputTextarea.getName()] = InputTextarea;
     this.elements[InputImageSelect.getName()] = InputImageSelect;
+    this.elements[InputAccept.getName()] = InputAccept;
     this.elements[Table.getName()] = Table;
     this.elements[Posts.getName()] = Posts;
     this.elements[Tabs.getName()] = Tabs;
@@ -134,6 +137,7 @@ export default class ElementsManger {
     this.components[InputWysiwyg.getName()] = InputWysiwygWidget;
     this.components[InputTextarea.getName()] = InputTextareaWidget;
     this.components[InputImageSelect.getName()] = InputImageSelectWidget;
+    this.components[InputAccept.getName()] = InputAcceptWidget;
     this.components[Text.getName()] = TextWidget;
     this.components[Image.getName()] = ImageWidget;
     this.components[Table.getName()] = TableWidget;
