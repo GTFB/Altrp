@@ -1,4 +1,5 @@
 import {
+  altrpCompare,
   convertData,
   isEditor,
   parseOptionsFromSettings,
@@ -7,18 +8,21 @@ import {
   replaceContentWithData,
   sortOptions,
   renderAssetIcon,
+  valueReplacement,
   getDataFromLocalStorage
 } from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
+import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
+import CKeditor from "../ckeditor/CKeditor";
+import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 import AltrpInput from "../altrp-input/AltrpInput";
 
 const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`
  /*здесь css стилей по умолчанию с селекторами*/
 `)
-
 const AltrpFieldContainer = styled.div`
   ${({ settings: { content_label_position_type } }) => {
     switch (content_label_position_type) {
@@ -33,7 +37,7 @@ const AltrpFieldContainer = styled.div`
   }}
 `;
 
-class InputSelectWidget extends Component {
+class InputRadioWidget extends Component {
   timeInput = null;
 
   constructor(props) {
@@ -70,7 +74,7 @@ class InputSelectWidget extends Component {
    * @return {boolean}
    */
   valueMustArray() {
-    return false;
+    return true;
   }
   /**
    * Чистит значение
@@ -115,17 +119,9 @@ class InputSelectWidget extends Component {
       );
 
       this.setState(state => ({ ...state, options }));
-    } else if (
-      ["input-select"].indexOf(this.props.element.getName()) >= 0 &&
-      this.state.settings.model_for_options
-    ) {
-      let options = await new Resource({ route: this.getRoute() }).getAll();
-      options = !_.isArray(options) ? options.data : options;
-      options = _.isArray(options) ? options : [];
-      this.setState(state => ({ ...state, options }));
     }
-    let value = this.state.value;
 
+    let value = this.state.value;
     /**
      * Если динамическое значение загрузилось,
      * то используем this.getContent для получение этого динамического значения
@@ -214,25 +210,7 @@ class InputSelectWidget extends Component {
         }
       );
     }
-    if (
-      this.props.element.getName() === "input-select" &&
-      this.props.element.getSettings("model_for_options")
-    ) {
-      if (
-        !(
-          this.state.settings.model_for_options ===
-          prevProps.element.getSettings("model_for_options")
-        )
-      ) {
-        let model_for_options = prevProps.element.getSettings(
-          "model_for_options"
-        );
-        let options = await new Resource({ route: this.getRoute() }).getAll();
-        options = !_.isArray(options) ? options.data : options;
-        options = _.isArray(options) ? options : [];
-        this.setState(state => ({ ...state, options, model_for_options }));
-      }
-    }
+
     /**
      * Если обновилась модель, то пробрасываем в стор новое значение (старый источник диамических данных)
      */
@@ -426,6 +404,8 @@ class InputSelectWidget extends Component {
           options = !_.isArray(options) ? options.data : options;
           options = _.isArray(options) ? options : [];
         }
+        // console.log(options);
+        // console.log(this.state.value);
         this.setState(state => ({
           ...state,
           paramsForUpdate,
@@ -443,8 +423,9 @@ class InputSelectWidget extends Component {
   onChange(e, editor = null) {
     let value = "";
     let valueToDispatch;
-    const settings = this.props.element.getSettings();
-    value = e.target.value;
+    if (e && e.target) {
+      value = e.target.value;
+    }
 
     if (e && e.value) {
       value = e.value;
@@ -481,16 +462,11 @@ class InputSelectWidget extends Component {
           "change_change_end_delay"
         );
 
-        if (
-          ["text", "email", "phone", "tel", "number", "password"].indexOf(
-            this.state.settings.content_type
-          ) === -1
-        ) {
-          this.dispatchFieldValueToStore(
-            valueToDispatch !== undefined ? valueToDispatch : value,
-            true
-          );
-        }
+        this.dispatchFieldValueToStore(
+          valueToDispatch !== undefined ? valueToDispatch : value,
+          true
+        );
+
         if (change_actions && !change_change_end && !isEditor()) {
           this.debounceDispatch(
             valueToDispatch !== undefined ? valueToDispatch : value
@@ -560,13 +536,6 @@ class InputSelectWidget extends Component {
    * @param  editor для получения изменений из CKEditor
    */
   onBlur = async (e, editor = null) => {
-    if (
-      ["text", "email", "phone", "tel", "number", "password"].indexOf(
-        this.state.settings.content_type
-      ) !== -1
-    ) {
-      this.dispatchFieldValueToStore(e.target.value, true);
-    }
     if (_.get(editor, "getData")) {
       this.dispatchFieldValueToStore(editor.getData(), true);
     }
@@ -706,6 +675,8 @@ class InputSelectWidget extends Component {
     const {
       options_sorting,
       content_readonly,
+      image_select_options,
+      select2_multiple: isMultiple,
       label_icon
     } = settings;
 
@@ -801,76 +772,9 @@ class InputSelectWidget extends Component {
     }
 
     let input = null;
-    switch (this.props.element.getName()) {
-      case "input-select":
-        {
-          let options = this.getOptions();
-          input = (
-            <select
-              value={value || ""}
-              onFocus={this.onFocus}
-              name={this.getName()}
-              onChange={this.onChange}
-              onBlur={this.onBlur}
-              onKeyDown={this.handleEnter}
-              id={this.state.settings.position_css_id}
-              className={
-                "altrp-field " + this.state.settings.position_css_classes
-              }
-            >
-              {this.state.settings.content_options_nullable ? (
-                <option value="" />
-              ) : (
-                ""
-              )}
 
-              {(options_sorting
-                ? sortOptions(options, options_sorting)
-                : options
-              ).map(option => (
-                <option value={option.value} key={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          );
-        }
-        break;
-      default: {
-        const isClearable = this.state.settings.content_clearable;
+    input = this.renderRepeatedInput();
 
-        input = (
-          <div className="altrp-input-wrapper">
-            <AltrpInput
-              type="select"
-              name={this.getName()}
-              value={value || ""}
-              element={this.props.element}
-              readOnly={content_readonly}
-              autoComplete={autocomplete}
-              placeholder={this.state.settings.content_placeholder}
-              className={
-                "altrp-field " + this.state.settings.position_css_classes
-              }
-              settings={this.props.element.getSettings()}
-              onKeyDown={this.handleEnter}
-              onChange={this.onChange}
-              onBlur={this.onBlur}
-              onFocus={this.onFocus}
-              id={this.state.settings.position_css_id}
-            />
-            {isClearable && (
-              <button
-                className="input-clear-btn"
-                onClick={() => this.setState({ value: this.defaultValue })}
-              >
-                ✖
-              </button>
-            )}
-          </div>
-        );
-      }
-    }
     return (
       <AltrpFieldContainer
         settings={settings}
@@ -886,6 +790,64 @@ class InputSelectWidget extends Component {
       </AltrpFieldContainer>
     );
   }
+  /**
+   * Выводит input type=checkbox|radio
+   */
+  renderRepeatedInput() {
+    const { options = [] } = this.state;
+    let { value = "" } = this.state;
+    const fieldName =
+      this.props.element.getFieldId() ||
+      Math.random()
+        .toString(36)
+        .substr(2, 9);
+    const formID =
+      this.props.element.getFormId() ||
+      Math.random()
+        .toString(36)
+        .substr(2, 9);
+    return (
+      <div className="altrp-field-subgroup">
+        {options.map((option, idx) => {
+          let checked = false;
+          /**
+           * Если значение или опция число, то приведем к числу перед сравнением
+           */
+          if (this.props.element.getName() === "input-radio") {
+            checked = altrpCompare(value, option.value, "==");
+          } else {
+            value = _.isArray(value) ? value : value ? [value] : [];
+            checked = altrpCompare(option.value, value, "in");
+          }
+          return (
+            <div
+              className={`altrp-field-option ${checked ? "active" : ""}`}
+              key={`${fieldName}-${idx}`}
+            >
+              <span className="altrp-field-option-span">
+                <input
+                  type="radio"
+                  value={option.value}
+                  name={`${formID}-${fieldName}`}
+                  className={`altrp-field-option__input ${checked ? "active" : ""
+                    }`}
+                  onChange={this.onChange}
+                  checked={checked}
+                  id={`${formID}-${fieldName}-${idx}`}
+                />
+              </span>
+              <label
+                htmlFor={`${formID}-${fieldName}-${idx}`}
+                className="altrp-field-option__label"
+              >
+                {option.label}
+              </label>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
 }
 
-export default InputSelectWidget;
+export default InputRadioWidget;

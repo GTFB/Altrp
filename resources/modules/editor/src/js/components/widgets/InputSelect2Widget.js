@@ -839,7 +839,7 @@ class InputSelect2Widget extends Component {
         input = (
           <div className="altrp-input-wrapper">
             <AltrpInput
-              type={this.state.settings.content_type}
+              type="select2"
               name={this.getName()}
               value={value || ""}
               element={this.props.element}

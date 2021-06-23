@@ -1,6 +1,7 @@
 import Input from "../elements/Input";
 import InputSelect from "../elements/InputSelect";
 import InputSelect2 from "../elements/InputSelect2";
+import InputRadio from "../elements/InputRadio";
 import RootElement from "../elements/RootElement";
 import RootComponent from "../../components/RootComponent";
 import HeadingElement from "../elements/Heading";
@@ -20,6 +21,7 @@ import TextWidget from "../../components/widgets/TextWidget";
 // import InputWidget from "../../components/widgets/InputWidget";
 import InputSelectWidget from "../../components/widgets/InputSelectWidget";
 import InputSelect2Widget from "../../components/widgets/InputSelect2Widget";
+import InputRadioWidget from "../../components/widgets/InputRadioWidget";
 import TableWidget from "../../components/widgets/TableWidget";
 import NavWidget from "../../components/widgets/NavWidget";
 import DividerWidget from "../../components/widgets/DividerWidget";
@@ -82,6 +84,7 @@ export default class ElementsManger {
     // this.elements[Input.getName()] = Input;
     this.elements[InputSelect.getName()] = InputSelect;
     this.elements[InputSelect2.getName()] = InputSelect2;
+    this.elements[InputRadio.getName()] = InputRadio;
     this.elements[Table.getName()] = Table;
     this.elements[Posts.getName()] = Posts;
     this.elements[Tabs.getName()] = Tabs;
@@ -114,6 +117,7 @@ export default class ElementsManger {
     // this.components[Input.getName()] = InputWidget;
     this.components[InputSelect.getName()] = InputSelectWidget;
     this.components[InputSelect2.getName()] = InputSelect2Widget;
+    this.components[InputRadio.getName()] = InputRadioWidget;
     this.components[Text.getName()] = TextWidget;
     this.components[Image.getName()] = ImageWidget;
     this.components[Table.getName()] = TableWidget;

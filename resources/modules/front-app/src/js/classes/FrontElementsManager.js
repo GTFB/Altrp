@@ -68,6 +68,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-radio",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputRadio' */ "../../../../editor/src/js/components/widgets/InputRadioWidget"
+          );
+        }
+      },
+      {
         name: "button",
         import: async () => {
           return await import(
