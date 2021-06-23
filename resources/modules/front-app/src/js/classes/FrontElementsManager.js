@@ -84,6 +84,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-wysiwyg",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputWysiwyg' */ "../../../../editor/src/js/components/widgets/InputWysiwygWidget"
+          );
+        }
+      },
+      {
         name: "button",
         import: async () => {
           return await import(
