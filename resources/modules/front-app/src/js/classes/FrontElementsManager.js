@@ -95,7 +95,15 @@ class FrontElementsManager {
         name: "input-textarea",
         import: async () => {
           return await import(
-            /* webpackChunkName: 'InputTextarea' */ "../../../../editor/src/js/components/widgets/InputTextarea"
+            /* webpackChunkName: 'InputTextarea' */ "../../../../editor/src/js/components/widgets/InputTextareaWidget"
+          );
+        }
+      },
+      {
+        name: "input-image-select",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputImageSelect' */ "../../../../editor/src/js/components/widgets/InputImageSelectWidget"
           );
         }
       },
