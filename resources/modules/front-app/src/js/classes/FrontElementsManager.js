@@ -76,6 +76,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-checkbox",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputCheckbox' */ "../../../../editor/src/js/components/widgets/InputCheckboxWidget"
+          );
+        }
+      },
+      {
         name: "button",
         import: async () => {
           return await import(

@@ -7,6 +7,7 @@ import {
   parseURLTemplate,
   replaceContentWithData,
   renderAssetIcon,
+  valueReplacement,
   getDataFromLocalStorage
 } from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
@@ -31,7 +32,7 @@ const AltrpFieldContainer = styled.div`
   }}
 `;
 
-class InputRadioWidget extends Component {
+class InputCheckboxWidget extends Component {
   timeInput = null;
 
   constructor(props) {
@@ -74,11 +75,25 @@ class InputRadioWidget extends Component {
    * Чистит значение
    */
   clearValue() {
-    let value = "";
+    let value = [];
     this.onChange(value);
     this.dispatchFieldValueToStore(value, true);
   }
+  /**
+   * Метод устанавливает все опции как выбранные
+   */
+  selectAll() {
+    const optionsDynamicSetting = this.props.element.getDynamicSetting(
+      "content_options"
+    );
+    let options = [...this.state.options];
 
+    if (optionsDynamicSetting) {
+      options = convertData(optionsDynamicSetting, options);
+    }
+    options = options.map(({ value }) => value);
+    this.onChange(options);
+  }
   /**
    * Обработка нажатия клавиши
    * @param {{}} e
@@ -114,7 +129,6 @@ class InputRadioWidget extends Component {
 
       this.setState(state => ({ ...state, options }));
     }
-
     let value = this.state.value;
     /**
      * Если динамическое значение загрузилось,
@@ -398,8 +412,7 @@ class InputRadioWidget extends Component {
           options = !_.isArray(options) ? options.data : options;
           options = _.isArray(options) ? options : [];
         }
-        // console.log(options);
-        // console.log(this.state.value);
+
         this.setState(state => ({
           ...state,
           paramsForUpdate,
@@ -417,8 +430,15 @@ class InputRadioWidget extends Component {
   onChange(e, editor = null) {
     let value = "";
     let valueToDispatch;
+    const settings = this.props.element.getSettings();
     if (e && e.target) {
-      value = e.target.value;
+      let inputs = document.getElementsByName(e.target.name);
+      value = [];
+      inputs.forEach(input => {
+        if (input.checked) {
+          value.push(input.value);
+        }
+      });
     }
 
     if (e && e.value) {
@@ -667,9 +687,6 @@ class InputRadioWidget extends Component {
     let label = null;
     const settings = this.props.element.getSettings();
     const {
-      options_sorting,
-      content_readonly,
-      image_select_options,
       select2_multiple: isMultiple,
       label_icon
     } = settings;
@@ -721,7 +738,6 @@ class InputRadioWidget extends Component {
             : 2 + "px"
         };
         classLabel = "altrp-field-label-container-left";
-        // this.label.current.classList.add("hello")
 
         break;
       case "absolute":
@@ -784,6 +800,7 @@ class InputRadioWidget extends Component {
       </AltrpFieldContainer>
     );
   }
+
   /**
    * Выводит input type=checkbox|radio
    */
@@ -800,6 +817,7 @@ class InputRadioWidget extends Component {
       Math.random()
         .toString(36)
         .substr(2, 9);
+
     return (
       <div className="altrp-field-subgroup">
         {options.map((option, idx) => {
@@ -807,12 +825,9 @@ class InputRadioWidget extends Component {
           /**
            * Если значение или опция число, то приведем к числу перед сравнением
            */
-          if (this.props.element.getName() === "input-radio") {
-            checked = altrpCompare(value, option.value, "==");
-          } else {
-            value = _.isArray(value) ? value : value ? [value] : [];
-            checked = altrpCompare(option.value, value, "in");
-          }
+          value = _.isArray(value) ? value : value ? [value] : [];
+          checked = altrpCompare(option.value, value, "in");
+
           return (
             <div
               className={`altrp-field-option ${checked ? "active" : ""}`}
@@ -820,7 +835,7 @@ class InputRadioWidget extends Component {
             >
               <span className="altrp-field-option-span">
                 <input
-                  type="radio"
+                  type="checkbox"
                   value={option.value}
                   name={`${formID}-${fieldName}`}
                   className={`altrp-field-option__input ${checked ? "active" : ""
@@ -844,4 +859,4 @@ class InputRadioWidget extends Component {
   }
 }
 
-export default InputRadioWidget;
+export default InputCheckboxWidget;
