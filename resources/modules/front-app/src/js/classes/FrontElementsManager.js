@@ -92,6 +92,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-textarea",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputTextarea' */ "../../../../editor/src/js/components/widgets/InputTextarea"
+          );
+        }
+      },
+      {
         name: "button",
         import: async () => {
           return await import(
