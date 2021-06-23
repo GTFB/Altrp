@@ -13,7 +13,7 @@ abstract class BaseFileWriter
 
     public function getStubFile($filename)
     {
-
+        return app_path($filename);
     }
 
     /**

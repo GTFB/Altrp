@@ -25,14 +25,12 @@ class ExportWord extends Model
         $this->filename = 'report';
         if ($filename)
             $this->filename = $filename;
-        //echo $this->filename;
     }
 
-    public function export()
+    public function export($type = false)
     {
         try {
             if ($this->template) {
-                //print_r($this->data);
                 if (!empty($this->data)) {
                     $_doc = new TemplateProcessor($this->template);
                     foreach ($this->data as $key => $dd) {
@@ -58,12 +56,22 @@ class ExportWord extends Model
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment; filename="'. urlencode($this->filename).'.docx"');
 
+            if (!file_exists(storage_path() . '/tmp/')) mkdir(storage_path() . '/tmp/');
             $filename = storage_path() . '/tmp/' . $this->filename . '.docx';
+
+            if ($type === 'robot') {
+                if (!file_exists(storage_path() . '/document/')) mkdir(storage_path() . '/document/');
+                $filename = storage_path() . '/document/' . $this->filename . '.docx';
+            }
+
             $_doc->saveAs($filename);
             readfile($filename);
-            unlink($filename);
+
+            if ($type !== 'robot') unlink($filename);
+            
         } catch (\Exception $e) {
-            return new \Exception($e->getMessage());
+            \Log::info($e->getMessage());
+
         }
     }
 }

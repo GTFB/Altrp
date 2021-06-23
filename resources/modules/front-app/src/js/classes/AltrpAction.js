@@ -731,39 +731,56 @@ class AltrpAction extends AltrpModel {
    * @return {Promise}
    */
   async doActionTableToXLS() {
-    const elementId = this.getProperty('element_id').trim();
-    if (!elementId) {
-      console.error('Element ID is not set');
-      return { success: true };
+
+    let data = [];
+
+    if (this.getProperty('all_sources')){
+      const all_sources_path = this.getProperty('all_sources_path');
+      if (all_sources_path) data = getDataByPath(all_sources_path, {});
+      data = { data };
+
+    } else {
+      const elementId = this.getProperty('element_id').trim();
+
+      if (!elementId) {
+        console.error('Element ID is not set');
+        return { success: true };
+      }
+  
+      const table = getHTMLElementById(elementId);
+      if (!table) {
+        console.error('Table with provided ID is not found');
+        return { success: true };
+      }
+  
+      data = dataFromTable(table);
+  
+      const formattedData = [];
+  
+      _.each(data, row => formattedData.push(Object.values(row)));
+      let rawTemplateData = this.getProperty('template_data');
+      if (rawTemplateData){
+        const parsedTemplateData = rawTemplateData
+          .split('\n')
+          .reduce((data, row) => {
+            const keyValuePair = row.split('=');
+            data[keyValuePair[0]] = keyValuePair[1];
+            return data;
+          }, {});
+          data = { ...parsedTemplateData, data: formattedData };
+      } else {
+        data = { data };
+      }
     }
 
-    const table = getHTMLElementById(elementId);
-    if (!table) {
-      console.error('Table with provided ID is not found');
-      return { success: true };
-    }
-
-    let data = dataFromTable(table);
-    const formattedData = [];
-
-    _.each(data, row => formattedData.push(Object.values(row)));
-    const templateName = this.getProperty('template_name');
-    const rawTemplateData = this.getProperty('template_data');
-    const parsedTemplateData = rawTemplateData
-      .split('\n')
-      .reduce((data, row) => {
-        const keyValuePair = row.split('=');
-        data[keyValuePair[0]] = keyValuePair[1];
-        return data;
-      }, {});
-    data = { ...parsedTemplateData, dataArray: formattedData };
     const filename = replaceContentWithData(this.getProperty('name', 'file'));
+    const templateName = this.getProperty('template_name');
 
     try {
       const blob = await dataToXLS(data, filename, templateName);
       let link = document.createElement('a');
       link.setAttribute('href', window.URL.createObjectURL(blob));
-      link.setAttribute('download', filename + '.xls');
+      link.setAttribute('download', filename + '.xlsx');
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

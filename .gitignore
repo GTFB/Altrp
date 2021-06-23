@@ -5,6 +5,8 @@ launch.json
 /public/storage
 /server-dist
 /storage/*.key
+/storage/document
+
 /vendor
 .env
 .env.backup

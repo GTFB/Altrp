@@ -5,6 +5,7 @@ import Crud from "./action/Crud"
 import Api from "./action/Api";
 import { setUpdatedNode } from "../../../../store/robot-settings/actions";
 import Chevron from "../../../../../../../editor/src/svgs/chevron.svg";
+import Document from "./action/Document";
 
 
 export default class Action extends Component{
@@ -109,6 +110,11 @@ export default class Action extends Component{
                                          selectNode={this.props.selectNode || []}
                                       />}
             {(typeData === "api") && <Api
+                                         activeSection={this.props.activeSection}
+                                         toggleChevron={this.props.toggleChevron}
+                                         selectNode={this.props.selectNode || []}
+                                      />}
+            {(typeData === "document") && <Document
                                          activeSection={this.props.activeSection}
                                          toggleChevron={this.props.toggleChevron}
                                          selectNode={this.props.selectNode || []}

@@ -425,6 +425,36 @@ export function actionsControllers(
     }
   });
 
+  actionsRepeater.addControl("template_name", {
+    label: "Template name",
+    responsive: false,
+    dynamic: false,
+    description: "template_name",
+    conditions: {
+      type: ["table_to_xls"]
+    }
+  });
+
+  actionsRepeater.addControl("all_sources", {
+    label: "All sources",
+    type: CONTROLLER_SWITCHER,
+    responsive: false,
+    dynamic: false,
+    conditions: {
+      type: ["table_to_xls"]
+    }
+  });
+
+  actionsRepeater.addControl("all_sources_path", {
+    label: "Path",
+    responsive: false,
+    dynamic: false,
+    description: "altrpdata.alias",
+    conditions: {
+      'all_sources': true
+    },
+  });
+
   actionsRepeater.addControl("element_id", {
     label: "Element",
     responsive: false,
@@ -437,17 +467,8 @@ export function actionsControllers(
         "table_to_csv",
         "toggle_offcanvas",
         "table_to_xls"
-      ]
-    }
-  });
-
-  actionsRepeater.addControl("template_name", {
-    label: "Template name",
-    responsive: false,
-    dynamic: false,
-    description: "template_name",
-    conditions: {
-      type: ["table_to_xls"]
+      ],
+      'all_sources': false
     }
   });
 
@@ -458,7 +479,8 @@ export function actionsControllers(
     dynamic: false,
     description: "template_data",
     conditions: {
-      type: ["table_to_xls"]
+      type: ["table_to_xls"],
+      'all_sources': false
     }
   });
 

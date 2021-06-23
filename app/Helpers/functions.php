@@ -964,6 +964,7 @@ function extractElementsNames( $areas = [], $only_react_elements = false){
 //    echo '</pre>';
     $data = $area['template']['data'];
     _extractElementsNames( $data, $elementNames, $only_react_elements );
+
   }
 
   return $elementNames;
@@ -1021,6 +1022,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
   if( isset( $element['children'] ) && is_array( $element['children'] ) ){
     foreach ( $element['children'] as $child ) {
       _extractElementsNames( $child, $elementNames, $only_react_elements );
+
     }
   }
 }
