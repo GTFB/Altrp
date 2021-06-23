@@ -36,11 +36,11 @@ class ColorController extends Component {
     return "";
   }
 
-  openColorPicker() {
+  openColorPicker(e) {
     this.setState({
       active: true
     });
-
+    e.stopPropagation();
     document.addEventListener("click", this.closeColorPicker);
   }
 
@@ -52,9 +52,6 @@ class ColorController extends Component {
   }
 
   setGlobal(guid) {
-    console.log("====================================");
-    console.log(guid);
-    console.log("====================================");
     getCurrentElement().setGlobalStyle(
       guid,
       this.props.controller.getSettingName()
@@ -111,9 +108,6 @@ class ColorController extends Component {
       colorPickedHex: color.colorPickedHex,
       colorRGB: color.colorRGB
     });
-    console.log("====================================");
-    console.log(color);
-    console.log("====================================");
     if (color?.guid) {
       this.setGlobal(color.guid);
     }
@@ -129,13 +123,11 @@ class ColorController extends Component {
   // // let g = parseInt(hexToRGB[2], 16);
   // // let b = parseInt(hexToRGB[3], 16);
 
-  //   console.log(r, g, b)
 
   //   this.setState({
   //     colorPickedHex: e.target.value,
   //     colorPickedRGB: `rgb(${r}, ${g}, ${b}, ${this.state.opacity})`,
   //   });
-  //   console.log(this.state.colorPickedRGB)
   //   this.props.currentElement.setSettingValue(this.props.controlId, e.target.value);
   // };
   render() {
@@ -170,7 +162,7 @@ class ColorController extends Component {
               <div
                 className="control-color-colorPicked"
                 style={colorPickedStyle}
-              ></div>
+              />
             </div>
             <label className="control-color-hex">{value.colorPickedHex}</label>
           </div>
@@ -188,7 +180,7 @@ class ColorController extends Component {
           }
           style={colorPickerPosition}
         >
-          <SketchPicker
+          < SketchPicker
             presetColors={[]}
             color={this.state.colorRGB}
             onChange={this.colorChange}
@@ -198,7 +190,7 @@ class ColorController extends Component {
             }}
             name="colorPicker"
             className="sketchPicker"
-          ></SketchPicker>
+          />
           {/* <PresetColors
             presetColors={this.props.presetColors}
             value={this.state.value}
