@@ -734,7 +734,7 @@ export function styledString(styles, settings) {
       } else {
         if (_.isArray(style)) {
           const settingName = style[1];
-          const state = style[3] || null;
+          const state = style[3] || "";
           const variable = getResponsiveSetting(
             settings,
             settingName,
