@@ -42,6 +42,7 @@ class AltrpMeta extends AltrpModel{
     return this.setProperty('metaValue', metaValue);
   }
 
+
   /**
    * Возвращает имя мета-свойства
    * @return {string}

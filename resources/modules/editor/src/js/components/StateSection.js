@@ -3,6 +3,7 @@ import ('../../sass/state-section.scss');
 import { connect } from "react-redux";
 import { setCurrentState } from "../store/state-section/actions";
 import { getElementState, getCurrentTab } from "../store/store";
+import GlobalStyles from "./state-section/GlobalStyles";
 
 class StateSection extends Component {
 
@@ -30,16 +31,19 @@ class StateSection extends Component {
 
   render() {
     return (
-      <div className="state-section">
-        {
-          this.state.buttons.map((button, index) => {
-            return <button
-              key={index}
-              className={"state-section__button " + (this.props.currentState.title === button.title ? "state-section__button_active" : "")}
-              onClick={() => this.setCurrentState(button)}
-            >{button.title}</button>
-          })
-        }
+      <div className="state-section-wrapper">
+        <div className="state-section">
+          {
+            this.state.buttons.map((button, index) => {
+              return <button
+                key={index}
+                className={"state-section__button " + (this.props.currentState.title === button.title ? "state-section__button_active" : "")}
+                onClick={() => this.setCurrentState(button)}
+              >{button.title}</button>
+            })
+          }
+        </div>
+        <GlobalStyles/>
       </div>
     )
   }

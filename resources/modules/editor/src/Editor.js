@@ -46,6 +46,7 @@ import {
   setGlobalEffects,
   setGlobalFonts
 } from "./js/store/altrp-global-colors/actions";
+import {setGlobalStylesPresets} from "./js/store/altrp-global-styles/actions";
 
 /**
  * Главный класс редактора.<br/>
@@ -213,11 +214,16 @@ class Editor extends Component {
     currentUser = currentUser.data;
     appStore.dispatch(changeCurrentUser(currentUser));
     const presetColors = await AltrpMeta.getMetaByName("preset_colors");
+    let presetGlobalStyles = await AltrpMeta.getMetaByName("global_styles");
     appStore.dispatch(setEditorMeta(presetColors));
     const globalStyles = await new Resource({
       route: "/admin/ajax/global_template_styles"
     }).getAll();
     //global colors
+    appStore.dispatch(
+      setGlobalStylesPresets(presetGlobalStyles.getMetaValue({}))
+    );
+
     appStore.dispatch(
       setGlobalColors(
         globalStyles.color?.map(color => ({
