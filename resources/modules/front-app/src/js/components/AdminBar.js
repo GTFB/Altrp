@@ -43,7 +43,8 @@ class AdminBar extends React.Component {
       }));
   }
 
-  toggleVisiblePopupTemplate() {
+  toggleVisiblePopupTemplate(e) {
+    e.stopPropagation();
     this.setState(state => ({
       ...state,
       visiblePopupTemplate: !state.visiblePopupTemplate

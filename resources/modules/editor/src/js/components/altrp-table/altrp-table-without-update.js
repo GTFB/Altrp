@@ -725,6 +725,7 @@ function AltrpTableWithoutUpdate(
                     currentScreen={currentScreen}
                     settings={settings}
                     table={tableElement}
+                    rows={rows}
                     ref={tableElement}
                     {...getTableProps()}>
       <div className="altrp-table-head">
