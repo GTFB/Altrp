@@ -77,7 +77,6 @@ function ItemRenderer(query, { handleClick, modifiers }) {
 
     delete settings.global_styles_presets;
 
-    console.log(needUpdate);
     needUpdate.forEach(elem => {
       elem.setSettings(settings);
     })
@@ -197,7 +196,7 @@ class GlobalStyles extends React.Component {
     if (!_.isEqual(this.state.items, items)) {
       this.setState((s) => ({
         ...s,
-        items
+        items,
       }))
     }
 

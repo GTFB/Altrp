@@ -22,7 +22,7 @@ export function globalStylesPresetsReducer(state, action) {
       state = { ...state, styles: {
         ...state.styles,
         [action.widgetName]: {
-          ...state[action.widgetName],
+          ...state.styles[action.widgetName],
           [action.name]: action.settings
         },
       }};
