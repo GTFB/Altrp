@@ -4,8 +4,6 @@ import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/Alt
 import { changeCurrentPageProperty } from "../store/current-page/actions";
 import { ElementWrapperDivComponent } from "../../../../editor/src/js/components/widgets/styled-components/ElementWrapperComponent";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
-import MenuComponent from "../../../../editor/src/js/components/widgets/styled-components/MenuComponent";
-import BreadcrumbsComponent from "../../../../editor/src/js/components/widgets/styled-components/BreadcrumbsComponent";
 import MapConstructorComponent from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
 import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
@@ -335,17 +333,8 @@ class ElementWrapper extends Component {
 
     let WrapperComponent = ElementWrapperDivComponent;
     switch (this.props.element.getName()) {
-      case "menu":
-        WrapperComponent = MenuComponent;
-        break;
-      case "breadcrumbs":
-        WrapperComponent = BreadcrumbsComponent;
-        break;
       case "diagram":
         WrapperComponent = DiagramComponent;
-        break;
-      case "dashboards":
-        WrapperComponent = DashboardComponent;
         break;
       case "nav":
         WrapperComponent = NavComponent;

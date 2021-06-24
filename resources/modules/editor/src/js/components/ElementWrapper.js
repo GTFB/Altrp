@@ -19,13 +19,9 @@ import { START_DRAG, startDrag } from "../store/element-drag/actions";
 import { contextMenu } from "react-contexify";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
 import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
-import ImageComponent from "./widgets/styled-components/ImageComponent";
 import NavComponent from "./widgets/styled-components/NavComponent";
 import Column from "../classes/elements/Column";
-import MenuComponent from "./widgets/styled-components/MenuComponent";
-import BreadcrumbsComponent from "./widgets/styled-components/BreadcrumbsComponent";
 import DiagramComponent from "./widgets/styled-components/DiagramComponent";
-import DashboardComponent from "./widgets/styled-components/DashboardComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -379,17 +375,8 @@ class ElementWrapper extends Component {
 
     let WrapperComponent = "div";
     switch (this.props.element.getName()) {
-      case "menu":
-        WrapperComponent = MenuComponent;
-        break;
-      case "breadcrumbs":
-        WrapperComponent = BreadcrumbsComponent;
-        break;
       case "diagram":
         WrapperComponent = DiagramComponent;
-        break;
-      case "dashboards":
-        WrapperComponent = DashboardComponent;
         break;
       case "nav":
         WrapperComponent = NavComponent;

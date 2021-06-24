@@ -4,12 +4,15 @@ import {getTableStyles} from "./helpers/stylesForTheTable";
 import {getPostsStyles} from "./helpers/stylesForThePosts";
 import getImageStyles from "./helpers/stylesForTheImage";
 import getTabsStyles from "./helpers/stylesForTheTabs";
+import getMenuStyles from "./helpers/stylesForTheMenu";
+import getBreadcrumbsStyles from "./helpers/stylesForTheBreadcrumbs";
 import ButtonComponent from "../../../../editor/src/js/components/widgets/styled-components/ButtonComponent";
 import CarouselComponent from "../../../../editor/src/js/components/widgets/styled-components/CarouselComponent";
 import GalleryComponent from "../../../../editor/src/js/components/widgets/styled-components/GalleryComponent";
 import DividerComponent from "../../../../editor/src/js/components/widgets/styled-components/DividerComponent";
 import VideoComponent from "../../../../editor/src/js/components/widgets/styled-components/VideoComponent";
 import ListComponent from "../../../../editor/src/js/components/widgets/styled-components/ListComponent";
+import DashboardComponent from "../../../../editor/src/js/components/widgets/styled-components/DashboardComponent";
 import AdvancedComponent from "../../../../editor/src/js/components/widgets/styled-components/AdvancedComponent";
 import SectionWidgetComponent
   from "../../../../editor/src/js/components/widgets/styled-components/SectionWidgetComponent";
@@ -63,11 +66,20 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         case "dropbar":
           styles += `.${prefix}${id} {${DropbarWidgetComponent(item.settings)}}`;
           break;
+        case "dashboard":
+          styles+=`.${prefix}${id} {${DashboardComponent(item.settings)}}`;
+          break;
         case "image":
           styles+=getImageStyles(item.settings,id);
           break;
         case "tabs":
           styles+=getTabsStyles(item.settings, id);
+          break;
+        case "menu":
+          styles+=getMenuStyles(item.settings,id);
+          break;
+        case "breadcrumbs":
+          styles+=getBreadcrumbsStyles(item.settings,id);
           break;
         case 'heading': {
           styles += getHeadingStyles(item.settings, id);
