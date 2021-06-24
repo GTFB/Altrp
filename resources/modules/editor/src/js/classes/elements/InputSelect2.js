@@ -16,11 +16,9 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_SHADOW,
-  CONTROLLER_REPEATER,
   CONTROLLER_MEDIA
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
-import { CONDITIONS_OPTIONS } from "../../../../../front-app/src/js/helpers";
 import { actionsControllers } from "../../decorators/actions-controllers";
 
 class InputSelect2 extends BaseElement {
@@ -61,164 +59,9 @@ class InputSelect2 extends BaseElement {
       label: "Shortcode"
     });
 
-    // this.addControl("content_type", {
-    //   type: CONTROLLER_SELECT,
-    //   label: "Type",
-    //   default: "text",
-    //   options: [
-    //     {
-    //       value: "text",
-    //       label: "Text"
-    //     },
-    //     {
-    //       value: "password",
-    //       label: "Password"
-    //     },
-    //     {
-    //       value: "number",
-    //       label: "Number"
-    //     },
-    //     {
-    //       value: "date",
-    //       label: "Date"
-    //     },
-    //     {
-    //       value: "email",
-    //       label: "Email"
-    //     },
-    //     {
-    //       value: "tel",
-    //       label: "Tel"
-    //     },
-    //     {
-    //       value: "file",
-    //       label: "File"
-    //     },
-    //     {
-    //       value: "select",
-    //       label: "Select"
-    //     },
-    //     {
-    //       value: "select2",
-    //       label: "Select2"
-    //     },
-    //     {
-    //       value: "image_select",
-    //       label: "Image Select"
-    //     },
-    //     {
-    //       value: "hidden",
-    //       label: "Hidden"
-    //     },
-    //     {
-    //       value: "radio",
-    //       label: "Radio"
-    //     },
-    //     {
-    //       value: "checkbox",
-    //       label: "Checkbox"
-    //     },
-    //     {
-    //       value: "accept",
-    //       label: "Accept"
-    //     },
-    //     {
-    //       value: "textarea",
-    //       label: "Textarea"
-    //     },
-    //     {
-    //       value: "wysiwyg",
-    //       label: "wysiwyg"
-    //     }
-    //   ]
-    // });
-
-    this.addControl("accept_checked", {
-      type: CONTROLLER_TEXT,
-      label: "Accept Checked Value",
-      conditions: {
-        content_type: ["accept"]
-      }
-    });
-
-    this.addControl("accept_unchecked", {
-      type: CONTROLLER_TEXT,
-      label: "Accept Unchecked Value",
-      conditions: {
-        content_type: ["accept"]
-      }
-    });
-
-    this.addControl("invalid_email_message", {
-      type: CONTROLLER_TEXT,
-      label: "Invalid Email Message",
-      conditions: { content_type: ["email"] }
-    });
-
     this.addControl("sort_default", {
       type: CONTROLLER_SWITCHER,
-      label: "Sort Default",
-      conditions: {
-        content_type: ["select", "select2"]
-      }
-    });
-
-    this.addControl("textarea_resize", {
-      type: CONTROLLER_SELECT,
-      label: "Resize",
-      options: [
-        {
-          label: "Both",
-          value: "both"
-        },
-        {
-          label: "None",
-          value: "none"
-        },
-        {
-          label: "Horizontal",
-          value: "horizontal"
-        },
-        {
-          label: "Vertical",
-          value: "vertical"
-        }
-      ],
-      conditions: { content_type: ["textarea"] }
-    });
-
-    this.addControl("justify_options", {
-      type: CONTROLLER_SELECT,
-      label: "Options Alignment",
-      options: [
-        {
-          label: "left",
-          value: "flex-start"
-        },
-        {
-          label: "center",
-          value: "center"
-        },
-        {
-          label: "right",
-          value: "flex-end"
-        },
-        {
-          label: "space-between",
-          value: "space-between"
-        },
-        {
-          label: "space-around",
-          value: "space-around"
-        },
-        {
-          label: "space-evenly",
-          value: "space-evenly"
-        }
-      ],
-      conditions: {
-        content_type: ["image_select"]
-      }
+      label: "Sort Default"
     });
 
     const optionsRepeater = new Repeater();
@@ -236,128 +79,6 @@ class InputSelect2 extends BaseElement {
     optionsRepeater.addControl("image", {
       type: CONTROLLER_MEDIA,
       label: "Image"
-    });
-
-    this.addControl("image_select_options", {
-      label: "Options",
-      type: CONTROLLER_REPEATER,
-      fields: optionsRepeater.getControls(),
-      conditions: {
-        content_type: ["image_select"]
-      },
-      default: []
-    });
-
-    this.addControl("image_select_item_width", {
-      type: CONTROLLER_SLIDER,
-      label: "Item Width",
-      max: 500,
-      min: 0,
-      units: ["px", "%", "vw"],
-      default: { unit: "px" },
-      conditions: {
-        content_type: ["image_select"]
-      }
-    });
-
-    this.addControl("image_select_item_height", {
-      type: CONTROLLER_SLIDER,
-      label: "Item Height",
-      max: 500,
-      min: 0,
-      units: ["px", "%", "vh"],
-      default: { unit: "px" },
-      conditions: {
-        content_type: ["image_select"]
-      }
-    });
-
-    this.addControl("image_select_image_fit", {
-      type: CONTROLLER_SELECT,
-      options: [
-        {
-          value: "unset",
-          label: "unset"
-        },
-        {
-          value: "fill",
-          label: "fill"
-        },
-        {
-          value: "cover",
-          label: "cover"
-        },
-        {
-          value: "contain",
-          label: "contain"
-        },
-        {
-          value: "scale-down",
-          label: "scale-down"
-        },
-        {
-          value: "none",
-          label: "none"
-        }
-      ],
-      label: "Background Size",
-      conditions: {
-        content_type: ["image_select"]
-      }
-    });
-
-    this.addControl("image_select_image_position", {
-      type: CONTROLLER_SELECT,
-      options: [
-        {
-          value: "top left",
-          label: "top left"
-        },
-        {
-          value: "top",
-          label: "top"
-        },
-        {
-          value: "top right",
-          label: "top right"
-        },
-        {
-          value: "right",
-          label: "right"
-        },
-        {
-          value: "bottom right",
-          label: "bottom right"
-        },
-        {
-          value: "bottom",
-          label: "bottom"
-        },
-        {
-          value: "bottom left",
-          label: "bottom left"
-        },
-        {
-          value: "left",
-          label: "left"
-        },
-        {
-          value: "center",
-          label: "center"
-        }
-      ],
-      label: "Background Position",
-      conditions: {
-        content_type: ["image_select"]
-      }
-    });
-
-    this.addControl("content_accept", {
-      type: CONTROLLER_TEXT,
-      label: "Accept",
-      conditions: {
-        content_type: ["file"]
-      }
     });
 
     this.addControl("content_label", {
@@ -428,30 +149,6 @@ class InputSelect2 extends BaseElement {
       default: "Placeholder"
     });
 
-    this.addControl("content_mask", {
-      type: CONTROLLER_TEXT,
-      label: "Mask",
-      conditions: {
-        content_type: ["text", "tel"]
-      }
-    });
-
-    this.addControl("mask_mismatch_message", {
-      type: CONTROLLER_TEXT,
-      label: "Validation Error Message",
-      conditions: {
-        content_type: ["text", "tel", "email"]
-      }
-    });
-
-    this.addControl("read_only", {
-      type: CONTROLLER_SWITCHER,
-      label: "Read only",
-      conditions: {
-        content_type: "wysiwyg"
-      }
-    });
-
     this.addControl("content_required", {
       type: CONTROLLER_SWITCHER,
       label: "Required"
@@ -460,14 +157,6 @@ class InputSelect2 extends BaseElement {
     this.addControl("content_readonly", {
       type: CONTROLLER_SWITCHER,
       label: "Readonly"
-    });
-
-    this.addControl("content_autocomplete", {
-      type: CONTROLLER_SWITCHER,
-      label: "Autocomplete",
-      conditions: {
-        content_type: ["text", "password", "email"]
-      }
     });
 
     this.addControl("content_timestamp", {
@@ -479,35 +168,23 @@ class InputSelect2 extends BaseElement {
     this.addControl("content_clearable", {
       type: CONTROLLER_SWITCHER,
       label: "Clearable",
-      default: false,
-      conditions: {
-        content_type: ["select2"]
-      }
+      default: false
     });
 
     this.addControl("content_options_nullable", {
       type: CONTROLLER_SWITCHER,
       label: "Select Nullable",
-      default: false,
-      conditions: {
-        content_type: ["select", "select2"]
-      }
+      default: false
     });
     this.addControl("nulled_option_title", {
       type: CONTROLLER_TEXT,
-      label: "Nulled Option Label",
-      conditions: {
-        content_type: ["select", "select2", "radio", "checkbox"]
-      }
+      label: "Nulled Option Label"
     });
 
     this.addControl("options_sorting", {
       type: CONTROLLER_SELECT,
       label: "Options Sorting",
       default: "",
-      conditions: {
-        content_type: ["select", "select2", "radio", "checkbox"]
-      },
       options: [
         {
           value: "",
@@ -528,9 +205,6 @@ class InputSelect2 extends BaseElement {
       type: CONTROLLER_SELECT2,
       label: "Choose Datasource for Select Options",
       default: "",
-      conditions: {
-        content_type: ["select", "select2", "radio", "checkbox"]
-      },
       nullable: true,
       options_resource:
         "/admin/ajax/models_options?with_names=1&not_plural=1&with_sql_queries=1"
@@ -558,31 +232,12 @@ class InputSelect2 extends BaseElement {
     this.addControl("select2_multiple", {
       type: CONTROLLER_SWITCHER,
       label: "Multiple",
-      default: false,
-      conditions: {
-        content_type: ["select2", "file", "image_select"]
-      }
+      default: false
     });
-
-    // this.addControl('is_select_all_allowed', {
-    //   type: CONTROLLER_SWITCHER,
-    //   label: 'Allow Select All',
-    //   default: false,
-    //   conditions: {
-    //     'content_type':
-    //         [
-    //           'select2',
-    //         ],
-    //     'select2_multiple': [true]
-    //   },
-    // });
 
     this.addControl("content_options", {
       type: CONTROLLER_TEXTAREA,
       label: "Or Type Select Options",
-      conditions: {
-        content_type: ["select", "select2", "radio", "checkbox"]
-      },
       description:
         'Enter each option in a separate line. To differentiate between label and value, separate them with a pipe char ("|"). For example: f_name | First Name'
     });
@@ -595,9 +250,6 @@ class InputSelect2 extends BaseElement {
     this.addControl("content_calculation", {
       type: CONTROLLER_TEXTAREA,
       label: "Calculation",
-      conditions: {
-        "content_type!": ["file"]
-      },
       description:
         "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
     });
@@ -606,10 +258,7 @@ class InputSelect2 extends BaseElement {
 
     this.startControlSection("create_options", {
       tab: TAB_CONTENT,
-      label: "Create Options Settings",
-      conditions: {
-        content_type: ["select2"]
-      }
+      label: "Create Options Settings"
     });
 
     this.addControl("create_allowed", {
@@ -982,16 +631,7 @@ class InputSelect2 extends BaseElement {
 
     this.startControlSection("placeholder_style_section", {
       tab: TAB_STYLE,
-      label: "Placeholder",
-      conditions: {
-        "content_type!": [
-          "image_select",
-          "hidden",
-          "radio",
-          "checkbox",
-          "select"
-        ]
-      }
+      label: "Placeholder"
     });
 
     this.addControl("placeholder_style_font_color", {
@@ -1050,9 +690,6 @@ class InputSelect2 extends BaseElement {
 
     this.addControl("option_background_color", {
       type: CONTROLLER_COLOR,
-      conditions: {
-        content_type: "select2"
-      },
       label: "Option Background Color",
       default: {
         color: "#FFF",
@@ -1066,8 +703,7 @@ class InputSelect2 extends BaseElement {
       default: {
         color: "#DEEBFF",
         colorPickedHex: "#DEEBFF"
-      },
-      conditions: { content_type: ["select2"] }
+      }
     });
 
     this.addControl("option_selected_background_color", {
@@ -1076,8 +712,7 @@ class InputSelect2 extends BaseElement {
       default: {
         color: "#2684FF",
         colorPickedHex: "#2684FF"
-      },
-      conditions: { content_type: ["select2"] }
+      }
     });
 
     this.addControl("background_section_opacity", {
