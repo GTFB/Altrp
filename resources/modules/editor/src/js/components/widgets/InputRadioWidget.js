@@ -52,9 +52,7 @@ class InputRadioWidget extends Component {
     this.state = {
       settings: { ...props.element.getSettings() },
       value: this.defaultValue,
-      options: parseOptionsFromSettings(
-        props.element.getSettings("content_options")
-      ),
+      options: parseOptionsFromSettings(props.element.getSettings("content_options")),
       paramsForUpdate: null
     };
     this.altrpSelectRef = React.createRef();
@@ -765,9 +763,7 @@ class InputRadioWidget extends Component {
       autocomplete = "off";
     }
 
-    let input = null;
-
-    input = this.renderRepeatedInput();
+    const input = this.renderRepeatedInput();
 
     return (
       <AltrpFieldContainer

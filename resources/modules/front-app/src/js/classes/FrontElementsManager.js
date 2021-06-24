@@ -43,14 +43,14 @@ class FrontElementsManager {
           );
         }
       },
-      // {
-      //   name: "input",
-      //   import: async () => {
-      //     return await import(
-      //       /* webpackChunkName: 'InputWidget' */ "../../../../editor/src/js/components/widgets/InputWidget"
-      //     );
-      //   }
-      // },
+      {
+        name: "input",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputWidget' */ "../../../../editor/src/js/components/widgets/InputWidget"
+          );
+        }
+      },
       {
         name: "input-select",
         import: async () => {
