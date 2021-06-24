@@ -116,6 +116,70 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-text",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputText' */ "../../../../editor/src/js/components/widgets/InputTextWidget"
+          );
+        }
+      },
+      {
+        name: "input-password",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputPassword' */ "../../../../editor/src/js/components/widgets/InputPasswordWidget"
+          );
+        }
+      },
+      {
+        name: "input-number",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputNumber' */ "../../../../editor/src/js/components/widgets/InputNumberWidget"
+          );
+        }
+      },
+      {
+        name: "input-tel",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputTel' */ "../../../../editor/src/js/components/widgets/InputTelWidget"
+          );
+        }
+      },
+      {
+        name: "input-email",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputEmail' */ "../../../../editor/src/js/components/widgets/InputEmailWidget"
+          );
+        }
+      },
+      {
+        name: "input-date",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputDate' */ "../../../../editor/src/js/components/widgets/InputDateWidget"
+          );
+        }
+      },
+      {
+        name: "input-hidden",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputHidden' */ "../../../../editor/src/js/components/widgets/InputHiddenWidget"
+          );
+        }
+      },
+      {
+        name: "input-file",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputFile' */ "../../../../editor/src/js/components/widgets/InputFileWidget"
+          );
+        }
+      },
+      {
         name: "button",
         import: async () => {
           return await import(
