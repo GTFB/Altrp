@@ -11,16 +11,13 @@ import {
   CONTROLLER_NUMBER,
   CONTROLLER_SLIDER,
   CONTROLLER_COLOR,
-  CONTROLLER_SELECT2,
   TAB_CONTENT,
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_SHADOW,
-  CONTROLLER_REPEATER,
   CONTROLLER_MEDIA
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
-import { CONDITIONS_OPTIONS } from "../../../../../front-app/src/js/helpers";
 import { actionsControllers } from "../../decorators/actions-controllers";
 
 class InputTextarea extends BaseElement {
