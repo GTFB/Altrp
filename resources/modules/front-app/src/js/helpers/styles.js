@@ -582,20 +582,78 @@ export function borderRadiusStyled(data = {}) {
 export function dimensionsStyled(controller, style) {
   if (controller) {
     const unit = controller.unit || "px";
-    const left = controller.left || 0;
-    const right = controller.right || 0;
-    const bottom = controller.bottom || 0;
-    const top = controller.top || 0;
+    const left = controller.left;
+    const right = controller.right;
+    const bottom = controller.bottom;
+    const top = controller.top;
 
-    if (
-      controller.left ||
-      controller.right ||
-      controller.bottom ||
-      controller.top
-    ) {
-      return `${style}: ${top + unit} ${right + unit} ${bottom + unit} ${left +
-        unit};`;
-    } else return "";
+    let styles = "";
+
+    if(controller.left) {
+      switch (style) {
+        case "padding":
+          styles += `padding-left: ${left + unit};`
+          break;
+        case "margin":
+          styles += `margin-left: ${left + unit};`
+          break;
+        case "border-radius":
+          styles += `border-bottom-right-radius: ${left + unit};`
+          break;
+        case "border-width":
+          styles += `border-left-width: ${left + unit};`
+      }
+    }
+
+    if(controller.right) {
+      switch (style) {
+        case "padding":
+          styles += `padding-right: ${right + unit};`
+          break;
+        case "margin":
+          styles += `margin-right: ${right + unit};`
+          break;
+        case "border-radius":
+          styles += `border-top-right-radius: ${right + unit};`
+          break;
+        case "border-width":
+          styles += `border-right-width: ${right + unit};`
+      }
+    }
+
+    if(controller.top) {
+      switch (style) {
+        case "padding":
+          styles += `padding-top: ${top + unit};`
+          break;
+        case "margin":
+          styles += `margin-top: ${top + unit};`
+          break;
+        case "border-radius":
+          styles += `border-top-left-radius: ${top + unit};`
+          break;
+        case "border-width":
+          styles += `border-top-width: ${top + unit};`
+      }
+    }
+
+    if(controller.bottom) {
+      switch (style) {
+        case "padding":
+          styles += `padding-bottom: ${bottom + unit};`
+          break;
+        case "margin":
+          styles += `margin-bottom: ${bottom + unit};`
+          break;
+        case "border-radius":
+          styles += `border-bottom-left-radius: ${bottom + unit};`
+          break;
+        case "border-width":
+          styles += `border-bottom-width: ${bottom + unit};`
+      }
+    }
+
+    return styles
   } else {
     return "";
   }

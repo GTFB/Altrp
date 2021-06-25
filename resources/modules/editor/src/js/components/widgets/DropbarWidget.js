@@ -10,6 +10,108 @@ import {
 import {Link} from "react-router-dom";
 import AltrpDropbar from "../altrp-dropbar/AltrpDropbar";
 
+(window.globalDefaults = window.globalDefaults || []).push(`
+  .altrp-btn-wrapper_dropbar.altrp-btn-wrapper {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+
+    & img {
+      max-width: 100%;
+    }
+  }
+
+  .altrp-btn-wrapper_dropbar .altrp-btn {
+    width: auto;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    flex-direction: row;
+    background-color: #343B4C;
+    color: #FFFFFF;
+    padding-top: 20px;
+    padding-right: 25px;
+    padding-bottom: 20px;
+    padding-left: 25px
+
+    &_gray {
+      background-color: #8E94AA;
+      color: #fff;
+    }
+
+    &__icon {
+      transform: scale(0.6);
+    }
+
+    &-icon {
+      display: flex;
+      justify-content: center;
+    }
+
+    & svg {
+      height: 25px;
+      width: 25px;
+    }
+  }
+
+  .altrp-dropbar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+  }
+
+  .altrp-dropbar-children-wrapper {
+    display: flex;
+    position: relative;
+  }
+
+  .altrp-btn-dropbar {
+    width: 100%;
+  }
+
+  .altrp-dropbar-container {
+    position: absolute;
+    color: #666;
+    padding: 30px;
+    background-color: #f1f3f5;
+  }
+
+  .altrp-dropbar-content {
+    user-select: text;
+  }
+
+  .altrp-dropbar-container-hide {
+    visibility: hidden;
+  }
+
+  .altrp-dropbar-variant-bottom-center .altrp-dropbar-children-wrapper {
+    position: static;
+    justify-content: center;
+  }
+
+  .altrp-dropbar-variant-top-center .altrp-dropbar-children-wrapper {
+    position: static;
+    justify-content: center;
+  }
+
+  .altrp-dropbar-variant-left-center .altrp-dropbar-children-wrapper {
+    align-items: center;
+  }
+
+  .altrp-dropbar-variant-right-center .altrp-dropbar-children-wrapper {
+    align-items: center;
+  }
+
+  .altrp-dropbar-container {
+    z-index: 9999;
+  }
+`);
+
+
 class DropbarWidget extends Component {
   constructor(props) {
     super(props);
@@ -209,7 +311,7 @@ class DropbarWidget extends Component {
         }
       </button>
     );
-    return <div className="altrp-btn-wrapper">
+    return <div className="altrp-btn-wrapper_dropbar altrp-btn-wrapper">
       <AltrpDropbar
         elemenentId={this.props.element.getId()}
         settings={this.props.element.getSettings()}

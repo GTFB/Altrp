@@ -2,6 +2,45 @@ import React, { Component } from "react";
 import { isEditor, redirect } from "../../../../front-app/src/js/helpers";
 import CONSTANTS from "../consts";
 
+(window.globalDefaults = window.globalDefaults || []).push(`
+  .altrp-section {
+    display: flex;
+    flex-direction: column;
+    &.altrp-section--boxed > .altrp-element {
+      margin: 0 auto;
+    }
+    &.altrp-section--full-width,
+    &.altrp-section--boxed {
+      width: 100vw;
+    }
+  }
+
+  .altrp-section-full-fill {
+    display: flex;
+    width: 100vh;
+  }
+
+  .altrp-section-full-fill .altrp-section {
+    width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .altrp-section {
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    bottom: auto;
+  }
+
+  .altrp-section_section-boxed {
+    padding-left: calc((100vw - 1440px) / 2);
+    padding-right: calc((100vw - 1440px) / 2);
+    width: 100vw;
+  }
+`);
+
 class SectionComponent extends Component {
   constructor(props) {
     super(props);

@@ -1,4 +1,29 @@
 
+(window.globalDefaults = window.globalDefaults || []).push(`
+  .altrp-divider {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    line-height: 0;
+    font-size: 0;
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .altrp-divider-separator {
+    display: block;
+    height: 1px;
+    width: 100%;
+  }
+
+  .altrp-divider-label {
+    line-height: normal;
+    font-size: medium;
+  }
+`);
+
 class DividerWidget extends Component {
   constructor(props) {
     super(props);

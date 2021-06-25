@@ -49,45 +49,6 @@
   text-align: inherit;
 }
 
-.altrp-btn {
-  width: auto;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  &_gray {
-    background-color: $grey;
-    color: #fff;
-  }
-  &__icon {
-    transform: scale(0.6);
-  }
-  &-icon {
-    display: flex;
-    justify-content: center;
-  }
-}
-
-.altrp-section {
-  //position: relative;
-  //z-index: 50;
-  &.altrp-section--boxed > .altrp-element {
-    // width: 1440px;
-    margin: 0 auto;
-  }
-  &.altrp-section--full-width,
-  &.altrp-section--boxed {
-    width: 100vw;
-  }
-}
-
-.altrp-column {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 10px;
-  align-content: flex-start;
-}
-
 .altrp-tooltip {
   background-color: rgb(104, 102, 222);
   color: rgb(255, 255, 255);
@@ -410,23 +371,6 @@ textarea.altrp-field{
   flex: 0 0 auto;
 }
 
-
-.altrp-section {
-  //&_section-boxed{
-  //  width: 100vw;
-  //}
-}
-.altrp-section-full-fill {
-  display: flex;
-  width: 100vh;
-}
-
-.altrp-section-full-fill .altrp-section {
-  width: 1400px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
 .altrp-table {
   width: 100%;
   border-collapse: collapse;
@@ -445,33 +389,6 @@ textarea.altrp-field{
       }
     }
   }
-}
-
-.altrp-divider {
-  padding-top: 15px;
-  padding-bottom: 15px;
-  line-height: 0;
-  font-size: 0;
-  margin: 10px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
-
-.altrp-divider-separator {
-  display: block;
-  height: 1px;
-  width: 100%;
-}
-
-.altrp-btn-wrapper {
-  align-items: center;
-}
-
-.altrp-divider-label {
-  line-height: normal;
-  font-size: medium;
 }
 
 .altrp-tab {
@@ -612,171 +529,6 @@ textarea.altrp-field{
   max-width: 100%;
 }
 
-.altrp-list-ul {
-  padding: 0;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  display: flex;
-}
-
-.altrp-list-li {
-  list-style: none;
-  display: flex;
-  position: relative;
-  justify-items: center;
-}
-
-.altrp-list-ul-inline {
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.altrp-list-ul-inline .altrp-list-label-content {
-  margin-right: 10px;
-}
-
-.altrp-list-ul-inline .altrp-list-li:first-child .altrp-list-li-content {
-  margin-left: 0 !important;
-}
-
-.altrp-list-ul-default .altrp-list-li:first-child .altrp-list-li-content {
-  margin-top: 0 !important;
-}
-
-.altrp-list-ul-inline .altrp-list-li:last-child .altrp-list-li-content {
-  margin-right: 0 !important;
-}
-
-.altrp-list-ul-default .altrp-list-li:last-child .altrp-list-li-content {
-  margin-bottom: 0 !important;
-}
-
-.altrp-list-ul-default {
-  flex-direction: column;
-}
-
-.altrp-list-icon svg {
-  width: inherit;
-  height: inherit;
-}
-
-.altrp-list-icon-top {
-  margin-bottom: auto;
-}
-
-.altrp-list-icon-center {
-  margin-bottom: auto;
-  margin-top: auto;
-}
-
-.altrp-list-icon-bottom {
-  margin-top: auto;
-}
-
-.altrp-list-icon-relative {
-  position: relative;
-}
-
-.altrp-list-li-divider-default {
-  position: absolute;
-  border-top-style: solid;
-  border-top-width: 1px;
-  bottom: 0;
-}
-
-.altrp-list-li-divider {
-  width: 100%
-}
-
-.altrp-list-li:last-child .altrp-list-li-divider-default {
-  border-top: none;
-}
-
-.altrp-list-li:last-child .altrp-list-li-divider-inline {
-  border-right: none;
-}
-
-.altrp-list-li-content {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-items: center;
-}
-
-.altrp-list-icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.altrp-list-icon, .altrp-list-icon svg {
-  height: 25px;
-  width: 25px;
-}
-
-.altrp-accordion-item-button {
-  background-color: rgb(52, 59, 76);
-  color: #ffffff;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  cursor: pointer;
-  width: 100%;
-  padding: 15px 20px;
-  z-index: 100;
-}
-
-.altrp-accordion-item-content {
-  background-color: rgb(79, 90, 114);
-  color: #ffffff;
-  width: 100%;
-  height: 100%;
-  line-height: 0;
-  padding-left: 20px !important;
-  padding-right: 20px !important;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  flex-wrap: wrap;
-  transition: 250ms ease-in-out;
-  z-index: 0;
-  text-align: left;
-  top: -1em;
-  height: 0px;
-}
-
-.altrp-accordion-item-content-show {
-  padding: 15px 20px;
-  line-height: 1;
-  top: 0;
-  z-index: 0;
-  height: auto;
-}
-
-.altrp-accordion-item-content * {
-  margin: 0;
-}
-
-.altrp-accordion-item-label-container {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  margin-right: auto;
-}
-
-.altrp-accordion-item:first-child {
-  margin-top: 0px !important;
-}
-
-.altrp-accordion-item-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .app-popup {
   position: fixed;
   //display: none;
@@ -903,68 +655,6 @@ textarea.altrp-field{
 .centred {
   text-align: center;
   text-align: -webkit-center;
-}
-
-.altrp-dropbar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: auto;
-}
-
-.altrp-dropbar-children-wrapper {
-  display: flex;
-  position: relative;
-}
-
-.altrp-btn-dropbar {
-  width: 100%;
-}
-
-.altrp-btn {
-  border-radius: 6px;
-  flex-direction: row;
-  background-color: #343B4C;
-  color: #FFFFFF;
-
-  & svg {
-    height: 25px;
-    width: 25px;
-  }
-}
-
-.altrp-dropbar-container {
-  position: absolute;
-  color: #666;
-  padding: 30px;
-  background-color: #f1f3f5;
-}
-
-.altrp-dropbar-content {
-  user-select: text;
-}
-
-.altrp-dropbar-container-hide {
-  visibility: hidden;
-}
-
-.altrp-dropbar-variant-bottom-center .altrp-dropbar-children-wrapper {
-  position: static;
-  justify-content: center;
-}
-
-.altrp-dropbar-variant-top-center .altrp-dropbar-children-wrapper {
-  position: static;
-  justify-content: center;
-}
-
-.altrp-dropbar-variant-left-center .altrp-dropbar-children-wrapper {
-  align-items: center;
-}
-
-.altrp-dropbar-variant-right-center .altrp-dropbar-children-wrapper {
-  align-items: center;
 }
 //.aspect-ratio-off_true .altrp-image {
 //  position: relative;
@@ -1510,9 +1200,6 @@ textarea.altrp-field{
     justify-content: center;
     flex-wrap: wrap;
   }
-}
-.altrp-dropbar-container {
-  z-index: 9999;
 }
 
 .altrp-pagination__previous,

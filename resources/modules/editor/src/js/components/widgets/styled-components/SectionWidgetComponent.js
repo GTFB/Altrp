@@ -641,7 +641,7 @@ export default function SectionWidgetComponent(settings) {
   function altrpSectionFull() {
     let styles = '';
 
-    let margin;
+    let margin, padding;
 
     //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
 
@@ -653,23 +653,33 @@ export default function SectionWidgetComponent(settings) {
       styles += dimensionsControllerToStyles(margin, 'margin');
     }
 
+    //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+
+    if (settings !== undefined) {
+      padding = getResponsiveSetting(settings, 'position_style_position_padding');
+    }
+
+    if (padding) {
+      styles += dimensionsControllerToStyles(padding, 'padding');
+    }
+
     return styles;
   }
 
   function altrpSectionFullHover() {
     let styles = '';
 
-    let margin;
-
-    //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
-
-    if (settings !== undefined) {
-      margin = getResponsiveSetting(settings, 'position_style_position_margin', ':hover');
-    }
-
-    if (margin) {
-      styles += dimensionsControllerToStyles(margin, 'margin');
-    }
+    // let margin;
+    //
+    // //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
+    //
+    // if (settings !== undefined) {
+    //   margin = getResponsiveSetting(settings, 'position_style_position_margin', ':hover');
+    // }
+    //
+    // if (margin) {
+    //   styles += dimensionsControllerToStyles(margin, 'margin');
+    // }
 
     return styles;
   }
