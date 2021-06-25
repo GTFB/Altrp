@@ -257,7 +257,6 @@ class FrontElementsManager {
       window.altrpElementsLists = window.altrpElementsLists.filter(elementName =>{
         return this.ELEMENTS.find(element => elementName === element.name);
       })
-      console.log(window.altrpElementsLists);
       componentsToLoad = this.ELEMENTS.filter(el => {
         return window.altrpElementsLists.indexOf(el.name) !== -1;
       });
