@@ -1,16 +1,16 @@
-.altrp-heading {
-  margin-top: 5px;
-  margin-right: 0;
-  margin-bottom: 5px;
-  margin-left: 0;
-  padding-top: 0;
-  padding-right: 0;
-  padding-bottom: 0;
-  padding-left: 0;
-  background-position: top left;
-  background-attachment: scroll;
-  background-repeat: repeat;
-}
+// .altrp-heading {
+//   margin-top: 5px;
+//   margin-right: 0;
+//   margin-bottom: 5px;
+//   margin-left: 0;
+//   padding-top: 0;
+//   padding-right: 0;
+//   padding-bottom: 0;
+//   padding-left: 0;
+//   background-position: top left;
+//   background-attachment: scroll;
+//   background-repeat: repeat;
+// }
 
 .altrp-btn {
   padding-top: 20px;
@@ -51,24 +51,24 @@
   text-decoration: none;
 }
 
-.altrp-text {
-  padding-top: 0;
-  padding-right: 0;
-  padding-bottom: 0;
-  padding-left: 0;
-  margin-top: 5px;
-  margin-right: 0;
-  margin-bottom: 5px;
-  margin-left: 0;
-  opacity: 1;
-  font-size: 16px;
-  font-family: "Open Sans";
-  line-height: 1.5;
-  letter-spacing: 0;
-  color: rgb(0, 0, 1);
-  border-color: rgb(50,168,82);
-  border-radius: 0;
-}
+// .altrp-text {
+//   padding-top: 0;
+//   padding-right: 0;
+//   padding-bottom: 0;
+//   padding-left: 0;
+//   margin-top: 5px;
+//   margin-right: 0;
+//   margin-bottom: 5px;
+//   margin-left: 0;
+//   opacity: 1;
+//   font-size: 16px;
+//   font-family: "Open Sans";
+//   line-height: 1.5;
+//   letter-spacing: 0;
+//   color: rgb(0, 0, 1);
+//   border-color: rgb(50,168,82);
+//   border-radius: 0;
+// }
 
 .altrp-image {
   margin-top: 0;
@@ -85,69 +85,69 @@
   border-radius: 0;
 }
 
-.altrp-field-label {
-  font-size: 16px;
-  font-family: "Open Sans";
-  line-height: 1.5;
-  letter-spacing: 0;
-}
+// .altrp-field-label {
+//   font-size: 16px;
+//   font-family: "Open Sans";
+//   line-height: 1.5;
+//   letter-spacing: 0;
+// }
 
-.altrp-field-select2__single-value, .altrp-field {
-  font-size: 16px;
-  font-family: "Open Sans";
-  line-height: 1.5;
-  letter-spacing: 0;
-}
+// .altrp-field-select2__single-value, .altrp-field {
+//   font-size: 16px;
+//   font-family: "Open Sans";
+//   line-height: 1.5;
+//   letter-spacing: 0;
+// }
 
-.altrp-field-select2__control, .altrp-field {
-  text-align: left;
-  padding-top: 2px;
-  padding-right: 2px;
-  padding-bottom: 2px;
-  padding-left: 2px;
-  border-width: 1px;
-  border-color: $black;
-  border-radius: 0 0 0 0;
-}
-.altrp-field-select2__control:hover{
+// .altrp-field-select2__control, .altrp-field {
+//   text-align: left;
+//   padding-top: 2px;
+//   padding-right: 2px;
+//   padding-bottom: 2px;
+//   padding-left: 2px;
+//   border-width: 1px;
+//   border-color: $black;
+//   border-radius: 0 0 0 0;
+// }
+// .altrp-field-select2__control:hover{
 
-  border-width: 1px;
-  border-color: $black;
-}
-.altrp-field-container {
-  margin-top: 0;
-  margin-right: 0;
-  margin-bottom: 0;
-  margin-left: 0;
-}
+//   border-width: 1px;
+//   border-color: $black;
+// }
+// .altrp-field-container {
+//   margin-top: 0;
+//   margin-right: 0;
+//   margin-bottom: 0;
+//   margin-left: 0;
+// }
 
-.altrp-field::placeholder, .altrp-field-select2__placeholder {
-  font-size: 13px;
-  font-family: "Open Sans";
-  line-height: 1.5;
-  letter-spacing: 0;
-}
+// .altrp-field::placeholder, .altrp-field-select2__placeholder {
+//   font-size: 13px;
+//   font-family: "Open Sans";
+//   line-height: 1.5;
+//   letter-spacing: 0;
+// }
 
-.altrp-table-th {
-  text-align: center;
-  font-size: 14px;
-  font-weight: normal;
-  font-family: "Open Sans";
-  line-height: 1.5;
-  letter-spacing: 0;
-  padding: 0 0 0 0;
-}
+// .altrp-table-th {
+//   text-align: center;
+//   font-size: 14px;
+//   font-weight: normal;
+//   font-family: "Open Sans";
+//   line-height: 1.5;
+//   letter-spacing: 0;
+//   padding: 0 0 0 0;
+// }
 
-.altrp-table-td {
-  text-align: left;
-  padding: 0 0 0 0;
-  font-size: 14px;
-  font-weight: normal;
-  font-family: "Open Sans";
-  line-height: 1.5;
-  letter-spacing: 0;
-}
+// .altrp-table-td {
+//   text-align: left;
+//   padding: 0 0 0 0;
+//   font-size: 14px;
+//   font-weight: normal;
+//   font-family: "Open Sans";
+//   line-height: 1.5;
+//   letter-spacing: 0;
+// }
 
-.altrp-table-tbody--striped tr:nth-child(2n) {
-  background-color: rgba(0, 0, 50, .05);
-}
+// .altrp-table-tbody--striped tr:nth-child(2n) {
+//   background-color: rgba(0, 0, 50, .05);
+// }
