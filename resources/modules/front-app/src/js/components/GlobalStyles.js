@@ -26,6 +26,8 @@ import MapComponent from "../../../../editor/src/js/components/widgets/styled-co
 import MapConstructorComponent
   from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
 
+const {isEditor} = window.altrpHelpers;
+
 const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
   let styles = "";
   if(areas){
@@ -132,11 +134,13 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
   });
 
   styles += `} `;
-
-
+  window.globalDefaults && (styles += window.globalDefaults.join(''));
   return styles;
 }}`;
 function mapStateToProps(state) {
+  if(isEditor()){
+    return {};
+  }
   return {
     elementsSettings: state.elementsSettings,
     areas: state.areas,
