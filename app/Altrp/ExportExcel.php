@@ -26,13 +26,24 @@ class ExportExcel extends Model
     public function __construct($data, $template, $filename)
     {
         $this->data = json_decode($data, true);
-        $this->template = false;
-        if (file_exists($template))
-            $this->template = $template;
-        $this->filename = 'report.xlsx';
-        if ($filename)
-            $this->filename = $filename;
-        //echo $this->filename;
+
+        $this->template = $this->checkTemplate($template);
+
+        $this->filename = $filename ?? 'report';
+    }
+
+    protected function checkTemplate($template)
+    {
+        $result = false;
+
+        $template_path = public_path() . '/storage/doc/' . $template . '.xls';
+        $template_path_x = public_path() . '/storage/doc/' . $template . '.xlsx';  
+  
+  
+        if (file_exists($template_path)) $result = $template_path;
+        if (file_exists($template_path_x)) $result = $template_path_x;
+  
+        return $result;  
     }
 
     protected function getDelimiter($file)
@@ -87,7 +98,7 @@ class ExportExcel extends Model
         }
     }
 
-    protected function parseTemplateArray(&$offset, $rows)
+    protected function parseTemplateArray(&$offset)
     {
         if (!empty($this->worksheet)) {
             for ($i = 0; $i < count($this->worksheet); $i++) {
@@ -95,14 +106,16 @@ class ExportExcel extends Model
                     preg_match('/\$\{*.array:([^{}]+)\}/im', trim($this->worksheet[$i][$j]), $data);
                     if (!empty($data[1])) {
                         $ColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($j + 1);
+                        
                         $column = $ColumnIndex . ($i + 1 + $offset);
                         $key = trim($data[1]);
                         //вставляем массив
                         $this->worksheet[$i][$j] = '';
-                        if (isset($rows[$key]) && !empty($rows[$key])) {
-                            $countRows = count($rows[$key]) - 1;
+                        if (isset($this->data[$key]) && !empty($this->data[$key])) {
+                            
+                            $countRows = count($this->data[$key]) - 1;
                             $this->sheet->insertNewRowBefore($i + 2 + $offset, $countRows);
-                            $this->sheet->fromArray($rows[$key], NULL, $column);
+                            $this->sheet->fromArray($this->data[$key], NULL, $column);
                             $offset = $offset + $countRows;
                             return;
                         }
