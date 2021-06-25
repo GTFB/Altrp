@@ -1,5 +1,13 @@
 import { isEditor, redirect } from "../../../../front-app/src/js/helpers";
 
+(window.globalDefaults = window.globalDefaults || []).push(`
+  .altrp-column {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+    align-content: flex-start;
+  }
+`);
 
 class ColumnComponent extends Component {
   constructor(props) {

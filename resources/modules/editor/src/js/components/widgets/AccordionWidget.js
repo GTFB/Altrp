@@ -1,5 +1,70 @@
 import {renderAssetIcon} from "../../../../../front-app/src/js/helpers";
 
+(window.globalDefaults = window.globalDefaults || []).push(`
+  .altrp-accordion-item-button {
+    background-color: rgb(52, 59, 76);
+    color: #ffffff;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    cursor: pointer;
+    width: 100%;
+    padding: 15px 20px;
+    z-index: 4;
+  }
+
+  .altrp-accordion-item-content {
+    background-color: rgb(79, 90, 114);
+    color: #ffffff;
+    width: 100%;
+    height: 100%;
+    line-height: 0;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    transition: 250ms ease-in-out;
+    z-index: 0;
+    text-align: left;
+    top: -1em;
+    height: 0px;
+  }
+
+  .altrp-accordion-item-content-show {
+    padding: 15px 20px;
+    line-height: 1;
+    top: 0;
+    z-index: 0;
+    height: auto;
+  }
+
+  .altrp-accordion-item-content * {
+    margin: 0;
+  }
+
+  .altrp-accordion-item-label-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    margin-right: auto;
+  }
+
+  .altrp-accordion-item:first-child {
+    margin-top: 0px !important;
+  }
+
+  .altrp-accordion-item-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+`);
+
 class AccordionWidget extends Component {
   constructor(props){
     super(props);

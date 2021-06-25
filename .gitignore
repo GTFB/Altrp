@@ -61,3 +61,5 @@ public/modules/front-app
 public/modules/editor
 public/modules/reports
 public/modules/reports-new
+
+package-lock.json

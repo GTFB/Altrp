@@ -61,6 +61,17 @@ class AltrpMeta extends AltrpModel{
     return (await resource.put(metaName, {meta_value:metaValue}));
 
   }
+
+  static async saveGlobalStylesPresets(metaValue){
+    const metaName = "global_styles";
+    if(_.isObject(metaValue)){
+      metaValue = JSON.stringify(metaValue);
+    }
+    const Resource = (await import(/* webpackChunkName: 'Resource' */ './Resource')).default;
+    const resource = new Resource({ route: `/admin/ajax/altrp_meta`});
+    return (await resource.put(metaName, {meta_value:metaValue}));
+
+  }
   /**
    * Получить иета свойство с сервера
    *

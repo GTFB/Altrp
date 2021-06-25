@@ -8,7 +8,55 @@ import {
   renderAssetIcon,
   scrollToElement
 } from "../../../../../front-app/src/js/helpers";
-const Link = window.Link
+
+(window.globalDefaults = window.globalDefaults || []).push(`
+  .altrp-btn-wrapper {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+
+    & img {
+      max-width: 100%;
+    }
+  }
+
+  .altrp-btn {
+    width: auto;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    flex-direction: row;
+    background-color: #343B4C;
+    color: #FFFFFF;
+    padding-top: 20px;
+    padding-right: 25px;
+    padding-bottom: 20px;
+    padding-left: 25px
+
+    &_gray {
+      background-color: #8E94AA;
+      color: #fff;
+    }
+
+    &__icon {
+      transform: scale(0.6);
+    }
+
+    &-icon {
+      display: flex;
+      justify-content: center;
+    }
+
+    & svg {
+      height: 25px;
+      width: 25px;
+    }
+  }
+`);
+
+const Link = window.Link;
 
 class ButtonWidget extends Component {
   constructor(props) {

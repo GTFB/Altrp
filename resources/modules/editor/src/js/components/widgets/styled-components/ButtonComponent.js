@@ -55,8 +55,6 @@ export function btnStyles(settings) {
     ["color", "font_color", "color"],
 
     "&:hover",
-    ["margin", "position_margin", "dimensions", ":hover"],
-    ["padding", "position_padding", "dimensions", ":hover"],
     ["background-color", "background_color", "color", ":hover"],
     ["", "gradient", "gradient", ":hover"],
     ["border-style", "border_type", "", ":hover"],
@@ -68,7 +66,6 @@ export function btnStyles(settings) {
     ["", "background_image", "media", ":hover"],
 
     "& .altrp-btn-icon",
-    ["padding", "icon_padding", "dimensions", ":hover"],
     // ["width", "icon_size", "slider", ":hover"],
     // ["height", "icon_size", "slider", ":hover"],
 
@@ -135,5 +132,5 @@ export default function ButtonComponent(settings) {
     ...btnStyles(settings)
   ];
 
-  return styledString(styles, settings) + "& .altrp-btn-wrapper{display:flex;flex-direction:column;}& img{max-width:100%;}";
+  return styledString(styles, settings);
 }

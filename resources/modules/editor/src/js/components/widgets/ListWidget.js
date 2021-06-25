@@ -1,5 +1,109 @@
 import {renderAssetIcon} from "../../../../../front-app/src/js/helpers";
 
+(window.globalDefaults = window.globalDefaults || []).push(`
+  .altrp-list-ul {
+    padding: 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+  }
+
+  .altrp-list-li {
+    list-style: none;
+    display: flex;
+    position: relative;
+    justify-items: center;
+  }
+
+  .altrp-list-ul-inline {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .altrp-list-ul-inline .altrp-list-label-content {
+    margin-right: 10px;
+  }
+
+  .altrp-list-ul-inline .altrp-list-li:first-child .altrp-list-li-content {
+    margin-left: 0 !important;
+  }
+
+  .altrp-list-ul-default .altrp-list-li:first-child .altrp-list-li-content {
+    margin-top: 0 !important;
+  }
+
+  .altrp-list-ul-inline .altrp-list-li:last-child .altrp-list-li-content {
+    margin-right: 0 !important;
+  }
+
+  .altrp-list-ul-default .altrp-list-li:last-child .altrp-list-li-content {
+    margin-bottom: 0 !important;
+  }
+
+  .altrp-list-ul-default {
+    flex-direction: column;
+  }
+
+  .altrp-list-icon svg {
+    width: inherit;
+    height: inherit;
+  }
+
+  .altrp-list-icon-top {
+    margin-bottom: auto;
+  }
+
+  .altrp-list-icon-center {
+    margin-bottom: auto;
+    margin-top: auto;
+  }
+
+  .altrp-list-icon-bottom {
+    margin-top: auto;
+  }
+
+  .altrp-list-icon-relative {
+    position: relative;
+  }
+
+  .altrp-list-li-divider-default {
+    position: absolute;
+    border-top-style: solid;
+    border-top-width: 1px;
+    bottom: 0;
+  }
+
+  .altrp-list-li-divider {
+    width: 100%
+  }
+
+  .altrp-list-li:last-child .altrp-list-li-divider-default {
+    border-top: none;
+  }
+
+  .altrp-list-li:last-child .altrp-list-li-divider-inline {
+    border-right: none;
+  }
+
+  .altrp-list-li-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-items: center;
+  }
+
+  .altrp-list-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .altrp-list-icon, .altrp-list-icon svg {
+    height: 25px;
+    width: 25px;
+  }
+`);
+
 class ListWidget extends Component {
   constructor(props){
     super(props);

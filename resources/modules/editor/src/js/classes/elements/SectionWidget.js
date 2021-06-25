@@ -171,6 +171,7 @@ class SectionWidget extends BaseElement {
     this.addControl("layout_column_direction", {
       type: CONTROLLER_SELECT,
       label: "Direction",
+      default: "column",
       options: [
         {
           value: "row",

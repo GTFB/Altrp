@@ -9,6 +9,7 @@ import {getCurrentElement} from "../../store/store";
 import Controller from "../../classes/Controller";
 import {editGlobalColor, editGlobalEffect, setGlobalColors} from "../../store/altrp-global-colors/actions";
 import {deleteGlobalStylesPresets, updateGlobalStylesPresets} from "../../store/altrp-global-styles/actions";
+import CONSTANTS from "../../consts";
 
 /**
  * @return {boolean}
@@ -94,6 +95,7 @@ function ItemRenderer(query, { handleClick, modifiers }) {
       onClick={handleClick}
     />
     <Button
+      title="delete this preset"
       onClick={deletePreset}
       intent="danger"
       icon="cross"
@@ -163,8 +165,7 @@ function ItemCreateRenderer(query, active, handleClick) {
 class GlobalStyles extends React.Component {
   constructor(props) {
     super(props);
-
-    const currentElement = getCurrentElement();
+    const currentElement = props.currentElement;
     const presets = props.globalStylesPresets.styles;
     let items = [];
     if(presets[currentElement.getName()]) {
@@ -181,12 +182,10 @@ class GlobalStyles extends React.Component {
 
     this.updateCurrent = this.updateCurrent.bind(this);
     this.updateQuery = this.updateQuery.bind(this);
-    this.save = this.save.bind(this)
   }
 
   componentDidUpdate(prevProps, prevState) {
-
-    const currentElement = getCurrentElement();
+    const currentElement = this.props.currentElement;
     const presets = this.props.globalStylesPresets.styles;
     let items = [];
     if (presets[currentElement.getName()]) {
@@ -201,12 +200,17 @@ class GlobalStyles extends React.Component {
     }
 
     if(currentElement.getId() !== this.state.currentElementId) {
+      const currentElementSettings = currentElement.getSettings("global_styles_presets", "");
+      let items = this.props.globalStylesPresets.styles[currentElement.getName()] || {};
+
       this.setState((s) => ({
         ...s,
-        currentElementId: currentElement.getId()
+        currentElementId: currentElement.getId(),
+        current: currentElementSettings,
+        query: "",
+        items: _.keys(items),
       }))
     }
-
     if(this.state.current) {
       let removeCurrent = _.findIndex(this.state.items, (item) => item === this.state.current);
 
@@ -217,15 +221,20 @@ class GlobalStyles extends React.Component {
         }))
       }
     }
+
+    if(JSON.stringify(this.props.controllerValue) !== JSON.stringify(prevProps.controllerValue)) {
+      this.save(prevProps)
+    }
   }
 
   updateCurrent(current) {
-    const currentElement = getCurrentElement();
+    const currentElement = this.props.currentElement;
     let isNewPreset = this.state.items.findIndex(preset => current === preset);
 
     const settings = currentElement.getSettings();
 
 
+    console.log(this.props.globalStylesPresets.styles[currentElement.getName()][current])
     currentElement.setSettings({
       ...settings,
       ...this.props.globalStylesPresets.styles[currentElement.getName()][current],
@@ -246,12 +255,14 @@ class GlobalStyles extends React.Component {
         current
       }))
     }
+
+
   }
 
-  async save() {
+  save() {
     if(this.state.current) {
-      const currentElement = getCurrentElement();
-      const settings = currentElement.getSettings();
+      const currentElement = this.props.currentElement;
+      // настроки елемента
 
       const controlsNames = [];
 
@@ -271,19 +282,29 @@ class GlobalStyles extends React.Component {
         controls[name] = currentElement.settings[name]
       });
 
+      AltrpMeta.getMetaByName("global_styles").then((r) => {
+        let metaValue = r.data.metaValue;
 
-      let meta = await AltrpMeta.getMetaByName("global_styles");
-      const metaValue = meta.getMetaValue({});
-
-      meta.setMetaValue({
-        ...metaValue,
-        [currentElement.getName()]: {
-          ...metaValue[currentElement.getName()],
-          [this.state.current]: controls
+        metaValue = {
+          ...metaValue,
+          [currentElement.getName()]: {
+            ...metaValue[currentElement.getName()],
+            [this.state.current]: controls
+          }
         }
-      });
 
-      await meta.save();
+        AltrpMeta.saveGlobalStylesPresets(metaValue).then(r => {
+          console.log(r)
+        })
+        // meta.setMetaValue({
+        //   ...metaValue,
+        //   [currentElement.getName()]: {
+        //     ...metaValue[currentElement.getName()],
+        //     [this.state.current]: controls
+        //   }
+        // });
+        // meta.save();
+      })
 
       if(this.props.globalStylesPresets.styles[currentElement.getName()]) {
         this.props.updateGlobalStylesPresets({
@@ -320,6 +341,14 @@ class GlobalStyles extends React.Component {
       findSimilar(element);
 
       needUpdate.forEach(elem => {
+        const settings = elem.getSettings();
+        console.log(
+          elem,
+          {
+            ...settings,
+            ...this.props.globalStylesPresets.styles[currentElement.getName()][this.state.current],
+          }
+        )
         elem.setSettings({
           ...settings,
           ...this.props.globalStylesPresets.styles[currentElement.getName()][this.state.current],
@@ -338,15 +367,17 @@ class GlobalStyles extends React.Component {
   }
 
   render() {
+    const items = this.state.items || [];
+    const query = this.state.query || "";
 
     return <div className="state-section-style-presets">
       <Select
         createNewItemFromQuery={(query) => query}
         onQueryChange={this.updateQuery}
-        query={this.state.query}
+        query={query}
         createNewItemRenderer={ItemCreateRenderer}
         itemPredicate={ItemPredicate}
-        items={this.state.items}
+        items={items}
         createNewItemPosition="first"
         noResults={<MenuItem disabled={true} text="No results." />}
         itemRenderer={ItemRenderer}
@@ -361,19 +392,15 @@ class GlobalStyles extends React.Component {
           }
         </button>
       </Select>
-      <button
-        className="state-section-style-button-update"
-        onClick={this.save}
-      >
-        Update
-      </button>
     </div>
   }
 }
 
 function mapStateToProps(state) {
   return {
-    globalStylesPresets: state.globalStylesPresets
+    currentElement: state.currentElement.currentElement,
+    globalStylesPresets: state.globalStylesPresets,
+    controllerValue: state.controllerValue,
   }
 }
 
