@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { hot } from "react-hot-loader";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-
+import GlobalStyles from '../../front-app/src/js/components/GlobalStyles';
 import Modules from "./js/classes/Modules";
 import WidgetsPanel from "./js/components/WidgetsPanel";
 import SettingsPanel from "./js/components/SettingsPanel";
@@ -378,6 +378,7 @@ class Editor extends Component {
             <EditorWindow />
           </div>
         </div>
+        <GlobalStyles/>
         <AssetsBrowser />
       </DndProvider>
     );
