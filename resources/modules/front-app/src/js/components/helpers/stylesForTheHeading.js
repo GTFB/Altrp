@@ -652,6 +652,17 @@ export function getHeadingStyles(settings, id) {
 
   styles += `} `;
 
+  styles += `${parentClass} .altrp-heading, ${parentClass} .altrp-heading a:hover {`;
+
+  const colorLinkHover = getResponsiveSetting(settings, "heading_style_color", ":hover");
+
+  if (colorLinkHover) {
+    styles += colorPropertyStyled(colorLinkHover, "color");
+    styles += "text-decoration: none; ";
+  }
+
+  styles += `} `;
+
   styles += `${parentClass} .altrp-heading {`;
 
   const borderType = getResponsiveSetting(settings, "style_border_type");
