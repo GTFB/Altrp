@@ -7,6 +7,7 @@ const http = require('http');
 module.exports = merge(common, {
   mode: 'development',
   devtool: 'inline-source-map',
+
   devServer: {
     disableHostCheck: true,
     contentBase: path.join(__dirname, "resources/modules/editor/public/"),

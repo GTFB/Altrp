@@ -10,4 +10,5 @@ module.exports = merge(common, {
     publicPath: "/modules/admin/",
     filename: "admin.js"
   },
+  devServer: false
 });
