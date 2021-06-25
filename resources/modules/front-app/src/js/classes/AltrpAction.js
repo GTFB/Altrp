@@ -746,17 +746,17 @@ class AltrpAction extends AltrpModel {
         console.error('Element ID is not set');
         return { success: true };
       }
-  
+
       const table = getHTMLElementById(elementId);
       if (!table) {
         console.error('Table with provided ID is not found');
         return { success: true };
       }
-  
+
       data = dataFromTable(table);
-  
+
       const formattedData = [];
-  
+
       _.each(data, row => formattedData.push(Object.values(row)));
       let rawTemplateData = this.getProperty('template_data');
       if (rawTemplateData){

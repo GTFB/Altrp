@@ -703,7 +703,7 @@ export function creativeLinkStyled(controller = {}) {
  * @param {{}} controller
  */
 export function mediaStyled(controller = {}) {
-  if (controller.url) {
+  if (controller?.url) {
     return `background-image: url("${controller.url}");`;
   } else {
     return "";

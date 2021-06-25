@@ -1252,4 +1252,69 @@ function getFileTypes(){
     $file_types = json_decode( $file_types, true);
     return $file_types;
 }
+const ACTIONS_NAMES = [
+  'actions',
+  'focus_actions',
+  'change_actions',
+  'page_load_actions',
+];
+const ACTIONS_COMPONENTS = [
+  'email',
+  'toggle_popup',
+];
+/**
+ * Получить настройки для фронтенда h-altrp
+ * @return array['action_components']=array - компоненты, которые нужно загрузить для действий ('mail', 'popups')
+ *
+ *
+ * ]
+ */
+function getAltrpSettings( $page_id ){
+  $settings = [
+    'action_components' => []
+  ];
+  if( ! $page_id ){
+    return $settings;
+  }
+  $areas = Page::get_areas_for_page( $page_id );
 
+  $action_types = [];
+  foreach ( $areas as $area ) {
+    $root_element = data_get( $area, 'template.data' );
+    if( $root_element ){
+      recurseMapElements( $root_element, function( $element ) use ( &$action_types ){
+        if( ! data_get( $element, 'settings.react_element' ) ){
+          return;
+        }
+        $actions = [];
+        foreach ( ACTIONS_NAMES as $ACTIONS_NAME ) {
+          $actions = array_merge( $actions, data_get( $element, 'settings.' . $ACTIONS_NAME, [] ) );
+        }
+        foreach ( $actions as $action ) {
+          $action_type = data_get( $action, 'type' );
+          if( array_search( $action_type, $action_types ) === false ){
+            $action_types[] = $action_type;
+          }
+        }
+
+      } );
+    }
+  }
+
+  foreach ( ACTIONS_COMPONENTS as $ACTIONS_COMPONENT ) {
+    if( array_search( $ACTIONS_COMPONENT, $action_types ) !== false ){
+      $settings['action_components'][] = $ACTIONS_COMPONENT;
+    }
+  }
+  return $settings;
+}
+
+function recurseMapElements( $element, $callback ){
+  $callback($element);
+
+  if( isset( $element['children'] ) && is_array( $element['children'] ) ){
+    foreach ( $element['children'] as $child ) {
+      recurseMapElements( $child, $callback );
+    }
+  }
+}

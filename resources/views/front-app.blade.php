@@ -134,6 +134,7 @@
   window.altrpPreloadedDatasources = {!! json_encode( $datasources ?? '' ) !!};
   window.altrpMenus = [];
   window.currentPage = {!! json_encode( $_frontend_route ) !!};
+  window.__altrp_settings__ = {!! $altrp_settings !!};
   /* ]]> */
 </script>
 <script src="/data/current-user" defer></script>

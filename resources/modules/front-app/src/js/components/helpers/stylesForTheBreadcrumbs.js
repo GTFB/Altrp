@@ -1,13 +1,13 @@
 import {getResponsiveSetting} from "../../helpers";
 import {typographicControllerToStyles} from "../../helpers/styles";
 
-const getBreadscrubsStyles =(settings,id)=>{
+const getBreadcrumbsStyles =(settings,id)=>{
     const parentClass = `.altrp-element${id}`;
 
     let styles = `${parentClass} .bp3-icon svg{
     width:${getResponsiveSetting(settings, 'icon_width') || '20px'};
     height:${getResponsiveSetting(settings, 'icon_height') || '20px'};`
-    
+
     styles += `} `;
 
     styles += `${parentClass} .bp3-icon{`;
@@ -20,7 +20,7 @@ const getBreadscrubsStyles =(settings,id)=>{
         styles += `margin-right:${icon_mr};`;
     }
     styles += `} `;
-    
+
     styles += `${parentClass} .altrp-menu-item__icon {display:flex;}`;
     let height = getResponsiveSetting(settings, 'height');
     if(height){
@@ -48,12 +48,12 @@ const getBreadscrubsStyles =(settings,id)=>{
     if(delimiter_mr){
         styles += `margin-right:${delimiter_mr};`
     }
-    
+
     styles += `} `;
     styles += `${parentClass} .bp3-breadcrumb:not(.bp3-breadcrumb-current){`;
-    
+
     let color = getResponsiveSetting(settings, 'color');
-    
+
     if(color && color.color){
         styles += `color:${color.color};`;
         styles += `svg, path {fill: ${color.color};`;
@@ -65,38 +65,38 @@ const getBreadscrubsStyles =(settings,id)=>{
     styles += `} `;
 
     styles += `${parentClass} .bp3-breadcrumb:not(.bp3-breadcrumb-current):hover{`;
-    
+
     color = getResponsiveSetting(settings, 'color', ':hover');
-    
+
     if(color && color.color){
         styles += `color:${color.color};`;
         styles += `svg, path {fill: ${color.color};`;
     }
     font = getResponsiveSetting(settings, 'font', ':hover');
-    
+
     if(font){
         styles += typographicControllerToStyles(font);
     }
     styles += `}`;
-    
+
     styles += `${parentClass} .bp3-breadcrumb-current{`;
-    
+
     let current_color = getResponsiveSetting(settings, 'current_color');
-    
+
     if(current_color && current_color.color){
         styles += `color:${current_color.color};`;
         styles += `svg, path {fill: ${current_color.color};}`;
     }
-    
+
     let current_font = getResponsiveSetting(settings, 'current_font');
-    
+
     if(current_font){
         styles += typographicControllerToStyles(current_font);
     }
-    
+
     styles += `} `;
-    
+
     return styles;
 }
 
-export default getBreadscrubsStyles;
+export default getBreadcrumbsStyles;

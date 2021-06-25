@@ -1,12 +1,13 @@
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const webpack = require("webpack");
 const path = require("path");
-const nodeExternals = require("webpack-node-externals");
+
 module.exports = {
-  entry: "./server/express.js",
+  entry: {
+    express: "./server/express.js",
+  },
 
   mode: "production",
-
   target: "node",
 
   output: {
@@ -77,7 +78,7 @@ module.exports = {
         use: ["@svgr/webpack", "url-loader"]
       },
       {
-        test: /\.(png|jpg|gif|woff(2)?|ttf|eot)$/,
+        test: /\.(png|jpg|gif|woff(2)?|ttf|eot|node)$/,
         loader: "file-loader",
         options: {
           name: "[path][name].[ext]"

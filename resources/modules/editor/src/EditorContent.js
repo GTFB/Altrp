@@ -22,7 +22,6 @@ import  { StyleSheetManager } from 'styled-components';
 import {HTML5Backend} from "react-dnd-html5-backend";
 import { DndProvider, } from 'react-dnd'
 import frontElementsManager from '../../front-app/src/js/classes/FrontElementsManager.js'
-import GlobalStyles from "../../front-app/src/js/components/GlobalStyles";
 
 window.Link = 'a';
 frontElementsManager.loadAllComponents();
@@ -99,7 +98,6 @@ class EditorContent extends Component {
         </DndProvider>
         {store.getState().templateData.template_type !== 'email' && <Styles/>}
         <ElementContextMenu/>
-        <GlobalStyles/>
       </Router>
       </StyleSheetManager>
       <FontsManager />

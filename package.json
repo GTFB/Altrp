@@ -27,7 +27,7 @@
         "reports:dev": "cd resources/modules/altrp-reports && PORT=3010 react-scripts start",
         "reports:build": "rm -rf public/modules/altrp-reports && cd resources/modules/altrp-reports && PUBLIC_URL=/modules/reports/ react-scripts build",
         "reports:move": "mv -f resources/modules/altrp-reports/build public/modules/reports",
-        "server:start": "node server-dist/index",
+        "server:start": "node server-dist/index.js",
         "docs": "jsdoc resources/modules -r"
     },
     "dependencies": {
@@ -110,6 +110,7 @@
         "moment": "^2.29.1",
         "nivo": "^0.31.0",
         "node-html-parser": "^3.2.0",
+        "nodemon": "^2.0.7",
         "object-diff": "^0.0.4",
         "passport": "^0.4.1",
         "pusher-js": "^7.0.2",
@@ -169,6 +170,7 @@
         "session-file-store": "^1.4.0",
         "slick-carousel": "^1.8.1",
         "sortablejs": "^1.13.0",
+        "spawn-server-webpack-plugin": "^5.0.6",
         "style-object-to-css-string": "^1.0.1",
         "styled-components": "^5.0.0",
         "text-mask-addons": "^3.8.0",
