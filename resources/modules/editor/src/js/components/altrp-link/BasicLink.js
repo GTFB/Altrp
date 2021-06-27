@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import {isEditor} from "../../../../../front-app/src/js/helpers";
-const Link = window.Link
-
 class BasicLink extends Component {
   render() {
     let classes = this.props.className;
@@ -74,7 +72,7 @@ class BasicLink extends Component {
         }
       </a>
     ) : (
-      <Link
+      <window.Link
         style={styleChildren}
         className={className}
         onClick={isEditor() ? (e) => e.preventDefault() : () => {}}
@@ -83,7 +81,7 @@ class BasicLink extends Component {
         {
           children
         }
-      </Link>
+      </window.Link>
     )
   }
 }

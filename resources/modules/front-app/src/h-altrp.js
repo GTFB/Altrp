@@ -5,6 +5,7 @@ import  "./js/functions/mount-elements";
 import  './js/libs/react-lodash';
 import {setScrollValue} from "./js/store/scroll-position/actions";
 
+window.Link = 'a';
 
 
 function loadDatastorageUpdater(){

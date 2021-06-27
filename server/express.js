@@ -3,12 +3,14 @@ import Area from "../resources/modules/front-app/src/js/classes/Area";
 import { parse } from "node-html-parser";
 import{Link} from "react-router-dom"
 import React from "react";
+import lodash from "lodash";
 import {StaticRouter as Router, Route, Switch} from "react-router-dom";
 import {setAreas} from "../resources/modules/front-app/src/js/store/areas/actions";
 if (typeof performance === "undefined") {
   global.performance = require("perf_hooks").performance;
 }
 global.styled = styled;
+global._ = lodash;
 global.createGlobalStyle = createGlobalStyle;
 /**
  * Эмулируем окружение клиента
@@ -17,6 +19,7 @@ global.createGlobalStyle = createGlobalStyle;
 global.window = {
   parent: {},
   Link,
+
 };
 global.window.altrpMenus = [];
 global.SSR = true;

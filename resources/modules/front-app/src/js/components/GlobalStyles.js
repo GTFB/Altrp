@@ -99,25 +99,34 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles += getPostsStyles(item.settings, id);
         }
           break;
-        case "input":
-          {
-            switch (item.settings?.content_type) {
-              case "select2":
-                styles += `.${prefix}${id} {${FormComponent.FormComponent(
-                  item.settings,
-                  id
-                )}}`;
-                //select2 options style
-                styles += `${FormComponent.select2Options(item.settings, id)}}`;
-                break;
-              default:
-                styles += `.${prefix}${id} {${FormComponent.FormComponent(
-                  item.settings,
-                  id
-                )}}`;
-                break;
-            }
-          }
+        case "input-select2": {
+          styles += `.${prefix}${id} {${FormComponent.FormComponent(
+            item.settings,
+            id
+          )}}`;
+          //select2 options style
+          styles += `${FormComponent.select2Options(item.settings, id)}}`;
+        }
+          break;
+        case "input-text":
+        case "input-password":
+        case "input-number":
+        case "input-date":
+        case "input-email":
+        case "input-tel":
+        case "input-file":
+        case "input-select":
+        case "input-image-select":
+        case "input-radio":
+        case "input-checkbox":
+        case "input-accept":
+        case "input-textarea":
+        case "input-wysiwyg": {
+          styles += `.${prefix}${id} {${FormComponent.FormComponent(
+            item.settings,
+            id
+          )}}`;
+        }
           break;
         case "map":
           styles += `.${prefix}${id} {${MapComponent(item.settings)}}`;
