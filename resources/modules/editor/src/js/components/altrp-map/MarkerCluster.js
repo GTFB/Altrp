@@ -3,13 +3,13 @@ import L from "leaflet";
 import "leaflet.markercluster/dist/leaflet.markercluster";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
-import { useLeaflet } from "react-leaflet";
+import { useMap } from "react-leaflet";
 import { customIcon } from "./DivIcon";
 
 const mcg = L.markerClusterGroup();
 
 const MarkerCluster = ({ markers }) => {
-  const { map } = useLeaflet();
+  const { map } = useMap();
 
   let markersData = markers.map(item => {
     return {
