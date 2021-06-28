@@ -498,6 +498,7 @@ class ElementWrapper extends Component {
         break;
     }
 
+    console.log(this.props.state)
     return elementHideTrigger &&
       this.props.hideTriggers.includes(elementHideTrigger) ? null : (
       <WrapperComponent
@@ -599,7 +600,9 @@ function mapStateToProps(state) {
     currentDataStorage: state.currentDataStorage,
     // hideTriggers: state.hideTriggers,
     currentScreen: state.currentScreen,
-    globalStyles: state.globalStyles
+    globalStyles: state.globalStyles,
+    historyStore: state.historyStore,
+    state,
   };
 }
 

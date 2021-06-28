@@ -42,8 +42,15 @@ class BaseElement extends ControlStack {
    * @param settings
    */
   setSettings(settings) {
-
     this.settings = settings || this.settings;
+    if(this.component && settings) {
+      this.component.setState(state => {
+        return {
+          ...state,
+          settings
+        }
+      })
+    }
   }
 
   /**

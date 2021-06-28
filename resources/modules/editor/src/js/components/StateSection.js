@@ -43,7 +43,7 @@ class StateSection extends Component {
             })
           }
         </div>
-        {/*<GlobalStyles/>*/}
+        <GlobalStyles/>
       </div>
     )
   }

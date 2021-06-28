@@ -1,5 +1,6 @@
 import { createGlobalColor } from "../../helpers";
 import {
+  ADD_UPDATE_GLOBAL_STYLES_PRESET
 } from "./actions";
 import {
   SET_GLOBAL_STYLES_PRESET,

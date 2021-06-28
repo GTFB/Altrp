@@ -26,9 +26,8 @@
 
 .state-section-style-presets {
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 70px;
   padding-bottom: 10px;
+  height: 40px;
 }
 
 .state-section-style-target {
@@ -36,11 +35,17 @@
 }
 
 .state-section-style-button {
-  width: calc(100% - 10px);
+  width: 100%;
 }
 
 .state-section-style-preset {
   display: grid;
   width: 100%;
   grid-template-columns: 1fr 40px;
+}
+
+.state-section-style-presets_active {
+  display: grid;
+  grid-template-columns: 1fr 46px;
+  grid-gap: 10px;
 }

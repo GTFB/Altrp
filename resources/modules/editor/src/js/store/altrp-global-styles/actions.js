@@ -25,4 +25,3 @@ export function deleteGlobalStylesPresets(widgetName, name) {
     name,
   };
 }
-
