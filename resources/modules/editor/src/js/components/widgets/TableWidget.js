@@ -191,7 +191,6 @@ class TableWidget extends Component {
   }
 
   _componentDidMount(){
-    console.log(window.globalDefaults)
     if(this.props.element.getSettings('store_state') && getWidgetState(this.props.element.getId())){
       this.setState(state=>({...state, widgetState: getWidgetState(this.props.element.getId())}));
     } else if (this.props.element.getSettings('store_state')){

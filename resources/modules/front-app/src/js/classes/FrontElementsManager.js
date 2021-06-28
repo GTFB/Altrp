@@ -52,6 +52,134 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-select",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputSelectWidget' */ "../../../../editor/src/js/components/widgets/InputSelectWidget"
+          );
+        }
+      },
+      {
+        name: "input-select2",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputSelect2Widget' */ "../../../../editor/src/js/components/widgets/InputSelect2Widget"
+          );
+        }
+      },
+      {
+        name: "input-radio",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputRadio' */ "../../../../editor/src/js/components/widgets/InputRadioWidget"
+          );
+        }
+      },
+      {
+        name: "input-checkbox",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputCheckbox' */ "../../../../editor/src/js/components/widgets/InputCheckboxWidget"
+          );
+        }
+      },
+      {
+        name: "input-wysiwyg",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputWysiwyg' */ "../../../../editor/src/js/components/widgets/InputWysiwygWidget"
+          );
+        }
+      },
+      {
+        name: "input-textarea",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputTextarea' */ "../../../../editor/src/js/components/widgets/InputTextareaWidget"
+          );
+        }
+      },
+      {
+        name: "input-image-select",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputImageSelect' */ "../../../../editor/src/js/components/widgets/InputImageSelectWidget"
+          );
+        }
+      },
+      {
+        name: "input-accept",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputAccept' */ "../../../../editor/src/js/components/widgets/InputAcceptWidget"
+          );
+        }
+      },
+      {
+        name: "input-text",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputText' */ "../../../../editor/src/js/components/widgets/InputTextWidget"
+          );
+        }
+      },
+      {
+        name: "input-password",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputPassword' */ "../../../../editor/src/js/components/widgets/InputPasswordWidget"
+          );
+        }
+      },
+      {
+        name: "input-number",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputNumber' */ "../../../../editor/src/js/components/widgets/InputNumberWidget"
+          );
+        }
+      },
+      {
+        name: "input-tel",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputTel' */ "../../../../editor/src/js/components/widgets/InputTelWidget"
+          );
+        }
+      },
+      {
+        name: "input-email",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputEmail' */ "../../../../editor/src/js/components/widgets/InputEmailWidget"
+          );
+        }
+      },
+      {
+        name: "input-date",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputDate' */ "../../../../editor/src/js/components/widgets/InputDateWidget"
+          );
+        }
+      },
+      {
+        name: "input-hidden",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputHidden' */ "../../../../editor/src/js/components/widgets/InputHiddenWidget"
+          );
+        }
+      },
+      {
+        name: "input-file",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputFile' */ "../../../../editor/src/js/components/widgets/InputFileWidget"
+          );
+        }
+      },
+      {
         name: "button",
         import: async () => {
           return await import(
