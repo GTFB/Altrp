@@ -17,6 +17,7 @@ export default class AdminSettings extends Component {
     this.switchTab = this.switchTab.bind(this);
     this.state = {
       SSREnabled: false,
+      SSRPort:'',
       activeTab: parseInt(window.location.hash[1]) || 0,
     };
   }
@@ -29,11 +30,22 @@ export default class AdminSettings extends Component {
       SSREnabled: value,
     }))
   };
+  setSSRPort = async (e)=>{
+    let value = e.target.value;
+    new Resource({route:'/admin/ajax/settings'}).put('ssr_port', {value});
+    this.setState(state=>({
+      ...state,
+      SSRPort: value,
+    }))
+  };
 
   async componentDidMount() {
     let SSREnabled = ! ! (await new Resource({route:'/admin/ajax/settings'}).get('altrp_ssr_disabled')).altrp_ssr_disabled;
+
+    let SSRPort = (await new Resource({route:'/admin/ajax/settings'}).get('ssr_port')).ssr_port;
     this.setState(state => ({...state,
       SSREnabled,
+      SSRPort
     }));
   }
   switchTab(activeTab){
@@ -42,6 +54,7 @@ export default class AdminSettings extends Component {
   }
 
   render() {
+    const {SSRPort} = this.state;
     return <div className="admin-settings admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs"><a className="admin-breadcrumbs__link" href="#">Settings</a><span
@@ -91,10 +104,13 @@ export default class AdminSettings extends Component {
                 </td>
               </tr>
               <tr className="admin-settings-table-row">
-                <td className="admin-settings-table__td row-text">Disable Default Colors</td>
+                <td className="admin-settings-table__td row-text">SSR Port</td>
                 <td className="admin-settings-table__td ">
-                  <input className="admin-table__td_check" type="checkbox"/>Checking this box will disable
-                  Builder's Default Colors, and make Builder inherit the colors from your CSS file
+                  <input className="admin-table__td_check"
+                         type="text"
+                         placeholder="9000"
+                         value={SSRPort}
+                         onChange={this.setSSRPort}/>
                 </td>
               </tr>
               <tr className="admin-settings-table-row">

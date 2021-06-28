@@ -107,7 +107,8 @@ const Row = ({ row,
   });
 
   const [{ isDragging }, drag, preview] = useDrag({
-    item: { type: DND_ITEM_TYPE, index },
+    item: {  index },
+    type: DND_ITEM_TYPE,
     collect: monitor => ({
       isDragging: monitor.isDragging(),
     }),

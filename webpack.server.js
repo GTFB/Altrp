@@ -1,14 +1,14 @@
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const webpack = require("webpack");
 const path = require("path");
-const nodeExternals = require("webpack-node-externals");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
-  entry: "./server/index.js",
+  entry: {
+    express: "./server/express.js",
+  },
 
+  mode: "production",
   target: "node",
-
-  externals: [nodeExternals()],
 
   output: {
     path: path.resolve("server-dist"),
@@ -20,10 +20,40 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        use: "babel-loader"
+        use: {
+          loader: "babel-loader",
+          options: {
+            exclude: /node_modules/,
+            presets: ["@babel/env", "@babel/react"],
+            plugins: [
+              "@babel/plugin-transform-runtime",
+              "@babel/plugin-transform-async-to-generator",
+              "@babel/transform-arrow-functions",
+              "@babel/proposal-object-rest-spread",
+              [
+                "@babel/plugin-proposal-class-properties",
+                {
+                  "loose": true
+                }
+              ],
+              [
+                "@babel/plugin-proposal-private-property-in-object",
+                {
+                  "loose": true
+                }
+              ],
+              [
+                "@babel/plugin-proposal-private-methods",
+                {
+                  "loose": true
+                }
+              ]
+            ]
+          }
+        }
       },
       {
-        test: /\.s[ac]ss$/i,
+        test: /\.(s[ac]ss|css)$/i,
 
         use: ["css-loader", "sass-loader"]
 
@@ -37,7 +67,7 @@ module.exports = {
         use: ["@svgr/webpack", "url-loader"]
       },
       {
-        test: /\.(png|jpg|gif)$/,
+        test: /\.(png|jpg|gif|woff(2)?|ttf|eot|node)$/,
         loader: "file-loader",
         options: {
           name: "[path][name].[ext]"
@@ -46,10 +76,11 @@ module.exports = {
     ]
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": '"production"',
       "process.env.BROWSER": JSON.stringify(true),
       __DEV__: false
-    })
+    }),
   ]
 };

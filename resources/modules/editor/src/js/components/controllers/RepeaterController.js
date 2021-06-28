@@ -215,7 +215,6 @@ const RepeaterItem = ({thisController, itemClasses, idx, itemController, fields:
       return ! (getTemplateType() === 'email' && field.hideOnEmail)
     })
   }, [thisController, _fields]);
-  console.log(idx);
   const [collectedProps, drop] = useDrop(()=>({
     accept: "item",
     drop(item, monitor) {
