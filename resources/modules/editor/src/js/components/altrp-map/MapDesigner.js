@@ -4,13 +4,7 @@ import axios from "axios";
 import Drawer from "rc-drawer";
 import { createPortal } from "react-dom";
 // import MarkerCluster from "./MarkerCluster";
-
-import {
-  MapContainer as Map,
-  FeatureGroup,
-  TileLayer,
-  useLeaflet
-} from "react-leaflet";
+import { MapContainer as Map, FeatureGroup, TileLayer } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 // import Control from "react-leaflet-control";
 

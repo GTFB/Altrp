@@ -93,8 +93,5 @@ module.exports = {
       "process.env.BROWSER": JSON.stringify(true),
       __DEV__: false
     }),
-    // new webpack.IgnorePlugin({
-    //   resourceRegExp: /\.ttf|\.woff|\.otf|\.woff2|\.s[ac]ss$/,
-    // }),
   ]
 };
