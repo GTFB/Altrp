@@ -58,27 +58,8 @@ function ItemRenderer(query, { handleClick, modifiers }) {
 
     let element = altrpEditor.modules.templateDataStorage.getRootElement();
 
-    function findSimilar(firstElement) {
-      const childs = firstElement.getChildren();
 
-      if(childs.length !== 0) {
-        childs.forEach(child => {
-          const name = child.getName();
-
-          if(currentElement.getName() === name) {
-            const preset = child.getSettings("global_styles_presets", "");
-            const currentPreset = currentElement.getSettings("global_styles_presets", "");
-
-            if(preset === currentPreset) {
-              needUpdate.push(child)
-            }
-          }
-
-          findSimilar(child)
-        })
-      }
-    }
-    findSimilar(element);
+    findSimilar(element, needUpdate);
 
     delete settings.global_styles_presets;
 
@@ -296,7 +277,6 @@ class GlobalStyles extends React.Component {
       }
     });
 
-    console.log('start save')
     AltrpMeta.getMetaByName("global_styles").then((r) => {
       let metaValue = r.data.metaValue;
 
@@ -309,7 +289,6 @@ class GlobalStyles extends React.Component {
       }
 
       AltrpMeta.saveGlobalStylesPresets(metaValue).then(r => {
-        console.log(r)
       })
       // meta.setMetaValue({
       //   ...metaValue,
@@ -320,7 +299,6 @@ class GlobalStyles extends React.Component {
       // });
       // meta.save();
     })
-    console.log('end save')
 
     if(this.props.globalStylesPresets.styles[currentElement.getName()]) {
       this.props.updateGlobalStylesPresets({
@@ -334,31 +312,12 @@ class GlobalStyles extends React.Component {
 
     let element = altrpEditor.modules.templateDataStorage.getRootElement();
 
-    function findSimilar(firstElement) {
-      const childs = firstElement.getChildren();
-
-      if(childs.length !== 0) {
-        childs.forEach(child => {
-          const name = child.getName();
-
-          if(currentElement.getName() === name) {
-            const preset = child.getSettings("global_styles_presets", "");
-            const currentPreset = currentElement.getSettings("global_styles_presets", "");
-
-            if(preset === currentPreset) {
-              needUpdate.push(child)
-            }
-          }
-
-          findSimilar(child)
-        })
-      }
-    }
-    findSimilar(element);
-
+    findSimilar(element, needUpdate);
     needUpdate.forEach(elem => {
       const settings = elem.getSettings();
-
+      if(elem === getCurrentElement()){
+        return;
+      }
       // _.keys(controls).forEach((controllerName) => {
       //   elem.setSettingValue(controllerName, controls[controllerName])
       // })
@@ -366,7 +325,6 @@ class GlobalStyles extends React.Component {
         ...settings,
         ...controls,
       });
-      console.log(elem)
     })
   }
 
@@ -450,3 +408,28 @@ const mapDispatchToProps = dispatch => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(GlobalStyles);
 
+/**
+ *
+ * @param {BaseElement} firstElement
+ * @param {BaseElement[]} needUpdate
+ */
+function findSimilar(firstElement, needUpdate) {
+  const children = firstElement.getChildren();
+  const currentElement = getCurrentElement();
+  if(children.length !== 0) {
+    children.forEach(child => {
+      const name = child.getName();
+
+      if(currentElement.getName() === name) {
+        const preset = child.getSettings("global_styles_presets", "");
+        const currentPreset = currentElement.getSettings("global_styles_presets", "");
+
+        if(preset === currentPreset) {
+          needUpdate.push(child)
+        }
+      }
+
+      findSimilar(child, needUpdate)
+    })
+  }
+}

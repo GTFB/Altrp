@@ -96,7 +96,6 @@ class AltrpMeta extends AltrpModel{
       metaValue = mbParseJSON(metaValue);
       if(_.isArray(AltrpMeta.pendingCallbacks[metaName])){
         AltrpMeta.pendingCallbacks[metaName].forEach(callback=>{
-          console.log(callback);
           callback(new AltrpMeta(metaName, metaValue));
         });
       }
