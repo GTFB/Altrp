@@ -192,7 +192,11 @@ class GlobalFontItem extends Component {
   }
 
   onSelect(event, font) {
-    this.setState(s => ({ ...s, font: { ...s.font, family: font.value } }));
+    console.log(font);
+    this.setState(s => ({
+      ...s,
+      font: { ...s.font, family: font.value, label: font.label }
+    }));
   }
 
   changeUnit(event) {

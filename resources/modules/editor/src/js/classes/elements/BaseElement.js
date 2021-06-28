@@ -5,6 +5,7 @@ import {
   getFactory,
   editorSetCurrentElement
 } from "../../helpers";
+import { addFont } from "../../../../../front-app/src/js/store/fonts-storage/actions";
 import CONSTANTS from "../../consts";
 import { changeTemplateStatus } from "../../store/template-status/actions";
 import store, { getCurrentScreen, getElementState } from "../../store/store";
@@ -43,16 +44,16 @@ class BaseElement extends ControlStack {
    */
   setSettings(settings) {
     this.settings = settings || this.settings;
-    if(this.component && settings) {
+    if (this.component && settings) {
       this.component.setState(state => {
         return {
           ...state,
           settings
-        }
-      })
+        };
+      });
     }
-    if(this.wrapperComponent && settings){
-      this.wrapperComponent.setState(state => ({...state, settings}))
+    if (this.wrapperComponent && settings) {
+      this.wrapperComponent.setState(state => ({ ...state, settings }));
     }
   }
 
@@ -459,7 +460,6 @@ class BaseElement extends ControlStack {
         })();
       }
     }
-
   }
 
   _registerControls() {
@@ -768,7 +768,16 @@ class BaseElement extends ControlStack {
     );
     currentPropsList.forEach(settingName => {
       // this.settings[settingName] = value;
-
+      /**
+       * child.addFont(
+            this.props.controller.getSettingName(),
+            value.value
+          );
+       */
+      if (settingName.indexOf("typographic") >= 0) {
+        this.addFont(settingName, value.family);
+        appStore.dispatch(addFont(this.getId(), settingName, value.family));
+      }
       if (settingName.indexOf("gradient-first-color:") >= 0) {
         settingName = settingName.replace("gradient-first-color:", "");
         if (
