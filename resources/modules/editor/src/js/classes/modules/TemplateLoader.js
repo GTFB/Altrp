@@ -37,7 +37,7 @@ class TemplateLoader {
     if(! update){
       update = ! this.templatesCache.hasProperty(templateId);
     }
-  
+
     if(_.get(TemplateLoader, `statuses.${templateId}`) === 'loading'){
       return new Promise((resolve, reject) => {
         TemplateLoader.pendingCallbacks[templateId] = TemplateLoader.pendingCallbacks[templateId] || [];

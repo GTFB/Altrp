@@ -1,5 +1,6 @@
 <?php
 
+use App\Constructor\Template;
 use App\Http\Requests\ApiRequest;
 use App\Role;
 use App\Media;
@@ -959,26 +960,57 @@ function extractElementsNames( $areas = [], $only_react_elements = false){
     if( ! isset( $area['template']['data'] ) ){
       continue;
     }
-//    echo '<pre style="padding-left: 200px;">';
-//    var_dump( $area );
-//    echo '</pre>';
+
     $data = $area['template']['data'];
     _extractElementsNames( $data, $elementNames, $only_react_elements );
 
   }
-
+  $elementNames = array_unique( $elementNames );
   return $elementNames;
+}
+
+/**
+ * @param string $template_id
+ * @param array $elementNames
+ */
+function extractElementsNamesFromTemplate( $template_id, &$elementNames ){
+  if( Str::isUuid( $template_id ) ){
+    $template = Template::where( 'guid', $template_id )->first();
+  } else {
+    $template = Template::find( $template_id );
+  }
+  if( ! $template ){
+    return;
+  }
+  $data = json_decode( $template->data, true );
+  _extractElementsNames( $data, $elementNames, false );
 }
 
 /**
  * @param array $element
  * @param array $elementNames
  * @param boolean $only_react_elements
- * @param $elementNames
  */
 function _extractElementsNames( $element,  &$elementNames, $only_react_elements ){
   $DEFAULT_REACT_ELEMENTS = [
     'input',
+    'input-select',
+    'input-select2',
+    'input-radio',
+    'input-checkbox',
+    'input-wysiwyg',
+    'input-textarea',
+    'input-image-select',
+    'input-accept',
+    'input-text',
+    'input-password',
+    'input-number',
+    'input-tel',
+    'input-email',
+    'input-date',
+    'input-hidden',
+    'input-file',
+    'posts',
     'breadcrumbs',
     'map',
     'text',
@@ -993,6 +1025,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'export',
     'template',
     'gallery',
+    'table',
   ];
   if( ! is_array( $elementNames ) ){
     $elementNames = [];
@@ -1022,7 +1055,31 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
   if( isset( $element['children'] ) && is_array( $element['children'] ) ){
     foreach ( $element['children'] as $child ) {
       _extractElementsNames( $child, $elementNames, $only_react_elements );
-
+    }
+  }
+  if( $element['name'] === 'template' && data_get( $element, 'settings.template' ) ){
+    extractElementsNamesFromTemplate( data_get( $element, 'settings.template' ), $elementNames );
+  }
+  if( $element['name'] === 'posts' && data_get( $element, 'settings.posts_card_template' ) ){
+    extractElementsNamesFromTemplate( data_get( $element, 'settings.posts_card_template' ), $elementNames );
+  }
+  if( $element['name'] === 'posts' && data_get( $element, 'settings.posts_card_hover_template' ) ){
+    extractElementsNamesFromTemplate( data_get( $element, 'settings.posts_card_hover_template' ), $elementNames );
+  }
+  if( $element['name'] === 'table'
+    && data_get( $element, 'settings.row_expand' )
+    && data_get( $element, 'settings.column_template' ) ){
+    extractElementsNamesFromTemplate( data_get( $element, 'settings.card_template' ), $elementNames );
+  }
+  if( $element['name'] === 'table'
+    && data_get( $element, 'settings.row_expand' )
+    && data_get( $element, 'settings.tables_columns' )
+    && is_array( data_get( $element, 'settings.tables_columns' ) ) ){
+    $columns = data_get( $element, 'settings.tables_columns' );
+    foreach ( $columns as $column ) {
+      if( data_get( $column, 'column_template') ){
+        extractElementsNamesFromTemplate( data_get( $column, 'column_template'), $elementNames );
+      }
     }
   }
 }

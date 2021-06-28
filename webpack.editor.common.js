@@ -23,7 +23,7 @@ module.exports = {
         // loader: "css-loader",
         use: [
           // Creates `style` nodes from JS strings
-          "style-loader",
+          "file-loader",
           // Translates CSS into CommonJS
           "css-loader"
         ]
