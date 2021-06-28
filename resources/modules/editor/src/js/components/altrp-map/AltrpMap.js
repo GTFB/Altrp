@@ -92,6 +92,7 @@ function AltrpMap({ settings }) {
       onTap={handleClickPolygon}
       isLoading={isLoading}
       style={{
+        pointerEvents: window.altrpHelpers.isEditor() ? 'none' : 'auto',
         height: style_height.size + style_height.unit,
         marginTop: style_margin.top + style_margin.unit,
         marginBottom: style_margin.bottom + style_margin.unit,

@@ -30,6 +30,14 @@ export default class AdminSettings extends Component {
       SSREnabled: value,
     }))
   };
+  setSSRPort = async (e)=>{
+    let value = e.target.value;
+    new Resource({route:'/admin/ajax/settings'}).put('ssr_port', {value});
+    this.setState(state=>({
+      ...state,
+      SSRPort: value,
+    }))
+  };
 
   setSSRPort = async (e)=>{
     let value = e.target.value;
