@@ -156,6 +156,7 @@ class ElementWrapper extends Component {
     this.handleContext = this.handleContext.bind(this);
     this.wrapper = React.createRef();
     this.elementId = this.props.element.getId();
+    props.element.wrapperComponent = this;
   }
   onDragLeave(e) {
     e.preventDefault();
@@ -498,7 +499,6 @@ class ElementWrapper extends Component {
         break;
     }
 
-    console.log(this.props.state)
     return elementHideTrigger &&
       this.props.hideTriggers.includes(elementHideTrigger) ? null : (
       <WrapperComponent

@@ -51,6 +51,9 @@ class BaseElement extends ControlStack {
         }
       })
     }
+    if(this.wrapperComponent && settings){
+      this.wrapperComponent.setState(state => ({...state, settings}))
+    }
   }
 
   /**
