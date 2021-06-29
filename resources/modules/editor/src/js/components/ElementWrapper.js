@@ -104,6 +104,15 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
       styles += getPostsStyles(settings, elementId);
     }
       break;
+    case "input-select2": {
+      styles += `.${prefix}${elementId} {${FormComponent.FormComponent(
+        settings,
+        elementId
+      )}}`;
+      //select2 options style
+      styles += `${FormComponent.select2Options(settings, elementId)}}`;
+    }
+      break;
     case "input-text":
     case "input-password":
     case "input-number":
@@ -118,30 +127,10 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
     case "input-accept":
     case "input-textarea":
     case "input-wysiwyg": {
-      styles += `.${prefix}${id} {${FormComponent.FormComponent(
-        item.settings,
-        id
+      styles += `.${prefix}${elementId} {${FormComponent.FormComponent(
+        settings,
+        elementId
       )}}`;
-    }
-      break;
-    case "input":
-    {
-      switch (settings?.content_type) {
-        case "select2":
-          styles += `.${prefix}${elementId} {${FormComponent.FormComponent(
-            settings,
-            elementId
-          )}}`;
-          //select2 options style
-          styles += `${FormComponent.select2Options(settings, elementId)}}`;
-          break;
-        default:
-          styles += `.${prefix}${elementId} {${FormComponent.FormComponent(
-            settings,
-            elementId
-          )}}`;
-          break;
-      }
     }
       break;
     case "map":
