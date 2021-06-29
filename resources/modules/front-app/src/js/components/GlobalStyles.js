@@ -84,7 +84,7 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         case "breadcrumbs":
           styles+=getBreadcrumbsStyles(item.settings,id);
           break;
-        case 'heading-type-heading': {
+        case 'heading': {
           styles += getHeadingTypeHeadingStyles(item.settings, id);
         }
           break;

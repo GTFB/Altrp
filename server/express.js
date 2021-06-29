@@ -6,6 +6,7 @@ import React from "react";
 import lodash from "lodash";
 import {StaticRouter as Router, Route, Switch} from "react-router-dom";
 import {setAreas} from "../resources/modules/front-app/src/js/store/areas/actions";
+import getAltrpSetting from "./functions/get-altrp-setting";
 if (typeof performance === "undefined") {
   global.performance = require("perf_hooks").performance;
 }
@@ -55,6 +56,7 @@ let PORT = process.env.ALTRP_SETTING_SSR_PORT || 9000;
 const { Provider } = require("react-redux");
 global.appStore = require("../resources/modules/front-app/src/js/store/store").default;
 window.parent.appStore = global.appStore;
+window.container_width = getAltrpSetting('container_width')
 const ReactDOMServer = require("react-dom/server");
 const AreaComponent = require("../resources/modules/front-app/src/js/components/AreaComponent")
   .default;

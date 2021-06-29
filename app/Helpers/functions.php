@@ -1026,6 +1026,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'template',
     'gallery',
     'table',
+    'heading-type-animating',
   ];
   if( ! is_array( $elementNames ) ){
     $elementNames = [];

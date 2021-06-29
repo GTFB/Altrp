@@ -29,6 +29,8 @@ import VideoWidget from '../../../resources/modules/editor/src/js/components/wid
 // import Skeleton from '../../../resources/modules/editor/src/js/components/altrp-image/Skeleton';
 import SkeletonPlaceholder from '../components/SkeletonPlaceholder';
 import DEFAULT_REACT_ELEMENTS from "../../../resources/modules/front-app/src/js/constants/DEFAULT_REACT_ELEMENTS";
+import HeadingTypeHeadingWidget
+  from "../../../resources/modules/editor/src/js/components/widgets/HeadingTypeHeadingWidget";
 // import BreadcrumbsWidget from '../../../resources/modules/editor/src/js/components/widgets/BreadcrumbsWidget';
 // import MenuWidget from '../../../resources/modules/editor/src/js/components/widgets/MenuWidget';
 
@@ -41,7 +43,7 @@ class FrontElementsManager {
       this.components[el] = SkeletonPlaceholder;
     })
     this.components['root-element'] = RootComponent;
-    this.components['heading'] = HeadingWidget;
+    this.components['heading'] = HeadingTypeHeadingWidget;
     this.components['section'] = SectionComponent;
     this.components['column'] = ColumnComponent;
     this.components['button'] = ButtonWidget;

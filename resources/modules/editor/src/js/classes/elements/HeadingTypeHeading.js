@@ -22,7 +22,7 @@ import { advancedTabControllers } from "../../decorators/register-controllers";
 
 class HeadingTypeHeading extends BaseElement {
   static getName() {
-    return "heading-type-heading";
+    return "heading";
   }
   static getTitle() {
     return "Heading";

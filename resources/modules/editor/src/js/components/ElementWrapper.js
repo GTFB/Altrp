@@ -89,7 +89,7 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
     case "breadcrumbs":
       styles+=getBreadcrumbsStyles(settings,elementId);
       break;
-    case 'heading-type-heading': {
+    case 'heading': {
       styles += getHeadingTypeHeadingStyles(settings, elementId);
     }
       break;

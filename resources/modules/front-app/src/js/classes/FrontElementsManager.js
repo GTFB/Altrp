@@ -12,7 +12,7 @@ class FrontElementsManager {
         }
       },
       {
-        name: "heading-type-heading",
+        name: "heading",
         import: async () => {
           return await import(
             /* webpackChunkName: 'HeadingTypeHeadingWidget' */ "../../../../editor/src/js/components/widgets/HeadingTypeHeadingWidget"
