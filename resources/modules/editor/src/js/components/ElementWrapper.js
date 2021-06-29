@@ -39,7 +39,7 @@ import AdvancedComponent from "./widgets/styled-components/AdvancedComponent";
 import {getEditor, topOrBottomHover, editorSetCurrentElement} from "../helpers";
 const { connect } = window.reactRedux;
 
-const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, elementId, settings})=>{
+const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, elementId, settings, element})=>{
   let styles = '';
   let prefix = "altrp-element";
   switch (elementName) {
@@ -65,7 +65,7 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
       styles += `.${prefix}${elementId} {${AccordionComponent(settings)}}`;
       break;
     case "section":
-      styles += `.${prefix}${elementId} {${SectionWidgetComponent(settings)}}`;
+      styles += `.${prefix}${elementId} {${SectionWidgetComponent(settings, element.children.length)}}`;
       break;
     case "column":
       styles += `.${prefix}${elementId} {${ColumnComponent(settings)}}`;
@@ -102,6 +102,26 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
       break;
     case 'posts': {
       styles += getPostsStyles(settings, elementId);
+    }
+      break;
+    case "input-text":
+    case "input-password":
+    case "input-number":
+    case "input-date":
+    case "input-email":
+    case "input-tel":
+    case "input-file":
+    case "input-select":
+    case "input-image-select":
+    case "input-radio":
+    case "input-checkbox":
+    case "input-accept":
+    case "input-textarea":
+    case "input-wysiwyg": {
+      styles += `.${prefix}${id} {${FormComponent.FormComponent(
+        item.settings,
+        id
+      )}}`;
     }
       break;
     case "input":
@@ -563,6 +583,7 @@ class ElementWrapper extends Component {
         <ElementWrapperGlobalStyles
           settings={this.props.element.getSettings()}
           elementName={this.props.element.getName()}
+          element={this.props.element}
           elementId={this.elementId}/>
       </WrapperComponent>
     );

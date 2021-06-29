@@ -60,7 +60,7 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles += `.${prefix}${id} {${AccordionComponent(item.settings)}}`;
           break;
         case "section":
-          styles += `.${prefix}${id} {${SectionWidgetComponent(item.settings)}}`;
+          styles += `.${prefix}${id} {${SectionWidgetComponent(item.settings, item.childrenLength || 1)}}`;
           break;
         case "column":
           styles += `.${prefix}${id} {${ColumnComponent(item.settings)}}`;

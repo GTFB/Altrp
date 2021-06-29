@@ -15,6 +15,7 @@ export default  function getRouteStyles(areas){
 .route-content.route-content{`;
   areas = areas.filter(area=>FRONT_DEFAULT_AREAS.indexOf(area.id) === -1)
   if(! areas.length){
+    styles += '}'
     return styles;
   }
 
