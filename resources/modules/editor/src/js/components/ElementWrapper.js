@@ -110,12 +110,13 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
     }
       break;
     case "input-select2": {
-      styles += `.${prefix}${id} {${FormComponent.FormComponent(
-        item.settings,
-        id
+
+      styles += `.${prefix}${elementId} {${FormComponent.FormComponent(
+        settings,
+        elementId
       )}}`;
-        //select2 options style
-      styles += `${FormComponent.select2Options(item.settings, id)}}`;
+      //select2 options style
+      styles += `${FormComponent.select2Options(settings, elementId)}}`;
     }
       break;
     case "input-text":
@@ -136,26 +137,6 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
         settings,
         elementId
       )}}`;
-    }
-      break;
-    case "input":
-    {
-      switch (settings?.content_type) {
-        case "select2":
-          styles += `.${prefix}${elementId} {${FormComponent.FormComponent(
-            settings,
-            elementId
-          )}}`;
-          //select2 options style
-          styles += `${FormComponent.select2Options(settings, elementId)}}`;
-          break;
-        default:
-          styles += `.${prefix}${elementId} {${FormComponent.FormComponent(
-            settings,
-            elementId
-          )}}`;
-          break;
-      }
     }
       break;
     case "map":
