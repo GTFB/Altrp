@@ -179,6 +179,9 @@ class GlobalTemplateStylesController extends Controller
         if (count($globalStyleList) > 0) {
             foreach ($globalStyleList as $item) {
                 if (!is_null($item)) {
+                    if (strpos($item, 'typographic') !== false) {
+                        data_set($element, 'settings.__altrpFonts__' . $item, $style['family']);
+                    }
                     if (strpos($item, 'gradient-first-color:') !== false) {
                         $currentSetting = str_replace('gradient-first-color:', '', $item);
                         $item = $currentSetting;
