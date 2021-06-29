@@ -28,7 +28,8 @@ import getImageStyles from "../../../../front-app/src/js/components/helpers/styl
 import getTabsStyles from "../../../../front-app/src/js/components/helpers/stylesForTheTabs";
 import getMenuStyles from "../../../../front-app/src/js/components/helpers/stylesForTheMenu";
 import getBreadcrumbsStyles from "../../../../front-app/src/js/components/helpers/stylesForTheBreadcrumbs";
-import {getHeadingStyles} from "../../../../front-app/src/js/components/helpers/stylesForTheHeading";
+import { getHeadingTypeHeadingStyles } from "../../../../front-app/src/js/components/helpers/stylesForTheHeadingTypeHeading";
+import { getHeadingTypeAnimatingStyles } from "../../../../front-app/src/js/components/helpers/stylesForTheHeadingTypeAnimating";
 import {getTextStyles} from "../../../../front-app/src/js/components/helpers/stylesForTheText";
 import {getTableStyles} from "../../../../front-app/src/js/components/helpers/stylesForTheTable";
 import {getPostsStyles} from "../../../../front-app/src/js/components/helpers/stylesForThePosts";
@@ -88,8 +89,12 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
     case "breadcrumbs":
       styles+=getBreadcrumbsStyles(settings,elementId);
       break;
-    case 'heading': {
-      styles += getHeadingStyles(settings, elementId);
+    case 'heading-type-heading': {
+      styles += getHeadingTypeHeadingStyles(settings, elementId);
+    }
+      break;
+    case 'heading-type-animating': {
+      styles += getHeadingTypeAnimatingStyles(settings, elementId);
     }
       break;
     case 'text': {
@@ -104,24 +109,33 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
       styles += getPostsStyles(settings, elementId);
     }
       break;
-    case "input":
-    {
-      switch (settings?.content_type) {
-        case "select2":
-          styles += `.${prefix}${elementId} {${FormComponent.FormComponent(
-            settings,
-            elementId
-          )}}`;
-          //select2 options style
-          styles += `${FormComponent.select2Options(settings, elementId)}}`;
-          break;
-        default:
-          styles += `.${prefix}${elementId} {${FormComponent.FormComponent(
-            settings,
-            elementId
-          )}}`;
-          break;
-      }
+    case "input-select2": {
+      styles += `.${prefix}${id} {${FormComponent.FormComponent(
+        item.settings,
+        id
+      )}}`;
+        //select2 options style
+      styles += `${FormComponent.select2Options(item.settings, id)}}`;
+    }
+      break;
+    case "input-text":
+    case "input-password":
+    case "input-number":
+    case "input-date":
+    case "input-email":
+    case "input-tel":
+    case "input-file":
+    case "input-select":
+    case "input-image-select":
+    case "input-radio":
+    case "input-checkbox":
+    case "input-accept":
+    case "input-textarea":
+    case "input-wysiwyg": {
+      styles += `.${prefix}${id} {${FormComponent.FormComponent(
+        item.settings,
+        id
+      )}}`;
     }
       break;
     case "map":

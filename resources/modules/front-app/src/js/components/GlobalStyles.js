@@ -1,4 +1,5 @@
-import {getHeadingStyles} from "./helpers/stylesForTheHeading";
+import { getHeadingTypeHeadingStyles } from "./helpers/stylesForTheHeadingTypeHeading";
+import { getHeadingTypeAnimatingStyles } from "./helpers/stylesForTheHeadingTypeAnimating";
 import {getTextStyles} from "./helpers/stylesForTheText";
 import {getTableStyles} from "./helpers/stylesForTheTable";
 import {getPostsStyles} from "./helpers/stylesForThePosts";
@@ -83,8 +84,12 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         case "breadcrumbs":
           styles+=getBreadcrumbsStyles(item.settings,id);
           break;
-        case 'heading': {
-          styles += getHeadingStyles(item.settings, id);
+        case 'heading-type-heading': {
+          styles += getHeadingTypeHeadingStyles(item.settings, id);
+        }
+          break;
+        case 'heading-type-animating': {
+          styles += getHeadingTypeAnimatingStyles(item.settings, id);
         }
           break;
         case 'text': {

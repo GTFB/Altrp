@@ -17,8 +17,10 @@ import InputHidden from "../elements/InputHidden";
 import InputFile from "../elements/InputFile";
 import RootElement from "../elements/RootElement";
 import RootComponent from "../../components/RootComponent";
-import HeadingElement from "../elements/Heading";
-import HeadingWidget from "../../components/widgets/HeadingWidget";
+import HeadingTypeAnimating from "../elements/HeadingTypeAnimating";
+import HeadingTypeHeading from "../elements/HeadingTypeHeading";
+import HeadingTypeAnimatingWidget from "../../components/widgets/HeadingTypeAnimatingWidget";
+import HeadingTypeHeadingWidget from "../../components/widgets/HeadingTypeHeadingWidget";
 import BreadcrumbsWidget from "../../components/widgets/BreadcrumbsWidget";
 import ButtonWidget from "../../components/widgets/ButtonWidget";
 import Column from "../elements/Column";
@@ -97,7 +99,8 @@ export default class ElementsManger {
     // this.elements[Input.getName()] = Input;
     //список элементов
     this.elements[RootElement.getName()] = RootElement;
-    this.elements[HeadingElement.getName()] = HeadingElement;
+    this.elements[HeadingTypeHeading.getName()] = HeadingTypeHeading;
+    this.elements[HeadingTypeAnimating.getName()] = HeadingTypeAnimating;
     this.elements[Image.getName()] = Image;
     this.elements[Breadcrumbs.getName()] = Breadcrumbs;
     this.elements[Button.getName()] = Button;
@@ -147,7 +150,8 @@ export default class ElementsManger {
     //список компонентов
     this.components = {};
     this.components[RootElement.getName()] = RootComponent;
-    this.components[HeadingElement.getName()] = HeadingWidget;
+    this.components[HeadingTypeHeading.getName()] = HeadingTypeHeadingWidget;
+    this.components[HeadingTypeAnimating.getName()] = HeadingTypeAnimatingWidget;
     this.components[Section.getName()] = SectionComponent;
     this.components[SectionWidget.getName()] = SectionComponent;
     this.components[Column.getName()] = ColumnComponent;
