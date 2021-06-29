@@ -15,7 +15,7 @@ import {
  * @return {string}
  */
 
-export default function SectionWidgetComponent(settings) {
+export default function SectionWidgetComponent(settings, childrenLength) {
   function altrpSection() {
     let styles = '';
 
@@ -618,25 +618,6 @@ export default function SectionWidgetComponent(settings) {
     return styles;
   }
 
-  function altrpSectionSectionBoxedHover() {
-    let styles = '';
-
-    let padding;
-
-    //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
-
-    if (settings !== undefined) {
-      padding = getResponsiveSetting(settings, 'layout_content_width', ':hover');
-    }
-
-    if (padding) {
-      if(padding.size) {
-        styles += `padding-left: calc((100vw - ${padding.size + padding.unit}) / 2); padding-right: calc((100vw - ${padding.size + padding.unit}) / 2); width: 100vw; `;
-      }
-    }
-
-    return styles;
-  }
 
   function altrpSectionFull() {
     let styles = '';
@@ -683,8 +664,10 @@ export default function SectionWidgetComponent(settings) {
 
     return styles;
   }
-
+  // console.log(`& > .altrp-section > .altrp-element_column{width:${100/childrenLength}%;}`);
   return `
+
+  & > .altrp-section > .altrp-element_column{width:${100/childrenLength}%;}
 
   & div.altrp-section,
   & div.altrp-section-full-fill {
@@ -732,10 +715,6 @@ export default function SectionWidgetComponent(settings) {
 
   & div.altrp-section_section-boxed {
     ${altrpSectionSectionBoxed()}
-  }
-
-  & div.altrp-section_section-boxed:hover {
-    ${altrpSectionSectionBoxedHover()}
   }
 
   &,

@@ -12,6 +12,7 @@ import { renderScrollbar } from "../../../../../admin/src/components/altrp-selec
 import { altrpFontsSet } from "../../../../../front-app/src/js/constants/fonts";
 import PresetGlobalFonts from "./PresetGlobalFonts";
 import store from "../../store/store";
+import { changeTemplateStatus } from "../../store/template-status/actions";
 
 class TypographicController extends Component {
   constructor(props) {
@@ -80,6 +81,7 @@ class TypographicController extends Component {
       lineHeight,
       size,
       spacing,
+      label,
       sizeUnit,
       weight,
       style,
@@ -88,6 +90,7 @@ class TypographicController extends Component {
     const fontValue = {
       decoration: decoration,
       family: family,
+      label: label,
       lineHeight: lineHeight,
       size: size,
       spacing: spacing,
@@ -97,14 +100,33 @@ class TypographicController extends Component {
       transform: transform
     };
     if (guidFont) {
-      this._changeValue({
-        ...this.defaultValues,
-        ...fontValue
-      });
+      if (family) {
+        appStore.dispatch(
+          addFont(
+            getCurrentElement().getId(),
+            this.props.controller.getSettingName(),
+            family
+          )
+        );
+        getCurrentElement().addFont(
+          this.props.controller.getSettingName(),
+          family
+        );
+      } else {
+        appStore.dispatch(
+          removeFont(
+            getCurrentElement().getId(),
+            this.props.controller.getSettingName()
+          )
+        );
+        getCurrentElement().removeFont(this.props.controller.getSettingName());
+      }
+      this._changeValue(fontValue);
       getCurrentElement().setGlobalStyle(
         guid,
         this.props.controller.getSettingName()
       );
+      console.log(guid, fontValue);
       getCurrentElement().updateAllGlobals(guid, fontValue);
       store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
     }
@@ -155,6 +177,7 @@ class TypographicController extends Component {
       );
       currentElement.removeFont(this.props.controller.getSettingName());
     }
+    console.log(value);
     this._changeValue({
       ..._value,
       family: value ? value.value : "",

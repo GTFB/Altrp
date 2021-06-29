@@ -5,7 +5,6 @@ import CONSTANTS from "../consts";
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-section {
     display: flex;
-    flex-direction: column;
     &.altrp-section--boxed > .altrp-element {
       margin: 0 auto;
     }

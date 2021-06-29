@@ -61,12 +61,9 @@ const AreaComponent = require("../resources/modules/front-app/src/js/components/
 const Styles = require("../resources/modules/editor/src/js/components/Styles")
   .default;
 
-const { StaticRouter } = require("react-router");
 // const { HTML5Backend } = require("react-dnd-html5-backend");
 // const { DndProvider } = require("react-dnd");
-const {
-  default: RouteContentWrapper
-} = require("../resources/modules/front-app/src/js/components/styled-components/RouteContentWrapper");
+
 
 var bodyParser = require("body-parser");
 const GlobalStyles = require('../resources/modules/front-app/src/js/components/GlobalStyles').default
@@ -85,32 +82,7 @@ app.get("/*", (req, res) => {
   return res.json({ success: true });
 
 });
-
-/**
- *
- * @param {Request} req
- * @param {Response} res
- * @param {string}data
- * @param {any} component
- * @param page
- * @param {any} store
- */
-function renderHTML(req, res, data, component, page, store) {
-  // console.log(data.replace(
-  //   '<div id="front-app" class="front-app"></div>',
-  //   `<div id="front-app">${component}</div>
-  //     `
-  // ));
-
-  return res.send(
-    data.replace(
-      '<div id="front-app" class="front-app"></div>',
-      `<div id="front-app">${component}</div>
-      `
-    )
-  );
-}
-
+const addSettingsToStore = (require("../resources/modules/front-app/src/js/functions/load-global-styles")).addSettingsToStore
 app.post("/", (req, res) => {
   const sheet = new ServerStyleSheet();
   const store = window.appStore;
@@ -141,14 +113,13 @@ app.post("/", (req, res) => {
     }
   });
   elements = elements.map(item => new FrontElement(item));
-  const elementStyles = elements.map(element => ({
-    styles: element.getStringifyStyles(),
-    elementId: element.getId()
-  }));
+
   window.currentRouterMatch = new AltrpModel({});
+  window.page_areas = page;
   page = page.map(area => (Area.areaFactory(area)));
   store.dispatch(setAreas(page));
-  let app = ReactDOMServer.renderToString(
+  addSettingsToStore();
+  let resultSSRApp = ReactDOMServer.renderToString(
     sheet.collectStyles(
       <Router>
         <Switch>
@@ -177,18 +148,25 @@ app.post("/", (req, res) => {
   );
 
   let styleTags = sheet.getStyleTags();
-  let _app = parse(app);
+  let _app = parse(resultSSRApp);
   if (_app.querySelector(".styles-container")) {
     styleTags += `<style>${
       _app.querySelector(".styles-container").textContent
     }</style>`;
     _app.removeChild(_app.querySelector(".styles-container"));
-    app = _app.toString();
+    resultSSRApp = _app.toString();
+  }
+  let styledStylesTags = parse(styleTags);
+  if(styledStylesTags.querySelector('[data-styled]')){
+    styledStylesTags.querySelector('[data-styled]')?.removeAttribute('data-styled-version')
+    styledStylesTags.querySelector('[data-styled]')?.removeAttribute('data-styled');
+    styledStylesTags.querySelector('style')?.setAttribute('data-altrp-ssr-styles', 'true');
+    styleTags = styledStylesTags.toString();
   }
   sheet.seal();
   const result = {
     important_styles: unEntity(styleTags),
-    content: unEntity(app)
+    content: unEntity(resultSSRApp)
   };
   return res.json(result);
 });
@@ -212,5 +190,7 @@ function unEntity(str) {
   return str
     .replace(/&amp;/g, "&")
     .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">");
+    .replace(/&gt;/g, ">")
+    .replace(/\/\*!sc\*\//g, "")
+    .replace(/\n/g, '');
 }

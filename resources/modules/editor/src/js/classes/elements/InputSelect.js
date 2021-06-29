@@ -386,7 +386,7 @@ class InputSelect extends BaseElement {
       units: ["px", "%", "vh"],
       max: 60,
       min: 0,
-      rules: {}
+
     });
 
     this.addControl("label_background_color", {
