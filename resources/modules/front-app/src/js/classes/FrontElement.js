@@ -57,7 +57,7 @@ class FrontElement {
      */
     this.modelsList = []
     if(this.getId()){
-        appStore.dispatch(addSettings(this.getId(), this.getName(), {...this.settings}, this?.children?.length || 0))
+      appStore.dispatch(addSettings(this.getId(), this.getName(), {...this.settings}, this?.children?.length || 0))
     }
   }
 

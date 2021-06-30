@@ -512,6 +512,9 @@ class ElementWrapper extends Component {
       case "nav":
         WrapperComponent = NavComponent;
         break;
+      case "dashboards":
+        WrapperComponent = DashboardComponent;
+        break;
     }
 
     return elementHideTrigger &&

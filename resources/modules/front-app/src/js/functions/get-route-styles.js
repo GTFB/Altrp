@@ -11,13 +11,13 @@ export default  function getRouteStyles(areas){
   display: flex;
   flex-direction: column;
   overflow: hidden;
-}
-.route-content.route-content{`;
+}`
+
   areas = areas.filter(area=>FRONT_DEFAULT_AREAS.indexOf(area.id) === -1)
   if(! areas.length){
-    styles += '}'
     return styles;
   }
+  styles += `.route-content.route-content{`;
 
   styles += 'display:grid;grid-template-rows:auto 1fr auto;'
   let columnsGrid = '';

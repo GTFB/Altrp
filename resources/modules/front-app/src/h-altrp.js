@@ -65,8 +65,10 @@ window.LIBS = {
 
 };
 
-
-window.libsToLoad = [];
+window.libsToLoad = window.libsToLoad || [];
+__altrp_settings__.libsToLoad?.forEach(lib=>{
+  libsToLoad.push(LIBS[lib]())
+})
 if (window.altrpElementsLists) {
   window.altrpElementsLists.forEach(el => {
     if (WIDGETS_DEPENDS[el] && WIDGETS_DEPENDS[el].length && libsToLoad.indexOf(el) === -1) {
@@ -83,7 +85,7 @@ if (window.altrpElementsLists) {
   })
 }
 Promise.all(libsToLoad).then(res => {
-
+  console.log(res);
   import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElementsManager').then(module => {
     import (/* webpackChunkName: 'FrontElementsFabric' */'./js/classes/FrontElementsFabric').then(module => {
       console.log('LOAD FrontElementsFabric: ', performance.now());

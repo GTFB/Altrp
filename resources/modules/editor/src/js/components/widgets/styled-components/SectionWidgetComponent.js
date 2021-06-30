@@ -608,7 +608,7 @@ export default function SectionWidgetComponent(settings, childrenLength) {
       padding = getResponsiveSetting(settings, 'layout_content_width');
     }
     let width = '100vw';
-    if(window?.page_areas?.length > 4){
+    if(window?.page_areas?.length > 4){//todo:weak place
       width = '100%';
     }
     if (padding) {

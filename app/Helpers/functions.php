@@ -1329,13 +1329,17 @@ const ACTIONS_COMPONENTS = [
  */
 function getAltrpSettings( $page_id ){
   $settings = [
-    'action_components' => []
+    'action_components' => [],
+    'libsToLoad' => [],
   ];
   if( ! $page_id ){
     return $settings;
   }
   $areas = Page::get_areas_for_page( $page_id );
-
+  $json_areas = json_encode( $areas );
+  if( strpos( $json_areas, 'altrptime' ) !== false){
+    $settings['libsToLoad'][] = 'moment';
+  }
   $action_types = [];
   foreach ( $areas as $area ) {
     $root_element = data_get( $area, 'template.data' );

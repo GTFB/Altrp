@@ -23,7 +23,6 @@ const DEFAULT_REACT_ELEMENTS = [
   'diagram',
   'input',
   'nav',
-  'breadcrumbs',
   'dashboards',
   'tour',
   'icon',

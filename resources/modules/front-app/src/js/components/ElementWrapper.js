@@ -31,7 +31,9 @@ class ElementWrapper extends Component {
     props.element.wrapper = this;
     this.elementWrapperRef = React.createRef();
     this.elementRef = React.createRef();
-    appStore.dispatch(addElement(this));
+    if(! isEditor()){
+      appStore.dispatch(addElement(this));
+    }
   }
 
   /**

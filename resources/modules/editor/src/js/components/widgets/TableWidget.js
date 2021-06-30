@@ -1,8 +1,11 @@
 import Query from "../../classes/Query";
 import {Scrollbars} from "react-custom-scrollbars";
-import {getDataByPath, getWidgetState, storeWidgetState} from "../../../../../front-app/src/js/helpers";
-const AltrpTableWithoutUpdate = React.lazy(() => import(/* webpackChunkName: 'altrp-table-without-update' */'../altrp-table/altrp-table-without-update'));
-const AltrpTable = React.lazy(() => import(/* webpackChunkName: 'altrp-table' */'../altrp-table/altrp-table'));
+const {getDataByPath, getWidgetState, isEditor, storeWidgetState} = window.altrpHelpers;
+// const AltrpTableWithoutUpdate = React.lazy(() => import(/* webpackChunkName: 'altrp-table-without-update' */'../altrp-table/altrp-table-without-update'));
+// const AltrpTableWithoutUpdate = React.lazy(() => import(/* webpackChunkName: 'altrp-table-without-update' */'../altrp-table/altrp-table-without-update'));
+// const AltrpTable = React.lazy(() => import(/* webpackChunkName: 'altrp-table' */'../altrp-table/altrp-table'));
+import AltrpTable from'../altrp-table/altrp-table';
+import AltrpTableWithoutUpdate from'../altrp-table/altrp-table-without-update';
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 .altrp-table-th {
@@ -223,7 +226,11 @@ class TableWidget extends Component {
       let path = this.props.element.getSettings('table_datasource').replace(/{{/g, '').replace(/}}/g, '');
       data = getDataByPath(path, [], this.props.element.getCurrentModel().getData())
     }
-    let query = new Query(this.props.element.getSettings().table_query || {}, this);
+    if(! this.query || ! this.table_query || this.table_query !== this.props.element.getSettings().table_query){
+      this.table_query = this.props.element.getSettings().table_query;
+      this.query = new Query(this.props.element.getSettings().table_query || {}, this);
+    }
+    const query = this.query;
     if(! this.showTable(query)){
       return <div children="Please Choose Source"/>
     }
@@ -245,6 +252,8 @@ class TableWidget extends Component {
     if (! (_.get(settings,'tables_columns.length'))) {
       return <div children="Please Add Column"/>
     }
+    console.error(this);
+
     const TableComponent = this.props.element.getSettings('table_2_0') ? AltrpTableWithoutUpdate : AltrpTable;
     return <Scrollbars
         ref={this.scrollbar}
@@ -259,16 +268,17 @@ class TableWidget extends Component {
           return <div className="altrp-scroll__vertical-track" style={style} {...props} />}}
         renderTrackHorizontal={({style, ...props})=>{
           return <div className="altrp-scroll__horizontal-track" style={style} {...props} />}}
-    ><React.Suspense fallback={''}>
+    >
+      {/*<React.Suspense fallback={''}>*/}
       <TableComponent query={query}
                       updateToken={this.props.updateToken}
                       widgetId={this.props.element.getId()}
-                      widgetState={this.state.widgetState}
+                      widgetState={isEditor() ? null : this.state.widgetState}
                       currentModel={this.props.currentModel}
                       currentScreen={this.props.currentScreen}
-                      data={data || query.getFromModel(this.state.modelData)}
-                      settings={this.props.element.getSettings()}/>
-    </React.Suspense>
+                      data={isEditor() ? null : (data || query.getFromModel(this.state.modelData))}
+                      settings={this.props.element?.settings}/>
+    {/*</React.Suspense>*/}
     </Scrollbars>;
   }
 }
