@@ -90,6 +90,8 @@ import MenuWidget from "../../components/widgets/MenuWidget";
 import SectionWidgetComponent from "../../components/SectionWidgetComponent";
 import DropbarWidget from "../../components/widgets/DropbarWidget";
 import Dropbar from "../elements/Dropbar";
+import TabsSwitcher from "../elements/TabsSwitcher";
+import TabsSwitcherWidget from "../../components/widgets/TabsSwitcherWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -107,6 +109,7 @@ export default class ElementsManger {
     this.elements[Section.getName()] = Section;
     this.elements[List.getName()] = List;
     this.elements[Nav.getName()] = Nav;
+    this.elements[TabsSwitcher.getName()] = TabsSwitcher
     // this.elements[Input.getName()] = Input;
     this.elements[InputSelect.getName()] = InputSelect;
     this.elements[InputSelect2.getName()] = InputSelect2;
@@ -192,6 +195,7 @@ export default class ElementsManger {
     this.components[Gallery.getName()] = GalleryWidget;
     this.components[Video.getName()] = VideoWidget;
     this.components[Dropbar.getName()] = DropbarWidget;
+    this.components[TabsSwitcher.getName()] = TabsSwitcherWidget;
     // Websocket Notifications widget
     // this.components[Notifications.getName()] = NotificationsWidget;
   }

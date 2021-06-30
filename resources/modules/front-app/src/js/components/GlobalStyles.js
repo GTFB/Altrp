@@ -25,6 +25,8 @@ import getRouteStyles from "../functions/get-route-styles";
 import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
 import MapConstructorComponent
   from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
+import TabsSwitcherComponent
+  from "../../../../editor/src/js/components/widgets/styled-components/TabsSwitcherComponent";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -38,6 +40,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
   _.each(elementsSettings, (item, id) => {
     if (item) {
       switch (item.name) {
+        case "tabs-switcher":
+          styles += `.${prefix}${id} {${TabsSwitcherComponent(item.settings)}}`;
+          break;
         case "button":
           styles += `.${prefix}${id} {${ButtonComponent(item.settings)}}`;
           break;

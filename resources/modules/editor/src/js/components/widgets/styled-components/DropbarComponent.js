@@ -40,6 +40,4 @@ export default styled.div`
   ];
   return styledString(styles, settings)
 }}
-
-background-color: red;
-`;
+`

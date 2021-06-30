@@ -8,10 +8,9 @@ class TabsWidget extends Component {
   constructor(props) {
     super(props);
     this.show = this.show.bind(this);
-    this.switcher = this.switcher.bind(this);
+    this.showTab = this.showTab.bind(this);
     this.state = {
       settings: props.element.getSettings(),
-      switcher: false,
       activeTab: 0
     };
     props.element.component = this;
@@ -81,10 +80,6 @@ class TabsWidget extends Component {
     } else {
       alert("ERROR, NOT FOUND ACTION");
     }
-  }
-
-  switcher() {
-    this.setState({ switcher: !this.state.switcher });
   }
 
   render() {
@@ -196,86 +191,6 @@ class TabsWidget extends Component {
           this.state.settings.layout_tabs == "right" ? (
             <div className="altrp-tab-btn-container">{tabs}</div>
           ) : null}
-        </div>
-      );
-    } else {
-      let switcherClasses = `altrp-tabs-switcher altrp-tabs-switcher_${
-        this.state.switcher ? "on" : "off"
-      }`;
-
-      let sectionOne = null;
-      switch (this.state.settings.type_section_one) {
-        case "image":
-          let media = { ...this.state.settings.media_section_one };
-          media.url = media.url || "/img/nullImage.png";
-          media.name = media.name || "null";
-          media.assetType = media.assetType || undefined;
-          sectionOne = renderAsset(media, {
-            className:
-              "altrp-tabs-switcher-section-one-img altrp-tabs-switcher-section-img"
-          });
-          break;
-        case "text":
-          sectionOne = React.createElement("div", {
-            className:
-              "altrp-tabs-switcher-section-one-text altrp-tabs-switcher-section-text",
-            dangerouslySetInnerHTML: {
-              __html: this.state.settings.wysiwyg_section_one
-            }
-          });
-          break;
-      }
-
-      let sectionTwo = null;
-      switch (this.state.settings.type_section_two) {
-        case "image":
-          let media = { ...this.state.settings.media_section_two };
-          media.url = media.url || "/img/nullImage.png";
-          media.name = media.name || "null";
-          media.assetType = media.assetType || undefined;
-          sectionTwo = renderAsset(media, {
-            className:
-              "altrp-tabs-switcher-section-two-img altrp-tabs-switcher-section-img"
-          });
-          break;
-        case "text":
-          sectionTwo = React.createElement("div", {
-            className:
-              "altrp-tabs-switcher-section-two-text altrp-tabs-switcher-section-text",
-            dangerouslySetInnerHTML: {
-              __html: this.state.settings.wysiwyg_section_two
-            }
-          });
-          break;
-      }
-
-      tab = (
-        <div className="altrp-tabs">
-          <div className="altrp-tabs-switcher-container">
-            <div className="altrp-tabs-switcher-label altrp-tabs-switcher-label-section-one">
-              {this.state.settings.title_section_one}
-            </div>
-
-            <div className={switcherClasses} onClick={this.switcher}>
-              <div className="altrp-tabs-switcher__caret" />
-            </div>
-
-            <div className="altrp-tabs-switcher-label altrp-tabs-switcher-label-section-two">
-              {this.state.settings.title_section_two}
-            </div>
-          </div>
-
-          <div className="altrp-tabs-switcher-wrapper">
-            {!this.state.switcher ? (
-              <div className="altrp-tabs-switcher-section-one">
-                {sectionOne}
-              </div>
-            ) : (
-              <div className="altrp-tabs-switcher-section-two">
-                {sectionTwo}
-              </div>
-            )}
-          </div>
         </div>
       );
     }
