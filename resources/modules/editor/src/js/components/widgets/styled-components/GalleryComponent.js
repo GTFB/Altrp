@@ -82,7 +82,6 @@ export default function GalleryComponent(settings) {
 
     ["align-items", "overlay_content_alignment", ":hover"],
     ["justify-content", "overlay_content_vertical", ":hover"],
-    ["padding", "overlay_content_padding", "dimensions", ":hover"],
 
     "}",
 

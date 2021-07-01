@@ -193,23 +193,23 @@ const ColumnComponent = (settings) => {
 
   //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
 
-  if (settings !== undefined) {
-    paddingH = getResponsiveSetting(settings, "style_position_padding", ':hover');
-  }
-
-  if (paddingH) {
-    styles += dimensionsControllerToStyles(paddingH);
-  }
+  // if (settings !== undefined) {
+  //   paddingH = getResponsiveSetting(settings, "style_position_padding", ':hover');
+  // }
+  //
+  // if (paddingH) {
+  //   styles += dimensionsControllerToStyles(paddingH);
+  // }
 
   //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
 
-  if (settings !== undefined) {
-    marginH = getResponsiveSetting(settings, 'style_position_margin');
-  }
-
-  if (marginH) {
-    styles += dimensionsControllerToStyles(marginH, 'margin');
-  }
+  // if (settings !== undefined) {
+  //   marginH = getResponsiveSetting(settings, 'style_position_margin');
+  // }
+  //
+  // if (marginH) {
+  //   styles += dimensionsControllerToStyles(marginH, 'margin');
+  // }
 
   //Получаем значения flex-wrap из контроллера, обрабатываем и добавляем в styles
 

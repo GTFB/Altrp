@@ -44,6 +44,9 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
   let styles = '';
   let prefix = "altrp-element";
   switch (elementName) {
+    case "diagram":
+      styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`;
+      break;
     case "tabs-switcher":
       styles += `.${prefix}${elementId} {${TabsSwitcherComponent(settings)}}`;
       break;
@@ -515,9 +518,6 @@ class ElementWrapper extends Component {
 
     let WrapperComponent = "div";
     switch (this.props.element.getName()) {
-      case "diagram":
-        WrapperComponent = DiagramComponent;
-        break;
       case "nav":
         WrapperComponent = NavComponent;
         break;
