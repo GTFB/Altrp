@@ -38,12 +38,19 @@ import MapComponent from "./widgets/styled-components/MapComponent";
 import MapConstructorComponent from "./widgets/styled-components/MapConstructorComponent";
 import AdvancedComponent from "./widgets/styled-components/AdvancedComponent";
 import {getEditor, topOrBottomHover, editorSetCurrentElement} from "../helpers";
+import TabsSwitcherComponent from "./widgets/styled-components/TabsSwitcherComponent";
 const { connect } = window.reactRedux;
 
 const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, elementId, settings, element})=>{
   let styles = '';
   let prefix = "altrp-element";
   switch (elementName) {
+    case "diagram":
+      styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`;
+      break;
+    case "tabs-switcher":
+      styles += `.${prefix}${elementId} {${TabsSwitcherComponent(settings)}}`;
+      break;
     case "button":
       styles += `.${prefix}${elementId} {${ButtonComponent(settings)}}`;
       break;
@@ -506,9 +513,6 @@ class ElementWrapper extends Component {
 
     let WrapperComponent = "div";
     switch (this.props.element.getName()) {
-      case "diagram":
-        WrapperComponent = DiagramComponent;
-        break;
       case "nav":
         WrapperComponent = NavComponent;
         break;
@@ -621,7 +625,6 @@ function mapStateToProps(state) {
     currentScreen: state.currentScreen,
     globalStyles: state.globalStyles,
     historyStore: state.historyStore,
-    state,
   };
 }
 

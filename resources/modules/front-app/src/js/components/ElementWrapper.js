@@ -335,9 +335,6 @@ class ElementWrapper extends Component {
 
     let WrapperComponent = ElementWrapperDivComponent;
     switch (this.props.element.getName()) {
-      case "diagram":
-        WrapperComponent = DiagramComponent;
-        break;
       case "nav":
         WrapperComponent = NavComponent;
         break;

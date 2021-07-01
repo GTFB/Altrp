@@ -297,14 +297,14 @@ export default function SectionWidgetComponent(settings, childrenLength) {
     let padding;
 
     //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
-
-    if (settings !== undefined) {
-      padding = getResponsiveSetting(settings, 'layout_columns_gap', ':hover');
-    }
-
-    if (padding && padding !== 'none') {
-      styles += `padding: ${padding}px; `;
-    }
+    //
+    // if (settings !== undefined) {
+    //   padding = getResponsiveSetting(settings, 'layout_columns_gap', ':hover');
+    // }
+    //
+    // if (padding && padding !== 'none') {
+    //   styles += `padding: ${padding}px; `;
+    // }
 
     return styles;
   }

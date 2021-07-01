@@ -394,6 +394,14 @@ class FrontElementsManager {
             /* webpackChunkName: 'DropbarWidget' */ "../../../../editor/src/js/components/widgets/DropbarWidget"
             );
         }
+      },
+      {
+        name: "tabs-switcher",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'TabsSwitcherWidget' */ "../../../../editor/src/js/components/widgets/TabsSwitcherWidget"
+            );
+        }
       }
     ];
     this.components = {};
