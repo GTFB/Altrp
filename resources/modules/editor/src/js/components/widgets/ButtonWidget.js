@@ -179,7 +179,7 @@ class ButtonWidget extends Component {
       );
     } else if (
       this.props.element
-        .getResponsiveSetting("other_action_type", null,[])
+        .getResponsiveSetting("other_action_type", '',[])
         .includes("print_elements")
     ) {
       let IDs = this.props.element.getResponsiveSetting("print_elements_ids", null,"");
