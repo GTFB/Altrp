@@ -155,7 +155,7 @@ class MenuController extends Controller
    */
   public static function getByGuid( $guid )
   {
-   $menu = Menu::first( 'guid', $guid )->first();
+   $menu = Menu::where( 'guid', $guid )->first();
    if( ! $menu ){
      return response()->json( ['success' => false,'message'=>'Menu Not Found'], 404, [], JSON_UNESCAPED_UNICODE);
    }

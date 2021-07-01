@@ -407,7 +407,9 @@ class FrontElement {
       styles += `}`;
     });
     styles += this.settings.stringStyles || '';
-
+    if(this.settings.stringStyles){
+      console.log(this.settings.stringStyles);
+    }
     return styles;
   }
 
