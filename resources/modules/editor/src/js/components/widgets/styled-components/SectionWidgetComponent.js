@@ -1,5 +1,4 @@
-import styled from "styled-components";
-import { getResponsiveSetting } from "../../../../../../front-app/src/js/helpers";
+const { getResponsiveSetting } = window.altrpHelpers;
 import {
   simplePropertyStyled,
   borderWidthStyled,
@@ -608,10 +607,13 @@ export default function SectionWidgetComponent(settings, childrenLength) {
     if (settings !== undefined) {
       padding = getResponsiveSetting(settings, 'layout_content_width');
     }
-
+    let width = '100vw';
+    if(window?.page_areas?.length > 4){
+      width = '100%';
+    }
     if (padding) {
       if(padding.size) {
-        styles += `padding-left: calc((100vw - ${padding.size + padding.unit}) / 2); padding-right: calc((100vw - ${padding.size + padding.unit}) / 2); width: 100vw; `;
+        styles += `padding-left:calc((${width} - ${padding.size + padding.unit}) / 2);padding-right:calc((${width} - ${padding.size + padding.unit}) / 2);width:${width};`;
       }
     }
 

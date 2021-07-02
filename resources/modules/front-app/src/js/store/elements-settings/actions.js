@@ -25,12 +25,10 @@ export function addSettings(elementId, elementName, settings, childrenLength) {
 }
 /**
  *
- * @param {{}}settings
+ * @param {{}} settings
  * @return {{}} - {
  *     type: {string},
- *     elementId: {string},
  *     settings: {{}},
- *     elementName: {string},
  *   }
  */
 export function replaceAllSettings(settings){

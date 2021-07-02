@@ -15,7 +15,15 @@ class FrontElementsManager {
         name: "heading",
         import: async () => {
           return await import(
-            /* webpackChunkName: 'HeadingWidget' */ "../../../../editor/src/js/components/widgets/HeadingWidget"
+            /* webpackChunkName: 'HeadingTypeHeadingWidget' */ "../../../../editor/src/js/components/widgets/HeadingTypeHeadingWidget"
+          );
+        }
+      },
+      {
+        name: "heading-type-animating",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'HeadingTypeAnimatingWidget' */ "../../../../editor/src/js/components/widgets/HeadingTypeAnimatingWidget"
           );
         }
       },

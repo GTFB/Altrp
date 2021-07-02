@@ -33,9 +33,9 @@ import CONSTANTS from "../consts";
     bottom: auto;
   }
 
-  .altrp-section_section-boxed {
-    padding-left: calc((100vw - 1440px) / 2);
-    padding-right: calc((100vw - 1440px) / 2);
+  .altrp-section_section-boxed.altrp-section_section-boxed {
+    padding-left: calc((100vw - ${window.container_width || 1440}px) / 2);
+    padding-right: calc((100vw - ${window.container_width || 1440}px) / 2);
     width: 100vw;
   }
 `);
