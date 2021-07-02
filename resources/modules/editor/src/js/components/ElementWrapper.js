@@ -39,12 +39,16 @@ import MapConstructorComponent from "./widgets/styled-components/MapConstructorC
 import AdvancedComponent from "./widgets/styled-components/AdvancedComponent";
 import {getEditor, topOrBottomHover, editorSetCurrentElement} from "../helpers";
 import TabsSwitcherComponent from "./widgets/styled-components/TabsSwitcherComponent";
+import ImageLightboxComponent from "./widgets/styled-components/ImageLightboxComponent";
 const { connect } = window.reactRedux;
 
 const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, elementId, settings, element})=>{
   let styles = '';
   let prefix = "altrp-element";
   switch (elementName) {
+    case "image-lightbox":
+      styles += ImageLightboxComponent(settings,elementId);
+      break;
     case "diagram":
       styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`;
       break;

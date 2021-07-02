@@ -29,6 +29,8 @@ import MapConstructorComponent
 import TabsSwitcherComponent
   from "../../../../editor/src/js/components/widgets/styled-components/TabsSwitcherComponent";
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
+import ImageLightboxComponent
+  from "../../../../editor/src/js/components/widgets/styled-components/ImageLightboxComponent";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -42,6 +44,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
   _.each(elementsSettings, (item, id) => {
     if (item) {
       switch (item.name) {
+        case "image-lightbox":
+          styles+=ImageLightboxComponent(item.settings,id);
+          break;
         case "diagram":
           styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
           break;

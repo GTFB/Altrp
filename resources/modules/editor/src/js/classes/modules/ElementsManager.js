@@ -94,6 +94,8 @@ import DropbarWidget from "../../components/widgets/DropbarWidget";
 import Dropbar from "../elements/Dropbar";
 import TabsSwitcher from "../elements/TabsSwitcher";
 import TabsSwitcherWidget from "../../components/widgets/TabsSwitcherWidget";
+import ImageLightbox from "../elements/ImageLightbox";
+import ImageLightboxWidget from "../../components/widgets/ImageLightboxWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -148,6 +150,7 @@ export default class ElementsManger {
     this.elements[Video.getName()] = Video;
     this.elements[SectionWidget.getName()] = SectionWidget;
     this.elements[Dropbar.getName()] = Dropbar;
+    this.elements[ImageLightbox.getName()] = ImageLightbox;
     // Websocket Notifications
     // this.elements[Notifications.getName()] = Notifications;
     //список компонентов
@@ -200,6 +203,7 @@ export default class ElementsManger {
     this.components[Video.getName()] = VideoWidget;
     this.components[Dropbar.getName()] = DropbarWidget;
     this.components[TabsSwitcher.getName()] = TabsSwitcherWidget;
+    this.components[ImageLightbox.getName()] = ImageLightboxWidget;
     // Websocket Notifications widget
     // this.components[Notifications.getName()] = NotificationsWidget;
   }

@@ -71,7 +71,11 @@ const getImageStyles = (settings,id)=>{
       }
 
       if (height) {
-        styles += sizeStyled(height, 'height');
+        if(height.size !== "0") {
+          styles += sizeStyled(height, 'height');
+        } else {
+
+        }
       }
 
       //Получаем значения width из контроллера, обрабатываем и добавляем в styles
@@ -236,7 +240,9 @@ const getImageStyles = (settings,id)=>{
       }
 
       if (height) {
-        styles += sizeStyled(height, 'height');
+        if(height.size !== "0") {
+          styles += sizeStyled(height, 'height');
+        }
       }
 
       //Получаем значения width из контроллера, обрабатываем и добавляем в styles

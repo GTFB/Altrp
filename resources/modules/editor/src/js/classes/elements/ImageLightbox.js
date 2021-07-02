@@ -19,12 +19,12 @@ import {
   CONTROLLER_GRADIENT
 } from "../modules/ControllersManager";
 
-class Image extends BaseElement {
+class ImageLightbox extends BaseElement {
   static getName() {
-    return 'image';
+    return 'image-lightbox';
   }
   static getTitle() {
-    return 'Image';
+    return 'Image lightbox';
   }
 
   static getIconComponent() {
@@ -61,6 +61,13 @@ class Image extends BaseElement {
       dynamic: false,
       responsive: false,
       label: 'Default Image URL',
+    });
+
+    this.addControl('lightbox_switch', {
+      hideOnEmail: true,
+      type: CONTROLLER_SWITCHER,
+      label: 'Lightbox',
+      default: false
     });
 
     this.addControl('cursor_pointer', {
@@ -111,32 +118,32 @@ class Image extends BaseElement {
     });
 
     this.addControl('image_fit_size', {
-          type: CONTROLLER_SELECT,
-          label: 'Image fit',
-          // default: "cover",
-          options: [
-            {
-              'value': 'fill',
-              'label': 'Fill',
-            },
-            {
-              'value': 'contain',
-              'label': 'Contain',
-            },
-            {
-              'value': 'cover',
-              'label': 'Cover',
-            },
-            {
-              'value': 'none',
-              'label': 'None',
-            },
-            {
-              'value': 'scale-down',
-              'label': 'Scale down',
-            }
-          ],
-        }
+        type: CONTROLLER_SELECT,
+        label: 'Image fit',
+        // default: "cover",
+        options: [
+          {
+            'value': 'fill',
+            'label': 'Fill',
+          },
+          {
+            'value': 'contain',
+            'label': 'Contain',
+          },
+          {
+            'value': 'cover',
+            'label': 'Cover',
+          },
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'scale-down',
+            'label': 'Scale down',
+          }
+        ],
+      }
     );
 
     // this.addControl('aspect_ratio_off', {
@@ -148,40 +155,40 @@ class Image extends BaseElement {
 
 
     this.addControl('aspect_ratio_size', {
-          type: CONTROLLER_SELECT,
-          label: 'Aspect Ratio',
-          default: '0',
-          options: [
-            {
-              'value': '0',
-              'label': 'None',
-            },
-            {
-              'value': '100',
-              'label': '1:1',
-            },
-            {
-              'value': '56.25',
-              'label': '16:9',
-            },
-            {
-              'value': '75',
-              'label': '4:3',
-            },
-            {
-              'value': '133.33',
-              'label': '3:4',
-            },
-            {
-              'value': '177.78',
-              'label': '9:16',
-            },
-            {
-              'value': 'custom',
-              'label': 'Custom',
-            },
-          ],
-        }
+        type: CONTROLLER_SELECT,
+        label: 'Aspect Ratio',
+        default: '0',
+        options: [
+          {
+            'value': '0',
+            'label': 'None',
+          },
+          {
+            'value': '100',
+            'label': '1:1',
+          },
+          {
+            'value': '56.25',
+            'label': '16:9',
+          },
+          {
+            'value': '75',
+            'label': '4:3',
+          },
+          {
+            'value': '133.33',
+            'label': '3:4',
+          },
+          {
+            'value': '177.78',
+            'label': '9:16',
+          },
+          {
+            'value': 'custom',
+            'label': 'Custom',
+          },
+        ],
+      }
     );
 
     this.addControl('custom_aspect', {
@@ -230,6 +237,10 @@ class Image extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default: {
+        // top: 0,
+        // right: 0,
+        // bottom: 0,
+        // left: 0,
         unit: 'px'
       },
       units: [
@@ -507,57 +518,57 @@ class Image extends BaseElement {
     });
 
     this.addControl('border_type', {
-      type: CONTROLLER_SELECT,
-      label: 'Border Type',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-      options: [
-        {
-          'value': 'none',
-          'label': 'None',
-        },
-        {
-          'value': 'solid',
-          'label': 'Solid',
-        },
-        {
-          'value': 'double',
-          'label': 'Double',
-        },
-        {
-          'value': 'dotted',
-          'label': 'Dotted',
-        },
-        {
-          'value': 'dashed',
-          'label': 'Dashed',
-        },
-        {
-          'value': 'groove',
-          'label': 'Groove',
-        },
-      ],
-    }
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        units: [
+          'px',
+          '%',
+          'vh',
+        ],
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+      }
     );
 
     this.addControl('border_width', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Border Width',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-    }
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        units: [
+          'px',
+          '%',
+          'vh',
+        ],
+      }
     );
 
     this.addControl('border_color', {
-      type: CONTROLLER_COLOR,
-      label: 'Border Color',
-    }
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+      }
     );
 
     this.addControl('border_radius', {
@@ -585,9 +596,9 @@ class Image extends BaseElement {
     });
 
     this.addControl('creative_hover_controller', {
-      type: CONTROLLER_CREATIVE_HOVER,
-      label: 'Creative Hover',
-    }
+        type: CONTROLLER_CREATIVE_HOVER,
+        label: 'Creative Hover',
+      }
     );
 
     this.endControlSection();
@@ -596,4 +607,4 @@ class Image extends BaseElement {
   }
 }
 
-export default Image
+export default ImageLightbox
