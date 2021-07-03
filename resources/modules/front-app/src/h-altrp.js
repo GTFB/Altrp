@@ -62,6 +62,13 @@ window.LIBS = {
       return Promise.resolve(res)
     });
   },
+  'blueprint-select': () => {
+    return import(/* webpackChunkName: 'blueprint-select' */'./js/libs/blueprint-select').then(res => {
+      window.libsLoaded.push('blueprint-select')
+      console.log('LOAD blueprint-select: ', performance.now());
+      return Promise.resolve(res)
+    });
+  },
 
 };
 
