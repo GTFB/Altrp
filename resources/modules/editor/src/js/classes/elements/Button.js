@@ -131,147 +131,11 @@ class Button extends BaseElement {
 
     actionsControllers(this);
 
-    this.startControlSection("form_section", {
-      hideOnEmail: true,
-      tab: TAB_CONTENT,
-      label: "Form Settings"
-    });
-
-    this.addControl('form_id', {
-      label: 'Form ID',
-      placeholder: 'Form ID'
-    });
-
-    this.addControl('form_actions', {
-      type: CONTROLLER_SELECT2,
-      label: 'Form Actions',
-      options: [
-        {
-          value: 'null',
-          label: 'Null',
-        },
-        {
-          value: 'add_new',
-          label: 'Add New',
-        },
-        {
-          value: 'delete',
-          label: 'Delete',
-        },
-        {
-          value: 'edit',
-          label: 'Edit',
-        },
-        {
-          value: 'login',
-          label: 'Login',
-        },
-        {
-          value: 'logout',
-          label: 'Logout',
-        },
-        {
-          value: 'email',
-          label: 'Email',
-        },
-      ],
-    });
-
-    this.addControl('form_confirm', {
-      type: CONTROLLER_TEXTAREA,
-      label: 'Confirm Submit Form Text',
-      default: '',
-    });
-
-    this.addControl('email_subject', {
-      conditions: {
-        'form_actions': 'email',
-      },
-      type: CONTROLLER_TEXTAREA,
-      label: 'Subject',
-      default: '',
-    });
-
-    this.addControl('text_after', {
-      type: CONTROLLER_TEXTAREA,
-      label: 'Text After Sending',
-      default: '',
-    });
-
-    this.addControl('choose_model', {
-      conditions: {
-        'form_actions': 'add_new',
-      },
-      label: 'Choose Model',
-      responsive: false,
-      type: CONTROLLER_SELECT,
-      resource: '/admin/ajax/models_options?with_names=true',
-    });
-
-    this.addControl('redirect_after', {
-      label: 'Redirect After',
-    });
-
-    this.addControl('redirect_to_prev_page', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Redirect To Prev Page',
-    });
-
-    this.addControl('close_popups', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Close all Popups',
-    });
-
-    this.endControlSection();
-
-    //<editor-fold desc="other_actions_on">
-    this.startControlSection('other_actions', {
-      hideOnEmail: true,
-      tab: TAB_CONTENT,
-      label: 'Other Actions',
-    });
-
-    this.addControl('other_action_type', {
-      type: CONTROLLER_SELECT2,
-      label: 'Actions',
-      isMulti: true,
-      options: [
-        {
-          label: 'Print Elements',
-          value: 'print_elements',
-        },
-      ],
-
-    });
-
-    this.addControl('print_elements_ids', {
-      label: 'IDs',
-      dynamic: false,
-      conditions: {
-        'other_action_type': 'print_elements'
-      },
-    });
-
-    this.endControlSection();
     //</editor-fold>
 
     this.startControlSection('position_section', {
       tab: TAB_STYLE,
       label: 'Position',
-    });
-
-    this.addControl('position_margin', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Margin',
-      default: {
-        unit: 'px',
-        bind: true
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
     });
 
     this.addControl('position_padding', {
@@ -292,12 +156,6 @@ class Button extends BaseElement {
       hideOnEmail: true,
       type: CONTROLLER_NUMBER,
       label: 'Z-index',
-    });
-
-    this.addControl('position_css_classes', {
-      type: CONTROLLER_TEXT,
-      label: 'CSS Classes',
-      default: ''
     });
 
     this.addControl('position_opacity', {

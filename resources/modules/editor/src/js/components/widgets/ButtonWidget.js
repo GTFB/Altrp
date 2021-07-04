@@ -20,6 +20,10 @@ import {
     }
   }
 
+  .altrp-btn:hover {
+    text-decoration: none;
+  }
+
   .altrp-btn {
     width: auto;
     text-decoration: none;

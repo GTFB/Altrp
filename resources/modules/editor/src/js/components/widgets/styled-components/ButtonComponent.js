@@ -55,6 +55,15 @@ export function btnStyles(settings) {
     ["color", "font_color", "color"],
 
     "&:hover",
+    () => {
+      const value = getResponsiveSetting(settings, "position_opacity", ':hover');
+
+      if (value && value.size) {
+        return `opacity: ${value.size};`
+      } else {
+        return ''
+      }
+    },
     ["background-color", "background_color", "color", ":hover"],
     ["", "gradient", "gradient", ":hover"],
     ["border-style", "border_type", "", ":hover"],
@@ -77,7 +86,7 @@ export function btnStyles(settings) {
 
     "& img",
     ["width", "icon_size", "slider", ":hover"],
-    ["height", "icon_size", "slider", ":hover"],
+    ["icon_size", "slider", ":hover"],
     "}",
 
     "& path",
@@ -100,7 +109,7 @@ export function btnStyles(settings) {
 
     "& img",
     ["width", "icon_size", "slider"],
-    ["height", "icon_size", "slider"],
+    ["icon_size", "slider"],
     "}",
 
     "& path",
@@ -115,8 +124,8 @@ export function btnStyles(settings) {
     ["background-position", "background_position"],
     ["background-attachment", "background_attachment"],
     ["background-repeat", "background_repeat"],
-    ["background-size", "background_size"],
     ["background-size", "background_image_width", "slider"],
+    ["background-size", "background_size"],
     "}",
   ]
 }
