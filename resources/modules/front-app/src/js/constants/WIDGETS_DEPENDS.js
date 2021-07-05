@@ -4,5 +4,10 @@ const WIDGETS_DEPENDS = {
   'breadcrumbs': ['blueprint'],
   'input': ['moment'],
   'input-select2': ['blueprint', 'blueprint-select'],
+  'input-radio': ['blueprint'],
+  'input-checkbox': ['blueprint'],
+  'input-accept': ['blueprint'],
+  'input-text': ['blueprint'],
+  'input-wysiwyg': ['ckeditor'],
 }
 export default WIDGETS_DEPENDS;

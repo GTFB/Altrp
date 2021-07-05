@@ -69,6 +69,13 @@ window.LIBS = {
       return Promise.resolve(res)
     });
   },
+  'ckeditor': () => {
+    return import(/* webpackChunkName: 'ckeditor' */'./js/libs/ckeditor').then(res => {
+      window.libsLoaded.push('ckeditor')
+      console.log('LOAD ckeditor: ', performance.now());
+      return Promise.resolve(res)
+    });
+  },
 
 };
 
