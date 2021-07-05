@@ -35,7 +35,7 @@ class AddToTablesRoleUserPresetTable extends Migration
         });
 
         Schema::table('role_user', function (Blueprint $table) {
-            $table->bigIncrements('id')->change();
+            //$table->bigIncrements('id')->change();
         });
 
         Schema::table('role_user', function (Blueprint $table) {
