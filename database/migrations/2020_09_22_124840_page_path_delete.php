@@ -15,7 +15,7 @@ class PagePathDelete extends Migration
   {
     //
     Schema::table( 'pages', function ( Blueprint $table ){
-      $table->dropIndex( DB::getTablePrefix() . 'pages_path_unique' );
+//      $table->dropIndex( DB::getTablePrefix() . 'pages_path_unique' );
     } );
   }
 

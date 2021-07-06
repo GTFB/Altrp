@@ -14,17 +14,17 @@ class UpdateAltrpKeysTableV3 extends Migration
     public function up()
     {
         
-        DB::table('altrp_keys')->join('tables','altrp_keys.source_table', '=', 'tables.name')->update(['altrp_keys.source_table' => DB::raw(env('DB_TABLES_PREFIX', '').'tables.id')]);
+       // DB::table('altrp_keys')->join('tables','altrp_keys.source_table', '=', 'tables.name')->update(['altrp_keys.source_table' => 'tables.id']);
         
         Schema::table('altrp_keys', function ( Blueprint $table ) {
             
-            $table->renameColumn('source_table','source_table_id');
+      //      $table->renameColumn('source_table','source_table_id');
             
         });
         
         Schema::table('altrp_keys', function ( Blueprint $table ) {
             
-            $table->bigInteger('source_table_id')->unsigned()->change();
+          //  $table->bigInteger('source_table_id')->unsigned()->change();
             
         });
     }
@@ -36,7 +36,7 @@ class UpdateAltrpKeysTableV3 extends Migration
      */
     public function down()
     {
-        Schema::table('altrp_keys', function ( Blueprint $table ) {
+       /* Schema::table('altrp_keys', function ( Blueprint $table ) {
             
             $table->renameColumn('source_table_id','source_table');
             
@@ -45,6 +45,6 @@ class UpdateAltrpKeysTableV3 extends Migration
             
             $table->string('source_table')->change();
             
-        });
+        });*/
     }
 }
