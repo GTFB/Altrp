@@ -1380,3 +1380,44 @@ function recurseMapElements( $element, $callback ){
     }
   }
 }
+
+/**
+ * загрузим шрифты
+ * @param string | [] $page_areas
+ * @return string
+ */
+function loadFonts( $page_areas ){
+  $out = '';
+  if( is_string($page_areas) ){
+    $page_areas = json_decode( $page_areas, true);
+  }
+  $fonts = [];
+  foreach ( $page_areas as $area ) {
+    $templates = data_get( $area, 'templates' );
+    if( ! $templates ){
+      $templates = [data_get( $area, 'template' )];
+    }
+    foreach ( $templates as $template ) {
+      $root_element = data_get( $template, 'data' );
+      recurseMapElements( $root_element, function( $element ) use( &$fonts ) {
+        $_fonts = data_get( $element, 'settings.__altrpFonts__' );
+        if( is_array( $_fonts ) ){
+          foreach ( $_fonts as $font ) {
+            $fonts[] = $font;
+          }
+        }
+      } );
+    }
+
+  }
+  $fonts = array_unique( $fonts );
+  foreach ( $fonts as $font ){
+    $font = str_replace( ' ', '+', $font);
+    $font .= ":100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic";
+    $fontUrl =
+      "https://fonts.googleapis.com/css?family=" . $font . "&subset=cyrillic";
+//    $fontUrl = urlencode( $fontUrl );
+    $out .= '<link rel="stylesheet"  href="'. $fontUrl .'" />';
+  }
+  return $out;
+}

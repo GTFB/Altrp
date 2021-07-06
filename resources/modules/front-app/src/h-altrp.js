@@ -1,3 +1,5 @@
+import loadFontsManager from "./js/functions/load-fonts";
+
 console.log('FIRST SCRIPT: ', performance.now());
 import  queryString from 'query-string';
 import WIDGETS_DEPENDS from "./js/constants/WIDGETS_DEPENDS";
@@ -62,6 +64,20 @@ window.LIBS = {
       return Promise.resolve(res)
     });
   },
+  'blueprint-select': () => {
+    return import(/* webpackChunkName: 'blueprint-select' */'./js/libs/blueprint-select').then(res => {
+      window.libsLoaded.push('blueprint-select')
+      console.log('LOAD blueprint-select: ', performance.now());
+      return Promise.resolve(res)
+    });
+  },
+  'ckeditor': () => {
+    return import(/* webpackChunkName: 'ckeditor' */'./js/libs/ckeditor').then(res => {
+      window.libsLoaded.push('ckeditor')
+      console.log('LOAD ckeditor: ', performance.now());
+      return Promise.resolve(res)
+    });
+  },
 
 };
 
@@ -85,7 +101,6 @@ if (window.altrpElementsLists) {
   })
 }
 Promise.all(libsToLoad).then(res => {
-  console.log(res);
   import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElementsManager').then(module => {
     import (/* webpackChunkName: 'FrontElementsFabric' */'./js/classes/FrontElementsFabric').then(module => {
       console.log('LOAD FrontElementsFabric: ', performance.now());
@@ -110,6 +125,7 @@ import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
     console.log('LOAD appStore: ', performance.now());
     loadingCallback();
     loadDatastorageUpdater();
+    loadFontsManager();
   });
 
   import (/* webpackChunkName: 'SimpleElementWrapper' */'./js/components/SimpleElementWrapper').then(module => {

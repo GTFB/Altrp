@@ -665,7 +665,7 @@ export function dimensionsStyled(controller, style) {
  * @param {{}} controller
  */
 export function gradientStyled(controller) {
-  if (controller.isWithGradient) {
+  if (controller && controller.isWithGradient) {
     return `background-image: ${controller.value} `;
   } else {
     return "";

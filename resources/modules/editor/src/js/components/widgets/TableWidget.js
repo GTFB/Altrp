@@ -252,7 +252,6 @@ class TableWidget extends Component {
     if (! (_.get(settings,'tables_columns.length'))) {
       return <div children="Please Add Column"/>
     }
-    console.error(this);
 
     const TableComponent = this.props.element.getSettings('table_2_0') ? AltrpTableWithoutUpdate : AltrpTable;
     return <Scrollbars

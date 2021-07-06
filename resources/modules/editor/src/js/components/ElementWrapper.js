@@ -72,6 +72,7 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
     case "accordion":
       styles += `.${prefix}${elementId} {${AccordionComponent(settings)}}`;
       break;
+    case "section_widget":
     case "section":
       styles += `.${prefix}${elementId} {${SectionWidgetComponent(settings, element.children.length)}}`;
       break;

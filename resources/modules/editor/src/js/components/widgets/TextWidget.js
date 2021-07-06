@@ -80,18 +80,7 @@ class TextWidget extends Component {
         <span>{this.state.settings.text?.slice(2)}</span> {tooltip}
       </>
     );
-    let text = (
-      <>
-        {this.state.settings.text} {tooltip}
-      </>
-    );
 
-    let activeText = "";
-    if (this.state.settings.text_drop_cap === true) {
-      activeText = textCap;
-    } else {
-      activeText = text;
-    }
 
     if (this.props.CKEditor) {
       return (
