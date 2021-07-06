@@ -81,33 +81,48 @@ class Button extends BaseElement {
       ],
     });
 
-    this.addControl('button_icon', {
+    this.addControl('button_icon_right', {
       type: CONTROLLER_MEDIA,
-      label: 'Choose Icon',
+      label: 'Right Icon',
     });
 
-    this.addControl('button_icon_position', {
-      type: CONTROLLER_SELECT,
-      label: 'Icon Position',
-      options: [
-        {
-          value: 'row',
-          label: 'Right'
-        },
-        {
-          value: 'row-reverse',
-          label: 'Left'
-        },
-        {
-          value: 'column',
-          label: 'Bottom'
-        },
-        {
-          value: 'column-reverse',
-          label: 'Top'
-        },
-      ],
+    this.addControl('button_icon_left', {
+      type: CONTROLLER_MEDIA,
+      label: 'Left Icon',
     });
+
+    this.addControl('button_icon_top', {
+      type: CONTROLLER_MEDIA,
+      label: 'Top Icon',
+    });
+
+    this.addControl('button_icon_bottom', {
+      type: CONTROLLER_MEDIA,
+      label: 'Bottom Icon',
+    });
+
+    // this.addControl('button_icon_position', {
+    //   type: CONTROLLER_SELECT,
+    //   label: 'Icon Position',
+    //   options: [
+    //     {
+    //       value: 'row',
+    //       label: 'Right'
+    //     },
+    //     {
+    //       value: 'row-reverse',
+    //       label: 'Left'
+    //     },
+    //     {
+    //       value: 'column',
+    //       label: 'Bottom'
+    //     },
+    //     {
+    //       value: 'column-reverse',
+    //       label: 'Top'
+    //     },
+    //   ],
+    // });
 
     this.endControlSection();
 
@@ -452,9 +467,51 @@ class Button extends BaseElement {
       label: "Icon"
     });
 
-    this.addControl('icon_padding', {
+    this.addControl('icon_padding_right', {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Padding',
+      label: 'Padding for icon right',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.addControl('icon_padding_left', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding for icon left',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.addControl('icon_padding_top', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding for icon top',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.addControl('icon_padding_bottom', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding for icon bottom',
       default: {
         unit: 'px',
         bind: true
@@ -482,9 +539,45 @@ class Button extends BaseElement {
     }
     );
 
-    this.addControl('icon_size', {
+    this.addControl('icon_size_right', {
       type: CONTROLLER_SLIDER,
-      label: 'Icon Size',
+      label: 'Icon right size',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+    });
+
+    this.addControl('icon_size_left', {
+      type: CONTROLLER_SLIDER,
+      label: 'Icon left size',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+    });
+
+    this.addControl('icon_size_top', {
+      type: CONTROLLER_SLIDER,
+      label: 'Icon top size',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+    });
+
+    this.addControl('icon_size_bottom', {
+      type: CONTROLLER_SLIDER,
+      label: 'Icon bottom size',
       units: [
         'px',
         '%',
