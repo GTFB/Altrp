@@ -13,6 +13,7 @@ import Resource from "../../classes/Resource";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
 import AltrpInput from "../altrp-input/AltrpInput";
+import { TextArea } from "@blueprintjs/core";
 
 const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`
@@ -766,7 +767,7 @@ class InputTextareaWidget extends Component {
     }
 
     const input = (
-      <textarea
+      <TextArea
         value={value || ""}
         readOnly={content_readonly}
         autoComplete={autocomplete}
