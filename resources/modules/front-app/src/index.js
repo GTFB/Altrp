@@ -64,14 +64,12 @@ import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
     console.log('LOAD ElementWrapper: ', performance.now());
     loadingCallback();
   });
+  import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element-component').then(module => {
+    window.elementDecorator = module.default;
+    console.log('LOAD elementDecorator: ', performance.now());
+    loadingCallback();
+  });
 })
-
-// });
-import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element-component').then(module => {
-  window.elementDecorator = module.default;
-  console.log('LOAD elementDecorator: ', performance.now());
-  loadingCallback();
-});
 
 if (process.env.NODE_ENV === 'production') {
   window.__hot = () => C => C;

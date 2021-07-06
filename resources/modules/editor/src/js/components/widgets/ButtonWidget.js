@@ -210,6 +210,17 @@ class ButtonWidget extends Component {
     }
   }
 
+  /**
+   * Получить css классы для кнопки
+   */
+  getClasses = ()=>{
+    let classes = 'altrp-btn ';
+    if(this.isActive()){
+      classes += 'active '
+    }
+    return classes;
+  }
+
   render() {
     const { link_link = {}, advanced_tooltip: tooltip } = this.state.settings;
     const { back } = history;
@@ -223,7 +234,7 @@ class ButtonWidget extends Component {
       ? this.props.element.getCardModel().getData()
       : this.props.currentModel.getData();
     let classes =
-      "altrp-btn " + (this.state.settings.position_css_classes || "");
+      this.getClasses() + (this.state.settings.position_css_classes || "");
     if (background_image.url) {
       classes += " altrp-background-image";
     }
