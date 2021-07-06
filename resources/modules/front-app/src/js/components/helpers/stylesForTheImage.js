@@ -78,16 +78,6 @@ const getImageStyles = (settings,id)=>{
         }
       }
 
-      //Получаем значения width из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        width = getResponsiveSetting(settings, 'width_size');
-      }
-
-      if (width) {
-        styles += sizeStyled(width, 'width');
-      }
-
       //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
       //Свойство margin было убрано из Контроллера у виджета Image. Перенес сюда на всякий случай, так как были активные rules в Image.js
 
@@ -243,16 +233,6 @@ const getImageStyles = (settings,id)=>{
         if(height.size !== "0") {
           styles += sizeStyled(height, 'height');
         }
-      }
-
-      //Получаем значения width из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        width = getResponsiveSetting(settings, 'width_size', ':hover');
-      }
-
-      if (width) {
-        styles += sizeStyled(width, 'width');
       }
 
       //Получаем значения margin из контроллера, обрабатываем и добавляем в styles

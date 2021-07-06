@@ -78,6 +78,25 @@ class Image extends BaseElement {
       default: false
     });
 
+    this.addControl('image_style_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment',
+      default: 'center',
+      options: [
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+      ],
+    });
     this.endControlSection();
 
     this.startControlSection("link", {
@@ -249,6 +268,7 @@ class Image extends BaseElement {
         // left: 0,
         unit: 'px'
       },
+      stateless: true,
       units: [
         'px',
         '%',
@@ -300,25 +320,6 @@ class Image extends BaseElement {
         saturate: 100,
         hue: 0,
       },
-    });
-    this.addControl('image_style_alignment', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Alignment',
-      default: 'center',
-      options: [
-        {
-          icon: 'left',
-          value: 'flex-start',
-        },
-        {
-          icon: 'center',
-          value: 'center',
-        },
-        {
-          icon: 'right',
-          value: 'flex-end',
-        },
-      ],
     });
 
     this.endControlSection();

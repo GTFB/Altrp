@@ -613,7 +613,7 @@ export function getDataByPath(
       falseValue = getDataByPath(falseValue, _default, context);
     }
     path = _path.trim();
-  }  
+  }
   /**
    * @type {AltrpModel} currentModel
    */

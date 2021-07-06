@@ -19,6 +19,11 @@ import AltrpImage from "../altrp-image/AltrpImage";
     border-color: rgb(50,168,82);
     border-radius: 0;
   }
+
+  .altrp-image-container {
+    display: flex;
+    justify-content: center;
+  }
 `)
 
 const Link = window.Link
@@ -62,11 +67,12 @@ class ImageWidget extends Component {
     /**
      * Возьмем данные из окружения
      */
+
     if (
-      this.state.settings.content_path &&
-      _.isObject(getDataByPath(this.state.settings.content_path, null, model))
+      this.getContent("content_path") &&
+      _.isObject(getDataByPath(this.getContent("content_path"), null, model))
     ) {
-      media = getDataByPath(this.state.settings.content_path, null, model);
+      media = getDataByPath(this.getContent("content_path"), null, model);
       /**
        * Проверим массив ли с файлами content_path
        */
@@ -76,19 +82,19 @@ class ImageWidget extends Component {
         media.assetType = "media";
       }
     } else if (
-      this.state.settings.content_path &&
-      _.isString(getDataByPath(this.state.settings.content_path, null, model))
+      this.getContent("content_path") &&
+      _.isString(getDataByPath(this.getContent("content_path"), null, model))
     ) {
-      media = getDataByPath(this.state.settings.content_path, null, model);
+      media = getDataByPath(this.getContent("content_path"), null, model);
       media = {
         assetType: "media",
         url: media,
         name: "null"
       };
-    } else if (this.props.element.getSettings('default_url')){
+    } else if (this.getContent('default_url')){
       media = {
         assetType: "media",
-        url: this.props.element.getSettings('default_url'),
+        url: this.getContent('default_url'),
         name: "default"
       };
     }

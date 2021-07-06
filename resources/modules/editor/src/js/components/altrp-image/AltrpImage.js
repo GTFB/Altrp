@@ -91,6 +91,7 @@ class AltrpImage extends Component {
     if(visible || window.altrpImageLazy === 'skeleton'){
       placeholderStyles.background = 'transparent';
     }
+
     let placeholder = <ImagePlaceholder color={media.main_color}
                                         className={'altrp-image-placeholder '}
                                         ref={this.imageRef}
