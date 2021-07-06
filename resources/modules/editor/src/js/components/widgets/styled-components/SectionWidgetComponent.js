@@ -643,7 +643,7 @@ export default function SectionWidgetComponent(settings, childrenLength) {
     }
 
     if (padding) {
-      styles += dimensionsControllerToStyles(padding, 'padding');
+      styles += `.altrp-section{${dimensionsControllerToStyles(padding, 'padding')}}`;
     }
 
     return styles;

@@ -21,7 +21,7 @@
   </script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  {!! loadFonts( $page_areas ) !!}
   {!!  getFavicons() !!}
   {{--<link rel="preload" href="/modules/front-app/front-app.css?0.14.16" as="style">--}}
   {{--preloads--}}
