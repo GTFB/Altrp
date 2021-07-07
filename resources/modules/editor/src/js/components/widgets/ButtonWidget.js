@@ -62,21 +62,13 @@ import {
   .btn-container-row {
     display: flex;
     flex-direction: row;
-  }
-
-  .btn-container-row-reverse {
-    display: flex;
-    flex-direction: row-reverse;
-  }
-
-  .btn-container-column-reverse {
-    display: flex;
-    flex-direction: column-reverse;
+    justify-content: space-between;
   }
 
   .btn-container-column {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
   }
 `);
 
@@ -287,6 +279,7 @@ class ButtonWidget extends Component {
     if (existingIconsString === 'r') {
       buttonInner = (
         !isSSR() && <div className="btn-container-row">
+          <span></span>
           {buttonText}
           <span className={"altrp-btn-icon-right "}>
             {renderAssetIcon(buttonMediaRight)}{" "}
@@ -297,22 +290,24 @@ class ButtonWidget extends Component {
 
     if (existingIconsString === 'l') {
       buttonInner = (
-        !isSSR() && <div className="btn-container-row-reverse">
-          {buttonText}
+        !isSSR() && <div className="btn-container-row">
           <span className={"altrp-btn-icon-left "}>
             {renderAssetIcon(buttonMediaLeft)}{" "}
           </span>
+          {buttonText}
+          <span></span>
         </div>
       )
     }
 
     if (existingIconsString === 't') {
       buttonInner = (
-        !isSSR() && <div className="btn-container-column-reverse">
-          {buttonText}
+        !isSSR() && <div className="btn-container-column">
           <span className={"altrp-btn-icon-top "}>
             {renderAssetIcon(buttonMediaTop)}{" "}
           </span>
+          {buttonText}
+          <span></span>
         </div>
       )
     }
@@ -320,6 +315,7 @@ class ButtonWidget extends Component {
     if (existingIconsString === 'b') {
       buttonInner = (
         !isSSR() && <div className="btn-container-column">
+          <span></span>
           {buttonText}
           <span className={"altrp-btn-icon-bottom "}>
             {renderAssetIcon(buttonMediaBottom)}{" "}
@@ -357,6 +353,7 @@ class ButtonWidget extends Component {
             {renderAssetIcon(buttonMediaTop)}{" "}
           </span>
           <div className="btn-container-row">
+            <span></span>
             {buttonText}
             <span className={"altrp-btn-icon-right "}>
               {renderAssetIcon(buttonMediaRight)}{" "}
@@ -380,6 +377,7 @@ class ButtonWidget extends Component {
               {renderAssetIcon(buttonMediaLeft)}{" "}
             </span>
             {buttonText}
+            <span></span>
           </div>
           <span className={"altrp-btn-icon-bottom "}>
             {renderAssetIcon(buttonMediaBottom)}{" "}
@@ -403,6 +401,7 @@ class ButtonWidget extends Component {
               {renderAssetIcon(buttonMediaRight)}{" "}
             </span>
           </div>
+          <span></span>
         </div>
       )
     }
@@ -410,6 +409,7 @@ class ButtonWidget extends Component {
     if (existingIconsString === 'blr') {
       buttonInner = (
         !isSSR() && <div className="btn-container-column">
+          <span></span>
           <div className="btn-container-row">
             <span className={"altrp-btn-icon-left "}>
               {renderAssetIcon(buttonMediaLeft)}{" "}
@@ -433,11 +433,13 @@ class ButtonWidget extends Component {
             {renderAssetIcon(buttonMediaTop)}{" "}
           </span>
           <div className="btn-container-row">
+            <span></span>
             {buttonText}
             <span className={"altrp-btn-icon-right "}>
               {renderAssetIcon(buttonMediaRight)}{" "}
             </span>
           </div>
+          <span></span>
         </div>
       )
     }
@@ -453,7 +455,9 @@ class ButtonWidget extends Component {
               {renderAssetIcon(buttonMediaLeft)}{" "}
             </span>
             {buttonText}
+            <span></span>
           </div>
+          <span></span>
         </div>
       )
     }
@@ -464,7 +468,11 @@ class ButtonWidget extends Component {
           <span className={"altrp-btn-icon-top "}>
             {renderAssetIcon(buttonMediaTop)}{" "}
           </span>
-          {buttonText}
+          <div className="btn-container-row">
+            <span></span>
+            {buttonText}
+            <span></span>
+          </div>
           <span className={"altrp-btn-icon-bottom "}>
             {renderAssetIcon(buttonMediaBottom)}{" "}
           </span>
@@ -475,7 +483,9 @@ class ButtonWidget extends Component {
     if (existingIconsString === 'br') {
       buttonInner = (
         !isSSR() && <div className="btn-container-column">
+          <span></span>
           <div className="btn-container-row">
+            <span></span>
             {buttonText}
             <span className={"altrp-btn-icon-right "}>
               {renderAssetIcon(buttonMediaRight)}{" "}
@@ -491,6 +501,7 @@ class ButtonWidget extends Component {
     if (existingIconsString === 'lr') {
       buttonInner = (
         !isSSR() && <div className="btn-container-column">
+          <span></span>
           <div className="btn-container-row">
             <span className={"altrp-btn-icon-left "}>
               {renderAssetIcon(buttonMediaLeft)}{" "}
@@ -500,6 +511,7 @@ class ButtonWidget extends Component {
               {renderAssetIcon(buttonMediaRight)}{" "}
             </span>
           </div>
+          <span></span>
         </div>
       )
     }
@@ -507,11 +519,13 @@ class ButtonWidget extends Component {
     if (existingIconsString === 'bl') {
       buttonInner = (
         !isSSR() && <div className="btn-container-column">
+          <span></span>
           <div className="btn-container-row">
             <span className={"altrp-btn-icon-left "}>
               {renderAssetIcon(buttonMediaLeft)}{" "}
             </span>
             {buttonText}
+            <span></span>
           </div>
           <span className={"altrp-btn-icon-bottom "}>
             {renderAssetIcon(buttonMediaBottom)}{" "}
