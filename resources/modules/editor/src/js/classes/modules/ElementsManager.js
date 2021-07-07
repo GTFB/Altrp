@@ -1,4 +1,5 @@
 // import Input from "../elements/Input";
+import InputTextEqual from "../elements/InputTextEqual";
 import InputSelect from "../elements/InputSelect";
 import InputSelect2 from "../elements/InputSelect2";
 import InputRadio from "../elements/InputRadio";
@@ -34,6 +35,7 @@ import Image from "../elements/Image";
 import ImageWidget from "../../components/widgets/ImageWidget";
 import TextWidget from "../../components/widgets/TextWidget";
 // import InputWidget from "../../components/widgets/InputWidget";
+import InputTextEqualWidget from "../../components/widgets/InputTextEqualWidget";
 import InputSelectWidget from "../../components/widgets/InputSelectWidget";
 import InputSelect2Widget from "../../components/widgets/InputSelect2Widget";
 import InputRadioWidget from "../../components/widgets/InputRadioWidget";
@@ -114,6 +116,7 @@ export default class ElementsManger {
     this.elements[Nav.getName()] = Nav;
     this.elements[TabsSwitcher.getName()] = TabsSwitcher
     // this.elements[Input.getName()] = Input;
+    this.elements[InputTextEqual.getName()] = InputTextEqual;
     this.elements[InputSelect.getName()] = InputSelect;
     this.elements[InputSelect2.getName()] = InputSelect2;
     this.elements[InputRadio.getName()] = InputRadio;
@@ -161,6 +164,7 @@ export default class ElementsManger {
     this.components[Breadcrumbs.getName()] = BreadcrumbsWidget;
     this.components[Button.getName()] = ButtonWidget;
     // this.components[Input.getName()] = InputWidget;
+    this.components[InputTextEqual.getName()] = InputTextEqualWidget;
     this.components[InputSelect.getName()] = InputSelectWidget;
     this.components[InputSelect2.getName()] = InputSelect2Widget;
     this.components[InputRadio.getName()] = InputRadioWidget;

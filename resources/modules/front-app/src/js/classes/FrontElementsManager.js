@@ -60,6 +60,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-text-equal",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputTextEqualWidget' */ "../../../../editor/src/js/components/widgets/InputTextEqualWidget"
+          );
+        }
+      },
+      {
         name: "input-select",
         import: async () => {
           return await import(
