@@ -67,30 +67,6 @@ class Divider extends BaseElement {
           value: 'dashed',
           label: 'dashed'
         },
-        {
-          value: 'curly',
-          label: 'curly'
-        },
-        {
-          value: 'curved',
-          label: 'curved'
-        },
-        {
-          value: 'slashes',
-          label: 'slashes'
-        },
-        {
-          value: 'squared',
-          label: 'squared'
-        },
-        {
-          value: 'wavy',
-          label: 'wavy'
-        },
-        {
-          value: 'zigzag',
-          label: 'zigzag'
-        }
       ]
     });
 
@@ -129,29 +105,8 @@ class Divider extends BaseElement {
       ],
     });
 
-    this.addControl('divider_add_element', {
-      type: CONTROLLER_CHOOSE,
-      label: 'add Element',
-      default: 'left',
-      options: [
-        {
-          icon: 'left',
-          value: 'none',
-        },
-        {
-          icon: 'center',
-          value: 'text',
-        },
-        {
-          icon: 'right',
-          value: 'icon',
-        }
-      ],
-    });
-
     this.addControl('divider_text', {
       type: CONTROLLER_TEXT,
-      default: 'divider',
       label: 'Text',
     });
 
@@ -162,34 +117,9 @@ class Divider extends BaseElement {
       label: 'Position',
     });
 
-    this.addControl('position_margin', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Margin',
-      default: {
-        unit: 'px',
-        bind: true
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-    });
-
     this.addControl('position_z_index', {
       type: CONTROLLER_NUMBER,
       label: 'Z-index',
-    });
-
-    this.addControl('position_css_id', {
-      type: CONTROLLER_TEXT,
-      label: 'CSS ID'
-    });
-
-    this.addControl('position_css_classes', {
-      type: CONTROLLER_TEXT,
-      label: 'CSS Classes',
-      default: ''
     });
 
     this.endControlSection();
@@ -217,34 +147,6 @@ class Divider extends BaseElement {
       max: 10,
       min: 1,
       step: 0.01,
-    });
-
-    this.addControl("divider_style_size", {
-      type: CONTROLLER_SLIDER,
-      label: "Size",
-      default: {
-        size: 20
-      },
-      max: 100,
-      min: 0,
-      step: 0.01,
-      conditions: {
-        'divider_style_type': ["curly", "curved", "slashes", "squared", "wavy", "zigzag"],
-      },
-    });
-
-    this.addControl("divider_style_amount", {
-      type: CONTROLLER_SLIDER,
-      label: "Amount",
-      default: {
-        size: 20
-      },
-      max: 100,
-      min: 0,
-      step: 0.01,
-      conditions: {
-        'divider_style_type': ["curly", "curved", "slashes", "squared", "wavy", "zigzag"],
-      },
     });
 
     this.addControl("divider_style_gap", {
@@ -309,6 +211,7 @@ class Divider extends BaseElement {
         'px',
         '%',
         'vh',
+        "vw"
       ],
     });
 
