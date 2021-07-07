@@ -1,4 +1,17 @@
-import {sliderStyled, styledString} from "../../../../../../front-app/src/js/helpers/styles";
+import {
+  sliderStyled,
+  styledString,
+  colorPropertyStyled,
+  gradientStyled,
+  backgroundImageControllerToStyles,
+  simplePropertyStyled,
+  borderWidthStyled,
+  sizeStyled,
+  shadowControllerToStyles,
+  typographicControllerToStyles,
+  iconSizeStyled,
+  dimensionsControllerToStyles,
+} from "../../../../../../front-app/src/js/helpers/styles";
 import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
 
 export function btnStyles(settings) {
@@ -10,7 +23,7 @@ export function btnStyles(settings) {
     "}",
 
     "altrp-btn",
-    ["flex-direction", "button_icon_position"],
+    // ["flex-direction", "button_icon_position"],
     ["margin", "position_margin", "dimensions"],
     ["padding", "position_padding", "dimensions"],
     ["z-index", "position_z_index"],
@@ -55,6 +68,15 @@ export function btnStyles(settings) {
     ["color", "font_color", "color"],
 
     "&:hover",
+    () => {
+      const value = getResponsiveSetting(settings, "position_opacity", ':hover');
+
+      if (value && value.size) {
+        return `opacity: ${value.size};`
+      } else {
+        return ''
+      }
+    },
     ["background-color", "background_color", "color", ":hover"],
     ["", "gradient", "gradient", ":hover"],
     ["border-style", "border_type", "", ":hover"],
@@ -77,7 +99,7 @@ export function btnStyles(settings) {
 
     "& img",
     ["width", "icon_size", "slider", ":hover"],
-    ["height", "icon_size", "slider", ":hover"],
+    ["icon_size", "slider", ":hover"],
     "}",
 
     "& path",
@@ -100,7 +122,7 @@ export function btnStyles(settings) {
 
     "& img",
     ["width", "icon_size", "slider"],
-    ["height", "icon_size", "slider"],
+    ["icon_size", "slider"],
     "}",
 
     "& path",
@@ -115,8 +137,8 @@ export function btnStyles(settings) {
     ["background-position", "background_position"],
     ["background-attachment", "background_attachment"],
     ["background-repeat", "background_repeat"],
-    ["background-size", "background_size"],
     ["background-size", "background_image_width", "slider"],
+    ["background-size", "background_size"],
     "}",
   ]
 }
@@ -132,5 +154,215 @@ export default function ButtonComponent(settings) {
     ...btnStyles(settings)
   ];
 
-  return styledString(styles, settings);
+  let stylesInString = '';
+
+  stylesInString += `& .altrp-btn.active {`;
+
+  const backgroundColorActive = getResponsiveSetting(settings, 'background_color', '.active');
+
+  if (backgroundColorActive) {
+    stylesInString += colorPropertyStyled(backgroundColorActive, 'background-color');
+  }
+
+  const gradientActive = getResponsiveSetting(settings, "gradient", '.active');
+
+  if (gradientActive) {
+    stylesInString += gradientStyled(gradientActive);
+  }
+
+  const backgroundImageActive = getResponsiveSetting(settings, "background_image", '.active');
+
+  if (backgroundImageActive) {
+    stylesInString += backgroundImageControllerToStyles(backgroundImageActive);
+  }
+
+  const borderTypeActive = getResponsiveSetting(settings, "border_type", '.active');
+
+  if (borderTypeActive) {
+    stylesInString += simplePropertyStyled(borderTypeActive, "border-style");
+  }
+
+  const borderWidthActive = getResponsiveSetting(settings, "border_width", '.active');
+
+  if (borderWidthActive) {
+    stylesInString += borderWidthStyled(borderWidthActive);
+  }
+
+  const borderColorActive = getResponsiveSetting(settings, "border_color", '.active');
+
+  if (borderColorActive) {
+    stylesInString += colorPropertyStyled(borderColorActive, "border-color");
+  }
+
+  const borderRadiusActive = getResponsiveSetting(settings, "border_radius", '.active');
+
+  if (borderRadiusActive) {
+    stylesInString += sizeStyled(borderRadiusActive, "border-radius");
+  }
+
+  const boxShadowActive = getResponsiveSetting(settings, 'style_background_shadow', '.active');
+
+  if (boxShadowActive) {
+    stylesInString += shadowControllerToStyles(boxShadowActive);
+  }
+
+  const typographicActive = getResponsiveSetting(settings, "font_typographic", '.active');
+
+  if (typographicActive) {
+    stylesInString += typographicControllerToStyles(typographicActive);
+  }
+
+  const colorActive = getResponsiveSetting(settings, 'font_color', '.active');
+
+  if (colorActive) {
+    stylesInString += colorPropertyStyled(colorActive, 'color');
+  }
+
+  stylesInString += `} `;
+
+  stylesInString += `& .altrp-btn.active svg {`;
+
+  const backgroundColorSvgActive = getResponsiveSetting(settings, 'icon_color_background', '.active');
+
+  if (backgroundColorSvgActive) {
+    stylesInString += colorPropertyStyled(backgroundColorSvgActive, 'background-color');
+  }
+
+  stylesInString += `} `;
+
+  stylesInString += `& .altrp-btn.active path {`;
+
+  const fillColorSvgActive = getResponsiveSetting(settings, 'icon_color', '.active');
+
+  if (fillColorSvgActive) {
+    stylesInString += colorPropertyStyled(fillColorSvgActive, 'fill');
+  }
+
+  const strokeColorSvgActive = getResponsiveSetting(settings, 'icon_color_stroke', '.active');
+
+  if (strokeColorSvgActive) {
+    stylesInString += colorPropertyStyled(strokeColorSvgActive, 'stroke');
+  }
+
+  stylesInString += `} `;
+
+  stylesInString += `& .altrp-btn svg {`;
+
+  const backgroundColorSvg = getResponsiveSetting(settings, 'icon_color_background');
+
+  if (backgroundColorSvg) {
+    stylesInString += colorPropertyStyled(backgroundColorSvg, 'background-color');
+  }
+
+  stylesInString += `} `;
+
+  stylesInString += `& .altrp-btn svg:hover {`;
+
+  const backgroundColorSvgHover = getResponsiveSetting(settings, 'icon_color_background', ':hover');
+
+  if (backgroundColorSvgHover) {
+    stylesInString += colorPropertyStyled(backgroundColorSvgHover, 'background-color');
+  }
+
+  stylesInString += `} `;
+
+  stylesInString += `& .altrp-btn path {`;
+
+  const fillColorSvg = getResponsiveSetting(settings, 'icon_color');
+
+  if (fillColorSvg) {
+    stylesInString += colorPropertyStyled(fillColorSvg, 'fill');
+  }
+
+  const strokeColorSvg = getResponsiveSetting(settings, 'icon_color_stroke');
+
+  if (strokeColorSvg) {
+    stylesInString += colorPropertyStyled(strokeColorSvg, 'stroke');
+  }
+
+  stylesInString += `} `;
+
+  stylesInString += `& .altrp-btn path:hover {`;
+
+  const fillColorSvgHover = getResponsiveSetting(settings, 'icon_color', ':hover');
+
+  if (fillColorSvgHover) {
+    stylesInString += colorPropertyStyled(fillColorSvgHover, 'fill');
+  }
+
+  const strokeColorSvgHover = getResponsiveSetting(settings, 'icon_color_stroke', ':hover');
+
+  if (strokeColorSvgHover) {
+    stylesInString += colorPropertyStyled(strokeColorSvgHover, 'stroke');
+  }
+
+  stylesInString += `} `;
+
+  stylesInString += `& .altrp-btn .altrp-btn-icon-right svg {`;
+
+  const paddingIconRightBtn = getResponsiveSetting(settings, 'icon_padding_right');
+
+  if (paddingIconRightBtn) {
+    stylesInString += dimensionsControllerToStyles(paddingIconRightBtn);
+  }
+
+  const iconRightSizeBtn = getResponsiveSetting(settings, 'icon_size_right');
+
+  if (iconRightSizeBtn) {
+    stylesInString += iconSizeStyled(iconRightSizeBtn);
+  }
+
+  stylesInString += `} `;
+
+  stylesInString += `& .altrp-btn .altrp-btn-icon-left svg {`;
+
+  const paddingIconLeftBtn = getResponsiveSetting(settings, 'icon_padding_left');
+
+  if (paddingIconLeftBtn) {
+    stylesInString += dimensionsControllerToStyles(paddingIconLeftBtn);
+  }
+
+  const iconLeftSizeBtn = getResponsiveSetting(settings, 'icon_size_left');
+
+  if (iconLeftSizeBtn) {
+    stylesInString += iconSizeStyled(iconLeftSizeBtn);
+  }
+
+  stylesInString += `} `;
+
+  stylesInString += `& .altrp-btn .altrp-btn-icon-top svg {`;
+
+  const paddingIconTopBtn = getResponsiveSetting(settings, 'icon_padding_top');
+
+  if (paddingIconTopBtn) {
+    stylesInString += dimensionsControllerToStyles(paddingIconTopBtn);
+  }
+
+  const iconTopSizeBtn = getResponsiveSetting(settings, 'icon_size_top');
+
+  if (iconTopSizeBtn) {
+    stylesInString += iconSizeStyled(iconTopSizeBtn);
+  }
+
+  stylesInString += `} `;
+
+  stylesInString += `& .altrp-btn .altrp-btn-icon-bottom svg {`;
+
+  const paddingIconBottomBtn = getResponsiveSetting(settings, 'icon_padding_bottom');
+
+  if (paddingIconBottomBtn) {
+    stylesInString += dimensionsControllerToStyles(paddingIconBottomBtn);
+  }
+
+  const iconBottomSizeBtn = getResponsiveSetting(settings, 'icon_size_bottom');
+
+  if (iconBottomSizeBtn) {
+    stylesInString += iconSizeStyled(iconBottomSizeBtn);
+  }
+
+  stylesInString += `} `;
+
+  stylesInString += styledString(styles, settings);
+
+  return stylesInString;
 }

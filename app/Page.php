@@ -743,6 +743,7 @@ class Page extends Model
               'altrpImageLazy'=> get_altrp_setting( 'altrp_image_lazy', 'none' ),
               'altrpSkeletonColor'=> get_altrp_setting( 'altrp_skeleton_color', '#ccc' ),
               'altrpSkeletonHighlightColor'=> get_altrp_setting( 'altrp_skeleton_highlight_color', '#d0d0d0' ),
+              'current_user' => getCurrentUser(),
             ]
           ),
 

@@ -1,12 +1,20 @@
 import {getResponsiveSetting} from "../../helpers";
-import {typographicControllerToStyles} from "../../helpers/styles";
+import { typographicControllerToStyles, colorPropertyStyled } from "../../helpers/styles";
 
 const getBreadcrumbsStyles =(settings,id)=>{
     const parentClass = `.altrp-element${id}`;
 
-    let styles = `${parentClass} .bp3-icon svg{
+  let styles = '';
+
+  styles = `${parentClass} .bp3-icon svg{
     width:${getResponsiveSetting(settings, 'icon_width') || '20px'};
     height:${getResponsiveSetting(settings, 'icon_height') || '20px'};`
+
+  const colorIcon = getResponsiveSetting(settings, 'icon_color');
+
+  if (colorIcon) {
+    styles += colorPropertyStyled(colorIcon, 'color');
+  }
 
     styles += `} `;
 
@@ -79,7 +87,7 @@ const getBreadcrumbsStyles =(settings,id)=>{
     }
     styles += `}`;
 
-    styles += `${parentClass} .bp3-breadcrumb-current{`;
+  styles += `${parentClass} .bp3-breadcrumb.bp3-breadcrumb-current{`;
 
     let current_color = getResponsiveSetting(settings, 'current_color');
 

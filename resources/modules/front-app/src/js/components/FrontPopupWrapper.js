@@ -48,7 +48,7 @@ const FrontPopupWrapper = window.styled.div`
 & .popup-close-button:hover {
   ${({settings}) => {
     let styles = '';
-    let popupCloseButtonPadding = getResponsiveSetting(settings, 'popup_close_button_padding', 'hover');
+    let popupCloseButtonPadding = getResponsiveSetting(settings, 'popup_close_button_padding', ':hover');
     styles += popupCloseButtonPadding;
     return styles;
   }}
