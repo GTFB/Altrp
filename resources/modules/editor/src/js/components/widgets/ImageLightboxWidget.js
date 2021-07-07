@@ -3,6 +3,7 @@ import {
   isEditor, parseURLTemplate
 } from "../../../../../front-app/src/js/helpers";
 import AltrpImage from "../altrp-image/AltrpImage";
+import AltrpLightbox from "../altrp-lightbox/AltrpLightbox";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-image {
@@ -19,19 +20,15 @@ import AltrpImage from "../altrp-image/AltrpImage";
     border-color: rgb(50,168,82);
     border-radius: 0;
   }
-
-  .altrp-image-container {
-    display: flex;
-    justify-content: center;
-  }
 `)
 
 const Link = window.Link
-class ImageWidget extends Component {
+class ImageLightboxWidget extends Component {
   constructor(props) {
     super(props);
     this.state = {
       settings: props.element.getSettings(),
+      lightbox: false
     };
     props.element.component = this;
     if (window.elementDecorator) {
@@ -45,6 +42,7 @@ class ImageWidget extends Component {
   render() {
     const { element } = this.props;
     const link = this.state.settings.image_link || {};
+    const activeLightbox = this.props.element.getSettings("lightbox_switch", false);
     const cursorPointer = this.props.element.getSettings("cursor_pointer", false);
     const background_image = this.props.element.getSettings(
       "background_image",
@@ -67,12 +65,11 @@ class ImageWidget extends Component {
     /**
      * Возьмем данные из окружения
      */
-
     if (
-      this.getContent("content_path") &&
-      _.isObject(getDataByPath(this.getContent("content_path"), null, model))
+      this.state.settings.content_path &&
+      _.isObject(getDataByPath(this.state.settings.content_path, null, model))
     ) {
-      media = getDataByPath(this.getContent("content_path"), null, model);
+      media = getDataByPath(this.state.settings.content_path, null, model);
       /**
        * Проверим массив ли с файлами content_path
        */
@@ -82,19 +79,19 @@ class ImageWidget extends Component {
         media.assetType = "media";
       }
     } else if (
-      this.getContent("content_path") &&
-      _.isString(getDataByPath(this.getContent("content_path"), null, model))
+      this.state.settings.content_path &&
+      _.isString(getDataByPath(this.state.settings.content_path, null, model))
     ) {
-      media = getDataByPath(this.getContent("content_path"), null, model);
+      media = getDataByPath(this.state.settings.content_path, null, model);
       media = {
         assetType: "media",
         url: media,
         name: "null"
       };
-    } else if (this.getContent('default_url')){
+    } else if (this.props.element.getSettings('default_url')){
       media = {
         assetType: "media",
-        url: this.getContent('default_url'),
+        url: this.props.element.getSettings('default_url'),
         name: "default"
       };
     }
@@ -113,10 +110,22 @@ class ImageWidget extends Component {
         width={width}
         element={this.props.element}
         height={height}
+        id={this.state.settings.position_css_id}
         className={
-          "altrp-image" +
+          this.state.settings.position_css_classes +
+          " altrp-image" +
           (background_image ? " altrp-background-image" : "")
         }
+      />
+    );
+
+    const lightbox = (
+      <AltrpLightbox
+        images={[(media ? media.url : "")]}
+        settings={{
+          onCloseRequest: () => this.setState({lightbox: false})
+        }}
+        // color={this.props.color_lightbox_style}
       />
     );
 
@@ -126,6 +135,9 @@ class ImageWidget extends Component {
           className={classNames}
           onClick={() => {
             history.back();
+            if(activeLightbox) {
+              this.setState({lightbox: true})
+            }
           }}
         >
           {altrpImage}
@@ -144,6 +156,11 @@ class ImageWidget extends Component {
       return (
         <div
           className={classNames}
+          onClick={() => {
+            if(activeLightbox) {
+              this.setState({lightbox: true})
+            }
+          }}
         >
           {linkUrl && ! isEditor() ? (
             link.tag === "a" ? (
@@ -154,17 +171,13 @@ class ImageWidget extends Component {
           ) : (
             altrpImage
           )}
+          {
+            activeLightbox && this.state.lightbox ? lightbox : ""
+          }
         </div>
       );
     }
   }
 }
 
-// const path = window.location.pathname;
-// let _export;
-// if (path.includes("reports")) {
-//   _export = ImageWidget;
-// } else {
-//   _export = withRouter(ImageWidget);
-// }
-export default ImageWidget;
+export default ImageLightboxWidget;

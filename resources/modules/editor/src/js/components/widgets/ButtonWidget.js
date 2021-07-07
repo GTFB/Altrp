@@ -63,6 +63,7 @@ import {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
   }
 
   .btn-container-column {
@@ -298,6 +299,7 @@ class ButtonWidget extends Component {
         </div>
       )
     }
+
 
     if (existingIconsString === 'l') {
       buttonInner = (

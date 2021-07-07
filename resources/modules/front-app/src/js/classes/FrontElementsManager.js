@@ -402,6 +402,14 @@ class FrontElementsManager {
             /* webpackChunkName: 'TabsSwitcherWidget' */ "../../../../editor/src/js/components/widgets/TabsSwitcherWidget"
             );
         }
+      },
+      {
+        name: "image-lightbox",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'TabsSwitcherWidget' */ "../../../../editor/src/js/components/widgets/ImageLightboxWidget"
+            );
+        }
       }
     ];
     this.components = {};

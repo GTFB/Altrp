@@ -71,17 +71,11 @@ const getImageStyles = (settings,id)=>{
       }
 
       if (height) {
-        styles += sizeStyled(height, 'height');
-      }
+        if(height.size !== "0") {
+          styles += sizeStyled(height, 'height');
+        } else {
 
-      //Получаем значения width из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        width = getResponsiveSetting(settings, 'width_size');
-      }
-
-      if (width) {
-        styles += sizeStyled(width, 'width');
+        }
       }
 
       //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
@@ -236,17 +230,9 @@ const getImageStyles = (settings,id)=>{
       }
 
       if (height) {
-        styles += sizeStyled(height, 'height');
-      }
-
-      //Получаем значения width из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        width = getResponsiveSetting(settings, 'width_size', ':hover');
-      }
-
-      if (width) {
-        styles += sizeStyled(width, 'width');
+        if(height.size !== "0") {
+          styles += sizeStyled(height, 'height');
+        }
       }
 
       //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
