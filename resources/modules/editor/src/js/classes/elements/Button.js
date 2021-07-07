@@ -479,6 +479,7 @@ class Button extends BaseElement {
         '%',
         'vh',
       ],
+      stateless: true,
     });
 
     this.addControl('icon_padding_left', {
@@ -493,6 +494,7 @@ class Button extends BaseElement {
         '%',
         'vh',
       ],
+      stateless: true,
     });
 
     this.addControl('icon_padding_top', {
@@ -507,6 +509,7 @@ class Button extends BaseElement {
         '%',
         'vh',
       ],
+      stateless: true,
     });
 
     this.addControl('icon_padding_bottom', {
@@ -521,6 +524,7 @@ class Button extends BaseElement {
         '%',
         'vh',
       ],
+      stateless: true,
     });
 
     this.addControl('icon_color', {
@@ -549,6 +553,7 @@ class Button extends BaseElement {
       ],
       max: 100,
       min: 0,
+      stateless: true,
     });
 
     this.addControl('icon_size_left', {
@@ -561,6 +566,7 @@ class Button extends BaseElement {
       ],
       max: 100,
       min: 0,
+      stateless: true,
     });
 
     this.addControl('icon_size_top', {
@@ -573,6 +579,7 @@ class Button extends BaseElement {
       ],
       max: 100,
       min: 0,
+      stateless: true,
     });
 
     this.addControl('icon_size_bottom', {
@@ -585,6 +592,7 @@ class Button extends BaseElement {
       ],
       max: 100,
       min: 0,
+      stateless: true,
     });
 
     this.endControlSection();

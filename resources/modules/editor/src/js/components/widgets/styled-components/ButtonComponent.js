@@ -298,7 +298,7 @@ export default function ButtonComponent(settings) {
 
   stylesInString += `} `;
 
-  stylesInString += `& .altrp-btn .altrp-btn-icon-right svg {`;
+  stylesInString += `& .altrp-btn .altrp-btn-icon-right svg, & .altrp-btn .altrp-btn-icon-right img {`;
 
   const paddingIconRightBtn = getResponsiveSetting(settings, 'icon_padding_right');
 
@@ -314,7 +314,7 @@ export default function ButtonComponent(settings) {
 
   stylesInString += `} `;
 
-  stylesInString += `& .altrp-btn .altrp-btn-icon-left svg {`;
+  stylesInString += `& .altrp-btn .altrp-btn-icon-left svg, & .altrp-btn .altrp-btn-icon-left img {`;
 
   const paddingIconLeftBtn = getResponsiveSetting(settings, 'icon_padding_left');
 
@@ -330,7 +330,7 @@ export default function ButtonComponent(settings) {
 
   stylesInString += `} `;
 
-  stylesInString += `& .altrp-btn .altrp-btn-icon-top svg {`;
+  stylesInString += `& .altrp-btn .altrp-btn-icon-top svg, & .altrp-btn .altrp-btn-icon-top img {`;
 
   const paddingIconTopBtn = getResponsiveSetting(settings, 'icon_padding_top');
 
@@ -346,7 +346,7 @@ export default function ButtonComponent(settings) {
 
   stylesInString += `} `;
 
-  stylesInString += `& .altrp-btn .altrp-btn-icon-bottom svg {`;
+  stylesInString += `& .altrp-btn .altrp-btn-icon-bottom svg, & .altrp-btn .altrp-btn-icon-bottom img {`;
 
   const paddingIconBottomBtn = getResponsiveSetting(settings, 'icon_padding_bottom');
 
