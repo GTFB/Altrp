@@ -262,10 +262,6 @@ class Image extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
         unit: 'px'
       },
       stateless: true,

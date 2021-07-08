@@ -338,7 +338,7 @@ const getImageStyles = (settings,id)=>{
 
       styles+="} ";
 
-      styles+=`${parentClass} .altrp-image-container {`;
+      styles+=`${parentClass} .altrp-image-container,${parentClass} .altrp-image-container a {`;
 
       //Получаем значения justify-content из контроллера, обрабатываем и добавляем в styles
 
@@ -347,24 +347,12 @@ const getImageStyles = (settings,id)=>{
       }
 
       if (justifyContent) {
+        styles += 'display:flex;'
         styles += simplePropertyStyled(justifyContent, 'justify-content');
       }
 
       styles+="} ";
 
-      styles+=`${parentClass} .altrp-image-container:hover {`;
-
-      //Получаем значения justify-content из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        justifyContent = getResponsiveSetting(settings, 'image_style_alignment', ':hover');
-      }
-
-      if (justifyContent) {
-        styles += simplePropertyStyled(justifyContent, 'justify-content');
-      }
-
-      styles+="} ";
 
       styles+=`${parentClass} .altrp-background-image {`;
 
