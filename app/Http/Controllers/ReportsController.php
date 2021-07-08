@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Altrp\ExportExcel;
 use App\Altrp\ExportWord;
+use App\Altrp\ExportXml;
 use App\Page;
 use App\Reports;
 use App\PagesTemplate;
@@ -187,6 +188,11 @@ class ReportsController extends Controller
 
     public function exportToWord(Request $request) {
       $word = new ExportWord($request->data, $request->template, $request->filename);
+      $word->export();
+    }
+
+    public function exportToXml(Request $request) {
+      $word = new ExportXml($request->data, $request->filename);
       $word->export();
     }
 }
