@@ -1398,7 +1398,7 @@ export async function dataToXLS(data, filename = "table", templateName = "") {
  * @param {Object data} Объект данных
  * @param {String} filename Имя файла
  */
-export async function dataToXLS(data, filename = "table") {
+export async function dataToXML(data, filename = "table") {
   const formData = new FormData();
   formData.append("filename", filename);
   formData.append("data", JSON.stringify(data));
