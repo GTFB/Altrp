@@ -153,7 +153,12 @@ class Action
         $entitiesData = $this->getNodeProperties()->nodeData->data->entitiesData;
         $entities = $this->getNodeProperties()->nodeData->data->entities;
         $users = $this->getRequiredUsers($entities, $entitiesData);
-        Notification::send($users, new RobotNotification($this->node, $this->modelData));
+
+        if (!$users->isEmpty()) {
+            Notification::send($users, new RobotNotification($this->node, $this->modelData));
+        } else {
+            Notification::route('user', 'anonymous')->notify(new RobotNotification($this->node, $this->modelData));
+        }
         return [
             'name' => 'notice',
             'value' => true
