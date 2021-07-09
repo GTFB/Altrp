@@ -81,6 +81,25 @@ class Button extends BaseElement {
       ],
     });
 
+    this.addControl('content_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Content Alignment',
+      options: [
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+      ],
+    });
+
     this.addControl('button_icon_right', {
       type: CONTROLLER_MEDIA,
       label: 'Right Icon',
@@ -479,6 +498,7 @@ class Button extends BaseElement {
         '%',
         'vh',
       ],
+      stateless: true,
     });
 
     this.addControl('icon_padding_left', {
@@ -493,6 +513,7 @@ class Button extends BaseElement {
         '%',
         'vh',
       ],
+      stateless: true,
     });
 
     this.addControl('icon_padding_top', {
@@ -507,6 +528,7 @@ class Button extends BaseElement {
         '%',
         'vh',
       ],
+      stateless: true,
     });
 
     this.addControl('icon_padding_bottom', {
@@ -521,6 +543,7 @@ class Button extends BaseElement {
         '%',
         'vh',
       ],
+      stateless: true,
     });
 
     this.addControl('icon_color', {
@@ -549,6 +572,7 @@ class Button extends BaseElement {
       ],
       max: 100,
       min: 0,
+      stateless: true,
     });
 
     this.addControl('icon_size_left', {
@@ -561,6 +585,7 @@ class Button extends BaseElement {
       ],
       max: 100,
       min: 0,
+      stateless: true,
     });
 
     this.addControl('icon_size_top', {
@@ -573,6 +598,7 @@ class Button extends BaseElement {
       ],
       max: 100,
       min: 0,
+      stateless: true,
     });
 
     this.addControl('icon_size_bottom', {
@@ -585,6 +611,7 @@ class Button extends BaseElement {
       ],
       max: 100,
       min: 0,
+      stateless: true,
     });
 
     this.endControlSection();

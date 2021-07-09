@@ -1,6 +1,7 @@
 import '../../front-app/src/js/libs/blueprint'
 import '../../front-app/src/js/libs/blueprint-select'
 import '../../front-app/src/js/libs/react-lodash'
+import '../../front-app/src/js/libs/ckeditor'
 import '../../front-app/src/js/libs/altrp'
 import '../../front-app/src/js/libs/moment'
 import { Provider } from "react-redux";

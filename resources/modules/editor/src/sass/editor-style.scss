@@ -736,6 +736,10 @@ button {
   margin-left: 5px;
 }
 
+.controller-container__label {
+  text-transform: capitalize;
+}
+
 .control-slider-label {
   font-size: 12px;
   line-height: 1;
@@ -1182,7 +1186,7 @@ button {
 .control-color-colorPicker {
   z-index: 9999;
   position: absolute;
-  margin-top: 60px;
+  margin-top: 100px;
   width: 200px;
   padding: 10px 10px 0;
   box-sizing: initial;
