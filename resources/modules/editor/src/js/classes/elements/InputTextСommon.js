@@ -23,12 +23,12 @@ import Repeater from "../Repeater";
 import { CONDITIONS_OPTIONS } from "../../../../../front-app/src/js/helpers";
 import { actionsControllers } from "../../decorators/actions-controllers";
 
-class InputTextEqual extends BaseElement {
+class InputTextСommon extends BaseElement {
   static getName() {
-    return "input-text-equal";
+    return "input-text-common";
   }
   static getTitle() {
-    return "Input Text Equal";
+    return "Input Text";
   }
   static getIconComponent() {
     return FromIcon;
@@ -1198,4 +1198,4 @@ class InputTextEqual extends BaseElement {
     advancedTabControllers(this);
   }
 }
-export default InputTextEqual;
+export default InputTextСommon;

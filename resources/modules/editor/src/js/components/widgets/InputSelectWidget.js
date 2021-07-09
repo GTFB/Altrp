@@ -13,10 +13,13 @@ import Resource from "../../classes/Resource";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
 import AltrpInput from "../altrp-input/AltrpInput";
-import { Select } from "@blueprintjs/select";
-import { MenuItem, Button } from "@blueprintjs/core";
+import BlurprintMultiSelect from "./BlurprintMultiSelect";
 
 const { moment } = window.altrpHelpers;
+const Button = window.altrpLibs.Blueprint.Button;
+const MenuItem = window.altrpLibs.Blueprint.MenuItem;
+const Select = window.altrpLibs.BlurprintSelect.Select;
+const MultiSelect = window.altrpLibs.BlurprintSelect.MultiSelect;
 (window.globalDefaults = window.globalDefaults || []).push(`
  /*здесь css стилей по умолчанию с селекторами*/
 `)
@@ -59,7 +62,13 @@ class InputSelectWidget extends Component {
       options: parseOptionsFromSettings(
         props.element.getSettings("content_options")
       ),
-      paramsForUpdate: null
+      paramsForUpdate: null,
+    };
+    this.popoverProps = {
+      usePortal: true,
+      // isOpen:true ,
+      portalClassName: `altrp-portal altrp-portal${this.props.element.getId()}`,
+      portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
     this.altrpSelectRef = React.createRef();
     if (this.getContent("content_default_value")) {
@@ -746,8 +755,7 @@ class InputSelectWidget extends Component {
     return text.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
   }
 
-  highlightText(text, query) {
-    console.log(query)
+  highlightText = (text, query) => {
     let lastIndex = 0;
     const words = query
       .split(/\s+/)
@@ -888,8 +896,32 @@ class InputSelectWidget extends Component {
 
           let itemsOptions = options.map(({ label }) => label);
 
+          if (this.state.settings.multi_select) {
+            const optionsForMultiSelect = options.map(({ label }) => {
+              return {
+                id: Math.floor(Math.random() * 100000),
+                name: label,
+              }
+            })
+
+            input = (
+              <BlurprintMultiSelect
+                items={optionsForMultiSelect}
+                popoverProps={this.popoverProps}
+                onFocus={this.onFocus}
+                name={this.getName()}
+                onBlur={this.onBlur}
+                onKeyDown={this.handleEnter}
+                id={this.state.settings.position_css_id}
+                className={
+                  "altrp-field " + this.state.settings.position_css_classes
+                }
+              ></BlurprintMultiSelect>
+            )
+          } else {
           input = (
             <Select
+              popoverProps={this.popoverProps}
               itemRenderer={(item, { handleClick, modifiers, query }) => {
                 if (!modifiers.matchesPredicate) {
                   return null;
@@ -925,6 +957,7 @@ class InputSelectWidget extends Component {
               />
             </Select>
           );
+        }
         }
         break;
       default: {

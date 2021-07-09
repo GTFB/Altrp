@@ -20,6 +20,10 @@ import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 import AltrpInput from "../altrp-input/AltrpInput";
 const { moment } = window.altrpHelpers;
 
+const Button = window.altrpLibs.Blueprint.Button;
+const Intent = window.altrpLibs.Blueprint.Intent;
+const Tooltip2 = window.altrpLibs.Tooltip2;
+
 (window.globalDefaults = window.globalDefaults || []).push(`
 .altrp-field {
   border-style: solid;
@@ -359,7 +363,7 @@ const AltrpFieldContainer = styled.div`
   }}
 `;
 
-class InputTextEqualWidget extends Component {
+class InputTextСommonWidget extends Component {
   timeInput = null;
 
   constructor(props) {
@@ -371,19 +375,20 @@ class InputTextEqualWidget extends Component {
     this.onChange = this.onChange.bind(this);
     this.debounceDispatch = this.debounceDispatch.bind(this);
 
-    this.defaultValue =
-      this.getContent("content_default_value") ||
-      (this.valueMustArray() ? [] : "");
-    if (this.valueMustArray() && !_.isArray(this.defaultValue)) {
-      this.defaultValue = [];
-    }
+    this.defaultValue = this.getContent("content_default_value")
+
     this.state = {
       settings: { ...props.element.getSettings() },
       value: this.defaultValue,
-      options: parseOptionsFromSettings(
-        props.element.getSettings("content_options")
-      ),
-      paramsForUpdate: null
+      options: parseOptionsFromSettings(props.element.getSettings("content_options")),
+      paramsForUpdate: null,
+      showPassword: false,
+    };
+    this.popoverProps = {
+      usePortal: true,
+      // isOpen:true ,
+      portalClassName: `altrp-portal altrp-portal${this.props.element.getId()}`,
+      portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
     this.altrpSelectRef = React.createRef();
     if (this.getContent("content_default_value")) {
@@ -392,74 +397,12 @@ class InputTextEqualWidget extends Component {
   }
 
   /**
-   * В некоторых случаях значение поля должно быть массивом
-   * @return {boolean}
-   */
-  valueMustArray() {
-    if (
-      ["file", "image_select", "checkbox"].indexOf(
-        this.props.element.getSettings("content_type")
-      ) !== -1
-    ) {
-      return true;
-    }
-    if (
-      this.props.element.getSettings("content_type") === "select2" &&
-      this.props.element.getSettings("select2_multiple")
-    ) {
-      return true;
-    }
-    return false;
-  }
-  /**
    * Чистит значение
    */
   clearValue() {
     let value = "";
-    if (
-      this.props.element.getSettings("content_type") === "checkbox" ||
-      (["select2", "image_select"].indexOf(
-        this.props.element.getSettings("content_type")
-      ) >= 0 &&
-        this.props.element.getSettings("select2_multiple"))
-    ) {
-      value = [];
-    }
     this.onChange(value);
     this.dispatchFieldValueToStore(value, true);
-  }
-  /**
-   * Метод устанавливает все опции как выбранные
-   */
-  selectAll() {
-    const optionsDynamicSetting = this.props.element.getDynamicSetting(
-      "content_options"
-    );
-    if (this.props.element.getSettings("content_type") === "checkbox") {
-      let options = [...this.state.options];
-
-      if (optionsDynamicSetting) {
-        options = convertData(optionsDynamicSetting, options);
-      }
-      options = options.map(({ value }) => value);
-      this.onChange(options);
-    }
-    if (
-      ["select2", "image_select"].indexOf(
-        this.props.element.getSettings("content_type")
-      ) >= 0 &&
-      this.props.element.getSettings("select2_multiple")
-    ) {
-      let options = [...this.state.options];
-      if (!_.isArray(options)) {
-        options = [];
-      } else {
-        if (optionsDynamicSetting) {
-          options = convertData(optionsDynamicSetting, options);
-        }
-      }
-      this.onChange(options);
-    }
   }
   /**
    * Обработка нажатия клавиши
@@ -495,15 +438,8 @@ class InputTextEqualWidget extends Component {
       );
 
       this.setState(state => ({ ...state, options }));
-    } else if (
-      ["select", "select2"].indexOf(this.state.settings.content_type) >= 0 &&
-      this.state.settings.model_for_options
-    ) {
-      let options = await new Resource({ route: this.getRoute() }).getAll();
-      options = !_.isArray(options) ? options.data : options;
-      options = _.isArray(options) ? options : [];
-      this.setState(state => ({ ...state, options }));
     }
+
     let value = this.state.value;
     /**
      * Если динамическое значение загрузилось,
@@ -516,9 +452,7 @@ class InputTextEqualWidget extends Component {
     ) {
       value = this.getContent("content_default_value");
     }
-    // if (!_.isObject(value)) {
-    //   value = this.getContent('content_default_value');
-    // }
+
     /**
      * Если модель обновилась при смене URL
      */
@@ -595,25 +529,7 @@ class InputTextEqualWidget extends Component {
         }
       );
     }
-    if (
-      this.props.element.getSettings("content_type") === "select" &&
-      this.props.element.getSettings("model_for_options")
-    ) {
-      if (
-        !(
-          this.state.settings.model_for_options ===
-          prevProps.element.getSettings("model_for_options")
-        )
-      ) {
-        let model_for_options = prevProps.element.getSettings(
-          "model_for_options"
-        );
-        let options = await new Resource({ route: this.getRoute() }).getAll();
-        options = !_.isArray(options) ? options.data : options;
-        options = _.isArray(options) ? options : [];
-        this.setState(state => ({ ...state, options, model_for_options }));
-      }
-    }
+
     /**
      * Если обновилась модель, то пробрасываем в стор новое значение (старый источник диамических данных)
      */
@@ -732,10 +648,6 @@ class InputTextEqualWidget extends Component {
       context.altrpstorage = getDataFromLocalStorage("altrpstorage", {});
     }
 
-    // if(_.isEqual(prevContext, context)){
-    //   return;
-    // }
-
     if (
       _.isEqual(prevProps.currentDataStorage, this.props.currentDataStorage) &&
       _.isEqual(prevProps.currentUser, this.props.currentUser) &&
@@ -811,8 +723,6 @@ class InputTextEqualWidget extends Component {
           options = !_.isArray(options) ? options.data : options;
           options = _.isArray(options) ? options : [];
         }
-        // console.log(options);
-        // console.log(this.state.value);
         this.setState(state => ({
           ...state,
           paramsForUpdate,
@@ -832,26 +742,7 @@ class InputTextEqualWidget extends Component {
     let valueToDispatch;
     const settings = this.props.element.getSettings();
     if (e && e.target) {
-      if (this.props.element.getSettings("content_type") === "checkbox") {
-        let inputs = document.getElementsByName(e.target.name);
-        value = [];
-        inputs.forEach(input => {
-          if (input.checked) {
-            value.push(input.value);
-          }
-        });
-      } else if (settings.content_type === "accept") {
-        let _value = e.target.checked;
-        let trueValue =
-          this.props.element.getSettings("accept_checked") || true;
-        let falseValue =
-          this.props.element.getSettings("accept_unchecked") || false;
-        falseValue = valueReplacement(falseValue);
-        trueValue = valueReplacement(trueValue);
-        valueToDispatch = _value ? trueValue : falseValue;
-      } else {
-        value = e.target.value;
-      }
+      value = e.target.value;
     }
 
     if (e && e.value) {
@@ -863,14 +754,6 @@ class InputTextEqualWidget extends Component {
     if (_.isArray(e)) {
       value = _.cloneDeep(e);
     }
-    if (this.props.element.getSettings("content_type") === "select2") {
-      if (this.props.element.getSettings("select2_multiple", false) && !e) {
-        value = [];
-      }
-      if (this.props.element.getSettings("select2_multiple", false)) {
-        value = value.map(item => item.value);
-      }
-    }
     if (
       this.props.element.getSettings("content_options_nullable") &&
       e &&
@@ -879,12 +762,6 @@ class InputTextEqualWidget extends Component {
       value = null;
     }
 
-    let timestamp = this.props.element.getSettings("content_timestamp");
-    let isDate = this.state.settings.content_type === "date";
-
-    if (isDate && timestamp && value != "") {
-      value = new Date(value).getTime(); // timestamp
-    }
     this.setState(
       state => ({
         ...state,
@@ -903,16 +780,6 @@ class InputTextEqualWidget extends Component {
           "change_change_end_delay"
         );
 
-        if (
-          ["text", "email", "phone", "tel", "number", "password"].indexOf(
-            this.state.settings.content_type
-          ) === -1
-        ) {
-          this.dispatchFieldValueToStore(
-            valueToDispatch !== undefined ? valueToDispatch : value,
-            true
-          );
-        }
         if (change_actions && !change_change_end && !isEditor()) {
           this.debounceDispatch(
             valueToDispatch !== undefined ? valueToDispatch : value
@@ -935,10 +802,6 @@ class InputTextEqualWidget extends Component {
     150
   );
 
-  // inputKeyBetween = setTimeout(
-  //   value => this.dispatchFieldValueToStore(value, true),
-  //   this.props.element.getSettings("change_change_end_delay")
-  // );
   /**
    * получить опции
    */
@@ -986,13 +849,8 @@ class InputTextEqualWidget extends Component {
    * @param  editor для получения изменений из CKEditor
    */
   onBlur = async (e, editor = null) => {
-    if (
-      ["text", "email", "phone", "tel", "number", "password"].indexOf(
-        this.state.settings.content_type
-      ) !== -1
-    ) {
-      this.dispatchFieldValueToStore(e.target.value, true);
-    }
+    this.dispatchFieldValueToStore(e.target.value, true);
+
     if (_.get(editor, "getData")) {
       this.dispatchFieldValueToStore(editor.getData(), true);
     }
@@ -1117,36 +975,20 @@ class InputTextEqualWidget extends Component {
       this.setState(state => ({ ...state, isDisabled: false }));
     }
   };
-  // shouldComponentUpdate(nextProps) {
-  // console.log(nextProps);
-
-  // console.log(nextProps.ElementWrapper=== this.props.ElementWrapper);
-  // console.log(nextProps.altrpMeta=== this.props.altrpMeta);
-  // console.log(nextProps.altrpPageState=== this.props.altrpPageState);
-  // console.log(nextProps.altrpresponses=== this.props.altrpresponses);
-  // console.log(nextProps.appStore=== this.props.appStore);
-  // console.log(nextProps.baseRender=== this.props.baseRender);
-  // console.log(nextProps.children=== this.props.children);
-  // console.log(nextProps.currentDataStorage=== this.props.currentDataStorage);
-  // console.log(nextProps.currentModel=== this.props.currentModel);
-  // console.log(nextProps.currentScreen=== this.props.currentScreen);
-  // console.log(nextProps.currentUser=== this.props.currentUser);
-  // console.log(nextProps.element=== this.props.element);
-  // console.log(nextProps.elementDisplay=== this.props.elementDisplay);
-  // console.log(nextProps.formsStore=== this.props.formsStore);
-  // console.log(nextProps.match=== this.props.match);
-  // console.log(nextProps.match);
-  // console.log(nextProps.rootElement=== this.props.rootElement);
-  // console.log(nextProps.rootElement);
-  // console.log(nextProps.updateToken=== this.props.updateToken);
-  //   return true;
-  // }
   /**
    * Взовращает имя для атрибута name
    * @return {string}
    */
   getName() {
     return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
+  }
+
+  handleLockClick = () => {
+    this.setState((state) => {
+      return {
+        showPassword: !state.showPassword,
+      }
+    })
   }
 
   render() {
@@ -1207,7 +1049,6 @@ class InputTextEqualWidget extends Component {
             : 2 + "px"
         };
         classLabel = "altrp-field-label-container-left";
-        // this.label.current.classList.add("hello")
 
         break;
       case "absolute":
@@ -1227,8 +1068,8 @@ class InputTextEqualWidget extends Component {
         >
           <label
             className={`altrp-field-label ${this.state.settings.content_required
-                ? "altrp-field-label--required"
-                : ""
+              ? "altrp-field-label--required"
+              : ""
               }`}
           >
             {this.state.settings.content_label}
@@ -1251,141 +1092,46 @@ class InputTextEqualWidget extends Component {
       autocomplete = "off";
     }
 
-    let input = null;
-    switch (this.state.settings.content_type) {
-      case "select":
-        {
-          let options = this.getOptions();
-          input = (
-            <select
-              value={value || ""}
-              onFocus={this.onFocus}
-              name={this.getName()}
-              onChange={this.onChange}
-              onBlur={this.onBlur}
-              onKeyDown={this.handleEnter}
-              id={this.state.settings.position_css_id}
-              className={
-                "altrp-field " + this.state.settings.position_css_classes
-              }
-            >
-              {this.state.settings.content_options_nullable ? (
-                <option value="" />
-              ) : (
-                ""
-              )}
+    let lockButton = (
+      <Tooltip2 content={`${this.state.showPassword ? "Hide" : "Show"} Password`}>
+        <Button
+          icon={this.state.showPassword ? "unlock" : "lock"}
+          intent={Intent.WARNING}
+          minimal={true}
+          onClick={this.handleLockClick}
+        />
+      </Tooltip2>
+    );;
 
-              {(options_sorting
-                ? sortOptions(options, options_sorting)
-                : options
-              ).map(option => (
-                <option value={option.value} key={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          );
-        }
-        break;
-      case "select2":
-        {
-          input = this.renderSelect2();
-        }
-        break;
-      case "radio":
-      case "checkbox":
-        {
-          input = this.renderRepeatedInput();
-        }
-        break;
-      case "wysiwyg":
-        {
-          input = this.renderWysiwyg();
-        }
-        break;
-      case "textarea":
-        input = (
-          <textarea
-            value={value || ""}
-            readOnly={content_readonly}
-            autoComplete={autocomplete}
-            placeholder={this.state.settings.content_placeholder}
-            className={
-              "altrp-field " + this.state.settings.position_css_classes
-            }
-            onChange={this.onChange}
-            onBlur={this.onBlur}
-            id={this.state.settings.position_css_id}
-          />
-        );
-        break;
-      case "image_select":
-        input = (
-          <AltrpImageSelect
-            options={image_select_options}
-            value={this.state.value}
-            changeHandler={value => this.setState({ value })}
-            isMultiple={isMultiple}
-          />
-        );
-        break;
-      case "accept":
-        input = this.renderAcceptInput();
-        break;
-      default: {
-        const isClearable = this.state.settings.content_clearable;
-        const isDate = this.state.settings.content_type === "date";
-        const timestamp = this.props.element.getSettings("content_timestamp");
-        if (isDate && timestamp) {
-          const isValid = moment.unix(value).isValid();
-          if (isValid) {
-            try {
-              value = moment.unix(value / 1000).format("YYYY-MM-DD");
-            } catch (error) {
-              console.log(error);
-            }
+    let input = (
+      <div className="altrp-input-wrapper">
+        <AltrpInput
+          type={this.state.settings.content_type === 'password' ? (this.state.showPassword ? "text" : "password") : this.state.settings.content_type}
+          rightElement={this.state.settings.content_type === 'password' ? lockButton : ''}
+          name={this.getName()}
+          value={value || ""}
+          popoverProps={this.popoverProps}
+          element={this.props.element}
+          readOnly={content_readonly}
+          autoComplete={autocomplete}
+          placeholder={this.state.settings.content_placeholder}
+          className={
+            "altrp-field " + this.state.settings.position_css_classes
           }
-        }
-        input = (
-          <div className="altrp-input-wrapper">
-            <AltrpInput
-              type={this.state.settings.content_type}
-              name={this.getName()}
-              value={value || ""}
-              element={this.props.element}
-              readOnly={content_readonly}
-              autoComplete={autocomplete}
-              placeholder={this.state.settings.content_placeholder}
-              className={
-                "altrp-field " + this.state.settings.position_css_classes
-              }
-              settings={this.props.element.getSettings()}
-              onKeyDown={this.handleEnter}
-              onChange={this.onChange}
-              onBlur={this.onBlur}
-              onFocus={this.onFocus}
-              id={this.state.settings.position_css_id}
-            />
-            {isClearable && (
-              <button
-                className="input-clear-btn"
-                onClick={() => this.setState({ value: this.defaultValue })}
-              >
-                ✖
-              </button>
-            )}
-          </div>
-        );
-      }
-    }
+          settings={this.props.element.getSettings()}
+          onKeyDown={this.handleEnter}
+          onChange={this.onChange}
+          onBlur={this.onBlur}
+          onFocus={this.onFocus}
+          id={this.state.settings.position_css_id}
+        />
+      </div>
+    );
+
     return (
       <AltrpFieldContainer
         settings={settings}
-        className={
-          this.state.settings.content_type !== "image_select"
-            ? "altrp-field-container "
-            : "" + classLabel
-        }
+        className="altrp-field-container "
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}
@@ -1397,224 +1143,6 @@ class InputTextEqualWidget extends Component {
       </AltrpFieldContainer>
     );
   }
-  /**
-   * Выводит input type=accept
-   */
-  renderAcceptInput() {
-    const settings = this.props.element.getSettings();
-    let value = this.state.value;
-    let trueValue = this.props.element.getSettings("accept_checked") || true;
-    let falseValue =
-      this.props.element.getSettings("accept_unchecked") || false;
-    if (value === trueValue) {
-      value = true;
-    } else if (value === falseValue) {
-      value = false;
-    }
-    return (
-      <div className={`altrp-field-option ${value ? "active" : ""}`}>
-        <span className="altrp-field-option-span">
-          <input
-            type="checkbox"
-            name={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
-            className={`altrp-field-option__input ${value ? "active" : ""}`}
-            onChange={this.onChange}
-            checked={!!value}
-            id={`${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`}
-          />
-        </span>
-      </div>
-    );
-  }
-  /**
-   * Выводит input type=checkbox|radio
-   */
-  renderRepeatedInput() {
-    const { options = [] } = this.state;
-    let { value = "" } = this.state;
-    const fieldName =
-      this.props.element.getFieldId() ||
-      Math.random()
-        .toString(36)
-        .substr(2, 9);
-    const formID =
-      this.props.element.getFormId() ||
-      Math.random()
-        .toString(36)
-        .substr(2, 9);
-    const inputType = this.props.element.getSettings("content_type", "radio");
-    return (
-      <div className="altrp-field-subgroup">
-        {options.map((option, idx) => {
-          let checked = false;
-          /**
-           * Если значение или опция число, то приведем к числу перед сравнением
-           */
-          if (inputType === "radio") {
-            checked = altrpCompare(value, option.value, "==");
-          } else {
-            value = _.isArray(value) ? value : value ? [value] : [];
-            checked = altrpCompare(option.value, value, "in");
-          }
-          return (
-            <div
-              className={`altrp-field-option ${checked ? "active" : ""}`}
-              key={`${fieldName}-${idx}`}
-            >
-              <span className="altrp-field-option-span">
-                <input
-                  type={inputType}
-                  value={option.value}
-                  name={`${formID}-${fieldName}`}
-                  className={`altrp-field-option__input ${checked ? "active" : ""
-                    }`}
-                  onChange={this.onChange}
-                  checked={checked}
-                  id={`${formID}-${fieldName}-${idx}`}
-                />
-              </span>
-              <label
-                htmlFor={`${formID}-${fieldName}-${idx}`}
-                className="altrp-field-option__label"
-              >
-                {option.label}
-              </label>
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
-
-  /**
-   * Выводит инпут-select2, используя компонент AltrpSelect
-   */
-  renderSelect2() {
-    const {
-      content_options_nullable,
-      nulled_option_title,
-      content_placeholder
-    } = this.props.element.getSettings();
-
-    let options = this.getOptions();
-    let value = this.state.value;
-    if (
-      _.get(value, "dynamic") &&
-      this.props.currentModel.getProperty("altrpModelUpdated")
-    ) {
-      value = this.getContent("content_default_value", true);
-    }
-    /**
-     * Пока динамический контент загружается, нужно вывести пустую строку
-     */
-    if (value && value.dynamic) {
-      value = "";
-    }
-    if (!this.props.element.getSettings("select2_multiple", false)) {
-      options.forEach(option => {
-        if (!option) {
-          return;
-        }
-        if (option.value === value) {
-          value = { ...option };
-        }
-        if (_.isArray(option.options)) {
-          option.options.forEach(option => {
-            if (option.value == value) {
-              value = { ...option };
-            }
-          });
-        }
-      });
-    } else {
-      /**
-       * Если включен мультиселект
-       */
-      value = value ? (_.isArray(value) ? value : [value]) : [];
-      value = value.map(v => {
-        let _v = v;
-        options.forEach(option => {
-          if (option.value && option.value.toString() === _v.toString()) {
-            _v = { ...option };
-          }
-          if (_.isArray(option.options)) {
-            option.options.forEach(option => {
-              if (option.value && option.value.toString() === _v.toString()) {
-                _v = { ...option };
-              }
-            });
-          }
-        });
-        return _v;
-      });
-      /**
-       * Добавим опцию, если для какого-то значения ее нет
-       */
-      value.forEach(valueItem => {
-        if (!_.isObject(valueItem)) {
-          options.push({
-            value: valueItem,
-            label: valueItem
-          });
-        }
-      });
-    }
-    /**
-     * Сортируем опции
-     * @type {Array|*}
-     */
-    if (
-      content_options_nullable &&
-      (this.props.element.getSettings("content_type") !== "select2" ||
-        this.props.element.getSettings("select2_multiple") !== true)
-    ) {
-      options = _.union(
-        [{ label: nulled_option_title, value: "<null>" }],
-        options
-      );
-    }
-    const select2Props = {
-      className: "altrp-field-select2",
-      onFocus: this.onFocus,
-      element: this.props.element,
-      classNamePrefix: this.props.element.getId() + " altrp-field-select2",
-      options,
-      name: this.props.element.getFieldId(),
-      ref: this.altrpSelectRef,
-      settings: this.props.element.getSettings(),
-      onChange: this.onChange,
-      onBlur: this.onBlur,
-      value: value || _.find(options, o => o && o.value == this.state.value),
-      isOptionSelected: option => {
-        if (_.isNumber(this.state.value) || _.isString(this.state.value)) {
-          return this.state.value == option.value;
-        }
-        return this.state.value && this.state.value.includes(option.value);
-      },
-      placeholder: content_placeholder,
-      isMulti: this.props.element.getSettings("select2_multiple", false),
-      onKeyDown: this.handleEnter
-      // menuIsOpen: true,
-    };
-    return (
-      <div className="altrp-input-wrapper">
-        <AltrpSelect {...select2Props} />
-      </div>
-    );
-  }
-
-  renderWysiwyg() {
-    return (
-      <CKeditor
-        onChange={this.onChange}
-        onBlur={this.onBlur}
-        changeText={this.dispatchFieldValueToStore}
-        text={this.getContent("content_default_value")}
-        name={this.getName()}
-        readOnly={this.getContent("read_only")}
-      />
-    );
-  }
 }
 
-export default InputTextEqualWidget;
+export default InputTextСommonWidget;

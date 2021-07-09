@@ -91,8 +91,10 @@ class AltrpInput extends Component {
       }
     }
 
+    let Input = window.altrpLibs.Blueprint.InputGroup;
+
     return <>
-      <input {...inputProps} />
+      <Input {...inputProps} />
       {!isValid && content_type === 'email' && mask_mismatch_message &&
         <p className="mask-mismatch-message">{mask_mismatch_message}</p>}
     </>;
