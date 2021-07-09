@@ -81,6 +81,25 @@ class Button extends BaseElement {
       ],
     });
 
+    this.addControl('content_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Content Alignment',
+      options: [
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+      ],
+    });
+
     this.addControl('button_icon_right', {
       type: CONTROLLER_MEDIA,
       label: 'Right Icon',

@@ -232,8 +232,14 @@ export function renderAssetIcon(asset, props = null) {
  * @throws Исключение если иконка не найдена
  * */
 export function renderAsset(asset, props = null) {
+  if(asset.type === 'image' && asset.dataUrl){
+    return React.createElement("img", {
+      ...props,
+      src: asset.dataUrl,
+    });
+  }
   if (asset.url && asset.type === "svg") {
-    return <AltrpSVG {...props} url={asset.url} />;
+    return <AltrpSVG {...props} url={asset.url} rawSVG={asset.rawSVG} />;
   }
   if (! isSSR() && asset instanceof File) {
     let refImg = React.createRef();
