@@ -117,31 +117,79 @@ class Action
     protected function execCrud()
     {
         $data = json_decode(json_encode($this->node->data->props->nodeData->data->body), true);
+        $custom = $this->node->data->props->nodeData->data->custom;
+        $custom_data = $this->node->data->props->nodeData->data->custom_data;
+
         $newData = [];
-        foreach ($data as $key => $value){
+        if ($custom && $custom_data) {
+
+            $params = preg_split('/\r\n|\r|\n/', $custom_data);
+            foreach ($params as $param) {
+                $paramParts = explode('|', $param);
+
+                $key = trim($paramParts[0]);
+                $value = setDynamicData(trim($paramParts[1]), $this->modelData);
+                if ($value === "null") $value = null;
+
+                $newData[$key] = $value;
+            }
+        }
+        foreach ($data as $key => $value) {
             $newData[$key] = setDynamicData($value, $this->modelData);
         }
+
         $model = Model::find($this->node->data->props->nodeData->data->model_id);
         $modelNamespace = $model->parent ? $model->parent->namespace : $model->namespace;
         $modelClass = '\\' . $modelNamespace;
         $method = $this->node->data->props->nodeData->data->method;
+
         if ($method == 'create') {
             $entity = new $modelClass($newData);
             $result = $entity->$method($newData);
         } elseif ($method == 'delete') {
-            $id = setDynamicData($this->node->data->props->nodeData->data->record, $this->modelData);
-            $entity = $modelClass::find($id);
-            $result = $entity->$method();
+            $entity = $this->getRecord($modelClass);
+            if ($entity) $result = $entity->$method();
         } else {
-            $id = setDynamicData($this->node->data->props->nodeData->data->record, $this->modelData);
-            $entity = $modelClass::find($id);
-            $result = $entity->$method($newData);
+            $entity = $this->getRecord($modelClass);
+            if ($entity) $result = $entity->$method($newData);
         }
 
         return [
             'name' => $model->name,
             'value' => $result
         ];
+    }
+
+    /**
+     * Получить запись модели
+     * @return mixed
+     */
+    protected function getRecord($model)
+    {
+        $result = false;
+        $params = setDynamicData($this->node->data->props->nodeData->data->record, $this->modelData);
+
+        if ($params) {
+
+            $params = preg_split('/\r\n|\r|\n/', $params);
+            $data = [];
+            foreach ($params as $param) {
+                $paramParts = explode('|', $param);
+
+                $key = trim($paramParts[0]);
+
+                $value = trim($paramParts[1]);
+                if ($value === "null") $value = null;
+
+                if (isset($paramParts[2])) $operator = trim($paramParts[2]);
+                else $operator = '=';
+
+                $data[] = [$key, $operator, $value];
+            }
+            $result = $model::where($data);
+        }
+
+        return $result;
     }
 
     /**
@@ -177,8 +225,8 @@ class Action
         try {
             if ($docData) {
                 preg_match("#\{\{([^{}]+):([^{}]+)\}\}#", $docData, $matches);
-                if($matches[1] === 'altrpmodel'){
-                    $model = Model::where('name', $matches[2] )->first();
+                if ($matches[1] === 'altrpmodel') {
+                    $model = Model::where('name', $matches[2])->first();
                     $modelNamespace = $model->parent ? $model->parent->namespace : $model->namespace;
                     $modelClass = '\\' . $modelNamespace;
                     $resultData = [
@@ -187,8 +235,8 @@ class Action
 
                     $resultData = json_encode($resultData);
                 }
-                if($matches[1]  === 'altrpsource'){
-                    $source = Source::where('name', $matches[2] )->first();
+                if ($matches[1]  === 'altrpsource') {
+                    $source = Source::where('name', $matches[2])->first();
                     $url = $source->url;
                     $method = $source->request_type;
 
@@ -202,7 +250,7 @@ class Action
                     $resultData = json_encode($resultData);
                 }
             }
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             \Log::info($e->getMessage());
         }
 
@@ -214,22 +262,22 @@ class Action
             $document = new ExportExcel($resultData, $template, $fileName);
             $document->export('robot');
 
-            return [ 'name' => 'document', 'value' => true ];
+            return ['name' => 'document', 'value' => true];
         }
 
         if ($type === 'word') {
             $document = new ExportWord($resultData, $template, $fileName);
             $document->export('robot');
 
-            return [ 'name' => 'document', 'value' => true ];
+            return ['name' => 'document', 'value' => true];
         }
         if ($type === 'presentation') {
         }
 
         return [
-              'name' => 'document',
-              'value' => false
-          ];
+            'name' => 'document',
+            'value' => false
+        ];
     }
 
     /**
@@ -256,7 +304,7 @@ class Action
             $value = setDynamicData($entities->dynamicValue, $this->modelData);
             if (isset($this->modelData['record']) && !Str::contains($field, "{{"))
                 $value = $this->modelData['record']->$field;
-            if (Str::contains($field, "|")){
+            if (Str::contains($field, "|")) {
                 $field = explode('|', $field);
                 $fieldOne = str_replace(' ', '', $field[1]);
                 $value = setDynamicData($fieldOne, $this->modelData);
@@ -265,12 +313,12 @@ class Action
             $users = User::where($columnName, $value)->get();
         } else {
             if (is_object($entities) && $type != 'all') {
-                $users = isset($entities->users) && !empty($entities->users) ? User::whereIn('id', $entities->users): null;
+                $users = isset($entities->users) && !empty($entities->users) ? User::whereIn('id', $entities->users) : null;
                 if (isset($entities->roles) && !empty($entities->roles)) {
                     $roles = $entities->roles;
-                    $users = $users ? $users->whereHas('roles', function ($q) use ($roles){
+                    $users = $users ? $users->whereHas('roles', function ($q) use ($roles) {
                         $q->whereIn('roles.id', $roles);
-                    }) : User::whereHas('roles', function ($q) use ($roles){
+                    }) : User::whereHas('roles', function ($q) use ($roles) {
                         $q->whereIn('roles.id', $roles);
                     });
                 }
