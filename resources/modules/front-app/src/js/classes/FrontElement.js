@@ -758,7 +758,7 @@ class FrontElement {
    */
   getTemplateType(){
     const rootElement = this.getRoot();
-    return rootElement.templateType || 'content';
+    return rootElement ? (rootElement.templateType || 'content') : 'content';
   }
 
   /**

@@ -24,6 +24,7 @@ export function btnStyles(settings) {
 
     "altrp-btn",
     // ["flex-direction", "button_icon_position"],
+    ["justify-content", "content_alignment"],
     ["margin", "position_margin", "dimensions"],
     ["padding", "position_padding", "dimensions"],
     ["z-index", "position_z_index"],

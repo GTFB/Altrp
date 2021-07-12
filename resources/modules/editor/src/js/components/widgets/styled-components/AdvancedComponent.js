@@ -19,6 +19,10 @@ export default function AdvancedComponent(settings) {
         return ''
       }
     },
+    () => {
+      const element_css_editor = getResponsiveSetting(settings, "element_css_editor");
+      return _.isString(element_css_editor) ? element_css_editor.replace(/__selector__/g, '&') : '';
+    },
 
     ["padding", "positioning_padding", "dimensions"],
     ["margin", "positioning_margin", "dimensions"],

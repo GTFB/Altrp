@@ -77,6 +77,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         case "section":
           styles += `.${prefix}${id} {${SectionWidgetComponent(item.settings, item.childrenLength || 1)}}`;
           break;
+        case "section_widget":
+          styles += `.${prefix}${id} {${SectionWidgetComponent(item.settings, item.childrenLength || 1)}}`;
+          break;
         case "column":
           styles += `.${prefix}${id} {${ColumnComponent(item.settings)}}`;
           break;

@@ -132,7 +132,7 @@ class SectionComponent extends Component {
       delete styles.maxWidth;
     }
 
-    let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
+    let ElementWrapper = window.SectionElementWrapper || this.props.ElementWrapper || window.ElementWrapper;
     let sectionWrapper = this.state.children.map(column => (
       <ElementWrapper
         ElementWrapper={ElementWrapper}

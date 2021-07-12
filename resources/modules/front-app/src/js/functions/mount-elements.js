@@ -49,7 +49,6 @@ function findElement(elementId){
   })
   if(element){
     element = frontElementsFabric.parseData(element);
-
   }
   return element;
 }

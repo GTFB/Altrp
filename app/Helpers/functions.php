@@ -1052,6 +1052,13 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
       && ! ( data_get( $element, 'settings.react_element' )
         || array_search(  $element['name'], $DEFAULT_REACT_ELEMENTS ) !== false ) ) ){
     $elementNames[] = $element['name'];
+    if($element['name'] === 'section' || $element['name'] === 'column'){
+      recurseMapElements( $element, function( $element ) use( &$elementNames ){
+        if( $element['name'] && array_search(  $element['name'], $elementNames ) === false ) {
+          $elementNames[] = $element['name'];
+        }
+      } );
+    }
   }
   if( isset( $element['children'] ) && is_array( $element['children'] ) ){
     foreach ( $element['children'] as $child ) {

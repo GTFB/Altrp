@@ -643,7 +643,7 @@ export default function SectionWidgetComponent(settings, childrenLength) {
     }
 
     if (padding) {
-      styles += `.altrp-section{${dimensionsControllerToStyles(padding, 'padding')}}`;
+      styles += ` > .altrp-section{${dimensionsControllerToStyles(padding, 'padding')}}`;
     }
 
     return styles;
@@ -671,61 +671,61 @@ export default function SectionWidgetComponent(settings, childrenLength) {
 
   & > .altrp-section > .altrp-element_column{width:${100/childrenLength}%;}
 
-  & div.altrp-section,
-  & div.altrp-section-full-fill {
+  & > div.altrp-section,
+  & > div.altrp-section-full-fill {
     ${altrpSection()}
   }
 
-  & div.altrp-section:hover,
-  & div.altrp-section-full-fill:hover {
+  & > div.altrp-section:hover,
+  & > div.altrp-section-full-fill:hover {
     ${altrpSectionHover()}
   }
 
-  & div.altrp-section div.altrp-column {
+  & > div.altrp-section div.altrp-column {
     ${altrpSectionColumn()}
   }
 
-  & div.altrp-section:hover div.altrp-column:hover {
+  & > div.altrp-section:hover div.altrp-column:hover {
     ${altrpSectionColumnHover()}
   }
 
-  & div.altrp-section {
+  & > div.altrp-section {
     ${altrpSectionSecond()}
   }
 
-  & div.altrp-section:hover {
+  & > div.altrp-section:hover {
     ${altrpSectionSecondHover()}
   }
 
-  & div.altrp-section.altrp-background-image {
+  & > div.altrp-section.altrp-background-image {
     ${altrpBackgroundImage()}
   }
 
-  & div.altrp-section.altrp-background-image:hover {
+  & > div.altrp-section.altrp-background-image:hover {
     ${altrpBackgroundImageHover()}
   }
 
-  & div.altrp-section_boxed,
-  & div.altrp-section_section_boxed {
+  & > div.altrp-section_boxed,
+  & > div.altrp-section_section_boxed {
     ${altrpSectionBoxed()}
   }
 
-  & div.altrp-section_boxed:hover,
-  & div.altrp-section_section_boxed:hover {
+  & > div.altrp-section_boxed:hover,
+  & > div.altrp-section_section_boxed:hover {
     ${altrpSectionBoxedHover()}
   }
 
-  & div.altrp-section_section-boxed {
+  & > div.altrp-section_section-boxed {
     ${altrpSectionSectionBoxed()}
   }
 
   &,
-  & div.altrp-section-full-fill {
+  & > div.altrp-section-full-fill {
     ${altrpSectionFull()}
   }
 
   &:hover,
-  & div.altrp-section-full-fill:hover {
+  & > div.altrp-section-full-fill:hover {
     ${altrpSectionFullHover()}
   }
 

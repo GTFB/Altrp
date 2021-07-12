@@ -86,15 +86,15 @@ class Button extends BaseElement {
       label: 'Content Alignment',
       options: [
         {
-          icon: 'left',
+          icon: 'block_left',
           value: 'flex-start',
         },
         {
-          icon: 'center',
+          icon: 'block_vertically',
           value: 'center',
         },
         {
-          icon: 'right',
+          icon: 'block_right',
           value: 'flex-end',
         },
       ],

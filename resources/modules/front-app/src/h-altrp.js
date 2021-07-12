@@ -78,6 +78,13 @@ window.LIBS = {
       return Promise.resolve(res)
     });
   },
+  'section-element-wrapper': () => {
+    return import(/* webpackChunkName: 'section-element-wrapper' */'./js/libs/section-element-wrapper').then(res => {
+      window.libsLoaded.push('section-element-wrapper')
+      console.log('LOAD "section-element-wrapper": ', performance.now());
+      return Promise.resolve(res)
+    });
+  },
 
 };
 
@@ -85,33 +92,35 @@ window.libsToLoad = window.libsToLoad || [];
 __altrp_settings__.libsToLoad?.forEach(lib=>{
   libsToLoad.push(LIBS[lib]())
 })
-if (window.altrpElementsLists) {
-  window.altrpElementsLists.forEach(el => {
-    if (WIDGETS_DEPENDS[el] && WIDGETS_DEPENDS[el].length && libsToLoad.indexOf(el) === -1) {
-      WIDGETS_DEPENDS[el].forEach(lib => {
-        if (LIBS[lib]) {
-          libsToLoad.push(LIBS[lib]())
-        }
+function loadLibs(){
+  if (window.altrpElementsLists) {
+    window.altrpElementsLists.forEach(el => {
+      if (WIDGETS_DEPENDS[el] && WIDGETS_DEPENDS[el].length && libsToLoad.indexOf(el) === -1) {
+        WIDGETS_DEPENDS[el].forEach(lib => {
+          if (LIBS[lib]) {
+            libsToLoad.push(LIBS[lib]())
+          }
+        });
+      }
+    })
+  } else {
+    LIBS.forEach(lib => {
+      libsToLoad.push(lib())
+    })
+  }
+  Promise.all(libsToLoad).then(res => {
+    import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElementsManager').then(module => {
+      import (/* webpackChunkName: 'FrontElementsFabric' */'./js/classes/FrontElementsFabric').then(module => {
+        console.log('LOAD FrontElementsFabric: ', performance.now());
+        loadingCallback();
       });
-    }
-  })
-} else {
-  LIBS.forEach(lib => {
-    libsToLoad.push(lib())
-  })
-}
-Promise.all(libsToLoad).then(res => {
-  import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElementsManager').then(module => {
-    import (/* webpackChunkName: 'FrontElementsFabric' */'./js/classes/FrontElementsFabric').then(module => {
-      console.log('LOAD FrontElementsFabric: ', performance.now());
+      return window.frontElementsManager.loadComponents();
+    }).then(async components => {
+      console.log('LOAD FrontElementsManager: ', performance.now());
       loadingCallback();
     });
-    return window.frontElementsManager.loadComponents();
-  }).then(async components => {
-    console.log('LOAD FrontElementsManager: ', performance.now());
-    loadingCallback();
   });
-});
+}
 
 /**
  * Параллельно загружаем все необходимые модули
@@ -126,6 +135,7 @@ import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
     loadingCallback();
     loadDatastorageUpdater();
     loadFontsManager();
+    loadLibs()
   });
 
   import (/* webpackChunkName: 'SimpleElementWrapper' */'./js/components/SimpleElementWrapper').then(module => {
