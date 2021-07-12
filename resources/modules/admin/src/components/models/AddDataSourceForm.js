@@ -25,7 +25,8 @@ class AddDataSourceForm extends Component {
         roles: [],
         permissions: []
       },
-      headers: []
+      headers: [],
+      bodies: []
     }
   }
 
@@ -42,7 +43,7 @@ class AddDataSourceForm extends Component {
     if (id) {
       const resource = new Resource({ route: '/admin/ajax/data_sources' });
       resource.get(id).then(value => this.setState({
-        value: { ...value, headers: Object.entries(value.headers || {})},        
+        value: { ...value, headers: Object.entries(value.headers || {}), bodies: Object.entries(value.bodies || {})},
         typeIsDisabled: value.type === 'remote'
       }));
     }
@@ -130,6 +131,40 @@ class AddDataSourceForm extends Component {
     });
   };
 
+  bodyDeleteHandler = index => {
+    this.setState(state => {
+      const bodies = [...state.value.bodies];
+      bodies.splice(index, 1);
+      return {
+        ...state,
+        value: { ...state.value, bodies }
+      };
+    });
+  };
+
+  bodyChangeHandler = (e, index) => {
+    const { name, value } = e.target;
+
+    this.setState(state => {
+      let bodies = [...state.value.bodies];
+      bodies[index][+name] = value;
+      return {
+        ...state,
+        value: { ...state.value, bodies }
+      };
+    });
+  };
+
+  bodyAddHandler = () => {
+    this.setState(state => {
+      const bodies = [...state.value.bodies, ["", ""]];
+      return {
+        ...state,
+        value: { ...state.value, bodies }
+      };
+    });
+  };
+
   submitHandler = e => {
     e.preventDefault();
     const resource = new Resource({ route: '/admin/ajax/data_sources' });
@@ -144,7 +179,7 @@ class AddDataSourceForm extends Component {
   render() {
     const { roles, permissions } = this.state.value.access;
     const { rolesOptions, permissionsOptions } = this.state;
-    const { headers } = this.state.value;
+    const { headers, bodies } = this.state.value;
     const { id } = this.props.match.params;
 
     return <form className="admin-form" onSubmit={this.submitHandler}>
@@ -262,6 +297,23 @@ class AddDataSourceForm extends Component {
       <div className="centred">
         <button className="btn btn_success" type="button" onClick={this.headerAddHandler}>
           + New Header
+        </button>
+      </div>
+
+      <h2 className="admin-form__subheader centred">Bodies</h2>
+
+      {bodies && bodies.map((item, index) => <Fragment key={index}>
+        {index !== 0 && <hr />}
+        <div className="text-right">
+          <button className="btn btn_failure" type="button" onClick={() => this.bodyDeleteHandler(index)}>
+            ✖
+          </button>
+        </div>
+        <HeaderComponent item={item} changeHandler={e => this.bodyChangeHandler(e, index)} />
+      </Fragment>)}
+      <div className="centred">
+        <button className="btn btn_success" type="button" onClick={this.bodyAddHandler}>
+          + New Body
         </button>
       </div>
 
