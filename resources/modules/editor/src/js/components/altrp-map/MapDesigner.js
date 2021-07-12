@@ -4,9 +4,9 @@ import axios from "axios";
 import Drawer from "rc-drawer";
 import MarkerCluster from "./MarkerCluster";
 
-import { Map, FeatureGroup, TileLayer } from "react-leaflet";
+import { MapContainer as Map, FeatureGroup, TileLayer } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
-import Control from "react-leaflet-control";
+// import Control from "react-leaflet-control";
 
 import { isCircle } from "./helpers/isCircle";
 import { isMarker } from "./helpers/isMarker";

@@ -1,8 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   entry: "./resources/modules/editor/src/index.js",
@@ -23,7 +21,7 @@ module.exports = {
         // loader: "css-loader",
         use: [
           // Creates `style` nodes from JS strings
-          "style-loader",
+          "file-loader",
           // Translates CSS into CommonJS
           "css-loader",
         ],

@@ -129,8 +129,6 @@ const GlobalStyles = createGlobalStyle`
     }
     styles += '}';
 
-    console.log(styles);
-
     return styles;
   }}
   .altrp-menu-item__icon svg {

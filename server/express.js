@@ -41,9 +41,9 @@ window.stylesModulePromise = new Promise(function(resolve) {
 });
 
 const express = require("express");
-let PORT = process.env.SSR_PORT || 9000;
-const { Provider } = require("react-redux");
 require("dotenv").config();
+let PORT = process.env.ALTRP_SETTING_SSR_PORT || 9000;
+const { Provider } = require("react-redux");
 global.appStore = require("../resources/modules/front-app/src/js/store/store").default;
 window.parent.appStore = global.appStore;
 const ReactDOMServer = require("react-dom/server");

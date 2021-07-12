@@ -716,13 +716,14 @@ class Page extends Model
     if (!$page->allowedForUser()) {
       return $result;
     }
-    $client = new Client(['base_uri' => "http://localhost:9000/"]);
+    $base_uri = 'http://localhost:' . get_altrp_setting( 'ssr_port', '9000' ) . '/';
+    $client = new Client(['base_uri' => $base_uri]);
     try {
       $test_result = $client->request('GET')->getStatusCode();
       if( $test_result === 200 ) {
 
       $postExpress = new Client([
-          'base_uri' => "http://localhost:9000/",
+          'base_uri' => $base_uri,
           'defaults' => [
               'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
           ]
