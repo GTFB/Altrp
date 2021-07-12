@@ -43,9 +43,9 @@ class AddDataSourceForm extends Component {
     if (id) {
       const resource = new Resource({ route: '/admin/ajax/data_sources' });
       resource.get(id).then(value => this.setState({
-        value: { ...value, headers: Object.entries(value.headers || {}), bodies: Object.entries(value.bodies || {})},
-        typeIsDisabled: value.type === 'remote'
-      }));
+            value: {...value, headers: Object.entries(value.headers || {}), bodies: Object.entries(value.bodies || {})},
+            typeIsDisabled: value.type === 'remote'
+          }))
     }
   }
 
@@ -170,7 +170,8 @@ class AddDataSourceForm extends Component {
     const resource = new Resource({ route: '/admin/ajax/data_sources' });
     const { id } = this.props.match.params;
     const headers = Object.fromEntries(this.state.value.headers);
-    const data = { ...this.state.value, headers };
+    const bodies = Object.fromEntries(this.state.value.bodies);
+    const data = { ...this.state.value, headers, bodies };
 
     (id ? resource.put(id, data) : resource.post(data))
       .then(() => this.props.history.goBack());
@@ -181,6 +182,8 @@ class AddDataSourceForm extends Component {
     const { rolesOptions, permissionsOptions } = this.state;
     const { headers, bodies } = this.state.value;
     const { id } = this.props.match.params;
+
+
 
     return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="form-group__inline-wrapper">

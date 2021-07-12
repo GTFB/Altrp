@@ -5,6 +5,7 @@ import {
   altrpLogout,
   dataFromTable,
   dataToCSV,
+  dataToXML,
   elementsToPdf,
   getAppContext,
   getComponentByElementId,
@@ -267,6 +268,11 @@ class AltrpAction extends AltrpModel {
         {
           result = await this.doActionTableToCSV();
         }
+        break;
+      case "table_to_xml":
+      {
+        result = await this.doActionTableToXML();
+      }
         break;
       case "table_to_xls":
         result = await this.doActionTableToXLS();
@@ -694,6 +700,39 @@ class AltrpAction extends AltrpModel {
       return { success: false };
     }
   }
+
+  /**
+   * HTML-Таблицу в XML-файл
+   * @return {Promise<{}>}
+   */
+  async doActionTableToXML() {
+    let elementId = this.getProperty("element_id");
+    if (!elementId) {
+      return { success: true };
+    }
+    elementId = elementId.trim();
+    const element = getHTMLElementById(elementId);
+    if (!element) {
+      return { success: true };
+    }
+    let data;
+    try {
+      data = dataFromTable(element);
+    } catch (error) {
+      console.error(error);
+      return { success: false };
+    }
+    if (_.isEmpty(data)) {
+      return { success: true };
+    }
+    let filename = replaceContentWithData(this.getProperty("name", "file"));
+    try {
+      return await dataToXML(data, filename);
+    } catch (error) {
+      console.error(error);
+      return { success: false };
+    }
+  }
   /**
    * HTML-таблицу в XLS-файл
    * @return {Promise}
@@ -712,21 +751,25 @@ class AltrpAction extends AltrpModel {
     }
 
     let data = dataFromTable(table);
+
     const formattedData = [];
 
     _.each(data, row => formattedData.push(Object.values(row)));
     const templateName = this.getProperty("template_name");
     const rawTemplateData = this.getProperty("template_data");
-    const parsedTemplateData = rawTemplateData
-      .split("\n")
-      .reduce((data, row) => {
-        const keyValuePair = row.split("=");
-        data[keyValuePair[0]] = keyValuePair[1];
-        return data;
-      }, {});
+    let parsedTemplateData = '';
+    if (rawTemplateData) {
+      parsedTemplateData = rawTemplateData
+        .split("\n")
+        .reduce((data, row) => {
+          const keyValuePair = row.split("=");
+          data[keyValuePair[0]] = keyValuePair[1];
+          return data;
+        }, {});
+    }
     data = { ...parsedTemplateData, dataArray: formattedData };
     const filename = replaceContentWithData(this.getProperty("name", "file"));
-
+    console.log(data);
     try {
       const blob = await dataToXLS(data, filename, templateName);
       let link = document.createElement("a");

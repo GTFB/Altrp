@@ -21,7 +21,7 @@ class ExportXml extends Model
             $this->filename = $filename;
     }
 
-    public function arrayToXML($array, SimpleXMLElement $xml, $child_name)
+    public function arrayToXML($array, \SimpleXMLElement $xml, $child_name)
     {
       foreach ($array as $k => $v) {
         if(is_array($v)) {
@@ -37,8 +37,8 @@ class ExportXml extends Model
     public function export()
     {
         try {
-            $xml = $this->arrayToXML($this->data, new SimpleXMLElement('<root/>'), 'product');
-            $dom = new DOMDocument;
+            $xml = $this->arrayToXML($this->data, new \SimpleXMLElement('<root/>'), 'product');
+            $dom = new \DOMDocument;
             $dom->preserveWhiteSpace = FALSE;
             $dom->loadXML($xml);
             $filename = storage_path() . '/tmp/' . $this->filename . '.xml';
