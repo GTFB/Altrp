@@ -443,6 +443,7 @@ class AltrpAction extends AltrpModel {
       this.getProperty('form_method'),
       formOptions
     );
+    console.log(form);
     let result = {
       success: true
     };

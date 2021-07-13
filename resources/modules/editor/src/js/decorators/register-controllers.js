@@ -515,7 +515,7 @@ export function advancedTabControllers(element) {
 
   element.addControl('disabled_conditional_other_display', {
     type: CONTROLLER_SELECT,
-    label: 'Display on',
+    label: 'Disabled on',
     responsive: false,
     options: [
       {
@@ -633,7 +633,7 @@ export function advancedTabControllers(element) {
 
   element.addControl('active_conditional_other_display', {
     type: CONTROLLER_SELECT,
-    label: 'Display on',
+    label: 'Active on',
     responsive: false,
     options: [
       {

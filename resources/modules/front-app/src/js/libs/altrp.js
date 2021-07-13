@@ -53,7 +53,7 @@ window.altrpHelpers = {
   const  CONSTANTS =  (await import(/* webpackChunkName: 'CONSTANTS' */'../../../../editor/src/js/consts')).default;
   window.CONSTANTS = CONSTANTS;
   window.addEventListener && window.addEventListener('resize', e=>{
-    const {currentMediaScreen} = appStore.getState();
+    const {currentScreen} = appStore.getState();
     const changedScreen = CONSTANTS.SCREENS.find(screen=>{
       if(! screen.fullMediaQuery){
         return false;
@@ -62,7 +62,7 @@ window.altrpHelpers = {
       query = query.replace('@media', '');
       return window.matchMedia(query).matches;
     }) || CONSTANTS.SCREENS[0];
-    if(currentMediaScreen !== changedScreen){
+    if(currentScreen !== changedScreen){
       appStore.dispatch(setCurrentScreen(changedScreen));
     }
   });

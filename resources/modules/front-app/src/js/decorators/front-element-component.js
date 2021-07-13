@@ -338,6 +338,70 @@ function isActive(){
   return active || authCondition;
 }
 /**
+ * true если выполняются условия
+ * @return {boolean}
+ */
+function isDisabled(){
+  if(isEditor()){
+    return false;
+  }
+  const { element } = this.props;
+  const conditional_active_choose = element.getSettings('conditional_disabled_choose');
+  /**
+   * @var {AltrpUser} currentUser
+   */
+  const currentUser = appStore.getState().currentUser;
+  let authCondition = false;
+  switch (conditional_active_choose){
+    case 'guest':{
+      if(currentUser.isGuest()){
+        authCondition = true;
+      }
+    }
+    break;
+    case 'auth':{
+      const roles = element.getSettings('conditional_disabled_roles') || [];
+      const permissions = element.getSettings('conditional_disabled_permissions') || [];
+      if(currentUser.hasRoles(roles)){
+        authCondition = true;
+        break;
+      }
+      if(currentUser.hasPermissions(permissions)){
+        authCondition = true;
+        break;
+      }
+    }
+    break;
+  }
+  if(! element.getSettings('disabled_conditional_other')){
+    return authCondition;
+  }
+  let conditions = element.getSettings("disabled_conditions", []);
+  conditions = conditions.map(c => {
+    const {
+      conditional_model_field: modelField,
+      conditional_other_operator: operator,
+      conditional_other_condition_value: value
+    } = c;
+    return {
+      modelField,
+      operator,
+      value
+    };
+  });
+  const active_conditional_other_display = element.getSettings("disabled_conditional_other_display");
+  let active = conditionsChecker(
+    conditions,
+    active_conditional_other_display === "AND",
+    this.props.element.getCurrentModel(),
+    true
+  );
+  if(active_conditional_other_display === "AND"){
+    return active && authCondition;
+  }
+  return active || authCondition;
+}
+/**
  * Декорирует компонент элемента методами необходимыми на фронте и в редакторе
  * @param component
  */
@@ -351,4 +415,5 @@ export default function frontDecorate(component) {
   component.updateModelData = updateModelData.bind(component);
   component.classStateDisabled = classStateDisabled.bind(component);
   component.isActive = isActive.bind(component);
+  component.isDisabled = isDisabled.bind(component);
 }

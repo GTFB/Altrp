@@ -235,6 +235,9 @@ class ButtonWidget extends Component {
     if(this.isActive()){
       classes += 'active '
     }
+    if(this.isDisabled()){
+      classes += 'state-disabled '
+    }
     return classes;
   }
 

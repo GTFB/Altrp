@@ -33,6 +33,7 @@ class FormsManager {
        * Если в хранилище есть список полей для указанной формы,
        * то передаем их в форму, а на список ссылку удаляем
        */
+
       if(this.fieldsStorage[formId] && this.fieldsStorage[formId].length){
         form.setFields(this.fieldsStorage[formId]);
         delete this.fieldsStorage[formId]

@@ -582,15 +582,19 @@ function saveCache( $html, $page_id ) {
   ];
 
   $key = false;
-  foreach ($relations as $relation) {
-    if ($relation['hash'] === $hash) {
+  $current_device = get_current_device();
+  if( ! isset($relations[$current_device]) || ! is_array( $relations[$current_device] ) ){
+    $relations[$current_device] = [];
+  }
+  foreach ($relations[$current_device] as $relation) {
+    if ($relation['hash'] === $hash && $page_id === $relation['page_id']) {
       $key = true;
       break;
     }
   }
 
   if (!$key) {
-    array_push($relations, $newRelation);
+    array_push($relations[get_current_device()], $newRelation);
   }
 
   $relations = json_encode($relations);
@@ -775,18 +779,23 @@ function clearPageCache( $page_id ) {
     File::put($cachePath . '/relations.json', '{}');
     $relations = [];
   }
+  foreach ( $relations as $index => $device_relations ) {
+    foreach ($device_relations as $key => $relation) {
+      if (isset($relation['page_id']) && $relation['page_id'] == $page_id) {
+        if ( File::exists($cachePath . '/' . $relation['hash']) ) {
+          File::delete($cachePath . '/' . $relation['hash']);
+        }
 
-  foreach ($relations as $key => $relation) {
-    if (isset($relation['page_id']) && $relation['page_id'] === $page_id) {
-      if ( File::exists($cachePath . '/' . $relation['hash']) ) {
-        File::delete($cachePath . '/' . $relation['hash']);
+        unset($relations[$index][$key]);
       }
-      unset($relations[$key]);
     }
   }
 
   $relations = json_encode($relations);
   File::put($cachePath . '/relations.json', $relations);
+  echo '<pre style="padding-left: 200px;">';
+  var_dump(  $relations);
+  echo '</pre>';
 
   Cache::delete( 'areas_' . $page_id );
 

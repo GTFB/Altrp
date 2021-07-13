@@ -160,7 +160,6 @@ export default function ButtonComponent(settings) {
   stylesInString += `& .altrp-btn.active {`;
 
   const backgroundColorActive = getResponsiveSetting(settings, 'background_color', '.active');
-
   if (backgroundColorActive) {
     stylesInString += colorPropertyStyled(backgroundColorActive, 'background-color');
   }

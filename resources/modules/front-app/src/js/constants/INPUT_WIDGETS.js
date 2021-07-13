@@ -1,0 +1,20 @@
+const INPUT_WIDGETS = [
+  'input',
+  'input-select',
+  'input-select2',
+  'input-switch',
+  'input-wysiwyg',
+  'input-checkbox',
+  'input-radio',
+  'input-image-select',
+  'input-file',
+  'input-accept',
+  'input-date',
+  'input-textarea',
+  'input-text',
+  'input-password',
+  'input-tel',
+  'input-number',
+  'input-email',
+];
+export default INPUT_WIDGETS;
