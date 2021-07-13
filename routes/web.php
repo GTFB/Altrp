@@ -100,6 +100,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/altrp_meta/{meta_name}', 'Admin\AltrpMetaController@getMetaByName');
     Route::put('/altrp_meta/{meta_name}', 'Admin\AltrpMetaController@saveMeta');
 
+    /**
+     * Роуты по кэшу и SSR
+     */
+
+    Route::post('/cache/clear', 'Admin\AltrpSettingsController@clearCache');
+
     // Websockets
     Route::get('/websockets', 'Admin\WebsocketsController@index');
 
@@ -235,7 +241,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::resource('settings', 'Admin\SettingsController');
     Route::resource('diagrams', 'Admin\AltrpDiagramController');
     Route::get('sql_editors/list', 'Admin\SQLEditorController@listByName');
-    Route::post( '/sql_editors/test', 'Admin\SQLEditorController@test' );
+    Route::post('/sql_editors/test', 'Admin\SQLEditorController@test');
     Route::resource('sql_editors', 'Admin\SQLEditorController');
 
     /**
@@ -660,7 +666,7 @@ Route::group(['prefix' => 'ajax', 'middleware' => 'auth'], function () {
 /**
  * Роуты для зарегистрированных пользователей
  */
-Route::group(['prefix' => 'data', ], function () {
+Route::group(['prefix' => 'data',], function () {
   Route::get('current-user', "Users\Users@getCurrentUserData");
 });
 
