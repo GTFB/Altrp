@@ -298,6 +298,7 @@ class GlobalFontItemAdd extends Component {
                   placeholder="Enter size"
                   min={0}
                   max={200}
+                  stepSize={0.1}
                   onValueChange={this.changeSize}
                 />
                 <HTMLSelect

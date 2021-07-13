@@ -266,7 +266,7 @@ class GlobalFontItem extends Component {
 
   render() {
     const { font } = this.state;
-    console.log(font);
+
     return (
       <>
         {" "}
@@ -327,6 +327,7 @@ class GlobalFontItem extends Component {
                     placeholder="Enter size"
                     min={0}
                     max={200}
+                    stepSize={0.1}
                     onValueChange={this.changeSize}
                   />
                   <HTMLSelect
