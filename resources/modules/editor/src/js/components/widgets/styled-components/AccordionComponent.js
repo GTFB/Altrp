@@ -91,8 +91,6 @@ export default function AccordionComponent(settings) {
     "}",
 
     "altrp-accordion-item-content-show:hover",
-
-    ["padding", "padding_content_style", "dimensions", ":hover"],
     ["margin-top", "spacing_content_style", "slider", ":hover"],
     ["", "typographic_content_style", "typographic", ":hover"],
 
@@ -105,7 +103,6 @@ export default function AccordionComponent(settings) {
     ["border-width", "border_width_title_style", "dimensions", ":hover"],
     ["border-color", "border_color_title_style", "color", ":hover"],
     ["border-radius", "border_radius_title_style", "dimensions", ":hover"],
-    ["padding", "padding_title_style", "dimensions", ":hover"],
     ["", "box_shadow_title_style", "shadow", ":hover"],
 
     "}",

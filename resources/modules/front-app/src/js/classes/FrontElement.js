@@ -57,7 +57,7 @@ class FrontElement {
      */
     this.modelsList = []
     if(this.getId()){
-      appStore.dispatch(addSettings(this.getId(), this.getName(), {...this.settings}))
+      appStore.dispatch(addSettings(this.getId(), this.getName(), {...this.settings}, this?.children?.length || 0))
     }
   }
 
@@ -424,7 +424,9 @@ class FrontElement {
       styles += `}`;
     });
     styles += this.settings.stringStyles || '';
-
+    if(this.settings.stringStyles){
+      console.log(this.settings.stringStyles);
+    }
     return styles;
   }
 
@@ -756,7 +758,7 @@ class FrontElement {
    */
   getTemplateType(){
     const rootElement = this.getRoot();
-    return rootElement.templateType || 'content';
+    return rootElement ? (rootElement.templateType || 'content') : 'content';
   }
 
   /**

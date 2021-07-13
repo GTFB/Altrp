@@ -23,7 +23,6 @@ const DEFAULT_REACT_ELEMENTS = [
   'diagram',
   'input',
   'nav',
-  'breadcrumbs',
   'dashboards',
   'tour',
   'icon',
@@ -33,5 +32,6 @@ const DEFAULT_REACT_ELEMENTS = [
   'dropbar',
   'posts',
   'table',
+  'heading-type-animating',
 ]
 export default DEFAULT_REACT_ELEMENTS

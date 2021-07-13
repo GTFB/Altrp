@@ -1,12 +1,10 @@
 import RootComponent from '../../../resources/modules/editor/src/js/components/RootComponent';
-import HeadingWidget from '../../../resources/modules/editor/src/js/components/widgets/HeadingWidget';
 import SectionComponent from '../../../resources/modules/editor/src/js/components/SectionComponent';
 import ColumnComponent from '../../../resources/modules/editor/src/js/components/ColumnComponent';
 // import InputWidget from '../../../resources/modules/editor/src/js/components/widgets/InputWidget';
 import ButtonWidget from '../../../resources/modules/editor/src/js/components/widgets/ButtonWidget';
 import TextWidget from '../../../resources/modules/editor/src/js/components/widgets/TextWidget';
 import ImageWidget from '../../../resources/modules/editor/src/js/components/widgets/ImageWidget';
-import TableWidget from '../../../resources/modules/editor/src/js/components/widgets/TableWidget';
 // import NavWidget from '../../../resources/modules/editor/src/js/components/widgets/NavWidget';
 import DividerWidget from '../../../resources/modules/editor/src/js/components/widgets/DividerWidget';
 import TabsWidget from '../../../resources/modules/editor/src/js/components/widgets/TabsWidget';
@@ -29,6 +27,8 @@ import VideoWidget from '../../../resources/modules/editor/src/js/components/wid
 // import Skeleton from '../../../resources/modules/editor/src/js/components/altrp-image/Skeleton';
 import SkeletonPlaceholder from '../components/SkeletonPlaceholder';
 import DEFAULT_REACT_ELEMENTS from "../../../resources/modules/front-app/src/js/constants/DEFAULT_REACT_ELEMENTS";
+import HeadingTypeHeadingWidget
+  from "../../../resources/modules/editor/src/js/components/widgets/HeadingTypeHeadingWidget";
 // import BreadcrumbsWidget from '../../../resources/modules/editor/src/js/components/widgets/BreadcrumbsWidget';
 // import MenuWidget from '../../../resources/modules/editor/src/js/components/widgets/MenuWidget';
 
@@ -41,13 +41,13 @@ class FrontElementsManager {
       this.components[el] = SkeletonPlaceholder;
     })
     this.components['root-element'] = RootComponent;
-    this.components['heading'] = HeadingWidget;
+    this.components['heading'] = HeadingTypeHeadingWidget;
     this.components['section'] = SectionComponent;
+    this.components['section_widget'] = SectionComponent;
     this.components['column'] = ColumnComponent;
     this.components['button'] = ButtonWidget;
     this.components['text'] = TextWidget;
     this.components['image'] = ImageWidget;
-    this.components['table'] = TableWidget;
     this.components['posts'] = PostsWidget;
     this.components['divider'] = DividerWidget;
     this.components['tabs'] = TabsWidget;

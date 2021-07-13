@@ -5,7 +5,6 @@ import CONSTANTS from "../consts";
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-section {
     display: flex;
-    flex-direction: column;
     &.altrp-section--boxed > .altrp-element {
       margin: 0 auto;
     }
@@ -34,9 +33,9 @@ import CONSTANTS from "../consts";
     bottom: auto;
   }
 
-  .altrp-section_section-boxed {
-    padding-left: calc((100vw - 1440px) / 2);
-    padding-right: calc((100vw - 1440px) / 2);
+  .altrp-section_section-boxed.altrp-section_section-boxed {
+    padding-left: calc((100vw - ${window.container_width || 1440}px) / 2);
+    padding-right: calc((100vw - ${window.container_width || 1440}px) / 2);
     width: 100vw;
   }
 `);
@@ -133,7 +132,7 @@ class SectionComponent extends Component {
       delete styles.maxWidth;
     }
 
-    let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
+    let ElementWrapper = window.SectionElementWrapper || this.props.ElementWrapper || window.ElementWrapper;
     let sectionWrapper = this.state.children.map(column => (
       <ElementWrapper
         ElementWrapper={ElementWrapper}

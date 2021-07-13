@@ -232,8 +232,14 @@ export function renderAssetIcon(asset, props = null) {
  * @throws Исключение если иконка не найдена
  * */
 export function renderAsset(asset, props = null) {
+  if(asset.type === 'image' && asset.dataUrl){
+    return React.createElement("img", {
+      ...props,
+      src: asset.dataUrl,
+    });
+  }
   if (asset.url && asset.type === "svg") {
-    return <AltrpSVG {...props} url={asset.url} />;
+    return <AltrpSVG {...props} url={asset.url} rawSVG={asset.rawSVG} />;
   }
   if (! isSSR() && asset instanceof File) {
     let refImg = React.createRef();
@@ -613,7 +619,7 @@ export function getDataByPath(
       falseValue = getDataByPath(falseValue, _default, context);
     }
     path = _path.trim();
-  }  
+  }
   /**
    * @type {AltrpModel} currentModel
    */
@@ -1277,14 +1283,29 @@ export function printElements(elements, title = "") {
   myWindow.document.write(`<html><head><title>${title}</title></head>`);
   myWindow.document.write("<body >");
   elements = _.isArray(elements) ? elements : [elements];
-  elements.forEach(element => {
-    myWindow.document.write(element.outerHTML);
-  });
+  let headContent = '';
   myWindow.document.write("</body></html>");
+  let bodyContent = '';
+  elements.forEach(element => {
+    if(element instanceof HTMLHeadElement){
+      headContent = element.innerHTML;
+      return
+    }
+    bodyContent += element.outerHTML;
+  });
   myWindow.document.close(); // necessary for IE >= 10
+  myWindow.document.head.innerHTML = headContent;
+  bodyContent = bodyContent
+    .replace(/<tr/g, '<div className="altrp-table-tr"')
+    .replace(/<th/g, '<div')
+    .replace(/<\/tr>/g, '</div>')
+    .replace(/<\/th>/g, '</div>')
+  myWindow.document.body.innerHTML = bodyContent;
   myWindow.focus(); // necessary for IE >= 10
-  myWindow.print();
-  myWindow.close();
+  delay(250).then(()=>{
+    myWindow.print();
+    myWindow.close();
+  })
   return true;
 }
 
@@ -1421,6 +1442,24 @@ export async function dataToXLS(data, filename = "table", templateName = "") {
   formData.append("template", templateName);
 
   const response = await fetch("/api/export-excel", {
+    method: "POST",
+    body: formData
+  });
+
+  return await response.blob();
+}
+
+/**
+ * Генерация и загрузка XML-файла
+ * @param {Object data} Объект данных
+ * @param {String} filename Имя файла
+ */
+export async function dataToXML(data, filename = "table") {
+  const formData = new FormData();
+  formData.append("filename", filename);
+  formData.append("data", JSON.stringify(data));
+
+  const response = await fetch("/api/export-xml", {
     method: "POST",
     body: formData
   });

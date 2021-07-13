@@ -11,7 +11,6 @@ export default function ListComponent(settings) {
 
     "altrp-list:hover",
     ["margin", "position_margin", "dimensions", ":hover"],
-    ["padding", "position_padding", "dimensions", ":hover"],
     "}",
 
     "altrp-list-ul-inline, & .altrp-list-ul-default .altrp-list-li",
@@ -69,31 +68,29 @@ export default function ListComponent(settings) {
     ["height", "size_icon_style", "slider", ":hover"],
     "}",
 
-    "altrp-list-icon path",
+    "altrp-list-icon:hover path",
     ["fill", "fill_icon_style", "color", ":hover"],
     "}",
 
-    "altrp-list-icon",
+    "altrp-list-icon:hover",
     ["background-color", "background_icon_style", "color", ":hover"],
-    ["padding", "padding_icon_style", "dimensions", ":hover"],
     ["border-radius", "border-radius_icon_style", "dimensions", ":hover"],
     ["border-style", "border-type_icon_style", "", ":hover"],
     ["border-width", "border-width_icon_style", "dimensions", ":hover"],
     ["border-color", "border_color_icon_style", "color", ":hover"],
     "}",
 
-    "altrp-list-label",
+    "altrp-list-label:hover",
     ["margin-left", "indent_text_style", "slider", ":hover"],
     ["color", "color_text_style", "color", ":hover"],
     ["background-color", "background_color_text_style", "color", ":hover"],
-    ["padding", "padding_text_style", "dimensions", ":hover"],
     ["border-radius", "border-radius_text_style", "dimensions", ":hover"],
     ["border-style", "border-type_text_style", "", ":hover"],
     ["border-width", "border-width_text_style", "dimensions", ":hover"],
     ["border-color", "border_color_text_style", "color", ":hover"],
     "}",
 
-    "altrp-list-li-link",
+    "altrp-list-li-link:hover",
     ["text-decoration", "link_decoration_text_style", "", ":hover"],
     "}",
     "}",

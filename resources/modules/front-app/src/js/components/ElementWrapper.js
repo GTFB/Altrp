@@ -4,9 +4,6 @@ import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/Alt
 import { changeCurrentPageProperty } from "../store/current-page/actions";
 import { ElementWrapperDivComponent } from "../../../../editor/src/js/components/widgets/styled-components/ElementWrapperComponent";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
-import MapConstructorComponent from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
-import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
-import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
 import DEFAULT_REACT_ELEMENTS from "../constants/DEFAULT_REACT_ELEMENTS";
 const {
   altrpCompare,
@@ -16,7 +13,6 @@ const {
   replaceContentWithData,
   setTitle
 } = window.altrpHelpers;
-import DashboardComponent from "../../../../editor/src/js/components/widgets/styled-components/DashboardComponent";
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -31,7 +27,9 @@ class ElementWrapper extends Component {
     props.element.wrapper = this;
     this.elementWrapperRef = React.createRef();
     this.elementRef = React.createRef();
-    appStore.dispatch(addElement(this));
+    if(! isEditor()){
+      appStore.dispatch(addElement(this));
+    }
   }
 
   /**
@@ -333,9 +331,6 @@ class ElementWrapper extends Component {
 
     let WrapperComponent = ElementWrapperDivComponent;
     switch (this.props.element.getName()) {
-      case "diagram":
-        WrapperComponent = DiagramComponent;
-        break;
       case "nav":
         WrapperComponent = NavComponent;
         break;

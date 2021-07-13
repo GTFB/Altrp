@@ -1,8 +1,7 @@
 import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
 import {defaultStyled, sliderStyled, styledString} from "../../../../../../front-app/src/js/helpers/styles";
 
-export default styled.div`
-  ${({settings}) => {
+export default function DiagramComponent(settings) {
   const styles = [
     "altrp-dashboard__tooltip--margin",
       ["margin", "style_margin_tooltip", "dimensions"],
@@ -51,5 +50,4 @@ export default styled.div`
     "}",
   ];
   return styledString(styles, settings)
-}}
-`;
+}

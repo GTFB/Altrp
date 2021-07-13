@@ -554,10 +554,6 @@ class Nav extends BaseElement {
     this.addControl("text_color_main_menu_style", {
       type: CONTROLLER_COLOR,
       label: "Text color",
-      rules: {
-        // "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}}": "color: {{COLOR}};",
-        // "{{ELEMENT}} .altrp-nav-menu-li-link-label{{STATE}}": "color: {{COLOR}};",
-      }
     });
 
     this.addControl("horizontal_padding_main_menu_style", {
@@ -627,14 +623,6 @@ class Nav extends BaseElement {
       },
       max: 30,
       min: 0,
-      rules: {
-        // "{{ELEMENT}} .altrp-nav-menu-li-underline:after": "height: {{SIZE}}{{UNIT}};",
-        // "{{ELEMENT}} .altrp-nav-menu-li-overline:before": "height: {{SIZE}}{{UNIT}};",
-        // "{{ELEMENT}} .altrp-nav-menu-li-doubleLine:before": "height: {{SIZE}}{{UNIT}};",
-        // "{{ELEMENT}} .altrp-nav-menu-li-doubleLine:after": "height: calc({{SIZE}}{{UNIT}} * 2);",
-        // "{{ELEMENT}} .altrp-nav-menu-li-framed:hover:after": "border-width: 0 {{SIZE}}{{UNIT}} {{SIZE}}{{UNIT}} 0;",
-        // "{{ELEMENT}} .altrp-nav-menu-li-framed:hover:before": "border-width: {{SIZE}}{{UNIT}} 0 0 {{SIZE}}{{UNIT}};",
-      }
     });
 
     this.addControl("chevron_heading_main_menu_style", {

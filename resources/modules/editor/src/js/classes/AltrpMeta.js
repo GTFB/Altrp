@@ -105,7 +105,6 @@ class AltrpMeta extends AltrpModel{
     }catch(error){
       if(_.isArray(AltrpMeta.pendingCallbacks[metaName])){
         AltrpMeta.pendingCallbacks[metaName].forEach(callback=>{
-          console.log(callback);
           callback(new AltrpMeta(metaName, null));
         });
       }

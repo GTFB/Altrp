@@ -1,9 +1,9 @@
 import {replaceAllSettings} from "../store/elements-settings/actions";
 
 /**
- * Загрузка отрисовщика email
+ * Загрузка отрисовщика стилей
  */
-export  default  function loadGlobalStyles(){
+export default function loadGlobalStyles(){
   import(/* webpackChunkName: 'EmailTemplatesRenderer' */'../components/GlobalStyles').then(module => {
     const GlobalStyles = module.default;
     const stylesContainer = document.createElement('div');
@@ -12,8 +12,12 @@ export  default  function loadGlobalStyles(){
       <GlobalStyles/>
     </window.Provider>, stylesContainer)
   });
+}
+
+export function addSettingsToStore(){
+
   const settings = {};
-  page_areas.forEach(area=>{
+  window.page_areas.forEach(area=>{
     const rootElement = _.get(area, 'template.data');
     if(rootElement){
       recurseAddSettings(rootElement)
@@ -38,6 +42,9 @@ export  default  function loadGlobalStyles(){
       settings: element.settings,
       name: element.name,
     };
+    if(element.name === 'section'){
+      settings[element.id].childrenLength = element?.children?.length || 1;
+    }
     element.children.forEach(el=>{recurseAddSettings(el)})
   }
   appStore.dispatch(replaceAllSettings(settings));

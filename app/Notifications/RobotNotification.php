@@ -4,18 +4,16 @@
 namespace App\Notifications;
 
 
-use App\Altrp\Source;
 use App\Notifications\Channels\CustomDatabaseChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
-use Illuminate\Notifications\Messages\MailMessage;
+use App\Mails\RobotsMail;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Log;
 use NotificationChannels\Telegram\TelegramChannel;
 use NotificationChannels\Telegram\TelegramMessage;
 use NotificationChannels\Telegram\TelegramFile;
-
+use Illuminate\Notifications\AnonymousNotifiable;
 use App\Constructor\Template;
 use DOMDocument;
 
@@ -30,11 +28,6 @@ class RobotNotification extends Notification implements ShouldQueue
     private $node;
 
     /**
-     * @var array
-     */
-    private $dataDynamic = [];
-
-    /**
      * @var object узел диаграммы робота
      */
     private $modelData;
@@ -44,7 +37,7 @@ class RobotNotification extends Notification implements ShouldQueue
      * @param $node
      * @param null $modelData
      */
-    public function __construct($node, $modelData = null)
+    public function __construct($node, $modelData = null, $type = '')
     {
         $this->node = $node;
         $this->modelData = $modelData;
@@ -58,30 +51,96 @@ class RobotNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        $this->dataDynamic = getCurrentEnv()->getData();
-        $this->setDataDynamic($notifiable);
-        $channels = [CustomDatabaseChannel::class];
+        // проверка на зарегистрированного юзера
+        if(!$notifiable instanceof AnonymousNotifiable) $this->setDataDynamic($notifiable);
+
+        $channels = [];
         $channel = $this->node->data->props->nodeData->data->channel;
-        $channels = array_merge($channels, $this->addChannel($notifiable, $channel));
+
+        if ($this->checkData($notifiable, 'telegram')) $channels[] = TelegramChannel::class;
+        if ($this->checkData($notifiable, 'mail')) $channels[] = $channel;
+        if ($this->checkData($notifiable, 'broadcast')) $channels[] = $channel;
+        // if ($this->checkData($notifiable, 'database')) $channels[] = [CustomDatabaseChannel::class]; // Добавление канала для записи уведомлений в БД
+
         return $channels;
     }
 
     /**
-     * @param $user
-     * @param $channel
-     * @return array
+     * Проверка на валидность данных для типа канала уведомления
+     *
+     * @param  mixed  $notifiable
+     * @return mixed
      */
-    protected function addChannel($user, $channel)
+    protected function checkData($notifiable, $type)
     {
-        $channels = [];
-        if ($channel == 'telegram' && ($user->telegram_user_id || $this->node->data->props->nodeData->data->telegram_id) && config('services.telegram-bot-api.token')) {
-            $channel = TelegramChannel::class;
-            $channels[] = $channel;
+        $result = false;
+        $user = !$notifiable instanceof AnonymousNotifiable;
+        $channel = $this->node->data->props->nodeData->data->channel;
+        $content = $this->node->data->props->nodeData->data->content;
+
+        switch ($type){
+            case 'telegram':
+                $toId = $this->getIdForType($notifiable, 1);     
+                if ($channel === 'telegram' && $toId && config('services.telegram-bot-api.token') && is_array($content) && !empty($content)) $result = true;
+                break;
+            case 'mail':
+                $toEmail = $this->getEmail($notifiable);     
+                if ($channel === 'mail' && $toEmail && config('mail.username')) $result = true;
+                break;
+            case 'broadcast':
+                if ($channel === 'broadcast' && $user) $result = true;
+                break;
+            case 'database':
+                if ($user) $result = true;
+                break;
+            }
+
+        return $result;
+    }
+
+    /**
+     * Получение из коллекции id канала телеграмма (чата или пользователя)
+     *
+     * @param  mixed  $notifiable
+     * @return mixed
+     */
+    protected function getIdForType($notifiable, $type)
+    {
+        $entitiesType = $this->node->data->props->nodeData->data->entities;
+        $dynamicValue = $this->node->data->props->nodeData->data->entitiesData->dynamicValue;
+        $id = 0;
+
+        if (!$notifiable instanceof AnonymousNotifiable && is_object($notifiable->social_interactions) && !$notifiable->social_interactions->isEmpty()) {
+            $socialArray = $notifiable->social_interactions->toArray();
+            foreach ($socialArray as $item){
+                if (is_array($item) && $item['type_id'] == $type) $id = $item['value'];
+            }
+        } else {
+            if ($entitiesType === 'dynamic' && $dynamicValue) $id = setDynamicData($dynamicValue, $this->modelData);
         }
-        if (($channel == 'mail' && config('mail.username')) || $channel == 'broadcast') {
-            $channels[] = $channel;
+
+        return $id;
+    }
+
+    /**
+     * Получение адреса email
+     *
+     * @param  mixed  $notifiable
+     * @return mixed
+     */
+    protected function getEmail($notifiable)
+    {
+        $entitiesType = $this->node->data->props->nodeData->data->entities;
+        $dynamicValue = $this->node->data->props->nodeData->data->entitiesData->dynamicValue;
+        $email = 0;
+
+        if ($notifiable instanceof AnonymousNotifiable) {
+            if ($entitiesType === 'dynamic' && $dynamicValue) $email = setDynamicData($dynamicValue, $this->modelData);
+        } else {
+            if ($notifiable->email) $email = $notifiable->email;
         }
-        return $channels;
+
+        return $email;
     }
 
     /**
@@ -118,12 +177,12 @@ class RobotNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $mailObj = new MailMessage;
-        $mailObj = $mailObj->view(
-            'emails.robotmail', ['data' => $this->templateHandler()]
-        );
-        $mailObj = $mailObj->from(setDynamicData($this->node->data->props->nodeData->data->content->from, $this->modelData));
-        $mailObj = $mailObj->subject(setDynamicData($this->node->data->props->nodeData->data->content->subject, $this->modelData));
+        $toEmail = $this->getEmail($notifiable);     
+
+        $mailObj = (new RobotsMail($this->templateHandler()))
+                        ->from(setDynamicData($this->node->data->props->nodeData->data->content->from, $this->modelData))
+                        ->subject(setDynamicData($this->node->data->props->nodeData->data->content->subject, $this->modelData))
+                        ->to($toEmail);
         return $mailObj;
     }
 
@@ -133,26 +192,22 @@ class RobotNotification extends Notification implements ShouldQueue
      * @return TelegramMessage|bool
      */
     public function toTelegram($notifiable)
-    {
+    {        
         $content = $this->node->data->props->nodeData->data->content;
-        $toId = setDynamicData($this->node->data->props->nodeData->data->telegram_id, $this->modelData);
-        if ((!$notifiable->telegram_user_id && !$toId) || !is_array($content) || empty($content) ) return false;
+
+        $toId = $this->getIdForType($notifiable, 1);        
 
         $tmObj = TelegramMessage::create();
-        if ($notifiable->telegram_user_id) $tmObj->to($notifiable->telegram_user_id);
-        if ($toId) $tmObj->to($toId);
+        $tmObj->to($toId);
 
         foreach ($content as $item) {
             if ($item->type === 'file' || $item->type === 'document' || $item->type === 'video' || $item->type === 'animation') {
               $tmObj = TelegramFile::create();
-              if ($notifiable->telegram_user_id) $tmObj->to($notifiable->telegram_user_id);
-              if ($toId) $tmObj->to($toId);
+              $tmObj->to($toId);
             }
         }
 
         $text = '';
-//        dump($tmObj);
-//        dump($content);
 
         foreach ($content as $item) {
             switch ($item->type){
@@ -184,8 +239,9 @@ class RobotNotification extends Notification implements ShouldQueue
                     break;
             }
         }
+
         if ($text) $tmObj = $tmObj->content($text);
-//        dd($text);
+
         return $tmObj;
     }
 
@@ -235,12 +291,12 @@ class RobotNotification extends Notification implements ShouldQueue
     }
 
     /**
+     * Запись в хранилище юзера, которому адресовано уведомление
      * @param $notifiable
      */
     protected function setDataDynamic($notifiable)
     {
         $this->modelData['altrpuserto'] = $notifiable->toArray();
-        $this->modelData['altrpdata'] = $this->modelData['sources'];
     }
 
     /**

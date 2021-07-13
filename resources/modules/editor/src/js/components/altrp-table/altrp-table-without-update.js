@@ -6,7 +6,6 @@ import {
   storeWidgetState,
   isEditor, parseURLTemplate,
   renderAssetIcon,
-  generateButtonsArray,
   renderIcon, setAltrpIndex, getResponsiveSetting
 } from "../../../../../front-app/src/js/helpers";
 import { renderAdditionalRows, renderCellActions, } from "./altrp-table";
@@ -153,158 +152,6 @@ function AltrpTableWithoutUpdate(
     sortSetting
   }) {
 
-  function DefaultCell(
-    { row,
-      data,
-      cell, value: initialValue,
-      updateData }) {
-    const { column } = cell;
-    const [value, setValue] = React.useState(initialValue);
-    React.useEffect(() => {
-      setValue(initialValue);
-    }, [initialValue, cell]);
-    const { column_template,
-      column_is_editable,
-      column_edit_url,
-      column_external_link,
-      column_blank_link,
-      edit_disabled,
-      column_cell_content_type } = column;
-    let {
-      _accessor,
-    } = column;
-    _accessor = _accessor || '';
-    _accessor = _accessor.trim();
-    let leftValue, rightValue;
-    if(_accessor && _accessor.indexOf('?') !== -1 && _accessor.indexOf(':') !== -1){
-      [leftValue, rightValue] = _accessor.split('?')[1].split(':');
-      leftValue = leftValue.trim();
-      rightValue = rightValue.trim();
-      cell.value = cell.value ? leftValue : rightValue;
-    }
-    if(_accessor.indexOf('"') === 0 && _accessor[_accessor.length - 1] === '"'){
-      cell.value = _accessor.substring(1, _accessor.length - 1);
-    }
-    const [columnTemplate, setColumnTemplate] = React.useState(null);
-    const columnEditUrl =
-      React.useMemo(() => {
-        if (!column_is_editable || !column_edit_url) {
-          return null;
-        }
-        return parseURLTemplate(column_edit_url, row.original);
-      }, [column_edit_url, column_is_editable, row, ]);
-
-    React.useEffect(() => {
-      if (column_template) {
-        (async () => {
-          const columnTemplate = await templateLoader.loadParsedTemplate(column_template);
-          setColumnTemplate(columnTemplate);
-        })();
-      }
-    }, [column_template]);
-    let cellContent = cell.value;
-    let linkTag = isEditor() ? 'a' : Link;
-    if(column_external_link && ! isEditor()) {
-      linkTag = 'a';
-    }
-    /**
-     * Если значение объект или массив, то отобразим пустую строку
-     */
-    if (_.isObject(cell.value)) {
-      cellContent = '';
-    }
-    /**
-     * Если в настройках колонки есть url, и в данных есть id, то делаем ссылку
-     */
-    let href = null;
-    switch (column_cell_content_type) {
-      case 'email':
-        cellContent = React.createElement('a', {
-          href: `mailto:${cell.value}`,
-          className: 'altrp-inherit altrp-table-td__default-content',
-          dangerouslySetInnerHTML: {
-            __html: cell.value === 0 ? '0' : (cell.value || '&nbsp;')
-          }
-        });
-        break;
-
-      case 'phone':
-        cellContent = React.createElement('a', {
-          href: `tel:${cell.value}`,
-          className: 'altrp-inherit altrp-table-td__default-content',
-          dangerouslySetInnerHTML: {
-            __html: cell.value === 0 ? '0' : (cell.value || '&nbsp;')
-          }
-        });
-        break;
-
-      default:
-        if (column.column_link) {
-          cellContent = React.createElement(linkTag, {
-            to: parseURLTemplate(column.column_link, row.original),
-            href: parseURLTemplate(column.column_link, row.original),
-            target: column_blank_link ? '_blank' : '',
-            className: 'altrp-inherit altrp-table-td__default-content',
-            dangerouslySetInnerHTML: {
-              __html: cell.value === 0 ? '0' : (cell.value || '&nbsp;')
-            }
-          })
-        } else {
-          cellContent = React.createElement('span', {
-            href,
-            className: 'altrp-inherit altrp-table-td__default-content',
-            dangerouslySetInnerHTML: {
-              __html: cell.value === 0 ? '0' : (cell.value || '&nbsp;')
-            }
-          })
-        }
-        break;
-    }
-
-    const columnTemplateContent = React.useMemo(() => {
-      if (! columnTemplate) {
-        return null;
-      }
-      let columnTemplateContent = frontElementsFabric.cloneElement(columnTemplate);
-      columnTemplateContent.setCardModel(new AltrpModel(row.original || {}),);
-      return React.createElement(columnTemplateContent.componentClass,
-        {
-          element: columnTemplateContent,
-          ElementWrapper: ElementWrapper,
-          children: columnTemplateContent.children
-        });
-    }, [columnTemplate, row.original, data]);
-    if (columnTemplateContent) {
-      return <div className="altrp-posts"><div className="altrp-post overflow-visible">{columnTemplateContent}</div></div>;
-    }
-
-    /**
-     * Отоборажаем инпут для редактирования данных
-     */
-    if (columnEditUrl && ! edit_disabled) {
-      return <AutoUpdateInput className="altrp-inherit"
-        route={columnEditUrl}
-        resourceid={''}
-        changevalue={value => {
-          setValue(value)
-        }}
-        onBlur={(value) => {
-          updateData(row.index, _accessor, value);
-        }}
-        value={value} />;
-    }
-    /**
-     * Если есть actions, то надо их вывести
-     */
-    if (_.get(cell, 'column.actions.length')) {
-      return renderCellActions(cell, row);
-    }
-    if (_.isString(cellContent)) {
-      return cellContent;
-    }
-    return <>{cellContent}</>;
-
-  }
   const stateRef = React.useRef(widgetState);
   const { inner_page_size,
     global_filter,
@@ -1263,4 +1110,161 @@ export default (props) => {
     return <AltrpTableWithoutUpdate {...props}/>
   }
   return <AltrpQueryComponent {...props}><AltrpTableWithoutUpdate /></AltrpQueryComponent>
+}
+
+function DefaultCell(
+  { row,
+    data,
+    cell, value: initialValue,
+    updateData }) {
+  const { column } = cell;
+  const [value, setValue] = React.useState(initialValue);
+  React.useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue, cell]);
+  const { column_template,
+    column_is_editable,
+    column_edit_url,
+    column_external_link,
+    column_blank_link,
+    edit_disabled,
+    column_cell_content_type } = column;
+  let {
+    _accessor,
+  } = column;
+  _accessor = _accessor || '';
+  _accessor = _accessor.trim();
+  let leftValue, rightValue;
+  if(_accessor && _accessor.indexOf('?') !== -1 && _accessor.indexOf(':') !== -1){
+    [leftValue, rightValue] = _accessor.split('?')[1].split(':');
+    leftValue = leftValue.trim();
+    rightValue = rightValue.trim();
+    cell.value = cell.value ? leftValue : rightValue;
+  }
+  if(_accessor.indexOf('"') === 0 && _accessor[_accessor.length - 1] === '"'){
+    cell.value = _accessor.substring(1, _accessor.length - 1);
+  }
+  const [columnTemplate, setColumnTemplate] = React.useState(null);
+  const columnEditUrl =
+    React.useMemo(() => {
+      if (!column_is_editable || !column_edit_url) {
+        return null;
+      }
+      return parseURLTemplate(column_edit_url, row.original);
+    }, [column_edit_url, column_is_editable, row, ]);
+
+  const fetchTemplate = React.useCallback(async () => {
+    const columnTemplate = await templateLoader.loadParsedTemplate(column_template);
+    setColumnTemplate(columnTemplate);
+  }, [column_template]);
+  // console.error(columnTemplate);
+
+  React.useEffect(() => {
+    if (column_template) {
+      fetchTemplate();
+    }
+  }, [fetchTemplate]);
+  // console.error(columnTemplate);
+  let cellContent = cell.value;
+  let linkTag = isEditor() ? 'a' : Link;
+  if(column_external_link && ! isEditor()) {
+    linkTag = 'a';
+  }
+  /**
+   * Если значение объект или массив, то отобразим пустую строку
+   */
+  if (_.isObject(cell.value)) {
+    cellContent = '';
+  }
+  /**
+   * Если в настройках колонки есть url, и в данных есть id, то делаем ссылку
+   */
+  let href = null;
+  switch (column_cell_content_type) {
+    case 'email':
+      cellContent = React.createElement('a', {
+        href: `mailto:${cell.value}`,
+        className: 'altrp-inherit altrp-table-td__default-content',
+        dangerouslySetInnerHTML: {
+          __html: cell.value === 0 ? '0' : (cell.value || '&nbsp;')
+        }
+      });
+      break;
+
+    case 'phone':
+      cellContent = React.createElement('a', {
+        href: `tel:${cell.value}`,
+        className: 'altrp-inherit altrp-table-td__default-content',
+        dangerouslySetInnerHTML: {
+          __html: cell.value === 0 ? '0' : (cell.value || '&nbsp;')
+        }
+      });
+      break;
+
+    default:
+      if (column.column_link) {
+        cellContent = React.createElement(linkTag, {
+          to: parseURLTemplate(column.column_link, row.original),
+          href: parseURLTemplate(column.column_link, row.original),
+          target: column_blank_link ? '_blank' : '',
+          className: 'altrp-inherit altrp-table-td__default-content',
+          dangerouslySetInnerHTML: {
+            __html: cell.value === 0 ? '0' : (cell.value || '&nbsp;')
+          }
+        })
+      } else {
+        cellContent = React.createElement('span', {
+          href,
+          className: 'altrp-inherit altrp-table-td__default-content',
+          dangerouslySetInnerHTML: {
+            __html: cell.value === 0 ? '0' : (cell.value || '&nbsp;')
+          }
+        })
+      }
+      break;
+  }
+
+  const columnTemplateContent = React.useMemo(() => {
+    if (! columnTemplate) {
+      return null;
+    }
+    let columnTemplateContent = frontElementsFabric.cloneElement(columnTemplate);
+    columnTemplateContent.setCardModel(new AltrpModel(row.original || {}),);
+    return React.createElement(columnTemplateContent.componentClass,
+      {
+        element: columnTemplateContent,
+        ElementWrapper: ElementWrapper,
+        children: columnTemplateContent.children
+      });
+  }, [columnTemplate, row.original, data]);
+  if (columnTemplateContent) {
+    return <div className="altrp-posts"><div className="altrp-post overflow-visible">{columnTemplateContent}</div></div>;
+  }
+
+  /**
+   * Отоборажаем инпут для редактирования данных
+   */
+  if (columnEditUrl && ! edit_disabled) {
+    return <AutoUpdateInput className="altrp-inherit"
+                            route={columnEditUrl}
+                            resourceid={''}
+                            changevalue={value => {
+                              setValue(value)
+                            }}
+                            onBlur={(value) => {
+                              updateData(row.index, _accessor, value);
+                            }}
+                            value={value} />;
+  }
+  /**
+   * Если есть actions, то надо их вывести
+   */
+  if (_.get(cell, 'column.actions.length')) {
+    return renderCellActions(cell, row);
+  }
+  if (_.isString(cellContent)) {
+    return cellContent;
+  }
+  return <>{cellContent}</>;
+
 }

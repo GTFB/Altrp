@@ -14,6 +14,7 @@ export function elementsSettingsReducer(elementSettings, action) {
       elementSettings = mutate.set(elementSettings, action.elementId, {
         settings: {...action.settings},
         name: action.elementName,
+        childrenLength: action.childrenLength,
       });
     }
     break;

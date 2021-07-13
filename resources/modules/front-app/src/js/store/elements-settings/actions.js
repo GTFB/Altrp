@@ -5,7 +5,8 @@ export const REPLACE_SETTINGS = 'REPLACE_SETTINGS';
  *
  * @param {string} elementId
  * @param {string} elementName
- * @param {{}}settings
+ * @param {{}} settings
+ * @param {int} childrenLength
  * @return {{}} - {
  *     type: {string},
  *     elementId: {string},
@@ -13,22 +14,21 @@ export const REPLACE_SETTINGS = 'REPLACE_SETTINGS';
  *     elementName: {string},
  *   }
  */
-export function addSettings(elementId, elementName, settings) {
+export function addSettings(elementId, elementName, settings, childrenLength) {
   return {
     type: CHANGE_SETTINGS,
     elementId,
     elementName,
     settings,
+    childrenLength,
   };
 }
 /**
  *
- * @param {{}}settings
+ * @param {{}} settings
  * @return {{}} - {
  *     type: {string},
- *     elementId: {string},
  *     settings: {{}},
- *     elementName: {string},
  *   }
  */
 export function replaceAllSettings(settings){

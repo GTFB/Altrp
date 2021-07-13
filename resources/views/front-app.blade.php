@@ -21,7 +21,7 @@
   </script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  {!! loadFonts( $page_areas ) !!}
   {!!  getFavicons() !!}
   {{--<link rel="preload" href="/modules/front-app/front-app.css?0.14.16" as="style">--}}
   {{--preloads--}}
@@ -135,6 +135,7 @@
   window.altrpMenus = [];
   window.currentPage = {!! json_encode( $_frontend_route ) !!};
   window.__altrp_settings__ = {!! $altrp_settings !!};
+  window.container_width = {!! get_altrp_setting( 'container_width', '1440' ) !!};
   /* ]]> */
 </script>
 <script src="/data/current-user" defer></script>

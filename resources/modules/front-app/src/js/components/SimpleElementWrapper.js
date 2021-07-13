@@ -2,13 +2,10 @@ import { addElement } from "../store/elements-storage/actions";
 import { changeCurrentPageProperty } from "../store/current-page/actions";
 import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
-import MenuComponent from "../../../../editor/src/js/components/widgets/styled-components/MenuComponent";
-import BreadcrumbsComponent from "../../../../editor/src/js/components/widgets/styled-components/BreadcrumbsComponent";
-import MapConstructorComponent
-  from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
-import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
 import DashboardComponent from "../../../../editor/src/js/components/widgets/styled-components/DashboardComponent";
+import {HTML5Backend} from "react-dnd-html5-backend";
+import {DndProvider} from "react-dnd";
 
 class SimpleElementWrapper extends Component {
   constructor(props) {
@@ -249,7 +246,7 @@ class SimpleElementWrapper extends Component {
       this.CSSId = CSSId;
     }
     let ContentComponent = frontElementsManager.getComponentClass(this.props.element.getName());
-    const content = React.createElement(ContentComponent, {
+    let content = React.createElement(ContentComponent, {
       ref: this.elementRef,
       rootElement: this.props.rootElement,
       ElementWrapper: this.props.ElementWrapper,
@@ -270,22 +267,14 @@ class SimpleElementWrapper extends Component {
       history: this.props.history,
       appStore
     });
-
+    if(this.props.element.getName() === 'table'){
+      content = <DndProvider backend={HTML5Backend}>
+        {content}
+      </DndProvider>
+      }
     let WrapperComponent = React.Fragment;
 
     switch (this.props.element.getName()) {
-      case "menu":
-        WrapperComponent = MenuComponent;
-        break;
-      case "breadcrumbs":
-        WrapperComponent = BreadcrumbsComponent;
-        break;
-      case "map_builder":
-        WrapperComponent = MapConstructorComponent;
-        break;
-      case "map":
-        WrapperComponent = MapComponent;
-        break;
       case "diagram":
         WrapperComponent = DiagramComponent;
         break;

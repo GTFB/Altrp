@@ -151,7 +151,7 @@ class IconsManager {
     this.icons.push(new Icon('block_left', blockLeftIcon));
     this.icons.push(new Icon('block_top', blockTopIcon));
     this.icons.push(new Icon('block_right', blockRightIcon));
-    this.icons.push(new Icon('block_veric', blockVerticallyIcon));
+    this.icons.push(new Icon('block_vertically', blockVerticallyIcon));
     this.icons.push(new Icon('block_d_horiz', blockDHorizontallyIcon));
     this.icons.push(new Icon('block_d_vertic', blockDVerticallyIcon));
     this.icons.push(new Icon('wide_screen', widescreenIcon));

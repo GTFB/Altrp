@@ -13,6 +13,8 @@ import Resource from "../../classes/Resource";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
 import AltrpInput from "../altrp-input/AltrpInput";
+import { Select } from "@blueprintjs/select";
+import { MenuItem, Button } from "@blueprintjs/core";
 
 const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`
@@ -508,6 +510,46 @@ class InputSelectWidget extends Component {
     );
   }
 
+  onItemSelect(value) {
+    this.setState(state => ({
+      ...state,
+      value
+    }),
+      () => {
+        /**
+         * Обновляем хранилище только если не текстовое поле
+         */
+
+        const change_actions = this.props.element.getSettings("change_actions");
+        const change_change_end = this.props.element.getSettings(
+          "change_change_end"
+        );
+        const change_change_end_delay = this.props.element.getSettings(
+          "change_change_end_delay"
+        );
+
+
+        this.dispatchFieldValueToStore(
+          value,
+          true
+        );
+
+        if (change_actions && !change_change_end && !isEditor()) {
+          this.debounceDispatch(
+            value
+          );
+        }
+        if (change_actions && change_change_end && !isEditor()) {
+          this.timeInput && clearTimeout(this.timeInput);
+          this.timeInput = setTimeout(() => {
+            this.debounceDispatch(
+              value
+            );
+          }, change_change_end_delay);
+        }
+      })
+  }
+
   debounceDispatch = _.debounce(
     value => this.dispatchFieldValueToStore(value, true),
     150
@@ -700,6 +742,42 @@ class InputSelectWidget extends Component {
     return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
   }
 
+  escapeRegExpChars(text) {
+    return text.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+  }
+
+  highlightText(text, query) {
+    console.log(query)
+    let lastIndex = 0;
+    const words = query
+      .split(/\s+/)
+      .filter(word => word.length > 0)
+      .map(this.escapeRegExpChars);
+    if (words.length === 0) {
+      return [text];
+    }
+    const regexp = new RegExp(words.join("|"), "gi");
+    const tokens = [];
+    while (true) {
+      const match = regexp.exec(text);
+      if (!match) {
+        break;
+      }
+      const length = match[0].length;
+      const before = text.slice(lastIndex, regexp.lastIndex - length);
+      if (before.length > 0) {
+        tokens.push(before);
+      }
+      lastIndex = regexp.lastIndex;
+      tokens.push(<strong key={lastIndex}>{match[0]}</strong>);
+    }
+    const rest = text.slice(lastIndex);
+    if (rest.length > 0) {
+      tokens.push(rest);
+    }
+    return tokens;
+  }
+
   render() {
     let label = null;
     const settings = this.props.element.getSettings();
@@ -805,12 +883,35 @@ class InputSelectWidget extends Component {
       case "input-select":
         {
           let options = this.getOptions();
+
+          options = options_sorting ? sortOptions(options, options_sorting) : options;
+
+          let itemsOptions = options.map(({ label }) => label);
+
           input = (
-            <select
-              value={value || ""}
+            <Select
+              itemRenderer={(item, { handleClick, modifiers, query }) => {
+                if (!modifiers.matchesPredicate) {
+                  return null;
+                }
+                return <MenuItem
+                  text={this.highlightText(item, query)}
+                  active={modifiers.active}
+                  disabled={modifiers.disabled}
+                  onClick={handleClick}
+                />
+              }}
+              itemPredicate={(query, item) => {
+                if (query === undefined || query.length === 0) {
+                  return true
+                }
+                return `${item.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0;
+              }}
+              items={itemsOptions}
+              noResults={<MenuItem disabled={true} text="No results." />}
               onFocus={this.onFocus}
               name={this.getName()}
-              onChange={this.onChange}
+              onItemSelect={item => this.onItemSelect(item)}
               onBlur={this.onBlur}
               onKeyDown={this.handleEnter}
               id={this.state.settings.position_css_id}
@@ -818,21 +919,11 @@ class InputSelectWidget extends Component {
                 "altrp-field " + this.state.settings.position_css_classes
               }
             >
-              {this.state.settings.content_options_nullable ? (
-                <option value="" />
-              ) : (
-                ""
-              )}
-
-              {(options_sorting
-                ? sortOptions(options, options_sorting)
-                : options
-              ).map(option => (
-                <option value={option.value} key={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              <Button
+                text={this.state.value}
+                rightIcon="double-caret-vertical"
+              />
+            </Select>
           );
         }
         break;

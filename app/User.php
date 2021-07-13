@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Altrp\Notification;
+use App\Altrp\SocialInteraction;
 use App\Traits\Searchable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -124,6 +125,11 @@ class User extends Authenticatable
     public function social_accounts()
     {
         return $this->hasMany(SocialAccount::class, 'user_id');
+    }
+
+    public function social_interactions()
+    {
+        return $this->hasMany(SocialInteraction::class, 'user_id');
     }
 
 

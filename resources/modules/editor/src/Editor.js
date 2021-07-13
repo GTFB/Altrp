@@ -377,7 +377,7 @@ class Editor extends Component {
             <EditorWindow />
           </div>
         </div>
-        <AssetsBrowser />
+        <AssetsBrowser rawEnable={true}/>
       </DndProvider>
     );
   }

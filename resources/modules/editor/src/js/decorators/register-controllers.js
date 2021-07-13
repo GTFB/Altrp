@@ -314,21 +314,22 @@ export function advancedTabControllers(element) {
     );
     element.endControlSection();
 
-    element.startControlSection(
-      'element_css', {
+  }
+
+  element.startControlSection(
+    'element_css', {
       tab: TAB_ADVANCED,
       label: 'CSS editor',
     }
-    );
+  );
 
-    element.addControl(
-      'element_css_editor', {
+  element.addControl(
+    'element_css_editor', {
       type: CONTROLLER_CSSEDITOR,
     }
-    );
+  );
 
-    element.endControlSection();
-  }
+  element.endControlSection();
 
   element.startControlSection(
     'conditional_display', {

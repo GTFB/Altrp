@@ -239,7 +239,6 @@ export default function CarouselComponent(settings) {
     "altrp-carousel-slide:hover",
 
     ["background-color", "background_slides_style", "color", ":hover"],
-    ["padding", "padding_slides_style", "dimensions", ":hover"],
     ["border-radius", "border_radius_slides_style", "dimensions", ":hover"],
 
     "}",
@@ -319,7 +318,6 @@ export default function CarouselComponent(settings) {
     "altrp-carousel-arrow:hover",
 
     ["background-color", "arrows_background_navigation_style", "color", ":hover"],
-    ["padding", "padding_arrows_navigation_style", "dimensions", ":hover"],
     ["border-radius", "border_radius_arrows_navigation_style", "dimensions", ":hover"],
 
     "& svg path",

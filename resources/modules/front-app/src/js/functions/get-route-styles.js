@@ -11,12 +11,13 @@ export default  function getRouteStyles(areas){
   display: flex;
   flex-direction: column;
   overflow: hidden;
-}
-.route-content.route-content{`;
+}`
+
   areas = areas.filter(area=>FRONT_DEFAULT_AREAS.indexOf(area.id) === -1)
   if(! areas.length){
     return styles;
   }
+  styles += `.route-content.route-content{`;
 
   styles += 'display:grid;grid-template-rows:auto 1fr auto;'
   let columnsGrid = '';
@@ -25,9 +26,9 @@ export default  function getRouteStyles(areas){
   let leftSidebar = areas.find(area=>area.settings.area_type === 'sidebar'
     && area.settings.sidebar_location === 'left');
 
-  columnsGrid += leftSidebar ? `${leftSidebar.settings.sidebar_width}` : '0';
-  columnsGrid += ` calc(100% - ${leftSidebar ? `${leftSidebar.settings.sidebar_width}` : '0'} - ${rightSidebar ? `${rightSidebar.settings.sidebar_width}` : '0'}) `;
-  columnsGrid += rightSidebar ? `${rightSidebar.settings.sidebar_width}` : '0';
+  columnsGrid += leftSidebar ? `${leftSidebar.settings.sidebar_width}` : '0px';
+  columnsGrid += ` calc(100% - ${leftSidebar ? `${leftSidebar.settings.sidebar_width}` : '0px'} - ${rightSidebar ? `${rightSidebar.settings.sidebar_width}` : '0px'}) `;
+  columnsGrid += rightSidebar ? `${rightSidebar.settings.sidebar_width}` : '0px';
 
   let contentRow = '';
   contentRow = leftSidebar ? `left-sidebar content` : `content content`;
@@ -52,5 +53,6 @@ export default  function getRouteStyles(areas){
   if(leftSidebar){
     styles += leftSidebar.getCustomCSS();
   }
+  styles += `.app-area > .sections-wrapper.sections-wrapper{width:100%;}`
   return  styles;
 }

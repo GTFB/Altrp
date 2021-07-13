@@ -53,7 +53,7 @@ class ColumnComponent extends Component {
       ":hover",
       {},
     );
-    let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
+    let ElementWrapper = window.SectionElementWrapper || this.props.ElementWrapper || window.ElementWrapper;
     let className = "altrp-column altrp-column-priority " + (this.state.settings.position_style_css_classes || "") + (background_image.url || background_image_hover.url ? ' altrp-background-image' : '');
     if (this.columnIsLink()) {
       className += ' altrp-pointer';

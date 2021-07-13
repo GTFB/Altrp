@@ -1,5 +1,4 @@
-import styled from "styled-components";
-import { getResponsiveSetting } from "../../../../../../front-app/src/js/helpers";
+const { getResponsiveSetting } = window.altrpHelpers;
 import {
   simplePropertyStyled,
   borderWidthStyled,
@@ -15,7 +14,7 @@ import {
  * @return {string}
  */
 
-export default function SectionWidgetComponent(settings) {
+export default function SectionWidgetComponent(settings, childrenLength) {
   function altrpSection() {
     let styles = '';
 
@@ -298,14 +297,14 @@ export default function SectionWidgetComponent(settings) {
     let padding;
 
     //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
-
-    if (settings !== undefined) {
-      padding = getResponsiveSetting(settings, 'layout_columns_gap', ':hover');
-    }
-
-    if (padding && padding !== 'none') {
-      styles += `padding: ${padding}px; `;
-    }
+    //
+    // if (settings !== undefined) {
+    //   padding = getResponsiveSetting(settings, 'layout_columns_gap', ':hover');
+    // }
+    //
+    // if (padding && padding !== 'none') {
+    //   styles += `padding: ${padding}px; `;
+    // }
 
     return styles;
   }
@@ -608,35 +607,19 @@ export default function SectionWidgetComponent(settings) {
     if (settings !== undefined) {
       padding = getResponsiveSetting(settings, 'layout_content_width');
     }
-
+    let width = '100vw';
+    if(window?.page_areas?.length > 4){//todo:weak place
+      width = '100%';
+    }
     if (padding) {
       if(padding.size) {
-        styles += `padding-left: calc((100vw - ${padding.size + padding.unit}) / 2); padding-right: calc((100vw - ${padding.size + padding.unit}) / 2); width: 100vw; `;
+        styles += `padding-left:calc((${width} - ${padding.size + padding.unit}) / 2);padding-right:calc((${width} - ${padding.size + padding.unit}) / 2);width:${width};`;
       }
     }
 
     return styles;
   }
 
-  function altrpSectionSectionBoxedHover() {
-    let styles = '';
-
-    let padding;
-
-    //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
-
-    if (settings !== undefined) {
-      padding = getResponsiveSetting(settings, 'layout_content_width', ':hover');
-    }
-
-    if (padding) {
-      if(padding.size) {
-        styles += `padding-left: calc((100vw - ${padding.size + padding.unit}) / 2); padding-right: calc((100vw - ${padding.size + padding.unit}) / 2); width: 100vw; `;
-      }
-    }
-
-    return styles;
-  }
 
   function altrpSectionFull() {
     let styles = '';
@@ -660,7 +643,7 @@ export default function SectionWidgetComponent(settings) {
     }
 
     if (padding) {
-      styles += dimensionsControllerToStyles(padding, 'padding');
+      styles += ` > .altrp-section{${dimensionsControllerToStyles(padding, 'padding')}}`;
     }
 
     return styles;
@@ -683,68 +666,66 @@ export default function SectionWidgetComponent(settings) {
 
     return styles;
   }
-
+  // console.log(`& > .altrp-section > .altrp-element_column{width:${100/childrenLength}%;}`);
   return `
 
-  & div.altrp-section,
-  & div.altrp-section-full-fill {
+  & > .altrp-section > .altrp-element_column{width:${100/childrenLength}%;}
+
+  & > div.altrp-section,
+  & > div.altrp-section-full-fill {
     ${altrpSection()}
   }
 
-  & div.altrp-section:hover,
-  & div.altrp-section-full-fill:hover {
+  & > div.altrp-section:hover,
+  & > div.altrp-section-full-fill:hover {
     ${altrpSectionHover()}
   }
 
-  & div.altrp-section div.altrp-column {
+  & > div.altrp-section div.altrp-column {
     ${altrpSectionColumn()}
   }
 
-  & div.altrp-section:hover div.altrp-column:hover {
+  & > div.altrp-section:hover div.altrp-column:hover {
     ${altrpSectionColumnHover()}
   }
 
-  & div.altrp-section {
+  & > div.altrp-section {
     ${altrpSectionSecond()}
   }
 
-  & div.altrp-section:hover {
+  & > div.altrp-section:hover {
     ${altrpSectionSecondHover()}
   }
 
-  & div.altrp-section.altrp-background-image {
+  & > div.altrp-section.altrp-background-image {
     ${altrpBackgroundImage()}
   }
 
-  & div.altrp-section.altrp-background-image:hover {
+  & > div.altrp-section.altrp-background-image:hover {
     ${altrpBackgroundImageHover()}
   }
 
-  & div.altrp-section_boxed,
-  & div.altrp-section_section_boxed {
+  & > div.altrp-section_boxed,
+  & > div.altrp-section_section_boxed {
     ${altrpSectionBoxed()}
   }
 
-  & div.altrp-section_boxed:hover,
-  & div.altrp-section_section_boxed:hover {
+  & > div.altrp-section_boxed:hover,
+  & > div.altrp-section_section_boxed:hover {
     ${altrpSectionBoxedHover()}
   }
 
-  & div.altrp-section_section-boxed {
+  & > div.altrp-section_section-boxed {
     ${altrpSectionSectionBoxed()}
   }
 
-  & div.altrp-section_section-boxed:hover {
-    ${altrpSectionSectionBoxedHover()}
-  }
-
   &,
-  & div.altrp-section-full-fill {
+  & > div.altrp-section-full-fill {
     ${altrpSectionFull()}
   }
 
   &:hover,
-  & div.altrp-section-full-fill:hover {
+  & > div.altrp-section-full-fill:hover {
     ${altrpSectionFullHover()}
   }
 

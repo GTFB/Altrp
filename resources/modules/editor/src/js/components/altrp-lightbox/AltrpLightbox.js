@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Lightbox from 'react-image-lightbox';
+import {isEditor} from "../../../../../front-app/src/js/helpers";
 import ('./altrp-lightbox.scss');
 
 class AltrpLightbox extends Component {
@@ -18,7 +19,7 @@ class AltrpLightbox extends Component {
     let prevSrc = null;
     const current = this.state.current;
 
-    if(images.length === 0) {
+    if(images.length === 0 || images[0] === "") {
       images = ["/img/nullImage.png"]
     }
 
@@ -30,17 +31,18 @@ class AltrpLightbox extends Component {
     return (
       <Lightbox
         {...settings}
+        mainSrc={images[current]}
         onMovePrevRequest={() => {
           this.setState({
             current: (current + images.length - 1) % images.length,
           })
         }}
         onMoveNextRequest={() => {
-            this.setState({
-              current: (current + 1) % images.length,
-            })
+          this.setState({
+            current: (current + 1) % images.length,
+          })
         }}
-        mainSrc={images[current]}
+
         prevSrc={prevSrc} nextSrc={nextSrc}
         wrapperClassName="altrp-lightbox"
       />

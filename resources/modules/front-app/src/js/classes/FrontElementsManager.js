@@ -15,7 +15,15 @@ class FrontElementsManager {
         name: "heading",
         import: async () => {
           return await import(
-            /* webpackChunkName: 'HeadingWidget' */ "../../../../editor/src/js/components/widgets/HeadingWidget"
+            /* webpackChunkName: 'HeadingTypeHeadingWidget' */ "../../../../editor/src/js/components/widgets/HeadingTypeHeadingWidget"
+          );
+        }
+      },
+      {
+        name: "heading-type-animating",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'HeadingTypeAnimatingWidget' */ "../../../../editor/src/js/components/widgets/HeadingTypeAnimatingWidget"
           );
         }
       },
@@ -386,6 +394,22 @@ class FrontElementsManager {
             /* webpackChunkName: 'DropbarWidget' */ "../../../../editor/src/js/components/widgets/DropbarWidget"
             );
         }
+      },
+      {
+        name: "tabs-switcher",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'TabsSwitcherWidget' */ "../../../../editor/src/js/components/widgets/TabsSwitcherWidget"
+            );
+        }
+      },
+      {
+        name: "image-lightbox",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'TabsSwitcherWidget' */ "../../../../editor/src/js/components/widgets/ImageLightboxWidget"
+            );
+        }
       }
     ];
     this.components = {};
@@ -410,10 +434,9 @@ class FrontElementsManager {
       //   ).default);
       // });
       componentsToLoad = componentsToLoad.map(el => {
-        console.log(el.name, performance.now());
         return new Promise((resolve, reject) => {
           el.import().then(res=>{
-            console.log(el.name, performance.now());
+            console.log(`LOAD Widget Component ${el.name}`, performance.now());
             this.components[el.name] = res.default
             resolve(res);
           })

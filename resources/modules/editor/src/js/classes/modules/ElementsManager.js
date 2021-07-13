@@ -17,8 +17,10 @@ import InputHidden from "../elements/InputHidden";
 import InputFile from "../elements/InputFile";
 import RootElement from "../elements/RootElement";
 import RootComponent from "../../components/RootComponent";
-import HeadingElement from "../elements/Heading";
-import HeadingWidget from "../../components/widgets/HeadingWidget";
+import HeadingTypeAnimating from "../elements/HeadingTypeAnimating";
+import HeadingTypeHeading from "../elements/HeadingTypeHeading";
+import HeadingTypeAnimatingWidget from "../../components/widgets/HeadingTypeAnimatingWidget";
+import HeadingTypeHeadingWidget from "../../components/widgets/HeadingTypeHeadingWidget";
 import BreadcrumbsWidget from "../../components/widgets/BreadcrumbsWidget";
 import ButtonWidget from "../../components/widgets/ButtonWidget";
 import Column from "../elements/Column";
@@ -90,6 +92,10 @@ import MenuWidget from "../../components/widgets/MenuWidget";
 import SectionWidgetComponent from "../../components/SectionWidgetComponent";
 import DropbarWidget from "../../components/widgets/DropbarWidget";
 import Dropbar from "../elements/Dropbar";
+import TabsSwitcher from "../elements/TabsSwitcher";
+import TabsSwitcherWidget from "../../components/widgets/TabsSwitcherWidget";
+import ImageLightbox from "../elements/ImageLightbox";
+import ImageLightboxWidget from "../../components/widgets/ImageLightboxWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -97,7 +103,8 @@ export default class ElementsManger {
     // this.elements[Input.getName()] = Input;
     //список элементов
     this.elements[RootElement.getName()] = RootElement;
-    this.elements[HeadingElement.getName()] = HeadingElement;
+    this.elements[HeadingTypeHeading.getName()] = HeadingTypeHeading;
+    this.elements[HeadingTypeAnimating.getName()] = HeadingTypeAnimating;
     this.elements[Image.getName()] = Image;
     this.elements[Breadcrumbs.getName()] = Breadcrumbs;
     this.elements[Button.getName()] = Button;
@@ -105,8 +112,9 @@ export default class ElementsManger {
     this.elements[Divider.getName()] = Divider;
     this.elements[Column.getName()] = Column;
     this.elements[Section.getName()] = Section;
-    this.elements[List.getName()] = List;
+    // this.elements[List.getName()] = List;
     this.elements[Nav.getName()] = Nav;
+    this.elements[TabsSwitcher.getName()] = TabsSwitcher
     // this.elements[Input.getName()] = Input;
     this.elements[InputSelect.getName()] = InputSelect;
     this.elements[InputSelect2.getName()] = InputSelect2;
@@ -142,12 +150,14 @@ export default class ElementsManger {
     this.elements[Video.getName()] = Video;
     this.elements[SectionWidget.getName()] = SectionWidget;
     this.elements[Dropbar.getName()] = Dropbar;
+    this.elements[ImageLightbox.getName()] = ImageLightbox;
     // Websocket Notifications
     // this.elements[Notifications.getName()] = Notifications;
     //список компонентов
     this.components = {};
     this.components[RootElement.getName()] = RootComponent;
-    this.components[HeadingElement.getName()] = HeadingWidget;
+    this.components[HeadingTypeHeading.getName()] = HeadingTypeHeadingWidget;
+    this.components[HeadingTypeAnimating.getName()] = HeadingTypeAnimatingWidget;
     this.components[Section.getName()] = SectionComponent;
     this.components[SectionWidget.getName()] = SectionComponent;
     this.components[Column.getName()] = ColumnComponent;
@@ -192,6 +202,8 @@ export default class ElementsManger {
     this.components[Gallery.getName()] = GalleryWidget;
     this.components[Video.getName()] = VideoWidget;
     this.components[Dropbar.getName()] = DropbarWidget;
+    this.components[TabsSwitcher.getName()] = TabsSwitcherWidget;
+    this.components[ImageLightbox.getName()] = ImageLightboxWidget;
     // Websocket Notifications widget
     // this.components[Notifications.getName()] = NotificationsWidget;
   }

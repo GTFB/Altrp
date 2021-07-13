@@ -1,4 +1,5 @@
-import {getHeadingStyles} from "./helpers/stylesForTheHeading";
+import { getHeadingTypeHeadingStyles } from "./helpers/stylesForTheHeadingTypeHeading";
+import { getHeadingTypeAnimatingStyles } from "./helpers/stylesForTheHeadingTypeAnimating";
 import {getTextStyles} from "./helpers/stylesForTheText";
 import {getTableStyles} from "./helpers/stylesForTheTable";
 import {getPostsStyles} from "./helpers/stylesForThePosts";
@@ -25,6 +26,11 @@ import getRouteStyles from "../functions/get-route-styles";
 import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
 import MapConstructorComponent
   from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
+import TabsSwitcherComponent
+  from "../../../../editor/src/js/components/widgets/styled-components/TabsSwitcherComponent";
+import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
+import ImageLightboxComponent
+  from "../../../../editor/src/js/components/widgets/styled-components/ImageLightboxComponent";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -38,6 +44,15 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
   _.each(elementsSettings, (item, id) => {
     if (item) {
       switch (item.name) {
+        case "image-lightbox":
+          styles+=ImageLightboxComponent(item.settings,id);
+          break;
+        case "diagram":
+          styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
+          break;
+        case "tabs-switcher":
+          styles += `.${prefix}${id} {${TabsSwitcherComponent(item.settings)}}`;
+          break;
         case "button":
           styles += `.${prefix}${id} {${ButtonComponent(item.settings)}}`;
           break;
@@ -60,7 +75,10 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles += `.${prefix}${id} {${AccordionComponent(item.settings)}}`;
           break;
         case "section":
-          styles += `.${prefix}${id} {${SectionWidgetComponent(item.settings)}}`;
+          styles += `.${prefix}${id} {${SectionWidgetComponent(item.settings, item.childrenLength || 1)}}`;
+          break;
+        case "section_widget":
+          styles += `.${prefix}${id} {${SectionWidgetComponent(item.settings, item.childrenLength || 1)}}`;
           break;
         case "column":
           styles += `.${prefix}${id} {${ColumnComponent(item.settings)}}`;
@@ -84,7 +102,11 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles+=getBreadcrumbsStyles(item.settings,id);
           break;
         case 'heading': {
-          styles += getHeadingStyles(item.settings, id);
+          styles += getHeadingTypeHeadingStyles(item.settings, id);
+        }
+          break;
+        case 'heading-type-animating': {
+          styles += getHeadingTypeAnimatingStyles(item.settings, id);
         }
           break;
         case 'text': {
