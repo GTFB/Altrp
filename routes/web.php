@@ -105,6 +105,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
      */
 
     Route::post('/cache/clear', 'Admin\AltrpSettingsController@clearCache');
+    Route::post('/ssr/make', 'Admin\AltrpSettingsController@makeSSRConfig');
+    Route::post('/ssr/restart', 'Admin\AltrpSettingsController@restartSSR');
 
     // Websockets
     Route::get('/websockets', 'Admin\WebsocketsController@index');

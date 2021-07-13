@@ -17,6 +17,7 @@ export default class AdminSettings extends Component {
     this.state = {
       SSREnabled: false,
       SSRPort: "",
+      SSRAlias: "",
       activeTab: parseInt(window.location.hash[1]) || 0
     };
   }
@@ -49,10 +50,47 @@ export default class AdminSettings extends Component {
     }));
   };
 
-  clearProjectCache = async e => {
-    new Resource({ route: "/admin/ajax/cache/clear" }).post().then(value => {
-      alert(value.message);
+  setSSRSettingsAlias = async e => {
+    let value = e.target.value;
+    new Resource({ route: "/admin/ajax/settings" }).put("ssr_settings_alias", {
+      value
     });
+    this.setState(state => ({
+      ...state,
+      SSRAlias: value
+    }));
+  };
+
+  generateConfig = async e => {
+    new Resource({ route: "/admin/ajax/ssr/make" }).post().then(
+      success => {
+        alert(success.message);
+      },
+      error => {
+        alert(error);
+      }
+    );
+  };
+  restartSSR = async e => {
+    new Resource({ route: "/ssr/restart" }).post().then(
+      success => {
+        alert(success.message);
+      },
+      error => {
+        alert(error);
+      }
+    );
+  };
+
+  clearProjectCache = async e => {
+    new Resource({ route: "/admin/ajax/cache/clear" }).post().then(
+      success => {
+        alert(success.message);
+      },
+      error => {
+        alert(error);
+      }
+    );
   };
 
   async componentDidMount() {
@@ -64,7 +102,12 @@ export default class AdminSettings extends Component {
     let SSRPort = (
       await new Resource({ route: "/admin/ajax/settings" }).get("ssr_port")
     ).ssr_port;
-    this.setState(state => ({ ...state, SSREnabled, SSRPort }));
+    let SSRAlias = (
+      await new Resource({ route: "/admin/ajax/settings" }).get(
+        "ssr_settings_alias"
+      )
+    ).ssr_settings_alias;
+    this.setState(state => ({ ...state, SSREnabled, SSRPort, SSRAlias }));
   }
   switchTab(activeTab) {
     window.location.hash = activeTab + "";
@@ -74,7 +117,7 @@ export default class AdminSettings extends Component {
   }
 
   render() {
-    const { SSRPort } = this.state;
+    const { SSRPort, SSRAlias } = this.state;
     return (
       <div className="admin-settings admin-page">
         <div className="admin-heading">
@@ -127,6 +170,35 @@ export default class AdminSettings extends Component {
                       />
                     </td>
                   </tr>
+                  <tr className="admin-settings-table-row">
+                    <td className="admin-settings-table__td row-text">
+                      SSR Settings Alias
+                    </td>
+                    <td className="admin-settings-table__td ">
+                      <input
+                        className="admin-table__td_check"
+                        type="text"
+                        placeholder="For ex. yourproject.."
+                        value={SSRAlias}
+                        onChange={this.setSSRSettingsAlias}
+                      />
+                    </td>
+                  </tr>
+                  {SSRAlias?.length > 0 && (
+                    <tr className="admin-settings-table-row">
+                      <td className="admin-settings-table__td row-text">
+                        Make SSR conf
+                      </td>
+                      <td className="admin-settings-table__td ">
+                        <button
+                          className="btn btn_success"
+                          onClick={this.generateConfig}
+                        >
+                          Generate
+                        </button>
+                      </td>
+                    </tr>
+                  )}
                   <tr className="admin-settings-table-row">
                     <td className="admin-settings-table__td row-text">
                       Clear project cache

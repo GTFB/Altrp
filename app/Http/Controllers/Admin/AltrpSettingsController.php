@@ -19,4 +19,32 @@ class AltrpSettingsController extends Controller
             return response()->json(['message' => 'fail'], 422);
         }
     }
+
+    /**
+     * WORK ONLY ON UNIX BASED SYSTEMS AND ALTRP ECOSYSTEM
+     */
+    public function makeSSRConfig(Request $request)
+    {
+        $confName = env('ALTRP_SETTING_SSR_SETTINGS_ALIAS');
+        $path = base_path();
+        $stubPath = app_path() . "/Altrp/Commands/stubs/ssr/ssr.conf.stub";
+        $owner = posix_getpwuid(fileowner($path . "/" . '.env'));
+        $ownerName = $owner['name'];
+        $fileStub = file_get_contents($stubPath);
+        $fileStub = str_replace('{{alias}}', $confName, $fileStub);
+        $fileStub = str_replace('{{projectDir}}', $path, $fileStub);
+        $fileStub = str_replace('{{projectOwner}}', $ownerName, $fileStub);
+        file_put_contents("$path/$confName.conf", $fileStub);
+    }
+
+    public function restartSSR(Request $request)
+    {
+        try {
+            $confName = env('ALTRP_SETTING_SSR_SETTINGS_ALIAS');
+            exec("restartssr $confName");
+            return response()->json(['message' => 'success']);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th]);
+        }
+    }
 }
