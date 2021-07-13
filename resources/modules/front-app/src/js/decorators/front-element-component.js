@@ -1,12 +1,12 @@
 import modelManager from "../../../../editor/src/js/classes/modules/ModelsManager";
-import {
+const {
   conditionsChecker,
   getConverter,
   getDataByPath,
   isEditor,
   prepareContext,
   replaceContentWithData
-} from "../helpers";
+} = window.altrpHelpers;
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {addSettings} from "../store/elements-settings/actions";
 
@@ -272,6 +272,71 @@ function getModelId() {
   }
   return id;
 }
+
+/**
+ * true если выполняются условия
+ * @return {boolean}
+ */
+function isActive(){
+  if(isEditor()){
+    return false;
+  }
+  const { element } = this.props;
+  const conditional_active_choose = element.getSettings('conditional_active_choose');
+  /**
+   * @var {AltrpUser} currentUser
+   */
+  const currentUser = appStore.getState().currentUser;
+  let authCondition = false;
+  switch (conditional_active_choose){
+    case 'guest':{
+      if(currentUser.isGuest()){
+        authCondition = true;
+      }
+    }
+    break;
+    case 'auth':{
+      const roles = element.getSettings('conditional_active_roles') || [];
+      const permissions = element.getSettings('conditional_active_permissions') || [];
+      if(currentUser.hasRoles(roles)){
+        authCondition = true;
+        break;
+      }
+      if(currentUser.hasPermissions(permissions)){
+        authCondition = true;
+        break;
+      }
+    }
+    break;
+  }
+  if(! element.getSettings('active_conditional_other')){
+    return authCondition;
+  }
+  let conditions = element.getSettings("active_conditions", []);
+  conditions = conditions.map(c => {
+    const {
+      conditional_model_field: modelField,
+      conditional_other_operator: operator,
+      conditional_other_condition_value: value
+    } = c;
+    return {
+      modelField,
+      operator,
+      value
+    };
+  });
+  const active_conditional_other_display = element.getSettings("active_conditional_other_display");
+  let active = conditionsChecker(
+    conditions,
+    active_conditional_other_display === "AND",
+    this.props.element.getCurrentModel(),
+    true
+  );
+  if(active_conditional_other_display === "AND"){
+    return active && authCondition;
+  }
+  return active || authCondition;
+}
 /**
  * Декорирует компонент элемента методами необходимыми на фронте и в редакторе
  * @param component
@@ -285,4 +350,5 @@ export default function frontDecorate(component) {
   component.getModelId = getModelId.bind(component);
   component.updateModelData = updateModelData.bind(component);
   component.classStateDisabled = classStateDisabled.bind(component);
+  component.isActive = isActive.bind(component);
 }

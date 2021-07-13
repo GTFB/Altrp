@@ -76,6 +76,7 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
     case "accordion":
       styles += `.${prefix}${elementId} {${AccordionComponent(settings)}}`;
       break;
+    case "section_widget":
     case "section":
       styles += `.${prefix}${elementId} {${SectionWidgetComponent(settings, element.children.length)}}`;
       break;
@@ -519,6 +520,9 @@ class ElementWrapper extends Component {
     switch (this.props.element.getName()) {
       case "nav":
         WrapperComponent = NavComponent;
+        break;
+      case "dashboards":
+        WrapperComponent = DashboardComponent;
         break;
     }
 

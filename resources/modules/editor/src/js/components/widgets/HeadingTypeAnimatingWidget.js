@@ -107,7 +107,7 @@ class HeadingTypeAnimatingWidget extends Component {
   }
 
   render() {
-    return <Animating settings={this.state.settings} />
+    return <Animating settings={this.state.settings} getContent={this.getContent.bind(this)} />
   }
 }
 

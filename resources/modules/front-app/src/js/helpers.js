@@ -1277,14 +1277,29 @@ export function printElements(elements, title = "") {
   myWindow.document.write(`<html><head><title>${title}</title></head>`);
   myWindow.document.write("<body >");
   elements = _.isArray(elements) ? elements : [elements];
-  elements.forEach(element => {
-    myWindow.document.write(element.outerHTML);
-  });
+  let headContent = '';
   myWindow.document.write("</body></html>");
+  let bodyContent = '';
+  elements.forEach(element => {
+    if(element instanceof HTMLHeadElement){
+      headContent = element.innerHTML;
+      return
+    }
+    bodyContent += element.outerHTML;
+  });
   myWindow.document.close(); // necessary for IE >= 10
+  myWindow.document.head.innerHTML = headContent;
+  bodyContent = bodyContent
+    .replace(/<tr/g, '<div className="altrp-table-tr"')
+    .replace(/<th/g, '<div')
+    .replace(/<\/tr>/g, '</div>')
+    .replace(/<\/th>/g, '</div>')
+  myWindow.document.body.innerHTML = bodyContent;
   myWindow.focus(); // necessary for IE >= 10
-  myWindow.print();
-  myWindow.close();
+  delay(250).then(()=>{
+    myWindow.print();
+    myWindow.close();
+  })
   return true;
 }
 

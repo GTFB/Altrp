@@ -7,8 +7,8 @@ class Animating extends Component {
     let animating = "";
 
     const settings = this.props.settings;
-    const beforeText = settings.text_before_animating;
-    const afterText = settings.text_after_animating;
+    const beforeText = this.props.getContent('text_before_animating');
+    const afterText = this.props.getContent('text_after_animating');
     const htmlTag = settings.html_tag_animating || "h2";
     const prefix = "heading";
 

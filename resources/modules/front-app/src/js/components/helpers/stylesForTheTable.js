@@ -14,8 +14,8 @@ import { getResponsiveSetting } from '../../helpers';
 
 /**
  * Преобразует объект стилей, который задается в виджете Table в строку css для вставки в GlobalStyles
- * @param {{}} settings 
- * @param {string} id 
+ * @param {{}} settings
+ * @param {string} id
  * @return {string}
  */
 
@@ -1331,7 +1331,7 @@ export function getTableStyles(settings, id) {
   const colorGlobalFilterLabel = getResponsiveSetting(settings, 'global_filter_label_color');
 
   if (colorGlobalFilterLabel) {
-    styles += colorPropertyStyled(color, 'color');
+    styles += colorPropertyStyled(colorGlobalFilterLabel, 'color');
   }
 
   const typographicGlobalFilterLabel = getResponsiveSetting(settings, 'global_filter_label_typographic');

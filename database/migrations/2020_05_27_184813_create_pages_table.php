@@ -20,7 +20,7 @@ class CreatePagesTable extends Migration
       $table->string( 'title', 191 )->index();
       $table->bigInteger( 'author' )->index();
       $table->longText( 'content' );
-      $table->string( 'path' )->unique();
+      $table->string( 'path' );//->unique();
 
     } );
     Schema::create( 'pages_templates', function ( Blueprint $table ) {
@@ -28,7 +28,7 @@ class CreatePagesTable extends Migration
       $table->timestamps();
       $table->bigInteger( 'page_id' )->index();
       $table->bigInteger( 'template_id' )->index();
-      $table->unique( ['template_id', 'page_id'] );
+     // $table->unique( ['template_id', 'page_id'] );
       $table->string( 'template_type' )->index();
     } );
   }

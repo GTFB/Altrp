@@ -7,6 +7,7 @@ import lodash from "lodash";
 import {StaticRouter as Router, Route, Switch} from "react-router-dom";
 import {setAreas} from "../resources/modules/front-app/src/js/store/areas/actions";
 import getAltrpSetting from "./functions/get-altrp-setting";
+import {changeCurrentUser} from "../resources/modules/front-app/src/js/store/current-user/actions";
 if (typeof performance === "undefined") {
   global.performance = require("perf_hooks").performance;
 }
@@ -100,6 +101,7 @@ app.post("/", (req, res) => {
    */
   global.window.altrpImageLazy = json.altrpImageLazy || "none";
   global.window.altrpSkeletonColor = json.altrpSkeletonColor || "#ccc";
+  appStore.dispatch(changeCurrentUser(json.current_user || {}));
   global.window.altrpSkeletonHighlightColor =
     json.altrpSkeletonHighlightColor || "#d0d0d0";
   let elements = [];

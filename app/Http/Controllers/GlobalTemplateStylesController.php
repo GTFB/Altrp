@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Constructor\Template;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\GlobalTemplateStyle as GlobalStyle;
 
 class GlobalTemplateStylesController extends Controller
@@ -36,6 +37,7 @@ class GlobalTemplateStylesController extends Controller
             'type' => 'required',
             'settings' => 'required',
         ]);
+        $data['guid'] = Str::uuid()->toString();
         try {
             $style = new GlobalStyle($data);
             $style->save();

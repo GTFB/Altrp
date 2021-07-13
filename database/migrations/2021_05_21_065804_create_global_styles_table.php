@@ -17,7 +17,7 @@ class CreateGlobalStylesTable extends Migration
             $table->bigIncrements('id');
             $table->json('settings');
             $table->string('type');
-            $table->uuid('guid')->default(DB::raw('(UUID())'));
+            $table->uuid('guid');
             $table->timestamps();
         });
     }

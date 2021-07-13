@@ -20,6 +20,10 @@ import {
     }
   }
 
+  .altrp-btn:hover {
+    text-decoration: none;
+  }
+
   .altrp-btn {
     width: auto;
     text-decoration: none;
@@ -53,6 +57,18 @@ import {
       height: 25px;
       width: 25px;
     }
+  }
+
+  .btn-container-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .btn-container-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 `);
 
@@ -179,7 +195,7 @@ class ButtonWidget extends Component {
       );
     } else if (
       this.props.element
-        .getResponsiveSetting("other_action_type", null,[])
+        .getResponsiveSetting("other_action_type", '',[])
         .includes("print_elements")
     ) {
       let IDs = this.props.element.getResponsiveSetting("print_elements_ids", null,"");
@@ -210,6 +226,17 @@ class ButtonWidget extends Component {
     }
   }
 
+  /**
+   * Получить css классы для кнопки
+   */
+  getClasses = ()=>{
+    let classes = 'altrp-btn ';
+    if(this.isActive()){
+      classes += 'active '
+    }
+    return classes;
+  }
+
   render() {
     const { link_link = {}, advanced_tooltip: tooltip } = this.state.settings;
     const { back } = history;
@@ -223,14 +250,300 @@ class ButtonWidget extends Component {
       ? this.props.element.getCardModel().getData()
       : this.props.currentModel.getData();
     let classes =
-      "altrp-btn " + (this.state.settings.position_css_classes || "");
+      this.getClasses() + (this.state.settings.position_css_classes || "");
     if (background_image.url) {
       classes += " altrp-background-image";
     }
 
     let buttonText = this.props.element.getContent("button_text");
-    let buttonMedia = { ...this.state.settings.button_icon };
-    const showIcon = buttonMedia.url;
+    let buttonMediaRight = { ...this.state.settings.button_icon_right };
+    let buttonMediaLeft = { ...this.state.settings.button_icon_left };
+    let buttonMediaTop = { ...this.state.settings.button_icon_top };
+    let buttonMediaBottom = { ...this.state.settings.button_icon_bottom };
+
+    const showIcon = buttonMediaRight.url || buttonMediaLeft.url || buttonMediaTop.url || buttonMediaBottom.url;
+
+    let existingIconsString = '';
+
+    if (showIcon) {
+      if (buttonMediaRight.url) {
+        existingIconsString += 'r'
+      }
+
+      if (buttonMediaLeft.url) {
+        existingIconsString += 'l'
+      }
+
+      if (buttonMediaTop.url) {
+        existingIconsString += 't'
+      }
+
+      if (buttonMediaBottom.url) {
+        existingIconsString += 'b'
+      }
+    }
+
+    existingIconsString = existingIconsString.split('').sort().join('');
+
+    let buttonInner = buttonText || "";
+
+    if (existingIconsString === 'r') {
+      buttonInner = (
+        !isSSR() && <div className="btn-container-row">
+          <span></span>
+          {buttonText}
+          <span className={"altrp-btn-icon-right "}>
+            {renderAssetIcon(buttonMediaRight)}{" "}
+          </span>
+        </div>
+      )
+    }
+
+    if (existingIconsString === 'l') {
+      buttonInner = (
+        !isSSR() && <div className="btn-container-row">
+          <span className={"altrp-btn-icon-left "}>
+            {renderAssetIcon(buttonMediaLeft)}{" "}
+          </span>
+          {buttonText}
+          <span></span>
+        </div>
+      )
+    }
+
+    if (existingIconsString === 't') {
+      buttonInner = (
+        !isSSR() && <div className="btn-container-column">
+          <span className={"altrp-btn-icon-top "}>
+            {renderAssetIcon(buttonMediaTop)}{" "}
+          </span>
+          {buttonText}
+          <span></span>
+        </div>
+      )
+    }
+
+    if (existingIconsString === 'b') {
+      buttonInner = (
+        !isSSR() && <div className="btn-container-column">
+          <span></span>
+          {buttonText}
+          <span className={"altrp-btn-icon-bottom "}>
+            {renderAssetIcon(buttonMediaBottom)}{" "}
+          </span>
+        </div>
+      )
+    }
+
+    if (existingIconsString === 'blrt') {
+      buttonInner = (
+        !isSSR() && <div className="btn-container-column">
+          <span className={"altrp-btn-icon-top "}>
+            {renderAssetIcon(buttonMediaTop)}{" "}
+          </span>
+          <div className="btn-container-row">
+            <span className={"altrp-btn-icon-left "}>
+              {renderAssetIcon(buttonMediaLeft)}{" "}
+            </span>
+            {buttonText}
+            <span className={"altrp-btn-icon-right "}>
+              {renderAssetIcon(buttonMediaRight)}{" "}
+            </span>
+          </div>
+          <span className={"altrp-btn-icon-bottom "}>
+            {renderAssetIcon(buttonMediaBottom)}{" "}
+          </span>
+        </div>
+      )
+    }
+
+    if (existingIconsString === 'brt') {
+      buttonInner = (
+        !isSSR() && <div className="btn-container-column">
+          <span className={"altrp-btn-icon-top "}>
+            {renderAssetIcon(buttonMediaTop)}{" "}
+          </span>
+          <div className="btn-container-row">
+            <span></span>
+            {buttonText}
+            <span className={"altrp-btn-icon-right "}>
+              {renderAssetIcon(buttonMediaRight)}{" "}
+            </span>
+          </div>
+          <span className={"altrp-btn-icon-bottom "}>
+            {renderAssetIcon(buttonMediaBottom)}{" "}
+          </span>
+        </div>
+      )
+    }
+
+    if (existingIconsString === 'blt') {
+      buttonInner = (
+        !isSSR() && <div className="btn-container-column">
+          <span className={"altrp-btn-icon-top "}>
+            {renderAssetIcon(buttonMediaTop)}{" "}
+          </span>
+          <div className="btn-container-row">
+            <span className={"altrp-btn-icon-left "}>
+              {renderAssetIcon(buttonMediaLeft)}{" "}
+            </span>
+            {buttonText}
+            <span></span>
+          </div>
+          <span className={"altrp-btn-icon-bottom "}>
+            {renderAssetIcon(buttonMediaBottom)}{" "}
+          </span>
+        </div>
+      )
+    }
+
+    if (existingIconsString === 'lrt') {
+      buttonInner = (
+        !isSSR() && <div className="btn-container-column">
+          <span className={"altrp-btn-icon-top "}>
+            {renderAssetIcon(buttonMediaTop)}{" "}
+          </span>
+          <div className="btn-container-row">
+            <span className={"altrp-btn-icon-left "}>
+              {renderAssetIcon(buttonMediaLeft)}{" "}
+            </span>
+            {buttonText}
+            <span className={"altrp-btn-icon-right "}>
+              {renderAssetIcon(buttonMediaRight)}{" "}
+            </span>
+          </div>
+          <span></span>
+        </div>
+      )
+    }
+
+    if (existingIconsString === 'blr') {
+      buttonInner = (
+        !isSSR() && <div className="btn-container-column">
+          <span></span>
+          <div className="btn-container-row">
+            <span className={"altrp-btn-icon-left "}>
+              {renderAssetIcon(buttonMediaLeft)}{" "}
+            </span>
+            {buttonText}
+            <span className={"altrp-btn-icon-right "}>
+              {renderAssetIcon(buttonMediaRight)}{" "}
+            </span>
+          </div>
+          <span className={"altrp-btn-icon-bottom "}>
+            {renderAssetIcon(buttonMediaBottom)}{" "}
+          </span>
+        </div>
+      )
+    }
+
+    if (existingIconsString === 'rt') {
+      buttonInner = (
+        !isSSR() && <div className="btn-container-column">
+          <span className={"altrp-btn-icon-top "}>
+            {renderAssetIcon(buttonMediaTop)}{" "}
+          </span>
+          <div className="btn-container-row">
+            <span></span>
+            {buttonText}
+            <span className={"altrp-btn-icon-right "}>
+              {renderAssetIcon(buttonMediaRight)}{" "}
+            </span>
+          </div>
+          <span></span>
+        </div>
+      )
+    }
+
+    if (existingIconsString === 'lt') {
+      buttonInner = (
+        !isSSR() && <div className="btn-container-column">
+          <span className={"altrp-btn-icon-top "}>
+            {renderAssetIcon(buttonMediaTop)}{" "}
+          </span>
+          <div className="btn-container-row">
+            <span className={"altrp-btn-icon-left "}>
+              {renderAssetIcon(buttonMediaLeft)}{" "}
+            </span>
+            {buttonText}
+            <span></span>
+          </div>
+          <span></span>
+        </div>
+      )
+    }
+
+    if (existingIconsString === 'bt') {
+      buttonInner = (
+        !isSSR() && <div className="btn-container-column">
+          <span className={"altrp-btn-icon-top "}>
+            {renderAssetIcon(buttonMediaTop)}{" "}
+          </span>
+          <div className="btn-container-row">
+            <span></span>
+            {buttonText}
+            <span></span>
+          </div>
+          <span className={"altrp-btn-icon-bottom "}>
+            {renderAssetIcon(buttonMediaBottom)}{" "}
+          </span>
+        </div>
+      )
+    }
+
+    if (existingIconsString === 'br') {
+      buttonInner = (
+        !isSSR() && <div className="btn-container-column">
+          <span></span>
+          <div className="btn-container-row">
+            <span></span>
+            {buttonText}
+            <span className={"altrp-btn-icon-right "}>
+              {renderAssetIcon(buttonMediaRight)}{" "}
+            </span>
+          </div>
+          <span className={"altrp-btn-icon-bottom "}>
+            {renderAssetIcon(buttonMediaBottom)}{" "}
+          </span>
+        </div>
+      )
+    }
+
+    if (existingIconsString === 'lr') {
+      buttonInner = (
+        !isSSR() && <div className="btn-container-column">
+          <span></span>
+          <div className="btn-container-row">
+            <span className={"altrp-btn-icon-left "}>
+              {renderAssetIcon(buttonMediaLeft)}{" "}
+            </span>
+            {buttonText}
+            <span className={"altrp-btn-icon-right "}>
+              {renderAssetIcon(buttonMediaRight)}{" "}
+            </span>
+          </div>
+          <span></span>
+        </div>
+      )
+    }
+
+    if (existingIconsString === 'bl') {
+      buttonInner = (
+        !isSSR() && <div className="btn-container-column">
+          <span></span>
+          <div className="btn-container-row">
+            <span className={"altrp-btn-icon-left "}>
+              {renderAssetIcon(buttonMediaLeft)}{" "}
+            </span>
+            {buttonText}
+            <span></span>
+          </div>
+          <span className={"altrp-btn-icon-bottom "}>
+            {renderAssetIcon(buttonMediaBottom)}{" "}
+          </span>
+        </div>
+      )
+    }
 
     if (this.state.pending) {
       classes += " altrp-disabled";
@@ -264,14 +577,7 @@ class ButtonWidget extends Component {
       id={this.state.settings.position_css_id}
       title={tooltip || null}
     >
-      {buttonText}
-      {
-        showIcon ? (
-          ! isSSR() && <span className={"altrp-btn-icon "}>
-          {renderAssetIcon(buttonMedia)}{" "}
-          </span>
-        ) : ""
-      }
+      {buttonInner}
     </button>;
     // let buttonTemplate = (
     //   <button
@@ -330,28 +636,14 @@ class ButtonWidget extends Component {
             title={tooltip || null}
           >
             {" "}
-            {buttonText || ""}
-            {
-              showIcon ? (
-                ! isSSR() && <span className={"altrp-btn-icon "}>
-                  {renderAssetIcon(buttonMedia)}{" "}
-                </span>
-              ) : ""
-            }
+            {buttonInner}
           </a>
         );
       } else {
         link = (
           <Link to={url} onClick={this.onClick} className={classes} title={tooltip || null}>
             {" "}
-            {buttonText || ""}
-            {
-              showIcon ? (
-                ! isSSR() && <span className={"altrp-btn-icon "}>
-                  {renderAssetIcon(buttonMedia)}{" "}
-                </span>
-              ) : ""
-            }
+            {buttonInner}
           </Link>
         );
       }
@@ -365,20 +657,13 @@ class ButtonWidget extends Component {
           id={this.state.settings.position_css_id}
           title={tooltip || null}
         >
-          {buttonText}
-          {
-            showIcon ? (
-              ! isSSR() && <span className={"altrp-btn-icon "}>
-                {renderAssetIcon(buttonMedia)}{" "}
-              </span>
-            ) : ""
-          }
+          {buttonInner}
         </button>
       );
     }
 
     return <div className="altrp-btn-wrapper">
-      { link || button || buttonMedia }
+      {link || button || buttonMediaRight || buttonMediaLeft || buttonMediaTop || buttonMediaBottom}
     </div>;
     // return React.createElement(tag, buttonProps, <>{this.state.settings.button_text}{icon}</>);
   }

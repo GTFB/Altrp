@@ -126,7 +126,6 @@ class TypographicController extends Component {
         guid,
         this.props.controller.getSettingName()
       );
-      console.log(guid, fontValue);
       getCurrentElement().updateAllGlobals(guid, fontValue);
       store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
     }

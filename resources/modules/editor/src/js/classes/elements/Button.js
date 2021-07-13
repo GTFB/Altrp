@@ -81,33 +81,48 @@ class Button extends BaseElement {
       ],
     });
 
-    this.addControl('button_icon', {
+    this.addControl('button_icon_right', {
       type: CONTROLLER_MEDIA,
-      label: 'Choose Icon',
+      label: 'Right Icon',
     });
 
-    this.addControl('button_icon_position', {
-      type: CONTROLLER_SELECT,
-      label: 'Icon Position',
-      options: [
-        {
-          value: 'row',
-          label: 'Right'
-        },
-        {
-          value: 'row-reverse',
-          label: 'Left'
-        },
-        {
-          value: 'column',
-          label: 'Bottom'
-        },
-        {
-          value: 'column-reverse',
-          label: 'Top'
-        },
-      ],
+    this.addControl('button_icon_left', {
+      type: CONTROLLER_MEDIA,
+      label: 'Left Icon',
     });
+
+    this.addControl('button_icon_top', {
+      type: CONTROLLER_MEDIA,
+      label: 'Top Icon',
+    });
+
+    this.addControl('button_icon_bottom', {
+      type: CONTROLLER_MEDIA,
+      label: 'Bottom Icon',
+    });
+
+    // this.addControl('button_icon_position', {
+    //   type: CONTROLLER_SELECT,
+    //   label: 'Icon Position',
+    //   options: [
+    //     {
+    //       value: 'row',
+    //       label: 'Right'
+    //     },
+    //     {
+    //       value: 'row-reverse',
+    //       label: 'Left'
+    //     },
+    //     {
+    //       value: 'column',
+    //       label: 'Bottom'
+    //     },
+    //     {
+    //       value: 'column-reverse',
+    //       label: 'Top'
+    //     },
+    //   ],
+    // });
 
     this.endControlSection();
 
@@ -131,147 +146,11 @@ class Button extends BaseElement {
 
     actionsControllers(this);
 
-    this.startControlSection("form_section", {
-      hideOnEmail: true,
-      tab: TAB_CONTENT,
-      label: "Form Settings"
-    });
-
-    this.addControl('form_id', {
-      label: 'Form ID',
-      placeholder: 'Form ID'
-    });
-
-    this.addControl('form_actions', {
-      type: CONTROLLER_SELECT2,
-      label: 'Form Actions',
-      options: [
-        {
-          value: 'null',
-          label: 'Null',
-        },
-        {
-          value: 'add_new',
-          label: 'Add New',
-        },
-        {
-          value: 'delete',
-          label: 'Delete',
-        },
-        {
-          value: 'edit',
-          label: 'Edit',
-        },
-        {
-          value: 'login',
-          label: 'Login',
-        },
-        {
-          value: 'logout',
-          label: 'Logout',
-        },
-        {
-          value: 'email',
-          label: 'Email',
-        },
-      ],
-    });
-
-    this.addControl('form_confirm', {
-      type: CONTROLLER_TEXTAREA,
-      label: 'Confirm Submit Form Text',
-      default: '',
-    });
-
-    this.addControl('email_subject', {
-      conditions: {
-        'form_actions': 'email',
-      },
-      type: CONTROLLER_TEXTAREA,
-      label: 'Subject',
-      default: '',
-    });
-
-    this.addControl('text_after', {
-      type: CONTROLLER_TEXTAREA,
-      label: 'Text After Sending',
-      default: '',
-    });
-
-    this.addControl('choose_model', {
-      conditions: {
-        'form_actions': 'add_new',
-      },
-      label: 'Choose Model',
-      responsive: false,
-      type: CONTROLLER_SELECT,
-      resource: '/admin/ajax/models_options?with_names=true',
-    });
-
-    this.addControl('redirect_after', {
-      label: 'Redirect After',
-    });
-
-    this.addControl('redirect_to_prev_page', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Redirect To Prev Page',
-    });
-
-    this.addControl('close_popups', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Close all Popups',
-    });
-
-    this.endControlSection();
-
-    //<editor-fold desc="other_actions_on">
-    this.startControlSection('other_actions', {
-      hideOnEmail: true,
-      tab: TAB_CONTENT,
-      label: 'Other Actions',
-    });
-
-    this.addControl('other_action_type', {
-      type: CONTROLLER_SELECT2,
-      label: 'Actions',
-      isMulti: true,
-      options: [
-        {
-          label: 'Print Elements',
-          value: 'print_elements',
-        },
-      ],
-
-    });
-
-    this.addControl('print_elements_ids', {
-      label: 'IDs',
-      dynamic: false,
-      conditions: {
-        'other_action_type': 'print_elements'
-      },
-    });
-
-    this.endControlSection();
     //</editor-fold>
 
     this.startControlSection('position_section', {
       tab: TAB_STYLE,
       label: 'Position',
-    });
-
-    this.addControl('position_margin', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Margin',
-      default: {
-        unit: 'px',
-        bind: true
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
     });
 
     this.addControl('position_padding', {
@@ -292,12 +171,6 @@ class Button extends BaseElement {
       hideOnEmail: true,
       type: CONTROLLER_NUMBER,
       label: 'Z-index',
-    });
-
-    this.addControl('position_css_classes', {
-      type: CONTROLLER_TEXT,
-      label: 'CSS Classes',
-      default: ''
     });
 
     this.addControl('position_opacity', {
@@ -594,9 +467,9 @@ class Button extends BaseElement {
       label: "Icon"
     });
 
-    this.addControl('icon_padding', {
+    this.addControl('icon_padding_right', {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Padding',
+      label: 'Padding for icon right',
       default: {
         unit: 'px',
         bind: true
@@ -606,6 +479,52 @@ class Button extends BaseElement {
         '%',
         'vh',
       ],
+      stateless: true,
+    });
+
+    this.addControl('icon_padding_left', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding for icon left',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      stateless: true,
+    });
+
+    this.addControl('icon_padding_top', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding for icon top',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      stateless: true,
+    });
+
+    this.addControl('icon_padding_bottom', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding for icon bottom',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      stateless: true,
     });
 
     this.addControl('icon_color', {
@@ -624,9 +543,9 @@ class Button extends BaseElement {
     }
     );
 
-    this.addControl('icon_size', {
+    this.addControl('icon_size_right', {
       type: CONTROLLER_SLIDER,
-      label: 'Icon Size',
+      label: 'Icon right size',
       units: [
         'px',
         '%',
@@ -634,6 +553,46 @@ class Button extends BaseElement {
       ],
       max: 100,
       min: 0,
+      stateless: true,
+    });
+
+    this.addControl('icon_size_left', {
+      type: CONTROLLER_SLIDER,
+      label: 'Icon left size',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      stateless: true,
+    });
+
+    this.addControl('icon_size_top', {
+      type: CONTROLLER_SLIDER,
+      label: 'Icon top size',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      stateless: true,
+    });
+
+    this.addControl('icon_size_bottom', {
+      type: CONTROLLER_SLIDER,
+      label: 'Icon bottom size',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      stateless: true,
     });
 
     this.endControlSection();

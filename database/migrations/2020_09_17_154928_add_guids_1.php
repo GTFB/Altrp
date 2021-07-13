@@ -19,7 +19,7 @@ class AddGuids1 extends Migration
     Schema::table( 'pages_templates', function ( Blueprint $table ){
       $table->uuid('page_guid')->nullable();
       $table->uuid('template_guid')->nullable();
-      $table->dropIndex( DB::getTablePrefix() . 'pages_templates_main_key' );
+    //  $table->dropIndex( DB::getTablePrefix() . 'pages_templates_main_key' );
       $table->unique( ['template_guid', 'page_guid', 'template_type', 'condition_type'],
         DB::getTablePrefix() . 'pages_templates_main_key' );
     } );

@@ -1329,13 +1329,17 @@ const ACTIONS_COMPONENTS = [
  */
 function getAltrpSettings( $page_id ){
   $settings = [
-    'action_components' => []
+    'action_components' => [],
+    'libsToLoad' => [],
   ];
   if( ! $page_id ){
     return $settings;
   }
   $areas = Page::get_areas_for_page( $page_id );
-
+  $json_areas = json_encode( $areas );
+  if( strpos( $json_areas, 'altrptime' ) !== false){
+    $settings['libsToLoad'][] = 'moment';
+  }
   $action_types = [];
   foreach ( $areas as $area ) {
     $root_element = data_get( $area, 'template.data' );
@@ -1375,4 +1379,48 @@ function recurseMapElements( $element, $callback ){
       recurseMapElements( $child, $callback );
     }
   }
+}
+
+/**
+ * загрузим шрифты
+ * @param string | [] $page_areas
+ * @return string
+ */
+function loadFonts( $page_areas ){
+  $out = '';
+  if( is_string($page_areas) ){
+    $page_areas = json_decode( $page_areas, true);
+  }
+  $fonts = [];
+  foreach ( $page_areas as $area ) {
+    $templates = data_get( $area, 'templates' );
+    if( ! $templates ){
+      $templates = [data_get( $area, 'template' )];
+    }
+    foreach ( $templates as $template ) {
+      $root_element = data_get( $template, 'data' );
+      recurseMapElements( $root_element, function( $element ) use( &$fonts ) {
+        $_fonts = data_get( $element, 'settings.__altrpFonts__' );
+        if( is_array( $_fonts ) ){
+          foreach ( $_fonts as $font ) {
+            $fonts[] = $font;
+          }
+        }
+      } );
+    }
+
+  }
+  $fonts = array_unique( $fonts );
+  $fonts = array_filter( $fonts, function( $font ){
+    return $font !== 'Arial';//todo: написать для всех системных шрифтов список вести в json?
+  } );
+  foreach ( $fonts as $font ){
+    $font = str_replace( ' ', '+', $font);
+    $font .= ":100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic";
+    $fontUrl =
+      "https://fonts.googleapis.com/css?family=" . $font . "&subset=cyrillic";
+//    $fontUrl = urlencode( $fontUrl );
+    $out .= '<link rel="stylesheet"  href="'. $fontUrl .'" />';
+  }
+  return $out;
 }
