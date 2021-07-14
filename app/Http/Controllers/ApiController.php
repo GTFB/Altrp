@@ -120,6 +120,7 @@ class ApiController extends Controller
      */
     protected function getRemoteData($entity, $result, $is_object = false)
     {
+        //dd($entity);
         $records = $result['data'] ?? $result;
         $countOfRemoteData = $entity->remote_data->count();
         if ($countOfRemoteData) {
@@ -390,5 +391,84 @@ class ApiController extends Controller
             $attributes['password'] = Hash::make($attributes['password']);
         }
         return $attributes;
+    }
+
+  /**
+   * Возвращает данные по динамическому запросу
+   * 0 - тип данных
+   * 1 - url запроса
+   * 2 - параметры для запроса
+   * 3 - переменная для ответа
+   * @param array $headers
+   * @return array
+   */
+    public function getDinamicDataSource($headers) {
+      if (!empty($headers)) {
+        foreach ($headers as $key => $header) {
+          if (Str::contains($header, 'REMOTE_DATA')) {
+            $trimedMatch = trim($header, '{}');
+            $params = explode(':', $trimedMatch);
+
+            $parts = explode('\\', $this->modelClass);
+            $modelName = array_pop($parts);
+            $indexedColumns = $this->getIndexedColumns($modelName);
+            $resource = Str::lower(Str::plural($modelName));
+
+            if (isset($params[3])) {
+              $search = $params[3];
+              $filters = [];
+              parse_str($params[2], $output);
+              if (!empty($output)) {
+                foreach ($output as $key => $value) {
+                  $filters[$key] = $value;
+                }
+              }
+            } else {
+              $search = $params[2];
+            }
+
+            $model = Model::where('name', $params[1])->first();
+            $relations = Relationship::where([['model_id',$model->id],['always_with',1]])->get()->implode('name',',');
+            $relations = $relations ? explode(',',$relations) : false;
+
+            //$currentModel = {$params[1]}::find($id)
+
+            /*
+            $test222 = test222::find($id);
+
+            if ($relations) {
+              $test222 = $test222->load($relations);
+            }
+
+            $test222 = $this->getRemoteData($model, $test222, true);
+
+            return response()->json($test222, 200, [], JSON_UNESCAPED_UNICODE);
+            */
+            //dd($model);
+
+            //$search = 'name';
+
+            $result = $this->getRemoteData($model, []);
+
+
+
+            //$result = $this->modelClass::whereLikeMany($filters)->get();
+
+
+            dd($result);
+            /*
+            $url = $this->replaceUrlDynamicParams($params[1], $params[2]);
+            $response = \Curl::to($url)
+              //->withHeaders($this->getDinamicDataSource(["_token" => "{{REMOTE_DATA:test555:id=7&b=3:data.sucesss.token}}"]))
+              ->withData($data)
+              ->asJson()
+              ->get();
+            dd($response);
+            */
+            return response()->json($response, 200, [], JSON_UNESCAPED_UNICODE);
+          }
+        }
+      }
+      dd('00000000000000');
     }
 }
