@@ -797,10 +797,6 @@ function clearPageCache( $page_id ) {
 
   $relations = json_encode($relations);
   File::put($cachePath . '/relations.json', $relations);
-  echo '<pre style="padding-left: 200px;">';
-  var_dump(  $relations);
-  echo '</pre>';
-
   Cache::delete( 'areas_' . $page_id );
 
   return true;

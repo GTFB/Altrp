@@ -1,8 +1,7 @@
-let Dropbar = React.lazy(() => import(/* webpackChunkName: 'AltrpDropbar' */"../altrp-dropbar/AltrpDropbar"));
 import {
   getComponentByElementId,
   getHTMLElementById,
-  isEditor, isSSR,
+  isEditor,
   parseURLTemplate,
   printElements,
   renderAsset,
@@ -575,7 +574,6 @@ class ButtonWidget extends Component {
       url = parseURLTemplate(link_link.url || "", modelData);
     }
 
-    classes += this.classStateDisabled();
     let button = <button
       onClick={this.onClick}
       className={classes}

@@ -460,10 +460,19 @@ export function advancedTabControllers(element) {
     label: 'Disabled for ...',
   });
 
+  element.addControl('disabled_enable', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Enable',
+    responsive: false,
+  });
+
   element.addControl('conditional_disabled_choose', {
     type: CONTROLLER_SELECT,
     label: 'Authorize Condition',
     responsive: false,
+    conditions: {
+      'disabled_enable': true,
+    },
     options: [
       {
         label: 'all',
@@ -484,6 +493,7 @@ export function advancedTabControllers(element) {
     type: CONTROLLER_SELECT2,
     label: 'User has Roles',
     conditions: {
+      'disabled_enable': true,
       'conditional_disabled_choose': 'auth',
     },
     options_resource: '/admin/ajax/role_options?value=name',
@@ -497,6 +507,7 @@ export function advancedTabControllers(element) {
     type: CONTROLLER_SELECT2,
     label: 'User has Permissions',
     conditions: {
+      'disabled_enable': true,
       'conditional_disabled_choose': 'auth',
     },
     options_resource: '/admin/ajax/permissions_options?value=name',
@@ -509,8 +520,10 @@ export function advancedTabControllers(element) {
   element.addControl('disabled_conditional_other', {
     type: CONTROLLER_SWITCHER,
     label: 'Other Conditions',
+    conditions: {
+      'disabled_enable': true,
+    },
     responsive: false,
-    default: false,
   });
 
   element.addControl('disabled_conditional_other_display', {
@@ -529,6 +542,7 @@ export function advancedTabControllers(element) {
     ],
     default: 'AND',
     conditions: {
+      'disabled_enable': true,
       'disabled_conditional_other': true,
     },
   });
@@ -544,6 +558,7 @@ export function advancedTabControllers(element) {
     type: CONTROLLER_SELECT,
     responsive: false,
     default: 'empty',
+
     options: CONDITIONS_OPTIONS,
   });
 
@@ -559,6 +574,7 @@ export function advancedTabControllers(element) {
     default: [
     ],
     conditions: {
+      'disabled_enable': true,
       'disabled_conditional_other': true,
     },
   });
@@ -578,10 +594,19 @@ export function advancedTabControllers(element) {
     label: 'Active when ...',
   });
 
+  element.addControl('active_enable', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Enable',
+    responsive: false,
+  });
+
   element.addControl('conditional_active_choose', {
     type: CONTROLLER_SELECT,
     label: 'Authorize Condition',
     responsive: false,
+    conditions: {
+      'active_enable': true,
+    },
     options: [
       {
         label: 'all',
@@ -602,6 +627,7 @@ export function advancedTabControllers(element) {
     type: CONTROLLER_SELECT2,
     label: 'User has Roles',
     conditions: {
+      'active_enable': true,
       'conditional_active_choose': 'auth',
     },
     options_resource: '/admin/ajax/role_options?value=name',
@@ -615,6 +641,7 @@ export function advancedTabControllers(element) {
     type: CONTROLLER_SELECT2,
     label: 'User has Permissions',
     conditions: {
+      'active_enable': true,
       'conditional_active_choose': 'auth',
     },
     options_resource: '/admin/ajax/permissions_options?value=name',
@@ -627,8 +654,10 @@ export function advancedTabControllers(element) {
   element.addControl('active_conditional_other', {
     type: CONTROLLER_SWITCHER,
     label: 'Other Conditions',
+    conditions: {
+      'active_enable': true,
+    },
     responsive: false,
-    default: false,
   });
 
   element.addControl('active_conditional_other_display', {
@@ -647,6 +676,7 @@ export function advancedTabControllers(element) {
     ],
     default: 'AND',
     conditions: {
+      'active_enable': true,
       'active_conditional_other': true,
     },
   });
@@ -677,6 +707,7 @@ export function advancedTabControllers(element) {
     default: [
     ],
     conditions: {
+      'active_enable': true,
       'active_conditional_other': true,
     },
   });

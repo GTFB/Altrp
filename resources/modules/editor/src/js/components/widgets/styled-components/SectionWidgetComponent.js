@@ -147,7 +147,7 @@ export default function SectionWidgetComponent(settings, childrenLength) {
   function altrpSectionHover() {
     let styles = '';
 
-    let backgroundColor, flexWrap, verticalAlign, gorizontalAlign, flexDirection, minHeight, overflow, borderStyle, borderWidth, borderColor, borderRadius, boxShadow;
+    let backgroundColor, borderStyle, borderWidth, borderColor, borderRadius, boxShadow;
 
     //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
 
@@ -157,67 +157,6 @@ export default function SectionWidgetComponent(settings, childrenLength) {
 
     if (backgroundColor) {
       styles += colorPropertyStyled(backgroundColor, 'background');
-    }
-
-    //Получаем значения flex-wrap из контроллера, обрабатываем и добавляем в styles
-
-    if (settings !== undefined) {
-      flexWrap = getResponsiveSetting(settings, 'layout_flex_wrap_content', ':hover');
-    }
-
-    if (flexWrap) {
-      styles += simplePropertyStyled(flexWrap, 'flex-wrap');
-    }
-
-    //Получаем значения vertical-align из контроллера, обрабатываем и добавляем в styles
-
-    if (settings !== undefined) {
-      verticalAlign = getResponsiveSetting(settings, 'layout_column_position', ':hover');
-    }
-
-    if (verticalAlign) {
-      styles += simplePropertyStyled(verticalAlign, 'align-content');
-      styles += simplePropertyStyled(verticalAlign, 'align-items');
-    }
-
-    //Получаем значения gorizontal-align из контроллера, обрабатываем и добавляем в styles
-
-    if (settings !== undefined) {
-      gorizontalAlign = getResponsiveSetting(settings, 'layout_justify_content', ':hover');
-    }
-
-    if (gorizontalAlign) {
-      styles += simplePropertyStyled(gorizontalAlign, 'justify-content');
-    }
-
-    //Получаем значения flex-direction из контроллера, обрабатываем и добавляем в styles
-
-    if (settings !== undefined) {
-      flexDirection = getResponsiveSetting(settings, 'layout_column_direction', ':hover');
-    }
-
-    if (flexDirection) {
-      styles += simplePropertyStyled(flexDirection, 'flex-direction');
-    }
-
-    //Получаем значения min-height из контроллера, обрабатываем и добавляем в styles
-
-    if (settings !== undefined) {
-      minHeight = getResponsiveSetting(settings, 'label_style_min_height', ':hover');
-    }
-
-    if (minHeight) {
-      styles += sizeStyled(minHeight, 'min-height');
-    }
-
-    //Получаем значения overflow из контроллера, обрабатываем и добавляем в styles
-
-    if (settings !== undefined) {
-      overflow = getResponsiveSetting(settings, 'layout_overflow', ':hover');
-    }
-
-    if (overflow) {
-      styles += simplePropertyStyled(overflow, 'overflow');
     }
 
     //Получаем значения border-style из контроллера, обрабатываем и добавляем в styles
