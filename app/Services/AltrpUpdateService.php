@@ -49,7 +49,11 @@ class AltrpUpdateService
     \Log::info(date('d.m.Y H:i:s') . " - Get Last Version | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
 
     $url = self::UPDATE_DOMAIN . 'download/' . ( $test ? self::TEST_PRODUCT_NAME : self::PRODUCT_NAME ) . '/' . $version;
-    $file = $this->client->get( $url )->getBody()->getContents();
+    try {
+      $file = $this->client->get( $url )->getBody()->getContents();
+    } catch (\Exception $e){
+      return false;
+    }
 
     \Log::info(date('d.m.Y H:i:s') . " - Download Last Version | User Id: " . \Auth::user()->id . " | User Ip: " . $_SERVER['REMOTE_ADDR'] . " | Method:" . __METHOD__);
 
@@ -162,6 +166,9 @@ class AltrpUpdateService
     }
     if( File::exists( public_path( 'modules' ) ) ){
       File::cleanDirectory( public_path( 'modules' ) );
+    }
+    if( File::exists( base_path( 'server-dist' ) ) ){
+      File::cleanDirectory( base_path( 'server-dist' ) );
     }
     clearAllCache();
     return $archive->extractTo( base_path() );

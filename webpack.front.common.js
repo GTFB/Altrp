@@ -3,6 +3,7 @@ const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const WebpackBuildNotifierPlugin = require("webpack-build-notifier");
 
 module.exports = {
   // entry: [
@@ -10,10 +11,9 @@ module.exports = {
   //     "./resources/modules/front-app/src/js/sw/sw.js",
   // ],
   entry: {
-    'front-app':"./resources/modules/front-app/src/index.js",
-    // 'sw': "./resources/modules/front-app/src/js/sw/sw.js",
+    "front-app": "./resources/modules/front-app/src/index.js",
+    "h-altrp": "./resources/modules/front-app/src/h-altrp.js"
   },
-
 
   // ],
   mode: "development",
@@ -21,7 +21,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /(node_modules|bower_components).*/,
         loader: "babel-loader",
         options: {
           presets: ["@babel/env", "@babel/preset-react"],
@@ -94,8 +94,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "editor/"),
     publicPath: "http://localhost:3001/src/",
-    chunkFilename: "[contenthash].[name].bundle.js",
-    filename: "bundle.[name].js",
+    chunkFilename: "[name].[contenthash].bundle.js",
+    filename: "bundle.[name].js"
   },
   devServer: {
     contentBase: path.join(__dirname, "resources/modules/front-app/public/"),
@@ -111,7 +111,14 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new CleanWebpackPlugin()
+    new CleanWebpackPlugin(),
+    new webpack.DefinePlugin({
+      "process.env": "{}",
+      global: {}
+    }),
+    new WebpackBuildNotifierPlugin({
+      title: "Editor"
+    })
     // new ExtractTextPlugin('style.css'),
     // new MiniCssExtractPlugin({
     //   // Options similar to the same options in webpackOptions.output

@@ -1,5 +1,11 @@
 import { getCurrentScreen, getElementState } from "./store/store";
 import CONSTANTS from "./consts";
+const {
+  uniqueNamesGenerator,
+  adjectives,
+  colors,
+  animals
+} = require("unique-names-generator");
 
 export function getTemplateId() {
   return new URL(window.location).searchParams.get("template_id");
@@ -70,6 +76,28 @@ export function deleteCurrentElementByID(elementID) {
   return false;
 }
 
+export function createGlobalColor() {
+  const randomName = uniqueNamesGenerator({
+    dictionaries: [adjectives, colors, animals],
+    separator: "",
+    style: "capital"
+  });
+  const color = `rgba(255, 255, 255, 1)`;
+  const colorPickedHex = "#FFFFFF";
+  const colorRGB = {
+    r: 255,
+    g: 255,
+    b: 255,
+    a: 1
+  };
+  return {
+    name: randomName,
+    color: color,
+    colorPickedHex: colorPickedHex,
+    colorRGB: colorRGB
+  };
+}
+
 /**
  * @return {TemplateDataStorage}
  * */
@@ -119,7 +147,7 @@ export function iconsManager() {
  */
 export function getElementSettingsSuffix(controller, ignoreResponse = false) {
   let suffix_1 = getElementState().value;
-  if (controller.type === "repeater") {
+  if (controller.type === "repeater" || controller.isStateless()) {
     suffix_1 = "";
   }
   let suffix_2 =
@@ -132,7 +160,7 @@ export function getElementSettingsSuffix(controller, ignoreResponse = false) {
   if (!(suffix_2 || suffix_1)) {
     return "";
   }
-  return `_${controller.stateless ? "" : getElementState().value}_${suffix_2}`;
+  return `_${suffix_1}_${suffix_2}`;
 }
 
 /**

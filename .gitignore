@@ -5,6 +5,8 @@ launch.json
 /public/storage
 /server-dist
 /storage/*.key
+/storage/document
+
 /vendor
 .env
 .env.backup
@@ -18,6 +20,7 @@ yarn-error.log
 storage/installed
 s.sql
 modules_statuses.json
+.babelrc
 
 # IDE helpers
 /config/ide-helper.php
@@ -41,12 +44,14 @@ _ide_helper.php
 /routes/AltrpChannels.php
 /routes/page_routes.php
 /out
-/app/Http/Requests/AltrpRequests
 /app/Plugins/*/
 /Modules/*/
 /app/Plugins/plugins.json
 public/modules/
 /config/telebot.php
+.babelrc
+webpack.editor.common.js
+webpack.front.common.js
 =======
 
 #bundles
@@ -56,4 +61,6 @@ public/modules/front-app
 public/modules/editor
 public/modules/reports
 public/modules/reports-new
-/routes/AltrpCustomRoutes.php
+
+package-lock.json
+yarn.lock

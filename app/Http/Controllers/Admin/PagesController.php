@@ -62,12 +62,13 @@ class PagesController extends Controller
    * Store a newly created resource in storage.
    *
    * @param  \Illuminate\Http\Request $request
-   * @return \Illuminate\Http\Response
+   * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
    */
   public function store( Request $request )
   {
     $res = [ 'success' => false, ];
     $page = new Page( $request->toArray() );
+
     $page->author = auth()->user()->id;
     $page->content = '';
     $page->guid = (string)Str::uuid();
@@ -91,7 +92,7 @@ class PagesController extends Controller
       $page->parseRoles( (array)$request->get( 'roles' ) );
       return response()->json( $res );
     }
-    $res['message'] = 'Page not saved';
+    $res['message'] = 'Page not Saved';
     return response()->json( $res, 500 );
   }
 
@@ -106,7 +107,7 @@ class PagesController extends Controller
     //
     $page = Page::find( $id );
     if ( $page ) {
-//      $page->template_id = $page->get_content_template() ? $page->get_content_template()->id : null;
+      $page->template_id = $page->get_content_template() ? $page->get_content_template()->id : null;
       $page->roles = $page->getRoles();
     }
     return response()->json( $page->toArray() );
@@ -150,6 +151,7 @@ class PagesController extends Controller
     $page->seo_title = $request->seo_title;
     $page->is_cached = $request->is_cached;
     $page->not_found = $request->not_found;
+    $page->icon = $request->icon;
     $page->sections_count = $request->sections_count;
     $res['page'] = $page->toArray();
 

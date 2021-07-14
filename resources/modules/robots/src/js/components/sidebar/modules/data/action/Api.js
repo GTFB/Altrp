@@ -36,17 +36,17 @@ export default class Api extends Component{
     render(){
         const source = this.props.selectNode?.data?.props?.nodeData?.data?.source ?? '';
         const {sourceOptions} = this.state;
-        const method = this.props.selectNode?.data?.props?.nodeData?.data?.method ?? '';;
+        const method = this.props.selectNode?.data?.props?.nodeData?.data?.method ?? '';
         const methodOptions = [
             {label:'GET', value: 'get'},
             {label:'POST', value: 'post'},
             {label:'PUT', value: 'put'},
             {label:'DELETE', value: 'delete'},
         ];
-        const name = this.props.selectNode?.data?.props?.nodeData?.data?.name ?? '';;
-        const url = this.props.selectNode?.data?.props?.nodeData?.data?.url ?? '';;
-        const headers = this.props.selectNode?.data?.props?.nodeData?.data?.headers ?? '';;
-        const data = this.props.selectNode?.data?.props?.nodeData?.data?.data ?? '';;
+        const name = this.props.selectNode?.data?.props?.nodeData?.data?.name ?? '';
+        const url = this.props.selectNode?.data?.props?.nodeData?.data?.url ?? '';
+        const headers = this.props.selectNode?.data?.props?.nodeData?.data?.headers ?? '';
+        const data = this.props.selectNode?.data?.props?.nodeData?.data?.data ?? '';
 
     return <div>
         <div className={"settings-section " + (this.props.activeSection === "api" ? '' : 'open')}>

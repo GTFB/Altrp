@@ -478,9 +478,6 @@ class Nav extends BaseElement {
           value: 'flex-end',
         },
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-nav-menu-dropdown-wrapper': "justify-content: {{VALUE}}",
-      },
     });
 
     this.endControlSection();
@@ -551,28 +548,12 @@ class Nav extends BaseElement {
           family: "Open Sans",
           decoration: ""
         },
-        rules: {
-          '{{ELEMENT}} .altrp-nav-menu-li-link-label{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
       }
     );
 
     this.addControl("text_color_main_menu_style", {
       type: CONTROLLER_COLOR,
       label: "Text color",
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}}": "color: {{COLOR}};",
-        "{{ELEMENT}} .altrp-nav-menu-li-link-label{{STATE}}": "color: {{COLOR}};",
-      }
     });
 
     this.addControl("horizontal_padding_main_menu_style", {
@@ -584,12 +565,6 @@ class Nav extends BaseElement {
       },
       max: 50,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}}": [
-          "padding-left: {{SIZE}}{{UNIT}}",
-          "padding-right: {{SIZE}}{{UNIT}}"
-        ]
-      }
     });
 
     this.addControl("vertical_padding_main_menu_style", {
@@ -601,12 +576,6 @@ class Nav extends BaseElement {
       },
       max: 50,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}}": [
-          "padding-top: {{SIZE}}{{UNIT}}",
-          "padding-bottom: {{SIZE}}{{UNIT}}"
-        ]
-      }
     });
 
     this.addControl("space_between_main_menu_style", {
@@ -618,11 +587,6 @@ class Nav extends BaseElement {
       },
       max: 100,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li{{STATE}}": [
-          "margin-right: {{SIZE}}{{UNIT}}",
-        ]
-      }
     });
 
     this.addControl("dropdown_indicator_space_main_menu_style", {
@@ -634,11 +598,6 @@ class Nav extends BaseElement {
       },
       max: 50,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}} .altrp-nav-menu-li-link-icon": [
-          "margin-left: {{SIZE}}{{UNIT}}",
-        ]
-      }
     });
 
     this.addControl("pointer_heading_main_menu_style", {
@@ -653,14 +612,6 @@ class Nav extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-overline{{STATE}}::before": "background: {{COLOR}};",
-        "{{ELEMENT}} .altrp-nav-menu-li-underLine{{STATE}}::after": "background: {{COLOR}};",
-        "{{ELEMENT}} .altrp-nav-menu-li-doubleLine{STATE}}::before": "background: {{COLOR}};",
-        "{{ELEMENT}} .altrp-nav-menu-li-framed{STATE}}::before, .altrp-nav-menu-li-framed{STATE}}::after": "background: {{COLOR}};",
-        "{{ELEMENT}} .altrp-nav-menu-li-background:hover": "background: {{COLOR}};",
-        "{{ELEMENT}} .altrp-nav-menu-li-animation-text:hover altrp-nav-menu-li-link-label": "color: {{COLOR}};"
-      }
     });
 
     this.addControl("pointer_height_main_menu_style", {
@@ -672,14 +623,6 @@ class Nav extends BaseElement {
       },
       max: 30,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-underline:after": "height: {{SIZE}}{{UNIT}};",
-        "{{ELEMENT}} .altrp-nav-menu-li-overline:before": "height: {{SIZE}}{{UNIT}};",
-        "{{ELEMENT}} .altrp-nav-menu-li-doubleLine:before": "height: {{SIZE}}{{UNIT}};",
-        "{{ELEMENT}} .altrp-nav-menu-li-doubleLine:after": "height: calc({{SIZE}}{{UNIT}} * 2);",
-        "{{ELEMENT}} .altrp-nav-menu-li-framed:hover:after": "border-width: 0 {{SIZE}}{{UNIT}} {{SIZE}}{{UNIT}} 0;",
-        "{{ELEMENT}} .altrp-nav-menu-li-framed:hover:before": "border-width: {{SIZE}}{{UNIT}} 0 0 {{SIZE}}{{UNIT}};",
-      }
     });
 
     this.addControl("chevron_heading_main_menu_style", {
@@ -699,9 +642,6 @@ class Nav extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}} path": "fill: {{COLOR}};"
-      }
     });
 
     this.addControl("stroke_chevron_main_menu_style", {
@@ -711,9 +651,6 @@ class Nav extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}} path": "stroke: {{COLOR}};"
-      }
     });
 
     this.addControl("size_chevron_main_menu_style", {
@@ -722,12 +659,6 @@ class Nav extends BaseElement {
       units: ["px", "%", "vh"],
       max: 100,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}} svg": [
-          "height: {{SIZE}}{{UNIT}}",
-          "width: {{SIZE}}{{UNIT}}"
-        ]
-      }
     });
 
     this.addControl("chevron_rotate_main_menu_style", {
@@ -740,9 +671,6 @@ class Nav extends BaseElement {
       units: ["px", "%", "vh"],
       max: 360,
       min: -360,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link{{STATE}} .altrp-nav-menu-li-link-icon": "transform: rotate({{SIZE}}deg)"
-      }
     });
 
     this.addControl("chevron_rotate_dropdown_main_menu_style", {
@@ -754,10 +682,6 @@ class Nav extends BaseElement {
       },
       max: 360,
       min: -360,
-      rules: {
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon": "transform: rotate({{SIZE}}deg)",
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon": "transform: rotate({{SIZE}}deg)"
-      }
     });
 
     this.endControlSection();
@@ -834,18 +758,6 @@ class Nav extends BaseElement {
           family: "Open Sans",
           decoration: ""
         },
-        rules: {
-          '.{{ID}}-altrp-portal .altrp-nav-menu-li-dropdown-hor-ver-link-label{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
       }
     );
 
@@ -856,12 +768,6 @@ class Nav extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}} .altrp-nav-menu-li-dropdown-hor-ver-link-label": "color: {{COLOR}};",
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon path": [
-          "stroke: {{COLOR}};",
-        ]
-      }
     });
 
     this.addControl("background_color_dropdown_hor_ver_menu_section", {
@@ -871,9 +777,6 @@ class Nav extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}}": "background: {{COLOR}};"
-      }
     });
 
     this.addControl("width_dropdown_hor_ver_menu_section", {
@@ -884,9 +787,6 @@ class Nav extends BaseElement {
       },
       max: 300,
       min: 0,
-      rules: {
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li{{STATE}}": "width: {{SIZE}}{{UNIT}}"
-      }
     });
 
     this.addControl('border_type_dropdown_hor_ver_menu_section', {
@@ -918,9 +818,6 @@ class Nav extends BaseElement {
             'label': 'Groove',
           },
         ],
-        rules: {
-          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
-        },
       }
     );
 
@@ -935,9 +832,6 @@ class Nav extends BaseElement {
           '%',
           'vh',
         ],
-        rules: {
-          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-        },
       }
     );
 
@@ -947,9 +841,6 @@ class Nav extends BaseElement {
         default: {
           color: "",
           colorPickedHex: "",
-        },
-        rules: {
-          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}': 'border-color: {{COLOR}};',
         },
       }
     );
@@ -965,46 +856,8 @@ class Nav extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"],
-      rules: {
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li:first-child{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} 0 0",
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li:last-child{{STATE}}": "border-radius: 0 0 {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
-      }
     });
 
-    // this.addControl("horizontal_padding_dropdown_hor_ver_menu_section", {
-    //   type: CONTROLLER_SLIDER,
-    //   label: 'Horizontal padding',
-    //   default:{
-    //     size: "15",
-    //     unit: 'px',
-    //   },
-    //   max: 50,
-    //   min: 0,
-    //   rules: {
-    //     "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
-    //       "padding-left: {{SIZE}}{{UNIT}}",
-    //       "padding-right: {{SIZE}}{{UNIT}}"
-    //     ]
-    //   }
-    // });
-    //
-    // this.addControl("vertical_padding_dropdown_hor_ver_menu_section", {
-    //   type: CONTROLLER_SLIDER,
-    //   label: 'Vertical padding',
-    //   default:{
-    //     size: "10",
-    //     unit: 'px',
-    //   },
-    //   max: 50,
-    //   min: 0,
-    //   rules: {
-    //     "{{ELEMENT}} .altrp-nav-menu-ul-dropdown-hor-ver-li-link{{STATE}}": [
-    //       "padding-top: {{SIZE}}{{UNIT}}",
-    //       "padding-bottom: {{SIZE}}{{UNIT}}"
-    //     ]
-    //   }
-    // });
 
     this.addControl("submenu_indicator_space_main_menu_style", {
       type: CONTROLLER_SLIDER,
@@ -1015,9 +868,6 @@ class Nav extends BaseElement {
       },
       max: 50,
       min: 0,
-      rules: {
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li-link-icon{{STATE}}": "margin-left: {{SIZE}}{{UNIT}}",
-      }
     });
 
     this.addControl("distance_dropdown_hor_ver_menu_section", {
@@ -1029,9 +879,6 @@ class Nav extends BaseElement {
       },
       max: 100,
       min: -100,
-      rules: {
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver{{STATE}}": "margin-top: {{SIZE}}{{UNIT}}"
-      }
     });
 
     this.addControl("heading_submenu_dropdown_hor_ver_menu_section", {
@@ -1050,18 +897,6 @@ class Nav extends BaseElement {
           family: "Open Sans",
           decoration: ""
         },
-        rules: {
-          '.{{ID}}-altrp-portal .altrp-nav-menu-li-dropdown-children-hor-ver-link-label{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-sefir;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
       }
     );
 
@@ -1072,12 +907,6 @@ class Nav extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}} .altrp-nav-menu-li-dropdown-children-hor-ver-link-label": "color: {{COLOR}};",
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li-link-icon path": [
-          "stroke: {{COLOR}};",
-        ]
-      }
     });
 
     this.addControl("background_color_submenu_dropdown_hor_ver_menu_section", {
@@ -1087,9 +916,6 @@ class Nav extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-      rules: {
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}}": "background: {{COLOR}};"
-      }
     });
 
     this.addControl("width_submenu_dropdown_hor_ver_menu_section", {
@@ -1100,9 +926,6 @@ class Nav extends BaseElement {
       },
       max: 300,
       min: 0,
-      rules: {
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li{{STATE}}": "width: {{SIZE}}{{UNIT}}"
-      }
     });
 
     this.addControl('border_type_submenu_dropdown_hor_ver_menu_section', {
@@ -1134,9 +957,6 @@ class Nav extends BaseElement {
             'label': 'Groove',
           },
         ],
-        rules: {
-          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-style: {{VALUE}};',
-        },
       }
     );
 
@@ -1151,9 +971,6 @@ class Nav extends BaseElement {
           '%',
           'vh',
         ],
-        rules: {
-          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-        },
       }
     );
 
@@ -1163,9 +980,6 @@ class Nav extends BaseElement {
         default: {
           color: "",
           colorPickedHex: "",
-        },
-        rules: {
-          '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}': 'border-color: {{COLOR}};',
         },
       }
     );
@@ -1181,47 +995,7 @@ class Nav extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"],
-      rules: {
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-only{{STATE}} .altrp-nav-menu-ul-dropdown-children-hor-ver-li": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li:first-child": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} 0 0",
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-li:last-child": "border-radius: 0 0 {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
-      }
     });
-
-    // this.addControl("horizontal_padding_submenu_dropdown_hor_ver_menu_section", {
-    //   type: CONTROLLER_SLIDER,
-    //   label: 'Horizontal padding',
-    //   default:{
-    //     size: "15",
-    //     unit: 'px',
-    //   },
-    //   max: 50,
-    //   min: 0,
-    //   rules: {
-    //     "{{ELEMENT}} .altrp-nav-menu-li-dropdown-children-hor-ver-li-link{{STATE}}": [
-    //       "padding-left: {{SIZE}}{{UNIT}}",
-    //       "padding-right: {{SIZE}}{{UNIT}}"
-    //     ]
-    //   }
-    // });
-    //
-    // this.addControl("vertical_submenu_dropdown_hor_ver_menu_section", {
-    //   type: CONTROLLER_SLIDER,
-    //   label: 'Vertical padding',
-    //   default:{
-    //     size: "10",
-    //     unit: 'px',
-    //   },
-    //   max: 50,
-    //   min: 0,
-    //   rules: {
-    //     "{{ELEMENT}} .altrp-nav-menu-li-dropdown-children-hor-ver-li-link{{STATE}}": [
-    //       "padding-top: {{SIZE}}{{UNIT}}",
-    //       "padding-bottom: {{SIZE}}{{UNIT}}"
-    //     ]
-    //   }
-    // });
 
     this.addControl("distance_submenu_dropdown_hor_ver_menu_section", {
       type: CONTROLLER_SLIDER,
@@ -1232,9 +1006,6 @@ class Nav extends BaseElement {
       },
       max: 100,
       min: -100,
-      rules: {
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver{{STATE}}": "margin-right: {{SIZE}}{{UNIT}}"
-      }
     });
 
     this.addControl("heading_divider_dropdown_hor_ver_menu_section", {
@@ -1269,9 +1040,6 @@ class Nav extends BaseElement {
           label: 'dashed'
         }
       ],
-      rules: {
-        '.{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li-divider': 'border-top-style: {{VALUE}}'
-      },
     });
 
     this.addControl("height_divider_dropdown_hor_ver_menu_section", {
@@ -1283,11 +1051,6 @@ class Nav extends BaseElement {
       },
       max: 100,
       min: 0,
-      rules: {
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li-divider{{STATE}}": "border-top-width: {{SIZE}}{{UNIT}}",
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-hor-ver-li:last-child .altrp-nav-menu-ul-dropdown-hor-ver-li-divider": "border-top: none",
-        ".{{ID}}-altrp-portal .altrp-nav-menu-ul-dropdown-children-hor-ver-ul .altrp-nav-menu-ul-dropdown-children-hor-ver-li:last-child .altrp-nav-menu-ul-dropdown-hor-ver-li-divider": "border-top: none"
-      }
     });
 
     this.endControlSection();
@@ -1309,33 +1072,21 @@ class Nav extends BaseElement {
         color: "rgb(54,54,54)",
         colorPickedHex: "#363636",
       },
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link-label-dropdown{{STATE}}": "color: {{COLOR}};"
-      }
     });
 
     this.addControl("background_color_dropdown_menu_section", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-dropdown{{STATE}}": "background-color: {{COLOR}};"
-      }
     });
 
     this.addControl("background_color_sub_dropdown_menu_section", {
       type: CONTROLLER_COLOR,
       label: "Background color sub",
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-sub{{STATE}}": "background-color: {{COLOR}};"
-      }
     });
 
     this.addControl("color_sub_dropdown_menu_section", {
       type: CONTROLLER_COLOR,
       label: "Text color sub",
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-sub{{STATE}}": "color: {{COLOR}};"
-      }
     });
 
     this.addControl('typographic_dropdown_menu_section', {
@@ -1349,18 +1100,6 @@ class Nav extends BaseElement {
           family: "Open Sans",
           decoration: ""
         },
-        rules: {
-          '{{ELEMENT}} .altrp-nav-menu-li-link-label-dropdown': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
       }
     );
 
@@ -1372,9 +1111,6 @@ class Nav extends BaseElement {
       ],
       max: 100,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link-dropdown{{STATE}}": ["padding-left: {{SIZE}}{{UNIT}}", "padding-right: {{SIZE}}{{UNIT}}"]
-      }
     });
 
     this.addControl("vertical_padding_dropdown_menu_section", {
@@ -1385,9 +1121,6 @@ class Nav extends BaseElement {
       ],
       max: 100,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link-dropdown{{STATE}}": ["padding-top: {{SIZE}}{{UNIT}}", "padding-bottom: {{SIZE}}{{UNIT}}"]
-      }
     });
 
     this.addControl("divider_heading_dropdown_menu_section", {
@@ -1425,17 +1158,11 @@ class Nav extends BaseElement {
           label: "Groove"
         }
       ],
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-dropdown-s-content-divider{{STATE}}": "border-top-style: {{VALUE}};"
-      }
     });
 
     this.addControl("divider_color_dropdown_menu_section", {
       type: CONTROLLER_COLOR,
       label: "Color",
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-dropdown-s-content-divider{{STATE}}": "border-top-color: {{COLOR}};"
-      }
     });
 
     this.addControl("divider_width_dropdown_menu_section", {
@@ -1446,9 +1173,6 @@ class Nav extends BaseElement {
       ],
       max: 50,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-dropdown-s-content-divider{{STATE}}": "border-top-width: {{SIZE}}{{UNIT}}"
-      }
     });
 
     this.addControl("chevron_heading_dropdown_menu_section", {
@@ -1469,23 +1193,11 @@ class Nav extends BaseElement {
       ],
       max: 100,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link-chevron-dropdown{{STATE}}": [
-          "width: {{SIZE}}{{UNIT}}",
-          "height: {{SIZE}}{{UNIT}}"
-        ]
-      }
     });
 
     this.addControl("chevron_color_dropdown_menu_section", {
       type: CONTROLLER_COLOR,
       label: "Color",
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link-chevron-dropdown{{STATE}} path": [
-          "fill: {{COLOR}};",
-          "stroke: {{COLOR}}"
-        ]
-      }
     });
 
     this.addControl("chevron_rotate_dropdown_menu_section", {
@@ -1500,9 +1212,6 @@ class Nav extends BaseElement {
       ],
       max: 360,
       min: -360,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link-chevron-dropdown{{STATE}}": "transform: rotate({{SIZE}}deg)",
-      }
     });
 
     this.addControl("chevron_active_rotate_dropdown_menu_section", {
@@ -1517,9 +1226,6 @@ class Nav extends BaseElement {
       ],
       max: 360,
       min: -360,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-li-link-active-chevron-dropdown{{STATE}}": "transform: rotate({{SIZE}}deg)",
-      }
     });
 
     this.addControl("toggle_button_heading_dropdown_menu_section", {
@@ -1530,25 +1236,16 @@ class Nav extends BaseElement {
     this.addControl("color_toggle_button_fill_dropdown_menu_section", {
       type: CONTROLLER_COLOR,
       label: "Color fill",
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}} svg path": "fill: {{COLOR}};"
-      }
     });
 
     this.addControl("color_toggle_button_stroke_dropdown_menu_section", {
       type: CONTROLLER_COLOR,
       label: "Color stroke",
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}} svg path": "stroke: {{COLOR}}"
-      }
     });
 
     this.addControl("background_color_toggle_button_dropdown_menu_section", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}}": "background-color: {{COLOR}};"
-      }
     });
 
     this.addControl("size_toggle_button_dropdown_menu_section", {
@@ -1562,12 +1259,6 @@ class Nav extends BaseElement {
       ],
       max: 100,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}} svg": [
-          "height: {{SIZE}}{{UNIT}}",
-          "width: {{SIZE}}{{UNIT}}"
-        ]
-      }
     });
 
     this.addControl('padding_toggle_button_dropdown_menu_section', {
@@ -1582,14 +1273,6 @@ class Nav extends BaseElement {
         '%',
         'vh',
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}}': [
-          'padding-top: {{TOP}}{{UNIT}};',
-          'padding-right: {{RIGHT}}{{UNIT}};',
-          'padding-bottom: {{BOTTOM}}{{UNIT}};',
-          'padding-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
     });
 
     this.addControl("border_type_toggle_button_dropdown_menu_section", {
@@ -1621,19 +1304,12 @@ class Nav extends BaseElement {
           label: "Groove"
         }
       ],
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}}": "border-style: {{VALUE}};"
-      }
     });
 
     this.addControl("border_width_toggle_button_dropdown_menu_section", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-      }
     });
 
     this.addControl("border_color_toggle_button_dropdown_menu_section", {
@@ -1641,9 +1317,6 @@ class Nav extends BaseElement {
       label: "Border color",
       default: {
       },
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}}": "border-color: {{COLOR}};"
-      }
     });
 
     this.addControl("border_radius_toggle_button_dropdown_menu_section", {
@@ -1657,9 +1330,6 @@ class Nav extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}} .altrp-nav-menu-dropdown-button{{STATE}}": "border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}",
-      }
     });
 
     this.endControlSection();
@@ -1682,12 +1352,6 @@ class Nav extends BaseElement {
       units: ["px", "%", "vh"],
       max: 20,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-breadcrumbs-label{{STATE}}": [
-          "padding-left: {{SIZE}}{{UNIT}}",
-          "padding-right: {{SIZE}}{{UNIT}}"
-        ],
-      }
     });
 
     this.addControl('breadcrumbs_style_alignment', {
@@ -1708,9 +1372,6 @@ class Nav extends BaseElement {
           value: 'flex-end',
         }
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-nav-breadcrumbs': 'justify-content: {{VALUE}};',
-      },
     });
 
     this.addControl('breadcrumbs_style_vertical_alignment', {
@@ -1731,9 +1392,6 @@ class Nav extends BaseElement {
           value: 'flex-end',
         }
       ],
-      rules: {
-        '{{ELEMENT}} .altrp-nav-breadcrumbs': 'align-items: {{VALUE}};',
-      },
     });
 
     this.endControlSection();
@@ -1757,18 +1415,6 @@ class Nav extends BaseElement {
           family: "Open Sans",
           decoration: ""
         },
-        rules: {
-          '{{ELEMENT}} .altrp-nav-breadcrumbs-link{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
       }
     );
 
@@ -1780,9 +1426,6 @@ class Nav extends BaseElement {
         colorPickedHex: "#274BC8",
       },
       presetColors: ["#eaeaea", "#9c18a8"],
-      rules: {
-        "{{ELEMENT}} .altrp-nav-breadcrumbs-link{{STATE}}": "color: {{COLOR}};",
-      }
     });
 
     this.addControl("breadcrumbs_links_visited_style_color", {
@@ -1793,9 +1436,6 @@ class Nav extends BaseElement {
         colorPickedHex: "#274BC8",
       },
       presetColors: ["#eaeaea", "#9c18a8"],
-      rules: {
-        "{{ELEMENT}} .altrp-nav-breadcrumbs-link:visited": "color: {{COLOR}};"
-      }
     });
 
     this.endControlSection();
@@ -1819,28 +1459,6 @@ class Nav extends BaseElement {
         family: "Open Sans",
         decoration: ""
       },
-      rules: {
-        '{{ELEMENT}} .altrp-nav-breadcrumbs-separator-default{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-        '{{ELEMENT}} .altrp-nav-breadcrumbs-separator-text{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
     });
 
     this.addControl("breadcrumbs_separator_style_color", {
@@ -1851,11 +1469,6 @@ class Nav extends BaseElement {
         colorPickedHex: "",
       },
       presetColors: ["#eaeaea", "#9c18a8"],
-      rules: {
-        "{{ELEMENT}} .altrp-nav-breadcrumbs-separator-default{{STATE}}": "color: {{COLOR}};",
-        "{{ELEMENT}} .altrp-nav-breadcrumbs-separator-text{{STATE}}": "color: {{COLOR}};",
-        "{{ELEMENT}} .altrp-nav-breadcrumbs-separator-icon{{STATE}} svg path": "fill: {{COLOR}};",
-      }
     });
 
     this.addControl("breadcrumbs_separator_stroke_style_color", {
@@ -1869,9 +1482,6 @@ class Nav extends BaseElement {
         colorPickedHex: "",
       },
       presetColors: ["#eaeaea", "#9c18a8"],
-      rules: {
-        "{{ELEMENT}} .altrp-nav-breadcrumbs-separator-icon{{STATE}} svg": "stroke: {{COLOR}};",
-      }
     });
 
     this.addControl("breadcrumbs_separator_icon_width_style", {
@@ -1889,12 +1499,6 @@ class Nav extends BaseElement {
       ],
       max: 50,
       min: 0,
-      rules: {
-        "{{ELEMENT}} .altrp-nav-breadcrumbs-separator-icon svg{{STATE}}": [
-          "height: {{SIZE}}{{UNIT}};",
-          "width: {{SIZE}}{{UNIT}};",
-        ]
-      }
     });
 
     this.endControlSection();
@@ -1918,18 +1522,6 @@ class Nav extends BaseElement {
           family: "Open Sans",
           decoration: ""
         },
-        rules: {
-          '{{ELEMENT}} .altrp-nav-breadcrumbs-current{{STATE}}': [
-            'font-family: "{{FAMILY}}", sans-serif;',
-            'font-size: {{SIZE}}px;',
-            'line-height: {{LINEHEIGHT}};',
-            'letter-spacing: {{SPACING}}px',
-            'font-weight: {{WEIGHT}}',
-            'text-transform: {{TRANSFORM}}',
-            'font-style: {{STYLE}}',
-            'text-decoration: {{DECORATION}}'
-          ],
-        },
       }
     );
 
@@ -1941,9 +1533,6 @@ class Nav extends BaseElement {
         colorPickedHex: "",
       },
       presetColors: ["#eaeaea", "#9c18a8"],
-      rules: {
-        "{{ELEMENT}} .altrp-nav-breadcrumbs-current{{STATE}}": "color: {{COLOR}};"
-      }
     });
 
     this.endControlSection();

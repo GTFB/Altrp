@@ -7,6 +7,7 @@ import {
 } from "../helpers";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {addFont} from "../store/fonts-storage/actions";
+import {addSettings} from "../store/elements-settings/actions";
 
 class FrontElement {
 
@@ -55,6 +56,9 @@ class FrontElement {
      *  * @type {array}
      */
     this.modelsList = []
+    if(this.getId()){
+        appStore.dispatch(addSettings(this.getId(), this.getName(), {...this.settings}, this?.children?.length || 0))
+    }
   }
 
   /**
@@ -98,7 +102,8 @@ class FrontElement {
     if (this.getType() === type){
       return this;
     }
-    if(!this.parent){
+    if(! this.parent){
+      return null;
       // console.log(type);
       // console.log(this);
     }
@@ -149,7 +154,7 @@ class FrontElement {
     /**
      * @member {ActionsManager|*} actionsManager
      */
-    const actionsManager = (await import('./modules/ActionsManager.js')).default;
+    const actionsManager = (await import(/* webpackChunkName: 'ActionsManager' */'./modules/ActionsManager.js')).default;
     switch (this.getName()){
       case 'button':{
         actionsManager.registerWidgetActions(this.getIdForAction(), this.getSettings('actions', []), 'click', this);
@@ -176,7 +181,7 @@ class FrontElement {
       return
     }
     this.formsIsInit = true;
-    let formsManager = await import('../../../../editor/src/js/classes/modules/FormsManager.js');
+    let formsManager = await import(/* webpackChunkName: 'FormsManager' */'../../../../editor/src/js/classes/modules/FormsManager.js');
     formsManager = formsManager.default;
 
     switch (this.getName()) {
@@ -266,6 +271,10 @@ class FrontElement {
     return this.children;
   }
 
+  /**
+   *
+   * @returns {string}
+   */
   getId(){
     return this.id;
   }
@@ -286,10 +295,18 @@ class FrontElement {
     return id;
   }
 
+  /**
+   *
+   * @returns {string}
+   */
   getName(){
     return this.name;
   }
 
+  /**
+   *
+   * @returns {string}
+   */
   getType(){
     return this.type;
   }
@@ -645,6 +662,9 @@ class FrontElement {
    */
   hasCardModel(){
     let rootElement = this.getRoot();
+    if(! rootElement){
+      return false;
+    }
     return ! ! (rootElement.cardModel && rootElement.isCard)
   }
   /**

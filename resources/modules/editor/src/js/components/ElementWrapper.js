@@ -1,13 +1,4 @@
 import CKEditor from "./ckeditor/CKeditor";
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import {
-  editorSetCurrentElement,
-  getEditor,
-  getFactory,
-  getTemplateDataStorage,
-  topOrBottomHover
-} from "../helpers";
 import EditIcon from "../../svgs/edit.svg";
 import DotsIcon from "../../svgs/dots_section.svg";
 import ColumnIcon from "../../svgs/columns.svg";
@@ -16,17 +7,150 @@ import DuplicateIcon from "../../svgs/duplicate.svg";
 import CloseIcon from "../../svgs/close.svg";
 import store from "../store/store";
 import { START_DRAG, startDrag } from "../store/element-drag/actions";
-import { contextMenu } from "react-contexify/lib/index";
+import { contextMenu } from "react-contexify";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
 import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
-import CarouselComponent from "./widgets/styled-components/CarouselComponent";
-import ImageComponent from "./widgets/styled-components/ImageComponent";
-import ButtonComponent from "./widgets/styled-components/ButtonComponent";
-import DividerComponent from "./widgets/styled-components/DividerComponent";
-import AccordionComponent from "./widgets/styled-components/AccordionComponent";
-import GalleryComponent from "./widgets/styled-components/GalleryComponent";
-import TextComponent from "./widgets/styled-components/TextComponent";
+import NavComponent from "./widgets/styled-components/NavComponent";
 import Column from "../classes/elements/Column";
+import DiagramComponent from "./widgets/styled-components/DiagramComponent";
+import ButtonComponent from "./widgets/styled-components/ButtonComponent";
+import CarouselComponent from "./widgets/styled-components/CarouselComponent";
+import GalleryComponent from "./widgets/styled-components/GalleryComponent";
+import DividerComponent from "./widgets/styled-components/DividerComponent";
+import VideoComponent from "./widgets/styled-components/VideoComponent";
+import ListComponent from "./widgets/styled-components/ListComponent";
+import AccordionComponent from "./widgets/styled-components/AccordionComponent";
+import SectionWidgetComponent from "./widgets/styled-components/SectionWidgetComponent";
+import ColumnComponent from "./widgets/styled-components/ColumnComponents";
+import DropbarWidgetComponent from "./widgets/styled-components/DropbarWidgetComponent";
+import DashboardComponent from "./widgets/styled-components/DashboardComponent";
+import getImageStyles from "../../../../front-app/src/js/components/helpers/stylesForTheImage";
+import getTabsStyles from "../../../../front-app/src/js/components/helpers/stylesForTheTabs";
+import getMenuStyles from "../../../../front-app/src/js/components/helpers/stylesForTheMenu";
+import getBreadcrumbsStyles from "../../../../front-app/src/js/components/helpers/stylesForTheBreadcrumbs";
+import { getHeadingTypeHeadingStyles } from "../../../../front-app/src/js/components/helpers/stylesForTheHeadingTypeHeading";
+import { getHeadingTypeAnimatingStyles } from "../../../../front-app/src/js/components/helpers/stylesForTheHeadingTypeAnimating";
+import {getTextStyles} from "../../../../front-app/src/js/components/helpers/stylesForTheText";
+import {getTableStyles} from "../../../../front-app/src/js/components/helpers/stylesForTheTable";
+import {getPostsStyles} from "../../../../front-app/src/js/components/helpers/stylesForThePosts";
+import FormComponent from "./widgets/styled-components/FormComponent";
+import MapComponent from "./widgets/styled-components/MapComponent";
+import MapConstructorComponent from "./widgets/styled-components/MapConstructorComponent";
+import AdvancedComponent from "./widgets/styled-components/AdvancedComponent";
+import {getEditor, topOrBottomHover, editorSetCurrentElement} from "../helpers";
+const { connect } = window.reactRedux;
+
+const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, elementId, settings, element})=>{
+  let styles = '';
+  let prefix = "altrp-element";
+  switch (elementName) {
+    case "button":
+      styles += `.${prefix}${elementId} {${ButtonComponent(settings)}}`;
+      break;
+    case "carousel":
+      styles += `.${prefix}${elementId} {${CarouselComponent(settings)}}`;
+      break;
+    case "gallery":
+      styles += `.${prefix}${elementId} {${GalleryComponent(settings)}}`;
+      break;
+    case "divider":
+      styles += `.${prefix}${elementId} {${DividerComponent(settings)}}`;
+      break;
+    case "video":
+      styles += `.${prefix}${elementId} {${VideoComponent(settings)}}`;
+      break;
+    case "list":
+      styles += `.${prefix}${elementId} {${ListComponent(settings)}}`;
+      break;
+    case "accordion":
+      styles += `.${prefix}${elementId} {${AccordionComponent(settings)}}`;
+      break;
+    case "section":
+      styles += `.${prefix}${elementId} {${SectionWidgetComponent(settings, element.children.length)}}`;
+      break;
+    case "column":
+      styles += `.${prefix}${elementId} {${ColumnComponent(settings)}}`;
+      break;
+    case "dropbar":
+      styles += `.${prefix}${elementId} {${DropbarWidgetComponent(settings)}}`;
+      break;
+    case "dashboard":
+      styles+=`.${prefix}${elementId} {${DashboardComponent(settings)}}`;
+      break;
+    case "image":
+      styles+=getImageStyles(settings,elementId);
+      break;
+    case "tabs":
+      styles+=getTabsStyles(settings, elementId);
+      break;
+    case "menu":
+      styles+=getMenuStyles(settings,elementId);
+      break;
+    case "breadcrumbs":
+      styles+=getBreadcrumbsStyles(settings,elementId);
+      break;
+    case 'heading': {
+      styles += getHeadingTypeHeadingStyles(settings, elementId);
+    }
+      break;
+    case 'heading-type-animating': {
+      styles += getHeadingTypeAnimatingStyles(settings, elementId);
+    }
+      break;
+    case 'text': {
+      styles += getTextStyles(settings, elementId);
+    }
+      break;
+    case 'table': {
+      styles += getTableStyles(settings, elementId);
+    }
+      break;
+    case 'posts': {
+      styles += getPostsStyles(settings, elementId);
+    }
+      break;
+    case "input-select2": {
+
+      styles += `.${prefix}${elementId} {${FormComponent.FormComponent(
+        settings,
+        elementId
+      )}}`;
+      //select2 options style
+      styles += `${FormComponent.select2Options(settings, elementId)}}`;
+    }
+      break;
+    case "input-text":
+    case "input-password":
+    case "input-number":
+    case "input-date":
+    case "input-email":
+    case "input-tel":
+    case "input-file":
+    case "input-select":
+    case "input-image-select":
+    case "input-radio":
+    case "input-checkbox":
+    case "input-accept":
+    case "input-textarea":
+    case "input-wysiwyg": {
+      styles += `.${prefix}${elementId} {${FormComponent.FormComponent(
+        settings,
+        elementId
+      )}}`;
+    }
+      break;
+    case "map":
+      styles += `.${prefix}${elementId} {${MapComponent(settings)}}`;
+      break;
+    case "map_builder":
+      styles += `.${prefix}${elementId} {${MapConstructorComponent(settings)}}`;
+      break;
+  }
+  styles += `div.${prefix}${elementId}.${prefix}${elementId} {${AdvancedComponent(
+    settings
+  )}}`;
+  return styles;
+}}`
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -46,6 +170,8 @@ class ElementWrapper extends Component {
     this.onDragEnd = this.onDragEnd.bind(this);
     this.handleContext = this.handleContext.bind(this);
     this.wrapper = React.createRef();
+    this.elementId = this.props.element.getId();
+    props.element.wrapperComponent = this;
   }
   onDragLeave(e) {
     e.preventDefault();
@@ -372,36 +498,19 @@ class ElementWrapper extends Component {
       currentUser: this.props.currentUser,
       currentScreen: this.props.currentScreen,
       currentDataStorage: this.props.currentDataStorage,
+      globalStyles: this.props.globalStyles,
       fireAction: this.fireAction,
       CKEditor: CKEditor,
       wrapper: this
     };
-    // if(this.props.element.getType() !== 'root-element'){
-    //   delete elementProps.element;
-    // }
-    // console.error(performance.now());
+
     let WrapperComponent = "div";
     switch (this.props.element.getName()) {
-      case "gallery":
-        WrapperComponent = GalleryComponent;
+      case "diagram":
+        WrapperComponent = DiagramComponent;
         break;
-      case "image":
-        WrapperComponent = ImageComponent;
-        break;
-      case "button":
-        WrapperComponent = ButtonComponent;
-        break;
-      case "text":
-        WrapperComponent = TextComponent;
-        break;
-      case "carousel":
-        WrapperComponent = CarouselComponent;
-        break;
-      case "divider":
-        WrapperComponent = DividerComponent;
-        break;
-      case "accordion":
-        WrapperComponent = AccordionComponent;
+      case "nav":
+        WrapperComponent = NavComponent;
         break;
     }
 
@@ -411,6 +520,7 @@ class ElementWrapper extends Component {
         className={classes}
         style={{ ...styles, width: layout_column_width }}
         ref={this.wrapper}
+        element={this.props.element.getId()}
         onContextMenu={this.handleContext}
         onDragOver={this.onDragOver}
         onClick={this.chooseElement}
@@ -465,6 +575,11 @@ class ElementWrapper extends Component {
           </AltrpTooltip>
         )}
         {emptyColumn}
+        <ElementWrapperGlobalStyles
+          settings={this.props.element.getSettings()}
+          elementName={this.props.element.getName()}
+          element={this.props.element}
+          elementId={this.elementId}/>
       </WrapperComponent>
     );
   }
@@ -500,7 +615,10 @@ function mapStateToProps(state) {
     controllerValue: state.controllerValue,
     currentDataStorage: state.currentDataStorage,
     // hideTriggers: state.hideTriggers,
-    currentScreen: state.currentScreen
+    currentScreen: state.currentScreen,
+    globalStyles: state.globalStyles,
+    historyStore: state.historyStore,
+    state,
   };
 }
 

@@ -3,19 +3,16 @@ import {
   clearCurrentDataStorage,
   currentDataStorageLoaded, currentDataStorageLoading
 } from "../../store/current-data-storage/actions";
-import Resource from "../../../../../editor/src/js/classes/Resource";
-import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
-import {isJSON, mbParseJSON, replaceContentWithData} from "../../helpers";
-import appStore from "../../store/store";
 import {changeCurrentUser} from "../../store/current-user/actions";
+import Datasource from "../Datasource";
+const { Resource, isJSON, mbParseJSON, replaceContentWithData} = window.altrpHelpers;
 
 /**
  * @class DataStorageUpdater
  */
 class DataStorageUpdater extends AltrpModel {
 
-  constructor(data) {
-    super(data);
+  constructor(data) {    super(data);
     this.setProperty('dataSourcesFormsDependent', []);
     this.setProperty('formsStore', appStore.getState().formsStore);
     appStore.subscribe(this.onStoreUpdate)
@@ -27,12 +24,18 @@ class DataStorageUpdater extends AltrpModel {
    *  @param {boolean} initialUpdate
    */
   async updateCurrent(dataSources = null, initialUpdate = true) {
+    dataSources = dataSources.map(ds => {
+      if(ds instanceof Datasource){
+        return ds;
+      }
+      return new Datasource(ds)
+    });
     if(appStore.getState().currentUser.isEmpty()){
       let currentUser = await new Resource({ route: "/ajax/current-user" }).getAll();
       currentUser = currentUser.data;
       appStore.dispatch(changeCurrentUser(currentUser));
     }
-    if(! _.get(dataSources, 'length')){
+    if(!initialUpdate && !_.get(dataSources, 'length')){
       dataSources = this.getProperty('currentDataSources');
     }
     if(! dataSources){
@@ -58,8 +61,8 @@ class DataStorageUpdater extends AltrpModel {
        */
       return ! (parameters && parameters.find(param=>{
         if (param.paramValue.toString().indexOf('altrpforms.') !== -1) {
-          let params = dataSource.getParams(window.currentRouterMatch.params, 'altrpforms.');
-          this.subscribeToFormsUpdate(dataSource, params);
+          let params = dataSource.getParams(window.currentRouterMatch.data.params, 'altrpforms.');
+          initialUpdate && this.subscribeToFormsUpdate(dataSource, params);
         } else {
           return false;
         }
@@ -105,7 +108,7 @@ class DataStorageUpdater extends AltrpModel {
            * и сохраняем параметры, с которыми уже получили данные
            */
           if (needUpdateFromForms) {
-            this.subscribeToFormsUpdate(dataSource, _.cloneDeep(defaultParams));
+            initialUpdate && this.subscribeToFormsUpdate(dataSource, _.cloneDeep(defaultParams));
           }
           let res = {};
           try {

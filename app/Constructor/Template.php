@@ -48,7 +48,7 @@ class Template extends Model
 
   /**
    * Вернуть json для data пустого шаблона для front-app
-   * @return []
+   * @return array
    */
   private static function getDefaultData()
   {
@@ -356,7 +356,9 @@ class Template extends Model
     if( $_template ){
       $_template = $_template->toArray();
       $_template['data'] = json_decode( $_template['data'], true );
-
+      if( empty( $_template['data'] ) ){
+        $_template['data'] = self::getDefaultData();
+      }
 
       //$_template['data'] = self::recursively_children_check_conditions($_template['data']);
 
@@ -381,9 +383,14 @@ class Template extends Model
       //$_template->check_elements_conditions();
       $_template = $_template->toArray();
       $_template['data'] =  json_decode( $_template['data'], true );
+      if( empty( $_template['data'] ) ){
+        $_template['data'] = self::getDefaultData();
+      }
       return $_template;
     }
-
+    if( empty( $template->data ) ){
+      $template->data = self::getDefaultData();
+    }
     return $template->toArray();
   }
   /**
@@ -457,7 +464,7 @@ class Template extends Model
    * @return array
    */
   public static function sanitizeSettings( $data = [] ){
-    return $data; //todo: to test
+//    return $data; //todo: to test
     if( is_string( $data ) ){
       $data = json_decode( $data, true );
       if( ! $data ){
@@ -472,11 +479,15 @@ class Template extends Model
         $data['children'][$index] = self::sanitizeSettings( $child );
       }
     }
+    $data['settings']['styles']  = [];
+
     if( is_array( $data['settings'] ) ){
       foreach ( $data['settings'] as $index => $setting ) {
         if( empty( $setting ) ){
 
           unset( $data['settings'][$index] );
+        } else {
+
         }
       }
     }

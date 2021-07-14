@@ -1,5 +1,6 @@
 <?php
 
+use App\Constructor\Template;
 use App\Http\Requests\ApiRequest;
 use App\Role;
 use App\Media;
@@ -312,6 +313,10 @@ function altrp_asset( $path, $domain = 'http://localhost:3002/' )
     return asset( $path ) . '?' . env( 'APP_VERSION' );
   }
   if( $domain === 'http://localhost:3001/' ){
+    if( strpos( $path, 'h-altrp.js') !== false){
+      return $domain . 'src/bundle.h-altrp.js';
+
+    }
     return $domain . 'src/bundle.front-app.js';
   }
   return $domain . 'src/bundle.js';
@@ -945,30 +950,84 @@ if( ! function_exists( 'getMainColor' ) ){
 }
 /**
  * @param array $areas
+ * @param boolean $only_react_elements
  * @return array
  */
-function extractElementsNames( $areas = []){
+function extractElementsNames( $areas = [], $only_react_elements = false){
   $elementNames = [];
 
   foreach ( $areas as $area ) {
     if( ! isset( $area['template']['data'] ) ){
       continue;
     }
-//    echo '<pre style="padding-left: 200px;">';
-//    var_dump( $area );
-//    echo '</pre>';
-    $data = $area['template']['data'];
-    _extractElementsNames( $data, $elementNames );
-  }
 
+    $data = $area['template']['data'];
+    _extractElementsNames( $data, $elementNames, $only_react_elements );
+
+  }
+  $elementNames = array_unique( $elementNames );
   return $elementNames;
 }
 
 /**
- * @param array $element
- * @param $elementNames
+ * @param string $template_id
+ * @param array $elementNames
  */
-function _extractElementsNames( $element = [],  &$elementNames ){
+function extractElementsNamesFromTemplate( $template_id, &$elementNames ){
+  if( Str::isUuid( $template_id ) ){
+    $template = Template::where( 'guid', $template_id )->first();
+  } else {
+    $template = Template::find( $template_id );
+  }
+  if( ! $template ){
+    return;
+  }
+  $data = json_decode( $template->data, true );
+  _extractElementsNames( $data, $elementNames, false );
+}
+
+/**
+ * @param array $element
+ * @param array $elementNames
+ * @param boolean $only_react_elements
+ */
+function _extractElementsNames( $element,  &$elementNames, $only_react_elements ){
+  $DEFAULT_REACT_ELEMENTS = [
+    'input',
+    'input-select',
+    'input-select2',
+    'input-radio',
+    'input-checkbox',
+    'input-wysiwyg',
+    'input-textarea',
+    'input-image-select',
+    'input-accept',
+    'input-text',
+    'input-password',
+    'input-number',
+    'input-tel',
+    'input-email',
+    'input-date',
+    'input-hidden',
+    'input-file',
+    'posts',
+    'breadcrumbs',
+    'map',
+    'text',
+    'map_builder',
+    'menu',
+    'diagram',
+    'nav',
+    'breadcrumbs',
+    'dashboards',
+    'tour',
+    'icon',
+    'export',
+    'template',
+    'gallery',
+    'table',
+    'heading-type-animating',
+  ];
   if( ! is_array( $elementNames ) ){
     $elementNames = [];
   }
@@ -976,17 +1035,52 @@ function _extractElementsNames( $element = [],  &$elementNames ){
     return;
   }
 
-  if( isset( $element['lazySection'] ) && $element['lazySection'] ){
-    return;
-  }
+//  if( isset( $element['lazySection'] ) && $element['lazySection'] ){
+//    return;
+//  }
+
+//echo '<pre style="padding-left: 200px;">';
+//var_dump( array_search( $element['name'], $elementNames ) === false
+//  && ! ( $only_react_elements
+//    && (! data_get( $element, 'settings.react_element' ) )
+//    || array_search( $DEFAULT_REACT_ELEMENTS, $elementNames ) !== false )  );
+//echo '</pre>';
 
 
-  if( array_search( $element['name'], $elementNames ) === false){
+  if( array_search( $element['name'], $elementNames ) === false
+    && ! ( $only_react_elements
+      && ! ( data_get( $element, 'settings.react_element' )
+        || array_search(  $element['name'], $DEFAULT_REACT_ELEMENTS ) !== false ) ) ){
     $elementNames[] = $element['name'];
   }
   if( isset( $element['children'] ) && is_array( $element['children'] ) ){
     foreach ( $element['children'] as $child ) {
-      _extractElementsNames( $child, $elementNames );
+      _extractElementsNames( $child, $elementNames, $only_react_elements );
+    }
+  }
+  if( $element['name'] === 'template' && data_get( $element, 'settings.template' ) ){
+    extractElementsNamesFromTemplate( data_get( $element, 'settings.template' ), $elementNames );
+  }
+  if( $element['name'] === 'posts' && data_get( $element, 'settings.posts_card_template' ) ){
+    extractElementsNamesFromTemplate( data_get( $element, 'settings.posts_card_template' ), $elementNames );
+  }
+  if( $element['name'] === 'posts' && data_get( $element, 'settings.posts_card_hover_template' ) ){
+    extractElementsNamesFromTemplate( data_get( $element, 'settings.posts_card_hover_template' ), $elementNames );
+  }
+  if( $element['name'] === 'table'
+    && data_get( $element, 'settings.row_expand' )
+    && data_get( $element, 'settings.column_template' ) ){
+    extractElementsNamesFromTemplate( data_get( $element, 'settings.card_template' ), $elementNames );
+  }
+  if( $element['name'] === 'table'
+    && data_get( $element, 'settings.row_expand' )
+    && data_get( $element, 'settings.tables_columns' )
+    && is_array( data_get( $element, 'settings.tables_columns' ) ) ){
+    $columns = data_get( $element, 'settings.tables_columns' );
+    foreach ( $columns as $column ) {
+      if( data_get( $column, 'column_template') ){
+        extractElementsNamesFromTemplate( data_get( $column, 'column_template'), $elementNames );
+      }
     }
   }
 }
@@ -1029,8 +1123,10 @@ function replaceContentWithData( $content ){
   if( ! isset( $path ) || ! isset( $path[1] )){
     return $content;
   }
+
   foreach ( $path[1] as $item ) {
     $value = data_get( $altrp_env, $item, '');
+
     $content = str_replace( '{{' . $item . '}}', $value, $content );
   }
   return $content;
@@ -1214,4 +1310,69 @@ function getFileTypes(){
     $file_types = json_decode( $file_types, true);
     return $file_types;
 }
+const ACTIONS_NAMES = [
+  'actions',
+  'focus_actions',
+  'change_actions',
+  'page_load_actions',
+];
+const ACTIONS_COMPONENTS = [
+  'email',
+  'toggle_popup',
+];
+/**
+ * Получить настройки для фронтенда h-altrp
+ * @return array['action_components']=array - компоненты, которые нужно загрузить для действий ('mail', 'popups')
+ *
+ *
+ * ]
+ */
+function getAltrpSettings( $page_id ){
+  $settings = [
+    'action_components' => []
+  ];
+  if( ! $page_id ){
+    return $settings;
+  }
+  $areas = Page::get_areas_for_page( $page_id );
 
+  $action_types = [];
+  foreach ( $areas as $area ) {
+    $root_element = data_get( $area, 'template.data' );
+    if( $root_element ){
+      recurseMapElements( $root_element, function( $element ) use ( &$action_types ){
+        if( ! data_get( $element, 'settings.react_element' ) ){
+          return;
+        }
+        $actions = [];
+        foreach ( ACTIONS_NAMES as $ACTIONS_NAME ) {
+          $actions = array_merge( $actions, data_get( $element, 'settings.' . $ACTIONS_NAME, [] ) );
+        }
+        foreach ( $actions as $action ) {
+          $action_type = data_get( $action, 'type' );
+          if( array_search( $action_type, $action_types ) === false ){
+            $action_types[] = $action_type;
+          }
+        }
+
+      } );
+    }
+  }
+
+  foreach ( ACTIONS_COMPONENTS as $ACTIONS_COMPONENT ) {
+    if( array_search( $ACTIONS_COMPONENT, $action_types ) !== false ){
+      $settings['action_components'][] = $ACTIONS_COMPONENT;
+    }
+  }
+  return $settings;
+}
+
+function recurseMapElements( $element, $callback ){
+  $callback($element);
+
+  if( isset( $element['children'] ) && is_array( $element['children'] ) ){
+    foreach ( $element['children'] as $child ) {
+      recurseMapElements( $child, $callback );
+    }
+  }
+}

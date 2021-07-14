@@ -1,10 +1,51 @@
-import React, {Component} from "react";
 import GalleryIcon from "../../../svgs/widget_gallery.svg";
 import ("../../../sass/altrp-gallery.scss");
 import {isEditor} from "../../../../../front-app/src/js/helpers";
 import AltrpLightbox from "../altrp-lightbox/AltrpLightbox";
 import HoverImage from "../animations/image/HoverImage";
 import Overlay from "../altrp-gallery/Overlay";
+
+(window.globalDefaults = window.globalDefaults || []).push(`
+  .altrp-gallery-overlay {
+    left: 0;
+    top: 0;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .altrp-gallery-grid {
+    display: grid;
+    position: relative;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .altrp-gallery-img {
+    background-size: cover;
+    background-position: center center;
+    width: 100%;
+    transform-origin: center top;
+  }
+
+  .altrp-gallery-img-container {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .altrp-gallery-icon {
+    height: 35px;
+    width: 35px;
+    opacity: 0.5;
+  }
+
+  .altrp-gallery-empty-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #C4C4C4;
+  }
+
+`);
 
 class GalleryWidget extends Component {
   constructor(props) {

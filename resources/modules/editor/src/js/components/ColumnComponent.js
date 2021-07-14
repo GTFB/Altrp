@@ -1,12 +1,13 @@
-import React, { Component } from "react";
-// import '../../sass/column.scss'
 import { isEditor, redirect } from "../../../../front-app/src/js/helpers";
-import {
-  ColumnArticleComponent,
-  ColumnAsideComponent,
-  ColumnDivComponent, ColumnFooterComponent, ColumnHeaderComponent, ColumnMainComponent,
-  ColumnNavComponent, ColumnSectionComponent
-} from "./widgets/styled-components/ColumnComponents";
+
+(window.globalDefaults = window.globalDefaults || []).push(`
+  .altrp-column {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+    align-content: flex-start;
+  }
+`);
 
 class ColumnComponent extends Component {
   constructor(props) {
@@ -47,41 +48,45 @@ class ColumnComponent extends Component {
 
   render() {
     const background_image = this.props.element.getSettings('background_image', {});
+    const background_image_hover = this.props.element.getResponsiveSetting(
+      "background_image",
+      ":hover",
+      {},
+    );
     let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
-    let className = "altrp-column " + (this.state.settings.position_style_css_classes || "") + (background_image.url ? ' altrp-background-image' : '');
+    let className = "altrp-column altrp-column-priority " + (this.state.settings.position_style_css_classes || "") + (background_image.url || background_image_hover.url ? ' altrp-background-image' : '');
     if (this.columnIsLink()) {
       className += ' altrp-pointer';
     }
 
     const layout_html_tag = this.props.element.getSettings('layout_html_tag') || 'div';
 
-    let component = ColumnDivComponent;
-
-    switch (layout_html_tag) {
-      case 'aside': {
-        component = ColumnAsideComponent;
-      } break;
-      case 'nav': {
-        component = ColumnNavComponent;
-      } break;
-      case 'section': {
-        component = ColumnSectionComponent;
-      } break;
-      case 'article': {
-        component = ColumnArticleComponent;
-      } break;
-      case 'main': {
-        component = ColumnMainComponent;
-      } break;
-      case 'footer': {
-        component = ColumnFooterComponent;
-      } break;
-      case 'header': {
-        component = ColumnHeaderComponent;
-      } break;
-    }
-
-    return React.createElement(component,
+    // let component = ColumnDivComponent;
+    //
+    // switch (layout_html_tag) {
+    //   case 'aside': {
+    //     component = ColumnAsideComponent;
+    //   } break;
+    //   case 'nav': {
+    //     component = ColumnNavComponent;
+    //   } break;
+    //   case 'section': {
+    //     component = ColumnSectionComponent;
+    //   } break;
+    //   case 'article': {
+    //     component = ColumnArticleComponent;
+    //   } break;
+    //   case 'main': {
+    //     component = ColumnMainComponent;
+    //   } break;
+    //   case 'footer': {
+    //     component = ColumnFooterComponent;
+    //   } break;
+    //   case 'header': {
+    //     component = ColumnHeaderComponent;
+    //   } break;
+    // }
+    return React.createElement(layout_html_tag,
       {
         className,
         id: this.state.settings.position_style_css_id || "",

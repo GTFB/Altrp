@@ -1,8 +1,8 @@
 const path = require("path");
 const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const WebpackBuildNotifierPlugin = require("webpack-build-notifier");
+
 
 module.exports = {
   entry: "./resources/modules/editor/src/index.js",
@@ -11,22 +11,22 @@ module.exports = {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /(node_modules|bower_components).*/,
         loader: "babel-loader",
         options: {
           presets: ["@babel/env", "@babel/preset-react"],
-          plugins: ["@babel/plugin-syntax-jsx", "inline-react-svg"],
-        },
+          plugins: ["@babel/plugin-syntax-jsx", "inline-react-svg"]
+        }
       },
       {
         test: /\.css$/,
         // loader: "css-loader",
         use: [
           // Creates `style` nodes from JS strings
-          "style-loader",
+          "file-loader",
           // Translates CSS into CommonJS
-          "css-loader",
-        ],
+          "css-loader"
+        ]
       },
 
       // {
@@ -42,8 +42,8 @@ module.exports = {
           // Translates CSS into CommonJS
           "css-loader",
           // Compiles Sass to CSS
-          "sass-loader",
-        ],
+          "sass-loader"
+        ]
 
         // loader: ExtractTextPlugin.extract({
         //   fallback: 'style-loader',
@@ -55,38 +55,39 @@ module.exports = {
         exclude: /slick.svg$/,
         use: [
           {
-            loader: "babel-loader",
+            loader: "babel-loader"
           },
           {
             loader: "react-svg-loader",
             options: {
               //jsx: true, // true outputs JSX tags
-            },
-          },
-        ],
+            }
+          }
+        ]
       },
       {
         test: /\.(png|jpg|gif)$/,
         loader: "file-loader",
         options: {
-          name: "[path][name].[ext]",
-        },
+          name: "[path][name].[ext]"
+        }
       },
       {
         test: /(\.(woff|woff2|eot|ttf|otf)|slick.svg)$/,
-        use: ["file-loader"],
-      },
-    ],
+        use: ["file-loader"]
+      }
+    ]
   },
   resolve: {
-    extensions: ["*", ".js", ".jsx"],
+    extensions: ["*", ".js", ".jsx"]
   },
   output: {
     path: path.resolve(__dirname, "editor/"),
     publicPath: "http://localhost:3000/src/",
     chunkFilename: "[chunkhash].bundle.js",
-    filename: "bundle.js",
+    filename: "bundle.js"
   },
+
   devServer: {
     contentBase: path.join(__dirname, "public/"),
     port: 3000,
@@ -94,13 +95,25 @@ module.exports = {
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
+      "Access-Control-Allow-Headers":
+        "X-Requested-With, content-type, Authorization"
     },
-    hotOnly: true,
+    hotOnly: true
   },
   plugins: [
+    new webpack.DefinePlugin({
+      "process.env": "{}",
+      global: {}
+    }),
+    new WebpackBuildNotifierPlugin({
+      title: "Editor"
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new CleanWebpackPlugin(),
+    new webpack.DefinePlugin({
+      "process.env": "{}",
+      global: {}
+    })
     // new ExtractTextPlugin('style.css'),
     // new MiniCssExtractPlugin({
     //   // Options similar to the same options in webpackOptions.output
@@ -108,5 +121,5 @@ module.exports = {
     //   filename: '[name].css',
     //   chunkFilename: '[id].css',
     // }),
-  ],
+  ]
 };

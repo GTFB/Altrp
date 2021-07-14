@@ -1,9 +1,11 @@
-import styled from "styled-components";
 import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
 import {defaultStyled, styledString} from "../../../../../../front-app/src/js/helpers/styles";
 
-export default styled.div`
-  ${({settings}) => {
+/**
+ * @return {string}
+ */
+
+export default function GalleryComponent(settings) {
   const styles = [
     "altrp-gallery-img",
 
@@ -119,11 +121,15 @@ export default styled.div`
     ["grid-gap", "spacing_grid_settings", "slider"],
     () => {
       const value = getResponsiveSetting(settings, "columns_grid_settings");
-      return `grid-template-columns: repeat(${defaultStyled(value)}, 1fr);`
+      const def = defaultStyled(value);
+
+      if(def) {
+        return `grid-template-columns: repeat(${def}, 1fr);`
+      }
     },
 
     "}"
   ];
+
   return styledString(styles, settings)
-}}
-`;
+}

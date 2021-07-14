@@ -1,10 +1,7 @@
-// import Skeleton, {SkeletonTheme} from 'react-loading-skeleton';
 import Skeleton from './Skeleton';
-import {connect} from "react-redux";
-import React, {cloneElement, Component} from 'react';
-import {isEditor, isSSR, renderAsset} from "../../../../../front-app/src/js/helpers";
 import ImagePlaceholder from "./ImagePlaceholder";
 import {checkElementInViewBox} from "../../../../../front-app/src/js/helpers/elements";
+const {isEditor, isSSR, renderAsset} = window.altrpHelpers;
 
 class AltrpImage extends Component {
   constructor(props) {
@@ -48,7 +45,7 @@ class AltrpImage extends Component {
     if (this.state.visible || ! this.imageRef.current) {
       return;
     }
-    if(this.props?.element.getRoot().popupGUID && this.props.element.getRoot().popupGUID === this.props.popupTrigger.popupID){
+    if(this.props?.element?.getRoot()?.popupGUID && this.props.element.getRoot().popupGUID === this.props.popupTrigger.popupID){
       this.setState(state => ({...state, visible: true}));
     }
     if (prevProps.scrollPosition === this.props.scrollPosition && prevState.update === this.state.update) {
@@ -58,6 +55,9 @@ class AltrpImage extends Component {
     if(! scroller){
       scroller = document.querySelector('.front-app-content');
     }
+    if(! scroller){
+      scroller = document.querySelector('.front-app');
+    }
     if (this.imageRef.current && checkElementInViewBox(this.imageRef.current, scroller)) {
       clearTimeout(this.timeoutId);
       this.setState(state => ({...state, visible: true}));
@@ -66,6 +66,7 @@ class AltrpImage extends Component {
 
   render() {
     let media = {...this.props.image};
+    const {visible} = this.state;
     const noDefault = this.props.noDefault || false;
     const placeholderStyles = {};
 
@@ -87,7 +88,7 @@ class AltrpImage extends Component {
       }
     }
     let image = renderAsset(media);
-    if(this.state.visible || window.altrpImageLazy === 'skeleton'){
+    if(visible || window.altrpImageLazy === 'skeleton'){
       placeholderStyles.background = 'transparent';
     }
     let placeholder = <ImagePlaceholder color={media.main_color}
@@ -100,14 +101,14 @@ class AltrpImage extends Component {
                                         mediaWidth={media.width || 100}
                                         mediaHeight={media.height || 75}>
       {window.altrpImageLazy === 'skeleton'
-        && ! this.state.visible
+        && ! visible
         &&
           <Skeleton className="altrp-skeleton"
                     color={window.altrpSkeletonColor}
                     highlightColor={window.altrpSkeletonHighlightColor}/>
 
       }
-      {this.state.visible && cloneElement(image, {
+      {visible && React.cloneElement(image, {
         className: this.props.className,
         id: this.props.id || null,
         style: this.props.style,
@@ -115,11 +116,6 @@ class AltrpImage extends Component {
       </ImagePlaceholder>;
 
     return <React.Fragment>
-      {/*{this.state.visible && cloneElement(image, {*/}
-      {/*className: this.props.className,*/}
-      {/*id: this.props.id || null,*/}
-      {/*style: this.props.style,*/}
-    {/*})}*/}
       {placeholder}
     </React.Fragment>
   }
@@ -137,6 +133,6 @@ if (isEditor()) {
     };
   }
 
-  _export = connect(mapStateToProps)(AltrpImage)
+  _export = window.reactRedux.connect(mapStateToProps)(AltrpImage)
 }
 export default _export;

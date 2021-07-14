@@ -1,9 +1,8 @@
-import React, {Component} from "react";
-import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
 import ("./altrp-breadcrumbs.scss");
 import {isEditor, replaceContentWithData} from "../../../../../front-app/src/js/helpers";
 import AltrpImage from "../altrp-image/AltrpImage";
+
 
 class AltrpBreadcrumbs extends Component {
   constructor(props) {
@@ -113,13 +112,13 @@ class AltrpBreadcrumbs extends Component {
             return <li className="altrp-nav-breadcrumbs-li" key={idx}>
               {
                 route.id !== currentId ? (
-                  <Link
+                  <window.Link
                     to={to}
                     onClick={isEditor() ? (e) => e.preventDefault() : null}
                     className="altrp-nav-breadcrumbs-label altrp-nav-breadcrumbs-link"
                   >
                     { label }
-                  </Link>
+                  </window.Link>
                 ) : (
                   <div className="altrp-nav-breadcrumbs-label altrp-nav-breadcrumbs-current">
                     { label }
@@ -140,5 +139,10 @@ class AltrpBreadcrumbs extends Component {
     );
   }
 }
-
-export default withRouter(AltrpBreadcrumbs);
+let _export
+if(window['h-altrp']){
+  _export = AltrpBreadcrumbs;
+} else {
+  _export = withRouter(AltrpBreadcrumbs);
+}
+export default _export;

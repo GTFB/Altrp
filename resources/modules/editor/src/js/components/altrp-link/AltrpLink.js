@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import {Link} from "react-router-dom";
-import {isEditor} from "../../../../../front-app/src/js/helpers";
 import ("./altrp-link.scss");
 import BasicLink from "./BasicLink";
 

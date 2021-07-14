@@ -5,7 +5,7 @@ class AltrpImageSelect extends Component {
     const { options, changeHandler, isMultiple, value } = this.props;
 
     return <div className="altrp-image-select">
-      {options.map(option => <div key={option.id}
+      {options?.map(option => <div key={option.id}
         className={`altrp-field altrp-field-container 
           ${(isMultiple && value.includes(option.value) || value === option.value ? "active" : "")}`}
         onClick={() => changeHandler(isMultiple ?

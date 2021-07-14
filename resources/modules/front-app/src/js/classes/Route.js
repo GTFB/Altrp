@@ -8,6 +8,7 @@ class Route {
   constructor(data) {
     this.id = data.id;
     this.path = data.path;
+    this.icon = data.icon;
     this.model = data.model;
     this.models = data.models;
     this.parent_page_id = data.parent_page_id;
@@ -29,7 +30,7 @@ class Route {
     route.areas = [];
     data.areas = data.areas || [];
     for (let _area of data.areas) {
-      route.areas.push(Area.areaFabric(_area));
+      route.areas.push(Area.areaFactory(_area));
     }
     return route;
   }

@@ -1,5 +1,3 @@
-import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
 import {
   getDataByPath,
   isEditor, parseURLTemplate
@@ -7,6 +5,24 @@ import {
 import AltrpImage from "../altrp-image/AltrpImage";
 import AltrpLightbox from "../altrp-lightbox/AltrpLightbox";
 
+(window.globalDefaults = window.globalDefaults || []).push(`
+  .altrp-image {
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    opacity: 1;
+    object-fit: cover;
+    border-color: rgb(50,168,82);
+    border-radius: 0;
+  }
+`)
+
+const Link = window.Link
 class ImageWidget extends Component {
   constructor(props) {
     super(props);

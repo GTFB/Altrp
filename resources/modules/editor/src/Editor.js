@@ -4,18 +4,21 @@ import { connect } from "react-redux";
 import { hot } from "react-hot-loader";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-
 import Modules from "./js/classes/Modules";
 import WidgetsPanel from "./js/components/WidgetsPanel";
 import SettingsPanel from "./js/components/SettingsPanel";
 import EditorWindow from "./js/components/EditorWindow";
 import HistoryPanel from "./js/components/HistoryPanel";
 import NavigationPanel from "./js/components/NavigationPanel";
+import CommonPanel from "./js/components/CommonPanel";
+import GlobalColors from "./js/components/GlobalColors";
+import GlobalEffects from "./js/components/GlobalEffects";
+import GlobalFonts from "./js/components/GlobalFonts";
 import UpdateButton from "./js/components/UpdateButton";
 import CONSTANTS from "./js/consts";
 import { stopDrag } from "./js/store/element-drag/actions";
 import AssetsBrowser from "./js/classes/modules/AssetsBrowser";
-
+window.Link = "a";
 import store, {
   getCurrentElement,
   getCurrentScreen
@@ -37,6 +40,13 @@ import { changeCurrentUser } from "../../front-app/src/js/store/current-user/act
 import Resource from "./js/classes/Resource";
 import AltrpMeta from "./js/classes/AltrpMeta";
 import { setEditorMeta } from "./js/store/editor-metas/actions";
+import {
+  setGlobalColors,
+  setGlobalEffects,
+  setGlobalFonts
+} from "./js/store/altrp-global-colors/actions";
+import {setGlobalStylesPresets} from "./js/store/altrp-global-styles/actions";
+
 /**
  * Главный класс редактора.<br/>
  * Реакт-Компонент.<br/>
@@ -56,12 +66,17 @@ class Editor extends Component {
       templateStatus: CONSTANTS.TEMPLATE_UPDATED,
       showDialogWindow: false
     };
+    this.effectRef = React.createRef();
     this.openPageSettings = this.openPageSettings.bind(this);
     this.openNavigratonPanel = this.openNavigratonPanel.bind(this);
     this.showSettingsPanel = this.showSettingsPanel.bind(this);
     this.showNavigationPanel = this.showNavigationPanel.bind(this);
     this.showHistoryPanel = this.showHistoryPanel.bind(this);
     this.showWidgetsPanel = this.showWidgetsPanel.bind(this);
+    this.showCommonPanel = this.showCommonPanel.bind(this);
+    this.showGlobalColorsPanel = this.showGlobalColorsPanel.bind(this);
+    this.showGlobalFontsPanel = this.showGlobalFontsPanel.bind(this);
+    this.showGlobalEffectsPanel = this.showGlobalEffectsPanel.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.onClick = this.onClick.bind(this);
     // store.subscribe(this.templateStatus.bind(this));
@@ -130,6 +145,34 @@ class Editor extends Component {
     });
   }
 
+  showCommonPanel() {
+    this.setState({
+      ...this.state,
+      activePanel: "common"
+    });
+  }
+
+  showGlobalColorsPanel() {
+    this.setState({
+      ...this.state,
+      activePanel: "global_colors"
+    });
+  }
+
+  showGlobalFontsPanel() {
+    this.setState({
+      ...this.state,
+      activePanel: "global_fonts"
+    });
+  }
+
+  showGlobalEffectsPanel() {
+    this.setState({
+      ...this.state,
+      activePanel: "global_effects"
+    });
+  }
+
   /**
    * Сработывает при клике
    */
@@ -170,7 +213,45 @@ class Editor extends Component {
     currentUser = currentUser.data;
     appStore.dispatch(changeCurrentUser(currentUser));
     const presetColors = await AltrpMeta.getMetaByName("preset_colors");
+    let presetGlobalStyles = await AltrpMeta.getMetaByName("global_styles");
     appStore.dispatch(setEditorMeta(presetColors));
+    const globalStyles = await new Resource({
+      route: "/admin/ajax/global_template_styles"
+    }).getAll();
+    //global colors
+    appStore.dispatch(
+      setGlobalStylesPresets(presetGlobalStyles.getMetaValue({}))
+    );
+
+    appStore.dispatch(
+      setGlobalColors(
+        globalStyles.color?.map(color => ({
+          id: color.id,
+          guid: color.guid,
+          ...color.settings
+        })) || []
+      )
+    );
+    //global effects
+    appStore.dispatch(
+      setGlobalEffects(
+        globalStyles.effect?.map(effect => ({
+          id: effect.id,
+          guid: effect.guid,
+          ...effect.settings
+        })) || []
+      )
+    );
+    //global fonts
+    appStore.dispatch(
+      setGlobalFonts(
+        globalStyles.font?.map(font => ({
+          id: font.id,
+          guid: font.guid,
+          ...font.settings
+        })) || []
+      )
+    );
   }
 
   /**
@@ -227,7 +308,7 @@ class Editor extends Component {
             <div className="editor-top-panel">
               <button
                 className="btn btn_hamburger"
-                // onClick={this.showSettingsPanel}
+                onClick={this.showCommonPanel}
               >
                 <Hamburger className="icon" />
               </button>
@@ -247,6 +328,16 @@ class Editor extends Component {
               {this.state.activePanel === "settings" && <SettingsPanel />}
               {this.state.activePanel === "history" && <HistoryPanel />}
               {this.state.activePanel === "navigation" && <NavigationPanel />}
+              {this.state.activePanel === "common" && (
+                <CommonPanel
+                  showGlobalColorsPanel={this.showGlobalColorsPanel}
+                  showGlobalFontsPanel={this.showGlobalFontsPanel}
+                  showGlobalEffectsPanel={this.showGlobalEffectsPanel}
+                />
+              )}
+              {this.state.activePanel === "global_colors" && <GlobalColors />}
+              {this.state.activePanel === "global_fonts" && <GlobalFonts />}
+              {this.state.activePanel === "global_effects" && <GlobalEffects />}
             </div>
             <div className="editor-bottom-panel d-flex align-content-center justify-center">
               <button

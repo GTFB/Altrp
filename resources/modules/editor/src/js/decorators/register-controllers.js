@@ -86,7 +86,14 @@ export function advancedTabControllers(element) {
 
   element.addControl('advanced_element_id', {
     label: 'CSS ID',
+  });
 
+
+  element.addControl('react_element', {
+    label: 'Dynamic Element',
+    type: CONTROLLER_SWITCHER,
+    responsive: false,
+    stateless: true,
   });
 
   // element.addControl('hide_on_trigger', {
@@ -103,9 +110,6 @@ export function advancedTabControllers(element) {
   element.addControl('z_index', {
     type: CONTROLLER_NUMBER,
     label: 'Z-index',
-    rules: {
-      '{{ELEMENT}}': 'z-index: {{VALUE}};'
-    },
   });
 
   element.addControl('advanced_opacity', {
@@ -114,9 +118,6 @@ export function advancedTabControllers(element) {
     max: 1,
     min: 0,
     step: 0.01,
-    rules: {
-      "{{ELEMENT}}{{STATE}}": "opacity: {{SIZE}}"
-    }
   });
 
   element.addControl('advanced_tooltip', {
@@ -152,14 +153,6 @@ export function advancedTabControllers(element) {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       units: ["px", "%", "vh"],
-      rules: {
-        "{{ELEMENT}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}}",
-          "padding-bottom: {{BOTTOM}}{{UNIT}}",
-          "padding-left: {{LEFT}}{{UNIT}}"
-        ]
-      }
     });
 
     element.addControl('positioning_margin', {
@@ -177,20 +170,11 @@ export function advancedTabControllers(element) {
         '%',
         'vh',
       ],
-      rules: {
-        '{{ELEMENT}}': [
-          'margin-top: {{TOP}}{{UNIT}}',
-          'margin-right: {{RIGHT}}{{UNIT}}',
-          'margin-bottom: {{BOTTOM}}{{UNIT}}',
-          'margin-left: {{LEFT}}{{UNIT}}'
-        ]
-      },
     });
 
     element.addControl('positioning_width_type', {
       type: CONTROLLER_SELECT,
       label: 'Width (not for Columns)',
-      default: 'default',
       options: [
         {
           value: 'default',
@@ -209,17 +193,13 @@ export function advancedTabControllers(element) {
           label: 'custom'
         }
       ],
-      rules: {
-        '{{ELEMENT}}.altrp-element': 'width: {{VALUE}};',
-      },
     });
 
     element.addControl('positioning_custom_width', {
       type: CONTROLLER_SLIDER,
       label: 'Custom width',
       default: {
-        size: "100%",
-        unit: 'px'
+        unit: '%'
       },
       units: [
         'px',
@@ -228,9 +208,6 @@ export function advancedTabControllers(element) {
       ],
       max: 1000,
       min: 0,
-      rules: {
-        'div{{ELEMENT}}.altrp-element': 'width: {{SIZE}}{{UNIT}};',
-      },
       conditions: {
         'positioning_width_type': 'custom',
       }
@@ -240,7 +217,6 @@ export function advancedTabControllers(element) {
       element.addControl('positioning_vertical_align', {
         type: CONTROLLER_CHOOSE,
         label: 'Vertical Align',
-        default: 'flex-start',
         options: [
           {
             icon: 'block_top',
@@ -255,16 +231,12 @@ export function advancedTabControllers(element) {
             value: 'flex-end',
           },
         ],
-        rules: {
-          '{{ELEMENT}}': 'align-self: {{VALUE}};',
-        },
       });
     }
 
     element.addControl('positioning_position_type', {
       type: CONTROLLER_SELECT,
       label: 'Position',
-      default: 'relative',
       options: [
         {
           value: 'relative',
@@ -283,15 +255,11 @@ export function advancedTabControllers(element) {
           label: 'fixed'
         }
       ],
-      rules: {
-        '{{ELEMENT}}': 'position: {{VALUE}} !important;',
-      },
     });
 
     element.addControl('positioning_horizontal_orientation', {
       type: CONTROLLER_CHOOSE,
       label: 'Horizontal Align',
-      default: 'flex-start',
       options: [
         {
           icon: 'block_left',
@@ -307,10 +275,6 @@ export function advancedTabControllers(element) {
     element.addControl('positioning_horizontal_offset', {
       type: CONTROLLER_SLIDER,
       label: 'offset',
-      default: {
-        size: "0",
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -318,16 +282,12 @@ export function advancedTabControllers(element) {
       ],
       max: 1000,
       min: -1000,
-      rules: {
-        '{{ELEMENT}}': 'left: {{SIZE}}{{UNIT}};',
-      },
     }
     );
 
     element.addControl('positioning_vertical_orientation', {
       type: CONTROLLER_CHOOSE,
       label: 'Vertical align',
-      default: 'flex-start',
       options: [
         {
           icon: 'block_top',
@@ -343,10 +303,6 @@ export function advancedTabControllers(element) {
     element.addControl('positioning_vertical_offset', {
       type: CONTROLLER_SLIDER,
       label: 'offset',
-      default: {
-        size: "0",
-        unit: 'px'
-      },
       units: [
         'px',
         '%',
@@ -354,9 +310,6 @@ export function advancedTabControllers(element) {
       ],
       max: 1000,
       min: -1000,
-      rules: {
-        '{{ELEMENT}}': 'bottom: {{SIZE}}{{UNIT}};',
-      },
     }
     );
     element.endControlSection();
@@ -486,8 +439,7 @@ export function advancedTabControllers(element) {
     label: 'Conditions',
     type: CONTROLLER_REPEATER,
     fields: modelRepeater.getControls(),
-    default: [
-    ],
+    default: [],
     conditions: {
       'conditional_other': true,
     },
@@ -814,14 +766,6 @@ export function advancedTabControllers(element) {
     type: CONTROLLER_DIMENSIONS,
     label: 'Padding',
     units: ['px', '%', 'vh', 'vw'],
-    rules: {
-      '{{ELEMENT}} > .altrp-tooltip{{STATE}}': [
-        'padding-top: {{TOP}}{{UNIT}};',
-        'padding-right: {{RIGHT}}{{UNIT}};',
-        'padding-bottom: {{BOTTOM}}{{UNIT}};',
-        'padding-left: {{LEFT}}{{UNIT}};'
-      ]
-    },
   });
 
   element.addControl('tooltip_horizontal_offset', {
@@ -830,9 +774,6 @@ export function advancedTabControllers(element) {
     units: ['px', '%', 'vh', 'vw'],
     max: 1000,
     min: -1000,
-    rules: {
-      '{{ELEMENT}} > .altrp-tooltip': 'left: {{SIZE}}{{UNIT}};',
-    },
   });
 
   element.addControl('tooltip_vertical_offset', {
@@ -841,64 +782,29 @@ export function advancedTabControllers(element) {
     units: ['px', '%', 'vh', 'vw'],
     max: 1000,
     min: -1000,
-    rules: {
-      '{{ELEMENT}} > .altrp-tooltip': 'bottom: {{SIZE}}{{UNIT}};',
-    },
   });
 
   element.addControl('tooltip_font_typographic', {
     type: CONTROLLER_TYPOGRAPHIC,
     label: 'Typographic',
-    rules: {
-      '{{ELEMENT}} > .altrp-tooltip{{STATE}}': [
-        'font-size: {{SIZE}}px;',
-        'font-family: {{FAMILY}}',
-        'line-height: {{LINEHEIGHT}};',
-        'letter-spacing: {{SPACING}}px',
-        'font-weight: {{WEIGHT}}',
-        'text-transform: {{TRANSFORM}}',
-        'font-style: {{STYLE}}',
-        'text-decoration: {{DECORATION}}'
-      ],
-    },
   }
   );
 
   element.addControl('tooltip_font_color', {
     type: CONTROLLER_COLOR,
     label: 'Color',
-    rules: {
-      '{{ELEMENT}} > .altrp-tooltip{{STATE}}': 'color: {{COLOR}};',
-    },
   }
   );
 
   element.addControl('tooltip_background_color', {
     type: CONTROLLER_COLOR,
     label: 'Background Color',
-    rules: {
-      '{{ELEMENT}} > .altrp-tooltip{{STATE}}': [
-        'border-color: transparent transparent {{COLOR}}',
-        'background-color: {{COLOR}}'
-      ]
-    }
   });
 
   element.addControl('tooltip_border_radius', {
     type: CONTROLLER_DIMENSIONS,
     label: 'Border Radius',
-    default: {
-      unit: 'px'
-    },
     units: ['px', '%', 'vh', 'vw'],
-    rules: {
-      '{{ELEMENT}} > .altrp-tooltip{{STATE}}': [
-        'border-top-left-radius: {{TOP}}{{UNIT}}',
-        'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-        'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-        'border-bottom-left-radius: {{LEFT}}{{UNIT}}'
-      ]
-    }
   });
 
   element.addControl('arrow_size', {
@@ -907,32 +813,11 @@ export function advancedTabControllers(element) {
     units: ['px', '%'],
     max: 50,
     min: 0,
-    rules: {
-      '{{ELEMENT}} > .altrp-tooltip::after': 'border-width: {{SIZE}}{{UNIT}};',
-
-      '{{ELEMENT}} > .altrp-tooltip--top': 'bottom: calc(100% + {{SIZE}}{{UNIT}});',
-      '{{ELEMENT}} > .altrp-tooltip--bottom': 'top: calc(100% + {{SIZE}}{{UNIT}});',
-      '{{ELEMENT}} > .altrp-tooltip--right': 'left: calc(100% + {{SIZE}}{{UNIT}});',
-      '{{ELEMENT}} > .altrp-tooltip--left': 'right: calc(100% + {{SIZE}}{{UNIT}});',
-
-      '{{ELEMENT}} > .altrp-tooltip--top::after': 'margin-left: -{{SIZE}}{{UNIT}};',
-      '{{ELEMENT}} > .altrp-tooltip--bottom::after': 'margin-left: -{{SIZE}}{{UNIT}};',
-      '{{ELEMENT}} > .altrp-tooltip--right::after': 'margin-top: -{{SIZE}}{{UNIT}};',
-      '{{ELEMENT}} > .altrp-tooltip--left::after': 'margin-top: -{{SIZE}}{{UNIT}};',
-
-    },
   });
 
   element.addControl('tooltip_background_shadow', {
     type: CONTROLLER_SHADOW,
     label: 'Shadow',
-    presetColors: [
-      '#eaeaea',
-      '#9c18a8'
-    ],
-    rules: {
-      '{{ELEMENT}} > .altrp-tooltip{{STATE}}': 'box-shadow: {{TYPE}} {{HORIZONTAL}}px {{VERTICAL}}px {{BLUR}}px {{SPREAD}}px {{COLOR}};',
-    },
   });
 
   element.endControlSection();

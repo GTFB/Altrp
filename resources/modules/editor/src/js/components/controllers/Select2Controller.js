@@ -156,7 +156,6 @@ class Select2Controller extends Component {
         padding: 5,
         height: 20
       }),
-
       menu: () => ({
         margin: 0,
         padding: 0,
@@ -179,7 +178,7 @@ class Select2Controller extends Component {
       }),
 
       control: () => {
-        return ({
+        return {
           display: "flex",
           // height: 28,
           borderRadius: 3,
@@ -187,8 +186,8 @@ class Select2Controller extends Component {
           borderStyle: "solid",
           borderColor: "#E5E6EA",
           color: "#8E94AA",
-          fontSize: 13,
-        })
+          fontSize: 13
+        };
       },
 
       placeholder: () => ({
@@ -244,21 +243,25 @@ class Select2Controller extends Component {
       onChange: this.change,
       onInputChange: this.change,
       options: this.state.options,
-      styles: customStyles,
+      // styles: customStyles,
       placeholder: this.props.placeholder,
       loadOptions: this.loadOptions,
       noOptionsMessage: () => "no found",
       value,
       isMulti: this.props.isMulti,
       closeMenuOnSelect: !this.props.isMulti,
-      isClearable: this.props.isClearable
+      isClearable: this.props.isClearable,
       // menuIsOpen: true,
     };
-
     let SelectComponent = Select;
     if (this.props.options_resource && !this.props.prefetch_options) {
       SelectComponent = AsyncSelect;
       selectProps.loadOptions = this.loadOptions;
+    }
+    let id = null;
+    if (this.props.prefetch_options) {
+      id = _.find(this.state.options, item => item.value === this.state.value)
+        ?.id;
     }
     return (
       <div className="controller-container controller-container_select2">
@@ -267,6 +270,12 @@ class Select2Controller extends Component {
         </div>
         <div className="control-container_select2-wrapper">
           <SelectComponent isClearable={true} {...selectProps} />
+          {id != null && typeof id != "undefined" && (
+            <a target="_blank" href={`/admin/editor?template_id=${id}`}>
+              Go to Template
+            </a>
+          )}
+          {this.props.after}
         </div>
       </div>
     );

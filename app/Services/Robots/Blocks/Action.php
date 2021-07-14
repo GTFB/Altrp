@@ -4,6 +4,8 @@
 namespace App\Services\Robots\Blocks;
 
 
+use App\Altrp\ExportExcel;
+use App\Altrp\ExportWord;
 use App\Altrp\Model;
 use App\Altrp\Source;
 use App\Jobs\SendCurl;
@@ -56,6 +58,9 @@ class Action
                 break;
             case 'api':
                 $res = $this->sendApiRequest();
+                break;
+            case 'document':
+                $res = $this->generateDocument();
                 break;
         }
         return $res;
@@ -132,6 +137,7 @@ class Action
             $entity = $modelClass::find($id);
             $result = $entity->$method($newData);
         }
+
         return [
             'name' => $model->name,
             'value' => $result
@@ -152,6 +158,73 @@ class Action
             'name' => 'notice',
             'value' => true
         ];
+    }
+
+    /**
+     * Сгенерировать документ
+     * @return array
+     */
+    protected function generateDocument()
+    {
+        $docData = $this->getNodeProperties()->nodeData->data->docData;
+        $resultData = [];
+
+        try {
+            if ($docData) {
+                preg_match("#\{\{([^{}]+):([^{}]+)\}\}#", $docData, $matches);
+                if($matches[1] === 'altrpmodel'){
+                    $model = Model::where('name', $matches[2] )->first();
+                    $modelNamespace = $model->parent ? $model->parent->namespace : $model->namespace;
+                    $modelClass = '\\' . $modelNamespace;
+                    $resultData = [
+                        'data' => $modelClass::all()->toArray()
+                    ];
+
+                    $resultData = json_encode($resultData);
+                }
+                if($matches[1]  === 'altrpsource'){
+                    $source = Source::where('name', $matches[2] )->first();
+                    $url = $source->url;
+                    $method = $source->request_type;
+
+                    $job = new SendCurl($url, $method, [], [], true);
+                    $job->delay(2);
+                    $this->dispatchNow($job);
+                    $resultData = [
+                        'data' => $job->getResponse()
+                    ];
+
+                    $resultData = json_encode($resultData);
+                }
+            }
+        } catch (\Exception $e){
+            \Log::info($e->getMessage());
+        }
+
+        $fileName = $this->getNodeProperties()->nodeData->data->fileName;
+        $type = $this->getNodeProperties()->nodeData->data->type;
+        $template = $this->getNodeProperties()->nodeData->data->template;
+
+        if ($type === 'excel') {
+            $document = new ExportExcel($resultData, $template, $fileName);
+            $document->export('robot');
+
+            return [ 'name' => 'document', 'value' => true ];
+        }
+
+        if ($type === 'word') {
+            $document = new ExportWord($resultData, $template, $fileName);
+            $document->export('robot');
+
+            return [ 'name' => 'document', 'value' => true ];
+        }
+        if ($type === 'presentation') {
+        }
+
+        return [
+              'name' => 'document',
+              'value' => false
+          ];
     }
 
     /**

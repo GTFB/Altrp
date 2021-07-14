@@ -1,14 +1,13 @@
-import { hot } from "react-hot-loader";
-import { getRoutes } from "./js/helpers";
 import appStore from "./js/store/store";
 import AppContent from "./js/components/AppContent";
 import { Provider } from "react-redux";
-import Resource from "../../editor/src/js/classes/Resource";
 import {changeCurrentUser, setUserNotice, setUsersOnline} from "./js/store/current-user/actions";
 import FontsManager from "./js/components/FontsManager";
 import Echo from "laravel-echo";
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider, } from 'react-dnd'
+const {getRoutes, Resource} = window.altrpHelpers;
+import GlobalStyles from "./js/components/GlobalStyles";
 
 class FrontApp extends Component {
   constructor(props) {
@@ -19,18 +18,18 @@ class FrontApp extends Component {
     console.log('FRONT APP: ',performance.now());
   }
   getRoutes() {
-    return getRoutes().then(res => {
+    return window.altrpHelpers.getRoutes().then(res => {
       this.routes = res.default;
     });
   }
 
   onWidgetMount(){
     console.log(performance.now());
-    if(this.timeoutId){
-      clearTimeout(this.timeoutId);
-    }
-    this.timeoutId = setTimeout(() =>{
-    }, 100);
+    // if(this.timeoutId){
+    //   clearTimeout(this.timeoutId);
+    // }
+    // this.timeoutId = setTimeout(() =>{
+    // }, 100);
   }
 
   /**
@@ -103,16 +102,10 @@ class FrontApp extends Component {
           <AppContent />
         </DndProvider>
         <FontsManager />
+        <GlobalStyles/>
       </Provider>
     );
   }
 }
 
-let _export;
-if (process.env.NODE_ENV === "production") {
-  _export = FrontApp;
-} else {
-  _export = hot(module)(FrontApp);
-}
-
-export default _export;
+export default window.__hot(module)(FrontApp);

@@ -252,7 +252,7 @@
 
 @media screen and (max-width: 910px){
   .admin-bar{
-    display: none;
+    display: none!important;
   }
   .front-app_admin{
     padding-top: 0;

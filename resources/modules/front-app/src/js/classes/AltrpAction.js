@@ -1,11 +1,11 @@
-import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
-
-import {
+import AltrpModel from '../../../../editor/src/js/classes/AltrpModel';
+import { togglePopup } from '../store/popup-trigger/actions';
+import { sendEmail } from '../helpers/sendEmail';
+const {
   altrpLogin,
   altrpLogout,
   dataFromTable,
   dataToCSV,
-  dataToXML,
   elementsToPdf,
   getAppContext,
   getComponentByElementId,
@@ -20,10 +20,7 @@ import {
   delay,
   altrpCompare,
   getWrapperHTMLElementByElement
-} from "../helpers";
-import { togglePopup } from "../store/popup-trigger/actions";
-import { sendEmail } from "../helpers/sendEmail";
-import { loadVIPlugin } from "../helpers/plugins";
+} = window.altrpHelpers;
 
 // let  history = require('history');
 // // import {history} from 'history';
@@ -36,8 +33,8 @@ import { loadVIPlugin } from "../helpers/plugins";
 class AltrpAction extends AltrpModel {
   constructor(data, widgetId, element) {
     super(data);
-    this.setProperty("_widgetId", widgetId);
-    this.setProperty("_element", element);
+    this.setProperty('_widgetId', widgetId);
+    this.setProperty('_element', element);
     this.init();
   }
 
@@ -46,7 +43,7 @@ class AltrpAction extends AltrpModel {
    * @return {string}
    */
   getElementId() {
-    return this.getProperty("_element").getId();
+    return this.getProperty('_element').getId();
   }
 
   /**
@@ -54,11 +51,11 @@ class AltrpAction extends AltrpModel {
    * @return {string}
    */
   getFormId() {
-    let formId = this.getProperty("form_id");
+    let formId = this.getProperty('form_id');
     if (!formId) {
       return formId;
     }
-    if (formId.indexOf("{{") !== -1) {
+    if (formId.indexOf('{{') !== -1) {
       formId = replaceContentWithData(formId, this.getCurrentModel().getData());
     }
     return formId;
@@ -69,11 +66,11 @@ class AltrpAction extends AltrpModel {
    * @return {string}
    */
   getFormURL() {
-    let formURL = this.getProperty("form_url");
+    let formURL = this.getProperty('form_url');
     if (!formURL) {
       return formURL;
     }
-    if (formURL.indexOf("{{") !== -1) {
+    if (formURL.indexOf('{{') !== -1) {
       formURL = replaceContentWithData(
         formURL,
         this.getCurrentModel().getData()
@@ -95,7 +92,7 @@ class AltrpAction extends AltrpModel {
    * @return {FrontElement | null}
    */
   getElement() {
-    return this.getProperty("_element");
+    return this.getProperty('_element');
   }
   /**
    * Получить экземпляр текущей модели страницы или карточки
@@ -112,7 +109,7 @@ class AltrpAction extends AltrpModel {
    * @params {*} defaultValue
    * @return {*}
    */
-  getReplacedProperty(name, defaultValue = "") {
+  getReplacedProperty(name, defaultValue = '') {
     let value = this.getProperty(name, defaultValue);
     if (_.isString(value)) {
       value = replaceContentWithData(value, this.getCurrentModel().getData());
@@ -124,9 +121,9 @@ class AltrpAction extends AltrpModel {
    */
   async init() {
     switch (this.getType()) {
-      case "form": {
+      case 'form': {
         if (!this.getFormURL()) {
-          this.setProperty("_form", null);
+          this.setProperty('_form', null);
           return;
         }
         // const formsManager = (
@@ -148,13 +145,13 @@ class AltrpAction extends AltrpModel {
         // this.setProperty('_form', form);
         return;
       }
-      case "login": {
+      case 'login': {
         const form = formsManager.registerForm(
           this.getFormId(),
-          "login",
-          "POST"
+          'login',
+          'POST'
         );
-        this.setProperty("_form", form);
+        this.setProperty('_form', form);
       }
     }
   }
@@ -163,14 +160,14 @@ class AltrpAction extends AltrpModel {
    * @return {string}
    */
   getType() {
-    return this.getProperty("type");
+    return this.getProperty('type');
   }
   /**
    * Получить тип действия
    * @return {*}
    */
   setType(type) {
-    return this.setProperty("type", type);
+    return this.setProperty('type', type);
   }
 
   /**
@@ -181,153 +178,148 @@ class AltrpAction extends AltrpModel {
     let result = {
       success: false
     };
-    let confirmText = this.getProperty("confirm");
+    let confirmText = this.getProperty('confirm');
     if (confirmText && !confirm(confirmText)) {
       return {
         success: false,
-        message: "User not Confirm"
+        message: 'User not Confirm'
       };
     }
     switch (this.getType()) {
-      case "form":
+      case 'form':
         {
           result = await this.doActionForm();
         }
         break;
-      case "delay":
+      case 'delay':
         {
           result = await this.doActionDelay();
         }
         break;
-      case "email":
+      case 'email':
         {
           result = await this.doActionEmail();
         }
         break;
-      case "redirect":
+      case 'redirect':
         {
           result = await this.doActionRedirect();
         }
         break;
-      case "toggle_element":
+      case 'toggle_element':
         {
           result = await this.doActionToggleElements();
         }
         break;
-      case "toggle_popup":
+      case 'toggle_popup':
         {
           result = await this.doActionTogglePopup();
         }
         break;
-      case "print_page":
+      case 'print_page':
         {
           result = await this.doActionPrintPage();
         }
         break;
-      case "print_elements":
+      case 'print_elements':
         {
           result = await this.doActionPrintElements();
         }
         break;
-      case "scroll_to_element":
+      case 'scroll_to_element':
         {
           result = await this.doActionScrollToElement();
         }
         break;
-      case "scroll_to_top":
+      case 'scroll_to_top':
         {
           result = await this.doActionScrollToTop();
         }
         break;
-      case "scroll_to_bottom":
+      case 'scroll_to_bottom':
         {
           result = await this.doActionScrollToBottom();
         }
         break;
-      case "trigger":
+      case 'trigger':
         {
           result = await this.doActionTrigger();
         }
         break;
-      case "page_to_pdf":
+      case 'page_to_pdf':
         {
           result = await this.doActionPageToPDF();
         }
         break;
-      case "elements_to_pdf":
+      case 'elements_to_pdf':
         {
           result = await this.doActionElementsToPDF();
         }
         break;
-      case "data_to_csv":
+      case 'data_to_csv':
         {
           result = await this.doActionDataToCSV();
         }
         break;
-      case "table_to_csv":
+      case 'table_to_csv':
         {
           result = await this.doActionTableToCSV();
         }
         break;
-      case "table_to_xml":
-      {
-        result = await this.doActionTableToXML();
-      }
-        break;
-      case "table_to_xls":
+      case 'table_to_xls':
         result = await this.doActionTableToXLS();
         break;
-      case "login":
+      case 'login':
         {
           result = await this.doActionLogin();
         }
         break;
-      case "logout":
+      case 'logout':
         {
           result = await this.doActionLogout();
         }
         break;
-      case "set_data":
+      case 'set_data':
         {
           result = await this.doActionSetData();
         }
         break;
-      case "update_current_datasources":
+      case 'update_current_datasources':
         {
           result = await this.doActionUpdateCurrentDatasources();
         }
         break;
-      case "forms_manipulate":
+      case 'forms_manipulate':
         {
           result = await this.doActionFormsManipulate();
         }
         break;
-      case "custom_code":
+      case 'custom_code':
         {
           result = await this.doActionCustomCode();
         }
         break;
-      case "play_sound":
+      case 'play_sound':
         {
           result = await this.doActionPlaySound();
         }
         break;
-      case "condition":
+      case 'condition':
         {
           result = await this.doActionCondition();
         }
         break;
-      case "vi_toggle":
+      case 'vi_toggle':
         {
           result = await this.doActionVIToggle();
         }
         break;
     }
-    let alertText = "";
+    let alertText = '';
     if (result.success) {
-      alertText = this.getProperty("alert");
+      alertText = this.getProperty('alert');
     } else {
-      alertText = this.getProperty("reject");
+      alertText = this.getProperty('reject');
     }
     if (alertText) {
       alertText = replaceContentWithData(alertText);
@@ -347,21 +339,21 @@ class AltrpAction extends AltrpModel {
     //   };
     // }
     const formsManager = (
-      await import("../../../../editor/src/js/classes/modules/FormsManager.js")
+      await import(/* webpackChunkName: 'formsManager' */'../../../../editor/src/js/classes/modules/FormsManager.js')
     ).default;
 
     let data = null;
     let customHeaders = null;
-    if (this.getProperty("custom_headers")) {
+    if (this.getProperty('custom_headers')) {
       customHeaders = parseParamsFromString(
-        this.getProperty("custom_headers"),
+        this.getProperty('custom_headers'),
         this.getCurrentModel()
       );
     }
-    if (this.getProperty("data")) {
+    if (this.getProperty('data')) {
       data = parseParamsFromString(
-        this.getProperty("data"),
-        getAppContext(),
+        this.getProperty('data'),
+        getAppContext(this.getCurrentModel()),
         true
       );
       // if (!_.isEmpty(data)) {
@@ -369,44 +361,44 @@ class AltrpAction extends AltrpModel {
       // }
       // return { success: true };
     }
-    if (this.getProperty("forms_bulk")) {
+    if (this.getProperty('forms_bulk')) {
       if (
-        _.isArray(getDataByPath(this.getProperty("bulk_path"))) &&
-        _.get(getDataByPath(this.getProperty("bulk_path")), "length")
+        _.isArray(getDataByPath(this.getProperty('bulk_path'))) &&
+        _.get(getDataByPath(this.getProperty('bulk_path')), 'length')
       ) {
-        let bulk = getDataByPath(this.getProperty("bulk_path"));
+        let bulk = getDataByPath(this.getProperty('bulk_path'));
         /**
          * Для получение данных с полей формы, нужно создать форму и вызвать метод getData
          * @type {AltrpForm}
          */
         const form = formsManager.registerForm(
           this.getFormId(),
-          "",
-          this.getProperty("form_method"),
+          '',
+          this.getProperty('form_method'),
           {
-            customRoute: ""
+            customRoute: ''
           }
         );
         data = _.assign(form.getData(), data);
         let bulkRequests = bulk.map(async (item, idx) => {
-          if (this.getProperty("data")) {
+          if (this.getProperty('data')) {
             data = parseParamsFromString(
-              this.getProperty("data"),
+              this.getProperty('data'),
               getAppContext(item),
               true
             );
           }
-          let url = this.getProperty("form_url");
+          let url = this.getProperty('form_url');
           url = replaceContentWithData(url, item);
           const form = formsManager.registerForm(
             this.getFormId() + idx,
-            "",
-            this.getProperty("form_method"),
+            '',
+            this.getProperty('form_method'),
             {
               customRoute: url
             }
           );
-          return await form.submit("", "", data, customHeaders);
+          return await form.submit('', '', data, customHeaders);
         });
         try {
           let res = await Promise.all(bulkRequests);
@@ -424,8 +416,8 @@ class AltrpAction extends AltrpModel {
 
       return { success: true };
     }
-    if (this.getProperty("path")) {
-      let _data = getDataByPath(this.getProperty("path"), {});
+    if (this.getProperty('path')) {
+      let _data = getDataByPath(this.getProperty('path'), {});
       if (!_.isEmpty(_data)) {
         data = _.assign(_data, data);
       }
@@ -436,7 +428,7 @@ class AltrpAction extends AltrpModel {
      */
     // let form = this.getProperty('_form');
     if (!this.getFormURL()) {
-      this.setProperty("_form", null);
+      this.setProperty('_form', null);
       return {
         success: false
       };
@@ -447,15 +439,15 @@ class AltrpAction extends AltrpModel {
     };
     const form = formsManager.registerForm(
       this.getFormId(),
-      "",
-      this.getProperty("form_method"),
+      '',
+      this.getProperty('form_method'),
       formOptions
     );
     let result = {
       success: true
     };
     try {
-      const response = await form.submit("", "", data, customHeaders);
+      const response = await form.submit('', '', data, customHeaders);
       result = _.assign(result, response);
     } catch (error) {
       console.log(error);
@@ -471,17 +463,19 @@ class AltrpAction extends AltrpModel {
    */
   async doActionRedirect() {
     let URL = this.getFormURL();
-    if (frontAppRouter) {
-      if (this.getProperty("back")) {
+    if (window.frontAppRouter) {
+      if (this.getProperty('back')) {
         frontAppRouter.history.goBack();
       } else {
-        let innerRedirect = !this.getProperty("outer");
+        let innerRedirect = !this.getProperty('outer');
         if (innerRedirect) {
           frontAppRouter.history.push(URL);
         } else {
           window.location.assign(URL);
         }
       }
+    } else {
+      window.location.href = URL;
     }
     return {
       success: true
@@ -492,11 +486,12 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionToggleElements() {
-    let IDs = this.getProperty("elements_ids");
+    let IDs = this.getProperty('elements_ids');
+
     if (!IDs) {
       return { success: true };
     }
-    IDs = IDs.split(",");
+    IDs = IDs.split(',');
 
     IDs.forEach(id => {
       let component = getComponentByElementId(id);
@@ -514,11 +509,15 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionTogglePopup() {
-    let id = this.getProperty("popup_id");
+    let id = this.getProperty('popup_id');
     if (!id) {
       return {
         success: true
       };
+    }
+    if(window['h-altrp']){
+      const loadPopups = (await import(/* webpackChunkName: 'load-popups' */"../functions/load-popups")).default;
+      await loadPopups();
     }
     appStore.dispatch(togglePopup(id));
 
@@ -541,11 +540,11 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionPrintElements() {
-    let IDs = this.getProperty("elements_ids");
+    let IDs = this.getProperty('elements_ids');
     if (!IDs) {
       return { success: true };
     }
-    IDs = IDs.split(",");
+    IDs = IDs.split(',');
     let elementsToPrint = [];
     IDs.forEach(elementId => {
       if (!elementId || !elementId.trim()) {
@@ -562,9 +561,9 @@ class AltrpAction extends AltrpModel {
         }
       }
     });
-    if (_.get(window, "stylesModule.stylesContainer.current")) {
+    if (_.get(window, 'stylesModule.stylesContainer.current')) {
       elementsToPrint.push(
-        _.get(window, "stylesModule.stylesContainer.current")
+        _.get(window, 'stylesModule.stylesContainer.current')
       );
     }
     elementsToPrint.push(document.head);
@@ -578,15 +577,18 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionScrollToElement() {
-    let elementId = this.getProperty("element_id");
+    let elementId = this.getProperty('element_id');
     if (!elementId) {
       return { success: true };
     }
     elementId = elementId.trim();
     const element = getHTMLElementById(elementId);
-    let scroller = mainScrollbars;
+    let scroller = window.mainScrollbars;
     if(! scroller){
       scroller = document.querySelector('.front-app-content');
+    }
+    if(! scroller){
+      scroller = document.querySelector('.front-app');
     }
     if (element) {
       scrollToElement(scroller, element);
@@ -600,7 +602,19 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionScrollToTop() {
-    mainScrollbars.scrollTop(0);
+    if(window.mainScrollbars){
+      window.mainScrollbars.scrollTop(0);
+      return {
+        success: true
+      };
+    }
+    let scroller = document.querySelector('.front-app-content');
+
+    if(! scroller){
+      scroller = document.querySelector('.front-app');
+    }
+    scroller.scrollTo(0,0)
+
     return {
       success: true
     };
@@ -610,13 +624,25 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionScrollToBottom() {
-    const routeContent = document.getElementById("route-content");
+    const routeContent = document.getElementById('route-content');
     if (!routeContent) {
       return {
         success: true
       };
     }
-    mainScrollbars.scrollTop(routeContent.offsetHeight);
+    if(window.mainScrollbars){
+      window.mainScrollbars.scrollTop(routeContent.offsetHeight);
+      return {
+        success: true
+      };
+    }
+
+    let scroller = document.querySelector('.front-app-content');
+
+    if(! scroller){
+      scroller = document.querySelector('.front-app');
+    }
+    scroller.scrollTo(0,document.querySelector('.route-content').offsetHeight)
     return {
       success: true
     };
@@ -626,10 +652,10 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionPageToPDF() {
-    let filename = replaceContentWithData(this.getProperty("name", "file"));
+    let filename = replaceContentWithData(this.getProperty('name', 'file'));
     const elements = [];
 
-    elements.push(document.getElementById("route-content"));
+    elements.push(document.getElementById('route-content'));
     return await elementsToPdf(elements, filename);
   }
 
@@ -638,13 +664,13 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionElementsToPDF() {
-    let filename = replaceContentWithData(this.getProperty("name", "file"));
+    let filename = replaceContentWithData(this.getProperty('name', 'file'));
     const elements = [];
-    let IDs = this.getProperty("elements_ids");
+    let IDs = this.getProperty('elements_ids');
     if (!IDs) {
       return { success: true };
     }
-    IDs = IDs.split(",");
+    IDs = IDs.split(',');
     IDs.forEach(elementId => {
       if (!elementId || !elementId.trim()) {
         return;
@@ -659,8 +685,8 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionDataToCSV() {
-    let data = getDataByPath(this.getProperty("path"));
-    let filename = replaceContentWithData(this.getProperty("name", "file"));
+    let data = getDataByPath(this.getProperty('path'));
+    let filename = replaceContentWithData(this.getProperty('name', 'file'));
     try {
       return await dataToCSV(data, filename);
     } catch (error) {
@@ -673,7 +699,7 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionTableToCSV() {
-    let elementId = this.getProperty("element_id");
+    let elementId = this.getProperty('element_id');
     if (!elementId) {
       return { success: true };
     }
@@ -692,42 +718,9 @@ class AltrpAction extends AltrpModel {
     if (_.isEmpty(data)) {
       return { success: true };
     }
-    let filename = replaceContentWithData(this.getProperty("name", "file"));
+    let filename = replaceContentWithData(this.getProperty('name', 'file'));
     try {
       return await dataToCSV(data, filename);
-    } catch (error) {
-      console.error(error);
-      return { success: false };
-    }
-  }
-
-  /**
-   * HTML-Таблицу в XML-файл
-   * @return {Promise<{}>}
-   */
-  async doActionTableToXML() {
-    let elementId = this.getProperty("element_id");
-    if (!elementId) {
-      return { success: true };
-    }
-    elementId = elementId.trim();
-    const element = getHTMLElementById(elementId);
-    if (!element) {
-      return { success: true };
-    }
-    let data;
-    try {
-      data = dataFromTable(element);
-    } catch (error) {
-      console.error(error);
-      return { success: false };
-    }
-    if (_.isEmpty(data)) {
-      return { success: true };
-    }
-    let filename = replaceContentWithData(this.getProperty("name", "file"));
-    try {
-      return await dataToXML(data, filename);
     } catch (error) {
       console.error(error);
       return { success: false };
@@ -738,43 +731,56 @@ class AltrpAction extends AltrpModel {
    * @return {Promise}
    */
   async doActionTableToXLS() {
-    const elementId = this.getProperty("element_id").trim();
-    if (!elementId) {
-      console.error("Element ID is not set");
-      return { success: true };
+
+    let data = [];
+
+    if (this.getProperty('all_sources')){
+      const all_sources_path = this.getProperty('all_sources_path');
+      if (all_sources_path) data = getDataByPath(all_sources_path, {});
+      data = { data };
+
+    } else {
+      const elementId = this.getProperty('element_id').trim();
+
+      if (!elementId) {
+        console.error('Element ID is not set');
+        return { success: true };
+      }
+
+      const table = getHTMLElementById(elementId);
+      if (!table) {
+        console.error('Table with provided ID is not found');
+        return { success: true };
+      }
+
+      data = dataFromTable(table);
+
+      const formattedData = [];
+
+      _.each(data, row => formattedData.push(Object.values(row)));
+      let rawTemplateData = this.getProperty('template_data');
+      if (rawTemplateData){
+        const parsedTemplateData = rawTemplateData
+          .split('\n')
+          .reduce((data, row) => {
+            const keyValuePair = row.split('=');
+            data[keyValuePair[0]] = keyValuePair[1];
+            return data;
+          }, {});
+          data = { ...parsedTemplateData, data: formattedData };
+      } else {
+        data = { data };
+      }
     }
 
-    const table = getHTMLElementById(elementId);
-    if (!table) {
-      console.error("Table with provided ID is not found");
-      return { success: true };
-    }
+    const filename = replaceContentWithData(this.getProperty('name', 'file'));
+    const templateName = this.getProperty('template_name');
 
-    let data = dataFromTable(table);
-
-    const formattedData = [];
-
-    _.each(data, row => formattedData.push(Object.values(row)));
-    const templateName = this.getProperty("template_name");
-    const rawTemplateData = this.getProperty("template_data");
-    let parsedTemplateData = '';
-    if (rawTemplateData) {
-      parsedTemplateData = rawTemplateData
-        .split("\n")
-        .reduce((data, row) => {
-          const keyValuePair = row.split("=");
-          data[keyValuePair[0]] = keyValuePair[1];
-          return data;
-        }, {});
-    }
-    data = { ...parsedTemplateData, dataArray: formattedData };
-    const filename = replaceContentWithData(this.getProperty("name", "file"));
-    console.log(data);
     try {
       const blob = await dataToXLS(data, filename, templateName);
-      let link = document.createElement("a");
-      link.setAttribute("href", window.URL.createObjectURL(blob));
-      link.setAttribute("download", filename + ".xls");
+      let link = document.createElement('a');
+      link.setAttribute('href', window.URL.createObjectURL(blob));
+      link.setAttribute('download', filename + '.xlsx');
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -793,7 +799,7 @@ class AltrpAction extends AltrpModel {
      *
      * @member {AltrpForm} form
      */
-    let form = this.getProperty("_form");
+    let form = this.getProperty('_form');
     let success = true;
     form.fields.forEach(field => {
       if (!field.fieldValidate()) {
@@ -818,47 +824,47 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionSetData() {
-    let paths = this.getProperty("path");
+    let paths = this.getProperty('path');
     const result = {
       success: true
     };
     if (!paths) {
       return result;
     }
-    if (paths.indexOf(",") !== -1) {
-      paths = paths.split(",").map(path => path.trim());
+    if (paths.indexOf(',') !== -1) {
+      paths = paths.split(',').map(path => path.trim());
     } else {
       paths = [paths];
     }
     for (let path of paths) {
       path = replaceContentWithData(path, this.getCurrentModel().getData());
-      let value = this.getProperty("value") || "";
+      let value = this.getProperty('value') || '';
       value = value.trim();
-      const setType = this.getProperty("set_type");
-      let count = this.getProperty("count");
+      const setType = this.getProperty('set_type');
+      let count = this.getProperty('count');
       switch (setType) {
-        case "toggle":
+        case 'toggle':
           {
             value = !getDataByPath(path);
             result.success = setDataByPath(path, value);
           }
           break;
-        case "set":
+        case 'set':
           {
             if (
               value.split(/\r?\n/).length === 1 &&
-              value.indexOf("{{") === 0 &&
-              value.indexOf("}}") === value.length - 2 &&
-              getDataByPath(value.replace("{{", "").replace("}}", ""),
+              value.indexOf('{{') === 0 &&
+              value.indexOf('}}') === value.length - 2 &&
+              getDataByPath(value.replace('{{', '').replace('}}', ''),
                   null,
                   this.getCurrentModel())
             ) {
               value = getDataByPath(
-                value.replace("{{", "").replace("}}", ""),
+                value.replace('{{', '').replace('}}', ''),
                 null,
                 this.getCurrentModel()
               );
-            } else if( value.indexOf("|") !== -1){
+            } else if( value.indexOf('|') !== -1){
               // value = replaceContentWithData(
               //   value,
               //   this.getCurrentModel().getData()
@@ -873,22 +879,22 @@ class AltrpAction extends AltrpModel {
             result.success = setDataByPath(path, value);
           }
           break;
-        case "toggle_set":
+        case 'toggle_set':
           {
             let currentValue = getDataByPath(path);
-            value = value.split("\n").map(v => v.trim());
+            value = value.split('\n').map(v => v.trim());
             if (value.length === 1) {
-              value.push("");
+              value.push('');
             }
             let nextIndex = value.indexOf(currentValue) + 1;
             if (nextIndex >= value.length) {
               nextIndex = 0;
             }
-            value = value[nextIndex] || "";
+            value = value[nextIndex] || '';
             result.success = setDataByPath(path, value);
           }
           break;
-        case "increment":
+        case 'increment':
           {
             let currentValue = getDataByPath(path);
             currentValue = currentValue
@@ -901,7 +907,7 @@ class AltrpAction extends AltrpModel {
             result.success = setDataByPath(path, currentValue);
           }
           break;
-        case "decrement":
+        case 'decrement':
           {
             let currentValue = getDataByPath(path);
             currentValue = currentValue
@@ -914,7 +920,7 @@ class AltrpAction extends AltrpModel {
             result.success = setDataByPath(path, currentValue);
           }
           break;
-        case "push_items":
+        case 'push_items':
           {
             let currentValue = getDataByPath(path);
             let item = {};
@@ -938,7 +944,7 @@ class AltrpAction extends AltrpModel {
             result.success = setDataByPath(path, currentValue);
           }
           break;
-        case "remove_items":
+        case 'remove_items':
           {
             let items = path.split(/\r?\n/);
             items.forEach(i => {
@@ -949,14 +955,14 @@ class AltrpAction extends AltrpModel {
               if (!i) {
                 return;
               }
-              if (i.indexOf("{{") !== -1) {
+              if (i.indexOf('{{') !== -1) {
                 i = replaceContentWithData(i, this.getCurrentModel().getData());
               }
               let item = getDataByPath(i);
               if (!item) {
                 return;
               }
-              let listPath = i.replace(/.\d+$/, "").trim();
+              let listPath = i.replace(/.\d+$/, '').trim();
               if (!listPath) {
                 return;
               }
@@ -980,25 +986,25 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   doActionFormsManipulate() {
-    let IDs = this.getProperty("elements_ids");
+    let IDs = this.getProperty('elements_ids');
     if (!IDs) {
       return { success: true };
     }
-    IDs = IDs.split(",");
-    const change = this.getProperty("forms_change");
+    IDs = IDs.split(',');
+    const change = this.getProperty('forms_change');
     IDs.forEach(id => {
       let component = getComponentByElementId(id);
       switch (change) {
-        case "select_all":
+        case 'select_all':
           {
-            if (_.get(component, "elementRef.current.selectAll")) {
+            if (_.get(component, 'elementRef.current.selectAll')) {
               component.elementRef.current.selectAll();
             }
           }
           break;
-        case "clear":
+        case 'clear':
           {
-            if (_.get(component, "elementRef.current.clearValue")) {
+            if (_.get(component, 'elementRef.current.clearValue')) {
               component.elementRef.current.clearValue();
             }
           }
@@ -1012,12 +1018,12 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   doActionCustomCode() {
-    let code = this.getProperty("code");
+    let code = this.getProperty('code');
     try {
       eval(code);
       return { success: true };
     } catch (error) {
-      console.error("Evaluate error in doActionCustomCode" + error.message);
+      console.error('Evaluate error in doActionCustomCode' + error.message);
       return { success: false };
     }
   }
@@ -1026,16 +1032,16 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionUpdateCurrentDatasources() {
-    let aliases = this.getProperty("aliases") || "";
+    let aliases = this.getProperty('aliases') || '';
     aliases = aliases
-      .split(",")
+      .split(',')
       .map(alias => alias.trim())
       .filter(alias => alias);
     const allDataSources = window.dataStorageUpdater.getProperty(
-      "currentDataSources"
+      'currentDataSources'
     );
     const dataSourcesToUpdate = allDataSources.filter(dataSource => {
-      return aliases.indexOf(dataSource.getProperty("alias")) !== -1;
+      return aliases.indexOf(dataSource.getProperty('alias')) !== -1;
     });
     /**
      * @type {DataStorageUpdater}
@@ -1048,9 +1054,9 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionTrigger() {
-    let elementId = this.getProperty("element_id");
+    let elementId = this.getProperty('element_id');
     let element = getComponentByElementId(elementId);
-    let action = this.getProperty("action");
+    let action = this.getProperty('action');
     if (_.isFunction(element[action])) {
       element[action]();
       return {
@@ -1074,7 +1080,7 @@ class AltrpAction extends AltrpModel {
    * Отправка почты
    */
   async doActionEmail() {
-    let templateGUID = this.getProperty("email_template");
+    let templateGUID = this.getProperty('email_template');
     if (!templateGUID) {
       return { success: true };
     }
@@ -1082,10 +1088,10 @@ class AltrpAction extends AltrpModel {
     try {
       res = await sendEmail(
         templateGUID,
-        this.getReplacedProperty("subject"),
-        this.getReplacedProperty("from"),
-        this.getReplacedProperty("to"),
-        this.getReplacedProperty("attachments")
+        this.getReplacedProperty('subject'),
+        this.getReplacedProperty('from'),
+        this.getReplacedProperty('to'),
+        this.getReplacedProperty('attachments')
       );
     } catch (e) {
       console.error(e);
@@ -1100,7 +1106,7 @@ class AltrpAction extends AltrpModel {
    * Добавляем временную задержку в милисекундах
    */
   async doActionDelay() {
-    await delay(this.getProperty("milliseconds") || 0);
+    await delay(this.getProperty('milliseconds') || 0);
     return { success: true };
   }
 
@@ -1109,11 +1115,11 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{success: boolean}>}
    */
   async doActionPlaySound() {
-    const duration = this.getProperty("milliseconds") || 0;
-    const url = this.getProperty("media_url");
-    const loop = this.getProperty("loop");
+    const duration = this.getProperty('milliseconds') || 0;
+    const url = this.getProperty('media_url');
+    const loop = this.getProperty('loop');
     if (url) {
-      const { playSound } = await import("../helpers/sounds");
+      const { playSound } = await import(/* webpackChunkName: 'helpers-sounds' */'../helpers/sounds');
       playSound(url, loop, duration);
       await delay(20);
     }
@@ -1124,9 +1130,9 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{success: boolean}>}
    */
   async doActionCondition() {
-    const compare = this.getProperty("compare");
-    let conditionLeft = this.getProperty("condition_left");
-    let conditionRight = this.getProperty("condition_right");
+    const compare = this.getProperty('compare');
+    let conditionLeft = this.getProperty('condition_left');
+    let conditionRight = this.getProperty('condition_right');
     conditionLeft = getDataByPath(conditionLeft);
     conditionRight = replaceContentWithData(conditionRight);
     const res = altrpCompare(conditionLeft, conditionRight, compare);
@@ -1139,6 +1145,7 @@ class AltrpAction extends AltrpModel {
    */
   async doActionVIToggle() {
     try {
+      const {loadVIPlugin} = (await import(/* webpackChunkName 'loadVIPlugin' */'../helpers/plugins'))
       await loadVIPlugin();
     } catch (error) {
       return {

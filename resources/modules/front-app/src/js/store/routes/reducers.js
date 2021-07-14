@@ -1,7 +1,14 @@
-import {CHANGE_APP_ROUTES} from './actions'
+import {CHANGE_APP_ROUTES,} from './actions'
+import Route from "../../classes/Route";
 
+let routes = [];
+if(window.altrpPages){
+  for (let _data of window.altrpPages) {
+    routes.push(Route.routeFabric(_data));
+  }
+}
 const defaultState = {
-  routes: [],
+  routes,
 };
 
 export function appRoutesReducer(state, action) {

@@ -1,10 +1,11 @@
 import Template from "./Template";
+import {setAreas} from "../store/areas/actions";
 /**
  * @property {Template} template
  * @property {Object} settings
  * */
 class Area {
-  static areaFabric(areaData) {
+  static areaFactory(areaData) {
     let area = new Area();
     area.settings = areaData.settings;
     area.id = areaData.id;
@@ -64,10 +65,49 @@ class Area {
       return this.CSSclasses;
     }
     this.CSSclasses = [];
-    this.CSSclasses.push(`app-area_id-${this.settings.area_type}`);
+    this.CSSclasses.push(`app-area_id-${this.id}`);
     this.settings.sidebar_type && this.CSSclasses.push(`app-area_${this.settings.sidebar_type}`);
     this.settings.sidebar_location && this.CSSclasses.push(`app-area_sidebar-location-${this.settings.sidebar_location}`);
     return this.CSSclasses;
+  }
+
+  /**
+   * Получить пользовательские стили, если они есть
+   * @return {string}
+   */
+  getCustomCSS(){
+    let styles = '';
+
+    if(! _.isString(this.settings.custom_css)){
+      return styles;
+    }
+    styles = this.settings.custom_css.replace(/__selector__/g, `.app-area_id-${this.id}`);
+    return  styles;
+  }
+
+  /**
+   * Обновить значение настройки
+   */
+  setSetting(settingName, value){
+    if(this.getSetting(settingName) === value){
+      return;
+    }
+    _.set(this.settings, settingName, value);
+    if(this.component){
+      this.component.setState(state=>({...state, settings: {...this.settings}}))
+    }
+    if(window.currentRouteComponent){
+      window.currentRouteComponent.setState(state=>({...state, updateToken: Math.random()}));
+      appStore.dispatch(setAreas([...appStore.getState().areas]))
+    } else {
+      appStore.dispatch(setAreas([...appStore.getState().areas]))
+    }
+  }
+  /**
+   * Получить значение настройки
+   */
+  getSetting(settingName, _default){
+    return _.get(this.settings, settingName, _default);
   }
 }
 

@@ -1,6 +1,5 @@
 import CONSTANTS from "../../../editor/src/js/consts";
 import AltrpModel from "../../../editor/src/js/classes/AltrpModel";
-import moment from "moment";
 import Resource from "../../../editor/src/js/classes/Resource";
 import { changeCurrentUser } from "./store/current-user/actions";
 import { changeCurrentUserProperty } from "./store/current-user/actions";
@@ -8,7 +7,6 @@ import { changeAppRoutes } from "./store/routes/actions";
 import Route from "./classes/Route";
 import { changePageState } from "./store/altrp-page-state-storage/actions";
 import { changeAltrpMeta } from "./store/altrp-meta-storage/actions";
-import { altrpFontsSet, GOOGLE_FONT } from "./components/FontsManager";
 import queryString from "query-string";
 import AltrpSVG from "../../../editor/src/js/components/altrp-svg/AltrpSVG";
 import ArrayConverter from "./classes/converters/ArrayConverter";
@@ -16,8 +14,13 @@ import DataConverter from "./classes/converters/DataConverter";
 import { changeFormFieldValue } from "./store/forms-data-storage/actions";
 import { addResponseData } from "./store/responses-storage/actions";
 import {getOffsetTopInElement} from "./helpers/elements";
+import Area from "./classes/Area";
+import {altrpFontsSet, GOOGLE_FONT} from "./constants/fonts";
+import {addSettings} from "./store/elements-settings/actions";
+import mutate from "dot-prop-immutable";
 export function getRoutes() {
-  return import("./classes/Routes.js");
+
+  return import(/* webpackChunkName: 'Routes' */"./classes/Routes.js");
 }
 
 export function isSSR(){
@@ -524,24 +527,41 @@ export function setDataByPath(path = "", value, dispatch = null) {
     } else {
       appStore.dispatch(changeFormFieldValue(fieldName, value, formId, true));
     }
-  }
+  } else
   if (path.indexOf("altrpelements.") === 0) {
     const pathElements = path.split(".");
-    const [prefix, elementId, updateType, propName] = pathElements;
+    let [prefix, elementId, updateType, ...propName] = pathElements;
     const component = getComponentByElementId(elementId);
     if (!component) {
       return true;
     }
+    propName =  propName.join('.');
     switch (updateType) {
       case "settings": {
         component.props.element.updateSetting(value, propName);
+        if(window['h-altrp']){
+          let settings = component.props.element.settings;
+          settings = mutate.set(settings, propName, value)
+          appStore.dispatch(addSettings(component.props.element.getId(), component.props.element.getName(), settings));
+        }
         return true;
       }
       default: {
         return true;
       }
     }
-  }
+  } else
+  if (path.indexOf("altrpareas.") === 0) {
+    const pathElements = path.split(".");
+    const [prefix,  areaName,  updateType, propName] = pathElements;
+    let area = window.page_areas.find(area => area.id === areaName);
+    if(area && updateType === 'settings'){
+      if(! (area instanceof Area)){
+        area = Area.areaFactory(area);
+      }
+      area.setSetting(propName, value);
+    }
+  } else
   if (path.indexOf("altrpstorage.") === 0) {
     path = path.replace("altrpstorage.", "");
     const currentStorage = getDataFromLocalStorage("altrpstorage", {});
@@ -593,7 +613,7 @@ export function getDataByPath(
       falseValue = getDataByPath(falseValue, _default, context);
     }
     path = _path.trim();
-  }
+  }  
   /**
    * @type {AltrpModel} currentModel
    */
@@ -675,6 +695,16 @@ export function getDataByPath(
     path = path.replace("altrpstorage.", "");
     value = getDataFromLocalStorage("altrpstorage", {});
     value = _.get(value, path, _default);
+  } else if (path.indexOf("altrpareas.") === 0) {
+    const pathElements = path.split(".");
+    const [prefix,  areaName,  updateType, propName] = pathElements;
+    let area = window.page_areas.find(area => area.id === areaName);
+    if(area && updateType === 'settings'){
+      if(! (area instanceof Area)){
+        area = Area.areaFactory(area);
+      }
+      value = area.getSetting(propName, _default);
+    }
   } else {
     value = currentModel.getProperty(path)
       ? currentModel.getProperty(path)
@@ -958,6 +988,7 @@ export function getTimeValue(path, defaultValue = null) {
       }
       break;
   }
+  const {moment} = window.altrpHelpers;
   value = moment(value).format("YYYY-MM-DD");
   return value;
 }
@@ -987,6 +1018,7 @@ export function startOfYear(date, yearShift = 0) {
  * @return {Date}
  */
 export function startOfWeek(date, weekShift = 0) {
+  const {moment} = window.altrpHelpers;
   return moment(
     new Date(
       date.getFullYear(),
@@ -1135,6 +1167,7 @@ export function getComponentByElementId(elementId = "") {
  * @return {moment.Moment}
  */
 function getNextWeekStart() {
+  const {moment} = window.altrpHelpers;
   let today = moment();
   let daystoMonday = 7 - (today.isoWeekday() - 1);
   return today.add(daystoMonday, "days");
@@ -1145,6 +1178,7 @@ function getNextWeekStart() {
  * @return {moment.Moment}
  */
 function getWeekStart() {
+  const {moment} = window.altrpHelpers;
   let today = moment();
   let daystoMonday = today.isoWeekday() - 1;
   return today.subtract(daystoMonday, "days");
@@ -1164,6 +1198,7 @@ function getNextWeekEnd() {
  * @return {moment.Moment}
  */
 function getPrevWeekStart() {
+  const {moment} = window.altrpHelpers;
   let today = moment();
   let daystoLastMonday = today.isoWeekday() - 1 + 7;
   return today.subtract(daystoLastMonday, "days");
@@ -1179,7 +1214,7 @@ function getPrevWeekEnd() {
 }
 
 /**
- * Elfkztn gecnst cdjqcndf d j,]trnf[
+ * Удаляет пустые свойства в объектах
  */
 export function clearEmptyProps() {}
 
@@ -1259,7 +1294,7 @@ export function printElements(elements, title = "") {
  * @params {string} filename
  */
 export async function elementsToPdf(elements, filename = "") {
-  let html2pdf = (await import("html2pdf.js")).default;
+  let html2pdf = (await import(/* webpackChunkName: 'html2pdf' */"html2pdf.js")).default;
   elements = elements.body ? elements.body : elements;
   if (!elements) {
     return {
@@ -1542,6 +1577,9 @@ export function recurseCount(object = {}, path = "") {
  */
 export function getAppContext(model = null) {
   const { currentModel } = appStore.getState();
+  if(model instanceof AltrpModel){
+    model = model.getData();
+  }
   const currentModelData = model ? model : currentModel.getData();
   const urlParams = _.cloneDeep(
     window.currentRouterMatch instanceof AltrpModel
@@ -1620,7 +1658,7 @@ export function saveDataToLocalStorage(name, data) {
  * @param {*} _default
  * @return {*}
  */
-export function getDataFromLocalStorage(name, _default = null) {
+export function getDataFromLocalStorage(name, _default = undefined) {
   if (!name) {
     return _default;
   }
@@ -1886,20 +1924,23 @@ export function getResponsiveSetting(
   _settingName = `${settingName}_${elementState}_${suffix}`;
   let setting = settings[_settingName];
   if (setting === undefined) {
-    for (let screen of CONSTANTS.SCREENS) {
+    for (let screen of [...CONSTANTS.SCREENS].reverse()) {
       if (
-        currentScreen.id > screen.id ||
+        currentScreen.id < screen.id ||
         screen.name === CONSTANTS.DEFAULT_BREAKPOINT
       ) {
         continue;
       }
+
       _settingName = `${settingName}_${elementState}_${screen.name}`;
-      if (settings[_settingName]) {
+
+      if (settings[_settingName] !== undefined) {
         setting = settings[_settingName];
         break;
       }
     }
   }
+
   if (setting === undefined) {
     setting = _.get(settings, settingName, _default);
   }
@@ -2069,4 +2110,50 @@ export function parseStringValue(string) {
     }
   }
   return value;
+}
+
+/**
+ *
+ * @return {*[]}
+ */
+export function getBreadcrumbsItems(){
+  if(window['h-altrp'] && window.breadcrumbsItems){
+    return window.breadcrumbsItems;
+  }
+  let items = [];
+  if(isEditor(0)){
+    return items;
+  }
+  const currentId = window['h-altrp'] ? window.page_id : window.currentPageId
+  const {routes} = appStore.getState().appRoutes
+  let breadcrumbsClone = [];
+  let idCurrent = 0;
+  routes.forEach((route, idx) => {
+    if(currentId === route.id) {
+      idCurrent = idx
+    }
+  })
+
+  breadcrumbsClone.push(routes[idCurrent])
+
+  function getParent(parentId) {
+    routes.forEach(route => {
+      if(route.id === parentId) {
+        breadcrumbsClone.push(route)
+        if(route.parent_page_id) {
+          getParent(route.parent_page_id)
+        }
+      }
+    })
+  }
+
+  if(routes[idCurrent].parent_page_id) {
+    getParent(routes[idCurrent].parent_page_id)
+  }
+
+  items = breadcrumbsClone.reverse()
+  if(window['h-altrp']){
+    window.breadcrumbsItems = items;
+  }
+  return items;
 }

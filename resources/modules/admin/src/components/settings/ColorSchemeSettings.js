@@ -44,9 +44,6 @@ class ColorSchemeSettings extends Component {
    * @param {Number} i
    */
   deleteButton(e, i) {
-    console.log("====================================");
-    console.log(i);
-    console.log("====================================");
     e.preventDefault();
     e.stopPropagation();
     let objects = this.state.colorsObjects;

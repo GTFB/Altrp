@@ -161,11 +161,18 @@ class Controller {
     /**
      * Если responsive отключен, то не добавляем суффикс
      */
-    if (this.data.responsive === false) {
-      // console.log(this);
-      return this.data.controlId;
-    }
-    return this.data.controlId + getElementSettingsSuffix(this);
+    // if (this.data.responsive === false) {
+    //   return this.data.controlId;
+    // }
+    return this.data.controlId + getElementSettingsSuffix(this, this.data.responsive === false);
+  }
+
+  /**
+   *
+   * @return {boolean}
+   */
+  isStateless(){
+    return ! ! this.data.stateless
   }
 }
 

@@ -24,7 +24,10 @@ class NavigationItem extends Component {
   render() {
     const { isDragging, connectDragSource, text, key } = this.props;
     return connectDragSource(
-      <div key={key} style={{ opacity: isDragging ? 0.5 : 1 }}>
+      <div
+        key={key}
+        style={{ opacity: isDragging ? 0.5 : 1, cursor: "pointer" }}
+      >
         {text}
       </div>
     );

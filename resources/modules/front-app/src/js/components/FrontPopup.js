@@ -1,5 +1,3 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
 import { Scrollbars } from "react-custom-scrollbars";
 import AltrpOffcanvas from "./altrp-offcanvas/AltrpOffcanvas";
 import { togglePopup } from "../store/popup-trigger/actions";
@@ -9,7 +7,7 @@ import FrontPopupWrapper from "./FrontPopupWrapper";
 class FrontPopup extends Component {
   constructor(props) {
     super(props);
-
+    this.ElementWrapper = props.ElementWrapper || window.ElementWrapper;
     this.state = {
       isVisible: false,
       rootElement: window.frontElementsFabric.parseData(
@@ -350,6 +348,7 @@ class FrontPopup extends Component {
             <div className="popup-content">
               {React.createElement(rootElement.componentClass, {
                 element: rootElement,
+                ElementWrapper :this.ElementWrapper,
                 children: rootElement.children
               })}
             </div>
@@ -390,4 +389,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(FrontPopup);
+export default window.reactRedux.connect(mapStateToProps, mapDispatchToProps)(FrontPopup);

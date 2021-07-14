@@ -315,7 +315,6 @@ class Carousel extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Height',
       default: {
-        size: 220,
         unit: 'px',
       },
       units: [
@@ -331,7 +330,6 @@ class Carousel extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Width',
       default: {
-        size: 100,
         unit: '%',
       },
       units: [
@@ -582,7 +580,6 @@ class Carousel extends BaseElement {
     this.addControl('image_fit_additional_content', {
       type: CONTROLLER_SELECT,
       label: 'Image fit',
-      default: 'cover',
       options: [
         {
           'value': 'cover',
@@ -623,7 +620,6 @@ class Carousel extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Space between',
       default: {
-        size: 15,
         unit: 'px',
       },
       max: 50,
@@ -680,8 +676,8 @@ class Carousel extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Border color",
       default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852"
+        color: "",
+        colorPickedHex: ""
       },
     });
 
@@ -689,10 +685,6 @@ class Carousel extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
         unit: "px"
       },
       units: ["px", "%", "vh"],
@@ -702,10 +694,6 @@ class Carousel extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Border radius",
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
         unit: "px"
       },
       units: ["px", "%", "vh"],
@@ -733,7 +721,6 @@ class Carousel extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Arrows size',
       default: {
-        size: 50,
         unit: 'px',
       },
       max: 100,
@@ -771,10 +758,6 @@ class Carousel extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
         unit: 'px',
         bind: true
       },
@@ -792,10 +775,6 @@ class Carousel extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border radius',
       default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
         unit: 'px',
         bind: true
       },
@@ -814,7 +793,6 @@ class Carousel extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Horizontal offset',
       default: {
-        size: 0,
         unit: 'px',
       },
       max: 400,
@@ -828,29 +806,12 @@ class Carousel extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Vertical offset (no center)',
       default: {
-        size: 0,
         unit: 'px',
       },
       max: 200,
       min: -200,
     });
 
-    // this.addControl('horizontal_no_center_offset_arrows_navigation_style', {
-    //   conditions: {
-    //     'arrows_navigation_content' : true,
-    //   },
-    //   type: CONTROLLER_SLIDER,
-    //   label: 'Horizontal offset (no center)',
-    //   default:{
-    //     size: 0,
-    //     unit: 'px',
-    //   },
-    //   max: 200,
-    //   min: -200,
-    //   rules: {
-    //     '{{ELEMENT}} .altrp-carousel-arrows-container{{STATE}}': 'transform: translateX({{SIZE}}{{UNIT}})',
-    //   },
-    // });
 
     this.addControl('dots_heading_navigation_style', {
       conditions: {
@@ -867,7 +828,6 @@ class Carousel extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Dots size',
       default: {
-        size: 10,
         unit: 'px',
       },
       max: 100,
@@ -881,8 +841,8 @@ class Carousel extends BaseElement {
       type: CONTROLLER_COLOR,
       label: 'Dots color',
       default: {
-        color: "rgb(164,164,164)",
-        colorPickedHex: "#a4a4a4",
+        color: "",
+        colorPickedHex: "",
       },
     });
 
@@ -891,10 +851,10 @@ class Carousel extends BaseElement {
         'dots_navigation_content': true,
       },
       type: CONTROLLER_COLOR,
-      label: 'Active dots color',
+      label: 'Active dot color',
       default: {
-        color: "rgb(19,106,237)",
-        colorPickedHex: "#136aed",
+        color: "",
+        colorPickedHex: "",
       },
     });
 
@@ -905,7 +865,6 @@ class Carousel extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Horizontal offset',
       default: {
-        size: 0,
         unit: 'px',
       },
       max: 200,
@@ -919,7 +878,6 @@ class Carousel extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Vertical offset (no center)',
       default: {
-        size: 0,
         unit: 'px',
       },
       max: 200,
@@ -937,8 +895,8 @@ class Carousel extends BaseElement {
       type: CONTROLLER_COLOR,
       label: 'Background color',
       default: {
-        color: "rgb(255, 255, 255)",
-        colorPickedHex: "#FFFFFF",
+        color: "",
+        colorPickedHex: "",
       },
     }
     );
@@ -947,22 +905,14 @@ class Carousel extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "text color",
       default: {
-        color: "rgb(0, 0, 0)",
-        colorPickedHex: "#000000",
+        color: "",
+        colorPickedHex: "",
       },
     });
 
     this.addControl('typographic_overlay', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 16,
-        weight: "normal",
-        family: '"roboto"',
-        decoration: ""
-      },
     }
     );
 

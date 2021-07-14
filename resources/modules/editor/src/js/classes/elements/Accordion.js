@@ -70,7 +70,7 @@ class Accordion extends BaseElement {
       default: "I Am Advanced Text"
     });
 
-    this.addControl('repeater_accordion_content', {
+    this.addControl('repeater_meta_data_section', {
       label: 'Accordion items',
       type: CONTROLLER_REPEATER,
       fields: repeater.getControls(),
@@ -173,7 +173,6 @@ class Accordion extends BaseElement {
     this.addControl('alignment_item_style', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: 'left',
       options: [
         {
           icon: 'left',
@@ -194,7 +193,6 @@ class Accordion extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Item spacing',
       default: {
-        size: 0,
         unit: 'px',
       },
       max: 100,
@@ -232,15 +230,6 @@ class Accordion extends BaseElement {
       type: CONTROLLER_SHADOW,
       label: 'Box shadow',
       default: {
-        blur: 0,
-        horizontal: 0,
-        vertical: 0,
-        opacity: 1,
-        spread: 0,
-        colorRGB: 'rgb(0, 0, 0)',
-        color: 'rgb(0, 0, 0)',
-        colorPickedHex: '#000000',
-        type: ""
       },
       presetColors: [
         '#eaeaea',
@@ -314,8 +303,8 @@ class Accordion extends BaseElement {
       type: CONTROLLER_COLOR,
       label: 'Border Color',
       default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852",
+        color: "",
+        colorPickedHex: "",
       },
     }
     );
@@ -324,10 +313,6 @@ class Accordion extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border radius',
       default: {
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
         unit: 'px',
       },
       units: [
@@ -342,14 +327,6 @@ class Accordion extends BaseElement {
     this.addControl('font_typographic_title_style', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      default: {
-        lineHeight: 1,
-        spacing: 0,
-        size: 16,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
     }
     );
 
@@ -363,7 +340,6 @@ class Accordion extends BaseElement {
     this.addControl('alignment_icon_style', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: 'right',
       options: [
         {
           icon: 'left',
@@ -390,7 +366,6 @@ class Accordion extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Spacing',
       default: {
-        size: 0,
         unit: 'px',
       },
       max: 100,
@@ -428,10 +403,6 @@ class Accordion extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border radius',
       default: {
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
         unit: 'px',
       },
       units: [
@@ -461,7 +432,6 @@ class Accordion extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: 'Spacing',
       default: {
-        size: 0,
         unit: 'px',
       },
       max: 100,
@@ -471,14 +441,6 @@ class Accordion extends BaseElement {
     this.addControl('typographic_content_style', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      default: {
-        lineHeight: 1,
-        spacing: 0,
-        size: 16,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
     }
     );
 

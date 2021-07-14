@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers\Admin  ;
 
+use App\Altrp\Builders\Traits\DynamicVariables;
 use App\Http\Controllers\Controller;
 use App\Altrp\Model;
+use App\Http\Requests\ApiRequest;
 use App\SQLEditor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class SQLEditorController extends Controller
 {
+
+  use DynamicVariables;
     /**
      * Display a listing of the resource.
      *
@@ -148,5 +152,26 @@ class SQLEditorController extends Controller
       }
       return response()->json( ['success' => false, 'Error on Delete'],200,  [], JSON_UNESCAPED_UNICODE );
 
+    }
+
+    public function test(ApiRequest $request) {
+      $sql = request()->sql;
+      if (empty($sql))
+        return json_encode(['error' => 'Нет запроса для проверки']);
+      try {
+        $sql = $this->replaceDynamicVars($sql, true);
+        $fp = fopen(storage_path('tmp') . '/' . 'sqltest.php', 'w');
+        fwrite($fp, "<?php \$sql = \"" . $sql ."\";\n \$res = DB::select(\$sql);\n return \$res;");
+        if (!file_exists(storage_path('tmp') . '/' . 'sqltest.php')) {
+          return json_encode(['error' => 'Нет доступа к временной папке tmp']);
+        }
+        $result = require storage_path('tmp') . '/' . 'sqltest.php';
+        fclose($fp);
+        @unlink(storage_path('tmp') . '/' . 'sqltest.php');
+        return json_encode(['success' => $result]);
+      } catch (\Exception $e) {
+        @unlink(storage_path('tmp') . '/' . 'sqltest.php');
+        return json_encode(['error' => $e->getMessage()]);
+      }
     }
 }

@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {hot} from "react-hot-loader/index";
+import {hot} from "react-hot-loader";
 import NewSection from "./js/components/NewSection";
 import {getEditor} from "./js/helpers";
 import {Provider} from 'react-redux';
@@ -7,7 +7,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import store from '../src/js/store/store'
 import RootElement from "./js/classes/elements/RootElement";
 import Styles from "./js/components/Styles";
-import {contextMenu} from "react-contexify/lib/index";
+import {contextMenu} from "react-contexify";
 import ElementContextMenu from "./js/components/ElementContextMenu";
 import "slick-carousel/slick/slick.scss";
 import "slick-carousel/slick/slick-theme.scss";
@@ -22,6 +22,9 @@ import  { StyleSheetManager } from 'styled-components';
 import {HTML5Backend} from "react-dnd-html5-backend";
 import { DndProvider, } from 'react-dnd'
 import frontElementsManager from '../../front-app/src/js/classes/FrontElementsManager.js'
+import GlobalStyles from "../../front-app/src/js/components/GlobalStyles";
+
+window.Link = 'a';
 frontElementsManager.loadAllComponents();
 class EditorContent extends Component {
   constructor(props) {
@@ -78,25 +81,26 @@ class EditorContent extends Component {
       <StyleSheetManager target={EditorFrame.contentWindow.document.getElementsByTagName(
           "head"
       )[0]}>
-      <Router>
-        <DndProvider backend={HTML5Backend}>
-          <div className="editor-content d-flex flex-column justify-center align-content-center"
-            onClick={this.onClick}
-                    ref={this.editorWindow}>
-          {
-            this.state.rootElement ? React.createElement(
-                this.state.rootElement.componentClass,{
-                  children: this.state.rootElement.children,
-                  element:this.state.rootElement,
-                }
-            ) : ''
-          }
-            <NewSection />
-          </div>
-        </DndProvider>
-        {store.getState().templateData.template_type !== 'email' && <Styles/>}
-        <ElementContextMenu/>
-      </Router>
+        <Router>
+          <DndProvider backend={HTML5Backend}>
+            <div className="editor-content d-flex flex-column justify-center align-content-center"
+              onClick={this.onClick}
+                      ref={this.editorWindow}>
+            {
+              this.state.rootElement ? React.createElement(
+                  this.state.rootElement.componentClass,{
+                    children: this.state.rootElement.children,
+                    element:this.state.rootElement,
+                  }
+              ) : ''
+            }
+              <NewSection />
+            </div>
+          </DndProvider>
+          {store.getState().templateData.template_type !== 'email' && <Styles/>}
+          <ElementContextMenu/>
+          <GlobalStyles/>
+        </Router>
       </StyleSheetManager>
       <FontsManager />
     </Provider>;

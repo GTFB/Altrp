@@ -1,8 +1,24 @@
-import React, { Component } from "react";
 import Tooltip from "./Tooltip";
-import { set } from "lodash";
 import { isEditor } from "../../../../../front-app/src/js/helpers";
 import TextComponent from "./styled-components/TextComponent";
+
+(window.globalDefaults = window.globalDefaults || []).push(`
+.altrp-text {
+  padding: 0;
+  margin-top: 5px;
+  margin-right: 0;
+  margin-bottom: 5px;
+  margin-left: 0;
+  opacity: 1;
+  font-size: 16px;
+  font-family: "Open Sans";
+  line-height: 1.5;
+  letter-spacing: 0;
+  color: rgb(0, 0, 1);
+  border-color: rgb(50,168,82);
+  border-radius: 0;
+}
+`)
 
 class TextWidget extends Component {
   constructor(props) {

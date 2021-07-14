@@ -61,7 +61,7 @@ class TemplateController extends Controller
         'id' => $template->id,
         'author' => data_get( $user, 'name' ),
         'url' => '/admin/editor?template_id=' . $template->id,
-        'area' => $template->area()->name,
+        'area' => data_get( $template->area(), 'name', 'content' ),
       ];
 
     }
@@ -534,6 +534,7 @@ class TemplateController extends Controller
                   [],
                   JSON_UNESCAPED_UNICODE );
               }
+              clearAllCache();
             }
             break;
           case 'page';
@@ -554,6 +555,7 @@ class TemplateController extends Controller
                     [],
                     JSON_UNESCAPED_UNICODE );
                 }
+                clearPageCache( $id );
               }
             }
             break;
@@ -575,6 +577,7 @@ class TemplateController extends Controller
                     [],
                     JSON_UNESCAPED_UNICODE );
                 }
+                clearPageCache( $id );
               }
             }
             break;

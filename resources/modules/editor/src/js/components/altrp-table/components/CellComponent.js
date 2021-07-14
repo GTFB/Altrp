@@ -11,7 +11,7 @@ const CellComponent = styled.div`${({settings, column})=>{
   }
   const {
     column_cell_vertical_alignment,
-    body_bg, 
+    body_bg,
     header_full_width} = column;
   const table_style_other_width = getResponsiveSetting(settings, 'table_style_other_width');
   let verticalAlign = getResponsiveSetting(settings, 'cell_vertical_alignment');
@@ -36,9 +36,11 @@ const CellComponent = styled.div`${({settings, column})=>{
   if(body_bg){
     styles +=`background-color:${body_bg.color};`;
   }
-  styles += `
-  width: ${_.get(table_style_other_width, 'size') + (_.get(table_style_other_width, 'unit') || 'px')};
+  if(_.get(table_style_other_width, 'unit') !== '%'){
+    styles += `
+    width: ${_.get(table_style_other_width, 'size') + (_.get(table_style_other_width, 'unit') || 'px')};
   `;
+  }
   styles += `}`;
   return styles;
 }}`;

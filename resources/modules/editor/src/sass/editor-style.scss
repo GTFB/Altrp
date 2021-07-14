@@ -16,6 +16,11 @@
 @import "./history-panel.scss";
 @import "../../../../sass/ckeditor.scss";
 
+// map leaflet
+@import "~leaflet/dist/leaflet.css";
+@import "~leaflet-draw/dist/leaflet.draw.css";
+
+
 //import blueprint to editor stylesheet
 @import "../../../../../node_modules/@blueprintjs/core/lib/css/blueprint-hi-contrast.css";
 @import "../../../../../node_modules/@blueprintjs/core/lib/css/blueprint.css";
@@ -1456,6 +1461,8 @@ button {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  position: relative;
+  width: 100%;
   &_drag-over {
     &.altrp-element_column .column-empty-plus {
       &::after {
@@ -1899,11 +1906,6 @@ button {
   width: 100%;
 }
 
-.altrp-section {
-  position: relative;
-  z-index: 50;
-}
-
 .assigning-types {
   width: 100%;
 }
@@ -1919,4 +1921,8 @@ button {
   & .altrp-element_widget .altrp-table-td > a {
     pointer-events: none;
   }
+}
+
+.section-fit-to-content {
+  height: 100vh !important;
 }

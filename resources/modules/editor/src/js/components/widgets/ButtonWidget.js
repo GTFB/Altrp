@@ -1,6 +1,4 @@
-import React, { Component, Suspense } from "react";
-import { Link, Redirect, withRouter } from "react-router-dom";
-let Dropbar = React.lazy(() => import("../altrp-dropbar/AltrpDropbar"));
+let Dropbar = React.lazy(() => import(/* webpackChunkName: 'AltrpDropbar' */"../altrp-dropbar/AltrpDropbar"));
 import {
   getComponentByElementId,
   getHTMLElementById,
@@ -10,7 +8,55 @@ import {
   renderAssetIcon,
   scrollToElement
 } from "../../../../../front-app/src/js/helpers";
-import { toggleTrigger } from "../../../../../front-app/src/js/store/hide-triggers/actions";
+
+(window.globalDefaults = window.globalDefaults || []).push(`
+  .altrp-btn-wrapper {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+
+    & img {
+      max-width: 100%;
+    }
+  }
+
+  .altrp-btn {
+    width: auto;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    flex-direction: row;
+    background-color: #343B4C;
+    color: #FFFFFF;
+    padding-top: 20px;
+    padding-right: 25px;
+    padding-bottom: 20px;
+    padding-left: 25px
+
+    &_gray {
+      background-color: #8E94AA;
+      color: #fff;
+    }
+
+    &__icon {
+      transform: scale(0.6);
+    }
+
+    &-icon {
+      display: flex;
+      justify-content: center;
+    }
+
+    & svg {
+      height: 25px;
+      width: 25px;
+    }
+  }
+`);
+
+const Link = window.Link;
 
 class ButtonWidget extends Component {
   constructor(props) {
@@ -33,7 +79,7 @@ class ButtonWidget extends Component {
    */
   async _componentWillUnmount() {
     const actionsManager = (
-      await import(
+      await import(/* webpackChunkName: 'ActionsManager' */
         "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
       )
     ).default;
@@ -53,7 +99,7 @@ class ButtonWidget extends Component {
       e.preventDefault();
       e.stopPropagation();
       const actionsManager = (
-        await import(
+        await import(/* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
         )
       ).default;
@@ -182,25 +228,27 @@ class ButtonWidget extends Component {
       classes += " altrp-background-image";
     }
 
-    let buttonText = this.props.element.getResponsiveSetting("button_text", null, "");
+    let buttonText = this.props.element.getContent("button_text");
     let buttonMedia = { ...this.state.settings.button_icon };
+    const showIcon = buttonMedia.url;
+
     if (this.state.pending) {
       classes += " altrp-disabled";
     }
 
-    classes +=
-      this.state.settings.link_button_type === "dropbar"
-        ? "altrp-btn-dropbar"
-        : "";
+    // classes +=
+    //   this.state.settings.link_button_type === "dropbar"
+    //     ? "altrp-btn-dropbar"
+    //     : "";
 
-    let icon =
-      buttonMedia && buttonMedia.assetType ? (
-        <span className={"altrp-btn-icon "}>
-          {renderAssetIcon(buttonMedia)}{" "}
-        </span>
-      ) : (
-        ""
-      );
+    // let icon =
+    //   buttonMedia && showIcon && buttonMedia.assetType ? (
+    //     <span className={"altrp-btn-icon "}>
+    //       {renderAssetIcon(buttonMedia)}{" "}
+    //     </span>
+    //   ) : (
+    //     ""
+    //   );
 
     let url = link_link.url
       ? link_link.url.replace(":id", this.getModelId() || "")
@@ -210,41 +258,59 @@ class ButtonWidget extends Component {
     }
 
     classes += this.classStateDisabled();
-    let button;
-    let buttonTemplate = (
-      <button
-        onClick={this.onClick}
-        className={classes}
-        id={this.state.settings.position_css_id}
-        title={tooltip || null}
-      >
-        {buttonText}
-        {! isSSR() && <span className={"altrp-btn-icon "}>
+    let button = <button
+      onClick={this.onClick}
+      className={classes}
+      id={this.state.settings.position_css_id}
+      title={tooltip || null}
+    >
+      {buttonText}
+      {
+        showIcon ? (
+          ! isSSR() && <span className={"altrp-btn-icon "}>
           {renderAssetIcon(buttonMedia)}{" "}
-        </span>}
-      </button>
-    );
+          </span>
+        ) : ""
+      }
+    </button>;
+    // let buttonTemplate = (
+    //   <button
+    //     onClick={this.onClick}
+    //     className={classes}
+    //     id={this.state.settings.position_css_id}
+    //     title={tooltip || null}
+    //   >
+    //     {buttonText}
+    //     {
+    //       showIcon ? (
+    //         ! isSSR() && <span className={"altrp-btn-icon "}>
+    //       {renderAssetIcon(buttonMedia)}{" "}
+    //       </span>
+    //       ) : ""
+    //     }
+    //   </button>
+    // );
 
-    switch (this.props.element.getResponsiveSetting("link_button_type", null,"none")) {
-      case "dropbar":
-        button = (
-          <Suspense fallback={<div>Загрузка...</div>}>
-            <Dropbar
-              elemenentId={this.props.element.getId()}
-              settings={this.props.element.getSettings()}
-              className="btn"
-              element={this.props.element}
-              getContent={this.getContent}
-              showDelay={this.state.settings.show_delay_dropbar_options}
-            >
-              {buttonTemplate}
-            </Dropbar>
-          </Suspense>
-        );
-        break;
-      default:
-        button = buttonTemplate;
-    }
+    // switch (this.props.element.getResponsiveSetting("link_button_type", null,"none")) {
+    //   case "dropbar":
+    //     button = (
+    //       <Suspense fallback={<div>Загрузка...</div>}>
+    //         <Dropbar
+    //           elemenentId={this.props.element.getId()}
+    //           settings={this.props.element.getSettings()}
+    //           className="btn"
+    //           element={this.props.element}
+    //           getContent={this.getContent}
+    //           showDelay={this.state.settings.show_delay_dropbar_options}
+    //         >
+    //           {buttonTemplate}
+    //         </Dropbar>
+    //       </Suspense>
+    //     );
+    //     break;
+    //   default:
+    //     button = buttonTemplate;
+    // }
 
     let link = null;
     if (
@@ -265,9 +331,13 @@ class ButtonWidget extends Component {
           >
             {" "}
             {buttonText || ""}
-            {! isSSR() && <span className={"altrp-btn-icon "}>
-              {renderAssetIcon(buttonMedia)}{" "}
-            </span>}
+            {
+              showIcon ? (
+                ! isSSR() && <span className={"altrp-btn-icon "}>
+                  {renderAssetIcon(buttonMedia)}{" "}
+                </span>
+              ) : ""
+            }
           </a>
         );
       } else {
@@ -275,9 +345,13 @@ class ButtonWidget extends Component {
           <Link to={url} onClick={this.onClick} className={classes} title={tooltip || null}>
             {" "}
             {buttonText || ""}
-            {! isSSR() && <span className={"altrp-btn-icon "}>
-              {renderAssetIcon(buttonMedia)}{" "}
-            </span>}
+            {
+              showIcon ? (
+                ! isSSR() && <span className={"altrp-btn-icon "}>
+                  {renderAssetIcon(buttonMedia)}{" "}
+                </span>
+              ) : ""
+            }
           </Link>
         );
       }
@@ -292,23 +366,23 @@ class ButtonWidget extends Component {
           title={tooltip || null}
         >
           {buttonText}
-          {! isSSR() && <span className={"altrp-btn-icon "}>
-            {renderAssetIcon(buttonMedia)}{" "}
-          </span>}
+          {
+            showIcon ? (
+              ! isSSR() && <span className={"altrp-btn-icon "}>
+                {renderAssetIcon(buttonMedia)}{" "}
+              </span>
+            ) : ""
+          }
         </button>
       );
     }
 
-    return link || button || buttonMedia;
+    return <div className="altrp-btn-wrapper">
+      { link || button || buttonMedia }
+    </div>;
     // return React.createElement(tag, buttonProps, <>{this.state.settings.button_text}{icon}</>);
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    toggleTrigger: string => dispatch(toggleTrigger(string))
-  };
-};
 
-// export default connect(null, mapDispatchToProps)(withRouter(ButtonWidget));
 export default ButtonWidget;

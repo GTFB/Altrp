@@ -1,7 +1,6 @@
 import React, { useState, } from "react";
 import {useTable, } from "react-table";
 import ('../../../sass/altrp-pagination.scss');
-import {Link} from "react-router-dom";
 import {
   isEditor, mbParseJSON,
   parseURLTemplate, renderAsset, replaceContentWithData
@@ -9,7 +8,7 @@ import {
 import {iconsManager} from "../../../../../admin/src/js/helpers";
 import AutoUpdateInput from "../../../../../admin/src/components/AutoUpdateInput";
 import AltrpQueryComponent from "../altrp-query-component/altrp-query-component";
-
+const Link = window.Link
 
 /**
  *
@@ -76,10 +75,10 @@ const AltrpTable = ({settings,
   const [doubleClicked, setDoubleClicked] =  useState({});
   const groupingStore = [];
 
-  
+
   let columns = [];
   columns = settingsToColumns(settings);
-  
+
   /**
    * обновление данных при изменении ячейки
    * @type {any[]}
@@ -112,7 +111,7 @@ const AltrpTable = ({settings,
    */
   const sortingHandler = order_by => {
     setSortSettings({
-    order_by, 
+    order_by,
     order: sortSetting &&
       (sortSetting.order_by === order_by) ? (sortSetting.order === "DESC" ? "ASC" :  "DESC") : "ASC"
   });
@@ -130,7 +129,7 @@ const AltrpTable = ({settings,
     }
     setFilterSettings(filterParams);
   };
-  
+
   return <><table className={"altrp-table altrp-table_columns-" + columns.length} {...getTableProps()}>
     <thead className="altrp-table-head">
     {renderAdditionalRows(settings)}
@@ -171,6 +170,7 @@ const AltrpTable = ({settings,
                 if(columns[_i].column_external_link && ! isEditor()) {
                   linkTag = 'a';
                 }
+
                 let style = cell.column.column_body_alignment ? { textAlign: cell.column.column_body_alignment } : {};
                 const cellProps = {...cell.getCellProps()};
                 let _cellContent = cell.value;

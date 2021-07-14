@@ -1,26 +1,17 @@
-import React, { Component } from "react";
+import '../../front-app/src/js/libs/blueprint'
+import '../../front-app/src/js/libs/react-lodash'
+import '../../front-app/src/js/libs/altrp'
+import '../../front-app/src/js/libs/moment'
 import { Provider } from "react-redux";
-import ReactDOM from "react-dom";
 import "./installing";
 import ElementsManager from "./js/classes/modules/ElementsManager";
 import ControllersManager from "./js/classes/modules/ControllersManager";
 import store from "../src/js/store/store";
-import _ from "lodash";
 import IconsManager from "./js/classes/modules/IconsManager";
 import "./sass/editor-style.scss";
-
-window.React = React;
-window.ReactDOM = ReactDOM;
-window.Component = Component;
-
 import controllerHistory from "./js/classes/ControllerHistory";
 
-window._ = _;
-// let cloneDeep = _.cloneDeep;
-// _.cloneDeep = function(){
-//  console.error(arguments);
-//  return cloneDeep.apply(_, arguments);
-// };
+
 window.iconsManager = new IconsManager();
 
 window.stylesModulePromise = new Promise(function(resolve) {
@@ -85,7 +76,7 @@ import("./Editor.js")
         styleLink.rel = "stylesheet";
         styleLink.href = `/modules/editor/editor.css?${_altrpVersion}`;
         head.appendChild(styleLink);
-        console.log(head.appendChild(document.querySelector('[data-cke]').cloneNode(true)));
+        head.appendChild(document.querySelector('[data-cke]').cloneNode(true));
       } else {
         let head = iframe.contentWindow.document.getElementsByTagName(
           "head"

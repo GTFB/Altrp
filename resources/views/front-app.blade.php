@@ -1,14 +1,6 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  {!!  getFavicons() !!}
-  <link rel="preload" href="/modules/front-app/front-app.js?{{ getCurrentVersion() }}" as="script">
-  {{--<link rel="preload" href="/modules/front-app/front-app.css?0.14.16" as="style">--}}
-  {{--preloads--}}
-  {{--preloads--}}
   <script>
     /* <![CDATA[ */
     console.log('START: ',performance.now());
@@ -27,6 +19,13 @@
     // window.onerror = myErrHandler;
     /* ]]> */
   </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  {!!  getFavicons() !!}
+  {{--<link rel="preload" href="/modules/front-app/front-app.css?0.14.16" as="style">--}}
+  {{--preloads--}}
+  {{--preloads--}}
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -39,10 +38,6 @@
   @endisset
 <!-- Scripts -->
 
-  <script>
-    window._token = '{{ csrf_token() }}';
-    window.altrpPages = {!! json_encode( $pages ) !!};
-  </script>
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">
   <!-- Style -->
@@ -107,11 +102,9 @@
 </head>
 <body class="front-app-body" >
 
-<div id="front-app" style="display:none" class="front-app {{ $is_admin ? 'front-app_admin' : '' }}">
+<div id="front-app" style="" class="front-app {{ $is_admin ? 'front-app_admin' : '' }}">{!! isset( $preload_content[ 'content'] ) ? $preload_content['content']  : ''!!}</div>
+<div id="front-app-server" style="display: none;" class="front-app {{ $is_admin ? 'front-app_admin' : '' }}" style="overflow:auto;">
 {{--  {!! isset( $preload_content[ 'content'] ) ? $preload_content[ 'content']  : ''!!}--}}
-</div>
-<div id="front-app-server" class="front-app {{ $is_admin ? 'front-app_admin' : '' }}" style="overflow:auto;">
-  {!! isset( $preload_content[ 'content'] ) ? $preload_content[ 'content']  : ''!!}
 </div>
 {{--  {!! isset( $preload_content[ 'content'] ) ? $preload_content['content'] : ''!!}--}}
 {{--<div id="front-app" class="front-app-content_preloaded">--}}
@@ -119,6 +112,8 @@
 
 <script>
   /* <![CDATA[ */
+  window._token = '{{ csrf_token() }}';
+  window.altrpPages = {!! json_encode( $pages ) !!};
   window.altrp = {
     version: '{{ getCurrentVersion() }}'
   };
@@ -126,21 +121,35 @@
   window.pageStorage = {};
   window.ALTRP_DEBUG = {!! json_encode( ! ! get_altrp_setting( 'altrp_debug', false ) ) !!};
   window.ALTRP_LOAD_BY_USER = {!! json_encode( ! ! get_altrp_setting( 'altrp_user_load', false ) ) !!};
-  var page_id = {{ $page_id }};
+  window.page_id = {{ $page_id }};
   window.page_areas = {!! $page_areas !!};
   window.lazySections = {!! $lazy_sections !!};
-  if (typeof page_id !== 'undefined' && typeof page_areas !== 'undefined') {
-    window.pageStorage[page_id] = {areas:page_areas};
+  if (typeof window.page_id !== 'undefined' && typeof page_areas !== 'undefined') {
+    window.pageStorage[window.page_id] = {areas:page_areas};
   }
   window.altrpImageLazy = '{{ get_altrp_setting( 'altrp_image_lazy', 'none' ) }}';
   window.altrpSkeletonColor = '{{ get_altrp_setting( 'altrp_skeleton_color', '#ccc' ) }}';
   window.altrpSkeletonHighlightColor = '{{ get_altrp_setting( 'altrp_skeleton_highlight_color', '#d0d0d0' ) }}';
-  window.current_user = {!! json_encode( getCurrentUser() ) !!};
   window.model_data = {!! json_encode( $model_data ) !!};
   window.altrpPreloadedDatasources = {!! json_encode( $datasources ?? '' ) !!};
+  window.altrpMenus = [];
+  window.currentPage = {!! json_encode( $_frontend_route ) !!};
+  window.__altrp_settings__ = {!! $altrp_settings !!};
+  window.container_width = {!! get_altrp_setting( 'container_width', '1440' ) !!};
   /* ]]> */
 </script>
-<script src="{{ altrp_asset( '/modules/front-app/front-app.js', 'http://localhost:3001/' ) }}" defer></script>
+<script src="/data/current-user" defer></script>
+@if( ! get_altrp_setting( 'altrp_ssr_disabled' ) && isset( $preload_content[ 'content'] ) && $preload_content[ 'content'] )
+
+  <script>
+    /* <![CDATA[ */
+    window['h-altrp'] = true;
+    /* ]]> */
+  </script>
+  <script src="{{ altrp_asset( '/modules/front-app/h-altrp.js', 'http://localhost:3001/' ) }}" defer></script>
+@else
+  <script src="{{ altrp_asset( '/modules/front-app/front-app.js', 'http://localhost:3001/' ) }}" defer></script>
+@endif
 @php
   $value = env( 'ALTRP_SETTING_ALL_SITE_JS', '' );
   try {
@@ -157,6 +166,5 @@
   </script>
 @endif
 <link rel="stylesheet" href="/modules/front-app/front-app.css?{{getCurrentVersion()}}">
-
 </body>
 </html>

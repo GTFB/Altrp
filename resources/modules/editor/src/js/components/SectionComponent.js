@@ -1,16 +1,44 @@
 import React, { Component } from "react";
 import { isEditor, redirect } from "../../../../front-app/src/js/helpers";
 import CONSTANTS from "../consts";
-import {
-  SectionArticleComponent,
-  SectionAsideComponent,
-  SectionDivComponent,
-  SectionFooterComponent,
-  SectionHeaderComponent,
-  SectionMainComponent,
-  SectionNavComponent,
-  SectionSectionComponent
-} from "./widgets/styled-components/SectionComponents";
+
+(window.globalDefaults = window.globalDefaults || []).push(`
+  .altrp-section {
+    display: flex;
+    &.altrp-section--boxed > .altrp-element {
+      margin: 0 auto;
+    }
+    &.altrp-section--full-width,
+    &.altrp-section--boxed {
+      width: 100vw;
+    }
+  }
+
+  .altrp-section-full-fill {
+    display: flex;
+    width: 100vh;
+  }
+
+  .altrp-section-full-fill .altrp-section {
+    width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .altrp-section {
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    bottom: auto;
+  }
+
+  .altrp-section_section-boxed.altrp-section_section-boxed {
+    padding-left: calc((100vw - ${window.container_width || 1440}px) / 2);
+    padding-right: calc((100vw - ${window.container_width || 1440}px) / 2);
+    width: 100vw;
+  }
+`);
 
 class SectionComponent extends Component {
   constructor(props) {
@@ -62,6 +90,11 @@ class SectionComponent extends Component {
       "background_image",
       {}
     );
+    const background_image_hover = this.props.element.getResponsiveSetting(
+      "background_image",
+      ":hover",
+      {},
+    );
     const { isScrollEffect, isFixed } = this.props.element.getSettings();
     const isContentBoxed =
       this.props.element.getSettings().layout_content_width_type === "boxed";
@@ -82,7 +115,7 @@ class SectionComponent extends Component {
     if (this.sectionIsLink()) {
       sectionClasses.push("altrp-pointer");
     }
-    if (background_image.url /*  && !isScrollEffect */) {
+    if (background_image.url || background_image_hover /*  && !isScrollEffect */) {
       sectionClasses.push("altrp-background-image");
     }
 
@@ -111,8 +144,9 @@ class SectionComponent extends Component {
       />
     ));
 
-    if (this.state.settings.layout_height === "fit") {
-      styles.height = "100vh";
+    const fitToContent = this.props.element.getResponsiveSetting("layout_height", "", "default")
+    if (fitToContent === "fit") {
+      sectionClasses.push("section-fit-to-content");
     }
     if (this.props.currentScreen.name !== CONSTANTS.DEFAULT_BREAKPOINT) {
       styles.flexWrap = "wrap";
@@ -120,42 +154,42 @@ class SectionComponent extends Component {
     const layout_html_tag =
       this.props.element.getSettings("layout_html_tag") || "div";
 
-    let component = SectionDivComponent;
+    let component = "div";
 
     switch (layout_html_tag) {
       case "aside":
         {
-          component = SectionAsideComponent;
+          component = "header";
         }
         break;
       case "nav":
         {
-          component = SectionNavComponent;
+          component = "nav";
         }
         break;
       case "section":
         {
-          component = SectionSectionComponent;
+          component = "section";
         }
         break;
       case "article":
         {
-          component = SectionArticleComponent;
+          component = "article";
         }
         break;
       case "main":
         {
-          component = SectionMainComponent;
+          component = "main";
         }
         break;
       case "footer":
         {
-          component = SectionFooterComponent;
+          component = "footer";
         }
         break;
       case "header":
         {
-          component = SectionHeaderComponent;
+          component = "header";
         }
         break;
     }

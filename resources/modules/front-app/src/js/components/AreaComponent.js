@@ -6,6 +6,7 @@ class AreaComponent extends Component {
   constructor(props) {
     super(props);
     // console.log("AreaComponent: ", performance.now());
+    props.area.component = this;
   }
   componentWillUnmount() {
     /**
@@ -41,14 +42,14 @@ class AreaComponent extends Component {
       typeof this.props.area.getTemplates !== "undefined" &&
       this.props.area.getTemplates().length
     ) {
-      let popus = (
+      let popups = (
         <div className={classes.join(" ")}>
           {this.props.area.getTemplates().map(template => {
             return <FrontPopup key={template.id} template={template} />;
           })}
         </div>
       );
-      return popus;
+      return popups;
     }
     /**
      * Если шаблон привязанный к странице удалили, то ничего не отрисовываем

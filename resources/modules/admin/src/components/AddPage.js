@@ -6,6 +6,8 @@ import AdminTable from "./AdminTable";
 import AdminModal2 from "./AdminModal2";
 import PageDataSourceForm from "./pages/PageDataSourceForm";
 import { titleToPath } from "../js/helpers";
+import IconSelect from "./icon-select/IconSelect";
+import mutate from "dot-prop-immutable";
 
 const columns = [
   {
@@ -147,7 +149,7 @@ class AddPage extends Component {
     if (res.success) {
       this.setState(state => {
         return { ...state, redirectAfterSave: true };
-      });
+      }, ()=>{this.props.history.push('/admin/pages')});
     } else {
       this.setState(state => {
         return { ...state, value: {} };
@@ -202,9 +204,7 @@ class AddPage extends Component {
 
   render() {
     const { isModalOpened, editingDataSource } = this.state;
-    if (this.state.redirectAfterSave) {
-      return <Redirect to="/admin/pages" />;
-    }
+
     let { dataSources } = this.state;
 
     dataSources = _.sortBy(dataSources, dataSource => dataSource.priority);
@@ -380,32 +380,47 @@ class AddPage extends Component {
                       />
                     </div>
                     <div className="row col-12">
-                      <div className="form-group col-4">
+                      <div className="form-group col-3 position-static ml-0 align-self-start">
                         <input type="checkbox" id="caching"
                           checked={this.state.value.is_cached || ""}
                           onChange={e => {
                             this.changeValue(e.target.checked, "is_cached");
                           }}
-                          className="form-check-input form-check-input_inline" />
+                          className="form-check-input mr-1 form-check-input_inline" />
                         <label htmlFor="caching" className="label_checkbox">Сaching (Only for Static Pages)</label>
                       </div>
-                      <div className="form-group col-4 ">
+                      <div className="form-group col-1 position-static ml-0 align-self-start">
                         <input type="checkbox" id="404"
                           checked={this.state.value.not_found || ""}
                           onChange={e => {
                             this.changeValue(e.target.checked, "not_found");
                           }}
-                          className="form-check-input form-check-input_inline" />
+                          className="form-check-input mr-1 form-check-input_inline" />
                         <label htmlFor="404" className="label_checkbox">404</label>
                       </div>
-                      <div className="form-group col-4 ">
-                        <label htmlFor="sections_count" className="label_checkbox">Sections Count:</label>
-                        <input type="number" id="sections_count"
-                          value={this.state.value.sections_count || ""}
-                          onChange={e => {
-                            this.changeValue(e.target.value, "sections_count");
+                      {/*<div className="form-group col-3 position-static ml-0 align-self-start">*/}
+                      {/*  <label htmlFor="sections_count" className="label_checkbox">Sections Count:</label>*/}
+                      {/*  <input type="number" id="sections_count"*/}
+                      {/*    value={this.state.value.sections_count || ""}*/}
+                      {/*    onChange={e => {*/}
+                      {/*      this.changeValue(e.target.value, "sections_count");*/}
+                      {/*    }}*/}
+                      {/*    className="form-control" />*/}
+                      {/*</div>*/}
+                      <div className="form-group col-5 position-static ml-0 align-self-start">
+                        <label htmlFor="icon" className="label_checkbox">Page Icon</label>
+                        <IconSelect
+                          id="icon"
+                          returnType="text"
+                          value={this.state.value.icon}
+                          maxWidth="50px"
+                          maxHeight="50px"
+                          className="col-4"
+                          onChange={(icon) => {
+                            let value = mutate.set(this.state.value, 'icon', icon);
+                            this.setState(state=>({...state, value}));
                           }}
-                          className="form-control" />
+                        />
                       </div>
                     </div>
                   </React.Fragment>

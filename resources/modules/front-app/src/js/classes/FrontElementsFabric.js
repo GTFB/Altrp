@@ -1,5 +1,4 @@
 import FrontElement from "./FrontElement";
-
 class FrontElementsFabric {
   /**
    * парсим данные шаблона
@@ -78,5 +77,6 @@ class FrontElementsFabric {
     }
   }
 }
+
 window.frontElementsFabric = new FrontElementsFabric();
 export default window.frontElementsFabric;

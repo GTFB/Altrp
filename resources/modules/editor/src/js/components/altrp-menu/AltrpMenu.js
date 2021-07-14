@@ -19,7 +19,7 @@ class AltrpMenu extends Component {
   }
 
   async _componentDidMount(){
-    const HorizontalVerticalMenu = (await import("./horizontalVertical/HorizontalVerticalMenu")).default;
+    const HorizontalVerticalMenu = (await import(/* webpackChunkName: 'HorizontalVerticalMenu' */"./horizontalVertical/HorizontalVerticalMenu")).default;
     this.setState(state => ({...state, HorizontalVerticalMenu}));
   }
   render() {

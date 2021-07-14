@@ -22,7 +22,7 @@ class AltrpMeta extends AltrpModel{
    */
   constructor(metaName, metaValue){
     const data = {metaValue, metaName};
-    
+
     super(data);
   }
 
@@ -42,6 +42,7 @@ class AltrpMeta extends AltrpModel{
     return this.setProperty('metaValue', metaValue);
   }
 
+
   /**
    * Возвращает имя мета-свойства
    * @return {string}
@@ -55,7 +56,18 @@ class AltrpMeta extends AltrpModel{
     if(_.isObject(metaValue)){
       metaValue = JSON.stringify(metaValue);
     }
-    const Resource = (await import( './Resource')).default;
+    const Resource = (await import(/* webpackChunkName: 'Resource' */ './Resource')).default;
+    const resource = new Resource({ route: `/admin/ajax/altrp_meta`});
+    return (await resource.put(metaName, {meta_value:metaValue}));
+
+  }
+
+  static async saveGlobalStylesPresets(metaValue){
+    const metaName = "global_styles";
+    if(_.isObject(metaValue)){
+      metaValue = JSON.stringify(metaValue);
+    }
+    const Resource = (await import(/* webpackChunkName: 'Resource' */ './Resource')).default;
     const resource = new Resource({ route: `/admin/ajax/altrp_meta`});
     return (await resource.put(metaName, {meta_value:metaValue}));
 
@@ -77,14 +89,13 @@ class AltrpMeta extends AltrpModel{
       })
     }
     AltrpMeta.statuses[metaName] = 'loading';
-    const Resource = (await import( './Resource')).default;
+    const Resource = (await import(/* webpackChunkName: 'Resource' */ './Resource')).default;
     const resource = new Resource({ route: `/admin/ajax/altrp_meta`});
     try {
       let metaValue = _.get((await resource.get(metaName)), 'data.meta_value') || null;
       metaValue = mbParseJSON(metaValue);
       if(_.isArray(AltrpMeta.pendingCallbacks[metaName])){
         AltrpMeta.pendingCallbacks[metaName].forEach(callback=>{
-          console.log(callback);
           callback(new AltrpMeta(metaName, metaValue));
         });
       }
@@ -94,7 +105,6 @@ class AltrpMeta extends AltrpModel{
     }catch(error){
       if(_.isArray(AltrpMeta.pendingCallbacks[metaName])){
         AltrpMeta.pendingCallbacks[metaName].forEach(callback=>{
-          console.log(callback);
           callback(new AltrpMeta(metaName, null));
         });
       }

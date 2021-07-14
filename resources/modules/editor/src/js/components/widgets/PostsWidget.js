@@ -1,4 +1,3 @@
-import React, {Component} from "react";
 import Query from "../../classes/Query";
 import {getDataByPath} from "../../../../../front-app/src/js/helpers";
 
@@ -18,7 +17,7 @@ class PostsWidget extends Component {
     }
   }
   _componentDidMount(){
-    import('../altrp-posts/altrp-posts').then(res=>{
+    import(/* webpackChunkName: 'altrp-posts' */'../altrp-posts/altrp-posts').then(res=>{
       this.setState(state=>({...state,PostsComponent:res.default}))
     })
   }
@@ -48,7 +47,7 @@ class PostsWidget extends Component {
     if(this.props.element.getSettings('choose_datasource') === 'datasource') {
       let path = this.props.element.getSettings('posts_datasource', '');
       path = path.replace(/}}/g, '').replace(/{{/g, '');
-      data = getDataByPath(path, []);
+      data = getDataByPath(path, [], this.props.element.getCurrentModel().getData());
     }
     return <this.state.PostsComponent query={query}
                                       currentModel={this.props.currentModel}

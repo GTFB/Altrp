@@ -1,9 +1,9 @@
-import styled from 'styled-components';
+
 import { getResponsiveSetting } from '../helpers';
 import { shadowControllerToStyles, dimensionsControllerToStyles } from '../helpers/styles';
 
 
-const FrontPopupWrapper = styled.div`
+const FrontPopupWrapper = window.styled.div`
 & .popup-content {
   ${({settings}) => {
     let styles = "";
@@ -23,7 +23,7 @@ const FrontPopupWrapper = styled.div`
       let {size, unit} = getResponsiveSetting(settings, 'popup_close_button_height_size');
       styles += `height: ${size}${unit};`;
     }
-      
+
     if(settings.popup_close_button_width_size && settings.popup_close_button_width_size.size) {
       let {size, unit} = getResponsiveSetting(settings, 'popup_close_button_width_size');
       styles += `width: ${size}${unit};`
@@ -39,7 +39,7 @@ const FrontPopupWrapper = styled.div`
     if(settings.popup_close_button_background_color) {
       styles += `background-color: ${getResponsiveSetting(settings, "popup_close_button_background_color").colorPickedHex} !important;`;
     }
-    
+
     styles += shadowControllerToStyles(getResponsiveSetting(settings, "popup_close_button_box_shadow"));
 
     return styles;
@@ -52,7 +52,7 @@ const FrontPopupWrapper = styled.div`
     styles += popupCloseButtonPadding;
     return styles;
   }}
-}  
+}
 & .popup-close-button-icon {
   ${({settings}) => {
     let styles = '';
@@ -66,7 +66,7 @@ const FrontPopupWrapper = styled.div`
     }
     return styles;
   }}
-}  
+}
 & .altrp-offcanvas {
   ${({settings}) => {
     let styles ='';

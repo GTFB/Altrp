@@ -1,5 +1,5 @@
 import {controllerMapStateToProps} from "../../decorators/controller";
-import React, { Component } from "react";
+import React, {Component,} from "react";
 import { connect } from "react-redux";
 import controllerDecorate from "../../decorators/controller";
 import {getTemplateType, iconsManager} from "../../helpers";
@@ -83,7 +83,7 @@ class RepeaterController extends Component {
   duplicateItem(e) {
     let index = parseInt(e.currentTarget.dataset.itemindex);
     let copyItem = this.state.items[index];
-    
+
     let items = update(this.state.items, {
       $splice: [
         [index, 0, copyItem]
@@ -183,13 +183,13 @@ class RepeaterController extends Component {
               if (this.state.activeItem === idx) {
                 itemClasses.push('repeater-item_open');
               }
-              return <RepeaterItem 
+              return <RepeaterItem
                 itemClasses={itemClasses}
                 thisController={this}
-                itemController={item} 
+                itemController={item}
                 fields={this.props.fields}
-                idx={idx}   
-                key={item.id} 
+                idx={idx}
+                key={item.id}
               />
             })
           }
@@ -215,12 +215,17 @@ const RepeaterItem = ({thisController, itemClasses, idx, itemController, fields:
       return ! (getTemplateType() === 'email' && field.hideOnEmail)
     })
   }, [thisController, _fields]);
-  const [, drop] = useDrop({
+  const [collectedProps, drop] = useDrop(()=>({
     accept: "item",
+    drop(item, monitor) {
+      throw 'template'
+
+    },
     hover(item, monitor) {
-      if (!ref.current) {
-        return;
-      }
+      console.log(monitor);
+      // if (!ref.current) {
+      //   return;
+      // }
       const dragIndex = item.idx;
       const hoverIndex = idx;
       if (dragIndex === hoverIndex) {
@@ -240,22 +245,30 @@ const RepeaterItem = ({thisController, itemClasses, idx, itemController, fields:
       moveItem(dragIndex, hoverIndex);
       item.idx = hoverIndex;
     },
-  });
-  const [{ isDragging }, drag] = useDrag({
-    item: { type: "item", idx },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
-  const opacity = isDragging ? 0 : 1;
-  drag(drop(ref));
-
+  }));
+  const [collected, drag, dragPreview ] = useDrag(() =>{
+    return{
+      item: { idx },
+      type: 'item',
+      isDragging: (monitor) => {
+        console.log(monitor);
+      },
+      collect: (monitor) => {
+        return({
+          isDragging: monitor.isDragging(),
+        })},
+    }}
+  );
+  const opacity = collected.isDragging ? 0 : 1;
+  drop(drag(ref));
   return (
     <div className={itemClasses.join(' ')} style={{opacity}}>
       <div className="repeater-item-tools">
         <div className="repeater-item__caption"
           data-itemindex={idx}
           ref={ref}
+          onDragStart={e=>{e.preventDefault();}}
+          onDrag={e=>{e.preventDefault();}}
           onClick={setActiveItem}
         >Item #{idx + 1}</div>
         <button className="repeater-item__icon"
@@ -278,7 +291,7 @@ const RepeaterItem = ({thisController, itemClasses, idx, itemController, fields:
               itemindex={idx}
               key={key}
               default={value}
-              controller={controller} 
+              controller={controller}
             />
           })
         }

@@ -324,6 +324,20 @@ class Users extends Controller
        return response()->json( ['data' => getCurrentUser()], 200, [], JSON_UNESCAPED_UNICODE );
     }
     /**
+     * Обработка запроса на получение данных текущего пользователя
+     * @param ApiRequest $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     */
+    public function getCurrentUserData(ApiRequest $request)
+    {
+      $user = json_encode( getCurrentUser() );
+      $res = "window.current_user = $user ;";
+
+      return response( $res, 200, [
+
+      ] );
+    }
+    /**
      * Обновление данных в local_storage текущего пользователя
      * @param ApiRequest $request
      * @return \Illuminate\Http\JsonResponse

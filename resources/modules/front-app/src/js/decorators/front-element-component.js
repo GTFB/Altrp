@@ -8,6 +8,7 @@ import {
   replaceContentWithData
 } from "../helpers";
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
+import {addSettings} from "../store/elements-settings/actions";
 
 /**
  * Срабатываает перед удалением компонента элемента
@@ -30,6 +31,7 @@ function componentWillUnmount(){
       // console.log(this.state.modelData);
     }
   });
+  appStore.dispatch(addSettings(this.props.element.getId(), this.props.element.getName(), {}))
   if(_.isFunction(this._componentWillUnmount)){
     this._componentWillUnmount();
   }
@@ -204,10 +206,6 @@ function componentDidMount() {
    */
   if(typeof this._componentDidMount === 'function'){
     this._componentDidMount();
-  }
-  if(this.props.element.lastElement){
-    const renderEvent = new Event('render-altrp');
-    window.dispatchEvent(renderEvent);
   }
   // this.subscribeToModels(this.getModelId());
 }

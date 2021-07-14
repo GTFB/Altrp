@@ -212,7 +212,7 @@ class QueryController extends Component {
         <div className="controller-field-group flex-wrap">
           <div className="controller-container__label">Defaults Params for Query</div>
           <textarea className="controller-container__textarea"
-                    onChange={this.changeDefaultParams} value={this.state.value.defaultParams || ''} />
+                    onChange={this.changeDefaultParams} value={value.defaultParams || ''} />
           <div className="controller-container__description">
             Enter each param for Query in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {'{{title}}'} for Take title Value from Current Model
           </div>

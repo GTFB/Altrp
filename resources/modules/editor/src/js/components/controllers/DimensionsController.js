@@ -1,7 +1,6 @@
 import { controllerMapStateToProps } from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import DynamicIcon from "../../../svgs/dynamic.svg";
 import BindIcon from "../../../svgs/bind.svg";
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";

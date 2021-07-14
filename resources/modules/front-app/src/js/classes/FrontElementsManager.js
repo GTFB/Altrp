@@ -15,7 +15,15 @@ class FrontElementsManager {
         name: "heading",
         import: async () => {
           return await import(
-            /* webpackChunkName: 'HeadingWidget' */ "../../../../editor/src/js/components/widgets/HeadingWidget"
+            /* webpackChunkName: 'HeadingTypeHeadingWidget' */ "../../../../editor/src/js/components/widgets/HeadingTypeHeadingWidget"
+          );
+        }
+      },
+      {
+        name: "heading-type-animating",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'HeadingTypeAnimatingWidget' */ "../../../../editor/src/js/components/widgets/HeadingTypeAnimatingWidget"
           );
         }
       },
@@ -52,10 +60,146 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-select",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputSelectWidget' */ "../../../../editor/src/js/components/widgets/InputSelectWidget"
+          );
+        }
+      },
+      {
+        name: "input-select2",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputSelect2Widget' */ "../../../../editor/src/js/components/widgets/InputSelect2Widget"
+          );
+        }
+      },
+      {
+        name: "input-radio",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputRadio' */ "../../../../editor/src/js/components/widgets/InputRadioWidget"
+          );
+        }
+      },
+      {
+        name: "input-checkbox",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputCheckbox' */ "../../../../editor/src/js/components/widgets/InputCheckboxWidget"
+          );
+        }
+      },
+      {
+        name: "input-wysiwyg",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputWysiwyg' */ "../../../../editor/src/js/components/widgets/InputWysiwygWidget"
+          );
+        }
+      },
+      {
+        name: "input-textarea",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputTextarea' */ "../../../../editor/src/js/components/widgets/InputTextareaWidget"
+          );
+        }
+      },
+      {
+        name: "input-image-select",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputImageSelect' */ "../../../../editor/src/js/components/widgets/InputImageSelectWidget"
+          );
+        }
+      },
+      {
+        name: "input-accept",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputAccept' */ "../../../../editor/src/js/components/widgets/InputAcceptWidget"
+          );
+        }
+      },
+      {
+        name: "input-text",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputText' */ "../../../../editor/src/js/components/widgets/InputTextWidget"
+          );
+        }
+      },
+      {
+        name: "input-password",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputPassword' */ "../../../../editor/src/js/components/widgets/InputPasswordWidget"
+          );
+        }
+      },
+      {
+        name: "input-number",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputNumber' */ "../../../../editor/src/js/components/widgets/InputNumberWidget"
+          );
+        }
+      },
+      {
+        name: "input-tel",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputTel' */ "../../../../editor/src/js/components/widgets/InputTelWidget"
+          );
+        }
+      },
+      {
+        name: "input-email",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputEmail' */ "../../../../editor/src/js/components/widgets/InputEmailWidget"
+          );
+        }
+      },
+      {
+        name: "input-date",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputDate' */ "../../../../editor/src/js/components/widgets/InputDateWidget"
+          );
+        }
+      },
+      {
+        name: "input-hidden",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputHidden' */ "../../../../editor/src/js/components/widgets/InputHiddenWidget"
+          );
+        }
+      },
+      {
+        name: "input-file",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputFile' */ "../../../../editor/src/js/components/widgets/InputFileWidget"
+          );
+        }
+      },
+      {
         name: "button",
         import: async () => {
           return await import(
             /* webpackChunkName: 'ButtonWidget' */ "../../../../editor/src/js/components/widgets/ButtonWidget"
+          );
+        }
+      },
+      {
+        name: "breadcrumbs",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'BreadcrumbsWidget' */ "../../../../editor/src/js/components/widgets/BreadcrumbsWidget"
           );
         }
       },
@@ -164,6 +308,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "menu",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'MenuWidget' */ "../../../../editor/src/js/components/widgets/MenuWidget"
+          );
+        }
+      },
+      {
         name: "diagram",
         import: async () => {
           return await import(
@@ -234,6 +386,14 @@ class FrontElementsManager {
             /* webpackChunkName: 'VideoWidget' */ "../../../../editor/src/js/components/widgets/VideoWidget"
           );
         }
+      },
+      {
+        name: "dropbar",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'DropbarWidget' */ "../../../../editor/src/js/components/widgets/DropbarWidget"
+            );
+        }
       }
     ];
     this.components = {};
@@ -246,22 +406,36 @@ class FrontElementsManager {
   async loadComponents() {
     let componentsToLoad;
     if (window.altrpElementsLists) {
+      window.altrpElementsLists = window.altrpElementsLists.filter(elementName =>{
+        return this.ELEMENTS.find(element => elementName === element.name);
+      })
       componentsToLoad = this.ELEMENTS.filter(el => {
         return window.altrpElementsLists.indexOf(el.name) !== -1;
       });
-      componentsToLoad = componentsToLoad.map(async el => {
-        return (this.components[el.name] = (
-          await el.import(/* webpackChunkName: 'FrontElementsFabric' */)
-        ).default);
+      // componentsToLoad = componentsToLoad.map(async el => {
+      //   return (this.components[el.name] = (
+      //     await el.import()
+      //   ).default);
+      // });
+      componentsToLoad = componentsToLoad.map(el => {
+        console.log(el.name, performance.now());
+        return new Promise((resolve, reject) => {
+          el.import().then(res=>{
+            console.log(el.name, performance.now());
+            this.components[el.name] = res.default
+            resolve(res);
+          })
+        })
       });
     } else {
       componentsToLoad = this.ELEMENTS.map(async el => {
         return (this.components[el.name] = (
-          await el.import(/* webpackChunkName: 'FrontElementsFabric' */)
+          await el.import()
         ).default);
       });
     }
     return await Promise.all(componentsToLoad);
+    // return true;
   }
 
   /**
@@ -284,12 +458,15 @@ class FrontElementsManager {
     if (!window.altrpElementsLists) {
       return;
     }
+    if(window.LIBS){
+      await Promise.all(Object.values(window.LIBS).map(l=>l()));
+    }
     let componentsToLoad = this.ELEMENTS.filter(el => {
       return window.altrpElementsLists.indexOf(el.name) === -1;
     });
     componentsToLoad = componentsToLoad.map(async el => {
       this.components[el.name] = (
-        await el.import(/* webpackChunkName: 'FrontElementsFabric' */)
+        await el.import()
       ).default;
     });
     await Promise.all(componentsToLoad);
@@ -299,9 +476,9 @@ class FrontElementsManager {
    */
   componentsIsLoaded() {
     if (! window.altrpElementsLists) {
-      return _.keys(this.components).length === this.ELEMENTS.length;
+      return Object.keys(this.components).length === this.ELEMENTS.length;
     }
-    return _.keys(this.components).length >= window.altrpElementsLists.length;
+    return Object.keys(this.components).length >= window.altrpElementsLists.length;
   }
 
   /**

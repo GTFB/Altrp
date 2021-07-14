@@ -137,7 +137,6 @@ class Gallery extends BaseElement {
       },
       type: CONTROLLER_NUMBER,
       label: 'Columns',
-      default: 3,
     });
 
     this.addControl("spacing_grid_settings", {
@@ -149,7 +148,7 @@ class Gallery extends BaseElement {
       units:[
         'px',
       ],
-      default: { size: 0, unit: "px"},
+      default: {unit: "px"},
       max: 100,
       min: 0,
     });
@@ -358,22 +357,6 @@ class Gallery extends BaseElement {
       ],
     });
 
-    // this.addControl('filters', {
-    //   type: CONTROLLER_FILTERS,
-    //   label: 'Filters',
-    //   default: {
-    //     blur: 0,
-    //     brightness: 100,
-    //     contrast: 100,
-    //     saturate: 100,
-    //     hue: 0,
-    //   },
-    //   rules: {
-    //     '{{ELEMENT}} .altrp-gallery-img{{STATE}}': [
-    //       'filter: blur({{BLUR}}px)  brightness({{BRIGHTNESS}}%) contrast({{CONTRAST}}%) saturate({{SATURATE}}%) hue-rotate({{HUE}}deg);'
-    //     ],
-    //   },
-    // });
 
     this.addControl('image_hover_animation', {
         type: CONTROLLER_SELECT,
@@ -599,7 +582,6 @@ class Gallery extends BaseElement {
     this.addControl('overlay_content_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: 'flex-start',
       options: [
         {
           icon: 'left',
@@ -619,7 +601,6 @@ class Gallery extends BaseElement {
     this.addControl('overlay_content_vertical', {
       type: CONTROLLER_CHOOSE,
       label: 'Vertical Alignment',
-      default: 'flex-start',
       options: [
         {
           icon: 'left',
@@ -694,68 +675,6 @@ class Gallery extends BaseElement {
         label: 'Typographic',
       }
     );
-
-    this.addControl('overlay_content_animation', {
-      type: CONTROLLER_HEADING,
-      label: 'Animation',
-    });
-
-    this.addControl('hover_animation_overlay_content', {
-      type: CONTROLLER_SELECT,
-      options: [
-        {
-          value: "none",
-          label: "None"
-        },
-        {
-          value: "slideInRight",
-          label: "Slide in right"
-        },
-        {
-          value: "slideInLeft",
-          label: "Slide in left"
-        },
-        {
-          value: "slideInUp",
-          label: "Slide in up"
-        },
-        {
-          value: "slideInDown",
-          label: "Slide in down"
-        },
-        {
-          value: "zoomIn",
-          label: "Zoom in"
-        },
-        {
-          value: "zoomOut",
-          label: "Zoom out"
-        },
-        {
-          value: "fadeIn",
-          label: "FadeIn"
-        },
-      ],
-      label: 'Hover animation',
-      default: 'none',
-    });
-
-    this.addControl('overlay_transition_content', {
-      type: CONTROLLER_SLIDER,
-      label: 'Animation duration (ms)',
-      default: {
-        size: 800,
-        unit: 'px',
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-      max: 3000,
-      min: 0,
-    });
-
     this.endControlSection();
 
     advancedTabControllers(this);

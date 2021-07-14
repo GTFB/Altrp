@@ -2,7 +2,13 @@
  * Имеет интерфейс для доступы к свойствам data (любой вложенности)
  * @class AltrpModel
  */
-import {cloneDeep, get, set, has, unset, isString, isEmpty} from "lodash";
+import cloneDeep from 'lodash.clonedeep';
+import get from 'lodash.get';
+import set from 'lodash.set';
+import has from 'lodash.has';
+import unset from 'lodash.unset';
+import isEmpty from 'lodash.isempty';
+// import {cloneDeep, get, set, has, unset, isString, isEmpty} from "lodash";
 
 class AltrpModel {
   constructor(data = {}) {
@@ -66,5 +72,5 @@ class AltrpModel {
     return unset(this.data, name);
   }
 }
-
+window.AltrpModel = AltrpModel;
 export default AltrpModel

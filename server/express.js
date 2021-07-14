@@ -1,31 +1,42 @@
-import { ServerStyleSheet } from "styled-components";
-import AltrpModel from "../resources/modules/editor/src/js/classes/AltrpModel";
+import styled,  { ServerStyleSheet, createGlobalStyle } from "styled-components";
 import Area from "../resources/modules/front-app/src/js/classes/Area";
-const sheet = new ServerStyleSheet();
 import { parse } from "node-html-parser";
+import{Link} from "react-router-dom"
 import React from "react";
+import lodash from "lodash";
+import {StaticRouter as Router, Route, Switch} from "react-router-dom";
+import {setAreas} from "../resources/modules/front-app/src/js/store/areas/actions";
+import getAltrpSetting from "./functions/get-altrp-setting";
 if (typeof performance === "undefined") {
   global.performance = require("perf_hooks").performance;
 }
+global.styled = styled;
+global._ = lodash;
+global.createGlobalStyle = createGlobalStyle;
 /**
  * Эмулируем окружение клиента
  * @type {{parent: {}}}
  */
 global.window = {
-  parent: {}
+  parent: {},
+  Link,
+
 };
+global.window.altrpMenus = [];
 global.SSR = true;
 global.window.SSR = true;
 // global.document = {
 //   addEventListener: () => {
 //   },
 // };
+require( '../resources/modules/front-app/src/js/libs/react-lodash');
+require('../resources/modules/front-app/src/js/libs/altrp');
 global.frontElementsManager = require("./classes/modules/FrontElementsManager").default;
-global.React = require("react");
 global.history = {
   back() {}
 };
 global.iconsManager = new (require("../resources/modules/editor/src/js/classes/modules/IconsManager").default)();
+const AltrpModel = require('../resources/modules/editor/src/js/classes/AltrpModel').default
 global.currentRouterMatch = new AltrpModel({});
 global.Component = global.React.Component;
 window.frontElementsFabric = require("../resources/modules/front-app/src/js/classes/FrontElementsFabric").default;
@@ -40,25 +51,25 @@ window.stylesModulePromise = new Promise(function(resolve) {
 });
 
 const express = require("express");
-let PORT = process.env.SSR_PORT || 9000;
-const { Provider } = require("react-redux");
 require("dotenv").config();
+let PORT = process.env.ALTRP_SETTING_SSR_PORT || 9000;
+const { Provider } = require("react-redux");
 global.appStore = require("../resources/modules/front-app/src/js/store/store").default;
 window.parent.appStore = global.appStore;
+window.container_width = getAltrpSetting('container_width')
 const ReactDOMServer = require("react-dom/server");
 const AreaComponent = require("../resources/modules/front-app/src/js/components/AreaComponent")
   .default;
 const Styles = require("../resources/modules/editor/src/js/components/Styles")
   .default;
 
-const { StaticRouter } = require("react-router");
 // const { HTML5Backend } = require("react-dnd-html5-backend");
 // const { DndProvider } = require("react-dnd");
-const {
-  default: RouteContentWrapper
-} = require("../resources/modules/front-app/src/js/components/styled-components/RouteContentWrapper");
+
 
 var bodyParser = require("body-parser");
+const GlobalStyles = require('../resources/modules/front-app/src/js/components/GlobalStyles').default
+
 const app = express();
 app.use(bodyParser.json({ limit: "500mb", extended: true }));
 app.use(
@@ -71,34 +82,11 @@ app.use(
 app.use(express.static("public"));
 app.get("/*", (req, res) => {
   return res.json({ success: true });
+
 });
-
-/**
- *
- * @param {Request} req
- * @param {Response} res
- * @param {string}data
- * @param {any} component
- * @param page
- * @param {any} store
- */
-function renderHTML(req, res, data, component, page, store) {
-  // console.log(data.replace(
-  //   '<div id="front-app" class="front-app"></div>',
-  //   `<div id="front-app">${component}</div>
-  //     `
-  // ));
-
-  return res.send(
-    data.replace(
-      '<div id="front-app" class="front-app"></div>',
-      `<div id="front-app">${component}</div>
-      `
-    )
-  );
-}
-
+const addSettingsToStore = (require("../resources/modules/front-app/src/js/functions/load-global-styles")).addSettingsToStore
 app.post("/", (req, res) => {
+  const sheet = new ServerStyleSheet();
   const store = window.appStore;
   let json = JSON.parse(req.body.json) || [];
   let page = json.page || [];
@@ -127,50 +115,60 @@ app.post("/", (req, res) => {
     }
   });
   elements = elements.map(item => new FrontElement(item));
-  const elementStyles = elements.map(element => ({
-    styles: element.getStringifyStyles(),
-    elementId: element.getId()
-  }));
-  page = page.map(area => (Area.areaFabric(area)))
-  let app = ReactDOMServer.renderToString(
+
+  window.currentRouterMatch = new AltrpModel({});
+  window.page_areas = page;
+  page = page.map(area => (Area.areaFactory(area)));
+  store.dispatch(setAreas(page));
+  addSettingsToStore();
+  let resultSSRApp = ReactDOMServer.renderToString(
     sheet.collectStyles(
-      <Provider store={window.appStore}>
-        <div className={`front-app-content `}>
-          <StaticRouter>
-            <RouteContentWrapper className="route-content" id="route-content" areas={page}>
-              {page.map((area, idx) => {
-                return (
-                  <AreaComponent
-                    {...area}
-                    area={area}
-                    areas={page}
-                    page={page_id}
-                    models={[page_model]}
-                    key={"appArea_" + area.id}
-                  />
-                );
-              })}
-            </RouteContentWrapper>
-          </StaticRouter>
-        </div>
-        <Styles elementStyles={elementStyles} />
-      </Provider>
+      <Router>
+        <Switch>
+          <Route path='*' exact>
+            <Provider store={store}>
+              <div className="route-content" id="route-content" areas={page}>
+                {page.map((area, idx) => {
+                  return (
+                    <AreaComponent
+                      {...area}
+                      area={area}
+                      areas={page}
+                      page={page_id}
+                      models={[page_model]}
+                      key={"appArea_" + area.id}
+                    />
+                  );
+                })}
+                <GlobalStyles/>
+              </div>
+            </Provider>
+          </Route>
+        </Switch>
+      </Router>
     )
   );
 
   let styleTags = sheet.getStyleTags();
-  let _app = parse(app);
+  let _app = parse(resultSSRApp);
   if (_app.querySelector(".styles-container")) {
     styleTags += `<style>${
       _app.querySelector(".styles-container").textContent
     }</style>`;
     _app.removeChild(_app.querySelector(".styles-container"));
-    app = _app.toString();
+    resultSSRApp = _app.toString();
   }
-  // sheet.seal();
+  let styledStylesTags = parse(styleTags);
+  if(styledStylesTags.querySelector('[data-styled]')){
+    styledStylesTags.querySelector('[data-styled]')?.removeAttribute('data-styled-version')
+    styledStylesTags.querySelector('[data-styled]')?.removeAttribute('data-styled');
+    styledStylesTags.querySelector('style')?.setAttribute('data-altrp-ssr-styles', 'true');
+    styleTags = styledStylesTags.toString();
+  }
+  sheet.seal();
   const result = {
     important_styles: unEntity(styleTags),
-    content: unEntity(app)
+    content: unEntity(resultSSRApp)
   };
   return res.json(result);
 });
@@ -194,5 +192,7 @@ function unEntity(str) {
   return str
     .replace(/&amp;/g, "&")
     .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">");
+    .replace(/&gt;/g, ">")
+    .replace(/\/\*!sc\*\//g, "")
+    .replace(/\n/g, '');
 }

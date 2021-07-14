@@ -1,9 +1,177 @@
-import React, {Component} from "react";
 import Query from "../../classes/Query";
 import {Scrollbars} from "react-custom-scrollbars";
 import {getDataByPath, getWidgetState, storeWidgetState} from "../../../../../front-app/src/js/helpers";
-const AltrpTableWithoutUpdate = React.lazy(() => import('../altrp-table/altrp-table-without-update'));
-const AltrpTable = React.lazy(() => import('../altrp-table/altrp-table'));
+const AltrpTableWithoutUpdate = React.lazy(() => import(/* webpackChunkName: 'altrp-table-without-update' */'../altrp-table/altrp-table-without-update'));
+const AltrpTable = React.lazy(() => import(/* webpackChunkName: 'altrp-table' */'../altrp-table/altrp-table'));
+
+(window.globalDefaults = window.globalDefaults || []).push(`
+.altrp-table-th {
+  text-align: center;
+  font-size: 14px;
+  font-weight: normal;
+  font-family: "Open Sans";
+  line-height: 1.5;
+  letter-spacing: 0;
+  padding: 0 0 0 0;
+  display: table-cell;
+}
+.altrp-table-td {
+  text-align: left;
+  padding: 0 0 0 0;
+  font-size: 14px;
+  font-weight: normal;
+  font-family: "Open Sans";
+  line-height: 1.5;
+  letter-spacing: 0;
+  display: table-cell;
+}
+.altrp-table-tbody--striped tr:nth-child(2n) {
+  background-color: rgba(0, 0, 50, .05);
+}
+.altrp-table-tbody,
+.altrp-table-th {
+  border-collapse: separate;
+  user-select: none;
+}
+.altrp-table-td__grouping {
+  font-size: 18px;
+  font-weight: bold;
+}
+.altrp-table-th_sort {
+  padding: 0;
+  margin-left: 10px;
+}
+.altrp-table-th .sort-icon {
+  margin-left: 10px;
+}
+.altrp-table {
+  overflow: hidden;
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  border-width: 1px 1px 1px 1px;
+  border-color: rgb(186, 186, 186);
+}
+.altrp-table__filter-select {
+  width: 100%;
+}
+.altrp-table__filter-select .altrp-field-select2__placeholder {
+  white-space: nowrap;
+}
+.altrp-table__filter-select .altrp-field-select2__single-value {
+  font-size: 14px;
+}
+.altrp-table__filter-select .altrp-field-select2__indicator-separator {
+  display: none;
+}
+.altrp-table__filter-select .altrp-field-select2__indicator {
+  align-items: center;
+}
+.altrp-table__filter-select .altrp-field-select2__control {
+  width: 100%;
+  min-height: 19px;
+  padding: 0;
+  border-radius: 0;
+  outline: none;
+  border-color: rgb(142, 148, 170);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.altrp-table__filter-select .altrp-field-select2__control input {
+  border: none;
+}
+.altrp-table__filter-select .altrp-field-select2__value-container {
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: 13px;
+}
+.altrp-table-td__grouping {
+  -webkit-transition-duration: 0.2s;
+  -moz-transition-duration: 0.2s;
+  -ms-transition-duration: 0.2s;
+  -o-transition-duration: 0.2s;
+  transition-duration: 0.2s;
+}
+.altrp-table-td_alignment .altrp-table-td_alignment-center .altrp-actions{
+  justify-content: center;
+}
+.altrp-table-td_alignment-right .altrp-actions {
+  justify-content: flex-end;
+}
+.altrp-table__collapse-icon {
+  display: inline-block;
+}
+.altrp-table__collapse-icon .altrp-table__collapse-icon svg {
+  position: relative;
+}
+
+.altrp-table-head {
+  display: table-header-group;
+}
+
+.altrp-table-tbody {
+  display: table-row-group;
+}
+
+.altrp-table-foot {
+  display: table-footer-group;
+}
+
+.altrp-table-tr {
+  display: table-row;
+}
+
+.altrp-table_loading {
+  display: block;
+}
+
+.altrp-table-th_global-filter {
+  colspan: all;
+}
+
+.altrp-table-td .altrp-inherit{
+  border: none;
+  width: 100%;
+}
+.altrp-table-td_loading {
+  display: block;
+  width: 100%;
+}
+
+.altrp-table__resizer {
+  display: inline-block;
+  background: blue;
+  width: 10px;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translateX(50%);
+  z-index: 1;
+  touch-action: none;
+}
+.altrp-table__resizer_resizing {
+    background: red;
+}
+.altrp-table .altrp-table-td .altrp-table-td__double-click-content {
+  display: none;
+}
+.altrp-table .altrp-table-td .altrp-table-td_double-clicked .altrp-table-td_double-clicked .altrp-table-td__double-click-content {
+  display: block;
+  width: 100%;
+  border-width: 2px;
+}
+.altrp-table .altrp-table-td .altrp-table-td_double-clicked .altrp-table-td_double-clicked .altrp-table-td__default-content {
+  display: none;
+}
+.altrp-table-global-filter {
+  font-weight: 400;
+}
+.altrp-table-global-filter label {
+  display: inline-block;
+}
+`)
 
 class TableWidget extends Component {
   constructor(props){
@@ -53,7 +221,7 @@ class TableWidget extends Component {
     if(this.props.element.getSettings('table_datasource')
         && this.props.element.getSettings('choose_datasource') === 'datasource'){
       let path = this.props.element.getSettings('table_datasource').replace(/{{/g, '').replace(/}}/g, '');
-      data = getDataByPath(path)
+      data = getDataByPath(path, [], this.props.element.getCurrentModel().getData())
     }
     let query = new Query(this.props.element.getSettings().table_query || {}, this);
     if(! this.showTable(query)){

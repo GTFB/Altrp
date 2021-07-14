@@ -26,13 +26,24 @@ class ExportExcel extends Model
     public function __construct($data, $template, $filename)
     {
         $this->data = json_decode($data, true);
-        $this->template = false;
-        if (file_exists($template))
-            $this->template = $template;
-        $this->filename = 'report.xlsx';
-        if ($filename)
-            $this->filename = $filename;
-        //echo $this->filename;
+
+        $this->template = $this->checkTemplate($template);
+
+        $this->filename = $filename ?? 'report';
+    }
+
+    protected function checkTemplate($template)
+    {
+        $result = false;
+
+        $template_path = public_path() . '/storage/doc/' . $template . '.xls';
+        $template_path_x = public_path() . '/storage/doc/' . $template . '.xlsx';  
+  
+  
+        if (file_exists($template_path)) $result = $template_path;
+        if (file_exists($template_path_x)) $result = $template_path_x;
+  
+        return $result;  
     }
 
     protected function getDelimiter($file)
@@ -67,7 +78,7 @@ class ExportExcel extends Model
         if (!empty($this->worksheet)) {
             for ($i = 0; $i < count($this->worksheet); $i++) {
                 for ($j = 0; $j < count($this->worksheet[$i]); $j++) {
-                    preg_match_all('/\{\{*.data:([^{}]+)\}\}/im', trim($this->worksheet[$i][$j]), $data);
+                    preg_match_all('/\$\{*.data:([^{}]+)\}/im', trim($this->worksheet[$i][$j]), $data);
                     if (!empty($data[1])) {
                         $ColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($j + 1);
                         $column = $ColumnIndex . ($i + 1);
@@ -75,8 +86,8 @@ class ExportExcel extends Model
                             $key = trim($item);
                             //вставляем одиночную переменную
                             $this->worksheet[$i][$j] = str_replace('data:' . $item, $this->data[$key], $this->worksheet[$i][$j]);
-                            $this->worksheet[$i][$j] = str_replace('{{', '', $this->worksheet[$i][$j]);
-                            $this->worksheet[$i][$j] = str_replace('}}', '', $this->worksheet[$i][$j]);
+                            $this->worksheet[$i][$j] = str_replace('${', '', $this->worksheet[$i][$j]);
+                                $this->worksheet[$i][$j] = str_replace('}', '', $this->worksheet[$i][$j]);
                             $this->spreadsheet->getActiveSheet()->setCellValue($column, $this->worksheet[$i][$j]);
                         }
                     }
@@ -87,22 +98,24 @@ class ExportExcel extends Model
         }
     }
 
-    protected function parseTemplateArray(&$offset, $rows)
+    protected function parseTemplateArray(&$offset)
     {
         if (!empty($this->worksheet)) {
             for ($i = 0; $i < count($this->worksheet); $i++) {
                 for ($j = 0; $j < count($this->worksheet[$i]); $j++) {
-                    preg_match('/\{\{*.array:([^{}]+)\}\}/im', trim($this->worksheet[$i][$j]), $data);
+                    preg_match('/\$\{*.array:([^{}]+)\}/im', trim($this->worksheet[$i][$j]), $data);
                     if (!empty($data[1])) {
                         $ColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($j + 1);
+                        
                         $column = $ColumnIndex . ($i + 1 + $offset);
                         $key = trim($data[1]);
                         //вставляем массив
                         $this->worksheet[$i][$j] = '';
-                        if (isset($rows[$key]) && !empty($rows[$key])) {
-                            $countRows = count($rows[$key]) - 1;
+                        if (isset($this->data[$key]) && !empty($this->data[$key])) {
+                            
+                            $countRows = count($this->data[$key]) - 1;
                             $this->sheet->insertNewRowBefore($i + 2 + $offset, $countRows);
-                            $this->sheet->fromArray($rows[$key], NULL, $column);
+                            $this->sheet->fromArray($this->data[$key], NULL, $column);
                             $offset = $offset + $countRows;
                             return;
                         }
@@ -114,7 +127,7 @@ class ExportExcel extends Model
         }
     }
 
-    public function export()
+    public function export($type = false)
     {
         try {
             if ($this->template) {
@@ -146,7 +159,7 @@ class ExportExcel extends Model
             } else {
                 $this->spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
                 $this->sheet = $this->spreadsheet->getActiveSheet();
-                $this->sheet->fromArray($this->data['dataArray'], NULL, 'A1');
+                $this->sheet->fromArray($this->data['data'], NULL, 'A1');
             }
             /*
             header('Content-Type: application/vnd.ms-excel');
@@ -159,12 +172,22 @@ class ExportExcel extends Model
             $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($this->spreadsheet, "Xlsx");
             //$writer->save('php://output');
             //$writer->save('j:\NewServer\data\altrp\storage\tmp\text.xlsx');
+
+            if (!file_exists(storage_path() . '/tmp/')) mkdir(storage_path() . '/tmp/');
             $filename = storage_path() . '/tmp/' . $this->filename . '.xlsx';
+
+            if ($type === 'robot') {
+                if (!file_exists(storage_path() . '/document/')) mkdir(storage_path() . '/document/');
+                $filename = storage_path() . '/document/' . $this->filename . '.xlsx';
+            }
+
             $writer->save($filename);
             readfile($filename);
-            unlink($filename);
+
+            if ($type !== 'robot') unlink($filename);
+            
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            \Log::info($e->getMessage());
         }
     }
 }

@@ -73,7 +73,15 @@ const Cell = ({ cell, settings }) => {
   // if (!column.column_body_alignment) {
   //   cellClassNames.join( `altrp-table-td_alignment-${column.column_body_alignment}`);
   // }
-  let style = cell.column.column_body_alignment ? { textAlign: cell.column.column_body_alignment } : {};
+  let style = {};
+
+  if (cell.column.column_body_alignment) {
+    style.textAlign = cell.column.column_body_alignment;
+  }
+
+  if (cell.column.body_bg) {
+    style.backgroundColor = cell.column.body_bg.color;
+  }
   style = _.assign(style, cellProps.style || {});
   if (cell.column.column_cell_vertical_alignment && cell.column.column_cell_vertical_alignment !== 'inherit') {
     style.verticalAlign = cell.column.column_cell_vertical_alignment;
