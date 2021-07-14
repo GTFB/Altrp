@@ -125,6 +125,10 @@ export function actionsControllers(
         label: 'Table to CSV'
       },
       {
+        value: 'table_to_xml',
+        label: 'Table to XML'
+      },
+      {
         value: 'table_to_xls',
         label: 'Table to XLS'
       },
@@ -346,6 +350,7 @@ export function actionsControllers(
         'elements_to_pdf',
         'data_to_csv',
         'table_to_csv',
+        'table_to_xml',
         'table_to_xls'
       ]
     }
@@ -465,6 +470,7 @@ export function actionsControllers(
         'scroll_to_element',
         'trigger',
         'table_to_csv',
+        'table_to_xml',
         'toggle_offcanvas',
         'table_to_xls'
       ],

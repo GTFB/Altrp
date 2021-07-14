@@ -15,7 +15,8 @@ class ExportXml extends Model
 
     public function __construct($data, $filename)
     {
-        $this->data = json_decode($data, true);
+        $this->data = iconv('windows-1251', 'UTF-8', $data);
+        $this->data = json_decode($this->data, true);
         $this->filename = 'report.xml';
         if ($filename)
             $this->filename = $filename;

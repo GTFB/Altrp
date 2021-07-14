@@ -6,6 +6,7 @@ const {
   altrpLogout,
   dataFromTable,
   dataToCSV,
+  dataToXML,
   elementsToPdf,
   getAppContext,
   getComponentByElementId,
@@ -265,6 +266,11 @@ class AltrpAction extends AltrpModel {
         {
           result = await this.doActionTableToCSV();
         }
+        break;
+      case 'table_to_xml':
+      {
+        result = await this.doActionTableToXML();
+      }
         break;
       case 'table_to_xls':
         result = await this.doActionTableToXLS();
@@ -721,6 +727,38 @@ class AltrpAction extends AltrpModel {
     let filename = replaceContentWithData(this.getProperty('name', 'file'));
     try {
       return await dataToCSV(data, filename);
+    } catch (error) {
+      console.error(error);
+      return { success: false };
+    }
+  }
+  /**
+   * HTML-Таблицу в XML-файл
+   * @return {Promise<{}>}
+   */
+  async doActionTableToXML() {
+    let elementId = this.getProperty('element_id');
+    if (!elementId) {
+      return { success: true };
+    }
+    elementId = elementId.trim();
+    const element = getHTMLElementById(elementId);
+    if (!element) {
+      return { success: true };
+    }
+    let data;
+    try {
+      data = dataFromTable(element);
+    } catch (error) {
+      console.error(error);
+      return { success: false };
+    }
+    if (_.isEmpty(data)) {
+      return { success: true };
+    }
+    let filename = replaceContentWithData(this.getProperty('name', 'file'));
+    try {
+      return await dataToXML(data, filename);
     } catch (error) {
       console.error(error);
       return { success: false };
