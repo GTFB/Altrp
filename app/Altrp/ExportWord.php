@@ -19,13 +19,26 @@ class ExportWord extends Model
     public function __construct($data, $template, $filename)
     {
         $this->data = json_decode($data, true);
-        $this->template = false;
-        if (file_exists($template))
-            $this->template = $template;
-        $this->filename = 'report';
-        if ($filename)
-            $this->filename = $filename;
+
+        $this->template = $this->checkTemplate($template);
+
+        $this->filename = $filename ?? 'report';
     }
+
+    protected function checkTemplate($template)
+    {
+        $result = false;
+
+        $template_path = storage_path() . '/app/public/' . $template . '.doc';
+        $template_path_x = storage_path() . '/app/public/' . $template . '.docx';  
+  
+  
+        if (file_exists($template_path)) $result = $template_path;
+        if (file_exists($template_path_x)) $result = $template_path_x;
+  
+        return $result;  
+    }
+
 
     public function export($type = false)
     {
@@ -35,6 +48,7 @@ class ExportWord extends Model
                     $_doc = new TemplateProcessor($this->template);
                     foreach ($this->data as $key => $dd) {
                         if (is_array($dd)) {
+                            $dd = unsetAltrpIndex($dd);
                             $firstKey = array_key_first($dd[0]);
                             $_doc->cloneRowAndSetValues($firstKey, $dd);
                         } else {
@@ -60,8 +74,8 @@ class ExportWord extends Model
             $filename = storage_path() . '/tmp/' . $this->filename . '.docx';
 
             if ($type === 'robot') {
-                if (!file_exists(storage_path() . '/document/')) mkdir(storage_path() . '/document/');
-                $filename = storage_path() . '/document/' . $this->filename . '.docx';
+                if (!file_exists(storage_path() . '/app/public/document/')) mkdir(storage_path() . '/app/public/document/');
+                $filename = storage_path() . '/app/public/document/' . $this->filename . '.docx';
             }
 
             $_doc->saveAs($filename);
