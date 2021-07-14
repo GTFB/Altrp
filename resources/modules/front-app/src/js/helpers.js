@@ -1933,7 +1933,6 @@ export function getResponsiveSetting(
 ) {
   let { currentScreen } = window.parent.appStore.getState();
   let _settingName = `${settingName}_${elementState}_`;
-
   if (currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT) {
     let setting = settings[_settingName];
     if (setting === undefined) {

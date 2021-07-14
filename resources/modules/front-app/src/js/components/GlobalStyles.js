@@ -172,6 +172,7 @@ function mapStateToProps(state) {
   if(isEditor()){
     return {};
   }
+  console.log(state.currentScreen);
   return {
     elementsSettings: state.elementsSettings,
     areas: state.areas,

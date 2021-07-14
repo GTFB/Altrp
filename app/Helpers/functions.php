@@ -468,14 +468,18 @@ function getFilterValues() {
 
 /**
  * Вернет true, если пользователь админ, false - в остальных случаях
+ * @param bool $for_css
  * @return boolean
  */
-function isAdmin(){
+function isAdmin( bool $for_css = true){
   /**
    * @var User $user
    */
   $user = auth()->user();
   if( ! auth()->user() ){
+    return false;
+  }
+  if( $for_css && array_search( get_current_device(), ['DEFAULT_BREAKPOINT', 'Desktop'] ) === false ){
     return false;
   }
   return $user->hasRole( 'admin' );
