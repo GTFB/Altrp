@@ -63,3 +63,4 @@ public/modules/reports-new
 
 package-lock.json
 yarn.lock
+*.conf

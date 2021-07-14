@@ -18,6 +18,7 @@ export default class AdminSettings extends Component {
       SSREnabled: false,
       SSRPort: "",
       SSRAlias: "",
+      SSRConf: false,
       activeTab: parseInt(window.location.hash[1]) || 0
     };
   }
@@ -107,7 +108,17 @@ export default class AdminSettings extends Component {
         "ssr_settings_alias"
       )
     ).ssr_settings_alias;
-    this.setState(state => ({ ...state, SSREnabled, SSRPort, SSRAlias }));
+    let SSRConf = (
+      await new Resource({ route: "/admin/ajax/ssr/check" }).get("")
+    ).file;
+    console.log(SSRConf);
+    this.setState(state => ({
+      ...state,
+      SSREnabled,
+      SSRPort,
+      SSRAlias,
+      SSRConf
+    }));
   }
   switchTab(activeTab) {
     window.location.hash = activeTab + "";
@@ -117,7 +128,7 @@ export default class AdminSettings extends Component {
   }
 
   render() {
-    const { SSRPort, SSRAlias } = this.state;
+    const { SSRPort, SSRAlias, SSRConf } = this.state;
     return (
       <div className="admin-settings admin-page">
         <div className="admin-heading">
@@ -199,6 +210,22 @@ export default class AdminSettings extends Component {
                       </td>
                     </tr>
                   )}
+                  {SSRConf && (
+                    <tr className="admin-settings-table-row">
+                      <td className="admin-settings-table__td row-text">
+                        Restart SSR
+                      </td>
+                      <td className="admin-settings-table__td ">
+                        <button
+                          className="btn btn_success"
+                          onClick={this.restartSSR}
+                        >
+                          Restart
+                        </button>
+                      </td>
+                    </tr>
+                  )}
+
                   <tr className="admin-settings-table-row">
                     <td className="admin-settings-table__td row-text">
                       Clear project cache
