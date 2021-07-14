@@ -73,7 +73,7 @@ export default class AdminSettings extends Component {
     );
   };
   restartSSR = async e => {
-    new Resource({ route: "/ssr/restart" }).post().then(
+    new Resource({ route: "/admin/ajax/ssr/restart" }).post().then(
       success => {
         alert(success.message);
       },
