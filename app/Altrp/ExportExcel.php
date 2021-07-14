@@ -36,8 +36,8 @@ class ExportExcel extends Model
     {
         $result = false;
 
-        $template_path = public_path() . '/storage/doc/' . $template . '.xls';
-        $template_path_x = public_path() . '/storage/doc/' . $template . '.xlsx';  
+        $template_path = storage_path() . '/app/public/' . $template . '.xls';
+        $template_path_x = storage_path() . '/app/public/' . $template . '.xlsx';  
   
   
         if (file_exists($template_path)) $result = $template_path;
@@ -115,7 +115,7 @@ class ExportExcel extends Model
                             
                             $countRows = count($this->data[$key]) - 1;
                             $this->sheet->insertNewRowBefore($i + 2 + $offset, $countRows);
-                            $this->sheet->fromArray($this->data[$key], NULL, $column);
+                            $this->sheet->fromArray(unsetAltrpIndex($this->data[$key]), NULL, $column);
                             $offset = $offset + $countRows;
                             return;
                         }
@@ -177,8 +177,8 @@ class ExportExcel extends Model
             $filename = storage_path() . '/tmp/' . $this->filename . '.xlsx';
 
             if ($type === 'robot') {
-                if (!file_exists(storage_path() . '/document/')) mkdir(storage_path() . '/document/');
-                $filename = storage_path() . '/document/' . $this->filename . '.xlsx';
+                if (!file_exists(storage_path() . '/app/public/document/')) mkdir(storage_path() . '/app/public/document/');
+                $filename = storage_path() . '/app/public/document/' . $this->filename . '.xlsx';
             }
 
             $writer->save($filename);

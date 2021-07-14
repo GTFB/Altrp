@@ -1444,3 +1444,15 @@ function loadFonts( $page_areas ){
   }
   return $out;
 }
+
+function unsetAltrpIndex($array){
+  if (is_array($array)) {
+    $array = collect($array)->map(function ($item) {
+        if (isset($item['altrpIndex'])) unset($item['altrpIndex']);
+        return $item;
+      })
+      ->toArray();
+   }
+   return $array;
+}
+
