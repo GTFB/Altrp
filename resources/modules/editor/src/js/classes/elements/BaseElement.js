@@ -810,6 +810,7 @@ class BaseElement extends ControlStack {
         currentValue.secondColor = value.color;
         value = currentValue;
       }
+      console.log(settingName);
       this.setSettingValue(settingName, value);
     });
     this.updateStyles();

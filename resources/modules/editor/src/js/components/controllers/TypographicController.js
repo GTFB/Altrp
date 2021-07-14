@@ -13,6 +13,7 @@ import { altrpFontsSet } from "../../../../../front-app/src/js/constants/fonts";
 import PresetGlobalFonts from "./PresetGlobalFonts";
 import store from "../../store/store";
 import { changeTemplateStatus } from "../../store/template-status/actions";
+import ResponsiveDdMenu from "../ResponsiveDdMenu";
 
 class TypographicController extends Component {
   constructor(props) {
@@ -730,6 +731,9 @@ class TypographicController extends Component {
       <div className="controller-container controller-container_shadow">
         <div className="controller-container__label control-shadow-label">
           {this.props.label}
+          <div className="responsive-absolute-shadow">
+            <ResponsiveDdMenu />
+          </div>
         </div>
         <div className="control-group control-group-shadow">
           <div
