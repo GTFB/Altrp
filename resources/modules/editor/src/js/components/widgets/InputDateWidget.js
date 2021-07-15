@@ -12,8 +12,9 @@ import Resource from "../../classes/Resource";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
 import AltrpInput from "../altrp-input/AltrpInput";
+import { DateInput, TimePrecision } from "@blueprintjs/datetime";
+import moment from "moment";
 
-const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`
  /*здесь css стилей по умолчанию с селекторами*/
 `)
@@ -45,9 +46,16 @@ class InputDateWidget extends Component {
     this.debounceDispatch = this.debounceDispatch.bind(this);
 
     this.defaultValue = this.getContent("content_default_value") || "";
+
+    let value = new Date();
+
+    if(this.defaultValue) {
+      value = new Date(this.defaultValue)
+    }
     this.state = {
       settings: { ...props.element.getSettings() },
-      value: this.defaultValue,
+      // value: this.defaultValue,
+      value,
       options: parseOptionsFromSettings(
         props.element.getSettings("content_options")
       ),
@@ -369,75 +377,67 @@ class InputDateWidget extends Component {
     }
   }
 
-  /**
-   * Обновляет опции для селекта при обновлении данных, полей формы
-   */
-  async updateOptions() {
-    {
-      let formId = this.props.element.getFormId();
-      let paramsForUpdate = this.props.element.getSettings("params_for_update");
-      let formData = _.get(this.props.formsStore, [formId], {});
-      paramsForUpdate = parseParamsFromString(
-        paramsForUpdate,
-        new AltrpModel(formData)
-      );
-      /**
-       * Сохраняем параметры запроса, и если надо обновляем опции
-       */
-      let options = [...this.state.options];
-
-      if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
-        if (!_.isEmpty(paramsForUpdate)) {
-          if (this.props.element.getSettings("params_as_filters", false)) {
-            paramsForUpdate = JSON.stringify(paramsForUpdate);
-            options = await new Resource({
-              route: this.getRoute()
-            }).getQueried({ filters: paramsForUpdate });
-          } else {
-            options = await new Resource({ route: this.getRoute() }).getQueried(
-              paramsForUpdate
-            );
-          }
-          options = !_.isArray(options) ? options.data : options;
-          options = _.isArray(options) ? options : [];
-        } else if (this.state.paramsForUpdate) {
-          options = await new Resource({ route: this.getRoute() }).getAll();
-          options = !_.isArray(options) ? options.data : options;
-          options = _.isArray(options) ? options : [];
-        }
-
-        this.setState(state => ({
-          ...state,
-          paramsForUpdate,
-          options
-        }));
-      }
-    }
-  }
+  // /**
+  //  * Обновляет опции для селекта при обновлении данных, полей формы
+  //  */
+  // async updateOptions() {
+  //   {
+  //     let formId = this.props.element.getFormId();
+  //     let paramsForUpdate = this.props.element.getSettings("params_for_update");
+  //     let formData = _.get(this.props.formsStore, [formId], {});
+  //     paramsForUpdate = parseParamsFromString(
+  //       paramsForUpdate,
+  //       new AltrpModel(formData)
+  //     );
+  //     /**
+  //      * Сохраняем параметры запроса, и если надо обновляем опции
+  //      */
+  //     let options = [...this.state.options];
+  //
+  //     if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
+  //       if (!_.isEmpty(paramsForUpdate)) {
+  //         if (this.props.element.getSettings("params_as_filters", false)) {
+  //           paramsForUpdate = JSON.stringify(paramsForUpdate);
+  //           options = await new Resource({
+  //             route: this.getRoute()
+  //           }).getQueried({ filters: paramsForUpdate });
+  //         } else {
+  //           options = await new Resource({ route: this.getRoute() }).getQueried(
+  //             paramsForUpdate
+  //           );
+  //         }
+  //         options = !_.isArray(options) ? options.data : options;
+  //         options = _.isArray(options) ? options : [];
+  //       } else if (this.state.paramsForUpdate) {
+  //         options = await new Resource({ route: this.getRoute() }).getAll();
+  //         options = !_.isArray(options) ? options.data : options;
+  //         options = _.isArray(options) ? options : [];
+  //       }
+  //
+  //       this.setState(state => ({
+  //         ...state,
+  //         paramsForUpdate,
+  //         options
+  //       }));
+  //     }
+  //   }
+  // }
 
   /**
    * Изменение значения в виджете
    * @param e
    * @param  editor для получения изменений из CKEditor
    */
-  onChange(e, editor = null) {
+  onChange(val, editor = null) {
     let value = "";
     let valueToDispatch;
 
-    if (e && e.target) {
-      value = e.target.value;
-    }
-
-    if (e && e.value) {
-      value = e.value;
+    if (val) {
+      value = val;
     }
 
     if (_.get(editor, "getData")) {
       value = `<div class="ck ck-content" style="width:100%">${editor.getData()}</div>`;
-    }
-
-    if (_.isArray(e)) {
-      value = _.cloneDeep(e);
     }
 
     if (
@@ -494,79 +494,79 @@ class InputDateWidget extends Component {
     150
   );
 
-  /**
-   * получить опции
-   */
-  getOptions() {
-    let options = [...this.state.options];
-    const optionsDynamicSetting = this.props.element.getDynamicSetting(
-      "content_options"
-    );
+  // /**
+  //  * получить опции
+  //  */
+  // getOptions() {
+  //   let options = [...this.state.options];
+  //   const optionsDynamicSetting = this.props.element.getDynamicSetting(
+  //     "content_options"
+  //   );
+  //
+  //   if (optionsDynamicSetting) {
+  //     options = convertData(optionsDynamicSetting, options);
+  //   }
+  //
+  //   if (!this.props.element.getSettings("sort_default")) {
+  //     options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
+  //   }
+  //
+  //   return options;
+  // }
 
-    if (optionsDynamicSetting) {
-      options = convertData(optionsDynamicSetting, options);
-    }
+  // /**
+  //  * Для действие по фокусу
+  //  * @param e
+  //  * @return {Promise<void>}
+  //  */
+  //
+  // onFocus = async e => {
+  //   const focus_actions = this.props.element.getSettings("focus_actions");
+  //
+  //   if (focus_actions && !isEditor()) {
+  //     const actionsManager = (
+  //       await import(
+  //         /* webpackChunkName: 'ActionsManager' */
+  //         "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+  //       )
+  //     ).default;
+  //     await actionsManager.callAllWidgetActions(
+  //       this.props.element.getIdForAction(),
+  //       "focus",
+  //       focus_actions,
+  //       this.props.element
+  //     );
+  //   }
+  // };
 
-    if (!this.props.element.getSettings("sort_default")) {
-      options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
-    }
-
-    return options;
-  }
-
-  /**
-   * Для действие по фокусу
-   * @param e
-   * @return {Promise<void>}
-   */
-
-  onFocus = async e => {
-    const focus_actions = this.props.element.getSettings("focus_actions");
-
-    if (focus_actions && !isEditor()) {
-      const actionsManager = (
-        await import(
-          /* webpackChunkName: 'ActionsManager' */
-          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-        )
-      ).default;
-      await actionsManager.callAllWidgetActions(
-        this.props.element.getIdForAction(),
-        "focus",
-        focus_actions,
-        this.props.element
-      );
-    }
-  };
-
-  /**
-   * Потеря фокуса для оптимизации
-   * @param  e
-   * @param  editor для получения изменений из CKEditor
-   */
-
-  onBlur = async (e, editor = null) => {
-    this.dispatchFieldValueToStore(e.target.value, true);
-
-    if (_.get(editor, "getData")) {
-      this.dispatchFieldValueToStore(editor.getData(), true);
-    }
-
-    if (this.props.element.getSettings("actions", []) && !isEditor()) {
-      const actionsManager = (
-        await import(
-          /* webpackChunkName: 'ActionsManager' */
-          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-        )
-      ).default;
-      await actionsManager.callAllWidgetActions(
-        this.props.element.getIdForAction(),
-        "blur",
-        this.props.element.getSettings("actions", []),
-        this.props.element
-      );
-    }
-  };
+  // /**
+  //  * Потеря фокуса для оптимизации
+  //  * @param  e
+  //  * @param  editor для получения изменений из CKEditor
+  //  */
+  //
+  // onBlur = async (e, editor = null) => {
+  //   this.dispatchFieldValueToStore(e.target.value, true);
+  //
+  //   if (_.get(editor, "getData")) {
+  //     this.dispatchFieldValueToStore(editor.getData(), true);
+  //   }
+  //
+  //   if (this.props.element.getSettings("actions", []) && !isEditor()) {
+  //     const actionsManager = (
+  //       await import(
+  //         /* webpackChunkName: 'ActionsManager' */
+  //         "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+  //       )
+  //     ).default;
+  //     await actionsManager.callAllWidgetActions(
+  //       this.props.element.getIdForAction(),
+  //       "blur",
+  //       this.props.element.getSettings("actions", []),
+  //       this.props.element
+  //     );
+  //   }
+  // };
 
   /**
    * Передадим значение в хранилище формы
@@ -699,8 +699,6 @@ class InputDateWidget extends Component {
     let label = null;
     const settings = this.props.element.getSettings();
     const {
-      content_readonly,
-      select2_multiple: isMultiple,
       label_icon
     } = settings;
 
@@ -790,15 +788,6 @@ class InputDateWidget extends Component {
       label = null;
     }
 
-    let autocomplete = "off";
-    if (this.state.settings.content_autocomplete) {
-      autocomplete = "on";
-    } else {
-      autocomplete = "off";
-    }
-
-    const isClearable = this.state.settings.content_clearable;
-
     const timestamp = this.props.element.getSettings("content_timestamp");
 
     if (timestamp) {
@@ -813,34 +802,91 @@ class InputDateWidget extends Component {
       }
     }
 
+    let frame = document.body;
+
+    if (isEditor()) {
+      frame = document.getElementById("editorContent").contentWindow.document.body
+    }
+
+    const locale = this.props.element.getSettings("content_locale", "en");
+    let typeDate = this.props.element.getSettings("content_time_type", "date");
+    let timePrecision = null;
+
+    switch (typeDate) {
+      case "date":
+        typeDate = "LL";
+        break;
+      case "time":
+        typeDate = "LT";
+        timePrecision = TimePrecision.MINUTE
+        break
+      case "dateTime":
+        typeDate = "llll";
+        timePrecision = TimePrecision.MINUTE
+        break
+    }
+
+    const dayPickerProps = {
+
+    }
+
+    switch (locale) {
+      case "ru":
+        dayPickerProps.months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+        dayPickerProps.weekdaysShort = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
+    }
+
+    const minimalStyle = this.props.element.getResponsiveSetting("picker_minimal", false);
+
     const input = (
       <div className="altrp-input-wrapper">
-        <AltrpInput
-          type="date"
-          name={this.getName()}
-          value={value || ""}
-          element={this.props.element}
-          readOnly={content_readonly}
-          autoComplete={autocomplete}
-          placeholder={this.state.settings.content_placeholder}
-          className={
-            "altrp-field " + this.state.settings.position_css_classes
-          }
-          settings={this.props.element.getSettings()}
-          onKeyDown={this.handleEnter}
+        <DateInput
+          dayPickerProps={dayPickerProps}
+          popoverProps={{
+            portalContainer: frame,
+            minimal: minimalStyle,
+            popoverClassName: "altrp-date-picker-popover-" + this.props.element.getId(),
+          }}
           onChange={this.onChange}
-          onBlur={this.onBlur}
-          onFocus={this.onFocus}
-          id={this.state.settings.position_css_id}
+          className={"altrp-date-picker-" + this.props.element.getId()}
+          timePrecision={timePrecision}
+          canClearSelection={false}
+          // showActionsBar
+          parseDate={(str, locale) => {
+            return moment(str, typeDate).locale(locale).toDate();
+          }}
+          placeholder={this.state.settings.content_placeholder}
+          formatDate={(date, locale) => {
+            return moment(date).locale(locale).format(typeDate);
+          }}
+          value={this.state.value}
+          locale={locale}
         />
-        {isClearable && (
-          <button
-            className="input-clear-btn"
-            onClick={() => this.setState({ value: this.defaultValue })}
-          >
-            ✖
-          </button>
-        )}
+        {/*<AltrpInput*/}
+        {/*  type="date"*/}
+        {/*  name={this.getName()}*/}
+        {/*  value={value || ""}*/}
+        {/*  element={this.props.element}*/}
+        {/*  readOnly={content_readonly}*/}
+        {/*  placeholder={this.state.settings.content_placeholder}*/}
+        {/*  className={*/}
+        {/*    "altrp-field " + this.state.settings.position_css_classes*/}
+        {/*  }*/}
+        {/*  settings={this.props.element.getSettings()}*/}
+        {/*  onKeyDown={this.handleEnter}*/}
+        {/*  onChange={this.onChange}*/}
+        {/*  onBlur={this.onBlur}*/}
+        {/*  onFocus={this.onFocus}*/}
+        {/*  id={this.state.settings.position_css_id}*/}
+        {/*/>*/}
+        {/*{isClearable && (*/}
+        {/*  <button*/}
+        {/*    className="input-clear-btn"*/}
+        {/*    onClick={() => this.setState({ value: this.defaultValue })}*/}
+        {/*  >*/}
+        {/*    ✖*/}
+        {/*  </button>*/}
+        {/*)}*/}
       </div>
     );
 

@@ -40,6 +40,8 @@ import AdvancedComponent from "./widgets/styled-components/AdvancedComponent";
 import {getEditor, topOrBottomHover, editorSetCurrentElement} from "../helpers";
 import TabsSwitcherComponent from "./widgets/styled-components/TabsSwitcherComponent";
 import ImageLightboxComponent from "./widgets/styled-components/ImageLightboxComponent";
+import InputDateComponent from "./widgets/styled-components/InputDateComponent";
+import DatePickerComponent from "./widgets/styled-components/DatePickerComponent";
 const { connect } = window.reactRedux;
 
 const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, elementId, settings, element})=>{
@@ -131,10 +133,19 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
       styles += `${FormComponent.select2Options(settings, elementId)}}`;
     }
       break;
+    case "input-date": {
+      styles += `.${prefix}${elementId} {${InputDateComponent(
+        settings,
+        elementId
+      )}}`;
+      styles += `${DatePickerComponent(
+        settings,
+        elementId,
+      )}`;
+    } break;
     case "input-text":
     case "input-password":
     case "input-number":
-    case "input-date":
     case "input-email":
     case "input-tel":
     case "input-file":

@@ -363,7 +363,7 @@ const AltrpFieldContainer = styled.div`
   }}
 `;
 
-class InputTextСommonWidget extends Component {
+class InputTextCommonWidget extends Component {
   timeInput = null;
 
   constructor(props) {
@@ -1145,4 +1145,4 @@ class InputTextСommonWidget extends Component {
   }
 }
 
-export default InputTextСommonWidget;
+export default InputTextCommonWidget;

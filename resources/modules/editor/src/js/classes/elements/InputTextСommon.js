@@ -23,7 +23,7 @@ import Repeater from "../Repeater";
 import { CONDITIONS_OPTIONS } from "../../../../../front-app/src/js/helpers";
 import { actionsControllers } from "../../decorators/actions-controllers";
 
-class InputTextСommon extends BaseElement {
+class InputTextCommon extends BaseElement {
   static getName() {
     return "input-text-common";
   }
@@ -1198,4 +1198,4 @@ class InputTextСommon extends BaseElement {
     advancedTabControllers(this);
   }
 }
-export default InputTextСommon;
+export default InputTextCommon;

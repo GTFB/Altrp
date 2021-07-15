@@ -63,7 +63,7 @@ class FrontElementsManager {
         name: "input-text-common",
         import: async () => {
           return await import(
-            /* webpackChunkName: 'InputTextCommonWidget' */ "../../../../editor/src/js/components/widgets/InputTextСommonWidget"
+            /* webpackChunkName: 'InputTextCommonWidget' */ "../../../../editor/src/js/components/widgets/InputTextCommonWidget"
           );
         }
       },

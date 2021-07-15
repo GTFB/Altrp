@@ -257,6 +257,7 @@ class FrontElement {
       case 'input-tel':
       case 'input-number':
       case 'input-text':
+      case 'input-text-common':
       case 'input': {
         formsManager.addField(this.getFormId(), this);
       }
