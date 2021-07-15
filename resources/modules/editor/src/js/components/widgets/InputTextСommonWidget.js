@@ -1,4 +1,5 @@
 import {
+  altrpCompare,
   convertData,
   isEditor,
   parseOptionsFromSettings,
@@ -7,21 +8,345 @@ import {
   replaceContentWithData,
   sortOptions,
   renderAssetIcon,
+  valueReplacement,
   getDataFromLocalStorage
 } from "../../../../../front-app/src/js/helpers";
 import Resource from "../../classes/Resource";
+import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
+import CKeditor from "../ckeditor/CKeditor";
+import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 import AltrpInput from "../altrp-input/AltrpInput";
-import BlurprintMultiSelect from "./BlurprintMultiSelect";
-
 const { moment } = window.altrpHelpers;
+
 const Button = window.altrpLibs.Blueprint.Button;
-const MenuItem = window.altrpLibs.Blueprint.MenuItem;
-const Select = window.altrpLibs.BlurprintSelect.Select;
-const MultiSelect = window.altrpLibs.BlurprintSelect.MultiSelect;
+const Intent = window.altrpLibs.Blueprint.Intent;
+const Tooltip2 = window.altrpLibs.Tooltip2;
+
 (window.globalDefaults = window.globalDefaults || []).push(`
- /*здесь css стилей по умолчанию с селекторами*/
+.altrp-field {
+  border-style: solid;
+  width: 100%;
+}
+.altrp-field-file{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.altrp-field-file__field{
+  display: none;
+}
+.altrp-field-file__placeholder{
+  display: none;
+}
+.altrp-field-file_empty .altrp-field-file__placeholder{
+  display: block;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  background-color: rgb(52,59,76);
+  color: #fff;
+}
+.input-clear-btn {
+  background: transparent;
+  padding: 0;
+  position: absolute;
+  bottom: calc(50% - 7px);
+  right: 15px;
+  display: none;
+}
+.input-clear-btn:hover {
+  font-weight: bold;
+}
+.altrp-field:hover + .input-clear-btn, .input-clear-btn:hover {
+  display: block;
+}
+.altrp-input-wrapper, .altrp-field-select2 {
+  position: relative;
+  flex-grow: 1;
+}
+.altrp-field-label--required::after {
+  content: "*";
+  color: red;
+  font-size: inherit;
+  padding-left: 10px;
+}
+.altrp-field-label {
+  font-size: 16px;
+  font-family: "Open Sans";
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+.altrp-field-select2__single-value, .altrp-field {
+  font-size: 16px;
+  font-family: "Open Sans";
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+.altrp-field-select2__control, .altrp-field {
+  text-align: left;
+  padding-top: 2px;
+  padding-right: 2px;
+  padding-bottom: 2px;
+  padding-left: 2px;
+  border-width: 1px;
+  border-color: #000;
+}
+.altrp-field-select2__control:hover{
+  border-width: 1px;
+  border-color: #000;
+}
+.altrp-field-container {
+  margin: 0;
+}
+.altrp-field::placeholder, .altrp-field-select2__placeholder {
+  font-size: 13px;
+  font-family: "Open Sans";
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+.altrp-image-select {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.altrp-image-select img {
+  flex-grow: 1;
+  object-fit: contain;
+}
+.altrp-field {
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.altrp-field.active {
+  border-color: lightcoral;
+}
+.altrp-field-label {
+  text-align: center;
+  display: block;
+}
+.altrp-pagination__select-size .altrp-field-select2__single-value {
+  font-size: 14px;
+}
+.altrp-pagination__select-size .altrp-field-select2__indicator-separator {
+  display: none;
+}
+.altrp-pagination__select-size .altrp-field-select2__indicator {
+  align-items: center;
+}
+.altrp-pagination__select-size .altrp-field-select2__control {
+  width: 100px;
+  min-height: 32px;
+  padding: 0;
+  border-radius: 0;
+  outline: none;
+  border-color: rgb(142,148,170);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.altrp-pagination__select-size .altrp-field-select2__control input {
+  border: none;
+}
+.altrp-field-select2 {
+  position: relative;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+.altrp-field-select2__control {
+  webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: hsl(0,0%,100%);
+  border-color: hsl(0,0%,80%);
+  border-style: solid;
+  border-width: 1px;
+  cursor: default;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  min-height: 38px;
+  outline: 0 !important;
+  position: relative;
+  -webkit-transition: all 100ms;
+  transition: all 100ms;
+  box-sizing: border-box;
+}
+.altrp-field-select2__value-container {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding: 2px 8px;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.altrp-field-select2__single-value {
+  color: hsl(0,0%,20%);
+  margin-left: 2px;
+  margin-right: 2px;
+  max-width: calc(100% - 8px);
+  overflow: hidden;
+  position: absolute;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  box-sizing: border-box;
+}
+.altrp-field-select2__indicators {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-align-self: stretch;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+.altrp-field-select2__indicator-separator {
+  -webkit-align-self: stretch;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
+  background-color: hsl(0,0%,80%);
+  margin-bottom: 8px;
+  margin-top: 8px;
+  width: 1px;
+  box-sizing: border-box;
+}
+.altrp-field-select2__indicator {
+  color: hsl(0,0%,80%);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 8px;
+  -webkit-transition: color 150ms;
+  transition: color 150ms;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+}
+.tba-placeholder {
+  display: flex;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: bold;
+}
+.altrp-field-subgroup {
+  display: flex;
+  flex-wrap: wrap;
+}
+.altrp-field-option {
+  display: flex;
+  padding: 10px;
+}
+.altrp-field-option__label {
+  cursor: pointer;
+}
+textarea.altrp-field {
+  display: block;
+}
+.altrp-table__filter-select .altrp-field-select2__placeholder {
+  white-space: nowrap;
+}
+.altrp-table__filter-select .altrp-field-select2__single-value {
+  font-size: 14px;
+}
+.altrp-table__filter-select .altrp-field-select2__indicator-separator {
+  display: none;
+}
+.altrp-table__filter-select .altrp-field-select2__indicator {
+  align-items: center;
+}
+.altrp-table__filter-select .altrp-field-select2__control {
+  width: 100%;
+  min-height: 19px;
+  padding: 0;
+  border-radius: 0;
+  outline: none;
+  border-color: rgb(142, 148, 170);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.altrp-table__filter-select .altrp-field-select2__control input {
+  border: none;
+}
+.altrp-table__filter-select .altrp-field-select2__value-container {
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: 13px;
+}
+.altrp-field-required {
+  color: red;
+  font-size: 18px;
+  padding-left: 10px;
+}
+.altrp-field-container-label {
+  display: flex;
+  flex-direction: row;
+}
+
+.altrp-field-label-container-left {
+  display: flex;
+  align-items: center;
+}
+
+.altrp-field-label-container {
+  display: inline-flex;
+  align-items: center;
+}
+.altrp-field-select2__indicator.altrp-field-select2__dropdown-indicator {
+  padding: 0 8px;
+  max-height: 14px;
+  overflow: hidden;
+}
+.altrp-field-select2 .altrp-field-select2__value-container {
+  padding: 0px 8px;
+}
+.altrp-field-select2 .css-b8ldur-Input {
+  padding-bottom: 0px;
+  padding-top: 0px;
+  margin: 0 2px;
+}
+.altrp-field-select2 .altrp-field-select2__control {
+  min-height: 14px;
+}
 `)
 
 const AltrpFieldContainer = styled.div`
@@ -38,7 +363,7 @@ const AltrpFieldContainer = styled.div`
   }}
 `;
 
-class InputSelectWidget extends Component {
+class InputTextСommonWidget extends Component {
   timeInput = null;
 
   constructor(props) {
@@ -50,19 +375,14 @@ class InputSelectWidget extends Component {
     this.onChange = this.onChange.bind(this);
     this.debounceDispatch = this.debounceDispatch.bind(this);
 
-    this.defaultValue =
-      this.getContent("content_default_value") ||
-      (this.valueMustArray() ? [] : "");
-    if (this.valueMustArray() && !_.isArray(this.defaultValue)) {
-      this.defaultValue = [];
-    }
+    this.defaultValue = this.getContent("content_default_value")
+
     this.state = {
       settings: { ...props.element.getSettings() },
       value: this.defaultValue,
-      options: parseOptionsFromSettings(
-        props.element.getSettings("content_options")
-      ),
+      options: parseOptionsFromSettings(props.element.getSettings("content_options")),
       paramsForUpdate: null,
+      showPassword: false,
     };
     this.popoverProps = {
       usePortal: true,
@@ -77,13 +397,6 @@ class InputSelectWidget extends Component {
   }
 
   /**
-   * В некоторых случаях значение поля должно быть массивом
-   * @return {boolean}
-   */
-  valueMustArray() {
-    return false;
-  }
-  /**
    * Чистит значение
    */
   clearValue() {
@@ -91,7 +404,6 @@ class InputSelectWidget extends Component {
     this.onChange(value);
     this.dispatchFieldValueToStore(value, true);
   }
-
   /**
    * Обработка нажатия клавиши
    * @param {{}} e
@@ -126,17 +438,9 @@ class InputSelectWidget extends Component {
       );
 
       this.setState(state => ({ ...state, options }));
-    } else if (
-      ["input-select"].indexOf(this.props.element.getName()) >= 0 &&
-      this.state.settings.model_for_options
-    ) {
-      let options = await new Resource({ route: this.getRoute() }).getAll();
-      options = !_.isArray(options) ? options.data : options;
-      options = _.isArray(options) ? options : [];
-      this.setState(state => ({ ...state, options }));
     }
-    let value = this.state.value;
 
+    let value = this.state.value;
     /**
      * Если динамическое значение загрузилось,
      * то используем this.getContent для получение этого динамического значения
@@ -225,25 +529,7 @@ class InputSelectWidget extends Component {
         }
       );
     }
-    if (
-      this.props.element.getName() === "input-select" &&
-      this.props.element.getSettings("model_for_options")
-    ) {
-      if (
-        !(
-          this.state.settings.model_for_options ===
-          prevProps.element.getSettings("model_for_options")
-        )
-      ) {
-        let model_for_options = prevProps.element.getSettings(
-          "model_for_options"
-        );
-        let options = await new Resource({ route: this.getRoute() }).getAll();
-        options = !_.isArray(options) ? options.data : options;
-        options = _.isArray(options) ? options : [];
-        this.setState(state => ({ ...state, options, model_for_options }));
-      }
-    }
+
     /**
      * Если обновилась модель, то пробрасываем в стор новое значение (старый источник диамических данных)
      */
@@ -455,7 +741,9 @@ class InputSelectWidget extends Component {
     let value = "";
     let valueToDispatch;
     const settings = this.props.element.getSettings();
-    value = e.target.value;
+    if (e && e.target) {
+      value = e.target.value;
+    }
 
     if (e && e.value) {
       value = e.value;
@@ -492,16 +780,6 @@ class InputSelectWidget extends Component {
           "change_change_end_delay"
         );
 
-        if (
-          ["text", "email", "phone", "tel", "number", "password"].indexOf(
-            this.state.settings.content_type
-          ) === -1
-        ) {
-          this.dispatchFieldValueToStore(
-            valueToDispatch !== undefined ? valueToDispatch : value,
-            true
-          );
-        }
         if (change_actions && !change_change_end && !isEditor()) {
           this.debounceDispatch(
             valueToDispatch !== undefined ? valueToDispatch : value
@@ -517,46 +795,6 @@ class InputSelectWidget extends Component {
         }
       }
     );
-  }
-
-  onItemSelect(value) {
-    this.setState(state => ({
-      ...state,
-      value
-    }),
-      () => {
-        /**
-         * Обновляем хранилище только если не текстовое поле
-         */
-
-        const change_actions = this.props.element.getSettings("change_actions");
-        const change_change_end = this.props.element.getSettings(
-          "change_change_end"
-        );
-        const change_change_end_delay = this.props.element.getSettings(
-          "change_change_end_delay"
-        );
-
-
-        this.dispatchFieldValueToStore(
-          value,
-          true
-        );
-
-        if (change_actions && !change_change_end && !isEditor()) {
-          this.debounceDispatch(
-            value
-          );
-        }
-        if (change_actions && change_change_end && !isEditor()) {
-          this.timeInput && clearTimeout(this.timeInput);
-          this.timeInput = setTimeout(() => {
-            this.debounceDispatch(
-              value
-            );
-          }, change_change_end_delay);
-        }
-      })
   }
 
   debounceDispatch = _.debounce(
@@ -611,13 +849,8 @@ class InputSelectWidget extends Component {
    * @param  editor для получения изменений из CKEditor
    */
   onBlur = async (e, editor = null) => {
-    if (
-      ["text", "email", "phone", "tel", "number", "password"].indexOf(
-        this.state.settings.content_type
-      ) !== -1
-    ) {
-      this.dispatchFieldValueToStore(e.target.value, true);
-    }
+    this.dispatchFieldValueToStore(e.target.value, true);
+
     if (_.get(editor, "getData")) {
       this.dispatchFieldValueToStore(editor.getData(), true);
     }
@@ -742,7 +975,6 @@ class InputSelectWidget extends Component {
       this.setState(state => ({ ...state, isDisabled: false }));
     }
   };
-
   /**
    * Взовращает имя для атрибута name
    * @return {string}
@@ -751,39 +983,12 @@ class InputSelectWidget extends Component {
     return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
   }
 
-  escapeRegExpChars(text) {
-    return text.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-  }
-
-  highlightText = (text, query) => {
-    let lastIndex = 0;
-    const words = query
-      .split(/\s+/)
-      .filter(word => word.length > 0)
-      .map(this.escapeRegExpChars);
-    if (words.length === 0) {
-      return [text];
-    }
-    const regexp = new RegExp(words.join("|"), "gi");
-    const tokens = [];
-    while (true) {
-      const match = regexp.exec(text);
-      if (!match) {
-        break;
+  handleLockClick = () => {
+    this.setState((state) => {
+      return {
+        showPassword: !state.showPassword,
       }
-      const length = match[0].length;
-      const before = text.slice(lastIndex, regexp.lastIndex - length);
-      if (before.length > 0) {
-        tokens.push(before);
-      }
-      lastIndex = regexp.lastIndex;
-      tokens.push(<strong key={lastIndex}>{match[0]}</strong>);
-    }
-    const rest = text.slice(lastIndex);
-    if (rest.length > 0) {
-      tokens.push(rest);
-    }
-    return tokens;
+    })
   }
 
   render() {
@@ -792,6 +997,8 @@ class InputSelectWidget extends Component {
     const {
       options_sorting,
       content_readonly,
+      image_select_options,
+      select2_multiple: isMultiple,
       label_icon
     } = settings;
 
@@ -842,7 +1049,6 @@ class InputSelectWidget extends Component {
             : 2 + "px"
         };
         classLabel = "altrp-field-label-container-left";
-        // this.label.current.classList.add("hello")
 
         break;
       case "absolute":
@@ -886,119 +1092,46 @@ class InputSelectWidget extends Component {
       autocomplete = "off";
     }
 
-    let input = null;
-    switch (this.props.element.getName()) {
-      case "input-select":
-        {
-          let options = this.getOptions();
+    let lockButton = (
+      <Tooltip2 content={`${this.state.showPassword ? "Hide" : "Show"} Password`}>
+        <Button
+          icon={this.state.showPassword ? "unlock" : "lock"}
+          intent={Intent.WARNING}
+          minimal={true}
+          onClick={this.handleLockClick}
+        />
+      </Tooltip2>
+    );;
 
-          options = options_sorting ? sortOptions(options, options_sorting) : options;
+    let input = (
+      <div className="altrp-input-wrapper">
+        <AltrpInput
+          type={this.state.settings.content_type === 'password' ? (this.state.showPassword ? "text" : "password") : this.state.settings.content_type}
+          rightElement={this.state.settings.content_type === 'password' ? lockButton : ''}
+          name={this.getName()}
+          value={value || ""}
+          popoverProps={this.popoverProps}
+          element={this.props.element}
+          readOnly={content_readonly}
+          autoComplete={autocomplete}
+          placeholder={this.state.settings.content_placeholder}
+          className={
+            "altrp-field " + this.state.settings.position_css_classes
+          }
+          settings={this.props.element.getSettings()}
+          onKeyDown={this.handleEnter}
+          onChange={this.onChange}
+          onBlur={this.onBlur}
+          onFocus={this.onFocus}
+          id={this.state.settings.position_css_id}
+        />
+      </div>
+    );
 
-          let itemsOptions = options.map(({ label }) => label);
-
-          if (this.state.settings.multi_select) {
-            const optionsForMultiSelect = options.map(({ label }) => {
-              return {
-                id: Math.floor(Math.random() * 100000),
-                name: label,
-              }
-            })
-
-            input = (
-              <BlurprintMultiSelect
-                items={optionsForMultiSelect}
-                popoverProps={this.popoverProps}
-                onFocus={this.onFocus}
-                name={this.getName()}
-                onBlur={this.onBlur}
-                onKeyDown={this.handleEnter}
-                id={this.state.settings.position_css_id}
-                className={
-                  "altrp-field " + this.state.settings.position_css_classes
-                }
-              ></BlurprintMultiSelect>
-            )
-          } else {
-          input = (
-            <Select
-              popoverProps={this.popoverProps}
-              itemRenderer={(item, { handleClick, modifiers, query }) => {
-                if (!modifiers.matchesPredicate) {
-                  return null;
-                }
-                return <MenuItem
-                  text={this.highlightText(item, query)}
-                  active={modifiers.active}
-                  disabled={modifiers.disabled}
-                  onClick={handleClick}
-                />
-              }}
-              itemPredicate={(query, item) => {
-                if (query === undefined || query.length === 0) {
-                  return true
-                }
-                return `${item.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0;
-              }}
-              items={itemsOptions}
-              noResults={<MenuItem disabled={true} text="No results." />}
-              onFocus={this.onFocus}
-              name={this.getName()}
-              onItemSelect={item => this.onItemSelect(item)}
-              onBlur={this.onBlur}
-              onKeyDown={this.handleEnter}
-              id={this.state.settings.position_css_id}
-              className={
-                "altrp-field " + this.state.settings.position_css_classes
-              }
-            >
-              <Button
-                text={this.state.value}
-                rightIcon="double-caret-vertical"
-              />
-            </Select>
-          );
-        }
-        }
-        break;
-      default: {
-        const isClearable = this.state.settings.content_clearable;
-
-        input = (
-          <div className="altrp-input-wrapper">
-            <AltrpInput
-              type="select"
-              name={this.getName()}
-              value={value || ""}
-              element={this.props.element}
-              readOnly={content_readonly}
-              autoComplete={autocomplete}
-              placeholder={this.state.settings.content_placeholder}
-              className={
-                "altrp-field " + this.state.settings.position_css_classes
-              }
-              settings={this.props.element.getSettings()}
-              onKeyDown={this.handleEnter}
-              onChange={this.onChange}
-              onBlur={this.onBlur}
-              onFocus={this.onFocus}
-              id={this.state.settings.position_css_id}
-            />
-            {isClearable && (
-              <button
-                className="input-clear-btn"
-                onClick={() => this.setState({ value: this.defaultValue })}
-              >
-                ✖
-              </button>
-            )}
-          </div>
-        );
-      }
-    }
     return (
       <AltrpFieldContainer
         settings={settings}
-        className={"altrp-field-container "}
+        className="altrp-field-container "
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}
@@ -1012,4 +1145,4 @@ class InputSelectWidget extends Component {
   }
 }
 
-export default InputSelectWidget;
+export default InputTextСommonWidget;

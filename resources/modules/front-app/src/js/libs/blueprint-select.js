@@ -1,2 +1,2 @@
-import {Select} from '@blueprintjs/select'
-(window.altrpLibs = window.altrpLibs || {}).Select = Select;
+import * as BlurprintSelect from '@blueprintjs/select'
+(window.altrpLibs = window.altrpLibs || {}).BlurprintSelect = BlurprintSelect;

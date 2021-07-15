@@ -60,6 +60,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-text-common",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputTextCommonWidget' */ "../../../../editor/src/js/components/widgets/InputTextСommonWidget"
+          );
+        }
+      },
+      {
         name: "input-select",
         import: async () => {
           return await import(
@@ -120,46 +128,6 @@ class FrontElementsManager {
         import: async () => {
           return await import(
             /* webpackChunkName: 'InputAccept' */ "../../../../editor/src/js/components/widgets/InputAcceptWidget"
-          );
-        }
-      },
-      {
-        name: "input-text",
-        import: async () => {
-          return await import(
-            /* webpackChunkName: 'InputText' */ "../../../../editor/src/js/components/widgets/InputTextWidget"
-          );
-        }
-      },
-      {
-        name: "input-password",
-        import: async () => {
-          return await import(
-            /* webpackChunkName: 'InputPassword' */ "../../../../editor/src/js/components/widgets/InputPasswordWidget"
-          );
-        }
-      },
-      {
-        name: "input-number",
-        import: async () => {
-          return await import(
-            /* webpackChunkName: 'InputNumber' */ "../../../../editor/src/js/components/widgets/InputNumberWidget"
-          );
-        }
-      },
-      {
-        name: "input-tel",
-        import: async () => {
-          return await import(
-            /* webpackChunkName: 'InputTel' */ "../../../../editor/src/js/components/widgets/InputTelWidget"
-          );
-        }
-      },
-      {
-        name: "input-email",
-        import: async () => {
-          return await import(
-            /* webpackChunkName: 'InputEmail' */ "../../../../editor/src/js/components/widgets/InputEmailWidget"
           );
         }
       },

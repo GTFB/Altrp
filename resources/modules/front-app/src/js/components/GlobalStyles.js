@@ -130,12 +130,8 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles += `${FormComponent.select2Options(item.settings, id)}}`;
         }
           break;
-        case "input-text":
-        case "input-password":
-        case "input-number":
+        case "input-text-common":
         case "input-date":
-        case "input-email":
-        case "input-tel":
         case "input-file":
         case "input-select":
         case "input-image-select":
