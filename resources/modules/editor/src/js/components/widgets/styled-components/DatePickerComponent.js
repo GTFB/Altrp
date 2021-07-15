@@ -63,6 +63,11 @@ export default function DatePickerComponent(settings, elementId) {
     `! div.altrp-date-picker-popover-${elementId}`,
       ["border-radius", "picker_border_radius", "dimensions"],
       ["", "picker_shadow", "shadow"],
+
+      "bp3-popover-arrow-fill",
+        ["fill", "picker_background", "color"],
+      "}",
+
     "}"
   ];
 
