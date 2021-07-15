@@ -983,6 +983,7 @@ function extractElementsNames( $areas = [], $only_react_elements = false){
  * @param array $elementNames
  */
 function extractElementsNamesFromTemplate( $template_id, &$elementNames ){
+  global $altrp_settings;
   if( Str::isUuid( $template_id ) ){
     $template = Template::where( 'guid', $template_id )->first();
   } else {
@@ -991,6 +992,8 @@ function extractElementsNamesFromTemplate( $template_id, &$elementNames ){
   if( ! $template ){
     return;
   }
+  data_set($altrp_settings, 'templates_data.' . $template_id,  $template->toArray());
+
   $data = json_decode( $template->data, true );
   _extractElementsNames( $data, $elementNames, false );
 }
@@ -1085,8 +1088,17 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
   }
   if( $element['name'] === 'table'
     && data_get( $element, 'settings.row_expand' )
-    && data_get( $element, 'settings.column_template' ) ){
+    && data_get( $element, 'settings.card_template' ) ){
     extractElementsNamesFromTemplate( data_get( $element, 'settings.card_template' ), $elementNames );
+  }
+  if( $element['name'] === 'table'
+    && data_get( $element, 'settings.tables_columns' ) ){
+    $columns = data_get( $element, 'settings.tables_columns', [] );
+    foreach ($columns as $column) {
+      if(data_get($column, 'column_template')){
+        extractElementsNamesFromTemplate( data_get($column, 'column_template'), $elementNames );
+      }
+    }
   }
   if( $element['name'] === 'table'
     && data_get( $element, 'settings.row_expand' )
@@ -1344,10 +1356,11 @@ const ACTIONS_COMPONENTS = [
  * ]
  */
 function getAltrpSettings( $page_id ){
-  $settings = [
-    'action_components' => [],
-    'libsToLoad' => [],
-  ];
+  global $altrp_settings;
+  $settings = $altrp_settings;
+  $settings['action_components'] = [];
+  $settings['libsToLoad'] = [];
+
   if( ! $page_id ){
     return $settings;
   }

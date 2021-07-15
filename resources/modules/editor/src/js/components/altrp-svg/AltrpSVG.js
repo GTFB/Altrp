@@ -12,7 +12,7 @@ class AltrpSVG extends Component {
     if(this.props.rawSVG){
       window.assetsCache[this.props.url] = this.props.rawSVG;
       svg = this.props.rawSVG;
-      let propsString = svg.match(/<svg(.*?)=\"(.*?)\">/gi)[0];
+      let propsString = svg.match(/<svg(.*?)=\"(.*?)\">/gi)?svg.match(/<svg(.*?)=\"(.*?)\">/gi)[0] : '';
 
       let match;
       while (match = this.regex.exec(propsString)) {
@@ -41,7 +41,7 @@ class AltrpSVG extends Component {
       content = await resource.getAsText();
       window.assetsCache[this.props.url] = content;
     }
-    let propsString = content.match(/<svg(.*?)=\"(.*?)\">/gi)[0];
+    let propsString = content.match(/<svg(.*?)=\"(.*?)\">/gi)?content.match(/<svg(.*?)=\"(.*?)\">/gi)[0] : '';
     let props = {};
     let match;
     while (match = this.regex.exec(propsString)) {
