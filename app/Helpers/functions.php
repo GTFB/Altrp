@@ -1432,6 +1432,9 @@ function loadFonts( $page_areas ){
         $_fonts = data_get( $element, 'settings.__altrpFonts__' );
         if( is_array( $_fonts ) ){
           foreach ( $_fonts as $font ) {
+            if( is_array( $font ) ){
+              $font = $font[array_key_first( $font )];
+            }
             $fonts[] = $font;
           }
         }

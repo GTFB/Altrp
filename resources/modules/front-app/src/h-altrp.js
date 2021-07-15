@@ -71,6 +71,13 @@ window.LIBS = {
       return Promise.resolve(res)
     });
   },
+  'blueprint-datetime': () => {
+    return import(/* webpackChunkName: 'blueprint-select' */'./js/libs/blueprint-datetime').then(res => {
+      window.libsLoaded.push('blueprint-datetime')
+      console.log('LOAD blueprint-datetime: ', performance.now());
+      return Promise.resolve(res)
+    });
+  },
   'ckeditor': () => {
     return import(/* webpackChunkName: 'ckeditor' */'./js/libs/ckeditor').then(res => {
       window.libsLoaded.push('ckeditor')

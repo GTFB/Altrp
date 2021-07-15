@@ -18,8 +18,8 @@ import BlurprintMultiSelect from "./BlurprintMultiSelect";
 const { moment } = window.altrpHelpers;
 const Button = window.altrpLibs.Blueprint.Button;
 const MenuItem = window.altrpLibs.Blueprint.MenuItem;
-const Select = window.altrpLibs.BlurprintSelect.Select;
-const MultiSelect = window.altrpLibs.BlurprintSelect.MultiSelect;
+const Select = window.altrpLibs.BlueprintSelect.Select;
+const MultiSelect = window.altrpLibs.BlueprintSelect.MultiSelect;
 (window.globalDefaults = window.globalDefaults || []).push(`
  /*здесь css стилей по умолчанию с селекторами*/
 `)

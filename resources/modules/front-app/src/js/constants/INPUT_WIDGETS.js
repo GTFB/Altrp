@@ -11,10 +11,11 @@ const INPUT_WIDGETS = [
   'input-accept',
   'input-date',
   'input-textarea',
-  'input-text',
+  'input-text-common',
   'input-password',
   'input-tel',
   'input-number',
   'input-email',
+  'input-date',
 ];
 export default INPUT_WIDGETS;

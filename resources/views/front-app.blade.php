@@ -63,6 +63,9 @@
       padding: 0;
       margin: 0;
     }
+    .altrp-hidden{
+      display: none!important;
+    }
     .altrp-inherit.altrp-inherit_wo-border{
       border: none;
     }

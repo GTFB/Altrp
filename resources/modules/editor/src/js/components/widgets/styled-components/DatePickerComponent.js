@@ -7,7 +7,7 @@ import {defaultStyled, sliderStyled, styledString} from "../../../../../../front
 
 export default function DatePickerComponent(settings, elementId) {
   const styles = [
-    `! div.altrp-date-picker-${elementId}`,
+    `! div.altrp-date-pickerpopover${elementId}`,
       ["padding", "picker_padding", "dimensions"],
       ["background-color", "picker_background", "color"],
       ["border-style", "picker_border_type"],
@@ -60,7 +60,7 @@ export default function DatePickerComponent(settings, elementId) {
       "}",
     "}",
 
-    `! div.altrp-date-picker-popover-${elementId}`,
+    `! div.altrp-date-picker-popover${elementId}`,
       ["border-radius", "picker_border_radius", "dimensions"],
       ["", "picker_shadow", "shadow"],
 

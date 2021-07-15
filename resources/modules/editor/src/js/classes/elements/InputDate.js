@@ -66,7 +66,7 @@ class InputDate extends BaseElement {
     this.addControl("content_locale", {
       type: CONTROLLER_SELECT,
       label: "Locale",
-      default: "en",
+      default: "ru",
       options: [
         {
           value: "en",
@@ -87,11 +87,6 @@ class InputDate extends BaseElement {
     this.addControl("field_id", {
       type: CONTROLLER_TEXT,
       label: "Field ID (Column Name)"
-    });
-
-    this.addControl("content_shortcode", {
-      type: CONTROLLER_TEXT,
-      label: "Shortcode"
     });
 
     const optionsRepeater = new Repeater();
@@ -179,6 +174,14 @@ class InputDate extends BaseElement {
       default: "Placeholder"
     });
 
+    this.addControl("content_format", {
+      type: CONTROLLER_TEXT,
+      label: "Format",
+      placeholder: 'YYYY-MM-DD',
+      responsive: false,
+      stateless: true,
+    });
+
     this.addControl("content_required", {
       type: CONTROLLER_SWITCHER,
       label: "Required"
@@ -195,18 +198,18 @@ class InputDate extends BaseElement {
       default: false
     });
 
-    // this.addControl("content_default_value", {
-    //   type: CONTROLLER_TEXTAREA,
-    //   default: "",
-    //   label: "Default Value"
-    // });
-
-    this.addControl("content_calculation", {
+    this.addControl("content_default_value", {
       type: CONTROLLER_TEXTAREA,
-      label: "Calculation",
-      description:
-        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
+      default: "",
+      label: "Default Value"
     });
+
+    // this.addControl("content_calculation", {
+    //   type: CONTROLLER_TEXTAREA,
+    //   label: "Calculation",
+    //   description:
+    //     "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
+    // });
 
     this.endControlSection();
 
@@ -253,10 +256,6 @@ class InputDate extends BaseElement {
     });
 
     this.endControlSection();
-
-    actionsControllers(this, "Blur Actions");
-
-    actionsControllers(this, "Focus Actions", "focus_");
 
     actionsControllers(this, "Change Actions", "change_");
 
@@ -948,68 +947,6 @@ class InputDate extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("radio_checkbox_styles", {
-      tab: TAB_STYLE,
-      label: "Radio Checkbox Styles"
-    });
-
-    this.addControl("input_position", {
-      label: "Position",
-      type: CONTROLLER_SELECT,
-      options: [
-        {
-          label: "Left",
-          value: "row"
-        },
-        {
-          label: "Top",
-          value: "column"
-        },
-        {
-          label: "Right",
-          value: "row-reverse"
-        },
-        {
-          label: "Bottom",
-          value: "column-reverse"
-        }
-      ],
-      default: "left"
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("mismatch_message_styles", {
-      tab: TAB_STYLE,
-      label: "Validation Error Message",
-      conditions: { "mask_mismatch_message!": [""] }
-    });
-
-    this.addControl("mismatch_message_margin", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Margin",
-      default: { unit: "px" },
-      units: ["px", "%", "vh", "vw"]
-    });
-
-    this.addControl("mismatch_message_padding", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Padding",
-      default: { unit: "px" },
-      units: ["px", "%", "vh", "vw"]
-    });
-
-    this.addControl("mismatch_message_font_color", {
-      type: CONTROLLER_COLOR,
-      label: "Font Color"
-    });
-
-    this.addControl("mismatch_message_typographic", {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
-    });
-
-    this.endControlSection();
 
     advancedTabControllers(this);
   }
