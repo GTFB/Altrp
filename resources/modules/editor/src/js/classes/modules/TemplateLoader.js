@@ -20,7 +20,7 @@ class TemplateLoader {
 
   constructor(){
     this.resource = new Resource({route: '/ajax/templates'});
-    this.templatesCache = new AltrpModel({});
+    this.templatesCache = new AltrpModel(_.get(window.__altrp_settings__, 'templates_data',{}));
   }
 
   /**
@@ -28,6 +28,7 @@ class TemplateLoader {
    * @param {integer | string} templateId
    * @param {boolean} force
    * @param {*} templateId
+   * @return {[]}
    */
   async loadTemplate(templateId, force = false){
 
