@@ -31,6 +31,8 @@ import TabsSwitcherComponent
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
 import ImageLightboxComponent
   from "../../../../editor/src/js/components/widgets/styled-components/ImageLightboxComponent";
+import InputDateComponent from "../../../../editor/src/js/components/widgets/styled-components/InputDateComponent";
+import DatePickerComponent from "../../../../editor/src/js/components/widgets/styled-components/DatePickerComponent";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -127,10 +129,20 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles += `${FormComponent.select2Options(item.settings, id)}}`;
         }
           break;
+        case "input-date": {
+          styles += `.${prefix}${id} {${InputDateComponent(
+            item.settings,
+            id
+          )}}`;
+
+          styles += `${DatePickerComponent(
+            item.settings,
+            id,
+          )}`;
+        }
         case "input-text":
         case "input-password":
         case "input-number":
-        case "input-date":
         case "input-email":
         case "input-tel":
         case "input-file":

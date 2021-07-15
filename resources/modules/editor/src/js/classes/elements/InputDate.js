@@ -15,7 +15,7 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_SHADOW,
-  CONTROLLER_MEDIA
+  CONTROLLER_MEDIA, CONTROLLER_HEADING
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 import { actionsControllers } from "../../decorators/actions-controllers";
@@ -41,6 +41,42 @@ class InputDate extends BaseElement {
     this.startControlSection("content_section", {
       tab: TAB_CONTENT,
       label: "Content"
+    });
+
+    this.addControl("content_time_type", {
+      type: CONTROLLER_SELECT,
+      label: "Type",
+      default: "date",
+      options: [
+        {
+          value: "date",
+          label: "date"
+        },
+        {
+          value: "time",
+          label: "time"
+        },
+        {
+          value: "dateTime",
+          label: "date and time"
+        }
+      ]
+    });
+
+    this.addControl("content_locale", {
+      type: CONTROLLER_SELECT,
+      label: "Locale",
+      default: "en",
+      options: [
+        {
+          value: "en",
+          label: "EN"
+        },
+        {
+          value: "ru",
+          label: "RU"
+        }
+      ]
     });
 
     this.addControl("form_id", {
@@ -159,10 +195,11 @@ class InputDate extends BaseElement {
       default: false
     });
 
-    this.addControl("content_default_value", {
-      type: CONTROLLER_TEXTAREA,
-      label: "Default Value"
-    });
+    // this.addControl("content_default_value", {
+    //   type: CONTROLLER_TEXTAREA,
+    //   default: "",
+    //   label: "Default Value"
+    // });
 
     this.addControl("content_calculation", {
       type: CONTROLLER_TEXTAREA,
@@ -691,6 +728,215 @@ class InputDate extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"]
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("date_picker", {
+      tab: TAB_STYLE,
+      label: "Date picker"
+    });
+
+    this.addControl('picker_minimal', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Minimal',
+    });
+
+    this.addControl('picker_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.addControl('picker_background', {
+      type: CONTROLLER_COLOR,
+      label: 'Background color',
+      // default: {
+      //   color: "rgb(52,59,76)",
+      //   colorPickedHex: "#343B4C",
+      // },
+    });
+
+    this.addControl('picker_border_type', {
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+      }
+    );
+
+    this.addControl('picker_border_width', {
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        default: {
+          bind: true,
+        },
+        units: [
+          'px',
+          '%',
+          'vh',
+        ],
+      }
+    );
+
+    this.addControl('picker_border_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+      }
+    );
+
+    this.addControl('picker_border_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+      default: {
+        unit: 'px',
+        bind: true,
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.addControl('picker_shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'Shadow',
+    });
+
+    this.addControl('picker_month_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Month typographic',
+      }
+    );
+
+    this.addControl('picker_month_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Month font color',
+      }
+    );
+
+    this.addControl('picker_year_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Year Typographic',
+      }
+    );
+
+    this.addControl('picker_year_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Year font color',
+      }
+    );
+
+    this.addControl('picker_icons_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Icons color',
+      }
+    );
+
+    this.addControl('picker_heading_date', {
+      type: CONTROLLER_HEADING,
+      label: 'Date',
+    });
+
+    this.addControl('date_weekday_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Weekday typographic',
+      }
+    );
+
+    this.addControl('date_weekday_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Weekday font color',
+      }
+    );
+
+    this.addControl('date_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+      }
+    );
+
+    this.addControl('date_background_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Background color',
+      }
+    );
+
+    this.addControl('date_font_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Font color',
+      }
+    );
+
+    this.addControl('date_outside_background_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Outside background color',
+      }
+    );
+
+    this.addControl('date_outside_font_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Outside font color',
+      }
+    );
+
+    this.addControl('date_selected_background_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Selected background color',
+      }
+    );
+
+    this.addControl('date_selected_font_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Selected font color',
+      }
+    );
+
+    this.addControl('date_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+      default: {
+        unit: 'px',
+        bind: true,
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
     });
 
     this.endControlSection();

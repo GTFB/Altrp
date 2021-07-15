@@ -20,8 +20,8 @@
 @import "~leaflet/dist/leaflet.css";
 @import "~leaflet-draw/dist/leaflet.draw.css";
 
-
 //import blueprint to editor stylesheet
+@import "~@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 @import "../../../../../node_modules/@blueprintjs/core/lib/css/blueprint-hi-contrast.css";
 @import "../../../../../node_modules/@blueprintjs/core/lib/css/blueprint.css";
 
