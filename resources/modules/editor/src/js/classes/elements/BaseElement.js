@@ -287,7 +287,6 @@ class BaseElement extends ControlStack {
    * Удаляет текущий элемент у родителя
    */
   deleteThisElement() {
-    console.log(this);
     this.parent.deleteChild(this);
   }
 

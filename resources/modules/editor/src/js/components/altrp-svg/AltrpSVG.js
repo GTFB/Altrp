@@ -18,8 +18,12 @@ class AltrpSVG extends Component {
       while (match = this.regex.exec(propsString)) {
         _props[match[1]] = match[3];
       }
+
+      svg = svg.replace(/<!--[\s\S]*?-->/g, '')
+      svg = svg.replace(/<![\s\S]*?>/g, '')
+      svg = svg.replace(/<\?[\s\S]*?\?>/g, '')
       svg = svg.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
-      svg = svg.replace(/<svg(.*?)=\"(.*?)\">/gi, "").replace(/<\/svg>/gi, "");
+      svg = svg.replace(/<svg[\s\S]*?>/gi, "").replace(/<\/svg>/gi, "");
     }
     this.state = {
       svg: svg || '',
@@ -49,8 +53,11 @@ class AltrpSVG extends Component {
     }
     this.setState(state => ({...state, props}));
 
+    content = content.replace(/<!--[\s\S]*?-->/g, '')
+    content = content.replace(/<![\s\S]*?>/g, '')
+    content = content.replace(/<\?[\s\S]*?\?>/g, '')
     content = content.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
-    content = content.replace(/<svg(.*?)=\"(.*?)\">/gi, "").replace(/<\/svg>/gi, "");
+    content = content.replace(/<svg[\s\S]*?>/gi, "").replace(/<\/svg>/gi, "");
 
     this.setState(state=>({...state, svg: content}));
   }
@@ -72,6 +79,9 @@ class AltrpSVG extends Component {
     if(! this.state.svg){
       return '';
     }
+    console.log(this.props);
+    console.log(this.state.props);
+    console.log(props);
     return <svg {...props}  dangerouslySetInnerHTML={{__html: this.state.svg}}/>
   }
 }

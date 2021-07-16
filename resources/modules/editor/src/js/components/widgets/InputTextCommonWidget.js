@@ -1,16 +1,10 @@
 const {
-  convertData,
   isEditor,
-  parseOptionsFromSettings,
-  parseParamsFromString,
-  parseURLTemplate,
   replaceContentWithData,
-  renderAssetIcon,
-  getDataFromLocalStorage
+  renderAsset,
+  getDataFromLocalStorage,
 } = window.altrpHelpers;
-import Resource from "../../classes/Resource";
-import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
-import AltrpModel from "../../classes/AltrpModel";
+import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpInput from "../altrp-input/AltrpInput";
 
 const Button = window.altrpLibs.Blueprint.Button;
@@ -18,6 +12,20 @@ const Intent = window.altrpLibs.Blueprint.Intent;
 const Tooltip2 = window.altrpLibs.Tooltip2;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
+.bp3-icon_text-widget img{
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  pointer-events: none;
+}
+.bp3-icon_text-widget svg{
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+.bp3-icon_right{
+    margin: 7px;
+}
 .altrp-field {
   border-style: solid;
   width: 100%;
@@ -26,6 +34,15 @@ const Tooltip2 = window.altrpLibs.Tooltip2;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+.altrp-label-icon,
+.altrp-label-icon svg,
+.altrp-label-icon img {
+  width: 20px;
+}
+.altrp-label-icon svg{
+  height: 20px;
 }
 .altrp-field-file__field{
   display: none;
@@ -343,17 +360,17 @@ textarea.altrp-field {
 `)
 
 const AltrpFieldContainer = styled.div`
-  ${({ settings: { content_label_position_type } }) => {
-    switch (content_label_position_type) {
-      case "left": {
-        return "display: flex";
-      }
-      case "right": {
-        return "display:flex;flex-direction:row-reverse;justify-content:flex-end;";
-      }
+  ${({settings: {content_label_position_type}}) => {
+  switch (content_label_position_type) {
+    case "left": {
+      return "display: flex";
     }
-    return "";
-  }}
+    case "right": {
+      return "display:flex;flex-direction:row-reverse;justify-content:flex-end;";
+    }
+  }
+  return "";
+}}
 `;
 
 class InputTextCommonWidget extends Component {
@@ -371,10 +388,7 @@ class InputTextCommonWidget extends Component {
     this.defaultValue = this.getContent("content_default_value")
 
     this.state = {
-      settings: { ...props.element.getSettings() },
-      value: this.defaultValue,
-      options: parseOptionsFromSettings(props.element.getSettings("content_options")),
-      paramsForUpdate: null,
+      settings: {...props.element.getSettings()},
       showPassword: false,
     };
     this.popoverProps = {
@@ -397,6 +411,7 @@ class InputTextCommonWidget extends Component {
     this.onChange(value);
     this.dispatchFieldValueToStore(value, true);
   }
+
   /**
    * Обработка нажатия клавиши
    * @param {{}} e
@@ -425,26 +440,8 @@ class InputTextCommonWidget extends Component {
    * @param {{}} prevState
    */
   async _componentDidMount(prevProps, prevState) {
-    if (this.props.element.getSettings("content_options")) {
-      let options = parseOptionsFromSettings(
-        this.props.element.getSettings("content_options")
-      );
 
-      this.setState(state => ({ ...state, options }));
-    }
-
-    let value = this.state.value;
-    /**
-     * Если динамическое значение загрузилось,
-     * то используем this.getContent для получение этого динамического значения
-     * старые динамические данные
-     * */
-    if (
-      _.get(value, "dynamic") &&
-      this.props.currentModel.getProperty("altrpModelUpdated")
-    ) {
-      value = this.getContent("content_default_value");
-    }
+    let value = this.getValue();
 
     /**
      * Если модель обновилась при смене URL
@@ -456,7 +453,7 @@ class InputTextCommonWidget extends Component {
     ) {
       value = this.getContent("content_default_value");
       this.setState(
-        state => ({ ...state, value, contentLoaded: true }),
+        state => ({...state, contentLoaded: true}),
         () => {
           this.dispatchFieldValueToStore(value);
         }
@@ -470,42 +467,35 @@ class InputTextCommonWidget extends Component {
     ) {
       value = this.getContent("content_default_value");
       this.setState(
-        state => ({ ...state, value, contentLoaded: true }),
+        state => ({...state, contentLoaded: true}),
         () => {
           this.dispatchFieldValueToStore(value);
         }
       );
       return;
     }
-    if (this.state.value !== value) {
-      this.setState(
-        state => ({ ...state, value }),
-        () => {
-          this.dispatchFieldValueToStore(value);
-        }
-      );
-    }
   }
 
   /**
-   * Получить url для запросов
+   *
+   * @returns {Date}
    */
-  getRoute() {
-    let url = this.props.element.getSettings("model_for_options");
-
-    if (url.indexOf("/") === -1) {
-      return `/ajax/models/${url}_options`;
+  getValue = () => {
+    let value;
+    let formId = this.props.element.getFormId();
+    let fieldName = this.props.element.getFieldId();
+    if (isEditor()) {
+      value = this.state.value;
+    } else {
+      value = _.get(appStore.getState(), `formsStore.${formId}.${fieldName}`, '')
     }
-    if (url.indexOf("{{") !== -1) {
-      url = replaceContentWithData(url);
-    }
-    return url;
+    return value;
   }
+
   /**
    * Обновление виджета
    */
   async _componentDidUpdate(prevProps, prevState) {
-    const { content_options, model_for_options } = this.state.settings;
     if (
       prevProps &&
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
@@ -516,7 +506,7 @@ class InputTextCommonWidget extends Component {
         this.props.element.getSettings("select2_multiple")
       );
       this.setState(
-        state => ({ ...state, value, contentLoaded: true }),
+        state => ({...state, contentLoaded: true}),
         () => {
           this.dispatchFieldValueToStore(value);
         }
@@ -534,22 +524,6 @@ class InputTextCommonWidget extends Component {
       this.dispatchFieldValueToStore(this.getContent("content_default_value"));
     }
 
-    /**
-     * Если обновилось хранилище данных формы, currentDataStorage или модель, то получаем новые опции c сервера
-     */
-    if (
-      this.props.formsStore !== prevProps.formsStore ||
-      this.props.currentModel !== prevProps.currentModel ||
-      this.props.currentDataStorage !== prevProps.currentDataStorage
-    ) {
-      this.updateOptions();
-    }
-    if (content_options && !model_for_options) {
-      let options = parseOptionsFromSettings(content_options);
-      if (!_.isEqual(options, this.state.options)) {
-        this.setState(state => ({ ...state, options }));
-      }
-    }
     this.updateValue(prevProps);
   }
 
@@ -668,7 +642,7 @@ class InputTextCommonWidget extends Component {
         return;
       }
       this.setState(
-        state => ({ ...state, value }),
+        state => ({...state, value}),
         () => {
           this.dispatchFieldValueToStore(value);
         }
@@ -681,59 +655,13 @@ class InputTextCommonWidget extends Component {
     }
   }
 
-  /**
-   * Обновляет опции для селекта при обновлении данных, полей формы
-   */
-  async updateOptions() {
-    {
-      let formId = this.props.element.getFormId();
-      let paramsForUpdate = this.props.element.getSettings("params_for_update");
-      let formData = _.get(this.props.formsStore, [formId], {});
-      paramsForUpdate = parseParamsFromString(
-        paramsForUpdate,
-        new AltrpModel(formData)
-      );
-      /**
-       * Сохраняем параметры запроса, и если надо обновляем опции
-       */
-      let options = [...this.state.options];
-      if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
-        if (!_.isEmpty(paramsForUpdate)) {
-          if (this.props.element.getSettings("params_as_filters", false)) {
-            paramsForUpdate = JSON.stringify(paramsForUpdate);
-            options = await new Resource({
-              route: this.getRoute()
-            }).getQueried({ filters: paramsForUpdate });
-          } else {
-            options = await new Resource({ route: this.getRoute() }).getQueried(
-              paramsForUpdate
-            );
-          }
-          options = !_.isArray(options) ? options.data : options;
-          options = _.isArray(options) ? options : [];
-        } else if (this.state.paramsForUpdate) {
-          options = await new Resource({ route: this.getRoute() }).getAll();
-          options = !_.isArray(options) ? options.data : options;
-          options = _.isArray(options) ? options : [];
-        }
-        this.setState(state => ({
-          ...state,
-          paramsForUpdate,
-          options
-        }));
-      }
-    }
-  }
 
   /**
    * Изменение значения в виджете
    * @param e
-   * @param  editor для получения изменений из CKEditor
    */
-  onChange(e, editor = null) {
+  onChange(e) {
     let value = "";
-    let valueToDispatch;
-    const settings = this.props.element.getSettings();
     if (e && e.target) {
       value = e.target.value;
     }
@@ -741,53 +669,38 @@ class InputTextCommonWidget extends Component {
     if (e && e.value) {
       value = e.value;
     }
-    if (_.get(editor, "getData")) {
-      value = `<div class="ck ck-content" style="width:100%">${editor.getData()}</div>`;
-    }
-    if (_.isArray(e)) {
-      value = _.cloneDeep(e);
-    }
-    if (
-      this.props.element.getSettings("content_options_nullable") &&
-      e &&
-      e.value === "<null>"
-    ) {
-      value = null;
-    }
 
-    this.setState(
-      state => ({
-        ...state,
-        value
-      }),
-      () => {
-        /**
-         * Обновляем хранилище только если не текстовое поле
-         */
 
-        const change_actions = this.props.element.getSettings("change_actions");
-        const change_change_end = this.props.element.getSettings(
-          "change_change_end"
-        );
-        const change_change_end_delay = this.props.element.getSettings(
-          "change_change_end_delay"
-        );
+    /**
+     * Обновляем хранилище только если не текстовое поле
+     */
 
-        if (change_actions && !change_change_end && !isEditor()) {
-          this.debounceDispatch(
-            valueToDispatch !== undefined ? valueToDispatch : value
-          );
-        }
-        if (change_actions && change_change_end && !isEditor()) {
-          this.timeInput && clearTimeout(this.timeInput);
-          this.timeInput = setTimeout(() => {
-            this.debounceDispatch(
-              valueToDispatch !== undefined ? valueToDispatch : value
-            );
-          }, change_change_end_delay);
-        }
-      }
+    const change_actions = this.props.element.getSettings("change_actions");
+    const change_change_end = this.props.element.getSettings(
+      "change_change_end"
     );
+    const change_change_end_delay = this.props.element.getSettings(
+      "change_change_end_delay"
+    );
+
+    if (change_actions && !change_change_end && !isEditor()) {
+      this.debounceDispatch(
+        value !== undefined ? value : value
+      );
+    }
+    if (change_actions && change_change_end && !isEditor()) {
+      this.timeInput && clearTimeout(this.timeInput);
+      this.timeInput = setTimeout(() => {
+        this.debounceDispatch(
+          value !== undefined ? value : value
+        );
+      }, change_change_end_delay);
+    }
+    if(isEditor()){
+      this.setState(state=>({...state, value}))
+    } else {
+      this.dispatchFieldValueToStore(value, true)
+    }
   }
 
   debounceDispatch = _.debounce(
@@ -795,22 +708,6 @@ class InputTextCommonWidget extends Component {
     150
   );
 
-  /**
-   * получить опции
-   */
-  getOptions() {
-    let options = [...this.state.options];
-    const optionsDynamicSetting = this.props.element.getDynamicSetting(
-      "content_options"
-    );
-    if (optionsDynamicSetting) {
-      options = convertData(optionsDynamicSetting, options);
-    }
-    if (!this.props.element.getSettings("sort_default")) {
-      options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
-    }
-    return options;
-  }
 
   /**
    * Для действие по фокусу
@@ -826,7 +723,7 @@ class InputTextCommonWidget extends Component {
         await import(
           /* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-        )
+          )
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
@@ -852,7 +749,7 @@ class InputTextCommonWidget extends Component {
         await import(
           /* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-        )
+          )
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
@@ -885,7 +782,7 @@ class InputTextCommonWidget extends Component {
             await import(
               /* webpackChunkName: 'ActionsManager' */
               "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-            )
+              )
           ).default;
           await actionsManager.callAllWidgetActions(
             this.props.element.getIdForAction(),
@@ -898,76 +795,6 @@ class InputTextCommonWidget extends Component {
     }
   };
 
-  /**
-   * Обработка добавления опции по ajax
-   * @param {SyntheticKeyboardEvent} e
-   */
-  createItem = async e => {
-    const keyCode = e.keyCode;
-    const { value: inputValue } = e.target;
-    if (keyCode !== 13 || !inputValue) {
-      return;
-    }
-    const {
-      create_url,
-      create_label,
-      create_data,
-      select2_multiple
-    } = this.props.element.getSettings();
-    if (!create_label && !create_url) {
-      return;
-    }
-    const currentModel = this.props.element.getCurrentModel();
-    let data = parseParamsFromString(create_data, currentModel, true);
-    data[create_label] = inputValue;
-    let url = parseURLTemplate(create_url, currentModel.getData());
-    this.setState(state => ({ ...state, isDisabled: true }));
-    try {
-      const resource = new Resource({
-        route: url
-      });
-      let res = await resource.post(data);
-      if (res.success && _.get(res, "data.id")) {
-        let newOption = {
-          label: inputValue,
-          value: _.get(res, "data.id")
-        };
-        this.setState(
-          state => ({ ...state, isDisabled: false }),
-          () => {
-            let options = [...this.state.options];
-            options.unshift(newOption);
-            let value = this.state.value;
-            if (select2_multiple) {
-              value = value ? [...value] : [];
-              value.push(_.get(res, "data.id"));
-            } else {
-              value = _.get(res, "data.id");
-            }
-            this.setState(
-              state => ({ ...state, options, value }),
-              () => {
-                const selectStateManager = _.get(
-                  this,
-                  "altrpSelectRef.current.selectRef.current"
-                );
-                if (selectStateManager) {
-                  selectStateManager.setState({
-                    menuIsOpen: false,
-                    inputValue: ""
-                  });
-                }
-              }
-            );
-          }
-        );
-      }
-      this.setState(state => ({ ...state, isDisabled: false }));
-    } catch (error) {
-      console.error(error);
-      this.setState(state => ({ ...state, isDisabled: false }));
-    }
-  };
   /**
    * Взовращает имя для атрибута name
    * @return {string}
@@ -984,65 +811,66 @@ class InputTextCommonWidget extends Component {
     })
   }
 
+  renderLeftIcon(){
+    const {element} = this.props;
+    const left_icon = element.getResponsiveSetting('left_icon');
+    if(!left_icon){
+      return null
+    }
+    return <span className="bp3-icon bp3-icon_left bp3-icon_text-widget">{renderAsset(left_icon, )}</span>
+  }
+  renderRightIcon(){
+    const {element} = this.props;
+    const right_icon = element.getResponsiveSetting('right_icon');
+    if(!right_icon){
+      return null
+    }
+    return <span className="bp3-icon bp3-icon_text-widget bp3-icon_right">{renderAsset(right_icon, )}</span>
+  }
+
   render() {
     let label = null;
     const settings = this.props.element.getSettings();
     const {
-      options_sorting,
       content_readonly,
-      image_select_options,
-      select2_multiple: isMultiple,
       label_icon
     } = settings;
+    let value = this.getValue()
 
-    let value = this.state.value;
-
-    if (
-      _.get(value, "dynamic") &&
-      this.props.currentModel.getProperty("altrpModelUpdated")
-    ) {
-      value = this.getContent("content_default_value");
-    }
-    /**
-     * Пока динамический контент загружается (Еесли это динамический контент),
-     * нужно вывести пустую строку
-     */
-    if (value && value.dynamic) {
-      value = "";
-    }
     let classLabel = "";
     let styleLabel = {};
     const content_label_position_type = this.props.element.getResponsiveSetting(
       "content_label_position_type"
     );
+    const label_icon_position = this.props.element.getResponsiveSetting('label_icon_position')
+    let label_style_spacing = this.props.element.getResponsiveSetting('label_style_spacing')
     switch (content_label_position_type) {
       case "top":
         styleLabel = {
-          marginBottom: this.state.settings.label_style_spacing
-            ? this.state.settings.label_style_spacing.size +
-            this.state.settings.label_style_spacing.unit
+          marginBottom: label_style_spacing
+            ? label_style_spacing?.size +
+            label_style_spacing?.unit
             : 2 + "px"
         };
         classLabel = "";
         break;
       case "bottom":
         styleLabel = {
-          marginTop: this.state.settings.label_style_spacing
-            ? this.state.settings.label_style_spacing.size +
-            this.state.settings.label_style_spacing.unit
+          marginTop: label_style_spacing
+            ? label_style_spacing?.size +
+            label_style_spacing?.unit
             : 2 + "px"
         };
         classLabel = "";
         break;
       case "left":
         styleLabel = {
-          marginRight: this.state.settings.label_style_spacing
-            ? this.state.settings.label_style_spacing.size +
-            this.state.settings.label_style_spacing.unit
+          marginRight: label_style_spacing
+            ? label_style_spacing?.size +
+            label_style_spacing?.unit
             : 2 + "px"
         };
         classLabel = "altrp-field-label-container-left";
-
         break;
       case "absolute":
         styleLabel = {
@@ -1053,31 +881,36 @@ class InputTextCommonWidget extends Component {
         break;
     }
 
-    if (this.state.settings.content_label) {
+    if (this.state.settings.content_label || label_icon ) {
       label = (
         <div
           className={"altrp-field-label-container " + classLabel}
           style={styleLabel}
         >
           <label
+            htmlFor={this.getName()}
+            style={{
+              display: 'flex',
+              flexDirection: label_icon_position,
+            }}
             className={`altrp-field-label ${this.state.settings.content_required
               ? "altrp-field-label--required"
               : ""
-              }`}
+            }`}
           >
             {this.state.settings.content_label}
-          </label>
-          {label_icon && label_icon.assetType && (
-            <span className="altrp-label-icon">
-              {renderAssetIcon(label_icon)}
+
+            {label_icon && label_icon.type && (
+              <span className="altrp-label-icon">
+              {renderAsset(label_icon)}
             </span>
-          )}
+            )}
+          </label>
         </div>
       );
     } else {
       label = null;
     }
-
     let autocomplete = "off";
     if (this.state.settings.content_autocomplete) {
       autocomplete = "on";
@@ -1094,7 +927,8 @@ class InputTextCommonWidget extends Component {
           onClick={this.handleLockClick}
         />
       </Tooltip2>
-    );;
+    );
+    ;
 
     let input = (
       <div className="altrp-input-wrapper">
@@ -1102,21 +936,20 @@ class InputTextCommonWidget extends Component {
           type={this.state.settings.content_type === 'password' ? (this.state.showPassword ? "text" : "password") : this.state.settings.content_type}
           rightElement={this.state.settings.content_type === 'password' ? lockButton : ''}
           name={this.getName()}
+          id={this.getName()}
           value={value || ""}
           popoverProps={this.popoverProps}
           element={this.props.element}
           readOnly={content_readonly}
           autoComplete={autocomplete}
           placeholder={this.state.settings.content_placeholder}
-          className={
-            "altrp-field " + this.state.settings.position_css_classes
-          }
           settings={this.props.element.getSettings()}
           onKeyDown={this.handleEnter}
           onChange={this.onChange}
           onBlur={this.onBlur}
           onFocus={this.onFocus}
-          id={this.state.settings.position_css_id}
+          leftIcon={this.renderLeftIcon()}
+          rightElement={this.renderRightIcon()}
         />
       </div>
     );

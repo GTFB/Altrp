@@ -168,6 +168,9 @@ class AssetsBrowser extends Component {
     if(asset.type === 'svg'){
       const resource = new Resource({route: asset.url});
       resource.getAsText().then(rawSVG=>{
+        rawSVG = rawSVG.replace(/<!--[\s\S]*?-->/g, '')
+        rawSVG = rawSVG.replace(/<![\s\S]*?>/g, '')
+        rawSVG = rawSVG.replace(/<\?[\s\S]*?\?>/g, '')
         this.props.onChoose({...asset, rawSVG});
         this.props.dispatch(assetsToggle());
       });
@@ -253,6 +256,7 @@ class AssetsBrowser extends Component {
                   asset.name = asset.filename;
                   asset.assetType = "media";
                 }
+                asset.assetType = this.state.activeTab
                 if (this.state.selectedAsset === asset.name) {
                   classes += " asset-choose_selected";
                 }

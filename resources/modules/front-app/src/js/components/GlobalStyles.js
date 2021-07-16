@@ -33,6 +33,7 @@ import ImageLightboxComponent
   from "../../../../editor/src/js/components/widgets/styled-components/ImageLightboxComponent";
 import InputDateComponent from "../../../../editor/src/js/components/widgets/styled-components/InputDateComponent";
 import DatePickerComponent from "../../../../editor/src/js/components/widgets/styled-components/DatePickerComponent";
+import getInputTextCommonStyles from "./helpers/getInputTextCommonStyles";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -143,7 +144,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
             id,
           )}`;
         } break;
-        case "input-text-common":
+        case "input-text-common":{
+          styles += getInputTextCommonStyles(item.settings, id)
+        }break;
         case "input-text":
         case "input-password":
         case "input-number":

@@ -232,6 +232,9 @@ export function renderAssetIcon(asset, props = null) {
  * @throws Исключение если иконка не найдена
  * */
 export function renderAsset(asset, props = null) {
+  if(_.isEmpty(asset)){
+    return  ''
+  }
   if(asset.type === 'image' && asset.dataUrl){
     return React.createElement("img", {
       ...props,

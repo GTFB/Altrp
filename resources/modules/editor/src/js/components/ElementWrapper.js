@@ -32,6 +32,7 @@ import { getHeadingTypeHeadingStyles } from "../../../../front-app/src/js/compon
 import { getHeadingTypeAnimatingStyles } from "../../../../front-app/src/js/components/helpers/stylesForTheHeadingTypeAnimating";
 import {getTextStyles} from "../../../../front-app/src/js/components/helpers/stylesForTheText";
 import {getTableStyles} from "../../../../front-app/src/js/components/helpers/stylesForTheTable";
+import getInputTextCommonStyles from "../../../../front-app/src/js/components/helpers/getInputTextCommonStyles";
 import {getPostsStyles} from "../../../../front-app/src/js/components/helpers/stylesForThePosts";
 import FormComponent from "./widgets/styled-components/FormComponent";
 import MapComponent from "./widgets/styled-components/MapComponent";
@@ -143,6 +144,12 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
         elementId,
       )}`;
     } break;
+    case "input-text-common":{
+      styles += `.${prefix}${elementId} {${getInputTextCommonStyles(
+        settings,
+        elementId
+      )}}`;
+    }break;
     case "input-text":
     case "input-password":
     case "input-number":

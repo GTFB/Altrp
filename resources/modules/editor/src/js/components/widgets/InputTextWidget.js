@@ -15,7 +15,15 @@ import AltrpInput from "../altrp-input/AltrpInput";
 
 const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`
- /*здесь css стилей по умолчанию с селекторами*/
+
+.altrp-label-icon,
+.altrp-label-icon svg,
+.altrp-label-icon img {
+  width: 20px;
+}
+.altrp-label-icon svg{
+  height: 20px;
+}
 `)
 
 const AltrpFieldContainer = styled.div`

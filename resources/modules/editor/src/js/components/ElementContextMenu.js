@@ -163,7 +163,6 @@ class ElementContextMenu extends Component {
     const elementPasteDisabled = !Boolean(
       getDataFromLocalStorage("altrp_element_to_copy")
     );
-    console.log(window.EditorFrame.contentWindow.document.body);
     return (
       <Portal
         className="altrp-portal altrp-portal_context-menu"

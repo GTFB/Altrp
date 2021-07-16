@@ -415,7 +415,6 @@ class InputDateWidget extends Component {
     const {
       label_icon
     } = settings;
-
     let classLabel = "";
     let styleLabel = {};
     const content_label_position_type = this.props.element.getResponsiveSetting(

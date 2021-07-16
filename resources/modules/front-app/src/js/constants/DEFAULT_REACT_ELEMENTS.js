@@ -9,6 +9,7 @@ const DEFAULT_REACT_ELEMENTS = [
   'input-image-select',
   'input-accept',
   'input-text',
+  'input-text-common',
   'input-password',
   'input-number',
   'input-tel',

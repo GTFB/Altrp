@@ -334,7 +334,7 @@ class InputTextCommon extends BaseElement {
 
     this.addControl("label_icon", {
       type: CONTROLLER_MEDIA,
-      label: "Choose Icon"
+      label: "Label Icon"
     });
 
     this.addControl("label_icon_position", {
@@ -584,6 +584,43 @@ class InputTextCommon extends BaseElement {
       description:
         'Enter additional data for new item in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n'
     });
+
+    this.endControlSection();
+
+    this.startControlSection('icons', {
+      label: 'Input Icons'
+    })
+
+    this.addControl('left_icon', {
+      type: CONTROLLER_MEDIA,
+      label: 'Left Icon'
+    })
+
+    this.addControl('password_show_left_icon', {
+      type: CONTROLLER_MEDIA,
+      conditions:{
+        content_type: 'password'
+      },
+      label: 'Password Show Left Icon'
+    })
+
+    this.addControl('right_icon', {
+      type: CONTROLLER_MEDIA,
+      label: 'Right Icon'
+    })
+
+    this.addControl('password_show_right_icon', {
+      type: CONTROLLER_MEDIA,
+      conditions:{
+        content_type: 'password'
+      },
+      label: 'Password Show Right Icon'
+    })
+
+    this.addControl('icons_size', {
+      label: 'Icons Size',
+      placeholder: '20px'
+    })
 
     this.endControlSection();
 

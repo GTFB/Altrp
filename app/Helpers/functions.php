@@ -975,6 +975,7 @@ function extractElementsNames( $areas = [], $only_react_elements = false){
 
   }
   $elementNames = array_unique( $elementNames );
+  $elementNames = array_values( $elementNames );
   return $elementNames;
 }
 
@@ -1015,6 +1016,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'input-image-select',
     'input-accept',
     'input-text',
+    'input-text-common',
     'input-password',
     'input-number',
     'input-tel',
@@ -1058,14 +1060,14 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
 //    || array_search( $DEFAULT_REACT_ELEMENTS, $elementNames ) !== false )  );
 //echo '</pre>';
 
-
-  if( array_search( $element['name'], $elementNames ) === false
-    && ! ( $only_react_elements
+  if( ! ( $only_react_elements
       && ! ( data_get( $element, 'settings.react_element' )
         || array_search(  $element['name'], $DEFAULT_REACT_ELEMENTS ) !== false ) ) ){
     $elementNames[] = $element['name'];
     if($element['name'] === 'section' || $element['name'] === 'column'){
+
       recurseMapElements( $element, function( $element ) use( &$elementNames ){
+
         if( $element['name'] && array_search(  $element['name'], $elementNames ) === false ) {
           $elementNames[] = $element['name'];
         }
@@ -1402,7 +1404,6 @@ function getAltrpSettings( $page_id ){
 
 function recurseMapElements( $element, $callback ){
   $callback($element);
-
   if( isset( $element['children'] ) && is_array( $element['children'] ) ){
     foreach ( $element['children'] as $child ) {
       recurseMapElements( $child, $callback );
