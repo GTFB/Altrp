@@ -47,6 +47,7 @@ class FrontElementsManager {
     this.components['column'] = ColumnComponent;
     this.components['button'] = ButtonWidget;
     this.components['text'] = TextWidget;
+    this.components['text-common'] = TextWidget;
     this.components['image'] = ImageWidget;
     this.components['posts'] = PostsWidget;
     this.components['divider'] = DividerWidget;

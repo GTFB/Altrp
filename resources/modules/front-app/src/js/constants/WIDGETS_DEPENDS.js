@@ -11,6 +11,7 @@ const WIDGETS_DEPENDS = {
   'input-checkbox': ['blueprint'],
   'input-accept': ['blueprint'],
   'input-text': ['blueprint'],
+  'input-text-common': ['blueprint'],
   'input-wysiwyg': ['ckeditor'],
   'input-date': ['blueprint', 'blueprint-datetime', 'moment'],
 }

@@ -1,24 +1,17 @@
-import {
-  altrpCompare,
+const {
   convertData,
   isEditor,
   parseOptionsFromSettings,
   parseParamsFromString,
   parseURLTemplate,
   replaceContentWithData,
-  sortOptions,
   renderAssetIcon,
-  valueReplacement,
   getDataFromLocalStorage
-} from "../../../../../front-app/src/js/helpers";
+} = window.altrpHelpers;
 import Resource from "../../classes/Resource";
-import AltrpSelect from "../../../../../admin/src/components/altrp-select/AltrpSelect";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
-import CKeditor from "../ckeditor/CKeditor";
-import AltrpImageSelect from "../altrp-image-select/AltrpImageSelect";
 import AltrpInput from "../altrp-input/AltrpInput";
-const { moment } = window.altrpHelpers;
 
 const Button = window.altrpLibs.Blueprint.Button;
 const Intent = window.altrpLibs.Blueprint.Intent;

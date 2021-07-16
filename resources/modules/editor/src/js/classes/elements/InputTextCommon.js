@@ -46,24 +46,10 @@ class InputTextCommon extends BaseElement {
       label: "Content"
     });
 
-    this.addControl("form_id", {
-      type: CONTROLLER_TEXT,
-      label: "Form ID"
-    });
-
-    this.addControl("field_id", {
-      type: CONTROLLER_TEXT,
-      label: "Field ID (Column Name)"
-    });
-
-    this.addControl("content_shortcode", {
-      type: CONTROLLER_TEXT,
-      label: "Shortcode"
-    });
-
     this.addControl("content_type", {
       type: CONTROLLER_SELECT,
       label: "Type",
+      responsive: false,
       default: "text",
       options: [
         {
@@ -89,23 +75,20 @@ class InputTextCommon extends BaseElement {
       ]
     });
 
-    this.addControl("accept_checked", {
+    this.addControl("form_id", {
+      responsive: false,
       type: CONTROLLER_TEXT,
-      label: "Accept Checked Value",
-      conditions: {
-        content_type: ["accept"]
-      }
+      label: "Form ID"
     });
 
-    this.addControl("accept_unchecked", {
+    this.addControl("field_id", {
+      responsive: false,
       type: CONTROLLER_TEXT,
-      label: "Accept Unchecked Value",
-      conditions: {
-        content_type: ["accept"]
-      }
+      label: "Field ID (Column Name)"
     });
 
     this.addControl("invalid_email_message", {
+      responsive: false,
       type: CONTROLLER_TEXT,
       label: "Invalid Email Message",
       conditions: { content_type: ["email"] }
