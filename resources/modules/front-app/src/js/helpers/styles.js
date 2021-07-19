@@ -710,7 +710,7 @@ export function shadowStyled(controller = {}) {
     const color = controller.color || "";
 
     if(horizontal !== 0 || vertical !== 0 || blur !== 0 || spread !== 0) {
-      return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread} ${color};`;
+      return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread}px ${color};`;
     } else return ""
   } else return ""
 }

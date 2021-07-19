@@ -145,7 +145,7 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           )}`;
         } break;
         case "input-text-common":{
-          styles += getInputTextCommonStyles(item.settings, id)
+          styles += `.${prefix}${id} {${getInputTextCommonStyles(item.settings, id)}}`
         }break;
         case "input-text":
         case "input-password":

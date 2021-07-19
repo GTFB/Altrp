@@ -23,7 +23,7 @@ class AltrpSVG extends Component {
       svg = svg.replace(/<![\s\S]*?>/g, '')
       svg = svg.replace(/<\?[\s\S]*?\?>/g, '')
       svg = svg.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
-      svg = svg.replace(/<svg[\s\S]*?>/gi, "").replace(/<\/svg>/gi, "");
+      // svg = svg.replace(/<svg[\s\S]*?>/gi, "").replace(/<\/svg>/gi, "");
     }
     this.state = {
       svg: svg || '',
@@ -57,7 +57,7 @@ class AltrpSVG extends Component {
     content = content.replace(/<![\s\S]*?>/g, '')
     content = content.replace(/<\?[\s\S]*?\?>/g, '')
     content = content.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
-    content = content.replace(/<svg[\s\S]*?>/gi, "").replace(/<\/svg>/gi, "");
+    // content = content.replace(/<svg[\s\S]*?>/gi, "").replace(/<\/svg>/gi, "");
 
     this.setState(state=>({...state, svg: content}));
   }
@@ -79,7 +79,11 @@ class AltrpSVG extends Component {
     if(! this.state.svg){
       return '';
     }
-    return <svg {...props}  dangerouslySetInnerHTML={{__html: this.state.svg}}/>
+    let divElement = document.createElement('div');
+    divElement.innerHTML = this.state.svg;
+    divElement.children[0]?.removeAttribute('width')
+    divElement.children[0]?.removeAttribute('height')
+    return <svg {...props}  dangerouslySetInnerHTML={{__html: divElement.children[0]?.outerHTML || this.state.svg}}/>
   }
 }
 

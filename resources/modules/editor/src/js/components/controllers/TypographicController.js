@@ -38,7 +38,6 @@ class TypographicController extends Component {
         value: font
       };
     });
-    console.log(this.props.default);
     this.units = ["px", "em", "rem", "%", "vw", "vh"];
     let value = this.getSettings(this.props.controlId);
     if (value === null && this.props.default) {
@@ -60,8 +59,6 @@ class TypographicController extends Component {
       spacingMax: this.props.spacingMax || 10,
       spacingMin: this.props.spacingMin || -5
     };
-    console.log("Default typographics");
-    console.log(value);
   }
   getDefaultValue() {
     return {
@@ -177,7 +174,6 @@ class TypographicController extends Component {
       );
       currentElement.removeFont(this.props.controller.getSettingName());
     }
-    console.log(value);
     this._changeValue({
       ..._value,
       family: value ? value.value : "",
@@ -279,7 +275,6 @@ class TypographicController extends Component {
       ...value,
       lineHeight: e.target.value
     });
-    // console.log(this.state.value)
   }
   //конец lineHeight
   //начало letter spacing
@@ -299,7 +294,6 @@ class TypographicController extends Component {
       ...value,
       spacing: e.target.value
     });
-    // console.log(this.state.value)
   }
   //конец letter spacing
 

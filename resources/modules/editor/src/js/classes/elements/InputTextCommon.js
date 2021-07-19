@@ -415,14 +415,6 @@ class InputTextCommon extends BaseElement {
       default: false
     });
 
-    this.addControl("content_clearable", {
-      type: CONTROLLER_SWITCHER,
-      label: "Clearable",
-      default: false,
-      conditions: {
-        content_type: ["select2"]
-      }
-    });
 
     this.addControl("content_options_nullable", {
       type: CONTROLLER_SWITCHER,
@@ -711,6 +703,18 @@ class InputTextCommon extends BaseElement {
       label: "Label"
     });
 
+    this.addControl("label_width", {
+      type: CONTROLLER_SLIDER,
+      label: "Label Width",
+      default: {
+        unit: "%",
+        size: null
+      },
+      units: ["%", "px", "vw"],
+      max: 100,
+      min: 0
+    });
+
     this.addControl("label_style_spacing", {
       type: CONTROLLER_SLIDER,
       label: "Spacing",
@@ -723,15 +727,6 @@ class InputTextCommon extends BaseElement {
       min: 0,
     });
 
-    this.addControl("label_background_color", {
-      type: CONTROLLER_COLOR,
-      label: "Background Color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      }
-    });
-
     this.addControl("label_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
@@ -739,6 +734,11 @@ class InputTextCommon extends BaseElement {
         unit: "px"
       },
       units: ["px", "%", "vh"]
+    });
+
+    this.addControl("label_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Background Color",
     });
 
     this.addControl("label_style_font_color", {
@@ -793,14 +793,10 @@ class InputTextCommon extends BaseElement {
       // }
     });
 
-    this.addControl("label_width", {
+    this.addControl("icon_size", {
       type: CONTROLLER_SLIDER,
-      label: "Label Width",
-      default: {
-        unit: "%",
-        size: null
-      },
-      units: ["%", "px", "vw"],
+      label: "Icon Size",
+      units: ["px", "%", "vh", "vw"],
       max: 100,
       min: 0
     });
@@ -827,64 +823,6 @@ class InputTextCommon extends BaseElement {
       // }
     });
 
-    this.addControl("icon_size", {
-      type: CONTROLLER_SLIDER,
-      label: "Icon Size",
-      units: ["px", "%", "vh", "vw"],
-      max: 100,
-      min: 0
-    });
-
-    this.addControl("cross_color", {
-      type: CONTROLLER_COLOR,
-      label: "Cross Color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      },
-      conditions: {
-        content_clearable: [true]
-      }
-    });
-
-    this.addControl("cross_size", {
-      type: CONTROLLER_SLIDER,
-      label: "Cross Size",
-      default: {
-        unit: "px",
-        size: null
-      },
-      conditions: {
-        content_clearable: [true]
-      },
-      max: 50,
-      min: 0
-      // rules: {
-      //   "{{ELEMENT}} .input-clear-btn{{STATE}}": "font-size: {{SIZE}}px;"
-      // }
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("font_style_section", {
-      tab: TAB_STYLE,
-      label: "Font"
-    });
-
-    this.addControl("field_font_typographic", {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
-    });
-
-    this.addControl("field_font_color", {
-      type: CONTROLLER_COLOR,
-      label: "Font Color",
-      default: {
-        color: "",
-        colorPickedHex: ""
-      }
-    });
-
     this.endControlSection();
 
     this.startControlSection("position_section", {
@@ -894,8 +832,18 @@ class InputTextCommon extends BaseElement {
 
     this.addControl("field_width", {
       type: CONTROLLER_SLIDER,
+      stateless:true,
       label: "Width",
       max: 500,
+      min: 0,
+      units: ["px", "%", "vw"]
+    });
+
+    this.addControl("field_height", {
+      type: CONTROLLER_SLIDER,
+      stateless:true,
+      label: "Height",
+      max: 100,
       min: 0,
       units: ["px", "%", "vw"]
     });
@@ -903,6 +851,7 @@ class InputTextCommon extends BaseElement {
     this.addControl("placeholder_and_value_alignment_position_section", {
       type: CONTROLLER_CHOOSE,
       label: "Alignment",
+      stateless:true,
       options: [
         {
           icon: "left",
@@ -925,32 +874,32 @@ class InputTextCommon extends BaseElement {
       default: {
         unit: "px"
       },
+      stateless:true,
       units: ["px", "%", "vh"]
     });
 
     this.addControl("position_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      default: {
-        unit: "px"
-      },
+      stateless:true,
       units: ["px", "%", "vh"]
     });
 
-    this.addControl("position_z_index", {
-      type: CONTROLLER_NUMBER,
-      label: "Z-index",
-      default: 0
+    this.endControlSection();
+
+    this.startControlSection("font_style_section", {
+      tab: TAB_STYLE,
+      label: "Font"
     });
 
-    this.addControl("position_css_id", {
-      type: CONTROLLER_TEXT,
-      label: "CSS ID"
+    this.addControl("field_font_typographic", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic"
     });
 
-    this.addControl("position_css_classes", {
-      type: CONTROLLER_TEXT,
-      label: "CSS Classes"
+    this.addControl("field_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "Font Color",
     });
 
     this.endControlSection();
@@ -958,25 +907,16 @@ class InputTextCommon extends BaseElement {
     this.startControlSection("placeholder_style_section", {
       tab: TAB_STYLE,
       label: "Placeholder",
-      conditions: {
-        "content_type!": [
-          "image_select",
-          "hidden",
-          "radio",
-          "checkbox",
-          "select"
-        ]
-      }
-    });
-
-    this.addControl("placeholder_style_font_color", {
-      type: CONTROLLER_COLOR,
-      label: "font color"
     });
 
     this.addControl("placeholder_style_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
       label: "Typographic"
+    });
+
+    this.addControl("placeholder_style_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "font color"
     });
 
     this.endControlSection();
@@ -986,22 +926,16 @@ class InputTextCommon extends BaseElement {
       label: "Required"
     });
 
-    this.addControl("required_style_font_color", {
-      type: CONTROLLER_COLOR,
-      label: "font color"
-    });
-
     this.addControl("required_style_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
       label: "Typographic",
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        // size: 13,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      }
+      stateless: true,
+    });
+
+    this.addControl("required_style_font_color", {
+      type: CONTROLLER_COLOR,
+      label: "font color",
+      stateless: true,
     });
 
     this.endControlSection();
@@ -1021,38 +955,6 @@ class InputTextCommon extends BaseElement {
     this.addControl("background_style_background_color", {
       type: CONTROLLER_COLOR,
       label: "Background Color"
-    });
-
-    this.addControl("option_background_color", {
-      type: CONTROLLER_COLOR,
-      conditions: {
-        content_type: "select2"
-      },
-      label: "Option Background Color",
-      default: {
-        color: "#FFF",
-        colorPickedHex: "#FFF"
-      }
-    });
-
-    this.addControl("option_focused_background_color", {
-      type: CONTROLLER_COLOR,
-      label: "Focused Option Background Color",
-      default: {
-        color: "#DEEBFF",
-        colorPickedHex: "#DEEBFF"
-      },
-      conditions: { content_type: ["select2"] }
-    });
-
-    this.addControl("option_selected_background_color", {
-      type: CONTROLLER_COLOR,
-      label: "Selected Option Background Color",
-      default: {
-        color: "#2684FF",
-        colorPickedHex: "#2684FF"
-      },
-      conditions: { content_type: ["select2"] }
     });
 
     this.addControl("background_section_opacity", {
@@ -1101,12 +1003,14 @@ class InputTextCommon extends BaseElement {
           value: "groove",
           label: "Groove"
         }
-      ]
+      ],
+      stateless:true,
     });
 
     this.addControl("border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
+      stateless:true,
       units: ["px", "%", "vh"]
     });
 
@@ -1149,40 +1053,6 @@ class InputTextCommon extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("radio_checkbox_styles", {
-      tab: TAB_STYLE,
-      label: "Radio Checkbox Styles",
-      conditions: {
-        "content_type!": "select"
-      }
-    });
-
-    this.addControl("input_position", {
-      label: "Position",
-      type: CONTROLLER_SELECT,
-      options: [
-        {
-          label: "Left",
-          value: "row"
-        },
-        {
-          label: "Top",
-          value: "column"
-        },
-        {
-          label: "Right",
-          value: "row-reverse"
-        },
-        {
-          label: "Bottom",
-          value: "column-reverse"
-        }
-      ],
-      default: "left"
-    });
-
-    this.endControlSection();
-
     this.startControlSection("mismatch_message_styles", {
       tab: TAB_STYLE,
       label: "Validation Error Message",
@@ -1192,14 +1062,12 @@ class InputTextCommon extends BaseElement {
     this.addControl("mismatch_message_margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
-      default: { unit: "px" },
       units: ["px", "%", "vh", "vw"]
     });
 
     this.addControl("mismatch_message_padding", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      default: { unit: "px" },
       units: ["px", "%", "vh", "vw"]
     });
 
@@ -1212,6 +1080,54 @@ class InputTextCommon extends BaseElement {
       type: CONTROLLER_TYPOGRAPHIC,
       label: "Typographic"
     });
+
+    this.endControlSection();
+
+    this.startControlSection('input_icons', {
+      tab: TAB_STYLE,
+      label: 'Input Icons Settings'
+    })
+
+    this.addControl('input_icons_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Size',
+      units: ["px", "%", "vw"],
+      stateless: true,
+    })
+
+    this.addControl('input_icons_margin', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Margin',
+      units: ["px", "%", "vw"],
+      stateless: true,
+    })
+    this.addControl('input_icons_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      units: ["px", "%", "vw"],
+      stateless: true,
+    })
+    this.addControl('input_icons_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Radius',
+      units: ["px", "%", "vw"],
+      stateless: true,
+    })
+
+    this.addControl('input_icons_fill', {
+      type: CONTROLLER_COLOR,
+      label: 'Fill',
+    })
+
+    this.addControl('input_icons_stroke', {
+      type: CONTROLLER_COLOR,
+      label: 'Stroke',
+    })
+
+    this.addControl('input_icons_background', {
+      type: CONTROLLER_COLOR,
+      label: 'Background',
+    })
 
     this.endControlSection();
 

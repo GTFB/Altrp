@@ -472,7 +472,7 @@ class InputDateWidget extends Component {
           >
             {this.state.settings.content_label}
           </label>
-          {label_icon && label_icon.assetType && (
+          {label_icon && label_icon.type && (
             <span className="altrp-label-icon">
               {renderAssetIcon(label_icon)}
             </span>

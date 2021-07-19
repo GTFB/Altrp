@@ -68,6 +68,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-text",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputTextCommonWidget' */ "../../../../editor/src/js/components/widgets/InputTextWidget"
+          );
+        }
+      },
+      {
         name: "input-select",
         import: async () => {
           return await import(

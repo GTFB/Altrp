@@ -12,6 +12,9 @@ const Intent = window.altrpLibs.Blueprint.Intent;
 const Tooltip2 = window.altrpLibs.Tooltip2;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
+.altrp-field-label_text-widget{
+    width: 100%;
+}
 .bp3-icon_text-widget img{
   width: 16px;
   height: 16px;
@@ -806,6 +809,7 @@ class InputTextCommonWidget extends Component {
   handleLockClick = () => {
     this.setState((state) => {
       return {
+        ...state,
         showPassword: !state.showPassword,
       }
     })
@@ -813,19 +817,48 @@ class InputTextCommonWidget extends Component {
 
   renderLeftIcon(){
     const {element} = this.props;
-    const left_icon = element.getResponsiveSetting('left_icon');
+    let left_icon = element.getResponsiveSetting('left_icon');
+    let password_show_left_icon = element.getResponsiveSetting('password_show_left_icon');
+    const {content_type} = element.settings
+    const leftIconProps = {}
+    if(content_type === 'password' && this.state.showPassword && password_show_left_icon){
+      left_icon = password_show_left_icon
+      leftIconProps.onClick = this.handleLockClick
+    }
+    if(content_type === 'password' && password_show_left_icon){
+      leftIconProps.onClick = this.handleLockClick
+      leftIconProps.style = {
+        cursor: 'pointer'
+      }
+    }
     if(!left_icon){
       return null
     }
-    return <span className="bp3-icon bp3-icon_left bp3-icon_text-widget">{renderAsset(left_icon, )}</span>
+    return <span className="bp3-icon bp3-icon_text-widget bp3-icon_left" {...leftIconProps} tabindex="0">
+      {renderAsset(left_icon, )}
+    </span>
   }
   renderRightIcon(){
     const {element} = this.props;
-    const right_icon = element.getResponsiveSetting('right_icon');
+    let right_icon = element.getResponsiveSetting('right_icon');
+    let password_show_right_icon = element.getResponsiveSetting('password_show_right_icon');
+    const {content_type} = element.settings
+    const rightIconProps = {}
+    if(content_type === 'password' && this.state.showPassword && password_show_right_icon){
+      right_icon = password_show_right_icon
+    }
+    if(content_type === 'password' && password_show_right_icon){
+      rightIconProps.onClick = this.handleLockClick
+      rightIconProps.style = {
+        cursor: 'pointer'
+      }
+    }
     if(!right_icon){
       return null
     }
-    return <span className="bp3-icon bp3-icon_text-widget bp3-icon_right">{renderAsset(right_icon, )}</span>
+    return <span className="bp3-icon bp3-icon_text-widget bp3-icon_right" {...rightIconProps} tabindex="0">
+      {renderAsset(right_icon, )}
+    </span>
   }
 
   render() {
@@ -893,7 +926,7 @@ class InputTextCommonWidget extends Component {
               display: 'flex',
               flexDirection: label_icon_position,
             }}
-            className={`altrp-field-label ${this.state.settings.content_required
+            className={`altrp-field-label altrp-field-label_text-widget ${this.state.settings.content_required
               ? "altrp-field-label--required"
               : ""
             }`}
@@ -918,23 +951,10 @@ class InputTextCommonWidget extends Component {
       autocomplete = "off";
     }
 
-    let lockButton = (
-      <Tooltip2 content={`${this.state.showPassword ? "Hide" : "Show"} Password`}>
-        <Button
-          icon={this.state.showPassword ? "unlock" : "lock"}
-          intent={Intent.WARNING}
-          minimal={true}
-          onClick={this.handleLockClick}
-        />
-      </Tooltip2>
-    );
-    ;
-
     let input = (
       <div className="altrp-input-wrapper">
         <AltrpInput
           type={this.state.settings.content_type === 'password' ? (this.state.showPassword ? "text" : "password") : this.state.settings.content_type}
-          rightElement={this.state.settings.content_type === 'password' ? lockButton : ''}
           name={this.getName()}
           id={this.getName()}
           value={value || ""}
