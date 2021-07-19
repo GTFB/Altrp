@@ -93,7 +93,6 @@ class HeadingTypeHeading extends BaseElement {
           value: 'stretch',
         }
       ],
-      prefixClass: 'altrp-alignment_',
     });
 
     this.addControl('sub_heading_settings_alignment', {

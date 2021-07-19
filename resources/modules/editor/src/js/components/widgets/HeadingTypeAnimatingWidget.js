@@ -50,7 +50,6 @@ import Animating from "../altrp-heading/Animating";
 
 .altrp-heading-wrapper {
   display: flex;
-  flex-direction: column;
 }
 
 .altrp-heading-wrapper-sub-top {
