@@ -42,56 +42,21 @@ class Tabs extends BaseElement {
       return;
     }
 
-    this.startControlSection("type_content", {
-      tab: TAB_CONTENT,
-      label: "Type"
-    });
-
-    this.addControl("type_type", {
-      type: CONTROLLER_SELECT,
-      label: "Type",
-      default: "tabs",
-      options: [
-        {
-          value: "tabs",
-          label: "tabs"
-        },
-        {
-          value: "switcher",
-          label: "switcher"
-        }
-      ],
-    });
-
-    this.endControlSection();
-
     this.startControlSection("tabs_content", {
       tab: TAB_CONTENT,
       label: "Tabs"
     });
 
-    this.addControl("layout_tabs", {
-      type: CONTROLLER_SELECT,
-      label: "Layout",
-      default: "top",
-      options: [
-        {
-          value: "top",
-          label: "top"
-        },
-        {
-          value: "bottom",
-          label: "bottom"
-        },
-        {
-          value: "left",
-          label: "left"
-        },
-        {
-          value: "right",
-          label: "right"
-        }
-      ],
+    this.addControl('vertical', {
+      type: CONTROLLER_SWITCHER,
+      default: false,
+      label: 'Vertical',
+    });
+
+    this.addControl('animate', {
+      type: CONTROLLER_SWITCHER,
+      default: true,
+      label: 'Animate',
     });
 
     let repeater = new Repeater();
@@ -102,10 +67,10 @@ class Tabs extends BaseElement {
       default: 'tab'
     });
 
-    repeater.addControl('id_items', {
-      type: CONTROLLER_TEXT,
-      label: 'ID for default activation',
-    });
+    // repeater.addControl('id_items', {
+    //   type: CONTROLLER_TEXT,
+    //   label: 'ID for default activation',
+    // });
 
     repeater.addControl('icon_items', {
       type: CONTROLLER_MEDIA,
@@ -325,6 +290,32 @@ class Tabs extends BaseElement {
       },
     }
     );
+
+    this.endControlSection();
+
+    this.startControlSection("indicator_style", {
+      tab: TAB_STYLE,
+      label: "Indicator"
+    });
+
+    this.addControl('indicator_height', {
+      type: CONTROLLER_SLIDER,
+      label: 'Indicator position',
+      default: {
+        unit: 'px',
+      },
+      max: 100,
+      min: 0,
+    });
+
+    this.addControl('indicator_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Color',
+      default: {
+        color: "",
+        colorPickedHex: "",
+      },
+    });
 
     this.endControlSection();
 

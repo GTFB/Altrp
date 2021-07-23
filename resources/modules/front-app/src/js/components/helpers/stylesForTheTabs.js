@@ -1,13 +1,13 @@
 import { getResponsiveSetting } from '../../helpers';
 import {
-    simplePropertyStyled,
-    borderWidthStyled,
-    colorPropertyStyled,
-    dimensionsControllerToStyles,
-    typographicControllerToStyles,
-    sizeStyled,
-    shadowControllerToStyles,
-  } from "../../helpers/styles";
+  simplePropertyStyled,
+  borderWidthStyled,
+  colorPropertyStyled,
+  dimensionsControllerToStyles,
+  typographicControllerToStyles,
+  sizeStyled,
+  shadowControllerToStyles, sliderStyled,
+} from "../../helpers/styles";
 
   const getTabsStyles = (settings,id)=>{
     let styles ="";
@@ -18,7 +18,7 @@ import {
 
     const parentClass = `.altrp-element${id}`;
 
-    styles += `${parentClass} .altrp-tab-btn-container {`;
+    styles += `${parentClass} .altrp-tabs .bp3-tab-list  {`;
 
     //Получаем значения justify-content из контроллера, обрабатываем и добавляем в styles
 
@@ -42,7 +42,7 @@ import {
 
       styles+="} ";
 
-      styles+=`${parentClass} .altrp-tab-btn-container:hover {`;
+      styles+=`${parentClass} .altrp-tabs .bp3-tab-list:hover {`;
 
       //Получаем значения justify-content из контроллера, обрабатываем и добавляем в styles
 
@@ -66,7 +66,32 @@ import {
 
       styles+="} ";
 
-      styles+=`${parentClass} .altrp-tab-btn {`;
+      styles+=`${parentClass} .altrp-tabs .bp3-tab-indicator-wrapper ~ .bp3-tab p {`;
+        //Получаем значения color из контроллера, обрабатываем и добавляем в styles
+
+        if (settings !== undefined) {
+          color = getResponsiveSetting(settings, 'background_text_color_tab_style');
+        }
+
+        if (color) {
+          styles += colorPropertyStyled(color, 'color');
+        }
+      styles+= "}";
+
+      styles+=`${parentClass} .altrp-tabs .bp3-tab-indicator-wrapper ~ .bp3-tab.active p {`;
+      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'background_text_color_tab_style', ".active");
+      }
+
+      if (color) {
+        styles += colorPropertyStyled(color, 'color');
+      }
+
+      styles+= "}";
+
+      styles+=`${parentClass} .altrp-tabs .bp3-tab-indicator-wrapper ~ .bp3-tab {`;
 
       //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
 
@@ -75,17 +100,7 @@ import {
       }
 
       if (backgroundColor) {
-        styles += colorPropertyStyled(backgroundColor, 'background-color');
-      }
-
-      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        color = getResponsiveSetting(settings, 'background_text_color_tab_style');
-      }
-
-      if (color) {
-        styles += colorPropertyStyled(color, 'color');
+        styles += colorPropertyStyled(backgroundColor, 'background-color', "!important");
       }
 
       //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
@@ -95,7 +110,7 @@ import {
       }
 
       if (boxShadow) {
-        styles += shadowControllerToStyles(boxShadow);
+        styles += shadowControllerToStyles(boxShadow, "!important");
       }
 
       //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
@@ -115,7 +130,7 @@ import {
       }
 
       if (borderType) {
-        styles += simplePropertyStyled(borderType, 'border-type');
+        styles += simplePropertyStyled(borderType, 'border-style');
       }
 
       //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
@@ -160,7 +175,104 @@ import {
 
       styles+="} ";
 
-      styles+=`${parentClass} .altrp-tab-btn:hover {`;
+      styles+=`${parentClass} .altrp-tabs .bp3-tab-indicator-wrapper ~ .bp3-tab.active {`;
+
+      //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        backgroundColor = getResponsiveSetting(settings, 'background_type_tab_style', ".active");
+      }
+
+      if (backgroundColor) {
+        styles += colorPropertyStyled(backgroundColor, 'background-color', "!important");
+      }
+
+      //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        boxShadow = getResponsiveSetting(settings, 'box_shadow_tab_style', ".active");
+      }
+
+      if (boxShadow) {
+        styles += shadowControllerToStyles(boxShadow, "!important");
+      }
+
+      //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        padding = getResponsiveSetting(settings, 'padding_tab_style', ".active");
+      }
+
+      if (padding) {
+        styles += dimensionsControllerToStyles(padding);
+      }
+
+      //Получаем значения border-type из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderType = getResponsiveSetting(settings, 'border_type_tab_style', ".active");
+      }
+
+      if (borderType) {
+        styles += simplePropertyStyled(borderType, 'border-style');
+      }
+
+      //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderWidth = getResponsiveSetting(settings, 'border_width_tab_style', ".active");
+      }
+
+      if (borderWidth) {
+        styles += borderWidthStyled(borderWidth);
+      }
+
+      //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderColor = getResponsiveSetting(settings, 'border_color_tab_style', ".active");
+      }
+
+      if (borderColor) {
+        styles += colorPropertyStyled(borderColor, 'border-color');
+      }
+
+      //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        borderRadius = getResponsiveSetting(settings, 'border_radius_tab_style', ".active");
+      }
+
+      if (borderRadius) {
+        styles += sizeStyled(borderRadius, 'border-radius');
+      }
+
+      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        typographic = getResponsiveSetting(settings, 'typographic_tab_style', ".active");
+      }
+
+      if (typographic) {
+        styles += typographicControllerToStyles(typographic);
+      }
+
+      styles+="} ";
+
+      styles+=`${parentClass} .altrp-tabs .bp3-tab-indicator-wrapper ~ .bp3-tab:hover p {`;
+      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'background_text_color_tab_style', ":hover");
+      }
+
+      if (color) {
+        styles += colorPropertyStyled(color, 'color');
+      }
+
+      styles+= "}";
+
+      styles+=`${parentClass} .altrp-tabs.altrp-tabs .bp3-tab-indicator-wrapper ~ .bp3-tab:hover {`;
 
       //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
 
@@ -169,17 +281,7 @@ import {
       }
 
       if (backgroundColor) {
-        styles += colorPropertyStyled(backgroundColor, 'background-color');
-      }
-
-      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        color = getResponsiveSetting(settings, 'background_text_color_tab_style', ':hover');
-      }
-
-      if (color) {
-        styles += colorPropertyStyled(color, 'color');
+        styles += colorPropertyStyled(backgroundColor, 'background-color', "!important");
       }
 
       //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
@@ -189,7 +291,7 @@ import {
       }
 
       if (boxShadow) {
-        styles += shadowControllerToStyles(boxShadow);
+        styles += shadowControllerToStyles(boxShadow, "!important");
       }
 
       //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
@@ -209,7 +311,7 @@ import {
       }
 
       if (borderType) {
-        styles += simplePropertyStyled(borderType, 'border-type');
+        styles += simplePropertyStyled(borderType, 'border-style');
       }
 
       //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
@@ -405,7 +507,7 @@ import {
       }
 
       styles+="} ";
-      
+
       styles+=`${parentClass} .altrp-tab-content div:hover {`;
 
       //Получаем значения color из контроллера, обрабатываем и добавляем в styles
@@ -459,233 +561,6 @@ import {
 
       styles+="} ";
 
-      styles+=`${parentClass} .altrp-tabs-switcher_off {`;
-
-      //Получаем значения background из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        background = getResponsiveSetting(settings, 'box_around_color_after_switch_button_style');
-      }
-
-      if (background) {
-        styles += colorPropertyStyled(background, 'background');
-      }
-
-      styles+="} ";
-
-      styles+=`${parentClass} .altrp-tabs-switcher_on  {`;
-
-      //Получаем значения background из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        background = getResponsiveSetting(settings, 'box_around_color_before_switch_button_style');
-      }
-
-      if (background) {
-        styles += colorPropertyStyled(background, 'background');
-      }
-
-      styles+="} ";
-
-      styles+=`${parentClass} .altrp-tabs-switcher__caret  {`;
-
-      //Получаем значения background из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        background = getResponsiveSetting(settings, 'switch_after_color_switch_button_style');
-      }
-
-      if (background) {
-        styles += colorPropertyStyled(background, 'background');
-      }
-
-      //Получаем значения border-radius в точных юнитах из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        borderRadius = getResponsiveSetting(settings, 'border_radius_switch_switch_button_style');
-      }
-
-      if (borderRadius) {
-        styles += sizeStyled(borderRadius, 'border-radius');
-      }
-
-      styles+="} ";
-
-      styles+=`${parentClass} .altrp-tabs-switcher-label-section-one  {`;
-
-      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        color = getResponsiveSetting(settings, 'color_title_section_one_style');
-      }
-
-      if (color) {
-        styles += colorPropertyStyled(color, 'color');
-      }
-
-      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        typographic = getResponsiveSetting(settings, 'typographic_title_section_one_style');
-      }
-
-      if (typographic) {
-        styles += typographicControllerToStyles(typographic);
-      }
-
-      styles+="} ";
-
-      styles+=`${parentClass} .altrp-tabs-switcher-section-one-text  {`;
-
-      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        color = getResponsiveSetting(settings, 'color_content_section_one_style');
-      }
-
-      if (color) {
-        styles += colorPropertyStyled(color, 'color');
-      }
-
-      styles+="} ";
-
-      styles+=`${parentClass} .altrp-tabs-switcher-section-one-text p  {`;
-
-      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        typographic = getResponsiveSetting(settings, 'typographic_content_section_one_style');
-      }
-
-      if (typographic) {
-        styles += typographicControllerToStyles(typographic);
-      }
-
-      styles+="} ";
-
-      styles+=`${parentClass} .altrp-tabs-switcher-label-section-two  {`;
-
-      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        color = getResponsiveSetting(settings, 'color_title_section_two_style');
-      }
-
-      if (color) {
-        styles += colorPropertyStyled(color, 'color');
-      }
-
-      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        typographic = getResponsiveSetting(settings, 'typographic_title_section_two_style');
-      }
-
-      if (typographic) {
-        styles += typographicControllerToStyles(typographic);
-      }
-
-      styles+="} ";
-
-      styles+=`${parentClass} .altrp-tabs-switcher-section-two-text p  {`;
-
-      //Получаем значения typographic из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        typographic = getResponsiveSetting(settings, 'typographic_content_section_two_style');
-      }
-
-      if (typographic) {
-        styles += typographicControllerToStyles(typographic);
-      }
-
-      styles+="} ";
-
-      styles+=`${parentClass} .altrp-tabs-switcher-section-two-text  {`;
-
-      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        color = getResponsiveSetting(settings, 'color_content_section_two_style');
-      }
-
-      if (color) {
-        styles += colorPropertyStyled(color, 'color');
-      }
-
-      styles+="} ";
-
-      styles+=`${parentClass} .altrp-tabs-switcher_on .altrp-tabs-switcher__caret {`;
-
-       //Получаем значения background из контроллера, обрабатываем и добавляем в styles
-
-       if (settings !== undefined) {
-        background = getResponsiveSetting(settings, 'switch_before_color_switch_button_style');
-      }
-
-      if (background) {
-        styles += colorPropertyStyled(background, 'background');
-      }
-
-      styles+="} ";
-
-      styles+=`${parentClass} .altrp-tabs-switcher-container {`;
-
-      //Получаем значения font-size в точных юнитах из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        fontSize = getResponsiveSetting(settings, 'size_switch_button_style');
-      }
-
-      if (fontSize) {
-        styles += sizeStyled(fontSize, 'font-size');
-      }
-
-      //Получаем значения margin-bottom в точных юнитах из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        marginBottom = getResponsiveSetting(settings, 'margin_bottom_switch_button_style');
-      }
-
-      if (marginBottom) {
-        styles += sizeStyled(marginBottom, 'margin-bottom');
-      }
-
-      styles+="} ";
-
-      styles+=`${parentClass} .altrp-tabs-switcher {`;
-
-      //Получаем значения margin-right в точных юнитах из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        marginRight = getResponsiveSetting(settings, 'spacing_switch_button_style');
-      }
-
-      if (marginRight) {
-        styles += sizeStyled(marginRight, 'margin-right');
-      }
-
-      //Получаем значения margin-left в точных юнитах из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        marginLeft = getResponsiveSetting(settings, 'spacing_switch_button_style');
-      }
-
-      if (marginLeft) {
-        styles += sizeStyled(marginLeft, 'margin-left');
-      }
-
-      //Получаем значения border-radius в точных юнитах из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        borderRadius = getResponsiveSetting(settings, 'border_radius_box_switch_button_style');
-      }
-
-      if (borderRadius) {
-        styles += sizeStyled(borderRadius, 'border-radius');
-      }
-
-      styles+="} ";
 
       styles+=`${parentClass} .altrp-tab-btn-column {`;
 
@@ -743,63 +618,7 @@ import {
 
       styles+="} ";
 
-      styles+=`${parentClass} .altrp-tab-btn-top {`;
-
-      //Получаем значения margin-bottom в точных юнитах из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        marginBottom = getResponsiveSetting(settings, 'spacing_content_tabs');
-      }
-
-      if (marginBottom) {
-        styles += sizeStyled(marginBottom, 'margin-bottom');
-      }
-
-      styles+="} ";
-
-      styles+=`${parentClass} .altrp-tab-btn-top:hover {`;
-
-      //Получаем значения margin-bottom в точных юнитах из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        marginBottom = getResponsiveSetting(settings, 'spacing_content_tabs', ':hover ');
-      }
-
-      if (marginBottom) {
-        styles += sizeStyled(marginBottom, 'margin-bottom');
-      }
-
-      styles+="} ";
-
-      styles+=`${parentClass} .altrp-tab-btn-bottom {`;
-
-      //Получаем значения margin-top в точных юнитах из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        marginTop = getResponsiveSetting(settings, 'spacing_content_tabs');
-      }
-
-      if (marginTop) {
-        styles += sizeStyled(marginTop, 'margin-top');
-      }
-
-      styles+="} ";
-
-      styles+=`${parentClass} .altrp-tab-btn-bottom:hover {`;
-
-      //Получаем значения margin-top в точных юнитах из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        marginTop = getResponsiveSetting(settings, 'spacing_content_tabs', ':hover');
-      }
-
-      if (marginTop) {
-        styles += sizeStyled(marginTop, 'margin-top');
-      }
-
-      styles+="} ";
-
-      styles+=`${parentClass} .altrp-tab-btn-left {`;
+      styles+=`${parentClass} .altrp-tab-vertical .altrp-tab {`;
 
       //Получаем значения margin-right в точных юнитах из контроллера, обрабатываем и добавляем в styles
 
@@ -808,53 +627,80 @@ import {
       }
 
       if (marginRight) {
-        styles += sizeStyled(marginRight, 'margin-right');
+        styles += sizeStyled(marginRight, 'margin-left');
       }
 
-      styles+="} ";
+      styles+=`} `;
 
-      styles+=`${parentClass} .altrp-tab-btn-left:hover {`;
+      styles+=`${parentClass} .altrp-tab-vertical.altrp-tab-btn {`;
 
       //Получаем значения margin-right в точных юнитах из контроллера, обрабатываем и добавляем в styles
 
       if (settings !== undefined) {
-        marginRight = getResponsiveSetting(settings, 'spacing_content_tabs', ':hover');
+        marginRight = getResponsiveSetting(settings, 'spacing_column_tabs');
+      }
+
+      if (marginRight) {
+        styles += sizeStyled(marginRight, 'margin-bottom');
+      }
+
+      styles+=`} `;
+
+      styles+=`${parentClass} .altrp-tab-horizontal .altrp-tab {`;
+
+      //Получаем значения margin-right в точных юнитах из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        marginRight = getResponsiveSetting(settings, 'spacing_content_tabs');
+      }
+
+      if (marginRight) {
+        styles += sizeStyled(marginRight, 'margin-top');
+      }
+
+      styles+=`} `;
+
+      styles+=`${parentClass} .altrp-tab-horizontal.altrp-tab-btn {`;
+
+      //Получаем значения margin-right в точных юнитах из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        marginRight = getResponsiveSetting(settings, 'spacing_column_tabs');
       }
 
       if (marginRight) {
         styles += sizeStyled(marginRight, 'margin-right');
       }
 
-      styles+="} ";
+      styles+=`} `;
 
-      styles+=`${parentClass} .altrp-tab-btn-right {`;
+    styles+=`${parentClass} .bp3-tab-indicator-wrapper {`;
 
-      //Получаем значения margin-left в точных юнитах из контроллера, обрабатываем и добавляем в styles
+    //Получаем значения height в точных юнитах из контроллера, обрабатываем и добавляем в styles
 
-      if (settings !== undefined) {
-        marginLeft = getResponsiveSetting(settings, 'spacing_content_tabs');
-      }
+    let indicatorHeight = "";
 
-      if (marginLeft) {
-        styles += sizeStyled(marginLeft, 'margin-left');
-      }
+    if (settings !== undefined) {
+      indicatorHeight = getResponsiveSetting(settings, 'indicator_height');
+    }
 
-      styles+="} ";
+    if (indicatorHeight) {
+      styles += `height: ${sliderStyled(indicatorHeight)} !important;`;
+    }
 
-      styles+=`${parentClass} .altrp-tab-btn-right:hover {`;
-      //Получаем значения margin-left в точных юнитах из контроллера, обрабатываем и добавляем в styles
+    styles+=`} `;
 
-      if (settings !== undefined) {
-        marginLeft = getResponsiveSetting(settings, 'spacing_content_tabs', ':hover');
-      }
+    styles+=`${parentClass} .bp3-tab-indicator {`;
 
-      if (marginLeft) {
-        styles += sizeStyled(marginLeft, 'margin-left');
-      }
+    let indicatorColor = getResponsiveSetting(settings, 'indicator_color')
 
-      styles+="} ";
+    if (indicatorColor && indicatorColor.color) {
+      styles += colorPropertyStyled(indicatorColor, "background-color", "!important");
+    }
 
-      return styles;
+    styles+=`} `;
+
+    return styles;
   }
 
 export default getTabsStyles;

@@ -16,7 +16,17 @@ import { DateInput, TimePrecision } from "@blueprintjs/datetime";
 import moment from "moment";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
- /*здесь css стилей по умолчанию с селекторами*/
+  .altrp-date-field-container .bp3-popover-wrapper, .altrp-date-field-container .bp3-popover-target {
+    width: 100%;
+  }
+
+  .altrp-date-picker-popover .bp3-datepicker-caption select + .bp3-icon {
+    right: 2px !important;
+  }
+
+  .altrp-date-picker-popover .bp3-datepicker-year-select select {
+    padding: 0 0 0 2px;
+  }
 `)
 
 const AltrpFieldContainer = styled.div`
@@ -845,7 +855,7 @@ class InputDateWidget extends Component {
           popoverProps={{
             portalContainer: frame,
             minimal: minimalStyle,
-            popoverClassName: "altrp-date-picker-popover-" + this.props.element.getId(),
+            popoverClassName: "altrp-date-picker-popover altrp-date-picker-popover-" + this.props.element.getId(),
           }}
           onChange={this.onChange}
           className={"altrp-date-picker-" + this.props.element.getId()}
@@ -893,7 +903,7 @@ class InputDateWidget extends Component {
     return (
       <AltrpFieldContainer
         settings={settings}
-        className="altrp-field-container "
+        className="altrp-field-container altrp-date-field-container "
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}

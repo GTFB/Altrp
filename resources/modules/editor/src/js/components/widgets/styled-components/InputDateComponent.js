@@ -15,7 +15,7 @@ import {
  * @returns {String} CSS style string
  */
 const inputWrapperStyle = settings => {
-  let styles = `&& .altrp-input-wrapper, && .bp3-input-group {`;
+  let styles = `&& .altrp-input-wrapper {`;
   let width;
   //width begin
   settings && (width = getResponsiveSetting(settings, "field_width"));
@@ -155,11 +155,145 @@ const fieldStyle = settings => {
 
   //TODO не нашел как активировать эту штуку
   //cross_size && (styles += `font-size:${cross_size.size}${cross_size.unit};`);
+  styles += "}";
 
   styles += "}";
 
   return styles;
 };
+
+/**
+* Стили для класса altrp-field:hover
+* @param {Object} settings style settings of element
+* @returns {String} CSS style string
+*/
+const fieldStyleHover = settings => {
+  let styles = `&& .altrp-field:hover, && .bp3-input:hover {`;
+  let color,
+    backgroundColor,
+    borderType,
+    borderWidth,
+    borderColor,
+    borderRadius,
+    boxShadow;
+
+  const {
+  } = settings;
+
+  settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ":hover"));
+  boxShadow && (styles += shadowControllerToStyles(boxShadow));
+
+  settings && (color = getResponsiveSetting(settings, "field_font_color", ":hover"));
+  color && (styles += colorPropertyStyled(color, "color"));
+
+  settings && (borderType = getResponsiveSetting(settings, "border_type", ":hover"));
+  borderType &&
+  (styles += simplePropertyStyled(borderType, "border-style", "!important"));
+
+  settings && (borderColor = getResponsiveSetting(settings, "border_color", ":hover"));
+  borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
+
+  settings && (borderWidth = getResponsiveSetting(settings, "border_width", ":hover"));
+  borderWidth && (styles += borderWidthStyled(borderWidth));
+
+  settings &&
+  (borderRadius = getResponsiveSetting(
+    settings,
+    "global_filter_input_border_radius",
+    ":hover"
+  ));
+  borderRadius &&
+  (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
+
+  settings &&
+  (backgroundColor = getResponsiveSetting(
+    settings,
+    "background_style_background_color",
+    ":hover"
+  ));
+  backgroundColor &&
+  (styles += colorPropertyStyled(backgroundColor, "background-color"));
+
+  styles += "&& .input-clear-btn{";
+
+  settings && (color = getResponsiveSetting(settings, "cross_color", ":hover"));
+  color && (styles += colorPropertyStyled(color, "color"));
+
+  //TODO не нашел как активировать эту штуку
+  //cross_size && (styles += `font-size:${cross_size.size}${cross_size.unit};`);
+  styles += "}";
+  styles += "}";
+
+  return styles;
+};
+
+/**
+ * Стили для класса altrp-field:hover
+ * @param {Object} settings style settings of element
+ * @returns {String} CSS style string
+ */
+const fieldStyleFocus = settings => {
+  let styles = `&& .altrp-field:focus, && .bp3-input:focus {`;
+  let padding,
+    color,
+    typographic,
+    backgroundColor,
+    borderType,
+    borderWidth,
+    borderColor,
+    borderRadius,
+    boxShadow;
+
+  const {
+  } = settings;
+
+  settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ":focus"));
+  boxShadow && (styles += shadowControllerToStyles(boxShadow));
+
+  settings && (color = getResponsiveSetting(settings, "field_font_color", ":focus"));
+  color && (styles += colorPropertyStyled(color, "color"));
+
+  settings && (borderType = getResponsiveSetting(settings, "border_type", ":focus"));
+  borderType &&
+  (styles += simplePropertyStyled(borderType, "border-style", "!important"));
+
+  settings && (borderColor = getResponsiveSetting(settings, "border_color", ":focus"));
+  borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
+
+  settings && (borderWidth = getResponsiveSetting(settings, "border_width", ":focus"));
+  borderWidth && (styles += borderWidthStyled(borderWidth));
+
+  settings &&
+  (borderRadius = getResponsiveSetting(
+    settings,
+    "global_filter_input_border_radius",
+    ":focus"
+  ));
+  borderRadius &&
+  (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
+
+  settings &&
+  (backgroundColor = getResponsiveSetting(
+    settings,
+    "background_style_background_color",
+    ":focus"
+  ));
+  backgroundColor &&
+  (styles += colorPropertyStyled(backgroundColor, "background-color"));
+
+  styles += "&& .input-clear-btn{";
+
+  settings && (color = getResponsiveSetting(settings, "cross_color", ":focus"));
+  color && (styles += colorPropertyStyled(color, "color"));
+
+  //TODO не нашел как активировать эту штуку
+  //cross_size && (styles += `font-size:${cross_size.size}${cross_size.unit};`);
+  styles += "}";
+  styles += "}";
+
+  return styles;
+};
+
 
 /**
  * Стили для класса altrp-image-select__label
@@ -519,6 +653,8 @@ const maskMismatchMessage = (settings, id) => {
 };
 //Точка входа
 function InputDateComponent(settings) {
+
+  console.log(fieldStyleHover(settings))
   let styles = "";
   const { background_section_opacity } = settings;
   //for all element
@@ -533,6 +669,12 @@ function InputDateComponent(settings) {
   //altrp-field
   const fieldStyles = fieldStyle(settings);
   fieldStyles && (styles += fieldStyles);
+  //altrp-field:hover
+  const fieldStylesHover = fieldStyleHover(settings);
+  fieldStylesHover && (styles += fieldStylesHover);
+  //altrp-field:focus
+  const fieldStylesFocus = fieldStyleFocus(settings);
+  fieldStylesFocus && (styles += fieldStylesFocus);
   //altrp-image-select__label
   const imageSelectLabelStyles = imageSelectLabel(settings);
   imageSelectLabelStyles && (styles += imageSelectLabelStyles);

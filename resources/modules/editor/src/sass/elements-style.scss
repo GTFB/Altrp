@@ -2,6 +2,11 @@
 //@import url("/fonts/OpenSans/stylesheet.css");
 //@import url("/fonts/PTSans/stylesheet.css");
 //@import url("/fonts/Montserrat/stylesheet.css");
+
+.bp3-portal {
+  z-index: 999999999999999999999999999;
+}
+
 .sections-wrapper {
   display: flex;
   width: 1440px;
@@ -371,15 +376,6 @@
 }
 .app-area_header {
   flex: 0 0 auto;
-}
-
-
-.altrp-tab {
-  display: none;
-}
-
-.altrp-tab-show {
-  display: block;
 }
 
 .altrp-tab-btn-container {

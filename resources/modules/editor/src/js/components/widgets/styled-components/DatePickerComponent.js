@@ -50,7 +50,7 @@ export default function DatePickerComponent(settings, elementId) {
         ["color", "date_selected_font_color", "color", ":hover"],
         ["background-color", "date_selected_background_color", "color", ":hover"],
       "}",
-      "DayPicker-Day--outside",
+      "DayPicker-Day--outside.DayPicker-Day--outside",
         ["color", "date_outside_font_color", "color"],
         ["background-color", "date_outside_background_color", "color"],
       "}",
@@ -70,6 +70,5 @@ export default function DatePickerComponent(settings, elementId) {
 
     "}"
   ];
-
   return styledString(styles, settings)
 }

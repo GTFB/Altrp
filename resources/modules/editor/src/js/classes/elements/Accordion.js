@@ -213,8 +213,7 @@ class Accordion extends BaseElement {
         color: "",
         colorPickedHex: "",
       },
-    }
-    );
+    });
 
     this.addControl('color_title_style', {
       type: CONTROLLER_COLOR,
