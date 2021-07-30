@@ -547,21 +547,21 @@ class InputCheckbox extends BaseElement {
       label: "Position"
     });
 
-    this.addControl("field_width", {
+    this.addControl("field_size", {
       type: CONTROLLER_SLIDER,
-      label: "Width",
-      max: 500,
+      label: "Size",
+      max: 100,
       min: 0,
       units: ["px", "%", "vw"]
     });
 
-    this.addControl("placeholder_and_value_alignment_position_section", {
+    this.addControl("field_alignment", {
       type: CONTROLLER_CHOOSE,
       label: "Alignment",
       options: [
         {
           icon: "left",
-          value: "left"
+          value: "flex-start"
         },
         {
           icon: "center",
@@ -569,7 +569,7 @@ class InputCheckbox extends BaseElement {
         },
         {
           icon: "right",
-          value: "right"
+          value: "flex-end"
         }
       ]
     });

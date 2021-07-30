@@ -6,7 +6,7 @@ import {
   dimensionsControllerToStyles,
   typographicControllerToStyles,
   sizeStyled,
-  shadowControllerToStyles, sliderStyled,
+  shadowControllerToStyles, sliderStyled, colorStyled,
 } from "../../helpers/styles";
 
   const getTabsStyles = (settings,id)=>{
@@ -77,6 +77,38 @@ import {
           styles += colorPropertyStyled(color, 'color');
         }
       styles+= "}";
+
+      styles+=`${parentClass} .altrp-tabs.altrp-tabs-without-animation.altrp-tabs-horizontal .bp3-tab[aria-selected="true"] {`;
+      //Получаем значения color из контроллера, обрабатываем и добавляем в styles
+
+      if (settings !== undefined) {
+        color = getResponsiveSetting(settings, 'indicator_color');
+      }
+
+      if (color) {
+        if (color) {
+          if (color.color) {
+            styles += `box-shadow: inset 0 -3px 0 ${color.color};`;
+          }
+        }
+      }
+      styles+= "}";
+
+    styles+=`${parentClass} .altrp-tabs.altrp-tabs-without-animation.altrp-tabs-vertical .bp3-tab[aria-selected="true"] {`;
+    //Получаем значения color из контроллера, обрабатываем и добавляем в styles
+
+    if (settings !== undefined) {
+      color = getResponsiveSetting(settings, 'indicator_color');
+    }
+
+    if (color) {
+      if (color) {
+        if (color.color) {
+          styles += colorStyled(color, "background-color");
+        }
+      }
+    }
+    styles+= "}";
 
       styles+=`${parentClass} .altrp-tabs .bp3-tab-indicator-wrapper ~ .bp3-tab.active p {`;
       //Получаем значения color из контроллера, обрабатываем и добавляем в styles

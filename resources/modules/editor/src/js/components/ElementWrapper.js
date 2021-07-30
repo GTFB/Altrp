@@ -42,6 +42,7 @@ import TabsSwitcherComponent from "./widgets/styled-components/TabsSwitcherCompo
 import ImageLightboxComponent from "./widgets/styled-components/ImageLightboxComponent";
 import InputDateComponent from "./widgets/styled-components/InputDateComponent";
 import DatePickerComponent from "./widgets/styled-components/DatePickerComponent";
+import InputCheckboxComponent from "./widgets/styled-components/InputCheckboxComponent";
 const { connect } = window.reactRedux;
 
 const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, elementId, settings, element})=>{
@@ -142,6 +143,14 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
         settings,
         elementId,
       )}`;
+      break
+    }
+    case "input-checkbox": {
+      styles += `.${prefix}${elementId} {${InputCheckboxComponent(
+        settings,
+        elementId
+      )}}`;
+      break
     }
     case "input-text":
     case "input-password":
@@ -152,7 +161,6 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
     case "input-select":
     case "input-image-select":
     case "input-radio":
-    case "input-checkbox":
     case "input-accept":
     case "input-textarea":
     case "input-wysiwyg": {

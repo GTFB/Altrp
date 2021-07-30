@@ -24,6 +24,7 @@ import {Tab, Tabs} from "@blueprintjs/core";
 
   .altrp-tab {
     width: 100%;
+    display: block;
   }
 `)
 
@@ -167,7 +168,7 @@ class TabsWidget extends Component {
             }
           }
         }
-
+        console.log(tab.card_template)
         return (
           <Tab
             id={`tab-${idx + 1}`}
@@ -244,7 +245,8 @@ class TabsWidget extends Component {
     const blueprintTabs = <Tabs
       onChange={this.blueprintShow}
       className={"altrp-tabs" +
-      (vertical ? " altrp-tabs-vertical" : " altrp-tabs-horizontal")
+      (vertical ? " altrp-tabs-vertical" : " altrp-tabs-horizontal") +
+      (animate ? "" : " altrp-tabs-without-animation")
       }
       animate={animate}
       renderActiveTabPanelOnly={true}

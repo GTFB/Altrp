@@ -13,10 +13,23 @@ import {
 import Resource from "../../classes/Resource";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
+import {Checkbox} from "@blueprintjs/core";
 
 const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`
- /*здесь css стилей по умолчанию с селекторами*/
+  .altrp-field-container .altrp-field-checkbox.altrp-field-checkbox {
+    margin: 0
+  }
+
+  .altrp-field-container .altrp-field-checkbox .bp3-control-indicator {
+    background-image: none;
+  }
+
+  .altrp-field-container .altrp-field-checkbox .bp3-control-indicator:before {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
 `)
 const AltrpFieldContainer = styled.div`
   ${({ settings: { content_label_position_type } }) => {
@@ -534,7 +547,7 @@ class InputCheckboxWidget extends Component {
         await import(
           /* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-        )
+          )
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
@@ -558,7 +571,7 @@ class InputCheckboxWidget extends Component {
         await import(
           /* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-        )
+          )
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
@@ -591,7 +604,7 @@ class InputCheckboxWidget extends Component {
             await import(
               /* webpackChunkName: 'ActionsManager' */
               "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-            )
+              )
           ).default;
           await actionsManager.callAllWidgetActions(
             this.props.element.getIdForAction(),
@@ -759,7 +772,7 @@ class InputCheckboxWidget extends Component {
             className={`altrp-field-label ${this.state.settings.content_required
               ? "altrp-field-label--required"
               : ""
-              }`}
+            }`}
           >
             {this.state.settings.content_label}
           </label>
@@ -834,16 +847,25 @@ class InputCheckboxWidget extends Component {
               key={`${fieldName}-${idx}`}
             >
               <span className="altrp-field-option-span">
-                <input
-                  type="checkbox"
-                  value={option.value}
+                <Checkbox
+                  inline
                   name={`${formID}-${fieldName}`}
-                  className={`altrp-field-option__input ${checked ? "active" : ""
-                    }`}
-                  onChange={this.onChange}
-                  checked={checked}
                   id={`${formID}-${fieldName}-${idx}`}
+                  onChange={this.onChange}
+                  value={option.value}
+                  className={`altrp-field-checkbox${checked ? " active" : ""}`}
+                  checked={checked}
                 />
+                {/*<input*/}
+                {/*  type="checkbox"*/}
+                {/*  value={option.value}*/}
+                {/*  name={`${formID}-${fieldName}`}*/}
+                {/*  className={`altrp-field-option__input ${checked ? "active" : ""*/}
+                {/*    }`}*/}
+                {/*  onChange={this.onChange}*/}
+                {/*  checked={checked}*/}
+                {/*  id={`${formID}-${fieldName}-${idx}`}*/}
+                {/*/>*/}
               </span>
               <label
                 htmlFor={`${formID}-${fieldName}-${idx}`}

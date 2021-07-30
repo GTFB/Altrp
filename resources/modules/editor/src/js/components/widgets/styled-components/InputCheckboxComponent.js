@@ -6,7 +6,7 @@ import {
   colorPropertyStyled,
   borderWidthStyled,
   shadowControllerToStyles,
-  sizeStyled
+  sizeStyled, sliderStyled, defaultStyled, colorStyled
 } from "../../../../../../front-app/src/js/helpers/styles";
 
 /**
@@ -49,7 +49,7 @@ const containerStyle = settings => {
  * @returns {String} CSS style string
  */
 const fieldStyle = settings => {
-  let styles = `&& .altrp-field, && .bp3-input {`;
+  let styles = `&& .altrp-field, && .altrp-field-checkbox .bp3-control-indicator {`;
   let padding,
     color,
     typographic,
@@ -58,7 +58,9 @@ const fieldStyle = settings => {
     borderWidth,
     borderColor,
     borderRadius,
-    boxShadow;
+    boxShadow,
+    size
+  ;
 
   const {
     placeholder_and_value_alignment_position_section,
@@ -73,22 +75,25 @@ const fieldStyle = settings => {
     cross_size
   } = settings;
 
+  settings && (size = getResponsiveSetting(settings, "field_size"));
+  size && (styles += `height:${sliderStyled(size)};width:${sliderStyled(size)};`);
+
   settings && (boxShadow = getResponsiveSetting(settings, "box_shadow"));
   boxShadow && (styles += shadowControllerToStyles(boxShadow));
 
-  settings &&
-    (typographic = getResponsiveSetting(settings, "field_font_typographic"));
-  typographic && (styles += typographicControllerToStyles(typographic));
+  // settings &&
+  // (typographic = getResponsiveSetting(settings, "field_font_typographic"));
+  // typographic && (styles += typographicControllerToStyles(typographic));
 
   settings && (padding = getResponsiveSetting(settings, "position_padding"));
   padding && (styles += dimensionsControllerToStyles(padding, "padding"));
 
-  settings && (color = getResponsiveSetting(settings, "field_font_color"));
-  color && (styles += colorPropertyStyled(color, "color"));
+  // settings && (color = getResponsiveSetting(settings, "field_font_color"));
+  // color && (styles += colorPropertyStyled(color, "color"));
 
   settings && (borderType = getResponsiveSetting(settings, "border_type"));
   borderType &&
-    (styles += simplePropertyStyled(borderType, "border-style", "!important"));
+  (styles += simplePropertyStyled(borderType, "border-style", "!important"));
 
   settings && (borderColor = getResponsiveSetting(settings, "border_color"));
   borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
@@ -97,26 +102,79 @@ const fieldStyle = settings => {
   borderWidth && (styles += borderWidthStyled(borderWidth));
 
   settings &&
-    (borderRadius = getResponsiveSetting(
-      settings,
-      "global_filter_input_border_radius"
-    ));
+  (borderRadius = getResponsiveSetting(
+    settings,
+    "global_filter_input_border_radius"
+  ));
   borderRadius &&
-    (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
+  (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
 
   settings &&
-    (backgroundColor = getResponsiveSetting(
-      settings,
-      "background_style_background_color"
-    ));
+  (backgroundColor = getResponsiveSetting(
+    settings,
+    "background_style_background_color"
+  ));
   backgroundColor &&
-    (styles += colorPropertyStyled(backgroundColor, "background-color"));
+  (styles += colorPropertyStyled(backgroundColor, "background-color"));
 
   placeholder_and_value_alignment_position_section &&
-    (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
+  (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
 
   position_z_index && (styles += `z-index:${position_z_index};`);
   textarea_resize && (styles += `resize:${textarea_resize};`);
+
+  styles += "}";
+
+  styles += `&& .altrp-field, && .altrp-field-checkbox .bp3-control-indicator:before {`;
+
+
+  // settings &&
+  // (typographic = getResponsiveSetting(settings, "field_font_typographic"));
+  // typographic && (styles += typographicControllerToStyles(typographic));
+
+  size && (styles += `height:${sliderStyled(size)};width:${sliderStyled(size)};`);
+
+  padding && (styles += dimensionsControllerToStyles(padding, "padding"));
+
+  // settings && (color = getResponsiveSetting(settings, "field_font_color"));
+  // color && (styles += colorPropertyStyled(color, "color"));
+
+  // settings &&
+  // (borderRadius = getResponsiveSetting(
+  //   settings,
+  //   "global_filter_input_border_radius"
+  // ));
+  // borderRadius &&
+  // (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
+
+  styles += "}";
+
+  styles += `&& .altrp-field-subgroup {`;
+
+  let fieldAlignment;
+
+  settings && (fieldAlignment = getResponsiveSetting(settings, "field_alignment"));
+  fieldAlignment && (styles += `justify-content: ${defaultStyled(fieldAlignment)};`);
+
+  styles += "}";
+
+  styles += "&& .altrp-field-option:hover span.bp3-control-indicator.bp3-control-indicator {";
+
+  let backgroundColorHover;
+
+  settings && (backgroundColorHover = getResponsiveSetting(settings, "background_style_background_color", ":hover"));
+
+  backgroundColorHover && (styles += colorStyled(backgroundColorHover, "background-color"));
+
+  styles += "}";
+
+  styles += "&& .altrp-field-option.active span.bp3-control-indicator.bp3-control-indicator   {";
+
+  let backgroundColorActive;
+
+  settings && (backgroundColorActive = getResponsiveSetting(settings, "background_style_background_color", ".active"));
+
+  backgroundColorActive && (styles += colorStyled(backgroundColorActive, "background-color"));
 
   styles += "}";
 
@@ -135,17 +193,17 @@ const fieldStyle = settings => {
   styles += "&& .altrp-image-select>.altrp-field{";
 
   image_select_item_width &&
-    (styles += `width:${image_select_item_width.size}${image_select_item_width.unit};`);
+  (styles += `width:${image_select_item_width.size}${image_select_item_width.unit};`);
 
   image_select_item_height &&
-    (styles += `height:${image_select_item_height.size}${image_select_item_height.unit};`);
+  (styles += `height:${image_select_item_height.size}${image_select_item_height.unit};`);
 
   styles += "}";
 
   styles += "&& .altrp-image-select img{";
   image_select_image_fit && (styles += `object-fit:${image_select_image_fit};`);
   image_select_image_position &&
-    (styles += `object-position:${image_select_image_position};`);
+  (styles += `object-position:${image_select_image_position};`);
   styles += "}";
 
   styles += "&& .input-clear-btn{";
@@ -163,10 +221,10 @@ const fieldStyle = settings => {
 };
 
 /**
-* Стили для класса altrp-field:hover
-* @param {Object} settings style settings of element
-* @returns {String} CSS style string
-*/
+ * Стили для класса altrp-field:hover
+ * @param {Object} settings style settings of element
+ * @returns {String} CSS style string
+ */
 const fieldStyleHover = settings => {
   let styles = `&& .altrp-field:hover, && .bp3-input:hover {`;
   let color,
@@ -307,14 +365,14 @@ const imageSelectLabel = settings => {
   const { placeholder_and_value_alignment_position_section } = settings;
 
   settings &&
-    (typographic = getResponsiveSetting(settings, "field_font_typographic"));
+  (typographic = getResponsiveSetting(settings, "field_font_typographic"));
   typographic && (styles += typographicControllerToStyles(typographic));
 
   settings && (color = getResponsiveSetting(settings, "field_font_color"));
   color && (styles += colorPropertyStyled(color, "color"));
 
   placeholder_and_value_alignment_position_section &&
-    (styles += `text-align:${placeholder_and_value_alignment_position_section}`);
+  (styles += `text-align:${placeholder_and_value_alignment_position_section}`);
 
   styles += "}";
   return styles;
@@ -329,7 +387,7 @@ const fieldSelect2SingleValueStyle = settings => {
   let typographic, color;
 
   settings &&
-    (typographic = getResponsiveSetting(settings, "field_font_typographic"));
+  (typographic = getResponsiveSetting(settings, "field_font_typographic"));
   typographic && (styles += typographicControllerToStyles(typographic));
 
   settings && (color = getResponsiveSetting(settings, "field_font_color"));
@@ -353,12 +411,12 @@ const fieldLabelContainerStyle = settings => {
   } = settings;
 
   settings &&
-    (backgroundColor = getResponsiveSetting(
-      settings,
-      "label_background_color"
-    ));
+  (backgroundColor = getResponsiveSetting(
+    settings,
+    "label_background_color"
+  ));
   backgroundColor &&
-    (styles += colorPropertyStyled(backgroundColor, "background-color"));
+  (styles += colorPropertyStyled(backgroundColor, "background-color"));
 
   settings && (padding = getResponsiveSetting(settings, "label_padding"));
   padding && (styles += dimensionsControllerToStyles(padding, "padding"));
@@ -383,14 +441,14 @@ const fieldLabel = settings => {
   let color, typographic;
 
   settings &&
-    (color = getResponsiveSetting(settings, "label_style_font_color"));
+  (color = getResponsiveSetting(settings, "label_style_font_color"));
   color && (styles += colorPropertyStyled(color, "color"));
 
   settings &&
-    (typographic = getResponsiveSetting(
-      settings,
-      "label_style_font_typographic"
-    ));
+  (typographic = getResponsiveSetting(
+    settings,
+    "label_style_font_typographic"
+  ));
   typographic && (styles += typographicControllerToStyles(typographic));
 
   styles += "}";
@@ -410,7 +468,7 @@ const labelIconStyle = settings => {
 
   settings && (iconSize = getResponsiveSetting(settings, "icon_size"));
   iconSize &&
-    (styles += `width:${iconSize.size}${iconSize.unit};height:${iconSize.size}${iconSize.unit};`);
+  (styles += `width:${iconSize.size}${iconSize.unit};height:${iconSize.size}${iconSize.unit};`);
 
   styles += "}";
   //for path
@@ -424,18 +482,18 @@ const labelIconStyle = settings => {
   styles += `&& .altrp-label-icon svg{`;
 
   settings &&
-    (backgroundColor = getResponsiveSetting(settings, "icon_color_background"));
+  (backgroundColor = getResponsiveSetting(settings, "icon_color_background"));
   backgroundColor &&
-    (styles += colorPropertyStyled(backgroundColor, "background"));
+  (styles += colorPropertyStyled(backgroundColor, "background"));
   iconSize &&
-    (styles += `width:${iconSize.size}${iconSize.unit};height:${iconSize.size}${iconSize.unit};`);
+  (styles += `width:${iconSize.size}${iconSize.unit};height:${iconSize.size}${iconSize.unit};`);
 
   styles += "}";
   //for img
   styles += `&& .altrp-label-icon img{`;
 
   iconSize &&
-    (styles += `width:${iconSize.size}${iconSize.unit};height:${iconSize.size}${iconSize.unit};`);
+  (styles += `width:${iconSize.size}${iconSize.unit};height:${iconSize.size}${iconSize.unit};`);
 
   styles += "}";
   return styles;
@@ -460,38 +518,38 @@ const placeholderStyle = settings => {
     boxShadow;
 
   settings &&
-    (typographic = getResponsiveSetting(
-      settings,
-      "placeholder_style_font_typographic"
-    ));
+  (typographic = getResponsiveSetting(
+    settings,
+    "placeholder_style_font_typographic"
+  ));
   typographic && (styles += typographicControllerToStyles(typographic));
 
   settings &&
-    (color = getResponsiveSetting(settings, "placeholder_style_font_color"));
+  (color = getResponsiveSetting(settings, "placeholder_style_font_color"));
   color && (styles += colorPropertyStyled(color, "color"));
 
   settings &&
-    (backgroundColor = getResponsiveSetting(
-      settings,
-      "background_style_background_color"
-    ));
+  (backgroundColor = getResponsiveSetting(
+    settings,
+    "background_style_background_color"
+  ));
   backgroundColor &&
-    (styles += colorPropertyStyled(backgroundColor, "background-color"));
+  (styles += colorPropertyStyled(backgroundColor, "background-color"));
 
   styles += "}";
 
   styles += `&& .altrp-field-select2__placeholder{`;
 
   settings &&
-    (backgroundColor = getResponsiveSetting(
-      settings,
-      "background_style_background_color"
-    ));
+  (backgroundColor = getResponsiveSetting(
+    settings,
+    "background_style_background_color"
+  ));
   backgroundColor &&
-    (styles += colorPropertyStyled(backgroundColor, "background-color"));
+  (styles += colorPropertyStyled(backgroundColor, "background-color"));
 
   settings &&
-    (color = getResponsiveSetting(settings, "placeholder_style_font_color"));
+  (color = getResponsiveSetting(settings, "placeholder_style_font_color"));
   color && (styles += colorPropertyStyled(color, "color"));
 
   styles += "}";
@@ -503,7 +561,7 @@ const placeholderStyle = settings => {
 
   settings && (borderType = getResponsiveSetting(settings, "border_type"));
   borderType &&
-    (styles += simplePropertyStyled(borderType, "border-style", "!important"));
+  (styles += simplePropertyStyled(borderType, "border-style", "!important"));
 
   settings && (borderColor = getResponsiveSetting(settings, "border_color"));
   borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
@@ -512,30 +570,30 @@ const placeholderStyle = settings => {
   borderWidth && (styles += borderWidthStyled(borderWidth));
 
   settings &&
-    (borderRadius = getResponsiveSetting(
-      settings,
-      "global_filter_input_border_radius"
-    ));
+  (borderRadius = getResponsiveSetting(
+    settings,
+    "global_filter_input_border_radius"
+  ));
   borderRadius &&
-    (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
+  (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
 
   settings &&
-    (backgroundColor = getResponsiveSetting(
-      settings,
-      "background_style_background_color"
-    ));
+  (backgroundColor = getResponsiveSetting(
+    settings,
+    "background_style_background_color"
+  ));
   backgroundColor &&
-    (styles += colorPropertyStyled(backgroundColor, "background-color"));
+  (styles += colorPropertyStyled(backgroundColor, "background-color"));
 
   settings &&
-    (typographic = getResponsiveSetting(
-      settings,
-      "placeholder_style_font_typographic"
-    ));
+  (typographic = getResponsiveSetting(
+    settings,
+    "placeholder_style_font_typographic"
+  ));
   typographic && (styles += typographicControllerToStyles(typographic));
 
   settings &&
-    (color = getResponsiveSetting(settings, "placeholder_style_font_color"));
+  (color = getResponsiveSetting(settings, "placeholder_style_font_color"));
   color && (styles += colorPropertyStyled(color, "color"));
 
   styles += "}";
@@ -551,14 +609,14 @@ const fieldLabelRequired = settings => {
   let color, typographic;
 
   settings &&
-    (color = getResponsiveSetting(settings, "required_style_font_color"));
+  (color = getResponsiveSetting(settings, "required_style_font_color"));
   color && (styles += colorPropertyStyled(color, "color"));
 
   settings &&
-    (typographic = getResponsiveSetting(
-      settings,
-      "required_style_font_typographic"
-    ));
+  (typographic = getResponsiveSetting(
+    settings,
+    "required_style_font_typographic"
+  ));
   typographic && (styles += typographicControllerToStyles(typographic));
 
   styles += "}";
@@ -574,48 +632,48 @@ const fieldSelect2Option = (settings, id) => {
   let backgroundColor;
 
   settings &&
-    (backgroundColor = getResponsiveSetting(
-      settings,
-      "option_background_color"
-    ));
+  (backgroundColor = getResponsiveSetting(
+    settings,
+    "option_background_color"
+  ));
   backgroundColor &&
-    (styles += colorPropertyStyled(
-      backgroundColor,
-      "background-color",
-      "!important"
-    ));
+  (styles += colorPropertyStyled(
+    backgroundColor,
+    "background-color",
+    "!important"
+  ));
 
   styles += "}";
 
   styles += `.${id}.altrp-field-select2__option.altrp-field-select2__option--is-focused{`;
 
   settings &&
-    (backgroundColor = getResponsiveSetting(
-      settings,
-      "option_focused_background_color"
-    ));
+  (backgroundColor = getResponsiveSetting(
+    settings,
+    "option_focused_background_color"
+  ));
   backgroundColor &&
-    (styles += colorPropertyStyled(
-      backgroundColor,
-      "background-color",
-      "!important"
-    ));
+  (styles += colorPropertyStyled(
+    backgroundColor,
+    "background-color",
+    "!important"
+  ));
 
   styles += "}";
 
   styles += `.${id}.altrp-field-select2__option.altrp-field-select2__option--is-selected{`;
 
   settings &&
-    (backgroundColor = getResponsiveSetting(
-      settings,
-      "option_selected_background_color"
-    ));
+  (backgroundColor = getResponsiveSetting(
+    settings,
+    "option_selected_background_color"
+  ));
   backgroundColor &&
-    (styles += colorPropertyStyled(
-      backgroundColor,
-      "background-color",
-      "!important"
-    ));
+  (styles += colorPropertyStyled(
+    backgroundColor,
+    "background-color",
+    "!important"
+  ));
 
   styles += "}";
   return styles;
@@ -630,35 +688,35 @@ const maskMismatchMessage = (settings, id) => {
   let margin, padding, color, typographic;
 
   settings &&
-    (margin = getResponsiveSetting(settings, "mismatch_message_margin"));
+  (margin = getResponsiveSetting(settings, "mismatch_message_margin"));
   margin && (styles += dimensionsControllerToStyles(margin, "margin"));
 
   settings &&
-    (padding = getResponsiveSetting(settings, "mismatch_message_padding"));
+  (padding = getResponsiveSetting(settings, "mismatch_message_padding"));
   padding && (styles += dimensionsControllerToStyles(margin, "padding"));
 
   settings &&
-    (color = getResponsiveSetting(settings, "mismatch_message_font_color"));
+  (color = getResponsiveSetting(settings, "mismatch_message_font_color"));
   color && (styles += colorPropertyStyled(color, "color"));
 
   settings &&
-    (typographic = getResponsiveSetting(
-      settings,
-      "mismatch_message_typographic"
-    ));
+  (typographic = getResponsiveSetting(
+    settings,
+    "mismatch_message_typographic"
+  ));
   typographic && (styles += typographicControllerToStyles(typographic));
 
   styles += "}";
   return styles;
 };
 //Точка входа
-function InputDateComponent(settings) {
+function InputCheckboxComponent(settings) {
 
   let styles = "";
   const { background_section_opacity } = settings;
   //for all element
   background_section_opacity &&
-    (styles += `opacity:${background_section_opacity.size};`);
+  (styles += `opacity:${background_section_opacity.size};`);
   //altrp-input-wrapper
   const inputWrapperStyles = inputWrapperStyle(settings);
   inputWrapperStyles && (styles += inputWrapperStyles);
@@ -701,4 +759,4 @@ function InputDateComponent(settings) {
   //finish
   return styles;
 }
-export default InputDateComponent
+export default InputCheckboxComponent

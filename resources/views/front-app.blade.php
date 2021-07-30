@@ -134,7 +134,7 @@
   window.altrpPreloadedDatasources = {!! json_encode( $datasources ?? '' ) !!};
   window.altrpMenus = [];
   window.currentPage = {!! json_encode( $_frontend_route ) !!};
-  window.__altrp_settings__ = {!! $altrp_settings !!};
+  {{--window.__altrp_settings__ = {!! $altrp_settings !!};--}}
   window.container_width = {!! get_altrp_setting( 'container_width', '1440' ) !!};
   /* ]]> */
 </script>

@@ -57,11 +57,30 @@ class InputDateWidget extends Component {
 
     this.defaultValue = this.getContent("content_default_value") || "";
 
-    let value = new Date();
+    this.timePrecision = null;
+    this.typeDate = props.element.getSettings("content_time_type", "date");
+    this.locale = this.props.element.getSettings("content_locale", "en");
+
+    switch (this.typeDate) {
+      case "date":
+        this.typeDate = "LL";
+        break;
+      case "time":
+        this.typeDate = "LT";
+        this.timePrecision = TimePrecision.MINUTE
+        break
+      case "dateTime":
+        this.typeDate = "llll";
+        this.timePrecision = TimePrecision.MINUTE
+        break
+    }
+
+    let value = moment().locale(this.locale).toDate();
 
     if(this.defaultValue) {
-      value = new Date(this.defaultValue)
+      value = moment(this.defaultValue).locale(this.locale).toDate()
     }
+
     this.state = {
       settings: { ...props.element.getSettings() },
       // value: this.defaultValue,
@@ -144,12 +163,20 @@ class InputDateWidget extends Component {
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
       value = this.getContent("content_default_value");
-      this.setState(
-        state => ({ ...state, value, contentLoaded: true }),
-        () => {
-          this.dispatchFieldValueToStore(value);
-        }
-      );
+
+      if(value) {
+        value = moment(value).locale(this.locale).toDate()
+        this.setState(
+          state => ({ ...state, value, contentLoaded: true }),
+          () => {
+            this.dispatchFieldValueToStore(value);
+          }
+        );
+      } else {
+        this.setState(
+          state => ({ ...state, contentLoaded: true }),
+        );
+      }
       return;
     }
 
@@ -159,12 +186,20 @@ class InputDateWidget extends Component {
       !this.state.contentLoaded
     ) {
       value = this.getContent("content_default_value");
-      this.setState(
-        state => ({ ...state, value, contentLoaded: true }),
-        () => {
-          this.dispatchFieldValueToStore(value);
-        }
-      );
+
+      if(value) {
+        value = moment(value).locale(this.locale).toDate()
+        this.setState(
+          state => ({ ...state, value, contentLoaded: true }),
+          () => {
+            this.dispatchFieldValueToStore(value);
+          }
+        );
+      } else {
+        this.setState(
+          state => ({ ...state, contentLoaded: true }),
+        );
+      }
       return;
     }
 
@@ -208,12 +243,19 @@ class InputDateWidget extends Component {
         "content_default_value",
         this.props.element.getSettings("select2_multiple")
       );
-      this.setState(
-        state => ({ ...state, value, contentLoaded: true }),
-        () => {
-          this.dispatchFieldValueToStore(value);
-        }
-      );
+      if(value) {
+        value = moment(value).locale(this.locale).toDate()
+        this.setState(
+          state => ({ ...state, value, contentLoaded: true }),
+          () => {
+            this.dispatchFieldValueToStore(value);
+          }
+        );
+      } else {
+        this.setState(
+          state => ({ ...state, contentLoaded: true }),
+        );
+      }
     }
 
     /**
@@ -251,7 +293,6 @@ class InputDateWidget extends Component {
    * @param {{}} prevProps
    */
   updateValue(prevProps) {
-
     if (isEditor()) {
       return;
     }
@@ -274,7 +315,7 @@ class InputDateWidget extends Component {
       ) {
         this.setState(state => ({
           ...state,
-          value: _.get(altrpforms, path)
+          value: moment(_.get(altrpforms, path)).locale(this.locale).toDate()
         }));
       }
       return;
@@ -387,51 +428,51 @@ class InputDateWidget extends Component {
     }
   }
 
-  // /**
-  //  * Обновляет опции для селекта при обновлении данных, полей формы
-  //  */
-  // async updateOptions() {
-  //   {
-  //     let formId = this.props.element.getFormId();
-  //     let paramsForUpdate = this.props.element.getSettings("params_for_update");
-  //     let formData = _.get(this.props.formsStore, [formId], {});
-  //     paramsForUpdate = parseParamsFromString(
-  //       paramsForUpdate,
-  //       new AltrpModel(formData)
-  //     );
-  //     /**
-  //      * Сохраняем параметры запроса, и если надо обновляем опции
-  //      */
-  //     let options = [...this.state.options];
-  //
-  //     if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
-  //       if (!_.isEmpty(paramsForUpdate)) {
-  //         if (this.props.element.getSettings("params_as_filters", false)) {
-  //           paramsForUpdate = JSON.stringify(paramsForUpdate);
-  //           options = await new Resource({
-  //             route: this.getRoute()
-  //           }).getQueried({ filters: paramsForUpdate });
-  //         } else {
-  //           options = await new Resource({ route: this.getRoute() }).getQueried(
-  //             paramsForUpdate
-  //           );
-  //         }
-  //         options = !_.isArray(options) ? options.data : options;
-  //         options = _.isArray(options) ? options : [];
-  //       } else if (this.state.paramsForUpdate) {
-  //         options = await new Resource({ route: this.getRoute() }).getAll();
-  //         options = !_.isArray(options) ? options.data : options;
-  //         options = _.isArray(options) ? options : [];
-  //       }
-  //
-  //       this.setState(state => ({
-  //         ...state,
-  //         paramsForUpdate,
-  //         options
-  //       }));
-  //     }
-  //   }
-  // }
+  /**
+   * Обновляет опции для селекта при обновлении данных, полей формы
+   */
+  async updateOptions() {
+    {
+      let formId = this.props.element.getFormId();
+      let paramsForUpdate = this.props.element.getSettings("params_for_update");
+      let formData = _.get(this.props.formsStore, [formId], {});
+      paramsForUpdate = parseParamsFromString(
+        paramsForUpdate,
+        new AltrpModel(formData)
+      );
+      /**
+       * Сохраняем параметры запроса, и если надо обновляем опции
+       */
+      let options = [...this.state.options];
+
+      if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
+        if (!_.isEmpty(paramsForUpdate)) {
+          if (this.props.element.getSettings("params_as_filters", false)) {
+            paramsForUpdate = JSON.stringify(paramsForUpdate);
+            options = await new Resource({
+              route: this.getRoute()
+            }).getQueried({ filters: paramsForUpdate });
+          } else {
+            options = await new Resource({ route: this.getRoute() }).getQueried(
+              paramsForUpdate
+            );
+          }
+          options = !_.isArray(options) ? options.data : options;
+          options = _.isArray(options) ? options : [];
+        } else if (this.state.paramsForUpdate) {
+          options = await new Resource({ route: this.getRoute() }).getAll();
+          options = !_.isArray(options) ? options.data : options;
+          options = _.isArray(options) ? options : [];
+        }
+
+        this.setState(state => ({
+          ...state,
+          paramsForUpdate,
+          options
+        }));
+      }
+    }
+  }
 
   /**
    * Изменение значения в виджете
@@ -818,23 +859,8 @@ class InputDateWidget extends Component {
       frame = document.getElementById("editorContent").contentWindow.document.body
     }
 
-    const locale = this.props.element.getSettings("content_locale", "en");
-    let typeDate = this.props.element.getSettings("content_time_type", "date");
-    let timePrecision = null;
-
-    switch (typeDate) {
-      case "date":
-        typeDate = "LL";
-        break;
-      case "time":
-        typeDate = "LT";
-        timePrecision = TimePrecision.MINUTE
-        break
-      case "dateTime":
-        typeDate = "llll";
-        timePrecision = TimePrecision.MINUTE
-        break
-    }
+    const locale = this.locale;
+    let timePrecision = this.timePrecision;
 
     const dayPickerProps = {
 
@@ -863,11 +889,11 @@ class InputDateWidget extends Component {
           canClearSelection={false}
           // showActionsBar
           parseDate={(str, locale) => {
-            return moment(str, typeDate).locale(locale).toDate();
+            return moment(str, this.typeDate).locale(locale).toDate();
           }}
           placeholder={this.state.settings.content_placeholder}
           formatDate={(date, locale) => {
-            return moment(date).locale(locale).format(typeDate);
+            return moment(date).locale(locale).format(this.typeDate);
           }}
           value={this.state.value}
           locale={locale}
