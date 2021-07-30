@@ -14,11 +14,11 @@ const ColumnComponent = (settings) => {
   let styles = "";
 
   let flexWrap, flexDirection, align, justifyContent, overflow, backgroundColor, gradient, zIndex, borderType, borderWidth, borderColor, borderRadius, boxShadow;
-  let flexWrapH, flexDirectionH, alignH, justifyContentH, overflowH, backgroundColorH, gradientH, zIndexH, borderTypeH, borderWidthH, borderColorH, borderRadiusH, boxShadowH;
+  let backgroundColorH, gradientH, borderTypeH, borderWidthH, borderColorH, borderRadiusH, boxShadowH;
   let marginBottom, marginBottomH, backgroundImage, backgroundPosition, backgroundAttachment, backgroundRepeat, backgroundSizeInUnits, backgroundSize;
   let backgroundImageH, backgroundPositionH, backgroundAttachmentH, backgroundRepeatH, backgroundSizeInUnitsH, backgroundSizeH, margin, marginH, padding, paddingH, width;
 
-  styles += "& div.altrp-column.altrp-column-priority {";
+  styles += "& > div.altrp-column.altrp-column-priority {";
 
   //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
 
@@ -189,78 +189,8 @@ const ColumnComponent = (settings) => {
 
   //hover
 
-  styles += "& div.altrp-column.altrp-column-priority:hover {";
+  styles += "& > div.altrp-column.altrp-column-priority:hover {";
 
-  //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
-
-  // if (settings !== undefined) {
-  //   paddingH = getResponsiveSetting(settings, "style_position_padding", ':hover');
-  // }
-  //
-  // if (paddingH) {
-  //   styles += dimensionsControllerToStyles(paddingH);
-  // }
-
-  //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
-
-  // if (settings !== undefined) {
-  //   marginH = getResponsiveSetting(settings, 'style_position_margin');
-  // }
-  //
-  // if (marginH) {
-  //   styles += dimensionsControllerToStyles(marginH, 'margin');
-  // }
-
-  //Получаем значения flex-wrap из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    flexWrapH = getResponsiveSetting(settings, 'layout_flex_wrap_content', ':hover');
-  }
-
-  if (flexWrapH) {
-    styles += simplePropertyStyled(flexWrapH, 'flex-wrap');
-  }
-
-  //Получаем значения flex-direction из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    flexDirectionH = getResponsiveSetting(settings, 'layout_column_direction', ':hover');
-  }
-
-  if (flexDirectionH) {
-    styles += simplePropertyStyled(flexDirectionH, 'flex-direction');
-  }
-
-  //Получаем значения align-content и align-items из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    alignH = getResponsiveSetting(settings, 'layout_type', ':hover');
-  }
-
-  if (alignH) {
-    styles += simplePropertyStyled(alignH, 'align-content');
-    styles += simplePropertyStyled(alignH, 'align-items');
-  }
-
-  //Получаем значения justify-content из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    justifyContentH = getResponsiveSetting(settings, 'layout_justify_content', ':hover');
-  }
-
-  if (justifyContentH) {
-    styles += simplePropertyStyled(justifyContentH, 'justify-content');
-  }
-
-  //Получаем значения overflow из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    overflowH = getResponsiveSetting(settings, 'layout_overflow', ':hover');
-  }
-
-  if (overflowH) {
-    styles += simplePropertyStyled(overflowH, 'overflow');
-  }
 
   //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
 
@@ -280,16 +210,6 @@ const ColumnComponent = (settings) => {
 
   if (gradientH) {
     styles += gradientStyled(gradientH);
-  }
-
-  //Получаем значения z-index из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    zIndexH = getResponsiveSetting(settings, 'position_z_index', ':hover');
-  }
-
-  if (zIndexH) {
-    styles += simplePropertyStyled(zIndexH, 'z-index');
   }
 
   //Получаем значения border-type из контроллера, обрабатываем и добавляем в styles
@@ -344,7 +264,7 @@ const ColumnComponent = (settings) => {
 
   styles += "} ";
 
-  styles += "& .altrp-element:not(:last-child) {";
+  styles += "& > .altrp-element:not(:last-child) {";
 
   if (settings !== undefined) {
     marginBottom = getResponsiveSetting(settings, 'layout_widgets-space');
@@ -358,7 +278,7 @@ const ColumnComponent = (settings) => {
 
   //hover
 
-  styles += "& .altrp-element:not(:last-child):hover {";
+  styles += "& > .altrp-element:not(:last-child):hover {";
 
   if (settings !== undefined) {
     marginBottomH = getResponsiveSetting(settings, 'layout_widgets-space', ':hover');
@@ -370,7 +290,7 @@ const ColumnComponent = (settings) => {
 
   styles += "} ";
 
-  styles += "& .altrp-column.altrp-background-image {";
+  styles += "& > .altrp-column.altrp-background-image {";
 
   //Получаем значения background-image из контроллера, обрабатываем и добавляем в styles
 
@@ -436,7 +356,7 @@ const ColumnComponent = (settings) => {
 
   //hover
 
-  styles += "& div.altrp-column.altrp-background-image:hover {";
+  styles += "& > div.altrp-column.altrp-background-image:hover {";
 
   //Получаем значения background-position из контроллера, обрабатываем и добавляем в styles
 

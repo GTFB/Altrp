@@ -26,7 +26,6 @@ export default class Plugins extends Component {
       name: pluginName,
       value: value
     });
-    console.log(req);
     this.setState({
       plugins: this.state.plugins
     });

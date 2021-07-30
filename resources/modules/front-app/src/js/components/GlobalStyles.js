@@ -35,6 +35,7 @@ import InputDateComponent from "../../../../editor/src/js/components/widgets/sty
 import DatePickerComponent from "../../../../editor/src/js/components/widgets/styled-components/DatePickerComponent";
 import InputCheckboxComponent
   from "../../../../editor/src/js/components/widgets/styled-components/InputCheckboxComponent";
+import getInputTextCommonStyles from "./helpers/getInputTextCommonStyles";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -79,6 +80,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles += `.${prefix}${id} {${AccordionComponent(item.settings)}}`;
           break;
         case "section":
+          styles += `.${prefix}${id} {${SectionWidgetComponent(item.settings, item.childrenLength || 1)}}`;
+          break;
+        case "section_widget":
           styles += `.${prefix}${id} {${SectionWidgetComponent(item.settings, item.childrenLength || 1)}}`;
           break;
         case "column":
@@ -149,6 +153,10 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
             id
           )}}`;
           break
+        }
+        case "input-text-common":{
+          styles += `.${prefix}${id} {${getInputTextCommonStyles(item.settings, id)}}`
+          break;
         }
         case "input-text":
         case "input-password":

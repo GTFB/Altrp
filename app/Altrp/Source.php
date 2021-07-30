@@ -15,7 +15,8 @@ class Source extends Model
 
   protected $casts = [
     'web_url' => 'string',
-    'headers' => 'array'
+    'headers' => 'array',
+    'bodies' => 'array'
   ];
 
     protected $fillable = [
@@ -32,6 +33,7 @@ class Source extends Model
         'sourceable_type',
         'description',
         'headers',
+        'bodies',
         'updated_at'
     ];
 

@@ -39,8 +39,6 @@ export default class SendTelegram extends Component{
           }
           return item;
         });
-      } else {
-        node.data.props.nodeData.data.telegram_id = value;
       }
       store.dispatch(setUpdatedNode(node));
     }
@@ -106,7 +104,6 @@ export default class SendTelegram extends Component{
 
 
     render(){
-      const telegramId = this.props.selectNode.data.props.nodeData.data?.telegram_id ?? '';
       let block = [];
       if (_.isArray(this.props.content)) block = this.props.content;
       else this.onNotice();
@@ -131,19 +128,6 @@ export default class SendTelegram extends Component{
                 </div>
 
                 <div className="controllers-wrapper" style={{padding: '0 10px 20px 10px'}}>
-                  <div className="controller-container controller-container_select">
-                    <div className="controller-container__label control-select__label controller-label">To telegram ID</div>
-                    <div className="control-container_select-wrapper controller-field">
-                      <input
-                        className="control-field"
-                        type="text"
-                        id="telegram-id"
-                        name="telegram-id"
-                        value={telegramId || ''}
-                        onChange={(e) => { this.changeInput(e) }}
-                      />
-                    </div>
-                  </div>
                   <div className="controller-container controller-container_repeater repeater">
                     <div className="control-header">
                       <div className="controller-container__label mt-10">

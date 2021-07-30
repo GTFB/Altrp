@@ -12,16 +12,17 @@ use Illuminate\Queue\SerializesModels;
 
 class RobotsMail extends Mailable implements ShouldQueue
 {
-    protected $robotData;
+    protected $data;
 
     public function __construct($data)
     {
-        $this->robotData = $data;
+        $this->data = $data;
     }
 
     public function build()
     {
-        return $this->view('emails.robotmail')
-            ->with($this->robotData);
+        return $this->view(
+            'emails.robotmail', ['data' => $this->data]
+        );
     }
 }

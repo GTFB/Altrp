@@ -37,59 +37,6 @@ function componentWillUnmount(){
   }
 }
 
-/**
- * Вернуть класс активного/неактивного состояния
- */
-function classStateDisabled(){
-  const { element, currentUser } = this.props;
-  let conditional_disabled_choose = element.getSettings('conditional_disabled_choose');
-  if(conditional_disabled_choose){
-    switch(conditional_disabled_choose){
-      case 'guest':{
-        if(currentUser.isGuest()){
-          return ' state-disabled ';
-        }
-      }
-      break;
-      case 'auth':{
-        if(currentUser.checkUserAllowed(
-            element.getSettings('conditional_disabled_permissions'),
-            element.getSettings('conditional_disabled_roles')
-        )){
-          return ' state-disabled ';
-        }
-      }
-      break;
-    }
-  }
-  let conditions = element.getSettings('disabled_conditions',[]);
-  conditions = conditions.map(c=>{
-    const {
-      conditional_model_field: modelField,
-      conditional_other_operator: operator,
-      conditional_other_condition_value: value,
-    } = c;
-    return {
-      modelField,
-      operator,
-      value,
-    };
-  });
-  if(element.getSettings('disabled_conditional_other', false)) {
-    let model = element.getCurrentModel();
-
-    if (conditionsChecker(conditions,
-        element.getSettings('disabled_conditional_other_display') === 'AND',
-        model,
-        true)) {
-
-      return ' state-disabled ';
-    }
-  }
-  return ' '
-}
-
-
 
 /**
  * обновить данные модели
@@ -282,28 +229,32 @@ function isActive(){
     return false;
   }
   const { element } = this.props;
+  const active_enable = element.getSettings('active_enable');
+  if(! active_enable){
+    return false
+  }
   const conditional_active_choose = element.getSettings('conditional_active_choose');
   /**
    * @var {AltrpUser} currentUser
    */
   const currentUser = appStore.getState().currentUser;
-  let authCondition = false;
+  let authCondition = true;
   switch (conditional_active_choose){
     case 'guest':{
-      if(currentUser.isGuest()){
-        authCondition = true;
+      if(! currentUser.isGuest()){
+        authCondition = false;
       }
     }
     break;
     case 'auth':{
       const roles = element.getSettings('conditional_active_roles') || [];
       const permissions = element.getSettings('conditional_active_permissions') || [];
-      if(currentUser.hasRoles(roles)){
-        authCondition = true;
+      if(! currentUser.hasRoles(roles)){
+        authCondition = false;
         break;
       }
-      if(currentUser.hasPermissions(permissions)){
-        authCondition = true;
+      if(! currentUser.hasPermissions(permissions)){
+        authCondition = false;
         break;
       }
     }
@@ -338,6 +289,74 @@ function isActive(){
   return active || authCondition;
 }
 /**
+ * true если выполняются условия
+ * @return {boolean}
+ */
+function isDisabled(){
+  if(isEditor()){
+    return false;
+  }
+  const { element } = this.props;
+  const disabled_enable = element.getSettings('disabled_enable');
+  if(! disabled_enable){
+    return false
+  }
+  const conditional_disabled_choose = element.getSettings('conditional_disabled_choose');
+  /**
+   * @var {AltrpUser} currentUser
+   */
+  const currentUser = appStore.getState().currentUser;
+  let authCondition = true;
+  switch (conditional_disabled_choose){
+    case 'guest':{
+      if(! currentUser.isGuest()){
+        authCondition = false;
+      }
+    }
+    break;
+    case 'auth':{
+      const roles = element.getSettings('conditional_disabled_roles') || [];
+      const permissions = element.getSettings('conditional_disabled_permissions') || [];
+      if(! currentUser.hasRoles(roles)){
+        authCondition = false;
+        break;
+      }
+      if(! currentUser.hasPermissions(permissions)){
+        authCondition = false;
+        break;
+      }
+    }
+    break;
+  }
+  if(! element.getSettings('disabled_conditional_other')){
+    return authCondition;
+  }
+  let conditions = element.getSettings("disabled_conditions", []);
+  conditions = conditions.map(c => {
+    const {
+      conditional_model_field: modelField,
+      conditional_other_operator: operator,
+      conditional_other_condition_value: value
+    } = c;
+    return {
+      modelField,
+      operator,
+      value
+    };
+  });
+  const active_conditional_other_display = element.getSettings("disabled_conditional_other_display");
+  let active = conditionsChecker(
+    conditions,
+    active_conditional_other_display === "AND",
+    this.props.element.getCurrentModel(),
+    true
+  );
+  if(active_conditional_other_display === "AND"){
+    return active && authCondition;
+  }
+  return active || authCondition;
+}
+/**
  * Декорирует компонент элемента методами необходимыми на фронте и в редакторе
  * @param component
  */
@@ -349,6 +368,6 @@ export default function frontDecorate(component) {
   component.getContent = getContent.bind(component);
   component.getModelId = getModelId.bind(component);
   component.updateModelData = updateModelData.bind(component);
-  component.classStateDisabled = classStateDisabled.bind(component);
   component.isActive = isActive.bind(component);
+  component.isDisabled = isDisabled.bind(component);
 }

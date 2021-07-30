@@ -1,57 +1,14 @@
+import loadFontsManager from "./js/functions/load-fonts";
+
 console.log('FIRST SCRIPT: ', performance.now());
-import WIDGETS_DEPENDS from "./js/constants/WIDGETS_DEPENDS";
 import {Link} from 'react-router-dom';
 window.Link = Link;
 import './sass/front-style.scss';
 import './js/libs/react-lodash';
+import loadDepends from "./js/functions/load-depends";
 
 window.sSr = false;
-window.libsLoaded = [];
-const LIBS = {
-  'blueprint': () => {
-    return import(/* webpackChunkName: 'Blueprint' */'./js/libs/blueprint').then(res => {
-      window.libsLoaded.push('blueprint')
-      return Promise.resolve(res)
-    });
-  },
-  'moment': () => {
-    return import(/* webpackChunkName: 'moment' */'./js/libs/moment').then(res => {
-      window.libsLoaded.push('moment')
-      return Promise.resolve(res)
-    });
-  },
-};
 
-
-const libsToLoad = [];
-if (window.altrpElementsLists) {
-  window.altrpElementsLists.forEach(el => {
-    if (WIDGETS_DEPENDS[el] && WIDGETS_DEPENDS[el].length && libsToLoad.indexOf(el) === -1) {
-      WIDGETS_DEPENDS[el].forEach(lib => {
-        if (LIBS[lib]) {
-          libsToLoad.push(LIBS[lib]())
-        }
-      });
-    }
-  })
-} else {
-  LIBS.forEach(lib => {
-    libsToLoad.push(lib())
-  })
-}
-Promise.all(libsToLoad).then(res => {
-  import (/* webpackChunkName: 'FrontElementsManager' */'./js/classes/FrontElementsManager').then(module => {
-    import (/* webpackChunkName: 'FrontElementsFabric' */'./js/classes/FrontElementsFabric').then(module => {
-      console.log('LOAD FrontElementsFabric: ', performance.now());
-      loadingCallback();
-    });
-    return window.frontElementsManager.loadComponents();
-  }).then(async components => {
-    // window.frontElementsManager.loadNotUsedComponent();
-    console.log('LOAD FrontElementsManager: ', performance.now());
-    loadingCallback();
-  });
-});
 /**
  * Параллельно загружаем все необходимые модули
  */
@@ -63,6 +20,12 @@ import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
     window.ElementWrapper = module.default;
     console.log('LOAD ElementWrapper: ', performance.now());
     loadingCallback();
+  });
+
+  import (/* webpackChunkName: 'appStore' */'./js/store/store').then(module => {
+    console.log('LOAD appStore: ', performance.now());
+    loadingCallback();
+    loadDepends()
   });
   import (/* webpackChunkName: 'elementDecorator' */'./js/decorators/front-element-component').then(module => {
     window.elementDecorator = module.default;
@@ -98,7 +61,7 @@ import (/* webpackChunkName: 'FormsManager' */'../../editor/src/js/classes/modul
 /**
  * Рендерим главный компонент после загрузки основных модулей
  */
-function loadingCallback() {
+window.loadingCallback = function loadingCallback() {
   if (window.React
     && window.Component
     && window.ReactDOM

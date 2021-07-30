@@ -292,8 +292,9 @@ class DropbarWidget extends Component {
     if (background_image.url) {
       classes.push("altrp-background-image");
     }
-
-    classes.push(this.classStateDisabled());
+    if(this.isDisabled()){
+      classes.push('state-disabled');
+    }
 
     const buttonTemplate = (
       <button

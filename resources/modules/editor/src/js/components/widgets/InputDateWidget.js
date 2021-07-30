@@ -1,20 +1,13 @@
-import {
-  convertData,
+const {
   isEditor,
   parseOptionsFromSettings,
-  parseParamsFromString,
-  parseURLTemplate,
   replaceContentWithData,
   renderAssetIcon,
+  moment,
   getDataFromLocalStorage
-} from "../../../../../front-app/src/js/helpers";
-import Resource from "../../classes/Resource";
+} = window.altrpHelpers;
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
-import AltrpModel from "../../classes/AltrpModel";
-import AltrpInput from "../altrp-input/AltrpInput";
-import { DateInput, TimePrecision } from "@blueprintjs/datetime";
-import moment from "moment";
-
+const { DateInput, TimePrecision } = window.altrpLibs.BlueprintDatetime;
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-date-field-container .bp3-popover-wrapper, .altrp-date-field-container .bp3-popover-target {
     width: 100%;
@@ -52,8 +45,6 @@ class InputDateWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    this.onChange = this.onChange.bind(this);
-    this.debounceDispatch = this.debounceDispatch.bind(this);
 
     this.defaultValue = this.getContent("content_default_value") || "";
 
@@ -84,7 +75,6 @@ class InputDateWidget extends Component {
     this.state = {
       settings: { ...props.element.getSettings() },
       // value: this.defaultValue,
-      value,
       options: parseOptionsFromSettings(
         props.element.getSettings("content_options")
       ),
@@ -92,7 +82,11 @@ class InputDateWidget extends Component {
     };
     this.altrpSelectRef = React.createRef();
     if (this.getContent("content_default_value")) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
+      let value = this.getContent("content_default_value")
+      const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
+      value = moment(value);
+      value = value.isValid() ? value.format(format) : '';
+      this.dispatchFieldValueToStore(value);
     }
   }
 
@@ -103,28 +97,6 @@ class InputDateWidget extends Component {
     this.onChange("");
     this.dispatchFieldValueToStore("", true);
   }
-
-  /**
-   * Обработка нажатия клавиши
-   * @param {{}} e
-   */
-  handleEnter = e => {
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      const inputs = Array.from(document.querySelectorAll("input,select"));
-      const index = inputs.indexOf(e.target);
-      if (index === undefined) return;
-      inputs[index + 1] && inputs[index + 1].focus();
-      const {
-        create_allowed,
-        create_label,
-        create_url
-      } = this.props.element.getSettings();
-      if (create_allowed && create_label && create_url) {
-        this.createItem(e);
-      }
-    }
-  };
 
   /**
    * Загрузка виджета
@@ -177,6 +149,17 @@ class InputDateWidget extends Component {
           state => ({ ...state, contentLoaded: true }),
         );
       }
+
+      const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
+      value = moment(value);
+      value = value.isValid() ? value.format(format) : '';
+      this.setState(
+        state => ({ ...state, value, contentLoaded: true }),
+        () => {
+          this.dispatchFieldValueToStore(value);
+        }
+      );
+
       return;
     }
 
@@ -200,6 +183,15 @@ class InputDateWidget extends Component {
           state => ({ ...state, contentLoaded: true }),
         );
       }
+      const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
+      value = moment(value);
+      value = value.isValid() ? value.format(format) : '';
+      this.setState(
+        state => ({ ...state, value, contentLoaded: true }),
+        () => {
+          this.dispatchFieldValueToStore(value);
+        }
+      );
       return;
     }
 
@@ -214,25 +206,9 @@ class InputDateWidget extends Component {
   }
 
   /**
-   * Получить url для запросов
-   */
-  getRoute() {
-    let url = this.props.element.getSettings("model_for_options");
-
-    if (url.indexOf("/") === -1) {
-      return `/ajax/models/${url}_options`;
-    }
-    if (url.indexOf("{{") !== -1) {
-      url = replaceContentWithData(url);
-    }
-    return url;
-  }
-
-  /**
    * Обновление виджета
    */
   async _componentDidUpdate(prevProps, prevState) {
-    const { content_options, model_for_options } = this.state.settings;
 
     if (
       prevProps &&
@@ -241,7 +217,6 @@ class InputDateWidget extends Component {
     ) {
       let value = this.getContent(
         "content_default_value",
-        this.props.element.getSettings("select2_multiple")
       );
       if(value) {
         value = moment(value).locale(this.locale).toDate()
@@ -256,35 +231,18 @@ class InputDateWidget extends Component {
           state => ({ ...state, contentLoaded: true }),
         );
       }
+      const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
+      value = moment(value);
+      value = value.isValid() ? value.format(format) : '';
+      this.setState(
+        state => ({ ...state, value, contentLoaded: true }),
+        () => {
+          this.dispatchFieldValueToStore(value);
+        }
+      );
     }
 
-    /**
-     * Если обновилась модель, то пробрасываем в стор новое значение (старый источник диамических данных)
-     */
-    if (
-      !_.isEqual(this.props.currentModel, prevProps.currentModel) &&
-      this.state.value &&
-      this.state.value.dynamic
-    ) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
-    }
 
-    /**
-     * Если обновилось хранилище данных формы, currentDataStorage или модель, то получаем новые опции c сервера
-     */
-    if (
-      this.props.formsStore !== prevProps.formsStore ||
-      this.props.currentModel !== prevProps.currentModel ||
-      this.props.currentDataStorage !== prevProps.currentDataStorage
-    ) {
-      this.updateOptions();
-    }
-    if (content_options && !model_for_options) {
-      let options = parseOptionsFromSettings(content_options);
-      if (!_.isEqual(options, this.state.options)) {
-        this.setState(state => ({ ...state, options }));
-      }
-    }
     this.updateValue(prevProps);
   }
 
@@ -476,148 +434,27 @@ class InputDateWidget extends Component {
 
   /**
    * Изменение значения в виджете
-   * @param e
-   * @param  editor для получения изменений из CKEditor
+   * @param val
+   * @param {boolean} userInput
    */
-  onChange(val, editor = null) {
+  onChange = (val, userInput) =>{
     let value = "";
-    let valueToDispatch;
 
     if (val) {
-      value = val;
-    }
+      value = new Date(val);
+      let timestamp = this.props.element.getSettings("content_timestamp");
 
-    if (_.get(editor, "getData")) {
-      value = `<div class="ck ck-content" style="width:100%">${editor.getData()}</div>`;
-    }
-
-    if (
-      this.props.element.getSettings("content_options_nullable") &&
-      e &&
-      e.value === "<null>"
-    ) {
-      value = null;
-    }
-
-    let timestamp = this.props.element.getSettings("content_timestamp");
-
-    if (timestamp && value != "") {
-      value = new Date(value).getTime(); // timestamp
-    }
-
-    this.setState(
-      state => ({
-        ...state,
-        value
-      }),
-      () => {
-        /**
-         * Обновляем хранилище только если не текстовое поле
-         */
-
-        const change_actions = this.props.element.getSettings("change_actions");
-        const change_change_end = this.props.element.getSettings(
-          "change_change_end"
-        );
-        const change_change_end_delay = this.props.element.getSettings(
-          "change_change_end_delay"
-        );
-
-        if (change_actions && !change_change_end && !isEditor()) {
-          this.debounceDispatch(
-            valueToDispatch !== undefined ? valueToDispatch : value
-          );
-        }
-        if (change_actions && change_change_end && !isEditor()) {
-          this.timeInput && clearTimeout(this.timeInput);
-          this.timeInput = setTimeout(() => {
-            this.debounceDispatch(
-              valueToDispatch !== undefined ? valueToDispatch : value
-            );
-          }, change_change_end_delay);
-        }
+      if (timestamp) {
+        value = value.getTime(); // timestamp
+      } else{
+        const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
+        value = moment(value).format(format)
       }
-    );
+    }
+    this.dispatchFieldValueToStore(value, userInput);
   }
 
-  debounceDispatch = _.debounce(
-    value => this.dispatchFieldValueToStore(value, true),
-    150
-  );
 
-  // /**
-  //  * получить опции
-  //  */
-  // getOptions() {
-  //   let options = [...this.state.options];
-  //   const optionsDynamicSetting = this.props.element.getDynamicSetting(
-  //     "content_options"
-  //   );
-  //
-  //   if (optionsDynamicSetting) {
-  //     options = convertData(optionsDynamicSetting, options);
-  //   }
-  //
-  //   if (!this.props.element.getSettings("sort_default")) {
-  //     options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
-  //   }
-  //
-  //   return options;
-  // }
-
-  // /**
-  //  * Для действие по фокусу
-  //  * @param e
-  //  * @return {Promise<void>}
-  //  */
-  //
-  // onFocus = async e => {
-  //   const focus_actions = this.props.element.getSettings("focus_actions");
-  //
-  //   if (focus_actions && !isEditor()) {
-  //     const actionsManager = (
-  //       await import(
-  //         /* webpackChunkName: 'ActionsManager' */
-  //         "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-  //       )
-  //     ).default;
-  //     await actionsManager.callAllWidgetActions(
-  //       this.props.element.getIdForAction(),
-  //       "focus",
-  //       focus_actions,
-  //       this.props.element
-  //     );
-  //   }
-  // };
-
-  // /**
-  //  * Потеря фокуса для оптимизации
-  //  * @param  e
-  //  * @param  editor для получения изменений из CKEditor
-  //  */
-  //
-  // onBlur = async (e, editor = null) => {
-  //   this.dispatchFieldValueToStore(e.target.value, true);
-  //
-  //   if (_.get(editor, "getData")) {
-  //     this.dispatchFieldValueToStore(editor.getData(), true);
-  //   }
-  //
-  //   if (this.props.element.getSettings("actions", []) && !isEditor()) {
-  //     const actionsManager = (
-  //       await import(
-  //         /* webpackChunkName: 'ActionsManager' */
-  //         "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-  //       )
-  //     ).default;
-  //     await actionsManager.callAllWidgetActions(
-  //       this.props.element.getIdForAction(),
-  //       "blur",
-  //       this.props.element.getSettings("actions", []),
-  //       this.props.element
-  //     );
-  //   }
-  // };
 
   /**
    * Передадим значение в хранилище формы
@@ -627,7 +464,6 @@ class InputDateWidget extends Component {
   dispatchFieldValueToStore = async (value, userInput = false) => {
     let formId = this.props.element.getFormId();
     let fieldName = this.props.element.getFieldId();
-
     if (fieldName.indexOf("{{") !== -1) {
       fieldName = replaceContentWithData(fieldName);
     }
@@ -658,85 +494,6 @@ class InputDateWidget extends Component {
     }
   };
 
-  /**
-   * Обработка добавления опции по ajax
-   * @param {SyntheticKeyboardEvent} e
-   */
-  createItem = async e => {
-    const keyCode = e.keyCode;
-    const { value: inputValue } = e.target;
-
-    if (keyCode !== 13 || !inputValue) {
-      return;
-    }
-
-    const {
-      create_url,
-      create_label,
-      create_data,
-      select2_multiple
-    } = this.props.element.getSettings();
-
-    if (!create_label && !create_url) {
-      return;
-    }
-
-    const currentModel = this.props.element.getCurrentModel();
-    let data = parseParamsFromString(create_data, currentModel, true);
-    data[create_label] = inputValue;
-    let url = parseURLTemplate(create_url, currentModel.getData());
-    this.setState(state => ({ ...state, isDisabled: true }));
-
-    try {
-      const resource = new Resource({
-        route: url
-      });
-      let res = await resource.post(data);
-
-      if (res.success && _.get(res, "data.id")) {
-        let newOption = {
-          label: inputValue,
-          value: _.get(res, "data.id")
-        };
-
-        this.setState(
-          state => ({ ...state, isDisabled: false }),
-          () => {
-            let options = [...this.state.options];
-            options.unshift(newOption);
-            let value = this.state.value;
-            if (select2_multiple) {
-              value = value ? [...value] : [];
-              value.push(_.get(res, "data.id"));
-            } else {
-              value = _.get(res, "data.id");
-            }
-
-            this.setState(
-              state => ({ ...state, options, value }),
-              () => {
-                const selectStateManager = _.get(
-                  this,
-                  "altrpSelectRef.current.selectRef.current"
-                );
-
-                if (selectStateManager) {
-                  selectStateManager.setState({
-                    menuIsOpen: false,
-                    inputValue: ""
-                  });
-                }
-              }
-            );
-          }
-        );
-      }
-      this.setState(state => ({ ...state, isDisabled: false }));
-    } catch (error) {
-      console.error(error);
-      this.setState(state => ({ ...state, isDisabled: false }));
-    }
-  };
 
   /**
    * Взовращает имя для атрибута name
@@ -746,31 +503,39 @@ class InputDateWidget extends Component {
     return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
   }
 
+  /**
+   *
+   * @returns {Date}
+   */
+  getValue = ()=>{
+    let value ;
+    let formId = this.props.element.getFormId();
+    let fieldName = this.props.element.getFieldId();
+    const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD'
+    const timestamp = this.props.element.getSettings("content_timestamp");
+
+    if(isEditor()){
+      value = new Date();
+    } else {
+      value = _.get(appStore.getState(), `formsStore.${formId}.${fieldName}`, '')
+      if(! value){
+        value = new Date();
+
+      } else if(timestamp){
+        value = new Date(value);
+      } else {
+        value = moment(value, format)
+        value = value.toDate();
+      }
+    }
+    return value;
+  }
   render() {
     let label = null;
     const settings = this.props.element.getSettings();
     const {
       label_icon
     } = settings;
-
-    let value = this.state.value;
-
-    if (
-      _.get(value, "dynamic") &&
-      this.props.currentModel.getProperty("altrpModelUpdated")
-    ) {
-      value = this.getContent("content_default_value");
-    }
-
-    /**
-     * Пока динамический контент загружается (Еесли это динамический контент),
-     * нужно вывести пустую строку
-     */
-
-    if (value && value.dynamic) {
-      value = "";
-    }
-
     let classLabel = "";
     let styleLabel = {};
     const content_label_position_type = this.props.element.getResponsiveSetting(
@@ -828,7 +593,7 @@ class InputDateWidget extends Component {
           >
             {this.state.settings.content_label}
           </label>
-          {label_icon && label_icon.assetType && (
+          {label_icon && label_icon.type && (
             <span className="altrp-label-icon">
               {renderAssetIcon(label_icon)}
             </span>
@@ -839,9 +604,8 @@ class InputDateWidget extends Component {
       label = null;
     }
 
-    const timestamp = this.props.element.getSettings("content_timestamp");
 
-    if (timestamp) {
+    if (0) {
       const isValid = moment.unix(value).isValid();
 
       if (isValid) {
@@ -863,7 +627,7 @@ class InputDateWidget extends Component {
     let timePrecision = this.timePrecision;
 
     const dayPickerProps = {
-
+      className: typeDate === 'time' ? 'altrp-hidden' : '',
     }
 
     switch (locale) {
@@ -873,56 +637,43 @@ class InputDateWidget extends Component {
     }
 
     const minimalStyle = this.props.element.getResponsiveSetting("picker_minimal", false);
-
+    const timePickerProps = {
+      showArrowButtons: true,
+      precision: timePrecision,
+      onChange: typeDate === 'LT' ? this.onChange : undefined,
+      className: typeDate === 'LL' ? 'altrp-hidden' : '',
+    };
+    const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
     const input = (
       <div className="altrp-input-wrapper">
         <DateInput
+          name={this.getName()}
+          minDate={new Date(0)}
+          maxDate={moment().add(20,'year').toDate()}
           dayPickerProps={dayPickerProps}
           popoverProps={{
             portalContainer: frame,
             minimal: minimalStyle,
             popoverClassName: "altrp-date-picker-popover altrp-date-picker-popover-" + this.props.element.getId(),
+            // popoverClassName: "altrp-date-pickerpopover" + this.props.element.getId(),
           }}
-          onChange={this.onChange}
-          className={"altrp-date-picker-" + this.props.element.getId()}
+          onChange={typeDate !== 'LT' ? this.onChange : undefined}
+          className={"altrp-date-picker" + this.props.element.getId()}
           timePrecision={timePrecision}
           canClearSelection={false}
           // showActionsBar
           parseDate={(str, locale) => {
             return moment(str, this.typeDate).locale(locale).toDate();
           }}
+          timePickerProps={timePickerProps}
+          disabled={this.state.settings.content_readonly}
           placeholder={this.state.settings.content_placeholder}
           formatDate={(date, locale) => {
             return moment(date).locale(locale).format(this.typeDate);
           }}
-          value={this.state.value}
+          value={this.getValue()}
           locale={locale}
         />
-        {/*<AltrpInput*/}
-        {/*  type="date"*/}
-        {/*  name={this.getName()}*/}
-        {/*  value={value || ""}*/}
-        {/*  element={this.props.element}*/}
-        {/*  readOnly={content_readonly}*/}
-        {/*  placeholder={this.state.settings.content_placeholder}*/}
-        {/*  className={*/}
-        {/*    "altrp-field " + this.state.settings.position_css_classes*/}
-        {/*  }*/}
-        {/*  settings={this.props.element.getSettings()}*/}
-        {/*  onKeyDown={this.handleEnter}*/}
-        {/*  onChange={this.onChange}*/}
-        {/*  onBlur={this.onBlur}*/}
-        {/*  onFocus={this.onFocus}*/}
-        {/*  id={this.state.settings.position_css_id}*/}
-        {/*/>*/}
-        {/*{isClearable && (*/}
-        {/*  <button*/}
-        {/*    className="input-clear-btn"*/}
-        {/*    onClick={() => this.setState({ value: this.defaultValue })}*/}
-        {/*  >*/}
-        {/*    ✖*/}
-        {/*  </button>*/}
-        {/*)}*/}
       </div>
     );
 

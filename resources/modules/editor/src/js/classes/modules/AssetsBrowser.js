@@ -4,6 +4,7 @@ import Times from "../../../svgs/times.svg";
 import { assetsToggle } from "../../store/assets-browser/actions";
 import Resource from "../Resource";
 import '../../../sass/assets-browser.scss';
+import toDataURL from "../../helpers/to-data-url";
 
 
 class AssetsBrowser extends Component {
@@ -149,8 +150,41 @@ class AssetsBrowser extends Component {
     this.props.dispatch(assetsToggle());
   }
 
+  /**
+   * функция добавляет контент самого изображения к возвращаемым данным об изображении
+   * для вставки в HTML картинок в виде данных svg base64
+   */
+  insertRaw = ()=>{
+
+    let asset;
+    this.state.assets.forEach(item => {
+      if (item.name === this.state.selectedAsset) {
+        asset = item;
+      }
+    });
+    if (!asset) {
+      throw `Asset with name ${this.state.selectedAsset} not found in Assets Browser (${this.state.activeTab})!`;
+    }
+    if(asset.type === 'svg'){
+      const resource = new Resource({route: asset.url});
+      resource.getAsText().then(rawSVG=>{
+        rawSVG = rawSVG.replace(/<!--[\s\S]*?-->/g, '')
+        rawSVG = rawSVG.replace(/<![\s\S]*?>/g, '')
+        rawSVG = rawSVG.replace(/<\?[\s\S]*?\?>/g, '')
+        this.props.onChoose({...asset, rawSVG});
+        this.props.dispatch(assetsToggle());
+      });
+    } else {
+      toDataURL(asset.url, (dataUrl)=>{
+        this.props.onChoose({...asset, dataUrl});
+        this.props.dispatch(assetsToggle());
+      })
+    }
+  }
+
   render() {
     const { videoAssets, activeTab } = this.state;
+    const { rawEnable, } = this.props;
     let classes = "assets-browser";
     if (this.props.active) {
       classes += " assets-browser_active";
@@ -222,6 +256,7 @@ class AssetsBrowser extends Component {
                   asset.name = asset.filename;
                   asset.assetType = "media";
                 }
+                asset.assetType = this.state.activeTab
                 if (this.state.selectedAsset === asset.name) {
                   classes += " asset-choose_selected";
                 }
@@ -251,6 +286,7 @@ class AssetsBrowser extends Component {
             <button className={buttonClasses} onClick={this.chooseAsset}>
               Choose
             </button>
+            {rawEnable && <button className={buttonClasses + ' ml-3'} onClick={this.insertRaw}>Insert Raw</button>}
           </div>
         </div>
       </div>

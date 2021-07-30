@@ -468,14 +468,18 @@ function getFilterValues() {
 
 /**
  * Вернет true, если пользователь админ, false - в остальных случаях
+ * @param bool $for_css
  * @return boolean
  */
-function isAdmin(){
+function isAdmin( bool $for_css = true){
   /**
    * @var User $user
    */
   $user = auth()->user();
   if( ! auth()->user() ){
+    return false;
+  }
+  if( $for_css && array_search( get_current_device(), ['DEFAULT_BREAKPOINT', 'Desktop'] ) === false ){
     return false;
   }
   return $user->hasRole( 'admin' );
@@ -582,15 +586,19 @@ function saveCache( $html, $page_id ) {
   ];
 
   $key = false;
-  foreach ($relations as $relation) {
-    if ($relation['hash'] === $hash) {
+  $current_device = get_current_device();
+  if( ! isset($relations[$current_device]) || ! is_array( $relations[$current_device] ) ){
+    $relations[$current_device] = [];
+  }
+  foreach ($relations[$current_device] as $relation) {
+    if ($relation['hash'] === $hash && $page_id === $relation['page_id']) {
       $key = true;
       break;
     }
   }
 
   if (!$key) {
-    array_push($relations, $newRelation);
+    array_push($relations[get_current_device()], $newRelation);
   }
 
   $relations = json_encode($relations);
@@ -775,19 +783,20 @@ function clearPageCache( $page_id ) {
     File::put($cachePath . '/relations.json', '{}');
     $relations = [];
   }
+  foreach ( $relations as $index => $device_relations ) {
+    foreach ($device_relations as $key => $relation) {
+      if (isset($relation['page_id']) && $relation['page_id'] == $page_id) {
+        if ( File::exists($cachePath . '/' . $relation['hash']) ) {
+          File::delete($cachePath . '/' . $relation['hash']);
+        }
 
-  foreach ($relations as $key => $relation) {
-    if (isset($relation['page_id']) && $relation['page_id'] === $page_id) {
-      if ( File::exists($cachePath . '/' . $relation['hash']) ) {
-        File::delete($cachePath . '/' . $relation['hash']);
+        unset($relations[$index][$key]);
       }
-      unset($relations[$key]);
     }
   }
 
   $relations = json_encode($relations);
   File::put($cachePath . '/relations.json', $relations);
-
   Cache::delete( 'areas_' . $page_id );
 
   return true;
@@ -966,6 +975,7 @@ function extractElementsNames( $areas = [], $only_react_elements = false){
 
   }
   $elementNames = array_unique( $elementNames );
+  $elementNames = array_values( $elementNames );
   return $elementNames;
 }
 
@@ -974,6 +984,7 @@ function extractElementsNames( $areas = [], $only_react_elements = false){
  * @param array $elementNames
  */
 function extractElementsNamesFromTemplate( $template_id, &$elementNames ){
+  global $altrp_settings;
   if( Str::isUuid( $template_id ) ){
     $template = Template::where( 'guid', $template_id )->first();
   } else {
@@ -982,6 +993,8 @@ function extractElementsNamesFromTemplate( $template_id, &$elementNames ){
   if( ! $template ){
     return;
   }
+  data_set($altrp_settings, 'templates_data.' . $template_id,  $template->toArray());
+
   $data = json_decode( $template->data, true );
   _extractElementsNames( $data, $elementNames, false );
 }
@@ -1003,6 +1016,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'input-image-select',
     'input-accept',
     'input-text',
+    'input-text-common',
     'input-password',
     'input-number',
     'input-tel',
@@ -1046,12 +1060,19 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
 //    || array_search( $DEFAULT_REACT_ELEMENTS, $elementNames ) !== false )  );
 //echo '</pre>';
 
-
-  if( array_search( $element['name'], $elementNames ) === false
-    && ! ( $only_react_elements
+  if( ! ( $only_react_elements
       && ! ( data_get( $element, 'settings.react_element' )
         || array_search(  $element['name'], $DEFAULT_REACT_ELEMENTS ) !== false ) ) ){
     $elementNames[] = $element['name'];
+    if($element['name'] === 'section' || $element['name'] === 'column'){
+
+      recurseMapElements( $element, function( $element ) use( &$elementNames ){
+
+        if( $element['name'] && array_search(  $element['name'], $elementNames ) === false ) {
+          $elementNames[] = $element['name'];
+        }
+      } );
+    }
   }
   if( isset( $element['children'] ) && is_array( $element['children'] ) ){
     foreach ( $element['children'] as $child ) {
@@ -1069,8 +1090,17 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
   }
   if( $element['name'] === 'table'
     && data_get( $element, 'settings.row_expand' )
-    && data_get( $element, 'settings.column_template' ) ){
+    && data_get( $element, 'settings.card_template' ) ){
     extractElementsNamesFromTemplate( data_get( $element, 'settings.card_template' ), $elementNames );
+  }
+  if( $element['name'] === 'table'
+    && data_get( $element, 'settings.tables_columns' ) ){
+    $columns = data_get( $element, 'settings.tables_columns', [] );
+    foreach ($columns as $column) {
+      if(data_get($column, 'column_template')){
+        extractElementsNamesFromTemplate( data_get($column, 'column_template'), $elementNames );
+      }
+    }
   }
   if( $element['name'] === 'table'
     && data_get( $element, 'settings.row_expand' )
@@ -1328,10 +1358,11 @@ const ACTIONS_COMPONENTS = [
  * ]
  */
 function getAltrpSettings( $page_id ){
-  $settings = [
-    'action_components' => [],
-    'libsToLoad' => [],
-  ];
+  global $altrp_settings;
+  $settings = $altrp_settings;
+  $settings['action_components'] = [];
+  $settings['libsToLoad'] = [];
+
   if( ! $page_id ){
     return $settings;
   }
@@ -1373,7 +1404,6 @@ function getAltrpSettings( $page_id ){
 
 function recurseMapElements( $element, $callback ){
   $callback($element);
-
   if( isset( $element['children'] ) && is_array( $element['children'] ) ){
     foreach ( $element['children'] as $child ) {
       recurseMapElements( $child, $callback );
@@ -1403,6 +1433,9 @@ function loadFonts( $page_areas ){
         $_fonts = data_get( $element, 'settings.__altrpFonts__' );
         if( is_array( $_fonts ) ){
           foreach ( $_fonts as $font ) {
+            if( is_array( $font ) ){
+              $font = $font[array_key_first( $font )];
+            }
             $fonts[] = $font;
           }
         }
@@ -1424,3 +1457,15 @@ function loadFonts( $page_areas ){
   }
   return $out;
 }
+
+function unsetAltrpIndex($array){
+  if (is_array($array)) {
+    $array = collect($array)->map(function ($item) {
+        if (isset($item['altrpIndex'])) unset($item['altrpIndex']);
+        return $item;
+      })
+      ->toArray();
+   }
+   return $array;
+}
+

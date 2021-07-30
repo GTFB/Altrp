@@ -1,6 +1,7 @@
 <?php
 
 //Render cached files
+require_once __DIR__ .'/get-current-device.php';
 $cachePath = '../storage/framework/cache/pages/';
 
 if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
@@ -12,10 +13,10 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
 
   $cachedFiles = [];
   $json = file_get_contents($cachePath . 'relations.json');
-
+  $current_device = get_current_device();
   if( $json ){
-    $cachedFiles = json_decode($json, true);
-
+    $relations = json_decode($json, true);
+    $cachedFiles = $relations[$current_device];
     $hash_to_delete = '';
 
     if (!empty($cachedFiles)) {
@@ -23,6 +24,7 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
         if ( $cachedFile['url'] === $url ) {
           if( file_exists($cachePath . $cachedFile['hash']) ){
             $file = file_get_contents($cachePath . $cachedFile['hash']);
+
             echo $file;
             die();
           } else {
@@ -36,7 +38,8 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
       $cachedFiles = array_filter( $cachedFiles, function ( $file ) use ( $hash_to_delete ){
         return $file['hash'] !== $hash_to_delete;
       } );
-      $json = json_encode( $cachedFiles );
+      $relations[$current_device] = $cachedFiles;
+      $json = json_encode( $relations );
       file_put_contents( $cachePath . 'relations.json', $json );
     }
   }
@@ -52,7 +55,9 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
 
 define('LARAVEL_START', microtime(true));
 global $altrp_env;
+global $altrp_settings;
 $altrp_env = [];
+$altrp_settings = [];
 global $altrp_need_cache;
 $altrp_need_cache = false;
 global $altrp_route_id;

@@ -8,6 +8,7 @@ import {
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {addFont} from "../store/fonts-storage/actions";
 import {addSettings} from "../store/elements-settings/actions";
+import INPUT_WIDGETS from "../constants/INPUT_WIDGETS";
 
 class FrontElement {
 
@@ -118,11 +119,11 @@ class FrontElement {
 
     let widgetsForForm = [
         'button',
-        'input',
+      ...INPUT_WIDGETS
     ];
     let widgetsWithActions = [
         'button',
-        'input',
+      ...INPUT_WIDGETS
     ];
     /**
      * Инициация событий в первую очередь
@@ -240,6 +241,23 @@ class FrontElement {
         });
       }
       break;
+      case 'input-select':
+      case 'input-select2':
+      case 'input-switch':
+      case 'input-wysiwyg':
+      case 'input-checkbox':
+      case 'input-radio':
+      case 'input-image-select':
+      case 'input-file':
+      case 'input-accept':
+      case 'input-date':
+      case 'input-textarea':
+      case 'input-password':
+      case 'input-email':
+      case 'input-tel':
+      case 'input-number':
+      case 'input-text':
+      case 'input-text-common':
       case 'input': {
         formsManager.addField(this.getFormId(), this);
       }
@@ -455,7 +473,7 @@ class FrontElement {
    *  @return {boolean}
    */
   fieldValidate(){
-    if(this.getName() !== 'input'){
+    if(INPUT_WIDGETS.indexOf(this.getName()) === -1){
       return true;
     }
     if(! this.getSettings('content_required')){
@@ -489,7 +507,7 @@ class FrontElement {
    */
   getValue(){
 
-    if(this.getName() !== 'input'){
+    if(INPUT_WIDGETS.indexOf(this.getName()) === -1){
       return null;
     }
     if(! this.elementIsDisplay()){
@@ -758,7 +776,7 @@ class FrontElement {
    */
   getTemplateType(){
     const rootElement = this.getRoot();
-    return rootElement.templateType || 'content';
+    return rootElement ? (rootElement.templateType || 'content') : 'content';
   }
 
   /**

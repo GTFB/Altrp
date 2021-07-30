@@ -4,13 +4,37 @@ import Resource from "../../classes/Resource";
 class AltrpSVG extends Component {
   constructor(props) {
     super(props);
+    window.assetsCache = window.assetsCache || {};
+    this.regex = new RegExp('[\\s\\r\\t\\n]*([a-z0-9\\-_]+)[\\s\\r\\t\\n]*=[\\s\\r\\t\\n]*([\'"])((?:\\\\\\2|(?!\\2).)*)\\2', 'ig'); //для работы с циклом
+
+    let _props = {};
+    let svg = '';
+    if(this.props.rawSVG){
+      window.assetsCache[this.props.url] = this.props.rawSVG;
+      svg = this.props.rawSVG;
+      let propsString = svg.match(/<svg(.*?)=\"(.*?)\">/gi)?svg.match(/<svg(.*?)=\"(.*?)\">/gi)[0] : '';
+
+      let match;
+      while (match = this.regex.exec(propsString)) {
+        _props[match[1]] = match[3];
+      }
+
+      svg = svg.replace(/<!--[\s\S]*?-->/g, '')
+      svg = svg.replace(/<![\s\S]*?>/g, '')
+      svg = svg.replace(/<\?[\s\S]*?\?>/g, '')
+      svg = svg.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+      // svg = svg.replace(/<svg[\s\S]*?>/gi, "").replace(/<\/svg>/gi, "");
+    }
     this.state = {
-      svg: '',
-      props: {},
+      svg: svg || '',
+      props: _props,
     };
   }
   async componentDidMount() {
     window.assetsCache = window.assetsCache || {};
+    if(this.props.rawSVG){
+      window.assetsCache[this.props.url] = this.props.rawSVG;
+    }
     if(! this.props.url){
       return;
     }
@@ -21,17 +45,19 @@ class AltrpSVG extends Component {
       content = await resource.getAsText();
       window.assetsCache[this.props.url] = content;
     }
-    let propsString = content.match(/<svg(.*?)=\"(.*?)\">/gi)[0];
-    let regex = new RegExp('[\\s\\r\\t\\n]*([a-z0-9\\-_]+)[\\s\\r\\t\\n]*=[\\s\\r\\t\\n]*([\'"])((?:\\\\\\2|(?!\\2).)*)\\2', 'ig'); //для работы с циклом
+    let propsString = content.match(/<svg(.*?)=\"(.*?)\">/gi)?content.match(/<svg(.*?)=\"(.*?)\">/gi)[0] : '';
     let props = {};
     let match;
-    while (match = regex.exec(propsString)) {
+    while (match = this.regex.exec(propsString)) {
       props[match[1]] = match[3];
     }
     this.setState(state => ({...state, props}));
 
+    content = content.replace(/<!--[\s\S]*?-->/g, '')
+    content = content.replace(/<![\s\S]*?>/g, '')
+    content = content.replace(/<\?[\s\S]*?\?>/g, '')
     content = content.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
-    content = content.replace(/<svg(.*?)=\"(.*?)\">/gi, "").replace(/<\/svg>/gi, "");
+    // content = content.replace(/<svg[\s\S]*?>/gi, "").replace(/<\/svg>/gi, "");
 
     this.setState(state=>({...state, svg: content}));
   }
@@ -49,10 +75,15 @@ class AltrpSVG extends Component {
   render(){
     let props = _.assign(this.state.props, this.props);
     _.unset(props, 'url');
+    _.unset(props, 'rawSVG');
     if(! this.state.svg){
       return '';
     }
-    return <svg {...props}  dangerouslySetInnerHTML={{__html: this.state.svg}}/>
+    let divElement = document.createElement('div');
+    divElement.innerHTML = this.state.svg;
+    divElement.children[0]?.removeAttribute('width')
+    divElement.children[0]?.removeAttribute('height')
+    return <svg {...props}  dangerouslySetInnerHTML={{__html: divElement.children[0]?.outerHTML || this.state.svg}}/>
   }
 }
 

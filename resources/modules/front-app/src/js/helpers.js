@@ -232,8 +232,17 @@ export function renderAssetIcon(asset, props = null) {
  * @throws Исключение если иконка не найдена
  * */
 export function renderAsset(asset, props = null) {
+  if(_.isEmpty(asset)){
+    return  ''
+  }
+  if(asset.type === 'image' && asset.dataUrl){
+    return React.createElement("img", {
+      ...props,
+      src: asset.dataUrl,
+    });
+  }
   if (asset.url && asset.type === "svg") {
-    return <AltrpSVG {...props} url={asset.url} />;
+    return <AltrpSVG {...props} url={asset.url} rawSVG={asset.rawSVG} />;
   }
   if (! isSSR() && asset instanceof File) {
     let refImg = React.createRef();
@@ -1444,6 +1453,24 @@ export async function dataToXLS(data, filename = "table", templateName = "") {
 }
 
 /**
+ * Генерация и загрузка XML-файла
+ * @param {Object data} Объект данных
+ * @param {String} filename Имя файла
+ */
+export async function dataToXML(data, filename = "table") {
+  const formData = new FormData();
+  formData.append("filename", filename);
+  formData.append("data", JSON.stringify(data));
+
+  const response = await fetch("/api/export-xml", {
+    method: "POST",
+    body: formData
+  });
+
+  return await response.blob();
+}
+
+/**
  * Логиним пользователя
  * @param {{}} data
  * @param {string} formId
@@ -1909,7 +1936,6 @@ export function getResponsiveSetting(
 ) {
   let { currentScreen } = window.parent.appStore.getState();
   let _settingName = `${settingName}_${elementState}_`;
-
   if (currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT) {
     let setting = settings[_settingName];
     if (setting === undefined) {

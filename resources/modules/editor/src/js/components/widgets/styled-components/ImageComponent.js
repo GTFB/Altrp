@@ -376,34 +376,11 @@ export default styled.div`
       let justifyContent;
 
       //Получаем значения justify-content из контроллера, обрабатываем и добавляем в styles
+  console.log(settings);
 
       if (settings !== undefined) {
         justifyContent = getResponsiveSetting(settings, 'image_style_alignment');
-      }
-
-      if (justifyContent) {
-        styles += simplePropertyStyled(justifyContent, 'justify-content');
-      }
-
-      return styles;
-
-    }
-    }
-  }
-
-  && .altrp-image-container:hover {
-
-    ${props => {
-
-      const { settings } = props;
-      let styles = '';
-
-      let justifyContent;
-
-      //Получаем значения justify-content из контроллера, обрабатываем и добавляем в styles
-
-      if (settings !== undefined) {
-        justifyContent = getResponsiveSetting(settings, 'image_style_alignment', ':hover');
+        console.log(justifyContent);
       }
 
       if (justifyContent) {

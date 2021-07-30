@@ -149,6 +149,11 @@ class InputSelect extends BaseElement {
       default: "Placeholder"
     });
 
+    this.addControl("multi_select", {
+      type: CONTROLLER_SWITCHER,
+      label: "MultiSelect"
+    });
+
     this.addControl("content_required", {
       type: CONTROLLER_SWITCHER,
       label: "Required"

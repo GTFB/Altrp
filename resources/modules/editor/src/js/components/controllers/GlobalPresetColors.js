@@ -57,7 +57,7 @@ class GlobalPresetColors extends Component {
               <div
                 className="control-color-preset-colors__item"
                 style={{ backgroundColor: color.color }}
-                title="Right Click to Delete this Color"
+                title={color.name || ''}
                 onClick={e => {
                   e.preventDefault();
                   e.stopPropagation();

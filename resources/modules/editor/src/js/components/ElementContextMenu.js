@@ -1,15 +1,16 @@
-import React, { Component } from "react";
-import { Menu, Item, Separator } from "react-contexify";
+import React, {Component} from "react";
+import {Menu, Item, Separator, contextMenu} from "react-contexify";
 
-import { contextMenu } from "react-contexify/lib/index";
+
 import("react-contexify/scss/main.scss");
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import Column from "../classes/elements/Column";
-import { getEditor, getFactory } from "../helpers";
+import {getEditor, getFactory} from "../helpers";
 import {
   getDataFromLocalStorage,
   saveDataToLocalStorage
 } from "../../../../front-app/src/js/helpers";
+const {Portal} = window.altrpLibs.Blueprint
 
 class ElementContextMenu extends Component {
   constructor(props) {
@@ -34,6 +35,7 @@ class ElementContextMenu extends Component {
   onSelectItem(e) {
     const data = e.props.element.toObject();
     saveDataToLocalStorage("altrp_element_to_copy", data);
+    contextMenu.hideAll();
   }
 
   /**
@@ -41,6 +43,7 @@ class ElementContextMenu extends Component {
    */
   deleteElement() {
     this.props.element.deleteThisElement();
+    contextMenu.hideAll();
   }
 
   /**
@@ -48,6 +51,7 @@ class ElementContextMenu extends Component {
    */
   addNewColumn() {
     this.props.element.insertSiblingAfter(new Column());
+    contextMenu.hideAll();
   }
 
   /**
@@ -55,11 +59,14 @@ class ElementContextMenu extends Component {
    */
   duplicateElement() {
     this.props.element.duplicate();
+    contextMenu.hideAll();
   }
+
   /**
    * Дублирует элемент используя контекстоное меню
    */
   onPasteElement = e => {
+    contextMenu.hideAll();
     /**
      * @member {BaseElement} currentElement
      */
@@ -71,8 +78,6 @@ class ElementContextMenu extends Component {
     }
     newElement = factory.parseData(newElement, null, true);
     // newElement = factory.parseData(newElement);
-    console.log(newElement);
-    console.log(currentElement);
     if (newElement.getType() === "section") {
       let section = currentElement.findClosestByType("section");
       section.insertSiblingAfter(newElement);
@@ -94,7 +99,7 @@ class ElementContextMenu extends Component {
    * Сохраняем стили в locale storage
    */
   copyStyles = e => {
-    console.log(e.props.element);
+    contextMenu.hideAll();
     const dataToStore = {
       settings: e.props.element.getSettings(),
       elementName: e.props.element.getName()
@@ -108,6 +113,7 @@ class ElementContextMenu extends Component {
    * Применяем для выбранного элемента стили из locale storage
    */
   pasteStyles = e => {
+    contextMenu.hideAll();
     let elementSettingsStore = getDataFromLocalStorage(
       "copied_element_settings",
       {}
@@ -117,6 +123,7 @@ class ElementContextMenu extends Component {
     }
     this.props.element.pasteStylesFromSettings(elementSettingsStore.settings);
   };
+
   /**
    * Отборажает пункт удалить, если можно удалить текущую колонку (в секции обязательна одна колонка)
    * @return {boolean}
@@ -128,6 +135,7 @@ class ElementContextMenu extends Component {
       this.props.element.canDeleteThis()
     );
   }
+
   /**
    * Отборажает пункт удалить, если можно удалить текущую колонку (в секции обязательна одна колонка)
    * @return {boolean}
@@ -137,6 +145,7 @@ class ElementContextMenu extends Component {
       !this.props.element.getType || this.props.element.getType() === "column"
     );
   }
+
   render() {
     let elementTitle = this.props.element.getTitle
       ? this.props.element.getTitle()
@@ -155,40 +164,44 @@ class ElementContextMenu extends Component {
       getDataFromLocalStorage("altrp_element_to_copy")
     );
     return (
-      <Menu id="element-menu">
-        <Item onClick={this.onEditItem}>Edit {elementTitle}</Item>
-        <Separator />
-        <Item onClick={this.onSelectItem}>Copy</Item>
-        <Item onClick={this.duplicateElement}>Duplicate {elementTitle}</Item>
-        <Item onClick={this.onPasteElement} disabled={elementPasteDisabled}>
-          Paste
-        </Item>
-        <Separator />
-        <Item
-          onClick={() => {
-            this.props.element.resetStyles();
-          }}
-        >
-          Reset Styles
-        </Item>
-        <Item onClick={this.copyStyles}>Copy Styles</Item>
-        <Item disabled={!stylesPasteEnable} onClick={this.pasteStyles}>
-          Paste Styles
-        </Item>
-        {this.showAddNewColumnItem() ? <Separator /> : ""}
-        {this.showAddNewColumnItem() ? (
-          <Item onClick={this.addNewColumn}>Add New Column</Item>
-        ) : (
-          ""
-        )}
-        <Separator />
-        <Item onClick={this.onSelectItem}>Navigator</Item>
-        {this.showDeleteItem() ? (
-          <Item onClick={this.deleteElement}>Delete {elementTitle}</Item>
-        ) : (
-          ""
-        )}
-      </Menu>
+      <Portal
+        className="altrp-portal altrp-portal_context-menu"
+        container={window.EditorFrame.contentWindow.document.body}>
+        <Menu id="element-menu">
+          <Item onClick={this.onEditItem}>Edit {elementTitle}</Item>
+          <Separator/>
+          <Item onClick={this.onSelectItem}>Copy</Item>
+          <Item onClick={this.duplicateElement}>Duplicate {elementTitle}</Item>
+          <Item onClick={this.onPasteElement} disabled={elementPasteDisabled}>
+            Paste
+          </Item>
+          <Separator/>
+          <Item
+            onClick={() => {
+              this.props.element.resetStyles();
+            }}
+          >
+            Reset Styles
+          </Item>
+          <Item onClick={this.copyStyles}>Copy Styles</Item>
+          <Item disabled={!stylesPasteEnable} onClick={this.pasteStyles}>
+            Paste Styles
+          </Item>
+          {this.showAddNewColumnItem() ? <Separator/> : ""}
+          {this.showAddNewColumnItem() ? (
+            <Item onClick={this.addNewColumn}>Add New Column</Item>
+          ) : (
+            ""
+          )}
+          <Separator/>
+          <Item onClick={this.onSelectItem}>Navigator</Item>
+          {this.showDeleteItem() ? (
+            <Item onClick={this.deleteElement}>Delete {elementTitle}</Item>
+          ) : (
+            ""
+          )}
+        </Menu>
+      </Portal>
     );
   }
 }
@@ -198,6 +211,6 @@ function mapStateToProps(state) {
     element: state.currentContextElement.currentElement
   };
 }
+
 export default connect(mapStateToProps)(ElementContextMenu);
 
-// export default ElementContextMenu;

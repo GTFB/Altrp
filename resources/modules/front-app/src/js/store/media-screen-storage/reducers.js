@@ -15,12 +15,15 @@ const defaultScreen =
       ? window?.matchMedia(query).matches
       : false;
   }) || CONSTANTS.SCREENS[0];
-
+if(!window.altrpHelpers.isEditor()){
+  window.Cookies.set('__altrp_current_device', defaultScreen.name);
+}
 export function mediaScreenReducer(currentScreen, action) {
   currentScreen = currentScreen || defaultScreen;
   switch (action.type) {
     case SET_CURRENT_SCREEN:
       {
+        window.Cookies.set('__altrp_current_device', action.screen.name, { expires: 365 });
         currentScreen = action.screen;
       }
       break;

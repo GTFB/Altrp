@@ -234,7 +234,9 @@ button {
   height: 100%;
   z-index: 999999;
 }
-
+.altrp-portal_context-menu{
+  z-index: 999999;
+}
 .editor-window {
   max-width: calc(100vw - 275px);
   display: flex;

@@ -257,3 +257,4 @@ Route::get('/altrp_run_robot/{robot_id}', 'RobotController@runRobot');
  // Export to XLS
 Route::post('export-excel', 'ReportsController@exportToExcel');
 Route::post('export-word', 'ReportsController@exportToWord');
+Route::post('export-xml', 'ReportsController@exportToXml');

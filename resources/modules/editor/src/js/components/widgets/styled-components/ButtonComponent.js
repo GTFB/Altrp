@@ -24,6 +24,7 @@ export function btnStyles(settings) {
 
     "altrp-btn",
     // ["flex-direction", "button_icon_position"],
+    ["justify-content", "content_alignment"],
     ["margin", "position_margin", "dimensions"],
     ["padding", "position_padding", "dimensions"],
     ["z-index", "position_z_index"],
@@ -108,6 +109,47 @@ export function btnStyles(settings) {
     "}",
     "}",
     "}",
+  "&.state-disabled",
+    () => {
+      const value = getResponsiveSetting(settings, "position_opacity", '.state-disabled');
+
+      if (value && value.size) {
+        return `opacity: ${value.size};`
+      } else {
+        return ''
+      }
+    },
+    ["background-color", "background_color", "color", ".state-disabled"],
+    ["", "gradient", "gradient", ".state-disabled"],
+    ["border-style", "border_type", "", ".state-disabled"],
+    ["border-width", "border_width", "dimensions", ".state-disabled"],
+    ["border-color", "border_color", "color", ".state-disabled"],
+    ["border-radius", "border_radius", "dimensions", ".state-disabled"],
+    ["", "style_background_shadow", "shadow", ".state-disabled"],
+    ["color", "font_color", "color", ".state-disabled"],
+    ["", "background_image", "media", ".state-disabled"],
+
+    "& .altrp-btn-icon",
+    // ["width", "icon_size", "slider", ":hover"],
+    // ["height", "icon_size", "slider", ":hover"],
+
+    "& svg",
+    ["background-color", "icon_color_background", "color", ".state-disabled"],
+    ["width", "icon_size", "slider", ".state-disabled"],
+    ["height", "icon_size", "slider", ".state-disabled"],
+    "}",
+
+    "& img",
+    ["width", "icon_size", "slider", ".state-disabled"],
+    ["icon_size", "slider", ".state-disabled"],
+    "}",
+
+    "& path",
+    ["fill", "icon_color", "color", ".state-disabled"],
+    ["stroke", "icon_color_stroke", "color", ".state-disabled"],
+    "}",
+    "}",
+    "}",
 
     "& .altrp-btn-icon",
     ["padding", "icon_padding", "dimensions"],
@@ -159,7 +201,6 @@ export default function ButtonComponent(settings) {
   stylesInString += `& .altrp-btn.active {`;
 
   const backgroundColorActive = getResponsiveSetting(settings, 'background_color', '.active');
-
   if (backgroundColorActive) {
     stylesInString += colorPropertyStyled(backgroundColorActive, 'background-color');
   }
@@ -256,7 +297,7 @@ export default function ButtonComponent(settings) {
 
   stylesInString += `} `;
 
-  stylesInString += `& .altrp-btn svg:hover {`;
+  stylesInString += `& .altrp-btn:hover svg {`;
 
   const backgroundColorSvgHover = getResponsiveSetting(settings, 'icon_color_background', ':hover');
 
@@ -282,7 +323,7 @@ export default function ButtonComponent(settings) {
 
   stylesInString += `} `;
 
-  stylesInString += `& .altrp-btn path:hover {`;
+  stylesInString += `& .altrp-btn:hover path {`;
 
   const fillColorSvgHover = getResponsiveSetting(settings, 'icon_color', ':hover');
 

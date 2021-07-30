@@ -91,17 +91,21 @@ class ImageWidget extends Component {
         url: media,
         name: "null"
       };
-    } else if (this.getContent('default_url')){
+    } else if (this.getContent('default_url') && _.isString(getDataByPath(this.getContent("default_url"), null, model))){
       media = {
         assetType: "media",
-        url: this.getContent('default_url'),
+        url: getDataByPath(this.getContent("default_url"), null, model),
         name: "default"
       };
     }
     let width = this.props.element.getResponsiveSetting('width_size');
     let height = this.props.element.getResponsiveSetting('height_size');
     width = _.get(width, 'size', '100') + _.get(width, 'unit', '%');
-    height = _.get(height, 'size', '100') + _.get(height, 'unit', '%');
+    if(_.get(height, 'size')){
+      height = _.get(height, 'size') + _.get(height, 'unit', '%');
+    } else {
+      height = '';
+    }
 
     if(_.get(this.props.element.getResponsiveSetting('height_size'), 'size', '100') === "0") {
       height = ""
@@ -125,7 +129,7 @@ class ImageWidget extends Component {
         <div
           className={classNames}
           onClick={() => {
-            history.back();
+            history.back();//todo: реализовать для h-altrp
           }}
         >
           {altrpImage}
@@ -145,8 +149,8 @@ class ImageWidget extends Component {
         <div
           className={classNames}
         >
-          {linkUrl && ! isEditor() ? (
-            link.tag === "a" ? (
+          {(linkUrl && ! isEditor()) ? (
+            link.tag === "a" || window['h-altrp'] ? (
               <a href={linkUrl} {...linkProps}>{altrpImage}</a>
             ) : (
               <Link to={linkUrl} {...linkProps}>{altrpImage}</Link>
