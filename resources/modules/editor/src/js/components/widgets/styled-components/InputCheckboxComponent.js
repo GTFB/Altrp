@@ -104,7 +104,7 @@ const fieldStyle = settings => {
   settings &&
   (borderRadius = getResponsiveSetting(
     settings,
-    "global_filter_input_border_radius"
+    "border_radius"
   ));
   borderRadius &&
   (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
@@ -166,6 +166,11 @@ const fieldStyle = settings => {
 
   backgroundColorHover && (styles += colorStyled(backgroundColorHover, "background-color"));
 
+  let boxShadowHover;
+
+  settings && (boxShadowHover = getResponsiveSetting(settings, "box_shadow", ":hover"));
+  boxShadowHover && (styles += shadowControllerToStyles(boxShadowHover));
+
   styles += "}";
 
   styles += "&& .altrp-field-option.active span.bp3-control-indicator.bp3-control-indicator   {";
@@ -175,6 +180,11 @@ const fieldStyle = settings => {
   settings && (backgroundColorActive = getResponsiveSetting(settings, "background_style_background_color", ".active"));
 
   backgroundColorActive && (styles += colorStyled(backgroundColorActive, "background-color"));
+
+  let boxShadowActive;
+
+  settings && (boxShadowActive = getResponsiveSetting(settings, "box_shadow", ".active"));
+  boxShadowActive && (styles += shadowControllerToStyles(boxShadowActive));
 
   styles += "}";
 
