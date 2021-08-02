@@ -29,15 +29,18 @@ export function getHeadingTypeHeadingStyles(settings, id) {
 
   const parentClass = `.altrp-element${id}`;
 
-  styles += `${parentClass} .altrp-heading, ${parentClass} .altrp-heading-wrapper {`;
+  styles += `${parentClass} .altrp-heading-wrapper {`;
 
   const justifyContent = getResponsiveSetting(
     settings,
     "heading_settings_alignment"
   );
-
   if (justifyContent) {
+
     styles += simplePropertyStyled(justifyContent, "justify-content");
+    if(justifyContent === 'stretch'){
+      styles += `& .altrp-heading{text-align:justify}`
+    }
   }
 
   styles += `} `;
@@ -101,10 +104,10 @@ export function getHeadingTypeHeadingStyles(settings, id) {
     );
   }
 
-  const widthHeaddingSub = getResponsiveSetting(settings, "width_sub_heading");
+  const widthHeadingSub = getResponsiveSetting(settings, "width_sub_heading");
 
-  if (widthHeaddingSub) {
-    styles += sizeStyled(widthHeaddingSub, "width");
+  if (widthHeadingSub) {
+    styles += sizeStyled(widthHeadingSub, "width");
   }
 
   styles += `} `;
@@ -177,14 +180,14 @@ export function getHeadingTypeHeadingStyles(settings, id) {
     );
   }
 
-  const widthHeaddingSubHover = getResponsiveSetting(
+  const widthHeadingSubHover = getResponsiveSetting(
     settings,
     "width_sub_heading",
     ":hover"
   );
 
-  if (widthHeaddingSubHover) {
-    styles += sizeStyled(widthHeaddingSubHover, "width");
+  if (widthHeadingSubHover) {
+    styles += sizeStyled(widthHeadingSubHover, "width");
   }
 
   styles += `} `;

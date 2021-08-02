@@ -287,7 +287,6 @@ class BaseElement extends ControlStack {
    * Удаляет текущий элемент у родителя
    */
   deleteThisElement() {
-    console.log(this);
     this.parent.deleteChild(this);
   }
 
@@ -810,6 +809,7 @@ class BaseElement extends ControlStack {
         currentValue.secondColor = value.color;
         value = currentValue;
       }
+      console.log(settingName);
       this.setSettingValue(settingName, value);
     });
     this.updateStyles();

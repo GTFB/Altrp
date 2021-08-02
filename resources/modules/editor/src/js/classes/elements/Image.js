@@ -63,13 +63,6 @@ class Image extends BaseElement {
       label: 'Default Image URL',
     });
 
-    this.addControl('lightbox_switch', {
-      hideOnEmail: true,
-      type: CONTROLLER_SWITCHER,
-      label: 'Lightbox',
-      default: false
-    });
-
     this.addControl('cursor_pointer', {
       hideOnEmail: true,
       type: CONTROLLER_SWITCHER,
@@ -85,6 +78,25 @@ class Image extends BaseElement {
       default: false
     });
 
+    this.addControl('image_style_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment',
+      default: 'center',
+      options: [
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+      ],
+    });
     this.endControlSection();
 
     this.startControlSection("link", {
@@ -237,10 +249,6 @@ class Image extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
       default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
         unit: 'px'
       },
       units: [
@@ -254,12 +262,9 @@ class Image extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
       default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
         unit: 'px'
       },
+      stateless: true,
       units: [
         'px',
         '%',
@@ -272,16 +277,6 @@ class Image extends BaseElement {
       type: CONTROLLER_NUMBER,
       label: 'Z-index',
       default: 0,
-    });
-
-    this.addControl('position_css_id', {
-      type: CONTROLLER_TEXT,
-      label: 'CSS ID'
-    });
-
-    this.addControl('position_css_classes', {
-      type: CONTROLLER_TEXT,
-      label: 'CSS Classes'
     });
 
     this.endControlSection();
@@ -321,25 +316,6 @@ class Image extends BaseElement {
         saturate: 100,
         hue: 0,
       },
-    });
-    this.addControl('image_style_alignment', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Alignment',
-      default: 'center',
-      options: [
-        {
-          icon: 'left',
-          value: 'flex-start',
-        },
-        {
-          icon: 'center',
-          value: 'center',
-        },
-        {
-          icon: 'right',
-          value: 'flex-end',
-        },
-      ],
     });
 
     this.endControlSection();

@@ -26,6 +26,14 @@ import getRouteStyles from "../functions/get-route-styles";
 import MapComponent from "../../../../editor/src/js/components/widgets/styled-components/MapComponent";
 import MapConstructorComponent
   from "../../../../editor/src/js/components/widgets/styled-components/MapConstructorComponent";
+import TabsSwitcherComponent
+  from "../../../../editor/src/js/components/widgets/styled-components/TabsSwitcherComponent";
+import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
+import ImageLightboxComponent
+  from "../../../../editor/src/js/components/widgets/styled-components/ImageLightboxComponent";
+import InputDateComponent from "../../../../editor/src/js/components/widgets/styled-components/InputDateComponent";
+import DatePickerComponent from "../../../../editor/src/js/components/widgets/styled-components/DatePickerComponent";
+import getInputTextCommonStyles from "./helpers/getInputTextCommonStyles";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -39,6 +47,15 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
   _.each(elementsSettings, (item, id) => {
     if (item) {
       switch (item.name) {
+        case "image-lightbox":
+          styles+=ImageLightboxComponent(item.settings,id);
+          break;
+        case "diagram":
+          styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
+          break;
+        case "tabs-switcher":
+          styles += `.${prefix}${id} {${TabsSwitcherComponent(item.settings)}}`;
+          break;
         case "button":
           styles += `.${prefix}${id} {${ButtonComponent(item.settings)}}`;
           break;
@@ -61,6 +78,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles += `.${prefix}${id} {${AccordionComponent(item.settings)}}`;
           break;
         case "section":
+          styles += `.${prefix}${id} {${SectionWidgetComponent(item.settings, item.childrenLength || 1)}}`;
+          break;
+        case "section_widget":
           styles += `.${prefix}${id} {${SectionWidgetComponent(item.settings, item.childrenLength || 1)}}`;
           break;
         case "column":
@@ -113,10 +133,23 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles += `${FormComponent.select2Options(item.settings, id)}}`;
         }
           break;
+        case "input-date": {
+          styles += `.${prefix}${id} {${InputDateComponent(
+            item.settings,
+            id
+          )}}`;
+
+          styles += `${DatePickerComponent(
+            item.settings,
+            id,
+          )}`;
+        } break;
+        case "input-text-common":{
+          styles += `.${prefix}${id} {${getInputTextCommonStyles(item.settings, id)}}`
+        }break;
         case "input-text":
         case "input-password":
         case "input-number":
-        case "input-date":
         case "input-email":
         case "input-tel":
         case "input-file":

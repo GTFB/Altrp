@@ -24,7 +24,6 @@ export default styled.div`
     "}",
 
     "&:hover.altrp-dropbar-btn-containter",
-      ["padding", "padding_dropbar_content_style", "dimensions", ":hover"],
       ["background-color", "background_dropbar_content_style", "color", ":hover"],
       ["border-style", "border_style_dropbar_content_style", "", ":hover"],
       ["border-width", "border_width_dropbar_content_style", "dimensions", ":hover"],
@@ -40,6 +39,4 @@ export default styled.div`
   ];
   return styledString(styles, settings)
 }}
-
-background-color: red;
-`;
+`

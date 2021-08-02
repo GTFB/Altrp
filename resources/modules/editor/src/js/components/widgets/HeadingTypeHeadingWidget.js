@@ -51,7 +51,6 @@ import { isEditor, parseURLTemplate } from "../../../../../front-app/src/js/help
 
 .altrp-heading-wrapper {
   display: flex;
-  flex-direction: column;
 }
 
 .altrp-heading-wrapper-sub-top {

@@ -17,10 +17,10 @@ class GenerateGuids1 extends Migration
   {
     //
     Schema::table( 'pages', function ( Blueprint $table ){
-      $table->index( 'guid', 'guid' );
+      $table->unique( 'guid', 'guid' );
     } );
     Schema::table( 'templates', function ( Blueprint $table ){
-      $table->index( 'guid', 'guid' );
+      $table->unique( 'guid', 'template_guid_field' );
     } );
     Schema::table( 'pages_templates', function ( Blueprint $table ){
       $table->foreign( 'page_guid', 'page' )

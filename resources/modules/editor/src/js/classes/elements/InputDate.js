@@ -15,7 +15,7 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_SHADOW,
-  CONTROLLER_MEDIA
+  CONTROLLER_MEDIA, CONTROLLER_HEADING
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 import { actionsControllers } from "../../decorators/actions-controllers";
@@ -43,6 +43,42 @@ class InputDate extends BaseElement {
       label: "Content"
     });
 
+    this.addControl("content_time_type", {
+      type: CONTROLLER_SELECT,
+      label: "Type",
+      default: "date",
+      options: [
+        {
+          value: "date",
+          label: "date"
+        },
+        {
+          value: "time",
+          label: "time"
+        },
+        {
+          value: "dateTime",
+          label: "date and time"
+        }
+      ]
+    });
+
+    this.addControl("content_locale", {
+      type: CONTROLLER_SELECT,
+      label: "Locale",
+      default: "ru",
+      options: [
+        {
+          value: "en",
+          label: "EN"
+        },
+        {
+          value: "ru",
+          label: "RU"
+        }
+      ]
+    });
+
     this.addControl("form_id", {
       type: CONTROLLER_TEXT,
       label: "Form ID"
@@ -51,11 +87,6 @@ class InputDate extends BaseElement {
     this.addControl("field_id", {
       type: CONTROLLER_TEXT,
       label: "Field ID (Column Name)"
-    });
-
-    this.addControl("content_shortcode", {
-      type: CONTROLLER_TEXT,
-      label: "Shortcode"
     });
 
     const optionsRepeater = new Repeater();
@@ -143,6 +174,14 @@ class InputDate extends BaseElement {
       default: "Placeholder"
     });
 
+    this.addControl("content_format", {
+      type: CONTROLLER_TEXT,
+      label: "Format",
+      placeholder: 'YYYY-MM-DD',
+      responsive: false,
+      stateless: true,
+    });
+
     this.addControl("content_required", {
       type: CONTROLLER_SWITCHER,
       label: "Required"
@@ -161,15 +200,16 @@ class InputDate extends BaseElement {
 
     this.addControl("content_default_value", {
       type: CONTROLLER_TEXTAREA,
+      default: "",
       label: "Default Value"
     });
 
-    this.addControl("content_calculation", {
-      type: CONTROLLER_TEXTAREA,
-      label: "Calculation",
-      description:
-        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
-    });
+    // this.addControl("content_calculation", {
+    //   type: CONTROLLER_TEXTAREA,
+    //   label: "Calculation",
+    //   description:
+    //     "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
+    // });
 
     this.endControlSection();
 
@@ -216,10 +256,6 @@ class InputDate extends BaseElement {
     });
 
     this.endControlSection();
-
-    actionsControllers(this, "Blur Actions");
-
-    actionsControllers(this, "Focus Actions", "focus_");
 
     actionsControllers(this, "Change Actions", "change_");
 
@@ -695,6 +731,215 @@ class InputDate extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection("date_picker", {
+      tab: TAB_STYLE,
+      label: "Date picker"
+    });
+
+    this.addControl('picker_minimal', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Minimal',
+    });
+
+    this.addControl('picker_padding', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      default: {
+        unit: 'px',
+        bind: true
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.addControl('picker_background', {
+      type: CONTROLLER_COLOR,
+      label: 'Background color',
+      // default: {
+      //   color: "rgb(52,59,76)",
+      //   colorPickedHex: "#343B4C",
+      // },
+    });
+
+    this.addControl('picker_border_type', {
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+      }
+    );
+
+    this.addControl('picker_border_width', {
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        default: {
+          bind: true,
+        },
+        units: [
+          'px',
+          '%',
+          'vh',
+        ],
+      }
+    );
+
+    this.addControl('picker_border_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+      }
+    );
+
+    this.addControl('picker_border_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+      default: {
+        unit: 'px',
+        bind: true,
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.addControl('picker_shadow', {
+      type: CONTROLLER_SHADOW,
+      label: 'Shadow',
+    });
+
+    this.addControl('picker_month_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Month typographic',
+      }
+    );
+
+    this.addControl('picker_month_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Month font color',
+      }
+    );
+
+    this.addControl('picker_year_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Year Typographic',
+      }
+    );
+
+    this.addControl('picker_year_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Year font color',
+      }
+    );
+
+    this.addControl('picker_icons_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Icons color',
+      }
+    );
+
+    this.addControl('picker_heading_date', {
+      type: CONTROLLER_HEADING,
+      label: 'Date',
+    });
+
+    this.addControl('date_weekday_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Weekday typographic',
+      }
+    );
+
+    this.addControl('date_weekday_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Weekday font color',
+      }
+    );
+
+    this.addControl('date_typographic', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+      }
+    );
+
+    this.addControl('date_background_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Background color',
+      }
+    );
+
+    this.addControl('date_font_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Font color',
+      }
+    );
+
+    this.addControl('date_outside_background_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Outside background color',
+      }
+    );
+
+    this.addControl('date_outside_font_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Outside font color',
+      }
+    );
+
+    this.addControl('date_selected_background_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Selected background color',
+      }
+    );
+
+    this.addControl('date_selected_font_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Selected font color',
+      }
+    );
+
+    this.addControl('date_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+      default: {
+        unit: 'px',
+        bind: true,
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
+    this.endControlSection();
+
     this.startControlSection("transform_section", {
       tab: TAB_STYLE,
       label: "Transform"
@@ -702,68 +947,6 @@ class InputDate extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("radio_checkbox_styles", {
-      tab: TAB_STYLE,
-      label: "Radio Checkbox Styles"
-    });
-
-    this.addControl("input_position", {
-      label: "Position",
-      type: CONTROLLER_SELECT,
-      options: [
-        {
-          label: "Left",
-          value: "row"
-        },
-        {
-          label: "Top",
-          value: "column"
-        },
-        {
-          label: "Right",
-          value: "row-reverse"
-        },
-        {
-          label: "Bottom",
-          value: "column-reverse"
-        }
-      ],
-      default: "left"
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("mismatch_message_styles", {
-      tab: TAB_STYLE,
-      label: "Validation Error Message",
-      conditions: { "mask_mismatch_message!": [""] }
-    });
-
-    this.addControl("mismatch_message_margin", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Margin",
-      default: { unit: "px" },
-      units: ["px", "%", "vh", "vw"]
-    });
-
-    this.addControl("mismatch_message_padding", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Padding",
-      default: { unit: "px" },
-      units: ["px", "%", "vh", "vw"]
-    });
-
-    this.addControl("mismatch_message_font_color", {
-      type: CONTROLLER_COLOR,
-      label: "Font Color"
-    });
-
-    this.addControl("mismatch_message_typographic", {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
-    });
-
-    this.endControlSection();
 
     advancedTabControllers(this);
   }

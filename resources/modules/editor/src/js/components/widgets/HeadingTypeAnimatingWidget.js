@@ -50,7 +50,6 @@ import Animating from "../altrp-heading/Animating";
 
 .altrp-heading-wrapper {
   display: flex;
-  flex-direction: column;
 }
 
 .altrp-heading-wrapper-sub-top {
@@ -107,7 +106,7 @@ class HeadingTypeAnimatingWidget extends Component {
   }
 
   render() {
-    return <Animating settings={this.state.settings} />
+    return <Animating settings={this.state.settings} getContent={this.getContent.bind(this)} />
   }
 }
 

@@ -10,7 +10,7 @@ const ImagePlaceholder = styled.div`& {
     return props.width + 'px';
   }
   return props.width ? props.width : '100%'
-}};  
+}};
 ${(props) => {
   const {settings} = props;
   const aspect_ratio_size = getResponsiveSetting(settings, 'aspect_ratio_size');
@@ -22,8 +22,8 @@ ${(props) => {
   }
   return `height:${props.height ? props.height : 'auto'};`;
 }}
-  
-  background-color: ${props => props.color ? props.color : '#fff'}; 
+
+  background-color: ${props => props.color ? props.color : '#fff'};
 }
 &::before{
   display: block;
@@ -54,12 +54,13 @@ ${(props) => {
 }
 && .altrp-skeleton,
 && .altrp-image{
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;  
-  height: 100%;
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  height:100%;
+  width:100%;
 }
 `;
 

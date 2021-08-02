@@ -60,6 +60,22 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-text-common",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputTextCommonWidget' */ "../../../../editor/src/js/components/widgets/InputTextCommonWidget"
+          );
+        }
+      },
+      {
+        name: "input-text",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputTextCommonWidget' */ "../../../../editor/src/js/components/widgets/InputTextWidget"
+          );
+        }
+      },
+      {
         name: "input-select",
         import: async () => {
           return await import(
@@ -120,46 +136,6 @@ class FrontElementsManager {
         import: async () => {
           return await import(
             /* webpackChunkName: 'InputAccept' */ "../../../../editor/src/js/components/widgets/InputAcceptWidget"
-          );
-        }
-      },
-      {
-        name: "input-text",
-        import: async () => {
-          return await import(
-            /* webpackChunkName: 'InputText' */ "../../../../editor/src/js/components/widgets/InputTextWidget"
-          );
-        }
-      },
-      {
-        name: "input-password",
-        import: async () => {
-          return await import(
-            /* webpackChunkName: 'InputPassword' */ "../../../../editor/src/js/components/widgets/InputPasswordWidget"
-          );
-        }
-      },
-      {
-        name: "input-number",
-        import: async () => {
-          return await import(
-            /* webpackChunkName: 'InputNumber' */ "../../../../editor/src/js/components/widgets/InputNumberWidget"
-          );
-        }
-      },
-      {
-        name: "input-tel",
-        import: async () => {
-          return await import(
-            /* webpackChunkName: 'InputTel' */ "../../../../editor/src/js/components/widgets/InputTelWidget"
-          );
-        }
-      },
-      {
-        name: "input-email",
-        import: async () => {
-          return await import(
-            /* webpackChunkName: 'InputEmail' */ "../../../../editor/src/js/components/widgets/InputEmailWidget"
           );
         }
       },
@@ -394,6 +370,22 @@ class FrontElementsManager {
             /* webpackChunkName: 'DropbarWidget' */ "../../../../editor/src/js/components/widgets/DropbarWidget"
             );
         }
+      },
+      {
+        name: "tabs-switcher",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'TabsSwitcherWidget' */ "../../../../editor/src/js/components/widgets/TabsSwitcherWidget"
+            );
+        }
+      },
+      {
+        name: "image-lightbox",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'TabsSwitcherWidget' */ "../../../../editor/src/js/components/widgets/ImageLightboxWidget"
+            );
+        }
       }
     ];
     this.components = {};
@@ -418,10 +410,9 @@ class FrontElementsManager {
       //   ).default);
       // });
       componentsToLoad = componentsToLoad.map(el => {
-        console.log(el.name, performance.now());
         return new Promise((resolve, reject) => {
           el.import().then(res=>{
-            console.log(el.name, performance.now());
+            console.log(`LOAD Widget Component ${el.name}`, performance.now());
             this.components[el.name] = res.default
             resolve(res);
           })

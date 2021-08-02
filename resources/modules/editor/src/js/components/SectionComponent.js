@@ -132,7 +132,7 @@ class SectionComponent extends Component {
       delete styles.maxWidth;
     }
 
-    let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
+    let ElementWrapper = window.SectionElementWrapper || this.props.ElementWrapper || window.ElementWrapper;
     let sectionWrapper = this.state.children.map(column => (
       <ElementWrapper
         ElementWrapper={ElementWrapper}
@@ -148,9 +148,9 @@ class SectionComponent extends Component {
     if (fitToContent === "fit") {
       sectionClasses.push("section-fit-to-content");
     }
-    if (this.props.currentScreen.name !== CONSTANTS.DEFAULT_BREAKPOINT) {
-      styles.flexWrap = "wrap";
-    }
+    // if (this.props.currentScreen.name !== CONSTANTS.DEFAULT_BREAKPOINT) {
+    //   styles.flexWrap = "wrap";
+    // }
     const layout_html_tag =
       this.props.element.getSettings("layout_html_tag") || "div";
 

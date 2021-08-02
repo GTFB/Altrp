@@ -374,7 +374,7 @@ class GlobalStyles extends React.Component {
           targetClassName: "state-section-style-target"
         }}
       >
-        <button className="state-section-style-button">
+        <button className="state-section-style-button btn">
           {
             this.state.current ? this.state.current : "Presets"
           }
@@ -384,6 +384,7 @@ class GlobalStyles extends React.Component {
         this.state.current ? (
           <button
             onClick={this.removeCurrent}
+            className="btn state-section-style-button"
             title="remove preset"
           >
             <Icon icon="cross"/>

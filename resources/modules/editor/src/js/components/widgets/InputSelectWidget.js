@@ -13,10 +13,346 @@ import Resource from "../../classes/Resource";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
 import AltrpInput from "../altrp-input/AltrpInput";
+import BlurprintMultiSelect from "./BlurprintMultiSelect";
 
 const { moment } = window.altrpHelpers;
+const Button = window.altrpLibs.Blueprint.Button;
+const MenuItem = window.altrpLibs.Blueprint.MenuItem;
+const Select = window.altrpLibs.BlueprintSelect.Select;
+const MultiSelect = window.altrpLibs.BlueprintSelect.MultiSelect;
 (window.globalDefaults = window.globalDefaults || []).push(`
- /*здесь css стилей по умолчанию с селекторами*/
+
+.altrp-field {
+  border-style: solid;
+  width: 100%;
+}
+.altrp-field-file{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.altrp-label-icon,
+.altrp-label-icon svg,
+.altrp-label-icon img {
+  width: 20px;
+}
+.altrp-label-icon svg{
+  height: 20px;
+}
+.altrp-field-file__field{
+  display: none;
+}
+.altrp-field-file__placeholder{
+  display: none;
+}
+.altrp-field-file_empty .altrp-field-file__placeholder{
+  display: block;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  background-color: rgb(52,59,76);
+  color: #fff;
+}
+.input-clear-btn {
+  background: transparent;
+  padding: 0;
+  position: absolute;
+  bottom: calc(50% - 7px);
+  right: 15px;
+  display: none;
+}
+.input-clear-btn:hover {
+  font-weight: bold;
+}
+.altrp-field:hover + .input-clear-btn, .input-clear-btn:hover {
+  display: block;
+}
+.altrp-input-wrapper, .altrp-field-select2 {
+  position: relative;
+  flex-grow: 1;
+}
+.altrp-field-label--required::after {
+  content: "*";
+  color: red;
+  font-size: inherit;
+  padding-left: 10px;
+}
+.altrp-field-label {
+  font-size: 16px;
+  font-family: "Open Sans";
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+.altrp-field-select2__single-value, .altrp-field {
+  font-size: 16px;
+  font-family: "Open Sans";
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+.altrp-field-select2__control, .altrp-field {
+  text-align: left;
+  padding-top: 2px;
+  padding-right: 2px;
+  padding-bottom: 2px;
+  padding-left: 2px;
+  border-width: 1px;
+  border-color: #000;
+}
+.altrp-field-select2__control:hover{
+  border-width: 1px;
+  border-color: #000;
+}
+.altrp-field-container {
+  margin: 0;
+}
+.altrp-field::placeholder, .altrp-field-select2__placeholder {
+  font-size: 13px;
+  font-family: "Open Sans";
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+.altrp-image-select {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.altrp-image-select img {
+  flex-grow: 1;
+  object-fit: contain;
+}
+.altrp-field {
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.altrp-field.active {
+  border-color: lightcoral;
+}
+.altrp-field-label {
+  text-align: center;
+  display: block;
+}
+.altrp-pagination__select-size .altrp-field-select2__single-value {
+  font-size: 14px;
+}
+.altrp-pagination__select-size .altrp-field-select2__indicator-separator {
+  display: none;
+}
+.altrp-pagination__select-size .altrp-field-select2__indicator {
+  align-items: center;
+}
+.altrp-pagination__select-size .altrp-field-select2__control {
+  width: 100px;
+  min-height: 32px;
+  padding: 0;
+  border-radius: 0;
+  outline: none;
+  border-color: rgb(142,148,170);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.altrp-pagination__select-size .altrp-field-select2__control input {
+  border: none;
+}
+.altrp-field-select2 {
+  position: relative;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+.altrp-field-select2__control {
+  webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: hsl(0,0%,100%);
+  border-color: hsl(0,0%,80%);
+  border-style: solid;
+  border-width: 1px;
+  cursor: default;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  min-height: 38px;
+  outline: 0 !important;
+  position: relative;
+  -webkit-transition: all 100ms;
+  transition: all 100ms;
+  box-sizing: border-box;
+}
+.altrp-field-select2__value-container {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding: 2px 8px;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.altrp-field-select2__single-value {
+  color: hsl(0,0%,20%);
+  margin-left: 2px;
+  margin-right: 2px;
+  max-width: calc(100% - 8px);
+  overflow: hidden;
+  position: absolute;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  box-sizing: border-box;
+}
+.altrp-field-select2__indicators {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-align-self: stretch;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+.altrp-field-select2__indicator-separator {
+  -webkit-align-self: stretch;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
+  background-color: hsl(0,0%,80%);
+  margin-bottom: 8px;
+  margin-top: 8px;
+  width: 1px;
+  box-sizing: border-box;
+}
+.altrp-field-select2__indicator {
+  color: hsl(0,0%,80%);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 8px;
+  -webkit-transition: color 150ms;
+  transition: color 150ms;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+}
+.tba-placeholder {
+  display: flex;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: bold;
+}
+.altrp-field-subgroup {
+  display: flex;
+  flex-wrap: wrap;
+}
+.altrp-field-option {
+  display: flex;
+  padding: 10px;
+}
+.altrp-field-option__label {
+  cursor: pointer;
+}
+textarea.altrp-field {
+  display: block;
+}
+.altrp-table__filter-select .altrp-field-select2__placeholder {
+  white-space: nowrap;
+}
+.altrp-table__filter-select .altrp-field-select2__single-value {
+  font-size: 14px;
+}
+.altrp-table__filter-select .altrp-field-select2__indicator-separator {
+  display: none;
+}
+.altrp-table__filter-select .altrp-field-select2__indicator {
+  align-items: center;
+}
+.altrp-table__filter-select .altrp-field-select2__control {
+  width: 100%;
+  min-height: 19px;
+  padding: 0;
+  border-radius: 0;
+  outline: none;
+  border-color: rgb(142, 148, 170);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.altrp-table__filter-select .altrp-field-select2__control input {
+  border: none;
+}
+.altrp-table__filter-select .altrp-field-select2__value-container {
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: 13px;
+}
+.altrp-field-required {
+  color: red;
+  font-size: 18px;
+  padding-left: 10px;
+}
+.altrp-field-container-label {
+  display: flex;
+  flex-direction: row;
+}
+
+.altrp-field-label-container-left {
+  display: flex;
+  align-items: center;
+}
+
+.altrp-field-label-container {
+  display: inline-flex;
+  align-items: center;
+}
+.altrp-field-select2__indicator.altrp-field-select2__dropdown-indicator {
+  padding: 0 8px;
+  max-height: 14px;
+  overflow: hidden;
+}
+.altrp-field-select2 .altrp-field-select2__value-container {
+  padding: 0px 8px;
+}
+.altrp-field-select2 .css-b8ldur-Input {
+  padding-bottom: 0px;
+  padding-top: 0px;
+  margin: 0 2px;
+}
+.altrp-field-select2 .altrp-field-select2__control {
+  min-height: 14px;
+}
 `)
 
 const AltrpFieldContainer = styled.div`
@@ -57,7 +393,13 @@ class InputSelectWidget extends Component {
       options: parseOptionsFromSettings(
         props.element.getSettings("content_options")
       ),
-      paramsForUpdate: null
+      paramsForUpdate: null,
+    };
+    this.popoverProps = {
+      usePortal: true,
+      // isOpen:true ,
+      portalClassName: `altrp-portal altrp-portal${this.props.element.getId()}`,
+      portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
     this.altrpSelectRef = React.createRef();
     if (this.getContent("content_default_value")) {
@@ -508,6 +850,46 @@ class InputSelectWidget extends Component {
     );
   }
 
+  onItemSelect(value) {
+    this.setState(state => ({
+      ...state,
+      value
+    }),
+      () => {
+        /**
+         * Обновляем хранилище только если не текстовое поле
+         */
+
+        const change_actions = this.props.element.getSettings("change_actions");
+        const change_change_end = this.props.element.getSettings(
+          "change_change_end"
+        );
+        const change_change_end_delay = this.props.element.getSettings(
+          "change_change_end_delay"
+        );
+
+
+        this.dispatchFieldValueToStore(
+          value,
+          true
+        );
+
+        if (change_actions && !change_change_end && !isEditor()) {
+          this.debounceDispatch(
+            value
+          );
+        }
+        if (change_actions && change_change_end && !isEditor()) {
+          this.timeInput && clearTimeout(this.timeInput);
+          this.timeInput = setTimeout(() => {
+            this.debounceDispatch(
+              value
+            );
+          }, change_change_end_delay);
+        }
+      })
+  }
+
   debounceDispatch = _.debounce(
     value => this.dispatchFieldValueToStore(value, true),
     150
@@ -700,6 +1082,41 @@ class InputSelectWidget extends Component {
     return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
   }
 
+  escapeRegExpChars(text) {
+    return text.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+  }
+
+  highlightText = (text, query) => {
+    let lastIndex = 0;
+    const words = query
+      .split(/\s+/)
+      .filter(word => word.length > 0)
+      .map(this.escapeRegExpChars);
+    if (words.length === 0) {
+      return [text];
+    }
+    const regexp = new RegExp(words.join("|"), "gi");
+    const tokens = [];
+    while (true) {
+      const match = regexp.exec(text);
+      if (!match) {
+        break;
+      }
+      const length = match[0].length;
+      const before = text.slice(lastIndex, regexp.lastIndex - length);
+      if (before.length > 0) {
+        tokens.push(before);
+      }
+      lastIndex = regexp.lastIndex;
+      tokens.push(<strong key={lastIndex}>{match[0]}</strong>);
+    }
+    const rest = text.slice(lastIndex);
+    if (rest.length > 0) {
+      tokens.push(rest);
+    }
+    return tokens;
+  }
+
   render() {
     let label = null;
     const settings = this.props.element.getSettings();
@@ -805,12 +1222,59 @@ class InputSelectWidget extends Component {
       case "input-select":
         {
           let options = this.getOptions();
+
+          options = options_sorting ? sortOptions(options, options_sorting) : options;
+
+          let itemsOptions = options.map(({ label }) => label);
+
+          if (this.state.settings.multi_select) {
+            const optionsForMultiSelect = options.map(({ label }) => {
+              return {
+                id: Math.floor(Math.random() * 100000),
+                name: label,
+              }
+            })
+
+            input = (
+              <BlurprintMultiSelect
+                items={optionsForMultiSelect}
+                popoverProps={this.popoverProps}
+                onFocus={this.onFocus}
+                name={this.getName()}
+                onBlur={this.onBlur}
+                onKeyDown={this.handleEnter}
+                id={this.state.settings.position_css_id}
+                className={
+                  "altrp-field " + this.state.settings.position_css_classes
+                }
+              ></BlurprintMultiSelect>
+            )
+          } else {
           input = (
-            <select
-              value={value || ""}
+            <Select
+              popoverProps={this.popoverProps}
+              itemRenderer={(item, { handleClick, modifiers, query }) => {
+                if (!modifiers.matchesPredicate) {
+                  return null;
+                }
+                return <MenuItem
+                  text={this.highlightText(item, query)}
+                  active={modifiers.active}
+                  disabled={modifiers.disabled}
+                  onClick={handleClick}
+                />
+              }}
+              itemPredicate={(query, item) => {
+                if (query === undefined || query.length === 0) {
+                  return true
+                }
+                return `${item.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0;
+              }}
+              items={itemsOptions}
+              noResults={<MenuItem disabled={true} text="No results." />}
               onFocus={this.onFocus}
               name={this.getName()}
-              onChange={this.onChange}
+              onItemSelect={item => this.onItemSelect(item)}
               onBlur={this.onBlur}
               onKeyDown={this.handleEnter}
               id={this.state.settings.position_css_id}
@@ -818,22 +1282,13 @@ class InputSelectWidget extends Component {
                 "altrp-field " + this.state.settings.position_css_classes
               }
             >
-              {this.state.settings.content_options_nullable ? (
-                <option value="" />
-              ) : (
-                ""
-              )}
-
-              {(options_sorting
-                ? sortOptions(options, options_sorting)
-                : options
-              ).map(option => (
-                <option value={option.value} key={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              <Button
+                text={this.state.value}
+                rightIcon="double-caret-vertical"
+              />
+            </Select>
           );
+        }
         }
         break;
       default: {

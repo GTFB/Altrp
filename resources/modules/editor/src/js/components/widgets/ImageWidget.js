@@ -3,7 +3,6 @@ import {
   isEditor, parseURLTemplate
 } from "../../../../../front-app/src/js/helpers";
 import AltrpImage from "../altrp-image/AltrpImage";
-import AltrpLightbox from "../altrp-lightbox/AltrpLightbox";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-image {
@@ -20,6 +19,11 @@ import AltrpLightbox from "../altrp-lightbox/AltrpLightbox";
     border-color: rgb(50,168,82);
     border-radius: 0;
   }
+
+  .altrp-image-container {
+    display: flex;
+    justify-content: center;
+  }
 `)
 
 const Link = window.Link
@@ -28,7 +32,6 @@ class ImageWidget extends Component {
     super(props);
     this.state = {
       settings: props.element.getSettings(),
-      lightbox: false
     };
     props.element.component = this;
     if (window.elementDecorator) {
@@ -42,7 +45,6 @@ class ImageWidget extends Component {
   render() {
     const { element } = this.props;
     const link = this.state.settings.image_link || {};
-    const activeLightbox = this.props.element.getSettings("lightbox_switch", false);
     const cursorPointer = this.props.element.getSettings("cursor_pointer", false);
     const background_image = this.props.element.getSettings(
       "background_image",
@@ -65,11 +67,12 @@ class ImageWidget extends Component {
     /**
      * Возьмем данные из окружения
      */
+
     if (
-      this.state.settings.content_path &&
-      _.isObject(getDataByPath(this.state.settings.content_path, null, model))
+      this.getContent("content_path") &&
+      _.isObject(getDataByPath(this.getContent("content_path"), null, model))
     ) {
-      media = getDataByPath(this.state.settings.content_path, null, model);
+      media = getDataByPath(this.getContent("content_path"), null, model);
       /**
        * Проверим массив ли с файлами content_path
        */
@@ -79,48 +82,45 @@ class ImageWidget extends Component {
         media.assetType = "media";
       }
     } else if (
-      this.state.settings.content_path &&
-      _.isString(getDataByPath(this.state.settings.content_path, null, model))
+      this.getContent("content_path") &&
+      _.isString(getDataByPath(this.getContent("content_path"), null, model))
     ) {
-      media = getDataByPath(this.state.settings.content_path, null, model);
+      media = getDataByPath(this.getContent("content_path"), null, model);
       media = {
         assetType: "media",
         url: media,
         name: "null"
       };
-    } else if (this.props.element.getSettings('default_url')){
+    } else if (this.getContent('default_url') && _.isString(getDataByPath(this.getContent("default_url"), null, model))){
       media = {
         assetType: "media",
-        url: this.props.element.getSettings('default_url'),
+        url: getDataByPath(this.getContent("default_url"), null, model),
         name: "default"
       };
     }
     let width = this.props.element.getResponsiveSetting('width_size');
     let height = this.props.element.getResponsiveSetting('height_size');
     width = _.get(width, 'size', '100') + _.get(width, 'unit', '%');
-    height = _.get(height, 'size', '100') + _.get(height, 'unit', '%');
+    if(_.get(height, 'size')){
+      height = _.get(height, 'size') + _.get(height, 'unit', '%');
+    } else {
+      height = '';
+    }
+
+    if(_.get(this.props.element.getResponsiveSetting('height_size'), 'size', '100') === "0") {
+      height = ""
+    }
+
     let altrpImage = (
       <AltrpImage
         image={media}
         width={width}
         element={this.props.element}
         height={height}
-        id={this.state.settings.position_css_id}
         className={
-          this.state.settings.position_css_classes +
-          " altrp-image" +
+          "altrp-image" +
           (background_image ? " altrp-background-image" : "")
         }
-      />
-    );
-
-    const lightbox = (
-      <AltrpLightbox
-        images={[(media ? media.url : "")]}
-        settings={{
-          onCloseRequest: () => this.setState({lightbox: false})
-        }}
-        // color={this.props.color_lightbox_style}
       />
     );
 
@@ -129,10 +129,7 @@ class ImageWidget extends Component {
         <div
           className={classNames}
           onClick={() => {
-            history.back();
-            if(activeLightbox) {
-              this.setState({lightbox: true})
-            }
+            history.back();//todo: реализовать для h-altrp
           }}
         >
           {altrpImage}
@@ -151,14 +148,9 @@ class ImageWidget extends Component {
       return (
         <div
           className={classNames}
-          onClick={() => {
-            if(activeLightbox) {
-              this.setState({lightbox: true})
-            }
-          }}
         >
-          {linkUrl && ! isEditor() ? (
-            link.tag === "a" ? (
+          {(linkUrl && ! isEditor()) ? (
+            link.tag === "a" || window['h-altrp'] ? (
               <a href={linkUrl} {...linkProps}>{altrpImage}</a>
             ) : (
               <Link to={linkUrl} {...linkProps}>{altrpImage}</Link>
@@ -166,9 +158,6 @@ class ImageWidget extends Component {
           ) : (
             altrpImage
           )}
-          {
-            activeLightbox && this.state.lightbox ? lightbox : ""
-          }
         </div>
       );
     }

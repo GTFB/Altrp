@@ -128,6 +128,7 @@ class Handler extends ExceptionHandler
           $lazy_sections = [];
           $page_areas = Page::get_areas_for_page( $not_found_page['id'] );
           $elements_list = extractElementsNames( $page_areas );
+          $altrp_settings = getAltrpSettings( $not_found_page['id'] );
 
           return response( view( 'front-app', [
             'page_areas' => json_encode( $page_areas ),
@@ -137,6 +138,7 @@ class Handler extends ExceptionHandler
             'title' => $not_found_page['title'],
             '_frontend_route' => $not_found_page,
             'preload_content' => $preload_content,
+            'altrp_settings' => json_encode( $altrp_settings ),
             'pages'=>Page::get_pages_for_frontend( true ),
             'model_data' => null,
             'is_admin' => isAdmin(),

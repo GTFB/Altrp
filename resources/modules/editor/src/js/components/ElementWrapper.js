@@ -32,18 +32,32 @@ import { getHeadingTypeHeadingStyles } from "../../../../front-app/src/js/compon
 import { getHeadingTypeAnimatingStyles } from "../../../../front-app/src/js/components/helpers/stylesForTheHeadingTypeAnimating";
 import {getTextStyles} from "../../../../front-app/src/js/components/helpers/stylesForTheText";
 import {getTableStyles} from "../../../../front-app/src/js/components/helpers/stylesForTheTable";
+import getInputTextCommonStyles from "../../../../front-app/src/js/components/helpers/getInputTextCommonStyles";
 import {getPostsStyles} from "../../../../front-app/src/js/components/helpers/stylesForThePosts";
 import FormComponent from "./widgets/styled-components/FormComponent";
 import MapComponent from "./widgets/styled-components/MapComponent";
 import MapConstructorComponent from "./widgets/styled-components/MapConstructorComponent";
 import AdvancedComponent from "./widgets/styled-components/AdvancedComponent";
 import {getEditor, topOrBottomHover, editorSetCurrentElement} from "../helpers";
+import TabsSwitcherComponent from "./widgets/styled-components/TabsSwitcherComponent";
+import ImageLightboxComponent from "./widgets/styled-components/ImageLightboxComponent";
+import InputDateComponent from "./widgets/styled-components/InputDateComponent";
+import DatePickerComponent from "./widgets/styled-components/DatePickerComponent";
 const { connect } = window.reactRedux;
 
 const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, elementId, settings, element})=>{
   let styles = '';
   let prefix = "altrp-element";
   switch (elementName) {
+    case "image-lightbox":
+      styles += ImageLightboxComponent(settings,elementId);
+      break;
+    case "diagram":
+      styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`;
+      break;
+    case "tabs-switcher":
+      styles += `.${prefix}${elementId} {${TabsSwitcherComponent(settings)}}`;
+      break;
     case "button":
       styles += `.${prefix}${elementId} {${ButtonComponent(settings)}}`;
       break;
@@ -65,6 +79,7 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
     case "accordion":
       styles += `.${prefix}${elementId} {${AccordionComponent(settings)}}`;
       break;
+    case "section_widget":
     case "section":
       styles += `.${prefix}${elementId} {${SectionWidgetComponent(settings, element.children.length)}}`;
       break;
@@ -119,10 +134,25 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
       styles += `${FormComponent.select2Options(settings, elementId)}}`;
     }
       break;
+    case "input-date": {
+      styles += `.${prefix}${elementId} {${InputDateComponent(
+        settings,
+        elementId
+      )}}`;
+      styles += `${DatePickerComponent(
+        settings,
+        elementId,
+      )}`;
+    } break;
+    case "input-text-common":{
+      styles += `.${prefix}${elementId} {${getInputTextCommonStyles(
+        settings,
+        elementId
+      )}}`;
+    }break;
     case "input-text":
     case "input-password":
     case "input-number":
-    case "input-date":
     case "input-email":
     case "input-tel":
     case "input-file":
@@ -506,11 +536,11 @@ class ElementWrapper extends Component {
 
     let WrapperComponent = "div";
     switch (this.props.element.getName()) {
-      case "diagram":
-        WrapperComponent = DiagramComponent;
-        break;
       case "nav":
         WrapperComponent = NavComponent;
+        break;
+      case "dashboards":
+        WrapperComponent = DashboardComponent;
         break;
     }
 
@@ -618,7 +648,6 @@ function mapStateToProps(state) {
     currentScreen: state.currentScreen,
     globalStyles: state.globalStyles,
     historyStore: state.historyStore,
-    state,
   };
 }
 

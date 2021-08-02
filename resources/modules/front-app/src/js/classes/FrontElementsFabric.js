@@ -27,8 +27,8 @@ class FrontElementsFabric {
         });
       }
     }
-    if( object.children && object.children.length ){
-      for( let child of object.children){
+    if(object.children && object.children.length ){
+      for(let child of object.children){
         window.frontElementsManager.checkElementExists(child.name) ?
             children.push( this.parseData(child, element) ) : '';
       }

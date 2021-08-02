@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import DynamicIcon from '../../../svgs/dynamic.svg'
 import controllerDecorate from "../../decorators/controller";
-import { toggleDynamicContent } from "../../store/dynamic-content/actions";
 import { iconsManager } from "../../../../../admin/src/js/helpers";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
 

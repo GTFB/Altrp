@@ -30,7 +30,9 @@ export default class Action extends Component{
                     "method": "",
                     "body": {},
                     "record_id": null,
-                    "model_id": ""
+                    "model_id": "",
+                    "custom": 0,
+                    "custom_data": ""
                 }
               };
               break;

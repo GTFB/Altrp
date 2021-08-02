@@ -311,7 +311,7 @@ const AltrpDiagram = props => {
       }
     } catch (error) {
       console.log("====================================");
-      console.log(error);
+      console.error(error);
       console.log("====================================");
       data = [
         {

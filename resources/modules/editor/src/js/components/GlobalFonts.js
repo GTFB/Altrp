@@ -132,7 +132,6 @@ class GlobalFonts extends Component {
   }
 
   render() {
-    console.log(this.props.fonts);
     return (
       <Panel>
         <Collapse isOpen={this.state.new}>

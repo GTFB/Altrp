@@ -7,6 +7,9 @@ import lodash from "lodash";
 import {StaticRouter as Router, Route, Switch} from "react-router-dom";
 import {setAreas} from "../resources/modules/front-app/src/js/store/areas/actions";
 import getAltrpSetting from "./functions/get-altrp-setting";
+import {changeCurrentUser} from "../resources/modules/front-app/src/js/store/current-user/actions";
+import {setCurrentScreen} from "../resources/modules/front-app/src/js/store/media-screen-storage/actions";
+import CONSTANTS from "../resources/modules/editor/src/js/consts"
 if (typeof performance === "undefined") {
   global.performance = require("perf_hooks").performance;
 }
@@ -20,7 +23,6 @@ global.createGlobalStyle = createGlobalStyle;
 global.window = {
   parent: {},
   Link,
-
 };
 global.window.altrpMenus = [];
 global.SSR = true;
@@ -92,6 +94,11 @@ app.post("/", (req, res) => {
   let page = json.page || [];
   let page_id = json.page_id || "";
   let page_model = json.page_model || {};
+  let current_device = json.current_device || 'DEFAULT_BREAKPOINT';
+  const changedScreen = CONSTANTS.SCREENS.find(screen=>screen.name === current_device)
+  if(changedScreen){
+    store.dispatch(setCurrentScreen(changedScreen))
+  }
   // delete page[3];
   global.altrp = json.altrp || {};
   /**
@@ -100,6 +107,7 @@ app.post("/", (req, res) => {
    */
   global.window.altrpImageLazy = json.altrpImageLazy || "none";
   global.window.altrpSkeletonColor = json.altrpSkeletonColor || "#ccc";
+  appStore.dispatch(changeCurrentUser(json.current_user || {}));
   global.window.altrpSkeletonHighlightColor =
     json.altrpSkeletonHighlightColor || "#d0d0d0";
   let elements = [];

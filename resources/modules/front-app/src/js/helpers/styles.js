@@ -118,16 +118,11 @@ export function shadowControllerToStyles(data) {
 
   if(data) {
     let {type = 'outline', offsetX,horizontal, offsetY, vertical, blurRadius,blur,spread, spreadRadius, color } = data;
+    let returnShadow = [offsetX, horizontal, offsetY, vertical, blurRadius, blur, spread, spreadRadius].filter(elem => (
+      (elem && elem !== 0)
+    ));
 
-    if(
-      offsetX !== 0 ||
-      offsetY !== 0 ||
-      horizontal !== 0 ||
-      vertical !== 0 ||
-      blur !== 0 ||
-      blurRadius !== 0 ||
-      spread !== 0 ||
-      spreadRadius !== 0) {
+    if(returnShadow.length !== 0) {
       styles += `box-shadow: ${type || ' '} ${offsetX || horizontal || 0}px ${offsetY || vertical || 0}px ${blurRadius || blur || 0}px ${spreadRadius || spread || 0}px ${color}; `;
     }
   }
@@ -665,7 +660,7 @@ export function dimensionsStyled(controller, style) {
  * @param {{}} controller
  */
 export function gradientStyled(controller) {
-  if (controller.isWithGradient) {
+  if (controller && controller.isWithGradient) {
     return `background-image: ${controller.value} `;
   } else {
     return "";
@@ -705,7 +700,7 @@ export function sliderStyled(controller) {
  * @param {{}} controller
  * @param {string} important
  */
-export function shadowStyled(controller = {}, important) {
+export function shadowStyled(controller = {}) {
   if (controller) {
     const type = controller.type || "";
     const horizontal = controller.horizontal || 0;
@@ -715,7 +710,7 @@ export function shadowStyled(controller = {}, important) {
     const color = controller.color || "";
 
     if(horizontal !== 0 || vertical !== 0 || blur !== 0 || spread !== 0) {
-      return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread} ${color} ${important};`;
+      return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread}px ${color};`;
     } else return ""
   } else return ""
 }
@@ -776,13 +771,16 @@ export function mediaStyled(controller = {}) {
  */
 export function styledString(styles, settings) {
   let stringStyles = "";
-
   if(_.keys(settings).length !== 0) {
     styles.forEach((style, idx) => {
       if(_.isString(style)) {
         if(style !== "}") {
           if(style.split('')[0] === "." || style.split('')[0] === "&") {
             stringStyles += `${style} {`;
+          } else if(style.split("")[0] === "!") {
+            let styleModify = style.split("");
+            styleModify.shift();
+            stringStyles += `${_.join(styleModify, "")}{`
           } else {
             stringStyles += `& .${style}{`;
           }

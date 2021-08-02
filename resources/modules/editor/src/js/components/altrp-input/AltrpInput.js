@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ("./altrp-input.scss");
 import AltrpInputFile from "./AltrpInputFile";
 import { isValueMatchMask, validateEmail } from "../../../../../front-app/src/js/helpers";
-const MaskedInput = React.lazy(() => import(/* webpackChunkName: 'react-text-mask' */"react-text-mask"));
+import MaskedInput from "react-text-mask";
 
 class AltrpInput extends Component {
   state = {
@@ -29,6 +29,7 @@ class AltrpInput extends Component {
     }
   }
   render() {
+    let Input = window.altrpLibs.Blueprint.InputGroup;
     const { isValid } = this.state;
     const { content_type, content_mask, mask_mismatch_message } = this.props.settings;
     const inputProps = {
@@ -68,12 +69,10 @@ class AltrpInput extends Component {
           this.checkValidity(mask)
         }
       };
-      return (
-        <React.Suspense fallback={<input {...this.props} />}>
+      return (<>
           <MaskedInput {...inputProps} />
           {!isValid && mask_mismatch_message && <p className="mask-mismatch-message">{mask_mismatch_message}</p>}
-
-        </React.Suspense>
+        </>
       );
     }
 
@@ -91,8 +90,9 @@ class AltrpInput extends Component {
       }
     }
 
+
     return <>
-      <input {...inputProps} />
+      <Input {...inputProps} />
       {!isValid && content_type === 'email' && mask_mismatch_message &&
         <p className="mask-mismatch-message">{mask_mismatch_message}</p>}
     </>;

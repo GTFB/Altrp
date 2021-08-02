@@ -30,6 +30,15 @@ const {moment} = window.altrpHelpers;
   justify-content: center;
   flex-wrap: wrap;
 }
+
+.altrp-label-icon,
+.altrp-label-icon svg,
+.altrp-label-icon img {
+  width: 20px;
+}
+.altrp-label-icon svg{
+  height: 20px;
+}
 .altrp-field-file__field{
   display: none;
 }

@@ -6211,6 +6211,7 @@ table.bp3-html-table.bp3-interactive tbody tr:active td {
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
   vertical-align: text-bottom;
+  overflow: hidden;
 }
 
 .bp3-icon:not(:empty)::before {
@@ -6218,6 +6219,7 @@ table.bp3-html-table.bp3-interactive tbody tr:active td {
   content: unset !important;
 }
 
+.bp3-icon > img ,
 .bp3-icon > svg {
   display: block;
 }

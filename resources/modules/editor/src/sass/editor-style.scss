@@ -20,8 +20,8 @@
 @import "~leaflet/dist/leaflet.css";
 @import "~leaflet-draw/dist/leaflet.draw.css";
 
-
 //import blueprint to editor stylesheet
+@import "~@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 @import "../../../../../node_modules/@blueprintjs/core/lib/css/blueprint-hi-contrast.css";
 @import "../../../../../node_modules/@blueprintjs/core/lib/css/blueprint.css";
 
@@ -234,7 +234,9 @@ button {
   height: 100%;
   z-index: 999999;
 }
-
+.altrp-portal_context-menu{
+  z-index: 999999;
+}
 .editor-window {
   max-width: calc(100vw - 275px);
   display: flex;
@@ -736,6 +738,10 @@ button {
   margin-left: 5px;
 }
 
+.controller-container__label {
+  text-transform: capitalize;
+}
+
 .control-slider-label {
   font-size: 12px;
   line-height: 1;
@@ -1182,7 +1188,7 @@ button {
 .control-color-colorPicker {
   z-index: 9999;
   position: absolute;
-  margin-top: 60px;
+  margin-top: 100px;
   width: 200px;
   padding: 10px 10px 0;
   box-sizing: initial;

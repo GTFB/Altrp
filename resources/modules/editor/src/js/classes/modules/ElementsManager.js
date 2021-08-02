@@ -1,4 +1,5 @@
 // import Input from "../elements/Input";
+import InputTextCommon from "../elements/InputTextCommon";
 import InputSelect from "../elements/InputSelect";
 import InputSelect2 from "../elements/InputSelect2";
 import InputRadio from "../elements/InputRadio";
@@ -7,11 +8,6 @@ import InputWysiwyg from "../elements/InputWysiwyg";
 import InputTextarea from "../elements/InputTextarea";
 import InputImageSelect from "../elements/InputImageSelect";
 import InputAccept from "../elements/InputAccept";
-import InputText from "../elements/InputText";
-import InputPassword from "../elements/InputPassword";
-import InputNumber from "../elements/InputNumber";
-import InputTel from "../elements/InputTel";
-import InputEmail from "../elements/InputEmail";
 import InputDate from "../elements/InputDate";
 import InputHidden from "../elements/InputHidden";
 import InputFile from "../elements/InputFile";
@@ -34,6 +30,7 @@ import Image from "../elements/Image";
 import ImageWidget from "../../components/widgets/ImageWidget";
 import TextWidget from "../../components/widgets/TextWidget";
 // import InputWidget from "../../components/widgets/InputWidget";
+import InputTextCommonWidget from "../../components/widgets/InputTextCommonWidget";
 import InputSelectWidget from "../../components/widgets/InputSelectWidget";
 import InputSelect2Widget from "../../components/widgets/InputSelect2Widget";
 import InputRadioWidget from "../../components/widgets/InputRadioWidget";
@@ -42,11 +39,6 @@ import InputWysiwygWidget from "../../components/widgets/InputWysiwygWidget";
 import InputTextareaWidget from "../../components/widgets/InputTextareaWidget";
 import InputImageSelectWidget from "../../components/widgets/InputImageSelectWidget";
 import InputAcceptWidget from "../../components/widgets/InputAcceptWidget";
-import InputTextWidget from "../../components/widgets/InputTextWidget";
-import InputPasswordWidget from "../../components/widgets/InputPasswordWidget";
-import InputNumberWidget from "../../components/widgets/InputNumberWidget";
-import InputTelWidget from "../../components/widgets/InputTelWidget";
-import InputEmailWidget from "../../components/widgets/InputEmailWidget";
 import InputDateWidget from "../../components/widgets/InputDateWidget";
 import InputHiddenWidget from "../../components/widgets/InputHiddenWidget";
 import InputFileWidget from "../../components/widgets/InputFileWidget";
@@ -92,6 +84,10 @@ import MenuWidget from "../../components/widgets/MenuWidget";
 import SectionWidgetComponent from "../../components/SectionWidgetComponent";
 import DropbarWidget from "../../components/widgets/DropbarWidget";
 import Dropbar from "../elements/Dropbar";
+import TabsSwitcher from "../elements/TabsSwitcher";
+import TabsSwitcherWidget from "../../components/widgets/TabsSwitcherWidget";
+import ImageLightbox from "../elements/ImageLightbox";
+import ImageLightboxWidget from "../../components/widgets/ImageLightboxWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -108,9 +104,11 @@ export default class ElementsManger {
     this.elements[Divider.getName()] = Divider;
     this.elements[Column.getName()] = Column;
     this.elements[Section.getName()] = Section;
-    this.elements[List.getName()] = List;
+    // this.elements[List.getName()] = List;
     this.elements[Nav.getName()] = Nav;
+    this.elements[TabsSwitcher.getName()] = TabsSwitcher
     // this.elements[Input.getName()] = Input;
+    this.elements[InputTextCommon.getName()] = InputTextCommon;
     this.elements[InputSelect.getName()] = InputSelect;
     this.elements[InputSelect2.getName()] = InputSelect2;
     this.elements[InputRadio.getName()] = InputRadio;
@@ -119,11 +117,6 @@ export default class ElementsManger {
     this.elements[InputTextarea.getName()] = InputTextarea;
     this.elements[InputImageSelect.getName()] = InputImageSelect;
     this.elements[InputAccept.getName()] = InputAccept;
-    this.elements[InputText.getName()] = InputText;
-    this.elements[InputPassword.getName()] = InputPassword;
-    this.elements[InputNumber.getName()] = InputNumber;
-    this.elements[InputTel.getName()] = InputTel;
-    this.elements[InputEmail.getName()] = InputEmail;
     this.elements[InputDate.getName()] = InputDate;
     this.elements[InputHidden.getName()] = InputHidden;
     this.elements[InputFile.getName()] = InputFile;
@@ -145,6 +138,7 @@ export default class ElementsManger {
     this.elements[Video.getName()] = Video;
     this.elements[SectionWidget.getName()] = SectionWidget;
     this.elements[Dropbar.getName()] = Dropbar;
+    this.elements[ImageLightbox.getName()] = ImageLightbox;
     // Websocket Notifications
     // this.elements[Notifications.getName()] = Notifications;
     //список компонентов
@@ -158,6 +152,7 @@ export default class ElementsManger {
     this.components[Breadcrumbs.getName()] = BreadcrumbsWidget;
     this.components[Button.getName()] = ButtonWidget;
     // this.components[Input.getName()] = InputWidget;
+    this.components[InputTextCommon.getName()] = InputTextCommonWidget;
     this.components[InputSelect.getName()] = InputSelectWidget;
     this.components[InputSelect2.getName()] = InputSelect2Widget;
     this.components[InputRadio.getName()] = InputRadioWidget;
@@ -166,11 +161,6 @@ export default class ElementsManger {
     this.components[InputTextarea.getName()] = InputTextareaWidget;
     this.components[InputImageSelect.getName()] = InputImageSelectWidget;
     this.components[InputAccept.getName()] = InputAcceptWidget;
-    this.components[InputText.getName()] = InputTextWidget;
-    this.components[InputPassword.getName()] = InputPasswordWidget;
-    this.components[InputNumber.getName()] = InputNumberWidget;
-    this.components[InputTel.getName()] = InputTelWidget;
-    this.components[InputEmail.getName()] = InputEmailWidget;
     this.components[InputDate.getName()] = InputDateWidget;
     this.components[InputHidden.getName()] = InputHiddenWidget;
     this.components[InputFile.getName()] = InputFileWidget;
@@ -196,6 +186,8 @@ export default class ElementsManger {
     this.components[Gallery.getName()] = GalleryWidget;
     this.components[Video.getName()] = VideoWidget;
     this.components[Dropbar.getName()] = DropbarWidget;
+    this.components[TabsSwitcher.getName()] = TabsSwitcherWidget;
+    this.components[ImageLightbox.getName()] = ImageLightboxWidget;
     // Websocket Notifications widget
     // this.components[Notifications.getName()] = NotificationsWidget;
   }

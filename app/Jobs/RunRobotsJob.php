@@ -38,8 +38,9 @@ class RunRobotsJob implements ShouldQueue
         $this->data = $data;
         $this->data['altrpuser'] = $currentEnv->current_user ?? null;
         $this->data['altrpmodel'] = $data['record'] ?? null;
+        $this->data['altrpdata'] = $data['sources'] ?? null;
         $this->data['altrprequest'] = $currentEnv->request ?? null;
-        $this->data['altrpenv'] = array_change_key_case (getenv());
+        $this->data['altrpenv'] = array_change_key_case( getenv() );
     }
 
     /**

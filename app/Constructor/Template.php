@@ -32,6 +32,16 @@ class Template extends Model
     'triggers' => 'array',
   ];
 
+  const SANITIZE_IGNORE = [
+    'button_text',
+    'loading_text',
+    'simple_title_media_settings',
+    'text_advanced_heading_content',
+    'description_icon_box_content',
+    'prev_text',
+    'next_text',
+  ];
+
   protected $fillable =[
     'name',
     'title',
@@ -483,7 +493,10 @@ class Template extends Model
 
     if( is_array( $data['settings'] ) ){
       foreach ( $data['settings'] as $index => $setting ) {
-        if( empty( $setting ) ){
+        if( array_search( $index, self::SANITIZE_IGNORE ) !== false ){
+          continue;
+        }
+        if( empty( $setting ) && ! is_string( $setting ) ){
 
           unset( $data['settings'][$index] );
         } else {

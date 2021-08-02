@@ -27,7 +27,6 @@
 .state-section-style-presets {
   width: 100%;
   padding-bottom: 10px;
-  height: 40px;
 }
 
 .state-section-style-target {
@@ -36,6 +35,17 @@
 
 .state-section-style-button {
   width: 100%;
+  background: #87CA00;
+  border: 1.5px solid #87CA00;
+  border-radius: 2px;
+  font-family: Roboto, Arial, sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #3C455B;
 }
 
 .state-section-style-preset {

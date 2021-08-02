@@ -474,7 +474,7 @@ export function actionsControllers(
         'toggle_offcanvas',
         'table_to_xls'
       ],
-      'all_sources': false
+      // 'all_sources': false
     }
   });
 
