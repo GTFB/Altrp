@@ -1230,7 +1230,6 @@ class InputSelectWidget extends Component {
     }
 
     let input = null;
-    console.log(value);
     switch (this.props.element.getName()) {
       case "input-select":
         {
