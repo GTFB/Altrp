@@ -481,7 +481,7 @@ class InputTextCommonWidget extends Component {
 
   /**
    *
-   * @returns {Date}
+   * @returns {string}
    */
   getValue = () => {
     let value;

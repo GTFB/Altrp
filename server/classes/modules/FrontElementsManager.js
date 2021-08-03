@@ -26,9 +26,10 @@ import HtmlWidget from '../../../resources/modules/editor/src/js/components/widg
 import VideoWidget from '../../../resources/modules/editor/src/js/components/widgets/VideoWidget';
 // import Skeleton from '../../../resources/modules/editor/src/js/components/altrp-image/Skeleton';
 import SkeletonPlaceholder from '../components/SkeletonPlaceholder';
-import DEFAULT_REACT_ELEMENTS from "../../../resources/modules/front-app/src/js/constants/DEFAULT_REACT_ELEMENTS";
 import HeadingTypeHeadingWidget
   from "../../../resources/modules/editor/src/js/components/widgets/HeadingTypeHeadingWidget";
+import SKELETON_ELEMENTS from "../../../resources/modules/front-app/src/js/constants/SKELETON_ELEMENTS";
+import InputHiddenWidget from "../../../resources/modules/editor/src/js/components/widgets/InputHiddenWidget";
 // import BreadcrumbsWidget from '../../../resources/modules/editor/src/js/components/widgets/BreadcrumbsWidget';
 // import MenuWidget from '../../../resources/modules/editor/src/js/components/widgets/MenuWidget';
 
@@ -37,7 +38,7 @@ class FrontElementsManager {
   constructor() {
     //список компонентов
     this.components = {};
-    DEFAULT_REACT_ELEMENTS.forEach(el=>{
+    SKELETON_ELEMENTS.forEach(el=>{
       this.components[el] = SkeletonPlaceholder;
     })
     this.components['root-element'] = RootComponent;
@@ -46,6 +47,7 @@ class FrontElementsManager {
     this.components['section_widget'] = SectionComponent;
     this.components['column'] = ColumnComponent;
     this.components['button'] = ButtonWidget;
+    this.components['input-hidden'] = InputHiddenWidget;
     this.components['text'] = TextWidget;
     this.components['text-common'] = TextWidget;
     this.components['image'] = ImageWidget;

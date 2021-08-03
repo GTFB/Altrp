@@ -2,7 +2,9 @@
 // =======> {{frontend_route}} <=======
 Route::get({{frontend_route}}, function ({{params}}) {
   global $altrp_env;
+  global $altrp_current_page;
   $_frontend_route = \App\Page::find({{page_id}});
+  $altrp_current_page = $_frontend_route;
   $_frontend_route['data_sources'] = $_frontend_route->page_data_sources->map(function (App\PageDatasource $page_data_source) {
     if ($page_data_source->source) {
       $page_data_source->source->web_url = $page_data_source->source->web_url;

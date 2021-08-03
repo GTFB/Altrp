@@ -14,6 +14,7 @@ class AreaForm extends Component {
         sidebar_location: '',
         sidebar_width: '',
         custom_css: '',
+        sidebar_checked: false,
       },
     };
     this.state = {
@@ -117,17 +118,32 @@ class AreaForm extends Component {
         </select>
       </div>}
       {settings.area_type === 'sidebar' &&
-      <div className="form-group">
-        <label htmlFor="settings.sidebar_width">Sidebar Width</label>
-        <input type="text" id="settings.sidebar_width" required
-               name="title"
-               value={settings.sidebar_width}
-               onChange={e => {
-                 this.changeValue(e.target.value, 'settings.sidebar_width')
-               }}
-               className="form-control"
-        />
-      </div>}
+      <div className="row">
+        <div className="form-group col-6">
+          <label htmlFor="settings.sidebar_width">Sidebar Width</label>
+          <input type="text" id="settings.sidebar_width" required
+                 name="settings.sidebar_width"
+                 value={settings.sidebar_width}
+                 onChange={e => {
+                   this.changeValue(e.target.value, 'settings.sidebar_width')
+                 }}
+                 className="form-control"
+          />
+        </div>
+        <div className="form-group col-6">
+          <label htmlFor="settings.sidebar_fixed">Sidebar Fixed</label>
+          <br/>
+          <input type="checkbox" id="settings.sidebar_fixed"
+                 name="settings.sidebar_fixed"
+                 checked={settings.sidebar_fixed}
+                 onChange={e => {
+                   console.log(e.target.checked);
+                   this.changeValue(e.target.checked, 'settings.sidebar_fixed')
+                 }}
+          />
+        </div>
+      </div>
+      }
       <div className="form-group">
         <label htmlFor="settings.custom_css">Custom CSS</label>
         <AltrpCodeEditor value={settings.custom_css}

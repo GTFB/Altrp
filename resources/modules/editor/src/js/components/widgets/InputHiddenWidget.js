@@ -1,36 +1,22 @@
-import {
+const {
   convertData,
   isEditor,
   parseOptionsFromSettings,
   parseParamsFromString,
-  parseURLTemplate,
+  renderIcon,
   replaceContentWithData,
-  renderAssetIcon,
   getDataFromLocalStorage
-} from "../../../../../front-app/src/js/helpers";
+} = window.altrpHelpers;
 import Resource from "../../classes/Resource";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
-import AltrpInput from "../altrp-input/AltrpInput";
+import FromIcon from "../../../svgs/form-horizontal.svg";
 
-const { moment } = window.altrpHelpers;
+
 (window.globalDefaults = window.globalDefaults || []).push(`
  /*здесь css стилей по умолчанию с селекторами*/
 `)
 
-const AltrpFieldContainer = styled.div`
-  ${({ settings: { content_label_position_type } }) => {
-    switch (content_label_position_type) {
-      case "left": {
-        return "display: flex";
-      }
-      case "right": {
-        return "display:flex;flex-direction:row-reverse;justify-content:flex-end;";
-      }
-    }
-    return "";
-  }}
-`;
 
 class InputHiddenWidget extends Component {
   timeInput = null;
@@ -509,60 +495,6 @@ class InputHiddenWidget extends Component {
   }
 
   /**
-   * Для действие по фокусу
-   * @param e
-   * @return {Promise<void>}
-   */
-
-  onFocus = async e => {
-    const focus_actions = this.props.element.getSettings("focus_actions");
-
-    if (focus_actions && !isEditor()) {
-      const actionsManager = (
-        await import(
-          /* webpackChunkName: 'ActionsManager' */
-          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-        )
-      ).default;
-      await actionsManager.callAllWidgetActions(
-        this.props.element.getIdForAction(),
-        "focus",
-        focus_actions,
-        this.props.element
-      );
-    }
-  };
-
-  /**
-   * Потеря фокуса для оптимизации
-   * @param  e
-   * @param  editor для получения изменений из CKEditor
-   */
-
-  onBlur = async (e, editor = null) => {
-    this.dispatchFieldValueToStore(e.target.value, true);
-
-    if (_.get(editor, "getData")) {
-      this.dispatchFieldValueToStore(editor.getData(), true);
-    }
-
-    if (this.props.element.getSettings("actions", []) && !isEditor()) {
-      const actionsManager = (
-        await import(
-          /* webpackChunkName: 'ActionsManager' */
-          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-        )
-      ).default;
-      await actionsManager.callAllWidgetActions(
-        this.props.element.getIdForAction(),
-        "blur",
-        this.props.element.getSettings("actions", []),
-        this.props.element
-      );
-    }
-  };
-
-  /**
    * Передадим значение в хранилище формы
    * @param {*} value
    * @param {boolean} userInput true - имзенилось пользователем
@@ -601,85 +533,6 @@ class InputHiddenWidget extends Component {
     }
   };
 
-  /**
-   * Обработка добавления опции по ajax
-   * @param {SyntheticKeyboardEvent} e
-   */
-  createItem = async e => {
-    const keyCode = e.keyCode;
-    const { value: inputValue } = e.target;
-
-    if (keyCode !== 13 || !inputValue) {
-      return;
-    }
-
-    const {
-      create_url,
-      create_label,
-      create_data,
-      select2_multiple
-    } = this.props.element.getSettings();
-
-    if (!create_label && !create_url) {
-      return;
-    }
-
-    const currentModel = this.props.element.getCurrentModel();
-    let data = parseParamsFromString(create_data, currentModel, true);
-    data[create_label] = inputValue;
-    let url = parseURLTemplate(create_url, currentModel.getData());
-    this.setState(state => ({ ...state, isDisabled: true }));
-
-    try {
-      const resource = new Resource({
-        route: url
-      });
-      let res = await resource.post(data);
-
-      if (res.success && _.get(res, "data.id")) {
-        let newOption = {
-          label: inputValue,
-          value: _.get(res, "data.id")
-        };
-
-        this.setState(
-          state => ({ ...state, isDisabled: false }),
-          () => {
-            let options = [...this.state.options];
-            options.unshift(newOption);
-            let value = this.state.value;
-            if (select2_multiple) {
-              value = value ? [...value] : [];
-              value.push(_.get(res, "data.id"));
-            } else {
-              value = _.get(res, "data.id");
-            }
-
-            this.setState(
-              state => ({ ...state, options, value }),
-              () => {
-                const selectStateManager = _.get(
-                  this,
-                  "altrpSelectRef.current.selectRef.current"
-                );
-
-                if (selectStateManager) {
-                  selectStateManager.setState({
-                    menuIsOpen: false,
-                    inputValue: ""
-                  });
-                }
-              }
-            );
-          }
-        );
-      }
-      this.setState(state => ({ ...state, isDisabled: false }));
-    } catch (error) {
-      console.error(error);
-      this.setState(state => ({ ...state, isDisabled: false }));
-    }
-  };
 
   /**
    * Взовращает имя для атрибута name
@@ -688,156 +541,31 @@ class InputHiddenWidget extends Component {
   getName() {
     return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
   }
+  /**
+   *
+   * @returns {*}
+   */
+  getValue = () => {
+    let value;
+    let formId = this.props.element.getFormId();
+    let fieldName = this.props.element.getFieldId();
+    if (isEditor()) {
+      value = this.state.value;
+    } else {
+      value = _.get(appStore.getState(), `formsStore.${formId}.${fieldName}`, '')
+    }
+    return value;
+  }
 
   render() {
-    let label = null;
-    const settings = this.props.element.getSettings();
-    const {
-      content_readonly,
-      select2_multiple: isMultiple,
-      label_icon
-    } = settings;
-
-    let value = this.state.value;
-
-    if (
-      _.get(value, "dynamic") &&
-      this.props.currentModel.getProperty("altrpModelUpdated")
-    ) {
-      value = this.getContent("content_default_value");
+    if(isEditor()){
+      return <FromIcon/>
     }
-
-    /**
-     * Пока динамический контент загружается (Еесли это динамический контент),
-     * нужно вывести пустую строку
-     */
-
-    if (value && value.dynamic) {
-      value = "";
-    }
-
-    let classLabel = "";
-    let styleLabel = {};
-    const content_label_position_type = this.props.element.getResponsiveSetting(
-      "content_label_position_type"
-    );
-
-    switch (content_label_position_type) {
-      case "top":
-        styleLabel = {
-          marginBottom: this.state.settings.label_style_spacing
-            ? this.state.settings.label_style_spacing.size +
-            this.state.settings.label_style_spacing.unit
-            : 2 + "px"
-        };
-        classLabel = "";
-        break;
-      case "bottom":
-        styleLabel = {
-          marginTop: this.state.settings.label_style_spacing
-            ? this.state.settings.label_style_spacing.size +
-            this.state.settings.label_style_spacing.unit
-            : 2 + "px"
-        };
-        classLabel = "";
-        break;
-      case "left":
-        styleLabel = {
-          marginRight: this.state.settings.label_style_spacing
-            ? this.state.settings.label_style_spacing.size +
-            this.state.settings.label_style_spacing.unit
-            : 2 + "px"
-        };
-        classLabel = "altrp-field-label-container-left";
-        break;
-      case "absolute":
-        styleLabel = {
-          position: "absolute",
-          zIndex: 2
-        };
-        classLabel = "";
-        break;
-    }
-
-    if (this.state.settings.content_label) {
-      label = (
-        <div
-          className={"altrp-field-label-container " + classLabel}
-          style={styleLabel}
-        >
-          <label
-            className={`altrp-field-label ${this.state.settings.content_required
-              ? "altrp-field-label--required"
-              : ""
-              }`}
-          >
-            {this.state.settings.content_label}
-          </label>
-          {label_icon && label_icon.assetType && (
-            <span className="altrp-label-icon">
-              {renderAssetIcon(label_icon)}
-            </span>
-          )}
-        </div>
-      );
-    } else {
-      label = null;
-    }
-
-    let autocomplete = "off";
-    if (this.state.settings.content_autocomplete) {
-      autocomplete = "on";
-    } else {
-      autocomplete = "off";
-    }
-
-    const isClearable = this.state.settings.content_clearable;
-
-    const input = (
-      <div className="altrp-input-wrapper">
-        <AltrpInput
-          type="hidden"
-          name={this.getName()}
-          value={value || ""}
-          element={this.props.element}
-          readOnly={content_readonly}
-          autoComplete={autocomplete}
-          placeholder={this.state.settings.content_placeholder}
-          className={
-            "altrp-field " + this.state.settings.position_css_classes
-          }
-          settings={this.props.element.getSettings()}
-          onKeyDown={this.handleEnter}
-          onChange={this.onChange}
-          onBlur={this.onBlur}
-          onFocus={this.onFocus}
-          id={this.state.settings.position_css_id}
-        />
-        {isClearable && (
-          <button
-            className="input-clear-btn"
-            onClick={() => this.setState({ value: this.defaultValue })}
-          >
-            ✖
-          </button>
-        )}
-      </div>
-    );
-
-    return (
-      <AltrpFieldContainer
-        settings={settings}
-        className="altrp-field-container "
-      >
-        {content_label_position_type === "top" ? label : ""}
-        {content_label_position_type === "left" ? label : ""}
-        {content_label_position_type === "right" ? label : ""}
-        {content_label_position_type === "absolute" ? label : ""}
-        {/* .altrp-field-label-container */}
-        {input}
-        {content_label_position_type === "bottom" ? label : ""}
-      </AltrpFieldContainer>
-    );
+    let value = this.getValue()
+    return <input value={value}
+                  type="hidden"
+                  name={this.getName()}
+                  id={this.getName()}/>
   }
 }
 

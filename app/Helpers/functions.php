@@ -1146,9 +1146,15 @@ function replaceContentWithData( $content ){
 //    return $content;
 //  }
   global $altrp_env;
+  global $altrp_current_page;
   if( ! isset( $altrp_env['altrpuser'] ) ){
     data_set( $altrp_env, 'altrpuser', getCurrentUser() );
   }
+  if( ! isset( $altrp_env['altrppage'] ) ){
+    data_set( $altrp_env, 'altrppage.url', (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" );
+    data_set( $altrp_env, 'altrppage.title', data_get( $altrp_current_page, 'title', '' ) );
+  }
+//  dd($altrp_env);
   is_string( $content ) ? preg_match_all( '/{{([\s\S]+?)(?=}})/', $content, $path ) : null;
   if( ! isset( $path ) || ! isset( $path[1] )){
     return $content;

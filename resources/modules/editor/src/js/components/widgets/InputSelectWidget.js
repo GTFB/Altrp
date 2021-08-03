@@ -1,4 +1,4 @@
-import {
+const {
   convertData,
   isEditor,
   parseOptionsFromSettings,
@@ -8,14 +8,13 @@ import {
   sortOptions,
   renderAssetIcon,
   getDataFromLocalStorage
-} from "../../../../../front-app/src/js/helpers";
+} = window.altrpHelpers;
 import Resource from "../../classes/Resource";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
 import AltrpInput from "../altrp-input/AltrpInput";
 import BlurprintMultiSelect from "./BlurprintMultiSelect";
 
-const { moment } = window.altrpHelpers;
 const Button = window.altrpLibs.Blueprint.Button;
 const MenuItem = window.altrpLibs.Blueprint.MenuItem;
 const Select = window.altrpLibs.BlueprintSelect.Select;
@@ -780,9 +779,8 @@ class InputSelectWidget extends Component {
   /**
    * Изменение значения в виджете
    * @param e
-   * @param  editor для получения изменений из CKEditor
    */
-  onChange(e, editor = null) {
+  onChange(e) {
     let value = "";
     let valueToDispatch;
     const settings = this.props.element.getSettings();
@@ -791,9 +789,7 @@ class InputSelectWidget extends Component {
     if (e && e.value) {
       value = e.value;
     }
-    if (_.get(editor, "getData")) {
-      value = `<div class="ck ck-content" style="width:100%">${editor.getData()}</div>`;
-    }
+
     if (_.isArray(e)) {
       value = _.cloneDeep(e);
     }
@@ -851,6 +847,9 @@ class InputSelectWidget extends Component {
   }
 
   onItemSelect(value) {
+    if(value.value){
+      value = value.value;
+    }
     this.setState(state => ({
       ...state,
       value
@@ -1117,30 +1116,43 @@ class InputSelectWidget extends Component {
     return tokens;
   }
 
+  /**
+   *
+   * @returns {*}
+   */
+  getValue = () => {
+    let value;
+    let formId = this.props.element.getFormId();
+    let fieldName = this.props.element.getFieldId();
+    if (isEditor()) {
+      value = this.state.value;
+    } else {
+      value = _.get(appStore.getState(), `formsStore.${formId}.${fieldName}`, '')
+    }
+
+    return value;
+  }
+
+  /**
+   * @return {*}
+   */
+  getCurrentLabel(){
+    const value = this.getValue()
+    const options = this.getOptions() || []
+    return options.find(option=>option.value === value)?.label || ''
+  }
+
   render() {
     let label = null;
     const settings = this.props.element.getSettings();
+    let value = this.getCurrentLabel();
+
     const {
       options_sorting,
       content_readonly,
       label_icon
     } = settings;
 
-    let value = this.state.value;
-
-    if (
-      _.get(value, "dynamic") &&
-      this.props.currentModel.getProperty("altrpModelUpdated")
-    ) {
-      value = this.getContent("content_default_value");
-    }
-    /**
-     * Пока динамический контент загружается (Еесли это динамический контент),
-     * нужно вывести пустую строку
-     */
-    if (value && value.dynamic) {
-      value = "";
-    }
     let classLabel = "";
     let styleLabel = {};
     const content_label_position_type = this.props.element.getResponsiveSetting(
@@ -1218,6 +1230,7 @@ class InputSelectWidget extends Component {
     }
 
     let input = null;
+    console.log(value);
     switch (this.props.element.getName()) {
       case "input-select":
         {
@@ -1225,7 +1238,7 @@ class InputSelectWidget extends Component {
 
           options = options_sorting ? sortOptions(options, options_sorting) : options;
 
-          let itemsOptions = options.map(({ label }) => label);
+          let itemsOptions = this.getOptions();
 
           if (this.state.settings.multi_select) {
             const optionsForMultiSelect = options.map(({ label }) => {
@@ -1246,8 +1259,7 @@ class InputSelectWidget extends Component {
                 id={this.state.settings.position_css_id}
                 className={
                   "altrp-field " + this.state.settings.position_css_classes
-                }
-              ></BlurprintMultiSelect>
+                }/>
             )
           } else {
           input = (
@@ -1258,8 +1270,8 @@ class InputSelectWidget extends Component {
                   return null;
                 }
                 return <MenuItem
-                  text={this.highlightText(item, query)}
-                  active={modifiers.active}
+                  text={item.label}
+                  active={item.value === value}
                   disabled={modifiers.disabled}
                   onClick={handleClick}
                 />
@@ -1271,6 +1283,7 @@ class InputSelectWidget extends Component {
                 return `${item.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0;
               }}
               items={itemsOptions}
+              // itemRenderer={({label})=>label}
               noResults={<MenuItem disabled={true} text="No results." />}
               onFocus={this.onFocus}
               name={this.getName()}
@@ -1283,7 +1296,7 @@ class InputSelectWidget extends Component {
               }
             >
               <Button
-                text={this.state.value}
+                text={value}
                 rightIcon="double-caret-vertical"
               />
             </Select>

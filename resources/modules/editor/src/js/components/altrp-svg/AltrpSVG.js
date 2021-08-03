@@ -1,5 +1,4 @@
-import React, {Component} from "react";
-import Resource from "../../classes/Resource";
+
 
 class AltrpSVG extends Component {
   constructor(props) {
@@ -41,7 +40,7 @@ class AltrpSVG extends Component {
     let content = (window.assetsCache[this.props.url]);
 
     if(! content) {
-      let resource = new Resource({route: this.props.url});
+      let resource = new window.altrpHelpers.Resource({route: this.props.url});
       content = await resource.getAsText();
       window.assetsCache[this.props.url] = content;
     }
@@ -79,11 +78,21 @@ class AltrpSVG extends Component {
     if(! this.state.svg){
       return '';
     }
-    let divElement = document.createElement('div');
-    divElement.innerHTML = this.state.svg;
-    divElement.children[0]?.removeAttribute('width')
-    divElement.children[0]?.removeAttribute('height')
-    return <svg {...props}  dangerouslySetInnerHTML={{__html: divElement.children[0]?.outerHTML || this.state.svg}}/>
+    let divElement;
+    let svg = '';
+    if(window.SSR){
+      divElement = parse(`<div>${this.state.svg}</div>`)
+      divElement.childNodes[1]?.removeAttribute('width')
+      divElement.childNodes[1]?.removeAttribute('height')
+      svg = divElement.childNodes[1]?.outerHTML;
+    } else {
+      divElement = document.createElement('div');
+      divElement.innerHTML = this.state.svg;
+      divElement.children[0]?.removeAttribute('width')
+      divElement.children[0]?.removeAttribute('height')
+      svg = divElement.children[0]?.outerHTML;
+    }
+    return <svg {...props}  dangerouslySetInnerHTML={{__html: svg || this.state.svg}}/>
   }
 }
 
