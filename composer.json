@@ -34,7 +34,8 @@
         "pusher/pusher-php-server": "4.1.1",
         "salsify/json-streaming-parser": "^8.2",
         "santigarcor/laratrust": "5.2.*",
-        "violet/streaming-json-encoder": "^1.1"
+        "violet/streaming-json-encoder": "^1.1",
+        "westacks/telebot": "^1.12"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.7",

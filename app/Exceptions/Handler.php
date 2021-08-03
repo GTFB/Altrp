@@ -114,6 +114,7 @@ class Handler extends ExceptionHandler
 
       if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException)
       {
+
         $not_found_page = Page::firstWhere( 'not_found', 1 );
         if( $not_found_page && strpos( $request->url(), 'favicon.ico' ) === false
           && strpos( $request->url(), '/ajax' ) === false
@@ -124,8 +125,12 @@ class Handler extends ExceptionHandler
           && strpos( $request->url(), '/modules/front-app/' ) === false
         ){
           logger('URL:' . $request->url());
+          global $altrp_env;
+          global $altrp_current_page;
+          $altrp_current_page = $not_found_page;
           $preload_content = Page::getPreloadPageContent( $not_found_page['id'] );
           $lazy_sections = [];
+          $preload_content['content'] = replaceContentWithData( $preload_content['content'] );
           $page_areas = Page::get_areas_for_page( $not_found_page['id'] );
           $elements_list = extractElementsNames( $page_areas );
           $altrp_settings = getAltrpSettings( $not_found_page['id'] );

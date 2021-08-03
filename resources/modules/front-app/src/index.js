@@ -32,26 +32,26 @@ import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
     console.log('LOAD elementDecorator: ', performance.now());
     loadingCallback();
   });
+  if (process.env.NODE_ENV === 'production') {
+    window.__hot = () => C => C;
+    import (/* webpackChunkName: 'FrontApp' */'./FrontApp').then(module => {
+      window.FrontApp = module.default;
+      console.log('LOAD FrontApp: ', performance.now());
+      loadingCallback();
+    });
+
+  } else {
+    import(/* webpackChunkName: 'react-hot-loader' */'react-hot-loader').then(({hot}) => {
+      window.__hot = hot;
+      return import (/* webpackChunkName: 'FrontApp' */'./FrontApp')
+    }).then(module => {
+      window.FrontApp = module.default;
+      console.log('LOAD FrontApp: ', performance.now());
+      loadingCallback();
+    });
+  }
 })
 
-if (process.env.NODE_ENV === 'production') {
-  window.__hot = () => C => C;
-  import (/* webpackChunkName: 'FrontApp' */'./FrontApp').then(module => {
-    window.FrontApp = module.default;
-    console.log('LOAD FrontApp: ', performance.now());
-    loadingCallback();
-  });
-
-} else {
-  import(/* webpackChunkName: 'react-hot-loader' */'react-hot-loader').then(({hot}) => {
-    window.__hot = hot;
-    return import (/* webpackChunkName: 'FrontApp' */'./FrontApp')
-  }).then(module => {
-    window.FrontApp = module.default;
-    console.log('LOAD FrontApp: ', performance.now());
-    loadingCallback();
-  });
-}
 
 import (/* webpackChunkName: 'FormsManager' */'../../editor/src/js/classes/modules/FormsManager.js').then(module => {
   console.log('LOAD FormsManager: ', performance.now());
