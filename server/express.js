@@ -14,6 +14,7 @@ if (typeof performance === "undefined") {
   global.performance = require("perf_hooks").performance;
 }
 global.styled = styled;
+global.parse = parse;
 global._ = lodash;
 global.createGlobalStyle = createGlobalStyle;
 /**
@@ -92,6 +93,7 @@ app.post("/", (req, res) => {
   const store = window.appStore;
   let json = JSON.parse(req.body.json) || [];
   let page = json.page || [];
+  global.window.currentPage = json.currentPage || {};
   let page_id = json.page_id || "";
   let page_model = json.page_model || {};
   let current_device = json.current_device || 'DEFAULT_BREAKPOINT';

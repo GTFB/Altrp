@@ -6,7 +6,8 @@ if (typeof location === "undefined") {
 }
 
 const defaultPage = {
-  url: location?.href || ""
+  url: location?.href || "",
+  title: window?.currentPage?.title || "",
 };
 
 export function currentPageReducer(page, action) {

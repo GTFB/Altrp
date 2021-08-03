@@ -25,7 +25,6 @@ export default  function getRouteStyles(areas){
     && area.settings.sidebar_location === 'right');
   let leftSidebar = areas.find(area=>area.settings.area_type === 'sidebar'
     && area.settings.sidebar_location === 'left');
-
   columnsGrid += leftSidebar ? `${leftSidebar.settings.sidebar_width}` : '0px';
   columnsGrid += ` calc(100% - ${leftSidebar ? `${leftSidebar.settings.sidebar_width}` : '0px'} - ${rightSidebar ? `${rightSidebar.settings.sidebar_width}` : '0px'}) `;
   columnsGrid += rightSidebar ? `${rightSidebar.settings.sidebar_width}` : '0px';
@@ -49,9 +48,15 @@ export default  function getRouteStyles(areas){
   styles += '& .altrp-section.altrp-section--full-width,& .altrp-section.altrp-section--boxed{max-width:100%;} & .sections-wrapper{max-width: 100%;width: 100%;}'
   if(rightSidebar){
     styles += rightSidebar.getCustomCSS();
+    if(rightSidebar.getSetting('sidebar_fixed')){
+      styles += `& .app-area_sidebar-location-right .sections-wrapper.sections-wrapper.sections-wrapper{overflow:hidden;position:fixed;top:0;right:0;width:${rightSidebar.getSetting('sidebar_width', '0px')};}`
+    }
   }
   if(leftSidebar){
     styles += leftSidebar.getCustomCSS();
+    if(leftSidebar.getSetting('sidebar_fixed')){
+      styles += `& .app-area_sidebar-location-left .sections-wrapper.sections-wrapper.sections-wrapper{overflow:hidden;position:fixed;top:0;left:0;width:${leftSidebar.getSetting('sidebar_width', '0px')};}`
+    }
   }
   styles += `.app-area > .sections-wrapper.sections-wrapper{width:100%;}`
   return  styles;

@@ -38,8 +38,19 @@ export function getHeadingTypeHeadingStyles(settings, id) {
   if (justifyContent) {
 
     styles += simplePropertyStyled(justifyContent, "justify-content");
-    if(justifyContent === 'stretch'){
-      styles += `& .altrp-heading{text-align:justify}`
+    switch (justifyContent){
+      case 'stretch':{
+        styles += `& .altrp-heading{text-align:justify}`
+      }break
+      case 'center':{
+        styles += `& .altrp-heading{text-align:center}`
+      }break
+      case 'flex-start':{
+        styles += `& .altrp-heading{text-align:left}`
+      }break
+      case 'flex-end':{
+        styles += `& .altrp-heading{text-align:right}`
+      }break
     }
   }
 
