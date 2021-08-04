@@ -101,6 +101,7 @@ export default function getInputSelectStyles(settings, elementId) {
     ['color', 'mismatch_message_font_color', 'color'],
     ['', 'mismatch_message_typographic', 'typographic'],
     '}',
+    //<editor-fold description="стили иконок">
     '.bp3-icon_text-widget.bp3-icon_text-widget.bp3-icon_text-widget',
     ['margin', 'input_icons_margin', 'dimensions'],
     ['padding', 'input_icons_padding', 'dimensions'],
@@ -135,6 +136,7 @@ export default function getInputSelectStyles(settings, elementId) {
     ['width', 'input_icons_size', 'slider'],
     ['height', 'input_icons_size', 'slider'],
     '}',
+    //</editor-fold>
     //<editor-fold description="стили кнопки">
     ()=>{
       const alignment = getResponsiveSetting(settings, 'alignment')

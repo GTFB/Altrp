@@ -487,6 +487,19 @@ export function colorStyled(controller, style) {
 }
 
 /**
+ * Преобразует объект, который сохраняет контроллер color, в строку css для вставки в styled-компонент
+ * @return {string}
+ * @param {{}} controller
+ */
+export function colorStyledSecond(controller) {
+  if (controller) {
+    if (controller.color) {
+      return `${controller.color}`;
+    } else return "";
+  } else return "";
+}
+
+/**
  * Преобразует объект, который сохраняет контроллер border-width, в строку css для вставки в styled-компонент
  * @param {{}} data
  * @param {string} declaration

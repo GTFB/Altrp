@@ -17,6 +17,16 @@ import {Checkbox} from "@blueprintjs/core";
 
 const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`
+  .altrp-field-option-span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .altrp-field-radio .bp3-control-indicator.bp3-control-indicator {
+    background-image: none;
+  }
+
   .altrp-field-container .altrp-field-checkbox.altrp-field-checkbox {
     margin: 0
   }

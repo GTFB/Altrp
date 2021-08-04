@@ -12,9 +12,14 @@ import {
 import Resource from "../../classes/Resource";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
+import {Radio, RadioGroup} from "@blueprintjs/core";
 
 const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`
+
+.altrp-field-container .bp3-radio {
+  margin-bottom: 0;
+}
 
 .altrp-field {
   border-style: solid;
@@ -843,7 +848,7 @@ class InputRadioWidget extends Component {
         await import(
           /* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-        )
+          )
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
@@ -867,7 +872,7 @@ class InputRadioWidget extends Component {
         await import(
           /* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-        )
+          )
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
@@ -900,7 +905,7 @@ class InputRadioWidget extends Component {
             await import(
               /* webpackChunkName: 'ActionsManager' */
               "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-            )
+              )
           ).default;
           await actionsManager.callAllWidgetActions(
             this.props.element.getIdForAction(),
@@ -1072,7 +1077,7 @@ class InputRadioWidget extends Component {
             className={`altrp-field-label ${this.state.settings.content_required
               ? "altrp-field-label--required"
               : ""
-              }`}
+            }`}
           >
             {this.state.settings.content_label}
           </label>
@@ -1128,7 +1133,13 @@ class InputRadioWidget extends Component {
         .toString(36)
         .substr(2, 9);
     return (
-      <div className="altrp-field-subgroup">
+      <RadioGroup
+        className="altrp-field-subgroup"
+        name={`${formID}-${fieldName}`}
+        inline
+        onChange={this.onChange}
+        selectedValue={this.state.value}
+      >
         {options.map((option, idx) => {
           let checked = false;
           /**
@@ -1141,32 +1152,28 @@ class InputRadioWidget extends Component {
             checked = altrpCompare(option.value, value, "in");
           }
           return (
-            <div
-              className={`altrp-field-option ${checked ? "active" : ""}`}
+            <Radio
+              className={`altrp-field-radio ${checked ? "active" : ""}`}
+              label={option.label}
+              value={option.value}
               key={`${fieldName}-${idx}`}
-            >
-              <span className="altrp-field-option-span">
-                <input
-                  type="radio"
-                  value={option.value}
-                  name={`${formID}-${fieldName}`}
-                  className={`altrp-field-option__input ${checked ? "active" : ""
-                    }`}
-                  onChange={this.onChange}
-                  checked={checked}
-                  id={`${formID}-${fieldName}-${idx}`}
-                />
-              </span>
-              <label
-                htmlFor={`${formID}-${fieldName}-${idx}`}
-                className="altrp-field-option__label"
-              >
-                {option.label}
-              </label>
-            </div>
+            />
+            // <span className="altrp-field-option-span">
+            //   {/*<Radio*/}
+            //   {/*  // type="radio"*/}
+            //   {/*  value={option.value}*/}
+            //   {/*  // name={`${formID}-${fieldName}`}*/}
+            //   {/*  // className={`altrp-field-option__input ${checked ? "active" : ""*/}
+            //   {/*    // }`}*/}
+            //   {/*  // onChange={this.onChange}*/}
+            //   {/*  // checked={checked}*/}
+            //   {/*  // id={`${formID}-${fieldName}-${idx}`}*/}
+            //   {/*/>*/}
+            // </span>
+            // </Radio>
           );
         })}
-      </div>
+      </RadioGroup>
     );
   }
 }

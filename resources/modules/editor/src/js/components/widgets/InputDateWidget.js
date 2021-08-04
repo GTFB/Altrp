@@ -628,7 +628,7 @@ class InputDateWidget extends Component {
     let timePrecision = this.timePrecision;
 
     const dayPickerProps = {
-      className: typeDate === 'time' ? 'altrp-hidden' : '',
+      className: this.typeDate === 'time' ? 'altrp-hidden' : '',
     }
 
     switch (locale) {
@@ -658,7 +658,7 @@ class InputDateWidget extends Component {
             popoverClassName: "altrp-date-picker-popover altrp-date-picker-popover-" + this.props.element.getId(),
             // popoverClassName: "altrp-date-pickerpopover" + this.props.element.getId(),
           }}
-          onChange={typeDate !== 'LT' ? this.onChange : undefined}
+          onChange={this.typeDate !== 'LT' ? this.onChange : undefined}
           className={"altrp-date-picker" + this.props.element.getId()}
           timePrecision={timePrecision}
           canClearSelection={false}

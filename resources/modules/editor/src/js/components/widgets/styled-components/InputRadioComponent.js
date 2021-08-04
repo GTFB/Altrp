@@ -6,7 +6,7 @@ import {
   colorPropertyStyled,
   borderWidthStyled,
   shadowControllerToStyles,
-  sizeStyled, sliderStyled, defaultStyled, colorStyled
+  sizeStyled, sliderStyled, defaultStyled, colorStyled, colorStyledSecond
 } from "../../../../../../front-app/src/js/helpers/styles";
 
 /**
@@ -49,7 +49,7 @@ const containerStyle = settings => {
  * @returns {String} CSS style string
  */
 const fieldStyle = settings => {
-  let styles = `&& .altrp-field, && .altrp-field-checkbox .bp3-control-indicator {`;
+  let styles = `.altrp-field-container .bp3-control-indicator.bp3-control-indicator.bp3-control-indicator {`;
   let padding,
     color,
     typographic,
@@ -84,9 +84,6 @@ const fieldStyle = settings => {
   // settings &&
   // (typographic = getResponsiveSetting(settings, "field_font_typographic"));
   // typographic && (styles += typographicControllerToStyles(typographic));
-
-  settings && (padding = getResponsiveSetting(settings, "position_padding"));
-  padding && (styles += dimensionsControllerToStyles(padding, "padding"));
 
   // settings && (color = getResponsiveSetting(settings, "field_font_color"));
   // color && (styles += colorPropertyStyled(color, "color"));
@@ -125,55 +122,21 @@ const fieldStyle = settings => {
 
   styles += "}";
 
-  styles += `&& .altrp-field, && .altrp-field-checkbox .bp3-control-indicator:before {`;
-
-
-  // settings &&
-  // (typographic = getResponsiveSetting(settings, "field_font_typographic"));
-  // typographic && (styles += typographicControllerToStyles(typographic));
+  styles += "&& .altrp-field-radio .bp3-control-indicator:before {";
 
   size && (styles += `height:${sliderStyled(size)};width:${sliderStyled(size)};`);
 
+  styles += "}";
+
+  styles += "&& .altrp-field-radio {";
+
+  settings && (padding = getResponsiveSetting(settings, "position_padding"));
   padding && (styles += dimensionsControllerToStyles(padding, "padding"));
 
-  // settings && (color = getResponsiveSetting(settings, "field_font_color"));
-  // color && (styles += colorPropertyStyled(color, "color"));
-
-  // settings &&
-  // (borderRadius = getResponsiveSetting(
-  //   settings,
-  //   "global_filter_input_border_radius"
-  // ));
-  // borderRadius &&
-  // (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
-
   styles += "}";
 
-  styles += `&& .altrp-field-subgroup {`;
 
-  let fieldAlignment;
-
-  settings && (fieldAlignment = getResponsiveSetting(settings, "field_alignment"));
-  fieldAlignment && (styles += `justify-content: ${defaultStyled(fieldAlignment)};`);
-
-  styles += "}";
-
-  styles += "&& .altrp-field-option:hover span.bp3-control-indicator.bp3-control-indicator {";
-
-  let backgroundColorHover;
-
-  settings && (backgroundColorHover = getResponsiveSetting(settings, "background_style_background_color", ":hover"));
-
-  backgroundColorHover && (styles += colorStyled(backgroundColorHover, "background-color"));
-
-  let boxShadowHover;
-
-  settings && (boxShadowHover = getResponsiveSetting(settings, "box_shadow", ":hover"));
-  boxShadowHover && (styles += shadowControllerToStyles(boxShadowHover));
-
-  styles += "}";
-
-  styles += "&& .altrp-field-option label.altrp-field-option__label {";
+  styles += "&& .altrp-field-radio {";
 
   let fontTypographic;
 
@@ -188,7 +151,7 @@ const fieldStyle = settings => {
 
   styles += "}";
 
-  styles += "&& .altrp-field-option:hover label.altrp-field-option__label {";
+  styles += "&& .altrp-field-radio:hover {";
 
   let fontTypographicHover;
 
@@ -203,7 +166,7 @@ const fieldStyle = settings => {
 
   styles += "}";
 
-  styles += "&& .altrp-field-option.active label.altrp-field-option__label {";
+  styles += "&& .altrp-field-radio.active {";
 
   let fontTypographicActive;
 
@@ -218,18 +181,45 @@ const fieldStyle = settings => {
 
   styles += "}";
 
-  styles += "&& .altrp-field-option.active span.bp3-control-indicator.bp3-control-indicator   {";
+  styles += "&& .altrp-field-radio.bp3-control.bp3-radio input:checked ~ .bp3-control-indicator::before {";
 
-  let backgroundColorActive;
+  let dotColor;
 
-  settings && (backgroundColorActive = getResponsiveSetting(settings, "background_style_background_color", ".active"));
+  settings && (dotColor = getResponsiveSetting(settings, "background_style_dot"));
 
-  backgroundColorActive && (styles += colorStyled(backgroundColorActive, "background-color"));
+  let dotSize;
 
-  let boxShadowActive;
+  settings && (dotSize = getResponsiveSetting(settings, "size_style_dot"));
 
-  settings && (boxShadowActive = getResponsiveSetting(settings, "box_shadow", ".active"));
-  boxShadowActive && (styles += shadowControllerToStyles(boxShadowActive));
+  console.log(dotSize, dotColor)
+  if(dotSize || dotColor) {
+
+    if(!dotSize) {
+      dotSize = {
+        size: 28,
+        unit: "%"
+      }
+    }
+
+    if(!dotColor) {
+      dotColor = {
+        color: "rgba(255, 255, 255, 1)",
+        colorPickedHex: "#ffffff",
+        colorRGB: {r: 255, g: 255, b: 255, a: 1}
+      }
+    }
+
+    styles += `background-image: radial-gradient(${colorStyledSecond(dotColor)}, ${colorStyledSecond(dotColor)} ${sliderStyled(dotSize)}, rgba(0, 0, 0, 0) calc(${sliderStyled(dotSize)} + 6%));`
+  }
+
+  styles += "}";
+
+  styles += `&& .altrp-field-subgroup {`;
+
+  let fieldAlignment;
+
+  settings && (fieldAlignment = getResponsiveSetting(settings, "alignment"));
+  fieldAlignment && (styles += `justify-content: ${defaultStyled(fieldAlignment)};`);
 
   styles += "}";
 
@@ -281,23 +271,41 @@ const fieldStyle = settings => {
  * @returns {String} CSS style string
  */
 const fieldStyleHover = settings => {
-  let styles = `&& .altrp-field:hover, && .bp3-input:hover {`;
-  let color,
+  let styles = `.altrp-field-container .altrp-field-radio:hover .bp3-control-indicator.bp3-control-indicator.bp3-control-indicator {`;
+  let padding,
+    color,
+    typographic,
     backgroundColor,
     borderType,
     borderWidth,
     borderColor,
     borderRadius,
-    boxShadow;
+    boxShadow,
+    size
+  ;
 
   const {
+    placeholder_and_value_alignment_position_section,
+    position_z_index,
+    input_position,
+    textarea_resize,
+    justify_options,
+    image_select_item_width,
+    image_select_item_height,
+    image_select_image_fit,
+    image_select_image_position,
+    cross_size
   } = settings;
 
   settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ":hover"));
   boxShadow && (styles += shadowControllerToStyles(boxShadow));
 
-  settings && (color = getResponsiveSetting(settings, "field_font_color", ":hover"));
-  color && (styles += colorPropertyStyled(color, "color"));
+  // settings &&
+  // (typographic = getResponsiveSetting(settings, "field_font_typographic"));
+  // typographic && (styles += typographicControllerToStyles(typographic));
+
+  // settings && (color = getResponsiveSetting(settings, "field_font_color"));
+  // color && (styles += colorPropertyStyled(color, "color"));
 
   settings && (borderType = getResponsiveSetting(settings, "border_type", ":hover"));
   borderType &&
@@ -312,7 +320,7 @@ const fieldStyleHover = settings => {
   settings &&
   (borderRadius = getResponsiveSetting(
     settings,
-    "global_filter_input_border_radius",
+    "border_radius",
     ":hover"
   ));
   borderRadius &&
@@ -327,17 +335,48 @@ const fieldStyleHover = settings => {
   backgroundColor &&
   (styles += colorPropertyStyled(backgroundColor, "background-color"));
 
-  styles += "&& .input-clear-btn{";
+  placeholder_and_value_alignment_position_section &&
+  (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
 
-  settings && (color = getResponsiveSetting(settings, "cross_color", ":hover"));
-  color && (styles += colorPropertyStyled(color, "color"));
+  position_z_index && (styles += `z-index:${position_z_index};`);
+  textarea_resize && (styles += `resize:${textarea_resize};`);
 
-  //TODO не нашел как активировать эту штуку
-  //cross_size && (styles += `font-size:${cross_size.size}${cross_size.unit};`);
-  styles += "}";
   styles += "}";
 
-  return styles;
+  styles += "&& .altrp-field-radio.bp3-control.bp3-radio:hover input:checked ~ .bp3-control-indicator.bp3-control-indicator::before {";
+
+  let dotColor;
+
+  settings && (dotColor = getResponsiveSetting(settings, "background_style_dot", ":hover"));
+
+  let dotSize;
+
+  settings && (dotSize = getResponsiveSetting(settings, "size_style_dot", ":hover"));
+
+  console.log(dotSize, dotColor)
+  if(dotSize || dotColor) {
+
+    if(!dotSize) {
+      dotSize = {
+        size: 28,
+        unit: "%"
+      }
+    }
+
+    if(!dotColor) {
+      dotColor = {
+        color: "rgba(255, 255, 255, 1)",
+        colorPickedHex: "#ffffff",
+        colorRGB: {r: 255, g: 255, b: 255, a: 1}
+      }
+    }
+
+    styles += `background-image: radial-gradient(${colorStyledSecond(dotColor)}, ${colorStyledSecond(dotColor)} ${sliderStyled(dotSize)}, rgba(0, 0, 0, 0) calc(${sliderStyled(dotSize)} + 6%));`
+  }
+
+  styles += "}";
+
+  return styles
 };
 
 /**
