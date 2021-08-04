@@ -624,6 +624,7 @@ class InputDateWidget extends Component {
     }
 
     const locale = this.locale;
+    let typeDate = this.props.element.getSettings("content_time_type", "date");
     let timePrecision = this.timePrecision;
 
     const dayPickerProps = {
@@ -640,8 +641,8 @@ class InputDateWidget extends Component {
     const timePickerProps = {
       showArrowButtons: true,
       precision: timePrecision,
-      onChange: typeDate === 'LT' ? this.onChange : undefined,
-      className: typeDate === 'LL' ? 'altrp-hidden' : '',
+      onChange: typeDate === 'date' ? this.onChange : undefined,
+      className: typeDate === 'date' ? 'altrp-hidden' : '',
     };
     const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
     const input = (
@@ -669,7 +670,7 @@ class InputDateWidget extends Component {
           disabled={this.state.settings.content_readonly}
           placeholder={this.state.settings.content_placeholder}
           formatDate={(date, locale) => {
-            return moment(date).locale(locale).format(this.typeDate);
+            return moment(date).locale(locale).format(format);
           }}
           value={this.getValue()}
           locale={locale}

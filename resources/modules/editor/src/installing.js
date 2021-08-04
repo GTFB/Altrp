@@ -3,9 +3,6 @@ import ElementWrapper from "./js/components/ElementWrapper";
 import _ from "lodash";
 
 window._ = _;
-import('../../front-app/src/js/helpers').then(altrpHelpers=>{
-  window.parent.altrpHelpers = altrpHelpers;
-});
 import("ace-builds").then(ace=>{
   window.ace = ace.default;
   ace.config.set('basePath', '/addons/ace');
