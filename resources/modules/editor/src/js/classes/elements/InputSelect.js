@@ -286,81 +286,45 @@ class InputSelect extends BaseElement {
 
     actionsControllers(this, "Change Actions", "change_");
 
-    // this.startControlSection('logic_section', {
-    //   tab: TAB_CONTENT,
-    //   label: 'Logic',
-    // });
-    //
-    // this.addControl('logic_action', {
-    //   type: CONTROLLER_SELECT2,
-    //   label: 'Action',
-    //   placeholder: 'action',
-    //   default: '1',
-    //   options: [
-    //     {
-    //       value: '1',
-    //       label: 'Select sd  Content 1'
-    //     },
-    //     {
-    //       value: '2',
-    //       label: 'Select Content 2'
-    //     },
-    //   ]
-    // });
-    //
-    // this.endControlSection();
-    //
-    // this.startControlSection("form_condition_display", {
-    //   tab: TAB_CONTENT,
-    //   label: "Field Condition"
-    // });
-    //
-    // this.addControl("form_condition_display_on", {
-    //   type: CONTROLLER_SELECT,
-    //   label: "Display on",
-    //   responsive: false,
-    //   options: [
-    //     {
-    //       label: "All Conditions Met",
-    //       value: "AND"
-    //     },
-    //     {
-    //       label: "Any Condition Met",
-    //       value: "OR"
-    //     }
-    //   ],
-    //   default: "AND"
-    // });
-    //
-    // const formConditionsRepeater = new Repeater();
-    //
-    // formConditionsRepeater.addControl("field_id", {
-    //   responsive: false,
-    //   dynamic: false,
-    //   label: "Field ID"
-    // });
-    //
-    // formConditionsRepeater.addControl("operator", {
-    //   type: CONTROLLER_SELECT,
-    //   responsive: false,
-    //   default: "empty",
-    //   options: CONDITIONS_OPTIONS
-    // });
-    //
-    // formConditionsRepeater.addControl("value", {
-    //   dynamic: false,
-    //   responsive: false,
-    //   label: "Value"
-    // });
-    //
-    // this.addControl("form_conditions", {
-    //   label: "Conditions",
-    //   type: CONTROLLER_REPEATER,
-    //   fields: formConditionsRepeater.getControls(),
-    //   default: []
-    // });
-    //
-    // this.endControlSection();
+    this.startControlSection("create_section", {
+      label: "Creating New Items"
+    });
+
+    this.addControl("create", {
+      type: CONTROLLER_SWITCHER,
+      responsive: false,
+      label: "Allow Creating New Items"
+    });
+
+    this.addControl("create_text", {
+      responsive: false,
+      type: CONTROLLER_TEXTAREA,
+      conditions: {
+        create: true,
+      },
+      label: "Create Text",
+      description:'Create {{__query__}}',
+    });
+
+    this.addControl("create_url", {
+      responsive: false,
+      conditions: {
+        create: true,
+      },
+      label: "POST URL",
+    });
+
+    this.addControl("create_params", {
+      responsive: false,
+      type: CONTROLLER_TEXTAREA,
+      conditions: {
+        create: true,
+      },
+      label: "POST Params",
+      description:'Enter each param for Query in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n',
+    });
+
+    this.endControlSection()
 
     this.startControlSection("label_style_section", {
       tab: TAB_STYLE,

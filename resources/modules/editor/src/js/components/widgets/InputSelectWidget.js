@@ -3,7 +3,6 @@ const {
   isEditor,
   parseOptionsFromSettings,
   parseParamsFromString,
-  parseURLTemplate,
   replaceContentWithData,
   renderAssetIcon,
   renderAsset,
@@ -405,8 +404,6 @@ class InputSelectWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    this.onChange = this.onChange.bind(this);
-
     this.defaultValue =
       this.getContent("content_default_value") ||
       (this.valueMustArray() ? [] : "");
@@ -426,7 +423,7 @@ class InputSelectWidget extends Component {
       position: 'bottom',
       minimal: props.element.getResponsiveSetting('minimal'),
       // isOpen:true ,
-      portalClassName: `altrp-portal altrp-portal_input-select altrp-portal${this.props.element.getId()}`,
+      portalClassName: `altrp-portal altrp-portal_input-select altrp-portal${this.props.element.getId()} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
     this.altrpSelectRef = React.createRef();
@@ -452,27 +449,6 @@ class InputSelectWidget extends Component {
     this.dispatchFieldValueToStore(value, true);
   }
 
-  /**
-   * Обработка нажатия клавиши
-   * @param {{}} e
-   */
-  handleEnter = e => {
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      const inputs = Array.from(document.querySelectorAll("input,select"));
-      const index = inputs.indexOf(e.target);
-      if (index === undefined) return;
-      inputs[index + 1] && inputs[index + 1].focus();
-      const {
-        create_allowed,
-        create_label,
-        create_url
-      } = this.props.element.getSettings();
-      if (create_allowed && create_label && create_url) {
-        this.createItem(e);
-      }
-    }
-  };
 
   /**
    * Загрузка виджета
@@ -626,12 +602,12 @@ class InputSelectWidget extends Component {
     ) {
       this.updateOptions();
     }
-    if (content_options && !model_for_options) {
-      let options = parseOptionsFromSettings(content_options);
-      if (!_.isEqual(options, this.state.options)) {
-        this.setState(state => ({...state, options}));
-      }
-    }
+    // if (content_options && !model_for_options) {
+    //   let options = parseOptionsFromSettings(content_options);
+    //   if (!_.isEqual(options, this.state.options)) {
+    //     this.setState(state => ({...state, options}));
+    //   }
+    // }
     this.updateValue(prevProps);
   }
 
@@ -811,7 +787,7 @@ class InputSelectWidget extends Component {
    * Изменение значения в виджете
    * @param e
    */
-  onChange(e) {
+  onChange = (e)=> {
     let value = "";
     let valueToDispatch;
     const settings = this.props.element.getSettings();
@@ -853,19 +829,44 @@ class InputSelectWidget extends Component {
     );
   }
 
-  onItemSelect(value) {
+  async onItemSelect(value) {
     if (value.value) {
       value = value.value;
     }
+    const options = [...this.state.options];
+    const element = this.props.element;
+    if(! options.find(option => option.value === value)){
+      const create_url = element.getResponsiveSetting('create_url');
+      if(element.getResponsiveSetting('create') && create_url){
+        this.setState(state =>({...state, widgetDisabled: true}))
+        let params = element.getResponsiveSetting('create_params') || '';
+        params = params.replace(/\{\{__query__\}\}/g, value);
+        params = parseParamsFromString(params, element.getCurrentModel(), true)
+        const resource = new Resource({route: create_url});
+        try{
+          let res = await resource.post(params)
+          if(res.data){
+            res = res.data
+          }
+          options.unshift(res)
+        } catch (e) {
+
+        }finally {
+          this.setState(state =>({...state, widgetDisabled: false}))
+        }
+      } else {
+        options.unshift(arguments[0])
+      }
+    }
     this.setState(state => ({
         ...state,
+        options,
         value
       }),
       () => {
         /**
-         * Обновляем хранилище только если не текстовое поле
+         * Обновляем хранилище
          */
-
         this.dispatchFieldValueToStore(
           value,
           true
@@ -928,77 +929,6 @@ class InputSelectWidget extends Component {
   };
 
   /**
-   * Обработка добавления опции по ajax
-   * @param {SyntheticKeyboardEvent} e
-   */
-  createItem = async e => {
-    const keyCode = e.keyCode;
-    const {value: inputValue} = e.target;
-    if (keyCode !== 13 || !inputValue) {
-      return;
-    }
-    const {
-      create_url,
-      create_label,
-      create_data,
-      select2_multiple
-    } = this.props.element.getSettings();
-    if (!create_label && !create_url) {
-      return;
-    }
-    const currentModel = this.props.element.getCurrentModel();
-    let data = parseParamsFromString(create_data, currentModel, true);
-    data[create_label] = inputValue;
-    let url = parseURLTemplate(create_url, currentModel.getData());
-    this.setState(state => ({...state, isDisabled: true}));
-    try {
-      const resource = new Resource({
-        route: url
-      });
-      let res = await resource.post(data);
-      if (res.success && _.get(res, "data.id")) {
-        let newOption = {
-          label: inputValue,
-          value: _.get(res, "data.id")
-        };
-        this.setState(
-          state => ({...state, isDisabled: false}),
-          () => {
-            let options = [...this.state.options];
-            options.unshift(newOption);
-            let value = this.state.value;
-            if (select2_multiple) {
-              value = value ? [...value] : [];
-              value.push(_.get(res, "data.id"));
-            } else {
-              value = _.get(res, "data.id");
-            }
-            this.setState(
-              state => ({...state, options, value}),
-              () => {
-                const selectStateManager = _.get(
-                  this,
-                  "altrpSelectRef.current.selectRef.current"
-                );
-                if (selectStateManager) {
-                  selectStateManager.setState({
-                    menuIsOpen: false,
-                    inputValue: ""
-                  });
-                }
-              }
-            );
-          }
-        );
-      }
-      this.setState(state => ({...state, isDisabled: false}));
-    } catch (error) {
-      console.error(error);
-      this.setState(state => ({...state, isDisabled: false}));
-    }
-  };
-
-  /**
    * Взовращает имя для атрибута name
    * @return {string}
    */
@@ -1010,36 +940,6 @@ class InputSelectWidget extends Component {
     return text.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
   }
 
-  highlightText = (text, query) => {
-    let lastIndex = 0;
-    const words = query
-      .split(/\s+/)
-      .filter(word => word.length > 0)
-      .map(this.escapeRegExpChars);
-    if (words.length === 0) {
-      return [text];
-    }
-    const regexp = new RegExp(words.join("|"), "gi");
-    const tokens = [];
-    while (true) {
-      const match = regexp.exec(text);
-      if (!match) {
-        break;
-      }
-      const length = match[0].length;
-      const before = text.slice(lastIndex, regexp.lastIndex - length);
-      if (before.length > 0) {
-        tokens.push(before);
-      }
-      lastIndex = regexp.lastIndex;
-      tokens.push(<strong key={lastIndex}>{match[0]}</strong>);
-    }
-    const rest = text.slice(lastIndex);
-    if (rest.length > 0) {
-      tokens.push(rest);
-    }
-    return tokens;
-  }
 
   /**
    *
@@ -1098,7 +998,6 @@ class InputSelectWidget extends Component {
    * @return {Promise<void>}
    */
   onClick = async ()=>{
-    console.log(this.props.element.getSettings("click_actions", []));
     if (this.props.element.getSettings("click_actions", []) && !isEditor()) {
       const actionsManager = (
         await import(
@@ -1114,6 +1013,52 @@ class InputSelectWidget extends Component {
       );
     }
   }
+  /**
+   * Создаем элемент из поисковой строки
+   * @param title
+   * @return {{label, value}}
+   */
+  createNewItemFromQuery = (title) => {
+    return{label: title,value: title};
+  }
+  /**
+   * отрисовываем создание нового элемента
+   * @param query
+   * @param active
+   * @param handleClick
+   * @return {JSX.Element|null}
+   */
+
+  createNewItemRenderer = ( query,
+                         active,
+                         handleClick) => {
+    /**
+     * @type {FrontElement}
+     */
+    const {element} = this.props;
+    // console.log(query,
+    //   active,
+    //   handleClick);
+    if(! element.getResponsiveSetting('create')){
+      return null;
+    }
+    const {options} = this.state;
+    if(options.find(option => option.value === query)) {
+      return null
+    }
+      let text = element.getResponsiveSetting('create_text') || ''
+    text = text.replace('{{__query__}}', query)
+    text = replaceContentWithData(text, element.getCurrentModel().getData())
+    return (
+      <MenuItem
+        icon="add"
+        text={text}
+        active={active}
+        onClick={handleClick}
+        shouldDismissPopover={false}
+      />)
+  }
+
   render() {
     const element = this.props.element;
     let label = null;
@@ -1213,6 +1158,8 @@ class InputSelectWidget extends Component {
           inputProps={inputProps}
           disabled={content_readonly}
           popoverProps={this.popoverProps}
+          createNewItemFromQuery={element.getResponsiveSetting('create') ? this.createNewItemFromQuery : null}
+          createNewItemRenderer={this.createNewItemRenderer}
           itemRenderer={(item, {handleClick, modifiers, query}) => {
             if (!modifiers.matchesPredicate) {
               return null;
@@ -1221,7 +1168,7 @@ class InputSelectWidget extends Component {
               text={item.label}
               key={item.value}
               active={item.value === value}
-              disabled={modifiers.disabled}
+              disabled={modifiers.disabled || item.disabled}
               onClick={handleClick}
             />
           }}
@@ -1229,16 +1176,15 @@ class InputSelectWidget extends Component {
             if (query === undefined || query.length === 0) {
               return true
             }
-            return `${item.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0;
+            return `${item?.label?.toLowerCase() || ''}`.indexOf(query.toLowerCase()) >= 0;
           }}
           items={itemsOptions}
           // itemRenderer={({label})=>label}
           noResults={<MenuItem disabled={true} text={no_results_text}/>}
           name={this.getName()}
           onItemSelect={item => this.onItemSelect(item)}
-          onKeyDown={this.handleEnter}
           id={position_css_id}
-          className={`${position_css_classes}`}
+          className={`${position_css_classes} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`}
         >
           <Button
             text={value}
