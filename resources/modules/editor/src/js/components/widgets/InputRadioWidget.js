@@ -17,6 +17,10 @@ import {Radio, RadioGroup} from "@blueprintjs/core";
 const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`
 
+.altrp-field-container .bp3-radio {
+  margin-bottom: 0;
+}
+
 .altrp-field {
   border-style: solid;
   width: 100%;
@@ -1130,8 +1134,9 @@ class InputRadioWidget extends Component {
         .substr(2, 9);
     return (
       <RadioGroup
-        // className="altrp-field-subgroup"
+        className="altrp-field-subgroup"
         name={`${formID}-${fieldName}`}
+        inline
         onChange={this.onChange}
         selectedValue={this.state.value}
       >
@@ -1148,7 +1153,7 @@ class InputRadioWidget extends Component {
           }
           return (
             <Radio
-              // className={`altrp-field-option ${checked ? "active" : ""}`}
+              className={`altrp-field-radio ${checked ? "active" : ""}`}
               label={option.label}
               value={option.value}
               key={`${fieldName}-${idx}`}

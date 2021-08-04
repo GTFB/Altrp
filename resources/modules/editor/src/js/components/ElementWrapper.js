@@ -44,6 +44,7 @@ import ImageLightboxComponent from "./widgets/styled-components/ImageLightboxCom
 import InputDateComponent from "./widgets/styled-components/InputDateComponent";
 import DatePickerComponent from "./widgets/styled-components/DatePickerComponent";
 import InputCheckboxComponent from "./widgets/styled-components/InputCheckboxComponent";
+import InputRadioComponent from "./widgets/styled-components/InputRadioComponent";
 const { connect } = window.reactRedux;
 
 const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, elementId, settings, element})=>{
@@ -160,6 +161,13 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
       )}}`;
       break
     }
+    case "input-radio": {
+      styles += `.${prefix}${elementId} {${InputRadioComponent(
+        settings,
+        elementId
+      )}}`;
+      break
+    }
     case "input-text":
     case "input-password":
     case "input-number":
@@ -168,7 +176,6 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
     case "input-file":
     case "input-select":
     case "input-image-select":
-    case "input-radio":
     case "input-accept":
     case "input-textarea":
     case "input-wysiwyg": {

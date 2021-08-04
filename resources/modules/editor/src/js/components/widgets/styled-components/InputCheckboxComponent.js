@@ -173,6 +173,51 @@ const fieldStyle = settings => {
 
   styles += "}";
 
+  styles += "&& .altrp-field-option label.altrp-field-option__label {";
+
+  let fontTypographic;
+
+  settings &&
+  (fontTypographic = getResponsiveSetting(settings, "field_font_typographic"));
+  fontTypographic && (styles += typographicControllerToStyles(fontTypographic));
+
+  let fontColor;
+
+  settings && (fontColor = getResponsiveSetting(settings, "field_font_color"));
+  fontColor && (styles += colorPropertyStyled(fontColor, "color"));
+
+  styles += "}";
+
+  styles += "&& .altrp-field-option:hover label.altrp-field-option__label {";
+
+  let fontTypographicHover;
+
+  settings &&
+  (fontTypographicHover = getResponsiveSetting(settings, "field_font_typographic", ":hover"));
+  fontTypographicHover && (styles += typographicControllerToStyles(fontTypographicHover));
+
+  let fontColorHover;
+
+  settings && (fontColorHover = getResponsiveSetting(settings, "field_font_color", ":hover"));
+  fontColorHover && (styles += colorPropertyStyled(fontColorHover, "color"));
+
+  styles += "}";
+
+  styles += "&& .altrp-field-option.active label.altrp-field-option__label {";
+
+  let fontTypographicActive;
+
+  settings &&
+  (fontTypographicActive = getResponsiveSetting(settings, "field_font_typographic", ".active"));
+  fontTypographicActive && (styles += typographicControllerToStyles(fontTypographicActive));
+
+  let fontColorActive;
+
+  settings && (fontColorActive = getResponsiveSetting(settings, "field_font_color", ".active"));
+  fontColorActive && (styles += colorPropertyStyled(fontColorActive, "color"));
+
+  styles += "}";
+
   styles += "&& .altrp-field-option.active span.bp3-control-indicator.bp3-control-indicator   {";
 
   let backgroundColorActive;

@@ -547,21 +547,21 @@ class InputRadio extends BaseElement {
       label: "Position"
     });
 
-    this.addControl("field_width", {
+    this.addControl("field_size", {
       type: CONTROLLER_SLIDER,
-      label: "Width",
-      max: 500,
+      label: "Size",
+      max: 100,
       min: 0,
       units: ["px", "%", "vw"]
     });
 
-    this.addControl("placeholder_and_value_alignment_position_section", {
+    this.addControl("alignment", {
       type: CONTROLLER_CHOOSE,
       label: "Alignment",
       options: [
         {
           icon: "left",
-          value: "left"
+          value: "flex-start"
         },
         {
           icon: "center",
@@ -569,7 +569,7 @@ class InputRadio extends BaseElement {
         },
         {
           icon: "right",
-          value: "right"
+          value: "flex-end"
         }
       ]
     });
@@ -676,6 +676,24 @@ class InputRadio extends BaseElement {
     this.addControl("background_style_background_color", {
       type: CONTROLLER_COLOR,
       label: "Background Color"
+    });
+
+    this.addControl("background_style_dot", {
+      type: CONTROLLER_COLOR,
+      label: "Active dot color"
+    });
+
+    this.addControl("size_style_dot", {
+      type: CONTROLLER_SLIDER,
+      label: "Active dot size",
+      default: {
+        size: 28,
+        unit: "%"
+      },
+      units: ["px", "%", "vh"],
+      max: 100,
+      min: 0,
+
     });
 
     this.addControl("background_section_opacity", {
