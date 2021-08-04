@@ -25,7 +25,6 @@ class NewSection extends Component {
     let newWidgetName = e.dataTransfer.getData("text/plain");
     e.preventDefault();
     e.stopPropagation();
-    console.log(getEditor().modules.templateDataStorage);
     getEditor().modules.templateDataStorage.addWidgetInSection(newWidgetName);
     return false;
   }

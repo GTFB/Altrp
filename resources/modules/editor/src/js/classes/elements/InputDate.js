@@ -180,6 +180,7 @@ class InputDate extends BaseElement {
       placeholder: 'YYYY-MM-DD',
       responsive: false,
       stateless: true,
+      description : '<a href="https://momentjs.com/" target="_blank">Documentation</a>'
     });
 
     this.addControl("content_required", {

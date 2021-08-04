@@ -36,6 +36,7 @@ import DatePickerComponent from "../../../../editor/src/js/components/widgets/st
 import InputCheckboxComponent
   from "../../../../editor/src/js/components/widgets/styled-components/InputCheckboxComponent";
 import getInputTextCommonStyles from "./helpers/getInputTextCommonStyles";
+import getInputSelectStyles from "./helpers/getInputSelectStyles";
 import InputRadioComponent from "../../../../editor/src/js/components/widgets/styled-components/InputRadioComponent";
 
 const {isEditor} = window.altrpHelpers;
@@ -146,33 +147,35 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
             item.settings,
             id,
           )}`;
-          break
         }
+          break
         case "input-checkbox": {
           styles += `.${prefix}${id} {${InputCheckboxComponent(
             item.settings,
             id
           )}}`;
-          break
         }
+          break
         case "input-text-common":{
           styles += `.${prefix}${id} {${getInputTextCommonStyles(item.settings, id)}}`
-          break;
         }
+          break;
+        case "input-select":{
+          styles += `.${prefix}${id} {${getInputSelectStyles(item.settings, id)}}`
+        }
+          break;
         case "input-radio": {
           styles += `.${prefix}${id} {${InputRadioComponent(
             item.settings,
             id
           )}}`;
-          break
-        }
+        }break;
         case "input-text":
         case "input-password":
         case "input-number":
         case "input-email":
         case "input-tel":
         case "input-file":
-        case "input-select":
         case "input-image-select":
         case "input-accept":
         case "input-textarea":

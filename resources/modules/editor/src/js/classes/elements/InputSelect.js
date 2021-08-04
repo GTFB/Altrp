@@ -64,23 +64,6 @@ class InputSelect extends BaseElement {
       label: "Sort Default"
     });
 
-    const optionsRepeater = new Repeater();
-
-    optionsRepeater.addControl("label", {
-      type: CONTROLLER_TEXT,
-      label: "Label"
-    });
-
-    optionsRepeater.addControl("value", {
-      type: CONTROLLER_TEXT,
-      label: "Value"
-    });
-
-    optionsRepeater.addControl("image", {
-      type: CONTROLLER_MEDIA,
-      label: "Image"
-    });
-
     this.addControl("content_label", {
       type: CONTROLLER_TEXT,
       label: "Label"
@@ -146,44 +129,54 @@ class InputSelect extends BaseElement {
     this.addControl("content_placeholder", {
       type: CONTROLLER_TEXT,
       label: "Placeholder",
+      responsive: false,
       default: "Placeholder"
     });
 
-    this.addControl("multi_select", {
+    this.addControl("hide_search", {
       type: CONTROLLER_SWITCHER,
-      label: "MultiSelect"
+      responsive: false,
+      label: "Hide Filter"
+    });
+
+    this.addControl("minimal", {
+      type: CONTROLLER_SWITCHER,
+      responsive: false,
+      label: "Minimal"
     });
 
     this.addControl("content_required", {
       type: CONTROLLER_SWITCHER,
+      responsive: false,
       label: "Required"
     });
 
     this.addControl("content_readonly", {
       type: CONTROLLER_SWITCHER,
+      responsive: false,
       label: "Readonly"
-    });
-
-    this.addControl("content_timestamp", {
-      type: CONTROLLER_SWITCHER,
-      label: "Timestamp",
-      default: false
     });
 
     this.addControl("content_options_nullable", {
       type: CONTROLLER_SWITCHER,
       label: "Select Nullable",
+      responsive: false,
       default: false
     });
 
     this.addControl("nulled_option_title", {
       type: CONTROLLER_TEXT,
-      label: "Nulled Option Label"
+      label: "Nulled Option Label",
+      responsive: false,
+      conditions:{
+        content_options_nullable: true,
+      },
     });
 
     this.addControl("options_sorting", {
       type: CONTROLLER_SELECT,
       label: "Options Sorting",
+      responsive: false,
       default: "",
       options: [
         {
@@ -250,53 +243,46 @@ class InputSelect extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("create_options", {
-      tab: TAB_CONTENT,
-      label: "Create Options Settings",
-      conditions: {
-        content_type: ["select2"]
-      }
+    this.startControlSection('button_content', {
+      label: 'Button',
+    })
+
+    this.addControl('alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment',
+      options: [
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+        {
+          icon: 'in_width',
+          value: 'stretch',
+        }
+      ],
     });
 
-    this.addControl("create_allowed", {
-      type: CONTROLLER_SWITCHER,
-      label: "Allowed"
-    });
+    this.addControl('right_icon', {
+      label: 'Right Icon',
+      type: CONTROLLER_MEDIA,
+    })
 
-    this.addControl("create_url", {
-      label: "URL",
-      dynamic: false,
-      responsive: false,
-      description: "/ajax/models/tests",
-      conditions: {
-        create_allowed: true
-      }
-    });
-
-    this.addControl("create_label", {
-      label: "Label Field",
-      dynamic: false,
-      responsive: false,
-      conditions: {
-        create_allowed: true
-      }
-    });
-
-    this.addControl("create_data", {
-      type: CONTROLLER_TEXTAREA,
-      label: "Data",
-      conditions: {
-        create_allowed: true
-      },
-      description:
-        'Enter additional data for new item in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n'
-    });
+    this.addControl('left_icon', {
+      label: 'Left Icon',
+      type: CONTROLLER_MEDIA,
+    })
 
     this.endControlSection();
 
-    actionsControllers(this, "Blur Actions");
-
-    actionsControllers(this, "Focus Actions", "focus_");
+    actionsControllers(this, "Click Actions", "click_");
 
     actionsControllers(this, "Change Actions", "change_");
 

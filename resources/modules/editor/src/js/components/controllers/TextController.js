@@ -84,8 +84,7 @@ class TextController extends Component {
           <DynamicIcon />
         </div>}
       </div>
-      {this.props.description ? <div className="controller-container__description">
-        {this.props.description}
+      {this.props.description ? <div className="controller-container__description" dangerouslySetInnerHTML={{__html: this.props.description}}>
       </div> : ''}
     </div>
 
