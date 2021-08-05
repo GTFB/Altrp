@@ -36,7 +36,7 @@ import DatePickerComponent from "../../../../editor/src/js/components/widgets/st
 import InputCheckboxComponent
   from "../../../../editor/src/js/components/widgets/styled-components/InputCheckboxComponent";
 import getInputTextCommonStyles from "./helpers/getInputTextCommonStyles";
-import getInputSelectStyles from "./helpers/getInputSelectStyles";
+import getInputSelectStyles, {getInputSelectPopoverStyles} from "./helpers/getInputSelectStyles";
 import InputRadioComponent from "../../../../editor/src/js/components/widgets/styled-components/InputRadioComponent";
 
 const {isEditor} = window.altrpHelpers;
@@ -162,6 +162,7 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           break;
         case "input-select":{
           styles += `.${prefix}${id} {${getInputSelectStyles(item.settings, id)}}`
+          styles += `${getInputSelectPopoverStyles(item.settings, id)}`
         }
           break;
         case "input-radio": {

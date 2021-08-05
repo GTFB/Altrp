@@ -44,7 +44,7 @@ import ImageLightboxComponent from "./widgets/styled-components/ImageLightboxCom
 import InputDateComponent from "./widgets/styled-components/InputDateComponent";
 import DatePickerComponent from "./widgets/styled-components/DatePickerComponent";
 import InputCheckboxComponent from "./widgets/styled-components/InputCheckboxComponent";
-import getInputSelectStyles from "../../../../front-app/src/js/components/helpers/getInputSelectStyles";
+import getInputSelectStyles, {getInputSelectPopoverStyles} from "../../../../front-app/src/js/components/helpers/getInputSelectStyles";
 import InputRadioComponent from "./widgets/styled-components/InputRadioComponent";
 const { connect } = window.reactRedux;
 
@@ -167,6 +167,7 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
         settings,
         elementId
       )}}`;
+      styles += `${getInputSelectPopoverStyles(settings, elementId)}`
 
     }break
     case "input-radio": {

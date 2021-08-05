@@ -39,7 +39,6 @@ const Tooltip2 = window.altrpLibs.Tooltip2;
   flex-wrap: wrap;
 }
 
-.altrp-label-icon,
 .altrp-label-icon svg,
 .altrp-label-icon img {
   width: 20px;

@@ -70,7 +70,7 @@ class GradientController extends Component {
   toggle = () => {
     let gradient =
       this.getSettings(this.props.controlId) ||
-      this.props.currentElement.settings.gradient;
+      this.props.currentElement.settings.gradient || {};
     gradient = { ...gradient, isWithGradient: !gradient.isWithGradient };
     const {
       isWithGradient,

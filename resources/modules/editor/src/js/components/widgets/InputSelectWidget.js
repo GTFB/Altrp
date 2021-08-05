@@ -58,7 +58,6 @@ const Select = window.altrpLibs.BlueprintSelect.Select;
 .altrp-widget_input-select .bp3-popover-target .bp3-button{
   width: 100%;
 }
-.altrp-label-icon,
 .altrp-label-icon svg,
 .altrp-label-icon img {
   width: 20px;
