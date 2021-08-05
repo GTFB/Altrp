@@ -1889,8 +1889,12 @@ export function renderIcon(isHidden, icon, defaultIcon, className) {
  * @param {{}} context
  */
 export function redirect(linkSettings, e, context = {}) {
-  if (_.get(linkSettings, "toPrevPage") && frontAppRouter) {
-    frontAppRouter.history.goBack();
+  if (_.get(linkSettings, "toPrevPage")) {
+    if(window.frontAppRouter){
+      frontAppRouter.history.goBack();
+    } else {
+      history.back();
+    }
     return;
   }
   if (!_.get(linkSettings, "url")) {
@@ -1900,17 +1904,17 @@ export function redirect(linkSettings, e, context = {}) {
   e.stopPropagation();
   let { url } = linkSettings;
   url = replaceContentWithData(url, context);
+  console.log(linkSettings);
   if (linkSettings.openInNew) {
     window.open(url, "_blank");
     return;
   }
-  if (frontAppRouter) {
-    if (linkSettings.tag === "a") {
-      window.location.assign(url);
-    } else {
-      frontAppRouter.history.push(url);
-    }
+  if (linkSettings.tag === "a" || ! window.frontAppRouter) {
+    window.location.assign(url);
+  } else {
+    frontAppRouter.history.push(url);
   }
+
 }
 
 export function validateEmail(email) {

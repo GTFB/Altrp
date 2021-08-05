@@ -147,3 +147,9 @@ if ('serviceWorker' in navigator) {
   // Use the window load event to keep the page load performant
   navigator.serviceWorker.register(filename, {scope: '/'});
 }
+
+document.body.addEventListener('click', e =>{
+  import(/* webpackChunkName: 'click-actions' */'./js/functions/actions/click-actions').then((module)=>{
+    module?.default(e);
+  })
+})
