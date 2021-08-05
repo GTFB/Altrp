@@ -81,5 +81,10 @@ class ActionsManager extends AltrpModel{
     return {success: true};
   }
 }
+
+/**
+ *
+ * @type {ActionsManager}
+ */
 window.actionsManager = new ActionsManager;
 export default window.actionsManager

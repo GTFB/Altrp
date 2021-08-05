@@ -526,11 +526,9 @@ export function setDataByPath(path = "", value, dispatch = null) {
     const { formsStore } = appStore.getState();
 
     const oldValue = _.get(formsStore, path);
-    console.log(value);
     if (_.isEqual(oldValue, value)) {
       return true;
     }
-    console.log(value);
     if (_.isFunction(dispatch)) {
       dispatch(changeFormFieldValue(path, value));
     } else {

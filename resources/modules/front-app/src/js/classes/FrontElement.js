@@ -12,7 +12,7 @@ import INPUT_WIDGETS from "../constants/INPUT_WIDGETS";
 
 class FrontElement {
 
-  constructor(data = {}){
+  constructor(data = {}, withoutComponent = false){
     this.name = data.name;
     this.settings = data.settings;
     this.lazySection = data.lazySection;
@@ -20,7 +20,7 @@ class FrontElement {
     this.cssClassStorage = data.cssClassStorage;
     this.type = data.type;
     this.id = data.id;
-    if(window.frontElementsManager){
+    if(window.frontElementsManager && ! withoutComponent){
       this.componentClass = window.frontElementsManager.getComponentClass(this.getName());
     }
     this.parent = null;

@@ -469,6 +469,7 @@ class BaseElement extends ControlStack {
    * @param {object} args
    * */
   startControlSection(sectionId, args) {
+
     if (this.controlsIds.indexOf(sectionId) !== -1) {
       throw "Control with id" +
         sectionId +

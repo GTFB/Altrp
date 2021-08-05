@@ -14,68 +14,12 @@ import {
 } from "../classes/modules/ControllersManager";
 import Repeater from "../classes/Repeater";
 import { CONDITIONS_OPTIONS } from "../../../../front-app/src/js/helpers";
+import {actionsControllers} from "./actions-controllers";
 /**
  * Функция декорирует элемент неободимыми контроллерами
  * @param {BaseElement} element
  * */
 export function advancedTabControllers(element) {
-  // element.startControlSection(
-  //   'element_position', {
-  //     tab: TAB_ADVANCED,
-  //     label: 'Position',
-  //   }
-  // );
-
-  // element.startControlSection(
-  //   'element_sizes', {
-  //     tab: TAB_ADVANCED,
-  //     label: 'Sizes',
-  //   }
-  // );
-
-  // element.addControl(
-  //   'element_sizes_width', {
-  //     type: CONTROLLER_SLIDER,
-  //     label: 'width',
-  //     default:{
-  //       size: "100%",
-  //       unit:'px'
-  //     },
-  //     units:[
-  //       'px',
-  //       '%',
-  //       'vh',
-  //     ],
-  //     max: 1920,
-  //     min: 0,
-  //     rules: {
-  //       '{{ELEMENT}}.altrp-element': 'width: {{SIZE}}{{UNIT}};',
-  //     },
-  //   }
-  // );
-
-  // element.addControl(
-  //   'element_sizes_height', {
-  //     type: CONTROLLER_SLIDER,
-  //     label: 'height',
-  //     default:{
-  //       size: "100%",
-  //       unit:'px'
-  //     },
-  //     units:[
-  //       'px',
-  //       '%',
-  //       'vh',
-  //     ],
-  //     max: 1080,
-  //     min: 0,
-  //     rules: {
-  //       '{{ELEMENT}}': 'height: {{SIZE}}{{UNIT}};',
-  //     },
-  //   }
-  // );
-
-  // element.endControlSection();
 
   element.startControlSection(
     'advanced', {
@@ -854,6 +798,7 @@ export function advancedTabControllers(element) {
 
   element.endControlSection();
 
+
   element.startControlSection('skeleton', {
     tab: TAB_ADVANCED,
     label: 'Skeleton Settings',
@@ -870,4 +815,7 @@ export function advancedTabControllers(element) {
   });
 
   element.endControlSection();
+
+  actionsControllers(element, 'Wrapper Click Actions', 'wrapper_click_', TAB_ADVANCED);
+
 }
