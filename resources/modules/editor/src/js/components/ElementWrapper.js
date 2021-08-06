@@ -46,6 +46,7 @@ import DatePickerComponent from "./widgets/styled-components/DatePickerComponent
 import InputCheckboxComponent from "./widgets/styled-components/InputCheckboxComponent";
 import getInputSelectStyles, {getInputSelectPopoverStyles} from "../../../../front-app/src/js/components/helpers/getInputSelectStyles";
 import InputRadioComponent from "./widgets/styled-components/InputRadioComponent";
+import getInputFileStyles from "../../../../front-app/src/js/components/helpers/getInputFileStyles";
 const { connect } = window.reactRedux;
 
 const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, elementId, settings, element})=>{
@@ -184,7 +185,12 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
     case "input-number":
     case "input-email":
     case "input-tel":
-    case "input-file":
+    case "input-file":{
+      styles += `.${prefix}${elementId} {${getInputFileStyles(
+        settings,
+        elementId
+      )}}`;
+    }break
     case "input-image-select":
     case "input-accept":
     case "input-textarea":
@@ -642,6 +648,9 @@ class ElementWrapper extends Component {
 
   chooseElement(e) {
     e.stopPropagation();
+    if(e.target.closest('button')){
+      e.preventDefault();
+    }
     contextMenu.hideAll();
 
     this.props.element.setElementAsCurrent();
@@ -650,14 +659,17 @@ class ElementWrapper extends Component {
 
   deleteElement(e) {
     e.stopPropagation();
+    e.preventDefault();
     this.props.element.parent.deleteChild(this.props.element);
   }
   duplicateElement(e) {
     e.stopPropagation();
+    e.preventDefault();
     this.props.element.duplicate();
   }
   showWidgetsPanel(e) {
     e.stopPropagation();
+    e.preventDefault();
     getEditor().showWidgetsPanel();
   }
 }

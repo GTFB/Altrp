@@ -7,9 +7,6 @@ const {
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpInput from "../altrp-input/AltrpInput";
 
-const Button = window.altrpLibs.Blueprint.Button;
-const Intent = window.altrpLibs.Blueprint.Intent;
-const Tooltip2 = window.altrpLibs.Tooltip2;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 .altrp-field-label_text-widget{

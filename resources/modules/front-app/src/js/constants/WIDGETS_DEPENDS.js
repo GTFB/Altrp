@@ -10,6 +10,7 @@ const WIDGETS_DEPENDS = {
   'input-radio': ['blueprint'],
   'input-checkbox': ['blueprint'],
   'input-accept': ['blueprint'],
+  'input-file': ['blueprint'],
   'input-text': ['blueprint'],
   'input-text-common': ['blueprint'],
   'input-wysiwyg': ['ckeditor'],

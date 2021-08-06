@@ -6,6 +6,9 @@
 
 ### 0.16.0
 + Menu Widget and Menu Builder
++ Add  Widgets:
+  1. Input Select
+  1. Input Select
 + Add "Active" State for Widgets:
 1. Button
 2. Divider

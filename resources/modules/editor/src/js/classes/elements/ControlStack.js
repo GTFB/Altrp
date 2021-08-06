@@ -9,7 +9,17 @@ class ControlStack extends FrontElement {
   }
   /**
    * @param {string} controlId
-   * @param {object} args
+   * @param {{
+   *   [type]: string,
+   *   [label]: string,
+   *   [description]: string,
+   *   [units]: array,
+   *   [options]: array,
+   *   [conditions]: object,
+   *   [default]: any,
+   *   [stateless]: boolean,
+   *   [responsive]: boolean,
+   * }} args
    * */
   addControl(controlId, args){
     if(!this.currentSection){

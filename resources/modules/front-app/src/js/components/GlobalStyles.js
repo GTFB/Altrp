@@ -38,6 +38,7 @@ import InputCheckboxComponent
 import getInputTextCommonStyles from "./helpers/getInputTextCommonStyles";
 import getInputSelectStyles, {getInputSelectPopoverStyles} from "./helpers/getInputSelectStyles";
 import InputRadioComponent from "../../../../editor/src/js/components/widgets/styled-components/InputRadioComponent";
+import getInputFileStyles from "./helpers/getInputFileStyles";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -176,7 +177,12 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         case "input-number":
         case "input-email":
         case "input-tel":
-        case "input-file":
+        case "input-file":{
+          styles += `.${prefix}${id} {${getInputFileStyles(
+            item.settings,
+            id
+          )}}`;
+        }break
         case "input-image-select":
         case "input-accept":
         case "input-textarea":

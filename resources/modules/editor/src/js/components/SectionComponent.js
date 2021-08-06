@@ -1,6 +1,4 @@
-import React, { Component } from "react";
-import { isEditor, redirect } from "../../../../front-app/src/js/helpers";
-import CONSTANTS from "../consts";
+const { isEditor, redirect } = window.altrpHelpers;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-section {
@@ -95,18 +93,10 @@ class SectionComponent extends Component {
       ":hover",
       {},
     );
-    const { isScrollEffect, isFixed } = this.props.element.getSettings();
-    const isContentBoxed =
-      this.props.element.getSettings().layout_content_width_type === "boxed";
+    const {  isFixed } = this.props.element.getSettings();
     const widthType = this.props.element.getSettings()
       .layout_content_width_type;
-    // if (this.state.settings.layout_content_width_type === "full") {
-    //   width = {
-    //     width: getWindowWidth() + "px"
-    //   }
-    // } else {
-    //   width = {}
-    // }
+
 
     let sectionClasses = [
       "altrp-section",
@@ -148,89 +138,28 @@ class SectionComponent extends Component {
     if (fitToContent === "fit") {
       sectionClasses.push("section-fit-to-content");
     }
-    // if (this.props.currentScreen.name !== CONSTANTS.DEFAULT_BREAKPOINT) {
-    //   styles.flexWrap = "wrap";
-    // }
     const layout_html_tag =
       this.props.element.getSettings("layout_html_tag") || "div";
 
-    let component = "div";
 
-    switch (layout_html_tag) {
-      case "aside":
-        {
-          component = "header";
-        }
-        break;
-      case "nav":
-        {
-          component = "nav";
-        }
-        break;
-      case "section":
-        {
-          component = "section";
-        }
-        break;
-      case "article":
-        {
-          component = "article";
-        }
-        break;
-      case "main":
-        {
-          component = "main";
-        }
-        break;
-      case "footer":
-        {
-          component = "footer";
-        }
-        break;
-      case "header":
-        {
-          component = "header";
-        }
-        break;
-    }
     return React.createElement(
-      component,
+      layout_html_tag,
       {
         style: styles,
         className:
           sectionClasses.join(" ") +
           " " +
+          (this.isActive() ? 'active ' : '') +
           this.state.settings.position_style_css_classes,
         id: "",
         onClick: this.onClick,
         columns: this.props.element.children || [],
         settings: this.props.element.getSettings()
       },
-      // isScrollEffect ?
-      // <>
-      //   <div className="motion-effects-container" onScroll={this.handleScroll}>
-      //       <div className="altrp-background-image" style={{ width: '100%', height: '130%', transform: 'translateY(110px)' }} />
-      //   </div>
-      //   <div className={"get-column-count " + `altrp-element-column-count${this.props.element.id}`} id="columnCount" />
-      // </> :
-      /*<div className={"get-column-count " + `altrp-element-column-count${this.props.element.id}`} id="columnCount" />,*/
-      sectionWrapper
+     sectionWrapper
     );
 
-    // let fullFill = null
-    // if(this.state.settings.layout_content_width_type == "full-fill") {
-    //   fullFill = section
-    //   // <div className="full-fill" style={{width: getWindowWidth() + "px"}}>{section}</div>
-    // }
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    changeWidthColumns: state.columnWidth
-  };
-}
-// export default connect(mapStateToProps, null, null, {
-//   forwardRef: true
-// })(SectionComponent);
 export default SectionComponent;
