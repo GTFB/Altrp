@@ -49,7 +49,7 @@ const containerStyle = settings => {
  * @returns {String} CSS style string
  */
 const fieldStyle = settings => {
-  let styles = `&& .altrp-field, && .bp3-input {`;
+  let styles = `& .altrp-field, & .bp3-input {`;
   let padding,
     color,
     typographic,
@@ -339,41 +339,6 @@ const fieldSelect2SingleValueStyle = settings => {
   return styles;
 };
 /**
- * Стили для класса altrp-field-label-container
- * @param {Object} settings style settings of element
- * @returns {String} CSS style string
- */
-const fieldLabelContainerStyle = settings => {
-  let styles = `&& .altrp-field-label-container {`;
-  let backgroundColor, padding, width;
-  const {
-    label_position_top,
-    label_position_left,
-    label_icon_position
-  } = settings;
-
-  settings &&
-    (backgroundColor = getResponsiveSetting(
-      settings,
-      "label_background_color"
-    ));
-  backgroundColor &&
-    (styles += colorPropertyStyled(backgroundColor, "background-color"));
-
-  settings && (padding = getResponsiveSetting(settings, "label_padding"));
-  padding && (styles += dimensionsControllerToStyles(padding, "padding"));
-
-  settings && (width = getResponsiveSetting(settings, "label_width"));
-  width && (styles += `${sizeStyled(width, "width")};flex-shrink: 0;`);
-
-  label_position_top && (styles += `top:${label_position_top};`);
-  label_position_left && (styles += `left:${label_position_left};`);
-  label_icon_position && (styles += `flex-direction:${label_icon_position};`);
-
-  styles += "}";
-  return styles;
-};
-/**
  * Стили для класса altrp-field-label
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
@@ -394,6 +359,35 @@ const fieldLabel = settings => {
   typographic && (styles += typographicControllerToStyles(typographic));
 
   styles += "}";
+
+  styles += `& .altrp-field-label-container {`;
+  let backgroundColor, padding, width;
+  const {
+    label_position_top,
+    label_position_left,
+    label_icon_position
+  } = settings;
+
+  settings &&
+  (backgroundColor = getResponsiveSetting(
+    settings,
+    "label_background_color"
+  ));
+  backgroundColor &&
+  (styles += colorPropertyStyled(backgroundColor, "background-color"));
+
+  settings && (padding = getResponsiveSetting(settings, "label_padding"));
+  padding && (styles += dimensionsControllerToStyles(padding, "padding"));
+
+  settings && (width = getResponsiveSetting(settings, "label_width"));
+  width && (styles += `${sizeStyled(width, "width")};flex-shrink: 0;`);
+
+  label_position_top && (styles += `top:${label_position_top};`);
+  label_position_left && (styles += `left:${label_position_left};`);
+  label_icon_position && (styles += `flex-direction:${label_icon_position};`);
+
+  styles += "}";
+
   return styles;
 };
 /**
@@ -652,52 +646,75 @@ const maskMismatchMessage = (settings, id) => {
   return styles;
 };
 //Точка входа
-function InputDateComponent(settings) {
+function InputDateComponent(settings, elementId, prefix) {
 
   let styles = "";
   const { background_section_opacity } = settings;
   //for all element
+  styles += `.${prefix}${elementId} {`
   background_section_opacity &&
     (styles += `opacity:${background_section_opacity.size};`);
   //altrp-input-wrapper
+  styles += `}`;
+  styles += `.${prefix}${elementId} {`
   const inputWrapperStyles = inputWrapperStyle(settings);
   inputWrapperStyles && (styles += inputWrapperStyles);
+  styles += `}`;
   //altrp-field-container
+  styles += `.${prefix}${elementId} {`
   const containerStyles = containerStyle(settings);
   containerStyles && (styles += containerStyles);
+  styles += `}`;
   //altrp-field
+  styles += `.${prefix}${elementId} {`
   const fieldStyles = fieldStyle(settings);
   fieldStyles && (styles += fieldStyles);
+  styles += `}`;
   //altrp-field:hover
+  styles += `.${prefix}${elementId} {`
   const fieldStylesHover = fieldStyleHover(settings);
   fieldStylesHover && (styles += fieldStylesHover);
+  styles += `}`;
   //altrp-field:focus
+  styles += `.${prefix}${elementId} {`
   const fieldStylesFocus = fieldStyleFocus(settings);
   fieldStylesFocus && (styles += fieldStylesFocus);
+  styles += `}`;
   //altrp-image-select__label
+  styles += `.${prefix}${elementId} {`
   const imageSelectLabelStyles = imageSelectLabel(settings);
   imageSelectLabelStyles && (styles += imageSelectLabelStyles);
+  styles += `}`;
   //altrp-field-select2__single-value
+  styles += `.${prefix}${elementId} {`
   const fieldSelect2SingleValueStyles = fieldSelect2SingleValueStyle(settings);
   fieldSelect2SingleValueStyles && (styles += fieldSelect2SingleValueStyles);
-  //altrp-field-select2__single-value
-  const fieldLabelContainerStyles = fieldLabelContainerStyle(settings);
-  fieldLabelContainerStyles && (styles += fieldLabelContainerStyles);
+  styles += `}`;
   //altrp-field-label
+  styles += `.${prefix}${elementId} {`
   const fieldLabelStyles = fieldLabel(settings);
   fieldLabelStyles && (styles += fieldLabelStyles);
+  styles += `}`;
   //altrp-label-icon
+  styles += `.${prefix}${elementId} {`
   const labelIconStyles = labelIconStyle(settings);
   labelIconStyles && (styles += labelIconStyles);
+  styles += `}`;
   //altrp-field::placeholder altrp-field-select2__placeholder altrp-field-file__placeholder
+  styles += `.${prefix}${elementId} {`
   const placeholderStyles = placeholderStyle(settings);
   placeholderStyles && (styles += placeholderStyles);
+  styles += `}`;
   //altrp-field-label--required::after
+  styles += `.${prefix}${elementId} {`
   const fieldLabelRequiredStyles = fieldLabelRequired(settings);
   fieldLabelRequiredStyles && (styles += fieldLabelRequiredStyles);
+  styles += `}`;
   //mask-mismatch-message
+  styles += `.${prefix}${elementId} {`
   const maskMismatchMessageStyles = maskMismatchMessage(settings);
   maskMismatchMessageStyles && (styles += maskMismatchMessageStyles);
+  styles += `}`;
   //finish
   return styles;
 }

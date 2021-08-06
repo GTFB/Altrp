@@ -138,10 +138,12 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
     }
       break;
     case "input-date": {
-      styles += `.${prefix}${elementId} {${InputDateComponent(
+      styles += InputDateComponent(
         settings,
-        elementId
-      )}}`;
+        elementId,
+        prefix
+      )
+
       styles += `${DatePickerComponent(
         settings,
         elementId,
@@ -149,7 +151,7 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
 
     }break
     case "input-checkbox": {
-      styles += `.${prefix}${elementId} {${InputCheckboxComponent(
+      styles += `.${prefix}${elementId} { ${InputCheckboxComponent(
         settings,
         elementId
       )}}`;
