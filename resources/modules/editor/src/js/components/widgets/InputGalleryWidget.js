@@ -11,7 +11,7 @@ import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-
 const FileInput = window.altrpLibs.Blueprint.FileInput;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
-.altrp-widget_input-file .bp3-file-upload-input::after{
+.altrp-widget_input-gallery .bp3-file-upload-input::after{
   width: auto;
   min-width: 0;
 }
@@ -24,7 +24,7 @@ const FileInput = window.altrpLibs.Blueprint.FileInput;
 }
 `)
 
-class InputFileWidget extends Component {
+class InputGalleryWidget extends Component {
 
   constructor(props) {
     super(props);
@@ -489,4 +489,4 @@ class InputFileWidget extends Component {
 
 }
 
-export default InputFileWidget;
+export default InputGalleryWidget;

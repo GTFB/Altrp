@@ -1024,6 +1024,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'input-date',
     'input-hidden',
     'input-file',
+    'input-galery',
     'posts',
     'breadcrumbs',
     'map',

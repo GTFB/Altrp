@@ -249,6 +249,7 @@ class FrontElement {
       case 'input-radio':
       case 'input-image-select':
       case 'input-file':
+      case 'input-gallery':
       case 'input-accept':
       case 'input-date':
       case 'input-textarea':

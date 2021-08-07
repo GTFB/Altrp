@@ -47,6 +47,7 @@ import InputCheckboxComponent from "./widgets/styled-components/InputCheckboxCom
 import getInputSelectStyles, {getInputSelectPopoverStyles} from "../../../../front-app/src/js/components/helpers/getInputSelectStyles";
 import InputRadioComponent from "./widgets/styled-components/InputRadioComponent";
 import getInputFileStyles from "../../../../front-app/src/js/components/helpers/getInputFileStyles";
+import getInputGalleryStyles from "../../../../front-app/src/js/components/helpers/getInputGalleryStyles";
 const { connect } = window.reactRedux;
 
 const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, elementId, settings, element})=>{
@@ -187,6 +188,12 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
     case "input-tel":
     case "input-file":{
       styles += `.${prefix}${elementId} {${getInputFileStyles(
+        settings,
+        elementId
+      )}}`;
+    }break
+    case "input-gallery":{
+      styles += `.${prefix}${elementId} {${getInputGalleryStyles(
         settings,
         elementId
       )}}`;

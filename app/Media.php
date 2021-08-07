@@ -6,7 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-
+/**
+ * Class Media
+ * @package App
+ * @property string $author
+ * @property string $guest_token
+ */
 class Media extends Model
 {
   use SoftDeletes;
@@ -14,6 +19,7 @@ class Media extends Model
 
   protected $fillable = [
     'author',
+    'guest_token',
     'filename',
     'media_type',
     'url',

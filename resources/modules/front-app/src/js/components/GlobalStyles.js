@@ -39,6 +39,7 @@ import getInputTextCommonStyles from "./helpers/getInputTextCommonStyles";
 import getInputSelectStyles, {getInputSelectPopoverStyles} from "./helpers/getInputSelectStyles";
 import InputRadioComponent from "../../../../editor/src/js/components/widgets/styled-components/InputRadioComponent";
 import getInputFileStyles from "./helpers/getInputFileStyles";
+import getInputGalleryStyles from "./helpers/getInputGalleryStyles";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -179,6 +180,12 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         case "input-tel":
         case "input-file":{
           styles += `.${prefix}${id} {${getInputFileStyles(
+            item.settings,
+            id
+          )}}`;
+        }break
+        case "input-gallery":{
+          styles += `.${prefix}${id} {${getInputGalleryStyles(
             item.settings,
             id
           )}}`;

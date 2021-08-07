@@ -16,6 +16,7 @@ const SKELETON_ELEMENTS = [
   'input-email',
   'input-date',
   'input-file',
+  'input-gallery',
   'breadcrumbs',
   'map',
   'map_builder',
