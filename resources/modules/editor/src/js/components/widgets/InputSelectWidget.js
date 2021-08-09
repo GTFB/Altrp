@@ -44,6 +44,9 @@ const Select = window.altrpLibs.BlueprintSelect.Select;
   height: 16px;
   pointer-events: none;
 }
+.altrp-widget_input-select.altrp-widget_input-select .bp3-icon:first-child:last-child{
+   margin: 0;
+}
 .altrp-widget_input-select .bp3-popover-wrapper{
   overflow: hidden;
   display: flex;
@@ -57,6 +60,12 @@ const Select = window.altrpLibs.BlueprintSelect.Select;
 }
 .altrp-widget_input-select .bp3-popover-target .bp3-button{
   width: 100%;
+  justify-content: flex-end;
+  /*flex-direction: row-reverse;*/
+
+}
+.altrp-widget_input-select .bp3-popover-target .bp3-button .bp3-button-text{
+  flex-grow: 1;
 }
 .altrp-label-icon svg,
 .altrp-label-icon img {

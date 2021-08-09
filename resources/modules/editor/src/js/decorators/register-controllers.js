@@ -28,6 +28,10 @@ export function advancedTabControllers(element) {
   }
   );
 
+  element.addControl('css_class', {
+    label: 'CSS Class',
+  });
+
   element.addControl('advanced_element_id', {
     label: 'CSS ID',
   });

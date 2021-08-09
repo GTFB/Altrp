@@ -55,12 +55,18 @@ class Image extends BaseElement {
       label: 'Path',
     });
 
+    this.addControl('raw_url', {
+      type: CONTROLLER_TEXT,
+      dynamic: false,
+      responsive: false,
+      label: 'URL',
+    });
 
     this.addControl('default_url', {
       type: CONTROLLER_TEXT,
       dynamic: false,
       responsive: false,
-      label: 'Default Image URL',
+      label: 'Path to Default Image URL',
     });
 
     this.addControl('cursor_pointer', {

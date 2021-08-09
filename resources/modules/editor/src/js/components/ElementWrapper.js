@@ -49,7 +49,7 @@ import InputRadioComponent from "./widgets/styled-components/InputRadioComponent
 import getInputFileStyles from "../../../../front-app/src/js/components/helpers/getInputFileStyles";
 import getInputGalleryStyles from "../../../../front-app/src/js/components/helpers/getInputGalleryStyles";
 const { connect } = window.reactRedux;
-
+const {replaceContentWithData} = window.altrpHelpers;
 const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, elementId, settings, element})=>{
   let styles = '';
   let prefix = "altrp-element";
@@ -506,6 +506,12 @@ class ElementWrapper extends Component {
       .replace(".", "")} altrp-element_${this.props.element.getType()}`;
     if (this.props.element.getType() === "widget") {
       classes += ` altrp-widget_${this.props.element.getName()}`;
+    }
+    if(this.props.element.getResponsiveSetting('css_class')){
+      classes += ` ${replaceContentWithData(
+        this.props.element.getResponsiveSetting('css_class'),
+        this.props.element.getCurrentModel().getData()
+      )} `;
     }
     let overlayClasses = `overlay`;
     let overlayStyles = { width: "100%" };

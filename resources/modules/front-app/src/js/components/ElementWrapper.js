@@ -241,6 +241,12 @@ class ElementWrapper extends Component {
     if (element.getType() === "widget") {
       classes += ` altrp-widget_${element.getName()}`;
     }
+    if(this.props.element.getResponsiveSetting('css_class')){
+      classes += ` ${replaceContentWithData(
+        this.props.element.getResponsiveSetting('css_class'),
+        this.props.element.getCurrentModel().getData()
+      )} `;
+    }
     if (hide_on_wide_screen) {
       classes += " hide_on_wide_screen";
     }

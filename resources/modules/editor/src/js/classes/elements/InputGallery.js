@@ -53,21 +53,10 @@ class InputGallery extends BaseElement {
       label: 'Field ID (Column Name)'
     });
 
-
     this.addControl('accept', {
       type: CONTROLLER_TEXT,
       responsive: false,
       label: 'Accept'
-    });
-
-    this.addControl('placeholder', {
-      type: CONTROLLER_TEXT,
-      label: 'Placeholder',
-    });
-
-    this.addControl('button_text', {
-      type: CONTROLLER_TEXT,
-      label: 'Button Text',
     });
 
     this.addControl('required', {
@@ -76,39 +65,16 @@ class InputGallery extends BaseElement {
       label: 'Required'
     });
 
-    this.addControl('multiple', {
-      type: CONTROLLER_SWITCHER,
-      responsive: false,
-      label: 'Multiple'
-    });
 
     this.addControl('limit', {
       type: CONTROLLER_NUMBER,
       responsive: false,
-      conditions:{
-        multiple: true
-      },
       label: 'Limit Files'
     });
 
-    this.addControl('readonly', {
-      type: CONTROLLER_SWITCHER,
-      responsive: false,
-      label: 'Readonly'
-    });
-
-    this.addControl('preview', {
-      type: CONTROLLER_SWITCHER,
-      responsive: false,
-      label: 'Preview (Only for Image)'
-    });
-
-    this.addControl('preview_placeholder', {
+    this.addControl('placeholder', {
       type: CONTROLLER_MEDIA,
-      conditions:{
-        preview: true,
-      },
-      label: 'Preview Placeholder'
+      label: 'Add New Placeholder'
     });
 
     this.addControl('default_value', {
@@ -120,27 +86,8 @@ class InputGallery extends BaseElement {
 
     actionsControllers(this, 'Change Actions', 'change_');
 
-    this.startControlSection('position_section', {
-      tab: TAB_STYLE,
-      label: 'Position'
-    });
-
-    this.addControl('width', {
-      type: CONTROLLER_SLIDER,
-      label: 'Width',
-      max: 500,
-      stateless: true,
-      min: 0,
-      units: ['px', '%', 'vw']
-    });
-
-    this.addControl('height', {
-      type: CONTROLLER_SLIDER,
-      label: 'Height',
-      max: 500,
-      stateless: true,
-      min: 0,
-      units: ['px', 'vw']
+    this.startControlSection('gallery', {
+      label: 'Gallery'
     });
 
     this.addControl('alignment', {
@@ -153,18 +100,49 @@ class InputGallery extends BaseElement {
           value: 'flex-start',
         },
         {
-          icon: 'center',
-          value: 'center',
-        },
-        {
           icon: 'right',
           value: 'flex-end',
         },
-        {
-          icon: 'in_width',
-          value: 'stretch',
-        }
       ],
+    });
+
+    this.addControl('columns', {
+      type: CONTROLLER_NUMBER,
+      label: 'Columns',
+    })
+
+    this.endControlSection()
+
+    this.startControlSection('position_section', {
+      tab: TAB_STYLE,
+      label: 'Items'
+    });
+
+    this.addControl('height', {
+      type: CONTROLLER_SLIDER,
+      label: 'Height',
+      max: 500,
+      stateless: true,
+      min: 0,
+      units: ['px', 'vw']
+    });
+
+    this.addControl('v_gap', {
+      type: CONTROLLER_SLIDER,
+      label: 'Vertical Gap',
+      max: 50,
+      stateless: true,
+      min: 0,
+      units: ['px', 'vw', '%']
+    });
+
+    this.addControl('h_gap', {
+      type: CONTROLLER_SLIDER,
+      label: 'Horizontal Gap',
+      max: 50,
+      stateless: true,
+      min: 0,
+      units: ['px', 'vw', '%']
     });
 
     this.addControl('padding', {
@@ -263,49 +241,7 @@ class InputGallery extends BaseElement {
       tab: TAB_STYLE,
       label: 'Border'
     });
-    /*
-    this.addControl('border_type', {
-      type: CONTROLLER_SELECT,
-      label: 'Border Type',
-      options: [
-        {
-          value: 'none',
-          label: 'None'
-        },
-        {
-          value: 'solid',
-          label: 'Solid'
-        },
-        {
-          value: 'double',
-          label: 'Double'
-        },
-        {
-          value: 'dotted',
-          label: 'Dotted'
-        },
-        {
-          value: 'dashed',
-          label: 'Dashed'
-        },
-        {
-          value: 'groove',
-          label: 'Groove'
-        }
-      ]
-    });
 
-    this.addControl('border_width', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Border Width',
-      units: ['px', '%', 'vh']
-    });
-
-    this.addControl('border_color', {
-      type: CONTROLLER_COLOR,
-      label: 'Border Color'
-    });
-    */
     this.addControl('box_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Box shadow',

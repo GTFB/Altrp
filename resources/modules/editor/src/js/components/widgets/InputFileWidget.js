@@ -57,7 +57,7 @@ class InputFileWidget extends Component {
 
   /**
    *
-   * @returns {string}
+   * @returns {string | []}
    */
   getValue = () => {
     let value;
