@@ -31,7 +31,7 @@
 
   @isset($title)
     <meta property="og:title" content="{{$title}}">
-    <title>{{ $title }}</title>
+    <title>{{ replaceContentWithData($title) }}</title>
   @else
     <meta property="og:title" content="altrp || FRONT APP">
     <title>altrp || FRONT APP</title>

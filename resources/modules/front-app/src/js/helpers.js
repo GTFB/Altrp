@@ -293,13 +293,15 @@ export function renderAsset(asset, props = null) {
  * @param {AltrpModel} context
  * @param {boolean} allowObject
  * @param {boolean} replaceRight - нужно ли подставлять в значение параметра данные или оставить сырой шаблон
+ * @param {boolean} replace - нужно ли подставлять в значение параметра данные или оставить сырой шаблон
  * @return {{}}
  */
 export function parseParamsFromString(
   string,
   context = {},
   allowObject = false,
-  replaceRight = true
+  replaceRight = true,
+  replace = true,
 ) {
   if (!(context instanceof AltrpModel)) {
     context = new AltrpModel(context);
@@ -321,10 +323,11 @@ export function parseParamsFromString(
     }
     left = left.trim();
     right = right.trim();
-    if (left.indexOf("{{") !== -1) {
+    if (replace && left.indexOf("{{") !== -1) {
       left = replaceContentWithData(left);
     }
-    if (right.match(/{{([\s\S]+?)(?=}})/g)) {
+    console.log(replace);
+    if (replace && right.match(/{{([\s\S]+?)(?=}})/g)) {
       if (
         context.getProperty(
           right.match(/{{([\s\S]+?)(?=}})/g)[0].replace("{{", "")

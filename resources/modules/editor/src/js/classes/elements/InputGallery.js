@@ -14,7 +14,7 @@ import {
   TAB_STYLE,
   CONTROLLER_CHOOSE,
   CONTROLLER_SHADOW,
-  CONTROLLER_MEDIA, CONTROLLER_GRADIENT
+  CONTROLLER_MEDIA, CONTROLLER_GRADIENT, CONTROLLER_SELECT
 } from '../modules/ControllersManager';
 import { actionsControllers } from '../../decorators/actions-controllers';
 
@@ -65,7 +65,6 @@ class InputGallery extends BaseElement {
       label: 'Required'
     });
 
-
     this.addControl('limit', {
       type: CONTROLLER_NUMBER,
       responsive: false,
@@ -86,25 +85,45 @@ class InputGallery extends BaseElement {
 
     actionsControllers(this, 'Change Actions', 'change_');
 
+    this.startControlSection('delete_section', {
+      label: 'Gallery'
+    });
+
+    this.addControl('delete', {
+      label: 'Delete Text'
+    });
+
+    this.addControl('delete_s', {
+      type: CONTROLLER_SLIDER,
+      label: 'Delete Size'
+    });
+
+    this.addControl('delete_o', {
+      type: CONTROLLER_SLIDER,
+      label: 'Delete Offset'
+    });
+
+    this.endControlSection();
+
     this.startControlSection('gallery', {
       label: 'Gallery'
     });
 
-    this.addControl('alignment', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Alignment',
-      stateless: true,
-      options: [
-        {
-          icon: 'left',
-          value: 'flex-start',
-        },
-        {
-          icon: 'right',
-          value: 'flex-end',
-        },
-      ],
-    });
+    // this.addControl('alignment', {
+    //   type: CONTROLLER_CHOOSE,
+    //   label: 'Alignment',
+    //   stateless: true,
+    //   options: [
+    //     {
+    //       icon: 'left',
+    //       value: 'start',
+    //     },
+    //     {
+    //       icon: 'right',
+    //       value: 'end',
+    //     },
+    //   ],
+    // });
 
     this.addControl('columns', {
       type: CONTROLLER_NUMBER,
@@ -145,80 +164,73 @@ class InputGallery extends BaseElement {
       units: ['px', 'vw', '%']
     });
 
-    this.addControl('padding', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Padding',
-      stateless: true,
-      units: ['px', '%', 'vh']
-    });
-
     this.endControlSection();
 
-    this.startControlSection('font_style_section', {
-      tab: TAB_STYLE,
-      label: 'Font'
-    });
+    // this.startControlSection('font_style_section', {
+    //   tab: TAB_STYLE,
+    //   label: 'Font'
+    // });
+    //
+    // this.addControl('typographic', {
+    //   type: CONTROLLER_TYPOGRAPHIC,
+    //   label: 'Typographic'
+    // });
+    //
+    // this.addControl('color', {
+    //   type: CONTROLLER_COLOR,
+    //   label: 'Font Color',
+    // });
+    //
+    // this.endControlSection();
 
-    this.addControl('typographic', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Typographic'
-    });
-
-    this.addControl('color', {
-      type: CONTROLLER_COLOR,
-      label: 'Font Color',
-    });
-
-    this.endControlSection();
-
-    this.startControlSection('button', {
-      tab: TAB_STYLE,
-      label: 'Button'
-    });
-
-    this.addControl('b_width', {
-      type: CONTROLLER_SLIDER,
-      label: 'Width',
-      max: 500,
-      min: 0,
-      stateless: true,
-      units: ['px', '%', 'vw']
-    });
-
-    this.addControl('b_height', {
-      type: CONTROLLER_SLIDER,
-      label: 'Height',
-      max: 500,
-      min: 0,
-      stateless: true,
-      units: ['px', 'vw']
-    });
-
-    this.addControl('b_margin', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Margin',
-      stateless: true,
-      units: ['px', '%', 'vh']
-    });
-
-    this.addControl('b_padding', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Padding',
-      stateless: true,
-      units: ['px', '%', 'vh']
-    });
-
-    this.addControl('b_typographic', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Typographic'
-    });
-
-    this.addControl('b_color', {
-      type: CONTROLLER_COLOR,
-      label: 'Font Color'
-    });
-
-    this.endControlSection();
+    // this.startControlSection('button', {
+    //   tab: TAB_STYLE,
+    //   label: 'Button'
+    // });
+    //
+    // this.addControl('b_width', {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Width',
+    //   max: 500,
+    //   min: 0,
+    //   stateless: true,
+    //   units: ['px', '%', 'vw']
+    // });
+    //
+    // this.addControl('b_height', {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Height',
+    //   max: 500,
+    //   min: 0,
+    //   stateless: true,
+    //   units: ['px', 'vw']
+    // });
+    //
+    // this.addControl('b_margin', {
+    //   type: CONTROLLER_DIMENSIONS,
+    //   label: 'Margin',
+    //   stateless: true,
+    //   units: ['px', '%', 'vh']
+    // });
+    //
+    // this.addControl('b_padding', {
+    //   type: CONTROLLER_DIMENSIONS,
+    //   label: 'Padding',
+    //   stateless: true,
+    //   units: ['px', '%', 'vh']
+    // });
+    //
+    // this.addControl('b_typographic', {
+    //   type: CONTROLLER_TYPOGRAPHIC,
+    //   label: 'Typographic'
+    // });
+    //
+    // this.addControl('b_color', {
+    //   type: CONTROLLER_COLOR,
+    //   label: 'Font Color'
+    // });
+    //
+    // this.endControlSection();
 
     this.startControlSection('background_section', {
       tab: TAB_STYLE,
@@ -230,9 +242,9 @@ class InputGallery extends BaseElement {
       label: 'Background Color'
     });
 
-    this.addControl('b_background', {
+    this.addControl('gradient', {
       type: CONTROLLER_GRADIENT,
-      label: 'Button Background Gradient'
+      label: 'Gradient'
     });
 
     this.endControlSection();
@@ -242,26 +254,62 @@ class InputGallery extends BaseElement {
       label: 'Border'
     });
 
+
+    this.addControl('b_style', {
+      type: CONTROLLER_SELECT,
+      label: 'Border type',
+      options: [
+        {
+          value: 'none',
+          label: 'None'
+        },
+        {
+          value: 'solid',
+          label: 'Solid'
+        },
+        {
+          value: 'double',
+          label: 'Double'
+        },
+        {
+          value: 'dotted',
+          label: 'Dotted'
+        },
+        {
+          value: 'dashed',
+          label: 'Dashed'
+        },
+        {
+          value: 'groove',
+          label: 'Groove'
+        }
+      ],
+    });
+
+    this.addControl('b_width', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border width',
+      units: ['px', '%', 'vh'],
+    });
+
+    this.addControl('b_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Border color',
+      default: {
+        color: '',
+        colorPickedHex: ''
+      },
+    });
+
     this.addControl('box_shadow', {
       type: CONTROLLER_SHADOW,
       label: 'Box shadow',
-    });
-    this.addControl('b_box_shadow', {
-      type: CONTROLLER_SHADOW,
-      label: 'Button Box shadow',
     });
 
     this.addControl('radius', {
       type: CONTROLLER_DIMENSIONS,
       stateless: true,
       label: 'Radius',
-      units: ['px', '%', 'vh']
-    });
-
-    this.addControl('b_radius', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Button Radius',
-      stateless: true,
       units: ['px', '%', 'vh']
     });
 

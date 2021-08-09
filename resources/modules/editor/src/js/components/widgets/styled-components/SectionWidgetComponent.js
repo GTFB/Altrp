@@ -7,7 +7,7 @@ import {
   sizeStyled,
   shadowControllerToStyles,
   gradientStyled,
-  backgroundImageControllerToStyles, sliderStyled,
+  backgroundImageControllerToStyles, sliderStyled, styledString,
 } from "../../../../../../front-app/src/js/helpers/styles";
 function altrpSection(settings) {
   let styles = '';
@@ -612,6 +612,16 @@ export default function SectionWidgetComponent(settings, childrenLength) {
   & > div.altrp-section.active,
   & > div.altrp-section-full-fill.active {
     ${altrpSectionHover(settings,'.active')}
+    ${()=>{
+      const  styles = [
+        '&{'
+        ['margin', 'position_style_position_margin', 'dimensions', '.active'],
+        ['padding', 'position_style_position_padding', 'dimensions', '.active'],
+        '}',
+      ];
+
+      return styledString(styles);
+    }
   }
 
   & > div.altrp-section div.altrp-column {

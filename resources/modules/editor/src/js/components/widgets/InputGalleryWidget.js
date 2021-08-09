@@ -22,10 +22,13 @@ const FileInput = window.altrpLibs.Blueprint.FileInput;
 }
 .input-gallery__item.input-gallery__item{
   height: 100px;
+}
+.input-gallery__item.input-gallery__item.input-gallery__item.input-gallery__item{
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
   position: relative;
+    width:100%;
 }
 .input-gallery__item.input-gallery__item svg{
     position: absolute;
@@ -35,8 +38,8 @@ const FileInput = window.altrpLibs.Blueprint.FileInput;
 }
 .input-gallery-wrapper{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-}
+    grid-auto-flow: row dense;
+    }
 `)
 
 class InputGalleryWidget extends Component {
@@ -76,6 +79,13 @@ class InputGalleryWidget extends Component {
       }
       return file.getProperty('media.id') !== item
       })
+
+    if(fileToDelete){
+      try {
+        await fileToDelete.deleteFileFromStorage()
+      } catch (e) {console.error(e);}
+    }
+    value = value.filter(v => v !== item)
     try {
       const limit = this.props.element.getResponsiveSetting('limit');
       _.forEach(filesStorage, (file, idx) => {
@@ -84,26 +94,22 @@ class InputGalleryWidget extends Component {
         }
         const reader = new FileReader
         reader.readAsDataURL(file.getFile())
-        reader.onload = () => {
+        reader.onload = async () => {
           this.setState(state => {
               state[`imageUrls_${idx}`] = reader.result;
               return {...state};
             }
           )
+
         }
       })
     } catch (e) {
       console.error(e);
     }
-    if(fileToDelete){
-      try {
-        await fileToDelete.deleteFileFromStorage()
-      } catch (e) {console.error(e);}
-    }
-    value = value.filter(v => v !== item)
-    this.onChange(value, filesStorage)
     this.setState(state => ({...state, notActive: false}))
+    this.onChange(value, filesStorage)
   }
+
   /**
    * Чистит значение
    */
@@ -449,7 +455,6 @@ class InputGalleryWidget extends Component {
     const limit = this.props.element.getResponsiveSetting('limit');
     let value = this.getValue();
 
-    console.log(files);
     files = _.map(files, (file, idx) => {
       return new AltrpFile(file)
     })
@@ -524,16 +529,18 @@ class InputGalleryWidget extends Component {
     if (limit && value.length >= limit) {
       fileInputProps.style.display = 'none'
     }
+    const deleteText = element.getResponsiveSetting('delete', '')
     return (
       <div className="input-gallery-wrapper">
         {value.map((item, idx) => {
           return <div
             className="input-gallery__item"
+            title={deleteText}
             style={{
               backgroundImage: `url(${this.state[`imageUrls_${idx}`]})`
             }}
             key={item}>
-            {<CloseIcon onClick={(e) => {
+            {<CloseIcon className="input-gallery__delete" onClick={(e) => {
               this.deleteItem(e, item)
             }}/>}
           </div>
