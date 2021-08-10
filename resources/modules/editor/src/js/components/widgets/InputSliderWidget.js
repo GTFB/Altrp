@@ -56,12 +56,17 @@ class InputSliderWidget extends Component {
   }
 
   label(value) {
-
+    const step = this.props.element.getResponsiveSetting("step", "", 1);
     const custom = this.props.element.getResponsiveSetting("custom_label", "", "{n}");
     const thousandsSeparator = this.props.element.getResponsiveSetting("thousands_separator", "", false);
 
     if(thousandsSeparator) {
       value = value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+
+    if(!Number.isInteger(value)) {
+      value = value.toFixed(String(step).split(".")[1].split("").length)
     }
 
     return custom.toString().replace(/{n}/, value)
@@ -86,7 +91,7 @@ class InputSliderWidget extends Component {
         <Slider
           min={min}
           max={max}
-          stepSize={step !== 0 && step ? step : 1}
+          stepSize={step !== 0 && step ? Math.abs(step) : 1}
           value={this.state.value}
           onChange={this.onChange}
           labelPrecision={decimalPlace}
