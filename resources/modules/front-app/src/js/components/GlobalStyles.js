@@ -38,6 +38,7 @@ import InputCheckboxComponent
 import getInputTextCommonStyles from "./helpers/getInputTextCommonStyles";
 import getInputSelectStyles from "./helpers/getInputSelectStyles";
 import InputRadioComponent from "../../../../editor/src/js/components/widgets/styled-components/InputRadioComponent";
+import InputSliderComponent from "../../../../editor/src/js/components/widgets/styled-components/InputSliderComponent";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -138,11 +139,11 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         }
           break;
         case "input-date": {
-          styles += `.${prefix}${id} {${InputDateComponent(
+          styles += InputDateComponent(
             item.settings,
-            id
-          )}}`;
-
+            id,
+            prefix
+          );
           styles += `${DatePickerComponent(
             item.settings,
             id,
@@ -153,6 +154,12 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles += `.${prefix}${id} {${InputCheckboxComponent(
             item.settings,
             id
+          )}}`;
+        }
+          break
+        case "input-slider": {
+          styles += `.${prefix}${id} {${InputSliderComponent(
+            item.settings,
           )}}`;
         }
           break

@@ -46,6 +46,7 @@ import DatePickerComponent from "./widgets/styled-components/DatePickerComponent
 import InputCheckboxComponent from "./widgets/styled-components/InputCheckboxComponent";
 import getInputSelectStyles from "../../../../front-app/src/js/components/helpers/getInputSelectStyles";
 import InputRadioComponent from "./widgets/styled-components/InputRadioComponent";
+import InputSliderComponent from "./widgets/styled-components/InputSliderComponent";
 const { connect } = window.reactRedux;
 
 const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, elementId, settings, element})=>{
@@ -157,6 +158,12 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
       )}}`;
 
     }break
+    case "input-slider": {
+      styles += `.${prefix}${elementId} { ${InputSliderComponent(
+        settings
+      )}}`;
+
+    }break
     case "input-text-common":{
       styles += `.${prefix}${elementId} {${getInputTextCommonStyles(
         settings,
@@ -172,10 +179,11 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
 
     }break
     case "input-radio": {
-      styles += `.${prefix}${elementId} {${InputRadioComponent(
+      styles += InputRadioComponent(
         settings,
-        elementId
-      )}}`;
+        elementId,
+        prefix
+      );
       break
     }
     case "input-text":

@@ -276,28 +276,28 @@ const fieldStyle = settings => {
 };
 
 /**
- * Стили для класса altrp-field:hover
+ * Стили для класса altrp-field-option:hover
  * @param {Object} settings style settings of element
  * @returns {String} CSS style string
  */
 const fieldStyleHover = settings => {
-  let styles = `&& .altrp-field:hover, && .bp3-input:hover {`;
-  let color,
-    backgroundColor,
+  let styles = `&& .altrp-field, && .altrp-field-option:hover .altrp-field-checkbox .bp3-control-indicator {`;
+  let backgroundColor,
     borderType,
     borderWidth,
     borderColor,
     borderRadius,
-    boxShadow;
+    boxShadow
+  ;
 
   const {
+    placeholder_and_value_alignment_position_section,
+    position_z_index,
+    textarea_resize,
   } = settings;
 
   settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ":hover"));
   boxShadow && (styles += shadowControllerToStyles(boxShadow));
-
-  settings && (color = getResponsiveSetting(settings, "field_font_color", ":hover"));
-  color && (styles += colorPropertyStyled(color, "color"));
 
   settings && (borderType = getResponsiveSetting(settings, "border_type", ":hover"));
   borderType &&
@@ -312,7 +312,7 @@ const fieldStyleHover = settings => {
   settings &&
   (borderRadius = getResponsiveSetting(
     settings,
-    "global_filter_input_border_radius",
+    "border_radius",
     ":hover"
   ));
   borderRadius &&
@@ -327,17 +327,73 @@ const fieldStyleHover = settings => {
   backgroundColor &&
   (styles += colorPropertyStyled(backgroundColor, "background-color"));
 
-  styles += "&& .input-clear-btn{";
+  placeholder_and_value_alignment_position_section &&
+  (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
 
-  settings && (color = getResponsiveSetting(settings, "cross_color", ":hover"));
-  color && (styles += colorPropertyStyled(color, "color"));
+  position_z_index && (styles += `z-index:${position_z_index};`);
+  textarea_resize && (styles += `resize:${textarea_resize};`);
 
-  //TODO не нашел как активировать эту штуку
-  //cross_size && (styles += `font-size:${cross_size.size}${cross_size.unit};`);
-  styles += "}";
   styles += "}";
 
-  return styles;
+  return styles
+};
+
+const fieldStyleActive = settings => {
+  let styles = `&& .altrp-field, && .altrp-field-option.active .altrp-field-checkbox .bp3-control-indicator {`;
+  let backgroundColor,
+    borderType,
+    borderWidth,
+    borderColor,
+    borderRadius,
+    boxShadow
+  ;
+
+  const {
+    placeholder_and_value_alignment_position_section,
+    position_z_index,
+    textarea_resize,
+  } = settings;
+
+  settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ".active"));
+  boxShadow && (styles += shadowControllerToStyles(boxShadow));
+
+  settings && (borderType = getResponsiveSetting(settings, "border_type", ".active"));
+  borderType &&
+  (styles += simplePropertyStyled(borderType, "border-style", "!important"));
+
+  settings && (borderColor = getResponsiveSetting(settings, "border_color", ".active"));
+  borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
+
+  settings && (borderWidth = getResponsiveSetting(settings, "border_width", ".active"));
+  borderWidth && (styles += borderWidthStyled(borderWidth));
+
+  settings &&
+  (borderRadius = getResponsiveSetting(
+    settings,
+    "border_radius",
+    ".active"
+  ));
+  borderRadius &&
+  (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
+
+  settings &&
+  (backgroundColor = getResponsiveSetting(
+    settings,
+    "background_style_background_color",
+    ".active"
+  ));
+  backgroundColor &&
+  (styles += colorPropertyStyled(backgroundColor, "background-color"));
+
+  placeholder_and_value_alignment_position_section &&
+  (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
+
+  position_z_index && (styles += `z-index:${position_z_index};`);
+  textarea_resize && (styles += `resize:${textarea_resize};`);
+
+  styles += "}";
+
+  return styles
 };
 
 /**
@@ -784,6 +840,9 @@ function InputCheckboxComponent(settings) {
   //altrp-field:hover
   const fieldStylesHover = fieldStyleHover(settings);
   fieldStylesHover && (styles += fieldStylesHover);
+  //altrp-field.active
+  const fieldStylesActive = fieldStyleActive(settings);
+  fieldStylesActive && (styles += fieldStylesActive);
   //altrp-field:focus
   const fieldStylesFocus = fieldStyleFocus(settings);
   fieldStylesFocus && (styles += fieldStylesFocus);
