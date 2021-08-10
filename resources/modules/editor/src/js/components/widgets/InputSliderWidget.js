@@ -52,6 +52,12 @@ class InputSliderWidget extends Component {
   }
 
   onChange(value) {
+    const step = this.props.element.getResponsiveSetting("step", "", 1);
+
+    if(!Number.isInteger(value)) {
+      value = parseFloat(value.toFixed(String(step).split(".")[1].split("").length))
+    }
+
     this.setState((s) => ({...s, value}))
   }
 
