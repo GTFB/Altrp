@@ -87,7 +87,72 @@ class MediaController extends Controller
         $media->type = "image";
         $media->filename = self::storeHeicToJpeg( $file );
       }
-      
+
+      $path = Storage::path( 'public/' . $media->filename );
+      $ext = pathinfo( $path, PATHINFO_EXTENSION );
+      if( $ext === 'svg' ){
+        $svg = file_get_contents( $path );
+        $svg = simplexml_load_string( $svg );
+        $media->width = ( string ) data_get( $svg->attributes(), 'width', 150 );
+        $media->height = ( string ) data_get( $svg->attributes(), 'height', 150 );
+      } else {
+        $size = getimagesize( $path );
+        $media->width = data_get( $size, '0', 0 );
+        $media->height = data_get( $size, '1', 0 );
+      }
+
+      $media->main_color = getMainColor( $path );
+      $media->url =  Storage::url( $media->filename );
+      $media->save();
+      $res[] = $media;
+    }
+    $res = array_reverse( $res );
+    return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE);
+
+  }
+  /**
+   * Store a newly created resource in storage. From front-app
+   *
+   * @param  \Illuminate\Http\Request $request
+   * @return \Illuminate\Http\Response
+   */
+  public function store_from_frontend( Request $request )
+  {
+
+    /**
+     * @var \Illuminate\Http\UploadedFile[] $files
+     */
+    $_files = $request->file( 'files' );
+    $res = [];
+    $files = [];
+
+    foreach ( $_files as $file ) {
+      $files[] = $file;
+    }
+
+    foreach ( $files as $file ) {
+      $media = new Media();
+      $media->title = $file->getClientOriginalName();
+      $media->media_type = $file->getClientMimeType();
+      if(Auth::user()){
+        $media->author = Auth::user()->id;
+      } else {
+        $media->guest_token = $request->session()->token();
+      }
+      $media->type = self::getTypeForFile( $file );
+      File::ensureDirectoryExists( 'app/media/' .  date("Y") . '/' .  date("m" ), 0775 );
+      $media->filename =  $file->storeAs( 'media/' .  date("Y") . '/' .  date("m" ) ,
+        Str::random(40) . '.' . $file->getClientOriginalExtension(),
+        ['disk' => 'public'] );
+
+      if ($file->getClientOriginalExtension() == "heic") {
+        $media->title = explode('.', $file->getClientOriginalName())[0] . '.jpg';
+        $media->media_type = "image/jpeg";
+        $media->author = Auth::user()->id;
+        $media->type = "image";
+        $media->filename = self::storeHeicToJpeg( $file );
+      }
+
       $path = Storage::path( 'public/' . $media->filename );
       $ext = pathinfo( $path, PATHINFO_EXTENSION );
       if( $ext === 'svg' ){
@@ -168,7 +233,7 @@ class MediaController extends Controller
    *
    * @param Media $media
    * @param string $id
-   * @return \Illuminate\Http\Response
+   * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
    * @throws \Exception
    */
   public function destroy( Media $media, $id )
@@ -176,6 +241,42 @@ class MediaController extends Controller
     //
     $media = $media->find($id);
 
+    if( ! $media ){
+      return response()->json( ['success' => false, 'message'=> 'Media not found' ], 404 );
+    }
+    if( Storage::delete( 'public/' . $media->filename ) ){
+      if( $media->delete() ){
+        return response()->json( ['success' => true] );
+      }
+      return response()->json( ['success' => false, 'message'=> 'Error deleting media' ], 500 );
+    }
+    return response()->json( ['success' => false, 'message'=> 'Error deleting file' ], 500 );
+  }
+
+  /**
+   * Remove the specified resource from storage. From front-app
+   *
+   * @param Media $media
+   * @param string $id
+   * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+   * @throws \Exception
+   */
+  public function destroy_from_frontend( Media $media, $id )
+  {
+    /**
+     * @var Media $media
+     */
+    $media = $media->find($id);
+    if( ! $media ){
+      return response()->json( ['success' => false, 'message'=> 'Media not found' ], 404 );
+    }
+    $user = Auth::user();
+    if( ! $user && session()->token() !== $media->guest_token ){
+      return response()->json( ['success' => false, 'message'=> 'Not Access to deleting media' ], 403 );
+    }
+    if( $user && ! $user->hasRole( 'admin' ) && $user->id !== $media->author ){
+      return response()->json( ['success' => false, 'message'=> 'Not Access to deleting media' ], 403 );
+    }
     if( Storage::delete( 'public/' . $media->filename ) ){
       if( $media->delete() ){
         return response()->json( ['success' => true] );

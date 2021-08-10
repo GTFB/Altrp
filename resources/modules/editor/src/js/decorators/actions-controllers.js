@@ -16,17 +16,19 @@ import Repeater from '../classes/Repeater';
  * @param {BaseElement} element - элемент
  * @param {string} sectionLabel - заголовок секции
  * @param {string} idPrefix - префикс, который добавляется ко всем id секция и контроллеров
+ * @param {string} tab - таб по умолчанию
  */
 export function actionsControllers(
   element,
   sectionLabel = 'Actions',
-  idPrefix = ''
+  idPrefix = '',
+  tab = TAB_CONTENT
 ) {
   /**
    * Список произвольных действия для кнопки START
    */
   element.startControlSection(idPrefix + 'actions_section', {
-    tab: TAB_CONTENT,
+    tab,
     hideOnEmail: true,
     label: sectionLabel
   });
@@ -647,6 +649,7 @@ export function actionsControllers(
     label: 'Actions',
     type: CONTROLLER_REPEATER,
     responsive: false,
+    stateless: true,
     fields: actionsRepeater.getControls()
   });
 

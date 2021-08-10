@@ -67,8 +67,12 @@ class ImageWidget extends Component {
     /**
      * Возьмем данные из окружения
      */
-
-    if (
+    if(this.getContent('raw_url')){
+      media = {
+        url: this.getContent('raw_url'),
+        assetType: "media",
+      }
+    } else if (
       this.getContent("content_path") &&
       _.isObject(getDataByPath(this.getContent("content_path"), null, model))
     ) {

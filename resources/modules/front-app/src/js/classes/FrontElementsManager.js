@@ -164,6 +164,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-gallery",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputGallery' */ "../../../../editor/src/js/components/widgets/InputGalleryWidget"
+          );
+        }
+      },
+      {
         name: "button",
         import: async () => {
           return await import(

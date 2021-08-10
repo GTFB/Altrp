@@ -1,4 +1,5 @@
 import AltrpFile from "../../../../../front-app/src/js/classes/AltrpFile";
+import CloseIcon from "../../../svgs/times.svg"
 
 const {
   isEditor,
@@ -11,20 +12,34 @@ import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-
 const FileInput = window.altrpLibs.Blueprint.FileInput;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
-.altrp-widget_input-file .bp3-file-upload-input::after{
+.altrp-widget_input-gallery .bp3-file-upload-input{
+    display: none;
+}
+.altrp-widget_input-gallery .bp3-file-upload-input::after{
   width: auto;
   min-width: 0;
+  display: none;
 }
-.bp3-file-input_preview.bp3-file-input_preview{
+.input-gallery__item.input-gallery__item{
+  height: 100px;
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
-  width: 100px;
-  height: 100px;
+  position: relative;
+}
+.input-gallery__item.input-gallery__item svg{
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+}
+.input-gallery-wrapper{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 `)
 
-class InputFileWidget extends Component {
+class InputGalleryWidget extends Component {
 
   constructor(props) {
     super(props);
@@ -32,8 +47,7 @@ class InputFileWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    this.wrapperRef = React.createRef()
-    this.defaultValue = this.getContent("content_default_value");
+    this.defaultValue = this.getContent("content_default_value") || [];
 
     this.state = {
       settings: {...props.element.getSettings()},
@@ -47,17 +61,61 @@ class InputFileWidget extends Component {
   }
 
   /**
+   *
+   * @param e
+   * @param item
+   */
+  async deleteItem(e, item){
+    this.setState(state => ({...state, notActive: true}))
+    let filesStorage = this.state.filesStorage;
+    let value = this.getValue()
+    let fileToDelete;
+    filesStorage = filesStorage.filter(file => {
+      if(file.getProperty('media.id') === item){
+        fileToDelete = file;
+      }
+      return file.getProperty('media.id') !== item
+      })
+    try {
+      const limit = this.props.element.getResponsiveSetting('limit');
+      _.forEach(filesStorage, (file, idx) => {
+        if (limit && idx >= limit) {
+          return
+        }
+        const reader = new FileReader
+        reader.readAsDataURL(file.getFile())
+        reader.onload = () => {
+          this.setState(state => {
+              state[`imageUrls_${idx}`] = reader.result;
+              return {...state};
+            }
+          )
+        }
+      })
+    } catch (e) {
+      console.error(e);
+    }
+    if(fileToDelete){
+      try {
+        await fileToDelete.deleteFileFromStorage()
+      } catch (e) {console.error(e);}
+    }
+    value = value.filter(v => v !== item)
+    this.onChange(value, filesStorage)
+    this.setState(state => ({...state, notActive: false}))
+  }
+  /**
    * Чистит значение
    */
   clearValue() {
-    this.onChange(null);
+    this.onChange([]);
     this.dispatchFieldValueToStore(null, true);
   }
 
 
   /**
    *
-   * @returns {string | []}
+   * @returns {[]}
    */
   getValue = () => {
     let value;
@@ -68,7 +126,7 @@ class InputFileWidget extends Component {
     } else {
       value = _.get(appStore.getState(), `formsStore.${formId}.${fieldName}`, '')
     }
-    return value;
+    return value || [];
   }
 
   /**
@@ -96,7 +154,7 @@ class InputFileWidget extends Component {
       _.get(value, "dynamic") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getContent("content_default_value") || [];
     }
 
     /**
@@ -107,7 +165,7 @@ class InputFileWidget extends Component {
       !prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getContent("content_default_value") || [];
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -122,7 +180,7 @@ class InputFileWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !this.state.contentLoaded
     ) {
-      value = this.getContent("content_default_value");
+      value = this.getContent("content_default_value") || [];
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -177,7 +235,7 @@ class InputFileWidget extends Component {
       this.state.value &&
       this.state.value.dynamic
     ) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
+      this.dispatchFieldValueToStore(this.getContent("content_default_value") || []);
     }
 
     if (content_options && !model_for_options) {
@@ -333,71 +391,16 @@ class InputFileWidget extends Component {
 
   /**
    * Изменение значения в виджете
-   * @param e
+   * @param {[]} value
+   * @param {[]| null} filesStorage
    */
-  onChange = async (e) => {
-    this.setState(state => ({...state, notActive: true}))
-    const {filesStorage} = this.state;
-    try {
-      if(_.isArray(filesStorage))
-      {
-        await Promise.all(filesStorage.map(async file=>(await file.deleteFileFromStorage())))
-      }
-    }catch (e) {
-      console.error(e);
-    }
-    const files = e.target.files;
-    const limit = this.props.element.getResponsiveSetting('limit');
-    let value;
-    if (this.props.element.getResponsiveSetting('multiple')) {
-      value = _.map(files, (file, idx) => {
-        return new AltrpFile(file)
-      })
-      if(limit){
-        value = value.slice(0, limit)
-      }
-      this.setState(state=>({...state, filesStorage: value}))
-      try {
-        value = await Promise.all(value.map(async file => ((await file.storeFile()).getProperty('media.id'))))
-      }catch (e) {
-        console.error(e);
-      }
-    } else {
-      value = new AltrpFile(files[0])
-      this.setState(state=>({...state, filesStorage: [value]}))
-      try {
-        value = (await value.storeFile()).getProperty('media.id')
-      }catch (e) {
-        console.error(e);
-      }
-    }
-
+  onChange = async (value, filesStorage = null) => {
+    this.setState(state => ({...state, filesStorage}))
     if (isEditor()) {
       this.setState(state => ({...state, value}))
     } else {
       this.dispatchFieldValueToStore(value, true)
     }
-    this.setState(state => ({...state, key: Math.random()}))
-    try {
-      _.forEach(files, (file, idx) => {
-        if(limit && idx >= limit){
-          return
-        }
-        const reader = new FileReader
-        reader.readAsDataURL(file)
-        reader.onload = () => {
-          this.setState(state => {
-              state[`imageUrls_${idx}`] = reader.result;
-              return {...state};
-            }
-          )
-        }
-      })
-    } catch (e) {
-      console.error(e);
-    }
-    this.setState(state => ({...state, notActive: false}))
-
   }
 
   /**
@@ -438,6 +441,56 @@ class InputFileWidget extends Component {
     }
   };
 
+  addElements = async (e) => {
+    this.setState(state => ({...state, notActive: true}))
+    let {filesStorage} = this.state;
+    filesStorage = filesStorage || []
+    let files = e.target.files;
+    const limit = this.props.element.getResponsiveSetting('limit');
+    let value = this.getValue();
+
+    console.log(files);
+    files = _.map(files, (file, idx) => {
+      return new AltrpFile(file)
+    })
+    filesStorage = filesStorage.concat(files)
+    this.setState(state => ({...state, filesStorage: value}))
+    try {
+      value = value.concat(
+        await Promise.all(
+          files.map(async file => ((await file.storeFile()).getProperty('media.id')))
+        )
+      )
+    } catch (e) {
+      console.error(e);
+    }
+
+    if (limit) {
+      value = value.slice(0, limit)
+      filesStorage = filesStorage.slice(0, limit)
+    }
+    this.onChange(value, filesStorage)
+    this.setState(state => ({...state, key: Math.random()}))
+    try {
+      _.forEach(filesStorage, (file, idx) => {
+        if (limit && idx >= limit) {
+          return
+        }
+        const reader = new FileReader
+        reader.readAsDataURL(file.getFile())
+        reader.onload = () => {
+          this.setState(state => {
+              state[`imageUrls_${idx}`] = reader.result;
+              return {...state};
+            }
+          )
+        }
+      })
+    } catch (e) {
+      console.error(e);
+    }
+    this.setState(state => ({...state, notActive: false}))
+  }
 
   /**
    * Взовращает имя для атрибута name
@@ -449,44 +502,47 @@ class InputFileWidget extends Component {
 
   render() {
     const {element} = this.props
-    let disabled = element.getResponsiveSetting('readonly');
 
     const inputProps = {
       name: this.getName(),
       accept: element.getResponsiveSetting('accept'),
-      multiple: element.getResponsiveSetting('multiple'),
+      multiple: 1,
     }
-    let text
-    const {filesStorage, notActive} = this.state
-    if(_.isArray(filesStorage)){
-      text = filesStorage.map(file => file.getFileName()).join(', ');
-    } else if(filesStorage instanceof AltrpFile) {
-      text = filesStorage.getFileName()
-    } else {
-      text = replaceContentWithData(element.getResponsiveSetting('placeholder'), element.getCurrentModel().getData())
-    }
+    const {notActive} = this.state
+    const value = this.getValue()
+    const limit = element.getResponsiveSetting('limit')
     const fileInputProps = {
-      disabled,
       key: this.state.key,
       inputProps,
-      text,
-      className: `${notActive ? 'pointer-event-none' : ''}`,
-      buttonText: replaceContentWithData(element.getResponsiveSetting('button_text'), element.getCurrentModel().getData()),
-      onInputChange: this.onChange
+      style: {
+        pointerEvents: notActive ? 'none' : '',
+        backgroundImage: `url(${element.getResponsiveSetting('placeholder') || "data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDY0IDY0IiB3aWR0aD0iMTAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGNsYXNzPSJpY29uIj48cGF0aCBkPSJNMjMuNDE0IDIxLjQxNEwzMCAxNC44MjhWNDRhMiAyIDAgMDA0IDBWMTQuODI4bDYuNTg2IDYuNTg2Yy4zOS4zOTEuOTAyLjU4NiAxLjQxNC41ODZzMS4wMjQtLjE5NSAxLjQxNC0uNTg2YTIgMiAwIDAwMC0yLjgyOGwtMTAtMTBhMiAyIDAgMDAtMi44MjggMGwtMTAgMTBhMiAyIDAgMTAyLjgyOCAyLjgyOHoiPjwvcGF0aD48cGF0aCBkPSJNNTAgNDBhMiAyIDAgMDAtMiAydjhjMCAxLjEwMy0uODk3IDItMiAySDE4Yy0xLjEwMyAwLTItLjg5Ny0yLTJ2LThhMiAyIDAgMDAtNCAwdjhjMCAzLjMwOSAyLjY5MSA2IDYgNmgyOGMzLjMwOSAwIDYtMi42OTEgNi02di04YTIgMiAwIDAwLTItMnoiPjwvcGF0aD48L3N2Zz4K"})`
+      },
+      onInputChange: this.addElements,
+      className: `bp3-file-input_preview input-gallery__item`,
     }
-    if (element.getResponsiveSetting('preview')) {
-      fileInputProps.style = {
-        backgroundImage: `url(${this.state.imageUrls_0})`,
-        pointerEvents : notActive ? 'none' : '',
-      }
-      fileInputProps.className = 'bp3-file-input_preview'
+    if (limit && value.length >= limit) {
+      fileInputProps.style.display = 'none'
     }
     return (
-      <FileInput {...fileInputProps} ref={this.wrapperRef}/>
-    );
-
+      <div className="input-gallery-wrapper">
+        {value.map((item, idx) => {
+          return <div
+            className="input-gallery__item"
+            style={{
+              backgroundImage: `url(${this.state[`imageUrls_${idx}`]})`
+            }}
+            key={item}>
+            {<CloseIcon onClick={(e) => {
+              this.deleteItem(e, item)
+            }}/>}
+          </div>
+        })}
+        <FileInput {...fileInputProps} />
+      </div>
+    )
   }
 
 }
 
-export default InputFileWidget;
+export default InputGalleryWidget;

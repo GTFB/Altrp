@@ -44,11 +44,14 @@ import ImageLightboxComponent from "./widgets/styled-components/ImageLightboxCom
 import InputDateComponent from "./widgets/styled-components/InputDateComponent";
 import DatePickerComponent from "./widgets/styled-components/DatePickerComponent";
 import InputCheckboxComponent from "./widgets/styled-components/InputCheckboxComponent";
-import getInputSelectStyles from "../../../../front-app/src/js/components/helpers/getInputSelectStyles";
+import getInputSelectStyles, {getInputSelectPopoverStyles} from "../../../../front-app/src/js/components/helpers/getInputSelectStyles";
 import InputRadioComponent from "./widgets/styled-components/InputRadioComponent";
 import InputSliderComponent from "./widgets/styled-components/InputSliderComponent";
-const { connect } = window.reactRedux;
+import getInputFileStyles from "../../../../front-app/src/js/components/helpers/getInputFileStyles";
+import getInputGalleryStyles from "../../../../front-app/src/js/components/helpers/getInputGalleryStyles";
 
+const { connect } = window.reactRedux;
+const {replaceContentWithData} = window.altrpHelpers;
 const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, elementId, settings, element})=>{
   let styles = '';
   let prefix = "altrp-element";
@@ -162,7 +165,6 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
       styles += `.${prefix}${elementId} { ${InputSliderComponent(
         settings
       )}}`;
-
     }break
     case "input-text-common":{
       styles += `.${prefix}${elementId} {${getInputTextCommonStyles(
@@ -176,6 +178,7 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
         settings,
         elementId
       )}}`;
+      styles += `${getInputSelectPopoverStyles(settings, elementId)}`
 
     }break
     case "input-radio": {
@@ -191,7 +194,18 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
     case "input-number":
     case "input-email":
     case "input-tel":
-    case "input-file":
+    case "input-file":{
+      styles += `.${prefix}${elementId} {${getInputFileStyles(
+        settings,
+        elementId
+      )}}`;
+    }break
+    case "input-gallery":{
+      styles += `.${prefix}${elementId} {${getInputGalleryStyles(
+        settings,
+        elementId
+      )}}`;
+    }break
     case "input-image-select":
     case "input-accept":
     case "input-textarea":
@@ -501,6 +515,12 @@ class ElementWrapper extends Component {
     if (this.props.element.getType() === "widget") {
       classes += ` altrp-widget_${this.props.element.getName()}`;
     }
+    if(this.props.element.getResponsiveSetting('css_class')){
+      classes += ` ${replaceContentWithData(
+        this.props.element.getResponsiveSetting('css_class'),
+        this.props.element.getCurrentModel().getData()
+      )} `;
+    }
     let overlayClasses = `overlay`;
     let overlayStyles = { width: "100%" };
     if (this.props.currentElement === this.props.element) {
@@ -649,6 +669,9 @@ class ElementWrapper extends Component {
 
   chooseElement(e) {
     e.stopPropagation();
+    if(e.target.closest('button')){
+      e.preventDefault();
+    }
     contextMenu.hideAll();
 
     this.props.element.setElementAsCurrent();
@@ -657,14 +680,17 @@ class ElementWrapper extends Component {
 
   deleteElement(e) {
     e.stopPropagation();
+    e.preventDefault();
     this.props.element.parent.deleteChild(this.props.element);
   }
   duplicateElement(e) {
     e.stopPropagation();
+    e.preventDefault();
     this.props.element.duplicate();
   }
   showWidgetsPanel(e) {
     e.stopPropagation();
+    e.preventDefault();
     getEditor().showWidgetsPanel();
   }
 }

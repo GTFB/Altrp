@@ -38,20 +38,21 @@ class DividerWidget extends Component {
       this.render = props.baseRender(this);
     }
   }
+  getClasses(){
+    return `altrp-divider ${this.isActive() ? 'active' : ''}`
+  }
   render() {
     let style = {};
     let styleSeparator = {};
     let labelStyle = {};
 
-    let borderColor = this.props.element.getResponsiveSetting("divider_style_color", null, { color: "#000" }).color;
     let borderWidth = this.props.element.getResponsiveSetting("divider_style_weight", null, { size: 1 }).size + "px";
-    let imageSize = this.props.element.getResponsiveSetting("divider_style_size", null, { size: 20 }).size + "px";
-    let imageAmount =  this.props.element.getResponsiveSetting("divider_style_amount", null, { size: 20 }).size + "px";
 
     switch (this.state.settings.divider_style_type) {
       case "solid":
         styleSeparator = {
-          borderTop: borderWidth + " " + "solid" + " " + borderColor
+          borderTopWidth: borderWidth,
+          borderTopStyle: "solid" ,
         };
         break;
       case "none":
@@ -60,17 +61,20 @@ class DividerWidget extends Component {
         break;
       case "double":
         styleSeparator = {
-          borderTop: borderWidth + " " + "double" + " " + borderColor
+          borderTopWidth: borderWidth,
+          borderTopStyle: "double" ,
         };
         break;
       case "dotted":
         styleSeparator = {
-          borderTop: borderWidth + " " + "dotted" + " " + borderColor
+          borderTopWidth: borderWidth,
+          borderTopStyle: "dotted" ,
         };
         break;
       case "dashed":
         styleSeparator = {
-          borderTop: borderWidth + " " + "dashed" + " " + borderColor
+          borderTopWidth: borderWidth,
+          borderTopStyle: "dashed" ,
         }
         break;
     }
@@ -97,23 +101,23 @@ class DividerWidget extends Component {
         }
         break;
     }
-
-    let divider = <div className="altrp-divider" style={style}><span className="altrp-divider-separator" style={styleSeparator}></span></div>
+    const sccClasses = this.getClasses();
+    let divider = <div className={sccClasses} style={style}><span className="altrp-divider-separator" style={styleSeparator}></span></div>
 
     if(this.props.element.getResponsiveSetting("divider_text")) {
-      divider = <div className="altrp-divider" style={style}><span className="altrp-divider-separator" style={styleSeparator}></span><div className="altrp-divider-container-label"><label className='altrp-divider-label'>{this.state.settings.divider_text}</label></div><span className="altrp-divider-separator" style={styleSeparator}></span></div>
+      divider = <div className={sccClasses} style={style}><span className="altrp-divider-separator" style={styleSeparator}></span><div className="altrp-divider-container-label"><label className='altrp-divider-label'>{this.state.settings.divider_text}</label></div><span className="altrp-divider-separator" style={styleSeparator}></span></div>
       switch (this.state.settings.text_style_position) {
         case "left":
           labelStyle = { marginRight: this.state.settings.text_style_spacing.size + this.state.settings.text_style_spacing.unit }
-          divider = <div className="altrp-divider" style={style}><div className="altrp-divider-container-label" style={labelStyle}><label className='altrp-divider-label'>{this.state.settings.divider_text}</label></div><span className="altrp-divider-separator" style={styleSeparator}></span></div>
+          divider = <div className={sccClasses} style={style}><div className="altrp-divider-container-label" style={labelStyle}><label className='altrp-divider-label'>{this.state.settings.divider_text}</label></div><span className="altrp-divider-separator" style={styleSeparator}></span></div>
           break;
         case "center":
           labelStyle = { marginRight: this.state.settings.text_style_spacing.size + this.state.settings.text_style_spacing.unit, marginLeft: this.state.settings.text_style_spacing.size + this.state.settings.text_style_spacing.unit }
-          divider = <div className="altrp-divider" style={style}><span className="altrp-divider-separator" style={styleSeparator}></span><div className="altrp-divider-container-label" style={labelStyle}><label className='altrp-divider-label'>{this.state.settings.divider_text}</label></div><span className="altrp-divider-separator" style={styleSeparator}></span></div>
+          divider = <div className={sccClasses} style={style}><span className="altrp-divider-separator" style={styleSeparator}></span><div className="altrp-divider-container-label" style={labelStyle}><label className='altrp-divider-label'>{this.state.settings.divider_text}</label></div><span className="altrp-divider-separator" style={styleSeparator}></span></div>
           break;
         case "right":
           labelStyle = { marginLeft: this.state.settings.text_style_spacing.size + this.state.settings.text_style_spacing.unit }
-          divider = <div className="altrp-divider" style={style}><span className="altrp-divider-separator" style={styleSeparator}></span><div className="altrp-divider-container-label" style={labelStyle}><label className='altrp-divider-label'>{this.state.settings.divider_text}</label></div></div>
+          divider = <div className={sccClasses} style={style}><span className="altrp-divider-separator" style={styleSeparator}></span><div className="altrp-divider-container-label" style={labelStyle}><label className='altrp-divider-label'>{this.state.settings.divider_text}</label></div></div>
           break;
       }
     }

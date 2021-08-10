@@ -17,6 +17,7 @@ const DEFAULT_REACT_ELEMENTS = [
   'input-date',
   'input-hidden',
   'input-file',
+  'input-gallery',
   'breadcrumbs',
   'map',
   'map_builder',

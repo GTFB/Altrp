@@ -140,3 +140,8 @@ frontAppContainer.addEventListener('scroll', e=>{
   appStore && appStore.dispatch(setScrollValue({top: e.target.scrollTop}))
 })
 
+document.body.addEventListener('click', e =>{
+  import(/* webpackChunkName: 'click-actions' */'./js/functions/actions/click-actions').then((module)=>{
+    module?.default(e);
+  })
+})

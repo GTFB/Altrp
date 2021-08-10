@@ -8,6 +8,7 @@ const INPUT_WIDGETS = [
   'input-radio',
   'input-image-select',
   'input-file',
+  'input-gallery',
   'input-accept',
   'input-date',
   'input-textarea',

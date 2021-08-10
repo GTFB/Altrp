@@ -1,4 +1,4 @@
-import {styledString} from "../../helpers/styles";
+import {gradientStyled, styledString} from "../../helpers/styles";
 const {getResponsiveSetting} = window.altrpHelpers;
 
 /**
@@ -9,21 +9,21 @@ const {getResponsiveSetting} = window.altrpHelpers;
 export default function getInputSelectStyles(settings, elementId) {
   let styles = [
     //<editor-fold description="стили лэйбла">
-    '.altrp-field-label',
+    '.altrp-field-label-container',
     ['background-color', 'label_background_color', 'color'],
     ['padding', 'label_padding', 'dimensions'],
     ['color', 'label_style_font_color', 'color'],
-    ['', 'label_style_font_typographic', 'typographic'],
     ['top', 'label_position_top', 'slider'],
     ['left', 'label_position_left', 'slider'],
-    '}',
-    '.altrp-field-label-container',
     ['width', 'label_width', 'slider'],
+    '}',
+    '.altrp-field-label',
+    ['', 'label_style_font_typographic', 'typographic'],
     '}',
     '.altrp-label-icon',
     ['padding', 'icon_padding', 'dimensions'],
-    ['width', 'icon_size', 'slider'],
-    ['height', 'icon_size', 'slider'],
+    // ['width', 'icon_size', 'slider'],
+    // ['height', 'icon_size', 'slider'],
     '}',
 
     '.altrp-label-icon svg',
@@ -41,54 +41,6 @@ export default function getInputSelectStyles(settings, elementId) {
     ['width', 'icon_size', 'slider'],
     ['height', 'icon_size', 'slider'],
     ['background-color', 'icon_color_background', 'color'],
-    '}',
-    //</editor-fold>
-    //<editor-fold description="стили инпута">
-    '.bp3-input-group',
-    ['width', 'field_width', 'slider'],
-    ['padding', 'position_margin', 'dimensions'],
-    '}',
-    '.bp3-input.bp3-input.bp3-input.bp3-input',
-    ['height', 'field_height', 'slider'],
-    ['text-align', 'placeholder_and_value_alignment_position_section', ],
-    ['padding', 'position_padding', 'dimensions'],
-    ['', 'field_font_typographic', 'typographic'],
-    ['color', 'field_font_color', 'color'],
-    ['background-color', 'background_style_background_color', 'color'],
-    ['opacity', 'background_section_opacity', 'slider'],
-    ['border-style', 'border_type',],
-    ['border-width', 'border_width', 'dimensions'],
-    ['border-color', 'border_color', 'color'],
-    ['border-radius', 'border_radius', 'dimensions'],
-    ['', 'box_shadow', 'shadow'],
-    '}',
-    '.bp3-input.bp3-input.bp3-input.bp3-input:hover',
-    ['', 'field_font_typographic', 'typographic', ':hover'],
-    ['color', 'field_font_color', 'color', ':hover'],
-    ['background-color', 'background_style_background_color', 'color',':hover'],
-    ['border-color', 'border_color', 'color',':hover'],
-    ['border-radius', 'border_radius', 'dimensions',':hover'],
-    ['', 'box_shadow', 'shadow',':hover'],
-    '}',
-    '.bp3-input.bp3-input.bp3-input.bp3-input:focus',
-    ['', 'field_font_typographic', 'typographic', ':focus'],
-    ['color', 'field_font_color', 'color', ':focus'],
-    ['background-color', 'background_style_background_color', 'color',':focus'],
-    ['border-color', 'border_color', 'color',':focus'],
-    ['border-radius', 'border_radius', 'dimensions',':focus'],
-    ['', 'box_shadow', 'shadow',':focus'],
-    '}',
-    '.bp3-input.bp3-input.bp3-input.bp3-input::placeholder',
-    ['', 'placeholder_style_font_typographic', 'typographic'],
-    ['color', 'placeholder_style_font_color', 'color'],
-    '}',
-    '.bp3-input.bp3-input.bp3-input.bp3-input:hover::placeholder',
-    ['', 'placeholder_style_font_typographic', 'typographic',':hover'],
-    ['color', 'placeholder_style_font_color', 'color', ':hover'],
-    '}',
-    '.bp3-input.bp3-input.bp3-input.bp3-input:focus::placeholder',
-    ['', 'placeholder_style_font_typographic', 'typographic',':focus'],
-    ['color', 'placeholder_style_font_color', 'color', ':focus'],
     '}',
     //</editor-fold>
     '.altrp-field-label--required::after',
@@ -152,10 +104,175 @@ export default function getInputSelectStyles(settings, elementId) {
         }
       }
     },
-    '.bp3-button',
+    '.bp3-popover-target',
+    ['width', 'field_width', 'slider'],
+    ['margin', 'position_margin', 'dimensions'],
+    '}',
+    '.bp3-button.bp3-button',
+    ['height', 'field_height', 'slider'],
+    ['text-align', 'placeholder_and_value_alignment_position_section', ],
+    ['padding', 'position_padding', 'dimensions'],
+    ['', 'field_font_typographic', 'typographic'],
+    ['color', 'field_font_color', 'color'],
+    ['opacity', 'background_section_opacity', 'slider'],
+    ['border-style', 'border_type',],
+    ['border-width', 'border_width', 'dimensions'],
+    ['border-color', 'border_color', 'color'],
+    ['border-radius', 'border_radius', 'dimensions'],
+    ['', 'box_shadow', 'shadow'],
+    '}',
+    ()=>{
+      let styles = '.bp3-button.bp3-button{';
+      let button_gradient = getResponsiveSetting(settings, 'button_gradient')
+      if(button_gradient){
+        styles += gradientStyled(button_gradient)
+      }
+      styles += '}'
+      styles += '.bp3-button:hover{'
+      button_gradient = getResponsiveSetting(settings, 'button_gradient', ':hover')
+      if(button_gradient){
+        styles += gradientStyled(button_gradient)
+      }
+      styles += '}'
+      styles += '.bp3-button.bp3-button:active{'
+      button_gradient = getResponsiveSetting(settings, 'button_gradient', '.active')
+      if(button_gradient){
+        styles += gradientStyled(button_gradient)
+      }
+      styles += '}'
+      return styles;
+    },
+    '.bp3-button.bp3-button:hover',
+    ['', 'field_font_typographic', 'typographic', ':hover'],
+    ['color', 'field_font_color', 'color', ':hover'],
+    ['border-color', 'border_color', 'color',':hover'],
+    ['border-radius', 'border_radius', 'dimensions',':hover'],
+    '.bp3-icon svg',
+    ['height', 'i_size', 'slider',':hover'],
+    ['width', 'i_size', 'slider',':hover'],
+    ['margin', 'i_margin', 'dimensions',':hover'],
+    '}',
+    '.bp3-icon path',
+    ['fill', 'i_color', 'color',':hover'],
+    '}',
+    '.bp3-icon img',
+    ['height', 'i_size', 'slider',':hover'],
+    ['width', 'i_size', 'slider',':hover'],
+    ['margin', 'i_margin', 'dimensions',':hover'],
+    '}',
+    ['', 'box_shadow', 'shadow',':hover'],
+    '}',
+    '.bp3-button.bp3-button:active',
+    ['', 'field_font_typographic', 'typographic', '.active'],
+    ['color', 'field_font_color', 'color', '.active'],
+    ['border-color', 'border_color', 'color','.active'],
+    ['border-radius', 'border_radius', 'dimensions','.active'],
+    ['', 'box_shadow', 'shadow','.active'],
+
+    '.bp3-icon svg',
+    ['height', 'i_size', 'slider','.active'],
+    ['width', 'i_size', 'slider','.active'],
+    ['margin', 'i_margin', 'dimensions','.active'],
+    '}',
+    '.bp3-icon path',
+    ['fill', 'i_color', 'color','.active'],
+    '}',
+    '.bp3-icon img',
+    ['height', 'i_size', 'slider','.active'],
+    ['width', 'i_size', 'slider','.active'],
+    ['margin', 'i_margin', 'dimensions','.active'],
+    '}',
+    '}',
+    // '.bp3-input.bp3-input.bp3-input.bp3-input::placeholder',
+    // ['', 'placeholder_style_font_typographic', 'typographic'],
+    // ['color', 'placeholder_style_font_color', 'color'],
+    // '}',
+    // '.bp3-input.bp3-input.bp3-input.bp3-input:hover::placeholder',
+    // ['', 'placeholder_style_font_typographic', 'typographic',':hover'],
+    // ['color', 'placeholder_style_font_color', 'color', ':hover'],
+    // '}',
+    // '.bp3-input.bp3-input.bp3-input.bp3-input:focus::placeholder',
+    // ['', 'placeholder_style_font_typographic', 'typographic',':focus'],
+    // ['color', 'placeholder_style_font_color', 'color', ':focus'],
+    // '}',
+    //</editor-fold>
+    //<editor-fold description="стили иконок">
+    '.bp3-icon svg',
+    ['height', 'i_size', 'slider'],
+    ['width', 'i_size', 'slider'],
+    ['margin', 'i_margin', 'dimensions'],
+    '}',
+    '.bp3-icon path',
+    ['fill', 'i_color', 'color'],
+    '}',
+    '.bp3-icon img',
+    ['height', 'i_size', 'slider'],
+    ['width', 'i_size', 'slider'],
+    ['margin', 'i_margin', 'dimensions'],
     '}',
     //</editor-fold>
 
   ];
   return styledString(styles, settings)
+}
+
+export function getInputSelectPopoverStyles(settings, elementId){
+  let styles = [
+  //<editor-fold description="стили поповера">
+    `.altrp-portal${elementId}`,
+    '.bp3-menu-item',
+    ['background-color', 'background_style_background_color', 'color'],
+    ['color', 'items_font_color', 'color'],
+    ['', 'field_font_typographic', 'typographic',],
+    '}',
+    '.bp3-menu-item:hover',
+    ['color', 'items_font_color', 'color', ':hover'],
+    ['background-color', 'background_style_background_color', 'color',':hover'],
+    ['', 'field_font_typographic', 'typographic', ':hover'],
+    '}',
+    '.bp3-menu-item.bp3-active.bp3-active',
+    ['color', 'items_font_color', 'color', '.active'],
+    ['background-color', 'background_style_background_color', 'color','.active'],
+    ['', 'field_font_typographic', 'typographic', '.active'],
+    '}',
+    '.bp3-input',
+    ['', 'field_font_typographic', 'typographic'],
+    ['height', 'si_size', 'slider'],
+    ['padding', 'si_padding', 'dimensions'],
+    ['color', 'si_color', 'color'],
+    ['background-color', 'si_bg_color', 'color'],
+    '}',
+    '.bp3-input:hover',
+    ['color', 'si_color', 'color', ':hover'],
+    ['background-color', 'si_bg_color', 'color', ':hover'],
+    '}',
+    '.bp3-input:focus',
+    ['color', 'si_color', 'color', ':focus'],
+    ['background-color', 'si_bg_color', 'color', ':focus'],
+    '}',
+    '.bp3-input-group .bp3-icon svg',
+      ['height', 'sii_size', 'slider'],
+      ['width', 'sii_size', 'slider'],
+      ['margin', 'sii_margin', 'dimensions'],
+    '}',
+    '.bp3-input-group .bp3-icon path',
+      ['fill', 'sii_color', 'color'],
+    '}',
+    '.bp3-icon-add svg',
+
+    ['height', 'a_size', 'slider'],
+    ['width', 'a_size', 'slider'],
+    ['margin', 'a_margin', 'dimensions'],
+    '}',
+    '.bp3-icon-add path',
+    ['fill', 'a_color', 'color'],
+    '}',
+    '.bp3-menu-item:hover .bp3-icon-add path',
+    ['fill', 'a_color', 'color', ':hover'],
+    '}',
+    '}',
+  //</editor-fold>
+  ];
+  return styledString(styles, settings)
+
 }

@@ -90,6 +90,8 @@ import ImageLightbox from "../elements/ImageLightbox";
 import ImageLightboxWidget from "../../components/widgets/ImageLightboxWidget";
 import InputSlider from "../elements/InputSlider";
 import InputSliderWidget from "../../components/widgets/InputSliderWidget";
+import InputGallery from "../elements/InputGallery";
+import InputGalleryWidget from "../../components/widgets/InputGalleryWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -122,6 +124,7 @@ export default class ElementsManger {
     this.elements[InputDate.getName()] = InputDate;
     this.elements[InputHidden.getName()] = InputHidden;
     this.elements[InputFile.getName()] = InputFile;
+    this.elements[InputGallery.getName()] = InputGallery;
     this.elements[Table.getName()] = Table;
     this.elements[Posts.getName()] = Posts;
     this.elements[Tabs.getName()] = Tabs;
@@ -167,6 +170,7 @@ export default class ElementsManger {
     this.components[InputDate.getName()] = InputDateWidget;
     this.components[InputHidden.getName()] = InputHiddenWidget;
     this.components[InputFile.getName()] = InputFileWidget;
+    this.components[InputGallery.getName()] = InputGalleryWidget;
     this.components[Text.getName()] = TextWidget;
     this.components[Image.getName()] = ImageWidget;
     this.components[Table.getName()] = TableWidget;

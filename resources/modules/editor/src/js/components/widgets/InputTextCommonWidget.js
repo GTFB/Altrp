@@ -7,9 +7,6 @@ const {
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpInput from "../altrp-input/AltrpInput";
 
-const Button = window.altrpLibs.Blueprint.Button;
-const Intent = window.altrpLibs.Blueprint.Intent;
-const Tooltip2 = window.altrpLibs.Tooltip2;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 .altrp-field-label_text-widget{
@@ -39,7 +36,6 @@ const Tooltip2 = window.altrpLibs.Tooltip2;
   flex-wrap: wrap;
 }
 
-.altrp-label-icon,
 .altrp-label-icon svg,
 .altrp-label-icon img {
   width: 20px;
@@ -652,7 +648,7 @@ class InputTextCommonWidget extends Component {
       );
     } catch (e) {
       console.error(
-        "Evaluate error in Input" + e.message,
+        "Evaluate error in Input " + e.message,
         this.props.element.getId()
       );
     }
