@@ -88,6 +88,8 @@ import TabsSwitcher from "../elements/TabsSwitcher";
 import TabsSwitcherWidget from "../../components/widgets/TabsSwitcherWidget";
 import ImageLightbox from "../elements/ImageLightbox";
 import ImageLightboxWidget from "../../components/widgets/ImageLightboxWidget";
+import InputSlider from "../elements/InputSlider";
+import InputSliderWidget from "../../components/widgets/InputSliderWidget";
 import InputGallery from "../elements/InputGallery";
 import InputGalleryWidget from "../../components/widgets/InputGalleryWidget";
 
@@ -142,6 +144,7 @@ export default class ElementsManger {
     this.elements[SectionWidget.getName()] = SectionWidget;
     this.elements[Dropbar.getName()] = Dropbar;
     this.elements[ImageLightbox.getName()] = ImageLightbox;
+    this.elements[InputSlider.getName()] = InputSlider;
     // Websocket Notifications
     // this.elements[Notifications.getName()] = Notifications;
     //список компонентов
@@ -192,6 +195,7 @@ export default class ElementsManger {
     this.components[Dropbar.getName()] = DropbarWidget;
     this.components[TabsSwitcher.getName()] = TabsSwitcherWidget;
     this.components[ImageLightbox.getName()] = ImageLightboxWidget;
+    this.components[InputSlider.getName()] = InputSliderWidget;
     // Websocket Notifications widget
     // this.components[Notifications.getName()] = NotificationsWidget;
   }

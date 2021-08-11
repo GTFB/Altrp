@@ -13,7 +13,7 @@ import {
 import Resource from "../../classes/Resource";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
-import {Checkbox} from "@blueprintjs/core";
+const Checkbox = window.altrpLibs.Blueprint.Checkbox;
 
 const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`

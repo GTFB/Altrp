@@ -12,7 +12,8 @@ import {
 import Resource from "../../classes/Resource";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
-import {Radio, RadioGroup} from "@blueprintjs/core";
+const Radio = window.altrpLibs.Blueprint.Radio;
+const RadioGroup = window.altrpLibs.Blueprint.RadioGroup;
 
 const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`

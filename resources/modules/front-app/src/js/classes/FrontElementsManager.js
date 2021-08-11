@@ -394,6 +394,14 @@ class FrontElementsManager {
             /* webpackChunkName: 'TabsSwitcherWidget' */ "../../../../editor/src/js/components/widgets/ImageLightboxWidget"
             );
         }
+      },
+      {
+        name: "input-slider",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputSliderWidget' */ "../../../../editor/src/js/components/widgets/InputSliderWidget"
+            );
+        }
       }
     ];
     this.components = {};

@@ -353,7 +353,6 @@ const fieldStyleHover = settings => {
 
   settings && (dotSize = getResponsiveSetting(settings, "size_style_dot", ":hover"));
 
-  console.log(dotSize, dotColor)
   if(dotSize || dotColor) {
 
     if(!dotSize) {
@@ -373,6 +372,82 @@ const fieldStyleHover = settings => {
 
     styles += `background-image: radial-gradient(${colorStyledSecond(dotColor)}, ${colorStyledSecond(dotColor)} ${sliderStyled(dotSize)}, rgba(0, 0, 0, 0) calc(${sliderStyled(dotSize)} + 6%));`
   }
+
+  styles += "}";
+
+  return styles
+};
+
+const fieldStyleActive = settings => {
+  let styles = `.altrp-field-container .altrp-field-radio.active .bp3-control-indicator.bp3-control-indicator.bp3-control-indicator {`;
+  let padding,
+    color,
+    typographic,
+    backgroundColor,
+    borderType,
+    borderWidth,
+    borderColor,
+    borderRadius,
+    boxShadow,
+    size
+  ;
+
+  const {
+    placeholder_and_value_alignment_position_section,
+    position_z_index,
+    input_position,
+    textarea_resize,
+    justify_options,
+    image_select_item_width,
+    image_select_item_height,
+    image_select_image_fit,
+    image_select_image_position,
+    cross_size
+  } = settings;
+
+  settings && (boxShadow = getResponsiveSetting(settings, "box_shadow", ".active"));
+  boxShadow && (styles += shadowControllerToStyles(boxShadow));
+
+  // settings &&
+  // (typographic = getResponsiveSetting(settings, "field_font_typographic"));
+  // typographic && (styles += typographicControllerToStyles(typographic));
+
+  // settings && (color = getResponsiveSetting(settings, "field_font_color"));
+  // color && (styles += colorPropertyStyled(color, "color"));
+
+  settings && (borderType = getResponsiveSetting(settings, "border_type", ".active"));
+  borderType &&
+  (styles += simplePropertyStyled(borderType, "border-style", "!important"));
+
+  settings && (borderColor = getResponsiveSetting(settings, "border_color", ".active"));
+  borderColor && (styles += colorPropertyStyled(borderColor, "border-color"));
+
+  settings && (borderWidth = getResponsiveSetting(settings, "border_width", ".active"));
+  borderWidth && (styles += borderWidthStyled(borderWidth));
+
+  settings &&
+  (borderRadius = getResponsiveSetting(
+    settings,
+    "border_radius",
+    ".active"
+  ));
+  borderRadius &&
+  (styles += dimensionsControllerToStyles(borderRadius, "border-radius"));
+
+  settings &&
+  (backgroundColor = getResponsiveSetting(
+    settings,
+    "background_style_background_color",
+    ".active"
+  ));
+  backgroundColor &&
+  (styles += colorPropertyStyled(backgroundColor, "background-color"));
+
+  placeholder_and_value_alignment_position_section &&
+  (styles += `text-align:${placeholder_and_value_alignment_position_section};`);
+
+  position_z_index && (styles += `z-index:${position_z_index};`);
+  textarea_resize && (styles += `resize:${textarea_resize};`);
 
   styles += "}";
 
@@ -804,52 +879,87 @@ const maskMismatchMessage = (settings, id) => {
   return styles;
 };
 //Точка входа
-function InputCheckboxComponent(settings) {
+function InputCheckboxComponent(settings, elementId, prefix) {
 
   let styles = "";
+
+  styles += `.${prefix}${elementId} {`;
   const { background_section_opacity } = settings;
   //for all element
   background_section_opacity &&
   (styles += `opacity:${background_section_opacity.size};`);
+  styles += `}`;
   //altrp-input-wrapper
+  styles += `.${prefix}${elementId} {`;
   const inputWrapperStyles = inputWrapperStyle(settings);
   inputWrapperStyles && (styles += inputWrapperStyles);
+  styles += `}`;
   //altrp-field-container
+  styles += `.${prefix}${elementId} {`;
   const containerStyles = containerStyle(settings);
   containerStyles && (styles += containerStyles);
-  //altrp-field
+  styles += `}`;
+  //altrp-field-radio
+  styles += `.${prefix}${elementId} {`;
   const fieldStyles = fieldStyle(settings);
   fieldStyles && (styles += fieldStyles);
-  //altrp-field:hover
+  styles += `}`;
+  //altrp-field-radio:hover
+  styles += `.${prefix}${elementId} {`;
   const fieldStylesHover = fieldStyleHover(settings);
   fieldStylesHover && (styles += fieldStylesHover);
+  styles += `}`;
+  //altrp-field-radio.active
+  styles += `.${prefix}${elementId} {`;
+  const fieldStylesActive = fieldStyleActive(settings);
+  fieldStylesActive && (styles += fieldStylesActive);
+  styles += `}`;
+
   //altrp-field:focus
+  styles += `.${prefix}${elementId} {`;
   const fieldStylesFocus = fieldStyleFocus(settings);
   fieldStylesFocus && (styles += fieldStylesFocus);
+  styles += `}`;
   //altrp-image-select__label
+  styles += `.${prefix}${elementId} {`;
   const imageSelectLabelStyles = imageSelectLabel(settings);
   imageSelectLabelStyles && (styles += imageSelectLabelStyles);
+  styles += `}`;
   //altrp-field-select2__single-value
+  styles += `.${prefix}${elementId} {`;
   const fieldSelect2SingleValueStyles = fieldSelect2SingleValueStyle(settings);
   fieldSelect2SingleValueStyles && (styles += fieldSelect2SingleValueStyles);
+  styles += `}`;
   //altrp-field-select2__single-value
+  styles += `.${prefix}${elementId} {`;
   const fieldLabelContainerStyles = fieldLabelContainerStyle(settings);
   fieldLabelContainerStyles && (styles += fieldLabelContainerStyles);
+  styles += `}`;
   //altrp-field-label
+  styles += `.${prefix}${elementId} {`;
   const fieldLabelStyles = fieldLabel(settings);
   fieldLabelStyles && (styles += fieldLabelStyles);
+  styles += `}`;
   //altrp-label-icon
+  styles += `.${prefix}${elementId} {`;
   const labelIconStyles = labelIconStyle(settings);
   labelIconStyles && (styles += labelIconStyles);
+  styles += `}`;
   //altrp-field::placeholder altrp-field-select2__placeholder altrp-field-file__placeholder
+  styles += `.${prefix}${elementId} {`;
   const placeholderStyles = placeholderStyle(settings);
   placeholderStyles && (styles += placeholderStyles);
+  styles += `}`;
   //altrp-field-label--required::after
+  styles += `.${prefix}${elementId} {`;
   const fieldLabelRequiredStyles = fieldLabelRequired(settings);
   fieldLabelRequiredStyles && (styles += fieldLabelRequiredStyles);
+  styles += `}`;
   //mask-mismatch-message
+  styles += `.${prefix}${elementId} {`;
   const maskMismatchMessageStyles = maskMismatchMessage(settings);
   maskMismatchMessageStyles && (styles += maskMismatchMessageStyles);
+  styles += `}`;
   //finish
   return styles;
 }
