@@ -3,6 +3,8 @@ const WIDGETS_DEPENDS = {
   'menu': ['blueprint'],
   'breadcrumbs': ['blueprint'],
   'tabs': ['blueprint', 'template-loader'],
+  'tabs-switcher': [ 'template-loader'],
+  'carousel': [ 'template-loader'],
   'input': ['moment'],
   'section': ['section-element-wrapper'],
   'column': ['section-element-wrapper'],
