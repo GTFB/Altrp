@@ -1,11 +1,64 @@
-import {
-  renderAsset,
-  renderAssetIcon
-} from "../../../../../front-app/src/js/helpers";
-import TemplateLoader from "../template-loader/TemplateLoader";
-import {Tab, Tabs} from "@blueprintjs/core";
-
+const {
+  TemplateLoader,
+  renderAssetIcon,
+} = window.altrpHelpers;
+const {Tab, Tabs} = window.altrpLibs.Blueprint;
 (window.globalDefaults = window.globalDefaults || []).push(`
+
+.altrp-tab-btn-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.altrp-tab-btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+.altrp-tab-btn p {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.altrp-tab-btn-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.altrp-tabs-left {
+  display: flex;
+  flex-direction: row;
+}
+
+.altrp-tabs-left .altrp-tab-btn-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.altrp-tabs-right {
+  display: flex;
+  flex-direction: row;
+}
+
+.altrp-tabs-right .altrp-tab-btn-container {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.altrp-tab-btn-column:last-child {
+  margin-right: 0px !important;
+}
+
+.altrp-tab-btn-row:last-child {
+  margin-bottom: 0px !important;
+}
+
   .bp3-tab-indicator-wrapper {
     z-index: 9999
   }
@@ -71,22 +124,6 @@ class TabsWidget extends Component {
       ...s,
       selected
     }))
-    // let button = e.currentTarget;
-    // let collectionTabs = button.parentNode.parentNode.getElementsByClassName(
-    //   "altrp-tab-content"
-    // )[0];
-    // let currentTab = collectionTabs.children[button.dataset.key];
-    //
-    // for (let i = 0; i < collectionTabs.children.length; i++) {
-    //   collectionTabs.children[i].classList.remove("altrp-tab-show");
-    //   e.currentTarget.parentNode.children[i].classList.remove("active");
-    // }
-    // currentTab.classList.add("altrp-tab-show");
-    // // e.currentTarget.classList.add("active");
-    // this.setState(state => ({
-    //   ...state,
-    //   activeTab: Number(button.dataset.key) || 0
-    // }));
   }
 
   showTab(tabKey) {
@@ -134,24 +171,24 @@ class TabsWidget extends Component {
     let buttonClasses = "";
 
     const vertical = this.props.element.getResponsiveSetting("vertical", "", false);
-    const animate = this.props.element.getResponsiveSetting("animate", "", true);
+    const animate = this.props.element.getResponsiveSetting("animate");
 
     let tabs = <div></div>;
     if (this.state.settings.items_tabs) {
-      tabs = this.state.settings.items_tabs.map((tab, idx) => {
+      tabs = this.state.settings.items_tabs?.map((tab, idx) => {
         let iconStyles = {};
 
         if (this.state.settings.alignment_icon_style === "left") {
           iconStyles = {
             paddingRight:
-              this.state.settings.spacing_icon_style.size +
-              this.state.settings.spacing_icon_style.unit
+              this.state.settings.spacing_icon_style?.size +
+              this.state.settings.spacing_icon_style?.unit
           };
         } else {
           iconStyles = {
             paddingLeft:
-              this.state.settings.spacing_icon_style.size +
-              this.state.settings.spacing_icon_style.unit
+              this.state.settings.spacing_icon_style?.size +
+              this.state.settings.spacing_icon_style?.unit
           };
         }
 
@@ -168,7 +205,6 @@ class TabsWidget extends Component {
             }
           }
         }
-        console.log(tab.card_template)
         return (
           <Tab
             id={`tab-${idx + 1}`}
@@ -199,50 +235,7 @@ class TabsWidget extends Component {
         );
       });
     }
-
-      // if (this.state.settings.items_tabs) {
-      //   tabWrapper = this.state.settings.items_tabs.map((tab, idx) => {
-      //     let show = "";
-      //     if (idx == 0) {
-      //       show = "altrp-tab-show";
-      //     }
-      //
-      //     return (
-      //       <div data-key={idx} className={"altrp-tab " + show} key={idx}>
-      //         {tab.card_template ? (
-      //           <TemplateLoader templateId={tab.card_template} />
-      //         ) : (
-      //           tab.wysiwyg_items
-      //         )}
-      //       </div>
-      //     );
-      //   });
-      // }
-
-    //   let tabsStyles = "";
-    //
-    //   if (this.state.settings.layout_tabs == "left") {
-    //     tabsStyles = " altrp-tabs-left";
-    //   }
-    //   if (this.state.settings.layout_tabs == "right") {
-    //     tabsStyles = " altrp-tabs-right";
-    //   }
-    //   tab = (
-    //     <div className={"altrp-tabs" + tabsStyles}>
-    //       {this.state.settings.layout_tabs == "top" ||
-    //       this.state.settings.layout_tabs == "left" ? (
-    //         <div className="altrp-tab-btn-container">{tabs}</div>
-    //       ) : null}
-    //       <div className="altrp-tab-content">{tabWrapper}</div>
-    //       {this.state.settings.layout_tabs == "bottom" ||
-    //       this.state.settings.layout_tabs == "right" ? (
-    //         <div className="altrp-tab-btn-container">{tabs}</div>
-    //       ) : null}
-    //     </div>
-    //   );
-    // }
-
-    const blueprintTabs = <Tabs
+    return <Tabs
       onChange={this.blueprintShow}
       className={"altrp-tabs" +
       (vertical ? " altrp-tabs-vertical" : " altrp-tabs-horizontal") +
@@ -258,7 +251,6 @@ class TabsWidget extends Component {
         tabs
       }
     </Tabs>
-    return blueprintTabs
   }
 }
 

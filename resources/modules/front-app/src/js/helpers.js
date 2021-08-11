@@ -326,7 +326,6 @@ export function parseParamsFromString(
     if (replace && left.indexOf("{{") !== -1) {
       left = replaceContentWithData(left);
     }
-    console.log(replace);
     if (replace && right.match(/{{([\s\S]+?)(?=}})/g)) {
       if (
         context.getProperty(
@@ -1079,13 +1078,11 @@ export function scrollToElement(scrollbars, element) {
       /**
        * ушли в самый корень ДОМ и контейнер не встретился
        */
-      console.log(top);
       return;
     }
     top += parent.offsetTop;
     parent = parent.offsetParent;
   }
-  console.log(top);
   /**
    * не получили каеое-либо значение
    */
@@ -1862,9 +1859,6 @@ export function convertData(settings, data) {
   if (_.isArray(settings)) {
     settings.forEach(item => {
       const converter = getConverter(item);
-      console.log("====================================");
-      console.log(item, data);
-      console.log("====================================");
       data = converter.convertData(data);
     });
   }
@@ -1907,7 +1901,6 @@ export function redirect(linkSettings, e, context = {}) {
   e.stopPropagation();
   let { url } = linkSettings;
   url = replaceContentWithData(url, context);
-  console.log(linkSettings);
   if (linkSettings.openInNew) {
     window.open(url, "_blank");
     return;

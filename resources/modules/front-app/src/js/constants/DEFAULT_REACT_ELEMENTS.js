@@ -34,6 +34,7 @@ const DEFAULT_REACT_ELEMENTS = [
   'dropbar',
   'posts',
   'table',
+  'tabs',
   'heading-type-animating',
 ]
 export default DEFAULT_REACT_ELEMENTS

@@ -32,6 +32,7 @@ const SKELETON_ELEMENTS = [
   'dropbar',
   'posts',
   'table',
+  'tabs',
   'heading-type-animating',
 ]
 export default SKELETON_ELEMENTS

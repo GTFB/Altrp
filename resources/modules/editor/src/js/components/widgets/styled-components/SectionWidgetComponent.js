@@ -612,18 +612,15 @@ export default function SectionWidgetComponent(settings, childrenLength) {
   & > div.altrp-section.active,
   & > div.altrp-section-full-fill.active {
     ${altrpSectionHover(settings,'.active')}
-    ${()=>{
+    ${(()=>{
       const  styles = [
-        '&{'
         ['margin', 'position_style_position_margin', 'dimensions', '.active'],
         ['padding', 'position_style_position_padding', 'dimensions', '.active'],
-        '}',
       ];
-
-      return styledString(styles);
-    }
+      return styledString(styles, settings);
+    })()
   }
-
+  }
   & > div.altrp-section div.altrp-column {
     ${altrpSectionColumn(settings)}
   }

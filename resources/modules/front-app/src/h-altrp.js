@@ -1,4 +1,5 @@
 console.log('FIRST SCRIPT: ', performance.now());
+console.log('FIRST SCRIPT: ', performance.now());
 import loadDepends from "./js/functions/load-depends";
 import loadFontsManager from "./js/functions/load-fonts";
 import  queryString from 'query-string';

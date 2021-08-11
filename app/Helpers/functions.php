@@ -1041,6 +1041,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'template',
     'gallery',
     'table',
+    'tabs',
     'heading-type-animating',
   ];
   if( ! is_array( $elementNames ) ){
@@ -1100,6 +1101,15 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     foreach ($columns as $column) {
       if(data_get($column, 'column_template')){
         extractElementsNamesFromTemplate( data_get($column, 'column_template'), $elementNames );
+      }
+    }
+  }
+  if( $element['name'] === 'tabs'
+    && data_get( $element, 'settings.items_tabs' ) ){
+    $tabs = data_get( $element, 'settings.items_tabs', [] );
+    foreach ($tabs as $tab) {
+      if(data_get($tab, 'card_template')){
+        extractElementsNamesFromTemplate( data_get($tab, 'card_template'), $elementNames );
       }
     }
   }

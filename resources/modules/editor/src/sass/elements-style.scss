@@ -378,60 +378,6 @@
   flex: 0 0 auto;
 }
 
-.altrp-tab-btn-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.altrp-tab-btn {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin: 0;
-}
-
-.altrp-tab-btn p {
-  margin: 0;
-  white-space: nowrap;
-}
-
-.altrp-tab-btn-icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.altrp-tabs-left {
-  display: flex;
-  flex-direction: row;
-}
-
-.altrp-tabs-left .altrp-tab-btn-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.altrp-tabs-right {
-  display: flex;
-  flex-direction: row;
-}
-
-.altrp-tabs-right .altrp-tab-btn-container {
-  margin-left: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.altrp-tab-btn-column:last-child {
-  margin-right: 0px !important;
-}
-
-.altrp-tab-btn-row:last-child {
-  margin-bottom: 0px !important;
-}
-
 .app-popup {
   position: fixed;
   //display: none;

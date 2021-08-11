@@ -63,7 +63,7 @@ class FrontApp extends Component {
         });
 
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
       const {currentUser} = appStore.getState();
       // Подключение слушателя канала

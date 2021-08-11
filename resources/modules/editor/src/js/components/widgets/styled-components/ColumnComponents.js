@@ -114,7 +114,7 @@ const ColumnComponent = (settings) => {
   if (backgroundColor) {
     styles += colorPropertyStyled(backgroundColor, 'background-color');
   }
-
+  // console.log(settings);
   //Получаем значения gradient из контроллера, обрабатываем и добавляем в styles
 
   if (settings !== undefined) {

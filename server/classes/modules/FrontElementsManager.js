@@ -7,7 +7,6 @@ import TextWidget from '../../../resources/modules/editor/src/js/components/widg
 import ImageWidget from '../../../resources/modules/editor/src/js/components/widgets/ImageWidget';
 // import NavWidget from '../../../resources/modules/editor/src/js/components/widgets/NavWidget';
 import DividerWidget from '../../../resources/modules/editor/src/js/components/widgets/DividerWidget';
-import TabsWidget from '../../../resources/modules/editor/src/js/components/widgets/TabsWidget';
 import PosterWidget from '../../../resources/modules/editor/src/js/components/widgets/PosterWidget';
 import ListWidget from '../../../resources/modules/editor/src/js/components/widgets/ListWidget';
 import AccordionWidget from '../../../resources/modules/editor/src/js/components/widgets/AccordionWidget';
@@ -53,7 +52,6 @@ class FrontElementsManager {
     this.components['image'] = ImageWidget;
     this.components['posts'] = PostsWidget;
     this.components['divider'] = DividerWidget;
-    this.components['tabs'] = TabsWidget;
     this.components['poster'] = PosterWidget;
     this.components['list'] = ListWidget;
     this.components['accordion'] = AccordionWidget;

@@ -5,13 +5,23 @@ import DynamicIcon from '../../../svgs/dynamic.svg'
 import controllerDecorate from "../../decorators/controller";
 import { iconsManager } from "../../../../../admin/src/js/helpers";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
+import {getTemplateDataStorage} from "../../helpers";
 
 class TextController extends Component {
   constructor(props) {
     super(props);
     controllerDecorate(this);
     this.changeValue = this.changeValue.bind(this);
-    let value = this.getSettings(this.props.controlId);
+
+    let value;
+    switch (this.props.controlId){
+      case '__template_name':{
+        value = getTemplateDataStorage().title
+      }break
+      default:{
+        value = this.getSettings(this.props.controlId);
+      }
+    }
     if (value === null && this.props.default) {
       value = this.props.default;
     }

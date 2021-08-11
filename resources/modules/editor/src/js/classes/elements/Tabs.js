@@ -22,41 +22,50 @@ import {
   CONTROLLER_WYSIWYG, CONTROLLER_SHADOW
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
-import { advancedTabControllers } from "../../decorators/register-controllers";
+import {advancedTabControllers} from "../../decorators/register-controllers";
 
 class Tabs extends BaseElement {
   static getName() {
     return "tabs";
   }
+
   static getTitle() {
     return "Tabs";
   }
+
   static getIconComponent() {
     return TabsIcon;
   }
+
   static getType() {
     return "widget";
   }
+
   _registerControls() {
     if (this.controllersRegistered) {
       return;
     }
 
-    this.startControlSection("tabs_content", {
+    this.startControlSection("tabs_settings", {
       tab: TAB_CONTENT,
-      label: "Tabs"
+      label: "Settings"
     });
 
     this.addControl('vertical', {
       type: CONTROLLER_SWITCHER,
-      default: false,
       label: 'Vertical',
     });
 
     this.addControl('animate', {
       type: CONTROLLER_SWITCHER,
-      default: true,
       label: 'Animate',
+    });
+
+    this.endControlSection()
+
+    this.startControlSection("tabs_content", {
+      tab: TAB_CONTENT,
+      label: "Tabs"
     });
 
     let repeater = new Repeater();
@@ -66,11 +75,6 @@ class Tabs extends BaseElement {
       label: 'Title & content',
       default: 'tab'
     });
-
-    // repeater.addControl('id_items', {
-    //   type: CONTROLLER_TEXT,
-    //   label: 'ID for default activation',
-    // });
 
     repeater.addControl('icon_items', {
       type: CONTROLLER_MEDIA,
@@ -97,15 +101,22 @@ class Tabs extends BaseElement {
       type: CONTROLLER_REPEATER,
       fields: repeater.getControls(),
       default: [
-        { title_and_content_items: "tab #1", wysiwyg_items: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." },
-        { title_and_content_items: "tab #2", wysiwyg_items: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)." }
+        {
+          title_and_content_items: "tab #1",
+          id: 1,
+          wysiwyg_items: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+        },
+        {
+          title_and_content_items: "tab #2",
+          id: 2,
+          wysiwyg_items: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)."
+        }
       ]
     });
 
     this.addControl('alignment_tabs', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      // default: 'flex-start',
       options: [
         {
           icon: 'left',
@@ -129,10 +140,6 @@ class Tabs extends BaseElement {
     this.addControl("spacing_column_tabs", {
       type: CONTROLLER_SLIDER,
       label: "Tab spacing",
-      default: {
-        // size: 10,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       max: 100,
       min: 0,
@@ -141,10 +148,6 @@ class Tabs extends BaseElement {
     this.addControl("spacing_content_tabs", {
       type: CONTROLLER_SLIDER,
       label: "Content spacing",
-      default: {
-        // size: 10,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       max: 100,
       min: 0,
@@ -160,57 +163,27 @@ class Tabs extends BaseElement {
     this.addControl("background_tab_style", {
       type: CONTROLLER_COLOR,
       label: "Background tabs",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
     });
 
     this.addControl("background_type_tab_style", {
       type: CONTROLLER_COLOR,
       label: "Background buttons",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
     });
 
     this.addControl("background_text_color_tab_style", {
       type: CONTROLLER_COLOR,
       label: "Text color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
     });
 
     this.addControl('box_shadow_tab_style', {
-      type: CONTROLLER_SHADOW,
-      label: 'Box shadow',
-      default: {
-        blur: 0,
-        horizontal: 0,
-        vertical: 0,
-        opacity: 1,
-        spread: 0,
-        colorRGB: 'rgb(0, 0, 0)',
-        color: 'rgb(0, 0, 0)',
-        colorPickedHex: '#000000',
-        type: ""
-      },
-    }
+        type: CONTROLLER_SHADOW,
+        label: 'Box shadow',
+      }
     );
 
     this.addControl("padding_tab_style", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      default: {
-        /* top: 10,
-        right: 15,
-        bottom: 10,
-        left: 15, */
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
     });
 
@@ -255,19 +228,11 @@ class Tabs extends BaseElement {
     this.addControl("border_color_tab_style", {
       type: CONTROLLER_COLOR,
       label: "Border color",
-      default: {
-        // color: "rgb(50,168,82)",
-        // colorPickedHex: "#32a852"
-      },
     });
 
     this.addControl("border_radius_tab_style", {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
-      default: {
-        // size: 0,
-        unit: 'px',
-      },
       units: [
         'px',
         '%',
@@ -278,17 +243,9 @@ class Tabs extends BaseElement {
     });
 
     this.addControl('typographic_tab_style', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Typographic',
-      default: {
-        lineHeight: 1.5,
-        spacing: 0,
-        size: 14,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
-    }
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+      }
     );
 
     this.endControlSection();
@@ -301,9 +258,6 @@ class Tabs extends BaseElement {
     this.addControl('indicator_height', {
       type: CONTROLLER_SLIDER,
       label: 'Indicator position',
-      default: {
-        unit: 'px',
-      },
       max: 100,
       min: 0,
     });
@@ -311,10 +265,6 @@ class Tabs extends BaseElement {
     this.addControl('indicator_color', {
       type: CONTROLLER_COLOR,
       label: 'Color',
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
     });
 
     this.endControlSection();
@@ -327,33 +277,18 @@ class Tabs extends BaseElement {
     this.addControl("background_content_style", {
       type: CONTROLLER_COLOR,
       label: "Background",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       presetColors: ["#eaeaea", "#9c18a8"],
     });
 
     this.addControl("text_color_content_style", {
       type: CONTROLLER_COLOR,
       label: "Text color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
       presetColors: ["#eaeaea", "#9c18a8"],
     });
 
     this.addControl("padding_content_style", {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
-      default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
     });
 
@@ -398,19 +333,11 @@ class Tabs extends BaseElement {
     this.addControl("border_color_content_style", {
       type: CONTROLLER_COLOR,
       label: "Border color",
-      default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852"
-      },
     });
 
     this.addControl("border_radius_content_style", {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
-      default: {
-        size: 0,
-        unit: 'px',
-      },
       units: [
         'px',
         '%',
@@ -421,17 +348,9 @@ class Tabs extends BaseElement {
     });
 
     this.addControl('typographic_content_style', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Typographic',
-      default: {
-        lineHeight: 1.4,
-        spacing: 0,
-        size: 16,
-        weight: "normal",
-        family: "Open Sans",
-        decoration: ""
-      },
-    }
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typographic',
+      }
     );
 
     this.endControlSection();
@@ -444,7 +363,6 @@ class Tabs extends BaseElement {
     this.addControl('alignment_icon_style', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: 'left',
       options: [
         {
           icon: 'block_left',
@@ -460,19 +378,11 @@ class Tabs extends BaseElement {
     this.addControl("color_icon_style", {
       type: CONTROLLER_COLOR,
       label: "Color",
-      default: {
-        color: "rgb(50,168,82)",
-        colorPickedHex: "#32a852"
-      },
     });
 
     this.addControl("spacing_icon_style", {
       type: CONTROLLER_SLIDER,
       label: "Spacing",
-      default: {
-        size: 8,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       max: 100,
       min: 0,
