@@ -149,7 +149,7 @@ const fieldStyle = settings => {
 
   styles += "}";
 
-  styles += `&& .altrp-field-subgroup {`;
+  styles += `&& .altrp-field-radio-group {`;
 
   let fieldAlignment;
 

@@ -175,10 +175,11 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         }
           break;
         case "input-radio": {
-          styles += `.${prefix}${id} {${InputRadioComponent(
+          styles += InputRadioComponent(
             item.settings,
-            id
-          )}}`;
+            id,
+            prefix
+          )
         }break;
         case "input-text":
         case "input-password":
@@ -224,7 +225,8 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
   styles += `} `;
   window.globalDefaults && (styles += window.globalDefaults.join(''));
   return styles;
-}}`;
+}}`
+
 function mapStateToProps(state) {
   if(isEditor()){
     return {};

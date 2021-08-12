@@ -6,7 +6,7 @@ import {
   colorPropertyStyled,
   borderWidthStyled,
   shadowControllerToStyles,
-  sizeStyled, sliderStyled, defaultStyled, colorStyled, colorStyledSecond
+  sizeStyled, sliderStyled, defaultStyled, colorStyled, colorStyledSecond, styledString
 } from "../../../../../../front-app/src/js/helpers/styles";
 
 /**
@@ -32,12 +32,17 @@ const inputWrapperStyle = settings => {
  */
 const containerStyle = settings => {
   let styles = `&& .altrp-field-container {`;
-  let margin;
+  let margin, aligment;
 
   //margin begin
   settings && (margin = getResponsiveSetting(settings, "position_margin"));
   margin && (styles += dimensionsControllerToStyles(margin, "margin"));
   //margin end
+
+  settings && (aligment = getResponsiveSetting(settings, "alignment_radio"));
+  aligment && (styles += `justify-content: ${defaultStyled(aligment)};`);
+  //margin end
+
 
   styles += "}";
   return styles;

@@ -18,6 +18,12 @@ const RadioGroup = window.altrpLibs.Blueprint.RadioGroup;
 const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`
 
+.altrp-field-radio-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
 .altrp-field-container .bp3-radio {
   margin-bottom: 0;
 }
@@ -272,10 +278,7 @@ const { moment } = window.altrpHelpers;
   font-size: 28px;
   font-weight: bold;
 }
-.altrp-field-subgroup {
-  display: flex;
-  flex-wrap: wrap;
-}
+
 .altrp-field-option {
   display: flex;
   padding: 10px;
@@ -1104,7 +1107,7 @@ class InputRadioWidget extends Component {
     return (
       <AltrpFieldContainer
         settings={settings}
-        className={"altrp-field-container "}
+        className={"altrp-field-container altrp-field-radio-container "}
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}
@@ -1120,6 +1123,8 @@ class InputRadioWidget extends Component {
    * Выводит input type=checkbox|radio
    */
   renderRepeatedInput() {
+    const inline = this.props.element.getResponsiveSetting("vertical_radio", "", false);
+
     const { options = [] } = this.state;
     let { value = "" } = this.state;
     const fieldName =
@@ -1134,9 +1139,9 @@ class InputRadioWidget extends Component {
         .substr(2, 9);
     return (
       <RadioGroup
-        className="altrp-field-subgroup"
+        className="altrp-field-radio-group"
         name={`${formID}-${fieldName}`}
-        inline
+        inline={!inline}
         onChange={this.onChange}
         selectedValue={this.state.value}
       >
