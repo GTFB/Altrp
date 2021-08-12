@@ -195,8 +195,7 @@ const fieldStyle = settings => {
   let dotSize;
 
   settings && (dotSize = getResponsiveSetting(settings, "size_style_dot"));
-
-  console.log(dotSize, dotColor)
+  
   if(dotSize || dotColor) {
 
     if(!dotSize) {
