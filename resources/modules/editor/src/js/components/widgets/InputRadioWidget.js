@@ -20,8 +20,8 @@ const { moment } = window.altrpHelpers;
 
 .altrp-field-radio-container {
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .altrp-field-container .bp3-radio {
@@ -1138,47 +1138,50 @@ class InputRadioWidget extends Component {
         .toString(36)
         .substr(2, 9);
     return (
-      <RadioGroup
-        className="altrp-field-radio-group"
-        name={`${formID}-${fieldName}`}
-        inline={!inline}
-        onChange={this.onChange}
-        selectedValue={this.state.value}
-      >
-        {options.map((option, idx) => {
-          let checked = false;
-          /**
-           * Если значение или опция число, то приведем к числу перед сравнением
-           */
-          if (this.props.element.getName() === "input-radio") {
-            checked = altrpCompare(value, option.value, "==");
-          } else {
-            value = _.isArray(value) ? value : value ? [value] : [];
-            checked = altrpCompare(option.value, value, "in");
-          }
-          return (
-            <Radio
-              className={`altrp-field-radio ${checked ? "active" : ""}`}
-              label={option.label}
-              value={option.value}
-              key={`${fieldName}-${idx}`}
-            />
-            // <span className="altrp-field-option-span">
-            //   {/*<Radio*/}
-            //   {/*  // type="radio"*/}
-            //   {/*  value={option.value}*/}
-            //   {/*  // name={`${formID}-${fieldName}`}*/}
-            //   {/*  // className={`altrp-field-option__input ${checked ? "active" : ""*/}
-            //   {/*    // }`}*/}
-            //   {/*  // onChange={this.onChange}*/}
-            //   {/*  // checked={checked}*/}
-            //   {/*  // id={`${formID}-${fieldName}-${idx}`}*/}
-            //   {/*/>*/}
-            // </span>
-            // </Radio>
-          );
-        })}
-      </RadioGroup>
+      <div className="altrp-field-subgroup">
+        <RadioGroup
+          className="altrp-field-radio-group"
+          name={`${formID}-${fieldName}`}
+          inline={!inline}
+          onChange={this.onChange}
+          selectedValue={this.state.value}
+        >
+          {options.map((option, idx) => {
+            let checked = false;
+            /**
+             * Если значение или опция число, то приведем к числу перед сравнением
+             */
+            if (this.props.element.getName() === "input-radio") {
+              checked = altrpCompare(value, option.value, "==");
+            } else {
+              value = _.isArray(value) ? value : value ? [value] : [];
+              checked = altrpCompare(option.value, value, "in");
+            }
+            return (
+              <Radio
+                className={`altrp-field-radio ${checked ? "active" : ""}`}
+                label={option.label}
+                value={option.value}
+                key={`${fieldName}-${idx}`}
+              />
+              // <span className="altrp-field-option-span">
+              //   {/*<Radio*/}
+              //   {/*  // type="radio"*/}
+              //   {/*  value={option.value}*/}
+              //   {/*  // name={`${formID}-${fieldName}`}*/}
+              //   {/*  // className={`altrp-field-option__input ${checked ? "active" : ""*/}
+              //   {/*    // }`}*/}
+              //   {/*  // onChange={this.onChange}*/}
+              //   {/*  // checked={checked}*/}
+              //   {/*  // id={`${formID}-${fieldName}-${idx}`}*/}
+              //   {/*/>*/}
+              // </span>
+              // </Radio>
+            );
+          })}
+        </RadioGroup>
+      </div>
+
     );
   }
 }

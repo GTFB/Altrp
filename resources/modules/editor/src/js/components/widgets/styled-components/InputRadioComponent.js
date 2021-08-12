@@ -40,7 +40,7 @@ const containerStyle = settings => {
   //margin end
 
   settings && (aligment = getResponsiveSetting(settings, "alignment_radio"));
-  aligment && (styles += `justify-content: ${defaultStyled(aligment)};`);
+  aligment && (styles += `align-items: ${defaultStyled(aligment)};`);
   //margin end
 
 
@@ -195,7 +195,7 @@ const fieldStyle = settings => {
   let dotSize;
 
   settings && (dotSize = getResponsiveSetting(settings, "size_style_dot"));
-  
+
   if(dotSize || dotColor) {
 
     if(!dotSize) {
