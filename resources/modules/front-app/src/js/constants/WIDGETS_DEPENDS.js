@@ -17,5 +17,6 @@ const WIDGETS_DEPENDS = {
   'input-wysiwyg': ['ckeditor'],
   'input-date': ['blueprint', 'blueprint-datetime', 'moment'],
   'input-slider': ['blueprint'],
+  'tabs': ['blueprint'],
 }
 export default WIDGETS_DEPENDS;

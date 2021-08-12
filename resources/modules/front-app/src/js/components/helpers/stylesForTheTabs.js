@@ -388,7 +388,7 @@ import {
 
       styles+="} ";
 
-      styles+=`${parentClass} .altrp-tab-content {`;
+      styles+=`${parentClass} .altrp-tab-content, ${parentClass} .altrp-tab-btn.bp3-tab-panel {`;
 
       //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
 
@@ -447,12 +447,12 @@ import {
       }
 
       if (borderRadius) {
-        styles += simplePropertyStyled(borderRadius, 'border-radius');
+        styles += `border-radius: ${sliderStyled(borderRadius)};`;
       }
 
       styles+="} ";
 
-      styles+=`${parentClass} .altrp-tab-content:hover {`;
+      styles+=`${parentClass} .altrp-tab-content:hover, ${parentClass} .altrp-tab-btn.bp3-tab-panel:hover {`;
 
       //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
 
@@ -511,12 +511,12 @@ import {
       }
 
       if (borderRadius) {
-        styles += simplePropertyStyled(borderRadius, 'border-radius');
+        styles += `border-radius: ${sliderStyled(borderRadius)};`;
       }
 
       styles+="} ";
 
-      styles+=`${parentClass} .altrp-tab-content div {`;
+      styles+=`${parentClass} .altrp-tab-content div, ${parentClass} .altrp-tab-btn.bp3-tab-panel div {`;
 
       //Получаем значения color из контроллера, обрабатываем и добавляем в styles
 
@@ -540,7 +540,7 @@ import {
 
       styles+="} ";
 
-      styles+=`${parentClass} .altrp-tab-content div:hover {`;
+      styles+=`${parentClass} .altrp-tab-content div:hover, ${parentClass} .altrp-tab-btn.bp3-tab-panel div:hover {`;
 
       //Получаем значения color из контроллера, обрабатываем и добавляем в styles
 
@@ -732,6 +732,7 @@ import {
 
     styles+=`} `;
 
+    console.log(styles)
     return styles;
   }
 

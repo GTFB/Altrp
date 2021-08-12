@@ -3,11 +3,17 @@ import {
   renderAssetIcon
 } from "../../../../../front-app/src/js/helpers";
 import TemplateLoader from "../template-loader/TemplateLoader";
-import {Tab, Tabs} from "@blueprintjs/core";
+const Tab = window.altrpLibs.Blueprint.Tab;
+const Tabs = window.altrpLibs.Blueprint.Tabs;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .bp3-tab-indicator-wrapper {
     z-index: 9999
+  }
+
+  .altrp-tab-btn-icon {
+    height: 20px;
+    width: 20px;
   }
 
   .altrp-tab-vertical p {

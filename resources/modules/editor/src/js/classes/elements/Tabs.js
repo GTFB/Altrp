@@ -324,6 +324,20 @@ class Tabs extends BaseElement {
       label: "Content"
     });
 
+    this.addControl("padding_content_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      default: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        unit: "px"
+      },
+      stateless: true,
+      units: ["px", "%", "vh"],
+    });
+
     this.addControl("background_content_style", {
       type: CONTROLLER_COLOR,
       label: "Background",
@@ -342,19 +356,6 @@ class Tabs extends BaseElement {
         colorPickedHex: "",
       },
       presetColors: ["#eaeaea", "#9c18a8"],
-    });
-
-    this.addControl("padding_content_style", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Padding",
-      default: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        unit: "px"
-      },
-      units: ["px", "%", "vh"],
     });
 
     this.addControl("border_type_content_style", {
