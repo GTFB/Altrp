@@ -263,6 +263,7 @@ class Select2Controller extends Component {
       id = _.find(this.state.options, item => item.value === this.state.value)
         ?.id;
     }
+    console.log(id);
     return (
       <div className="controller-container controller-container_select2">
         <div className="control-select2-header">

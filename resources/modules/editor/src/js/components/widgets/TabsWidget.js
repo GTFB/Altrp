@@ -29,7 +29,11 @@ const {Tab, Tabs} = window.altrpLibs.Blueprint;
   justify-content: center;
   align-items: center;
 }
-
+.altrp-tab-btn-icon img{
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
 .altrp-tabs-left {
   display: flex;
   flex-direction: row;
@@ -174,6 +178,7 @@ class TabsWidget extends Component {
     const animate = this.props.element.getResponsiveSetting("animate");
 
     let tabs = <div></div>;
+    const spacing_icon_style = this.props.element.getResponsiveSetting("spacing_icon_style");
     if (this.state.settings.items_tabs) {
       tabs = this.state.settings.items_tabs?.map((tab, idx) => {
         let iconStyles = {};
@@ -181,14 +186,14 @@ class TabsWidget extends Component {
         if (this.state.settings.alignment_icon_style === "left") {
           iconStyles = {
             paddingRight:
-              this.state.settings.spacing_icon_style?.size +
-              this.state.settings.spacing_icon_style?.unit
+              spacing_icon_style?.size +
+              spacing_icon_style?.unit
           };
         } else {
           iconStyles = {
             paddingLeft:
-              this.state.settings.spacing_icon_style?.size +
-              this.state.settings.spacing_icon_style?.unit
+              spacing_icon_style?.size +
+              spacing_icon_style?.unit
           };
         }
 

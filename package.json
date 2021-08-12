@@ -70,6 +70,8 @@
         "core-js": "^3.15.1",
         "d3": "^6.7.0",
         "dagre": "^0.8.5",
+        "devextreme": "21.1.5",
+        "devextreme-react": "21.1.5",
         "dom-to-image": "^2.6.0",
         "dot-prop-immutable": "^2.1.0",
         "express-session": "^1.17.1",

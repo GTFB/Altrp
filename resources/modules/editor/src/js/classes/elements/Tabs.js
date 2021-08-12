@@ -46,23 +46,6 @@ class Tabs extends BaseElement {
       return;
     }
 
-    this.startControlSection("tabs_settings", {
-      tab: TAB_CONTENT,
-      label: "Settings"
-    });
-
-    this.addControl('vertical', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Vertical',
-    });
-
-    this.addControl('animate', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Animate',
-    });
-
-    this.endControlSection()
-
     this.startControlSection("tabs_content", {
       tab: TAB_CONTENT,
       label: "Tabs"
@@ -137,9 +120,27 @@ class Tabs extends BaseElement {
       ],
     });
 
+    this.endControlSection();
+
+    this.startControlSection("tabs_settings", {
+      tab: TAB_CONTENT,
+      label: "Settings"
+    });
+
+    this.addControl('vertical', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Vertical',
+    });
+
+    this.addControl('animate', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Animate',
+    });
+
+
     this.addControl("spacing_column_tabs", {
       type: CONTROLLER_SLIDER,
-      label: "Tab spacing",
+      label: "Tab Spacing",
       units: ["px", "%", "vh"],
       max: 100,
       min: 0,
@@ -147,17 +148,24 @@ class Tabs extends BaseElement {
 
     this.addControl("spacing_content_tabs", {
       type: CONTROLLER_SLIDER,
-      label: "Content spacing",
+      label: "Content Spacing",
       units: ["px", "%", "vh"],
       max: 100,
       min: 0,
     });
 
-    this.endControlSection();
+    this.endControlSection()
 
     this.startControlSection("tab_style", {
       tab: TAB_STYLE,
       label: "Tab"
+    });
+
+    this.addControl("padding_tab_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      stateless: true,
+      units: ["px", "%", "vh"],
     });
 
     this.addControl("background_tab_style", {
@@ -180,12 +188,6 @@ class Tabs extends BaseElement {
         label: 'Box shadow',
       }
     );
-
-    this.addControl("padding_tab_style", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Padding",
-      units: ["px", "%", "vh"],
-    });
 
     this.addControl("border_type_tab_style", {
       type: CONTROLLER_SELECT,
@@ -253,13 +255,6 @@ class Tabs extends BaseElement {
     this.startControlSection("indicator_style", {
       tab: TAB_STYLE,
       label: "Indicator"
-    });
-
-    this.addControl('indicator_height', {
-      type: CONTROLLER_SLIDER,
-      label: 'Indicator position',
-      max: 100,
-      min: 0,
     });
 
     this.addControl('indicator_color', {
@@ -360,8 +355,18 @@ class Tabs extends BaseElement {
       label: "Icon"
     });
 
+    this.addControl("i_size", {
+      type: CONTROLLER_SLIDER,
+      label: "Size",
+      stateless: true,
+      units: ["px", "%", "vh"],
+      max: 100,
+      min: 0,
+    });
+
     this.addControl('alignment_icon_style', {
       type: CONTROLLER_CHOOSE,
+      stateless: true,
       label: 'Alignment',
       options: [
         {
@@ -375,18 +380,20 @@ class Tabs extends BaseElement {
       ],
     });
 
+    this.addControl("spacing_icon_style", {
+      type: CONTROLLER_SLIDER,
+      label: "Spacing",
+      stateless: true,
+      units: ["px", "%", "vh"],
+      max: 100,
+      min: 0,
+    });
+
     this.addControl("color_icon_style", {
       type: CONTROLLER_COLOR,
       label: "Color",
     });
 
-    this.addControl("spacing_icon_style", {
-      type: CONTROLLER_SLIDER,
-      label: "Spacing",
-      units: ["px", "%", "vh"],
-      max: 100,
-      min: 0,
-    });
 
     this.endControlSection();
 
