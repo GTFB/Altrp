@@ -12,6 +12,7 @@ const INPUT_WIDGETS = [
   'input-accept',
   'input-date',
   'input-textarea',
+  'input-slider',
   'input-text-common',
   'input-password',
   'input-tel',

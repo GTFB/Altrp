@@ -6,6 +6,7 @@ const SKELETON_ELEMENTS = [
   'input-checkbox',
   'input-wysiwyg',
   'input-textarea',
+  'input-slider',
   'input-image-select',
   'input-accept',
   'input-text',

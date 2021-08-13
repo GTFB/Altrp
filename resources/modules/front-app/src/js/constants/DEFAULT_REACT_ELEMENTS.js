@@ -6,6 +6,7 @@ const DEFAULT_REACT_ELEMENTS = [
   'input-checkbox',
   'input-wysiwyg',
   'input-textarea',
+  'input-slider',
   'input-image-select',
   'input-accept',
   'input-text',

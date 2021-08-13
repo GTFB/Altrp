@@ -1013,6 +1013,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'input-checkbox',
     'input-wysiwyg',
     'input-textarea',
+    'input-slider',
     'input-image-select',
     'input-accept',
     'input-text',
