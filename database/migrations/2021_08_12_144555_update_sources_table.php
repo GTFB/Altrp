@@ -13,8 +13,8 @@ class UpdateSourcesTable extends Migration
      */
     public function up()
     {
-      Schema::table('sources', function (Blueprint $table) {
-        $table->longText('bodies')->nullable();
+      Schema::table('altrp_sources', function (Blueprint $table) {
+        $table->text('bodies')->nullable();
       });
     }
 
@@ -25,7 +25,7 @@ class UpdateSourcesTable extends Migration
      */
     public function down()
     {
-      Schema::table('sources', function (Blueprint $table) {
+      Schema::table('altrp_sources', function (Blueprint $table) {
         $table->dropColumn('bodies');
       });
     }
