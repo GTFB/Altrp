@@ -16,6 +16,8 @@ class Select2Controller extends Component {
     if (value === null && this.props.default) {
       value = this.props.default;
     }
+    this.linkTemplate = _.get(props, 'gotoLink.linkTemplate', '')
+    this.textTemplate = _.get(props, 'gotoLink.textTemplate', '')
     value = value || "";
     this.state = {
       value,
@@ -259,11 +261,16 @@ class Select2Controller extends Component {
       selectProps.loadOptions = this.loadOptions;
     }
     let id = null;
+    let linkUrl = null;
+    let linkText = null;
     if (this.props.prefetch_options) {
       id = _.find(this.state.options, item => item.value === this.state.value)
-        ?.id;
+        ?.value;
+      linkUrl = this.linkTemplate.replace(/\{id\}/g, id);
+      linkText = this.textTemplate.replace(/\{id\}/g, id);
     }
     console.log(id);
+
     return (
       <div className="controller-container controller-container_select2">
         <div className="control-select2-header">
@@ -271,9 +278,9 @@ class Select2Controller extends Component {
         </div>
         <div className="control-container_select2-wrapper">
           <SelectComponent isClearable={true} {...selectProps} />
-          {id != null && typeof id != "undefined" && (
-            <a target="_blank" href={`/admin/editor?template_id=${id}`}>
-              Go to Template
+          {id && linkUrl && linkText && (
+            <a target="_blank" href={linkUrl}>
+              {linkText}
             </a>
           )}
           {this.props.after}

@@ -192,13 +192,19 @@ class TemplateController extends Controller
    * Display the specified resource.
    *
    * @param \App\Constructor\Template $template
-   * @return \Illuminate\Http\Response
+   * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
    */
-  public function show( Template $template )
+  public function show( $id )
   {
-    $res = $template->toArray();
-    $res['template_type'] = $template->template_type;
-    return response()->json( $res );
+    if( Uuid::isValid( $id ) ){
+      $template = Template::where( 'guid', $id )->first();
+    } else {
+      $template = Template::find( $id );
+    }
+    if( ! $template ){
+      return  response()->json( [ 'message' => 'Template not Found', 'success' => false], 404, [], JSON_UNESCAPED_UNICODE);
+    }
+    return response()->json( $template->toArray() );
   }
 
   /**

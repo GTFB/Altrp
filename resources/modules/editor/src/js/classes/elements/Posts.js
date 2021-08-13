@@ -131,6 +131,10 @@ class Table extends BaseElement {
       label: "Template",
       isClearable: true,
       options_resource: '/admin/ajax/templates/options?template_type=card&value=guid',
+      gotoLink: {
+        linkTemplate: '/admin/editor?template_id={id}',
+        textTemplate: 'Go to Template',
+      },
       nullable: true,
     });
 
@@ -140,6 +144,10 @@ class Table extends BaseElement {
       label: "Hover Template",
       isClearable: true,
       options_resource: '/admin/ajax/templates/options?template_type=card&value=guid',
+      gotoLink: {
+        linkTemplate: '/admin/editor?template_id={id}',
+        textTemplate: 'Go to Template',
+      },
       nullable: true,
     });
 

@@ -67,6 +67,11 @@ const {Tab, Tabs} = window.altrpLibs.Blueprint;
     z-index: 9999
   }
 
+  .altrp-tab-btn-icon {
+    height: 20px;
+    width: 20px;
+  }
+
   .altrp-tab-vertical p {
    margin: 0;
   }

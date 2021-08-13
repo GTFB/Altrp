@@ -76,6 +76,10 @@ class Tabs extends BaseElement {
       label: "Template",
       isClearable: true,
       options_resource: '/admin/ajax/templates/options?value=guid',
+      gotoLink: {
+        linkTemplate: '/admin/editor?template_id={id}',
+        textTemplate: 'Go to Template',
+      },
       nullable: true,
     });
 
@@ -269,6 +273,13 @@ class Tabs extends BaseElement {
       label: "Content"
     });
 
+    this.addControl("padding_content_style", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Padding",
+      stateless: true,
+      units: ["px", "%", "vh"],
+    });
+
     this.addControl("background_content_style", {
       type: CONTROLLER_COLOR,
       label: "Background",
@@ -279,12 +290,6 @@ class Tabs extends BaseElement {
       type: CONTROLLER_COLOR,
       label: "Text color",
       presetColors: ["#eaeaea", "#9c18a8"],
-    });
-
-    this.addControl("padding_content_style", {
-      type: CONTROLLER_DIMENSIONS,
-      label: "Padding",
-      units: ["px", "%", "vh"],
     });
 
     this.addControl("border_type_content_style", {
