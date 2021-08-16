@@ -36,7 +36,7 @@ export default function InputSliderComponent(settings) {
     "}",
 
     "altrp-field-slider-vertical .altrp-field-slider",
-      ["height", "height", "slider"],
+      ["height", "length", "slider"],
     "}",
 
     "bp3-slider-progress, & .bp3-slider-track",
@@ -44,7 +44,7 @@ export default function InputSliderComponent(settings) {
     "}",
 
     "altrp-field-slider-vertical .bp3-slider-progress.bp3-slider-progress, & .altrp-field-slider-vertical .bp3-slider-track.bp3-slider-track",
-      ["width", "width", "slider"],
+      ["width", "thickness", "slider"],
     "}",
 
     "altrp-field-slider-horizontal .bp3-slider-label",
@@ -59,11 +59,11 @@ export default function InputSliderComponent(settings) {
 
     "altrp-field-slider-vertical .bp3-slider-label.bp3-slider-label.bp3-slider-label",
       () => {
-        let width = getResponsiveSetting(settings, "width", "", { size: 6, unit: "px" })
+        let thickness = getResponsiveSetting(settings, "thickness", "", { size: 6, unit: "px" })
 
-        width = sliderStyled(width)
+        thickness = sliderStyled(thickness)
 
-        return `transform: translate(calc(14px + ${width}), 50%);`
+        return `transform: translate(calc(14px + ${thickness}), 50%);`
       },
     "}",
 
@@ -75,6 +75,10 @@ export default function InputSliderComponent(settings) {
 
         return `height: calc(35px + ${height});`
       },
+    "}",
+
+    "bp3-slider-handle .bp3-slider-label, & .bp3-slider-handle.bp3-active .bp3-slider-label",
+      ["background-color", "tooltip_color", "color"],
     "}",
 
     "bp3-slider-handle, & .bp3-slider-handle.bp3-active",

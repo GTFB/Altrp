@@ -731,8 +731,6 @@ import {
     }
 
     styles+=`} `;
-
-    console.log(styles)
     return styles;
   }
 
