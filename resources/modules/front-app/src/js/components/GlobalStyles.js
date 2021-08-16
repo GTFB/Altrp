@@ -41,6 +41,7 @@ import InputRadioComponent from "../../../../editor/src/js/components/widgets/st
 import InputSliderComponent from "../../../../editor/src/js/components/widgets/styled-components/InputSliderComponent";
 import getInputFileStyles from "./helpers/getInputFileStyles";
 import getInputGalleryStyles from "./helpers/getInputGalleryStyles";
+import {getResponsiveSetting} from "../helpers";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -218,6 +219,10 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         item.settings
       )}}`;
 
+      let element_css_editor = getResponsiveSetting(item.settings, "element_css_editor");
+      if(_.isString(element_css_editor)){
+        styles+=element_css_editor.replace(/__selector__/g, `${prefix}${id}`)
+      }
     }
   });
 

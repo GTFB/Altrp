@@ -660,7 +660,7 @@ const getTabsStyles = (settings, id) => {
 
   styles += "} ";
 
-  styles += `${parentClass} .altrp-tab-vertical .altrp-tab {`;
+  styles += `${parentClass} .altrp-tab-vertical.bp3-tab-panel {`;
 
   //Получаем значения margin-right в точных юнитах из контроллера, обрабатываем и добавляем в styles
 
@@ -674,7 +674,7 @@ const getTabsStyles = (settings, id) => {
 
   styles += `} `;
 
-  styles += `${parentClass} .altrp-tab-vertical.altrp-tab-btn {`;
+  styles += `${parentClass} .altrp-tab-vertical.bp3-tab {`;
 
   //Получаем значения margin-right в точных юнитах из контроллера, обрабатываем и добавляем в styles
 
@@ -688,7 +688,7 @@ const getTabsStyles = (settings, id) => {
 
   styles += `} `;
 
-  styles += `${parentClass} .altrp-tab-horizontal .altrp-tab {`;
+  styles += `${parentClass} .altrp-tab-horizontal.bp3-tab-panel {`;
 
   //Получаем значения margin-right в точных юнитах из контроллера, обрабатываем и добавляем в styles
 
@@ -702,7 +702,7 @@ const getTabsStyles = (settings, id) => {
 
   styles += `} `;
 
-  styles += `${parentClass} .altrp-tab-horizontal.altrp-tab-btn {`;
+  styles += `${parentClass} .altrp-tab-horizontal.bp3-tab {`;
 
   //Получаем значения margin-right в точных юнитах из контроллера, обрабатываем и добавляем в styles
 
