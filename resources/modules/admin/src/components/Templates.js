@@ -96,6 +96,7 @@ export default class Templates extends Component {
       data,
       title: template.title,
       name: template.name,
+      __exported_metas__: template.__exported_metas__,
     });
   }
   /** @function downloadJSONFile

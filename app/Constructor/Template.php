@@ -117,6 +117,8 @@ class Template extends Model
   public static function prepareAfterImport( string $data ): string
   {
     $_data = json_decode( $data, true );
+
+
     $_data = recurseMutateMapElements( $_data, function ( $element ) {
       if ( isset( $element['settings'] ) && is_array( $element['settings'] ) ) {
         foreach ( $element['settings'] as $index => $value ) {

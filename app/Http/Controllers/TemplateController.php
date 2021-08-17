@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\AltrpMeta;
 use App\Constructor\Template;
 use App\Constructor\TemplateSetting;
+use App\GlobalTemplateStyle;
 use App\Page;
 use App\PagesTemplate;
 use App\User;
@@ -177,9 +179,14 @@ class TemplateController extends Controller
     $template->type = 'template';
     $template->guid = (string)Str::uuid();
     if( $request->get( 'isImported' ) ){
+      $exported_metas = $request->get( '__exported_metas__' );
+      if( data_get( $exported_metas, 'styles_presets' ) ){
+        AltrpMeta::importStylesPresets( data_get( $exported_metas, 'styles_presets' ) );
+      }
+      if( data_get( $exported_metas, 'global_styles' ) ){
+        GlobalTemplateStyle::importGlobalStyles( data_get( $exported_metas, 'global_styles' ) );
+      }
       $template->data = Template::prepareAfterImport( $template_data['data'] );
-
-
     }
     if ( $template->save() ) {
 
@@ -676,7 +683,7 @@ class TemplateController extends Controller
     }
     $data = json_decode( $template->data, true );
     /**
-     * Ищем все url и заменяем
+     * Ищем все url и заменяем на url с доменом
      */
     recurseMapElements( $data, function ( $element ) use ( &$template ){
 
@@ -716,6 +723,9 @@ class TemplateController extends Controller
       }
     } );
     $res = $template->toArray();
+    $res['__exported_metas__'] = [];
+    $res['__exported_metas__']['styles_presets'] = AltrpMeta::getGlobalStyles();
+    $res['__exported_metas__']['global_styles'] = GlobalTemplateStyle::all();
     return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE );
   }
 }
