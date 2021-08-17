@@ -22,7 +22,7 @@ import {
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 
-class List extends BaseElement{
+class InputSlider extends BaseElement{
 
   static getName(){
     return'input-slider';
@@ -45,6 +45,32 @@ class List extends BaseElement{
     this.startControlSection('slider', {
       tab: TAB_CONTENT,
       label: 'Slider',
+    });
+
+    this.addControl("form_id", {
+      type: CONTROLLER_TEXT,
+      label: "Form ID",
+      responsive: false
+    });
+
+    this.addControl("field_id", {
+      type: CONTROLLER_TEXT,
+      responsive: false,
+      label: "Field ID (Column Name)"
+    });
+
+    this.addControl("content_default_value", {
+      type: CONTROLLER_TEXTAREA,
+      responsive: false,
+      label: "Default Value"
+    });
+
+    this.addControl("content_calculation", {
+      type: CONTROLLER_TEXTAREA,
+      label: "Calculation",
+      responsive: false,
+      description:
+        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
     });
 
     this.addControl('vertical', {
@@ -72,8 +98,7 @@ class List extends BaseElement{
 
     this.addControl('step', {
       type: CONTROLLER_NUMBER,
-      label: 'Step',
-      default: 1,
+      label: 'Step count',
     });
 
     this.addControl('label_step', {
@@ -87,9 +112,21 @@ class List extends BaseElement{
       label: 'Thousands separator',
     });
 
+    this.addControl('thousands_separator_value', {
+      type: CONTROLLER_TEXT,
+      label: 'Separator',
+      default: "."
+    });
+
     this.addControl('decimal_place', {
       type: CONTROLLER_NUMBER,
       label: 'Decimal place',
+    });
+
+    this.addControl('decimal_separator', {
+      type: CONTROLLER_TEXT,
+      label: 'Separator',
+      default: ",",
     });
 
     this.addControl('custom_label', {
@@ -108,9 +145,6 @@ class List extends BaseElement{
     this.addControl('width', {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default: {
-        unit: "px"
-      },
       units: [
         'px',
         '%',
@@ -118,6 +152,9 @@ class List extends BaseElement{
       ],
       max: 500,
       min: 0,
+      conditions: {
+        'vertical!': true,
+      },
     });
 
     this.addControl('height', {
@@ -125,29 +162,52 @@ class List extends BaseElement{
       label: 'Height',
       units: [
         'px',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+      conditions: {
+        'vertical!': true,
+      },
+    });
+
+    this.addControl('thickness', {
+      type: CONTROLLER_SLIDER,
+      label: 'thickness',
+      units: [
+        'px',
         '%',
         'vh',
       ],
       max: 100,
       min: 0,
+      conditions: {
+        'vertical': true,
+      },
+    });
+
+    this.addControl('length', {
+      type: CONTROLLER_SLIDER,
+      label: 'length',
+      units: [
+        'px',
+        'vh',
+      ],
+      max: 500,
+      min: 0,
+      conditions: {
+        'vertical': true,
+      },
     });
 
     this.addControl('filled_color', {
       type: CONTROLLER_COLOR,
       label: 'Filled color',
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
     });
 
     this.addControl('blank_color', {
       type: CONTROLLER_COLOR,
       label: 'Blank color',
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
     });
 
     this.endControlSection();
@@ -166,10 +226,6 @@ class List extends BaseElement{
     this.addControl('label_color', {
       type: CONTROLLER_COLOR,
       label: 'Label color',
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
     });
 
     this.addControl('current_label_typographic', {
@@ -181,10 +237,6 @@ class List extends BaseElement{
     this.addControl('current_label_color', {
       type: CONTROLLER_COLOR,
       label: 'Current label color',
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
     });
 
     this.endControlSection();
@@ -197,9 +249,6 @@ class List extends BaseElement{
     this.addControl("handle_size", {
       type: CONTROLLER_SLIDER,
       label: 'Size',
-      default: {
-        unit: 'px',
-      },
       units: [
         'px',
       ],
@@ -210,10 +259,6 @@ class List extends BaseElement{
     this.addControl('handle_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Radius',
-      default: {
-        unit: 'px',
-        bind: true,
-      },
       units: [
         'px',
         '%',
@@ -224,10 +269,11 @@ class List extends BaseElement{
     this.addControl('handle_color', {
       type: CONTROLLER_COLOR,
       label: 'Handle color',
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
+    });
+
+    this.addControl('tooltip_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Handle tooltip color',
     });
 
     this.endControlSection();
@@ -236,4 +282,4 @@ class List extends BaseElement{
   }
 }
 
-export default List
+export default InputSlider

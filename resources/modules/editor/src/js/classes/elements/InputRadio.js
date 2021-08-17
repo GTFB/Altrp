@@ -278,10 +278,6 @@ class InputRadio extends BaseElement {
 
     this.endControlSection();
 
-    actionsControllers(this, "Blur Actions");
-
-    actionsControllers(this, "Focus Actions", "focus_");
-
     actionsControllers(this, "Change Actions", "change_");
 
     // this.startControlSection('logic_section', {
@@ -610,32 +606,6 @@ class InputRadio extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("placeholder_style_section", {
-      tab: TAB_STYLE,
-      label: "Placeholder",
-      conditions: {
-        "content_type!": [
-          "image_select",
-          "hidden",
-          "radio",
-          "checkbox",
-          "select"
-        ]
-      }
-    });
-
-    this.addControl("placeholder_style_font_color", {
-      type: CONTROLLER_COLOR,
-      label: "font color"
-    });
-
-    this.addControl("placeholder_style_font_typographic", {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
-    });
-
-    this.endControlSection();
-
     this.startControlSection("required_style_section", {
       tab: TAB_STYLE,
       label: "Required"
@@ -817,6 +787,30 @@ class InputRadio extends BaseElement {
         }
       ],
       default: "left"
+    });
+
+    this.addControl("vertical_radio", {
+      label: "vertical",
+      type: CONTROLLER_SWITCHER
+    });
+
+    this.addControl('alignment_radio', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment',
+      options: [
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+      ],
     });
 
     this.endControlSection();

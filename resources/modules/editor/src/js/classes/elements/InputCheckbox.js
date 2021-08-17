@@ -278,10 +278,6 @@ class InputCheckbox extends BaseElement {
 
     this.endControlSection();
 
-    actionsControllers(this, "Blur Actions");
-
-    actionsControllers(this, "Focus Actions", "focus_");
-
     actionsControllers(this, "Change Actions", "change_");
 
     // this.startControlSection('logic_section', {
@@ -606,32 +602,6 @@ class InputCheckbox extends BaseElement {
     this.addControl("position_css_classes", {
       type: CONTROLLER_TEXT,
       label: "CSS Classes"
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("placeholder_style_section", {
-      tab: TAB_STYLE,
-      label: "Placeholder",
-      conditions: {
-        "content_type!": [
-          "image_select",
-          "hidden",
-          "radio",
-          "checkbox",
-          "select"
-        ]
-      }
-    });
-
-    this.addControl("placeholder_style_font_color", {
-      type: CONTROLLER_COLOR,
-      label: "font color"
-    });
-
-    this.addControl("placeholder_style_font_typographic", {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
     });
 
     this.endControlSection();

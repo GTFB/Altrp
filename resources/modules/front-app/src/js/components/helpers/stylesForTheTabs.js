@@ -442,6 +442,7 @@ const getTabsStyles = (settings, id) => {
 
   //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
 
+
   if (settings !== undefined) {
     borderRadius = getResponsiveSetting(settings, 'border_radius_content_style');
   }
@@ -513,6 +514,7 @@ const getTabsStyles = (settings, id) => {
   if (borderRadius) {
     styles += simplePropertyStyled(borderRadius, 'border-radius');
   }
+
 
   styles += "} ";
 
