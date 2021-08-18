@@ -49,6 +49,8 @@ import InputRadioComponent from "./widgets/styled-components/InputRadioComponent
 import InputSliderComponent from "./widgets/styled-components/InputSliderComponent";
 import getInputFileStyles from "../../../../front-app/src/js/components/helpers/getInputFileStyles";
 import getInputGalleryStyles from "../../../../front-app/src/js/components/helpers/getInputGalleryStyles";
+import InputRangeSlider from "../classes/elements/InputRangeSlider";
+import InputRangeSliderComponent from "./widgets/styled-components/InputRangeSliderComponent";
 
 const { connect } = window.reactRedux;
 const {replaceContentWithData} = window.altrpHelpers;
@@ -163,6 +165,11 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
     }break
     case "input-slider": {
       styles += `.${prefix}${elementId} { ${InputSliderComponent(
+        settings
+      )}}`;
+    }break
+    case "input-range-slider": {
+      styles += `.${prefix}${elementId} { ${InputRangeSliderComponent(
         settings
       )}}`;
     }break

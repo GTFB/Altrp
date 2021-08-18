@@ -41,6 +41,9 @@ import InputRadioComponent from "../../../../editor/src/js/components/widgets/st
 import InputSliderComponent from "../../../../editor/src/js/components/widgets/styled-components/InputSliderComponent";
 import getInputFileStyles from "./helpers/getInputFileStyles";
 import getInputGalleryStyles from "./helpers/getInputGalleryStyles";
+import InputRangeSlider from "../../../../editor/src/js/classes/elements/InputRangeSlider";
+import InputRangeSliderComponent
+  from "../../../../editor/src/js/components/widgets/styled-components/InputRangeSliderComponent";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -161,6 +164,12 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           break
         case "input-slider": {
           styles += `.${prefix}${id} {${InputSliderComponent(
+            item.settings,
+          )}}`;
+        }
+          break
+        case "input-range-slider": {
+          styles += `.${prefix}${id} {${InputRangeSliderComponent(
             item.settings,
           )}}`;
         }

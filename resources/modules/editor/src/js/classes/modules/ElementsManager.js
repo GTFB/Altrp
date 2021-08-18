@@ -92,6 +92,8 @@ import InputSlider from "../elements/InputSlider";
 import InputSliderWidget from "../../components/widgets/InputSliderWidget";
 import InputGallery from "../elements/InputGallery";
 import InputGalleryWidget from "../../components/widgets/InputGalleryWidget";
+import InputRangeSlider from "../elements/InputRangeSlider";
+import InputRangeSliderWidget from "../../components/widgets/InputRangeSliderWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -145,6 +147,7 @@ export default class ElementsManger {
     this.elements[Dropbar.getName()] = Dropbar;
     this.elements[ImageLightbox.getName()] = ImageLightbox;
     this.elements[InputSlider.getName()] = InputSlider;
+    this.elements[InputRangeSlider.getName()] = InputRangeSlider;
     // Websocket Notifications
     // this.elements[Notifications.getName()] = Notifications;
     //список компонентов
@@ -196,6 +199,7 @@ export default class ElementsManger {
     this.components[TabsSwitcher.getName()] = TabsSwitcherWidget;
     this.components[ImageLightbox.getName()] = ImageLightboxWidget;
     this.components[InputSlider.getName()] = InputSliderWidget;
+    this.components[InputRangeSlider.getName()] = InputRangeSliderWidget;
     // Websocket Notifications widget
     // this.components[Notifications.getName()] = NotificationsWidget;
   }

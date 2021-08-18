@@ -402,6 +402,14 @@ class FrontElementsManager {
             /* webpackChunkName: 'InputSliderWidget' */ "../../../../editor/src/js/components/widgets/InputSliderWidget"
             );
         }
+      },
+      {
+        name: "input-range-slider",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputRangeSliderWidget' */ "../../../../editor/src/js/components/widgets/InputRangeSliderWidget"
+            );
+        }
       }
     ];
     this.components = {};
