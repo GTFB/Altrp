@@ -11,6 +11,7 @@
 + Add  Widgets:
   1. Input Select
   2. Input Gallery
+  3. Input Slider
 + Add "Active" State for Widgets:
 1. Button
 2. Divider

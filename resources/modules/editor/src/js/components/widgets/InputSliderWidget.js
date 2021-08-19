@@ -56,7 +56,7 @@ class InputSliderWidget extends Component {
 
     this.state = {
       settings: props.element.getSettings(),
-      value: props.element.getResponsiveSetting("initial", "", 0),
+      value: min,
       step: step || 1,
     };
 
@@ -73,21 +73,10 @@ class InputSliderWidget extends Component {
   }
 
   _componentDidUpdate(prevProps, prevState) {
-    const prevStep = prevState.step
-    let step = this.props.element.getResponsiveSetting("step", "", null);
-    const min = this.props.element.getResponsiveSetting("min", "", 0);
-    const max = this.props.element.getResponsiveSetting("max", "", 100);
 
-    if(step && step < max) {
-      step = (max - min) / step;
-    }
 
-    if(step !== prevStep) {
-      this.setState((s) => ({...s,
-        step,
-        value: this.props.element.getResponsiveSetting("initial", "", 0)
-      }))
-    }
+
+
   }
   /**
    * Передадим значение в хранилище формы
@@ -124,13 +113,20 @@ class InputSliderWidget extends Component {
       }
     }
   };
-  onChange(value) {
-    const step = this.state.step
 
-    if(!Number.isInteger(value)) {
-      value = parseFloat(value.toFixed(String(step).split(".")[1].split("").length))
+  onChange(value) {
+    // const step = this.state.step
+
+    // if(!Number.isInteger(value)) {
+    //   value = parseFloat(value.toFixed(String(step).split(".")[1].split("").length))
+    // }
+    let decimalPlace = this.props.element.getResponsiveSetting("decimal_place", "", null);
+    if(!Number.isInteger(value) && decimalPlace) {
+      decimalPlace = Math.abs(decimalPlace);
+      console.log(value);
+      value = value
+        .toFixed(decimalPlace)
     }
-    console.log(value);
     if(isEditor()){
       this.setState((s) => ({...s, value}))
     } else {
@@ -139,18 +135,20 @@ class InputSliderWidget extends Component {
   }
 
   label(value) {
-    const step = this.props.element.getResponsiveSetting("step", "", 1);
     let decimalPlace = this.props.element.getResponsiveSetting("decimal_place", "", null);
     const custom = this.props.element.getResponsiveSetting("custom_label", "", "{n}");
     const thousandsSeparator = this.props.element.getResponsiveSetting("thousands_separator", "", false);
-    const thousandsSeparatorValue = this.props.element.getResponsiveSetting("thousands_separator_value", "", ".");
+    const thousandsSeparatorValue = this.props.element.getResponsiveSetting("thousands_separator_value", "", " ");
     const decimalSeparator = this.props.element.getResponsiveSetting("decimal_separator", "", ",");
+    value = Number(value)
 
-    if(!Number.isInteger(value) && decimalPlace && decimalSeparator) {
+    if(!Number.isInteger(value) && decimalPlace) {
       decimalPlace = Math.abs(decimalPlace);
-
       value = value
-        .toFixed(decimalPlace).replace(".", decimalSeparator)
+        .toFixed(decimalPlace)
+    }
+    if(!Number.isInteger(value) && decimalSeparator) {
+      value = value.replace(".", decimalSeparator)
     }
 
     if(thousandsSeparator && thousandsSeparatorValue) {
@@ -189,12 +187,20 @@ class InputSliderWidget extends Component {
   render() {
     const min = this.props.element.getResponsiveSetting("min", "", 0);
     const max = this.props.element.getResponsiveSetting("max", "", 100);
-    // const step = this.props.element.getResponsiveSetting("step", "", 1);
     const labelStepSize = this.props.element.getResponsiveSetting("label_step", "", 25);
     const decimalPlace = this.props.element.getResponsiveSetting("decimal_place", "", null);
     const vertical = this.props.element.getResponsiveSetting("vertical", "", false);
     const handleSize = this.props.element.getResponsiveSetting("handle_size", "", null);
-    const value = this.getValue()
+    let step = this.props.element.getResponsiveSetting("step", "", 1);
+    if(step == '0'){
+      step = 1;
+    }
+    let value = this.getValue()
+    console.log(value);
+    value = Number(value)
+    if(Number.isNaN(value)){
+      value = Number(min)
+    }
     return (
       <SliderWrapper
         value={this.state.value}
@@ -205,7 +211,7 @@ class InputSliderWidget extends Component {
         <Slider
           min={min}
           max={max}
-          stepSize={this.state.step !== 0 && this.state.step ? Math.abs(this.state.step) : 1}
+          stepSize={step}
           value={value}
           onChange={this.onChange}
           labelPrecision={decimalPlace}

@@ -269,7 +269,6 @@ class Select2Controller extends Component {
       linkUrl = this.linkTemplate.replace(/\{id\}/g, id);
       linkText = this.textTemplate.replace(/\{id\}/g, id);
     }
-    console.log(id);
 
     return (
       <div className="controller-container controller-container_select2">

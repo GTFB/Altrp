@@ -76,20 +76,14 @@ class InputSlider extends BaseElement{
       default: 100,
     });
 
-    this.addControl('initial', {
-      type: CONTROLLER_NUMBER,
-      label: 'Initial',
-      default: 0,
-    });
-
     this.addControl('step', {
       type: CONTROLLER_NUMBER,
-      label: 'Step count',
+      label: 'Step Size',
     });
 
     this.addControl('label_step', {
       type: CONTROLLER_NUMBER,
-      label: 'Label step size',
+      label: 'Label Step Size',
       default: 25,
     });
 
@@ -101,23 +95,21 @@ class InputSlider extends BaseElement{
     this.addControl('thousands_separator_value', {
       type: CONTROLLER_TEXT,
       label: 'Separator',
-      default: "."
     });
 
     this.addControl('decimal_place', {
       type: CONTROLLER_NUMBER,
-      label: 'Decimal place',
+      label: 'Rounding Degree',
     });
 
     this.addControl('decimal_separator', {
       type: CONTROLLER_TEXT,
       label: 'Separator',
-      default: ",",
     });
 
     this.addControl('custom_label', {
       type: CONTROLLER_TEXT,
-      label: '',
+      label: 'Label Content',
       default: "value: {n}"
     });
 

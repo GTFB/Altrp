@@ -587,6 +587,7 @@ class Template extends Model
 
     if ( is_array( $data['settings'] ) ) {
       foreach ( $data['settings'] as $index => $setting ) {
+
         if ( array_search( $index, self::SANITIZE_IGNORE ) !== false ) {
           continue;
         }
