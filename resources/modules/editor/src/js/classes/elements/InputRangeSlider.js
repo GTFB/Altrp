@@ -22,13 +22,13 @@ import {
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 
-class InputSlider extends BaseElement{
+class InputRangeSlider extends BaseElement{
 
   static getName(){
-    return'input-slider';
+    return'input-range-slider';
   }
   static getTitle(){
-    return'Input slider';
+    return'Input range slider';
   }
 
   static getIconComponent(){
@@ -59,6 +59,20 @@ class InputSlider extends BaseElement{
       label: "Field ID (Column Name)"
     });
 
+    this.addControl("content_default_value", {
+      type: CONTROLLER_TEXTAREA,
+      responsive: false,
+      label: "Default Value"
+    });
+
+    this.addControl("content_calculation", {
+      type: CONTROLLER_TEXTAREA,
+      label: "Calculation",
+      responsive: false,
+      description:
+        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
+    });
+
     this.addControl('vertical', {
       type: CONTROLLER_SWITCHER,
       label: 'Vertical',
@@ -78,8 +92,14 @@ class InputSlider extends BaseElement{
 
     this.addControl('initial', {
       type: CONTROLLER_NUMBER,
-      label: 'Initial',
+      label: 'Initial first',
       default: 0,
+    });
+
+    this.addControl('initial_second', {
+      type: CONTROLLER_NUMBER,
+      label: 'Initial second',
+      default: 10,
     });
 
     this.addControl('step', {
@@ -119,20 +139,6 @@ class InputSlider extends BaseElement{
       type: CONTROLLER_TEXT,
       label: '',
       default: "value: {n}"
-    });
-
-    this.addControl("content_default_value", {
-      type: CONTROLLER_TEXTAREA,
-      responsive: false,
-      label: "Default Value"
-    });
-
-    this.addControl("content_calculation", {
-      type: CONTROLLER_TEXTAREA,
-      label: "Calculation",
-      responsive: false,
-      description:
-        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
     });
 
     this.endControlSection();
@@ -282,4 +288,4 @@ class InputSlider extends BaseElement{
   }
 }
 
-export default InputSlider
+export default InputRangeSlider

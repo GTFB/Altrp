@@ -1,19 +1,7 @@
-const { isEditor } =
-  window.altrpHelpers
-import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
-
-const Slider = window.altrpLibs.Blueprint.Slider;
+const Slider = window.altrpLibs.Blueprint.RangeSlider;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
-.bp3-slider-label{
-    white-space: nowrap;
-}
-.bp3-slider-handle{
-    z-index: 2;
-}
-.bp3-slider-label{
-    z-index: 1;
-}
+
 `);
 
 const SliderWrapper = styled.div`
@@ -42,7 +30,7 @@ const SliderWrapper = styled.div`
   }}
 `;
 
-class InputSliderWidget extends Component {
+class InputRangeSliderWidget extends Component {
   constructor(props) {
     super(props);
 
@@ -56,7 +44,10 @@ class InputSliderWidget extends Component {
 
     this.state = {
       settings: props.element.getSettings(),
-      value: props.element.getResponsiveSetting("initial", "", 0),
+      value: [
+        props.element.getResponsiveSetting("initial", "", 0),
+        props.element.getResponsiveSetting("initial_second", "", 0)
+      ],
       step: step || 1,
     };
 
@@ -85,57 +76,24 @@ class InputSliderWidget extends Component {
     if(step !== prevStep) {
       this.setState((s) => ({...s,
         step,
-        value: this.props.element.getResponsiveSetting("initial", "", 0)
+        value: [
+          this.props.element.getResponsiveSetting("initial", "", 0),
+          this.props.element.getResponsiveSetting("initial_second", "", 0)
+        ]
       }))
     }
   }
-  /**
-   * Передадим значение в хранилище формы
-   * @param {*} value
-   * @param {boolean} userInput true - имзенилось пользователем
-   */
-  dispatchFieldValueToStore = async (value, userInput = false) => {
-    let formId = this.props.element.getFormId();
-    let fieldName = this.props.element.getFieldId();
-    if (fieldName.indexOf("{{") !== -1) {
-      fieldName = replaceContentWithData(fieldName);
-    }
-    if (_.isObject(this.props.appStore) && fieldName && formId) {
-      this.props.appStore.dispatch(
-        changeFormFieldValue(fieldName, value, formId, userInput)
-      );
-      if (userInput) {
-        const change_actions = this.props.element.getSettings("change_actions");
 
-        if (change_actions && !isEditor()) {
-          const actionsManager = (
-            await import(
-              /* webpackChunkName: 'ActionsManager' */
-              "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-              )
-          ).default;
-          await actionsManager.callAllWidgetActions(
-            this.props.element.getIdForAction(),
-            "change",
-            change_actions,
-            this.props.element
-          );
-        }
-      }
-    }
-  };
-  onChange(value) {
+  onChange(values) {
     const step = this.state.step
 
-    if(!Number.isInteger(value)) {
-      value = parseFloat(value.toFixed(String(step).split(".")[1].split("").length))
-    }
-    console.log(value);
-    if(isEditor()){
-      this.setState((s) => ({...s, value}))
-    } else {
-      this.dispatchFieldValueToStore(value)
-    }
+    values.forEach((value, idx) => {
+      if(!Number.isInteger(value)) {
+        values[idx] = parseFloat(value.toFixed(String(step).split(".")[1].split("").length))
+      }
+    });
+
+    this.setState((s) => ({...s, value: values}))
   }
 
   label(value) {
@@ -165,27 +123,6 @@ class InputSliderWidget extends Component {
       .replace(/{n}/, value)
   }
 
-  /**
-   *
-   * @returns {number}
-   */
-  getValue = () => {
-    let value;
-    let formId = this.props.element.getFormId();
-    let fieldName = this.props.element.getFieldId();
-    if (isEditor()) {
-      value = this.state.value;
-    } else {
-      value = _.get(appStore.getState(), `formsStore.${formId}.${fieldName}`, '')
-    }
-
-    return value || this.props.element.getResponsiveSetting('min') || 0;
-  }
-
-  /**
-   *
-   * @returns {JSX.Element}
-   */
   render() {
     const min = this.props.element.getResponsiveSetting("min", "", 0);
     const max = this.props.element.getResponsiveSetting("max", "", 100);
@@ -194,7 +131,8 @@ class InputSliderWidget extends Component {
     const decimalPlace = this.props.element.getResponsiveSetting("decimal_place", "", null);
     const vertical = this.props.element.getResponsiveSetting("vertical", "", false);
     const handleSize = this.props.element.getResponsiveSetting("handle_size", "", null);
-    const value = this.getValue()
+
+    console.log(this.state.value)
     return (
       <SliderWrapper
         value={this.state.value}
@@ -206,7 +144,7 @@ class InputSliderWidget extends Component {
           min={min}
           max={max}
           stepSize={this.state.step !== 0 && this.state.step ? Math.abs(this.state.step) : 1}
-          value={value}
+          value={this.state.value}
           onChange={this.onChange}
           labelPrecision={decimalPlace}
           labelRenderer={this.label}
@@ -219,4 +157,4 @@ class InputSliderWidget extends Component {
   }
 }
 
-export default InputSliderWidget;
+export default InputRangeSliderWidget;

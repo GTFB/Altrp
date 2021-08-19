@@ -5,6 +5,9 @@ const WIDGETS_DEPENDS = {
   'tabs': ['blueprint', 'template-loader'],
   'tabs-switcher': [ 'template-loader'],
   'carousel': [ 'template-loader'],
+  'cards': [ 'template-loader'],
+  'template': [ 'template-loader'],
+  'table': [ 'template-loader'],
   'input': ['moment'],
   'section': ['section-element-wrapper'],
   'column': ['section-element-wrapper'],
@@ -20,5 +23,6 @@ const WIDGETS_DEPENDS = {
   'input-wysiwyg': ['ckeditor'],
   'input-date': ['blueprint', 'blueprint-datetime', 'moment'],
   'input-slider': ['blueprint'],
+  'input-range-slider': ['blueprint'],
 }
 export default WIDGETS_DEPENDS;

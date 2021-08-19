@@ -110,12 +110,10 @@ class HeadingWidget extends Component {
 
   render() {
 
-    let heading = <div>
-      Loading...
-    </div>;
+    let heading;
 
     switch (this.props.element.getSettings("type", 'heading')) {
-      case "heading":
+      default:
 
         let modelData = this.props.element.getCurrentModel().getData();
         const  background_image = this.props.element.getSettings('background_image', {});
@@ -348,9 +346,6 @@ class HeadingWidget extends Component {
         </div>
       );
       break;
-      case "animating": {
-        heading = <Animating settings={this.state.settings} />
-      }
     }
 
     return heading
