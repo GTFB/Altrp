@@ -84,6 +84,10 @@ class Carousel extends BaseElement {
       label: "Card",
       isClearable: true,
       options_resource: '/admin/ajax/templates/options?value=guid',
+      gotoLink: {
+        linkTemplate: '/admin/editor?template_id={id}',
+        textTemplate: 'Go to Template',
+      },
       nullable: true,
     });
 

@@ -11,7 +11,10 @@ const {Tab, Tabs} = window.altrpLibs.Blueprint;
   flex-wrap: wrap;
 }
 
-.altrp-tab-btn {
+.bp3-tab-panel {
+  margin-top: 20px;
+}
+.bp3-tab {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -76,11 +79,11 @@ const {Tab, Tabs} = window.altrpLibs.Blueprint;
    margin: 0;
   }
 
-  .altrp-tab-vertical.altrp-tab-btn.altrp-tab-btn.altrp-tab-btn:last-child {
+  .altrp-tab-vertical.bp3-tab.bp3-tab.bp3-tab:last-child {
    margin-bottom: 0;
   }
 
-  .altrp-tab-horizontal.altrp-tab-btn.altrp-tab-btn.altrp-tab-btn:last-child {
+  .altrp-tab-horizontal.bp3-tab.bp3-tab.bp3-tab:last-child {
    margin-right: 0;
   }
 
@@ -183,20 +186,20 @@ class TabsWidget extends Component {
     const animate = this.props.element.getResponsiveSetting("animate");
 
     let tabs = <div></div>;
-    const spacing_icon_style = this.props.element.getResponsiveSetting("spacing_icon_style");
+    const spacing_icon_style = this.props.element.getResponsiveSetting("spacing_icon_style") || {size: '10',unit:'px'};
     if (this.state.settings.items_tabs) {
       tabs = this.state.settings.items_tabs?.map((tab, idx) => {
         let iconStyles = {};
-
-        if (this.state.settings.alignment_icon_style === "left") {
+        const alignment_icon_style = this.props.element.getResponsiveSetting("alignment_icon_style") || 'left'
+        if (alignment_icon_style === "left") {
           iconStyles = {
-            paddingRight:
+            marginRight:
               spacing_icon_style?.size +
               spacing_icon_style?.unit
           };
         } else {
           iconStyles = {
-            paddingLeft:
+            marginLeft:
               spacing_icon_style?.size +
               spacing_icon_style?.unit
           };
@@ -236,9 +239,9 @@ class TabsWidget extends Component {
             )}
             key={idx + 1}
           >
-            {this.state.settings.alignment_icon_style == "left" ? icon : null}
+            {alignment_icon_style == "left" ? icon : null}
             <p>{tab.title_and_content_items}</p>
-            {this.state.settings.alignment_icon_style == "right"
+            {alignment_icon_style == "right"
               ? icon
               : null}
           </Tab>

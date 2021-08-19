@@ -49,6 +49,7 @@ import InputRadioComponent from "./widgets/styled-components/InputRadioComponent
 import InputSliderComponent from "./widgets/styled-components/InputSliderComponent";
 import getInputFileStyles from "../../../../front-app/src/js/components/helpers/getInputFileStyles";
 import getInputGalleryStyles from "../../../../front-app/src/js/components/helpers/getInputGalleryStyles";
+import {getResponsiveSetting} from "../../../../front-app/src/js/helpers";
 
 const { connect } = window.reactRedux;
 const {replaceContentWithData} = window.altrpHelpers;
@@ -226,6 +227,10 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
   styles += `div.${prefix}${elementId}.${prefix}${elementId} {${AdvancedComponent(
     settings
   )}}`;
+  let element_css_editor = getResponsiveSetting(settings, "element_css_editor");
+  if(_.isString(element_css_editor)){
+    styles+=element_css_editor.replace(/__selector__/g, `${prefix}${elementId}`)
+  }
   return styles;
 }}`
 

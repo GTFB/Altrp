@@ -628,13 +628,14 @@ class InputDateWidget extends Component {
     let timePrecision = this.timePrecision;
 
     const dayPickerProps = {
+      firstDayOfWeek: 1,
       className: this.typeDate === 'time' ? 'altrp-hidden' : '',
     }
 
     switch (locale) {
       case "ru":
         dayPickerProps.months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
-        dayPickerProps.weekdaysShort = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
+        dayPickerProps.weekdaysShort = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб',]
     }
 
     const minimalStyle = this.props.element.getResponsiveSetting("picker_minimal", false);

@@ -5,183 +5,179 @@ import {
   dimensionsControllerToStyles, shadowControllerToStyles,
   typographicControllerToStyles
 } from "../../../../../front-app/src/js/helpers/styles";
+
 const {Button, ButtonGroup, Menu, MenuItem, Position} = window.altrpLibs.Blueprint;
 const Popover2 = window.altrpLibs.Popover2;
 
 const GlobalStyles = createGlobalStyle`
   ${({elementId, settings}) => {
 
-    let styles = `.bp3-menu-item.altrp-menu-item${elementId}{align-items:center;border-radius:0;`;
+  let styles = `.bp3-menu-item.altrp-menu-item${elementId}{align-items:center;border-radius:0;`;
 
-    let padding = getResponsiveSetting(settings, 'padding');
-    if(padding){
-      styles += dimensionsControllerToStyles(padding);
-    }
+  let padding = getResponsiveSetting(settings, 'padding');
+  if (padding) {
+    styles += dimensionsControllerToStyles(padding);
+  }
 
-    let typographic = getResponsiveSetting(settings, 'typographic');
+  let typographic = getResponsiveSetting(settings, 'typographic');
 
-    if(typographic){
-      styles += typographicControllerToStyles(typographic);
-    }
+  if (typographic) {
+    styles += typographicControllerToStyles(typographic);
+  }
 
-    let bg = getResponsiveSetting(settings, 'bg');
-
-
-    if(bg && bg.color){
-      styles += `background-color: ${bg.color};`;
-    }
-    let color = getResponsiveSetting(settings, 'color');
-
-    if(color && color.color){
-      styles += `color: ${color.color};`;
-      styles += `.bp3-icon svg, .bp3-icon path{fill: ${color.color};}`;
-    }
+  let bg = getResponsiveSetting(settings, 'bg');
 
 
-    styles += '}';
-    /**
-     * Hover Styles
-     */
-    styles += `.bp3-popover-open.bp3-popover-target .bp3-menu-item.altrp-menu-item.altrp-menu-item${elementId},
+  if (bg && bg.color) {
+    styles += `background-color: ${bg.color};`;
+  }
+  let color = getResponsiveSetting(settings, 'color');
+
+  if (color && color.color) {
+    styles += `color: ${color.color};`;
+    styles += `.bp3-icon svg, .bp3-icon path{fill: ${color.color};}`;
+  }
+
+
+  styles += '}';
+  /**
+   * Hover Styles
+   */
+  styles += `.bp3-popover-open.bp3-popover-target .bp3-menu-item.altrp-menu-item.altrp-menu-item${elementId},
     .bp3-menu-item.altrp-menu-item.altrp-menu-item${elementId}:hover{`;
-    bg = getResponsiveSetting(settings, 'bg', ':hover');
-    if(bg && bg.color){
-      styles += `background-color: ${bg.color};`;
-    }
+  bg = getResponsiveSetting(settings, 'bg', ':hover');
+  if (bg && bg.color) {
+    styles += `background-color: ${bg.color};`;
+  }
 
-    typographic = getResponsiveSetting(settings, 'typographic', ':hover');
+  typographic = getResponsiveSetting(settings, 'typographic', ':hover');
 
-    if(typographic){
-      styles += typographicControllerToStyles(typographic);
-    }
+  if (typographic) {
+    styles += typographicControllerToStyles(typographic);
+  }
 
-    color = getResponsiveSetting(settings, 'color', ':hover');
-    if(color && color.color){
-      styles += `color: ${color.color};`;
-      styles += `.bp3-icon svg, .bp3-icon path{fill: ${color.color};}`;
-    }
-    styles += '}';
+  color = getResponsiveSetting(settings, 'color', ':hover');
+  if (color && color.color) {
+    styles += `color: ${color.color};`;
+    styles += `.bp3-icon svg, .bp3-icon path{fill: ${color.color};}`;
+  }
+  styles += '}';
 
-    let gap = getResponsiveSetting(settings, 'gap');
-    if(gap){
-      styles += `.altrp-portal${elementId} .bp3-menu > li:not(:last-child) { margin-bottom: ${gap}}`;
-    }
+  let gap = getResponsiveSetting(settings, 'gap');
+  if (gap) {
+    styles += `.altrp-portal${elementId} .bp3-menu > li:not(:last-child) { margin-bottom: ${gap}}`;
+  }
 
-    /**
-     * Submenu styles
-     */
-    styles += `.altrp-portal${elementId} .bp3-menu{`;
+  /**
+   * Submenu styles
+   */
+  styles += `.altrp-portal${elementId} .bp3-menu{`;
 
-    let sub_menu_padding = getResponsiveSetting(settings, 'sub_menu_padding');
-    if(sub_menu_padding){
-      styles += dimensionsControllerToStyles(sub_menu_padding);
-    }
+  let sub_menu_padding = getResponsiveSetting(settings, 'sub_menu_padding');
+  if (sub_menu_padding) {
+    styles += dimensionsControllerToStyles(sub_menu_padding);
+  }
 
-    let sub_menu_bg = getResponsiveSetting(settings, 'sub_menu_bg');
-    if(sub_menu_bg && sub_menu_bg.color){
-      styles += `background-color: ${sub_menu_bg.color};`;
-    }
+  let sub_menu_bg = getResponsiveSetting(settings, 'sub_menu_bg');
+  if (sub_menu_bg && sub_menu_bg.color) {
+    styles += `background-color: ${sub_menu_bg.color};`;
+  }
 
 
+  styles += '}';
 
-    styles += '}';
+  styles += `.bp3-portal .altrp-portal.altrp-portal${elementId} .bp3-popover-content{`
 
-    styles += `.bp3-portal .altrp-portal.altrp-portal${elementId} .bp3-popover-content{`
+  let sub_menu_shadow = getResponsiveSetting(settings, 'sub_menu_shadow');
+  if (sub_menu_shadow) {
+    styles += shadowControllerToStyles(sub_menu_shadow);
+  }
+  styles += '}';
 
-    let sub_menu_shadow = getResponsiveSetting(settings, 'sub_menu_shadow');
-    if(sub_menu_shadow){
-      styles += shadowControllerToStyles(sub_menu_shadow);
-    }
-    styles += '}';
-
-    styles += `.altrp-portal.altrp-portal${elementId} .bp3-popover-content,
+  styles += `.altrp-portal.altrp-portal${elementId} .bp3-popover-content,
     .altrp-portal.altrp-portal${elementId} .bp3-menu{`;
-    let sub_menu_radius = getResponsiveSetting(settings, 'sub_menu_radius');
-    if(sub_menu_radius){
-      styles += dimensionsControllerToStyles(sub_menu_radius, 'border-radius');
-    }
-    styles += '}';
-    styles += `.altrp-portal${elementId} .bp3-menu:hover{`;
+  let sub_menu_radius = getResponsiveSetting(settings, 'sub_menu_radius');
+  if (sub_menu_radius) {
+    styles += dimensionsControllerToStyles(sub_menu_radius, 'border-radius');
+  }
+  styles += '}';
+  styles += `.altrp-portal${elementId} .bp3-menu:hover{`;
 
-    sub_menu_bg = getResponsiveSetting(settings, 'sub_menu_bg', ':hover');
-    if(sub_menu_bg && sub_menu_bg.color){
-      styles += `background-color: ${sub_menu_bg.color};`;
-    }
+  sub_menu_bg = getResponsiveSetting(settings, 'sub_menu_bg', ':hover');
+  if (sub_menu_bg && sub_menu_bg.color) {
+    styles += `background-color: ${sub_menu_bg.color};`;
+  }
 
 
-    styles += `.bp3-portal .altrp-portal.altrp-portal${elementId} .bp3-popover-content:hover{`
+  styles += `.bp3-portal .altrp-portal.altrp-portal${elementId} .bp3-popover-content:hover{`
 
-    sub_menu_shadow = getResponsiveSetting(settings, 'sub_menu_shadow', ':hover');
-    if(sub_menu_shadow){
-      styles += shadowControllerToStyles(sub_menu_shadow);
-    }
-    styles += '}';
-    styles += '}';
+  sub_menu_shadow = getResponsiveSetting(settings, 'sub_menu_shadow', ':hover');
+  if (sub_menu_shadow) {
+    styles += shadowControllerToStyles(sub_menu_shadow);
+  }
+  styles += '}';
+  styles += '}';
 
-    styles += `.altrp-portal.altrp-portal${elementId} .bp3-popover-content:hover,
+  styles += `.altrp-portal.altrp-portal${elementId} .bp3-popover-content:hover,
     .altrp-portal.altrp-portal${elementId} .bp3-menu:hover{`;
 
-    sub_menu_radius = getResponsiveSetting(settings, 'sub_menu_radius', ':hover');
-    if(sub_menu_radius){
-      styles += dimensionsControllerToStyles(sub_menu_radius, 'border-radius');
-    }
-    styles += '}';
+  sub_menu_radius = getResponsiveSetting(settings, 'sub_menu_radius', ':hover');
+  if (sub_menu_radius) {
+    styles += dimensionsControllerToStyles(sub_menu_radius, 'border-radius');
+  }
+  styles += '}';
 
-    return styles;
-  }}
+  return styles;
+}}
 
-  ${({elementId, settings})=>{
+  ${({elementId, settings}) => {
   let styles = `.altrp-element${elementId}.altrp-widget_menu {`; // было .altrp-portal${elementId} .altrp-menu
 
-    const menuPadding = getResponsiveSetting(settings, 'menu_padding');
-    if (menuPadding) {
-      styles += dimensionsControllerToStyles(menuPadding);
-    }
-    let menuBg = getResponsiveSetting(settings, 'menu_bg');
-    if (menuBg && menuBg.color) {
-      styles += `background-color: ${menuBg.color};`;
-    }
-    let menu_radius = getResponsiveSetting(settings, 'menu_radius');
-    if (menu_radius) {
-      styles += dimensionsControllerToStyles(menu_radius, 'border-radius');
-    }
-    let gap = getResponsiveSetting(settings, 'gap');
-    if(gap){
-      gap = gap.replace(',', '.')
-      styles += `& > li:not(:last-child) { margin-${
-        getResponsiveSetting(settings, 'type') === 'horizontal' ? 'right' : 'bottom'
-      }: ${gap}}`;
-    }
-    styles += '}';
-
-    /**
-     * стили для ховера
-     * @type {string}
-     */
+  const menuPadding = getResponsiveSetting(settings, 'menu_padding');
+  if (menuPadding) {
+    styles += dimensionsControllerToStyles(menuPadding);
+  }
+  let menu_radius = getResponsiveSetting(settings, 'menu_radius');
+  if (menu_radius) {
+    styles += dimensionsControllerToStyles(menu_radius, 'border-radius');
+  }
+  let gap = getResponsiveSetting(settings, 'gap');
+  if (gap) {
+    gap = gap.replace(',', '.')
+    styles += `& > li:not(:last-child) { margin-${
+      getResponsiveSetting(settings, 'type') === 'horizontal' ? 'right' : 'bottom'
+    }: ${gap}}`;
+  }
+  styles += '}';
+  styles += `.altrp-element${elementId} .altrp-menu{`;
+  let menuBg = getResponsiveSetting(settings, 'menu_bg');
+  if (menuBg && menuBg.color) {
+    styles += `background-color: ${menuBg.color};`;
+  }
+  styles += '}';
+  /**
+   * стили для ховера
+   * @type {string}
+   */
   styles += `.altrp-element${elementId}.altrp-widget_menu:hover {`; // было .altrp-portal${elementId} .altrp-menu:hover
 
-    menu_radius = getResponsiveSetting(settings, 'menu_radius', ':hover');
-    if (menu_radius) {
-      styles += dimensionsControllerToStyles(menu_radius, 'border-radius');
-    }
+  menu_radius = getResponsiveSetting(settings, 'menu_radius', ':hover');
+  if (menu_radius) {
+    styles += dimensionsControllerToStyles(menu_radius, 'border-radius');
+  }
 
-    menuBg = getResponsiveSetting(settings, 'menu_bg', ':hover');
-    if (menuBg && menuBg.color) {
-      styles += `background-color: ${menuBg.color};`;
+  styles += '}';
+  let renderButton = getResponsiveSetting(settings, 'button');
+  if (renderButton) {
+    styles += `.altrp-portal_main.altrp-portal${elementId} .altrp-menu{`;
+    let mainPortalWidth = getResponsiveSetting(settings, 'width');
+    if (mainPortalWidth) {
+      styles += `max-width:${mainPortalWidth};width:${mainPortalWidth};`;
     }
-
     styles += '}';
-    let renderButton = getResponsiveSetting(settings, 'button');
-    if (renderButton) {
-      styles += `.altrp-portal_main.altrp-portal${elementId} .altrp-menu{`;
-      let mainPortalWidth = getResponsiveSetting(settings, 'width');
-      if(mainPortalWidth){
-        styles += `max-width:${mainPortalWidth};width:${mainPortalWidth};`;
-      }
-      styles += '}';
-    }
-    return styles;
-  }}
+  }
+  return styles;
+}}
   .altrp-menu-item__icon svg {
     display: block;
     height: 20px;
@@ -206,7 +202,7 @@ class MenuWidget extends Component {
 
   getMenuData = async () => {
     let menuGUID = this.props.element.getResponsiveSetting('menu')
-    if (this.state.menuData || this.loading || ! menuGUID) {
+    if (this.state.menuData || this.loading || !menuGUID) {
       return
     }
     this.loading = true;
@@ -290,7 +286,7 @@ class MenuWidget extends Component {
     };
     let renderButton = this.props.element.getResponsiveSetting('button');
 
-    if (depth === 1 && element.getResponsiveSetting('type') === 'horizontal' && ! renderButton) {
+    if (depth === 1 && element.getResponsiveSetting('type') === 'horizontal' && !renderButton) {
       popoverProps.position = Position.BOTTOM_LEFT;
     }
     return <>
@@ -321,20 +317,19 @@ class MenuWidget extends Component {
   }
 
 
-
-  renderButton = ()=>{
-   const {menuData} = this.state;
-    if(! menuData){
+  renderButton = () => {
+    const {menuData} = this.state;
+    if (!menuData) {
       return null;
     }
-    let toggle_icon = _ .get(menuData, 'settings.toggle_icon', '')
+    let toggle_icon = _.get(menuData, 'settings.toggle_icon', '')
     return <Popover2 content={this.renderVerticalMenu()}
                      className="altrp-popover"
-                     portalContainer={ window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body}
-                     portalClassName={ `altrp-portal altrp-portal_main altrp-portal${this.elementId}`}
-                     minimal={true} >
+                     portalContainer={window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body}
+                     portalClassName={`altrp-portal altrp-portal_main altrp-portal${this.elementId}`}
+                     minimal={true}>
       <Button className="altrp-menu-toggle" text={toggle_icon ?
-        <span className="altrp-menu-item__icon" dangerouslySetInnerHTML={{__html: toggle_icon}}/> : ''} />
+        <span className="altrp-menu-item__icon" dangerouslySetInnerHTML={{__html: toggle_icon}}/> : ''}/>
     </Popover2>
   }
 
@@ -342,7 +337,7 @@ class MenuWidget extends Component {
     this.getMenuData();
     let type = this.props.element.getResponsiveSetting('type');
     let renderButton = this.props.element.getResponsiveSetting('button');
-    if(renderButton){
+    if (renderButton) {
       return <>
         <GlobalStyles {...this.props} settings={this.props.element.getSettings()} elementId={this.elementId}/>
         {this.renderButton()}

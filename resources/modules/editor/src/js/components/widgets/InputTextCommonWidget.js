@@ -830,7 +830,7 @@ class InputTextCommonWidget extends Component {
     if(!left_icon){
       return null
     }
-    return <span className="bp3-icon bp3-icon_text-widget bp3-icon_left" {...leftIconProps} tabindex="0">
+    return <span className="bp3-icon bp3-icon_text-widget bp3-icon_left" {...leftIconProps} tabIndex="0">
       {renderAsset(left_icon, )}
     </span>
   }
@@ -852,7 +852,7 @@ class InputTextCommonWidget extends Component {
     if(!right_icon){
       return null
     }
-    return <span className="bp3-icon bp3-icon_text-widget bp3-icon_right" {...rightIconProps} tabindex="0">
+    return <span className="bp3-icon bp3-icon_text-widget bp3-icon_right" {...rightIconProps} tabIndex="0">
       {renderAsset(right_icon, )}
     </span>
   }

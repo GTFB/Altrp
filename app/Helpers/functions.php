@@ -1013,6 +1013,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'input-checkbox',
     'input-wysiwyg',
     'input-textarea',
+    'input-slider',
     'input-image-select',
     'input-accept',
     'input-text',
@@ -1422,10 +1423,26 @@ function getAltrpSettings( $page_id ){
 function recurseMapElements( $element, $callback ){
   $callback($element);
   if( isset( $element['children'] ) && is_array( $element['children'] ) ){
-    foreach ( $element['children'] as $child ) {
-      recurseMapElements( $child, $callback );
+    foreach ( $element['children'] as $idx => $child ) {
+      recurseMapElements( $element['children'][$idx], $callback );
     }
   }
+}
+
+/**
+ * @param array $element
+ * @param $callback
+ * @return array mixed
+ */
+function recurseMutateMapElements( array $element, $callback ): array
+{
+  if( isset( $element['children'] ) && is_array( $element['children'] ) ){
+    foreach ( $element['children'] as $idx => $child ) {
+      $element['children'][$idx] = recurseMutateMapElements( $element['children'][$idx], $callback );
+    }
+  }
+  $element = $callback( $element );
+  return $element;
 }
 
 /**

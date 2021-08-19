@@ -507,6 +507,7 @@ const getTabsStyles = (settings, id) => {
 
   //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
 
+
   if (settings !== undefined) {
     borderRadius = getResponsiveSetting(settings, 'border_radius_content_style', ':hover');
   }
@@ -660,7 +661,7 @@ const getTabsStyles = (settings, id) => {
 
   styles += "} ";
 
-  styles += `${parentClass} .altrp-tab-vertical .altrp-tab {`;
+  styles += `${parentClass} .altrp-tab-vertical.bp3-tab-panel {`;
 
   //Получаем значения margin-right в точных юнитах из контроллера, обрабатываем и добавляем в styles
 
@@ -674,7 +675,7 @@ const getTabsStyles = (settings, id) => {
 
   styles += `} `;
 
-  styles += `${parentClass} .altrp-tab-vertical.altrp-tab-btn {`;
+  styles += `${parentClass} .altrp-tab-vertical.bp3-tab {`;
 
   //Получаем значения margin-right в точных юнитах из контроллера, обрабатываем и добавляем в styles
 
@@ -688,7 +689,7 @@ const getTabsStyles = (settings, id) => {
 
   styles += `} `;
 
-  styles += `${parentClass} .altrp-tab-horizontal .altrp-tab {`;
+  styles += `${parentClass} .altrp-tab-horizontal.bp3-tab-panel {`;
 
   //Получаем значения margin-right в точных юнитах из контроллера, обрабатываем и добавляем в styles
 
@@ -702,7 +703,7 @@ const getTabsStyles = (settings, id) => {
 
   styles += `} `;
 
-  styles += `${parentClass} .altrp-tab-horizontal.altrp-tab-btn {`;
+  styles += `${parentClass} .altrp-tab-horizontal.bp3-tab {`;
 
   //Получаем значения margin-right в точных юнитах из контроллера, обрабатываем и добавляем в styles
 
@@ -735,6 +736,76 @@ const getTabsStyles = (settings, id) => {
     styles += `box-shadow: inset 0 -3px ${indicatorColor.color};`
     styles += `} `;
   }
+  styles += `${parentClass} .altrp-tab {`;
+
+  let contentBackgroundColor,
+    contentPadding,
+    contentBorderType,
+    contentBorderWidth,
+    contentBorderColor,
+    contentBorderRadius;
+
+  //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    contentBackgroundColor = getResponsiveSetting(settings, 'background_content_style');
+  }
+
+  if (contentBackgroundColor) {
+    styles += colorPropertyStyled(contentBackgroundColor, 'background-color');
+  }
+
+  //Получаем значения padding из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    contentPadding = getResponsiveSetting(settings, 'padding_content_style');
+  }
+
+  if (contentPadding) {
+    styles += dimensionsControllerToStyles(contentPadding);
+  }
+
+  //Получаем значения border-type из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    contentBorderType = getResponsiveSetting(settings, 'border_type_content_style');
+  }
+
+  if (contentBorderType) {
+    styles += simplePropertyStyled(contentBorderType, 'border-style');
+  }
+
+  //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    contentBorderWidth = getResponsiveSetting(settings, 'border_width_content_style');
+  }
+
+  if (contentBorderWidth) {
+    styles += borderWidthStyled(contentBorderWidth);
+  }
+
+  //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    contentBorderColor = getResponsiveSetting(settings, 'border_color_content_style');
+  }
+
+  if (contentBorderColor) {
+    styles += colorPropertyStyled(contentBorderColor, 'border-color');
+  }
+
+  //Получаем значения border-radius из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    contentBorderRadius = getResponsiveSetting(settings, 'border_radius_content_style');
+  }
+
+  if (contentBorderRadius) {
+    styles += `border-radius:${sliderStyled(contentBorderRadius)}`;
+  }
+
+  styles += `} `;
 
   return styles;
 }

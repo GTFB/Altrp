@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 
 class Templates extends ApiController
 {
-    
+
     /**
      * Получение списка прав действия
      * @return type
@@ -21,23 +21,23 @@ class Templates extends ApiController
         $templates = Template::all();
         return response()->json($templates, 200, [],JSON_UNESCAPED_UNICODE);
     }
-    
+
     /**
      * Получение права доступа по идентификатору
      * @param Request $request
      * @return type
      */
     function getTemplate(Request $request) {
-        
+
         $id = $request->template;
         $template = Template::find($id);
 
         if(!$template) {
             return response()->json(trans("responses.not_found.template"), 404, [],JSON_UNESCAPED_UNICODE);
         }
-        
+
         return response()->json($template, 200, [],JSON_UNESCAPED_UNICODE);
-        
+
     }
 
   /**
@@ -52,7 +52,7 @@ class Templates extends ApiController
             "title" => ["string", "required"],
             "data" => ["array", "required"],
         ]);
-        
+
         $template = new Template();
         $template->name = $request->name;
         $template->title = $request->title;
@@ -64,18 +64,18 @@ class Templates extends ApiController
         if($template->save()){
             return response()->json($template, 200, [],JSON_UNESCAPED_UNICODE);
         }
-        
+
         return response()->json(trans("responses.dberror"), 400, [],JSON_UNESCAPED_UNICODE);
-        
+
     }
-    
+
     /**
      * Обновление права действия
      * @param ApiRequest $request
      * @return type
      */
     function update(ApiRequest $request) {
-        
+
       $request->validate([
         "name" => ["string", "required"],
         "title" => ["string", "required"],
@@ -105,27 +105,27 @@ class Templates extends ApiController
       }
 
       return response()->json(trans("responses.dberror"), 400, [],JSON_UNESCAPED_UNICODE);
-        
+
     }
-    
+
     /**
      * Удаление права действеия
      * @param ApiRequest $request
      * @return type
      */
     function delete(ApiRequest $request) {
-        
+
         $template = Template::find($request->template);
-        
+
         if(!$template) {
             return response()->json(trans("responses.not_found.template"), 404, [],JSON_UNESCAPED_UNICODE);
         }
-        
+
         if($template->delete()) {
             return response()->json(trans("responses.delete.template"), 200, [],JSON_UNESCAPED_UNICODE);
         }
-        
+
         return response()->json(trans("deleteerror"), 400, [],JSON_UNESCAPED_UNICODE);
     }
-    
+
 }

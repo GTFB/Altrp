@@ -81,7 +81,7 @@ const TabsComponent = styled.div`
     }
   }
 
-  && .altrp-tab-btn {
+  && .bp3-tab {
 
     ${props => {
 

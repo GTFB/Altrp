@@ -76,6 +76,10 @@ class Tabs extends BaseElement {
       label: "Template",
       isClearable: true,
       options_resource: '/admin/ajax/templates/options?value=guid',
+      gotoLink: {
+        linkTemplate: '/admin/editor?template_id={id}',
+        textTemplate: 'Go to Template',
+      },
       nullable: true,
     });
 

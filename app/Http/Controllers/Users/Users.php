@@ -334,6 +334,7 @@ class Users extends Controller
       $res = "window.current_user = $user ;";
 
       return response( $res, 200, [
+        'Content-Type'=> 'application/javascript'
 
       ] );
     }
