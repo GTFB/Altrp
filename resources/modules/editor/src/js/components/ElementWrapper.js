@@ -51,6 +51,7 @@ import getInputFileStyles from "../../../../front-app/src/js/components/helpers/
 import getInputGalleryStyles from "../../../../front-app/src/js/components/helpers/getInputGalleryStyles";
 import {getResponsiveSetting} from "../../../../front-app/src/js/helpers";
 import InputRangeSliderComponent from "./widgets/styled-components/InputRangeSliderComponent";
+import getTemplateStyles from "../../../../front-app/src/js/components/helpers/getTemplateStyles";
 
 const { connect } = window.reactRedux;
 const {replaceContentWithData} = window.altrpHelpers;
@@ -179,6 +180,13 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
         elementId
       )}}`;
 
+    }break
+
+    case "template":{
+      styles += `.${prefix}${elementId} {${getTemplateStyles(
+        settings,
+        elementId
+      )}}`;
     }break
     case "input-select":{
       styles += `.${prefix}${elementId} {${getInputSelectStyles(

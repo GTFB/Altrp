@@ -6212,6 +6212,7 @@ table.bp3-html-table.bp3-interactive tbody tr:active td {
   flex: 0 0 auto;
   vertical-align: text-bottom;
   overflow: hidden;
+  user-select: none;
 }
 
 .bp3-icon:not(:empty)::before {

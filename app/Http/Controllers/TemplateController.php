@@ -263,14 +263,20 @@ class TemplateController extends Controller
    *
    * @param \Illuminate\Http\Request $request
    * @param \App\Constructor\Template $template
-   * @return \Illuminate\Http\Response
+   * @return JsonResponse|\Illuminate\Http\Response
    */
-  public function update( Request $request, Template $template )
+  public function update( Request $request, $id )
   {
+
+    if( Uuid::isValid( $id ) ){
+      $template = Template::where( 'guid', $id )->first();
+    } else {
+      $template = Template::find( $id );
+    }
     $old_template = $template;
 
     if ( ! $old_template ) {
-      return response()->json( trans( "responses.not_found.template" ), 404, [], JSON_UNESCAPED_UNICODE );
+      return response()->json( ['success' => false, 'message'=>trans( "responses.not_found.template" )], 404, [], JSON_UNESCAPED_UNICODE );
     }
 
     $review = new Template( $old_template->toArray() );

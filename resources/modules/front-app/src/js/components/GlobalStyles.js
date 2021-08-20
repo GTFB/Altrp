@@ -44,6 +44,7 @@ import getInputGalleryStyles from "./helpers/getInputGalleryStyles";
 import {getResponsiveSetting} from "../helpers";
 import InputRangeSliderComponent
   from "../../../../editor/src/js/components/widgets/styled-components/InputRangeSliderComponent";
+import getTemplateStyles from "./helpers/getTemplateStyles";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -121,12 +122,12 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles += getHeadingTypeAnimatingStyles(item.settings, id);
         }
           break;
-        case 'text': {
-          styles += getTextStyles(item.settings, id);
-        }
-          break;
         case 'table': {
           styles += getTableStyles(item.settings, id);
+        }
+          break;
+        case 'text': {
+          styles += getTextStyles(item.settings, id);
         }
           break;
         case 'posts': {
@@ -202,6 +203,12 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         }break
         case "input-gallery":{
           styles += `.${prefix}${id} {${getInputGalleryStyles(
+            item.settings,
+            id
+          )}}`;
+        }break
+        case "template":{
+          styles += `.${prefix}${id} {${getTemplateStyles(
             item.settings,
             id
           )}}`;

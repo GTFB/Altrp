@@ -13,10 +13,11 @@
   2. Input Gallery
   3. Input Slider
 + Add "Active" State for Widgets:
-1. Button
-2. Divider
+  1. Button
+  2. Divider
 + Add "Disabled" State for Widgets:
-1. Button
+  1. Button
++ Render Template Widget on Server
 
 
 ### 0.15.0

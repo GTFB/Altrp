@@ -28,7 +28,7 @@ const SKELETON_ELEMENTS = [
   'tour',
   'icon',
   'export',
-  'template',
+  // 'template',
   'gallery',
   'dropbar',
   'posts',

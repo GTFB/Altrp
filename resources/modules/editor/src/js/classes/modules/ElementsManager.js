@@ -114,19 +114,21 @@ export default class ElementsManger {
     this.elements[Nav.getName()] = Nav;
     this.elements[TabsSwitcher.getName()] = TabsSwitcher
     // this.elements[Input.getName()] = Input;
-    this.elements[InputTextCommon.getName()] = InputTextCommon;
+    this.elements[InputCheckbox.getName()] = InputCheckbox;
+    this.elements[InputGallery.getName()] = InputGallery;
+    this.elements[InputRadio.getName()] = InputRadio;
+    this.elements[InputRangeSlider.getName()] = InputRangeSlider;
     this.elements[InputSelect.getName()] = InputSelect;
     this.elements[InputSelect2.getName()] = InputSelect2;
-    this.elements[InputRadio.getName()] = InputRadio;
-    this.elements[InputWysiwyg.getName()] = InputWysiwyg;
-    this.elements[InputCheckbox.getName()] = InputCheckbox;
+    this.elements[InputSlider.getName()] = InputSlider;
+    this.elements[InputTextCommon.getName()] = InputTextCommon;
     this.elements[InputTextarea.getName()] = InputTextarea;
+    this.elements[InputWysiwyg.getName()] = InputWysiwyg;
     this.elements[InputImageSelect.getName()] = InputImageSelect;
     this.elements[InputAccept.getName()] = InputAccept;
     this.elements[InputDate.getName()] = InputDate;
     this.elements[InputHidden.getName()] = InputHidden;
     this.elements[InputFile.getName()] = InputFile;
-    this.elements[InputGallery.getName()] = InputGallery;
     this.elements[Table.getName()] = Table;
     this.elements[Posts.getName()] = Posts;
     this.elements[Tabs.getName()] = Tabs;
@@ -146,8 +148,6 @@ export default class ElementsManger {
     this.elements[SectionWidget.getName()] = SectionWidget;
     this.elements[Dropbar.getName()] = Dropbar;
     this.elements[ImageLightbox.getName()] = ImageLightbox;
-    this.elements[InputSlider.getName()] = InputSlider;
-    this.elements[InputRangeSlider.getName()] = InputRangeSlider;
     // Websocket Notifications
     // this.elements[Notifications.getName()] = Notifications;
     //список компонентов

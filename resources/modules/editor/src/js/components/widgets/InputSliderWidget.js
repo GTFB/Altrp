@@ -123,8 +123,7 @@ class InputSliderWidget extends Component {
     let decimalPlace = this.props.element.getResponsiveSetting("decimal_place", "", null);
     if(!Number.isInteger(value) && decimalPlace) {
       decimalPlace = Math.abs(decimalPlace);
-      console.log(value);
-      value = value
+        value = value
         .toFixed(decimalPlace)
     }
     if(isEditor()){
@@ -196,7 +195,6 @@ class InputSliderWidget extends Component {
       step = 1;
     }
     let value = this.getValue()
-    console.log(value);
     value = Number(value)
     if(Number.isNaN(value)){
       value = Number(min)

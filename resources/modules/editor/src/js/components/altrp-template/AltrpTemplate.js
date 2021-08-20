@@ -1,14 +1,19 @@
-import React, { Component } from "react";
-import templateLoader from "../../classes/modules/TemplateLoader";
+import  "../../classes/modules/TemplateLoader";
 import ElementWrapper from "../../../../../front-app/src/js/components/ElementWrapper";
 import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric";
 
 class AltrpTemplate extends Component {
   constructor(props) {
     super(props);
+    let template = window.templateLoader.mbGetParsedTemplate(this.props.settings.template)
+    if(template){
+      template = frontElementsFabric.cloneElement(template);
+    }
     this.state = {
+      template,
       templateGUID: this.props.settings.template
     };
+    this.template = template;
   }
   componentDidMount() {
     this.updateTemplate();
@@ -33,7 +38,7 @@ class AltrpTemplate extends Component {
         return;
       } else {
         this.loading = true;
-        template = await templateLoader.loadParsedTemplate(templateGUID);
+        template = await window.templateLoader.loadParsedTemplate(templateGUID);
         this.loading = false;
         this.template = null;
       }

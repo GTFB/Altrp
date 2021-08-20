@@ -962,7 +962,7 @@ if( ! function_exists( 'getMainColor' ) ){
  * @param boolean $only_react_elements
  * @return array
  */
-function extractElementsNames( $areas = [], $only_react_elements = false){
+function extractElementsNames( array $areas = [], bool $only_react_elements = false){
   $elementNames = [];
 
   foreach ( $areas as $area ) {

@@ -48,7 +48,11 @@ Route::get({{frontend_route}}, function ({{params}}) {
     global $altrp_route_id;
     $altrp_route_id = $_frontend_route['id'];
   }
-  $pages = \App\Page::get_pages_for_frontend( true );
+  if( $preload_content['content'] ){
+    $pages = [];
+  } else {
+    $pages = \App\Page::get_pages_for_frontend( true );
+  }
   return view( 'front-app', [
     'page_areas' => json_encode( $page_areas ),
     'altrp_settings' => json_encode( $altrp_settings ),
