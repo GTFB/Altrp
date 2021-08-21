@@ -446,7 +446,6 @@ export function getTextStyles(settings, id) {
 
   styles += `} `;
 
-  console.log(styles);
 
   return styles;
 }

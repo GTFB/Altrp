@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import BalloonEditor from "@ckeditor/ckeditor5-build-balloon";
+import InlineEditor from "@ckeditor/ckeditor5-build-inline";
 import UploadAdapterPlugin from "./Plugins/UploadAdapterPlugin";
 
 const defaultToolbar = [
@@ -23,6 +23,7 @@ const defaultToolbar = [
   "tableRow",
   "mergeTableCells"
 ];
+
 class CKeditor extends Component {
   constructor(props) {
     super(props);
@@ -37,7 +38,7 @@ class CKeditor extends Component {
               extraPlugins: [UploadAdapterPlugin],
               toolbar: defaultToolbar
             }}
-            editor={BalloonEditor}
+            editor={InlineEditor}
             disabled={!this.props.readOnly}
             data={this.props.text || "Type text here"}
             onReady={editor => {
@@ -57,7 +58,7 @@ class CKeditor extends Component {
           extraPlugins: [UploadAdapterPlugin],
           toolbar: defaultToolbar
         }}
-        editor={BalloonEditor}
+        editor={InlineEditor}
         data={this.props.text || "Type text here"}
         disabled={this.props.readOnly}
         onReady={editor => {
