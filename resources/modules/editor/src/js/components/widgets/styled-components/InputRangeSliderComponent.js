@@ -24,11 +24,33 @@ export default function InputRangeSliderComponent(settings) {
       ["color", "current_label_color", "color", ":hover"],
     "}",
 
+    "altrp-field-slider-horizontal .bp3-slider-handle",
+      () => {
+        let width = getResponsiveSetting(settings, "size");
+
+        width = sliderStyled(width);
+
+        console.log(width)
+        if(width) {
+          return `width: calc(${width} / 2);`
+        } else {
+          return ""
+        }
+      },
+      ["height", "handle_size", "slider"],
+    "}",
+
 
     "bp3-slider-handle",
-      ["height", "handle_size", "slider"],
-      ["width", "handle_size", "slider"],
       ["border-radius", "handle_radius", "dimensions"],
+    "}",
+
+    "bp3-slider-handle.bp3-start",
+      ["border-radius", "handle_radius", "dimensions"],
+    "}",
+
+    "bp3-slider-handle.bp3-end",
+      ["border-radius", "handle_radius_second", "dimensions"],
     "}",
 
     "altrp-field-slider-horizontal .altrp-field-slider",
@@ -37,6 +59,50 @@ export default function InputRangeSliderComponent(settings) {
 
     "altrp-field-slider-vertical .altrp-field-slider",
       ["height", "length", "slider"],
+    "}",
+
+    "altrp-field-slider-horizontal .bp3-slider-handle.bp3-start",
+      () => {
+        let value = getResponsiveSetting(settings, "handle_transform");
+        value = sliderStyled(value);
+
+        if(value) {
+          return `transform: translate(${value}, 0);`;
+        }
+      },
+    "}",
+
+    "altrp-field-slider-horizontal .bp3-slider-handle.bp3-end",
+      () => {
+        let value = getResponsiveSetting(settings, "handle_transform_end");
+        value = sliderStyled(value);
+
+        if(value) {
+          return `transform: translate(${value}, 0);`;
+        }
+      },
+    "}",
+
+    "altrp-field-slider-vertical .bp3-slider-handle.bp3-start",
+      () => {
+        let value = getResponsiveSetting(settings, "handle_transform");
+        value = sliderStyled(value);
+
+        if(value) {
+          return `transform: translate(0, ${value});`;
+        }
+      },
+    "}",
+
+    "altrp-field-slider-vertical .bp3-slider-handle.bp3-end",
+      () => {
+        let value = getResponsiveSetting(settings, "handle_transform_end");
+        value = sliderStyled(value);
+
+        if(value) {
+          return `transform: translate(0, ${value});`;
+        }
+      },
     "}",
 
     "bp3-slider-progress, & .bp3-slider-track",
@@ -64,16 +130,6 @@ export default function InputRangeSliderComponent(settings) {
         thickness = sliderStyled(thickness)
 
         return `transform: translate(calc(14px + ${thickness}), 50%);`
-      },
-    "}",
-
-    "altrp-field-slider",
-      () => {
-        let height = getResponsiveSetting(settings, "height", "", { size: 6, unit: "px" })
-
-        height = sliderStyled(height)
-
-        return `height: calc(35px + ${height});`
       },
     "}",
 

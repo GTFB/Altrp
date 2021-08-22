@@ -35,6 +35,28 @@ export default function InputSliderComponent(settings) {
       ["width", "width", "slider"],
     "}",
 
+    "altrp-field-slider-horizontal .bp3-slider-handle",
+      () => {
+        let value = getResponsiveSetting(settings, "handle_transform");
+        value = sliderStyled(value);
+
+        if(value) {
+          return `transform: translate(${value}, 0);`;
+        }
+      },
+    "}",
+
+    "altrp-field-slider-vertical .bp3-slider-handle",
+      () => {
+        let value = getResponsiveSetting(settings, "handle_transform");
+        value = sliderStyled(value);
+
+        if(value) {
+          return `transform: translate(0, ${value});`;
+        }
+      },
+    "}",
+
     "altrp-field-slider-vertical .altrp-field-slider",
       ["height", "length", "slider"],
     "}",
@@ -64,16 +86,6 @@ export default function InputSliderComponent(settings) {
         thickness = sliderStyled(thickness)
 
         return `transform: translate(calc(14px + ${thickness}), 50%);`
-      },
-    "}",
-
-    "altrp-field-slider",
-      () => {
-        let height = getResponsiveSetting(settings, "height", "", { size: 6, unit: "px" })
-
-        height = sliderStyled(height)
-
-        return `height: calc(35px + ${height});`
       },
     "}",
 
