@@ -9,6 +9,7 @@ const {
 } = window.altrpHelpers;
 import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import {addSettings} from "../store/elements-settings/actions";
+import ELEMENTS_IGNORES_FORM_UPDATE from "../constants/ELEMENTS_IGNORES_FORM_UPDATE";
 
 /**
  * Срабатываает перед удалением компонента элемента
@@ -151,11 +152,26 @@ function componentDidMount() {
   /**
    * Если есть определен метод _componentDidMount вызываем его
    */
+  this.elementName = this.props.element.getName();
   if(typeof this._componentDidMount === 'function'){
     this._componentDidMount();
   }
   // this.subscribeToModels(this.getModelId());
 }
+
+/**
+ *
+ * @param nextProps
+ */
+function shouldComponentUpdate(nextProps) {
+  // console.log(this.elementName);
+  if(this.props.formsStore !== nextProps.formsStore
+    && ELEMENTS_IGNORES_FORM_UPDATE.indexOf(this.elementName) !== -1){
+    return  false
+  }
+  return true;
+}
+
 /**
  * Компоненте обновился
  * @params {
@@ -370,4 +386,5 @@ export default function frontDecorate(component) {
   component.updateModelData = updateModelData.bind(component);
   component.isActive = isActive.bind(component);
   component.isDisabled = isDisabled.bind(component);
+  component.shouldComponentUpdate = shouldComponentUpdate.bind(component);
 }

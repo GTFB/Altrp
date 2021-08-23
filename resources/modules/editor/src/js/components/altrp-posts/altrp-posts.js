@@ -18,6 +18,7 @@ class AltrpPosts extends React.Component {
       simpleTemplateId : null,
       currentPage: 1,
     }
+    this.postsComponents = {};
   }
 
   /**
@@ -89,14 +90,14 @@ class AltrpPosts extends React.Component {
 
   /**
    * Отрисовывает отдельную карточку
-   * @param {integer} idx - индекс в массиве записей
+   * @param {int} idx - индекс в массиве записей
    */
   renderPost = (idx) => {
     const hoverTemplateId = _.get(this.props.settings, 'posts_card_hover_template', null);
     const transitionType = _.get(this.props.settings, 'posts_transition_type', null);
     let post = _.cloneDeep(this.props.data[idx] || this.props.data);
     let PostContentComponent = post.component || '';
-    if(this.state.simpleTemplate){
+    if(this.state.simpleTemplate && ! _.get(this.postsComponents, `${this.state.simpleTemplate}.${idx}`)){
       let template = frontElementsFabric.cloneElement(this.state.simpleTemplate);
       template.setCardModel(new AltrpModel(post), idx);
       PostContentComponent = React.createElement(template.componentClass,
@@ -105,8 +106,11 @@ class AltrpPosts extends React.Component {
           ElementWrapper: ElementWrapper,
           children: template.children
         });
+      _.set(this.postsComponents, `${this.state.simpleTemplate}.${idx}`, PostContentComponent)
+    } else if(_.get(this.postsComponents, `${this.state.simpleTemplate}.${idx}`)){
+      PostContentComponent = _.get(this.postsComponents, `${this.state.simpleTemplate}.${idx}`)
     }
-    return <React.Fragment key={(post.id || post.altrpIndex) + Math.random()}>
+    return <React.Fragment key={(post.id || post.altrpIndex)}>
       <div className="altrp-post">{PostContentComponent}
         {hoverTemplateId && <div className={`altrp-post altrp-post--hover altrp-post--hover--${transitionType}`}>{PostContentComponent}</div>}
       </div>
@@ -258,7 +262,7 @@ class AltrpPosts extends React.Component {
     let posts_rows_gap = getResponsiveSetting(this.props.settings,'posts_rows_gap') || '';
 
 
-    return<React.Fragment>
+    return <React.Fragment>
       <PostsWrapper columnsCount={columnsCount}
                                         posts_columns_gap={posts_columns_gap}
                                         posts_rows_gap={posts_rows_gap}
