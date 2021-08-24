@@ -32,6 +32,7 @@ global.window.SSR = true;
 //   addEventListener: () => {
 //   },
 // };
+
 require( '../resources/modules/front-app/src/js/libs/react-lodash');
 require('../resources/modules/front-app/src/js/libs/altrp');
 global.frontElementsManager = require("./classes/modules/FrontElementsManager").default;
@@ -42,6 +43,9 @@ global.iconsManager = new (require("../resources/modules/editor/src/js/classes/m
 const AltrpModel = require('../resources/modules/editor/src/js/classes/AltrpModel').default
 global.currentRouterMatch = new AltrpModel({});
 global.Component = global.React.Component;
+
+const {TemplateLoader} = require("../resources/modules/editor/src/js/classes/modules/TemplateLoader");
+
 window.frontElementsFabric = require("../resources/modules/front-app/src/js/classes/FrontElementsFabric").default;
 const FrontElement = require("../resources/modules/front-app/src/js/classes/FrontElement")
   .default;
@@ -92,6 +96,11 @@ app.post("/", (req, res) => {
   const sheet = new ServerStyleSheet();
   const store = window.appStore;
   let json = JSON.parse(req.body.json) || [];
+  if(_.isObject(json.altrp_settings)){
+    window.__altrp_settings__ = json.altrp_settings;
+  } else {
+    window.__altrp_settings__ = {};
+  }
   let page = json.page || [];
   global.window.currentPage = json.currentPage || {};
   let page_id = json.page_id || "";
@@ -131,6 +140,9 @@ app.post("/", (req, res) => {
   page = page.map(area => (Area.areaFactory(area)));
   store.dispatch(setAreas(page));
   addSettingsToStore();
+
+  window.templateLoader = new TemplateLoader();
+
   let resultSSRApp = ReactDOMServer.renderToString(
     sheet.collectStyles(
       <Router>

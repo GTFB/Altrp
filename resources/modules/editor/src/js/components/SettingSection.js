@@ -13,6 +13,9 @@ class SettingSection extends Component {
       hidden: false,
     };
     this.toggle = this.toggle.bind(this);
+    if(props.sectionId === 'wrapper_click_section'){
+      console.log(props);
+    }
   };
 
   componentDidMount() {

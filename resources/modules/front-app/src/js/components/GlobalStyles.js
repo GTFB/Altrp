@@ -33,7 +33,18 @@ import ImageLightboxComponent
   from "../../../../editor/src/js/components/widgets/styled-components/ImageLightboxComponent";
 import InputDateComponent from "../../../../editor/src/js/components/widgets/styled-components/InputDateComponent";
 import DatePickerComponent from "../../../../editor/src/js/components/widgets/styled-components/DatePickerComponent";
+import InputCheckboxComponent
+  from "../../../../editor/src/js/components/widgets/styled-components/InputCheckboxComponent";
 import getInputTextCommonStyles from "./helpers/getInputTextCommonStyles";
+import getInputSelectStyles, {getInputSelectPopoverStyles} from "./helpers/getInputSelectStyles";
+import InputRadioComponent from "../../../../editor/src/js/components/widgets/styled-components/InputRadioComponent";
+import InputSliderComponent from "../../../../editor/src/js/components/widgets/styled-components/InputSliderComponent";
+import getInputFileStyles from "./helpers/getInputFileStyles";
+import getInputGalleryStyles from "./helpers/getInputGalleryStyles";
+import {getResponsiveSetting} from "../helpers";
+import InputRangeSliderComponent
+  from "../../../../editor/src/js/components/widgets/styled-components/InputRangeSliderComponent";
+import getTemplateStyles from "./helpers/getTemplateStyles";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -43,7 +54,6 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
     styles += getRouteStyles(areas);
   }
   let prefix = "altrp-element";
-
   _.each(elementsSettings, (item, id) => {
     if (item) {
       switch (item.name) {
@@ -112,12 +122,12 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles += getHeadingTypeAnimatingStyles(item.settings, id);
         }
           break;
-        case 'text': {
-          styles += getTextStyles(item.settings, id);
-        }
-          break;
         case 'table': {
           styles += getTableStyles(item.settings, id);
+        }
+          break;
+        case 'text': {
+          styles += getTextStyles(item.settings, id);
         }
           break;
         case 'posts': {
@@ -134,29 +144,76 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         }
           break;
         case "input-date": {
-          styles += `.${prefix}${id} {${InputDateComponent(
+          styles += InputDateComponent(
             item.settings,
-            id
-          )}}`;
-
+            id,
+            prefix
+          );
           styles += `${DatePickerComponent(
             item.settings,
             id,
           )}`;
-        } break;
+        }
+          break
+        case "input-checkbox": {
+          styles += `.${prefix}${id} {${InputCheckboxComponent(
+            item.settings,
+            id
+          )}}`;
+        }
+          break
+        case "input-slider": {
+          styles += `.${prefix}${id} {${InputSliderComponent(
+            item.settings,
+          )}}`;
+        }
+          break
+        case "input-range-slider": {
+          styles += `.${prefix}${id} {${InputRangeSliderComponent(
+            item.settings,
+          )}}`;
+        }
+          break
         case "input-text-common":{
           styles += `.${prefix}${id} {${getInputTextCommonStyles(item.settings, id)}}`
+        }
+          break;
+        case "input-select":{
+          styles += `.${prefix}${id} {${getInputSelectStyles(item.settings, id)}}`
+          styles += `${getInputSelectPopoverStyles(item.settings, id)}`
+        }
+          break;
+        case "input-radio": {
+          styles += InputRadioComponent(
+            item.settings,
+            id,
+            prefix
+          )
         }break;
         case "input-text":
         case "input-password":
         case "input-number":
         case "input-email":
         case "input-tel":
-        case "input-file":
-        case "input-select":
+        case "input-file":{
+          styles += `.${prefix}${id} {${getInputFileStyles(
+            item.settings,
+            id
+          )}}`;
+        }break
+        case "input-gallery":{
+          styles += `.${prefix}${id} {${getInputGalleryStyles(
+            item.settings,
+            id
+          )}}`;
+        }break
+        case "template":{
+          styles += `.${prefix}${id} {${getTemplateStyles(
+            item.settings,
+            id
+          )}}`;
+        }break
         case "input-image-select":
-        case "input-radio":
-        case "input-checkbox":
         case "input-accept":
         case "input-textarea":
         case "input-wysiwyg": {
@@ -177,13 +234,18 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         item.settings
       )}}`;
 
+      let element_css_editor = getResponsiveSetting(item.settings, "element_css_editor");
+      if(_.isString(element_css_editor)){
+        styles+=element_css_editor.replace(/__selector__/g, `${prefix}${id}`)
+      }
     }
   });
 
   styles += `} `;
   window.globalDefaults && (styles += window.globalDefaults.join(''));
   return styles;
-}}`;
+}}`
+
 function mapStateToProps(state) {
   if(isEditor()){
     return {};

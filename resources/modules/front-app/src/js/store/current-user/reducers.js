@@ -36,7 +36,7 @@ export function currentUserReducer(user, action) {
           .then(res => {
             appStore.dispatch(changeCurrentUser(res.data));
           })
-          .catch(error => console.log(error));
+          .catch(error => console.error(error));
       }
       break;
     case SET_NOTICE_FOR_USER:
@@ -48,7 +48,6 @@ export function currentUserReducer(user, action) {
     case SET_USERS_ONLINE:
       {
         user = { ...user, members: action.members };
-        console.log(user);
       }
       break;
   }

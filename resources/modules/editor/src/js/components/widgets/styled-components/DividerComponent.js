@@ -41,11 +41,14 @@ export default function DividerComponent(settings) {
 
     "}",
 
-    "altrp-divider:hover",
+    "altrp-divider .altrp-divider-separator",
+    ["border-color", "divider_style_color", "color"],
+    "}",
+    "altrp-divider.active",
 
-    ["margin", "position_margin", "dimensions", ":hover"],
+    ["margin", "position_margin", "dimensions", ".active"],
     () => {
-      const value = getResponsiveSetting(settings, "divider_style_gap", ":hover");
+      const value = getResponsiveSetting(settings, "divider_style_gap", ".active");
       const slider = sliderStyled(value);
 
       if(slider) {
@@ -55,11 +58,15 @@ export default function DividerComponent(settings) {
 
     "& .altrp-divider-label",
 
-    ["color", "text_style_color", "color", ":hover"],
+    ["color", "text_style_color", "color", ".active"],
 
     "}",
 
-    "}"
+    "}",
+    "altrp-divider.active .altrp-divider-separator",
+    ["border-color", "divider_style_color", "color", ".active"],
+    "}",
+
   ];
 
   return styledString(styles, settings)

@@ -7,7 +7,6 @@ import TextWidget from '../../../resources/modules/editor/src/js/components/widg
 import ImageWidget from '../../../resources/modules/editor/src/js/components/widgets/ImageWidget';
 // import NavWidget from '../../../resources/modules/editor/src/js/components/widgets/NavWidget';
 import DividerWidget from '../../../resources/modules/editor/src/js/components/widgets/DividerWidget';
-import TabsWidget from '../../../resources/modules/editor/src/js/components/widgets/TabsWidget';
 import PosterWidget from '../../../resources/modules/editor/src/js/components/widgets/PosterWidget';
 import ListWidget from '../../../resources/modules/editor/src/js/components/widgets/ListWidget';
 import AccordionWidget from '../../../resources/modules/editor/src/js/components/widgets/AccordionWidget';
@@ -30,6 +29,7 @@ import HeadingTypeHeadingWidget
   from "../../../resources/modules/editor/src/js/components/widgets/HeadingTypeHeadingWidget";
 import SKELETON_ELEMENTS from "../../../resources/modules/front-app/src/js/constants/SKELETON_ELEMENTS";
 import InputHiddenWidget from "../../../resources/modules/editor/src/js/components/widgets/InputHiddenWidget";
+import TemplateWidget from "../../../resources/modules/editor/src/js/components/widgets/TemplateWidget";
 // import BreadcrumbsWidget from '../../../resources/modules/editor/src/js/components/widgets/BreadcrumbsWidget';
 // import MenuWidget from '../../../resources/modules/editor/src/js/components/widgets/MenuWidget';
 
@@ -53,13 +53,13 @@ class FrontElementsManager {
     this.components['image'] = ImageWidget;
     this.components['posts'] = PostsWidget;
     this.components['divider'] = DividerWidget;
-    this.components['tabs'] = TabsWidget;
     this.components['poster'] = PosterWidget;
     this.components['list'] = ListWidget;
     this.components['accordion'] = AccordionWidget;
     this.components['carousel'] = CarouselWidget;
     this.components['html'] = HtmlWidget;
     this.components['video'] = VideoWidget;
+    this.components['template'] = TemplateWidget;
   }
 
   getComponentClass(name) {

@@ -13,7 +13,7 @@ import {
   isEditor,
   renderAsset
 } from "../../../../../front-app/src/js/helpers";
-import TemplateLoader from "../template-loader/TemplateLoader";
+const {TemplateLoader} = window.altrpHelpers;
 import AltrpCarouselWrapper from "./AltrpCarouselWrapper";
 
 /**

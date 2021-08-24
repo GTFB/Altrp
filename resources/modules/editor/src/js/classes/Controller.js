@@ -1,10 +1,11 @@
 import store, { getCurrentElement } from "../store/store";
-import { getElementSettingsSuffix } from "../helpers";
+import {getElementSettingsSuffix, getTemplateDataStorage} from "../helpers";
 import CONSTANTS from "../consts";
 import CSSRule from "../classes/CSSRule";
 import { changeTemplateStatus } from "../store/template-status/actions";
 import { controllerValue } from "../store/controller-value/actions";
 import RepeaterController from "../components/controllers/RepeaterController";
+const {setTitle} = window.altrpHelpers
 
 /**
  * Класс-контроллер
@@ -42,12 +43,25 @@ class Controller {
     }
   }
 
+  changeTemplateName(value){
+    console.log(getTemplateDataStorage());
+    getTemplateDataStorage().title = value;
+    setTitle(value)
+    store.dispatch(changeTemplateStatus(CONSTANTS.TEMPLATE_NEED_UPDATE));
+  }
+
   /**
    * Изменение значения либо в текущем элементе, либо в репитере
    * @param {*} value
    * @param {boolean} updateElement
    */
   changeValue(value, updateElement = true) {
+    switch(this.data.controlId ){
+      case '__template_name':{
+        this.changeTemplateName(value)
+        return
+      }
+    }
     /**
      * Если значение контроллера объект, то создаем его копию
      */

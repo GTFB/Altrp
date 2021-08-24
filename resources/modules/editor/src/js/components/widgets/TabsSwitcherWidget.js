@@ -1,7 +1,5 @@
-import React from "react"
-import {getResponsiveSetting} from "../../../../../front-app/src/js/helpers";
 import { Switch } from "@blueprintjs/core";
-import TemplateLoader from "../template-loader/TemplateLoader";
+const {TemplateLoader} = window.altrpHelpers;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-tabs-switcher_wrapper {

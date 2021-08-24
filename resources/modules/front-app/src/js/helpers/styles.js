@@ -107,9 +107,10 @@ export function dimensionsControllerToStyles(
 /**
  * Преобразует объект, который сохраняет контроллер box-shadow, в строку css для вставки в styled-компонент
  * @param {{}} data
+ * @param {string} declaration
  * @return {string}
  */
-export function shadowControllerToStyles(data) {
+export function shadowControllerToStyles(data, declaration="") {
   let styles = "";
 
   if (_.isEmpty(data)) {
@@ -123,7 +124,7 @@ export function shadowControllerToStyles(data) {
     ));
 
     if(returnShadow.length !== 0) {
-      styles += `box-shadow: ${type || ' '} ${offsetX || horizontal || 0}px ${offsetY || vertical || 0}px ${blurRadius || blur || 0}px ${spreadRadius || spread || 0}px ${color}; `;
+      styles += `box-shadow: ${type || ' '} ${offsetX || horizontal || 0}px ${offsetY || vertical || 0}px ${blurRadius || blur || 0}px ${spreadRadius || spread || 0}px ${color} ${declaration}; `;
     }
   }
   return styles;
@@ -481,6 +482,19 @@ export function colorStyled(controller, style) {
   if (controller) {
     if (controller.color) {
       return `${style}: ${controller.color};`;
+    } else return "";
+  } else return "";
+}
+
+/**
+ * Преобразует объект, который сохраняет контроллер color, в строку css для вставки в styled-компонент
+ * @return {string}
+ * @param {{}} controller
+ */
+export function colorStyledSecond(controller) {
+  if (controller) {
+    if (controller.color) {
+      return `${controller.color}`;
     } else return "";
   } else return "";
 }

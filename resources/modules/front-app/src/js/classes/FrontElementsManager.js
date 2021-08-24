@@ -164,6 +164,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-gallery",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputGallery' */ "../../../../editor/src/js/components/widgets/InputGalleryWidget"
+          );
+        }
+      },
+      {
         name: "button",
         import: async () => {
           return await import(
@@ -384,6 +392,22 @@ class FrontElementsManager {
         import: async () => {
           return await import(
             /* webpackChunkName: 'TabsSwitcherWidget' */ "../../../../editor/src/js/components/widgets/ImageLightboxWidget"
+            );
+        }
+      },
+      {
+        name: "input-slider",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputSliderWidget' */ "../../../../editor/src/js/components/widgets/InputSliderWidget"
+            );
+        }
+      },
+      {
+        name: "input-range-slider",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputRangeSliderWidget' */ "../../../../editor/src/js/components/widgets/InputRangeSliderWidget"
             );
         }
       }

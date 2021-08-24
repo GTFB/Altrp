@@ -50,7 +50,7 @@ class PageDataSourceForm extends Component {
     let isExtendedSettings = ! this.state.isExtendedSettings;
     let parameters;
     if(isExtendedSettings){
-      parameters = parseParamsFromString(this.state.parameters, {}, false, false);
+      parameters = parseParamsFromString(this.state.parameters, {}, false, false, false);
       parameters = _.map(parameters, (paramValue, paramName) => {
         return {
           paramValue,

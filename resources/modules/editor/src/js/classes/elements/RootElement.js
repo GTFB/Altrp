@@ -113,6 +113,18 @@ class RootElement extends BaseElement {
     //
     // this.endControlSection();
 
+    this.startControlSection('content', {
+      label: 'Content',
+    });
+
+    this.addControl('__template_name', {
+      label: 'Template Name',
+      responsive: false,
+      dynamic: false,
+    })
+
+    this.endControlSection();
+
     this.startControlSection('popup_section', {
       label: 'Popup',
     });

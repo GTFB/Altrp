@@ -1,4 +1,5 @@
 console.log('FIRST SCRIPT: ', performance.now());
+console.log('FIRST SCRIPT: ', performance.now());
 import loadDepends from "./js/functions/load-depends";
 import loadFontsManager from "./js/functions/load-fonts";
 import  queryString from 'query-string';
@@ -140,3 +141,8 @@ frontAppContainer.addEventListener('scroll', e=>{
   appStore && appStore.dispatch(setScrollValue({top: e.target.scrollTop}))
 })
 
+document.body.addEventListener('click', e =>{
+  import(/* webpackChunkName: 'click-actions' */'./js/functions/actions/click-actions').then((module)=>{
+    module?.default(e);
+  })
+})

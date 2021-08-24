@@ -155,52 +155,14 @@ class SectionWidgetComponent extends Component {
     const layout_html_tag =
       this.props.element.getSettings("layout_html_tag") || "div";
 
-    let component = "div";
-
-    switch (layout_html_tag) {
-      case "aside":
-        {
-          component = SectionAsideComponent;
-        }
-        break;
-      case "nav":
-        {
-          component = SectionNavComponent;
-        }
-        break;
-      case "section":
-        {
-          component = SectionSectionComponent;
-        }
-        break;
-      case "article":
-        {
-          component = SectionArticleComponent;
-        }
-        break;
-      case "main":
-        {
-          component = SectionMainComponent;
-        }
-        break;
-      case "footer":
-        {
-          component = SectionFooterComponent;
-        }
-        break;
-      case "header":
-        {
-          component = SectionHeaderComponent;
-        }
-        break;
-    }
     return React.createElement(
-      component,
+      layout_html_tag,
       {
         style: styles,
         className:
           sectionClasses.join(" ") +
           " " +
+          (this.isActive() ? 'active ' : '') +
           this.state.settings.position_style_css_classes,
         id: "",
         onClick: this.onClick,
@@ -209,12 +171,6 @@ class SectionWidgetComponent extends Component {
       sectionWrapper
     );
   }
-}
-
-function mapStateToProps(state) {
-  return {
-    changeWidthColumns: state.columnWidth
-  };
 }
 
 export default SectionWidgetComponent;

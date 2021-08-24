@@ -1,4 +1,3 @@
-import React, {Component} from 'react';
 import Rotating from "../animations/text/rotating/Rotating";
 import Highlighted from "../animations/text/highlighted/Highlighted";
 
@@ -11,12 +10,12 @@ class Animating extends Component {
     const afterText = this.props.getContent('text_after_animating');
     const htmlTag = settings.html_tag_animating || "h2";
     const prefix = "heading";
-
+    const text_highlighted_animating = this.props.getContent('text_highlighted_animating')
     if(settings.style_animating === "highlighted") {
 
       animating = <Highlighted
         shape={settings.shape_animating}
-        text={settings.text_highlighted_animating}
+        text={text_highlighted_animating}
         bringToFront={settings.bring_to_front_shape_animating}
         roundedEdges={settings.rounded_edges_shape_animating}
         prefix={prefix}

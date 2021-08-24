@@ -6,6 +6,7 @@ const DEFAULT_REACT_ELEMENTS = [
   'input-checkbox',
   'input-wysiwyg',
   'input-textarea',
+  'input-slider',
   'input-image-select',
   'input-accept',
   'input-text',
@@ -17,6 +18,7 @@ const DEFAULT_REACT_ELEMENTS = [
   'input-date',
   'input-hidden',
   'input-file',
+  'input-gallery',
   'breadcrumbs',
   'map',
   'map_builder',
@@ -33,6 +35,7 @@ const DEFAULT_REACT_ELEMENTS = [
   'dropbar',
   'posts',
   'table',
+  'tabs',
   'heading-type-animating',
 ]
 export default DEFAULT_REACT_ELEMENTS

@@ -456,7 +456,7 @@ class AltrpAction extends AltrpModel {
       const response = await form.submit('', '', data, customHeaders);
       result = _.assign(result, response);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       result.error = error;
       result.success = false;
     }

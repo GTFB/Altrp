@@ -293,13 +293,15 @@ export function renderAsset(asset, props = null) {
  * @param {AltrpModel} context
  * @param {boolean} allowObject
  * @param {boolean} replaceRight - нужно ли подставлять в значение параметра данные или оставить сырой шаблон
+ * @param {boolean} replace - нужно ли подставлять в значение параметра данные или оставить сырой шаблон
  * @return {{}}
  */
 export function parseParamsFromString(
   string,
   context = {},
   allowObject = false,
-  replaceRight = true
+  replaceRight = true,
+  replace = true,
 ) {
   if (!(context instanceof AltrpModel)) {
     context = new AltrpModel(context);
@@ -321,10 +323,10 @@ export function parseParamsFromString(
     }
     left = left.trim();
     right = right.trim();
-    if (left.indexOf("{{") !== -1) {
+    if (replace && left.indexOf("{{") !== -1) {
       left = replaceContentWithData(left);
     }
-    if (right.match(/{{([\s\S]+?)(?=}})/g)) {
+    if (replace && right.match(/{{([\s\S]+?)(?=}})/g)) {
       if (
         context.getProperty(
           right.match(/{{([\s\S]+?)(?=}})/g)[0].replace("{{", "")
@@ -526,11 +528,9 @@ export function setDataByPath(path = "", value, dispatch = null) {
     const { formsStore } = appStore.getState();
 
     const oldValue = _.get(formsStore, path);
-    console.log(value);
     if (_.isEqual(oldValue, value)) {
       return true;
     }
-    console.log(value);
     if (_.isFunction(dispatch)) {
       dispatch(changeFormFieldValue(path, value));
     } else {
@@ -1078,13 +1078,11 @@ export function scrollToElement(scrollbars, element) {
       /**
        * ушли в самый корень ДОМ и контейнер не встретился
        */
-      console.log(top);
       return;
     }
     top += parent.offsetTop;
     parent = parent.offsetParent;
   }
-  console.log(top);
   /**
    * не получили каеое-либо значение
    */
@@ -1861,9 +1859,6 @@ export function convertData(settings, data) {
   if (_.isArray(settings)) {
     settings.forEach(item => {
       const converter = getConverter(item);
-      console.log("====================================");
-      console.log(item, data);
-      console.log("====================================");
       data = converter.convertData(data);
     });
   }
@@ -1891,8 +1886,12 @@ export function renderIcon(isHidden, icon, defaultIcon, className) {
  * @param {{}} context
  */
 export function redirect(linkSettings, e, context = {}) {
-  if (_.get(linkSettings, "toPrevPage") && frontAppRouter) {
-    frontAppRouter.history.goBack();
+  if (_.get(linkSettings, "toPrevPage")) {
+    if(window.frontAppRouter){
+      frontAppRouter.history.goBack();
+    } else {
+      history.back();
+    }
     return;
   }
   if (!_.get(linkSettings, "url")) {
@@ -1906,13 +1905,12 @@ export function redirect(linkSettings, e, context = {}) {
     window.open(url, "_blank");
     return;
   }
-  if (frontAppRouter) {
-    if (linkSettings.tag === "a") {
-      window.location.assign(url);
-    } else {
-      frontAppRouter.history.push(url);
-    }
+  if (linkSettings.tag === "a" || ! window.frontAppRouter) {
+    window.location.assign(url);
+  } else {
+    frontAppRouter.history.push(url);
   }
+
 }
 
 export function validateEmail(email) {

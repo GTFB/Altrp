@@ -9,7 +9,17 @@ const {
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 const { DateInput, TimePrecision } = window.altrpLibs.BlueprintDatetime;
 (window.globalDefaults = window.globalDefaults || []).push(`
- /*здесь css стилей по умолчанию с селекторами*/
+  .altrp-date-field-container .bp3-popover-wrapper, .altrp-date-field-container .bp3-popover-target {
+    width: 100%;
+  }
+
+  .altrp-date-picker-popover .bp3-datepicker-caption select + .bp3-icon {
+    right: 2px !important;
+  }
+
+  .altrp-date-picker-popover .bp3-datepicker-year-select select {
+    padding: 0 0 0 2px;
+  }
 `)
 
 const AltrpFieldContainer = styled.div`
@@ -37,6 +47,30 @@ class InputDateWidget extends Component {
     }
 
     this.defaultValue = this.getContent("content_default_value") || "";
+
+    this.timePrecision = null;
+    this.typeDate = props.element.getSettings("content_time_type", "date");
+    this.locale = this.props.element.getSettings("content_locale", "en");
+
+    switch (this.typeDate) {
+      case "date":
+        this.typeDate = "LL";
+        break;
+      case "time":
+        this.typeDate = "LT";
+        this.timePrecision = TimePrecision.MINUTE
+        break
+      case "dateTime":
+        this.typeDate = "llll";
+        this.timePrecision = TimePrecision.MINUTE
+        break
+    }
+
+    let value = moment().locale(this.locale).toDate();
+
+    if(this.defaultValue) {
+      value = moment(this.defaultValue).locale(this.locale).toDate()
+    }
 
     this.state = {
       settings: { ...props.element.getSettings() },
@@ -101,6 +135,21 @@ class InputDateWidget extends Component {
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
       value = this.getContent("content_default_value");
+
+      if(value) {
+        value = moment(value).locale(this.locale).toDate()
+        this.setState(
+          state => ({ ...state, value, contentLoaded: true }),
+          () => {
+            this.dispatchFieldValueToStore(value);
+          }
+        );
+      } else {
+        this.setState(
+          state => ({ ...state, contentLoaded: true }),
+        );
+      }
+
       const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
       value = moment(value);
       value = value.isValid() ? value.format(format) : '';
@@ -110,6 +159,7 @@ class InputDateWidget extends Component {
           this.dispatchFieldValueToStore(value);
         }
       );
+
       return;
     }
 
@@ -119,6 +169,20 @@ class InputDateWidget extends Component {
       !this.state.contentLoaded
     ) {
       value = this.getContent("content_default_value");
+
+      if(value) {
+        value = moment(value).locale(this.locale).toDate()
+        this.setState(
+          state => ({ ...state, value, contentLoaded: true }),
+          () => {
+            this.dispatchFieldValueToStore(value);
+          }
+        );
+      } else {
+        this.setState(
+          state => ({ ...state, contentLoaded: true }),
+        );
+      }
       const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
       value = moment(value);
       value = value.isValid() ? value.format(format) : '';
@@ -154,6 +218,19 @@ class InputDateWidget extends Component {
       let value = this.getContent(
         "content_default_value",
       );
+      if(value) {
+        value = moment(value).locale(this.locale).toDate()
+        this.setState(
+          state => ({ ...state, value, contentLoaded: true }),
+          () => {
+            this.dispatchFieldValueToStore(value);
+          }
+        );
+      } else {
+        this.setState(
+          state => ({ ...state, contentLoaded: true }),
+        );
+      }
       const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
       value = moment(value);
       value = value.isValid() ? value.format(format) : '';
@@ -174,7 +251,6 @@ class InputDateWidget extends Component {
    * @param {{}} prevProps
    */
   updateValue(prevProps) {
-
     if (isEditor()) {
       return;
     }
@@ -197,7 +273,7 @@ class InputDateWidget extends Component {
       ) {
         this.setState(state => ({
           ...state,
-          value: _.get(altrpforms, path)
+          value: moment(_.get(altrpforms, path)).locale(this.locale).toDate()
         }));
       }
       return;
@@ -304,12 +380,57 @@ class InputDateWidget extends Component {
       );
     } catch (e) {
       console.error(
-        "Evaluate error in Input" + e.message,
+        "Evaluate error in Input " + e.message,
         this.props.element.getId()
       );
     }
   }
 
+  /**
+   * Обновляет опции для селекта при обновлении данных, полей формы
+   */
+  async updateOptions() {
+    {
+      let formId = this.props.element.getFormId();
+      let paramsForUpdate = this.props.element.getSettings("params_for_update");
+      let formData = _.get(this.props.formsStore, [formId], {});
+      paramsForUpdate = parseParamsFromString(
+        paramsForUpdate,
+        new AltrpModel(formData)
+      );
+      /**
+       * Сохраняем параметры запроса, и если надо обновляем опции
+       */
+      let options = [...this.state.options];
+
+      if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
+        if (!_.isEmpty(paramsForUpdate)) {
+          if (this.props.element.getSettings("params_as_filters", false)) {
+            paramsForUpdate = JSON.stringify(paramsForUpdate);
+            options = await new Resource({
+              route: this.getRoute()
+            }).getQueried({ filters: paramsForUpdate });
+          } else {
+            options = await new Resource({ route: this.getRoute() }).getQueried(
+              paramsForUpdate
+            );
+          }
+          options = !_.isArray(options) ? options.data : options;
+          options = _.isArray(options) ? options : [];
+        } else if (this.state.paramsForUpdate) {
+          options = await new Resource({ route: this.getRoute() }).getAll();
+          options = !_.isArray(options) ? options.data : options;
+          options = _.isArray(options) ? options : [];
+        }
+
+        this.setState(state => ({
+          ...state,
+          paramsForUpdate,
+          options
+        }));
+      }
+    }
+  }
 
   /**
    * Изменение значения в виджете
@@ -502,39 +623,27 @@ class InputDateWidget extends Component {
       frame = document.getElementById("editorContent").contentWindow.document.body
     }
 
-    const locale = this.props.element.getSettings("content_locale", "en");
+    const locale = this.locale;
     let typeDate = this.props.element.getSettings("content_time_type", "date");
-    let timePrecision = null;
+    let timePrecision = this.timePrecision;
 
     const dayPickerProps = {
-      className: typeDate === 'time' ? 'altrp-hidden' : '',
-    }
-    switch (typeDate) {
-      case "date":
-        typeDate = "LL";
-        break;
-      case "time":
-        typeDate = "LT";
-        timePrecision = TimePrecision.MINUTE
-        break
-      case "dateTime":
-        typeDate = "llll";
-        timePrecision = TimePrecision.MINUTE
-        break
+      firstDayOfWeek: 1,
+      className: this.typeDate === 'time' ? 'altrp-hidden' : '',
     }
 
     switch (locale) {
       case "ru":
         dayPickerProps.months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
-        dayPickerProps.weekdaysShort = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
+        dayPickerProps.weekdaysShort = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб',]
     }
 
     const minimalStyle = this.props.element.getResponsiveSetting("picker_minimal", false);
     const timePickerProps = {
       showArrowButtons: true,
       precision: timePrecision,
-      onChange: typeDate === 'LT' ? this.onChange : undefined,
-      className: typeDate === 'LL' ? 'altrp-hidden' : '',
+      onChange: typeDate === 'date' ? this.onChange : undefined,
+      className: typeDate === 'date' ? 'altrp-hidden' : '',
     };
     const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
     const input = (
@@ -547,15 +656,16 @@ class InputDateWidget extends Component {
           popoverProps={{
             portalContainer: frame,
             minimal: minimalStyle,
-            popoverClassName: "altrp-date-pickerpopover" + this.props.element.getId(),
+            popoverClassName: "altrp-date-picker-popover altrp-date-picker-popover-" + this.props.element.getId(),
+            // popoverClassName: "altrp-date-pickerpopover" + this.props.element.getId(),
           }}
-          onChange={typeDate !== 'LT' ? this.onChange : undefined}
+          onChange={this.typeDate !== 'LT' ? this.onChange : undefined}
           className={"altrp-date-picker" + this.props.element.getId()}
           timePrecision={timePrecision}
           canClearSelection={false}
           // showActionsBar
           parseDate={(str, locale) => {
-            return moment(str, typeDate).locale(locale).toDate();
+            return moment(str, this.typeDate).locale(locale).toDate();
           }}
           timePickerProps={timePickerProps}
           disabled={this.state.settings.content_readonly}
@@ -572,7 +682,7 @@ class InputDateWidget extends Component {
     return (
       <AltrpFieldContainer
         settings={settings}
-        className="altrp-field-container "
+        className="altrp-field-container altrp-date-field-container "
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}

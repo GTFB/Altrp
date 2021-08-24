@@ -212,6 +212,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
      * Templates Routes
      */
     Route::resource('templates', 'TemplateController');
+    Route::get('exports/templates/{id}', 'TemplateController@exportTemplate' );
 
     Route::resource('global_template_styles', 'GlobalTemplateStylesController');
     /**
@@ -576,7 +577,11 @@ foreach ($reports_routes as $report_route) {
  * AJAX routes for frontend
  */
 Route::group(['prefix' => 'ajax'], function () {
-
+  /**
+   * Добавление/удаление медиа-файлов
+   */
+  Route::post('media', 'Admin\MediaController@store_from_frontend')->name('front.media.store');
+  Route::delete('media/{id}', 'Admin\MediaController@destroy_from_frontend')->name('front.media.destroy');
   /**
    * Роут текущий пользователь
    */

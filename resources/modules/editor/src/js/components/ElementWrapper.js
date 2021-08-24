@@ -43,8 +43,18 @@ import TabsSwitcherComponent from "./widgets/styled-components/TabsSwitcherCompo
 import ImageLightboxComponent from "./widgets/styled-components/ImageLightboxComponent";
 import InputDateComponent from "./widgets/styled-components/InputDateComponent";
 import DatePickerComponent from "./widgets/styled-components/DatePickerComponent";
-const { connect } = window.reactRedux;
+import InputCheckboxComponent from "./widgets/styled-components/InputCheckboxComponent";
+import getInputSelectStyles, {getInputSelectPopoverStyles} from "../../../../front-app/src/js/components/helpers/getInputSelectStyles";
+import InputRadioComponent from "./widgets/styled-components/InputRadioComponent";
+import InputSliderComponent from "./widgets/styled-components/InputSliderComponent";
+import getInputFileStyles from "../../../../front-app/src/js/components/helpers/getInputFileStyles";
+import getInputGalleryStyles from "../../../../front-app/src/js/components/helpers/getInputGalleryStyles";
+import {getResponsiveSetting} from "../../../../front-app/src/js/helpers";
+import InputRangeSliderComponent from "./widgets/styled-components/InputRangeSliderComponent";
+import getTemplateStyles from "../../../../front-app/src/js/components/helpers/getTemplateStyles";
 
+const { connect } = window.reactRedux;
+const {replaceContentWithData} = window.altrpHelpers;
 const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, elementId, settings, element})=>{
   let styles = '';
   let prefix = "altrp-element";
@@ -135,31 +145,83 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
     }
       break;
     case "input-date": {
-      styles += `.${prefix}${elementId} {${InputDateComponent(
+      styles += InputDateComponent(
         settings,
-        elementId
-      )}}`;
+        elementId,
+        prefix
+      )
+
       styles += `${DatePickerComponent(
         settings,
         elementId,
       )}`;
-    } break;
+
+    }break
+    case "input-checkbox": {
+      styles += `.${prefix}${elementId} { ${InputCheckboxComponent(
+        settings,
+        elementId
+      )}}`;
+
+    }break
+    case "input-slider": {
+      styles += `.${prefix}${elementId} { ${InputSliderComponent(
+        settings
+      )}}`;
+    }break
+    case "input-range-slider": {
+      styles += `.${prefix}${elementId} { ${InputRangeSliderComponent(
+        settings
+      )}}`;
+    }break
     case "input-text-common":{
       styles += `.${prefix}${elementId} {${getInputTextCommonStyles(
         settings,
         elementId
       )}}`;
-    }break;
+
+    }break
+
+    case "template":{
+      styles += `.${prefix}${elementId} {${getTemplateStyles(
+        settings,
+        elementId
+      )}}`;
+    }break
+    case "input-select":{
+      styles += `.${prefix}${elementId} {${getInputSelectStyles(
+        settings,
+        elementId
+      )}}`;
+      styles += `${getInputSelectPopoverStyles(settings, elementId)}`
+
+    }break
+    case "input-radio": {
+      styles += InputRadioComponent(
+        settings,
+        elementId,
+        prefix
+      );
+      break
+    }
     case "input-text":
     case "input-password":
     case "input-number":
     case "input-email":
     case "input-tel":
-    case "input-file":
-    case "input-select":
+    case "input-file":{
+      styles += `.${prefix}${elementId} {${getInputFileStyles(
+        settings,
+        elementId
+      )}}`;
+    }break
+    case "input-gallery":{
+      styles += `.${prefix}${elementId} {${getInputGalleryStyles(
+        settings,
+        elementId
+      )}}`;
+    }break
     case "input-image-select":
-    case "input-radio":
-    case "input-checkbox":
     case "input-accept":
     case "input-textarea":
     case "input-wysiwyg": {
@@ -179,6 +241,10 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
   styles += `div.${prefix}${elementId}.${prefix}${elementId} {${AdvancedComponent(
     settings
   )}}`;
+  let element_css_editor = getResponsiveSetting(settings, "element_css_editor");
+  if(_.isString(element_css_editor)){
+    styles+=element_css_editor.replace(/__selector__/g, `${prefix}${elementId}`)
+  }
   return styles;
 }}`
 
@@ -468,6 +534,12 @@ class ElementWrapper extends Component {
     if (this.props.element.getType() === "widget") {
       classes += ` altrp-widget_${this.props.element.getName()}`;
     }
+    if(this.props.element.getResponsiveSetting('css_class')){
+      classes += ` ${replaceContentWithData(
+        this.props.element.getResponsiveSetting('css_class'),
+        this.props.element.getCurrentModel().getData()
+      )} `;
+    }
     let overlayClasses = `overlay`;
     let overlayStyles = { width: "100%" };
     if (this.props.currentElement === this.props.element) {
@@ -616,6 +688,9 @@ class ElementWrapper extends Component {
 
   chooseElement(e) {
     e.stopPropagation();
+    if(e.target.closest('button')){
+      e.preventDefault();
+    }
     contextMenu.hideAll();
 
     this.props.element.setElementAsCurrent();
@@ -624,14 +699,17 @@ class ElementWrapper extends Component {
 
   deleteElement(e) {
     e.stopPropagation();
+    e.preventDefault();
     this.props.element.parent.deleteChild(this.props.element);
   }
   duplicateElement(e) {
     e.stopPropagation();
+    e.preventDefault();
     this.props.element.duplicate();
   }
   showWidgetsPanel(e) {
     e.stopPropagation();
+    e.preventDefault();
     getEditor().showWidgetsPanel();
   }
 }

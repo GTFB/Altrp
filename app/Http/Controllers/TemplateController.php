@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\AltrpMeta;
 use App\Constructor\Template;
 use App\Constructor\TemplateSetting;
+use App\GlobalTemplateStyle;
 use App\Page;
 use App\PagesTemplate;
 use App\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
@@ -20,7 +23,7 @@ class TemplateController extends Controller
    * Display a listing of the resource.
    *
    * @param Request $request
-   * @return \Illuminate\Http\JsonResponse
+   * @return \Illumiate\Http\JsonResponse
    */
   public function index( Request $request )
   {
@@ -78,7 +81,7 @@ class TemplateController extends Controller
    * }).
    *
    * @param Request $request
-   * @return \Illuminate\Http\JsonResponse
+   * @return JsonResponse
    */
   public function options( Request $request )
   {
@@ -118,7 +121,7 @@ class TemplateController extends Controller
    * }). Только для popup
    *
    * @param Request $request
-   * @return \Illuminate\Http\JsonResponse
+   * @return JsonResponse
    */
   public function popupsOptions( Request $request )
   {
@@ -164,7 +167,7 @@ class TemplateController extends Controller
    * Store a newly created resource in storage.
    *
    * @param \Illuminate\Http\Request $request
-   * @return \Illuminate\Http\JsonResponse
+   * @return JsonResponse
    */
   public function store( Request $request )
   {
@@ -175,12 +178,23 @@ class TemplateController extends Controller
     $template->user_id = Auth::user()->id;
     $template->type = 'template';
     $template->guid = (string)Str::uuid();
+    if( $request->get( 'isImported' ) ){
+      $exported_metas = $request->get( '__exported_metas__' );
+      if( data_get( $exported_metas, 'styles_presets' ) ){
+        AltrpMeta::importStylesPresets( data_get( $exported_metas, 'styles_presets' ) );
+      }
+      if( data_get( $exported_metas, 'global_styles' ) ){
+        GlobalTemplateStyle::importGlobalStyles( data_get( $exported_metas, 'global_styles' ) );
+      }
+      $template->data = Template::prepareAfterImport( $template_data['data'] );
+    }
     if ( $template->save() ) {
 
       return \response()->json(
         [
           'message' => 'Success',
           'redirect' => true,
+          'data' => json_decode( $template->data, true ),
           'url' => url( '/admin/editor?template_id=' . $template->id )
         ]
       );
@@ -192,13 +206,19 @@ class TemplateController extends Controller
    * Display the specified resource.
    *
    * @param \App\Constructor\Template $template
-   * @return \Illuminate\Http\Response
+   * @return JsonResponse|\Illuminate\Http\Response
    */
-  public function show( Template $template )
+  public function show( $id )
   {
-    $res = $template->toArray();
-    $res['template_type'] = $template->template_type;
-    return response()->json( $res );
+    if( Uuid::isValid( $id ) ){
+      $template = Template::where( 'guid', $id )->first();
+    } else {
+      $template = Template::find( $id );
+    }
+    if( ! $template ){
+      return  response()->json( [ 'message' => 'Template not Found', 'success' => false], 404, [], JSON_UNESCAPED_UNICODE);
+    }
+    return response()->json( $template->toArray() );
   }
 
   /**
@@ -243,14 +263,20 @@ class TemplateController extends Controller
    *
    * @param \Illuminate\Http\Request $request
    * @param \App\Constructor\Template $template
-   * @return \Illuminate\Http\Response
+   * @return JsonResponse|\Illuminate\Http\Response
    */
-  public function update( Request $request, Template $template )
+  public function update( Request $request, $id )
   {
+
+    if( Uuid::isValid( $id ) ){
+      $template = Template::where( 'guid', $id )->first();
+    } else {
+      $template = Template::find( $id );
+    }
     $old_template = $template;
 
     if ( ! $old_template ) {
-      return response()->json( trans( "responses.not_found.template" ), 404, [], JSON_UNESCAPED_UNICODE );
+      return response()->json( ['success' => false, 'message'=>trans( "responses.not_found.template" )], 404, [], JSON_UNESCAPED_UNICODE );
     }
 
     $review = new Template( $old_template->toArray() );
@@ -297,7 +323,7 @@ class TemplateController extends Controller
    * Remove the specified resource from storage.
    *
    * @param \App\Constructor\Template $template
-   * @return \Illuminate\Http\JsonResponse
+   * @return JsonResponse
    * @throws \Exception
    */
   public function destroy( Template $template )
@@ -312,7 +338,7 @@ class TemplateController extends Controller
 
   /**
    * @param string $template_id
-   * @return \Illuminate\Http\JsonResponse
+   * @return JsonResponse
    */
   public function reviews( $template_id )
   {
@@ -338,7 +364,7 @@ class TemplateController extends Controller
    * Удалить шаблоны по родителю с типом review
    *
    * @param Request $request
-   * @return \Illuminate\Http\JsonResponse
+   * @return JsonResponse
    */
   public function deleteReviews( Request $request )
   {
@@ -358,7 +384,7 @@ class TemplateController extends Controller
    * Удалить шаблоны по родителю с типом review
    *
    * @param Request $request
-   * @return \Illuminate\Http\JsonResponse
+   * @return JsonResponse
    */
   public function getReview( Request $request )
   {
@@ -378,7 +404,7 @@ class TemplateController extends Controller
    * Удалить все review по
    *
    * @param Request $request
-   * @return \Illuminate\Http\JsonResponse
+   * @return JsonResponse
    */
   public function deleteAllReviews()
   {
@@ -397,7 +423,7 @@ class TemplateController extends Controller
    * получить review по ID
    *
    * @param Request $request
-   * @return \Illuminate\Http\JsonResponse
+   * @return JsonResponse
    */
   public function getAllReview( Request $request )
   {
@@ -412,7 +438,7 @@ class TemplateController extends Controller
    * Обрабатываем запрос на получение настройки
    * @param string $template_id
    * @param string $setting_name
-   * @return \Illuminate\Http\JsonResponse
+   * @return JsonResponse
    */
   public function settingGet( $template_id, $setting_name )
   {
@@ -431,7 +457,7 @@ class TemplateController extends Controller
    * @param string $template_id
    * @param string $setting_name
    * @param Request $request
-   * @return \Illuminate\Http\JsonResponse
+   * @return JsonResponse
    */
   public function settingSet( $template_id, $setting_name, Request $request )
   {
@@ -463,7 +489,7 @@ class TemplateController extends Controller
    * Получение условий текущего шаблона
    * @param $template_id
    * @param Request $request
-   * @return \Illuminate\Http\JsonResponse
+   * @return JsonResponse
    */
   public function conditionsGet( $template_id, Request $request )
   {
@@ -480,7 +506,7 @@ class TemplateController extends Controller
    * Сохранение условий текущего шаблона
    * @param $template_id
    * @param Request $request
-   * @return \Illuminate\Http\JsonResponse
+   * @return JsonResponse
    */
   public function conditionsSet( $template_id, Request $request )
   {
@@ -636,5 +662,76 @@ class TemplateController extends Controller
 
     return false;
 
+  }
+
+  /**
+   * @param string $id
+   * @return JsonResponse
+   */
+  public function exportTemplate( string $id ): JsonResponse
+  {
+
+    if( Uuid::isValid( $id ) ){
+      $template = Template::where( 'guid', $id )->first();
+    } else {
+      $template = Template::find( $id );
+    }
+    /**
+     * @var $template Template
+     */
+    if( ! $template ){
+      return response()
+        ->json(
+          ['success' => false, 'message' => 'Template not Found'],
+          404,
+          [],
+          JSON_UNESCAPED_UNICODE );
+    }
+    $data = json_decode( $template->data, true );
+    /**
+     * Ищем все url и заменяем на url с доменом
+     */
+    recurseMapElements( $data, function ( $element ) use ( &$template ){
+
+      foreach ( $element['settings'] as $key => $value ) {
+//        if( is_array( $value ) ) {
+//          dd([$key => $value]);
+//        }
+        if(is_array( $value ) ){
+          foreach ( $value as $label => $repeater_item ) {
+            if( is_string( $label ) ){
+              continue;
+            }
+            if( is_array( $repeater_item ) ){
+              foreach ( $repeater_item as $item ) {
+                if( ! ( isset( $item['filename'] ) && isset( $item['url'] ) ) ) {
+                  continue;
+                }
+                if( env( 'APP_URL' ) ){
+                  $template->data = str_replace(
+                    json_encode($item['url']),
+                    json_encode( env('APP_URL') . $item['url'] ),
+                    $template->data );
+                }
+              }
+            }
+          }
+        }
+        if( ! ( isset( $value['filename'] ) && isset( $value['url'] ) ) ) {
+          continue ;
+        }
+        if( env( 'APP_URL' ) ){
+          $template->data = str_replace(
+            json_encode($value['url']),
+            json_encode( env('APP_URL') . $value['url'] ),
+            $template->data );
+        }
+      }
+    } );
+    $res = $template->toArray();
+    $res['__exported_metas__'] = [];
+    $res['__exported_metas__']['styles_presets'] = AltrpMeta::getGlobalStyles();
+    $res['__exported_metas__']['global_styles'] = GlobalTemplateStyle::all();
+    return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE );
   }
 }

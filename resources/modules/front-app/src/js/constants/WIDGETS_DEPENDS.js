@@ -2,6 +2,12 @@
 const WIDGETS_DEPENDS = {
   'menu': ['blueprint'],
   'breadcrumbs': ['blueprint'],
+  'tabs': ['blueprint', 'template-loader'],
+  'tabs-switcher': [ 'template-loader'],
+  'carousel': [ 'template-loader'],
+  'cards': [ 'template-loader'],
+  'template': [ 'template-loader'],
+  'table': [ 'template-loader'],
   'input': ['moment'],
   'section': ['section-element-wrapper'],
   'column': ['section-element-wrapper'],
@@ -10,9 +16,13 @@ const WIDGETS_DEPENDS = {
   'input-radio': ['blueprint'],
   'input-checkbox': ['blueprint'],
   'input-accept': ['blueprint'],
+  'input-file': ['blueprint'],
+  'input-gallery': ['blueprint'],
   'input-text': ['blueprint'],
   'input-text-common': ['blueprint'],
   'input-wysiwyg': ['ckeditor'],
   'input-date': ['blueprint', 'blueprint-datetime', 'moment'],
+  'input-slider': ['blueprint'],
+  'input-range-slider': ['blueprint'],
 }
 export default WIDGETS_DEPENDS;

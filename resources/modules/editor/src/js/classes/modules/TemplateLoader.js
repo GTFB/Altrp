@@ -5,7 +5,7 @@ import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontEl
 /**
  * @class TemplateLoader
  */
-class TemplateLoader {
+export class TemplateLoader {
   /**
    * Хранилище статусов получения данных, чтобы не делать много параллельных запросов
    * @type {{}}
@@ -102,6 +102,19 @@ class TemplateLoader {
     return frontElementsFabric.parseData(templateData);
   }
 
+  /**
+   *
+   * @param {string} templateId
+   * @returns {null|{}}
+   */
+  mbGetParsedTemplate(templateId){
+    if(! this.templatesCache.hasProperty(templateId)){
+      return null;
+    }
+    let templateData = _.get(this.templatesCache.getProperty(templateId), 'data');
+    templateData = JSON.parse(templateData);
+    return frontElementsFabric.parseData(templateData)
+  }
 }
 
  window.templateLoader =  new TemplateLoader();

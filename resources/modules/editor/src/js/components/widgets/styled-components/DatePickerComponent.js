@@ -6,7 +6,7 @@ import { styledString} from "../../../../../../front-app/src/js/helpers/styles";
 
 export default function DatePickerComponent(settings, elementId) {
   const styles = [
-    `! div.altrp-date-pickerpopover${elementId}`,
+    `! div.altrp-date-picker${elementId}`,
       ["padding", "picker_padding", "dimensions"],
       ["background-color", "picker_background", "color"],
       ["border-style", "picker_border_type"],
@@ -49,7 +49,7 @@ export default function DatePickerComponent(settings, elementId) {
         ["color", "date_selected_font_color", "color", ":hover"],
         ["background-color", "date_selected_background_color", "color", ":hover"],
       "}",
-      "DayPicker-Day--outside",
+      "DayPicker-Day--outside.DayPicker-Day--outside",
         ["color", "date_outside_font_color", "color"],
         ["background-color", "date_outside_background_color", "color"],
       "}",
@@ -59,16 +59,18 @@ export default function DatePickerComponent(settings, elementId) {
       "}",
     "}",
 
-    `! div.altrp-date-picker-popover${elementId}`,
-      ["border-radius", "picker_border_radius", "dimensions"],
+    `! div.altrp-date-picker-popover-${elementId}`,
       ["", "picker_shadow", "shadow"],
+      ["border-radius", "picker_border_radius", "dimensions"],
 
       "bp3-popover-arrow-fill",
         ["fill", "picker_background", "color"],
       "}",
 
+      "bp3-popover-content",
+        ["border-radius", "picker_border_radius", "dimensions"],
+      "}",
     "}"
   ];
-
   return styledString(styles, settings)
 }

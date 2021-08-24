@@ -44,6 +44,13 @@ window.LIBS = {
       return Promise.resolve(res)
     });
   },
+  'template-loader': () => {
+    return import(/* webpackChunkName: 'template-loader' */'../libs/template-loader').then(res => {
+      window.libsLoaded.push('template-loader')
+      console.log('LOAD "template-loader": ', performance.now());
+      return Promise.resolve(res)
+    });
+  },
 
 };
 

@@ -27,7 +27,6 @@ const { moment } = window.altrpHelpers;
   flex-wrap: wrap;
 }
 
-.altrp-label-icon,
 .altrp-label-icon svg,
 .altrp-label-icon img {
   width: 20px;
@@ -689,7 +688,7 @@ class InputTextareaWidget extends Component {
       );
     } catch (e) {
       console.error(
-        "Evaluate error in Input" + e.message,
+        "Evaluate error in Input " + e.message,
         this.props.element.getId()
       );
     }
@@ -996,8 +995,26 @@ class InputTextareaWidget extends Component {
     return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
   }
 
+  /**
+   *
+   * @returns {string}
+   */
+  getValue = () => {
+    let value;
+    let formId = this.props.element.getFormId();
+    let fieldName = this.props.element.getFieldId();
+    if (isEditor()) {
+      value = this.state.value;
+    } else {
+      value = _.get(appStore.getState(), `formsStore.${formId}.${fieldName}`, '')
+    }
+    return value;
+  }
+
+
   render() {
     let label = null;
+
     const settings = this.props.element.getSettings();
     const {
       content_readonly,
@@ -1005,7 +1022,7 @@ class InputTextareaWidget extends Component {
       label_icon
     } = settings;
 
-    let value = this.state.value;
+    let value = this.getValue();
 
     if (
       _.get(value, "dynamic") &&
@@ -1013,13 +1030,7 @@ class InputTextareaWidget extends Component {
     ) {
       value = this.getContent("content_default_value");
     }
-    /**
-     * Пока динамический контент загружается (Еесли это динамический контент),
-     * нужно вывести пустую строку
-     */
-    if (value && value.dynamic) {
-      value = "";
-    }
+
     let classLabel = "";
     let styleLabel = {};
     const content_label_position_type = this.props.element.getResponsiveSetting(

@@ -2,7 +2,7 @@ import BaseElement from "./BaseElement";
 import CodeIcon from "../../../svgs/code.svg";
 import {
   TAB_CONTENT,
-  CONTROLLER_SELECT2
+  CONTROLLER_SELECT2, TAB_STYLE
 } from '../modules/ControllersManager';
 import {advancedTabControllers} from "../../decorators/register-controllers";
 
@@ -39,8 +39,25 @@ class Template extends BaseElement {
       label: "Template",
       isClearable: true,
       options_resource: '/admin/ajax/templates/options?value=guid',
+      gotoLink: {
+        linkTemplate: '/admin/editor?template_id={id}',
+        textTemplate: 'Go to Template',
+      },
       nullable: true,
     });
+
+    this.endControlSection();
+
+    this.startControlSection('styles', {
+      tab: TAB_STYLE,
+      label: 'Content'
+    });
+
+    this.addControl('width', {
+      stateless: true,
+      label: 'Width',
+
+    })
 
     this.endControlSection();
 

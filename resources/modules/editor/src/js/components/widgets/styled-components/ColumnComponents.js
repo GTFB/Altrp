@@ -1,4 +1,4 @@
-import { getResponsiveSetting } from "../../../../../../front-app/src/js/helpers";
+const { getResponsiveSetting } = window.altrpHelpers;
 import {
   dimensionsControllerToStyles,
   simplePropertyStyled,
@@ -114,7 +114,7 @@ const ColumnComponent = (settings) => {
   if (backgroundColor) {
     styles += colorPropertyStyled(backgroundColor, 'background-color');
   }
-
+  // console.log(settings);
   //Получаем значения gradient из контроллера, обрабатываем и добавляем в styles
 
   if (settings !== undefined) {
@@ -420,7 +420,142 @@ const ColumnComponent = (settings) => {
 
   styles += "} ";
 
+  //<editor-fold description=active>
+  styles += "& > div.altrp-column.altrp-column-priority.active {";
 
+  //Получаем значения background-position из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundPositionH = getResponsiveSetting(settings, 'background_position', '.active');
+  }
+
+  if (backgroundPositionH) {
+    styles += simplePropertyStyled(backgroundPositionH, 'background-position');
+  }
+
+  //Получаем значения background-attachment из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundAttachmentH = getResponsiveSetting(settings, 'background_attachment', '.active');
+  }
+
+  if (backgroundAttachmentH) {
+    styles += simplePropertyStyled(backgroundAttachmentH, 'background-attachment');
+  }
+
+  //Получаем значения background-repeat из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundRepeatH = getResponsiveSetting(settings, 'background_repeat', '.active');
+  }
+
+  if (backgroundRepeatH) {
+    styles += simplePropertyStyled(backgroundRepeatH, 'background-repeat');
+  }
+
+  //Получаем значения background-size в точных юнитах из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundSizeInUnitsH = getResponsiveSetting(settings, 'background_image_width', '.active');
+  }
+
+  if (backgroundSizeInUnitsH) {
+    styles += sizeStyled(backgroundSizeInUnitsH, 'background-size');
+  }
+
+  //Получаем значения background-size из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundSizeH = getResponsiveSetting(settings, 'background_size', '.active');
+  }
+
+  if (backgroundSizeH) {
+    styles += simplePropertyStyled(backgroundSizeH, 'background-size');
+  }
+
+  //Получаем значения background-image из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundImageH = getResponsiveSetting(settings, 'background_image', '.active');
+  }
+
+  if (backgroundImageH) {
+    styles += backgroundImageControllerToStyles(backgroundImageH);
+  }
+  styles += "} ";
+
+
+  //Получаем значения background-color из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    backgroundColorH = getResponsiveSetting(settings, 'column_style_background_color', '.active');
+  }
+
+  if (backgroundColorH) {
+    styles += colorPropertyStyled(backgroundColorH, 'background-color');
+  }
+
+  //Получаем значения gradient из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    gradientH = getResponsiveSetting(settings, 'gradient', '.active');
+  }
+
+  if (gradientH) {
+    styles += gradientStyled(gradientH);
+  }
+
+  //Получаем значения border-type из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    borderTypeH = getResponsiveSetting(settings, 'column_style_border_type', '.active');
+  }
+
+  if (borderTypeH) {
+    styles += simplePropertyStyled(borderTypeH, 'border-style');
+  }
+
+  //Получаем значения border-width из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    borderWidthH = getResponsiveSetting(settings, 'column_style_border_width', '.active');
+  }
+
+  if (borderWidthH) {
+    styles += borderWidthStyled(borderWidthH);
+  }
+
+  //Получаем значения border-color из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    borderColorH = getResponsiveSetting(settings, 'column_style_border_color', '.active');
+  }
+
+  if (borderColorH) {
+    styles += colorPropertyStyled(borderColorH, 'border-color');
+  }
+
+  //Получаем значения border-radius в точных юнитах из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    borderRadiusH = getResponsiveSetting(settings, 'column_style_border_radius', '.active');
+  }
+
+  if (borderRadiusH) {
+    styles += sizeStyled(borderRadiusH, 'border-radius');
+  }
+
+  //Получаем значения box-shadow из контроллера, обрабатываем и добавляем в styles
+
+  if (settings !== undefined) {
+    boxShadowH = getResponsiveSetting(settings, 'column_style_box_shadow', '.active');
+  }
+
+  if (boxShadowH) {
+    styles += shadowStyled(boxShadowH);
+  }
+
+  //</editor-fold>
   return styles;
 };
 

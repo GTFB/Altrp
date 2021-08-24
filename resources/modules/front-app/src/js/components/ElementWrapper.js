@@ -223,6 +223,7 @@ class ElementWrapper extends Component {
   }
 
   render() {
+    const {element} = this.props;
     const {
       hide_on_wide_screen,
       hide_on_desktop,
@@ -233,12 +234,18 @@ class ElementWrapper extends Component {
       hide_on_trigger,
       isFixed,
       tooltip_position
-    } = this.props.element.settings;
-    let { tooltip_text } = this.props.element.settings;
-    let classes = `altrp-element altrp-element${this.props.element.getId()} altrp-element_${this.props.element.getType()}`;
-    classes += this.props.element.getPrefixClasses() + " ";
-    if (this.props.element.getType() === "widget") {
-      classes += ` altrp-widget_${this.props.element.getName()}`;
+    } = element.settings;
+    let { tooltip_text } = element.settings;
+    let classes = `altrp-element altrp-element${element.getId()} altrp-element_${element.getType()}`;
+    classes += element.getPrefixClasses() + " ";
+    if (element.getType() === "widget") {
+      classes += ` altrp-widget_${element.getName()}`;
+    }
+    if(this.props.element.getResponsiveSetting('css_class')){
+      classes += ` ${replaceContentWithData(
+        this.props.element.getResponsiveSetting('css_class'),
+        this.props.element.getCurrentModel().getData()
+      )} `;
     }
     if (hide_on_wide_screen) {
       classes += " hide_on_wide_screen";
@@ -263,7 +270,7 @@ class ElementWrapper extends Component {
     }
     if (this.state.errorInfo) {
       return (
-        <div className="altrp-error" data-eltype={this.props.element.getType()}>
+        <div className="altrp-error" data-eltype={element.getType()}>
           <h2>Something went wrong.</h2>
           <details style={{ whiteSpace: "pre-wrap" }}>
             {this.state.error && this.state.error.toString()}
@@ -275,14 +282,14 @@ class ElementWrapper extends Component {
     }
     const styles = {};
 
-    if (this.props.element.getResponsiveSetting("layout_column_width")) {
+    if (element.getResponsiveSetting("layout_column_width")) {
       if (
-        Number(this.props.element.getResponsiveSetting("layout_column_width"))
+        Number(element.getResponsiveSetting("layout_column_width"))
       ) {
         styles.width =
-          this.props.element.getResponsiveSetting("layout_column_width") + "%";
+          element.getResponsiveSetting("layout_column_width") + "%";
       } else {
-        styles.width = this.props.element.getResponsiveSetting(
+        styles.width = element.getResponsiveSetting(
           "layout_column_width"
         );
       }
@@ -290,23 +297,23 @@ class ElementWrapper extends Component {
     if (!this.state.elementDisplay) {
       styles.display = "none";
     }
-    let CSSId = this.props.element.getSettings("advanced_element_id", "");
+    let CSSId = element.getSettings("advanced_element_id", "");
     CSSId = replaceContentWithData(
       CSSId,
-      this.props.element.getCurrentModel().getData()
+      element.getCurrentModel().getData()
     );
     if (this.CSSId !== CSSId) {
       this.CSSId = CSSId;
     }
     let ContentComponent = frontElementsManager.getComponentClass(
-      this.props.element.getName()
+      element.getName()
     );
     const content = React.createElement(ContentComponent, {
       ref: this.elementRef,
       rootElement: this.props.rootElement,
       ElementWrapper: this.props.ElementWrapper,
-      element: this.props.element,
-      children: this.props.element.getChildren(),
+      element: element,
+      children: element.getChildren(),
       match: this.props.match,
       currentModel: this.props.currentModel,
       currentUser: this.props.currentUser,
@@ -322,7 +329,7 @@ class ElementWrapper extends Component {
       history: this.props.history,
       appStore
     });
-    if (this.props.element.getTemplateType() === "email") {
+    if (element.getTemplateType() === "email") {
       if (!this.state.elementDisplay) {
         return null;
       }
@@ -330,7 +337,7 @@ class ElementWrapper extends Component {
     }
 
     let WrapperComponent = ElementWrapperDivComponent;
-    switch (this.props.element.getName()) {
+    switch (element.getName()) {
       case "nav":
         WrapperComponent = NavComponent;
         break;
@@ -338,25 +345,29 @@ class ElementWrapper extends Component {
 
     tooltip_text = replaceContentWithData(
       tooltip_text,
-      this.props.element.getCurrentModel().getData()
+      element.getCurrentModel().getData()
     );
+
     const wrapperProps = {
       className: classes,
       ref: this.elementWrapperRef,
       elementId: this.elementId,
       settings: this.settings,
       style: styles,
-      id: this.CSSId
+      id: this.CSSId,
     };
-
     if (
       this.reactElement ||
-      DEFAULT_REACT_ELEMENTS.indexOf(this.props.element.getName()) !== -1
+      DEFAULT_REACT_ELEMENTS.indexOf(element.getName()) !== -1
     ) {
-      wrapperProps["data-react-element"] = this.props.element.getId();
+      wrapperProps["data-react-element"] = element.getId();
     }
-    return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
-      <WrapperComponent {...wrapperProps} element={this.props.element.getId()}>
+    if(! _.isEmpty(element.getResponsiveSetting('wrapper_click_actions'))){
+      wrapperProps["data-altrp-wrapper-click-actions"] = element.getId();
+    }
+    wrapperProps["data-altrp-id"] = element.getId();
+    return  (
+      <WrapperComponent {...wrapperProps} element={element.getId()}>
         {content}
         {tooltip_text && (
           <AltrpTooltip position={tooltip_position}>
@@ -370,7 +381,6 @@ class ElementWrapper extends Component {
 
 function mapStateToProps(state) {
   return {
-    hideTriggers: state.hideTriggers,
     altrpresponses: state.altrpresponses,
     formsStore: state.formsStore,
     currentDataStorage: state.currentDataStorage,

@@ -2,7 +2,6 @@ import BaseElement from "./BaseElement";
 import WidgetIcon from '../../../svgs/slider-push.svg';
 import { advancedTabControllers } from "../../decorators/register-controllers";
 import {
-  CONTROLLER_TEXTAREA,
   CONTROLLER_DIMENSIONS,
   CONTROLLER_NUMBER,
   CONTROLLER_SELECT2,
@@ -12,13 +11,12 @@ import {
   CONTROLLER_LINK,
   CONTROLLER_TYPOGRAPHIC,
   CONTROLLER_REPEATER,
-  CONTROLLER_CHOOSE,
   CONTROLLER_SLIDER,
   CONTROLLER_COLOR,
-  CONTROLLER_SHADOW,
   TAB_CONTENT,
   TAB_STYLE,
-  TAB_ADVANCED, CONTROLLER_MEDIA, CONTROLLER_SWITCHER
+  CONTROLLER_MEDIA,
+  CONTROLLER_SWITCHER
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 
@@ -86,6 +84,10 @@ class Carousel extends BaseElement {
       label: "Card",
       isClearable: true,
       options_resource: '/admin/ajax/templates/options?value=guid',
+      gotoLink: {
+        linkTemplate: '/admin/editor?template_id={id}',
+        textTemplate: 'Go to Template',
+      },
       nullable: true,
     });
 

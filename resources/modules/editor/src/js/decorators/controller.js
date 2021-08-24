@@ -5,6 +5,9 @@ import { getElementSettingsSuffix } from "../helpers";
  * Обновление значения в компоненте контроллера при загрузке нового экземпляра того же элемента
  */
 function componentDidUpdate(prevProps, prevState) {
+  if(this.props.controlId === '__template_name'){
+    return false
+  }
   if (!this.props.repeater) {
     let elementValue = this.props.currentElement.getSettings(
       this.props.controlId

@@ -1,4 +1,4 @@
-const AltrpTemplate = React.lazy(() => import ('../altrp-template/AltrpTemplate'));
+import AltrpTemplate from'../altrp-template/AltrpTemplate';
 
 class TemplateWidget extends Component {
   constructor(props) {
@@ -15,9 +15,8 @@ class TemplateWidget extends Component {
   }
 
   render() {
-    return <React.Suspense fallback={''}>
-      <AltrpTemplate settings={this.props.element.getSettings() || {}}/>
-    </React.Suspense>
+
+    return <AltrpTemplate settings={this.props.element.getSettings() || {}}/>
   }
 }
 

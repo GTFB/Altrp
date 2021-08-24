@@ -13,9 +13,33 @@ import {
 import Resource from "../../classes/Resource";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
+const Checkbox = window.altrpLibs.Blueprint.Checkbox;
 
 const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`
+  .altrp-field-option-span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .altrp-field-radio .bp3-control-indicator.bp3-control-indicator {
+    background-image: none;
+  }
+
+  .altrp-field-container .altrp-field-checkbox.altrp-field-checkbox {
+    margin: 0
+  }
+
+  .altrp-field-container .altrp-field-checkbox .bp3-control-indicator {
+    background-image: none;
+  }
+
+  .altrp-field-container .altrp-field-checkbox .bp3-control-indicator:before {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
 
 .altrp-field {
   border-style: solid;
@@ -27,7 +51,6 @@ const { moment } = window.altrpHelpers;
   flex-wrap: wrap;
 }
 
-.altrp-label-icon,
 .altrp-label-icon svg,
 .altrp-label-icon img {
   width: 20px;
@@ -702,7 +725,7 @@ class InputCheckboxWidget extends Component {
       );
     } catch (e) {
       console.error(
-        "Evaluate error in Input" + e.message,
+        "Evaluate error in Input " + e.message,
         this.props.element.getId()
       );
     }
@@ -865,7 +888,7 @@ class InputCheckboxWidget extends Component {
         await import(
           /* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-        )
+          )
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
@@ -889,7 +912,7 @@ class InputCheckboxWidget extends Component {
         await import(
           /* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-        )
+          )
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
@@ -922,7 +945,7 @@ class InputCheckboxWidget extends Component {
             await import(
               /* webpackChunkName: 'ActionsManager' */
               "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-            )
+              )
           ).default;
           await actionsManager.callAllWidgetActions(
             this.props.element.getIdForAction(),
@@ -1090,7 +1113,7 @@ class InputCheckboxWidget extends Component {
             className={`altrp-field-label ${this.state.settings.content_required
               ? "altrp-field-label--required"
               : ""
-              }`}
+            }`}
           >
             {this.state.settings.content_label}
           </label>
@@ -1165,16 +1188,25 @@ class InputCheckboxWidget extends Component {
               key={`${fieldName}-${idx}`}
             >
               <span className="altrp-field-option-span">
-                <input
-                  type="checkbox"
-                  value={option.value}
+                <Checkbox
+                  inline
                   name={`${formID}-${fieldName}`}
-                  className={`altrp-field-option__input ${checked ? "active" : ""
-                    }`}
-                  onChange={this.onChange}
-                  checked={checked}
                   id={`${formID}-${fieldName}-${idx}`}
+                  onChange={this.onChange}
+                  value={option.value}
+                  className={`altrp-field-checkbox${checked ? " active" : ""}`}
+                  checked={checked}
                 />
+                {/*<input*/}
+                {/*  type="checkbox"*/}
+                {/*  value={option.value}*/}
+                {/*  name={`${formID}-${fieldName}`}*/}
+                {/*  className={`altrp-field-option__input ${checked ? "active" : ""*/}
+                {/*    }`}*/}
+                {/*  onChange={this.onChange}*/}
+                {/*  checked={checked}*/}
+                {/*  id={`${formID}-${fieldName}-${idx}`}*/}
+                {/*/>*/}
               </span>
               <label
                 htmlFor={`${formID}-${fieldName}-${idx}`}

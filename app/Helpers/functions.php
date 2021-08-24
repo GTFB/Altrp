@@ -962,7 +962,7 @@ if( ! function_exists( 'getMainColor' ) ){
  * @param boolean $only_react_elements
  * @return array
  */
-function extractElementsNames( $areas = [], $only_react_elements = false){
+function extractElementsNames( array $areas = [], bool $only_react_elements = false){
   $elementNames = [];
 
   foreach ( $areas as $area ) {
@@ -1013,6 +1013,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'input-checkbox',
     'input-wysiwyg',
     'input-textarea',
+    'input-slider',
     'input-image-select',
     'input-accept',
     'input-text',
@@ -1024,6 +1025,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'input-date',
     'input-hidden',
     'input-file',
+    'input-gallery',
     'posts',
     'breadcrumbs',
     'map',
@@ -1040,6 +1042,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'template',
     'gallery',
     'table',
+    'tabs',
     'heading-type-animating',
   ];
   if( ! is_array( $elementNames ) ){
@@ -1099,6 +1102,15 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     foreach ($columns as $column) {
       if(data_get($column, 'column_template')){
         extractElementsNamesFromTemplate( data_get($column, 'column_template'), $elementNames );
+      }
+    }
+  }
+  if( $element['name'] === 'tabs'
+    && data_get( $element, 'settings.items_tabs' ) ){
+    $tabs = data_get( $element, 'settings.items_tabs', [] );
+    foreach ($tabs as $tab) {
+      if(data_get($tab, 'card_template')){
+        extractElementsNamesFromTemplate( data_get($tab, 'card_template'), $elementNames );
       }
     }
   }
@@ -1291,6 +1303,7 @@ function getDataSources( $page_id, $params = array(), $params_string = '' ){
 
     }
   } catch( Exception $e ){
+    logger()->error( $e->getMessage() );
     return $datasources;
   }
   return $datasources;
@@ -1411,10 +1424,26 @@ function getAltrpSettings( $page_id ){
 function recurseMapElements( $element, $callback ){
   $callback($element);
   if( isset( $element['children'] ) && is_array( $element['children'] ) ){
-    foreach ( $element['children'] as $child ) {
-      recurseMapElements( $child, $callback );
+    foreach ( $element['children'] as $idx => $child ) {
+      recurseMapElements( $element['children'][$idx], $callback );
     }
   }
+}
+
+/**
+ * @param array $element
+ * @param $callback
+ * @return array mixed
+ */
+function recurseMutateMapElements( array $element, $callback ): array
+{
+  if( isset( $element['children'] ) && is_array( $element['children'] ) ){
+    foreach ( $element['children'] as $idx => $child ) {
+      $element['children'][$idx] = recurseMutateMapElements( $element['children'][$idx], $callback );
+    }
+  }
+  $element = $callback( $element );
+  return $element;
 }
 
 /**

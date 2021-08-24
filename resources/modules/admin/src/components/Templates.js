@@ -96,6 +96,7 @@ export default class Templates extends Component {
       data,
       title: template.title,
       name: template.name,
+      __exported_metas__: template.__exported_metas__,
     });
   }
   /** @function downloadJSONFile
@@ -142,6 +143,7 @@ export default class Templates extends Component {
         fr.onload = async (e) => {
           let importedTemplateData = _.get(e, 'target.result', '{}');
           importedTemplateData = JSON.parse(importedTemplateData);
+          importedTemplateData.isImported = true;
           let areaExists = false;
           this.state.templateAreas.forEach(ta => {
             if (ta.name === importedTemplateData.area) {
@@ -155,7 +157,17 @@ export default class Templates extends Component {
             });
           }
           // let res = await this.templateImportModule.importTemplate(importedTemplateData)
-          let res = await this.resource.post(importedTemplateData);
+          try {
+            let res = await this.resource.post(importedTemplateData);
+            if(res.redirect && res.url){
+              const newLink = document.createElement('a');
+              newLink.href = res.url
+              newLink.setAttribute('target', '_blank');
+              newLink.click()
+            }
+          }catch (error){
+            console.error(error);
+          }
           this.updateTemplates(this.state.currentPage)
         };
 
@@ -245,7 +257,8 @@ export default class Templates extends Component {
         </div>
       </div>
       <div className="admin-content">
-        {this.state.showImportForm && <form className={"admin-form justify-content-center" + (this.state.showImportForm ? ' d-flex' : ' d-none')}
+        {this.state.showImportForm &&
+        <form className={"admin-form justify-content-center" + (this.state.showImportForm ? ' d-flex' : ' d-none')}
           onSubmit={this.importTemplate}>
           <input type="file"
             name="files"
@@ -300,7 +313,7 @@ export default class Templates extends Component {
             title: 'Clear History'
           }, {
             tag: 'button',
-            route: '/admin/ajax/templates',
+            route: '/admin/ajax/exports/templates',
             method: 'get',
             after: response => this.downloadJSONFile(response),
             title: 'Export'

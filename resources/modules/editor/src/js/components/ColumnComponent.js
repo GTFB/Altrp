@@ -55,37 +55,16 @@ class ColumnComponent extends Component {
     );
     let ElementWrapper = window.SectionElementWrapper || this.props.ElementWrapper || window.ElementWrapper;
     let className = "altrp-column altrp-column-priority " + (this.state.settings.position_style_css_classes || "") + (background_image.url || background_image_hover.url ? ' altrp-background-image' : '');
+    if(this.isActive()){
+      className += ' active';
+    }
     if (this.columnIsLink()) {
       className += ' altrp-pointer';
     }
 
     const layout_html_tag = this.props.element.getSettings('layout_html_tag') || 'div';
 
-    // let component = ColumnDivComponent;
-    //
-    // switch (layout_html_tag) {
-    //   case 'aside': {
-    //     component = ColumnAsideComponent;
-    //   } break;
-    //   case 'nav': {
-    //     component = ColumnNavComponent;
-    //   } break;
-    //   case 'section': {
-    //     component = ColumnSectionComponent;
-    //   } break;
-    //   case 'article': {
-    //     component = ColumnArticleComponent;
-    //   } break;
-    //   case 'main': {
-    //     component = ColumnMainComponent;
-    //   } break;
-    //   case 'footer': {
-    //     component = ColumnFooterComponent;
-    //   } break;
-    //   case 'header': {
-    //     component = ColumnHeaderComponent;
-    //   } break;
-    // }
+
     return React.createElement(layout_html_tag,
       {
         className,

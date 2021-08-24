@@ -8,6 +8,11 @@
 @import "./responsive.scss";
 @import "../../../../sass/ckeditor.scss";
 
+//import blueprint to editor stylesheet
+//@import "~@blueprintjs/datetime/lib/css/blueprint-datetime.css";
+//@import "../../../../../node_modules/@blueprintjs/core/lib/css/blueprint-hi-contrast.css";
+//@import "../../../editor/src/sass/blueprint";
+
 
 .front-app {
     position: relative;

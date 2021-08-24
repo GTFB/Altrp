@@ -278,10 +278,6 @@ class InputCheckbox extends BaseElement {
 
     this.endControlSection();
 
-    actionsControllers(this, "Blur Actions");
-
-    actionsControllers(this, "Focus Actions", "focus_");
-
     actionsControllers(this, "Change Actions", "change_");
 
     // this.startControlSection('logic_section', {
@@ -547,21 +543,21 @@ class InputCheckbox extends BaseElement {
       label: "Position"
     });
 
-    this.addControl("field_width", {
+    this.addControl("field_size", {
       type: CONTROLLER_SLIDER,
-      label: "Width",
-      max: 500,
+      label: "Size",
+      max: 100,
       min: 0,
       units: ["px", "%", "vw"]
     });
 
-    this.addControl("placeholder_and_value_alignment_position_section", {
+    this.addControl("field_alignment", {
       type: CONTROLLER_CHOOSE,
       label: "Alignment",
       options: [
         {
           icon: "left",
-          value: "left"
+          value: "flex-start"
         },
         {
           icon: "center",
@@ -569,7 +565,7 @@ class InputCheckbox extends BaseElement {
         },
         {
           icon: "right",
-          value: "right"
+          value: "flex-end"
         }
       ]
     });
@@ -606,32 +602,6 @@ class InputCheckbox extends BaseElement {
     this.addControl("position_css_classes", {
       type: CONTROLLER_TEXT,
       label: "CSS Classes"
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("placeholder_style_section", {
-      tab: TAB_STYLE,
-      label: "Placeholder",
-      conditions: {
-        "content_type!": [
-          "image_select",
-          "hidden",
-          "radio",
-          "checkbox",
-          "select"
-        ]
-      }
-    });
-
-    this.addControl("placeholder_style_font_color", {
-      type: CONTROLLER_COLOR,
-      label: "font color"
-    });
-
-    this.addControl("placeholder_style_font_typographic", {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: "Typographic"
     });
 
     this.endControlSection();

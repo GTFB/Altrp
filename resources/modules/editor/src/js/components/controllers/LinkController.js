@@ -52,24 +52,15 @@ class LinkController extends Component {
     settings.classList.toggle("settingBlock-none");
   };
 
-  toggleSettingsNewPage() {
-    let toggleSettingsNewPageCheckbox = document.getElementById("toggleSettingsNewPageCheckbox");
+  toggleSettingsNewPage(e) {
+    let toggleSettingsNewPageCheckbox = e.currentTarget;
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
-    let changeCheckBox = toggleSettingsNewPageCheckbox.hasAttribute("checked");
-    if (toggleSettingsNewPageCheckbox.hasAttribute("checked") == false) {
-      this._changeValue({
+    console.log(value.openInNew);
+    this._changeValue({
+      ...value,
+      openInNew: !value.openInNew
+    });
 
-        ...value,
-        openInNew: !changeCheckBox
-      });
-      toggleSettingsNewPageCheckbox.setAttribute("checked", "checked");
-    } else {
-      this._changeValue({
-        ...value,
-        openInNew: changeCheckBox
-      });
-      toggleSettingsNewPageCheckbox.removeAttribute("checked");
-    }
   };
 
   toggleSettingsNoFollow() {    //TODO: надо порефакторить
@@ -157,15 +148,15 @@ class LinkController extends Component {
             {this.state.tagsOptions.map(option => { return <option value={option.value} key={option.value || 'null'}>{option.label}</option> })}
           </select>
         </div>
-        <div className="settings-checkbox-option" onClick={this.toggleSettingsNewPage}>
-          <input id="toggleSettingsNewPageCheckbox" type="checkbox" className="settings-checkbox" />
+        <label className="settings-checkbox-option" >
+          <input id={`toggleSettingsNewPageCheckbox_${this.props.controlId}`} onChange={this.toggleSettingsNewPage} type="checkbox" checked={value.openInNew} className="settings-checkbox" />
           <span className="settings-checkbox-container" />
-          <label className="settings-checkbox__label">Открывать в новом окне</label>
-        </div>
+          <span className="settings-checkbox__label">Open in New Window</span>
+        </label>
         <div className="settings-checkbox-option" onClick={this.toggleSettingsNoFollow}>
           <input id="togglesettingsNoFollowCheckbox" type="checkbox" className="settings-checkbox" />
           <span className="settings-checkbox-container" />
-          <label className="settings-checkbox__label">Добавить nofollow</label>
+          <label className="settings-checkbox__label">Add nofollow</label>
         </div>
         <div className="settings-checkbox-option">
           <input

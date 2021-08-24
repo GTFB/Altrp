@@ -222,32 +222,32 @@ class Resource {
     // });
   }
   /**
-   * @param {FileList} files
-   * @param {string} fileTypes
+   * @param {FileList | File[]} files
    * @return {Promise}
    * */
-  postFiles(files, fileTypes) {
-    fileTypes = fileTypes || "image";
+  postFiles(files) {
+    // fileTypes = fileTypes || "image";
     let headers = {
       "X-CSRF-TOKEN": _token
     };
     let formData = new FormData();
-    fileTypes = fileTypes.split(",");
-    fileTypes.forEach(fileType => {
-      if (!fileType) {
-        return;
+    // fileTypes = fileTypes.split(",");
+    // fileTypes.forEach(fileType => {
+    //   if (!fileType) {
+    //     return;
+    //   }
+    //   fileType = fileType.trim();
+    //
+    // });
+    for (let i = 0; i < files.length; i++) {
+      if (
+        files[i].size > MAX_FILE_SIZE
+        // ||          files[i].type.indexOf(fileType) === -1
+      ) {
+        continue;
       }
-      fileType = fileType.trim();
-      for (let i = 0; i < files.length; i++) {
-        if (
-          files[i].size > MAX_FILE_SIZE
-          // ||          files[i].type.indexOf(fileType) === -1
-        ) {
-          continue;
-        }
-        formData.append(`files[${i}]`, files[i]);
-      }
-    });
+      formData.append(`files[${i}]`, files[i]);
+    }
     let options = {
       method: "POST",
       body: formData,

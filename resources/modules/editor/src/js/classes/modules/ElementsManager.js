@@ -88,6 +88,12 @@ import TabsSwitcher from "../elements/TabsSwitcher";
 import TabsSwitcherWidget from "../../components/widgets/TabsSwitcherWidget";
 import ImageLightbox from "../elements/ImageLightbox";
 import ImageLightboxWidget from "../../components/widgets/ImageLightboxWidget";
+import InputSlider from "../elements/InputSlider";
+import InputSliderWidget from "../../components/widgets/InputSliderWidget";
+import InputGallery from "../elements/InputGallery";
+import InputGalleryWidget from "../../components/widgets/InputGalleryWidget";
+import InputRangeSlider from "../elements/InputRangeSlider";
+import InputRangeSliderWidget from "../../components/widgets/InputRangeSliderWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -108,13 +114,16 @@ export default class ElementsManger {
     this.elements[Nav.getName()] = Nav;
     this.elements[TabsSwitcher.getName()] = TabsSwitcher
     // this.elements[Input.getName()] = Input;
-    this.elements[InputTextCommon.getName()] = InputTextCommon;
+    this.elements[InputCheckbox.getName()] = InputCheckbox;
+    this.elements[InputGallery.getName()] = InputGallery;
+    this.elements[InputRadio.getName()] = InputRadio;
+    this.elements[InputRangeSlider.getName()] = InputRangeSlider;
     this.elements[InputSelect.getName()] = InputSelect;
     this.elements[InputSelect2.getName()] = InputSelect2;
-    this.elements[InputRadio.getName()] = InputRadio;
-    this.elements[InputWysiwyg.getName()] = InputWysiwyg;
-    this.elements[InputCheckbox.getName()] = InputCheckbox;
+    this.elements[InputSlider.getName()] = InputSlider;
+    this.elements[InputTextCommon.getName()] = InputTextCommon;
     this.elements[InputTextarea.getName()] = InputTextarea;
+    this.elements[InputWysiwyg.getName()] = InputWysiwyg;
     this.elements[InputImageSelect.getName()] = InputImageSelect;
     this.elements[InputAccept.getName()] = InputAccept;
     this.elements[InputDate.getName()] = InputDate;
@@ -164,6 +173,7 @@ export default class ElementsManger {
     this.components[InputDate.getName()] = InputDateWidget;
     this.components[InputHidden.getName()] = InputHiddenWidget;
     this.components[InputFile.getName()] = InputFileWidget;
+    this.components[InputGallery.getName()] = InputGalleryWidget;
     this.components[Text.getName()] = TextWidget;
     this.components[Image.getName()] = ImageWidget;
     this.components[Table.getName()] = TableWidget;
@@ -188,6 +198,8 @@ export default class ElementsManger {
     this.components[Dropbar.getName()] = DropbarWidget;
     this.components[TabsSwitcher.getName()] = TabsSwitcherWidget;
     this.components[ImageLightbox.getName()] = ImageLightboxWidget;
+    this.components[InputSlider.getName()] = InputSliderWidget;
+    this.components[InputRangeSlider.getName()] = InputRangeSliderWidget;
     // Websocket Notifications widget
     // this.components[Notifications.getName()] = NotificationsWidget;
   }

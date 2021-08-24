@@ -12,9 +12,21 @@ import {
 import Resource from "../../classes/Resource";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
+const Radio = window.altrpLibs.Blueprint.Radio;
+const RadioGroup = window.altrpLibs.Blueprint.RadioGroup;
 
 const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`
+
+.altrp-field-radio-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.altrp-field-container .bp3-radio {
+  margin-bottom: 0;
+}
 
 .altrp-field {
   border-style: solid;
@@ -26,7 +38,6 @@ const { moment } = window.altrpHelpers;
   flex-wrap: wrap;
 }
 
-.altrp-label-icon,
 .altrp-label-icon svg,
 .altrp-label-icon img {
   width: 20px;
@@ -267,10 +278,7 @@ const { moment } = window.altrpHelpers;
   font-size: 28px;
   font-weight: bold;
 }
-.altrp-field-subgroup {
-  display: flex;
-  flex-wrap: wrap;
-}
+
 .altrp-field-option {
   display: flex;
   padding: 10px;
@@ -686,7 +694,7 @@ class InputRadioWidget extends Component {
       );
     } catch (e) {
       console.error(
-        "Evaluate error in Input" + e.message,
+        "Evaluate error in Input " + e.message,
         this.props.element.getId()
       );
     }
@@ -843,7 +851,7 @@ class InputRadioWidget extends Component {
         await import(
           /* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-        )
+          )
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
@@ -867,7 +875,7 @@ class InputRadioWidget extends Component {
         await import(
           /* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-        )
+          )
       ).default;
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
@@ -900,7 +908,7 @@ class InputRadioWidget extends Component {
             await import(
               /* webpackChunkName: 'ActionsManager' */
               "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-            )
+              )
           ).default;
           await actionsManager.callAllWidgetActions(
             this.props.element.getIdForAction(),
@@ -1072,7 +1080,7 @@ class InputRadioWidget extends Component {
             className={`altrp-field-label ${this.state.settings.content_required
               ? "altrp-field-label--required"
               : ""
-              }`}
+            }`}
           >
             {this.state.settings.content_label}
           </label>
@@ -1099,7 +1107,7 @@ class InputRadioWidget extends Component {
     return (
       <AltrpFieldContainer
         settings={settings}
-        className={"altrp-field-container "}
+        className={"altrp-field-container altrp-field-radio-container "}
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}
@@ -1115,6 +1123,8 @@ class InputRadioWidget extends Component {
    * Выводит input type=checkbox|radio
    */
   renderRepeatedInput() {
+    const inline = this.props.element.getResponsiveSetting("vertical_radio", "", false);
+
     const { options = [] } = this.state;
     let { value = "" } = this.state;
     const fieldName =
@@ -1129,44 +1139,49 @@ class InputRadioWidget extends Component {
         .substr(2, 9);
     return (
       <div className="altrp-field-subgroup">
-        {options.map((option, idx) => {
-          let checked = false;
-          /**
-           * Если значение или опция число, то приведем к числу перед сравнением
-           */
-          if (this.props.element.getName() === "input-radio") {
-            checked = altrpCompare(value, option.value, "==");
-          } else {
-            value = _.isArray(value) ? value : value ? [value] : [];
-            checked = altrpCompare(option.value, value, "in");
-          }
-          return (
-            <div
-              className={`altrp-field-option ${checked ? "active" : ""}`}
-              key={`${fieldName}-${idx}`}
-            >
-              <span className="altrp-field-option-span">
-                <input
-                  type="radio"
-                  value={option.value}
-                  name={`${formID}-${fieldName}`}
-                  className={`altrp-field-option__input ${checked ? "active" : ""
-                    }`}
-                  onChange={this.onChange}
-                  checked={checked}
-                  id={`${formID}-${fieldName}-${idx}`}
-                />
-              </span>
-              <label
-                htmlFor={`${formID}-${fieldName}-${idx}`}
-                className="altrp-field-option__label"
-              >
-                {option.label}
-              </label>
-            </div>
-          );
-        })}
+        <RadioGroup
+          className="altrp-field-radio-group"
+          name={`${formID}-${fieldName}`}
+          inline={!inline}
+          onChange={this.onChange}
+          selectedValue={this.state.value}
+        >
+          {options.map((option, idx) => {
+            let checked = false;
+            /**
+             * Если значение или опция число, то приведем к числу перед сравнением
+             */
+            if (this.props.element.getName() === "input-radio") {
+              checked = altrpCompare(value, option.value, "==");
+            } else {
+              value = _.isArray(value) ? value : value ? [value] : [];
+              checked = altrpCompare(option.value, value, "in");
+            }
+            return (
+              <Radio
+                className={`altrp-field-radio ${checked ? "active" : ""}`}
+                label={option.label}
+                value={option.value}
+                key={`${fieldName}-${idx}`}
+              />
+              // <span className="altrp-field-option-span">
+              //   {/*<Radio*/}
+              //   {/*  // type="radio"*/}
+              //   {/*  value={option.value}*/}
+              //   {/*  // name={`${formID}-${fieldName}`}*/}
+              //   {/*  // className={`altrp-field-option__input ${checked ? "active" : ""*/}
+              //   {/*    // }`}*/}
+              //   {/*  // onChange={this.onChange}*/}
+              //   {/*  // checked={checked}*/}
+              //   {/*  // id={`${formID}-${fieldName}-${idx}`}*/}
+              //   {/*/>*/}
+              // </span>
+              // </Radio>
+            );
+          })}
+        </RadioGroup>
       </div>
+
     );
   }
 }
