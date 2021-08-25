@@ -1,3 +1,6 @@
+import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
+import {isEditor} from "../../../../../front-app/src/js/helpers";
+
 const Slider = window.altrpLibs.Blueprint.RangeSlider;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
@@ -15,13 +18,21 @@ const SliderWrapper = styled.div`
     if(props.handleSize) {
       if(props.handleSize.size) {
         styles += `
-        &.altrp-field-slider-horizontal .bp3-slider-handle {
-          left: calc(${(props.value/props.max*100).toFixed(2)}% - ${props.handle/ 2 + props.handleSize.size}px) !important;
+        &.altrp-field-slider-horizontal .bp3-slider-handle.bp3-start {
+          left: calc(${(props.value[0]/props.max*100).toFixed(2)}% - 8px) !important;
         }
 
-        &.altrp-field-slider-vertical .bp3-slider-handle {
-          bottom: calc(${(props.value/props.max*100).toFixed(2)}% - ${props.handle/ 2 + props.handleSize.size}px) !important;
-        }Size.size
+        &.altrp-field-slider-horizontal .bp3-slider-handle.bp3-end {
+          left: calc(${(props.value[1]/props.max*100).toFixed(2)}% - 8px) !important;
+        }
+
+        &.altrp-field-slider-vertical .bp3-slider-handle.bp3-start {
+          bottom: calc(${(props.value[0]/props.max*100).toFixed(2)}% - ${props.handleSize.size - 4}px) !important;
+        }
+
+        &.altrp-field-slider-vertical .bp3-slider-handle.bp3-end {
+          bottom: calc(${(props.value[1 ]/props.max*100).toFixed(2)}% - ${props.handleSize.size - 4}px) !important;
+        }
         `
       }
     }
@@ -45,8 +56,8 @@ class InputRangeSliderWidget extends Component {
     this.state = {
       settings: props.element.getSettings(),
       value: [
-        props.element.getResponsiveSetting("initial", "", 0),
-        props.element.getResponsiveSetting("initial_second", "", 0)
+        min,
+        max
       ],
       step: step || 1,
     };
@@ -84,6 +95,92 @@ class InputRangeSliderWidget extends Component {
     }
   }
 
+  /**
+   * Передадим значение в хранилище формы
+   * @param {*} value
+   * @param {boolean} userInput true - имзенилось пользователем
+   */
+  dispatchFieldValueToStore = async (value, index, userInput = false) => {
+
+    let formId;
+    let fieldName;
+
+    if(index === 0) {
+      formId = this.props.element.getFormId("form_id_start");
+      fieldName = this.props.element.getFieldId("field_id_start");
+    } else if(index === 1) {
+      formId = this.props.element.getFormId("form_id_end");
+      fieldName = this.props.element.getFieldId("field_id_end");
+    }
+
+    if (fieldName.indexOf("{{") !== -1) {
+      fieldName = replaceContentWithData(fieldName);
+    }
+    if (_.isObject(this.props.appStore) && fieldName && formId) {
+      this.props.appStore.dispatch(
+        changeFormFieldValue(fieldName, value, formId, userInput)
+      );
+      if (userInput) {
+        const change_actions = this.props.element.getSettings("change_actions");
+
+        if (change_actions && !isEditor()) {
+          const actionsManager = (
+            await import(
+              /* webpackChunkName: 'ActionsManager' */
+              "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+              )
+          ).default;
+          await actionsManager.callAllWidgetActions(
+            this.props.element.getIdForAction(),
+            "change",
+            change_actions,
+            this.props.element
+          );
+        }
+      }
+    }
+  };
+
+  /**
+   *
+   * @returns {number}
+   */
+  getValue = () => {
+    let value;
+    let formIdStart = this.props.element.getFormId("form_id_start");
+    let fieldNameStart = this.props.element.getFieldId("field_id_start");
+    let formIdEnd = this.props.element.getFormId("form_id_end");
+    let fieldNameEnd = this.props.element.getFieldId("field_id_end");
+
+    if (isEditor()) {
+      value = this.state.value;
+    } else {
+      value = [
+        _.get(appStore.getState(), `formsStore.${formIdStart}.${fieldNameStart}`, ''),
+        _.get(appStore.getState(), `formsStore.${formIdEnd}.${fieldNameEnd}`, '')
+      ];
+    }
+
+    console.log('vvaaaa', value)
+    if(!value[0] && !value[1]) {
+      return [
+        this.props.element.getResponsiveSetting('min', "", 0),
+        this.props.element.getResponsiveSetting('max', "", 100),
+      ]
+    }
+
+    if(!value[0]) {
+      value[0] = this.props.element.getResponsiveSetting('min', "", 0);
+    }
+
+    if(!value[1]) {
+      value[1] = this.props.element.getResponsiveSetting('max', "", 100);
+    }
+    console.log('vvaaasssa', value)
+
+    return value
+  }
+
   onChange(values) {
     const step = this.state.step
 
@@ -93,7 +190,12 @@ class InputRangeSliderWidget extends Component {
       }
     });
 
-    this.setState((s) => ({...s, value: values}))
+    if(isEditor()){
+      this.setState((s) => ({...s, value: values}))
+    } else {
+      this.dispatchFieldValueToStore(values[0], 0)
+      this.dispatchFieldValueToStore(values[1], 1)
+    }
   }
 
   label(value) {
@@ -132,7 +234,16 @@ class InputRangeSliderWidget extends Component {
     const vertical = this.props.element.getResponsiveSetting("vertical", "", false);
     const handleSize = this.props.element.getResponsiveSetting("handle_size", "", null);
 
-    console.log(this.state.value)
+    let value = this.getValue();
+
+    if(Number.isNaN(value[0])){
+      value[0] = Number(min)
+    }
+
+    if(Number.isNaN(value[1])) {
+      value[1] = Number(max);
+    }
+
     return (
       <SliderWrapper
         value={this.state.value}
@@ -144,7 +255,7 @@ class InputRangeSliderWidget extends Component {
           min={min}
           max={max}
           stepSize={this.state.step !== 0 && this.state.step ? Math.abs(this.state.step) : 1}
-          value={this.state.value}
+          value={value}
           onChange={this.onChange}
           labelPrecision={decimalPlace}
           labelRenderer={this.label}

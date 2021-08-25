@@ -47,32 +47,6 @@ class InputRangeSlider extends BaseElement{
       label: 'Slider',
     });
 
-    this.addControl("form_id", {
-      type: CONTROLLER_TEXT,
-      label: "Form ID",
-      responsive: false
-    });
-
-    this.addControl("field_id", {
-      type: CONTROLLER_TEXT,
-      responsive: false,
-      label: "Field ID (Column Name)"
-    });
-
-    this.addControl("content_default_value", {
-      type: CONTROLLER_TEXTAREA,
-      responsive: false,
-      label: "Default Value"
-    });
-
-    this.addControl("content_calculation", {
-      type: CONTROLLER_TEXTAREA,
-      label: "Calculation",
-      responsive: false,
-      description:
-        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
-    });
-
     this.addControl('vertical', {
       type: CONTROLLER_SWITCHER,
       label: 'Vertical',
@@ -142,6 +116,74 @@ class InputRangeSlider extends BaseElement{
     });
 
     this.endControlSection();
+
+
+    this.startControlSection('form_start', {
+      tab: TAB_CONTENT,
+      label: 'Start form',
+    });
+
+    this.addControl("form_id_start", {
+      type: CONTROLLER_TEXT,
+      label: "Start form ID",
+      responsive: false
+    });
+
+    this.addControl("field_id_start", {
+      type: CONTROLLER_TEXT,
+      responsive: false,
+      label: "Start field ID (Column Name)"
+    });
+
+    this.addControl("content_default_value_start", {
+      type: CONTROLLER_TEXTAREA,
+      responsive: false,
+      label: "Start default Value"
+    });
+
+    this.addControl("content_calculation_start", {
+      type: CONTROLLER_TEXTAREA,
+      label: "Start calculation",
+      responsive: false,
+      description:
+        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('form_end', {
+      tab: TAB_CONTENT,
+      label: 'End form',
+    });
+
+    this.addControl("form_id_end", {
+      type: CONTROLLER_TEXT,
+      label: "End form ID",
+      responsive: false
+    });
+
+    this.addControl("field_id_end", {
+      type: CONTROLLER_TEXT,
+      responsive: false,
+      label: "End field ID (Column Name)"
+    });
+
+    this.addControl("content_default_value_end", {
+      type: CONTROLLER_TEXTAREA,
+      responsive: false,
+      label: "End default Value"
+    });
+
+    this.addControl("content_calculation_end", {
+      type: CONTROLLER_TEXTAREA,
+      label: "End calculation",
+      responsive: false,
+      description:
+        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
+    });
+
+    this.endControlSection();
+
 
     this.startControlSection('slider_styles', {
       tab: TAB_STYLE,
@@ -262,15 +304,47 @@ class InputRangeSlider extends BaseElement{
       min: 0,
     });
 
+    this.addControl("handle_transform", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transform start',
+      units: [
+        'px',
+      ],
+      max: 50,
+      min: -50,
+    });
+
+    this.addControl("handle_transform_end", {
+      type: CONTROLLER_SLIDER,
+      label: 'Transform end',
+      units: [
+        'px',
+      ],
+      max: 50,
+      min: -50,
+    });
+
+
     this.addControl('handle_radius', {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Border Radius',
+      label: 'Border Radius first',
       units: [
         'px',
         '%',
         'vh',
       ],
     });
+
+    this.addControl('handle_radius_second', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius second',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
 
     this.addControl('handle_color', {
       type: CONTROLLER_COLOR,

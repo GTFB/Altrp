@@ -717,9 +717,10 @@ class FrontElement {
 
   /**
    * Получить id поля
+   * @param {string} setting если конртоллер имеет кастомное имя
    */
-  getFieldId(){
-    let fieldId = this.getSettings('field_id');
+  getFieldId(setting="field_id"){
+    let fieldId = this.getSettings(setting);
     if(! fieldId){
       return fieldId;
     }
@@ -730,9 +731,10 @@ class FrontElement {
   }
   /**
    * Получить id поля
+   * @param {string} setting если конртоллер имеет кастомное имя
    */
-  getFormId(){
-    let formId = this.getSettings('form_id');
+  getFormId(setting="form_id"){
+    let formId = this.getSettings(setting);
     if(! formId){
       return formId;
     }
