@@ -1784,14 +1784,6 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       units: ["px", "%", "vh"],
-      rules: {
-        "div .altrp-text{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
     });
 
     this.addControl('text_style_position_margin', {
@@ -1802,22 +1794,11 @@ class RootElement extends BaseElement {
         '%',
         'vh',
       ],
-      rules: {
-        'div .altrp-text{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
     });
 
     this.addControl("text_style_background_color", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      rules: {
-        ".altrp-text{{STATE}}": "background-color: {{COLOR}};"
-      }
     });
 
     this.addControl("text_style_background_opacity", {
@@ -1826,35 +1807,17 @@ class RootElement extends BaseElement {
       max: 1,
       min: 0,
       step: 0.01,
-      rules: {
-        "div .altrp-text{{STATE}}": "opacity: {{SIZE}}"
-      }
     });
 
     this.addControl('text_style_font_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      rules: {
-        'div .altrp-text{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
     }
     );
 
     this.addControl("text_style_font_color", {
       type: CONTROLLER_COLOR,
       label: "Color",
-      rules: {
-        "div.altrp-text{{STATE}}": "color: {{COLOR}};"
-      }
     });
 
     this.addControl("text_style_border_type", {
@@ -1887,27 +1850,17 @@ class RootElement extends BaseElement {
           label: "Groove"
         }
       ],
-      rules: {
-        ".altrp-text{{STATE}}": "border-style: {{VALUE}};"
-      }
     });
 
     this.addControl("text_style_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
       units: ["px", "%", "vh"],
-      rules: {
-        ".altrp-text{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-      }
     });
 
     this.addControl("text_style_border_color", {
       type: CONTROLLER_COLOR,
       label: "Border color",
-      rules: {
-        "div .altrp-text{{STATE}}": "border-color: {{COLOR}};"
-      }
     });
 
     this.addControl('text_default_border_radius', {
@@ -1918,22 +1871,12 @@ class RootElement extends BaseElement {
         '%',
         'vh',
       ],
-      rules: {
-        'div .altrp-text{{STATE}}': [
-          'border-top-left-radius: {{TOP}}{{UNIT}}',
-          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
-        ]
-      }
+
     });
 
     this.addControl('text_transition_property', {
       type: CONTROLLER_TEXTAREA,
       label: 'Transition Property',
-      rules: {
-        ".altrp-text": "transition-property: {{VALUE}};",
-      },
       description: 'Input properties, commas separated'
     });
 
@@ -1944,9 +1887,6 @@ class RootElement extends BaseElement {
       max: 5,
       min: 0,
       step: 0.1,
-      rules: {
-        ".altrp-text": "transition-duration: {{SIZE}}s;",
-      }
     });
 
     this.addControl('text_transition_timing', {
@@ -1974,9 +1914,6 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Transition Timing Function',
-      rules: {
-        ".altrp-text": "transition-timing-function: {{VALUE}};",
-      }
     });
 
     this.addControl("text_transition_delay", {
@@ -1986,9 +1923,6 @@ class RootElement extends BaseElement {
       max: 5,
       min: 0,
       step: 0.1,
-      rules: {
-        ".altrp-text": "transition-delay: {{SIZE}}s;",
-      }
     });
 
 

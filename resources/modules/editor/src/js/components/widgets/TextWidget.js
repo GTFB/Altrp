@@ -1,22 +1,43 @@
 import Tooltip from "./Tooltip";
-import { isEditor } from "../../../../../front-app/src/js/helpers";
-import TextComponent from "./styled-components/TextComponent";
+
+const {isEditor, getDataByPath} = window.altrpHelpers;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 .altrp-text {
   padding: 0;
-  margin-top: 5px;
-  margin-right: 0;
-  margin-bottom: 5px;
-  margin-left: 0;
+  margin: 0;
   opacity: 1;
   font-size: 16px;
-  font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
   line-height: 1.5;
   letter-spacing: 0;
-  color: rgb(0, 0, 1);
-  border-color: rgb(50,168,82);
   border-radius: 0;
+}
+
+.altrp-text a{
+  font-family: "Open Sans", sans-serif;
+
+}
+.altrp-text blockquote {
+    overflow: hidden;
+    padding-right: 1.5em;
+    padding-left: 1.5em;
+    margin-left: 0;
+    margin-right: 0;
+    font-style: italic;
+    border-left: solid 5px hsl(0, 0%, 80%);
+}
+.altrp-text p{
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.altrp-text img{
+    max-width: 100%;
+}
+
+.ck.ck-editor__editable_inline{
+    padding: 0;
 }
 `)
 
@@ -72,6 +93,12 @@ class TextWidget extends Component {
       tooltipActive = this.tooltipActive;
     }
     let textContent = this.getContent("text");
+    const content = this.props.element.getSettings('content')
+    if (content
+      && getDataByPath(content)
+      && _.isString(getDataByPath(content))) {
+      textContent = getDataByPath(content);
+    }
     let textCap = (
       <>
         <span className="altrp-text-drop-cap">
@@ -84,14 +111,14 @@ class TextWidget extends Component {
 
     if (this.props.CKEditor) {
       return (
-        <TextComponent className="altrp-text">
+        <div className="altrp-text">
           <this.props.CKEditor
             changeText={this.changeText}
             text={textContent}
             readOnly={isEditor()}
             textWidget={true}
           />
-        </TextComponent>
+        </div>
       );
     }
 

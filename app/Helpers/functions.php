@@ -1376,7 +1376,8 @@ const ACTIONS_COMPONENTS = [
  *
  * ]
  */
-function getAltrpSettings( $page_id ){
+function getAltrpSettings( $page_id ): array
+{
   global $altrp_settings;
   $settings = $altrp_settings;
   $settings['action_components'] = [];

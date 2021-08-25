@@ -146,3 +146,9 @@ document.body.addEventListener('click', e =>{
     module?.default(e);
   })
 })
+
+document.addEventListener('DOMContentLoaded', e =>{
+  import(/* webpackChunkName: 'load-sticky' */'./js/functions/load-sticky').then((module)=>{
+    module?.default(e);
+  })
+})

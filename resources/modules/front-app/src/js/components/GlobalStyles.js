@@ -54,6 +54,7 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
     styles += getRouteStyles(areas);
   }
   let prefix = "altrp-element";
+
   _.each(elementsSettings, (item, id) => {
     if (item) {
       switch (item.name) {

@@ -16,8 +16,8 @@ import { getResponsiveSetting } from '../../helpers';
 
 /**
  * Преобразует объект стилей, который задается в виджете Text в строку css для вставки в GlobalStyles
- * @param {{}} settings 
- * @param {string} id 
+ * @param {{}} settings
+ * @param {string} id
  * @return {string}
  */
 
@@ -112,81 +112,6 @@ export function getTextStyles(settings, id) {
 
   styles += `} `;
   //hover
-  styles += `${parentClass} .altrp-text:hover {`;
-
-  const columnCountHover = getResponsiveSetting(settings, 'text_style_column-count', ':hover');
-
-  if (columnCountHover) {
-    styles += simplePropertyStyled(columnCountHover, 'column-count');
-  }
-
-  const paddingHover = getResponsiveSetting(settings, 'text_style_position_padding', ':hover');
-
-  if (paddingHover) {
-    styles += dimensionsControllerToStyles(paddingHover);
-  }
-
-  const marginHover = getResponsiveSetting(settings, 'text_style_position_margin', ':hover');
-
-  if (marginHover) {
-    styles += dimensionsControllerToStyles(marginHover, 'margin');
-  }
-
-  const zIndexHover = getResponsiveSetting(settings, 'text_position_z_index', ':hover');
-
-  if (zIndexHover) {
-    styles += simplePropertyStyled(zIndexHover, 'z-index');
-  }
-
-  const backgroundColorHover = getResponsiveSetting(settings, 'text_style_background_color', ':hover');
-
-  if (backgroundColorHover) {
-    styles += colorPropertyStyled(backgroundColorHover, 'background-color');
-  }
-
-  const opacityHover = getResponsiveSetting(settings, 'text_style_background_opacity', ':hover');
-
-  if (opacityHover) {
-    styles += opacityStyled(opacityHover, 'opacity');
-  }
-
-  const typographicHover = getResponsiveSetting(settings, 'text_style_font_typographic', ':hover');
-
-  if (typographicHover) {
-    styles += typographicControllerToStyles(typographicHover);
-  }
-
-  const colorHover = getResponsiveSetting(settings, 'text_style_font_color', ':hover');
-
-  if (colorHover) {
-    styles += colorPropertyStyled(colorHover, 'color');
-  }
-
-  const borderStyleHover = getResponsiveSetting(settings, 'text_style_border_type', ':hover');
-
-  if (borderStyleHover) {
-    styles += simplePropertyStyled(borderStyleHover, 'border-style');
-  }
-
-  const borderWidthHover = getResponsiveSetting(settings, 'text_style_border_width', ':hover');
-
-  if (borderWidthHover) {
-    styles += borderWidthStyled(borderWidthHover);
-  }
-
-  const borderColorHover = getResponsiveSetting(settings, 'text_style_border_color', ':hover');
-
-  if (borderColorHover) {
-    styles += colorPropertyStyled(borderColorHover, 'border-color');
-  }
-
-  const borderRadiusHover = getResponsiveSetting(settings, 'text_style_border_radius', ':hover');
-
-  if (borderRadiusHover) {
-    styles += borderRadiusStyled(borderRadiusHover);
-  }
-
-  styles += `} `;
 
   styles+=`${parentClass} .altrp-text p {`
 
@@ -203,7 +128,7 @@ export function getTextStyles(settings, id) {
   }
 
   styles += `} `;
-  
+
   styles+=`${parentClass} .altrp-text blockquote {`
 
   const blockquoteMargin = getResponsiveSetting(settings, 'text_blockquote_margin');
@@ -403,7 +328,7 @@ export function getTextStyles(settings, id) {
   if (numberedListItemMargin) {
     styles += `li{ ${dimensionsControllerToStyles(numberedListItemMargin, 'margin')}}`;
   }
-  
+
   const numberedListStyle = getResponsiveSetting(settings, 'text_numbered_list_style_type');
 
   if (numberedListStyle) {
@@ -425,7 +350,7 @@ export function getTextStyles(settings, id) {
   if (unorderedListItemMargin) {
     styles += `li{ ${dimensionsControllerToStyles(unorderedListItemMargin, 'margin')}}`;
   }
-  
+
   const unorderedListStyle = getResponsiveSetting(settings, 'text_unordered_list_style_type');
 
   if (unorderedListStyle) {

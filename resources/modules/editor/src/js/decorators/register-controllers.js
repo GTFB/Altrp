@@ -820,6 +820,37 @@ export function advancedTabControllers(element) {
 
   element.endControlSection();
 
+  element.startControlSection('sticky_section', {
+    label: 'Sticky',
+    tab: TAB_ADVANCED,
+  })
+
+  element.addControl('sticky', {
+    type: CONTROLLER_SELECT,
+    label: 'Sticky Type',
+    options:[
+      {
+        label: 'None',
+        value: '',
+      },
+      {
+        label: 'Top',
+        value: 'top',
+      },
+      {
+        label: 'Bottom',
+        value: 'bottom',
+      },
+    ],
+  })
+
+  element.addControl('st_spacing', {
+    type: CONTROLLER_NUMBER,
+    label: 'Spacing'
+  })
+
+  element.endControlSection();
+
   actionsControllers(element, 'Wrapper Click Actions', 'wrapper_click_', TAB_ADVANCED);
 
 }

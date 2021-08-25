@@ -365,6 +365,10 @@ class ElementWrapper extends Component {
     if(! _.isEmpty(element.getResponsiveSetting('wrapper_click_actions'))){
       wrapperProps["data-altrp-wrapper-click-actions"] = element.getId();
     }
+    if(! _.isEmpty(element.getResponsiveSetting('sticky'))){
+      wrapperProps["data-altrp-sticky"] = element.getResponsiveSetting('sticky');
+      wrapperProps["data-altrp-sticky-spacing"] = element.getResponsiveSetting('st_spacing');
+    }
     wrapperProps["data-altrp-id"] = element.getId();
     return  (
       <WrapperComponent {...wrapperProps} element={element.getId()}>
