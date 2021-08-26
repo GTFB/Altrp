@@ -30,7 +30,6 @@ export default function InputRangeSliderComponent(settings) {
 
         width = sliderStyled(width);
 
-        console.log(width)
         if(width) {
           return `width: calc(${width} / 2);`
         } else {
@@ -61,49 +60,14 @@ export default function InputRangeSliderComponent(settings) {
       ["height", "length", "slider"],
     "}",
 
-    "altrp-field-slider-horizontal .bp3-slider-handle.bp3-start",
-      () => {
-        let value = getResponsiveSetting(settings, "handle_transform");
-        value = sliderStyled(value);
-
-        if(value) {
-          return `transform: translate(${value}, 0);`;
-        }
-      },
-    "}",
-
-    "altrp-field-slider-horizontal .bp3-slider-handle.bp3-end",
-      () => {
-        let value = getResponsiveSetting(settings, "handle_transform_end");
-        value = sliderStyled(value);
-
-        if(value) {
-          return `transform: translate(${value}, 0);`;
-        }
-      },
-    "}",
-
-    "altrp-field-slider-vertical .bp3-slider-handle.bp3-start",
-      () => {
-        let value = getResponsiveSetting(settings, "handle_transform");
-        value = sliderStyled(value);
-
-        if(value) {
-          return `transform: translate(0, ${value});`;
-        }
-      },
-    "}",
-
-    "altrp-field-slider-vertical .bp3-slider-handle.bp3-end",
-      () => {
-        let value = getResponsiveSetting(settings, "handle_transform_end");
-        value = sliderStyled(value);
-
-        if(value) {
-          return `transform: translate(0, ${value});`;
-        }
-      },
-    "}",
+    () => {
+      let tr_x = getResponsiveSetting(settings, "tr_x") ;
+      let tr_y = getResponsiveSetting(settings, "tr_y") ;
+      if(! tr_x && ! tr_y){
+        return ''
+      }
+      return `& .bp3-slider-handle{transform:translate(${tr_x || '0px'},${tr_y || '0px'});}`
+    },
 
     "bp3-slider-progress, & .bp3-slider-track",
       ["height", "height", "slider"],

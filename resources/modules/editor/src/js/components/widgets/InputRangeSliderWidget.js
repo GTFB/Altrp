@@ -1,5 +1,5 @@
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
-import {isEditor} from "../../../../../front-app/src/js/helpers";
+const {isEditor} = window.altrpHelpers;
 
 const Slider = window.altrpLibs.Blueprint.RangeSlider;
 
@@ -98,6 +98,7 @@ class InputRangeSliderWidget extends Component {
   /**
    * Передадим значение в хранилище формы
    * @param {*} value
+   * @param index
    * @param {boolean} userInput true - имзенилось пользователем
    */
   dispatchFieldValueToStore = async (value, index, userInput = false) => {
@@ -112,7 +113,6 @@ class InputRangeSliderWidget extends Component {
       formId = this.props.element.getFormId("form_id_end");
       fieldName = this.props.element.getFieldId("field_id_end");
     }
-
     if (fieldName.indexOf("{{") !== -1) {
       fieldName = replaceContentWithData(fieldName);
     }
@@ -161,7 +161,6 @@ class InputRangeSliderWidget extends Component {
       ];
     }
 
-    console.log('vvaaaa', value)
     if(!value[0] && !value[1]) {
       return [
         this.props.element.getResponsiveSetting('min', "", 0),
@@ -176,41 +175,45 @@ class InputRangeSliderWidget extends Component {
     if(!value[1]) {
       value[1] = this.props.element.getResponsiveSetting('max', "", 100);
     }
-    console.log('vvaaasssa', value)
-
+    value = value.map((value)=>(Number(value) || 0))
     return value
   }
 
   onChange(values) {
-    const step = this.state.step
+    let decimalPlace = this.props.element.getResponsiveSetting("decimal_place", "", null);
+    decimalPlace = Math.abs(decimalPlace);
 
     values.forEach((value, idx) => {
       if(!Number.isInteger(value)) {
-        values[idx] = parseFloat(value.toFixed(String(step).split(".")[1].split("").length))
+        values[idx] = value
+          .toFixed(decimalPlace)
       }
     });
 
     if(isEditor()){
       this.setState((s) => ({...s, value: values}))
     } else {
-      this.dispatchFieldValueToStore(values[0], 0)
-      this.dispatchFieldValueToStore(values[1], 1)
+      this.dispatchFieldValueToStore(values[0], 0, true)
+      this.dispatchFieldValueToStore(values[1], 1, true)
     }
   }
 
   label(value) {
-    const step = this.props.element.getResponsiveSetting("step", "", 1);
     let decimalPlace = this.props.element.getResponsiveSetting("decimal_place", "", null);
     const custom = this.props.element.getResponsiveSetting("custom_label", "", "{n}");
     const thousandsSeparator = this.props.element.getResponsiveSetting("thousands_separator", "", false);
-    const thousandsSeparatorValue = this.props.element.getResponsiveSetting("thousands_separator_value", "", ".");
-    const decimalSeparator = this.props.element.getResponsiveSetting("decimal_separator", "", ",");
+    const thousandsSeparatorValue = this.props.element.getResponsiveSetting("thousands_separator_value", "", " ");
+    const decimalSeparator = this.props.element.getResponsiveSetting("decimal_separator");
+    value = Number(value)
 
-    if(!Number.isInteger(value) && decimalPlace && decimalSeparator) {
+    if(!Number.isInteger(value) && decimalPlace) {
       decimalPlace = Math.abs(decimalPlace);
-
       value = value
-        .toFixed(decimalPlace).replace(".", decimalSeparator)
+        .toFixed(decimalPlace)
+    }
+
+    if(!Number.isInteger(value) && decimalSeparator) {
+      value = value.toString().replace(".", decimalSeparator)
     }
 
     if(thousandsSeparator && thousandsSeparatorValue) {
@@ -233,6 +236,7 @@ class InputRangeSliderWidget extends Component {
     const decimalPlace = this.props.element.getResponsiveSetting("decimal_place", "", null);
     const vertical = this.props.element.getResponsiveSetting("vertical", "", false);
     const handleSize = this.props.element.getResponsiveSetting("handle_size", "", null);
+    let step = this.props.element.getResponsiveSetting("step", "", 1);
 
     let value = this.getValue();
 
@@ -254,7 +258,7 @@ class InputRangeSliderWidget extends Component {
         <Slider
           min={min}
           max={max}
-          stepSize={this.state.step !== 0 && this.state.step ? Math.abs(this.state.step) : 1}
+          stepSize={step}
           value={value}
           onChange={this.onChange}
           labelPrecision={decimalPlace}

@@ -1,7 +1,6 @@
 import {controllerMapStateToProps} from "../../decorators/controller";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import DynamicIcon from '../../../svgs/dynamic.svg'
 import controllerDecorate from "../../decorators/controller";
 import ResponsiveDdMenu from "../ResponsiveDdMenu";
 
@@ -32,12 +31,13 @@ class NumberController extends Component {
     event.stopPropagation();
     event.nativeEvent.stopImmediatePropagation();
   }
+
   /**
    * Изменение больше не обновляет элемент
    * @param e
    */
   changeValue(e) {
-    this._changeValue(Number(e.target.value));
+    this._changeValue(Number(e.target.value), false);
   }
   getDefaultValue() {
     return '';

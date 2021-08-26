@@ -837,10 +837,10 @@ export function advancedTabControllers(element) {
         label: 'Top',
         value: 'top',
       },
-      {
-        label: 'Bottom',
-        value: 'bottom',
-      },
+      // {
+      //   label: 'Bottom',
+      //   value: 'bottom',
+      // },
     ],
   })
 

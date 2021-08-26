@@ -1014,6 +1014,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'input-wysiwyg',
     'input-textarea',
     'input-slider',
+    'input-range-slider',
     'input-image-select',
     'input-accept',
     'input-text',

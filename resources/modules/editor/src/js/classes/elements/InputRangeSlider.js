@@ -28,7 +28,7 @@ class InputRangeSlider extends BaseElement{
     return'input-range-slider';
   }
   static getTitle(){
-    return'Input range slider';
+    return'Input Range Slider';
   }
 
   static getIconComponent(){
@@ -64,26 +64,14 @@ class InputRangeSlider extends BaseElement{
       default: 100,
     });
 
-    this.addControl('initial', {
-      type: CONTROLLER_NUMBER,
-      label: 'Initial first',
-      default: 0,
-    });
-
-    this.addControl('initial_second', {
-      type: CONTROLLER_NUMBER,
-      label: 'Initial second',
-      default: 10,
-    });
-
     this.addControl('step', {
       type: CONTROLLER_NUMBER,
-      label: 'Step count',
+      label: 'Step Size',
     });
 
     this.addControl('label_step', {
       type: CONTROLLER_NUMBER,
-      label: 'Label step size',
+      label: 'Label Step Size',
       default: 25,
     });
 
@@ -95,18 +83,16 @@ class InputRangeSlider extends BaseElement{
     this.addControl('thousands_separator_value', {
       type: CONTROLLER_TEXT,
       label: 'Separator',
-      default: "."
     });
 
     this.addControl('decimal_place', {
       type: CONTROLLER_NUMBER,
-      label: 'Decimal place',
+      label: 'Rounding Degree',
     });
 
     this.addControl('decimal_separator', {
       type: CONTROLLER_TEXT,
       label: 'Separator',
-      default: ",",
     });
 
     this.addControl('custom_label', {
@@ -304,26 +290,13 @@ class InputRangeSlider extends BaseElement{
       min: 0,
     });
 
-    this.addControl("handle_transform", {
-      type: CONTROLLER_SLIDER,
-      label: 'Transform start',
-      units: [
-        'px',
-      ],
-      max: 50,
-      min: -50,
+    this.addControl("tr_x", {
+      label: 'Translate X',
     });
 
-    this.addControl("handle_transform_end", {
-      type: CONTROLLER_SLIDER,
-      label: 'Transform end',
-      units: [
-        'px',
-      ],
-      max: 50,
-      min: -50,
+    this.addControl("tr_y", {
+      label: 'Translate Y',
     });
-
 
     this.addControl('handle_radius', {
       type: CONTROLLER_DIMENSIONS,
