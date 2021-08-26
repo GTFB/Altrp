@@ -1303,6 +1303,7 @@ function getDataSources( $page_id, $params = array(), $params_string = '' ){
 
     }
   } catch( Exception $e ){
+    logger()->error( $e->getMessage() );
     return $datasources;
   }
   return $datasources;

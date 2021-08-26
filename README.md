@@ -18,6 +18,7 @@
 + Add "Disabled" State for Widgets:
   1. Button
 + Render Template Widget on Server
++ Prevent Update Some Widgets on Forms Update
 
 
 ### 0.15.0

@@ -7,7 +7,7 @@ import {styledString} from "../../helpers/styles";
  */
 export default function getTemplateStyles(settings, elementId) {
   let styles =[
-    '& > .altrp-posts > .altrp-post > .sections-wrapper{',
+    '& > .altrp-posts > .altrp-post > .sections-wrapper',
     ['width', 'width'],
     '}'
   ];
