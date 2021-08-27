@@ -10,9 +10,10 @@
 + Import Widgets Presets and Global Styles Settings With Templates
 + Add  Widgets:
   1. Input Select
-  2. Input Gallery
-  3. Input Slider
-  3. Input Range Slider
+  2. Input Multi Select   
+  3. Input Gallery
+  4. Input Slider
+  5. Input Range Slider
 + Add "Active" State for Widgets:
   1. Button
   2. Divider

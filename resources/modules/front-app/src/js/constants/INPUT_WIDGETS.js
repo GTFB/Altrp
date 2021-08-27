@@ -1,6 +1,7 @@
 const INPUT_WIDGETS = [
   'input',
   'input-select',
+  'input-multi-select',
   'input-select2',
   'input-switch',
   'input-wysiwyg',

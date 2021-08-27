@@ -84,6 +84,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-multi-select",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputSelectWidget' */ "../../../../editor/src/js/components/widgets/InputMultiSelectWidget"
+          );
+        }
+      },
+      {
         name: "input-select2",
         import: async () => {
           return await import(

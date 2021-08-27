@@ -242,6 +242,7 @@ class FrontElement {
       }
       break;
       case 'input-select':
+      case 'input-multi-select':
       case 'input-select2':
       case 'input-switch':
       case 'input-wysiwyg':

@@ -1,6 +1,7 @@
 const SKELETON_ELEMENTS = [
   'input',
   'input-select',
+  'input-multi-select',
   'input-select2',
   'input-radio',
   'input-checkbox',

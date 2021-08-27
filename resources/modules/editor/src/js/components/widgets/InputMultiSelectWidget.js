@@ -11,9 +11,10 @@ const {
 } = window.altrpHelpers;
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
+
 const Button = window.altrpLibs.Blueprint.Button;
 const MenuItem = window.altrpLibs.Blueprint.MenuItem;
-const Select = window.altrpLibs.BlueprintSelect.Select;
+const MultiSelect = window.altrpLibs.BlueprintSelect.MultiSelect;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
 
@@ -30,7 +31,7 @@ const Select = window.altrpLibs.BlueprintSelect.Select;
   max-height: 300px;
   overflow: auto;
 }
-.altrp-widget_input-select .bp3-icon_right{
+.altrp-widget_input-multi-select .bp3-icon_right{
     margin:  0 0 0 7px;
 }
 .bp3-icon_text-widget img{
@@ -44,27 +45,23 @@ const Select = window.altrpLibs.BlueprintSelect.Select;
   height: 16px;
   pointer-events: none;
 }
-.altrp-widget_input-select.altrp-widget_input-select .bp3-icon:first-child:last-child{
+.altrp-widget_input-multi-select.altrp-widget_input-multi-select .bp3-icon:first-child:last-child{
    margin: 0;
 }
-.altrp-widget_input-select .bp3-popover-wrapper{
-  overflow: hidden;
+.altrp-widget_input-multi-select .bp3-popover-wrapper{
   display: flex;
 }
-.altrp-widget_input-select .bp3-popover-target > div{
+.altrp-widget_input-multi-select .bp3-popover-target > div{
   width: 100%;
 }
-.altrp-widget_input-select .bp3-popover-target{
+.altrp-widget_input-multi-select .bp3-popover-target{
   display: flex;
   flex-grow: 1;
 }
-.altrp-widget_input-select .bp3-popover-target .bp3-button{
-  width: 100%;
+.altrp-widget_input-multi-select .bp3-popover-target .bp3-button{
   justify-content: flex-end;
-  /*flex-direction: row-reverse;*/
-
 }
-.altrp-widget_input-select .bp3-popover-target .bp3-button .bp3-button-text{
+.altrp-widget_input-multi-select .bp3-popover-target .bp3-button .bp3-button-text{
   flex-grow: 1;
 }
 .altrp-label-icon svg,
@@ -403,11 +400,12 @@ const AltrpFieldContainer = styled.div`
 }}
 `;
 
-class InputSelectWidget extends Component {
+class InputMultiSelectWidget extends Component {
   timeInput = null;
 
   constructor(props) {
     super(props);
+    this.onItemSelect = this.onItemSelect.bind(this)
     props.element.component = this;
     if (window.elementDecorator) {
       window.elementDecorator(this);
@@ -471,7 +469,6 @@ class InputSelectWidget extends Component {
 
       this.setState(state => ({...state, options}));
     } else if (
-      ["input-select"].indexOf(this.props.element.getName()) >= 0 &&
       this.state.settings.model_for_options
     ) {
       let options = await new Resource({route: this.getRoute()}).getAll();
@@ -571,7 +568,6 @@ class InputSelectWidget extends Component {
       );
     }
     if (
-      this.props.element.getName() === "input-select" &&
       this.props.element.getSettings("model_for_options")
     ) {
       if (
@@ -795,7 +791,7 @@ class InputSelectWidget extends Component {
    * Изменение значения в виджете
    * @param e
    */
-  onChange = (e)=> {
+  onChange = (e) => {
     let value = "";
     let valueToDispatch;
     const settings = this.props.element.getSettings();
@@ -837,35 +833,61 @@ class InputSelectWidget extends Component {
     );
   }
 
+  /**
+   *
+   * @param item
+   * @param idx
+   */
+  handleTagRemove = (item, idx)=>{
+    let value = this.getValue()
+    value = [...value]
+    value.splice(idx, 1)
+    value = value.map(v=>v.value)
+    this.dispatchFieldValueToStore(value, true)
+  }
+
+  /**
+   *
+   * @param value
+   * @returns {Promise<void>}
+   */
   async onItemSelect(value) {
+    const currentValue = this.getValue();
     if (value.value) {
       value = value.value;
     }
     const options = [...this.state.options];
     const element = this.props.element;
-    if(! options.find(option => option.value === value)){
+    if (!options.find(option => option.value === value)) {
       const create_url = element.getResponsiveSetting('create_url');
-      if(element.getResponsiveSetting('create') && create_url){
-        this.setState(state =>({...state, widgetDisabled: true}))
+      if (element.getResponsiveSetting('create') && create_url) {
+        this.setState(state => ({...state, widgetDisabled: true}))
         let params = element.getResponsiveSetting('create_params') || '';
         params = params.replace(/\{\{__query__\}\}/g, value);
         params = parseParamsFromString(params, element.getCurrentModel(), true)
         const resource = new Resource({route: create_url});
-        try{
+        try {
           let res = await resource.post(params)
-          if(res.data){
+          if (res.data) {
             res = res.data
           }
           options.unshift(res)
         } catch (e) {
-
-        }finally {
-          this.setState(state =>({...state, widgetDisabled: false}))
+          console.error(e);
+        } finally {
+          this.setState(state => ({...state, widgetDisabled: false}))
         }
       } else {
         options.unshift(arguments[0])
       }
     }
+
+    if(! options.find(o=>o.value === value)){
+      value = currentValue
+    } else if(! currentValue.find(v => v.value === value)){
+      value = currentValue.concat({value})
+    }
+    value = value.map(v => v.value)
     this.setState(state => ({
         ...state,
         options,
@@ -896,10 +918,14 @@ class InputSelectWidget extends Component {
     }
     if (!this.props.element.getSettings("sort_default")) {
       options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
-      if(this.props.element.getSettings("options_sorting") === 'desc'){
+      if (this.props.element.getSettings("options_sorting") === 'desc') {
         options = _.reverse(options)
       }
     }
+    let value = this.getValue()
+    options = options.filter(o => {
+      return ! value.find(v => v.value === o.value)
+    })
     return options;
   }
 
@@ -954,7 +980,7 @@ class InputSelectWidget extends Component {
 
   /**
    *
-   * @returns {*}
+   * @returns {[]}
    */
   getValue = () => {
     let value;
@@ -965,7 +991,22 @@ class InputSelectWidget extends Component {
     } else {
       value = _.get(appStore.getState(), `formsStore.${formId}.${fieldName}`, '')
     }
-
+    if (value && !_.isArray(value)) {
+      value = [value];
+    }
+    if (!value) {
+      value = [];
+    }
+    let options = [...this.state.options]
+    value = value.map(v => {
+      let option = options.find(o => {
+        return o.value === v;
+      })
+      if (! option) {
+        return {value: v, label: v}
+      }
+      return  option;
+    })
     return value;
   }
 
@@ -979,36 +1020,10 @@ class InputSelectWidget extends Component {
   }
 
   /**
-   *
-   * @return {JSX.Element|string}
-   */
-  renderRightIcon = ()=>{
-    const right_icon = this.props.element.getResponsiveSetting('right_icon')
-    if(_.isEmpty(right_icon)){
-      return 'caret-down'
-    }
-    return <span className="bp3-icon bp3-icon_text-widget bp3-icon_right" >
-      {renderAsset(right_icon )}
-    </span>
-  }
-  /**
-   *
-   * @return {JSX.Element|null}
-   */
-  renderLeftIcon = ()=>{
-    const left_icon = this.props.element.getResponsiveSetting('left_icon')
-    if(_.isEmpty(left_icon)){
-      return null
-    }
-    return <span className="bp3-icon bp3-icon_text-widget bp3-icon_left" >
-      {renderAsset(left_icon)}
-    </span>
-  }
-  /**
    * Обработка клика по кнопке
    * @return {Promise<void>}
    */
-  onClick = async ()=>{
+  onClick = async () => {
     if (this.props.element.getSettings("click_actions", []) && !isEditor()) {
       const actionsManager = (
         await import(
@@ -1030,7 +1045,7 @@ class InputSelectWidget extends Component {
    * @return {{label, value}}
    */
   createNewItemFromQuery = (title) => {
-    return{label: title,value: title};
+    return {label: title, value: title};
   }
   /**
    * отрисовываем создание нового элемента
@@ -1040,24 +1055,22 @@ class InputSelectWidget extends Component {
    * @return {JSX.Element|null}
    */
 
-  createNewItemRenderer = ( query,
-                         active,
-                         handleClick) => {
+  createNewItemRenderer = (query,
+                           active,
+                           handleClick) => {
     /**
      * @type {FrontElement}
      */
     const {element} = this.props;
-    // console.log(query,
-    //   active,
-    //   handleClick);
-    if(! element.getResponsiveSetting('create')){
+
+    if (!element.getResponsiveSetting('create')) {
       return null;
     }
     const {options} = this.state;
-    if(options.find(option => option.value === query)) {
+    if (options.find(option => option.value === query)) {
       return null
     }
-      let text = element.getResponsiveSetting('create_text') || ''
+    let text = element.getResponsiveSetting('create_text') || ''
     text = text.replace('{{__query__}}', query)
     text = replaceContentWithData(text, element.getCurrentModel().getData())
     return (
@@ -1070,12 +1083,40 @@ class InputSelectWidget extends Component {
       />)
   }
 
+  /**
+   *
+   * @param {
+   *   {
+   *     label: string
+   *     value: string
+   *   }
+   * }value
+   * @returns {string}
+   */
+  tagRender(value) {
+    return value.label || ''
+  }
+
+  /**
+   *
+   * @param item1
+   * @param item2
+   * @returns {boolean}
+   */
+  itemsEqual(item1, item2) {
+    return item1?.value === item2?.value
+  }
+
+  /**
+   *
+   */
+  handleClear = ()=>{
+    this.dispatchFieldValueToStore([], true)
+  }
   render() {
     const element = this.props.element;
     let label = null;
     const settings = this.props.element.getSettings();
-    let value = this.getCurrentLabel();
-
     const {
       label_icon
     } = settings;
@@ -1154,8 +1195,6 @@ class InputSelectWidget extends Component {
     const no_results_text = element.getResponsiveSetting('no_results_text');
 
     const inputProps = {
-      placeholder,
-      className: element.getResponsiveSetting('hide_search') ? 'altrp-hidden' : '',
     };
 
     let input = null;
@@ -1163,48 +1202,51 @@ class InputSelectWidget extends Component {
     let itemsOptions = this.getOptions();
     const position_css_classes = element.getResponsiveSetting('position_css_classes', '', '')
     const position_css_id = this.getContent('position_css_id')
-
+    const selectedItems = this.getValue()
+    const clearButton =
+      selectedItems.length > 0 ? <Button icon="cross" minimal={true} className="altrp-clear" onClick={this.handleClear} /> : undefined;
     input = (
-        <Select
-          inputProps={inputProps}
-          disabled={content_readonly}
-          popoverProps={this.popoverProps}
-          createNewItemFromQuery={element.getResponsiveSetting('create') ? this.createNewItemFromQuery : null}
-          createNewItemRenderer={this.createNewItemRenderer}
-          itemRenderer={(item, {handleClick, modifiers, query}) => {
-            if (!modifiers.matchesPredicate) {
-              return null;
-            }
-            return <MenuItem
-              text={item.label}
-              key={item.value}
-              active={item.value === value}
-              disabled={modifiers.disabled || item.disabled}
-              onClick={handleClick}
-            />
-          }}
-          itemPredicate={(query, item) => {
-            if (query === undefined || query.length === 0) {
-              return true
-            }
-            return `${item?.label?.toLowerCase() || ''}`.indexOf(query.toLowerCase()) >= 0;
-          }}
-          items={itemsOptions}
-          // itemRenderer={({label})=>label}
-          noResults={<MenuItem disabled={true} text={no_results_text}/>}
-          name={this.getName()}
-          onItemSelect={item => this.onItemSelect(item)}
-          id={position_css_id}
-          className={`${position_css_classes} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`}
-        >
-          <Button
-            text={value}
-            disabled={content_readonly}
-            onClick={this.onClick}
-            icon={this.renderLeftIcon()}
-            rightIcon={this.renderRightIcon()}
+      <MultiSelect
+        placeholder={placeholder}
+        inputProps={inputProps}
+        itemsEqual={this.itemsEqual}
+        disabled={content_readonly}
+        popoverProps={this.popoverProps}
+        createNewItemFromQuery={element.getResponsiveSetting('create') ? this.createNewItemFromQuery : null}
+        createNewItemRenderer={this.createNewItemRenderer}
+        itemRenderer={(item, {handleClick, modifiers, query}) => {
+          if (!modifiers.matchesPredicate) {
+            return null;
+          }
+          return <MenuItem
+            text={item.label}
+            key={item.value}
+            disabled={modifiers.disabled || item.disabled}
+            onClick={handleClick}
           />
-        </Select>
+        }}
+        itemPredicate={(query, item) => {
+          if (query === undefined || query.length === 0) {
+            return true
+          }
+          return `${item?.label?.toLowerCase() || ''}`.indexOf(query.toLowerCase()) >= 0;
+        }}
+        items={itemsOptions}
+        // itemRenderer={({label})=>label}
+        noResults={<MenuItem disabled={true} text={no_results_text}/>}
+        name={this.getName()}
+        onItemSelect={this.onItemSelect}
+        selectedItems={selectedItems}
+        tagInputProps={{
+          onRemove: this.handleTagRemove,
+          rightElement: clearButton,
+          // tagProps: getTagProps,
+        }}
+        id={position_css_id}
+        tagRenderer={this.tagRender}
+        className={`${position_css_classes} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`}
+      >
+      </MultiSelect>
     );
 
     return (
@@ -1224,4 +1266,4 @@ class InputSelectWidget extends Component {
   }
 }
 
-export default InputSelectWidget;
+export default InputMultiSelectWidget;

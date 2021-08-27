@@ -52,6 +52,7 @@ import getInputGalleryStyles from "../../../../front-app/src/js/components/helpe
 import {getResponsiveSetting} from "../../../../front-app/src/js/helpers";
 import InputRangeSliderComponent from "./widgets/styled-components/InputRangeSliderComponent";
 import getTemplateStyles from "../../../../front-app/src/js/components/helpers/getTemplateStyles";
+import getInputMultiSelectStyles, {getInputMultiSelectPopoverStyles} from "../../../../front-app/src/js/components/helpers/getInputMultiSelectStyles";
 
 const { connect } = window.reactRedux;
 const {replaceContentWithData} = window.altrpHelpers;
@@ -194,6 +195,15 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
         elementId
       )}}`;
       styles += `${getInputSelectPopoverStyles(settings, elementId)}`
+
+    }break
+    case "input-multi-select":{
+      styles += `.${prefix}${elementId} {${getInputMultiSelectStyles(
+        settings,
+        elementId
+      )}}`;
+      console.log(getInputMultiSelectStyles());
+      styles += `${getInputMultiSelectPopoverStyles(settings, elementId)}`
 
     }break
     case "input-radio": {

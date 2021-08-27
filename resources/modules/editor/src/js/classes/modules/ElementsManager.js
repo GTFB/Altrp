@@ -94,6 +94,8 @@ import InputGallery from "../elements/InputGallery";
 import InputGalleryWidget from "../../components/widgets/InputGalleryWidget";
 import InputRangeSlider from "../elements/InputRangeSlider";
 import InputRangeSliderWidget from "../../components/widgets/InputRangeSliderWidget";
+import InputMultiSelect from "../elements/InputMultiSelect";
+import InputMultiSelectWidget from "../../components/widgets/InputMultiSelectWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -119,6 +121,7 @@ export default class ElementsManger {
     this.elements[InputRadio.getName()] = InputRadio;
     this.elements[InputRangeSlider.getName()] = InputRangeSlider;
     this.elements[InputSelect.getName()] = InputSelect;
+    this.elements[InputMultiSelect.getName()] = InputMultiSelect;
     this.elements[InputSelect2.getName()] = InputSelect2;
     this.elements[InputSlider.getName()] = InputSlider;
     this.elements[InputTextCommon.getName()] = InputTextCommon;
@@ -163,6 +166,7 @@ export default class ElementsManger {
     // this.components[Input.getName()] = InputWidget;
     this.components[InputTextCommon.getName()] = InputTextCommonWidget;
     this.components[InputSelect.getName()] = InputSelectWidget;
+    this.components[InputMultiSelect.getName()] = InputMultiSelectWidget;
     this.components[InputSelect2.getName()] = InputSelect2Widget;
     this.components[InputRadio.getName()] = InputRadioWidget;
     this.components[InputCheckbox.getName()] = InputCheckboxWidget;

@@ -588,7 +588,7 @@ export function marginTopLeftStyled(data = {}, position) {
  * @param {string} style
  * @param {string} important
  */
- export function dimensionsStyled(controller, style, important) {
+ export function dimensionsStyled(controller, style, important = '') {
   if (controller) {
     const unit = controller.unit || "px";
     const left = controller.left;
@@ -714,7 +714,7 @@ export function sliderStyled(controller) {
  * @param {{}} controller
  * @param {string} important
  */
-export function shadowStyled(controller = {}, important) {
+export function shadowStyled(controller = {}, important = '') {
   if (controller) {
     const type = controller.type || "";
     const horizontal = controller.horizontal || 0;
@@ -735,7 +735,7 @@ export function shadowStyled(controller = {}, important) {
  * @param {{}} controller
  * @param {string} important
  */
-export function textShadowStyled(controller = {}, important) {
+export function textShadowStyled(controller = {}, important = '') {
   if (controller) {
     const horizontal = controller.horizontal || 0;
     const vertical = controller.vertical || 0;

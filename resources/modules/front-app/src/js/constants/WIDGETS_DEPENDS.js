@@ -13,6 +13,7 @@ const WIDGETS_DEPENDS = {
   'column': ['section-element-wrapper'],
   'section_widget': ['section-element-wrapper'],
   'input-select': ['blueprint', 'blueprint-select'],
+  'input-multi-select': ['blueprint', 'blueprint-select'],
   'input-radio': ['blueprint'],
   'input-checkbox': ['blueprint'],
   'input-accept': ['blueprint'],
