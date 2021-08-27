@@ -1,10 +1,16 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import L, { CRS } from "leaflet";
+import "leaflet/dist/leaflet.css";
 import axios from "axios";
 import Drawer from "rc-drawer";
 import { createPortal } from "react-dom";
 // import MarkerCluster from "./MarkerCluster";
-import { MapContainer as Map, FeatureGroup, TileLayer } from "react-leaflet";
+import {
+  MapContainer as Map,
+  FeatureGroup,
+  TileLayer,
+  MapContainer
+} from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 // import Control from "react-leaflet-control";
 
@@ -373,7 +379,7 @@ function MapDesigner({
   return (
     <div className="altrp-map" style={style}>
       {isLoading && <Loader />}
-      <Map
+      <MapContainer
         center={center}
         zoom={zoom}
         onclick={handleMapClick}
@@ -381,18 +387,14 @@ function MapDesigner({
         whenReady={whenReady}
         scrollWheelZoom={true}
         touchZoom={true}
-        crs={CRS.EPSG3395}
+        // crs={CRS.EPSG3395}
         doubleClickZoom={true}
         keyboard={interactionOptions.keyboard}
         style={{ height: style.height }}
       >
         <TileLayer
-          // url="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" НЕ УДАЛЯТЬ, НУЖНО ДЛЯ ИНТЕГРАЦИИ
-          url="http://vec{s}.maps.yandex.net/tiles?l=map&v=4.55.2&z={z}&x={x}&y={y}&scale=2&lang=ru_RU"
-          subdomains={["01", "02", "03", "04"]}
-          attribution='<a http="yandex.ru" target="_blank">Яндекс</a>'
-          reuseTiles={true}
-          updateWhenIdle={false}
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {markers !== null && <MarkerCluster markers={markers} />}
 
@@ -425,7 +427,7 @@ function MapDesigner({
             </button>
           </Control>
         )}
-      </Map>
+      </MapContainer>
 
       {createPortal(
         <Drawer
