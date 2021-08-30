@@ -25,18 +25,16 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
   const [startDate, setStartDate] = useState(start);
   const [endDate, setEndDate] = useState(end);
   const isMobile = screen.width <= 480; //Проверка на ширину экрана
-  let navPosition = 'jusitfy-content-end';
+  let navPosition = "jusitfy-content-end";
   /*
    * Получить настройки дашборда для текущего пользователя
    */
 
-  const getSettings = async (id) => {
+  const getSettings = async id => {
     try {
       // Отправляем запрос
       const req = await axios(`/ajax/dashboards/${id}/settings`, {
-        headers: [
-          { key: 'Cache-Control', value: 'no-store' }
-        ]
+        headers: [{ key: "Cache-Control", value: "no-store" }]
       });
       // Если успешно
       if (req.status === 200) {
@@ -54,12 +52,10 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
   /*
    * Получаем настройки и виджеты
    */
-  const getWidgets = async (id) => {
+  const getWidgets = async id => {
     try {
       const req = await axios(`/ajax/dashboards/${id}`, {
-        headers: [
-          { key: 'Cache-Control', value: 'no-store' }
-        ]
+        headers: [{ key: "Cache-Control", value: "no-store" }]
       });
       if (req.status === 200) {
         console.log("req.data DASHBOARDS:>> ", req.data);
@@ -85,14 +81,21 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
         // Если есть, получаем настройки
         const filters = await getSettings(id);
         // Если настройки есть
-        if (filters !== null && filters.hasOwnProperty("startDate") && filters.hasOwnProperty("endDate")) {
+        if (
+          filters !== null &&
+          filters.hasOwnProperty("startDate") &&
+          filters.hasOwnProperty("endDate")
+        ) {
           // Записываем вижеты в состояние с настройками
           setWidgets(
-            myWidgets.map((w) => {
+            myWidgets.map(w => {
               return {
                 ...w,
-                options: { ...JSON.parse(w.options), animated: settings.animated },
-                filter: { ...JSON.parse(w.filter), ...filters },
+                options: {
+                  ...JSON.parse(w.options),
+                  animated: settings.animated
+                },
+                filter: { ...JSON.parse(w.filter), ...filters }
               };
             })
           );
@@ -102,102 +105,117 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
         } else {
           // Возвращаем виджеты с дефолтными настройками
           setWidgets(
-            myWidgets.map((w) => {
+            myWidgets.map(w => {
               return {
                 ...w,
-                options: { ...JSON.parse(w.options), animated: settings.animated },
-                filter: { ...JSON.parse(w.filter), startDate, endDate },
+                options: {
+                  ...JSON.parse(w.options),
+                  animated: settings.animated
+                },
+                filter: { ...JSON.parse(w.filter), startDate, endDate }
               };
             })
           );
           // И записываем настройки
-          axios.post(`/ajax/dashboards/${id}/settings`, { settings: { startDate, endDate } }, {
-            headers: [
-              { key: 'Cache-Control', value: 'no-store' }
-            ]
-          });
+          axios.post(
+            `/ajax/dashboards/${id}/settings`,
+            { settings: { startDate, endDate } },
+            {
+              headers: [{ key: "Cache-Control", value: "no-store" }]
+            }
+          );
         }
       } catch (error) {
-        console.error(error)
-       }
+        console.error(error);
+      }
     },
     [id, settings.animated, startDate, endDate]
   );
 
-  const handleAdd = (widget) => {
+  const handleAdd = widget => {
     setWidgets([widget, ...widgets]);
   };
 
-  const handleRemove = (widget) => {
-    setWidgets(widgets.filter((w) => w.id !== widget.id));
+  const handleRemove = widget => {
+    setWidgets(widgets.filter(w => w.id !== widget.id));
     axios.delete(`/ajax/dashboards/${widget.id}`, {
-      headers: [
-        { key: 'Cache-Control', value: 'no-store' }
-      ]
+      headers: [{ key: "Cache-Control", value: "no-store" }]
     });
   };
 
-  const handleEdit = (widget) => {
-    setWidgets(widgets.map((w) => (w.id === widget.id ? widget : w)));
-    axios.put(`/ajax/dashboards/${widget.id}`, {
-      ...widget,
-      options: JSON.stringify(widget.options),
-      filter: JSON.stringify(widget.filter),
-    }, {
-      headers: [
-        { key: 'Cache-Control', value: 'no-store' }
-      ]
-    });
+  const handleEdit = widget => {
+    setWidgets(widgets.map(w => (w.id === widget.id ? widget : w)));
+    axios.put(
+      `/ajax/dashboards/${widget.id}`,
+      {
+        ...widget,
+        options: JSON.stringify(widget.options),
+        filter: JSON.stringify(widget.filter)
+      },
+      {
+        headers: [{ key: "Cache-Control", value: "no-store" }]
+      }
+    );
   };
 
-  const handleChangeStartDate = (date) => {
+  const handleChangeStartDate = date => {
     setStartDate(date.getTime());
-    axios.post(`/ajax/dashboards/${id}/settings`, {
-      settings: { startDate: date.getTime(), endDate },
-    }, {
-      headers: [
-        { key: 'Cache-Control', value: 'no-store' }
-      ]
-    });
+    axios.post(
+      `/ajax/dashboards/${id}/settings`,
+      {
+        settings: { startDate: date.getTime(), endDate }
+      },
+      {
+        headers: [{ key: "Cache-Control", value: "no-store" }]
+      }
+    );
   };
 
-  const handleChangeEndDate = (date) => {
+  const handleChangeEndDate = date => {
     setEndDate(date.getTime());
-    axios.post(`/ajax/dashboards/${id}/settings`, {
-      settings: { startDate, endDate: date.getTime() },
-    }, {
-      headers: [
-        { key: 'Cache-Control', value: 'no-store' }
-      ]
-    });
+    axios.post(
+      `/ajax/dashboards/${id}/settings`,
+      {
+        settings: { startDate, endDate: date.getTime() }
+      },
+      {
+        headers: [{ key: "Cache-Control", value: "no-store" }]
+      }
+    );
   };
 
   const handleWeek = () => {
     const start = sub(endDate, { weeks: 1 }).getTime();
     setStartDate(start);
-    axios.post(`/ajax/dashboards/${id}/settings`, { settings: { startDate: start, endDate } }, {
-      headers: [
-        { key: 'Cache-Control', value: 'no-store' }
-      ]
-    });
+    axios.post(
+      `/ajax/dashboards/${id}/settings`,
+      { settings: { startDate: start, endDate } },
+      {
+        headers: [{ key: "Cache-Control", value: "no-store" }]
+      }
+    );
   };
 
   const handleMonth = () => {
     const start = sub(endDate, { months: 1 }).getTime();
     setStartDate(start);
-    axios.post(`/ajax/dashboards/${id}/settings`, { settings: { startDate: start, endDate } }, {
-      headers: [
-        { key: 'Cache-Control', value: 'no-store' }
-      ]
-    });
+    axios.post(
+      `/ajax/dashboards/${id}/settings`,
+      { settings: { startDate: start, endDate } },
+      {
+        headers: [{ key: "Cache-Control", value: "no-store" }]
+      }
+    );
   };
 
   const setGlobalOption = (key, value) => {
-    setWidgets(widgets.map(widget => ({
-      ...widget,
-      filter: { ...widget.filter, [key]: value }
-    })));
-  }
+    setWidgets(
+      widgets.map(widget => ({
+        ...widget,
+        filter: { ...widget.filter, [key]: value }
+      }))
+    );
+  };
   /**
    * Навигационное меню, показывающееся на экаранах шириной более 480px
    * */
@@ -241,14 +259,18 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
       <Nav.Item className="nav-button" onClick={handleMonth}>
         Месяц
       </Nav.Item>
-      { globalParameter &&
-        globalParameter.map((param, index) => (<Nav.Item key={index}>
-          <GlobalParameter settings={settings} setGlobalOption={setGlobalOption} parameter={param} />
-        </Nav.Item>))
-      }
+      {globalParameter &&
+        globalParameter.map((param, index) => (
+          <Nav.Item key={index}>
+            <GlobalParameter
+              settings={settings}
+              setGlobalOption={setGlobalOption}
+              parameter={param}
+            />
+          </Nav.Item>
+        ))}
     </Nav>
   );
-
 
   /**
    * Выпадающее меню, показывающееся на экаранах шириной менее 480px
@@ -259,7 +281,9 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
         <ThreeDotsVertical color="#7a7a7b" />
       </Dropdown.Toggle>
       <Dropdown.Menu>
-        <Dropdown.Item onClick={() => setIsShow(true)}>Добавить виджет</Dropdown.Item>
+        <Dropdown.Item onClick={() => setIsShow(true)}>
+          Добавить виджет
+        </Dropdown.Item>
         <Dropdown.Divider />
         <Dropdown.Item onClick={handleWeek}>Неделя</Dropdown.Item>
         <Dropdown.Item onClick={handleMonth}>Месяц</Dropdown.Item>
@@ -293,10 +317,21 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
         </Dropdown.ItemText>
         <Dropdown.Divider />
         {globalParameter &&
-          globalParameter.map((param, index) => (<Dropdown.Item onClick={e => { e.stopPropagation(); e.preventDefault(); }} key={index}>
-            <GlobalParameter settings={settings} setGlobalOption={setGlobalOption} parameter={param} />
-          </Dropdown.Item>))
-        }
+          globalParameter.map((param, index) => (
+            <Dropdown.Item
+              onClick={e => {
+                e.stopPropagation();
+                e.preventDefault();
+              }}
+              key={index}
+            >
+              <GlobalParameter
+                settings={settings}
+                setGlobalOption={setGlobalOption}
+                parameter={param}
+              />
+            </Dropdown.Item>
+          ))}
       </Dropdown.Menu>
     </Dropdown>
   );
@@ -312,19 +347,25 @@ const AltrpDashboards = ({ id, settings, globalParameter }) => {
       </div>
       <div className="altrp-dashboard__widgets">
         {isShow && (
-          <AddWidget settings={settings} id={id} setIsShow={setIsShow} onAdd={handleAdd} />
-        )}
-        {widgets.map((widget) => {
-          return (
-          <CardWidget
+          <AddWidget
             settings={settings}
-            key={widget.id}
-            widget={widget}
-            onDeleted={handleRemove}
-            onEdited={handleEdit}
-            isMobile={isMobile}
+            id={id}
+            setIsShow={setIsShow}
+            onAdd={handleAdd}
           />
-        )})}
+        )}
+        {widgets.map(widget => {
+          return (
+            <CardWidget
+              settings={settings}
+              key={widget.id}
+              widget={widget}
+              onDeleted={handleRemove}
+              onEdited={handleEdit}
+              isMobile={isMobile}
+            />
+          );
+        })}
       </div>
     </div>
   );
