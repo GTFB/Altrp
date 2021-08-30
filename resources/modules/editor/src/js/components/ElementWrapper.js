@@ -30,38 +30,51 @@ import getMenuStyles from "../../../../front-app/src/js/components/helpers/style
 import getBreadcrumbsStyles from "../../../../front-app/src/js/components/helpers/stylesForTheBreadcrumbs";
 import { getHeadingTypeHeadingStyles } from "../../../../front-app/src/js/components/helpers/stylesForTheHeadingTypeHeading";
 import { getHeadingTypeAnimatingStyles } from "../../../../front-app/src/js/components/helpers/stylesForTheHeadingTypeAnimating";
-import {getTextStyles} from "../../../../front-app/src/js/components/helpers/stylesForTheText";
-import {getTableStyles} from "../../../../front-app/src/js/components/helpers/stylesForTheTable";
+import { getTextStyles } from "../../../../front-app/src/js/components/helpers/stylesForTheText";
+import { getTableStyles } from "../../../../front-app/src/js/components/helpers/stylesForTheTable";
 import getInputTextCommonStyles from "../../../../front-app/src/js/components/helpers/getInputTextCommonStyles";
-import {getPostsStyles} from "../../../../front-app/src/js/components/helpers/stylesForThePosts";
+import { getPostsStyles } from "../../../../front-app/src/js/components/helpers/stylesForThePosts";
 import FormComponent from "./widgets/styled-components/FormComponent";
 import MapComponent from "./widgets/styled-components/MapComponent";
 import MapConstructorComponent from "./widgets/styled-components/MapConstructorComponent";
 import AdvancedComponent from "./widgets/styled-components/AdvancedComponent";
-import {getEditor, topOrBottomHover, editorSetCurrentElement} from "../helpers";
+import {
+  getEditor,
+  topOrBottomHover,
+  editorSetCurrentElement
+} from "../helpers";
 import TabsSwitcherComponent from "./widgets/styled-components/TabsSwitcherComponent";
 import ImageLightboxComponent from "./widgets/styled-components/ImageLightboxComponent";
 import InputDateComponent from "./widgets/styled-components/InputDateComponent";
 import DatePickerComponent from "./widgets/styled-components/DatePickerComponent";
 import InputCheckboxComponent from "./widgets/styled-components/InputCheckboxComponent";
-import getInputSelectStyles, {getInputSelectPopoverStyles} from "../../../../front-app/src/js/components/helpers/getInputSelectStyles";
+import getInputSelectStyles, {
+  getInputSelectPopoverStyles
+} from "../../../../front-app/src/js/components/helpers/getInputSelectStyles";
 import InputRadioComponent from "./widgets/styled-components/InputRadioComponent";
 import InputSliderComponent from "./widgets/styled-components/InputSliderComponent";
 import getInputFileStyles from "../../../../front-app/src/js/components/helpers/getInputFileStyles";
 import getInputGalleryStyles from "../../../../front-app/src/js/components/helpers/getInputGalleryStyles";
-import {getResponsiveSetting} from "../../../../front-app/src/js/helpers";
+import { getResponsiveSetting } from "../../../../front-app/src/js/helpers";
 import InputRangeSliderComponent from "./widgets/styled-components/InputRangeSliderComponent";
 import getTemplateStyles from "../../../../front-app/src/js/components/helpers/getTemplateStyles";
-import getInputMultiSelectStyles, {getInputMultiSelectPopoverStyles} from "../../../../front-app/src/js/components/helpers/getInputMultiSelectStyles";
+import getInputMultiSelectStyles, {
+  getInputMultiSelectPopoverStyles
+} from "../../../../front-app/src/js/components/helpers/getInputMultiSelectStyles";
 
 const { connect } = window.reactRedux;
-const {replaceContentWithData} = window.altrpHelpers;
-const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, elementId, settings, element})=>{
-  let styles = '';
+const { replaceContentWithData } = window.altrpHelpers;
+const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
+  elementName,
+  elementId,
+  settings,
+  element
+}) => {
+  let styles = "";
   let prefix = "altrp-element";
   switch (elementName) {
     case "image-lightbox":
-      styles += ImageLightboxComponent(settings,elementId);
+      styles += ImageLightboxComponent(settings, elementId);
       break;
     case "diagram":
       styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`;
@@ -92,7 +105,10 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
       break;
     case "section_widget":
     case "section":
-      styles += `.${prefix}${elementId} {${SectionWidgetComponent(settings, element.children.length)}}`;
+      styles += `.${prefix}${elementId} {${SectionWidgetComponent(
+        settings,
+        element.children.length
+      )}}`;
       break;
     case "column":
       styles += `.${prefix}${elementId} {${ColumnComponent(settings)}}`;
@@ -101,145 +117,153 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
       styles += `.${prefix}${elementId} {${DropbarWidgetComponent(settings)}}`;
       break;
     case "dashboard":
-      styles+=`.${prefix}${elementId} {${DashboardComponent(settings)}}`;
+      styles += `.${prefix}${elementId} {${DashboardComponent(settings)}}`;
       break;
     case "image":
-      styles+=getImageStyles(settings,elementId);
+      styles += getImageStyles(settings, elementId);
       break;
     case "tabs":
-      styles+=getTabsStyles(settings, elementId);
+      styles += getTabsStyles(settings, elementId);
       break;
     case "menu":
-      styles+=getMenuStyles(settings,elementId);
+      styles += getMenuStyles(settings, elementId);
       break;
     case "breadcrumbs":
-      styles+=getBreadcrumbsStyles(settings,elementId);
+      styles += getBreadcrumbsStyles(settings, elementId);
       break;
-    case 'heading': {
-      styles += getHeadingTypeHeadingStyles(settings, elementId);
-    }
+    case "heading":
+      {
+        styles += getHeadingTypeHeadingStyles(settings, elementId);
+      }
       break;
-    case 'heading-type-animating': {
-      styles += getHeadingTypeAnimatingStyles(settings, elementId);
-    }
+    case "heading-type-animating":
+      {
+        styles += getHeadingTypeAnimatingStyles(settings, elementId);
+      }
       break;
-    case 'text': {
-      styles += getTextStyles(settings, elementId);
-    }
+    case "text":
+      {
+        styles += getTextStyles(settings, elementId);
+      }
       break;
-    case 'table': {
-      styles += getTableStyles(settings, elementId);
-    }
+    case "table":
+      {
+        styles += getTableStyles(settings, elementId);
+      }
       break;
-    case 'posts': {
-      styles += getPostsStyles(settings, elementId);
-    }
+    case "posts":
+      {
+        styles += getPostsStyles(settings, elementId);
+      }
       break;
-    case "input-select2": {
-
-      styles += `.${prefix}${elementId} {${FormComponent.FormComponent(
-        settings,
-        elementId
-      )}}`;
-      //select2 options style
-      styles += `${FormComponent.select2Options(settings, elementId)}}`;
-    }
+    case "input-select2":
+      {
+        styles += `.${prefix}${elementId} {${FormComponent.FormComponent(
+          settings,
+          elementId
+        )}}`;
+        //select2 options style
+        styles += `${FormComponent.select2Options(settings, elementId)}}`;
+      }
       break;
-    case "input-date": {
-      styles += InputDateComponent(
-        settings,
-        elementId,
-        prefix
-      )
+    case "input-date":
+      {
+        styles += InputDateComponent(settings, elementId, prefix);
 
-      styles += `${DatePickerComponent(
-        settings,
-        elementId,
-      )}`;
+        styles += `${DatePickerComponent(settings, elementId)}`;
+      }
+      break;
+    case "input-checkbox":
+      {
+        styles += `.${prefix}${elementId} { ${InputCheckboxComponent(
+          settings,
+          elementId
+        )}}`;
+      }
+      break;
+    case "input-slider":
+      {
+        styles += `.${prefix}${elementId} { ${InputSliderComponent(settings)}}`;
+      }
+      break;
+    case "input-range-slider":
+      {
+        styles += `.${prefix}${elementId} { ${InputRangeSliderComponent(
+          settings
+        )}}`;
+      }
+      break;
+    case "input-text-common":
+      {
+        styles += `.${prefix}${elementId} {${getInputTextCommonStyles(
+          settings,
+          elementId
+        )}}`;
+      }
+      break;
 
-    }break
-    case "input-checkbox": {
-      styles += `.${prefix}${elementId} { ${InputCheckboxComponent(
-        settings,
-        elementId
-      )}}`;
-
-    }break
-    case "input-slider": {
-      styles += `.${prefix}${elementId} { ${InputSliderComponent(
-        settings
-      )}}`;
-    }break
-    case "input-range-slider": {
-      styles += `.${prefix}${elementId} { ${InputRangeSliderComponent(
-        settings
-      )}}`;
-    }break
-    case "input-text-common":{
-      styles += `.${prefix}${elementId} {${getInputTextCommonStyles(
-        settings,
-        elementId
-      )}}`;
-
-    }break
-
-    case "template":{
-      styles += `.${prefix}${elementId} {${getTemplateStyles(
-        settings,
-        elementId
-      )}}`;
-    }break
-    case "input-select":{
-      styles += `.${prefix}${elementId} {${getInputSelectStyles(
-        settings,
-        elementId
-      )}}`;
-      styles += `${getInputSelectPopoverStyles(settings, elementId)}`
-
-    }break
-    case "input-multi-select":{
-      styles += `.${prefix}${elementId} {${getInputMultiSelectStyles(
-        settings,
-        elementId
-      )}}`;
-      console.log(getInputMultiSelectStyles());
-      styles += `${getInputMultiSelectPopoverStyles(settings, elementId)}`
-
-    }break
+    case "template":
+      {
+        styles += `.${prefix}${elementId} {${getTemplateStyles(
+          settings,
+          elementId
+        )}}`;
+      }
+      break;
+    case "input-select":
+      {
+        styles += `.${prefix}${elementId} {${getInputSelectStyles(
+          settings,
+          elementId
+        )}}`;
+        styles += `${getInputSelectPopoverStyles(settings, elementId)}`;
+      }
+      break;
+    case "input-multi-select":
+      {
+        styles += `.${prefix}${elementId} {${getInputMultiSelectStyles(
+          settings,
+          elementId
+        )}}`;
+        console.log(getInputMultiSelectStyles());
+        styles += `${getInputMultiSelectPopoverStyles(settings, elementId)}`;
+      }
+      break;
     case "input-radio": {
-      styles += InputRadioComponent(
-        settings,
-        elementId,
-        prefix
-      );
-      break
+      styles += InputRadioComponent(settings, elementId, prefix);
+      break;
     }
     case "input-text":
     case "input-password":
     case "input-number":
     case "input-email":
     case "input-tel":
-    case "input-file":{
-      styles += `.${prefix}${elementId} {${getInputFileStyles(
-        settings,
-        elementId
-      )}}`;
-    }break
-    case "input-gallery":{
-      styles += `.${prefix}${elementId} {${getInputGalleryStyles(
-        settings,
-        elementId
-      )}}`;
-    }break
+    case "input-file":
+      {
+        styles += `.${prefix}${elementId} {${getInputFileStyles(
+          settings,
+          elementId
+        )}}`;
+      }
+      break;
+    case "input-gallery":
+      {
+        styles += `.${prefix}${elementId} {${getInputGalleryStyles(
+          settings,
+          elementId
+        )}}`;
+      }
+      break;
     case "input-image-select":
     case "input-accept":
     case "input-textarea":
-    case "input-wysiwyg": {
-      styles += `.${prefix}${elementId} {${FormComponent.FormComponent(
-        settings,
-        elementId
-      )}}`;
-    }
+    case "input-wysiwyg":
+      {
+        styles += `.${prefix}${elementId} {${FormComponent.FormComponent(
+          settings,
+          elementId
+        )}}`;
+      }
       break;
     case "map":
       styles += `.${prefix}${elementId} {${MapComponent(settings)}}`;
@@ -252,11 +276,14 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({elementName, ele
     settings
   )}}`;
   let element_css_editor = getResponsiveSetting(settings, "element_css_editor");
-  if(_.isString(element_css_editor)){
-    styles+=element_css_editor.replace(/__selector__/g, `${prefix}${elementId}`)
+  if (_.isString(element_css_editor)) {
+    styles += element_css_editor.replace(
+      /__selector__/g,
+      `${prefix}${elementId}`
+    );
   }
   return styles;
-}}`
+}}`;
 
 class ElementWrapper extends Component {
   constructor(props) {
@@ -544,9 +571,9 @@ class ElementWrapper extends Component {
     if (this.props.element.getType() === "widget") {
       classes += ` altrp-widget_${this.props.element.getName()}`;
     }
-    if(this.props.element.getResponsiveSetting('css_class')){
+    if (this.props.element.getResponsiveSetting("css_class")) {
       classes += ` ${replaceContentWithData(
-        this.props.element.getResponsiveSetting('css_class'),
+        this.props.element.getResponsiveSetting("css_class"),
         this.props.element.getCurrentModel().getData()
       )} `;
     }
@@ -621,9 +648,9 @@ class ElementWrapper extends Component {
       case "nav":
         WrapperComponent = NavComponent;
         break;
-      case "dashboards":
-        WrapperComponent = DashboardComponent;
-        break;
+      // case "dashboard":
+      // WrapperComponent = DashboardComponent;
+      // break;
     }
 
     return elementHideTrigger &&
@@ -691,14 +718,15 @@ class ElementWrapper extends Component {
           settings={this.props.element.getSettings()}
           elementName={this.props.element.getName()}
           element={this.props.element}
-          elementId={this.elementId}/>
+          elementId={this.elementId}
+        />
       </WrapperComponent>
     );
   }
 
   chooseElement(e) {
     e.stopPropagation();
-    if(e.target.closest('button')){
+    if (e.target.closest("button")) {
       e.preventDefault();
     }
     contextMenu.hideAll();
@@ -735,7 +763,7 @@ function mapStateToProps(state) {
     // hideTriggers: state.hideTriggers,
     currentScreen: state.currentScreen,
     globalStyles: state.globalStyles,
-    historyStore: state.historyStore,
+    historyStore: state.historyStore
   };
 }
 
