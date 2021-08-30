@@ -12,13 +12,13 @@ export default async function  loadSticky() {
       switch($this.data('altrp-sticky')){
         case 'top':{
           stickyOptions.topSpacing = $this.data('altrp-sticky-spacing') || 0
+          $this.sticky(stickyOptions)
         }break;
         case 'bottom':{
           stickyOptions.bottomSpacing = $this.data('altrp-sticky-spacing') || 0
         }break;
       }
       console.log($this);
-      $this.sticky(stickyOptions)
       $this.attr('data-altrp-sticky-loaded', true)
       const frontAppContainer = document.getElementById('front-app');
       frontAppContainer.addEventListener('scroll', ()=>{

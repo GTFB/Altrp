@@ -825,23 +825,32 @@ export function advancedTabControllers(element) {
     tab: TAB_ADVANCED,
   })
 
+  const stickyOptions = [
+    {
+      label: 'None',
+      value: '',
+    },
+    {
+      label: 'Top',
+      value: 'top',
+    },
+    // {
+    //   label: 'Bottom',
+    //   value: 'bottom',
+    // },
+  ]
+
+  if(element.getType() === 'widget'){
+    stickyOptions.push({
+      label: 'Top in Column',
+      value: 'column_top',
+    })
+  }
+
   element.addControl('sticky', {
     type: CONTROLLER_SELECT,
     label: 'Sticky Type',
-    options:[
-      {
-        label: 'None',
-        value: '',
-      },
-      {
-        label: 'Top',
-        value: 'top',
-      },
-      // {
-      //   label: 'Bottom',
-      //   value: 'bottom',
-      // },
-    ],
+    options:stickyOptions,
   })
 
   element.addControl('st_spacing', {
