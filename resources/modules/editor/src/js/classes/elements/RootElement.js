@@ -26,6 +26,7 @@ import {
   import Repeater from "../Repeater";
   import SaveImportModule from "../modules/SaveImportModule";
   import {actionsControllers} from "../../decorators/actions-controllers";
+  import {getTemplateDataStorage, getTemplateType} from "../../helpers";
 
 class RootElement extends BaseElement {
   constructor() {
@@ -127,6 +128,9 @@ class RootElement extends BaseElement {
 
     this.startControlSection('popup_section', {
       label: 'Popup',
+      conditionsCallback: ()=>{
+        return getTemplateType() === 'popup'
+      }
     });
 
     this.addControl("type_popup", {
@@ -148,6 +152,9 @@ class RootElement extends BaseElement {
 
     this.startControlSection('popup_layout_section',{
       label: 'Popup layout',
+      conditionsCallback: ()=>{
+        return getTemplateType() === 'popup'
+      },
     });
 
     this.addControl("width_popup_layout", {
@@ -313,6 +320,10 @@ class RootElement extends BaseElement {
     this.startControlSection('popup_close_icon_section', {
       conditions: {
         'switcher_close_button_popup_layout': true,
+      },
+
+      conditionsCallback: ()=>{
+        return getTemplateType() === 'popup'
       },
       label: 'Custom close button',
     });

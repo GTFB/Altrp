@@ -81,6 +81,10 @@ class TemplateDataStorage extends BaseModule {
     }
   }
 
+  /**
+   *
+   * @returns {BaseElement}
+   */
   getRootElement() {
     return this.rootElement;
   }

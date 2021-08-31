@@ -1,5 +1,5 @@
 console.log('FIRST SCRIPT: ', performance.now());
-console.log('FIRST SCRIPT: ', performance.now());
+import loadPageActions from "./js/functions/actions/load-page-actions";
 import loadDepends from "./js/functions/load-depends";
 import loadFontsManager from "./js/functions/load-fonts";
 import  queryString from 'query-string';
@@ -44,7 +44,13 @@ window.loadingCallback = function loadingCallback() {
     console.log('h-altrp LOADED: ', performance.now());
 
     const hAltrpLoadedEvent = new Event('h-altrp-loaded');
-    window.dispatchEvent(hAltrpLoadedEvent);  }
+    window.dispatchEvent(hAltrpLoadedEvent);
+
+    /**
+     * Загружаем все действия привязанные к загрузке страницы
+     */
+    loadPageActions()
+  }
 }
 
 window.sSr = false;

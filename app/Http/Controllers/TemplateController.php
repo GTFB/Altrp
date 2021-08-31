@@ -215,10 +215,13 @@ class TemplateController extends Controller
     } else {
       $template = Template::find( $id );
     }
+
     if( ! $template ){
       return  response()->json( [ 'message' => 'Template not Found', 'success' => false], 404, [], JSON_UNESCAPED_UNICODE);
     }
-    return response()->json( $template->toArray() );
+    $res = $template->toArray();
+    $res['template_type'] = $template->template_type;
+    return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE);
   }
 
   /**

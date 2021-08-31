@@ -225,7 +225,6 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
           settings,
           elementId
         )}}`;
-        console.log(getInputMultiSelectStyles());
         styles += `${getInputMultiSelectPopoverStyles(settings, elementId)}`;
       }
       break;

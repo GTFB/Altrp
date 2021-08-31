@@ -368,6 +368,7 @@ class ElementWrapper extends Component {
     if(! _.isEmpty(element.getResponsiveSetting('sticky'))){
       wrapperProps["data-altrp-sticky"] = element.getResponsiveSetting('sticky');
       wrapperProps["data-altrp-sticky-spacing"] = element.getResponsiveSetting('st_spacing');
+      wrapperProps["data-margin-top"] = element.getResponsiveSetting('st_spacing') || 0;
     }
     wrapperProps["data-altrp-id"] = element.getId();
     return  (

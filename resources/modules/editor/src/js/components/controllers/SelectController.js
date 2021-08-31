@@ -19,7 +19,12 @@ class SelectController extends Component {
      */
     const responsive = _.get(props, 'responsive', true);
     value = value || '';
-    const options = _.cloneDeep(this.props.options) || [];
+    let options;
+    if(_.isFunction(this.props.options)){
+      options = this.props.options()
+    } else {
+      options = _.cloneDeep(this.props.options) || [];
+    }
     if (props.nullable) {
       options.unshift({ label: '', value: '', })
     }
@@ -48,6 +53,10 @@ class SelectController extends Component {
       return '';
     }
 
+    let options = this.state.options
+    if(_.isFunction(this.props.options)) {
+      options = this.props.options()
+    }
     let value = this.getSettings(this.props.controlId) || this.getDefaultValue();
     return <div className="controller-container controller-container_select">
       <div className="controller-container__label control-select__label">
@@ -57,7 +66,7 @@ class SelectController extends Component {
       <div className="control-container_select-wrapper">
 
         <select className="control-select control-field" value={value || ''} onChange={this.changeValue}>
-          {this.state.options.map(option => {
+          {options.map(option => {
             return <option value={option.value} key={option.value}>{option.label}</option> })}
         </select>
       </div>
