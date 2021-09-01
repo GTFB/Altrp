@@ -1,3 +1,4 @@
+const {getResponsiveSetting, iconsManager} = window.altrpHelpers
 import { Scrollbars } from "react-custom-scrollbars";
 import AltrpOffcanvas from "./altrp-offcanvas/AltrpOffcanvas";
 import { togglePopup } from "../store/popup-trigger/actions";
@@ -18,7 +19,6 @@ class FrontPopup extends Component {
       ),
       isShownOnScroll: false
     };
-
     this.close = this.close.bind(this);
   }
 
@@ -83,12 +83,7 @@ class FrontPopup extends Component {
 
   componentDidUpdate(prevProps) {
     let { popupTrigger } = this.props;
-    const { on_scroll, to_element } = _.get(
-      this.props,
-      "template.triggers.data",
-      {}
-    );
-    const { isShownOnScroll } = this.state;
+
     switch (this.state.rootElement.getSettings("type_popup", "popup")) {
       case "popup":
         // if (on_scroll && !isShownOnScroll && on_scroll.size <= this.props.scrollPosition.top * 100) {
@@ -172,11 +167,27 @@ class FrontPopup extends Component {
     const rootElement = this.state.rootElement;
     rootElement.popupGUID = _.get(this.props, "template.guid");
     const rootElementSettings = rootElement.getSettings("");
+    let  popup_close_icon =  rootElement.getResponsiveSetting('popup_close_icon')
+    let  popup_close_icon_width_size =  rootElement.getResponsiveSetting('popup_close_icon_width_size')
+    let  popup_close_icon_height_size =  rootElement.getResponsiveSetting('popup_close_icon_height_size')
+    if(! popup_close_icon_height_size){
+      popup_close_icon_height_size = '50px'
+    } else {
+      popup_close_icon_height_size = `${popup_close_icon_height_size.size || '0'}${popup_close_icon_height_size.unit}`
+    }
+
+    if(! popup_close_icon_width_size){
+      popup_close_icon_width_size = '50px'
+    } else {
+      popup_close_icon_width_size = `${popup_close_icon_width_size.size || '0'}${popup_close_icon_width_size.unit}`
+    }
+
     const rootElementId = rootElement.getId();
+    const close_context = rootElement.getResponsiveSetting( 'close_context')
 
     classes.push(`${rootElementId}-app-popup`);
     const overlayCondition =
-      rootElementSettings.overlay_close_popup_layout || true;
+      rootElement.getResponsiveSetting('overlay_close_popup_layout');
 
     if (overlayCondition) {
       classes.push("app-popup-overlay");
@@ -222,55 +233,9 @@ class FrontPopup extends Component {
         classes.push("app-popup-vertical-center");
     }
 
-    // let styleButtonClose = {};
-
-    // if(rootElementSettings.popup_close_button_height_size && rootElementSettings.popup_close_button_height_size.size)
-    //   styleButtonClose.height = rootElementSettings.popup_close_button_height_size.size + rootElementSettings.popup_close_button_height_size.unit;
-    // if(rootElementSettings.popup_close_button_width_size && rootElementSettings.popup_close_button_width_size.size)
-    //   styleButtonClose.width = rootElementSettings.popup_close_button_width_size.size + rootElementSettings.popup_close_button_width_size.unit;
-
-    // if(rootElementSettings.popup_close_button_padding) {
-    //   styleButtonClose.paddingTop = rootElementSettings.popup_close_button_padding.top + rootElementSettings.popup_close_button_padding.unit;
-    //   styleButtonClose.paddingRight = rootElementSettings.popup_close_button_padding.right + rootElementSettings.popup_close_button_padding.unit;
-    //   styleButtonClose.paddingBottom = rootElementSettings.popup_close_button_padding.bottom + rootElementSettings.popup_close_button_padding.unit;
-    //   styleButtonClose.paddingLeft = rootElementSettings.popup_close_button_padding.left + rootElementSettings.popup_close_button_padding.unit;
-    // }
-
-    // if(rootElementSettings.popup_close_button_border_type && rootElementSettings.popup_close_button_border_type !== "none") {
-    //   styleButtonClose.borderTopWidth = rootElementSettings.popup_close_button_border_width.top + rootElementSettings.popup_close_button_border_width.unit;
-    //   styleButtonClose.borderRightWidth = rootElementSettings.popup_close_button_border_width.right + rootElementSettings.popup_close_button_border_width.unit;
-    //   styleButtonClose.borderBottomWidth = rootElementSettings.popup_close_button_border_width.bottom + rootElementSettings.popup_close_button_border_width.unit;
-    //   styleButtonClose.borderLeftWidth = rootElementSettings.popup_close_button_border_width.left + rootElementSettings.popup_close_button_border_width.unit;
-    //   styleButtonClose.borderStyle = rootElementSettings.popup_close_button_border_type;
-    //   if(rootElementSettings.popup_close_button_border_color && rootElementSettings.popup_close_button_border_color.colorPickedHex)
-    //     styleButtonClose.borderColor = rootElementSettings.popup_close_button_border_color.colorPickedHex;
-    // }
-
-    // if(rootElementSettings.popup_close_button_border_radius) {
-    //   let borderRadiusTop = (rootElementSettings.popup_close_button_border_radius.top ? rootElementSettings.popup_close_button_border_radius.top : "0") + rootElementSettings.popup_close_button_border_radius.unit;
-    //   let borderRadiusRight = (rootElementSettings.popup_close_button_border_radius.right ? rootElementSettings.popup_close_button_border_radius.right : "0") + rootElementSettings.popup_close_button_border_radius.unit;
-    //   let borderRadiusBottom = (rootElementSettings.popup_close_button_border_radius.bottom ? rootElementSettings.popup_close_button_border_radius.bottom : "0") + rootElementSettings.popup_close_button_border_radius.unit;
-    //   let borderRadiusLeft = (rootElementSettings.popup_close_button_border_radius.left ?  rootElementSettings.popup_close_button_border_radius.left  : "0")+ rootElementSettings.popup_close_button_border_radius.unit;
-    //   styleButtonClose.borderRadius = `${borderRadiusTop} ${borderRadiusRight} ${borderRadiusBottom} ${borderRadiusLeft}`;
-    // }
-
-    // if(rootElementSettings.popup_close_button_background_color) {
-    //   styleButtonClose.backgroundColor = rootElementSettings.popup_close_button_background_color.colorPickedHex;
-    // }
-
-    // if(rootElementSettings.popup_close_button_box_shadow) {
-    //   let type = rootElementSettings.popup_close_button_box_shadow.type;
-    //   let offsetX = rootElementSettings.popup_close_button_box_shadow.horizontal;
-    //   let offsetY = rootElementSettings.popup_close_button_box_shadow.vertical;
-    //   let blurRadius = rootElementSettings.popup_close_button_box_shadow.blur;
-    //   let spreadRadius = rootElementSettings.popup_close_button_box_shadow.spread;
-    //   let color = rootElementSettings.popup_close_button_box_shadow.colorPickedHex;
-    //   styleButtonClose.boxShadow = `${type} ${offsetX}px ${offsetY}px ${blurRadius}px ${spreadRadius} ${color}`;
-    // }
-
     let content = "";
     const closeButtonCondition =
-      rootElementSettings.switcher_close_button_popup_layout || true;
+      rootElement.getResponsiveSetting('switcher_close_button_popup_layout');
     let { popup_close_icon_alignment } = rootElementSettings;
     popup_close_icon_alignment = popup_close_icon_alignment || "right";
     const closeButton = closeButtonCondition ? (
@@ -287,8 +252,10 @@ class FrontPopup extends Component {
         }}
       >
         <AltrpImage
-          image={rootElementSettings.popup_close_icon}
+          image={popup_close_icon}
           lazy={false}
+          width={popup_close_icon_width_size}
+          height={popup_close_icon_height_size}
           default={{
             assetType: "icon",
             name: "deleteOne",
@@ -297,14 +264,27 @@ class FrontPopup extends Component {
           className="popup-close-button-icon"
         />
       </button>
-    ) : null;
+    ) : (
+      <button
+        className={
+          "popup-close-button" +
+          (popup_close_icon_alignment === "right"
+            ? " popup-close-button-right"
+            : " popup-close-button-left")
+        }
+        onClick={() => {
+          this.setState({ isVisible: false });
+          this.props.closePopup();
+        }}
+      >
+        {iconsManager().renderIcon('times' ,{
+          width:popup_close_icon_width_size,
+          height:popup_close_icon_height_size,
+          className: "popup-close-button-icon"
+        })}
+      </button>
+    );
 
-    let maxHeight = "100%";
-
-    if (rootElementSettings.height_popup_layout === "custom") {
-      maxHeight =
-        Number(rootElementSettings.height_custom_popup_layout.size) || 0;
-    }
 
     const popup = isVisible ? (
       <FrontPopupWrapper
@@ -312,24 +292,23 @@ class FrontPopup extends Component {
         className={classes.join(" ")}
         onClick={() => {
           if (
-            rootElementSettings.popup_close_click_on_dark_area === undefined ||
-            rootElementSettings.popup_close_click_on_dark_area
+            overlayCondition
           ) {
             this.setState({ isVisible: false });
             this.props.closePopup();
           }
         }}
       >
+        {close_context === 'window' && closeButton}
         <div
           className="popup-window"
           // style={{ top: positioning_custom_top.size + positioning_custom_top.unit}}
           onClick={e => e.stopPropagation()}
         >
-          {closeButton}
+          {close_context !== 'window' && closeButton}
 
           <Scrollbars
             autoHide
-            autoHeight
             renderThumbHorizontal={props => (
               <div {...props} className="popup-scrollbar-vertical" />
             )}
@@ -340,8 +319,6 @@ class FrontPopup extends Component {
               <div {...props} className="popup-scrollbar-track-vertical" />
             )}
             className="popup-scrollbar"
-            autoHeightMin={100}
-            autoHeightMax={maxHeight}
             autoHideTimeout={1000}
             autoHideDuration={200}
           >
@@ -356,7 +333,7 @@ class FrontPopup extends Component {
         </div>
       </FrontPopupWrapper>
     ) : null;
-    const type = rootElementSettings.type_popup || "popup";
+    const type = rootElement.getResponsiveSetting('type_popup') || "popup";
     switch (type) {
       case "popup":
         content = popup;

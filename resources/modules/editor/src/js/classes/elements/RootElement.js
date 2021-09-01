@@ -157,6 +157,49 @@ class RootElement extends BaseElement {
       },
     });
 
+    this.addControl('heading_position_popup_layout', {
+      type: CONTROLLER_HEADING,
+      label: "Position"
+    });
+
+    this.addControl('horizontal_position_popup_layout', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Horizontal',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ],
+    });
+
+    this.addControl('vertical_position_popup_layout', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Vertical',
+      options: [
+        {
+          icon: 'block_top',
+          value: 'top',
+        },
+        {
+          icon: 'block_horiz',
+          value: 'center',
+        },
+        {
+          icon: 'block_bottom',
+          value: 'bottom',
+        },
+      ],
+    });
+
     this.addControl("width_popup_layout", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
@@ -226,58 +269,17 @@ class RootElement extends BaseElement {
           label: "bottom"
         }
       ],
-      rules: {
-        '.{{ID}}-app-popup .popup-window{{STATE}}': 'justify-content: {{VALUE}};',
-      },
     });
 
-    this.addControl('heading_position_popup_layout', {
-      type: CONTROLLER_HEADING,
-      label: "Position"
+    this.addControl('layout_bg', {
+      type: CONTROLLER_COLOR,
+      label: "Layout Background",
     });
 
-    this.addControl('horizontal_position_popup_layout', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Horizontal',
-      options: [
-        {
-          icon: 'left',
-          value: 'left',
-        },
-        {
-          icon: 'center',
-          value: 'center',
-        },
-        {
-          icon: 'right',
-          value: 'right',
-        },
-      ],
-    });
-
-    this.addControl('vertical_position_popup_layout', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Vertical',
-      options: [
-        {
-          icon: 'left',
-          value: 'top',
-        },
-        {
-          icon: 'center',
-          value: 'center',
-        },
-        {
-          icon: 'right',
-          value: 'bottom',
-        },
-      ],
-    });
 
     this.addControl('heading_close_popup_layout', {
       type: CONTROLLER_HEADING,
       label: "Close",
-      default: true
     });
 
     this.addControl('overlay_close_popup_layout', {
@@ -289,7 +291,15 @@ class RootElement extends BaseElement {
     this.addControl('switcher_close_button_popup_layout', {
       type: CONTROLLER_SWITCHER,
       label: 'Custom close button',
-      default: true
+    });
+
+    this.addControl("popup_close_icon", {
+      type: CONTROLLER_MEDIA,
+      conditions: {
+        'switcher_close_button_popup_layout': true,
+      },
+
+      label: 'Close icon'
     });
 
     // this.addControl('icon_close_button_popup_layout', {
@@ -318,9 +328,6 @@ class RootElement extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('popup_close_icon_section', {
-      conditions: {
-        'switcher_close_button_popup_layout': true,
-      },
 
       conditionsCallback: ()=>{
         return getTemplateType() === 'popup'
@@ -328,49 +335,48 @@ class RootElement extends BaseElement {
       label: 'Custom close button',
     });
 
-    this.addControl("popup_close_icon", {
-      type: CONTROLLER_MEDIA,
-      label: 'Close icon'
-    });
-
-    this.addControl('popup_close_icon_alignment', {
-      type: CONTROLLER_CHOOSE,
-      label: 'alignment',
+    this.addControl('close_context', {
+      type: CONTROLLER_SELECT,
+      label: 'Close Button Position Context',
       options: [
         {
-          icon: 'left',
-          value: 'left',
+          label: 'Popup',
+          value: 'popup',
         },
         {
-          icon: 'right',
-          value: 'right',
+          label: 'Window',
+          value: 'window',
         },
       ],
     });
 
-    this.addControl('popup_close_icon_height_size', {
+    this.addControl('close_right', {
       type: CONTROLLER_SLIDER,
-      label: 'height icon',
-      default: {
-        size: 25,
-        unit: 'px',
-      },
+      label: 'Right',
       units: [
         'px',
         '%',
         'vh',
       ],
-      max: 1000,
-      min: 0,
+      max: 100,
+      min: -100,
+    });
+
+    this.addControl('close_top', {
+      type: CONTROLLER_SLIDER,
+      label: 'top',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: -100,
     });
 
     this.addControl('popup_close_icon_width_size', {
       type: CONTROLLER_SLIDER,
-      label: 'width icon',
-      default: {
-        size: 25,
-        unit: 'px',
-      },
+      label: 'Width',
       units: [
         'px',
         '%',
@@ -379,10 +385,49 @@ class RootElement extends BaseElement {
       max: 1000,
       min: 0,
     });
-    this.addControl('popup_close_click_on_dark_area', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Close click on a dark area',
+
+    this.addControl('popup_close_icon_height_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Height',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 1000,
+      min: 0,
     });
+
+    this.addControl('close_pa', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Button Padding',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+    });
+
+
+    this.endControlSection();
+
+    this.startControlSection('button_styles', {
+      label: 'Close Button',
+      tab: TAB_STYLE,
+    });
+
+    this.addControl("close_c", {
+      type: CONTROLLER_COLOR,
+      label: "Button Background Color",
+    });
+
+    this.addControl("icon_fill", {
+      type: CONTROLLER_COLOR,
+      label: "Icon Fill",
+    });
+
     this.endControlSection();
 
     this.startControlSection('offcanvas_section', {
@@ -402,10 +447,6 @@ class RootElement extends BaseElement {
       ],
       max: 1200,
       min: 0,
-      rules: {
-        '.{{ID}}-altrp-offcanvas .altrp-offcanvas-vertical{{STATE}}': 'width: {{SIZE}}{{UNIT}};',
-        '.{{ID}}-altrp-offcanvas .altrp-offcanvas-horizontal{{STATE}}': 'height: {{SIZE}}{{UNIT}};'
-      },
     });
 
     // this.addControl('overlay_offcanvas', {
@@ -3758,7 +3799,7 @@ class RootElement extends BaseElement {
         'switcher_close_button_popup_layout': true,
       },
       tab: TAB_STYLE,
-      label: 'Custom close button',
+      label: 'Custom Close',
     });
 
     this.addControl('popup_close_button_padding', {

@@ -21,7 +21,7 @@ export function doTemplateAction(templateData = {}){
   if(! _.isArray(page_load_actions)){
     return
   }
-  console.log(window.altrpHelpers);
+
   let element
   import(/* webpackChunkName: 'FrontElement' */'../../classes/FrontElement').then(module=>{
     const FrontElement = module.default

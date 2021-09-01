@@ -71,6 +71,7 @@ class AltrpImage extends Component {
     const placeholderStyles = {};
 
     let width = this.props.width;
+
     let height = this.props.height;
     if (! isSSR() && this.props.image instanceof File) {
       media = this.props.image
