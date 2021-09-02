@@ -214,6 +214,10 @@ class SimpleElementWrapper extends Component {
     } = this.props.element.settings;
     let {
       tooltip_text,
+      tooltip_minimal,
+      tooltip_show_type,
+      tooltip_horizontal_offset,
+      tooltip_vertical_offset,
     } = this.props.element.settings
 
     if (this.state.errorInfo) {
@@ -301,10 +305,27 @@ class SimpleElementWrapper extends Component {
         this.elementWrapperRef.current.style.display = 'none';
       }
     }
+
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
       <WrapperComponent {...wrapperProps} >
-        {content}
-        {tooltip_text && <AltrpTooltip position={tooltip_position}>{tooltip_text}</AltrpTooltip>}
+        {
+          tooltip_show_type !== "never" ?
+            <AltrpTooltip
+              text={tooltip_text}
+              id={this.props.element.getId()}
+              state={tooltip_show_type}
+              position={tooltip_position}
+              minimal={tooltip_minimal}
+              horizontal={tooltip_horizontal_offset}
+              vertical={tooltip_vertical_offset}
+            >
+              {
+                content
+              }
+            </AltrpTooltip>
+            : content
+
+        }
       </WrapperComponent>
     );
   }

@@ -6,6 +6,7 @@ use App\Role;
 use App\Media;
 use App\User;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use League\ColorExtractor\Color;
 use League\ColorExtractor\ColorExtractor;
@@ -1390,14 +1391,25 @@ function getAltrpSettings( $page_id ){
   if( strpos( $json_areas, 'altrptime' ) !== false){
     $settings['libsToLoad'][] = 'moment';
   }
+
+  $settings['libsToLoad'][] = 'blueprint';
+
   $action_types = [];
   foreach ( $areas as $area ) {
     $root_element = data_get( $area, 'template.data' );
     if( $root_element ){
-      recurseMapElements( $root_element, function( $element ) use ( &$action_types ){
+
+      recurseMapElements( $root_element, function( $element ) use ($settings, &$action_types ){
+        error_log(data_get( $element, 'settings.react_element' ));
+
+        if(data_get( $element, 'settings.tooltip_show_type' ) && is_integer(array_search("blueprint", $settings['libsToLoad']))) {
+          $settings['libsToLoad'][] = "blueprint";
+        }
+
         if( ! data_get( $element, 'settings.react_element' ) ){
           return;
         }
+
         $actions = [];
         foreach ( ACTIONS_NAMES as $ACTIONS_NAME ) {
           $actions = array_merge( $actions, data_get( $element, 'settings.' . $ACTIONS_NAME, [] ) );
@@ -1408,7 +1420,6 @@ function getAltrpSettings( $page_id ){
             $action_types[] = $action_type;
           }
         }
-
       } );
     }
   }

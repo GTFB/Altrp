@@ -45,6 +45,7 @@ import {getResponsiveSetting} from "../helpers";
 import InputRangeSliderComponent
   from "../../../../editor/src/js/components/widgets/styled-components/InputRangeSliderComponent";
 import getTemplateStyles from "./helpers/getTemplateStyles";
+import TooltipComponent from "../../../../editor/src/js/components/widgets/styled-components/TooltipComponent";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -233,6 +234,12 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
       styles += `div.${prefix}${id}.${prefix}${id} {${AdvancedComponent(
         item.settings
       )}}`;
+
+      const tooltip_show_type = item.settings.tooltip_show_type || "never";
+
+      if(tooltip_show_type !== "never") {
+        styles += `.altrp-tooltip${id} {${TooltipComponent(item.settings)}}`
+      }
 
       let element_css_editor = getResponsiveSetting(item.settings, "element_css_editor");
       if(_.isString(element_css_editor)){
