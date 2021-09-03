@@ -3,7 +3,6 @@ import { changeCurrentPageProperty } from "../store/current-page/actions";
 import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
-import DashboardComponent from "../../../../editor/src/js/components/widgets/styled-components/DashboardComponent";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
 
@@ -215,8 +214,18 @@ class SimpleElementWrapper extends Component {
   }
 
   render() {
-    const { hide_on_trigger, tooltip_position } = this.props.element.settings;
-    let { tooltip_text } = this.props.element.settings;
+
+    const {
+      hide_on_trigger,
+      tooltip_position
+    } = this.props.element.settings;
+    let {
+      tooltip_text,
+      tooltip_minimal,
+      tooltip_show_type,
+      tooltip_horizontal_offset,
+      tooltip_vertical_offset,
+    } = this.props.element.settings
 
     if (this.state.errorInfo) {
       return (
@@ -314,14 +323,27 @@ class SimpleElementWrapper extends Component {
         this.elementWrapperRef.current.style.display = "none";
       }
     }
+
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
-      <WrapperComponent {...wrapperProps}>
-        {content}
-        {tooltip_text && (
-          <AltrpTooltip position={tooltip_position}>
-            {tooltip_text}
-          </AltrpTooltip>
-        )}
+      <WrapperComponent {...wrapperProps} >
+        {
+          tooltip_show_type !== "never" ?
+            <AltrpTooltip
+              text={tooltip_text}
+              id={this.props.element.getId()}
+              state={tooltip_show_type}
+              position={tooltip_position}
+              minimal={tooltip_minimal}
+              horizontal={tooltip_horizontal_offset}
+              vertical={tooltip_vertical_offset}
+            >
+              {
+                content
+              }
+            </AltrpTooltip>
+            : content
+
+        }
       </WrapperComponent>
     );
   }

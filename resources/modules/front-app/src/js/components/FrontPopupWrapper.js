@@ -89,6 +89,7 @@ ${({settings}) => {
 & .popup-close-button .altrp-image-placeholder svg{
   width: 100%;
   height: 100%;
+  display: block;
 }
 &.app-popup_offcanvas .popup-window{
 ${({settings}) => {
@@ -107,7 +108,7 @@ ${({settings}) => {
       top = 'auto'
     }break;
     case 'center':{
-      styles += 'height:100%';
+      styles += 'height:100%;';
     }break;
   }
   switch(horizontal_position_popup_layout){
@@ -116,12 +117,13 @@ ${({settings}) => {
       left = 'auto'
     }break;
     case 'center':{
-      styles += 'width:100%';
+      styles += 'width:100%;';
     }break;
   }
   styles += `top:${top};left:${left};right:${right};bottom:${bottom};`
   return styles
 }}
+}
 &&& .popup-close-button{
   padding: 0;
   ${({settings}) => {

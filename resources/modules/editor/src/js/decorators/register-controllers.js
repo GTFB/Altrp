@@ -10,7 +10,7 @@ import {
   TAB_ADVANCED,
   CONTROLLER_SWITCHER, CONTROLLER_SELECT2, CONTROLLER_HEADING, CONTROLLER_REPEATER,
   CONTROLLER_TEXT, CONTROLLER_NUMBER,
-  CONTROLLER_TYPOGRAPHIC
+  CONTROLLER_TYPOGRAPHIC, CONTROLLER_TEXTAREA
 } from "../classes/modules/ControllersManager";
 import Repeater from "../classes/Repeater";
 import { CONDITIONS_OPTIONS } from "../../../../front-app/src/js/helpers";
@@ -713,15 +713,39 @@ export function advancedTabControllers(element) {
     label: 'Tooltip',
   });
 
+  element.addControl('tooltip_show_type', {
+    type: CONTROLLER_SELECT,
+    label: 'Show type',
+    default: 'Never',
+    options: [
+      {
+        value: 'never',
+        label: 'Never',
+      },
+      {
+        value: 'hover',
+        label: 'Hover',
+      },
+      {
+        value: 'click',
+        label: 'Click',
+      },
+      {
+        value: 'always',
+        label: 'Always',
+      },
+    ],
+  });
+
   element.addControl('tooltip_text', {
-    type: CONTROLLER_TEXT,
+    type: CONTROLLER_TEXTAREA,
     label: 'Content',
   });
 
   element.addControl('tooltip_position', {
     type: CONTROLLER_SELECT,
     label: 'Position',
-    default: 'top',
+    default: 'bottom',
     options: [
       {
         label: 'top',
@@ -742,6 +766,11 @@ export function advancedTabControllers(element) {
     ],
   });
 
+  element.addControl('tooltip_minimal', {
+    type: CONTROLLER_SWITCHER,
+    label: 'Minimal',
+  });
+
   element.addControl('tooltip_position_padding', {
     type: CONTROLLER_DIMENSIONS,
     label: 'Padding',
@@ -751,7 +780,7 @@ export function advancedTabControllers(element) {
   element.addControl('tooltip_horizontal_offset', {
     type: CONTROLLER_SLIDER,
     label: 'offset x',
-    units: ['px', '%', 'vh', 'vw'],
+    units: ['px'],
     max: 1000,
     min: -1000,
   });
@@ -759,7 +788,7 @@ export function advancedTabControllers(element) {
   element.addControl('tooltip_vertical_offset', {
     type: CONTROLLER_SLIDER,
     label: 'offset y',
-    units: ['px', '%', 'vh', 'vw'],
+    units: ['px'],
     max: 1000,
     min: -1000,
   });
@@ -787,13 +816,13 @@ export function advancedTabControllers(element) {
     units: ['px', '%', 'vh', 'vw'],
   });
 
-  element.addControl('arrow_size', {
-    type: CONTROLLER_SLIDER,
-    label: 'Arrow Size',
-    units: ['px', '%'],
-    max: 50,
-    min: 0,
-  });
+  // element.addControl('arrow_size', {
+  //   type: CONTROLLER_SLIDER,
+  //   label: 'Arrow Size',
+  //   units: ['px', '%'],
+  //   max: 50,
+  //   min: 0,
+  // });
 
   element.addControl('tooltip_background_shadow', {
     type: CONTROLLER_SHADOW,
