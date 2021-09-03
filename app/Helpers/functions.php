@@ -1396,17 +1396,16 @@ function getAltrpSettings( $page_id ): array
     $settings['libsToLoad'][] = 'moment';
   }
 
-  $settings['libsToLoad'][] = 'blueprint';
 
   $action_types = [];
   foreach ( $areas as $area ) {
     $root_element = data_get( $area, 'template.data' );
+    $root_elements = [data_get( $area, 'template.data' )];
     if( $root_element ){
 
       recurseMapElements( $root_element, function( $element ) use ($settings, &$action_types ){
-        error_log(data_get( $element, 'settings.react_element' ));
 
-        if(data_get( $element, 'settings.tooltip_show_type' ) && is_integer(array_search("blueprint", $settings['libsToLoad']))) {
+        if(data_get( $element, 'settings.tooltip_enable' ) && array_search("blueprint", $settings['libsToLoad']) === false) {
           $settings['libsToLoad'][] = "blueprint";
         }
 

@@ -713,6 +713,12 @@ export function advancedTabControllers(element) {
     label: 'Tooltip',
   });
 
+  element.addControl('tooltip_enable', {
+    type: CONTROLLER_SWITCHER,
+    responsive: false,
+    label: 'Enable',
+  });
+
   element.addControl('tooltip_show_type', {
     type: CONTROLLER_SELECT,
     label: 'Show type',

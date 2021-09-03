@@ -380,7 +380,7 @@ class ElementWrapper extends Component {
     return  (
       <WrapperComponent {...wrapperProps} element={element.getId()}>
 
-        {tooltip_show_type !== "never" ? (
+        {tooltip_show_type && tooltip_show_type !== "never" ? (
           <AltrpTooltip
             position={tooltip_position}
             id={this.props.element.getId()}

@@ -718,7 +718,7 @@ class ElementWrapper extends Component {
           </div>
         </div>
         {
-          tooltip_show_type !== "never" && !errorContent ?
+          tooltip_show_type && tooltip_show_type !== "never" && !errorContent ?
             <AltrpTooltip
               text={tooltip_text}
               id={this.props.element.getId()}

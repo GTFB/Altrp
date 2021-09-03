@@ -326,7 +326,7 @@ class SimpleElementWrapper extends Component {
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
       <WrapperComponent {...wrapperProps} >
         {
-          tooltip_show_type !== "never" ?
+          tooltip_show_type && tooltip_show_type !== "never" ?
             <AltrpTooltip
               text={tooltip_text}
               id={this.props.element.getId()}
