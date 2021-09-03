@@ -217,9 +217,9 @@ class SimpleElementWrapper extends Component {
   render() {
     const {
       hide_on_trigger,
-      tooltip_position
     } = this.props.element.settings;
     let {
+      tooltip_position,
       tooltip_text,
       tooltip_minimal,
       tooltip_show_type,

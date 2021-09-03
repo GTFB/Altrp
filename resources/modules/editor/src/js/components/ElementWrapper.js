@@ -61,6 +61,7 @@ import getTemplateStyles from "../../../../front-app/src/js/components/helpers/g
 import getInputMultiSelectStyles, {
   getInputMultiSelectPopoverStyles
 } from "../../../../front-app/src/js/components/helpers/getInputMultiSelectStyles";
+import TooltipComponent from "./widgets/styled-components/TooltipComponent";
 
 const { connect } = window.reactRedux;
 const { replaceContentWithData } = window.altrpHelpers;
@@ -271,6 +272,13 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       styles += `.${prefix}${elementId} {${MapConstructorComponent(settings)}}`;
       break;
   }
+
+  const tooltip_show_type = settings.tooltip_show_type || "never";
+
+  if(tooltip_show_type !== "never") {
+    styles += `.altrp-tooltip${elementId}.altrp-tooltip${elementId} {${TooltipComponent(settings)}}`
+  }
+
   styles += `div.${prefix}${elementId}.${prefix}${elementId} {${AdvancedComponent(
     settings
   )}}`;
@@ -548,6 +556,10 @@ class ElementWrapper extends Component {
     const {
       isFixed,
       tooltip_text,
+      tooltip_minimal,
+      tooltip_show_type,
+      tooltip_horizontal_offset,
+      tooltip_vertical_offset,
       tooltip_position
     } = this.props.element.getSettings();
 
@@ -705,13 +717,23 @@ class ElementWrapper extends Component {
             </button>
           </div>
         </div>
-        {errorContent ||
-          React.createElement(this.props.component, elementProps)}
-        {tooltip_text && (
-          <AltrpTooltip position={tooltip_position}>
-            {tooltip_text}
-          </AltrpTooltip>
-        )}
+        {
+          tooltip_show_type !== "never" && !errorContent ?
+            <AltrpTooltip
+              text={tooltip_text}
+              id={this.props.element.getId()}
+              state={tooltip_show_type}
+              position={tooltip_position}
+              minimal={tooltip_minimal}
+              horizontal={tooltip_horizontal_offset}
+              vertical={tooltip_vertical_offset}
+            >
+              {
+                React.createElement(this.props.component, elementProps)
+              }
+            </AltrpTooltip>
+            : errorContent || React.createElement(this.props.component, elementProps)
+        }
         {emptyColumn}
         <ElementWrapperGlobalStyles
           settings={this.props.element.getSettings()}

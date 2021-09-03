@@ -1,4 +1,5 @@
 import React from 'react';
+import {isEditor} from "../../../../../front-app/src/js/helpers";
 let Tooltip2;
 
 if(window.altrpLibs) {
@@ -37,7 +38,17 @@ function AltrpTooltip(props) {
       break;
   }
 
-  
+  let body = document.body;
+
+  if(!props.editor) {
+    body = React.useMemo(() => {
+      return isEditor() ?
+        document.getElementById("editorContent").contentWindow.document.body
+        :
+        document.body
+    });
+  }
+
   if(Tooltip2 && props.children && !_.isString(props.children)) {
     return <Tooltip2
       content={props.text}
@@ -46,6 +57,7 @@ function AltrpTooltip(props) {
       interactionKind={state !== "always" ? state : null }
       placement={position}
       minimal={minimal}
+      portalContainer={body}
       modifiers={{
         offset: {
           enabled: true,
@@ -56,11 +68,7 @@ function AltrpTooltip(props) {
       }}
     >
       {
-        React.cloneElement(props.children, {
-          // onClick: state === "click" ? () => {
-          //   console.log('ea')
-          // } : null
-        })
+        props.children
       }
     </Tooltip2>
   } else {
