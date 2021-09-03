@@ -618,6 +618,10 @@ export function actionsControllers(
     options_resource:
       '/admin/ajax/templates/options?template_type=popup&value=guid',
     nullable: true,
+    gotoLink: {
+      linkTemplate: '/admin/editor?template_id={id}',
+      textTemplate: 'Go to Template',
+    },
     responsive: false,
     conditions: {
       type: ['toggle_popup']

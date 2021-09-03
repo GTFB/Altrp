@@ -19,9 +19,18 @@ class Select2Controller extends Component {
     this.linkTemplate = _.get(props, 'gotoLink.linkTemplate', '')
     this.textTemplate = _.get(props, 'gotoLink.textTemplate', '')
     value = value || "";
+    let options;
+    if(_.isFunction(this.props.options)){
+      options = this.props.options()
+    } else {
+      options = _.cloneDeep(this.props.options) || [];
+    }
+    if (props.nullable) {
+      options.unshift({ label: '', value: '', })
+    }
     this.state = {
       value,
-      options: this.props.options || [],
+      options,
       show: true
     };
     // if (this.props.options_resource) {
@@ -241,10 +250,14 @@ class Select2Controller extends Component {
         }
       });
     }
+    let options = this.state.options
+    if(_.isFunction(this.props.options)) {
+      options = this.props.options()
+    }
     let selectProps = {
       onChange: this.change,
       onInputChange: this.change,
-      options: this.state.options,
+      options,
       // styles: customStyles,
       placeholder: this.props.placeholder,
       loadOptions: this.loadOptions,

@@ -1,5 +1,5 @@
 console.log('FIRST SCRIPT: ', performance.now());
-console.log('FIRST SCRIPT: ', performance.now());
+import loadPageActions from "./js/functions/actions/load-page-actions";
 import loadDepends from "./js/functions/load-depends";
 import loadFontsManager from "./js/functions/load-fonts";
 import  queryString from 'query-string';
@@ -44,7 +44,13 @@ window.loadingCallback = function loadingCallback() {
     console.log('h-altrp LOADED: ', performance.now());
 
     const hAltrpLoadedEvent = new Event('h-altrp-loaded');
-    window.dispatchEvent(hAltrpLoadedEvent);  }
+    window.dispatchEvent(hAltrpLoadedEvent);
+
+    /**
+     * Загружаем все действия привязанные к загрузке страницы
+     */
+    loadPageActions()
+  }
 }
 
 window.sSr = false;
@@ -143,6 +149,12 @@ frontAppContainer.addEventListener('scroll', e=>{
 
 document.body.addEventListener('click', e =>{
   import(/* webpackChunkName: 'click-actions' */'./js/functions/actions/click-actions').then((module)=>{
+    module?.default(e);
+  })
+})
+
+document.addEventListener('DOMContentLoaded', e =>{
+  import(/* webpackChunkName: 'load-sticky' */'./js/functions/load-sticky').then((module)=>{
     module?.default(e);
   })
 })

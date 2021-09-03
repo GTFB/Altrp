@@ -138,7 +138,7 @@ class InputSliderWidget extends Component {
     const custom = this.props.element.getResponsiveSetting("custom_label", "", "{n}");
     const thousandsSeparator = this.props.element.getResponsiveSetting("thousands_separator", "", false);
     const thousandsSeparatorValue = this.props.element.getResponsiveSetting("thousands_separator_value", "", " ");
-    const decimalSeparator = this.props.element.getResponsiveSetting("decimal_separator", "", ",");
+    const decimalSeparator = this.props.element.getResponsiveSetting("decimal_separator");
     value = Number(value)
 
     if(!Number.isInteger(value) && decimalPlace) {
@@ -147,7 +147,7 @@ class InputSliderWidget extends Component {
         .toFixed(decimalPlace)
     }
     if(!Number.isInteger(value) && decimalSeparator) {
-      value = value.replace(".", decimalSeparator)
+      value = value.toString().replace(".", decimalSeparator)
     }
 
     if(thousandsSeparator && thousandsSeparatorValue) {

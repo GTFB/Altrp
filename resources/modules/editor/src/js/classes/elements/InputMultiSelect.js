@@ -18,15 +18,14 @@ import {
   CONTROLLER_SHADOW,
   CONTROLLER_MEDIA, CONTROLLER_GRADIENT
 } from "../modules/ControllersManager";
-import Repeater from "../Repeater";
 import { actionsControllers } from "../../decorators/actions-controllers";
 
-class InputSelect extends BaseElement {
+class InputMultiSelect extends BaseElement {
   static getName() {
-    return "input-select";
+    return "input-multi-select";
   }
   static getTitle() {
-    return "Input Select";
+    return "Input Multi Select";
   }
   static getIconComponent() {
     return FromIcon;
@@ -123,12 +122,6 @@ class InputSelect extends BaseElement {
       type: CONTROLLER_TEXT,
       label: "Search Placeholder",
       responsive: false,
-    });
-
-    this.addControl("hide_search", {
-      type: CONTROLLER_SWITCHER,
-      responsive: false,
-      label: "Hide Filter"
     });
 
     this.addControl("minimal", {
@@ -238,7 +231,7 @@ class InputSelect extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('button_content', {
-      label: 'Button',
+      label: 'Input',
     })
 
     this.addControl('alignment', {
@@ -263,16 +256,6 @@ class InputSelect extends BaseElement {
         }
       ],
     });
-
-    this.addControl('right_icon', {
-      label: 'Right Icon',
-      type: CONTROLLER_MEDIA,
-    })
-
-    this.addControl('left_icon', {
-      label: 'Left Icon',
-      type: CONTROLLER_MEDIA,
-    })
 
     this.endControlSection();
 
@@ -454,11 +437,12 @@ class InputSelect extends BaseElement {
 
     this.startControlSection("position_section", {
       tab: TAB_STYLE,
-      label: "Button Position"
+      label: "Input Position"
     });
 
     this.addControl("field_width", {
       type: CONTROLLER_SLIDER,
+      stateless: true,
       label: "Width",
       max: 500,
       min: 0,
@@ -466,18 +450,118 @@ class InputSelect extends BaseElement {
     });
 
     this.addControl("position_margin", {
+      stateless: true,
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
       units: ["px", "%", "vh"]
     });
 
     this.addControl("position_padding", {
+      stateless: true,
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       units: ["px", "%", "vh"]
     });
 
     this.endControlSection();
+
+    this.startControlSection("tags_styles", {
+      tab: TAB_STYLE,
+      label: "Tags Position"
+    });
+
+    this.addControl("tags_ma", {
+      type: CONTROLLER_DIMENSIONS,
+      stateless: true,
+      label: "Margin",
+      units: ["px", "%", "vh"]
+    });
+
+    this.addControl("tags_pa", {
+      type: CONTROLLER_DIMENSIONS,
+      stateless: true,
+      label: "Padding",
+      units: ["px", "%", "vh"]
+    });
+
+
+    this.addControl("delete_s", {
+      type: CONTROLLER_SLIDER,
+      stateless: true,
+      label: "Tag Delete Size",
+      units: ["px", "%", "vh"]
+    });
+
+    this.addControl("delete_ma", {
+      type: CONTROLLER_DIMENSIONS,
+      stateless: true,
+      label: "Tag Delete Margin",
+      units: ["px", "%", "vh"]
+    });
+
+    this.endControlSection();
+
+    this.endControlSection();
+
+    this.startControlSection("clear_styles", {
+      tab: TAB_STYLE,
+      label: "Clear Styles"
+    });
+
+    this.addControl('clear_align', {
+      type: CONTROLLER_CHOOSE,
+      stateless: true,
+      label: 'Vertical Alignment',
+      options: [
+        {
+          icon: 'block_top',
+          value: 'flex-start',
+        },
+        {
+          icon: 'block_horiz',
+          value: 'center',
+        },
+        {
+          icon: 'block_bottom',
+          value: 'flex-end',
+        },
+      ],
+    });
+
+    this.addControl("clear_s", {
+      type: CONTROLLER_SLIDER,
+      stateless: true,
+      label: "Size",
+      units: ["px", "%", "vh"]
+    });
+
+    this.addControl("clear_ma", {
+      type: CONTROLLER_DIMENSIONS,
+      stateless: true,
+      label: "Margin",
+      units: ["px", "%", "vh"]
+    });
+
+    this.addControl("clear_pa", {
+      type: CONTROLLER_DIMENSIONS,
+      stateless: true,
+      label: "Padding",
+      units: ["px", "%", "vh"]
+    });
+
+    this.addControl("clear_color", {
+      type: CONTROLLER_COLOR,
+      stateless: true,
+      label: "Color",
+      units: ["px", "%", "vh"]
+    });
+
+    this.addControl("clear_bg", {
+      type: CONTROLLER_COLOR,
+      stateless: true,
+      label: "Background Color",
+      units: ["px", "%", "vh"]
+    });
 
     this.startControlSection("font_style_section", {
       tab: TAB_STYLE,
@@ -489,9 +573,24 @@ class InputSelect extends BaseElement {
       label: "Typographic"
     });
 
+    this.addControl("tags_t", {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: "Tags Typographic"
+    });
+
     this.addControl("field_font_color", {
       type: CONTROLLER_COLOR,
       label: "Font Color",
+    });
+
+    this.addControl("tags_color", {
+      type: CONTROLLER_COLOR,
+      label: "Tags Color",
+    });
+
+    this.addControl("tags_delete_color", {
+      type: CONTROLLER_COLOR,
+      label: "Tags Delete Icon Color",
     });
 
     this.addControl("items_font_color", {
@@ -510,17 +609,28 @@ class InputSelect extends BaseElement {
 
     this.startControlSection("background_section", {
       tab: TAB_STYLE,
-      label: "Background"
+      label: "Backgrounds"
     });
 
-    this.addControl("button_gradient", {
-      type: CONTROLLER_GRADIENT,
-      label: "Button Gradient"
+    this.addControl("input_bg", {
+      type: CONTROLLER_COLOR,
+      label: "Input Background Color"
+    });
+
+
+    this.addControl("menu_bg", {
+      type: CONTROLLER_COLOR,
+      label: "Menu Background Color"
+    });
+
+    this.addControl("tags_bg", {
+      type: CONTROLLER_COLOR,
+      label: "Tags Background Color"
     });
 
     this.addControl("background_style_background_color", {
       type: CONTROLLER_COLOR,
-      label: "Items Background Color"
+      label: "Menu Items Background Color"
     });
 
     this.addControl("background_section_opacity", {
@@ -630,78 +740,6 @@ class InputSelect extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("icons", {
-      tab: TAB_STYLE,
-      label: "Button Icons"
-    });
-
-    this.addControl("i_size", {
-      type:   CONTROLLER_SLIDER,
-      label: "Size"
-    });
-
-    this.addControl("i_margin", {
-      type:   CONTROLLER_DIMENSIONS,
-      label: "Margin"
-    });
-
-    this.addControl("i_color", {
-      type:   CONTROLLER_COLOR,
-      label: "Color"
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("search_input", {
-      tab: TAB_STYLE,
-      label: "Search Input"
-    });
-
-    this.addControl("si_size", {
-      type:   CONTROLLER_SLIDER,
-      units: ["px","%",  "vw"],
-      stateless: true,
-      label: "Height"
-    });
-
-    this.addControl("si_padding", {
-      type:   CONTROLLER_DIMENSIONS,
-      units: ["px","%",  "vw"],
-      stateless: true,
-      label: "Padding"
-    });
-
-    this.addControl("si_color", {
-      type:   CONTROLLER_COLOR,
-      label: "Color"
-    });
-
-    this.addControl("si_bg_color", {
-      type:   CONTROLLER_COLOR,
-      label: "Background Color"
-    });
-
-    this.addControl("sii_size", {
-      type:   CONTROLLER_SLIDER,
-      units: ["px","%",  "vw"],
-      stateless: true,
-      label: "Icon Size"
-    });
-
-    this.addControl("sii_margin", {
-      type:   CONTROLLER_DIMENSIONS,
-      units: ["px","%",  "vw"],
-      stateless: true,
-      label: "Icon Margin"
-    });
-
-    this.addControl("sii_color", {
-      type:   CONTROLLER_COLOR,
-      label: "Icon Color"
-    });
-
-    this.endControlSection();
-
     this.startControlSection("add_icon", {
       tab: TAB_STYLE,
       label: "Add Icon"
@@ -748,4 +786,4 @@ class InputSelect extends BaseElement {
     advancedTabControllers(this);
   }
 }
-export default InputSelect;
+export default InputMultiSelect;

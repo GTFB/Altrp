@@ -19,8 +19,8 @@ import {
 } from "../../../../../admin/src/components/dashboard/widgetTypes";
 import { getDataByPath } from "../../../../../front-app/src/js/helpers";
 import { color } from "d3";
-
-const {moment} = window.altrpHelpers;
+import moment from "moment";
+// const {moment} = window.altrpHelpers;
 
 const AltrpDiagram = props => {
   const { settings, id } = props;

@@ -7,13 +7,17 @@ import {
   borderRadiusStyled,
   columnGapStyled,
   opacityStyled,
+  sliderStyled,
+  shadowControllerToStyles,
+  textShadowControllerToStyles,
+  dimensionsStyled,
 } from '../../helpers/styles';
 import { getResponsiveSetting } from '../../helpers';
 
 /**
  * Преобразует объект стилей, который задается в виджете Text в строку css для вставки в GlobalStyles
- * @param {{}} settings 
- * @param {string} id 
+ * @param {{}} settings
+ * @param {string} id
  * @return {string}
  */
 
@@ -108,78 +112,249 @@ export function getTextStyles(settings, id) {
 
   styles += `} `;
   //hover
-  styles += `${parentClass} .altrp-text:hover {`;
 
-  const columnCountHover = getResponsiveSetting(settings, 'text_style_column-count', ':hover');
+  styles+=`${parentClass} .altrp-text p {`
 
-  if (columnCountHover) {
-    styles += simplePropertyStyled(columnCountHover, 'column-count');
+  const paragraphMargin = getResponsiveSetting(settings, 'text_paragraph_margin');
+
+  if (paragraphMargin) {
+    styles += dimensionsControllerToStyles(paragraphMargin, 'margin');
   }
 
-  const paddingHover = getResponsiveSetting(settings, 'text_style_position_padding', ':hover');
+  const textIndent = getResponsiveSetting(settings,"text_paragraph_indent");
 
-  if (paddingHover) {
-    styles += dimensionsControllerToStyles(paddingHover);
+  if (textIndent){
+    styles+=`text-indent:${sliderStyled(textIndent)};`;
   }
 
-  const marginHover = getResponsiveSetting(settings, 'text_style_position_margin', ':hover');
+  styles += `} `;
 
-  if (marginHover) {
-    styles += dimensionsControllerToStyles(marginHover, 'margin');
+  styles+=`${parentClass} .altrp-text blockquote {`
+
+  const blockquoteMargin = getResponsiveSetting(settings, 'text_blockquote_margin');
+
+  if (blockquoteMargin) {
+    styles += dimensionsControllerToStyles(blockquoteMargin, 'margin');
   }
 
-  const zIndexHover = getResponsiveSetting(settings, 'text_position_z_index', ':hover');
+  const blockquotePadding = getResponsiveSetting(settings, 'text_blockquote_padding');
 
-  if (zIndexHover) {
-    styles += simplePropertyStyled(zIndexHover, 'z-index');
+  if (blockquotePadding) {
+    styles += dimensionsControllerToStyles(blockquotePadding, 'padding');
   }
 
-  const backgroundColorHover = getResponsiveSetting(settings, 'text_style_background_color', ':hover');
+  const blockquoteBackgroundColor = getResponsiveSetting(settings, 'text_blockquote_background_color');
 
-  if (backgroundColorHover) {
-    styles += colorPropertyStyled(backgroundColorHover, 'background-color');
+  if (blockquoteBackgroundColor) {
+    styles += colorPropertyStyled(blockquoteBackgroundColor, 'background-color');
   }
 
-  const opacityHover = getResponsiveSetting(settings, 'text_style_background_opacity', ':hover');
+  const blockquoteBorderStyle = getResponsiveSetting(settings, 'text_blockquote_border_type');
 
-  if (opacityHover) {
-    styles += opacityStyled(opacityHover, 'opacity');
+  if (blockquoteBorderStyle) {
+    styles += simplePropertyStyled(blockquoteBorderStyle, 'border-style');
   }
 
-  const typographicHover = getResponsiveSetting(settings, 'text_style_font_typographic', ':hover');
+  const blockquoteBorderWidth = getResponsiveSetting(settings, 'text_blockquote_border_width');
 
-  if (typographicHover) {
-    styles += typographicControllerToStyles(typographicHover);
+  if (blockquoteBorderWidth) {
+    styles += borderWidthStyled(blockquoteBorderWidth);
   }
 
-  const colorHover = getResponsiveSetting(settings, 'text_style_font_color', ':hover');
+  const blockquoteBorderColor = getResponsiveSetting(settings, 'text_blockquote_border_color');
 
-  if (colorHover) {
-    styles += colorPropertyStyled(colorHover, 'color');
+  if (blockquoteBorderColor) {
+    styles += colorPropertyStyled(blockquoteBorderColor, 'border-color');
   }
 
-  const borderStyleHover = getResponsiveSetting(settings, 'text_style_border_type', ':hover');
+  const blockquoteBorderRadius = getResponsiveSetting(settings, 'text_blockquote_border_radius');
 
-  if (borderStyleHover) {
-    styles += simplePropertyStyled(borderStyleHover, 'border-style');
+  if (blockquoteBorderRadius) {
+    styles += borderRadiusStyled(blockquoteBorderRadius);
   }
 
-  const borderWidthHover = getResponsiveSetting(settings, 'text_style_border_width', ':hover');
+  const blockquoteBoxShadow = getResponsiveSetting(
+    settings,
+    "text_blockquote_box_shadow"
+  );
 
-  if (borderWidthHover) {
-    styles += borderWidthStyled(borderWidthHover);
+  if (blockquoteBoxShadow) {
+    styles += shadowControllerToStyles(blockquoteBoxShadow);
   }
 
-  const borderColorHover = getResponsiveSetting(settings, 'text_style_border_color', ':hover');
+  const blockquoteTypographic = getResponsiveSetting(settings, 'text_blockquote_font_typographic');
 
-  if (borderColorHover) {
-    styles += colorPropertyStyled(borderColorHover, 'border-color');
+  if (blockquoteTypographic) {
+    styles += typographicControllerToStyles(blockquoteTypographic);
   }
 
-  const borderRadiusHover = getResponsiveSetting(settings, 'text_style_border_radius', ':hover');
 
-  if (borderRadiusHover) {
-    styles += borderRadiusStyled(borderRadiusHover);
+  const blockquoteTextShadow = getResponsiveSetting(
+    settings,
+    "text_blockquote_text_shadow"
+  );
+
+  if (blockquoteTextShadow) {
+    styles += textShadowControllerToStyles(blockquoteTextShadow);
+  }
+
+  styles += `} `;
+
+  styles += `${parentClass} .altrp-text table {`
+
+  const tableMargin = getResponsiveSetting(settings, 'text_table_margin');
+
+  if (tableMargin) {
+    styles += dimensionsControllerToStyles(tableMargin, 'margin');
+  }
+
+  const tableBackgroundColor = getResponsiveSetting(settings, 'text_table_background_color');
+
+  if (tableBackgroundColor) {
+    styles += colorPropertyStyled(tableBackgroundColor, 'background-color');
+  }
+
+  const tableBorderStyle = getResponsiveSetting(settings, 'text_table_border_type');
+
+  if (tableBorderStyle) {
+    styles += simplePropertyStyled(tableBorderStyle, 'border-style',"!important");
+  }
+
+  const tableBorderWidth = getResponsiveSetting(settings, 'text_table_border_width');
+
+  if (tableBorderWidth) {
+    styles += borderWidthStyled(tableBorderWidth,"!important");
+  }
+
+  const tableBorderColor = getResponsiveSetting(settings, 'text_table_border_color');
+
+  if (tableBorderColor) {
+    styles += colorPropertyStyled(tableBorderColor, 'border-color',"!important");
+  }
+
+  // const tableBorderRadius = getResponsiveSetting(settings, 'text_table_border_radius');
+
+  // if (tableBorderRadius) {
+  //   styles += borderRadiusStyled(tableBorderRadius);
+  // }
+
+  const tableOddRowsColor = getResponsiveSetting(settings,"text_table_odd_rows_color");
+
+  if(tableOddRowsColor){
+    styles+=`tr:nth-child(odd) {${colorPropertyStyled(tableOddRowsColor,"background")}}`
+  }
+
+  styles+= "th,td {";
+
+  const tableCellsPadding = getResponsiveSetting(settings, 'text_table_padding');
+
+  if (tableCellsPadding) {
+    styles += dimensionsStyled(tableCellsPadding, 'padding',"!important");
+  }
+
+  const tableCellsBorderStyle = getResponsiveSetting(settings, 'text_table_cells_border_type');
+
+  if (tableCellsBorderStyle) {
+    styles += simplePropertyStyled(tableCellsBorderStyle, 'border-style',"!important");
+  }
+
+  const tableCellsBorderWidth = getResponsiveSetting(settings, 'text_table_cells_border_width');
+
+  if (tableCellsBorderWidth) {
+    styles += borderWidthStyled(tableCellsBorderWidth,"!important");
+  }
+
+  const tableCellsBorderColor = getResponsiveSetting(settings, 'text_table_cells_border_color');
+
+  if (tableCellsBorderColor) {
+    styles += colorPropertyStyled(tableCellsBorderColor, 'border-color',"!important");
+  }
+
+  // const tableCellsBorderRadius = getResponsiveSetting(settings, 'text_table_cells_border_radius');
+
+  // if (tableCellsBorderRadius) {
+  //   styles += borderRadiusStyled(tableCellsBorderRadius);
+  // }
+
+  const tableCellsTypographic = getResponsiveSetting(settings, 'text_table_cells_font_typographic');
+
+  if (tableCellsTypographic) {
+    styles += typographicControllerToStyles(tableCellsTypographic);
+  }
+
+
+  const tableCellsTextShadow = getResponsiveSetting(
+    settings,
+    "text_table_cells_text_shadow"
+  );
+
+  if (tableCellsTextShadow) {
+    styles += textShadowControllerToStyles(tableCellsTextShadow);
+  }
+
+  styles+="}"
+
+  styles += `} `;
+
+  styles += `${parentClass} .altrp-text a {`;
+
+  const linkTypographic = getResponsiveSetting(settings, 'text_link_font_typographic');
+
+  if (linkTypographic) {
+    styles += typographicControllerToStyles(linkTypographic);
+  }
+
+  const linkTextShadow = getResponsiveSetting(
+    settings,
+    "text_link_text_shadow"
+  );
+
+  if (linkTextShadow) {
+    styles += textShadowControllerToStyles(linkTextShadow);
+  }
+  //
+  styles += `} `;
+
+  styles += `${parentClass} .altrp-text ol {`;
+
+  const numberedListMargin = getResponsiveSetting(settings, 'text_numbered_list_margin');
+
+  if (numberedListMargin) {
+    styles += dimensionsControllerToStyles(numberedListMargin, 'margin');
+  }
+
+  const numberedListItemMargin = getResponsiveSetting(settings, 'text_numbered_list_item_margin');
+
+  if (numberedListItemMargin) {
+    styles += `li{ ${dimensionsControllerToStyles(numberedListItemMargin, 'margin')}}`;
+  }
+
+  const numberedListStyle = getResponsiveSetting(settings, 'text_numbered_list_style_type');
+
+  if (numberedListStyle) {
+    styles += simplePropertyStyled(numberedListStyle, 'list-style-type');
+  }
+
+  styles += `} `;
+
+  styles += `${parentClass} .altrp-text ul {`;
+
+  const unorderedListMargin = getResponsiveSetting(settings, 'text_unordered_list_margin');
+
+  if (unorderedListMargin) {
+    styles += dimensionsControllerToStyles(unorderedListMargin, 'margin');
+  }
+
+  const unorderedListItemMargin = getResponsiveSetting(settings, 'text_unordered_list_item_margin');
+
+  if (unorderedListItemMargin) {
+    styles += `li{ ${dimensionsControllerToStyles(unorderedListItemMargin, 'margin')}}`;
+  }
+
+  const unorderedListStyle = getResponsiveSetting(settings, 'text_unordered_list_style_type');
+
+  if (unorderedListStyle) {
+    styles += simplePropertyStyled(unorderedListStyle, 'list-style-type');
   }
 
   styles += `} `;
@@ -195,6 +370,7 @@ export function getTextStyles(settings, id) {
   styles += `padding: 0; `
 
   styles += `} `;
+
 
   return styles;
 }

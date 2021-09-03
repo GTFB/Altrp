@@ -4,15 +4,15 @@ import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/Alt
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
 import DashboardComponent from "../../../../editor/src/js/components/widgets/styled-components/DashboardComponent";
-import {HTML5Backend} from "react-dnd-html5-backend";
-import {DndProvider} from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd";
 
 class SimpleElementWrapper extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      elementDisplay: !this.props.element.getSettings("default_hidden"),
+      elementDisplay: !this.props.element.getSettings("default_hidden")
     };
     props.element.wrapper = this;
     this.elementWrapperRef = this.props.elementWrapperRef;
@@ -38,7 +38,7 @@ class SimpleElementWrapper extends Component {
    * Иногда надо обновить элемент (FrontElement)
    */
   componentDidMount() {
-    ! window.altrpHelpers.isEditor() && window?.frontApp?.onWidgetMount();
+    !window.altrpHelpers.isEditor() && window?.frontApp?.onWidgetMount();
     if (_.isFunction(this.props.element.update)) {
       this.props.element.update();
       this.props.element.updateFonts();
@@ -101,14 +101,18 @@ class SimpleElementWrapper extends Component {
    */
   componentDidUpdate(prevProps, prevState) {
     this.checkElementDisplay();
-    if (appStore.getState().currentModel.getProperty('altrpModelUpdated') &&
-      appStore.getState().currentDataStorage.getProperty('currentDataStorageLoaded') &&
+    if (
+      appStore.getState().currentModel.getProperty("altrpModelUpdated") &&
+      appStore
+        .getState()
+        .currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !window.altrpHelpers.isEditor() &&
-      this.props.element.getName() === 'section') {
+      this.props.element.getName() === "section"
+    ) {
       let title = appStore.getState().currentTitle;
       title = window.altrpHelpers.replaceContentWithData(title);
-      if (appStore.getState().altrpPage.getProperty('title') !== title) {
-        appStore.dispatch(changeCurrentPageProperty('title', title));
+      if (appStore.getState().altrpPage.getProperty("title") !== title) {
+        appStore.dispatch(changeCurrentPageProperty("title", title));
       }
       window.altrpHelpers.setTitle(title);
     }
@@ -118,7 +122,10 @@ class SimpleElementWrapper extends Component {
    * Обновить элемент изменив this.state.updateToken
    */
   updateElement() {
-    this.setState(state => ({ ...state, updateToken: window.altrpHelpers.altrpRandomId() }))
+    this.setState(state => ({
+      ...state,
+      updateToken: window.altrpHelpers.altrpRandomId()
+    }));
   }
 
   /**
@@ -218,7 +225,7 @@ class SimpleElementWrapper extends Component {
       tooltip_show_type,
       tooltip_horizontal_offset,
       tooltip_vertical_offset,
-    } = this.props.element.settings
+    } = this.props.element.settings;
 
     if (this.state.errorInfo) {
       return (
@@ -234,22 +241,32 @@ class SimpleElementWrapper extends Component {
     }
     const styles = {};
 
-    if (this.props.element.getResponsiveSetting('layout_column_width')) {
-      if (Number(this.props.element.getResponsiveSetting('layout_column_width'))) {
-        styles.width = this.props.element.getResponsiveSetting('layout_column_width') + '%';
+    if (this.props.element.getResponsiveSetting("layout_column_width")) {
+      if (
+        Number(this.props.element.getResponsiveSetting("layout_column_width"))
+      ) {
+        styles.width =
+          this.props.element.getResponsiveSetting("layout_column_width") + "%";
       } else {
-        styles.width = this.props.element.getResponsiveSetting('layout_column_width');
+        styles.width = this.props.element.getResponsiveSetting(
+          "layout_column_width"
+        );
       }
     }
     if (!this.state.elementDisplay) {
       styles.display = "none";
     }
     let CSSId = this.props.element.getSettings("advanced_element_id", "");
-    CSSId = window.altrpHelpers.replaceContentWithData(CSSId, this.props.element.getCurrentModel().getData());
+    CSSId = window.altrpHelpers.replaceContentWithData(
+      CSSId,
+      this.props.element.getCurrentModel().getData()
+    );
     if (this.CSSId !== CSSId) {
       this.CSSId = CSSId;
     }
-    let ContentComponent = frontElementsManager.getComponentClass(this.props.element.getName());
+    let ContentComponent = frontElementsManager.getComponentClass(
+      this.props.element.getName()
+    );
     let content = React.createElement(ContentComponent, {
       ref: this.elementRef,
       rootElement: this.props.rootElement,
@@ -271,38 +288,39 @@ class SimpleElementWrapper extends Component {
       history: this.props.history,
       appStore
     });
-    if(this.props.element.getName() === 'table'){
-      content = <DndProvider backend={HTML5Backend}>
-        {content}
-      </DndProvider>
-      }
+    if (this.props.element.getName() === "table") {
+      content = <DndProvider backend={HTML5Backend}>{content}</DndProvider>;
+    }
     let WrapperComponent = React.Fragment;
 
     switch (this.props.element.getName()) {
       case "diagram":
         WrapperComponent = DiagramComponent;
         break;
-      case "dashboards":
-        WrapperComponent = DashboardComponent;
-        break;
+      // case "dashboards":
+      // WrapperComponent = DashboardComponent;
+      // break;
       case "nav":
         WrapperComponent = NavComponent;
         break;
     }
-    tooltip_text = window.altrpHelpers.replaceContentWithData(tooltip_text, this.props.element.getCurrentModel().getData())
+    tooltip_text = window.altrpHelpers.replaceContentWithData(
+      tooltip_text,
+      this.props.element.getCurrentModel().getData()
+    );
     const wrapperProps = {
       elementId: this.elementId,
       settings: this.settings,
       styles
     };
-    if(WrapperComponent === React.Fragment){
-      delete  wrapperProps.elementId;
-      delete  wrapperProps.settings;
-      delete  wrapperProps.styles;
-      if(this.state.elementDisplay){
+    if (WrapperComponent === React.Fragment) {
+      delete wrapperProps.elementId;
+      delete wrapperProps.settings;
+      delete wrapperProps.styles;
+      if (this.state.elementDisplay) {
         this.elementWrapperRef.current.style.display = null;
       } else {
-        this.elementWrapperRef.current.style.display = 'none';
+        this.elementWrapperRef.current.style.display = "none";
       }
     }
 
@@ -324,7 +342,6 @@ class SimpleElementWrapper extends Component {
               }
             </AltrpTooltip>
             : content
-
         }
       </WrapperComponent>
     );
@@ -341,7 +358,7 @@ function mapStateToProps(state) {
     currentUser: state.currentUser,
     altrpMeta: state.altrpMeta,
     altrpPageState: state.altrpPageState,
-    currentScreen: state.currentScreen,
+    currentScreen: state.currentScreen
   };
 }
 

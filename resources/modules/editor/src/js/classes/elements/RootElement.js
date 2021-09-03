@@ -26,6 +26,7 @@ import {
   import Repeater from "../Repeater";
   import SaveImportModule from "../modules/SaveImportModule";
   import {actionsControllers} from "../../decorators/actions-controllers";
+  import {getTemplateDataStorage, getTemplateType} from "../../helpers";
 
 class RootElement extends BaseElement {
   constructor() {
@@ -127,6 +128,9 @@ class RootElement extends BaseElement {
 
     this.startControlSection('popup_section', {
       label: 'Popup',
+      conditionsCallback: ()=>{
+        return getTemplateType() === 'popup'
+      }
     });
 
     this.addControl("type_popup", {
@@ -148,6 +152,52 @@ class RootElement extends BaseElement {
 
     this.startControlSection('popup_layout_section',{
       label: 'Popup layout',
+      conditionsCallback: ()=>{
+        return getTemplateType() === 'popup'
+      },
+    });
+
+    this.addControl('heading_position_popup_layout', {
+      type: CONTROLLER_HEADING,
+      label: "Position"
+    });
+
+    this.addControl('horizontal_position_popup_layout', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Horizontal',
+      options: [
+        {
+          icon: 'left',
+          value: 'left',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'right',
+        },
+      ],
+    });
+
+    this.addControl('vertical_position_popup_layout', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Vertical',
+      options: [
+        {
+          icon: 'block_top',
+          value: 'top',
+        },
+        {
+          icon: 'block_horiz',
+          value: 'center',
+        },
+        {
+          icon: 'block_bottom',
+          value: 'bottom',
+        },
+      ],
     });
 
     this.addControl("width_popup_layout", {
@@ -219,58 +269,17 @@ class RootElement extends BaseElement {
           label: "bottom"
         }
       ],
-      rules: {
-        '.{{ID}}-app-popup .popup-window{{STATE}}': 'justify-content: {{VALUE}};',
-      },
     });
 
-    this.addControl('heading_position_popup_layout', {
-      type: CONTROLLER_HEADING,
-      label: "Position"
+    this.addControl('layout_bg', {
+      type: CONTROLLER_COLOR,
+      label: "Layout Background",
     });
 
-    this.addControl('horizontal_position_popup_layout', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Horizontal',
-      options: [
-        {
-          icon: 'left',
-          value: 'left',
-        },
-        {
-          icon: 'center',
-          value: 'center',
-        },
-        {
-          icon: 'right',
-          value: 'right',
-        },
-      ],
-    });
-
-    this.addControl('vertical_position_popup_layout', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Vertical',
-      options: [
-        {
-          icon: 'left',
-          value: 'top',
-        },
-        {
-          icon: 'center',
-          value: 'center',
-        },
-        {
-          icon: 'right',
-          value: 'bottom',
-        },
-      ],
-    });
 
     this.addControl('heading_close_popup_layout', {
       type: CONTROLLER_HEADING,
       label: "Close",
-      default: true
     });
 
     this.addControl('overlay_close_popup_layout', {
@@ -282,7 +291,15 @@ class RootElement extends BaseElement {
     this.addControl('switcher_close_button_popup_layout', {
       type: CONTROLLER_SWITCHER,
       label: 'Custom close button',
-      default: true
+    });
+
+    this.addControl("popup_close_icon", {
+      type: CONTROLLER_MEDIA,
+      conditions: {
+        'switcher_close_button_popup_layout': true,
+      },
+
+      label: 'Close icon'
     });
 
     // this.addControl('icon_close_button_popup_layout', {
@@ -311,55 +328,55 @@ class RootElement extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('popup_close_icon_section', {
-      conditions: {
-        'switcher_close_button_popup_layout': true,
+
+      conditionsCallback: ()=>{
+        return getTemplateType() === 'popup'
       },
       label: 'Custom close button',
     });
 
-    this.addControl("popup_close_icon", {
-      type: CONTROLLER_MEDIA,
-      label: 'Close icon'
-    });
-
-    this.addControl('popup_close_icon_alignment', {
-      type: CONTROLLER_CHOOSE,
-      label: 'alignment',
+    this.addControl('close_context', {
+      type: CONTROLLER_SELECT,
+      label: 'Close Button Position Context',
       options: [
         {
-          icon: 'left',
-          value: 'left',
+          label: 'Popup',
+          value: 'popup',
         },
         {
-          icon: 'right',
-          value: 'right',
+          label: 'Window',
+          value: 'window',
         },
       ],
     });
 
-    this.addControl('popup_close_icon_height_size', {
+    this.addControl('close_right', {
       type: CONTROLLER_SLIDER,
-      label: 'height icon',
-      default: {
-        size: 25,
-        unit: 'px',
-      },
+      label: 'Right',
       units: [
         'px',
         '%',
         'vh',
       ],
-      max: 1000,
-      min: 0,
+      max: 100,
+      min: -100,
+    });
+
+    this.addControl('close_top', {
+      type: CONTROLLER_SLIDER,
+      label: 'top',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: -100,
     });
 
     this.addControl('popup_close_icon_width_size', {
       type: CONTROLLER_SLIDER,
-      label: 'width icon',
-      default: {
-        size: 25,
-        unit: 'px',
-      },
+      label: 'Width',
       units: [
         'px',
         '%',
@@ -368,10 +385,49 @@ class RootElement extends BaseElement {
       max: 1000,
       min: 0,
     });
-    this.addControl('popup_close_click_on_dark_area', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Close click on a dark area',
+
+    this.addControl('popup_close_icon_height_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Height',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 1000,
+      min: 0,
     });
+
+    this.addControl('close_pa', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Button Padding',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+    });
+
+
+    this.endControlSection();
+
+    this.startControlSection('button_styles', {
+      label: 'Close Button',
+      tab: TAB_STYLE,
+    });
+
+    this.addControl("close_c", {
+      type: CONTROLLER_COLOR,
+      label: "Button Background Color",
+    });
+
+    this.addControl("icon_fill", {
+      type: CONTROLLER_COLOR,
+      label: "Icon Fill",
+    });
+
     this.endControlSection();
 
     this.startControlSection('offcanvas_section', {
@@ -391,10 +447,6 @@ class RootElement extends BaseElement {
       ],
       max: 1200,
       min: 0,
-      rules: {
-        '.{{ID}}-altrp-offcanvas .altrp-offcanvas-vertical{{STATE}}': 'width: {{SIZE}}{{UNIT}};',
-        '.{{ID}}-altrp-offcanvas .altrp-offcanvas-horizontal{{STATE}}': 'height: {{SIZE}}{{UNIT}};'
-      },
     });
 
     // this.addControl('overlay_offcanvas', {
@@ -1784,14 +1836,6 @@ class RootElement extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Padding",
       units: ["px", "%", "vh"],
-      rules: {
-        "div .altrp-text{{STATE}}": [
-          "padding-top: {{TOP}}{{UNIT}};",
-          "padding-right: {{RIGHT}}{{UNIT}};",
-          "padding-bottom: {{BOTTOM}}{{UNIT}};",
-          "padding-left: {{LEFT}}{{UNIT}};"
-        ]
-      }
     });
 
     this.addControl('text_style_position_margin', {
@@ -1802,22 +1846,11 @@ class RootElement extends BaseElement {
         '%',
         'vh',
       ],
-      rules: {
-        'div .altrp-text{{STATE}}': [
-          'margin-top: {{TOP}}{{UNIT}};',
-          'margin-right: {{RIGHT}}{{UNIT}};',
-          'margin-bottom: {{BOTTOM}}{{UNIT}};',
-          'margin-left: {{LEFT}}{{UNIT}};'
-        ]
-      },
     });
 
     this.addControl("text_style_background_color", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      rules: {
-        ".altrp-text{{STATE}}": "background-color: {{COLOR}};"
-      }
     });
 
     this.addControl("text_style_background_opacity", {
@@ -1826,35 +1859,17 @@ class RootElement extends BaseElement {
       max: 1,
       min: 0,
       step: 0.01,
-      rules: {
-        "div .altrp-text{{STATE}}": "opacity: {{SIZE}}"
-      }
     });
 
     this.addControl('text_style_font_typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
       label: 'Typographic',
-      rules: {
-        'div .altrp-text{{STATE}}': [
-          'font-family: "{{FAMILY}}", sans-serif;',
-          'font-size: {{SIZE}}px;',
-          'line-height: {{LINEHEIGHT}};',
-          'letter-spacing: {{SPACING}}px',
-          'font-weight: {{WEIGHT}}',
-          'text-transform: {{TRANSFORM}}',
-          'font-style: {{STYLE}}',
-          'text-decoration: {{DECORATION}}'
-        ],
-      },
     }
     );
 
     this.addControl("text_style_font_color", {
       type: CONTROLLER_COLOR,
       label: "Color",
-      rules: {
-        "div.altrp-text{{STATE}}": "color: {{COLOR}};"
-      }
     });
 
     this.addControl("text_style_border_type", {
@@ -1887,27 +1902,17 @@ class RootElement extends BaseElement {
           label: "Groove"
         }
       ],
-      rules: {
-        ".altrp-text{{STATE}}": "border-style: {{VALUE}};"
-      }
     });
 
     this.addControl("text_style_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
       units: ["px", "%", "vh"],
-      rules: {
-        ".altrp-text{{STATE}}":
-          "border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};"
-      }
     });
 
     this.addControl("text_style_border_color", {
       type: CONTROLLER_COLOR,
       label: "Border color",
-      rules: {
-        "div .altrp-text{{STATE}}": "border-color: {{COLOR}};"
-      }
     });
 
     this.addControl('text_default_border_radius', {
@@ -1918,22 +1923,12 @@ class RootElement extends BaseElement {
         '%',
         'vh',
       ],
-      rules: {
-        'div .altrp-text{{STATE}}': [
-          'border-top-left-radius: {{TOP}}{{UNIT}}',
-          'border-top-right-radius: {{RIGHT}}{{UNIT}}',
-          'border-bottom-right-radius: {{BOTTOM}}{{UNIT}}',
-          'border-bottom-left-radius:  {{LEFT}}{{UNIT}}'
-        ]
-      }
+
     });
 
     this.addControl('text_transition_property', {
       type: CONTROLLER_TEXTAREA,
       label: 'Transition Property',
-      rules: {
-        ".altrp-text": "transition-property: {{VALUE}};",
-      },
       description: 'Input properties, commas separated'
     });
 
@@ -1944,9 +1939,6 @@ class RootElement extends BaseElement {
       max: 5,
       min: 0,
       step: 0.1,
-      rules: {
-        ".altrp-text": "transition-duration: {{SIZE}}s;",
-      }
     });
 
     this.addControl('text_transition_timing', {
@@ -1974,9 +1966,6 @@ class RootElement extends BaseElement {
         }
       ],
       label: 'Transition Timing Function',
-      rules: {
-        ".altrp-text": "transition-timing-function: {{VALUE}};",
-      }
     });
 
     this.addControl("text_transition_delay", {
@@ -1986,9 +1975,6 @@ class RootElement extends BaseElement {
       max: 5,
       min: 0,
       step: 0.1,
-      rules: {
-        ".altrp-text": "transition-delay: {{SIZE}}s;",
-      }
     });
 
 
@@ -3813,7 +3799,7 @@ class RootElement extends BaseElement {
         'switcher_close_button_popup_layout': true,
       },
       tab: TAB_STYLE,
-      label: 'Custom close button',
+      label: 'Custom Close',
     });
 
     this.addControl('popup_close_button_padding', {

@@ -248,14 +248,12 @@ class InputSlider extends BaseElement{
       min: 0,
     });
 
-    this.addControl("handle_transform", {
-      type: CONTROLLER_SLIDER,
-      label: 'Transform',
-      units: [
-        'px',
-      ],
-      max: 50,
-      min: -50,
+    this.addControl("tr_x", {
+      label: 'Translate X',
+    });
+
+    this.addControl("tr_y", {
+      label: 'Translate Y',
     });
 
     this.addControl('handle_radius', {

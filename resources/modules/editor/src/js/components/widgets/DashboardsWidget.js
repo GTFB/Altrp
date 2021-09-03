@@ -2,10 +2,15 @@ import axios from "axios";
 import { getCurrentBreakpoint } from "../../../../../front-app/src/js/helpers";
 
 const AltrpDashboards = React.lazy(() =>
-  import(/* webpackChunkName: 'AltrpDashboards' */"../altrp-dashboards/AltrpDashboards")
+  import(
+    /* webpackChunkName: 'AltrpDashboards' */ "../altrp-dashboards/AltrpDashboards"
+  )
 );
+
 const DataSourceDashboards = React.lazy(() =>
-  import(/* webpackChunkName: 'DataSourceDashboards' */"../altrp-dashboards/DataSourceDashboards")
+  import(
+    /* webpackChunkName: 'DataSourceDashboards' */ "../altrp-dashboards/DataSourceDashboards"
+  )
 );
 
 class DashboardsWidget extends Component {
@@ -27,7 +32,7 @@ class DashboardsWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    if(props.baseRender){
+    if (props.baseRender) {
       this.render = props.baseRender(this);
     }
   }

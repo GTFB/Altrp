@@ -1009,12 +1009,14 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
   $DEFAULT_REACT_ELEMENTS = [
     'input',
     'input-select',
+    'input-multi-select',
     'input-select2',
     'input-radio',
     'input-checkbox',
     'input-wysiwyg',
     'input-textarea',
     'input-slider',
+    'input-range-slider',
     'input-image-select',
     'input-accept',
     'input-text',
@@ -1377,7 +1379,8 @@ const ACTIONS_COMPONENTS = [
  *
  * ]
  */
-function getAltrpSettings( $page_id ){
+function getAltrpSettings( $page_id ): array
+{
   global $altrp_settings;
   $settings = $altrp_settings;
   $settings['action_components'] = [];

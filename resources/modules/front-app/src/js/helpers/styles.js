@@ -567,7 +567,7 @@ export function marginTopLeftStyled(data = {}, position) {
  * @return {string}
  */
 
-export function borderRadiusStyled(data = {}) {
+ export function borderRadiusStyled(data = {},declaration="") {
   let styles = "";
 
   if (_.isEmpty(data)) {
@@ -576,7 +576,7 @@ export function borderRadiusStyled(data = {}) {
 
   const { size, unit } = data;
 
-  styles = `border-radius: ${size + unit}; `;
+  styles = `border-radius: ${size + unit + declaration}; `;
 
   return styles;
 }
@@ -588,7 +588,7 @@ export function borderRadiusStyled(data = {}) {
  * @param {string} style
  * @param {string} important
  */
-export function dimensionsStyled(controller, style) {
+ export function dimensionsStyled(controller, style, important = '') {
   if (controller) {
     const unit = controller.unit || "px";
     const left = controller.left;
@@ -601,64 +601,64 @@ export function dimensionsStyled(controller, style) {
     if(controller.left) {
       switch (style) {
         case "padding":
-          styles += `padding-left: ${left + unit};`
+          styles += `padding-left: ${left + unit + important};`
           break;
         case "margin":
-          styles += `margin-left: ${left + unit};`
+          styles += `margin-left: ${left + unit + important};`
           break;
         case "border-radius":
-          styles += `border-bottom-right-radius: ${left + unit};`
+          styles += `border-bottom-right-radius: ${left + unit + important};`
           break;
         case "border-width":
-          styles += `border-left-width: ${left + unit};`
+          styles += `border-left-width: ${left + unit + important};`
       }
     }
 
     if(controller.right) {
       switch (style) {
         case "padding":
-          styles += `padding-right: ${right + unit};`
+          styles += `padding-right: ${right + unit + important};`
           break;
         case "margin":
-          styles += `margin-right: ${right + unit};`
+          styles += `margin-right: ${right + unit + important};`
           break;
         case "border-radius":
-          styles += `border-top-right-radius: ${right + unit};`
+          styles += `border-top-right-radius: ${right + unit + important};`
           break;
         case "border-width":
-          styles += `border-right-width: ${right + unit};`
+          styles += `border-right-width: ${right + unit + important};`
       }
     }
 
     if(controller.top) {
       switch (style) {
         case "padding":
-          styles += `padding-top: ${top + unit};`
+          styles += `padding-top: ${top + unit + important};`
           break;
         case "margin":
-          styles += `margin-top: ${top + unit};`
+          styles += `margin-top: ${top + unit + important};`
           break;
         case "border-radius":
-          styles += `border-top-left-radius: ${top + unit};`
+          styles += `border-top-left-radius: ${top + unit + important};`
           break;
         case "border-width":
-          styles += `border-top-width: ${top + unit};`
+          styles += `border-top-width: ${top + unit + important};`
       }
     }
 
     if(controller.bottom) {
       switch (style) {
         case "padding":
-          styles += `padding-bottom: ${bottom + unit};`
+          styles += `padding-bottom: ${bottom + unit + important};`
           break;
         case "margin":
-          styles += `margin-bottom: ${bottom + unit};`
+          styles += `margin-bottom: ${bottom + unit + important};`
           break;
         case "border-radius":
-          styles += `border-bottom-left-radius: ${bottom + unit};`
+          styles += `border-bottom-left-radius: ${bottom + unit + important};`
           break;
         case "border-width":
-          styles += `border-bottom-width: ${bottom + unit};`
+          styles += `border-bottom-width: ${bottom + unit + important};`
       }
     }
 
@@ -714,7 +714,7 @@ export function sliderStyled(controller) {
  * @param {{}} controller
  * @param {string} important
  */
-export function shadowStyled(controller = {}) {
+export function shadowStyled(controller = {}, important = '') {
   if (controller) {
     const type = controller.type || "";
     const horizontal = controller.horizontal || 0;
@@ -724,7 +724,7 @@ export function shadowStyled(controller = {}) {
     const color = controller.color || "";
 
     if(horizontal !== 0 || vertical !== 0 || blur !== 0 || spread !== 0) {
-      return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread}px ${color};`;
+      return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread} ${color} ${important};`;
     } else return ""
   } else return ""
 }
@@ -735,7 +735,7 @@ export function shadowStyled(controller = {}) {
  * @param {{}} controller
  * @param {string} important
  */
-export function textShadowStyled(controller = {}, important) {
+export function textShadowStyled(controller = {}, important = '') {
   if (controller) {
     const horizontal = controller.horizontal || 0;
     const vertical = controller.vertical || 0;

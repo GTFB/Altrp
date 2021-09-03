@@ -46,6 +46,7 @@ import InputRangeSliderComponent
   from "../../../../editor/src/js/components/widgets/styled-components/InputRangeSliderComponent";
 import getTemplateStyles from "./helpers/getTemplateStyles";
 import TooltipComponent from "../../../../editor/src/js/components/widgets/styled-components/TooltipComponent";
+import getInputMultiSelectStyles, {getInputMultiSelectPopoverStyles} from "./helpers/getInputMultiSelectStyles";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -55,6 +56,7 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
     styles += getRouteStyles(areas);
   }
   let prefix = "altrp-element";
+
   _.each(elementsSettings, (item, id) => {
     if (item) {
       switch (item.name) {
@@ -182,6 +184,11 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         case "input-select":{
           styles += `.${prefix}${id} {${getInputSelectStyles(item.settings, id)}}`
           styles += `${getInputSelectPopoverStyles(item.settings, id)}`
+        }
+          break;
+        case "input-multi-select":{
+          styles += `.${prefix}${id} {${getInputMultiSelectStyles(item.settings, id)}}`
+          styles += `${getInputMultiSelectPopoverStyles(item.settings, id)}`
         }
           break;
         case "input-radio": {

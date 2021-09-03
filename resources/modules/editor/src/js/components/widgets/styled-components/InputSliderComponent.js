@@ -34,29 +34,14 @@ export default function InputSliderComponent(settings) {
     "altrp-field-slider-horizontal .altrp-field-slider",
       ["width", "width", "slider"],
     "}",
-
-    "altrp-field-slider-horizontal .bp3-slider-handle",
       () => {
-        let value = getResponsiveSetting(settings, "handle_transform");
-        value = sliderStyled(value);
-
-        if(value) {
-          return `transform: translate(${value}, 0);`;
+        let tr_x = getResponsiveSetting(settings, "tr_x") ;
+        let tr_y = getResponsiveSetting(settings, "tr_y") ;
+        if(! tr_x && ! tr_y){
+          return ''
         }
+        return `& .bp3-slider-handle{transform:translate(${tr_x || '0px'},${tr_y || '0px'});}`
       },
-    "}",
-
-    "altrp-field-slider-vertical .bp3-slider-handle",
-      () => {
-        let value = getResponsiveSetting(settings, "handle_transform");
-        value = sliderStyled(value);
-
-        if(value) {
-          return `transform: translate(0, ${value});`;
-        }
-      },
-    "}",
-
     "altrp-field-slider-vertical .altrp-field-slider",
       ["height", "length", "slider"],
     "}",

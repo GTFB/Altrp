@@ -849,6 +849,48 @@ export function advancedTabControllers(element) {
 
   element.endControlSection();
 
+  element.startControlSection('sticky_section', {
+    label: 'Sticky',
+    tab: TAB_ADVANCED,
+  })
+
+
+
+  element.addControl('sticky', {
+    type: CONTROLLER_SELECT,
+    label: 'Sticky Type',
+    options:()=>{
+      const stickyOptions = [
+        {
+          label: 'None',
+          value: '',
+        },
+        {
+          label: 'Top',
+          value: 'top',
+        },
+        // {
+        //   label: 'Bottom',
+        //   value: 'bottom',
+        // },
+      ]
+      if(element.getType() === 'widget'){
+        stickyOptions.push({
+          label: 'Top in Column',
+          value: 'column_top',
+        })
+      }
+      return stickyOptions
+    },
+  })
+
+  element.addControl('st_spacing', {
+    type: CONTROLLER_NUMBER,
+    label: 'Spacing'
+  })
+
+  element.endControlSection();
+
   actionsControllers(element, 'Wrapper Click Actions', 'wrapper_click_', TAB_ADVANCED);
 
 }

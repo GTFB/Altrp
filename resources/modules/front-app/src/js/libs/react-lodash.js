@@ -25,6 +25,7 @@ import toArray from 'lodash.toarray';
 import uniqBy  from 'lodash.uniqby';
 import sortBy  from 'lodash.sortby';
 import map  from 'lodash.map';
+import reverse  from 'lodash.reverse';
 window._ = {
   cloneDeep,
   get,
@@ -41,6 +42,7 @@ window._ = {
   isEqual,
   clone,
   each,
+  forEach: each,
   keys,
   toPairs,
   assign,
@@ -49,7 +51,7 @@ window._ = {
   isFunction,
   uniqBy,
   map,
-  forEach: each,
+  reverse,
 };
 window.ReactDOM = ReactDom;
 window.React = React;

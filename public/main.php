@@ -1,7 +1,7 @@
 <?php
 
 //Render cached files
-require_once __DIR__ .'/get-current-device.php';
+require_once __DIR__ . '/get-current-device.php';
 $cachePath = '../storage/framework/cache/pages/';
 
 if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
@@ -14,15 +14,16 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
   $cachedFiles = [];
   $json = file_get_contents($cachePath . 'relations.json');
   $current_device = get_current_device();
-  if( $json ){
+  if ($json) {
     $relations = json_decode($json, true);
-    $cachedFiles = $relations[$current_device];
+
+    $cachedFiles = $relations[$current_device] ?? null;
     $hash_to_delete = '';
 
     if (!empty($cachedFiles)) {
       foreach ($cachedFiles as $key => $cachedFile) {
-        if ( $cachedFile['url'] === $url ) {
-          if( file_exists($cachePath . $cachedFile['hash']) ){
+        if ($cachedFile['url'] === $url) {
+          if (file_exists($cachePath . $cachedFile['hash'])) {
             $file = file_get_contents($cachePath . $cachedFile['hash']);
 
             echo $file;
@@ -34,13 +35,13 @@ if (is_dir($cachePath) && file_exists($cachePath . 'relations.json')) {
       }
     }
 
-    if( $hash_to_delete ){
-      $cachedFiles = array_filter( $cachedFiles, function ( $file ) use ( $hash_to_delete ){
+    if ($hash_to_delete) {
+      $cachedFiles = array_filter($cachedFiles, function ($file) use ($hash_to_delete) {
         return $file['hash'] !== $hash_to_delete;
-      } );
+      });
       $relations[$current_device] = $cachedFiles;
-      $json = json_encode( $relations );
-      file_put_contents( $cachePath . 'relations.json', $json );
+      $json = json_encode($relations);
+      file_put_contents($cachePath . 'relations.json', $json);
     }
   }
 }
@@ -74,7 +75,7 @@ $altrp_route_id = false;
 |
 */
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -88,7 +89,7 @@ require __DIR__.'/../vendor/autoload.php';
 |
 */
 
-$app = require_once __DIR__.'/../bootstrap/app.php';
+$app = require_once __DIR__ . '/../bootstrap/app.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -105,7 +106,7 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
 $response = $kernel->handle(
-   $request = Illuminate\Http\Request::capture()
+  $request = Illuminate\Http\Request::capture()
 );
 
 $response->send();
