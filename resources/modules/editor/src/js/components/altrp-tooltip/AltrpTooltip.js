@@ -1,4 +1,5 @@
 import React from 'react';
+const {isEditor, isSSR} = window.altrpHelpers;
 let Tooltip2;
 
 if(window.altrpLibs) {
@@ -20,6 +21,9 @@ function offset(slider) {
 }
 
 function AltrpTooltip(props) {
+  if(isSSR()){
+    return <>{props.children}</>;
+  }
   const state = props.state || "never";
   const minimal = props.minimal || false;
   const position = props.position || "bottom";
@@ -37,6 +41,18 @@ function AltrpTooltip(props) {
       break;
   }
 
+
+  let body = document.body;
+
+  if(!props.editor) {
+    body = React.useMemo(() => {
+      return isEditor() ?
+        document.getElementById("editorContent").contentWindow.document.body
+        :
+        document.body
+    });
+  }
+
   if(Tooltip2 && props.children && !_.isString(props.children)) {
     return <Tooltip2
       content={props.text}
@@ -45,6 +61,7 @@ function AltrpTooltip(props) {
       interactionKind={state !== "always" ? state : null }
       placement={position}
       minimal={minimal}
+      portalContainer={body}
       modifiers={{
         offset: {
           enabled: true,
@@ -55,11 +72,7 @@ function AltrpTooltip(props) {
       }}
     >
       {
-        React.cloneElement(props.children, {
-          // onClick: state === "click" ? () => {
-          //   console.log('ea')
-          // } : null
-        })
+        props.children
       }
     </Tooltip2>
   } else {

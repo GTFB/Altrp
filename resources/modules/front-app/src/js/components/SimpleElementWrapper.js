@@ -214,18 +214,17 @@ class SimpleElementWrapper extends Component {
   }
 
   render() {
-
     const {
       hide_on_trigger,
-      tooltip_position
     } = this.props.element.settings;
-    let {
-      tooltip_text,
-      tooltip_minimal,
-      tooltip_show_type,
-      tooltip_horizontal_offset,
-      tooltip_vertical_offset,
-    } = this.props.element.settings
+
+    const tooltip_position = this.props.element.getResponsiveSetting('tooltip_position')
+    let tooltip_text = this.props.element.getResponsiveSetting('tooltip_text')
+    const tooltip_minimal = this.props.element.getResponsiveSetting('tooltip_minimal')
+    const tooltip_show_type = this.props.element.getResponsiveSetting('tooltip_show_type')
+    const tooltip_horizontal_offset = this.props.element.getResponsiveSetting('tooltip_horizontal_offset')
+    const tooltip_vertical_offset = this.props.element.getResponsiveSetting('tooltip_vertical_offset')
+
 
     if (this.state.errorInfo) {
       return (
@@ -342,7 +341,6 @@ class SimpleElementWrapper extends Component {
               }
             </AltrpTooltip>
             : content
-
         }
       </WrapperComponent>
     );

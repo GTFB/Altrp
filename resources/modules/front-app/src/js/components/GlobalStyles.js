@@ -45,8 +45,8 @@ import {getResponsiveSetting} from "../helpers";
 import InputRangeSliderComponent
   from "../../../../editor/src/js/components/widgets/styled-components/InputRangeSliderComponent";
 import getTemplateStyles from "./helpers/getTemplateStyles";
-import getInputMultiSelectStyles, {getInputMultiSelectPopoverStyles} from "./helpers/getInputMultiSelectStyles";
 import TooltipComponent from "../../../../editor/src/js/components/widgets/styled-components/TooltipComponent";
+import getInputMultiSelectStyles, {getInputMultiSelectPopoverStyles} from "./helpers/getInputMultiSelectStyles";
 
 const {isEditor} = window.altrpHelpers;
 

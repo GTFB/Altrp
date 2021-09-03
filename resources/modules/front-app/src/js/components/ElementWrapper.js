@@ -233,9 +233,7 @@ class ElementWrapper extends Component {
       hide_on_small_phone,
       hide_on_trigger,
       isFixed,
-      tooltip_position
     } = element.settings;
-    let { tooltip_text } = element.settings;
     let classes = `altrp-element altrp-element${element.getId()} altrp-element_${element.getType()}`;
     classes += element.getPrefixClasses() + " ";
     if (element.getType() === "widget") {
@@ -343,10 +341,6 @@ class ElementWrapper extends Component {
         break;
     }
 
-    tooltip_text = replaceContentWithData(
-      tooltip_text,
-      element.getCurrentModel().getData()
-    );
 
     const wrapperProps = {
       className: classes,
@@ -371,14 +365,33 @@ class ElementWrapper extends Component {
       wrapperProps["data-margin-top"] = element.getResponsiveSetting('st_spacing') || 0;
     }
     wrapperProps["data-altrp-id"] = element.getId();
+
+    const tooltip_position = this.props.element.getResponsiveSetting('tooltip_position')
+    let tooltip_text = this.props.element.getResponsiveSetting('tooltip_text')
+
+    tooltip_text = replaceContentWithData(
+      tooltip_text,
+      element.getCurrentModel().getData()
+    );
+    const tooltip_minimal = this.props.element.getResponsiveSetting('tooltip_minimal')
+    const tooltip_show_type = this.props.element.getResponsiveSetting('tooltip_show_type')
+    const tooltip_horizontal_offset = this.props.element.getResponsiveSetting('tooltip_horizontal_offset')
+    const tooltip_vertical_offset = this.props.element.getResponsiveSetting('tooltip_vertical_offset')
     return  (
       <WrapperComponent {...wrapperProps} element={element.getId()}>
-        {content}
-        {tooltip_text && (
-          <AltrpTooltip position={tooltip_position}>
-            {tooltip_text}
+
+        {tooltip_show_type !== "never" ? (
+          <AltrpTooltip
+            position={tooltip_position}
+            id={this.props.element.getId()}
+            state={tooltip_show_type}
+            minimal={tooltip_minimal}
+            horizontal={tooltip_horizontal_offset}
+            vertical={tooltip_vertical_offset}
+            text={tooltip_text}>
+            {content}
           </AltrpTooltip>
-        )}
+        ) : content}
       </WrapperComponent>
     );
   }
