@@ -966,6 +966,7 @@ function extractElementsNames( array $areas = [], bool $only_react_elements = fa
   $elementNames = [];
 
   foreach ( $areas as $area ) {
+
     if( ! isset( $area['template']['data'] ) ){
       continue;
     }
@@ -1413,6 +1414,9 @@ function getAltrpSettings( $page_id ): array
         }
 
       } );
+    }
+    if( is_array( data_get( $area, 'templates') ) ){
+      $settings['libsToLoad'][] = 'moment';
     }
   }
 

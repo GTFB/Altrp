@@ -8,6 +8,7 @@ export default async function loadPopups(){
     return;
   }
   await frontElementsManager.loadNotUsedComponent()
+
   const module = await import(/* webpackChunkName: 'FrontPopup' */'../components/FrontPopup')
   const ElementWrapper = (await import(/* webpackChunkName: 'FrontPopup' */'../components/ElementWrapper')).default;
   window.popupsContainer = document.createElement('div');

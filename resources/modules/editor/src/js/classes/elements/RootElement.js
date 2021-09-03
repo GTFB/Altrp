@@ -254,7 +254,7 @@ class RootElement extends BaseElement {
 
     this.addControl("content_position_popup_layout", {
       type: CONTROLLER_SELECT,
-      label: "Content position",
+      label: "Content Position",
       options: [
         {
           value: "flex-start",
@@ -271,11 +271,87 @@ class RootElement extends BaseElement {
       ],
     });
 
+    this.addControl('popup_pa', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Popup Padding',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+    });
+
+    this.addControl('popup_border', {
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+      }
+    );
+
+    this.addControl('popup_border_width', {
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        units: [
+          'px',
+          '%',
+          'vh',
+        ],
+      }
+    );
+
+    this.addControl('popup_border_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+      }
+    );
+
+    this.addControl('popup_radius', {
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Radius',
+        units: [
+          'px',
+          '%',
+          'vh',
+        ],
+      }
+    );
+
     this.addControl('layout_bg', {
       type: CONTROLLER_COLOR,
       label: "Layout Background",
     });
 
+    this.addControl('popup_bg', {
+      type: CONTROLLER_COLOR,
+      label: "Popup Background",
+    });
 
     this.addControl('heading_close_popup_layout', {
       type: CONTROLLER_HEADING,
@@ -332,7 +408,7 @@ class RootElement extends BaseElement {
       conditionsCallback: ()=>{
         return getTemplateType() === 'popup'
       },
-      label: 'Custom close button',
+      label: 'Close Button',
     });
 
     this.addControl('close_context', {
@@ -364,7 +440,7 @@ class RootElement extends BaseElement {
 
     this.addControl('close_top', {
       type: CONTROLLER_SLIDER,
-      label: 'top',
+      label: 'Top',
       units: [
         'px',
         '%',

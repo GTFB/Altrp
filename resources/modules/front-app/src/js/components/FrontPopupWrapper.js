@@ -57,6 +57,30 @@ ${({settings}) => {
     styles += `width:${sliderStyled(width_popup_layout)};`
   }
 
+  const popup_bg = getResponsiveSetting(settings, 'popup_bg')
+  if (popup_bg) {
+    styles += `background-color:${popup_bg.color};`
+  }
+  const popup_pa = getResponsiveSetting(settings, 'popup_pa')
+  if (popup_pa) {
+    styles += dimensionsControllerToStyles(popup_pa, 'padding')
+  }
+  const popup_border = getResponsiveSetting(settings, 'popup_border')
+  if (popup_border) {
+    styles += `border-style:${popup_border};`
+  }
+  const popup_border_width = getResponsiveSetting(settings, 'popup_border_width')
+  if (popup_border_width) {
+    styles += dimensionsControllerToStyles(popup_border_width, 'border-width')
+  }
+  const popup_radius = getResponsiveSetting(settings, 'popup_radius')
+  if (popup_radius) {
+    styles += dimensionsControllerToStyles(popup_radius, 'border-radius')
+  }
+  const popup_border_color = getResponsiveSetting(settings, 'popup_border_color')
+  if (popup_border_color) {
+    styles += `border-color:${popup_border_color.color};`
+  }
   return styles;
 }}
   max-height: 100%;
@@ -66,45 +90,76 @@ ${({settings}) => {
   width: 100%;
   height: 100%;
 }
+&.app-popup_offcanvas .popup-window{
+${({settings}) => {
+  let styles = ''
+  const type_popup = getResponsiveSetting(settings, 'type_popup')
+  if(type_popup !== 'offcanvas'){
+    return  styles
+  }
+  let top = 0, left = 0, right = 'auto', bottom = 'auto';
+  const horizontal_position_popup_layout = getResponsiveSetting(settings, 'horizontal_position_popup_layout')
+  const vertical_position_popup_layout = getResponsiveSetting(settings, 'vertical_position_popup_layout')
+
+  switch(vertical_position_popup_layout){
+    case 'bottom':{
+      bottom = 0
+      top = 'auto'
+    }break;
+    case 'center':{
+      styles += 'height:100%';
+    }break;
+  }
+  switch(horizontal_position_popup_layout){
+    case 'right':{
+      right = 0
+      left = 'auto'
+    }break;
+    case 'center':{
+      styles += 'width:100%';
+    }break;
+  }
+  styles += `top:${top};left:${left};right:${right};bottom:${bottom};`
+  return styles
+}}
 &&& .popup-close-button{
-  transform: translate(50%, -50%);
   padding: 0;
   ${({settings}) => {
   let styles = ''
   const close_pa = getResponsiveSetting(settings, 'close_pa')
-  if(close_pa){
+  if (close_pa) {
     styles += dimensionsControllerToStyles(close_pa, 'padding')
   }
   const close_right = getResponsiveSetting(settings, 'close_right')
-  if(close_right){
+  if (close_right) {
     styles += `right:${sliderStyled(close_right)};`
   }
   const close_top = getResponsiveSetting(settings, 'close_top')
-  if(close_top){
+  if (close_top) {
     styles += `top:${sliderStyled(close_top)};`
   }
   let close_c = getResponsiveSetting(settings, 'close_c');
-  if(close_c){
+  if (close_c) {
     styles += colorPropertyStyled(close_c, 'background-color')
   }
   close_c = getResponsiveSetting(settings, 'close_c', '.active');
-  if(close_c){
+  if (close_c) {
     styles += `&:active{${colorPropertyStyled(close_c, 'background-color')}}`
   }
   close_c = getResponsiveSetting(settings, 'close_c', ':hover');
-  if(close_c){
+  if (close_c) {
     styles += `&:hover{${colorPropertyStyled(close_c, 'background-color')}}`
   }
   let icon_fill = getResponsiveSetting(settings, 'icon_fill');
-  if(icon_fill){
+  if (icon_fill) {
     styles += `& svg *{${colorPropertyStyled(icon_fill, 'fill')}}`
   }
   icon_fill = getResponsiveSetting(settings, 'icon_fill', ':hover');
-  if(icon_fill){
+  if (icon_fill) {
     styles += `&:hover svg *{${colorPropertyStyled(icon_fill, 'fill')}}`
   }
   icon_fill = getResponsiveSetting(settings, 'icon_fill', '.active');
-  if(icon_fill){
+  if (icon_fill) {
     styles += `&:active svg *{${colorPropertyStyled(icon_fill, 'fill')}}`
   }
   return styles;
