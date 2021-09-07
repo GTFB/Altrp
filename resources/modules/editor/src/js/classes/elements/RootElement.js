@@ -1,4 +1,4 @@
-  import BaseElement from "./BaseElement";
+import BaseElement from "./BaseElement";
 import {
   CONTROLLER_DIMENSIONS,
   CONTROLLER_NUMBER,
@@ -27,6 +27,7 @@ import {
   import SaveImportModule from "../modules/SaveImportModule";
   import {actionsControllers} from "../../decorators/actions-controllers";
   import {getTemplateDataStorage, getTemplateType} from "../../helpers";
+import {getCurrentElement} from "../../store/store";
 
 class RootElement extends BaseElement {
   constructor() {
@@ -516,6 +517,10 @@ class RootElement extends BaseElement {
       label: "Animations",
       options: [
         {
+          value: "",
+          label: "none"
+        },
+        {
           value: "slide",
           label: "Slide"
         },
@@ -523,15 +528,34 @@ class RootElement extends BaseElement {
           value: "push",
           label: "Push"
         },
+      ],
+    });
+
+    this.addControl("s_direction", {
+      type: CONTROLLER_SELECT,
+      label: "Popup Slide Direction",
+      options: [
         {
-          value: "reveal",
-          label: "Reveal"
+          value: "left",
+          label: "Left"
         },
         {
-          value: "none",
-          label: "none"
-        }
+          value: "top",
+          label: "Top"
+        },
+        {
+          value: "right",
+          label: "Right"
+        },
+        {
+          value: "bottom",
+          label: "Bottom"
+        },
       ],
+      conditionsCallback: ()=>{
+        return getCurrentElement().getResponsiveSetting('type_popup') === 'popup' &&
+          getCurrentElement().getResponsiveSetting('animations_offcanvas') === 'slide'
+      },
     });
 
     this.addControl("time", {

@@ -53,13 +53,8 @@ class FrontPopup extends Component {
     this.props.closePopup();
   }
   onExited = ()=> {
-    const rootElement = this.state.rootElement;
-    const type_popup = rootElement.getResponsiveSetting('type_popup')
-    const animations_offcanvas = rootElement.getResponsiveSetting('animations_offcanvas')
     document.body.classList.remove('overflow-hidden');
     window.dispatchEvent(new Event('resize'));
-    const appContainer = document.getElementById('front-app')
-
   }
   onExit = ()=>{
     const rootElement = this.state.rootElement;
@@ -67,7 +62,7 @@ class FrontPopup extends Component {
     const animations_offcanvas = rootElement.getResponsiveSetting('animations_offcanvas')
     const appContainer = document.getElementById('front-app')
     const vertical_position_popup_layout = rootElement.getResponsiveSetting('vertical_position_popup_layout')
-    const horizontal_position_popup_layout = rootElement.getResponsiveSetting('vertical_position_popup_layout')
+    const horizontal_position_popup_layout = rootElement.getResponsiveSetting('horizontal_position_popup_layout')
     if(type_popup === 'offcanvas' && animations_offcanvas === 'push' ) {
       switch (vertical_position_popup_layout) {
         case 'top':{
@@ -92,16 +87,8 @@ class FrontPopup extends Component {
     }
   }
   onEntered = ()=>{
-    const rootElement = this.state.rootElement;
-    const type_popup = rootElement.getResponsiveSetting('type_popup')
-    const animations_offcanvas = rootElement.getResponsiveSetting('animations_offcanvas')
-    const width_popup_layout = rootElement.getResponsiveSetting('width_popup_layout')
-    const height_custom_popup_layout = rootElement.getResponsiveSetting('height_custom_popup_layout')
-    const appContainer = document.getElementById('front-app')
-
   }
   onEntering = ()=>{
-
     const rootElement = this.state.rootElement;
     const type_popup = rootElement.getResponsiveSetting('type_popup')
     const animations_offcanvas = rootElement.getResponsiveSetting('animations_offcanvas')
@@ -109,7 +96,7 @@ class FrontPopup extends Component {
     const width_popup_layout = rootElement.getResponsiveSetting('width_popup_layout')
     const height_custom_popup_layout = rootElement.getResponsiveSetting('height_custom_popup_layout')
     const appContainer = document.getElementById('front-app')
-    const horizontal_position_popup_layout = rootElement.getResponsiveSetting('vertical_position_popup_layout')
+    const horizontal_position_popup_layout = rootElement.getResponsiveSetting('horizontal_position_popup_layout')
     if(type_popup === 'offcanvas' && animations_offcanvas === 'push'){
       appContainer.style.transitionDuration =  _.get(rootElement.getResponsiveSetting('time'), 'size', 0) + 'ms'
       switch (vertical_position_popup_layout) {
@@ -141,10 +128,8 @@ class FrontPopup extends Component {
     const type_popup = rootElement.getResponsiveSetting('type_popup')
     const animations_offcanvas = rootElement.getResponsiveSetting('animations_offcanvas')
     const vertical_position_popup_layout = rootElement.getResponsiveSetting('vertical_position_popup_layout')
-    const width_popup_layout = rootElement.getResponsiveSetting('width_popup_layout')
-    const height_custom_popup_layout = rootElement.getResponsiveSetting('height_custom_popup_layout')
     const appContainer = document.getElementById('front-app')
-    const horizontal_position_popup_layout = rootElement.getResponsiveSetting('vertical_position_popup_layout')
+    const horizontal_position_popup_layout = rootElement.getResponsiveSetting('horizontal_position_popup_layout')
     if(type_popup === 'offcanvas' && animations_offcanvas === 'push' ) {
       switch (vertical_position_popup_layout) {
         case 'top':{
@@ -297,18 +282,21 @@ class FrontPopup extends Component {
     classes.push(
       `${type_popup || 'popup'}-${rootElement.getResponsiveSetting('horizontal_position_popup_layout') || 'center'}-${rootElement.getResponsiveSetting('vertical_position_popup_layout') || 'center'}-${rootElement.getResponsiveSetting('animations_offcanvas') || 'animations_offcanvas'}`
     );
-    let timeout = _.get(rootElement.getResponsiveSetting('time'), 'size', 0)
-    if(type_popup === 'popup'){
-      timeout = 0
-    }
+    const animations_offcanvas = rootElement.getResponsiveSetting('animations_offcanvas')
 
+    let timeout = _.get(rootElement.getResponsiveSetting('time'), 'size', 0)
+    if(type_popup === 'popup' && timeout && animations_offcanvas === 'slide'){
+      classes.push(`popup-slide-direction_${rootElement.getResponsiveSetting('s_direction') || 'left'}`);
+    }
     return (
     <CSSTransition
       in={isVisible}
       timeout={Number(timeout)}
       onEnter={this.onEnter}
+      onEntering={this.onEntering}
       onEntered={this.onEntered}
       onExit={this.onExit}
+      onExiting={this.onExiting}
       onExited={this.onExited}
       classNames="popup-transition-state">
       <FrontPopupWrapper

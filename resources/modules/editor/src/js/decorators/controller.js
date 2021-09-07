@@ -199,6 +199,13 @@ function conditionSubscriber() {
     }
     // }
   }
+  if(this.props.conditionsCallback){
+    if (this.props.controller.isShow() !== this.state.show) {
+      this.props.controller.isShow()
+        ? this.showComponentController()
+        : this.hideComponentController();
+    }
+  }
 }
 
 /**

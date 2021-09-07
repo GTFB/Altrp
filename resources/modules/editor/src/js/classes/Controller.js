@@ -118,7 +118,6 @@ class Controller {
    * @return {boolean}
    */
   isShow() {
-
     if(this.data.conditionsCallback){
       return this.data.conditionsCallback();
     }
