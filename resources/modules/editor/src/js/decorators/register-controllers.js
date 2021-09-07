@@ -722,7 +722,6 @@ export function advancedTabControllers(element) {
   element.addControl('tooltip_show_type', {
     type: CONTROLLER_SELECT,
     label: 'Show type',
-    default: 'Never',
     options: [
       {
         value: 'never',
@@ -751,7 +750,6 @@ export function advancedTabControllers(element) {
   element.addControl('tooltip_position', {
     type: CONTROLLER_SELECT,
     label: 'Position',
-    default: 'bottom',
     options: [
       {
         label: 'top',

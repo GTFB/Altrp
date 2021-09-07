@@ -170,6 +170,7 @@
         "react-tabs": "^3.1.1",
         "react-text-mask": "^5.4.3",
         "react-to-print": "^2.10.0",
+        "react-transition-group": "^4.4.2",
         "react-window": "^1.8.6",
         "reactour": "^1.18.0",
         "reaviz": "^8.1.8",

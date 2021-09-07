@@ -44,6 +44,15 @@ ${({settings}) => {
 && .popup-window{
   ${({settings}) => {
   let styles = "";
+
+  let timeout = _.get(getResponsiveSetting(settings, 'time'), 'size', 0)
+  const type_popup = getResponsiveSetting(settings, 'type_popup')
+  if(type_popup === 'popup'){
+    timeout = 0
+  }
+  if(timeout != 0) {
+    styles += `transition-duration: ${timeout}ms;`
+  }
   const height_custom_popup_layout = getResponsiveSetting(settings, 'height_custom_popup_layout')
   if (height_custom_popup_layout) {
     styles += `height:${sliderStyled(height_custom_popup_layout)};`

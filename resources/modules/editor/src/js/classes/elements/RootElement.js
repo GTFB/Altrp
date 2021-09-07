@@ -506,117 +506,9 @@ class RootElement extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection('offcanvas_section', {
-      label: 'Offcanvas',
-      conditions: {
-        "type_popup": "offcanvas"
-      }
-    });
+    this.startControlSection('transitions', {
+      label: 'Transitions',
 
-    this.addControl("width_offcanvas", {
-      type: CONTROLLER_SLIDER,
-      label: 'Width',
-      units: [
-        'px',
-        '%',
-        'vw'
-      ],
-      max: 1200,
-      min: 0,
-    });
-
-    // this.addControl('overlay_offcanvas', {
-    //   type: CONTROLLER_SWITCHER,
-    //   label: 'Overlay',
-    // });
-
-    this.addControl('close_offcanvas', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Close button',
-    });
-
-    // this.addControl('close_button_position_offcanvas', {
-    //   conditions: {
-    //     'close_offcanvas': true,
-    //   },
-    //   type: CONTROLLER_CHOOSE,
-    //   label: 'Alignment',
-    //   options: [
-    //     {
-    //       icon: 'left',
-    //       value: 'left',
-    //     },
-    //     {
-    //       icon: 'right',
-    //       value: 'right',
-    //     },
-    //   ],
-    // });
-
-    // this.addControl('close_button_icon_offcanvas', {
-    //   conditions: {
-    //     'close_offcanvas': true,
-    //   },
-    //   type: CONTROLLER_MEDIA,
-    //   label: 'Background Image',
-    // });
-
-    this.addControl("close_cursor_offcanvas", {
-      type: CONTROLLER_SELECT,
-      label: "Close cursor",
-      options: [
-        {
-          value: "none",
-          label: "None"
-        },
-        {
-          value: "crosshair",
-          label: "Crosshair"
-        },
-        {
-          value: "pointer",
-          label: "Pointer"
-        },
-      ],
-    });
-
-    this.addControl("direction_offcanvas", {
-      type: CONTROLLER_SELECT,
-      label: "Content box direction",
-      options: [
-        {
-          value: "left",
-          label: "Left"
-        },
-        {
-          value: "right",
-          label: "Right"
-        },
-        {
-          value: "top",
-          label: "Top"
-        },
-        {
-          value: "bottom",
-          label: "Bottom"
-        },
-        // {
-        //   value: "topLeft",
-        //   label: "Top left"
-        // },
-        // {
-        //   value: "topRight",
-        //   label: "Top right"
-        // },
-        // {
-        //   value: "bottomLeft",
-        //   label: "Bottom Left"
-        // },
-        // {
-        //   value: "bottomRight",
-        //   label: "Bottom right"
-        // },
-      ],
     });
 
     this.addControl("animations_offcanvas", {
@@ -642,21 +534,12 @@ class RootElement extends BaseElement {
       ],
     });
 
-    this.addControl('overflow_visible_offcanvas', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Offcanvas overflow visible',
-    });
-
-    this.addControl("time_offcanvas", {
+    this.addControl("time", {
       type: CONTROLLER_SLIDER,
-      default: {
-        size: 200,
-        unit: 'ms',
-      },
-      label: 'Time',
+      label: 'Transition Time',
       units: ["ms"],
-      max: 5000,
-      min: 100,
+      max: 1000,
+      min: 0,
     });
 
     this.endControlSection();

@@ -218,10 +218,10 @@ class SimpleElementWrapper extends Component {
       hide_on_trigger,
     } = this.props.element.settings;
 
-    const tooltip_position = this.props.element.getResponsiveSetting('tooltip_position')
+    const tooltip_position = this.props.element.getResponsiveSetting('tooltip_position', 'bottom')
     let tooltip_text = this.props.element.getResponsiveSetting('tooltip_text')
     const tooltip_minimal = this.props.element.getResponsiveSetting('tooltip_minimal')
-    const tooltip_show_type = this.props.element.getResponsiveSetting('tooltip_show_type')
+    let tooltip_show_type = this.props.element.getResponsiveSetting('tooltip_show_type')
     const tooltip_horizontal_offset = this.props.element.getResponsiveSetting('tooltip_horizontal_offset')
     const tooltip_vertical_offset = this.props.element.getResponsiveSetting('tooltip_vertical_offset')
 
@@ -322,8 +322,11 @@ class SimpleElementWrapper extends Component {
         this.elementWrapperRef.current.style.display = "none";
       }
     }
+    if(['column', 'section'].indexOf(this.props.element.getType()) !== -1){
+      tooltip_show_type = 'never'
+    }
 
-    return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
+    return (
       <WrapperComponent {...wrapperProps} >
         {
           tooltip_show_type && tooltip_show_type !== "never" ?

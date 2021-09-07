@@ -366,7 +366,7 @@ class ElementWrapper extends Component {
     }
     wrapperProps["data-altrp-id"] = element.getId();
 
-    const tooltip_position = this.props.element.getResponsiveSetting('tooltip_position')
+    const tooltip_position = this.props.element.getResponsiveSetting('tooltip_position', 'bottom')
     let tooltip_text = this.props.element.getResponsiveSetting('tooltip_text')
 
     tooltip_text = replaceContentWithData(
@@ -374,9 +374,12 @@ class ElementWrapper extends Component {
       element.getCurrentModel().getData()
     );
     const tooltip_minimal = this.props.element.getResponsiveSetting('tooltip_minimal')
-    const tooltip_show_type = this.props.element.getResponsiveSetting('tooltip_show_type')
+    let tooltip_show_type = this.props.element.getResponsiveSetting('tooltip_show_type')
     const tooltip_horizontal_offset = this.props.element.getResponsiveSetting('tooltip_horizontal_offset')
     const tooltip_vertical_offset = this.props.element.getResponsiveSetting('tooltip_vertical_offset')
+    if(['column', 'section'].indexOf(this.props.element.getType()) !== -1){
+      tooltip_show_type = 'never'
+    }
     return  (
       <WrapperComponent {...wrapperProps} element={element.getId()}>
 

@@ -553,16 +553,18 @@ class ElementWrapper extends Component {
   }
   render() {
     const elementHideTrigger = this.props.element.settings.hide_on_trigger;
-    const {
+    let {
       isFixed,
       tooltip_text,
       tooltip_minimal,
       tooltip_show_type,
       tooltip_horizontal_offset,
       tooltip_vertical_offset,
-      tooltip_position
+      tooltip_position = 'bottom'
     } = this.props.element.getSettings();
-
+    if(['column', 'section'].indexOf(this.props.element.getType())){
+      tooltip_show_type = 'never'
+    }
     let errorContent = null;
     if (this.state.errorInfo) {
       errorContent = (
@@ -718,7 +720,7 @@ class ElementWrapper extends Component {
           </div>
         </div>
         {
-          tooltip_show_type && tooltip_show_type !== "never" && !errorContent ?
+          tooltip_show_type && tooltip_show_type !== "never" && ! errorContent ?
             <AltrpTooltip
               text={tooltip_text}
               id={this.props.element.getId()}
