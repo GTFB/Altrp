@@ -22,6 +22,7 @@ import { currentPageReducer } from "./current-page/reducers";
 import {menusReducer} from "./menus-storage/reducers";
 import {elementsSettingsReducer} from "./elements-settings/reducers";
 import {areasReducer} from "./areas/reducers";
+import {lightboxImagesReducer} from "./ligtbox-images-storage/reducers";
 
 export default combineReducers({
   appRoutes: appRoutesReducer,
@@ -47,4 +48,5 @@ export default combineReducers({
   altrpMenus: menusReducer,
   elementsSettings: elementsSettingsReducer,
   areas: areasReducer,
+  lightboxImages: lightboxImagesReducer,
 });

@@ -1,4 +1,4 @@
-import {
+const {
   getComponentByElementId,
   getHTMLElementById,
   isEditor,
@@ -6,7 +6,7 @@ import {
   printElements,
   renderAsset,
   scrollToElement
-} from "../../../../../front-app/src/js/helpers";
+} = window.altrpHelpers;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-btn-wrapper {

@@ -4,7 +4,15 @@ const {isEditor} = window.altrpHelpers;
 const Slider = window.altrpLibs.Blueprint.RangeSlider;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
-
+.bp3-slider-label{
+    white-space: nowrap;
+}
+.bp3-slider-handle{
+    z-index: 2;
+}
+.bp3-slider-label{
+    z-index: 1;
+}
 `);
 
 const SliderWrapper = styled.div`

@@ -88,6 +88,8 @@ class FrontPopup extends Component {
   }
   onEntered = ()=>{
   }
+  onExiting = ()=>{
+  }
   onEntering = ()=>{
     const rootElement = this.state.rootElement;
     const type_popup = rootElement.getResponsiveSetting('type_popup')
@@ -156,6 +158,7 @@ class FrontPopup extends Component {
 
   render() {
     const { isVisible } = this.state;
+    console.log(isVisible);
     let classes = [`app-popup`];
     const rootElement = this.state.rootElement;
     rootElement.popupGUID = _.get(this.props, "template.guid");
@@ -288,6 +291,8 @@ class FrontPopup extends Component {
     if(type_popup === 'popup' && timeout && animations_offcanvas === 'slide'){
       classes.push(`popup-slide-direction_${rootElement.getResponsiveSetting('s_direction') || 'left'}`);
     }
+    console.log(CSSTransition);
+    console.log(Number(timeout));
     return (
     <CSSTransition
       in={isVisible}

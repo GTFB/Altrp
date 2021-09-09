@@ -21,6 +21,7 @@
   1. Button
 + Render Template Widget on Server
 + Prevent Update Some Widgets on Forms Update
++ Add Tooltip for Widgets
 
 
 ### 0.15.0
