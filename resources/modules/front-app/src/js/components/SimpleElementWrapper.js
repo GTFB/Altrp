@@ -215,7 +215,6 @@ class SimpleElementWrapper extends Component {
 
   render() {
     const {
-      hide_on_trigger,
     } = this.props.element.settings;
 
     const tooltip_position = this.props.element.getResponsiveSetting('tooltip_position', 'bottom')

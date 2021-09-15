@@ -66,7 +66,7 @@ class FrontElementsManager {
 
   getComponentClass(name) {
     if (! this.components[name]) {
-      console.error( 'Не найден компонент с именем ' + name);
+      console.error( 'Not found component with ' + name);
     }
     return this.components[name];
   }

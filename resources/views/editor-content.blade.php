@@ -26,6 +26,10 @@
         .altrp-hidden{
           display: none!important;
         }
+
+        .altrp-element > .bp3-popover2-target{
+          display: content;
+        }
     </style>
     <script>
         window.ALTRP_DEBUG = {!! json_encode(!!get_altrp_setting('altrp_debug', false)) !!};

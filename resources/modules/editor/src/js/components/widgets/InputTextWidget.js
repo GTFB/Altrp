@@ -1,4 +1,4 @@
-import {
+const {
   convertData,
   isEditor,
   parseOptionsFromSettings,
@@ -7,13 +7,12 @@ import {
   replaceContentWithData,
   renderAssetIcon,
   getDataFromLocalStorage
-} from "../../../../../front-app/src/js/helpers";
+} = window.altrpHelpers;
 import Resource from "../../classes/Resource";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
 import AltrpInput from "../altrp-input/AltrpInput";
 
-const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`
 .altrp-field-label_text-widget{
     width: 100%;
@@ -106,11 +105,9 @@ const { moment } = window.altrpHelpers;
   padding-bottom: 2px;
   padding-left: 2px;
   border-width: 1px;
-  border-color: #000;
 }
 .altrp-field-select2__control:hover{
   border-width: 1px;
-  border-color: #000;
 }
 .altrp-field-container {
   margin: 0;

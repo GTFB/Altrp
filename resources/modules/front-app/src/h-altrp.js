@@ -146,7 +146,6 @@ const frontAppContainer = document.getElementById('front-app');
 frontAppContainer.addEventListener('scroll', e=>{
   appStore && appStore.dispatch(setScrollValue({top: e.target.scrollTop}))
 })
-
 document.body.addEventListener('click', e =>{
   import(/* webpackChunkName: 'click-actions' */'./js/functions/actions/click-actions').then((module)=>{
     module?.default(e);
@@ -157,4 +156,11 @@ document.addEventListener('DOMContentLoaded', e =>{
   import(/* webpackChunkName: 'load-sticky' */'./js/functions/load-sticky').then((module)=>{
     module?.default(e);
   })
+
+  if(document.querySelector('[data-enter-animation-type]')){
+    import('./js/functions/add-animation-classes').then(module=>{
+      document.addEventListener('scroll', module.default)
+      module.default();
+    })
+  }
 })

@@ -13,6 +13,7 @@ module.exports = {
   output: {
     path: path.resolve("server-dist"),
     filename: "index.js",
+    chunkFilename: "[name].[contenthash].server-chunk.js",
     globalObject: "this"
   },
 

@@ -242,6 +242,11 @@ class InputFile extends BaseElement {
       label: 'Font Color'
     });
 
+    this.addControl('b_bg_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Background Color'
+    });
+
     this.endControlSection();
 
     this.startControlSection('background_section', {
@@ -265,10 +270,10 @@ class InputFile extends BaseElement {
       tab: TAB_STYLE,
       label: 'Border'
     });
-    /*
+
     this.addControl('border_type', {
       type: CONTROLLER_SELECT,
-      label: 'Border Type',
+      label: 'Input Border Type',
       options: [
         {
           value: 'none',
@@ -299,18 +304,61 @@ class InputFile extends BaseElement {
 
     this.addControl('border_width', {
       type: CONTROLLER_DIMENSIONS,
-      label: 'Border Width',
+      label: 'Input Border Width',
       units: ['px', '%', 'vh']
     });
 
     this.addControl('border_color', {
       type: CONTROLLER_COLOR,
-      label: 'Border Color'
+      label: 'Input Border Color'
     });
-    */
+
+
+    this.addControl('b_border_type', {
+      type: CONTROLLER_SELECT,
+      label: 'Button Border Type',
+      options: [
+        {
+          value: 'none',
+          label: 'None'
+        },
+        {
+          value: 'solid',
+          label: 'Solid'
+        },
+        {
+          value: 'double',
+          label: 'Double'
+        },
+        {
+          value: 'dotted',
+          label: 'Dotted'
+        },
+        {
+          value: 'dashed',
+          label: 'Dashed'
+        },
+        {
+          value: 'groove',
+          label: 'Groove'
+        }
+      ]
+    });
+
+    this.addControl('b_border_width', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Button Border Width',
+      units: ['px', '%', 'vh']
+    });
+
+    this.addControl('b_border_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Button Border Color'
+    });
+
     this.addControl('box_shadow', {
       type: CONTROLLER_SHADOW,
-      label: 'Box shadow',
+      label: 'Input Box shadow',
     });
     this.addControl('b_box_shadow', {
       type: CONTROLLER_SHADOW,
@@ -320,7 +368,7 @@ class InputFile extends BaseElement {
     this.addControl('radius', {
       type: CONTROLLER_DIMENSIONS,
       stateless: true,
-      label: 'Radius',
+      label: 'Input Radius',
       units: ['px', '%', 'vh']
     });
 

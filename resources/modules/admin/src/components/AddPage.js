@@ -274,8 +274,8 @@ class AddPage extends Component {
                         }}
                         className="form-control"
                       >
-                        <option value="" disabled />
-                        <option value="root">Root</option>
+                        {/*<option value=""  />*/}
+                        <option value="">None</option>
                         {this.state.pagesOptions.map(page => {
                           return (
                             <option value={page.value} key={page.value}>

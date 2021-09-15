@@ -14,6 +14,7 @@
   3. Input Gallery
   4. Input Slider
   5. Input Range Slider
+  5. Image Widget with Lightbox
 + Add "Active" State for Widgets:
   1. Button
   2. Divider
@@ -21,7 +22,7 @@
   1. Button
 + Render Template Widget on Server
 + Prevent Update Some Widgets on Forms Update
-+ Add Tooltip for Widgets
++ Add Entrance Motion Effect for Widgets 
 
 
 ### 0.15.0

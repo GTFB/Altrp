@@ -479,7 +479,9 @@ class ElementWrapper extends Component {
       return { ...state, isDrag: false, dragOver: false, cursorPos: false };
     });
   }
-
+  componentDidUpdate(){
+    document.getElementById('editorContent')?.contentWindow?.dispatchEvent(new Event('resize'))
+  }
   /**
    * Css классы
    * @return {string}
@@ -562,7 +564,7 @@ class ElementWrapper extends Component {
       tooltip_vertical_offset,
       tooltip_position = 'bottom'
     } = this.props.element.getSettings();
-    if(['column', 'section'].indexOf(this.props.element.getType())){
+    if(['column', 'section'].indexOf(this.props.element.getType()) !== -1){
       tooltip_show_type = 'never'
     }
     let errorContent = null;
@@ -665,7 +667,6 @@ class ElementWrapper extends Component {
       // WrapperComponent = DashboardComponent;
       // break;
     }
-
     return elementHideTrigger &&
       this.props.hideTriggers.includes(elementHideTrigger) ? null : (
       <WrapperComponent

@@ -95,6 +95,7 @@ const addSettingsToStore = (require("../resources/modules/front-app/src/js/funct
 app.post("/", (req, res) => {
   const sheet = new ServerStyleSheet();
   const store = window.appStore;
+  window.animationsMemo = []
   let json = JSON.parse(req.body.json) || [];
   if(_.isObject(json.altrp_settings)){
     window.__altrp_settings__ = json.altrp_settings;

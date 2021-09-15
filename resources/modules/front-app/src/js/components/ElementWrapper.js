@@ -5,6 +5,7 @@ import { changeCurrentPageProperty } from "../store/current-page/actions";
 import { ElementWrapperDivComponent } from "../../../../editor/src/js/components/widgets/styled-components/ElementWrapperComponent";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
 import DEFAULT_REACT_ELEMENTS from "../constants/DEFAULT_REACT_ELEMENTS";
+import EntranceAnimationsStyles from "./EntranceAnimationsStyles";
 const {
   altrpCompare,
   altrpRandomId,
@@ -306,7 +307,7 @@ class ElementWrapper extends Component {
     let ContentComponent = frontElementsManager.getComponentClass(
       element.getName()
     );
-    const content = React.createElement(ContentComponent, {
+    let content = React.createElement(ContentComponent, {
       ref: this.elementRef,
       rootElement: this.props.rootElement,
       ElementWrapper: this.props.ElementWrapper,
@@ -366,19 +367,30 @@ class ElementWrapper extends Component {
     }
     wrapperProps["data-altrp-id"] = element.getId();
 
-    const tooltip_position = this.props.element.getResponsiveSetting('tooltip_position', 'bottom')
-    let tooltip_text = this.props.element.getResponsiveSetting('tooltip_text')
+    const tooltip_position = element.getResponsiveSetting('tooltip_position', 'bottom')
+    let tooltip_text = element.getResponsiveSetting('tooltip_text')
 
     tooltip_text = replaceContentWithData(
       tooltip_text,
       element.getCurrentModel().getData()
     );
-    const tooltip_minimal = this.props.element.getResponsiveSetting('tooltip_minimal')
-    let tooltip_show_type = this.props.element.getResponsiveSetting('tooltip_show_type')
-    const tooltip_horizontal_offset = this.props.element.getResponsiveSetting('tooltip_horizontal_offset')
-    const tooltip_vertical_offset = this.props.element.getResponsiveSetting('tooltip_vertical_offset')
-    if(['column', 'section'].indexOf(this.props.element.getType()) !== -1){
+    const tooltip_minimal = element.getResponsiveSetting('tooltip_minimal')
+    let tooltip_show_type = element.getResponsiveSetting('tooltip_show_type')
+    const tooltip_horizontal_offset = element.getResponsiveSetting('tooltip_horizontal_offset')
+    const tooltip_vertical_offset = element.getResponsiveSetting('tooltip_vertical_offset')
+    if(['column', 'section'].indexOf(element.getType()) !== -1){
       tooltip_show_type = 'never'
+    }
+    const entranceAnimationType = element.getResponsiveSetting('en_an');
+    if(entranceAnimationType){
+      wrapperProps['data-enter-animation-type'] = entranceAnimationType;
+      // wrapperProps['data-enter-animation-duration'] = element.getResponsiveSetting('en_a_duration') || 400;
+      wrapperProps['data-enter-animation-delay'] = element.getResponsiveSetting('en_a_delay') || 0;
+      wrapperProps.className += ` altrp-invisible`;
+      content = <>
+        <EntranceAnimationsStyles settings={element.getSettings()} elementId={element.getId()}/>
+        {content}
+      </>
     }
     return  (
       <WrapperComponent {...wrapperProps} element={element.getId()}>

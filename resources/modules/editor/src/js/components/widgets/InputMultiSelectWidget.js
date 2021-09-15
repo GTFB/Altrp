@@ -128,11 +128,9 @@ const MultiSelect = window.altrpLibs.BlueprintSelect.MultiSelect;
   padding-bottom: 2px;
   padding-left: 2px;
   border-width: 1px;
-  border-color: #000;
 }
 .altrp-field-select2__control:hover{
   border-width: 1px;
-  border-color: #000;
 }
 .altrp-field-container {
   margin: 0;
