@@ -236,6 +236,9 @@ class MenuWidget extends Component {
           key={item.id}
           onClick={(e) => {
             e.preventDefault();
+            if(! item.url){
+              return;
+            }
             if (isEditor() || !this.props.history) {
               window.location.href = item.url
               return
@@ -300,7 +303,10 @@ class MenuWidget extends Component {
           key={item.id}
           onClick={(e) => {
             e.preventDefault();
-            if (isEditor() || !this.props.history) {
+            if(! item.url){
+              return;
+            }
+            if (isEditor() || !this.props.history || ! item.url) {
               window.location.href = item.url
               return
             }

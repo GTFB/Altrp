@@ -20,11 +20,13 @@ const getMenuStyles = (settings,id)=>{
      */
     let renderButton = getResponsiveSetting(settings, 'button');
     if (renderButton) {
-      styles += `${parentClass} .altrp-popover{display:flex;`;
+      styles += `${parentClass}${parentClass} {`;
       let alignment = getResponsiveSetting(settings, 'alignment')
-      styles += `justify-content:${alignment};`;
-      if (alignment === 'stretch') {
-        styles += `${parentClass} .altrp-menu-toggle{flex-grow:1;}`;
+      styles += `justify-content:${alignment};flex-direction: row;`;
+      if (alignment !== 'stretch') {
+        styles += `& .altrp-popover{flex-grow:0; width: auto;}`;
+      } else {
+        styles += `& .bp3-button {width: 100%;}`;
       }
       styles += '} ';
     }
@@ -33,7 +35,7 @@ const getMenuStyles = (settings,id)=>{
      * @type {string}
      */
     if (renderButton) {
-      styles += `${parentClass} .altrp-menu-toggle{`;
+      styles += `${parentClass}${parentClass} .altrp-menu-toggle{`;
       let buttonBg = getResponsiveSetting(settings, 'button_bg')
       if (buttonBg && buttonBg.color) {
         styles += `background-color:${buttonBg.color};background-image:none;`;

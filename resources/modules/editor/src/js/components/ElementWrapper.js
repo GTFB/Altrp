@@ -26,7 +26,7 @@ import DropbarWidgetComponent from "./widgets/styled-components/DropbarWidgetCom
 import DashboardComponent from "./widgets/styled-components/DashboardComponent";
 import getImageStyles from "../../../../front-app/src/js/components/helpers/stylesForTheImage";
 import getTabsStyles from "../../../../front-app/src/js/components/helpers/stylesForTheTabs";
-import getMenuStyles from "../../../../front-app/src/js/components/helpers/stylesForTheMenu";
+import getMenuStyles from "../../../../front-app/src/js/components/helpers/getMenuStyles";
 import getBreadcrumbsStyles from "../../../../front-app/src/js/components/helpers/stylesForTheBreadcrumbs";
 import { getHeadingTypeHeadingStyles } from "../../../../front-app/src/js/components/helpers/stylesForTheHeadingTypeHeading";
 import { getHeadingTypeAnimatingStyles } from "../../../../front-app/src/js/components/helpers/stylesForTheHeadingTypeAnimating";
