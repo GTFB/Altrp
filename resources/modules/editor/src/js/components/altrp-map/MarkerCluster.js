@@ -8,7 +8,7 @@ import { customIcon } from "./DivIcon";
 
 const mcg = L.markerClusterGroup();
 
-const MarkerCluster = ({ markers }) => {
+const MarkerCluster = ({ markers, FG }) => {
   const { map } = useMap();
 
   let markersData = markers.map(item => {
@@ -32,7 +32,8 @@ const MarkerCluster = ({ markers }) => {
         .bindPopup(popup)
         .bindTooltip(tooltip);
     });
-    map.addLayer(mcg);
+    console.log(FG.current);
+    FG.current.addLayer(mcg);
   }, [markers, map]);
 
   return null;
