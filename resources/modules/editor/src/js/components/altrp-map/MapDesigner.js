@@ -244,7 +244,7 @@ function MapDesigner({
       if (e.target.feature) {
         setSelected(e.target.feature.id);
       } else {
-        const id = FG.current.leafletElement.getLayerId(e.target);
+        const id = FG.current.getLayerId(e.target);
         setSelected(id);
       }
     },
