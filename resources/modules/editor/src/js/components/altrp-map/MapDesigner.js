@@ -283,7 +283,8 @@ function MapDesigner({
   const whenReady = useCallback(() => {
     if (!FG.current) return;
     // Очищаем старые слои
-    FG.current.leafletElement.clearLayers();
+    console.log(FG.current);
+    FG.current.clearLayers();
     let markers = [];
     // Добавляем новые слои
     if (state.features?.length > 0) {
@@ -340,7 +341,7 @@ function MapDesigner({
               layer.bindPopup(feature.properties.popup);
             }
             if (!feature.inCluster) {
-              FG.current.leafletElement.addLayer(layer);
+              FG.current.addLayer(layer);
             }
           }
         });

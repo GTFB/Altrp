@@ -275,8 +275,10 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
 
   const tooltip_show_type = settings.tooltip_show_type || "never";
 
-  if(tooltip_show_type !== "never") {
-    styles += `.altrp-tooltip${elementId}.altrp-tooltip${elementId} {${TooltipComponent(settings)}}`
+  if (tooltip_show_type !== "never") {
+    styles += `.altrp-tooltip${elementId}.altrp-tooltip${elementId} {${TooltipComponent(
+      settings
+    )}}`;
   }
 
   styles += `div.${prefix}${elementId}.${prefix}${elementId} {${AdvancedComponent(
@@ -479,8 +481,10 @@ class ElementWrapper extends Component {
       return { ...state, isDrag: false, dragOver: false, cursorPos: false };
     });
   }
-  componentDidUpdate(){
-    document.getElementById('editorContent')?.contentWindow?.dispatchEvent(new Event('resize'))
+  componentDidUpdate() {
+    document
+      .getElementById("editorContent")
+      ?.contentWindow?.dispatchEvent(new Event("resize"));
   }
   /**
    * Css классы
@@ -562,10 +566,10 @@ class ElementWrapper extends Component {
       tooltip_show_type,
       tooltip_horizontal_offset,
       tooltip_vertical_offset,
-      tooltip_position = 'bottom'
+      tooltip_position = "bottom"
     } = this.props.element.getSettings();
-    if(['column', 'section'].indexOf(this.props.element.getType()) !== -1){
-      tooltip_show_type = 'never'
+    if (["column", "section"].indexOf(this.props.element.getType()) !== -1) {
+      tooltip_show_type = "never";
     }
     let errorContent = null;
     if (this.state.errorInfo) {
@@ -720,23 +724,22 @@ class ElementWrapper extends Component {
             </button>
           </div>
         </div>
-        {
-          tooltip_show_type && tooltip_show_type !== "never" && ! errorContent ?
-            <AltrpTooltip
-              text={tooltip_text}
-              id={this.props.element.getId()}
-              state={tooltip_show_type}
-              position={tooltip_position}
-              minimal={tooltip_minimal}
-              horizontal={tooltip_horizontal_offset}
-              vertical={tooltip_vertical_offset}
-            >
-              {
-                React.createElement(this.props.component, elementProps)
-              }
-            </AltrpTooltip>
-            : errorContent || React.createElement(this.props.component, elementProps)
-        }
+        {tooltip_show_type && tooltip_show_type !== "never" && !errorContent ? (
+          <AltrpTooltip
+            text={tooltip_text}
+            id={this.props.element.getId()}
+            state={tooltip_show_type}
+            position={tooltip_position}
+            minimal={tooltip_minimal}
+            horizontal={tooltip_horizontal_offset}
+            vertical={tooltip_vertical_offset}
+          >
+            {React.createElement(this.props.component, elementProps)}
+          </AltrpTooltip>
+        ) : (
+          errorContent ||
+          React.createElement(this.props.component, elementProps)
+        )}
         {emptyColumn}
         <ElementWrapperGlobalStyles
           settings={this.props.element.getSettings()}
