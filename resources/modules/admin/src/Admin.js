@@ -62,6 +62,9 @@ import SQLEditors from "./components/SQLEditors";
 import ColorSchemes from "./components/dashboard/ColorSchemes";
 import ModelPage from "./components/models/ModelPage";
 import { WithRouterAdminAssetsDropList } from "./components/AdminAssetsDropList";
+import { WithRouterAdminTablesDropList } from "./components/AdminTablesDropList";
+import { WithRouterAdminTemplatesDropList } from "./components/AdminTemplatesDropList";
+import { WithRouterAdminUsersDropList } from "./components/AdminUsersDropList";
 import CustomFonts from "./components/CustomFonts";
 import EditFont from "./components/EditFont";
 import AddNewFont from "./components/AddNewFont";
@@ -326,17 +329,7 @@ class Admin extends Component {
                         <TableSvg className="icon" />
                         <span>Tables</span>
                       </Link>
-                      <ul className="admin-nav-sublist">
-                        <li>
-                          <Link
-                            to="/admin/tables/sql_editors"
-                            className="admin-nav-list__link"
-                          >
-                            <TableSvg className="icon" />
-                            <span>SQL Editors</span>
-                          </Link>
-                        </li>
-                      </ul>
+                      <WithRouterAdminTablesDropList />
                     </li>
                     <li>
                       <Link
@@ -346,15 +339,7 @@ class Admin extends Component {
                         <TemplateSvg className="icon" />
                         <span>Templates</span>
                       </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/admin/areas"
-                        className="admin-nav-list__link"
-                      >
-                        <TemplateSvg className="icon" />
-                        <span>Custom Areas</span>
-                      </Link>
+                      <WithRouterAdminTemplatesDropList />
                     </li>
                     <li>
                       <Link to="/admin/robots" className="admin-nav-list__link">
@@ -376,14 +361,7 @@ class Admin extends Component {
                         <UserSvg className="icon" />
                         <span>Users</span>
                       </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/admin/tools"
-                        className="admin-nav-list__link"
-                      >
-                        <span>Tools</span>
-                      </Link>
+                      <WithRouterAdminUsersDropList />
                     </li>
                     <li>
                       <Link

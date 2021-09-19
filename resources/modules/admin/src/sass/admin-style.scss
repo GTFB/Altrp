@@ -145,13 +145,13 @@
         display: none;
         position: fixed;
         left: 271px;
-        top: 81px;
+        margin-top: -37px;
 
         &::before {
+          margin-top: 10px;
+          left: 255px;
           content: "";
           position: fixed;
-          left: 255px;
-          top: 102px;
           border: 8px solid transparent;
           border-right: 8px solid #677289;
           display: block;
