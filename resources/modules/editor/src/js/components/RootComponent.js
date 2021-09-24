@@ -1,4 +1,5 @@
 import React, { Component,  } from "react";
+import {isEditor} from "../../../../front-app/src/js/helpers";
 
 class RootComponent extends Component {
   constructor(props) {
@@ -35,6 +36,7 @@ class RootComponent extends Component {
         this.props.element.getResponsiveSetting("page_load_actions", []),
         this.props.element
     );
+
   }
 
   render() {
