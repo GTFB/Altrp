@@ -6,9 +6,10 @@ import  queryString from 'query-string';
 import  "./js/functions/mount-elements";
 import  './js/libs/react-lodash';
 import {setScrollValue} from "./js/store/scroll-position/actions";
-
+import DataGrid from "devextreme/ui/data_grid";
 window.Link = 'a';
 
+new DataGrid(document.getElementById('front-app-server'))
 
 function loadDatastorageUpdater(){
   import(/* webpackChunkName: 'DatastorageUpdater' */'./js/classes/modules/DatastorageUpdater').then(module => {
@@ -63,6 +64,7 @@ import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
   window.currentRouterMatch = new window.AltrpModel({
     params:queryString.parseUrl(window.location.href).query
   });
+
   import (/* webpackChunkName: 'appStore' */'./js/store/store').then(module => {
     console.log('LOAD appStore: ', performance.now());
     loadingCallback();
@@ -152,7 +154,7 @@ document.body.addEventListener('click', e =>{
   })
 })
 
-document.addEventListener('DOMContentLoaded', e =>{
+window.addEventListener('h-altrp-loaded', e =>{
   import(/* webpackChunkName: 'load-sticky' */'./js/functions/load-sticky').then((module)=>{
     module?.default(e);
   })

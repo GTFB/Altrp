@@ -55,7 +55,24 @@ class ElementWrapper extends Component {
       this.props.element.update();
       this.props.element.updateFonts();
     }
+    const {element} = this.props
+    const mountElementEvent = new Event(`altrp-mount-element:${element.getId()}` );
+    const mountElementTypeEvent = new Event(`altrp-mount-element:${element.getName()}` );
+    document.dispatchEvent(mountElementEvent)
+    document.dispatchEvent(mountElementTypeEvent)
     this.checkElementDisplay();
+  }
+
+  componentWillUnmount() {
+
+    const {element} = this.props
+    // if(element.getId() === '_giafvu4nk'){
+    //   console.error(this);
+    // }
+    const unmountElementEvent = new Event(`altrp-unmount-element:${element.getId()}` );
+    const unmountElementTypeEvent = new Event(`altrp-unmount-element:${element.getName()}` );
+    document.dispatchEvent(unmountElementEvent)
+    document.dispatchEvent(unmountElementTypeEvent)
   }
   /**
    * Подписываемся на обновление store редакса
@@ -385,7 +402,7 @@ class ElementWrapper extends Component {
     if(entranceAnimationType){
       wrapperProps['data-enter-animation-type'] = entranceAnimationType;
       // wrapperProps['data-enter-animation-duration'] = element.getResponsiveSetting('en_a_duration') || 400;
-      wrapperProps['data-enter-animation-delay'] = element.getResponsiveSetting('en_a_delay') || 0;
+      wrapperProps['data-enter-animation-delay'] = element.getResponsiveSetting('en_a_delay')?.size || 0;
       wrapperProps.className += ` altrp-invisible`;
       content = <>
         <EntranceAnimationsStyles settings={element.getSettings()} elementId={element.getId()}/>

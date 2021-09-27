@@ -119,7 +119,7 @@ class Controller {
    */
   isShow() {
     if(this.data.conditionsCallback){
-      return this.data.conditionsCallback();
+      return ! ! this.data.conditionsCallback();
     }
 
     if (!this.data.conditions) {
@@ -157,7 +157,7 @@ class Controller {
         }
       });
     });
-    return show;
+    return ! ! show;
   }
 
   /**

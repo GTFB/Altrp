@@ -44,7 +44,6 @@ class Menu extends BaseElement {
       options_resource: '/admin/ajax/menus/options?value=guid',
       nullable: true,
       after: <div className="control-button-container mt-2"><button onClick={()=>{
-        console.log(appStore);
       }} className="btn btn_success">Edit Menus</button></div>
     });
 

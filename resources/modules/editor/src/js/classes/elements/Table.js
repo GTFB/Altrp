@@ -642,7 +642,7 @@ class Table extends BaseElement {
       type: CONTROLLER_SWITCHER,
       default: false,
       hideOnEmail: true,
-      conditionsCallback: ()=>getCurrentElement().getResponsiveSetting('table_transpose'),
+      conditionsCallback: ()=>!!getCurrentElement().getResponsiveSetting('table_transpose'),
       label: 'Header Full Width',
     });
 

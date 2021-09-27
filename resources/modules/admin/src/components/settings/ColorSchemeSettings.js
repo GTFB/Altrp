@@ -84,9 +84,7 @@ class ColorSchemeSettings extends Component {
   inputHandler = e => this.setState({ colorSchemeName: e.target?.value });
 
   render() {
-    console.log("====================================");
-    console.log(this.state.colorsObjects);
-    console.log("====================================");
+
     return (
       <>
         <form onSubmit={this.submitHandler} method="post">

@@ -174,7 +174,6 @@ class StyleSettings extends Component {
   }
 
   handleChange(event) {
-    console.log(event);
     event.persist();
     this.setState(state => ({
       ...state,

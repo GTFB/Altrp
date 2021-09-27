@@ -115,7 +115,7 @@ class SectionWidgetComponent extends Component {
     if (this.sectionIsLink()) {
       sectionClasses.push("altrp-pointer");
     }
-    if (background_image.url || background_image_hover.url /*  && !isScrollEffect */) {
+    if (background_image?.url || background_image_hover?.url /*  && !isScrollEffect */) {
       sectionClasses.push("altrp-background-image");
     }
 

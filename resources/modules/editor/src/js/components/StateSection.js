@@ -3,7 +3,7 @@ import ('../../sass/state-section.scss');
 import { connect } from "react-redux";
 import { setCurrentState } from "../store/state-section/actions";
 import { getElementState, getCurrentTab } from "../store/store";
-import GlobalStyles from "./state-section/GlobalStyles";
+import GlobalStylesPresets from "./state-section/GlobalStylesPresets";
 
 class StateSection extends Component {
 
@@ -43,7 +43,7 @@ class StateSection extends Component {
             })
           }
         </div>
-        <GlobalStyles/>
+        <GlobalStylesPresets/>
       </div>
     )
   }

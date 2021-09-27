@@ -24,7 +24,7 @@ class CustomFonts extends React.Component {
     render() {
         let fonts = null;
         let fontsCount = null;
-        if (this.props.metaValue !== null) {
+        if (this.props.metaValue) {
             fontsCount = this.props.metaValue.length
             fonts = this.props.metaValue.map(f => (
                 <tr key={f.id} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
@@ -57,16 +57,16 @@ class CustomFonts extends React.Component {
 
                 <div className="custom-fonts__table-header">
                     <div className="custom-fonts__sorting-options">
-                        <Link className="custom-fonts__sorting-options-name">All
+                        <a className="custom-fonts__sorting-options-name">All
                             <span className="custom-fonts__sorting-options-count custom-fonts__sorting-options-count_line">
                                 {fontsCount}
                             </span>
-                        </Link>
-                        <Link className="custom-fonts__sorting-options-name">Published
+                        </a>
+                        <a className="custom-fonts__sorting-options-name">Published
                             <span className="custom-fonts__sorting-options-count">
                                 {fontsCount}
                             </span>
-                        </Link>
+                        </a>
                     </div>
                     <div className="custom-fonts__search">
                         <input className="custom-fonts__search-input" />

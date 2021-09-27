@@ -23,6 +23,7 @@
 + Render Template Widget on Server
 + Prevent Update Some Widgets on Forms Update
 + Add Entrance Motion Effect for Widgets 
++ Preset Now work with State Style Settings
 
 
 ### 0.15.0

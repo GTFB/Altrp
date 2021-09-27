@@ -85,6 +85,7 @@ export function advancedTabControllers(element) {
   element.addControl('en_an', {
     label: 'Entrance Animation',
     type: CONTROLLER_SELECT2,
+    isClearable: true,
     //<editor-fold description="Entrance Animation Options" defaultstate="collapsed">
     options:[
       {

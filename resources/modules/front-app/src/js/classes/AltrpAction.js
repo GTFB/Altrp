@@ -481,7 +481,11 @@ class AltrpAction extends AltrpModel {
         }
       }
     } else {
-      window.location.href = URL;
+      if (this.getProperty('back')) {
+        history.back()
+      }else{
+        window.location.href = URL;
+      }
     }
     return {
       success: true

@@ -67,9 +67,7 @@ class ColorSettings extends Component {
   render() {
     let source = this.state.editElement.settings.sources;
     if (Object.keys(source).length === 0) {
-      console.log("====================================");
-      console.log(source);
-      console.log("====================================");
+
       return <div className="col-12">Нет данных </div>;
     }
     if (this.state.data.length === 0) {
