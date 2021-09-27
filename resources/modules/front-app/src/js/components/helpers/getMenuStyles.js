@@ -189,6 +189,29 @@ const getMenuStyles = (settings, id) => {
   }
   styles += '}';
 
+  /**
+   * Active Styles
+   */
+  styles += `.bp3-popover-open.bp3-popover-target .bp3-menu-item.altrp-menu-item.altrp-menu-item${id},
+    .bp3-menu-item.altrp-menu-item.altrp-menu-item${id}.active{`;
+  bg = getResponsiveSetting(settings, 'bg', '.active');
+  if (bg && bg.color) {
+    styles += `background-color: ${bg.color};`;
+  }
+
+  typographic = getResponsiveSetting(settings, 'typographic', '.active');
+
+  if (typographic) {
+    styles += typographicControllerToStyles(typographic);
+  }
+
+  color = getResponsiveSetting(settings, 'color', '.active');
+  if (color && color.color) {
+    styles += `color: ${color.color};`;
+    styles += `.bp3-icon svg, .bp3-icon path{fill: ${color.color};}`;
+  }
+  styles += '}';
+
   if (gap) {
     styles += `.altrp-portal${id} .bp3-menu > li:not(:last-child) { margin-bottom: ${gap}}`;
   }

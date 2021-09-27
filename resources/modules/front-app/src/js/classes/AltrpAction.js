@@ -1065,7 +1065,7 @@ class AltrpAction extends AltrpModel {
       eval(code);
       return { success: true };
     } catch (error) {
-      console.error('Evaluate error in doActionCustomCode' + error.message);
+      console.error('Evaluate error in doActionCustomCode: "' + error.message + '"');
       return { success: false };
     }
   }

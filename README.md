@@ -4,7 +4,7 @@
 ## Changelog
 
 
-### 0.16.0
+### 0.17.0
 + Menu Widget and Menu Builder
 + Import Images With Templates
 + Import Widgets Presets and Global Styles Settings With Templates
@@ -24,6 +24,7 @@
 + Prevent Update Some Widgets on Forms Update
 + Add Entrance Motion Effect for Widgets 
 + Preset Now work with State Style Settings
++ Active Conditions for Menu Items in Menus Setting Admin Page
 
 
 ### 0.15.0

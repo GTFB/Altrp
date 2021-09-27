@@ -1,6 +1,8 @@
 import React, {Component} from "react";
 import {ReactSortable} from "react-sortablejs";
 import IconSelect from "../icon-select/IconSelect";
+import {CONDITIONS_OPTIONS} from "../../../../front-app/src/js/helpers"
+import AltrpSelect from "../altrp-select/AltrpSelect";
 
 
 class MenuItem extends Component {
@@ -42,6 +44,43 @@ class MenuItem extends Component {
                    this.props.updateValue(value, path)
                  }}
                  value={this.props.item.url}/>
+          <label className="form-label">Active Condition:</label>
+          <input type="text"
+                 className="form-control"
+                 placeholder="path"
+                 id={`${this.props.indexes.join('.')}.modelField`}
+                 onChange={(e) => {
+                   let value = e.target.value;
+                   let path = this.props.indexes.map(((index) => {
+                     return `children.${index}`;
+                   })).join('.') + '.modelField'
+                   this.props.updateValue(value, path)
+                 }}
+                 value={this.props.item.modelField}/>
+          <AltrpSelect id={`${this.props.indexes.join('.')}.operator`}
+                 className="altrp-menu-item__select"
+                 onChange={(e) => {
+                   let value = e?.value || '';
+                   let path = this.props.indexes.map(((index) => {
+                     return `children.${index}`;
+                   })).join('.') + '.operator'
+                   this.props.updateValue(value, path)
+                 }}
+                 isClearable={true}
+                 options={CONDITIONS_OPTIONS}
+                 value={this.props.item.operator}/>
+          <input type="text"
+                 className="form-control"
+                 placeholder="value"
+                 id={`${this.props.indexes.join('.')}.value`}
+                 onChange={(e) => {
+                   let value = e.target.value;
+                   let path = this.props.indexes.map(((index) => {
+                     return `children.${index}`;
+                   })).join('.') + '.value'
+                   this.props.updateValue(value, path)
+                 }}
+                 value={this.props.item.value}/>
           <label htmlFor={`${this.props.indexes.join('.')}.icon`} className="form-label">Icon</label>
           <button
             onClick={() => {
@@ -67,7 +106,7 @@ class MenuItem extends Component {
             onClick={() => {
               this.props.deleteItem(this.props.indexes)
             }}
-            className="btn btn_link text-danger fs-2 altrp-menu-item__delete">delete
+            className="btn btn_link text-danger fs-2 altrp-menu-item__delete">delete menu item
           </button>
         </div>}
         <ReactSortable

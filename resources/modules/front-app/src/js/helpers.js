@@ -398,10 +398,13 @@ export function conditionsChecker(
  * @param {boolean} dataByPath - брать ли данный из getDataByPath
  * @return {boolean}
  */
-function conditionChecker(c, model, dataByPath = true) {
+export function conditionChecker(c, model, dataByPath = true) {
   let result = 0;
   const { operator } = c;
   let { modelField: left, value } = c;
+  console.log(left);
+  console.log(operator);
+  console.log(value);
   if (dataByPath) {
     value = getDataByPath(value, "", model, true);
     left = getDataByPath(left, "", model);
@@ -849,6 +852,8 @@ export function altrpCompare(
       return !altrpCompare(leftValue, rightValue, "in");
     }
     case "contain": {
+      console.log(leftValue);
+      console.log(rightValue);
       if (_.isString(leftValue)) {
         return leftValue.indexOf(rightValue) !== -1;
       }

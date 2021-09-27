@@ -1,6 +1,6 @@
 import {getMenuByGUID} from "../../../../../front-app/src/js/functions/menus";
 import {addMenu} from "../../../../../front-app/src/js/store/menus-storage/actions";
-const { isEditor, mbParseJSON} = window.altrpHelpers;
+const { isEditor, mbParseJSON, conditionChecker} = window.altrpHelpers;
 
 
 const {Button, ButtonGroup, Menu, MenuItem, Position} = window.altrpLibs.Blueprint;
@@ -111,7 +111,7 @@ class MenuWidget extends Component {
     const {element} = this.props;
     const popoverProps = {
       usePortal: true,
-      // isOpen:true ,
+      isOpen:true ,
       portalClassName: `altrp-portal altrp-portal${this.elementId}`,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
@@ -122,12 +122,13 @@ class MenuWidget extends Component {
     }
     return <>
       {items.map((item) => {
+        console.log(item);
         return <MenuItem
           popoverProps={popoverProps}
           depth={depth}
           href={item.url}
           width={100}
-          className={`altrp-menu-item altrp-menu-item${this.elementId}`}
+          className={`altrp-menu-item altrp-menu-item${this.elementId} ${this.mbItemActive(item) ? 'active' : ''}`}
           key={item.id}
           onClick={(e) => {
             e.preventDefault();
@@ -188,6 +189,25 @@ class MenuWidget extends Component {
         </>;
       }
     }
+  }
+
+  /**
+   * Check if the given menu item is active (configurable in the admin panel)
+   *
+   * Проверяем является ли данный элемент меню активным (настраивается в админке)
+   *
+   * @param {{
+   *   compare: string,
+   *   value: string,
+   *   path: string,
+   * }} item
+   * @returns {boolean}
+   */
+  mbItemActive(item) {
+    if(! item || !item.operator || ! item.value || ! item.modelField){
+      return false;
+    }
+    return conditionChecker(item, this.props.element.getCurrentModel())
   }
 }
 
