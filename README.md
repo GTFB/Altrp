@@ -25,6 +25,7 @@
 + Add Entrance Motion Effect for Widgets 
 + Preset Now work with State Style Settings
 + Active Conditions for Menu Items in Menus Setting Admin Page
++ Designer of Telegram Bots;
 
 
 ### 0.15.0

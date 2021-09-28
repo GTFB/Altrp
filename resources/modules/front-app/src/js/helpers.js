@@ -1945,7 +1945,7 @@ export function getResponsiveSetting(
   try{
     currentScreen = window.parent.appStore.getState().currentScreen
   } catch(e){
-    console.trace(e);
+    // console.trace(e);
     currentScreen = window.appStore.getState().currentScreen
   }
   let _settingName = `${settingName}_${elementState}_`;
