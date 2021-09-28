@@ -1761,7 +1761,9 @@ button {
 }
 #editor-content .altrp-element {
   position: relative;
-  flex-wrap: wrap;
+  &:not(.altrp-section_section_boxed) {
+    flex-wrap: wrap;
+  }
 }
 .screens {
   &-container {

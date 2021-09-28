@@ -1,4 +1,4 @@
-import {styledString} from "../../helpers/styles";
+  import {styledString} from "../../helpers/styles";
 const {getResponsiveSetting} = window.altrpHelpers;
 
 /**

@@ -49,7 +49,6 @@ class GlobalFonts extends Component {
    * @param {*} font
    */
   recursiveWalkTree(template, guid, font) {
-    console.log(template);
     if (Array.isArray(template)) {
       template?.forEach(
         /**

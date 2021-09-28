@@ -69,6 +69,10 @@ export default class WidgetsPanel extends React.Component {
             <RobotIcon/>
             <p>Robot</p>
           </div>
+          <div className="robot-widget" onDragStart={(event) => this.onDragStart( event, 'bot' )} draggable>
+            <RobotIcon/>
+            <p>Bot</p>
+          </div>
           {finish && <div className="robot-widget" onDragStart={(event) => this.onDragStart( event, 'finish' )} draggable>
             <FinishIcon/>
             <p>Finish</p>

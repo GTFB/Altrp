@@ -188,6 +188,17 @@ export default class SendTelegram extends Component{
                                 }}/>
                               </div>
                             </div>}
+                            {(item.type == "button") && <div className="controller-container controller-container_textarea">
+                              <div className="controller-container__label textcontroller-responsive controller-label">
+                              Shortcode
+                              </div>
+                              <div className='controller-field'>
+                                <textarea className="control-field" type="url" id={`telegram_url_${item.id}`} name="url"
+                                       value={item?.data?.shortcode ?? ''} onChange={(e) => {
+                                  this.changeInput(e, "shortcode", item.id)
+                                }}/>
+                              </div>
+                            </div>}
                             {/*{(item.type === "file" || item.type === "document" || item.type === "animation"  || item.type === "video") && <div>*/}
                             {/*  <input*/}
                             {/*    type="file"*/}

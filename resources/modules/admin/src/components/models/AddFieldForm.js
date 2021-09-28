@@ -207,7 +207,6 @@ class AddFieldForm extends Component {
       if (['select', 'checkbox', 'radio button'].includes(input_type)) {
         data = { ...data, options };
       }
-      console.log(default_);
       if (['integer', 'bigInteger'].includes(type)) {
         data.default = default_;
       }
@@ -249,7 +248,7 @@ class AddFieldForm extends Component {
       this.fieldName = value.name;
       if (typeof value.calculation_logic === 'string') {
         value.calculation_logic = JSON.parse(value.calculation_logic);
-      }  
+      }
       this.setState(state => ({ ...state, isAlways: value.calculation ? true : false ,  value: { ...state.value, ...value } }));
     }
     this.setState(state => ({ ...state, fieldsOptions: options }));

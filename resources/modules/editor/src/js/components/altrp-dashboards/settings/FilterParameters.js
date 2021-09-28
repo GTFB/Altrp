@@ -50,7 +50,6 @@ class FilterParameters extends Component {
         typeof o[this.state.param.value] !== "undefined" &&
         o[this.state.param.value] != null
       ) {
-        console.log(o[this.state.param.value]);
         return o[this.state.param.value];
       }
       return "";

@@ -43,6 +43,22 @@ class SimpleElementWrapper extends Component {
       this.props.element.updateFonts();
     }
     this.checkElementDisplay();
+    const {element} = this.props
+    const mountElementEvent = new Event(`altrp-mount-element:${element.getId()}` );
+    const mountElementTypeEvent = new Event(`altrp-mount-element:${element.getName()}` );
+    document.dispatchEvent(mountElementEvent)
+    document.dispatchEvent(mountElementTypeEvent)
+  }
+
+  componentWillUnmount() {
+    const {element} = this.props
+    if(element.getId() === '_giafvu4nk'){
+      console.error(this);
+    }
+    const unmountElementEvent = new Event(`altrp-unmount-element:${element.getId()}` );
+    const unmountElementTypeEvent = new Event(`altrp-unmount-element:${element.getName()}` );
+    document.dispatchEvent(unmountElementEvent)
+    document.dispatchEvent(unmountElementTypeEvent)
   }
   /**
    * Подписываемся на обновление store редакса
@@ -116,7 +132,6 @@ class SimpleElementWrapper extends Component {
       window.altrpHelpers.setTitle(title);
     }
   }
-
   /**
    * Обновить элемент изменив this.state.updateToken
    */
@@ -292,9 +307,9 @@ class SimpleElementWrapper extends Component {
     let WrapperComponent = React.Fragment;
 
     switch (this.props.element.getName()) {
-      case "diagram":
-        WrapperComponent = DiagramComponent;
-        break;
+      // case "diagram":
+      //   WrapperComponent = DiagramComponent;
+      //   break;
       // case "dashboards":
       // WrapperComponent = DashboardComponent;
       // break;

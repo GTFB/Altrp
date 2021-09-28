@@ -117,8 +117,8 @@ class Action
     protected function execCrud()
     {
         $data = json_decode(json_encode($this->node->data->props->nodeData->data->body), true);
-        $custom = $this->node->data->props->nodeData->data->custom;
-        $custom_data = $this->node->data->props->nodeData->data->custom_data;
+        $custom = $this->node->data->props->nodeData->data->custom ?? false;
+        $custom_data = $this->node->data->props->nodeData->data->custom_data ?? false;
 
         $newData = [];
         if ($custom && $custom_data) {
@@ -202,7 +202,7 @@ class Action
         $entities = $this->getNodeProperties()->nodeData->data->entities;
         $users = $this->getRequiredUsers($entities, $entitiesData);
 
-        if (!$users->isEmpty()) {
+        if ((is_array($users) && empty($users)) || !$users->isEmpty()) {
             Notification::send($users, new RobotNotification($this->node, $this->modelData));
         } else {
             Notification::route('user', 'anonymous')->notify(new RobotNotification($this->node, $this->modelData));
@@ -300,7 +300,7 @@ class Action
         if ($type == 'dynamic') {
             $field = $entities->dynamicValue;
             $columnName = 'id';
-            $users = [];
+            $users = collect();
             $value = setDynamicData($entities->dynamicValue, $this->modelData);
             if (isset($this->modelData['record']) && !Str::contains($field, "{{"))
                 $value = $this->modelData['record']->$field;

@@ -28,7 +28,6 @@ class MenusList extends Component {
     try{
       let res = await this.resource.post({name: '', children: '[]'});
       res = res.data;
-      console.log(res);
       this.props.history.push(`/admin/menus/${res.id}`)
     }catch (e) {
       if(e.res instanceof Promise){

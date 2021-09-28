@@ -666,7 +666,7 @@ export function getHeadingTypeHeadingStyles(settings, id) {
 
   styles += `} `;
 
-  styles += `${parentClass} .altrp-heading, ${parentClass} .altrp-heading a:hover {`;
+  styles += `${parentClass} .altrp-heading:hover, ${parentClass} .altrp-heading a:hover {`;
 
   const colorLinkHover = getResponsiveSetting(settings, "heading_style_color", ":hover");
 

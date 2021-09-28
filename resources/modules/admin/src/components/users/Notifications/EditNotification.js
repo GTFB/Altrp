@@ -11,7 +11,7 @@ import './admin-notifications.scss';
 
 class EditNotification extends Component{
     constructor(props){
-        super(props);        
+        super(props);
         this.state = {
             user_id: this.props.match.params.id ?? '',
             notice_id: this.props.match.params.name ?? '',
@@ -37,13 +37,13 @@ class EditNotification extends Component{
 
         // Проверка на наличие полученной настройки с сервера
         if (value.length === 0) this.getNewValue();
-        else this.setState({ value: value[0] });        
+        else this.setState({ value: value[0] });
 
         this.setState({ sourcesOptions: dataSourcesAll?.options ?? [] });
 
         this.getSourceArray();
-    }   
-    
+    }
+
     // Обработка переключения табов
     switchTab(activeTab){
         window.location.hash = activeTab + '';
@@ -51,24 +51,24 @@ class EditNotification extends Component{
     }
 
     // Создание массива дата-сурсов для селекта
-    getSourceArray(){ 
+    getSourceArray(){
         if(this.state.value?.sources instanceof Array){
             let sources = this.state.value.sources.map(item => {
                 return item.id;
-              });  
-            this.setState(s => ({ ...s, value: {...s.value, sources: sources} }));  
-        }           
+              });
+            this.setState(s => ({ ...s, value: {...s.value, sources: sources} }));
+        }
     }
 
     // Сохранение и редирект для создания новой настройки
     saveNoticeSetting(){
         const {user_id} = this.state;
-        this.serverUpdate(); 
+        this.serverUpdate();
 
-        this.props.history.push(`/admin/users/user/${user_id}/notification/new`);        
+        this.props.history.push(`/admin/users/user/${user_id}/notification/new`);
         this.getNewValue();
     }
-    
+
     // Создание и запись новой настройки в value
     getNewValue(){
         const newValue = {
@@ -120,11 +120,10 @@ class EditNotification extends Component{
     // Отправка изменений на сервер
     serverUpdate(){
         const {notice_id, value} = this.state;
-        console.log(notice_id);
 
         // Проверка роута (текущая настройка или новая)
-        if (notice_id === "new") this.resourceEdit.post(value);      
-        else this.resourceEdit.put(notice_id, value);       
+        if (notice_id === "new") this.resourceEdit.post(value);
+        else this.resourceEdit.put(notice_id, value);
     }
 
     // Сохранение и создание condition или compare
@@ -145,9 +144,9 @@ class EditNotification extends Component{
                             compares: [],
                         });
                         state.value.notice_settings.conditions = conArray;
-                    }    
+                    }
                     return state
-                });        
+                });
                 break;
             case 'compare':
                 if (!conditionId) return;
@@ -169,10 +168,10 @@ class EditNotification extends Component{
                                 }
                             }
                             return item;
-                        });    
-                    }    
+                        });
+                    }
                     return state
-                });           
+                });
                 break;
             case 'save':
                 console.log('SAVE');
@@ -181,7 +180,7 @@ class EditNotification extends Component{
         }
         if(notice_id !== "new") this.serverUpdate();
     }
-    
+
     // Обработка disable и delete у condition и compare
     onAction = (e, type, component = false, conditionId = false) => {
 
@@ -194,7 +193,7 @@ class EditNotification extends Component{
                             state.value.notice_settings.conditions.map(item => {
                                 if(item.id === e.id) item.enabled = !item.enabled;
                                 return item;
-                            });    
+                            });
                         }
                         if(type === 'delete'){
                             if (confirm("Are you sure?")) {
@@ -203,9 +202,9 @@ class EditNotification extends Component{
                                 state.value.notice_settings.conditions = arForDelete;
                             }
                         }
-                    }    
+                    }
                     return state
-                });             
+                });
                 break;
             case 'compare':
                 if (!conditionId) return;
@@ -217,7 +216,7 @@ class EditNotification extends Component{
                                 if(item?.compares instanceof Array){
                                     if(type === 'disable'){
                                         item.compares.map(compare =>{
-                                            if(compare?.id === e.id) compare.enabled = !compare.enabled;                                       
+                                            if(compare?.id === e.id) compare.enabled = !compare.enabled;
                                             return compare;
                                         });
                                     }
@@ -231,16 +230,16 @@ class EditNotification extends Component{
                                 }
                             }
                             return item;
-                        });    
-                    }    
+                        });
+                    }
                     return state
-                });           
+                });
                 break;
         }
     }
 
     changeBox = (e, key) => {
-        e.persist();        
+        e.persist();
         this.setState(state => {
             state.value.notice_settings.send[key].enabled = e.target.checked;
             return state
@@ -258,7 +257,7 @@ class EditNotification extends Component{
                     state.value.notice_settings.data[0].field = name;
                     return state
                 });
-        
+
                 // this.setState(s => ({ ...s, value: {...s.value, name: name, notice_settings: {...s.value.notice_settings, data: {...s.value.notice_settings.data, field: name }}} }));
                 break;
             case 'value':
@@ -283,10 +282,10 @@ class EditNotification extends Component{
                         state.value.notice_settings.conditions.map(item => {
                             if(item.id === conditionId) item.name = name;
                             return item;
-                        });    
-                    }    
+                        });
+                    }
                     return state
-                });              
+                });
                 break;
             case 'compare':
                 if (!conditionId || !compareId || !compareType) return;
@@ -297,31 +296,31 @@ class EditNotification extends Component{
                             if(item?.id === conditionId){
                                 if(item?.compares instanceof Array){
                                     item.compares.map(compare =>{
-                                        if(compare?.id === compareId) compare[compareType] = name;                                       
+                                        if(compare?.id === compareId) compare[compareType] = name;
                                         return compare;
                                     });
                                 }
                             }
                             return item;
-                        });    
-                    }    
+                        });
+                    }
                     return state
-                });            
+                });
                 break;
-        }        
-    }    
+        }
+    }
 
     // Запись выбранных селектов Data source в стейт (value)
     changeSelect = (e, i, type = 'parent', conditionId=false, compareId=false) => {
-        
+
         switch(type){
             case 'parent':
                 this.setState({
                     value: {
                         ...this.state.value,
                         sources: e ? e.map(item => item.value) : []
-                    }    
-                });            
+                    }
+                });
                 break;
             case 'condition':
                 if (!conditionId) return;
@@ -331,10 +330,10 @@ class EditNotification extends Component{
                         state.value.notice_settings.conditions.map(item => {
                             if(item.id === conditionId) item.type = e.label;
                             return item;
-                        });    
-                    }    
+                        });
+                    }
                     return state
-                });           
+                });
                 break;
             case 'compare':
                 if (!conditionId || !compareId) return;
@@ -345,18 +344,18 @@ class EditNotification extends Component{
                             if(item?.id === conditionId){
                                 if(item?.compares instanceof Array){
                                     item.compares.map(compare =>{
-                                        if(compare?.id === compareId) compare.operator = e.value;                                       
+                                        if(compare?.id === compareId) compare.operator = e.value;
                                         return compare;
                                     });
                                 }
                             }
                             return item;
-                        });    
-                    }    
+                        });
+                    }
                     return state
-                });            
+                });
                 break;
-        }        
+        }
     }
 
     render(){
@@ -414,7 +413,7 @@ class EditNotification extends Component{
                     />
                 </TabPanel>
                 <TabPanel>
-                    <DataTab 
+                    <DataTab
                         data={notice_settings?.data ?? []}
                         onSaveData={this.onSave}
                         changeInputData={this.changeInput}
