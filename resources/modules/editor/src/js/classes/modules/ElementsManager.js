@@ -96,6 +96,8 @@ import InputRangeSlider from "../elements/InputRangeSlider";
 import InputRangeSliderWidget from "../../components/widgets/InputRangeSliderWidget";
 import InputMultiSelect from "../elements/InputMultiSelect";
 import InputMultiSelectWidget from "../../components/widgets/InputMultiSelectWidget";
+import Scheduler from "../elements/Scheduler";
+import SchedulerWidget from "../../components/widgets/SchedulerWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -151,6 +153,7 @@ export default class ElementsManger {
     this.elements[SectionWidget.getName()] = SectionWidget;
     this.elements[Dropbar.getName()] = Dropbar;
     this.elements[ImageLightbox.getName()] = ImageLightbox;
+    this.elements[Scheduler.getName()] = Scheduler;
     // Websocket Notifications
     // this.elements[Notifications.getName()] = Notifications;
     //список компонентов
@@ -204,6 +207,7 @@ export default class ElementsManger {
     this.components[ImageLightbox.getName()] = ImageLightboxWidget;
     this.components[InputSlider.getName()] = InputSliderWidget;
     this.components[InputRangeSlider.getName()] = InputRangeSliderWidget;
+    this.components[Scheduler.getName()] = SchedulerWidget;
     // Websocket Notifications widget
     // this.components[Notifications.getName()] = NotificationsWidget;
   }
