@@ -1,9 +1,11 @@
-const {getResponsiveSetting, iconsManager} = window.altrpHelpers
+import {CSSTransition} from "react-transition-group";
+
+const {iconsManager} = window.altrpHelpers
 import { Scrollbars } from "react-custom-scrollbars";
-import AltrpOffcanvas from "./altrp-offcanvas/AltrpOffcanvas";
 import { togglePopup } from "../store/popup-trigger/actions";
 import AltrpImage from "../../../../editor/src/js/components/altrp-image/AltrpImage";
 import FrontPopupWrapper from "./FrontPopupWrapper";
+import '../../sass/altrp-popup.scss'
 
 class FrontPopup extends Component {
   constructor(props) {
@@ -22,98 +24,12 @@ class FrontPopup extends Component {
     this.close = this.close.bind(this);
   }
 
-  componentDidMount() {
-    switch (this.state.rootElement.getContent("type_popup")) {
-      case "popup":
-        // const { on_page_load, on_click, inactivity, on_exit, to_element } = _.get(this.props, 'template.triggers.data', {});
 
-        // if (on_page_load || on_page_load === 0) {
-        //   setTimeout(() => this.setState({ isVisible: true }), on_page_load * 1000)
-        // }
-        //
-        // if (on_click) {
-        //   this.clickCounter = 0;
-        //   document.addEventListener('click', () => {
-        //     this.clickCounter += 1;
-        //     if (this.clickCounter === +on_click) {
-        //       this.clickCounter = 0;
-        //       this.setState({ isVisible: true });
-        //     }
-        //   })
-        // }
-        //
-        // if (inactivity) {
-        //   this.inactivityTimeout = setTimeout(() => this.setState({ isVisible: true }), inactivity * 1000);
-        //
-        //   this.resetTimer = () => {
-        //     clearTimeout(this.inactivityTimeout);
-        //     this.inactivityTimeout = setTimeout(() => this.setState({ isVisible: true }), inactivity * 1000);
-        //   };
-        //
-        //   const events = ['mousedown', 'keydown', 'touchstart'];
-        //   events.forEach(event => {
-        //     document.addEventListener(event, this.resetTimer, true);
-        //   });
-        // }
-        //
-        // if (on_exit) {
-        //   // window.addEventListener('beforeunload', (event) => {
-        //   //   // Отмените событие, как указано в стандарте.
-        //   //   event.preventDefault();
-        //   //   this.setState({ isVisible: true })
-        //   //   // Хром требует установки возвратного значения.
-        //   //   event.returnValue = '';
-        //   // });
-        //   document.addEventListener('mouseleave', () => this.setState({ isVisible: true }))
-        // }
-
-        // if (to_element) {
-        //   const htmlCollection = document.getElementsByClassName(to_element);
-        //   console.log(htmlCollection);
-        //   this.elements = []
-        //   for (let index = 0; index < htmlCollection.length; index++) {
-        //     const element = htmlCollection[index];
-        //     this.elements[index] = getTopPosition(element);
-        //   }
-        //   console.log(this.elements);
-        // }
-        break;
-    }
-  }
 
   componentDidUpdate(prevProps) {
     let { popupTrigger } = this.props;
-
     switch (this.state.rootElement.getSettings("type_popup", "popup")) {
       case "popup":
-        // if (on_scroll && !isShownOnScroll && on_scroll.size <= this.props.scrollPosition.top * 100) {
-        //   this.setState({ isVisible: true, isShownOnScroll: true });
-        //
-        // }
-        // if (this.resetTimer && this.props.scrollPosition.top !== prevProps.scrollPosition.top) {
-        //
-        //  this.resetTimer();
-        //
-        // }
-        // if (to_element && this.props.scrollPosition.top !== prevProps.scrollPosition.top) {
-        //
-        //  // console.log(this.elements)
-        //
-        //  console.log(this.props.scrollPosition.scrollTop)
-        //  const { scrollTop, clientHeight } = this.props.scrollPosition;
-        //
-        //  for (let index = 0; index < this.elements.length; index++) {
-        //
-        //    const element = this.elements[index];
-        //
-        //     if (isElementTopInViewport(element, scrollTop, clientHeight)) {
-        //
-        //      this.setState({ isVisible: true });
-        //       // this.elements.splice(index, 1);
-        //     }
-        //   }
-
-        // }
         if (popupTrigger !== prevProps.popupTrigger) {
           this.setState({
             isVisible:
@@ -122,29 +38,6 @@ class FrontPopup extends Component {
         }
         break;
       case "offcanvas":
-        // if (on_scroll && !isShownOnScroll && on_scroll.size <= this.props.scrollPosition.top * 100) {
-        //   this.setState({ isVisible: true, isShownOnScroll: true });
-        // }
-        //
-        // if (this.resetTimer && this.props.scrollPosition.top !== prevProps.scrollPosition.top) {
-        //   this.resetTimer();
-        // }
-
-        // if (to_element && this.props.scrollPosition.top !== prevProps.scrollPosition.top) {
-        //   // console.log(this.elements)
-        //   console.log(this.props.scrollPosition.scrollTop)
-        //   const { scrollTop, clientHeight } = this.props.scrollPosition;
-
-        //   for (let index = 0; index < this.elements.length; index++) {
-        //     const element = this.elements[index];
-
-        //     if (isElementTopInViewport(element, scrollTop, clientHeight)) {
-        //       this.setState({ isVisible: true });
-        //       // this.elements.splice(index, 1);
-        //     }
-        //   }
-
-        // }
         if (popupTrigger !== prevProps.popupTrigger) {
           this.setState({
             isVisible:
@@ -155,15 +48,117 @@ class FrontPopup extends Component {
     }
   }
 
-  close() {
+  close = ()=> {
     this.setState({ isVisible: false, isShownOnScroll: false });
     this.props.closePopup();
+  }
+  onExited = ()=> {
+    document.body.classList.remove('overflow-hidden');
+    window.dispatchEvent(new Event('resize'));
+  }
+  onExit = ()=>{
+    const rootElement = this.state.rootElement;
+    const type_popup = rootElement.getResponsiveSetting('type_popup')
+    const animations_offcanvas = rootElement.getResponsiveSetting('animations_offcanvas')
+    const appContainer = document.getElementById('front-app')
+    const vertical_position_popup_layout = rootElement.getResponsiveSetting('vertical_position_popup_layout')
+    const horizontal_position_popup_layout = rootElement.getResponsiveSetting('horizontal_position_popup_layout')
+    if(type_popup === 'offcanvas' && animations_offcanvas === 'push' ) {
+      switch (vertical_position_popup_layout) {
+        case 'top':{
+          appContainer.style.top = 0
+          appContainer.style.bottom = 'auto'
+        }break;
+        case 'bottom':{
+          appContainer.style.bottom = 0
+          appContainer.style.top = 'auto'
+        }break;
+      }
+      switch (horizontal_position_popup_layout) {
+        case 'left':{
+          appContainer.style.left = 0
+          appContainer.style.right = 'auto'
+        }break;
+        case 'right':{
+          appContainer.style.right = 0
+          appContainer.style.left = 'auto'
+        }break;
+      }
+    }
+  }
+  onEntered = ()=>{
+  }
+  onExiting = ()=>{
+  }
+  onEntering = ()=>{
+    const rootElement = this.state.rootElement;
+    const type_popup = rootElement.getResponsiveSetting('type_popup')
+    const animations_offcanvas = rootElement.getResponsiveSetting('animations_offcanvas')
+    const vertical_position_popup_layout = rootElement.getResponsiveSetting('vertical_position_popup_layout')
+    const width_popup_layout = rootElement.getResponsiveSetting('width_popup_layout')
+    const height_custom_popup_layout = rootElement.getResponsiveSetting('height_custom_popup_layout')
+    const appContainer = document.getElementById('front-app')
+    const horizontal_position_popup_layout = rootElement.getResponsiveSetting('horizontal_position_popup_layout')
+    if(type_popup === 'offcanvas' && animations_offcanvas === 'push'){
+      appContainer.style.transitionDuration =  _.get(rootElement.getResponsiveSetting('time'), 'size', 0) + 'ms'
+      switch (vertical_position_popup_layout) {
+        case 'top':{
+          appContainer.style.top = height_custom_popup_layout?.size + (height_custom_popup_layout?.unit || 'px')
+          appContainer.style.bottom = 'auto'
+        }break;
+        case 'bottom':{
+          appContainer.style.bottom = height_custom_popup_layout?.size + (height_custom_popup_layout?.unit || 'px')
+          appContainer.style.top = 'auto'
+        }break;
+      }
+      switch (horizontal_position_popup_layout) {
+        case 'left':{
+          appContainer.style.left = width_popup_layout?.size + (width_popup_layout?.unit || 'px')
+          appContainer.style.right = 'auto'
+        }break;
+        case 'right':{
+          appContainer.style.right = width_popup_layout?.size + (width_popup_layout?.unit || 'px')
+          appContainer.style.left = 'auto'
+        }break;
+      }
+    }
+  }
+  onEnter = ()=> {
+    document.body.classList.add('overflow-hidden');
+    window.dispatchEvent(new Event('resize'));
+    const rootElement = this.state.rootElement;
+    const type_popup = rootElement.getResponsiveSetting('type_popup')
+    const animations_offcanvas = rootElement.getResponsiveSetting('animations_offcanvas')
+    const vertical_position_popup_layout = rootElement.getResponsiveSetting('vertical_position_popup_layout')
+    const appContainer = document.getElementById('front-app')
+    const horizontal_position_popup_layout = rootElement.getResponsiveSetting('horizontal_position_popup_layout')
+    if(type_popup === 'offcanvas' && animations_offcanvas === 'push' ) {
+      switch (vertical_position_popup_layout) {
+        case 'top':{
+          appContainer.style.top = 0
+          appContainer.style.bottom = 0
+        }break;
+        case 'bottom':{
+          appContainer.style.bottom = 0
+          appContainer.style.top = 0
+        }break;
+      }
+      switch (horizontal_position_popup_layout) {
+        case 'left':{
+          appContainer.style.left = 0
+          appContainer.style.right = 0
+        }break;
+        case 'right':{
+          appContainer.style.right = 0
+          appContainer.style.left = 0
+        }break;
+      }
+    }
   }
 
   render() {
     const { isVisible } = this.state;
     let classes = [`app-popup`];
-    // const { positioning_custom_top } = this.props.template.data.rootElementSettings;
     const rootElement = this.state.rootElement;
     rootElement.popupGUID = _.get(this.props, "template.guid");
     const rootElementSettings = rootElement.getSettings("");
@@ -181,7 +176,10 @@ class FrontPopup extends Component {
     } else {
       popup_close_icon_width_size = `${popup_close_icon_width_size.size || '0'}${popup_close_icon_width_size.unit}`
     }
-
+    const type_popup = rootElement.getResponsiveSetting('type_popup')
+    if(type_popup === 'offcanvas'){
+      classes.push("app-popup_offcanvas")
+    }
     const rootElementId = rootElement.getId();
     const close_context = rootElement.getResponsiveSetting( 'close_context')
 
@@ -233,7 +231,6 @@ class FrontPopup extends Component {
         classes.push("app-popup-vertical-center");
     }
 
-    let content = "";
     const closeButtonCondition =
       rootElement.getResponsiveSetting('switcher_close_button_popup_layout');
     let { popup_close_icon_alignment } = rootElementSettings;
@@ -284,9 +281,28 @@ class FrontPopup extends Component {
         })}
       </button>
     );
+    classes.push(
+      `${type_popup || 'popup'}-${rootElement.getResponsiveSetting('horizontal_position_popup_layout') || 'center'}-${rootElement.getResponsiveSetting('vertical_position_popup_layout') || 'center'}-${rootElement.getResponsiveSetting('animations_offcanvas') || 'animations_offcanvas'}`
+    );
+    const animations_offcanvas = rootElement.getResponsiveSetting('animations_offcanvas')
 
+    let timeout = _.get(rootElement.getResponsiveSetting('time'), 'size', 0)
+    if(type_popup === 'popup' && timeout && animations_offcanvas === 'slide'){
+      classes.push(`popup-slide-direction_${rootElement.getResponsiveSetting('s_direction') || 'left'}`);
+    }
 
-    const popup = isVisible ? (
+    return (
+    <CSSTransition
+      in={isVisible}
+      timeout={Number(timeout)}
+      onEnter={this.onEnter}
+      onEntering={this.onEntering}
+      onEntered={this.onEntered}
+      onExit={this.onExit}
+      onExiting={this.onExiting}
+      onExited={this.onExited}
+      unmountOnExit={true}
+      classNames="popup-transition-state">
       <FrontPopupWrapper
         settings={rootElementSettings}
         className={classes.join(" ")}
@@ -306,7 +322,6 @@ class FrontPopup extends Component {
           onClick={e => e.stopPropagation()}
         >
           {close_context !== 'window' && closeButton}
-
           <Scrollbars
             autoHide
             renderThumbHorizontal={props => (
@@ -332,24 +347,9 @@ class FrontPopup extends Component {
           </Scrollbars>
         </div>
       </FrontPopupWrapper>
-    ) : null;
-    const type = rootElement.getResponsiveSetting('type_popup') || "popup";
-    switch (type) {
-      case "popup":
-        content = popup;
-        break;
-      case "offcanvas":
-        content = (
-          <AltrpOffcanvas
-            close={this.close}
-            show={this.state.isVisible}
-            settings={rootElementSettings}
-            template={rootElement}
-          />
-        );
-        break;
-    }
-    return content;
+    </CSSTransition>
+  );
+
   }
 }
 

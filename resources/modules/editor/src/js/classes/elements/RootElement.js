@@ -1,4 +1,4 @@
-  import BaseElement from "./BaseElement";
+import BaseElement from "./BaseElement";
 import {
   CONTROLLER_DIMENSIONS,
   CONTROLLER_NUMBER,
@@ -27,6 +27,7 @@ import {
   import SaveImportModule from "../modules/SaveImportModule";
   import {actionsControllers} from "../../decorators/actions-controllers";
   import {getTemplateDataStorage, getTemplateType} from "../../helpers";
+import {getCurrentElement} from "../../store/store";
 
 class RootElement extends BaseElement {
   constructor() {
@@ -254,7 +255,7 @@ class RootElement extends BaseElement {
 
     this.addControl("content_position_popup_layout", {
       type: CONTROLLER_SELECT,
-      label: "Content position",
+      label: "Content Position",
       options: [
         {
           value: "flex-start",
@@ -271,11 +272,87 @@ class RootElement extends BaseElement {
       ],
     });
 
+    this.addControl('popup_pa', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Popup Padding',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+    });
+
+    this.addControl('popup_border', {
+        type: CONTROLLER_SELECT,
+        label: 'Border Type',
+        options: [
+          {
+            'value': 'none',
+            'label': 'None',
+          },
+          {
+            'value': 'solid',
+            'label': 'Solid',
+          },
+          {
+            'value': 'double',
+            'label': 'Double',
+          },
+          {
+            'value': 'dotted',
+            'label': 'Dotted',
+          },
+          {
+            'value': 'dashed',
+            'label': 'Dashed',
+          },
+          {
+            'value': 'groove',
+            'label': 'Groove',
+          },
+        ],
+      }
+    );
+
+    this.addControl('popup_border_width', {
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+        units: [
+          'px',
+          '%',
+          'vh',
+        ],
+      }
+    );
+
+    this.addControl('popup_border_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+      }
+    );
+
+    this.addControl('popup_radius', {
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Radius',
+        units: [
+          'px',
+          '%',
+          'vh',
+        ],
+      }
+    );
+
     this.addControl('layout_bg', {
       type: CONTROLLER_COLOR,
       label: "Layout Background",
     });
 
+    this.addControl('popup_bg', {
+      type: CONTROLLER_COLOR,
+      label: "Popup Background",
+    });
 
     this.addControl('heading_close_popup_layout', {
       type: CONTROLLER_HEADING,
@@ -332,7 +409,7 @@ class RootElement extends BaseElement {
       conditionsCallback: ()=>{
         return getTemplateType() === 'popup'
       },
-      label: 'Custom close button',
+      label: 'Close Button',
     });
 
     this.addControl('close_context', {
@@ -364,7 +441,7 @@ class RootElement extends BaseElement {
 
     this.addControl('close_top', {
       type: CONTROLLER_SLIDER,
-      label: 'top',
+      label: 'Top',
       units: [
         'px',
         '%',
@@ -430,123 +507,19 @@ class RootElement extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection('offcanvas_section', {
-      label: 'Offcanvas',
-      conditions: {
-        "type_popup": "offcanvas"
-      }
-    });
+    this.startControlSection('transitions', {
+      label: 'Transitions',
 
-    this.addControl("width_offcanvas", {
-      type: CONTROLLER_SLIDER,
-      label: 'Width',
-      units: [
-        'px',
-        '%',
-        'vw'
-      ],
-      max: 1200,
-      min: 0,
-    });
-
-    // this.addControl('overlay_offcanvas', {
-    //   type: CONTROLLER_SWITCHER,
-    //   label: 'Overlay',
-    // });
-
-    this.addControl('close_offcanvas', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Close button',
-    });
-
-    // this.addControl('close_button_position_offcanvas', {
-    //   conditions: {
-    //     'close_offcanvas': true,
-    //   },
-    //   type: CONTROLLER_CHOOSE,
-    //   label: 'Alignment',
-    //   options: [
-    //     {
-    //       icon: 'left',
-    //       value: 'left',
-    //     },
-    //     {
-    //       icon: 'right',
-    //       value: 'right',
-    //     },
-    //   ],
-    // });
-
-    // this.addControl('close_button_icon_offcanvas', {
-    //   conditions: {
-    //     'close_offcanvas': true,
-    //   },
-    //   type: CONTROLLER_MEDIA,
-    //   label: 'Background Image',
-    // });
-
-    this.addControl("close_cursor_offcanvas", {
-      type: CONTROLLER_SELECT,
-      label: "Close cursor",
-      options: [
-        {
-          value: "none",
-          label: "None"
-        },
-        {
-          value: "crosshair",
-          label: "Crosshair"
-        },
-        {
-          value: "pointer",
-          label: "Pointer"
-        },
-      ],
-    });
-
-    this.addControl("direction_offcanvas", {
-      type: CONTROLLER_SELECT,
-      label: "Content box direction",
-      options: [
-        {
-          value: "left",
-          label: "Left"
-        },
-        {
-          value: "right",
-          label: "Right"
-        },
-        {
-          value: "top",
-          label: "Top"
-        },
-        {
-          value: "bottom",
-          label: "Bottom"
-        },
-        // {
-        //   value: "topLeft",
-        //   label: "Top left"
-        // },
-        // {
-        //   value: "topRight",
-        //   label: "Top right"
-        // },
-        // {
-        //   value: "bottomLeft",
-        //   label: "Bottom Left"
-        // },
-        // {
-        //   value: "bottomRight",
-        //   label: "Bottom right"
-        // },
-      ],
     });
 
     this.addControl("animations_offcanvas", {
       type: CONTROLLER_SELECT,
       label: "Animations",
       options: [
+        {
+          value: "",
+          label: "none"
+        },
         {
           value: "slide",
           label: "Slide"
@@ -555,32 +528,42 @@ class RootElement extends BaseElement {
           value: "push",
           label: "Push"
         },
-        {
-          value: "reveal",
-          label: "Reveal"
-        },
-        {
-          value: "none",
-          label: "none"
-        }
       ],
     });
 
-    this.addControl('overflow_visible_offcanvas', {
-      type: CONTROLLER_SWITCHER,
-      label: 'Offcanvas overflow visible',
+    this.addControl("s_direction", {
+      type: CONTROLLER_SELECT,
+      label: "Popup Slide Direction",
+      options: [
+        {
+          value: "left",
+          label: "Left"
+        },
+        {
+          value: "top",
+          label: "Top"
+        },
+        {
+          value: "right",
+          label: "Right"
+        },
+        {
+          value: "bottom",
+          label: "Bottom"
+        },
+      ],
+      conditionsCallback: ()=>{
+        return getCurrentElement().getResponsiveSetting('type_popup') === 'popup' &&
+          getCurrentElement().getResponsiveSetting('animations_offcanvas') === 'slide'
+      },
     });
 
-    this.addControl("time_offcanvas", {
+    this.addControl("time", {
       type: CONTROLLER_SLIDER,
-      default: {
-        size: 200,
-        unit: 'ms',
-      },
-      label: 'Time',
+      label: 'Transition Time',
       units: ["ms"],
-      max: 5000,
-      min: 100,
+      max: 1000,
+      min: 0,
     });
 
     this.endControlSection();

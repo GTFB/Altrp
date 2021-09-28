@@ -43,6 +43,11 @@ class ImageLightbox extends BaseElement {
       label: 'Content',
     });
 
+    this.addControl('l_id', {
+      label: 'Lightbox ID',
+      responsive: false,
+    });
+
     this.addControl('content_media', {
       type: CONTROLLER_MEDIA,
       label: 'Image',
@@ -67,14 +72,12 @@ class ImageLightbox extends BaseElement {
       hideOnEmail: true,
       type: CONTROLLER_SWITCHER,
       label: 'Lightbox',
-      default: false
     });
 
     this.addControl('cursor_pointer', {
       hideOnEmail: true,
       type: CONTROLLER_SWITCHER,
       label: 'Cursor pointer',
-      default: false
     });
 
 
@@ -82,25 +85,6 @@ class ImageLightbox extends BaseElement {
       hideOnEmail: true,
       type: CONTROLLER_SWITCHER,
       label: 'Lazyload Disable',
-      default: false
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("link", {
-      tab: TAB_CONTENT,
-      label: "Link"
-    });
-
-    this.addControl('image_link', {
-      type: CONTROLLER_LINK,
-      default: {
-        url: "",
-        attributes: "",
-        noFollow: false,
-        tag: 'Link'
-      },
-      label: 'Link',
     });
 
     this.endControlSection();
@@ -120,7 +104,6 @@ class ImageLightbox extends BaseElement {
     this.addControl('image_fit_size', {
         type: CONTROLLER_SELECT,
         label: 'Image fit',
-        // default: "cover",
         options: [
           {
             'value': 'fill',
@@ -146,18 +129,11 @@ class ImageLightbox extends BaseElement {
       }
     );
 
-    // this.addControl('aspect_ratio_off', {
-    //   type: CONTROLLER_SWITCHER,
-    //   label: 'Aspect Ratio Off',
-    //   default: true,
-    //   prefixClass: 'aspect-ratio-off_'
-    // });
 
 
     this.addControl('aspect_ratio_size', {
         type: CONTROLLER_SELECT,
         label: 'Aspect Ratio',
-        default: '0',
         options: [
           {
             'value': '0',
@@ -213,10 +189,7 @@ class ImageLightbox extends BaseElement {
     this.addControl('width_size', {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default: {
-        size: 100,
-        unit: '%',
-      },
+
       units: [
         'px',
         '%',
@@ -236,13 +209,7 @@ class ImageLightbox extends BaseElement {
     this.addControl('position_margin', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Margin',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px'
-      },
+
       units: [
         'px',
         '%',
@@ -253,13 +220,7 @@ class ImageLightbox extends BaseElement {
     this.addControl('position_padding', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Padding',
-      default: {
-        // top: 0,
-        // right: 0,
-        // bottom: 0,
-        // left: 0,
-        unit: 'px'
-      },
+
       units: [
         'px',
         '%',
@@ -271,7 +232,6 @@ class ImageLightbox extends BaseElement {
       hideOnEmail: true,
       type: CONTROLLER_NUMBER,
       label: 'Z-index',
-      default: 0,
     });
 
     this.endControlSection();
@@ -285,9 +245,7 @@ class ImageLightbox extends BaseElement {
     this.addControl('opacity_overlay', {
       type: CONTROLLER_SLIDER,
       label: 'Opacity',
-      // default:{
-      //   size: 1,
-      // },
+
       max: 1,
       min: 0,
       step: 0.01,
@@ -304,18 +262,11 @@ class ImageLightbox extends BaseElement {
       hideOnEmail: true,
       type: CONTROLLER_FILTERS,
       label: 'filters',
-      default: {
-        blur: 0,
-        brightness: 100,
-        contrast: 100,
-        saturate: 100,
-        hue: 0,
-      },
+
     });
     this.addControl('image_style_alignment', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
-      default: 'center',
       options: [
         {
           icon: 'left',
@@ -343,31 +294,18 @@ class ImageLightbox extends BaseElement {
     this.addControl("background_color", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      default: {
-        color: "",
-        colorPickedHex: "",
-      },
+
     });
 
     this.addControl('gradient', {
       type: CONTROLLER_GRADIENT,
       label: 'Gradient',
-      default: {
-        isWithGradient: false,
-        firstColor: "rgba(97,206,112,1)",
-        firstPoint: '100',
-        secondColor: "rgba(242,41,91,1)",
-        secondPoint: "0",
-        angle: "0",
-        value: ""
-      },
-    });
 
+    });
 
     this.addControl('background_image', {
       type: CONTROLLER_MEDIA,
       label: 'Background Image',
-      default: { url: "" },
     });
 
     this.addControl('background_position', {
@@ -411,7 +349,6 @@ class ImageLightbox extends BaseElement {
         }
       ],
       label: 'Background Position',
-      default: 'top left',
     });
 
     this.addControl('background_attachment', {
@@ -431,7 +368,6 @@ class ImageLightbox extends BaseElement {
         }
       ],
       label: 'Background Attachment',
-      default: 'scroll',
     });
 
     this.addControl('background_repeat', {
@@ -463,16 +399,11 @@ class ImageLightbox extends BaseElement {
         }
       ],
       label: 'Background Repeat',
-      default: 'repeat',
     });
 
     this.addControl("background_image_width", {
       type: CONTROLLER_SLIDER,
       label: 'Width',
-      default: {
-        size: 100,
-        unit: 'px',
-      },
       conditions: {
         'background_size': [''],
       },
@@ -506,7 +437,6 @@ class ImageLightbox extends BaseElement {
         },
       ],
       label: 'Background Size',
-      default: 'unset',
     });
 
 
@@ -574,10 +504,6 @@ class ImageLightbox extends BaseElement {
     this.addControl('border_radius', {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
-      default: {
-        // size: 0,
-        unit: 'px',
-      },
       units: [
         'px',
         '%',

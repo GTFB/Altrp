@@ -75,9 +75,6 @@ class UserForm extends Component {
     } else {
       res = await this.resource.post(this.state.user);
     }
-    console.log(res);
-
-
 
     if (res) {
 

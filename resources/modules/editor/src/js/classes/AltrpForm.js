@@ -141,7 +141,7 @@ class AltrpForm {
             {
               let res;
               if (modelID || this.options.customRoute) {
-                console.log(_.assign(this.getData(), data));
+
                 res = await this.resource.put(
                   modelID,
                   _.assign(this.getData(), data),

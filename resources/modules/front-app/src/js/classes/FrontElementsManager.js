@@ -418,7 +418,15 @@ class FrontElementsManager {
             /* webpackChunkName: 'InputRangeSliderWidget' */ "../../../../editor/src/js/components/widgets/InputRangeSliderWidget"
             );
         }
-      }
+      },
+      {
+        name: "scheduler",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'SchedulerWidget' */ "../../../../editor/src/js/components/widgets/SchedulerWidget"
+            );
+        }
+      },
     ];
     this.components = {};
   }

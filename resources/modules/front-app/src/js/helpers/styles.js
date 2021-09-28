@@ -122,7 +122,6 @@ export function shadowControllerToStyles(data, declaration="") {
     let returnShadow = [offsetX, horizontal, offsetY, vertical, blurRadius, blur, spread, spreadRadius].filter(elem => (
       (elem && elem !== 0)
     ));
-
     if(returnShadow.length !== 0) {
       styles += `box-shadow: ${type || ' '} ${offsetX || horizontal || 0}px ${offsetY || vertical || 0}px ${blurRadius || blur || 0}px ${spreadRadius || spread || 0}px ${color} ${declaration}; `;
     }
@@ -724,7 +723,7 @@ export function shadowStyled(controller = {}, important = '') {
     const color = controller.color || "";
 
     if(horizontal !== 0 || vertical !== 0 || blur !== 0 || spread !== 0) {
-      return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread} ${color} ${important};`;
+      return `box-shadow: ${type} ${horizontal}px ${vertical}px ${blur}px ${spread}px ${color} ${important};`;
     } else return ""
   } else return ""
 }

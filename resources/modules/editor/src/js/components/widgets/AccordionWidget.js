@@ -1,4 +1,4 @@
-import {renderAssetIcon} from "../../../../../front-app/src/js/helpers";
+const {renderAssetIcon} = window.altrpHelpers;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-accordion-item-button {
@@ -136,17 +136,17 @@ class AccordionWidget extends Component {
         {className: "altrp-accordion-item-active-icon-svg"}
       );
     }
-
+    const title_html_tag_accordion_content = this.props.element.getSettings('title_html_tag_accordion_content') || 'div'
     let accordion_items = items.map((item, idx) => {
 
       return (
-        <div className="altrp-accordion-item" key={idx}>
+        <div className={"altrp-accordion-item" + (this.state.activeItem.id[idx] ? ' active' : '')} key={idx}>
           {/*button*/}
           <div className="altrp-accordion-item-button" data-key={idx} onClick={(e) => this.open(e)}>
             <div className="altrp-accordion-item-label-container">
               {
                 React.createElement(
-                  this.state.settings.title_html_tag_accordion_content,
+                  title_html_tag_accordion_content,
                   {
                     className: "altrp-accordion-item-label"
                   },

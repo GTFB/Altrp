@@ -45,51 +45,51 @@ class Relationship extends EloquentModel
         'editable'
     ];
 
-  /**
-   * @deprecated
-   * Импортируем связи
-   * @param array $imported_relations
-   */
-  public static function import( $imported_relations = [] )
-  {
-    foreach ( $imported_relations as $imported_relation ) {
-      $model = AltrpModel::where( 'name', Arr::get( $imported_relation, 'model_name' ) )->first();
-      if( ! $model ){
-        continue;
-      }
-      $target_model = AltrpModel::where( 'name', Arr::get( $imported_relation, 'target_model_name' ) )->first();
-      if( ! $target_model ){
-        continue;
-      }
-      foreach ( $model->altrp_relationships as $altrp_relation ) {
-        if( $imported_relation['name'] === $altrp_relation->name ){
-          $altrp_relation->always_with = $imported_relation['always_with'];
-          $altrp_relation->onDelete = $imported_relation['onDelete'];
-          $altrp_relation->onUpdate = $imported_relation['onUpdate'];
-          $altrp_relation->title = $imported_relation['title'];
-          $altrp_relation->target_model_id = $target_model->id;
-          try{
-            $altrp_relation->save();
-          } catch (\Exception $e){
-            Log::error( $e->getMessage(), [$e->getFile()] );
-            continue;
-          }
-          continue 2;
+    /**
+     * @deprecated
+     * Импортируем связи
+     * @param array $imported_relations
+     */
+    public static function import($imported_relations = [])
+    {
+        foreach ($imported_relations as $imported_relation) {
+            $model = AltrpModel::where('name', Arr::get($imported_relation, 'model_name'))->first();
+            if (!$model) {
+                continue;
+            }
+            $target_model = AltrpModel::where('name', Arr::get($imported_relation, 'target_model_name'))->first();
+            if (!$target_model) {
+                continue;
+            }
+            foreach ($model->altrp_relationships as $altrp_relation) {
+                if ($imported_relation['name'] === $altrp_relation->name) {
+                    $altrp_relation->always_with = $imported_relation['always_with'];
+                    $altrp_relation->onDelete = $imported_relation['onDelete'];
+                    $altrp_relation->onUpdate = $imported_relation['onUpdate'];
+                    $altrp_relation->title = $imported_relation['title'];
+                    $altrp_relation->target_model_id = $target_model->id;
+                    try {
+                        $altrp_relation->save();
+                    } catch (\Exception $e) {
+                        Log::error($e->getMessage(), [$e->getFile()]);
+                        continue;
+                    }
+                    continue 2;
+                }
+            }
+            $new_relation = new self($imported_relation);
+            $new_relation->model_id = $model->id;
+            $new_relation->target_model_id = $target_model->id;
+            try {
+                $new_relation->save();
+            } catch (\Exception $e) {
+                Log::error($e->getMessage(), [$e->getFile()]);
+                continue;
+            }
         }
-      }
-      $new_relation = new self( $imported_relation );
-      $new_relation->model_id = $model->id;
-      $new_relation->target_model_id = $target_model->id;
-      try{
-        $new_relation->save();
-      } catch (\Exception $e){
-        Log::error( $e->getMessage(), [$e->getFile()] );
-        continue;
-      }
     }
-  }
 
-  /**
+    /**
      * @return array | null
      */
     public function get_model_for_route()
@@ -149,7 +149,7 @@ class Relationship extends EloquentModel
     public static function getBySearch($search, $modelId)
     {
         return self::where('model_id', $modelId)
-            ->where('title','like', "%{$search}%")
+            ->where('title', 'like', "%{$search}%")
             ->orWhere('id', $search)
             ->get();
     }
@@ -158,7 +158,7 @@ class Relationship extends EloquentModel
     {
         return self::where('model_id', $modelId)
             ->where(function ($query) use ($search) {
-                $query->where('title','like', "%{$search}%")
+                $query->where('title', 'like', "%{$search}%")
                     ->orWhere('id', $search);
             })
             ->skip($offset)
@@ -183,7 +183,7 @@ class Relationship extends EloquentModel
     {
         return self::where('model_id', $modelId)
             ->where(function ($query) use ($search) {
-                $query->where('title','like', "%{$search}%")
+                $query->where('title', 'like', "%{$search}%")
                     ->orWhere('id', $search);
             })
             ->toBase()
@@ -191,48 +191,49 @@ class Relationship extends EloquentModel
     }
 
 
-    public function checkForeignExist() {
+    public function checkForeignExist()
+    {
 
 
         $conditions = [
-            ["target_model_id","=",$this->target_model_id],
-            ["model_id","=",$this->model_id],
-            ["foreign_key","=",$this->foreign_key],
-            ["local_key","=",$this->local_key]
+            ["target_model_id", "=", $this->target_model_id],
+            ["model_id", "=", $this->model_id],
+            ["foreign_key", "=", $this->foreign_key],
+            ["local_key", "=", $this->local_key]
         ];
 
-        if(isset($this->id)) {
-            $conditions[] = ["id","!=",$this->id];
+        if (isset($this->id)) {
+            $conditions[] = ["id", "!=", $this->id];
         }
 
         $current_result = Relationship::where($conditions)->get();
 
         $current_result_fields = Relationship::where([
-            ["target_model_id","=",$this->target_model_id],
-            ["model_id","=",$this->model_id],
-            ["foreign_key","=",$this->local_key],
-            ["local_key","=",$this->foreign_key]
+            ["target_model_id", "=", $this->target_model_id],
+            ["model_id", "=", $this->model_id],
+            ["foreign_key", "=", $this->local_key],
+            ["local_key", "=", $this->foreign_key]
         ])->get();
 
         $inverse_result = Relationship::where([
-            ["target_model_id","=",$this->model_id],
-            ["model_id","=",$this->target_model_id],
-            ["foreign_key","=",$this->foreign_key],
-            ["local_key","=",$this->local_key]
+            ["target_model_id", "=", $this->model_id],
+            ["model_id", "=", $this->target_model_id],
+            ["foreign_key", "=", $this->foreign_key],
+            ["local_key", "=", $this->local_key]
         ])->get();
 
         $inverse_result_fields = Relationship::where([
-            ["target_model_id","=",$this->model_id],
-            ["model_id","=",$this->target_model_id],
-            ["foreign_key","=",$this->local_key],
-            ["local_key","=",$this->foreign_key]
+            ["target_model_id", "=", $this->model_id],
+            ["model_id", "=", $this->target_model_id],
+            ["foreign_key", "=", $this->local_key],
+            ["local_key", "=", $this->foreign_key]
         ])->get();
 
-        if(count($current_result) > 0 || count($inverse_result) > 0) {
+        if (count($current_result) > 0 || count($inverse_result) > 0) {
             return false;
         }
 
-        if(count($current_result_fields) > 0 || count($inverse_result_fields) > 0) {
+        if (count($current_result_fields) > 0 || count($inverse_result_fields) > 0) {
             return false;
         }
 
@@ -243,17 +244,19 @@ class Relationship extends EloquentModel
      * Проверка на существование таблицы в БД
      * @return bool
      */
-    public function is_db_exist() {
+    public function is_db_exist()
+    {
         $table = $this->altrp_model->altrp_table;
         $target_table = $this->altrp_target_model->altrp_table;
         $keys = $table->getDBForeignKeys();
         $prefix = env('DB_TABLES_PREFIX', '');
         $key = false;
         foreach ($keys as $value) {
-            if(array_search($this->local_key,$value->getLocalColumns()) !== false
-                && $value->getForeignTableName() == $prefix.$target_table->name
+            if (
+                array_search($this->local_key, $value->getLocalColumns()) !== false
+                && $value->getForeignTableName() == $prefix . $target_table->name
                 && array_search($this->foreign_key, $value->getForeignColumns()) !== false
-                ) {
+            ) {
                 return $value;
             }
         }
@@ -261,7 +264,8 @@ class Relationship extends EloquentModel
         return false;
     }
 
-    public function getDBKey($is_original = false) {
+    public function getDBKey($is_original = false)
+    {
 
         $foreign_table = $this->getTableToDBAL(false, $is_original);
         $local_table = $this->getTableToDBAL(true, $is_original);
@@ -269,15 +273,16 @@ class Relationship extends EloquentModel
         $foreign_key = $this->getColumnNameToDBAL(false, $is_original);
         $prefix = env('DB_TABLES_PREFIX', '');
 
-        if(!$foreign_table) {
+        if (!$foreign_table) {
             return false;
         }
 
         $keys = $foreign_table->getDBForeignKeys();
 
         foreach ($keys as $value) {
-            if(array_search($local_key,$value->getLocalColumns()) !== false
-                && $value->getForeignTableName() == $prefix.$local_table->name
+            if (
+                array_search($local_key, $value->getLocalColumns()) !== false
+                && $value->getForeignTableName() == $prefix . $local_table->name
                 && array_search($foreign_key, $value->getForeignColumns()) !== false
             ) {
                 return $value;
@@ -293,22 +298,22 @@ class Relationship extends EloquentModel
      * @param bool $is_original
      * @return bool|string
      */
-    public function getTableToDBAL($is_local = false, $is_original = false) {
+    public function getTableToDBAL($is_local = false, $is_original = false)
+    {
         $table = $this->altrp_model->altrp_table;
         $target_table = $this->altrp_target_model->altrp_table;
         $type = $this->type;
 
-        if($is_original) {
+        if ($is_original) {
             $table = Model::find($this->getOriginal("model_id"))->altrp_table;
             $target_table = Model::find($this->getOriginal("target_model_id"))->altrp_table;
             $type = $this->getOriginal("type");
         }
 
         $prefix = env('DB_TABLES_PREFIX', '');
-        if($type == "hasOne" || $type == "hasMany") {
-            return $is_local ? $table : $target_table ;
-        }
-        else if($type == "belongsTo") {
+        if ($type == "hasOne" || $type == "hasMany") {
+            return $is_local ? $table : $target_table;
+        } else if ($type == "belongsTo") {
             return $is_local ?  $target_table : $table;
         }
         return false;
@@ -320,16 +325,16 @@ class Relationship extends EloquentModel
      * @param bool $is_original
      * @return bool|mixed
      */
-    public function getColumnNameToDBAL($is_local = false, $is_original = false) {
+    public function getColumnNameToDBAL($is_local = false, $is_original = false)
+    {
 
         $foreign_key = $is_original ? $this->getOriginal("foreign_key") : $this->foreign_key;
         $local_key = $is_original ? $this->getOriginal("local_key") : $this->local_key;
         $type = $is_original ? $this->getOriginal("type") : $this->type;
 
-        if($type == "hasOne" || $type == "hasMany") {
+        if ($type == "hasOne" || $type == "hasMany") {
             return $is_local ? $foreign_key : $local_key;
-        }
-        else if($type == "belongsTo") {
+        } else if ($type == "belongsTo") {
             return $is_local ? $local_key : $foreign_key;
         }
         return false;
@@ -339,7 +344,8 @@ class Relationship extends EloquentModel
      * Сравнение аттрибутов колонок через DBAL
      * @return array
      */
-    public function compareColumnsAttributes() {
+    public function compareColumnsAttributes()
+    {
         $table = $this->altrp_model->altrp_table;
         $target_table = $this->altrp_target_model->altrp_table;
         $target_column = $target_table->getDBColumnByName($this->foreign_key);
@@ -347,16 +353,15 @@ class Relationship extends EloquentModel
 
         $errors = [];
 
-        if($target_column->getType() !== $local_column->getType()) {
+        if ($target_column->getType() !== $local_column->getType()) {
             $errors[] = "Columns has different type";
         }
 
-        if(!$this->checkNullable($target_column, $local_column)) {
+        if (!$this->checkNullable($target_column, $local_column)) {
             $errors[] = "Target column is not nullable";
         }
 
         return $errors;
-
     }
 
     /**
@@ -365,12 +370,13 @@ class Relationship extends EloquentModel
      * @param $local_column
      * @return bool
      */
-    public function checkNullable($target_column, $local_column) {
-        if($this->onUpdate != "set null" || $this->onDelete != "set null") {
+    public function checkNullable($target_column, $local_column)
+    {
+        if ($this->onUpdate != "set null" || $this->onDelete != "set null") {
             return true;
         }
 
-        if(($this->type == "hasOne" || $this->type == "hasMany") && $target_column->getNotNull()) {
+        if (($this->type == "hasOne" || $this->type == "hasMany") && $target_column->getNotNull()) {
             return false;
         }
 
@@ -381,18 +387,25 @@ class Relationship extends EloquentModel
      * Cannot add or update a child row: a foreign key constraint fails
      * @return bool
      */
-    public function checkDBRowsConstraint() {
+    public function checkDBRowsConstraint()
+    {
         $foreign_table = $this->getTableToDBAL();
         $local_table = $this->getTableToDBAL(true);
         $local_key = $this->getColumnNameToDBAL(true);
         $foreign_key = $this->getColumnNameToDBAL();
         $prefix = env('DB_TABLES_PREFIX', '');
-
-        $result = DB::table($foreign_table->name)
-            ->leftJoin($local_table->name, $foreign_table->name.".".$local_key, '=', $local_table->name.".".$foreign_key)
-            ->whereNotNull($foreign_table->name.".".$local_key)
-            ->havingRaw($prefix.$local_table->name.".".$foreign_key." IS NULL")
-            ->get();
+        if (env('DB_CONNECTION') === 'pgsql') {
+            $result = DB::table($foreign_table->name)
+                ->leftJoin($local_table->name, $foreign_table->name . "." . $local_key, '=', $local_table->name . "." . $foreign_key)
+                ->whereNotNull($foreign_table->name . "." . $local_key)
+                ->get();
+        } else {
+            $result = DB::table($foreign_table->name)
+                ->leftJoin($local_table->name, $foreign_table->name . "." . $local_key, '=', $local_table->name . "." . $foreign_key)
+                ->whereNotNull($foreign_table->name . "." . $local_key)
+                ->havingRaw($prefix . $local_table->name . "." . $foreign_key . " IS NULL")
+                ->get();
+        }
 
         return count($result) > 0 ? false : true;
     }
@@ -400,27 +413,27 @@ class Relationship extends EloquentModel
     /**
      * Получаем обратную связь
      */
-    public function getInverseRelationship() {
+    public function getInverseRelationship()
+    {
 
         $conditions = [
-            ["target_model_id","=",$this->model_id],
-            ["model_id","=",$this->target_model_id],
-            ["foreign_key","=",$this->local_key],
-            ["local_key","=",$this->foreign_key],
+            ["target_model_id", "=", $this->model_id],
+            ["model_id", "=", $this->target_model_id],
+            ["foreign_key", "=", $this->local_key],
+            ["local_key", "=", $this->foreign_key],
         ];
 
-        if($this->type === "hasOne") {
-            $conditions[] = ["type","=","belongsTo"];
+        if ($this->type === "hasOne") {
+            $conditions[] = ["type", "=", "belongsTo"];
         }
 
-        if($this->type === "hasMany") {
-            $conditions[] = ["type","=","belongsTo"];
-
+        if ($this->type === "hasMany") {
+            $conditions[] = ["type", "=", "belongsTo"];
         }
 
         $result = Relationship::where($conditions);
 
-        if($this->type === "belongsTo") {
+        if ($this->type === "belongsTo") {
             $result->whereIn('type', ["hasOne", "hasMany"]);
         }
 

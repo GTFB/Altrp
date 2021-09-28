@@ -3,7 +3,6 @@ import { changeCurrentPageProperty } from "../store/current-page/actions";
 import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
-import DashboardComponent from "../../../../editor/src/js/components/widgets/styled-components/DashboardComponent";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
 import styled from "styled-components";
@@ -60,6 +59,23 @@ class SimpleElementWrapper extends Component {
     window.addEventListener("load", () => {
       window.dispatchEvent(new Event("resize"));
     })
+
+    const {element} = this.props
+    const mountElementEvent = new Event(`altrp-mount-element:${element.getId()}` );
+    const mountElementTypeEvent = new Event(`altrp-mount-element:${element.getName()}` );
+    document.dispatchEvent(mountElementEvent)
+    document.dispatchEvent(mountElementTypeEvent)
+  }
+
+  componentWillUnmount() {
+    const {element} = this.props
+    if(element.getId() === '_giafvu4nk'){
+      console.error(this);
+    }
+    const unmountElementEvent = new Event(`altrp-unmount-element:${element.getId()}` );
+    const unmountElementTypeEvent = new Event(`altrp-unmount-element:${element.getName()}` );
+    document.dispatchEvent(unmountElementEvent)
+    document.dispatchEvent(unmountElementTypeEvent)
   }
   /**
    * Подписываемся на обновление store редакса
@@ -182,7 +198,6 @@ class SimpleElementWrapper extends Component {
       window.altrpHelpers.setTitle(title);
     }
   }
-
   /**
    * Обновить элемент изменив this.state.updateToken
    */
@@ -281,16 +296,15 @@ class SimpleElementWrapper extends Component {
 
   render() {
     const {
-      hide_on_trigger,
     } = this.props.element.settings;
-    let {
-      tooltip_position,
-      tooltip_text,
-      tooltip_minimal,
-      tooltip_show_type,
-      tooltip_horizontal_offset,
-      tooltip_vertical_offset,
-    } = this.props.element.settings;
+
+    const tooltip_position = this.props.element.getResponsiveSetting('tooltip_position', 'bottom')
+    let tooltip_text = this.props.element.getResponsiveSetting('tooltip_text')
+    const tooltip_minimal = this.props.element.getResponsiveSetting('tooltip_minimal')
+    let tooltip_show_type = this.props.element.getResponsiveSetting('tooltip_show_type')
+    const tooltip_horizontal_offset = this.props.element.getResponsiveSetting('tooltip_horizontal_offset')
+    const tooltip_vertical_offset = this.props.element.getResponsiveSetting('tooltip_vertical_offset')
+
 
     if (this.state.errorInfo) {
       return (
@@ -359,9 +373,9 @@ class SimpleElementWrapper extends Component {
     let WrapperComponent = TransparentDiv;
 
     switch (this.props.element.getName()) {
-      case "diagram":
-        WrapperComponent = DiagramComponent;
-        break;
+      // case "diagram":
+      //   WrapperComponent = DiagramComponent;
+      //   break;
       // case "dashboards":
       // WrapperComponent = DashboardComponent;
       // break;
@@ -392,7 +406,9 @@ class SimpleElementWrapper extends Component {
         this.elementWrapperRef.current.style.display = "none";
       }
     }
-
+    if(['column', 'section'].indexOf(this.props.element.getType()) !== -1){
+      tooltip_show_type = 'never'
+    }
     return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
       <>
         {

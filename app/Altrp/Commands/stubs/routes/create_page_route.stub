@@ -4,6 +4,16 @@ Route::get({{frontend_route}}, function ({{params}}) {
   global $altrp_env;
   global $altrp_current_page;
   $_frontend_route = \App\Page::find({{page_id}});
+  /*
+  try{
+    if( $_frontend_route && ! $_frontend_route->allowedForUser() ){
+      $url = $_frontend_route->redirect ? $_frontend_route->redirect : '/';
+      return redirect($url);
+    }
+  } catch( Exception $e ){
+
+  }
+  */
   $altrp_current_page = $_frontend_route;
   $_frontend_route['data_sources'] = $_frontend_route->page_data_sources->map(function (App\PageDatasource $page_data_source) {
     if ($page_data_source->source) {
@@ -48,11 +58,8 @@ Route::get({{frontend_route}}, function ({{params}}) {
     global $altrp_route_id;
     $altrp_route_id = $_frontend_route['id'];
   }
-  if( $preload_content['content'] ){
-    $pages = [];
-  } else {
-    $pages = \App\Page::get_pages_for_frontend( true );
-  }
+  $pages = \App\Page::get_pages_for_frontend( true, $_frontend_route['id'], ! ! $preload_content['content'] );
+
   return view( 'front-app', [
     'page_areas' => json_encode( $page_areas ),
     'altrp_settings' => json_encode( $altrp_settings ),

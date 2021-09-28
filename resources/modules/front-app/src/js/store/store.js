@@ -10,7 +10,6 @@ window.appStore = appStore;
 if (window.ALTRP_DEBUG) {
   let _dis = appStore.dispatch;
   appStore.dispatch = function(action) {
-    console.trace(action);
     _dis.bind(appStore)(action);
   };
 }

@@ -116,7 +116,7 @@
           content: "";
           position: absolute;
           right: 0;
-          top: 62px;
+          top: 16px;
           border: 8px solid transparent;
           border-right: 8px solid #f7f8f9;
           display: block;
@@ -145,13 +145,13 @@
         display: none;
         position: fixed;
         left: 271px;
-        top: 81px;
+        margin-top: -37px;
 
         &::before {
+          margin-top: 10px;
+          left: 255px;
           content: "";
           position: fixed;
-          left: 255px;
-          top: 102px;
           border: 8px solid transparent;
           border-right: 8px solid #677289;
           display: block;
@@ -216,6 +216,11 @@
   }
 }
 
+/* Чтобы кастомный скроллбар слева не перекрывал элементы списка при наведении */
+.admin-nav-main div div:last-child {
+  pointer-events: none;
+}
+
 .icon {
   width: 16px;
   height: 16px;
@@ -225,6 +230,7 @@
   align-items: center;
 }
 .admin-nav li {
+  position: relative;
   list-style-type: none;
   background: #343b4c;
   &:hover {

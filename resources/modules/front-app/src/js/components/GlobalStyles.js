@@ -5,7 +5,7 @@ import {getTableStyles} from "./helpers/stylesForTheTable";
 import {getPostsStyles} from "./helpers/stylesForThePosts";
 import getImageStyles from "./helpers/stylesForTheImage";
 import getTabsStyles from "./helpers/stylesForTheTabs";
-import getMenuStyles from "./helpers/stylesForTheMenu";
+import getMenuStyles from "./helpers/getMenuStyles";
 import getBreadcrumbsStyles from "./helpers/stylesForTheBreadcrumbs";
 import ButtonComponent from "../../../../editor/src/js/components/widgets/styled-components/ButtonComponent";
 import CarouselComponent from "../../../../editor/src/js/components/widgets/styled-components/CarouselComponent";

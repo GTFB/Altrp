@@ -131,11 +131,9 @@ const Select = window.altrpLibs.BlueprintSelect.Select;
   padding-bottom: 2px;
   padding-left: 2px;
   border-width: 1px;
-  border-color: #000;
 }
 .altrp-field-select2__control:hover{
   border-width: 1px;
-  border-color: #000;
 }
 .altrp-field-container {
   margin: 0;
@@ -741,7 +739,7 @@ class InputSelectWidget extends Component {
       );
     } catch (e) {
       console.error(
-        "Evaluate error in Input " + e.message,
+        "Evaluate error in Input: '" + e.message + "'",
         this.props.element.getId()
       );
     }

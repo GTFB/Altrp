@@ -14,7 +14,7 @@ class AddLocalStorageToUser extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->json('local_storage')->nullable()->default('{}');
+            $table->longText('local_storage')->nullable()->default('{}');
         });
     }
 

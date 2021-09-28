@@ -967,6 +967,7 @@ function extractElementsNames( array $areas = [], bool $only_react_elements = fa
   $elementNames = [];
 
   foreach ( $areas as $area ) {
+
     if( ! isset( $area['template']['data'] ) ){
       continue;
     }
@@ -1047,6 +1048,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'table',
     'tabs',
     'heading-type-animating',
+    'sheduler',
   ];
   if( ! is_array( $elementNames ) ){
     $elementNames = [];
@@ -1389,41 +1391,54 @@ function getAltrpSettings( $page_id ): array
   if( ! $page_id ){
     return $settings;
   }
+
   $areas = Page::get_areas_for_page( $page_id );
   $json_areas = json_encode( $areas );
   if( strpos( $json_areas, 'altrptime' ) !== false){
     $settings['libsToLoad'][] = 'moment';
   }
 
-  $settings['libsToLoad'][] = 'blueprint';
 
   $action_types = [];
   foreach ( $areas as $area ) {
-    $root_element = data_get( $area, 'template.data' );
-    if( $root_element ){
+    $templates = data_get( $area, 'templates' );
+    if( ! $templates ){
+      $templates = [data_get( $area, 'template' )];
+    }
+    if( empty( $templates ) ){
+      continue;
+    }
+    foreach ( $templates as $template ) {
 
-      recurseMapElements( $root_element, function( $element ) use ($settings, &$action_types ){
-        error_log(data_get( $element, 'settings.react_element' ));
+      $root_element = data_get( $template, 'data');
 
-        if(data_get( $element, 'settings.tooltip_show_type' ) && is_integer(array_search("blueprint", $settings['libsToLoad']))) {
-          $settings['libsToLoad'][] = "blueprint";
-        }
+      if ( $root_element ) {
 
-        if( ! data_get( $element, 'settings.react_element' ) ){
-          return;
-        }
+        recurseMapElements( $root_element, function ( $element ) use ( &$settings, &$action_types ) {
 
-        $actions = [];
-        foreach ( ACTIONS_NAMES as $ACTIONS_NAME ) {
-          $actions = array_merge( $actions, data_get( $element, 'settings.' . $ACTIONS_NAME, [] ) );
-        }
-        foreach ( $actions as $action ) {
-          $action_type = data_get( $action, 'type' );
-          if( array_search( $action_type, $action_types ) === false ){
-            $action_types[] = $action_type;
+          if ( data_get( $element, 'settings.tooltip_enable' ) && array_search( "blueprint", $settings['libsToLoad'] ) === false ) {
+            $settings['libsToLoad'][] = "blueprint";
           }
-        }
-      } );
+
+          if ( ! data_get( $element, 'settings.react_element' ) ) {
+            return;
+          }
+
+          $actions = [];
+          foreach ( ACTIONS_NAMES as $ACTIONS_NAME ) {
+            $actions = array_merge( $actions, data_get( $element, 'settings.' . $ACTIONS_NAME, [] ) );
+          }
+          foreach ( $actions as $action ) {
+            $action_type = data_get( $action, 'type' );
+            if ( array_search( $action_type, $action_types ) === false ) {
+              $action_types[] = $action_type;
+            }
+          }
+        } );
+      }
+    }
+    if( is_array( data_get( $area, 'templates') ) ){
+      $settings['libsToLoad'][] = 'moment';
     }
   }
 
@@ -1431,6 +1446,15 @@ function getAltrpSettings( $page_id ): array
     if( array_search( $ACTIONS_COMPONENT, $action_types ) !== false ){
       $settings['action_components'][] = $ACTIONS_COMPONENT;
     }
+  }
+  $page = Page::find( $page_id );
+  try{
+    if( $page && ! $page->allowedForUser() ){
+      $url = $page->redirect ? $page->redirect : '/';
+      $settings['redirect'] = $url;
+    }
+  } catch( Exception $e ){
+
   }
   return $settings;
 }

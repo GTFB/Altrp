@@ -30,6 +30,7 @@ import HeadingTypeHeadingWidget
 import SKELETON_ELEMENTS from "../../../resources/modules/front-app/src/js/constants/SKELETON_ELEMENTS";
 import InputHiddenWidget from "../../../resources/modules/editor/src/js/components/widgets/InputHiddenWidget";
 import TemplateWidget from "../../../resources/modules/editor/src/js/components/widgets/TemplateWidget";
+import ImageLightboxWidget from "../../../resources/modules/editor/src/js/components/widgets/ImageLightboxWidget";
 // import BreadcrumbsWidget from '../../../resources/modules/editor/src/js/components/widgets/BreadcrumbsWidget';
 // import MenuWidget from '../../../resources/modules/editor/src/js/components/widgets/MenuWidget';
 
@@ -51,6 +52,7 @@ class FrontElementsManager {
     this.components['text'] = TextWidget;
     this.components['text-common'] = TextWidget;
     this.components['image'] = ImageWidget;
+    this.components['image-lightbox'] = ImageLightboxWidget;
     this.components['posts'] = PostsWidget;
     this.components['divider'] = DividerWidget;
     this.components['poster'] = PosterWidget;
@@ -64,7 +66,7 @@ class FrontElementsManager {
 
   getComponentClass(name) {
     if (! this.components[name]) {
-      console.error( 'Не найден компонент с именем ' + name);
+      console.error( 'Not found component with ' + name);
     }
     return this.components[name];
   }

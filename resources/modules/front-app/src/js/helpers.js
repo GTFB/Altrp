@@ -398,7 +398,7 @@ export function conditionsChecker(
  * @param {boolean} dataByPath - брать ли данный из getDataByPath
  * @return {boolean}
  */
-function conditionChecker(c, model, dataByPath = true) {
+export function conditionChecker(c, model, dataByPath = true) {
   let result = 0;
   const { operator } = c;
   let { modelField: left, value } = c;
@@ -408,33 +408,6 @@ function conditionChecker(c, model, dataByPath = true) {
     return altrpCompare(left, value, operator);
   }
   return altrpCompare(model.getProperty(left), value, operator);
-  switch (operator) {
-    case "empty": {
-      return !model.getProperty(modelField, "");
-    }
-    case "not_empty": {
-      return !!model.getProperty(modelField, "");
-    }
-    case "==": {
-      return _.isEqual(model.getProperty(modelField, ""), value);
-    }
-    case "<>": {
-      return !_.isEqual(model.getProperty(modelField, ""), value);
-    }
-    case ">": {
-      return Number(model.getProperty(modelField, "")) > Number(value);
-    }
-    case ">=": {
-      return Number(model.getProperty(modelField, "")) >= Number(value);
-    }
-    case "<": {
-      return Number(model.getProperty(modelField, "")) < Number(value);
-    }
-    case "<=": {
-      return Number(model.getProperty(modelField, "")) <= Number(value);
-    }
-  }
-  return result;
 }
 
 /**
@@ -849,6 +822,7 @@ export function altrpCompare(
       return !altrpCompare(leftValue, rightValue, "in");
     }
     case "contain": {
+
       if (_.isString(leftValue)) {
         return leftValue.indexOf(rightValue) !== -1;
       }
@@ -894,10 +868,10 @@ export const CONDITIONS_OPTIONS = [
     value: "<>",
     label: "Not Equals"
   },
-  {
-    value: "between",
-    label: "Between"
-  },
+  // {
+  //   value: "between",
+  //   label: "Between"
+  // },
   {
     value: ">",
     label: ">"
@@ -1671,7 +1645,11 @@ export function saveDataToLocalStorage(name, data) {
   if (_.isObject(data)) {
     data = JSON.stringify(data);
   }
-  localStorage.setItem(name, data);
+  try {
+    localStorage.setItem(name, data);
+  } catch (e) {
+    return true;
+  }
   return true;
 }
 /**
@@ -1684,14 +1662,14 @@ export function getDataFromLocalStorage(name, _default = undefined) {
   if (!name) {
     return _default;
   }
-  let value = localStorage.getItem(name);
-  if (!value) {
-    return _default;
-  }
+  let value
   try {
+    value = localStorage.getItem(name);
+    if (!value) {
+      return _default;
+    }
     value = JSON.parse(value);
   } catch (error) {
-    console.error(error);
   }
   if (_.isString(value) && Number(value)) {
     value = Number(value);
@@ -1932,11 +1910,21 @@ export function getResponsiveSetting(
   elementState = "",
   _default = null
 ) {
-  let { currentScreen } = window.parent.appStore.getState();
+  let  currentScreen
+  try{
+    currentScreen = window.parent.appStore.getState().currentScreen
+  } catch(e){
+    // console.trace(e);
+    currentScreen = window.appStore.getState().currentScreen
+  }
   let _settingName = `${settingName}_${elementState}_`;
   if (currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT) {
     let setting = settings[_settingName];
+
     if (setting === undefined) {
+      if(elementState){
+        return undefined
+      }
       setting = _.get(settings, settingName, _default);
     }
     return setting;
@@ -1962,7 +1950,12 @@ export function getResponsiveSetting(
     }
   }
 
+
+
   if (setting === undefined) {
+    if(elementState){
+      return undefined
+    }
     setting = _.get(settings, settingName, _default);
   }
   return setting;

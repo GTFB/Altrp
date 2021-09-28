@@ -1,7 +1,12 @@
 import {
+  addImage,
+  addImageToLightboxStorage, removeImageFromLightbox
+} from "../../../../../front-app/src/js/store/ligtbox-images-storage/actions";
+
+const {
   getDataByPath,
   isEditor, parseURLTemplate
-} from "../../../../../front-app/src/js/helpers";
+} = window.altrpHelpers;
 import AltrpImage from "../altrp-image/AltrpImage";
 import AltrpLightbox from "../altrp-lightbox/AltrpLightbox";
 
@@ -22,38 +27,65 @@ import AltrpLightbox from "../altrp-lightbox/AltrpLightbox";
   }
 `)
 
-const Link = window.Link
 class ImageLightboxWidget extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      settings: props.element.getSettings(),
+      settings: props.element.getResponsiveSetting(),
       lightbox: false
     };
     props.element.component = this;
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    if(props.baseRender){
+    if (props.baseRender) {
       this.render = props.baseRender(this);
     }
+
+    this.lightboxID = props.element.getResponsiveSetting('l_id');
   }
 
-  render() {
-    const { element } = this.props;
-    const link = this.state.settings.image_link || {};
-    const activeLightbox = this.props.element.getSettings("lightbox_switch", false);
-    const cursorPointer = this.props.element.getSettings("cursor_pointer", false);
-    const background_image = this.props.element.getSettings(
-      "background_image",
-      {}
-    );
-    let classNames = "altrp-image-container";
-    let media = this.state.settings.content_media;
+  _componentDidMount() {
+    this.updateLightboxStore()
+  }
 
-    if(cursorPointer) {
-      classNames += " cursor-pointer"
+  _componentDidUpdate(){
+    this.updateLightboxStore()
+  }
+
+  /**
+   * Add image data to lightbox store if necessary
+   */
+  updateLightboxStore() {
+    if(isEditor()){
+      return;
     }
+    const lightBoxID = this.props.element.getResponsiveSetting('l_id')
+    if(! lightBoxID){
+      return
+    }
+    const media = this.getMedia()
+    if(! media?.url || this.addedURL === media.url){
+      return;
+    }
+    this.props.appStore.dispatch(addImageToLightboxStorage(media.url, lightBoxID, ))
+    this.addedURL = media.url
+  }
+
+  _componentWillUnmount() {
+    const lightBoxID = this.props.element.getResponsiveSetting('l_id')
+    if(! lightBoxID){
+      return
+    }
+    this.props.appStore(removeImageFromLightbox(media.url, lightBoxID, ))
+  }
+  /**
+   *
+   * @returns {{}}
+   */
+  getMedia(){
+    const {element} = this.props
+    let media = element.getResponsiveSetting('content_media');
 
     /**
      * Для карточки модель может быть другой
@@ -66,10 +98,10 @@ class ImageLightboxWidget extends Component {
      * Возьмем данные из окружения
      */
     if (
-      this.state.settings.content_path &&
-      _.isObject(getDataByPath(this.state.settings.content_path, null, model))
+      element.getResponsiveSetting('content_path') &&
+      _.isObject(getDataByPath(element.getResponsiveSetting('content_path'), null, model))
     ) {
-      media = getDataByPath(this.state.settings.content_path, null, model);
+      media = getDataByPath(element.getResponsiveSetting('content_path'), null, model);
       /**
        * Проверим массив ли с файлами content_path
        */
@@ -79,28 +111,44 @@ class ImageLightboxWidget extends Component {
         media.assetType = "media";
       }
     } else if (
-      this.state.settings.content_path &&
-      _.isString(getDataByPath(this.state.settings.content_path, null, model))
+      element.getResponsiveSetting('content_path') &&
+      _.isString(getDataByPath(element.getResponsiveSetting('content_path'), null, model))
     ) {
-      media = getDataByPath(this.state.settings.content_path, null, model);
+      media = getDataByPath(element.getResponsiveSetting('content_path'), null, model);
       media = {
         assetType: "media",
         url: media,
         name: "null"
       };
-    } else if (this.props.element.getSettings('default_url')){
+    } else if (this.props.element.getResponsiveSetting('default_url')) {
       media = {
         assetType: "media",
-        url: this.props.element.getSettings('default_url'),
+        url: this.props.element.getResponsiveSetting('default_url'),
         name: "default"
       };
     }
+    return media
+  }
+
+  render() {
+    const {element} = this.props;
+    const cursorPointer = element.getResponsiveSetting("cursor_pointer", false);
+    const background_image = element.getResponsiveSetting(
+      "background_image",
+      {}
+    );
+    const media = this.getMedia()
+    let classNames = "altrp-image-container";
+    if (cursorPointer) {
+      classNames += " cursor-pointer"
+    }
+
     let width = this.props.element.getResponsiveSetting('width_size');
     let height = this.props.element.getResponsiveSetting('height_size');
     width = _.get(width, 'size', '100') + _.get(width, 'unit', '%');
     height = _.get(height, 'size', '100') + _.get(height, 'unit', '%');
 
-    if(_.get(this.props.element.getResponsiveSetting('height_size'), 'size', '100') === "0") {
+    if (_.get(this.props.element.getResponsiveSetting('height_size'), 'size', '100') === "0") {
       height = ""
     }
 
@@ -110,9 +158,7 @@ class ImageLightboxWidget extends Component {
         width={width}
         element={this.props.element}
         height={height}
-        id={this.state.settings.position_css_id}
         className={
-          this.state.settings.position_css_classes +
           " altrp-image" +
           (background_image ? " altrp-background-image" : "")
         }
@@ -122,6 +168,8 @@ class ImageLightboxWidget extends Component {
     const lightbox = (
       <AltrpLightbox
         images={[(media ? media.url : "")]}
+        currentUrl={this.addedURL}
+        lightboxID={this.props.element.getResponsiveSetting('l_id')}
         settings={{
           onCloseRequest: () => this.setState({lightbox: false})
         }}
@@ -129,54 +177,26 @@ class ImageLightboxWidget extends Component {
       />
     );
 
-    if (link.toPrevPage && !isEditor()) {
-      return (
-        <div
-          className={classNames}
-          onClick={() => {
-            history.back();
-            if(activeLightbox) {
-              this.setState({lightbox: true})
-            }
-          }}
-        >
-          {altrpImage}
-        </div>
-      );
-    } else {
-      let linkUrl = link.url || '';
-      linkUrl = parseURLTemplate(linkUrl, this.props.element.getCurrentModel().getData());
-      const linkProps = {
 
-      };
-      if(link.openInNew){
-        linkProps.target = '_blank';
-      }
 
-      return (
-        <div
-          className={classNames}
-          onClick={() => {
-            if(activeLightbox) {
-              this.setState({lightbox: true})
-            }
-          }}
-        >
-          {linkUrl && ! isEditor() ? (
-            link.tag === "a" ? (
-              <a href={linkUrl} {...linkProps}>{altrpImage}</a>
-            ) : (
-              <Link to={linkUrl} {...linkProps}>{altrpImage}</Link>
-            )
-          ) : (
-            altrpImage
-          )}
-          {
-            activeLightbox && this.state.lightbox ? lightbox : ""
+    return (
+      <div
+        className={classNames}
+        onClick={() => {
+          if(! isEditor()){
+            this.setState({lightbox: true})
           }
-        </div>
-      );
-    }
+        }}
+      >
+        {
+          altrpImage
+        }
+        {
+          this.state.lightbox ? lightbox : ""
+        }
+      </div>
+    );
+
   }
 }
 

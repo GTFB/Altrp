@@ -1,5 +1,5 @@
 import React from 'react';
-import {isEditor} from "../../../../../front-app/src/js/helpers";
+const {isEditor, isSSR} = window.altrpHelpers;
 let Tooltip2;
 
 if(window.altrpLibs) {
@@ -21,6 +21,9 @@ function offset(slider) {
 }
 
 function AltrpTooltip(props) {
+  if(isSSR()){
+    return <>{props.children}</>;
+  }
   const state = props.state || "never";
   const minimal = props.minimal || false;
   const position = props.position || "bottom";
@@ -38,6 +41,7 @@ function AltrpTooltip(props) {
       break;
   }
 
+
   let body = document.body;
 
   if(!props.editor) {
@@ -48,7 +52,6 @@ function AltrpTooltip(props) {
         document.body
     });
   }
-
   if(Tooltip2 && props.children && !_.isString(props.children)) {
     return <Tooltip2
       content={props.text}

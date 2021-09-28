@@ -82,18 +82,17 @@ class Updates extends Component {
     const {testEnable} = this.props.adminState;
     return <div className="admin-updates p-4">
       <div className="admin-caption mt-1">
-        {data.updateMessage}
+        Install Test Version of Altrp
       </div>
-      {
-        this.state.needUpdate ?
+      <button className="btn_success btn" onClick={this.installTestAltrp}>Install Test</button>      
+        
+      {testEnable && <React.Fragment>
+        <div className="admin-caption mt-1">
+          {data.updateMessage}
+        </div>
+        {this.state.needUpdate ?
           <button className="btn_success btn" onClick={this.updateAltrp}>Update</button>
           :  <button className="btn"  onClick={this.updateAltrp}>Re-install Now</button>}
-      {testEnable && <React.Fragment>
-
-        <div className="admin-caption mt-1">
-          Install Test Version of Altrp
-        </div>
-        <button className="btn_success btn" onClick={this.installTestAltrp}>Install Test</button>
 
       </React.Fragment>}
     </div>

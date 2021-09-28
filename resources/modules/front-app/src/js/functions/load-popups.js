@@ -11,6 +11,8 @@ export default async function loadPopups(){
   const module = await import(/* webpackChunkName: 'FrontPopup' */'../components/FrontPopup')
   const ElementWrapper = (await import(/* webpackChunkName: 'FrontPopup' */'../components/ElementWrapper')).default;
   window.popupsContainer = document.createElement('div');
+  window.popupsContainer.style.position = 'relative'
+  window.popupsContainer.style.zIndex = '10000000000'
   document.body.appendChild(window.popupsContainer);
   const FrontPopup = module.default;
   window.ReactDOM.render(<window.Provider store={window.appStore}>

@@ -1,4 +1,4 @@
-import {
+const {
   altrpCompare,
   convertData,
   isEditor,
@@ -7,15 +7,13 @@ import {
   parseURLTemplate,
   replaceContentWithData,
   renderAssetIcon,
-  valueReplacement,
   getDataFromLocalStorage
-} from "../../../../../front-app/src/js/helpers";
+} = window.altrpHelpers;
 import Resource from "../../classes/Resource";
 import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 import AltrpModel from "../../classes/AltrpModel";
 const Checkbox = window.altrpLibs.Blueprint.Checkbox;
 
-const { moment } = window.altrpHelpers;
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-field-option-span {
     display: flex;
@@ -115,11 +113,9 @@ const { moment } = window.altrpHelpers;
   padding-bottom: 2px;
   padding-left: 2px;
   border-width: 1px;
-  border-color: #000;
 }
 .altrp-field-select2__control:hover{
   border-width: 1px;
-  border-color: #000;
 }
 .altrp-field-container {
   margin: 0;
@@ -725,7 +721,7 @@ class InputCheckboxWidget extends Component {
       );
     } catch (e) {
       console.error(
-        "Evaluate error in Input " + e.message,
+        "Evaluate error in Input: '" + e.message + "'",
         this.props.element.getId()
       );
     }
@@ -779,12 +775,10 @@ class InputCheckboxWidget extends Component {
   /**
    * Изменение значения в виджете
    * @param e
-   * @param  editor для получения изменений из CKEditor
    */
-  onChange(e, editor = null) {
+  onChange(e) {
     let value = "";
     let valueToDispatch;
-    const settings = this.props.element.getSettings();
     if (e && e.target) {
       let inputs = document.getElementsByName(e.target.name);
       value = [];
@@ -795,59 +789,20 @@ class InputCheckboxWidget extends Component {
       });
     }
 
-    if (e && e.value) {
-      value = e.value;
-    }
-    if (_.get(editor, "getData")) {
-      value = `<div class="ck ck-content" style="width:100%">${editor.getData()}</div>`;
-    }
     if (_.isArray(e)) {
       value = _.cloneDeep(e);
     }
-    if (
-      this.props.element.getSettings("content_options_nullable") &&
-      e &&
-      e.value === "<null>"
-    ) {
-      value = null;
-    }
-
+    console.log(value);
     this.setState(
       state => ({
         ...state,
         value
       }),
       () => {
-        /**
-         * Обновляем хранилище только если не текстовое поле
-         */
-
-        const change_actions = this.props.element.getSettings("change_actions");
-        const change_change_end = this.props.element.getSettings(
-          "change_change_end"
-        );
-        const change_change_end_delay = this.props.element.getSettings(
-          "change_change_end_delay"
-        );
-
         this.dispatchFieldValueToStore(
           valueToDispatch !== undefined ? valueToDispatch : value,
           true
         );
-
-        if (change_actions && !change_change_end && !isEditor()) {
-          this.debounceDispatch(
-            valueToDispatch !== undefined ? valueToDispatch : value
-          );
-        }
-        if (change_actions && change_change_end && !isEditor()) {
-          this.timeInput && clearTimeout(this.timeInput);
-          this.timeInput = setTimeout(() => {
-            this.debounceDispatch(
-              valueToDispatch !== undefined ? valueToDispatch : value
-            );
-          }, change_change_end_delay);
-        }
       }
     );
   }
@@ -939,7 +894,6 @@ class InputCheckboxWidget extends Component {
       );
       if (userInput) {
         const change_actions = this.props.element.getSettings("change_actions");
-
         if (change_actions && !isEditor()) {
           const actionsManager = (
             await import(

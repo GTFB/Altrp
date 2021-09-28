@@ -24,6 +24,7 @@ import { setCurrentRobot } from "./js/store/current-robot/actions";
 import Sidebar from "./js/components/sidebar/Sidebar";
 import Condition from "./js/components/sidebar/modules/widgets/Condition";
 import Start from "./js/components/sidebar/modules/widgets/Start";
+import BotWidget from "./js/components/sidebar/modules/widgets/BotWidget";
 import DocumentAction from "./js/components/sidebar/modules/widgets/DocumentAction";
 import CrudAction from "./js/components/sidebar/modules/widgets/CrudAction";
 import ApiAction from "./js/components/sidebar/modules/widgets/ApiAction";
@@ -85,7 +86,7 @@ class RobotsEditor extends Component {
       this.setState(s => ({ ...s, sources}));
     }
     if(!robot.chart) return;
-    const data = JSON.parse(robot.chart) ?? [];
+    const data = _.isString(robot.chart) ? JSON.parse(robot.chart) : robot.chart;
     store.dispatch(setRobotSettingsData(data));
     this.btnChange('');
 
@@ -277,6 +278,17 @@ class RobotsEditor extends Component {
           }
         };
         break;
+      case "bot":
+        data = {
+          "type": "bot",
+          "nodeData": {
+            "data": {
+              "shortcode": "",
+              "content": [],
+            }
+          }
+        };
+        break;
     }
     return data;
   }
@@ -411,6 +423,7 @@ class RobotsEditor extends Component {
                 apiAction: ApiAction,
                 messageAction: MessageAction,
                 robot: Robot,
+                bot: BotWidget,
                 finish: Finish,
               }}
               onEdgeUpdate={this.onEdgeUpdate}

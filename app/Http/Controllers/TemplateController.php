@@ -496,8 +496,11 @@ class TemplateController extends Controller
    */
   public function conditionsGet( $template_id, Request $request )
   {
-
-    $data = Template::find( $template_id )->getTemplateConditions();
+    if(Uuid::isValid($template_id)){
+      $data = Template::firstWhere( 'guid', $template_id )->getTemplateConditions();
+    } else {
+      $data = Template::find( $template_id )->getTemplateConditions();
+    }
 
     return response()->json( [
       'success' => true,
@@ -513,7 +516,14 @@ class TemplateController extends Controller
    */
   public function conditionsSet( $template_id, Request $request )
   {
-    $template = Template::find( $template_id );
+
+    if(Uuid::isValid($template_id)){
+      $template = Template::firstWhere( 'guid', $template_id );
+    } else {
+      $template = Template::find( $template_id );
+    }
+
+
     if ( ! $template ) {
       return response()->json( [ 'message' => 'Template not Found' ], 404, [], JSON_UNESCAPED_UNICODE );
     }
@@ -521,12 +531,12 @@ class TemplateController extends Controller
      * Сначала сохраним сами настройки
      */
     $setting = TemplateSetting::where( [
-      'template_id' => $template_id,
+      'template_id' => $template->id,
       'setting_name' => 'conditions',
     ] )->first();
     if ( ! $setting ) {
       $setting = new TemplateSetting( [
-        'template_id' => $template_id,
+        'template_id' => $template->id,
         'setting_name' => 'conditions',
         'template_guid' => $template->guid,
         'data' => $request->get( 'data' ),
@@ -538,11 +548,9 @@ class TemplateController extends Controller
     if ( ! $setting->save() ) {
       return response()->json( [ 'message' => 'Conditions not Saved' ], 500, [], JSON_UNESCAPED_UNICODE );
     }
-    $template = Template::find( $template_id );
     /**
      * Обновим/добавим необходимые данные в БД
      */
-
     if ( $template ) {
       $template->all_site = false;
       if ( ! $template->save() ) {
@@ -573,7 +581,7 @@ class TemplateController extends Controller
                 $pages_template = new PagesTemplate( [
                   'page_id' => $id,
                   'page_guid' => $page->guid,
-                  'template_id' => $template_id,
+                  'template_id' => $template->id,
                   'template_guid' => $template->guid,
                   'condition_type' => $datum['condition_type'],
                   'template_type' => $template->template_type
@@ -595,7 +603,7 @@ class TemplateController extends Controller
                 $pages_template = new PagesTemplate( [
                   'page_id' => $id,
                   'page_guid' => $page->guid,
-                  'template_id' => $template_id,
+                  'template_id' => $template->id,
                   'template_guid' => $template->guid,
                   'condition_type' => $datum['condition_type'],
                   'template_type' => $template->template_type
@@ -610,7 +618,6 @@ class TemplateController extends Controller
               }
             }
             break;
-
         }
       }
     }

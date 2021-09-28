@@ -25,6 +25,7 @@ import Loader from "./Loader";
 
 import MemoPaintIcon from "./Icons/PaintIcon";
 import { isEditor } from "../../../../../front-app/src/js/helpers";
+import MarkerCluster from "./MarkerCluster";
 
 function noob() {}
 
@@ -244,7 +245,7 @@ function MapDesigner({
       if (e.target.feature) {
         setSelected(e.target.feature.id);
       } else {
-        const id = FG.current.leafletElement.getLayerId(e.target);
+        const id = FG.current.getLayerId(e.target);
         setSelected(id);
       }
     },
@@ -283,7 +284,8 @@ function MapDesigner({
   const whenReady = useCallback(() => {
     if (!FG.current) return;
     // Очищаем старые слои
-    FG.current.leafletElement.clearLayers();
+    console.log(FG.current);
+    FG.current.clearLayers();
     let markers = [];
     // Добавляем новые слои
     if (state.features?.length > 0) {
@@ -340,7 +342,7 @@ function MapDesigner({
               layer.bindPopup(feature.properties.popup);
             }
             if (!feature.inCluster) {
-              FG.current.leafletElement.addLayer(layer);
+              FG.current.addLayer(layer);
             }
           }
         });
@@ -396,7 +398,7 @@ function MapDesigner({
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {markers !== null && <MarkerCluster markers={markers} />}
+        {markers !== null && <MarkerCluster markers={markers} FG={FG} />}
 
         <FeatureGroup ref={FG}>
           <EditControl

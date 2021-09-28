@@ -89,7 +89,6 @@ export function globalStyleReducer(state, action) {
       break;
     case ADD_GLOBAL_FONT:
       {
-        console.log(action.font);
         state = { ...state, fonts: [...state.fonts, action.font] };
       }
       break;

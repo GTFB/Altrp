@@ -3,6 +3,7 @@ import Scrollbars from "react-custom-scrollbars";
 import Action from "./data/Action"
 import ConditionNode from "./data/ConditionNode"
 import RobotNode from "./data/RobotNode"
+import Bot from "./data/Bot"
 import StartNode from "./data/StartNode"
 import Edge from "./data/Edge"
 import store from "../../../store/store"
@@ -108,6 +109,12 @@ export default class SelectedPanel extends React.Component {
                                                                           selectNode={this.props.selectNode || []}
                                                                         />}
                       {(this.props.selectNode?.type === "robot") && <RobotNode
+                                                                      activeSection={this.state.activeSection}
+                                                                      toggleChevron={this.toggleChevron}
+                                                                      robot={ this.props.robot }
+                                                                      selectNode={this.props.selectNode || []}
+                                                                    />}
+                      {(this.props.selectNode?.type === "bot") && <Bot
                                                                       activeSection={this.state.activeSection}
                                                                       toggleChevron={this.toggleChevron}
                                                                       robot={ this.props.robot }

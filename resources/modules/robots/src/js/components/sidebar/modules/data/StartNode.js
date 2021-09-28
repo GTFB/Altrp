@@ -26,30 +26,42 @@ export default class StartNode extends React.Component {
 
   changeSelectRobot = (e, type, key = false, item = false) => {
     let robot = this.props.robot;
+    const value = e.target.value;
+    
     if (type === "start_config") {
-      if (!robot.start_config) {
-        robot.start_config = {
-          period: {
-            name: "",
-            time: ""
-          },
-          restrictions: [],
-        }
-      }
       if (key === 'period') {
-        robot.start_config.period.name = e.target.value;
+        robot.start_config.period.name = value;
       }
       if (key === 'restrictions') {
         if (_.isArray(robot.start_config.restrictions)) {
           robot.start_config.restrictions.map(i => {
-            if (i.id === item.id) i.name = e.target.value;
+            if (i.id === item.id) i.name = value;
             return i;
           });
         }
       }
 
     } else {
-      robot[type] = e.target.value;
+      if (type === "start_condition") {
+        switch (value){
+          case "cron":
+            robot.start_config = {
+              period: {
+                name: '',
+                time: ''
+              },
+              restrictions: [],
+            }    
+            break;
+          case "telegram_bot":
+            robot.start_config = { bot_token: '' }
+            break;
+          default:
+            robot.start_config = '';
+            break;
+        }    
+      }
+      robot[type] = value;
     }
     store.dispatch(setCurrentRobot(robot));
   }
@@ -89,11 +101,14 @@ export default class StartNode extends React.Component {
 // Запись значений select в store
   changeInputRobot(e, type, key = false, id = false) {
     let robot = this.props.robot;
-    if (type === "period") robot.start_config.period.time = e.target.value;
+    let value = e.target.value;
+
+    if (type === "bot_token") robot.start_config.bot_token = value;
+    if (type === "period") robot.start_config.period.time = value;
     if (type === 'restrictions') {
       if (_.isArray(robot.start_config.restrictions)) {
         robot.start_config.restrictions.map(item => {
-          if (key && item.id === id) item.time[key] = e.target.value;
+          if (key && item.id === id) item.time[key] = value;
           return item;
         });
       }
@@ -196,6 +211,7 @@ export default class StartNode extends React.Component {
       {label: 'каждые 3 месяца', value: 'quarterly'},
       {label: 'каждый год', value: 'yearly'},
     ];
+    const botToken = this.props.robot?.start_config?.bot_token ?? '';
     const period = this.props.robot?.start_config?.period?.name ?? '';
     const periodTime = this.props.robot?.start_config?.period?.time ?? '';
     const restrictions = this.props.robot?.start_config?.restrictions ?? [];
@@ -226,11 +242,13 @@ export default class StartNode extends React.Component {
       {label: 'deleted', value: 'deleted'},
       {label: 'cron', value: 'cron'},
       {label: 'logged_in', value: 'logged_in'},
-      {label: 'action', value: 'action'}
+      {label: 'action', value: 'action'},
+      {label: 'telegram_bot', value: 'telegram_bot'}
     ] : [
       {label: 'cron', value: 'cron'},
       {label: 'logged_in', value: 'logged_in'},
-      {label: 'action', value: 'action'}
+      {label: 'action', value: 'action'},
+      {label: 'telegram_bot', value: 'telegram_bot'}
     ];
 
     return (
@@ -391,6 +409,20 @@ export default class StartNode extends React.Component {
               {/* ./controller-container controller-container_repeater repeater */}
 
             </div>}
+            {(start === 'telegram_bot') && <div className="controller-container controller-container_select">
+                <div className="controller-container__label control-select__label controller-label">Bot Token</div>
+                <div className="control-container_select-wrapper controller-field">
+                  <input
+                    className="control-field"
+                    id="bot-token"
+                    name="bot-token"
+                    value={botToken || ''}
+                    onChange={(e) => {
+                      this.changeInputRobot(e, 'bot_token')
+                    }}
+                  />
+                </div>
+              </div>}
             {(start === 'cron') && <div>
               <div className="controller-container controller-container_select">
                 <div className="controller-container__label control-select__label controller-label">Period</div>

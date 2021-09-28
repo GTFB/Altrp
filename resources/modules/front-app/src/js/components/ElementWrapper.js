@@ -5,6 +5,7 @@ import { changeCurrentPageProperty } from "../store/current-page/actions";
 import { ElementWrapperDivComponent } from "../../../../editor/src/js/components/widgets/styled-components/ElementWrapperComponent";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
 import DEFAULT_REACT_ELEMENTS from "../constants/DEFAULT_REACT_ELEMENTS";
+import EntranceAnimationsStyles from "./EntranceAnimationsStyles";
 const {
   altrpCompare,
   altrpRandomId,
@@ -54,7 +55,24 @@ class ElementWrapper extends Component {
       this.props.element.update();
       this.props.element.updateFonts();
     }
+    const {element} = this.props
+    const mountElementEvent = new Event(`altrp-mount-element:${element.getId()}` );
+    const mountElementTypeEvent = new Event(`altrp-mount-element:${element.getName()}` );
+    document.dispatchEvent(mountElementEvent)
+    document.dispatchEvent(mountElementTypeEvent)
     this.checkElementDisplay();
+  }
+
+  componentWillUnmount() {
+
+    const {element} = this.props
+    // if(element.getId() === '_giafvu4nk'){
+    //   console.error(this);
+    // }
+    const unmountElementEvent = new Event(`altrp-unmount-element:${element.getId()}` );
+    const unmountElementTypeEvent = new Event(`altrp-unmount-element:${element.getName()}` );
+    document.dispatchEvent(unmountElementEvent)
+    document.dispatchEvent(unmountElementTypeEvent)
   }
   /**
    * Подписываемся на обновление store редакса
@@ -233,9 +251,7 @@ class ElementWrapper extends Component {
       hide_on_small_phone,
       hide_on_trigger,
       isFixed,
-      tooltip_position
     } = element.settings;
-    let { tooltip_text } = element.settings;
     let classes = `altrp-element altrp-element${element.getId()} altrp-element_${element.getType()}`;
     classes += element.getPrefixClasses() + " ";
     if (element.getType() === "widget") {
@@ -308,7 +324,7 @@ class ElementWrapper extends Component {
     let ContentComponent = frontElementsManager.getComponentClass(
       element.getName()
     );
-    const content = React.createElement(ContentComponent, {
+    let content = React.createElement(ContentComponent, {
       ref: this.elementRef,
       rootElement: this.props.rootElement,
       ElementWrapper: this.props.ElementWrapper,
@@ -343,10 +359,6 @@ class ElementWrapper extends Component {
         break;
     }
 
-    tooltip_text = replaceContentWithData(
-      tooltip_text,
-      element.getCurrentModel().getData()
-    );
 
     const wrapperProps = {
       className: classes,
@@ -371,14 +383,47 @@ class ElementWrapper extends Component {
       wrapperProps["data-margin-top"] = element.getResponsiveSetting('st_spacing') || 0;
     }
     wrapperProps["data-altrp-id"] = element.getId();
+
+    const tooltip_position = element.getResponsiveSetting('tooltip_position', 'bottom')
+    let tooltip_text = element.getResponsiveSetting('tooltip_text')
+
+    tooltip_text = replaceContentWithData(
+      tooltip_text,
+      element.getCurrentModel().getData()
+    );
+    const tooltip_minimal = element.getResponsiveSetting('tooltip_minimal')
+    let tooltip_show_type = element.getResponsiveSetting('tooltip_show_type')
+    const tooltip_horizontal_offset = element.getResponsiveSetting('tooltip_horizontal_offset')
+    const tooltip_vertical_offset = element.getResponsiveSetting('tooltip_vertical_offset')
+    if(['column', 'section'].indexOf(element.getType()) !== -1){
+      tooltip_show_type = 'never'
+    }
+    const entranceAnimationType = element.getResponsiveSetting('en_an');
+    if(entranceAnimationType){
+      wrapperProps['data-enter-animation-type'] = entranceAnimationType;
+      // wrapperProps['data-enter-animation-duration'] = element.getResponsiveSetting('en_a_duration') || 400;
+      wrapperProps['data-enter-animation-delay'] = element.getResponsiveSetting('en_a_delay')?.size || 0;
+      wrapperProps.className += ` altrp-invisible`;
+      content = <>
+        <EntranceAnimationsStyles settings={element.getSettings()} elementId={element.getId()}/>
+        {content}
+      </>
+    }
     return  (
       <WrapperComponent {...wrapperProps} element={element.getId()}>
-        {content}
-        {tooltip_text && (
-          <AltrpTooltip position={tooltip_position}>
-            {tooltip_text}
+
+        {tooltip_show_type && tooltip_show_type !== "never" ? (
+          <AltrpTooltip
+            position={tooltip_position}
+            id={this.props.element.getId()}
+            state={tooltip_show_type}
+            minimal={tooltip_minimal}
+            horizontal={tooltip_horizontal_offset}
+            vertical={tooltip_vertical_offset}
+            text={tooltip_text}>
+            {content}
           </AltrpTooltip>
-        )}
+        ) : content}
       </WrapperComponent>
     );
   }
