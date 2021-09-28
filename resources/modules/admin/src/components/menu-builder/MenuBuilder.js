@@ -65,7 +65,8 @@ const Wrapper = styled.div`
     padding-left: 20px;
   }
 
-  & .altrp-menu-item-content .form-control:not(:first-child) {
+  & .altrp-menu-item-content .form-control:not(:first-child) ,
+  & .altrp-menu-item-content .altrp-menu-item__select:not(:first-child) {
     margin-bottom: 13px;
   }
 
@@ -99,6 +100,9 @@ class MenuBuilder extends Component {
       new: {
         label: '',
         url: '',
+        modelField: '',
+        operator: '',
+        value: '',
       }
     };
     this.resource = new Resource({route: '/admin/ajax/menus'})
@@ -132,6 +136,9 @@ class MenuBuilder extends Component {
       children: [],
       label: this.state.new.label,
       url: this.state.new.url,
+      modelField: this.state.new.modelField,
+      operator: this.state.new.operator,
+      value: this.state.new.value,
       id: generateId(),
     }
     let value = {...this.state.value};

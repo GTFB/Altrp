@@ -54,7 +54,7 @@ class ColumnComponent extends Component {
       {},
     );
     let ElementWrapper = window.SectionElementWrapper || this.props.ElementWrapper || window.ElementWrapper;
-    let className = "altrp-column altrp-column-priority " + (this.state.settings.position_style_css_classes || "") + (background_image.url || background_image_hover.url ? ' altrp-background-image' : '');
+    let className = "altrp-column altrp-column-priority " + (this.state.settings.position_style_css_classes || "") + (background_image?.url || background_image_hover?.url ? ' altrp-background-image' : '');
     if(this.isActive()){
       className += ' active';
     }

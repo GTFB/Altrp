@@ -43,6 +43,22 @@ class SimpleElementWrapper extends Component {
       this.props.element.updateFonts();
     }
     this.checkElementDisplay();
+    const {element} = this.props
+    const mountElementEvent = new Event(`altrp-mount-element:${element.getId()}` );
+    const mountElementTypeEvent = new Event(`altrp-mount-element:${element.getName()}` );
+    document.dispatchEvent(mountElementEvent)
+    document.dispatchEvent(mountElementTypeEvent)
+  }
+
+  componentWillUnmount() {
+    const {element} = this.props
+    if(element.getId() === '_giafvu4nk'){
+      console.error(this);
+    }
+    const unmountElementEvent = new Event(`altrp-unmount-element:${element.getId()}` );
+    const unmountElementTypeEvent = new Event(`altrp-unmount-element:${element.getName()}` );
+    document.dispatchEvent(unmountElementEvent)
+    document.dispatchEvent(unmountElementTypeEvent)
   }
   /**
    * Подписываемся на обновление store редакса
@@ -116,7 +132,6 @@ class SimpleElementWrapper extends Component {
       window.altrpHelpers.setTitle(title);
     }
   }
-
   /**
    * Обновить элемент изменив this.state.updateToken
    */
@@ -215,13 +230,12 @@ class SimpleElementWrapper extends Component {
 
   render() {
     const {
-      hide_on_trigger,
     } = this.props.element.settings;
 
-    const tooltip_position = this.props.element.getResponsiveSetting('tooltip_position')
+    const tooltip_position = this.props.element.getResponsiveSetting('tooltip_position', 'bottom')
     let tooltip_text = this.props.element.getResponsiveSetting('tooltip_text')
     const tooltip_minimal = this.props.element.getResponsiveSetting('tooltip_minimal')
-    const tooltip_show_type = this.props.element.getResponsiveSetting('tooltip_show_type')
+    let tooltip_show_type = this.props.element.getResponsiveSetting('tooltip_show_type')
     const tooltip_horizontal_offset = this.props.element.getResponsiveSetting('tooltip_horizontal_offset')
     const tooltip_vertical_offset = this.props.element.getResponsiveSetting('tooltip_vertical_offset')
 
@@ -293,9 +307,9 @@ class SimpleElementWrapper extends Component {
     let WrapperComponent = React.Fragment;
 
     switch (this.props.element.getName()) {
-      case "diagram":
-        WrapperComponent = DiagramComponent;
-        break;
+      // case "diagram":
+      //   WrapperComponent = DiagramComponent;
+      //   break;
       // case "dashboards":
       // WrapperComponent = DashboardComponent;
       // break;
@@ -322,8 +336,11 @@ class SimpleElementWrapper extends Component {
         this.elementWrapperRef.current.style.display = "none";
       }
     }
+    if(['column', 'section'].indexOf(this.props.element.getType()) !== -1){
+      tooltip_show_type = 'never'
+    }
 
-    return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
+    return (
       <WrapperComponent {...wrapperProps} >
         {
           tooltip_show_type && tooltip_show_type !== "never" ?

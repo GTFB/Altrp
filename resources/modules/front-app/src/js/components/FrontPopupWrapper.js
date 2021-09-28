@@ -44,6 +44,15 @@ ${({settings}) => {
 && .popup-window{
   ${({settings}) => {
   let styles = "";
+
+  let timeout = _.get(getResponsiveSetting(settings, 'time'), 'size', 0)
+  const type_popup = getResponsiveSetting(settings, 'type_popup')
+  if (type_popup === 'popup') {
+    timeout = 0
+  }
+  if (timeout != 0) {
+    styles += `transition-duration: ${timeout}ms;`
+  }
   const height_custom_popup_layout = getResponsiveSetting(settings, 'height_custom_popup_layout')
   if (height_custom_popup_layout) {
     styles += `height:${sliderStyled(height_custom_popup_layout)};`
@@ -81,6 +90,11 @@ ${({settings}) => {
   if (popup_border_color) {
     styles += `border-color:${popup_border_color.color};`
   }
+  const animations_offcanvas = getResponsiveSetting(settings, 'animations_offcanvas')
+  timeout = _.get(getResponsiveSetting(settings, 'time'), 'size', 0)
+  if (timeout && type_popup === 'popup' && animations_offcanvas === 'slide') {
+    styles += `transition-duration:${timeout}ms;`
+  }
   return styles;
 }}
   max-height: 100%;
@@ -91,34 +105,110 @@ ${({settings}) => {
   height: 100%;
   display: block;
 }
+&.popup-transition-state{
+${({settings}) => {
+  let styles = '';
+  const vertical_position_popup_layout = getResponsiveSetting(settings, 'vertical_position_popup_layout')
+  const horizontal_position_popup_layout = getResponsiveSetting(settings, 'horizontal_position_popup_layout')
+  /**
+   * @var s_direction
+   * @type {string}
+   */
+  const s_direction = getResponsiveSetting(settings, 's_direction') || 'left'
+  let topOffset = '0';
+  let leftOffset = '0';
+  let leftOffsetEnd = '0';
+  let topOffsetEnd = '0';
+  // if(vertical_position_popup_layout === 'top' || vertical_position_popup_layout === 'bottom') {
+  //   topOffset = '0'
+  // } else {
+  //   topOffset = '-50%'
+  // }
+
+  if(horizontal_position_popup_layout === 'center') {
+    leftOffsetEnd = '-50%'
+  }
+  if(vertical_position_popup_layout === 'center') {
+    topOffsetEnd = '-50%'
+  }
+  switch (s_direction) {
+    case 'left': {
+      if(horizontal_position_popup_layout === 'center') {
+        leftOffset = '-100%'
+      } else {
+        leftOffset = '-50%'
+      }
+      topOffset = topOffsetEnd
+    } break;
+    case 'top': {
+      topOffset = '-50%'
+      leftOffset = leftOffsetEnd
+    } break;
+    case 'right': {
+      if(horizontal_position_popup_layout === 'center') {
+        leftOffset = '0'
+      } else {
+        leftOffset = '50%'
+      }
+      topOffset = topOffsetEnd
+    } break;
+    case 'bottom': {
+      topOffset = '50%'
+      leftOffset = leftOffsetEnd
+    } break;
+  }
+
+  styles += `&-exit-active .popup-window.popup-window.popup-window.popup-window{
+      opacity: 0;
+      transform: translate(${leftOffset}, ${topOffset});
+    }
+    &-enter .popup-window.popup-window.popup-window.popup-window{
+      opacity: 0;
+      transform: translate(${leftOffset}, ${topOffset});
+    }
+    &-enter-active .popup-window.popup-window.popup-window.popup-window{
+      opacity: 1;
+      transform: translate(${leftOffsetEnd}, ${topOffsetEnd});
+    }`/*
+    `
+    &-enter-done .popup-window.popup-window.popup-window{
+      transform: translate(${leftOffsetEnd}, ${topOffsetEnd});
+    }`*/
+  return styles
+}}
+}
 &.app-popup_offcanvas .popup-window{
 ${({settings}) => {
   let styles = ''
   const type_popup = getResponsiveSetting(settings, 'type_popup')
-  if(type_popup !== 'offcanvas'){
-    return  styles
+  if (type_popup !== 'offcanvas') {
+    return styles
   }
   let top = 0, left = 0, right = 'auto', bottom = 'auto';
   const horizontal_position_popup_layout = getResponsiveSetting(settings, 'horizontal_position_popup_layout')
   const vertical_position_popup_layout = getResponsiveSetting(settings, 'vertical_position_popup_layout')
 
-  switch(vertical_position_popup_layout){
-    case 'bottom':{
+  switch (vertical_position_popup_layout) {
+    case 'bottom': {
       bottom = 0
       top = 'auto'
-    }break;
-    case 'center':{
+    }
+      break;
+    case 'center': {
       styles += 'height:100%;';
-    }break;
+    }
+      break;
   }
-  switch(horizontal_position_popup_layout){
-    case 'right':{
+  switch (horizontal_position_popup_layout) {
+    case 'right': {
       right = 0
       left = 'auto'
-    }break;
-    case 'center':{
+    }
+      break;
+    case 'center': {
       styles += 'width:100%;';
-    }break;
+    }
+      break;
   }
   styles += `top:${top};left:${left};right:${right};bottom:${bottom};`
   return styles

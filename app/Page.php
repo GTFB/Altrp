@@ -141,19 +141,42 @@ class Page extends Model
 
   /**
    * @param bool $lazy
+   * @param int $page_id
+   * @param bool $only_parents
    * @return array
    */
-  public static function get_pages_for_frontend( $lazy = false )
+  public static function get_pages_for_frontend( bool $lazy = false, int $current_page_id = 0, bool $only_parents = false )
   {
-    $_pages = static::all()->where( 'type', null );
+    $pages = [];
 
-    $pages = ( new static )->getPagesData( $_pages, $lazy );
+    if( ! $only_parents ){
+      $_pages = static::all()->where( 'type', null );
 
-    if ( self::firstWhere( 'not_found', 1 ) ) {
-      $not_found_page = ( new static )->getPagesData( [ self::firstWhere( 'not_found', 1 ) ], $lazy );
-      $not_found_page[0]['path'] = '*';
+      $pages = ( new static )->getPagesData( $_pages, $lazy );
 
-      $pages[] = $not_found_page[0];
+      if ( self::firstWhere( 'not_found', 1 ) ) {
+        $not_found_page = ( new static )->getPagesData( [ self::firstWhere( 'not_found', 1 ) ], $lazy );
+        $not_found_page[0]['path'] = '*';
+
+        $pages[] = $not_found_page[0];
+      }
+    } else {
+      $current_page = self::find( $current_page_id );
+      if( $current_page ){
+        $pages[] = $current_page->toArray();
+        $_page = $current_page;
+        try {
+
+          while( $_page && $_page->parent_page_id ){
+            $_page = self::find( $_page->parent_page_id );
+            if( $_page ){
+              $pages[] = $_page->toArray();
+            }
+        }
+        } catch( Exception $e ){
+          logger( $e->getMessage() );
+        }
+      }
     }
 
     return $pages;

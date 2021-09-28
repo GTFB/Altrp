@@ -149,7 +149,7 @@ function ItemCreateRenderer(query, active, handleClick) {
   />
 }
 
-class GlobalStyles extends React.Component {
+class GlobalStylesPresets extends React.Component {
   constructor(props) {
     super(props);
     const currentElement = props.currentElement.currentElement;
@@ -321,9 +321,14 @@ class GlobalStyles extends React.Component {
       // _.keys(controls).forEach((controllerName) => {
       //   elem.setSettingValue(controllerName, controls[controllerName])
       // })
+      let _controls = controls
+      if(this.props?.controllerValue?.controlId){
+        _controls = {..._controls}
+        _controls[this.props.controllerValue.controlId] = this.props?.controllerValue?.value
+      }
       elem.setSettings({
         ...settings,
-        ...controls,
+        ..._controls,
       });
     })
   }
@@ -407,7 +412,7 @@ const mapDispatchToProps = dispatch => ({
   updateGlobalStylesPresets: payload => dispatch(updateGlobalStylesPresets(payload.widgetName, payload.name, payload.settings)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(GlobalStyles);
+export default connect(mapStateToProps, mapDispatchToProps)(GlobalStylesPresets);
 
 /**
  *

@@ -64,6 +64,11 @@ export default function AccordionComponent(settings) {
     ["fill", "color_icon_style", "color"],
 
     "}",
+    "altrp-accordion-item.active .altrp-accordion-item-icon path",
+
+    ["fill", "color_icon_style", "color", '.active'],
+
+    "}",
 
 
     "altrp-accordion-item-button:hover .altrp-accordion-item-label",

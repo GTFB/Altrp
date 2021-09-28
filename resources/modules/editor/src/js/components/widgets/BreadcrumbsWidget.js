@@ -1,9 +1,9 @@
-import {
+const {
   getBreadcrumbsItems,
   getResponsiveSetting,
   isEditor,
   replaceContentWithData
-} from '../../../../../front-app/src/js/helpers';
+} = window.altrpHelpers;
 import {typographicControllerToStyles} from "../../../../../front-app/src/js/helpers/styles";
 const {Breadcrumbs} = window.altrpLibs.Blueprint;
 

@@ -42,6 +42,9 @@ class AreaComponent extends Component {
       typeof this.props.area.getTemplates !== "undefined" &&
       this.props.area.getTemplates().length
     ) {
+      if(window.SSR){
+        return null
+      }
       let popups = (
         <div className={classes.join(" ")}>
           {this.props.area.getTemplates().map(template => {

@@ -12,10 +12,10 @@ class AdminAssetsDropList extends React.Component {
                     <li><Link to="/admin/assets" className="admin-nav-list__link"><span>Library</span></Link></li>
                     <li>
                         <Link
-                            to="/admin/assets/custom-fonts" 
+                            to="/admin/assets/custom-fonts"
                             className="admin-nav-list__link"
                         >
-                            <span>Custom fonts</span>
+                            <span>Custom Fonts</span>
                         </Link>
                     </li>
                 </ul>

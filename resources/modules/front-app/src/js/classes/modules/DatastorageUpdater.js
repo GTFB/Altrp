@@ -92,7 +92,6 @@ class DataStorageUpdater extends AltrpModel {
       }
       initialUpdate && appStore.dispatch(currentDataStorageLoading());
       let requests = groupedDataSources[groupPriority].map(async dataSource => {
-
         if (dataSource.getWebUrl()) {
           let params = dataSource.getParams(window.currentRouterMatch.params, 'altrpforms.');
           let defaultParams = _.cloneDeep(params);
@@ -227,7 +226,6 @@ class DataStorageUpdater extends AltrpModel {
         return ! value;
       });
     });
-    // console.log(dataSources);
     dataSources = _.sortBy(dataSources, data_source => data_source.priority);
     let formsStore = appStore.getState().formsStore;
     for (let ds of dataSources) {

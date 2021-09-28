@@ -26,7 +26,7 @@ import DropbarWidgetComponent from "./widgets/styled-components/DropbarWidgetCom
 import DashboardComponent from "./widgets/styled-components/DashboardComponent";
 import getImageStyles from "../../../../front-app/src/js/components/helpers/stylesForTheImage";
 import getTabsStyles from "../../../../front-app/src/js/components/helpers/stylesForTheTabs";
-import getMenuStyles from "../../../../front-app/src/js/components/helpers/stylesForTheMenu";
+import getMenuStyles from "../../../../front-app/src/js/components/helpers/getMenuStyles";
 import getBreadcrumbsStyles from "../../../../front-app/src/js/components/helpers/stylesForTheBreadcrumbs";
 import { getHeadingTypeHeadingStyles } from "../../../../front-app/src/js/components/helpers/stylesForTheHeadingTypeHeading";
 import { getHeadingTypeAnimatingStyles } from "../../../../front-app/src/js/components/helpers/stylesForTheHeadingTypeAnimating";
@@ -275,8 +275,10 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
 
   const tooltip_show_type = settings.tooltip_show_type || "never";
 
-  if(tooltip_show_type !== "never") {
-    styles += `.altrp-tooltip${elementId}.altrp-tooltip${elementId} {${TooltipComponent(settings)}}`
+  if (tooltip_show_type !== "never") {
+    styles += `.altrp-tooltip${elementId}.altrp-tooltip${elementId} {${TooltipComponent(
+      settings
+    )}}`;
   }
 
   styles += `div.${prefix}${elementId}.${prefix}${elementId} {${AdvancedComponent(
@@ -479,7 +481,11 @@ class ElementWrapper extends Component {
       return { ...state, isDrag: false, dragOver: false, cursorPos: false };
     });
   }
-
+  componentDidUpdate() {
+    document
+      .getElementById("editorContent")
+      ?.contentWindow?.dispatchEvent(new Event("resize"));
+  }
   /**
    * Css классы
    * @return {string}
@@ -553,16 +559,18 @@ class ElementWrapper extends Component {
   }
   render() {
     const elementHideTrigger = this.props.element.settings.hide_on_trigger;
-    const {
+    let {
       isFixed,
       tooltip_text,
       tooltip_minimal,
       tooltip_show_type,
       tooltip_horizontal_offset,
       tooltip_vertical_offset,
-      tooltip_position
+      tooltip_position = "bottom"
     } = this.props.element.getSettings();
-
+    if (["column", "section"].indexOf(this.props.element.getType()) !== -1) {
+      tooltip_show_type = "never";
+    }
     let errorContent = null;
     if (this.state.errorInfo) {
       errorContent = (
@@ -663,7 +671,6 @@ class ElementWrapper extends Component {
       // WrapperComponent = DashboardComponent;
       // break;
     }
-
     return elementHideTrigger &&
       this.props.hideTriggers.includes(elementHideTrigger) ? null : (
       <WrapperComponent
@@ -717,23 +724,22 @@ class ElementWrapper extends Component {
             </button>
           </div>
         </div>
-        {
-          tooltip_show_type && tooltip_show_type !== "never" && !errorContent ?
-            <AltrpTooltip
-              text={tooltip_text}
-              id={this.props.element.getId()}
-              state={tooltip_show_type}
-              position={tooltip_position}
-              minimal={tooltip_minimal}
-              horizontal={tooltip_horizontal_offset}
-              vertical={tooltip_vertical_offset}
-            >
-              {
-                React.createElement(this.props.component, elementProps)
-              }
-            </AltrpTooltip>
-            : errorContent || React.createElement(this.props.component, elementProps)
-        }
+        {tooltip_show_type && tooltip_show_type !== "never" && !errorContent ? (
+          <AltrpTooltip
+            text={tooltip_text}
+            id={this.props.element.getId()}
+            state={tooltip_show_type}
+            position={tooltip_position}
+            minimal={tooltip_minimal}
+            horizontal={tooltip_horizontal_offset}
+            vertical={tooltip_vertical_offset}
+          >
+            {React.createElement(this.props.component, elementProps)}
+          </AltrpTooltip>
+        ) : (
+          errorContent ||
+          React.createElement(this.props.component, elementProps)
+        )}
         {emptyColumn}
         <ElementWrapperGlobalStyles
           settings={this.props.element.getSettings()}

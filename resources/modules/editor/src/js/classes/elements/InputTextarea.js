@@ -634,9 +634,6 @@ class InputTextarea extends BaseElement {
     this.addControl("background_section_opacity", {
       type: CONTROLLER_SLIDER,
       label: "Opacity",
-      default: {
-        size: 1
-      },
       max: 1,
       min: 0,
       step: 0.01

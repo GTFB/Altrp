@@ -258,6 +258,7 @@ class FrontElement {
       case 'input-email':
       case 'input-tel':
       case 'input-number':
+      case 'input-hidden':
       case 'input-text':
       case 'input-text-common':
       case 'input': {

@@ -193,7 +193,7 @@ class PagesController extends Controller
    *
    * @param Page $page
    * @param string $id
-   * @return \Illuminate\Http\Response
+   * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
    * @throws \Exception
    */
   public function destroy( $id )
@@ -202,6 +202,11 @@ class PagesController extends Controller
     $page = new Page();
     $page = $page->find( $id );
     if( $page->delete() ){
+      try{
+        Page::where( 'parent_page_id', $page->id )->update( 'parent_page_id', null );
+      }catch( \Exception $e){
+        logger()->error( $e->getMessage());
+      }
       return response()->json( ['success' => true,], 200, [], JSON_UNESCAPED_UNICODE );
     }
     return response()->json( ['success' => false, 'message' => 'Could not deleting'], 500, [], JSON_UNESCAPED_UNICODE );

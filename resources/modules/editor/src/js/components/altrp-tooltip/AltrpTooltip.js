@@ -52,7 +52,6 @@ function AltrpTooltip(props) {
         document.body
     });
   }
-
   if(Tooltip2 && props.children && !_.isString(props.children)) {
     return <Tooltip2
       content={props.text}

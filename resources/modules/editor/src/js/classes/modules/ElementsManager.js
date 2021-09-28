@@ -214,14 +214,14 @@ export default class ElementsManger {
 
   getElementClass(name) {
     if (!this.elements[name]) {
-      throw "Не найден элемент с именем " + name;
+      throw "Not found element with name " + name;
     }
     return this.elements[name];
   }
 
   getComponentClass(name) {
     if (!this.components[name]) {
-      throw "Не найден компонент с именем " + name;
+      throw "Not found component with name " + name;
     }
     return this.components[name];
   }

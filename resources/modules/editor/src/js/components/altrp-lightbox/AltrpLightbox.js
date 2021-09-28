@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Lightbox from 'react-image-lightbox';
-import {isEditor} from "../../../../../front-app/src/js/helpers";
+import {connect} from "react-redux";
+const {isEditor} = window.altrpHelpers
 import ('./altrp-lightbox.scss');
 
 class AltrpLightbox extends Component {
@@ -12,8 +13,36 @@ class AltrpLightbox extends Component {
     }
   }
 
+  getImages(){
+    const {lightboxID} = this.props
+    if(! lightboxID){
+      return this.props.images
+    }
+    return this.props.lightboxImages[lightboxID] || this.props.images
+  }
+
+  componentDidMount() {
+    this.updateCurrentIdx()
+  }
+
+  updateCurrentIdx(){
+    const {currentUrl} = this.props
+    if(! currentUrl){
+      return
+    }
+    const images = this.getImages();
+    let idx = images.indexOf(currentUrl)
+    if(idx === -1){
+      idx = 0
+    }
+    if(this.state.current === idx){
+      return
+    }
+    this.setState(state=>({...state, current: idx}))
+  }
+
   render() {
-    let images = this.props.images;
+    let images = this.getImages();
     const settings = this.props.settings;
     let nextSrc = null;
     let prevSrc = null;
@@ -49,6 +78,8 @@ class AltrpLightbox extends Component {
     )
   }
 }
-
-export default AltrpLightbox
+function mapStateToProps({lightboxImages}) {
+  return {lightboxImages}
+}
+export default connect(mapStateToProps)(AltrpLightbox)
 

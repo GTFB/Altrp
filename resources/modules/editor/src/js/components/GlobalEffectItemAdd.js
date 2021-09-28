@@ -64,7 +64,6 @@ class GlobalEffectItemAdd extends Component {
 
   globalColor = value => {
     const guid = value.guid;
-    console.log(value);
     const rgba = `rgba(${value.colorRGB.r}, ${value.colorRGB.g}, ${value.colorRGB.b}, ${value.colorRGB.a})`;
     const hex = value.colorPickedHex;
     const rgb = value.colorRGB;

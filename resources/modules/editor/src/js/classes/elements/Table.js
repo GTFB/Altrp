@@ -510,7 +510,7 @@ class Table extends BaseElement {
       hideOnEmail: true,
       conditions: {
         'column_is_filtered': true,
-        'column_filter_type': 'text',
+        'column_filter_type': ['text', 'select'],
       },
       dynamic: false,
       responsive: false,
@@ -642,7 +642,7 @@ class Table extends BaseElement {
       type: CONTROLLER_SWITCHER,
       default: false,
       hideOnEmail: true,
-      conditionsCallback: ()=>getCurrentElement().getResponsiveSetting('table_transpose'),
+      conditionsCallback: ()=>!!getCurrentElement().getResponsiveSetting('table_transpose'),
       label: 'Header Full Width',
     });
 
