@@ -402,42 +402,12 @@ export function conditionChecker(c, model, dataByPath = true) {
   let result = 0;
   const { operator } = c;
   let { modelField: left, value } = c;
-  console.log(left);
-  console.log(operator);
-  console.log(value);
   if (dataByPath) {
     value = getDataByPath(value, "", model, true);
     left = getDataByPath(left, "", model);
     return altrpCompare(left, value, operator);
   }
   return altrpCompare(model.getProperty(left), value, operator);
-  switch (operator) {
-    case "empty": {
-      return !model.getProperty(modelField, "");
-    }
-    case "not_empty": {
-      return !!model.getProperty(modelField, "");
-    }
-    case "==": {
-      return _.isEqual(model.getProperty(modelField, ""), value);
-    }
-    case "<>": {
-      return !_.isEqual(model.getProperty(modelField, ""), value);
-    }
-    case ">": {
-      return Number(model.getProperty(modelField, "")) > Number(value);
-    }
-    case ">=": {
-      return Number(model.getProperty(modelField, "")) >= Number(value);
-    }
-    case "<": {
-      return Number(model.getProperty(modelField, "")) < Number(value);
-    }
-    case "<=": {
-      return Number(model.getProperty(modelField, "")) <= Number(value);
-    }
-  }
-  return result;
 }
 
 /**
@@ -852,8 +822,7 @@ export function altrpCompare(
       return !altrpCompare(leftValue, rightValue, "in");
     }
     case "contain": {
-      console.log(leftValue);
-      console.log(rightValue);
+
       if (_.isString(leftValue)) {
         return leftValue.indexOf(rightValue) !== -1;
       }
@@ -899,10 +868,10 @@ export const CONDITIONS_OPTIONS = [
     value: "<>",
     label: "Not Equals"
   },
-  {
-    value: "between",
-    label: "Between"
-  },
+  // {
+  //   value: "between",
+  //   label: "Between"
+  // },
   {
     value: ">",
     label: ">"
