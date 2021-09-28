@@ -5,10 +5,11 @@ class AdminTemplatesDropList extends React.Component {
 
     render() {
         const { pathname } = this.props.location
-        const pathnameHaveTemplates = pathname.indexOf('templates') || pathname.indexOf('areas')
+
+        const pathnameHaveTemplates = pathname.indexOf('templates') !== -1 || pathname.indexOf('areas') !== -1
 
         return (
-                <ul className={pathnameHaveTemplates !== -1 ? "admin-nav-list admin-nav-list--sublist_active" : "admin-nav-list admin-nav-list--sublist"}>
+                <ul className={pathnameHaveTemplates ? "admin-nav-list admin-nav-list--sublist_active" : "admin-nav-list admin-nav-list--sublist"}>
                     <li>
                         <Link
                             to="/admin/areas"

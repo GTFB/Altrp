@@ -5,10 +5,10 @@ class AdminUsersDropList extends React.Component {
 
     render() {
         const { pathname } = this.props.location
-        const pathnameHaveUsers = pathname.indexOf('users') || pathname.indexOf('tools')
+        const pathnameHaveUsers = pathname.indexOf('users') !== -1 || pathname.indexOf('tools') !== -1
 
         return (
-                <ul className={pathnameHaveUsers !== -1 ? "admin-nav-list admin-nav-list--sublist_active" : "admin-nav-list admin-nav-list--sublist"}>
+                <ul className={pathnameHaveUsers ? "admin-nav-list admin-nav-list--sublist_active" : "admin-nav-list admin-nav-list--sublist"}>
                     <li>
                         <Link
                             to="/admin/tools"

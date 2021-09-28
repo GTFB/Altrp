@@ -51,7 +51,13 @@ window.LIBS = {
       return Promise.resolve(res)
     });
   },
-
+  'devextreme': () => {
+    return import(/* webpackChunkName: 'devextreme' */'../libs/devextreme').then(res => {
+      window.libsLoaded.push('devextreme')
+      console.log('LOAD "devextreme": ', performance.now());
+      return Promise.resolve(res)
+    });    
+  }
 };
 
 window.libsToLoad = window.libsToLoad || [];

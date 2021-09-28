@@ -216,6 +216,11 @@
   }
 }
 
+/* Чтобы кастомный скроллбар слева не перекрывал элементы списка при наведении */
+.admin-nav-main div div:last-child {
+  pointer-events: none;
+}
+
 .icon {
   width: 16px;
   height: 16px;
