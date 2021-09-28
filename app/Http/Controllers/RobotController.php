@@ -7,6 +7,7 @@ use App\Altrp\Robot;
 use App\Helpers\Classes\CurrentEnvironment;
 use App\Jobs\RunRobotsJob;
 use App\Services\Robots\RobotsService;
+use App\Services\Robots\Bots\TelegramBot\TelegramBotService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -121,6 +122,21 @@ class RobotController extends Controller
                 $config->period,
                 $config->restrictions
             );
+        }
+
+        if ($data['start_condition'] == 'telegram_bot' && $data['start_config']['bot_token'] && $data['enabled']) {
+                $bot = new TelegramBotService($data['start_config']['bot_token']);
+                if (env('APP_ENV') == 'local') $update = $bot->getUpdates();
+
+    //            $result = $this->robotsService->initRobot($robot)->runRobot();
+                // $result = $this->dispatch(new RunRobotsJob(
+                //     [$robot],
+                //     $this->robotsService,
+                //     [],
+                //     'telegram_bot',
+                //     array_change_key_case( getenv() )
+                // ));
+                return response()->json(['success' => $result], $result ? 200 : 500);
         }
 
         return \response()->json(['success' => $result], $result ? 200 : 500);

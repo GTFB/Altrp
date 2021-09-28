@@ -24,7 +24,7 @@ export default class Sidebar extends React.Component {
     const robotId = new URL(window.location).searchParams.get("robot_id");
     const robotData = store.getState()?.currentRobot;
     const robotChart = store.getState()?.robotSettingsData;
-    robotData.chart = robotChart;
+    robotData.chart = JSON.stringify(robotChart);
     console.log(this.props.sources);
     this.resource.put(robotId, {
       data: robotData,
