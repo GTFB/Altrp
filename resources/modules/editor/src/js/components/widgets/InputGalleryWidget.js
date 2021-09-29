@@ -130,7 +130,9 @@ class InputGalleryWidget extends Component {
     if (isEditor()) {
       value = this.state.value;
     } else {
-      value = _.get(appStore.getState(), `formsStore.${formId}.${fieldName}`, '')
+
+      value = _.get(appStore.getState().formsStore, `${formId}`, '')
+      value = _.get(value, fieldName, '')
     }
     return value || [];
   }

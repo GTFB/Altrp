@@ -688,10 +688,10 @@ export function getDataByPath(
       value = area.getSetting(propName, _default);
     }
   } else {
-    value = currentModel.getProperty(path)
+    value = currentModel.getProperty(path) !== undefined
       ? currentModel.getProperty(path)
       : urlParams[path];
-    if (!value) {
+    if (! value && value !== 0) {
       value = _default;
     }
   }
@@ -1214,8 +1214,10 @@ export function replaceContentWithData(content = "", modelContext = null) {
     paths.forEach(path => {
       path = path.replace("{{", "");
       let value = getDataByPath(path, "", modelContext);
+
       if (value === 0) {
         value = "0";
+        console.log();
       }
       path = escapeRegExp(path);
       content = content.replace(new RegExp(`{{${path}}}`, "g"), value || "");

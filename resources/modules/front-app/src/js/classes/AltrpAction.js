@@ -998,7 +998,9 @@ class AltrpAction extends AltrpModel {
                 return;
               }
               if (i.indexOf('{{') !== -1) {
+                console.log(i);
                 i = replaceContentWithData(i, this.getCurrentModel().getData());
+                console.log(i);
               }
               let item = getDataByPath(i);
               if (!item) {
@@ -1013,6 +1015,7 @@ class AltrpAction extends AltrpModel {
                 return;
               }
               list = [...list];
+
               list = list.filter(_item => _item !== item);
               setDataByPath(listPath, list);
             });

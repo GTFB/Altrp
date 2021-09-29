@@ -163,9 +163,18 @@ class InputRangeSliderWidget extends Component {
     if (isEditor()) {
       value = this.state.value;
     } else {
+      let valueStart
+
+      valueStart = _.get(appStore.getState().formsStore, `${formIdStart}`, '')
+      valueStart = _.get(valueStart, fieldNameStart, '')
+      let valueEnd
+
+      valueEnd = _.get(appStore.getState().formsStore, `${formIdEnd}`, '')
+      valueEnd = _.get(valueEnd, fieldNameEnd, '')
+
       value = [
-        _.get(appStore.getState(), `formsStore.${formIdStart}.${fieldNameStart}`, ''),
-        _.get(appStore.getState(), `formsStore.${formIdEnd}.${fieldNameEnd}`, '')
+        valueStart,
+        valueEnd
       ];
     }
 

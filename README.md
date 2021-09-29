@@ -3,6 +3,9 @@
 
 ## Changelog
 
+### 0.17.1 
+* Fix "Remove Item" In Set Data Action
+* Fix Input Update in Cards Fields
 
 ### 0.17.0
 + Menu Widget and Menu Builder

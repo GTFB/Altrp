@@ -484,7 +484,8 @@ class InputTextCommonWidget extends Component {
     if (isEditor()) {
       value = this.state.value;
     } else {
-      value = _.get(appStore.getState(), `formsStore.${formId}.${fieldName}`, '')
+      value = _.get(appStore.getState().formsStore, `${formId}`, '')
+      value = _.get(value, fieldName, '')
     }
     return value;
   }
@@ -767,6 +768,7 @@ class InputTextCommonWidget extends Component {
     if (fieldName.indexOf("{{") !== -1) {
       fieldName = replaceContentWithData(fieldName);
     }
+
     if (_.isObject(this.props.appStore) && fieldName && formId) {
       this.props.appStore.dispatch(
         changeFormFieldValue(fieldName, value, formId, userInput)

@@ -517,7 +517,9 @@ class InputDateWidget extends Component {
     if(isEditor()){
       value = new Date();
     } else {
-      value = _.get(appStore.getState(), `formsStore.${formId}.${fieldName}`, '')
+
+      value = _.get(appStore.getState().formsStore, `${formId}`, '')
+      value = _.get(value, fieldName, '')
       if(! value){
         value = new Date();
 
