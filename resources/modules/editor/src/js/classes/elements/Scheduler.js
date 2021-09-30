@@ -1,7 +1,8 @@
 import BaseElement from "./BaseElement";
 import TestIcon from "../../../svgs/accordion.svg";
-import { CONTROLLER_DATE, CONTROLLER_REPEATER, CONTROLLER_TEXT, TAB_CONTENT } from "../modules/ControllersManager";
+import { CONTROLLER_DATE, CONTROLLER_REPEATER, CONTROLLER_SELECT, CONTROLLER_TEXT, TAB_CONTENT } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
+import { advancedTabControllers } from "../../decorators/register-controllers";
 
 class Scheduler extends BaseElement {
   static getTitle() {
@@ -25,36 +26,69 @@ class Scheduler extends BaseElement {
       return;
     }
 
+
+    this.startControlSection("web_api_settings", {
+      tab: TAB_CONTENT,
+      label: "Web API settings",
+    });
+
+    
+    this.addControl('get_url', {
+      type: CONTROLLER_TEXT,
+      label: 'URL for get',
+    });
+
+    this.addControl('create_url', {
+      type: CONTROLLER_TEXT,
+      label: 'URL for create',
+    });
+
+    this.addControl('update_url', {
+      type: CONTROLLER_TEXT,
+      label: 'URL for update',
+    });
+
+    this.addControl('delete_url', {
+      type: CONTROLLER_TEXT,
+      label: 'URL for delete requests',
+    });
+
+    this.endControlSection();
+
     this.startControlSection("scheduler_content", {
       tab: TAB_CONTENT,
-      label: "Scheduler",
+      label: "Items fields settings",
     });
 
     let repeater = new Repeater();
 
-    repeater.addControl('title_repeater', {
+    repeater.addControl('field_name_repeater', {
       type: CONTROLLER_TEXT,
-      label: 'Title',
+      label: 'Field name',
+    });
+
+    repeater.addControl('input_type_repeater', {
+      type: CONTROLLER_SELECT,
+      label: 'Input type',
+      default: 'text',
+      options: [
+        {
+          value: 'text',
+          label: 'Text'
+        }
+      ]
     });
 
     this.addControl('repeater_meta_data_section', {
       label: 'Scheduler items',
       type: CONTROLLER_REPEATER,
       fields: repeater.getControls(),
-      default: [
-        {
-          title_repeater: "Title #1",
-        },
-        {
-          title_repeater: "Title #2",
-        },
-        {
-          title_repeater: "Title #3",
-        }
-      ]
+      default: []
     });
 
     this.endControlSection();
+
+    advancedTabControllers(this);
   }
 }
 

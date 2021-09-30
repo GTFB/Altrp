@@ -1048,7 +1048,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'table',
     'tabs',
     'heading-type-animating',
-    'sheduler',
+    'scheduler',
   ];
   if( ! is_array( $elementNames ) ){
     $elementNames = [];

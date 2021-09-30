@@ -25,6 +25,9 @@
 @import "./blueprint-hi-contrast";
 @import "./blueprint";
 
+@import "~devextreme/dist/css/dx.common.css";
+@import "~devextreme/dist/css/dx.light.css";
+
 .editor {
   display: flex;
   min-height: 100vh;
