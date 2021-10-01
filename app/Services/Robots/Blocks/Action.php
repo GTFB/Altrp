@@ -43,7 +43,7 @@ class Action
     /**
      * Запустить действие в зависимости от типа
      */
-    public function runAction()
+    public function runAction($botData = null)
     {
         $res = [
             'name' => '',
@@ -61,6 +61,9 @@ class Action
                 break;
             case 'document':
                 $res = $this->generateDocument();
+                break;
+            case 'bot':
+                $res = $this->execBot($botData);
                 break;
         }
         return $res;
@@ -105,7 +108,37 @@ class Action
         $source = strtolower(implode('_', explode(' ', $name)));
 
         return [
-            'name' => $source,
+            'name' => 'api',
+            'value' => [ $source => $res]
+        ];
+    }
+
+    protected function getLabelForBot($shortcode)
+    {
+        $result = false;
+        if (is_array($this->getNodeProperties()->nodeData->data->content)){
+            foreach ($this->getNodeProperties()->nodeData->data->content as $item){
+                if (isset($item->data->shortcode) && $item->data->shortcode === $shortcode) $result = $item->data->text;
+            }
+        }
+        return $result;
+    }
+
+    protected function execBot($botData)
+    {
+        $res = [];
+        if ($botData){
+            $value = setDynamicData($botData->callback_query->data, $this->modelData);
+            $label = setDynamicData($this->getLabelForBot($botData->callback_query->data), $this->modelData);
+            $key = setDynamicData($this->getNodeProperties()->nodeData->data->shortcode, $this->modelData);
+
+            if ($key) {
+                $res[$key]['value'] = $value;
+                $res[$key]['label'] = $label;
+            }
+        }
+        return [
+            'name' => 'bot',
             'value' => $res
         ];
     }

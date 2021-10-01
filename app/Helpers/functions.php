@@ -532,7 +532,7 @@ function getFavicons() {
 function setDynamicData($template, $data)
 {
     try {
-        if ($data) {
+        if ($template && $data) {
             preg_match_all("#\{\{(?<path>(.*?)+)\}\}#", $template, $matches);
             $matches = $matches['path'];
 
