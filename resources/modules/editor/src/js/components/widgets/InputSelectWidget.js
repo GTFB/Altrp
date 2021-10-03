@@ -854,6 +854,14 @@ class InputSelectWidget extends Component {
           if(res.data){
             res = res.data
           }
+          const label_path = element.getResponsiveSetting('label_path')
+          if(label_path){
+            res.label = _.get(res, label_path, res.id);
+          }
+          const value_path = element.getResponsiveSetting('value_path')
+          if(value_path){
+            res.value = _.get(res, value_path, res.id);
+          }
           options.unshift(res)
         } catch (e) {
 
@@ -1054,10 +1062,15 @@ class InputSelectWidget extends Component {
       return null;
     }
     const {options} = this.state;
-    if(options.find(option => option.value === query)) {
+    if (options.find(option => {
+      let label = (option.label || '') + '';
+      label = label.toLowerCase();
+      query = (query || '') + '';
+      return query === label;
+    })) {
       return null
     }
-      let text = element.getResponsiveSetting('create_text') || ''
+    let text = element.getResponsiveSetting('create_text') || ''
     text = text.replace('{{__query__}}', query)
     text = replaceContentWithData(text, element.getCurrentModel().getData())
     return (

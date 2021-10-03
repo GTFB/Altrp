@@ -318,6 +318,16 @@ class InputSelect extends BaseElement {
       description:'Enter each param for Query in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n',
     });
 
+    this.addControl('label_path', {
+      label: 'Label Alias',
+      responsive: false,
+    })
+
+    this.addControl('value_path', {
+      label: 'Value Alias',
+      responsive: false,
+    })
+
     this.endControlSection()
 
     this.startControlSection("label_style_section", {

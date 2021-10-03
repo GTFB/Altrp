@@ -122,7 +122,8 @@ class NewMigrationGenerator extends AppGenerator{
                     }
                 }
             }
-            return false;
+          logger($e->getMessage());
+          return false;
         }
         return true;
     }

@@ -3,6 +3,12 @@
 
 ## Changelog
 
+### 0.17.2
+* Fix "Default Value" Settings Bug in Input Multi Select Widget
+* Fix Model Settings Updates Bug in Admin
+* Fix Create Item Bug in Input Multi Select Widget
+* Add Storage Bot and Handler Bot Node
+
 ### 0.17.1 
 * Fix "Remove Item" In Set Data Action
 * Fix Input Update in Cards Fields

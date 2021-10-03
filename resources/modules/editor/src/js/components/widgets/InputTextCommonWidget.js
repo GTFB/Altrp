@@ -500,8 +500,7 @@ class InputTextCommonWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
       let value = this.getContent(
-        "content_default_value",
-        this.props.element.getSettings("select2_multiple")
+        "content_default_value"
       );
       this.setState(
         state => ({...state, contentLoaded: true}),
@@ -511,16 +510,6 @@ class InputTextCommonWidget extends Component {
       );
     }
 
-    /**
-     * Если обновилась модель, то пробрасываем в стор новое значение (старый источник диамических данных)
-     */
-    if (
-      !_.isEqual(this.props.currentModel, prevProps.currentModel) &&
-      this.state.value &&
-      this.state.value.dynamic
-    ) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
-    }
 
     this.updateValue(prevProps);
   }
@@ -739,9 +728,6 @@ class InputTextCommonWidget extends Component {
   onBlur = async (e, editor = null) => {
     this.dispatchFieldValueToStore(e.target.value, true);
 
-    if (_.get(editor, "getData")) {
-      this.dispatchFieldValueToStore(editor.getData(), true);
-    }
     if (this.props.element.getSettings("actions", []) && !isEditor()) {
       const actionsManager = (
         await import(

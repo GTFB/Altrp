@@ -50,15 +50,16 @@ class InputGalleryWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    this.defaultValue = this.getContent("content_default_value") || [];
-
-    this.state = {
+    const state ={
       settings: {...props.element.getSettings()},
       value: this.defaultValue,
       imageUrls_0: _.get(props.element.getResponsiveSetting('preview_placeholder'), 'url'),
     };
+    this.defaultValue = this.getDefaultValue(state)
+
+    this.state = state;
     this.altrpSelectRef = React.createRef();
-    if (this.getContent("content_default_value")) {
+    if (this.defaultValue) {
       this.dispatchFieldValueToStore(this.defaultValue);
     }
   }
@@ -78,8 +79,7 @@ class InputGalleryWidget extends Component {
         fileToDelete = file;
       }
       return file.getProperty('media.id') !== item
-      })
-
+    })
     if(fileToDelete){
       try {
         await fileToDelete.deleteFileFromStorage()
@@ -92,15 +92,21 @@ class InputGalleryWidget extends Component {
         if (limit && idx >= limit) {
           return
         }
-        const reader = new FileReader
-        reader.readAsDataURL(file.getFile())
-        reader.onload = async () => {
+        if(file.getFile()){
+          const reader = new FileReader
+          reader.readAsDataURL(file.getFile())
+          reader.onload = () => {
+            this.setState(state => {
+                state[`imageUrls_${idx}`] = reader.result;
+                return {...state};
+              }
+            )
+          }
+        } else {
           this.setState(state => {
-              state[`imageUrls_${idx}`] = reader.result;
-              return {...state};
-            }
-          )
-
+            state[`imageUrls_${idx}`] = file.getProperty('media.url');
+            return {...state};
+          })
         }
       })
     } catch (e) {
@@ -154,18 +160,6 @@ class InputGalleryWidget extends Component {
     let value = this.state.value;
 
     /**
-     * Если динамическое значение загрузилось,
-     * то используем this.getContent для получение этого динамического значения
-     * старые динамические данные
-     * */
-    if (
-      _.get(value, "dynamic") &&
-      this.props.currentModel.getProperty("altrpModelUpdated")
-    ) {
-      value = this.getContent("content_default_value") || [];
-    }
-
-    /**
      * Если модель обновилась при смене URL
      */
     if (
@@ -173,7 +167,7 @@ class InputGalleryWidget extends Component {
       !prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value") || [];
+      value = this.getDefaultValue();
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -188,7 +182,7 @@ class InputGalleryWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !this.state.contentLoaded
     ) {
-      value = this.getContent("content_default_value") || [];
+      value = this.getDefaultValue() || [];
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -223,10 +217,7 @@ class InputGalleryWidget extends Component {
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
-      let value = this.getContent(
-        "content_default_value",
-        this.props.element.getSettings("select2_multiple")
-      );
+      let value = this.getDefaultValue();
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -235,16 +226,6 @@ class InputGalleryWidget extends Component {
       );
     }
 
-    /**
-     * Если обновилась модель, то пробрасываем в стор новое значение (старый источник диамических данных)
-     */
-    if (
-      !_.isEqual(this.props.currentModel, prevProps.currentModel) &&
-      this.state.value &&
-      this.state.value.dynamic
-    ) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value") || []);
-    }
 
     if (content_options && !model_for_options) {
       let options = parseOptionsFromSettings(content_options);
@@ -255,6 +236,40 @@ class InputGalleryWidget extends Component {
     this.updateValue(prevProps);
   }
 
+  /**
+   * @param {{} | null} state
+   * @returns {*[]}
+   */
+  getDefaultValue(state) {
+
+    let value = this.getContent("default_value", true) || []
+    if(! _.isArray(value) && ! _.isEmpty(value)){
+      value = [value];
+    }
+
+    let filesStorage = _.map(value, (media, idx) => {
+      const newFile =  new AltrpFile()
+      newFile.setProperty('media', media)
+      return newFile
+    })
+    value.forEach((v, idx)=>{
+      if(!v?.url){
+        return
+      }
+      if(state){
+        state[`imageUrls_${idx}`] = v.url
+        state.filesStorage = filesStorage
+      } else {
+        this.setState(state=>{
+          // this.state[]
+          state[`imageUrls_${idx}`] = v.url
+          state.filesStorage = filesStorage
+        })
+      }
+    })
+    value = value.map(v => v.id)
+    return value
+  }
   /**
    * Обновить значение если нужно
    * @param {{}} prevProps
@@ -483,14 +498,21 @@ class InputGalleryWidget extends Component {
         if (limit && idx >= limit) {
           return
         }
-        const reader = new FileReader
-        reader.readAsDataURL(file.getFile())
-        reader.onload = () => {
+        if(file.getFile()){
+          const reader = new FileReader
+          reader.readAsDataURL(file.getFile())
+          reader.onload = () => {
+            this.setState(state => {
+                state[`imageUrls_${idx}`] = reader.result;
+                return {...state};
+              }
+            )
+          }
+        } else {
           this.setState(state => {
-              state[`imageUrls_${idx}`] = reader.result;
-              return {...state};
-            }
-          )
+            state[`imageUrls_${idx}`] = file.getProperty('media.url');
+            return {...state};
+          })
         }
       })
     } catch (e) {
@@ -523,7 +545,7 @@ class InputGalleryWidget extends Component {
       inputProps,
       style: {
         pointerEvents: notActive ? 'none' : '',
-        backgroundImage: `url(${element.getResponsiveSetting('placeholder') || "data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDY0IDY0IiB3aWR0aD0iMTAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGNsYXNzPSJpY29uIj48cGF0aCBkPSJNMjMuNDE0IDIxLjQxNEwzMCAxNC44MjhWNDRhMiAyIDAgMDA0IDBWMTQuODI4bDYuNTg2IDYuNTg2Yy4zOS4zOTEuOTAyLjU4NiAxLjQxNC41ODZzMS4wMjQtLjE5NSAxLjQxNC0uNTg2YTIgMiAwIDAwMC0yLjgyOGwtMTAtMTBhMiAyIDAgMDAtMi44MjggMGwtMTAgMTBhMiAyIDAgMTAyLjgyOCAyLjgyOHoiPjwvcGF0aD48cGF0aCBkPSJNNTAgNDBhMiAyIDAgMDAtMiAydjhjMCAxLjEwMy0uODk3IDItMiAySDE4Yy0xLjEwMyAwLTItLjg5Ny0yLTJ2LThhMiAyIDAgMDAtNCAwdjhjMCAzLjMwOSAyLjY5MSA2IDYgNmgyOGMzLjMwOSAwIDYtMi42OTEgNi02di04YTIgMiAwIDAwLTItMnoiPjwvcGF0aD48L3N2Zz4K"})`
+        backgroundImage: `url(${element.getResponsiveSetting('placeholder')?.url || "data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDY0IDY0IiB3aWR0aD0iMTAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGNsYXNzPSJpY29uIj48cGF0aCBkPSJNMjMuNDE0IDIxLjQxNEwzMCAxNC44MjhWNDRhMiAyIDAgMDA0IDBWMTQuODI4bDYuNTg2IDYuNTg2Yy4zOS4zOTEuOTAyLjU4NiAxLjQxNC41ODZzMS4wMjQtLjE5NSAxLjQxNC0uNTg2YTIgMiAwIDAwMC0yLjgyOGwtMTAtMTBhMiAyIDAgMDAtMi44MjggMGwtMTAgMTBhMiAyIDAgMTAyLjgyOCAyLjgyOHoiPjwvcGF0aD48cGF0aCBkPSJNNTAgNDBhMiAyIDAgMDAtMiAydjhjMCAxLjEwMy0uODk3IDItMiAySDE4Yy0xLjEwMyAwLTItLjg5Ny0yLTJ2LThhMiAyIDAgMDAtNCAwdjhjMCAzLjMwOSAyLjY5MSA2IDYgNmgyOGMzLjMwOSAwIDYtMi42OTEgNi02di04YTIgMiAwIDAwLTItMnoiPjwvcGF0aD48L3N2Zz4K"})`
       },
       onInputChange: this.addElements,
       className: `bp3-file-input_preview input-gallery__item`,
