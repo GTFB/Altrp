@@ -2,7 +2,6 @@
 namespace App\Services\Robots\Blocks;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 
 class Block
 {
@@ -25,6 +24,13 @@ class Block
      * @var array Запись модели
      */
     protected $modelData;
+
+    protected $botData;
+
+    /**
+     * @var object Текущий узел
+     */
+    protected static $currentNode;
 
     /**
      * @var object Следующий узел
@@ -57,12 +63,23 @@ class Block
     }
 
     /**
+     * @return array
+     */
+    public function getBots()
+    {
+        return collect($this->nodes)->where('data.props.type', 'bot')->toArray();
+    }
+
+    /**
      * Запустить узел и выполнить действие
      */
-    public function run()
+    public function run($updateBot = false)
     {
-        $currentNode = collect($this->nodes)->where('data.props.type', $this->type)->first();
+        if ($this->type == 'start') $currentNode = collect($this->nodes)->where('data.props.type', $this->type)->first();
+        else $currentNode = collect($this->nodes)->where('id', $this->type)->first();
 
+        if($updateBot) $this->botData = $updateBot;
+                
         $currentNode = self::$nextNode ?: $currentNode;
         $currentNodeEdgesSources = collect($this->edges)->where('source', $currentNode->id)->values()->all();
 
@@ -72,7 +89,8 @@ class Block
             $currentNode->data->props->type === 'documentAction' ||
             $currentNode->data->props->type === 'crudAction' ||
             $currentNode->data->props->type === 'apiAction' ||
-            $currentNode->data->props->type === 'messageAction'
+            $currentNode->data->props->type === 'messageAction' ||
+            $currentNode->data->props->type === 'bot'
         ) {
             $prevAction = $this->doAction($currentNode);
             $this->savePrevAction($prevAction);
@@ -84,7 +102,8 @@ class Block
             self::$nextNode = collect($this->nodes)->where('id', $currentNodeEdgesSource->target)->first();
         }
 
-        $this->modelData['altrpapi'] = self::$completedActions;
+        if(isset(self::$completedActions['api'])) $this->modelData['altrpapi'] = self::$completedActions['api'];
+        if(isset(self::$completedActions['bot'])) $this->modelData['altrpbot'] = self::$completedActions['bot'];
 
         return self::$completedActions;
     }
@@ -141,7 +160,7 @@ class Block
             return eval($str);
         }
         catch (\Exception $e){
-            Log::info($e->getMessage());
+            \Log::info($e->getMessage());
         }
     }
 
@@ -227,7 +246,7 @@ class Block
     protected function doAction($node)
     {
         $action = new Action($node, $this->modelData);
-        return $action->runAction();
+        return $action->runAction($this->botData);
     }
 
     /**
@@ -245,7 +264,15 @@ class Block
      */
     public function getCurrentNode()
     {
-        return self::$nextNode->data->props->type;
+        return self::$nextNode->data->props->type ?? 'onstart';
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNextNode()
+    {
+        return self::$nextNode;
     }
 
     /**
@@ -261,9 +288,10 @@ class Block
      * Проверить, является ли блок конечным
      * @return bool
      */
-    public function isEnd()
+    public function isEnd($type = false)
     {
-        return self::$nextNode->data->props->type == 'finish';
+        if ($type) return (self::$nextNode->data->props->type == 'finish' || self::$nextNode->data->props->type == $type);
+        else return self::$nextNode->data->props->type == 'finish';
     }
 
     /**
