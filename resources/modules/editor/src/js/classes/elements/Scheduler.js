@@ -62,6 +62,11 @@ class Scheduler extends BaseElement {
 
     let repeater = new Repeater();
 
+    repeater.addControl('label_repeater', {
+      type: CONTROLLER_TEXT,
+      label: 'Label',
+    });
+
     repeater.addControl('field_name_repeater', {
       type: CONTROLLER_TEXT,
       label: 'Field name',
@@ -70,20 +75,23 @@ class Scheduler extends BaseElement {
     repeater.addControl('input_type_repeater', {
       type: CONTROLLER_SELECT,
       label: 'Input type',
-      default: 'text',
+      default: 'dxTextBox',
       options: [
         {
-          value: 'text',
+          value: 'dxTextBox',
           label: 'Text'
-        }
+        },
+        {
+          value: 'dxTextArea',
+          label: 'TextArea'
+        },
       ]
     });
 
-    this.addControl('repeater_meta_data_section', {
-      label: 'Scheduler items',
+    this.addControl('repeater_fields_section', {
+      label: 'Scheduler fields',
       type: CONTROLLER_REPEATER,
-      fields: repeater.getControls(),
-      default: []
+      fields: repeater.getControls()
     });
 
     this.endControlSection();

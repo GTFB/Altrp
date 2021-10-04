@@ -18,8 +18,6 @@ class SchedulerWidget extends Component {
     if (props.baseRender) {
       this.render = props.baseRender(this);
     }
-    
-    this.getData();
   }
 
   onAppointmentAdding = async e => {
@@ -29,8 +27,7 @@ class SchedulerWidget extends Component {
 
     const res = await resource.post({
       start_date: appointmentData.startDate,
-      end_date: appointmentData.end_date,
-      subject: appointmentData.text
+      end_date: appointmentData.end_date
     });
   }
 
@@ -45,28 +42,75 @@ class SchedulerWidget extends Component {
   onAppointmentUpdating = async e => {
     const {newData} = e;
 
-    const resource = new Resource({route: this.state.settings.update_url, dynamicURL: true});
-
     console.log({newData});
+
+    const resource = new Resource({route: this.state.settings.update_url, dynamicURL: true});
 
     const res = await resource.put(newData.id, {
       ...newData,
       start_date: newData.startDate,
       end_date: newData.endDate,
-      subject: newData.text,
     });
   }
 
-  getData = async () => {
+  _componentDidMount = async () => {
     const resource = new Resource({route: this.state.settings.get_url, dynamicURL: true});
     const {data} = await resource.getAll();
 
     this.setState({dataSource: data.map(item => ({
       startDate: item.start_date,
       endDate: item.end_date,
-      text: item.subject,
       ...item
     }))});
+  }
+
+  onAppointmentFormOpening = data => {
+    const {form} = data;
+
+    const settings = this.state.settings.repeater_fields_section || [];
+
+    const fields = settings.map(el => ({
+      label: {
+        text: el.label_repeater
+      },
+      name: el.field_name_repeater,
+      editorType: el.input_type_repeater,
+      colSpan: 2
+    }));
+
+    console.log({fields});
+
+    form.option('items', [
+      {
+        label: {
+          text: 'Subject'
+        },
+        dataField: 'text',
+        editorType: 'dxTextBox',
+        editorOptions: {
+          width: '100%',
+        },
+        colSpan: 2
+      },
+      {
+        dataField: 'startDate',
+        editorType: 'dxDateBox',
+        editorOptions: {
+          width: '100%',
+          type: 'datetime'
+        }
+      }, 
+      {
+        name: 'endDate',
+        dataField: 'endDate',
+        editorType: 'dxDateBox',
+        editorOptions: {
+          width: '100%',
+          type: 'datetime'
+        }
+      },
+      ...fields,
+    ]);
   }
 
   render() {
@@ -78,6 +122,7 @@ class SchedulerWidget extends Component {
         onAppointmentAdding={this.onAppointmentAdding}
         onAppointmentDeleting={this.onAppointmentDeleting}
         onAppointmentUpdating={this.onAppointmentUpdating}
+        onAppointmentFormOpening={this.onAppointmentFormOpening}
         dataSource={this.state.dataSource}
       >
         <View type="day" />
