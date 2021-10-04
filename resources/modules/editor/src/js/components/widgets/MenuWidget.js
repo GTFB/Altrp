@@ -122,7 +122,6 @@ class MenuWidget extends Component {
     }
     return <>
       {items.map((item) => {
-        console.log(item);
         return <MenuItem
           popoverProps={popoverProps}
           depth={depth}

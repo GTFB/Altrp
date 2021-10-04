@@ -155,6 +155,10 @@ export function actionsControllers(
         label: 'Update Current Datasources'
       },
       {
+        value: 'update_current_model',
+        label: 'Update Current Model'
+      },
+      {
         value: 'custom_code',
         label: 'Custom JS-Code'
       },

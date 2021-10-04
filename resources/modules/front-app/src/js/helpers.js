@@ -655,6 +655,9 @@ export function getDataByPath(
     value = altrpPage
       ? altrpPage.getProperty(path.replace("altrppage.", ""), _default)
       : "";
+    if(_.isString(value) && value.match(/{{([\s\S]+?)}}/)){
+      value = replaceContentWithData(value, context.getData());
+    }
   } else if (path.indexOf("altrpelements.") === 0) {
     const pathElements = path.split(".");
     const [prefix, elementId, updateType, propName] = pathElements;

@@ -3,6 +3,9 @@
 
 ## Changelog
 
+### 0.17.3
++ Add Update Current Model Action
+
 ### 0.17.2
 * Fix "Default Value" Settings Bug in Input Multi Select Widget
 * Fix Model Settings Updates Bug in Admin

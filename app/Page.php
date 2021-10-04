@@ -67,6 +67,9 @@ class Page extends Model
     'reports',
   ];
 
+  protected $appends = [
+    'model_name',
+  ];
   /**
    * @return array
    */
@@ -971,5 +974,16 @@ class Page extends Model
   static public function getPageModel()
   {
 
+  }
+
+  /**
+   * @return string
+   */
+  public function getModelNameAttribute(): string
+  {
+    if( ! $this->model ){
+      return '';
+    }
+    return Str::plural( $this->model->name );
   }
 }
