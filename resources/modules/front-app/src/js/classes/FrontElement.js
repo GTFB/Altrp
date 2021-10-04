@@ -2,6 +2,7 @@ import CONSTANTS from "../../../../editor/src/js/consts";
 import {
   altrpRandomId,
   getResponsiveSetting,
+  isEditor,
   replaceContentWithData,
   valueReplacement
 } from "../helpers";
@@ -20,7 +21,10 @@ class FrontElement {
     this.cssClassStorage = data.cssClassStorage;
     this.type = data.type;
     this.id = data.id;
-    if(window.frontElementsManager && ! withoutComponent){
+
+    if(isEditor() && ! withoutComponent && this.getName()){
+      this.componentClass = window.elementsManager.getComponentClass(this.getName());
+    } else if(window.frontElementsManager && ! withoutComponent){
       this.componentClass = window.frontElementsManager.getComponentClass(this.getName());
     }
     this.parent = null;
