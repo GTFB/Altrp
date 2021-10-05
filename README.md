@@ -5,6 +5,7 @@
 
 ### 0.17.3
 + Add Update Current Model Action
+* Fix Default Value in Input Select Widget
 
 ### 0.17.2
 * Fix "Default Value" Settings Bug in Input Multi Select Widget

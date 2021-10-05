@@ -136,9 +136,11 @@ class InputGalleryWidget extends Component {
     if (isEditor()) {
       value = this.state.value;
     } else {
-
       value = _.get(appStore.getState().formsStore, `${formId}`, '')
       value = _.get(value, fieldName, '')
+      if(! _.isArray(value)){
+        value = [value]
+      }
     }
     return value || [];
   }
@@ -539,6 +541,7 @@ class InputGalleryWidget extends Component {
     }
     const {notActive} = this.state
     const value = this.getValue()
+
     const limit = element.getResponsiveSetting('limit')
     const fileInputProps = {
       key: this.state.key,

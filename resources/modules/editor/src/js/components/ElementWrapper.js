@@ -587,6 +587,11 @@ class ElementWrapper extends Component {
     let classes = `altrp-element ${this.props.element
       .getSelector()
       .replace(".", "")} altrp-element_${this.props.element.getType()}`;
+    if(! this.props.element?.children?.length){
+      if(this.props.element.getType() === 'column'){
+        classes += ' altrp-element_empty-column '
+      }
+    }
     if (this.props.element.getType() === "widget") {
       classes += ` altrp-widget_${this.props.element.getName()}`;
     }

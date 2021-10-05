@@ -42,8 +42,8 @@ Route::group([
 Route::group([
   'middleware' => ['installation.checker'],
 ], function () {
-  Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-  Route::post('login', 'Auth\LoginController@login')->name('post.login');
+  Route::get('altrp-login', 'Auth\LoginController@showLoginForm')->name('login');
+  Route::post('altrp-login', 'Auth\LoginController@login')->name('post.login');
   Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 });
 

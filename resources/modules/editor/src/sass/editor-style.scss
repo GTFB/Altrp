@@ -1652,6 +1652,9 @@ button {
     }
   }
 }
+#editor-content .altrp-element.altrp-element.altrp-element_column.altrp-element_empty-column{
+  flex-wrap: nowrap;
+}
 .column-empty-plus {
   position: relative;
   display: flex;
