@@ -991,7 +991,7 @@ class InputMultiSelectWidget extends Component {
   getCurrentLabel() {
     const value = this.getValue()
     const options = this.getOptions() || []
-    return options.find(option => option.value === value)?.label || ''
+    return options.find(option => option.value == value)?.label || ''
   }
 
   /**

@@ -3,8 +3,12 @@
 
 ## Changelog
 
+### 0.17.4
+* Fix Offset Bug in CurrentEnvironment When Request has Associative Array
+* Change Default Login url to /altrp-login
+
 ### 0.17.3
-+ Add Update Current Model Action
++ Add "Update Current Model" Action
 * Fix Default Value in Input Select Widget
 
 ### 0.17.2
