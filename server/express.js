@@ -102,6 +102,12 @@ app.post("/", (req, res) => {
   } else {
     window.__altrp_settings__ = {};
   }
+  if(_.isObject(json.route_args)){
+    window.route_args = json.route_args;
+  } else {
+    window.route_args = {};
+  }
+
   let page = json.page || [];
   global.window.currentPage = json.currentPage || {};
   let page_id = json.page_id || "";

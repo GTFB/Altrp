@@ -33,7 +33,11 @@ Route::get({{frontend_route}}, function ({{params}}) {
         if ( $relations ) {
           $model = $model->load( $relations );
         }
-        $model = $model->find( {{model_id}} );
+        if( {{custom_argument}} ){
+          {{custom_model}}
+        } else {
+          $model = $model->find( {{model_id}} );
+        }
         if( ! $model ){
           throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException( 'Model not found' );
         }
@@ -45,7 +49,7 @@ Route::get({{frontend_route}}, function ({{params}}) {
     }
   }
   $datasources = getDataSources( $_frontend_route['id'], func_get_args(), $params_string );
-  $preload_content = \App\Page::getPreloadPageContent( $_frontend_route['id'] );
+  $preload_content = \App\Page::getPreloadPageContent( $_frontend_route['id'], {{route_args}} );
   $preload_content['content'] = replaceContentWithData( $preload_content['content'] );
   $page_areas = \App\Page::get_areas_for_page( $_frontend_route['id'] );
   $lazy_sections = [];
@@ -72,6 +76,7 @@ Route::get({{frontend_route}}, function ({{params}}) {
     'preload_content' => $preload_content,
     'model_data' => $model_data,
     'datasources' => $datasources,
+    'route_args'=> {{route_args}},
     'is_admin' => isAdmin(),
   ]);
 })->middleware(['web', 'installation.checker', 'after'])->name( 'page_' . {{page_id}});

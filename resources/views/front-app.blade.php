@@ -169,6 +169,7 @@ if( isset($_altrp_settings['redirect']) && $_altrp_settings['redirect']){
   window.model_data = {!! json_encode( $model_data ) !!};
   window.altrpPreloadedDatasources = {!! json_encode( $datasources ?? '' ) !!};
   window.altrpMenus = [];
+  window.route_args = {!! json_encode( $route_args ) !!};
   window.currentPage = {!! json_encode( $_frontend_route ) !!};
   window.__altrp_settings__ = {!! $altrp_settings !!};
   window.container_width = {!! get_altrp_setting( 'container_width', '1440' ) !!};

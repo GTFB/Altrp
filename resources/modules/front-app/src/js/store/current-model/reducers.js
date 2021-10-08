@@ -1,8 +1,14 @@
 import {CHANGE_CURRENT_MODEL} from './actions'
 import AltrpModel from "../../../../../editor/src/js/classes/AltrpModel";
 
-const defaultModel =  {...window.model_data};
+let defaultModel =  {...window.model_data};
 defaultModel.altrpModelUpdated = true
+if(_.isObject(window.route_args)){
+  defaultModel = {
+    ...defaultModel,
+    ...window.route_args
+  }
+}
 
 export function currentModelReducer(model, action) {
   model = model || defaultModel;

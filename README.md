@@ -3,6 +3,10 @@
 
 ## Changelog
 
+### 0.17.5
++ Add "Column for Search" and "Param for Search" Settings on Page Settings to Search for Models by an Arbitrary Column
+* Fix "Scroll To Element", "Scroll Top" and "Scroll Bottom" Actions
+
 ### 0.17.4
 * Fix Offset Bug in CurrentEnvironment When Request has Associative Array
 * Change Default Login url to /altrp-login
@@ -31,7 +35,7 @@
   3. Input Gallery
   4. Input Slider
   5. Input Range Slider
-  5. Image Widget with Lightbox
+  6. Image Widget with Lightbox
 + Add "Active" State for Widgets:
   1. Button
   2. Divider

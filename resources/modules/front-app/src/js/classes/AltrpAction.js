@@ -607,7 +607,7 @@ class AltrpAction extends AltrpModel {
       scroller = document.querySelector('.front-app-content');
     }
     if(! scroller){
-      scroller = document.querySelector('.front-app');
+      scroller = window;
     }
     if (element) {
       scrollToElement(scroller, element);
@@ -630,9 +630,9 @@ class AltrpAction extends AltrpModel {
     let scroller = document.querySelector('.front-app-content');
 
     if(! scroller){
-      scroller = document.querySelector('.front-app');
+      scroller = window;
     }
-    scroller.scrollTo(0,0)
+    scroller.scrollTo({top: 0,left: 0, behavior:'smooth'})
 
     return {
       success: true
@@ -659,9 +659,9 @@ class AltrpAction extends AltrpModel {
     let scroller = document.querySelector('.front-app-content');
 
     if(! scroller){
-      scroller = document.querySelector('.front-app');
+      scroller = window;
     }
-    scroller.scrollTo(0,document.querySelector('.route-content').offsetHeight)
+    scroller.scrollTo({left:0,top:document.querySelector('.route-content').offsetHeight, behavior:'smooth'})
     return {
       success: true
     };
