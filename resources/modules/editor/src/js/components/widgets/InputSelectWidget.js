@@ -1201,7 +1201,7 @@ class InputSelectWidget extends Component {
             if (query === undefined || query.length === 0) {
               return true
             }
-            return `${item?.label?.toLowerCase() || ''}`.indexOf(query.toLowerCase()) >= 0;
+            return `${item?.label?.toLowerCase() || ''}`.indexOf(query?.toLowerCase()) >= 0;
           }}
           items={itemsOptions}
           // itemRenderer={({label})=>label}

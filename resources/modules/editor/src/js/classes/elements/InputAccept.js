@@ -53,11 +53,6 @@ class InputAccept extends BaseElement {
       label: "Field ID (Column Name)"
     });
 
-    this.addControl("content_shortcode", {
-      type: CONTROLLER_TEXT,
-      label: "Shortcode"
-    });
-
     this.addControl("accept_checked", {
       type: CONTROLLER_TEXT,
       label: "Accept Checked Value"

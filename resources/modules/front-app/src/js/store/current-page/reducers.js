@@ -9,7 +9,7 @@ if (typeof location === "undefined") {
 const defaultPage = {
   url: location?.href || "",
   title: window?.currentPage?.title || "",
-  params: convertQueryParamsToObject(document.location.search),
+  params: convertQueryParamsToObject(document?.location?.search),
 };
 
 export function currentPageReducer(page, action) {

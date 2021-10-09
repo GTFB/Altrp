@@ -3,6 +3,9 @@
 
 ## Changelog
 
+### 0.17.6
+* Fix SSR Bug with Query Parameters
+
 ### 0.17.5
 + Add "Column for Search" and "Param for Search" Settings on Page Settings to Search for Models by an Arbitrary Column
 * Fix "Scroll To Element", "Scroll Top" and "Scroll Bottom" Actions
