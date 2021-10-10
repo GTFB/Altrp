@@ -39,5 +39,6 @@ const DEFAULT_REACT_ELEMENTS = [
   'table',
   'tabs',
   'heading-type-animating',
+  'scheduler',
 ]
 export default DEFAULT_REACT_ELEMENTS

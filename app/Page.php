@@ -55,6 +55,8 @@ class Page extends Model
     'not_found',
     'sections_count',
     'icon',
+    'param_name',
+    'model_column',
   ];
 
   const DEFAULT_AREAS = [
@@ -67,6 +69,9 @@ class Page extends Model
     'reports',
   ];
 
+  protected $appends = [
+    'model_name',
+  ];
   /**
    * @return array
    */
@@ -80,7 +85,7 @@ class Page extends Model
       return $pages;
     }
     try {
-      $pages = Page::all()->map->only( [ 'path', 'title', 'id', 'model' ] )
+      $pages = Page::all()->map->only( [ 'path', 'title', 'id', 'model', 'model_column', 'param_name' ] )
         //        ->map( function ( $path ) {
         //
         //        return [
@@ -723,9 +728,11 @@ class Page extends Model
 
   /**
    * @param string $page_id
+   * @param array $route_args
    * @return null | array
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  static function getPreloadPageContent( $page_id )
+  static function getPreloadPageContent( $page_id, $route_args = [] )
   {
     $result = [
       'content' => '',
@@ -766,7 +773,7 @@ class Page extends Model
                 [
                   'page' => $page_areas,
                   'page_id' => $page_id,
-                  'altrp_settings' => getAltrpSettings( $page_id ),
+                    'altrp_settings' => getAltrpSettings( $page_id ),
                   'altrp' => [
                     'version' => getCurrentVersion()
                   ],
@@ -775,6 +782,7 @@ class Page extends Model
                   'altrpSkeletonHighlightColor' => get_altrp_setting( 'altrp_skeleton_highlight_color', '#d0d0d0' ),
                   'current_user' => getCurrentUser(),
                   'current_device' => get_current_device(),
+                  'route_args' => $route_args,
                 ]
               ),
 
@@ -971,5 +979,16 @@ class Page extends Model
   static public function getPageModel()
   {
 
+  }
+
+  /**
+   * @return string
+   */
+  public function getModelNameAttribute(): string
+  {
+    if( ! $this->model ){
+      return '';
+    }
+    return Str::plural( $this->model->name );
   }
 }

@@ -11,7 +11,7 @@ class TelegramBotService
 {
     protected $bot;
 
-    public function __construct($token = false)
+    public function __construct($token = false, $robotser)
     {
         if (!$token) $token = env('TELEGRAM_BOT_TOKEN', '');
 
@@ -20,24 +20,25 @@ class TelegramBotService
             'api_url'       => env('TELEGRAM_API_URL', 'https://api.telegram.org'),
             'exceptions'    => env('TELEGRAM_BOT_DEBUG', false),
             'async'         => env('TELEGRAM_ASYNC_REQUESTS', false),
-        //     'webhook' => [
-        //         'url'               => env('TELEGRAM_WEBHOOK_URL', env('APP_URL') . '/telegrambot/webhook'),
-        //         'certificate'       => env('TELEGRAM_BOT_CERT_PATH', storage_path('app/ssl/public.pem')),
-        //         'max_connections'   => env('TELEGRAM_MAX_CONNECTIONS', 40),
-        //         'ip_address'        => env('TELEGRAM_IP_ADDRESS', ''),
-        //         'allowed_updates'   => ["message", "edited_channel_post", "callback_query"]
-        //    ],
+            'webhook' => [
+                'url'               => env('TELEGRAM_WEBHOOK_URL', env('APP_URL') . '/telegrambot/webhook'),
+                'certificate'       => env('TELEGRAM_BOT_CERT_PATH', storage_path('app/ssl/public.pem')),
+                'max_connections'   => env('TELEGRAM_MAX_CONNECTIONS', 40),
+                'ip_address'        => env('TELEGRAM_IP_ADDRESS', ''),
+                'allowed_updates'   => ["message", "edited_channel_post", "callback_query"]
+           ],
            'handlers'      => [
                // App\Services\Robots\Bots\TelegramBot\Commands\RegisterCommand::class,
                // App\Services\Robots\Bots\TelegramBot\Commands\HelpCommand::class,
                // App\Services\Robots\Bots\TelegramBot\Commands\InfoCommand::class,
-               \App\Services\Robots\Bots\TelegramBot\Commands\StartCommand::class,
+            //    \App\Services\Robots\Bots\TelegramBot\Commands\StartCommand::class,
                \App\Services\Robots\Bots\TelegramBot\Handlers\UpdateHandler::class
            ],
            'poll'    => [
                'limit'             => 100,
                'timeout'           => 0,
-               'allowed_updates'   => ["message", "edited_channel_post", "callback_query"]
+               'allowed_updates'   => ["message", "edited_channel_post", "callback_query"],
+               'robotser' => $robotser,
            ],
        ]);
     }
@@ -73,8 +74,6 @@ class TelegramBotService
                 foreach ($updates as $update) {
                     $this->bot->handleUpdate($update);
                     $last_offset = $update->update_id;
-
-                    // $this->bot->callHandler(UpdateHandler::class, $update, true);
                 }
             }
         } else {

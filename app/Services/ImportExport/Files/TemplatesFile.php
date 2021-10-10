@@ -104,6 +104,7 @@ class TemplatesFile extends ImportExportFile implements IImportExportFile
     public function export(IWriter $writer, string $path, array $params = [])
     {
         $data = DB::table( 'templates' )
+            ->whereNotNull("deleted_at")
             ->select('templates.*', 'areas.name as area_name')
             ->leftJoin('areas', 'templates.area', '=', 'areas.id')
             ->where("type", "=", "template")

@@ -20,6 +20,7 @@ export default class Bot extends Component{
 
     render(){
         const content = this.props.selectNode?.data?.props?.nodeData?.data?.content ?? [];
+        const shortcode = this.props.selectNode?.data?.props?.nodeData?.data?.shortcode ?? '';
 
 
         return <div>
@@ -39,7 +40,7 @@ export default class Bot extends Component{
                 // rows="3"
                 style={{lineHeight: '125%'}}
                 onChange={(e) => { this.changeInput(e) }}
-                value={ this.props.selectNode.data?.shortcode }
+                value={ shortcode }
               />
               </div>
            </div>

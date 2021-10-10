@@ -1,7 +1,7 @@
 class FrontElementsManager {
   constructor() {
+    this.components = {};
     //список компонентов
-
     this.ELEMENTS = [
       {
         name: "root-element",
@@ -428,7 +428,6 @@ class FrontElementsManager {
         }
       },
     ];
-    this.components = {};
   }
 
   /**

@@ -652,7 +652,7 @@ function AltrpTableWithoutUpdate(
         {global_filter && <div className="altrp-table-tr">
           <th className="altrp-table-th altrp-table-th_global-filter altrp-table-cell"
             role="cell"
-            colSpan={visibleColumns.length + replace_rows}
+            colSpan={(visibleColumns.length + replace_rows) || 1}
             style={{
               textAlign: 'left',
             }}
@@ -682,7 +682,7 @@ function AltrpTableWithoutUpdate(
           cardTemplate,
         }}
         /> :
-        <div><div className="altrp-table-tr altrp-table-tr_loading"><div className="altrp-table-td altrp-table-td_loading" colSpan={visibleColumns.length + replace_rows}>
+        <div><div className="altrp-table-tr altrp-table-tr_loading"><div className="altrp-table-td altrp-table-td_loading" colSpan={(visibleColumns.length + replace_rows) || 1}>
           {(_status === 'loading' ? (loading_text || null) : null)}
         </div></div></div>}
     </TableComponent>

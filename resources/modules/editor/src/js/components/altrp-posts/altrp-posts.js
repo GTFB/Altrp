@@ -281,7 +281,7 @@ export default (props) => {
     if(isEditor()){
       props = {...props};
       props.settings = {...props.settings};
-      props.data = Array.from({length: 100}, () => ({}));
+      props.data = Array.from({length: 3}, () => ({}));
       setAltrpIndex(props.data);
     }
     return<AltrpPosts {...props}/>

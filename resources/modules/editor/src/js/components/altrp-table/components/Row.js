@@ -205,7 +205,7 @@ const Row = ({ row,
         </div>
         {row.isExpanded && row_expand && card_template && cardTemplate &&
         <div className="altrp-table-tr altrp-posts">
-          <td colSpan={visibleColumns.length + replace_rows} className="altrp-table-td altrp-post">{ExpandCard}</td>
+          <td colSpan={(visibleColumns.length + replace_rows) || 1} className="altrp-table-td altrp-post">{ExpandCard}</td>
         </div>
         }
       </React.Fragment>);

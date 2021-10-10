@@ -2,6 +2,7 @@ import CONSTANTS from "../../../../editor/src/js/consts";
 import {
   altrpRandomId,
   getResponsiveSetting,
+  isEditor,
   replaceContentWithData,
   valueReplacement
 } from "../helpers";
@@ -20,7 +21,10 @@ class FrontElement {
     this.cssClassStorage = data.cssClassStorage;
     this.type = data.type;
     this.id = data.id;
-    if(window.frontElementsManager && ! withoutComponent){
+
+    if(isEditor() && ! withoutComponent && this.getName()){
+      this.componentClass = window.elementsManager.getComponentClass(this.getName());
+    } else if(window.frontElementsManager && ! withoutComponent){
       this.componentClass = window.frontElementsManager.getComponentClass(this.getName());
     }
     this.parent = null;
@@ -516,15 +520,20 @@ class FrontElement {
     if(! this.elementIsDisplay()){
       return null;
     }
-    const settings = this.getSettings();
-    let value = this.component.state.value;
-    /**
-     * Если значение динамическое и не менялось в виджете,
-     * то используем метод this.getContent для получения значения, а не динмического объекта
-     */
-    if(value && value.dynamic){
-      value = this.getContent('content_default_value')
+    const elementName = this.getName();
+    let value ;
+    switch (elementName) {
+      case 'input':
+      case 'input-textarea':
+      case 'input-text-common':{
+        value = this?.component?.getValue() || this?.component?.state?.value || '';
+      }break;
+
+      default:{
+        value = this.component.state.value;
+      }
     }
+
     switch (this.getSettings('content_type')){
       /**
        * Если нужен массив
@@ -541,6 +550,7 @@ class FrontElement {
         value = value ? trueValue : falseValue;
       }
         break;
+
 
     }
     return value;

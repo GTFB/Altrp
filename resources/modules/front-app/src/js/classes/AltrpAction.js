@@ -1,6 +1,7 @@
 import AltrpModel from '../../../../editor/src/js/classes/AltrpModel';
 import { togglePopup } from '../store/popup-trigger/actions';
 import { sendEmail } from '../helpers/sendEmail';
+import {changeCurrentModel} from "../store/current-model/actions";
 const {
   altrpLogin,
   altrpLogout,
@@ -20,6 +21,7 @@ const {
   dataToXLS,
   delay,
   altrpCompare,
+  Resource,
   getWrapperHTMLElementByElement
 } = window.altrpHelpers;
 
@@ -180,6 +182,8 @@ class AltrpAction extends AltrpModel {
       success: false
     };
     let confirmText = this.getProperty('confirm');
+    confirmText = replaceContentWithData(confirmText,this.getCurrentModel().getData());
+
     if (confirmText && !confirm(confirmText)) {
       return {
         success: false,
@@ -295,6 +299,11 @@ class AltrpAction extends AltrpModel {
           result = await this.doActionUpdateCurrentDatasources();
         }
         break;
+      case 'update_current_model':
+        {
+          result = await this.doActionUpdateCurrentModel();
+        }
+        break;
       case 'forms_manipulate':
         {
           result = await this.doActionFormsManipulate();
@@ -328,7 +337,7 @@ class AltrpAction extends AltrpModel {
       alertText = this.getProperty('reject');
     }
     if (alertText) {
-      alertText = replaceContentWithData(alertText);
+      alertText = replaceContentWithData(alertText, this.getCurrentModel().getData());
       alert(alertText);
     }
     return result;
@@ -598,7 +607,7 @@ class AltrpAction extends AltrpModel {
       scroller = document.querySelector('.front-app-content');
     }
     if(! scroller){
-      scroller = document.querySelector('.front-app');
+      scroller = window;
     }
     if (element) {
       scrollToElement(scroller, element);
@@ -621,9 +630,9 @@ class AltrpAction extends AltrpModel {
     let scroller = document.querySelector('.front-app-content');
 
     if(! scroller){
-      scroller = document.querySelector('.front-app');
+      scroller = window;
     }
-    scroller.scrollTo(0,0)
+    scroller.scrollTo({top: 0,left: 0, behavior:'smooth'})
 
     return {
       success: true
@@ -650,9 +659,9 @@ class AltrpAction extends AltrpModel {
     let scroller = document.querySelector('.front-app-content');
 
     if(! scroller){
-      scroller = document.querySelector('.front-app');
+      scroller = window;
     }
-    scroller.scrollTo(0,document.querySelector('.route-content').offsetHeight)
+    scroller.scrollTo({left:0,top:document.querySelector('.route-content').offsetHeight, behavior:'smooth'})
     return {
       success: true
     };
@@ -662,7 +671,7 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionPageToPDF() {
-    let filename = replaceContentWithData(this.getProperty('name', 'file'));
+    let filename = replaceContentWithData(this.getProperty('name', 'file'), this.getCurrentModel().getData());
     const elements = [];
 
     elements.push(document.getElementById('route-content'));
@@ -674,7 +683,7 @@ class AltrpAction extends AltrpModel {
    * @return {Promise<{}>}
    */
   async doActionElementsToPDF() {
-    let filename = replaceContentWithData(this.getProperty('name', 'file'));
+    let filename = replaceContentWithData(this.getProperty('name', 'file'), this.getCurrentModel().getData());
     const elements = [];
     let IDs = this.getProperty('elements_ids');
     if (!IDs) {
@@ -696,7 +705,7 @@ class AltrpAction extends AltrpModel {
    */
   async doActionDataToCSV() {
     let data = getDataByPath(this.getProperty('path'));
-    let filename = replaceContentWithData(this.getProperty('name', 'file'));
+    let filename = replaceContentWithData(this.getProperty('name', 'file'), this.getCurrentModel().getData());
     try {
       return await dataToCSV(data, filename);
     } catch (error) {
@@ -728,7 +737,7 @@ class AltrpAction extends AltrpModel {
     if (_.isEmpty(data)) {
       return { success: true };
     }
-    let filename = replaceContentWithData(this.getProperty('name', 'file'));
+    let filename = replaceContentWithData(this.getProperty('name', 'file'), this.getCurrentModel().getData());
     try {
       return await dataToCSV(data, filename);
     } catch (error) {
@@ -760,7 +769,7 @@ class AltrpAction extends AltrpModel {
     if (_.isEmpty(data)) {
       return { success: true };
     }
-    let filename = replaceContentWithData(this.getProperty('name', 'file'));
+    let filename = replaceContentWithData(this.getProperty('name', 'file'), this.getCurrentModel().getData());
     try {
       return await dataToXML(data, filename);
     } catch (error) {
@@ -815,7 +824,7 @@ class AltrpAction extends AltrpModel {
       }
     }
 
-    const filename = replaceContentWithData(this.getProperty('name', 'file'));
+    const filename = replaceContentWithData(this.getProperty('name', 'file'), this.getCurrentModel().getData());
     const templateName = this.getProperty('template_name');
 
     try {
@@ -907,10 +916,7 @@ class AltrpAction extends AltrpModel {
                 this.getCurrentModel()
               );
             } else if( value.indexOf('|') !== -1){
-              // value = replaceContentWithData(
-              //   value,
-              //   this.getCurrentModel().getData()
-              // );
+
 
               value = parseParamsFromString(
                 value,
@@ -1013,6 +1019,7 @@ class AltrpAction extends AltrpModel {
                 return;
               }
               list = [...list];
+
               list = list.filter(_item => _item !== item);
               setDataByPath(listPath, list);
             });
@@ -1069,6 +1076,42 @@ class AltrpAction extends AltrpModel {
       return { success: false };
     }
   }
+  /**
+   * Действие - обновление текущей модели по AJAX
+   * Action - updating the current model via AJAX
+   * @return {Promise<{}>}
+   */
+  async doActionUpdateCurrentModel(){
+
+    let modelName = window?.currentPage?.model_name
+    if(! modelName){
+      return  {success:true}
+    }
+    let modelId = window?.model_data?.id;
+    if(! modelId){
+      return  {success:true}
+    }
+    try {
+      let model = await new Resource({
+        route: `/ajax/models/${modelName}`
+      }).get(modelId);
+      if(_.isObject(model.data)){
+        model = model.data
+      }
+      const oldModel = window.appStore.getState().currentModel.getData();
+      model.altrpModelUpdated = true;
+
+      if(! _.isEqual(model, oldModel)){
+        appStore.dispatch(changeCurrentModel({ altrpModelUpdated: false }));
+        appStore.dispatch(changeCurrentModel(model));
+      }
+      return  {success:true}
+
+    } catch (e){
+      console.error(e);
+    }
+  }
+
   /**
    * действие - обновление текущего хранилища
    * @return {Promise<{}>}
@@ -1176,7 +1219,7 @@ class AltrpAction extends AltrpModel {
     let conditionLeft = this.getProperty('condition_left');
     let conditionRight = this.getProperty('condition_right');
     conditionLeft = getDataByPath(conditionLeft);
-    conditionRight = replaceContentWithData(conditionRight);
+    conditionRight = replaceContentWithData(conditionRight, this.getCurrentModel().getData());
     const res = altrpCompare(conditionLeft, conditionRight, compare);
     return { success: res };
   }

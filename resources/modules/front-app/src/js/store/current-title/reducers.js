@@ -4,6 +4,7 @@ if (typeof document === "undefined") {
 import { CHANGE_CURRENT_TITLE } from "./actions";
 
 const defaultTitle = document?.title || "";
+console.log(document?.title || "");
 
 export function currentTitleReducer(title, action) {
   title = title || defaultTitle;

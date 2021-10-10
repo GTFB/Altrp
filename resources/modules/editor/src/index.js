@@ -37,11 +37,70 @@ if (process.env.NODE_ENV !== "production") {
   );
 }
 
+function loadEditorContent(EditorContent){
+
+  let iframe = document.getElementsByTagName("iframe")[0];
+  window.EditorFrame = iframe;
+  if (!iframe) {
+    return;
+  }
+  let editorContentTarget = iframe.contentDocument.getElementById(
+    "editor-content"
+  );
+
+  if (editorContentTarget) {
+    ReactDOM.render(<EditorContent />, editorContentTarget);
+  } else {
+    // DOMContentLoaded
+    iframe.contentDocument.addEventListener('DOMContentLoaded', ()=>{
+      editorContentTarget = iframe.contentWindow.document.getElementById(
+        "editor-content"
+      );
+      if (editorContentTarget) {
+        ReactDOM.render(<EditorContent />, editorContentTarget);
+      }
+    })
+  }
+  if (process.env.NODE_ENV === "production") {
+    let head = iframe.contentWindow.document.getElementsByTagName(
+      "head"
+    )[0];
+    let styleLink = iframe.contentWindow.document.createElement("link");
+    styleLink.rel = "stylesheet";
+    styleLink.href = `/modules/editor/editor.css?${_altrpVersion}`;
+    head.appendChild(styleLink);
+    head.appendChild(document.querySelector('[data-cke]').cloneNode(true));
+  } else {
+    let head = iframe.contentWindow.document.getElementsByTagName(
+      "head"
+    )[0];
+    let script = iframe.contentWindow.document.createElement("script");
+    script.src = "http://localhost:3000/src/bundle.js";
+    script.defer = "http://localhost:3000/src/bundle.js";
+    head.appendChild(script);
+  }
+
+  function listenerHistory(event) {
+    if (window.parent.appStore.getState().historyStore.active) {
+      if (event.ctrlKey && event.code === "KeyZ" && event.shiftKey) {
+        controllerHistory.redo();
+      } else if (event.ctrlKey && event.code === "KeyZ") {
+        controllerHistory.undo();
+      }
+    }
+  }
+  window.addEventListener("keydown", listenerHistory, false);
+  window.EditorFrame.contentWindow.addEventListener(
+    "keydown",
+    listenerHistory,
+    false
+  );
+}
 // window.ReactDOM.render(<Editor/>, editorTarget);
 /**
  * Импортируем компонент редактора Editor
  */
-import("./Editor.js")
+import(/* webpackChunkName: 'Editor' */"./Editor.js")
   .then(Editor => {
     Editor = Editor.default;
 
@@ -55,57 +114,18 @@ import("./Editor.js")
       );
     }
 
-    return import("./EditorContent");
+    return import(/* webpackChunkName: 'EditorContent' */"./EditorContent");
   })
   .then(EditorContent => {
     EditorContent = EditorContent.default;
-
-    window.onload = () => {
-      let iframe = document.getElementsByTagName("iframe")[0];
-      window.EditorFrame = iframe;
-      if (!iframe) {
-        return;
+    let iframe = document.getElementsByTagName("iframe")[0];
+    if(iframe && iframe.contentDocument.getElementById(
+      "editor-content"
+    )){
+      loadEditorContent(EditorContent)
+    } else if(iframe){
+      iframe.onload = ()=>{
+        loadEditorContent(EditorContent)
       }
-      let editorContentTarget = iframe.contentWindow.document.getElementById(
-        "editor-content"
-      );
-
-      if (editorContentTarget) {
-        ReactDOM.render(<EditorContent />, editorContentTarget);
-      }
-      if (process.env.NODE_ENV === "production") {
-        let head = iframe.contentWindow.document.getElementsByTagName(
-          "head"
-        )[0];
-        let styleLink = iframe.contentWindow.document.createElement("link");
-        styleLink.rel = "stylesheet";
-        styleLink.href = `/modules/editor/editor.css?${_altrpVersion}`;
-        head.appendChild(styleLink);
-        head.appendChild(document.querySelector('[data-cke]').cloneNode(true));
-      } else {
-        let head = iframe.contentWindow.document.getElementsByTagName(
-          "head"
-        )[0];
-        let script = iframe.contentWindow.document.createElement("script");
-        script.src = "http://localhost:3000/src/bundle.js";
-        script.defer = "http://localhost:3000/src/bundle.js";
-        head.appendChild(script);
-      }
-
-      function listenerHistory(event) {
-        if (window.parent.appStore.getState().historyStore.active) {
-          if (event.ctrlKey && event.code === "KeyZ" && event.shiftKey) {
-            controllerHistory.redo();
-          } else if (event.ctrlKey && event.code === "KeyZ") {
-            controllerHistory.undo();
-          }
-        }
-      }
-      window.addEventListener("keydown", listenerHistory, false);
-      window.EditorFrame.contentWindow.addEventListener(
-        "keydown",
-        listenerHistory,
-        false
-      );
-    };
+    }
   });

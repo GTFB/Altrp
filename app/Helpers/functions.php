@@ -532,7 +532,7 @@ function getFavicons() {
 function setDynamicData($template, $data)
 {
     try {
-        if ($data) {
+        if ($template && $data) {
             preg_match_all("#\{\{(?<path>(.*?)+)\}\}#", $template, $matches);
             $matches = $matches['path'];
 
@@ -1048,7 +1048,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'table',
     'tabs',
     'heading-type-animating',
-    'sheduler',
+    'scheduler',
   ];
   if( ! is_array( $elementNames ) ){
     $elementNames = [];
@@ -1290,11 +1290,11 @@ function getDataSources( $page_id, $params = array(), $params_string = '' ){
 
       if ($ds->source->type == 'get') $method = 'index';
       elseif ($ds->source->type == 'filters') $method = 'getIndexedColumnsValueWithCount';
-      elseif ($ds->source->source->type == 'add') $method = 'store';
+      elseif ($ds->source->type == 'add') $method = 'store';
       elseif ($ds->source->type == 'update_column') $method = 'updateColumn';
       elseif ($ds->source->type == 'delete') $method = 'destroy';
       else $method = $ds->source->type;
-      $result = call_user_func( [$controllerInstance, $method], $request );
+      $result = call_user_func( [$controllerInstance, $method], $request, ...explode( ',', $params_string ) );
       if( $result ){
         $result = $result->getContent();
         $result = json_decode( $result, true );
@@ -1307,8 +1307,8 @@ function getDataSources( $page_id, $params = array(), $params_string = '' ){
       }
 
     }
-  } catch( Exception $e ){
-    logger()->error( $e->getMessage() );
+  } catch( \Exception $e ){
+    logger()->error( $e->getMessage() . "\n" . implode( "\n", $e->getTrace() ) . "\n" );
     return $datasources;
   }
   return $datasources;

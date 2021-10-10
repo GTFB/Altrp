@@ -308,6 +308,8 @@ class ElementWrapper extends Component {
         styles.width = element.getResponsiveSetting(
           "layout_column_width"
         );
+        console.log(styles.width);
+        console.log(this);
       }
     }
     if (!this.state.elementDisplay) {
@@ -368,6 +370,7 @@ class ElementWrapper extends Component {
       style: styles,
       id: this.CSSId,
     };
+    console.log(wrapperProps);
     if (
       this.reactElement ||
       DEFAULT_REACT_ELEMENTS.indexOf(element.getName()) !== -1

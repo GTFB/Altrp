@@ -147,6 +147,7 @@ class Handler extends ExceptionHandler
             'pages'=>Page::get_pages_for_frontend( true ),
             'model_data' => null,
             'is_admin' => isAdmin(),
+            'route_args' => [],
           ]), 200 );
         }
       }
