@@ -1258,6 +1258,7 @@ function getDataSources( $page_id, $params = array(), $params_string = '' ){
       if( ! $ds->source || ! $ds->source->model || ! $ds->alias ){
         continue;
       }
+      $request_parameters = [];
       if( $ds->parameters ){
         $_request_parameters = json_decode( replaceContentWithData( $ds->parameters ), true );
 
@@ -1277,7 +1278,6 @@ function getDataSources( $page_id, $params = array(), $params_string = '' ){
             ];
           }, $_request_parameters );
         }
-        $request_parameters = [];
         foreach ( $_request_parameters as $request_parameter ) {
           $request_parameters[$request_parameter['paramName']] = replaceContentWithData( $request_parameter['paramValue'] );
         }
@@ -1308,7 +1308,15 @@ function getDataSources( $page_id, $params = array(), $params_string = '' ){
 
     }
   } catch( \Exception $e ){
-    logger()->error( $e->getMessage() . "\n" . implode( "\n", $e->getTrace() ) . "\n" );
+
+    logger()->error( $e->getMessage() . "\n" .
+      implode(
+        "\n",
+        array_map(function($tr){
+          return $tr['file'] . " " . $tr['line'];
+        }, $e->getTrace())
+      )
+      . "\n" );
     return $datasources;
   }
   return $datasources;

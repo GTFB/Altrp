@@ -839,7 +839,7 @@ class InputSelectWidget extends Component {
     if (value.value) {
       value = value.value;
     }
-    const options = [...this.state.options];
+    const options = this.getOptions();
     const element = this.props.element;
     if(! options.find(option => option.value === value)){
       const create_url = element.getResponsiveSetting('create_url');
@@ -908,7 +908,7 @@ class InputSelectWidget extends Component {
     }
     if(this.props.element.getResponsiveSetting('content_options_nullable')){
       options.unshift({
-        label: this.getResponsiveSetting('nulled_option_title') || '',
+        label: this.props.element.getResponsiveSetting('nulled_option_title') || '',
         value: '',
       })
     }

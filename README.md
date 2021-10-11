@@ -3,6 +3,10 @@
 
 ## Changelog
 
+### 0.17.8
+* Fix Bug with Empty String Setting Value When Template Attempt to Save
+* Fix Input Date Default Value with Custom Format
+
 ### 0.17.7
 * Ability to Customize Button for Next / Previous Pages Without Text in Cards "Widget"
 * Fix Link in Heading Widget

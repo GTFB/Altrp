@@ -292,27 +292,56 @@ class SimpleElementWrapper extends Component {
     );
     let content
     if(! _.isArray(altrp_repeater)){
-      content = [React.createElement(ContentComponent, {
-        ref: this.elementRef,
-        rootElement: this.props.rootElement,
-        ElementWrapper: this.props.ElementWrapper,
-        element: this.props.element,
-        children: this.props.element.getChildren(),
-        match: this.props.match,
-        currentModel: this.props.currentModel,
-        currentUser: this.props.currentUser,
-        currentDataStorage: this.props.currentDataStorage,
-        altrpresponses: this.props.altrpresponses,
-        formsStore: this.props.formsStore,
-        elementDisplay: this.state.elementDisplay,
-        altrpPageState: this.props.altrpPageState,
-        altrpMeta: this.props.altrpMeta,
-        updateToken: this.state.updateToken,
-        currentScreen: this.props.currentScreen,
-        baseRender: this.props.baseRender,
-        history: this.props.history,
-        appStore
-      })];
+
+
+      if (this.props.element.getName() === "table") {
+        content = [<DndProvider backend={HTML5Backend}>{
+          React.createElement(ContentComponent, {
+            ref: this.elementRef,
+            rootElement: this.props.rootElement,
+            ElementWrapper: this.props.ElementWrapper,
+            element: this.props.element,
+            children: this.props.element.getChildren(),
+            match: this.props.match,
+            currentModel: this.props.currentModel,
+            currentUser: this.props.currentUser,
+            currentDataStorage: this.props.currentDataStorage,
+            altrpresponses: this.props.altrpresponses,
+            formsStore: this.props.formsStore,
+            elementDisplay: this.state.elementDisplay,
+            altrpPageState: this.props.altrpPageState,
+            altrpMeta: this.props.altrpMeta,
+            updateToken: this.state.updateToken,
+            currentScreen: this.props.currentScreen,
+            baseRender: this.props.baseRender,
+            history: this.props.history,
+            appStore
+          })}</DndProvider>];
+      } else {
+        content = [
+          React.createElement(ContentComponent, {
+            ref: this.elementRef,
+            rootElement: this.props.rootElement,
+            ElementWrapper: this.props.ElementWrapper,
+            element: this.props.element,
+            children: this.props.element.getChildren(),
+            match: this.props.match,
+            currentModel: this.props.currentModel,
+            currentUser: this.props.currentUser,
+            currentDataStorage: this.props.currentDataStorage,
+            altrpresponses: this.props.altrpresponses,
+            formsStore: this.props.formsStore,
+            elementDisplay: this.state.elementDisplay,
+            altrpPageState: this.props.altrpPageState,
+            altrpMeta: this.props.altrpMeta,
+            updateToken: this.state.updateToken,
+            currentScreen: this.props.currentScreen,
+            baseRender: this.props.baseRender,
+            history: this.props.history,
+            appStore
+          })
+        ];
+      }
     } else {
       content = altrp_repeater.map(ar=>{
         const repeaterElement = frontElementsFabric.cloneElement(this.props.element)
@@ -338,9 +367,6 @@ class SimpleElementWrapper extends Component {
           appStore
         })
       })
-    }
-    if (this.props.element.getName() === "table") {
-      content = <DndProvider backend={HTML5Backend}>{content}</DndProvider>;
     }
     let WrapperComponent = React.Fragment;
 
