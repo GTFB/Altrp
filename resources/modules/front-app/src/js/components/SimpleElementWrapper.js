@@ -5,12 +5,18 @@ import NavComponent from "../../../../editor/src/js/components/widgets/styled-co
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
+const {getDataByPath} = window.altrpHelpers;
 
 class SimpleElementWrapper extends Component {
   constructor(props) {
     super(props);
-
+    let altrp_repeater = getDataByPath(
+      props.element.getResponsiveSetting('altrp_repeater'),
+      null,
+      props.element.getCurrentModel()
+    );
     this.state = {
+      altrp_repeater,
       elementDisplay: !this.props.element.getSettings("default_hidden")
     };
     props.element.wrapper = this;
@@ -18,6 +24,7 @@ class SimpleElementWrapper extends Component {
     this.elementRef = React.createRef();
     this.settings = props.element.getSettings();
     appStore.dispatch(addElement(this));
+    this.elementId = props.element.getId();
   }
 
   /**
@@ -48,8 +55,19 @@ class SimpleElementWrapper extends Component {
     const mountElementTypeEvent = new Event(`altrp-mount-element:${element.getName()}` );
     document.dispatchEvent(mountElementEvent)
     document.dispatchEvent(mountElementTypeEvent)
+    this.updateAltrpRepeater()
   }
-
+  updateAltrpRepeater(){
+    const {element} = this.props
+    const altrp_repeater = getDataByPath(
+      element.getResponsiveSetting('altrp_repeater'),
+      null,
+      element.getCurrentModel()
+    );
+    if(altrp_repeater !== this.state.altrp_repeater){
+      this.setState(state=>({...state, altrp_repeater}))
+    }
+  }
   componentWillUnmount() {
     const {element} = this.props
     if(element.getId() === '_giafvu4nk'){
@@ -229,9 +247,13 @@ class SimpleElementWrapper extends Component {
   }
 
   render() {
+    /**
+     * @member {FrontElement} element
+     */
     const {
-    } = this.props.element.settings;
-
+      element
+    } = this.props;
+    const {altrp_repeater}= this.state
     const tooltip_position = this.props.element.getResponsiveSetting('tooltip_position', 'bottom')
     let tooltip_text = this.props.element.getResponsiveSetting('tooltip_text')
     const tooltip_minimal = this.props.element.getResponsiveSetting('tooltip_minimal')
@@ -254,18 +276,6 @@ class SimpleElementWrapper extends Component {
     }
     const styles = {};
 
-    if (this.props.element.getResponsiveSetting("layout_column_width")) {
-      if (
-        Number(this.props.element.getResponsiveSetting("layout_column_width"))
-      ) {
-        styles.width =
-          this.props.element.getResponsiveSetting("layout_column_width") + "%";
-      } else {
-        styles.width = this.props.element.getResponsiveSetting(
-          "layout_column_width"
-        );
-      }
-    }
     if (!this.state.elementDisplay) {
       styles.display = "none";
     }
@@ -280,27 +290,55 @@ class SimpleElementWrapper extends Component {
     let ContentComponent = frontElementsManager.getComponentClass(
       this.props.element.getName()
     );
-    let content = React.createElement(ContentComponent, {
-      ref: this.elementRef,
-      rootElement: this.props.rootElement,
-      ElementWrapper: this.props.ElementWrapper,
-      element: this.props.element,
-      children: this.props.element.getChildren(),
-      match: this.props.match,
-      currentModel: this.props.currentModel,
-      currentUser: this.props.currentUser,
-      currentDataStorage: this.props.currentDataStorage,
-      altrpresponses: this.props.altrpresponses,
-      formsStore: this.props.formsStore,
-      elementDisplay: this.state.elementDisplay,
-      altrpPageState: this.props.altrpPageState,
-      altrpMeta: this.props.altrpMeta,
-      updateToken: this.state.updateToken,
-      currentScreen: this.props.currentScreen,
-      baseRender: this.props.baseRender,
-      history: this.props.history,
-      appStore
-    });
+    let content
+    if(! _.isArray(altrp_repeater)){
+      content = [React.createElement(ContentComponent, {
+        ref: this.elementRef,
+        rootElement: this.props.rootElement,
+        ElementWrapper: this.props.ElementWrapper,
+        element: this.props.element,
+        children: this.props.element.getChildren(),
+        match: this.props.match,
+        currentModel: this.props.currentModel,
+        currentUser: this.props.currentUser,
+        currentDataStorage: this.props.currentDataStorage,
+        altrpresponses: this.props.altrpresponses,
+        formsStore: this.props.formsStore,
+        elementDisplay: this.state.elementDisplay,
+        altrpPageState: this.props.altrpPageState,
+        altrpMeta: this.props.altrpMeta,
+        updateToken: this.state.updateToken,
+        currentScreen: this.props.currentScreen,
+        baseRender: this.props.baseRender,
+        history: this.props.history,
+        appStore
+      })];
+    } else {
+      content = altrp_repeater.map(ar=>{
+        const repeaterElement = frontElementsFabric.cloneElement(this.props.element)
+        return React.createElement(ContentComponent, {
+          ref: this.elementRef,
+          rootElement: this.props.rootElement,
+          ElementWrapper: this.props.ElementWrapper,
+          element: this.props.element,
+          children: this.props.element.getChildren(),
+          match: this.props.match,
+          currentModel: this.props.currentModel,
+          currentUser: this.props.currentUser,
+          currentDataStorage: this.props.currentDataStorage,
+          altrpresponses: this.props.altrpresponses,
+          formsStore: this.props.formsStore,
+          elementDisplay: this.state.elementDisplay,
+          altrpPageState: this.props.altrpPageState,
+          altrpMeta: this.props.altrpMeta,
+          updateToken: this.state.updateToken,
+          currentScreen: this.props.currentScreen,
+          baseRender: this.props.baseRender,
+          history: this.props.history,
+          appStore
+        })
+      })
+    }
     if (this.props.element.getName() === "table") {
       content = <DndProvider backend={HTML5Backend}>{content}</DndProvider>;
     }
@@ -341,25 +379,32 @@ class SimpleElementWrapper extends Component {
     }
 
     return (
-      <WrapperComponent {...wrapperProps} >
-        {
-          tooltip_show_type && tooltip_show_type !== "never" ?
-            <AltrpTooltip
-              text={tooltip_text}
-              id={this.props.element.getId()}
-              state={tooltip_show_type}
-              position={tooltip_position}
-              minimal={tooltip_minimal}
-              horizontal={tooltip_horizontal_offset}
-              vertical={tooltip_vertical_offset}
-            >
+      <>
+        {content.map((c, idx)=>{
+          return(
+            <WrapperComponent {...wrapperProps} key={this.elementId + idx}>
               {
-                content
+                tooltip_show_type && tooltip_show_type !== "never" ?
+                  <AltrpTooltip
+                    text={tooltip_text}
+                    id={this.elementId}
+                    state={tooltip_show_type}
+                    position={tooltip_position}
+                    minimal={tooltip_minimal}
+                    horizontal={tooltip_horizontal_offset}
+                    vertical={tooltip_vertical_offset}
+                  >
+                    {
+                      c
+                    }
+                  </AltrpTooltip>
+                  : c
               }
-            </AltrpTooltip>
-            : content
-        }
-      </WrapperComponent>
+            </WrapperComponent>
+          )
+        })}
+      </>
+
     );
   }
 }

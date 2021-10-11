@@ -159,10 +159,13 @@ class AltrpPosts extends React.Component {
    */
   renderPagination(){
     const settings = {...this.props.settings};
+    const element = this.props.element;
     let {data: posts} = this.props;
     if(! posts.length && ! isEditor()){
       return null;
     }
+    let prev_text = element.getResponsiveSetting('prev_text', '', 'Previous Page')
+    let next_text = element.getResponsiveSetting('next_text', '', 'Next Page')
     let posts_pagination_type = getResponsiveSetting(this.props.settings, 'posts_pagination_type') || '';
     if(posts_pagination_type){
       const {currentPage} = this.state;
@@ -209,7 +212,7 @@ class AltrpPosts extends React.Component {
           onClick={() => this.setPage(currentPage - 1)}
           disabled={currentPage <= 1}
         >
-          <span dangerouslySetInnerHTML={{ __html: settings.prev_text || 'Previous Page' }} />
+          <span dangerouslySetInnerHTML={{ __html: prev_text }} />
             {renderAssetIcon(settings.prev_icon)}
         </button>}
         {! settings.hide_pages_buttons_button && <div className="altrp-pagination__count">
@@ -219,7 +222,7 @@ class AltrpPosts extends React.Component {
             onClick={() => this.setPage(currentPage + 1)}
             disabled={currentPage === pageCount}
           >
-            <span dangerouslySetInnerHTML={{ __html: settings.next_text || 'Next Page' }} />
+            <span dangerouslySetInnerHTML={{ __html: next_text }} />
             {renderAssetIcon(settings.next_icon)}
           </button>}
         {/* {!settings.hide_page_input && <input className="altrp-pagination__goto-page"

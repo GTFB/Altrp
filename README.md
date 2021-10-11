@@ -3,6 +3,11 @@
 
 ## Changelog
 
+### 0.17.7
+* Ability to Customize Button for Next / Previous Pages Without Text in Cards "Widget"
+* Fix Link in Heading Widget
+* Fix Column Custom Width 
+
 ### 0.17.6
 * Fix SSR Bug with Query Parameters
 

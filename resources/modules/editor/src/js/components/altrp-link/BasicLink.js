@@ -76,6 +76,7 @@ class BasicLink extends Component {
         style={styleChildren}
         className={className}
         onClick={isEditor() ? (e) => e.preventDefault() : () => {}}
+        href={settings.href}
         to={settings.to}
       >
         {

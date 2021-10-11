@@ -906,6 +906,12 @@ class InputSelectWidget extends Component {
         options = _.reverse(options)
       }
     }
+    if(this.props.element.getResponsiveSetting('content_options_nullable')){
+      options.unshift({
+        label: this.getResponsiveSetting('nulled_option_title') || '',
+        value: '',
+      })
+    }
     return options;
   }
 

@@ -298,20 +298,6 @@ class ElementWrapper extends Component {
     }
     const styles = {};
 
-    if (element.getResponsiveSetting("layout_column_width")) {
-      if (
-        Number(element.getResponsiveSetting("layout_column_width"))
-      ) {
-        styles.width =
-          element.getResponsiveSetting("layout_column_width") + "%";
-      } else {
-        styles.width = element.getResponsiveSetting(
-          "layout_column_width"
-        );
-        console.log(styles.width);
-        console.log(this);
-      }
-    }
     if (!this.state.elementDisplay) {
       styles.display = "none";
     }
@@ -367,10 +353,9 @@ class ElementWrapper extends Component {
       ref: this.elementWrapperRef,
       elementId: this.elementId,
       settings: this.settings,
-      style: styles,
+      styles,
       id: this.CSSId,
     };
-    console.log(wrapperProps);
     if (
       this.reactElement ||
       DEFAULT_REACT_ELEMENTS.indexOf(element.getName()) !== -1
@@ -412,6 +397,9 @@ class ElementWrapper extends Component {
         {content}
       </>
     }
+
+
+
     return  (
       <WrapperComponent {...wrapperProps} element={element.getId()}>
 
