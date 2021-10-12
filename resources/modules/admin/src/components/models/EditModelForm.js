@@ -122,19 +122,30 @@ class EditModelForm extends Component {
             optionsRoute="/admin/ajax/tables/options"/>
       </div>}
       <div className="row col-12">
-        <div className="form-group col-6 form-check-inline">
+        <div className="form-group col-4 form-check-inline">
           <input type="checkbox" id="page-soft_deletes"
             checked={model.soft_deletes}
             onChange={e => { this.changeValue(e.target.checked, 'soft_deletes') }}
             className="form-check-input form-check-input" />
           <label htmlFor="page-soft_deletes" className="label_checkbox">Soft Deletes</label>
         </div>
-        <div className="form-group col-6 form-check-inline">
+        <div className="form-group col-4 form-check-inline">
           <input type="checkbox" id="page-time_stamps"
             checked={model.time_stamps}
             onChange={e => { this.changeValue(e.target.checked, 'time_stamps') }}
             className="form-check-input form-check-input_inline" />
           <label htmlFor="page-time_stamps" className="label_checkbox">Time Stamps</label>
+        </div>
+
+        <div className="form-group col-4 form-check-inline">
+          <input type="checkbox" id="page-only_user"
+
+
+            checked={this.state.value.user_id}
+
+            onChange={e => { this.changeValue(e.target.checked, 'user_id') }}
+            className="form-check-input form-check-input_inline" />
+          <label htmlFor="page-only_user" className="label_checkbox">Only for Current User</label>
         </div>
 
       </div>
