@@ -363,7 +363,7 @@ class ElementWrapper extends Component {
       wrapperProps["data-react-element"] = element.getId();
     }
     if(! _.isEmpty(element.getResponsiveSetting('wrapper_click_actions'))){
-      wrapperProps["data-altrp-wrapper-click-actions"] = element.getId();
+      wrapperProps["data-altrp-wrapper-click-actions"] = element.getIdForAction();
     }
     if(! _.isEmpty(element.getResponsiveSetting('sticky'))){
       wrapperProps["data-altrp-sticky"] = element.getResponsiveSetting('sticky');

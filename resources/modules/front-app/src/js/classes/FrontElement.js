@@ -310,14 +310,12 @@ class FrontElement {
    */
   getIdForAction(){
     if(! this.idForAction){
-      this.idForAction = altrpRandomId();
+      this.idForAction = this.getId() +
+        (this.getCurrentModel()?.getProperty('altrpIndex')
+          || this.getCurrentModel()?.getProperty('id')
+          || '');
     }
     return this.idForAction;
-    let id = this.getId();//todo: delete this
-    if(this.getCurrentModel().getProperty('altrpIndex') !== ''){
-      id += `_${this.getCurrentModel().getProperty('altrpIndex')}`;
-    }
-    return id;
   }
 
   /**

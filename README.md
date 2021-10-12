@@ -3,6 +3,9 @@
 
 ## Changelog
 
+### 0.17.9
+* Fix CSS Editor Bug for Elements
+
 ### 0.17.8
 * Fix Bug with Empty String Setting Value When Template Attempt to Save
 * Fix Input Date Default Value with Custom Format

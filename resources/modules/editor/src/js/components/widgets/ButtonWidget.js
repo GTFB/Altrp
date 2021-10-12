@@ -19,6 +19,9 @@ const {
     }
   }
 
+  .altrp-btn svg {
+    display: block;
+  }
   .altrp-btn:hover {
     text-decoration: none;
   }
@@ -644,7 +647,7 @@ class ButtonWidget extends Component {
         );
       } else {
         link = (
-          <Link to={url} onClick={this.onClick} className={classes} title={tooltip || null}>
+          <Link to={url} href={url} onClick={this.onClick} className={classes} title={tooltip || null}>
             {" "}
             {buttonInner}
           </Link>

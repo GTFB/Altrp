@@ -250,12 +250,13 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
 
       let element_css_editor = getResponsiveSetting(item.settings, "element_css_editor");
       if(_.isString(element_css_editor)){
-        styles+=element_css_editor.replace(/__selector__/g, `${prefix}${id}`)
+        styles+=element_css_editor.replace(/__selector__/g, `.${prefix}${id}`)
       }
     }
   });
 
-  styles += `} `;
+  styles += ` `;
+
   window.globalDefaults && (styles += window.globalDefaults.join(''));
   return styles;
 }}`
