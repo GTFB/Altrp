@@ -1,20 +1,15 @@
 import { addElement } from "../store/elements-storage/actions";
 import { changeCurrentPageProperty } from "../store/current-page/actions";
-import AltrpTooltip from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip";
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
-import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
-<<<<<<< HEAD
 const {getDataByPath} = window.altrpHelpers;
-=======
 import styled from "styled-components";
 import AltrpTooltip2 from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip2";
 import React from "react";
 
 const TransparentDiv = styled.div`
 `;
->>>>>>> origin/dsavelyev
 
 class SimpleElementWrapper extends Component {
   constructor(props) {
@@ -25,13 +20,8 @@ class SimpleElementWrapper extends Component {
       props.element.getCurrentModel()
     );
     this.state = {
-<<<<<<< HEAD
       altrp_repeater,
       elementDisplay: !this.props.element.getSettings("default_hidden")
-=======
-      elementDisplay: !this.props.element.getSettings("default_hidden"),
-      tooltipOpen: false,
->>>>>>> origin/dsavelyev
     };
     props.element.wrapper = this;
     this.elementWrapperRef = this.props.elementWrapperRef;
@@ -444,12 +434,6 @@ class SimpleElementWrapper extends Component {
     let WrapperComponent = TransparentDiv;
 
     switch (this.props.element.getName()) {
-      // case "diagram":
-      //   WrapperComponent = DiagramComponent;
-      //   break;
-      // case "dashboards":
-      // WrapperComponent = DashboardComponent;
-      // break;
       case "nav":
         WrapperComponent = NavComponent;
         break;
@@ -480,7 +464,6 @@ class SimpleElementWrapper extends Component {
     if(['column', 'section'].indexOf(this.props.element.getType()) !== -1){
       tooltip_show_type = 'never'
     }
-<<<<<<< HEAD
 
     return (
       <>
@@ -489,10 +472,11 @@ class SimpleElementWrapper extends Component {
             <WrapperComponent {...wrapperProps} key={this.elementId + idx}>
               {
                 tooltip_show_type && tooltip_show_type !== "never" ?
-                  <AltrpTooltip
+                  <AltrpTooltip2
+                    element={this.wrapper}
                     text={tooltip_text}
-                    id={this.elementId}
-                    state={tooltip_show_type}
+                    id={this.props.element.getId()}
+                    open={tooltip_show_type === "always" ? true : this.state.tooltipOpen}
                     position={tooltip_position}
                     minimal={tooltip_minimal}
                     horizontal={tooltip_horizontal_offset}
@@ -501,7 +485,7 @@ class SimpleElementWrapper extends Component {
                     {
                       c
                     }
-                  </AltrpTooltip>
+                  </AltrpTooltip2>
                   : c
               }
             </WrapperComponent>
@@ -509,29 +493,6 @@ class SimpleElementWrapper extends Component {
         })}
       </>
 
-=======
-    return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
-      <>
-        {
-          tooltip_show_type !== "never" && tooltip_show_type ?
-            <AltrpTooltip2
-              element={this.wrapper}
-              text={tooltip_text}
-              id={this.props.element.getId()}
-              open={tooltip_show_type === "always" ? true : this.state.tooltipOpen}
-              position={tooltip_position}
-              minimal={tooltip_minimal}
-              horizontal={tooltip_horizontal_offset}
-              vertical={tooltip_vertical_offset}
-            /> : ""
-        }
-        <WrapperComponent {...wrapperProps} >
-          {
-            content
-          }
-        </WrapperComponent>
-      </>
->>>>>>> origin/dsavelyev
     );
   }
 }

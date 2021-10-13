@@ -77,6 +77,10 @@ class AltrpPosts extends React.Component {
     if(! _.isEqual(prevProps.data, this.props.data)){
       this.setState(state =>({...state, posts: this.props.data}));
     }
+    if(this.props.data !== prevProps.data){
+      console.log('data updates');
+      this.postsComponents = {};
+    }
     if(newSimpleTemplateId !== simpleTemplateId){
       if(! newSimpleTemplateId){
         return;
@@ -111,7 +115,8 @@ class AltrpPosts extends React.Component {
       PostContentComponent = _.get(this.postsComponents, `${this.state.simpleTemplate}.${idx}`)
     }
     return <React.Fragment key={(post.id || post.altrpIndex)}>
-      <div className="altrp-post">{PostContentComponent}
+      <div className="altrp-post" key={(post.id || post.altrpIndex)}>
+        {PostContentComponent}
         {hoverTemplateId && <div className={`altrp-post altrp-post--hover altrp-post--hover--${transitionType}`}>{PostContentComponent}</div>}
       </div>
 
@@ -264,8 +269,7 @@ class AltrpPosts extends React.Component {
     let posts_columns_gap = getResponsiveSetting(this.props.settings,'posts_columns_gap') || '';
     let posts_rows_gap = getResponsiveSetting(this.props.settings,'posts_rows_gap') || '';
 
-
-    return <React.Fragment>
+    return<React.Fragment>
       <PostsWrapper columnsCount={columnsCount}
                                         posts_columns_gap={posts_columns_gap}
                                         posts_rows_gap={posts_rows_gap}
