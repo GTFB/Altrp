@@ -5,7 +5,16 @@ import NavComponent from "../../../../editor/src/js/components/widgets/styled-co
 import DiagramComponent from "../../../../editor/src/js/components/widgets/styled-components/DiagramComponent";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
+<<<<<<< HEAD
 const {getDataByPath} = window.altrpHelpers;
+=======
+import styled from "styled-components";
+import AltrpTooltip2 from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip2";
+import React from "react";
+
+const TransparentDiv = styled.div`
+`;
+>>>>>>> origin/dsavelyev
 
 class SimpleElementWrapper extends Component {
   constructor(props) {
@@ -16,13 +25,23 @@ class SimpleElementWrapper extends Component {
       props.element.getCurrentModel()
     );
     this.state = {
+<<<<<<< HEAD
       altrp_repeater,
       elementDisplay: !this.props.element.getSettings("default_hidden")
+=======
+      elementDisplay: !this.props.element.getSettings("default_hidden"),
+      tooltipOpen: false,
+>>>>>>> origin/dsavelyev
     };
     props.element.wrapper = this;
     this.elementWrapperRef = this.props.elementWrapperRef;
     this.elementRef = React.createRef();
+    this.wrapper = React.createRef();
     this.settings = props.element.getSettings();
+    this.onClickTooltip = this.onClickTooltip.bind(this);
+    this.closeTooltip = this.closeTooltip.bind(this);
+    this.tooltipOnMouseEnter = this.tooltipOnMouseEnter.bind(this);
+    this.tooltipOnMouseLeave = this.tooltipOnMouseLeave.bind(this);
     appStore.dispatch(addElement(this));
     this.elementId = props.element.getId();
   }
@@ -50,6 +69,11 @@ class SimpleElementWrapper extends Component {
       this.props.element.updateFonts();
     }
     this.checkElementDisplay();
+
+    window.addEventListener("load", () => {
+      window.dispatchEvent(new Event("resize"));
+    })
+
     const {element} = this.props
     const mountElementEvent = new Event(`altrp-mount-element:${element.getId()}` );
     const mountElementTypeEvent = new Event(`altrp-mount-element:${element.getName()}` );
@@ -126,6 +150,55 @@ class SimpleElementWrapper extends Component {
       )[0] || null
     );
   }
+
+  closeTooltip(e) {
+    if(!e.path.includes(this.wrapper.current)) {
+      const checkTooltip = e.path.find(domElem => domElem.classList ? domElem.classList.contains("bp3-popover2") : false);
+
+
+      if(!checkTooltip) {
+        this.setState(s => ({
+          ...s, tooltipOpen: false
+        }))
+
+        this.tooltipOnClickListener(true)
+      }
+    }
+
+  }
+
+  tooltipOnClickListener(remove) {
+    if(remove) {
+      document.removeEventListener("click", this.closeTooltip, {
+        capture: true
+      });
+    } else {
+      document.addEventListener("click", this.closeTooltip, {
+        capture: true
+      });
+    }
+  }
+
+  tooltipOnMouseEnter() {
+    this.setState(s => ({
+      ...s, tooltipOpen: true
+    }))
+  }
+
+  tooltipOnMouseLeave() {
+    this.setState(s => ({
+      ...s, tooltipOpen: false
+    }))
+  }
+
+  onClickTooltip() {
+
+    this.setState(s => ({
+      ...s, tooltipOpen: !s.tooltipOpen
+    }))
+
+    this.tooltipOnClickListener()
+  };
 
   /**
    * Нужно ли обновить отображение обертки элементов
@@ -368,7 +441,7 @@ class SimpleElementWrapper extends Component {
         })
       })
     }
-    let WrapperComponent = React.Fragment;
+    let WrapperComponent = TransparentDiv;
 
     switch (this.props.element.getName()) {
       // case "diagram":
@@ -388,7 +461,11 @@ class SimpleElementWrapper extends Component {
     const wrapperProps = {
       elementId: this.elementId,
       settings: this.settings,
-      styles
+      ref: this.wrapper,
+      styles,
+      onClick: tooltip_show_type === "click" ? this.onClickTooltip : null,
+      onMouseEnter: tooltip_show_type === "hover" ? this.tooltipOnMouseEnter : null,
+      onMouseLeave: tooltip_show_type === "hover" ? this.tooltipOnMouseLeave : null,
     };
     if (WrapperComponent === React.Fragment) {
       delete wrapperProps.elementId;
@@ -403,6 +480,7 @@ class SimpleElementWrapper extends Component {
     if(['column', 'section'].indexOf(this.props.element.getType()) !== -1){
       tooltip_show_type = 'never'
     }
+<<<<<<< HEAD
 
     return (
       <>
@@ -431,6 +509,29 @@ class SimpleElementWrapper extends Component {
         })}
       </>
 
+=======
+    return this.props.hideTriggers.includes(hide_on_trigger) ? null : (
+      <>
+        {
+          tooltip_show_type !== "never" && tooltip_show_type ?
+            <AltrpTooltip2
+              element={this.wrapper}
+              text={tooltip_text}
+              id={this.props.element.getId()}
+              open={tooltip_show_type === "always" ? true : this.state.tooltipOpen}
+              position={tooltip_position}
+              minimal={tooltip_minimal}
+              horizontal={tooltip_horizontal_offset}
+              vertical={tooltip_vertical_offset}
+            /> : ""
+        }
+        <WrapperComponent {...wrapperProps} >
+          {
+            content
+          }
+        </WrapperComponent>
+      </>
+>>>>>>> origin/dsavelyev
     );
   }
 }

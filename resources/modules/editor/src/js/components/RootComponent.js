@@ -1,5 +1,7 @@
-import React, { Component,  } from "react";
+import React, { Component } from "react";
+
 const {isEditor} = window.altrpHelpers
+
 class RootComponent extends Component {
   constructor(props) {
     super(props);

@@ -5,6 +5,7 @@
 
 ### 0.17.9
 * Fix CSS Editor Bug for Elements
+* Wrapper Click Action Now Working in Cards
 
 ### 0.17.8
 * Fix Bug with Empty String Setting Value When Template Attempt to Save

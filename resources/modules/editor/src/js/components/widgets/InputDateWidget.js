@@ -453,6 +453,7 @@ class InputDateWidget extends Component {
         value = value.isValid() ? value.format(format) : '';
       }
     }
+    this.setState(state=>({...state, value}))
     this.dispatchFieldValueToStore(value, userInput);
   }
 
