@@ -38,29 +38,26 @@ class Marketplace extends React.Component {
     //   }, "*")
     // }
 
-    window.addEventListener("load", () => {
-      setTimeout(() => {
-        window.addEventListener("message", (e) => {
-          console.log(e, marketplaceUrl)
-          if(e.origin !== marketplaceUrl)
-            return;
-          switch (e.data.type) {
-            case "template_download":
-              if(e.data.data) {
-                this.resource.postFiles([e.data.data], 'application/zip,application/x-zip,application/x-zip-compressed').then((r) => {
-                  if(r.success) {
-                    alert("installed")
-                  }
-                })
+    window.addEventListener("message", (e) => {
+      console.log(e, marketplaceUrl)
+      if(e.origin !== marketplaceUrl)
+        return;
+      switch (e.data.type) {
+        case "template_download":
+          if(e.data.data) {
+            this.resource.postFiles([e.data.data], 'application/zip,application/x-zip,application/x-zip-compressed').then((r) => {
+              if(r.success) {
+                alert("installed")
               }
-              break
+            })
           }
-        })
-      }, 100)
+          break
+      }
     })
   }
 
   render() {
+
     return <Wrapper>
       <iframe
         width="100%"
