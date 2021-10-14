@@ -78,7 +78,6 @@ class AltrpPosts extends React.Component {
       this.setState(state =>({...state, posts: this.props.data}));
     }
     if(this.props.data !== prevProps.data){
-      console.log('data updates');
       this.postsComponents = {};
     }
     if(newSimpleTemplateId !== simpleTemplateId){

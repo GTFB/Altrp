@@ -388,7 +388,7 @@ class Admin extends Component {
                         className="admin-nav-list__link"
                       >
                         <PluginSvg className="icon" />
-                        <span>Marketplace</span>
+                        <span>Market</span>
                       </Link>
                     </li>
                     <li>

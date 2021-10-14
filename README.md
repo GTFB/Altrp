@@ -4,10 +4,13 @@
 ## Changelog
 
 
+### 0.17.10
++ Market Page to Admin
+
 ### 0.17.9
 * Fix CSS Editor Bug for Elements
 * Fix Widget Cards Data Updates
-* Wrapper Click Action Now Working in Cards
+* Fix Wrapper Click Action Now Working in Cards Bug
 + Support for the Same Site Parameter for Session Cookies
 
 ### 0.17.8

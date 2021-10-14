@@ -316,7 +316,7 @@ class ElementWrapper extends Component {
       ref: this.elementRef,
       rootElement: this.props.rootElement,
       ElementWrapper: this.props.ElementWrapper,
-      element: element,
+      element,
       children: element.getChildren(),
       match: this.props.match,
       currentModel: this.props.currentModel,
@@ -353,7 +353,7 @@ class ElementWrapper extends Component {
       ref: this.elementWrapperRef,
       elementId: this.elementId,
       settings: this.settings,
-      styles,
+      style: styles,
       id: this.CSSId,
     };
     if (
@@ -397,8 +397,6 @@ class ElementWrapper extends Component {
         {content}
       </>
     }
-
-
 
     return  (
       <WrapperComponent {...wrapperProps} element={element.getId()}>
