@@ -1,14 +1,18 @@
 import Resource from '../../classes/Resource';
 
-const {Scheduler} = window.altrpLibs.devextreme
+const {FullCalendar, dayGridPlugin, timeGridPlugin, interaction} = window.altrpLibs.fullCalendar
+
 
 class SchedulerWidget extends Component {
-  constructor(props) {
+  constructor(props) { 
     super(props)
     
     this.state = {
-      dataSource: [],
-      settings: props.element.getSettings()
+      startEvents: [],
+      settings: props.element.getSettings(),
+      popup: {
+        status: null
+      }
     }
 
     props.element.component = this;
@@ -18,117 +22,228 @@ class SchedulerWidget extends Component {
     if (props.baseRender) {
       this.render = props.baseRender(this);
     }
+
+    this.calendar = React.createRef();
   }
 
-  onAppointmentAdding = async e => {
-    const {appointmentData} = e;
+  getFormattedEvents = async () => {
+    console.log(this.state.settings);
+    const resource = new Resource({route: this.state.settings.get_url, dynamicURL: true});
 
-    const resource = new Resource({route: this.state.settings.create_url, dynamicURL: true});
+    const {data} = await resource.getAll();
 
-    const res = await resource.post({
-      start_date: appointmentData.startDate,
-      end_date: appointmentData.end_date
-    });
-  }
+    console.log({data});
 
-  onAppointmentDeleting = async e => {
-    const {appointmentData} = e;
+    const formattedData = data.map(el => {
+      if (el.end === '0000-00-00 00:00:00') {
+        delete el.end
+        
+        if (el.start.indexOf('00:00:00') !== -1) {
+          el.start = el.start.substr(0, 10)
+        }
+      }
 
-    const resource = new Resource({route: this.state.settings.delete_url, dynamicURL: true});
+      return el
+    })
 
-    const res = await resource.delete(appointmentData.id);
-  }
-
-  onAppointmentUpdating = async e => {
-    const {newData} = e;
-
-    console.log({newData});
-
-    const resource = new Resource({route: this.state.settings.update_url, dynamicURL: true});
-
-    const res = await resource.put(newData.id, {
-      ...newData,
-      start_date: newData.startDate,
-      end_date: newData.endDate,
-    });
+    return formattedData
   }
 
   _componentDidMount = async () => {
-    const resource = new Resource({route: this.state.settings.get_url, dynamicURL: true});
-    const {data} = await resource.getAll();
+    console.log('mounted');
 
-    this.setState({dataSource: data.map(item => ({
-      startDate: item.start_date,
-      endDate: item.end_date,
-      ...item
-    }))});
+    const formattedData = await this.getFormattedEvents()
+
+    this.setState({
+      startEvents: formattedData
+    });
   }
 
-  onAppointmentFormOpening = data => {
-    const {form} = data;
+  closePopup = () => {
+    this.setState({
+      popup: {
+        status: null
+      }
+    })
+  }
 
-    const settings = this.state.settings.repeater_fields_section || [];
-
-    const fields = settings.map(el => ({
-      label: {
-        text: el.label_repeater
-      },
-      name: el.field_name_repeater,
-      editorType: el.input_type_repeater,
-      colSpan: 2
-    }));
-
-    console.log({fields});
-
-    form.option('items', [
-      {
-        label: {
-          text: 'Subject'
+  dateClickHandler = async e => {
+    this.setState({
+      popup: {
+        status: 'create',
+        payload: {
+          event: e
         },
-        dataField: 'text',
-        editorType: 'dxTextBox',
-        editorOptions: {
-          width: '100%',
+        formData: {}
+      }
+    })
+  }
+
+  createEvent = async e => {
+    e.preventDefault()
+
+    const resource = new Resource({route: this.state.settings.create_url, dynamicURL: true});
+
+    const event = {
+      ...this.state.popup.formData,
+      start: this.state.popup.payload.event.dateStr
+    }
+
+    const res = await resource.post(event);
+
+    const newEvents = await this.getFormattedEvents()
+
+    this.setState({
+      startEvents: newEvents
+    })
+
+    this.closePopup()
+  }
+
+  eventChangeHandler = async e => {
+    try {
+      const resource = new Resource({route: this.state.settings.update_url, dynamicURL: true});
+      const event = JSON.parse(JSON.stringify(e.event))
+
+      const {id} = event
+      
+      const res = await resource.put(+id, {
+        start: event.start,
+        end: event.end
+      });
+    } catch (error) {
+      console.log({error});
+    }
+  }
+
+  openEvent = e => {
+    const event = JSON.parse(JSON.stringify(e.event));
+    this.setState({
+      popup: {
+        status: 'edit',
+        payload: {
+          event: e.event
         },
-        colSpan: 2
-      },
-      {
-        dataField: 'startDate',
-        editorType: 'dxDateBox',
-        editorOptions: {
-          width: '100%',
-          type: 'datetime'
+        formData: {
+          ...event,
+          ...event.extendedProps
         }
-      }, 
-      {
-        name: 'endDate',
-        dataField: 'endDate',
-        editorType: 'dxDateBox',
-        editorOptions: {
-          width: '100%',
-          type: 'datetime'
+      }
+    })
+  }
+
+  editEvent = async e => {
+    e.preventDefault()
+
+    const resource = new Resource({route: this.state.settings.update_url, dynamicURL: true});
+    const event = this.state.popup.formData
+
+    const id = this.state.popup.payload.event.id
+
+    const api = this.calendar.current.getApi()
+
+    let currentEvent = JSON.parse(JSON.stringify(this.state.popup.payload.event))
+    currentEvent = {...currentEvent, ...currentEvent.extendedProps}
+
+    for (const key in event) {
+      currentEvent[key] = event[key]
+    }
+
+    delete currentEvent.extendedProps
+    delete currentEvent.updated_at
+    delete currentEvent.deleted_at
+    delete currentEvent.created_at
+
+    console.log({currentEvent});
+
+    const res = await resource.put(+id, currentEvent);
+
+    this.setState({
+      startEvents: api.getEvents().map(el => {
+        if (el.id == currentEvent.id) {
+          return currentEvent
         }
-      },
-      ...fields,
-    ]);
+
+        return el
+      })
+    })
+
+    this.closePopup()
+  }
+
+  deleteEvent = async () => {
+    const resource = new Resource({route: this.state.settings.update_url, dynamicURL: true});
+    const eventId = this.state.popup.payload.event.id
+    this.closePopup()
+
+    this.state.popup.payload.event.remove()
+
+    await resource.delete(eventId)
+  }
+
+  eventInputHandler = e => {
+    this.setState({
+      popup: {
+        ...this.state.popup,
+        formData: {
+          ...this.state.popup.formData,
+          [e.target.name]: e.target.value
+        }
+      }
+    })
   }
 
   render() {
-    const {View, Button} = Scheduler;
-
     return (
-      <Scheduler.default 
-        defaultCurrentView='month'
-        onAppointmentAdding={this.onAppointmentAdding}
-        onAppointmentDeleting={this.onAppointmentDeleting}
-        onAppointmentUpdating={this.onAppointmentUpdating}
-        onAppointmentFormOpening={this.onAppointmentFormOpening}
-        dataSource={this.state.dataSource}
-      >
-        <View type="day" />
-        <View type="week" />
-        <View type="month" />
-      </Scheduler.default>
+      <div className="popup-wrapper">
+        <FullCalendar
+          plugins={[dayGridPlugin, interaction, timeGridPlugin]}
+          initialView='dayGridMonth'
+          events={this.state.startEvents}
+          editable={true}
+          headerToolbar={{
+            left: 'prev,next',
+            center: 'title',
+            right: 'timeGridDay,timeGridWeek,dayGridMonth'
+          }}
+          dateClick={this.dateClickHandler}
+          eventClick={this.openEvent}
+          eventChange={this.eventChangeHandler}
+          ref={this.calendar}
+        />
+
+        {!!this.state.popup.status && <div className='popup'>
+            <form onSubmit={() => {this.state.popup.status === 'create' ? this.createEvent() : this.editEvent()}}>
+              <div className="popup__body">
+                <div className="popup__field-title">
+                  Title
+                </div>
+                <input type="text" name="title" onChange={this.eventInputHandler} className='popup__text-field' value={this.state.popup.formData.title || ''} />
+
+                {this.state.settings.repeater_fields_section?.map(el => <div key={el.field_name_repeater}>
+                  <div className="popup__field-title">
+                    {el.label_repeater}
+                  </div>
+                  {el.input_type_repeater === 'text' && (
+                    <input type="text" name={el.field_name_repeater} onChange={this.eventInputHandler} className='popup__text-field' value={this.state.popup.formData[el.field_name_repeater] || ''} />
+                  )}
+                  {el.input_type_repeater ==='textarea' && (
+                    <textarea name={el.field_name_repeater} onChange={this.eventInputHandler} className='popup__text-field popup__textarea' value={this.state.popup.formData[el.field_name_repeater] || ''}></textarea>
+                  )}
+                </div>)}
+              </div>
+              <div className="popup__actions">
+                {this.state.popup.status == 'create'
+                  ? <input type="button" className="button" value='Create' onClick={this.createEvent} />
+                  : <input type="button" className="button" value='Done' onClick={this.editEvent} />
+                }
+                <input type="button" className="button" value="Cancel" onClick={this.closePopup} />
+                {this.state.popup.status == 'edit' && <input type="button" className="button button-danger" value="Delete" onClick={this.deleteEvent} />}
+              </div>
+            </form>
+          </div>
+        }
+      </div>
     );
   }
 }
