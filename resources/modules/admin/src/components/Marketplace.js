@@ -39,7 +39,6 @@ class Marketplace extends React.Component {
     // }
 
     window.addEventListener("message", (e) => {
-      console.log(e, marketplaceUrl)
       if(e.origin !== marketplaceUrl)
         return;
       switch (e.data.type) {
