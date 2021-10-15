@@ -44,6 +44,9 @@ Route::get({{frontend_route}}, function ({{params}}) {
         $model_data = $model->toArray();
         $altrp_env = $model_data;
       } catch( Exception $e ) {
+        if($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+          throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException( 'Model not found' );
+        }
         $model_data = [];
       }
     }

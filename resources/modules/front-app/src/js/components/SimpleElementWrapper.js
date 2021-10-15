@@ -233,7 +233,7 @@ class SimpleElementWrapper extends Component {
      * @member {FrontElement} element
      */
     const { element } = this.props;
-    if (!element.getSettings("conditional_other")) {
+    if (! element.getSettings("conditional_other")) {
       return;
     }
     let conditions = element.getSettings("conditions", []);
@@ -464,7 +464,7 @@ class SimpleElementWrapper extends Component {
     if(['column', 'section'].indexOf(this.props.element.getType()) !== -1){
       tooltip_show_type = 'never'
     }
-    if(! this.props.element.getResponciveSettings('tooltip_enable')){
+    if(! this.props.element.getResponsiveSetting('tooltip_enable')){
       tooltip_show_type = 'never'
     }
 
@@ -474,7 +474,7 @@ class SimpleElementWrapper extends Component {
           return(
             <WrapperComponent {...wrapperProps} key={this.elementId + idx}>
               {
-                tooltip_show_type && (tooltip_show_type !== "never" || tooltip_show_type !== "Never") ?
+                tooltip_show_type && (tooltip_show_type !== "never" && tooltip_show_type !== "Never") ?
                   <AltrpTooltip2
                     element={this.wrapper}
                     text={tooltip_text}

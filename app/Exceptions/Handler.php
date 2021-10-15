@@ -114,7 +114,6 @@ class Handler extends ExceptionHandler
 
       if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException)
       {
-
         $not_found_page = Page::firstWhere( 'not_found', 1 );
         if( $not_found_page && strpos( $request->url(), 'favicon.ico' ) === false
           && strpos( $request->url(), '/ajax' ) === false

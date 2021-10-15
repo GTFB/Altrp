@@ -26,6 +26,6 @@ const WIDGETS_DEPENDS = {
   'input-date': ['blueprint', 'blueprint-datetime', 'moment'],
   'input-slider': ['blueprint'],
   'input-range-slider': ['blueprint'],
-  'scheduler': ['devextreme']
+  'scheduler': ['fullcalendar']
 }
 export default WIDGETS_DEPENDS;
