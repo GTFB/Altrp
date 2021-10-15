@@ -243,7 +243,8 @@ export function simplePropertyStyled(style, styleProperty, declaration = "") {
  * @return {string}
  */
 
-export function colorPropertyStyled(data = {}, styleProperty, declaration = "") {
+export function colorPropertyStyled(data , styleProperty, declaration = "") {
+  data = data || {}
   const { color } = data;
 
   if (color) {

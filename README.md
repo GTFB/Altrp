@@ -6,6 +6,7 @@
 
 ### 0.17.10
 + Market Page to Admin
++ Scheduler Widget
 
 ### 0.17.9
 * Fix CSS Editor Bug for Elements
