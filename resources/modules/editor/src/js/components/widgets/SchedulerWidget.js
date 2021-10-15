@@ -1,12 +1,12 @@
 import Resource from '../../classes/Resource';
-
+const {isEditor} = window.altrpHelpers;
 const {FullCalendar, dayGridPlugin, timeGridPlugin, interaction} = window.altrpLibs.fullCalendar
 
 
 class SchedulerWidget extends Component {
-  constructor(props) { 
+  constructor(props) {
     super(props)
-    
+
     this.state = {
       startEvents: [],
       settings: props.element.getSettings(),
@@ -27,17 +27,15 @@ class SchedulerWidget extends Component {
   }
 
   getFormattedEvents = async () => {
-    console.log(this.state.settings);
     const resource = new Resource({route: this.state.settings.get_url, dynamicURL: true});
 
     const {data} = await resource.getAll();
 
-    console.log({data});
 
     const formattedData = data.map(el => {
       if (el.end === '0000-00-00 00:00:00') {
         delete el.end
-        
+
         if (el.start.indexOf('00:00:00') !== -1) {
           el.start = el.start.substr(0, 10)
         }
@@ -49,11 +47,14 @@ class SchedulerWidget extends Component {
     return formattedData
   }
 
+  _componentDidUpdate = async () => {
+    if(isEditor()) {
+      window.dispatchEvent(new Event('resize'))
+    }
+  }
   _componentDidMount = async () => {
-    console.log('mounted');
 
     const formattedData = await this.getFormattedEvents()
-
     this.setState({
       startEvents: formattedData
     });
@@ -106,7 +107,7 @@ class SchedulerWidget extends Component {
       const event = JSON.parse(JSON.stringify(e.event))
 
       const {id} = event
-      
+
       const res = await resource.put(+id, {
         start: event.start,
         end: event.end
@@ -154,7 +155,6 @@ class SchedulerWidget extends Component {
     delete currentEvent.deleted_at
     delete currentEvent.created_at
 
-    console.log({currentEvent});
 
     const res = await resource.put(+id, currentEvent);
 

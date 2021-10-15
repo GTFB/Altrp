@@ -106,7 +106,7 @@ module.exports = {
       global: {}
     }),
     new WebpackBuildNotifierPlugin({
-      title: "Editor"
+      title: "Admin"
     }),
     new webpack.HotModuleReplacementPlugin(),
     new CleanWebpackPlugin(),
