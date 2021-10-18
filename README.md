@@ -4,6 +4,9 @@
 ## Changelog
 
 
+### 0.17.11
++ Support for Arrays in URL Parameters in `altrppage.params` Object
+
 ### 0.17.10
 + Market Page to Admin
 + Scheduler Widget

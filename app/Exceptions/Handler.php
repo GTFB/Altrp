@@ -132,7 +132,7 @@ class Handler extends ExceptionHandler
           $preload_content['content'] = replaceContentWithData( $preload_content['content'] );
           $page_areas = Page::get_areas_for_page( $not_found_page['id'] );
           $elements_list = extractElementsNames( $page_areas );
-          $altrp_settings = getAltrpSettings( $not_found_page['id'] );
+          $altrp_settings = getPageSettings( $not_found_page['id'] );
 
           return response( view( 'front-app', [
             'page_areas' => json_encode( $page_areas ),

@@ -5,11 +5,15 @@ import convertQueryParamsToObject from "../../functions/convert-query-params-to-
 if (typeof location === "undefined") {
   global.location = {};
 }
+let params = window?.__altrp_settings__?.page_params
+if( ! params){
+  params= convertQueryParamsToObject(document?.location?.search);
 
+}
 const defaultPage = {
   url: location?.href || "",
   title: window?.currentPage?.title || "",
-  params: convertQueryParamsToObject(document?.location?.search),
+  params
 };
 
 export function currentPageReducer(page, action) {

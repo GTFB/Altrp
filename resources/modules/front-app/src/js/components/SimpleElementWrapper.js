@@ -442,7 +442,12 @@ class SimpleElementWrapper extends Component {
       tooltip_text,
       this.props.element.getCurrentModel().getData()
     );
-    const wrapperProps = {
+
+    if(this.props.element.getName() === 'section'){
+
+      WrapperComponent = React.Fragment
+    }
+    let wrapperProps = {
       elementId: this.elementId,
       settings: this.settings,
       ref: this.wrapper,
@@ -452,14 +457,15 @@ class SimpleElementWrapper extends Component {
       onMouseLeave: tooltip_show_type === "hover" ? this.tooltipOnMouseLeave : null,
     };
     if (WrapperComponent === React.Fragment) {
-      delete wrapperProps.elementId;
-      delete wrapperProps.settings;
-      delete wrapperProps.styles;
-      if (this.state.elementDisplay) {
-        this.elementWrapperRef.current.style.display = null;
-      } else {
-        this.elementWrapperRef.current.style.display = "none";
-      }
+      wrapperProps = {};
+      // delete wrapperProps.elementId;
+      // delete wrapperProps.settings;
+      // delete wrapperProps.styles;
+      // if (this.state.elementDisplay) {
+      //   this.elementWrapperRef.current.style.display = null;
+      // } else {
+      //   this.elementWrapperRef.current.style.display = "none";
+      // }
     }
     if(['column', 'section'].indexOf(this.props.element.getType()) !== -1){
       tooltip_show_type = 'never'
@@ -467,7 +473,6 @@ class SimpleElementWrapper extends Component {
     if(! this.props.element.getResponsiveSetting('tooltip_enable')){
       tooltip_show_type = 'never'
     }
-
     return (
       <>
         {content.map((c, idx)=>{
