@@ -96,6 +96,30 @@ class Scheduler extends BaseElement {
 
     this.endControlSection();
 
+    
+    this.startControlSection("localization", {
+      tab: TAB_CONTENT,
+      label: "Localization",
+    });
+
+    this.addControl('lang', {
+      label: 'Language',
+      type: CONTROLLER_SELECT,
+      default: 'en',
+      options: [
+        {
+          value: 'en-gb',
+          label: 'en'
+        },
+        {
+          value: 'ru',
+          label: 'ru'
+        },
+      ]
+    });
+
+    this.endControlSection();
+
     this.startControlSection('style_switcher', {
       label: 'Switcher',
       tab: TAB_STYLE
@@ -104,10 +128,6 @@ class Scheduler extends BaseElement {
     this.addControl('switcher_bgc', {
       label: 'Background color',
       type: CONTROLLER_COLOR,
-      default: {
-        color: 'rgba(44, 62, 80, 100)',
-        colorPickedHex: '#2C3E50'
-      }
     })
 
     this.addControl("switcher_border_type", {
@@ -145,24 +165,12 @@ class Scheduler extends BaseElement {
     this.addControl("switcher_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
-      default: {
-        top: 1,
-        right: 1,
-        bottom: 1,
-        left: 1,
-        unit: "px",
-        bind: true
-      },
       units: ["px", "%", "vh"],
     });
 
     this.addControl("switcher_border_color", {
       type: CONTROLLER_COLOR,
       label: "Border color",
-      default: {
-        color: "rgba(44,62,80,100)",
-        colorPickedHex: "#2C3E50"
-      },
     });
 
     
@@ -182,10 +190,6 @@ class Scheduler extends BaseElement {
     this.addControl('toolbar_title_color', {
       type: CONTROLLER_COLOR,
       label: 'Title color',
-      default: {
-        color: "rgba(0,0,0,100)",
-        colorPickedHex: "#000000"
-      }
     })
 
     this.addControl('toolbar_title_typography', {
@@ -250,10 +254,6 @@ class Scheduler extends BaseElement {
     this.addControl("table_border_color", {
       type: CONTROLLER_COLOR,
       label: "Border color",
-      default: {
-        color: "rgba(221,221,221,100)",
-        colorPickedHex: "#DDDDDD"
-      },
     });
 
     // this.addControl("table_border_radius", {
@@ -272,19 +272,11 @@ class Scheduler extends BaseElement {
     this.addControl("header_cell_color", {
       type: CONTROLLER_COLOR,
       label: "Text color",
-      default: {
-        color: "rgba(0,0,0,100)",
-        colorPickedHex: "#000000"
-      },
     });
 
     this.addControl("header_cell_background-color", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      default: {
-        color: "rgba(255,255,255,100)",
-        colorPickedHex: "#FFFFFF"
-      },
     });
 
     this.addControl('header_cell_typography', {
@@ -303,19 +295,11 @@ class Scheduler extends BaseElement {
     this.addControl("active_cell_color", {
       type: CONTROLLER_COLOR,
       label: "Text color",
-      default: {
-        color: "rgba(0,0,0,100)",
-        colorPickedHex: "#000000"
-      },
     });
 
     this.addControl("active_cell_background-color", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      default: {
-        color: "rgba(255,255,255,100)",
-        colorPickedHex: "#FFFFFF"
-      },
     });
 
     this.addControl('active_cell_typography', {
@@ -334,19 +318,11 @@ class Scheduler extends BaseElement {
     this.addControl("muted_cell_color", {
       type: CONTROLLER_COLOR,
       label: "Text color",
-      default: {
-        color: "rgba(34,25,77,100)",
-        colorPickedHex: "#F5F5F5"
-      },
     });
 
     this.addControl("muted_cell_background-color", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      default: {
-        color: "rgba(255,255,255,100)",
-        colorPickedHex: "#FFFFFF"
-      },
     });
 
     this.addControl('muted_cell_typography', {
@@ -365,19 +341,11 @@ class Scheduler extends BaseElement {
     this.addControl("current_cell_color", {
       type: CONTROLLER_COLOR,
       label: "Text color",
-      default: {
-        color: "rgba(34,25,77,100)",
-        colorPickedHex: "#F5F5F5"
-      },
     });
 
     this.addControl("current_cell_background-color", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      default: {
-        color: "rgba(255,255,255,100)",
-        colorPickedHex: "#FFFFFF"
-      },
     });
 
     this.addControl('current_cell_typography', {
@@ -396,19 +364,11 @@ class Scheduler extends BaseElement {
     this.addControl("event_color", {
       type: CONTROLLER_COLOR,
       label: "Text color",
-      default: {
-        color: "rgba(255,255,255,100)",
-        colorPickedHex: "#000000"
-      },
     });
 
     this.addControl("event_background-color", {
       type: CONTROLLER_COLOR,
       label: "Background color",
-      default: {
-        color: "rgba(55,136,216,100)",
-        colorPickedHex: "#3788d8"
-      },
     });
 
     this.addControl('event_typography', {
@@ -452,34 +412,18 @@ class Scheduler extends BaseElement {
     this.addControl("event_border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border width",
-      default: {
-        top: 1,
-        right: 1,
-        bottom: 1,
-        left: 1,
-        unit: "px",
-        bind: true
-      },
       units: ["px", "%", "vh"],
     });
 
     this.addControl("event_border_color", {
       type: CONTROLLER_COLOR,
       label: "Border color",
-      default: {
-        color: "rgba(55,136,216,100)",
-        colorPickedHex: "#3788d8"
-      },
     });
 
     this.addControl("event_border_radius", {
       type: CONTROLLER_SLIDER,
       label: 'Border radius',
-      default:{
-        size: 0,
-        unit: 'px',
-      },
-      units:[
+      units: [
         'px',
         '%',
         'vh',

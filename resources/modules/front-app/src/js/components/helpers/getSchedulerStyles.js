@@ -28,11 +28,11 @@ const getSchedulerStyles = (settings, id) => {
 
     styles += `.popup__text-field {
         font-size: 14px;
-        border: solid #ddd 1px;
-        width: 100%;
+        margin-bottom: 8px;
+    }`
+
+    styles += `.bp3-input {
         height: 40px;
-        padding: 4px;
-        padding-left: 7px;
     }`
 
     styles += ` .popup__actions {
@@ -77,13 +77,19 @@ const getSchedulerStyles = (settings, id) => {
         background-color: #fafafa;
     }`
 
-    const switcher_bgc = getResponsiveSetting(settings, 'switcher_bgc')
+    const switcher_bgc = getResponsiveSetting(settings, 'switcher_bgc', '', {
+        color: 'rgba(44, 62, 80, 100)',
+        colorPickedHex: '#2C3E50'
+    })
 
     styles += `.fc-button {
         background-color: ${switcher_bgc?.color} !important;
     }`
 
-    const switcherBgcActive = getResponsiveSetting(settings, 'switcher_bgc', 'active')
+    const switcherBgcActive = getResponsiveSetting(settings, 'switcher_bgc', ':active', {
+        color: 'rgba(44, 62, 80, 100)',
+        colorPickedHex: '#2C3E50'
+    })
 
     styles += `.fc .fc-button-primary:not(:disabled).fc-button-active, .fc .fc-button-primary:not(:disabled):active {
         background-color: ${switcherBgcActive?.color} !important;
@@ -111,9 +117,20 @@ const getSchedulerStyles = (settings, id) => {
         color: inherit;
     }`
 
-    const switcherBorderType = getResponsiveSetting(settings, "switcher_border_type");
-    const switcherBorderWidth = getResponsiveSetting(settings, 'switcher_border_width')
-    const switcherBorderColor = getResponsiveSetting(settings, 'switcher_border_color')
+    const switcherBorderType = getResponsiveSetting(settings, "switcher_border_type", '', 'solid');
+    const switcherBorderWidth = getResponsiveSetting(settings, 'switcher_border_width', '', {
+        top: 1,
+        right: 1,
+        bottom: 1,
+        left: 1,
+        unit: "px",
+        bind: true
+    })
+
+    const switcherBorderColor = getResponsiveSetting(settings, 'switcher_border_color', '', {
+        color: "rgba(44,62,80,100)",
+        colorPickedHex: "#2C3E50"
+      })
 
     styles += `.fc .fc-button {
         ${simplePropertyStyled(switcherBorderType, 'border-style')}
@@ -122,7 +139,10 @@ const getSchedulerStyles = (settings, id) => {
         ${typographicControllerToStyles(getResponsiveSetting(settings, 'switcher_typography'))}
     }`
 
-    const switcherHoverBorderColor = getResponsiveSetting(settings, 'switcher_border_color', ':hover')
+    const switcherHoverBorderColor = getResponsiveSetting(settings, 'switcher_border_color', ':hover', {
+        color: 'rgb(26, 37, 47)',
+        colorPickedHex: '#1a252f'
+    })
 
     styles += `.fc .fc-button:hover {
         ${simplePropertyStyled( getResponsiveSetting(settings, 'switcher_border_type', ':hover') , 'border-style')}
@@ -131,7 +151,10 @@ const getSchedulerStyles = (settings, id) => {
         ${typographicControllerToStyles(getResponsiveSetting(settings, 'switcher_typography', ':hover'))}
     }`
 
-    const toolbarTitleColor = getResponsiveSetting(settings, 'toolbar_title_color')
+    const toolbarTitleColor = getResponsiveSetting(settings, 'toolbar_title_color', '', {
+      color: "rgba(0,0,0,100)",
+      colorPickedHex: "#000000"
+    })
 
     styles += `.fc-toolbar-title {
         ${colorPropertyStyled(toolbarTitleColor, 'color')}
@@ -139,7 +162,10 @@ const getSchedulerStyles = (settings, id) => {
     }`
 
     styles += `.fc-toolbar-title:hover {
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'toolbar_title_color', ':hover') , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'toolbar_title_color', ':hover', {
+            color: "rgba(0,0,0,100)",
+            colorPickedHex: "#000000"
+        }) , 'color')}
     }`
 
     // styles += `.fc-theme-standard .fc-scrollgrid {
@@ -149,78 +175,169 @@ const getSchedulerStyles = (settings, id) => {
     //     ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'table_border_radius') , "border-radius")}
     // }`
 
+    const tableBorderColor = colorPropertyStyled( getResponsiveSetting(settings, 'table_border_color', '', {
+        color: "rgba(221,221,221,100)",
+        colorPickedHex: "#DDDDDD"
+    }) , 'border-color')
+
     styles += `.fc-theme-standard .fc-scrollgrid {
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'table_border_color') , 'border-color')}
+        ${tableBorderColor}
     }`
 
     styles += `.fc-theme-standard td, .fc-theme-standard th {
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'table_border_color') , 'border-color')}
+        ${tableBorderColor}
     }`
 
     styles += `.fc-col-header-cell {
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'header_cell_color') , 'color')}
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'header_cell_background-color') , 'background-color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'header_cell_color', '', {
+            color: "rgba(0,0,0,100)",
+            colorPickedHex: "#000000"
+        }) , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'header_cell_background-color', '', {
+            color: "rgba(255,255,255,100)",
+            colorPickedHex: "#FFFFFF"
+        }) , 'background-color')}
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'header_cell_typography') )}
     }`
     styles += `.fc-col-header-cell:hover {
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'header_cell_color', ':hover') , 'color')}
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'header_cell_background-color', ':hover') , 'background-color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'header_cell_color', ':hover', {
+            color: "rgba(0,0,0,100)",
+            colorPickedHex: "#000000"
+        }), 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'header_cell_background-color', ':hover', {
+            color: "rgba(255,255,255,100)",
+            colorPickedHex: "#FFFFFF"
+        }) , 'background-color')}
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'header_cell_typography', ':hover') )}
     }`
 
 
     styles += `.fc-daygrid-day:not(.fc-day-other):not(.fc-day-today) {
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'active_cell_color') , 'color')}
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'active_cell_background-color') , 'background-color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'active_cell_color', '', {
+            color: "rgba(0,0,0,100)",
+            colorPickedHex: "#000000"
+        }), 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'active_cell_background-color', '', {
+            color: "rgba(255,255,255,100)",
+            colorPickedHex: "#FFFFFF"
+        }) , 'background-color')}
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'active_cell_typography') )}
     }`
     styles += `.fc-daygrid-day:not(.fc-day-other):not(.fc-day-today):hover {
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'active_cell_color', ':hover') , 'color')}
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'active_cell_background-color', ':hover') , 'background-color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'active_cell_color', ':hover', {
+            color: "rgba(0,0,0,100)",
+            colorPickedHex: "#000000"
+        }), 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'active_cell_background-color', ':hover', {
+            color: "rgba(255,255,255,100)",
+            colorPickedHex: "#FFFFFF"
+        }) , 'background-color')}
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'active_cell_typography', ':hover') )}
     }`
 
     
     styles += `.fc-day-other {
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'muted_cell_color') , 'color')}
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'muted_cell_background-color') , 'background-color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'muted_cell_color', '', {
+            color: "rgba(34,25,77,100)",
+            colorPickedHex: "#F5F5F5"
+        }) , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'muted_cell_background-color', '', {
+            color: "rgba(255,255,255,100)",
+            colorPickedHex: "#FFFFFF"
+        }) , 'background-color')}
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'muted_cell_typography') )}
     }`
     styles += `.fc-day-other:hover {
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'muted_cell_color', ':hover') , 'color')}
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'muted_cell_background-color', ':hover') , 'background-color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'muted_cell_color', ':hover', {
+            color: "rgba(34,25,77,100)",
+            colorPickedHex: "#F5F5F5"
+        }) , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'muted_cell_background-color', ':hover', {
+            color: "rgba(255,255,255,100)",
+            colorPickedHex: "#FFFFFF"
+        }) , 'background-color')}
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'muted_cell_typography', ':hover') )}
     }`
 
 
     styles += `.fc-day-today {
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'current_cell_color') , 'color')}
-        background-color: ${getResponsiveSetting(settings, 'current_cell_background-color')?.color } !important;
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'current_cell_color', '', {
+            color: "rgba(34,25,77,100)",
+            colorPickedHex: "#F5F5F5"
+        }) , 'color')}
+        background-color: ${getResponsiveSetting(settings, 'current_cell_background-color', '', {
+            color: "rgba(255,255,255,100)",
+            colorPickedHex: "#FFFFFF"
+        })?.color } !important;
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'current_cell_typography') )}
     }`
     styles += `.fc-day-today:hover {
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'current_cell_color', ':hover') , 'color')}
-        background-color: ${getResponsiveSetting(settings, 'current_cell_background-color', ':hover')?.color } !important;
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'current_cell_color', ':hover', {
+            color: "rgba(34,25,77,100)",
+            colorPickedHex: "#F5F5F5"
+        }) , 'color')}
+        background-color: ${getResponsiveSetting(settings, 'current_cell_background-color', ':hover', {
+            color: "rgba(255,255,255,100)",
+            colorPickedHex: "#FFFFFF"
+        })?.color } !important;
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'current_cell_typography', ':hover') )}
     }`
 
     styles += `.fc-event {
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'event_color') , 'color')}
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'event_background-color') , 'background-color')}
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'event_border_color') , 'border-color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'event_color', '', {
+            color: "rgba(255,255,255,100)",
+            colorPickedHex: "#000000"
+        }) , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'event_background-color', '', {
+            color: "rgba(55,136,216,100)",
+            colorPickedHex: "#3788d8"
+        }) , 'background-color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'event_border_color', '', {
+            color: "rgba(55,136,216,100)",
+            colorPickedHex: "#3788d8"
+        }) , 'border-color')}
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'event_typography') )}
         ${simplePropertyStyled( getResponsiveSetting(settings, 'event_border_type') , 'border-style')}
-        ${borderWidthStyled( getResponsiveSetting(settings, 'event_border_width') )}
-        ${sizeStyled( getResponsiveSetting(settings, 'event_border_radius') , "border-radius")}
+        ${borderWidthStyled( getResponsiveSetting(settings, 'event_border_width', '', {
+            top: 1,
+            right: 1,
+            bottom: 1,
+            left: 1,
+            unit: "px",
+            bind: true
+        }) )}
+        ${sizeStyled( getResponsiveSetting(settings, 'event_border_radius', '', {
+            size: 0,
+            unit: 'px',
+        }) , "border-radius")}
     }`
     styles += `.fc-event:hover {
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'event_color', ':hover') , 'color')}
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'event_background-color', ':hover') , 'background-color')}
-        ${colorPropertyStyled( getResponsiveSetting(settings, 'event_border_color', ':hover') , 'border-color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'event_color', ':hover', {
+            color: "rgba(255,255,255,100)",
+            colorPickedHex: "#000000"
+        }) , 'color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'event_background-color', ':hover', {
+            color: "rgba(55,136,216,100)",
+            colorPickedHex: "#3788d8"
+        }) , 'background-color')}
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'event_border_color', ':hover', {
+            color: "rgba(55,136,216,100)",
+            colorPickedHex: "#3788d8"
+        }) , 'border-color')}
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'event_typography', ':hover') )}
         ${simplePropertyStyled( getResponsiveSetting(settings, 'event_border_type', ':hover') , 'border-style')}
-        ${borderWidthStyled( getResponsiveSetting(settings, 'event_border_width', ':hover') )}
-        ${sizeStyled( getResponsiveSetting(settings, 'event_border_radius', ':hover') , "border-radius")}
+        ${borderWidthStyled( getResponsiveSetting(settings, 'event_border_width', ':hover', {
+            top: 1,
+            right: 1,
+            bottom: 1,
+            left: 1,
+            unit: "px",
+            bind: true
+        }) )}
+        ${sizeStyled( getResponsiveSetting(settings, 'event_border_radius', ':hover', {
+            size: 0,
+            unit: 'px',
+        }) , "border-radius")}
     }`
     
     return styles;
