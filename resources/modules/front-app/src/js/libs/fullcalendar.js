@@ -14,4 +14,4 @@ window.altrpLibs.fullCalendar.timeGridPlugin = timeGridPlugin;
 window.altrpLibs.fullCalendar.interaction = interaction;
 window.altrpLibs.fullCalendar.locales = window.altrpLibs.fullCalendar.locales || {};
 window.altrpLibs.fullCalendar.locales.ru = ruLocale;
-window.altrpLibs.fullCalendar.locales.en = enLocale;
+window.altrpLibs.fullCalendar.locales['en-gb'] = enLocale;

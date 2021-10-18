@@ -213,8 +213,7 @@ class SchedulerWidget extends Component {
     return (
       <div className="popup-wrapper">
         <FullCalendar
-          locales={locales}
-          locale={lang}
+          locale={locales[lang]}
           plugins={[dayGridPlugin, interaction, timeGridPlugin]}
           initialView='dayGridMonth'
           events={this.state.startEvents}
