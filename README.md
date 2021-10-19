@@ -6,6 +6,7 @@
 
 ### 0.17.11
 + Support for Arrays in URL Parameters in `altrppage.params` Object
+* Fix Table in Inner Templates Bug
 
 ### 0.17.10
 + Market Page to Admin

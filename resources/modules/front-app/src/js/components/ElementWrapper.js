@@ -6,6 +6,9 @@ import { ElementWrapperDivComponent } from "../../../../editor/src/js/components
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
 import DEFAULT_REACT_ELEMENTS from "../constants/DEFAULT_REACT_ELEMENTS";
 import EntranceAnimationsStyles from "./EntranceAnimationsStyles";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd";
+import React from "react";
 const {
   altrpCompare,
   altrpRandomId,
@@ -333,6 +336,30 @@ class ElementWrapper extends Component {
       history: this.props.history,
       appStore
     });
+    if (this.props.element.getName() === "table") {
+      content = <DndProvider backend={HTML5Backend}>{
+        React.createElement(ContentComponent, {
+          ref: this.elementRef,
+          rootElement: this.props.rootElement,
+          ElementWrapper: this.props.ElementWrapper,
+          element: this.props.element,
+          children: this.props.element.getChildren(),
+          match: this.props.match,
+          currentModel: this.props.currentModel,
+          currentUser: this.props.currentUser,
+          currentDataStorage: this.props.currentDataStorage,
+          altrpresponses: this.props.altrpresponses,
+          formsStore: this.props.formsStore,
+          elementDisplay: this.state.elementDisplay,
+          altrpPageState: this.props.altrpPageState,
+          altrpMeta: this.props.altrpMeta,
+          updateToken: this.state.updateToken,
+          currentScreen: this.props.currentScreen,
+          baseRender: this.props.baseRender,
+          history: this.props.history,
+          appStore
+        })}</DndProvider>;
+    }
     if (element.getTemplateType() === "email") {
       if (!this.state.elementDisplay) {
         return null;

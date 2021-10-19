@@ -427,12 +427,16 @@ class InputSelectWidget extends Component {
     };
     this.popoverProps = {
       usePortal: true,
+
       position: 'bottom',
       minimal: props.element.getResponsiveSetting('minimal'),
       // isOpen:true ,
       portalClassName: `altrp-portal altrp-portal_input-select altrp-portal${this.props.element.getId()} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
+    if(! isEditor()){
+      this.popoverProps.boundary = document.body
+    }
     this.altrpSelectRef = React.createRef();
     if (this.getContent("content_default_value")) {
       this.dispatchFieldValueToStore(this.getContent("content_default_value"));

@@ -430,6 +430,10 @@ class InputMultiSelectWidget extends Component {
       portalClassName: `altrp-portal altrp-portal_input-select altrp-portal${this.props.element.getId()} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
+
+    if(! isEditor()){
+      this.popoverProps.boundary = document.body
+    }
     this.altrpSelectRef = React.createRef();
     if (this.getContent("content_default_value", true)) {
       this.dispatchFieldValueToStore(this.getContent("content_default_value", true));
