@@ -44,7 +44,6 @@ export function actionsControllers(
     label: 'Delay between char input (milliseconds)',
     type: CONTROLLER_NUMBER,
     responsive: false,
-    default: 500,
     conditions: {
       [`${idPrefix + 'change_end'}`]: true
     }

@@ -435,7 +435,7 @@ class InputSelectWidget extends Component {
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
     if(! isEditor()){
-      this.popoverProps.boundary = document.body
+      // this.popoverProps.boundary = '#front-app'
     }
     this.altrpSelectRef = React.createRef();
     if (this.getContent("content_default_value")) {
@@ -846,7 +846,7 @@ class InputSelectWidget extends Component {
     }
     const options = this.getOptions();
     const element = this.props.element;
-    if(! options.find(option => option.value === value)){
+    if(! options.find(option => option.value == value)){
       const create_url = element.getResponsiveSetting('create_url');
       if(element.getResponsiveSetting('create') && create_url){
         this.setState(state =>({...state, widgetDisabled: true}))
@@ -1203,6 +1203,7 @@ class InputSelectWidget extends Component {
         <Select
           inputProps={inputProps}
           disabled={content_readonly}
+          matchTargetWidth={true}
           popoverProps={this.popoverProps}
           createNewItemFromQuery={element.getResponsiveSetting('create') ? this.createNewItemFromQuery : null}
           createNewItemRenderer={this.createNewItemRenderer}
@@ -1213,7 +1214,7 @@ class InputSelectWidget extends Component {
             return <MenuItem
               text={item.label}
               key={item.value}
-              active={item.value === value}
+              active={item.value == value}
               disabled={modifiers.disabled || item.disabled}
               onClick={handleClick}
             />
