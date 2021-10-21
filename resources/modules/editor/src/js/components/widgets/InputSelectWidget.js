@@ -1104,7 +1104,36 @@ class InputSelectWidget extends Component {
         shouldDismissPopover={false}
       />)
   }
+  onQueryChange = async (s)=>{
+    const searchActions = this.props.element.getSettings("s_actions");
+    if(_.isEmpty(searchActions)){
+      return
+    }
+    if(this.searchOnPending){
+      return
+    }
+    this.searchOnPending = true;
+    try{
 
+      const actionsManager = (
+        await import(
+          /* webpackChunkName: 'ActionsManager' */
+          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+          )
+      ).default;
+      this.props.element.getCurrentModel().setProperty('altrp_search', s);
+      await actionsManager.callAllWidgetActions(
+        this.props.element.getIdForAction(),
+        "change",
+        searchActions,
+        this.props.element
+      );
+    } catch (e) {
+      console.error(e);
+    }finally{
+      this.searchOnPending = false;
+    }
+  }
   render() {
     const element = this.props.element;
     let label = null;
@@ -1225,6 +1254,7 @@ class InputSelectWidget extends Component {
             }
             return `${item?.label?.toLowerCase() || ''}`.indexOf(query?.toLowerCase()) >= 0;
           }}
+          onQueryChange={this.onQueryChange}
           items={itemsOptions}
           // itemRenderer={({label})=>label}
           noResults={<MenuItem disabled={true} text={no_results_text}/>}

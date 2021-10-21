@@ -539,6 +539,36 @@ class InputMultiSelectWidget extends Component {
     return url;
   }
 
+  onQueryChange = async (s)=>{
+    const searchActions = this.props.element.getSettings("s_actions");
+    if(_.isEmpty(searchActions)){
+      return
+    }
+    if(this.searchOnPending){
+      return
+    }
+    this.searchOnPending = true;
+    try{
+
+      const actionsManager = (
+        await import(
+          /* webpackChunkName: 'ActionsManager' */
+          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+          )
+      ).default;
+      this.props.element.getCurrentModel().setProperty('altrp_search', s);
+      await actionsManager.callAllWidgetActions(
+        this.props.element.getIdForAction(),
+        "change",
+        searchActions,
+        this.props.element
+      );
+    } catch (e) {
+      console.error(e);
+    }finally{
+      this.searchOnPending = false;
+    }
+  }
   /**
    * Обновление виджета
    */
@@ -1212,6 +1242,7 @@ class InputMultiSelectWidget extends Component {
       <MultiSelect
         placeholder={placeholder}
         inputProps={inputProps}
+        onQueryChange={this.onQueryChange}
         itemsEqual={this.itemsEqual}
         disabled={content_readonly}
         popoverProps={this.popoverProps}

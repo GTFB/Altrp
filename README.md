@@ -5,7 +5,8 @@
 
 
 ### 0.17.12
-* Fixed Cases of errors when Getting Default Values as Strings and Arrays of Strings in Input Select Widget and Input Multi Select Widget
+* Fixed Cases of errors when Getting Default Values as Strings and Arrays of Strings in Input Select Widget and Input Multi Select Widget 
++ Add Actions when Changing Text in Input Select and Input Multi Select Widget  
 
 ### 0.17.11
 + Support for Arrays in URL Parameters in `altrppage.params` Object
