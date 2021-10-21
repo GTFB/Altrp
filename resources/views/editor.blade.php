@@ -29,7 +29,7 @@
   <script>
     window.ALTRP_DEBUG = {!! json_encode( ! ! get_altrp_setting( 'altrp_debug', false ) ) !!};
     window.altrpMenus = [];
-    window.container_width = {{ get_altrp_setting( 'container_width', '1440' ) }};
+    window.container_width = {{ get_altrp_setting( 'container_width', '1200' ) }};
   </script>
   <link rel="stylesheet" href="{{ asset( '/modules/editor/editor.css?' ) . getCurrentVersion() }}">
   {{--<link rel="dns-prefetch" href="//fonts.gstatic.com">--}}

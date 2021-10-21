@@ -47,6 +47,7 @@ import InputRangeSliderComponent
 import getTemplateStyles from "./helpers/getTemplateStyles";
 import TooltipComponent from "../../../../editor/src/js/components/widgets/styled-components/TooltipComponent";
 import getInputMultiSelectStyles, {getInputMultiSelectPopoverStyles} from "./helpers/getInputMultiSelectStyles";
+import getSchedulerStyles from "./helpers/getSchedulerStyles";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -237,6 +238,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         case "map_builder":
           styles += `.${prefix}${id} {${MapConstructorComponent(item.settings)}}`;
           break;
+        case "scheduler":
+          styles += `.${prefix}${id} {${getSchedulerStyles(item.settings, id)}}`;
+          break;
       }
       styles += `div.${prefix}${id}.${prefix}${id} {${AdvancedComponent(
         item.settings
@@ -250,12 +254,13 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
 
       let element_css_editor = getResponsiveSetting(item.settings, "element_css_editor");
       if(_.isString(element_css_editor)){
-        styles+=element_css_editor.replace(/__selector__/g, `${prefix}${id}`)
+        styles+=element_css_editor.replace(/__selector__/g, `.${prefix}${id}`)
       }
     }
   });
 
-  styles += `} `;
+  styles += ` `;
+
   window.globalDefaults && (styles += window.globalDefaults.join(''));
   return styles;
 }}`

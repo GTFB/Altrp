@@ -54,11 +54,6 @@ class InputSelect2 extends BaseElement {
       label: "Field ID (Column Name)"
     });
 
-    this.addControl("content_shortcode", {
-      type: CONTROLLER_TEXT,
-      label: "Shortcode"
-    });
-
     this.addControl("sort_default", {
       type: CONTROLLER_SWITCHER,
       label: "Sort Default"

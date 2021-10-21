@@ -81,13 +81,16 @@ class Gallery extends BaseElement {
       label: 'Description',
       default: "Description"
     });
-
     this.addControl('repeater_simple_settings', {
       label: 'Images',
       type: CONTROLLER_REPEATER,
       fields: simpleRepeater.getControls(),
       default: [
       ]
+    });
+
+    this.addControl('path', {
+      label: 'Path',
     });
 
     this.addControl("order_by_settings", {

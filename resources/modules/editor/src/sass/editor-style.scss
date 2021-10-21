@@ -25,6 +25,10 @@
 @import "./blueprint-hi-contrast";
 @import "./blueprint";
 
+@import "~@fullcalendar/common/main.min.css";
+@import "~@fullcalendar/daygrid/main.min.css";
+@import "~@fullcalendar/timegrid/main.min.css";
+
 .editor {
   display: flex;
   min-height: 100vh;
@@ -1651,6 +1655,9 @@ button {
       }
     }
   }
+}
+#editor-content .altrp-element.altrp-element.altrp-element_column.altrp-element_empty-column{
+  flex-wrap: nowrap;
 }
 .column-empty-plus {
   position: relative;

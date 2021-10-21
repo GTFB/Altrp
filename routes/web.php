@@ -42,7 +42,7 @@ Route::group([
 Route::group([
   'middleware' => ['installation.checker'],
 ], function () {
-  Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+  Route::get('altrp-login', 'Auth\LoginController@showLoginForm')->name('login');
   Route::post('login', 'Auth\LoginController@login')->name('post.login');
   Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 });
@@ -466,20 +466,6 @@ Route::view('/admin/{path?}', 'admin')
  * Frontend
  */
 
-Route::get('/', function () {
-  return view('front-app', [
-    'elements_list' => json_encode([]),
-    'title' => 'Main',
-    'page_id' => 'null',
-    '_frontend_route' => [],
-    'preload_content' => [],
-    'page_areas' => '[]',
-    'lazy_sections' => '[]',
-    'pages' => Page::get_pages_for_frontend(true),
-    'model_data' => null,
-    'is_admin' => isAdmin(),
-  ]);
-})->middleware(['web', 'installation.checker']);
 
 //Route::get('/test/{id}/test/{test}', function($test, $id){
 //  echo '<pre style="padding-left: 200px;">';

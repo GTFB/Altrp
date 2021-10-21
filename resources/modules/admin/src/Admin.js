@@ -95,6 +95,7 @@ import MenuPage from "./components/menu-builder/MenuPage";
 import MenusList from "./components/menu-builder/MenusList";
 import ModelsPage from "./components/models/ModelsPage";
 import {modelsToggle} from "./js/store/models-state/actions";
+import Marketplace from "./components/Marketplace";
 
 window.React = React;
 window.ReactDOM = ReactDOM;
@@ -355,6 +356,15 @@ class Admin extends Component {
                     </li>
                     <li>
                       <Link
+                        to="/admin/marketplace"
+                        className="admin-nav-list__link"
+                      >
+                        <PluginSvg className="icon" />
+                        <span>Market</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
                         to="/admin/users"
                         className="admin-nav-list__link"
                       >
@@ -430,6 +440,12 @@ class Admin extends Component {
             </Route>
             <Route path="/admin/plugins">
               <Plugins />
+            </Route>
+            <Route path="/admin/plugins">
+              <Plugins />
+            </Route>
+            <Route path="/admin/marketplace">
+              <Marketplace />
             </Route>
             <Route path="/admin/reports">
               <Reports />

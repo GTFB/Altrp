@@ -80,11 +80,11 @@ if( isset($_altrp_settings['redirect']) && $_altrp_settings['redirect']){
       cursor: pointer;
     }
     .app-area > .sections-wrapper{
-      width: {{ get_altrp_setting( 'container_width', '1440' ) }}px;
+      width: {{ get_altrp_setting( 'container_width', '1200' ) }}px;
     }
     .altrp-section--boxed {
-      padding-left: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
-      padding-right: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1440' ) }}px) / 2 );
+      padding-left: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1200' ) }}px) / 2 );
+      padding-right: calc( ( 100vw - {{ get_altrp_setting( 'container_width', '1200' ) }}px) / 2 );
     }
     .front-app-content_preloaded{
       /*display: none;*/
@@ -98,9 +98,6 @@ if( isset($_altrp_settings['redirect']) && $_altrp_settings['redirect']){
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-    .altrp-btn svg {
-      display: block;
     }
     .section-fit-to-content {
       height: 100vh !important;
@@ -169,9 +166,10 @@ if( isset($_altrp_settings['redirect']) && $_altrp_settings['redirect']){
   window.model_data = {!! json_encode( $model_data ) !!};
   window.altrpPreloadedDatasources = {!! json_encode( $datasources ?? '' ) !!};
   window.altrpMenus = [];
+  window.route_args = {!! json_encode( $route_args ) !!};
   window.currentPage = {!! json_encode( $_frontend_route ) !!};
   window.__altrp_settings__ = {!! $altrp_settings !!};
-  window.container_width = {!! get_altrp_setting( 'container_width', '1440' ) !!};
+  window.container_width = {!! get_altrp_setting( 'container_width', '1200' ) !!};
   /* ]]> */
 </script>
 <script src="/data/current-user" defer></script>

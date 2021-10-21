@@ -53,11 +53,6 @@ class InputTel extends BaseElement {
       label: "Field ID (Column Name)"
     });
 
-    this.addControl("content_shortcode", {
-      type: CONTROLLER_TEXT,
-      label: "Shortcode"
-    });
-
     const optionsRepeater = new Repeater();
 
     optionsRepeater.addControl("label", {

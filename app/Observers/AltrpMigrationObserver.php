@@ -19,7 +19,7 @@ class AltrpMigrationObserver
     {
 
         if(!NewMigrationGenerator::runMigration()) {
-            throw new AltrpMigrationRunExceptions("Failed to run migration file on creating migration");
+            throw new AltrpMigrationRunExceptions("Failed to run migration file on run migration");
         }
 
 

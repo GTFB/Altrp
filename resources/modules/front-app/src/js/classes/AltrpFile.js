@@ -6,11 +6,11 @@ class AltrpFile extends AltrpModel{
     if(data instanceof File){
       data = {file: data}
     }
-    if(! data.file instanceof File){
-      throw new Error('Need a File instance in AltrpFile Constructor')
-    }
+    // if(! data.file instanceof File){
+    //   throw new Error('Need a File instance in AltrpFile Constructor')
+    // }
     super(data);
-    if(data.file.type.indexOf('image') >= 0){
+    if(data?.file?.type?.indexOf('image') >= 0){
       const reader = new FileReader
       reader.onload = ()=>{
         this.setProperty('dataAsUrl', reader.result)

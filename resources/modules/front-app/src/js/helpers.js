@@ -655,6 +655,9 @@ export function getDataByPath(
     value = altrpPage
       ? altrpPage.getProperty(path.replace("altrppage.", ""), _default)
       : "";
+    if(_.isString(value) && value.match(/{{([\s\S]+?)}}/)){
+      value = replaceContentWithData(value, context.getData());
+    }
   } else if (path.indexOf("altrpelements.") === 0) {
     const pathElements = path.split(".");
     const [prefix, elementId, updateType, propName] = pathElements;
@@ -1030,9 +1033,12 @@ export function scrollToElement(scrollbars, element) {
     container = scrollbars;
     let scroll = getOffsetTopInElement(element, scrollbars);
     if(scroll){
-      scrollbars.scrollTop =scroll;
+      scrollbars.scrollTop = scroll;
     }
 
+  }
+  if(scrollbars instanceof Window){
+    container = scrollbars;
   }
   /**
    * @member {HTMLElement} container
@@ -1040,19 +1046,20 @@ export function scrollToElement(scrollbars, element) {
   if (!container) {
     return;
   }
-  if (!_.isFunction(scrollbars.scrollTop)) {
+  if (!_.isFunction(scrollbars.scrollTop) && !_.isFunction(scrollbars.scrollTo)) {
     return;
   }
+
 
   let parent = element.offsetParent;
   let top = element.offsetTop;
 
-  while (parent !== container) {
+  while (parent !== container || parent !== document.body) {
     if (! parent) {
       /**
        * ушли в самый корень ДОМ и контейнер не встретился
        */
-      return;
+      break;
     }
     top += parent.offsetTop;
     parent = parent.offsetParent;
@@ -1063,7 +1070,15 @@ export function scrollToElement(scrollbars, element) {
   if (! top) {
     return;
   }
-  scrollbars.scrollTop(top);
+
+
+  console.log(scrollbars.scrollTo);
+  scrollbars.scrollTop && scrollbars.scrollTop(top);
+  scrollbars.scrollTo && scrollbars.scrollTo({
+    top,
+    left: 0,
+    behavior: 'smooth',
+  });
 }
 
 /**

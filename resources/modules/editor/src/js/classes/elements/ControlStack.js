@@ -16,6 +16,7 @@ class ControlStack extends FrontElement {
    *   [units]: array,
    *   [options]: array,
    *   [conditions]: object,
+   *   [conditionsCallback]: function,
    *   [default]: any,
    *   [stateless]: boolean,
    *   [responsive]: boolean,

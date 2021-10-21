@@ -53,11 +53,6 @@ class InputEmail extends BaseElement {
       label: "Field ID (Column Name)"
     });
 
-    this.addControl("content_shortcode", {
-      type: CONTROLLER_TEXT,
-      label: "Shortcode"
-    });
-
     this.addControl("invalid_email_message", {
       type: CONTROLLER_TEXT,
       label: "Invalid Email Message"

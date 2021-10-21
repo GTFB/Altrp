@@ -44,7 +44,6 @@ export function actionsControllers(
     label: 'Delay between char input (milliseconds)',
     type: CONTROLLER_NUMBER,
     responsive: false,
-    default: 500,
     conditions: {
       [`${idPrefix + 'change_end'}`]: true
     }
@@ -153,6 +152,10 @@ export function actionsControllers(
       {
         value: 'update_current_datasources',
         label: 'Update Current Datasources'
+      },
+      {
+        value: 'update_current_model',
+        label: 'Update Current Model'
       },
       {
         value: 'custom_code',

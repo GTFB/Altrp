@@ -17,11 +17,11 @@
     <link rel="stylesheet" href="/addons/react-contexify/ReactContexify.min.css">
     <style>
         .editor-content>.sections-wrapper {
-            width: {{ get_altrp_setting('container_width', '1440') }}px;
+            width: {{ get_altrp_setting('container_width', '1200') }}px;
         }
         .altrp-section--boxed {
-            padding-left: calc((100vw - {{ get_altrp_setting('container_width', '1440') }}px) / 2);
-            padding-right: calc((100vw - {{ get_altrp_setting('container_width', '1440') }}px) / 2);
+            padding-left: calc((100vw - {{ get_altrp_setting('container_width', '1200') }}px) / 2);
+            padding-right: calc((100vw - {{ get_altrp_setting('container_width', '1200') }}px) / 2);
         }
         .altrp-hidden{
           display: none!important;
@@ -33,7 +33,7 @@
     </style>
     <script>
         window.ALTRP_DEBUG = {!! json_encode(!!get_altrp_setting('altrp_debug', false)) !!};
-        window.container_width = {{ get_altrp_setting('container_width', '1440') }};
+        window.container_width = {{ get_altrp_setting('container_width', '1200') }};
         window.altrpMenus = [];
 
     </script>

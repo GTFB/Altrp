@@ -6,6 +6,7 @@ const {
   replaceContentWithData,
   renderAssetIcon,
   renderAsset,
+  getDataByPath,
   Resource,
   getDataFromLocalStorage
 } = window.altrpHelpers;
@@ -426,12 +427,16 @@ class InputSelectWidget extends Component {
     };
     this.popoverProps = {
       usePortal: true,
+
       position: 'bottom',
       minimal: props.element.getResponsiveSetting('minimal'),
       // isOpen:true ,
       portalClassName: `altrp-portal altrp-portal_input-select altrp-portal${this.props.element.getId()} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
+    if(! isEditor()){
+      // this.popoverProps.boundary = '#front-app'
+    }
     this.altrpSelectRef = React.createRef();
     if (this.getContent("content_default_value")) {
       this.dispatchFieldValueToStore(this.getContent("content_default_value"));
@@ -839,9 +844,9 @@ class InputSelectWidget extends Component {
     if (value.value) {
       value = value.value;
     }
-    const options = [...this.state.options];
+    const options = this.getOptions();
     const element = this.props.element;
-    if(! options.find(option => option.value === value)){
+    if(! options.find(option => option.value == value)){
       const create_url = element.getResponsiveSetting('create_url');
       if(element.getResponsiveSetting('create') && create_url){
         this.setState(state =>({...state, widgetDisabled: true}))
@@ -853,6 +858,14 @@ class InputSelectWidget extends Component {
           let res = await resource.post(params)
           if(res.data){
             res = res.data
+          }
+          const label_path = element.getResponsiveSetting('label_path')
+          if(label_path){
+            res.label = _.get(res, label_path, res.id);
+          }
+          const value_path = element.getResponsiveSetting('value_path')
+          if(value_path){
+            res.value = _.get(res, value_path, res.id);
           }
           options.unshift(res)
         } catch (e) {
@@ -889,6 +902,16 @@ class InputSelectWidget extends Component {
     const optionsDynamicSetting = this.props.element.getDynamicSetting(
       "content_options"
     );
+    const content_options = this.props.element.getResponsiveSetting('content_options');
+    const model_for_options = this.props.element.getResponsiveSetting('model_for_options');
+    if(_.isString(content_options)
+      && content_options.indexOf('{{') === 0
+      && ! model_for_options){
+      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''))
+      if( ! _.isArray(options)){
+        options = [];
+      }
+    }
     if (optionsDynamicSetting) {
       options = convertData(optionsDynamicSetting, options);
     }
@@ -897,6 +920,12 @@ class InputSelectWidget extends Component {
       if(this.props.element.getSettings("options_sorting") === 'desc'){
         options = _.reverse(options)
       }
+    }
+    if(this.props.element.getResponsiveSetting('content_options_nullable')){
+      options.unshift({
+        label: this.props.element.getResponsiveSetting('nulled_option_title') || '',
+        value: '',
+      })
     }
     return options;
   }
@@ -974,8 +1003,9 @@ class InputSelectWidget extends Component {
    */
   getCurrentLabel() {
     const value = this.getValue()
+
     const options = this.getOptions() || []
-    return options.find(option => option.value === value)?.label || ''
+    return options.find(option => option.value == value)?.label || ''
   }
 
   /**
@@ -1054,10 +1084,15 @@ class InputSelectWidget extends Component {
       return null;
     }
     const {options} = this.state;
-    if(options.find(option => option.value === query)) {
+    if (options.find(option => {
+      let label = (option.label || '') + '';
+      label = label.toLowerCase();
+      query = (query || '') + '';
+      return query === label;
+    })) {
       return null
     }
-      let text = element.getResponsiveSetting('create_text') || ''
+    let text = element.getResponsiveSetting('create_text') || ''
     text = text.replace('{{__query__}}', query)
     text = replaceContentWithData(text, element.getCurrentModel().getData())
     return (
@@ -1069,7 +1104,36 @@ class InputSelectWidget extends Component {
         shouldDismissPopover={false}
       />)
   }
+  onQueryChange = async (s)=>{
+    const searchActions = this.props.element.getSettings("s_actions");
+    if(_.isEmpty(searchActions)){
+      return
+    }
+    if(this.searchOnPending){
+      return
+    }
+    this.searchOnPending = true;
+    try{
 
+      const actionsManager = (
+        await import(
+          /* webpackChunkName: 'ActionsManager' */
+          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+          )
+      ).default;
+      this.props.element.getCurrentModel().setProperty('altrp_search', s);
+      await actionsManager.callAllWidgetActions(
+        this.props.element.getIdForAction(),
+        "search",
+        searchActions,
+        this.props.element
+      );
+    } catch (e) {
+      console.error(e);
+    }finally{
+      this.searchOnPending = false;
+    }
+  }
   render() {
     const element = this.props.element;
     let label = null;
@@ -1168,6 +1232,7 @@ class InputSelectWidget extends Component {
         <Select
           inputProps={inputProps}
           disabled={content_readonly}
+          matchTargetWidth={true}
           popoverProps={this.popoverProps}
           createNewItemFromQuery={element.getResponsiveSetting('create') ? this.createNewItemFromQuery : null}
           createNewItemRenderer={this.createNewItemRenderer}
@@ -1178,7 +1243,7 @@ class InputSelectWidget extends Component {
             return <MenuItem
               text={item.label}
               key={item.value}
-              active={item.value === value}
+              active={item.value == value}
               disabled={modifiers.disabled || item.disabled}
               onClick={handleClick}
             />
@@ -1187,8 +1252,9 @@ class InputSelectWidget extends Component {
             if (query === undefined || query.length === 0) {
               return true
             }
-            return `${item?.label?.toLowerCase() || ''}`.indexOf(query.toLowerCase()) >= 0;
+            return `${item?.label?.toLowerCase() || ''}`.indexOf(query?.toLowerCase()) >= 0;
           }}
+          onQueryChange={this.onQueryChange}
           items={itemsOptions}
           // itemRenderer={({label})=>label}
           noResults={<MenuItem disabled={true} text={no_results_text}/>}

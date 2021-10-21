@@ -29,7 +29,7 @@
     <script src="{{ altrp_asset( '/modules/robots/robots.js', 'http://localhost:3006/' ) }}" crossorigin defer></script>
 
     <script>
-      window.container_width = {{ get_altrp_setting('container_width', '1440') }};
+      window.container_width = {{ get_altrp_setting('container_width', '1200') }};
 
     </script>
     <link rel="stylesheet" href="{{ asset( '/modules/editor/editor.css?' ) . getCurrentVersion() }}">
