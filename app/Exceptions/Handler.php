@@ -133,7 +133,6 @@ class Handler extends ExceptionHandler
           $page_areas = Page::get_areas_for_page( $not_found_page['id'] );
           $elements_list = extractElementsNames( $page_areas );
           $altrp_settings = getPageSettings( $not_found_page['id'] );
-
           return response( view( 'front-app', [
             'page_areas' => json_encode( $page_areas ),
             'page_id' => $not_found_page['id'],
