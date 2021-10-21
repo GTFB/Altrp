@@ -27,7 +27,7 @@ class SchedulerWidget extends Component {
     }
 
     this.popupLocalization = {
-      en: {
+      'en-gb': {
         create: 'Create',
         cancel: 'Cancel',
         title: 'Title',
