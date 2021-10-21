@@ -211,7 +211,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     /**
      * Templates Routes
      */
-    Route::resource('templates', 'TemplateController');
+    Route::resource('templates', 'TemplateController')
+      ->name('put', 'template_save')
+      ->name('delete', 'template_delete')
+      ->name('post', 'template_add')
+      ->name('get', 'template_get');
     Route::get('exports/templates/{id}', 'TemplateController@exportTemplate' );
 
     Route::resource('global_template_styles', 'GlobalTemplateStylesController');
