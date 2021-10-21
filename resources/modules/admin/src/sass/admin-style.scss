@@ -29,9 +29,8 @@
   min-height: 100vh;
   padding-left: 271px;
   &__logo {
-    width: 120px;
+    width: 102px;
     height: 44px;
-    padding-left: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -60,43 +59,47 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      width: 271px;
-      padding-right: 5px;
-      .nav-logo {
-        background-color: #2a2d36;
-      }
+      padding: 9px 15px;
+      background-color: $black;
     }
     &-list {
-      margin-top: 10px;
 
       &__link {
         position: relative;
         display: flex;
-        padding: 6px;
+        align-items: center;
+        padding: 10px 15px 10px 18px;
         color: #fff;
         font-size: 17px;
-        font-weight: 500;
+        font-weight: 400;
+        font-family: Roboto, sans-serif;
         &.admin-nav-list__link--models {
-          margin-left: 40px;
+          padding: 10px 10px 10px 54px;
         }
         &:hover {
           color: $green;
+          text-decoration: none;
           & path {
+            fill: $green;
+          }
+        /* этот circle задан чтобы в иконке models покрасились кружки*/
+          & circle {
             fill: $green;
           }
         }
         &:hover::before {
           content: "";
           position: absolute;
-          left: 1px;
-          top: 3px;
+          left: 0;
+          top: 0;
           border-left: 4px solid #7eb223;
-          height: 28px;
+          height: 45px;
+          border-top-right-radius: 4px;
+          border-bottom-right-radius: 4px;
         }
         & svg {
           position: relative;
-          top: 1px;
-          margin: 3px 16px 0 7px;
+          top: -1px;
         }
       }
       &_pages {
@@ -112,11 +115,12 @@
       }
 
       .admin-nav-list--sublist_active {
+
         &::after {
           content: "";
           position: absolute;
           right: 0;
-          top: 16px;
+          top: 15px;
           border: 8px solid transparent;
           border-right: 8px solid #f7f8f9;
           display: block;
@@ -125,18 +129,23 @@
         }
 
         & li {
-          background-color: #677289;
+          background-color: #485674;
           position: relative;
 
           &:hover {
-            background-color: #677289;
+            background-color: #485674;
           }
         }
 
         & .admin-nav-list__link {
           font-size: 13px;
+          height: 40px;
+          padding: 10px 10px 10px 54px;
           text-decoration: none;
-          padding: 8px 12px 8px 12px;
+
+          &:hover::before {
+            height: 40px;
+          }
         }
       }
 
@@ -145,10 +154,10 @@
         display: none;
         position: fixed;
         left: 271px;
-        margin-top: -37px;
+        margin-top: -45px;
 
         &::before {
-          margin-top: 10px;
+          margin-top: 15px;
           left: 255px;
           content: "";
           position: fixed;
@@ -170,7 +179,9 @@
 
         .admin-nav-list__link {
           font-size: 13px;
-          padding: 8px 67px 8px 19px;
+          width: 165px;
+          height: 45px;
+          padding: 10px;
           text-decoration: none;
         }
       }
@@ -188,9 +199,8 @@
     font-size: 18px;
   }
   &__bars {
-    margin: 12px 12px;
-    float: right;
     cursor: pointer;
+    fill: #fff;
   }
   &_pages-show {
     & .admin-nav-list_pages {
@@ -206,6 +216,8 @@
     text-align: center;
     font-size: 13px;
     color: #fff;
+    font-family: Roboto, sans-serif;
+    background-color: $black;
   }
   &-form__subheader {
     text-transform: uppercase;
@@ -214,6 +226,10 @@
     font-size: 16px;
     line-height: 20px;
   }
+}
+
+.additionally__models {
+  cursor: pointer;
 }
 
 /* Чтобы кастомный скроллбар слева не перекрывал элементы списка при наведении */
@@ -225,7 +241,7 @@
   width: 16px;
   height: 16px;
   fill: white;
-  margin-right: 15px;
+  margin-right: 20px;
   display: inline-block;
   align-items: center;
 }
@@ -256,9 +272,9 @@ a {
   flex-direction: column;
 }
 .admin-content {
-  background-color: $light-light-gray;
+  background-color: #f7f7f7;
   flex-grow: 1;
-  padding: 13px 25px;
+  padding: 30px 60px;
 }
 
 .ace_editor {

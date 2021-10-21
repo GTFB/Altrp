@@ -35,7 +35,7 @@ class Telegram extends Component {
     if(res.success){
       alert(res.message || 'success');
       store.dispatch(setWebsocketsEnabled(false));
-      window.location.reload();  
+      window.location.reload();
     }
   };
 
@@ -51,7 +51,7 @@ class Telegram extends Component {
             route="/admin/ajax/settings"
             resourceid="telegram_bot_token"
             id="telegram_bot_token"
-            className="admin_input_key" />
+            className="admin_input_key form_styles_border" />
         </div>
         <div>
         </div>

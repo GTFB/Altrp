@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Left from "../svgs/left.svg";
 import Right from "../svgs/right.svg";
-import { NavLink } from "react-router-dom";
+import {NavLink} from "react-router-dom";
 import "../sass/components/admin-pagination.scss";
 
 class Pagination extends Component {
@@ -19,16 +19,16 @@ class Pagination extends Component {
   setCurrentPage(num) {
     num = parseInt(num) || 1;
     if (num <= 1) {
-      this.setState({ currentPage: 1 });
+      this.setState({currentPage: 1});
       this.props.changePage(1);
       return;
     }
     if (num >= this.props.pageCount) {
-      this.setState({ currentPage: this.props.pageCount });
+      this.setState({currentPage: this.props.pageCount});
       this.props.changePage(this.props.pageCount);
       return;
     }
-    this.setState({ currentPage: num });
+    this.setState({currentPage: num});
     this.props.changePage(num);
   }
 
@@ -40,20 +40,21 @@ class Pagination extends Component {
       this.setCurrentPage(this.props.currentPage || this.props.pageCount);
     }
   }
+
   render() {
     return (
       <div className="pagination">
-        <div className="version">
-          <p className="pagination__version">
-            {/*App creating*/}
-            {/*with*/}
-            {/*<a className="pagination__link"*/}
-            {/*target="_blank"*/}
-            {/*href="https://altrp.com/">Altrp</a>*/}
-            {/*/*/}
-            Version {altrp_version}{" "}
-          </p>
-        </div>
+        {/*<div className="version">*/}
+        {/*  <p className="pagination__version">*/}
+        {/*    App creating*/}
+        {/*    with*/}
+        {/*    <a className="pagination__link"*/}
+        {/*    target="_blank"*/}
+        {/*    href="https://altrp.com/">Altrp</a>*/}
+        {/*    /*/}
+        {/*    Version {altrp_version}{" "}*/}
+        {/*  </p>*/}
+        {/*</div>*/}
         <div className="pagination__buttons">
           <p className="pagination__text">{this.props.itemsCount} Items</p>
           <div
@@ -64,8 +65,8 @@ class Pagination extends Component {
             }
             onClick={() => this.setCurrentPage(1)}
           >
-            <Right className="right__arrow" />
-            <Right className="right__arrow" />
+            <Right className="right__arrow arrow__color"/>
+            <Right className="right__arrow arrow__color"/>
           </div>
           <div
             className={
@@ -75,7 +76,7 @@ class Pagination extends Component {
             }
             onClick={() => this.setCurrentPage(--this.state.currentPage)}
           >
-            <Right className="right__arrow" />{" "}
+            <Right className="right__arrow arrow__color"/>{" "}
           </div>
           <input
             type="text"
@@ -97,7 +98,7 @@ class Pagination extends Component {
             }}
           >
             {" "}
-            <Right />{" "}
+            <Right className="arrow__color"/>{" "}
           </div>
           <div
             className={
@@ -107,7 +108,8 @@ class Pagination extends Component {
             }
             onClick={() => this.setCurrentPage(this.props.pageCount)}
           >
-            <Right /> <Right />
+            <Right className="arrow__color"/>
+            <Right className="arrow__color"/>
           </div>
         </div>
       </div>

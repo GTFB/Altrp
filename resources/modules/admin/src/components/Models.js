@@ -4,7 +4,6 @@ import 'react-tabs/style/react-tabs.scss';
 import { Link } from 'react-router-dom'
 
 import AdminTable from "./AdminTable";
-import Pagination from "./Pagination";
 import Resource from "../../../editor/src/js/classes/Resource";
 
 const columnsModel = [
@@ -165,6 +164,14 @@ export default class Models extends Component {
     this.getDataSources();
   }
 
+  changeModel = (e) => {
+    this.setState({ modelsSearch: e.target.value })
+  }
+
+  changeDataSource = (e) => {
+    this.setState({ dataSourcesSearch: e.target.value })
+  }
+
   render() {
     const { activeTab, models, dataSources, modelsCurrentPage, dataSourcesCurrentPage, modelsSearch, dataSourcesSearch,
       modelsPageCount, dataSourcesPageCount, modelsCount, dataSourcesCount, modelsSorting, dataSourcesSorting } = this.state;
@@ -178,7 +185,7 @@ export default class Models extends Component {
         </div>
         <Link className="btn" to={`/admin/tables/${activeTab === 0 ? 'models' : 'data-sources'}/add`}>Add New</Link>
       </div>
-      <div className="admin-content">
+      <div className="admin-content zeroing__styleTabs">
         <Tabs selectedIndex={activeTab} onSelect={this.switchTab}>
           <TabList className="nav nav-pills admin-pills">
             <Tab>
@@ -189,10 +196,6 @@ export default class Models extends Component {
             </Tab>
           </TabList>
           <TabPanel>
-            <form className="admin-panel py-2" onSubmit={this.searchModel}>
-              <input className="input-sm mr-2" value={modelsSearch} onChange={e => this.setState({ modelsSearch: e.target.value })} />
-              <button className="btn btn_bare admin-users-button">Search</button>
-            </form>
             <AdminTable
               columns={columnsModel}
               quickActions={[
@@ -217,8 +220,14 @@ export default class Models extends Component {
               }))}
               sortingHandler={this.modelsSortingHandler}
               sortingField={modelsSorting.order_by}
-            />
-            <Pagination pageCount={modelsPageCount || 1}
+
+              searchModel={{
+                onSubmitModel: this.searchModel,
+                valueModel: modelsSearch,
+                onChangeModel: this.changeModel
+              }}
+
+              pageCount={modelsPageCount || 1}
               currentPage={modelsCurrentPage || 1}
               changePage={modelsCurrentPage => {
                 if (this.state.modelsCurrentPage !== modelsCurrentPage) {
@@ -226,14 +235,11 @@ export default class Models extends Component {
                 }
               }
               }
-              itemsCount={modelsCount}
+              itemsCount={models.length}
+              openPagination={true}
             />
           </TabPanel>
           <TabPanel>
-            <form className="admin-panel py-2" onSubmit={this.searchDataSources}>
-              <input className="input-sm mr-2" value={dataSourcesSearch} onChange={e => this.setState({ dataSourcesSearch: e.target.value })} />
-              <button className="btn btn_bare admin-users-button">Search</button>
-            </form>
             <AdminTable
               columns={columnsDataSource}
               quickActions={[
@@ -258,11 +264,18 @@ export default class Models extends Component {
               }))}
               sortingHandler={this.dataSourcesSortingHandler}
               sortingField={dataSourcesSorting.order_by}
-            />
-            <Pagination pageCount={dataSourcesPageCount}
+
+              searchDataSources={{
+                onSubmitDataSources: this.searchDataSources,
+                valueDataSources: dataSourcesSearch,
+                onChangeDataSources: this.changeDataSource
+              }}
+
+              pageCount={dataSourcesPageCount}
               currentPage={dataSourcesCurrentPage}
               changePage={dataSourcesCurrentPage => this.setState({ dataSourcesCurrentPage }, this.getDataSources)}
-              itemsCount={dataSourcesCount}
+              itemsCount={dataSources.length}
+              openPagination={true}
             />
           </TabPanel>
         </Tabs>

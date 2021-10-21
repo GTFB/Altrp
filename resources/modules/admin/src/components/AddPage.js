@@ -8,6 +8,7 @@ import PageDataSourceForm from "./pages/PageDataSourceForm";
 import { titleToPath } from "../js/helpers";
 import IconSelect from "./icon-select/IconSelect";
 import mutate from "dot-prop-immutable";
+import "./../sass/components/AddPost.scss";
 
 const columns = [
   {
@@ -221,7 +222,7 @@ class AddPage extends Component {
             </span>
           </div>
         </div>
-        <div className="admin-content">
+        <div className="admin-content zeroing__styleTabs">
           <div className="custom-tab__tabs">
             <button
               className={this.state.currentTab === "content" ?
@@ -229,7 +230,7 @@ class AddPage extends Component {
               "custom-tab__tab"}
               onClick={this.changeCurrentTab('content')}
             >
-              content
+              Content
             </button>
             <button
               className={this.state.currentTab === "SEO" ?
@@ -250,7 +251,7 @@ class AddPage extends Component {
                 return (
                   <React.Fragment>
                     <div className="form-group">
-                      <label htmlFor="page-title">Title</label>
+                      <label htmlFor="page-title" className="font__edit">Title</label>
                       <input
                         type="text"
                         id="page-title"
@@ -264,7 +265,7 @@ class AddPage extends Component {
                     </div>
 
                     <div className="form-group">
-                      <label htmlFor="parent_page_id">Parent Page</label>
+                      <label htmlFor="parent_page_id" className="font__edit">Parent Page</label>
                       <select
                         id="parent_page_id"
                         value={this.state.value.parent_page_id || ""}
@@ -300,7 +301,7 @@ class AddPage extends Component {
                     </div>
 
                     <div className="form-group">
-                      <label htmlFor="page-path">Path</label>
+                      <label htmlFor="page-path" className="font__edit">Path</label>
                       <input
                         type="text"
                         id="page-path"
@@ -328,7 +329,7 @@ class AddPage extends Component {
                     {/*</select>*/}
                     {/*</div>*/}
                     <div className="form-group">
-                      <label htmlFor="page-model">Model</label>
+                      <label htmlFor="page-model" className="font__edit">Model</label>
                       <select
                         id="page-model"
                         value={this.state.value.model_id || ""}
@@ -349,7 +350,7 @@ class AddPage extends Component {
                     </div>
 
                     <div className="form-group">
-                      <label htmlFor="page-roles">Roles</label>
+                      <label htmlFor="page-roles" className="font__edit">Roles</label>
                       <AltrpSelect
                         id="page-roles"
                         isMulti={true}
@@ -368,7 +369,7 @@ class AddPage extends Component {
                       />
                     </div>
                     <div className="form-group">
-                      <label htmlFor="redirect">Redirect</label>
+                      <label htmlFor="redirect" className="font__edit">Redirect</label>
                       <input
                         type="text"
                         id="redirect"
@@ -379,24 +380,24 @@ class AddPage extends Component {
                         className="form-control"
                       />
                     </div>
-                    <div className="row col-12">
-                      <div className="form-group col-3 position-static ml-0 align-self-start">
+                    <div className="addPage__bottom">
+                      <div className="addPage__bottom-block">
                         <input type="checkbox" id="caching"
                           checked={this.state.value.is_cached || ""}
                           onChange={e => {
                             this.changeValue(e.target.checked, "is_cached");
                           }}
-                          className="form-check-input mr-1 form-check-input_inline" />
-                        <label htmlFor="caching" className="label_checkbox">Сaching (Only for Static Pages)</label>
+                          className="addPage__bottom-checkbox" />
+                        <label htmlFor="caching" className="addPage__bottom-label font__edit">Сaching (Only for Static Pages)</label>
                       </div>
-                      <div className="form-group col-1 position-static ml-0 align-self-start">
+                      <div className="addPage__bottom-block">
                         <input type="checkbox" id="404"
                           checked={this.state.value.not_found || ""}
                           onChange={e => {
                             this.changeValue(e.target.checked, "not_found");
                           }}
-                          className="form-check-input mr-1 form-check-input_inline" />
-                        <label htmlFor="404" className="label_checkbox">404</label>
+                          className="addPage__bottom-checkbox" />
+                        <label htmlFor="404" className="addPage__bottom-label font__edit">404</label>
                       </div>
                       {/*<div className="form-group col-3 position-static ml-0 align-self-start">*/}
                       {/*  <label htmlFor="sections_count" className="label_checkbox">Sections Count:</label>*/}
@@ -407,15 +408,15 @@ class AddPage extends Component {
                       {/*    }}*/}
                       {/*    className="form-control" />*/}
                       {/*</div>*/}
-                      <div className="form-group col-5 position-static ml-0 align-self-start">
-                        <label htmlFor="icon" className="label_checkbox">Page Icon</label>
+                      <div className="addPage__bottom-page_icon">
+                        <label htmlFor="icon" className="addPage__bottom-label font__edit">Page Icon</label>
                         <IconSelect
                           id="icon"
                           returnType="text"
                           value={this.state.value.icon}
                           maxWidth="50px"
                           maxHeight="50px"
-                          className="col-4"
+                          className="addPage__bottom-icon"
                           onChange={(icon) => {
                             let value = mutate.set(this.state.value, 'icon', icon);
                             this.setState(state=>({...state, value}));
@@ -429,7 +430,7 @@ class AddPage extends Component {
                 return (
                   <React.Fragment>
                     <div className="form-group">
-                      <label htmlFor="seo-title">Title</label>
+                      <label htmlFor="seo-title" className="font__edit">Title</label>
                       <input
                         type="text"
                         id="seo-title"
@@ -441,7 +442,7 @@ class AddPage extends Component {
                       />
                     </div>
                     <div className="form-group">
-                      <label htmlFor="seo-keywords">Keywords</label>
+                      <label htmlFor="seo-keywords" className="font__edit">Keywords</label>
                       <input
                         type="text"
                         id="seo-keywords"
@@ -453,7 +454,7 @@ class AddPage extends Component {
                       />
                     </div>
                     <div className="form-group">
-                      <label htmlFor="seo_description">Description</label>
+                      <label htmlFor="seo_description" className="font__edit">Description</label>
                       <textarea
                         id="seo_description"
                         value={this.state.value.seo_description || ""}

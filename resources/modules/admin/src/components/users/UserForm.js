@@ -149,7 +149,7 @@ class UserForm extends Component {
       return <Redirect to={this.state.redirect_error_url} />
     }
 
-    return <form className="admin-form" onSubmit={this.saveUser}>
+    return <form className="admin-form admin-form_newUsers" onSubmit={this.saveUser}>
       <div className="form-group">
         <label htmlFor="page-name">Name</label>
         <input type="text" id="name" name="name" required={1}

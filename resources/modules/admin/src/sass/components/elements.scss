@@ -1,24 +1,25 @@
 .btn {
   display: inline-block;
   padding: 6px 12px;
-  background: #E9E9EB;
-  border: 1.5px solid $dark-grey;
-  border-radius: 2px;
-  font-family: Roboto, Arial, sans-serif;
-  font-weight: 500;
+  background: #315EFB;
+  border-radius: 10px;
+  font-family: Roboto, sans-serif;
+  font-weight: 400;
   font-size: 15px;
   line-height: 18px;
   text-decoration: none;
-  color: $dark-grey;
+  color: white;
   &:hover {
-    background: $dark-grey;
+    background: #274BC8;
     color: white;
   }
   &_success{
     background-color: $green;
     border-color: $green;
+    padding: 12px 34px;
+    color: white;
     &:hover{
-      border-color: $purple
+      background-color: #7CA727;
     }
   }
   &_link{
@@ -34,6 +35,7 @@
     background-color: #cccccc;
     color: #666666;
     border-color: #666666;
+    padding: 12px 34px;
     &:hover {
       background-color: #cccccc;
       color: #666666;
@@ -47,6 +49,10 @@
       background-color: #fff;
       color: $red;
     }
+  }
+
+  &__right {
+    margin-right: 10px;
   }
 }
 
@@ -86,22 +92,22 @@ input[type="text"].form__input{
   font-size: 14px;
 }
 .admin-pills{
+  margin-bottom: 25px;
   & .nav-item{
     background-color: transparent;
+    margin-right: 10px;
   }
-  & .nav-link{
-    border: 1px solid $border-gray;
-    border-radius: 3px 3px 0 0 ;
+  & .nav-link {
+    border-radius: 10px;
     margin-bottom: -1px;
     background-color: $light-gray;
-    font-family: Montserrat, sans-serif;
+    font-family: Roboto, sans-serif;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 700;
     color: $button-grey;
     &.active{
-      background-color: #fff;
-      border-bottom-color: #fff;
-      color: $purple;
+      background-color: $green;
+      color: white;
     }
   }
 }
@@ -111,10 +117,12 @@ input[type="text"].form__input{
   top: 0;
   right: 0;
   height: 62px;
-  padding-right: 27px;
+  padding-right: 60px;
 }
 .top-panel{
   &-notification{
+    position: relative;
+    top: -1px;
     margin-right: 19px;
   }
   &__portrait{
@@ -124,6 +132,7 @@ input[type="text"].form__input{
     margin-right: 14px;
     font-size: 15px;
     color: $grey;
+    font-family: Roboto, sans-serif;
   }
   &-logout{
     background-color: transparent;
@@ -141,45 +150,102 @@ input[type="text"].form__input{
   &__tab {
     display: inline-block;
     margin-right: 16px;
-    padding: .5rem 1rem;
-
-    border: 1px solid $border-gray;
-    border-radius: 3px 3px 0 0;
+    padding: 8px 16px;
+    border-radius: 10px;
     background-color: #e6e9ec;
-
-    font-family: Montserrat,sans-serif;
+    font-family: Roboto, sans-serif;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 700;
     color: #8e94aa;
-
     cursor: pointer;
-  }
 
-  &__tab:hover {
-    background-color: #f1f3f5;
-
-    color: #8992b4;
-    text-decoration: none;
+    &:hover {
+      text-decoration: none;
+      color: #8e94aa;
+    }
   }
 
   &__tab--selected {
     display: inline-block;
+    background-color: #87CA00;
+    color: white;
 
-    background-color: #fff;
-    border-bottom-color: #fff;
-
-    color: #343b4c;
-  }
-
-  &__tab--selected:hover {
-    background-color: #fff;
-
-    color: #343b4c;
+    &:hover {
+      text-decoration: none;
+      color: white;
+    }
   }
 
   &__tab-panel {
     padding: 0 10px;
     background-color: #fff;
+    border-radius: 5px;
     border: 1px solid $border-gray;
   }
+}
+
+.zeroing__styleTabs .custom-tab__tab-panel {
+  padding: 20px;
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: white;
+  filter: drop-shadow(-4px 8px 24px rgba(44, 63, 88, 0.02));
+}
+
+.zeroing__styleTabs .custom-tab__tabs {
+  position: relative;
+  bottom: 0;
+  margin-top: 10px;
+  margin-bottom: 25px;
+}
+
+.skeleton_marginRight {
+  margin-right: 3em;
+}
+
+.addFavicon__block {
+  padding: 15px;
+}
+
+.skeletonColors__marginBottom {
+  margin-bottom: 20px;
+}
+
+.form_styles_border {
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+}
+
+.export-block {
+  margin-bottom: 20px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  & .btn_success {
+    padding: 12px 10px;
+    min-width: 340px;
+    text-align: center;
+  }
+}
+
+.btn_advanced {
+  min-width: 120px;
+  padding: 8px 10px;
+  text-align: center;
+}
+
+.edit_left {
+  margin-left: 15px;
+  padding: 0;
+}
+
+.font__edit {
+  font-family: Roboto, sans-serif;
+}
+
+.upload__marginBottom {
+  margin-bottom: 40px;
 }

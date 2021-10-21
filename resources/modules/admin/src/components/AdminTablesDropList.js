@@ -1,5 +1,4 @@
 import React from 'react';
-import TableSvg from '../svgs/tables.svg';
 import { Link, withRouter } from "react-router-dom";
 
 class AdminTablesDropList extends React.Component {

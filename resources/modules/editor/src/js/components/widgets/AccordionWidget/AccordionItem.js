@@ -24,7 +24,7 @@ function AccordionItem({idArray, idx, open, item, title_html_tag_accordion_conte
 
     <div className={"altrp-accordion-item" + (idArray[idx] ? ' active' : '')}>
       {/*button*/}
-      <div className="altrp-accordion-item-button active" data-key={idx} onClick={(e) => onAccordion(e)}>
+      <div className="altrp-accordion-item-button" data-key={idx} onClick={(e) => onAccordion(e)}>
         <div className="altrp-accordion-item-label-container">
           {
             React.createElement(

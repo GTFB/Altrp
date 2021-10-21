@@ -5,14 +5,18 @@ import AdminTable from "../AdminTable";
 import CONSTANTS from "../../../../editor/src/js/consts";
 import {mbParseJSON} from "../../../../front-app/src/js/helpers";
 import {withRouter} from "react-router";
+import {buildPagesTree} from "../../js/helpers";
 
 class MenusList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       menus: [],
+      currentPage: 1,
+      menusSearch: ""
     }
     this.resource = new Resource({route: '/admin/ajax/menus'})
+    this.itemsPerPage = 3;
   }
 
   async componentDidMount() {
@@ -24,12 +28,21 @@ class MenusList extends Component {
     }
   }
 
+  searchMenus = (e) => {
+    e.preventDefault();
+    this.updateMenus;
+  }
+
+  changeMenus = (e) => {
+    this.setState( { menusSearch: e.target.value})
+  }
+
   addNew = async()=>{
     try{
       let res = await this.resource.post({name: '', children: '[]'});
       res = res.data;
       this.props.history.push(`/admin/menus/${res.id}`)
-    }catch (e) {
+    } catch (e) {
       if(e.res instanceof Promise){
         e = await e.res.then();
         e = mbParseJSON(e);
@@ -43,16 +56,18 @@ class MenusList extends Component {
   }
 
   updateMenus = async () => {
-    this.resource = new Resource({route: '/admin/ajax/menus'});
-    let menus = await  this.resource.getAll();
+    let menus = await  this.resource.getQueried({ s: this.state.menusSearch });
     this.setState(state => ({...state, menus}))
   }
 
   render() {
+
+    const { menus, currentPage, menusSearch } = this.state;
+
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
-          <div className="admin-breadcrumbs__current">Areas</div>
+          <div className="admin-breadcrumbs__current">Menus</div>
         </div>
         <button className="btn" onClick={this.addNew} >Add New</button>
       </div>
@@ -82,10 +97,28 @@ class MenusList extends Component {
               title: "Trash"
             }
           ]}
-          rows={this.state.menus.map(menu => ({
-            ...menu,
-            editUrl: '/admin/menus/' + menu.id
-          }))}/>
+          rows={buildPagesTree(menus).slice(
+            currentPage * this.itemsPerPage - this.itemsPerPage,
+            currentPage * this.itemsPerPage
+          )}
+
+          searchMenus={{
+            onSubmitMenus: this.searchMenus,
+            valueMenus: menusSearch,
+            onChangeMenus: this.changeMenus
+          }}
+
+          pageCount={Math.ceil(menus.length / this.itemsPerPage) || 1}
+          currentPage={currentPage}
+          changePage={page => {
+            if (currentPage !== page) {
+              this.setState({ currentPage: page });
+            }
+          }}
+          itemsCount={menus.length}
+
+          openPagination={true}
+        />
       </div>
     </div>
   }

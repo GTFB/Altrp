@@ -79,35 +79,35 @@ class EditModelForm extends Component {
     }
     return <form className="admin-form row" onSubmit={this.submitHandler}>
       <div className="form-group col-12">
-        <label htmlFor="page-title">Model Title</label>
+        <label htmlFor="page-title font__editModeForm" className="font__edit">Model Title</label>
         <input type="text" id="page-title" required
           value={model.title || ''}
           onChange={this.titleChangeHandler}
           className="form-control" />
       </div>
       <div className="form-group col-4">
-        <label htmlFor="page-name">Model Name</label>
+        <label htmlFor="page-name font__editModeForm" className="font__edit">Model Name</label>
         <input type="text" id="page-name" required
           value={model.name || ''}
           onChange={e => { this.changeValue(e.target.value, 'name') }}
           className="form-control" />
       </div>
       <div className="form-group col-4">
-        <label htmlFor="page-description">Parent Model</label>
+        <label htmlFor="page-description font__editModeForm" className="font__edit">Parent Model</label>
         <input type="text" id="page-description"
                value={model.parent_model_id || ''}
                onChange={e => { this.changeValue(e.target.value, 'parent_model_id') }}
                className="form-control" />
       </div>
       <div className="form-group col-4">
-        <label htmlFor="page-description">Model Description</label>
+        <label htmlFor="page-description font__editModeForm" className="font__edit">Model Description</label>
         <input type="text" id="page-description"
           value={model.description || ''}
           onChange={e => { this.changeValue(e.target.value, 'description') }}
           className="form-control" />
       </div>
       {(model.id) ? '' : <div className="form-group col-12 ">
-        <label htmlFor="model-table_id" className="label_checkbox">Table</label>
+        <label htmlFor="model-table_id" className="label_checkbox font__edit">Table</label>
         <AltrpSelect
             id="model-table_id"
             defaultOptions={[
@@ -121,24 +121,24 @@ class EditModelForm extends Component {
             onChange={value => {this.changeValue(value, 'table_id')}}
             optionsRoute="/admin/ajax/tables/options"/>
       </div>}
-      <div className="row col-12">
+      <div className="row col-12 edit_left">
         <div className="form-group col-6 form-check-inline">
           <input type="checkbox" id="page-soft_deletes"
             checked={model.soft_deletes}
             onChange={e => { this.changeValue(e.target.checked, 'soft_deletes') }}
             className="form-check-input form-check-input" />
-          <label htmlFor="page-soft_deletes" className="label_checkbox">Soft Deletes</label>
+          <label htmlFor="page-soft_deletes" className="label_checkbox font__edit">Soft Deletes</label>
         </div>
-        <div className="form-group col-6 form-check-inline">
+        <div className="form-group col-6 form-check-inline ">
           <input type="checkbox" id="page-time_stamps"
             checked={model.time_stamps}
             onChange={e => { this.changeValue(e.target.checked, 'time_stamps') }}
             className="form-check-input form-check-input_inline" />
-          <label htmlFor="page-time_stamps" className="label_checkbox">Time Stamps</label>
+          <label htmlFor="page-time_stamps" className="label_checkbox font__edit">Time Stamps</label>
         </div>
 
       </div>
-      <div className="btn__wrapper">
+      <div className="btn__wrapper edit_left">
         <button className="btn btn_success" type="submit">{this.props.submitText}</button>
         <Link to="/admin/tables/models"><button className="btn">Cancel</button></Link>
         {this.props.edit

@@ -155,16 +155,18 @@ class EditModel extends Component {
         .then(res => res.json())
         .then(res => !res.taken) :
       null;
-    
+
     if (isNameTaken) {
       return alert(`Name ${model.name} is already taken. Use another one.`)
     }
 
     if (this.state.id) {
       res = await this.modelsResource.put(this.state.id, model);
+      console.log("if", res)
     } else {
 
       res = await this.modelsResource.post(model);
+      console.log("else", res)
     }
     this.props.history.push("/admin/tables/models");
   };
@@ -187,7 +189,7 @@ class EditModel extends Component {
           edit={model.id}
           onSubmit={this.onSubmit} />
 
-        {fields ? <><h2 className="sub-header">Fields</h2>
+        {fields ? <><h2 className="sub-header ">Fields</h2>
           <AdminTable
             columns={columns}
             quickActions={[{
@@ -205,6 +207,7 @@ class EditModel extends Component {
               title: 'Trash'
             }]}
             rows={fields.map(field => ({ ...field, editUrl: `/admin/tables/models/${model.id}/fields/edit/${field.id}` }))}
+            radiusTable={true}
           />
           <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/fields/add`}>Add Field</Link>
         </> : ''}
@@ -226,6 +229,7 @@ class EditModel extends Component {
             title: 'Trash'
           }]}
           rows={remoteFields}
+          radiusTable={true}
         />
         <button onClick={() => this.setState({ isFieldRemoteModalOpened: true, editingRemoteField: null })} className="btn btn_add">
           Add Remote Field
@@ -258,6 +262,7 @@ class EditModel extends Component {
               title: 'Trash'
             }]}
             rows={relations.map(relation => ({ ...relation, editUrl: `/admin/tables/models/${model.id}/relations/edit/${relation.id}` }))}
+            radiusTable={true}
           />
           <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/relations/add`}>Add Relation</Link>
         </> : ''}
@@ -280,6 +285,7 @@ class EditModel extends Component {
               title: 'Trash'
             }]}
             rows={accessors.map(accessor => ({ ...accessor, editUrl: `/admin/tables/models/${model.id}/accessors/edit/${accessor.id}` }))}
+            radiusTable={true}
           />
           <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/accessors/add`}>Add Accessor</Link>
         </> : ''}
@@ -302,6 +308,7 @@ class EditModel extends Component {
               className: 'quick-action-menu__item_danger',
               title: 'Trash'
             }]}
+            radiusTable={true}
           />
           <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/queries/add`}>Add Query</Link>
         </> : ''}
@@ -310,6 +317,7 @@ class EditModel extends Component {
           <AdminTable
             columns={columns}
             rows={sql_editors.map(query => ({ ...query, editUrl: `/admin/tables/models/${model.id}/sql_editors/edit/${query.id}` }))}
+            radiusTable={true}
           />
           <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/sql_editors/add`}>Add Editor</Link>
         </> : ''}

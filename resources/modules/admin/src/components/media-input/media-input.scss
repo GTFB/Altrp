@@ -1,10 +1,15 @@
 @import "../../../../../sass/vars";
 .admin-media-input{
-  width: 100px;
+  display: flex;
+  align-items: center;
   &__preview{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
     height: 100px;
-    width: 100%;
     background-color: $light-gray;
+    margin-right: 30px;
     & img{
       max-width: 100%;
     }

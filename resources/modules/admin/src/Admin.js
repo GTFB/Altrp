@@ -11,16 +11,17 @@ import { hot } from "react-hot-loader";
 import { Scrollbars } from "react-custom-scrollbars";
 import { connect } from "react-redux";
 
-import Bars from "./svgs/bars.svg";
-import AssetSvg from "./svgs/assets.svg";
-import DashboardSvg from "./svgs/dashboard.svg";
-import PagesSvg from "./svgs/pages.svg";
-import PluginSvg from "./svgs/plugins.svg";
-import ReportSvg from "./svgs/reports.svg";
-import SettingSvg from "./svgs/settings.svg";
-import TableSvg from "./svgs/tables.svg";
-import TemplateSvg from "./svgs/templates.svg";
-import UserSvg from "./svgs/users.svg";
+import Bars from "./svgs/bars-v2.svg";
+import AssetSvg from "./svgs/assets-v2.svg";
+import MainSvg from "./svgs/main-v2.svg";
+import PagesSvg from "./svgs/pages-v2.svg";
+import PluginSvg from "./svgs/plugins-v2.svg";
+import ModelsSvg from "./svgs/models-v2.svg";
+import SettingSvg from "./svgs/settings-v2.svg";
+import TablesSvg from "./svgs/tables-v2.svg";
+import RobotsSvg from "./svgs/robots-v2.svg";
+import LayoutSvg from "./svgs/layout-v2.svg";
+import UserSvg from "./svgs/users-v2.svg";
 
 import AdminLogo from "./components/AdminLogo";
 import AllPages from "./components/AllPages";
@@ -65,6 +66,7 @@ import { WithRouterAdminAssetsDropList } from "./components/AdminAssetsDropList"
 import { WithRouterAdminTablesDropList } from "./components/AdminTablesDropList";
 import { WithRouterAdminTemplatesDropList } from "./components/AdminTemplatesDropList";
 import { WithRouterAdminUsersDropList } from "./components/AdminUsersDropList";
+import {WithRouterAdminModelsDropList} from "./components/AdminModelsDropList";
 import CustomFonts from "./components/CustomFonts";
 import EditFont from "./components/EditFont";
 import AddNewFont from "./components/AddNewFont";
@@ -91,6 +93,8 @@ import AreaAdd from "./components/areas/AreaAdd";
 import AreaEdit from "./components/areas/AreaEdit";
 import MenuPage from "./components/menu-builder/MenuPage";
 import MenusList from "./components/menu-builder/MenusList";
+import ModelsPage from "./components/models/ModelsPage";
+import {modelsToggle} from "./js/store/models-state/actions";
 
 window.React = React;
 window.ReactDOM = ReactDOM;
@@ -117,6 +121,17 @@ class Admin extends Component {
 
     this.getConnect();
     this.getMetaName();
+    this.getStatusCheckedModels();
+  }
+
+  async getStatusCheckedModels() {
+    let valueChecked = !!(
+      await new Resource({ route: "/admin/ajax/settings" }).get(
+        "altrp_models_disabled"
+      )
+    ).altrp_models_disabled;
+
+    store.dispatch(modelsToggle(valueChecked))
   }
 
   // Подключение вебсокетов
@@ -238,7 +253,7 @@ class Admin extends Component {
           <nav className="admin-nav">
             <div className="admin-nav-top">
               <AdminLogo />
-              <Bars className="admin__bars" onClick={this.toggleMenu} />
+              <Bars width={29} height={24} className="admin__bars" onClick={this.toggleMenu} />
             </div>
             <div className="admin-nav-main">
               {this.state.pagesMenuShow ? (
@@ -258,36 +273,12 @@ class Admin extends Component {
                       </Link>
                     </li>
                     <li>
-                      <Link
-                        to="/admin/reports"
-                        className="admin-nav-list__link"
-                      >
-                        <ReportSvg className="icon" />
-                        <span>Reports</span>
+                      <Link to="/admin/models" className="admin-nav-list__link additionally__models">
+                        <ModelsSvg className="icon" />
+                        <span>Models</span>
                       </Link>
+                      <WithRouterAdminModelsDropList models={models} />
                     </li>
-                      Models
-                      {models
-                      .sort((a, b) => {
-                        if (a.label.toUpperCase() < b.label.toUpperCase())
-                          return -1;
-                        if (a.label.toUpperCase() > b.label.toUpperCase())
-                          return 1;
-                        return 0;
-                      })
-                      .map(({ value: id, label }) => (
-                        <li key={id}>
-                          <Link
-                            to={{
-                              pathname: `/admin/model/${id}`,
-                              propsSearch: label,
-                            }}
-                            className="admin-nav-list__link admin-nav-list__link--models"
-                          >
-                            {label}
-                          </Link>
-                        </li>
-                      ))}
                   </ul>
                 </Scrollbars>
               ) : (
@@ -302,8 +293,8 @@ class Admin extends Component {
                         to="/admin/dashboard"
                         className="admin-nav-list__link"
                       >
-                        <DashboardSvg className="icon" />
-                        <span>Dashboard</span>
+                        <MainSvg className="icon" />
+                        <span>Main</span>
                       </Link>
                     </li>
                     <li>
@@ -317,6 +308,16 @@ class Admin extends Component {
                       <WithRouterAdminAssetsDropList />
                     </li>
                     <li>
+                      <Link
+                        to="/admin/templates"
+                        className="admin-nav-list__link"
+                      >
+                        <LayoutSvg className="icon" />
+                        <span>Layouts</span>
+                      </Link>
+                      <WithRouterAdminTemplatesDropList />
+                    </li>
+                    <li>
                       {/*<Link to="/admin/tables" className="admin-nav-list__link">*/}
                       {/*<TableSvg className="icon"/>*/}
                       {/*<span>Tables</span>*/}
@@ -326,24 +327,14 @@ class Admin extends Component {
                         to="/admin/tables/models"
                         className="admin-nav-list__link"
                       >
-                        <TableSvg className="icon" />
+                        <TablesSvg className="icon" />
                         <span>Tables</span>
                       </Link>
                       <WithRouterAdminTablesDropList />
                     </li>
                     <li>
-                      <Link
-                        to="/admin/templates"
-                        className="admin-nav-list__link"
-                      >
-                        <TemplateSvg className="icon" />
-                        <span>Templates</span>
-                      </Link>
-                      <WithRouterAdminTemplatesDropList />
-                    </li>
-                    <li>
                       <Link to="/admin/robots" className="admin-nav-list__link">
-                        <TemplateSvg className="icon" />
+                        <RobotsSvg className="icon" />
                         <span>Robots</span>
                       </Link>
                     </li>
@@ -353,6 +344,15 @@ class Admin extends Component {
                       <span>Reports</span>
                     </Link>
                   </li> */}
+                    <li>
+                      <Link
+                        to="/admin/plugins"
+                        className="admin-nav-list__link"
+                      >
+                        <PluginSvg className="icon" />
+                        <span>Plugins</span>
+                      </Link>
+                    </li>
                     <li>
                       <Link
                         to="/admin/users"
@@ -365,38 +365,11 @@ class Admin extends Component {
                     </li>
                     <li>
                       <Link
-                        to="/admin/access/roles"
-                        className="admin-nav-list__link"
-                      >
-                        <UserSvg className="icon" />
-                        <span>Access</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/admin/plugins"
-                        className="admin-nav-list__link"
-                      >
-                        <PluginSvg className="icon" />
-                        <span>Plugins</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
                         to="/admin/settings"
                         className="admin-nav-list__link"
                       >
                         <SettingSvg className="icon" />
                         <span>Settings</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/admin/menus"
-                        className="admin-nav-list__link"
-                      >
-                        <SettingSvg className="icon" />
-                        <span>Menus</span>
                       </Link>
                     </li>
                   </ul>
@@ -433,7 +406,8 @@ class Admin extends Component {
             </Route>
             <Route path="/admin/users/user/:id/notification/new" exact>
               <EditNotification />
-            </Route>            <Route path="/admin/tools">
+            </Route>
+            <Route path="/admin/tools">
               <UsersTools />
             </Route>
             <Route path="/admin/assets/custom-fonts">
@@ -576,6 +550,9 @@ class Admin extends Component {
             </Route>
             <Route path="/admin/access">
               <AccessOptions />
+            </Route>
+            <Route path="/admin/models">
+              <ModelsPage />
             </Route>
             <Route path="/admin/model/:id">
               <ModelPage />

@@ -251,56 +251,56 @@ class Assets extends Component {
             </span>
           </label>
         </div>
-        <div className="custom-tab__tabs mt-4">
+        <div className="custom-tab__tabs mt-4 upload__marginBottom">
           <NavLink
             className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"
             to={`${this.path}/images`}
             isActive={this.isActiveLink('images')}
             onClick={this.onFilterAssets('images')}
-          >IMAGES</NavLink>
+          >Images</NavLink>
           <NavLink
             className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"
             to={`${this.path}/documents`}
             isActive={this.isActiveLink('documents')}
             onClick={this.onFilterAssets('documents')}
-          >DOCUMENTS</NavLink>
+          >Documents</NavLink>
           <NavLink
             className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"
             to={`${this.path}/fonts`}
             isActive={this.isActiveLink('fonts')}
             onClick={this.onFilterAssets('fonts')}
-          >FONTS</NavLink>
+          >Fonts</NavLink>
           <NavLink
             className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"
             to={`${this.path}/svgs`}
             isActive={this.isActiveLink('svgs')}
             onClick={this.onFilterAssets('svgs')}
-          >SVGS</NavLink>
+          >Svgs</NavLink>
           <NavLink
             className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"
             to={`${this.path}/archives`}
             isActive={this.isActiveLink('archives')}
             onClick={this.onFilterAssets('archives')}
-          >ARCHIVES</NavLink>
+          >Archives</NavLink>
           <NavLink
             className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"
             to={`${this.path}/medias`}
             isActive={this.isActiveLink('medias')}
             onClick={this.onFilterAssets('medias')}
-          >MEDIAS</NavLink>
+          >Medias</NavLink>
           <NavLink
             className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"
             to={`${this.path}/others`}
             isActive={this.isActiveLink('others')}
             onClick={this.onFilterAssets('others')}
-          >OTHERS</NavLink>
+          >Others</NavLink>
         </div>
         <div className="admin-assets__list custom-tab__tab-panel p-4 assets-list d-flex flex-wrap">
           {

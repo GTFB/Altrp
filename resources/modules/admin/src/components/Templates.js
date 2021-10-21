@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
 import store from "../js/store/store";
-import { setModalSettings } from "../js/store/modal-settings/actions";
-import { generateId, redirect, objectDeepCleaning } from "../js/helpers";
+import {setModalSettings} from "../js/store/modal-settings/actions";
+import {generateId, redirect, objectDeepCleaning} from "../js/helpers";
 import Pagination from "./Pagination";
 
 
@@ -31,6 +31,7 @@ export default class Templates extends Component {
     this.changeActiveArea = this.changeActiveArea.bind(this);
     this.generateTemplateJSON = this.generateTemplateJSON.bind(this);
   }
+
   changeActiveArea(e) {
     let areaId = parseInt(e.target.dataset.area);
     let activeTemplateArea = {};
@@ -47,7 +48,7 @@ export default class Templates extends Component {
    */
   changePage(currentPage) {
     this.updateTemplates(currentPage, this.state.activeTemplateArea);
-    this.setState(state => ({ ...state, currentPage }));
+    this.setState(state => ({...state, currentPage}));
   }
 
   /**
@@ -57,7 +58,7 @@ export default class Templates extends Component {
   setActiveArea(activeTemplateArea) {
     this.updateTemplates(1, activeTemplateArea);
     this.setState(state => {
-      return { ...state, activeTemplateArea };
+      return {...state, activeTemplateArea};
     })
   }
 
@@ -85,10 +86,10 @@ export default class Templates extends Component {
   }
 
   /** @function generateTemplateJSON
-  * Генерируем контент файла template в формате JSON
-  * @param {object} template Данные, получаемые с сервера
-  * @return {string} Строка в формате JSON
-  */
+   * Генерируем контент файла template в формате JSON
+   * @param {object} template Данные, получаемые с сервера
+   * @return {string} Строка в формате JSON
+   */
   generateTemplateJSON(template) {
     const data = objectDeepCleaning(JSON.parse(template.data));
     return JSON.stringify({
@@ -99,13 +100,14 @@ export default class Templates extends Component {
       __exported_metas__: template.__exported_metas__,
     });
   }
+
   /** @function downloadJSONFile
-  * Скачиваем файл
-  * @param {object} template Данные, получаемые с сервера
-  */
+   * Скачиваем файл
+   * @param {object} template Данные, получаемые с сервера
+   */
   downloadJSONFile(template) {
     const element = document.createElement("a");
-    const file = new Blob([this.generateTemplateJSON(template)], { type: 'text/plain' });
+    const file = new Blob([this.generateTemplateJSON(template)], {type: 'text/plain'});
     element.href = URL.createObjectURL(file);
     element.download = `${template.name}.json`;
     document.body.appendChild(element); // Required for this to work in FireFox
@@ -119,7 +121,7 @@ export default class Templates extends Component {
     let templateAreas = await this.templateTypesResource.getAll();
     this.setActiveArea(templateAreas[0]);
     this.setState(state => {
-      return { ...state, templateAreas }
+      return {...state, templateAreas}
     });
     this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea)
   }
@@ -128,7 +130,7 @@ export default class Templates extends Component {
    * Показываем/скрываем форму импорта
    */
   toggleImportForm = () => {
-    this.setState(state => ({ ...state, showImportForm: !this.state.showImportForm }))
+    this.setState(state => ({...state, showImportForm: !this.state.showImportForm}))
   };
   /**
    * Импортируем шаблон из файла
@@ -159,13 +161,13 @@ export default class Templates extends Component {
           // let res = await this.templateImportModule.importTemplate(importedTemplateData)
           try {
             let res = await this.resource.post(importedTemplateData);
-            if(res.redirect && res.url){
+            if (res.redirect && res.url) {
               const newLink = document.createElement('a');
               newLink.href = res.url
               newLink.setAttribute('target', '_blank');
               newLink.click()
             }
-          }catch (error){
+          } catch (error) {
             console.error(error);
           }
           this.updateTemplates(this.state.currentPage)
@@ -193,7 +195,7 @@ export default class Templates extends Component {
             type: "root-element",
           }
         };
-        return (new Resource({ route: '/admin/ajax/templates' })).post(data)
+        return (new Resource({route: '/admin/ajax/templates'})).post(data)
       },
       fields: [
         {
@@ -219,21 +221,23 @@ export default class Templates extends Component {
     };
     store.dispatch(setModalSettings(modalSettings));
   }
+
   getAreasOptions() {
     return this.state.templateAreas;
   }
+
   setTemplates(templates) {
     let allTemplates = templates;
     templates = templates.filter(template => {
       return template.area === this.state.activeTemplateArea.name;
     });
     this.setState(state => {
-      return { ...state, templates, allTemplates };
+      return {...state, templates, allTemplates};
     });
   }
 
   sortingHandler = (order_by, order) => {
-    this.setState({ sorting: { order_by, order } }, this.updateTemplates);
+    this.setState({sorting: {order_by, order}}, this.updateTemplates);
   }
 
   searchTemplates = e => {
@@ -241,8 +245,12 @@ export default class Templates extends Component {
     this.updateTemplates();
   }
 
+  changeTemplates = (e) => {
+    this.setState({templateSearch: e.target.value})
+  }
+
   render() {
-    const { templateSearch, sorting } = this.state
+    const {templateSearch, sorting} = this.state
     return <div className="admin-templates admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
@@ -259,13 +267,13 @@ export default class Templates extends Component {
       <div className="admin-content">
         {this.state.showImportForm &&
         <form className={"admin-form justify-content-center" + (this.state.showImportForm ? ' d-flex' : ' d-none')}
-          onSubmit={this.importTemplate}>
+              onSubmit={this.importTemplate}>
           <input type="file"
-            name="files"
-            multiple={true}
-            required={true}
-            accept="application/json"
-            className="form__input" />
+                 name="files"
+                 multiple={true}
+                 required={true}
+                 accept="application/json"
+                 className="form__input"/>
           <button className="btn">Import</button>
         </form>}
         <ul className="nav nav-pills admin-pills">
@@ -276,27 +284,24 @@ export default class Templates extends Component {
             }
             return <li className="nav-item" key={area.id}>
               <button className={tabClasses.join(' ')}
-                onClick={this.changeActiveArea}
-                data-area={area.id}>{area.title}</button>
+                      onClick={this.changeActiveArea}
+                      data-area={area.id}>{area.title}</button>
             </li>
           })}
         </ul>
-        <form className="admin-panel py-2" onSubmit={this.searchTemplates}>
-          <input className="input-sm mr-2" value={templateSearch} onChange={e => this.setState({ templateSearch: e.target.value })} />
-          <button className="btn btn_bare admin-users-button">Search</button>
-        </form>
-        <AdminTable columns={[
-          {
-            name: 'title',
-            title: 'Title',
-            url: true,
-            target: '_blank',
-          },
-          {
-            name: 'author',
-            title: 'Author',
-          },
-        ]}
+        <AdminTable
+          columns={[
+            {
+              name: 'title',
+              title: 'Title',
+              url: true,
+              target: '_blank',
+            },
+            {
+              name: 'author',
+              title: 'Author',
+            },
+          ]}
           rows={this.state.templates}
           quickActions={[{
             tag: 'a', props: {
@@ -328,11 +333,19 @@ export default class Templates extends Component {
           }]}
           sortingHandler={this.sortingHandler}
           sortingField={sorting.order_by}
-        />
-        <Pagination pageCount={this.state.pageCount || 1}
+
+          searchTemplates={{
+            onSubmitSearchTemplates: this.searchTemplates,
+            valueTemplates: templateSearch,
+            onChangeTemplates: (e) => this.changeTemplates(e)
+          }}
+
+          pageCount={this.state.pageCount || 1}
           currentPage={this.state.currentPage}
           changePage={this.changePage}
           itemsCount={this.state.templates.length}
+
+          openPagination={true}
         />
       </div>
     </div>;

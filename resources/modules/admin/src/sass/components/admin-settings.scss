@@ -1,12 +1,9 @@
 
-.admin-settings{
-    .nav{
-        margin-bottom: -1px;
-    }
+.admin-settings {
     width: 100%;
-    border: 1px solid $border-gray;
     border-radius: 3px;
     overflow: hidden;
+    font-family: Roboto, sans-serif;
     & .admin-settings-table__td{
         height: 65px;
         padding: 8px 16px;
@@ -22,9 +19,8 @@
         line-height: 20px;
     }
     & .row-text{
-        font-family: Roboto;
         font-style: normal;
-        font-weight: bold;
+        font-weight: 700;
         font-size: 15px;
         line-height: 18px;
     }
@@ -80,14 +76,14 @@
 .admin_settings_telegram{
     display: flex;
     margin-top: 20px;
-    
+
     .admin_input__label{
-        font-weight:bold;
+        font-weight: 700;
         margin-right: 15px;
-    }   
+    }
     .admin_input_key{
         min-width: 500px;
-    }  
+    }
 }
 
 // Switcher
@@ -166,13 +162,64 @@
 
     .admin_settings_websockets_box{
         display: flex;
-        margin-top: 20px;    
     }
 
     .admin_input__label{
         margin-right: 15px;
-    }    
+    }
     .admin_input{
         margin-right: 30px;
-    }    
+    }
+}
+
+.admin_settings_integrations {
+  padding: 15px;
+}
+
+.admin-export-caption {
+  margin-bottom: 30px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.admin-export-middle {
+  margin-bottom: 30px;
+}
+
+.dt_font {
+
+  & a {
+    font-family: Roboto, sans-serif;
+  }
+}
+
+.admin-styles-advanced-blocks {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.admin-styles-advanced-block {
+  margin-bottom: 30px;
+
+  & .altrp-code-editor {
+    margin-bottom: 30px;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.advanced-flex {
+  display: flex;
+  align-items: center;
+
+  & .advanced-text {
+    margin-right: 30px;
+  }
+}
+
+.advanced-text-custom {
+  margin-bottom: 20px;
 }

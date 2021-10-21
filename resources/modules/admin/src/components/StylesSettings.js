@@ -101,11 +101,11 @@ class StylesSettings extends Component {
       imageLazyLoading,
     } = this.state;
     let {
-      skeletonColor = '#ccc',
-      skeletonHighlightColor = '#d0d0d0',
+      skeletonColor = '#e3e3e3',
+      skeletonHighlightColor = '#dcdcdc',
     } = this.state;
-    skeletonColor = skeletonColor || '#ccc';
-    skeletonHighlightColor = skeletonHighlightColor || '#d0d0d0';
+    skeletonColor = skeletonColor || '#e3e3e3';
+    skeletonHighlightColor = skeletonHighlightColor || '#dcdcdc';
     return (
         <div className="admin-styles-settings">
           <table>
@@ -122,7 +122,7 @@ class StylesSettings extends Component {
                     route="/admin/ajax/settings"
                     resourceid="container_width"
                     id="settings-container-width"
-                    className="form__input w-25"
+                    className="form__input w-25 form_styles_border"
                 />
               </td>
             </tr>
@@ -147,7 +147,7 @@ class StylesSettings extends Component {
               </td>
               <td className="admin-settings-table__td admin-skeleton-settings">
                 <div className="row">
-                  <div className="control-color-colorPicker pr-5">
+                  <div className="control-color-colorPicker pr-5 skeletonColors__marginBottom">
                     <SketchPicker presetColors={[]}
                                   color={skeletonColor}
                                   onChange={this.skeletonColorChange}
@@ -159,7 +159,7 @@ class StylesSettings extends Component {
                                   className="sketchPicker">
                     </SketchPicker>
                   </div>
-                  <div className="control-color-colorPicker pr-5">
+                  <div className="control-color-colorPicker pr-5 skeletonColors__marginBottom">
                     <SketchPicker presetColors={[]}
                                   color={skeletonHighlightColor}
                                   onChange={this.skeletonHighlightColorChange}
@@ -171,12 +171,12 @@ class StylesSettings extends Component {
                                   className="sketchPicker">
                     </SketchPicker>
                   </div>
-                  <div className="admin-skeleton pr-5 position-relative">
+                  <div className="admin-skeleton pr-5 position-relative skeleton_marginRight skeletonColors__marginBottom">
                       <Skeleton className="altrp-skeleton"
                                 color={skeletonColor}
                                 highlightColor={skeletonHighlightColor}/>
                   </div>
-                  <button className="admin-media-input__button btn btn_success align-self-end" onClick={async()=>{
+                  <button className="admin-media-input__button btn btn_success align-self-end skeletonColors__marginBottom" onClick={async()=>{
                     await this.skeletonHighlightColorChange('#d0d0d0');
                     await this.skeletonColorChange('#ccc');
                   }}>
@@ -187,7 +187,7 @@ class StylesSettings extends Component {
             </tr>}
             </tbody>
           </table>
-          <form onSubmit={this.submitHandler}>
+          <form onSubmit={this.submitHandler} className="addFavicon__block">
             <legend>Add Favicon:</legend>
             <div
                 className={this.state.uploaderClasses}
