@@ -1,10 +1,7 @@
 
 
 const AdminBarWrapper = styled.div`
-&{
-  position: relative;
-  z-index:
-}
+
 & .admin-bar {
   top: 0;
   position: absolute;

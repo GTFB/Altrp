@@ -559,7 +559,7 @@ class InputMultiSelectWidget extends Component {
       this.props.element.getCurrentModel().setProperty('altrp_search', s);
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
-        "change",
+        "search",
         searchActions,
         this.props.element
       );
