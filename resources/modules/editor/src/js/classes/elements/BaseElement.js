@@ -177,9 +177,15 @@ class BaseElement extends ControlStack {
   setAllChild(child, dispatchToHistory = true) {
     const factory = getFactory();
 
+    const sections = [];
+
     child.forEach(section => {
-      this.children.push(factory.parseData(section, this))
+      section.id = BaseElement.generateId();
+      sections.push(factory.parseData(section, this))
     })
+
+    console.log(sections)
+    this.children = [...this.children, ...sections]
 
     if (this.component && typeof this.component.setChildren === "function") {
       this.component.setChildren(this.children);
