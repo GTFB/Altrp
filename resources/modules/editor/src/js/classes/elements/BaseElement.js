@@ -180,11 +180,11 @@ class BaseElement extends ControlStack {
     const sections = [];
 
     child.forEach(section => {
-      section.id = BaseElement.generateId();
-      sections.push(factory.parseData(section, this))
+      sections.push(factory.parseData(section, this, null, {
+        updateId: true
+      }))
     })
 
-    console.log(sections)
     this.children = [...this.children, ...sections]
 
     if (this.component && typeof this.component.setChildren === "function") {
