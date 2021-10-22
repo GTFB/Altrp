@@ -17,11 +17,16 @@ import { addHistoryStoreItem } from "../../store/history-store/actions";
  * Базовый класс для методов элемента для редактора
  */
 class BaseElement extends ControlStack {
-  constructor() {
+  constructor(element) {
     super();
-    this.settings = {};
+    if(!element) {
+      this.settings = {};
+      this.cssClassStorage = {};
+    } else {
+      this.settings = element.settings;
+      this.cssClassStorage = element.cssClassStorage;
+    }
     this.controls = {};
-    this.cssClassStorage = {};
     this.controlsIds = [];
     this.controllersRegistered = false;
     this.children = [];
@@ -168,6 +173,24 @@ class BaseElement extends ControlStack {
       );
     }
   }
+
+  setAllChild(child, dispatchToHistory = true) {
+    const factory = getFactory();
+
+    child.forEach(section => {
+      this.children.push(factory.parseData(section, this))
+    })
+
+    if (this.component && typeof this.component.setChildren === "function") {
+      this.component.setChildren(this.children);
+    }
+
+    this.templateNeedUpdate();
+
+    child.forEach
+  }
+
+
 
   insertSiblingAfter(newSibling) {
     this.parent.insertNewChildAfter(this.getId(), newSibling);
