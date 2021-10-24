@@ -176,7 +176,11 @@ export function actionsControllers(
       {
         value: 'vi_toggle',
         label: 'Version for the Visually Impaired Toggle'
-      }
+      },
+      {
+        value: 'oauth',
+        label: 'OAuth'
+      },
     ]
   });
 
