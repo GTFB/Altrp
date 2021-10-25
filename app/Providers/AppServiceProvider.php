@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Altrp\Accessor;
 use App\Altrp\Controller;
+use App\Altrp\Customizer;
 use App\Altrp\Model;
 use App\Altrp\Query;
 use App\Altrp\Source;
@@ -17,6 +18,7 @@ use App\Observers\AltrpSourceObserver;
 use App\Observers\AltrpSQLEditorObserver;
 use App\Observers\AltrpValidationFieldObserver;
 use App\Observers\AltrpValidationRuleObserver;
+use App\Observers\CustomizerObserver;
 use App\Observers\PageObserver;
 use App\Observers\UserObserver;
 use App\Page;
@@ -75,6 +77,7 @@ class AppServiceProvider extends ServiceProvider
         Column::observe(AltrpColumnObserver::class);
         Relationship::observe(AltrpRelationshipObserver::class);
         Model::observe(AltrpModelObserver::class);
+        Customizer::observe(CustomizerObserver::class);
         Controller::observe(AltrpControllerObserver::class);
         Query::observe(AltrpQueryObserver::class);
         SQLEditor::observe(AltrpSQLEditorObserver::class);

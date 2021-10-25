@@ -73,6 +73,9 @@ Route::post('/reports/generate', "ReportsController@setHtml");
 Route::get('/admin/robots-editor', function () {
   return view('robots');
 })->middleware('auth', 'admin')->name('robots-editor');
+Route::get('/admin/customizers-editor', function () {
+  return view('customizer');
+})->middleware('auth', 'admin')->name('customizers-editor');
 
 /**
  * Notifications routes
@@ -291,6 +294,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/models/{model_id}/field_name_is_free', 'Admin\ModelsController@fieldNameIsFree');
     Route::get('/models/{model_id}/relation_name_is_free', 'Admin\ModelsController@relationNameIsFree');
     Route::get('/models/{model_id}/sql_builder_name_is_free', 'Admin\ModelsController@queryNameIsFree');
+
+    /**
+     * Customizers Resource
+     */
+    Route::resource('customizers', 'Admin\CustomizerController');
 
     /**
      * Модели
