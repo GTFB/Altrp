@@ -114,7 +114,7 @@ export default class ElementsManger {
     this.elements[Divider.getName()] = Divider;
     this.elements[Column.getName()] = Column;
     this.elements[Section.getName()] = Section;
-    // this.elements[List.getName()] = List;
+    this.elements[List.getName()] = List;
     this.elements[Nav.getName()] = Nav;
     this.elements[TabsSwitcher.getName()] = TabsSwitcher
     // this.elements[Input.getName()] = Input;
