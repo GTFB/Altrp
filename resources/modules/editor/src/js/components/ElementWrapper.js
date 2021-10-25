@@ -65,6 +65,8 @@ import TooltipComponent from "./widgets/styled-components/TooltipComponent";
 import AltrpTooltip2 from "./altrp-tooltip/AltrpTooltip2";
 import React from "react";
 import getSchedulerStyles from "../../../../front-app/src/js/components/helpers/getSchedulerStyles";
+import getInputTextAutocompleteStyles
+  from "../../../../front-app/src/js/components/helpers/getInputTextAutocompleteStyles";
 
 const { connect } = window.reactRedux;
 const { replaceContentWithData } = window.altrpHelpers;
@@ -200,6 +202,14 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
     case "input-text-common":
       {
         styles += `.${prefix}${elementId} {${getInputTextCommonStyles(
+          settings,
+          elementId
+        )}}`;
+      }
+      break;
+    case "input-text-autocomplete":
+      {
+        styles += `.${prefix}${elementId} {${getInputTextAutocompleteStyles(
           settings,
           elementId
         )}}`;

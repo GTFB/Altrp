@@ -4,6 +4,9 @@
 ## Changelog
 
 
+### 0.17.13
++ Add Params fromURl Hash now store in `altrppage.gashParams` 
+
 ### 0.17.12
 * Fixed Cases of errors when Getting Default Values as Strings and Arrays of Strings in Input Select Widget and Input Multi Select Widget 
 + Add Actions when Changing Text in Input Select and Input Multi Select Widget  

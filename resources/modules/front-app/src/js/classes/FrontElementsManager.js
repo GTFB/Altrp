@@ -68,6 +68,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-text-autocomplete",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputTextCommonWidget' */ "../../../../editor/src/js/components/widgets/InputTextAutocompleteWidget"
+          );
+        }
+      },
+      {
         name: "input-text",
         import: async () => {
           return await import(

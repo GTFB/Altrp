@@ -265,6 +265,7 @@ class FrontElement {
       case 'input-hidden':
       case 'input-text':
       case 'input-text-common':
+      case 'input-text-autocomplete':
       case 'input': {
         formsManager.addField(this.getFormId(), this);
       }
@@ -523,6 +524,7 @@ class FrontElement {
     switch (elementName) {
       case 'input':
       case 'input-textarea':
+      case 'input-text-autocomplete':
       case 'input-text-common':{
         value = this?.component?.getValue() || this?.component?.state?.value || '';
       }break;
