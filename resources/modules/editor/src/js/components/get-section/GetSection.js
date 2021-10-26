@@ -1,7 +1,16 @@
 import React from "react";
 import { createPortal } from "react-dom";
-import {BackgroundWrapper, Content, ContentWithSections, Iframe, ReturnButton, Wrapper} from "./GetSection.styled";
+import {
+  BackgroundWrapper,
+  Content,
+  ContentSections,
+  ContentWithSections, Element,
+  Iframe, Overlap,
+  ReturnButton, ViewElement,
+  Wrapper
+} from "./GetSection.styled";
 import {getFactory, iconsManager} from "../../helpers"
+import Scrollbars from "react-custom-scrollbars";
 
 const marketplaceUrl = "https://altrp.org";
 const url = "https://altrp.org/get/templates/section"
@@ -16,36 +25,44 @@ export default class GetSection extends React.Component {
 
     this.message = this.message.bind(this);
     this.returnToIframe = this.returnToIframe.bind(this);
+
+    this.rootElement = altrpEditor.modules.templateDataStorage.getRootElement();
   }
 
   componentDidMount() {
-    // const currentElement = document.getElementsByClassName(`altrp-element${this.getElement().id}`)[0];
-    //
-    // const elementId = _.toNumber(currentElement.classList.toString().split("market-element-")[1])
-    //
-    // const data = appStore.getState().currentDataStorage.data.templates;
-    //
-    // for (let i = 0; i < data.length; i+1) {
-    //   if (data[i].id === elementId) {
-    //     const Http = new XMLHttpRequest();
-    //     const url = data[i].template_url;
-    //     Http.open("GET", url);
-    //     Http.setRequestHeader("Accept", "application/json")
-    //     Http.send();
-    //     Http.onload=(e)=>{
-    //       window.parent.parent.postMessage({
-    //         type: "section_editor",
-    //         data:  e.target.response
-    //       }, "*")
-    //     }
-    //     break;
-    //   }
-    // }
+   // const elements =  document.getElementsByClassName(`market-element`);
+   //
+   //  for (let element of elements) {
+   //    element.addEventListener("click", (e) => {
+   //      const elementId = _.toNumber(e.currentTarget.classList.toString().split("market-element-")[1])
+   //
+   //      const data = appStore.getState().currentDataStorage.data.templates;
+   //
+   //      for (let dataElem of data) {
+   //        if (dataElem.id === elementId) {
+   //
+   //          const Http = new XMLHttpRequest();
+   //          const url = dataElem.template_url;
+   //          Http.open("GET", url);
+   //          Http.setRequestHeader("Accept", "application/json")
+   //          Http.send();
+   //          Http.onload=(e)=>{
+   //            window.parent.parent.postMessage({
+   //              type: "section_editor",
+   //              data:  e.target.response
+   //            }, "*")
+   //          }
+   //          break;
+   //        }
+   //      }
+   //    })
+   //  }
+
     window.addEventListener("message", this.message)
   }
 
   message(e) {
-    console.log(e.origin)
+    console.log(e.origin, e)
     if(e.origin !== marketplaceUrl)
       return;
     switch (e.data.type) {
@@ -58,13 +75,20 @@ export default class GetSection extends React.Component {
           const sections = [];
 
           value.forEach(section => {
-            sections.push(factory.parseData(section))
+            sections.push(factory.parseData(section, null, null, {
+              updateId: true
+            }))
           })
-
           this.setState({ showSections: true, sections })
         }
         break
     }
+  }
+
+  addSection(idx) {
+    console.log(idx)
+    this.rootElement.appendChild(this.state.sections[idx]);
+    this.props.showSections()
   }
 
   componentWillUnmount() {
@@ -76,7 +100,7 @@ export default class GetSection extends React.Component {
 
   render() {
 
-    const ReturnIcon = iconsManager().getIconComponent("exit");
+    const Arrow = iconsManager().getIconComponent("arrow");
     const ElementWrapper = window.ElementWrapper
 
     const content = (
@@ -86,24 +110,39 @@ export default class GetSection extends React.Component {
               src={url}
               showSections={this.state.showSections}
             />
-
             <ContentWithSections showSections={this.state.showSections}>
-              <ReturnButton onClick={this.returnToIframe}>
-                <ReturnIcon/>
-              </ReturnButton>
-              <div>
-                { this.state.sections.length > 0 && this.state.sections.map(section => {
-                  return(
-                    <ElementWrapper
-                      ElementWrapper={ElementWrapper}
-                      rootElement={altrpEditor.modules.templateDataStorage.getRootElement()}
-                      key={section.getIdForAction()}
-                      component={section.componentClass}
-                      element={section}
-                    />
-                  )})
-                }
-              </div>
+              {
+                this.state.sections.length > 0 && <>
+                  <ReturnButton onClick={this.returnToIframe}>
+                    <Arrow/>
+                  </ReturnButton>
+                  <Scrollbars>
+                    <ContentSections>
+
+                      {
+                        this.state.sections.map((section, idx) => {
+                          return(
+                            <Element
+                              onClick={() => this.addSection(idx)}
+                              key={section.getIdForAction()}
+                            >
+                              <ViewElement>
+                                <ElementWrapper
+                                  ElementWrapper={ElementWrapper}
+                                  rootElement={altrpEditor.modules.templateDataStorage.getRootElement()}
+                                  component={section.componentClass}
+                                  element={section}
+                                />
+                              </ViewElement>
+                              <Overlap/>
+                            </Element>
+
+                          )})
+                      }
+                    </ContentSections>
+                  </Scrollbars>
+                </>
+              }
             </ContentWithSections>
           </Content>
           <BackgroundWrapper onClick={this.props.showSections}/>

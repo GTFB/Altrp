@@ -28,7 +28,7 @@ export const BackgroundWrapper = styled.div`
   top: 0;
   height: 100vh;
   width: 100%;
-  z-index: 99998;
+  z-index: 99999998;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -51,7 +51,7 @@ export const Content = styled.div`
   background-color: #FFFFFF;
   width: 80%;
   position: relative;
-  z-index: 99999;
+  z-index: 99999999;
   border-radius: 2px;
   box-shadow: 0 2px 8px 0 rgba(99, 99, 99, 0.2);
   animation: ${contentShowAnimation} ease-in-out 0.4s forwards;
@@ -62,7 +62,6 @@ export const Iframe = styled.iframe`
   height: 100%;
   width: 100%;
   position: absolute;
-  top: 20px;
   ${props => {
     if(props.showSections) {
       return css`animation: ${iFrameHide} ease-in-out 0.4s forwards;`
@@ -94,6 +93,9 @@ export const ContentWithSections = styled.div`
   height: 100%;
   width: 100%;
   position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   transform: translateX(100%);
   ${props => {
   if(props.showSections) {
@@ -105,6 +107,22 @@ export const ContentWithSections = styled.div`
 `;
 
 export const ReturnButton = styled.div`
+  cursor: pointer;
+  padding: 2px;
+  background-color: #315EFB;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+
+  &:hover {
+    background-color: #274BC8;
+  }
+
+  path {
+    stroke: #FFFFFF;
+  }
 `;
 
 
@@ -126,3 +144,36 @@ const ContentShow = keyframes`
   }
 `
 
+export const ContentSections = styled.div`
+  width: 100%;
+  overflow: hidden;
+`;
+
+export const Element = styled.section`
+  position: relative;
+`;
+
+export const ViewElement = styled.div`
+  position: relative;
+  z-index: 1;
+`;
+
+export const Overlap = styled.div`
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  top: 0;
+  height: calc(100% + 10px);
+  width: calc(100% + 10px);
+  cursor: pointer;
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  &:hover {
+    opacity: 1;
+    background-color: rgba(49, 94, 251, 0.4);
+  }
+`;

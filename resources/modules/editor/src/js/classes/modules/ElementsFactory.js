@@ -9,6 +9,7 @@ class ElementsFactory extends BaseModule {
    * @param parent
    * @param {boolean} rewriteStyles
    * @param {object} other
+   * @param {boolean} [other.updateId]
    * @return {BaseElement}
    */
   parseData(object, parent, rewriteStyles = false, other) {

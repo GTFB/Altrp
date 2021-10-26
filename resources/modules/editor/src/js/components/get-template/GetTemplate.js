@@ -13,28 +13,33 @@ export default class GetTemplate extends React.Component {
   }
 
   componentDidMount() {
-//       const currentElement = document.getElementsByClassName(`altrp-element${this.getElement().id}`)[0];
-//
-//   const elementId = _.toNumber(currentElement.classList.toString().split("market-element-")[1])
-//
-//   const data = appStore.getState().currentDataStorage.data.templates;
-//
-//   for (let i = 0; i < data.length; i+1) {
-//   if (data[i].id === elementId) {
-//   const Http = new XMLHttpRequest();
-//   const url = data[i].template_url;
-//   Http.open("GET", url);
-//   Http.setRequestHeader("Accept", "application/json")
-//   Http.send();
-//   Http.onreadystatechange=(e)=>{
-//     window.parent.parent.postMessage({
-//       type: "template_editor",
-//       data:  e.target.response
-//     }, "*")
-//   }
-//   break;
-// }
-// }
+    // const elements =  document.getElementsByClassName(`market-element`);
+    //
+    //  for (let element of elements) {
+    //    element.addEventListener("click", (e) => {
+    //      const elementId = _.toNumber(e.currentTarget.classList.toString().split("market-element-")[1])
+    //
+    //      const data = appStore.getState().currentDataStorage.data.templates;
+    //
+    //      for (let dataElem of data) {
+    //        if (dataElem.id === elementId) {
+    //
+    //          const Http = new XMLHttpRequest();
+    //          const url = dataElem.template_url;
+    //          Http.open("GET", url);
+    //          Http.setRequestHeader("Accept", "application/json")
+    //          Http.send();
+    //          Http.onload=(e)=>{
+    //            window.parent.parent.postMessage({
+    //              type: "template_editor",
+    //              data:  e.target.response
+    //            }, "*")
+    //          }
+    //          break;
+    //        }
+    //      }
+    //    })
+    //  }
     window.addEventListener("message", this.message)
   }
 
@@ -48,11 +53,6 @@ export default class GetTemplate extends React.Component {
           const value = JSON.parse(e.data.data).data.children;
           altrpEditor.modules.templateDataStorage.getRootElement().setAllChild(value);
           this.props.showTemplates()
-          // this.resource.postFiles([e.data.data], 'application/zip,application/x-zip,application/x-zip-compressed').then((r) => {
-          //   if(r.success) {
-          //     alert("installed")
-          //   }
-          // })
         }
         break
     }
