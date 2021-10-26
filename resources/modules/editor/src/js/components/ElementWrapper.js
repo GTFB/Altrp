@@ -67,6 +67,7 @@ import React from "react";
 import getSchedulerStyles from "../../../../front-app/src/js/components/helpers/getSchedulerStyles";
 import getInputTextAutocompleteStyles
   from "../../../../front-app/src/js/components/helpers/getInputTextAutocompleteStyles";
+import TreeComponent from "./widgets/styled-components/TreeComponent";
 
 const { connect } = window.reactRedux;
 const { replaceContentWithData } = window.altrpHelpers;
@@ -108,6 +109,9 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       break;
     case "accordion":
       styles += `.${prefix}${elementId} {${AccordionComponent(settings)}}`;
+      break;
+    case "tree":
+      styles += `.${prefix}${elementId} {${TreeComponent(settings)}}`;
       break;
     case "section_widget":
     case "section":

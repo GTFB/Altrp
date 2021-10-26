@@ -100,6 +100,8 @@ import Scheduler from "../elements/Scheduler";
 import SchedulerWidget from "../../components/widgets/SchedulerWidget";
 import InputTextAutocomplete from "../elements/InputTextAutocomplete";
 import InputTextAutocompleteWidget from "../../components/widgets/InputTextAutocompleteWidget";
+import Tree from "../elements/Tree";
+import TreeWidget from "../../components/widgets/TreeWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -157,6 +159,7 @@ export default class ElementsManger {
     this.elements[Dropbar.getName()] = Dropbar;
     this.elements[ImageLightbox.getName()] = ImageLightbox;
     this.elements[Scheduler.getName()] = Scheduler;
+    this.elements[Tree.getName()] = Tree;
     // Websocket Notifications
     // this.elements[Notifications.getName()] = Notifications;
     //список компонентов
@@ -212,6 +215,7 @@ export default class ElementsManger {
     this.components[InputSlider.getName()] = InputSliderWidget;
     this.components[InputRangeSlider.getName()] = InputRangeSliderWidget;
     this.components[Scheduler.getName()] = SchedulerWidget;
+    this.components[Tree.getName()] = TreeWidget;
     // Websocket Notifications widget
     // this.components[Notifications.getName()] = NotificationsWidget;
   }

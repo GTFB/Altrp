@@ -49,6 +49,7 @@ import TooltipComponent from "../../../../editor/src/js/components/widgets/style
 import getInputMultiSelectStyles, {getInputMultiSelectPopoverStyles} from "./helpers/getInputMultiSelectStyles";
 import getSchedulerStyles from "./helpers/getSchedulerStyles";
 import getInputTextAutocompleteStyles from "./helpers/getInputTextAutocompleteStyles";
+import TreeComponent from "../../../../editor/src/js/components/widgets/styled-components/TreeComponent";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -245,6 +246,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           break;
         case "scheduler":
           styles += `.${prefix}${id} {${getSchedulerStyles(item.settings, id)}}`;
+          break;
+        case "tree":
+          styles += `.${prefix}${id} {${TreeComponent(item.settings, id)}}`;
           break;
       }
       styles += `div.${prefix}${id}.${prefix}${id} {${AdvancedComponent(

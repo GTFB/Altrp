@@ -41,5 +41,6 @@ const DEFAULT_REACT_ELEMENTS = [
   'tabs',
   'heading-type-animating',
   'scheduler',
+  'tree',
 ]
 export default DEFAULT_REACT_ELEMENTS

@@ -39,5 +39,6 @@ const SKELETON_ELEMENTS = [
   'tabs',
   'heading-type-animating',
   'scheduler',
+  'tree',
 ]
 export default SKELETON_ELEMENTS

@@ -435,6 +435,14 @@ class FrontElementsManager {
             );
         }
       },
+      {
+        name: "tree",
+        import: async () => {
+          return await import(
+              /* webpackChunkName: 'TreeWidget' */ "../../../../editor/src/js/components/widgets/TreeWidget"
+            );
+        }
+      },
     ];
   }
 
