@@ -48,6 +48,7 @@ import getTemplateStyles from "./helpers/getTemplateStyles";
 import TooltipComponent from "../../../../editor/src/js/components/widgets/styled-components/TooltipComponent";
 import getInputMultiSelectStyles, {getInputMultiSelectPopoverStyles} from "./helpers/getInputMultiSelectStyles";
 import getSchedulerStyles from "./helpers/getSchedulerStyles";
+import getInputTextAutocompleteStyles from "./helpers/getInputTextAutocompleteStyles";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -180,6 +181,10 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           break
         case "input-text-common":{
           styles += `.${prefix}${id} {${getInputTextCommonStyles(item.settings, id)}}`
+        }
+          break
+        case "input-text-autocomplete":{
+          styles += `.${prefix}${id} {${getInputTextAutocompleteStyles(item.settings, id)}}`
         }
           break;
         case "input-select":{

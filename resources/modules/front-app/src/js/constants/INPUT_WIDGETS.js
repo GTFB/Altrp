@@ -15,6 +15,7 @@ const INPUT_WIDGETS = [
   'input-textarea',
   'input-slider',
   'input-text-common',
+  'input-text-autocomplete',
   'input-password',
   'input-tel',
   'input-number',

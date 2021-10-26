@@ -18,6 +18,7 @@ import Area from "./classes/Area";
 import {altrpFontsSet, GOOGLE_FONT} from "./constants/fonts";
 import {addSettings} from "./store/elements-settings/actions";
 import mutate from "dot-prop-immutable";
+import convertQueryParamsToObject from "./functions/convert-query-params-to-object";
 export function getRoutes() {
 
   return import(/* webpackChunkName: 'Routes' */"./classes/Routes.js");
@@ -652,6 +653,9 @@ export function getDataByPath(
   } else if (path.indexOf("altrpforms.") === 0) {
     value = _.get(formsStore, path.replace("altrpforms.", ""), _default);
   } else if (path.indexOf("altrppage.") === 0) {
+    if(path.indexOf("altrppage.hashParams") === 0 && document?.location?.hash && document?.location?.hash.indexOf('=') !== -1){
+      altrpPage.setProperty('hashParams', convertQueryParamsToObject(document?.location?.hash))
+    }
     value = altrpPage
       ? altrpPage.getProperty(path.replace("altrppage.", ""), _default)
       : "";

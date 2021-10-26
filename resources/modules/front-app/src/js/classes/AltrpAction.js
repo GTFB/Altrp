@@ -2,8 +2,6 @@ import AltrpModel from '../../../../editor/src/js/classes/AltrpModel';
 import {togglePopup} from '../store/popup-trigger/actions';
 import {sendEmail} from '../helpers/sendEmail';
 import {changeCurrentModel} from "../store/current-model/actions";
-import {WebStorageStateStore, UserManager} from "oidc-client";
-
 const {
   altrpLogin,
   altrpLogout,
@@ -1255,26 +1253,54 @@ class AltrpAction extends AltrpModel {
    * @returns {Promise<void>}
    */
   async doActionOAuth() {
-    const settings = {
-      client_id: '34623582819-9dtck25e70tu7kv67eki33t4ot4nubr3.apps.googleusercontent.com',
-      client_secret: 'UccZ1HZQyMtyYqE3U_vzKVXw',
-      redirect_uri: `altrp.nz/callback`,
-      post_logout_redirect_uri: `altrp.nz/`,
+    const OIDC  = await import (/* webpackChunkName: 'OIDC' */"oidc-client");
+    const {WebStorageStateStore, UserManager, authority, OidcClient} = OIDC;
+    console.log(this);
+    (window.altrpLibs = window.altrpLibs || {}).OIDC = OIDC
+
+    const method = this.getProperty('method')
+    if( ! method){
+      return {
+        success: true,
+      }
+    }
+    let settings = {
+      client_id: 'AisOrder',
+      redirect_uri: `http://zayavka.geobuilder.ru/login/laravelpassport/callback`,
+      post_logout_redirect_uri: `http://zayavka.geobuilder.ru/login/laravelpassport/callback`,
       response_type: 'token id_token',
-      // scope: 'oauth2',
-      authority: 'https://accounts.google.com/o/oauth2/auth',
+      scope: 'openid profile',
+      authority:'https://fs.geobuilder.ru/idp',
       automaticSilentRenew: false,
-      userStore: new WebStorageStateStore({store: window.localStorage}),
+      userStore: new WebStorageStateStore({ store: window.localStorage }),
       filterProtocolClaims: true,
       loadUserInfo: true,
       monitorSession: false,
-      scope: 'openid email profile',
       checkSessionInterval: 3600000
     };
+    const _manager = new UserManager(settings);
+    console.log(_manager);
+    settings = {
+      client_id: this.getProperty('client_id'),
+      redirect_uri: this.getProperty('redirect_uri'),
+      post_logout_redirect_uri: this.getProperty('post_logout_redirect_uri'),
+      response_type: this.getProperty('response_type'),
+      scope: this.getProperty('scope'),
+      authority:this.getProperty('authority'),
+      automaticSilentRenew: this.getProperty('automaticSilentRenew'),
+      userStore: new WebStorageStateStore({ store: window.localStorage }),
+      filterProtocolClaims: this.getProperty('filterProtocolClaims'),
+      loadUserInfo: this.getProperty('loadUserInfo'),
+      monitorSession: this.getProperty('monitorSession'),
+      checkSessionInterval: this.getProperty('checkSessionInterval')
+    };
     const manager = new UserManager(settings);
-    console.log(await manager.signinPopup());
-    console.log(manager);
-    manager.getUser();
+    // console.log( manager);
+    // console.log(await manager.getUser());
+    if(_.isFunction(manager[method])){
+      manager[method]();
+    }
+    // await manager.signoutRedirect();
     return {success:true}
   }
 }
