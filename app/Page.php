@@ -773,7 +773,7 @@ class Page extends Model
                 [
                   'page' => $page_areas,
                   'page_id' => $page_id,
-                    'altrp_settings' => getAltrpSettings( $page_id ),
+                    'altrp_settings' => getPageSettings( $page_id ),
                   'altrp' => [
                     'version' => getCurrentVersion()
                   ],

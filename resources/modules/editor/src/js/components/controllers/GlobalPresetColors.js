@@ -52,7 +52,7 @@ class GlobalPresetColors extends Component {
           return (
             <div
               className="control-color-preset-colors-wrapper"
-              key={color.color}
+              key={color.guid}
             >
               <div
                 className="control-color-preset-colors__item"

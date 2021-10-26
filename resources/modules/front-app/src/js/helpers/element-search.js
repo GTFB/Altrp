@@ -1,4 +1,5 @@
 import FrontElement from "../classes/FrontElement";
+import checkElement from "./check-element";
 /**
  *
  * @param {string} elementId
@@ -56,25 +57,3 @@ export function recursiveSearch(element, elementId, params = {}){
   return null
 }
 
-/**
- *
- * @param {FrontElement|{}}element
- * @param {{}}params
- * @return {boolean}
- */
-export function checkElement(element, params = {}){
-  let result = false;
-  if(_.isEmpty(params.settings) || ! _.isArray(params.settings)){
-    return ! result;
-  }
-  if(! element instanceof FrontElement){
-    element = new FrontElement(element, true)
-  }
-  result = params.settings.find(settingParam => {
-    let settingValue = element.getSettings(settingParam?.settingName);
-    return settingParam?.checks.length === settingParam?.checks.filter(check=>{
-      return _.isFunction(check) && check(settingValue)
-    })
-  })
-  return result
-}

@@ -1,45 +1,31 @@
 const {
-  altrpCompare,
-  convertData,
   isEditor,
-  parseOptionsFromSettings,
-  parseParamsFromString,
-  parseURLTemplate,
   replaceContentWithData,
-  renderAssetIcon,
-  getDataByPath,
-  getDataFromLocalStorage
+  renderAsset,
+  getDataFromLocalStorage,
 } = window.altrpHelpers;
-import Resource from "../../classes/Resource";
-import { changeFormFieldValue } from "../../../../../front-app/src/js/store/forms-data-storage/actions";
-import AltrpModel from "../../classes/AltrpModel";
-const Checkbox = window.altrpLibs.Blueprint.Checkbox;
+import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
+import AltrpInput from "../altrp-input/AltrpInput";
+
 
 (window.globalDefaults = window.globalDefaults || []).push(`
-  .altrp-field-option-span {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .altrp-field-radio .bp3-control-indicator.bp3-control-indicator {
-    background-image: none;
-  }
-
-  .altrp-field-container .altrp-field-checkbox.altrp-field-checkbox {
-    margin: 0
-  }
-
-  .altrp-field-container .altrp-field-checkbox .bp3-control-indicator {
-    background-image: none;
-  }
-
-  .altrp-field-container .altrp-field-checkbox .bp3-control-indicator:before {
-    position: absolute;
-    left: 0;
-    top: 0;
-  }
-
+.altrp-field-label_text-widget{
+    width: 100%;
+}
+.bp3-icon_text-widget img{
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  pointer-events: none;
+}
+.bp3-icon_text-widget svg{
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+.bp3-icon_right{
+    margin: 7px;
+}
 .altrp-field {
   border-style: solid;
   width: 100%;
@@ -369,21 +355,22 @@ textarea.altrp-field {
   min-height: 14px;
 }
 `)
+
 const AltrpFieldContainer = styled.div`
-  ${({ settings: { content_label_position_type } }) => {
-    switch (content_label_position_type) {
-      case "left": {
-        return "display: flex";
-      }
-      case "right": {
-        return "display:flex;flex-direction:row-reverse;justify-content:flex-end;";
-      }
+  ${({settings: {content_label_position_type}}) => {
+  switch (content_label_position_type) {
+    case "left": {
+      return "display: flex";
     }
-    return "";
-  }}
+    case "right": {
+      return "display:flex;flex-direction:row-reverse;justify-content:flex-end;";
+    }
+  }
+  return "";
+}}
 `;
 
-class InputCheckboxWidget extends Component {
+class InputTextCommonWidget extends Component {
   timeInput = null;
 
   constructor(props) {
@@ -395,19 +382,17 @@ class InputCheckboxWidget extends Component {
     this.onChange = this.onChange.bind(this);
     this.debounceDispatch = this.debounceDispatch.bind(this);
 
-    this.defaultValue =
-      this.getContent("content_default_value") ||
-      (this.valueMustArray() ? [] : "");
-    if (this.valueMustArray() && !_.isArray(this.defaultValue)) {
-      this.defaultValue = [];
-    }
+    this.defaultValue = this.getContent("content_default_value")
+
     this.state = {
-      settings: { ...props.element.getSettings() },
-      value: this.defaultValue,
-      options: parseOptionsFromSettings(
-        props.element.getSettings("content_options")
-      ),
-      paramsForUpdate: null
+      settings: {...props.element.getSettings()},
+      showPassword: false,
+    };
+    this.popoverProps = {
+      usePortal: true,
+      // isOpen:true ,
+      portalClassName: `altrp-portal altrp-portal${this.props.element.getId()}`,
+      portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
     this.altrpSelectRef = React.createRef();
     if (this.getContent("content_default_value")) {
@@ -416,35 +401,14 @@ class InputCheckboxWidget extends Component {
   }
 
   /**
-   * В некоторых случаях значение поля должно быть массивом
-   * @return {boolean}
-   */
-  valueMustArray() {
-    return true;
-  }
-  /**
    * Чистит значение
    */
   clearValue() {
-    let value = [];
+    let value = "";
     this.onChange(value);
     this.dispatchFieldValueToStore(value, true);
   }
-  /**
-   * Метод устанавливает все опции как выбранные
-   */
-  selectAll() {
-    const optionsDynamicSetting = this.props.element.getDynamicSetting(
-      "content_options"
-    );
-    let options = [...this.state.options];
 
-    if (optionsDynamicSetting) {
-      options = convertData(optionsDynamicSetting, options);
-    }
-    options = options.map(({ value }) => value);
-    this.onChange(options);
-  }
   /**
    * Обработка нажатия клавиши
    * @param {{}} e
@@ -473,25 +437,8 @@ class InputCheckboxWidget extends Component {
    * @param {{}} prevState
    */
   async _componentDidMount(prevProps, prevState) {
-    if (this.props.element.getSettings("content_options")) {
-      let options = parseOptionsFromSettings(
-        this.props.element.getSettings("content_options")
-      );
 
-      this.setState(state => ({ ...state, options }));
-    }
-    let value = this.state.value;
-    /**
-     * Если динамическое значение загрузилось,
-     * то используем this.getContent для получение этого динамического значения
-     * старые динамические данные
-     * */
-    if (
-      _.get(value, "dynamic") &&
-      this.props.currentModel.getProperty("altrpModelUpdated")
-    ) {
-      value = this.getContent("content_default_value");
-    }
+    let value = this.getValue();
 
     /**
      * Если модель обновилась при смене URL
@@ -503,7 +450,7 @@ class InputCheckboxWidget extends Component {
     ) {
       value = this.getContent("content_default_value");
       this.setState(
-        state => ({ ...state, value, contentLoaded: true }),
+        state => ({...state, contentLoaded: true}),
         () => {
           this.dispatchFieldValueToStore(value);
         }
@@ -517,86 +464,53 @@ class InputCheckboxWidget extends Component {
     ) {
       value = this.getContent("content_default_value");
       this.setState(
-        state => ({ ...state, value, contentLoaded: true }),
+        state => ({...state, contentLoaded: true}),
         () => {
           this.dispatchFieldValueToStore(value);
         }
       );
       return;
     }
-    if (this.state.value !== value) {
-      this.setState(
-        state => ({ ...state, value }),
-        () => {
-          this.dispatchFieldValueToStore(value);
-        }
-      );
-    }
   }
 
   /**
-   * Получить url для запросов
+   *
+   * @returns {string}
    */
-  getRoute() {
-    let url = this.props.element.getSettings("model_for_options");
-
-    if (url.indexOf("/") === -1) {
-      return `/ajax/models/${url}_options`;
+  getValue = () => {
+    let value;
+    let formId = this.props.element.getFormId();
+    let fieldName = this.props.element.getFieldId();
+    if (isEditor()) {
+      value = this.state.value;
+    } else {
+      value = _.get(appStore.getState().formsStore, `${formId}`, '')
+      value = _.get(value, fieldName, '')
     }
-    if (url.indexOf("{{") !== -1) {
-      url = replaceContentWithData(url);
-    }
-    return url;
+    return value;
   }
+
   /**
    * Обновление виджета
    */
   async _componentDidUpdate(prevProps, prevState) {
-    const { content_options, model_for_options } = this.state.settings;
     if (
       prevProps &&
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
       let value = this.getContent(
-        "content_default_value",
-        this.props.element.getSettings("select2_multiple")
+        "content_default_value"
       );
       this.setState(
-        state => ({ ...state, value, contentLoaded: true }),
+        state => ({...state, contentLoaded: true}),
         () => {
           this.dispatchFieldValueToStore(value);
         }
       );
     }
 
-    /**
-     * Если обновилась модель, то пробрасываем в стор новое значение (старый источник диамических данных)
-     */
-    if (
-      !_.isEqual(this.props.currentModel, prevProps.currentModel) &&
-      this.state.value &&
-      this.state.value.dynamic
-    ) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
-    }
 
-    /**
-     * Если обновилось хранилище данных формы, currentDataStorage или модель, то получаем новые опции c сервера
-     */
-    if (
-      this.props.formsStore !== prevProps.formsStore ||
-      this.props.currentModel !== prevProps.currentModel ||
-      this.props.currentDataStorage !== prevProps.currentDataStorage
-    ) {
-      this.updateOptions();
-    }
-    if (content_options && !model_for_options) {
-      let options = parseOptionsFromSettings(content_options);
-      if (!_.isEqual(options, this.state.options)) {
-        this.setState(state => ({ ...state, options }));
-      }
-    }
     this.updateValue(prevProps);
   }
 
@@ -715,7 +629,7 @@ class InputCheckboxWidget extends Component {
         return;
       }
       this.setState(
-        state => ({ ...state, value }),
+        state => ({...state, value}),
         () => {
           this.dispatchFieldValueToStore(value);
         }
@@ -728,50 +642,6 @@ class InputCheckboxWidget extends Component {
     }
   }
 
-  /**
-   * Обновляет опции для селекта при обновлении данных, полей формы
-   */
-  async updateOptions() {
-    {
-      let formId = this.props.element.getFormId();
-      let paramsForUpdate = this.props.element.getSettings("params_for_update");
-      let formData = _.get(this.props.formsStore, [formId], {});
-      paramsForUpdate = parseParamsFromString(
-        paramsForUpdate,
-        new AltrpModel(formData)
-      );
-      /**
-       * Сохраняем параметры запроса, и если надо обновляем опции
-       */
-      let options = [...this.state.options];
-      if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
-        if (!_.isEmpty(paramsForUpdate)) {
-          if (this.props.element.getSettings("params_as_filters", false)) {
-            paramsForUpdate = JSON.stringify(paramsForUpdate);
-            options = await new Resource({
-              route: this.getRoute()
-            }).getQueried({ filters: paramsForUpdate });
-          } else {
-            options = await new Resource({ route: this.getRoute() }).getQueried(
-              paramsForUpdate
-            );
-          }
-          options = !_.isArray(options) ? options.data : options;
-          options = _.isArray(options) ? options : [];
-        } else if (this.state.paramsForUpdate) {
-          options = await new Resource({ route: this.getRoute() }).getAll();
-          options = !_.isArray(options) ? options.data : options;
-          options = _.isArray(options) ? options : [];
-        }
-
-        this.setState(state => ({
-          ...state,
-          paramsForUpdate,
-          options
-        }));
-      }
-    }
-  }
 
   /**
    * Изменение значения в виджете
@@ -779,33 +649,45 @@ class InputCheckboxWidget extends Component {
    */
   onChange(e) {
     let value = "";
-    let valueToDispatch;
     if (e && e.target) {
-      let inputs = document.getElementsByName(e.target.name);
-      value = [];
-      inputs.forEach(input => {
-        if (input.checked) {
-          value.push(input.value);
-        }
-      });
+      value = e.target.value;
     }
 
-    if (_.isArray(e)) {
-      value = _.cloneDeep(e);
+    if (e && e.value) {
+      value = e.value;
     }
-    console.log(value);
-    this.setState(
-      state => ({
-        ...state,
-        value
-      }),
-      () => {
-        this.dispatchFieldValueToStore(
-          valueToDispatch !== undefined ? valueToDispatch : value,
-          true
-        );
-      }
+
+
+    /**
+     * Обновляем хранилище только если не текстовое поле
+     */
+
+    const change_actions = this.props.element.getSettings("change_actions");
+    const change_change_end = this.props.element.getSettings(
+      "change_change_end"
     );
+    const change_change_end_delay = this.props.element.getSettings(
+      "change_change_end_delay"
+    );
+
+    if (change_actions && !change_change_end && !isEditor()) {
+      this.debounceDispatch(
+        value !== undefined ? value : value
+      );
+    }
+    if (change_actions && change_change_end && !isEditor()) {
+      this.timeInput && clearTimeout(this.timeInput);
+      this.timeInput = setTimeout(() => {
+        this.debounceDispatch(
+          value !== undefined ? value : value
+        );
+      }, change_change_end_delay);
+    }
+    if(isEditor()){
+      this.setState(state=>({...state, value}))
+    } else {
+      this.dispatchFieldValueToStore(value, true)
+    }
   }
 
   debounceDispatch = _.debounce(
@@ -813,32 +695,6 @@ class InputCheckboxWidget extends Component {
     150
   );
 
-  /**
-   * получить опции
-   */
-  getOptions() {
-    let options = [...this.state.options];
-    const optionsDynamicSetting = this.props.element.getDynamicSetting(
-      "content_options"
-    );
-    const content_options = this.props.element.getResponsiveSetting('content_options');
-    const model_for_options = this.props.element.getResponsiveSetting('model_for_options');
-    if(_.isString(content_options)
-      && content_options.indexOf('{{') === 0
-      && ! model_for_options){
-      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''))
-      if( ! _.isArray(options)){
-        options = [];
-      }
-    }
-    if (optionsDynamicSetting) {
-      options = convertData(optionsDynamicSetting, options);
-    }
-    if (!this.props.element.getSettings("sort_default")) {
-      options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
-    }
-    return options;
-  }
 
   /**
    * Для действие по фокусу
@@ -870,9 +726,8 @@ class InputCheckboxWidget extends Component {
    * @param  editor для получения изменений из CKEditor
    */
   onBlur = async (e, editor = null) => {
-    if (_.get(editor, "getData")) {
-      this.dispatchFieldValueToStore(editor.getData(), true);
-    }
+    this.dispatchFieldValueToStore(e.target.value, true);
+
     if (this.props.element.getSettings("actions", []) && !isEditor()) {
       const actionsManager = (
         await import(
@@ -899,12 +754,14 @@ class InputCheckboxWidget extends Component {
     if (fieldName.indexOf("{{") !== -1) {
       fieldName = replaceContentWithData(fieldName);
     }
+
     if (_.isObject(this.props.appStore) && fieldName && formId) {
       this.props.appStore.dispatch(
         changeFormFieldValue(fieldName, value, formId, userInput)
       );
       if (userInput) {
         const change_actions = this.props.element.getSettings("change_actions");
+
         if (change_actions && !isEditor()) {
           const actionsManager = (
             await import(
@@ -924,77 +781,6 @@ class InputCheckboxWidget extends Component {
   };
 
   /**
-   * Обработка добавления опции по ajax
-   * @param {SyntheticKeyboardEvent} e
-   */
-  createItem = async e => {
-    const keyCode = e.keyCode;
-    const { value: inputValue } = e.target;
-    if (keyCode !== 13 || !inputValue) {
-      return;
-    }
-    const {
-      create_url,
-      create_label,
-      create_data,
-      select2_multiple
-    } = this.props.element.getSettings();
-    if (!create_label && !create_url) {
-      return;
-    }
-    const currentModel = this.props.element.getCurrentModel();
-    let data = parseParamsFromString(create_data, currentModel, true);
-    data[create_label] = inputValue;
-    let url = parseURLTemplate(create_url, currentModel.getData());
-    this.setState(state => ({ ...state, isDisabled: true }));
-    try {
-      const resource = new Resource({
-        route: url
-      });
-      let res = await resource.post(data);
-      if (res.success && _.get(res, "data.id")) {
-        let newOption = {
-          label: inputValue,
-          value: _.get(res, "data.id")
-        };
-        this.setState(
-          state => ({ ...state, isDisabled: false }),
-          () => {
-            let options = [...this.state.options];
-            options.unshift(newOption);
-            let value = this.state.value;
-            if (select2_multiple) {
-              value = value ? [...value] : [];
-              value.push(_.get(res, "data.id"));
-            } else {
-              value = _.get(res, "data.id");
-            }
-            this.setState(
-              state => ({ ...state, options, value }),
-              () => {
-                const selectStateManager = _.get(
-                  this,
-                  "altrpSelectRef.current.selectRef.current"
-                );
-                if (selectStateManager) {
-                  selectStateManager.setState({
-                    menuIsOpen: false,
-                    inputValue: ""
-                  });
-                }
-              }
-            );
-          }
-        );
-      }
-      this.setState(state => ({ ...state, isDisabled: false }));
-    } catch (error) {
-      console.error(error);
-      this.setState(state => ({ ...state, isDisabled: false }));
-    }
-  };
-
-  /**
    * Взовращает имя для атрибута name
    * @return {string}
    */
@@ -1002,62 +788,104 @@ class InputCheckboxWidget extends Component {
     return `${this.props.element.getFormId()}[${this.props.element.getFieldId()}]`;
   }
 
+  handleLockClick = () => {
+    this.setState((state) => {
+      return {
+        ...state,
+        showPassword: !state.showPassword,
+      }
+    })
+  }
+
+  renderLeftIcon(){
+    const {element} = this.props;
+    let left_icon = element.getResponsiveSetting('left_icon');
+    let password_show_left_icon = element.getResponsiveSetting('password_show_left_icon');
+    const {content_type} = element.settings
+    const leftIconProps = {}
+    if(content_type === 'password' && this.state.showPassword && password_show_left_icon){
+      left_icon = password_show_left_icon
+      leftIconProps.onClick = this.handleLockClick
+    }
+    if(content_type === 'password' && password_show_left_icon){
+      leftIconProps.onClick = this.handleLockClick
+      leftIconProps.style = {
+        cursor: 'pointer'
+      }
+    }
+    if(!left_icon){
+      return null
+    }
+    return <span className="bp3-icon bp3-icon_text-widget bp3-icon_left" {...leftIconProps} tabIndex="0">
+      {renderAsset(left_icon, )}
+    </span>
+  }
+  renderRightIcon(){
+    const {element} = this.props;
+    let right_icon = element.getResponsiveSetting('right_icon');
+    let password_show_right_icon = element.getResponsiveSetting('password_show_right_icon');
+    const {content_type} = element.settings
+    const rightIconProps = {}
+    if(content_type === 'password' && this.state.showPassword && password_show_right_icon){
+      right_icon = password_show_right_icon
+    }
+    if(content_type === 'password' && password_show_right_icon){
+      rightIconProps.onClick = this.handleLockClick
+      rightIconProps.style = {
+        cursor: 'pointer'
+      }
+    }
+    if(!right_icon){
+      return null
+    }
+    return <span className="bp3-icon bp3-icon_text-widget bp3-icon_right" {...rightIconProps} tabIndex="0">
+      {renderAsset(right_icon, )}
+    </span>
+  }
+
   render() {
     let label = null;
     const settings = this.props.element.getSettings();
     const {
-      select2_multiple: isMultiple,
+      content_readonly,
       label_icon
     } = settings;
+    let value = this.getValue()
 
-    let value = this.state.value;
-
-    if (
-      _.get(value, "dynamic") &&
-      this.props.currentModel.getProperty("altrpModelUpdated")
-    ) {
-      value = this.getContent("content_default_value");
-    }
-    /**
-     * Пока динамический контент загружается (Еесли это динамический контент),
-     * нужно вывести пустую строку
-     */
-    if (value && value.dynamic) {
-      value = "";
-    }
     let classLabel = "";
     let styleLabel = {};
     const content_label_position_type = this.props.element.getResponsiveSetting(
       "content_label_position_type"
     );
+    const label_icon_position = this.props.element.getResponsiveSetting('label_icon_position')
+    let label_style_spacing = this.props.element.getResponsiveSetting('label_style_spacing')
     switch (content_label_position_type) {
       case "top":
         styleLabel = {
-          marginBottom: this.state.settings.label_style_spacing
-            ? this.state.settings.label_style_spacing.size +
-            this.state.settings.label_style_spacing.unit
+          marginBottom: label_style_spacing
+            ? label_style_spacing?.size +
+            label_style_spacing?.unit
             : 2 + "px"
         };
         classLabel = "";
         break;
       case "bottom":
         styleLabel = {
-          marginTop: this.state.settings.label_style_spacing
-            ? this.state.settings.label_style_spacing.size +
-            this.state.settings.label_style_spacing.unit
+          marginTop: label_style_spacing
+            ? label_style_spacing?.size +
+            label_style_spacing?.unit
             : 2 + "px"
         };
         classLabel = "";
         break;
       case "left":
         styleLabel = {
-          marginRight: this.state.settings.label_style_spacing
-            ? this.state.settings.label_style_spacing.size +
-            this.state.settings.label_style_spacing.unit
+          marginRight: label_style_spacing
+            ? label_style_spacing?.size +
+            label_style_spacing?.unit
             : 2 + "px"
         };
         classLabel = "altrp-field-label-container-left";
-
         break;
       case "absolute":
         styleLabel = {
@@ -1068,31 +896,36 @@ class InputCheckboxWidget extends Component {
         break;
     }
 
-    if (this.state.settings.content_label) {
+    if (this.state.settings.content_label || label_icon ) {
       label = (
         <div
           className={"altrp-field-label-container " + classLabel}
           style={styleLabel}
         >
           <label
-            className={`altrp-field-label ${this.state.settings.content_required
+            htmlFor={this.getName()}
+            style={{
+              display: 'flex',
+              flexDirection: label_icon_position,
+            }}
+            className={`altrp-field-label altrp-field-label_text-widget ${this.state.settings.content_required
               ? "altrp-field-label--required"
               : ""
             }`}
           >
             {this.state.settings.content_label}
-          </label>
-          {label_icon && label_icon.assetType && (
-            <span className="altrp-label-icon">
-              {renderAssetIcon(label_icon)}
+
+            {label_icon && label_icon.type && (
+              <span className="altrp-label-icon">
+              {renderAsset(label_icon)}
             </span>
-          )}
+            )}
+          </label>
         </div>
       );
     } else {
       label = null;
     }
-
     let autocomplete = "off";
     if (this.state.settings.content_autocomplete) {
       autocomplete = "on";
@@ -1100,14 +933,33 @@ class InputCheckboxWidget extends Component {
       autocomplete = "off";
     }
 
-    let input = null;
-
-    input = this.renderRepeatedInput();
+    let input = (
+      <div className="altrp-input-wrapper">
+        <AltrpInput
+          type={this.state.settings.content_type === 'password' ? (this.state.showPassword ? "text" : "password") : this.state.settings.content_type}
+          name={this.getName()}
+          id={this.getName()}
+          value={value || ""}
+          popoverProps={this.popoverProps}
+          element={this.props.element}
+          readOnly={content_readonly}
+          autoComplete={autocomplete}
+          placeholder={this.state.settings.content_placeholder}
+          settings={this.props.element.getSettings()}
+          onKeyDown={this.handleEnter}
+          onChange={this.onChange}
+          onBlur={this.onBlur}
+          onFocus={this.onFocus}
+          leftIcon={this.renderLeftIcon()}
+          rightElement={this.renderRightIcon()}
+        />
+      </div>
+    );
 
     return (
       <AltrpFieldContainer
         settings={settings}
-        className={"altrp-field-container "}
+        className="altrp-field-container "
       >
         {content_label_position_type === "top" ? label : ""}
         {content_label_position_type === "left" ? label : ""}
@@ -1119,72 +971,6 @@ class InputCheckboxWidget extends Component {
       </AltrpFieldContainer>
     );
   }
-
-  /**
-   * Выводит input type=checkbox|radio
-   */
-  renderRepeatedInput() {
-    const { options = [] } = this.state;
-    let { value = "" } = this.state;
-    const fieldName =
-      this.props.element.getFieldId() ||
-      Math.random()
-        .toString(36)
-        .substr(2, 9);
-    const formID =
-      this.props.element.getFormId() ||
-      Math.random()
-        .toString(36)
-        .substr(2, 9);
-
-    return (
-      <div className="altrp-field-subgroup">
-        {options.map((option, idx) => {
-          let checked = false;
-          /**
-           * Если значение или опция число, то приведем к числу перед сравнением
-           */
-          value = _.isArray(value) ? value : value ? [value] : [];
-          checked = altrpCompare(option.value, value, "in");
-
-          return (
-            <div
-              className={`altrp-field-option ${checked ? "active" : ""}`}
-              key={`${fieldName}-${idx}`}
-            >
-              <span className="altrp-field-option-span">
-                <Checkbox
-                  inline
-                  name={`${formID}-${fieldName}`}
-                  id={`${formID}-${fieldName}-${idx}`}
-                  onChange={this.onChange}
-                  value={option.value}
-                  className={`altrp-field-checkbox${checked ? " active" : ""}`}
-                  checked={checked}
-                />
-                {/*<input*/}
-                {/*  type="checkbox"*/}
-                {/*  value={option.value}*/}
-                {/*  name={`${formID}-${fieldName}`}*/}
-                {/*  className={`altrp-field-option__input ${checked ? "active" : ""*/}
-                {/*    }`}*/}
-                {/*  onChange={this.onChange}*/}
-                {/*  checked={checked}*/}
-                {/*  id={`${formID}-${fieldName}-${idx}`}*/}
-                {/*/>*/}
-              </span>
-              <label
-                htmlFor={`${formID}-${fieldName}-${idx}`}
-                className="altrp-field-option__label"
-              >
-                {option.label}
-              </label>
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
 }
 
-export default InputCheckboxWidget;
+export default InputTextCommonWidget;

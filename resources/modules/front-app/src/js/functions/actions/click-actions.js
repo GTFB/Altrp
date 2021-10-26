@@ -1,5 +1,5 @@
-import elementSearch from '../../helpers/element-search';
 import { v4 } from 'uuid';
+import elementSearchForAction from "../../helpers/element-search-for-action";
 
 const CLICK_EXCLUDE_TAG_NAMES = [
   // 'input',todo: выяснить нужно ли исключение
@@ -26,7 +26,7 @@ export default function clickActions(e){
     element = _.get(ACTIONS_CACHE, `clickActions.${e.target.dataset.elementUuid}.element`);
   } else {
     while ((html_element = html_element?.closest('[data-altrp-wrapper-click-actions]'))){
-      const _el = elementSearch(html_element?.dataset?.altrpWrapperClickActions)
+      const _el = elementSearchForAction(html_element?.dataset?.altrpWrapperClickActions)
       if(_el && ! _.isEmpty(_el.getSettings('wrapper_click_actions'))){
         actions = _el.getSettings('wrapper_click_actions')
         element = _el

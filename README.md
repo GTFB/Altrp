@@ -3,6 +3,37 @@
 
 ## Changelog
 
+
+### 0.17.13
++ Add Params fromURl Hash now store in `altrppage.gashParams` 
+
+### 0.17.12
+* Fixed Cases of errors when Getting Default Values as Strings and Arrays of Strings in Input Select Widget and Input Multi Select Widget 
++ Add Actions when Changing Text in Input Select and Input Multi Select Widget  
+
+### 0.17.11
++ Support for Arrays in URL Parameters in `altrppage.params` Object
+* Fix Table in Inner Templates Bug
+
+### 0.17.10
++ Market Page to Admin
++ Scheduler Widget
+
+### 0.17.9
+* Fix CSS Editor Bug for Elements
+* Fix Widget Cards Data Updates
+* Fix Wrapper Click Action Now Working in Cards Bug
++ Support for the Same Site Parameter for Session Cookies
+
+### 0.17.8
+* Fix Bug with Empty String Setting Value When Template Attempt to Save
+* Fix Input Date Default Value with Custom Format
+
+### 0.17.7
+* Ability to Customize Button for Next / Previous Pages Without Text in Cards "Widget"
+* Fix Link in Heading Widget
+* Fix Column Custom Width 
+
 ### 0.17.6
 * Fix SSR Bug with Query Parameters
 

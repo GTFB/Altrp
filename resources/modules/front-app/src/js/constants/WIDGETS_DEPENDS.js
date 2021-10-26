@@ -22,10 +22,11 @@ const WIDGETS_DEPENDS = {
   'input-text': ['blueprint'],
   'input-textarea': ['blueprint'],
   'input-text-common': ['blueprint'],
+  'input-text-autocomplete': ['blueprint'],
   'input-wysiwyg': ['ckeditor'],
   'input-date': ['blueprint', 'blueprint-datetime', 'moment'],
   'input-slider': ['blueprint'],
   'input-range-slider': ['blueprint'],
-  'scheduler': ['devextreme']
+  'scheduler': ['fullcalendar']
 }
 export default WIDGETS_DEPENDS;

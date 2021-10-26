@@ -99,9 +99,6 @@ if( isset($_altrp_settings['redirect']) && $_altrp_settings['redirect']){
       justify-content: center;
       align-items: center;
     }
-    .altrp-btn svg {
-      display: block;
-    }
     .section-fit-to-content {
       height: 100vh !important;
     }

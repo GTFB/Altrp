@@ -258,6 +258,8 @@ class InputMultiSelect extends BaseElement {
 
     actionsControllers(this, "Change Actions", "change_");
 
+    actionsControllers(this, "On Search Actions", "s_");
+
     this.startControlSection("create_section", {
       label: "Creating New Items"
     });

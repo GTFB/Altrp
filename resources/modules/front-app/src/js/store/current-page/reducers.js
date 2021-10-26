@@ -5,13 +5,22 @@ import convertQueryParamsToObject from "../../functions/convert-query-params-to-
 if (typeof location === "undefined") {
   global.location = {};
 }
-
+let params = window?.__altrp_settings__?.page_params
+if( ! params){
+  params= convertQueryParamsToObject(document?.location?.search);
+}
+let hashParams = {};
+if(document?.location?.hash && document?.location?.hash.indexOf('=') !== -1){
+  hashParams = convertQueryParamsToObject(document?.location?.hash)
+}
 const defaultPage = {
   url: location?.href || "",
   title: window?.currentPage?.title || "",
-  params: convertQueryParamsToObject(document?.location?.search),
+  hash:document?.location?.hash,
+  params,
+  hashParams,
 };
-
+console.log(defaultPage);
 export function currentPageReducer(page, action) {
   page = page || defaultPage;
   switch (action.type) {

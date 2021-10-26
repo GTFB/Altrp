@@ -64,6 +64,9 @@ import getInputMultiSelectStyles, {
 import TooltipComponent from "./widgets/styled-components/TooltipComponent";
 import AltrpTooltip2 from "./altrp-tooltip/AltrpTooltip2";
 import React from "react";
+import getSchedulerStyles from "../../../../front-app/src/js/components/helpers/getSchedulerStyles";
+import getInputTextAutocompleteStyles
+  from "../../../../front-app/src/js/components/helpers/getInputTextAutocompleteStyles";
 
 const { connect } = window.reactRedux;
 const { replaceContentWithData } = window.altrpHelpers;
@@ -204,6 +207,14 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
         )}}`;
       }
       break;
+    case "input-text-autocomplete":
+      {
+        styles += `.${prefix}${elementId} {${getInputTextAutocompleteStyles(
+          settings,
+          elementId
+        )}}`;
+      }
+      break;
 
     case "template":
       {
@@ -272,6 +283,9 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       break;
     case "map_builder":
       styles += `.${prefix}${elementId} {${MapConstructorComponent(settings)}}`;
+      break;
+    case "scheduler":
+      styles += `.${prefix}${elementId} {${getSchedulerStyles(settings, elementId)}}`;
       break;
   }
 

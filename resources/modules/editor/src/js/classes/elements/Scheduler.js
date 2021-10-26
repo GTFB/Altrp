@@ -1,7 +1,8 @@
 import BaseElement from "./BaseElement";
 import TestIcon from "../../../svgs/accordion.svg";
-import { CONTROLLER_DATE, CONTROLLER_REPEATER, CONTROLLER_TEXT, TAB_CONTENT } from "../modules/ControllersManager";
+import { TAB_STYLE, CONTROLLER_REPEATER, CONTROLLER_SELECT, CONTROLLER_TEXT, TAB_CONTENT, CONTROLLER_COLOR, CONTROLLER_DIMENSIONS, CONTROLLER_SLIDER, CONTROLLER_TYPOGRAPHIC } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
+import { advancedTabControllers } from "../../decorators/register-controllers";
 
 class Scheduler extends BaseElement {
   static getTitle() {
@@ -25,36 +26,471 @@ class Scheduler extends BaseElement {
       return;
     }
 
+
+    this.startControlSection("web_api_settings", {
+      tab: TAB_CONTENT,
+      label: "Web API settings",
+    });
+
+    
+    this.addControl('get_url', {
+      type: CONTROLLER_TEXT,
+      label: 'URL for get',
+    });
+
+    this.addControl('create_url', {
+      type: CONTROLLER_TEXT,
+      label: 'URL for create',
+    });
+
+    this.addControl('update_url', {
+      type: CONTROLLER_TEXT,
+      label: 'URL for update',
+    });
+
+    this.addControl('delete_url', {
+      type: CONTROLLER_TEXT,
+      label: 'URL for delete requests',
+    });
+
+    this.endControlSection();
+
     this.startControlSection("scheduler_content", {
       tab: TAB_CONTENT,
-      label: "Scheduler",
+      label: "Items fields settings",
     });
 
     let repeater = new Repeater();
 
-    repeater.addControl('title_repeater', {
+    repeater.addControl('label_repeater', {
       type: CONTROLLER_TEXT,
-      label: 'Title',
+      label: 'Label',
     });
 
-    this.addControl('repeater_meta_data_section', {
-      label: 'Scheduler items',
-      type: CONTROLLER_REPEATER,
-      fields: repeater.getControls(),
-      default: [
+    repeater.addControl('field_name_repeater', {
+      type: CONTROLLER_TEXT,
+      label: 'Field name',
+    });
+
+    repeater.addControl('input_type_repeater', {
+      type: CONTROLLER_SELECT,
+      label: 'Input type',
+      default: 'text',
+      options: [
         {
-          title_repeater: "Title #1",
+          value: 'text',
+          label: 'Text'
         },
         {
-          title_repeater: "Title #2",
+          value: 'textarea',
+          label: 'TextArea'
         },
-        {
-          title_repeater: "Title #3",
-        }
       ]
     });
 
+    this.addControl('repeater_fields_section', {
+      label: 'Scheduler fields',
+      type: CONTROLLER_REPEATER,
+      fields: repeater.getControls()
+    });
+
     this.endControlSection();
+
+    this.startControlSection('style_switcher', {
+      label: 'Switcher',
+      tab: TAB_STYLE
+    });
+
+    this.addControl('switcher_bgc', {
+      label: 'Background color',
+      type: CONTROLLER_COLOR,
+      default: {
+        color: 'rgba(44, 62, 80, 100)',
+        colorPickedHex: '#2C3E50'
+      }
+    })
+
+    this.addControl("switcher_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Border type",
+      default: 'solid',
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+    });
+
+    this.addControl("switcher_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border width",
+      default: {
+        top: 1,
+        right: 1,
+        bottom: 1,
+        left: 1,
+        unit: "px",
+        bind: true
+      },
+      units: ["px", "%", "vh"],
+    });
+
+    this.addControl("switcher_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Border color",
+      default: {
+        color: "rgba(44,62,80,100)",
+        colorPickedHex: "#2C3E50"
+      },
+    });
+
+    
+    this.addControl('switcher_typography', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typography',
+      }
+    );
+
+    this.endControlSection();
+
+    this.startControlSection('style_title', {
+      label: 'Toolbar title',
+      tab: TAB_STYLE
+    });
+
+    this.addControl('toolbar_title_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Title color',
+      default: {
+        color: "rgba(0,0,0,100)",
+        colorPickedHex: "#000000"
+      }
+    })
+
+    this.addControl('toolbar_title_typography', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typography',
+      }
+    );
+
+    this.endControlSection();
+
+    this.startControlSection('calendar_table_styles', {
+      label: 'Calendar table',
+      tab: TAB_STYLE
+    });
+
+    // this.addControl("table_border_type", {
+    //   type: CONTROLLER_SELECT,
+    //   label: "Border type",
+    //   default: 'solid',
+    //   options: [
+    //     {
+    //       value: "none",
+    //       label: "None"
+    //     },
+    //     {
+    //       value: "solid",
+    //       label: "Solid"
+    //     },
+    //     {
+    //       value: "double",
+    //       label: "Double"
+    //     },
+    //     {
+    //       value: "dotted",
+    //       label: "Dotted"
+    //     },
+    //     {
+    //       value: "dashed",
+    //       label: "Dashed"
+    //     },
+    //     {
+    //       value: "groove",
+    //       label: "Groove"
+    //     }
+    //   ],
+    // });
+
+    // this.addControl("table_border_width", {
+    //   type: CONTROLLER_DIMENSIONS,
+    //   label: "Border width",
+    //   default: {
+    //     top: 1,
+    //     right: 1,
+    //     bottom: 1,
+    //     left: 1,
+    //     unit: "px",
+    //     bind: true
+    //   },
+    //   units: ["px", "%", "vh"],
+    // });
+
+    this.addControl("table_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Border color",
+      default: {
+        color: "rgba(221,221,221,100)",
+        colorPickedHex: "#DDDDDD"
+      },
+    });
+
+    // this.addControl("table_border_radius", {
+    //   type: CONTROLLER_DIMENSIONS,
+    //   label: "Radius",
+    //   units: ["px", "%", "vh"],
+    // });
+
+    this.endControlSection();
+
+    this.startControlSection('header_cells_style', {
+      label: 'Header cells',
+      tab: TAB_STYLE
+    });
+
+    this.addControl("header_cell_color", {
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "rgba(0,0,0,100)",
+        colorPickedHex: "#000000"
+      },
+    });
+
+    this.addControl("header_cell_background-color", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "rgba(255,255,255,100)",
+        colorPickedHex: "#FFFFFF"
+      },
+    });
+
+    this.addControl('header_cell_typography', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typography',
+      }
+    );
+
+    this.endControlSection();
+    
+    this.startControlSection('active_cell_style', {
+      label: 'Active cells',
+      tab: TAB_STYLE
+    });
+
+    this.addControl("active_cell_color", {
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "rgba(0,0,0,100)",
+        colorPickedHex: "#000000"
+      },
+    });
+
+    this.addControl("active_cell_background-color", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "rgba(255,255,255,100)",
+        colorPickedHex: "#FFFFFF"
+      },
+    });
+
+    this.addControl('active_cell_typography', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typography',
+      }
+    );
+
+    this.endControlSection();
+    
+    this.startControlSection('muted_cell_style', {
+      label: 'Muted cells',
+      tab: TAB_STYLE
+    });
+
+    this.addControl("muted_cell_color", {
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "rgba(34,25,77,100)",
+        colorPickedHex: "#F5F5F5"
+      },
+    });
+
+    this.addControl("muted_cell_background-color", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "rgba(255,255,255,100)",
+        colorPickedHex: "#FFFFFF"
+      },
+    });
+
+    this.addControl('muted_cell_typography', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typography',
+      }
+    );
+
+    this.endControlSection();
+    
+    this.startControlSection('current_cell_style', {
+      label: 'Current cell',
+      tab: TAB_STYLE
+    });
+
+    this.addControl("current_cell_color", {
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "rgba(34,25,77,100)",
+        colorPickedHex: "#F5F5F5"
+      },
+    });
+
+    this.addControl("current_cell_background-color", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "rgba(255,255,255,100)",
+        colorPickedHex: "#FFFFFF"
+      },
+    });
+
+    this.addControl('current_cell_typography', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typography',
+      }
+    );
+
+    this.endControlSection();
+    
+    this.startControlSection('event_style', {
+      label: 'Event',
+      tab: TAB_STYLE
+    });
+
+    this.addControl("event_color", {
+      type: CONTROLLER_COLOR,
+      label: "Text color",
+      default: {
+        color: "rgba(255,255,255,100)",
+        colorPickedHex: "#000000"
+      },
+    });
+
+    this.addControl("event_background-color", {
+      type: CONTROLLER_COLOR,
+      label: "Background color",
+      default: {
+        color: "rgba(55,136,216,100)",
+        colorPickedHex: "#3788d8"
+      },
+    });
+
+    this.addControl('event_typography', {
+        type: CONTROLLER_TYPOGRAPHIC,
+        label: 'Typography',
+      }
+    );
+
+    this.addControl("event_border_type", {
+      type: CONTROLLER_SELECT,
+      label: "Border type",
+      default: 'solid',
+      options: [
+        {
+          value: "none",
+          label: "None"
+        },
+        {
+          value: "solid",
+          label: "Solid"
+        },
+        {
+          value: "double",
+          label: "Double"
+        },
+        {
+          value: "dotted",
+          label: "Dotted"
+        },
+        {
+          value: "dashed",
+          label: "Dashed"
+        },
+        {
+          value: "groove",
+          label: "Groove"
+        }
+      ],
+    });
+
+    this.addControl("event_border_width", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Border width",
+      default: {
+        top: 1,
+        right: 1,
+        bottom: 1,
+        left: 1,
+        unit: "px",
+        bind: true
+      },
+      units: ["px", "%", "vh"],
+    });
+
+    this.addControl("event_border_color", {
+      type: CONTROLLER_COLOR,
+      label: "Border color",
+      default: {
+        color: "rgba(55,136,216,100)",
+        colorPickedHex: "#3788d8"
+      },
+    });
+
+    this.addControl("event_border_radius", {
+      type: CONTROLLER_SLIDER,
+      label: 'Border radius',
+      default:{
+        size: 0,
+        unit: 'px',
+      },
+      units:[
+        'px',
+        '%',
+        'vh',
+      ],
+      max: 100,
+      min: 0,
+    });
+
+    this.endControlSection();
+
+    advancedTabControllers(this);
   }
 }
 
