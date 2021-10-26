@@ -20,7 +20,7 @@ const defaultPage = {
   params,
   hashParams,
 };
-console.log(defaultPage);
+
 export function currentPageReducer(page, action) {
   page = page || defaultPage;
   switch (action.type) {

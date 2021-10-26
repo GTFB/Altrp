@@ -24,9 +24,16 @@ window.LIBS = {
     });
   },
   'blueprint-datetime': () => {
-    return import(/* webpackChunkName: 'blueprint-select' */'../libs/blueprint-datetime').then(res => {
+    return import(/* webpackChunkName: 'blueprint-datetime' */'../libs/blueprint-datetime').then(res => {
       window.libsLoaded.push('blueprint-datetime')
       console.log('LOAD blueprint-datetime: ', performance.now());
+      return Promise.resolve(res)
+    });
+  },
+  'blueprint-popover': () => {
+    return import(/* webpackChunkName: 'blueprint-popover' */'../libs/blueprint-popover').then(res => {
+      window.libsLoaded.push('blueprint-popover')
+      console.log('LOAD blueprint-popover: ', performance.now());
       return Promise.resolve(res)
     });
   },
@@ -56,7 +63,7 @@ window.LIBS = {
       window.libsLoaded.push('fullcalendar')
       console.log('LOAD "fullcalendar": ', performance.now());
       return Promise.resolve(res)
-    });    
+    });
   }
 };
 

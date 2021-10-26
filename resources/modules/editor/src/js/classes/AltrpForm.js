@@ -147,7 +147,6 @@ class AltrpForm {
                   _.assign(this.getData(), data),
                   customHeaders
                 );
-                console.log(res);
                 import(/* webpackChunkName: 'ModelsManager' */"./modules/ModelsManager").then(modelsManager => {
                   modelsManager.default.updateModelWithData(
                     this.modelName,

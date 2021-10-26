@@ -1,11 +1,20 @@
+import AltrpInput from "../altrp-input/AltrpInput";
 const {
   isEditor,
   replaceContentWithData,
   renderAsset,
+  getDataByPath,
+  parseOptionsFromSettings,
   getDataFromLocalStorage,
 } = window.altrpHelpers;
+const {
+  MenuItem,
+  Menu} = window.altrpLibs.Blueprint;
+const {
+  Popover2,
+  } = window.altrpLibs.BlueprintPopover;
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
-import AltrpInput from "../altrp-input/AltrpInput";
+
 
 
 (window.globalDefaults = window.globalDefaults || []).push(`
@@ -18,6 +27,7 @@ import AltrpInput from "../altrp-input/AltrpInput";
   object-fit: contain;
   pointer-events: none;
 }
+
 .bp3-icon_text-widget svg{
   width: 16px;
   height: 16px;
@@ -75,6 +85,7 @@ import AltrpInput from "../altrp-input/AltrpInput";
   position: relative;
   flex-grow: 1;
 }
+
 .altrp-field-label--required::after {
   content: "*";
   color: red;
@@ -383,10 +394,15 @@ class InputTextCommonWidget extends Component {
     this.debounceDispatch = this.debounceDispatch.bind(this);
 
     this.defaultValue = this.getContent("content_default_value")
-
+    this.popoverRef = React.createRef()
+    this.inputRef = React.createRef()
     this.state = {
       settings: {...props.element.getSettings()},
       showPassword: false,
+      isOpen: false,
+      options: parseOptionsFromSettings(
+        props.element.getSettings("options")
+      ),
     };
     this.popoverProps = {
       usePortal: true,
@@ -437,7 +453,6 @@ class InputTextCommonWidget extends Component {
    * @param {{}} prevState
    */
   async _componentDidMount(prevProps, prevState) {
-
     let value = this.getValue();
 
     /**
@@ -472,7 +487,35 @@ class InputTextCommonWidget extends Component {
       return;
     }
   }
-
+  getOptions(){
+    if(! this.getValue()){
+      return [];
+    }
+    let options = this.state.options;
+    const content_options = this.props.element.getResponsiveSetting('options');
+    if(_.isString(content_options)
+      && content_options.indexOf('{{') === 0 ){
+      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''))
+      if( ! _.isArray(options)){
+        options = [];
+      }
+    }
+    const value = this.getValue()
+    options = options.filter(o=>{
+      if(_.isObject(o)){
+        o = (o?.label ||o?.value || '')
+      }
+      o += '';
+      return o.indexOf(value) >= 0;
+    });
+    options = options.map(o=>{
+      if(! _.isObject(o)){
+        return o;
+      }
+      return o?.label ||o?.value || ''
+    })
+    return options;
+  }
   /**
    *
    * @returns {string}
@@ -704,7 +747,7 @@ class InputTextCommonWidget extends Component {
 
   onFocus = async e => {
     const focus_actions = this.props.element.getSettings("focus_actions");
-
+    this.setState(state=>({...state, isOpen: true}))
     if (focus_actions && !isEditor()) {
       const actionsManager = (
         await import(
@@ -723,10 +766,12 @@ class InputTextCommonWidget extends Component {
   /**
    * Потеря фокуса для оптимизации
    * @param  e
-   * @param  editor для получения изменений из CKEditor
    */
-  onBlur = async (e, editor = null) => {
+  onBlur = async (e) => {
     this.dispatchFieldValueToStore(e.target.value, true);
+    setTimeout(()=>{
+      this.setState(state=>({...state, isOpen: false}))
+    }, 200);
 
     if (this.props.element.getSettings("actions", []) && !isEditor()) {
       const actionsManager = (
@@ -754,7 +799,6 @@ class InputTextCommonWidget extends Component {
     if (fieldName.indexOf("{{") !== -1) {
       fieldName = replaceContentWithData(fieldName);
     }
-
     if (_.isObject(this.props.appStore) && fieldName && formId) {
       this.props.appStore.dispatch(
         changeFormFieldValue(fieldName, value, formId, userInput)
@@ -843,6 +887,22 @@ class InputTextCommonWidget extends Component {
     </span>
   }
 
+  /**
+   *
+   * @param {text} text
+   * @param {int} index
+   * @returns {JSX.Element}
+   */
+  itemRenderer = (text, index)=>{
+    return <MenuItem
+      onClick={()=>{
+        this.dispatchFieldValueToStore(text, true)
+      }
+      }
+      key={text + index}
+      text={text}/>
+  }
+
   render() {
     let label = null;
     const settings = this.props.element.getSettings();
@@ -926,33 +986,45 @@ class InputTextCommonWidget extends Component {
     } else {
       label = null;
     }
-    let autocomplete = "off";
-    if (this.state.settings.content_autocomplete) {
-      autocomplete = "on";
-    } else {
-      autocomplete = "off";
-    }
-
+    let options = this.getOptions();
+    // conl
     let input = (
-      <div className="altrp-input-wrapper">
-        <AltrpInput
-          type={this.state.settings.content_type === 'password' ? (this.state.showPassword ? "text" : "password") : this.state.settings.content_type}
-          name={this.getName()}
-          id={this.getName()}
-          value={value || ""}
-          popoverProps={this.popoverProps}
-          element={this.props.element}
-          readOnly={content_readonly}
-          autoComplete={autocomplete}
-          placeholder={this.state.settings.content_placeholder}
-          settings={this.props.element.getSettings()}
-          onKeyDown={this.handleEnter}
-          onChange={this.onChange}
-          onBlur={this.onBlur}
-          onFocus={this.onFocus}
-          leftIcon={this.renderLeftIcon()}
-          rightElement={this.renderRightIcon()}
-        />
+      <div className="altrp-input-wrapper altrp-input-wrapper_autocomplete">
+        <Popover2
+          isOpen={this.state.isOpen}
+          // isOpen={true}
+          disabled={!options.length}
+          minimal={true}
+          autoFocus={false}
+          fill={true}
+          position="bottom"
+          popoverRef={this.popoverRef}
+          usePortal={false}
+          content={<Menu>
+            {options.map(this.itemRenderer)}
+          </Menu>}
+        >
+          <AltrpInput
+            ref={this.inputRef}
+            type={this.state.settings.content_type === 'password' ? (this.state.showPassword ? "text" : "password") : this.state.settings.content_type}
+            name={this.getName()}
+            id={this.getName()}
+            value={value || ""}
+            popoverProps={this.popoverProps}
+            element={this.props.element}
+            readOnly={content_readonly}
+            placeholder={this.state.settings.content_placeholder}
+            settings={this.props.element.getSettings()}
+            onKeyDown={this.handleEnter}
+            onChange={this.onChange}
+            onBlur={this.onBlur}
+            onFocus={this.onFocus}
+            leftIcon={this.renderLeftIcon()}
+            rightElement={this.renderRightIcon()}
+          />
+
+      </Popover2>
+
       </div>
     );
 

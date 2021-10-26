@@ -1253,7 +1253,7 @@ class AltrpAction extends AltrpModel {
    * @returns {Promise<void>}
    */
   async doActionOAuth() {
-    const OIDC  = await import ("oidc-client");
+    const OIDC  = await import (/* webpackChunkName: 'OIDC' */"oidc-client");
     const {WebStorageStateStore, UserManager, authority, OidcClient} = OIDC;
     console.log(this);
     (window.altrpLibs = window.altrpLibs || {}).OIDC = OIDC
@@ -1266,8 +1266,6 @@ class AltrpAction extends AltrpModel {
     }
     let settings = {
       client_id: 'AisOrder',
-      // redirect_uri: `http://altrp.nz/callback.html`,
-      // post_logout_redirect_uri: `http://altrp.nz/`,
       redirect_uri: `http://zayavka.geobuilder.ru/login/laravelpassport/callback`,
       post_logout_redirect_uri: `http://zayavka.geobuilder.ru/login/laravelpassport/callback`,
       response_type: 'token id_token',
@@ -1280,6 +1278,8 @@ class AltrpAction extends AltrpModel {
       monitorSession: false,
       checkSessionInterval: 3600000
     };
+    const _manager = new UserManager(settings);
+    console.log(_manager);
     settings = {
       client_id: this.getProperty('client_id'),
       redirect_uri: this.getProperty('redirect_uri'),
