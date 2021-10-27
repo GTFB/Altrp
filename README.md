@@ -5,6 +5,10 @@
 
 
 ### 0.17.14
++ Add Icon Widget
++ Fixed Position for Adminbar and "Hide Adminbar" Button
+
+### 0.17.14
 + Add Input Widget Autocomplete
 + Add OIDC Client Action
 
