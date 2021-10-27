@@ -684,4 +684,4 @@ Route::get('/altrp_run_robot/{robot_id}', 'RobotController@runRobot');
 /**
  * Обновление всех ресурсов бэкенда
  */
-Route::post('update-all-resources', 'Admin\UpdateController@upgradeAllResources');
+//Route::post('update-all-resources', 'Admin\UpdateController@upgradeAllResources');
