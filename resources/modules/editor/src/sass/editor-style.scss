@@ -25,6 +25,10 @@
 @import "./blueprint-hi-contrast";
 @import "./blueprint";
 
+@import "~@fullcalendar/common/main.min.css";
+@import "~@fullcalendar/daygrid/main.min.css";
+@import "~@fullcalendar/timegrid/main.min.css";
+
 .editor {
   display: flex;
   min-height: 100vh;

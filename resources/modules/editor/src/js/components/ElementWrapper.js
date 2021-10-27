@@ -62,6 +62,8 @@ import getInputMultiSelectStyles, {
   getInputMultiSelectPopoverStyles
 } from "../../../../front-app/src/js/components/helpers/getInputMultiSelectStyles";
 import TooltipComponent from "./widgets/styled-components/TooltipComponent";
+import getSchedulerStyles from "../../../../front-app/src/js/components/helpers/getSchedulerStyles";
+import getIconStyles from "../../../../front-app/src/js/components/helpers/getIconStyles";
 
 const { connect } = window.reactRedux;
 const { replaceContentWithData } = window.altrpHelpers;
@@ -271,6 +273,11 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
     case "map_builder":
       styles += `.${prefix}${elementId} {${MapConstructorComponent(settings)}}`;
       break;
+    case "scheduler":
+      styles += `.${prefix}${elementId} {${getSchedulerStyles(settings, elementId)}}`;
+      break;
+    case "icon":
+      styles += `.${prefix}${elementId} {${getIconStyles(settings, elementId)}}`
   }
 
   const tooltip_show_type = settings.tooltip_show_type || "never";

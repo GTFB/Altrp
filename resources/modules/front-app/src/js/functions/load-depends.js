@@ -51,10 +51,10 @@ window.LIBS = {
       return Promise.resolve(res)
     });
   },
-  'devextreme': () => {
-    return import(/* webpackChunkName: 'devextreme' */'../libs/devextreme').then(res => {
-      window.libsLoaded.push('devextreme')
-      console.log('LOAD "devextreme": ', performance.now());
+  'fullcalendar': () => {
+    return import(/* webpackChunkName: 'fullcalendar' */'../libs/fullcalendar').then(res => {
+      window.libsLoaded.push('fullcalendar')
+      console.log('LOAD "fullcalendar": ', performance.now());
       return Promise.resolve(res)
     });    
   }
