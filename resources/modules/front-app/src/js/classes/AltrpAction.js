@@ -1255,7 +1255,6 @@ class AltrpAction extends AltrpModel {
   async doActionOAuth() {
     const OIDC  = await import (/* webpackChunkName: 'OIDC' */"oidc-client");
     const {WebStorageStateStore, UserManager, authority, OidcClient} = OIDC;
-    console.log(this);
     (window.altrpLibs = window.altrpLibs || {}).OIDC = OIDC
 
     const method = this.getProperty('method')
@@ -1297,9 +1296,17 @@ class AltrpAction extends AltrpModel {
     const manager = new UserManager(settings);
     // console.log( manager);
     // console.log(await manager.getUser());
+    let result;
+    console.log(method);
+
     if(_.isFunction(manager[method])){
-      manager[method]();
+      try {
+        result =await manager[method]();
+      } catch (e) {
+        return {success:false}
+      }
     }
+    console.log(result);
     // await manager.signoutRedirect();
     return {success:true}
   }

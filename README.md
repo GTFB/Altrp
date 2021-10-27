@@ -6,6 +6,7 @@
 
 ### 0.17.14
 + Add Input Widget Autocomplete
++ Add OIDC Client Action
 
 ### 0.17.13
 + Add Params fromURl Hash now store in `altrppage.hashParams`
