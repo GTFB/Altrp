@@ -4,8 +4,11 @@
 ## Changelog
 
 
+### 0.17.14
++ Add Input Widget Autocomplete
+
 ### 0.17.13
-+ Add Params fromURl Hash now store in `altrppage.gashParams` 
++ Add Params fromURl Hash now store in `altrppage.hashParams`
 
 ### 0.17.12
 * Fixed Cases of errors when Getting Default Values as Strings and Arrays of Strings in Input Select Widget and Input Multi Select Widget 
