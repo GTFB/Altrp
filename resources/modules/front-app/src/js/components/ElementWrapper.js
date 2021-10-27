@@ -6,6 +6,9 @@ import { ElementWrapperDivComponent } from "../../../../editor/src/js/components
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
 import DEFAULT_REACT_ELEMENTS from "../constants/DEFAULT_REACT_ELEMENTS";
 import EntranceAnimationsStyles from "./EntranceAnimationsStyles";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd";
+import React from "react";
 const {
   altrpCompare,
   altrpRandomId,
@@ -298,20 +301,6 @@ class ElementWrapper extends Component {
     }
     const styles = {};
 
-    if (element.getResponsiveSetting("layout_column_width")) {
-      if (
-        Number(element.getResponsiveSetting("layout_column_width"))
-      ) {
-        styles.width =
-          element.getResponsiveSetting("layout_column_width") + "%";
-      } else {
-        styles.width = element.getResponsiveSetting(
-          "layout_column_width"
-        );
-        console.log(styles.width);
-        console.log(this);
-      }
-    }
     if (!this.state.elementDisplay) {
       styles.display = "none";
     }
@@ -330,7 +319,7 @@ class ElementWrapper extends Component {
       ref: this.elementRef,
       rootElement: this.props.rootElement,
       ElementWrapper: this.props.ElementWrapper,
-      element: element,
+      element,
       children: element.getChildren(),
       match: this.props.match,
       currentModel: this.props.currentModel,
@@ -347,6 +336,30 @@ class ElementWrapper extends Component {
       history: this.props.history,
       appStore
     });
+    if (this.props.element.getName() === "table") {
+      content = <DndProvider backend={HTML5Backend}>{
+        React.createElement(ContentComponent, {
+          ref: this.elementRef,
+          rootElement: this.props.rootElement,
+          ElementWrapper: this.props.ElementWrapper,
+          element: this.props.element,
+          children: this.props.element.getChildren(),
+          match: this.props.match,
+          currentModel: this.props.currentModel,
+          currentUser: this.props.currentUser,
+          currentDataStorage: this.props.currentDataStorage,
+          altrpresponses: this.props.altrpresponses,
+          formsStore: this.props.formsStore,
+          elementDisplay: this.state.elementDisplay,
+          altrpPageState: this.props.altrpPageState,
+          altrpMeta: this.props.altrpMeta,
+          updateToken: this.state.updateToken,
+          currentScreen: this.props.currentScreen,
+          baseRender: this.props.baseRender,
+          history: this.props.history,
+          appStore
+        })}</DndProvider>;
+    }
     if (element.getTemplateType() === "email") {
       if (!this.state.elementDisplay) {
         return null;
@@ -370,7 +383,6 @@ class ElementWrapper extends Component {
       style: styles,
       id: this.CSSId,
     };
-    console.log(wrapperProps);
     if (
       this.reactElement ||
       DEFAULT_REACT_ELEMENTS.indexOf(element.getName()) !== -1
@@ -378,7 +390,7 @@ class ElementWrapper extends Component {
       wrapperProps["data-react-element"] = element.getId();
     }
     if(! _.isEmpty(element.getResponsiveSetting('wrapper_click_actions'))){
-      wrapperProps["data-altrp-wrapper-click-actions"] = element.getId();
+      wrapperProps["data-altrp-wrapper-click-actions"] = element.getIdForAction();
     }
     if(! _.isEmpty(element.getResponsiveSetting('sticky'))){
       wrapperProps["data-altrp-sticky"] = element.getResponsiveSetting('sticky');
@@ -412,6 +424,7 @@ class ElementWrapper extends Component {
         {content}
       </>
     }
+
     return  (
       <WrapperComponent {...wrapperProps} element={element.getId()}>
 

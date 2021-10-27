@@ -1,12 +1,13 @@
 import '../../front-app/src/js/libs/blueprint'
 import '../../front-app/src/js/libs/blueprint-select'
 import '../../front-app/src/js/libs/blueprint-datetime'
+import '../../front-app/src/js/libs/blueprint-popover'
 import '../../front-app/src/js/libs/react-lodash'
 import '../../front-app/src/js/libs/ckeditor'
 import '../../front-app/src/js/libs/altrp'
 import '../../front-app/src/js/libs/moment'
 import '../../front-app/src/js/libs/template-loader'
-import '../../front-app/src/js/libs/devextreme'
+import '../../front-app/src/js/libs/fullcalendar'
 import { Provider } from "react-redux";
 import "./installing";
 import ElementsManager from "./js/classes/modules/ElementsManager";

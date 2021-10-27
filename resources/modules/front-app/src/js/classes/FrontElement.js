@@ -265,6 +265,7 @@ class FrontElement {
       case 'input-hidden':
       case 'input-text':
       case 'input-text-common':
+      case 'input-text-autocomplete':
       case 'input': {
         formsManager.addField(this.getFormId(), this);
       }
@@ -310,14 +311,12 @@ class FrontElement {
    */
   getIdForAction(){
     if(! this.idForAction){
-      this.idForAction = altrpRandomId();
+      this.idForAction = this.getId() +
+        (this.getCurrentModel()?.getProperty('altrpIndex')
+          || this.getCurrentModel()?.getProperty('id')
+          || '');
     }
     return this.idForAction;
-    let id = this.getId();//todo: delete this
-    if(this.getCurrentModel().getProperty('altrpIndex') !== ''){
-      id += `_${this.getCurrentModel().getProperty('altrpIndex')}`;
-    }
-    return id;
   }
 
   /**
@@ -525,6 +524,7 @@ class FrontElement {
     switch (elementName) {
       case 'input':
       case 'input-textarea':
+      case 'input-text-autocomplete':
       case 'input-text-common':{
         value = this?.component?.getValue() || this?.component?.state?.value || '';
       }break;

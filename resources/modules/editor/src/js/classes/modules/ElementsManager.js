@@ -98,6 +98,10 @@ import InputMultiSelect from "../elements/InputMultiSelect";
 import InputMultiSelectWidget from "../../components/widgets/InputMultiSelectWidget";
 import Scheduler from "../elements/Scheduler";
 import SchedulerWidget from "../../components/widgets/SchedulerWidget";
+import Icon from '../elements/Icon';
+import IconWidget from "../../components/widgets/IconWidget";
+import InputTextAutocomplete from "../elements/InputTextAutocomplete";
+import InputTextAutocompleteWidget from "../../components/widgets/InputTextAutocompleteWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -114,7 +118,7 @@ export default class ElementsManger {
     this.elements[Divider.getName()] = Divider;
     this.elements[Column.getName()] = Column;
     this.elements[Section.getName()] = Section;
-    // this.elements[List.getName()] = List;
+    this.elements[List.getName()] = List;
     this.elements[Nav.getName()] = Nav;
     this.elements[TabsSwitcher.getName()] = TabsSwitcher
     // this.elements[Input.getName()] = Input;
@@ -127,6 +131,7 @@ export default class ElementsManger {
     this.elements[InputSelect2.getName()] = InputSelect2;
     this.elements[InputSlider.getName()] = InputSlider;
     this.elements[InputTextCommon.getName()] = InputTextCommon;
+    this.elements[InputTextAutocomplete.getName()] = InputTextAutocomplete;
     this.elements[InputTextarea.getName()] = InputTextarea;
     this.elements[InputWysiwyg.getName()] = InputWysiwyg;
     this.elements[InputImageSelect.getName()] = InputImageSelect;
@@ -154,6 +159,8 @@ export default class ElementsManger {
     this.elements[Dropbar.getName()] = Dropbar;
     this.elements[ImageLightbox.getName()] = ImageLightbox;
     this.elements[Scheduler.getName()] = Scheduler;
+    this.elements[Icon.getName()] = Icon;
+
     // Websocket Notifications
     // this.elements[Notifications.getName()] = Notifications;
     //список компонентов
@@ -168,6 +175,7 @@ export default class ElementsManger {
     this.components[Button.getName()] = ButtonWidget;
     // this.components[Input.getName()] = InputWidget;
     this.components[InputTextCommon.getName()] = InputTextCommonWidget;
+    this.components[InputTextAutocomplete.getName()] = InputTextAutocompleteWidget;
     this.components[InputSelect.getName()] = InputSelectWidget;
     this.components[InputMultiSelect.getName()] = InputMultiSelectWidget;
     this.components[InputSelect2.getName()] = InputSelect2Widget;
@@ -208,6 +216,7 @@ export default class ElementsManger {
     this.components[InputSlider.getName()] = InputSliderWidget;
     this.components[InputRangeSlider.getName()] = InputRangeSliderWidget;
     this.components[Scheduler.getName()] = SchedulerWidget;
+    this.components[Icon.getName()] = IconWidget;
     // Websocket Notifications widget
     // this.components[Notifications.getName()] = NotificationsWidget;
   }

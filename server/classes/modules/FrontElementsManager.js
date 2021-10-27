@@ -31,6 +31,7 @@ import SKELETON_ELEMENTS from "../../../resources/modules/front-app/src/js/const
 import InputHiddenWidget from "../../../resources/modules/editor/src/js/components/widgets/InputHiddenWidget";
 import TemplateWidget from "../../../resources/modules/editor/src/js/components/widgets/TemplateWidget";
 import ImageLightboxWidget from "../../../resources/modules/editor/src/js/components/widgets/ImageLightboxWidget";
+import IconWidget from "../../../resources/modules/editor/src/js/components/widgets/IconWidget"
 // import BreadcrumbsWidget from '../../../resources/modules/editor/src/js/components/widgets/BreadcrumbsWidget';
 // import MenuWidget from '../../../resources/modules/editor/src/js/components/widgets/MenuWidget';
 
@@ -62,6 +63,7 @@ class FrontElementsManager {
     this.components['html'] = HtmlWidget;
     this.components['video'] = VideoWidget;
     this.components['template'] = TemplateWidget;
+    this.components['icon'] = IconWidget;
   }
 
   getComponentClass(name) {

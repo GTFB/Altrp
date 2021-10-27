@@ -283,7 +283,7 @@ class AddPage extends Component {
                         className="form-control"
                       >
                         {/*<option value=""  />*/}
-                        <option value="">None</option>
+                        <option value="root">None</option>
                         {this.state.pagesOptions.map(page => {
                           return (
                             <option value={page.value} key={page.value}>
@@ -345,7 +345,7 @@ class AddPage extends Component {
                         }}
                         className="form-control"
                       >
-                        <option value="" />
+                        <option value="0" >None</option>
                         {this.state.models.map(model => {
                           return (
                             <option value={model.value} key={model.value}>

@@ -24,9 +24,16 @@ window.LIBS = {
     });
   },
   'blueprint-datetime': () => {
-    return import(/* webpackChunkName: 'blueprint-select' */'../libs/blueprint-datetime').then(res => {
+    return import(/* webpackChunkName: 'blueprint-datetime' */'../libs/blueprint-datetime').then(res => {
       window.libsLoaded.push('blueprint-datetime')
       console.log('LOAD blueprint-datetime: ', performance.now());
+      return Promise.resolve(res)
+    });
+  },
+  'blueprint-popover': () => {
+    return import(/* webpackChunkName: 'blueprint-popover' */'../libs/blueprint-popover').then(res => {
+      window.libsLoaded.push('blueprint-popover')
+      console.log('LOAD blueprint-popover: ', performance.now());
       return Promise.resolve(res)
     });
   },
@@ -51,12 +58,12 @@ window.LIBS = {
       return Promise.resolve(res)
     });
   },
-  'devextreme': () => {
-    return import(/* webpackChunkName: 'devextreme' */'../libs/devextreme').then(res => {
-      window.libsLoaded.push('devextreme')
-      console.log('LOAD "devextreme": ', performance.now());
+  'fullcalendar': () => {
+    return import(/* webpackChunkName: 'fullcalendar' */'../libs/fullcalendar').then(res => {
+      window.libsLoaded.push('fullcalendar')
+      console.log('LOAD "fullcalendar": ', performance.now());
       return Promise.resolve(res)
-    });    
+    });
   }
 };
 

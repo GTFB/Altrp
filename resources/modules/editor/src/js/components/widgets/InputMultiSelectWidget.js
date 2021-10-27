@@ -7,6 +7,7 @@ const {
   renderAssetIcon,
   renderAsset,
   Resource,
+  getDataByPath,
   getDataFromLocalStorage
 } = window.altrpHelpers;
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
@@ -409,7 +410,7 @@ class InputMultiSelectWidget extends Component {
       window.elementDecorator(this);
     }
     this.defaultValue =
-      this.getContent("content_default_value", true) || []
+      this.getContentDefaultValue() || []
     if (!_.isArray(this.defaultValue)) {
       this.defaultValue = [];
     }
@@ -429,10 +430,23 @@ class InputMultiSelectWidget extends Component {
       portalClassName: `altrp-portal altrp-portal_input-select altrp-portal${this.props.element.getId()} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
-    this.altrpSelectRef = React.createRef();
-    if (this.getContent("content_default_value", true)) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value", true));
+
+    if(! isEditor()){
+      // this.popoverProps.boundary = '#front-app'
     }
+    this.altrpSelectRef = React.createRef();
+    if (this.getContentDefaultValue()) {
+      this.dispatchFieldValueToStore(this.getContentDefaultValue());
+    }
+  }
+
+
+  getContentDefaultValue(){
+    let value = this.getContent("content_default_value", true)
+    if(_.isString(value) && value.indexOf(',') !== -1){
+      value = value.split(',')
+    }
+    return value;
   }
 
 
@@ -477,7 +491,7 @@ class InputMultiSelectWidget extends Component {
       ! prevProps.currentModel.getProperty("altrpModelUpdated") &&
       this.props.currentModel.getProperty("altrpModelUpdated")
     ) {
-      value = this.getContent("content_default_value", true);
+      value = this.getContentDefaultValue();
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -491,7 +505,7 @@ class InputMultiSelectWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       !this.state.contentLoaded
     ) {
-      value = this.getContent("content_default_value", true);
+      value = this.getContentDefaultValue();
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -525,6 +539,36 @@ class InputMultiSelectWidget extends Component {
     return url;
   }
 
+  onQueryChange = async (s)=>{
+    const searchActions = this.props.element.getSettings("s_actions");
+    if(_.isEmpty(searchActions)){
+      return
+    }
+    if(this.searchOnPending){
+      return
+    }
+    this.searchOnPending = true;
+    try{
+
+      const actionsManager = (
+        await import(
+          /* webpackChunkName: 'ActionsManager' */
+          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+          )
+      ).default;
+      this.props.element.getCurrentModel().setProperty('altrp_search', s);
+      await actionsManager.callAllWidgetActions(
+        this.props.element.getIdForAction(),
+        "search",
+        searchActions,
+        this.props.element
+      );
+    } catch (e) {
+      console.error(e);
+    }finally{
+      this.searchOnPending = false;
+    }
+  }
   /**
    * Обновление виджета
    */
@@ -535,8 +579,7 @@ class InputMultiSelectWidget extends Component {
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
-      let value = this.getContent(
-        "content_default_value", true);
+      let value = this.getContentDefaultValue();
       this.setState(
         state => ({...state, value, contentLoaded: true}),
         () => {
@@ -820,7 +863,7 @@ class InputMultiSelectWidget extends Component {
     }
     const options = [...this.state.options];
     const element = this.props.element;
-    if (!options.find(option => option.value === value)) {
+    if (!options.find(option => option.value == value)) {
       const create_url = element.getResponsiveSetting('create_url');
       if (element.getResponsiveSetting('create') && create_url) {
         this.setState(state => ({...state, widgetDisabled: true}))
@@ -852,9 +895,9 @@ class InputMultiSelectWidget extends Component {
       }
     }
 
-    if(! options.find(o=>o.value === value)){
+    if(! options.find(o=>o.value == value)){
       value = currentValue
-    } else if(! currentValue.find(v => v.value === value)){
+    } else if(! currentValue.find(v => v.value == value)){
       value = currentValue.concat({value})
     }
     value = value.map(v => v.value)
@@ -883,6 +926,16 @@ class InputMultiSelectWidget extends Component {
     const optionsDynamicSetting = this.props.element.getDynamicSetting(
       "content_options"
     );
+    const content_options = this.props.element.getResponsiveSetting('content_options');
+    const model_for_options = this.props.element.getResponsiveSetting('model_for_options');
+    if(_.isString(content_options)
+      && content_options.indexOf('{{') === 0
+      && ! model_for_options){
+      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''))
+      if( ! _.isArray(options)){
+        options = [];
+      }
+    }
     if (optionsDynamicSetting) {
       options = convertData(optionsDynamicSetting, options);
     }
@@ -894,7 +947,7 @@ class InputMultiSelectWidget extends Component {
     }
     let value = this.getValue()
     options = options.filter(o => {
-      return ! value.find(v => v.value === o.value)
+      return ! value.find(v => v.value == o.value)
     })
     return options;
   }
@@ -975,7 +1028,7 @@ class InputMultiSelectWidget extends Component {
     let options = [...this.state.options]
     value = value.map(v => {
       let option = options.find(o => {
-        return o.value === v;
+        return o.value == v;
       })
       if (! option) {
         return {value: v, label: v}
@@ -1084,7 +1137,7 @@ class InputMultiSelectWidget extends Component {
    * @returns {boolean}
    */
   itemsEqual(item1, item2) {
-    return item1?.value === item2?.value
+    return item1?.value == item2?.value
   }
 
   /**
@@ -1189,6 +1242,7 @@ class InputMultiSelectWidget extends Component {
       <MultiSelect
         placeholder={placeholder}
         inputProps={inputProps}
+        onQueryChange={this.onQueryChange}
         itemsEqual={this.itemsEqual}
         disabled={content_readonly}
         popoverProps={this.popoverProps}

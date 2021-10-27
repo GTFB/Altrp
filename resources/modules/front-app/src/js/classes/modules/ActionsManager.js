@@ -51,12 +51,13 @@ class ActionsManager extends AltrpModel{
       return
     }
     preventedActions = preventedActions || [];
-    let actions = this.getProperty(`actions.${widgetId}.${eventName}`, []);
+    let actions = preventedActions;
     const errors = [];
-    if(! actions.length && preventedActions.length && element){
-      this.registerWidgetActions(widgetId, preventedActions, eventName, element);
-      actions = this.getProperty(`actions.${widgetId}.${eventName}`, []);
-    }
+    actions = actions.map(a=> new AltrpAction(a, widgetId, element))
+    // if(! actions.length && preventedActions.length && element){
+    //   this.registerWidgetActions(widgetId, preventedActions, eventName, element);
+    //   actions = this.getProperty(`actions.${widgetId}.${eventName}`, []);
+    // }
     for (let action of actions){
       try {
         let result = await action.doAction();

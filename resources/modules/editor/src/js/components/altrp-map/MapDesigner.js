@@ -67,18 +67,12 @@ function MapDesigner({
         [field_id]: JSON.stringify(data)
       })
       .then(res => {
-        console.log("====================================");
-        console.log(res);
-        console.log("====================================");
       });
   };
 
   const deleteGeoObjectToModel = geoObject => {
     const { dbID } = geoObject;
     axios.delete(`${url}/${dbID}`).then(res => {
-      console.log("====================================");
-      console.log(res);
-      console.log("====================================");
     });
   };
 

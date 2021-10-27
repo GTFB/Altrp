@@ -117,7 +117,7 @@ module.exports = {
       global: {}
     }),
     new WebpackBuildNotifierPlugin({
-      title: "Editor"
+      title: "Front"
     })
     // new ExtractTextPlugin('style.css'),
     // new MiniCssExtractPlugin({

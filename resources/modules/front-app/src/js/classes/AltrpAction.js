@@ -1,6 +1,6 @@
 import AltrpModel from '../../../../editor/src/js/classes/AltrpModel';
-import { togglePopup } from '../store/popup-trigger/actions';
-import { sendEmail } from '../helpers/sendEmail';
+import {togglePopup} from '../store/popup-trigger/actions';
+import {sendEmail} from '../helpers/sendEmail';
 import {changeCurrentModel} from "../store/current-model/actions";
 const {
   altrpLogin,
@@ -97,6 +97,7 @@ class AltrpAction extends AltrpModel {
   getElement() {
     return this.getProperty('_element');
   }
+
   /**
    * Получить экземпляр текущей модели страницы или карточки
    * @return {AltrpModel | null}
@@ -119,6 +120,7 @@ class AltrpAction extends AltrpModel {
     }
     return value;
   }
+
   /**
    * Инициируем действие
    */
@@ -158,6 +160,7 @@ class AltrpAction extends AltrpModel {
       }
     }
   }
+
   /**
    * Получить тип действия
    * @return {string}
@@ -165,6 +168,7 @@ class AltrpAction extends AltrpModel {
   getType() {
     return this.getProperty('type');
   }
+
   /**
    * Получить тип действия
    * @return {*}
@@ -182,7 +186,7 @@ class AltrpAction extends AltrpModel {
       success: false
     };
     let confirmText = this.getProperty('confirm');
-    confirmText = replaceContentWithData(confirmText,this.getCurrentModel().getData());
+    confirmText = replaceContentWithData(confirmText, this.getCurrentModel().getData());
 
     if (confirmText && !confirm(confirmText)) {
       return {
@@ -191,143 +195,121 @@ class AltrpAction extends AltrpModel {
       };
     }
     switch (this.getType()) {
-      case 'form':
-        {
-          result = await this.doActionForm();
-        }
+      case 'form': {
+        result = await this.doActionForm();
+      }
         break;
-      case 'delay':
-        {
-          result = await this.doActionDelay();
-        }
+      case 'delay': {
+        result = await this.doActionDelay();
+      }
         break;
-      case 'email':
-        {
-          result = await this.doActionEmail();
-        }
+      case 'email': {
+        result = await this.doActionEmail();
+      }
         break;
-      case 'redirect':
-        {
-          result = await this.doActionRedirect();
-        }
+      case 'redirect': {
+        result = await this.doActionRedirect();
+      }
         break;
-      case 'toggle_element':
-        {
-          result = await this.doActionToggleElements();
-        }
+      case 'toggle_element': {
+        result = await this.doActionToggleElements();
+      }
         break;
-      case 'toggle_popup':
-        {
-          result = await this.doActionTogglePopup();
-        }
+      case 'toggle_popup': {
+        result = await this.doActionTogglePopup();
+      }
         break;
-      case 'print_page':
-        {
-          result = await this.doActionPrintPage();
-        }
+      case 'print_page': {
+        result = await this.doActionPrintPage();
+      }
         break;
-      case 'print_elements':
-        {
-          result = await this.doActionPrintElements();
-        }
+      case 'print_elements': {
+        result = await this.doActionPrintElements();
+      }
         break;
-      case 'scroll_to_element':
-        {
-          result = await this.doActionScrollToElement();
-        }
+      case 'scroll_to_element': {
+        result = await this.doActionScrollToElement();
+      }
         break;
-      case 'scroll_to_top':
-        {
-          result = await this.doActionScrollToTop();
-        }
+      case 'scroll_to_top': {
+        result = await this.doActionScrollToTop();
+      }
         break;
-      case 'scroll_to_bottom':
-        {
-          result = await this.doActionScrollToBottom();
-        }
+      case 'scroll_to_bottom': {
+        result = await this.doActionScrollToBottom();
+      }
         break;
-      case 'trigger':
-        {
-          result = await this.doActionTrigger();
-        }
+      case 'trigger': {
+        result = await this.doActionTrigger();
+      }
         break;
-      case 'page_to_pdf':
-        {
-          result = await this.doActionPageToPDF();
-        }
+      case 'page_to_pdf': {
+        result = await this.doActionPageToPDF();
+      }
         break;
-      case 'elements_to_pdf':
-        {
-          result = await this.doActionElementsToPDF();
-        }
+      case 'elements_to_pdf': {
+        result = await this.doActionElementsToPDF();
+      }
         break;
-      case 'data_to_csv':
-        {
-          result = await this.doActionDataToCSV();
-        }
+      case 'data_to_csv': {
+        result = await this.doActionDataToCSV();
+      }
         break;
-      case 'table_to_csv':
-        {
-          result = await this.doActionTableToCSV();
-        }
+      case 'table_to_csv': {
+        result = await this.doActionTableToCSV();
+      }
         break;
-      case 'table_to_xml':
-      {
+      case 'table_to_xml': {
         result = await this.doActionTableToXML();
       }
         break;
       case 'table_to_xls':
         result = await this.doActionTableToXLS();
         break;
-      case 'login':
-        {
-          result = await this.doActionLogin();
-        }
+      case 'login': {
+        result = await this.doActionLogin();
+      }
         break;
-      case 'logout':
-        {
-          result = await this.doActionLogout();
-        }
+      case 'logout': {
+        result = await this.doActionLogout();
+      }
         break;
-      case 'set_data':
-        {
-          result = await this.doActionSetData();
-        }
+      case 'set_data': {
+        result = await this.doActionSetData();
+      }
         break;
-      case 'update_current_datasources':
-        {
-          result = await this.doActionUpdateCurrentDatasources();
-        }
+      case 'update_current_datasources': {
+        result = await this.doActionUpdateCurrentDatasources();
+      }
         break;
-      case 'update_current_model':
-        {
-          result = await this.doActionUpdateCurrentModel();
-        }
+      case 'update_current_model': {
+        result = await this.doActionUpdateCurrentModel();
+      }
         break;
-      case 'forms_manipulate':
-        {
-          result = await this.doActionFormsManipulate();
-        }
+      case 'forms_manipulate': {
+        result = await this.doActionFormsManipulate();
+      }
         break;
-      case 'custom_code':
-        {
-          result = await this.doActionCustomCode();
-        }
+      case 'custom_code': {
+        result = await this.doActionCustomCode();
+      }
         break;
-      case 'play_sound':
-        {
-          result = await this.doActionPlaySound();
-        }
+      case 'play_sound': {
+        result = await this.doActionPlaySound();
+      }
         break;
-      case 'condition':
-        {
-          result = await this.doActionCondition();
-        }
+      case 'condition': {
+        result = await this.doActionCondition();
+      }
         break;
-      case 'vi_toggle':
-        {
-          result = await this.doActionVIToggle();
-        }
+      case 'vi_toggle': {
+        result = await this.doActionVIToggle();
+      }
+        break;
+      case 'oauth': {
+        result = await this.doActionOAuth();
+
+      }
         break;
     }
     let alertText = '';
@@ -342,6 +324,7 @@ class AltrpAction extends AltrpModel {
     }
     return result;
   }
+
   /**
    * Ассинхронно выполняет действие-формы
    * @return {Promise<{}>}
@@ -422,14 +405,14 @@ class AltrpAction extends AltrpModel {
           bulk.forEach((item, idx) => {
             formsManager.deleteFormById(this.getFormId() + idx);
           });
-          return { success: false };
+          return {success: false};
         }
         bulk.forEach((item, idx) => {
           formsManager.deleteFormById(this.getFormId() + idx);
         });
       }
 
-      return { success: true };
+      return {success: true};
     }
     if (this.getProperty('path')) {
       let _data = getDataByPath(this.getProperty('path'), {});
@@ -472,6 +455,7 @@ class AltrpAction extends AltrpModel {
 
     return result;
   }
+
   /**
    * Делает редирект на страницу form_url
    * @return {Promise<{}>}
@@ -492,7 +476,7 @@ class AltrpAction extends AltrpModel {
     } else {
       if (this.getProperty('back')) {
         history.back()
-      }else{
+      } else {
         window.location.href = URL;
       }
     }
@@ -500,6 +484,7 @@ class AltrpAction extends AltrpModel {
       success: true
     };
   }
+
   /**
    * Показывает/скрывает элементы по пользовательским ИД
    * @return {Promise<{}>}
@@ -508,7 +493,7 @@ class AltrpAction extends AltrpModel {
     let IDs = this.getProperty('elements_ids');
 
     if (!IDs) {
-      return { success: true };
+      return {success: true};
     }
     IDs = IDs.split(',');
 
@@ -523,6 +508,7 @@ class AltrpAction extends AltrpModel {
       success: true
     };
   }
+
   /**
    * Показывает/скрывает попап
    * @return {Promise<{}>}
@@ -534,7 +520,7 @@ class AltrpAction extends AltrpModel {
         success: true
       };
     }
-    if(window['h-altrp']){
+    if (window['h-altrp']) {
       const loadPopups = (await import(/* webpackChunkName: 'load-popups' */"../functions/load-popups")).default;
       await loadPopups();
     }
@@ -544,6 +530,7 @@ class AltrpAction extends AltrpModel {
       success: true
     };
   }
+
   /**
    * Печать страницы
    * @return {Promise<{}>}
@@ -554,6 +541,7 @@ class AltrpAction extends AltrpModel {
       success: true
     };
   }
+
   /**
    * Печать элементов
    * @return {Promise<{}>}
@@ -561,7 +549,7 @@ class AltrpAction extends AltrpModel {
   async doActionPrintElements() {
     let IDs = this.getProperty('elements_ids');
     if (!IDs) {
-      return { success: true };
+      return {success: true};
     }
     IDs = IDs.split(',');
     let elementsToPrint = [];
@@ -570,7 +558,7 @@ class AltrpAction extends AltrpModel {
         return;
       }
       getHTMLElementById(elementId.trim()) &&
-        elementsToPrint.push(getHTMLElementById(elementId));
+      elementsToPrint.push(getHTMLElementById(elementId));
       if (getComponentByElementId(elementId.trim())?.getStylesHTMLElement) {
         let stylesElement = getComponentByElementId(
           elementId.trim()
@@ -591,6 +579,7 @@ class AltrpAction extends AltrpModel {
       success: true
     };
   }
+
   /**
    * Скролл к элементу
    * @return {Promise<{}>}
@@ -598,15 +587,15 @@ class AltrpAction extends AltrpModel {
   async doActionScrollToElement() {
     let elementId = this.getProperty('element_id');
     if (!elementId) {
-      return { success: true };
+      return {success: true};
     }
     elementId = elementId.trim();
     const element = getHTMLElementById(elementId);
     let scroller = window.mainScrollbars;
-    if(! scroller){
+    if (!scroller) {
       scroller = document.querySelector('.front-app-content');
     }
-    if(! scroller){
+    if (!scroller) {
       scroller = window;
     }
     if (element) {
@@ -616,12 +605,13 @@ class AltrpAction extends AltrpModel {
       success: true
     };
   }
+
   /**
    * Скролл на верх страницы
    * @return {Promise<{}>}
    */
   async doActionScrollToTop() {
-    if(window.mainScrollbars){
+    if (window.mainScrollbars) {
       window.mainScrollbars.scrollTop(0);
       return {
         success: true
@@ -629,15 +619,16 @@ class AltrpAction extends AltrpModel {
     }
     let scroller = document.querySelector('.front-app-content');
 
-    if(! scroller){
+    if (!scroller) {
       scroller = window;
     }
-    scroller.scrollTo({top: 0,left: 0, behavior:'smooth'})
+    scroller.scrollTo({top: 0, left: 0, behavior: 'smooth'})
 
     return {
       success: true
     };
   }
+
   /**
    * Скролл на верх страницы
    * @return {Promise<{}>}
@@ -649,7 +640,7 @@ class AltrpAction extends AltrpModel {
         success: true
       };
     }
-    if(window.mainScrollbars){
+    if (window.mainScrollbars) {
       window.mainScrollbars.scrollTop(routeContent.offsetHeight);
       return {
         success: true
@@ -658,14 +649,15 @@ class AltrpAction extends AltrpModel {
 
     let scroller = document.querySelector('.front-app-content');
 
-    if(! scroller){
+    if (!scroller) {
       scroller = window;
     }
-    scroller.scrollTo({left:0,top:document.querySelector('.route-content').offsetHeight, behavior:'smooth'})
+    scroller.scrollTo({left: 0, top: document.querySelector('.route-content').offsetHeight, behavior: 'smooth'})
     return {
       success: true
     };
   }
+
   /**
    * Страницу в PDF
    * @return {Promise<{}>}
@@ -687,7 +679,7 @@ class AltrpAction extends AltrpModel {
     const elements = [];
     let IDs = this.getProperty('elements_ids');
     if (!IDs) {
-      return { success: true };
+      return {success: true};
     }
     IDs = IDs.split(',');
     IDs.forEach(elementId => {
@@ -695,10 +687,11 @@ class AltrpAction extends AltrpModel {
         return;
       }
       getHTMLElementById(elementId.trim()) &&
-        elements.push(getHTMLElementById(elementId));
+      elements.push(getHTMLElementById(elementId));
     });
     return await elementsToPdf(elements, filename);
   }
+
   /**
    * Данные в CSV-файл
    * @return {Promise<{}>}
@@ -710,9 +703,10 @@ class AltrpAction extends AltrpModel {
       return await dataToCSV(data, filename);
     } catch (error) {
       console.error(error);
-      return { success: false };
+      return {success: false};
     }
   }
+
   /**
    * HTML-Таблицу в CSV-файл
    * @return {Promise<{}>}
@@ -720,31 +714,32 @@ class AltrpAction extends AltrpModel {
   async doActionTableToCSV() {
     let elementId = this.getProperty('element_id');
     if (!elementId) {
-      return { success: true };
+      return {success: true};
     }
     elementId = elementId.trim();
     const element = getHTMLElementById(elementId);
     if (!element) {
-      return { success: true };
+      return {success: true};
     }
     let data;
     try {
       data = dataFromTable(element);
     } catch (error) {
       console.error(error);
-      return { success: false };
+      return {success: false};
     }
     if (_.isEmpty(data)) {
-      return { success: true };
+      return {success: true};
     }
     let filename = replaceContentWithData(this.getProperty('name', 'file'), this.getCurrentModel().getData());
     try {
       return await dataToCSV(data, filename);
     } catch (error) {
       console.error(error);
-      return { success: false };
+      return {success: false};
     }
   }
+
   /**
    * HTML-Таблицу в XML-файл
    * @return {Promise<{}>}
@@ -752,31 +747,32 @@ class AltrpAction extends AltrpModel {
   async doActionTableToXML() {
     let elementId = this.getProperty('element_id');
     if (!elementId) {
-      return { success: true };
+      return {success: true};
     }
     elementId = elementId.trim();
     const element = getHTMLElementById(elementId);
     if (!element) {
-      return { success: true };
+      return {success: true};
     }
     let data;
     try {
       data = dataFromTable(element);
     } catch (error) {
       console.error(error);
-      return { success: false };
+      return {success: false};
     }
     if (_.isEmpty(data)) {
-      return { success: true };
+      return {success: true};
     }
     let filename = replaceContentWithData(this.getProperty('name', 'file'), this.getCurrentModel().getData());
     try {
       return await dataToXML(data, filename);
     } catch (error) {
       console.error(error);
-      return { success: false };
+      return {success: false};
     }
   }
+
   /**
    * HTML-таблицу в XLS-файл
    * @return {Promise}
@@ -785,23 +781,23 @@ class AltrpAction extends AltrpModel {
 
     let data = [];
 
-    if (this.getProperty('all_sources')){
+    if (this.getProperty('all_sources')) {
       const all_sources_path = this.getProperty('all_sources_path');
       if (all_sources_path) data = getDataByPath(all_sources_path, {});
-      data = { data };
+      data = {data};
 
     } else {
       const elementId = this.getProperty('element_id').trim();
 
       if (!elementId) {
         console.error('Element ID is not set');
-        return { success: true };
+        return {success: true};
       }
 
       const table = getHTMLElementById(elementId);
       if (!table) {
         console.error('Table with provided ID is not found');
-        return { success: true };
+        return {success: true};
       }
 
       data = dataFromTable(table);
@@ -810,7 +806,7 @@ class AltrpAction extends AltrpModel {
 
       _.each(data, row => formattedData.push(Object.values(row)));
       let rawTemplateData = this.getProperty('template_data');
-      if (rawTemplateData){
+      if (rawTemplateData) {
         const parsedTemplateData = rawTemplateData
           .split('\n')
           .reduce((data, row) => {
@@ -818,9 +814,9 @@ class AltrpAction extends AltrpModel {
             data[keyValuePair[0]] = keyValuePair[1];
             return data;
           }, {});
-          data = { ...parsedTemplateData, data: formattedData };
+        data = {...parsedTemplateData, data: formattedData};
       } else {
-        data = { data };
+        data = {data};
       }
     }
 
@@ -835,12 +831,13 @@ class AltrpAction extends AltrpModel {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      return { success: true };
+      return {success: true};
     } catch (error) {
       console.error(error);
-      return { success: false };
+      return {success: false};
     }
   }
+
   /**
    * действие-логин
    * @return {Promise<{}>}
@@ -858,11 +855,12 @@ class AltrpAction extends AltrpModel {
       }
     });
     if (!success) {
-      return { success: false };
+      return {success: false};
     }
 
     return await altrpLogin(form.getData(), this.getFormId());
   }
+
   /**
    * действие-выход из приложения
    * @return {Promise<{}>}
@@ -870,6 +868,7 @@ class AltrpAction extends AltrpModel {
   async doActionLogout() {
     return await altrpLogout();
   }
+
   /**
    * действие-установка значения по для пути `path`
    * @return {Promise<{}>}
@@ -894,142 +893,136 @@ class AltrpAction extends AltrpModel {
       const setType = this.getProperty('set_type');
       let count = this.getProperty('count');
       switch (setType) {
-        case 'toggle':
-          {
-            value = !getDataByPath(path);
-            result.success = setDataByPath(path, value);
-          }
+        case 'toggle': {
+          value = !getDataByPath(path);
+          result.success = setDataByPath(path, value);
+        }
           break;
-        case 'set':
-          {
-            if (
-              value.split(/\r?\n/).length === 1 &&
-              value.indexOf('{{') === 0 &&
-              value.indexOf('}}') === value.length - 2 &&
-              getDataByPath(value.replace('{{', '').replace('}}', ''),
-                  null,
-                  this.getCurrentModel())
-            ) {
-              value = getDataByPath(
-                value.replace('{{', '').replace('}}', ''),
-                null,
-                this.getCurrentModel()
-              );
-            } else if( value.indexOf('|') !== -1){
+        case 'set': {
+          if (
+            value.split(/\r?\n/).length === 1 &&
+            value.indexOf('{{') === 0 &&
+            value.indexOf('}}') === value.length - 2 &&
+            getDataByPath(value.replace('{{', '').replace('}}', ''),
+              null,
+              this.getCurrentModel())
+          ) {
+            value = getDataByPath(
+              value.replace('{{', '').replace('}}', ''),
+              null,
+              this.getCurrentModel()
+            );
+          } else if (value.indexOf('|') !== -1) {
 
 
-              value = parseParamsFromString(
-                value,
-                this.getCurrentModel(),
-                true
-              );
-            }
-            result.success = setDataByPath(path, value);
+            value = parseParamsFromString(
+              value,
+              this.getCurrentModel(),
+              true
+            );
           }
+          result.success = setDataByPath(path, value);
+        }
           break;
-        case 'toggle_set':
-          {
-            let currentValue = getDataByPath(path);
-            value = value.split('\n').map(v => v.trim());
-            if (value.length === 1) {
-              value.push('');
-            }
-            let nextIndex = value.indexOf(currentValue) + 1;
-            if (nextIndex >= value.length) {
-              nextIndex = 0;
-            }
-            value = value[nextIndex] || '';
-            result.success = setDataByPath(path, value);
+        case 'toggle_set': {
+          let currentValue = getDataByPath(path);
+          value = value.split('\n').map(v => v.trim());
+          if (value.length === 1) {
+            value.push('');
           }
-          break;
-        case 'increment':
-          {
-            let currentValue = getDataByPath(path);
-            currentValue = currentValue
-              ? _.isNaN(Number(currentValue))
-                ? 1
-                : Number(currentValue)
-              : Number(!!currentValue);
-            count = Number(count) || 1;
-            currentValue += count;
-            result.success = setDataByPath(path, currentValue);
+          let nextIndex = value.indexOf(currentValue) + 1;
+          if (nextIndex >= value.length) {
+            nextIndex = 0;
           }
+          value = value[nextIndex] || '';
+          result.success = setDataByPath(path, value);
+        }
           break;
-        case 'decrement':
-          {
-            let currentValue = getDataByPath(path);
-            currentValue = currentValue
-              ? _.isNaN(Number(currentValue))
-                ? 1
-                : Number(currentValue)
-              : Number(!!currentValue);
-            count = Number(count) || 1;
-            currentValue -= count;
-            result.success = setDataByPath(path, currentValue);
+        case 'increment': {
+          let currentValue = getDataByPath(path);
+          currentValue = currentValue
+            ? _.isNaN(Number(currentValue))
+              ? 1
+              : Number(currentValue)
+            : Number(!!currentValue);
+          count = Number(count) || 1;
+          currentValue += count;
+          result.success = setDataByPath(path, currentValue);
+        }
+          break;
+        case 'decrement': {
+          let currentValue = getDataByPath(path);
+          currentValue = currentValue
+            ? _.isNaN(Number(currentValue))
+              ? 1
+              : Number(currentValue)
+            : Number(!!currentValue);
+          count = Number(count) || 1;
+          currentValue -= count;
+          result.success = setDataByPath(path, currentValue);
+        }
+          break;
+        case 'push_items': {
+          let currentValue = getDataByPath(path);
+          let item = {};
+          if (!_.isArray(currentValue)) {
+            currentValue = [];
           }
-          break;
-        case 'push_items':
-          {
-            let currentValue = getDataByPath(path);
-            let item = {};
-            if (!_.isArray(currentValue)) {
-              currentValue = [];
-            }
-            currentValue = [...currentValue];
-            if (_.isObject(getDataByPath(value))) {
-              item = getDataByPath(value);
-            }
-            count = Number(count) || 1;
-            if (count < 0) {
-              count = 1;
-            }
-            while (count) {
-              _.isArray(item)
-                ? currentValue.push([...item])
-                : currentValue.push({ ...item });
-              --count;
-            }
-            result.success = setDataByPath(path, currentValue);
+          currentValue = [...currentValue];
+          if (_.isObject(getDataByPath(value))) {
+            item = getDataByPath(value);
           }
+          count = Number(count) || 1;
+          if (count < 0) {
+            count = 1;
+          }
+          while (count) {
+            _.isArray(item)
+              ? currentValue.push([...item])
+              : currentValue.push({...item});
+            --count;
+          }
+          result.success = setDataByPath(path, currentValue);
+        }
           break;
-        case 'remove_items':
-          {
-            let items = path.split(/\r?\n/);
-            items.forEach(i => {
-              if (!i) {
-                return;
-              }
-              i = i.trim();
-              if (!i) {
-                return;
-              }
-              if (i.indexOf('{{') !== -1) {
-                i = replaceContentWithData(i, this.getCurrentModel().getData());
-              }
-              let item = getDataByPath(i);
-              if (!item) {
-                return;
-              }
-              let listPath = i.replace(/.\d+$/, '').trim();
-              if (!listPath) {
-                return;
-              }
-              let list = getDataByPath(listPath);
-              if (!_.isArray(list)) {
-                return;
-              }
-              list = [...list];
+        case 'remove_items': {
+          let items = path.split(/\r?\n/);
+          items.forEach(i => {
+            if (!i) {
+              return;
+            }
+            i = i.trim();
+            if (!i) {
+              return;
+            }
+            if (i.indexOf('{{') !== -1) {
+              i = replaceContentWithData(i, this.getCurrentModel().getData());
+            }
+            let item = getDataByPath(i);
+            if (!item) {
+              return;
+            }
+            let listPath = i.replace(/.\d+$/, '').trim();
+            if (!listPath) {
+              return;
+            }
+            let list = getDataByPath(listPath);
+            if (!_.isArray(list)) {
+              return;
+            }
+            list = [...list];
 
-              list = list.filter(_item => _item !== item);
-              setDataByPath(listPath, list);
-            });
-            result.success = true;
-          }
+            list = list.filter(_item => _item !== item);
+            setDataByPath(listPath, list);
+          });
+          result.success = true;
+        }
           break;
       }
     }
     return result;
   }
+
   /**
    * действие - манипуляция с элементами форм
    * @return {Promise<{}>}
@@ -1037,31 +1030,30 @@ class AltrpAction extends AltrpModel {
   doActionFormsManipulate() {
     let IDs = this.getProperty('elements_ids');
     if (!IDs) {
-      return { success: true };
+      return {success: true};
     }
     IDs = IDs.split(',');
     const change = this.getProperty('forms_change');
     IDs.forEach(id => {
       let component = getComponentByElementId(id);
       switch (change) {
-        case 'select_all':
-          {
-            if (_.get(component, 'elementRef.current.selectAll')) {
-              component.elementRef.current.selectAll();
-            }
+        case 'select_all': {
+          if (_.get(component, 'elementRef.current.selectAll')) {
+            component.elementRef.current.selectAll();
           }
+        }
           break;
-        case 'clear':
-          {
-            if (_.get(component, 'elementRef.current.clearValue')) {
-              component.elementRef.current.clearValue();
-            }
+        case 'clear': {
+          if (_.get(component, 'elementRef.current.clearValue')) {
+            component.elementRef.current.clearValue();
           }
+        }
           break;
       }
     });
-    return { success: true };
+    return {success: true};
   }
+
   /**
    * действие - выполнение пользовательского кода
    * @return {Promise<{}>}
@@ -1070,44 +1062,45 @@ class AltrpAction extends AltrpModel {
     let code = this.getProperty('code');
     try {
       eval(code);
-      return { success: true };
+      return {success: true};
     } catch (error) {
       console.error('Evaluate error in doActionCustomCode: "' + error.message + '"');
-      return { success: false };
+      return {success: false};
     }
   }
+
   /**
    * Действие - обновление текущей модели по AJAX
    * Action - updating the current model via AJAX
    * @return {Promise<{}>}
    */
-  async doActionUpdateCurrentModel(){
+  async doActionUpdateCurrentModel() {
 
     let modelName = window?.currentPage?.model_name
-    if(! modelName){
-      return  {success:true}
+    if (!modelName) {
+      return {success: true}
     }
     let modelId = window?.model_data?.id;
-    if(! modelId){
-      return  {success:true}
+    if (!modelId) {
+      return {success: true}
     }
     try {
       let model = await new Resource({
         route: `/ajax/models/${modelName}`
       }).get(modelId);
-      if(_.isObject(model.data)){
+      if (_.isObject(model.data)) {
         model = model.data
       }
       const oldModel = window.appStore.getState().currentModel.getData();
       model.altrpModelUpdated = true;
 
-      if(! _.isEqual(model, oldModel)){
-        appStore.dispatch(changeCurrentModel({ altrpModelUpdated: false }));
+      if (!_.isEqual(model, oldModel)) {
+        appStore.dispatch(changeCurrentModel({altrpModelUpdated: false}));
         appStore.dispatch(changeCurrentModel(model));
       }
-      return  {success:true}
+      return {success: true}
 
-    } catch (e){
+    } catch (e) {
       console.error(e);
     }
   }
@@ -1132,8 +1125,9 @@ class AltrpAction extends AltrpModel {
      * @type {DataStorageUpdater}
      */
     await window.dataStorageUpdater.updateCurrent(dataSourcesToUpdate, false);
-    return { success: true };
+    return {success: true};
   }
+
   /**
    * Триггер события на другом компоненте
    * @return {Promise<{}>}
@@ -1167,9 +1161,9 @@ class AltrpAction extends AltrpModel {
   async doActionEmail() {
     let templateGUID = this.getProperty('email_template');
     if (!templateGUID) {
-      return { success: true };
+      return {success: true};
     }
-    let res = { success: false };
+    let res = {success: false};
     try {
       res = await sendEmail(
         templateGUID,
@@ -1192,7 +1186,7 @@ class AltrpAction extends AltrpModel {
    */
   async doActionDelay() {
     await delay(this.getProperty('milliseconds') || 0);
-    return { success: true };
+    return {success: true};
   }
 
   /**
@@ -1204,12 +1198,13 @@ class AltrpAction extends AltrpModel {
     const url = this.getProperty('media_url');
     const loop = this.getProperty('loop');
     if (url) {
-      const { playSound } = await import(/* webpackChunkName: 'helpers-sounds' */'../helpers/sounds');
+      const {playSound} = await import(/* webpackChunkName: 'helpers-sounds' */'../helpers/sounds');
       playSound(url, loop, duration);
       await delay(20);
     }
-    return { success: true };
+    return {success: true};
   }
+
   /**
    * Проверка условий
    * @return {Promise<{success: boolean}>}
@@ -1221,7 +1216,7 @@ class AltrpAction extends AltrpModel {
     conditionLeft = getDataByPath(conditionLeft);
     conditionRight = replaceContentWithData(conditionRight, this.getCurrentModel().getData());
     const res = altrpCompare(conditionLeft, conditionRight, compare);
-    return { success: res };
+    return {success: res};
   }
 
   /**
@@ -1251,6 +1246,69 @@ class AltrpAction extends AltrpModel {
     return {
       success: true
     };
+  }
+
+  /**
+   *
+   * @returns {Promise<void>}
+   */
+  async doActionOAuth() {
+    const OIDC  = await import (/* webpackChunkName: 'OIDC' */"oidc-client");
+    const {WebStorageStateStore, UserManager, authority, OidcClient} = OIDC;
+    (window.altrpLibs = window.altrpLibs || {}).OIDC = OIDC
+
+    const method = this.getProperty('method')
+    if( ! method){
+      return {
+        success: true,
+      }
+    }
+    let settings = {
+      client_id: 'AisOrder',
+      redirect_uri: `http://zayavka.geobuilder.ru/login/laravelpassport/callback`,
+      post_logout_redirect_uri: `http://zayavka.geobuilder.ru/login/laravelpassport/callback`,
+      response_type: 'token id_token',
+      scope: 'openid profile',
+      authority:'https://fs.geobuilder.ru/idp',
+      automaticSilentRenew: false,
+      userStore: new WebStorageStateStore({ store: window.localStorage }),
+      filterProtocolClaims: true,
+      loadUserInfo: true,
+      monitorSession: false,
+      checkSessionInterval: 3600000
+    };
+    const _manager = new UserManager(settings);
+    console.log(_manager);
+    settings = {
+      client_id: this.getProperty('client_id'),
+      redirect_uri: this.getProperty('redirect_uri'),
+      post_logout_redirect_uri: this.getProperty('post_logout_redirect_uri'),
+      response_type: this.getProperty('response_type'),
+      scope: this.getProperty('scope'),
+      authority:this.getProperty('authority'),
+      automaticSilentRenew: this.getProperty('automaticSilentRenew'),
+      userStore: new WebStorageStateStore({ store: window.localStorage }),
+      filterProtocolClaims: this.getProperty('filterProtocolClaims'),
+      loadUserInfo: this.getProperty('loadUserInfo'),
+      monitorSession: this.getProperty('monitorSession'),
+      checkSessionInterval: this.getProperty('checkSessionInterval')
+    };
+    const manager = new UserManager(settings);
+    // console.log( manager);
+    // console.log(await manager.getUser());
+    let result;
+    console.log(method);
+
+    if(_.isFunction(manager[method])){
+      try {
+        result =await manager[method]();
+      } catch (e) {
+        return {success:false}
+      }
+    }
+    console.log(result);
+    // await manager.signoutRedirect();
+    return {success:true}
   }
 }
 
