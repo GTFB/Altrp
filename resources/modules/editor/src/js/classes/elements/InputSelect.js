@@ -54,11 +54,6 @@ class InputSelect extends BaseElement {
       label: "Field ID (Column Name)"
     });
 
-    this.addControl("content_shortcode", {
-      type: CONTROLLER_TEXT,
-      label: "Shortcode"
-    });
-
     this.addControl("content_label", {
       type: CONTROLLER_TEXT,
       label: "Label"
@@ -280,6 +275,8 @@ class InputSelect extends BaseElement {
 
     actionsControllers(this, "Change Actions", "change_");
 
+    actionsControllers(this, "On Search Actions", "s_");
+
     this.startControlSection("create_section", {
       label: "Creating New Items"
     });
@@ -317,6 +314,16 @@ class InputSelect extends BaseElement {
       label: "POST Params",
       description:'Enter each param for Query in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n',
     });
+
+    this.addControl('label_path', {
+      label: 'Label Alias',
+      responsive: false,
+    })
+
+    this.addControl('value_path', {
+      label: 'Value Alias',
+      responsive: false,
+    })
 
     this.endControlSection()
 

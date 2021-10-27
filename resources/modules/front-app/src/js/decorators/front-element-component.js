@@ -105,7 +105,7 @@ function getContent(settingName, returnRaw = false) {
     // console.log(model);
     content = model ? model.getProperty(content.fieldName) : ' ';
   }
-  if((! isEditor())){//todo: сделать подгрузку данных и в редакторе
+  if((! isEditor())){
     let model = element.hasCardModel() ? element.getCardModel() : this.props.currentModel;
 
      if(settingName === 'content_default_value' && _.isString(content) && content.indexOf('{{{') !== -1){
@@ -126,7 +126,8 @@ function getContent(settingName, returnRaw = false) {
         return '';
       } finally {
       }
-    } else if(returnRaw){
+    }
+     else if(returnRaw){
        content = content.trim().replace('{{', '').replace('}}', '');
        content = getDataByPath(content, '', model);
      } else {
@@ -198,6 +199,9 @@ function componentDidUpdate(prevProps, prevState) {
     if(_.isFunction(this._componentDidMount)){
       this._componentDidMount(prevProps, prevState);
     }
+  }
+  if(this.props.element !== prevProps.element && ! this.props.element.component){
+    this.props.element.component = this;
   }
   /**
    * После загрузки хранилища данных текущей страницы надо обновить некоторые виджеты

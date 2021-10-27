@@ -168,9 +168,17 @@ class AddPage extends Component {
         value = value[0] !== "/" ? `/${value}` : value;
       }
     }
+    if (field === "param_name" && value) {
+      value = value.replace(/\W/g, '');
+      value = value.replace(/[0-9]/g, '');
+    }
     this.setState(state => {
       const newState = _.cloneDeep(state);
       newState.value[field] = value;
+      if (field === "model_id" && ! value) {
+        newState.value.model_column = ''
+        newState.value.param_name = ''
+      }
       return newState;
     });
   }
@@ -275,7 +283,7 @@ class AddPage extends Component {
                         className="form-control"
                       >
                         {/*<option value=""  />*/}
-                        <option value="">None</option>
+                        <option value="root">None</option>
                         {this.state.pagesOptions.map(page => {
                           return (
                             <option value={page.value} key={page.value}>
@@ -337,7 +345,7 @@ class AddPage extends Component {
                         }}
                         className="form-control"
                       >
-                        <option value="" />
+                        <option value="0" >None</option>
                         {this.state.models.map(model => {
                           return (
                             <option value={model.value} key={model.value}>
@@ -347,7 +355,34 @@ class AddPage extends Component {
                         })}
                       </select>
                     </div>
-
+                    {
+                      this.state.value.model_id &&  <div className="form-group">
+                        <label htmlFor="page-path">Column for Search</label>
+                        <input
+                          type="text"
+                          id="page-path"
+                          value={this.state.value.model_column || ""}
+                          onChange={e => {
+                            this.changeValue(e.target.value, "model_column");
+                          }}
+                          className="form-control"
+                        />
+                      </div>
+                    }
+                    {
+                      this.state.value.model_id &&  <div className="form-group">
+                        <label htmlFor="page-path">Param for Search</label>
+                        <input
+                          type="text"
+                          id="page-path"
+                          value={this.state.value.param_name || ""}
+                          onChange={e => {
+                            this.changeValue(e.target.value, "param_name");
+                          }}
+                          className="form-control"
+                        />
+                      </div>
+                    }
                     <div className="form-group">
                       <label htmlFor="page-roles">Roles</label>
                       <AltrpSelect

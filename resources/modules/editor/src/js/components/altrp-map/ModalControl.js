@@ -228,9 +228,6 @@ const ModalControl = (
         [field]: JSON.stringify(options.value)
       })
       .then(res => {
-        console.log("====================================");
-        console.log(res);
-        console.log("====================================");
       });
   };
 
@@ -244,9 +241,6 @@ const ModalControl = (
         [field]: e.target.value
       })
       .then(res => {
-        console.log("====================================");
-        console.log(res);
-        console.log("====================================");
       });
   };
 

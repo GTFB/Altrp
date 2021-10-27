@@ -44,7 +44,6 @@ export function actionsControllers(
     label: 'Delay between char input (milliseconds)',
     type: CONTROLLER_NUMBER,
     responsive: false,
-    default: 500,
     conditions: {
       [`${idPrefix + 'change_end'}`]: true
     }
@@ -155,6 +154,10 @@ export function actionsControllers(
         label: 'Update Current Datasources'
       },
       {
+        value: 'update_current_model',
+        label: 'Update Current Model'
+      },
+      {
         value: 'custom_code',
         label: 'Custom JS-Code'
       },
@@ -173,7 +176,11 @@ export function actionsControllers(
       {
         value: 'vi_toggle',
         label: 'Version for the Visually Impaired Toggle'
-      }
+      },
+      {
+        value: 'oauth',
+        label: 'Oidc Client'
+      },
     ]
   });
 
@@ -627,6 +634,170 @@ export function actionsControllers(
       type: ['toggle_popup']
     }
   });
+
+  /**
+   * Контроллеры настроек oidc-client-js
+   */
+
+
+  actionsRepeater.addControl('method', {
+    type: CONTROLLER_SELECT2,
+    nullable: true,
+    conditions: {
+      type: 'oauth'
+    },
+    options:[
+      {
+        value: 'signinCallback',
+        label: 'signinCallback',
+      },
+      {
+        value: 'signinPopup',
+        label: 'signinPopup',
+      },
+      {
+        value: 'signinPopupCallback',
+        label: 'signinPopupCallback',
+      },
+      {
+        value: 'signinRedirect',
+        label: 'signinRedirect',
+      },
+      {
+        value: 'signinRedirectCallback',
+        label: 'signinRedirectCallback',
+      },
+      {
+        value: 'signinSilent',
+        label: 'signinSilent',
+      },
+      {
+        value: 'signinSilentCallback',
+        label: 'signinSilentCallback',
+      },
+      {
+        value: 'signoutCallback',
+        label: 'signoutCallback',
+      },
+      {
+        value: 'signoutPopup',
+        label: 'signoutPopup',
+      },
+      {
+        value: 'signoutPopupCallback',
+        label: 'signoutPopupCallback',
+      },
+      {
+        value: 'signoutRedirect',
+        label: 'signoutRedirect',
+      },
+      {
+        value: 'signoutRedirectCallback',
+        label: 'signoutRedirectCallback',
+      },
+      {
+        value: 'getUser',
+        label: 'getUser',
+      },
+    ],
+    dynamic: false,
+    responsive: false,
+    label: 'Method'
+  });
+
+  actionsRepeater.addControl('client_id', {
+    dynamic: false,
+    conditions: {
+      type: 'oauth'
+    },
+    responsive: false,
+    label: 'Client Id'
+  });
+  actionsRepeater.addControl('redirect_uri', {
+    dynamic: false,
+    responsive: false,
+    conditions: {
+      type: 'oauth'
+    },
+    label: 'Redirect Uri'
+  });
+  actionsRepeater.addControl('post_logout_redirect_uri', {
+    dynamic: false,
+    responsive: false,
+    conditions: {
+      type: 'oauth'
+    },
+    label: 'Post Logout Redirect Uri'
+  });
+  actionsRepeater.addControl('response_type', {
+    dynamic: false,
+    responsive: false,
+    conditions: {
+      type: 'oauth'
+    },
+    label: 'Response Type'
+  });
+  actionsRepeater.addControl('scope', {
+    dynamic: false,
+    responsive: false,
+    conditions: {
+      type: 'oauth'
+    },
+    label: 'Scope'
+  });
+  actionsRepeater.addControl('authority', {
+    dynamic: false,
+    responsive: false,
+    conditions: {
+      type: 'oauth'
+    },
+    label: 'Authority'
+  });
+  actionsRepeater.addControl('automaticSilentRenew', {
+    type: CONTROLLER_SWITCHER,
+    dynamic: false,
+    responsive: false,
+    conditions: {
+      type: 'oauth'
+    },
+    label: 'Automatic Silent Renew'
+  });
+  actionsRepeater.addControl('filterProtocolClaims', {
+    type: CONTROLLER_SWITCHER,
+    dynamic: false,
+    responsive: false,
+    conditions: {
+      type: 'oauth'
+    },
+    label: 'Filter Protocol Claims'
+  });
+  actionsRepeater.addControl('loadUserInfo', {
+    type: CONTROLLER_SWITCHER,
+    dynamic: false,
+    responsive: false,
+    conditions: {
+      type: 'oauth'
+    },
+    label: 'Load User Info'
+  });
+  actionsRepeater.addControl('monitorSession', {
+    type: CONTROLLER_SWITCHER,
+    dynamic: false,
+    responsive: false,
+    conditions: {
+      type: 'oauth'
+    },
+    label: 'Monitor Session'
+  });
+  actionsRepeater.addControl('checkSessionInterval', {
+    dynamic: false,
+    responsive: false,
+    conditions: {
+      type: 'oauth'
+    },
+    label: 'Check Session Interval'
+  });
+
 
   actionsRepeater.addControl('confirm', {
     type: CONTROLLER_TEXTAREA,

@@ -111,7 +111,7 @@ class MenuWidget extends Component {
     const {element} = this.props;
     const popoverProps = {
       usePortal: true,
-      isOpen:true ,
+      // isOpen:true ,
       portalClassName: `altrp-portal altrp-portal${this.elementId}`,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
@@ -122,7 +122,6 @@ class MenuWidget extends Component {
     }
     return <>
       {items.map((item) => {
-        console.log(item);
         return <MenuItem
           popoverProps={popoverProps}
           depth={depth}

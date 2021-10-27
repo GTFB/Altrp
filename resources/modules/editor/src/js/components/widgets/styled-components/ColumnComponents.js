@@ -30,19 +30,6 @@ const ColumnComponent = (settings) => {
     styles += dimensionsControllerToStyles(padding);
   }
 
-  //Получаем значения width из контроллера, обрабатываем и добавляем в styles
-
-  if (settings !== undefined) {
-    width = getResponsiveSetting(settings, "layout_column_width");
-  }
-
-  // if (layout_column_width) {
-  //   if (Number(layout_column_width)) {
-  //     styles += `width:${layout_column_width}%;`;
-  //   } else {
-  //     styles += `width:${layout_column_width};`;
-  //   }
-  // }
 
   //Получаем значения margin из контроллера, обрабатываем и добавляем в styles
 
@@ -556,6 +543,18 @@ const ColumnComponent = (settings) => {
   }
 
   //</editor-fold>
+
+  const layout_column_width = getResponsiveSetting(settings, 'layout_column_width');
+  if(layout_column_width){
+    if (
+      Number(layout_column_width)
+    ){
+      styles += `&&&&{width:${layout_column_width}%;}`;
+
+    }else {
+      styles += `&&&&{width:${layout_column_width};}`;
+    }
+  }
   return styles;
 };
 

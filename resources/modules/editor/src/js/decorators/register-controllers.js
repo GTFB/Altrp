@@ -930,6 +930,7 @@ export function advancedTabControllers(element) {
   element.addControl('tooltip_show_type', {
     type: CONTROLLER_SELECT,
     label: 'Show type',
+    default: 'never',
     options: [
       {
         value: 'never',

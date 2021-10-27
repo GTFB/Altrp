@@ -4,6 +4,65 @@
 ## Changelog
 
 
+### 0.17.14
++ Add Input Widget Autocomplete
++ Add OIDC Client Action
+
+### 0.17.13
++ Add Params fromURl Hash now store in `altrppage.hashParams`
+
+### 0.17.12
+* Fixed Cases of errors when Getting Default Values as Strings and Arrays of Strings in Input Select Widget and Input Multi Select Widget 
++ Add Actions when Changing Text in Input Select and Input Multi Select Widget  
+
+### 0.17.11
++ Support for Arrays in URL Parameters in `altrppage.params` Object
+* Fix Table in Inner Templates Bug
+
+### 0.17.10
++ Market Page to Admin
++ Scheduler Widget
+
+### 0.17.9
+* Fix CSS Editor Bug for Elements
+* Fix Widget Cards Data Updates
+* Fix Wrapper Click Action Now Working in Cards Bug
++ Support for the Same Site Parameter for Session Cookies
+
+### 0.17.8
+* Fix Bug with Empty String Setting Value When Template Attempt to Save
+* Fix Input Date Default Value with Custom Format
+
+### 0.17.7
+* Ability to Customize Button for Next / Previous Pages Without Text in Cards "Widget"
+* Fix Link in Heading Widget
+* Fix Column Custom Width 
+
+### 0.17.6
+* Fix SSR Bug with Query Parameters
+
+### 0.17.5
++ Add "Column for Search" and "Param for Search" Settings on Page Settings to Search for Models by an Arbitrary Column
+* Fix "Scroll To Element", "Scroll Top" and "Scroll Bottom" Actions
+
+### 0.17.4
+* Fix Offset Bug in CurrentEnvironment When Request has Associative Array
+* Change Default Login url to /altrp-login
+
+### 0.17.3
++ Add "Update Current Model" Action
+* Fix Default Value in Input Select Widget
+
+### 0.17.2
+* Fix "Default Value" Settings Bug in Input Multi Select Widget
+* Fix Model Settings Updates Bug in Admin
+* Fix Create Item Bug in Input Multi Select Widget
+* Add Storage Bot and Handler Bot Node
+
+### 0.17.1 
+* Fix "Remove Item" In Set Data Action
+* Fix Input Update in Cards Fields
+
 ### 0.17.0
 + Menu Widget and Menu Builder
 + Import Images With Templates
@@ -14,7 +73,7 @@
   3. Input Gallery
   4. Input Slider
   5. Input Range Slider
-  5. Image Widget with Lightbox
+  6. Image Widget with Lightbox
 + Add "Active" State for Widgets:
   1. Button
   2. Divider

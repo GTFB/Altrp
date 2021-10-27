@@ -282,6 +282,7 @@ class RobotsEditor extends Component {
         data = {
           "type": "bot",
           "nodeData": {
+            "type": "bot",
             "data": {
               "shortcode": "",
               "content": [],

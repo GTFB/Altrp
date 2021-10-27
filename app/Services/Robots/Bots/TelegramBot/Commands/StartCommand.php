@@ -25,7 +25,6 @@ class StartCommand extends CommandHandler
 
     public function handle()
     {
-        $this->showRegister();
     }
 
     public function getBotData()
@@ -52,43 +51,5 @@ class StartCommand extends CommandHandler
 
     protected function showRegister()
     {
-        $keyboard = [
-            [
-                (new InlineKeyboardButton([
-                    'text' => 'test',
-                    'callback_data' => 'test'
-                ])),
-                (new InlineKeyboardButton([
-                    'text' => 'awp',
-                    'callback_data' => 'awp'
-                ])),
-                (new InlineKeyboardButton([
-                    'text' => 'altrp',
-                    'callback_data' => 'altrp'
-                ]))
-            ],
-        ];
-
-        $replyMarkup = ReplyKeyboardMarkup::create([
-            'inline_keyboard' => $keyboard,
-            'resize_keyboard' => true,
-            'one_time_keyboard' => true
-        ]);
-
-        $message = 'хэлло';
-
-        // $bot = TelegramBot::where(
-        //     'bot_token',
-        //     config('telebot.bots.' . config('telebot.default') . '.token')
-        // )->first();
-
-        // if ($bot && $bot->settings && $bot->settings->start_message) {
-        //     $message = $bot->settings->start_message;
-        // }
-
-        $this->sendMessage([
-            'text' => $message,
-            'reply_markup' => $replyMarkup
-        ]);
     }
 }

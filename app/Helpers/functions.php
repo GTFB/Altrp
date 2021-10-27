@@ -532,7 +532,7 @@ function getFavicons() {
 function setDynamicData($template, $data)
 {
     try {
-        if ($data) {
+        if ($template && $data) {
             preg_match_all("#\{\{(?<path>(.*?)+)\}\}#", $template, $matches);
             $matches = $matches['path'];
 
@@ -1022,6 +1022,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'input-accept',
     'input-text',
     'input-text-common',
+    'input-text-autocomplete',
     'input-password',
     'input-number',
     'input-tel',
@@ -1259,6 +1260,7 @@ function getDataSources( $page_id, $params = array(), $params_string = '' ){
       if( ! $ds->source || ! $ds->source->model || ! $ds->alias ){
         continue;
       }
+      $request_parameters = [];
       if( $ds->parameters ){
         $_request_parameters = json_decode( replaceContentWithData( $ds->parameters ), true );
 
@@ -1278,7 +1280,6 @@ function getDataSources( $page_id, $params = array(), $params_string = '' ){
             ];
           }, $_request_parameters );
         }
-        $request_parameters = [];
         foreach ( $_request_parameters as $request_parameter ) {
           $request_parameters[$request_parameter['paramName']] = replaceContentWithData( $request_parameter['paramValue'] );
         }
@@ -1291,11 +1292,11 @@ function getDataSources( $page_id, $params = array(), $params_string = '' ){
 
       if ($ds->source->type == 'get') $method = 'index';
       elseif ($ds->source->type == 'filters') $method = 'getIndexedColumnsValueWithCount';
-      elseif ($ds->source->source->type == 'add') $method = 'store';
+      elseif ($ds->source->type == 'add') $method = 'store';
       elseif ($ds->source->type == 'update_column') $method = 'updateColumn';
       elseif ($ds->source->type == 'delete') $method = 'destroy';
       else $method = $ds->source->type;
-      $result = call_user_func( [$controllerInstance, $method], $request );
+      $result = call_user_func( [$controllerInstance, $method], $request, ...explode( ',', $params_string ) );
       if( $result ){
         $result = $result->getContent();
         $result = json_decode( $result, true );
@@ -1308,8 +1309,16 @@ function getDataSources( $page_id, $params = array(), $params_string = '' ){
       }
 
     }
-  } catch( Exception $e ){
-    logger()->error( $e->getMessage() );
+  } catch( \Exception $e ){
+
+    logger()->error( $e->getMessage() . "\n" .
+      implode(
+        "\n",
+        array_map(function($tr){
+          return $tr['file'] . " " . $tr['line'];
+        }, $e->getTrace())
+      )
+      . "\n" );
     return $datasources;
   }
   return $datasources;
@@ -1382,12 +1391,14 @@ const ACTIONS_COMPONENTS = [
  *
  * ]
  */
-function getAltrpSettings( $page_id ): array
+function getPageSettings( $page_id ): array
 {
+
   global $altrp_settings;
   $settings = $altrp_settings;
   $settings['action_components'] = [];
   $settings['libsToLoad'] = [];
+  $settings['page_params'] = $_GET;
 
   if( ! $page_id ){
     return $settings;
@@ -1543,3 +1554,28 @@ function unsetAltrpIndex($array){
    return $array;
 }
 
+/**
+ * @param $value
+ * @param $words
+ * @param bool $show
+ * @return string
+ */
+
+function num_word($value, $words, $show = true)
+{
+  $num = $value % 100;
+  if ($num > 19) {
+    $num = $num % 10;
+  }
+
+  $out = ($show) ?  $value . ' ' : '';
+  switch ($num) {
+    case 1:  $out .= $words[0]; break;
+    case 2:
+    case 3:
+    case 4:  $out .= $words[1]; break;
+    default: $out .= $words[2]; break;
+  }
+
+  return $out;
+}

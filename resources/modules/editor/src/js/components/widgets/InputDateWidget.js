@@ -48,6 +48,7 @@ class InputDateWidget extends Component {
 
     this.defaultValue = this.getContent("content_default_value") || "";
 
+
     this.timePrecision = null;
     this.typeDate = props.element.getSettings("content_time_type", "date");
     this.locale = this.props.element.getSettings("content_locale", "en");
@@ -67,27 +68,23 @@ class InputDateWidget extends Component {
     }
 
     let value = moment().locale(this.locale).toDate();
+    const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
 
     if(this.defaultValue) {
-      value = moment(this.defaultValue).locale(this.locale).toDate()
+      value = moment(this.defaultValue, format)
+      value = value.isValid() ? value.format(format) : '';
     }
 
     this.state = {
       settings: { ...props.element.getSettings() },
-      // value: this.defaultValue,
       options: parseOptionsFromSettings(
         props.element.getSettings("content_options")
       ),
       paramsForUpdate: null
     };
     this.altrpSelectRef = React.createRef();
-    if (this.getContent("content_default_value")) {
-      let value = this.getContent("content_default_value")
-      const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
-      value = moment(value);
-      value = value.isValid() ? value.format(format) : '';
-      this.dispatchFieldValueToStore(value);
-    }
+
+    this.dispatchFieldValueToStore(value);
   }
 
   /**
@@ -151,7 +148,7 @@ class InputDateWidget extends Component {
       }
 
       const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
-      value = moment(value);
+      value = moment(value, format);
       value = value.isValid() ? value.format(format) : '';
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
@@ -171,7 +168,9 @@ class InputDateWidget extends Component {
       value = this.getContent("content_default_value");
 
       if(value) {
-        value = moment(value).locale(this.locale).toDate()
+        const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
+        value = moment(value, format);
+        value = value.isValid() ? value.format(format) : '';
         this.setState(
           state => ({ ...state, value, contentLoaded: true }),
           () => {
@@ -184,7 +183,7 @@ class InputDateWidget extends Component {
         );
       }
       const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
-      value = moment(value);
+      value = moment(value, format);
       value = value.isValid() ? value.format(format) : '';
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
@@ -219,7 +218,9 @@ class InputDateWidget extends Component {
         "content_default_value",
       );
       if(value) {
-        value = moment(value).locale(this.locale).toDate()
+        const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
+        value = moment(value, format);
+        value = value.isValid() ? value.format(format) : '';
         this.setState(
           state => ({ ...state, value, contentLoaded: true }),
           () => {
@@ -232,7 +233,7 @@ class InputDateWidget extends Component {
         );
       }
       const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
-      value = moment(value);
+      value = moment(value, format);
       value = value.isValid() ? value.format(format) : '';
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
@@ -448,9 +449,11 @@ class InputDateWidget extends Component {
         value = value.getTime(); // timestamp
       } else{
         const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD';
-        value = moment(value).format(format)
+        value = moment(value, format);
+        value = value.isValid() ? value.format(format) : '';
       }
     }
+    this.setState(state=>({...state, value}))
     this.dispatchFieldValueToStore(value, userInput);
   }
 
@@ -517,7 +520,9 @@ class InputDateWidget extends Component {
     if(isEditor()){
       value = new Date();
     } else {
-      value = _.get(appStore.getState(), `formsStore.${formId}.${fieldName}`, '')
+
+      value = _.get(appStore.getState().formsStore, `${formId}`, '')
+      value = _.get(value, fieldName, '')
       if(! value){
         value = new Date();
 
@@ -528,6 +533,7 @@ class InputDateWidget extends Component {
         value = value.toDate();
       }
     }
+
     return value;
   }
   render() {

@@ -29,7 +29,6 @@ function altrpSection(settings) {
   if (settings !== undefined) {
     flexWrap = getResponsiveSetting(settings, 'layout_flex_wrap_content');
   }
-
   if (flexWrap) {
     styles += simplePropertyStyled(flexWrap, 'flex-wrap');
   }

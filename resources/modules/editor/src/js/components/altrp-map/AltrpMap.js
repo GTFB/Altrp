@@ -22,7 +22,6 @@ function AltrpMap({ settings }) {
     style_height = {},
     style_margin = {}
   } = settings;
-  console.log("settings :>> ", settings);
 
   const handleClickPolygon = e => {
     // Получаем ID объекта на карте

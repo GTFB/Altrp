@@ -142,7 +142,7 @@ class AccordionWidget extends Component {
       return (
         <div className={"altrp-accordion-item" + (this.state.activeItem.id[idx] ? ' active' : '')} key={idx}>
           {/*button*/}
-          <div className="altrp-accordion-item-button" data-key={idx} onClick={(e) => this.open(e)}>
+            <div className="altrp-accordion-item-button active" data-key={idx} onClick={(e) => this.open(e)}>
             <div className="altrp-accordion-item-label-container">
               {
                 React.createElement(

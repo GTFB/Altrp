@@ -53,11 +53,6 @@ class InputTextarea extends BaseElement {
       label: "Field ID (Column Name)"
     });
 
-    this.addControl("content_shortcode", {
-      type: CONTROLLER_TEXT,
-      label: "Shortcode"
-    });
-
     this.addControl("textarea_resize", {
       type: CONTROLLER_SELECT,
       label: "Resize",

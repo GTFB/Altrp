@@ -64,7 +64,7 @@ class AltrpTableObserver
             Table::withoutEvents(function () use ($table) {
                 $table->forceDelete();
             });
-            throw new AltrpMigrationRunExceptions("Failed to run migration file on creating migration");
+            throw new AltrpMigrationRunExceptions("Failed to run migration file on run migration");
         }
 
         $column = new Column();
@@ -119,7 +119,7 @@ class AltrpTableObserver
         //При ошибке в миграции удаляем миграцию
         if(!NewMigrationGenerator::runMigration()) {
             $migration->delete();
-            throw new AltrpMigrationRunExceptions("Failed to run migration file on creating migration");
+            throw new AltrpMigrationRunExceptions("Failed to run migration file on run migration");
         }
 
     }

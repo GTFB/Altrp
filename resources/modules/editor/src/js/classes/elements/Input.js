@@ -56,11 +56,6 @@ class Input extends BaseElement {
       label: "Field ID (Column Name)"
     });
 
-    this.addControl("content_shortcode", {
-      type: CONTROLLER_TEXT,
-      label: "Shortcode"
-    });
-
     this.addControl("content_type", {
       type: CONTROLLER_SELECT,
       label: "Type",

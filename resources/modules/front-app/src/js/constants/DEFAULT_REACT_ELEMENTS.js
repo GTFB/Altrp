@@ -13,6 +13,7 @@ const DEFAULT_REACT_ELEMENTS = [
   'input-accept',
   'input-text',
   'input-text-common',
+  'input-text-autocomplete',
   'input-password',
   'input-number',
   'input-tel',
@@ -39,5 +40,6 @@ const DEFAULT_REACT_ELEMENTS = [
   'table',
   'tabs',
   'heading-type-animating',
+  'scheduler',
 ]
 export default DEFAULT_REACT_ELEMENTS

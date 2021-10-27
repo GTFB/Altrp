@@ -4,12 +4,13 @@ const {FullCalendar, dayGridPlugin, timeGridPlugin, interaction, locales} = wind
 const {InputGroup, TextArea} = window.altrpLibs.Blueprint
 
 
+
 class SchedulerWidget extends Component {
   constructor(props) {
     super(props)
 
     const settings = props.element.getSettings()
-    
+
     this.state = {
       startEvents: [],
       settings: settings,
@@ -54,7 +55,7 @@ class SchedulerWidget extends Component {
     const formattedData = data.map(el => {
       if (el.end === '0000-00-00 00:00:00') {
         delete el.end
-        
+
         if (el.start.indexOf('00:00:00') !== -1) {
           el.start = el.start.substr(0, 10)
         }
@@ -66,9 +67,14 @@ class SchedulerWidget extends Component {
     return formattedData
   }
 
+  _componentDidUpdate = async () => {
+    if(isEditor()) {
+      window.dispatchEvent(new Event('resize'))
+    }
+  }
   _componentDidMount = async () => {
-    const formattedData = await this.getFormattedEvents()
 
+    const formattedData = await this.getFormattedEvents()
     this.setState({
       startEvents: formattedData
     });
@@ -121,7 +127,7 @@ class SchedulerWidget extends Component {
       const event = JSON.parse(JSON.stringify(e.event))
 
       const {id} = event
-      
+
       const res = await resource.put(+id, {
         start: event.start,
         end: event.end
@@ -168,7 +174,6 @@ class SchedulerWidget extends Component {
     delete currentEvent.updated_at
     delete currentEvent.deleted_at
     delete currentEvent.created_at
-
     const res = await resource.put(+id, currentEvent);
 
     this.setState({

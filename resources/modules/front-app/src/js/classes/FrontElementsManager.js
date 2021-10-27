@@ -1,7 +1,7 @@
 class FrontElementsManager {
   constructor() {
+    this.components = {};
     //список компонентов
-
     this.ELEMENTS = [
       {
         name: "root-element",
@@ -64,6 +64,14 @@ class FrontElementsManager {
         import: async () => {
           return await import(
             /* webpackChunkName: 'InputTextCommonWidget' */ "../../../../editor/src/js/components/widgets/InputTextCommonWidget"
+          );
+        }
+      },
+      {
+        name: "input-text-autocomplete",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputTextCommonWidget' */ "../../../../editor/src/js/components/widgets/InputTextAutocompleteWidget"
           );
         }
       },
@@ -428,7 +436,6 @@ class FrontElementsManager {
         }
       },
     ];
-    this.components = {};
   }
 
   /**

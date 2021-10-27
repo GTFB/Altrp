@@ -19,6 +19,9 @@ const {
     }
   }
 
+  .altrp-btn svg {
+    display: block;
+  }
   .altrp-btn:hover {
     text-decoration: none;
   }
@@ -258,7 +261,7 @@ class ButtonWidget extends Component {
       classes += " altrp-background-image";
     }
 
-    let buttonText = this.props.element.getContent("button_text");
+    let buttonText = this.getContent("button_text");
     let buttonMediaRight = { ...this.state.settings.button_icon_right };
     let buttonMediaLeft = { ...this.state.settings.button_icon_left };
     let buttonMediaTop = { ...this.state.settings.button_icon_top };
@@ -644,7 +647,7 @@ class ButtonWidget extends Component {
         );
       } else {
         link = (
-          <Link to={url} onClick={this.onClick} className={classes} title={tooltip || null}>
+          <Link to={url} href={url} onClick={this.onClick} className={classes} title={tooltip || null}>
             {" "}
             {buttonInner}
           </Link>

@@ -1,6 +1,12 @@
 
 
 const AdminBarWrapper = styled.div`
+& {
+  position: absolute;
+  top: 0;
+  z-index: 9999999;
+  width: 100%;
+}
 & .admin-bar {
   position: fixed;
   height: 25px;
