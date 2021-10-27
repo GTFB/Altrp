@@ -394,7 +394,6 @@ class InputTextCommonWidget extends Component {
       portalClassName: `altrp-portal altrp-portal${this.props.element.getId()}`,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
-    this.altrpSelectRef = React.createRef();
     if (this.getContent("content_default_value")) {
       this.dispatchFieldValueToStore(this.getContent("content_default_value"));
     }

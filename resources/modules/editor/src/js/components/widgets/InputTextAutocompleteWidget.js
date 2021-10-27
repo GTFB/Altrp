@@ -27,7 +27,10 @@ import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-
   object-fit: contain;
   pointer-events: none;
 }
-
+.altrp-input-wrapper_autocomplete .bp3-menu{
+  max-height: 200px;
+  overflow-y: auto;
+}
 .bp3-icon_text-widget svg{
   width: 16px;
   height: 16px;
@@ -391,7 +394,6 @@ class InputTextCommonWidget extends Component {
       window.elementDecorator(this);
     }
     this.onChange = this.onChange.bind(this);
-    this.debounceDispatch = this.debounceDispatch.bind(this);
 
     this.defaultValue = this.getContent("content_default_value")
     this.popoverRef = React.createRef()
@@ -496,6 +498,7 @@ class InputTextCommonWidget extends Component {
     if(_.isString(content_options)
       && content_options.indexOf('{{') === 0 ){
       options = getDataByPath(content_options.replace('{{', '').replace('}}', ''))
+      console.log(options);
       if( ! _.isArray(options)){
         options = [];
       }
@@ -503,17 +506,27 @@ class InputTextCommonWidget extends Component {
     const value = this.getValue()
     options = options.filter(o=>{
       if(_.isObject(o)){
-        o = (o?.label ||o?.value || '')
+        o = (o?.label ||o?.value)
+        if(o === 0){
+          o = '0';
+        }
       }
       o += '';
-      return o.indexOf(value) >= 0;
+      return o.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) >= 0;
     });
+    console.log(options);
     options = options.map(o=>{
       if(! _.isObject(o)){
         return o;
       }
       return o?.label ||o?.value || ''
     })
+    console.log(options);
+    options = _.uniq(options);
+    if(options.length === 1 && options.find(o=>o==value)){
+      options = [];
+    }
+    console.log(options);
     return options;
   }
   /**
@@ -700,32 +713,6 @@ class InputTextCommonWidget extends Component {
       value = e.value;
     }
 
-
-    /**
-     * Обновляем хранилище только если не текстовое поле
-     */
-
-    const change_actions = this.props.element.getSettings("change_actions");
-    const change_change_end = this.props.element.getSettings(
-      "change_change_end"
-    );
-    const change_change_end_delay = this.props.element.getSettings(
-      "change_change_end_delay"
-    );
-
-    if (change_actions && !change_change_end && !isEditor()) {
-      this.debounceDispatch(
-        value !== undefined ? value : value
-      );
-    }
-    if (change_actions && change_change_end && !isEditor()) {
-      this.timeInput && clearTimeout(this.timeInput);
-      this.timeInput = setTimeout(() => {
-        this.debounceDispatch(
-          value !== undefined ? value : value
-        );
-      }, change_change_end_delay);
-    }
     if(isEditor()){
       this.setState(state=>({...state, value}))
     } else {
@@ -733,10 +720,6 @@ class InputTextCommonWidget extends Component {
     }
   }
 
-  debounceDispatch = _.debounce(
-    value => this.dispatchFieldValueToStore(value, true),
-    150
-  );
 
 
   /**
@@ -916,7 +899,7 @@ class InputTextCommonWidget extends Component {
     let styleLabel = {};
     const content_label_position_type = this.props.element.getResponsiveSetting(
       "content_label_position_type"
-    );
+    ) || 'top';
     const label_icon_position = this.props.element.getResponsiveSetting('label_icon_position')
     let label_style_spacing = this.props.element.getResponsiveSetting('label_style_spacing')
     switch (content_label_position_type) {

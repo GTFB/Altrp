@@ -695,6 +695,10 @@ export function actionsControllers(
         value: 'signoutRedirectCallback',
         label: 'signoutRedirectCallback',
       },
+      {
+        value: 'getUser',
+        label: 'getUser',
+      },
     ],
     dynamic: false,
     responsive: false,

@@ -202,6 +202,8 @@ class AltrpForm {
           this.updateResponseStorage(error);
         }
         return { success: false, error };
+      } finally{
+        // this.
       }
     } else {
       await alert("Пожалуйста, заполните все обязательные поля");
