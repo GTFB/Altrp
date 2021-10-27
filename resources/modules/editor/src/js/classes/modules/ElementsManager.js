@@ -98,6 +98,8 @@ import InputMultiSelect from "../elements/InputMultiSelect";
 import InputMultiSelectWidget from "../../components/widgets/InputMultiSelectWidget";
 import Scheduler from "../elements/Scheduler";
 import SchedulerWidget from "../../components/widgets/SchedulerWidget";
+import Icon from '../elements/Icon';
+import IconWidget from "../../components/widgets/IconWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -154,6 +156,8 @@ export default class ElementsManger {
     this.elements[Dropbar.getName()] = Dropbar;
     this.elements[ImageLightbox.getName()] = ImageLightbox;
     this.elements[Scheduler.getName()] = Scheduler;
+    this.elements[Icon.getName()] = Icon;
+
     // Websocket Notifications
     // this.elements[Notifications.getName()] = Notifications;
     //список компонентов
@@ -208,6 +212,7 @@ export default class ElementsManger {
     this.components[InputSlider.getName()] = InputSliderWidget;
     this.components[InputRangeSlider.getName()] = InputRangeSliderWidget;
     this.components[Scheduler.getName()] = SchedulerWidget;
+    this.components[Icon.getName()] = IconWidget;
     // Websocket Notifications widget
     // this.components[Notifications.getName()] = NotificationsWidget;
   }
