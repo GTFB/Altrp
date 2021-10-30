@@ -75,6 +75,7 @@
 // Admin Settings telegram
 .admin_settings_telegram{
     display: flex;
+    align-items: center;
     margin-top: 20px;
 
     .admin_input__label{
@@ -84,6 +85,10 @@
     .admin_input_key{
         min-width: 500px;
     }
+
+  & label {
+    margin-bottom: 0;
+  }
 }
 
 // Switcher
@@ -162,6 +167,7 @@
 
     .admin_settings_websockets_box{
         display: flex;
+        align-items: center;
     }
 
     .admin_input__label{
@@ -170,11 +176,17 @@
     .admin_input{
         margin-right: 30px;
     }
+
+  & label {
+    margin-bottom: 0;
+  }
 }
 
 .admin_settings_integrations {
   padding: 15px;
 }
+
+
 
 .admin-export-caption {
   margin-bottom: 30px;
@@ -223,3 +235,62 @@
 .advanced-text-custom {
   margin-bottom: 20px;
 }
+
+.skeletonColors__paddingLeft {
+  padding-left: 16px;
+}
+
+.admin-import .btn_success {
+  min-width: 220px;
+  padding: 8px 12px;
+  margin-left: 30px;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.admin-updates__inputFile {
+  margin-bottom: 0;
+}
+
+.admin-import__block {
+  display: flex;
+  align-items: center;
+}
+
+.mail-container__settings {
+  width: 600px;
+}
+
+.admin-settings-color__blocks {
+  display: flex;
+  width: 100%;
+  margin-bottom: 60px;
+}
+
+.admin-settings-color__block {
+  display: flex;
+  align-items: center;
+
+  &:first-child {
+    margin-right: 40px;
+  }
+
+  & label {
+    margin-bottom: 0;
+  }
+}
+
+.admin-settings-color__input {
+  width: 220px;
+}
+
+.admin-settings-color {
+  margin-right: 35px;
+
+  &:first-child {
+    margin-left: 16px;
+  }
+}
+
+
+

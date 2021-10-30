@@ -23,6 +23,10 @@ const columns = [
     title: 'Description'
   },
   {
+    name: 'categories',
+    title: 'Categories'
+  },
+  {
     name: 'updated_at',
     title: 'Updated At'
   }

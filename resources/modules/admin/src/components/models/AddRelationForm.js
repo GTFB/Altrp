@@ -44,9 +44,9 @@ class AddRelationForm extends Component {
       value: {
         title: '',
         description: '',
-        type: '',
+        type: 'hasMany',
         model_id: this.props.match.params.modelId,
-        add_belong_to: false,
+        add_belong_to: true,
         editable: true,
         always_with: false,
         local_key: '',
@@ -224,31 +224,31 @@ class AddRelationForm extends Component {
 
   render() {
     const { id } = this.props.match.params;
-    return <form className="admin-form" onSubmit={this.submitHandler}>
-      <div className="row">
-        <div className="form-group col-12">
+    return <form className="admin-form admin-form-relation" onSubmit={this.submitHandler}>
+      <div className="form-group__inline-wrapper">
+        <div className="form-group form-group_width47">
           <label htmlFor="relation-title">Relation Title</label>
           <input type="text" id="relation-title" required
             value={this.state.value.title || ''}
             onChange={e => { this.changeValue(e.target.value, 'title') }}
             className="form-control" />
         </div>
-        <div className="form-group col-4">
+        <div className="form-group form-group_width47">
           <label htmlFor="relation-title">Relation Name</label>
           <input type="text" id="relation-title" required readOnly={id}
             value={this.state.value.name || ''}
             onChange={e => { this.changeValue(e.target.value, 'name') }}
             className="form-control" />
         </div>
+      </div>
 
-        <div className="form-group col-8">
+        <div className="form-group">
           <label htmlFor="relation-description">Relation Description</label>
           <input type="text" id="relation-description" readOnly={id}
             value={this.state.value.description || ''}
             onChange={e => { this.changeValue(e.target.value, 'description') }}
             className="form-control" />
         </div>
-      </div>
 
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">

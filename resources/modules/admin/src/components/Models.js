@@ -23,8 +23,8 @@ const columnsModel = [
     title: 'Description'
   },
   {
-    name: 'updated_at',
-    title: 'Updated At'
+    name: 'categories',
+    title: 'Categories'
   }
 ];
 const columnsDataSource = [

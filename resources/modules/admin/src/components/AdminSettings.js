@@ -233,7 +233,7 @@ export default class AdminSettings extends Component {
                     </td>
                     <td className="admin-settings-table__td ">
                       <button
-                        className="btn btn_success"
+                        className="btn btn_success btn_general"
                         onClick={this.clearProjectCache}
                       >
                         Clear

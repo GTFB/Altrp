@@ -7,6 +7,9 @@ import Resource from "../../../../editor/src/js/classes/Resource";
 import ValidatedFieldForm from "./ValidationSection/ValidatedFieldForm";
 import ValidationTable from "./ValidationSection/ValidationTable";
 import ModelsRemoteFieldForm from "./RemoteFieldForms/ModelsRemoteFieldForm";
+import ModalWindow from "../ModalWindow";
+import store from "./../../js/store/store"
+import {getModelId} from "../../js/store/models-state/actions";
 
 const columns = [
   {
@@ -14,7 +17,8 @@ const columns = [
     title: 'Title',
     url: true,
     editUrl: true,
-    tag: 'Link'
+    tag: 'Link',
+    button__table: true
   },
   {
     name: 'name',
@@ -64,7 +68,8 @@ class EditModel extends Component {
       data_source_options: [],
       isModalOpened: false,
       isFieldRemoteModalOpened: false,
-      editingRemoteField: null
+      editingRemoteField: null,
+      modalWindow: false,
     };
 
     this.modelsResource = new Resource({ route: '/admin/ajax/models' });
@@ -108,6 +113,17 @@ class EditModel extends Component {
   updateRemoteFields = async () => {
     let remoteFields = await this.remoteFieldsResource.getAll();
     this.setState(state => ({ ...state, remoteFields, isFieldRemoteModalOpened: false, editingRemoteField: null }));
+  }
+
+  toggleWindowModal = () => {
+    store.dispatch(getModelId(null));
+    this.setState(state => ({ ...state, modalWindow: !this.state.modalWindow }))
+    this.updateFields();
+  }
+
+  getModalFields = (id) => {
+    store.dispatch(getModelId(id));
+    this.setState(state => ({ ...state, modalWindow: true }))
   }
 
   /**
@@ -162,17 +178,16 @@ class EditModel extends Component {
 
     if (this.state.id) {
       res = await this.modelsResource.put(this.state.id, model);
-      console.log("if", res)
     } else {
 
       res = await this.modelsResource.post(model);
-      console.log("else", res)
     }
+    this.props.updateModels();
     this.props.history.push("/admin/tables/models");
   };
   render() {
     const { model, fields, remoteFields, relations, queries, sql_editors, accessors, isModalOpened,
-      isFieldRemoteModalOpened, editingRemoteField, data_source_options, validations } = this.state;
+      isFieldRemoteModalOpened, editingRemoteField, data_source_options, validations, modalWindow } = this.state;
 
     const { id } = this.props.match.params;
     return <div className="admin-pages admin-page">
@@ -180,138 +195,207 @@ class EditModel extends Component {
         <div className="admin-breadcrumbs">
           <Link className="admin-breadcrumbs__link" to="/admin/tables/models">Tables / All Models</Link>
           <span className="admin-breadcrumbs__separator">/</span>
-          <span className="admin-breadcrumbs__current">{this.state.id ? 'Edit Model' : 'Add Model'}</span>
+          <span className="admin-breadcrumbs__current">Edit Model</span>
         </div>
       </div>
       <div className="admin-content">
         <EditModelForm model={model}
-          submitText={model.id ? 'Save' : 'Add'}
+          submitText="Save"
           edit={model.id}
           onSubmit={this.onSubmit} />
 
-        {fields ? <><h2 className="sub-header ">Fields</h2>
-          <AdminTable
-            columns={columns}
-            quickActions={[{
-              tag: 'Link', props: {
-                href: `/admin/tables/models/${id}/fields/edit/:id`,
-              },
-              title: 'Edit'
-            }, {
-              tag: 'button',
-              route: `/admin/ajax/models/${id}/fields/:id`,
-              method: 'delete',
-              confirm: 'Are You Sure?',
-              after: () => this.updateFields(),
-              className: 'quick-action-menu__item_danger',
-              title: 'Trash'
-            }]}
-            rows={fields.map(field => ({ ...field, editUrl: `/admin/tables/models/${model.id}/fields/edit/${field.id}` }))}
-            radiusTable={true}
-          />
-          <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/fields/add`}>Add Field</Link>
-        </> : ''}
+        <div className="form-group__inline-wrapper table_start">
+          {fields ?
+            <div className="form-group_width-table47">
+              <div className="form-group__inline-wrapper table__name-top">
+                <h2 className="sub-header ">Fields</h2>
+                <button className="btn btn_add" onClick={this.toggleWindowModal}>Add Field</button>
+              </div>
+              <AdminTable
+                columns={columns}
+                quickActions={[{
+                  tag: 'Link', props: {
+                    href: `/admin/tables/models/${id}/fields/edit/:id`,
+                  },
+                  title: 'Edit'
+                }, {
+                  tag: 'button',
+                  route: `/admin/ajax/models/${id}/fields/:id`,
+                  method: 'delete',
+                  confirm: 'Are You Sure?',
+                  after: () => this.updateFields(),
+                  className: 'quick-action-menu__item_danger',
+                  title: 'Trash'
+                }]}
+                rows={fields.map(field => ({ ...field,  button__table: () => this.getModalFields(field.id) }))}
+                radiusTable={true}
+                offBorderLast={true}
+              />
+              {/*<Link className="btn btn_add" to={`/admin/tables/models/${model.id}/fields/add`}>Add Field</Link>*/}
+            </div>
+           : ''}
 
 
-        <h2 className="sub-header">Remote Fields</h2>
-        <AdminTable
-          columns={remoteFieldsColumns}
-          quickActions={[{
-            callBack: field => this.setState({ isFieldRemoteModalOpened: true, editingRemoteField: field }),
-            title: 'Edit'
-          }, {
-            tag: 'button',
-            route: `/admin/ajax/remote_data/:id`,
-            method: 'delete',
-            confirm: 'Are You Sure?',
-            after: () => this.updateRemoteFields(),
-            className: 'quick-action-menu__item_danger',
-            title: 'Trash'
-          }]}
-          rows={remoteFields}
-          radiusTable={true}
-        />
-        <button onClick={() => this.setState({ isFieldRemoteModalOpened: true, editingRemoteField: null })} className="btn btn_add">
-          Add Remote Field
-        </button>
-        {isFieldRemoteModalOpened && <AdminModal2 closeHandler={() => this.setState({ isFieldRemoteModalOpened: false, editingRemoteField: null })}>
-          <ModelsRemoteFieldForm
-            fieldsOptions={fields}
-            remoteFieldsResource={this.remoteFieldsResource}
-            updateRemoteFields={this.updateRemoteFields}
-            field={editingRemoteField}
-          />
-        </AdminModal2>}
+          {relations ?
+            <div className="form-group_width-table47">
+              <div className="form-group__inline-wrapper table__name-top">
+                <h2 className="sub-header">Relations</h2>
+                <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/relations/add`}>Add Relation</Link>
+              </div>
+              <AdminTable
+                columns={columns}
+                quickActions={[{
+                  tag: 'Link', props: {
+                    href: `/admin/tables/models/${id}/relations/edit/:id`,
+                  },
+                  title: 'Edit'
+                }, {
+                  tag: 'button',
+                  route: `/admin/ajax/models/${id}/relations/:id`,
+                  method: 'delete',
+                  confirm: 'Are You Sure?',
+                  after: () => this.updateRelations(),
+                  className: 'quick-action-menu__item_danger',
+                  title: 'Trash'
+                }]}
+                rows={relations.map(relation => ({ ...relation, editUrl: `/admin/tables/models/${model.id}/relations/edit/${relation.id}` }))}
+                radiusTable={true}
+                offBorderLast={true}
+              />
+            </div>
+           : ''}
+        </div>
 
-        {relations ? <>
-          <h2 className="sub-header">Relations</h2>
-          <AdminTable
-            columns={columns}
-            quickActions={[{
-              tag: 'Link', props: {
-                href: `/admin/tables/models/${id}/relations/edit/:id`,
-              },
-              title: 'Edit'
-            }, {
-              tag: 'button',
-              route: `/admin/ajax/models/${id}/relations/:id`,
-              method: 'delete',
-              confirm: 'Are You Sure?',
-              after: () => this.updateRelations(),
-              className: 'quick-action-menu__item_danger',
-              title: 'Trash'
-            }]}
-            rows={relations.map(relation => ({ ...relation, editUrl: `/admin/tables/models/${model.id}/relations/edit/${relation.id}` }))}
-            radiusTable={true}
-          />
-          <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/relations/add`}>Add Relation</Link>
-        </> : ''}
-        {accessors ? <>
-          <h2 className="sub-header">Accessors</h2>
-          <AdminTable
-            columns={columns}
-            quickActions={[{
-              tag: 'Link', props: {
-                href: `/admin/tables/models/${id}/accessors/edit/:id`,
-              },
-              title: 'Edit'
-            }, {
-              tag: 'button',
-              route: `/admin/ajax/models/${id}/accessors/:id`,
-              method: 'delete',
-              confirm: 'Are You Sure?',
-              after: () => this.updateAccessors(),
-              className: 'quick-action-menu__item_danger',
-              title: 'Trash'
-            }]}
-            rows={accessors.map(accessor => ({ ...accessor, editUrl: `/admin/tables/models/${model.id}/accessors/edit/${accessor.id}` }))}
-            radiusTable={true}
-          />
-          <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/accessors/add`}>Add Accessor</Link>
-        </> : ''}
-        {queries ? <>
-          <h2 className="sub-header">Queries</h2>
-          <AdminTable
-            columns={columns}
-            rows={queries.map(query => ({ ...query, editUrl: `/admin/tables/models/${model.id}/queries/edit/${query.id}` }))}
-            quickActions={[{
-              tag: 'Link', props: {
-                href: `/admin/tables/models/${model.id}/queries/edit/:id`,
-              },
-              title: 'Edit'
-            }, {
-              tag: 'button',
-              route: `/admin/ajax/models/${model.id}/queries/:id`,
-              method: 'delete',
-              confirm: 'Are You Sure?',
-              after: () => this.updateQueries(),
-              className: 'quick-action-menu__item_danger',
-              title: 'Trash'
-            }]}
-            radiusTable={true}
-          />
-          <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/queries/add`}>Add Query</Link>
-        </> : ''}
+
+        <div className="form-group__inline-wrapper table_start">
+          <div className="form-group_width-table47">
+            <div className="form-group__inline-wrapper table__name-top">
+              <h2 className="sub-header">Remote Fields</h2>
+              <button onClick={() => this.setState({ isFieldRemoteModalOpened: true, editingRemoteField: null })} className="btn btn_add">
+                Add Remote Field
+              </button>
+            </div>
+
+            <AdminTable
+              columns={remoteFieldsColumns}
+              quickActions={[{
+                callBack: field => this.setState({ isFieldRemoteModalOpened: true, editingRemoteField: field }),
+                title: 'Edit'
+              }, {
+                tag: 'button',
+                route: `/admin/ajax/remote_data/:id`,
+                method: 'delete',
+                confirm: 'Are You Sure?',
+                after: () => this.updateRemoteFields(),
+                className: 'quick-action-menu__item_danger',
+                title: 'Trash'
+              }]}
+              rows={remoteFields}
+              radiusTable={true}
+              offBorderLast={true}
+            />
+            {isFieldRemoteModalOpened && <AdminModal2 closeHandler={() => this.setState({ isFieldRemoteModalOpened: false, editingRemoteField: null })}>
+              <ModelsRemoteFieldForm
+                fieldsOptions={fields}
+                remoteFieldsResource={this.remoteFieldsResource}
+                updateRemoteFields={this.updateRemoteFields}
+                field={editingRemoteField}
+              />
+            </AdminModal2>}
+          </div>
+
+
+          {accessors ?
+            <div className="form-group_width-table47">
+              <div className="form-group__inline-wrapper table__name-top">
+                <h2 className="sub-header">Accessors</h2>
+                <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/accessors/add`}>Add Accessor</Link>
+              </div>
+
+              <AdminTable
+                columns={columns}
+                quickActions={[{
+                  tag: 'Link', props: {
+                    href: `/admin/tables/models/${id}/accessors/edit/:id`,
+                  },
+                  title: 'Edit'
+                }, {
+                  tag: 'button',
+                  route: `/admin/ajax/models/${id}/accessors/:id`,
+                  method: 'delete',
+                  confirm: 'Are You Sure?',
+                  after: () => this.updateAccessors(),
+                  className: 'quick-action-menu__item_danger',
+                  title: 'Trash'
+                }]}
+                rows={accessors.map(accessor => ({ ...accessor, editUrl: `/admin/tables/models/${model.id}/accessors/edit/${accessor.id}` }))}
+                radiusTable={true}
+                offBorderLast={true}
+              />
+            </div>
+           : ''}
+        </div>
+
+
+        <div className="form-group__inline-wrapper table_start">
+          {queries ?
+            <div className="form-group_width-table47">
+              <div className="form-group__inline-wrapper table__name-top">
+                <h2 className="sub-header">Queries</h2>
+                <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/queries/add`}>Add Query</Link>
+              </div>
+
+              <AdminTable
+                columns={columns}
+                rows={queries.map(query => ({ ...query, editUrl: `/admin/tables/models/${model.id}/queries/edit/${query.id}` }))}
+                quickActions={[{
+                  tag: 'Link', props: {
+                    href: `/admin/tables/models/${model.id}/queries/edit/:id`,
+                  },
+                  title: 'Edit'
+                }, {
+                  tag: 'button',
+                  route: `/admin/ajax/models/${model.id}/queries/:id`,
+                  method: 'delete',
+                  confirm: 'Are You Sure?',
+                  after: () => this.updateQueries(),
+                  className: 'quick-action-menu__item_danger',
+                  title: 'Trash'
+                }]}
+                radiusTable={true}
+                offBorderLast={true}
+              />
+            </div>
+           : ''}
+
+
+          <div className="form-group_width-table47">
+            <div className="form-group__inline-wrapper table__name-top">
+              <h2 className="sub-header">Validation</h2>
+              <button onClick={() => this.setState({ isModalOpened: true })} className="btn btn_add">
+                Add Field
+              </button>
+            </div>
+            {id && <>
+              <ValidationTable
+                validations={validations}
+                updateValidations={this.updateValidations}
+                fieldsOptions={fields}
+                validationsResource={this.validationsResource}
+                data_source_options={data_source_options}
+              />
+            </>}
+            {isModalOpened && <AdminModal2 closeHandler={() => this.setState({ isModalOpened: false })}>
+              <ValidatedFieldForm
+                fieldsOptions={fields}
+                validationsResource={this.validationsResource}
+                data_source_options={data_source_options}
+                updateValidations={this.updateValidations}
+              />
+            </AdminModal2>}
+          </div>
+        </div>
+
         {sql_editors ? <>
           <h2 className="sub-header">SQL Editors</h2>
           <AdminTable
@@ -321,27 +405,10 @@ class EditModel extends Component {
           />
           <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/sql_editors/add`}>Add Editor</Link>
         </> : ''}
-        <h2 className="sub-header">Validation</h2>
-        {id && <>
-          <ValidationTable
-            validations={validations}
-            updateValidations={this.updateValidations}
-            fieldsOptions={fields}
-            validationsResource={this.validationsResource}
-            data_source_options={data_source_options}
-          />
-          <button onClick={() => this.setState({ isModalOpened: true })} className="btn btn_add">
-            Add Field
-          </button>
-        </>}
-        {isModalOpened && <AdminModal2 closeHandler={() => this.setState({ isModalOpened: false })}>
-          <ValidatedFieldForm
-            fieldsOptions={fields}
-            validationsResource={this.validationsResource}
-            data_source_options={data_source_options}
-            updateValidations={this.updateValidations}
-          />
-        </AdminModal2>}
+
+        {modalWindow && (
+          <ModalWindow modelId={id} activeMode={this.state.modalWindow} toggleModal={this.toggleWindowModal} />
+        )}
       </div>
     </div>;
   }

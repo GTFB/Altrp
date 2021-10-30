@@ -23,6 +23,7 @@
 @import "components/admin-document-detail";
 @import "components/admin-custom-fonts";
 @import "components/admin-edit-font";
+@import "~@blueprintjs/core/lib/css/blueprint.css";
 
 .admin {
   display: flex;
@@ -79,24 +80,20 @@
         &:hover {
           color: $green;
           text-decoration: none;
-          & path {
-            fill: $green;
-          }
-        /* этот circle задан чтобы в иконке models покрасились кружки*/
-          & circle {
+          & path, circle {
             fill: $green;
           }
         }
-        &:hover::before {
-          content: "";
-          position: absolute;
-          left: 0;
-          top: 0;
-          border-left: 4px solid #7eb223;
-          height: 45px;
-          border-top-right-radius: 4px;
-          border-bottom-right-radius: 4px;
-        }
+        //&:hover::before {
+        //  content: "";
+        //  position: absolute;
+        //  left: 0;
+        //  top: 0;
+        //  border-left: 4px solid #7eb223;
+        //  height: 41px;
+        //  border-top-right-radius: 4px;
+        //  border-bottom-right-radius: 4px;
+        //}
         & svg {
           position: relative;
           top: -1px;
@@ -116,31 +113,31 @@
 
       .admin-nav-list--sublist_active {
 
-        &::after {
-          content: "";
-          position: absolute;
-          right: 0;
-          top: 15px;
-          border: 8px solid transparent;
-          border-right: 8px solid #f7f8f9;
-          display: block;
-          width: 0;
-          height: 0;
-        }
+        //&::after {
+        //  content: "";
+        //  position: absolute;
+        //  right: 0;
+        //  top: 12px;
+        //  border: 8px solid transparent;
+        //  border-right: 8px solid #f7f8f9;
+        //  display: block;
+        //  width: 0;
+        //  height: 0;
+        //}
 
         & li {
-          background-color: #485674;
+          background-color: rgba(255, 255, 255, 0.03);
           position: relative;
 
           &:hover {
-            background-color: #485674;
+            background-color: rgba(255, 255, 255, 0.02);
           }
         }
 
         & .admin-nav-list__link {
           font-size: 13px;
           height: 40px;
-          padding: 10px 10px 10px 54px;
+          padding: 10.5px 10px 10.5px 54px;
           text-decoration: none;
 
           &:hover::before {
@@ -154,35 +151,42 @@
         display: none;
         position: fixed;
         left: 271px;
-        margin-top: -45px;
+        margin-top: -41px;
 
         &::before {
-          margin-top: 15px;
+          margin-top: 12px;
           left: 255px;
           content: "";
           position: fixed;
           border: 8px solid transparent;
-          border-right: 8px solid #677289;
+          border-right: 8px solid #2E313A;
           display: block;
           width: 0;
           height: 0;
         }
 
         & li {
-          background-color: #677289;
+          background-color: #2E313A;
           position: relative;
 
           &:hover {
-            background-color: #677289;
+            background-color: #2C2F38;
           }
         }
 
         .admin-nav-list__link {
           font-size: 13px;
           width: 165px;
-          height: 45px;
+          height: 41px;
           padding: 10px;
           text-decoration: none;
+
+          &:hover::before {
+            height: 0;
+            border-left: none;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+          }
         }
       }
       & li:hover &.admin-nav-list--sublist {
@@ -244,14 +248,39 @@
   margin-right: 20px;
   display: inline-block;
   align-items: center;
+
+  & path {
+    width: 16px;
+    height: 16px;
+  }
 }
+
+.icon__droplet {
+  position: absolute !important;
+  top: 11.1px !important;
+  right: -4px;
+  width: 16px;
+  height: 18px;
+  fill: white;
+  display: none;
+
+  & path {
+    width: 16px;
+    height: 20px;
+  }
+}
+
+
+.admin-nav .admin-nav-list__link-top  {
+  list-style-type: none;
+  background-color: rgba(255, 255, 255, 0.05);
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
 .admin-nav li {
   position: relative;
-  list-style-type: none;
-  background: #343b4c;
-  &:hover {
-    background: #495267;
-  }
 }
 ul {
   margin-left: 0;
@@ -292,3 +321,36 @@ a {
   }
 }
 
+.admin-nav .active__panel {
+  list-style-type: none;
+  background-color: #7CA727;
+
+  &:hover {
+    color: white;
+    text-decoration: none;
+    & path, circle {
+      fill: white;
+    }
+
+    &:hover::before {
+      display: none;
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      border-left: none;
+      height: 0;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+  }
+
+  & .icon__droplet {
+    display: inline-block;
+  }
+}
+
+.font__weightDropList {
+  font-weight: 700;
+}

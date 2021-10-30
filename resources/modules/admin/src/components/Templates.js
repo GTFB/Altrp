@@ -301,6 +301,10 @@ export default class Templates extends Component {
               name: 'author',
               title: 'Author',
             },
+            {
+              name: 'categories',
+              title: 'Categories'
+            }
           ]}
           rows={this.state.templates}
           quickActions={[{

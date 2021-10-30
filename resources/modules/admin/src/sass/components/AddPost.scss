@@ -1,3 +1,12 @@
+.admin-form-pages {
+  width: 800px;
+
+  & .btn_success, .btn_disable {
+    padding: 8px 34px;
+  }
+}
+
+
 .addPage__bottom {
   padding: 20px 0;
   display: flex;
@@ -5,6 +14,7 @@
 
   &-icon {
     cursor: pointer;
+    margin-left: 20px;
   }
 
   &-checkbox {
@@ -25,8 +35,12 @@
 
   &-page_icon {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    & .addPage__bottom-label {
+      position: relative;
+      top: 2px;
+    }
   }
 }

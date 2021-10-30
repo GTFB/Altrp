@@ -8,6 +8,7 @@ import {Link} from "react-router-dom";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import Pagination from "../Pagination";
 import {filterUsers, sortUsers} from "../../js/helpers";
+import {InputGroup} from "@blueprintjs/core";
 
 class Users extends Component {
   constructor(props) {
@@ -108,7 +109,7 @@ class Users extends Component {
 
           <div className="admin-users-table">
             <form className="admin-users-top" onSubmit={this.getData}>
-              <input className="form-tables-user form-tables-user__indentRight-user" value={search}
+              <InputGroup className="form-tables-user form-tables-user__indentRight-user" value={search}
                      onChange={e => this.setState({search: e.target.value})}/>
               <SearchUser />
               {/*<button type="button" onClick={this.getUsers} className="btn btn_bare admin-users-button btn__tables-user btn__tables-user__indentRight">Search Users*/}
@@ -158,7 +159,6 @@ class Users extends Component {
                     className={`vector-svg ${order === 'DESC' ? 'role-svg' : ''} ${sortingField === 'email' ? 'vector-svg--active' : ''}`}/>
                 </td>
                 <td className="admin-table__td ">Role</td>
-                <td className="admin-table__td ">Post</td>
                 <td className="admin-table__td "
                     onClick={() => this.setState({
                       sorting: {
@@ -189,7 +189,6 @@ class Users extends Component {
                   <td className="admin-table__td "><a>{row.roles.map((value) => {
                     return value.name
                   }).join(", ")}</a></td>
-                  <td className="admin-table__td ">2</td>
                   <td className="admin-table__td ">{row.last_login_at}</td>
                   <td className="admin-table__td ">Enable</td>
                 </tr>)}

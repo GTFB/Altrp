@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import Resource from "../../../../editor/src/js/classes/Resource";
+import {InputGroup} from "@blueprintjs/core";
 
 const rolesResource = new Resource({ route: '/admin/ajax/roles' });
 
@@ -40,31 +41,51 @@ class RoleForm extends Component {
     const { name, display_name, description } = this.state;
     const isEditing = Boolean(this.props.match.params.id);
 
-    return <form className="admin-form" onSubmit={this.submitHandler}>
-      <div className="form-group">
-        <label htmlFor="name">Name</label>
-        <input type="text" id="name" required name="name"
-          value={name}
-          onChange={this.changeHandler}
-          className="form-control"
-        />
-      </div>
+    return <form className="admin-form-access__roles" onSubmit={this.submitHandler}>
+     <div className="form-group__inline-wrapper">
+       <div className="form-group form-group_width47">
+         <label htmlFor="name" className="label__RobotoFont">Name</label>
+         {/*<input type="text" id="name" required name="name"*/}
+         {/*       value={name}*/}
+         {/*       onChange={this.changeHandler}*/}
+         {/*       className="form-control"*/}
+         {/*/>*/}
+
+         <InputGroup type="text" id="name" required name="name"
+                     value={name}
+                     onChange={this.changeHandler}
+                     className="form-control-blueprint"
+         />
+       </div>
+
+       <div className="form-group form-group_width47">
+         <label htmlFor="display_name" className="label__RobotoFont">Display Name</label>
+         {/*<input type="text" id="display_name" name="display_name"*/}
+         {/*       value={display_name}*/}
+         {/*       onChange={this.changeHandler}*/}
+         {/*       className="form-control"*/}
+         {/*/>*/}
+
+         <InputGroup type="text" id="display_name" name="display_name"
+                     value={display_name}
+                     onChange={this.changeHandler}
+                     className="form-control-blueprint"
+         />
+       </div>
+     </div>
 
       <div className="form-group">
-        <label htmlFor="display_name">Display Name</label>
-        <input type="text" id="display_name" name="display_name"
-          value={display_name}
-          onChange={this.changeHandler}
-          className="form-control"
-        />
-      </div>
+        <label htmlFor="description" className="label__RobotoFont">Description</label>
+        {/*<input type="text" id="description"  name="description"*/}
+        {/*  value={description}*/}
+        {/*  onChange={this.changeHandler}*/}
+        {/*  className="form-control"*/}
+        {/*/>*/}
 
-      <div className="form-group">
-        <label htmlFor="description">Description</label>
-        <input type="text" id="description"  name="description"
-          value={description}
-          onChange={this.changeHandler}
-          className="form-control"
+        <InputGroup type="text" id="description"  name="description"
+                    value={description}
+                    onChange={this.changeHandler}
+                    className="form-control-blueprint"
         />
       </div>
 

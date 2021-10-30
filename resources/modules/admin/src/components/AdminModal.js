@@ -3,6 +3,7 @@ import React, {Component} from "react";
 import TimesIcon from '../svgs/times.svg';
 import store from "../js/store/store";
 import {toggleModal} from "../js/store/modal-settings/actions";
+import CloseModal from "./../svgs/clear_black.svg"
 
 
 class AdminModal extends Component {
@@ -70,7 +71,7 @@ class AdminModal extends Component {
     return <div className={modalClasses}>
       <div className="admin-modal__bg" onClick={this.toggleModal}/>
       <div className="admin-modal-content">
-        <button className="admin-modal__close" onClick={this.toggleModal}><TimesIcon className="icon"/></button>
+        <button className="admin-modal__close" onClick={this.toggleModal}><CloseModal className="icon_modal"/></button>
         <div className="admin-caption">{this.props.title}</div>
         <div className="admin-modal-form form">
           {

@@ -5,6 +5,7 @@ import { iconsManager } from "../js/helpers";
 import Resource from "../../../editor/src/js/classes/Resource";
 import { ImageDetail } from "./ImageDetail";
 import { FontsDetail } from "./FontsDetail";
+import IconUpload from "./../svgs/upload.svg"
 
 class Assets extends Component {
   constructor(props) {
@@ -239,14 +240,14 @@ class Assets extends Component {
           onDrop={this.onDrop}
           onDragOver={this.onDragOver}>
           <label className="uploader__label d-flex flex-column align-items-center">
-            <UploadIcon width={100} height={100} className="icon" />
+            <IconUpload width={100} height={100} className="icon" />
             <input
               type="file"
               accept={this.state.acceptInput}
               multiple={true}
               onChange={this.onChange}
               className="uploader__input" />
-            <span className="uploader__text text text_bold">
+            <span className="uploader__text">
               Drag or Choose File
             </span>
           </label>

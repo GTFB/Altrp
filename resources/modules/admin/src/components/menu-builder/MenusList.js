@@ -30,7 +30,7 @@ class MenusList extends Component {
 
   searchMenus = (e) => {
     e.preventDefault();
-    this.updateMenus;
+    this.updateMenus();
   }
 
   changeMenus = (e) => {
@@ -82,6 +82,10 @@ class MenusList extends Component {
               editUrl: true,
               tag: 'Link'
             },
+            {
+              name: 'categories',
+              title: 'Categories'
+            }
           ]}
 
           quickActions={[

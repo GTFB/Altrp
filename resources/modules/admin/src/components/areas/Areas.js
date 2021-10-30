@@ -30,7 +30,7 @@ class Areas extends Component {
 
   searchAreas = (e) => {
     e.preventDefault();
-    this.updateAreas;
+    this.updateAreas();
   }
 
   changeAreas = (e) => {

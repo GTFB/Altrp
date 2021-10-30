@@ -22,7 +22,8 @@ class AdminUsersDropList extends React.Component {
         <li>
           <Link
             to="/admin/access/roles"
-            className="admin-nav-list__link"
+            className={pathname.indexOf('access') !== -1 ? "admin-nav-list__link font__weightDropList" : "admin-nav-list__link"}
+            onClick={this.props.activeButton}
           >
             <span>Access</span>
           </Link>

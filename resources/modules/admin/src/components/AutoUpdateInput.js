@@ -9,7 +9,7 @@ class AutoUpdateInput extends Component {
     });
 
     this.state = {
-      value: this.props.value || '',
+      value: this.props.value || "",
       disabled: ! this.props.value,
     };
     this.changeValue = this.changeValue.bind(this);
@@ -42,7 +42,7 @@ class AutoUpdateInput extends Component {
     let res = await this.resource.get(this.props.resourceid);
     this.setState(state=>{
       return{...state,
-        value: res[this.props.resourceid] || '',
+        value: res[this.props.resourceid] || "",
         disabled: false,
       }
     });

@@ -14,7 +14,8 @@ class AdminTemplatesDropList extends React.Component {
         <li>
           <Link
             to="/admin/areas"
-            className="admin-nav-list__link"
+            className={pathname.indexOf('areas') !== -1 ? "admin-nav-list__link font__weightDropList" : "admin-nav-list__link"}
+            onClick={this.props.activeButton}
           >
             <span>Custom Areas</span>
           </Link>
@@ -23,7 +24,8 @@ class AdminTemplatesDropList extends React.Component {
         <li>
           <Link
             to="/admin/menus"
-            className="admin-nav-list__link"
+            className={pathname.indexOf('menus') !== -1 ? "admin-nav-list__link font__weightDropList" : "admin-nav-list__link"}
+            onClick={this.props.activeButton}
           >
             <span>Menus</span>
           </Link>

@@ -1,7 +1,8 @@
-import { MODELS_TOGGLE } from "./actions";
+import {GET_MODEL_ID, MODELS_TOGGLE} from "./actions";
 
 const initialState = {
-  toggleModels: false
+  toggleModels: false,
+  modelID: null
 }
 
 export const modelsReducer = (state = initialState, action) => {
@@ -10,6 +11,11 @@ export const modelsReducer = (state = initialState, action) => {
       return {
         ...state,
         toggleModels: action.payload
+      }
+    case GET_MODEL_ID:
+      return {
+        ...state,
+        modelID: action.payload
       }
     default:
       return state;

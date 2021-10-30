@@ -32,6 +32,7 @@ class AdminModelsDropList extends React.Component {
                         propsSearch: label,
                       }}
                       className="admin-nav-list__link admin-nav-list__link--models"
+                      onClick={this.props.activeButton}
                     >
                       {label}
                     </Link>
@@ -59,6 +60,7 @@ class AdminModelsDropList extends React.Component {
                           propsSearch: label,
                         }}
                         className="admin-nav-list__link admin-nav-list__link--models"
+                        onClick={this.props.activeButton}
                       >
                         {label}
                       </Link>

@@ -3,6 +3,7 @@ import SortableHeader from "./AdminTableComponents/SortableHeader";
 import AdminTableRow from "./AdminTableRow";
 import Pagination from "./Pagination";
 import Search from "./../svgs/search.svg"
+import {InputGroup} from "@blueprintjs/core";
 class AdminTable extends Component {
   /**
    * Фильтр по введенной строке
@@ -28,17 +29,17 @@ class AdminTable extends Component {
       searchModalPage,
       searchRobots,
       searchAreas,
-      searchMenus, radiusTable, sortingField } = this.props;
+      searchMenus, radiusTable, sortingField, tableHalf } = this.props;
     return (
       /*Search всех компонент*/
       <div className={"admin-table" + (radiusTable ? " admin-table-noRadius" : "")}>
         {search && (
           <form onSubmit={search.submitHandler} className="admin-table-top">
-            <input
+            <InputGroup
               value={search.value}
               onChange={search.changeHandler}
               type="text"
-              className="form-tables form-tables__indentRight"
+              className="form-tables"
             />
             <Search />
             <button className="btn btn_bare admin-users-button btn__tables">Search</button>
@@ -47,7 +48,7 @@ class AdminTable extends Component {
 
         {searchSQLEditors && (
           <form className="admin-table-top" onSubmit={searchSQLEditors.onSubmitSearchSQL}>
-            <input className="form-tables form-tables__indentRight " value={searchSQLEditors.valueSQL} onChange={searchSQLEditors.onChangeSQL} />
+            <InputGroup className="form-tables" value={searchSQLEditors.valueSQL} onChange={searchSQLEditors.onChangeSQL} />
             <Search />
             <button type="button" onClick={searchSQLEditors.onClickSQL} className="btn btn_bare admin-users-button btn__tables">Search</button>
           </form>
@@ -55,7 +56,7 @@ class AdminTable extends Component {
 
         {searchTemplates && (
           <form className="admin-table-top" onSubmit={searchTemplates.onSubmitSearchTemplates}>
-            <input className="form-tables form-tables__indentRight" value={searchTemplates.valueTemplates} onChange={searchTemplates.onChangeTemplates} />
+            <InputGroup className="form-tables" value={searchTemplates.valueTemplates} onChange={searchTemplates.onChangeTemplates} />
             <Search />
             <button className="btn btn_bare admin-users-button btn__tables">Search</button>
           </form>
@@ -63,7 +64,7 @@ class AdminTable extends Component {
 
         {searchModel && (
           <form className="admin-table-top" onSubmit={searchModel.onSubmitModel}>
-            <input className="form-tables form-tables__indentRight" value={searchModel.valueModel} onChange={searchModel.onChangeModel} />
+            <InputGroup className="form-tables" value={searchModel.valueModel} onChange={searchModel.onChangeModel} />
             <Search />
             <button className="btn btn_bare admin-users-button btn__tables">Search</button>
           </form>
@@ -71,7 +72,7 @@ class AdminTable extends Component {
 
         {searchDataSources && (
           <form className="admin-table-top" onSubmit={searchDataSources.onSubmitDataSources}>
-            <input className="form-tables form-tables__indentRight" value={searchDataSources.valueDataSources} onChange={searchDataSources.onChangeDataSources} />
+            <InputGroup className="form-tables" value={searchDataSources.valueDataSources} onChange={searchDataSources.onChangeDataSources} />
             <Search />
             <button className="btn btn_bare admin-users-button btn__tables">Search</button>
           </form>
@@ -79,7 +80,7 @@ class AdminTable extends Component {
 
         {searchAccessRoles && (
           <form className="admin-table-top" onSubmit={searchAccessRoles.onSubmitAccessRoles}>
-            <input className="form-tables form-tables__indentRight" value={searchAccessRoles.valueAccessRoles} onChange={searchAccessRoles.onChangeAccessRoles} />
+            <InputGroup className="form-tables" value={searchAccessRoles.valueAccessRoles} onChange={searchAccessRoles.onChangeAccessRoles} />
             <Search />
             <button className="btn btn_bare admin-users-button btn__tables">Search</button>
           </form>
@@ -87,7 +88,7 @@ class AdminTable extends Component {
 
         {searchAccessPermissions && (
           <form className="admin-table-top" onSubmit={searchAccessPermissions.onSubmitAccessPermissions}>
-            <input className="form-tables form-tables__indentRight" value={searchAccessPermissions.valueAccessPermissions} onChange={searchAccessPermissions.onChangeAccessPermissions} />
+            <InputGroup className="form-tables" value={searchAccessPermissions.valueAccessPermissions} onChange={searchAccessPermissions.onChangeAccessPermissions} />
             <Search />
             <button className="btn btn_bare admin-users-button btn__tables">Search</button>
           </form>
@@ -95,7 +96,7 @@ class AdminTable extends Component {
 
         {searchModalPage && (
           <form className="admin-table-top" onSubmit={searchModalPage.onSubmitModelPage}>
-            <input className="form-tables form-tables__indentRight" value={searchModalPage.valueModelPage} onChange={searchModalPage.onChangeModalPage} />
+            <InputGroup className="form-tables" value={searchModalPage.valueModelPage} onChange={searchModalPage.onChangeModalPage} />
             <Search />
             <button className="btn btn_bare admin-users-button btn__tables">Search</button>
           </form>
@@ -103,7 +104,7 @@ class AdminTable extends Component {
 
         {searchRobots && (
           <form className="admin-table-top" onSubmit={searchRobots.onSubmitRobots}>
-            <input className="form-tables form-tables__indentRight" value={searchRobots.valueRobots} onChange={searchRobots.onChangeRobots} />
+            <InputGroup className="form-tables" value={searchRobots.valueRobots} onChange={searchRobots.onChangeRobots} />
             <Search />
             <button className="btn btn_bare admin-users-button btn__tables">Search</button>
           </form>
@@ -111,7 +112,7 @@ class AdminTable extends Component {
 
         {searchAreas && (
           <form className="admin-table-top" onSubmit={searchAreas.onSubmitAreas}>
-            <input className="form-tables form-tables__indentRight" value={searchAreas.valueAreas} onChange={searchAreas.onChangeAreas} />
+            <InputGroup className="form-tables" value={searchAreas.valueAreas} onChange={searchAreas.onChangeAreas} />
             <Search />
             <button className="btn btn_bare admin-users-button btn__tables">Search</button>
           </form>
@@ -119,7 +120,7 @@ class AdminTable extends Component {
 
         {searchMenus && (
           <form className="admin-table-top" onSubmit={searchMenus.onSubmitMenus}>
-            <input className="form-tables form-tables__indentRight" value={searchMenus.valueMenus} onChange={searchMenus.onChangeMenus} />
+            <InputGroup className="form-tables" value={searchMenus.valueMenus} onChange={searchMenus.onChangeMenus} />
             <Search />
             <button className="btn btn_bare admin-users-button btn__tables">Search</button>
           </form>
@@ -152,7 +153,7 @@ class AdminTable extends Component {
           </thead>
           <tbody className="admin-table-body">
             {this.props.rows.map(row => (
-              <AdminTableRow key={row.id} row={row} {...this.props} />
+              <AdminTableRow offBorderLast={this.props.offBorderLast} key={row.id} row={row} {...this.props} />
             ))}
           </tbody>
         </table>

@@ -75,6 +75,10 @@ export default class AllPages extends Component {
                 title: "Path",
                 url: true,
                 target: "_blank"
+              },
+              {
+                name: 'categories',
+                title: 'Categories'
               }
             ]}
             quickActions={[
