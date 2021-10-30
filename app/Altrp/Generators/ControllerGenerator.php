@@ -4,6 +4,7 @@ namespace App\Altrp\Generators;
 
 use App\Altrp\Column;
 use App\Altrp\Controller;
+use App\Altrp\Customizer;
 use App\Altrp\Generators\Request\RequestFile;
 use App\Altrp\Generators\Request\RequestFileWriter;
 use App\Altrp\Model;
@@ -498,7 +499,6 @@ class ControllerGenerator extends AppGenerator
     $sources = $this->controllerModel->model->altrp_sources;
 
     if ( file_exists( $oldControllerFile ) ) unlink( $oldControllerFile );
-
     try {
       Artisan::call( 'crud:controller', [
         'name' => $modelName . 'Controller',
@@ -516,6 +516,7 @@ class ControllerGenerator extends AppGenerator
         '--options' => $options
       ] );
     } catch ( \Exception $e ) {
+      logger()->error( $e->getMessage() . "\n" . $e->getTraceAsString() );
       if ( file_exists( $this->controllerFile . '.bak' ) )
         rename( $this->controllerFile . '.bak', $this->controllerFile );
       return false;
@@ -524,6 +525,7 @@ class ControllerGenerator extends AppGenerator
     if ( $sources ) {
       $sql_editors = SQLEditor::where( 'model_id', $this->controllerModel->model->id )->get();
       $sql_builders = Query::where( 'model_id', $this->controllerModel->model->id )->get();
+      $customizers = Customizer::where( 'model_id', $this->controllerModel->model->id )->get();
       foreach ( $sql_editors as $sql_editor ) {
         $sqlEditorObj = SQLEditor::find( $sql_editor->id );
         $data = $sql_editor->toArray();
@@ -536,6 +538,12 @@ class ControllerGenerator extends AppGenerator
         $data = $sql_builder->toArray();
         $data['updated_at'] = Carbon::now();
         $query->update( $data );
+      }
+      foreach ( $customizers as $customizer ) {
+        $old_customizer = Customizer::find( $customizer->id );
+        $data = $old_customizer->toArray();
+        $data['updated_at'] = Carbon::now();
+        $old_customizer->update( $data );
       }
     }
 
@@ -742,7 +750,7 @@ class ControllerGenerator extends AppGenerator
     $controller = trim( $controllerName, "\\" );
     $prefix = $this->getRoutePrefix() ? '/' . trim( $this->getRoutePrefix(), '/' ) : null;
     $actions = [ 'get', 'options', 'show', 'add', 'update', 'delete', 'update_column', 'filters' ];
-    $apiAuthActions = [ 'add', 'update', 'delete', 'update_column' ];
+
     foreach ( $sources as $source ) {
       if ( in_array( $source->type, $actions ) ) {
         $routeMiddleware = $routeGenerator->getMiddleware( $source, $api );

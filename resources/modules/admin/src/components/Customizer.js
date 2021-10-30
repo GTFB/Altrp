@@ -3,7 +3,8 @@ import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
 import store from "../js/store/store";
 import { setModalSettings } from "../js/store/modal-settings/actions";
-import { redirect } from "../js/helpers";
+import {redirect, titleToName} from "../js/helpers";
+import {altrpRandomId} from "../../../front-app/src/js/helpers";
 
 export default class Customizer extends Component {
   constructor(props) {
@@ -44,21 +45,23 @@ export default class Customizer extends Component {
 
   addNew() {
     const modalSettings = {
-      title: "Add new Robot",
+      title: "Add new Customizer",
       submitButton: "Add",
-      submit: data =>
-        this.resource.post({
-          name: data.name,
-        }),
+      submit: data =>{
+        data.name = titleToName(data.title);
+        data.name += `_${altrpRandomId()}`
+        return  this.resource.post( data )
+      },
       fields: [
         {
-          name: "name",
-          label: "Robot name",
+          name: "title",
+          label: "Customizer Title",
           required: true
         },
       ],
       active: true,
       success: res => {
+        console.log(res);
         if (res.redirect_route) {
           redirect(res.redirect_route);
         }

@@ -1,5 +1,5 @@
 import {
-  SET_ROBOT_SETTINGS,
+  SET_CUSTOMIZER_SETTINGS,
   SET_UPDATED_NODE
 } from "./actions";
 
@@ -12,7 +12,7 @@ export function customizerSettingsDataReducer(state, action) {
       state[index] = action.value;
       console.log(state);
       break;
-    case SET_ROBOT_SETTINGS:
+    case SET_CUSTOMIZER_SETTINGS:
       state = action.data;
       break;
   }

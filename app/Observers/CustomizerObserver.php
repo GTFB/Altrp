@@ -3,7 +3,11 @@
 namespace App\Observers;
 
 use App\Altrp\Customizer;
+use App\Altrp\Generators\Controller\ControllerFile;
+use App\Altrp\Generators\Controller\ControllerFileWriter;
 use App\Altrp\Generators\ControllerGenerator;
+use App\Altrp\Generators\Repository\RepositoryFile;
+use App\Altrp\Generators\Repository\RepositoryInterfaceFile;
 use App\Altrp\Generators\RouteGenerator;
 use App\Altrp\Model;
 use App\Altrp\Source;
@@ -31,7 +35,7 @@ class CustomizerObserver
       if($customizer->type === 'api' && $customizer->model_id){
         $model = Model::find( $customizer->model_id );
         if($model){
-
+          $controllerFile = new ControllerFile($model);
           $source = new Source([
             'sourceable_type' => 'App\Altrp\Customizer',
             'sourceable_id' => $customizer->id,
@@ -41,18 +45,28 @@ class CustomizerObserver
             'api_url' => "/" . $customizer->name,
             'title' => $customizer->title,
             'name' => $customizer->name,
+            'type' => 'customizer',
             'request_type' =>  data_get($customizer->data,'request_type', 'get'),
           ]);
           try{
             $source->save();
+            $controller = $model->altrp_controller;
+            $generator = new ControllerGenerator($controller);
+            $repo = new RepositoryFile($model);
+            $repoInterface = new RepositoryInterfaceFile($model);
+            $controllerWriter = new ControllerFileWriter(
+              $controllerFile,
+              $repo,
+              $repoInterface
+            );
+            $controllerWriter->writeCustomizerMethod( $customizer );
+            if (! $generator->generateRoutes($controller->model, new RouteGenerator($controller))) {
+              throw new RouteGenerateFailedException('Failed to generate routes', 500);
+            }
           } catch (\Throwable $th){
             $customizer->forceDelete();
+            $source->forceDelete();
             throw $th;
-          }
-          $controller = $model->altrp_controller;
-          $generator = new ControllerGenerator($controller);
-          if (! $generator->generateRoutes($controller->model, new RouteGenerator($controller))) {
-            throw new RouteGenerateFailedException('Failed to generate routes', 500);
           }
         }
         return;
