@@ -65,6 +65,7 @@ import TooltipComponent from "./widgets/styled-components/TooltipComponent";
 import AltrpTooltip2 from "./altrp-tooltip/AltrpTooltip2";
 import React from "react";
 import getSchedulerStyles from "../../../../front-app/src/js/components/helpers/getSchedulerStyles";
+import getIconStyles from "../../../../front-app/src/js/components/helpers/getIconStyles";
 import getInputTextAutocompleteStyles
   from "../../../../front-app/src/js/components/helpers/getInputTextAutocompleteStyles";
 import TreeComponent from "./widgets/styled-components/TreeComponent";
@@ -291,6 +292,8 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
     case "scheduler":
       styles += `.${prefix}${elementId} {${getSchedulerStyles(settings, elementId)}}`;
       break;
+    case "icon":
+      styles += `.${prefix}${elementId} {${getIconStyles(settings, elementId)}}`
   }
 
   const tooltip_show_type = settings.tooltip_show_type || "never";

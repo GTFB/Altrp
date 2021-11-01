@@ -1,15 +1,19 @@
 import Resource from '../../classes/Resource';
-const {isEditor} = window.altrpHelpers;
-const {FullCalendar, dayGridPlugin, timeGridPlugin, interaction} = window.altrpLibs.fullCalendar
+
+const {FullCalendar, dayGridPlugin, timeGridPlugin, interaction, locales} = window.altrpLibs.fullCalendar
+const {InputGroup, TextArea} = window.altrpLibs.Blueprint
+
 
 
 class SchedulerWidget extends Component {
   constructor(props) {
     super(props)
 
+    const settings = props.element.getSettings()
+
     this.state = {
       startEvents: [],
-      settings: props.element.getSettings(),
+      settings: settings,
       popup: {
         status: null
       }
@@ -23,6 +27,23 @@ class SchedulerWidget extends Component {
       this.render = props.baseRender(this);
     }
 
+    this.popupLocalization = {
+      'en-gb': {
+        create: 'Create',
+        cancel: 'Cancel',
+        title: 'Title',
+        delete: 'Delete',
+        done: 'Done'
+      },
+      ru: {
+        create: 'Создать',
+        cancel: 'Отменить',
+        title: 'Название',
+        delete: 'Удалить',
+        done: 'Закончить'
+      }
+    }
+
     this.calendar = React.createRef();
   }
 
@@ -30,7 +51,6 @@ class SchedulerWidget extends Component {
     const resource = new Resource({route: this.state.settings.get_url, dynamicURL: true});
 
     const {data} = await resource.getAll();
-
 
     const formattedData = data.map(el => {
       if (el.end === '0000-00-00 00:00:00') {
@@ -154,8 +174,6 @@ class SchedulerWidget extends Component {
     delete currentEvent.updated_at
     delete currentEvent.deleted_at
     delete currentEvent.created_at
-
-
     const res = await resource.put(+id, currentEvent);
 
     this.setState({
@@ -194,9 +212,12 @@ class SchedulerWidget extends Component {
   }
 
   render() {
+    const lang = this.props.element.getResponsiveSetting('lang', '', 'en-gb')
+    const popupText = this.popupLocalization[lang]
     return (
       <div className="popup-wrapper">
         <FullCalendar
+          locale={locales[lang]}
           plugins={[dayGridPlugin, interaction, timeGridPlugin]}
           initialView='dayGridMonth'
           events={this.state.startEvents}
@@ -216,29 +237,29 @@ class SchedulerWidget extends Component {
             <form onSubmit={() => {this.state.popup.status === 'create' ? this.createEvent() : this.editEvent()}}>
               <div className="popup__body">
                 <div className="popup__field-title">
-                  Title
+                  {popupText?.title}
                 </div>
-                <input type="text" name="title" onChange={this.eventInputHandler} className='popup__text-field' value={this.state.popup.formData.title || ''} />
+                <InputGroup type="text" name="title" onChange={this.eventInputHandler} className='popup__text-field' value={this.state.popup.formData.title || ''} />
 
                 {this.state.settings.repeater_fields_section?.map(el => <div key={el.field_name_repeater}>
                   <div className="popup__field-title">
                     {el.label_repeater}
                   </div>
-                  {el.input_type_repeater === 'text' && (
-                    <input type="text" name={el.field_name_repeater} onChange={this.eventInputHandler} className='popup__text-field' value={this.state.popup.formData[el.field_name_repeater] || ''} />
+                  {(el.input_type_repeater === 'text' || !el.input_type_repeater) && (
+                    <InputGroup type="text" name={el.field_name_repeater} onChange={this.eventInputHandler} className='popup__text-field' value={this.state.popup.formData[el.field_name_repeater] || ''} />
                   )}
                   {el.input_type_repeater ==='textarea' && (
-                    <textarea name={el.field_name_repeater} onChange={this.eventInputHandler} className='popup__text-field popup__textarea' value={this.state.popup.formData[el.field_name_repeater] || ''}></textarea>
+                    <TextArea name={el.field_name_repeater} onChange={this.eventInputHandler} className='popup__text-field popup__textarea' value={this.state.popup.formData[el.field_name_repeater] || ''}></TextArea>
                   )}
                 </div>)}
               </div>
               <div className="popup__actions">
                 {this.state.popup.status == 'create'
-                  ? <input type="button" className="button" value='Create' onClick={this.createEvent} />
-                  : <input type="button" className="button" value='Done' onClick={this.editEvent} />
+                  ? <input type="button" className="button" value={popupText.create} onClick={this.createEvent} />
+                  : <input type="button" className="button" value={popupText.done} onClick={this.editEvent} />
                 }
-                <input type="button" className="button" value="Cancel" onClick={this.closePopup} />
-                {this.state.popup.status == 'edit' && <input type="button" className="button button-danger" value="Delete" onClick={this.deleteEvent} />}
+                <input type="button" className="button" value={popupText.cancel} onClick={this.closePopup} />
+                {this.state.popup.status == 'edit' && <input type="button" className="button button-danger" value={popupText.delete} onClick={this.deleteEvent} />}
               </div>
             </form>
           </div>

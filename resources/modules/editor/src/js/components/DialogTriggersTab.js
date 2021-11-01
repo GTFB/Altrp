@@ -22,7 +22,7 @@ export default class DialogTriggersTab extends Component {
   async updateTriggers() {
     const { inactivity, on_click, on_exit, on_page_load, on_scroll, to_element } = this.state.value;
     const { afterInactivity, onClick, onLoad, onScroll, scrollElement } = this.state;
-    const data = { 
+    const data = {
       inactivity: afterInactivity && inactivity,
       on_click: onClick && on_click,
       on_exit,
@@ -31,7 +31,6 @@ export default class DialogTriggersTab extends Component {
       to_element: scrollElement && to_element
     }
     let res = await this.resource.put('triggers', { data });
-    console.log(res);
   }
 
 

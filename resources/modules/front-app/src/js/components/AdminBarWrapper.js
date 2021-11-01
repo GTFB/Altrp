@@ -8,8 +8,7 @@ const AdminBarWrapper = styled.div`
   width: 100%;
 }
 & .admin-bar {
-  top: 0;
-  position: absolute;
+  position: fixed;
   height: 25px;
   width: 100%;
   display: flex;
@@ -26,11 +25,50 @@ const AdminBarWrapper = styled.div`
   letter-spacing: 0em;
   text-align: left;
   z-index: 1000;
+  transition: transform 0.12s, margin 0.12s;
+  top: 0;
 }
-& .admin-bar__link {
+
+& .admin-bar.closed {
+  transform: translateY(-100%);
+}
+
+& .admin-bar__arrow {
+  height: 19px;
+  width: 35px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  padding: 3px;
+  z-index: 99999;
+  background-color: #343B4C;
   cursor: pointer;
-  margin-left: 15px;
+  border-radius: 0 0 3px 0;
 }
+
+& .admin-bar__arrow div {
+  margin-bottom: 5px;
+  transform: rotate(225deg);
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-left: 8px;
+  margin-right: 5px;
+  transition: transform 0.2s, margin 0.2s;
+}
+
+& .admin-bar__arrow.closed div {
+  margin-bottom: 8px;
+  transform: rotate(45deg);
+}
+
+& .admin-bar__link {
+  margin-left: 15px;
+  cursor: pointer;
+}
+
 & .admin-bar__tools {
   display: flex;
   justify-content: space-between;
@@ -221,6 +259,14 @@ const AdminBarWrapper = styled.div`
 
 & .admin-bar__search-content::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+& .history-popup__card {
+  padding: 5px 10px;
+}
+
+& .history-popup__card:hover {
+  background-color: #4f5972;
 }
 `;
 

@@ -147,7 +147,6 @@ class AltrpForm {
                   _.assign(this.getData(), data),
                   customHeaders
                 );
-                console.log(res);
                 import(/* webpackChunkName: 'ModelsManager' */"./modules/ModelsManager").then(modelsManager => {
                   modelsManager.default.updateModelWithData(
                     this.modelName,
@@ -203,6 +202,8 @@ class AltrpForm {
           this.updateResponseStorage(error);
         }
         return { success: false, error };
+      } finally{
+        // this.
       }
     } else {
       await alert("Пожалуйста, заполните все обязательные поля");
