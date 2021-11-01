@@ -18,6 +18,7 @@ import Area from "./classes/Area";
 import {altrpFontsSet, GOOGLE_FONT} from "./constants/fonts";
 import {addSettings} from "./store/elements-settings/actions";
 import mutate from "dot-prop-immutable";
+import React from "react";
 export function getRoutes() {
 
   return import(/* webpackChunkName: 'Routes' */"./classes/Routes.js");
