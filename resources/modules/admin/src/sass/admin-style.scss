@@ -80,6 +80,7 @@
         &:hover {
           color: $green;
           text-decoration: none;
+          z-index: 500;
           & path, circle {
             fill: $green;
           }
@@ -191,6 +192,7 @@
       }
       & li:hover &.admin-nav-list--sublist {
         display: block;
+        z-index: 999;
       }
     }
   }

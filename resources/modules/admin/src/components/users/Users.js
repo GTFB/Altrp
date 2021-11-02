@@ -8,7 +8,12 @@ import {Link} from "react-router-dom";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import Pagination from "../Pagination";
 import {filterUsers, sortUsers} from "../../js/helpers";
-import {InputGroup} from "@blueprintjs/core";
+import {InputGroup, MenuItem, Button, Alignment} from "@blueprintjs/core";
+import {Select} from "@blueprintjs/select";
+
+
+const BulkActions = ['Bulk Actions']
+const ChangeRole = ['Change role on...']
 
 class Users extends Component {
   constructor(props) {
@@ -19,6 +24,8 @@ class Users extends Component {
       search: "",
       currentPage: 1,
       roles: [],
+      bulkActions: 'Bulk Actions',
+      changeRole: 'Change role on...',
       sorting: {sortingField: null, order: 'ASC'}
     };
 
@@ -57,6 +64,38 @@ class Users extends Component {
     });
   }
 
+  ItemPredicate = (query, value) => {
+
+    if(!query) {
+      return true
+    }
+
+    const index = _.findIndex(_.split(value, ""), char => {
+      let similar = false;
+      _.split(query, "").forEach(queryChar => {
+        if(queryChar === char) {
+          similar = true
+        }
+      });
+      return similar
+    });
+
+    if(index !== -1) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+
+  onSubmitBulkActions = (e) => {
+    e.preventDefault();
+  }
+
+  onSubmitRoles = (e) => {
+    e.preventDefault();
+  }
+
   render() {
     const {currentPage, data, search, roles, roleFilter} = this.state;
     const {sortingField, order} = this.state.sorting;
@@ -92,17 +131,56 @@ class Users extends Component {
 
         <div className="admin-content-user">
           <div className="admin-panel">
-            <form className="admin-users-form form-bulk-left">
-              <select className="form-control input-sm">
-                <option value="1">Bulk Actions</option>
-              </select>
+            <form className="admin-users-form form-bulk-left" onSubmit={this.onSubmitRoles}>
+              {/*<select className="form-control input-sm">*/}
+              {/*  <option value="1">Bulk Actions</option>*/}
+              {/*</select>*/}
+              <Select items={BulkActions}
+                      matchTargetWidth
+                      itemPredicate={this.ItemPredicate}
+                      noResults={<MenuItem disabled={true} text="No results." />}
+                      itemRenderer={(item, {handleClick, modifiers, query}) => {
+                        return <MenuItem
+                          text={item}
+                          key={item}
+                          active={item === this.state.bulkActions}
+                          onClick={handleClick}
+                        />
+                      }}
+                      onItemSelect={current => {
+                        this.setState({ bulkActions: current})
+                      }}
+                      fill={true}
+              >
+                <Button fill alignText={Alignment.LEFT} text={this.state.bulkActions} rightIcon="caret-down"/>
+              </Select>
               <button className="btn btn_bare admin-users-button">Apply</button>
             </form>
 
-            <form className="admin-users-form form-bulk-right">
-              <select className="form-control input">
-                <option value="1">Change role on...</option>
-              </select>
+            <form className="admin-users-form form-bulk-right" onSubmit={this.onSubmitRoles}>
+              {/*<select className="form-control input">*/}
+              {/*  <option value="1">Change role on...</option>*/}
+              {/*</select>*/}
+
+              <Select items={ChangeRole}
+                      matchTargetWidth
+                      itemPredicate={this.ItemPredicate}
+                      noResults={<MenuItem disabled={true} text="No results." />}
+                      itemRenderer={(item, {handleClick, modifiers, query}) => {
+                        return <MenuItem
+                          text={item}
+                          key={item}
+                          active={item === this.state.changeRole}
+                          onClick={handleClick}
+                        />
+                      }}
+                      onItemSelect={current => {
+                        this.setState({ changeRole: current})
+                      }}
+                      fill={true}
+              >
+                <Button fill alignText={Alignment.LEFT} text={this.state.changeRole} rightIcon="caret-down"/>
+              </Select>
               <button className="btn btn_bare admin-users-button">Change</button>
             </form>
           </div>

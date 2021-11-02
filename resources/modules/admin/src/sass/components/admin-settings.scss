@@ -217,10 +217,23 @@
   & .altrp-code-editor {
     margin-bottom: 30px;
   }
+}
 
-  &:last-child {
-    margin-bottom: 0;
+.admin-styles-advanced__flex {
+  display: flex;
+
+  & .admin-styles-advanced-block {
+    margin-right: 60px;
+
+    &:last-child {
+      margin-right: 0;
+    }
   }
+}
+
+.admin__logo-advanced {
+  position: relative;
+  left: 10px;
 }
 
 .advanced-flex {

@@ -213,20 +213,23 @@ class EditModel extends Component {
               </div>
               <AdminTable
                 columns={columns}
-                quickActions={[{
-                  tag: 'Link', props: {
-                    href: `/admin/tables/models/${id}/fields/edit/:id`,
-                  },
-                  title: 'Edit'
-                }, {
-                  tag: 'button',
-                  route: `/admin/ajax/models/${id}/fields/:id`,
-                  method: 'delete',
-                  confirm: 'Are You Sure?',
-                  after: () => this.updateFields(),
-                  className: 'quick-action-menu__item_danger',
-                  title: 'Trash'
-                }]}
+                quickActions={[
+                  // {
+                  //   tag: 'Link', props: {
+                  //     href: `/admin/tables/models/${id}/fields/edit/:id`,
+                  //   },
+                  //   title: 'Edit'
+                  // },
+                  {
+                    tag: 'button',
+                    route: `/admin/ajax/models/${id}/fields/:id`,
+                    method: 'delete',
+                    confirm: 'Are You Sure?',
+                    after: () => this.updateFields(),
+                    className: 'quick-action-menu__item_danger',
+                    title: 'Trash'
+                  }
+                ]}
                 rows={fields.map(field => ({ ...field,  button__table: () => this.getModalFields(field.id) }))}
                 radiusTable={true}
                 offBorderLast={true}

@@ -22,13 +22,17 @@
     pointer-events: all;
     z-index: 1000;
     background-color: rgba(52, 59, 76, 0.4);
+
+
+    & .bp3-popover {
+      flex-grow: 1;
+    }
   }
 
 
   &-content {
     width: 670px;
     min-height: 30%;
-    overflow: auto;
     position: relative;
     padding: 30px;
     background-color: #fff;

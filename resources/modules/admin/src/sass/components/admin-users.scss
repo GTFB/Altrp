@@ -4,7 +4,8 @@
 
   & .admin-panel {
     display: flex;
-    margin-bottom: 30px;
+    margin-top: 20px;
+    margin-bottom: 50px;
   }
 
   & .admin-users-form {
@@ -17,10 +18,11 @@
   }
 
   & .form-bulk-left {
-    width: unset;
+    flex-basis: 260px;
   }
 
   & .form-bulk-right {
+    flex-basis: 260px;
     margin-left: 24px;
   }
 

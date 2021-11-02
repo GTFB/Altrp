@@ -390,14 +390,18 @@ input[type="text"].form__input{
 .admin-form-dataSources {
   display: flex;
 
+  & .bp3-button.bp3-large {
+    min-height: 38px;
+  }
+
   &__inputs {
-    flex-basis: 400px;
+    flex-basis: 550px;
     flex-shrink: 0;
     margin-right: 160px;
   }
 
   &__create {
-    flex-basis: 64%;
+    flex-basis: 50%;
     flex-shrink: 0;
   }
 
@@ -466,6 +470,7 @@ input[type="text"].form__input{
 .sql-checkbox__block {
   display: flex;
   align-items: center;
+  margin-bottom: 40px;
 
   & .sql__checkbox {
     display: flex;
@@ -514,4 +519,84 @@ input[type="text"].form__input{
 
 .admin-users-notice .admin-table-head {
   background-color: transparent;
+}
+
+.flex-grow__selectBlueprint .bp3-popover {
+  flex-grow: 1;
+}
+
+.overflow-select__blueprint {
+  & .bp3-menu {
+    height: 310px;
+    overflow: auto;
+  }
+}
+
+.overflow-select__blueprint-sql {
+  & .bp3-menu {
+    height: 285px;
+    overflow: auto;
+  }
+
+  & .bp3-button.bp3-large {
+    min-height: 38px;
+  }
+}
+
+.form-group__multiSelectBlueprint  {
+  & .bp3-tag-input.bp3-large {
+    height: auto;
+    min-height: 38px;
+  }
+
+  & .bp3-input {
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    box-shadow: none;
+  }
+
+  & .bp3-input:focus, .bp3-input.bp3-active {
+    box-shadow: 0 0 0 1px #315efb, 0 0 0 3px rgb(19 124 189 / 30%);
+  }
+
+  & .bp3-menu {
+    min-width: 261.25px;
+  }
+}
+
+.form-group__multiSelectBlueprint-sql {
+  & .bp3-menu {
+    min-width: 285px;
+  }
+}
+
+.overflow-blueprint__multiSelect {
+
+  & .bp3-menu {
+    height: 150px;
+    overflow: auto;
+  }
+}
+
+.data-source__btn-wrapper {
+  margin-top: 20px;
+}
+
+.styleTabs-marginBottom {
+  & .custom-tab__tab-panel {
+    margin-bottom: 40px;
+  }
+}
+
+.btn__wrapper-relations {
+  margin-top: 40px;
+}
+
+.form-control-blueprint__marginModal {
+  margin-top: 10px;
+}
+
+.form-areas__container {
+  width: 600px;
 }

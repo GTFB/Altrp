@@ -27,7 +27,7 @@ class MediaInput extends Component {
       <div className="admin-media-input__preview">
         {(this.state.value.assetType) ? renderAsset(this.state.value) : 'Not selected' }
       </div>
-      <button className="admin-media-input__button btn btn_success" onClick={this.openMediaBrowser}>
+      <button className="admin-media-input__button btn btn_success btn_advanced" onClick={this.openMediaBrowser}>
         Change
       </button>
     </div>

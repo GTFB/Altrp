@@ -70,8 +70,26 @@ const fieldTypeOptions = [
     label: 'Binary'
   },
 ];
-const attributeOptions = [
 
+// const fieldTypeOptions = [
+//   'String',
+//   'Integer',
+//   'Big Integer',
+//   'Float',
+//   'Boolean',
+//   'Text',
+//   'Long Text',
+//   'Calculated',
+//   'Date',
+//   'Time',
+//   'Year',
+//   'Datetime',
+//   'Geometry',
+//   'JSON',
+//   'Binary'
+// ]
+
+const attributeOptions = [
   {
     value: 'unsigned',
     label: 'UNSIGNED'
@@ -181,7 +199,7 @@ class AddFieldFormModal extends Component {
       if (value === "bigInteger") {
         state.value["attribute"] = "unsigned"
       } else {
-        state.value["attribute"] = ""
+        state.value["attribute"] = "none"
       }
       state.value[field] = value;
       return state
@@ -314,7 +332,7 @@ class AddFieldFormModal extends Component {
     return <form className="admin-form field-form" onSubmit={this.submitHandler}>
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
-          <label htmlFor="field-title">Field Title</label>
+          <label htmlFor="field-title" className="label__RobotoFont">Field Title</label>
           {/*<input type="text" id="field-title" required*/}
           {/*       value={this.state.value.title || ''}*/}
           {/*       onChange={this.titleChangeHandler}*/}
@@ -328,7 +346,7 @@ class AddFieldFormModal extends Component {
 
 
         <div className="form-group form-group_width47">
-          <label htmlFor="field-name">Field Name</label>
+          <label htmlFor="field-name" className="label__RobotoFont">Field Name</label>
           {/*<input type="text" id="field-name" required readOnly={null}*/}
           {/*       value={this.state.value.name || ''}*/}
           {/*       onChange={e => {*/}
@@ -347,7 +365,7 @@ class AddFieldFormModal extends Component {
       </div>
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
-          <label htmlFor="field-description">Field Description</label>
+          <label htmlFor="field-description" className="label__RobotoFont">Field Description</label>
           {/*<input type="text" id="field-description"*/}
           {/*       value={this.state.value.description || ''}*/}
           {/*       onChange={e => {*/}
@@ -365,7 +383,7 @@ class AddFieldFormModal extends Component {
 
 
         <div className="form-group form-group_width47">
-          <label htmlFor="field-type">Field Type</label>
+          <label htmlFor="field-type" className="label__RobotoFont">Field Type</label>
           {/*<select id="field-type" required*/}
           {/*        value={this.state.value.type || ''}*/}
           {/*        onChange={e => {*/}
@@ -381,7 +399,9 @@ class AddFieldFormModal extends Component {
           {/*</select>*/}
 
           <Select items={fieldTypeOptions}
+                  matchTargetWidth
                   itemPredicate={this.ItemPredicate}
+                  noResults={<MenuItem disabled={true} text="No results." />}
                   itemRenderer={(item, {handleClick, modifiers, query}) => {
                     return <MenuItem
                       text={item.label}
@@ -394,15 +414,13 @@ class AddFieldFormModal extends Component {
                     this.changeValue(current.value, 'type')
                   }}
                   fill={true}
-                  inputProps={{
-                    fill: true
-                  }}
-                  popoverProps={{
-                    targetClassName: "state-section-style-target",
-                  }}
-
           >
-            <Button fill large alignText={Alignment.LEFT} text={this.state.value.type} rightIcon="caret-down"/>
+            <Button fill
+                    large
+                    alignText={Alignment.LEFT}
+                    text={fieldTypeOptions.find(item => ( item.value === this.state.value.type))?.label}
+                    rightIcon="caret-down"
+            />
           </Select>
         </div>
       </div>
@@ -415,13 +433,13 @@ class AddFieldFormModal extends Component {
                    checked={this.state.isAlways}
                    onChange={e => this.setState({isAlways: e.target.checked})}
             />
-            <label htmlFor="always" className="label_checkbox">Always</label>
+            <label htmlFor="always" className="label_checkbox label__RobotoFont">Always</label>
           </div>
 
           {this.state.isAlways ?
             <>
               <div className="form-group">
-                <label htmlFor="calculation">Calculation</label>
+                <label htmlFor="calculation" className="label__RobotoFont">Calculation</label>
                 <input type="text" className="form-control" id="calculation"
                        value={this.state.value.calculation}
                        onChange={e => {
@@ -457,7 +475,7 @@ class AddFieldFormModal extends Component {
                        this.changeValue(e.target.checked, 'is_label')
                      }}
               />
-              <label className="checkbox-label-field" htmlFor="field-is_label">As Label</label>
+              <label className="checkbox-label-field label__RobotoFont" htmlFor="field-is_label">As Label</label>
             </div>
             <div className="form-group-field">
               <input type="checkbox" id="field-is_title"
@@ -466,7 +484,7 @@ class AddFieldFormModal extends Component {
                        this.changeValue(e.target.checked, 'is_title')
                      }}
               />
-              <label className="checkbox-label-field" htmlFor="field-is_title">As Title</label>
+              <label className="checkbox-label-field label__RobotoFont" htmlFor="field-is_title">As Title</label>
             </div>
             <div className="form-group-field">
               <input type="checkbox" id="field-is_auth"
@@ -475,23 +493,30 @@ class AddFieldFormModal extends Component {
                        this.changeValue(e.target.checked, 'is_auth')
                      }}
               />
-              <label className="checkbox-label-field" htmlFor="field-is_auth">Set Auth</label>
+              <label className="checkbox-label-field label__RobotoFont" htmlFor="field-is_auth">Set Auth</label>
             </div>
           </div>
 
           <div className="form-group__inline-wrapper">
             <div className="form-group form-group_width47">
-              <label htmlFor="field-length_value">Length/Value</label>
+              <label htmlFor="field-length_value" className="label__RobotoFont">Length/Value</label>
               {/*<input type="number" id="field-length_value"*/}
               {/*       value={this.state.value.size || ''}*/}
               {/*       onChange={e => {*/}
               {/*         this.changeValue(e.target.value, 'size')*/}
               {/*       }}*/}
               {/*       className="form-control"/>*/}
-              <NumericInput className="form-control-blueprint" fill={true}/>
+              <NumericInput
+                className="form-control-blueprint"
+                fill={true}
+                value={this.state.value.size || ''}
+                onValueChange={valueAsNumber => {
+                  this.changeValue(valueAsNumber, 'size')
+                }}
+              />
             </div>
             <div className="form-group form-group_width47">
-              <label htmlFor="field-default">Default</label>
+              <label htmlFor="field-default" className="label__RobotoFont">Default</label>
               {/*<input type="text" id="field-default"*/}
               {/*       value={this.state.value.default || ''}*/}
               {/*       onChange={e => {*/}
@@ -510,43 +535,90 @@ class AddFieldFormModal extends Component {
 
           <div className="form-group__inline-wrapper">
             <div className="form-group form-group_width47">
-              <label htmlFor="field-attribute">Attribute</label>
-              <select id="field-attribute"
-                      value={this.state.value.attribute || ''}
-                      onChange={e => {
-                        this.changeValue(e.target.value, 'attribute')
+              <label htmlFor="field-attribute" className="label__RobotoFont">Attribute</label>
+              {/*<select id="field-attribute"*/}
+              {/*        value={this.state.value.attribute || ''}*/}
+              {/*        onChange={e => {*/}
+              {/*          this.changeValue(e.target.value, 'attribute')*/}
+              {/*        }}*/}
+              {/*        className="form-control"*/}
+              {/*>*/}
+              {/*  <option value=""/>*/}
+              {/*  {attributeOptions.map(item =>*/}
+              {/*    <option key={item.value} value={item.value}>*/}
+              {/*      {item.label}*/}
+              {/*    </option>)}*/}
+              {/*</select>*/}
+
+
+              <Select items={attributeOptions}
+                      matchTargetWidth
+                      itemPredicate={this.ItemPredicate}
+                      noResults={<MenuItem disabled={true} text="No results." />}
+                      itemRenderer={(item, {handleClick, modifiers, query}) => {
+                        return <MenuItem
+                          text={item.label}
+                          key={item.value}
+                          active={item.value === this.state.value.attribute }
+                          onClick={handleClick}
+                        />
                       }}
-                      className="form-control"
+                      onItemSelect={current => {
+                        this.changeValue(current.value, 'attribute')
+                      }}
+                      fill={true}
               >
-                <option value=""/>
-                {attributeOptions.map(item =>
-                  <option key={item.value} value={item.value}>
-                    {item.label}
-                  </option>)}
-              </select>
+                <Button fill
+                        large
+                        alignText={Alignment.LEFT}
+                        text={attributeOptions.find(item => ( item.value === this.state.value.attribute ))?.label || 'none'}
+                        rightIcon="caret-down"
+                />
+              </Select>
             </div>
 
             <div className="form-group form-group_width47">
-              <label htmlFor="field-input_type">Input Type</label>
-              <select id="field-input_type" required
-                      value={this.state.value.input_type || ''}
-                      onChange={e => {
-                        this.changeValue(e.target.value, 'input_type')
+              <label htmlFor="field-input_type" className="label__RobotoFont">Input Type</label>
+              {/*<select id="field-input_type" required*/}
+              {/*        value={this.state.value.input_type || ''}*/}
+              {/*        onChange={e => {*/}
+              {/*          this.changeValue(e.target.value, 'input_type')*/}
+              {/*        }}*/}
+              {/*        className="form-control"*/}
+              {/*>*/}
+              {/*  <option disabled value=""/>*/}
+              {/*  {inputTipeOptions.map(item =>*/}
+              {/*    <option key={item} value={item}>*/}
+              {/*      {item}*/}
+              {/*    </option>)}*/}
+              {/*</select>*/}
+
+
+              <Select items={inputTipeOptions}
+                      matchTargetWidth
+                      itemPredicate={this.ItemPredicate}
+                      noResults={<MenuItem disabled={true} text="No results." />}
+                      itemRenderer={(item, {handleClick, modifiers, query}) => {
+                        return <MenuItem
+                          text={item}
+                          key={item}
+                          active={item === this.state.value.input_type }
+                          onClick={handleClick}
+                        />
                       }}
-                      className="form-control"
+                      onItemSelect={current => {
+                        this.changeValue(current, 'input_type')
+                      }}
+                      fill={true}
               >
-                <option disabled value=""/>
-                {inputTipeOptions.map(item =>
-                  <option key={item} value={item}>
-                    {item}
-                  </option>)}
-              </select>
+                <Button fill large alignText={Alignment.LEFT} text={this.state.value.input_type} rightIcon="caret-down"/>
+              </Select>
             </div>
           </div>
 
           {['select', 'checkbox', 'radio button'].includes(this.state.value.input_type) && <>
             <div className="form-group">
-              <label htmlFor="field-options">Options</label>
+              <label htmlFor="field-options" className="label__RobotoFont">Options</label>
               <textarea id="field-options"
                         value={this.state.value.options || ''}
                         onChange={e => {
@@ -555,9 +627,9 @@ class AddFieldFormModal extends Component {
                         className="form-control"
               />
             </div>
-            <p>Enter each choice on a new line.</p>
-            <p>Fro more control, you may specify both a value and label like this:</p>
-            <p>red | Red</p>
+            <p className="p__RobotoFont">Enter each choice on a new line.</p>
+            <p className="p__RobotoFont">Fro more control, you may specify both a value and label like this:</p>
+            <p className="p__RobotoFont">red | Red</p>
           </>}
 
           <div className="checkbox-group-field">
@@ -568,7 +640,7 @@ class AddFieldFormModal extends Component {
                        this.changeValue(e.target.checked, 'null')
                      }}
               />
-              <label className="checkbox-label-field" htmlFor="field-nullable">Nullable</label>
+              <label className="checkbox-label-field label__RobotoFont" htmlFor="field-nullable">Nullable</label>
             </div>
             <div className="form-group-field">
               <input type="checkbox" id="field-indexed"
@@ -577,7 +649,7 @@ class AddFieldFormModal extends Component {
                        this.changeValue(e.target.checked, 'indexed')
                      }}
               />
-              <label className="checkbox-label-field" htmlFor="field-indexed">Indexed</label>
+              <label className="checkbox-label-field label__RobotoFont" htmlFor="field-indexed">Indexed</label>
             </div>
             <div className="form-group-field">
               <input type="checkbox" id="field-editable"
@@ -586,7 +658,7 @@ class AddFieldFormModal extends Component {
                        this.changeValue(e.target.checked, 'editable')
                      }}
               />
-              <label className="checkbox-label-field" htmlFor="field-editable">Editable</label>
+              <label className="checkbox-label-field label__RobotoFont" htmlFor="field-editable">Editable</label>
             </div>
           </div>
         </>

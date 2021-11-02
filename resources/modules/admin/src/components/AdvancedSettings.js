@@ -14,6 +14,7 @@ class AdvancedSettings extends Component {
     this.state = {
       allSiteJavascript: '',
       debugOn: false,
+      loadByUser: false,
     }
   }
 
@@ -125,7 +126,7 @@ class AdvancedSettings extends Component {
 
       <div className="admin-styles-advanced-blocks">
         <div className="admin-styles-advanced-block">
-          <label htmlFor="settings-container-width">
+          <label htmlFor="settings-container-width" className="admin__logo-advanced">
             Admin Logo:
           </label>
           <Suspense fallback={'Loading'}>
@@ -133,58 +134,66 @@ class AdvancedSettings extends Component {
           </Suspense>
         </div>
 
-        <div className="admin-styles-advanced-block">
-          <div className="advanced-text-custom">Clear All Templates History:</div>
-          <button className="btn btn_success btn_advanced"
-                  onClick={this.deleteAllTemplatesReviews}>
-            Clear
-          </button>
-        </div>
+       <div className="admin-styles-advanced__flex">
+         <div className="admin-styles-advanced-block">
+           <div className="advanced-text-custom">Clear All Templates History:</div>
+           <button className="btn btn_success btn_advanced"
+                   onClick={this.deleteAllTemplatesReviews}>
+             Clear
+           </button>
+         </div>
 
-        <div className="admin-styles-advanced-block">
-          <div className="advanced-text-custom">Update All Backend Resources:</div>
-          <button className="btn btn_success btn_advanced"
-                  onClick={this.updateAllBackendResources}>
-            Update
-          </button>
-        </div>
+         <div className="admin-styles-advanced-block">
+           <div className="advanced-text-custom">Update All Backend Resources:</div>
+           <button className="btn btn_success btn_advanced"
+                   onClick={this.updateAllBackendResources}>
+             Update
+           </button>
+         </div>
 
-        <div className="admin-styles-advanced-block">
-          <div className="advanced-text-custom">Clear All Cache:</div>
-          <button className="btn btn_success btn_advanced"
-                  onClick={this.clearAllCache}>
-            Clear
-          </button>
-        </div>
+         <div className="admin-styles-advanced-block">
+           <div className="advanced-text-custom">Clear All Cache:</div>
+           <button className="btn btn_success btn_advanced"
+                   onClick={this.clearAllCache}>
+             Clear
+           </button>
+         </div>
+       </div>
 
         <div className="admin-styles-advanced-block">
           <div className="advanced-text-custom">Add Custom Javascript on All Site Pages:</div>
           <AltrpCodeEditor value={this.state.allSiteJavascript}
                            mode="javascript"
                            onChange={value => this.setState({ allSiteJavascript: value})}
+                           height="40em"
+                           style={{
+                             width: '60%'
+                           }}
           />
-          <button className="btn btn_success"
+          <button className="btn btn_success btn_advanced"
                   onClick={this.updateAllSiteJavascript}>
             Update
           </button>
         </div>
 
-        <div className="admin-styles-advanced-block advanced-flex">
-          <div className="advanced-text">Debug Altrp App</div>
-          <input className="admin-table__td_check"
-                 onChange={this.toggleDebug}
-            // value={this.state.debugOn}
-                 checked={this.state.debugOn}
-                 type="checkbox"/>
-        </div>
+        <div className="admin-styles-advanced__flex">
+          <div className="admin-styles-advanced-block advanced-flex">
+            <div className="advanced-text">Debug Altrp App</div>
+            <input className="admin-table__td_check"
+                   onChange={this.toggleDebug}
+              // value={this.state.debugOn}
+                   checked={this.state.debugOn}
+                   type="checkbox"/>
+          </div>
 
-        <div className="admin-styles-advanced-block advanced-flex">
-          <div className="advanced-text">Load App on User Action</div>
-          <input className="admin-table__td_check"
-                 onChange={this.toggleLoadingOption}
-            // value={this.state.debugOn}
-                 checked={this.state.loadByUser}
-                 type="checkbox"/>
+          <div className="admin-styles-advanced-block advanced-flex">
+            <div className="advanced-text">Load App on User Action</div>
+            <input className="admin-table__td_check"
+                   onChange={this.toggleLoadingOption}
+              // value={this.state.debugOn}
+                   checked={this.state.loadByUser}
+                   type="checkbox"/>
+          </div>
         </div>
       </div>
 

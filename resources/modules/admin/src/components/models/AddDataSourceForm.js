@@ -1,10 +1,16 @@
 import React, {Component, Fragment} from "react";
 import {Link, withRouter} from "react-router-dom";
-import AltrpSelect from "../altrp-select/AltrpSelect";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import {titleToName, titleToNameTwo} from "../../js/helpers";
 import HeaderComponent from "./HeaderComponent"
-import {InputGroup} from "@blueprintjs/core";
+import {InputGroup, MenuItem, Button, Alignment} from "@blueprintjs/core";
+import {Select, MultiSelect} from "@blueprintjs/select";
+
+
+
+const DataSourceType = ['get', 'show', 'options', 'filters', 'add', 'update', 'update_column', 'delete', 'remote' ]
+const requestType = ['get', 'post', 'put', 'delete']
+
 
 class AddDataSourceForm extends Component {
   state = {
@@ -17,7 +23,7 @@ class AddDataSourceForm extends Component {
       name: '',
       description: '',
       type: 'remote',
-      request_type: '',
+      request_type: 'get',
       model_id: '',
       url: '',
       api_url: '',
@@ -47,6 +53,46 @@ class AddDataSourceForm extends Component {
         value: {...value, headers: Object.entries(value.headers || {}), bodies: Object.entries(value.bodies || {})},
         typeIsDisabled: value.type === 'remote'
       }))
+    }
+  }
+
+  ItemPredicate = (query, value) => {
+
+    if(!query) {
+      return true
+    }
+    if (value.label) {
+      const index = _.findIndex(_.split(value.label, ""), char => {
+        let similar = false;
+        _.split(query, "").forEach(queryChar => {
+          if(queryChar === char) {
+            similar = true
+          }
+        });
+        return similar
+      });
+
+      if(index !== -1) {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      const index = _.findIndex(_.split(value, ""), char => {
+        let similar = false;
+        _.split(query, "").forEach(queryChar => {
+          if(queryChar === char) {
+            similar = true
+          }
+        });
+        return similar
+      });
+
+      if(index !== -1) {
+        return true
+      } else {
+        return false
+      }
     }
   }
 
@@ -166,6 +212,80 @@ class AddDataSourceForm extends Component {
     });
   };
 
+  // MultiSelect
+
+  tagRenderer = (item) => {
+    return item.label;
+  };
+
+  isItemSelectedRoles = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.value.access.roles);
+    return selectedString.includes(itemString);
+  };
+
+  handleItemSelectRoles = (item) => {
+    if (!this.isItemSelectedRoles(item)) {
+      this.setState(state => ({
+        ...state,
+        value: {
+          ...state.value,
+          access: {
+            ...state.value.access,
+            roles: [...state.value.access.roles, item]
+          }
+        },
+      }));
+    }
+  };
+
+  handleTagRemoveRoles = (item) => {
+    this.setState(state => ({
+      ...state,
+      value: {
+        ...state.value,
+        access: {
+          ...state.value.access,
+          roles: [...state.value.access.roles].filter((i) => i.label !== item)
+        }
+      },
+    }));
+  };
+
+  isItemSelectedPermissions = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.value.access.permissions);
+    return selectedString.includes(itemString);
+  };
+
+  handleItemSelectPermissions = (item) => {
+    if (!this.isItemSelectedPermissions(item)) {
+      this.setState(state => ({
+        ...state,
+        value: {
+          ...state.value,
+          access: {
+            ...state.value.access,
+            permissions: [...state.value.access.permissions, item]
+          }
+        },
+      }));
+    }
+  };
+
+  handleTagRemovePermissions = (item) => {
+    this.setState(state => ({
+      ...state,
+      value: {
+        ...state.value,
+        access: {
+          ...state.value.access,
+          permissions: [...state.value.access.permissions].filter((i) => i.label !== item)
+        }
+      },
+    }));
+  };
+
   submitHandler = e => {
     e.preventDefault();
     const resource = new Resource({route: '/admin/ajax/data_sources'});
@@ -183,7 +303,6 @@ class AddDataSourceForm extends Component {
     const {rolesOptions, permissionsOptions} = this.state;
     const {headers, bodies} = this.state.value;
     const {id} = this.props.match.params;
-
 
     return (
       <form className="admin-form-dataSources" onSubmit={this.submitHandler}>
@@ -246,65 +365,140 @@ class AddDataSourceForm extends Component {
           </div>
 
           <div className="form-group__inline-wrapper">
-            <div className="form-group form-group_width47">
+            <div className="form-group flex-grow__selectBlueprint form-group_width47">
               <label htmlFor="data-source-type" className="data-source-label">Data Source Type</label>
-              <select id="data-source-type" required
-                      name="type"
-                      value={this.state.value.type}
-                      onChange={e => {
-                        this.changeValue(e.target.value, 'type')
-                      }}
-                      className="form-control"
+              {/*<select id="data-source-type" required*/}
+              {/*        name="type"*/}
+              {/*        value={this.state.value.type}*/}
+              {/*        onChange={e => {*/}
+              {/*          this.changeValue(e.target.value, 'type')*/}
+              {/*        }}*/}
+              {/*        className="form-control"*/}
+              {/*        disabled={!this.props.match.params.id || this.state.typeIsDisabled}*/}
+              {/*>*/}
+              {/*  /!* <option disabled value="" /> *!/*/}
+              {/*  <option value="get">get</option>*/}
+              {/*  <option value="show">show</option>*/}
+              {/*  <option value="options">options</option>*/}
+              {/*  <option value="filters">filters</option>*/}
+              {/*  <option value="add">add</option>*/}
+              {/*  <option value="update">update</option>*/}
+              {/*  <option value="update_column">update_column</option>*/}
+              {/*  <option value="delete">delete</option>*/}
+              {/*  <option value="remote">remote</option>*/}
+              {/*</select>*/}
+
+
+              <Select items={DataSourceType}
+                      matchTargetWidth
+                      itemPredicate={this.ItemPredicate}
                       disabled={!this.props.match.params.id || this.state.typeIsDisabled}
+                      noResults={<MenuItem disabled={true} text="No results." />}
+                      itemRenderer={(item, {handleClick, modifiers, query}) => {
+                        return <MenuItem
+                          text={item}
+                          key={item}
+                          active={item === this.state.value.type }
+                          onClick={handleClick}
+                        />
+                      }}
+                      onItemSelect={current => {
+                        this.changeValue(current, 'type')
+                      }}
+                      fill={true}
               >
-                {/* <option disabled value="" /> */}
-                <option value="get">get</option>
-                <option value="show">show</option>
-                <option value="options">options</option>
-                <option value="filters">filters</option>
-                <option value="add">add</option>
-                <option value="update">update</option>
-                <option value="update_column">update_column</option>
-                <option value="delete">delete</option>
-                <option value="remote">remote</option>
-              </select>
+                <Button fill
+                        large
+                        alignText={Alignment.LEFT}
+                        text={this.state.value.type}
+                        rightIcon="caret-down"
+                        disabled={!this.props.match.params.id || this.state.typeIsDisabled}
+                />
+              </Select>
             </div>
 
-            <div className="form-group form-group_width47">
+            <div className="form-group flex-grow__selectBlueprint form-group_width47">
               <label htmlFor="data-source-type" className="data-source-label">Request Type</label>
-              <select id="data-source-type" required
-                      name="type"
-                      value={this.state.value.request_type}
-                      onChange={e => {
-                        this.changeValue(e.target.value, 'request_type')
+              {/*<select id="data-source-type" required*/}
+              {/*        name="type"*/}
+              {/*        value={this.state.value.request_type}*/}
+              {/*        onChange={e => {*/}
+              {/*          this.changeValue(e.target.value, 'request_type')*/}
+              {/*        }}*/}
+              {/*        className="form-control"*/}
+              {/*>*/}
+              {/*  <option disabled value=""/>*/}
+              {/*  <option value="get">get</option>*/}
+              {/*  <option value="post">post</option>*/}
+              {/*  <option value="put">put</option>*/}
+              {/*  <option value="delete">delete</option>*/}
+              {/*</select>*/}
+
+
+              <Select items={requestType}
+                      matchTargetWidth
+                      itemPredicate={this.ItemPredicate}
+                      noResults={<MenuItem disabled={true} text="No results." />}
+                      itemRenderer={(item, {handleClick, modifiers, query}) => {
+                        return <MenuItem
+                          text={item}
+                          key={item}
+                          active={item === this.state.value.request_type }
+                          onClick={handleClick}
+                        />
                       }}
-                      className="form-control"
+                      onItemSelect={current => {
+                        this.changeValue(current, 'request_type')
+                      }}
+                      fill={true}
               >
-                <option disabled value=""/>
-                <option value="get">get</option>
-                <option value="post">post</option>
-                <option value="put">put</option>
-                <option value="delete">delete</option>
-              </select>
+                <Button fill large alignText={Alignment.LEFT} text={this.state.value.request_type} rightIcon="caret-down"/>
+              </Select>
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="form-group flex-grow__selectBlueprint overflow-select__blueprint">
             <label htmlFor="data-source-model_id" className="data-source-label">Model</label>
-            <select id="data-source-model_id" required
-                    value={this.state.value.model_id}
-                    onChange={e => {
-                      this.changeValue(e.target.value, 'model_id')
-                    }}
-                    className="form-control"
+            {/*<select id="data-source-model_id" required*/}
+            {/*        value={this.state.value.model_id}*/}
+            {/*        onChange={e => {*/}
+            {/*          this.changeValue(e.target.value, 'model_id')*/}
+            {/*        }}*/}
+            {/*        className="form-control"*/}
+            {/*        disabled={this.props.match.params.id}*/}
+            {/*>*/}
+            {/*  <option disabled value=""/>*/}
+            {/*  {this.state.modelsOptions.map(({value, label}) =>*/}
+            {/*    <option key={value} value={value}>*/}
+            {/*      {label}*/}
+            {/*    </option>)}*/}
+            {/*</select>*/}
+
+
+            <Select items={this.state.modelsOptions}
+                    matchTargetWidth
+                    itemPredicate={this.ItemPredicate}
                     disabled={this.props.match.params.id}
+                    noResults={<MenuItem disabled={true} text="No results." />}
+                    itemRenderer={(item, {handleClick, modifiers, query}) => {
+                      return <MenuItem
+                        text={item.label}
+                        key={item.value}
+                        active={item.value === this.state.value.model_id }
+                        onClick={handleClick}
+                      />
+                    }}
+                    onItemSelect={current => {
+                      this.changeValue(current.value, 'model_id')
+                    }}
+                    fill={true}
             >
-              <option disabled value=""/>
-              {this.state.modelsOptions.map(({value, label}) =>
-                <option key={value} value={value}>
-                  {label}
-                </option>)}
-            </select>
+              <Button fill large alignText={Alignment.LEFT}
+                      text={this.state.modelsOptions.find(item => (item.value === this.state.value.model_id))?.label || 'none'}
+                      rightIcon="caret-down"
+                      disabled={this.props.match.params.id}
+              />
+            </Select>
           </div>
 
           <div className="form-group__inline-wrapper">
@@ -362,29 +556,84 @@ class AddDataSourceForm extends Component {
          </div>
 
           {this.state.value.auth ? <div className="form-group__inline-wrapper">
-            <div className="form-group form-group_width47">
+            <div className="form-group form-group__multiSelectBlueprint form-group_width47 ">
               <label htmlFor="roles" className="data-source-label">Roles</label>
 
-              <AltrpSelect id="roles"
-                           closeMenuOnSelect={false}
-                           value={_.filter(rolesOptions, r => roles.indexOf(r.value) >= 0)}
-                           isMulti={true}
-                           onChange={this.changeRoles}
-                           options={rolesOptions}/>
+              {/*<AltrpSelect id="roles"*/}
+              {/*             closeMenuOnSelect={false}*/}
+              {/*             value={_.filter(rolesOptions, r => roles.indexOf(r.value) >= 0)}*/}
+              {/*             isMulti={true}*/}
+              {/*             onChange={this.changeRoles}*/}
+              {/*             options={rolesOptions}/>*/}
+
+              <MultiSelect tagRenderer={this.tagRenderer} id="roles"
+                           items={rolesOptions}
+                           itemPredicate={this.ItemPredicate}
+                           noResults={<MenuItem disabled={true} text="No results." />}
+                           fill={true}
+                           placeholder="Select..."
+                           selectedItems={roles}
+                           onItemSelect={this.handleItemSelectRoles}
+                           itemRenderer={(item, {handleClick, modifiers, query}) => {
+                             return (
+                               <MenuItem
+                                 icon={this.isItemSelectedRoles(item) ? "tick" : "blank"}
+                                 text={item.label}
+                                 key={item.value}
+                                 onClick={handleClick}
+                               />
+                             )
+                           }}
+                           tagInputProps={{
+                             onRemove: this.handleTagRemoveRoles,
+                             large: false,
+                           }}
+                           popoverProps={{
+                             usePortal: false
+                           }}
+              />
             </div>
 
-            <div className="form-group form-group_width47">
+            <div className="form-group form-group__multiSelectBlueprint overflow-blueprint__multiSelect form-group_width47">
               <label htmlFor="permissions" className="data-source-label">Permissions</label>
-              <AltrpSelect id="roles"
-                           value={_.filter(permissionsOptions, p => permissions.indexOf(p.value) >= 0)}
-                           closeMenuOnSelect={false}
-                           isMulti={true}
-                           onChange={this.changePermission}
-                           options={permissionsOptions}/>
+              {/*<AltrpSelect id="roles"*/}
+              {/*             value={_.filter(permissionsOptions, p => permissions.indexOf(p.value) >= 0)}*/}
+              {/*             closeMenuOnSelect={false}*/}
+              {/*             isMulti={true}*/}
+              {/*             onChange={this.changePermission}*/}
+              {/*             options={permissionsOptions}/>*/}
+
+
+              <MultiSelect tagRenderer={this.tagRenderer} id="roles"
+                           items={permissionsOptions}
+                           itemPredicate={this.ItemPredicate}
+                           noResults={<MenuItem disabled={true} text="No results." />}
+                           fill={true}
+                           placeholder="Select..."
+                           selectedItems={permissions}
+                           onItemSelect={this.handleItemSelectPermissions}
+                           itemRenderer={(item, {handleClick, modifiers, query}) => {
+                             return (
+                               <MenuItem
+                                 icon={this.isItemSelectedPermissions(item) ? "tick" : "blank"}
+                                 text={item.label}
+                                 key={item.value}
+                                 onClick={handleClick}
+                               />
+                             )
+                           }}
+                           tagInputProps={{
+                             onRemove: this.handleTagRemovePermissions,
+                             large: false,
+                           }}
+                           popoverProps={{
+                             usePortal: false
+                           }}
+              />
             </div>
           </div> : null}
 
-          <div className="btn__wrapper">
+          <div className="btn__wrapper data-source__btn-wrapper">
             <button className="btn btn_success" type="submit">{id ? 'Edit' : 'Add'}</button>
             <Link className="btn" to="/admin/tables/models">Cancel</Link>
             {/* <button className="btn btn_failure">Delete</button> */}

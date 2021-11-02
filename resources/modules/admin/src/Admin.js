@@ -324,7 +324,7 @@ class Admin extends Component {
                         <DropletSvg className="icon__droplet"/>
                         <span>Assets</span>
                       </Link>
-                      <WithRouterAdminAssetsDropList activeButton={() => this.setState({ activeButton: 1 })}/>
+                      {/*<WithRouterAdminAssetsDropList activeButton={() => this.setState({ activeButton: 1 })}/>*/}
                     </li>
                     <li>
                       <Link
@@ -516,7 +516,7 @@ class Admin extends Component {
               <AddPage />
             </Route>
             <Route path="/admin/tables/models" exact>
-              <Models />
+              <Models updateModels={this.updateModels} />
             </Route>
             <Route path="/admin/tables/sql_editors" exact>
               <SQLEditors />

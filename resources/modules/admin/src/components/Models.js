@@ -113,6 +113,7 @@ export default class Models extends Component {
       s: this.state.modelsSearch,
       ...this.state.modelsSorting
     });
+    this.props.updateModels()
     this.setState(state => {
       return {
         ...state,

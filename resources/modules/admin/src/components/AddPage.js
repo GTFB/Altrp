@@ -223,7 +223,7 @@ class AddPage extends Component {
             </span>
           </div>
         </div>
-        <div className="admin-content zeroing__styleTabs">
+        <div className="admin-content zeroing__styleTabs styleTabs-marginBottom">
           <div className="custom-tab__tabs">
             <button
               className={this.state.currentTab === "content" ?
@@ -552,6 +552,7 @@ class AddPage extends Component {
               }
             ]}
             rows={dataSources}
+            radiusTable={true}
           />}
 
         {this.props.match.params.id &&
