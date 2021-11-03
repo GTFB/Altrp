@@ -658,6 +658,7 @@ class InputSelectTreeWidget extends Component {
     //     this.setState(state => ({...state, options}));
     //   }
     // }
+
     this.updateValue(prevProps);
 
 
@@ -922,6 +923,7 @@ class InputSelectTreeWidget extends Component {
     }
     this.setState(state => ({
         ...state,
+        options,
         value
       }),
       () => {

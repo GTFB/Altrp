@@ -246,6 +246,7 @@ class FrontElement {
       }
       break;
       case 'input-select':
+      case 'input-select-tree':
       case 'input-multi-select':
       case 'input-select2':
       case 'input-switch':
