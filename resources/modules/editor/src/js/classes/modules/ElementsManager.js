@@ -104,6 +104,8 @@ import InputTextAutocomplete from "../elements/InputTextAutocomplete";
 import InputTextAutocompleteWidget from "../../components/widgets/InputTextAutocompleteWidget";
 import Tree from "../elements/Tree";
 import TreeWidget from "../../components/widgets/TreeWidget";
+import InputSelectTree from "../elements/InputSelectTree";
+import InputSelectTreeWidget from "../../components/widgets/InputSelectTreeWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -163,6 +165,7 @@ export default class ElementsManger {
     this.elements[Scheduler.getName()] = Scheduler;
     this.elements[Tree.getName()] = Tree;
     this.elements[Icon.getName()] = Icon;
+    this.elements[InputSelectTree.getName()] = InputSelectTree
 
     // Websocket Notifications
     // this.elements[Notifications.getName()] = Notifications;
@@ -180,6 +183,7 @@ export default class ElementsManger {
     this.components[InputTextCommon.getName()] = InputTextCommonWidget;
     this.components[InputTextAutocomplete.getName()] = InputTextAutocompleteWidget;
     this.components[InputSelect.getName()] = InputSelectWidget;
+    this.components[InputSelectTree.getName()] = InputSelectTreeWidget;
     this.components[InputMultiSelect.getName()] = InputMultiSelectWidget;
     this.components[InputSelect2.getName()] = InputSelect2Widget;
     this.components[InputRadio.getName()] = InputRadioWidget;

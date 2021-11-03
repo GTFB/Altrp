@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
 import AltrpImage from "../../altrp-image/AltrpImage";
 
-export default function TreeComponent(settings) {
+export default function TreeComponent(settings, prefix) {
   const styles = [
     "bp3-tree-node svg",
       ["width", "icon_size", "slider"],
@@ -69,7 +69,9 @@ export default function TreeComponent(settings) {
     "}",
   ]
 
-  return styledString(styles, settings)
+  return styledString(styles, settings, {
+    settingsPrefix: prefix
+  })
 }
 
 export const NullArray = styled.div`

@@ -92,6 +92,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-select-tree",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputSelectTreeWidget' */ "../../../../editor/src/js/components/widgets/InputSelectTreeWidget"
+            );
+        }
+      },
+      {
         name: "input-multi-select",
         import: async () => {
           return await import(

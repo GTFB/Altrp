@@ -14,6 +14,7 @@ import {
   CONTROLLER_SLIDER, CONTROLLER_COLOR, CONTROLLER_TYPOGRAPHIC, CONTROLLER_DIMENSIONS, CONTROLLER_SHADOW
 } from '../modules/ControllersManager';
 import Repeater from "../Repeater";
+import {advancedTabControllers} from "../../decorators/register-controllers";
 
 class Tree extends BaseElement {
   static getName() {
@@ -266,6 +267,7 @@ class Tree extends BaseElement {
 
     this.endControlSection();
 
+    advancedTabControllers(this);
   }
 }
 

@@ -192,6 +192,11 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles += `.${prefix}${id} {${getInputSelectStyles(item.settings, id)}}`
           styles += `${getInputSelectPopoverStyles(item.settings, id)}`
         }
+        case "input-select-tree": {
+          styles += `.${prefix}${id} {${getInputSelectStyles(item.settings, id)}}`
+          styles += `${getInputSelectPopoverStyles(item.settings, id)}`
+          styles += `.altrp-select-tree${id} {${TreeComponent(item.settings, "tree_")}}`;
+        }
           break;
         case "input-multi-select":{
           styles += `.${prefix}${id} {${getInputMultiSelectStyles(item.settings, id)}}`
@@ -248,7 +253,7 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles += `.${prefix}${id} {${getSchedulerStyles(item.settings, id)}}`;
           break;
         case "tree":
-          styles += `.${prefix}${id} {${TreeComponent(item.settings, id)}}`;
+          styles += `.${prefix}${id} {${TreeComponent(item.settings)}}`;
           break;
       }
       styles += `div.${prefix}${id}.${prefix}${id} {${AdvancedComponent(

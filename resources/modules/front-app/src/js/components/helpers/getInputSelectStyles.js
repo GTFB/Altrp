@@ -4,9 +4,8 @@ const {getResponsiveSetting} = window.altrpHelpers;
 /**
  *
  * @param {{}} settings
- * @param {string} elementId
  */
-export default function getInputSelectStyles(settings, elementId) {
+export default function getInputSelectStyles(settings) {
   let styles = [
     //<editor-fold description="стили лэйбла">
     '.altrp-field-label-container',

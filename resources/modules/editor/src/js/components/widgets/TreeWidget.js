@@ -5,9 +5,138 @@ import {
   parseOptionsFromSettings, renderAsset,
   renderAssetIcon
 } from "../../../../../front-app/src/js/helpers";
+
 import {NullArray} from "./styled-components/TreeComponent";
 
 const TreeBlueprint = window.altrpLibs.Blueprint.Tree;
+
+export const normalizeValues = function(branch, select=false) {
+  const folderIcon = "folder-close";
+  const icon = branch.icon || folderIcon;
+
+  // {
+  //   assetType: "media",
+  //     url: '/img/nullImage.png',
+  //   name: "default"
+  // }
+  const label = branch.label || "Label";
+
+  return {
+    ...branch,
+    labelValue: label,
+    label: label,
+    icon: !icon.type ? folderIcon : renderAsset(icon),
+    iconValue: icon,
+    treeId: branch.tree_id || -1,
+    parentId: branch.parent || -1,
+  }
+}
+
+export const getFromDatasource = function(settings, settingNames=['tree_from_datasource', "tree_substitute_datasource"], defaultOptions=false) {
+  settings.path = this.props.element.getSettings(settingNames[0], '');
+  settings.path = settings.path.replace(/}}/g, '').replace(/{{/g, '');
+  settings.data = getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData());
+  settings.dataSettings = parseOptionsFromSettings(this.props.element.getSettings(settingNames[1]))
+
+  const repeater = [];
+
+  const keys = {
+    label: "",
+    icon: "",
+    tree_id: "",
+    parent: "",
+  }
+
+  settings.dataSettings.forEach((s) => {
+    keys[s.value] = s.label
+  })
+
+  let allKeys = true;
+
+  Object.values(keys).forEach((k) => {
+    if(!k) {
+      allKeys = false
+    }
+  })
+
+  if(allKeys) {
+    settings.data.forEach((d) => {
+      repeater.push({
+        label: d[keys.label],
+        icon: d[keys.icon],
+        tree_id: d[keys.tree_id],
+        parent: d[keys.parent],
+        value: d.value ? d.value : -1
+      })
+    })
+  }
+
+
+  if(!defaultOptions) {
+    return this.updateRepeater(repeater)
+  } else {
+    return settings.data.map(branch => this.normalizeValues(branch))
+  }
+}
+
+export const updateRepeater = function (repeaterSetting) {
+  const repeater = [];
+
+  repeaterSetting.forEach((branch, idx) => {
+    const children = [];
+    const branchSettings = this.normalizeValues(branch)
+
+    if(branchSettings.treeId !== -1) {
+      repeaterSetting.forEach((possibleChild, possibleIdx) => {
+        if(idx !== possibleIdx) {
+          const possibleParentId = possibleChild.parent || -1;
+
+          if(possibleParentId === branchSettings.treeId) {
+            children.push({
+              ...this.normalizeValues(possibleChild),
+              id: possibleIdx,
+            })
+          }
+        }
+      })
+    }
+
+    repeater.push({
+      id: idx,
+      ...branchSettings,
+      hasCaret: branchSettings.treeId !== -1,
+      childNodes: children
+    })
+  })
+
+  const newRepeater = [];
+
+  repeater.forEach((branch) => {
+    newRepeater.push({
+      ...branch,
+      childNodes: this.childrenInChildren(branch.childNodes, repeater)
+    })
+  })
+
+  return newRepeater.filter((branch) => branch.parentId === -1);
+}
+
+export const childrenInChildren = function(children, repeater) {
+  const replacedChildren = [];
+
+  if(children.length > 0) {
+    children.forEach((branch) => {
+      repeater.forEach((repBranch) => {
+        if(branch.id === repBranch.id) {
+          repBranch.childNodes = this.childrenInChildren(repBranch.childNodes, repeater)
+          replacedChildren.push(repBranch)
+        }
+      })
+    })
+  }
+
+  return replacedChildren
+}
 
 class TreeWidget extends Component {
   constructor(props){
@@ -18,7 +147,6 @@ class TreeWidget extends Component {
       settings,
       type: settings.select_type || "repeater",
       repeater: [],
-      repeaterType: "default"
     };
 
     props.element.component = this;
@@ -36,26 +164,11 @@ class TreeWidget extends Component {
     this.handleNodeClick = this.handleNodeClick.bind(this)
   }
 
-  normalizeValues(branch) {
-    const folderIcon = "folder-close";
-    const icon = branch.icon || folderIcon;
+  normalizeValues = normalizeValues;
+  getFromDatasource = getFromDatasource;
+  updateRepeater = updateRepeater;
+  childrenInChildren = childrenInChildren;
 
-    // {
-    //   assetType: "media",
-    //     url: '/img/nullImage.png',
-    //   name: "default"
-    // }
-    const label = branch.label || "Label";
-
-    return {
-      labelValue: label,
-      label: label,
-      icon: !icon.type ? folderIcon : renderAsset(icon),
-      iconValue: icon,
-      treeId: branch.tree_id || -1,
-      parentId: branch.parent || -1,
-    }
-  }
 
   _componentDidMount() {
     let settings = {
@@ -81,46 +194,7 @@ class TreeWidget extends Component {
     }
   }
 
-  getFromDatasource(settings) {
-    settings.path = this.props.element.getSettings('tree_from_datasource', '');
-    settings.path = settings.path.replace(/}}/g, '').replace(/{{/g, '');
-    settings.data = getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData());
-    settings.dataSettings = parseOptionsFromSettings(this.props.element.getSettings("tree_substitute_datasource"))
 
-    const repeater = [];
-
-    const keys = {
-      label: "",
-      icon: "",
-      tree_id: "",
-      parent: "",
-    }
-
-    settings.dataSettings.forEach((s) => {
-      keys[s.value] = s.label
-    })
-
-    let allKeys = true;
-
-    Object.values(keys).forEach((k) => {
-      if(!k) {
-        allKeys = false
-      }
-    })
-
-    if(allKeys) {
-      settings.data.forEach((d) => {
-        repeater.push({
-          label: d[keys.label],
-          icon: d[keys.icon],
-          tree_id: d[keys.tree_id],
-          parent: d[keys.parent]
-        })
-      })
-
-      return this.updateRepeater(repeater)
-    }
-  }
 
   _componentDidUpdate(prevProps, prevState) {
     let settings = {
@@ -152,65 +226,6 @@ class TreeWidget extends Component {
         }))
       }
     }
-  }
-
-  updateRepeater(repeaterSetting) {
-    const repeater = [];
-
-    repeaterSetting.forEach((branch, idx) => {
-      const children = [];
-      const branchSettings = this.normalizeValues(branch)
-
-      if(branchSettings.treeId !== -1) {
-        repeaterSetting.forEach((possibleChild, possibleIdx) => {
-          if(idx !== possibleIdx) {
-            const possibleParentId = possibleChild.parent || -1;
-
-            if(possibleParentId === branchSettings.treeId) {
-              children.push({
-                ...this.normalizeValues(possibleChild),
-                id: possibleIdx,
-              })
-            }
-          }
-        })
-      }
-
-      repeater.push({
-        id: idx,
-        ...branchSettings,
-        hasCaret: branchSettings.treeId !== -1,
-        childNodes: children
-      })
-    })
-
-    const newRepeater = [];
-
-    repeater.forEach((branch) => {
-      newRepeater.push({
-        ...branch,
-        childNodes: this.childrenInChildren(branch.childNodes, repeater)
-      })
-    })
-
-    return newRepeater.filter((branch) => branch.parentId === -1);
-  }
-
-  childrenInChildren(children, repeater) {
-    const replacedChildren = [];
-
-    if(children.length > 0) {
-      children.forEach((branch) => {
-        repeater.forEach((repBranch) => {
-          if(branch.id === repBranch.id) {
-            repBranch.childNodes = this.childrenInChildren(repBranch.childNodes, repeater)
-            replacedChildren.push(repBranch)
-          }
-        })
-      })
-    }
-
-    return replacedChildren
   }
   handleNodeClick(node, path) {
     const originallySelected = node.isSelected;
