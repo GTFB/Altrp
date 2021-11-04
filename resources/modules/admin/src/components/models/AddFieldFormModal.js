@@ -4,7 +4,7 @@ import FieldCalculationLogic from "./FieldCalculationLogic";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import {titleToName} from "../../js/helpers";
 import "./../../sass/components/AddFieldFormModal.scss"
-import {InputGroup, NumericInput, MenuItem, Button, Alignment} from "@blueprintjs/core";
+import {InputGroup, NumericInput, MenuItem, Button, Alignment, TextArea} from "@blueprintjs/core";
 import {connect} from "react-redux";
 import {Select} from "@blueprintjs/select";
 
@@ -617,14 +617,24 @@ class AddFieldFormModal extends Component {
           </div>
 
           {['select', 'checkbox', 'radio button'].includes(this.state.value.input_type) && <>
-            <div className="form-group">
+            <div className="form-group form-control-blueprint resize-textarea">
               <label htmlFor="field-options" className="label__RobotoFont">Options</label>
-              <textarea id="field-options"
-                        value={this.state.value.options || ''}
-                        onChange={e => {
-                          this.changeValue(e.target.value, 'options')
-                        }}
-                        className="form-control"
+              {/*<textarea id="field-options"*/}
+              {/*          value={this.state.value.options || ''}*/}
+              {/*          onChange={e => {*/}
+              {/*            this.changeValue(e.target.value, 'options')*/}
+              {/*          }}*/}
+              {/*          className="form-control"*/}
+              {/*/>*/}
+
+              <TextArea  id="field-options"
+                         className="textarea-blueprint"
+                         value={this.state.value.options || ''}
+                         onChange={e => {
+                           this.changeValue(e.target.value, 'options')
+                         }}
+                         fill
+                         large
               />
             </div>
             <p className="p__RobotoFont">Enter each choice on a new line.</p>

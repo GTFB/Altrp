@@ -543,7 +543,7 @@ class SqlEditor extends Component {
                   }}
                   className="field-ace"
                   name="aceEditor"
-                  height="30em"
+                  height="38em"
                   setOptions={{
                     value: this.state.value.sql || ''
                   }}

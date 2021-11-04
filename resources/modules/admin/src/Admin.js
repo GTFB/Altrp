@@ -428,18 +428,18 @@ class Admin extends Component {
             <Route path="/admin/users/new" exact>
               <AddUserPage />
             </Route>
-            <Route path="/admin/users/user/:id" exact>
-              <UserPage />
-            </Route>
-            <Route path="/admin/users/user/:id" exact>
-              <Notifications />
-            </Route>
-            <Route path="/admin/users/user/:id/notification/:name" exact>
-              <EditNotification />
-            </Route>
-            <Route path="/admin/users/user/:id/notification/new" exact>
-              <EditNotification />
-            </Route>
+            {/*<Route path="/admin/users/user/:id" exact>*/}
+            {/*  <UserPage />*/}
+            {/*</Route>*/}
+            {/*<Route path="/admin/users/user/:id" exact>*/}
+            {/*  <Notifications />*/}
+            {/*</Route>*/}
+            {/*<Route path="/admin/users/user/:id/notification/:name" exact>*/}
+            {/*  <EditNotification />*/}
+            {/*</Route>*/}
+            {/*<Route path="/admin/users/user/:id/notification/new" exact>*/}
+            {/*  <EditNotification />*/}
+            {/*</Route>*/}
             <Route path="/admin/tools">
               <UsersTools />
             </Route>

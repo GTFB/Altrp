@@ -571,6 +571,16 @@ input[type="text"].form__input{
   }
 }
 
+.form-group__multiSelectBlueprint-users {
+  & .bp3-menu {
+    min-width: 285px;
+  }
+
+  & .bp3-tag-input {
+    min-height: 38px;
+  }
+}
+
 .overflow-blueprint__multiSelect {
 
   & .bp3-menu {
@@ -585,7 +595,8 @@ input[type="text"].form__input{
 
 .styleTabs-marginBottom {
   & .custom-tab__tab-panel {
-    margin-bottom: 40px;
+    margin-bottom: 100px;
+    overflow: visible;
   }
 }
 
@@ -598,5 +609,36 @@ input[type="text"].form__input{
 }
 
 .form-areas__container {
-  width: 600px;
+  width: 700px;
+
+  & .btn_success {
+    padding: 8px 34px;
+    margin-top: 30px;
+  }
+}
+
+.form-group_width30 {
+  flex-basis: 30%;
+}
+
+.form-group__multiSelectBlueprint-pages .bp3-menu {
+  width: 380px;
+}
+
+.form-group__multiSelectBlueprint-pages .bp3-tag-input {
+  min-height: 38px;
+}
+
+.overflow-select__blueprint-pages .bp3-menu {
+  height: 220px;
+  overflow: auto;
+}
+
+.resize-textarea {
+  & textarea {
+    resize: none;
+  }
+  & textarea.bp3-input, textarea.bp3-input.bp3-large {
+    height: 210px;
+  }
 }

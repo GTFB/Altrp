@@ -9,7 +9,8 @@ import { titleToPath } from "../js/helpers";
 import IconSelect from "./icon-select/IconSelect";
 import mutate from "dot-prop-immutable";
 import "./../sass/components/AddPost.scss";
-import {InputGroup} from "@blueprintjs/core";
+import {Alignment, Button, InputGroup, MenuItem, TextArea} from "@blueprintjs/core";
+import {MultiSelect, Select} from "@blueprintjs/select";
 
 const columns = [
   {
@@ -33,6 +34,13 @@ const columns = [
   },
 ];
 
+const rolesOptions = [
+  {
+    value: "guest",
+    label: "Guest"
+  }
+]
+
 /**
  * @class
  * @property {Resource} resource
@@ -43,7 +51,14 @@ class AddPage extends Component {
     super(props);
     this.state = {
       page: {},
-      value: {},
+      value: {
+        model_id: null,
+        parent_page_id: null,
+        path: "",
+        redirect: "",
+        roles: [],
+        title: "",
+      },
       redirectAfterSave: false,
       templates: [],
       models: [],
@@ -91,7 +106,19 @@ class AddPage extends Component {
       this.getDataSources();
       let pageData = await this.resource.get(id);
       this.setState(state => {
-        return { ...state, value: pageData, id };
+        return {
+          ...state,
+          value: {
+            ...state.value,
+            model_id: pageData.model_id,
+            parent_page_id: pageData.parent_page_id,
+            path: pageData.path,
+            redirect: pageData.redirect,
+            roles: pageData.roles,
+            title: pageData.title,
+            id
+          }
+        };
       });
     }
   }
@@ -106,6 +133,28 @@ class AddPage extends Component {
   editHandler = editingDataSource => {
     this.setState({ editingDataSource, isModalOpened: true });
   };
+
+  ItemPredicate(query, value) {
+
+    if(!query) {
+      return true
+    }
+    const index = _.findIndex(_.split(value.label, ""), char => {
+      let similar = false;
+      _.split(query, "").forEach(queryChar => {
+        if(queryChar === char) {
+          similar = true
+        }
+      });
+      return similar
+    });
+
+    if(index !== -1) {
+      return true
+    } else {
+      return false
+    }
+  }
 
   /**
    * Сохранить страницу или добавить новую
@@ -198,6 +247,38 @@ class AddPage extends Component {
     }
   };
 
+  tagRenderer = (item) => {
+    return item.label;
+  };
+
+  isItemSelectedRoles = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.value.roles);
+    return selectedString.includes(itemString);
+  };
+
+  handleItemSelectRoles = (item) => {
+    if (!this.isItemSelectedRoles(item)) {
+      this.setState(state => ({
+        ...state,
+        value: {
+          ...state.value,
+          roles: [...state.value.roles, item]
+        },
+      }));
+    }
+  };
+
+  handleTagRemoveRoles = (item) => {
+    this.setState(state => ({
+      ...state,
+      value: {
+        ...state.value,
+        roles: [...state.value.roles].filter((i) => i.label !== item)
+      },
+    }));
+  };
+
   changeCurrentTab(currentTab) {
     return () => this.setState((state)=> {
       return {...state, currentTab }
@@ -276,40 +357,54 @@ class AddPage extends Component {
                        />
                      </div>
 
-                     <div className="form-group form-group_width47">
+                     <div className="form-group overflow-select__blueprint flex-grow__selectBlueprint form-group_width47">
                        <label htmlFor="parent_page_id" className="font__edit">Parent Page</label>
-                       <select
-                         id="parent_page_id"
-                         value={this.state.value.parent_page_id || ""}
-                         onChange={e => {
-                           // this.changeValue(e.target.value, 'parent_page_id');
-                           this.parentChangeHandler(e.target.value);
-                         }}
-                         className="form-control"
+                       {/*<select*/}
+                       {/*  id="parent_page_id"*/}
+                       {/*  value={this.state.value.parent_page_id || ""}*/}
+                       {/*  onChange={e => {*/}
+                       {/*    // this.changeValue(e.target.value, 'parent_page_id');*/}
+                       {/*    this.parentChangeHandler(e.target.value);*/}
+                       {/*  }}*/}
+                       {/*  className="form-control"*/}
+                       {/*>*/}
+                       {/*  /!*<option value=""  />*!/*/}
+                       {/*  <option value="">None</option>*/}
+                       {/*  {this.state.pagesOptions.map(page => {*/}
+                       {/*    return (*/}
+                       {/*      <option value={page.value} key={page.value}>*/}
+                       {/*        {page.label}*/}
+                       {/*      </option>*/}
+                       {/*    );*/}
+                       {/*  })}*/}
+                       {/*</select>*/}
+
+
+                       <Select items={this.state.pagesOptions}
+                               matchTargetWidth
+                               id="parent_page_id"
+                               itemPredicate={this.ItemPredicate}
+                               noResults={<MenuItem disabled={true} text="No results." />}
+                               itemRenderer={(item, {handleClick, modifiers, query}) => {
+                                 return <MenuItem
+                                   text={item.label}
+                                   key={item.value}
+                                   active={item.value === this.state.value.parent_page_id }
+                                   onClick={handleClick}
+                                 />
+                               }}
+                               onItemSelect={current => {
+                                 this.parentChangeHandler(current.value);
+                               }}
+                               fill={true}
                        >
-                         {/*<option value=""  />*/}
-                         <option value="">None</option>
-                         {this.state.pagesOptions.map(page => {
-                           return (
-                             <option value={page.value} key={page.value}>
-                               {page.label}
-                             </option>
-                           );
-                         })}
-                       </select>
-                       {/* <AltrpSelect id="parent_page_id"
-                      // isMulti={true}
-                      optionsRoute="/admin/ajax/pages_options"
-                      placeholder=""
-                      defaultOptions={[
-                        {
-                          value: '',
-                          label: '',
-                        }
-                      ]}
-                      value={this.state.value.parent_page_id || ''}
-                      onChange={({ value }) => { this.parentChangeHandler(value) }}
-                    /> */}
+                         <Button fill
+                                 large
+                                 alignText={Alignment.LEFT}
+                                 text={this.state.pagesOptions.find(item => ( item.value === this.state.value.parent_page_id))?.label || 'None'}
+                                 rightIcon="caret-down"
+                         />
+                       </Select>
                      </div>
                    </div>
 
@@ -352,47 +447,102 @@ class AddPage extends Component {
                      {/*}*/}
                      {/*</select>*/}
                      {/*</div>*/}
-                     <div className="form-group form-group_width47">
+                     <div className="form-group overflow-select__blueprint-pages flex-grow__selectBlueprint form-group_width47">
                        <label htmlFor="page-model" className="font__edit">Model</label>
-                       <select
-                         id="page-model"
-                         value={this.state.value.model_id || ""}
-                         onChange={e => {
-                           this.changeValue(e.target.value, "model_id");
-                         }}
-                         className="form-control"
+                       {/*<select*/}
+                       {/*  id="page-model"*/}
+                       {/*  value={this.state.value.model_id || ""}*/}
+                       {/*  onChange={e => {*/}
+                       {/*    this.changeValue(e.target.value, "model_id");*/}
+                       {/*  }}*/}
+                       {/*  className="form-control"*/}
+                       {/*>*/}
+                       {/*  <option value="" />*/}
+                       {/*  {this.state.models.map(model => {*/}
+                       {/*    return (*/}
+                       {/*      <option value={model.value} key={model.value}>*/}
+                       {/*        {model.label}*/}
+                       {/*      </option>*/}
+                       {/*    );*/}
+                       {/*  })}*/}
+                       {/*</select>*/}
+
+
+                       <Select items={this.state.models}
+                               matchTargetWidth
+                               id="page-model"
+                               itemPredicate={this.ItemPredicate}
+                               noResults={<MenuItem disabled={true} text="No results." />}
+                               itemRenderer={(item, {handleClick, modifiers, query}) => {
+                                 return <MenuItem
+                                   text={item.label}
+                                   key={item.value}
+                                   active={item.value === this.state.value.model_id }
+                                   onClick={handleClick}
+                                 />
+                               }}
+                               onItemSelect={current => {
+                                 this.changeValue(current.value, "model_id")
+                               }}
+                               fill={true}
                        >
-                         <option value="" />
-                         {this.state.models.map(model => {
-                           return (
-                             <option value={model.value} key={model.value}>
-                               {model.label}
-                             </option>
-                           );
-                         })}
-                       </select>
+                         <Button fill
+                                 large
+                                 alignText={Alignment.LEFT}
+                                 text={this.state.models.find(item => ( item.value === this.state.value.model_id))?.label || 'None'}
+                                 rightIcon="caret-down"
+                         />
+                       </Select>
                      </div>
                    </div>
 
 
                     <div className="form-group__inline-wrapper">
-                      <div className="form-group form-group_width47">
+                      <div className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-pages form-group_width47">
                         <label htmlFor="page-roles" className="font__edit">Roles</label>
-                        <AltrpSelect
-                          id="page-roles"
-                          isMulti={true}
-                          optionsRoute="/admin/ajax/role_options"
-                          placeholder="All"
-                          defaultOptions={[
-                            {
-                              value: "guest",
-                              label: "Guest"
-                            }
-                          ]}
-                          value={this.state.value.roles}
-                          onChange={value => {
-                            this.changeValue(value, "roles");
-                          }}
+                        {/*<AltrpSelect*/}
+                        {/*  id="page-roles"*/}
+                        {/*  isMulti={true}*/}
+                        {/*  optionsRoute="/admin/ajax/role_options"*/}
+                        {/*  placeholder="All"*/}
+                        {/*  defaultOptions={[*/}
+                        {/*    {*/}
+                        {/*      value: "guest",*/}
+                        {/*      label: "Guest"*/}
+                        {/*    }*/}
+                        {/*  ]}*/}
+                        {/*  value={this.state.value.roles}*/}
+                        {/*  onChange={value => {*/}
+                        {/*    this.changeValue(value, "roles");*/}
+                        {/*  }}*/}
+                        {/*/>*/}
+
+
+                        <MultiSelect tagRenderer={this.tagRenderer} id="roles"
+                                     items={rolesOptions}
+                                     itemPredicate={this.ItemPredicate}
+                                     noResults={<MenuItem disabled={true} text="No results." />}
+                                     fill={true}
+                                     placeholder="All..."
+                                     selectedItems={this.state.value.roles}
+                                     onItemSelect={this.handleItemSelectRoles}
+                                     itemRenderer={(item, {handleClick, modifiers, query}) => {
+                                       return (
+                                         <MenuItem
+                                           icon={this.isItemSelectedRoles(item) ? "tick" : "blank"}
+                                           text={item.label}
+                                           key={item.value}
+                                           onClick={handleClick}
+                                         />
+                                       )
+                                     }}
+                                     tagInputProps={{
+                                       onRemove: this.handleTagRemoveRoles,
+                                       large: false,
+                                     }}
+                                     popoverProps={{
+                                       usePortal: false
+                                     }}
                         />
                       </div>
                       <div className="form-group form-group_width47">
@@ -513,17 +663,27 @@ class AddPage extends Component {
                       </div>
                     </div>
 
-                    <div className="form-group">
+                    <div className="form-group form-control-blueprint">
                       <label htmlFor="seo_description" className="font__edit">Description</label>
-                      <textarea
-                        id="seo_description"
-                        value={this.state.value.seo_description || ""}
-                        onChange={e => {
-                          this.changeValue(e.target.value, "seo_description");
-                        }}
-                        className="form-control"
-                      >
-                      </textarea>
+                      {/*<textarea*/}
+                      {/*  id="seo_description"*/}
+                      {/*  value={this.state.value.seo_description || ""}*/}
+                      {/*  onChange={e => {*/}
+                      {/*    this.changeValue(e.target.value, "seo_description");*/}
+                      {/*  }}*/}
+                      {/*  className="form-control"*/}
+                      {/*>*/}
+                      {/*</textarea>*/}
+
+                      <TextArea  id="seo_description"
+                                 className="textarea-blueprint"
+                                 value={this.state.value.seo_description || ""}
+                                 onChange={e => {
+                                   this.changeValue(e.target.value, "seo_description");
+                                 }}
+                                 fill
+                                 large
+                      />
                     </div>
                   </React.Fragment>
                 );

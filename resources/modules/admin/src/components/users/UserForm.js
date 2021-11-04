@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import { Redirect, withRouter } from 'react-router-dom';
 import AltrpSelect from "../altrp-select/AltrpSelect";
-import {InputGroup} from "@blueprintjs/core";
+import {InputGroup, MenuItem} from "@blueprintjs/core";
+import {MultiSelect} from "@blueprintjs/select";
 //import TableForm from "../../../../admin/src/components/tables/TableForm";
 /**
  * @class
@@ -15,8 +16,14 @@ class UserForm extends Component {
     super(props);
     this.state = {
       id: this.props.id,
-      user: {},
-      usermeta: {},
+      user: {
+        _roles: [],
+        _permissions: []
+      },
+      usermeta: {
+        roles: [],
+        permissions: []
+      },
       errors: [],
       redirectAfterSave: false,
       redirectAfterError: false,
@@ -139,8 +146,121 @@ class UserForm extends Component {
     })
   };
 
-  render() {
+  ItemPredicate(query, value) {
 
+    if(!query) {
+      return true
+    }
+    const index = _.findIndex(_.split(value.label, ""), char => {
+      let similar = false;
+      _.split(query, "").forEach(queryChar => {
+        if(queryChar === char) {
+          similar = true
+        }
+      });
+      return similar
+    });
+
+    if(index !== -1) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  tagRenderer = (item) => {
+    return item.label;
+  };
+
+  isItemSelectedRoles = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.user._roles || []);
+    return selectedString.includes(itemString);
+  };
+
+  handleItemSelectRoles = (item) => {
+    if (!this.isItemSelectedRoles(item)) {
+      this.setState(state => {
+        const copyRoles = state.user._roles || []
+        copyRoles.push(item)
+        return {
+          ...state,
+          user: {
+            ...state.user,
+            _roles: copyRoles
+          },
+          usermeta: {
+            ...state.usermeta,
+            roles: copyRoles
+          }
+        }
+      });
+    }
+  };
+
+  handleTagRemoveRoles = (item) => {
+    this.setState(state => {
+      const copyRoles = state.user._roles
+      const copyUserMetaRoles = state.usermeta.roles
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          _roles: copyRoles.filter((i) => i.label !== item)
+        },
+        usermeta: {
+          ...state.usermeta,
+          roles: copyUserMetaRoles.filter((i) => i.label !== item)
+        }
+      }
+    });
+  };
+
+  isItemSelectedPermissions = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.user._permissions || []);
+    return selectedString.includes(itemString);
+  };
+
+  handleItemSelectPermissions = (item) => {
+    if (!this.isItemSelectedPermissions(item)) {
+      this.setState(state => {
+        const copyPermissions = state.user._permissions || []
+        copyPermissions.push(item)
+        return {
+          ...state,
+          user: {
+            ...state.user,
+            _permissions: copyPermissions
+          },
+          usermeta: {
+            ...state.usermeta,
+            permissions: copyPermissions
+          }
+        }
+      });
+    }
+  };
+
+  handleTagRemovePermissions = (item) => {
+    this.setState(state => {
+      const copyPermissions = state.user._permissions
+      const copyUserMetaPermissions = state.usermeta.permissions
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          _permissions: copyPermissions.filter((i) => i.label !== item)
+        },
+        usermeta: {
+          ...state.usermeta,
+          permissions: copyUserMetaPermissions.filter((i) => i.label !== item)
+        }
+      }
+    });
+  };
+
+  render() {
     const { rolesOptions, permissionsOptions, isPasswordChange } = this.state;
     const { _roles: roles = [], _permissions: permissions = [] } = this.state.user;
     if (this.state.redirectAfterSave) {
@@ -284,24 +404,79 @@ class UserForm extends Component {
       </div>
 
       <div className="form-group__inline-wrapper">
-        <div className="form-group form-group_width47">
+        <div className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-users form-group_width47">
           <label htmlFor="roles" className="label__RobotoFont">Roles</label>
-          <AltrpSelect id="roles"
-                       closeMenuOnSelect={false}
-                       value={_.filter(rolesOptions, r => roles && roles.indexOf(r.value) >= 0)}
-                       isMulti={true}
-                       onChange={this.changeRolesHandler}
-                       options={rolesOptions} />
+          {/*<AltrpSelect id="roles"*/}
+          {/*             closeMenuOnSelect={false}*/}
+          {/*             value={_.filter(rolesOptions, r => roles && roles.indexOf(r.value) >= 0)}*/}
+          {/*             isMulti={true}*/}
+          {/*             onChange={this.changeRolesHandler}*/}
+          {/*             options={rolesOptions} />*/}
+
+          <MultiSelect tagRenderer={this.tagRenderer} id="roles"
+                       items={rolesOptions}
+                       itemPredicate={this.ItemPredicate}
+                       noResults={<MenuItem disabled={true} text="No results." />}
+                       fill={true}
+                       placeholder="Select..."
+                       selectedItems={this.state.usermeta.roles}
+                       onItemSelect={this.handleItemSelectRoles}
+                       itemRenderer={(item, {handleClick, modifiers, query}) => {
+                         return (
+                           <MenuItem
+                             icon={this.isItemSelectedRoles(item) ? "tick" : "blank"}
+                             text={item.label}
+                             key={item.value}
+                             onClick={handleClick}
+                           />
+                         )
+                       }}
+                       tagInputProps={{
+                         onRemove: this.handleTagRemoveRoles,
+                         large: false,
+                       }}
+                       popoverProps={{
+                         usePortal: false
+                       }}
+          />
         </div>
 
-        <div className="form-group form-group_width47">
+        <div className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-users overflow-blueprint__multiSelect form-group_width47">
           <label htmlFor="permissions" className="label__RobotoFont">Permissions</label>
-          <AltrpSelect id="permissions"
-                       value={_.filter(permissionsOptions, p => permissions && permissions.indexOf(p.value) >= 0)}
-                       closeMenuOnSelect={false}
-                       isMulti={true}
-                       onChange={this.changePermissionsHandler}
-                       options={permissionsOptions} />
+          {/*<AltrpSelect id="permissions"*/}
+          {/*             value={_.filter(permissionsOptions, p => permissions && permissions.indexOf(p.value) >= 0)}*/}
+          {/*             closeMenuOnSelect={false}*/}
+          {/*             isMulti={true}*/}
+          {/*             onChange={this.changePermissionsHandler}*/}
+          {/*             options={permissionsOptions} />*/}
+
+
+          <MultiSelect tagRenderer={this.tagRenderer} id="permissions"
+                       items={permissionsOptions}
+                       itemPredicate={this.ItemPredicate}
+                       noResults={<MenuItem disabled={true} text="No results." />}
+                       fill={true}
+                       placeholder="Select..."
+                       selectedItems={this.state.usermeta.permissions}
+                       onItemSelect={this.handleItemSelectPermissions}
+                       itemRenderer={(item, {handleClick, modifiers, query}) => {
+                         return (
+                           <MenuItem
+                             icon={this.isItemSelectedPermissions(item) ? "tick" : "blank"}
+                             text={item.label}
+                             key={item.value}
+                             onClick={handleClick}
+                           />
+                         )
+                       }}
+                       tagInputProps={{
+                         onRemove: this.handleTagRemovePermissions,
+                         large: false,
+                       }}
+                       popoverProps={{
+                         usePortal: false
+                       }}
+          />
         </div>
       </div>
 
@@ -317,7 +492,7 @@ class UserForm extends Component {
         <div className="form-group">
           <label htmlFor="newPassword" className="label__RobotoFont">New Password</label>
           <input type="password" id="newPassword" name="password" required
-            minlength={8}
+            minLength={8}
             value={this.state.user.password || ''}
             onChange={this.changeValue}
             className="form-control" />
@@ -326,7 +501,7 @@ class UserForm extends Component {
         <div className="form-group">
           <label htmlFor="page-description" className="label__RobotoFont">Confirm Password</label>
           <input type="password" id="confirmNewPassword" name="password_confirmation" required
-            minlength={8}
+            minLength={8}
             value={this.state.user.password_confirmation || ''}
             onChange={this.changeValue}
             className="form-control" />
