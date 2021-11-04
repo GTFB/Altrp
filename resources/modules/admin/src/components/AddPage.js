@@ -11,7 +11,7 @@ import mutate from "dot-prop-immutable";
 
 const columns = [
   {
-    name: "source.name",
+    name: "source.title",
     title: "Datasource",
     url: true
     // editUrl: true,

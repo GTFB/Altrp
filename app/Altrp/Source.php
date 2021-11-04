@@ -113,6 +113,8 @@ class Source extends Model
       case 'App\SQLEditor':
       case 'App\Altrp\Query':
         return config('app.url') . '/ajax/models/queries' . data_get( $this, 'url' );
+      case 'App\Altrp\Customizer':
+        return config('app.url') . '/ajax/models/'. \Str::plural($this->model->name) .'/customizers' . data_get( $this, 'url' );
       default:
         return $this->type != 'remote'
             ? config('app.url') . '/ajax/models' . data_get( $this, 'url' )

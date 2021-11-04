@@ -107,14 +107,14 @@ class CustomizerSettingsPanel extends React.Component {
                                        value: 'api',
                                        label: 'Api',
                                      },
-                                     {
-                                       value: 'method',
-                                       label: 'Model Custom Method',
-                                     },
-                                     {
-                                       value: 'before',
-                                       label: 'Before Page Load',
-                                     },
+                                     // {
+                                     //   value: 'method',
+                                     //   label: 'Model Custom Method',
+                                     // },
+                                     // {
+                                     //   value: 'before',
+                                     //   label: 'Before Page Load',
+                                     // },
                                    ]}
                       />
                     </div>

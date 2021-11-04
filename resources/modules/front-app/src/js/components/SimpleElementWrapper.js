@@ -338,7 +338,6 @@ class SimpleElementWrapper extends Component {
       );
     }
     const styles = {};
-
     if (!this.state.elementDisplay) {
       styles.display = "none";
     }
@@ -458,15 +457,9 @@ class SimpleElementWrapper extends Component {
     };
     if (WrapperComponent === React.Fragment) {
       wrapperProps = {};
-      // delete wrapperProps.elementId;
-      // delete wrapperProps.settings;
-      // delete wrapperProps.styles;
-      // if (this.state.elementDisplay) {
-      //   this.elementWrapperRef.current.style.display = null;
-      // } else {
-      //   this.elementWrapperRef.current.style.display = "none";
-      // }
     }
+    this.updateHTMLElementDisplay()
+
     if(['column', 'section'].indexOf(this.props.element.getType()) !== -1){
       tooltip_show_type = 'never'
     }
@@ -502,6 +495,13 @@ class SimpleElementWrapper extends Component {
       </>
 
     );
+  }
+
+  updateHTMLElementDisplay() {
+    const HTMLElement = document.querySelector(`[data-react-element="${this.props.element.getId()}"]`)
+    if(HTMLElement){
+      HTMLElement.style.display = this.state.elementDisplay ? null : 'none';
+    }
   }
 }
 

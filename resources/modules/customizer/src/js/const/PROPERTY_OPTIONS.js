@@ -1,11 +1,11 @@
 const PROPERTY_OPTIONS =  [
   {
-    label: 'session.',
-    value: 'session',
-  },
-  {
     label: 'context.',
     value: 'context',
+  },
+  {
+    label: 'session.',
+    value: 'session',
   },
   {
     label: 'this.',
