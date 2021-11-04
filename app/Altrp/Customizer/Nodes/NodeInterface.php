@@ -3,6 +3,8 @@
 
 namespace App\Altrp\Customizer\Nodes;
 
+use Illuminate\Support\Collection;
+
 /**
  * Interface NodeInterface - описывает методы и свойства нод, используемых в кастомайзере
  * @package App\Altrp\Customizer\Nodes
@@ -23,5 +25,5 @@ interface NodeInterface
    * @param array $data
    * @return bool
    */
-  function parseData( array $data  ):bool;
+  function parseCustomizerData( Collection $data  ):bool;
 }

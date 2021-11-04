@@ -1,4 +1,7 @@
+@import "customizer-left-sidebar.scss";
+@import "~bootstrap/scss/bootstrap";
 @import "../../../../sass/vars.scss";
+@import "../../../front-app/src/sass/front-style";
 
 body {
     margin: 0px;
@@ -495,3 +498,61 @@ body {
 //    display: flex;
 //    width: 100%;
 //}
+.react-flow__renderer .react-flow__handle{
+  padding: 10px;
+  background: transparent;
+  border: none;
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #555;
+    border-radius: 100%;
+    top:7px ;
+    left: 1px ;
+  }
+  &-top::after {
+    top:2px ;
+    left: 6px ;
+  }
+  &-bottom::after {
+    top: 13px;
+    left: 7px;
+  }
+}
+#customizer-editor {
+  & .left-panel {
+    width: 450px;
+  }
+  & .customizer-widget {
+    width: 210px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+}
+.controllers-wrapper{
+  & .bp3-control-group {
+    margin-bottom: 5px;
+  }
+}
+.switcher-repeater{
+  width: 100%;
+  &-item{
+    margin-bottom: 10px;
+    border-bottom: 1px solid $grey;
+  }
+    &:last-child{
+      margin-bottom: 10px;
+    }
+
+}
+
+
+.pe-none{
+  pointer-events: none;
+}

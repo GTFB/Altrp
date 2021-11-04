@@ -9,8 +9,9 @@ import DotsIcon from "../../../../../editor/src/svgs/dots.svg";
 import HamburgerIcon from "../../../../../editor/src/svgs/hamburger.svg";
 import SettingsIcon from "../../../../../editor/src/svgs/settings.svg";
 import {renderAsset} from "../../../../../front-app/src/js/helpers";
+import {connect} from "react-redux";
 
-export default class Sidebar extends React.Component {
+class Sidebar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,12 +24,10 @@ export default class Sidebar extends React.Component {
   async update() {
     const customizerId = new URL(window.location).searchParams.get("customizer_id");
     const customizerData = store.getState()?.currentCustomizer;
-    const customizerChart = store.getState()?.customizerSettingsData;
-    customizerData.chart = JSON.stringify(customizerChart);
-    console.log(this.props.sources);
+    const {customizerSettingsData} = this.props
     this.resource.put(customizerId, {
-      data: customizerData,
-      sources: this.props.sources,
+      ...customizerData,
+      data: customizerSettingsData
     });
     this.props.btnChange("");
   }
@@ -45,7 +44,7 @@ export default class Sidebar extends React.Component {
             <HamburgerIcon className="icon" />
           </button>
 
-          <a href="/admin/templates" target="_blank" className="logo">
+          <a href="/admin/customizers" target="_blank" className="logo">
             {window.admin_logo ? (
               renderAsset(window.admin_logo, { className: "editor__logo" })
             ) : (
@@ -61,7 +60,6 @@ export default class Sidebar extends React.Component {
         <div className="left-panel-main">
           {activePanel === "widgets" && <WidgetsPanel />}
           {activePanel === "settings" && <CustomizerSettingsPanel
-                                            customizer={ this.props.customizer }
                                             sources={ this.props.sources }
                                             setSources={ this.props.setSources }
                                             onLayout={ this.props.onLayout }
@@ -87,3 +85,9 @@ export default class Sidebar extends React.Component {
     );
   }
 }
+function mapStateToProps(state){
+  return {
+    customizerSettingsData: state.customizerSettingsData,
+  };
+}
+export default connect(mapStateToProps)(Sidebar)

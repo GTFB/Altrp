@@ -4,16 +4,14 @@ import {
  } from "./actions";
 
 export function currentCustomizerReducer(state, action) {
-  state = state || [];
+  state = state || {};
 
   switch (action.type) {
     case SET_CURRENT_CUSTOMIZER:
       state = action.data;
-      console.log(state);
       break;
     case SET_CHART_IN_CURRENT_CUSTOMIZER:
       state.chart = action.data;
-      console.log(state);
       break;
   }
   return state;

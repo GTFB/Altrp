@@ -40,6 +40,7 @@
     <div id="customizer-editor">
 
     </div>
+<div id="portal-target"></div>
 </body>
 
 </html>

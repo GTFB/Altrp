@@ -22,15 +22,15 @@ import {
 } from "./js/store/customizer-settings/actions";
 import { setCurrentCustomizer } from "./js/store/current-customizer/actions";
 import Sidebar from "./js/components/sidebar/Sidebar";
-import Condition from "./js/components/sidebar/modules/widgets/Condition";
+import Switch from "./js/components/sidebar/modules/widgets/Switch";
+import Change from "./js/components/sidebar/modules/widgets/Change";
 import Start from "./js/components/sidebar/modules/widgets/Start";
-import BotWidget from "./js/components/sidebar/modules/widgets/BotWidget";
 import DocumentAction from "./js/components/sidebar/modules/widgets/DocumentAction";
 import CrudAction from "./js/components/sidebar/modules/widgets/CrudAction";
 import ApiAction from "./js/components/sidebar/modules/widgets/ApiAction";
 import MessageAction from "./js/components/sidebar/modules/widgets/MessageAction";
 import Customizer from "./js/components/sidebar/modules/widgets/Customizer";
-import Finish from "./js/components/sidebar/modules/widgets/Finish";
+import Return from "./js/components/sidebar/modules/widgets/Return";
 import CustomEdge from "./js/components/sidebar/modules/widgets/CustomEdge";
 import ConnectionLine from './js/components/sidebar/modules/widgets/ConnectionLine';
 
@@ -77,16 +77,18 @@ class CustomizerEditor extends Component {
     store.subscribe(this.updateCustomizerState.bind(this));
 
     const customizerId = new URL(window.location).searchParams.get("customizer_id");
-    const customizer = await this.resource.get(customizerId)
+    const customizer = (await this.resource.get(customizerId)).data
     if (_.isString(customizer.start_config)) customizer.start_config = JSON.parse(customizer.start_config);
-    console.log(customizer);
     store.dispatch(setCurrentCustomizer(customizer));
     if (customizer.sources) {
       let sources = this.changeSources(customizer.sources);
       this.setState(s => ({ ...s, sources}));
     }
-    if(!customizer.chart) return;
-    const data = _.isString(customizer.chart) ? JSON.parse(customizer.chart) : customizer.chart;
+    if(!customizer.data) return;
+    let data = _.isString(customizer.data) ? JSON.parse(customizer.data) : customizer.data;
+    if( !_.isArray(data)){
+      data = [];
+    }
     store.dispatch(setCustomizerSettingsData(data));
     this.btnChange('');
 
@@ -137,8 +139,6 @@ class CustomizerEditor extends Component {
       params.className = 'green';
     }
     const newStore = addEdge(params, customizerStore);
-    console.log(newStore);
-    console.log(params);
     store.dispatch(setCustomizerSettingsData(newStore));
   }
 
@@ -194,71 +194,16 @@ class CustomizerEditor extends Component {
     let data = { type };
 
     switch (type){
-      case "documentAction":
+      case "switch":
         data = {
-          "type": "documentAction",
-          "nodeData": {
-            "type": "document",
-            "data": {
-            }
-          },
+          "type": "switch",
+          "items": []
         };
         break;
-      case "crudAction":
+      case "change":
         data = {
-          "type": "crudAction",
-          "nodeData": {
-            "type": "crud",
-            "data": {
-              "method": "",
-              "body": {},
-              "record": "",
-              "model_id": "",
-            }
-          }
-        };
-        break;
-      case "apiAction":
-        data = {
-          "type": "apiAction",
-          "nodeData": {
-            "type": "api",
-            "data": {
-                "source": "",
-                "method": "",
-                "headers": "",
-                "name": "",
-                "url": "",
-                "data": ""
-            }
-          },
-        };
-        break;
-      case "messageAction":
-        data = {
-          "type": "messageAction",
-          "nodeData": {
-            "type": "send_notification",
-            "data": {
-              "entities": "",
-              "entitiesData": {
-                "users": [],
-                "roles": [],
-                "dynamicValue": "",
-              },
-              "channel": "",
-              "content": {},
-            }
-          }
-        };
-        break;
-      case "condition":
-        data = {
-          "type": "condition",
-          "nodeData": {
-              "operator": "",
-              "body": []
-          }
+          "type": "change",
+          "items": []
         };
         break;
       case "start":
@@ -310,8 +255,6 @@ class CustomizerEditor extends Component {
 
   onEdgeUpdate = (oldEdge, newConnection) => {
     const customizerStore = store.getState()?.customizerSettingsData;
-    console.log(oldEdge);
-    console.log(newConnection);
     const newStore = updateEdge(oldEdge, newConnection, customizerStore);
     store.dispatch(setCustomizerSettingsData(newStore));
   }
@@ -344,7 +287,6 @@ class CustomizerEditor extends Component {
     // const newElements = _.cloneDeep(elements);
 
     const layoutedElements = this.getLayoutedElements(elements, item);
-    console.log(layoutedElements);
     store.dispatch(setCustomizerSettingsData(layoutedElements));
   }
 
@@ -370,7 +312,6 @@ class CustomizerEditor extends Component {
         const nodeWithPosition = this.dagreGraph.node(el.id);
         el.targetPosition = isHorizontal ? 'left' : 'top';
         el.sourcePosition = isHorizontal ? 'right' : 'bottom';
-        console.log(el);
 
         // unfortunately we need this little hack to pass a slighltiy different position
         // to notify react flow about the change. More over we are shifting the dagre node position
@@ -387,8 +328,6 @@ class CustomizerEditor extends Component {
 
 
   render() {
-    console.log(this.state.selectNode);
-    console.log(this.state.selectEdge);
     return (
       <div className="page__content">
         <ReactFlowProvider>
@@ -418,14 +357,14 @@ class CustomizerEditor extends Component {
               onDragOver={ this.onDragOver }
               nodeTypes={{
                 start: Start,
-                condition: Condition,
+                switch: Switch,
+                change: Change,
                 documentAction: DocumentAction,
                 crudAction: CrudAction,
                 apiAction: ApiAction,
                 messageAction: MessageAction,
                 customizer: Customizer,
-                bot: BotWidget,
-                finish: Finish,
+                return: Return,
               }}
               onEdgeUpdate={this.onEdgeUpdate}
               edgeTypes={{

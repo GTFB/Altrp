@@ -2,7 +2,7 @@ import * as React from "react";
 import Scrollbars from "react-custom-scrollbars";
 import store from "../../../store/store";
 import StartIcon from "../../../../svgs/start.svg";
-import ConditionIcon from "../../../../svgs/condition.svg";
+import SwitchIcon from "../../../../svgs/condition.svg";
 import DocumentIcon from "../../../../svgs/document.svg";
 import CrudIcon from "../../../../svgs/crud.svg";
 import ApiIcon from "../../../../svgs/api.svg";
@@ -36,7 +36,7 @@ export default class WidgetsPanel extends React.Component {
 
   render() {
     let start = this.issetNode('start');
-    let finish = this.issetNode('finish');
+    let finish = this.issetNode('return');
 
   return <div className="widget-panel-wrapper">
       <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
@@ -45,37 +45,33 @@ export default class WidgetsPanel extends React.Component {
             <StartIcon/>
             <p>Start</p>
           </div>}
-          <div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'condition' )} draggable>
-            <ConditionIcon/>
-            <p>Condition</p>
+          <div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'switch' )} draggable>
+            <SwitchIcon/>
+            <p>Switch</p>
           </div>
-          <div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'documentAction' )} draggable>
-            <DocumentIcon/>
-            <p>Document</p>
-          </div>
-          <div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'crudAction' )} draggable>
-            <CrudIcon/>
-            <p>CRUD</p>
-          </div>
-          <div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'apiAction' )} draggable>
-            <ApiIcon/>
-            <p>API</p>
-          </div>
-          <div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'messageAction' )} draggable>
-            <MessageIcon/>
-            <p>Message</p>
-          </div>
-          <div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'customizer' )} draggable>
+          {/*<div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'documentAction' )} draggable>*/}
+          {/*  <DocumentIcon/>*/}
+          {/*  <p>Document</p>*/}
+          {/*</div>*/}
+          {/*<div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'crudAction' )} draggable>*/}
+          {/*  <CrudIcon/>*/}
+          {/*  <p>CRUD</p>*/}
+          {/*</div>*/}
+          {/*<div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'apiAction' )} draggable>*/}
+          {/*  <ApiIcon/>*/}
+          {/*  <p>API</p>*/}
+          {/*</div>*/}
+          {/*<div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'messageAction' )} draggable>*/}
+          {/*  <MessageIcon/>*/}
+          {/*  <p>Message</p>*/}
+          {/*</div>*/}
+          <div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'change' )} draggable>
             <CustomizerIcon/>
-            <p>Customizer</p>
+            <p>Change</p>
           </div>
-          <div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'bot' )} draggable>
-            <CustomizerIcon/>
-            <p>Bot</p>
-          </div>
-          {finish && <div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'finish' )} draggable>
+          {<div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'return' )} draggable>
             <FinishIcon/>
-            <p>Finish</p>
+            <p>Return</p>
           </div>}
         </div>
       </Scrollbars>

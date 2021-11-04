@@ -10,7 +10,7 @@ export function customizerSettingsDataReducer(state, action) {
     case SET_UPDATED_NODE:
       const index = state.findIndex(node => node.id == action.value.id);
       state[index] = action.value;
-      console.log(state);
+      state = _.cloneDeep(state)
       break;
     case SET_CUSTOMIZER_SETTINGS:
       state = action.data;

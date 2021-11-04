@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Handle } from 'react-flow-renderer';
 
-export default class BotWidget extends React.Component {
+export default class Change extends React.Component {
   constructor(props) {
     super(props);
   }

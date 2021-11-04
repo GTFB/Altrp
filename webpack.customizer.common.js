@@ -70,5 +70,12 @@ module.exports = {
     },
     hotOnly: true
   },
-  plugins: [new webpack.HotModuleReplacementPlugin(), new CleanWebpackPlugin()]
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+
+    new webpack.DefinePlugin({
+      "process.env": "{}",
+      global: {}
+    }),
+    new CleanWebpackPlugin()]
 };

@@ -1295,7 +1295,12 @@ function getDataSources( $page_id, $params = array(), $params_string = '' ){
       elseif ($ds->source->type == 'add') $method = 'store';
       elseif ($ds->source->type == 'update_column') $method = 'updateColumn';
       elseif ($ds->source->type == 'delete') $method = 'destroy';
-      else $method = $ds->source->type;
+      elseif ($ds->source->type == 'customizer') {
+        $method = $ds->source->name;
+      }
+      else {
+        $method = $ds->source->type;
+      }
       $result = call_user_func( [$controllerInstance, $method], $request, ...explode( ',', $params_string ) );
       if( $result ){
         $result = $result->getContent();
@@ -1310,14 +1315,8 @@ function getDataSources( $page_id, $params = array(), $params_string = '' ){
 
     }
   } catch( \Exception $e ){
-
     logger()->error( $e->getMessage() . "\n" .
-      implode(
-        "\n",
-        array_map(function($tr){
-          return $tr['file'] . " " . $tr['line'];
-        }, $e->getTrace())
-      )
+       $e->getTraceAsString()
       . "\n" );
     return $datasources;
   }
@@ -1578,4 +1577,196 @@ function num_word($value, $words, $show = true)
   }
 
   return $out;
+}
+
+
+global $__customizer_data__;
+$__customizer_data__ = [
+  'context' => [],
+];
+/**
+ * @param string $path
+ * @param mixed $default
+ * @return mixed
+ */
+function get_customizer_data($path, $default = null)
+{
+  global $__customizer_data__;
+  if( ! isset($__customizer_data__['session'])){
+    $__customizer_data__['session'] = session();
+  }
+  if( ! isset($__customizer_data__['current_user'])){
+    $__customizer_data__['current_user'] = auth()->user();
+  }
+  return data_get($__customizer_data__, $path, $default);
+}
+
+/**
+ * @param string $path
+ * @param mixed $data
+ * @return mixed
+ */
+function set_customizer_data($path, $data)
+{
+  global $__customizer_data__;
+  if( ! isset($__customizer_data__['session'])){
+    $__customizer_data__['session'] = session();
+  }
+  if( ! isset($__customizer_data__['current_user'])){
+    $__customizer_data__['current_user'] = auth()->user();
+  }
+  return data_set($__customizer_data__, $path, $data);
+}
+/**
+ * @param string $path
+ * @param mixed $data
+ * @return mixed
+ */
+function unset_customizer_data($path, $data)
+{
+  global $__customizer_data__;
+  if( ! isset($__customizer_data__['session'])){
+    $__customizer_data__['session'] = session();
+  }
+  if( ! isset($__customizer_data__['current_user'])){
+    $__customizer_data__['current_user'] = auth()->user();
+  }
+  if( strpos( $path,'context' ) !== 0 ){
+    return false;
+  }
+  return data_set($__customizer_data__, $path, null);
+}
+
+function property_to_php( $property_data ) : string{
+  $PHPContent = '';
+  if( empty($property_data) ){
+    return 'null';
+  }
+  $namespace = data_get($property_data,'namespace', 'session');
+  $path = data_get($property_data,'path');
+  $expression = data_get($property_data,'expression', 'null');
+  $method = data_get($property_data,'method');
+  $method_settings = data_get($property_data,'methodSettings', []);
+
+  switch($namespace){
+    case 'string':{
+      $PHPContent .='"'. $path .'"';
+    }break;
+    case 'expression':{
+      $PHPContent .= $expression ;
+    }break;
+    case 'number':{
+      $PHPContent .= $path ;
+    }break;
+    case 'env':{
+      $PHPContent = "get_customizer_data('env.$path')";
+    }break;
+    case 'session':
+    case 'context':
+    case 'this':
+    case 'current_user':{
+    if( ! $path ) {
+      $path = $namespace;
+    } else {
+      $path = $namespace . '.' . $path;
+    }
+    $PHPContent = "get_customizer_data('$path')";
+    if($method){
+      $PHPContent .=  method_to_php( $method, $method_settings);
+    }
+    }break;
+    default:
+      $PHPContent = "null";
+  }
+  return $PHPContent;
+}
+function change_property_to_php( $property_data, $value = 'null', $type= 'set' ) : string{
+  if( empty($property_data) ){
+    return 'null';
+  }
+  $namespace = data_get($property_data,'namespace', 'session');
+  $path = data_get($property_data,'path');
+
+  switch($namespace){
+    case 'context':{
+    if( ! $path ) {
+      $path = $namespace;
+    } else {
+      $path = $namespace . '.' . $path;
+    }
+    $PHPContent = "{$type}_customizer_data('$path', $value)";
+
+    }break;
+    default:
+      $PHPContent = "null";
+  }
+  return $PHPContent;
+}
+
+function method_to_php( $method, $method_settings = []){
+  if( ! $method ){
+    return '';
+  }
+  if( strpos( $method, '.') !== false ){
+    $method = explode('.', $method)[1];
+  }
+  $PHPContent = '->' . $method . '(';
+  $parameters = data_get( $method_settings, 'parameters', [] );
+  foreach ( $parameters as $key => $parameter ){
+    $PHPContent .= property_to_php( data_get($parameter, 'value', []));
+    if( $key < count( $parameters ) - 1){
+      $PHPContent .= ', ';
+    }
+  }
+
+  $PHPContent .= ')';
+  return $PHPContent;
+}
+
+function customizer_build_compare( $operator, $left_php_property = 'null', $right_php_property = 'null'){
+  if(! $operator || $operator == 'empty'){
+    return "empty($left_php_property)";
+  }
+  switch($operator){
+    case 'not_empty':{
+      return "! empty($left_php_property)";
+    }
+    case 'null':{
+      return "$left_php_property == null";
+    }
+    case 'not_null':{
+      return "$left_php_property != null";
+    }
+    case '==':{
+      return "$left_php_property == $right_php_property";
+    }
+    case '<>':{
+      return "$left_php_property != $right_php_property";
+    }
+    case '<':{
+      return "$left_php_property < $right_php_property";
+    }
+    case '>':{
+      return "$left_php_property > $right_php_property";
+    }
+    case '<=':{
+      return "$left_php_property <= $right_php_property";
+    }
+    case '>=':{
+      return "$left_php_property >= $right_php_property";
+    }
+    case 'in':{
+      return "array_search($left_php_property, $right_php_property) !== false";
+    }
+    case 'not_in':{
+      return "array_search($left_php_property, $right_php_property) === false";
+    }
+    case 'contain':{
+      return "strpos( $right_php_property, $left_php_property) !== false";
+    }
+    case 'not_contain':{
+      return "strpos( $right_php_property, $left_php_property) === false";
+    }
+    default: return 'null';
+  }
 }

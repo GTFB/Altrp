@@ -1,6 +1,7 @@
 const merge = require("webpack-merge");
 const common = require("./webpack.customizer.common.js");
 const path = require("path");
+const webpack = require("webpack");
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 
 module.exports =  {
@@ -59,5 +60,11 @@ module.exports =  {
     publicPath: "/modules/customizer/",
     filename: "customizer.js"
   },
-  plugins: [ new CleanWebpackPlugin()]
+  plugins: [
+
+    new webpack.DefinePlugin({
+      "process.env": "{}",
+      global: {}
+    }),
+    new CleanWebpackPlugin()]
 };

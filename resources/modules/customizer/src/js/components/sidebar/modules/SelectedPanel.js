@@ -1,7 +1,6 @@
 import * as React from "react";
 import Scrollbars from "react-custom-scrollbars";
 import Action from "./data/Action"
-import ConditionNode from "./data/ConditionNode"
 import CustomizerNode from "./data/CustomizerNode"
 import Bot from "./data/Bot"
 import StartNode from "./data/StartNode"
@@ -9,6 +8,9 @@ import Edge from "./data/Edge"
 import store from "../../../store/store"
 import { setUpdatedNode, setCustomizerSettingsData } from "../../../store/customizer-settings/actions"
 import Chevron from "../../../../../../editor/src/svgs/chevron.svg";
+import SwitchNode from "./data/SwitchNode";
+import ChangeNode from "./data/ChangeNode";
+import ReturnNode from "./data/ReturnNode";
 // import {setCurrentCustomizer} from "../../../store/current-customizer/actions"
 // import Resource from "../../../../../../editor/src/js/classes/Resource";
 // import AltrpSelect from "../../../../../../admin/src/components/altrp-select/AltrpSelect";
@@ -102,7 +104,19 @@ export default class SelectedPanel extends React.Component {
                                                                         customizer={ this.props.customizer }
                                                                         selectNode={this.props.selectNode || []}
                                                                       />}
-                      {(this.props.selectNode?.type === "condition") && <ConditionNode
+                      {(this.props.selectNode?.type === "switch") && <SwitchNode
+                                                                          activeSection={this.state.activeSection}
+                                                                          toggleChevron={this.toggleChevron}
+                                                                          customizer={ this.props.customizer }
+                                                                          selectNode={this.props.selectNode || []}
+                                                                        />}
+                      {(this.props.selectNode?.type === "return") && <ReturnNode
+                                                                          activeSection={this.state.activeSection}
+                                                                          toggleChevron={this.toggleChevron}
+                                                                          customizer={ this.props.customizer }
+                                                                          selectNode={this.props.selectNode || []}
+                                                                        />}
+                      {(this.props.selectNode?.type === "change") && <ChangeNode
                                                                           activeSection={this.state.activeSection}
                                                                           toggleChevron={this.toggleChevron}
                                                                           customizer={ this.props.customizer }

@@ -96,8 +96,8 @@ export default class Customizer extends Component {
           <AdminTable
             columns={[
               {
-                name: "name",
-                title: "Name",
+                name: "title",
+                title: "Title",
                 url: true,
                 target: "_blank"
               },
