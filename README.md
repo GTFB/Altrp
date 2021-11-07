@@ -4,6 +4,9 @@
 ## Changelog
 
 
+### 0.18.1
+* Fix Change Label in Node Issue
+
 ### 0.18.0
 + Customizer Module
 * Fix Condition Display with Default Hidden Widgets  

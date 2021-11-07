@@ -6,10 +6,8 @@ use App\Altrp\Customizer\Nodes\BaseNode;
 use App\Altrp\Customizer\Nodes\StartNode;
 use Carbon\Traits\Timestamp;
 use Illuminate\Database\Eloquent\Model;
-use App\Altrp\Model as AltrpModel;
+use App\Altrp\Source;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class Customizer
@@ -37,9 +35,27 @@ class Customizer extends Model
     'data' => 'array',
   ];
 
+  protected $appends = [
+    'source',
+  ];
+
   public function altrp_model()
   {
     return $this->hasOne( 'App\Altrp\Model', 'id', 'model_id' );
+  }
+
+  public function getSourceAttribute(){
+    if( ! $this->id ){
+      return null;
+    }
+    $source = Source::where([
+      'sourceable_id' => $this->id,
+      'sourceable_type' => 'App\Altrp\Customizer',
+    ])->first();
+    if( ! $source ){
+      return null;
+    }
+    return $source->toArray();
   }
 
   /**

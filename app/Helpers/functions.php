@@ -1642,7 +1642,7 @@ function property_to_php( $property_data ) : string{
   if( empty($property_data) ){
     return 'null';
   }
-  $namespace = data_get($property_data,'namespace', 'session');
+  $namespace = data_get($property_data,'namespace', 'context');
   $path = data_get($property_data,'path');
   $expression = data_get($property_data,'expression', 'null');
   $method = data_get($property_data,'method');
@@ -1684,7 +1684,7 @@ function change_property_to_php( $property_data, $value = 'null', $type= 'set' )
   if( empty($property_data) ){
     return 'null';
   }
-  $namespace = data_get($property_data,'namespace', 'session');
+  $namespace = data_get($property_data,'namespace', 'context');
   $path = data_get($property_data,'path');
 
   switch($namespace){

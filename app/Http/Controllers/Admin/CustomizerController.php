@@ -51,6 +51,10 @@ class CustomizerController extends Controller
     if ( ! $customizer ) {
       return response()->json( [ 'success' => false, 'message' => 'Customizer not found' ], 404, [], JSON_UNESCAPED_UNICODE );
     }
+    /**
+     * @var $customizer Customizer
+     */
+    $customizer->with('altrp_model');
     return response()->json( [ 'success' => true, 'data' => $customizer->toArray() ], 200, [], JSON_UNESCAPED_UNICODE );
   }
 

@@ -11,11 +11,13 @@ import Chevron from "../../../../../../editor/src/svgs/chevron.svg";
 import SwitchNode from "./data/SwitchNode";
 import ChangeNode from "./data/ChangeNode";
 import ReturnNode from "./data/ReturnNode";
+import {connect} from "react-redux";
+import mutate from "dot-prop-immutable";
 // import {setCurrentCustomizer} from "../../../store/current-customizer/actions"
 // import Resource from "../../../../../../editor/src/js/classes/Resource";
 // import AltrpSelect from "../../../../../../admin/src/components/altrp-select/AltrpSelect";
 
-export default class SelectedPanel extends React.Component {
+ class SelectedPanel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,6 +26,20 @@ export default class SelectedPanel extends React.Component {
     }
     this.toggleChevron = this.toggleChevron.bind(this);
   }
+
+   changeByPath = (e, path) => {
+     let node = this.getNode();
+     let value = _.isString(e?.target?.value) ? e.target.value : e;
+     node = mutate.set(node, `data.${path}`, value)
+     store.dispatch(setUpdatedNode(node));
+   }
+
+   getNode(){
+     let node =  this.props.customizerSettingsData?.find(n=>{
+       return this.props.selectNode?.id == n.id
+     });
+     return node;
+   }
 
   changeInput(e){
     const value = e.target.value;
@@ -58,7 +74,8 @@ export default class SelectedPanel extends React.Component {
   }
 
   render() {
-
+    const node =this.getNode();
+    const {label = ''} = node.data ;
     return (
       <div className="panel settings-panel d-flex">
         <div className="panel-tabs d-flex">
@@ -84,8 +101,8 @@ export default class SelectedPanel extends React.Component {
                           type="text"
                           // rows="3"
                           style={{lineHeight: '125%'}}
-                          onChange={(e) => { this.changeInput(e) }}
-                          value={ this.props.selectNode.data?.label }
+                          onChange={(e) => { this.changeByPath(e, 'label') }}
+                          value={ label }
                         />
                       </div>}
                       {this.props.selectEdge && <Edge
@@ -151,3 +168,8 @@ export default class SelectedPanel extends React.Component {
     );
   }
 }
+
+function mapStateToProps(state){
+  return {customizerSettingsData:state.customizerSettingsData}
+}
+export default connect(mapStateToProps)(SelectedPanel)

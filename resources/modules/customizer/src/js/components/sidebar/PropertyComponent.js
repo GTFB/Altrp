@@ -6,6 +6,7 @@ import {Select} from "@blueprintjs/select";
 import METHODS_OPTIONS from "../../const/METHODS_OPTIONS";
 import MethodEditComponent from "./MethodEditComponent";
 import altrpRandomId from "../../../../../front-app/src/js/helpers/functions/altrp-random-id";
+import SESSION_OPTIONS from "../../const/methods-options/SESSION_OPTIONS";
 
 class PropertyComponent extends Component {
   constructor(props) {
@@ -30,6 +31,10 @@ class PropertyComponent extends Component {
   onSelect = (e) => {
     if (this.props.changeByPath && this.props.path) {
       this.props.changeByPath(e, `${this.props.path}.namespace`)
+
+      this.props.changeByPath('', `${this.props.path}.method`)
+      const newParameters = [];
+      this.props.changeByPath(newParameters, `${this.props.path}.methodSettings.parameters`)
     } else if (this.props.onSelect) {
       this.props.onSelect(e)
     }
@@ -83,11 +88,17 @@ class PropertyComponent extends Component {
       }
     }
     let showMethod = false;
+    let methodOptions = METHODS_OPTIONS
     let {showMethodEdit} = this.state;
     if (namespace === 'context'
       || namespace === 'this'
+      || ! namespace
     ) {
       showMethod = true;
+    }
+    if(namespace === 'session' && ! path) {
+      showMethod = true;
+      methodOptions = SESSION_OPTIONS;
     }
     let buttonText = 'None'
     const currentMethod = METHODS_OPTIONS.find(o => o.value == method);
@@ -111,7 +122,7 @@ class PropertyComponent extends Component {
                   value={expression || ''}/>}
       </ControlGroup>
       {!withoutMethods && showMethod && <ControlGroup fill={true}>
-        <Select items={METHODS_OPTIONS}
+        <Select items={methodOptions}
                 onItemSelect={this.onItemSelect}
                 onQueryChange={this.onQueryChange}
           // matchTargetWidth={true}

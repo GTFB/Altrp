@@ -37,6 +37,10 @@ class Source extends Model
         'updated_at'
     ];
 
+    protected $appends = [
+      'web_url'
+    ];
+
     protected $with = ['notice_settings'];
 
     public function sourceable()

@@ -10,7 +10,7 @@ const COLLECTION_OPTIONS = [
     value: 'Collection.get',
     objectInstance: 'Collection',
     label: 'get',
-    returns: [ANY],
+    returns: ANY,
     parameters:[
       new Parameter({
         name: 'key',
