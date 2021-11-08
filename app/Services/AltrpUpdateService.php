@@ -4,6 +4,7 @@ namespace App\Services;
 
 
 use App\Altrp\Controller;
+use App\Altrp\Customizer;
 use App\Altrp\Generators\ControllerGenerator;
 use App\Altrp\Generators\Schedule\ScheduleFileWriter;
 use App\Altrp\Model;
@@ -324,6 +325,7 @@ class AltrpUpdateService
   {
     $this->updateAllModels();
     $this->updateAllRobotsSchedules();
+    $this->updateAllCustomizers();
     return true;
   }
 
@@ -333,6 +335,15 @@ class AltrpUpdateService
       if (! $models) return true;
       foreach ($models as $model) {
           $model->update(['last_upgrade' => Carbon::now()]);
+      }
+      return true;
+  }
+  protected function updateAllCustomizers()
+  {
+      $customizers = Customizer::all();
+      if (! $customizers) return true;
+      foreach ($customizers as $customizer) {
+        $customizer->touch();
       }
       return true;
   }

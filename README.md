@@ -4,6 +4,13 @@
 ## Changelog
 
 
+### 0.18.0
++ Customizer Module
+* Fix Condition Display with Default Hidden Widgets  
+
+### 0.17.15
+* Fix Hover Card Issue in Card Widget
+
 ### 0.17.14
 + Add Icon Widget
 + Fixed Position for Adminbar and "Hide Adminbar" Button

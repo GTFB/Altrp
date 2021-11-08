@@ -29,6 +29,7 @@ class CrudControllerCommand extends GeneratorCommand
                             {--custom-properties= : Custom props of the controller.}
                             {--custom-methods= : Custom methods of the controller.}
                             {--sql-editors= : Methods with sql queries in the controller.}
+                            {--customizers= : Methods created with customizers in the controller.}
                             {--options= : Resource data for select options.}';
 
     /**
@@ -112,6 +113,7 @@ class CrudControllerCommand extends GeneratorCommand
         $customProperties = $this->option('custom-properties') ?? '';
         $customMethods = $this->option('custom-methods') ?? '';
         $sqlEditors = $this->option('sql-editors') ?? '';
+        $customizers = $this->option('customizers') ?? '';
         $options = $this->option('options') ?? '';
 
         $storeRequest = $modelName . 'StoreRequest';
@@ -202,6 +204,7 @@ EOD;
             ->replaceCustomProperties($stub, $customProperties)
             ->replaceCustomMethods($stub, $customMethods)
             ->replaceSqlEditors($stub, $sqlEditors)
+            ->replaceCustomizers($stub, $customizers)
             ->replaceOptions($stub, $options)
             ->replacePaginationNumber($stub, $perPage)
             ->replaceFileSnippet($stub, $fileSnippet)
@@ -302,6 +305,19 @@ EOD;
     protected function replaceCustomMethods(&$stub, $customMethods)
     {
         $stub = str_replace('{{customMethods}}', $customMethods, $stub);
+        return $this;
+    }
+    /**
+     * Replace the customizers for the given stub.
+     *
+     * @param $stub
+     * @param $customizers
+     *
+     * @return $this
+     */
+    protected function replaceCustomizers(&$stub, $customizers)
+    {
+        $stub = str_replace('{{customizers}}', $customizers, $stub);
         return $this;
     }
 

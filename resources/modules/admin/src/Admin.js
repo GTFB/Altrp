@@ -92,6 +92,7 @@ import AreaEdit from "./components/areas/AreaEdit";
 import MenuPage from "./components/menu-builder/MenuPage";
 import MenusList from "./components/menu-builder/MenusList";
 import Marketplace from "./components/Marketplace";
+import Customizer from "./components/Customizer";
 
 window.React = React;
 window.ReactDOM = ReactDOM;
@@ -348,6 +349,12 @@ class Admin extends Component {
                         <span>Robots</span>
                       </Link>
                     </li>
+                    <li>
+                      <Link to="/admin/customizers" className="admin-nav-list__link">
+                        <TemplateSvg className="icon" />
+                        <span>Customizer</span>
+                      </Link>
+                    </li>
                     {/* <li>
                     <Link to="/admin/reports" className="admin-nav-list__link">
                       <ReportSvg className="icon" />
@@ -514,6 +521,9 @@ class Admin extends Component {
             </Route>
             <Route path="/admin/robots">
               <Robots />
+            </Route>
+            <Route path="/admin/customizers">
+              <Customizer />
             </Route>
             <Route path="/admin/pages" exact>
               <AllPages />

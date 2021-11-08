@@ -47,6 +47,10 @@ class DummyClass extends {{extendsModel}}
     {{relationships}}
     // RELATIONSHIPS
 
+    // CUSTOMIZERS_METHODS_BEGIN - IMPORTANT: Don't remove this comment! Write your methods between these comments.
+
+    // CUSTOMIZERS_METHODS_END - IMPORTANT: Don't remove this comment! Write your methods between these comments.
+
     // CUSTOM_METHODS_BEGIN - IMPORTANT: Don't remove this comment! Write your methods between these comments.
     {{customMethods}}
     // CUSTOM_METHODS_END - IMPORTANT: Don't remove this comment! Write your methods between these comments.
