@@ -112,6 +112,7 @@ class PropertyComponent extends Component {
       </ControlGroup>
       {!withoutMethods && showMethod && <ControlGroup fill={true}>
         <Select items={METHODS_OPTIONS}
+                matchTargetWidth
                 onItemSelect={this.onItemSelect}
                 onQueryChange={this.onQueryChange}
           // matchTargetWidth={true}
