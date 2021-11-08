@@ -179,6 +179,10 @@ function AltrpTableWithoutUpdate(
     checkbox_unchecked_icon: uncheckedIcon = {},
     checkbox_indeterminate_icon: indeterminateIcon = {} } = settings;
   const [cardTemplate, setCardTemplate] = React.useState(null);
+  console.log(data, inner_page_size);
+  const showPagination = React.useMemo(()=>{
+    return inner_page_size < data?.length
+  }, [data, inner_page_size]);
   /**
    * Для перетаскивания
    */
@@ -686,7 +690,7 @@ function AltrpTableWithoutUpdate(
           {(_status === 'loading' ? (loading_text || null) : null)}
         </div></div></div>}
     </TableComponent>
-    {paginationProps && <Pagination {...paginationProps} />}
+    {showPagination && paginationProps && <Pagination {...paginationProps} />}
   </React.Fragment>
 }
 

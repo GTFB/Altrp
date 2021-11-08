@@ -198,6 +198,10 @@ class AltrpPosts extends React.Component {
     if(! posts.length && ! isEditor()){
       return null;
     }
+
+    if(element.getResponsiveSetting('posts_per_page') >= posts?.length || element.getResponsiveSetting('posts_per_page') <= 0){
+      return null;
+    }
     let prev_text = element.getResponsiveSetting('prev_text', '', 'Previous Page')
     let next_text = element.getResponsiveSetting('next_text', '', 'Next Page')
     let posts_pagination_type = getResponsiveSetting(this.props.settings, 'posts_pagination_type') || '';
@@ -288,7 +292,7 @@ class AltrpPosts extends React.Component {
       posts = [];
     }
     let postsStart = 0;
-    if(posts_per_page && Number(posts_per_page)){
+    if(posts_per_page && Number(posts_per_page) && posts_per_page > 0){
       if(currentPage > 1){
         postsStart = (currentPage - 1) * posts_per_page
       }

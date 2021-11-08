@@ -392,6 +392,12 @@ class ElementWrapper extends Component {
     if(! _.isEmpty(element.getResponsiveSetting('wrapper_click_actions'))){
       wrapperProps["data-altrp-wrapper-click-actions"] = element.getIdForAction();
     }
+    if(! _.isEmpty(element.getResponsiveSetting('wrapper_appearB_actions'))){
+      wrapperProps["data-altrp-wrapper-appear-bottom-actions"] = element.getIdForAction();
+    }
+    if(! _.isEmpty(element.getResponsiveSetting('wrapper_appearT_actions'))){
+      wrapperProps["data-altrp-wrapper-appear-top-actions"] = element.getIdForAction();
+    }
     if(! _.isEmpty(element.getResponsiveSetting('sticky'))){
       wrapperProps["data-altrp-sticky"] = element.getResponsiveSetting('sticky');
       wrapperProps["data-altrp-sticky-spacing"] = element.getResponsiveSetting('st_spacing');

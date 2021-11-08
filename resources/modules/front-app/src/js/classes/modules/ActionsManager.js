@@ -50,6 +50,10 @@ class ActionsManager extends AltrpModel{
     if(isEditor()){
       return
     }
+    if(this.getProperty(`widget.statuses.${widgetId}.${eventName}`) === 'inAction'){
+      return
+    }
+    this.setProperty(`widget.statuses.${widgetId}.${eventName}`, 'inAction')
     preventedActions = preventedActions || [];
     let actions = preventedActions;
     const errors = [];
@@ -73,6 +77,7 @@ class ActionsManager extends AltrpModel{
         console.error(error);
       }
     }
+    this.setProperty(`widget.statuses.${widgetId}.${eventName}`, 'noAction')
     if (errors.length){
       return {
         success: false,

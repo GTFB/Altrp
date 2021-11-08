@@ -25,7 +25,7 @@ class RootComponent extends Component {
     //     .map(item => item.trim());
     //   this.props.setDefaultTriggers(hiddenElementsTriggers);
     // }
-    if(! isEditor()){
+    if(! isEditor() && this.props.element.getResponsiveSetting("page_load_actions", [])?.length){
       const actionsManager = (
         await import(
           /* webpackChunkName: 'ActionsManager' */"../../../../front-app/src/js/classes/modules/ActionsManager.js"

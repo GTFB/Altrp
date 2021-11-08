@@ -1106,4 +1106,7 @@ export function advancedTabControllers(element) {
 
   actionsControllers(element, 'Wrapper Click Actions', 'wrapper_click_', TAB_ADVANCED);
 
+  actionsControllers(element, 'Appearance of Top of Element Actions', 'wrapper_appearT_', TAB_ADVANCED);
+  actionsControllers(element, 'Appearance of Bottom of Element Actions', 'wrapper_appearB_', TAB_ADVANCED);
+
 }
