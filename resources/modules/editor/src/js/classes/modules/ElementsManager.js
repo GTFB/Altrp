@@ -51,7 +51,6 @@ import AccordionWidget from "../../components/widgets/AccordionWidget";
 import CarouselWidget from "../../components/widgets/CarouselWidget";
 import MapWidget from "../../components/widgets/MapWidget";
 import MapConstructorWidget from "../../components/widgets/MapConstructorWidget";
-import DiagramWidget from "../../components/widgets/DiagramWidget";
 import DashboardsWidget from "../../components/widgets/DashboardsWidget";
 import GalleryWidget from "../../components/widgets/GalleryWidget";
 import Carousel from "../elements/Carousel";
@@ -66,7 +65,6 @@ import Posts from "../elements/Posts";
 import Map from "../elements/Map";
 import Menu from "../elements/Menu";
 import MapConstructor from "../elements/MapConstructor";
-import Diagram from "../elements/Diagram";
 import Dashboards from "../elements/Dashboards";
 import PostsWidget from "../../components/widgets/PostsWidget";
 import Gallery from "../elements/Gallery";
@@ -100,6 +98,15 @@ import Scheduler from "../elements/Scheduler";
 import SchedulerWidget from "../../components/widgets/SchedulerWidget";
 import Icon from '../elements/Icon';
 import IconWidget from "../../components/widgets/IconWidget";
+
+import PieDiagram from "../elements/diagrams/PieDiagram";
+import PieDiagramWidget from "../../components/widgets/diagrams/PieDiagramWidget";
+import BarDiagram from "../elements/diagrams/BarDiagram";
+import BarDiagramWidget from "../../components/widgets/diagrams/BarDiagramWidget";
+import LineDiagram from "../elements/diagrams/LineDiagram";
+import LineDiagramWidget from "../../components/widgets/diagrams/LineDiagramWidget";
+import PointDiagram from "../elements/diagrams/PointDiagram";
+import PointDiagramWidget from "../../components/widgets/diagrams/PointDiagramWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -143,7 +150,12 @@ export default class ElementsManger {
     this.elements[Map.getName()] = Map;
     this.elements[MapConstructor.getName()] = MapConstructor;
     this.elements[Menu.getName()] = Menu;
-    this.elements[Diagram.getName()] = Diagram;
+
+    this.elements[PieDiagram.getName()] = PieDiagram;
+    this.elements[BarDiagram.getName()] = BarDiagram;
+    this.elements[LineDiagram.getName()] = LineDiagram;
+    this.elements[PointDiagram.getName()] = PointDiagram;    
+
     this.elements[Dashboards.getName()] = Dashboards;
     this.elements[Carousel.getName()] = Carousel;
     this.elements[Tour.getName()] = Tour;
@@ -198,7 +210,12 @@ export default class ElementsManger {
     this.components[Map.getName()] = MapWidget;
     this.components[MapConstructor.getName()] = MapConstructorWidget;
     this.components[Menu.getName()] = MenuWidget;
-    this.components[Diagram.getName()] = DiagramWidget;
+
+    this.components[PieDiagram.getName()] = PieDiagramWidget;
+    this.components[BarDiagram.getName()] = BarDiagramWidget;
+    this.components[LineDiagram.getName()] = LineDiagramWidget;
+    this.components[PointDiagram.getName()] = PointDiagramWidget;
+
     this.components[Dashboards.getName()] = DashboardsWidget;
     this.components[Tour.getName()] = TourGuide;
     this.components[Template.getName()] = TemplateWidget;

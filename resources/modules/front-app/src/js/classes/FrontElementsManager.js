@@ -308,10 +308,34 @@ class FrontElementsManager {
         }
       },
       {
-        name: "diagram",
+        name: "pie-diagram",
         import: async () => {
           return await import(
-            /* webpackChunkName: 'DiagramWidget' */ "../../../../editor/src/js/components/widgets/DiagramWidget"
+            /* webpackChunkName: 'PieDiagramWidget' */ "../../../../editor/src/js/components/widgets/diagrams/PieDiagramWidget"
+          );
+        }
+      },
+      {
+        name: "bar-diagram",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'BarDiagramWidget' */ "../../../../editor/src/js/components/widgets/diagrams/BarDiagramWidget"
+          );
+        }
+      },
+      {
+        name: "point-diagram",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'PointDiagramWidget' */ "../../../../editor/src/js/components/widgets/diagrams/PointDiagramWidget"
+          );
+        }
+      },
+      {
+        name: "line-diagram",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'LineDiagramWidget' */ "../../../../editor/src/js/components/widgets/diagrams/LineDiagramWidget"
           );
         }
       },

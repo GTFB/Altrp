@@ -79,9 +79,6 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
     case "image-lightbox":
       styles += ImageLightboxComponent(settings, elementId);
       break;
-    case "diagram":
-      styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`;
-      break;
     case "tabs-switcher":
       styles += `.${prefix}${elementId} {${TabsSwitcherComponent(settings)}}`;
       break;

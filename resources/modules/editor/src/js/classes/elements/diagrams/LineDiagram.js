@@ -1,7 +1,7 @@
-import Schemes from "../../components/altrp-dashboards/settings/NivoColorSchemes.js";
-import BaseElement from "./BaseElement";
-import PieIcon from "../../../svgs/skill-bar.svg";
-import { advancedTabControllers } from "../../decorators/register-controllers";
+import Schemes from "../../../components/altrp-dashboards/settings/NivoColorSchemes.js";
+import BaseElement from ".././BaseElement";
+import PieIcon from "../../../../svgs/skill-bar.svg";
+import { advancedTabControllers } from "../../../decorators/register-controllers";
 import {
   CONTROLLER_DIMENSIONS,
   CONTROLLER_SELECT,
@@ -18,7 +18,7 @@ import {
   CONTROLLER_DATE,
   CONTROLLER_SHADOW,
   CONTROLLER_TYPOGRAPHIC
-} from "../modules/ControllersManager";
+} from "../../modules/ControllersManager";
 
 import {
   TABLE,
@@ -27,15 +27,15 @@ import {
   BAR,
   PIE,
   widgetTypes
-} from "../../../../../admin/src/components/dashboard/widgetTypes";
-import Repeater from "../Repeater";
+} from "../../../../../../admin/src/components/dashboard/widgetTypes";
+import Repeater from "../../Repeater";
 
-class Diagram extends BaseElement {
+class LineDiagram extends BaseElement {
   static getName() {
-    return "diagram";
+    return "line-diagram";
   }
   static getTitle() {
-    return "Diagram";
+    return "Line Diagram";
   }
   static getIconComponent() {
     return PieIcon;
@@ -112,30 +112,7 @@ class Diagram extends BaseElement {
       label: "Use custom tooltip?",
       default: false
     });
-
-    let repeaterTooltip = new Repeater();
-
-    repeaterTooltip.addControl("value", {
-      label: "value",
-      dynamic: false
-    });
-
-    repeaterTooltip.addControl("label", {
-      label: "label",
-      dynamic: false
-    });
-    repeaterTooltip.addControl("color", {
-      label: "color",
-      type: CONTROLLER_COLOR,
-      dynamic: false
-    });
-
-    this.addControl("repTooltips", {
-      type: CONTROLLER_REPEATER,
-      default: [],
-      fields: repeaterTooltip.getControls()
-    });
-
+    
     this.endControlSection();
 
     this.startControlSection("main", {
@@ -153,12 +130,7 @@ class Diagram extends BaseElement {
 
     this.startControlSection("multiple_data", {
       dynamic: false,
-      label: "Multiple data",
-      conditions: {
-        type: {
-          LINE
-        }
-      }
+      label: "Multiple data"
     });
     let repeater = new Repeater();
     repeater.addControl("title", {
@@ -265,165 +237,6 @@ class Diagram extends BaseElement {
       step: 1
     });
 
-    this.addControl("innerRadius", {
-      type: CONTROLLER_RANGE,
-      label: "Внутренний радиус",
-      default: 0,
-      min: 0,
-      max: 0.95,
-      step: 0.05,
-      conditions: {
-        type: PIE
-      }
-    });
-
-    this.addControl("padAngle", {
-      type: CONTROLLER_RANGE,
-      label: "Угол между секторами",
-      default: 0,
-      min: 0,
-      max: 45,
-      step: 1,
-      conditions: {
-        type: PIE
-      }
-    });
-
-    this.addControl("cornerRadius", {
-      type: CONTROLLER_RANGE,
-      label: "Скругление углов",
-      default: 0,
-      min: 0,
-      max: 45,
-      step: 1,
-      conditions: {
-        type: PIE
-      }
-    });
-
-    this.addControl("enableRadialLabels", {
-      type: CONTROLLER_SWITCHER,
-      label: "Внешние подписи к секторам",
-      default: false,
-      conditions: {
-        type: PIE
-      }
-    });
-
-    this.addControl("sortByValue", {
-      type: CONTROLLER_SWITCHER,
-      label: "Сортировка по значению",
-      default: false,
-      conditions: {
-        type: PIE
-      }
-    });
-
-    this.addControl("enableSliceLabels", {
-      type: CONTROLLER_SWITCHER,
-      label: "Отобразить данные на секторах",
-      default: false,
-      conditions: {
-        type: PIE
-      }
-    });
-
-    this.addControl("layout", {
-      type: CONTROLLER_SELECT,
-      label: "Вид графика",
-      default: "vertical",
-      options: [
-        {
-          id: 0,
-          value: "vertical",
-          label: "Вертикальный"
-        },
-        {
-          id: 1,
-          value: "horizontal",
-          label: "Горизонтальный"
-        }
-      ],
-      conditions: {
-        type: BAR
-      }
-    });
-
-    this.addControl("groupMode", {
-      type: CONTROLLER_SELECT,
-      label: "Группировка",
-      default: "stacked",
-      options: [
-        {
-          id: 0,
-          value: "stacked",
-          label: "Сложенный"
-        },
-        {
-          id: 1,
-          value: "grouped",
-          label: "Группированный"
-        }
-      ],
-      conditions: {
-        type: BAR
-      }
-    });
-
-    this.addControl("enableLabel", {
-      type: CONTROLLER_SWITCHER,
-      label: "Отобразить данные на секторах",
-      default: false,
-      conditions: {
-        type: BAR
-      }
-    });
-
-    this.addControl("reverse", {
-      type: CONTROLLER_SWITCHER,
-      label: "Отразить",
-      default: false,
-      conditions: {
-        type: BAR
-      }
-    });
-
-    this.addControl("padding", {
-      type: CONTROLLER_RANGE,
-      label: "Отступы",
-      default: 0,
-      min: 0,
-      max: 0.95,
-      step: 0.05,
-      conditions: {
-        type: BAR
-      }
-    });
-
-    this.addControl("borderRadius", {
-      type: CONTROLLER_RANGE,
-      label: "Скругление рамки",
-      default: 0,
-      min: 0,
-      max: 36,
-      step: 1,
-      conditions: {
-        type: BAR
-      }
-    });
-
-    this.addControl("borderWidth", {
-      type: CONTROLLER_RANGE,
-      label: "Ширина рамки",
-      default: 0,
-      min: 0,
-      max: 20,
-      step: 1,
-      conditions: {
-        type: BAR
-      }
-    });
-
     this.addControl("xScaleType", {
       type: CONTROLLER_SELECT,
       label: "Тип оси X",
@@ -444,10 +257,7 @@ class Diagram extends BaseElement {
           label: "Временной",
           value: "time"
         }
-      ],
-      conditions: {
-        type: { LINE, POINT }
-      }
+      ]
     });
 
     this.addControl("precision", {
@@ -458,11 +268,7 @@ class Diagram extends BaseElement {
         { id: 0, label: "День", value: "day" },
         { id: 1, label: "Месяц", value: "month" },
         { id: 2, label: "Год", value: "year" }
-      ],
-      conditions: {
-        xScaleType: "time",
-        type: { LINE, POINT }
-      }
+      ]
     });
 
     this.addControl("curve", {
@@ -480,54 +286,35 @@ class Diagram extends BaseElement {
         { id: 7, value: "step", label: "step" },
         { id: 8, value: "stepAfter", label: "stepAfter" },
         { id: 9, value: "stepBefore", label: "stepBefore" }
-      ],
-      conditions: {
-        type: LINE
-      }
+      ]
     });
+
     this.addControl("lineWidth", {
       type: CONTROLLER_NUMBER,
       label: "Ширина линии",
-      default: 2,
-      conditions: {
-        type: LINE
-      }
+      default: 2
     });
 
     this.addControl("enableArea", {
       type: CONTROLLER_SWITCHER,
       label: "Отобразить области?",
-      default: false,
-      conditions: {
-        type: LINE
-      }
+      default: false
     });
 
     this.addControl("enablePoints", {
       type: CONTROLLER_SWITCHER,
       label: "Отобразить точки?",
-      default: true,
-      conditions: {
-        type: LINE
-      }
+      default: true
     });
 
     this.addControl("pointSize", {
       type: CONTROLLER_NUMBER,
       label: "Размер точки",
-      default: 6,
-      conditions: {
-        enablePoints: true,
-        type: { POINT, LINE }
-      }
+      default: 6
     });
     this.addControl("pointColor", {
       type: CONTROLLER_COLOR,
-      label: "Цвет точки",
-      conditions: {
-        enablePoints: true,
-        type: LINE
-      }
+      label: "Цвет точки"
     });
     this.endControlSection();
 
@@ -658,17 +445,13 @@ class Diagram extends BaseElement {
     this.addControl("border_color_tooltip", {
       type: CONTROLLER_COLOR,
       label: "Border Color",
-      // default: {
-      //   color: "rgb(50,168,82)",
-      //   colorPickedHex: "#32a852",
-      // },
     });
 
     this.endControlSection();
 
     this.startControlSection("axisConstants", {
       tab: TAB_STYLE,
-      label: "Axis constatns (ONLY LINE AND SCATTER CHART!)"
+      label: "Axis constatns"
     });
     let repeaterY = new Repeater();
 
@@ -812,8 +595,8 @@ class Diagram extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "width",
       default: {
-        size: 400,
-        unit: "px"
+        size: 100,
+        unit: "%"
       },
       units: ["px", "%", "vh"],
       max: 1000,
@@ -824,7 +607,7 @@ class Diagram extends BaseElement {
       type: CONTROLLER_SLIDER,
       label: "height",
       default: {
-        size: 400,
+        size: 420,
         unit: "px"
       },
       units: ["px", "%", "vh"],
@@ -836,10 +619,10 @@ class Diagram extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
       default: {
-        top: 10,
-        right: 10,
-        bottom: 10,
-        left: 10,
+        top: 30,
+        right: 30,
+        bottom: 30,
+        left: 30,
         unit: "px",
         bind: true
       },
@@ -849,4 +632,4 @@ class Diagram extends BaseElement {
     advancedTabControllers(this);
   }
 }
-export default Diagram;
+export default LineDiagram;

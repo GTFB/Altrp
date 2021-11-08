@@ -28,10 +28,8 @@ const DynamicPieChart = ({
   tickRotation = 0,
   bottomAxis = true,
   keyIsDate = false,
-  isDashboard = false,
   customColorSchemeChecker = false,
   customColors = [],
-  yScaleMax,
   widgetID,
   useCustomTooltips,
   margin
@@ -89,18 +87,12 @@ const DynamicPieChart = ({
   if (isLoading) return <Spinner />;
 
   if (!data || data.length === 0) return <EmptyWidget />;
+
   return (
     <>
       <div style={{ height: height, width: width }}>
         <ResponsivePie
           data={data}
-          colors={{ scheme: colorScheme }}
-          margin={{
-            top: margin?.top || 30,
-            right: margin?.right || 30,
-            bottom: margin?.bottom || 30,
-            left: margin?.left || 30
-          }}
           colors={
             customColorSchemeChecker && customColors.length > 0
               ? customColors
@@ -116,6 +108,7 @@ const DynamicPieChart = ({
             <TooltipPie
               enable={useCustomTooltips}
               datum={datum}
+              data={data}
               widgetID={widgetID}
             ></TooltipPie>
           )}
@@ -129,15 +122,7 @@ const DynamicPieChart = ({
               tickRotation: tickRotation
             }
           }
-          colors={
-            colorScheme === "regagro"
-              ? regagroScheme
-              : colorScheme === "milk"
-              ? milkScheme
-              : colorScheme === "milk2"
-              ? milkScheme2
-              : { scheme: colorScheme }
-          }
+          margin={margin}
           enableRadialLabels={enableRadialLabels}
           // legends={
           //   !isDashboard

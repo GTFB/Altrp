@@ -64,7 +64,16 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         case "image-lightbox":
           styles+=ImageLightboxComponent(item.settings,id);
           break;
-        case "diagram":
+        case "pie-diagram":
+          styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
+          break;
+        case "line-diagram":
+          styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
+          break;
+        case "bar-diagram":
+          styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
+          break;
+        case "point-diagram":
           styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
           break;
         case "tabs-switcher":
