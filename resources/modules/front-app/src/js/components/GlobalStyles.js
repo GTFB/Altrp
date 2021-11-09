@@ -50,6 +50,9 @@ import getInputMultiSelectStyles, {getInputMultiSelectPopoverStyles} from "./hel
 import getSchedulerStyles from "./helpers/getSchedulerStyles";
 import getInputTextAutocompleteStyles from "./helpers/getInputTextAutocompleteStyles";
 import TreeComponent from "../../../../editor/src/js/components/widgets/styled-components/TreeComponent";
+import InputDateRange from "../../../../editor/src/js/classes/elements/InputDateRange";
+import InputDateRangeComponent
+  from "../../../../editor/src/js/components/widgets/styled-components/InputDateRangeComponent";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -161,6 +164,12 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           )}`;
         }
           break
+        case "input-date-range": {
+          styles += `.${prefix}${id} {${InputDateRangeComponent(
+            item.settings,
+          )}}`;
+        }
+        break
         case "input-checkbox": {
           styles += `.${prefix}${id} {${InputCheckboxComponent(
             item.settings,
@@ -192,6 +201,7 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles += `.${prefix}${id} {${getInputSelectStyles(item.settings, id)}}`
           styles += `${getInputSelectPopoverStyles(item.settings, id)}`
         }
+          break;
         case "input-select-tree": {
           styles += `.${prefix}${id} {${getInputSelectStyles(item.settings, id)}}`
           styles += `${getInputSelectPopoverStyles(item.settings, id)}`

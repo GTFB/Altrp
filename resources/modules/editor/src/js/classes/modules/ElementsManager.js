@@ -106,6 +106,8 @@ import Tree from "../elements/Tree";
 import TreeWidget from "../../components/widgets/TreeWidget";
 import InputSelectTree from "../elements/InputSelectTree";
 import InputSelectTreeWidget from "../../components/widgets/InputSelectTreeWidget";
+import InputDateRange from "../elements/InputDateRange";
+import InputDateRangeWidget from "../../components/widgets/InputDateRangeWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -141,6 +143,7 @@ export default class ElementsManger {
     this.elements[InputImageSelect.getName()] = InputImageSelect;
     this.elements[InputAccept.getName()] = InputAccept;
     this.elements[InputDate.getName()] = InputDate;
+    this.elements[InputDateRange.getName()] = InputDateRange;
     this.elements[InputHidden.getName()] = InputHidden;
     this.elements[InputFile.getName()] = InputFile;
     this.elements[Table.getName()] = Table;
@@ -165,7 +168,7 @@ export default class ElementsManger {
     this.elements[Scheduler.getName()] = Scheduler;
     this.elements[Tree.getName()] = Tree;
     this.elements[Icon.getName()] = Icon;
-    this.elements[InputSelectTree.getName()] = InputSelectTree
+    this.elements[InputSelectTree.getName()] = InputSelectTree;
 
     // Websocket Notifications
     // this.elements[Notifications.getName()] = Notifications;
@@ -193,6 +196,7 @@ export default class ElementsManger {
     this.components[InputImageSelect.getName()] = InputImageSelectWidget;
     this.components[InputAccept.getName()] = InputAcceptWidget;
     this.components[InputDate.getName()] = InputDateWidget;
+    this.components[InputDateRange.getName()] = InputDateRangeWidget;
     this.components[InputHidden.getName()] = InputHiddenWidget;
     this.components[InputFile.getName()] = InputFileWidget;
     this.components[InputGallery.getName()] = InputGalleryWidget;

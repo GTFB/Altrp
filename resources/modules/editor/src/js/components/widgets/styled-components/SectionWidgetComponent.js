@@ -667,6 +667,5 @@ export default function SectionWidgetComponent(settings, childrenLength) {
   & > div.altrp-section-full-fill:hover {
     ${altrpSectionFullHover(settings)}
   }
-
 `
 }

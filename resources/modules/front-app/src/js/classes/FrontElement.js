@@ -258,6 +258,7 @@ class FrontElement {
       case 'input-gallery':
       case 'input-accept':
       case 'input-date':
+      case 'input-date-range':
       case 'input-textarea':
       case 'input-password':
       case 'input-email':

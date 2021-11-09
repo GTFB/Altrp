@@ -21,7 +21,7 @@ const INPUT_WIDGETS = [
   'input-tel',
   'input-number',
   'input-email',
-  'input-date',
+  'input-date-range',
   'input-hidden',
 ];
 export default INPUT_WIDGETS;

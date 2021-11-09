@@ -20,6 +20,7 @@ const DEFAULT_REACT_ELEMENTS = [
   'input-tel',
   'input-email',
   'input-date',
+  'input-date-range',
   'input-hidden',
   'input-file',
   'input-gallery',

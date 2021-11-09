@@ -70,6 +70,8 @@ import getInputTextAutocompleteStyles
   from "../../../../front-app/src/js/components/helpers/getInputTextAutocompleteStyles";
 import TreeComponent from "./widgets/styled-components/TreeComponent";
 import getInputSelectTreeStyles from "../../../../front-app/src/js/components/helpers/getInputSelectTreeStyles";
+import InputDateRange from "../classes/elements/InputDateRange";
+import InputDateRangeComponent from "./widgets/styled-components/InputDateRangeComponent";
 
 const { connect } = window.reactRedux;
 const { replaceContentWithData } = window.altrpHelpers;
@@ -183,6 +185,10 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
         styles += InputDateComponent(settings, elementId, prefix);
 
         styles += `${DatePickerComponent(settings, elementId)}`;
+      }
+      break
+    case "input-date-range": {
+      styles += `.${prefix}${elementId} {${InputDateRangeComponent(settings)}}`
       }
       break;
     case "input-checkbox":

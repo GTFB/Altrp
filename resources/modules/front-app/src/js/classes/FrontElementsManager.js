@@ -172,6 +172,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-date-range",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputDateRange' */ "../../../../editor/src/js/components/widgets/InputDateRangeWidget"
+            );
+        }
+      },
+      {
         name: "input-hidden",
         import: async () => {
           return await import(

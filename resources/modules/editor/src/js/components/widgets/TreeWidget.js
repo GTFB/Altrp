@@ -32,13 +32,15 @@ export const normalizeValues = function(branch, select=false) {
   }
 }
 
-export const getFromDatasource = function(settings, settingNames=['tree_from_datasource', "tree_substitute_datasource"], defaultOptions=false) {
+export const getFromDatasource = function (settings, settingNames=['tree_from_datasource', "tree_substitute_datasource"], defaultOptions=false) {
   settings.path = this.props.element.getSettings(settingNames[0], '');
   settings.path = settings.path.replace(/}}/g, '').replace(/{{/g, '');
   settings.data = getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData());
   settings.dataSettings = parseOptionsFromSettings(this.props.element.getSettings(settingNames[1]))
+  settings.sortDefault = this.props.element.getSettings("sort_default");
+  settings.sortOption = this.props.element.getSettings("options_sorting");
 
-  const repeater = [];
+  let repeater = [];
 
   const keys = {
     label: "",
@@ -59,7 +61,7 @@ export const getFromDatasource = function(settings, settingNames=['tree_from_dat
     }
   })
 
-  if(allKeys) {
+  if(allKeys && settings.data) {
     settings.data.forEach((d) => {
       repeater.push({
         label: d[keys.label],
@@ -71,19 +73,20 @@ export const getFromDatasource = function(settings, settingNames=['tree_from_dat
     })
   }
 
-
   if(!defaultOptions) {
-    return this.updateRepeater(repeater)
+    return this.updateRepeater(repeater, {
+      sort: [settings.sortDefault, settings.sortOption]
+    })
   } else {
     return settings.data.map(branch => this.normalizeValues(branch))
   }
 }
 
-export const updateRepeater = function (repeaterSetting) {
+export const updateRepeater = function (repeaterSetting, other={}) {
   const repeater = [];
 
   repeaterSetting.forEach((branch, idx) => {
-    const children = [];
+    let children = [];
     const branchSettings = this.normalizeValues(branch)
 
     if(branchSettings.treeId !== -1) {
@@ -101,6 +104,13 @@ export const updateRepeater = function (repeaterSetting) {
       })
     }
 
+    if (!other.sort[0]) {
+      children = _.sortBy(children, o => o && (o.label ? o.label.toString() : o));
+      if(other.sort[1] === 'desc'){
+        children = _.reverse(children)
+      }
+    }
+
     repeater.push({
       id: idx,
       ...branchSettings,
@@ -109,7 +119,7 @@ export const updateRepeater = function (repeaterSetting) {
     })
   })
 
-  const newRepeater = [];
+  let newRepeater = [];
 
   repeater.forEach((branch) => {
     newRepeater.push({
@@ -117,6 +127,14 @@ export const updateRepeater = function (repeaterSetting) {
       childNodes: this.childrenInChildren(branch.childNodes, repeater)
     })
   })
+
+
+  if (!other.sort[0]) {
+    newRepeater = _.sortBy(newRepeater, o => o && (o.label ? o.label.toString() : o));
+    if(other.sort[1] === 'desc'){
+      newRepeater = _.reverse(newRepeater)
+    }
+  }
 
   return newRepeater.filter((branch) => branch.parentId === -1);
 }

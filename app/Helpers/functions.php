@@ -1010,6 +1010,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
   $DEFAULT_REACT_ELEMENTS = [
     'input',
     'input-select',
+    'input-date-range',
     'input-select-tree',
     'input-multi-select',
     'input-select2',

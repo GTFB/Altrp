@@ -26,6 +26,7 @@ const WIDGETS_DEPENDS = {
   'input-text-autocomplete': ['blueprint'],
   'input-wysiwyg': ['ckeditor'],
   'input-date': ['blueprint', 'blueprint-datetime', 'moment'],
+  'input-date-range': ['blueprint', 'blueprint-datetime', 'moment'],
   'input-slider': ['blueprint'],
   'input-range-slider': ['blueprint'],
   'tree': ['blueprint'],

@@ -20,6 +20,7 @@ const SKELETON_ELEMENTS = [
   'input-tel',
   'input-email',
   'input-date',
+  'input-date-range',
   'input-file',
   'input-gallery',
   'breadcrumbs',
