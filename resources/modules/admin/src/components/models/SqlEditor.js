@@ -231,7 +231,8 @@ class SqlEditor extends Component {
             </div>
             <div className="form-group col-12">
               <input type="checkbox" id="field-is_object"
-                     checked={this.state.value.is_object} value={this.state.value.is_object}
+                     checked={this.state.value.is_object}
+                     value={this.state.value.is_object}
                      onChange={e => { this.changeValue(e.target.checked, 'is_object') }}
               />
               <label className="checkbox-label" htmlFor="field-is_object">As Object</label>
@@ -315,8 +316,11 @@ class SqlEditor extends Component {
                 name="aceEditorResponse"
                 height="15em"
                 wrapEnabled={true}
-                value={this.state.testResponse || ''}
+                // value={this.state.testResponse || ''}
                 showPrintMargin={false}
+                setOptions={{
+                  value: this.state.testResponsel || ''
+                }}
                 style={{
                   width: '100%'
                 }}

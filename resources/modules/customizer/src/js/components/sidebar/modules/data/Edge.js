@@ -21,11 +21,9 @@ export default class Edge extends Component{
 
     toggle() {
         const node = this.props.selectEdge;
-        console.log(node.animated);
 
         if(node.animated === undefined) node.animated = false;
         node.animated = !node.animated;
-        console.log(node.animated);
         store.dispatch(setUpdatedNode(node));
 
         // вызов принудительного рендера flow
@@ -37,7 +35,6 @@ export default class Edge extends Component{
     changeInput(e){
         const value = e.target.value;
         const node = this.props.selectEdge;
-        console.log(node.data);
         if(!node.data) node.data = {};
         node.label = value;
         store.dispatch(setUpdatedNode(node));

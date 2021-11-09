@@ -38,6 +38,9 @@ import mutate from "dot-prop-immutable";
      let node =  this.props.customizerSettingsData?.find(n=>{
        return this.props.selectNode?.id == n.id
      });
+     if( ! node && this.props.selectEdge){
+       node= this.props.selectEdge
+     }
      return node;
    }
 
@@ -50,7 +53,6 @@ import mutate from "dot-prop-immutable";
     }
     if(this.props.selectEdge) {
       node = this.props.selectEdge;
-      console.log(node.data);
       if(!node.data) node.data = {};
       node.data.text = value;
     }
@@ -75,7 +77,7 @@ import mutate from "dot-prop-immutable";
 
   render() {
     const node =this.getNode();
-    const {label = ''} = node.data ;
+    const {label = ''} = node?.data || {};
     return (
       <div className="panel settings-panel d-flex">
         <div className="panel-tabs d-flex">
