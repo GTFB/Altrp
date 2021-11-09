@@ -1,4 +1,4 @@
-const AltrpDiagram = React.lazy(() => import(/* webpackChunkName: 'AltrpDiagram' */"../../altrp-diagram/AltrpDiagram"));
+const AltrpDiagram = React.lazy(() => import(/* webpackChunkName: 'AltrpDiagram' */"../../altrp-diagram/AltrpPointDiagram"));
 class DiagramWidget extends Component {
   constructor(props) {
     super(props);
