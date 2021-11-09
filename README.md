@@ -7,7 +7,7 @@
 ### 0.18.1
 * Fix Change Label in Node Issue
 * Hide Pagination when Page Size Greater then Items 
-* Fix REgEXp Bug in Sliders Widgets on iOs
+* Fix Regexp Bug in Sliders Widgets on iOs
 + Appearance of Top of Element Actions
 + Appearance of Bottom of Element Actions
 
