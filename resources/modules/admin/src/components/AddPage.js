@@ -34,13 +34,6 @@ const columns = [
   },
 ];
 
-const rolesOptions = [
-  {
-    value: "guest",
-    label: "Guest"
-  }
-]
-
 /**
  * @class
  * @property {Resource} resource
@@ -57,6 +50,7 @@ class AddPage extends Component {
         path: "",
         redirect: "",
         roles: [],
+        rolesOptions: [{value: "guest", label: "Guest"}],
         title: "",
       },
       redirectAfterSave: false,
@@ -131,6 +125,7 @@ class AddPage extends Component {
             path: pageData.path,
             redirect: pageData.redirect,
             roles: pageData.roles,
+            rolesOptions: [{value: "guest", label: "Guest"}, ...pageData.roles],
             title: pageData.title,
             id
           }
@@ -480,7 +475,7 @@ class AddPage extends Component {
                           <label htmlFor="page-roles" className="font__edit">Roles</label>
 
                           <MultiSelect tagRenderer={this.tagRenderer} id="roles"
-                                       items={rolesOptions}
+                                       items={this.state.value.rolesOptions}
                                        itemPredicate={this.ItemPredicate}
                                        noResults={<MenuItem disabled={true} text="No results."/>}
                                        fill={true}

@@ -38,7 +38,6 @@ export default class AllPages extends Component {
 
   render() {
     const { currentPage, pages, pagesSearch } = this.state;
-    console.log("pages", pages)
     return (
       <div className="admin-pages admin-page">
         <div className="admin-heading">

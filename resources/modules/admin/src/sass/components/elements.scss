@@ -600,6 +600,12 @@ input[type="text"].form__input{
   }
 }
 
+.custom_tabs-visible {
+  & .react-tabs__tab-panel{
+    overflow: visible;
+  }
+}
+
 .btn__wrapper-relations {
   margin-top: 40px;
 }

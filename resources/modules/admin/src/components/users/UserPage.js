@@ -30,22 +30,22 @@ class UserPage extends Component {
           <span className="admin-breadcrumbs__current">User</span>
         </div>
       </div>
-      <div className="admin-content zeroing__styleTabsSettings">
+      <div className="admin-content zeroing__styleTabsSettings custom_tabs-visible">
         <Tabs selectedIndex={this.state.activeTab} onSelect={this.switchTab}>
           <TabList className="nav nav-pills admin-pills">
             <Tab>
               Edit user
             </Tab>
-            <Tab>
-              Notifications
-            </Tab>
+            {/*<Tab>*/}
+            {/*  Notifications*/}
+            {/*</Tab>*/}
           </TabList>
           <TabPanel>
             <EditUserPage/>
           </TabPanel>
-          <TabPanel>
-            <Notifications/>
-          </TabPanel>
+          {/*<TabPanel>*/}
+          {/*  <Notifications/>*/}
+          {/*</TabPanel>*/}
         </Tabs>
       </div>
     </div>

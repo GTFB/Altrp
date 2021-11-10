@@ -259,9 +259,8 @@ class Users extends Component {
                   <td className="admin-table__td admin-table__td_check admin-table__td_check-user">
                     <input className="input-users" type="checkbox"/>
                     <UserSvg className="users-svg"/>
-                    {/*<Link to={"/admin/users/user/" + row.id}>{row.name} {row.id === this.props.userId &&*/}
-                    {/*<span style={{color: 'red'}}>you</span>}</Link>*/}
-                    <span> {row.name} </span>
+                    <Link to={"/admin/users/user/" + row.id}>{row.name} {row.id === this.props.userId &&
+                    <span style={{color: 'red'}}>you</span>}</Link>
                   </td>
                   <td className="admin-table__td ">{row.full_name}</td>
                   <td className="admin-table__td "><a>{row.email}</a></td>
