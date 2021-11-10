@@ -21,4 +21,5 @@ const METHODS_OPTIONS =  [
   ...BUILDER_OPTIONS,
   ...SESSION_OPTIONS,
 ];
+
 export default METHODS_OPTIONS;

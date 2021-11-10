@@ -47,7 +47,7 @@ import NavWidget from "../../components/widgets/NavWidget";
 import DividerWidget from "../../components/widgets/DividerWidget";
 import TabsWidget from "../../components/widgets/TabsWidget";
 import ListWidget from "../../components/widgets/ListWidget";
-import AccordionWidget from "../../components/widgets/AccordionWidget";
+import AccordionWidget from "../../components/widgets/AccordionWidget/AccordionWidget";
 import CarouselWidget from "../../components/widgets/CarouselWidget";
 import MapWidget from "../../components/widgets/MapWidget";
 import MapConstructorWidget from "../../components/widgets/MapConstructorWidget";

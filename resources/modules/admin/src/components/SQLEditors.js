@@ -4,7 +4,6 @@ import 'react-tabs/style/react-tabs.scss';
 import { Link } from 'react-router-dom'
 
 import AdminTable from "./AdminTable";
-import Pagination from "./Pagination";
 import Resource from "../../../editor/src/js/classes/Resource";
 
 const columns = [
@@ -22,6 +21,10 @@ const columns = [
   {
     name: 'description',
     title: 'Description'
+  },
+  {
+    name: 'categories',
+    title: 'Categories'
   },
   {
     name: 'updated_at',
@@ -101,9 +104,13 @@ export default class SQLEditors extends Component {
     this.setState({ sorting: { order_by, order } }, this.getSqlEditors);
   }
 
-  searchSqlEditors = e => {
+  searchSqlEditors = (e) => {
     e.preventDefault();
     this.getSqlEditors();
+  }
+
+  changeSQLEditors = (e) => {
+    this.setState({ sqlEditorSearch: e.target.value })
   }
 
   render() {
@@ -118,10 +125,6 @@ export default class SQLEditors extends Component {
         <Link className="btn" to={`/admin/tables/sql_editors/add`}>Add New</Link>
       </div>
       <div className="admin-content">
-        <form className="admin-panel py-2" onSubmit={this.searchSqlEditors}>
-          <input className="input-sm mr-2" value={sqlEditorSearch} onChange={e => this.setState({ sqlEditorSearch: e.target.value })} />
-          <button type="button" onClick={this.getSqlEditors} className="btn btn_bare admin-users-button">Search</button>
-        </form>
         <AdminTable
           columns={columns}
           quickActions={[{
@@ -134,7 +137,7 @@ export default class SQLEditors extends Component {
             route: '/admin/ajax/sql_editors/:id',
             method: 'delete',
             confirm: 'Are You Sure?',
-            // after: () => this.updateModels(this.state.currentPage, this.state.activeTemplateArea),
+            after: () => { this.getSqlEditors() },
             className: 'quick-action-menu__item_danger',
             title: 'Trash'
           }]}
@@ -144,11 +147,20 @@ export default class SQLEditors extends Component {
           }))}
           sortingHandler={this.sortingHandler}
           sortingField={sorting.order_by}
-        />
-        <Pagination pageCount={sql_editorsPagination.pageCount}
+
+          searchSQLEditors={{
+            onSubmitSearchSQL: this.searchSqlEditors,
+            valueSQL: sqlEditorSearch,
+            onChangeSQL: (e) => this.changeSQLEditors(e),
+            onClickSQL: this.getSqlEditors
+          }}
+
+          pageCount={sql_editorsPagination.pageCount}
           currentPage={sql_editorsPagination.currentPage}
           changePage={currentPage => this.changePage(currentPage, "sql_editorsPagination")}
           itemsCount={sql_editors.length}
+
+          openPagination={true}
         />
       </div>
     </div>

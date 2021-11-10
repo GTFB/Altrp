@@ -1,5 +1,4 @@
 import React from 'react';
-import TableSvg from '../svgs/tables.svg';
 import { Link, withRouter } from "react-router-dom";
 
 class AdminTablesDropList extends React.Component {
@@ -13,7 +12,8 @@ class AdminTablesDropList extends React.Component {
                     <li>
                         <Link
                             to="/admin/tables/sql_editors"
-                            className="admin-nav-list__link"
+                            className={pathname.indexOf('sql_editors') !== -1 ? "admin-nav-list__link font__weightDropList" : "admin-nav-list__link"}
+                            onClick={this.props.activeButton}
                         >
                             <span>SQL Editors</span>
                         </Link>

@@ -67,5 +67,12 @@ module.exports = {
   resolve: {
     extensions: ["*", ".js", ".jsx"]
   },
-  plugins: [ new CleanWebpackPlugin()]
+  plugins: [
+    new CleanWebpackPlugin(),
+    new webpack.DefinePlugin({
+      "process.env": "{}",
+      global: {}
+    }),
+
+  ]
 };

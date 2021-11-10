@@ -101,7 +101,7 @@ function Dashboard() {
             Analytics
           </a>
         </div>
-        <button onClick={() => setShowAddForm(true)} className="btn">
+        <button onClick={() => setShowAddForm(true)} className="btn btn__right">
           Add Widget
         </button>
         <Link className="btn" to={`/admin/dashboard/colors`}>Color Schemes</Link>

@@ -12,9 +12,7 @@ import {
   CONTROLLER_NUMBER,
   CONTROLLER_DIMENSIONS,
   CONTROLLER_SLIDER,
-  CONTROLLER_LINK,
-  CONTROLLER_TRANSFORM,
-  CONTROLLER_CHOOSE, CONTROLLER_REPEATER, CONTROLLER_WYSIWYG, CONTROLLER_MEDIA, CONTROLLER_SWITCHER,
+  CONTROLLER_CHOOSE, CONTROLLER_REPEATER, CONTROLLER_MEDIA, CONTROLLER_SWITCHER,
 } from "../modules/ControllersManager";
 import Repeater from "../Repeater";
 import { advancedTabControllers } from "../../decorators/register-controllers";
@@ -67,7 +65,10 @@ class Accordion extends BaseElement {
     repeater.addControl("wysiwyg_repeater", {
       type: CONTROLLER_TEXTAREA,
       label: "Text",
-      default: "I Am Advanced Text"
+      default: "I Am Advanced Text",
+      conditions: {
+        'content_select_repeater': "template",
+      },
     });
 
     this.addControl('repeater_meta_data_section', {
@@ -202,6 +203,17 @@ class Accordion extends BaseElement {
       label: "Title",
     });
 
+    this.addControl('padding_title_style', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
     this.addControl('background_color_title_style', {
       type: CONTROLLER_COLOR,
       label: 'Background color',
@@ -226,16 +238,6 @@ class Accordion extends BaseElement {
     }
     );
 
-    this.addControl('padding_title_style', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Padding',
-
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-    });
 
     this.addControl('border_type_title_style', {
       type: CONTROLLER_SELECT,
@@ -315,6 +317,13 @@ class Accordion extends BaseElement {
       label: "Icon",
     });
 
+    this.addControl('spacing_icon_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Size icon',
+      max: 128,
+      min: 16,
+    });
+
     this.addControl('alignment_icon_style', {
       type: CONTROLLER_CHOOSE,
       label: 'Alignment',
@@ -350,6 +359,16 @@ class Accordion extends BaseElement {
       label: "Content",
     });
 
+    this.addControl('padding_content_style', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Padding',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
     this.addControl('background_color_content_style', {
       type: CONTROLLER_COLOR,
       label: 'Background color',
@@ -361,6 +380,55 @@ class Accordion extends BaseElement {
       label: 'Color',
     }
     );
+
+    this.addControl('border_type_content_style', {
+      type: CONTROLLER_SELECT,
+      label: 'Border Type',
+      options: [
+        {
+          'value': 'none',
+          'label': 'None',
+        },
+        {
+          'value': 'solid',
+          'label': 'Solid',
+        },
+        {
+          'value': 'double',
+          'label': 'Double',
+        },
+        {
+          'value': 'dotted',
+          'label': 'Dotted',
+        },
+        {
+          'value': 'dashed',
+          'label': 'Dashed',
+        },
+        {
+          'value': 'groove',
+          'label': 'Groove',
+        },
+      ],
+    }
+    );
+
+    this.addControl('border_width_content_style', {
+        type: CONTROLLER_DIMENSIONS,
+        label: 'Border Width',
+
+        units: [
+          'px',
+          '%',
+          'vh',
+        ],
+      }
+    );
+
+    this.addControl('border_color_content_style', {
+        type: CONTROLLER_COLOR,
+        label: 'Border Color',
+    });
 
     this.addControl('border_radius_content_style', {
       type: CONTROLLER_DIMENSIONS,
@@ -374,15 +442,7 @@ class Accordion extends BaseElement {
       min: 0,
     });
 
-    this.addControl('padding_content_style', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Padding',
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-    });
+
 
     this.addControl('spacing_content_style', {
       type: CONTROLLER_SLIDER,

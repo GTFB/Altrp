@@ -1,15 +1,16 @@
 .admin-heading {
   display: flex;
   align-items: center;
-  padding: 10px 20px 10px 25px;
+  padding: 13px 60px;
 }
 
 .admin-breadcrumbs {
   margin-right: 20px;
   font-size: 28px;
-  font-family: Montserrat, Arial, sans-serif;
+  font-family: Roboto, sans-serif;
   &__link {
-    font-weight: 500;
+    font-family: Roboto, sans-serif;
+    font-weight: 700;
     font-size: 28px;
     text-decoration: none;
     color: $grey;
@@ -18,13 +19,13 @@
     }
   }
   &__separator {
-    font-weight: bold;
+    font-weight: 700;
     font-size: 28px;
     margin-left: 5px;
     margin-right: 5px;
   }
   &__current {
-    font-weight: bold;
+    font-weight: 700;
     font-size: 28px;
   }
 }
@@ -33,10 +34,11 @@
     margin-left: 20px;
     margin-right: 20px;
     font-size: 15px;
-    font-family: Roboto, Arial, sans-serif;
+    font-family: Roboto, sans-serif;
     &__link {
         text-decoration: none;
         color: $grey;
+        font-family: Roboto, sans-serif;
         &:hover {
             color: $blue;
         }

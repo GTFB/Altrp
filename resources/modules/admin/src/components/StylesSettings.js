@@ -4,6 +4,7 @@ import AutoUpdateInput from "./AutoUpdateInput";
 import {iconsManager} from "../js/helpers";
 import Resource from "../../../editor/src/js/classes/Resource";
 import {SketchPicker} from "react-color"
+import IconUpload from "./../svgs/upload.svg"
 
 class StylesSettings extends Component {
   state = {
@@ -101,45 +102,49 @@ class StylesSettings extends Component {
       imageLazyLoading,
     } = this.state;
     let {
-      skeletonColor = '#ccc',
-      skeletonHighlightColor = '#d0d0d0',
+      skeletonColor = '#F3F3F3',
+      skeletonHighlightColor = '#EBECEC',
     } = this.state;
-    skeletonColor = skeletonColor || '#ccc';
-    skeletonHighlightColor = skeletonHighlightColor || '#d0d0d0';
+    skeletonColor = skeletonColor || '#F3F3F3';
+    skeletonHighlightColor = skeletonHighlightColor || '#EBECEC';
     return (
         <div className="admin-styles-settings">
-          <table>
-            <tbody className="admin-settings-table-row">
-            <tr className="admin-settings-table-row">
-              <td className="admin-settings-table__td row-text" width="10%">
+
+          <div className="admin-settings-color__blocks">
+            <div className="admin-settings-color__block">
+              <div className="admin-settings-color row-text" width="10%">
                 <label htmlFor="settings-container-width">
                   Container Width:
                 </label>
-              </td>
-              <td className="admin-settings-table__td">
+              </div>
+              <div className="admin-settings-color__input">
                 <AutoUpdateInput
-                    type="number"
-                    route="/admin/ajax/settings"
-                    resourceid="container_width"
-                    id="settings-container-width"
-                    className="form__input w-25"
+                  type="number"
+                  route="/admin/ajax/settings"
+                  resourceid="container_width"
+                  id="settings-container-width"
+                  className="form__input  form_styles_width"
                 />
-              </td>
-            </tr>
+              </div>
+            </div>
+           <div className="admin-settings-color__block">
+             <div className="admin-settings-color row-text" width="10%">
+               Image Lazy Loading:
+             </div>
+             <div className="admin-settings-color__input">
+               <div className="form-group">
+                 <select className="form-control" value={imageLazyLoading} onChange={this.updateImageLazyLoading}>
+                   <option value="none">None</option>
+                   <option value="color">Color</option>
+                   <option value="skeleton">Skeleton</option>
+                 </select></div>
+             </div>
+           </div>
+          </div>
 
-            <tr className="admin-settings-table-row">
-              <td className="admin-settings-table__td row-text" width="10%">
-                Image Lazy Loading:
-              </td>
-              <td className="admin-settings-table__td">
-                <div className="form-group w-25">
-                  <select className="form-control" value={imageLazyLoading} onChange={this.updateImageLazyLoading}>
-                    <option value="none">None</option>
-                    <option value="color">Color</option>
-                    <option value="skeleton">Skeleton</option>
-                  </select></div>
-              </td>
-            </tr>
+          <table>
+            <tbody className="admin-settings-table-row">
+
             {imageLazyLoading === 'skeleton' &&
             <tr className="admin-settings-table-row">
               <td className="admin-settings-table__td row-text" width="10%">
@@ -147,7 +152,7 @@ class StylesSettings extends Component {
               </td>
               <td className="admin-settings-table__td admin-skeleton-settings">
                 <div className="row">
-                  <div className="control-color-colorPicker pr-5">
+                  <div className="control-color-colorPicker pr-5 skeletonColors__marginBottom skeletonColors__paddingLeft">
                     <SketchPicker presetColors={[]}
                                   color={skeletonColor}
                                   onChange={this.skeletonColorChange}
@@ -159,7 +164,7 @@ class StylesSettings extends Component {
                                   className="sketchPicker">
                     </SketchPicker>
                   </div>
-                  <div className="control-color-colorPicker pr-5">
+                  <div className="control-color-colorPicker pr-5 skeletonColors__marginBottom">
                     <SketchPicker presetColors={[]}
                                   color={skeletonHighlightColor}
                                   onChange={this.skeletonHighlightColorChange}
@@ -171,12 +176,12 @@ class StylesSettings extends Component {
                                   className="sketchPicker">
                     </SketchPicker>
                   </div>
-                  <div className="admin-skeleton pr-5 position-relative">
+                  <div className="admin-skeleton pr-5 position-relative skeleton_marginRight skeletonColors__marginBottom">
                       <Skeleton className="altrp-skeleton"
                                 color={skeletonColor}
                                 highlightColor={skeletonHighlightColor}/>
                   </div>
-                  <button className="admin-media-input__button btn btn_success align-self-end" onClick={async()=>{
+                  <button className="admin-media-input__button btn btn_success align-self-end skeletonColors__marginBottom" onClick={async()=>{
                     await this.skeletonHighlightColorChange('#d0d0d0');
                     await this.skeletonColorChange('#ccc');
                   }}>
@@ -187,7 +192,7 @@ class StylesSettings extends Component {
             </tr>}
             </tbody>
           </table>
-          <form onSubmit={this.submitHandler}>
+          <form onSubmit={this.submitHandler} className="addFavicon__block">
             <legend>Add Favicon:</legend>
             <div
                 className={this.state.uploaderClasses}
@@ -196,14 +201,14 @@ class StylesSettings extends Component {
                 onDragOver={this.onDragOver}
             >
               <label className="uploader__label d-flex flex-column align-items-center">
-                <UploadIcon width={100} height={100} className="icon"/>
+                <IconUpload width={100} height={100} className="icon"/>
                 <input
                     type="file"
                     accept="image/*"
                     onChange={e => this.setState({iconFile: e.target.files[0]})}
                     className="uploader__input"
                 />
-                <span className="uploader__text text text_bold">
+                <span className="uploader__text">
                 Drag or Choose File
               </span>
               </label>

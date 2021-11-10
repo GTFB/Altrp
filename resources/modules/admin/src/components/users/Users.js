@@ -1,12 +1,19 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, {Component} from "react";
+import {connect} from "react-redux";
 import PluginSvg from "../../svgs/plugins.svg";
 import VectorSvg from '../../svgs/vector.svg';
 import UserSvg from '../../svgs/user.svg';
-import { Link } from "react-router-dom";
+import SearchUser from "./../../svgs/search.svg"
+import {Link} from "react-router-dom";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import Pagination from "../Pagination";
-import { filterUsers, sortUsers } from "../../js/helpers";
+import {filterUsers, sortUsers} from "../../js/helpers";
+import {InputGroup, MenuItem, Button, Alignment} from "@blueprintjs/core";
+import {Select} from "@blueprintjs/select";
+
+
+const BulkActions = ['Bulk Actions']
+const ChangeRole = ['Change role on...']
 
 class Users extends Component {
   constructor(props) {
@@ -17,23 +24,30 @@ class Users extends Component {
       search: "",
       currentPage: 1,
       roles: [],
-      sorting: { sortingField: null, order: 'ASC' }
+      bulkActions: 'Bulk Actions',
+      changeRole: 'Change role on...',
+      sorting: {sortingField: null, order: 'ASC'}
     };
 
-    this.resource = new Resource({ route: '/admin/ajax/users' });
+    this.resource = new Resource({route: '/admin/ajax/users'});
     this.itemsPerPage = 10;
   }
 
   componentDidMount() {
     this.getUsers();
-    new Resource({ route: '/admin/ajax/role_options' }).getAll()
-      .then(roles => this.setState({ roles }));
+    new Resource({route: '/admin/ajax/role_options'}).getAll()
+      .then(roles => this.setState({roles}));
+  }
+
+  getData = (e) => {
+    e.preventDefault();
+    this.getUsersEmail();
   }
 
   getUsers = async () => {
-    let users_result = await this.resource.getQueried({ s: this.state.search });
+    let users_result = await this.resource.getQueried({s: this.state.search});
     this.setState(state => {
-      return { ...state, data: users_result };
+      return {...state, data: users_result};
     });
   }
 
@@ -46,18 +60,50 @@ class Users extends Component {
       }
     }
     this.setState(state => {
-      return { ...state, data: users_result_email };
+      return {...state, data: users_result_email};
     });
   }
 
+  ItemPredicate = (query, value) => {
+
+    if(!query) {
+      return true
+    }
+
+    const index = _.findIndex(_.split(value, ""), char => {
+      let similar = false;
+      _.split(query, "").forEach(queryChar => {
+        if(queryChar === char) {
+          similar = true
+        }
+      });
+      return similar
+    });
+
+    if(index !== -1) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+
+  onSubmitBulkActions = (e) => {
+    e.preventDefault();
+  }
+
+  onSubmitRoles = (e) => {
+    e.preventDefault();
+  }
+
   render() {
-    const { currentPage, data, search, roles, roleFilter } = this.state;
-    const { sortingField, order } = this.state.sorting;
+    const {currentPage, data, search, roles, roleFilter} = this.state;
+    const {sortingField, order} = this.state.sorting;
     const users = roleFilter ? filterUsers(data, roleFilter) : data;
 
     return <div className="admin-users">
       <div className="wrapper">
-        <div className="admin-heading-users">
+        <div className="admin-heading">
           <div className="admin-breadcrumbs">
             <a className="admin-breadcrumbs__link" href="#">Users</a>
             <span className="admin-breadcrumbs__separator">/</span>
@@ -67,7 +113,7 @@ class Users extends Component {
           <Link className="btn" to={"/admin/users/new/"}>Add New</Link>
 
           <div className="admin-filters">
-            <span className="admin-filters__current" onClick={() => this.setState({ roleFilter: null })}>
+            <span className="admin-filters__current" onClick={() => this.setState({roleFilter: null})}>
               <a className="admin-filters__link">All ({data.length})</a>
             </span>
             {roles.map(role => {
@@ -75,7 +121,7 @@ class Users extends Component {
 
               return itemsCount ? <React.Fragment key={role.value}>
                 <span className="admin-filters__separator">|</span>
-                <a className="admin-filters__link" onClick={() => this.setState({ roleFilter: role.value })}>
+                <a className="admin-filters__link" onClick={() => this.setState({roleFilter: role.value})}>
                   {role.label} ({itemsCount})
                 </a>
               </React.Fragment> : null
@@ -83,89 +129,160 @@ class Users extends Component {
           </div>
         </div>
 
-        <div className="admin-panel">
-          <form className="admin-users-form form-bulk-left">
-            <select className="form-control input-sm">
-              <option value="1">Bulk Actions</option>
-            </select>
-            <button className="btn btn_bare admin-users-button">Apply</button>
-          </form>
+        <div className="admin-content-user">
+          <div className="admin-panel">
+            <form className="admin-users-form form-bulk-left" onSubmit={this.onSubmitRoles}>
+              {/*<select className="form-control input-sm">*/}
+              {/*  <option value="1">Bulk Actions</option>*/}
+              {/*</select>*/}
+              <Select items={BulkActions}
+                      matchTargetWidth
+                      itemPredicate={this.ItemPredicate}
+                      noResults={<MenuItem disabled={true} text="No results." />}
+                      itemRenderer={(item, {handleClick, modifiers, query}) => {
+                        return <MenuItem
+                          text={item}
+                          key={item}
+                          active={item === this.state.bulkActions}
+                          onClick={handleClick}
+                        />
+                      }}
+                      onItemSelect={current => {
+                        this.setState({ bulkActions: current})
+                      }}
+                      fill={true}
+              >
+                <Button fill alignText={Alignment.LEFT} text={this.state.bulkActions} rightIcon="caret-down"/>
+              </Select>
+              <button className="btn btn_bare admin-users-button">Apply</button>
+            </form>
 
-          <form className="admin-users-form form-bulk-right" >
-            <select className="form-control input">
-              <option value="1">Change role on...</option>
-            </select>
-            <button className="btn btn_bare admin-users-button">Change</button>
-          </form>
+            <form className="admin-users-form form-bulk-right" onSubmit={this.onSubmitRoles}>
+              {/*<select className="form-control input">*/}
+              {/*  <option value="1">Change role on...</option>*/}
+              {/*</select>*/}
 
-          <form className="admin-users-form form-bulk-search" >
-            <input className="form-control input-sm" value={search} onChange={e => this.setState({ search: e.target.value })} />
-            <button type="button" onClick={this.getUsers} className="btn btn_bare admin-users-button">Search Users</button>
-            <button type="button" onClick={this.getUsersEmail} className="btn btn_bare admin-users-button">Search Email</button>
-          </form>
-        </div>
+              <Select items={ChangeRole}
+                      matchTargetWidth
+                      itemPredicate={this.ItemPredicate}
+                      noResults={<MenuItem disabled={true} text="No results." />}
+                      itemRenderer={(item, {handleClick, modifiers, query}) => {
+                        return <MenuItem
+                          text={item}
+                          key={item}
+                          active={item === this.state.changeRole}
+                          onClick={handleClick}
+                        />
+                      }}
+                      onItemSelect={current => {
+                        this.setState({ changeRole: current})
+                      }}
+                      fill={true}
+              >
+                <Button fill alignText={Alignment.LEFT} text={this.state.changeRole} rightIcon="caret-down"/>
+              </Select>
+              <button className="btn btn_bare admin-users-button">Change</button>
+            </form>
+          </div>
 
-        <div className="admin-users-table">
-          <table className="table">
-            <thead className="admin-users-table-head">
+          <div className="admin-users-table">
+            <form className="admin-users-top" onSubmit={this.getData}>
+              <InputGroup className="form-tables-user form-tables-user__indentRight-user" value={search}
+                     onChange={e => this.setState({search: e.target.value})}/>
+              <SearchUser />
+              {/*<button type="button" onClick={this.getUsers} className="btn btn_bare admin-users-button btn__tables-user btn__tables-user__indentRight">Search Users*/}
+              {/*</button>*/}
+              <button  className="btn btn_bare admin-users-button btn__tables-user">Search
+                Email
+              </button>
+            </form>
+            <table className="table table-user">
+              <thead className="admin-users-table-head">
               <tr className="admin-table-row">
-                <td className="admin-table__td admin-table__td_check"
-                  onClick={() => this.setState({ sorting: { sortingField: 'name', order: order === 'ASC' ? 'DESC' : 'ASC' } })}
+                <td className="admin-table__td admin-table__td_check admin-table__td_check-head"
+                    onClick={() => this.setState({
+                      sorting: {
+                        sortingField: 'name',
+                        order: order === 'ASC' ? 'DESC' : 'ASC'
+                      }
+                    })}
                 >
-                  <input className="input-users" type="checkbox" />
+                  <input className="input-users" type="checkbox"/>
                   Username
-                  <VectorSvg className={`vector-svg ${order === 'DESC' ? 'role-svg' : ''} ${sortingField === 'name' ? 'vector-svg--active' : ''}`} />
+                  <VectorSvg
+                    className={`vector-svg ${order === 'DESC' ? 'role-svg' : ''} ${sortingField === 'name' ? 'vector-svg--active' : ''}`}/>
                 </td>
                 <td className="admin-table__td "
-                  onClick={() => this.setState({ sorting: { sortingField: 'full_name', order: order === 'ASC' ? 'DESC' : 'ASC' } })}
+                    onClick={() => this.setState({
+                      sorting: {
+                        sortingField: 'full_name',
+                        order: order === 'ASC' ? 'DESC' : 'ASC'
+                      }
+                    })}
                 >
                   Name
-                  <VectorSvg className={`vector-svg ${order === 'DESC' ? 'role-svg' : ''} ${sortingField === 'full_name' ? 'vector-svg--active' : ''}`} />
+                  <VectorSvg
+                    className={`vector-svg ${order === 'DESC' ? 'role-svg' : ''} ${sortingField === 'full_name' ? 'vector-svg--active' : ''}`}/>
                 </td>
                 <td className="admin-table__td "
-                  onClick={() => this.setState({ sorting: { sortingField: 'email', order: order === 'ASC' ? 'DESC' : 'ASC' } })}
+                    onClick={() => this.setState({
+                      sorting: {
+                        sortingField: 'email',
+                        order: order === 'ASC' ? 'DESC' : 'ASC'
+                      }
+                    })}
                 >
                   Email
-                  <VectorSvg className={`vector-svg ${order === 'DESC' ? 'role-svg' : ''} ${sortingField === 'email' ? 'vector-svg--active' : ''}`} />
+                  <VectorSvg
+                    className={`vector-svg ${order === 'DESC' ? 'role-svg' : ''} ${sortingField === 'email' ? 'vector-svg--active' : ''}`}/>
                 </td>
                 <td className="admin-table__td ">Role</td>
-                <td className="admin-table__td ">Post</td>
                 <td className="admin-table__td "
-                  onClick={() => this.setState({ sorting: { sortingField: 'last_login_at', order: order === 'ASC' ? 'DESC' : 'ASC' } })}
+                    onClick={() => this.setState({
+                      sorting: {
+                        sortingField: 'last_login_at',
+                        order: order === 'ASC' ? 'DESC' : 'ASC'
+                      }
+                    })}
                 >
                   Last Enter
-                  <VectorSvg className={`vector-svg ${order === 'DESC' ? 'role-svg' : ''} ${sortingField === 'last_login_at' ? 'vector-svg--active' : ''}`} />
+                  <VectorSvg
+                    className={`vector-svg ${order === 'DESC' ? 'role-svg' : ''} ${sortingField === 'last_login_at' ? 'vector-svg--active' : ''}`}/>
                 </td>
                 <td className="admin-table__td ">Status</td>
               </tr>
-            </thead>
-            <tbody className="admin-table-body">
+              </thead>
+              <tbody className="admin-table-body">
               {sortUsers(users, sortingField, order)
                 .slice(currentPage * this.itemsPerPage - this.itemsPerPage, currentPage * this.itemsPerPage)
                 .map((row, idx) => <tr className="admin-table-row" key={row.id}>
-                  <td className="admin-table__td admin-table__td_check ">
-                    <input className="input-users" type="checkbox" />
-                    <UserSvg className="users-svg" />
-                    <Link to={"/admin/users/user/" + row.id}>{row.name} {row.id === this.props.userId && <span style={{ color: 'red' }}>you</span>}</Link>
+                  <td className="admin-table__td admin-table__td_check admin-table__td_check-user">
+                    <input className="input-users" type="checkbox"/>
+                    <UserSvg className="users-svg"/>
+                    {/*<Link to={"/admin/users/user/" + row.id}>{row.name} {row.id === this.props.userId &&*/}
+                    {/*<span style={{color: 'red'}}>you</span>}</Link>*/}
+                    <span> {row.name} </span>
                   </td>
                   <td className="admin-table__td ">{row.full_name}</td>
                   <td className="admin-table__td "><a>{row.email}</a></td>
-                  <td className="admin-table__td "><a>{row.roles.map((value) => { return value.name }).join(", ")}</a></td>
-                  <td className="admin-table__td ">2</td>
+                  <td className="admin-table__td "><a>{row.roles.map((value) => {
+                    return value.name
+                  }).join(", ")}</a></td>
                   <td className="admin-table__td ">{row.last_login_at}</td>
                   <td className="admin-table__td ">Enable</td>
                 </tr>)}
-            </tbody>
-          </table>
-          <Pagination pageCount={Math.ceil(users.length / this.itemsPerPage) || 1}
-            currentPage={currentPage}
-            changePage={page => {
-              if (currentPage !== page) {
-                this.setState({ currentPage: page })
-              }
-            }}
-            itemsCount={users.length}
-          />
+              </tbody>
+            </table>
+            <Pagination pageCount={Math.ceil(users.length / this.itemsPerPage) || 1}
+                        currentPage={currentPage}
+                        changePage={page => {
+                          if (currentPage !== page) {
+                            this.setState({currentPage: page})
+                          }
+                        }}
+                        itemsCount={users.length}
+            />
+          </div>
         </div>
       </div>
     </div>

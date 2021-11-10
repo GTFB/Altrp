@@ -295,7 +295,7 @@ class FrontElementsManager {
         name: "accordion",
         import: async () => {
           return await import(
-            /* webpackChunkName: 'AccordionWidget' */ "../../../../editor/src/js/components/widgets/AccordionWidget"
+            /* webpackChunkName: 'AccordionWidget' */ "../../../../editor/src/js/components/widgets/AccordionWidget/AccordionWidget"
           );
         }
       },

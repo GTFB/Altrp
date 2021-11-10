@@ -3,7 +3,7 @@ import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
 import store from "../js/store/store";
 import { setModalSettings } from "../js/store/modal-settings/actions";
-import { redirect } from "../js/helpers";
+import {buildPagesTree, redirect} from "../js/helpers";
 
 export default class Robots extends Component {
   constructor(props) {
@@ -11,23 +11,25 @@ export default class Robots extends Component {
 
     this.state = {
       robots: [],
+      currentPage: 1,
+      robotsSearch: "",
       model_id: false
     };
 
     this.resource = new Resource({
-      route: "ajax/robots"
+      route: "/admin/ajax/robots"
     });
 
     this.addNew = this.addNew.bind(this);
+    this.itemsPerPage = 10;
   }
 
   async componentDidMount() {
     await this.fetchData();
-    console.log(this.state);
   }
 
-  async fetchData() {
-    const robots = await this.resource.getAll();
+  fetchData = async () => {
+    const robots = await this.resource.getQueried({ s: this.state.robotsSearch });
 
     if (_.isArray(robots)) {
       robots.map(item =>{
@@ -35,9 +37,14 @@ export default class Robots extends Component {
         return item;
       });
     }
-    console.log(robots);
+    this.setState(state => {
+      return { ...state, robots: robots }
+    });
+  }
 
-    this.setState(state => ({ ...state, robots }));
+  searchRobots = (e) => {
+    e.preventDefault();
+    this.fetchData();
   }
 
   goToRobotsEditor() {
@@ -70,7 +77,13 @@ export default class Robots extends Component {
     store.dispatch(setModalSettings(modalSettings));
   }
 
+  changeRobots = (e) => {
+    this.setState( { robotsSearch: e.target.value})
+  }
+
   render() {
+    const { currentPage, robots, robotsSearch } = this.state;
+
     return (
       <div className="admin-templates admin-page">
         <div className="admin-heading">
@@ -117,7 +130,10 @@ export default class Robots extends Component {
                 title: "Enabled",
               }
             ]}
-            rows={this.state.robots}
+            rows={buildPagesTree(robots).slice(
+              currentPage * this.itemsPerPage - this.itemsPerPage,
+              currentPage * this.itemsPerPage
+            )}
             quickActions={[
               {
                 tag: "a",
@@ -151,6 +167,23 @@ export default class Robots extends Component {
                 title: "Trash"
               }
             ]}
+
+            searchRobots={{
+              onSubmitRobots: this.searchRobots,
+              valueRobots: robotsSearch,
+              onChangeRobots: this.changeRobots
+            }}
+
+            pageCount={Math.ceil(robots.length / this.itemsPerPage) || 1}
+            currentPage={currentPage}
+            changePage={page => {
+              if (currentPage !== page) {
+                this.setState({ currentPage: page });
+              }
+            }}
+            itemsCount={robots.length}
+
+            openPagination={true}
           />
         </div>
       </div>

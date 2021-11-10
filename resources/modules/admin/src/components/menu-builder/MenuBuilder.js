@@ -7,6 +7,7 @@ import MenuItem from "./MenuItem";
 import mutate from "dot-prop-immutable";
 import {mbParseJSON} from "../../../../front-app/src/js/helpers";
 import IconSelect from "../icon-select/IconSelect";
+import {withRouter} from "react-router-dom";
 
 
 const defaultValue = {
@@ -156,6 +157,7 @@ class MenuBuilder extends Component {
         alert('Success');
         this.props.afterSave && this.props.afterSave();
       }
+      this.props.history.push("/admin/menus")
     } catch (e) {
       if (e.res instanceof Promise) {
         e = await e.res.then();
@@ -288,4 +290,4 @@ class MenuBuilder extends Component {
 }
 
 
-export default MenuBuilder
+export default withRouter(MenuBuilder)

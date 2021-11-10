@@ -9,7 +9,7 @@ import ImageWidget from '../../../resources/modules/editor/src/js/components/wid
 import DividerWidget from '../../../resources/modules/editor/src/js/components/widgets/DividerWidget';
 import PosterWidget from '../../../resources/modules/editor/src/js/components/widgets/PosterWidget';
 import ListWidget from '../../../resources/modules/editor/src/js/components/widgets/ListWidget';
-import AccordionWidget from '../../../resources/modules/editor/src/js/components/widgets/AccordionWidget';
+import AccordionWidget from '../../../resources/modules/editor/src/js/components/widgets/AccordionWidget/AccordionWidget';
 import CarouselWidget from '../../../resources/modules/editor/src/js/components/widgets/CarouselWidget';
 // import MapWidget from '../../../resources/modules/editor/src/js/components/widgets/MapWidget';
 // import MapConstructorWidget from '../../../resources/modules/editor/src/js/components/widgets/MapConstructorWidget';

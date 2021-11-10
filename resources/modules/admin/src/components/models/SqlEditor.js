@@ -8,6 +8,8 @@ import AdminTable from "../AdminTable";
 import AltrpSelect from "../altrp-select/AltrpSelect";
 import AdminModal2 from "../AdminModal2";
 import SQLsRemoteFieldForm from "./RemoteFieldForms/SQLsRemoteFieldForm";
+import {InputGroup, MenuItem, Button, Alignment} from "@blueprintjs/core";
+import {MultiSelect, Select} from "@blueprintjs/select";
 
 const remoteFieldsColumns = [
   {
@@ -24,6 +26,9 @@ const remoteFieldsColumns = [
   }
 ]
 
+const rolesOptions = ['All']
+const permissionsOptions = ['All']
+
 class SqlEditor extends Component {
   constructor(props) {
     super(props);
@@ -34,6 +39,15 @@ class SqlEditor extends Component {
         paged: false,
         is_object: false,
         auth: false,
+        model_id: null,
+        name: '',
+        title: '',
+        description: '',
+        sql: '',
+        roles: [],
+        permissions: [],
+        test: '',
+        id: null,
       },
       modelsOptions: [],
       AceEditor: storeState.aceEditorReducer.AceEditor,
@@ -62,6 +76,7 @@ class SqlEditor extends Component {
       AceEditor: storeState.aceEditorReducer.AceEditor
     }))
   };
+
   /**
    * Компонент загрузился
    * @return {Promise<void>}
@@ -76,7 +91,16 @@ class SqlEditor extends Component {
       this.editor = null;
       this.setState(state=>({
           ...state,
-        value,
+        value: {
+          ...state.value,
+          model_id: value.model_id,
+          title: value.title,
+          name: value.name,
+          description: value.description,
+          sql: value.sql,
+          id: value.id,
+          is_object: value.is_object
+        }
       }))
     }
     let { options } = await this.modelsResource.getAll();
@@ -88,6 +112,110 @@ class SqlEditor extends Component {
     let remoteFields = await this.remoteFieldsResource.getAll();
     this.setState(state => ({ ...state, remoteFields, isFieldRemoteModalOpened: false, editingRemoteField: null }));
   }
+
+  ItemPredicate = (query, value) => {
+
+    if (!query) {
+      return true
+    }
+    if (value.label) {
+      const index = _.findIndex(_.split(value.label, ""), char => {
+        let similar = false;
+        _.split(query, "").forEach(queryChar => {
+          if (queryChar === char) {
+            similar = true
+          }
+        });
+        return similar
+      });
+
+      if (index !== -1) {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      const index = _.findIndex(_.split(value, ""), char => {
+        let similar = false;
+        _.split(query, "").forEach(queryChar => {
+          if (queryChar === char) {
+            similar = true
+          }
+        });
+        return similar
+      });
+
+      if (index !== -1) {
+        return true
+      } else {
+        return false
+      }
+    }
+  }
+
+  tagRenderer = (item) => {
+    return item;
+  };
+
+  isItemSelectedRoles = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.value.roles);
+    return selectedString.includes(itemString);
+  };
+
+  handleItemSelectRoles = (item) => {
+    if (!this.isItemSelectedRoles(item)) {
+      this.setState(state => ({
+        ...state,
+        value: {
+          ...state.value,
+          roles: [...state.value.roles, item]
+        },
+      }));
+    }
+  };
+
+  handleTagRemoveRoles = (item) => {
+    this.setState(state => ({
+      ...state,
+      value: {
+        ...state.value,
+        roles: [...state.value.roles].filter((i) => i !== item)
+      },
+    }));
+  };
+
+
+
+
+
+  isItemSelectedPermissions = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.value.permissions);
+    return selectedString.includes(itemString);
+  };
+
+  handleItemSelectPermissions = (item) => {
+    if (!this.isItemSelectedPermissions(item)) {
+      this.setState(state => ({
+        ...state,
+        value: {
+          ...state.value,
+          permissions: [...state.value.permissions, item]
+        },
+      }));
+    }
+  };
+
+  handleTagRemovePermissions = (item) => {
+    this.setState(state => ({
+      ...state,
+      value: {
+        ...state.value,
+        permissions: [...state.value.permissions].filter((i) => i !== item)
+      },
+    }));
+  };
 
   /**
    * Имзенить поле
@@ -123,6 +251,7 @@ class SqlEditor extends Component {
       return state
     })
   }
+
   /**
    * отправка данных
    * @return {*}
@@ -162,7 +291,8 @@ class SqlEditor extends Component {
   render() {
     const {id} = this.props.match.params;
     const { isFieldRemoteModalOpened, remoteFields, editingRemoteField } = this.state;
-    return <div className="admin-pages admin-page">
+    return (
+      <div className="admin-pages admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
           <Link className="admin-breadcrumbs__link" to="/admin/tables/sql_editors">All  SQL Editors</Link>
@@ -173,33 +303,69 @@ class SqlEditor extends Component {
       </div>
       <div className="admin-content">
         <form className="admin-form field-form" onSubmit={this.onSubmit}>
-          <div className="row">
-            <div className="form-group col-6">
-              <label htmlFor="field-title">Title</label>
-              <input type="text" id="field-title" required
+            <div className="form-group-sql">
+              <div className="form-sql_width">
+
+                <div className="form-group__inline-wrapper">
+                  <div className="form-group form-group_width47">
+                    <label htmlFor="field-title" className="sql-editor-label">Title</label>
+                    {/*<input type="text" id="field-title" required*/}
+                    {/*       value={this.state.value.title || ''}*/}
+                    {/*       onChange={e => {*/}
+                    {/*         this.changeValue(e.target.value, 'title')*/}
+                    {/*       }}*/}
+                    {/*       className="form-control"/>*/}
+
+                    <InputGroup type="text"
+                                id="field-title"
+                                required
                      value={this.state.value.title || ''}
                      onChange={e => {
                        this.changeValue(e.target.value, 'title')
                      }}
-                     className="form-control"/>
+                                className="form-control-blueprint"
+                    />
             </div>
-            <div className="form-group col-6">
-              <label htmlFor="field-name">Name</label>
-              <input type="text" id="field-name" required readOnly={id}
+                  <div className="form-group form-group_width47">
+                    <label htmlFor="field-name" className="sql-editor-label">Name</label>
+                    {/*<input type="text" id="field-name" required readOnly={id}*/}
+                    {/*       value={this.state.value.name || ''}*/}
+                    {/*       onChange={e => {*/}
+                    {/*         this.changeValue(e.target.value, 'name')*/}
+                    {/*       }}*/}
+                    {/*       className="form-control"/>*/}
+
+                    <InputGroup type="text"
+                                id="field-name"
+                                required
+                                readOnly={id}
                      value={this.state.value.name || ''}
                      onChange={e => {
                        this.changeValue(e.target.value, 'name')
                      }}
-                     className="form-control"/>
+                                className="form-control-blueprint"
+                    />
+                  </div>
             </div>
-            <div className="form-group col-12">
-              <label htmlFor="field-name">Description</label>
-              <input type="text" id="field-description"
+                <div className="form-group__inline-wrapper">
+                  <div className="form-group form-group_width47">
+                    <label htmlFor="field-name" className="sql-editor-label">Description</label>
+                    {/*<input type="text" id="field-description"*/}
+                    {/*       value={this.state.value.description || ''}*/}
+                    {/*       onChange={e => {*/}
+                    {/*         this.changeValue(e.target.value, 'description')*/}
+                    {/*       }}*/}
+                    {/*       className="form-control"/>*/}
+
+                    <InputGroup type="text"
+                                id="field-description"
+                                required
                      value={this.state.value.description || ''}
                      onChange={e => {
                        this.changeValue(e.target.value, 'description')
                      }}
-                     className="form-control"/>
+                                className="form-control-blueprint"
+                    />
             </div>
             {/*<div className="form-group col-12">*/}
               {/*<input type="checkbox" id="relation-paged"*/}
@@ -208,69 +374,167 @@ class SqlEditor extends Component {
               {/*/>*/}
               {/*<label className="checkbox-label" htmlFor="relation-paged">Paged</label>*/}
             {/*</div>*/}
-            <div className="form-group col-12">
-              <label htmlFor="relation-model_id">Model</label>
-              <select id="relation-model_id" required disabled={id}
-                      value={this.state.value.model_id || ''}
-                      onChange={e => { this.changeValue(e.target.value, 'model_id') }}
-                      className="form-control"
+                  <div
+                    className="form-group form-group_width47 flex-grow__selectBlueprint overflow-select__blueprint-sql">
+                    <label htmlFor="relation-model_id" className="sql-editor-label">Model</label>
+                    {/*<select id="relation-model_id" required disabled={id}*/}
+                    {/*        value={this.state.value.model_id || ''}*/}
+                    {/*        onChange={e => { this.changeValue(e.target.value, 'model_id') }}*/}
+                    {/*        className="form-control"*/}
+                    {/*>*/}
+                    {/*  <option disabled value="" />*/}
+                    {/*  {this.state.modelsOptions.map(({ value, label }) =>*/}
+                    {/*    <option key={value} value={value}>*/}
+                    {/*      {label}*/}
+                    {/*    </option>)}*/}
+                    {/*</select>*/}
+
+
+                    <Select items={this.state.modelsOptions}
+                            disabled={id}
+                            matchTargetWidth
+                            itemPredicate={this.ItemPredicate}
+                            noResults={<MenuItem disabled={true} text="No results."/>}
+                            itemRenderer={(item, {handleClick, modifiers, query}) => {
+                              return <MenuItem
+                                text={item.label}
+                                key={item.value}
+                                active={item.value === this.state.value.model_id}
+                                onClick={handleClick}
+                              />
+                            }}
+                            onItemSelect={current => {
+                              this.changeValue(current.value, 'model_id')
+                            }}
+                            fill={true}
               >
-                <option disabled value="" />
-                {this.state.modelsOptions.map(({ value, label }) =>
-                    <option key={value} value={value}>
-                      {label}
-                    </option>)}
-              </select>
+                      <Button disabled={id}
+                              fill
+                              large
+                              alignText={Alignment.LEFT}
+                              text={this.state.modelsOptions.find(item => (item.value === this.state.value.model_id))?.label || 'none'}
+                              rightIcon="caret-down"
+                      />
+                    </Select>
             </div>
-            <div className="form-group col-12">
+                </div>
+
+                <div className="sql-checkbox__block">
+                  <div className="form-group sql__checkbox">
               <input type="checkbox" id="field-auth"
                      checked={this.state.value.auth} value={this.state.value.auth}
-                     onChange={e => { this.changeValue(e.target.checked, 'auth') }}
+                           onChange={e => {
+                             this.changeValue(e.target.checked, 'auth')
+                           }}
               />
-              <label className="checkbox-label" htmlFor="field-auth">Auth</label>
+                    <label className="checkbox-label sql-editor-label" htmlFor="field-auth">Auth</label>
             </div>
-            <div className="form-group col-12">
+                  <div className="form-group sql__checkbox">
               <input type="checkbox" id="field-is_object"
                      checked={this.state.value.is_object}
                      value={this.state.value.is_object}
                      onChange={e => { this.changeValue(e.target.checked, 'is_object') }}
+
               />
-              <label className="checkbox-label" htmlFor="field-is_object">As Object</label>
+                    <label className="checkbox-label sql-editor-label" htmlFor="field-is_object">As Object</label>
             </div>
-            {!this.state.value.auth ? '' : <><div className="form-group col-4">
-              <label htmlFor="field-roles">Roles</label>
-              <AltrpSelect id="field-roles"
-                           isMulti={true}
-                           optionsRoute="/admin/ajax/role_options"
+                </div>
+
+                <div className="form-group__inline-wrapper">
+                  {!this.state.value.auth ? '' : <>
+                    <div className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-sql form-group_width47">
+                      <label htmlFor="field-roles" className="sql-editor-label">Roles</label>
+                      {/*<AltrpSelect id="field-roles"*/}
+                      {/*             isMulti={true}*/}
+                      {/*             optionsRoute="/admin/ajax/role_options"*/}
+                      {/*             placeholder="All"*/}
+                      {/*             defaultOptions={[*/}
+                      {/*               {*/}
+                      {/*                 value: null,*/}
+                      {/*                 label: 'All',*/}
+                      {/*               }*/}
+                      {/*             ]}*/}
+                      {/*             value={this.state.value.roles || ''}*/}
+                      {/*             onChange={value => {this.changeValue(value, 'roles')}}*/}
+                      {/*/>*/}
+
+                      <MultiSelect tagRenderer={this.tagRenderer} id="field-roles"
+                                   items={rolesOptions}
+                                   itemPredicate={this.ItemPredicate}
+                                   noResults={<MenuItem disabled={true} text="No results."/>}
+                                   fill={true}
                            placeholder="All"
-                           defaultOptions={[
-                             {
-                               value: null,
-                               label: 'All',
-                             }
-                           ]}
-                           value={this.state.value.roles}
-                           onChange={value => {this.changeValue(value, 'roles')}}
+                                   selectedItems={this.state.value.roles}
+                                   onItemSelect={this.handleItemSelectRoles}
+                                   itemRenderer={(item, {handleClick, modifiers, query}) => {
+                                     return (
+                                       <MenuItem
+                                         icon={this.isItemSelectedRoles(item) ? "tick" : "blank"}
+                                         text={item}
+                                         key={item}
+                                         onClick={handleClick}
+                                       />
+                                     )
+                                   }}
+                                   tagInputProps={{
+                                     onRemove: this.handleTagRemoveRoles,
+                                     large: false,
+                                   }}
+                                   popoverProps={{
+                                     usePortal: false
+                                   }}
               />
             </div>
-            <div className="form-group col-4">
-              <label htmlFor="field-permissions">Permissions</label>
-              <AltrpSelect id="field-permissions"
-                           isMulti={true}
-                           optionsRoute="/admin/ajax/permissions_options"
+                    <div className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-sql form-group_width47">
+                      <label htmlFor="field-permissions" className="sql-editor-label">Permissions</label>
+                      {/*<AltrpSelect id="field-permissions"*/}
+                      {/*             isMulti={true}*/}
+                      {/*             optionsRoute="/admin/ajax/permissions_options"*/}
+                      {/*             placeholder="All"*/}
+                      {/*             defaultOptions={[*/}
+                      {/*               {*/}
+                      {/*                 value: null,*/}
+                      {/*                 label: 'All',*/}
+                      {/*               }*/}
+                      {/*             ]}*/}
+                      {/*             value={this.state.value.permissions}*/}
+                      {/*             onChange={value => {*/}
+                      {/*               this.changeValue(value, 'permissions')*/}
+                      {/*             }}*/}
+                      {/*/>*/}
+
+                      <MultiSelect tagRenderer={this.tagRenderer} id="field-permissions"
+                                   items={permissionsOptions}
+                                   itemPredicate={this.ItemPredicate}
+                                   noResults={<MenuItem disabled={true} text="No results."/>}
+                                   fill={true}
                            placeholder="All"
-                           defaultOptions={[
-                             {
-                               value: null,
-                               label: 'All',
-                             }
-                           ]}
-                           value={this.state.value.permissions}
-                           onChange={value => {this.changeValue(value, 'permissions')}}
+                                   selectedItems={this.state.value.permissions}
+                                   onItemSelect={this.handleItemSelectPermissions}
+                                   itemRenderer={(item, {handleClick, modifiers, query}) => {
+                                     return (
+                                       <MenuItem
+                                         icon={this.isItemSelectedPermissions(item) ? "tick" : "blank"}
+                                         text={item}
+                                         key={item}
+                                         onClick={handleClick}
               />
-            </div></>}
-            <div className="form-group col-12">
-              <label htmlFor="field-name">SQL Query</label>
+                                     )
+                                   }}
+                                   tagInputProps={{
+                                     onRemove: this.handleTagRemovePermissions,
+                                     large: false,
+                                   }}
+                                   popoverProps={{
+                                     usePortal: false
+                                   }}
+                      />
+                    </div>
+                  </>}
+                </div>
+              </div>
+              <div className="form-group">
+                <label htmlFor="field-name" className="sql-editor-label">SQL Query</label>
               {this.state.AceEditor && (this.editor = (this.editor || <this.state.AceEditor
                   mode="sql"
                   theme="textmate"
@@ -279,7 +543,7 @@ class SqlEditor extends Component {
                   }}
                   className="field-ace"
                   name="aceEditor"
-                  height="15em"
+                  height="38em"
                   setOptions={{
                     value: this.state.value.sql || ''
                   }}
@@ -289,23 +553,33 @@ class SqlEditor extends Component {
                   }}
                   enableLiveAutocompletion={true} />))}
             </div>
-            <div className="row col-12">
-              <div className="form-group col-11">
-                <input type="text" id="field-test"
-                       value={this.state.value.test  || ''}
+              <div className="form-group__inline-wrapper field-input__center">
+                <div className="form-group field-input__width">
+                  {/*<input type="text" id="field-test"*/}
+                  {/*       value={this.state.value.test  || ''}*/}
+                  {/*       placeholder='Parametr for test (task_id=3&id=1)'*/}
+                  {/*       onChange={e => {*/}
+                  {/*         this.changeValue(e.target.value, 'test')*/}
+                  {/*       }}*/}
+                  {/*       className="form-control"*/}
+                  {/*/>*/}
+
+                  <InputGroup type="text"
+                              id="field-test"
                        placeholder='Parametr for test (task_id=3&id=1)'
+                              value={this.state.value.test || ''}
                        onChange={e => {
                          this.changeValue(e.target.value, 'test')
                        }}
-                       className="form-control"
+                              className="form-control-blueprint"
                 />
               </div>
-              <div className="form-group col-1">
+                <div className="form-group">
                 <button className="btn btn_success" type="button" onClick={this.onTest}>Test</button>
               </div>
             </div>
-            <div className="form-group col-12">
-              <label htmlFor="field-name">Test Result</label>
+              <div className="form-group">
+                <label htmlFor="field-name" className="sql-editor-label">Test Result</label>
               <this.state.AceEditorResponse
                 mode="javascript"
                 theme="textmate"
@@ -355,20 +629,24 @@ class SqlEditor extends Component {
               title: 'Trash'
             }]}
             rows={remoteFields}
+              radiusTable={true}
           />
-          <button onClick={() => this.setState({ isFieldRemoteModalOpened: true, editingRemoteField: null })} className="btn btn_add">
+            <button onClick={() => this.setState({isFieldRemoteModalOpened: true, editingRemoteField: null})}
+                    className="btn btn_add">
             Add Remote Field
           </button>
         </>}
       </div>
-      {isFieldRemoteModalOpened && <AdminModal2 closeHandler={() => this.setState({ isFieldRemoteModalOpened: false, editingRemoteField: null })}>
+        {isFieldRemoteModalOpened &&
+        <AdminModal2 closeHandler={() => this.setState({isFieldRemoteModalOpened: false, editingRemoteField: null})}>
         <SQLsRemoteFieldForm
           remoteFieldsResource={this.remoteFieldsResource}
           updateRemoteFields={this.updateRemoteFields}
           field={editingRemoteField}
         />
       </AdminModal2>}
-    </div>;
+      </div>
+    )
   }
 }
 

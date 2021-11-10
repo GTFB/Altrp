@@ -5,7 +5,7 @@ class ValidationTable extends Component {
 
   render() {
     const { validations, updateValidations, fieldsOptions, validationsResource, data_source_options } = this.props;
-    return <table className="admin-table">
+    return <table className="admin-table admin-table-noRadius">
       <thead className="admin-table-head">
         <tr className="admin-table-row">
           <th className="admin-table__td"></th>
