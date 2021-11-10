@@ -22,4 +22,20 @@
     &-content_test {
         padding-bottom: 100px;
     }
+
+  &_admin {
+    padding-top: var(--front-app-padding);
+  }
+}
+.front-app_admin .route-content{
+  min-height: calc(100vh - var(--front-app-padding));
+}
+
+$padding_true: 35px;
+$padding_false: 0px;
+
+:root {
+  --front-app-true: #{$padding_true};
+  --front-app-false: #{$padding_false};
+  --front-app-padding: var(--front-app-true);
 }

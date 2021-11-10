@@ -205,6 +205,15 @@ class AdminBar extends React.Component {
     this.setState({
       barIsOpened: !this.state.barIsOpened
     })
+    this.frontAppPadding(!this.state.barIsOpened)
+  }
+
+  frontAppPadding = (barIsOpened) => {
+    let frontAppPadding = barIsOpened ? "true" : "false"
+
+    const root = document.querySelector(':root');
+
+    root.style.setProperty('--front-app-padding', `var(--front-app-${frontAppPadding})`)
   }
 
   toggleVisiblePopupHistory = () => {
@@ -248,7 +257,7 @@ class AdminBar extends React.Component {
             </div>
             <div className="admin-bar__tool">
               <span onClick={this.toggleVisiblePopupTemplate}>
-                {iconsManager.renderIcon("admin-bar1", {
+                {iconsManager.renderIcon("admin-new-bar", {
                   className: "admin-bar__tool-svg"
                 })}{" "}
                 Edit-Template
@@ -300,7 +309,7 @@ class AdminBar extends React.Component {
               )}
             </div>
             <div className="admin-bar__tool" onClick={this.openPageSettings}>
-              {iconsManager.renderIcon("admin-bar2", {
+              {iconsManager.renderIcon("admin-settings-bar", {
                 className: "admin-bar__tool-svg"
               })}{" "}
               Page-Settings
@@ -309,8 +318,8 @@ class AdminBar extends React.Component {
               {/*{iconsManager.renderIcon('admin-bar3', {className: "admin-bar__tool-svg"})} Clear Cache*/}
             {/*</div>*/}
 
-            <div 
-              className="admin-bar__tool" 
+            <div
+              className="admin-bar__tool"
               onClick={() => {this.toggleVisiblePopupHistory(); this.getUserHistory();}}
               ref={this.popupHistoryRef}
             >
@@ -351,6 +360,9 @@ class AdminBar extends React.Component {
                 </div>
               )}
             </div>
+            </div>
+
+          <div className="admin-bar__left">
 
             <div className="admin-bar__search-bar" ref={this.searchContentResult}>
               {this.state.visibleContentResult && (
@@ -373,19 +385,19 @@ class AdminBar extends React.Component {
               )}
 
               {this.state.visibleAutocomplete &&
-                this.state.filteredOptions.length !== 0 && (
-                  <div className="admin-bar__autocomplete" ref={this.autocomplete}>
-                    {this.state.filteredOptions.map((item, index) => (
-                      <div
-                        key={index}
-                        className="admin-bar__autocomplete-option"
-                        onClick={this.handleClickOptions(item)}
-                      >
-                        {item}
-                      </div>
-                    ))}
-                  </div>
-                )}
+              this.state.filteredOptions.length !== 0 && (
+                <div className="admin-bar__autocomplete" ref={this.autocomplete}>
+                  {this.state.filteredOptions.map((item, index) => (
+                    <div
+                      key={index}
+                      className="admin-bar__autocomplete-option"
+                      onClick={this.handleClickOptions(item)}
+                    >
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              )}
               <input
                 className="admin-bar__search"
                 value={this.state.valueInput}
@@ -403,22 +415,27 @@ class AdminBar extends React.Component {
                 test
               </button>
               <button
-                  className="admin-bar__button"
-                  onClick={this.clearCache}
+                className="admin-bar__button"
+                onClick={this.clearCache}
               >
                 Clear Cache
               </button>
             </div>
+
+            <div className="admin-bar__profile">
+            <span>
+              Hello,
+              {this.props.data.name ? this.props.data.name : this.props.data.email}
+            </span>
+              <button className="admin-bar__button"
+                      onClick={this.logout}
+              >
+                Logout
+              </button>
+            </div>
+
           </div>
-          <div className="admin-bar__profile">
-            Hello,
-            {this.props.data.name ? this.props.data.name : this.props.data.email}
-            <button className="admin-bar__button"
-              onClick={this.logout}
-            >
-              Logout
-            </button>
-          </div>
+
           <div className={'admin-bar__arrow ' + (this.state.barIsOpened ? '' : 'closed')} onClick={this.toggleBar}>
             <div></div>
           </div>

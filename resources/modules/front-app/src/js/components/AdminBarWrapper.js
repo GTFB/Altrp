@@ -9,15 +9,17 @@ const AdminBarWrapper = styled.div`
 }
 & .admin-bar {
   position: fixed;
-  height: 25px;
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 5px;
 
   background-color: #343B4C;
   color: #fff;
 
-  font-family: 'Open Sans';
+  font-family: 'Roboto', sans-serif;
   line-height: 25px;
   font-size: 13px;
   font-style: normal;
@@ -29,12 +31,18 @@ const AdminBarWrapper = styled.div`
   top: 0;
 }
 
+  & .admin-bar__left {
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+  }
+
 & .admin-bar.closed {
   transform: translateY(-100%);
 }
 
 & .admin-bar__arrow {
-  height: 19px;
+  height: 20px;
   width: 35px;
   position: absolute;
   top: 100%;
@@ -72,11 +80,10 @@ const AdminBarWrapper = styled.div`
 & .admin-bar__tools {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
-  background-color: #343b4c;
   color: #fff;
-
-  font-family: "Open Sans";
+  font-family: 'Roboto', sans-serif;
   line-height: 25px;
   font-size: 13px;
   font-style: normal;
@@ -88,12 +95,14 @@ const AdminBarWrapper = styled.div`
 
 
 & .admin-bar__tool {
-  margin-left: 15px;
-
+  margin-left: 20px;
   cursor: pointer;
 }
 
 & .admin-bar__tool-svg {
+  fill: white;
+  width: 16px;
+  height: 16px;
   margin-right: 10px;
   vertical-align: text-top;
 }
@@ -160,8 +169,7 @@ const AdminBarWrapper = styled.div`
   background: #4f5972;
 }
 & .admin-bar__search-bar {
-  margin: 2px 0;
-  margin-left: 15px;
+
 }
 & .admin-bar__search-result {
   position: fixed;
@@ -173,6 +181,11 @@ const AdminBarWrapper = styled.div`
   z-index: 999;
   background-color: #343b4c;
 }
+
+  & .admin-bar__search-bar {
+    margin-left: 30px;
+  }
+
 & .admin-bar__search-content {
   width: 100%;
   height: 100%;
@@ -229,21 +242,26 @@ const AdminBarWrapper = styled.div`
 & .admin-bar__search {
   width: 223px;
   border: 1px;
-  padding: 2px 9px;
+  padding: 4px 9px;
   vertical-align: top;
   line-height: 17px;
 }
 & .admin-bar__button {
-  width: 83px;
-  height: 21px;
+  width: 85px;
   margin-left: 9px;
-  padding: 3px;
+  padding: 4.5px;
   vertical-align: top;
+  font-size: 13px;
+  font-weight: 400;
 
   color: #000000;
   background-color: #87ca00;
   border-radius: 2px;
 }
+
+  & .admin-bar__button:hover {
+    background-color: #7bb701;
+  }
 
 & .admin-bar__search-content::-webkit-scrollbar {
   width: 12px;
@@ -268,6 +286,12 @@ const AdminBarWrapper = styled.div`
 & .history-popup__card:hover {
   background-color: #4f5972;
 }
+
+  @media screen and (max-width: 1070px) {
+
+  }
+
+
 `;
 
 export default AdminBarWrapper;
