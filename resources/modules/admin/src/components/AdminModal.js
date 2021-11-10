@@ -3,6 +3,8 @@ import React, {Component} from "react";
 import TimesIcon from '../svgs/times.svg';
 import store from "../js/store/store";
 import {toggleModal} from "../js/store/modal-settings/actions";
+import CloseModal from "./../svgs/clear_black.svg"
+import {InputGroup} from "@blueprintjs/core";
 
 
 class AdminModal extends Component {
@@ -70,20 +72,22 @@ class AdminModal extends Component {
     return <div className={modalClasses}>
       <div className="admin-modal__bg" onClick={this.toggleModal}/>
       <div className="admin-modal-content">
-        <button className="admin-modal__close" onClick={this.toggleModal}><TimesIcon className="icon"/></button>
+        <button className="admin-modal__close" onClick={this.toggleModal}><CloseModal className="icon_modal"/></button>
         <div className="admin-caption">{this.props.title}</div>
         <div className="admin-modal-form form">
           {
-            this.props.fields.map((field, idx) => <label className="form-label"
+            this.props.fields.map((field, idx) => <label className="form-label label__RobotoFont"
                                                          data-field={field.name}
                                                          key={field.name}>{field.label}
               {(field.type !== 'select') ?
-                  <input type={field.type || 'text'}
-                         className="form__input"
-                         data-field={field.name}
-                         data-error={idx}
-                         defaultValue={field.defaultValue || ''}
-                         onChange={this.changeValue}/> :
+                <InputGroup
+                  type={field.type || 'text'}
+                  className="form-control-blueprint form-control-blueprint__marginModal"
+                  data-field={field.name}
+                  data-error={idx}
+                  defaultValue={field.defaultValue || ''}
+                  onChange={this.changeValue}
+                /> :
                   <select className="form__input"
                           data-field={field.name}
                           data-error={idx}

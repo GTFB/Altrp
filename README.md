@@ -4,6 +4,28 @@
 ## Changelog
 
 
+### 0.18.2
++ Add Tree Widget and Input Select Tree Widget
+
+
+### 0.18.1
+* Fix Change Label in Node Issue
+* Hide Pagination when Page Size Greater then Items 
+* Fix Regexp Bug in Sliders Widgets on iOs
++ Appearance of Top of Element Actions
++ Appearance of Bottom of Element Actions
+
+### 0.18.0
++ Customizer Module
+* Fix Condition Display with Default Hidden Widgets  
+
+### 0.17.15
+* Fix Hover Card Issue in Card Widget
+
+### 0.17.14
++ Add Icon Widget
++ Fixed Position for Adminbar and "Hide Adminbar" Button
+
 ### 0.17.14
 + Add Input Widget Autocomplete
 + Add OIDC Client Action

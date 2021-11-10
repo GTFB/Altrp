@@ -214,7 +214,6 @@ class SchedulerWidget extends Component {
   render() {
     const lang = this.props.element.getResponsiveSetting('lang', '', 'en-gb')
     const popupText = this.popupLocalization[lang]
-
     return (
       <div className="popup-wrapper">
         <FullCalendar
@@ -238,7 +237,7 @@ class SchedulerWidget extends Component {
             <form onSubmit={() => {this.state.popup.status === 'create' ? this.createEvent() : this.editEvent()}}>
               <div className="popup__body">
                 <div className="popup__field-title">
-                  {popupText.title}
+                  {popupText?.title}
                 </div>
                 <InputGroup type="text" name="title" onChange={this.eventInputHandler} className='popup__text-field' value={this.state.popup.formData.title || ''} />
 

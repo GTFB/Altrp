@@ -32,7 +32,7 @@ class Scheduler extends BaseElement {
       label: "Web API settings",
     });
 
-    
+
     this.addControl('get_url', {
       type: CONTROLLER_TEXT,
       label: 'URL for get',
@@ -96,7 +96,7 @@ class Scheduler extends BaseElement {
 
     this.endControlSection();
 
-    
+
     this.startControlSection("localization", {
       tab: TAB_CONTENT,
       label: "Localization",
@@ -105,15 +105,15 @@ class Scheduler extends BaseElement {
     this.addControl('lang', {
       label: 'Language',
       type: CONTROLLER_SELECT,
-      default: 'en',
+      default: 'en-gb',
       options: [
         {
           value: 'en-gb',
-          label: 'en'
+          label: 'En'
         },
         {
           value: 'ru',
-          label: 'ru'
+          label: 'Ru'
         },
       ]
     });
@@ -173,7 +173,7 @@ class Scheduler extends BaseElement {
       label: "Border color",
     });
 
-    
+
     this.addControl('switcher_typography', {
         type: CONTROLLER_TYPOGRAPHIC,
         label: 'Typography',
@@ -286,7 +286,7 @@ class Scheduler extends BaseElement {
     );
 
     this.endControlSection();
-    
+
     this.startControlSection('active_cell_style', {
       label: 'Active cells',
       tab: TAB_STYLE
@@ -309,7 +309,7 @@ class Scheduler extends BaseElement {
     );
 
     this.endControlSection();
-    
+
     this.startControlSection('muted_cell_style', {
       label: 'Muted cells',
       tab: TAB_STYLE
@@ -332,7 +332,7 @@ class Scheduler extends BaseElement {
     );
 
     this.endControlSection();
-    
+
     this.startControlSection('current_cell_style', {
       label: 'Current cell',
       tab: TAB_STYLE
@@ -355,7 +355,7 @@ class Scheduler extends BaseElement {
     );
 
     this.endControlSection();
-    
+
     this.startControlSection('event_style', {
       label: 'Event',
       tab: TAB_STYLE

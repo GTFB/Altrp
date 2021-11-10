@@ -23,7 +23,7 @@
 
 .altrp-post.altrp-post--hover {
   position: absolute;
-  top: 0;  
+  top: 0;
   transition: transform 0.5s ease-out, opacity 0.5s ease-out;
 
   &--left {
@@ -49,9 +49,10 @@
 .altrp-post:hover .altrp-post.altrp-post--hover {
   transform: scale(1) translate(0, 0);
   opacity: 1;
-  
+
 }
 .altrp-widget_posts{
+  & > div > .altrp-pagination-pages,
   & > .altrp-pagination-pages{
     justify-content: center;
   }

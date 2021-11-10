@@ -104,6 +104,9 @@ abstract class AppGenerator
 
         $customContent = [];
 
+      /* todo- сделать формирование $commentBlocks более интеллектуальным (нет проверки наличия конца специально комментария, приего отсутствии, он запишет весь оставшийся файл)
+
+       */
         for ($i = 0; $i < count($commentBlocks); $i++) {
             for ($j = 0; $j < count($fileContent); $j++) {
                 if (strpos($fileContent[$j], $commentBlocks[$i]) !== false) {
@@ -113,7 +116,11 @@ abstract class AppGenerator
                         if (strpos($fileContent[$k], $commentBlocks[$i]) !== false) break;
                         $customContent[$key][] = $fileContent[$k];
                     }
-                    $customContent[$key] = implode(PHP_EOL, $customContent[$key]);
+                    if( isset($customContent[$key])){
+                      $customContent[$key] = implode(PHP_EOL, $customContent[$key]);
+                    } else {
+                      $customContent[$key] = PHP_EOL;
+                    }
                     break;
                 }
             }
@@ -135,6 +142,6 @@ abstract class AppGenerator
      */
     protected function getCustomCodeBlock($customCode, $blockName)
     {
-        return $customCode[$blockName] ?? '';
+        return data_get($customCode, $blockName, '');
     }
 }

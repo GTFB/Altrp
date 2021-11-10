@@ -11,16 +11,19 @@ import { hot } from "react-hot-loader";
 import { Scrollbars } from "react-custom-scrollbars";
 import { connect } from "react-redux";
 
-import Bars from "./svgs/bars.svg";
-import AssetSvg from "./svgs/assets.svg";
-import DashboardSvg from "./svgs/dashboard.svg";
-import PagesSvg from "./svgs/pages.svg";
-import PluginSvg from "./svgs/plugins.svg";
-import ReportSvg from "./svgs/reports.svg";
-import SettingSvg from "./svgs/settings.svg";
-import TableSvg from "./svgs/tables.svg";
 import TemplateSvg from "./svgs/templates.svg";
-import UserSvg from "./svgs/users.svg";
+import Bars from "./svgs/bars-v2.svg";
+import AssetSvg from "./svgs/assets-v2.svg";
+import MainSvg from "./svgs/main-v2.svg";
+import PagesSvg from "./svgs/pages-v2.svg";
+import PluginSvg from "./svgs/plugins-v2.svg";
+import ModelsSvg from "./svgs/models-v2.svg";
+import SettingSvg from "./svgs/settings-v2.svg";
+import TablesSvg from "./svgs/tables-v2.svg";
+import RobotsSvg from "./svgs/robots-v2.svg";
+import LayoutSvg from "./svgs/layout-v2.svg";
+import UserSvg from "./svgs/users-v2.svg";
+import DropletSvg from "./svgs/droplet-v2.svg";
 
 import AdminLogo from "./components/AdminLogo";
 import AllPages from "./components/AllPages";
@@ -65,6 +68,7 @@ import { WithRouterAdminAssetsDropList } from "./components/AdminAssetsDropList"
 import { WithRouterAdminTablesDropList } from "./components/AdminTablesDropList";
 import { WithRouterAdminTemplatesDropList } from "./components/AdminTemplatesDropList";
 import { WithRouterAdminUsersDropList } from "./components/AdminUsersDropList";
+import {WithRouterAdminModelsDropList} from "./components/AdminModelsDropList";
 import CustomFonts from "./components/CustomFonts";
 import EditFont from "./components/EditFont";
 import AddNewFont from "./components/AddNewFont";
@@ -92,6 +96,10 @@ import AreaEdit from "./components/areas/AreaEdit";
 import MenuPage from "./components/menu-builder/MenuPage";
 import MenusList from "./components/menu-builder/MenusList";
 import Marketplace from "./components/Marketplace";
+import Customizer from "./components/Customizer";
+import ModelsPage from "./components/models/ModelsPage";
+import {modelsToggle} from "./js/store/models-state/actions";
+import AddModel from "./components/models/AddModel";
 
 window.React = React;
 window.ReactDOM = ReactDOM;
@@ -106,6 +114,7 @@ class Admin extends Component {
       },
       pagesMenuShow: false,
       models: [],
+      activeButton: 0,
     };
     this.toggleMenu = this.toggleMenu.bind(this);
   }
@@ -118,6 +127,23 @@ class Admin extends Component {
 
     this.getConnect();
     this.getMetaName();
+    this.getStatusCheckedModels();
+  }
+
+  async getStatusCheckedModels() {
+    let valueChecked = !!(
+      await new Resource({ route: "/admin/ajax/settings" }).get(
+        "altrp_models_disabled"
+      )
+    ).altrp_models_disabled;
+
+    store.dispatch(modelsToggle(valueChecked))
+  }
+
+  updateModels = async () => {
+    let options = await new Resource({ route: "/admin/ajax/model_options" }).getAll()
+    options = options.options
+    this.setState({models: options})
   }
 
   // Подключение вебсокетов
@@ -239,7 +265,7 @@ class Admin extends Component {
           <nav className="admin-nav">
             <div className="admin-nav-top">
               <AdminLogo />
-              <Bars className="admin__bars" onClick={this.toggleMenu} />
+              <Bars width={29} height={24} className="admin__bars" onClick={this.toggleMenu} />
             </div>
             <div className="admin-nav-main">
               {this.state.pagesMenuShow ? (
@@ -252,43 +278,25 @@ class Admin extends Component {
                     <li>
                       <Link
                         to="/admin/pages"
-                        className="admin-nav-list__link"
+                        className={this.state.activeButton === 8 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                        onClick={() => this.setState({ activeButton: 8 })}
                       >
                         <PagesSvg className="icon" />
+                        <DropletSvg className="icon__droplet"/>
                         <span>Pages</span>
                       </Link>
                     </li>
                     <li>
-                      <Link
-                        to="/admin/reports"
-                        className="admin-nav-list__link"
-                      >
-                        <ReportSvg className="icon" />
-                        <span>Reports</span>
-                      </Link>
-                    </li>
-                      Models
-                      {models
-                      .sort((a, b) => {
-                        if (a.label.toUpperCase() < b.label.toUpperCase())
-                          return -1;
-                        if (a.label.toUpperCase() > b.label.toUpperCase())
-                          return 1;
-                        return 0;
-                      })
-                      .map(({ value: id, label }) => (
-                        <li key={id}>
-                          <Link
-                            to={{
-                              pathname: `/admin/model/${id}`,
-                              propsSearch: label,
-                            }}
-                            className="admin-nav-list__link admin-nav-list__link--models"
+                      <Link to="/admin/models"
+                            className={this.state.activeButton === 9 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                            onClick={() => this.setState({ activeButton: 9 })}
                           >
-                            {label}
+                        <ModelsSvg className="icon" />
+                        <DropletSvg className="icon__droplet"/>
+                        <span>Models</span>
                           </Link>
+                      <WithRouterAdminModelsDropList models={models} activeButton={() => this.setState({ activeButton: 9 })} />
                         </li>
-                      ))}
                   </ul>
                 </Scrollbars>
               ) : (
@@ -301,21 +309,37 @@ class Admin extends Component {
                     <li>
                       <Link
                         to="/admin/dashboard"
-                        className="admin-nav-list__link"
+                        className={this.state.activeButton ? "admin-nav-list__link admin-nav-list__link-top" : "admin-nav-list__link active__panel"}
+                        onClick={() => this.setState({ activeButton: 0 })}
                       >
-                        <DashboardSvg className="icon" />
-                        <span>Dashboard</span>
+                        <MainSvg className="icon" />
+                        <DropletSvg className="icon__droplet"/>
+                        <span>Main</span>
                       </Link>
                     </li>
                     <li>
                       <Link
                         to="/admin/assets"
-                        className="admin-nav-list__link"
+                        className={this.state.activeButton === 1 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                        onClick={() => this.setState({ activeButton: 1 })}
                       >
                         <AssetSvg className="icon" />
+                        <DropletSvg className="icon__droplet"/>
                         <span>Assets</span>
                       </Link>
-                      <WithRouterAdminAssetsDropList />
+                      {/*<WithRouterAdminAssetsDropList activeButton={() => this.setState({ activeButton: 1 })}/>*/}
+                    </li>
+                    <li>
+                      <Link
+                        to="/admin/templates"
+                        className={this.state.activeButton === 2 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                        onClick={() => this.setState({ activeButton: 2 })}
+                      >
+                        <LayoutSvg className="icon" />
+                        <DropletSvg className="icon__droplet"/>
+                        <span>Layouts</span>
+                      </Link>
+                      <WithRouterAdminTemplatesDropList activeButton={() => this.setState({ activeButton: 2 })} />
                     </li>
                     <li>
                       {/*<Link to="/admin/tables" className="admin-nav-list__link">*/}
@@ -325,27 +349,29 @@ class Admin extends Component {
 
                       <Link
                         to="/admin/tables/models"
-                        className="admin-nav-list__link"
+                        className={this.state.activeButton === 3 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                        onClick={() => this.setState({ activeButton: 3 })}
                       >
-                        <TableSvg className="icon" />
+                        <TablesSvg className="icon" />
+                        <DropletSvg className="icon__droplet"/>
                         <span>Tables</span>
                       </Link>
-                      <WithRouterAdminTablesDropList />
+                      <WithRouterAdminTablesDropList activeButton={() => this.setState({ activeButton: 3 })}/>
                     </li>
                     <li>
-                      <Link
-                        to="/admin/templates"
-                        className="admin-nav-list__link"
+                      <Link to="/admin/robots"
+                            className={this.state.activeButton === 4 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                            onClick={() => this.setState({ activeButton: 4 })}
                       >
-                        <TemplateSvg className="icon" />
-                        <span>Templates</span>
+                        <RobotsSvg className="icon" />
+                        <DropletSvg className="icon__droplet"/>
+                        <span>Robots</span>
                       </Link>
-                      <WithRouterAdminTemplatesDropList />
                     </li>
                     <li>
-                      <Link to="/admin/robots" className="admin-nav-list__link">
+                      <Link to="/admin/customizers" className="admin-nav-list__link">
                         <TemplateSvg className="icon" />
-                        <span>Robots</span>
+                        <span>Customizer</span>
                       </Link>
                     </li>
                     {/* <li>
@@ -356,29 +382,12 @@ class Admin extends Component {
                   </li> */}
                     <li>
                       <Link
-                        to="/admin/users"
-                        className="admin-nav-list__link"
-                      >
-                        <UserSvg className="icon" />
-                        <span>Users</span>
-                      </Link>
-                      <WithRouterAdminUsersDropList />
-                    </li>
-                    <li>
-                      <Link
-                        to="/admin/access/roles"
-                        className="admin-nav-list__link"
-                      >
-                        <UserSvg className="icon" />
-                        <span>Access</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
                         to="/admin/plugins"
-                        className="admin-nav-list__link"
+                        className={this.state.activeButton === 5 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                        onClick={() => this.setState({ activeButton: 5 })}
                       >
                         <PluginSvg className="icon" />
+                        <DropletSvg className="icon__droplet"/>
                         <span>Plugins</span>
                       </Link>
                     </li>
@@ -393,20 +402,25 @@ class Admin extends Component {
                     </li>
                     <li>
                       <Link
-                        to="/admin/settings"
-                        className="admin-nav-list__link"
+                        to="/admin/users"
+                        className={this.state.activeButton === 6 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                        onClick={() => this.setState({ activeButton: 6 })}
                       >
-                        <SettingSvg className="icon" />
-                        <span>Settings</span>
+                        <UserSvg className="icon" />
+                        <DropletSvg className="icon__droplet"/>
+                        <span>Users</span>
                       </Link>
+                      <WithRouterAdminUsersDropList activeButton={() => this.setState({ activeButton: 6 })} />
                     </li>
                     <li>
                       <Link
-                        to="/admin/menus"
-                        className="admin-nav-list__link"
+                        to="/admin/settings"
+                        className={this.state.activeButton === 7 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                        onClick={() => this.setState({ activeButton: 7 })}
                       >
                         <SettingSvg className="icon" />
-                        <span>Menus</span>
+                        <DropletSvg className="icon__droplet"/>
+                        <span>Settings</span>
                       </Link>
                     </li>
                   </ul>
@@ -432,18 +446,19 @@ class Admin extends Component {
             <Route path="/admin/users/new" exact>
               <AddUserPage />
             </Route>
-            <Route path="/admin/users/user/:id" exact>
-              <UserPage />
-            </Route>
-            <Route path="/admin/users/user/:id" exact>
-              <Notifications />
-            </Route>
-            <Route path="/admin/users/user/:id/notification/:name" exact>
-              <EditNotification />
-            </Route>
-            <Route path="/admin/users/user/:id/notification/new" exact>
-              <EditNotification />
-            </Route>            <Route path="/admin/tools">
+            {/*<Route path="/admin/users/user/:id" exact>*/}
+            {/*  <UserPage />*/}
+            {/*</Route>*/}
+            {/*<Route path="/admin/users/user/:id" exact>*/}
+            {/*  <Notifications />*/}
+            {/*</Route>*/}
+            {/*<Route path="/admin/users/user/:id/notification/:name" exact>*/}
+            {/*  <EditNotification />*/}
+            {/*</Route>*/}
+            {/*<Route path="/admin/users/user/:id/notification/new" exact>*/}
+            {/*  <EditNotification />*/}
+            {/*</Route>*/}
+            <Route path="/admin/tools">
               <UsersTools />
             </Route>
             <Route path="/admin/assets/custom-fonts">
@@ -515,6 +530,9 @@ class Admin extends Component {
             <Route path="/admin/robots">
               <Robots />
             </Route>
+            <Route path="/admin/customizers">
+              <Customizer />
+            </Route>
             <Route path="/admin/pages" exact>
               <AllPages />
             </Route>
@@ -525,7 +543,7 @@ class Admin extends Component {
               <AddPage />
             </Route>
             <Route path="/admin/tables/models" exact>
-              <Models />
+              <Models updateModels={this.updateModels} />
             </Route>
             <Route path="/admin/tables/sql_editors" exact>
               <SQLEditors />
@@ -537,10 +555,10 @@ class Admin extends Component {
               <SqlEditor />
             </Route>
             <Route path="/admin/tables/models/add">
-              <EditModel />
+              <AddModel updateModels={this.updateModels} />
             </Route>
             <Route path="/admin/tables/models/edit/:id" exact>
-              <EditModel />
+              <EditModel updateModels={this.updateModels}/>
             </Route>
             <Route path="/admin/tables/models/:modelId/fields/add">
               <EditField />
@@ -592,6 +610,9 @@ class Admin extends Component {
             </Route>
             <Route path="/admin/access">
               <AccessOptions />
+            </Route>
+            <Route path="/admin/models">
+              <ModelsPage />
             </Route>
             <Route path="/admin/model/:id">
               <ModelPage />

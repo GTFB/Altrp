@@ -5,6 +5,7 @@ import { iconsManager } from "../js/helpers";
 import Resource from "../../../editor/src/js/classes/Resource";
 import { ImageDetail } from "./ImageDetail";
 import { FontsDetail } from "./FontsDetail";
+import IconUpload from "./../svgs/upload.svg"
 
 class Assets extends Component {
   constructor(props) {
@@ -239,68 +240,68 @@ class Assets extends Component {
           onDrop={this.onDrop}
           onDragOver={this.onDragOver}>
           <label className="uploader__label d-flex flex-column align-items-center">
-            <UploadIcon width={100} height={100} className="icon" />
+            <IconUpload width={100} height={100} className="icon" />
             <input
               type="file"
               accept={this.state.acceptInput}
               multiple={true}
               onChange={this.onChange}
               className="uploader__input" />
-            <span className="uploader__text text text_bold">
+            <span className="uploader__text">
               Drag or Choose File
             </span>
           </label>
         </div>
-        <div className="custom-tab__tabs mt-4">
+        <div className="custom-tab__tabs mt-4 upload__marginBottom">
           <NavLink
             className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"
             to={`${this.path}/images`}
             isActive={this.isActiveLink('images')}
             onClick={this.onFilterAssets('images')}
-          >IMAGES</NavLink>
+          >Images</NavLink>
           <NavLink
             className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"
             to={`${this.path}/documents`}
             isActive={this.isActiveLink('documents')}
             onClick={this.onFilterAssets('documents')}
-          >DOCUMENTS</NavLink>
+          >Documents</NavLink>
           <NavLink
             className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"
             to={`${this.path}/fonts`}
             isActive={this.isActiveLink('fonts')}
             onClick={this.onFilterAssets('fonts')}
-          >FONTS</NavLink>
+          >Fonts</NavLink>
           <NavLink
             className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"
             to={`${this.path}/svgs`}
             isActive={this.isActiveLink('svgs')}
             onClick={this.onFilterAssets('svgs')}
-          >SVGS</NavLink>
+          >Svgs</NavLink>
           <NavLink
             className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"
             to={`${this.path}/archives`}
             isActive={this.isActiveLink('archives')}
             onClick={this.onFilterAssets('archives')}
-          >ARCHIVES</NavLink>
+          >Archives</NavLink>
           <NavLink
             className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"
             to={`${this.path}/medias`}
             isActive={this.isActiveLink('medias')}
             onClick={this.onFilterAssets('medias')}
-          >MEDIAS</NavLink>
+          >Medias</NavLink>
           <NavLink
             className="custom-tab__tab"
             activeClassName="custom-tab__tab--selected"
             to={`${this.path}/others`}
             isActive={this.isActiveLink('others')}
             onClick={this.onFilterAssets('others')}
-          >OTHERS</NavLink>
+          >Others</NavLink>
         </div>
         <div className="admin-assets__list custom-tab__tab-panel p-4 assets-list d-flex flex-wrap">
           {

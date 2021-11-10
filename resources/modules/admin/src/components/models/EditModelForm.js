@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import {Link, Redirect} from "react-router-dom";
-import { titleToName }from "../../js/helpers";
+import {titleToName, titleToNameTwo} from "../../js/helpers";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import AltrpSelect from "../altrp-select/AltrpSelect";
+import {InputGroup} from "@blueprintjs/core";
 
 class EditModelForm extends Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class EditModelForm extends Component {
     this.setState(state => ({
       ...state, value: {
         ...state.value,
-        title: e.target.value,
+        title: titleToNameTwo(e.target.value),
         name: titleToName(e.target.value)
       }
     }))
@@ -77,37 +78,68 @@ class EditModelForm extends Component {
     if(this.state.redirect){
       return <Redirect to={this.state.redirect} push={true}/>
     }
-    return <form className="admin-form row" onSubmit={this.submitHandler}>
-      <div className="form-group col-12">
-        <label htmlFor="page-title">Model Title</label>
-        <input type="text" id="page-title" required
-          value={model.title || ''}
-          onChange={this.titleChangeHandler}
-          className="form-control" />
+    return <form className="admin-form model-width" onSubmit={this.submitHandler}>
+      <div className="form-group__inline-wrapper">
+        <div className="form-group form-group_width47">
+          <label htmlFor="page-title" className="font__edit">Model Title</label>
+          {/*<input type="text" id="page-title" required*/}
+          {/*       value={model.title || ''}*/}
+          {/*       onChange={this.titleChangeHandler}*/}
+          {/*       className="form-control" />*/}
+          <InputGroup className="form-control-blueprint"
+                      onChange={this.titleChangeHandler}
+                      value={model.title || ''}
+                      type="text"
+                      id="page-title"
+                      pattern="(?=\D).+"
+                      required
+          />
+        </div>
+        <div className="form-group form-group_width47">
+          <label htmlFor="page-name" className="font__edit">Model Name</label>
+          {/*<input type="text" id="page-name" required*/}
+          {/*       value={model.name || ''}*/}
+          {/*       onChange={e => { this.changeValue(e.target.value, 'name') }}*/}
+          {/*       className="form-control" />*/}
+          <InputGroup className="form-control-blueprint"
+                      onChange={e => { this.changeValue(e.target.value, 'name') }}
+                      value={model.name || ''}
+                      type="text"
+                      id="page-name"
+                      required
+          />
+        </div>
       </div>
-      <div className="form-group col-4">
-        <label htmlFor="page-name">Model Name</label>
-        <input type="text" id="page-name" required
-          value={model.name || ''}
-          onChange={e => { this.changeValue(e.target.value, 'name') }}
-          className="form-control" />
+      <div className="form-group__inline-wrapper">
+        <div className="form-group form-group_width47">
+          <label htmlFor="page-description" className="font__edit">Parent Model</label>
+          {/*<input type="text" id="page-description"*/}
+          {/*       value={model.parent_model_id || ''}*/}
+          {/*       onChange={e => { this.changeValue(e.target.value, 'parent_model_id') }}*/}
+          {/*       className="form-control" />*/}
+          <InputGroup className="form-control-blueprint"
+                      onChange={e => { this.changeValue(e.target.value, 'parent_model_id') }}
+                      value={model.parent_model_id || ''}
+                      type="text"
+                      id="page-description"
+          />
+        </div>
+        <div className="form-group form-group_width47">
+          <label htmlFor="page-description" className="font__edit">Model Description</label>
+          {/*<input type="text" id="page-description"*/}
+          {/*       value={model.description || ''}*/}
+          {/*       onChange={e => { this.changeValue(e.target.value, 'description') }}*/}
+          {/*       className="form-control" />*/}
+          <InputGroup className="form-control-blueprint"
+                      onChange={e => { this.changeValue(e.target.value, 'parent_model_id') }}
+                      value={model.description || ''}
+                      type="text"
+                      id="page-description"
+          />
+        </div>
       </div>
-      <div className="form-group col-4">
-        <label htmlFor="page-description">Parent Model</label>
-        <input type="text" id="page-description"
-               value={model.parent_model_id || ''}
-               onChange={e => { this.changeValue(e.target.value, 'parent_model_id') }}
-               className="form-control" />
-      </div>
-      <div className="form-group col-4">
-        <label htmlFor="page-description">Model Description</label>
-        <input type="text" id="page-description"
-          value={model.description || ''}
-          onChange={e => { this.changeValue(e.target.value, 'description') }}
-          className="form-control" />
-      </div>
-      {(model.id) ? '' : <div className="form-group col-12 ">
-        <label htmlFor="model-table_id" className="label_checkbox">Table</label>
+      {(model.id) ? '' : <div className="form-group">
+        <label htmlFor="model-table_id" className="font__edit">Table</label>
         <AltrpSelect
             id="model-table_id"
             defaultOptions={[
@@ -121,20 +153,20 @@ class EditModelForm extends Component {
             onChange={value => {this.changeValue(value, 'table_id')}}
             optionsRoute="/admin/ajax/tables/options"/>
       </div>}
-      <div className="row col-12">
-        <div className="form-group col-6 form-check-inline">
+      <div className="checkbox-container-editModel">
+        <div className="form-group__flexModel">
           <input type="checkbox" id="page-soft_deletes"
             checked={model.soft_deletes}
             onChange={e => { this.changeValue(e.target.checked, 'soft_deletes') }}
-            className="form-check-input form-check-input" />
-          <label htmlFor="page-soft_deletes" className="label_checkbox">Soft Deletes</label>
+            />
+          <label htmlFor="page-soft_deletes" className="label_model font__edit">Soft Deletes</label>
         </div>
-        <div className="form-group col-6 form-check-inline">
+        <div className="form-group__flexModel">
           <input type="checkbox" id="page-time_stamps"
             checked={model.time_stamps}
             onChange={e => { this.changeValue(e.target.checked, 'time_stamps') }}
-            className="form-check-input form-check-input_inline" />
-          <label htmlFor="page-time_stamps" className="label_checkbox">Time Stamps</label>
+            />
+          <label htmlFor="page-time_stamps" className="label_model font__edit">Time Stamps</label>
         </div>
 
       </div>

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
-import Pagination from "./Pagination";
 import { buildPagesTree } from "../js/helpers";
 
 export default class AllPages extends Component {
@@ -18,12 +17,9 @@ export default class AllPages extends Component {
   }
 
   getPages = async s => {
-    if (typeof s === 'object') {
-      s = undefined;
-    }
-    let res = await this.resource.getQueried({ s });
+    let res = await this.resource.getQueried({ s: this.state.pagesSearch });
     this.setState(state => {
-      return { ...state, pages: res, pagesSearch: s };
+      return { ...state, pages: res };
     });
   };
 
@@ -31,12 +27,18 @@ export default class AllPages extends Component {
     this.getPages();
   }
 
-  changeSearchHandler = e => {
-    this.getPages(e.target.value);
+  submitSearchHandler = (e) => {
+    e.preventDefault();
+    this.getPages();
+  }
+
+  changeSearchHandler = (e) => {
+    this.setState({pagesSearch: e.target.value})
   };
 
   render() {
     const { currentPage, pages, pagesSearch } = this.state;
+    console.log("pages", pages)
     return (
       <div className="admin-pages admin-page">
         <div className="admin-heading">
@@ -74,6 +76,10 @@ export default class AllPages extends Component {
                 title: "Path",
                 url: true,
                 target: "_blank"
+              },
+              {
+                name: 'categories',
+                title: 'Categories'
               }
             ]}
             quickActions={[
@@ -82,7 +88,7 @@ export default class AllPages extends Component {
                 route: `/admin/ajax/pages/:id`,
                 method: "delete",
                 confirm: "Are You Sure?",
-                after: this.getPages,
+                after: () => { this.getPages() },
                 className: "quick-action-menu__item_danger",
                 title: "Trash"
               }
@@ -93,11 +99,12 @@ export default class AllPages extends Component {
             )}
             search={{
               value: pagesSearch || "",
-              changeHandler: this.changeSearchHandler
+              submitHandler: this.submitSearchHandler,
+              changeHandler: (e) => this.changeSearchHandler(e)
             }}
             getPages={this.getPages}
-          />
-          <Pagination
+
+
             pageCount={Math.ceil(pages.length / this.itemsPerPage) || 1}
             currentPage={currentPage}
             changePage={page => {
@@ -106,6 +113,7 @@ export default class AllPages extends Component {
               }
             }}
             itemsCount={pages.length}
+            openPagination={true}
           />
         </div>
       </div>

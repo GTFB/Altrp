@@ -17,7 +17,7 @@ class EditUserPage extends Component {
         redirectAfterSave: false,
     };
     this.resource = new Resource({route: '/admin/ajax/users/user'});
-    
+
     //this.savePage = this.savePage.bind(this);
   }
   /*async componentDidMount(){
@@ -75,13 +75,6 @@ class EditUserPage extends Component {
     }
     return <div className="admin-users">
         <div className="wrapper">
-            <div className="admin-heading-users">
-                <div className="admin-breadcrumbs">
-                    <Link className="admin-breadcrumbs__link" to={"/admin/users"}>Users</Link>
-                    <span className="admin-breadcrumbs__separator">/</span>
-                    <span className="admin-breadcrumbs__current">Add New Users</span>
-                </div>
-            </div>
             <div className="admin-users-form">
                 <UserForm redirect_url="/admin/users" id={this.state.user_id} />
             </div>

@@ -7,6 +7,7 @@ import {aceEditorReducer} from "./ace-editor/reducers";
 import {currentUserReducer} from "../../../../front-app/src/js/store/current-user/reducers";
 import { websocketsReducer } from "./websockets-storage/reducers";
 import {customFontsReduser} from "./custom-fonts/reducers";
+import {modelsReducer} from "./models-state/reducers";
 
 
 export default combineReducers({
@@ -18,4 +19,5 @@ export default combineReducers({
   currentUser: currentUserReducer,
   websocketStore: websocketsReducer,
   customFonts: customFontsReduser,
+  modelsState: modelsReducer,
 });

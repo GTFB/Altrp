@@ -58,7 +58,7 @@ class BlurprintMultiSelect extends React.Component {
           tagInputProps={{
             onRemove: this.handleTagRemove
           }}
-        ></MultiSelect>
+        > </MultiSelect>
       </div>
     );
   }

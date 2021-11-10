@@ -1,14 +1,14 @@
 .uploader{
   padding: 48px;
   background-color: #fff;
-  border: 1px solid $border-gray;
-  border-radius: 5px;
+  border-radius: 10px;
   -webkit-transition-duration: .5s;
   -moz-transition-duration: .5s;
   -ms-transition-duration: .5s;
   -o-transition-duration: .5s;
   transition-duration: .5s;
   color: $grey;
+  border: 1px solid #D5D7DE;
   & .icon {
     width: auto;
     height: auto;

@@ -498,7 +498,6 @@ class InputTextCommonWidget extends Component {
     if(_.isString(content_options)
       && content_options.indexOf('{{') === 0 ){
       options = getDataByPath(content_options.replace('{{', '').replace('}}', ''))
-      console.log(options);
       if( ! _.isArray(options)){
         options = [];
       }
@@ -514,19 +513,16 @@ class InputTextCommonWidget extends Component {
       o += '';
       return o.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) >= 0;
     });
-    console.log(options);
     options = options.map(o=>{
       if(! _.isObject(o)){
         return o;
       }
       return o?.label ||o?.value || ''
     })
-    console.log(options);
     options = _.uniq(options);
     if(options.length === 1 && options.find(o=>o==value)){
       options = [];
     }
-    console.log(options);
     return options;
   }
   /**

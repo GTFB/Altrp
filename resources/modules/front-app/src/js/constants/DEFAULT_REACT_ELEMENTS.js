@@ -1,6 +1,7 @@
 const DEFAULT_REACT_ELEMENTS = [
   'input',
   'input-select',
+  'input-select-tree',
   'input-multi-select',
   'input-select2',
   'input-radio',
@@ -19,6 +20,7 @@ const DEFAULT_REACT_ELEMENTS = [
   'input-tel',
   'input-email',
   'input-date',
+  'input-date-range',
   'input-hidden',
   'input-file',
   'input-gallery',
@@ -44,5 +46,6 @@ const DEFAULT_REACT_ELEMENTS = [
   'tabs',
   'heading-type-animating',
   'scheduler',
+  'tree',
 ]
 export default DEFAULT_REACT_ELEMENTS

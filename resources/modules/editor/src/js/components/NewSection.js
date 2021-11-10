@@ -3,8 +3,21 @@ import PlusIcon from "../../svgs/plus.svg";
 import FolderIcon from "../../svgs/folder.svg";
 import { getEditor } from "../helpers";
 import Column from "../classes/elements/Column";
+import GetTemplate from "./get-template/GetTemplate";
+import GetSection from "./get-section/GetSection";
 
 class NewSection extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showTemplates: false,
+      showSections: false,
+    };
+
+    this.showTemplates = this.showTemplates.bind(this);
+    this.showSections = this.showSections.bind(this);
+  }
+
   onDragOver(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -29,28 +42,54 @@ class NewSection extends Component {
     return false;
   }
 
+  showTemplates() {
+    this.setState((s) => ({
+      ...s,
+      showTemplates: !s.showTemplates
+    }));
+  }
+
+  showSections() {
+    this.setState((s) => ({
+      ...s,
+      showSections: !s.showSections
+    }));
+  }
+
   render() {
     return (
-      <div
-        className="new-section"
-        onDragOver={this.onDragOver}
-        onDragEnter={this.onDragEnter}
-        onDrop={this.onDrop}
-        data-element-type="new-section"
-      >
-        <div className="new-section-buttons d-flex">
-          <button
-            draggable="true"
-            className="new-section__button new-section__button_add d-flex "
-          >
-            <PlusIcon />
-          </button>
-          <button className="new-section__button new-section__button_library d-flex">
-            <FolderIcon />
-          </button>
+      <>
+        <div
+          className="new-section"
+          onDragOver={this.onDragOver}
+          onDragEnter={this.onDragEnter}
+          onDrop={this.onDrop}
+          data-element-type="new-section"
+        >
+          <div className="new-section-buttons d-flex">
+            <button
+              onClick={this.showSections}
+              draggable="true"
+              className="new-section__button new-section__button_add d-flex "
+            >
+              <PlusIcon />
+            </button>
+            <button
+              onClick={this.showTemplates}
+              className="new-section__button new-section__button_library d-flex"
+            >
+              <FolderIcon />
+            </button>
+          </div>
+          <div className="new-section__text">Drag widget here</div>
         </div>
-        <div className="new-section__text">Drag widget here</div>
-      </div>
+        {
+          this.state.showTemplates && <GetTemplate showTemplates={this.showTemplates}/>
+        }
+        {
+          this.state.showSections && <GetSection showSections={this.showSections}/>
+        }
+      </>
     );
   }
 }

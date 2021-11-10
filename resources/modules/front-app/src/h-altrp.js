@@ -143,8 +143,11 @@ if ('serviceWorker' in navigator) {
  */
 const frontAppContainer = document.getElementById('front-app');
 
-frontAppContainer.addEventListener('scroll', e=>{
-  appStore && appStore.dispatch(setScrollValue({top: e.target.scrollTop}))
+document.addEventListener('scroll', e=>{
+  appStore && appStore.dispatch(setScrollValue({top: document.documentElement.scrollTop}))
+  import(/* webpackChunkName: 'scroll-actions' */'./js/functions/actions/scroll-actions').then((module)=>{
+    module?.default(e);
+  })
 })
 document.body.addEventListener('click', e =>{
   import(/* webpackChunkName: 'click-actions' */'./js/functions/actions/click-actions').then((module)=>{

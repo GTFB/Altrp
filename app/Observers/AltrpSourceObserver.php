@@ -201,6 +201,23 @@ class AltrpSourceObserver
                     throw new ControllerFileException('Failed to delete method to the controller file', 500);
             }
         }
+        if ($source->type == 'customizer') {
+            $repo = new RepositoryFile($model);
+            $repoInterface = new RepositoryInterfaceFile($model);
+            $controllerWriter = new ControllerFileWriter(
+                $controllerFile,
+                $repo,
+                $repoInterface
+            );
+            if ($controllerWriter->methodSourceExists($source->getOriginal('name'))) {
+                $result = $controllerWriter->removeMethod(
+                    $source->getOriginal('name'),
+                  'CUSTOMIZERS_METHODS_BEGIN'
+                );
+                if (! $result)
+                    throw new ControllerFileException('Failed to delete method to the controller file', 500);
+            }
+        }
 
         $this->writeSourceAccess($source, request()->get('access'));
 

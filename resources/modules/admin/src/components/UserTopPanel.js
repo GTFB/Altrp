@@ -13,7 +13,7 @@ class UserTopPanel extends Component {
       <a href="#" className="top-panel-notification notification">
         <BellIcon className="notification__icon"/>
       </a>
-      <UserIcon className="top-panel__portrait"/>
+      {/*<UserIcon className="top-panel__portrait"/>*/}
       <div className="top-panel__greeting">Hello, {this.props.userName || "administrator"}</div>
       <button className="top-panel-logout logout" onClick={logout}>
         <LogoutIcon className="logout__icon"/>

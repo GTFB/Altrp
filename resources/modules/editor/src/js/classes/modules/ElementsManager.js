@@ -47,7 +47,7 @@ import NavWidget from "../../components/widgets/NavWidget";
 import DividerWidget from "../../components/widgets/DividerWidget";
 import TabsWidget from "../../components/widgets/TabsWidget";
 import ListWidget from "../../components/widgets/ListWidget";
-import AccordionWidget from "../../components/widgets/AccordionWidget";
+import AccordionWidget from "../../components/widgets/AccordionWidget/AccordionWidget";
 import CarouselWidget from "../../components/widgets/CarouselWidget";
 import MapWidget from "../../components/widgets/MapWidget";
 import MapConstructorWidget from "../../components/widgets/MapConstructorWidget";
@@ -100,6 +100,12 @@ import Icon from '../elements/Icon';
 import IconWidget from "../../components/widgets/IconWidget";
 import InputTextAutocomplete from "../elements/InputTextAutocomplete";
 import InputTextAutocompleteWidget from "../../components/widgets/InputTextAutocompleteWidget";
+import Tree from "../elements/Tree";
+import TreeWidget from "../../components/widgets/TreeWidget";
+import InputSelectTree from "../elements/InputSelectTree";
+import InputSelectTreeWidget from "../../components/widgets/InputSelectTreeWidget";
+import InputDateRange from "../elements/InputDateRange";
+import InputDateRangeWidget from "../../components/widgets/InputDateRangeWidget";
 
 import PieDiagram from "../elements/diagrams/PieDiagram";
 import PieDiagramWidget from "../../components/widgets/diagrams/PieDiagramWidget";
@@ -125,7 +131,7 @@ export default class ElementsManger {
     this.elements[Divider.getName()] = Divider;
     this.elements[Column.getName()] = Column;
     this.elements[Section.getName()] = Section;
-    this.elements[List.getName()] = List;
+    // this.elements[List.getName()] = List;
     this.elements[Nav.getName()] = Nav;
     this.elements[TabsSwitcher.getName()] = TabsSwitcher
     // this.elements[Input.getName()] = Input;
@@ -144,6 +150,7 @@ export default class ElementsManger {
     this.elements[InputImageSelect.getName()] = InputImageSelect;
     this.elements[InputAccept.getName()] = InputAccept;
     this.elements[InputDate.getName()] = InputDate;
+    this.elements[InputDateRange.getName()] = InputDateRange;
     this.elements[InputHidden.getName()] = InputHidden;
     this.elements[InputFile.getName()] = InputFile;
     this.elements[Table.getName()] = Table;
@@ -171,7 +178,9 @@ export default class ElementsManger {
     this.elements[Dropbar.getName()] = Dropbar;
     this.elements[ImageLightbox.getName()] = ImageLightbox;
     this.elements[Scheduler.getName()] = Scheduler;
+    this.elements[Tree.getName()] = Tree;
     this.elements[Icon.getName()] = Icon;
+    this.elements[InputSelectTree.getName()] = InputSelectTree;
 
     // Websocket Notifications
     // this.elements[Notifications.getName()] = Notifications;
@@ -189,6 +198,7 @@ export default class ElementsManger {
     this.components[InputTextCommon.getName()] = InputTextCommonWidget;
     this.components[InputTextAutocomplete.getName()] = InputTextAutocompleteWidget;
     this.components[InputSelect.getName()] = InputSelectWidget;
+    this.components[InputSelectTree.getName()] = InputSelectTreeWidget;
     this.components[InputMultiSelect.getName()] = InputMultiSelectWidget;
     this.components[InputSelect2.getName()] = InputSelect2Widget;
     this.components[InputRadio.getName()] = InputRadioWidget;
@@ -198,6 +208,7 @@ export default class ElementsManger {
     this.components[InputImageSelect.getName()] = InputImageSelectWidget;
     this.components[InputAccept.getName()] = InputAcceptWidget;
     this.components[InputDate.getName()] = InputDateWidget;
+    this.components[InputDateRange.getName()] = InputDateRangeWidget;
     this.components[InputHidden.getName()] = InputHiddenWidget;
     this.components[InputFile.getName()] = InputFileWidget;
     this.components[InputGallery.getName()] = InputGalleryWidget;
@@ -233,6 +244,7 @@ export default class ElementsManger {
     this.components[InputSlider.getName()] = InputSliderWidget;
     this.components[InputRangeSlider.getName()] = InputRangeSliderWidget;
     this.components[Scheduler.getName()] = SchedulerWidget;
+    this.components[Tree.getName()] = TreeWidget;
     this.components[Icon.getName()] = IconWidget;
     // Websocket Notifications widget
     // this.components[Notifications.getName()] = NotificationsWidget;

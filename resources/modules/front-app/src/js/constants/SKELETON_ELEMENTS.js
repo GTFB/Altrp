@@ -1,6 +1,7 @@
 const SKELETON_ELEMENTS = [
   'input',
   'input-select',
+  'input-select-tree',
   'input-multi-select',
   'input-select2',
   'input-radio',
@@ -19,6 +20,7 @@ const SKELETON_ELEMENTS = [
   'input-tel',
   'input-email',
   'input-date',
+  'input-date-range',
   'input-file',
   'input-gallery',
   'breadcrumbs',
@@ -42,5 +44,6 @@ const SKELETON_ELEMENTS = [
   'tabs',
   'heading-type-animating',
   'scheduler',
+  'tree',
 ]
 export default SKELETON_ELEMENTS

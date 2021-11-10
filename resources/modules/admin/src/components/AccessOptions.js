@@ -97,6 +97,14 @@ class AccessOptions extends Component {
     this.getPermissions();
   }
 
+  changeRoles = (e) => {
+    this.setState({ rolesFilter: e.target.value })
+  }
+
+  changePermissions = (e) => {
+    this.setState({ permissionsFilter: e.target.value })
+  }
+
   render() {
     const { roles, rolesPagination, rolesFilter, rolesSorting, permissions, permissionsPagination, permissionsFilter, permissionsSorting} = this.state;
     const activeTab = this.props.location.pathname === "/admin/access/roles" ? 0 : 1;
@@ -114,17 +122,13 @@ class AccessOptions extends Component {
           Add New
         </Link>
       </div>
-      <div className="admin-content">
+      <div className="admin-content zeroing__styleTabs">
         <Tabs selectedIndex={activeTab} onSelect={() => { }}>
           <TabList className="nav nav-pills admin-pills">
             <Link to="/admin/access/roles"><Tab>Roles</Tab></Link>
             <Link to="/admin/access/permissions"><Tab>Permissions</Tab></Link>
           </TabList>
           <TabPanel>
-            <form className="admin-panel py-2" onSubmit={this.searchRoles}>
-              <input className="input-sm mr-2" value={rolesFilter} onChange={e => this.setState({ rolesFilter: e.target.value })} />
-              <button className="btn btn_bare admin-users-button">Search</button>
-            </form>
             <AdminTable
               columns={columns}
               quickActions={[
@@ -149,18 +153,22 @@ class AccessOptions extends Component {
               }))}
               sortingHandler={this.rolesSortingHandler}
               sortingField={rolesSorting.order_by}
-            />
-            <Pagination pageCount={rolesPagination.pageCount}
+
+              searchAccessRoles={{
+                onSubmitAccessRoles: this.searchRoles,
+                valueAccessRoles: rolesFilter,
+                onChangeAccessRoles: this.changeRoles
+              }}
+
+              pageCount={rolesPagination.pageCount}
               currentPage={rolesPagination.currentPage}
               changePage={currentPage => this.setState({ rolesPagination: { ...rolesPagination, currentPage } }, this.getRoles)}
               itemsCount={rolesPagination.count}
+
+              openPagination={true}
             />
           </TabPanel>
           <TabPanel>
-            <form className="admin-panel py-2" onSubmit={this.searchPermissions}>
-              <input className="input-sm mr-2" value={permissionsFilter} onChange={e => this.setState({ permissionsFilter: e.target.value })} />
-              <button className="btn btn_bare admin-users-button">Search</button>
-            </form>
             <AdminTable
               columns={columns}
               quickActions={[
@@ -185,11 +193,19 @@ class AccessOptions extends Component {
               }))}
               sortingHandler={this.permissionsSortingHandler}
               sortingField={permissionsSorting.order_by}
-            />
-            <Pagination pageCount={permissionsPagination.pageCount}
+
+              searchAccessPermissions={{
+                onSubmitAccessPermissions: this.searchPermissions,
+                valueAccessPermissions: permissionsFilter,
+                onChangeAccessPermissions: this.changePermissions
+              }}
+
+              pageCount={permissionsPagination.pageCount}
               currentPage={permissionsPagination.currentPage}
               changePage={currentPage => this.setState({ permissionsPagination: { ...permissionsPagination, currentPage } }, this.getPermissions)}
               itemsCount={permissionsPagination.count}
+
+              openPagination={true}
             />
           </TabPanel>
         </Tabs>
