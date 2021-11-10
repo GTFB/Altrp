@@ -338,6 +338,15 @@ body {
 .controllers-wrapper {
     display: block;
     background-color: #fff;
+
+  & .bp3-menu {
+    height: 295px;
+    overflow: auto;
+  }
+
+  & .bp3-popover.bp3-minimal.bp3-popover {
+    flex-grow: 1;
+  }
 }
 .settings-section-box {
     margin: 15px 0px;
