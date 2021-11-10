@@ -50,7 +50,6 @@ import getInputMultiSelectStyles, {getInputMultiSelectPopoverStyles} from "./hel
 import getSchedulerStyles from "./helpers/getSchedulerStyles";
 import getInputTextAutocompleteStyles from "./helpers/getInputTextAutocompleteStyles";
 import TreeComponent from "../../../../editor/src/js/components/widgets/styled-components/TreeComponent";
-import InputDateRange from "../../../../editor/src/js/classes/elements/InputDateRange";
 import InputDateRangeComponent
   from "../../../../editor/src/js/components/widgets/styled-components/InputDateRangeComponent";
 
