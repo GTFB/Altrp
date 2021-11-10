@@ -9,119 +9,45 @@ import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/se
 import { getDataByPath, isEditor } from "../../../../../front-app/src/js/helpers";
 import moment from "moment";
 
-const AltrpDiagram = props => {
+const AltrpPieDiagram = props => {
   const { settings, id } = props;
 
   const dispatch = useDispatch();
-  const margin = settings?.margin;
   const widgetName = settings?.widget_name || id;
   const customColorSchemeChecker = settings?.isCustomColor;
 
   const customColors = settings?.customScheme?.map(item =>
     _.get(item, "color.colorPickedHex")
   );
-  const yScaleMax = settings?.yScaleMax;
 
-  const axisY = settings?.axisY;
-  const tooltipValues = settings?.repTooltips?.map(item => ({
-    label: _.get(item, "label"),
-    field: _.get(item, "value"),
-    color: _.get(item, "color")?.colorPickedHex
-  }));
   const useCustomTooltips = settings?.customTooltip;
 
-  const formattedYAxis =
-    axisY?.map(item => {
-      const valueFromPath = getDataByPath(item.yMarkerValue);
-      const value =
-        valueFromPath !== null
-          ? Number(valueFromPath)
-          : Number(item.yMarkerValue);
-      const data = {
-        axis: "y",
-        value: value,
-        lineStyle: {
-          stroke:
-            item.yMarkerColor != null
-              ? item.yMarkerColor.colorPickedHex
-              : "#000000",
-          strokeWidth: item.yMarkerWidth
-        },
-        textStyle: {
-          fill:
-            item.yMarkerLabelColor != null
-              ? item.yMarkerLabelColor.colorPickedHex
-              : "#000000"
-        },
-        legend: item.yMarkerLabel,
-        legendOrientation: item.yMarkerOrientation
-      };
-      return data;
-    }) || [];
-
-  const axisX = settings?.axisX;
-  const formattedXAxis =
-    axisX?.map(item => {
-      const valueFromPath = getDataByPath(item.xMarkerValue);
-
-      const value =
-        valueFromPath !== null
-          ? valueFromPath
-          : item.xMarkerIsDate
-          ? moment(item.xMarkerValue).format("DD.MM.YYYY")
-          : item.xMarkerValue;
-
-      const data = {
-        axis: "x",
-        value: value,
-        lineStyle: {
-          stroke:
-            item.xMarkerColor != null
-              ? item.xMarkerColor.colorPickedHex
-              : "#000000",
-          strokeWidth: item.xMarkerWidth
-        },
-        textStyle: {
-          fill:
-            item.xMarkerLabelColor != null
-              ? item.xMarkerLabelColor.colorPickedHex
-              : "#000000"
-        },
-        legend: item.xMarkerLabel,
-        legendOrientation: item.xMarkerOrientation
-      };
-      return data;
-    }) || [];
-
-  let constantsAxises = [];
-  if (formattedXAxis.length > 0) {
-    constantsAxises.push(formattedXAxis);
-    constantsAxises = constantsAxises.flat();
-  }
-  if (formattedYAxis.length > 0) {
-    constantsAxises.push(formattedYAxis);
-    constantsAxises = constantsAxises.flat();
-  }
-
   const sql = settings.query?.dataSource?.value;
-  const isMultiple = settings.isMultiple;
-  const isCustomColor = settings.isCustomColors;
   const keyIsDate = settings.key_is_date;
-  const sort = settings?.sort;
-  const tickRotation = settings?.tickRotation;
-  const bottomAxis = settings?.bottomAxis;
-  const enableGridX = settings?.enableGridX;
-  const enableGridY = settings?.enableGridY;
   //line settings
 
-  const colorScheme = settings?.colorScheme;
-
-  const innerRadius = settings?.innerRadius;
-  const enableSliceLabels = settings?.enableSliceLabels;
-  const padAngle = settings?.padAngle;
-  const cornerRadius = settings?.cornerRadius;
-  const sortByValue = settings?.sortByValue;
-  const enableRadialLabels = settings?.enableRadialLabels;
+  const {
+    activeOuterRadiusOffset,
+    margin,
+    yScaleMax,
+    colorScheme,
+    isMultiple,
+    isCustomColor,
+    sort,
+    tickRotation,
+    bottomAxis,
+    innerRadius,
+    enableSliceLabels,
+    padAngle,
+    cornerRadius,
+    sortByValue,
+    enableRadialLabels,
+    activeInnerRadiusOffset,
+    useCenteredMetric,
+    useLinkArcLabels,
+    useProcent
+  } = settings
+  
   //data variable
   let data = [];
 
@@ -150,11 +76,6 @@ const AltrpDiagram = props => {
         };
     });
   };
-  let legend = [];
-  const currentColors = isCustomColor
-    ? customColors
-    : _.find(Schemes, { value: settings?.colorScheme }).colors;
-  const colorsCount = currentColors.length;
 
   if (isEditor()) {
     data = [
@@ -204,10 +125,6 @@ const AltrpDiagram = props => {
       });
       
       data = [].concat(...data);
-      legend = data?.map((item, i) => ({
-        color: currentColors[i % colorsCount],
-        label: item.id || item.key
-      }));
 
     } else if (settings.datasource_path != null) {
       try {
@@ -218,10 +135,6 @@ const AltrpDiagram = props => {
         };
   
         data = formatData(data, r);
-        legend = data?.map((item, i) => ({
-          color: currentColors[i % colorsCount],
-          label: item.id || item.key
-        }));
       } catch (error) {
         console.log("====================================");
         console.error(error);
@@ -264,21 +177,13 @@ const AltrpDiagram = props => {
     filter: {}
   };
 
-  const setLegend = legend =>
-    dispatch(changePageState(widgetName, { legend: legend }));
-
-  useEffect(() => {
-    if (legend.length > 0) {
-      setLegend(legend);
-    }
-  }, [legend]);
-
   console.log("====================================");
   console.log(data);
   console.log("====================================");
 
   return (
     <DynamicPieChart
+      useProcent={useProcent}
       widgetID={id}
       margin={margin}
       useCustomTooltips={useCustomTooltips}
@@ -300,12 +205,30 @@ const AltrpDiagram = props => {
       sort={sort}
       tickRotation={tickRotation}
       bottomAxis={bottomAxis}
-      enableGridX={enableGridX}
-      enableGridY={enableGridY}
+      title={settings.datasource_title}
+      subTitle={settings.subtitle}
+      legend={settings.use_legend && {
+        anchor: settings.legend_anchor,
+        direction: settings.legend_direction,
+        itemDirection: settings.legend_item_direction,
+        translateX: settings.legend_translate_x,
+        translateY: settings.legend_translate_y,
+        itemsSpacing: settings.legend_items_spacing,
+        itemWidth: settings.legend_item_width,
+        itemHeight: settings.legend_item_height,
+        itemOpacity: settings.legend_item_opacity,
+        symbolSize: settings.legend_symbol_size,
+        symbolShape: settings.legend_symbol_shape
+      }}
+      keyIsDate={keyIsDate}
+      activeOuterRadiusOffset={activeOuterRadiusOffset}
+      activeInnerRadiusOffset={activeInnerRadiusOffset}
+      useCenteredMetric={useCenteredMetric}
+      useLinkArcLabels={useLinkArcLabels}
     />
   );
 };
 const mapStateToProps = state => ({
   currentDataStorage: state.currentDataStorage
 });
-export default connect(mapStateToProps)(AltrpDiagram);
+export default connect(mapStateToProps)(AltrpPieDiagram);

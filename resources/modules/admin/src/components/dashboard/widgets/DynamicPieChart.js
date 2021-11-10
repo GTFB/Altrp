@@ -10,7 +10,29 @@ const milkScheme2 = _.find(Schemes, { value: "milk2" }).colors;
 
 import { getWidgetData } from "../services/getWidgetData";
 import moment from "moment";
+import { animated } from '@react-spring/web'
 import TooltipPie from "./d3/TooltipPie";
+
+const CenteredMetric = ({ dataWithArc, centerX, centerY }) => {
+  let total = 0
+  dataWithArc.forEach(datum => {
+      total += datum.value
+  })
+
+  return (
+    <svg>
+      <text
+          x={centerX}
+          y={centerY}
+          textAnchor="middle"
+          dominantBaseline="central"
+          className='centered-metric'
+      >
+        {total}
+      </text>
+    </svg>
+  )
+}
 
 const DynamicPieChart = ({
   widget,
@@ -32,8 +54,24 @@ const DynamicPieChart = ({
   customColors = [],
   widgetID,
   useCustomTooltips,
-  margin
+  margin,
+  title,
+  subTitle,
+  legend,
+  activeOuterRadiusOffset,
+  activeInnerRadiusOffset,
+  useCenteredMetric,
+  useLinkArcLabels,
+  useProcent
 }) => {
+  if (legend) {
+    Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
+  }
+
+  let allValue = 0;
+
+  dataSource.forEach(el => allValue += el.value)
+  
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
 
@@ -84,13 +122,31 @@ const DynamicPieChart = ({
     getData();
   }, [getData]);
 
+  const clickHandler = async () => {
+
+  }
+
+  const layers = ['arcs', 'arcLabels', 'arcLinkLabels', 'legends']
+
+  if (useCenteredMetric) {
+    layers.push(CenteredMetric)
+  }
+
+  const customProperties = {}
+
+  if (!useLinkArcLabels) {
+    customProperties.arcLinkLabelComponent = () => <text />
+  }
+
   if (isLoading) return <Spinner />;
 
   if (!data || data.length === 0) return <EmptyWidget />;
 
   return (
     <>
-      <div style={{ height: height, width: width }}>
+      {title && <h3 className='diagram-title' style={{margin: 0}}>{title}</h3>}
+      {subTitle && <h5 className='diagram-subtitle' style={{margin: 0}}>{subTitle}</h5>}
+      <div className='diagram' style={{ height: height, width: width }}>
         <ResponsivePie
           data={data}
           colors={
@@ -112,9 +168,6 @@ const DynamicPieChart = ({
               widgetID={widgetID}
             ></TooltipPie>
           )}
-          innerRadius={innerRadius}
-          enableSliceLabels={enableSliceLabels}
-          padAngle={padAngle}
           cornerRadius={cornerRadius}
           sortByValue={sortByValue}
           axisBottom={
@@ -124,25 +177,42 @@ const DynamicPieChart = ({
           }
           margin={margin}
           enableRadialLabels={enableRadialLabels}
-          // legends={
-          //   !isDashboard
-          //     ? [
-          //         {
-          //           anchor: "right",
-          //           direction: "column",
-          //           translateX: 80,
-          //           translateY: 0,
-          //           itemsSpacing: 2,
-          //           itemWidth: 60,
-          //           itemHeight: 14,
-          //           itemDirection: "left-to-right",
-          //           itemOpacity: 1,
-          //           symbolSize: 14,
-          //           symbolShape: "circle"
-          //         }
-          //       ]
-          //     : []
-          // }
+          legends={legend && [
+            {
+              anchor: 'top-right',
+              direction: 'column',
+              translateX: 0,
+              translateY: 0,
+              itemsSpacing: 2,
+              itemWidth: 60,
+              itemHeight: 14,
+              itemDirection: "left-to-right",
+              itemOpacity: 1,
+              symbolSize: 14,
+              symbolShape: "circle",
+              ...legend
+            }
+          ]}
+          innerRadius={innerRadius}
+          enableSliceLabels={enableSliceLabels}
+          padAngle={padAngle}
+          animate={true}
+          activeOuterRadiusOffset={activeOuterRadiusOffset}
+          activeInnerRadiusOffset={activeInnerRadiusOffset}
+          layers={layers}
+          arcLabelsComponent={({ datum, label, style }) => {
+            console.log({datum});
+            return <animated.g transform={style.transform} style={{ pointerEvents: 'none' }}>
+                <text
+                    textAnchor="middle"
+                    dominantBaseline="central"
+                    className="arc-label"
+                >
+                    {label} {useProcent ?  ` (${Math.round((label / allValue) * 100)}%)` : ''}
+                </text>
+            </animated.g>
+          }}
+          {...customProperties}
         />
       </div>
     </>

@@ -48,6 +48,30 @@ export default function DiagramComponent(settings) {
     "altrp-btn",
       ["margin", "margin", "dimensions"],
     "}",
+
+    "diagram-title",
+      ["", "title_typography", "typographic"],
+      ["color", "title_color", "color"],
+      ["text-align", "title_alignment"],
+      ["padding", "title_padding", "dimensions"],
+    "}",
+
+    "diagram-subtitle",
+      ["", "subtitle_typography", "typographic"],
+      ["color", "subtitle_color", "color"],
+      ["text-align", "subtitle_alignment"],
+      ["padding", "subtitle_padding", "dimensions"],
+    "}",
+
+    'centered-metric',
+      ['', 'centered_metric_typography', 'typographic'],
+      ['fill', 'centered_metric_color', 'color'],
+    '}',
+
+    'arc-label',
+      ['', 'arc_label_typography', 'typographic'],
+      ['fill', 'arc_label_color', 'color'],
+    '}'
   ];
   return styledString(styles, settings)
 }

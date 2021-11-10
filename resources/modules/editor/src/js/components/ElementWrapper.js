@@ -275,6 +275,8 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       break;
     case "icon":
       styles += `.${prefix}${elementId} {${getIconStyles(settings, elementId)}}`
+    case "pie-diagram":
+      styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
   }
 
   const tooltip_show_type = settings.tooltip_show_type || "never";
