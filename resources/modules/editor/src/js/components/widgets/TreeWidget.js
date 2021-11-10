@@ -104,7 +104,7 @@ export const updateRepeater = function (repeaterSetting, other={}) {
       })
     }
 
-    if (!other.sort[0]) {
+    if (other?.sort && !other?.sort[0]) {
       children = _.sortBy(children, o => o && (o.label ? o.label.toString() : o));
       if(other.sort[1] === 'desc'){
         children = _.reverse(children)
@@ -129,7 +129,7 @@ export const updateRepeater = function (repeaterSetting, other={}) {
   })
 
 
-  if (!other.sort[0]) {
+  if (other?.sort && !other?.sort[0]) {
     newRepeater = _.sortBy(newRepeater, o => o && (o.label ? o.label.toString() : o));
     if(other.sort[1] === 'desc'){
       newRepeater = _.reverse(newRepeater)

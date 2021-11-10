@@ -4,6 +4,10 @@
 ## Changelog
 
 
+### 0.18.2
++ Add Tree Widget and Input Select Tree Widget
+
+
 ### 0.18.1
 * Fix Change Label in Node Issue
 * Hide Pagination when Page Size Greater then Items 
