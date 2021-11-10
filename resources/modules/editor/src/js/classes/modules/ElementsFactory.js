@@ -1,5 +1,6 @@
 import BaseModule from "./BaseModule";
 import { getEditor } from "../../helpers";
+import BaseElement from "../elements/BaseElement";
 
 class ElementsFactory extends BaseModule {
   /**
@@ -7,9 +8,19 @@ class ElementsFactory extends BaseModule {
    * @param object
    * @param parent
    * @param {boolean} rewriteStyles
+   * @param {object} other
+   * @param {boolean} [other.updateId]
    * @return {BaseElement}
    */
-  parseData(object, parent, rewriteStyles = false) {
+  parseData(object, parent, rewriteStyles = false, other) {
+    let updateId = false;
+
+    if(other) {
+      if(other.updateId) {
+        updateId = other.updateId;
+      }
+    }
+
     let children = [];
     const elementsManager = window.elementsManager;
     /**
@@ -33,7 +44,11 @@ class ElementsFactory extends BaseModule {
       );
       object.settings = JSON.parse(object.settings);
     } else {
-      element.id = object.id;
+      if(updateId) {
+        element.id = BaseElement.generateId();
+      } else {
+        element.id = object.id;
+      }
     }
     element.children = children;
     /**

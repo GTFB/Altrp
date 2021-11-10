@@ -13,6 +13,7 @@ const WIDGETS_DEPENDS = {
   'column': ['section-element-wrapper'],
   'section_widget': ['section-element-wrapper'],
   'input-select': ['blueprint', 'blueprint-select'],
+  'input-select-tree': ['blueprint', 'blueprint-select'],
   'input-multi-select': ['blueprint', 'blueprint-select'],
   'input-radio': ['blueprint'],
   'input-checkbox': ['blueprint'],
@@ -22,11 +23,13 @@ const WIDGETS_DEPENDS = {
   'input-text': ['blueprint'],
   'input-textarea': ['blueprint'],
   'input-text-common': ['blueprint'],
-  'input-text-autocomplete': ['blueprint', 'blueprint-popover'],
+  'input-text-autocomplete': ['blueprint'],
   'input-wysiwyg': ['ckeditor'],
   'input-date': ['blueprint', 'blueprint-datetime', 'moment'],
+  'input-date-range': ['blueprint', 'blueprint-datetime', 'moment'],
   'input-slider': ['blueprint'],
   'input-range-slider': ['blueprint'],
+  'tree': ['blueprint'],
   'scheduler': ['fullcalendar', 'blueprint']
 }
 export default WIDGETS_DEPENDS;

@@ -2,10 +2,11 @@ import React from 'react';
 import {isEditor} from "../../../../../front-app/src/js/helpers";
 import styled from "styled-components";
 let Tooltip2;
-import { Popover2InteractionKind } from "@blueprintjs/popover2"
+let Popover2InteractionKind
 
 if(window.altrpLibs) {
   Tooltip2 = window.altrpLibs.Tooltip2;
+  Popover2InteractionKind = window.altrpLibs.Popover2.Popover2InteractionKind;
 }
 
 function offset(slider) {

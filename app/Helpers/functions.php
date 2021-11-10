@@ -1010,6 +1010,8 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
   $DEFAULT_REACT_ELEMENTS = [
     'input',
     'input-select',
+    'input-date-range',
+    'input-select-tree',
     'input-multi-select',
     'input-select2',
     'input-radio',
@@ -1022,7 +1024,6 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'input-accept',
     'input-text',
     'input-text-common',
-    'input-text-autocomplete',
     'input-password',
     'input-number',
     'input-tel',
@@ -1050,6 +1051,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'tabs',
     'heading-type-animating',
     'scheduler',
+    'tree',
     'list'
   ];
   if( ! is_array( $elementNames ) ){

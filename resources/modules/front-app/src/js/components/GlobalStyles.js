@@ -49,6 +49,9 @@ import TooltipComponent from "../../../../editor/src/js/components/widgets/style
 import getInputMultiSelectStyles, {getInputMultiSelectPopoverStyles} from "./helpers/getInputMultiSelectStyles";
 import getSchedulerStyles from "./helpers/getSchedulerStyles";
 import getInputTextAutocompleteStyles from "./helpers/getInputTextAutocompleteStyles";
+import TreeComponent from "../../../../editor/src/js/components/widgets/styled-components/TreeComponent";
+import InputDateRangeComponent
+  from "../../../../editor/src/js/components/widgets/styled-components/InputDateRangeComponent";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -160,6 +163,12 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           )}`;
         }
           break
+        case "input-date-range": {
+          styles += `.${prefix}${id} {${InputDateRangeComponent(
+            item.settings,
+          )}}`;
+        }
+        break
         case "input-checkbox": {
           styles += `.${prefix}${id} {${InputCheckboxComponent(
             item.settings,
@@ -190,6 +199,12 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         case "input-select":{
           styles += `.${prefix}${id} {${getInputSelectStyles(item.settings, id)}}`
           styles += `${getInputSelectPopoverStyles(item.settings, id)}`
+        }
+          break;
+        case "input-select-tree": {
+          styles += `.${prefix}${id} {${getInputSelectStyles(item.settings, id)}}`
+          styles += `${getInputSelectPopoverStyles(item.settings, id)}`
+          styles += `.altrp-select-tree${id} {${TreeComponent(item.settings, "tree_")}}`;
         }
           break;
         case "input-multi-select":{
@@ -245,6 +260,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           break;
         case "scheduler":
           styles += `.${prefix}${id} {${getSchedulerStyles(item.settings, id)}}`;
+          break;
+        case "tree":
+          styles += `.${prefix}${id} {${TreeComponent(item.settings)}}`;
           break;
       }
       styles += `div.${prefix}${id}.${prefix}${id} {${AdvancedComponent(

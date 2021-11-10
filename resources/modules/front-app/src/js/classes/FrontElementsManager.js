@@ -92,6 +92,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-select-tree",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputSelectTreeWidget' */ "../../../../editor/src/js/components/widgets/InputSelectTreeWidget"
+            );
+        }
+      },
+      {
         name: "input-multi-select",
         import: async () => {
           return await import(
@@ -161,6 +169,14 @@ class FrontElementsManager {
           return await import(
             /* webpackChunkName: 'InputDate' */ "../../../../editor/src/js/components/widgets/InputDateWidget"
           );
+        }
+      },
+      {
+        name: "input-date-range",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputDateRange' */ "../../../../editor/src/js/components/widgets/InputDateRangeWidget"
+            );
         }
       },
       {
@@ -432,6 +448,14 @@ class FrontElementsManager {
         import: async () => {
           return await import(
             /* webpackChunkName: 'SchedulerWidget' */ "../../../../editor/src/js/components/widgets/SchedulerWidget"
+            );
+        }
+      },
+      {
+        name: "tree",
+        import: async () => {
+          return await import(
+              /* webpackChunkName: 'TreeWidget' */ "../../../../editor/src/js/components/widgets/TreeWidget"
             );
         }
       },

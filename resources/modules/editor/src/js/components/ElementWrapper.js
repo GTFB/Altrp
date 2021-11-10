@@ -68,6 +68,10 @@ import getSchedulerStyles from "../../../../front-app/src/js/components/helpers/
 import getIconStyles from "../../../../front-app/src/js/components/helpers/getIconStyles";
 import getInputTextAutocompleteStyles
   from "../../../../front-app/src/js/components/helpers/getInputTextAutocompleteStyles";
+import TreeComponent from "./widgets/styled-components/TreeComponent";
+import getInputSelectTreeStyles from "../../../../front-app/src/js/components/helpers/getInputSelectTreeStyles";
+import InputDateRange from "../classes/elements/InputDateRange";
+import InputDateRangeComponent from "./widgets/styled-components/InputDateRangeComponent";
 
 const { connect } = window.reactRedux;
 const { replaceContentWithData } = window.altrpHelpers;
@@ -109,6 +113,9 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       break;
     case "accordion":
       styles += `.${prefix}${elementId} {${AccordionComponent(settings)}}`;
+      break;
+    case "tree":
+      styles += `.${prefix}${elementId} {${TreeComponent(settings)}}`;
       break;
     case "section_widget":
     case "section":
@@ -179,6 +186,10 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
 
         styles += `${DatePickerComponent(settings, elementId)}`;
       }
+      break
+    case "input-date-range": {
+      styles += `.${prefix}${elementId} {${InputDateRangeComponent(settings)}}`
+      }
       break;
     case "input-checkbox":
       {
@@ -232,6 +243,12 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
           elementId
         )}}`;
         styles += `${getInputSelectPopoverStyles(settings, elementId)}`;
+      }
+      break;
+    case "input-select-tree": {
+      styles += `.${prefix}${elementId} {${getInputSelectTreeStyles(settings)}}`;
+        styles += `${getInputSelectPopoverStyles(settings, elementId)}`;
+      styles += `.altrp-select-tree${elementId} {${TreeComponent(settings, "tree_")}}`;
       }
       break;
     case "input-multi-select":

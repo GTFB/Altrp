@@ -29,9 +29,7 @@ class Marketplace extends React.Component {
     // Http.responseType = "blob"
     // Http.setRequestHeader("Accept", "application/zip,application/x-zip,application/x-zip-compressed")
     // Http.send();
-    // console.log("start")
     // Http.onreadystatechange=(e)=>{
-    //   console.log("ready")
     //   window.parent.postMessage({
     //     type: "template_download",
     //     data:  e.target.response

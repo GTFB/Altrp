@@ -246,6 +246,7 @@ class FrontElement {
       }
       break;
       case 'input-select':
+      case 'input-select-tree':
       case 'input-multi-select':
       case 'input-select2':
       case 'input-switch':
@@ -257,6 +258,7 @@ class FrontElement {
       case 'input-gallery':
       case 'input-accept':
       case 'input-date':
+      case 'input-date-range':
       case 'input-textarea':
       case 'input-password':
       case 'input-email':
