@@ -22,62 +22,39 @@ class TooltipScatter extends PureComponent {
     }
   }
 
-  customTooltip() {
-    return (
-      <>
+  render() {
+    if (this.state.enable) {
+      return (
         <div
-          className={`${this.props.widgetID} altrp-dashboard__tooltip--label-background altrp-dashboard__tooltip--width altrp-dashboard__tooltip--label-background-shadow altrp-dashboard__tooltip--border-type altrp-dashboard__tooltip--border-width altrp-dashboard__tooltip--border-color col-12`}
+          className={`${this.props.widgetID} altrp-dashboard__tooltip--font altrp-dashboard__tooltip--label-background altrp-dashboard__tooltip--width altrp-dashboard__tooltip--label-background-shadow altrp-dashboard__tooltip--border-type altrp-dashboard__tooltip--border-width altrp-dashboard__tooltip--border-color col-12`}
           style={{ padding: "5px 9px" }}
         >
           <div>
-          {this.props.datum.node.data?.tooltip === undefined &&
             <div
-              className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
               style={{
-                whiteSpace: "pre",
-                display: "flex",
-                alignItems: "center"
+                color: 'white',
+                display: 'flex'
               }}
             >
-              <span
-                style={{
-                  display: "block",
-                  width: "12px",
-                  height: "12px",
-                  background: this.props.datum.node.style.color,
-                  marginRight: "7px"
-                }}
-              ></span>
-              {this.props.datum.node.data.formattedX}:{" "}
-              <strong
-                className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
-              >
-                {this.props.datum.node.data.formattedY}
-              </strong>
+              <div style={{
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <div style={{
+                  width: '15px',
+                  height: '15px',
+                  background: this.props.datum.datum.color || "#000000",
+                  marginRight: '3px',
+                  marginTop: '1px'
+                }} />
+              </div>
+              {this.props.datum?.datum?.label}:
+              <strong>{this.props.datum?.datum?.value}</strong>
             </div>
-            }
-            {this.props.datum.node.data?.tooltip?.map((item, index) => {
-              return (
-                <div
-                  style={{
-                    color: item?.color || "#000000"
-                  }}
-                  key={index}
-                >
-                  {`${item?.label}:`}
-                  <strong>{item.value}</strong>
-                </div>
-              );
-            })}
           </div>
         </div>
-      </>
-    );
-  }
-
-  render() {
-    if (this.state.enable) {
-      return this.customTooltip();
+      )
     }
     return (
       <>
@@ -103,13 +80,13 @@ class TooltipScatter extends PureComponent {
                 display: "block",
                 width: "12px",
                 height: "12px",
-                background: this.props.datum.node.style.color,
+                background: this.props.datum.datum.color,
                 marginRight: "7px"
               }}
             ></span>
             <span>
-              {this.props.datum.node.data.formattedX}:{" "}
-              <strong>{this.props.datum.node.data.formattedY}</strong>
+              {this.props.datum.datum.label}:{" "}
+              <strong>{this.props.datum.datum.value}</strong>
             </span>
           </div>
         </div>
