@@ -128,7 +128,8 @@ class AddPage extends Component {
             rolesOptions: [{value: "guest", label: "Guest"}, ...pageData.roles],
             title: pageData.title,
             id
-          }
+          },
+          id
         };
       });
     }
@@ -197,6 +198,7 @@ class AddPage extends Component {
     }
     this.state.value.redirect = redirect;
     this.state.value.path = path;
+
     if (this.state.id) {
       res = await this.resource.put(this.state.id, {
         ...this.state.value,

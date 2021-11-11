@@ -436,16 +436,16 @@ class SimpleElementWrapper extends Component {
       case "nav":
         WrapperComponent = NavComponent;
         break;
+      case "menu":
+      case "section":
+        WrapperComponent = React.Fragment;
+        break;
     }
     tooltip_text = window.altrpHelpers.replaceContentWithData(
       tooltip_text,
       this.props.element.getCurrentModel().getData()
     );
 
-    if(this.props.element.getName() === 'section'){
-
-      WrapperComponent = React.Fragment
-    }
     let wrapperProps = {
       elementId: this.elementId,
       settings: this.settings,

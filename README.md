@@ -4,9 +4,12 @@
 ## Changelog
 
 
-### 0.18.2
-+ Add Tree Widget and Input Select Tree Widget
+### 0.19.1
+* Fix Customizer and Page Update Issues
 
+### 0.19.0
++ Add Tree Widget and Input Select Tree Widget
+* Admin Restyle
 
 ### 0.18.1
 * Fix Change Label in Node Issue

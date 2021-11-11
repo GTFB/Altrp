@@ -13,17 +13,14 @@ class StartNode extends BaseNode implements NodeInterface
 
   public function getChildren(): array
   {
-    // TODO: Implement getChildren() method.
     return [];
   }
   public function getContent(): string
   {
-    // TODO: Implement getContent() method.
     return '';
   }
   function parseCustomizerData( Collection $data ): bool
   {
-    // TODO: Implement parseData() method.
     if( ! $data ) {
       $data = [];
     }

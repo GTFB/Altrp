@@ -165,9 +165,9 @@ class PagesController extends Controller
       $pages_template->save();
       $res['pages_template'] = $pages_template->toArray();
     }
-    if ( ( ! $request->template_id ) && $pages_template ) {
-      $pages_template->delete();
-    }
+//    if ( ( ! $request->template_id ) && $pages_template ) {
+//      $pages_template->delete();
+//    }
     if ( $request->template_id && ! $pages_template ) {
       $template = Template::find( $request->template_id );
       $pages_template = new PagesTemplate( [
@@ -205,7 +205,7 @@ class PagesController extends Controller
     $page = $page->find( $id );
     if( $page->delete() ){
       try{
-        Page::where( 'parent_page_id', $page->id )->update( 'parent_page_id', null );
+        Page::where( 'parent_page_id', $page->id )->update( ['parent_page_id'=> null] );
       }catch( \Exception $e){
         logger()->error( $e->getMessage());
       }

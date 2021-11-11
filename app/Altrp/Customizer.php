@@ -79,7 +79,7 @@ class Customizer extends Model
           'message' => 'Customizer failed!',
           'throw message' => \$th->getMessage(),
           'trace' => \$th->getTrace(),
-        ]
+        ], 500, [], JSON_UNESCAPED_UNICODE
         );
       }
       \n\t}";
