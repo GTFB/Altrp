@@ -27,7 +27,6 @@ class ApiController extends Controller
      */
     public function index(ApiRequest $request)
     {
-      session()->push();
         $resources = $this->getModelsAndPageCount($request);
         //        $parts = explode('\\', $this->modelClass);
         //        $modelName = array_pop($parts);

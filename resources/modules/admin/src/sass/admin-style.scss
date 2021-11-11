@@ -23,8 +23,11 @@
 @import "components/admin-document-detail";
 @import "components/admin-custom-fonts";
 @import "components/admin-edit-font";
-@import "~@blueprintjs/core/lib/css/blueprint.css";
 
+
+@import "../../../editor/src/sass/blueprint-datetime";
+@import "../../../editor/src/sass/blueprint-hi-contrast";
+@import "../../../editor/src/sass/blueprint";
 .admin {
   display: flex;
   min-height: 100vh;

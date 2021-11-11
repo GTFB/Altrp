@@ -1232,7 +1232,7 @@ class InputSelectWidget extends Component {
         <Select
           inputProps={inputProps}
           disabled={content_readonly}
-          matchTargetWidth={true}
+          // matchTargetWidth={true}
           popoverProps={this.popoverProps}
           createNewItemFromQuery={element.getResponsiveSetting('create') ? this.createNewItemFromQuery : null}
           createNewItemRenderer={this.createNewItemRenderer}
