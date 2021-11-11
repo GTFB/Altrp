@@ -4,6 +4,9 @@
 ## Changelog
 
 
+### 0.19.2
+* Update Select Components 
+
 ### 0.19.1
 * Fix Customizer and Page Update Issues
 
