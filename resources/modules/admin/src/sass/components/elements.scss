@@ -105,6 +105,7 @@ input[type="text"].form__input{
   & .nav-item{
     background-color: transparent;
     margin-right: 10px;
+    margin-bottom: 10px;
   }
   & .nav-link {
     border-radius: 10px;
@@ -525,13 +526,6 @@ input[type="text"].form__input{
   flex-grow: 1;
 }
 
-.overflow-select__blueprint {
-  & .bp3-menu {
-    height: 310px;
-    overflow: auto;
-  }
-}
-
 .overflow-select__blueprint-sql {
   & .bp3-menu {
     height: 285px;
@@ -646,5 +640,20 @@ input[type="text"].form__input{
   }
   & textarea.bp3-input, textarea.bp3-input.bp3-large {
     height: 210px;
+  }
+}
+
+
+.admin-form_newUsers {
+  & .bp3-menu {
+    max-height: 185px;
+    overflow: auto;
+  }
+}
+
+.admin-page {
+  & .bp3-menu {
+    max-height: 185px;
+    overflow: auto;
   }
 }
