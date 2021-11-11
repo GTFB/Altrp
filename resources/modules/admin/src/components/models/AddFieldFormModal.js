@@ -198,8 +198,6 @@ class AddFieldFormModal extends Component {
       }
       if (value === "bigInteger") {
         state.value["attribute"] = "unsigned"
-      } else {
-        state.value["attribute"] = "none"
       }
       state.value[field] = value;
       return state

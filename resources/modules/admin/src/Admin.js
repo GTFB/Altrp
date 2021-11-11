@@ -369,8 +369,12 @@ class Admin extends Component {
                       </Link>
                     </li>
                     <li>
-                      <Link to="/admin/customizers" className="admin-nav-list__link">
+                      <Link to="/admin/customizers"
+                            className={this.state.activeButton === 11 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                            onClick={() => this.setState({ activeButton: 11 })}
+                      >
                         <TemplateSvg className="icon" />
+                        <DropletSvg className="icon__droplet"/>
                         <span>Customizer</span>
                       </Link>
                     </li>
@@ -394,9 +398,11 @@ class Admin extends Component {
                     <li>
                       <Link
                         to="/admin/marketplace"
-                        className="admin-nav-list__link"
+                        className={this.state.activeButton === 10 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                        onClick={() => this.setState({ activeButton: 10 })}
                       >
                         <PluginSvg className="icon" />
+                        <DropletSvg className="icon__droplet"/>
                         <span>Market</span>
                       </Link>
                     </li>

@@ -50,7 +50,7 @@ class AddPage extends Component {
         path: "",
         redirect: "",
         roles: [],
-        rolesOptions: [{value: "guest", label: "Guest"}],
+        rolesOptions: [{value: "загрузка ролей", label: "Загрузка ролей"}],
         title: "",
       },
       redirectAfterSave: false,
@@ -63,6 +63,7 @@ class AddPage extends Component {
       currentTab: 'content',
     };
     this.resource = new Resource({route: "/admin/ajax/pages"});
+    this.rolesOptionsResource = new Resource( {route: "/admin/ajax/role_options"} )
     this.pagesOptionsResource = new Resource({
       route: "/admin/ajax/pages_options"
     });
@@ -110,6 +111,16 @@ class AddPage extends Component {
           ...models_res]
       };
     });
+
+    let roles = await this.rolesOptionsResource.getAll();
+    this.setState(state => ({
+      ...state,
+      value: {
+        ...state.value,
+        rolesOptions: roles
+      }
+    }));
+
     let id = this.props.match.params.id;
     id = parseInt(id);
     if (id) {
@@ -125,7 +136,6 @@ class AddPage extends Component {
             path: pageData.path,
             redirect: pageData.redirect,
             roles: pageData.roles,
-            rolesOptions: [{value: "guest", label: "Guest"}, ...pageData.roles],
             title: pageData.title,
             id
           },
@@ -310,7 +320,7 @@ class AddPage extends Component {
 
   render() {
     const {isModalOpened, editingDataSource} = this.state;
-
+    console.log(this.state)
     let {dataSources} = this.state;
 
     dataSources = _.sortBy(dataSources, dataSource => dataSource.priority);
