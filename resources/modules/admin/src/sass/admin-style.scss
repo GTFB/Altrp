@@ -71,6 +71,7 @@
         align-items: center;
         padding: 10px 15px 10px 18px;
         color: #fff;
+        line-height: 1.28581;
         font-size: 17px;
         font-weight: 400;
         font-family: Roboto, sans-serif;
@@ -355,4 +356,8 @@ a {
 
 .font__weightDropList {
   font-weight: 700;
+}
+
+body {
+  font-size: 14px !important;
 }
