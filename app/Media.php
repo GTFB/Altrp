@@ -18,6 +18,7 @@ use Illuminate\Support\Str;
 class Media extends Model
 {
   use SoftDeletes;
+
   protected $table = 'altrp_media';
 
   protected $fillable = [
@@ -36,14 +37,14 @@ class Media extends Model
   ];
 
   /**
+   * @param array $imported_media
    * @deprecated
    * Импортирует медиа
-   * @param array $imported_media
    */
   public static function import( $imported_media = [] )
   {
-    foreach ( $imported_media as $_media ){
-      if( self::where( 'url', $_media['url'] )->first() ){
+    foreach ( $imported_media as $_media ) {
+      if ( self::where( 'url', $_media['url'] )->first() ) {
         continue;
       }
       $new_media = new self( $_media );
@@ -61,21 +62,29 @@ class Media extends Model
     $media = new Media();
     try {
       $contents = file_get_contents( $url );
-      $path      = parse_url( $url, PHP_URL_PATH );       // get path from url
+      $path = parse_url( $url, PHP_URL_PATH );       // get path from url
       $extension = pathinfo( $path, PATHINFO_EXTENSION );
-      File::ensureDirectoryExists( storage_path('app/public/media') .  date("Y") . '/' .  date("m" ), 0775 );
-      $new_filename = 'media/' .  date("Y") . '/' .  date("m" ) .'/'.
-        Str::random(40) . '.' . $extension;
+      File::ensureDirectoryExists( storage_path( 'app/public/media' ) . date( "Y" ) . '/' . date( "m" ), 0775 );
+      $new_filename = 'media/' . date( "Y" ) . '/' . date( "m" ) . '/' .
+        Str::random( 40 ) . '.' . $extension;
 
 
-      File::put( storage_path('app/public/') . $new_filename, $contents );
+      File::put( storage_path( 'app/public/' ) . $new_filename, $contents );
       $media->author = Auth::user()->id;
       $media->filename = $new_filename;
       $media->url = Storage::url( $media->filename );
       return $media;
     } catch ( \Exception $e ) {
-      logger()->error( $e->getMessage());
-      return  null;
+      logger()->error( $e->getMessage() );
+      return null;
     }
+  }
+
+  public function delete()
+  {
+    $result = parent::delete();
+
+    Storage::delete( 'public/' . $this->filename );
+    return $result;
   }
 }
