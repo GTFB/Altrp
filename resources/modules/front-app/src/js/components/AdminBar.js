@@ -213,7 +213,17 @@ class AdminBar extends React.Component {
 
     const root = document.querySelector(':root');
 
-    root.style.setProperty('--front-app-padding', `var(--front-app-${frontAppPadding})`)
+    const components = [
+      'front-app',
+      'front-app-adaptive1070',
+      'front-app-adaptive667'
+    ]
+
+    components.forEach(component => {
+      root.style.setProperty(
+        `--${component}-padding`, `var(--${component}-${frontAppPadding})`
+      )
+    })
   }
 
   toggleVisiblePopupHistory = () => {

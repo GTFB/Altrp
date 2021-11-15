@@ -108,6 +108,8 @@ const AdminBarWrapper = styled.div`
 }
 
 & .admin-bar__profile {
+  display: flex;
+  align-items: center;
   margin-right: 25px;
 }
 
@@ -249,7 +251,7 @@ const AdminBarWrapper = styled.div`
 & .admin-bar__button {
   width: 85px;
   margin-left: 9px;
-  padding: 4.5px;
+  padding: 5px;
   vertical-align: top;
   font-size: 13px;
   font-weight: 400;
@@ -288,9 +290,53 @@ const AdminBarWrapper = styled.div`
 }
 
   @media screen and (max-width: 1070px) {
+    & .admin-bar__search-bar {
+      margin-right: 30px;
+    }
 
+    & .admin-bar__link {
+      margin-left: 30px;
+    }
+
+    & .admin-bar__tools {
+      margin-bottom: 10px;
+      flex-grow: 1;
+    }
+
+    & .admin-bar__tool:last-child {
+      margin-right: 30px;
+    }
   }
 
+  @media screen and (max-width: 667px) {
+    & .admin-bar__left {
+      flex-wrap: wrap;
+    }
+
+    & .admin-bar__search-bar {
+      margin-bottom: 10px;
+    }
+
+    & .admin-bar__profile {
+      margin-left: 30px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    & .admin-bar {
+      flex-shrink: 0;
+    }
+
+    & .admin-bar__tools {
+      flex-shrink: 0;
+    }
+
+    & .admin-bar__search-bar {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+  }
 
 `;
 
