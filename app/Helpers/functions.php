@@ -1024,6 +1024,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'input-accept',
     'input-text',
     'input-text-common',
+    'input-text-autocomplete',
     'input-password',
     'input-number',
     'input-tel',

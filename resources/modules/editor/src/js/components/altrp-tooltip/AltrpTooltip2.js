@@ -1,12 +1,12 @@
 import React from 'react';
-import {isEditor} from "../../../../../front-app/src/js/helpers";
+const {isEditor, isSSR} = window.altrpHelpers;
 import styled from "styled-components";
 let Tooltip2;
 let Popover2InteractionKind
 
 if(window.altrpLibs) {
   Tooltip2 = window.altrpLibs.Tooltip2;
-  Popover2InteractionKind = window.altrpLibs.Popover2.Popover2InteractionKind;
+  Popover2InteractionKind = window.altrpLibs.Popover2InteractionKind;
 }
 
 function offset(slider) {
@@ -74,22 +74,26 @@ function AltrpTooltip2(props) {
       :
       document.body
   });
-
-  React.useLayoutEffect(() => {
-    if(isEditor()) {
-      document.getElementById("editorContent").contentWindow.addEventListener("resize", checkSize);
-    } else {
-      window.addEventListener("resize", checkSize);
-    }
-    return () => {
+  if(! isSSR()){
+    React.useLayoutEffect(() => {
       if(isEditor()) {
-        document.getElementById("editorContent").contentWindow.removeEventListener("resize", checkSize);
+        document.getElementById("editorContent").contentWindow.addEventListener("resize", checkSize);
       } else {
-        window.removeEventListener("resize", checkSize);
+        window.addEventListener("resize", checkSize);
       }
-    }
-  }, [])
+      return () => {
+        if(isEditor()) {
+          document.getElementById("editorContent").contentWindow.removeEventListener("resize", checkSize);
+        } else {
+          window.removeEventListener("resize", checkSize);
+        }
+      }
+    }, [])
+  }
 
+  if(isSSR()){
+    return <></>;
+  }
   if(Tooltip2 && props.text && !_.isString(props.children)) {
     return <Tooltip2
       content={props.text}

@@ -4,6 +4,9 @@
 ## Changelog
 
 
+### 0.19.3
++ Add Typing and Select Actions in Input Text Autocomplete Widget
+
 ### 0.19.2
 * Update Select Components 
 
