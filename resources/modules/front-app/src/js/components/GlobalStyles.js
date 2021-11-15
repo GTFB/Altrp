@@ -48,6 +48,7 @@ import getTemplateStyles from "./helpers/getTemplateStyles";
 import TooltipComponent from "../../../../editor/src/js/components/widgets/styled-components/TooltipComponent";
 import getInputMultiSelectStyles, {getInputMultiSelectPopoverStyles} from "./helpers/getInputMultiSelectStyles";
 import getSchedulerStyles from "./helpers/getSchedulerStyles";
+import getIconStyles from "./helpers/getIconStyles";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -63,6 +64,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
       switch (item.name) {
         case "image-lightbox":
           styles+=ImageLightboxComponent(item.settings,id);
+          break;
+        case "icon":
+          styles += `.${prefix}${id} {${getIconStyles(item.settings, id)}}`
           break;
         case "pie-diagram":
           styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
