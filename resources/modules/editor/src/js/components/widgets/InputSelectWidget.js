@@ -848,6 +848,11 @@ class InputSelectWidget extends Component {
     if (value.value) {
       value = value.value;
     }
+
+    if(value === -1) {
+      value = null
+    }
+
     const options = this.getOptions();
     const element = this.props.element;
     if(! options.find(option => option.value == value)){
@@ -931,6 +936,14 @@ class InputSelectWidget extends Component {
         value: '',
       })
     }
+
+    if(this.props.element.getResponsiveSetting("remove") && this.state.value) {
+      options = [{
+        value: -1,
+        label: this.props.element.getResponsiveSetting("remove_label", "", "remove"),
+      }, ...options]
+    }
+
     return options;
   }
 
@@ -1231,12 +1244,13 @@ class InputSelectWidget extends Component {
     let itemsOptions = this.getOptions();
     const position_css_classes = element.getResponsiveSetting('position_css_classes', '', '')
     const position_css_id = this.getContent('position_css_id')
+    const fullWidth = element.getResponsiveSetting("full_width", "", "false")
 
     input = (
         <Select
           inputProps={inputProps}
           disabled={content_readonly}
-          // matchTargetWidth={true}
+          matchTargetWidth={fullWidth}
           popoverProps={this.popoverProps}
           createNewItemFromQuery={element.getResponsiveSetting('create') ? this.createNewItemFromQuery : null}
           createNewItemRenderer={this.createNewItemRenderer}

@@ -42,6 +42,7 @@ const DEFAULT_REACT_ELEMENTS = [
   'gallery',
   'dropbar',
   'posts',
+  'carousel',
   'table',
   'tabs',
   'heading-type-animating',
