@@ -6,11 +6,18 @@ const { isEditor, mbParseJSON, conditionChecker} = window.altrpHelpers;
 const {Button, ButtonGroup, Menu, MenuItem, Position} = window.altrpLibs.Blueprint;
 const Popover2 = window.altrpLibs.Popover2;
 
-(window.globalDefaults = window.globalDefaults || []).push(`.altrp-menu-item__icon svg {
+(window.globalDefaults = window.globalDefaults || []).push(`
+.altrp-menu-item__icon svg {
     display: block;
     height: 20px;
     width: 20px;
-  }`)
+}
+
+.altrp-menu {
+  display: flex;
+}
+`)
+
 class MenuWidget extends Component {
   constructor(props) {
     super(props);
@@ -84,6 +91,7 @@ class MenuWidget extends Component {
     if (!menuData) {
       return 'Select Menu';
     }
+
     return <Menu className={this.getMenuClasses()}>
       {/*{menuData.children.map(child)}*/}
       {this.renderSubItems(menuData.children, 1)}

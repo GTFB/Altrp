@@ -72,6 +72,8 @@ import TreeComponent from "./widgets/styled-components/TreeComponent";
 import getInputSelectTreeStyles from "../../../../front-app/src/js/components/helpers/getInputSelectTreeStyles";
 import InputDateRange from "../classes/elements/InputDateRange";
 import InputDateRangeComponent from "./widgets/styled-components/InputDateRangeComponent";
+import StarsComponent from "./widgets/styled-components/StarsComponent";
+import ProgressBarComponent from "./widgets/styled-components/ProgressBarComponent";
 
 const { connect } = window.reactRedux;
 const { replaceContentWithData } = window.altrpHelpers;
@@ -259,6 +261,20 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       break;
     case "input-radio": {
       styles += InputRadioComponent(settings, elementId, prefix);
+      break;
+    }
+    case "stars": {
+      styles += `.${prefix}${elementId} {${StarsComponent(
+        settings,
+        elementId
+      )}}`;
+      break;
+    }
+    case "progress-bar": {
+      styles += `.${prefix}${elementId} {${ProgressBarComponent(
+        settings,
+        elementId
+      )}}`;
       break;
     }
     case "input-text":

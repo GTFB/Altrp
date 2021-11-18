@@ -45,5 +45,7 @@ const SKELETON_ELEMENTS = [
   'heading-type-animating',
   'scheduler',
   'tree',
+  'stars',
+  'progress-bar'
 ]
 export default SKELETON_ELEMENTS

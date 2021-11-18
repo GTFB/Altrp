@@ -392,7 +392,7 @@ const AltrpFieldContainer = styled.div`
   ${({settings: {content_label_position_type}}) => {
   switch (content_label_position_type) {
     case "left": {
-      return "display: flex";
+      return "display: flex;";
     }
     case "right": {
       return "display:flex;flex-direction:row-reverse;justify-content:flex-end;";
@@ -400,6 +400,10 @@ const AltrpFieldContainer = styled.div`
   }
   return "";
 }}
+
+  & .bp3-popover-wrapper {
+    width: 100%
+  }
 `;
 
 class InputSelectWidget extends Component {
@@ -427,7 +431,7 @@ class InputSelectWidget extends Component {
     };
     this.popoverProps = {
       usePortal: true,
-
+      targetClassName: "altrp-select-popover",
       position: 'bottom',
       minimal: props.element.getResponsiveSetting('minimal'),
       // isOpen:true ,

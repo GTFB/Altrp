@@ -268,6 +268,7 @@ class FrontElement {
       case 'input-text':
       case 'input-text-common':
       case 'input-text-autocomplete':
+      case 'stars':
       case 'input': {
         formsManager.addField(this.getFormId(), this);
       }
@@ -527,6 +528,7 @@ class FrontElement {
       case 'input':
       case 'input-textarea':
       case 'input-text-autocomplete':
+      case "stars":
       case 'input-text-common':{
         value = this?.component?.getValue() || this?.component?.state?.value || '';
       }break;

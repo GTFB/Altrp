@@ -11,10 +11,21 @@ const getMenuStyles = (settings, id) => {
 
   let styles = `${parentClass} .altrp-menu{`;
 
+  const menuAlignment = getResponsiveSetting(settings, "menu_alignment");
+
   if (getResponsiveSetting(settings, 'type') === 'horizontal') {
     styles += 'display: flex;';
-    styles += '.bp3-submenu{flex-grow:1}';
+    styles += 'flex-direction: row;'
+    // styles += '.bp3-submenu{flex-grow:1}';
     styles += '.bp3-icon-caret-right{transform: rotate(90deg);}';
+    if(menuAlignment) {
+      styles += `justify-content: ${menuAlignment}`
+    }
+  } else {
+    styles += 'flex-direction: column;'
+    if(menuAlignment) {
+      styles += `align-items: ${menuAlignment}`
+    }
   }
 
   styles += '} ';

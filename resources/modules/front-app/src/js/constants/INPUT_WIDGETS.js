@@ -23,5 +23,6 @@ const INPUT_WIDGETS = [
   'input-email',
   'input-date-range',
   'input-hidden',
+  'stars',
 ];
 export default INPUT_WIDGETS;

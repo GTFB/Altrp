@@ -47,5 +47,7 @@ const DEFAULT_REACT_ELEMENTS = [
   'heading-type-animating',
   'scheduler',
   'tree',
+  'stars',
+  'progress-bar',
 ]
 export default DEFAULT_REACT_ELEMENTS
