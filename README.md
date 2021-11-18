@@ -6,6 +6,7 @@
 
 ### 0.19.3
 + Add Typing and Select Actions in Input Text Autocomplete Widget
+* Fix Tooltip for Elements
 
 ### 0.19.2
 * Update Select Components 

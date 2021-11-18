@@ -37,22 +37,25 @@ class AddDataSourceForm extends Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount()  {
     const {id} = this.props.match.params;
 
     new Resource({route: '/admin/ajax/model_options'}).getAll()
       .then(({options}) => this.setState({modelsOptions: options}));
-    new Resource({route: '/admin/ajax/role_options'}).getAll()
-      .then(rolesOptions => this.setState({rolesOptions}));
-    new Resource({route: '/admin/ajax/permissions_options'}).getAll()
-      .then(permissionsOptions => this.setState({permissionsOptions}));
+    const rolesOptions = await (new Resource({route: '/admin/ajax/role_options'}).getAll())
+    const permissionsOptions = await(new Resource({route: '/admin/ajax/permissions_options'}).getAll())
 
     if (id) {
       const resource = new Resource({route: '/admin/ajax/data_sources'});
-      resource.get(id).then(value => this.setState({
+      resource.get(id).then(value => {
+        value.access.roles = value?.access?.roles?.map(r=>rolesOptions.find(o=>o.value == r))
+        value.access.permissions = value?.access?.permissions?.map(p=>permissionsOptions.find(o=>o.value == p))
+        this.setState({
+        rolesOptions,
+        permissionsOptions,
         value: {...value, headers: Object.entries(value.headers || {}), bodies: Object.entries(value.bodies || {})},
         typeIsDisabled: value.type === 'remote'
-      }))
+      })})
     }
   }
 

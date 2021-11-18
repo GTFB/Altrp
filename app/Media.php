@@ -83,8 +83,11 @@ class Media extends Model
   public function delete()
   {
     $result = parent::delete();
+    try{
+      Storage::delete( 'public/' . $this->filename );
+    }catch ( \Throwable $e ){
 
-    Storage::delete( 'public/' . $this->filename );
+    }
     return $result;
   }
 }
