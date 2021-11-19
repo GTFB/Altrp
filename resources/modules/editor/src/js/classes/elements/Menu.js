@@ -25,6 +25,7 @@ class Menu extends BaseElement {
   static getType() {
     return 'widget';
   }
+
   _registerControls() {
     if (this.controllersRegistered) {
       return;
@@ -64,6 +65,28 @@ class Menu extends BaseElement {
     })
 
 
+    this.addControl('menu_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment',
+      options: [
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+        {
+          icon: 'in_width',
+          value: 'stretch',
+        }
+      ],
+    });
 
     this.endControlSection();
 

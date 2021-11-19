@@ -1056,7 +1056,9 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'heading-type-animating',
     'scheduler',
     'tree',
-    'list'
+    'list',
+    'stars',
+    'progress-bar'
   ];
   if( ! is_array( $elementNames ) ){
     $elementNames = [];
