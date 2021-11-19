@@ -393,7 +393,6 @@ class InputTextCommonWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    this.onChange = this.onChange.bind(this);
 
     this.defaultValue = this.getContent("content_default_value")
     this.popoverRef = React.createRef()
@@ -423,7 +422,6 @@ class InputTextCommonWidget extends Component {
    */
   clearValue() {
     let value = "";
-    this.onChange(value);
     this.dispatchFieldValueToStore(value, true);
   }
 
@@ -699,7 +697,7 @@ class InputTextCommonWidget extends Component {
    * Изменение значения в виджете
    * @param e
    */
-  onChange(e) {
+  onChange = async (e) => {
     let value = "";
     if (e && e.target) {
       value = e.target.value;
@@ -712,7 +710,25 @@ class InputTextCommonWidget extends Component {
     if(isEditor()){
       this.setState(state=>({...state, value}))
     } else {
+
       this.dispatchFieldValueToStore(value, true)
+
+      const typing_actions = this.props.element.getSettings("typing_actions");
+
+      if (typing_actions) {
+        const actionsManager = (
+          await import(
+            /* webpackChunkName: 'ActionsManager' */
+            "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+            )
+        ).default;
+        await actionsManager.callAllWidgetActions(
+          this.props.element.getIdForAction(),
+          "typing",
+          typing_actions,
+          this.props.element
+        );
+      }
     }
   }
 
@@ -867,6 +883,30 @@ class InputTextCommonWidget extends Component {
   }
 
   /**
+   * Срабатывает после клика на элемент в меню
+   * @param e
+   * @returns {Promise<void>}
+   */
+  onSelect = async(e)=>{
+
+    const select_actions = this.props.element.getSettings("select_actions");
+
+    if (select_actions) {
+      const actionsManager = (
+        await import(
+          /* webpackChunkName: 'ActionsManager' */
+          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+          )
+      ).default;
+      await actionsManager.callAllWidgetActions(
+        this.props.element.getIdForAction(),
+        "autocomplete_select",
+        select_actions,
+        this.props.element
+      );
+    }
+  }
+  /**
    *
    * @param {text} text
    * @param {int} index
@@ -874,8 +914,9 @@ class InputTextCommonWidget extends Component {
    */
   itemRenderer = (text, index)=>{
     return <MenuItem
-      onClick={()=>{
+      onClick={(e)=>{
         this.dispatchFieldValueToStore(text, true)
+        this.onSelect(e)
       }
       }
       key={text + index}
@@ -966,7 +1007,7 @@ class InputTextCommonWidget extends Component {
       label = null;
     }
     let options = this.getOptions();
-    // conl
+
     let input = (
       <div className="altrp-input-wrapper altrp-input-wrapper_autocomplete">
         <Popover2

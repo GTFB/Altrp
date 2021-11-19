@@ -9,7 +9,6 @@ import store from "../store/store";
 import { START_DRAG, startDrag } from "../store/element-drag/actions";
 import { contextMenu } from "react-contexify";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
-import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
 import NavComponent from "./widgets/styled-components/NavComponent";
 import Column from "../classes/elements/Column";
 import DiagramComponent from "./widgets/styled-components/DiagramComponent";
@@ -675,6 +674,7 @@ class ElementWrapper extends Component {
   }
   render() {
     const elementHideTrigger = this.props.element.settings.hide_on_trigger;
+    const element = this.props.element
     let {
       isFixed,
       tooltip_text,
@@ -682,11 +682,12 @@ class ElementWrapper extends Component {
       tooltip_show_type,
       tooltip_horizontal_offset,
       tooltip_vertical_offset,
-      tooltip_position = "bottom"
     } = this.props.element.getSettings();
     if (["column", "section"].indexOf(this.props.element.getType()) !== -1) {
       tooltip_show_type = "never";
     }
+    const tooltip_position = element.getResponsiveSetting('tooltip_position') || 'bottom'
+
     let errorContent = null;
     if (this.state.errorInfo) {
       errorContent = (
@@ -791,6 +792,9 @@ class ElementWrapper extends Component {
       // case "dashboard":
       // WrapperComponent = DashboardComponent;
       // break;
+    }
+    if(! this.props.element.getResponsiveSetting('tooltip_enable')){
+      tooltip_show_type = 'never'
     }
     return elementHideTrigger &&
       this.props.hideTriggers.includes(elementHideTrigger) ? null : (

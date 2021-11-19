@@ -14,13 +14,7 @@ const TransparentDiv = styled.div`
 class SimpleElementWrapper extends Component {
   constructor(props) {
     super(props);
-    let altrp_repeater = getDataByPath(
-      props.element.getResponsiveSetting('altrp_repeater'),
-      null,
-      props.element.getCurrentModel()
-    );
     this.state = {
-      altrp_repeater,
       elementDisplay: !this.props.element.getSettings("default_hidden")
     };
     props.element.wrapper = this;
@@ -69,19 +63,8 @@ class SimpleElementWrapper extends Component {
     const mountElementTypeEvent = new Event(`altrp-mount-element:${element.getName()}` );
     document.dispatchEvent(mountElementEvent)
     document.dispatchEvent(mountElementTypeEvent)
-    this.updateAltrpRepeater()
   }
-  updateAltrpRepeater(){
-    const {element} = this.props
-    const altrp_repeater = getDataByPath(
-      element.getResponsiveSetting('altrp_repeater'),
-      null,
-      element.getCurrentModel()
-    );
-    if(altrp_repeater !== this.state.altrp_repeater){
-      this.setState(state=>({...state, altrp_repeater}))
-    }
-  }
+
   componentWillUnmount() {
     const {element} = this.props
     if(element.getId() === '_giafvu4nk'){
@@ -316,8 +299,7 @@ class SimpleElementWrapper extends Component {
     const {
       element
     } = this.props;
-    const {altrp_repeater}= this.state
-    const tooltip_position = this.props.element.getResponsiveSetting('tooltip_position', 'bottom')
+    const tooltip_position = element.getResponsiveSetting('tooltip_position') || 'bottom'
     let tooltip_text = this.props.element.getResponsiveSetting('tooltip_text')
     const tooltip_minimal = this.props.element.getResponsiveSetting('tooltip_minimal')
     let tooltip_show_type = this.props.element.getResponsiveSetting('tooltip_show_type')
@@ -353,61 +335,32 @@ class SimpleElementWrapper extends Component {
       this.props.element.getName()
     );
     let content
-    if(! _.isArray(altrp_repeater)){
-
-
-      if (this.props.element.getName() === "table") {
-        content = [<DndProvider backend={HTML5Backend}>{
-          React.createElement(ContentComponent, {
-            ref: this.elementRef,
-            rootElement: this.props.rootElement,
-            ElementWrapper: this.props.ElementWrapper,
-            element: this.props.element,
-            children: this.props.element.getChildren(),
-            match: this.props.match,
-            currentModel: this.props.currentModel,
-            currentUser: this.props.currentUser,
-            currentDataStorage: this.props.currentDataStorage,
-            altrpresponses: this.props.altrpresponses,
-            formsStore: this.props.formsStore,
-            elementDisplay: this.state.elementDisplay,
-            altrpPageState: this.props.altrpPageState,
-            altrpMeta: this.props.altrpMeta,
-            updateToken: this.state.updateToken,
-            currentScreen: this.props.currentScreen,
-            baseRender: this.props.baseRender,
-            history: this.props.history,
-            appStore
-          })}</DndProvider>];
-      } else {
-        content = [
-          React.createElement(ContentComponent, {
-            ref: this.elementRef,
-            rootElement: this.props.rootElement,
-            ElementWrapper: this.props.ElementWrapper,
-            element: this.props.element,
-            children: this.props.element.getChildren(),
-            match: this.props.match,
-            currentModel: this.props.currentModel,
-            currentUser: this.props.currentUser,
-            currentDataStorage: this.props.currentDataStorage,
-            altrpresponses: this.props.altrpresponses,
-            formsStore: this.props.formsStore,
-            elementDisplay: this.state.elementDisplay,
-            altrpPageState: this.props.altrpPageState,
-            altrpMeta: this.props.altrpMeta,
-            updateToken: this.state.updateToken,
-            currentScreen: this.props.currentScreen,
-            baseRender: this.props.baseRender,
-            history: this.props.history,
-            appStore
-          })
-        ];
-      }
+    if (this.props.element.getName() === "table") {
+      content = <DndProvider backend={HTML5Backend}>{
+        React.createElement(ContentComponent, {
+          ref: this.elementRef,
+          rootElement: this.props.rootElement,
+          ElementWrapper: this.props.ElementWrapper,
+          element: this.props.element,
+          children: this.props.element.getChildren(),
+          match: this.props.match,
+          currentModel: this.props.currentModel,
+          currentUser: this.props.currentUser,
+          currentDataStorage: this.props.currentDataStorage,
+          altrpresponses: this.props.altrpresponses,
+          formsStore: this.props.formsStore,
+          elementDisplay: this.state.elementDisplay,
+          altrpPageState: this.props.altrpPageState,
+          altrpMeta: this.props.altrpMeta,
+          updateToken: this.state.updateToken,
+          currentScreen: this.props.currentScreen,
+          baseRender: this.props.baseRender,
+          history: this.props.history,
+          appStore
+        })}</DndProvider>;
     } else {
-      content = altrp_repeater.map(ar=>{
-        const repeaterElement = frontElementsFabric.cloneElement(this.props.element)
-        return React.createElement(ContentComponent, {
+      content =
+        React.createElement(ContentComponent, {
           ref: this.elementRef,
           rootElement: this.props.rootElement,
           ElementWrapper: this.props.ElementWrapper,
@@ -428,7 +381,7 @@ class SimpleElementWrapper extends Component {
           history: this.props.history,
           appStore
         })
-      })
+      ;
     }
     let WrapperComponent = TransparentDiv;
 
@@ -468,32 +421,24 @@ class SimpleElementWrapper extends Component {
     }
     return (
       <>
-        {content.map((c, idx)=>{
-          return(
-            <WrapperComponent {...wrapperProps} key={this.elementId + idx}>
-              {
-                tooltip_show_type && (tooltip_show_type !== "never" && tooltip_show_type !== "Never") ?
-                  <AltrpTooltip2
-                    element={this.wrapper}
-                    text={tooltip_text}
-                    id={this.props.element.getId()}
-                    open={tooltip_show_type === "always" ? true : this.state.tooltipOpen}
-                    position={tooltip_position}
-                    minimal={tooltip_minimal}
-                    horizontal={tooltip_horizontal_offset}
-                    vertical={tooltip_vertical_offset}
-                  >
-                    {
-                      c
-                    }
-                  </AltrpTooltip2>
-                  : c
-              }
-            </WrapperComponent>
-          )
-        })}
-      </>
+        {
+          tooltip_show_type && (tooltip_show_type !== "never" && tooltip_show_type !== "Never") ?
+            <AltrpTooltip2
+              element={this.wrapper}
+              text={tooltip_text}
+              id={this.props.element.getId()}
+              open={tooltip_show_type === "always" ? true : this.state.tooltipOpen}
+              position={tooltip_position}
+              minimal={tooltip_minimal}
+              horizontal={tooltip_horizontal_offset}
+              vertical={tooltip_vertical_offset}
+            /> : ''
+        }
+        <WrapperComponent {...wrapperProps} >
+          {content}
+        </WrapperComponent>
 
+      </>
     );
   }
 

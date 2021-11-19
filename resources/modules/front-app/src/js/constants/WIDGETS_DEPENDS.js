@@ -23,7 +23,7 @@ const WIDGETS_DEPENDS = {
   'input-text': ['blueprint'],
   'input-textarea': ['blueprint'],
   'input-text-common': ['blueprint'],
-  'input-text-autocomplete': ['blueprint'],
+  'input-text-autocomplete': ['blueprint', 'blueprint-popover'],
   'input-wysiwyg': ['ckeditor'],
   'input-date': ['blueprint', 'blueprint-datetime', 'moment'],
   'input-date-range': ['blueprint', 'blueprint-datetime', 'moment'],

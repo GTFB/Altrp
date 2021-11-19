@@ -61,7 +61,9 @@ class UpdateController extends Controller
       return response()->json( ['message' => $e->getMessage(), 'result' => false], 500 );
     }
     Artisan::call( 'up' );
-    return response()->json( ['result' => $result] );
+    return response()->json( ['result' => $result], 200, [
+      'Clear-Site-Data' => 'cache',
+    ], JSON_UNESCAPED_UNICODE);
   }
   /**
    * Обновление Altrp
