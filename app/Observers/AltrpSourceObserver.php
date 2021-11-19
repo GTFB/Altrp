@@ -265,94 +265,111 @@ class AltrpSourceObserver
     //
   }
 
+  /**
+   * @param Source $source
+   * @param [] $access
+   * @return bool
+   */
   protected function writeSourceAccess( $source, $access )
   {
-    if ( ! isset( $access ) ) return true;
-    foreach ( $access as $type => $permissions ) {
-      if ( $type == 'permissions' ) {
-        $permissions = array_map(function ( $permission ){
-          if (isset( $permission['value'])) {
-            $permission = $permission['value'];
+
+    if( ! $source->auth ){
+      $oldSourcePermission = SourcePermission::where( [
+        [ 'source_id', $source->id ],
+      ] )->get('id')->toArray();
+      SourcePermission::destroy( $oldSourcePermission );
+
+      $oldSourceRole = SourceRole::where( [
+        [ 'source_id', $source->id ],
+      ] )->get('id')->toArray();
+      SourceRole::destroy( $oldSourceRole );
+    } else {
+      if ( ! isset( $access ) ) return true;
+      foreach ( $access as $type => $permissions ) {
+        if ( $type == 'permissions' ) {
+          $permissions = array_map( function ( $permission ) {
+            if ( isset( $permission['value'] ) ) {
+              $permission = $permission['value'];
+            }
+            return $permission;
+          }, $permissions );
+          foreach ( $permissions as $permission ) {
+            $permObj = Permission::find( $permission );
+            if ( ! $permObj ) continue;
+            $action = explode( '-', $permObj->name )[0] ?? null;
+            $permissionData = [
+              'source_id' => $source->id,
+              'permission_id' => $permission,
+              'type' => $action . '-' . $source->name
+            ];
+            $oldSourcePermission = SourcePermission::where( [
+              [ 'source_id', $source->id ],
+              [ 'permission_id', $permission ]
+            ] );
+            if ( $oldSourcePermission->first() ) {
+              $sourcePermission = $oldSourcePermission;
+              $permissionData['updated_at'] = Carbon::now();
+              $sourcePermission->update( $permissionData );
+            } else {
+              $sourcePermission = new SourcePermission( $permissionData );
+              $sourcePermission->save();
+            }
           }
-          return $permission;
-        }, $permissions );
-        foreach ( $permissions as $permission ) {
-          $permObj = Permission::find( $permission );
-          if ( ! $permObj ) continue;
-          $action = explode( '-', $permObj->name )[0] ?? null;
-          $permissionData = [
-            'source_id' => $source->id,
-            'permission_id' => $permission,
-            'type' => $action . '-' . $source->name
-          ];
-          $oldSourcePermission = SourcePermission::where( [
-            [ 'source_id', $source->id ],
-            [ 'permission_id', $permission ]
-          ] );
-          if ( $oldSourcePermission->first() ) {
-            $sourcePermission = $oldSourcePermission;
-            $permissionData['updated_at'] = Carbon::now();
-            $sourcePermission->update( $permissionData );
-          } else {
-            $sourcePermission = new SourcePermission( $permissionData );
-            $sourcePermission->save();
+          $oldSourcePermissions = SourcePermission::where( [
+            [ 'source_id', $source->id ]
+          ] )->get();
+          $deletePermissions = [];
+          foreach ( $oldSourcePermissions as $oldSourcePermission ) {
+            if ( ! in_array( $oldSourcePermission->permission_id, $permissions ) ) {
+              $deletePermissions[] = $oldSourcePermission->id;
+            }
           }
+          SourcePermission::destroy( $deletePermissions );
         }
-        $oldSourcePermissions = SourcePermission::where( [
-          [ 'source_id', $source->id ]
-        ] )->get();
-        $deletePermissions = [];
-        foreach ( $oldSourcePermissions as $oldSourcePermission ) {
-          if ( ! in_array( $oldSourcePermission->permission_id, $permissions ) ) {
-            $deletePermissions[] = $oldSourcePermission->id;
+      }
+
+      foreach ( $access as $type => $roles ) {
+        if ( $type == 'roles' ) {
+          $roles = array_map( function ( $role ) {
+            if ( isset( $role['value'] ) ) {
+              $role = $role['value'];
+            }
+            return $role;
+          }, $roles );
+          foreach ( $roles as $role ) {
+            $roleObj = Role::find( $role );
+            if ( ! $roleObj ) continue;
+            $roleData = [
+              'source_id' => $source->id,
+              'role_id' => $role,
+            ];
+
+            $oldSourceRole = SourceRole::where( [
+              [ 'source_id', $source->id ],
+              [ 'role_id', $role ]
+            ] );
+            if ( $oldSourceRole->first() ) {
+              $sourceRole = $oldSourceRole;
+              $roleData['updated_at'] = Carbon::now();
+              $sourceRole->update( $roleData );
+            } else {
+              $sourceRole = new SourceRole( $roleData );
+              $sourceRole->save();
+            }
           }
+          $oldSourceRoles = SourceRole::where( [
+            [ 'source_id', $source->id ]
+          ] )->get();
+          $deleteRoles = [];
+          foreach ( $oldSourceRoles as $oldSourceRole ) {
+            if ( ! in_array( $oldSourceRole->role_id, $roles ) ) {
+              $deleteRoles[] = $oldSourceRole->id;
+            }
+          }
+          SourceRole::destroy( $deleteRoles );
         }
-        SourcePermission::destroy( $deletePermissions );
       }
     }
-
-    foreach ( $access as $type => $roles ) {
-      if ( $type == 'roles' ) {
-        $roles = array_map(function ( $role ){
-          if (isset( $role['value'])) {
-            $role = $role['value'];
-          }
-          return $role;
-        }, $roles );
-        foreach ( $roles as $role ) {
-          $roleObj = Role::find( $role );
-          if ( ! $roleObj ) continue;
-          $roleData = [
-            'source_id' => $source->id,
-            'role_id' => $role,
-          ];
-
-          $oldSourceRole = SourceRole::where( [
-            [ 'source_id', $source->id ],
-            [ 'role_id', $role ]
-          ] );
-          if ( $oldSourceRole->first() ) {
-            $sourceRole = $oldSourceRole;
-            $roleData['updated_at'] = Carbon::now();
-            $sourceRole->update( $roleData );
-          } else {
-            $sourceRole = new SourceRole( $roleData );
-            $sourceRole->save();
-          }
-        }
-        $oldSourceRoles = SourceRole::where( [
-          [ 'source_id', $source->id ]
-        ] )->get();
-        $deleteRoles = [];
-        foreach ( $oldSourceRoles as $oldSourceRole ) {
-          if ( ! in_array( $oldSourceRole->role_id, $roles ) ) {
-            $deleteRoles[] = $oldSourceRole->id;
-          }
-        }
-        SourceRole::destroy( $deleteRoles );
-      }
-    }
-
     return true;
   }
 }
