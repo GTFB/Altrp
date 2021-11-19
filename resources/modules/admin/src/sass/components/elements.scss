@@ -105,6 +105,7 @@ input[type="text"].form__input{
   & .nav-item{
     background-color: transparent;
     margin-right: 10px;
+    margin-bottom: 10px;
   }
   & .nav-link {
     border-radius: 10px;
@@ -421,6 +422,11 @@ input[type="text"].form__input{
       height: 42px;
     }
   }
+
+
+  & .bp3-tag-input .bp3-tag-input-values > * {
+    margin-bottom: 0;
+  }
 }
 
 .data_sources_checkbox {
@@ -646,5 +652,37 @@ input[type="text"].form__input{
   }
   & textarea.bp3-input, textarea.bp3-input.bp3-large {
     height: 210px;
+  }
+}
+
+.admin-form_newUsers {
+  & .bp3-menu {
+    max-height: 200px;
+    overflow: auto;
+
+    & .bp3-menu-item {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  & .bp3-tag-input .bp3-tag-input-values > * {
+    margin-bottom: 0;
+  }
+}
+
+.admin-page {
+  & .bp3-menu {
+    max-height: 200px;
+    overflow: auto;
+
+    & .bp3-menu-item {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  & .bp3-tag-input .bp3-tag-input-values > * {
+    margin-bottom: 0;
   }
 }
