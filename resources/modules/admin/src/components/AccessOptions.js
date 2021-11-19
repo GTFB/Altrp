@@ -154,10 +154,10 @@ class AccessOptions extends Component {
               sortingHandler={this.rolesSortingHandler}
               sortingField={rolesSorting.order_by}
 
-              searchAccessRoles={{
-                onSubmitAccessRoles: this.searchRoles,
-                valueAccessRoles: rolesFilter,
-                onChangeAccessRoles: this.changeRoles
+              searchTables={{
+                submit: this.searchRoles,
+                value: rolesFilter,
+                change: this.changeRoles
               }}
 
               pageCount={rolesPagination.pageCount}
@@ -194,10 +194,10 @@ class AccessOptions extends Component {
               sortingHandler={this.permissionsSortingHandler}
               sortingField={permissionsSorting.order_by}
 
-              searchAccessPermissions={{
-                onSubmitAccessPermissions: this.searchPermissions,
-                valueAccessPermissions: permissionsFilter,
-                onChangeAccessPermissions: this.changePermissions
+              searchTables={{
+                submit: this.searchPermissions,
+                value: permissionsFilter,
+                change: this.changePermissions
               }}
 
               pageCount={permissionsPagination.pageCount}

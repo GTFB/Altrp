@@ -234,7 +234,7 @@ class Assets extends Component {
           <span className="admin-breadcrumbs__current">All Assets</span>
         </div>
       </div>
-      <div className="admin-content">
+      <div className="admin-content assets-content">
         <div className={this.state.uploaderClasses}
           onDragLeave={this.onDragLeave}
           onDrop={this.onDrop}
@@ -303,35 +303,41 @@ class Assets extends Component {
             onClick={this.onFilterAssets('others')}
           >Others</NavLink>
         </div>
-        <div className="admin-assets__list custom-tab__tab-panel p-4 assets-list d-flex flex-wrap">
+        <div className={this.state.activeLink === 'images'
+        || this.state.activeLink === 'svgs' ? "admin-assets__list custom-tab__tab-panel assets-shell-blocks__background"
+        : "admin-assets__list custom-tab__tab-panel assets-shell-blocks"}>
           {
             this.state.assets.map(asset => {
               return (
-                <div className="assets-list__item item col-1" key={asset.id} >
-                  {(() => {
-                    if (this.state.activeLink === 'images' ||
-                      this.state.activeLink === 'svgs')
-                      return (
-                        <div onClick={() => this.openImageDetail(asset.id)} className="item__background"
-                          style={{ 'backgroundImage': `url('${asset.url}')` }} />
-                      )
-                    let typeIcon = asset.url.split('.').pop();
-                    let IconFile = iconsManager().getIconComponent('file');
-                    this.typesFiles[this.state.activeLink].forEach((type) => {
-                      if (typeIcon === type) {
-                        IconFile = iconsManager().getIconComponent(typeIcon);
-                        return <IconFile className="item__icon-background" />
+                <div key={asset.id} className={this.state.activeLink === 'images' || this.state.activeLink === 'svgs' ? "assets-shell-background" : "assets-shell"}>
+
+                  <div className="assets-list__item item" >
+                    {(() => {
+                        if (this.state.activeLink === 'images' ||
+                          this.state.activeLink === 'svgs')
+                          return (
+                            <div onClick={() => this.openImageDetail(asset.id)} className="item__background"
+                                 style={{ 'backgroundImage': `url('${asset.url}')` }} />
+                          )
+                        let typeIcon = asset.url.split('.').pop();
+                        let IconFile = iconsManager().getIconComponent('file');
+                        this.typesFiles[this.state.activeLink].forEach((type) => {
+                          if (typeIcon === type) {
+                            IconFile = iconsManager().getIconComponent(typeIcon);
+                            return <IconFile className="item__background-icon" />
+                          }
+                        });
+                        return <IconFile onClick={() => this.openDocumentDetail(asset.id)} className="item__background-icon" />
                       }
-                    });
-                    return <IconFile onClick={() => this.openDocumentDetail(asset.id)} className="item__icon-background" />
-                  }
-                  )()}
-                  <button className={this.state.itemDeleteClasses}
-                    data-assetid={asset.id}
-                    title="Delete"
-                    onClick={this.deleteClick}>
-                    <CloseIcon className="item__delete-icon" />
-                  </button>
+                    )()}
+                    <button className={this.state.itemDeleteClasses}
+                            data-assetid={asset.id}
+                            title="Delete"
+                            onClick={this.deleteClick}>
+                      <CloseIcon className="item__delete-icon" />
+                    </button>
+                  </div>
+
                 </div>
               )
             }

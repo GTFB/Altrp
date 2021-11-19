@@ -3,7 +3,7 @@ import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
 import store from "../js/store/store";
 import { setModalSettings } from "../js/store/modal-settings/actions";
-import {redirect, titleToName} from "../js/helpers";
+import {buildPagesTree, redirect, titleToName} from "../js/helpers";
 import {altrpRandomId} from "../../../front-app/src/js/helpers";
 
 export default class Customizer extends Component {
@@ -12,12 +12,16 @@ export default class Customizer extends Component {
 
     this.state = {
       customizers: [],
-      model_id: false
+      model_id: false,
+      currentPage: 1,
+      customizersSearch: ""
     };
 
     this.resource = new Resource({
       route: "ajax/customizers"
     });
+
+    this.itemsPerPage = 10;
 
     this.addNew = this.addNew.bind(this);
   }
@@ -27,7 +31,7 @@ export default class Customizer extends Component {
   }
 
   async fetchData() {
-    const customizers = (await this.resource.getAll()).data;
+    const customizers = (await this.resource.getQueried({ s: this.state.customizersSearch })).data;
 
     if (_.isArray(customizers)) {
       customizers.map(item =>{
@@ -71,7 +75,17 @@ export default class Customizer extends Component {
     store.dispatch(setModalSettings(modalSettings));
   }
 
+  submitSearchCustomizers = async (e) => {
+    e.preventDefault();
+    await this.fetchData();
+  }
+
+  changeValueCustomizers = (e) => {
+    this.setState({customizersSearch: e.target.value})
+  }
+
   render() {
+    const { currentPage, customizers, customizersSearch  } = this.state;
     return (
       <div className="admin-templates admin-page">
         <div className="admin-heading">
@@ -102,7 +116,10 @@ export default class Customizer extends Component {
                 target: "_blank"
               },
             ]}
-            rows={this.state.customizers}
+            rows={buildPagesTree(customizers).slice(
+              currentPage * this.itemsPerPage - this.itemsPerPage,
+              currentPage * this.itemsPerPage
+            )}
             quickActions={[
               {
                 tag: "a",
@@ -136,6 +153,22 @@ export default class Customizer extends Component {
                 title: "Trash"
               }
             ]}
+
+            searchTables={{
+              value: customizersSearch,
+              submit: this.submitSearchCustomizers,
+              change: this.changeValueCustomizers
+            }}
+
+            pageCount={Math.ceil(customizers.length / this.itemsPerPage) || 1}
+            currentPage={currentPage}
+            changePage={page => {
+              if (currentPage !== page) {
+                this.setState({ currentPage: page });
+              }
+            }}
+            itemsCount={customizers.length}
+            openPagination={true}
           />
         </div>
       </div>

@@ -148,11 +148,10 @@ export default class SQLEditors extends Component {
           sortingHandler={this.sortingHandler}
           sortingField={sorting.order_by}
 
-          searchSQLEditors={{
-            onSubmitSearchSQL: this.searchSqlEditors,
-            valueSQL: sqlEditorSearch,
-            onChangeSQL: (e) => this.changeSQLEditors(e),
-            onClickSQL: this.getSqlEditors
+          searchTables={{
+            submit: this.searchSqlEditors,
+            value: sqlEditorSearch,
+            change: (e) => this.changeSQLEditors(e),
           }}
 
           pageCount={sql_editorsPagination.pageCount}

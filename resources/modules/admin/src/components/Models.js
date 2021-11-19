@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 
 import AdminTable from "./AdminTable";
 import Resource from "../../../editor/src/js/classes/Resource";
+import {buildPagesTree} from "../js/helpers";
 
 const columnsModel = [
   {
@@ -54,8 +55,8 @@ export default class Models extends Component {
     super(props);
     this.state = {
       activeTab: 0,
-      modelsCurrentPage: 1,
-      dataSourcesCurrentPage: 1,
+      currentPageModels: 1,
+      currentPageDataSources: 1,
       models: [],
       modelsSearch: '',
       modelsPageCount: 1,
@@ -87,9 +88,7 @@ export default class Models extends Component {
    */
   getDataSources = async () => {
     let res = await this.dataSourcesResource.getQueried({
-      page: this.state.dataSourcesCurrentPage,
-      pageSize: this.itemsPerPage,
-      preset: false,
+
       s: this.state.dataSourcesSearch,
       ...this.state.dataSourcesSorting
     });
@@ -97,7 +96,6 @@ export default class Models extends Component {
       return {
         ...state,
         dataSources: res.data_sources,
-        dataSourcesPageCount: res.pageCount || 1
       }
     });
   };
@@ -107,9 +105,6 @@ export default class Models extends Component {
    */
   getModels = async () => {
     let res = await this.modelsResource.getQueried({
-      page: this.state.modelsCurrentPage,
-      pageSize: this.itemsPerPage,
-      preset: false,
       s: this.state.modelsSearch,
       ...this.state.modelsSorting
     });
@@ -174,8 +169,18 @@ export default class Models extends Component {
   }
 
   render() {
-    const { activeTab, models, dataSources, modelsCurrentPage, dataSourcesCurrentPage, modelsSearch, dataSourcesSearch,
-      modelsPageCount, dataSourcesPageCount, modelsCount, dataSourcesCount, modelsSorting, dataSourcesSorting } = this.state;
+    const { activeTab, models, dataSources, modelsCurrentPage, modelsSearch, dataSourcesSearch,
+      modelsPageCount, modelsCount, dataSourcesCount, modelsSorting, dataSourcesSorting, currentPageDataSources, currentPageModels } = this.state;
+
+    let dataSourcesMap = dataSources.map(dataSource => ({
+      ...dataSource,
+      editUrl: '/admin/tables/data-sources/edit/' + dataSource.id
+    }))
+
+    let modelsMap = models.map(model => ({
+      ...model,
+      editUrl: '/admin/tables/models/edit/' + model.id
+    }))
 
     return <div className="admin-settings admin-page">
       <div className="admin-heading">
@@ -215,28 +220,28 @@ export default class Models extends Component {
                   title: 'Trash'
                 }
               ]}
-              rows={models.map(model => ({
-                ...model,
-                editUrl: '/admin/tables/models/edit/' + model.id
-              }))}
+              rows={buildPagesTree(modelsMap).slice(
+                currentPageModels * this.itemsPerPage - this.itemsPerPage,
+                currentPageModels * this.itemsPerPage
+              )}
               sortingHandler={this.modelsSortingHandler}
               sortingField={modelsSorting.order_by}
 
-              searchModel={{
-                onSubmitModel: this.searchModel,
-                valueModel: modelsSearch,
-                onChangeModel: this.changeModel
+              searchTables={{
+                submit: this.searchModel,
+                value: modelsSearch,
+                change: this.changeModel
               }}
 
-              pageCount={modelsPageCount || 1}
-              currentPage={modelsCurrentPage || 1}
-              changePage={modelsCurrentPage => {
-                if (this.state.modelsCurrentPage !== modelsCurrentPage) {
-                  this.setState({ modelsCurrentPage }, this.getModels)
+              pageCount={Math.ceil(modelsMap.length / this.itemsPerPage) || 1}
+              currentPage={currentPageModels}
+              changePage={page => {
+                if (currentPageModels !== page) {
+                  this.setState({ currentPageModels: page });
                 }
               }
               }
-              itemsCount={models.length}
+              itemsCount={modelsMap.length}
               openPagination={true}
             />
           </TabPanel>
@@ -259,23 +264,27 @@ export default class Models extends Component {
                   title: 'Trash'
                 }
               ]}
-              rows={dataSources.map(dataSource => ({
-                ...dataSource,
-                editUrl: '/admin/tables/data-sources/edit/' + dataSource.id
-              }))}
+              rows={buildPagesTree(dataSourcesMap).slice(
+                currentPageDataSources * this.itemsPerPage - this.itemsPerPage,
+                currentPageDataSources * this.itemsPerPage
+              )}
               sortingHandler={this.dataSourcesSortingHandler}
               sortingField={dataSourcesSorting.order_by}
 
-              searchDataSources={{
-                onSubmitDataSources: this.searchDataSources,
-                valueDataSources: dataSourcesSearch,
-                onChangeDataSources: this.changeDataSource
+              searchTables={{
+                submit: this.searchDataSources,
+                value: dataSourcesSearch,
+                change: this.changeDataSource
               }}
 
-              pageCount={dataSourcesPageCount}
-              currentPage={dataSourcesCurrentPage}
-              changePage={dataSourcesCurrentPage => this.setState({ dataSourcesCurrentPage }, this.getDataSources)}
-              itemsCount={dataSources.length}
+              pageCount={Math.ceil(dataSourcesMap.length / this.itemsPerPage) || 1}
+              currentPage={currentPageDataSources}
+              changePage={page => {
+                if (currentPageDataSources !== page) {
+                  this.setState({ currentPageDataSources: page });
+                }
+              }}
+              itemsCount={dataSourcesMap.length}
               openPagination={true}
             />
           </TabPanel>
