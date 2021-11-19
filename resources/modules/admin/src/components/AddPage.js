@@ -622,7 +622,12 @@ class AddPage extends Component {
             </form>
           </div>
 
-          {Boolean(dataSources.length) && <AdminTable
+          {this.props.match.params.id && this.state.currentTab === "content" &&
+          <button onClick={() => this.setState({isModalOpened: true})} className="btn btn_add">
+            Add Data Source
+          </button>}
+
+          {Boolean(dataSources.length) && this.state.currentTab === "content" && <AdminTable
             columns={columns}
             quickActions={[
               {
@@ -642,11 +647,6 @@ class AddPage extends Component {
             rows={dataSources}
             radiusTable={true}
           />}
-
-          {this.props.match.params.id &&
-          <button onClick={() => this.setState({isModalOpened: true})} className="btn btn_add">
-            Add Data Source
-          </button>}
 
           {isModalOpened && (
             <AdminModal2

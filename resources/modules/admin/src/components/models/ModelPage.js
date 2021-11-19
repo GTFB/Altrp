@@ -97,10 +97,10 @@ class ModelPage extends Component {
             sortingHandler={this.sortingHandler}
             sortingField={sorting.order_by}
 
-            searchModalPage={{
-              onSubmitModelPage: this.searchModelData,
-              valueModelPage: search,
-              onChangeModalPage: this.changeModalPage
+            searchTables={{
+              submit: this.searchModelData,
+              value: search,
+              change: this.changeModalPage
             }}
 
             pageCount={pageCount || 1}

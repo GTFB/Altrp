@@ -584,16 +584,16 @@ class SqlEditor extends Component {
                 mode="javascript"
                 theme="textmate"
                 onChange={value => {
-                  //this.changeValue(value, 'test')
+                  this.changeValue(value, 'test')
                 }}
                 className="field-ace"
                 name="aceEditorResponse"
                 height="15em"
                 wrapEnabled={true}
-                // value={this.state.testResponse || ''}
+                value={this.state.testResponse || ''}
                 showPrintMargin={false}
                 setOptions={{
-                  value: this.state.testResponsel || ''
+                  value: this.state.testResponse || ''
                 }}
                 style={{
                   width: '100%'

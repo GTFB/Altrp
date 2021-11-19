@@ -124,77 +124,82 @@ class AdvancedSettings extends Component {
   render() {
     return <div className="admin-styles-settings">
 
-      <div className="admin-styles-advanced-blocks">
-        <div className="admin-styles-advanced-block">
-          <label htmlFor="settings-container-width" className="admin__logo-advanced">
-            Admin Logo:
-          </label>
-          <Suspense fallback={'Loading'}>
-            <MediaInput onChange={this.changeAdminLogo} value={this.props.adminLogo}/>
-          </Suspense>
-        </div>
-
-       <div className="admin-styles-advanced__flex">
-         <div className="admin-styles-advanced-block">
-           <div className="advanced-text-custom">Clear All Templates History:</div>
-           <button className="btn btn_success btn_advanced"
-                   onClick={this.deleteAllTemplatesReviews}>
-             Clear
-           </button>
-         </div>
-
-         <div className="admin-styles-advanced-block">
-           <div className="advanced-text-custom">Update All Backend Resources:</div>
-           <button className="btn btn_success btn_advanced"
-                   onClick={this.updateAllBackendResources}>
-             Update
-           </button>
-         </div>
-
-         <div className="admin-styles-advanced-block">
-           <div className="advanced-text-custom">Clear All Cache:</div>
-           <button className="btn btn_success btn_advanced"
-                   onClick={this.clearAllCache}>
-             Clear
-           </button>
-         </div>
-       </div>
-
-        <div className="admin-styles-advanced-block">
-          <div className="advanced-text-custom">Add Custom Javascript on All Site Pages:</div>
-          <AltrpCodeEditor value={this.state.allSiteJavascript}
-                           mode="javascript"
-                           onChange={value => this.setState({ allSiteJavascript: value})}
-                           height="40em"
-                           style={{
-                             width: '60%'
-                           }}
-          />
-          <button className="btn btn_success btn_advanced"
-                  onClick={this.updateAllSiteJavascript}>
-            Update
-          </button>
-        </div>
-
-        <div className="admin-styles-advanced__flex">
-          <div className="admin-styles-advanced-block advanced-flex">
-            <div className="advanced-text">Debug Altrp App</div>
-            <input className="admin-table__td_check"
-                   onChange={this.toggleDebug}
-              // value={this.state.debugOn}
-                   checked={this.state.debugOn}
-                   type="checkbox"/>
+      <div className="advanced__settings">
+        <div className="admin-styles-advanced-blocks">
+          <div className="admin-styles-advanced-block">
+            <label htmlFor="settings-container-width" className="admin__logo-advanced">
+              Admin Logo:
+            </label>
+            <Suspense fallback={'Loading'}>
+              <MediaInput onChange={this.changeAdminLogo} value={this.props.adminLogo}/>
+            </Suspense>
           </div>
 
-          <div className="admin-styles-advanced-block advanced-flex">
-            <div className="advanced-text">Load App on User Action</div>
-            <input className="admin-table__td_check"
-                   onChange={this.toggleLoadingOption}
-              // value={this.state.debugOn}
-                   checked={this.state.loadByUser}
-                   type="checkbox"/>
+          <div className="admin-styles-advanced">
+            <div className="admin-styles-advanced-block">
+              <div className="advanced-text-custom">Clear All Templates History:</div>
+              <button className="btn btn_success btn_advanced"
+                      onClick={this.deleteAllTemplatesReviews}>
+                Clear
+              </button>
+            </div>
+
+            <div className="admin-styles-advanced-block">
+              <div className="advanced-text-custom">Update All Backend Resources:</div>
+              <button className="btn btn_success btn_advanced"
+                      onClick={this.updateAllBackendResources}>
+                Update
+              </button>
+            </div>
+
+            <div className="admin-styles-advanced-block">
+              <div className="advanced-text-custom">Clear All Cache:</div>
+              <button className="btn btn_success btn_advanced"
+                      onClick={this.clearAllCache}>
+                Clear
+              </button>
+            </div>
+          </div>
+
+          <div className="admin-styles-advanced">
+            <div className="admin-styles-advanced-block advanced-flex">
+              <div className="advanced-text">Debug Altrp App</div>
+              <input className="admin-table__td_check"
+                     onChange={this.toggleDebug}
+                // value={this.state.debugOn}
+                     checked={this.state.debugOn}
+                     type="checkbox"/>
+            </div>
+
+            <div className="admin-styles-advanced-block advanced-flex">
+              <div className="advanced-text">Load App on User Action</div>
+              <input className="admin-table__td_check"
+                     onChange={this.toggleLoadingOption}
+                // value={this.state.debugOn}
+                     checked={this.state.loadByUser}
+                     type="checkbox"/>
+            </div>
+          </div>
+      </div>
+
+        <div className="editor-js__block">
+          <div className="admin-styles-advanced-block no-margin ">
+            <div className="advanced-text-custom">Add Custom Javascript on All Site Pages:</div>
+            <AltrpCodeEditor value={this.state.allSiteJavascript}
+                             mode="javascript"
+                             onChange={value => this.setState({ allSiteJavascript: value})}
+                             height="40em"
+                             style={{
+                               width: '100%'
+                             }}
+            />
+            <button className="btn btn_success btn_advanced"
+                    onClick={this.updateAllSiteJavascript}>
+              Update
+            </button>
           </div>
         </div>
+
       </div>
 
 

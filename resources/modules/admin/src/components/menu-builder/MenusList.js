@@ -106,10 +106,10 @@ class MenusList extends Component {
             currentPage * this.itemsPerPage
           )}
 
-          searchMenus={{
-            onSubmitMenus: this.searchMenus,
-            valueMenus: menusSearch,
-            onChangeMenus: this.changeMenus
+          searchTables={{
+            submit: this.searchMenus,
+            value: menusSearch,
+            change: this.changeMenus
           }}
 
           pageCount={Math.ceil(menus.length / this.itemsPerPage) || 1}

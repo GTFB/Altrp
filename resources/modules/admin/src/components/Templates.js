@@ -251,6 +251,7 @@ export default class Templates extends Component {
 
   render() {
     const {templateSearch, sorting} = this.state
+
     return <div className="admin-templates admin-page">
       <div className="admin-heading">
         <div className="admin-breadcrumbs">
@@ -261,7 +262,7 @@ export default class Templates extends Component {
         <button onClick={this.onClick} className="btn">Add New</button>
         <button onClick={this.toggleImportForm} className="btn ml-3">Import Template</button>
         <div className="admin-filters">
-          <span className="admin-filters__current">All ({this.state.allTemplates.length || ''})</span>
+          <span className="admin-filters__current">All ({this.state.templates.length || ''})</span>
         </div>
       </div>
       <div className="admin-content">
@@ -338,10 +339,10 @@ export default class Templates extends Component {
           sortingHandler={this.sortingHandler}
           sortingField={sorting.order_by}
 
-          searchTemplates={{
-            onSubmitSearchTemplates: this.searchTemplates,
-            valueTemplates: templateSearch,
-            onChangeTemplates: (e) => this.changeTemplates(e)
+          searchTables={{
+            submit: this.searchTemplates,
+            value: templateSearch,
+            change: (e) => this.changeTemplates(e)
           }}
 
           pageCount={this.state.pageCount || 1}
