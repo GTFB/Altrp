@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import {Redirect, withRouter} from 'react-router-dom';
 import UserForm from "./UserForm";
+import UserTopPanel from "../UserTopPanel";
 /**
  * @class
  * @property {Resource} resource
@@ -75,11 +76,14 @@ class AddUserPage extends Component {
     return <div className="admin-users">
         <div className="wrapper">
             <div className="admin-heading">
-                <div className="admin-breadcrumbs">
+                <div className="admin-heading-left">
+                  <div className="admin-breadcrumbs">
                     <Link className="admin-breadcrumbs__link" to={"/admin/users"}>Users</Link>
                     <span className="admin-breadcrumbs__separator">/</span>
                     <span className="admin-breadcrumbs__current">Add New Users</span>
+                  </div>
                 </div>
+              <UserTopPanel />
             </div>
             <div className="admin-users-form-add">
                 <UserForm redirect_url="/admin/users"/>

@@ -3,7 +3,8 @@ import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
 import store from "../js/store/store";
 import { setModalSettings } from "../js/store/modal-settings/actions";
-import {buildPagesTree, redirect} from "../js/helpers";
+import {redirect} from "../js/helpers";
+import UserTopPanel from "./UserTopPanel";
 
 export default class Robots extends Component {
   constructor(props) {
@@ -12,6 +13,7 @@ export default class Robots extends Component {
     this.state = {
       robots: [],
       currentPage: 1,
+      activeHeader: 0,
       robotsSearch: "",
       model_id: false
     };
@@ -26,6 +28,24 @@ export default class Robots extends Component {
 
   async componentDidMount() {
     await this.fetchData();
+
+    window.addEventListener("scroll", this.listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", this.listenScrollHeader)
+    }
+  }
+
+  listenScrollHeader = () => {
+    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
+      this.setState({
+        activeHeader: 1
+      })
+    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
+      this.setState({
+        activeHeader: 0
+      })
+    }
   }
 
   fetchData = async () => {
@@ -86,23 +106,26 @@ export default class Robots extends Component {
 
     return (
       <div className="admin-templates admin-page">
-        <div className="admin-heading">
-          <div className="admin-breadcrumbs">
-            <a className="admin-breadcrumbs__link" href="#">
-              Robots
-            </a>
-            <span className="admin-breadcrumbs__separator">/</span>
-            <span className="admin-breadcrumbs__current">All Robots</span>
-          </div>
-          <button onClick={this.addNew} className="btn">
-            Add New
-          </button>
-          {/* <button className="btn ml-3">Import Robot</button> */}
-          <div className="admin-filters">
+        <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
+          <div className="admin-heading-left">
+            <div className="admin-breadcrumbs">
+              <a className="admin-breadcrumbs__link" href="#">
+                Robots
+              </a>
+              <span className="admin-breadcrumbs__separator">/</span>
+              <span className="admin-breadcrumbs__current">All Robots</span>
+            </div>
+            <button onClick={this.addNew} className="btn">
+              Add New
+            </button>
+            {/* <button className="btn ml-3">Import Robot</button> */}
+            <div className="admin-filters">
             <span className="admin-filters__current">
-              {/* All ({this.state.allTemplates.length || ""}) */}
+              All ({ this.state.robots.length || "0"})
             </span>
+            </div>
           </div>
+          <UserTopPanel />
         </div>
         <div className="admin-content">
           <AdminTable
@@ -130,7 +153,7 @@ export default class Robots extends Component {
                 title: "Enabled",
               }
             ]}
-            rows={buildPagesTree(robots).slice(
+            rows={robots.slice(
               currentPage * this.itemsPerPage - this.itemsPerPage,
               currentPage * this.itemsPerPage
             )}

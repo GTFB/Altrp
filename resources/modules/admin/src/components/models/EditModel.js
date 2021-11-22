@@ -11,6 +11,7 @@ import ModalWindow from "../ModalWindow";
 import store from "./../../js/store/store"
 import {getModelId, getModelRelationId} from "../../js/store/models-state/actions";
 import ModalRelationWindow from "../ModalRelationWindow";
+import UserTopPanel from "../UserTopPanel";
 
 const columns = [
   {
@@ -72,6 +73,7 @@ class EditModel extends Component {
       editingRemoteField: null,
       modalWindow: false,
       modalRelationWindow: false,
+      activeHeader: 0,
     };
 
     this.modelsResource = new Resource({ route: '/admin/ajax/models' });
@@ -172,6 +174,25 @@ class EditModel extends Component {
       this.data_source_optionsResource.getAll()
         .then(data_source_options => this.setState({ data_source_options }));
     }
+
+    window.addEventListener("scroll", this.listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", this.listenScrollHeader)
+    }
+  }
+
+
+  listenScrollHeader = () => {
+    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
+      this.setState({
+        activeHeader: 1
+      })
+    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
+      this.setState({
+        activeHeader: 0
+      })
+    }
   }
   /**
    * Обработка формы
@@ -204,12 +225,15 @@ class EditModel extends Component {
 
     const { id } = this.props.match.params;
     return <div className="admin-pages admin-page">
-      <div className="admin-heading">
-        <div className="admin-breadcrumbs">
-          <Link className="admin-breadcrumbs__link" to="/admin/tables/models">Tables / All Models</Link>
-          <span className="admin-breadcrumbs__separator">/</span>
-          <span className="admin-breadcrumbs__current">Edit Model</span>
-        </div>
+      <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
+       <div className="admin-heading-left">
+         <div className="admin-breadcrumbs">
+           <Link className="admin-breadcrumbs__link" to="/admin/tables/models">Tables / All Models</Link>
+           <span className="admin-breadcrumbs__separator">/</span>
+           <span className="admin-breadcrumbs__current">Edit Model</span>
+         </div>
+       </div>
+        <UserTopPanel />
       </div>
       <div className="admin-content">
         <EditModelForm model={model}

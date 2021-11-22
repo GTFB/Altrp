@@ -5,6 +5,7 @@ import store from "../js/store/store";
 import {setModalSettings} from "../js/store/modal-settings/actions";
 import {generateId, redirect, objectDeepCleaning} from "../js/helpers";
 import Pagination from "./Pagination";
+import UserTopPanel from "./UserTopPanel";
 
 
 export default class Templates extends Component {
@@ -12,6 +13,7 @@ export default class Templates extends Component {
     super(props);
     this.state = {
       templates: [],
+      activeHeader: 0,
       allTemplates: [],
       templateAreas: [],
       activeTemplateArea: {},
@@ -30,6 +32,7 @@ export default class Templates extends Component {
     this.changePage = this.changePage.bind(this);
     this.changeActiveArea = this.changeActiveArea.bind(this);
     this.generateTemplateJSON = this.generateTemplateJSON.bind(this);
+    this.itemsPerPage = 10;
   }
 
   changeActiveArea(e) {
@@ -124,6 +127,24 @@ export default class Templates extends Component {
       return {...state, templateAreas}
     });
     this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea)
+
+    window.addEventListener("scroll", this.listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", this.listenScrollHeader)
+    }
+  }
+
+  listenScrollHeader = () => {
+    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
+      this.setState({
+        activeHeader: 1
+      })
+    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
+      this.setState({
+        activeHeader: 0
+      })
+    }
   }
 
   /**
@@ -250,20 +271,22 @@ export default class Templates extends Component {
   }
 
   render() {
-    const {templateSearch, sorting} = this.state
-
+    const {templateSearch, sorting, templates} = this.state
     return <div className="admin-templates admin-page">
-      <div className="admin-heading">
-        <div className="admin-breadcrumbs">
-          <a className="admin-breadcrumbs__link" href="#">Templates</a>
-          <span className="admin-breadcrumbs__separator">/</span>
-          <span className="admin-breadcrumbs__current">All Templates</span>
-        </div>
-        <button onClick={this.onClick} className="btn">Add New</button>
-        <button onClick={this.toggleImportForm} className="btn ml-3">Import Template</button>
-        <div className="admin-filters">
-          <span className="admin-filters__current">All ({this.state.templates.length || ''})</span>
-        </div>
+      <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
+       <div className="admin-heading-left">
+         <div className="admin-breadcrumbs">
+           <a className="admin-breadcrumbs__link" href="#">Templates</a>
+           <span className="admin-breadcrumbs__separator">/</span>
+           <span className="admin-breadcrumbs__current">All Templates</span>
+         </div>
+         <button onClick={this.onClick} className="btn">Add New</button>
+         <button onClick={this.toggleImportForm} className="btn ml-3">Import Template</button>
+         <div className="admin-filters">
+           <span className="admin-filters__current">All ({this.state.templates.length || ''})</span>
+         </div>
+       </div>
+        <UserTopPanel />
       </div>
       <div className="admin-content">
         {this.state.showImportForm &&

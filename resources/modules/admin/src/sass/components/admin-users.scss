@@ -2,6 +2,14 @@
 .admin-users {
   width: 100%;
 
+  & .admin-table__td {
+    position: relative;
+  }
+
+  & .admin-table-body .admin-table-row .quick-action-menu {
+    left: 91px;
+  }
+
   & .admin-panel {
     display: flex;
     margin-top: 20px;
@@ -112,7 +120,8 @@
 .admin-content-user {
   background-color: #f7f7f7;
   flex-grow: 1;
-  padding: 30px 60px;
+  //padding: 30px 60px;
+  padding: 90px 60px 30px 60px;
   height: 100vh;
 }
 
@@ -187,7 +196,8 @@
 }
 
 .admin-users-form-add {
-  padding: 30px 60px;
+  //padding: 30px 60px;
+  padding: 120px 60px 30px 60px;
   background-color: #f7f7f7;
   height: 100vh;
   flex-grow: 1;

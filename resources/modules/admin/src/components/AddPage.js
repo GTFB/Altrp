@@ -11,6 +11,7 @@ import mutate from "dot-prop-immutable";
 import "./../sass/components/AddPost.scss";
 import {Alignment, Button, InputGroup, MenuItem, TextArea} from "@blueprintjs/core";
 import {MultiSelect, Select} from "@blueprintjs/select";
+import UserTopPanel from "./UserTopPanel";
 
 const columns = [
   {
@@ -44,6 +45,7 @@ class AddPage extends Component {
     super(props);
     this.state = {
       page: {},
+      activeHeader: 0,
       value: {
         model_id: null,
         parent_page_id: null,
@@ -142,6 +144,24 @@ class AddPage extends Component {
           id
         };
       });
+    }
+
+    window.addEventListener("scroll", this.listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", this.listenScrollHeader)
+    }
+  }
+
+  listenScrollHeader = () => {
+    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
+      this.setState({
+        activeHeader: 1
+      })
+    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
+      this.setState({
+        activeHeader: 0
+      })
     }
   }
 
@@ -320,22 +340,24 @@ class AddPage extends Component {
 
   render() {
     const {isModalOpened, editingDataSource} = this.state;
-    console.log(this.state)
     let {dataSources} = this.state;
 
     dataSources = _.sortBy(dataSources, dataSource => dataSource.priority);
     return (
       <div className="admin-pages admin-page">
-        <div className="admin-heading">
-          <div className="admin-breadcrumbs">
-            <Link className="admin-breadcrumbs__link" to="/admin/pages">
-              Pages
-            </Link>
-            <span className="admin-breadcrumbs__separator">/</span>
-            <span className="admin-breadcrumbs__current">
+        <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
+          <div className="admin-heading-left">
+            <div className="admin-breadcrumbs">
+              <Link className="admin-breadcrumbs__link" to="/admin/pages">
+                Pages
+              </Link>
+              <span className="admin-breadcrumbs__separator">/</span>
+              <span className="admin-breadcrumbs__current">
               {this.state.value.title || "Add New Page"}
             </span>
+            </div>
           </div>
+          <UserTopPanel />
         </div>
         <div className="admin-content zeroing__styleTabs styleTabs-marginBottom">
           <div className="custom-tab__tabs">
@@ -454,28 +476,46 @@ class AddPage extends Component {
                           {
                             this.state.value.model_id && <div className="form-group">
                               <label htmlFor="page-path">Column for Search</label>
-                              <input
-                                type="text"
-                                id="page-path"
-                                value={this.state.value.model_column || ""}
-                                onChange={e => {
-                                  this.changeValue(e.target.value, "model_column");
-                                }}
-                                className="form-control"
+                              {/*<input*/}
+                              {/*  type="text"*/}
+                              {/*  id="page-path"*/}
+                              {/*  value={this.state.value.model_column || ""}*/}
+                              {/*  onChange={e => {*/}
+                              {/*    this.changeValue(e.target.value, "model_column");*/}
+                              {/*  }}*/}
+                              {/*  className="form-control"*/}
+                              {/*/>*/}
+
+                              <InputGroup type="text"
+                                          id="page-path"
+                                          value={this.state.value.model_column || ""}
+                                          onChange={e => {
+                                            this.changeValue(e.target.value, "model_column");
+                                          }}
+                                          className="form-control-blueprint"
                               />
                             </div>
                           }
                           {
                             this.state.value.model_id && <div className="form-group">
                               <label htmlFor="page-path">Param for Search</label>
-                              <input
-                                type="text"
-                                id="page-path"
-                                value={this.state.value.param_name || ""}
-                                onChange={e => {
-                                  this.changeValue(e.target.value, "param_name");
-                                }}
-                                className="form-control"
+                              {/*<input*/}
+                              {/*  type="text"*/}
+                              {/*  id="page-path"*/}
+                              {/*  value={this.state.value.param_name || ""}*/}
+                              {/*  onChange={e => {*/}
+                              {/*    this.changeValue(e.target.value, "param_name");*/}
+                              {/*  }}*/}
+                              {/*  className="form-control"*/}
+                              {/*/>*/}
+
+                              <InputGroup type="text"
+                                          id="page-path"
+                                          value={this.state.value.param_name || ""}
+                                          onChange={e => {
+                                            this.changeValue(e.target.value, "param_name");
+                                          }}
+                                          className="form-control-blueprint"
                               />
                             </div>
                           }

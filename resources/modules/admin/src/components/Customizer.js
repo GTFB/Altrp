@@ -3,8 +3,9 @@ import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
 import store from "../js/store/store";
 import { setModalSettings } from "../js/store/modal-settings/actions";
-import {buildPagesTree, redirect, titleToName} from "../js/helpers";
+import {redirect, titleToName} from "../js/helpers";
 import {altrpRandomId} from "../../../front-app/src/js/helpers";
+import UserTopPanel from "./UserTopPanel";
 
 export default class Customizer extends Component {
   constructor(props) {
@@ -14,6 +15,7 @@ export default class Customizer extends Component {
       customizers: [],
       model_id: false,
       currentPage: 1,
+      activeHeader: 0,
       customizersSearch: ""
     };
 
@@ -28,6 +30,24 @@ export default class Customizer extends Component {
 
   async componentDidMount() {
     await this.fetchData();
+
+    window.addEventListener("scroll", this.listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", this.listenScrollHeader)
+    }
+  }
+
+  listenScrollHeader = () => {
+    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
+      this.setState({
+        activeHeader: 1
+      })
+    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
+      this.setState({
+        activeHeader: 0
+      })
+    }
   }
 
   async fetchData() {
@@ -88,23 +108,26 @@ export default class Customizer extends Component {
     const { currentPage, customizers, customizersSearch  } = this.state;
     return (
       <div className="admin-templates admin-page">
-        <div className="admin-heading">
-          <div className="admin-breadcrumbs">
-            <a className="admin-breadcrumbs__link" href="#">
-              Customizer
-            </a>
-            <span className="admin-breadcrumbs__separator">/</span>
-            <span className="admin-breadcrumbs__current">All Customizer</span>
-          </div>
-          <button onClick={this.addNew} className="btn">
-            Add New
-          </button>
-          {/* <button className="btn ml-3">Import Robot</button> */}
-          <div className="admin-filters">
+        <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
+          <div className="admin-heading-left">
+            <div className="admin-breadcrumbs">
+              <a className="admin-breadcrumbs__link" href="#">
+                Customizer
+              </a>
+              <span className="admin-breadcrumbs__separator">/</span>
+              <span className="admin-breadcrumbs__current">All Customizer</span>
+            </div>
+            <button onClick={this.addNew} className="btn">
+              Add New
+            </button>
+            {/* <button className="btn ml-3">Import Robot</button> */}
+            <div className="admin-filters">
             <span className="admin-filters__current">
-              {/* All ({this.state.allTemplates.length || ""}) */}
+              All ({ this.state.customizers.length || "0"})
             </span>
+            </div>
           </div>
+          <UserTopPanel />
         </div>
         <div className="admin-content">
           <AdminTable
@@ -116,7 +139,7 @@ export default class Customizer extends Component {
                 target: "_blank"
               },
             ]}
-            rows={buildPagesTree(customizers).slice(
+            rows={customizers.slice(
               currentPage * this.itemsPerPage - this.itemsPerPage,
               currentPage * this.itemsPerPage
             )}

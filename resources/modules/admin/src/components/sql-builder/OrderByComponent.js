@@ -7,33 +7,31 @@ class OrderByComponent extends Component {
 
     return <div className="form-segment form-group__inline-wrapper">
       <div className="form-group form-group_width47">
-        <label>Field
-          <select required name="column"
-            value={column}
-            onChange={changeHandler}
-            className="form-control"
-          >
-            <option disabled value="" />
-            {columnsOptions.map(({ value, label }) =>
-              <option key={value} value={label}>
-                {label}
-              </option>)}
-          </select>
-        </label>
+        <label>Field</label>
+        <select required name="column"
+                value={column}
+                onChange={changeHandler}
+                className="form-control"
+        >
+          <option disabled value="" />
+          {columnsOptions.map(({ value, label }) =>
+            <option key={value} value={label}>
+              {label}
+            </option>)}
+        </select>
       </div>
 
       <div className="form-group form-group_width47">
-        <label>Type
-          <select required name="type"
-            value={type}
-            onChange={changeHandler}
-            className="form-control"
-          >
-            {/*<option disabled value="" />*/}
-            <option value="asc">Asc</option>
-            <option value="desc">Desc</option>
-          </select>
-        </label>
+        <label>Type</label>
+        <select required name="type"
+                value={type}
+                onChange={changeHandler}
+                className="form-control"
+        >
+          {/*<option disabled value="" />*/}
+          <option value="asc">Asc</option>
+          <option value="desc">Desc</option>
+        </select>
       </div>
     </div>
   }

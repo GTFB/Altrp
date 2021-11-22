@@ -135,6 +135,29 @@ export function buildPagesTree(pages) {
   return tree;
 }
 
+export function PagesTree(pages) {
+  const tree = [];
+  const roots = pages.filter(({ parent_page_id }) => parent_page_id === null);
+
+  if (!roots.length) return pages;
+
+  roots.forEach(root => {
+    tree.push(root);
+    treeRecursion(root.id);
+  });
+
+  function treeRecursion(parentId) {
+    const children = pages.filter(({ parent_page_id }) => parent_page_id === parentId);
+    const childrenMap = children.map(page => ({
+      ...page,
+      title: "——" + page.title
+    }))
+    tree.push(...childrenMap);
+  }
+
+  return tree;
+}
+
 export function filterUsers(users, roleFilter) {
   return users.filter(user => user.roles.some(role => role.id === roleFilter));
 }

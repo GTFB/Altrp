@@ -10,6 +10,7 @@ import Pagination from "../Pagination";
 import {filterUsers, sortUsers} from "../../js/helpers";
 import {InputGroup, MenuItem, Button, Alignment} from "@blueprintjs/core";
 import {Select} from "@blueprintjs/select";
+import UserTopPanel from "../UserTopPanel";
 
 
 const BulkActions = ['Bulk Actions']
@@ -23,6 +24,7 @@ class Users extends Component {
       roleFilter: null,
       search: "",
       currentPage: 1,
+      activeHeader: 0,
       roles: [],
       bulkActions: 'Bulk Actions',
       changeRole: 'Change role on...',
@@ -37,6 +39,24 @@ class Users extends Component {
     this.getUsers();
     new Resource({route: '/admin/ajax/role_options'}).getAll()
       .then(roles => this.setState({roles}));
+
+    window.addEventListener("scroll", this.listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", this.listenScrollHeader)
+    }
+  }
+
+  listenScrollHeader = () => {
+    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
+      this.setState({
+        activeHeader: 1
+      })
+    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
+      this.setState({
+        activeHeader: 0
+      })
+    }
   }
 
   getData = (e) => {
@@ -96,37 +116,48 @@ class Users extends Component {
     e.preventDefault();
   }
 
+  deleteUser = async (id) => {
+    if (confirm('Are You Sure?')) {
+      await this.resource.delete(id)
+      await this.getUsers();
+    }
+  }
+
   render() {
     const {currentPage, data, search, roles, roleFilter} = this.state;
     const {sortingField, order} = this.state.sorting;
     const users = roleFilter ? filterUsers(data, roleFilter) : data;
 
+
     return <div className="admin-users">
       <div className="wrapper">
-        <div className="admin-heading">
-          <div className="admin-breadcrumbs">
-            <a className="admin-breadcrumbs__link" href="#">Users</a>
-            <span className="admin-breadcrumbs__separator">/</span>
-            <span className="admin-breadcrumbs__current">All Users</span>
-          </div>
+        <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
+          <div className="admin-heading-left">
+            <div className="admin-breadcrumbs">
+              <a className="admin-breadcrumbs__link" href="#">Users</a>
+              <span className="admin-breadcrumbs__separator">/</span>
+              <span className="admin-breadcrumbs__current">All Users</span>
+            </div>
 
-          <Link className="btn" to={"/admin/users/new/"}>Add New</Link>
+            <Link className="btn" to={"/admin/users/new/"}>Add New</Link>
 
-          <div className="admin-filters">
+            <div className="admin-filters">
             <span className="admin-filters__current" onClick={() => this.setState({roleFilter: null})}>
               <a className="admin-filters__link">All ({data.length})</a>
             </span>
-            {roles.map(role => {
-              const itemsCount = filterUsers(data, role.value).length;
+              {roles.map(role => {
+                const itemsCount = filterUsers(data, role.value).length;
 
-              return itemsCount ? <React.Fragment key={role.value}>
-                <span className="admin-filters__separator">|</span>
-                <a className="admin-filters__link" onClick={() => this.setState({roleFilter: role.value})}>
-                  {role.label} ({itemsCount})
-                </a>
-              </React.Fragment> : null
-            })}
+                return itemsCount ? <React.Fragment key={role.value}>
+                  <span className="admin-filters__separator">|</span>
+                  <a className="admin-filters__link" onClick={() => this.setState({roleFilter: role.value})}>
+                    {role.label} ({itemsCount})
+                  </a>
+                </React.Fragment> : null
+              })}
+            </div>
           </div>
+          <UserTopPanel />
         </div>
 
         <div className="admin-content-user">
@@ -261,6 +292,11 @@ class Users extends Component {
                     <UserSvg className="users-svg"/>
                     <Link to={"/admin/users/user/" + row.id}>{row.name} {row.id === this.props.userId &&
                     <span style={{color: 'red'}}>you</span>}</Link>
+                    <span className="quick-action-menu">
+                      <span className="quick-action-menu__item_wrapper">
+                        <button onClick={() => this.deleteUser(row.id)} className="quick-action-menu__item quick-action-menu__item_danger">Trash</button>
+                      </span>
+                    </span>
                   </td>
                   <td className="admin-table__td ">{row.full_name}</td>
                   <td className="admin-table__td "><a>{row.email}</a></td>

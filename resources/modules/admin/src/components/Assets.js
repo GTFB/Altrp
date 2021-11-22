@@ -6,6 +6,7 @@ import Resource from "../../../editor/src/js/classes/Resource";
 import { ImageDetail } from "./ImageDetail";
 import { FontsDetail } from "./FontsDetail";
 import IconUpload from "./../svgs/upload.svg"
+import UserTopPanel from "./UserTopPanel";
 
 class Assets extends Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class Assets extends Component {
     this.state = {
       uploaderClasses: 'admin-assets__uploader uploader',
       assets: [],
+      activeHeader: 0,
       acceptInput: '',
       itemDeleteClasses: 'item__delete',
       activeLink: '',
@@ -101,7 +103,26 @@ class Assets extends Component {
   componentDidMount() {
     const activeLink = this.changeUrlForTab();
     this.filterAssets(activeLink);
+
+    window.addEventListener("scroll", this.listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", this.listenScrollHeader)
+    }
   }
+
+  listenScrollHeader = () => {
+    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
+      this.setState({
+        activeHeader: 1
+      })
+    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
+      this.setState({
+        activeHeader: 0
+      })
+    }
+  }
+
   componentDidUpdate() {
     this.changeUrlForTab();
   }
@@ -227,12 +248,15 @@ class Assets extends Component {
     let CloseIcon = iconsManager().getIconComponent('close');
     let AviIcon = iconsManager().getIconComponent('avi');
     return <div className="admin-assets admin-page">
-      <div className="admin-heading">
-        <div className="admin-breadcrumbs">
-          <a className="admin-breadcrumbs__link" href="#">Assets</a>
-          <span className="admin-breadcrumbs__separator">/</span>
-          <span className="admin-breadcrumbs__current">All Assets</span>
+      <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
+        <div className="admin-heading-left">
+          <div className="admin-breadcrumbs">
+            <a className="admin-breadcrumbs__link" href="#">Assets</a>
+            <span className="admin-breadcrumbs__separator">/</span>
+            <span className="admin-breadcrumbs__current">All Assets</span>
+          </div>
         </div>
+        <UserTopPanel />
       </div>
       <div className="admin-content assets-content">
         <div className={this.state.uploaderClasses}

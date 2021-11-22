@@ -18,9 +18,9 @@ class SortableHeader extends Component {
     const { order } = this.state;
 
 
-    return <td onClick={this.clickHandler} className="admin-table__td " title={column.name}>
+    return <td className="admin-table__td " title={column.name}>
       {column.title}
-      <VectorSvg className={`vector-svg ${order === 'DESC' ? 'role-svg' : ''} ${sortingField === column.name ? 'vector-svg--active' : ''}`} />
+      <VectorSvg onClick={this.clickHandler} className={`vector-svg ${order === 'DESC' ? 'role-svg' : ''} ${sortingField === column.name ? 'vector-svg--active' : ''}`} />
     </td>
   }
 };

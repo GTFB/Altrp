@@ -10,6 +10,7 @@ import AdminModal2 from "../AdminModal2";
 import SQLsRemoteFieldForm from "./RemoteFieldForms/SQLsRemoteFieldForm";
 import {InputGroup, MenuItem, Button, Alignment} from "@blueprintjs/core";
 import {MultiSelect, Select} from "@blueprintjs/select";
+import UserTopPanel from "../UserTopPanel";
 
 const remoteFieldsColumns = [
   {
@@ -257,21 +258,26 @@ class SqlEditor extends Component {
    * @return {*}
    */
   onSubmit = async e => {
-    const {id} = this.props.match.params;
-    e.preventDefault();
-    let res;
-    if(! this.state.value.sql){
-      return alert('Заполните SQL Query');
-    }
-    if(id){
-      res = await this.sqlEditorResource.put(id, this.state.value);
-    } else {
-      res = await this.sqlEditorResource.post(this.state.value);
-    }
-    if(res.success){
-      this.props.history.push('/admin/tables/sql_editors');
-    } else {
-      alert(res.message);
+    try {
+      const {id} = this.props.match.params;
+      e.preventDefault();
+      let res;
+      if(! this.state.value.sql){
+        return alert('Заполните SQL Query');
+      }
+      if(id){
+        res = await this.sqlEditorResource.put(id, this.state.value);
+      } else {
+        res = await this.sqlEditorResource.post(this.state.value);
+      }
+      if(res.success){
+        this.props.history.push('/admin/tables/sql_editors');
+      } else {
+        alert(res.message);
+      }
+    } catch (error) {
+      alert("Ошибка, проверьте еще раз внимательно введенные данные");
+      console.error(error);
     }
   };
 
@@ -294,12 +300,15 @@ class SqlEditor extends Component {
     return (
       <div className="admin-pages admin-page">
       <div className="admin-heading">
-        <div className="admin-breadcrumbs">
-          <Link className="admin-breadcrumbs__link" to="/admin/tables/sql_editors">All  SQL Editors</Link>
-          <span className="admin-breadcrumbs__separator">/</span>
+        <div className="admin-heading-left">
+          <div className="admin-breadcrumbs">
+            <Link className="admin-breadcrumbs__link" to="/admin/tables/sql_editors">All  SQL Editors</Link>
+            <span className="admin-breadcrumbs__separator">/</span>
 
-          <span className="admin-breadcrumbs__current">Add SQL Query</span>
+            <span className="admin-breadcrumbs__current">Add SQL Query</span>
+          </div>
         </div>
+        <UserTopPanel />
       </div>
       <div className="admin-content">
         <form className="admin-form field-form" onSubmit={this.onSubmit}>

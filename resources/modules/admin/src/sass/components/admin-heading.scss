@@ -1,13 +1,24 @@
 .admin-heading {
-  //position: fixed;
-  //width: 100%;
-  //top: 0;
-  //left: 271px;
-  //background-color: white;
-  //z-index: 100;
+  position: fixed;
+  width: calc(100% - var(--menu-admin-default));
+  top: 0;
+  left: var(--menu-admin-default);
+  background-color: white;
+  z-index: 100;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 13px 60px;
+  transition: box-shadow 0.4s ease-in-out;
+
+  &-shadow {
+    box-shadow: 0 10px 24px -4px rgba(34, 60, 80, 0.15);
+  }
+
+  &-left {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .admin-breadcrumbs {

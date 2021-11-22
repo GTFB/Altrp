@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 import AdminTable from "./AdminTable";
 import Resource from "../../../editor/src/js/classes/Resource";
-import {buildPagesTree} from "../js/helpers";
+import UserTopPanel from "./UserTopPanel";
 
 const columnsModel = [
   {
@@ -55,6 +55,7 @@ export default class Models extends Component {
     super(props);
     this.state = {
       activeTab: 0,
+      activeHeader: 0,
       currentPageModels: 1,
       currentPageDataSources: 1,
       models: [],
@@ -72,7 +73,7 @@ export default class Models extends Component {
     this.changePage = this.changePage.bind(this);
     this.modelsResource = new Resource({ route: '/admin/ajax/models' });
     this.dataSourcesResource = new Resource({ route: '/admin/ajax/data_sources' });
-    this.itemsPerPage = 10;
+    this.itemsPerPage = 20;
   }
 
   switchTab(activeTab) {
@@ -140,6 +141,24 @@ export default class Models extends Component {
 
     this.getModels();
     this.getDataSources();
+
+    window.addEventListener("scroll", this.listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", this.listenScrollHeader)
+    }
+  }
+
+  listenScrollHeader = () => {
+    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
+      this.setState({
+        activeHeader: 1
+      })
+    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
+      this.setState({
+        activeHeader: 0
+      })
+    }
   }
 
   modelsSortingHandler = (order_by, order) => {
@@ -172,6 +191,7 @@ export default class Models extends Component {
     const { activeTab, models, dataSources, modelsCurrentPage, modelsSearch, dataSourcesSearch,
       modelsPageCount, modelsCount, dataSourcesCount, modelsSorting, dataSourcesSorting, currentPageDataSources, currentPageModels } = this.state;
 
+
     let dataSourcesMap = dataSources.map(dataSource => ({
       ...dataSource,
       editUrl: '/admin/tables/data-sources/edit/' + dataSource.id
@@ -183,13 +203,21 @@ export default class Models extends Component {
     }))
 
     return <div className="admin-settings admin-page">
-      <div className="admin-heading">
-        <div className="admin-breadcrumbs">
-          <a className="admin-breadcrumbs__link" href="#">Tables</a>
-          <span className="admin-breadcrumbs__separator">/</span>
-          <span className="admin-breadcrumbs__current">{activeTab === 0 ? 'All Models' : 'All Data Sources'}</span>
+      <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
+        <div className="admin-heading-left">
+          <div className="admin-breadcrumbs">
+            <a className="admin-breadcrumbs__link" href="#">Tables</a>
+            <span className="admin-breadcrumbs__separator">/</span>
+            <span className="admin-breadcrumbs__current">{activeTab === 0 ? 'All Models' : 'All Data Sources'}</span>
+          </div>
+          <Link className="btn" to={`/admin/tables/${activeTab === 0 ? 'models' : 'data-sources'}/add`}>Add New</Link>
+          <div className="admin-filters">
+            <span className="admin-filters__current">
+              All ({ activeTab === 0 ? this.state.models.length : this.state.dataSources.length || "0"})
+            </span>
+          </div>
         </div>
-        <Link className="btn" to={`/admin/tables/${activeTab === 0 ? 'models' : 'data-sources'}/add`}>Add New</Link>
+        <UserTopPanel />
       </div>
       <div className="admin-content zeroing__styleTabs">
         <Tabs selectedIndex={activeTab} onSelect={this.switchTab}>
@@ -220,7 +248,7 @@ export default class Models extends Component {
                   title: 'Trash'
                 }
               ]}
-              rows={buildPagesTree(modelsMap).slice(
+              rows={modelsMap.slice(
                 currentPageModels * this.itemsPerPage - this.itemsPerPage,
                 currentPageModels * this.itemsPerPage
               )}
@@ -264,7 +292,7 @@ export default class Models extends Component {
                   title: 'Trash'
                 }
               ]}
-              rows={buildPagesTree(dataSourcesMap).slice(
+              rows={dataSourcesMap.slice(
                 currentPageDataSources * this.itemsPerPage - this.itemsPerPage,
                 currentPageDataSources * this.itemsPerPage
               )}
