@@ -1,7 +1,7 @@
 import {getResponsiveSetting} from '../../helpers';
 import {
   dimensionsControllerToStyles,
-  shadowControllerToStyles,
+  shadowControllerToStyles, styledString,
   typographicControllerToStyles
 } from "../../helpers/styles";
 
@@ -105,39 +105,39 @@ const getMenuStyles = (settings, id) => {
 
   styles += `.altrp-element${id}.altrp-widget_menu {`; // было .altrp-portal${id} .altrp-menu
 
-  const menuPadding = getResponsiveSetting(settings, 'menu_padding');
-  if (menuPadding) {
-    styles += dimensionsControllerToStyles(menuPadding);
-  }
-  let menu_radius = getResponsiveSetting(settings, 'menu_radius');
-  if (menu_radius) {
-    styles += dimensionsControllerToStyles(menu_radius, 'border-radius');
-  }
-  let gap = getResponsiveSetting(settings, 'gap');
-  if (gap) {
-    gap = gap.replace(',', '.')
-    styles += `& .altrp-menu > li:not(:last-child) { margin-${
-      getResponsiveSetting(settings, 'type') === 'horizontal' ? 'right' : 'bottom'
-    }: ${gap}}`;
-
-  }
+  // const menuPadding = getResponsiveSetting(settings, 'menu_padding');
+  // if (menuPadding) {
+  //   styles += dimensionsControllerToStyles(menuPadding);
+  // }
+  // let menu_radius = getResponsiveSetting(settings, 'menu_radius');
+  // if (menu_radius) {
+  //   styles += dimensionsControllerToStyles(menu_radius, 'border-radius');
+  // }
+  // let gap = getResponsiveSetting(settings, 'gap');
+  // if (gap) {
+  //   gap = gap.replace(',', '.')
+  //   styles += `& .altrp-menu > li:not(:last-child) { margin-${
+  //     getResponsiveSetting(settings, 'type') === 'horizontal' ? 'right' : 'bottom'
+  //   }: ${gap}}`;
+  //
+  // }
   styles += '}';
-  styles += `.altrp-element${id} .altrp-menu{`;
-  let menuBg = getResponsiveSetting(settings, 'menu_bg');
-  if (menuBg && menuBg.color) {
-    styles += `background-color: ${menuBg.color};`;
-  }
-  styles += '}';
+  // styles += `.altrp-element${id} .altrp-menu{`;
+  // let menuBg = getResponsiveSetting(settings, 'menu_bg');
+  // if (menuBg && menuBg.color) {
+  //   styles += `background-color: ${menuBg.color};`;
+  // }
+  // styles += '}';
   /**
    * стили для ховера
    * @type {string}
    */
   styles += `.altrp-element${id}.altrp-widget_menu:hover {`; // было .altrp-portal${id} .altrp-menu:hover
 
-  menu_radius = getResponsiveSetting(settings, 'menu_radius', ':hover');
-  if (menu_radius) {
-    styles += dimensionsControllerToStyles(menu_radius, 'border-radius');
-  }
+  // menu_radius = getResponsiveSetting(settings, 'menu_radius', ':hover');
+  // if (menu_radius) {
+  //   styles += dimensionsControllerToStyles(menu_radius, 'border-radius');
+  // }
 
   styles += '}';
   if (renderButton) {
@@ -223,19 +223,19 @@ const getMenuStyles = (settings, id) => {
   }
   styles += '}';
 
-  if (gap) {
-    styles += `.altrp-portal${id} .bp3-menu > li:not(:last-child) { margin-bottom: ${gap}}`;
-  }
+  // if (gap) {
+  //   styles += `.altrp-portal${id} .bp3-menu > li:not(:last-child) { margin-bottom: ${gap}}`;
+  // }
 
   /**
    * Submenu styles
    */
   styles += `.altrp-portal${id} .bp3-menu{`;
 
-  let sub_menu_padding = getResponsiveSetting(settings, 'sub_menu_padding');
-  if (sub_menu_padding) {
-    styles += dimensionsControllerToStyles(sub_menu_padding);
-  }
+  // let sub_menu_padding = getResponsiveSetting(settings, 'sub_menu_padding');
+  // if (sub_menu_padding) {
+  //   styles += dimensionsControllerToStyles(sub_menu_padding);
+  // }
 
   let sub_menu_bg = getResponsiveSetting(settings, 'sub_menu_bg');
   if (sub_menu_bg && sub_menu_bg.color) {
@@ -255,10 +255,10 @@ const getMenuStyles = (settings, id) => {
 
   styles += `.altrp-portal.altrp-portal${id} .bp3-popover-content,
     .altrp-portal.altrp-portal${id} .bp3-menu{`;
-  let sub_menu_radius = getResponsiveSetting(settings, 'sub_menu_radius');
-  if (sub_menu_radius) {
-    styles += dimensionsControllerToStyles(sub_menu_radius, 'border-radius');
-  }
+  // let sub_menu_radius = getResponsiveSetting(settings, 'sub_menu_radius');
+  // if (sub_menu_radius) {
+  //   styles += dimensionsControllerToStyles(sub_menu_radius, 'border-radius');
+  // }
   styles += '}';
   styles += `.altrp-portal${id} .bp3-menu:hover{`;
 
@@ -280,11 +280,55 @@ const getMenuStyles = (settings, id) => {
   styles += `.altrp-portal.altrp-portal${id} .bp3-popover-content:hover,
     .altrp-portal.altrp-portal${id} .bp3-menu:hover{`;
 
-  sub_menu_radius = getResponsiveSetting(settings, 'sub_menu_radius', ':hover');
-  if (sub_menu_radius) {
-    styles += dimensionsControllerToStyles(sub_menu_radius, 'border-radius');
-  }
+  // sub_menu_radius = getResponsiveSetting(settings, 'sub_menu_radius', ':hover');
+  // if (sub_menu_radius) {
+  //   styles += dimensionsControllerToStyles(sub_menu_radius, 'border-radius');
+  // }
   styles += '}';
+
+
+  const menuStyles = [
+    "altrp-menu",
+      ["padding", "menu_padding", "dimensions"],
+      () => {
+        const value = getResponsiveSetting(settings, 'gap');
+
+        if(value) {
+          return `grid-gap: ${value};`
+        } else {
+          return ""
+        }
+      },
+      ["background-color", "menu_bg", "color"],
+    "}",
+
+    "altrp-menu li .bp3-menu-item",
+      ["border-radius", "item_radius", "dimensions"],
+    "}",
+  ]
+
+  const styledArray = [
+    ...menuStyles
+  ]
+
+  styles += `.altrp-element${id} {${styledString(styledArray, settings)}}`
+
+  const styledPortalArray = [
+    "bp3-popover-content.bp3-popover-content",
+      ["border-radius", "popover_radius", "dimensions"],
+    "}",
+
+    "& li .bp3-menu-item",
+      ["border-radius", "sub_menu_radius", "dimensions"],
+    "}",
+
+    "bp3-popover-content .bp3-menu",
+      ["border-radius", "popover_radius", "dimensions"],
+    "}",
+    ...menuStyles,
+  ]
+
+  styles += `.altrp-portal${id} {${styledString(styledPortalArray, settings)}}`
 
   return styles;
 }

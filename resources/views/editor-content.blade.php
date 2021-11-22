@@ -34,7 +34,6 @@
     <script>
         window.ALTRP_DEBUG = {!! json_encode(!!get_altrp_setting('altrp_debug', false)) !!};
         window.container_width = {{ get_altrp_setting('container_width', '1440') }};
-        window.altrpMenus = [];
 
     </script>
 </head>
