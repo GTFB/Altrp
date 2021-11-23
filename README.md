@@ -6,9 +6,9 @@
 
 ### 0.19.4
 + Add Stars Input Widget
++ Add Progressbar Widget
 * Fix Sources Auth settings Bug
-+ Add Null Palceholder in Select-type Filter In table Widget
-
++ Add Null Placeholder in Select-type Filter In table Widget
 
 ### 0.19.3
 + Add Typing and Select Actions in Input Text Autocomplete Widget
