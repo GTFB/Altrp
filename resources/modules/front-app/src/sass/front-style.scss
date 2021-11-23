@@ -63,13 +63,13 @@ $padding-adaptive667_false: 0px;
 :root {
   --front-app-true: #{$padding_true};
   --front-app-false: #{$padding_false};
-  --front-app-padding: var(--front-app-true);
+  --front-app-padding: var(--front-app-false);
 
   --front-app-adaptive1070-true: #{$padding-adaptive1070_true};
   --front-app-adaptive1070-false: #{$padding-adaptive1070_false};
-  --front-app-adaptive1070-padding: var(--front-app-adaptive1070-true);
+  --front-app-adaptive1070-padding: var(--front-app-adaptive1070-false);
 
   --front-app-adaptive667-true: #{$padding-adaptive667_true};
   --front-app-adaptive667-false: #{$padding-adaptive667_false};
-  --front-app-adaptive667-padding: var(--front-app-adaptive667-true);
+  --front-app-adaptive667-padding: var(--front-app-adaptive667-false);
 }

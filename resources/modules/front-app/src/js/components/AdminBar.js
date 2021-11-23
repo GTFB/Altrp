@@ -16,7 +16,7 @@ class AdminBar extends React.Component {
       visibleAutocomplete: false,
       filteredOptions: [],
       isHttps: false,
-      barIsOpened: true,
+      barIsOpened: false,
       arrayRevisions: null
     };
     this.popupTemplateRef = React.createRef();
