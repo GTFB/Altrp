@@ -78,9 +78,9 @@ class EditModelForm extends Component {
     if(this.state.redirect){
       return <Redirect to={this.state.redirect} push={true}/>
     }
-    return <form className="admin-form model-width" onSubmit={this.submitHandler}>
+    return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="form-group__inline-wrapper">
-        <div className="form-group form-group_width47">
+        <div className="form-group form-group_width23">
           <label htmlFor="page-title" className="font__edit">Model Title</label>
           {/*<input type="text" id="page-title" required*/}
           {/*       value={model.title || ''}*/}
@@ -95,7 +95,7 @@ class EditModelForm extends Component {
                       required
           />
         </div>
-        <div className="form-group form-group_width47">
+        <div className="form-group form-group_width23">
           <label htmlFor="page-name" className="font__edit">Model Name</label>
           {/*<input type="text" id="page-name" required*/}
           {/*       value={model.name || ''}*/}
@@ -109,9 +109,8 @@ class EditModelForm extends Component {
                       required
           />
         </div>
-      </div>
-      <div className="form-group__inline-wrapper">
-        <div className="form-group form-group_width47">
+
+        <div className="form-group form-group_width23">
           <label htmlFor="page-description" className="font__edit">Parent Model</label>
           {/*<input type="text" id="page-description"*/}
           {/*       value={model.parent_model_id || ''}*/}
@@ -124,21 +123,21 @@ class EditModelForm extends Component {
                       id="page-description"
           />
         </div>
-        <div className="form-group form-group_width47">
+        <div className="form-group form-group_width23">
           <label htmlFor="page-description" className="font__edit">Model Description</label>
           {/*<input type="text" id="page-description"*/}
           {/*       value={model.description || ''}*/}
           {/*       onChange={e => { this.changeValue(e.target.value, 'description') }}*/}
           {/*       className="form-control" />*/}
           <InputGroup className="form-control-blueprint"
-                      onChange={e => { this.changeValue(e.target.value, 'parent_model_id') }}
+                      onChange={e => { this.changeValue(e.target.value, 'description') }}
                       value={model.description || ''}
                       type="text"
                       id="page-description"
           />
         </div>
       </div>
-      {(model.id) ? '' : <div className="form-group">
+      {(model.id) ? '' : <div className="form-group modalTable__width">
         <label htmlFor="model-table_id" className="font__edit">Table</label>
         <AltrpSelect
             id="model-table_id"

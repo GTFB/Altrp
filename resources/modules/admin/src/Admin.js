@@ -24,6 +24,7 @@ import RobotsSvg from "./svgs/robots-v2.svg";
 import LayoutSvg from "./svgs/layout-v2.svg";
 import UserSvg from "./svgs/users-v2.svg";
 import DropletSvg from "./svgs/droplet-v2.svg";
+import MarketPlace from "./svgs/marketplace.svg"
 
 import AdminLogo from "./components/AdminLogo";
 import AllPages from "./components/AllPages";
@@ -287,6 +288,18 @@ class Admin extends Component {
                       </Link>
                     </li>
                     <li>
+                      <Link
+                        to="/admin/assets"
+                        className={this.state.activeButton === 1 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                        onClick={() => this.setState({ activeButton: 1 })}
+                      >
+                        <AssetSvg className="icon" />
+                        <DropletSvg className="icon__droplet"/>
+                        <span>Assets</span>
+                      </Link>
+                      {/*<WithRouterAdminAssetsDropList activeButton={() => this.setState({ activeButton: 1 })}/>*/}
+                    </li>
+                    <li>
                       <Link to="/admin/models"
                             className={this.state.activeButton === 9 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 9 })}
@@ -316,18 +329,6 @@ class Admin extends Component {
                         <DropletSvg className="icon__droplet"/>
                         <span>Main</span>
                       </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/admin/assets"
-                        className={this.state.activeButton === 1 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
-                        onClick={() => this.setState({ activeButton: 1 })}
-                      >
-                        <AssetSvg className="icon" />
-                        <DropletSvg className="icon__droplet"/>
-                        <span>Assets</span>
-                      </Link>
-                      {/*<WithRouterAdminAssetsDropList activeButton={() => this.setState({ activeButton: 1 })}/>*/}
                     </li>
                     <li>
                       <Link
@@ -401,7 +402,7 @@ class Admin extends Component {
                         className={this.state.activeButton === 10 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
                         onClick={() => this.setState({ activeButton: 10 })}
                       >
-                        <PluginSvg className="icon" />
+                        <MarketPlace className="icon" />
                         <DropletSvg className="icon__droplet"/>
                         <span>Market</span>
                       </Link>
@@ -578,12 +579,12 @@ class Admin extends Component {
             <Route path="/admin/tables/models/:modelId/remote-fields/edit/:id">
               <EditField />
             </Route>
-            <Route path="/admin/tables/models/:modelId/relations/add">
-              <AddRelation />
-            </Route>
-            <Route path="/admin/tables/models/:modelId/relations/edit/:id">
-              <AddRelation />
-            </Route>
+            {/*<Route path="/admin/tables/models/:modelId/relations/add">*/}
+            {/*  <AddRelation />*/}
+            {/*</Route>*/}
+            {/*<Route path="/admin/tables/models/:modelId/relations/edit/:id">*/}
+            {/*  <AddRelation />*/}
+            {/*</Route>*/}
             <Route path="/admin/tables/models/:modelId/accessors/add">
               <AddAccessor />
             </Route>

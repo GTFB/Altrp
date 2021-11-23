@@ -96,10 +96,10 @@ export default class AllPages extends Component {
               currentPage * this.itemsPerPage - this.itemsPerPage,
               currentPage * this.itemsPerPage
             )}
-            search={{
+            searchTables={{
               value: pagesSearch || "",
-              submitHandler: this.submitSearchHandler,
-              changeHandler: (e) => this.changeSearchHandler(e)
+              submit: this.submitSearchHandler,
+              change: (e) => this.changeSearchHandler(e)
             }}
             getPages={this.getPages}
 

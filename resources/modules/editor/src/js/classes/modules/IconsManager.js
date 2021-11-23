@@ -106,6 +106,8 @@ import adminBar3 from '../../../svgs/admin-bar3.svg';
 import adminBar4 from '../../../svgs/admin-bar4.svg';
 import copyIcon from '../../../svgs/copy-icon.svg';
 import chevronAdminBar from '../../../svgs/chevron-admin-bar.svg';
+import adminNewBar from '../../../svgs/admin-bar-new.svg';
+import adminSettingsBar from '../../../svgs/admin-page-settings.svg'
 class IconsManager {
   constructor() {
     this.icons = [];
@@ -218,6 +220,8 @@ class IconsManager {
     this.icons.push(new Icon('admin-bar4', adminBar4));
     this.icons.push(new Icon('copy-icon', copyIcon));
     this.icons.push(new Icon('chevron-admin-bar', chevronAdminBar));
+    this.icons.push(new Icon('admin-new-bar', adminSettingsBar));
+    this.icons.push(new Icon('admin-settings-bar', adminNewBar));
   }
   /**
    * @param {string} iconName

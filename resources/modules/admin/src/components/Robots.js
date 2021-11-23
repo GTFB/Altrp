@@ -168,10 +168,10 @@ export default class Robots extends Component {
               }
             ]}
 
-            searchRobots={{
-              onSubmitRobots: this.searchRobots,
-              valueRobots: robotsSearch,
-              onChangeRobots: this.changeRobots
+            searchTables={{
+              submit: this.searchRobots,
+              value: robotsSearch,
+              change: this.changeRobots
             }}
 
             pageCount={Math.ceil(robots.length / this.itemsPerPage) || 1}

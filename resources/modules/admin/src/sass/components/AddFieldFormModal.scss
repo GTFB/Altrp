@@ -4,6 +4,20 @@
   width: 47.5%;
 }
 
+.checkbox-group-field_noWidth {
+  align-items: center;
+  width: 100%;
+
+  & .showMore {
+    color: #007bff;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
 .form-group-field {
   display: flex;
   align-items: center;

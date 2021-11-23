@@ -77,10 +77,10 @@ class Areas extends Component {
             currentPage * this.itemsPerPage
           )}
 
-          searchAreas={{
-            onSubmitAreas: this.searchAreas,
-            valueAreas: areasSearch,
-            onChangeAreas: this.changeAreas
+          searchTables={{
+            submit: this.searchAreas,
+            value: areasSearch,
+            change: this.changeAreas
           }}
 
           pageCount={Math.ceil(areas.length / this.itemsPerPage) || 1}

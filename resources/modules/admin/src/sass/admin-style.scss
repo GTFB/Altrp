@@ -308,6 +308,7 @@ a {
 .admin-content {
   background-color: #f7f7f7;
   flex-grow: 1;
+  //padding: 120px 60px 30px 60px;
   padding: 30px 60px;
 }
 
@@ -358,4 +359,9 @@ a {
 
 .font__weightDropList {
   font-weight: 700;
+}
+
+body {
+  font-size: 14px !important;
+  line-height: 1.28581 !important;
 }

@@ -9,7 +9,8 @@ import ValidationTable from "./ValidationSection/ValidationTable";
 import ModelsRemoteFieldForm from "./RemoteFieldForms/ModelsRemoteFieldForm";
 import ModalWindow from "../ModalWindow";
 import store from "./../../js/store/store"
-import {getModelId} from "../../js/store/models-state/actions";
+import {getModelId, getModelRelationId} from "../../js/store/models-state/actions";
+import ModalRelationWindow from "../ModalRelationWindow";
 
 const columns = [
   {
@@ -70,6 +71,7 @@ class EditModel extends Component {
       isFieldRemoteModalOpened: false,
       editingRemoteField: null,
       modalWindow: false,
+      modalRelationWindow: false,
     };
 
     this.modelsResource = new Resource({ route: '/admin/ajax/models' });
@@ -124,6 +126,17 @@ class EditModel extends Component {
   getModalFields = (id) => {
     store.dispatch(getModelId(id));
     this.setState(state => ({ ...state, modalWindow: true }))
+  }
+
+  toggleWindowRelationModal = () => {
+    store.dispatch(getModelRelationId(null));
+    this.setState(state => ({ ...state, modalRelationWindow: !this.state.modalRelationWindow }))
+    this.updateRelations();
+  }
+
+  getModalRelation = (id) => {
+    store.dispatch(getModelRelationId(id));
+    this.setState(state => ({ ...state, modalRelationWindow: true }))
   }
 
   /**
@@ -187,7 +200,7 @@ class EditModel extends Component {
   };
   render() {
     const { model, fields, remoteFields, relations, queries, sql_editors, accessors, isModalOpened,
-      isFieldRemoteModalOpened, editingRemoteField, data_source_options, validations, modalWindow } = this.state;
+      isFieldRemoteModalOpened, editingRemoteField, data_source_options, validations, modalWindow, modalRelationWindow } = this.state;
 
     const { id } = this.props.match.params;
     return <div className="admin-pages admin-page">
@@ -243,16 +256,19 @@ class EditModel extends Component {
             <div className="form-group_width-table47">
               <div className="form-group__inline-wrapper table__name-top">
                 <h2 className="sub-header">Relations</h2>
-                <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/relations/add`}>Add Relation</Link>
+                <button className="btn btn_add" onClick={this.toggleWindowRelationModal}>Add Relation</button>
               </div>
               <AdminTable
                 columns={columns}
-                quickActions={[{
-                  tag: 'Link', props: {
-                    href: `/admin/tables/models/${id}/relations/edit/:id`,
-                  },
-                  title: 'Edit'
-                }, {
+                quickActions={
+                  [
+                //     {
+                //   tag: 'Link', props: {
+                //     href: `/admin/tables/models/${id}/relations/edit/:id`,
+                //   },
+                //   title: 'Edit'
+                // },
+                    {
                   tag: 'button',
                   route: `/admin/ajax/models/${id}/relations/:id`,
                   method: 'delete',
@@ -261,7 +277,7 @@ class EditModel extends Component {
                   className: 'quick-action-menu__item_danger',
                   title: 'Trash'
                 }]}
-                rows={relations.map(relation => ({ ...relation, editUrl: `/admin/tables/models/${model.id}/relations/edit/${relation.id}` }))}
+                rows={relations.map(relation => ({ ...relation, button__table: () => this.getModalRelation(relation.id) }))}
                 radiusTable={true}
                 offBorderLast={true}
               />
@@ -411,6 +427,10 @@ class EditModel extends Component {
 
         {modalWindow && (
           <ModalWindow modelId={id} activeMode={this.state.modalWindow} toggleModal={this.toggleWindowModal} />
+        )}
+
+        {modalRelationWindow && (
+          <ModalRelationWindow modelId={id} activeMode={this.state.modalRelationWindow} toggleModal={this.toggleWindowRelationModal}/>
         )}
       </div>
     </div>;
