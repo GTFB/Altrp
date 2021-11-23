@@ -109,9 +109,9 @@ class BarDiagram extends BaseElement {
     //   ]
     // });
 
-    this.addControl("customTooltip", {
+    this.addControl("use_legend", {
       type: CONTROLLER_SWITCHER,
-      label: "Use custom tooltip?",
+      label: "Use legend?",
       default: false
     });
 

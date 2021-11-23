@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ResponsiveLine } from "@nivo/line";
+import { Defs, linearGradientDef } from '@nivo/core'
 Tooltip;
 import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
@@ -31,20 +32,6 @@ const DynamicLineChart = ({
   enableArea = false,
   enablePoints = true,
   pointColor,
-  yMarker = false,
-  yMarkerValue = 0,
-  yMarkerOrientation = "vertical",
-  yMarkerColor,
-  yMarkerLabel = "",
-  yMarkerWidth = 2,
-  xMarker = false,
-  xMarkerValue = 0,
-  xMarkerOrientation = "vertical",
-  xMarkerColor,
-  xMarkerLabel = "",
-  xMarkerWidth = 2,
-  yMarkerLabelColor,
-  xMarkerLabelColor,
   sort = "",
   tickRotation = 0,
   bottomAxis = true,
@@ -55,8 +42,15 @@ const DynamicLineChart = ({
   constantsAxises = [],
   yScaleMax,
   widgetID,
-  useCustomTooltips
+  title,
+  subTitle,
+  legend,
+  enableGradient
 }) => {
+  if (legend) {
+    Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
+  }
+  
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
 
@@ -131,9 +125,26 @@ const DynamicLineChart = ({
   );
 
   isNotEmpty = matches.includes(true);
+
+  const customProps = {}
+
   if (!isNotEmpty) return <EmptyWidget />;
+
+  if (enableGradient) {
+    customProps.defs = [
+      linearGradientDef('gradientA', [
+          { offset: 0, color: 'inherit' },
+          { offset: 100, color: 'inherit', opacity: 0 },
+      ]),
+    ]
+
+    customProps.fill= [{ match: '*', id: 'gradientA' }]
+  }
+
   return (
     <>
+      {title && <h3 className='diagram-title' style={{margin: 0}}>{title}</h3>}
+      {subTitle && <h5 className='diagram-subtitle' style={{margin: 0}}>{subTitle}</h5>}
       <div
         style={{
           width: width,
@@ -190,7 +201,6 @@ const DynamicLineChart = ({
               <Tooltip
                 keyIsDate={keyIsDate}
                 datum={datum}
-                enable={useCustomTooltips}
                 widgetID={widgetID}
               />
             );
@@ -213,32 +223,24 @@ const DynamicLineChart = ({
               ? pointColor.colorPickedHex
               : { from: "color", modifiers: [] }
           }
-          // legends={[
-          //   {
-          //     anchor: "bottom-right",
-          //     direction: "column",
-          //     justify: false,
-          //     translateX: 130,
-          //     translateY: 0,
-          //     itemsSpacing: 0,
-          //     itemDirection: "left-to-right",
-          //     itemWidth: 120,
-          //     itemHeight: 20,
-          //     itemOpacity: 0.75,
-          //     symbolSize: 12,
-          //     symbolShape: "circle",
-          //     symbolBorderColor: "rgba(0, 0, 0, .5)",
-          //     effects: [
-          //       {
-          //         on: "hover",
-          //         style: {
-          //           itemBackground: "rgba(0, 0, 0, .03)",
-          //           itemOpacity: 1
-          //         }
-          //       }
-          //     ]
-          //   }
-          // ]}
+          legends={legend && [
+            {
+              anchor: 'top-right',
+              direction: 'column',
+              translateX: 0,
+              translateY: 0,
+              itemsSpacing: 2,
+              itemWidth: 60,
+              itemHeight: 14,
+              itemDirection: "left-to-right",
+              itemOpacity: 1,
+              symbolSize: 14,
+              symbolShape: "circle",
+              ...legend
+            }
+          ]}
+
+          {...customProps}
         />
       </div>
     </>

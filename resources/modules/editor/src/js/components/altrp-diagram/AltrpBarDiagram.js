@@ -45,8 +45,9 @@ const AltrpBarDiagram = props => {
   const keyIsDate = settings.key_is_date;
 
   //data variable
-  let data = [];
+  let data = []
   let keys = []
+  let indexBy = ''
 
   //funciton for formattion data for all types
   const formatData = (data, groupName, keyName, dataName) => {
@@ -86,6 +87,9 @@ const AltrpBarDiagram = props => {
         title: 60,
       },
     ]
+
+    keys = ['title', 'title1']
+    indexBy = 'key'
   } else {
     try {
       data = getDataByPath(settings.datasource_path, []);
@@ -93,6 +97,8 @@ const AltrpBarDiagram = props => {
       keys = [
         ...new Set(data.map(el => el[key_name]))
       ]
+
+      indexBy = group_name
 
       data = formatData(data, group_name, key_name, data_name);
     } catch (error) {
@@ -159,7 +165,7 @@ const AltrpBarDiagram = props => {
       enableGridY={enableGridY}
       useCustomTooltips={useCustomTooltips}
       keys={keys}
-      indexBy={group_name}
+      indexBy={indexBy}
       legend={!settings.use_legend && {
         anchor: settings.legend_anchor,
         direction: settings.legend_direction,

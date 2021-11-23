@@ -25,8 +25,6 @@ class TooltipBar extends PureComponent {
   }
 
   render() {
-    console.log({propsdatum: this.props.datum.id});
-
     return (
       <div
         className={`${this.props.widgetID} altrp-dashboard__tooltip--font altrp-dashboard__tooltip--label-background altrp-dashboard__tooltip--width altrp-dashboard__tooltip--label-background-shadow altrp-dashboard__tooltip--border-type altrp-dashboard__tooltip--border-width altrp-dashboard__tooltip--border-color col-12`}
