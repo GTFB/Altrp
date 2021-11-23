@@ -466,6 +466,10 @@ class Table extends BaseElement {
           value: 'min_max',
         },
         {
+          label: 'Range Slider',
+          value: 'range_slider',
+        },
+        {
           label: 'Select',
           value: 'select',
         },
@@ -480,6 +484,7 @@ class Table extends BaseElement {
       },
     });
 
+
     repeater.addControl('null_placeholder', {
       type: CONTROLLER_TEXT,
       hideOnEmail: true,
@@ -488,6 +493,27 @@ class Table extends BaseElement {
       conditions: {
         'column_is_filtered': true,
         'column_filter_type': 'select',
+      },
+    });
+
+    repeater.addControl('step_size', {
+      type: CONTROLLER_SLIDER,
+      hideOnEmail: true,
+      label: 'Step Size',
+      responsive: false,
+      conditions: {
+        'column_is_filtered': true,
+        'column_filter_type': 'range_slider',
+      },
+    });
+    repeater.addControl('label_step_size', {
+      type: CONTROLLER_SLIDER,
+      hideOnEmail: true,
+      label: 'Label Step Size',
+      responsive: false,
+      conditions: {
+        'column_is_filtered': true,
+        'column_filter_type': 'range_slider',
       },
     });
 

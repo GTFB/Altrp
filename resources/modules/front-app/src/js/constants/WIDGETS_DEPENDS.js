@@ -7,7 +7,7 @@ const WIDGETS_DEPENDS = {
   'carousel': [ 'template-loader'],
   'cards': [ 'template-loader'],
   'template': [ 'template-loader'],
-  'table': [ 'template-loader'],
+  'table': [ 'template-loader', 'blueprint'],
   'input': ['moment'],
   'section': ['section-element-wrapper'],
   'column': ['section-element-wrapper'],

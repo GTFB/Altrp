@@ -4,6 +4,9 @@
 ## Changelog
 
 
+### 0.19.5
++ Add Range Slider Filter for Table
+
 ### 0.19.4
 + Add Stars Input Widget
 + Add Progressbar Widget
