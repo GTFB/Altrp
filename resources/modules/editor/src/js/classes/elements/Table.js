@@ -480,6 +480,17 @@ class Table extends BaseElement {
       },
     });
 
+    repeater.addControl('null_placeholder', {
+      type: CONTROLLER_TEXT,
+      hideOnEmail: true,
+      label: 'Null Placeholder',
+      responsive: false,
+      conditions: {
+        'column_is_filtered': true,
+        'column_filter_type': 'select',
+      },
+    });
+
     repeater.addControl('column_text_filter_type', {
       type: CONTROLLER_SELECT,
       hideOnEmail: true,

@@ -1,6 +1,9 @@
 import React, {Component} from "react";
 import AltrpPopper from "../altrp-popper/AltrpPopper";
-import TemplateLoader from "../template-loader/TemplateLoader";
+const {
+  TemplateLoader,
+} = window.altrpHelpers;
+
 import DropbarComponent from "../widgets/styled-components/DropbarComponent";
 
 class Dropbar extends Component {
@@ -69,6 +72,9 @@ class Dropbar extends Component {
       this.props.className;
     let type = this.props.settings.type_dropbar_section || "text";
     let content_dropbar_section = this.props.getContent('content_dropbar_section');
+
+    const id = this.props.settings.template_dropbar_section;
+
     return (
       <div className={"altrp-dropbar altrp-dropbar-" + mainClass}>
         <span className={"altrp-dropbar-children-wrapper " + mainClass + "-wrapper"}
@@ -83,7 +89,7 @@ class Dropbar extends Component {
                 // onMouseEnter: this.props.settings.mode_dropbar_options === "hover" ? this.enterShow : null,
                 // onMouseLeave: this.props.settings.mode_dropbar_options === "hover" ? this.leaveHide : null
               }
-              )
+            )
           }
 
           <AltrpPopper
@@ -99,11 +105,11 @@ class Dropbar extends Component {
             }}
           >
             <DropbarComponent settings={this.props.element.getSettings()}
-              className={"altrp-dropbar-container " +
-              (` ${this.props.elemenentId}-altrp-dropbar `) +
-              mainClass +
-              "-containter" +
-              (this.state.show ? " altrp-dropbar-container-show" : " altrp-dropbar-container-hide")}
+                              className={"altrp-dropbar-container " +
+                              (` ${this.props.elemenentId}-altrp-dropbar `) +
+                              mainClass +
+                              "-containter" +
+                              (this.state.show ? " altrp-dropbar-container-show" : " altrp-dropbar-container-hide")}
             >
               {
                 type === "text" ? (
@@ -120,8 +126,7 @@ class Dropbar extends Component {
                     onLoad={() => {
                       this.setState({ updateToken: Math.random() })
                     }}
-                    templateId={this.props.settings.template_dropbar_section}
-                    cardModel={this.props.element.getCurrentModel()}
+                    templateId={id}
                   />
                 )
               }

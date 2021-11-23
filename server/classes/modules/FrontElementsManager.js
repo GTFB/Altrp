@@ -32,6 +32,7 @@ import InputHiddenWidget from "../../../resources/modules/editor/src/js/componen
 import TemplateWidget from "../../../resources/modules/editor/src/js/components/widgets/TemplateWidget";
 import ImageLightboxWidget from "../../../resources/modules/editor/src/js/components/widgets/ImageLightboxWidget";
 import IconWidget from "../../../resources/modules/editor/src/js/components/widgets/IconWidget"
+import MenuPlaceholder from "../components/MenuPlaceholder";
 // import BreadcrumbsWidget from '../../../resources/modules/editor/src/js/components/widgets/BreadcrumbsWidget';
 // import MenuWidget from '../../../resources/modules/editor/src/js/components/widgets/MenuWidget';
 
@@ -41,7 +42,11 @@ class FrontElementsManager {
     //список компонентов
     this.components = {};
     SKELETON_ELEMENTS.forEach(el=>{
-      this.components[el] = SkeletonPlaceholder;
+      if(el === "menu") {
+        this.components[el] = MenuPlaceholder;
+      } else {
+        this.components[el] = SkeletonPlaceholder;
+      }
     })
     this.components['root-element'] = RootComponent;
     this.components['heading'] = HeadingTypeHeadingWidget;

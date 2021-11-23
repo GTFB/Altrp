@@ -520,9 +520,13 @@ class InputTextCommon extends BaseElement {
 
     actionsControllers(this, "Blur Actions");
 
+    actionsControllers(this, "Select Actions", "select_");
+
     actionsControllers(this, "Focus Actions", "focus_");
 
     actionsControllers(this, "Change Actions", "change_");
+
+    actionsControllers(this, "Typing Text Actions", "typing_");
 
     // this.startControlSection('logic_section', {
     //   tab: TAB_CONTENT,

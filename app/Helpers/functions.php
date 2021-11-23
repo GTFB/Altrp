@@ -12,6 +12,7 @@ use League\ColorExtractor\Color;
 use League\ColorExtractor\ColorExtractor;
 use League\ColorExtractor\Palette;
 use App\Page;
+use App\Altrp\Menu;
 use Illuminate\Support\Facades\Auth;
 use App\Altrp\Facades\CacheService;
 
@@ -1024,6 +1025,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'input-accept',
     'input-text',
     'input-text-common',
+    'input-text-autocomplete',
     'input-password',
     'input-number',
     'input-tel',
@@ -1049,13 +1051,16 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'icon',
     'export',
     'template',
+    'dropbar',
     'gallery',
     'table',
     'tabs',
     'heading-type-animating',
     'scheduler',
     'tree',
-    'list'
+    'list',
+    'stars',
+    'progress-bar'
   ];
   if( ! is_array( $elementNames ) ){
     $elementNames = [];
@@ -1388,6 +1393,23 @@ const ACTIONS_COMPONENTS = [
   'email',
   'toggle_popup',
 ];
+
+ function dedup($array, $key)
+ {
+  $temp_array = array();
+      $i = 0;
+      $key_array = array();
+
+      foreach($array as $val) {
+          if (!in_array($val[$key], $key_array)) {
+              $key_array[$i] = $val[$key];
+              $temp_array[$i] = $val;
+          }
+          $i++;
+      }
+      return $temp_array;
+ };
+
 /**
  * Получить настройки для фронтенда h-altrp
  * @return array['action_components']=array - компоненты, которые нужно загрузить для действий ('mail', 'popups')
@@ -1403,6 +1425,7 @@ function getPageSettings( $page_id ): array
   $settings['action_components'] = [];
   $settings['libsToLoad'] = [];
   $settings['page_params'] = $_GET;
+  $settings["altrpMenus"] = [];
 
   if( ! $page_id ){
     return $settings;
@@ -1413,7 +1436,6 @@ function getPageSettings( $page_id ): array
   if( strpos( $json_areas, 'altrptime' ) !== false){
     $settings['libsToLoad'][] = 'moment';
   }
-
 
   $action_types = [];
   foreach ( $areas as $area ) {
@@ -1431,6 +1453,17 @@ function getPageSettings( $page_id ): array
       if ( $root_element ) {
 
         recurseMapElements( $root_element, function ( $element ) use ( &$settings, &$action_types ) {
+
+          if($element["name"] === "menu") {
+            $guid = data_get($element, "settings.menu");
+            $menu = Menu::where("guid", $guid)->get()[0];
+            try {
+              if($menu) {
+                $settings["altrpMenus"][] = $menu;
+              }
+            } catch(Exception $e) {
+            }
+          }
 
           if ( data_get( $element, 'settings.tooltip_enable' ) && array_search( "blueprint", $settings['libsToLoad'] ) === false ) {
             $settings['libsToLoad'][] = "blueprint";
@@ -1453,6 +1486,7 @@ function getPageSettings( $page_id ): array
         } );
       }
     }
+
     if( is_array( data_get( $area, 'templates') ) ){
       $settings['libsToLoad'][] = 'moment';
     }
@@ -1472,7 +1506,10 @@ function getPageSettings( $page_id ): array
   } catch( Exception $e ){
 
   }
-  return $settings;
+
+ $settings["altrpMenus"] = dedup($settings["altrpMenus"], "id");
+
+ return $settings;
 }
 
 function recurseMapElements( $element, $callback ){

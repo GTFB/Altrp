@@ -31,6 +31,7 @@ const SKELETON_ELEMENTS = [
   'pie-diagram',
   'line-diagram',
   'bar-diagram',
+  'diagram',
   'nav',
   'dashboards',
   'tour',
@@ -45,5 +46,7 @@ const SKELETON_ELEMENTS = [
   'heading-type-animating',
   'scheduler',
   'tree',
+  'stars',
+  'progress-bar'
 ]
 export default SKELETON_ELEMENTS

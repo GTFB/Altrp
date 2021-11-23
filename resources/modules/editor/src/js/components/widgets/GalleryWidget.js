@@ -82,6 +82,17 @@ class GalleryWidget extends Component {
 
   _componentDidMount() {
     this.updateRepeater()
+
+    let repeater = this.props.element.getResponsiveSetting("repeater_simple_settings", "",[]);
+    const orderBy = this.state.settings.order_by_settings || "default";
+
+    if(!isEditor() && this.state.simpleRepeater.length === 0 && repeater.length !== 0) {
+      if(orderBy === "random" && !this.state.shuffled) {
+        repeater = _.shuffle(repeater)
+      };
+
+      this.setState({simpleRepeater: repeater})
+    }
   }
 
   _componentDidUpdate(prevProps, prevState) {
@@ -147,12 +158,10 @@ class GalleryWidget extends Component {
         let containerClassNames = "altrp-gallery-img-container";
 
         if(hoverAnimationType && hoverAnimationType !== "none" ) {
-          console.log(hoverAnimationType)
           containerClassNames += " altrp-hover-parent-image";
         };
 
         if(overlayAnimationType && overlayAnimationType !== "none" ) {
-          console.log(overlayAnimationType)
           containerClassNames += " altrp-hover-parent-overlay";
         };
 
@@ -209,7 +218,7 @@ class GalleryWidget extends Component {
 
     let imagesSrcs = [];
     if(linkType === "media" && simpleRepeater.length > 0) {
-      imagesSrcs = simpleRepeater.map(img => img?.simple_media_settings.url)
+      imagesSrcs = simpleRepeater.map(img => img?.simple_media_settings?.url)
     }
 
     return simpleRepeater.length > 0 ? (
