@@ -4,6 +4,12 @@
 ## Changelog
 
 
+### 0.19.4
++ Add Stars Input Widget
+* Fix Sources Auth settings Bug
++ Add Null Palceholder in Select-type Filter In table Widget
+
+
 ### 0.19.3
 + Add Typing and Select Actions in Input Text Autocomplete Widget
 * Fix Tooltip for Elements
