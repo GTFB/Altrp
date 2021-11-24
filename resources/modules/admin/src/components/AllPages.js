@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
 import UserTopPanel from "./UserTopPanel";
-import {PagesTree} from "../js/helpers";
 
 export default class AllPages extends Component {
   constructor(props) {
@@ -55,6 +54,30 @@ export default class AllPages extends Component {
   changeSearchHandler = (e) => {
     this.setState({pagesSearch: e.target.value})
   };
+
+  // PagesTree = (pages) => {
+  //   const tree = [];
+  //   const roots = pages.filter(({ parent_page_id }) => parent_page_id === null);
+  //
+  //   if (!roots.length) return pages;
+  //
+  //   roots.forEach(root => {
+  //     tree.push(root);
+  //     treeRecursion(root.id);
+  //   });
+  //
+  //   function treeRecursion(parentId) {
+  //     const children = pages.filter(({ parent_page_id }) => parent_page_id === parentId);
+  //     const childrenMap = children.map(page => ({
+  //       ...page,
+  //       title: "——" + page.title
+  //     }))
+  //     tree.push(...childrenMap);
+  //   }
+  //   console.log(tree)
+  //
+  //   return tree;
+  // }
 
   render() {
     const { currentPage, pages, pagesSearch } = this.state;
@@ -115,7 +138,7 @@ export default class AllPages extends Component {
                 title: "Trash"
               }
             ]}
-            rows={PagesTree(pages).slice(
+            rows={pages.slice(
               currentPage * this.itemsPerPage - this.itemsPerPage,
               currentPage * this.itemsPerPage
             )}

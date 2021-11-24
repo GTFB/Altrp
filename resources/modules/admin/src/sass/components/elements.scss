@@ -566,12 +566,7 @@ input[type="text"].form__input {
   flex-grow: 1;
 }
 
-.overflow-select__blueprint {
-  & .bp3-menu {
-    height: 310px;
-    overflow: auto;
-  }
-}
+
 
 .overflow-select__blueprint-sql {
   & .bp3-menu {

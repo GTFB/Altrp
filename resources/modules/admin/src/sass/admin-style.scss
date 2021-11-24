@@ -183,7 +183,8 @@
 
         .admin-nav-list__link {
           font-size: 13px;
-          width: 165px;
+          min-width: 165px;
+          max-width: 250px;
           height: 41.84px;
           padding: 10px;
           text-decoration: none;
@@ -376,7 +377,9 @@ a {
 
 .models-sublist__item {
   max-height: 715px;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
 }
 
 .admin-nav-mini {
