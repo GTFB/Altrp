@@ -1,16 +1,25 @@
 import {getMenuByGUID} from "../../../../../front-app/src/js/functions/menus";
 import {addMenu} from "../../../../../front-app/src/js/store/menus-storage/actions";
+
 const { isEditor, mbParseJSON, conditionChecker} = window.altrpHelpers;
 
 
 const {Button, ButtonGroup, Menu, MenuItem, Position} = window.altrpLibs.Blueprint;
 const Popover2 = window.altrpLibs.Popover2;
 
-(window.globalDefaults = window.globalDefaults || []).push(`.altrp-menu-item__icon svg {
+(window.globalDefaults = window.globalDefaults || []).push(`
+.altrp-menu-item__icon svg {
     display: block;
     height: 20px;
     width: 20px;
-  }`)
+}
+
+.altrp-menu {
+  display: flex;
+  flex-wrap: wrap;
+}
+`)
+
 class MenuWidget extends Component {
   constructor(props) {
     super(props);
@@ -84,6 +93,7 @@ class MenuWidget extends Component {
     if (!menuData) {
       return 'Select Menu';
     }
+
     return <Menu className={this.getMenuClasses()}>
       {/*{menuData.children.map(child)}*/}
       {this.renderSubItems(menuData.children, 1)}
@@ -117,9 +127,22 @@ class MenuWidget extends Component {
     };
     let renderButton = this.props.element.getResponsiveSetting('button');
 
-    if (depth === 1 && element.getResponsiveSetting('type') === 'horizontal' && !renderButton) {
-      popoverProps.position = Position.BOTTOM_LEFT;
+    // if (depth === 1 && element.getResponsiveSetting('type') === 'horizontal' && !renderButton) {
+    //   popoverProps.position = Position.BOTTOM_LEFT;
+    // }
+
+    if(depth === 1) {
+      const positionSetting = this.props.element.getResponsiveSetting('popover_position', "", "auto");
+
+      popoverProps.position = this.getPosition(positionSetting)
+
+    } else {
+      const positionSetting = this.props.element.getResponsiveSetting('sub_popover_position', "", "auto");
+
+      popoverProps.position = this.getPosition(positionSetting)
+
     }
+
     return <>
       {items.map((item) => {
         return <MenuItem
@@ -150,6 +173,55 @@ class MenuWidget extends Component {
     </>
   }
 
+  getPosition(setting) {
+    let position;
+
+    switch (setting) {
+      case "auto":
+        position = "auto";
+        break
+      case "top-left":
+        position = Position.TOP_LEFT;
+        break
+      case "top-right":
+        position = Position.TOP_RIGHT;
+        break
+      case "top":
+        position = Position.TOP;
+        break
+      case "bottom-left":
+        position = Position.BOTTOM_LEFT;
+        break
+      case "bottom-right":
+        position = Position.BOTTOM_RIGHT;
+        break
+      case "bottom":
+        position = Position.BOTTOM;
+        break
+      case "left-top":
+        position = Position.LEFT_TOP;
+        break
+      case "left-bottom":
+        position = Position.LEFT_BOTTOM;
+        break
+      case "left":
+        position = Position.LEFT;
+        break
+      case "right-top":
+        position = Position.RIGHT_TOP;
+        break;
+      case "right-bottom":
+        position = Position.RIGHT_BOTTOM;
+        break
+      case "right":
+        position = Position.RIGHT;
+        break
+      default:
+        position = Position.AUTO
+    }
+
+    return position
+  }
 
   renderButton = () => {
     const {menuData} = this.state;

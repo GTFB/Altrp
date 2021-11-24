@@ -902,10 +902,7 @@ class AltrpAction extends AltrpModel {
           if (
             value.split(/\r?\n/).length === 1 &&
             value.indexOf('{{') === 0 &&
-            value.indexOf('}}') === value.length - 2 &&
-            getDataByPath(value.replace('{{', '').replace('}}', ''),
-              null,
-              this.getCurrentModel())
+            value.indexOf('}}') === value.length - 2
           ) {
             value = getDataByPath(
               value.replace('{{', '').replace('}}', ''),
@@ -913,8 +910,6 @@ class AltrpAction extends AltrpModel {
               this.getCurrentModel()
             );
           } else if (value.indexOf('|') !== -1) {
-
-
             value = parseParamsFromString(
               value,
               this.getCurrentModel(),

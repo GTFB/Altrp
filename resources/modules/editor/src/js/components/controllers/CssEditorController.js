@@ -111,7 +111,7 @@ class CssEditorController extends Component {
 
       </div>
       <div className="control-css-editor-description">
-        Use "selector" to target wrapper element.
+        Use "__selector__" to target wrapper element.
           <br />Examples:
           selector "color: red;" // For main element
           selector .child-element "margin: 10px;" // For <br />child element<br />

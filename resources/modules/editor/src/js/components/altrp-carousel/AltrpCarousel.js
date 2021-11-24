@@ -183,7 +183,7 @@ class AltrpCarousel extends Component {
       beforeChange: (current, next) => {
         this.carouselsToSynchronize && this.carouselsToSynchronize.forEach(carousel => {carousel.setSlide(next)})
       },
-      adaptiveHeight: true,
+      // adaptiveHeight: false,
     };
 
     // слайды
@@ -220,6 +220,7 @@ class AltrpCarousel extends Component {
                      if(this.props.lightbox_slides_content) {
                        this.setState((state) => ({
                          ...state,
+                         activeSlide: idx,
                          openLightBox: true
                        }))
                      }

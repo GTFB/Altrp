@@ -23,13 +23,14 @@ const WIDGETS_DEPENDS = {
   'input-text': ['blueprint'],
   'input-textarea': ['blueprint'],
   'input-text-common': ['blueprint'],
-  'input-text-autocomplete': ['blueprint'],
+  'input-text-autocomplete': ['blueprint', 'blueprint-popover'],
   'input-wysiwyg': ['ckeditor'],
   'input-date': ['blueprint', 'blueprint-datetime', 'moment'],
   'input-date-range': ['blueprint', 'blueprint-datetime', 'moment'],
   'input-slider': ['blueprint'],
   'input-range-slider': ['blueprint'],
   'tree': ['blueprint'],
-  'scheduler': ['fullcalendar', 'blueprint']
+  'scheduler': ['fullcalendar', 'blueprint'],
+  'progress-bar': ['blueprint']
 }
 export default WIDGETS_DEPENDS;

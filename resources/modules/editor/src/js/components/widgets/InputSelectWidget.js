@@ -392,7 +392,7 @@ const AltrpFieldContainer = styled.div`
   ${({settings: {content_label_position_type}}) => {
   switch (content_label_position_type) {
     case "left": {
-      return "display: flex";
+      return "display: flex;";
     }
     case "right": {
       return "display:flex;flex-direction:row-reverse;justify-content:flex-end;";
@@ -400,6 +400,10 @@ const AltrpFieldContainer = styled.div`
   }
   return "";
 }}
+
+  & .bp3-popover-wrapper {
+    width: 100%
+  }
 `;
 
 class InputSelectWidget extends Component {
@@ -427,7 +431,7 @@ class InputSelectWidget extends Component {
     };
     this.popoverProps = {
       usePortal: true,
-
+      targetClassName: "altrp-select-popover",
       position: 'bottom',
       minimal: props.element.getResponsiveSetting('minimal'),
       // isOpen:true ,
@@ -844,6 +848,11 @@ class InputSelectWidget extends Component {
     if (value.value) {
       value = value.value;
     }
+
+    if(value === -1) {
+      value = null
+    }
+
     const options = this.getOptions();
     const element = this.props.element;
     if(! options.find(option => option.value == value)){
@@ -927,6 +936,14 @@ class InputSelectWidget extends Component {
         value: '',
       })
     }
+
+    if(this.props.element.getResponsiveSetting("remove") && this.state.value) {
+      options = [{
+        value: -1,
+        label: this.props.element.getResponsiveSetting("remove_label", "", "remove"),
+      }, ...options]
+    }
+
     return options;
   }
 
@@ -1227,12 +1244,13 @@ class InputSelectWidget extends Component {
     let itemsOptions = this.getOptions();
     const position_css_classes = element.getResponsiveSetting('position_css_classes', '', '')
     const position_css_id = this.getContent('position_css_id')
+    const fullWidth = element.getResponsiveSetting("full_width", "", "false")
 
     input = (
         <Select
           inputProps={inputProps}
           disabled={content_readonly}
-          // matchTargetWidth={true}
+          matchTargetWidth={fullWidth}
           popoverProps={this.popoverProps}
           createNewItemFromQuery={element.getResponsiveSetting('create') ? this.createNewItemFromQuery : null}
           createNewItemRenderer={this.createNewItemRenderer}

@@ -20,6 +20,7 @@ function loadDatastorageUpdater(){
  * Рендерим главный компонент после загрузки основных модулей
  */
 window.loadingCallback = function loadingCallback() {
+  loadPageActions()
   if (window.React
     && window.Component
     && window.ReactDOM
@@ -48,7 +49,6 @@ window.loadingCallback = function loadingCallback() {
     /**
      * Загружаем все действия привязанные к загрузке страницы
      */
-    loadPageActions()
   }
 }
 

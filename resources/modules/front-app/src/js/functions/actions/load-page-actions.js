@@ -11,6 +11,7 @@ export default function loadPageActions(){
   })
 }
 
+const templateActionsDone = [];
 /**
  *
  * @param {{}} templateData
@@ -18,10 +19,10 @@ export default function loadPageActions(){
 export function doTemplateAction(templateData = {}){
   const page_load_actions = _.get(templateData, 'data.settings.page_load_actions')
   const id = _.get(templateData, 'data.id')
-  if(! _.isArray(page_load_actions)){
+  if(! _.isArray(page_load_actions) || templateActionsDone.indexOf(id) !== -1){
     return
   }
-
+  templateActionsDone.push(id);
   let element
   import(/* webpackChunkName: 'FrontElement' */'../../classes/FrontElement').then(module=>{
     const FrontElement = module.default

@@ -52,6 +52,8 @@ import getInputTextAutocompleteStyles from "./helpers/getInputTextAutocompleteSt
 import TreeComponent from "../../../../editor/src/js/components/widgets/styled-components/TreeComponent";
 import InputDateRangeComponent
   from "../../../../editor/src/js/components/widgets/styled-components/InputDateRangeComponent";
+import StarsComponent from "../../../../editor/src/js/components/widgets/styled-components/StarsComponent";
+import ProgressBarComponent from "../../../../editor/src/js/components/widgets/styled-components/ProgressBarComponent";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -180,6 +182,20 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         break
         case "input-checkbox": {
           styles += `.${prefix}${id} {${InputCheckboxComponent(
+            item.settings,
+            id
+          )}}`;
+        }
+          break
+        case "stars": {
+          styles += `.${prefix}${id} {${StarsComponent(
+            item.settings,
+            id
+          )}}`;
+        }
+          break
+        case "progress-bar": {
+          styles += `.${prefix}${id} {${ProgressBarComponent(
             item.settings,
             id
           )}}`;
