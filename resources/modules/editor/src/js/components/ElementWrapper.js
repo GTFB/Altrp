@@ -56,6 +56,7 @@ import getInputFileStyles from "../../../../front-app/src/js/components/helpers/
 import getInputGalleryStyles from "../../../../front-app/src/js/components/helpers/getInputGalleryStyles";
 import {getResponsiveSetting, isEditor} from "../../../../front-app/src/js/helpers";
 import InputRangeSliderComponent from "./widgets/styled-components/InputRangeSliderComponent";
+import RangeSliderTableComponent from "./widgets/styled-components/RangeSliderTableComponent"
 import getTemplateStyles from "../../../../front-app/src/js/components/helpers/getTemplateStyles";
 import getInputMultiSelectStyles, {
   getInputMultiSelectPopoverStyles
@@ -161,6 +162,9 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
     case "table":
       {
         styles += getTableStyles(settings, elementId);
+        styles += `.${prefix}${elementId} { ${RangeSliderTableComponent(
+          settings
+        )}}`;
       }
       break;
     case "posts":
