@@ -1,4 +1,8 @@
-import {childrenInChildren, getFromDatasource, normalizeValues, updateRepeater} from "./TreeWidget";
+import {
+  childrenInChildren,
+  getFromDatasource,
+  normalizeValues,
+  updateRepeater} from "./TreeWidget";
 
 const {
   convertData,
@@ -19,7 +23,6 @@ const Button = window.altrpLibs.Blueprint.Button;
 const MenuItem = window.altrpLibs.Blueprint.MenuItem;
 const Popover = window.altrpLibs.Popover2;
 const TreeBlueprint = window.altrpLibs.Blueprint.Tree;
-const Classes = window.altrpLibs.Popover2Classes;
 const Alignment = window.altrpLibs.Blueprint.Alignment;
 const InputGroup = window.altrpLibs.Blueprint.InputGroup;
 
@@ -29,6 +32,11 @@ const InputGroup = window.altrpLibs.Blueprint.InputGroup;
   display: flex;
   grid-gap: 5px;
   flex-direction: column;
+}
+
+.altrp-select-tree_popover{
+ max-height: 250px;
+ overflow: auto;
 }
 
 .altrp-field {
@@ -448,15 +456,15 @@ class InputSelectTreeWidget extends Component {
     this.state = {
       settings: {...props.element.getSettings()},
       value: this.defaultValue,
-      options: this.getFromDatasource({}, ["content_options", "tree_substitute_datasource"]),
+      options: parseOptionsFromSettings(
+        props.element.getSettings("content_options")
+      ),
       optionsList: this.getFromDatasource({}, ["content_options", "tree_substitute_datasource"], true),
       paramsForUpdate: null,
       searchValue: ""
     };
 
 
-    this.updateNode = this.updateNode.bind(this);
-    this.handleNodeExpand = this.handleNodeExpand.bind(this);
     this.handleNodeCollapse = this.handleNodeCollapse.bind(this);
     this.handleNodeClick = this.handleNodeClick.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
@@ -508,20 +516,7 @@ class InputSelectTreeWidget extends Component {
    * @param {{}} prevState
    */
   async _componentDidMount(prevProps, prevState) {
-    if (this.props.element.getSettings("content_options")) {
-      let options = this.getFromDatasource({}, ["content_options", "tree_substitute_datasource"]);
-      let optionsList = this.getFromDatasource({}, ["content_options", "tree_substitute_datasource"], true);
 
-      this.setState(state => ({...state, options, optionsList}));
-    } else if (
-      ["input-select"].indexOf(this.props.element.getName()) >= 0 &&
-      this.state.settings.model_for_options
-    ) {
-      let options = await new Resource({route: this.getRoute()}).getAll();
-      options = !_.isArray(options) ? options.data : options;
-      options = _.isArray(options) ? options : [];
-      this.setState(state => ({...state, options}));
-    }
     let value = this.state.value;
 
     /**
@@ -942,37 +937,88 @@ class InputSelectTreeWidget extends Component {
 
   /**
    * получить опции
+   * @return []
    */
   getOptions() {
     let options = [...this.state.options];
 
-    if(!this.state.searchValue) {
+    const content_options = this.props.element.getResponsiveSetting('content_options');
+    if(isEditor()){
+      options = [
+        {
+          label: 'Empty First Level',
+          value: 1,
+          id: 1,
+          childNodes: [],
+        },
+        {
+          label: 'First Level With Child',
+          value: 2,
+          id: 2,
+          childNodes: [
+
+            {
+              label: 'Empty Second Level',
+              value: 3,
+              id: 3,
+              childNodes: [
+
+              ],
+            },
+
+            {
+              label: 'Second Level With Child',
+              value: 4,
+              id: 4,
+              childNodes: [
+                {
+                  label: 'Empty Third Level',
+                  value: 5,
+                  id: 5,
+                  childNodes: [
+
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ];
+    } else if(_.isString(content_options)
+      && content_options.indexOf('{{') === 0){
+      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''))
+
+      if( ! _.isArray(options)){
+        options = [];
+      } else {
+        options = [...options]
+      }
       const optionsDynamicSetting = this.props.element.getDynamicSetting(
         "content_options"
       );
-      const content_options = this.props.element.getResponsiveSetting('content_options');
-      const model_for_options = this.props.element.getResponsiveSetting('model_for_options');
-      if(_.isString(content_options)
-        && content_options.indexOf('{{') === 0
-        && ! model_for_options){
-        options = this.state.options
-        if( ! _.isArray(options)){
-          options = [];
-        }
-      }
       if (optionsDynamicSetting) {
         options = convertData(optionsDynamicSetting, options);
       }
-      if(this.props.element.getResponsiveSetting('content_options_nullable')){
-        options.unshift({
-          label: this.props.element.getResponsiveSetting('nulled_option_title') || '',
-          value: '',
-        })
-      }
-      return options;
-    } else {
-      return this.handleSearch(this.state.searchValue, true)
     }
+    if(this.props.element.getResponsiveSetting('content_options_nullable')){
+      let nullLabel = '';
+      if(this.props.element.getResponsiveSetting('nulled_option_title')){
+        nullLabel = this.props.element.getResponsiveSetting('nulled_option_title')
+      }
+      options.unshift({
+        value: '',
+        label: nullLabel,
+        id: '',
+        childNodes: [],
+      })
+    }
+
+    options = options.map(o=>{
+      o = {...o}
+      o.hasCaret = ! ! o?.childNodes?.length
+      return o;
+    })
+    return options
   }
 
   /**
@@ -1049,10 +1095,7 @@ class InputSelectTreeWidget extends Component {
   getCurrentLabel() {
     const value = this.getValue()
 
-    const options = this.state.optionsList.length > 0 ?
-      this.state.optionsList :
-      this.getFromDatasource({}, ["content_options", "tree_substitute_datasource"], true);
-
+    const options = this.getOptions()
     return options.find(option => option.value == value)?.label || ''
   }
 
@@ -1121,8 +1164,8 @@ class InputSelectTreeWidget extends Component {
     })
   }
 
-  handleNodeExpand(node, path) {
-
+  handleNodeExpand = (node, path) => {
+    console.log(node, path);
     this.updateNode({
       node,
       path,
@@ -1133,13 +1176,10 @@ class InputSelectTreeWidget extends Component {
     })
   }
 
-  updateNode(settings) {
+  updateNode = (settings) => {
     this.setState(s => {
       const options = s.options;
-      const optionsList = this.state.optionsList.length > 0 ?
-        this.state.optionsList :
-        this.getFromDatasource({}, ["content_options", "tree_substitute_datasource"], true);
-
+      const optionsList = this.getOptions()
       if(settings.hasOwnProperty("isExpanded")) {
         TreeBlueprint.nodeFromPath(settings.path, options).isExpanded = settings.isExpanded;
       } else {
@@ -1260,9 +1300,7 @@ class InputSelectTreeWidget extends Component {
   }
 
   handleSearch(value, get=false) {
-    let options = this.state.optionsList.length > 0 ?
-      this.state.optionsList :
-      this.getFromDatasource({}, ["content_options", "tree_substitute_datasource"], true);
+    let options = this.getOptions()
 
     options = options.filter(option => option.treeId === -1);
 
@@ -1392,12 +1430,13 @@ class InputSelectTreeWidget extends Component {
     let body = isEditor() ?
       document.getElementById("editorContent").contentWindow.document.body
       :
-      document.body
-    
+      document.body;
+
     input = (
       <Popover
         usePortal={false}
-        popoverClassName={`altrp-select-tree${this.props.element.getId()}`}
+        popoverClassName={`altrp-select-tree_popover altrp-select-tree${this.props.element.getId()}`}
+        matchW
         renderTarget={({isOpen, ref, ...targetProps}) => {
           targetProps.className += " altrp-select-tree-btn"
           return (

@@ -245,7 +245,7 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       break;
     case "input-select-tree": {
       styles += `.${prefix}${elementId} {${getInputSelectTreeStyles(settings)}}`;
-        styles += `${getInputSelectPopoverStyles(settings, elementId)}`;
+      styles += `${getInputSelectPopoverStyles(settings, elementId)}`;
       styles += `.altrp-select-tree${elementId} {${TreeComponent(settings, "tree_")}}`;
       }
       break;
