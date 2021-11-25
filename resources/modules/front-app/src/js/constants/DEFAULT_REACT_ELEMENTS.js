@@ -28,6 +28,7 @@ const DEFAULT_REACT_ELEMENTS = [
   'point-diagram',
   'pie-diagram',
   'line-diagram',
+  'funnel-diagram',
   'bar-diagram',
   'input',
   'nav',

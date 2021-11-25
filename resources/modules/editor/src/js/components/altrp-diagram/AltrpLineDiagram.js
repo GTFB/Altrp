@@ -350,6 +350,8 @@ const AltrpDiagram = props => {
       yMarker={yMarker}
       width={`${settings.width?.size}${settings.width?.unit}`}
       height={`${settings.height?.size}${settings.height?.unit}`}
+      title={settings.datasource_title}
+      subTitle={settings.subtitle}
       yMarkerValue={yMarkerValue}
       yMarkerOrientation={yMarkerOrientation}
       yMarkerColor={yMarkerColor}

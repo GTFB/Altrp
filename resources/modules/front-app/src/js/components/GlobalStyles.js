@@ -80,6 +80,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         case "point-diagram":
           styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
           break;
+        case "funnel-diagram":
+          styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
+          break;
         case "tabs-switcher":
           styles += `.${prefix}${id} {${TabsSwitcherComponent(item.settings)}}`;
           break;

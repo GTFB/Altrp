@@ -20,24 +20,16 @@ import {
   CONTROLLER_TYPOGRAPHIC
 } from "../../modules/ControllersManager";
 
-import {
-  TABLE,
-  LINE,
-  POINT,
-  BAR,
-  PIE,
-  widgetTypes
-} from "../../../../../../admin/src/components/dashboard/widgetTypes";
 import Repeater from "../../Repeater";
 import titleControllers from "../../../decorators/diagrams/diagram-title-subtitle.js";
 import legendControllers from "../../../decorators/diagrams/diagram-legend.js";
 
-class PointDiagram extends BaseElement {
+class FunnelDiagram extends BaseElement {
   static getName() {
-    return "point-diagram";
+    return "funnel-diagram";
   }
   static getTitle() {
-    return "Point Diagram";
+    return "Funnel Diagram";
   }
   static getIconComponent() {
     return PieIcon;
@@ -63,6 +55,11 @@ class PointDiagram extends BaseElement {
       dynamic: false,
       label: "Title"
     });
+    
+    this.addControl("subtitle", {
+      dynamic: false,
+      label: "Subtitle"
+    });
 
     this.addControl("datasource_path", {
       dynamic: false,
@@ -71,42 +68,12 @@ class PointDiagram extends BaseElement {
 
     this.addControl("key_name", {
       dynamic: false,
-      label: "Key Field (X)"
-    });
-
-    this.addControl("key_is_date", {
-      dynamic: false,
-      default: false,
-      label: "Key has Date format?",
-      type: CONTROLLER_SWITCHER
+      label: "Key Field"
     });
 
     this.addControl("data_name", {
       dynamic: false,
-      label: "Data Field (Y)"
-    });
-
-    this.addControl("sort", {
-      type: CONTROLLER_SELECT,
-      label: "Сортировка",
-      default: false,
-      options: [
-        {
-          id: 0,
-          value: "",
-          label: "По умолчанию"
-        },
-        {
-          id: 1,
-          value: "value",
-          label: "По значению"
-        },
-        {
-          id: 2,
-          value: "key",
-          label: "По ключу"
-        }
-      ]
+      label: "Data Field"
     });
 
     this.addControl("use_legend", {
@@ -114,7 +81,7 @@ class PointDiagram extends BaseElement {
       label: "Use legend?",
       default: false
     });
-
+    
     this.endControlSection();
 
     this.startControlSection("main", {
@@ -130,72 +97,10 @@ class PointDiagram extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("multiple_data", {
-      dynamic: false,
-      label: "Multiple data"
-    });
-
-    let repeater = new Repeater();
-    repeater.addControl("title", {
-      label: "Title",
-      dynamic: false
-    });
-    repeater.addControl("path", {
-      label: "Path",
-      dynamic: false
-    });
-    repeater.addControl("data", {
-      label: "Y",
-      dynamic: false
-    });
-    repeater.addControl("key", {
-      label: "X",
-      dynamic: false
-    });
-
-    this.addControl("isMultiple", {
-      type: CONTROLLER_SWITCHER,
-      label: "Использовать множественные данные?",
-      default: false
-    });
-
-    // this.addControl("keysIsDate", {
-    //   label: "Ключи как дата",
-    //   type: CONTROLLER_SWITCHER,
-    //   default: false,
-    //   dynamic: false
-    // });
-
-    this.addControl("rep", {
-      type: CONTROLLER_REPEATER,
-      default: [],
-      fields: repeater.getControls()
-    });
-
-    this.endControlSection();
-
     this.startControlSection("style", {
       tab: TAB_STYLE,
       label: "Visual type"
     });
-
-    const types = widgetTypes.map(type => {
-      return { label: type.name, value: type.value };
-    });
-
-    this.addControl("type", {
-      type: CONTROLLER_SELECT,
-      label: "Type",
-      default: TABLE,
-      options: types
-    });
-
-    // this.addControl("isVertical", {
-    //   type: CONTROLLER_SWITCHER,
-    //   label: "Vertical table",
-    //   default: true,
-    //   type: TABLE
-    // });
 
     const colors = Schemes.map(object => {
       return { label: object.label, value: object.value };
@@ -208,85 +113,150 @@ class PointDiagram extends BaseElement {
       options: colors
     });
 
-    this.addControl("yScaleMax", {
-      type: CONTROLLER_NUMBER,
-      label: "Y scale max"
-    });
-
-    this.addControl("bottomAxis", {
-      type: CONTROLLER_SWITCHER,
-      label: "Отобразить нижнюю легенду",
-      default: true
-    });
-
-    this.addControl("enableGridX", {
-      type: CONTROLLER_SWITCHER,
-      label: "Отобразить сетку по X",
-      default: true
-    });
-
-    this.addControl("enableGridY", {
-      type: CONTROLLER_SWITCHER,
-      label: "Отобразить сетку по Y",
-      default: true
-    });
-
-    this.addControl("tickRotation", {
+    this.addControl("fillOpacity", {
       type: CONTROLLER_RANGE,
-      label: "Наклон нижней легенды",
+      label: "Fill opacity",
+      default: 1,
+      min: 0,
+      max: 1,
+      step: 0.01
+    });
+
+    this.addControl("borderOpacity", {
+        type: CONTROLLER_RANGE,
+        label: "Border opacity",
+        default: 1,
+        min: 0,
+        max: 1,
+        step: 0.01
+    });
+
+    this.addControl('borderWidth', {
+        type: CONTROLLER_NUMBER,
+        label: 'Border width'
+    })
+    
+    this.addControl('interpolation', {
+      type: CONTROLLER_SELECT,
+      label: 'Interpolation',
+      options: [
+          {
+              label: 'Smooth',
+              value: 'smooth'
+          },
+          {
+              label: 'Linear',
+              value: 'linear'
+          },
+      ]
+    })
+
+    this.addControl("spacing", {
+      type: CONTROLLER_RANGE,
+      label: "Spacing",
       default: 0,
-      min: -90,
-      max: 90,
+      min: 0,
+      max: 50,
       step: 1
     });
 
-    this.addControl("xScaleType", {
+    this.addControl("shapeBlending", {
+      type: CONTROLLER_RANGE,
+      label: "Shape blending",
+      default: 1,
+      min: 0,
+      max: 1,
+      step: 0.05
+    });
+    
+    this.addControl('direction', {
       type: CONTROLLER_SELECT,
-      label: "Тип оси X",
-      default: "point",
+      label: 'Direction',
       options: [
-        {
-          id: 0,
-          label: "Линейный",
-          value: "linear"
-        },
-        {
-          id: 1,
-          label: "Точечный",
-          value: "point"
-        },
-        {
-          id: 2,
-          label: "Временной",
-          value: "time"
-        }
-      ],
+          {
+              label: 'Vertical',
+              value: 'vertical'
+          },
+          {
+              label: 'Horizontal',
+              value: 'horizontal'
+          },
+      ]
+    })
+
+    this.addControl("isInteractive", {
+      type: CONTROLLER_SWITCHER,
+      label: "Is interactive",
+      default: true,
     });
 
-    this.addControl("precision", {
-      type: CONTROLLER_SELECT,
-      label: "Масштаб времени",
-      default: "point",
-      options: [
-        { id: 0, label: "День", value: "day" },
-        { id: 1, label: "Месяц", value: "month" },
-        { id: 2, label: "Год", value: "year" }
-      ],
+    this.addControl("currentPartSizeExtension", {
+      type: CONTROLLER_RANGE,
+      label: "Hover part size",
+      default: 0,
+      min: 0,
+      max: 100,
+      step: 1,
       conditions: {
-        xScaleType: "time",
+        isInteractive: true
       }
     });
 
-    this.addControl("pointSize", {
-      type: CONTROLLER_NUMBER,
-      label: "Размер точки",
-      default: 6,
+    this.addControl("currentBorderWidth", {
+      type: CONTROLLER_RANGE,
+      label: "Hover border width",
+      default: 0,
+      min: 0,
+      max: 100,
+      step: 1,
       conditions: {
-        enablePoints: true,
+        isInteractive: true
       }
     });
 
     this.endControlSection();
+
+    this.startControlSection('labels', {
+        tab: TAB_STYLE,
+        label: 'Label Styles',
+    })
+
+    this.addControl('label_color_type', {
+        type: CONTROLLER_SELECT,
+        label: 'Color type',
+        options: [
+            {
+                label: 'Custom',
+                value: 'custom'
+            },
+            {
+                label: 'Darker',
+                value: 'darker'
+            },
+            {
+                label: 'Brighter',
+                value: 'brighter'
+            }
+        ]
+    })
+
+    this.addControl('label_modifier', {
+        type: CONTROLLER_RANGE,
+        label: 'Value',
+        min: 0,
+        max: 3,
+        step: 0.1,
+        conditions: {
+            label_color_type: ['darker', 'brighter']
+        }
+    })
+
+    this.addControl('label_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Color'
+    })
+
+    this.endControlSection()
     
     titleControllers(this)
 
@@ -419,10 +389,6 @@ class PointDiagram extends BaseElement {
     this.addControl("border_color_tooltip", {
       type: CONTROLLER_COLOR,
       label: "Border Color",
-      // default: {
-      //   color: "rgb(50,168,82)",
-      //   colorPickedHex: "#32a852",
-      // },
     });
 
     this.endControlSection();
@@ -430,109 +396,6 @@ class PointDiagram extends BaseElement {
     this.startControlSection("axisConstants", {
       tab: TAB_STYLE,
       label: "Axis constatns"
-    });
-    let repeaterY = new Repeater();
-
-    repeaterY.addControl("yMarkerLabel", {
-      type: CONTROLLER_TEXT,
-      label: "Label Y",
-      dynamic: false
-    });
-    repeaterY.addControl("yMarkerValue", {
-      type: CONTROLLER_TEXT,
-      label: "Value Y (only numbers)",
-      dynamic: false
-    });
-    repeaterY.addControl("yMarkerOrientation", {
-      type: CONTROLLER_SELECT,
-      label: "Orientation Y",
-      default: "vertical",
-      options: [
-        { id: 0, value: "vertical", label: "Vertical" },
-        { id: 1, value: "horizontal", label: "Horizontal" }
-      ],
-      dynamic: false
-    });
-
-    repeaterY.addControl("yMarkerColor", {
-      type: CONTROLLER_COLOR,
-      label: "Color Y",
-      dynamic: false
-    });
-
-    repeaterY.addControl("yMarkerLabelColor", {
-      type: CONTROLLER_COLOR,
-      label: "Label color Y",
-      dynamic: false
-    });
-
-    repeaterY.addControl("yMarkerWidth", {
-      type: CONTROLLER_NUMBER,
-      label: "Width Y",
-      dynamic: false
-    });
-
-    //Y AXIS
-    this.addControl("axisY", {
-      label: "AXIS Y",
-      type: CONTROLLER_REPEATER,
-      default: [],
-      fields: repeaterY.getControls()
-    });
-
-    let repeaterX = new Repeater();
-
-    repeaterX.addControl("xMarkerLabel", {
-      type: CONTROLLER_TEXT,
-      label: "Label X",
-      dynamic: false
-    });
-
-    repeaterX.addControl("xMarkerIsDate", {
-      type: CONTROLLER_SWITCHER,
-      default: false,
-      label: "Value X is Date",
-      dynamic: false
-    });
-    repeaterX.addControl("xMarkerValue", {
-      type: CONTROLLER_TEXT,
-      label: "Value X (only numbers or dates)",
-      dynamic: false
-    });
-    repeaterX.addControl("xMarkerOrientation", {
-      type: CONTROLLER_SELECT,
-      label: "Orientation X",
-      default: "vertical",
-      options: [
-        { id: 0, value: "vertical", label: "Vertical" },
-        { id: 1, value: "horizontal", label: "Horizontal" }
-      ],
-      dynamic: false
-    });
-
-    repeaterX.addControl("xMarkerColor", {
-      type: CONTROLLER_COLOR,
-      label: "Color X",
-      dynamic: false
-    });
-
-    repeaterX.addControl("xMarkerLabelColor", {
-      type: CONTROLLER_COLOR,
-      label: "Label color X",
-      dynamic: false
-    });
-
-    repeaterX.addControl("xMarkerWidth", {
-      type: CONTROLLER_NUMBER,
-      label: "Width X",
-      dynamic: false
-    });
-    //X AXIS
-    this.addControl("axisX", {
-      label: "AXIS X",
-      type: CONTROLLER_REPEATER,
-      default: [],
-      fields: repeaterX.getControls()
     });
 
     this.endControlSection();
@@ -610,4 +473,4 @@ class PointDiagram extends BaseElement {
     advancedTabControllers(this);
   }
 }
-export default PointDiagram;
+export default FunnelDiagram;

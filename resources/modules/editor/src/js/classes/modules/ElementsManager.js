@@ -107,6 +107,8 @@ import LineDiagram from "../elements/diagrams/LineDiagram";
 import LineDiagramWidget from "../../components/widgets/diagrams/LineDiagramWidget";
 import PointDiagram from "../elements/diagrams/PointDiagram";
 import PointDiagramWidget from "../../components/widgets/diagrams/PointDiagramWidget";
+import FunnelDiagram from "../elements/diagrams/FunnelDiagram";
+import FunnelDiagramWidget from "../../components/widgets/diagrams/FunnelDiagramWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -154,7 +156,8 @@ export default class ElementsManger {
     this.elements[PieDiagram.getName()] = PieDiagram;
     this.elements[BarDiagram.getName()] = BarDiagram;
     this.elements[LineDiagram.getName()] = LineDiagram;
-    this.elements[PointDiagram.getName()] = PointDiagram;    
+    this.elements[PointDiagram.getName()] = PointDiagram;
+    this.elements[FunnelDiagram.getName()] = FunnelDiagram;
 
     this.elements[Dashboards.getName()] = Dashboards;
     this.elements[Carousel.getName()] = Carousel;
@@ -215,6 +218,7 @@ export default class ElementsManger {
     this.components[BarDiagram.getName()] = BarDiagramWidget;
     this.components[LineDiagram.getName()] = LineDiagramWidget;
     this.components[PointDiagram.getName()] = PointDiagramWidget;
+    this.components[FunnelDiagram.getName()] = FunnelDiagramWidget;
 
     this.components[Dashboards.getName()] = DashboardsWidget;
     this.components[Tour.getName()] = TourGuide;

@@ -28,6 +28,7 @@ const SKELETON_ELEMENTS = [
   'pie-diagram',
   'line-diagram',
   'bar-diagram',
+  'funnel-diagram',
   'nav',
   'dashboards',
   'tour',
