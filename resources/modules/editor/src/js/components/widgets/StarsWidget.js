@@ -80,6 +80,28 @@ class StarsWidget extends Component {
     });
   }
 
+  _componentDidUpdate(previousProps, previousState) {
+    if(this.state.settings.default_value !== previousState.settings.default_value) {
+      let defaultValue = this.getContent(
+        "default_value"
+      );
+
+      if(!isNaN(defaultValue)) {
+        defaultValue = _.parseInt(defaultValue) || -1;
+      } else {
+        defaultValue = -1
+      }
+
+      this.setState((s) => ({
+        ...s,
+        value: defaultValue
+      }))
+
+      this.dispatchFieldValueToStore(defaultValue || 0);
+
+    }
+  }
+
   /**
    * Передадим значение в хранилище формы
    * @param {*} value
