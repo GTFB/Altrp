@@ -28,7 +28,7 @@ const MenuPlaceholder = props=>{
   const divStyles = {
     position: 'relative',
     width: props.element.getResponsiveSetting('skeleton_width') || '100%',
-    height: props.element.getResponsiveSetting('skeleton_height') || '50px',
+    height: props.element.getResponsiveSetting('skeleton_height') || '30px',
   };
 
   const guid = props.element.getResponsiveSetting('menu');

@@ -186,7 +186,7 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       }
       break
     case "input-date-range": {
-      styles += `.${prefix}${elementId} {${InputDateRangeComponent(settings)}}`
+      styles += InputDateRangeComponent(settings, elementId, prefix)
       }
       break;
     case "input-checkbox":

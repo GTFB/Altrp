@@ -66,8 +66,13 @@ class Stars extends BaseElement {
     });
 
     this.addControl("default_value", {
+      type: CONTROLLER_TEXTAREA,
+      label: "Default Value"
+    });
+
+    this.addControl("second_default_value", {
       type: CONTROLLER_SLIDER,
-      label: "Default value",
+      label: "Default visual value",
       default: {
         size: 0
       },
@@ -152,6 +157,11 @@ class Stars extends BaseElement {
     this.addControl('color', {
       type: CONTROLLER_COLOR,
       label: 'Color',
+    });
+
+    this.addControl('visual_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Default visual color',
     });
 
     this.endControlSection();

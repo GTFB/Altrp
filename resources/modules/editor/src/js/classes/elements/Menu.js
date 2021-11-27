@@ -9,7 +9,7 @@ import {
   CONTROLLER_SELECT,
   CONTROLLER_COLOR,
   CONTROLLER_TYPOGRAPHIC,
-  CONTROLLER_SHADOW, CONTROLLER_SWITCHER, CONTROLLER_CHOOSE,
+  CONTROLLER_SHADOW, CONTROLLER_SWITCHER, CONTROLLER_CHOOSE, CONTROLLER_MEDIA, CONTROLLER_SLIDER,
 } from '../modules/ControllersManager';
 
 class Menu extends BaseElement {
@@ -63,6 +63,12 @@ class Menu extends BaseElement {
       ],
       default: 'vertical'
     })
+
+
+    this.addControl('caret', {
+      type: CONTROLLER_MEDIA,
+      label: 'Caret',
+    });
 
     this.endControlSection();
 
@@ -132,6 +138,10 @@ class Menu extends BaseElement {
       options: popoverPositions
     });
 
+    this.addControl('popover_width', {
+      label: 'Width',
+    })
+
     this.endControlSection();
 
     this.startControlSection('sub_menu_content', {
@@ -144,6 +154,10 @@ class Menu extends BaseElement {
       label: 'Popover position',
       options: popoverPositions
     });
+
+    this.addControl('sub_width', {
+      label: 'Width',
+    })
 
     this.endControlSection();
 
@@ -178,6 +192,12 @@ class Menu extends BaseElement {
           value: 'stretch',
         }
       ],
+    });
+
+    this.addControl('popover_position_toggle', {
+      type: CONTROLLER_SELECT,
+      label: 'Popover position',
+      options: popoverPositions
     });
 
     this.addControl('width', {
@@ -241,6 +261,17 @@ class Menu extends BaseElement {
           value: 'stretch',
         }
       ],
+    });
+
+    this.addControl('caret_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Caret size',
+      units: [
+        'px',
+      ],
+      max: 50,
+      min: 5,
+      stateless: true,
     });
 
     this.endControlSection();
