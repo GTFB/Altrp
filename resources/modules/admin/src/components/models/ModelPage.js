@@ -90,7 +90,7 @@ class ModelPage extends Component {
                 confirm: 'Are You Sure?',
                 after: () => this.getModelData(),
                 className: 'quick-action-menu__item_danger',
-                title: 'Trash'
+                title: 'Delete'
               }
             ]}
             rows={data}

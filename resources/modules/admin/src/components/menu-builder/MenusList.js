@@ -118,7 +118,7 @@ class MenusList extends Component {
                 this.updateMenus()
               },
               className: "quick-action-menu__item_danger",
-              title: "Trash"
+              title: "Delete"
             }
           ]}
           rows={menus.slice(

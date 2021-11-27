@@ -91,7 +91,7 @@ class Areas extends Component {
                 this.updateAreas()
               },
               className: "quick-action-menu__item_danger",
-              title: "Trash"
+              title: "Delete"
             }
           ]}
           rows={areas.slice(

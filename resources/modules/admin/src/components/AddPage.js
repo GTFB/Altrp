@@ -52,7 +52,7 @@ class AddPage extends Component {
         path: "",
         redirect: "",
         roles: [],
-        rolesOptions: [{value: "загрузка ролей", label: "Загрузка ролей"}],
+        rolesOptions: [{ value: "guest", label: "Guest" }],
         title: "",
       },
       redirectAfterSave: false,
@@ -119,7 +119,7 @@ class AddPage extends Component {
       ...state,
       value: {
         ...state.value,
-        rolesOptions: roles
+        rolesOptions: [...state.value.rolesOptions, ...roles]
       }
     }));
 
@@ -681,7 +681,7 @@ class AddPage extends Component {
                 confirm: 'Are You Sure?',
                 after: () => this.getDataSources(),
                 className: 'quick-action-menu__item_danger',
-                title: 'Trash'
+                title: 'Delete'
               }
             ]}
             rows={dataSources}

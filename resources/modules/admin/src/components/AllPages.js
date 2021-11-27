@@ -135,7 +135,7 @@ export default class AllPages extends Component {
                 confirm: "Are You Sure?",
                 after: () => { this.getPages() },
                 className: "quick-action-menu__item_danger",
-                title: "Trash"
+                title: "Delete"
               }
             ]}
             rows={pages.slice(

@@ -187,7 +187,7 @@ export default class Robots extends Component {
                 confirm: "Are You Sure?",
                 after: () => this.fetchData(),
                 className: "quick-action-menu__item_danger",
-                title: "Trash"
+                title: "Delete"
               }
             ]}
 

@@ -112,10 +112,10 @@ export default class Customizer extends Component {
           <div className="admin-heading-left">
             <div className="admin-breadcrumbs">
               <a className="admin-breadcrumbs__link" href="#">
-                Customizer
+                Visual Codes
               </a>
               <span className="admin-breadcrumbs__separator">/</span>
-              <span className="admin-breadcrumbs__current">All Customizer</span>
+              <span className="admin-breadcrumbs__current">All Visual Codes</span>
             </div>
             <button onClick={this.addNew} className="btn">
               Add New
@@ -173,7 +173,7 @@ export default class Customizer extends Component {
                 confirm: "Are You Sure?",
                 after: () => this.fetchData(),
                 className: "quick-action-menu__item_danger",
-                title: "Trash"
+                title: "Delete"
               }
             ]}
 

@@ -293,7 +293,7 @@ class Users extends Component {
                   <span style={{color: 'red'}}>you</span>}</Link>
                   <span className="quick-action-menu">
                       <span className="quick-action-menu__item_wrapper">
-                        <button onClick={() => this.deleteUser(row.id)} className="quick-action-menu__item quick-action-menu__item_danger">Trash</button>
+                        <button onClick={() => this.deleteUser(row.id)} className="quick-action-menu__item quick-action-menu__item_danger">Delete</button>
                       </span>
                     </span>
                 </td>

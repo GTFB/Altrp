@@ -498,13 +498,14 @@ class AddFieldFormModal extends Component {
                 <label className="checkbox-label-field label__RobotoFont" htmlFor="field-is_title">As Title</label>
               </div>
               <div className="form-group-field">
-                <input type="checkbox" id="field-is_auth"
-                       checked={this.state.value.is_auth}
+                <input type="checkbox" id="field-nullable"
+                       checked={this.state.value.null}
                        onChange={e => {
-                         this.changeValue(e.target.checked, 'is_auth')
+                         this.changeValue(e.target.checked, 'null')
                        }}
+                       disabled={this.state.value.type === 'bigInteger'}
                 />
-                <label className="checkbox-label-field label__RobotoFont" htmlFor="field-is_auth">Set Auth</label>
+                <label className="checkbox-label-field label__RobotoFont" htmlFor="field-nullable">Nullable</label>
               </div>
             </div>
             <span className="showMore" onClick={this.toggleAdvancedSettings}>
@@ -663,14 +664,13 @@ class AddFieldFormModal extends Component {
 
                 <div className="checkbox-group-field">
                   <div className="form-group-field">
-                    <input type="checkbox" id="field-nullable"
-                           checked={this.state.value.null}
+                    <input type="checkbox" id="field-is_auth"
+                           checked={this.state.value.is_auth}
                            onChange={e => {
-                             this.changeValue(e.target.checked, 'null')
+                             this.changeValue(e.target.checked, 'is_auth')
                            }}
-                           disabled={this.state.value.type === 'bigInteger'}
                     />
-                    <label className="checkbox-label-field label__RobotoFont" htmlFor="field-nullable">Nullable</label>
+                    <label className="checkbox-label-field label__RobotoFont" htmlFor="field-is_auth">Set Auth</label>
                   </div>
                   <div className="form-group-field">
                     <input type="checkbox" id="field-indexed"

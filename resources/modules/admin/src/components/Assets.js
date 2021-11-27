@@ -20,6 +20,7 @@ class Assets extends Component {
     this.changeUrlForTab = this.changeUrlForTab.bind(this);
     this.state = {
       uploaderClasses: 'admin-assets__uploader uploader',
+      uploadActive: false,
       assets: [],
       activeHeader: 0,
       acceptInput: '',
@@ -45,19 +46,21 @@ class Assets extends Component {
   }
 
   deleteClick(e) {
-    let assetId = e.currentTarget.dataset.assetid;
-    this.setState(state => {
-      return { ...state, itemDeleteClasses: 'item__delete altrp-disabled' }
-    });
-    this.resource.delete(assetId).then(res => {
-      if (res.success) {
-        let newAssets = [...this.state.assets];
-        newAssets = _.filter(newAssets, item => !(item.id === Number(assetId)));
-        this.setState(state => {
-          return { ...state, assets: newAssets, itemDeleteClasses: 'item__delete' };
-        })
-      }
-    });
+    if (confirm('Are You Sure')) {
+      let assetId = e.currentTarget.dataset.assetid;
+      this.setState(state => {
+        return { ...state, itemDeleteClasses: 'item__delete altrp-disabled' }
+      });
+      this.resource.delete(assetId).then(res => {
+        if (res.success) {
+          let newAssets = [...this.state.assets];
+          newAssets = _.filter(newAssets, item => !(item.id === Number(assetId)));
+          this.setState(state => {
+            return { ...state, assets: newAssets, itemDeleteClasses: 'item__delete' };
+          })
+        }
+      });
+    }
   }
   updateAssets(files) {
     this.resource.postFiles(files).then(res => {
@@ -243,6 +246,13 @@ class Assets extends Component {
       havePreviousFont: true,
     })
   }
+
+  toggleUploadLoader = () => {
+    this.setState({
+      uploadActive: !this.state.uploadActive
+    })
+  }
+
   render() {
     let UploadIcon = iconsManager().getIconComponent('upload');
     let CloseIcon = iconsManager().getIconComponent('close');
@@ -255,27 +265,30 @@ class Assets extends Component {
             <span className="admin-breadcrumbs__separator">/</span>
             <span className="admin-breadcrumbs__current">All Assets</span>
           </div>
+          <button className="btn" onClick={this.toggleUploadLoader}>{this.state.uploadActive ? "Close file uploader" : "Open file uploader"}</button>
         </div>
         <UserTopPanel />
       </div>
       <div className="admin-content assets-content">
-        <div className={this.state.uploaderClasses}
-          onDragLeave={this.onDragLeave}
-          onDrop={this.onDrop}
-          onDragOver={this.onDragOver}>
-          <label className="uploader__label d-flex flex-column align-items-center">
-            <IconUpload width={100} height={100} className="icon" />
-            <input
-              type="file"
-              accept={this.state.acceptInput}
-              multiple={true}
-              onChange={this.onChange}
-              className="uploader__input" />
-            <span className="uploader__text">
+        {this.state.uploadActive && (
+          <div className={this.state.uploaderClasses}
+               onDragLeave={this.onDragLeave}
+               onDrop={this.onDrop}
+               onDragOver={this.onDragOver}>
+            <label className="uploader__label d-flex flex-column align-items-center">
+              <IconUpload width={100} height={100} className="icon" />
+              <input
+                type="file"
+                accept={this.state.acceptInput}
+                multiple={true}
+                onChange={this.onChange}
+                className="uploader__input" />
+              <span className="uploader__text">
               Drag or Choose File
             </span>
-          </label>
-        </div>
+            </label>
+          </div>
+        )}
         <div className="custom-tab__tabs mt-4 upload__marginBottom">
           <NavLink
             className="custom-tab__tab"
@@ -337,21 +350,22 @@ class Assets extends Component {
 
                   <div className="assets-list__item item" >
                     {(() => {
-                        if (this.state.activeLink === 'images' ||
-                          this.state.activeLink === 'svgs')
+                        if (this.state.activeLink === 'images' || this.state.activeLink === 'svgs') {
                           return (
                             <div onClick={() => this.openImageDetail(asset.id)} className="item__background"
                                  style={{ 'backgroundImage': `url('${asset.url}')` }} />
                           )
-                        let typeIcon = asset.url.split('.').pop();
-                        let IconFile = iconsManager().getIconComponent('file');
-                        this.typesFiles[this.state.activeLink].forEach((type) => {
-                          if (typeIcon === type) {
-                            IconFile = iconsManager().getIconComponent(typeIcon);
-                            return <IconFile className="item__background-icon" />
-                          }
-                        });
-                        return <IconFile onClick={() => this.openDocumentDetail(asset.id)} className="item__background-icon" />
+                        } else {
+                          let typeIcon = asset.url.split('.').pop();
+                          let IconFile = iconsManager().getIconComponent('file');
+                          this.typesFiles[this.state.activeLink].forEach((type) => {
+                            if (typeIcon === type) {
+                              IconFile = iconsManager().getIconComponent(typeIcon);
+                              return <IconFile className="item__background-icon" />
+                            }
+                          });
+                          return <IconFile onClick={() => this.openDocumentDetail(asset.id)} className="item__background-icon" />
+                        }
                       }
                     )()}
                     <button className={this.state.itemDeleteClasses}

@@ -36,6 +36,7 @@ class SqlEditor extends Component {
     let storeState = store.getState();
     this.state = {
       modelTitle: 'Model Title',
+      activeHeader: 0,
       value: {
         paged: false,
         is_object: false,
@@ -107,6 +108,24 @@ class SqlEditor extends Component {
     let { options } = await this.modelsResource.getAll();
     options = options.filter(option => (option.label !== 'User'));
     this.setState({ modelsOptions: options });
+
+    window.addEventListener("scroll", this.listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", this.listenScrollHeader)
+    }
+  }
+
+  listenScrollHeader = () => {
+    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
+      this.setState({
+        activeHeader: 1
+      })
+    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
+      this.setState({
+        activeHeader: 0
+      })
+    }
   }
 
   updateRemoteFields = async () => {
@@ -299,10 +318,10 @@ class SqlEditor extends Component {
     const { isFieldRemoteModalOpened, remoteFields, editingRemoteField } = this.state;
     return (
       <div className="admin-pages admin-page">
-      <div className="admin-heading">
+      <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
         <div className="admin-heading-left">
           <div className="admin-breadcrumbs">
-            <Link className="admin-breadcrumbs__link" to="/admin/tables/sql_editors">All  SQL Editors</Link>
+            <Link className="admin-breadcrumbs__link" to="/admin/tables/sql_editors">All  SQL Queries</Link>
             <span className="admin-breadcrumbs__separator">/</span>
 
             <span className="admin-breadcrumbs__current">Add SQL Query</span>
