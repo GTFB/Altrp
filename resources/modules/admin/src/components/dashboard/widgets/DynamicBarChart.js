@@ -98,6 +98,27 @@ const DynamicBarChart = ({
   console.log(colorScheme);
   console.log("====================================");
 
+  const customProps = {}
+
+  if (legend) {
+    customProps.legends = [
+      {
+        anchor: 'top-right',
+        direction: 'column',
+        translateX: 0,
+        translateY: 0,
+        itemsSpacing: 2,
+        itemWidth: 60,
+        itemHeight: 14,
+        itemDirection: "left-to-right",
+        itemOpacity: 1,
+        symbolSize: 14,
+        symbolShape: "circle",
+        ...legend
+      }
+    ]
+  }
+  
   return (
     <>
       {title && <h3 className='diagram-title' style={{margin: 0}}>{title}</h3>}
@@ -149,23 +170,8 @@ const DynamicBarChart = ({
             legend: "",
             legendOffset: 32
           }}
-          legends={legend && [
-            {
-              anchor: 'top-right',
-              direction: 'column',
-              translateX: 0,
-              translateY: 0,
-              itemsSpacing: 2,
-              itemWidth: 60,
-              itemHeight: 14,
-              itemDirection: "left-to-right",
-              itemOpacity: 1,
-              symbolSize: 14,
-              symbolShape: "circle",
-              ...legend
-            }
-          ]}
           markers={markers}
+          {...customProps}
         />
       </div>
     </>

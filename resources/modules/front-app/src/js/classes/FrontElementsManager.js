@@ -348,6 +348,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "radar-diagram",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'RadarDiagramWidget' */ "../../../../editor/src/js/components/widgets/diagrams/RadarDiagramWidget"
+          );
+        }
+      },
+      {
         name: "dashboards",
         import: async () => {
           return await import(

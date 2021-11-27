@@ -159,7 +159,7 @@ const AltrpFunnelDiagram = props => {
       currentBorderWidth={currentBorderWidth ? +currentBorderWidth : 0}
       title={settings.datasource_title}
       subTitle={settings.subtitle}
-      legend={!settings.use_legend && {
+      legend={settings.use_legend && {
         anchor: settings.legend_anchor,
         direction: settings.legend_direction,
         itemDirection: settings.legend_item_direction,

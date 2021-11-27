@@ -141,6 +141,25 @@ const DynamicLineChart = ({
     customProps.fill= [{ match: '*', id: 'gradientA' }]
   }
 
+  if (legend) {
+    customProps.legends = [
+      {
+        anchor: 'top-right',
+        direction: 'column',
+        translateX: 0,
+        translateY: 0,
+        itemsSpacing: 2,
+        itemWidth: 60,
+        itemHeight: 14,
+        itemDirection: "left-to-right",
+        itemOpacity: 1,
+        symbolSize: 14,
+        symbolShape: "circle",
+        ...legend
+      }
+    ]
+  }
+
   return (
     <>
       {title && <h3 className='diagram-title' style={{margin: 0}}>{title}</h3>}
@@ -223,22 +242,6 @@ const DynamicLineChart = ({
               ? pointColor.colorPickedHex
               : { from: "color", modifiers: [] }
           }
-          legends={legend && [
-            {
-              anchor: 'top-right',
-              direction: 'column',
-              translateX: 0,
-              translateY: 0,
-              itemsSpacing: 2,
-              itemWidth: 60,
-              itemHeight: 14,
-              itemDirection: "left-to-right",
-              itemOpacity: 1,
-              symbolSize: 14,
-              symbolShape: "circle",
-              ...legend
-            }
-          ]}
 
           {...customProps}
         />

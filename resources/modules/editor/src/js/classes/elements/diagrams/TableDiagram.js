@@ -178,7 +178,7 @@ class TableDiagram extends BaseElement {
 
     this.startControlSection("style", {
       tab: TAB_STYLE,
-      label: "Visual type"
+      label: "Visual"
     });
 
     const types = widgetTypes.map(type => {

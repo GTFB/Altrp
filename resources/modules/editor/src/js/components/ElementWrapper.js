@@ -283,6 +283,10 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
     case "point-diagram":
       styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
+    case "funnel-diagram":
+      styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
+    case "radar-diagram":
+      styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
   }
 
   const tooltip_show_type = settings.tooltip_show_type || "never";

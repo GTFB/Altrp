@@ -40,15 +40,12 @@ const DynamicPieChart = ({
   height = "450px",
   dataSource = [],
   colorScheme = "red_grey",
-  enableSliceLabels = false,
   innerRadius = 0,
   padAngle = 0,
   cornerRadius = 0,
   sortByValue = 0,
-  enableRadialLabels = true,
   sort = "",
   tickRotation = 0,
-  bottomAxis = true,
   keyIsDate = false,
   customColorSchemeChecker = false,
   customColors = [],
@@ -166,13 +163,7 @@ const DynamicPieChart = ({
           )}
           cornerRadius={cornerRadius}
           sortByValue={sortByValue}
-          axisBottom={
-            bottomAxis && {
-              tickRotation: tickRotation
-            }
-          }
           margin={margin}
-          enableRadialLabels={enableRadialLabels}
           legends={legend && [
             {
               anchor: 'top-right',
@@ -190,14 +181,12 @@ const DynamicPieChart = ({
             }
           ]}
           innerRadius={innerRadius}
-          enableSliceLabels={enableSliceLabels}
           padAngle={padAngle}
           animate={true}
           activeOuterRadiusOffset={activeOuterRadiusOffset}
           activeInnerRadiusOffset={activeInnerRadiusOffset}
           layers={layers}
           arcLabelsComponent={({ datum, label, style }) => {
-            console.log({datum});
             return <animated.g transform={style.transform} style={{ pointerEvents: 'none' }}>
                 <text
                     textAnchor="middle"

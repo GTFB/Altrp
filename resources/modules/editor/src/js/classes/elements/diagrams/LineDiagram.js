@@ -172,7 +172,7 @@ class LineDiagram extends BaseElement {
 
     this.startControlSection("style", {
       tab: TAB_STYLE,
-      label: "Visual type"
+      label: "Visual"
     });
 
     // this.addControl("isVertical", {

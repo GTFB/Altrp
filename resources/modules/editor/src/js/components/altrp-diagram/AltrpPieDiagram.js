@@ -20,7 +20,7 @@ const AltrpPieDiagram = props => {
     _.get(item, "color.colorPickedHex")
   );
 
-  const useCustomTooltips = settings?.customTooltip;
+  const {useCustomTooltips} = settings;
 
   const sql = settings.query?.dataSource?.value;
   const keyIsDate = settings.key_is_date;
@@ -34,14 +34,10 @@ const AltrpPieDiagram = props => {
     isMultiple,
     isCustomColor,
     sort,
-    tickRotation,
-    bottomAxis,
     innerRadius,
-    enableSliceLabels,
     padAngle,
     cornerRadius,
     sortByValue,
-    enableRadialLabels,
     activeInnerRadiusOffset,
     useCenteredMetric,
     useLinkArcLabels,
@@ -80,33 +76,24 @@ const AltrpPieDiagram = props => {
   if (isEditor()) {
     data = [
       {
-        id: 'Demo data 1',
-        value: 60,
-        tooltip: []
+        id: 'python',
+        value: 199,
       },
       {
-        id: 'Demo data 2',
-        date: '2013-01',
-        value: 200,
-        tooltip: []
+        id: 'rust',
+        value: 541,
       },
       {
-        id: 'Demo data 3',
-        date: '2013-01',
-        value: 20,
-        tooltip: []
+        id: 'scala',
+        value: 584,
       },
       {
-        id: 'Demo data 4',
-        date: '2013-01',
-        value: 10,
-        tooltip: []
+        id: 'c',
+        value: 565,
       },
       {
-        id: 'Demo data 5',
-        date: '2013-01',
-        value: 50,
-        tooltip: []
+        id: 'lisp',
+        value: 598,
       },
     ]
   } else {
@@ -197,14 +184,10 @@ const AltrpPieDiagram = props => {
       width={`${settings.width?.size}${settings.width?.unit}`}
       height={`${settings.height?.size}${settings.height?.unit}`}
       innerRadius={innerRadius}
-      enableSliceLabels={enableSliceLabels}
       padAngle={padAngle}
       cornerRadius={cornerRadius}
       sortByValue={sortByValue}
-      enableRadialLabels={enableRadialLabels}
       sort={sort}
-      tickRotation={tickRotation}
-      bottomAxis={bottomAxis}
       title={settings.datasource_title}
       subTitle={settings.subtitle}
       legend={settings.use_legend && {

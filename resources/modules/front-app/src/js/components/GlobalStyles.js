@@ -83,6 +83,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         case "funnel-diagram":
           styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
           break;
+        case "radar-diagram":
+          styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
+          break;
         case "tabs-switcher":
           styles += `.${prefix}${id} {${TabsSwitcherComponent(item.settings)}}`;
           break;

@@ -371,7 +371,7 @@ const AltrpDiagram = props => {
       bottomAxis={bottomAxis}
       enableGridX={enableGridX}
       enableGridY={enableGridY}
-      legend={!settings.use_legend && {
+      legend={settings.use_legend && {
         anchor: settings.legend_anchor,
         direction: settings.legend_direction,
         itemDirection: settings.legend_item_direction,
