@@ -43,25 +43,21 @@ class StarsWidget extends Component {
 
     const settings = props.element.getSettings();
 
-    this.state = {
-      settings,
-      value: 0,
-      changed: false,
-    };
-
     let defaultValue = this.getContent(
       "default_value"
     );
 
-    if(defaultValue.indexOf("}}") !== -1 && defaultValue.indexOf("}}") !== -1) {
-      defaultValue = getDataByPath(defaultValue.replace('{{', '').replace('}}', ''))
+    if(!isNaN(defaultValue)) {
+      defaultValue = _.parseInt(defaultValue) || -1;
+    } else {
+      defaultValue = -1
     }
 
-    if(!isNaN(defaultValue)) {
-      defaultValue = _.parseInt(defaultValue) || 0;
-    } else {
-      defaultValue = null
-    }
+    this.state = {
+      settings,
+      value: defaultValue,
+      changed: false,
+    };
 
     this.dispatchFieldValueToStore(defaultValue || 0);
 
@@ -142,7 +138,13 @@ class StarsWidget extends Component {
     const countNumber = parseInt(this.props.element.getContent("count")?.size) || 1;
     const count = new Array(countNumber).fill("", 0, countNumber);
     const value = this.getValue();
-    const visualValue = this.getContent("second_default_value")?.size | 0;
+    let visualValue = this.getContent("second_default_value");
+
+    if(!isNaN(visualValue)) {
+      visualValue = _.parseInt(visualValue) || 0;
+    } else {
+      visualValue = 0
+    }
 
     return (
       <StarsList className="altrp-stars-list">
@@ -150,7 +152,7 @@ class StarsWidget extends Component {
           count.map((count, idx) => {
             let active = value-1 >= idx
 
-            if(!this.state.changed) {
+            if(!this.state.changed && this.state.value === -1 ) {
               active = _.parseInt(visualValue)-1 >= idx
             }
 
