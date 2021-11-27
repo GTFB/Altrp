@@ -516,16 +516,20 @@ class InputDateWidget extends Component {
     let fieldName = this.props.element.getFieldId();
     const format = this.props.element.getSettings('content_format') || 'YYYY-MM-DD'
     const timestamp = this.props.element.getSettings("content_timestamp");
+    const nullable = this.props.element.getSettings("nullable");
 
     if(isEditor()){
-      value = new Date();
+      if(!nullable) {
+        value = new Date();
+      }
     } else {
 
       value = _.get(appStore.getState().formsStore, `${formId}`, '')
       value = _.get(value, fieldName, '')
-      if(! value){
-        value = new Date();
-
+      if(!value){
+        if(!nullable) {
+          value = new Date();
+        }
       } else if(timestamp){
         value = new Date(value);
       } else {
@@ -679,7 +683,7 @@ class InputDateWidget extends Component {
           formatDate={(date, locale) => {
             return moment(date).locale(locale).format(format);
           }}
-          value={this.getValue()}
+          value={this.getValue() || null}
           locale={locale}
         />
       </div>

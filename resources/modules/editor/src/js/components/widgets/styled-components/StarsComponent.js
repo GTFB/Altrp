@@ -40,6 +40,14 @@ export default function StarsComponent(settings) {
     "altrp-stars-star.active svg",
       ["fill", "color", "color", ".active"],
     "}",
+
+    "altrp-stars-visual.active svg",
+      ["fill", "visual_color", "color"],
+    "}",
+
+    "& li.altrp-stars-visual.active:hover svg",
+     ["fill", "visual_color", "color", ":hover"],
+    "}",
   ];
 
   return styledString(styles, settings)

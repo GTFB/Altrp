@@ -325,9 +325,52 @@ const getMenuStyles = (settings, id) => {
     "bp3-popover-content .bp3-menu",
       ["border-radius", "popover_radius", "dimensions"],
     "}",
+
+    "bp3-menu",
+
+      () => {
+        let styles = "";
+        if (getResponsiveSetting(settings, 'type') === 'horizontal') {
+          styles += 'display: flex;';
+          styles += 'flex-direction: row;'
+          // styles += '.bp3-submenu{flex-grow:1}';
+          styles += '.bp3-icon-caret-right{transform: rotate(90deg);}';
+          if(menuAlignment) {
+            styles += `justify-content: ${menuAlignment}`
+          }
+        } else {
+          styles += 'flex-direction: column;'
+          if(menuAlignment) {
+            styles += `align-items: ${menuAlignment};`
+          }
+        }
+
+        return styles
+      },
+    "}",
+
+    "&.altrp-menu-first-portal .bp3-menu",
+      () => {
+        const value = getResponsiveSetting(settings, "popover_width");
+
+        if(value) {
+          return `max-width:${value};width: ${value};`;
+        }
+      },
+    "}",
+
+    "&.altrp-sub-portal .bp3-menu",
+    () => {
+      const value = getResponsiveSetting(settings, "sub_width");
+
+      if(value) {
+        return `max-width:${value};width: ${value};`;
+      }
+    },
+    "}",
+
     ...menuStyles,
   ]
-
   styles += `.altrp-portal${id} {${styledString(styledPortalArray, settings)}}`
 
   return styles;

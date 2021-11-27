@@ -211,16 +211,16 @@ class AltrpCarousel extends Component {
           }
 
           return (
-              <div className="altrp-carousel-slide" key={idx}
+              <div className="altrp-carousel-slide" key={slide.id}
                    onClick={()=>{
-                     this.slider.slickGoTo(idx);
+                     this.slider.slickGoTo(slide.id);
                    }}
                    onDoubleClick={ () => {
-                     this.slider.slickGoTo(idx);
+                     this.slider.slickGoTo(slide.id);
                      if(this.props.lightbox_slides_content) {
                        this.setState((state) => ({
                          ...state,
-                         activeSlide: idx,
+                         activeSlide: slide.id,
                          openLightBox: true
                        }))
                      }
@@ -409,6 +409,8 @@ class AltrpCarousel extends Component {
         <AltrpLightbox
           images={imagesSrcs}
           current={this.state.activeSlide}
+          carousel={true}
+          carouselItems={this.props.slides_repeater}
           settings={{
             onCloseRequest: () => this.setState({openLightBox: false})
           }}

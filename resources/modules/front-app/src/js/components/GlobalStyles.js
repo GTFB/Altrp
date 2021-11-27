@@ -175,9 +175,11 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         }
           break
         case "input-date-range": {
-          styles += `.${prefix}${id} {${InputDateRangeComponent(
+          styles += InputDateRangeComponent(
             item.settings,
-          )}}`;
+            id,
+            prefix
+          );
         }
         break
         case "input-checkbox": {
