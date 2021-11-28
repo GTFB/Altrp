@@ -264,7 +264,7 @@ class EditModel extends Component {
                     confirm: 'Are You Sure?',
                     after: () => this.updateFields(),
                     className: 'quick-action-menu__item_danger',
-                    title: 'Trash'
+                    title: 'Delete'
                   }
                 ]}
                 rows={fields.map(field => ({ ...field,  button__table: () => this.getModalFields(field.id) }))}
@@ -299,7 +299,7 @@ class EditModel extends Component {
                   confirm: 'Are You Sure?',
                   after: () => this.updateRelations(),
                   className: 'quick-action-menu__item_danger',
-                  title: 'Trash'
+                  title: 'Delete'
                 }]}
                 rows={relations.map(relation => ({ ...relation, button__table: () => this.getModalRelation(relation.id) }))}
                 radiusTable={true}
@@ -331,7 +331,7 @@ class EditModel extends Component {
                 confirm: 'Are You Sure?',
                 after: () => this.updateRemoteFields(),
                 className: 'quick-action-menu__item_danger',
-                title: 'Trash'
+                title: 'Delete'
               }]}
               rows={remoteFields}
               radiusTable={true}
@@ -369,7 +369,7 @@ class EditModel extends Component {
                   confirm: 'Are You Sure?',
                   after: () => this.updateAccessors(),
                   className: 'quick-action-menu__item_danger',
-                  title: 'Trash'
+                  title: 'Delete'
                 }]}
                 rows={accessors.map(accessor => ({ ...accessor, editUrl: `/admin/tables/models/${model.id}/accessors/edit/${accessor.id}` }))}
                 radiusTable={true}
@@ -403,7 +403,7 @@ class EditModel extends Component {
                   confirm: 'Are You Sure?',
                   after: () => this.updateQueries(),
                   className: 'quick-action-menu__item_danger',
-                  title: 'Trash'
+                  title: 'Delete'
                 }]}
                 radiusTable={true}
                 offBorderLast={true}

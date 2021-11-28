@@ -167,7 +167,7 @@ class AccessOptions extends Component {
                   confirm: 'Are You Sure?',
                   after: () => this.getRoles(),
                   className: 'quick-action-menu__item_danger',
-                  title: 'Trash'
+                  title: 'Delete'
                 }
               ]}
               rows={roles.map(role => ({
@@ -207,7 +207,7 @@ class AccessOptions extends Component {
                   confirm: 'Are You Sure?',
                   after: () => this.getPermissions(),
                   className: 'quick-action-menu__item_danger',
-                  title: 'Trash'
+                  title: 'Delete'
                 }
               ]}
               rows={permissions.map(permission => ({

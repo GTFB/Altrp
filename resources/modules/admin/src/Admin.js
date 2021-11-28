@@ -17,7 +17,7 @@ import AssetSvg from "./svgs/assets-v2.svg";
 import MainSvg from "./svgs/main-v2.svg";
 import PagesSvg from "./svgs/pages-v2.svg";
 import PluginSvg from "./svgs/plugins-v2.svg";
-import ModelsSvg from "./svgs/models-v2.svg";
+import DatabaseSvg from "./svgs/models-v2.svg";
 import SettingSvg from "./svgs/settings-v2.svg";
 import TablesSvg from "./svgs/tables-v2.svg";
 import RobotsSvg from "./svgs/robots-v2.svg";
@@ -103,6 +103,7 @@ import Customizer from "./components/Customizer";
 import ModelsPage from "./components/models/ModelsPage";
 import {modelsToggle} from "./js/store/models-state/actions";
 import AddModel from "./components/models/AddModel";
+import {WithRouterAdminRobotsDropList} from "./components/AdminRobotsDropList";
 
 window.React = React;
 window.ReactDOM = ReactDOM;
@@ -328,9 +329,9 @@ class Admin extends Component {
                                 className={this.state.activeButton === 9 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
                                 onClick={() => this.setState({ activeButton: 9 })}
                           >
-                            <ModelsSvg className="icon" />
+                            <DatabaseSvg className="icon" />
                             <DropletSvg className="icon__droplet"/>
-                            <span>Models</span>
+                            <span>Database</span>
                           </Link>
                           <WithRouterAdminModelsDropList menu={this.state.menu} models={models} activeButton={() => this.setState({ activeButton: 9 })} />
                         </li>
@@ -351,7 +352,7 @@ class Admin extends Component {
                           >
                             <MainSvg className="icon" />
                             <DropletSvg className="icon__droplet"/>
-                            <span>Main</span>
+                            <span>Advise</span>
                           </Link>
                         </li>
                         <li>
@@ -392,16 +393,7 @@ class Admin extends Component {
                             <DropletSvg className="icon__droplet"/>
                             <span>Robots</span>
                           </Link>
-                        </li>
-                        <li>
-                          <Link to="/admin/customizers"
-                                className={this.state.activeButton === 11 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
-                                onClick={() => this.setState({ activeButton: 11 })}
-                          >
-                            <TemplateSvg className="icon" />
-                            <DropletSvg className="icon__droplet"/>
-                            <span>Customizer</span>
-                          </Link>
+                          <WithRouterAdminRobotsDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 4 })} />
                         </li>
                         {/* <li>
                     <Link to="/admin/reports" className="admin-nav-list__link">
@@ -422,17 +414,6 @@ class Admin extends Component {
                         </li>
                         <li>
                           <Link
-                            to="/admin/marketplace"
-                            className={this.state.activeButton === 10 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
-                            onClick={() => this.setState({ activeButton: 10 })}
-                          >
-                            <MarketPlace className="icon" />
-                            <DropletSvg className="icon__droplet"/>
-                            <span>Market</span>
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
                             to="/admin/users"
                             className={this.state.activeButton === 6 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 6 })}
@@ -442,6 +423,17 @@ class Admin extends Component {
                             <span>Users</span>
                           </Link>
                           <WithRouterAdminUsersDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 6 })} />
+                        </li>
+                        <li>
+                          <Link
+                            to="/admin/marketplace"
+                            className={this.state.activeButton === 10 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                            onClick={() => this.setState({ activeButton: 10 })}
+                          >
+                            <MarketPlace className="icon" />
+                            <DropletSvg className="icon__droplet"/>
+                            <span>Market</span>
+                          </Link>
                         </li>
                         <li>
                           <Link
@@ -457,7 +449,9 @@ class Admin extends Component {
                       </ul>
                     </Scrollbars>
                   )}
-                  <ChevronMenu onClick={this.toggleAdminMenu} className="icon__menu" />
+                  <div onClick={this.toggleAdminMenu} className="icon-menu__block">
+                    <ChevronMenu className="icon__menu" />
+                  </div>
                 </div>
                 <AdminVersion />
               </nav>
@@ -499,7 +493,7 @@ class Admin extends Component {
                                 className={this.state.activeButton === 9 ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
                                 onClick={() => this.setState({ activeButton: 9 })}
                           >
-                            <ModelsSvg className="icon-mini" />
+                            <DatabaseSvg className="icon-mini" />
                           </Link>
                           <WithRouterAdminModelsDropList menu={this.state.menu} models={models} activeButton={() => this.setState({ activeButton: 9 })} />
                         </li>
@@ -553,6 +547,7 @@ class Admin extends Component {
                           >
                             <RobotsSvg className="icon-mini" />
                           </Link>
+                          <WithRouterAdminRobotsDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 4 })} />
                         </li>
                         <li>
                           <Link to="/admin/customizers"
@@ -579,15 +574,6 @@ class Admin extends Component {
                         </li>
                         <li>
                           <Link
-                            to="/admin/marketplace"
-                            className={this.state.activeButton === 10 ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
-                            onClick={() => this.setState({ activeButton: 10 })}
-                          >
-                            <MarketPlace className="icon-mini" />
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
                             to="/admin/users"
                             className={this.state.activeButton === 6 ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 6 })}
@@ -595,6 +581,15 @@ class Admin extends Component {
                             <UserSvg className="icon-mini" />
                           </Link>
                           <WithRouterAdminUsersDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 6 })} />
+                        </li>
+                        <li>
+                          <Link
+                            to="/admin/marketplace"
+                            className={this.state.activeButton === 10 ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
+                            onClick={() => this.setState({ activeButton: 10 })}
+                          >
+                            <MarketPlace className="icon-mini" />
+                          </Link>
                         </li>
                         <li>
                           <Link

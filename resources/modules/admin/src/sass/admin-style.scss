@@ -183,7 +183,8 @@
 
         .admin-nav-list__link {
           font-size: 13px;
-          width: 165px;
+          min-width: 165px;
+          max-width: 250px;
           height: 41.84px;
           padding: 10px;
           text-decoration: none;
@@ -363,20 +364,37 @@ a {
   font-weight: 700;
 }
 
-.icon__menu {
+.icon-menu__block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: absolute;
   right: 15px;
   bottom: 40px;
+  width: 35px;
+  height: 35px;
+  z-index: 50;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.3s ease-in-out;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.icon__menu {
   display: inline-block;
   width: 17px;
   height: 27px;
-  cursor: pointer;
   transform: rotate(-180deg);
 }
 
 .models-sublist__item {
   max-height: 715px;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
 }
 
 .admin-nav-mini {

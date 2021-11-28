@@ -145,9 +145,9 @@ export default class SQLEditors extends Component {
       <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
        <div className="admin-heading-left">
          <div className="admin-breadcrumbs">
-           <a className="admin-breadcrumbs__link" href="#">SQL Editors</a>
+           <a className="admin-breadcrumbs__link" href="#">SQL Queries</a>
            <span className="admin-breadcrumbs__separator">/</span>
-           <span className="admin-breadcrumbs__current">SQL Editors</span>
+           <span className="admin-breadcrumbs__current">SQL Queries</span>
          </div>
          <Link className="btn" to={`/admin/tables/sql_editors/add`}>Add New</Link>
          <div className="admin-filters">
@@ -173,7 +173,7 @@ export default class SQLEditors extends Component {
             confirm: 'Are You Sure?',
             after: () => { this.getSqlEditors() },
             className: 'quick-action-menu__item_danger',
-            title: 'Trash'
+            title: 'Delete'
           }]}
           rows={sql_editorsMap.slice(
             currentPage * this.itemsPerPage - this.itemsPerPage,

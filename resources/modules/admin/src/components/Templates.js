@@ -357,7 +357,7 @@ export default class Templates extends Component {
             confirm: 'Are You Sure?',
             after: () => this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea),
             className: 'quick-action-menu__item_danger',
-            title: 'Trash'
+            title: 'Delete'
           }]}
           sortingHandler={this.sortingHandler}
           sortingField={sorting.order_by}

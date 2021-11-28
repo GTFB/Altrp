@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import AdminTable from "./AdminTable";
 import Resource from "../../../editor/src/js/classes/Resource";
 import UserTopPanel from "./UserTopPanel";
+import {connect} from "react-redux";
 
 const columnsModel = [
   {
@@ -49,8 +50,7 @@ const columnsDataSource = [
     title: 'Type'
   }
 ];
-
-export default class Models extends Component {
+class Models extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -110,13 +110,23 @@ export default class Models extends Component {
       ...this.state.modelsSorting
     });
     this.props.updateModels()
-    this.setState(state => {
-      return {
-        ...state,
-        models: res.models,
-        modelsPageCount: res.pageCount
-      }
-    });
+    if (this.props.modelsState) {
+      this.setState(state => {
+        return {
+          ...state,
+          models: res.models,
+          modelsPageCount: res.pageCount
+        }
+      });
+    } else {
+      this.setState(state => {
+        return {
+          ...state,
+          models: res.models.filter(item => item.id >= 5),
+          modelsPageCount: res.pageCount
+        }
+      });
+    }
   };
 
   // slicePage = (array, page, itemsPerPage) => {
@@ -245,7 +255,7 @@ export default class Models extends Component {
                   confirm: 'Are You Sure?',
                   after: () => { this.getModels() },
                   className: 'quick-action-menu__item_danger',
-                  title: 'Trash'
+                  title: 'Delete'
                 }
               ]}
               rows={modelsMap.slice(
@@ -289,7 +299,7 @@ export default class Models extends Component {
                   confirm: 'Are You Sure?',
                   after: () => { this.getDataSources() },
                   className: 'quick-action-menu__item_danger',
-                  title: 'Trash'
+                  title: 'Delete'
                 }
               ]}
               rows={dataSourcesMap.slice(
@@ -321,3 +331,13 @@ export default class Models extends Component {
     </div>
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    modelsState: state.modelsState.toggleModels
+  }
+}
+
+Models = connect(mapStateToProps)(Models)
+
+export default Models;

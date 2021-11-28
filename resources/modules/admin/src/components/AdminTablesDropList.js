@@ -17,7 +17,7 @@ class AdminTablesDropList extends React.Component {
                     className={pathname.indexOf('sql_editors') !== -1 ? "admin-nav-list__link font__weightDropList" : "admin-nav-list__link"}
                     onClick={this.props.activeButton}
                   >
-                    <span>SQL Editors</span>
+                    <span>SQL Queries</span>
                   </Link>
                 </li>
               </ul>
@@ -29,7 +29,7 @@ class AdminTablesDropList extends React.Component {
                     className={pathname.indexOf('sql_editors') !== -1 ? "admin-nav-list__link font__weightDropList" : "admin-nav-list__link"}
                     onClick={this.props.activeButton}
                   >
-                    <span>SQL Editors</span>
+                    <span>SQL Queries</span>
                   </Link>
                 </li>
               </ul>

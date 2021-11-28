@@ -1,6 +1,8 @@
 
 .admin-users {
   width: 100%;
+  display: flex;
+  flex-direction: column;
 
   & .admin-table__td {
     position: relative;
@@ -112,17 +114,12 @@
   transform: rotate(180deg);
 }
 
-.wrapper {
-  display: flex;
-  flex-direction: column;
-}
 
 .admin-content-user {
   background-color: #f7f7f7;
   flex-grow: 1;
   //padding: 30px 60px;
   padding: 90px 60px 30px 60px;
-  height: 100vh;
 }
 
 .table-user {

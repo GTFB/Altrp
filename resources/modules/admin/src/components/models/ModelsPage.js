@@ -11,7 +11,7 @@ class ModelsPage extends Component {
         <div className="admin-heading">
           <div className="admin-heading-left">
             <div className="admin-breadcrumbs">
-              <Link className="admin-breadcrumbs__link" to="/admin/pages">Models</Link>
+              <Link className="admin-breadcrumbs__link" to="/admin/pages">Database</Link>
             </div>
           </div>
           <UserTopPanel />
