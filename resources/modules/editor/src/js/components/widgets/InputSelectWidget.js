@@ -1173,9 +1173,6 @@ class InputSelectWidget extends Component {
     } = settings;
 
     const fullWidth = element.getSettings("full_width") || false
-
-    console.log(fullWidth)
-
     this.popoverProps.onOpening = (e) => {
       if(fullWidth) {
         const inputWidth = this.inputRef.current.offsetWidth;

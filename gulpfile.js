@@ -32,6 +32,7 @@ const excludes = [
   '!./storage/app/public/**',
   '!./storage/installed',
   '!./storage/logs/**',
+  '!./storage/tmp/**',
   '!./storage/framework/cache/**',
   '!./storage/framework/sessions/**',
   '!./tests/**',

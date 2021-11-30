@@ -4,6 +4,11 @@
 ## Changelog
 
 
+### 0.19.6
+* Fix Input Select Tree Widget
+* Fix Autofocus Issue in Input Autocomplete Widget
++ Add Filter Options in Input Autocomplete Widget
+
 ### 0.19.5
 + Add Range Slider Filter for Table
 
