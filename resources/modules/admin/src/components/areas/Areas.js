@@ -60,6 +60,11 @@ class Areas extends Component {
 
     const { areas, currentPage, areasSearch } = this.state;
 
+    let areasMap = areas.map(item => ({
+      ...item,
+      editUrl: '/admin/areas/' + item.id
+    }))
+
     return <div className="admin-pages admin-page">
       <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
        <div className="admin-heading-left">
@@ -94,7 +99,7 @@ class Areas extends Component {
               title: "Delete"
             }
           ]}
-          rows={areas.slice(
+          rows={areasMap.slice(
             currentPage * this.itemsPerPage - this.itemsPerPage,
             currentPage * this.itemsPerPage
           )}

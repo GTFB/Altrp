@@ -53,13 +53,22 @@ class EditModelForm extends Component {
 
   titleChangeHandler(e) {
     e.persist();
-    this.setState(state => ({
-      ...state, value: {
-        ...state.value,
-        title: titleToNameTwo(e.target.value),
-        name: titleToName(e.target.value)
-      }
-    }))
+    if (this.props.paramsId) {
+      this.setState(state => ({
+        ...state, value: {
+          ...state.value,
+          title: titleToNameTwo(e.target.value),
+        }
+      }))
+    } else {
+      this.setState(state => ({
+        ...state, value: {
+          ...state.value,
+          title: titleToNameTwo(e.target.value),
+          name: titleToName(e.target.value)
+        }
+      }))
+    }
   }
 
   /**
@@ -129,6 +138,7 @@ class EditModelForm extends Component {
                       type="text"
                       id="page-name"
                       required
+                      disabled={this.props.paramsId}
           />
         </div>
 

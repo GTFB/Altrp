@@ -549,14 +549,7 @@ class Admin extends Component {
                           </Link>
                           <WithRouterAdminRobotsDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 4 })} />
                         </li>
-                        <li>
-                          <Link to="/admin/customizers"
-                                className={this.state.activeButton === 11 ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
-                                onClick={() => this.setState({ activeButton: 11 })}
-                          >
-                            <TemplateSvg className="icon-mini" />
-                          </Link>
-                        </li>
+
                         {/* <li>
                     <Link to="/admin/reports" className="admin-nav-list__link">
                       <ReportSvg className="icon" />

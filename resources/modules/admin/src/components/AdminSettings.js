@@ -201,36 +201,36 @@ export default class AdminSettings extends Component {
                   {/*    />*/}
                   {/*  </td>*/}
                   {/*</tr>*/}
-                  {SSRAlias?.length > 0 && (
-                    <tr className="admin-settings-table-row">
-                      <td className="admin-settings-table__td row-text">
-                        Make SSR conf
-                      </td>
-                      <td className="admin-settings-table__td ">
-                        <button
-                          className="btn btn_success"
-                          onClick={this.generateConfig}
-                        >
-                          Generate
-                        </button>
-                      </td>
-                    </tr>
-                  )}
-                  {SSRConf && (
-                    <tr className="admin-settings-table-row">
-                      <td className="admin-settings-table__td row-text">
-                        Restart SSR
-                      </td>
-                      <td className="admin-settings-table__td ">
-                        <button
-                          className="btn btn_success"
-                          onClick={this.restartSSR}
-                        >
-                          Restart
-                        </button>
-                      </td>
-                    </tr>
-                  )}
+                  {/*{SSRAlias?.length > 0 && (*/}
+                  {/*  <tr className="admin-settings-table-row">*/}
+                  {/*    <td className="admin-settings-table__td row-text">*/}
+                  {/*      Make SSR conf*/}
+                  {/*    </td>*/}
+                  {/*    <td className="admin-settings-table__td ">*/}
+                  {/*      <button*/}
+                  {/*        className="btn btn_success"*/}
+                  {/*        onClick={this.generateConfig}*/}
+                  {/*      >*/}
+                  {/*        Generate*/}
+                  {/*      </button>*/}
+                  {/*    </td>*/}
+                  {/*  </tr>*/}
+                  {/*)}*/}
+                  {/*{SSRConf && (*/}
+                  {/*  <tr className="admin-settings-table-row">*/}
+                  {/*    <td className="admin-settings-table__td row-text">*/}
+                  {/*      Restart SSR*/}
+                  {/*    </td>*/}
+                  {/*    <td className="admin-settings-table__td ">*/}
+                  {/*      <button*/}
+                  {/*        className="btn btn_success"*/}
+                  {/*        onClick={this.restartSSR}*/}
+                  {/*      >*/}
+                  {/*        Restart*/}
+                  {/*      </button>*/}
+                  {/*    </td>*/}
+                  {/*  </tr>*/}
+                  {/*)}*/}
 
                   <tr className="admin-settings-table-row">
                     <td className="admin-settings-table__td row-text">

@@ -236,7 +236,9 @@ class EditModel extends Component {
         <UserTopPanel />
       </div>
       <div className="admin-content">
-        <EditModelForm model={model}
+        <EditModelForm
+          paramsId={id}
+          model={model}
           submitText="Save"
           edit={model.id}
           onSubmit={this.onSubmit} />

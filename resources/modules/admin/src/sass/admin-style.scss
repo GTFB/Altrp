@@ -57,7 +57,7 @@
     // overflow-y: auto;
     height: 100vh;
     background-color: $dark-purple;
-    width: 271px;
+    width: 250px;
     flex-shrink: 0;
     &-main {
       height: 100%;
@@ -207,7 +207,7 @@
     width: 100%;
     background-color: #f7f7f7;
     flex-grow: 1;
-    padding: 120px 60px 30px 60px;
+    padding: 90px 60px 30px 60px;
     //padding: 30px 60px;
   }
   &-caption {
@@ -495,11 +495,11 @@ body {
 }
 
 :root {
-  --menu-admin-true: 271px;
+  --menu-admin-true: 250px;
   --menu-admin-false: 60px;
   --menu-admin-default: var(--menu-admin-true);
 
-  --menu-droplet-true: 255px;
+  --menu-droplet-true: 235px;
   --menu-droplet-false: 45px;
   --menu-droplet-default: var(--menu-droplet-true);
 }
