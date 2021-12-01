@@ -11,7 +11,14 @@ class AltrpLightbox extends Component {
     let current
 
     if(props.carousel) {
-      current = props.carouselItems.findIndex(img => props.current === img.id);
+      const value = props.carouselItems.findIndex(img => props.current === img.id);
+      if(value !== -1) {
+        current = props.carouselItems.findIndex(img => props.current === img.id);
+      } else if(props.current) {
+        current = props.current
+      } else {
+        current = 0
+      }
     } else {
       current = props.current
     }
@@ -23,7 +30,7 @@ class AltrpLightbox extends Component {
 
   getImages(){
     const {lightboxID} = this.props
-    if(! lightboxID){
+    if(!lightboxID){
       return this.props.images
     }
     return this.props.lightboxImages[lightboxID] || this.props.images
