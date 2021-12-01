@@ -212,18 +212,18 @@ const DynamicLineChart = ({
           useMesh={true}
           enableArea={enableArea}
           enablePoints={enablePoints}
-          tooltip={datum => {
-            console.log("====================================");
-            console.log(datum);
-            console.log("====================================");
-            return (
-              <Tooltip
-                keyIsDate={keyIsDate}
-                datum={datum}
-                widgetID={widgetID}
-              />
-            );
-          }}
+          // tooltip={datum => {
+          //   console.log("====================================");
+          //   console.log(datum);
+          //   console.log("====================================");
+          //   return (
+          //     <Tooltip
+          //       keyIsDate={keyIsDate}
+          //       datum={datum}
+          //       widgetID={widgetID}
+          //     />
+          //   );
+          // }}
           pointSize={pointSize}
           curve={curve}
           colors={

@@ -147,13 +147,13 @@ const DynamicBarChart = ({
           }
           // colorBy="index"
           layout={layout}
-          tooltip={useCustomTooltips && (datum => (
-            <TooltipBar
-              enable={useCustomTooltips}
-              datum={datum}
-              widgetID={widgetID}
-            ></TooltipBar>
-          ))}
+          // tooltip={useCustomTooltips && (datum => (
+          //   <TooltipBar
+          //     enable={useCustomTooltips}
+          //     datum={datum}
+          //     widgetID={widgetID}
+          //   />
+          // ))}
           enableGridX={enableGridX}
           enableGridY={enableGridY}
           enableLabel={enableLabel}

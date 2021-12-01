@@ -191,12 +191,12 @@ const PointChart = ({
               ? { type: xScaleType, format: format, precision: precision }
               : { type: xScaleType }
           }
-          tooltip={datum => (
-            <Tooltip
-              datum={datum}
-              widgetID={widgetID}
-            />
-          )}
+          // tooltip={datum => (
+          //   <Tooltip
+          //     datum={datum}
+          //     widgetID={widgetID}
+          //   />
+          // )}
           enableGridX={enableGridX}
           enableGridY={enableGridY}
           axisBottom={

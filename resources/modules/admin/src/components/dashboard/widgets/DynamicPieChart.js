@@ -125,10 +125,10 @@ const DynamicPieChart = ({
     layers.push(CenteredMetric)
   }
 
-  const customProperties = {}
+  const customProps = {}
 
   if (!useLinkArcLabels) {
-    customProperties.arcLinkLabelComponent = () => <text />
+    customProps.arcLinkLabelComponent = () => <text />
   }
 
   if (isLoading) return <Spinner />;
@@ -153,14 +153,6 @@ const DynamicPieChart = ({
               ? milkScheme2
               : { scheme: colorScheme }
           }
-          tooltip={datum => (
-            <TooltipPie
-              enable={useCustomTooltips}
-              datum={datum}
-              data={data}
-              widgetID={widgetID}
-            ></TooltipPie>
-          )}
           cornerRadius={cornerRadius}
           sortByValue={sortByValue}
           margin={margin}
@@ -186,6 +178,13 @@ const DynamicPieChart = ({
           activeOuterRadiusOffset={activeOuterRadiusOffset}
           activeInnerRadiusOffset={activeInnerRadiusOffset}
           layers={layers}
+          // tooltip={datum => (
+          //   <TooltipPie
+          //     datum={datum}
+          //     data={data}
+          //     widgetID={widgetID}
+          //   ></TooltipPie>
+          // )}
           arcLabelsComponent={({ datum, label, style }) => {
             return <animated.g transform={style.transform} style={{ pointerEvents: 'none' }}>
                 <text
@@ -197,7 +196,7 @@ const DynamicPieChart = ({
                 </text>
             </animated.g>
           }}
-          {...customProperties}
+          {...customProps}
         />
       </div>
     </>
