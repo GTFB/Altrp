@@ -1,6 +1,7 @@
 const INPUT_WIDGETS = [
   'input',
   'input-select',
+  'input-select-tree',
   'input-multi-select',
   'input-select2',
   'input-switch',
@@ -15,11 +16,13 @@ const INPUT_WIDGETS = [
   'input-textarea',
   'input-slider',
   'input-text-common',
+  'input-text-autocomplete',
   'input-password',
   'input-tel',
   'input-number',
   'input-email',
-  'input-date',
+  'input-date-range',
   'input-hidden',
+  'stars',
 ];
 export default INPUT_WIDGETS;

@@ -1,5 +1,7 @@
 import AdminBarWrapper from './AdminBarWrapper';
-// import Resource from "../../../../editor/src/js/classes/Resource";
+import Resource from "../../../../editor/src/js/classes/Resource";
+import Scrollbars from "react-custom-scrollbars";
+
 const {getDataByPath}= window.altrpHelpers;
 
 class AdminBar extends React.Component {
@@ -7,14 +9,18 @@ class AdminBar extends React.Component {
     super(props);
     this.state = {
       visiblePopupTemplate: false,
+      visiblePopupHistory: false,
       valueInput: "",
       contentResult: <div/>,
       visibleContentResult: false,
       visibleAutocomplete: false,
       filteredOptions: [],
-      isHttps: false
+      isHttps: false,
+      barIsOpened: false,
+      arrayRevisions: null
     };
     this.popupTemplateRef = React.createRef();
+    this.popupHistoryRef = React.createRef();
     this.searchContentResult = React.createRef();
     this.autocomplete = React.createRef();
     this.searchInput = React.createRef();
@@ -98,6 +104,13 @@ class AdminBar extends React.Component {
 
   handleOutsideClick(event) {
     const path = event.path || (event.composedPath && event.composedPath());
+
+    if (!path.includes(this.popupHistoryRef.current)) {
+      this.setState(state => ({
+        ...state,
+        visiblePopupHistory: false
+      }))
+    }
     if (!path.includes(this.popupTemplateRef.current)) {
       this.setState(state => ({
         ...state,
@@ -168,6 +181,7 @@ class AdminBar extends React.Component {
       this.handleClickSearch();
     };
   }
+
   onFocus() {
     this.setState(state => ({
       ...state,
@@ -182,17 +196,78 @@ class AdminBar extends React.Component {
     }));
   }
 
+  logout = async () => {
+    const res = await new window.altrpHelpers.Resource({route:'/logout'}).post();
+    location.reload();
+  }
+
+  toggleBar = () => {
+    this.setState({
+      barIsOpened: !this.state.barIsOpened
+    })
+    this.frontAppPadding(!this.state.barIsOpened)
+  }
+
+  frontAppPadding = (barIsOpened) => {
+    let frontAppPadding = barIsOpened ? "true" : "false"
+
+    const root = document.querySelector(':root');
+
+    const components = [
+      'front-app',
+      'front-app-adaptive1070',
+      'front-app-adaptive667'
+    ]
+
+    components.forEach(component => {
+      root.style.setProperty(
+        `--${component}-padding`, `var(--${component}-${frontAppPadding})`
+      )
+    })
+  }
+
+  toggleVisiblePopupHistory = () => {
+    this.setState({
+      visiblePopupHistory: !this.state.visiblePopupHistory
+    })
+  }
+
+  getUserHistory = async () => {
+    const arrayRevisions = await new Resource({
+      route: `/admin/ajax/templates/${this.props.idPage}/reviews`
+    }).getAll();
+
+    arrayRevisions.reverse()
+
+    this.setState(state => ({
+      ...state,
+      arrayRevisions
+    }))
+  }
+
   render() {
+    let isInIframe;
+
+    try {
+        isInIframe = window.self !== window.top;
+    } catch (e) {
+        isInIframe = true;
+    }
+
+    if (isInIframe) {
+      return '';
+    }
+
     return (
       <AdminBarWrapper>
-        <div className="admin-bar bvi-hide">
+        <div className={"admin-bar bvi-hide " + (this.state.barIsOpened ? '' : 'closed')}>
           <div className="admin-bar__tools">
             <div className="admin-bar__link" onClick={this.openPageAdmin}>
               Admin
             </div>
             <div className="admin-bar__tool">
               <span onClick={this.toggleVisiblePopupTemplate}>
-                {iconsManager.renderIcon("admin-bar1", {
+                {iconsManager.renderIcon("admin-new-bar", {
                   className: "admin-bar__tool-svg"
                 })}{" "}
                 Edit-Template
@@ -244,7 +319,7 @@ class AdminBar extends React.Component {
               )}
             </div>
             <div className="admin-bar__tool" onClick={this.openPageSettings}>
-              {iconsManager.renderIcon("admin-bar2", {
+              {iconsManager.renderIcon("admin-settings-bar", {
                 className: "admin-bar__tool-svg"
               })}{" "}
               Page-Settings
@@ -252,6 +327,53 @@ class AdminBar extends React.Component {
             {/*<div className="admin-bar__tool">*/}
               {/*{iconsManager.renderIcon('admin-bar3', {className: "admin-bar__tool-svg"})} Clear Cache*/}
             {/*</div>*/}
+
+            <div
+              className="admin-bar__tool"
+              onClick={() => {this.toggleVisiblePopupHistory(); this.getUserHistory();}}
+              ref={this.popupHistoryRef}
+            >
+              User-History
+              {this.state.visiblePopupHistory && (
+                <div className="admin-bar__popup-template admin-bar__popup-history">
+                  <Scrollbars
+                    autoHeight={true}
+                    autoHeightMax='500px'
+                  >
+                    {this.state.arrayRevisions && this.state.arrayRevisions.map((item, index) => {
+                      let secondsAgo = (Date.now() - Date.parse(item.updated_at)) / 1000;
+                      let dateString;
+                      if (secondsAgo < 100) {
+                        dateString = `${secondsAgo} seconds ago`;
+                      } else if (secondsAgo < 6000) {
+                        dateString = `${Math.floor(secondsAgo / 100)} minutes ago`;
+                      } else if (secondsAgo < 144000) {
+                        dateString = `${Math.floor(secondsAgo / 6000)} hours ago`;
+                      } else if (secondsAgo < 4320000) {
+                        dateString = `${Math.floor(secondsAgo / 144000)} days ago`;
+                      } else if (secondsAgo < 51840000) {
+                        dateString = `${Math.floor(secondsAgo / 4320000)} months ago`;
+                      } else {
+                        dateString = `${Math.floor(secondsAgo / 51840000)} years ago`;
+                      }
+
+                      return (
+                        <div className='history-popup__card' key={index}>
+                          <div className="history-popup__card-time">{dateString}</div>
+                          <div className="history-popup__card-author">
+                            by {item.author}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </Scrollbars>
+                </div>
+              )}
+            </div>
+            </div>
+
+          <div className="admin-bar__left">
+
             <div className="admin-bar__search-bar" ref={this.searchContentResult}>
               {this.state.visibleContentResult && (
                 <div className="admin-bar__search-result">
@@ -273,19 +395,19 @@ class AdminBar extends React.Component {
               )}
 
               {this.state.visibleAutocomplete &&
-                this.state.filteredOptions.length !== 0 && (
-                  <div className="admin-bar__autocomplete" ref={this.autocomplete}>
-                    {this.state.filteredOptions.map((item, index) => (
-                      <div
-                        key={index}
-                        className="admin-bar__autocomplete-option"
-                        onClick={this.handleClickOptions(item)}
-                      >
-                        {item}
-                      </div>
-                    ))}
-                  </div>
-                )}
+              this.state.filteredOptions.length !== 0 && (
+                <div className="admin-bar__autocomplete" ref={this.autocomplete}>
+                  {this.state.filteredOptions.map((item, index) => (
+                    <div
+                      key={index}
+                      className="admin-bar__autocomplete-option"
+                      onClick={this.handleClickOptions(item)}
+                    >
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              )}
               <input
                 className="admin-bar__search"
                 value={this.state.valueInput}
@@ -303,19 +425,29 @@ class AdminBar extends React.Component {
                 test
               </button>
               <button
-                  className="admin-bar__button"
-                  onClick={this.clearCache}
+                className="admin-bar__button"
+                onClick={this.clearCache}
               >
                 Clear Cache
               </button>
             </div>
+
+            <div className="admin-bar__profile">
+            <span>
+              Hello,
+              {this.props.data.name ? this.props.data.name : this.props.data.email}
+            </span>
+              <button className="admin-bar__button"
+                      onClick={this.logout}
+              >
+                Logout
+              </button>
+            </div>
+
           </div>
-          <div className="admin-bar__profile">
-            Hello,
-            {this.props.data.name ? this.props.data.name : this.props.data.email}
-            {iconsManager.renderIcon("admin-bar4", {
-              className: "admin-bar__profile-svg"
-            })}
+
+          <div className={'admin-bar__arrow ' + (this.state.barIsOpened ? '' : 'closed')} onClick={this.toggleBar}>
+            <div></div>
           </div>
         </div>
       </AdminBarWrapper>

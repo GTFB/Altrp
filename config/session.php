@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Str;
-
 return [
 
     /*
@@ -167,6 +166,7 @@ return [
     */
 
     'secure' => env('SESSION_SECURE_COOKIE', false),
+//    'secure' => env('APP_ENV') !== 'local',
 
     /*
     |--------------------------------------------------------------------------
@@ -194,6 +194,8 @@ return [
     |
     */
 
-    'same_site' => null,
+//    'same_site' => null,
+    'same_site' => env('SESSION_SECURE_COOKIE', false) ? 'none' : null,
+
 
 ];

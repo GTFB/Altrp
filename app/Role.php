@@ -45,7 +45,23 @@ class Role extends LaratrustRole
     }
   }
 
-    public function notice_settings()
+  /**
+   * @return int|string
+   */
+  public static function getAdminId()
+  {
+    $admin_role = Role::where( 'name', 'admin' )->first();
+    if( ! $admin_role ) {
+      $admin_role = new Role([
+        'name' => 'admin',
+        'display_name' => 'Admin',
+      ]);
+      $admin_role->save();
+    }
+    return $admin_role->id;
+  }
+
+  public function notice_settings()
     {
         return $this->morphMany('App\Altrp\NoticeSetting', 'noticed', 'noticed_type', 'noticed_id');
     }

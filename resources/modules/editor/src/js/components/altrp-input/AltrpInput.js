@@ -2,38 +2,39 @@ import React, { Component } from "react";
 import ("./altrp-input.scss");
 import AltrpInputFile from "./AltrpInputFile";
 import { isValueMatchMask, validateEmail } from "../../../../../front-app/src/js/helpers";
-import MaskedInput from "react-text-mask";
+import MaskedInput from "./MaskedInput";
 
 class AltrpInput extends Component {
   state = {
     isValid: true
   };
 
-  checkValidity = mask => {
-    if (! mask) return;
-    let value = this.props.value.replace(/_/g, '');
-    let isValid = ! ! (value.length && isValueMatchMask(value, mask));
-    this.setState(state => ({...state, isValid}));
-    _.set(this, 'props.element.maskIsValid', isValid);
-  };
+  // checkValidity = mask => {
+  //   if (! mask) return;
+  //   let value = this.props.value.replace(/_/g, '');
+  //   let isValid = ! ! (value.length);
+  //   this.setState(state => ({...state, isValid}));
+  //   _.set(this, 'props.element.maskIsValid', isValid);
+  // };
 
-  /**
-   *
-   * @param {{}} prevProps
-   * @param {{}} prevState
-   */
-  componentDidUpdate(prevProps, prevState){
-    if((! this.props.value) && this.props.settings.content_mask && this.state.isValid){
-      this.setState(state => ({...state, isValid: false}));
-      _.set(this, 'props.element.maskIsValid', false);
-    }
-  }
+  // /**
+  //  *
+  //  * @param {{}} prevProps
+  //  * @param {{}} prevState
+  //  */
+  // componentDidUpdate(prevProps, prevState){
+  //   if((! this.props.value) && this.state.isValid){
+  //     this.setState(state => ({...state, isValid: false}));
+  //     _.set(this, 'props.element.maskIsValid', false);
+  //   }
+  // }
   render() {
     let Input = window.altrpLibs.Blueprint.InputGroup;
     const { isValid } = this.state;
     const { content_type, content_mask, mask_mismatch_message } = this.props.settings;
     const inputProps = {
       ...this.props,
+      inputRef: this.props.inputRef,
     };
     switch (content_type) {
       case "file": {
@@ -41,36 +42,12 @@ class AltrpInput extends Component {
       }
     }
     if (content_mask) {
-      let mask = content_mask.split("");
-      mask = mask.map(m => {
-        switch (m) {
-          case "_": {
-            return /\d/;
-          }
-          case "*": {
-            return /\S/;
-          }
-          default:
-            return m;
-        }
-      });
-      inputProps.mask = mask;
-      inputProps.guide = true;
-      inputProps.onBlur = e => {
-        this.props.onBlur(e);
-        // if (mask_mismatch_message) {
-        //   this.checkValidity(mask)
-        // }
-        this.checkValidity(mask)
-      };
-      inputProps.onChange = e => {
-        this.props.onChange(e);
-        if (! isValid) {
-          this.checkValidity(mask)
-        }
-      };
       return (<>
-          <MaskedInput {...inputProps} />
+          <MaskedInput
+            mask={content_mask}
+            inputProps={inputProps}
+            input={Input}
+          />
           {!isValid && mask_mismatch_message && <p className="mask-mismatch-message">{mask_mismatch_message}</p>}
         </>
       );
@@ -94,7 +71,7 @@ class AltrpInput extends Component {
     return <>
       <Input {...inputProps} />
       {!isValid && content_type === 'email' && mask_mismatch_message &&
-        <p className="mask-mismatch-message">{mask_mismatch_message}</p>}
+      <p className="mask-mismatch-message">{mask_mismatch_message}</p>}
     </>;
   }
 }

@@ -68,6 +68,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-text-autocomplete",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputTextCommonWidget' */ "../../../../editor/src/js/components/widgets/InputTextAutocompleteWidget"
+          );
+        }
+      },
+      {
         name: "input-text",
         import: async () => {
           return await import(
@@ -81,6 +89,14 @@ class FrontElementsManager {
           return await import(
             /* webpackChunkName: 'InputSelectWidget' */ "../../../../editor/src/js/components/widgets/InputSelectWidget"
           );
+        }
+      },
+      {
+        name: "input-select-tree",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputSelectTreeWidget' */ "../../../../editor/src/js/components/widgets/InputSelectTreeWidget"
+            );
         }
       },
       {
@@ -153,6 +169,30 @@ class FrontElementsManager {
           return await import(
             /* webpackChunkName: 'InputDate' */ "../../../../editor/src/js/components/widgets/InputDateWidget"
           );
+        }
+      },
+      {
+        name: "input-date-range",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputDateRange' */ "../../../../editor/src/js/components/widgets/InputDateRangeWidget"
+            );
+        }
+      },
+      {
+        name: "stars",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'Stars' */ "../../../../editor/src/js/components/widgets/StarsWidget"
+            );
+        }
+      },
+      {
+        name: "progress-bar",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'ProgressBar' */ "../../../../editor/src/js/components/widgets/ProgressBarWidget"
+            );
         }
       },
       {
@@ -271,7 +311,7 @@ class FrontElementsManager {
         name: "accordion",
         import: async () => {
           return await import(
-            /* webpackChunkName: 'AccordionWidget' */ "../../../../editor/src/js/components/widgets/AccordionWidget"
+            /* webpackChunkName: 'AccordionWidget' */ "../../../../editor/src/js/components/widgets/AccordionWidget/AccordionWidget"
           );
         }
       },
@@ -308,10 +348,34 @@ class FrontElementsManager {
         }
       },
       {
-        name: "diagram",
+        name: "pie-diagram",
         import: async () => {
           return await import(
-            /* webpackChunkName: 'DiagramWidget' */ "../../../../editor/src/js/components/widgets/DiagramWidget"
+            /* webpackChunkName: 'PieDiagramWidget' */ "../../../../editor/src/js/components/widgets/diagrams/PieDiagramWidget"
+          );
+        }
+      },
+      {
+        name: "bar-diagram",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'BarDiagramWidget' */ "../../../../editor/src/js/components/widgets/diagrams/BarDiagramWidget"
+          );
+        }
+      },
+      {
+        name: "point-diagram",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'PointDiagramWidget' */ "../../../../editor/src/js/components/widgets/diagrams/PointDiagramWidget"
+          );
+        }
+      },
+      {
+        name: "line-diagram",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'LineDiagramWidget' */ "../../../../editor/src/js/components/widgets/diagrams/LineDiagramWidget"
           );
         }
       },
@@ -424,6 +488,14 @@ class FrontElementsManager {
         import: async () => {
           return await import(
             /* webpackChunkName: 'SchedulerWidget' */ "../../../../editor/src/js/components/widgets/SchedulerWidget"
+            );
+        }
+      },
+      {
+        name: "tree",
+        import: async () => {
+          return await import(
+              /* webpackChunkName: 'TreeWidget' */ "../../../../editor/src/js/components/widgets/TreeWidget"
             );
         }
       },

@@ -59,53 +59,6 @@ const DynamicLineChart = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
-  const markers = () => {
-    let markerY = {};
-    let markerX = {};
-    if (yMarker) {
-      markerY = {
-        axis: "y",
-        value: yMarkerValue,
-        lineStyle: {
-          stroke:
-            yMarkerColor != null ? yMarkerColor.colorPickedHex : "#000000",
-          strokeWidth: yMarkerWidth
-        },
-        textStyle: {
-          fill:
-            yMarkerLabelColor != null
-              ? yMarkerLabelColor.colorPickedHex
-              : "#000000"
-        },
-        legend: yMarkerLabel,
-        legendOrientation: yMarkerOrientation
-      };
-    }
-    if (xMarker) {
-      markerX = {
-        axis: "x",
-        value: xMarkerValue,
-        lineStyle: {
-          stroke:
-            xMarkerColor != null ? xMarkerColor.colorPickedHex : "#000000",
-          strokeWidth: xMarkerWidth
-        },
-        textStyle: {
-          fill:
-            xMarkerLabelColor != null
-              ? xMarkerLabelColor.colorPickedHex
-              : "#000000"
-        },
-        legend: xMarkerLabel,
-        legendOrientation: xMarkerOrientation
-      };
-    }
-    if (!yMarker && !xMarker) return [];
-    if (yMarker && !xMarker) return [markerY];
-    if (!yMarker && xMarker) return [markerX];
-
-    return [markerY, markerX];
-  };
 
   const getData = useCallback(async () => {
     setIsLoading(true);
@@ -154,7 +107,6 @@ const DynamicLineChart = ({
             break;
 
           default:
-            // data = data;
             break;
         }
       }
@@ -243,15 +195,6 @@ const DynamicLineChart = ({
               />
             );
           }}
-          // tooltip={datum => {
-          //   const tooltip = datum.point.data?.tooltip;
-          //   console.log("=============TOOLTIP==============");
-          //   console.log(tooltip);
-          //   console.log("====================================");
-          //   return tooltip.map(item => (
-          //     <div>{`${item?.label}:${item?.value}`}</div>
-          //   ));
-          // }}
           pointSize={pointSize}
           curve={curve}
           colors={

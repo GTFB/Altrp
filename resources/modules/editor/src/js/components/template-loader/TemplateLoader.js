@@ -30,6 +30,7 @@ class TemplateLoader extends Component {
       if(this.props.cardModel instanceof AltrpModel){
         templateComponent.setCardModel(this.props.cardModel);
       }
+
       templateComponent = React.createElement(templateComponent.componentClass,
           {...this.props,
             children: templateComponent.children,
@@ -62,6 +63,7 @@ class TemplateLoader extends Component {
     }
   }
   render() {
+    console.log(this.state.templateComponent)
     return <div className="inner-template">{this.state.templateComponent}</div>;
   }
 }

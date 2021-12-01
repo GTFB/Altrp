@@ -143,10 +143,19 @@ class FrontElement {
       // }
     }
 
+    if(this.getName() === "input-date-range" &&
+      this.getFormId("form_id_start") &&
+      this.getFormId("form_id_end")
+    ) {
+      this.formInit();
+      return;
+    }
+
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getFormId()){
       this.formInit();
       return;
     }
+
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_actions') === 'delete'){
       this.formInit();
       return;
@@ -246,6 +255,7 @@ class FrontElement {
       }
       break;
       case 'input-select':
+      case 'input-select-tree':
       case 'input-multi-select':
       case 'input-select2':
       case 'input-switch':
@@ -265,8 +275,17 @@ class FrontElement {
       case 'input-hidden':
       case 'input-text':
       case 'input-text-common':
+      case 'input-text-autocomplete':
+      case 'stars':
+
       case 'input': {
         formsManager.addField(this.getFormId(), this);
+      }
+      break;
+
+      case 'input-date-range': {
+        formsManager.addField(this.getFormId("form_id_start"), this);
+        formsManager.addField(this.getFormId("form_id_end"), this);
       }
       break;
     }
@@ -310,14 +329,12 @@ class FrontElement {
    */
   getIdForAction(){
     if(! this.idForAction){
-      this.idForAction = altrpRandomId();
+      this.idForAction = this.getId() +
+        (this.getCurrentModel()?.getProperty('altrpIndex')
+          || this.getCurrentModel()?.getProperty('id')
+          || '');
     }
     return this.idForAction;
-    let id = this.getId();//todo: delete this
-    if(this.getCurrentModel().getProperty('altrpIndex') !== ''){
-      id += `_${this.getCurrentModel().getProperty('altrpIndex')}`;
-    }
-    return id;
   }
 
   /**
@@ -513,7 +530,6 @@ class FrontElement {
    * Возвращает значение если виджет input, если другое, то null
    */
   getValue(){
-
     if(INPUT_WIDGETS.indexOf(this.getName()) === -1){
       return null;
     }
@@ -525,6 +541,9 @@ class FrontElement {
     switch (elementName) {
       case 'input':
       case 'input-textarea':
+      case 'input-text-autocomplete':
+      case 'stars':
+      case  'input-date-range':
       case 'input-text-common':{
         value = this?.component?.getValue() || this?.component?.state?.value || '';
       }break;

@@ -18,7 +18,7 @@ class Kernel extends HttpKernel
     \App\Http\Middleware\CheckForMaintenanceMode::class,
     \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
     \App\Http\Middleware\TrimStrings::class,
-    \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+    \App\Http\Middleware\AltrpConvertEmptyStringsToNull::class,
     \Illuminate\Session\Middleware\StartSession::class,
   ];
 
@@ -65,7 +65,7 @@ class Kernel extends HttpKernel
     'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     'installation.checker' => \App\Http\Middleware\InstallationChecker::class,
     'admin' => \App\Http\Middleware\IsAdmin::class,
-      'inputStream' => \App\Http\Middleware\ParseMultipartFormDataInputForNonPostRequests::class
+    'inputStream' => \App\Http\Middleware\ParseMultipartFormDataInputForNonPostRequests::class
   ];
 
   /**

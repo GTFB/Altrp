@@ -1,18 +1,21 @@
 import React, {Component} from "react";
 import Resource from "../../../../editor/src/js/classes/Resource";
-import {Link} from "react-router-dom";
 import AdminTable from "../AdminTable";
-import CONSTANTS from "../../../../editor/src/js/consts";
 import {mbParseJSON} from "../../../../front-app/src/js/helpers";
 import {withRouter} from "react-router";
+import UserTopPanel from "../UserTopPanel";
 
 class MenusList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       menus: [],
+      activeHeader: 0,
+      currentPage: 1,
+      menusSearch: ""
     }
     this.resource = new Resource({route: '/admin/ajax/menus'})
+    this.itemsPerPage = 3;
   }
 
   async componentDidMount() {
@@ -22,6 +25,33 @@ class MenusList extends Component {
     } catch (e) {
       console.error(e);
     }
+
+    window.addEventListener("scroll", this.listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", this.listenScrollHeader)
+    }
+  }
+
+  listenScrollHeader = () => {
+    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
+      this.setState({
+        activeHeader: 1
+      })
+    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
+      this.setState({
+        activeHeader: 0
+      })
+    }
+  }
+
+  searchMenus = (e) => {
+    e.preventDefault();
+    this.updateMenus();
+  }
+
+  changeMenus = (e) => {
+    this.setState( { menusSearch: e.target.value})
   }
 
   addNew = async()=>{
@@ -29,7 +59,7 @@ class MenusList extends Component {
       let res = await this.resource.post({name: '', children: '[]'});
       res = res.data;
       this.props.history.push(`/admin/menus/${res.id}`)
-    }catch (e) {
+    } catch (e) {
       if(e.res instanceof Promise){
         e = await e.res.then();
         e = mbParseJSON(e);
@@ -43,18 +73,23 @@ class MenusList extends Component {
   }
 
   updateMenus = async () => {
-    this.resource = new Resource({route: '/admin/ajax/menus'});
-    let menus = await  this.resource.getAll();
+    let menus = await  this.resource.getQueried({ s: this.state.menusSearch });
     this.setState(state => ({...state, menus}))
   }
 
   render() {
+
+    const { menus, currentPage, menusSearch } = this.state;
+
     return <div className="admin-pages admin-page">
-      <div className="admin-heading">
-        <div className="admin-breadcrumbs">
-          <div className="admin-breadcrumbs__current">Areas</div>
+      <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
+        <div className="admin-heading-left">
+          <div className="admin-breadcrumbs">
+            <div className="admin-breadcrumbs__current">Menus</div>
+          </div>
+          <button className="btn" onClick={this.addNew} >Add New</button>
         </div>
-        <button className="btn" onClick={this.addNew} >Add New</button>
+        <UserTopPanel />
       </div>
       <div className="admin-content">
         <AdminTable
@@ -67,6 +102,10 @@ class MenusList extends Component {
               editUrl: true,
               tag: 'Link'
             },
+            {
+              name: 'categories',
+              title: 'Categories'
+            }
           ]}
 
           quickActions={[
@@ -79,13 +118,31 @@ class MenusList extends Component {
                 this.updateMenus()
               },
               className: "quick-action-menu__item_danger",
-              title: "Trash"
+              title: "Delete"
             }
           ]}
-          rows={this.state.menus.map(menu => ({
-            ...menu,
-            editUrl: '/admin/menus/' + menu.id
-          }))}/>
+          rows={menus.slice(
+            currentPage * this.itemsPerPage - this.itemsPerPage,
+            currentPage * this.itemsPerPage
+          )}
+
+          searchTables={{
+            submit: this.searchMenus,
+            value: menusSearch,
+            change: this.changeMenus
+          }}
+
+          pageCount={Math.ceil(menus.length / this.itemsPerPage) || 1}
+          currentPage={currentPage}
+          changePage={page => {
+            if (currentPage !== page) {
+              this.setState({ currentPage: page });
+            }
+          }}
+          itemsCount={menus.length}
+
+          openPagination={true}
+        />
       </div>
     </div>
   }

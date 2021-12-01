@@ -55,6 +55,10 @@ export function titleToName(str) {
 
 }
 
+export function titleToNameTwo(str) {
+  return str.replace(/^\d+/, '')
+}
+
 export function titleToPath(str) {
   str = transliterate(str);
   return str.toLowerCase().replace(/^\d+/, '').replace(/[^\d\w]/g, '-');
@@ -130,6 +134,7 @@ export function buildPagesTree(pages) {
 
   return tree;
 }
+
 
 export function filterUsers(users, roleFilter) {
   return users.filter(user => user.roles.some(role => role.id === roleFilter));

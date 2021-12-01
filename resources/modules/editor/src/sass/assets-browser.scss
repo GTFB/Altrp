@@ -33,10 +33,10 @@
     border-radius: 3px;
     background-color: #fff;
   }
-  &__close.btn{
+  &__close{
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 5px;
+    right: 10px;
     padding: 10px;
     -webkit-transform: scale(2);
     -moz-transform: scale(2);

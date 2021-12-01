@@ -23,11 +23,11 @@ class MediaInput extends Component {
     this.props.dispatch(assetsShow(assetsSettings));
   }
   render(){
-    return<div className="admin-media-input d-flex flex-column align-items-center">
-      <div className="admin-media-input__preview d-flex align-items-center justify-content-center">
+    return<div className="admin-media-input ">
+      <div className="admin-media-input__preview">
         {(this.state.value.assetType) ? renderAsset(this.state.value) : 'Not selected' }
       </div>
-      <button className="admin-media-input__button btn btn_success" onClick={this.openMediaBrowser}>
+      <button className="admin-media-input__button btn btn_success btn_advanced" onClick={this.openMediaBrowser}>
         Change
       </button>
     </div>

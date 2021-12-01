@@ -64,6 +64,7 @@ module.exports =  {
   },
   output: {
     path: path.resolve(__dirname, "public/modules/editor/"),
+    chunkFilename: "[name].[contenthash].bundle.js",
     publicPath: "/modules/editor/",
     filename: "editor.js",
   },

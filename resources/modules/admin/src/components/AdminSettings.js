@@ -7,6 +7,9 @@ import Export from "./settings/Export";
 import Websockets from "./settings/integrations/Websockets";
 import Telegram from "./settings/integrations/Telegram";
 import Resource from "../../../editor/src/js/classes/Resource";
+import AutoUpdateCheckbox from "./AutoUpdateCheckbox";
+import UserTopPanel from "./UserTopPanel";
+import React from "react";
 const AdvancedSettings = React.lazy(() => import("./AdvancedSettings"));
 const MailForm = React.lazy(() => import("./settings/MailForm"));
 
@@ -132,69 +135,72 @@ export default class AdminSettings extends Component {
     return (
       <div className="admin-settings admin-page">
         <div className="admin-heading">
-          <div className="admin-breadcrumbs">
-            <a className="admin-breadcrumbs__link" href="#">
-              Settings
-            </a>
-            <span className="admin-breadcrumbs__separator">/</span>
-            <span className="admin-breadcrumbs__current">Builder</span>
+          <div className="admin-heading-left">
+            <div className="admin-breadcrumbs">
+              <a className="admin-breadcrumbs__link" href="#">
+                Settings
+              </a>
+              <span className="admin-breadcrumbs__separator">/</span>
+              <span className="admin-breadcrumbs__current">Builder</span>
+            </div>
           </div>
+          <UserTopPanel />
         </div>
-        <div className="admin-content">
+        <div className="admin-content zeroing__styleTabsSettings">
           <Tabs selectedIndex={this.state.activeTab} onSelect={this.switchTab}>
             <TabList className="nav nav-pills admin-pills">
-              <Tab>GENERAL</Tab>
-              <Tab>STYLE</Tab>
-              <Tab>INTEGRATIONS</Tab>
-              <Tab>ADVANCED</Tab>
-              <Tab>UPDATES</Tab>
-              <Tab>EXPORT</Tab>
-              <Tab>IMPORT</Tab>
-              <Tab>MAIL</Tab>
+              <Tab>General</Tab>
+              <Tab>Style</Tab>
+              <Tab>Integrations</Tab>
+              <Tab>Advanced</Tab>
+              <Tab>Updates</Tab>
+              <Tab>Export</Tab>
+              <Tab>Import</Tab>
+              <Tab>Mail</Tab>
             </TabList>
             <TabPanel>
               <table>
                 <tbody className="admin-table-body">
-                  <tr className="admin-settings-table-row">
-                    <td className="admin-settings-table__td row-text">SSR</td>
-                    <td className="admin-settings-table__td ">
-                      <input
-                        className="admin-table__td_check"
-                        checked={this.state.SSREnabled}
-                        onChange={this.toggleSSREnabled}
-                        type="checkbox"
-                      />
-                      Hide Server Side Content
-                    </td>
-                  </tr>
-                  <tr className="admin-settings-table-row">
-                    <td className="admin-settings-table__td row-text">
-                      SSR Port
-                    </td>
-                    <td className="admin-settings-table__td ">
-                      <input
-                        className="admin-table__td_check"
-                        type="text"
-                        placeholder="9000"
-                        value={SSRPort}
-                        onChange={this.setSSRPort}
-                      />
-                    </td>
-                  </tr>
-                  <tr className="admin-settings-table-row">
-                    <td className="admin-settings-table__td row-text">
-                      SSR Settings Alias
-                    </td>
-                    <td className="admin-settings-table__td ">
-                      <input
-                        className="admin-table__td_check"
-                        type="text"
-                        placeholder="For ex. yourproject.."
-                        value={SSRAlias}
-                        onChange={this.setSSRSettingsAlias}
-                      />
-                    </td>
-                  </tr>
+                  {/*<tr className="admin-settings-table-row">*/}
+                  {/*  <td className="admin-settings-table__td row-text">SSR</td>*/}
+                  {/*  <td className="admin-settings-table__td ">*/}
+                  {/*    <input*/}
+                  {/*      className="admin-table__td_check"*/}
+                  {/*      checked={this.state.SSREnabled}*/}
+                  {/*      onChange={this.toggleSSREnabled}*/}
+                  {/*      type="checkbox"*/}
+                  {/*    />*/}
+                  {/*    Hide Server Side Content*/}
+                  {/*  </td>*/}
+                  {/*</tr>*/}
+                  {/*<tr className="admin-settings-table-row">*/}
+                  {/*  <td className="admin-settings-table__td row-text">*/}
+                  {/*    SSR Port*/}
+                  {/*  </td>*/}
+                  {/*  <td className="admin-settings-table__td ">*/}
+                  {/*    <input*/}
+                  {/*      className="admin-table__td_check"*/}
+                  {/*      type="text"*/}
+                  {/*      placeholder="9000"*/}
+                  {/*      value={SSRPort}*/}
+                  {/*      onChange={this.setSSRPort}*/}
+                  {/*    />*/}
+                  {/*  </td>*/}
+                  {/*</tr>*/}
+                  {/*<tr className="admin-settings-table-row">*/}
+                  {/*  <td className="admin-settings-table__td row-text">*/}
+                  {/*    SSR Settings Alias*/}
+                  {/*  </td>*/}
+                  {/*  <td className="admin-settings-table__td ">*/}
+                  {/*    <input*/}
+                  {/*      className="admin-table__td_check"*/}
+                  {/*      type="text"*/}
+                  {/*      placeholder="For ex. yourproject.."*/}
+                  {/*      value={SSRAlias}*/}
+                  {/*      onChange={this.setSSRSettingsAlias}*/}
+                  {/*    />*/}
+                  {/*  </td>*/}
+                  {/*</tr>*/}
                   {SSRAlias?.length > 0 && (
                     <tr className="admin-settings-table-row">
                       <td className="admin-settings-table__td row-text">
@@ -232,7 +238,7 @@ export default class AdminSettings extends Component {
                     </td>
                     <td className="admin-settings-table__td ">
                       <button
-                        className="btn btn_success"
+                        className="btn btn_success btn_general"
                         onClick={this.clearProjectCache}
                       >
                         Clear
@@ -271,6 +277,17 @@ export default class AdminSettings extends Component {
                       more
                     </td>
                   </tr>
+                  <tr className="admin-settings-table-row">
+                    <td className="admin-settings-table__td row-text">
+                      Open standard models
+                    </td>
+                    <td className="admin-settings-table__td ">
+                      <AutoUpdateCheckbox
+                        type="checkbox"
+                        className="admin-table__td_check"
+                      />
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </TabPanel>
@@ -278,8 +295,10 @@ export default class AdminSettings extends Component {
               <StylesSettings />
             </TabPanel>
             <TabPanel>
-              <Websockets />
-              <Telegram />
+              <div className="admin_settings_integrations">
+                <Websockets />
+                <Telegram />
+              </div>
             </TabPanel>
             <TabPanel>
               <React.Suspense fallback={"Loading"}>

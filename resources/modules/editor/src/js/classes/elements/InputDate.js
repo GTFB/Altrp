@@ -89,6 +89,12 @@ class InputDate extends BaseElement {
       label: "Field ID (Column Name)"
     });
 
+    this.addControl("nullable", {
+      type: CONTROLLER_SWITCHER,
+      label: "Nullable",
+      default: false
+    });
+
     const optionsRepeater = new Repeater();
 
     optionsRepeater.addControl("label", {

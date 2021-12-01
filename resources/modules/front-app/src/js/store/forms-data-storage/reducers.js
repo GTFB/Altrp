@@ -13,7 +13,6 @@ export function formsStoreReducer(state, {type, formId, fieldName, value, change
         state.changedField = changedField;
         _.set(state, [formId, fieldName], value);
       }
-
     }break;
     case CLEAR_FORM_FIELD_VALUE:{
       if(formId){

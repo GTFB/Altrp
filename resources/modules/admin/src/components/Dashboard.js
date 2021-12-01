@@ -9,6 +9,7 @@ import TrashFill from "react-bootstrap-icons/dist/icons/trash-fill";
 import WidgetDiagram from "./dashboard/WidgetDiagram";
 import EditWidget from "./dashboard/EditWidget";
 import AddWidget from "./dashboard/AddWidget";
+import UserTopPanel from "./UserTopPanel";
 
 function Dashboard() {
   const [diagrams, setDiagrams] = useState([]);
@@ -16,6 +17,7 @@ function Dashboard() {
   const [showEditForm, setShowEditForm] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedWidget, setSelectedWidget] = useState({});
+  const [activeHeader, setActiveHeader] = useState(0)
 
   /*
    * Показываем окно настроек
@@ -91,20 +93,38 @@ function Dashboard() {
    */
   useEffect(() => {
     getDiagrams();
+
+    window.addEventListener("scroll", listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", listenScrollHeader)
+    }
   }, [getDiagrams]);
+
+
+  const listenScrollHeader = () => {
+    if (window.scrollY > 4) {
+      setActiveHeader(1)
+    } else if (window.scrollY < 4 ) {
+      setActiveHeader(0)
+    }
+  }
 
   return (
     <div className="admin-templates admin-page">
-      <div className="admin-heading">
-        <div className="admin-breadcrumbs">
-          <a className="admin-breadcrumbs__link" href="#">
-            Analytics
-          </a>
+      <div className={activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
+        <div className="admin-heading-left">
+          <div className="admin-breadcrumbs">
+            <a className="admin-breadcrumbs__link" href="#">
+              Analytics
+            </a>
+          </div>
+          <button onClick={() => setShowAddForm(true)} className="btn btn__right">
+            Add Widget
+          </button>
+          <Link className="btn" to={`/admin/dashboard/colors`}>Color Schemes</Link>
         </div>
-        <button onClick={() => setShowAddForm(true)} className="btn">
-          Add Widget
-        </button>
-        <Link className="btn" to={`/admin/dashboard/colors`}>Color Schemes</Link>
+        <UserTopPanel />
       </div>
       <div className="admin-content">
         <div className="charts">

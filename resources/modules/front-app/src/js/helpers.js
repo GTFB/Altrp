@@ -18,6 +18,9 @@ import Area from "./classes/Area";
 import {altrpFontsSet, GOOGLE_FONT} from "./constants/fonts";
 import {addSettings} from "./store/elements-settings/actions";
 import mutate from "dot-prop-immutable";
+import React from "react";
+import convertQueryParamsToObject from "./functions/convert-query-params-to-object";
+import _CONDITIONS_OPTIONS from "./constants/CONDITIONS_OPTIONS";
 export function getRoutes() {
 
   return import(/* webpackChunkName: 'Routes' */"./classes/Routes.js");
@@ -846,68 +849,7 @@ export function altrpCompare(
   }
 }
 
-export const CONDITIONS_OPTIONS = [
-  {
-    value: "empty",
-    label: "Empty"
-  },
-  {
-    value: "not_empty",
-    label: "Not Empty"
-  },
-  {
-    value: "null",
-    label: "Null"
-  },
-  {
-    value: "not_null",
-    label: "Not Null"
-  },
-  {
-    value: "==",
-    label: "Equals"
-  },
-  {
-    value: "<>",
-    label: "Not Equals"
-  },
-  // {
-  //   value: "between",
-  //   label: "Between"
-  // },
-  {
-    value: ">",
-    label: ">"
-  },
-  {
-    value: ">=",
-    label: ">="
-  },
-  {
-    value: "<",
-    label: "<"
-  },
-  {
-    value: "<=",
-    label: "<="
-  },
-  {
-    value: "in",
-    label: "In"
-  },
-  {
-    value: "not_in",
-    label: "Not In"
-  },
-  {
-    value: "contain",
-    label: "Contain"
-  },
-  {
-    value: "not_contain",
-    label: "Not Contain"
-  }
-];
+export const CONDITIONS_OPTIONS = _CONDITIONS_OPTIONS
 
 export function isElementTopInViewport(top, scrollTop, clientHeight) {
   return top > scrollTop && top < scrollTop + clientHeight;

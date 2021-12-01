@@ -243,7 +243,8 @@ export function simplePropertyStyled(style, styleProperty, declaration = "") {
  * @return {string}
  */
 
-export function colorPropertyStyled(data, styleProperty, declaration = "") {
+export function colorPropertyStyled(data , styleProperty, declaration = "") {
+  data = data || {}
   const { color } = data;
 
   if (color) {
@@ -728,6 +729,7 @@ export function shadowStyled(controller = {}, important = '') {
   } else return ""
 }
 
+
 /**
  * проверяет наличичие значения text shadow
  * @return {string}
@@ -781,8 +783,9 @@ export function mediaStyled(controller = {}) {
  * @return {string}
  * @param {[]} styles - массив стилей
  * @param {{}} settings - настройки виджета
+ * @param {{}} other - дополнительные настройки функции
  */
-export function styledString(styles, settings) {
+export function styledString(styles, settings, other={}) {
   let stringStyles = "";
   if(_.keys(settings).length !== 0) {
     styles.forEach((style, idx) => {
@@ -802,7 +805,12 @@ export function styledString(styles, settings) {
         }
       } else {
         if (_.isArray(style)) {
-          const settingName = style[1];
+          let settingName = style[1];
+
+          if(other.settingsPrefix) {
+            settingName = other.settingsPrefix + settingName
+          }
+
           const state = style[3] || "";
           const variable = getResponsiveSetting(
             settings,

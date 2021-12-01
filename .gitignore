@@ -6,6 +6,7 @@ launch.json
 /server-dist
 /storage/*.key
 /storage/document
+storage/tmp/
 
 /vendor
 .env
@@ -64,3 +65,10 @@ public/modules/reports-new
 package-lock.json
 yarn.lock
 *.conf
+rootCA.crt
+rootCA.key
+rootCA.srl
+server.crt
+server.csr
+server.key
+dhparam.pem

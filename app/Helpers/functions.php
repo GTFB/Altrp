@@ -12,6 +12,7 @@ use League\ColorExtractor\Color;
 use League\ColorExtractor\ColorExtractor;
 use League\ColorExtractor\Palette;
 use App\Page;
+use App\Altrp\Menu;
 use Illuminate\Support\Facades\Auth;
 use App\Altrp\Facades\CacheService;
 
@@ -1010,6 +1011,8 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
   $DEFAULT_REACT_ELEMENTS = [
     'input',
     'input-select',
+    'input-date-range',
+    'input-select-tree',
     'input-multi-select',
     'input-select2',
     'input-radio',
@@ -1022,6 +1025,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'input-accept',
     'input-text',
     'input-text-common',
+    'input-text-autocomplete',
     'input-password',
     'input-number',
     'input-tel',
@@ -1036,7 +1040,10 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'text',
     'map_builder',
     'menu',
-    'diagram',
+    'point-diagram',
+    'pie-diagram',
+    'line-diagram',
+    'bar-diagram',
     'nav',
     'breadcrumbs',
     'dashboards',
@@ -1044,11 +1051,16 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'icon',
     'export',
     'template',
+    'dropbar',
     'gallery',
     'table',
     'tabs',
     'heading-type-animating',
     'scheduler',
+    'tree',
+    'list',
+    'stars',
+    'progress-bar'
   ];
   if( ! is_array( $elementNames ) ){
     $elementNames = [];
@@ -1258,6 +1270,7 @@ function getDataSources( $page_id, $params = array(), $params_string = '' ){
       if( ! $ds->source || ! $ds->source->model || ! $ds->alias ){
         continue;
       }
+      $request_parameters = [];
       if( $ds->parameters ){
         $_request_parameters = json_decode( replaceContentWithData( $ds->parameters ), true );
 
@@ -1277,7 +1290,6 @@ function getDataSources( $page_id, $params = array(), $params_string = '' ){
             ];
           }, $_request_parameters );
         }
-        $request_parameters = [];
         foreach ( $_request_parameters as $request_parameter ) {
           $request_parameters[$request_parameter['paramName']] = replaceContentWithData( $request_parameter['paramValue'] );
         }
@@ -1293,7 +1305,12 @@ function getDataSources( $page_id, $params = array(), $params_string = '' ){
       elseif ($ds->source->type == 'add') $method = 'store';
       elseif ($ds->source->type == 'update_column') $method = 'updateColumn';
       elseif ($ds->source->type == 'delete') $method = 'destroy';
-      else $method = $ds->source->type;
+      elseif ($ds->source->type == 'customizer') {
+        $method = $ds->source->name;
+      }
+      else {
+        $method = $ds->source->type;
+      }
       $result = call_user_func( [$controllerInstance, $method], $request, ...explode( ',', $params_string ) );
       if( $result ){
         $result = $result->getContent();
@@ -1308,7 +1325,9 @@ function getDataSources( $page_id, $params = array(), $params_string = '' ){
 
     }
   } catch( \Exception $e ){
-    logger()->error( $e->getMessage() . "\n" . implode( "\n", $e->getTrace() ) . "\n" );
+    logger()->error( $e->getMessage() . "\n" .
+       $e->getTraceAsString()
+      . "\n" );
     return $datasources;
   }
   return $datasources;
@@ -1374,6 +1393,23 @@ const ACTIONS_COMPONENTS = [
   'email',
   'toggle_popup',
 ];
+
+ function dedup($array, $key)
+ {
+  $temp_array = array();
+      $i = 0;
+      $key_array = array();
+
+      foreach($array as $val) {
+          if (!in_array($val[$key], $key_array)) {
+              $key_array[$i] = $val[$key];
+              $temp_array[$i] = $val;
+          }
+          $i++;
+      }
+      return $temp_array;
+ };
+
 /**
  * Получить настройки для фронтенда h-altrp
  * @return array['action_components']=array - компоненты, которые нужно загрузить для действий ('mail', 'popups')
@@ -1381,12 +1417,15 @@ const ACTIONS_COMPONENTS = [
  *
  * ]
  */
-function getAltrpSettings( $page_id ): array
+function getPageSettings( $page_id ): array
 {
+
   global $altrp_settings;
   $settings = $altrp_settings;
   $settings['action_components'] = [];
   $settings['libsToLoad'] = [];
+  $settings['page_params'] = $_GET;
+  $settings["altrpMenus"] = [];
 
   if( ! $page_id ){
     return $settings;
@@ -1397,7 +1436,6 @@ function getAltrpSettings( $page_id ): array
   if( strpos( $json_areas, 'altrptime' ) !== false){
     $settings['libsToLoad'][] = 'moment';
   }
-
 
   $action_types = [];
   foreach ( $areas as $area ) {
@@ -1415,6 +1453,17 @@ function getAltrpSettings( $page_id ): array
       if ( $root_element ) {
 
         recurseMapElements( $root_element, function ( $element ) use ( &$settings, &$action_types ) {
+
+          if($element["name"] === "menu") {
+            $guid = data_get($element, "settings.menu");
+            $menu = Menu::where("guid", $guid)->get()[0];
+            try {
+              if($menu) {
+                $settings["altrpMenus"][] = $menu;
+              }
+            } catch(Exception $e) {
+            }
+          }
 
           if ( data_get( $element, 'settings.tooltip_enable' ) && array_search( "blueprint", $settings['libsToLoad'] ) === false ) {
             $settings['libsToLoad'][] = "blueprint";
@@ -1437,6 +1486,7 @@ function getAltrpSettings( $page_id ): array
         } );
       }
     }
+
     if( is_array( data_get( $area, 'templates') ) ){
       $settings['libsToLoad'][] = 'moment';
     }
@@ -1456,7 +1506,10 @@ function getAltrpSettings( $page_id ): array
   } catch( Exception $e ){
 
   }
-  return $settings;
+
+ $settings["altrpMenus"] = dedup($settings["altrpMenus"], "id");
+
+ return $settings;
 }
 
 function recurseMapElements( $element, $callback ){
@@ -1542,3 +1595,220 @@ function unsetAltrpIndex($array){
    return $array;
 }
 
+/**
+ * @param $value
+ * @param $words
+ * @param bool $show
+ * @return string
+ */
+
+function num_word($value, $words, $show = true)
+{
+  $num = $value % 100;
+  if ($num > 19) {
+    $num = $num % 10;
+  }
+
+  $out = ($show) ?  $value . ' ' : '';
+  switch ($num) {
+    case 1:  $out .= $words[0]; break;
+    case 2:
+    case 3:
+    case 4:  $out .= $words[1]; break;
+    default: $out .= $words[2]; break;
+  }
+
+  return $out;
+}
+
+
+global $__customizer_data__;
+$__customizer_data__ = [
+  'context' => [],
+];
+/**
+ * @param string $path
+ * @param mixed $default
+ * @return mixed
+ */
+function get_customizer_data($path, $default = null)
+{
+  global $__customizer_data__;
+  if( ! isset($__customizer_data__['session'])){
+    $__customizer_data__['session'] = session();
+  }
+  if( ! isset($__customizer_data__['current_user'])){
+    $__customizer_data__['current_user'] = auth()->user();
+  }
+  return data_get($__customizer_data__, $path, $default);
+}
+
+/**
+ * @param string $path
+ * @param mixed $data
+ * @return mixed
+ */
+function set_customizer_data($path, $data)
+{
+  global $__customizer_data__;
+  if( ! isset($__customizer_data__['session'])){
+    $__customizer_data__['session'] = session();
+  }
+  if( ! isset($__customizer_data__['current_user'])){
+    $__customizer_data__['current_user'] = auth()->user();
+  }
+  return data_set($__customizer_data__, $path, $data);
+}
+/**
+ * @param string $path
+ * @param mixed $data
+ * @return mixed
+ */
+function unset_customizer_data($path, $data)
+{
+  global $__customizer_data__;
+  if( ! isset($__customizer_data__['session'])){
+    $__customizer_data__['session'] = session();
+  }
+  if( ! isset($__customizer_data__['current_user'])){
+    $__customizer_data__['current_user'] = auth()->user();
+  }
+  if( strpos( $path,'context' ) !== 0 ){
+    return false;
+  }
+  return data_set($__customizer_data__, $path, null);
+}
+
+function property_to_php( $property_data ) : string{
+  $PHPContent = '';
+  if( empty($property_data) ){
+    return 'null';
+  }
+  $namespace = data_get($property_data,'namespace', 'context');
+  $path = data_get($property_data,'path');
+  $expression = data_get($property_data,'expression', 'null');
+  $method = data_get($property_data,'method');
+  $method_settings = data_get($property_data,'methodSettings', []);
+
+  switch($namespace){
+    case 'string':{
+      $PHPContent .='"'. $path .'"';
+    }break;
+    case 'expression':{
+      $PHPContent .= $expression ;
+    }break;
+    case 'number':{
+      $PHPContent .= $path ;
+    }break;
+    case 'env':{
+      $PHPContent = "get_customizer_data('env.$path')";
+    }break;
+    case 'session':
+    case 'context':
+    case 'this':
+    case 'current_user':{
+    if( ! $path ) {
+      $path = $namespace;
+    } else {
+      $path = $namespace . '.' . $path;
+    }
+    $PHPContent = "get_customizer_data('$path')";
+    if($method){
+      $PHPContent .=  method_to_php( $method, $method_settings);
+    }
+    }break;
+    default:
+      $PHPContent = "null";
+  }
+  return $PHPContent;
+}
+function change_property_to_php( $property_data, $value = 'null', $type= 'set' ) : string{
+  if( empty($property_data) ){
+    return 'null';
+  }
+  $namespace = data_get($property_data,'namespace', 'context');
+  $path = data_get($property_data,'path');
+
+  switch($namespace){
+    case 'context':{
+    if( ! $path ) {
+      $path = $namespace;
+    } else {
+      $path = $namespace . '.' . $path;
+    }
+    $PHPContent = "{$type}_customizer_data('$path', $value)";
+
+    }break;
+    default:
+      $PHPContent = "null";
+  }
+  return $PHPContent;
+}
+
+function method_to_php( $method, $method_settings = []){
+  if( ! $method ){
+    return '';
+  }
+  if( strpos( $method, '.') !== false ){
+    $method = explode('.', $method)[1];
+  }
+  $PHPContent = '->' . $method . '(';
+  $parameters = data_get( $method_settings, 'parameters', [] );
+  foreach ( $parameters as $key => $parameter ){
+    $PHPContent .= property_to_php( data_get($parameter, 'value', []));
+    if( $key < count( $parameters ) - 1){
+      $PHPContent .= ', ';
+    }
+  }
+
+  $PHPContent .= ')';
+  return $PHPContent;
+}
+
+function customizer_build_compare( $operator, $left_php_property = 'null', $right_php_property = 'null'){
+  if(! $operator || $operator == 'empty'){
+    return "empty($left_php_property)";
+  }
+  switch($operator){
+    case 'not_empty':{
+      return "! empty($left_php_property)";
+    }
+    case 'null':{
+      return "$left_php_property == null";
+    }
+    case 'not_null':{
+      return "$left_php_property != null";
+    }
+    case '==':{
+      return "$left_php_property == $right_php_property";
+    }
+    case '<>':{
+      return "$left_php_property != $right_php_property";
+    }
+    case '<':{
+      return "$left_php_property < $right_php_property";
+    }
+    case '>':{
+      return "$left_php_property > $right_php_property";
+    }
+    case '<=':{
+      return "$left_php_property <= $right_php_property";
+    }
+    case '>=':{
+      return "$left_php_property >= $right_php_property";
+    }
+    case 'in':{
+      return "array_search($left_php_property, $right_php_property) !== false";
+    }
+    case 'not_in':{
+      return "array_search($left_php_property, $right_php_property) === false";
+    }
+    case 'contain':{
+      return "strpos( $right_php_property, $left_php_property) !== false";
+    }
+    case 'not_contain':{
+      return "strpos( $right_php_property, $left_php_property) === false";
+    }
+    default: return 'null';
+  }
+}

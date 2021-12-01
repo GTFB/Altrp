@@ -9,7 +9,7 @@ import ImageWidget from '../../../resources/modules/editor/src/js/components/wid
 import DividerWidget from '../../../resources/modules/editor/src/js/components/widgets/DividerWidget';
 import PosterWidget from '../../../resources/modules/editor/src/js/components/widgets/PosterWidget';
 import ListWidget from '../../../resources/modules/editor/src/js/components/widgets/ListWidget';
-import AccordionWidget from '../../../resources/modules/editor/src/js/components/widgets/AccordionWidget';
+import AccordionWidget from '../../../resources/modules/editor/src/js/components/widgets/AccordionWidget/AccordionWidget';
 import CarouselWidget from '../../../resources/modules/editor/src/js/components/widgets/CarouselWidget';
 // import MapWidget from '../../../resources/modules/editor/src/js/components/widgets/MapWidget';
 // import MapConstructorWidget from '../../../resources/modules/editor/src/js/components/widgets/MapConstructorWidget';
@@ -31,6 +31,8 @@ import SKELETON_ELEMENTS from "../../../resources/modules/front-app/src/js/const
 import InputHiddenWidget from "../../../resources/modules/editor/src/js/components/widgets/InputHiddenWidget";
 import TemplateWidget from "../../../resources/modules/editor/src/js/components/widgets/TemplateWidget";
 import ImageLightboxWidget from "../../../resources/modules/editor/src/js/components/widgets/ImageLightboxWidget";
+import IconWidget from "../../../resources/modules/editor/src/js/components/widgets/IconWidget"
+import MenuPlaceholder from "../components/MenuPlaceholder";
 // import BreadcrumbsWidget from '../../../resources/modules/editor/src/js/components/widgets/BreadcrumbsWidget';
 // import MenuWidget from '../../../resources/modules/editor/src/js/components/widgets/MenuWidget';
 
@@ -40,7 +42,11 @@ class FrontElementsManager {
     //список компонентов
     this.components = {};
     SKELETON_ELEMENTS.forEach(el=>{
-      this.components[el] = SkeletonPlaceholder;
+      if(el === "menu") {
+        this.components[el] = MenuPlaceholder;
+      } else {
+        this.components[el] = SkeletonPlaceholder;
+      }
     })
     this.components['root-element'] = RootComponent;
     this.components['heading'] = HeadingTypeHeadingWidget;
@@ -62,6 +68,7 @@ class FrontElementsManager {
     this.components['html'] = HtmlWidget;
     this.components['video'] = VideoWidget;
     this.components['template'] = TemplateWidget;
+    this.components['icon'] = IconWidget;
   }
 
   getComponentClass(name) {

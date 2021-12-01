@@ -3,6 +3,86 @@
 
 ## Changelog
 
+
+### 0.19.7
+* Fix Lightbox Issues
+
+### 0.19.6
+* Fix Input Select Tree Widget
+* Fix Autofocus Issue in Input Autocomplete Widget
++ Add Filter Options in Input Autocomplete Widget
+
+### 0.19.5
++ Add Range Slider Filter for Table
+
+### 0.19.4
++ Add Stars Input Widget
++ Add Progressbar Widget
+* Fix Sources Auth settings Bug
++ Add Null Placeholder in Select-type Filter In table Widget
+
+### 0.19.3
++ Add Typing and Select Actions in Input Text Autocomplete Widget
+* Fix Tooltip for Elements
+* Fix Roles/Permissions Access in Data Source Issues
+
+### 0.19.2
+* Update Select Components 
+
+### 0.19.1
+* Fix Customizer and Page Update Issues
+
+### 0.19.0
++ Add Tree Widget and Input Select Tree Widget
+* Admin Restyle
+
+### 0.18.1
+* Fix Change Label in Node Issue
+* Hide Pagination when Page Size Greater then Items 
+* Fix Regexp Bug in Sliders Widgets on iOs
++ Appearance of Top of Element Actions
++ Appearance of Bottom of Element Actions
+
+### 0.18.0
++ Customizer Module
+* Fix Condition Display with Default Hidden Widgets  
+
+### 0.17.15
+* Fix Hover Card Issue in Card Widget
+
+### 0.17.14
++ Add Icon Widget
++ Fixed Position for Adminbar and "Hide Adminbar" Button
+
+### 0.17.14
++ Add Input Widget Autocomplete
++ Add OIDC Client Action
+
+### 0.17.13
++ Add Params fromURl Hash now store in `altrppage.hashParams`
+
+### 0.17.12
+* Fixed Cases of errors when Getting Default Values as Strings and Arrays of Strings in Input Select Widget and Input Multi Select Widget 
++ Add Actions when Changing Text in Input Select and Input Multi Select Widget  
+
+### 0.17.11
++ Support for Arrays in URL Parameters in `altrppage.params` Object
+* Fix Table in Inner Templates Bug
+
+### 0.17.10
++ Market Page to Admin
++ Scheduler Widget
+
+### 0.17.9
+* Fix CSS Editor Bug for Elements
+* Fix Widget Cards Data Updates
+* Fix Wrapper Click Action Now Working in Cards Bug
++ Support for the Same Site Parameter for Session Cookies
+
+### 0.17.8
+* Fix Bug with Empty String Setting Value When Template Attempt to Save
+* Fix Input Date Default Value with Custom Format
+
 ### 0.17.7
 * Ability to Customize Button for Next / Previous Pages Without Text in Cards "Widget"
 * Fix Link in Heading Widget

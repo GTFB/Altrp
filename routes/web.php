@@ -11,16 +11,8 @@
 |
 */
 
-use App\Altrp\Relationship;
-use App\Constructor\Template;
-use App\Http\Controllers\AltrpControllers\testController;
-use App\Media;
 use App\Page;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use League\ColorExtractor\ColorExtractor;
-use League\ColorExtractor\Palette;
-use League\ColorExtractor\Color;
 
 //use CacheService;
 
@@ -36,7 +28,6 @@ Route::group([
   Route::get('/', 'InstallationController@starting')->name('installation.start');
   Route::get('process', 'InstallationController@process')->name('installation.input');
   Route::post('process', 'InstallationController@process')->name('installation.post');
-  //  Route::get('migrate', 'InstallationController@migrate')->name(  'installation.migrate' );
 });
 
 Route::group([
@@ -59,20 +50,14 @@ Route::get('/admin/editor-content', function () {
 Route::get('/admin/editor-reports', function () {
   return view('editor-reports');
 })->middleware('auth')->name('editor-reports');
-//Route::get('/admin/reports-editor',fn()=>view('reports'));
-//Route::get('/admin/reports-content',fn()=>view('reports-content'));
-
-// Route::get( '/admin/editor-reports', function (){
-//    return view( 'editor-reports' );
-// } )->middleware( 'auth' )->name('editor-reports');
-
-// Route::get('/reports/html/{id}', "ReportsController@page");
-// Route::get('/reports/{id}/html', "ReportsController@html");
 Route::post('/reports/generate', "ReportsController@setHtml");
 
 Route::get('/admin/robots-editor', function () {
   return view('robots');
 })->middleware('auth', 'admin')->name('robots-editor');
+Route::get('/admin/customizers-editor', function () {
+  return view('customizer');
+})->middleware('auth', 'admin')->name('customizers-editor');
 
 /**
  * Notifications routes
@@ -94,6 +79,8 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
   Route::group(['prefix' => 'ajax'], function () {
+
+    Route::post('/export_json', 'Admin\AdminController@export_json')->name('admin.export_json');
     /**
      * Роуты модели AltrpMeta
      */
@@ -211,7 +198,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     /**
      * Templates Routes
      */
-    Route::resource('templates', 'TemplateController');
+    Route::resource('templates', 'TemplateController')
+      ->name('put', 'template_save')
+      ->name('delete', 'template_delete')
+      ->name('post', 'template_add')
+      ->name('get', 'template_get');
     Route::get('exports/templates/{id}', 'TemplateController@exportTemplate' );
 
     Route::resource('global_template_styles', 'GlobalTemplateStylesController');
@@ -237,8 +228,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     /**
      * Reports
      */
-    //Route::get('reports/{id}', "TemplateController@show");
-    //Route::put('reports/{id}', "TemplateController@update");
     Route::resource('reports', 'ReportsController');
 
     Route::resource('media', 'Admin\MediaController');
@@ -287,6 +276,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/models/{model_id}/field_name_is_free', 'Admin\ModelsController@fieldNameIsFree');
     Route::get('/models/{model_id}/relation_name_is_free', 'Admin\ModelsController@relationNameIsFree');
     Route::get('/models/{model_id}/sql_builder_name_is_free', 'Admin\ModelsController@queryNameIsFree');
+
+    /**
+     * Customizers Resource
+     */
+    Route::resource('customizers', 'Admin\CustomizerController');
 
     /**
      * Модели
@@ -453,10 +447,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
   });
 });
 
-//Route::resource( 'admin/ajax/areas', 'Admin\AreasController' );
-//Route::resource( 'admin/ajax/templates', 'TemplateController' );
-//Route::resource( 'admin/ajax/media', 'Admin\MediaController' );
-
 Route::view('/admin/{path?}', 'admin')
   ->where('path', '.*')
   ->middleware(['auth', 'web', 'installation.checker', 'admin'])
@@ -465,96 +455,6 @@ Route::view('/admin/{path?}', 'admin')
 /**
  * Frontend
  */
-
-Route::get('/', function () {
-  return view('front-app', [
-    'elements_list' => json_encode([]),
-    'title' => 'Main',
-    'page_id' => 'null',
-    '_frontend_route' => [],
-    'preload_content' => [],
-    'page_areas' => '[]',
-    'lazy_sections' => '[]',
-    'pages' => Page::get_pages_for_frontend(true),
-    'model_data' => null,
-    'is_admin' => isAdmin(),
-  ]);
-})->middleware(['web', 'installation.checker']);
-
-//Route::get('/test/{id}/test/{test}', function($test, $id){
-//  echo '<pre style="padding-left: 200px;">';
-//  var_dump( func_get_args() );
-//  echo '</pre>';
-//});
-//foreach ( $frontend_routes as $_frontend_route ) {
-//  $path = $_frontend_route['path'];
-//  $title = $_frontend_route['title'];
-//  $pattern1 = '/:(.+)((\/)|$)/U';
-//  $replacement1 = '{$1}/';
-//  $frontend_route = preg_replace( $pattern1, $replacement1, $path );
-//  $pattern2 = '/:(.+)((\/)|$)/U';
-//  preg_match_all( $pattern2, $path, $matches );
-//  $argument_index = false;
-//  foreach ($matches[0] as $idx => $item) {
-//    if( strpos( $item, ':id') !== false ) {
-//      $argument_index = $idx;
-//    }
-//  }
-//
-//  Route::get( $frontend_route, function () use ( $title, $_frontend_route, $frontend_route, $argument_index ) {
-//
-//    if( $argument_index !== false && $_frontend_route['model'] ) {
-//      $model = $_frontend_route['model']->toArray();
-//      if( isset( $model['namespace'] ) ){
-//        try {
-//          $relations = Relationship::where( [['model_id',$model['id']],['always_with',1]] )->get()->implode( 'name', ',' );
-//          $relations = $relations ? explode( ',',$relations ) : false;
-//          $model = new $model['namespace'];
-//          $model = $model->find( func_get_arg( $argument_index ) );
-//          if ( $relations ) {
-//            $model = $model->load( $relations );
-//          }
-//          $model_data = $model->toArray();
-//        } catch( Exception $e ) {
-//          $model_data = null;
-//        }
-//      }
-//    } else {
-//      $model_data = null;
-//    }
-//
-//    $preload_content = Page::getPreloadPageContent( $_frontend_route['id'] );
-//    if( $model_data ){
-//      $preload_content['content'] = replaceContentWithData( $preload_content['content'], $model_data );
-//    }
-//
-//    $page_areas = Page::get_areas_for_page( $_frontend_route['id'] );
-//    $lazy_sections = [];
-//    $elements_list = extractElementsNames( $page_areas );
-//    if (Page::isCached( $_frontend_route['id'] )) {
-//
-//      global $altrp_need_cache;
-//      $altrp_need_cache = true;
-//      global $altrp_route_id;
-//      $altrp_route_id = $_frontend_route['id'];
-//
-//    }
-//    return view( 'front-app', [
-//      'page_areas' => json_encode( $page_areas ),
-//      'lazy_sections' => json_encode( $lazy_sections ),
-//      'elements_list' => json_encode( $elements_list ),
-//      'page_id' => $_frontend_route['id'],
-//      'title' => $title,
-//      '_frontend_route' => $_frontend_route,
-//      'pages'=>Page::get_pages_for_frontend( true ),
-//      'preload_content' => $preload_content,
-//      'model_data' => $model_data,
-//      'is_admin' => isAdmin(),
-//    ]);
-//
-//  })->middleware(['web', 'installation.checker', 'after'])->name( 'page_' . $_frontend_route['id'] );
-//}
-
 /**
  * Reports
  */
@@ -686,4 +586,3 @@ Route::get('/altrp_run_robot/{robot_id}', 'RobotController@runRobot');
 /**
  * Обновление всех ресурсов бэкенда
  */
-Route::post('update-all-resources', 'Admin\UpdateController@upgradeAllResources');

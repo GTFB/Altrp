@@ -183,7 +183,7 @@ class AltrpCarousel extends Component {
       beforeChange: (current, next) => {
         this.carouselsToSynchronize && this.carouselsToSynchronize.forEach(carousel => {carousel.setSlide(next)})
       },
-      adaptiveHeight: true,
+      // adaptiveHeight: false,
     };
 
     // слайды
@@ -211,15 +211,16 @@ class AltrpCarousel extends Component {
           }
 
           return (
-              <div className="altrp-carousel-slide" key={idx}
+              <div className="altrp-carousel-slide" key={slide.id}
                    onClick={()=>{
-                     this.slider.slickGoTo(idx);
+                     this.slider.slickGoTo(slide.id);
                    }}
                    onDoubleClick={ () => {
-                     this.slider.slickGoTo(idx);
+                     this.slider.slickGoTo(slide.id);
                      if(this.props.lightbox_slides_content) {
                        this.setState((state) => ({
                          ...state,
+                         activeSlide: slide.id,
                          openLightBox: true
                        }))
                      }
@@ -399,15 +400,14 @@ class AltrpCarousel extends Component {
 
     let lightbox = "";
     if(this.props.lightbox_slides_content) {
-      const imagesSrcs = this.props.slides_repeater.map(img => {
-        if(img.image_slides_repeater) {
-          return img.image_slides_repeater.url
-        } else return '/img/nullImage.png'
-      });
+      let imagesSrcs = this.state.sliderImages;
+
       lightbox =  this.state.openLightBox ? (
         <AltrpLightbox
           images={imagesSrcs}
           current={this.state.activeSlide}
+          carousel={true}
+          carouselItems={this.props.slides_repeater}
           settings={{
             onCloseRequest: () => this.setState({openLightBox: false})
           }}

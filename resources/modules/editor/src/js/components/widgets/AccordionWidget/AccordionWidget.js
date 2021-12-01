@@ -1,3 +1,5 @@
+import AccordionItem from "./AccordionItem";
+
 const {renderAssetIcon} = window.altrpHelpers;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
@@ -12,35 +14,38 @@ const {renderAssetIcon} = window.altrpHelpers;
     cursor: pointer;
     width: 100%;
     padding: 15px 20px;
+    transition: 450ms ease-in-out;
     z-index: 4;
+  }
+
+  .altrp-accordion-item-label {
+    transition: 450ms ease-in-out;
   }
 
   .altrp-accordion-item-content {
     background-color: rgb(79, 90, 114);
     color: #ffffff;
-    width: 100%;
-    height: 100%;
-    line-height: 0;
-    padding-left: 20px !important;
-    padding-right: 20px !important;
     position: relative;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    flex-wrap: wrap;
-    transition: 250ms ease-in-out;
+    width: 100%;
+    transition: 450ms ease-in-out, visibility 450ms ease-in-out;
     z-index: 0;
     text-align: left;
-    top: -1em;
-    height: 0px;
+    visibility: hidden;
   }
 
-  .altrp-accordion-item-content-show {
-    padding: 15px 20px;
-    line-height: 1;
-    top: 0;
-    z-index: 0;
-    height: auto;
+  .active .altrp-accordion-item-content {
+    display: block;
+    visibility: visible;
+  }
+
+  .altrp-accordion-item-content-text {
+    width: 100%;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+    font-size: 16px;
+    padding: 30px 20px;
+    transition: 450ms ease-in-out;
   }
 
   .altrp-accordion-item-content * {
@@ -63,6 +68,11 @@ const {renderAssetIcon} = window.altrpHelpers;
     align-items: center;
     justify-content: center;
   }
+
+  .altrp-accordion-item-icon svg {
+    width: 16px;
+    height: 16px;
+  }
 `);
 
 class AccordionWidget extends Component {
@@ -83,8 +93,10 @@ class AccordionWidget extends Component {
         this.state.activeItem.id.push(false)
       } else {
         this.state.activeItem.id.push(true)
-      };
-    };
+      }
+
+    }
+
 
     this.open = this.open.bind(this);
     props.element.component = this;
@@ -94,6 +106,7 @@ class AccordionWidget extends Component {
     if(props.baseRender){
       this.render = props.baseRender(this);
     }
+
   }
 
   open(e) {
@@ -116,8 +129,15 @@ class AccordionWidget extends Component {
             };
           });
         }
+      }
+    } else {
+      this.setState((state) => {
+        state.activeItem.id[activeItem] = !state.activeItem.id[activeItem];
+        return {
+          ...state
       };
-    };
+      });
+    }
   };
 
   render(){
@@ -137,50 +157,20 @@ class AccordionWidget extends Component {
       );
     }
     const title_html_tag_accordion_content = this.props.element.getSettings('title_html_tag_accordion_content') || 'div'
-    let accordion_items = items.map((item, idx) => {
-
-      return (
-        <div className={"altrp-accordion-item" + (this.state.activeItem.id[idx] ? ' active' : '')} key={idx}>
-          {/*button*/}
-          <div className="altrp-accordion-item-button" data-key={idx} onClick={(e) => this.open(e)}>
-            <div className="altrp-accordion-item-label-container">
-              {
-                React.createElement(
-                  title_html_tag_accordion_content,
-                  {
-                    className: "altrp-accordion-item-label"
-                  },
-                  [item.title_repeater]
-                )
-              }
-            </div>
-            {/*icon*/}
-            <div className="altrp-accordion-item-icon">
-              {this.state.activeItem.id[idx] ? active_icon : icon}
-            </div>
-          </div>
-          {/*content*/}
-          {
-            React.createElement("div", {
-              className: "altrp-accordion-item-content" + (this.state.activeItem.id[idx] ?
-                  " altrp-accordion-item-content-show"
-                  :
-                  ""
-              )
-              ,
-              dangerouslySetInnerHTML: {
-                __html: item.wysiwyg_repeater
-              },
-              "data-item": idx
-            })
-          }
-        </div>
-      )
-    });
 
     return <div className="altrp-accordion">
       {
-        accordion_items
+        items.map((item, idx) => (
+          <AccordionItem idArray={this.state.activeItem.id}
+                         idx={idx}
+                         open={(e) => this.open(e)}
+                         item={item}
+                         key={idx}
+                         title_html_tag_accordion_content={title_html_tag_accordion_content}
+                         icon={icon}
+                         activeIcon={active_icon}
+                         activeMode={this.state.activeItem.id[idx]}/>
+        ))
       }
     </div>
   }

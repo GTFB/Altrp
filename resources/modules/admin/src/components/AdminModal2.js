@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import TimesIcon from '../svgs/times.svg';
+import CloseIcon from './../svgs/clear_black.svg';
 
 class AdminModal2 extends Component {
   render() {
@@ -8,7 +8,7 @@ class AdminModal2 extends Component {
     return ReactDOM.createPortal(<div className="admin-modal admin-modal_active">
       <div className="admin-modal__bg" onClick={closeHandler} />
       <div className="admin-modal-content">
-        <button className="admin-modal__close" onClick={closeHandler}><TimesIcon className="icon" /></button>
+        <button className="admin-modal__close" onClick={closeHandler}><CloseIcon className="icon icon-fill" /></button>
         {children}
       </div>
     </div>, document.body)

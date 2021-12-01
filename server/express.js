@@ -10,6 +10,7 @@ import getAltrpSetting from "./functions/get-altrp-setting";
 import {changeCurrentUser} from "../resources/modules/front-app/src/js/store/current-user/actions";
 import {setCurrentScreen} from "../resources/modules/front-app/src/js/store/media-screen-storage/actions";
 import CONSTANTS from "../resources/modules/editor/src/js/consts"
+import {addMenus} from "../resources/modules/front-app/src/js/store/menus-storage/actions";
 if (typeof performance === "undefined") {
   global.performance = require("perf_hooks").performance;
 }
@@ -114,8 +115,12 @@ app.post("/", (req, res) => {
   let page_model = json.page_model || {};
   let current_device = json.current_device || 'DEFAULT_BREAKPOINT';
   const changedScreen = CONSTANTS.SCREENS.find(screen=>screen.name === current_device)
+  const altrpMenus = json.altrp_settings.altrpMenus || [];
   if(changedScreen){
     store.dispatch(setCurrentScreen(changedScreen))
+  }
+  if(altrpMenus.length > 0){
+    store.dispatch(addMenus(altrpMenus))
   }
   // delete page[3];
   global.altrp = json.altrp || {};

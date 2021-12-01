@@ -29,7 +29,6 @@ function altrpSection(settings) {
   if (settings !== undefined) {
     flexWrap = getResponsiveSetting(settings, 'layout_flex_wrap_content');
   }
-
   if (flexWrap) {
     styles += simplePropertyStyled(flexWrap, 'flex-wrap');
   }
@@ -668,6 +667,5 @@ export default function SectionWidgetComponent(settings, childrenLength) {
   & > div.altrp-section-full-fill:hover {
     ${altrpSectionFullHover(settings)}
   }
-
 `
 }
