@@ -13,16 +13,8 @@ class TooltipPie extends PureComponent {
     };
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (!_.isEqual(prevProps.enable, this.props.enable)) {
-      this.setState(s => ({
-        ...s,
-        enable: this.props?.enable
-      }));
-    }
-  }
-
   render() {
+    console.log({enable: this.state.enable});
     if (this.state.enable) {
       return (
         <div
@@ -32,7 +24,6 @@ class TooltipPie extends PureComponent {
           <div>
             <div
               style={{
-                color: 'white',
                 display: 'flex'
               }}
             >

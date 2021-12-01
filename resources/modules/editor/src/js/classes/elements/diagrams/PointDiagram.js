@@ -29,6 +29,8 @@ import {
   widgetTypes
 } from "../../../../../../admin/src/components/dashboard/widgetTypes";
 import Repeater from "../../Repeater";
+import titleControllers from "../../../decorators/diagrams/diagram-title-subtitle.js";
+import legendControllers from "../../../decorators/diagrams/diagram-legend.js";
 
 class PointDiagram extends BaseElement {
   static getName() {
@@ -107,9 +109,9 @@ class PointDiagram extends BaseElement {
       ]
     });
 
-    this.addControl("customTooltip", {
+    this.addControl("use_legend", {
       type: CONTROLLER_SWITCHER,
-      label: "Use custom tooltip?",
+      label: "Use legend?",
       default: false
     });
 
@@ -174,7 +176,7 @@ class PointDiagram extends BaseElement {
 
     this.startControlSection("style", {
       tab: TAB_STYLE,
-      label: "Visual type"
+      label: "Visual"
     });
 
     const types = widgetTypes.map(type => {
@@ -285,6 +287,10 @@ class PointDiagram extends BaseElement {
     });
 
     this.endControlSection();
+    
+    titleControllers(this)
+
+    legendControllers(this)
 
     this.startControlSection("Tooltip", {
       tab: TAB_STYLE,

@@ -2,6 +2,7 @@ import Schemes from "../../../components/altrp-dashboards/settings/NivoColorSche
 import BaseElement from ".././BaseElement";
 import PieIcon from "../../../../svgs/skill-bar.svg";
 import { advancedTabControllers } from "../../../decorators/register-controllers";
+import legendControllers from '../../../decorators/diagrams/diagram-legend'
 import {
   CONTROLLER_DIMENSIONS,
   CONTROLLER_SELECT,
@@ -10,25 +11,16 @@ import {
   CONTROLLER_QUERY,
   TAB_CONTENT,
   TAB_STYLE,
-  CONTROLLER_TEXT,
   CONTROLLER_REPEATER,
   CONTROLLER_COLOR,
   CONTROLLER_NUMBER,
   CONTROLLER_RANGE,
-  CONTROLLER_DATE,
   CONTROLLER_SHADOW,
   CONTROLLER_TYPOGRAPHIC
 } from "../../modules/ControllersManager";
 
-import {
-  TABLE,
-  LINE,
-  POINT,
-  BAR,
-  PIE,
-  widgetTypes
-} from "../../../../../../admin/src/components/dashboard/widgetTypes";
 import Repeater from "../../Repeater";
+import titleControllers from "../../../decorators/diagrams/diagram-title-subtitle.js";
 
 class BarDiagram extends BaseElement {
   static getName() {
@@ -62,14 +54,29 @@ class BarDiagram extends BaseElement {
       label: "Title"
     });
 
+    this.addControl("subtitle", {
+      dynamic: false,
+      label: "Subtitle"
+    });
+
     this.addControl("datasource_path", {
       dynamic: false,
       label: "Path to Data"
     });
 
+    this.addControl("group_name", {
+      dynamic: false,
+      label: "Group Field"
+    });
+
     this.addControl("key_name", {
       dynamic: false,
-      label: "Key Field (X)"
+      label: "Key Field"
+    });
+
+    this.addControl("data_name", {
+      dynamic: false,
+      label: "Data Field"
     });
 
     this.addControl("key_is_date", {
@@ -79,37 +86,32 @@ class BarDiagram extends BaseElement {
       type: CONTROLLER_SWITCHER
     });
 
-    this.addControl("data_name", {
-      dynamic: false,
-      label: "Data Field (Y)"
-    });
+    // this.addControl("sort", {
+    //   type: CONTROLLER_SELECT,
+    //   label: "Сортировка",
+    //   default: false,
+    //   options: [
+    //     {
+    //       id: 0,
+    //       value: "",
+    //       label: "По умолчанию"
+    //     },
+    //     {
+    //       id: 1,
+    //       value: "value",
+    //       label: "По значению"
+    //     },
+    //     {
+    //       id: 2,
+    //       value: "key",
+    //       label: "По ключу"
+    //     }
+    //   ]
+    // });
 
-    this.addControl("sort", {
-      type: CONTROLLER_SELECT,
-      label: "Сортировка",
-      default: false,
-      options: [
-        {
-          id: 0,
-          value: "",
-          label: "По умолчанию"
-        },
-        {
-          id: 1,
-          value: "value",
-          label: "По значению"
-        },
-        {
-          id: 2,
-          value: "key",
-          label: "По ключу"
-        }
-      ]
-    });
-
-    this.addControl("customTooltip", {
+    this.addControl("use_legend", {
       type: CONTROLLER_SWITCHER,
-      label: "Use custom tooltip?",
+      label: "Use legend?",
       default: false
     });
 
@@ -128,9 +130,53 @@ class BarDiagram extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('markers', {
+      tab: TAB_CONTENT,
+      label: 'Markers',
+    })
+
+    let repeaterMarker = new Repeater();
+
+    repeaterMarker.addControl("legend", {
+      label: "Label",
+    })
+
+    repeaterMarker.addControl("value", {
+      label: "Value",
+      type: CONTROLLER_NUMBER,
+    })
+
+    repeaterMarker.addControl("legendOrientation", {
+      label: "Orientation",
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          label: 'vartical',
+          value: 'vertical'
+        },
+        {
+          label: 'horizontal',
+          value: 'horizontal'
+        },
+      ]
+    })
+
+    repeaterMarker.addControl('stroke', {
+      label: 'Color',
+      type: CONTROLLER_COLOR,
+    })
+    
+    this.addControl("markersRepeater", {
+      type: CONTROLLER_REPEATER,
+      default: [],
+      fields: repeaterMarker.getControls()
+    });
+
+    this.endControlSection();
+
     this.startControlSection("style", {
       tab: TAB_STYLE,
-      label: "Visual type"
+      label: "Visual"
     });
 
     const colors = Schemes.map(object => {
@@ -165,15 +211,6 @@ class BarDiagram extends BaseElement {
       type: CONTROLLER_SWITCHER,
       label: "Отобразить сетку по Y",
       default: true
-    });
-
-    this.addControl("tickRotation", {
-      type: CONTROLLER_RANGE,
-      label: "Наклон нижней легенды",
-      default: 0,
-      min: -90,
-      max: 90,
-      step: 1
     });
 
     this.addControl("layout", {
@@ -252,6 +289,10 @@ class BarDiagram extends BaseElement {
     });
 
     this.endControlSection();
+
+    titleControllers(this)
+
+    legendControllers(this)
 
     this.startControlSection("Tooltip", {
       tab: TAB_STYLE,

@@ -364,6 +364,22 @@ class FrontElementsManager {
         }
       },
       {
+        name: "funnel-diagram",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'FunnelDiagramWidget' */ "../../../../editor/src/js/components/widgets/diagrams/FunnelDiagramWidget"
+          );
+        }
+      },
+      {
+        name: "radar-diagram",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'RadarDiagramWidget' */ "../../../../editor/src/js/components/widgets/diagrams/RadarDiagramWidget"
+          );
+        }
+      },
+      {
         name: "dashboards",
         import: async () => {
           return await import(

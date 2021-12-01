@@ -1,58 +1,54 @@
 import React, { useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 
+import DynamicRadarChart from "../../../../../admin/src/components/dashboard/widgets/DynamicRadarChart";
+
 import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
 
 import { getDataByPath, isEditor } from "../../../../../front-app/src/js/helpers";
-import moment from "moment";
-import DynamicBarChart from "../../../../../admin/src/components/dashboard/widgets/DynamicBarChart";
 
-const AltrpBarDiagram = props => {
+const AltrpRadarDiagram = props => {
   const { settings, id } = props;
 
+  const widgetName = settings?.widget_name || id;
   const customColorSchemeChecker = settings?.isCustomColor;
 
   const customColors = settings?.customScheme?.map(item =>
     _.get(item, "color.colorPickedHex")
   );
 
-  const {
-    isMultiple,
-    sort,
-    tickRotation,
-    enableGridX,
-    enableGridY,
-    colorScheme,
-    layout,
-    groupMode,
-    reverse,
-    borderRadius,
-    borderWidth,
-    enableLabel,
-    padding,
-    useCustomTooltips,
-    margin,
-    datasource_title,
-    subTitle,
-    markersRepeater,
-    useSymlogScale,
-    group_name,
-    key_name, 
-    data_name
-  } = settings
-
   const sql = settings.query?.dataSource?.value;
 
+  const {
+    pointSize, 
+    colorScheme, 
+    group_name,
+    key_name, 
+    data_name,
+    margin,
+    curve,
+    fillOpacity,
+    borderWidth,
+    blendMode,
+    gridLevels,
+    gridShape,
+    enableDots,
+    dotSize
+  } = settings;
+
+  //data variable
   let data = []
   let keys = []
   let indexBy = ''
 
+  //funciton for formattion data for all types
+  
   const formatData = (data, groupName, keyName, dataName) => {
     let hierarhed = {}
 
     data.forEach(el => {
-      hierarhed[el.type] = hierarhed[el.type] || []
-      hierarhed[el.type].push(el)
+      hierarhed[el[groupName]] = hierarhed[el[groupName]] || []
+      hierarhed[el[groupName]].push(el)
     })
 
     let formatted = []
@@ -74,35 +70,57 @@ const AltrpBarDiagram = props => {
   if (isEditor()) {
     data = [
       {
-        key: 'key1',
-        title: 61,
-        title1: 60,
+        "taste": "fruity",
+        "chardonay": 90,
+        "carmenere": 117,
+        "syrah": 96
       },
       {
-        key: 'key2',
-        title1: 50,
-        title: 60,
+        "taste": "bitter",
+        "chardonay": 117,
+        "carmenere": 22,
+        "syrah": 51
       },
+      {
+        "taste": "heavy",
+        "chardonay": 69,
+        "carmenere": 80,
+        "syrah": 50
+      },
+      {
+        "taste": "strong",
+        "chardonay": 45,
+        "carmenere": 106,
+        "syrah": 57
+      },
+      {
+        "taste": "sunny",
+        "chardonay": 27,
+        "carmenere": 24,
+        "syrah": 94
+      }
     ]
-
-    keys = ['title', 'title1']
-    indexBy = 'key'
+    
+    keys = [ 'chardonay', 'carmenere', 'syrah' ]
+    indexBy = 'taste'
   } else {
     try {
       data = getDataByPath(settings.datasource_path, []);
 
       keys = [
-        ...new Set(data.map(el => el[key_name]))
+        ...new Set(data.map(el => el[group_name]))
       ]
 
-      indexBy = group_name
+      indexBy = key_name
 
-      data = formatData(data, group_name, key_name, data_name);
+      data = formatData(data, key_name, group_name, data_name);
+
+      console.log({data});
     } catch (error) {
       console.log("====================================");
       console.error(error);
       console.log("====================================");
-      data = [];
+      data = []
     }
   }
 
@@ -138,32 +156,30 @@ const AltrpBarDiagram = props => {
   console.log("====================================");
   
   return (
-    <DynamicBarChart
+    <DynamicRadarChart
       widgetID={id}
+      borderWidth={borderWidth}
+      blendMode={blendMode}
       margin={margin}
       customColorSchemeChecker={customColorSchemeChecker}
       customColors={customColors}
-      isMultiple={isMultiple}
-      colorScheme={colorScheme}
       dataSource={data}
-      widget={widget}
-      enableLabel={enableLabel}
+      gridShape={gridShape}
+      enableDots={enableDots}
+      colorScheme={colorScheme}
       width={`${settings.width?.size}${settings.width?.unit}`}
-      height={settings.height?.size}
-      layout={layout}
-      groupMode={groupMode}
-      reverse={reverse}
-      borderRadius={borderRadius}
-      borderWidth={borderWidth}
-      padding={padding}
-      sort={sort}
-      tickRotation={tickRotation}
-      enableGridX={enableGridX}
-      enableGridY={enableGridY}
-      useCustomTooltips={useCustomTooltips}
+      height={`${settings.height?.size}${settings.height?.unit}`}
+      widget={widget}
+      nodeSize={pointSize}
+      title={settings.datasource_title}
+      subTitle={settings.subtitle}
       keys={keys}
       indexBy={indexBy}
-      legend={settings.use_legend && {
+      curve={curve}
+      fillOpacity={fillOpacity}
+      gridLevels={gridLevels}
+      dotSize={dotSize}
+      legends={settings.use_legend && {
         anchor: settings.legend_anchor,
         direction: settings.legend_direction,
         itemDirection: settings.legend_item_direction,
@@ -176,18 +192,10 @@ const AltrpBarDiagram = props => {
         symbolSize: settings.legend_symbol_size,
         symbolShape: settings.legend_symbol_shape
       }}
-      title={datasource_title}
-      subTitle={subTitle}
-      markers={markersRepeater?.map(el => ({
-        ...el,
-        axis: 'y', 
-        legendOrientation: el.legendOrientation || 'horizontal',
-        lineStyle: {stroke: el.stroke.color}
-      }))}
     />
-  )
+  );
 };
 const mapStateToProps = state => ({
   currentDataStorage: state.currentDataStorage
 });
-export default connect(mapStateToProps)(AltrpBarDiagram);
+export default connect(mapStateToProps)(AltrpRadarDiagram);

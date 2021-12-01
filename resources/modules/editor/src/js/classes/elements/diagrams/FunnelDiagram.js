@@ -17,22 +17,19 @@ import {
   CONTROLLER_RANGE,
   CONTROLLER_DATE,
   CONTROLLER_SHADOW,
-  CONTROLLER_TYPOGRAPHIC,
-  CONTROLLER_CHOOSE
+  CONTROLLER_TYPOGRAPHIC
 } from "../../modules/ControllersManager";
 
-import {actionsControllers} from "../../../decorators/actions-controllers";
-
 import Repeater from "../../Repeater";
-import legendControllers from "../../../decorators/diagrams/diagram-legend.js";
 import titleControllers from "../../../decorators/diagrams/diagram-title-subtitle.js";
+import legendControllers from "../../../decorators/diagrams/diagram-legend.js";
 
-class PieDiagram extends BaseElement {
+class FunnelDiagram extends BaseElement {
   static getName() {
-    return "pie-diagram";
+    return "funnel-diagram";
   }
   static getTitle() {
-    return "Pie Diagram";
+    return "Funnel Diagram";
   }
   static getIconComponent() {
     return PieIcon;
@@ -58,7 +55,7 @@ class PieDiagram extends BaseElement {
       dynamic: false,
       label: "Title"
     });
-
+    
     this.addControl("subtitle", {
       dynamic: false,
       label: "Subtitle"
@@ -71,48 +68,12 @@ class PieDiagram extends BaseElement {
 
     this.addControl("key_name", {
       dynamic: false,
-      label: "Key Field (X)"
-    });
-
-    this.addControl("key_is_date", {
-      dynamic: false,
-      default: false,
-      label: "Key has Date format?",
-      type: CONTROLLER_SWITCHER
+      label: "Key Field"
     });
 
     this.addControl("data_name", {
       dynamic: false,
-      label: "Data Field (Y)"
-    });
-
-    this.addControl("sort", {
-      type: CONTROLLER_SELECT,
-      label: "Сортировка",
-      default: false,
-      options: [
-        {
-          id: 0,
-          value: "",
-          label: "По умолчанию"
-        },
-        {
-          id: 1,
-          value: "value",
-          label: "По значению"
-        },
-        {
-          id: 2,
-          value: "key",
-          label: "По ключу"
-        }
-      ]
-    });
-
-    this.addControl("useCustomTooltips", {
-      type: CONTROLLER_SWITCHER,
-      label: "Use custom tooltip?",
-      default: false
+      label: "Data Field"
     });
 
     this.addControl("use_legend", {
@@ -120,25 +81,7 @@ class PieDiagram extends BaseElement {
       label: "Use legend?",
       default: false
     });
-
-    this.addControl("useCenteredMetric", {
-      type: CONTROLLER_SWITCHER,
-      label: "Use centered metric?",
-      default: false
-    });
     
-    this.addControl("useProcent", {
-      type: CONTROLLER_SWITCHER,
-      label: "Add procent?",
-      default: false
-    });
-    
-    this.addControl("useLinkArcLabels", {
-      type: CONTROLLER_SWITCHER,
-      label: "Use link arc labels?",
-      default: true
-    });
-
     this.endControlSection();
 
     this.startControlSection("main", {
@@ -154,41 +97,13 @@ class PieDiagram extends BaseElement {
 
     this.endControlSection();
 
-    actionsControllers(this);
-
     this.startControlSection("style", {
       tab: TAB_STYLE,
-      label: "Visual style"
+      label: "Visual"
     });
 
     const colors = Schemes.map(object => {
       return { label: object.label, value: object.value };
-    });
-    
-    this.addControl("activeOuterRadiusOffset", {
-      type: CONTROLLER_NUMBER,
-      label: "Active outer radius offset"
-    });
-    
-    this.addControl("activeInnerRadiusOffset", {
-      type: CONTROLLER_NUMBER,
-      label: "Active inner radius offset"
-    });
-
-    this.addControl("innerRadius", {
-      type: CONTROLLER_RANGE,
-      label: "Inner radius",
-      min: 0,
-      max: 0.95,
-      step: 0.05
-    });
-
-    this.addControl("padAngle", {
-      type: CONTROLLER_RANGE,
-      label: "Угол между секторами",
-      min: 0,
-      max: 45,
-      step: 1
     });
 
     this.addControl("colorScheme", {
@@ -198,30 +113,153 @@ class PieDiagram extends BaseElement {
       options: colors
     });
 
-    this.addControl("yScaleMax", {
-      type: CONTROLLER_NUMBER,
-      label: "Y scale max"
+    this.addControl("fillOpacity", {
+      type: CONTROLLER_RANGE,
+      label: "Fill opacity",
+      default: 1,
+      min: 0,
+      max: 1,
+      step: 0.01
     });
 
-    this.addControl("cornerRadius", {
+    this.addControl("borderOpacity", {
+        type: CONTROLLER_RANGE,
+        label: "Border opacity",
+        default: 1,
+        min: 0,
+        max: 1,
+        step: 0.01
+    });
+
+    this.addControl('borderWidth', {
+        type: CONTROLLER_NUMBER,
+        label: 'Border width'
+    })
+    
+    this.addControl('interpolation', {
+      type: CONTROLLER_SELECT,
+      label: 'Interpolation',
+      options: [
+          {
+              label: 'Smooth',
+              value: 'smooth'
+          },
+          {
+              label: 'Linear',
+              value: 'linear'
+          },
+      ]
+    })
+
+    this.addControl("spacing", {
       type: CONTROLLER_RANGE,
-      label: "Скругление углов",
+      label: "Spacing",
       default: 0,
       min: 0,
-      max: 45,
-      step: 1,
+      max: 50,
+      step: 1
     });
 
-    this.addControl("sortByValue", {
+    this.addControl("shapeBlending", {
+      type: CONTROLLER_RANGE,
+      label: "Shape blending",
+      default: 1,
+      min: 0,
+      max: 1,
+      step: 0.05
+    });
+    
+    this.addControl('direction', {
+      type: CONTROLLER_SELECT,
+      label: 'Direction',
+      options: [
+          {
+              label: 'Vertical',
+              value: 'vertical'
+          },
+          {
+              label: 'Horizontal',
+              value: 'horizontal'
+          },
+      ]
+    })
+
+    this.addControl("isInteractive", {
       type: CONTROLLER_SWITCHER,
-      label: "Сортировка по значению",
-      default: false,
+      label: "Is interactive",
+      default: true,
+    });
+
+    this.addControl("currentPartSizeExtension", {
+      type: CONTROLLER_RANGE,
+      label: "Hover part size",
+      default: 0,
+      min: 0,
+      max: 100,
+      step: 1,
+      conditions: {
+        isInteractive: true
+      }
+    });
+
+    this.addControl("currentBorderWidth", {
+      type: CONTROLLER_RANGE,
+      label: "Hover border width",
+      default: 0,
+      min: 0,
+      max: 100,
+      step: 1,
+      conditions: {
+        isInteractive: true
+      }
     });
 
     this.endControlSection();
+
+    this.startControlSection('labels', {
+        tab: TAB_STYLE,
+        label: 'Label Styles',
+    })
+
+    this.addControl('label_color_type', {
+        type: CONTROLLER_SELECT,
+        label: 'Color type',
+        options: [
+            {
+                label: 'Custom',
+                value: 'custom'
+            },
+            {
+                label: 'Darker',
+                value: 'darker'
+            },
+            {
+                label: 'Brighter',
+                value: 'brighter'
+            }
+        ]
+    })
+
+    this.addControl('label_modifier', {
+        type: CONTROLLER_RANGE,
+        label: 'Value',
+        min: 0,
+        max: 3,
+        step: 0.1,
+        conditions: {
+            label_color_type: ['darker', 'brighter']
+        }
+    })
+
+    this.addControl('label_color', {
+        type: CONTROLLER_COLOR,
+        label: 'Color'
+    })
+
+    this.endControlSection()
     
     titleControllers(this)
-    
+
     legendControllers(this)
 
     this.startControlSection("Tooltip", {
@@ -339,18 +377,6 @@ class PieDiagram extends BaseElement {
       ],
     });
 
-    this.addControl('border_radius_tooltip', {
-      type: CONTROLLER_SLIDER,
-      label: "Border radius",
-      default: {
-        size: 2,
-        unit: "px"
-      },
-      units: ["px", "%"],
-      max: 50,
-      min: 0,
-    })
-
     this.addControl("border_width_tooltip", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
@@ -363,10 +389,13 @@ class PieDiagram extends BaseElement {
     this.addControl("border_color_tooltip", {
       type: CONTROLLER_COLOR,
       label: "Border Color",
-      // default: {
-      //   color: "rgb(50,168,82)",
-      //   colorPickedHex: "#32a852",
-      // },
+    });
+
+    this.endControlSection();
+
+    this.startControlSection("axisConstants", {
+      tab: TAB_STYLE,
+      label: "Axis constatns"
     });
 
     this.endControlSection();
@@ -441,43 +470,7 @@ class PieDiagram extends BaseElement {
       units: ["px", "%", "vh"],
     });
 
-    this.endControlSection()
-    
-    this.startControlSection("centered_metric", {
-      tab: TAB_STYLE,
-      label: "Center metric"
-    });
-
-    this.addControl('centered_metric_typography', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Typography'
-    })
-
-    this.addControl('centered_metric_color', {
-      type: CONTROLLER_COLOR,
-      label: 'Text color',
-    })
-
-    this.endControlSection()
-
-    this.startControlSection("arc_label", {
-      tab: TAB_STYLE,
-      label: "Arc label"
-    });
-
-    this.addControl('arc_label_typography', {
-      type: CONTROLLER_TYPOGRAPHIC,
-      label: 'Typography'
-    })
-
-    this.addControl('arc_label_color', {
-      type: CONTROLLER_COLOR,
-      label: 'Color'
-    })
-
-    this.endControlSection()
-
     advancedTabControllers(this);
   }
 }
-export default PieDiagram;
+export default FunnelDiagram;

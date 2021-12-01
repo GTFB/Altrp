@@ -2,126 +2,85 @@ import React, { useEffect } from "react";
 import { changePageState } from "../../../../../front-app/src/js/store/altrp-page-state-storage/actions";
 import { connect, useDispatch } from "react-redux";
 
-import DynamicPieChart from "../../../../../admin/src/components/dashboard/widgets/DynamicPieChart";
-
-import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+import DynamicFunnelChart from "../../../../../admin/src/components/dashboard/widgets/DynamicFunnelChart";
 
 import { getDataByPath, isEditor } from "../../../../../front-app/src/js/helpers";
-import moment from "moment";
 
-const AltrpPieDiagram = props => {
+const AltrpFunnelDiagram = props => {
   const { settings, id } = props;
 
   const dispatch = useDispatch();
+  const margin = settings?.margin;
   const widgetName = settings?.widget_name || id;
   const customColorSchemeChecker = settings?.isCustomColor;
 
   const customColors = settings?.customScheme?.map(item =>
     _.get(item, "color.colorPickedHex")
-  );
+  )
 
-  const {useCustomTooltips} = settings;
+  const yScaleMax = settings?.yScaleMax;
 
   const sql = settings.query?.dataSource?.value;
   const keyIsDate = settings.key_is_date;
   //line settings
+  const colorScheme = settings?.colorScheme;
 
   const {
-    activeOuterRadiusOffset,
-    margin,
-    yScaleMax,
-    colorScheme,
-    isMultiple,
-    isCustomColor,
-    sort,
-    innerRadius,
-    padAngle,
-    cornerRadius,
-    sortByValue,
-    activeInnerRadiusOffset,
-    useCenteredMetric,
-    useLinkArcLabels,
-    useProcent
+    label_color_type, 
+    label_color, 
+    label_modifier,
+    interpolation,
+    spacing,
+    shapeBlending,
+    direction,
+    isInteractive,
+    currentPartSizeExtension,
+    currentBorderWidth
   } = settings
-  
-  //data variable
+
   let data = [];
 
   //funciton for formattion data for all types
   const formatData = (data, r) => {
-    return data.map((d, index) => {
-      const currentKey = _.get(d, r.key);
-      const keyFormatted = !moment(currentKey).isValid()
-        ? currentKey
-        : moment(currentKey).format("DD.MM.YYYY");
-      const tooltip =
-        typeof tooltipValues !== "undefined"
-          ? tooltipValues?.map(item => {
-              return {
-                label: item?.label,
-                value: _.get(d, item.field),
-                color: item?.color
-              };
-            })
-          : [];
-        
-        return {
-            value: Number(_.get(d, r.data)),
-            id: keyIsDate ? keyFormatted : currentKey,
-            tooltip: tooltip
-        };
-    });
+    return data.map((d) => ({
+        id: d[settings.key_name],
+        label: d[settings.key_name],
+        value: d[settings.data_name]
+    }))
   };
+
+  let legend = [];
 
   if (isEditor()) {
     data = [
-      {
-        id: 'python',
-        value: 199,
-      },
-      {
-        id: 'rust',
-        value: 541,
-      },
-      {
-        id: 'scala',
-        value: 584,
-      },
-      {
-        id: 'c',
-        value: 565,
-      },
-      {
-        id: 'lisp',
-        value: 598,
-      },
+        {
+            label: 'test',
+            id: 1,
+            value: 50
+        },
+        {
+            label: 'test1',
+            id: 2,
+            value: 70
+        },
+        {
+            label: 'test2',
+            id: 3,
+            value: 20
+        },
+        {
+            label: 'test3',
+            id: 4,
+            value: 70
+        },
     ]
   } else {
-    if (isMultiple) {
-      let repeater = _.cloneDeep(settings.rep, []);
-      data = repeater.map((r, index) => {
-        let innerData = getDataByPath(r.path, []);
-        if (innerData.length > 0) {
-          //Исключаем дублирование ключей, т.к. это приводит к ошибкам рендера всех диаграм
-          innerData = _.uniqBy(innerData, r.key);
-          
-          innerData = formatData(innerData, r);
-        }
-        
-        return innerData;
-      });
-      
-      data = [].concat(...data);
-
-    } else if (settings.datasource_path != null) {
+    if (settings.datasource_path != null) {
       try {
         data = getDataByPath(settings.datasource_path, []);
-        const r = {
-          key: settings.key_name,
-          data: settings.data_name
-        };
-  
-        data = formatData(data, r);
+        data = _.uniqBy(data, settings.key_name);
+
+        data = formatData(data)
       } catch (error) {
         console.log("====================================");
         console.error(error);
@@ -164,30 +123,40 @@ const AltrpPieDiagram = props => {
     filter: {}
   };
 
+  const setLegend = legend =>
+    dispatch(changePageState(widgetName, { legend: legend }));
+
+  useEffect(() => {
+    if (legend.length > 0) {
+      setLegend(legend);
+    }
+  }, [legend]);
   console.log("====================================");
   console.log(data);
   console.log("====================================");
-
+  
   return (
-    <DynamicPieChart
-      useProcent={useProcent}
+    <DynamicFunnelChart
       widgetID={id}
       margin={margin}
-      useCustomTooltips={useCustomTooltips}
       yScaleMax={yScaleMax}
       customColorSchemeChecker={customColorSchemeChecker}
       customColors={customColors}
-      isMultiple={isMultiple}
+      widget={widget}
       dataSource={data}
       colorScheme={colorScheme}
-      widget={widget}
       width={`${settings.width?.size}${settings.width?.unit}`}
       height={`${settings.height?.size}${settings.height?.unit}`}
-      innerRadius={innerRadius}
-      padAngle={padAngle}
-      cornerRadius={cornerRadius}
-      sortByValue={sortByValue}
-      sort={sort}
+      fillOpacity={settings.fillOpacity}
+      borderOpacity={settings.borderOpacity}
+      borderWidth={settings.borderWidth}
+      interpolation={interpolation}
+      spacing={spacing}
+      shapeBlending={shapeBlending}
+      direction={direction}
+      isInteractive={isInteractive}
+      currentPartSizeExtension={currentPartSizeExtension ? +currentPartSizeExtension : 0}
+      currentBorderWidth={currentBorderWidth ? +currentBorderWidth : 0}
       title={settings.datasource_title}
       subTitle={settings.subtitle}
       legend={settings.use_legend && {
@@ -203,15 +172,15 @@ const AltrpPieDiagram = props => {
         symbolSize: settings.legend_symbol_size,
         symbolShape: settings.legend_symbol_shape
       }}
-      keyIsDate={keyIsDate}
-      activeOuterRadiusOffset={activeOuterRadiusOffset}
-      activeInnerRadiusOffset={activeInnerRadiusOffset}
-      useCenteredMetric={useCenteredMetric}
-      useLinkArcLabels={useLinkArcLabels}
+      labelColor={
+        label_color_type && label_color_type === 'custom' 
+            ? label_color?.colorPickedHex
+            : label_modifier && { from: 'color', modifiers: [ [ label_color_type, label_modifier ] ] }
+      }
     />
   );
 };
 const mapStateToProps = state => ({
   currentDataStorage: state.currentDataStorage
 });
-export default connect(mapStateToProps)(AltrpPieDiagram);
+export default connect(mapStateToProps)(AltrpFunnelDiagram);

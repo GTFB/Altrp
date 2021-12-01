@@ -136,12 +136,16 @@ const AltrpDiagram = props => {
   const xMarkerValue = keyIsDate
     ? moment(settings?.xMarkerValueDate).toDate()
     : settings?.xMarkerValue;
-  const xMarkerOrientation = settings?.xMarkerOrientation;
-  const xMarkerColor = settings?.xMarkerColor;
-  const xMarkerWidth = settings?.xMarkerWidth;
-  const xMarkerLabel = settings?.xMarkerLabel;
-  const xMarkerLabelColor = settings?.xMarkerLabelColor;
-  //data variable
+  
+  const {
+    enableGradient, 
+    xMarkerLabelColor,
+    xMarkerLabel,
+    xMarkerWidth,
+    xMarkerColor,
+    xMarkerOrientation,
+  } = settings
+
   let data = [];
 
   //funciton for formattion data for all types
@@ -325,6 +329,7 @@ const AltrpDiagram = props => {
   return (
     <DynamicLineChart
       widgetID={id}
+      enableGradient={enableGradient}
       margin={margin}
       useCustomTooltips={useCustomTooltips}
       yScaleMax={yScaleMax}
@@ -345,6 +350,8 @@ const AltrpDiagram = props => {
       yMarker={yMarker}
       width={`${settings.width?.size}${settings.width?.unit}`}
       height={`${settings.height?.size}${settings.height?.unit}`}
+      title={settings.datasource_title}
+      subTitle={settings.subtitle}
       yMarkerValue={yMarkerValue}
       yMarkerOrientation={yMarkerOrientation}
       yMarkerColor={yMarkerColor}
@@ -364,6 +371,19 @@ const AltrpDiagram = props => {
       bottomAxis={bottomAxis}
       enableGridX={enableGridX}
       enableGridY={enableGridY}
+      legend={settings.use_legend && {
+        anchor: settings.legend_anchor,
+        direction: settings.legend_direction,
+        itemDirection: settings.legend_item_direction,
+        translateX: settings.legend_translate_x,
+        translateY: settings.legend_translate_y,
+        itemsSpacing: settings.legend_items_spacing,
+        itemWidth: settings.legend_item_width,
+        itemHeight: settings.legend_item_height,
+        itemOpacity: settings.legend_item_opacity,
+        symbolSize: settings.legend_symbol_size,
+        symbolShape: settings.legend_symbol_shape
+      }}
     />
   );
 };

@@ -52,6 +52,7 @@ import getInputTextAutocompleteStyles from "./helpers/getInputTextAutocompleteSt
 import TreeComponent from "../../../../editor/src/js/components/widgets/styled-components/TreeComponent";
 import InputDateRangeComponent
   from "../../../../editor/src/js/components/widgets/styled-components/InputDateRangeComponent";
+import getIconStyles from "./helpers/getIconStyles";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -68,6 +69,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         case "image-lightbox":
           styles+=ImageLightboxComponent(item.settings,id);
           break;
+        case "icon":
+          styles += `.${prefix}${id} {${getIconStyles(item.settings, id)}}`
+          break;
         case "pie-diagram":
           styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
           break;
@@ -78,6 +82,12 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
           break;
         case "point-diagram":
+          styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
+          break;
+        case "funnel-diagram":
+          styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
+          break;
+        case "radar-diagram":
           styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
           break;
         case "tabs-switcher":

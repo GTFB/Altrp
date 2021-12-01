@@ -327,6 +327,21 @@ const AltrpDiagram = props => {
       bottomAxis={bottomAxis}
       enableGridX={enableGridX}
       enableGridY={enableGridY}
+      title={settings.datasource_title}
+      subTitle={settings.subtitle}
+      legend={settings.use_legend && {
+        anchor: settings.legend_anchor,
+        direction: settings.legend_direction,
+        itemDirection: settings.legend_item_direction,
+        translateX: settings.legend_translate_x,
+        translateY: settings.legend_translate_y,
+        itemsSpacing: settings.legend_items_spacing,
+        itemWidth: settings.legend_item_width,
+        itemHeight: settings.legend_item_height,
+        itemOpacity: settings.legend_item_opacity,
+        symbolSize: settings.legend_symbol_size,
+        symbolShape: settings.legend_symbol_shape
+      }}
     />
   );
 };

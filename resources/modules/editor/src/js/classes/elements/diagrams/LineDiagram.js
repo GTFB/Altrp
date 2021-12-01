@@ -20,15 +20,9 @@ import {
   CONTROLLER_TYPOGRAPHIC
 } from "../../modules/ControllersManager";
 
-import {
-  TABLE,
-  LINE,
-  POINT,
-  BAR,
-  PIE,
-  widgetTypes
-} from "../../../../../../admin/src/components/dashboard/widgetTypes";
 import Repeater from "../../Repeater";
+import titleControllers from "../../../decorators/diagrams/diagram-title-subtitle.js";
+import legendControllers from "../../../decorators/diagrams/diagram-legend.js";
 
 class LineDiagram extends BaseElement {
   static getName() {
@@ -60,6 +54,11 @@ class LineDiagram extends BaseElement {
     this.addControl("datasource_title", {
       dynamic: false,
       label: "Title"
+    });
+    
+    this.addControl("subtitle", {
+      dynamic: false,
+      label: "Subtitle"
     });
 
     this.addControl("datasource_path", {
@@ -107,9 +106,9 @@ class LineDiagram extends BaseElement {
       ]
     });
 
-    this.addControl("customTooltip", {
+    this.addControl("use_legend", {
       type: CONTROLLER_SWITCHER,
-      label: "Use custom tooltip?",
+      label: "Use legend?",
       default: false
     });
     
@@ -173,18 +172,7 @@ class LineDiagram extends BaseElement {
 
     this.startControlSection("style", {
       tab: TAB_STYLE,
-      label: "Visual type"
-    });
-
-    const types = widgetTypes.map(type => {
-      return { label: type.name, value: type.value };
-    });
-
-    this.addControl("type", {
-      type: CONTROLLER_SELECT,
-      label: "Type",
-      default: TABLE,
-      options: types
+      label: "Visual"
     });
 
     // this.addControl("isVertical", {
@@ -301,6 +289,12 @@ class LineDiagram extends BaseElement {
       default: false
     });
 
+    this.addControl("enableGradient", {
+      type: CONTROLLER_SWITCHER,
+      label: "Использовать градиент?",
+      default: false
+    });
+
     this.addControl("enablePoints", {
       type: CONTROLLER_SWITCHER,
       label: "Отобразить точки?",
@@ -317,6 +311,10 @@ class LineDiagram extends BaseElement {
       label: "Цвет точки"
     });
     this.endControlSection();
+    
+    titleControllers(this)
+
+    legendControllers(this)
 
     this.startControlSection("Tooltip", {
       tab: TAB_STYLE,
