@@ -84,24 +84,6 @@ class FunnelDiagram extends BaseElement {
     
     this.endControlSection();
 
-    this.startControlSection("main", {
-      tab: TAB_CONTENT,
-      dynamic: false,
-      label: "Main"
-    });
-
-    this.addControl("widget_name", {
-      dynamic: false,
-      label: "Widget name"
-    });
-
-    this.endControlSection();
-
-    this.startControlSection("style", {
-      tab: TAB_STYLE,
-      label: "Visual"
-    });
-
     const colors = Schemes.map(object => {
       return { label: object.label, value: object.value };
     });

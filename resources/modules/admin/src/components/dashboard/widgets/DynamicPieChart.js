@@ -45,11 +45,9 @@ const DynamicPieChart = ({
   cornerRadius = 0,
   sortByValue = 0,
   sort = "",
-  tickRotation = 0,
   keyIsDate = false,
   customColorSchemeChecker = false,
   customColors = [],
-  widgetID,
   useCustomTooltips,
   margin,
   title,
@@ -182,7 +180,6 @@ const DynamicPieChart = ({
           //   <TooltipPie
           //     datum={datum}
           //     data={data}
-          //     widgetID={widgetID}
           //   ></TooltipPie>
           // )}
           arcLabelsComponent={({ datum, label, style }) => {

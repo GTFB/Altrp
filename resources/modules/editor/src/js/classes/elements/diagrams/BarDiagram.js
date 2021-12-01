@@ -117,19 +117,6 @@ class BarDiagram extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("main", {
-      tab: TAB_CONTENT,
-      dynamic: false,
-      label: "Main"
-    });
-
-    this.addControl("widget_name", {
-      dynamic: false,
-      label: "Widget name"
-    });
-
-    this.endControlSection();
-
     this.startControlSection('markers', {
       tab: TAB_CONTENT,
       label: 'Markers',

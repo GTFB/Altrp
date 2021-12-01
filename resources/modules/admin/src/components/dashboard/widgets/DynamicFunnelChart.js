@@ -24,7 +24,6 @@ const DynamicFunnelChart = ({
   colorScheme = "red_grey",
   customColorSchemeChecker = false,
   customColors = [],
-  widgetID,
   title,
   subTitle,
   legend,
@@ -104,7 +103,6 @@ const DynamicFunnelChart = ({
           //     <Tooltip
           //       keyIsDate={keyIsDate}
           //       datum={datum}
-          //       widgetID={widgetID}
           //     />
           //   );
           // }}

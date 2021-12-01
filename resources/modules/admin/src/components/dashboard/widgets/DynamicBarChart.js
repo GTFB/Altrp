@@ -31,7 +31,6 @@ const DynamicBarChart = ({
   enableGridY = true,
   customColorSchemeChecker = false,
   customColors = [],
-  widgetID,
   useCustomTooltips,
   margin = {},
   legend,
@@ -151,7 +150,6 @@ const DynamicBarChart = ({
           //   <TooltipBar
           //     enable={useCustomTooltips}
           //     datum={datum}
-          //     widgetID={widgetID}
           //   />
           // ))}
           enableGridX={enableGridX}

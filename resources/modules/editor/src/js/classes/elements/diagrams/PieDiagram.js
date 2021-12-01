@@ -135,21 +135,6 @@ class PieDiagram extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("main", {
-      tab: TAB_CONTENT,
-      dynamic: false,
-      label: "Main"
-    });
-
-    this.addControl("widget_name", {
-      dynamic: false,
-      label: "Widget name"
-    });
-
-    this.endControlSection();
-
-    actionsControllers(this);
-
     this.startControlSection("style", {
       tab: TAB_STYLE,
       label: "Visual style"
@@ -204,12 +189,6 @@ class PieDiagram extends BaseElement {
       min: 0,
       max: 45,
       step: 1,
-    });
-
-    this.addControl("sortByValue", {
-      type: CONTROLLER_SWITCHER,
-      label: "Сортировка по значению",
-      default: false,
     });
 
     this.endControlSection();

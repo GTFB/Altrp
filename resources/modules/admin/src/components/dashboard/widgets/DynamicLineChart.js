@@ -41,7 +41,6 @@ const DynamicLineChart = ({
   customColors = [],
   constantsAxises = [],
   yScaleMax,
-  widgetID,
   title,
   subTitle,
   legend,
@@ -220,7 +219,6 @@ const DynamicLineChart = ({
           //     <Tooltip
           //       keyIsDate={keyIsDate}
           //       datum={datum}
-          //       widgetID={widgetID}
           //     />
           //   );
           // }}

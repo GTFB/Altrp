@@ -36,7 +36,6 @@ const PointChart = ({
   customColors = [],
   constantsAxises = [],
   yScaleMax,
-  widgetID,
   useCustomTooltips,
   margin,
   legend,
@@ -194,7 +193,6 @@ const PointChart = ({
           // tooltip={datum => (
           //   <Tooltip
           //     datum={datum}
-          //     widgetID={widgetID}
           //   />
           // )}
           enableGridX={enableGridX}
