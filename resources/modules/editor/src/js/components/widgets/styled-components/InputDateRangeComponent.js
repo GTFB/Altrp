@@ -102,16 +102,63 @@ export default function InputDateRangeComponent(settings, id, prefix) {
       ["padding", "caption_padding", "dimensions"],
     "}",
 
-    "DayPicker-Caption svg",
+    "& span.bp3-icon-chevron-left svg, & span.bp3-icon-chevron-right svg, & span.bp3-icon-double-caret-vertical svg",
       ["fill", "caption_arrow_color", "color"],
     "}",
 
-    "DayPicker-Caption .bp3-icon-chevron-left:hover svg",
+    "DayPicker-NavButton:hover span.bp3-icon-chevron-left svg, & .DayPicker-NavButton:hover span.bp3-icon-chevron-right svg",
       ["fill", "caption_arrow_color", "color", ":hover"],
     "}",
 
     "DayPicker-Caption .bp3-html-select:hover .bp3-icon-double-caret-vertical svg",
       ["fill", "caption_arrow_color", "color", ":hover"],
+    "}",
+
+    "DayPicker-NavButton svg",
+      ["height", "caption_arrow_size", "slider"],
+      ["width", "caption_arrow_size", "slider"],
+    "}",
+
+    "& div.DayPicker-Caption select",
+      ["", "caption_typographic", "typographic"],
+      ["color", "caption_color", "color"],
+      ["background-color", "caption_select_background_color", "color"],
+    "}",
+
+    "& div.DayPicker-Caption select:hover",
+    ["color", "caption_color", "color", ":hover"],
+    ["background-color", "caption_select_background_color", "color", ":hover"],
+    "}",
+
+    "DayPicker-Weekday",
+      ["", "calendar_weekday_typographic", "typographic"],
+      ["color", "calendar_weekday_color", "color"],
+    "}",
+
+    "DayPicker-Day",
+      ["", "calendar_typographic", "typographic"],
+      ["color", "calendar_color", "color"],
+      ["background-color", "calendar_background_color", "color"],
+    "}",
+
+    "DayPicker-Day.DayPicker-Day:hover",
+      ["color", "calendar_color", "color", ":hover"],
+      ["background-color", "calendar_background_color", "color", ":hover"],
+    "}",
+
+    "DayPicker-Day.DayPicker-Day.DayPicker-Day--selected",
+    ["color", "calendar_color", "color", ".active"],
+    ["background-color", "calendar_background_color", "color", ".active"],
+    "}",
+
+    "DayPicker-Day.DayPicker-Day--selected-range",
+      ["color", "calendar_range_color", "color"],
+      ["background-color", "calendar_range_background_color", "color"],
+    "}",
+
+    "DayPicker-Day.DayPicker-Day.DayPicker-Day--hovered-range",
+      ["color", "calendar_range_color", "color", ":hover"],
+      ["background-color", "calendar_range_background_color", "color", ":hover"],
     "}",
   ];
 
