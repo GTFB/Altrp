@@ -22,8 +22,7 @@ class InputDateRangeWidget extends Component {
     if(props.baseRender){
       this.render = props.baseRender(this);
     }
-
-    this.typeDate = props.element.getSettings("content_time_type", "date");
+    this.locale = this.props.element.getSettings("content_locale", "en");
 
     switch (this.typeDate) {
       case "date":
@@ -158,18 +157,14 @@ class InputDateRangeWidget extends Component {
       formatDate={date => moment(date).locale(locale).format(format)}
       parseDate={str => moment(str, this.typeDate).locale(locale).toDate()}
       onChange={this.handleChange}
-      allowSingleDayRange={false}
-      closeOnSelection={false}
-      contiguousCalendarMonths
-      disabled={false}
-      enableTimePicker={false}
       dayPickerProps={dayPickerProps}
-      reverseMonthAndYearMenus={false}
-      selectAllOnFocus={false}
-      shortcuts
-      showTimeArrowButtons={false}
-      singleMonthOnly={false}
       value={value}
+      startInputProps={{
+        placeholder: this.props.element.getResponsiveSetting("start_placeholder", "", "start date")
+      }}
+      endInputProps={{
+        placeholder: this.props.element.getResponsiveSetting("end_placeholder", "", "end date")
+      }}
       popoverProps={{
         usePortal: true,
         popoverClassName: "altrp-portal" + this.props.element.getId(),

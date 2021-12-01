@@ -1,7 +1,7 @@
 import BaseElement from "./BaseElement";
 import FromIcon from "../../../svgs/form-horizontal.svg";
 import {
-  CONTROLLER_COLOR, CONTROLLER_DIMENSIONS,
+  CONTROLLER_COLOR, CONTROLLER_DIMENSIONS, CONTROLLER_SELECT,
   CONTROLLER_SHADOW, CONTROLLER_SLIDER, CONTROLLER_SWITCHER, CONTROLLER_TEXT, CONTROLLER_TEXTAREA,
   CONTROLLER_TYPOGRAPHIC,
   TAB_CONTENT,
@@ -32,6 +32,22 @@ class InputDateRange extends BaseElement {
       label: "Content"
     });
 
+    this.addControl("content_locale", {
+      type: CONTROLLER_SELECT,
+      label: "Locale",
+      default: "ru",
+      options: [
+        {
+          value: "en",
+          label: "EN"
+        },
+        {
+          value: "ru",
+          label: "RU"
+        }
+      ]
+    });
+
     this.addControl("form_id_start", {
       type: CONTROLLER_TEXT,
       label: "Start form ID",
@@ -44,19 +60,17 @@ class InputDateRange extends BaseElement {
       label: "Start field ID (Column Name)"
     });
 
+    this.addControl("start_placeholder", {
+      type: CONTROLLER_TEXT,
+      label: "Start placeholder"
+    });
+
     this.addControl("content_default_value_start", {
       type: CONTROLLER_TEXTAREA,
       responsive: false,
       label: "Start default Value"
     });
 
-    this.addControl("content_calculation_start", {
-      type: CONTROLLER_TEXTAREA,
-      label: "Start calculation",
-      responsive: false,
-      description:
-        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
-    });
 
     this.addControl("form_id_end", {
       type: CONTROLLER_TEXT,
@@ -70,26 +84,22 @@ class InputDateRange extends BaseElement {
       label: "End field ID (Column Name)"
     });
 
+    this.addControl("end_placeholder", {
+      type: CONTROLLER_TEXT,
+      label: "End placeholder"
+    });
+
     this.addControl("content_default_value_end", {
       type: CONTROLLER_TEXTAREA,
       responsive: false,
       label: "End default Value"
     });
 
-    this.addControl("content_calculation_end", {
-      type: CONTROLLER_TEXTAREA,
-      label: "End calculation",
-      responsive: false,
-      description:
-        "E.g {{altrpforms.form_id.field_id}}*{{altrpforms.form_id.field_id_2}}+10"
-    });
-
-
-    this.addControl("shortcuts", {
-      type: CONTROLLER_SWITCHER,
-      label: "Shortcuts",
-      default: false
-    });
+    // this.addControl("shortcuts", {
+    //   type: CONTROLLER_SWITCHER,
+    //   label: "Shortcuts",
+    //   default: false
+    // });
 
     this.endControlSection();
 
@@ -215,50 +225,50 @@ class InputDateRange extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("shortcuts_styles", {
-      tab: TAB_STYLE,
-      label: "Shortcuts",
-      conditions: {
-        shortcuts: true
-      },
-    });
-
-    this.addControl('shortcuts_typographic', {
-        type: CONTROLLER_TYPOGRAPHIC,
-        label: 'Typographic',
-      }
-    );
-
-    this.addControl('shortcuts_color', {
-      type: CONTROLLER_COLOR,
-      label: 'color',
-    });
-
-    this.addControl('shortcuts_background_shortcut', {
-      type: CONTROLLER_COLOR,
-      label: 'Shortcut background color',
-    });
-
-    this.addControl('shortcuts_background', {
-      type: CONTROLLER_COLOR,
-      label: 'Background color',
-    });
-
-    this.addControl('shortcuts_padding', {
-      type: CONTROLLER_DIMENSIONS,
-      label: 'Padding',
-      default: {
-        unit: 'px',
-        bind: true
-      },
-      units: [
-        'px',
-        '%',
-        'vh',
-      ],
-    });
-
-    this.endControlSection();
+    // this.startControlSection("shortcuts_styles", {
+    //   tab: TAB_STYLE,
+    //   label: "Shortcuts",
+    //   conditions: {
+    //     shortcuts: true
+    //   },
+    // });
+    //
+    // this.addControl('shortcuts_typographic', {
+    //     type: CONTROLLER_TYPOGRAPHIC,
+    //     label: 'Typographic',
+    //   }
+    // );
+    //
+    // this.addControl('shortcuts_color', {
+    //   type: CONTROLLER_COLOR,
+    //   label: 'color',
+    // });
+    //
+    // this.addControl('shortcuts_background_shortcut', {
+    //   type: CONTROLLER_COLOR,
+    //   label: 'Shortcut background color',
+    // });
+    //
+    // this.addControl('shortcuts_background', {
+    //   type: CONTROLLER_COLOR,
+    //   label: 'Background color',
+    // });
+    //
+    // this.addControl('shortcuts_padding', {
+    //   type: CONTROLLER_DIMENSIONS,
+    //   label: 'Padding',
+    //   default: {
+    //     unit: 'px',
+    //     bind: true
+    //   },
+    //   units: [
+    //     'px',
+    //     '%',
+    //     'vh',
+    //   ],
+    // });
+    //
+    // this.endControlSection();
 
     this.startControlSection("caption_styles", {
       tab: TAB_STYLE,
@@ -310,19 +320,9 @@ class InputDateRange extends BaseElement {
       label: 'color',
     });
 
-    this.addControl('caption_select_background-color', {
+    this.addControl('caption_select_background_color', {
       type: CONTROLLER_COLOR,
       label: 'Select background color',
-    });
-
-    this.addControl('caption_select_arrows_size', {
-      type: CONTROLLER_SLIDER,
-      label: 'Select arrows size',
-      units: [
-        'px',
-      ],
-      max: 50,
-      min: 0,
     });
 
     this.endControlSection();
@@ -354,14 +354,19 @@ class InputDateRange extends BaseElement {
       label: 'color',
     });
 
-    this.addControl('calendar_background-color', {
+    this.addControl('calendar_background_color', {
       type: CONTROLLER_COLOR,
       label: 'Background color',
     });
 
-    this.addControl('calendar_day_background-color', {
+    this.addControl('calendar_range_color', {
       type: CONTROLLER_COLOR,
-      label: 'Day background color',
+      label: 'Range color',
+    });
+
+    this.addControl('calendar_range_background_color', {
+      type: CONTROLLER_COLOR,
+      label: 'Range Background color',
     });
 
     this.endControlSection();
