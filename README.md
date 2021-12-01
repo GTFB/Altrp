@@ -4,6 +4,9 @@
 ## Changelog
 
 
+### 0.19.7
+* Fix Lightbox Issues
+
 ### 0.19.6
 * Fix Input Select Tree Widget
 * Fix Autofocus Issue in Input Autocomplete Widget
