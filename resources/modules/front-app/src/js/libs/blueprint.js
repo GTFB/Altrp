@@ -10,7 +10,6 @@ const NS = Blueprint.Classes.getClassNamespace();
 (window.altrpLibs = window.altrpLibs || {}).Blueprint = Blueprint;
 window.altrpLibs.Popover2 = Popover2;
 window.altrpLibs.Tooltip2 = Tooltip2;
-
 window.altrpLibs.Popover2InteractionKind = Popover2InteractionKind;
 window.altrpLibs.Popover2Classes = PopoverClasses;
 

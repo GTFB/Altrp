@@ -9,7 +9,6 @@ import store from "../store/store";
 import { START_DRAG, startDrag } from "../store/element-drag/actions";
 import { contextMenu } from "react-contexify";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
-import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
 import NavComponent from "./widgets/styled-components/NavComponent";
 import Column from "../classes/elements/Column";
 import DiagramComponent from "./widgets/styled-components/DiagramComponent";
@@ -72,6 +71,8 @@ import TreeComponent from "./widgets/styled-components/TreeComponent";
 import getInputSelectTreeStyles from "../../../../front-app/src/js/components/helpers/getInputSelectTreeStyles";
 import InputDateRange from "../classes/elements/InputDateRange";
 import InputDateRangeComponent from "./widgets/styled-components/InputDateRangeComponent";
+import StarsComponent from "./widgets/styled-components/StarsComponent";
+import ProgressBarComponent from "./widgets/styled-components/ProgressBarComponent";
 
 const { connect } = window.reactRedux;
 const { replaceContentWithData } = window.altrpHelpers;
@@ -185,7 +186,7 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       }
       break
     case "input-date-range": {
-      styles += `.${prefix}${elementId} {${InputDateRangeComponent(settings)}}`
+      styles += InputDateRangeComponent(settings, elementId, prefix)
       }
       break;
     case "input-checkbox":
@@ -244,7 +245,7 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       break;
     case "input-select-tree": {
       styles += `.${prefix}${elementId} {${getInputSelectTreeStyles(settings)}}`;
-        styles += `${getInputSelectPopoverStyles(settings, elementId)}`;
+      styles += `${getInputSelectPopoverStyles(settings, elementId)}`;
       styles += `.altrp-select-tree${elementId} {${TreeComponent(settings, "tree_")}}`;
       }
       break;
@@ -259,6 +260,20 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       break;
     case "input-radio": {
       styles += InputRadioComponent(settings, elementId, prefix);
+      break;
+    }
+    case "stars": {
+      styles += `.${prefix}${elementId} {${StarsComponent(
+        settings,
+        elementId
+      )}}`;
+      break;
+    }
+    case "progress-bar": {
+      styles += `.${prefix}${elementId} {${ProgressBarComponent(
+        settings,
+        elementId
+      )}}`;
       break;
     }
     case "input-text":
@@ -669,6 +684,7 @@ class ElementWrapper extends Component {
   }
   render() {
     const elementHideTrigger = this.props.element.settings.hide_on_trigger;
+    const element = this.props.element
     let {
       isFixed,
       tooltip_text,
@@ -676,11 +692,12 @@ class ElementWrapper extends Component {
       tooltip_show_type,
       tooltip_horizontal_offset,
       tooltip_vertical_offset,
-      tooltip_position = "bottom"
     } = this.props.element.getSettings();
     if (["column", "section"].indexOf(this.props.element.getType()) !== -1) {
       tooltip_show_type = "never";
     }
+    const tooltip_position = element.getResponsiveSetting('tooltip_position') || 'bottom'
+
     let errorContent = null;
     if (this.state.errorInfo) {
       errorContent = (
@@ -785,6 +802,9 @@ class ElementWrapper extends Component {
       // case "dashboard":
       // WrapperComponent = DashboardComponent;
       // break;
+    }
+    if(! this.props.element.getResponsiveSetting('tooltip_enable')){
+      tooltip_show_type = 'never'
     }
     return elementHideTrigger &&
       this.props.hideTriggers.includes(elementHideTrigger) ? null : (

@@ -4,9 +4,34 @@
 ## Changelog
 
 
-### 0.18.2
-+ Add Tree Widget and Input Select Tree Widget
+### 0.19.6
+* Fix Input Select Tree Widget
+* Fix Autofocus Issue in Input Autocomplete Widget
++ Add Filter Options in Input Autocomplete Widget
 
+### 0.19.5
++ Add Range Slider Filter for Table
+
+### 0.19.4
++ Add Stars Input Widget
++ Add Progressbar Widget
+* Fix Sources Auth settings Bug
++ Add Null Placeholder in Select-type Filter In table Widget
+
+### 0.19.3
++ Add Typing and Select Actions in Input Text Autocomplete Widget
+* Fix Tooltip for Elements
+* Fix Roles/Permissions Access in Data Source Issues
+
+### 0.19.2
+* Update Select Components 
+
+### 0.19.1
+* Fix Customizer and Page Update Issues
+
+### 0.19.0
++ Add Tree Widget and Input Select Tree Widget
+* Admin Restyle
 
 ### 0.18.1
 * Fix Change Label in Node Issue

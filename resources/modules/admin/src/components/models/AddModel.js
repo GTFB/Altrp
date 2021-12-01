@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {Link, withRouter} from "react-router-dom";
 import EditModelForm from "./EditModelForm";
 import Resource from "../../../../editor/src/js/classes/Resource";
+import UserTopPanel from "../UserTopPanel";
 
 class AddModel extends Component {
   constructor(props) {
@@ -11,6 +12,7 @@ class AddModel extends Component {
         name: '',
         title: '',
         description: '',
+        categories: '',
         bounded_model: '',
         soft_deletes: false,
         time_stamps: false
@@ -45,11 +47,14 @@ class AddModel extends Component {
     const { model } = this.state;
     return <div className="admin-pages admin-page">
       <div className="admin-heading">
-        <div className="admin-breadcrumbs">
-          <Link className="admin-breadcrumbs__link" to="/admin/tables/models">Tables / All Models</Link>
-          <span className="admin-breadcrumbs__separator">/</span>
-          <span className="admin-breadcrumbs__current">Add Model</span>
+        <div className="admin-heading-left">
+          <div className="admin-breadcrumbs">
+            <Link className="admin-breadcrumbs__link" to="/admin/tables/models">Tables / All Models</Link>
+            <span className="admin-breadcrumbs__separator">/</span>
+            <span className="admin-breadcrumbs__current">Add Model</span>
+          </div>
         </div>
+        <UserTopPanel />
       </div>
       <div className="admin-content">
         <EditModelForm model={model}

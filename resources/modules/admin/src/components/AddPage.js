@@ -11,6 +11,7 @@ import mutate from "dot-prop-immutable";
 import "./../sass/components/AddPost.scss";
 import {Alignment, Button, InputGroup, MenuItem, TextArea} from "@blueprintjs/core";
 import {MultiSelect, Select} from "@blueprintjs/select";
+import UserTopPanel from "./UserTopPanel";
 
 const columns = [
   {
@@ -34,13 +35,6 @@ const columns = [
   },
 ];
 
-const rolesOptions = [
-  {
-    value: "guest",
-    label: "Guest"
-  }
-]
-
 /**
  * @class
  * @property {Resource} resource
@@ -51,12 +45,14 @@ class AddPage extends Component {
     super(props);
     this.state = {
       page: {},
+      activeHeader: 0,
       value: {
         model_id: null,
         parent_page_id: null,
         path: "",
         redirect: "",
         roles: [],
+        rolesOptions: [{ value: "guest", label: "Guest" }],
         title: "",
       },
       redirectAfterSave: false,
@@ -69,6 +65,7 @@ class AddPage extends Component {
       currentTab: 'content',
     };
     this.resource = new Resource({route: "/admin/ajax/pages"});
+    this.rolesOptionsResource = new Resource( {route: "/admin/ajax/role_options"} )
     this.pagesOptionsResource = new Resource({
       route: "/admin/ajax/pages_options"
     });
@@ -116,6 +113,16 @@ class AddPage extends Component {
           ...models_res]
       };
     });
+
+    let roles = await this.rolesOptionsResource.getAll();
+    this.setState(state => ({
+      ...state,
+      value: {
+        ...state.value,
+        rolesOptions: [...state.value.rolesOptions, ...roles]
+      }
+    }));
+
     let id = this.props.match.params.id;
     id = parseInt(id);
     if (id) {
@@ -133,9 +140,28 @@ class AddPage extends Component {
             roles: pageData.roles,
             title: pageData.title,
             id
-          }
+          },
+          id
         };
       });
+    }
+
+    window.addEventListener("scroll", this.listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", this.listenScrollHeader)
+    }
+  }
+
+  listenScrollHeader = () => {
+    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
+      this.setState({
+        activeHeader: 1
+      })
+    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
+      this.setState({
+        activeHeader: 0
+      })
     }
   }
 
@@ -202,6 +228,7 @@ class AddPage extends Component {
     }
     this.state.value.redirect = redirect;
     this.state.value.path = path;
+
     if (this.state.id) {
       res = await this.resource.put(this.state.id, {
         ...this.state.value,
@@ -313,22 +340,24 @@ class AddPage extends Component {
 
   render() {
     const {isModalOpened, editingDataSource} = this.state;
-
     let {dataSources} = this.state;
 
     dataSources = _.sortBy(dataSources, dataSource => dataSource.priority);
     return (
       <div className="admin-pages admin-page">
-        <div className="admin-heading">
-          <div className="admin-breadcrumbs">
-            <Link className="admin-breadcrumbs__link" to="/admin/pages">
-              Pages
-            </Link>
-            <span className="admin-breadcrumbs__separator">/</span>
-            <span className="admin-breadcrumbs__current">
+        <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
+          <div className="admin-heading-left">
+            <div className="admin-breadcrumbs">
+              <Link className="admin-breadcrumbs__link" to="/admin/pages">
+                Pages
+              </Link>
+              <span className="admin-breadcrumbs__separator">/</span>
+              <span className="admin-breadcrumbs__current">
               {this.state.value.title || "Add New Page"}
             </span>
+            </div>
           </div>
+          <UserTopPanel />
         </div>
         <div className="admin-content zeroing__styleTabs styleTabs-marginBottom">
           <div className="custom-tab__tabs">
@@ -447,28 +476,46 @@ class AddPage extends Component {
                           {
                             this.state.value.model_id && <div className="form-group">
                               <label htmlFor="page-path">Column for Search</label>
-                              <input
-                                type="text"
-                                id="page-path"
-                                value={this.state.value.model_column || ""}
-                                onChange={e => {
-                                  this.changeValue(e.target.value, "model_column");
-                                }}
-                                className="form-control"
+                              {/*<input*/}
+                              {/*  type="text"*/}
+                              {/*  id="page-path"*/}
+                              {/*  value={this.state.value.model_column || ""}*/}
+                              {/*  onChange={e => {*/}
+                              {/*    this.changeValue(e.target.value, "model_column");*/}
+                              {/*  }}*/}
+                              {/*  className="form-control"*/}
+                              {/*/>*/}
+
+                              <InputGroup type="text"
+                                          id="page-path"
+                                          value={this.state.value.model_column || ""}
+                                          onChange={e => {
+                                            this.changeValue(e.target.value, "model_column");
+                                          }}
+                                          className="form-control-blueprint"
                               />
                             </div>
                           }
                           {
                             this.state.value.model_id && <div className="form-group">
                               <label htmlFor="page-path">Param for Search</label>
-                              <input
-                                type="text"
-                                id="page-path"
-                                value={this.state.value.param_name || ""}
-                                onChange={e => {
-                                  this.changeValue(e.target.value, "param_name");
-                                }}
-                                className="form-control"
+                              {/*<input*/}
+                              {/*  type="text"*/}
+                              {/*  id="page-path"*/}
+                              {/*  value={this.state.value.param_name || ""}*/}
+                              {/*  onChange={e => {*/}
+                              {/*    this.changeValue(e.target.value, "param_name");*/}
+                              {/*  }}*/}
+                              {/*  className="form-control"*/}
+                              {/*/>*/}
+
+                              <InputGroup type="text"
+                                          id="page-path"
+                                          value={this.state.value.param_name || ""}
+                                          onChange={e => {
+                                            this.changeValue(e.target.value, "param_name");
+                                          }}
+                                          className="form-control-blueprint"
                               />
                             </div>
                           }
@@ -480,7 +527,7 @@ class AddPage extends Component {
                           <label htmlFor="page-roles" className="font__edit">Roles</label>
 
                           <MultiSelect tagRenderer={this.tagRenderer} id="roles"
-                                       items={rolesOptions}
+                                       items={this.state.value.rolesOptions}
                                        itemPredicate={this.ItemPredicate}
                                        noResults={<MenuItem disabled={true} text="No results."/>}
                                        fill={true}
@@ -615,7 +662,12 @@ class AddPage extends Component {
             </form>
           </div>
 
-          {Boolean(dataSources.length) && <AdminTable
+          {this.props.match.params.id && this.state.currentTab === "content" &&
+          <button onClick={() => this.setState({isModalOpened: true})} className="btn btn_add">
+            Add Data Source
+          </button>}
+
+          {Boolean(dataSources.length) && this.state.currentTab === "content" && <AdminTable
             columns={columns}
             quickActions={[
               {
@@ -629,17 +681,12 @@ class AddPage extends Component {
                 confirm: 'Are You Sure?',
                 after: () => this.getDataSources(),
                 className: 'quick-action-menu__item_danger',
-                title: 'Trash'
+                title: 'Delete'
               }
             ]}
             rows={dataSources}
             radiusTable={true}
           />}
-
-          {this.props.match.params.id &&
-          <button onClick={() => this.setState({isModalOpened: true})} className="btn btn_add">
-            Add Data Source
-          </button>}
 
           {isModalOpened && (
             <AdminModal2

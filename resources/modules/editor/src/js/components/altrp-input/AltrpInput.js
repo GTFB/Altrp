@@ -34,6 +34,7 @@ class AltrpInput extends Component {
     const { content_type, content_mask, mask_mismatch_message } = this.props.settings;
     const inputProps = {
       ...this.props,
+      inputRef: this.props.inputRef,
     };
     switch (content_type) {
       case "file": {

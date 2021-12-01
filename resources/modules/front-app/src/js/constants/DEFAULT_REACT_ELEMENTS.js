@@ -43,10 +43,13 @@ const DEFAULT_REACT_ELEMENTS = [
   'gallery',
   'dropbar',
   'posts',
+  'carousel',
   'table',
   'tabs',
   'heading-type-animating',
   'scheduler',
   'tree',
+  'stars',
+  'progress-bar',
 ]
 export default DEFAULT_REACT_ELEMENTS

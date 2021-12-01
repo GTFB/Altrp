@@ -1,6 +1,6 @@
 import React from "react";
-import { createMask, Masked } from "imask";
-import {isNumber} from "../../../../../altrp-reports/src/helpers/number";
+// import { createMask, Masked } from "imask";
+// import {isNumber} from "../../../../../altrp-reports/src/helpers/number";
 
 class MaskedInput extends React.Component {
   constructor(props) {

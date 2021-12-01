@@ -9,7 +9,7 @@ import MODEL_OPTIONS from "./MODEL_OPTIONS";
 const USER_EXTENDS_MODEL = MODEL_OPTIONS.map(item => {
   return {
     value: `userExtendsModel.${item.label}`,
-    objectInstance: "userExtendsModel",
+    objectInstance: "User",
     label: item.label,
     returns: item.returns || null,
     parameters: item.parameters

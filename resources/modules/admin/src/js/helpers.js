@@ -135,6 +135,7 @@ export function buildPagesTree(pages) {
   return tree;
 }
 
+
 export function filterUsers(users, roleFilter) {
   return users.filter(user => user.roles.some(role => role.id === roleFilter));
 }

@@ -8,6 +8,8 @@ import Websockets from "./settings/integrations/Websockets";
 import Telegram from "./settings/integrations/Telegram";
 import Resource from "../../../editor/src/js/classes/Resource";
 import AutoUpdateCheckbox from "./AutoUpdateCheckbox";
+import UserTopPanel from "./UserTopPanel";
+import React from "react";
 const AdvancedSettings = React.lazy(() => import("./AdvancedSettings"));
 const MailForm = React.lazy(() => import("./settings/MailForm"));
 
@@ -133,13 +135,16 @@ export default class AdminSettings extends Component {
     return (
       <div className="admin-settings admin-page">
         <div className="admin-heading">
-          <div className="admin-breadcrumbs">
-            <a className="admin-breadcrumbs__link" href="#">
-              Settings
-            </a>
-            <span className="admin-breadcrumbs__separator">/</span>
-            <span className="admin-breadcrumbs__current">Builder</span>
+          <div className="admin-heading-left">
+            <div className="admin-breadcrumbs">
+              <a className="admin-breadcrumbs__link" href="#">
+                Settings
+              </a>
+              <span className="admin-breadcrumbs__separator">/</span>
+              <span className="admin-breadcrumbs__current">Builder</span>
+            </div>
           </div>
+          <UserTopPanel />
         </div>
         <div className="admin-content zeroing__styleTabsSettings">
           <Tabs selectedIndex={this.state.activeTab} onSelect={this.switchTab}>

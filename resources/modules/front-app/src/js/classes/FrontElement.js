@@ -143,10 +143,19 @@ class FrontElement {
       // }
     }
 
+    if(this.getName() === "input-date-range" &&
+      this.getFormId("form_id_start") &&
+      this.getFormId("form_id_end")
+    ) {
+      this.formInit();
+      return;
+    }
+
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getFormId()){
       this.formInit();
       return;
     }
+
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_actions') === 'delete'){
       this.formInit();
       return;
@@ -258,7 +267,6 @@ class FrontElement {
       case 'input-gallery':
       case 'input-accept':
       case 'input-date':
-      case 'input-date-range':
       case 'input-textarea':
       case 'input-password':
       case 'input-email':
@@ -268,8 +276,16 @@ class FrontElement {
       case 'input-text':
       case 'input-text-common':
       case 'input-text-autocomplete':
+      case 'stars':
+
       case 'input': {
         formsManager.addField(this.getFormId(), this);
+      }
+      break;
+
+      case 'input-date-range': {
+        formsManager.addField(this.getFormId("form_id_start"), this);
+        formsManager.addField(this.getFormId("form_id_end"), this);
       }
       break;
     }
@@ -514,7 +530,6 @@ class FrontElement {
    * Возвращает значение если виджет input, если другое, то null
    */
   getValue(){
-
     if(INPUT_WIDGETS.indexOf(this.getName()) === -1){
       return null;
     }
@@ -527,6 +542,8 @@ class FrontElement {
       case 'input':
       case 'input-textarea':
       case 'input-text-autocomplete':
+      case 'stars':
+      case  'input-date-range':
       case 'input-text-common':{
         value = this?.component?.getValue() || this?.component?.state?.value || '';
       }break;

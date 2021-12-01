@@ -86,6 +86,22 @@ class InputSelect extends BaseElement {
       ]
     });
 
+    this.addControl('full_width', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Full width',
+    });
+
+    this.addControl('remove', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Remove button',
+    });
+
+    this.addControl('remove_label', {
+      type: CONTROLLER_TEXT,
+      label: 'Remove label',
+    });
+
+
     this.addControl("label_icon", {
       type: CONTROLLER_MEDIA,
       label: "Choose Icon"

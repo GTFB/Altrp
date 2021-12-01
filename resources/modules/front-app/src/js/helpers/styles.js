@@ -729,6 +729,7 @@ export function shadowStyled(controller = {}, important = '') {
   } else return ""
 }
 
+
 /**
  * проверяет наличичие значения text shadow
  * @return {string}

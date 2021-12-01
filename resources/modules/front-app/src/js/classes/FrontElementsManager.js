@@ -180,6 +180,22 @@ class FrontElementsManager {
         }
       },
       {
+        name: "stars",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'Stars' */ "../../../../editor/src/js/components/widgets/StarsWidget"
+            );
+        }
+      },
+      {
+        name: "progress-bar",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'ProgressBar' */ "../../../../editor/src/js/components/widgets/ProgressBarWidget"
+            );
+        }
+      },
+      {
         name: "input-hidden",
         import: async () => {
           return await import(

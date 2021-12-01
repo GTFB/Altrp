@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
-import { buildPagesTree } from "../js/helpers";
+import UserTopPanel from "./UserTopPanel";
 
 export default class AllPages extends Component {
   constructor(props) {
@@ -10,6 +10,7 @@ export default class AllPages extends Component {
     this.state = {
       pages: [],
       currentPage: 1,
+      activeHeader: 0,
       pagesSearch: ""
     };
     this.resource = new Resource({ route: "/admin/ajax/pages" });
@@ -25,6 +26,24 @@ export default class AllPages extends Component {
 
   componentDidMount() {
     this.getPages();
+
+    window.addEventListener("scroll", this.listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", this.listenScrollHeader)
+    }
+  }
+
+  listenScrollHeader = () => {
+    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
+      this.setState({
+        activeHeader: 1
+      })
+    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
+      this.setState({
+        activeHeader: 0
+      })
+    }
   }
 
   submitSearchHandler = (e) => {
@@ -36,27 +55,53 @@ export default class AllPages extends Component {
     this.setState({pagesSearch: e.target.value})
   };
 
+  // PagesTree = (pages) => {
+  //   const tree = [];
+  //   const roots = pages.filter(({ parent_page_id }) => parent_page_id === null);
+  //
+  //   if (!roots.length) return pages;
+  //
+  //   roots.forEach(root => {
+  //     tree.push(root);
+  //     treeRecursion(root.id);
+  //   });
+  //
+  //   function treeRecursion(parentId) {
+  //     const children = pages.filter(({ parent_page_id }) => parent_page_id === parentId);
+  //     const childrenMap = children.map(page => ({
+  //       ...page,
+  //       title: "——" + page.title
+  //     }))
+  //     tree.push(...childrenMap);
+  //   }
+  //   console.log(tree)
+  //
+  //   return tree;
+  // }
+
   render() {
     const { currentPage, pages, pagesSearch } = this.state;
-    console.log("pages", pages)
     return (
       <div className="admin-pages admin-page">
-        <div className="admin-heading">
-          <div className="admin-breadcrumbs">
-            <a className="admin-breadcrumbs__link" href="#">
-              Pages
-            </a>
-            <span className="admin-breadcrumbs__separator">/</span>
-            <span className="admin-breadcrumbs__current">All Pages</span>
-          </div>
-          <Link className="btn" to="/admin/pages/add">
-            Add New
-          </Link>
-          <div className="admin-filters">
+        <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
+         <div className="admin-heading-left">
+           <div className="admin-breadcrumbs">
+             <a className="admin-breadcrumbs__link" href="#">
+               Pages
+             </a>
+             <span className="admin-breadcrumbs__separator">/</span>
+             <span className="admin-breadcrumbs__current">All Pages</span>
+           </div>
+           <Link className="btn" to="/admin/pages/add">
+             Add New
+           </Link>
+           <div className="admin-filters">
             <span className="admin-filters__current">
               All ({this.state.pages.length || "0"})
             </span>
-          </div>
+           </div>
+         </div>
+          <UserTopPanel />
         </div>
         <div className="admin-content">
           <AdminTable
@@ -90,17 +135,17 @@ export default class AllPages extends Component {
                 confirm: "Are You Sure?",
                 after: () => { this.getPages() },
                 className: "quick-action-menu__item_danger",
-                title: "Trash"
+                title: "Delete"
               }
             ]}
-            rows={buildPagesTree(pages).slice(
+            rows={pages.slice(
               currentPage * this.itemsPerPage - this.itemsPerPage,
               currentPage * this.itemsPerPage
             )}
-            search={{
+            searchTables={{
               value: pagesSearch || "",
-              submitHandler: this.submitSearchHandler,
-              changeHandler: (e) => this.changeSearchHandler(e)
+              submit: this.submitSearchHandler,
+              change: (e) => this.changeSearchHandler(e)
             }}
             getPages={this.getPages}
 

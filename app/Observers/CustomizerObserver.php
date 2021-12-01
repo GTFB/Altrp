@@ -12,6 +12,7 @@ use App\Altrp\Generators\RouteGenerator;
 use App\Altrp\Model;
 use App\Altrp\Source;
 use App\Exceptions\RouteGenerateFailedException;
+use App\PageDatasource;
 
 class CustomizerObserver
 {
@@ -87,6 +88,7 @@ class CustomizerObserver
         'sourceable_id' => $customizer->id
       ])->first();
       if( $source_to_delete ){
+        $old_page_data_sources = PageDatasource::where('source_id', $source_to_delete->id)->get();
         $source_to_delete->delete();
       }
 
@@ -109,6 +111,14 @@ class CustomizerObserver
           ]);
           try{
             $source->save();
+
+            if(isset($old_page_data_sources) && $old_page_data_sources){
+              $old_page_data_sources->each(function($old_page_data_source) use ($source){
+                $page_data_source = new PageDatasource($old_page_data_source->toArray());
+                $page_data_source->source_id = $source->id;
+                $page_data_source->save();
+              });
+            }
             $controller = $model->altrp_controller;
             $generator = new ControllerGenerator($controller);
             $repo = new RepositoryFile($model);

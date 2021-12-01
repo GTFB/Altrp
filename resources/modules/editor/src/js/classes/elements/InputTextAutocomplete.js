@@ -518,11 +518,38 @@ class InputTextCommon extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('search_settings', {
+      label: 'Filter Settings'
+    });
+
+    this.addControl('s_type', {
+      type: CONTROLLER_SELECT,
+      responsive: false,
+      label: 'Filter Type',
+      options: [
+        {
+          value: 'complete_entry',
+          label: 'Complete Entry',
+        },
+        {
+          value: 'prevent_filter',
+          label: 'Prevent Filter',
+        },
+
+      ],
+    })
+
+    this.endControlSection();
+
     actionsControllers(this, "Blur Actions");
+
+    actionsControllers(this, "Select Actions", "select_");
 
     actionsControllers(this, "Focus Actions", "focus_");
 
     actionsControllers(this, "Change Actions", "change_");
+
+    actionsControllers(this, "Typing Text Actions", "typing_");
 
     // this.startControlSection('logic_section', {
     //   tab: TAB_CONTENT,

@@ -175,7 +175,7 @@ class Action
         $modelNamespace = $model->parent ? $model->parent->namespace : $model->namespace;
         $modelClass = '\\' . $modelNamespace;
         $method = $this->node->data->props->nodeData->data->method;
-
+      $result = false;
         if ($method == 'create') {
             $entity = new $modelClass($newData);
             $result = $entity->$method($newData);

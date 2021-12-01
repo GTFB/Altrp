@@ -96,16 +96,6 @@ class Tree extends BaseElement {
       },
     });
 
-    this.addControl('tree_substitute_datasource', {
-      type: CONTROLLER_TEXTAREA,
-      label: 'Substitute values',
-      responsive: false,
-      dynamic: false,
-      description: 'label | alias \n icon | alias \n tree_id | alias \n parent | alias',
-      conditions: {
-        'select_type': "datasource",
-      },
-    });
 
     this.addControl('cursor', {
       type: CONTROLLER_SWITCHER,

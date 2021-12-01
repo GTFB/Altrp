@@ -5,6 +5,7 @@ import store from "../js/store/store";
 import { setModalSettings } from "../js/store/modal-settings/actions";
 import {redirect, titleToName} from "../js/helpers";
 import {altrpRandomId} from "../../../front-app/src/js/helpers";
+import UserTopPanel from "./UserTopPanel";
 
 export default class Customizer extends Component {
   constructor(props) {
@@ -12,22 +13,45 @@ export default class Customizer extends Component {
 
     this.state = {
       customizers: [],
-      model_id: false
+      model_id: false,
+      currentPage: 1,
+      activeHeader: 0,
+      customizersSearch: ""
     };
 
     this.resource = new Resource({
       route: "ajax/customizers"
     });
 
+    this.itemsPerPage = 10;
+
     this.addNew = this.addNew.bind(this);
   }
 
   async componentDidMount() {
     await this.fetchData();
+
+    window.addEventListener("scroll", this.listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", this.listenScrollHeader)
+    }
+  }
+
+  listenScrollHeader = () => {
+    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
+      this.setState({
+        activeHeader: 1
+      })
+    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
+      this.setState({
+        activeHeader: 0
+      })
+    }
   }
 
   async fetchData() {
-    const customizers = (await this.resource.getAll()).data;
+    const customizers = (await this.resource.getQueried({ s: this.state.customizersSearch })).data;
 
     if (_.isArray(customizers)) {
       customizers.map(item =>{
@@ -71,26 +95,39 @@ export default class Customizer extends Component {
     store.dispatch(setModalSettings(modalSettings));
   }
 
+  submitSearchCustomizers = async (e) => {
+    e.preventDefault();
+    await this.fetchData();
+  }
+
+  changeValueCustomizers = (e) => {
+    this.setState({customizersSearch: e.target.value})
+  }
+
   render() {
+    const { currentPage, customizers, customizersSearch  } = this.state;
     return (
       <div className="admin-templates admin-page">
-        <div className="admin-heading">
-          <div className="admin-breadcrumbs">
-            <a className="admin-breadcrumbs__link" href="#">
-              Customizer
-            </a>
-            <span className="admin-breadcrumbs__separator">/</span>
-            <span className="admin-breadcrumbs__current">All Customizer</span>
-          </div>
-          <button onClick={this.addNew} className="btn">
-            Add New
-          </button>
-          {/* <button className="btn ml-3">Import Robot</button> */}
-          <div className="admin-filters">
+        <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
+          <div className="admin-heading-left">
+            <div className="admin-breadcrumbs">
+              <a className="admin-breadcrumbs__link" href="#">
+                Visual Codes
+              </a>
+              <span className="admin-breadcrumbs__separator">/</span>
+              <span className="admin-breadcrumbs__current">All Visual Codes</span>
+            </div>
+            <button onClick={this.addNew} className="btn">
+              Add New
+            </button>
+            {/* <button className="btn ml-3">Import Robot</button> */}
+            <div className="admin-filters">
             <span className="admin-filters__current">
-              {/* All ({this.state.allTemplates.length || ""}) */}
+              All ({ this.state.customizers.length || "0"})
             </span>
+            </div>
           </div>
+          <UserTopPanel />
         </div>
         <div className="admin-content">
           <AdminTable
@@ -102,7 +139,10 @@ export default class Customizer extends Component {
                 target: "_blank"
               },
             ]}
-            rows={this.state.customizers}
+            rows={customizers.slice(
+              currentPage * this.itemsPerPage - this.itemsPerPage,
+              currentPage * this.itemsPerPage
+            )}
             quickActions={[
               {
                 tag: "a",
@@ -133,9 +173,25 @@ export default class Customizer extends Component {
                 confirm: "Are You Sure?",
                 after: () => this.fetchData(),
                 className: "quick-action-menu__item_danger",
-                title: "Trash"
+                title: "Delete"
               }
             ]}
+
+            searchTables={{
+              value: customizersSearch,
+              submit: this.submitSearchCustomizers,
+              change: this.changeValueCustomizers
+            }}
+
+            pageCount={Math.ceil(customizers.length / this.itemsPerPage) || 1}
+            currentPage={currentPage}
+            changePage={page => {
+              if (currentPage !== page) {
+                this.setState({ currentPage: page });
+              }
+            }}
+            itemsCount={customizers.length}
+            openPagination={true}
           />
         </div>
       </div>

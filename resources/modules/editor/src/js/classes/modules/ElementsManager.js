@@ -119,6 +119,10 @@ import FunnelDiagram from "../elements/diagrams/FunnelDiagram";
 import FunnelDiagramWidget from "../../components/widgets/diagrams/FunnelDiagramWidget";
 import RadarDiagram from "../elements/diagrams/RadarDiagram";
 import RadarDiagramWidget from "../../components/widgets/diagrams/RadarDiagramWidget";
+import Stars from "../elements/Stars";
+import StarsWidget from "../../components/widgets/StarsWidget";
+import ProgressBar from "../elements/ProgressBar";
+import ProgressBarWidget from "../../components/widgets/ProgressBarWidget";
 
 export default class ElementsManger {
   constructor() {
@@ -182,6 +186,10 @@ export default class ElementsManger {
     this.elements[MapConstructor.getName()] = MapConstructor;
     this.elements[Menu.getName()] = Menu;
 
+    this.elements[PieDiagram.getName()] = PieDiagram;
+    this.elements[BarDiagram.getName()] = BarDiagram;
+    this.elements[LineDiagram.getName()] = LineDiagram;
+    this.elements[PointDiagram.getName()] = PointDiagram;
     this.elements[Dashboards.getName()] = Dashboards;
     this.elements[Carousel.getName()] = Carousel;
     this.elements[Tour.getName()] = Tour;
@@ -197,6 +205,8 @@ export default class ElementsManger {
     this.elements[Tree.getName()] = Tree;
     this.elements[Icon.getName()] = Icon;
     this.elements[InputSelectTree.getName()] = InputSelectTree;
+    this.elements[Stars.getName()] = Stars;
+    this.elements[ProgressBar.getName()] = ProgressBar;
 
     // Websocket Notifications
     // this.elements[Notifications.getName()] = Notifications;
@@ -256,6 +266,8 @@ export default class ElementsManger {
     this.components[Scheduler.getName()] = SchedulerWidget;
     this.components[Tree.getName()] = TreeWidget;
     this.components[Icon.getName()] = IconWidget;
+    this.components[Stars.getName()] = StarsWidget;
+    this.components[ProgressBar.getName()] = ProgressBarWidget;
     // Websocket Notifications widget
     // this.components[Notifications.getName()] = NotificationsWidget;
   }

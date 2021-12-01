@@ -9,7 +9,9 @@ import ValidationTable from "./ValidationSection/ValidationTable";
 import ModelsRemoteFieldForm from "./RemoteFieldForms/ModelsRemoteFieldForm";
 import ModalWindow from "../ModalWindow";
 import store from "./../../js/store/store"
-import {getModelId} from "../../js/store/models-state/actions";
+import {getModelId, getModelRelationId} from "../../js/store/models-state/actions";
+import ModalRelationWindow from "../ModalRelationWindow";
+import UserTopPanel from "../UserTopPanel";
 
 const columns = [
   {
@@ -70,6 +72,8 @@ class EditModel extends Component {
       isFieldRemoteModalOpened: false,
       editingRemoteField: null,
       modalWindow: false,
+      modalRelationWindow: false,
+      activeHeader: 0,
     };
 
     this.modelsResource = new Resource({ route: '/admin/ajax/models' });
@@ -126,6 +130,17 @@ class EditModel extends Component {
     this.setState(state => ({ ...state, modalWindow: true }))
   }
 
+  toggleWindowRelationModal = () => {
+    store.dispatch(getModelRelationId(null));
+    this.setState(state => ({ ...state, modalRelationWindow: !this.state.modalRelationWindow }))
+    this.updateRelations();
+  }
+
+  getModalRelation = (id) => {
+    store.dispatch(getModelRelationId(id));
+    this.setState(state => ({ ...state, modalRelationWindow: true }))
+  }
+
   /**
    * Загрузим данные модели
    * @return {Promise<void>}
@@ -159,6 +174,25 @@ class EditModel extends Component {
       this.data_source_optionsResource.getAll()
         .then(data_source_options => this.setState({ data_source_options }));
     }
+
+    window.addEventListener("scroll", this.listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", this.listenScrollHeader)
+    }
+  }
+
+
+  listenScrollHeader = () => {
+    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
+      this.setState({
+        activeHeader: 1
+      })
+    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
+      this.setState({
+        activeHeader: 0
+      })
+    }
   }
   /**
    * Обработка формы
@@ -187,16 +221,19 @@ class EditModel extends Component {
   };
   render() {
     const { model, fields, remoteFields, relations, queries, sql_editors, accessors, isModalOpened,
-      isFieldRemoteModalOpened, editingRemoteField, data_source_options, validations, modalWindow } = this.state;
+      isFieldRemoteModalOpened, editingRemoteField, data_source_options, validations, modalWindow, modalRelationWindow } = this.state;
 
     const { id } = this.props.match.params;
     return <div className="admin-pages admin-page">
-      <div className="admin-heading">
-        <div className="admin-breadcrumbs">
-          <Link className="admin-breadcrumbs__link" to="/admin/tables/models">Tables / All Models</Link>
-          <span className="admin-breadcrumbs__separator">/</span>
-          <span className="admin-breadcrumbs__current">Edit Model</span>
-        </div>
+      <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
+       <div className="admin-heading-left">
+         <div className="admin-breadcrumbs">
+           <Link className="admin-breadcrumbs__link" to="/admin/tables/models">Tables / All Models</Link>
+           <span className="admin-breadcrumbs__separator">/</span>
+           <span className="admin-breadcrumbs__current">Edit Model</span>
+         </div>
+       </div>
+        <UserTopPanel />
       </div>
       <div className="admin-content">
         <EditModelForm model={model}
@@ -227,7 +264,7 @@ class EditModel extends Component {
                     confirm: 'Are You Sure?',
                     after: () => this.updateFields(),
                     className: 'quick-action-menu__item_danger',
-                    title: 'Trash'
+                    title: 'Delete'
                   }
                 ]}
                 rows={fields.map(field => ({ ...field,  button__table: () => this.getModalFields(field.id) }))}
@@ -243,25 +280,28 @@ class EditModel extends Component {
             <div className="form-group_width-table47">
               <div className="form-group__inline-wrapper table__name-top">
                 <h2 className="sub-header">Relations</h2>
-                <Link className="btn btn_add" to={`/admin/tables/models/${model.id}/relations/add`}>Add Relation</Link>
+                <button className="btn btn_add" onClick={this.toggleWindowRelationModal}>Add Relation</button>
               </div>
               <AdminTable
                 columns={columns}
-                quickActions={[{
-                  tag: 'Link', props: {
-                    href: `/admin/tables/models/${id}/relations/edit/:id`,
-                  },
-                  title: 'Edit'
-                }, {
+                quickActions={
+                  [
+                //     {
+                //   tag: 'Link', props: {
+                //     href: `/admin/tables/models/${id}/relations/edit/:id`,
+                //   },
+                //   title: 'Edit'
+                // },
+                    {
                   tag: 'button',
                   route: `/admin/ajax/models/${id}/relations/:id`,
                   method: 'delete',
                   confirm: 'Are You Sure?',
                   after: () => this.updateRelations(),
                   className: 'quick-action-menu__item_danger',
-                  title: 'Trash'
+                  title: 'Delete'
                 }]}
-                rows={relations.map(relation => ({ ...relation, editUrl: `/admin/tables/models/${model.id}/relations/edit/${relation.id}` }))}
+                rows={relations.map(relation => ({ ...relation, button__table: () => this.getModalRelation(relation.id) }))}
                 radiusTable={true}
                 offBorderLast={true}
               />
@@ -291,7 +331,7 @@ class EditModel extends Component {
                 confirm: 'Are You Sure?',
                 after: () => this.updateRemoteFields(),
                 className: 'quick-action-menu__item_danger',
-                title: 'Trash'
+                title: 'Delete'
               }]}
               rows={remoteFields}
               radiusTable={true}
@@ -329,7 +369,7 @@ class EditModel extends Component {
                   confirm: 'Are You Sure?',
                   after: () => this.updateAccessors(),
                   className: 'quick-action-menu__item_danger',
-                  title: 'Trash'
+                  title: 'Delete'
                 }]}
                 rows={accessors.map(accessor => ({ ...accessor, editUrl: `/admin/tables/models/${model.id}/accessors/edit/${accessor.id}` }))}
                 radiusTable={true}
@@ -363,7 +403,7 @@ class EditModel extends Component {
                   confirm: 'Are You Sure?',
                   after: () => this.updateQueries(),
                   className: 'quick-action-menu__item_danger',
-                  title: 'Trash'
+                  title: 'Delete'
                 }]}
                 radiusTable={true}
                 offBorderLast={true}
@@ -411,6 +451,10 @@ class EditModel extends Component {
 
         {modalWindow && (
           <ModalWindow modelId={id} activeMode={this.state.modalWindow} toggleModal={this.toggleWindowModal} />
+        )}
+
+        {modalRelationWindow && (
+          <ModalRelationWindow modelId={id} activeMode={this.state.modalRelationWindow} toggleModal={this.toggleWindowRelationModal}/>
         )}
       </div>
     </div>;

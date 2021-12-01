@@ -1,17 +1,16 @@
 import React, {Component} from "react";
 import Resource from "../../../../editor/src/js/classes/Resource";
-import {Link} from "react-router-dom";
 import AdminTable from "../AdminTable";
-import CONSTANTS from "../../../../editor/src/js/consts";
 import {mbParseJSON} from "../../../../front-app/src/js/helpers";
 import {withRouter} from "react-router";
-import {buildPagesTree} from "../../js/helpers";
+import UserTopPanel from "../UserTopPanel";
 
 class MenusList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       menus: [],
+      activeHeader: 0,
       currentPage: 1,
       menusSearch: ""
     }
@@ -25,6 +24,24 @@ class MenusList extends Component {
       this.setState(state => ({...state, menus}));
     } catch (e) {
       console.error(e);
+    }
+
+    window.addEventListener("scroll", this.listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", this.listenScrollHeader)
+    }
+  }
+
+  listenScrollHeader = () => {
+    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
+      this.setState({
+        activeHeader: 1
+      })
+    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
+      this.setState({
+        activeHeader: 0
+      })
     }
   }
 
@@ -65,11 +82,14 @@ class MenusList extends Component {
     const { menus, currentPage, menusSearch } = this.state;
 
     return <div className="admin-pages admin-page">
-      <div className="admin-heading">
-        <div className="admin-breadcrumbs">
-          <div className="admin-breadcrumbs__current">Menus</div>
+      <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
+        <div className="admin-heading-left">
+          <div className="admin-breadcrumbs">
+            <div className="admin-breadcrumbs__current">Menus</div>
+          </div>
+          <button className="btn" onClick={this.addNew} >Add New</button>
         </div>
-        <button className="btn" onClick={this.addNew} >Add New</button>
+        <UserTopPanel />
       </div>
       <div className="admin-content">
         <AdminTable
@@ -98,18 +118,18 @@ class MenusList extends Component {
                 this.updateMenus()
               },
               className: "quick-action-menu__item_danger",
-              title: "Trash"
+              title: "Delete"
             }
           ]}
-          rows={buildPagesTree(menus).slice(
+          rows={menus.slice(
             currentPage * this.itemsPerPage - this.itemsPerPage,
             currentPage * this.itemsPerPage
           )}
 
-          searchMenus={{
-            onSubmitMenus: this.searchMenus,
-            valueMenus: menusSearch,
-            onChangeMenus: this.changeMenus
+          searchTables={{
+            submit: this.searchMenus,
+            value: menusSearch,
+            change: this.changeMenus
           }}
 
           pageCount={Math.ceil(menus.length / this.itemsPerPage) || 1}

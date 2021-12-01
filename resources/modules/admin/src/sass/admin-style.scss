@@ -23,12 +23,18 @@
 @import "components/admin-document-detail";
 @import "components/admin-custom-fonts";
 @import "components/admin-edit-font";
-@import "~@blueprintjs/core/lib/css/blueprint.css";
 
+
+@import "../../../editor/src/sass/blueprint-datetime";
+@import "../../../editor/src/sass/blueprint-hi-contrast";
+@import "../../../editor/src/sass/blueprint";
 .admin {
-  display: flex;
-  min-height: 100vh;
-  padding-left: 271px;
+  padding-left: var(--menu-admin-default);
+
+  &-block {
+    display: flex;
+    min-height: 100vh;
+  }
   &__logo {
     width: 102px;
     height: 44px;
@@ -151,12 +157,12 @@
         /* margin-left: 55px; */
         display: none;
         position: fixed;
-        left: 271px;
-        margin-top: -41px;
+        left: var(--menu-admin-default);
+        margin-top: -41.84px;
 
         &::before {
           margin-top: 12px;
-          left: 255px;
+          left: var(--menu-droplet-default);
           content: "";
           position: fixed;
           border: 8px solid transparent;
@@ -177,8 +183,9 @@
 
         .admin-nav-list__link {
           font-size: 13px;
-          width: 165px;
-          height: 41px;
+          min-width: 165px;
+          max-width: 250px;
+          height: 41.84px;
           padding: 10px;
           text-decoration: none;
 
@@ -198,6 +205,10 @@
   }
   &-content {
     width: 100%;
+    background-color: #f7f7f7;
+    flex-grow: 1;
+    padding: 120px 60px 30px 60px;
+    //padding: 30px 60px;
   }
   &-caption {
     margin-bottom: 15px;
@@ -299,13 +310,9 @@ a {
 }
 .admin-page {
   width: 100%;
+  position: relative;
   display: flex;
   flex-direction: column;
-}
-.admin-content {
-  background-color: #f7f7f7;
-  flex-grow: 1;
-  padding: 30px 60px;
 }
 
 .ace_editor {
@@ -355,4 +362,144 @@ a {
 
 .font__weightDropList {
   font-weight: 700;
+}
+
+.icon-menu__block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 15px;
+  bottom: 40px;
+  width: 35px;
+  height: 35px;
+  z-index: 50;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.3s ease-in-out;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.icon__menu {
+  display: inline-block;
+  width: 17px;
+  height: 27px;
+  transform: rotate(-180deg);
+}
+
+.models-sublist__item {
+  max-height: 715px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+}
+
+.admin-nav-mini {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow: hidden;
+  height: 100vh;
+  background-color: #2A2D36;
+  width: 60px;
+  flex-shrink: 0;
+
+  & .active__panel {
+    list-style-type: none;
+    background-color: #7CA727;
+  }
+}
+
+.admin-nav-mini .active__panel {
+  &:hover {
+    background-color: #7CA727;
+
+    & svg path, circle {
+      fill: white;
+    }
+  }
+}
+
+.admin-nav-top-mini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  height: 62px;
+  background-color: #262626;
+}
+
+.admin-nav-list__link-mini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  height: 41.84px;
+  background-color: rgba(255, 255, 255, 0.05);
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+
+    & path, circle {
+      fill: $green;
+    }
+  }
+}
+
+.icon-mini {
+  width: 16px;
+  height: 16px;
+  fill: white;
+  display: inline-block;
+  align-items: center;
+
+  & path {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.admin-bottom__block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 5px;
+}
+
+.admin__bars-mini {
+  cursor: pointer;
+  fill: #fff;
+  margin-bottom: 20px;
+}
+
+.icon__menu-mini {
+  display: inline-block;
+  width: 17px;
+  height: 27px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+body {
+  font-size: 14px !important;
+  line-height: 1.28581 !important;
+}
+
+:root {
+  --menu-admin-true: 271px;
+  --menu-admin-false: 60px;
+  --menu-admin-default: var(--menu-admin-true);
+
+  --menu-droplet-true: 255px;
+  --menu-droplet-false: 45px;
+  --menu-droplet-default: var(--menu-droplet-true);
 }

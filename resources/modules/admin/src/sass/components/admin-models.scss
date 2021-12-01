@@ -13,6 +13,12 @@
   margin-top: 20px;
 }
 
+.admin-pages {
+  & .btn_add {
+    margin-bottom: 20px;
+  }
+}
+
 
 .form-group__inline-wrapper {
   display: flex;

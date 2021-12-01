@@ -393,7 +393,6 @@ class InputTextCommonWidget extends Component {
     if (window.elementDecorator) {
       window.elementDecorator(this);
     }
-    this.onChange = this.onChange.bind(this);
 
     this.defaultValue = this.getContent("content_default_value")
     this.popoverRef = React.createRef()
@@ -423,7 +422,6 @@ class InputTextCommonWidget extends Component {
    */
   clearValue() {
     let value = "";
-    this.onChange(value);
     this.dispatchFieldValueToStore(value, true);
   }
 
@@ -432,6 +430,7 @@ class InputTextCommonWidget extends Component {
    * @param {{}} e
    */
   handleEnter = e => {
+    this.setState(state=>({...state, isOpen: true}));
     if (e.keyCode === 13) {
       e.preventDefault();
       const inputs = Array.from(document.querySelectorAll("input,select"));
@@ -494,6 +493,7 @@ class InputTextCommonWidget extends Component {
       return [];
     }
     let options = this.state.options;
+    let element = this.props.element;
     const content_options = this.props.element.getResponsiveSetting('options');
     if(_.isString(content_options)
       && content_options.indexOf('{{') === 0 ){
@@ -503,16 +503,18 @@ class InputTextCommonWidget extends Component {
       }
     }
     const value = this.getValue()
-    options = options.filter(o=>{
-      if(_.isObject(o)){
-        o = (o?.label ||o?.value)
-        if(o === 0){
-          o = '0';
+    if(element.getResponsiveSetting('s_type') !== 'prevent_filter'){
+      options = options.filter(o=>{
+        if(_.isObject(o)){
+          o = (o?.label ||o?.value)
+          if(o === 0){
+            o = '0';
+          }
         }
-      }
-      o += '';
-      return o.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) >= 0;
-    });
+        o += '';
+        return o.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) >= 0;
+      });
+    }
     options = options.map(o=>{
       if(! _.isObject(o)){
         return o;
@@ -699,7 +701,7 @@ class InputTextCommonWidget extends Component {
    * Изменение значения в виджете
    * @param e
    */
-  onChange(e) {
+  onChange = async (e) => {
     let value = "";
     if (e && e.target) {
       value = e.target.value;
@@ -712,7 +714,25 @@ class InputTextCommonWidget extends Component {
     if(isEditor()){
       this.setState(state=>({...state, value}))
     } else {
+
       this.dispatchFieldValueToStore(value, true)
+
+      const typing_actions = this.props.element.getSettings("typing_actions");
+
+      if (typing_actions) {
+        const actionsManager = (
+          await import(
+            /* webpackChunkName: 'ActionsManager' */
+            "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+            )
+        ).default;
+        await actionsManager.callAllWidgetActions(
+          this.props.element.getIdForAction(),
+          "typing",
+          typing_actions,
+          this.props.element
+        );
+      }
     }
   }
 
@@ -726,7 +746,7 @@ class InputTextCommonWidget extends Component {
 
   onFocus = async e => {
     const focus_actions = this.props.element.getSettings("focus_actions");
-    this.setState(state=>({...state, isOpen: true}))
+    // this.setState(state=>({...state, isOpen: true}))
     if (focus_actions && !isEditor()) {
       const actionsManager = (
         await import(
@@ -867,6 +887,43 @@ class InputTextCommonWidget extends Component {
   }
 
   /**
+   * Срабатывает после клика на элемент в меню
+   * @param e
+   * @returns {Promise<void>}
+   */
+  onSelect = async(e)=>{
+    const select_actions = this.props.element.getSettings("select_actions");
+    var len = this.getValue().length;
+    let input = this.inputRef.current
+
+    if(input){
+      if (input.setSelectionRange) {
+        input.focus();
+        input.setSelectionRange(len, len);
+      } else if (input.createTextRange) {
+        var t = input.createTextRange();
+        t.collapse(true);
+        t.moveEnd('character', len);
+        t.moveStart('character', len);
+        t.select();
+      }
+    }
+    if (select_actions) {
+      const actionsManager = (
+        await import(
+          /* webpackChunkName: 'ActionsManager' */
+          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+          )
+      ).default;
+      await actionsManager.callAllWidgetActions(
+        this.props.element.getIdForAction(),
+        "autocomplete_select",
+        select_actions,
+        this.props.element
+      );
+    }
+  }
+  /**
    *
    * @param {text} text
    * @param {int} index
@@ -874,8 +931,9 @@ class InputTextCommonWidget extends Component {
    */
   itemRenderer = (text, index)=>{
     return <MenuItem
-      onClick={()=>{
+      onClick={(e)=>{
         this.dispatchFieldValueToStore(text, true)
+        this.onSelect(e)
       }
       }
       key={text + index}
@@ -966,7 +1024,7 @@ class InputTextCommonWidget extends Component {
       label = null;
     }
     let options = this.getOptions();
-    // conl
+
     let input = (
       <div className="altrp-input-wrapper altrp-input-wrapper_autocomplete">
         <Popover2
@@ -984,7 +1042,7 @@ class InputTextCommonWidget extends Component {
           </Menu>}
         >
           <AltrpInput
-            ref={this.inputRef}
+            inputRef={this.inputRef}
             type={this.state.settings.content_type === 'password' ? (this.state.showPassword ? "text" : "password") : this.state.settings.content_type}
             name={this.getName()}
             id={this.getName()}

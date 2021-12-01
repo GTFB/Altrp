@@ -14,6 +14,8 @@ class EditModelForm extends Component {
     this.submitHandler = this.submitHandler.bind(this);
     this.deleteHandler = this.deleteHandler.bind(this);
     this.titleChangeHandler = this.titleChangeHandler.bind(this);
+    this.nameChangeHandler = this.nameChangeHandler.bind(this);
+    this.categoriesChangeHandler = this.categoriesChangeHandler.bind(this);
   }
 
   /**
@@ -27,6 +29,26 @@ class EditModelForm extends Component {
       state.value[field] = value;
       return state
     });
+  }
+
+  categoriesChangeHandler(e) {
+    this.setState(state => ({
+      ...state,
+      value: {
+        ...state.value,
+        categories: titleToNameTwo(e.target.value)
+      }
+    }))
+  }
+
+  nameChangeHandler(e) {
+    this.setState(state => ({
+      ...state,
+      value: {
+        ...state.value,
+        name: titleToName(e.target.value)
+      }
+    }))
   }
 
   titleChangeHandler(e) {
@@ -78,9 +100,9 @@ class EditModelForm extends Component {
     if(this.state.redirect){
       return <Redirect to={this.state.redirect} push={true}/>
     }
-    return <form className="admin-form model-width" onSubmit={this.submitHandler}>
+    return <form className="admin-form" onSubmit={this.submitHandler}>
       <div className="form-group__inline-wrapper">
-        <div className="form-group form-group_width47">
+        <div className="form-group form-group_width23">
           <label htmlFor="page-title" className="font__edit">Model Title</label>
           {/*<input type="text" id="page-title" required*/}
           {/*       value={model.title || ''}*/}
@@ -95,23 +117,22 @@ class EditModelForm extends Component {
                       required
           />
         </div>
-        <div className="form-group form-group_width47">
+        <div className="form-group form-group_width23">
           <label htmlFor="page-name" className="font__edit">Model Name</label>
           {/*<input type="text" id="page-name" required*/}
           {/*       value={model.name || ''}*/}
           {/*       onChange={e => { this.changeValue(e.target.value, 'name') }}*/}
           {/*       className="form-control" />*/}
           <InputGroup className="form-control-blueprint"
-                      onChange={e => { this.changeValue(e.target.value, 'name') }}
+                      onChange={this.nameChangeHandler}
                       value={model.name || ''}
                       type="text"
                       id="page-name"
                       required
           />
         </div>
-      </div>
-      <div className="form-group__inline-wrapper">
-        <div className="form-group form-group_width47">
+
+        <div className="form-group form-group_width23">
           <label htmlFor="page-description" className="font__edit">Parent Model</label>
           {/*<input type="text" id="page-description"*/}
           {/*       value={model.parent_model_id || ''}*/}
@@ -124,23 +145,24 @@ class EditModelForm extends Component {
                       id="page-description"
           />
         </div>
-        <div className="form-group form-group_width47">
+        <div className="form-group form-group_width23">
           <label htmlFor="page-description" className="font__edit">Model Description</label>
           {/*<input type="text" id="page-description"*/}
           {/*       value={model.description || ''}*/}
           {/*       onChange={e => { this.changeValue(e.target.value, 'description') }}*/}
           {/*       className="form-control" />*/}
           <InputGroup className="form-control-blueprint"
-                      onChange={e => { this.changeValue(e.target.value, 'parent_model_id') }}
+                      onChange={e => { this.changeValue(e.target.value, 'description') }}
                       value={model.description || ''}
                       type="text"
                       id="page-description"
           />
         </div>
       </div>
-      {(model.id) ? '' : <div className="form-group">
-        <label htmlFor="model-table_id" className="font__edit">Table</label>
-        <AltrpSelect
+      <div className="form-group__inline-wrapper">
+        {(model.id) ? '' : <div className="form-group form-group_width47">
+          <label htmlFor="model-table_id" className="font__edit">Table</label>
+          <AltrpSelect
             id="model-table_id"
             defaultOptions={[
               {
@@ -152,7 +174,19 @@ class EditModelForm extends Component {
             isDisabled={model.id}
             onChange={value => {this.changeValue(value, 'table_id')}}
             optionsRoute="/admin/ajax/tables/options"/>
-      </div>}
+        </div>}
+        <div className="form-group form-group_width47">
+          <label htmlFor="page-categories" className="font__edit">Categories (Временно не доступен)</label>
+          <InputGroup className="form-control-blueprint"
+                      onChange={this.categoriesChangeHandler}
+                      value={model.categories || ''}
+                      type="text"
+                      id="page-categories"
+                      disabled={true}
+                      required
+          />
+        </div>
+      </div>
       <div className="checkbox-container-editModel">
         <div className="form-group__flexModel">
           <input type="checkbox" id="page-soft_deletes"

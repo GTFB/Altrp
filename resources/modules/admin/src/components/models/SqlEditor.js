@@ -10,6 +10,7 @@ import AdminModal2 from "../AdminModal2";
 import SQLsRemoteFieldForm from "./RemoteFieldForms/SQLsRemoteFieldForm";
 import {InputGroup, MenuItem, Button, Alignment} from "@blueprintjs/core";
 import {MultiSelect, Select} from "@blueprintjs/select";
+import UserTopPanel from "../UserTopPanel";
 
 const remoteFieldsColumns = [
   {
@@ -35,6 +36,7 @@ class SqlEditor extends Component {
     let storeState = store.getState();
     this.state = {
       modelTitle: 'Model Title',
+      activeHeader: 0,
       value: {
         paged: false,
         is_object: false,
@@ -106,6 +108,24 @@ class SqlEditor extends Component {
     let { options } = await this.modelsResource.getAll();
     options = options.filter(option => (option.label !== 'User'));
     this.setState({ modelsOptions: options });
+
+    window.addEventListener("scroll", this.listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", this.listenScrollHeader)
+    }
+  }
+
+  listenScrollHeader = () => {
+    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
+      this.setState({
+        activeHeader: 1
+      })
+    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
+      this.setState({
+        activeHeader: 0
+      })
+    }
   }
 
   updateRemoteFields = async () => {
@@ -257,21 +277,26 @@ class SqlEditor extends Component {
    * @return {*}
    */
   onSubmit = async e => {
-    const {id} = this.props.match.params;
-    e.preventDefault();
-    let res;
-    if(! this.state.value.sql){
-      return alert('Заполните SQL Query');
-    }
-    if(id){
-      res = await this.sqlEditorResource.put(id, this.state.value);
-    } else {
-      res = await this.sqlEditorResource.post(this.state.value);
-    }
-    if(res.success){
-      this.props.history.push('/admin/tables/sql_editors');
-    } else {
-      alert(res.message);
+    try {
+      const {id} = this.props.match.params;
+      e.preventDefault();
+      let res;
+      if(! this.state.value.sql){
+        return alert('Заполните SQL Query');
+      }
+      if(id){
+        res = await this.sqlEditorResource.put(id, this.state.value);
+      } else {
+        res = await this.sqlEditorResource.post(this.state.value);
+      }
+      if(res.success){
+        this.props.history.push('/admin/tables/sql_editors');
+      } else {
+        alert(res.message);
+      }
+    } catch (error) {
+      alert("Ошибка, проверьте еще раз внимательно введенные данные");
+      console.error(error);
     }
   };
 
@@ -293,13 +318,16 @@ class SqlEditor extends Component {
     const { isFieldRemoteModalOpened, remoteFields, editingRemoteField } = this.state;
     return (
       <div className="admin-pages admin-page">
-      <div className="admin-heading">
-        <div className="admin-breadcrumbs">
-          <Link className="admin-breadcrumbs__link" to="/admin/tables/sql_editors">All  SQL Editors</Link>
-          <span className="admin-breadcrumbs__separator">/</span>
+      <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
+        <div className="admin-heading-left">
+          <div className="admin-breadcrumbs">
+            <Link className="admin-breadcrumbs__link" to="/admin/tables/sql_editors">All  SQL Queries</Link>
+            <span className="admin-breadcrumbs__separator">/</span>
 
-          <span className="admin-breadcrumbs__current">Add SQL Query</span>
+            <span className="admin-breadcrumbs__current">Add SQL Query</span>
+          </div>
         </div>
+        <UserTopPanel />
       </div>
       <div className="admin-content">
         <form className="admin-form field-form" onSubmit={this.onSubmit}>
@@ -584,16 +612,16 @@ class SqlEditor extends Component {
                 mode="javascript"
                 theme="textmate"
                 onChange={value => {
-                  //this.changeValue(value, 'test')
+                  this.changeValue(value, 'test')
                 }}
                 className="field-ace"
                 name="aceEditorResponse"
                 height="15em"
                 wrapEnabled={true}
-                // value={this.state.testResponse || ''}
+                value={this.state.testResponse || ''}
                 showPrintMargin={false}
                 setOptions={{
-                  value: this.state.testResponsel || ''
+                  value: this.state.testResponse || ''
                 }}
                 style={{
                   width: '100%'

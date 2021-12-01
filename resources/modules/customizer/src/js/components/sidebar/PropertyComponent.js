@@ -125,7 +125,7 @@ class PropertyComponent extends Component {
         <Select items={methodOptions}
                 onItemSelect={this.onItemSelect}
                 onQueryChange={this.onQueryChange}
-          // matchTargetWidth={true}
+                matchTargetWidth={true}
                 fill={true}
                 popoverProps={{
                   minimal: true,

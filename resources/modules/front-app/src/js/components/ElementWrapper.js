@@ -9,6 +9,7 @@ import EntranceAnimationsStyles from "./EntranceAnimationsStyles";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
 import React from "react";
+import AltrpTooltip2 from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip2";
 const {
   altrpCompare,
   altrpRandomId,
@@ -405,7 +406,7 @@ class ElementWrapper extends Component {
     }
     wrapperProps["data-altrp-id"] = element.getId();
 
-    const tooltip_position = element.getResponsiveSetting('tooltip_position', 'bottom')
+    const tooltip_position = element.getResponsiveSetting('tooltip_position') || 'bottom'
     let tooltip_text = element.getResponsiveSetting('tooltip_text')
 
     tooltip_text = replaceContentWithData(
@@ -430,7 +431,28 @@ class ElementWrapper extends Component {
         {content}
       </>
     }
+    return (
+      <>
 
+        <WrapperComponent {...wrapperProps} >
+          {
+            tooltip_show_type && (tooltip_show_type !== "never" && tooltip_show_type !== "Never") ?
+              <AltrpTooltip2
+                element={this.elementWrapperRef}
+                text={tooltip_text}
+                id={this.props.element.getId()}
+                open={tooltip_show_type === "always" ? true : this.state.tooltipOpen}
+                position={tooltip_position}
+                minimal={tooltip_minimal}
+                horizontal={tooltip_horizontal_offset}
+                vertical={tooltip_vertical_offset}
+              /> : ''
+          }
+          {content}
+        </WrapperComponent>
+
+      </>
+    );
     return  (
       <WrapperComponent {...wrapperProps} element={element.getId()}>
 

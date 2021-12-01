@@ -90,17 +90,17 @@ class ModelPage extends Component {
                 confirm: 'Are You Sure?',
                 after: () => this.getModelData(),
                 className: 'quick-action-menu__item_danger',
-                title: 'Trash'
+                title: 'Delete'
               }
             ]}
             rows={data}
             sortingHandler={this.sortingHandler}
             sortingField={sorting.order_by}
 
-            searchModalPage={{
-              onSubmitModelPage: this.searchModelData,
-              valueModelPage: search,
-              onChangeModalPage: this.changeModalPage
+            searchTables={{
+              submit: this.searchModelData,
+              value: search,
+              change: this.changeModalPage
             }}
 
             pageCount={pageCount || 1}

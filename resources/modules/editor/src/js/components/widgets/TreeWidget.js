@@ -1,16 +1,16 @@
 import React from "react";
-import {
+const {
   getDataByPath,
   isEditor,
   parseOptionsFromSettings, renderAsset,
   renderAssetIcon
-} from "../../../../../front-app/src/js/helpers";
+} = window.altrpHelpers;
 
 import {NullArray} from "./styled-components/TreeComponent";
 
 const TreeBlueprint = window.altrpLibs.Blueprint.Tree;
 
-export const normalizeValues = function(branch, select=false) {
+export const normalizeValues = function(branch) {
   const folderIcon = "folder-close";
   const icon = branch.icon || folderIcon;
 
@@ -25,21 +25,25 @@ export const normalizeValues = function(branch, select=false) {
     ...branch,
     labelValue: label,
     label: label,
-    icon: !icon.type ? folderIcon : renderAsset(icon),
+    icon: icon.indexOf("/") !== -1 || icon.url ? renderAsset(icon) : folderIcon,
     iconValue: icon,
     treeId: branch.tree_id || -1,
     parentId: branch.parent || -1,
   }
 }
 
-export const getFromDatasource = function (settings, settingNames=['tree_from_datasource', "tree_substitute_datasource"], defaultOptions=false) {
+export const getFromDatasource = function (settings = {}, settingNames=['tree_from_datasource', "tree_substitute_datasource"], defaultOptions=false) {
   settings.path = this.props.element.getSettings(settingNames[0], '');
   settings.path = settings.path.replace(/}}/g, '').replace(/{{/g, '');
-  settings.data = getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData());
   settings.dataSettings = parseOptionsFromSettings(this.props.element.getSettings(settingNames[1]))
   settings.sortDefault = this.props.element.getSettings("sort_default");
   settings.sortOption = this.props.element.getSettings("options_sorting");
+  const data = getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData());
 
+  if(! _.isArray(data)){
+    return [];
+  }
+  return data;
   let repeater = [];
 
   const keys = {
@@ -49,8 +53,67 @@ export const getFromDatasource = function (settings, settingNames=['tree_from_da
     parent: "",
   }
 
+  if(isEditor()) {
+    settings.data = [
+      {
+        label: "label 1",
+        tree_id: 1,
+        value: 1,
+      },
+      {
+        label: "child 1",
+        parent_id: 1,
+        value: 2,
+      },
+      {
+        label: "child 2",
+        parent_id: 1,
+        tree_id: 2,
+        value: 3,
+      },
+      {
+        label: "child 1",
+        parent_id: 2,
+        tree_id: 2,
+        value: 4,
+      },
+      {
+        label: "label 2",
+        tree_id: 3,
+        value: 5,
+      },
+      {
+        label: "child 1",
+        parent_id: 3,
+        value: 6,
+      },
+      {
+        label: "child 2",
+        parent_id: 3,
+        value: 7,
+      },
+      {
+        label: "label 3",
+        value: 8,
+      },
+    ]
+  }
+
   settings.dataSettings.forEach((s) => {
-    keys[s.value] = s.label
+    switch (s.value) {
+      case "label":
+        keys[s.value] = s.label || "label"
+        break;
+      case "icon":
+        keys[s.value] = s.label || "icon"
+        break;
+      case "parent":
+        keys[s.value] = s.label || "parent_id"
+        break;
+      case "tree_id":
+        keys[s.value] = s.label || "tree_id"
+        break;
+    }
   })
 
   let allKeys = true;
@@ -61,7 +124,7 @@ export const getFromDatasource = function (settings, settingNames=['tree_from_da
     }
   })
 
-  if(allKeys && settings.data) {
+  if(allKeys && settings.data.length > 0) {
     settings.data.forEach((d) => {
       repeater.push({
         label: d[keys.label],
@@ -78,7 +141,10 @@ export const getFromDatasource = function (settings, settingNames=['tree_from_da
       sort: [settings.sortDefault, settings.sortOption]
     })
   } else {
-    return settings.data.map(branch => this.normalizeValues(branch))
+    if(! _.isArray(settings?.data)){
+      return  [];
+    }
+    return settings?.data?.map(branch => this.normalizeValues(branch)) || []
   }
 }
 
@@ -112,8 +178,8 @@ export const updateRepeater = function (repeaterSetting, other={}) {
     }
 
     repeater.push({
-      id: idx,
       ...branchSettings,
+      id: idx,
       hasCaret: branchSettings.treeId !== -1,
       childNodes: children
     })
@@ -127,7 +193,6 @@ export const updateRepeater = function (repeaterSetting, other={}) {
       childNodes: this.childrenInChildren(branch.childNodes, repeater)
     })
   })
-
 
   if (other?.sort && !other?.sort[0]) {
     newRepeater = _.sortBy(newRepeater, o => o && (o.label ? o.label.toString() : o));
@@ -326,9 +391,7 @@ class TreeWidget extends Component {
           Add a branch
         </NullArray>
       )
-    ) : isEditor() ? <NullArray>
-      Tree with datasource
-    </NullArray> : this.state.repeater.length > 0 ? (<TreeBlueprint
+    ) : this.state.repeater.length > 0 ? (<TreeBlueprint
       contents={this.state.repeater}
       onNodeClick={this.handleNodeClick}
       onNodeCollapse={this.handleNodeCollapse}

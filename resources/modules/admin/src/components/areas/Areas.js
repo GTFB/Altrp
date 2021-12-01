@@ -3,13 +3,14 @@ import Resource from "../../../../editor/src/js/classes/Resource";
 import AdminTable from "../AdminTable";
 import {Link} from "react-router-dom";
 import CONSTANTS from '../../../../editor/src/js/consts'
-import {buildPagesTree} from "../../js/helpers";
+import UserTopPanel from "../UserTopPanel";
 
 class Areas extends Component {
   constructor(props) {
     super(props);
     this.state = {
       areas: [],
+      activeHeader: 0,
       currentPage: 1,
       areasSearch: ""
     }
@@ -20,6 +21,24 @@ class Areas extends Component {
 
   async componentDidMount() {
     this.updateAreas();
+
+    window.addEventListener("scroll", this.listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", this.listenScrollHeader)
+    }
+  }
+
+  listenScrollHeader = () => {
+    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
+      this.setState({
+        activeHeader: 1
+      })
+    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
+      this.setState({
+        activeHeader: 0
+      })
+    }
   }
 
   updateAreas = async () => {
@@ -42,11 +61,14 @@ class Areas extends Component {
     const { areas, currentPage, areasSearch } = this.state;
 
     return <div className="admin-pages admin-page">
-      <div className="admin-heading">
-        <div className="admin-breadcrumbs">
-          <div className="admin-breadcrumbs__current">Custom Areas</div>
-        </div>
-        <Link className="btn" to={`/admin/areas/add`}>Add New</Link>
+      <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
+       <div className="admin-heading-left">
+         <div className="admin-breadcrumbs">
+           <div className="admin-breadcrumbs__current">Custom Areas</div>
+         </div>
+         <Link className="btn" to={`/admin/areas/add`}>Add New</Link>
+       </div>
+        <UserTopPanel />
       </div>
       <div className="admin-content">
         <AdminTable
@@ -69,18 +91,18 @@ class Areas extends Component {
                 this.updateAreas()
               },
               className: "quick-action-menu__item_danger",
-              title: "Trash"
+              title: "Delete"
             }
           ]}
-          rows={buildPagesTree(areas).slice(
+          rows={areas.slice(
             currentPage * this.itemsPerPage - this.itemsPerPage,
             currentPage * this.itemsPerPage
           )}
 
-          searchAreas={{
-            onSubmitAreas: this.searchAreas,
-            valueAreas: areasSearch,
-            onChangeAreas: this.changeAreas
+          searchTables={{
+            submit: this.searchAreas,
+            value: areasSearch,
+            change: this.changeAreas
           }}
 
           pageCount={Math.ceil(areas.length / this.itemsPerPage) || 1}

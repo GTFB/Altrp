@@ -4,6 +4,7 @@ import Resource from "../../../../editor/src/js/classes/Resource";
 import {titleToName, titleToNameTwo} from "../../js/helpers";
 import {InputGroup, MenuItem, Button, Alignment} from "@blueprintjs/core";
 import {Select} from "@blueprintjs/select";
+import {connect} from "react-redux";
 
 const relationTypeOptions = [
   {
@@ -47,7 +48,7 @@ class AddRelationForm extends Component {
         title: '',
         description: '',
         type: 'hasMany',
-        model_id: this.props.match.params.modelId,
+        model_id: this.props.modelRelationID,
         add_belong_to: true,
         editable: true,
         always_with: false,
@@ -61,24 +62,23 @@ class AddRelationForm extends Component {
       relationTypeOptions,
     };
     this.modelsResource = new Resource({ route: '/admin/ajax/model_options' });
-    this.relationsResource = new Resource({ route: `/admin/ajax/models/${this.props.match.params.modelId}/relations` });
+    this.relationsResource = new Resource({ route: `/admin/ajax/models/${this.props.modelId}/relations` });
     this.submitHandler = this.submitHandler.bind(this);
   }
 
   async componentDidMount() {
     let { options } = await this.modelsResource.getAll();
-    const { modelId, id } = this.props.match.params;
     //Модель может ссылаться на саму себя
     //options = options.filter(option=>(Number(option.value) !== Number(modelId)));
     this.setState({ modelsOptions: options });
-    let fields = await (new Resource({route: `/admin/ajax/models/${modelId}/fields`})).getAll();
+    let fields = await (new Resource({route: `/admin/ajax/models/${this.props.modelId}/fields`})).getAll();
     let selfFieldsOptions = fields.map(field=>({
       label: field.title,
       value: field.name,
     }));
     this.setState(state=>({...state, selfFieldsOptions}));
-    if(id){
-      let value = await this.relationsResource.get(id);
+    if(this.props.modelRelationID){
+      let value = await this.relationsResource.get(this.props.modelRelationID);
       this.relationName = value.name;
       this.updateForeignFieldOptions(value.target_model_id);
       this.changeTargetModel(value.target_model_id);
@@ -141,7 +141,6 @@ class AddRelationForm extends Component {
  * @param {string} field
  */
   changeValue(value, field) {
-  const { id } = this.props.match.params;
 
   if(field === 'target_model_id'){
     this.changeTargetModel(value);
@@ -149,7 +148,7 @@ class AddRelationForm extends Component {
   this.setState(state => {
       state = { ...state };
       state.value[field] = value;
-      if(field === 'title' && ! id){
+      if(field === 'title' && ! this.props.modelRelationID){
         state.value.title = titleToNameTwo(value);
         state.value.name = titleToName(value);
       }
@@ -184,10 +183,9 @@ class AddRelationForm extends Component {
    */
   async submitHandler(e) {
     e.preventDefault();
-    const { history, match } = this.props;
     const data = this.state.value;
-    const isNameTaken = !this.props.match.params.id || this.relationName !== data.name ?
-      await fetch(`/admin/ajax/models/${match.params.modelId}/relation_name_is_free/?name=${data.name}`)
+    const isNameTaken = !this.props.modelRelationID || this.relationName !== data.name ?
+      await fetch(`/admin/ajax/models/${this.props.modelId}/relation_name_is_free/?name=${data.name}`)
         .then(res => res.json())
         .then(res => !res.taken) :
       null;
@@ -196,19 +194,18 @@ class AddRelationForm extends Component {
       return alert(`Name ${data.name} is already taken. Use another one.`)
     }
 
-    if (this.props.match.params.id) {
-      let res = await this.relationsResource.put(this.props.match.params.id, data);
+    if (this.props.modelRelationID) {
+      await this.relationsResource.put(this.props.modelRelationID, data);
     } else {
-      let res = await this.relationsResource.post(data);
+      await this.relationsResource.post(data);
     }
-    history.push(`/admin/tables/models/edit/${match.params.modelId}`);
+    this.props.toggleModal();
   }
 
   /**
    * вывод поля Local Key
    */
   renderLocalKey(){
-    const { id } = this.props.match.params;
 
     return <div className="form-group flex-grow__selectBlueprint form-group_width47">
       <label htmlFor="relation-local_key">Local Key</label>
@@ -256,7 +253,6 @@ class AddRelationForm extends Component {
    * вывод поля Foreign Key
    */
   renderForeignKey(){
-    const { id } = this.props.match.params;
 
     return<div className="form-group flex-grow__selectBlueprint form-group_width47">
       <label htmlFor="relation-foreign_key">Foreign Key</label>
@@ -300,7 +296,6 @@ class AddRelationForm extends Component {
 
 
   render() {
-    const { id } = this.props.match.params;
     return <form className="admin-form admin-form-relation" onSubmit={this.submitHandler}>
       <div className="form-group__inline-wrapper">
         <div className="form-group form-group_width47">
@@ -328,7 +323,7 @@ class AddRelationForm extends Component {
           <InputGroup type="text"
                       id="relation-title"
                       required
-                      readOnly={id}
+                      readOnly={this.props.modelRelationID}
                       value={this.state.value.name || ''}
                       onChange={e => { this.changeValue(e.target.value, 'name') }}
                       className="form-control-blueprint"
@@ -345,7 +340,7 @@ class AddRelationForm extends Component {
 
           <InputGroup type="text"
                       id="relation-description"
-                      readOnly={id}
+                      readOnly={this.props.modelRelationID}
                       value={this.state.value.description || ''}
                       onChange={e => { this.changeValue(e.target.value, 'description') }}
                       className="form-control-blueprint"
@@ -369,7 +364,7 @@ class AddRelationForm extends Component {
 
 
           <Select items={relationTypeOptions}
-                  disabled={id}
+                  disabled={this.props.modelRelationID}
                   matchTargetWidth
                   itemPredicate={this.ItemPredicate}
                   noResults={<MenuItem disabled={true} text="No results." />}
@@ -384,7 +379,7 @@ class AddRelationForm extends Component {
                   onItemSelect={current => { this.changeValue(current.value, 'type') }}
                   fill={true}
           >
-            <Button disabled={id}
+            <Button disabled={this.props.modelRelationID}
                     fill
                     large
                     alignText={Alignment.LEFT}
@@ -434,15 +429,15 @@ class AddRelationForm extends Component {
           </Select>
         </div>
       </div>
-      <div className="row">
-        <div className="form-group col-4">
+      <div className="relations__checkbox">
+        <div className="form-group">
           {this.state.hideAddBelongTo || this.state.value.type === 'belongsTo' ? '' : <><input type="checkbox" id="relation-add_belong_to"
-            checked={this.state.value.add_belong_to} readOnly={id}
+            checked={this.state.value.add_belong_to} readOnly={this.props.modelRelationID}
             onChange={e => { this.changeValue(e.target.checked, 'add_belong_to') }}
           />
           <label className="checkbox-label" htmlFor="relation-add_belong_to">Add Reverse Relation</label></>}
         </div>
-        <div className="form-group col-4">
+        <div className="form-group">
           { (! ['hasMany', 'belongsTo'].includes(this.state.value.type)) ?
               <><input type="checkbox"
                        id="field-editable"
@@ -452,7 +447,7 @@ class AddRelationForm extends Component {
             <label className="checkbox-label" htmlFor="field-editable">Editable</label></> : ''}
 
         </div>
-        <div className="form-group col-4">
+        <div className="form-group">
          <input type="checkbox"
                 id="field-always_with"
                 checked={this.state.value.always_with}
@@ -552,7 +547,7 @@ class AddRelationForm extends Component {
 
        <div className="btn__wrapper btn__wrapper-relations">
         <button className="btn btn_success" type="submit">Add</button>
-        <Link className="btn" to="/admin/tables/models">Cancel</Link>
+        {/*<Link className="btn" to="/admin/tables/models">Cancel</Link>*/}
         {/* <button className="btn btn_failure">Delete</button> */}
       </div>
     </form>;
@@ -560,4 +555,10 @@ class AddRelationForm extends Component {
 
 }
 
-export default withRouter(AddRelationForm);
+const mapStateToProps = (state) => {
+  return {
+    modelRelationID: state.modelsState.modelRelationID
+  }
+}
+
+export default connect(mapStateToProps)(AddRelationForm);
