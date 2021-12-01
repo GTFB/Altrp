@@ -10,6 +10,7 @@ module.exports = {
   devtool: 'source-map',
   output: {
     path: path.resolve(__dirname, "./public/modules/admin/"),
+    chunkFilename: "[name].[contenthash].bundle.js",
     publicPath: "/modules/admin/",
     filename: "admin.js"
   },

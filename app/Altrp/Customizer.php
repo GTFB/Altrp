@@ -29,6 +29,7 @@ class Customizer extends Model
     "type",
     "model_id",
     "data",
+    "model_guid",
   ];
 
   protected $casts = [

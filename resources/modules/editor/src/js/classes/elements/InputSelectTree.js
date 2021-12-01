@@ -197,15 +197,6 @@ class InputSelectTree extends BaseElement {
       label: "Path",
     });
 
-    this.addControl('tree_substitute_datasource', {
-      type: CONTROLLER_TEXTAREA,
-      label: 'Substitute values',
-      responsive: false,
-      dynamic: false,
-      description: 'label | alias \n icon | alias \n tree_id | alias \n parent | alias',
-    });
-
-
     this.addControl("content_default_value", {
       type: CONTROLLER_TEXTAREA,
       label: "Default Value"
@@ -272,9 +263,6 @@ class InputSelectTree extends BaseElement {
       type: CONTROLLER_TEXT,
       label: "No results text",
       responsive: false,
-      conditions:{
-        s_on: true,
-      },
     });
 
     this.endControlSection();
