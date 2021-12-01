@@ -139,10 +139,6 @@ export default class ElementsManger {
       [RadarDiagram, RadarDiagramWidget]
     ]
 
-    widgetsList.forEach(([elem, comp]) => {
-      this.elements[elem.getName()] = elem
-      this.components[elem.getName()] = comp
-    })
 
     // this.elements[Input.getName()] = Input;
     //список элементов
@@ -208,6 +204,10 @@ export default class ElementsManger {
     this.elements[Stars.getName()] = Stars;
     this.elements[ProgressBar.getName()] = ProgressBar;
 
+    widgetsList.forEach(([elem, comp]) => {
+      this.elements[elem.getName()] = elem
+      this.components[elem.getName()] = comp
+    })
     // Websocket Notifications
     // this.elements[Notifications.getName()] = Notifications;
     //список компонентов
