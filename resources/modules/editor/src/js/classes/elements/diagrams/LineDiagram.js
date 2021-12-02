@@ -138,7 +138,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl("isMultiple", {
       type: CONTROLLER_SWITCHER,
-      label: "Использовать множественные данные?",
+      label: "Use multiple data?",
       default: false
     });
 
@@ -187,25 +187,25 @@ class LineDiagram extends BaseElement {
 
     this.addControl("bottomAxis", {
       type: CONTROLLER_SWITCHER,
-      label: "Отобразить нижнюю легенду",
+      label: "Enable bottom axis",
       default: true
     });
 
     this.addControl("enableGridX", {
       type: CONTROLLER_SWITCHER,
-      label: "Отобразить сетку по X",
+      label: "Enable grid X",
       default: true
     });
 
     this.addControl("enableGridY", {
       type: CONTROLLER_SWITCHER,
-      label: "Отобразить сетку по Y",
+      label: "Enable grid Y",
       default: true
     });
 
     this.addControl("tickRotation", {
       type: CONTROLLER_RANGE,
-      label: "Наклон нижней легенды",
+      label: "Bottom axis rotation",
       default: 0,
       min: -90,
       max: 90,
@@ -214,22 +214,22 @@ class LineDiagram extends BaseElement {
 
     this.addControl("xScaleType", {
       type: CONTROLLER_SELECT,
-      label: "Тип оси X",
+      label: "X scale type",
       default: "point",
       options: [
         {
           id: 0,
-          label: "Линейный",
+          label: "Linear",
           value: "linear"
         },
         {
           id: 1,
-          label: "Точечный",
+          label: "Point",
           value: "point"
         },
         {
           id: 2,
-          label: "Временной",
+          label: "Time",
           value: "time"
         }
       ]
@@ -237,18 +237,18 @@ class LineDiagram extends BaseElement {
 
     this.addControl("precision", {
       type: CONTROLLER_SELECT,
-      label: "Масштаб времени",
+      label: "Time scale",
       default: "point",
       options: [
-        { id: 0, label: "День", value: "day" },
-        { id: 1, label: "Месяц", value: "month" },
-        { id: 2, label: "Год", value: "year" }
+        { id: 0, label: "Day", value: "day" },
+        { id: 1, label: "Month", value: "month" },
+        { id: 2, label: "Year", value: "year" }
       ]
     });
 
     this.addControl("curve", {
       type: CONTROLLER_SELECT,
-      label: "Тип кривой",
+      label: "Curve type",
       default: "linear",
       options: [
         { id: 0, value: "basis", label: "basis" },
@@ -266,36 +266,36 @@ class LineDiagram extends BaseElement {
 
     this.addControl("lineWidth", {
       type: CONTROLLER_NUMBER,
-      label: "Ширина линии",
+      label: "Line width",
       default: 2
     });
 
     this.addControl("enableArea", {
       type: CONTROLLER_SWITCHER,
-      label: "Отобразить области?",
+      label: "Enable area?",
       default: false
     });
 
     this.addControl("enableGradient", {
       type: CONTROLLER_SWITCHER,
-      label: "Использовать градиент?",
+      label: "Enable gradient?",
       default: false
     });
 
     this.addControl("enablePoints", {
       type: CONTROLLER_SWITCHER,
-      label: "Отобразить точки?",
+      label: "Enable points?",
       default: true
     });
 
     this.addControl("pointSize", {
       type: CONTROLLER_NUMBER,
-      label: "Размер точки",
+      label: "Point size",
       default: 6
     });
     this.addControl("pointColor", {
       type: CONTROLLER_COLOR,
-      label: "Цвет точки"
+      label: "Point color"
     });
     this.endControlSection();
     

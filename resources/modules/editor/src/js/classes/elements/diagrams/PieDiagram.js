@@ -71,7 +71,7 @@ class PieDiagram extends BaseElement {
 
     this.addControl("key_name", {
       dynamic: false,
-      label: "Key Field (X)"
+      label: "Key Field"
     });
 
     this.addControl("key_is_date", {
@@ -83,28 +83,28 @@ class PieDiagram extends BaseElement {
 
     this.addControl("data_name", {
       dynamic: false,
-      label: "Data Field (Y)"
+      label: "Data Field"
     });
 
     this.addControl("sort", {
       type: CONTROLLER_SELECT,
-      label: "Сортировка",
+      label: "Sort",
       default: false,
       options: [
         {
           id: 0,
           value: "",
-          label: "По умолчанию"
+          label: "By default"
         },
         {
           id: 1,
           value: "value",
-          label: "По значению"
+          label: "By value"
         },
         {
           id: 2,
           value: "key",
-          label: "По ключу"
+          label: "By key"
         }
       ]
     });
@@ -164,7 +164,7 @@ class PieDiagram extends BaseElement {
 
     this.addControl("padAngle", {
       type: CONTROLLER_RANGE,
-      label: "Угол между секторами",
+      label: "Pad angle",
       min: 0,
       max: 45,
       step: 1
@@ -184,7 +184,7 @@ class PieDiagram extends BaseElement {
 
     this.addControl("cornerRadius", {
       type: CONTROLLER_RANGE,
-      label: "Скругление углов",
+      label: "Corner radius",
       default: 0,
       min: 0,
       max: 45,

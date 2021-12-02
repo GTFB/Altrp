@@ -184,61 +184,61 @@ class BarDiagram extends BaseElement {
 
     this.addControl("bottomAxis", {
       type: CONTROLLER_SWITCHER,
-      label: "Отобразить нижнюю легенду",
+      label: "Enable bottom legend",
       default: true
     });
 
     this.addControl("enableGridX", {
       type: CONTROLLER_SWITCHER,
-      label: "Отобразить сетку по X",
+      label: "Enable grid X",
       default: true
     });
 
     this.addControl("enableGridY", {
       type: CONTROLLER_SWITCHER,
-      label: "Отобразить сетку по Y",
+      label: "Enable grid Y",
       default: true
     });
 
     this.addControl("layout", {
       type: CONTROLLER_SELECT,
-      label: "Вид графика",
+      label: "Chart type",
       default: "vertical",
       options: [
         {
           id: 0,
           value: "vertical",
-          label: "Вертикальный"
+          label: "Vertical"
         },
         {
           id: 1,
           value: "horizontal",
-          label: "Горизонтальный"
+          label: "Horizontal"
         }
       ]
     });
 
     this.addControl("groupMode", {
       type: CONTROLLER_SELECT,
-      label: "Группировка",
+      label: "Grouping",
       default: "stacked",
       options: [
         {
           id: 0,
           value: "stacked",
-          label: "Сложенный"
+          label: "Stacked"
         },
         {
           id: 1,
           value: "grouped",
-          label: "Группированный"
+          label: "Grouped"
         }
       ]
     });
 
     this.addControl("enableLabel", {
       type: CONTROLLER_SWITCHER,
-      label: "Отобразить данные на секторах",
+      label: "Enable arc labels",
       default: false
     });
 
@@ -259,7 +259,7 @@ class BarDiagram extends BaseElement {
 
     this.addControl("borderRadius", {
       type: CONTROLLER_RANGE,
-      label: "Скругление рамки",
+      label: "Border radius",
       default: 0,
       min: 0,
       max: 36,
@@ -268,7 +268,7 @@ class BarDiagram extends BaseElement {
 
     this.addControl("borderWidth", {
       type: CONTROLLER_RANGE,
-      label: "Ширина рамки",
+      label: "Border width",
       default: 0,
       min: 0,
       max: 20,
