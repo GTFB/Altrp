@@ -83,6 +83,11 @@ class FunnelDiagram extends BaseElement {
     });
     
     this.endControlSection();
+    
+    this.startControlSection("style", {
+      tab: TAB_STYLE,
+      label: "Visual"
+    });
 
     const colors = Schemes.map(object => {
       return { label: object.label, value: object.value };
