@@ -3081,6 +3081,59 @@ class Table extends BaseElement {
 
     this.endControlSection();
     //</editor-fold>
+
+
+    this.startControlSection('range_slider_columns', {
+      tab: TAB_STYLE,
+      label: "Range Slider Styled"
+    });
+
+    this.addControl('color_range-slider_style', {
+      type: CONTROLLER_COLOR,
+      label: 'Progress primary',
+    });
+
+    this.addControl('color_range-slider_progress', {
+      type: CONTROLLER_COLOR,
+      label: 'Progress',
+    });
+
+    this.addControl('color_range-slider_label-background', {
+      type: CONTROLLER_COLOR,
+      label: 'label background',
+    });
+
+    this.addControl('color_range-slider_label-text', {
+      type: CONTROLLER_COLOR,
+      label: 'label text',
+    });
+
+    this.addControl('color_range-slider_label-text-stages', {
+      type: CONTROLLER_COLOR,
+      label: 'label stages text',
+    });
+
+    this.addControl('color_range-slider_controller-start', {
+      type: CONTROLLER_COLOR,
+      label: 'Controller start',
+    });
+
+    this.addControl('color_range-slider_controller-end', {
+      type: CONTROLLER_COLOR,
+      label: 'Controller end',
+    });
+
+    this.addControl('typographic_range-slider_label-text', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'typographic label',
+    });
+
+    this.addControl('typographic_range-slider_label-text-stages', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'typographic label stages',
+    });
+
+    this.endControlSection();
   }
 }
 

@@ -61,18 +61,18 @@ export default function SliderRangeFilter(
   }, [filterValue, preFilteredRows, id])
   const stepSize = React.useMemo(() => {
 
-    if( ! Number(step_size.size)){
+    if( ! Number(step_size?.size)){
       return 1;
     }
-    return  Number(step_size.size)
-  }, [step_size.size])
+    return  Number(step_size?.size)
+  }, [step_size?.size])
   const labelStepSize = React.useMemo(() => {
 
-    if( ! Number(label_step_size.size)){
+    if( ! Number(label_step_size?.size)){
       return 20;
     }
-    return  Number(label_step_size.size)
-  }, [label_step_size.size])
+    return  Number(label_step_size?.size)
+  }, [label_step_size?.size])
   return (
     <div className="altrp-filter-group altrp-filter-group_range-slider"
          style={{
