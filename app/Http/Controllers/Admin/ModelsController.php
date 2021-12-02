@@ -236,13 +236,15 @@ class ModelsController extends HttpController
         $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
         if (! $page) {
             $pageCount = 0;
-            $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
+            //$sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
             $models = $search
                 ? Model::getBySearch($search, $orderColumn, $orderType)
                 //: Model::all()->$sortType( $orderColumn )->values();
                 : Model::whereNull('user_id')
                     ->orWhere('user_id', Auth::user()->id)
-                    ->$sortType( $orderColumn )->values();
+                    //->$sortType( $orderColumn )->values();
+                    ->orderBy($orderColumn, $orderType)
+                    ->get();
         } else {
             $modelsCount = $search ? Model::getCountWithSearch($search) : Model::getCount();
             $limit = $request->get('pageSize', 10);
