@@ -86,29 +86,6 @@ class BarDiagram extends BaseElement {
       type: CONTROLLER_SWITCHER
     });
 
-    // this.addControl("sort", {
-    //   type: CONTROLLER_SELECT,
-    //   label: "Сортировка",
-    //   default: false,
-    //   options: [
-    //     {
-    //       id: 0,
-    //       value: "",
-    //       label: "По умолчанию"
-    //     },
-    //     {
-    //       id: 1,
-    //       value: "value",
-    //       label: "По значению"
-    //     },
-    //     {
-    //       id: 2,
-    //       value: "key",
-    //       label: "По ключу"
-    //     }
-    //   ]
-    // });
-
     this.addControl("use_legend", {
       type: CONTROLLER_SWITCHER,
       label: "Use legend?",
@@ -244,13 +221,13 @@ class BarDiagram extends BaseElement {
 
     this.addControl("reverse", {
       type: CONTROLLER_SWITCHER,
-      label: "Отразить",
+      label: "Reverse",
       default: false
     });
 
     this.addControl("padding", {
       type: CONTROLLER_RANGE,
-      label: "Отступы",
+      label: "Padding",
       default: 0,
       min: 0,
       max: 0.95,
