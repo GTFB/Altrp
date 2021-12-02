@@ -111,7 +111,7 @@ class ExportService
             ->exportValidationFields()
             ->exportValidationRules();
 
-        return $this->createArchive();
+        return $this->createArchive([]);
     }
 
     /**
@@ -204,10 +204,7 @@ class ExportService
             throw( $exception );
         }
         $this->archiveFiles( $zip );
-
-        if (isset($params['exportMedia']) && count($params['exportMedia']) > 0) {
-            $this->archiveMedia( $zip, $params );
-        }
+        $this->archiveMedia( $zip, $params );
 
         $zip->close();
         $this->deleteFiles();
@@ -495,16 +492,19 @@ class ExportService
      * @return ZipArchive
      */
     private function archiveMedia(ZipArchive $zip, $params) {
-        // $all_media = Storage::allFiles( '/public/media' );
-        // foreach ( $all_media as $file ) {
-        //     $zip->addFile( storage_path( 'app/' . $file ),
-        //         str_replace( 'public/', '', $file ) );
-        // }
 
-        $media = Media::whereIn('id', $params['exportMedia'])->get();
-        foreach ( $media as $file ) {
-            $zip->addFile( storage_path( 'app/public/' . $file->filename ),
-                str_replace( 'public/', '', $file->filename ) );
+        if (isset($params['exportMedia']) && count($params['exportMedia']) > 0) {
+            $media = Media::whereIn('id', $params['exportMedia'])->get();
+            foreach ( $media as $file ) {
+                $zip->addFile( storage_path( 'app/public/' . $file->filename ),
+                    str_replace( 'public/', '', $file->filename ) );
+            }
+        } else {
+            $all_media = Storage::allFiles( '/public/media' );
+            foreach ( $all_media as $file ) {
+                $zip->addFile( storage_path( 'app/' . $file ),
+                    str_replace( 'public/', '', $file ) );
+            }
         }
 
         return $zip;
