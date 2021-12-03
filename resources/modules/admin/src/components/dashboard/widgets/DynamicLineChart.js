@@ -18,8 +18,8 @@ const format = "%d.%m.%Y";
 
 const DynamicLineChart = ({
   widget,
-  width = `300px`,
-  height = `450px`,
+  width,
+  height,
   margin,
   keyIsDate,
   dataSource = [],

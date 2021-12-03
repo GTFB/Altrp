@@ -64,7 +64,6 @@ class FunnelDiagram extends BaseElement {
     this.addControl("use_legend", {
       type: CONTROLLER_SWITCHER,
       label: "Use legend?",
-      default: false
     });
     
     this.endControlSection();
@@ -81,7 +80,6 @@ class FunnelDiagram extends BaseElement {
     this.addControl("colorScheme", {
       type: CONTROLLER_SELECT,
       label: "Color Scheme",
-      default: "regagro",
       options: colors
     });
 
@@ -126,7 +124,6 @@ class FunnelDiagram extends BaseElement {
     this.addControl("spacing", {
       type: CONTROLLER_SLIDER,
       label: "Spacing",
-      default: 0,
       min: 0,
       max: 50,
       step: 1
@@ -165,7 +162,6 @@ class FunnelDiagram extends BaseElement {
     this.addControl("currentPartSizeExtension", {
       type: CONTROLLER_SLIDER,
       label: "Hover part size",
-      default: 0,
       min: 0,
       max: 100,
       step: 1,
@@ -177,7 +173,6 @@ class FunnelDiagram extends BaseElement {
     this.addControl("currentBorderWidth", {
       type: CONTROLLER_SLIDER,
       label: "Hover border width",
-      default: 0,
       min: 0,
       max: 100,
       step: 1,
@@ -248,12 +243,10 @@ class FunnelDiagram extends BaseElement {
     this.addControl("isCustomColor", {
       type: CONTROLLER_SWITCHER,
       label: "Use custom color scheme?",
-      default: false
     });
 
     this.addControl("customScheme", {
       type: CONTROLLER_REPEATER,
-      default: [],
       fields: repeaterScheme.getControls()
     });
 
@@ -267,10 +260,6 @@ class FunnelDiagram extends BaseElement {
     this.addControl("width", {
       type: CONTROLLER_SLIDER,
       label: "width",
-      default: {
-        size: 100,
-        unit: "%"
-      },
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
@@ -279,10 +268,6 @@ class FunnelDiagram extends BaseElement {
     this.addControl("height", {
       type: CONTROLLER_SLIDER,
       label: "height",
-      default: {
-        size: 420,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
@@ -291,14 +276,6 @@ class FunnelDiagram extends BaseElement {
     this.addControl("margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
-      default: {
-        top: 30,
-        right: 30,
-        bottom: 30,
-        left: 30,
-        unit: "px",
-        bind: true
-      },
       units: ["px", "%", "vh"],
     });
 

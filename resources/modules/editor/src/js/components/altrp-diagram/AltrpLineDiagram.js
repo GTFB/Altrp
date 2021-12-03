@@ -108,19 +108,8 @@ const AltrpDiagram = props => {
     pointSize,
     pointColor,
     yMarker,
-    yMarkerValue,
-    yMarkerOrientation,
-    yMarkerColor,
-    yMarkerWidth,
-    yMarkerLabel,
-    yMarkerLabelColor,
-    xMarker,
-    enableGradient, 
-    xMarkerLabelColor,
-    xMarkerLabel,
-    xMarkerWidth,
-    xMarkerColor,
-    xMarkerOrientation,
+    enableGradient,
+    curve
   } = settings
 
   const isCustomColor = settings.isCustomColors;
@@ -128,7 +117,6 @@ const AltrpDiagram = props => {
   //line settings
   const xScaleType = settings?.xScaleType || "point";
   const precision = settings?.precision || "month";
-  const curve = settings?.curve || "line";
   
   const xMarkerValue = keyIsDate
     ? moment(settings?.xMarkerValueDate).toDate()
@@ -267,12 +255,18 @@ const AltrpDiagram = props => {
   console.log("====================================");
   console.log(data);
   console.log("====================================");
+
+  console.log({width: settings.width, height: settings.height});
   
   return (
     <DynamicLineChart
-      widgetID={id}
       enableGradient={enableGradient}
-      margin={margin}
+      margin={margin ? margin : {
+        top: 30,
+        bottom: 30,
+        right: 30,
+        left: 30 
+      }}
       useCustomTooltips={useCustomTooltips}
       yScaleMax={yScaleMax}
       customColorSchemeChecker={customColorSchemeChecker}
@@ -290,8 +284,8 @@ const AltrpDiagram = props => {
       pointColor={pointColor}
       pointSize={pointSize}
       yMarker={yMarker}
-      width={`${settings.width?.size}${settings.width?.unit}`}
-      height={`${settings.height?.size}${settings.height?.unit}`}
+      width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
+      height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
       constantsAxises={constantsAxises}
       sort={sort}
       tickRotation={tickRotation?.size}

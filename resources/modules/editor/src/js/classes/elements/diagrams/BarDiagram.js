@@ -66,7 +66,6 @@ class BarDiagram extends BaseElement {
 
     this.addControl("key_is_date", {
       dynamic: false,
-      default: false,
       label: "Key has Date format?",
       type: CONTROLLER_SWITCHER
     });
@@ -74,7 +73,6 @@ class BarDiagram extends BaseElement {
     this.addControl("use_legend", {
       type: CONTROLLER_SWITCHER,
       label: "Use legend?",
-      default: false
     });
 
     this.endControlSection();
@@ -117,7 +115,6 @@ class BarDiagram extends BaseElement {
     
     this.addControl("markersRepeater", {
       type: CONTROLLER_REPEATER,
-      default: [],
       fields: repeaterMarker.getControls()
     });
 
@@ -135,7 +132,6 @@ class BarDiagram extends BaseElement {
     this.addControl("colorScheme", {
       type: CONTROLLER_SELECT,
       label: "Color Scheme",
-      default: "regagro",
       options: colors
     });
 
@@ -147,25 +143,21 @@ class BarDiagram extends BaseElement {
     this.addControl("bottomAxis", {
       type: CONTROLLER_SWITCHER,
       label: "Enable bottom legend",
-      default: true
     });
 
     this.addControl("enableGridX", {
       type: CONTROLLER_SWITCHER,
       label: "Enable grid X",
-      default: true
     });
 
     this.addControl("enableGridY", {
       type: CONTROLLER_SWITCHER,
       label: "Enable grid Y",
-      default: true
     });
 
     this.addControl("layout", {
       type: CONTROLLER_SELECT,
       label: "Chart type",
-      default: "vertical",
       options: [
         {
           id: 0,
@@ -183,7 +175,6 @@ class BarDiagram extends BaseElement {
     this.addControl("groupMode", {
       type: CONTROLLER_SELECT,
       label: "Grouping",
-      default: "stacked",
       options: [
         {
           id: 0,
@@ -201,19 +192,16 @@ class BarDiagram extends BaseElement {
     this.addControl("enableLabel", {
       type: CONTROLLER_SWITCHER,
       label: "Enable arc labels",
-      default: false
     });
 
     this.addControl("reverse", {
       type: CONTROLLER_SWITCHER,
       label: "Reverse",
-      default: false
     });
 
     this.addControl("padding", {
       type: CONTROLLER_SLIDER,
       label: "Padding",
-      default: 0,
       min: 0,
       max: 0.95,
       step: 0.05
@@ -222,7 +210,6 @@ class BarDiagram extends BaseElement {
     this.addControl("borderRadius", {
       type: CONTROLLER_SLIDER,
       label: "Border radius",
-      default: 0,
       min: 0,
       max: 36,
       step: 1
@@ -231,7 +218,6 @@ class BarDiagram extends BaseElement {
     this.addControl("borderWidth", {
       type: CONTROLLER_SLIDER,
       label: "Border width",
-      default: 0,
       min: 0,
       max: 20,
       step: 1
@@ -259,12 +245,10 @@ class BarDiagram extends BaseElement {
     this.addControl("isCustomColor", {
       type: CONTROLLER_SWITCHER,
       label: "Use custom color scheme?",
-      default: false
     });
 
     this.addControl("customScheme", {
       type: CONTROLLER_REPEATER,
-      default: [],
       fields: repeaterScheme.getControls()
     });
 
@@ -278,10 +262,6 @@ class BarDiagram extends BaseElement {
     this.addControl("width", {
       type: CONTROLLER_SLIDER,
       label: "width",
-      default: {
-        size: 100,
-        unit: "%"
-      },
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
@@ -290,10 +270,6 @@ class BarDiagram extends BaseElement {
     this.addControl("height", {
       type: CONTROLLER_SLIDER,
       label: "height",
-      default: {
-        size: 420,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
@@ -302,14 +278,6 @@ class BarDiagram extends BaseElement {
     this.addControl("margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
-      default: {
-        top: 30,
-        right: 30,
-        bottom: 30,
-        left: 30,
-        unit: "px",
-        bind: true
-      },
       units: ["px", "%", "vh"],
     });
 

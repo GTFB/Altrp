@@ -67,7 +67,6 @@ class PointDiagram extends BaseElement {
 
     this.addControl("key_is_date", {
       dynamic: false,
-      default: false,
       label: "Key has Date format?",
       type: CONTROLLER_SWITCHER
     });
@@ -80,7 +79,6 @@ class PointDiagram extends BaseElement {
     this.addControl("sort", {
       type: CONTROLLER_SELECT,
       label: "Сортировка",
-      default: false,
       options: [
         {
           id: 0,
@@ -103,7 +101,6 @@ class PointDiagram extends BaseElement {
     this.addControl("use_legend", {
       type: CONTROLLER_SWITCHER,
       label: "Use legend?",
-      default: false
     });
 
     this.endControlSection();
@@ -134,19 +131,16 @@ class PointDiagram extends BaseElement {
     this.addControl("isMultiple", {
       type: CONTROLLER_SWITCHER,
       label: "Use multiple data?",
-      default: false
     });
 
     // this.addControl("keysIsDate", {
     //   label: "Ключи как дата",
     //   type: CONTROLLER_SWITCHER,
-    //   default: false,
     //   dynamic: false
     // });
 
     this.addControl("rep", {
       type: CONTROLLER_REPEATER,
-      default: [],
       fields: repeater.getControls()
     });
 
@@ -157,24 +151,6 @@ class PointDiagram extends BaseElement {
       label: "Visual"
     });
 
-    const types = widgetTypes.map(type => {
-      return { label: type.name, value: type.value };
-    });
-
-    this.addControl("type", {
-      type: CONTROLLER_SELECT,
-      label: "Type",
-      default: TABLE,
-      options: types
-    });
-
-    // this.addControl("isVertical", {
-    //   type: CONTROLLER_SWITCHER,
-    //   label: "Vertical table",
-    //   default: true,
-    //   type: TABLE
-    // });
-
     const colors = Schemes.map(object => {
       return { label: object.label, value: object.value };
     });
@@ -182,7 +158,6 @@ class PointDiagram extends BaseElement {
     this.addControl("colorScheme", {
       type: CONTROLLER_SELECT,
       label: "Color Scheme",
-      default: "regagro",
       options: colors
     });
 
@@ -194,25 +169,21 @@ class PointDiagram extends BaseElement {
     this.addControl("bottomAxis", {
       type: CONTROLLER_SWITCHER,
       label: "Enable bottom axis",
-      default: true
     });
 
     this.addControl("enableGridX", {
       type: CONTROLLER_SWITCHER,
       label: "Enable grid X",
-      default: true
     });
 
     this.addControl("enableGridY", {
       type: CONTROLLER_SWITCHER,
       label: "Enable grid Y",
-      default: true
     });
 
     this.addControl("tickRotation", {
       type: CONTROLLER_SLIDER,
       label: "Bottom axis rotation",
-      default: 0,
       min: -90,
       max: 90,
       step: 1
@@ -221,7 +192,6 @@ class PointDiagram extends BaseElement {
     this.addControl("xScaleType", {
       type: CONTROLLER_SELECT,
       label: "X scale type",
-      default: "point",
       options: [
         {
           id: 0,
@@ -244,7 +214,6 @@ class PointDiagram extends BaseElement {
     this.addControl("precision", {
       type: CONTROLLER_SELECT,
       label: "Time scale",
-      default: "point",
       options: [
         { id: 0, label: "Day", value: "day" },
         { id: 1, label: "Month", value: "month" },
@@ -258,7 +227,6 @@ class PointDiagram extends BaseElement {
     this.addControl("pointSize", {
       type: CONTROLLER_NUMBER,
       label: "Point size",
-      default: 6,
       conditions: {
         enablePoints: true,
       }
@@ -287,7 +255,6 @@ class PointDiagram extends BaseElement {
     repeaterY.addControl("yMarkerOrientation", {
       type: CONTROLLER_SELECT,
       label: "Orientation Y",
-      default: "vertical",
       options: [
         { id: 0, value: "vertical", label: "Vertical" },
         { id: 1, value: "horizontal", label: "Horizontal" }
@@ -317,7 +284,6 @@ class PointDiagram extends BaseElement {
     this.addControl("axisY", {
       label: "AXIS Y",
       type: CONTROLLER_REPEATER,
-      default: [],
       fields: repeaterY.getControls()
     });
 
@@ -331,7 +297,6 @@ class PointDiagram extends BaseElement {
 
     repeaterX.addControl("xMarkerIsDate", {
       type: CONTROLLER_SWITCHER,
-      default: false,
       label: "Value X is Date",
       dynamic: false
     });
@@ -343,7 +308,6 @@ class PointDiagram extends BaseElement {
     repeaterX.addControl("xMarkerOrientation", {
       type: CONTROLLER_SELECT,
       label: "Orientation X",
-      default: "vertical",
       options: [
         { id: 0, value: "vertical", label: "Vertical" },
         { id: 1, value: "horizontal", label: "Horizontal" }
@@ -372,7 +336,6 @@ class PointDiagram extends BaseElement {
     this.addControl("axisX", {
       label: "AXIS X",
       type: CONTROLLER_REPEATER,
-      default: [],
       fields: repeaterX.getControls()
     });
 
@@ -394,12 +357,10 @@ class PointDiagram extends BaseElement {
     this.addControl("isCustomColor", {
       type: CONTROLLER_SWITCHER,
       label: "Use custom color scheme?",
-      default: false
     });
 
     this.addControl("customScheme", {
       type: CONTROLLER_REPEATER,
-      default: [],
       fields: repeaterScheme.getControls()
     });
 
@@ -413,10 +374,6 @@ class PointDiagram extends BaseElement {
     this.addControl("width", {
       type: CONTROLLER_SLIDER,
       label: "width",
-      default: {
-        size: 100,
-        unit: "%"
-      },
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
@@ -425,10 +382,6 @@ class PointDiagram extends BaseElement {
     this.addControl("height", {
       type: CONTROLLER_SLIDER,
       label: "height",
-      default: {
-        size: 420,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
@@ -437,14 +390,6 @@ class PointDiagram extends BaseElement {
     this.addControl("margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
-      default: {
-        top: 30,
-        right: 30,
-        bottom: 30,
-        left: 30,
-        unit: "px",
-        bind: true
-      },
       units: ["px", "%", "vh"],
     });
 

@@ -269,8 +269,12 @@ const AltrpDiagram = props => {
   
   return (
     <DynamicPointChart
-      widgetID={id}
-      margin={margin}
+      margin={margin ? margin : {
+        top: 30,
+        bottom: 30,
+        right: 30,
+        left: 30 
+      }}
       useCustomTooltips={useCustomTooltips}
       yScaleMax={yScaleMax}
       customColorSchemeChecker={customColorSchemeChecker}
@@ -278,8 +282,8 @@ const AltrpDiagram = props => {
       dataSource={data}
       constantsAxises={constantsAxises}
       colorScheme={colorScheme}
-      width={`${settings.width?.size}${settings.width?.unit}`}
-      height={`${settings.height?.size}${settings.height?.unit}`}
+      width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
+      height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
       widget={widget}
       nodeSize={pointSize}
       xScaleType={xScaleType}

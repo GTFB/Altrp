@@ -123,7 +123,7 @@ const DynamicPieChart = ({
 
   const customProps = {}
 
-  if (!useLinkArcLabels) {
+  if (useLinkArcLabels === false) {
     customProps.arcLinkLabelComponent = () => <text />
   }
 

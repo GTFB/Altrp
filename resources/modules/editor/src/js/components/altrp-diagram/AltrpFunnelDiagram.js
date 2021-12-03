@@ -132,16 +132,20 @@ const AltrpFunnelDiagram = props => {
   
   return (
     <DynamicFunnelChart
-      widgetID={id}
-      margin={margin}
+      margin={margin ? margin : {
+        top: 30,
+        bottom: 30,
+        right: 30,
+        left: 30 
+      }}
       yScaleMax={yScaleMax}
       customColorSchemeChecker={customColorSchemeChecker}
       customColors={customColors}
       widget={widget}
       dataSource={data}
       colorScheme={colorScheme}
-      width={`${settings.width?.size}${settings.width?.unit}`}
-      height={`${settings.height?.size}${settings.height?.unit}`}
+      width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
+      height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
       fillOpacity={settings.fillOpacity?.size}
       borderOpacity={settings.borderOpacity?.size}
       borderWidth={settings.borderWidth}

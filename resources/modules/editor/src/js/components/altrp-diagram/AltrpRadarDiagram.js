@@ -157,18 +157,22 @@ const AltrpRadarDiagram = props => {
   
   return (
     <DynamicRadarChart
-      widgetID={id}
       borderWidth={borderWidth?.size}
       blendMode={blendMode}
-      margin={margin}
+      margin={margin ? margin : {
+        top: 30,
+        bottom: 30,
+        right: 30,
+        left: 30 
+      }}
       customColorSchemeChecker={customColorSchemeChecker}
       customColors={customColors}
       dataSource={data}
       gridShape={gridShape}
       enableDots={enableDots}
       colorScheme={colorScheme}
-      width={`${settings.width?.size}${settings.width?.unit}`}
-      height={`${settings.height?.size}${settings.height?.unit}`}
+      width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
+      height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
       widget={widget}
       nodeSize={pointSize}
       keys={keys}

@@ -156,8 +156,12 @@ const AltrpPieDiagram = props => {
   return (
     <DynamicPieChart
       useProcent={useProcent}
-      widgetID={id}
-      margin={margin}
+      margin={margin ? margin : {
+        top: 30,
+        bottom: 30,
+        right: 30,
+        left: 30 
+      }}
       useCustomTooltips={useCustomTooltips}
       yScaleMax={yScaleMax}
       customColorSchemeChecker={customColorSchemeChecker}
@@ -166,8 +170,8 @@ const AltrpPieDiagram = props => {
       dataSource={data}
       colorScheme={colorScheme}
       widget={widget}
-      width={`${settings.width?.size}${settings.width?.unit}`}
-      height={`${settings.height?.size}${settings.height?.unit}`}
+      width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
+      height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
       innerRadius={innerRadius?.size}
       padAngle={padAngle?.size}
       cornerRadius={cornerRadius?.size}

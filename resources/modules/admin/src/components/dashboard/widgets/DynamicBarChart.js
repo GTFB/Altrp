@@ -16,7 +16,8 @@ import TooltipBar from "./d3/TooltipBar";
 
 const DynamicBarChart = ({
   widget,
-  height = 450,
+  height,
+  width,
   dataSource = [],
   groupMode = "stacked",
   layout = "vertical",
@@ -33,7 +34,7 @@ const DynamicBarChart = ({
   customColorSchemeChecker = false,
   customColors = [],
   useCustomTooltips,
-  margin = {},
+  margin,
   legend,
   markers,
   keys,
@@ -119,7 +120,7 @@ const DynamicBarChart = ({
   
   return (
     <>
-      <div style={{ height: `${height}px` }}>
+      <div style={{ height, width }}>
         <ResponsiveBar
           data={data}
           margin={{

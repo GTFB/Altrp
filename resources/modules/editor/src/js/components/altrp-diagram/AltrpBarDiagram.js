@@ -136,8 +136,12 @@ const AltrpBarDiagram = props => {
   
   return (
     <DynamicBarChart
-      widgetID={id}
-      margin={margin}
+      margin={margin ? margin : {
+        top: 30,
+        bottom: 30,
+        right: 30,
+        left: 30 
+      }}
       customColorSchemeChecker={customColorSchemeChecker}
       customColors={customColors}
       isMultiple={isMultiple}
@@ -145,8 +149,8 @@ const AltrpBarDiagram = props => {
       dataSource={data}
       widget={widget}
       enableLabel={enableLabel}
-      width={`${settings.width?.size}${settings.width?.unit}`}
-      height={settings.height?.size}
+      width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
+      height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
       layout={layout}
       groupMode={groupMode}
       reverse={reverse}
