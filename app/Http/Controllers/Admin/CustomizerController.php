@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Altrp\Customizer;
+use App\Altrp\Model;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -20,6 +21,10 @@ class CustomizerController extends Controller
     $customizer = new Customizer( $request->all() );
     $customizer->guid = Str::uuid();
     try {
+
+      if($customizer->model_id && Model::find($customizer->model_id)){
+        $customizer->model_guid = Model::find($customizer->model_id)->guid;
+      }
       $customizer->save();
     } catch ( \Throwable $th ) {
       return response()->json( [
@@ -70,6 +75,9 @@ class CustomizerController extends Controller
     }
     $customizer->fill( $request->toArray() );
     try {
+      if($customizer->model_id && Model::find($customizer->model_id)){
+        $customizer->model_guid = Model::find($customizer->model_id)->guid;
+      }
       $customizer->save();
     } catch ( \Throwable $th ) {
       return response()->json( [

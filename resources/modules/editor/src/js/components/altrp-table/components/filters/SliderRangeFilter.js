@@ -10,8 +10,8 @@ const {RangeSlider} = window.altrpLibs.Blueprint
  * @param {int|undefined} label_step_size
  * @param {int|undefined} step_size
  * @param {function} setFilter
- * @param filter_max_placeholder
- * @param filter_min_placeholder
+ * @param {boolean} labels_count_on
+ * @param {int | string} labels_count
  * @param id
  * @return {*}
  * @constructor
@@ -24,6 +24,8 @@ export default function SliderRangeFilter(
       setFilter,
       label_step_size,
       step_size,
+      labels_count = 0,
+      labels_count_on = false,
       id
     },
   })
@@ -66,13 +68,22 @@ export default function SliderRangeFilter(
     }
     return  Number(step_size?.size)
   }, [step_size?.size])
+
   const labelStepSize = React.useMemo(() => {
 
+    if(parseInt(labels_count) && labels_count_on){
+      const length = max - min;
+      if(length){
+
+
+        return Math.floor(length / labels_count);
+      }
+    }
     if( ! Number(label_step_size?.size)){
       return 20;
     }
     return  Number(label_step_size?.size)
-  }, [label_step_size?.size])
+  }, [label_step_size?.size, labels_count, labels_count_on, preFilteredRows])
   return (
     <div className="altrp-filter-group altrp-filter-group_range-slider"
          style={{

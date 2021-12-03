@@ -506,6 +506,20 @@ class Table extends BaseElement {
         'column_filter_type': 'range_slider',
       },
     });
+
+
+
+    repeater.addControl('labels_count_on', {
+      type: CONTROLLER_SWITCHER,
+      hideOnEmail: true,
+      label: 'Fix Labels Count',
+      responsive: false,
+      conditions: {
+        'column_is_filtered': true,
+        'column_filter_type': 'range_slider',
+      },
+    });
+
     repeater.addControl('label_step_size', {
       type: CONTROLLER_SLIDER,
       hideOnEmail: true,
@@ -514,6 +528,18 @@ class Table extends BaseElement {
       conditions: {
         'column_is_filtered': true,
         'column_filter_type': 'range_slider',
+        'labels_count_on!': true,
+      },
+    });
+    repeater.addControl('labels_count', {
+      type: CONTROLLER_NUMBER,
+      hideOnEmail: true,
+      label: 'Labels Count',
+      responsive: false,
+      conditions: {
+        'column_is_filtered': true,
+        'column_filter_type': 'range_slider',
+        'labels_count_on': true,
       },
     });
 
@@ -3110,7 +3136,7 @@ class Table extends BaseElement {
 
     this.addControl('color_range-slider_label-text-stages', {
       type: CONTROLLER_COLOR,
-      label: 'label stages text',
+      label: 'label steps text',
     });
 
     this.addControl('color_range-slider_controller-start', {
@@ -3130,7 +3156,7 @@ class Table extends BaseElement {
 
     this.addControl('typographic_range-slider_label-text-stages', {
       type: CONTROLLER_TYPOGRAPHIC,
-      label: 'typographic label stages',
+      label: 'typographic label steps',
     });
 
     this.endControlSection();

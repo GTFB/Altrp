@@ -64,7 +64,7 @@ class SwitchNode extends BaseNode implements NodeInterface
         continue;
       }
       $right_php_property = property_to_php( $item );
-      $compare =customizer_build_compare(data_get( $item,'operator'),$left_php_property,  $right_php_property);
+      $compare = customizer_build_compare(data_get( $item,'operator'),$left_php_property,  $right_php_property);
       $PHPContent .= "if( $compare ){";
       if(data_get( $this->children, $key)){
         $PHPContent.= data_get( $this->children, $key)->getPHPContent();

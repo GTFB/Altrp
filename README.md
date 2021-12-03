@@ -5,6 +5,9 @@
 
 
 ### 0.19.7
+* Fix Dropbar with Template Issue
+
+### 0.19.7
 * Fix Lightbox Issues
 
 ### 0.19.6

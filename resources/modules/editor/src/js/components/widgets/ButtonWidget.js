@@ -122,6 +122,7 @@ class ButtonWidget extends Component {
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
         )
       ).default;
+      console.log(this.props.element.getSettings("actions", []));
       await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
         'click',
