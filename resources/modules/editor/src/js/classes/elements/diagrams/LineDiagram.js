@@ -14,7 +14,6 @@ import {
   CONTROLLER_REPEATER,
   CONTROLLER_COLOR,
   CONTROLLER_NUMBER,
-  CONTROLLER_RANGE,
   CONTROLLER_DATE,
   CONTROLLER_SHADOW,
   CONTROLLER_TYPOGRAPHIC
@@ -45,20 +44,6 @@ class LineDiagram extends BaseElement {
     this.startControlSection("content_section", {
       tab: TAB_CONTENT,
       label: "Content"
-    });
-
-    this.addControl("query", {
-      type: CONTROLLER_QUERY
-    });
-
-    this.addControl("datasource_title", {
-      dynamic: false,
-      label: "Title"
-    });
-    
-    this.addControl("subtitle", {
-      dynamic: false,
-      label: "Subtitle"
     });
 
     this.addControl("datasource_path", {
@@ -204,7 +189,7 @@ class LineDiagram extends BaseElement {
     });
 
     this.addControl("tickRotation", {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: "Bottom axis rotation",
       default: 0,
       min: -90,
@@ -298,8 +283,6 @@ class LineDiagram extends BaseElement {
       label: "Point color"
     });
     this.endControlSection();
-    
-    titleControllers(this)
 
     legendControllers(this)
 

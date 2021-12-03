@@ -14,7 +14,6 @@ import {
   CONTROLLER_REPEATER,
   CONTROLLER_COLOR,
   CONTROLLER_NUMBER,
-  CONTROLLER_RANGE,
   CONTROLLER_DATE,
   CONTROLLER_SHADOW,
   CONTROLLER_TYPOGRAPHIC
@@ -45,20 +44,6 @@ class FunnelDiagram extends BaseElement {
     this.startControlSection("content_section", {
       tab: TAB_CONTENT,
       label: "Content"
-    });
-
-    this.addControl("query", {
-      type: CONTROLLER_QUERY
-    });
-
-    this.addControl("datasource_title", {
-      dynamic: false,
-      label: "Title"
-    });
-    
-    this.addControl("subtitle", {
-      dynamic: false,
-      label: "Subtitle"
     });
 
     this.addControl("datasource_path", {
@@ -101,7 +86,7 @@ class FunnelDiagram extends BaseElement {
     });
 
     this.addControl("fillOpacity", {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: "Fill opacity",
       default: 1,
       min: 0,
@@ -110,7 +95,7 @@ class FunnelDiagram extends BaseElement {
     });
 
     this.addControl("borderOpacity", {
-        type: CONTROLLER_RANGE,
+        type: CONTROLLER_SLIDER,
         label: "Border opacity",
         default: 1,
         min: 0,
@@ -139,7 +124,7 @@ class FunnelDiagram extends BaseElement {
     })
 
     this.addControl("spacing", {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: "Spacing",
       default: 0,
       min: 0,
@@ -148,7 +133,7 @@ class FunnelDiagram extends BaseElement {
     });
 
     this.addControl("shapeBlending", {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: "Shape blending",
       default: 1,
       min: 0,
@@ -178,7 +163,7 @@ class FunnelDiagram extends BaseElement {
     });
 
     this.addControl("currentPartSizeExtension", {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: "Hover part size",
       default: 0,
       min: 0,
@@ -190,7 +175,7 @@ class FunnelDiagram extends BaseElement {
     });
 
     this.addControl("currentBorderWidth", {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: "Hover border width",
       default: 0,
       min: 0,
@@ -228,7 +213,7 @@ class FunnelDiagram extends BaseElement {
     })
 
     this.addControl('label_modifier', {
-        type: CONTROLLER_RANGE,
+        type: CONTROLLER_SLIDER,
         label: 'Value',
         min: 0,
         max: 3,
@@ -244,8 +229,6 @@ class FunnelDiagram extends BaseElement {
     })
 
     this.endControlSection()
-    
-    titleControllers(this)
 
     legendControllers(this)
 

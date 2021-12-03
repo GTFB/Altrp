@@ -41,8 +41,6 @@ const DynamicLineChart = ({
   customColors = [],
   constantsAxises = [],
   yScaleMax,
-  title,
-  subTitle,
   legend,
   enableGradient
 }) => {
@@ -161,8 +159,6 @@ const DynamicLineChart = ({
 
   return (
     <>
-      {title && <h3 className='diagram-title' style={{margin: 0}}>{title}</h3>}
-      {subTitle && <h5 className='diagram-subtitle' style={{margin: 0}}>{subTitle}</h5>}
       <div
         style={{
           width: width,

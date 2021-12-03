@@ -14,7 +14,6 @@ import {
   CONTROLLER_REPEATER,
   CONTROLLER_COLOR,
   CONTROLLER_NUMBER,
-  CONTROLLER_RANGE,
   CONTROLLER_DATE,
   CONTROLLER_SHADOW,
   CONTROLLER_TYPOGRAPHIC
@@ -45,20 +44,6 @@ class RadarDiagram extends BaseElement {
     this.startControlSection("content_section", {
       tab: TAB_CONTENT,
       label: "Content"
-    });
-
-    this.addControl("query", {
-      type: CONTROLLER_QUERY
-    });
-
-    this.addControl("datasource_title", {
-      dynamic: false,
-      label: "Title"
-    });
-    
-    this.addControl("subtitle", {
-      dynamic: false,
-      label: "Subtitle"
     });
 
     this.addControl("datasource_path", {
@@ -118,7 +103,7 @@ class RadarDiagram extends BaseElement {
     })
 
     this.addControl('fillOpacity', {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: 'Fill opacity',
       min: 0,
       max: 1,
@@ -126,7 +111,7 @@ class RadarDiagram extends BaseElement {
     })
 
     this.addControl('borderWidth', {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: 'Border width',
       min: 0,
       max: 20,
@@ -149,7 +134,7 @@ class RadarDiagram extends BaseElement {
     })
 
     this.addControl('gridLevels', {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: 'Grid levels',
       min: 0,
       max: 12,
@@ -177,7 +162,7 @@ class RadarDiagram extends BaseElement {
     })
 
     this.addControl('dotSize', {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: 'Dot size',
       min: 0,
       max: 32,
@@ -195,8 +180,6 @@ class RadarDiagram extends BaseElement {
       options: colors
     });
     this.endControlSection();
-    
-    titleControllers(this)
 
     legendControllers(this)
 

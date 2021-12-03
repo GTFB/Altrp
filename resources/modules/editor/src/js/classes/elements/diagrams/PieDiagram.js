@@ -14,7 +14,6 @@ import {
   CONTROLLER_REPEATER,
   CONTROLLER_COLOR,
   CONTROLLER_NUMBER,
-  CONTROLLER_RANGE,
   CONTROLLER_DATE,
   CONTROLLER_SHADOW,
   CONTROLLER_TYPOGRAPHIC,
@@ -50,20 +49,6 @@ class PieDiagram extends BaseElement {
       label: "Content"
     });
 
-    this.addControl("query", {
-      type: CONTROLLER_QUERY
-    });
-
-    this.addControl("datasource_title", {
-      dynamic: false,
-      label: "Title"
-    });
-
-    this.addControl("subtitle", {
-      dynamic: false,
-      label: "Subtitle"
-    });
-
     this.addControl("datasource_path", {
       dynamic: false,
       label: "Path to Data"
@@ -74,16 +59,16 @@ class PieDiagram extends BaseElement {
       label: "Key Field"
     });
 
+    this.addControl("data_name", {
+      dynamic: false,
+      label: "Data Field"
+    });
+
     this.addControl("key_is_date", {
       dynamic: false,
       default: false,
       label: "Key has Date format?",
       type: CONTROLLER_SWITCHER
-    });
-
-    this.addControl("data_name", {
-      dynamic: false,
-      label: "Data Field"
     });
 
     this.addControl("sort", {
@@ -155,7 +140,7 @@ class PieDiagram extends BaseElement {
     });
 
     this.addControl("innerRadius", {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: "Inner radius",
       min: 0,
       max: 0.95,
@@ -163,7 +148,7 @@ class PieDiagram extends BaseElement {
     });
 
     this.addControl("padAngle", {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: "Pad angle",
       min: 0,
       max: 45,
@@ -183,7 +168,7 @@ class PieDiagram extends BaseElement {
     });
 
     this.addControl("cornerRadius", {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: "Corner radius",
       default: 0,
       min: 0,
@@ -192,8 +177,6 @@ class PieDiagram extends BaseElement {
     });
 
     this.endControlSection();
-    
-    titleControllers(this)
     
     legendControllers(this)
 

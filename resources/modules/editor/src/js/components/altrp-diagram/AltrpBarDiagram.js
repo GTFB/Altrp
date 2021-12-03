@@ -32,10 +32,7 @@ const AltrpBarDiagram = props => {
     padding,
     useCustomTooltips,
     margin,
-    datasource_title,
-    subTitle,
     markersRepeater,
-    useSymlogScale,
     group_name,
     key_name, 
     data_name
@@ -153,9 +150,9 @@ const AltrpBarDiagram = props => {
       layout={layout}
       groupMode={groupMode}
       reverse={reverse}
-      borderRadius={borderRadius}
-      borderWidth={borderWidth}
-      padding={padding}
+      borderRadius={borderRadius?.size}
+      borderWidth={borderWidth?.size}
+      padding={padding?.size}
       sort={sort}
       tickRotation={tickRotation}
       enableGridX={enableGridX}
@@ -170,14 +167,12 @@ const AltrpBarDiagram = props => {
         translateX: settings.legend_translate_x,
         translateY: settings.legend_translate_y,
         itemsSpacing: settings.legend_items_spacing,
-        itemWidth: settings.legend_item_width,
+        itemWidth: settings.legend_item_width || 60,
         itemHeight: settings.legend_item_height,
-        itemOpacity: settings.legend_item_opacity,
+        itemOpacity: settings.legend_item_opacity?.size,
         symbolSize: settings.legend_symbol_size,
         symbolShape: settings.legend_symbol_shape
       }}
-      title={datasource_title}
-      subTitle={subTitle}
       markers={markersRepeater?.map(el => ({
         ...el,
         axis: 'y', 

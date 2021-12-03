@@ -85,12 +85,7 @@ const AltrpFunnelDiagram = props => {
         console.log("====================================");
         console.error(error);
         console.log("====================================");
-        data = [
-          {
-            id: settings.datasource_title || settings.datasource_path,
-            data: []
-          }
-        ];
+        data = [];
       }
     }
   }
@@ -147,18 +142,16 @@ const AltrpFunnelDiagram = props => {
       colorScheme={colorScheme}
       width={`${settings.width?.size}${settings.width?.unit}`}
       height={`${settings.height?.size}${settings.height?.unit}`}
-      fillOpacity={settings.fillOpacity}
-      borderOpacity={settings.borderOpacity}
+      fillOpacity={settings.fillOpacity?.size}
+      borderOpacity={settings.borderOpacity?.size}
       borderWidth={settings.borderWidth}
       interpolation={interpolation}
-      spacing={spacing}
-      shapeBlending={shapeBlending}
+      spacing={spacing?.size}
+      shapeBlending={shapeBlending?.size}
       direction={direction}
       isInteractive={isInteractive}
-      currentPartSizeExtension={currentPartSizeExtension ? +currentPartSizeExtension : 0}
-      currentBorderWidth={currentBorderWidth ? +currentBorderWidth : 0}
-      title={settings.datasource_title}
-      subTitle={settings.subtitle}
+      currentPartSizeExtension={currentPartSizeExtension?.size ? +currentPartSizeExtension?.size : 0}
+      currentBorderWidth={currentBorderWidth?.size ? +currentBorderWidth?.size : 0}
       legend={settings.use_legend && {
         anchor: settings.legend_anchor,
         direction: settings.legend_direction,
@@ -166,16 +159,16 @@ const AltrpFunnelDiagram = props => {
         translateX: settings.legend_translate_x,
         translateY: settings.legend_translate_y,
         itemsSpacing: settings.legend_items_spacing,
-        itemWidth: settings.legend_item_width,
+        itemWidth: settings.legend_item_width || 60,
         itemHeight: settings.legend_item_height,
-        itemOpacity: settings.legend_item_opacity,
+        itemOpacity: settings.legend_item_opacity?.size,
         symbolSize: settings.legend_symbol_size,
         symbolShape: settings.legend_symbol_shape
       }}
       labelColor={
         label_color_type && label_color_type === 'custom' 
             ? label_color?.colorPickedHex
-            : label_modifier && { from: 'color', modifiers: [ [ label_color_type, label_modifier ] ] }
+            : label_modifier?.size && { from: 'color', modifiers: [ [ label_color_type, label_modifier?.size ] ] }
       }
     />
   );

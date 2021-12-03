@@ -55,15 +55,6 @@ class PointDiagram extends BaseElement {
       label: "Content"
     });
 
-    this.addControl("query", {
-      type: CONTROLLER_QUERY
-    });
-
-    this.addControl("datasource_title", {
-      dynamic: false,
-      label: "Title"
-    });
-
     this.addControl("datasource_path", {
       dynamic: false,
       label: "Path to Data"
@@ -219,7 +210,7 @@ class PointDiagram extends BaseElement {
     });
 
     this.addControl("tickRotation", {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: "Bottom axis rotation",
       default: 0,
       min: -90,
@@ -274,8 +265,6 @@ class PointDiagram extends BaseElement {
     });
 
     this.endControlSection();
-    
-    titleControllers(this)
 
     legendControllers(this)
 

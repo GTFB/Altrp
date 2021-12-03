@@ -14,7 +14,6 @@ import {
   CONTROLLER_REPEATER,
   CONTROLLER_COLOR,
   CONTROLLER_NUMBER,
-  CONTROLLER_RANGE,
   CONTROLLER_SHADOW,
   CONTROLLER_TYPOGRAPHIC
 } from "../../modules/ControllersManager";
@@ -43,20 +42,6 @@ class BarDiagram extends BaseElement {
     this.startControlSection("content_section", {
       tab: TAB_CONTENT,
       label: "Content"
-    });
-
-    this.addControl("query", {
-      type: CONTROLLER_QUERY
-    });
-
-    this.addControl("datasource_title", {
-      dynamic: false,
-      label: "Title"
-    });
-
-    this.addControl("subtitle", {
-      dynamic: false,
-      label: "Subtitle"
     });
 
     this.addControl("datasource_path", {
@@ -226,7 +211,7 @@ class BarDiagram extends BaseElement {
     });
 
     this.addControl("padding", {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: "Padding",
       default: 0,
       min: 0,
@@ -235,7 +220,7 @@ class BarDiagram extends BaseElement {
     });
 
     this.addControl("borderRadius", {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: "Border radius",
       default: 0,
       min: 0,
@@ -244,7 +229,7 @@ class BarDiagram extends BaseElement {
     });
 
     this.addControl("borderWidth", {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: "Border width",
       default: 0,
       min: 0,

@@ -12,22 +12,14 @@ import moment from "moment";
 const AltrpDiagram = props => {
   const { settings, id } = props;
 
-  const dispatch = useDispatch();
-  const margin = settings?.margin;
-  const widgetName = settings?.widget_name || id;
+  const {margin, yScaleMax, axisY, axisX} = settings
+
   const customColorSchemeChecker = settings?.isCustomColor;
 
   const customColors = settings?.customScheme?.map(item =>
     _.get(item, "color.colorPickedHex")
   );
-  const yScaleMax = settings?.yScaleMax;
 
-  const axisY = settings?.axisY;
-  const tooltipValues = settings?.repTooltips?.map(item => ({
-    label: _.get(item, "label"),
-    field: _.get(item, "value"),
-    color: _.get(item, "color")?.colorPickedHex
-  }));
   const useCustomTooltips = settings?.customTooltip;
 
   const formattedYAxis =
@@ -59,7 +51,6 @@ const AltrpDiagram = props => {
       return data;
     }) || [];
 
-  const axisX = settings?.axisX;
   const formattedXAxis =
     axisX?.map(item => {
       const valueFromPath = getDataByPath(item.xMarkerValue);
@@ -103,41 +94,27 @@ const AltrpDiagram = props => {
     constantsAxises = constantsAxises.flat();
   }
 
-  const sql = settings.query?.dataSource?.value;
-  const isMultiple = settings.isMultiple;
-  const isCustomColor = settings.isCustomColors;
-  const keyIsDate = settings.key_is_date;
-  const sort = settings?.sort;
-  const tickRotation = settings?.tickRotation;
-  const bottomAxis = settings?.bottomAxis;
-  const enableGridX = settings?.enableGridX;
-  const enableGridY = settings?.enableGridY;
-  //line settings
-  const xScaleType = settings?.xScaleType || "point";
-  const precision = settings?.precision || "month";
-  const curve = settings?.curve || "line";
-  const lineWidth = settings?.lineWidth;
-  const colorScheme = settings?.colorScheme;
-
-  const enableArea = settings?.enableArea;
-  const enablePoints = settings?.enablePoints;
-  const pointSize = settings?.pointSize;
-  const pointColor = settings?.pointColor;
-  //line marker Y
-  const yMarker = settings?.yMarker;
-  const yMarkerValue = settings?.yMarkerValue;
-  const yMarkerOrientation = settings?.yMarkerOrientation;
-  const yMarkerColor = settings?.yMarkerColor;
-  const yMarkerWidth = settings?.yMarkerWidth;
-  const yMarkerLabel = settings?.yMarkerLabel;
-  const yMarkerLabelColor = settings?.yMarkerLabelColor;
-  //line marker X
-  const xMarker = settings?.xMarker;
-  const xMarkerValue = keyIsDate
-    ? moment(settings?.xMarkerValueDate).toDate()
-    : settings?.xMarkerValue;
-  
   const {
+    isMultiple, 
+    sort, 
+    tickRotation, 
+    bottomAxis, 
+    enableGridX, 
+    enableGridY, 
+    lineWidth, 
+    colorScheme,
+    enableArea,
+    enablePoints,
+    pointSize,
+    pointColor,
+    yMarker,
+    yMarkerValue,
+    yMarkerOrientation,
+    yMarkerColor,
+    yMarkerWidth,
+    yMarkerLabel,
+    yMarkerLabelColor,
+    xMarker,
     enableGradient, 
     xMarkerLabelColor,
     xMarkerLabel,
@@ -145,6 +122,17 @@ const AltrpDiagram = props => {
     xMarkerColor,
     xMarkerOrientation,
   } = settings
+
+  const isCustomColor = settings.isCustomColors;
+  const keyIsDate = settings.key_is_date;
+  //line settings
+  const xScaleType = settings?.xScaleType || "point";
+  const precision = settings?.precision || "month";
+  const curve = settings?.curve || "line";
+  
+  const xMarkerValue = keyIsDate
+    ? moment(settings?.xMarkerValueDate).toDate()
+    : settings?.xMarkerValue;
 
   let data = [];
 
@@ -155,29 +143,13 @@ const AltrpDiagram = props => {
       const keyFormatted = !moment(currentKey).isValid()
         ? currentKey
         : moment(currentKey).format("DD.MM.YYYY");
-      const tooltip =
-        typeof tooltipValues !== "undefined"
-          ? tooltipValues?.map(item => {
-              return {
-                label: item?.label,
-                value: _.get(d, item.field),
-                color: item?.color
-              };
-            })
-          : [];
       
       return {
         y: Number(_.get(d, r.data)),
         x: keyIsDate ? keyFormatted : currentKey,
-        tooltip: tooltip
       };
     });
   };
-  let legend = [];
-  const currentColors = isCustomColor
-    ? customColors
-    : _.find(Schemes, { value: settings?.colorScheme }).colors;
-  const colorsCount = currentColors.length;
 
   if (isEditor()) {
     data = [
@@ -243,11 +215,6 @@ const AltrpDiagram = props => {
           innerData = formatData(innerData, r);
         }
 
-        legend.push({
-          color: currentColors[index % colorsCount],
-          label: r.title || r.path
-        });
-
         return {
           id: r.title || r.path,
           data: innerData
@@ -261,14 +228,9 @@ const AltrpDiagram = props => {
           key: settings.key_name,
           data: settings.data_name
         };
-  
-        legend.push({
-          color: currentColors[0],
-          label: settings.datasource_title || settings.datasource_path
-        });
+
         data = [
           {
-            id: settings.datasource_title || settings.datasource_path,
             data: formatData(data, r)
           }
         ];
@@ -278,7 +240,6 @@ const AltrpDiagram = props => {
         console.log("====================================");
         data = [
           {
-            id: settings.datasource_title || settings.datasource_path,
             data: []
           }
         ];
@@ -286,7 +247,7 @@ const AltrpDiagram = props => {
     }
   }
 
-  if (!sql && data.length === 0) {
+  if (data.length === 0) {
     return (
       <div className={`altrp-chart ${settings.legendPosition}`}>
         Идет загрузка данных...
@@ -294,34 +255,15 @@ const AltrpDiagram = props => {
     );
   }
 
-  const parseQueryParams = (qs = "") => {
-    if (!qs) return "";
-    const keyValues = qs.split("\n");
-    const result = keyValues.map(item => item.replace("|", "=")).join("&");
-    return `?${result}`;
-  };
-
-  const queryString = parseQueryParams(settings.query?.defaultParams);
-
   const widget = {
-    source: sql + queryString,
     options: {
       colorScheme: settings.colorScheme,
-      legend: settings.legend,
       animated: settings.animated,
       isVertical: settings.isVertical
     },
     filter: {}
   };
 
-  const setLegend = legend =>
-    dispatch(changePageState(widgetName, { legend: legend }));
-
-  useEffect(() => {
-    if (legend.length > 0) {
-      setLegend(legend);
-    }
-  }, [legend]);
   console.log("====================================");
   console.log(data);
   console.log("====================================");
@@ -350,24 +292,9 @@ const AltrpDiagram = props => {
       yMarker={yMarker}
       width={`${settings.width?.size}${settings.width?.unit}`}
       height={`${settings.height?.size}${settings.height?.unit}`}
-      title={settings.datasource_title}
-      subTitle={settings.subtitle}
-      yMarkerValue={yMarkerValue}
-      yMarkerOrientation={yMarkerOrientation}
-      yMarkerColor={yMarkerColor}
-      yMarkerWidth={yMarkerWidth}
-      yMarkerLabel={yMarkerLabel}
-      xMarker={xMarker}
-      xMarkerValue={xMarkerValue}
-      xMarkerOrientation={xMarkerOrientation}
-      xMarkerColor={xMarkerColor}
-      xMarkerWidth={xMarkerWidth}
-      xMarkerLabel={xMarkerLabel}
-      yMarkerLabelColor={yMarkerLabelColor}
-      xMarkerLabelColor={xMarkerLabelColor}
       constantsAxises={constantsAxises}
       sort={sort}
-      tickRotation={tickRotation}
+      tickRotation={tickRotation?.size}
       bottomAxis={bottomAxis}
       enableGridX={enableGridX}
       enableGridY={enableGridY}
@@ -378,9 +305,9 @@ const AltrpDiagram = props => {
         translateX: settings.legend_translate_x,
         translateY: settings.legend_translate_y,
         itemsSpacing: settings.legend_items_spacing,
-        itemWidth: settings.legend_item_width,
+        itemWidth: settings.legend_item_width || 60,
         itemHeight: settings.legend_item_height,
-        itemOpacity: settings.legend_item_opacity,
+        itemOpacity: settings.legend_item_opacity?.size,
         symbolSize: settings.legend_symbol_size,
         symbolShape: settings.legend_symbol_shape
       }}

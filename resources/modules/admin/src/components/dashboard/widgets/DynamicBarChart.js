@@ -36,8 +36,6 @@ const DynamicBarChart = ({
   margin = {},
   legend,
   markers,
-  title,
-  subTitle,
   keys,
   indexBy
 }) => {
@@ -121,8 +119,6 @@ const DynamicBarChart = ({
   
   return (
     <>
-      {title && <h3 className='diagram-title' style={{margin: 0}}>{title}</h3>}
-      {subTitle && <h5 className='diagram-subtitle' style={{margin: 0}}>{subTitle}</h5>}
       <div style={{ height: `${height}px` }}>
         <ResponsiveBar
           data={data}

@@ -50,8 +50,6 @@ const DynamicPieChart = ({
   customColors = [],
   useCustomTooltips,
   margin,
-  title,
-  subTitle,
   legend,
   activeOuterRadiusOffset,
   activeInnerRadiusOffset,
@@ -135,8 +133,6 @@ const DynamicPieChart = ({
 
   return (
     <>
-      {title && <h3 className='diagram-title' style={{margin: 0}}>{title}</h3>}
-      {subTitle && <h5 className='diagram-subtitle' style={{margin: 0}}>{subTitle}</h5>}
       <div className='diagram' style={{ height, width }}>
         <ResponsivePie
           data={data}
