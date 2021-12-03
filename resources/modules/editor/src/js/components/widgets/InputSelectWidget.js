@@ -825,13 +825,6 @@ class InputSelectWidget extends Component {
     if (_.isArray(e)) {
       value = _.cloneDeep(e);
     }
-    if (
-      this.props.element.getSettings("content_options_nullable") &&
-      e &&
-      e.value === "<null>"
-    ) {
-      value = null;
-    }
 
     this.setState(
       state => ({
@@ -855,7 +848,7 @@ class InputSelectWidget extends Component {
   }
 
   async onItemSelect(value) {
-    if (value.value) {
+    if (value.value !== undefined && ! isNaN(value.value)){
       value = value.value;
     }
 
@@ -895,10 +888,13 @@ class InputSelectWidget extends Component {
       } else {
         options.unshift(arguments[0])
       }
+      this.setState(state => ({
+          ...state,
+          options,
+        }))
     }
     this.setState(state => ({
         ...state,
-        options,
         value
       }),
       () => {
@@ -917,7 +913,8 @@ class InputSelectWidget extends Component {
    * получить опции
    */
   getOptions() {
-    let options = [...this.state.options];
+    let options = this.state.options;
+
     const optionsDynamicSetting = this.props.element.getDynamicSetting(
       "content_options"
     );
@@ -933,6 +930,8 @@ class InputSelectWidget extends Component {
     }
     if (optionsDynamicSetting) {
       options = convertData(optionsDynamicSetting, options);
+    } else {
+      options = [...options]
     }
     if (!this.props.element.getSettings("sort_default")) {
       options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
@@ -1283,7 +1282,7 @@ class InputSelectWidget extends Component {
             return <MenuItem
               text={item.label}
               key={item.value}
-              active={item.value == value}
+              active={item.value === this.getValue()}
               disabled={modifiers.disabled || item.disabled}
               onClick={handleClick}
             />

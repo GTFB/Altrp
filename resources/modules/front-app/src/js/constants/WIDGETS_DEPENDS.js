@@ -4,6 +4,7 @@ const WIDGETS_DEPENDS = {
   'breadcrumbs': ['blueprint'],
   'tabs': ['blueprint', 'template-loader'],
   'tabs-switcher': [ 'template-loader'],
+  'dropbar': [ 'template-loader'],
   'carousel': [ 'template-loader'],
   'cards': [ 'template-loader'],
   'template': [ 'template-loader'],

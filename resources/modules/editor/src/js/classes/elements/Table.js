@@ -506,6 +506,20 @@ class Table extends BaseElement {
         'column_filter_type': 'range_slider',
       },
     });
+
+
+
+    repeater.addControl('labels_count_on', {
+      type: CONTROLLER_SWITCHER,
+      hideOnEmail: true,
+      label: 'Fix Labels Count',
+      responsive: false,
+      conditions: {
+        'column_is_filtered': true,
+        'column_filter_type': 'range_slider',
+      },
+    });
+
     repeater.addControl('label_step_size', {
       type: CONTROLLER_SLIDER,
       hideOnEmail: true,
@@ -514,6 +528,18 @@ class Table extends BaseElement {
       conditions: {
         'column_is_filtered': true,
         'column_filter_type': 'range_slider',
+        'labels_count_on!': true,
+      },
+    });
+    repeater.addControl('labels_count', {
+      type: CONTROLLER_NUMBER,
+      hideOnEmail: true,
+      label: 'Labels Count',
+      responsive: false,
+      conditions: {
+        'column_is_filtered': true,
+        'column_filter_type': 'range_slider',
+        'labels_count_on': true,
       },
     });
 
@@ -3081,6 +3107,59 @@ class Table extends BaseElement {
 
     this.endControlSection();
     //</editor-fold>
+
+
+    this.startControlSection('range_slider_columns', {
+      tab: TAB_STYLE,
+      label: "Range Slider Styled"
+    });
+
+    this.addControl('color_range-slider_style', {
+      type: CONTROLLER_COLOR,
+      label: 'Progress primary',
+    });
+
+    this.addControl('color_range-slider_progress', {
+      type: CONTROLLER_COLOR,
+      label: 'Progress',
+    });
+
+    this.addControl('color_range-slider_label-background', {
+      type: CONTROLLER_COLOR,
+      label: 'label background',
+    });
+
+    this.addControl('color_range-slider_label-text', {
+      type: CONTROLLER_COLOR,
+      label: 'label text',
+    });
+
+    this.addControl('color_range-slider_label-text-stages', {
+      type: CONTROLLER_COLOR,
+      label: 'label steps text',
+    });
+
+    this.addControl('color_range-slider_controller-start', {
+      type: CONTROLLER_COLOR,
+      label: 'Controller start',
+    });
+
+    this.addControl('color_range-slider_controller-end', {
+      type: CONTROLLER_COLOR,
+      label: 'Controller end',
+    });
+
+    this.addControl('typographic_range-slider_label-text', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'typographic label',
+    });
+
+    this.addControl('typographic_range-slider_label-text-stages', {
+      type: CONTROLLER_TYPOGRAPHIC,
+      label: 'typographic label steps',
+    });
+
+    this.endControlSection();
   }
 }
 

@@ -32,6 +32,7 @@ class PropertyComponent extends Component {
     if (this.props.changeByPath && this.props.path) {
       this.props.changeByPath(e, `${this.props.path}.namespace`)
 
+
       this.props.changeByPath('', `${this.props.path}.method`)
       const newParameters = [];
       this.props.changeByPath(newParameters, `${this.props.path}.methodSettings.parameters`)
@@ -76,6 +77,7 @@ class PropertyComponent extends Component {
 
   render() {
     let options = [];
+
     const {namespace, path, method, expression} = this.props.property;
     const {type, withoutMethods} = this.props;
     switch (type) {
