@@ -4,8 +4,9 @@
 ## Changelog
 
 
-### 0.19.7
+### 0.19.8
 * Fix Dropbar with Template Issue
+* Fix Import/Export Issues
 
 ### 0.19.7
 * Fix Lightbox Issues
