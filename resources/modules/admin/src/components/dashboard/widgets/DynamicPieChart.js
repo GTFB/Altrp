@@ -45,15 +45,11 @@ const DynamicPieChart = ({
   cornerRadius = 0,
   sortByValue = 0,
   sort = "",
-  tickRotation = 0,
   keyIsDate = false,
   customColorSchemeChecker = false,
   customColors = [],
-  widgetID,
   useCustomTooltips,
   margin,
-  title,
-  subTitle,
   legend,
   activeOuterRadiusOffset,
   activeInnerRadiusOffset,
@@ -125,10 +121,10 @@ const DynamicPieChart = ({
     layers.push(CenteredMetric)
   }
 
-  const customProperties = {}
+  const customProps = {}
 
-  if (!useLinkArcLabels) {
-    customProperties.arcLinkLabelComponent = () => <text />
+  if (useLinkArcLabels === false) {
+    customProps.arcLinkLabelComponent = () => <text />
   }
 
   if (isLoading) return <Spinner />;
@@ -137,8 +133,6 @@ const DynamicPieChart = ({
 
   return (
     <>
-      {title && <h3 className='diagram-title' style={{margin: 0}}>{title}</h3>}
-      {subTitle && <h5 className='diagram-subtitle' style={{margin: 0}}>{subTitle}</h5>}
       <div className='diagram' style={{ height, width }}>
         <ResponsivePie
           data={data}
@@ -153,14 +147,6 @@ const DynamicPieChart = ({
               ? milkScheme2
               : { scheme: colorScheme }
           }
-          tooltip={datum => (
-            <TooltipPie
-              enable={useCustomTooltips}
-              datum={datum}
-              data={data}
-              widgetID={widgetID}
-            ></TooltipPie>
-          )}
           cornerRadius={cornerRadius}
           sortByValue={sortByValue}
           margin={margin}
@@ -186,6 +172,12 @@ const DynamicPieChart = ({
           activeOuterRadiusOffset={activeOuterRadiusOffset}
           activeInnerRadiusOffset={activeInnerRadiusOffset}
           layers={layers}
+          // tooltip={datum => (
+          //   <TooltipPie
+          //     datum={datum}
+          //     data={data}
+          //   ></TooltipPie>
+          // )}
           arcLabelsComponent={({ datum, label, style }) => {
             return <animated.g transform={style.transform} style={{ pointerEvents: 'none' }}>
                 <text
@@ -197,7 +189,7 @@ const DynamicPieChart = ({
                 </text>
             </animated.g>
           }}
-          {...customProperties}
+          {...customProps}
         />
       </div>
     </>

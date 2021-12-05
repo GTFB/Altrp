@@ -12,8 +12,6 @@ import moment from "moment";
 const AltrpPieDiagram = props => {
   const { settings, id } = props;
 
-  const dispatch = useDispatch();
-  const widgetName = settings?.widget_name || id;
   const customColorSchemeChecker = settings?.isCustomColor;
 
   const customColors = settings?.customScheme?.map(item =>
@@ -22,7 +20,6 @@ const AltrpPieDiagram = props => {
 
   const {useCustomTooltips} = settings;
 
-  const sql = settings.query?.dataSource?.value;
   const keyIsDate = settings.key_is_date;
   //line settings
 
@@ -32,7 +29,6 @@ const AltrpPieDiagram = props => {
     yScaleMax,
     colorScheme,
     isMultiple,
-    isCustomColor,
     sort,
     innerRadius,
     padAngle,
@@ -128,7 +124,6 @@ const AltrpPieDiagram = props => {
         console.log("====================================");
         data = [
           {
-            id: settings.datasource_title || settings.datasource_path,
             data: []
           }
         ];
@@ -136,7 +131,7 @@ const AltrpPieDiagram = props => {
     }
   }
 
-  if (!sql && data.length === 0) {
+  if (data.length === 0) {
     return (
       <div className={`altrp-chart ${settings.legendPosition}`}>
         Идет загрузка данных...
@@ -144,17 +139,7 @@ const AltrpPieDiagram = props => {
     );
   }
 
-  const parseQueryParams = (qs = "") => {
-    if (!qs) return "";
-    const keyValues = qs.split("\n");
-    const result = keyValues.map(item => item.replace("|", "=")).join("&");
-    return `?${result}`;
-  };
-
-  const queryString = parseQueryParams(settings.query?.defaultParams);
-
   const widget = {
-    source: sql + queryString,
     options: {
       colorScheme: settings.colorScheme,
       legend: settings.legend,
@@ -171,8 +156,12 @@ const AltrpPieDiagram = props => {
   return (
     <DynamicPieChart
       useProcent={useProcent}
-      widgetID={id}
-      margin={margin}
+      margin={margin ? margin : {
+        top: 30,
+        bottom: 30,
+        right: 30,
+        left: 30 
+      }}
       useCustomTooltips={useCustomTooltips}
       yScaleMax={yScaleMax}
       customColorSchemeChecker={customColorSchemeChecker}
@@ -181,15 +170,13 @@ const AltrpPieDiagram = props => {
       dataSource={data}
       colorScheme={colorScheme}
       widget={widget}
-      width={`${settings.width?.size}${settings.width?.unit}`}
-      height={`${settings.height?.size}${settings.height?.unit}`}
-      innerRadius={innerRadius}
-      padAngle={padAngle}
-      cornerRadius={cornerRadius}
+      width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
+      height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
+      innerRadius={innerRadius?.size}
+      padAngle={padAngle?.size}
+      cornerRadius={cornerRadius?.size}
       sortByValue={sortByValue}
       sort={sort}
-      title={settings.datasource_title}
-      subTitle={settings.subtitle}
       legend={settings.use_legend && {
         anchor: settings.legend_anchor,
         direction: settings.legend_direction,
@@ -197,9 +184,9 @@ const AltrpPieDiagram = props => {
         translateX: settings.legend_translate_x,
         translateY: settings.legend_translate_y,
         itemsSpacing: settings.legend_items_spacing,
-        itemWidth: settings.legend_item_width,
+        itemWidth: settings.legend_item_width || 60,
         itemHeight: settings.legend_item_height,
-        itemOpacity: settings.legend_item_opacity,
+        itemOpacity: settings.legend_item_opacity?.size,
         symbolSize: settings.legend_symbol_size,
         symbolShape: settings.legend_symbol_shape
       }}

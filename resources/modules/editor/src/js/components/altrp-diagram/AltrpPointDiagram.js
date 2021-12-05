@@ -12,9 +12,7 @@ import moment from "moment";
 const AltrpDiagram = props => {
   const { settings, id } = props;
 
-  const dispatch = useDispatch();
   const margin = settings?.margin;
-  const widgetName = settings?.widget_name || id;
   const customColorSchemeChecker = settings?.isCustomColor;
 
   const customColors = settings?.customScheme?.map(item =>
@@ -52,7 +50,6 @@ const AltrpDiagram = props => {
             ? item.yMarkerLabelColor.colorPickedHex
             : "#000000"
       },
-      legend: item.yMarkerLabel,
       legendOrientation: item.yMarkerOrientation
     };
     return data;
@@ -146,10 +143,6 @@ const AltrpDiagram = props => {
     });
   };
   let legend = [];
-  const currentColors = isCustomColor
-    ? customColors
-    : _.find(Schemes, { value: settings?.colorScheme }).colors;
-  const colorsCount = currentColors.length;
 
   if (isEditor()) {
     data = [
@@ -221,11 +214,6 @@ const AltrpDiagram = props => {
           innerData = formatData(innerData, r);
         }
         
-        legend.push({
-          color: currentColors[index % colorsCount],
-          label: r.title || r.path
-        });
-        
         return {
           id: r.title || r.path,
           data: innerData
@@ -238,15 +226,9 @@ const AltrpDiagram = props => {
           key: settings.key_name,
           data: settings.data_name
         };
-  
-        legend.push({
-          color: currentColors[0],
-          label: settings.datasource_title || settings.datasource_path
-        });
 
         data = [
           {
-            id: settings.datasource_title || settings.datasource_path,
             data: formatData(data, r)
           }
         ];
@@ -256,7 +238,6 @@ const AltrpDiagram = props => {
         console.log("====================================");
         data = [
           {
-            id: settings.datasource_title || settings.datasource_path,
             data: []
           }
         ];
@@ -272,34 +253,15 @@ const AltrpDiagram = props => {
     );
   }
 
-  const parseQueryParams = (qs = "") => {
-    if (!qs) return "";
-    const keyValues = qs.split("\n");
-    const result = keyValues.map(item => item.replace("|", "=")).join("&");
-    return `?${result}`;
-  };
-
-  const queryString = parseQueryParams(settings.query?.defaultParams);
-
   const widget = {
-    source: sql + queryString,
     options: {
       colorScheme: settings.colorScheme,
-      legend: settings.legend,
       animated: settings.animated,
       isVertical: settings.isVertical
     },
     filter: {}
   };
 
-  const setLegend = legend =>
-    dispatch(changePageState(widgetName, { legend: legend }));
-
-  useEffect(() => {
-    if (legend.length > 0) {
-      setLegend(legend);
-    }
-  }, [legend]);
   console.log("====================================");
   console.log(data);
   console.log("====================================");
@@ -307,8 +269,12 @@ const AltrpDiagram = props => {
   
   return (
     <DynamicPointChart
-      widgetID={id}
-      margin={margin}
+      margin={margin ? margin : {
+        top: 30,
+        bottom: 30,
+        right: 30,
+        left: 30 
+      }}
       useCustomTooltips={useCustomTooltips}
       yScaleMax={yScaleMax}
       customColorSchemeChecker={customColorSchemeChecker}
@@ -316,19 +282,17 @@ const AltrpDiagram = props => {
       dataSource={data}
       constantsAxises={constantsAxises}
       colorScheme={colorScheme}
-      width={`${settings.width?.size}${settings.width?.unit}`}
-      height={`${settings.height?.size}${settings.height?.unit}`}
+      width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
+      height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
       widget={widget}
       nodeSize={pointSize}
       xScaleType={xScaleType}
       precision={precision}
       sort={sort}
-      tickRotation={tickRotation}
+      tickRotation={tickRotation?.size}
       bottomAxis={bottomAxis}
       enableGridX={enableGridX}
       enableGridY={enableGridY}
-      title={settings.datasource_title}
-      subTitle={settings.subtitle}
       legend={settings.use_legend && {
         anchor: settings.legend_anchor,
         direction: settings.legend_direction,
@@ -336,9 +300,9 @@ const AltrpDiagram = props => {
         translateX: settings.legend_translate_x,
         translateY: settings.legend_translate_y,
         itemsSpacing: settings.legend_items_spacing,
-        itemWidth: settings.legend_item_width,
+        itemWidth: settings.legend_item_width || 60,
         itemHeight: settings.legend_item_height,
-        itemOpacity: settings.legend_item_opacity,
+        itemOpacity: settings.legend_item_opacity?.size,
         symbolSize: settings.legend_symbol_size,
         symbolShape: settings.legend_symbol_shape
       }}

@@ -18,8 +18,8 @@ const format = "%d.%m.%Y";
 
 const DynamicLineChart = ({
   widget,
-  width = `300px`,
-  height = `450px`,
+  width,
+  height,
   margin,
   keyIsDate,
   dataSource = [],
@@ -41,9 +41,6 @@ const DynamicLineChart = ({
   customColors = [],
   constantsAxises = [],
   yScaleMax,
-  widgetID,
-  title,
-  subTitle,
   legend,
   enableGradient
 }) => {
@@ -162,8 +159,6 @@ const DynamicLineChart = ({
 
   return (
     <>
-      {title && <h3 className='diagram-title' style={{margin: 0}}>{title}</h3>}
-      {subTitle && <h5 className='diagram-subtitle' style={{margin: 0}}>{subTitle}</h5>}
       <div
         style={{
           width: width,
@@ -212,18 +207,17 @@ const DynamicLineChart = ({
           useMesh={true}
           enableArea={enableArea}
           enablePoints={enablePoints}
-          tooltip={datum => {
-            console.log("====================================");
-            console.log(datum);
-            console.log("====================================");
-            return (
-              <Tooltip
-                keyIsDate={keyIsDate}
-                datum={datum}
-                widgetID={widgetID}
-              />
-            );
-          }}
+          // tooltip={datum => {
+          //   console.log("====================================");
+          //   console.log(datum);
+          //   console.log("====================================");
+          //   return (
+          //     <Tooltip
+          //       keyIsDate={keyIsDate}
+          //       datum={datum}
+          //     />
+          //   );
+          // }}
           pointSize={pointSize}
           curve={curve}
           colors={

@@ -24,9 +24,6 @@ const DynamicFunnelChart = ({
   colorScheme = "red_grey",
   customColorSchemeChecker = false,
   customColors = [],
-  widgetID,
-  title,
-  subTitle,
   legend,
   fillOpacity,
   borderWidth,
@@ -77,8 +74,6 @@ const DynamicFunnelChart = ({
 
   return (
     <>
-      {title && <h3 className='diagram-title' style={{margin: 0}}>{title}</h3>}
-      {subTitle && <h5 className='diagram-subtitle' style={{margin: 0}}>{subTitle}</h5>}
       <div
         style={{
           width: width,
@@ -104,7 +99,6 @@ const DynamicFunnelChart = ({
           //     <Tooltip
           //       keyIsDate={keyIsDate}
           //       datum={datum}
-          //       widgetID={widgetID}
           //     />
           //   );
           // }}

@@ -36,12 +36,9 @@ const PointChart = ({
   customColors = [],
   constantsAxises = [],
   yScaleMax,
-  widgetID,
   useCustomTooltips,
   margin,
   legend,
-  title,
-  subTitle
 }) => {
   if (legend) {
     Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
@@ -146,8 +143,6 @@ const PointChart = ({
 
   return (
     <>
-      {title && <h3 className='diagram-title' style={{margin: 0}}>{title}</h3>}
-      {subTitle && <h5 className='diagram-subtitle' style={{margin: 0}}>{subTitle}</h5>}
       <div
         style={{
           width: width,
@@ -191,12 +186,11 @@ const PointChart = ({
               ? { type: xScaleType, format: format, precision: precision }
               : { type: xScaleType }
           }
-          tooltip={datum => (
-            <Tooltip
-              datum={datum}
-              widgetID={widgetID}
-            />
-          )}
+          // tooltip={datum => (
+          //   <Tooltip
+          //     datum={datum}
+          //   />
+          // )}
           enableGridX={enableGridX}
           enableGridY={enableGridY}
           axisBottom={

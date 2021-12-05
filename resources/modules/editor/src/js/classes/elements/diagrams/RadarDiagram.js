@@ -14,7 +14,6 @@ import {
   CONTROLLER_REPEATER,
   CONTROLLER_COLOR,
   CONTROLLER_NUMBER,
-  CONTROLLER_RANGE,
   CONTROLLER_DATE,
   CONTROLLER_SHADOW,
   CONTROLLER_TYPOGRAPHIC
@@ -47,20 +46,6 @@ class RadarDiagram extends BaseElement {
       label: "Content"
     });
 
-    this.addControl("query", {
-      type: CONTROLLER_QUERY
-    });
-
-    this.addControl("datasource_title", {
-      dynamic: false,
-      label: "Title"
-    });
-    
-    this.addControl("subtitle", {
-      dynamic: false,
-      label: "Subtitle"
-    });
-
     this.addControl("datasource_path", {
       dynamic: false,
       label: "Path to Data"
@@ -84,22 +69,8 @@ class RadarDiagram extends BaseElement {
     this.addControl("use_legend", {
       type: CONTROLLER_SWITCHER,
       label: "Use legend?",
-      default: false
     });
     
-    this.endControlSection();
-
-    this.startControlSection("main", {
-      tab: TAB_CONTENT,
-      dynamic: false,
-      label: "Main"
-    });
-
-    this.addControl("widget_name", {
-      dynamic: false,
-      label: "Widget name"
-    });
-
     this.endControlSection();
 
     this.startControlSection("style", {
@@ -131,7 +102,7 @@ class RadarDiagram extends BaseElement {
     })
 
     this.addControl('fillOpacity', {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: 'Fill opacity',
       min: 0,
       max: 1,
@@ -139,7 +110,7 @@ class RadarDiagram extends BaseElement {
     })
 
     this.addControl('borderWidth', {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: 'Border width',
       min: 0,
       max: 20,
@@ -162,7 +133,7 @@ class RadarDiagram extends BaseElement {
     })
 
     this.addControl('gridLevels', {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: 'Grid levels',
       min: 0,
       max: 12,
@@ -190,7 +161,7 @@ class RadarDiagram extends BaseElement {
     })
 
     this.addControl('dotSize', {
-      type: CONTROLLER_RANGE,
+      type: CONTROLLER_SLIDER,
       label: 'Dot size',
       min: 0,
       max: 32,
@@ -204,12 +175,9 @@ class RadarDiagram extends BaseElement {
     this.addControl("colorScheme", {
       type: CONTROLLER_SELECT,
       label: "Color Scheme",
-      default: "regagro",
       options: colors
     });
     this.endControlSection();
-    
-    titleControllers(this)
 
     legendControllers(this)
 
@@ -229,12 +197,10 @@ class RadarDiagram extends BaseElement {
     this.addControl("isCustomColor", {
       type: CONTROLLER_SWITCHER,
       label: "Use custom color scheme?",
-      default: false
     });
 
     this.addControl("customScheme", {
       type: CONTROLLER_REPEATER,
-      default: [],
       fields: repeaterScheme.getControls()
     });
 
@@ -248,10 +214,6 @@ class RadarDiagram extends BaseElement {
     this.addControl("width", {
       type: CONTROLLER_SLIDER,
       label: "width",
-      default: {
-        size: 100,
-        unit: "%"
-      },
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
@@ -260,10 +222,6 @@ class RadarDiagram extends BaseElement {
     this.addControl("height", {
       type: CONTROLLER_SLIDER,
       label: "height",
-      default: {
-        size: 420,
-        unit: "px"
-      },
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
@@ -272,14 +230,6 @@ class RadarDiagram extends BaseElement {
     this.addControl("margin", {
       type: CONTROLLER_DIMENSIONS,
       label: "Margin",
-      default: {
-        top: 30,
-        right: 30,
-        bottom: 30,
-        left: 30,
-        unit: "px",
-        bind: true
-      },
       units: ["px", "%", "vh"],
     });
 

@@ -157,28 +157,30 @@ const AltrpRadarDiagram = props => {
   
   return (
     <DynamicRadarChart
-      widgetID={id}
-      borderWidth={borderWidth}
+      borderWidth={borderWidth?.size}
       blendMode={blendMode}
-      margin={margin}
+      margin={margin ? margin : {
+        top: 30,
+        bottom: 30,
+        right: 30,
+        left: 30 
+      }}
       customColorSchemeChecker={customColorSchemeChecker}
       customColors={customColors}
       dataSource={data}
       gridShape={gridShape}
       enableDots={enableDots}
       colorScheme={colorScheme}
-      width={`${settings.width?.size}${settings.width?.unit}`}
-      height={`${settings.height?.size}${settings.height?.unit}`}
+      width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
+      height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
       widget={widget}
       nodeSize={pointSize}
-      title={settings.datasource_title}
-      subTitle={settings.subtitle}
       keys={keys}
       indexBy={indexBy}
       curve={curve}
-      fillOpacity={fillOpacity}
-      gridLevels={gridLevels}
-      dotSize={dotSize}
+      fillOpacity={fillOpacity?.size}
+      gridLevels={gridLevels?.size}
+      dotSize={dotSize?.size}
       legends={settings.use_legend && {
         anchor: settings.legend_anchor,
         direction: settings.legend_direction,
@@ -186,7 +188,7 @@ const AltrpRadarDiagram = props => {
         translateX: settings.legend_translate_x,
         translateY: settings.legend_translate_y,
         itemsSpacing: settings.legend_items_spacing,
-        itemWidth: settings.legend_item_width,
+        itemWidth: settings.legend_item_width || 60,
         itemHeight: settings.legend_item_height,
         itemOpacity: settings.legend_item_opacity,
         symbolSize: settings.legend_symbol_size,

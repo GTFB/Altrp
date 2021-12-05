@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from "react";
 
 import Spinner from "./Spinner";
@@ -15,7 +16,8 @@ import TooltipBar from "./d3/TooltipBar";
 
 const DynamicBarChart = ({
   widget,
-  height = 450,
+  height,
+  width,
   dataSource = [],
   groupMode = "stacked",
   layout = "vertical",
@@ -31,13 +33,10 @@ const DynamicBarChart = ({
   enableGridY = true,
   customColorSchemeChecker = false,
   customColors = [],
-  widgetID,
   useCustomTooltips,
-  margin = {},
+  margin,
   legend,
   markers,
-  title,
-  subTitle,
   keys,
   indexBy
 }) => {
@@ -121,9 +120,7 @@ const DynamicBarChart = ({
   
   return (
     <>
-      {title && <h3 className='diagram-title' style={{margin: 0}}>{title}</h3>}
-      {subTitle && <h5 className='diagram-subtitle' style={{margin: 0}}>{subTitle}</h5>}
-      <div style={{ height: `${height}px` }}>
+      <div style={{ height, width }}>
         <ResponsiveBar
           data={data}
           margin={{
@@ -147,13 +144,12 @@ const DynamicBarChart = ({
           }
           // colorBy="index"
           layout={layout}
-          tooltip={useCustomTooltips && (datum => (
-            <TooltipBar
-              enable={useCustomTooltips}
-              datum={datum}
-              widgetID={widgetID}
-            ></TooltipBar>
-          ))}
+          // tooltip={useCustomTooltips && (datum => (
+          //   <TooltipBar
+          //     enable={useCustomTooltips}
+          //     datum={datum}
+          //   />
+          // ))}
           enableGridX={enableGridX}
           enableGridY={enableGridY}
           enableLabel={enableLabel}

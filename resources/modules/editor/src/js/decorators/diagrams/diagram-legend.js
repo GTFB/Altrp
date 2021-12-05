@@ -1,4 +1,4 @@
-import { CONTROLLER_NUMBER, CONTROLLER_RANGE, CONTROLLER_SELECT, TAB_STYLE } from "../../classes/modules/ControllersManager";
+import { CONTROLLER_NUMBER, CONTROLLER_RANGE, CONTROLLER_SELECT, CONTROLLER_SLIDER, TAB_STYLE } from "../../classes/modules/ControllersManager";
 
 export default function legendControllers(element) {
     element.startControlSection("legend_styles", {
@@ -111,8 +111,8 @@ export default function legendControllers(element) {
     });
 
     element.addControl("legend_item_opacity", {
-        type: CONTROLLER_RANGE,
-        label: "Item Opacithy",
+        type: CONTROLLER_SLIDER,
+        label: "Item Opacity",
         default: 1,
         min: 0,
         max: 1,
