@@ -534,6 +534,7 @@ class InputTextCommonWidget extends Component {
   getValue = () => {
     let value;
     let formId = this.props.element.getFormId();
+
     let fieldName = this.props.element.getFieldId();
     if (isEditor()) {
       value = this.state.value;

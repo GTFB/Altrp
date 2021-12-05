@@ -11,6 +11,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Model
@@ -35,7 +36,8 @@ class Model extends EloquentModel
         'table_id',
         'pk',
         'last_upgrade',
-        'preset'
+        'preset',
+        'user_id'
     ];
 
     protected $hidden = [
@@ -156,13 +158,19 @@ class Model extends EloquentModel
         return (bool)$value;
     }
 
+    public function getOnlyUserAttribute($value)
+    {
+        return (bool)$value;
+    }
+
     /**
      * Список моделей для редактора
      */
     public static function getModelsForEditor()
     {
         $models = [];
-        $_models = self::all();
+        //$_models = self::all();
+        $_models = self::whereNull('user_id')->orWhere('user_id', Auth::user()->id)->get();
         foreach ($_models as $model) {
             /**
              * @var {Model} $model
@@ -325,10 +333,24 @@ class Model extends EloquentModel
     public static function getBySearch($search, $orderColumn = 'id', $orderType = 'Desc')
     {
         $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
-        return self::where('title','like', "%{$search}%")
-            ->orWhere('id', 'like', "%{$search}%")
+        // return self::where('title','like', "%{$search}%")
+        //     ->orWhere('id', 'like', "%{$search}%")
+        //   ->$sortType($orderColumn)
+        //   ->get();
+
+        return self::where(function($q)  {
+            return $q
+                    ->whereNull('user_id')
+                    ->orWhere('user_id', Auth::user()->id);
+          })
+          ->where(function($q)  {
+            return $q
+                    ->where('title','like', "%{$search}%")
+                    ->orWhere('id', 'like', "%{$search}%");
+          })
           ->$sortType($orderColumn)
           ->get();
+
     }
 
   /**
@@ -344,13 +366,26 @@ class Model extends EloquentModel
       if( $request->has( 'preset' ) ) {
         return self::where('title','like', "%{$search}%")
           ->where( 'preset', $request->get( 'preset' ) )
-          ->orWhere('id', "%$search%")
+
+          //->orWhere('id', "%$search%")
+
+          ->where(function($q)  {
+            return $q
+                  ->whereNull('user_id')
+                  ->orWhere('user_id', Auth::user()->id);
+          })
+
           ->skip($offset)
           ->$sortType($orderColumn)
           ->take($limit);
       } else {
         return self::where('title','like', "%{$search}%")
-          ->orWhere('id', "%$search%")
+          //->orWhere('id', "%$search%")
+          ->where(function($q)  {
+            return $q
+                  ->whereNull('user_id')
+                  ->orWhere('user_id', Auth::user()->id);
+          })
           ->skip($offset)
           ->$sortType($orderColumn)
           ->take($limit);
@@ -370,12 +405,22 @@ class Model extends EloquentModel
         $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
       if( $request->has( 'preset' ) ) {
         return self::where('preset', $request->get( 'preset' ) )
+          ->where(function($q)  {
+            return $q
+                    ->whereNull('user_id')
+                    ->orWhere('user_id', Auth::user()->id);
+          })
           ->skip($offset)
           ->take($limit)
           ->$sortType($orderColumn);
       } else {
 
-        return self::skip($offset)
+        return self::where(function($q)  {
+            return $q
+                    ->whereNull('user_id')
+                    ->orWhere('user_id', Auth::user()->id);
+          })
+          ->skip($offset)
           ->take($limit)
           ->$sortType($orderColumn);
       }
@@ -389,7 +434,8 @@ class Model extends EloquentModel
     public static function getCountWithSearch($search)
     {
         return self::where('title','like', "%{$search}%")
-            ->orWhere('id', $search)
+            //->orWhere('id', $search)
+        ->where('user_id', Auth::user()->id)
             ->toBase()
             ->count();
     }

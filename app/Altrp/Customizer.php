@@ -79,6 +79,8 @@ class Customizer extends Model
           'success' => false,
           'message' => 'Customizer failed!',
           'throw message' => \$th->getMessage(),
+          'file' => \$th->getFile(),
+          'line' => \$th->getLine(),
           'trace' => \$th->getTrace(),
         ], 500, [], JSON_UNESCAPED_UNICODE
         );

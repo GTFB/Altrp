@@ -63,7 +63,6 @@ class TemplateLoader extends Component {
     }
   }
   render() {
-    console.log(this.state.templateComponent)
     return <div className="inner-template">{this.state.templateComponent}</div>;
   }
 }

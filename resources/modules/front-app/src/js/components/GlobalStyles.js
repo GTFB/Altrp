@@ -44,6 +44,7 @@ import getInputGalleryStyles from "./helpers/getInputGalleryStyles";
 import {getResponsiveSetting} from "../helpers";
 import InputRangeSliderComponent
   from "../../../../editor/src/js/components/widgets/styled-components/InputRangeSliderComponent";
+import RangeSliderTableComponent from "../../../../editor/src/js/components/widgets/styled-components/RangeSliderTableComponent"
 import getTemplateStyles from "./helpers/getTemplateStyles";
 import TooltipComponent from "../../../../editor/src/js/components/widgets/styled-components/TooltipComponent";
 import getInputMultiSelectStyles, {getInputMultiSelectPopoverStyles} from "./helpers/getInputMultiSelectStyles";
@@ -153,6 +154,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           break;
         case 'table': {
           styles += getTableStyles(item.settings, id);
+          styles += `.${prefix}${id} {${RangeSliderTableComponent(
+            item.settings,
+          )}}`;
         }
           break;
         case 'text': {
