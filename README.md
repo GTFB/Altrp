@@ -8,6 +8,7 @@
 * Fix Dropbar with Template Issue
 * Fix Import/Export Issues
 * Fix Placeholders Color for Widgets
+* Fix Icon in Toggle Button In Menu Widget Issue
 
 ### 0.19.7
 * Fix Lightbox Issues
