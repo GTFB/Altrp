@@ -6,6 +6,7 @@ import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/se
 import { getDataByPath, isEditor } from "../../../../../front-app/src/js/helpers";
 import moment from "moment";
 import DynamicBarChart from "../../../../../admin/src/components/dashboard/widgets/DynamicBarChart";
+import getFormatValueString from "../../../../../admin/src/components/dashboard/services/getFormatValueString";
 
 const AltrpBarDiagram = props => {
   const { settings, id } = props;
@@ -37,8 +38,6 @@ const AltrpBarDiagram = props => {
     key_name, 
     data_name
   } = settings
-
-  const sql = settings.query?.dataSource?.value;
 
   let data = []
   let keys = []
@@ -103,7 +102,7 @@ const AltrpBarDiagram = props => {
     }
   }
 
-  if (!sql && data.length === 0) {
+  if (data.length === 0) {
     return (
       <div className={`altrp-chart ${settings.legendPosition}`}>
         Loading data...
@@ -111,17 +110,7 @@ const AltrpBarDiagram = props => {
     );
   }
 
-  const parseQueryParams = (qs = "") => {
-    if (!qs) return "";
-    const keyValues = qs.split("\n");
-    const result = keyValues.map(item => item.replace("|", "=")).join("&");
-    return `?${result}`;
-  };
-
-  const queryString = parseQueryParams(settings.query?.defaultParams);
-
   const widget = {
-    source: sql + queryString,
     options: {
       colorScheme: settings.colorScheme,
       animated: settings.animated,
@@ -142,6 +131,7 @@ const AltrpBarDiagram = props => {
         right: 30,
         left: 30 
       }}
+      valueFormat={getFormatValueString(settings)}
       customColorSchemeChecker={customColorSchemeChecker}
       customColors={customColors}
       isMultiple={isMultiple}
@@ -178,10 +168,12 @@ const AltrpBarDiagram = props => {
         symbolShape: settings.legend_symbol_shape
       }}
       markers={markersRepeater?.map(el => ({
-        ...el,
+        label: '',
+        value: 0,
         axis: 'y', 
         legendOrientation: el.legendOrientation || 'horizontal',
-        lineStyle: {stroke: el.stroke.color}
+        lineStyle: {stroke: el.stroke?.color || '#000'},
+        ...el,
       }))}
     />
   )

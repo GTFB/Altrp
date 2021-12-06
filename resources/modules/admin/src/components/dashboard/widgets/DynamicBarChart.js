@@ -38,7 +38,8 @@ const DynamicBarChart = ({
   legend,
   markers,
   keys,
-  indexBy
+  indexBy,
+  valueFormat
 }) => {
   if (legend) {
     Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
@@ -150,6 +151,7 @@ const DynamicBarChart = ({
           //     datum={datum}
           //   />
           // ))}
+          valueFormat={valueFormat}
           enableGridX={enableGridX}
           enableGridY={enableGridY}
           enableLabel={enableLabel}

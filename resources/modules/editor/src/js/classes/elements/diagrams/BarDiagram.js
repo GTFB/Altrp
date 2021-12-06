@@ -98,7 +98,7 @@ class BarDiagram extends BaseElement {
       type: CONTROLLER_SELECT,
       options: [
         {
-          label: 'vartical',
+          label: 'vertical',
           value: 'vertical'
         },
         {
