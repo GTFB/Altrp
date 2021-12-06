@@ -47,8 +47,6 @@ const getIconStyles = (settings, id) => {
         ${simplePropertyStyled( getResponsiveSetting(settings, 'description_alignment') , 'text-align')}
     }`
 
-    console.log({height: getResponsiveSetting(settings, 'icon_height')});
-
     styles += `${parentClass} .widget-icon {
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'icon_padding') , "padding")}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'icon_margin') , "margin")}

@@ -8,6 +8,7 @@ import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/se
 
 import { getDataByPath, isEditor } from "../../../../../front-app/src/js/helpers";
 import moment from "moment";
+import getFormatValueString from "../../../../../admin/src/components/dashboard/services/getFormatValueString";
 
 const AltrpPieDiagram = props => {
   const { settings, id } = props;
@@ -162,6 +163,7 @@ const AltrpPieDiagram = props => {
         right: 30,
         left: 30 
       }}
+      valueFormat={getFormatValueString(settings)}
       useCustomTooltips={useCustomTooltips}
       yScaleMax={yScaleMax}
       customColorSchemeChecker={customColorSchemeChecker}

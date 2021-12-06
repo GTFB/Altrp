@@ -25,6 +25,7 @@ import {actionsControllers} from "../../../decorators/actions-controllers";
 import Repeater from "../../Repeater";
 import legendControllers from "../../../decorators/diagrams/diagram-legend.js";
 import titleControllers from "../../../decorators/diagrams/diagram-title-subtitle.js";
+import valueFormatControllers from "../../../decorators/diagrams/diagram-value-format.js";
 
 class PieDiagram extends BaseElement {
   static getName() {
@@ -171,6 +172,8 @@ class PieDiagram extends BaseElement {
     this.endControlSection();
     
     legendControllers(this)
+
+    valueFormatControllers(this)
 
     this.startControlSection("custom_color_scheme", {
       tab: TAB_STYLE,
