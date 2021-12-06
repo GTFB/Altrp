@@ -9,7 +9,7 @@ import {
   CONTROLLER_SELECT,
   CONTROLLER_COLOR,
   CONTROLLER_TYPOGRAPHIC,
-  CONTROLLER_SHADOW, CONTROLLER_SWITCHER, CONTROLLER_CHOOSE, CONTROLLER_MEDIA, CONTROLLER_SLIDER,
+  CONTROLLER_SHADOW, CONTROLLER_SWITCHER, CONTROLLER_CHOOSE, CONTROLLER_MEDIA, CONTROLLER_SLIDER, CONTROLLER_TEXT,
 } from '../modules/ControllersManager';
 
 class Menu extends BaseElement {
@@ -409,6 +409,11 @@ class Menu extends BaseElement {
       label: 'Icon Fill Color',
       type: CONTROLLER_COLOR,
     })
+
+    this.addControl('icon_size', {
+      type: CONTROLLER_TEXT,
+      label: "Icon size"
+    });
 
     this.addControl('border',{
       type: CONTROLLER_SELECT,

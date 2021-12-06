@@ -305,6 +305,16 @@ const getMenuStyles = (settings, id) => {
     "altrp-menu li .bp3-menu-item",
       ["border-radius", "item_radius", "dimensions"],
     "}",
+
+    "altrp-menu-toggle .altrp-menu-item__icon svg",
+      () => {
+        const value = getResponsiveSetting(settings, "icon_size");
+
+        if(value) {
+          return `height:${value};width: ${value};`;
+        }
+      },
+    "}",
   ]
 
   const styledArray = [
