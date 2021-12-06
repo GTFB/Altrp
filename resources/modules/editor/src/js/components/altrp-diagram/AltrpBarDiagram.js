@@ -36,7 +36,12 @@ const AltrpBarDiagram = props => {
     markersRepeater,
     group_name,
     key_name, 
-    data_name
+    data_name,
+    bottomAxis,
+    minValue,
+    enableMinValue,
+    maxValue,
+    enableMaxValue
   } = settings
 
   let data = []
@@ -70,19 +75,37 @@ const AltrpBarDiagram = props => {
   if (isEditor()) {
     data = [
       {
-        key: 'key1',
-        title: 61,
-        title1: 60,
+        "country": "AG",
+        "hot dog": 69,
+        "burger": 148,
+        "sandwich": 173,
+        "kebab": 35,
       },
       {
-        key: 'key2',
-        title1: 50,
-        title: 60,
+        "country": "AI",
+        "hot dog": 45,
+        "burger": 96,
+        "sandwich": 154,
+        "kebab": 96,
       },
+      {
+        "country": "AL",
+        "hot dog": 107,
+        "burger": 39,
+        "sandwich": 159,
+        "kebab": 61,
+      },
+      {
+        "country": "AM",
+        "hot dog": 111,
+        "burger": 135,
+        "sandwich": 32,
+        "kebab": 54,
+      }
     ]
 
-    keys = ['title', 'title1']
-    indexBy = 'key'
+    keys = ['hot dog', 'burger', 'sandwich', 'kebab']
+    indexBy = 'country'
   } else {
     try {
       data = getDataByPath(settings.datasource_path, []);
@@ -175,6 +198,15 @@ const AltrpBarDiagram = props => {
         lineStyle: {stroke: el.stroke?.color || '#000'},
         ...el,
       }))}
+      axisBottom={bottomAxis && {
+        tickSize: 5,
+        tickPadding: 0,
+        tickRotation: 0,
+        legend: "",
+        legendOffset: 32
+      }}
+      minValue={enableMinValue && minValue}
+      maxValue={enableMaxValue && maxValue}
     />
   )
 };
