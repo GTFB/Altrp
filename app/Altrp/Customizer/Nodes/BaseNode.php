@@ -4,6 +4,7 @@ namespace App\Altrp\Customizer\Nodes;
 
 
 use Illuminate\Support\Collection;
+use phpDocumentor\Reflection\Types\Mixed_;
 
 class BaseNode
 {
@@ -25,6 +26,21 @@ class BaseNode
     return $this->children;
   }
 
+
+  public function getProperty(): array
+  {
+    return data_get( $this->data, 'data.property', [] );
+  }
+
+  /**
+   * Получить данный по пути
+   * @param $path
+   * @return mixed
+   */
+  public function getDataByPath( $path )
+  {
+    return data_get( $this->data, 'data.' . $path );
+  }
 
   public function getPHPContent(): string{
     $PHPContent = '';
