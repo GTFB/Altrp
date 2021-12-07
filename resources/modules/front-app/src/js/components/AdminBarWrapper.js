@@ -43,7 +43,7 @@ const AdminBarWrapper = styled.div`
 
 & .admin-bar__arrow {
   height: 20px;
-  width: 35px;
+  width: 25px;
   position: absolute;
   top: 100%;
   left: 0;
@@ -51,7 +51,7 @@ const AdminBarWrapper = styled.div`
   z-index: 99999;
   background-color: #343B4C;
   cursor: pointer;
-  border-radius: 0 0 3px 0;
+  border-radius: 0 0 6px 0;
 }
 
 & .admin-bar__arrow div {
@@ -60,9 +60,9 @@ const AdminBarWrapper = styled.div`
   border: solid #fff;
   border-width: 0 2px 2px 0;
   display: inline-block;
-  width: 10px;
-  height: 10px;
-  margin-left: 8px;
+  width: 8px;
+  height: 8px;
+  margin-left: 5px;
   margin-right: 5px;
   transition: transform 0.2s, margin 0.2s;
 }
@@ -125,12 +125,9 @@ const AdminBarWrapper = styled.div`
   top: 30px;
   width: 150px;
   max-height: 450px;
-  padding-bottom: 7px;
-  padding-top: 5px;
 
   line-height: 16px;
   z-index: 999;
-  background-color: #343b4c;
 }
 
   & .admin-bar__popup-popups {
@@ -142,6 +139,7 @@ const AdminBarWrapper = styled.div`
   justify-content: space-between;
   padding: 6px 11px;
   text-overflow: ellipsis;
+  background-color: #343b4c;
 }
 
 & .admin-bar__popup-template-item:hover {
