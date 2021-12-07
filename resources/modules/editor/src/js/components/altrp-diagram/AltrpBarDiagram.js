@@ -41,7 +41,8 @@ const AltrpBarDiagram = props => {
     minValue,
     enableMinValue,
     maxValue,
-    enableMaxValue
+    enableMaxValue,
+    currency
   } = settings
 
   let data = []
@@ -155,6 +156,7 @@ const AltrpBarDiagram = props => {
         left: 30 
       }}
       valueFormat={getFormatValueString(settings)}
+      currency={currency}
       customColorSchemeChecker={customColorSchemeChecker}
       customColors={customColors}
       isMultiple={isMultiple}

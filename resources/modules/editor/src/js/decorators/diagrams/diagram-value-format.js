@@ -97,9 +97,9 @@ export default function valueFormatControllers(element) {
       ]
     })
 
-    element.addControl('formatSymbol', {
+    element.addControl('currency', {
       type: CONTROLLER_SELECT,
-      label: 'Sybmol',
+      label: 'Currency',
       options: [
         {
           label: "none",
@@ -110,8 +110,56 @@ export default function valueFormatControllers(element) {
           value: "$",
         },
         {
-          label: "b",
-          value: "b",
+          label: "€",
+          value: "€",
+        },
+        {
+          label: '₽',
+          value: '₽'
+        },
+        {
+          label: '¢',
+          value: '¢'
+        },
+        {
+          label: '¥',
+          value: '¥'
+        },
+        {
+          label: '₣',
+          value: '₣'
+        },
+        {
+          label: '₴',
+          value: '₴'
+        },
+        {
+          label: '₸',
+          value: '₸'
+        },
+        {
+          label: '￡',
+          value: '￡'
+        },
+        {
+          label: '₤',
+          value: '₤'
+        },
+        {
+          label: '元',
+          value: '元'
+        },
+        {
+          label: '円',
+          value: '円'
+        },
+        {
+          label: '₯',
+          value: '₯'
+        },
+        {
+          label: '₪',
+          value: '₪'
         },
       ]
     })

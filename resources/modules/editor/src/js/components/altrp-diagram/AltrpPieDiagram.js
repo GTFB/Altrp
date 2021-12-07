@@ -38,7 +38,8 @@ const AltrpPieDiagram = props => {
     activeInnerRadiusOffset,
     useCenteredMetric,
     useLinkArcLabels,
-    useProcent
+    useProcent,
+    currency
   } = settings
   
   //data variable
@@ -154,6 +155,8 @@ const AltrpPieDiagram = props => {
   console.log(data);
   console.log("====================================");
 
+  
+
   return (
     <DynamicPieChart
       useProcent={useProcent}
@@ -197,6 +200,7 @@ const AltrpPieDiagram = props => {
       activeInnerRadiusOffset={activeInnerRadiusOffset}
       useCenteredMetric={useCenteredMetric}
       useLinkArcLabels={useLinkArcLabels}
+      currency={currency}
     />
   );
 };

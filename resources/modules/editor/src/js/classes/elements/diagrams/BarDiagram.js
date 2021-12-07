@@ -20,6 +20,7 @@ import {
 
 import Repeater from "../../Repeater";
 import titleControllers from "../../../decorators/diagrams/diagram-title-subtitle.js";
+import valueFormatControllers from "../../../decorators/diagrams/diagram-value-format.js";
 
 class BarDiagram extends BaseElement {
   static getName() {
@@ -286,6 +287,8 @@ class BarDiagram extends BaseElement {
     this.endControlSection()
 
     legendControllers(this)
+
+    valueFormatControllers(this)
 
     this.startControlSection("custom_color_scheme", {
       tab: TAB_STYLE,

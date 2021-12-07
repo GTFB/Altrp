@@ -13,6 +13,7 @@ import { ResponsiveBar } from "@nivo/bar";
 
 import { getWidgetData } from "../services/getWidgetData";
 import TooltipBar from "./d3/TooltipBar";
+import addCurrencyToLabel from "../services/addCurrencyToLabel";
 
 const DynamicBarChart = ({
   widget,
@@ -42,7 +43,8 @@ const DynamicBarChart = ({
   valueFormat,
   axisBottom,
   maxValue,
-  minValue
+  minValue,
+  currency
 }) => {
   if (legend) {
     Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
@@ -120,6 +122,11 @@ const DynamicBarChart = ({
         ...legend
       }
     ]
+  }
+
+  if (valueFormat && currency) {
+    customProps.arcLabel = addCurrencyToLabel(currency)
+    customProps.tooltipFormat = addCurrencyToLabel(currency)
   }
   
   return (
