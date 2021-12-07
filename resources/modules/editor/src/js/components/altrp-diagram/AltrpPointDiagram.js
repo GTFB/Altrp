@@ -281,7 +281,7 @@ const AltrpDiagram = props => {
       customColors={customColors}
       dataSource={data}
       constantsAxises={constantsAxises}
-      colorScheme={colorScheme}
+      colorScheme={colorScheme || 'nivo'}
       width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
       height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
       widget={widget}

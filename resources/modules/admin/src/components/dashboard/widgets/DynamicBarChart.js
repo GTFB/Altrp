@@ -5,7 +5,6 @@ import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
 import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
-const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
 const milkScheme = _.find(Schemes, { value: "milk" }).colors;
 const milkScheme2 = _.find(Schemes, { value: "milk2" }).colors;
 
@@ -22,7 +21,7 @@ const DynamicBarChart = ({
   dataSource = [],
   groupMode = "stacked",
   layout = "vertical",
-  colorScheme = "regagro",
+  colorScheme,
   reverse = false,
   enableLabel = false,
   padding = 0.1,
@@ -44,7 +43,8 @@ const DynamicBarChart = ({
   axisBottom,
   maxValue,
   minValue,
-  currency
+  currency,
+  borderColor
 }) => {
   if (legend) {
     Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
@@ -124,6 +124,10 @@ const DynamicBarChart = ({
     ]
   }
 
+  if (borderColor) {
+    customProps.borderColor = borderColor
+  }
+
   if (valueFormat && currency) {
     customProps.arcLabel = addCurrencyToLabel(currency)
     customProps.tooltipFormat = addCurrencyToLabel(currency)
@@ -145,8 +149,6 @@ const DynamicBarChart = ({
           colors={
             customColorSchemeChecker && customColors.length > 0
               ? customColors
-              : colorScheme === "regagro"
-              ? regagroScheme
               : colorScheme === "milk"
               ? milkScheme
               : colorScheme === "milk2"

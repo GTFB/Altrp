@@ -277,7 +277,7 @@ const AltrpDiagram = props => {
       xScaleType={xScaleType}
       precision={precision}
       curve={curve}
-      colorScheme={colorScheme}
+      colorScheme={colorScheme || 'nivo'}
       enableArea={enableArea}
       enablePoints={enablePoints}
       lineWidth={lineWidth}

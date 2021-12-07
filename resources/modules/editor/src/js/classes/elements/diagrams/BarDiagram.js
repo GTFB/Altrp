@@ -284,6 +284,11 @@ class BarDiagram extends BaseElement {
       step: 1
     });
 
+    this.addControl("borderColor", {
+      type: CONTROLLER_COLOR,
+      label: "Border color",
+    });
+
     this.endControlSection()
 
     legendControllers(this)
