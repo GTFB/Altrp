@@ -156,6 +156,19 @@ class AltrpCarousel extends Component {
       }
     }
     // настройки слайдера
+
+    let infinite = this.props.infinite_loop_additional_content;
+    let maxView = Number(this.props.per_view_slides_content) || 1;
+    let rows = Number(this.props.per_row_slides_content) || 1;
+
+    if(rows > 1) {
+      maxView = maxView * rows
+    }
+
+    if(maxView >= slides.length) {
+      infinite = false
+    }
+
     let settings = {
       arrows: false,
       customPaging: (idx) => {
@@ -170,7 +183,7 @@ class AltrpCarousel extends Component {
         )},
       dotsClass: dotsClasses,
       dots: this.props.dots_navigation_content,
-      infinite: this.props.infinite_loop_additional_content,
+      infinite,
       pauseOnHover: this.props.pause_on_interaction_loop_additional_content,
       autoplay: this.props.autoplay_additional_content,
       className: sliderClasses,
@@ -178,7 +191,7 @@ class AltrpCarousel extends Component {
       speed: Number(this.props.transition_duration_additional_content),
       slidesToShow: Number(this.props.per_view_slides_content),
       slidesToScroll: Number(this.props.to_scroll_slides_content),
-      rows: Number(this.props.per_row_slides_content),
+      rows,
       afterChange: current => this.setState({ activeSlide: current }),
       beforeChange: (current, next) => {
         this.carouselsToSynchronize && this.carouselsToSynchronize.forEach(carousel => {carousel.setSlide(next)})
@@ -317,6 +330,7 @@ class AltrpCarousel extends Component {
           } else if(! _.isArray(slidesMap)){
             slidesMap = [];
           }
+
           slidesMap = slidesMap.map((media, idx)=>{
             if(_.isObject(media.media)){
               media = media.media;
@@ -416,7 +430,7 @@ class AltrpCarousel extends Component {
       ) : ""
 
     }
-
+    slidesMap
     return <AltrpCarouselWrapper settings={{...this.props}} className="altrp-carousel">
       {
         this.props.lightbox_slides_content ? lightbox : ""

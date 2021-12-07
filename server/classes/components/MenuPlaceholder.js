@@ -34,7 +34,6 @@ const MenuPlaceholder = props=>{
   const guid = props.element.getResponsiveSetting('menu');
 
     const menus = window.appStore.getState().altrpMenus;
-  console.log(guid, "g")
   if(guid) {
     const menu = menus.find((m) => {
       return m.guid === guid

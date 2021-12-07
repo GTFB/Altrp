@@ -5,6 +5,7 @@ let menusJSON =  window.__altrp_settings__?.altrpMenus || [];
 
 menusJSON = menusJSON.map(menu => {
   menu.children = mbParseJSON(menu.children);
+  menu.settings = mbParseJSON(menu.settings);
 
   return menu;
 })
