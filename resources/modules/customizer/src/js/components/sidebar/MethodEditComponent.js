@@ -23,6 +23,7 @@ class MethodEditComponent extends Component {
 
   renderContent() {
     const {parameters = []} = this.props.method
+    console.log(parameters)
     const {show} = this.props
     const classes = [
       'method-edit',

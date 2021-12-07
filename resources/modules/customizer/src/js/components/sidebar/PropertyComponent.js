@@ -7,34 +7,46 @@ import METHODS_OPTIONS from "../../const/METHODS_OPTIONS";
 import MethodEditComponent from "./MethodEditComponent";
 import altrpRandomId from "../../../../../front-app/src/js/helpers/functions/altrp-random-id";
 import SESSION_OPTIONS from "../../const/methods-options/SESSION_OPTIONS";
+import USER_OPTIONS from "../../const/methods-options/USER_OPTIONS";
+import mutate from "dot-prop-immutable";
 
 class PropertyComponent extends Component {
   constructor(props) {
     super(props)
     this.state = {};
+    this.textareaRef = React.createRef();
   }
 
   onChange = (e) => {
     if (this.props.changeByPath && this.props.path) {
-      this.props.changeByPath(e, `${this.props.path}.path`)
+      this.props.changeByPath(e.target.value, `${this.props.path}.path`)
     } else if (this.props.onChange) {
       this.props.onChange(e)
     }
   }
   onTextareaChange = (e) => {
     if (this.props.changeByPath && this.props.path) {
-      this.props.changeByPath(e, `${this.props.path}.expression`)
+      this.props.changeByPath(e.target.value, `${this.props.path}.expression`)
     } else if (this.props.onChange) {
       this.props.onChange(e)
     }
   }
   onSelect = (e) => {
     if (this.props.changeByPath && this.props.path) {
-      this.props.changeByPath(e, `${this.props.path}.namespace`)
-
-      this.props.changeByPath('', `${this.props.path}.method`)
       const newParameters = [];
-      this.props.changeByPath(newParameters, `${this.props.path}.methodSettings.parameters`)
+      let objSelect = this.props.property
+      objSelect = mutate.set(objSelect, 'namespace', e.target.value )
+      objSelect = mutate.set(objSelect, 'method', '' )
+      objSelect = mutate.set(objSelect, 'methodSettings.parameters', newParameters )
+
+      this.props.changeByPath(objSelect, `${this.props.path}`)
+
+
+      // this.props.changeByPath(e, `${this.props.path}.namespace`)
+      //
+      // this.props.changeByPath('', `${this.props.path}.method`)
+      // const newParameters = [];
+      // this.props.changeByPath(newParameters, `${this.props.path}.methodSettings.parameters`)
     } else if (this.props.onSelect) {
       this.props.onSelect(e)
     }
@@ -58,6 +70,24 @@ class PropertyComponent extends Component {
     }
   }
 
+  textAreaSize = () => {
+    if (this.textareaRef.current) {
+      let sizeHeight = String(this.textareaRef.current.offsetHeight) + 'px'
+      this.props.changeByPath(sizeHeight, `${this.props.path}.size`)
+    }
+  }
+
+  componentDidMount() {
+    document.body.addEventListener('mouseup', this.textAreaSize)
+    const { size } = this.props.property;
+    if (this.textareaRef.current) {
+      this.textareaRef.current.style.height = size
+    }
+    return () => {
+      document.body.removeEventListener('mouseup', this.textAreaSize)
+    }
+  }
+
   itemRenderer = (item, {handleClick, modifiers}) => {
     if (!modifiers.matchesPredicate) {
       return null;
@@ -70,8 +100,10 @@ class PropertyComponent extends Component {
       label={item.objectInstance || ''}
       key={item.value}/>
   }
-  onQueryChange= (s)=>{
-    console.log(s);
+  onQueryChange = (query, value) => {
+    return (
+      `${value.label.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0 || `${value.objectInstance}`.indexOf(query) >= 0
+    );
   }
 
   render() {
@@ -98,7 +130,12 @@ class PropertyComponent extends Component {
     }
     if(namespace === 'session' && ! path) {
       showMethod = true;
-      methodOptions = SESSION_OPTIONS;
+      methodOptions = [ {value: '', label: 'None'}, ...SESSION_OPTIONS ];
+    }
+
+    if(namespace === 'current_user') {
+      showMethod = true;
+      methodOptions = [ {value: '', label: 'None'}, ...USER_OPTIONS];
     }
     let buttonText = 'None'
     const currentMethod = METHODS_OPTIONS.find(o => o.value == method);
@@ -115,16 +152,26 @@ class PropertyComponent extends Component {
                     onChange={this.onChange}
                     value={path || ''}/>}
         {namespace === 'expression' &&
-        <TextArea fill={true}
-                  placeholder="php expression"
-                  height={7}
-                  onChange={this.onTextareaChange}
-                  value={expression || ''}/>}
+        // <TextArea fill={true}
+        //           placeholder="php expression"
+        //           inputRef={this.textareaRef}
+        //           onChange={this.onTextareaChange}
+        //           growVertically={true}
+        //           value={expression || ''}/>
+          <textarea value={expression || ''}
+                    onChange={this.onTextareaChange}
+                    placeholder="php expression"
+                    ref={this.textareaRef}
+                    className="textarea-custom"
+          />
+        }
       </ControlGroup>
       {!withoutMethods && showMethod && <ControlGroup fill={true}>
         <Select items={methodOptions}
                 onItemSelect={this.onItemSelect}
-                onQueryChange={this.onQueryChange}
+                noResults={<MenuItem disabled={true} text="No results."/>}
+                // onQueryChange={this.onQueryChange}
+                itemPredicate={this.onQueryChange}
                 matchTargetWidth={true}
                 fill={true}
                 popoverProps={{

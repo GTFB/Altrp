@@ -21,8 +21,7 @@ class ChangeNode extends React.Component {
 
   changeByPath = (e, path) => {
     let node = this.getNode();
-    let value = _.isString(e?.target?.value) ? e.target.value : e;
-    node = mutate.set(node, `data.${path}`, value)
+    node = mutate.set(node, `data.${path}`, e)
     store.dispatch(setUpdatedNode(node));
   }
 
@@ -33,13 +32,23 @@ class ChangeNode extends React.Component {
     return node;
   }
 
-  addClick = () => {
-    const node = this.getNode();
-    let items = [...node?.data?.props?.items || []];
-    items.push({
-      id: altrpRandomId()
-    });
-    this.changeByPath(items, 'props.items')
+  addClick = (value) => {
+    if (value) {
+      const node = this.getNode();
+      let items = [...node?.data?.props?.items || []];
+      items.push({
+        id: altrpRandomId(),
+        action: value
+      });
+      this.changeByPath(items, 'props.items')
+    } else {
+      const node = this.getNode();
+      let items = [...node?.data?.props?.items || []];
+      items.push({
+        id: altrpRandomId()
+      });
+      this.changeByPath(items, 'props.items')
+    }
   }
 
   deleteById = (id) => {

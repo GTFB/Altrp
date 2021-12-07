@@ -73,6 +73,12 @@ class CustomizerEditor extends Component {
     this.setState(s => ({ ...s, elements, customizer, btnActive: "btn_active" }));
   }
 
+  updateCustomizer = async () => {
+    const customizerId = new URL(window.location).searchParams.get("customizer_id");
+    const customizer = (await this.resource.get(customizerId)).data
+    store.dispatch(setCurrentCustomizer(customizer));
+  }
+
   async componentDidMount() {
     store.subscribe(this.updateCustomizerState.bind(this));
 
@@ -343,6 +349,7 @@ class CustomizerEditor extends Component {
                   btnChange={ this.btnChange }
                   setSources={ this.setSources }
                    onLayout={ this.onLayout }
+                   updateCustomizer={ this.updateCustomizer }
           />
           <div className="content" ref={this.reactFlowRef }>
             <ReactFlow
