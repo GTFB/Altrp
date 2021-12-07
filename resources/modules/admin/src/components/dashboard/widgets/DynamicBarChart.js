@@ -38,7 +38,11 @@ const DynamicBarChart = ({
   legend,
   markers,
   keys,
-  indexBy
+  indexBy,
+  valueFormat,
+  axisBottom,
+  maxValue,
+  minValue
 }) => {
   if (legend) {
     Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
@@ -150,6 +154,7 @@ const DynamicBarChart = ({
           //     datum={datum}
           //   />
           // ))}
+          valueFormat={valueFormat}
           enableGridX={enableGridX}
           enableGridY={enableGridY}
           enableLabel={enableLabel}
@@ -159,14 +164,10 @@ const DynamicBarChart = ({
           innerPadding={innerPadding}
           borderRadius={borderRadius}
           borderWidth={borderWidth}
-          axisBottom={{
-            tickSize: 5,
-            tickPadding: 0,
-            tickRotation: 0,
-            legend: "",
-            legendOffset: 32
-          }}
+          axisBottom={axisBottom}
           markers={markers}
+          maxValue={maxValue}
+          minValue={minValue}
           {...customProps}
         />
       </div>

@@ -238,7 +238,7 @@ const AltrpDiagram = props => {
   if (data.length === 0) {
     return (
       <div className={`altrp-chart ${settings.legendPosition}`}>
-        Идет загрузка данных...
+        Loading data...
       </div>
     );
   }

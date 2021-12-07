@@ -98,7 +98,7 @@ class BarDiagram extends BaseElement {
       type: CONTROLLER_SELECT,
       options: [
         {
-          label: 'vartical',
+          label: 'vertical',
           value: 'vertical'
         },
         {
@@ -120,8 +120,8 @@ class BarDiagram extends BaseElement {
 
     this.endControlSection();
 
-    this.startControlSection("style", {
-      tab: TAB_STYLE,
+    this.startControlSection("visual", {
+      tab: TAB_CONTENT,
       label: "Visual"
     });
 
@@ -199,61 +199,34 @@ class BarDiagram extends BaseElement {
       label: "Reverse",
     });
 
-    this.addControl("padding", {
-      type: CONTROLLER_SLIDER,
-      label: "Padding",
-      min: 0,
-      max: 0.95,
-      step: 0.05
-    });
-
-    this.addControl("borderRadius", {
-      type: CONTROLLER_SLIDER,
-      label: "Border radius",
-      min: 0,
-      max: 36,
-      step: 1
-    });
-
-    this.addControl("borderWidth", {
-      type: CONTROLLER_SLIDER,
-      label: "Border width",
-      min: 0,
-      max: 20,
-      step: 1
-    });
-
-    this.endControlSection();
-
-    titleControllers(this)
-
-    legendControllers(this)
-
-    this.startControlSection("custom_color_scheme", {
-      tab: TAB_STYLE,
-      label: "Custom color scheme"
-    });
-
-    let repeaterScheme = new Repeater();
-
-    repeaterScheme.addControl("color", {
-      label: "Color",
-      type: CONTROLLER_COLOR,
-      dynamic: false
-    });
-
-    this.addControl("isCustomColor", {
+    this.addControl('enableMinValue', {
       type: CONTROLLER_SWITCHER,
-      label: "Use custom color scheme?",
-    });
+      label: 'Enable min value'
+    })
 
-    this.addControl("customScheme", {
-      type: CONTROLLER_REPEATER,
-      fields: repeaterScheme.getControls()
-    });
+    this.addControl('minValue', {
+      type: CONTROLLER_NUMBER,
+      label: 'Min value',
+      conditions: {
+        enableMinValue: true
+      }
+    })
+    
+    this.addControl('enableMaxValue', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Enable max value'
+    })
+
+    this.addControl('maxValue', {
+      type: CONTROLLER_NUMBER,
+      label: 'Max value',
+      conditions: {
+        enableMaxValue: true
+      }
+    })
 
     this.endControlSection();
-
+    
     this.startControlSection("size", {
       tab: TAB_STYLE,
       label: "Size"
@@ -280,6 +253,64 @@ class BarDiagram extends BaseElement {
       label: "Margin",
       units: ["px", "%", "vh"],
     });
+
+    this.startControlSection('styles', {
+      label: 'Common styles',
+      tab: TAB_STYLE
+    })
+
+    this.addControl("padding", {
+      type: CONTROLLER_SLIDER,
+      label: "Padding",
+      min: 0,
+      max: 0.95,
+      step: 0.05
+    });
+
+    this.addControl("borderRadius", {
+      type: CONTROLLER_SLIDER,
+      label: "Border radius",
+      min: 0,
+      max: 36,
+      step: 1
+    });
+
+    this.addControl("borderWidth", {
+      type: CONTROLLER_SLIDER,
+      label: "Border width",
+      min: 0,
+      max: 20,
+      step: 1
+    });
+
+    this.endControlSection()
+
+    legendControllers(this)
+
+    this.startControlSection("custom_color_scheme", {
+      tab: TAB_STYLE,
+      label: "Custom color scheme"
+    });
+
+    let repeaterScheme = new Repeater();
+
+    repeaterScheme.addControl("color", {
+      label: "Color",
+      type: CONTROLLER_COLOR,
+      dynamic: false
+    });
+
+    this.addControl("isCustomColor", {
+      type: CONTROLLER_SWITCHER,
+      label: "Use custom color scheme?",
+    });
+
+    this.addControl("customScheme", {
+      type: CONTROLLER_REPEATER,
+      fields: repeaterScheme.getControls()
+    });
+
+    this.endControlSection()
 
     advancedTabControllers(this);
   }

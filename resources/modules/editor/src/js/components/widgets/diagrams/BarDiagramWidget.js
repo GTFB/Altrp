@@ -1,5 +1,5 @@
 const AltrpBarDiagram = React.lazy(() => import(/* webpackChunkName: 'AltrpBarDiagram' */"../../altrp-diagram/AltrpBarDiagram"));
-class DiagramWidget extends Component {
+class BarDiagramWidget extends Component {
   constructor(props) {
     super(props);
 
@@ -27,4 +27,4 @@ class DiagramWidget extends Component {
   }
 }
 
-export default DiagramWidget;
+export default BarDiagramWidget;

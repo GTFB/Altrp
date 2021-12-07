@@ -49,6 +49,7 @@ const DynamicPieChart = ({
   customColorSchemeChecker = false,
   customColors = [],
   useCustomTooltips,
+  valueFormat,
   margin,
   legend,
   activeOuterRadiusOffset,
@@ -60,6 +61,8 @@ const DynamicPieChart = ({
   if (legend) {
     Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
   }
+
+  console.log({valueFormat});
 
   let allValue = 0;
 
@@ -189,6 +192,7 @@ const DynamicPieChart = ({
                 </text>
             </animated.g>
           }}
+          valueFormat={valueFormat}
           {...customProps}
         />
       </div>
