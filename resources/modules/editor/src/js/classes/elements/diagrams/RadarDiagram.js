@@ -16,7 +16,8 @@ import {
   CONTROLLER_NUMBER,
   CONTROLLER_DATE,
   CONTROLLER_SHADOW,
-  CONTROLLER_TYPOGRAPHIC
+  CONTROLLER_TYPOGRAPHIC,
+  CONTROLLER_TEXTAREA
 } from "../../modules/ControllersManager";
 
 import Repeater from "../../Repeater";
@@ -48,6 +49,7 @@ class RadarDiagram extends BaseElement {
 
     this.addControl("datasource_path", {
       dynamic: false,
+      type: CONTROLLER_TEXTAREA,
       label: "Path to Data"
     });
 

@@ -17,7 +17,8 @@ import {
   CONTROLLER_RANGE,
   CONTROLLER_DATE,
   CONTROLLER_SHADOW,
-  CONTROLLER_TYPOGRAPHIC
+  CONTROLLER_TYPOGRAPHIC,
+  CONTROLLER_TEXTAREA
 } from "../../modules/ControllersManager";
 
 import {
@@ -57,6 +58,7 @@ class PointDiagram extends BaseElement {
 
     this.addControl("datasource_path", {
       dynamic: false,
+      type: CONTROLLER_TEXTAREA,
       label: "Path to Data"
     });
 

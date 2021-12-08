@@ -39,7 +39,7 @@ const AltrpPieDiagram = props => {
     useCenteredMetric,
     useLinkArcLabels,
     useProcent,
-    currency
+    formatCurrency
   } = settings
   
   //data variable
@@ -200,7 +200,7 @@ const AltrpPieDiagram = props => {
       activeInnerRadiusOffset={activeInnerRadiusOffset}
       useCenteredMetric={useCenteredMetric}
       useLinkArcLabels={useLinkArcLabels}
-      currency={currency}
+      currency={formatCurrency}
     />
   );
 };

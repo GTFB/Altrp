@@ -140,8 +140,6 @@ const PointChart = ({
     ]
   }
 
-  console.log({xScaleType});
-
   return (
     <>
       <div

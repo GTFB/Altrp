@@ -16,12 +16,14 @@ import {
   CONTROLLER_NUMBER,
   CONTROLLER_DATE,
   CONTROLLER_SHADOW,
-  CONTROLLER_TYPOGRAPHIC
+  CONTROLLER_TYPOGRAPHIC,
+  CONTROLLER_TEXTAREA
 } from "../../modules/ControllersManager";
 
 import Repeater from "../../Repeater";
 import titleControllers from "../../../decorators/diagrams/diagram-title-subtitle.js";
 import legendControllers from "../../../decorators/diagrams/diagram-legend.js";
+import valueFormatControllers from "../../../decorators/diagrams/diagram-value-format.js";
 
 class LineDiagram extends BaseElement {
   static getName() {
@@ -48,6 +50,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl("datasource_path", {
       dynamic: false,
+      type: CONTROLLER_TEXTAREA,
       label: "Path to Data"
     });
 
@@ -56,15 +59,15 @@ class LineDiagram extends BaseElement {
       label: "Key Field (X)"
     });
 
+    this.addControl("data_name", {
+      dynamic: false,
+      label: "Data Field (Y)"
+    });
+
     this.addControl("key_is_date", {
       dynamic: false,
       label: "Key has Date format?",
       type: CONTROLLER_SWITCHER
-    });
-
-    this.addControl("data_name", {
-      dynamic: false,
-      label: "Data Field (Y)"
     });
 
     this.addControl("sort", {
@@ -268,6 +271,20 @@ class LineDiagram extends BaseElement {
     this.endControlSection();
 
     legendControllers(this)
+
+    valueFormatControllers(this, {
+      name: 'yFormat',
+      tabID: 'y_format_value',
+      tabName: 'Y format value',
+      useCurrency: false,
+    })
+
+    valueFormatControllers(this, {
+      name: 'xFormat',
+      tabID: 'x_format_value',
+      tabName: 'X format value',
+      useCurrency: false,
+    })
 
     this.startControlSection("axisConstants", {
       tab: TAB_STYLE,

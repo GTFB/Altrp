@@ -1,39 +1,39 @@
-export default function getFormatValueString (settings) {
-    if (!settings.enableFormatting) {
+export default function getFormatValueString (settings, {name = 'format'}) {
+    if (!settings[name + 'Enable']) {
         return
     }
 
     let formatValueString = ''
     
-    if (settings.formatFill?.size) {
-        formatValueString += settings.formatFill?.size
+    if (settings[name + 'Fill']?.size) {
+        formatValueString += settings[name + 'Fill']?.size
     }
 
-    formatValueString += settings.formatAlign || '>'
+    formatValueString += settings[name + 'Align'] || '>'
 
-    formatValueString += settings.formatSign || '-'
+    formatValueString += settings[name + 'Sign'] || '-'
 
-    formatValueString += settings.formatSymbol || ''
+    formatValueString += settings[name + 'Symbol'] || ''
 
-    if (settings.formatZeroPadding) {
+    if (settings[name + 'ZeroPadding']) {
         formatValueString += 0
     }
 
-    formatValueString += settings.formatWidth?.size || ''
+    formatValueString += settings[name + 'Width']?.size || ''
 
-    if (settings.formatComma) {
+    if (settings[name + 'Comma']) {
         formatValueString += ','
     }
 
     formatValueString += '.'
 
-    formatValueString += settings.formatPrecision || 4
+    formatValueString += settings[name + 'Precision'] || 4
 
-    if (settings.formatTrimTrailingZeros) {
+    if (settings[name + 'TrimTrailingZeros']) {
         formatValueString += '~'
     }
 
-    formatValueString += settings.formatType || ''
+    formatValueString += settings[name + 'Type'] || ''
 
     return formatValueString
 }

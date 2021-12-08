@@ -17,7 +17,8 @@ import {
   CONTROLLER_DATE,
   CONTROLLER_SHADOW,
   CONTROLLER_TYPOGRAPHIC,
-  CONTROLLER_CHOOSE
+  CONTROLLER_CHOOSE,
+  CONTROLLER_TEXTAREA
 } from "../../modules/ControllersManager";
 
 import {actionsControllers} from "../../../decorators/actions-controllers";
@@ -52,6 +53,7 @@ class PieDiagram extends BaseElement {
 
     this.addControl("datasource_path", {
       dynamic: false,
+      type: CONTROLLER_TEXTAREA,
       label: "Path to Data"
     });
 

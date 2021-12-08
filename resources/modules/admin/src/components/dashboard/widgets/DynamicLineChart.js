@@ -41,7 +41,9 @@ const DynamicLineChart = ({
   constantsAxises = [],
   yScaleMax,
   legend,
-  enableGradient
+  enableGradient,
+  yFormat,
+  xFormat
 }) => {
   if (legend) {
     Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
@@ -203,6 +205,8 @@ const DynamicLineChart = ({
                   tickRotation: tickRotation
                 })
           }
+          yFormat={yFormat}
+          xFormat={xFormat}
           useMesh={true}
           enableArea={enableArea}
           enablePoints={enablePoints}

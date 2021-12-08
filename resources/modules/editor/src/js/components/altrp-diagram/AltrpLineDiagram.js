@@ -5,6 +5,7 @@ import { connect, useDispatch } from "react-redux";
 import DynamicLineChart from "../../../../../admin/src/components/dashboard/widgets/DynamicLineChart";
 
 import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+import getFormatValueString from "../../../../../admin/src/components/dashboard/services/getFormatValueString";
 
 import { getDataByPath, isEditor } from "../../../../../front-app/src/js/helpers";
 import moment from "moment";
@@ -142,55 +143,275 @@ const AltrpDiagram = props => {
   if (isEditor()) {
     data = [
       {
-        data: [
+        "id": "japan",
+        "color": "hsl(112, 70%, 50%)",
+        "data": [
           {
-            x: '2020-01',
-            y: 60,
+            "x": "plane",
+            "y": 187
           },
           {
-            x: '2020-02',
-            y: 200,
+            "x": "helicopter",
+            "y": 202
           },
           {
-            x: '2013-03',
-            y: 20,
+            "x": "boat",
+            "y": 215
           },
           {
-            x: '2013-04',
-            y: 10,
+            "x": "train",
+            "y": 272
           },
           {
-            x: '2013-05',
-            y: 50,
+            "x": "subway",
+            "y": 195
           },
-        ],
-        id: 'Line 1'
+          {
+            "x": "bus",
+            "y": 5
+          },
+          {
+            "x": "car",
+            "y": 236
+          },
+          {
+            "x": "moto",
+            "y": 270
+          },
+          {
+            "x": "bicycle",
+            "y": 230
+          },
+          {
+            "x": "horse",
+            "y": 146
+          },
+          {
+            "x": "skateboard",
+            "y": 141
+          },
+          {
+            "x": "others",
+            "y": 207
+          }
+        ]
       },
       {
-        data: [
+        "id": "france",
+        "color": "hsl(151, 70%, 50%)",
+        "data": [
           {
-            x: '2020-01',
-            y: 50,
+            "x": "plane",
+            "y": 151
           },
           {
-            x: '2020-02',
-            y: 140,
+            "x": "helicopter",
+            "y": 58
           },
           {
-            x: '2013-03',
-            y: 40,
+            "x": "boat",
+            "y": 154
           },
           {
-            x: '2013-04',
-            y: 20,
+            "x": "train",
+            "y": 280
           },
           {
-            x: '2013-05',
-            y: 60,
+            "x": "subway",
+            "y": 37
           },
-        ],
-        id: 'Line 2'
+          {
+            "x": "bus",
+            "y": 238
+          },
+          {
+            "x": "car",
+            "y": 176
+          },
+          {
+            "x": "moto",
+            "y": 239
+          },
+          {
+            "x": "bicycle",
+            "y": 52
+          },
+          {
+            "x": "horse",
+            "y": 24
+          },
+          {
+            "x": "skateboard",
+            "y": 5
+          },
+          {
+            "x": "others",
+            "y": 63
+          }
+        ]
       },
+      {
+        "id": "us",
+        "color": "hsl(211, 70%, 50%)",
+        "data": [
+          {
+            "x": "plane",
+            "y": 150
+          },
+          {
+            "x": "helicopter",
+            "y": 77
+          },
+          {
+            "x": "boat",
+            "y": 188
+          },
+          {
+            "x": "train",
+            "y": 201
+          },
+          {
+            "x": "subway",
+            "y": 163
+          },
+          {
+            "x": "bus",
+            "y": 274
+          },
+          {
+            "x": "car",
+            "y": 214
+          },
+          {
+            "x": "moto",
+            "y": 299
+          },
+          {
+            "x": "bicycle",
+            "y": 168
+          },
+          {
+            "x": "horse",
+            "y": 115
+          },
+          {
+            "x": "skateboard",
+            "y": 149
+          },
+          {
+            "x": "others",
+            "y": 153
+          }
+        ]
+      },
+      {
+        "id": "germany",
+        "color": "hsl(203, 70%, 50%)",
+        "data": [
+          {
+            "x": "plane",
+            "y": 228
+          },
+          {
+            "x": "helicopter",
+            "y": 69
+          },
+          {
+            "x": "boat",
+            "y": 251
+          },
+          {
+            "x": "train",
+            "y": 107
+          },
+          {
+            "x": "subway",
+            "y": 127
+          },
+          {
+            "x": "bus",
+            "y": 72
+          },
+          {
+            "x": "car",
+            "y": 34
+          },
+          {
+            "x": "moto",
+            "y": 255
+          },
+          {
+            "x": "bicycle",
+            "y": 213
+          },
+          {
+            "x": "horse",
+            "y": 246
+          },
+          {
+            "x": "skateboard",
+            "y": 286
+          },
+          {
+            "x": "others",
+            "y": 24
+          }
+        ]
+      },
+      {
+        "id": "norway",
+        "color": "hsl(21, 70%, 50%)",
+        "data": [
+          {
+            "x": "plane",
+            "y": 256
+          },
+          {
+            "x": "helicopter",
+            "y": 58
+          },
+          {
+            "x": "boat",
+            "y": 173
+          },
+          {
+            "x": "train",
+            "y": 246
+          },
+          {
+            "x": "subway",
+            "y": 154
+          },
+          {
+            "x": "bus",
+            "y": 108
+          },
+          {
+            "x": "car",
+            "y": 273
+          },
+          {
+            "x": "moto",
+            "y": 195
+          },
+          {
+            "x": "bicycle",
+            "y": 36
+          },
+          {
+            "x": "horse",
+            "y": 1
+          },
+          {
+            "x": "skateboard",
+            "y": 253
+          },
+          {
+            "x": "others",
+            "y": 143
+          }
+        ]
+      }
     ]
   } else {
     if (isMultiple) {
@@ -292,6 +513,8 @@ const AltrpDiagram = props => {
       bottomAxis={bottomAxis}
       enableGridX={enableGridX}
       enableGridY={enableGridY}
+      xFormat={getFormatValueString(settings, {name: 'xFormat'})}
+      yFormat={getFormatValueString(settings, {name: 'yFormat'})}
       legend={settings.use_legend && {
         anchor: settings.legend_anchor,
         direction: settings.legend_direction,

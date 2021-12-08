@@ -1,17 +1,22 @@
 import { CONTROLLER_NUMBER, CONTROLLER_SELECT, CONTROLLER_SLIDER, CONTROLLER_SWITCHER, TAB_STYLE } from "../../classes/modules/ControllersManager";
 
-export default function valueFormatControllers(element) {
-    element.startControlSection('value_format', {
-      tab: TAB_STYLE,
-      label: 'Value format'
-    })
+export default function valueFormatControllers(element, options) {
+  const name = options?.name || 'format'
+  const tabName = options?.tabName || 'Value format'
+  const tabID = options?.tabID || 'value_format'
+  const useCurrency = options?.useCurrency === true
 
-    element.addControl('enableFormatting', {
-      label: 'Enable formatting',
-      type: CONTROLLER_SWITCHER,
-    })
+  element.startControlSection(tabID, {
+    tab: TAB_STYLE,
+    label: tabName
+  })
 
-    element.addControl('formatType', {
+  element.addControl(name + 'Enable', {
+    label: 'Enable formatting',
+    type: CONTROLLER_SWITCHER,
+  })
+
+    element.addControl(name + 'Type', {
       label: 'Type',
       type: CONTROLLER_SELECT,
       options: [
@@ -74,7 +79,7 @@ export default function valueFormatControllers(element) {
       ]
     })
 
-    element.addControl('formatSign', {
+    element.addControl(name + 'Sign', {
       type: CONTROLLER_SELECT,
       label: 'Sign',
       options: [
@@ -97,79 +102,81 @@ export default function valueFormatControllers(element) {
       ]
     })
 
-    element.addControl('currency', {
-      type: CONTROLLER_SELECT,
-      label: 'Currency',
-      options: [
-        {
-          label: "none",
-          value: '',
-        },
-        {
-          label: "$",
-          value: "$",
-        },
-        {
-          label: "€",
-          value: "€",
-        },
-        {
-          label: '₽',
-          value: '₽'
-        },
-        {
-          label: '¢',
-          value: '¢'
-        },
-        {
-          label: '¥',
-          value: '¥'
-        },
-        {
-          label: '₣',
-          value: '₣'
-        },
-        {
-          label: '₴',
-          value: '₴'
-        },
-        {
-          label: '₸',
-          value: '₸'
-        },
-        {
-          label: '￡',
-          value: '￡'
-        },
-        {
-          label: '₤',
-          value: '₤'
-        },
-        {
-          label: '元',
-          value: '元'
-        },
-        {
-          label: '円',
-          value: '円'
-        },
-        {
-          label: '₯',
-          value: '₯'
-        },
-        {
-          label: '₪',
-          value: '₪'
-        },
-      ]
-    })
+    if (useCurrency) {
+      element.addControl(name + 'Currency', {
+        type: CONTROLLER_SELECT,
+        label: 'Currency',
+        options: [
+          {
+            label: "none",
+            value: '',
+          },
+          {
+            label: "$",
+            value: "$",
+          },
+          {
+            label: "€",
+            value: "€",
+          },
+          {
+            label: '₽',
+            value: '₽'
+          },
+          {
+            label: '¢',
+            value: '¢'
+          },
+          {
+            label: '¥',
+            value: '¥'
+          },
+          {
+            label: '₣',
+            value: '₣'
+          },
+          {
+            label: '₴',
+            value: '₴'
+          },
+          {
+            label: '₸',
+            value: '₸'
+          },
+          {
+            label: '￡',
+            value: '￡'
+          },
+          {
+            label: '₤',
+            value: '₤'
+          },
+          {
+            label: '元',
+            value: '元'
+          },
+          {
+            label: '円',
+            value: '円'
+          },
+          {
+            label: '₯',
+            value: '₯'
+          },
+          {
+            label: '₪',
+            value: '₪'
+          },
+        ]
+      })
+    }
 
-    element.addControl('formatPrecision', {
+    element.addControl(name + 'Precision', {
       type: CONTROLLER_NUMBER,
       label: 'Precision',
     })
 
-    element.addControl('formatWidth', {
+    element.addControl(name + 'Width', {
       type: CONTROLLER_SLIDER,
       label: 'Width',
       min: 0,
@@ -177,7 +184,7 @@ export default function valueFormatControllers(element) {
       step: 1
     })
 
-    element.addControl('formatFill', {
+    element.addControl(name + 'Fill', {
       type: CONTROLLER_SLIDER,
       label: 'Fill',
       min: 0,
@@ -185,7 +192,7 @@ export default function valueFormatControllers(element) {
       step: 1
     })
 
-    element.addControl('formatAlign', {
+    element.addControl(name + 'Align', {
       type: CONTROLLER_SELECT,
       label: 'Align',
       options: [
@@ -208,17 +215,17 @@ export default function valueFormatControllers(element) {
       ]
     })
 
-    element.addControl('formatZeroPadding', {
+    element.addControl(name + 'ZeroPadding', {
       type: CONTROLLER_SWITCHER,
       label: 'Zero padding'
     })
 
-    element.addControl('formatComma', {
+    element.addControl(name + 'Comma', {
       type: CONTROLLER_SWITCHER,
       label: 'Comma'
     })
 
-    element.addControl('formatTrimTrailingZeros', {
+    element.addControl(name + 'TrimTrailingZeros', {
       type: CONTROLLER_SWITCHER,
       label: 'Trim trailing zeros'
     })
