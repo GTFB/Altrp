@@ -65,15 +65,15 @@ class PointDiagram extends BaseElement {
       label: "Key Field (X)"
     });
 
+    this.addControl("data_name", {
+      dynamic: false,
+      label: "Data Field (Y)"
+    });
+
     this.addControl("key_is_date", {
       dynamic: false,
       label: "Key has Date format?",
       type: CONTROLLER_SWITCHER
-    });
-
-    this.addControl("data_name", {
-      dynamic: false,
-      label: "Data Field (Y)"
     });
 
     this.addControl("sort", {

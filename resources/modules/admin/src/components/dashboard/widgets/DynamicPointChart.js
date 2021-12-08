@@ -21,7 +21,7 @@ const PointChart = ({
   width = `300px`,
   height = `450px`,
   dataSource = [],
-  xScaleType = "point",
+  xScaleType,
   colorScheme = "red_grey",
   nodeSize = 6,
   sort = "",
@@ -140,6 +140,8 @@ const PointChart = ({
     ]
   }
 
+  console.log({xScaleType});
+
   return (
     <>
       <div
@@ -159,16 +161,16 @@ const PointChart = ({
               ? milkScheme2
               : { scheme: colorScheme }
           }
-          yScale={
-            yScaleMax
-              ? {
-                  max: yScaleMax,
-                  type: "linear"
-                }
-              : {
-                  type: "linear"
-                }
-          }
+          // yScale={
+          //   yScaleMax
+          //     ? {
+          //         max: yScaleMax,
+          //         type: "linear"
+          //       }
+          //     : {
+          //         type: "linear"
+          //       }
+          // }
           markers={constantsAxises}
           margin={{
             top: margin?.top || 30,
@@ -180,8 +182,8 @@ const PointChart = ({
           nodeSize={nodeSize}
           xScale={
             xScaleType === "time"
-              ? { type: xScaleType, format: format, precision: precision }
-              : { type: xScaleType }
+              ? { type: xScaleType || 'linear', format: format, precision: precision }
+              : { type: xScaleType || 'linear' }
           }
           // tooltip={datum => (
           //   <Tooltip
