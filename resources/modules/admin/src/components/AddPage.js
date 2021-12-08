@@ -62,6 +62,8 @@ class AddPage extends Component {
       dataSources: [],
       editingDataSource: null,
       pagesOptions: [],
+      dataSourceSearch: '',
+      currentPage: 1,
       currentTab: 'content',
     };
     this.resource = new Resource({route: "/admin/ajax/pages"});
@@ -74,6 +76,7 @@ class AddPage extends Component {
     this.dataSourceResource = new Resource({
       route: "/admin/ajax/page_data_sources/pages"
     });
+    this.itemsPerPage = 10;
 
     this.savePage = this.savePage.bind(this);
   }
@@ -338,6 +341,15 @@ class AddPage extends Component {
     });
   }
 
+  changeSearchHandler = (e) => {
+    this.setState({dataSourceSearch: e.target.value})
+  }
+
+  submitSearchHandler = async (e) => {
+    e.preventDefault();
+    await this.getDataSources()
+  }
+
   render() {
     const {isModalOpened, editingDataSource} = this.state;
     let {dataSources} = this.state;
@@ -356,10 +368,16 @@ class AddPage extends Component {
               {this.state.value.title || "Add New Page"}
             </span>
             </div>
+            {this.props.match.params.id && this.state.currentTab === "Datasource" && (
+              <button onClick={() => this.setState({isModalOpened: true})} className="btn btn_add">
+                Add Data Source
+              </button>
+            )}
           </div>
           <UserTopPanel />
         </div>
-        <div className="admin-content zeroing__styleTabs styleTabs-marginBottom">
+        <div className={this.state.currentTab === 'Datasource' ? "admin-content zeroing__styleTabs zeroing__styleTabs-datasource styleTabs-marginBottom"
+          : "admin-content zeroing__styleTabs styleTabs-marginBottom"}>
           <div className="custom-tab__tabs">
             <button
               className={this.state.currentTab === "content" ?
@@ -377,10 +395,20 @@ class AddPage extends Component {
             >
               SEO
             </button>
+            {this.props.match.params.id && (
+              <button
+                className={this.state.currentTab === "Datasource" ?
+                  "custom-tab__tab custom-tab__tab--selected" :
+                  "custom-tab__tab"}
+                onClick={this.changeCurrentTab('Datasource')}
+              >
+                Datasource
+              </button>
+            )}
           </div>
           <div className="custom-tab__tab-panel">
             <form
-              className="admin-form-pages mb-2"
+              className={this.state.currentTab === 'Datasource' ? "admin-form-pages__datasource mb-2" : "admin-form-pages mb-2"}
               onSubmit={this.savePage}
             >
               {(() => {
@@ -656,37 +684,76 @@ class AddPage extends Component {
                   );
                 }
               })()}
-              <button className={this.state.value.path ? "btn btn_success" : "btn btn_disable"}>
-                {this.state.id ? "Save" : "Add"}
-              </button>
+              {(this.state.currentTab === "content" || this.state.currentTab === "SEO") && (
+                <button className={this.state.value.path ? "btn btn_success" : "btn btn_disable"}>
+                  {this.state.id ? "Save" : "Add"}
+                </button>
+              )}
             </form>
+            {this.state.currentTab === 'Datasource' && (
+              <div>
+                <AdminTable
+                  columns={columns}
+                  quickActions={[
+                    {
+                      callBack: data => this.editHandler(data),
+                      title: 'Edit'
+                    },
+                    {
+                      tag: 'button',
+                      route: `/admin/ajax/page_data_sources/:id`,
+                      method: 'delete',
+                      confirm: 'Are You Sure?',
+                      after: () => this.getDataSources(),
+                      className: 'quick-action-menu__item_danger',
+                      title: 'Delete'
+                    }
+                  ]}
+                  rows={dataSources.slice(
+                    this.state.currentPage * this.itemsPerPage - this.itemsPerPage,
+                    this.state.currentPage * this.itemsPerPage
+                  )}
+
+                  searchTables={{
+                    value: this.state.dataSourceSearch || "",
+                    submit: this.submitSearchHandler,
+                    change: (e) => this.changeSearchHandler(e)
+                  }}
+
+                  pageCount={Math.ceil(this.state.dataSources.length / this.itemsPerPage) || 1}
+                  currentPage={this.state.currentPage}
+                  changePage={page => {
+                    if (this.state.currentPage !== page) {
+                      this.setState({ currentPage: page });
+                    }
+                  }}
+                  itemsCount={this.state.dataSources.length}
+                  openPagination={true}
+                />
+              </div>
+            )}
           </div>
 
-          {this.props.match.params.id && this.state.currentTab === "content" &&
-          <button onClick={() => this.setState({isModalOpened: true})} className="btn btn_add">
-            Add Data Source
-          </button>}
-
-          {Boolean(dataSources.length) && this.state.currentTab === "content" && <AdminTable
-            columns={columns}
-            quickActions={[
-              {
-                callBack: data => this.editHandler(data),
-                title: 'Edit'
-              },
-              {
-                tag: 'button',
-                route: `/admin/ajax/page_data_sources/:id`,
-                method: 'delete',
-                confirm: 'Are You Sure?',
-                after: () => this.getDataSources(),
-                className: 'quick-action-menu__item_danger',
-                title: 'Delete'
-              }
-            ]}
-            rows={dataSources}
-            radiusTable={true}
-          />}
+          {/*{Boolean(dataSources.length) && this.state.currentTab === "content" && <AdminTable*/}
+          {/*  columns={columns}*/}
+          {/*  quickActions={[*/}
+          {/*    {*/}
+          {/*      callBack: data => this.editHandler(data),*/}
+          {/*      title: 'Edit'*/}
+          {/*    },*/}
+          {/*    {*/}
+          {/*      tag: 'button',*/}
+          {/*      route: `/admin/ajax/page_data_sources/:id`,*/}
+          {/*      method: 'delete',*/}
+          {/*      confirm: 'Are You Sure?',*/}
+          {/*      after: () => this.getDataSources(),*/}
+          {/*      className: 'quick-action-menu__item_danger',*/}
+          {/*      title: 'Delete'*/}
+          {/*    }*/}
+          {/*  ]}*/}
+          {/*  rows={dataSources}*/}
+          {/*  radiusTable={true}*/}
+          {/*/>}*/}
 
           {isModalOpened && (
             <AdminModal2

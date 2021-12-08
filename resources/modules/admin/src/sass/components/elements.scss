@@ -827,6 +827,21 @@ input[type="text"].form__input {
   }
 }
 
+.admin-form-pages__datasource {
+  display: none;
+  & .pagination {
+    background-color: transparent;
+  }
+
+  & .admin-table-head {
+    background-color: transparent;
+  }
+}
+
+.zeroing__styleTabs-datasource .custom-tab__tab-panel {
+  padding: 0;
+}
+
 @media screen and (max-width: 1101px) {
   .upload__marginBottom {
     margin-bottom: 20px;

@@ -71,21 +71,35 @@ export default class Templates extends Component {
    * @param activeTemplateArea
    */
   updateTemplates = (currentPage = this.state.currentPage, activeTemplateArea = this.state.activeTemplateArea) => {
-    this.resource.getQueried({
-      area: activeTemplateArea.name,
-      page: currentPage,
-      pageSize: 10,
-      s: this.state.templateSearch,
-      ...this.state.sorting
-    }).then(res => {
-      this.setState(state => {
-        return {
-          ...state,
-          pageCount: res.pageCount,
-          templates: res.templates
-        }
+    if (activeTemplateArea.name === 'all') {
+      this.resource.getQueried({
+        s: this.state.templateSearch,
+        ...this.state.sorting
+      }).then(res => {
+        this.setState(state => {
+          return {
+            ...state,
+            templates: res.templates
+          }
+        });
       });
-    });
+    } else {
+      this.resource.getQueried({
+        area: activeTemplateArea.name,
+        page: currentPage,
+        pageSize: 10,
+        s: this.state.templateSearch,
+        ...this.state.sorting
+      }).then(res => {
+        this.setState(state => {
+          return {
+            ...state,
+            pageCount: res.pageCount,
+            templates: res.templates
+          }
+        });
+      });
+    }
   }
 
   /** @function generateTemplateJSON
@@ -122,9 +136,18 @@ export default class Templates extends Component {
    */
   async componentDidMount() {
     let templateAreas = await this.templateTypesResource.getAll();
-    this.setActiveArea(templateAreas[0]);
+    let templateAreasNew = [
+      {
+        id: 0,
+        name: 'all',
+        settings: '[]',
+        title: 'All'
+      },
+      ...templateAreas
+    ]
+    this.setActiveArea(templateAreasNew[0]);
     this.setState(state => {
-      return {...state, templateAreas}
+      return {...state, templateAreas: templateAreasNew}
     });
     this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea)
 
@@ -330,7 +353,11 @@ export default class Templates extends Component {
               title: 'Categories'
             }
           ]}
-          rows={this.state.templates}
+          rows={this.state.activeTemplateArea.name === 'all' ?
+            this.state.templates.slice(
+            this.state.currentPage * this.itemsPerPage - this.itemsPerPage,
+            this.state.currentPage * this.itemsPerPage
+          ) : this.state.templates}
           quickActions={[{
             tag: 'a', props: {
               href: '/admin/editor?template_id=:id',
@@ -368,9 +395,13 @@ export default class Templates extends Component {
             change: (e) => this.changeTemplates(e)
           }}
 
-          pageCount={this.state.pageCount || 1}
+          pageCount={this.state.activeTemplateArea.name === 'all' ? Math.ceil(this.state.templates.length / this.itemsPerPage) || 1 : this.state.pageCount || 1}
           currentPage={this.state.currentPage}
-          changePage={this.changePage}
+          changePage={this.state.activeTemplateArea.name === 'all' ? page => {
+            if (this.state.currentPage !== page) {
+              this.setState({ currentPage: page });
+            }
+          } : this.changePage}
           itemsCount={this.state.templates.length}
 
           openPagination={true}
