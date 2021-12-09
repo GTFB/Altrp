@@ -64,7 +64,6 @@ class FrontElementsManager {
     this.components['poster'] = PosterWidget;
     this.components['list'] = ListWidget;
     this.components['accordion'] = AccordionWidget;
-    this.components['carousel'] = CarouselWidget;
     this.components['html'] = HtmlWidget;
     this.components['video'] = VideoWidget;
     this.components['template'] = TemplateWidget;
