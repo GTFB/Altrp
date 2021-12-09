@@ -18,6 +18,7 @@ npm-debug.log
 yarn-error.log
 /nbproject
 .idea
+/resources/modules/.idea
 storage/installed
 s.sql
 modules_statuses.json
