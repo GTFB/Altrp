@@ -74,7 +74,7 @@ export default class Plugins extends Component {
                   <div className="mb-2">{item.name}</div>
                   <a href={item.url}><img
                     className="mb-2"
-                    src={item.image}
+                    src={item.logo}
                     style={{ maxWidth: "150px" }}
                     alt=""
                   ></img></a>

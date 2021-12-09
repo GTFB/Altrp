@@ -240,10 +240,7 @@ class ModelsController extends HttpController
             $models = $search
                 ? Model::getBySearch($search, $orderColumn, $orderType)
                 //: Model::all()->$sortType( $orderColumn )->values();
-                : Model::whereNull('user_id')
-                    ->orWhere('user_id', Auth::user()->id)
-                    //->$sortType( $orderColumn )->values();
-                    ->orderBy($orderColumn, $orderType)
+                : Model::orderBy($orderColumn, $orderType)
                     ->get();
         } else {
             $modelsCount = $search ? Model::getCountWithSearch($search) : Model::getCount();
