@@ -38,7 +38,8 @@ const AltrpPieDiagram = props => {
     activeInnerRadiusOffset,
     useCenteredMetric,
     useLinkArcLabels,
-    useProcent
+    useProcent,
+    formatCurrency
   } = settings
   
   //data variable
@@ -154,6 +155,8 @@ const AltrpPieDiagram = props => {
   console.log(data);
   console.log("====================================");
 
+  
+
   return (
     <DynamicPieChart
       useProcent={useProcent}
@@ -170,7 +173,7 @@ const AltrpPieDiagram = props => {
       customColors={customColors}
       isMultiple={isMultiple}
       dataSource={data}
-      colorScheme={colorScheme}
+      colorScheme={colorScheme || 'nivo'}
       widget={widget}
       width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
       height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
@@ -197,6 +200,7 @@ const AltrpPieDiagram = props => {
       activeInnerRadiusOffset={activeInnerRadiusOffset}
       useCenteredMetric={useCenteredMetric}
       useLinkArcLabels={useLinkArcLabels}
+      currency={formatCurrency}
     />
   );
 };

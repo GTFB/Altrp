@@ -17,7 +17,8 @@ import {
   CONTROLLER_RANGE,
   CONTROLLER_DATE,
   CONTROLLER_SHADOW,
-  CONTROLLER_TYPOGRAPHIC
+  CONTROLLER_TYPOGRAPHIC,
+  CONTROLLER_TEXTAREA
 } from "../../modules/ControllersManager";
 
 import {
@@ -57,6 +58,7 @@ class PointDiagram extends BaseElement {
 
     this.addControl("datasource_path", {
       dynamic: false,
+      type: CONTROLLER_TEXTAREA,
       label: "Path to Data"
     });
 
@@ -65,15 +67,15 @@ class PointDiagram extends BaseElement {
       label: "Key Field (X)"
     });
 
+    this.addControl("data_name", {
+      dynamic: false,
+      label: "Data Field (Y)"
+    });
+
     this.addControl("key_is_date", {
       dynamic: false,
       label: "Key has Date format?",
       type: CONTROLLER_SWITCHER
-    });
-
-    this.addControl("data_name", {
-      dynamic: false,
-      label: "Data Field (Y)"
     });
 
     this.addControl("sort", {

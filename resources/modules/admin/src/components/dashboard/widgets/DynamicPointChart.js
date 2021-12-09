@@ -3,7 +3,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { ResponsiveScatterPlot } from "@nivo/scatterplot";
 
 import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
-const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
 const milkScheme = _.find(Schemes, { value: "milk" }).colors;
 const milkScheme2 = _.find(Schemes, { value: "milk2" }).colors;
 
@@ -22,7 +21,7 @@ const PointChart = ({
   width = `300px`,
   height = `450px`,
   dataSource = [],
-  xScaleType = "point",
+  xScaleType,
   colorScheme = "red_grey",
   nodeSize = 6,
   sort = "",
@@ -154,24 +153,22 @@ const PointChart = ({
           colors={
             customColorSchemeChecker && customColors.length > 0
               ? customColors
-              : colorScheme === "regagro"
-              ? regagroScheme
               : colorScheme === "milk"
               ? milkScheme
               : colorScheme === "milk2"
               ? milkScheme2
               : { scheme: colorScheme }
           }
-          yScale={
-            yScaleMax
-              ? {
-                  max: yScaleMax,
-                  type: "linear"
-                }
-              : {
-                  type: "linear"
-                }
-          }
+          // yScale={
+          //   yScaleMax
+          //     ? {
+          //         max: yScaleMax,
+          //         type: "linear"
+          //       }
+          //     : {
+          //         type: "linear"
+          //       }
+          // }
           markers={constantsAxises}
           margin={{
             top: margin?.top || 30,
@@ -183,8 +180,8 @@ const PointChart = ({
           nodeSize={nodeSize}
           xScale={
             xScaleType === "time"
-              ? { type: xScaleType, format: format, precision: precision }
-              : { type: xScaleType }
+              ? { type: xScaleType || 'linear', format: format, precision: precision }
+              : { type: xScaleType || 'linear' }
           }
           // tooltip={datum => (
           //   <Tooltip
@@ -207,8 +204,6 @@ const PointChart = ({
           colors={
             customColorSchemeChecker && customColors.length > 0
               ? customColors
-              : colorScheme === "regagro"
-              ? regagroScheme
               : colorScheme === "milk"
               ? milkScheme
               : colorScheme === "milk2"

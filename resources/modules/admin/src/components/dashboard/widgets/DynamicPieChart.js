@@ -4,7 +4,6 @@ import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
 import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
-const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
 const milkScheme = _.find(Schemes, { value: "milk" }).colors;
 const milkScheme2 = _.find(Schemes, { value: "milk2" }).colors;
 
@@ -12,6 +11,7 @@ import { getWidgetData } from "../services/getWidgetData";
 import moment from "moment";
 import { animated } from '@react-spring/web'
 import TooltipPie from "./d3/TooltipPie";
+import addCurrencyToLabel from "../services/addCurrencyToLabel";
 
 const CenteredMetric = ({ dataWithArc, centerX, centerY }) => {
   let total = 0
@@ -56,13 +56,12 @@ const DynamicPieChart = ({
   activeInnerRadiusOffset,
   useCenteredMetric,
   useLinkArcLabels,
-  useProcent
+  useProcent,
+  currency
 }) => {
   if (legend) {
     Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
   }
-
-  console.log({valueFormat});
 
   let allValue = 0;
 
@@ -130,6 +129,18 @@ const DynamicPieChart = ({
     customProps.arcLinkLabelComponent = () => <text />
   }
 
+  if (!!valueFormat && currency) {
+    customProps.arcLabel = addCurrencyToLabel(currency)
+    customProps.tooltip = ({datum}) => (
+      <div style={{background: 'white', color: 'inherit', fontSize: '13px', borderRadius: '2px', boxShadow: 'rgba(0, 0, 0, 0.25) 0px 1px 2px', padding: '5px 9px'}}>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <span style={{display: 'block', width: '12px', height: '12px', background: datum.color, marginRight: '7px'}}></span>
+          <span>{datum.label}: <strong>{addCurrencyToLabel(currency)(datum)}</strong></span>
+        </div>
+      </div>
+    )
+  }
+
   if (isLoading) return <Spinner />;
 
   if (!data || data.length === 0) return <EmptyWidget />;
@@ -142,8 +153,6 @@ const DynamicPieChart = ({
           colors={
             customColorSchemeChecker && customColors.length > 0
               ? customColors
-              : colorScheme === "regagro"
-              ? regagroScheme
               : colorScheme === "milk"
               ? milkScheme
               : colorScheme === "milk2"
