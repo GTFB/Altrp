@@ -99,10 +99,6 @@ const AltrpDiagram = props => {
     constantsAxises = constantsAxises.flat();
   }
 
-  const sql = settings.query?.dataSource?.value;
-  const isMultiple = settings.isMultiple;
-  const isCustomColor = settings.isCustomColors;
-  const keyIsDate = settings.key_is_date;
   const sort = settings?.sort;
   const tickRotation = settings?.tickRotation;
   const bottomAxis = settings?.bottomAxis;
@@ -116,33 +112,6 @@ const AltrpDiagram = props => {
   const pointSize = settings?.pointSize;
   //data variable
   let data = [];
-
-  //funciton for formattion data for all types
-  const formatData = (data, r) => {
-    return data.map((d, index) => {
-      const currentKey = _.get(d, r.key);
-      const keyFormatted = !moment(currentKey).isValid()
-        ? currentKey
-        : moment(currentKey).format("DD.MM.YYYY");
-      const tooltip =
-        typeof tooltipValues !== "undefined"
-          ? tooltipValues?.map(item => {
-              return {
-                label: item?.label,
-                value: _.get(d, item.field),
-                color: item?.color
-              };
-            })
-          : [];
-        
-      return {
-        y: Number(_.get(d, r.data)),
-        x: keyIsDate ? keyFormatted : currentKey,
-        tooltip: tooltip
-      };
-    });
-  };
-  let legend = [];
 
   if (isEditor()) {
     data = [
@@ -1033,61 +1002,25 @@ const AltrpDiagram = props => {
       }
     ]
   } else {
-    if (isMultiple) {
-      let repeater = _.cloneDeep(settings.rep, []);
-      data = repeater.map((r, index) => {
-        let innerData = getDataByPath(r.path, []);
-        if (innerData.length > 0) {
-          innerData = formatData(innerData, r);
-        }
-        
-        return {
-          id: r.title || r.path,
-          data: innerData
-        };
-      });
-    } else if (settings.datasource_path != null) {
+    if (settings.datasource_path != null) {
       try {
         data = getDataByPath(settings.datasource_path, []);
-        const r = {
-          key: settings.key_name,
-          data: settings.data_name
-        };
-
-        data = [
-          {
-            data: formatData(data, r)
-          }
-        ];
       } catch (error) {
         console.log("====================================");
         console.error(error);
         console.log("====================================");
-        data = [
-          {
-            data: []
-          }
-        ];
+        data = [];
       }
     }
   }
 
-  if (!sql && data.length === 0) {
+  if (data.length === 0) {
     return (
       <div className={`altrp-chart ${settings.legendPosition}`}>
         Loading data...
       </div>
     );
   }
-
-  const widget = {
-    options: {
-      colorScheme: settings.colorScheme,
-      animated: settings.animated,
-      isVertical: settings.isVertical
-    },
-    filter: {}
-  };
 
   console.log("====================================");
   console.log(data);
@@ -1106,16 +1039,14 @@ const AltrpDiagram = props => {
       yScaleMax={yScaleMax}
       customColorSchemeChecker={customColorSchemeChecker}
       customColors={customColors}
-      dataSource={data}
+      data={data}
       constantsAxises={constantsAxises}
       colorScheme={colorScheme || 'nivo'}
       width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
       height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
-      widget={widget}
       nodeSize={pointSize}
       xScaleType={xScaleType}
       precision={precision}
-      sort={sort}
       tickRotation={tickRotation?.size}
       bottomAxis={bottomAxis}
       enableGridX={enableGridX}

@@ -95,9 +95,7 @@ const AltrpDiagram = props => {
     constantsAxises = constantsAxises.flat();
   }
 
-  const {
-    isMultiple, 
-    sort, 
+  const { 
     tickRotation, 
     bottomAxis, 
     enableGridX, 
@@ -113,32 +111,13 @@ const AltrpDiagram = props => {
     curve
   } = settings
 
-  const isCustomColor = settings.isCustomColors;
-  const keyIsDate = settings.key_is_date;
   //line settings
   const xScaleType = settings?.xScaleType || "point";
   const precision = settings?.precision || "month";
-  
-  const xMarkerValue = keyIsDate
-    ? moment(settings?.xMarkerValueDate).toDate()
-    : settings?.xMarkerValue;
 
   let data = [];
 
   //funciton for formattion data for all types
-  const formatData = (data, r) => {
-    return data.map((d, index) => {
-      const currentKey = _.get(d, r.key);
-      const keyFormatted = !moment(currentKey).isValid()
-        ? currentKey
-        : moment(currentKey).format("DD.MM.YYYY");
-      
-      return {
-        y: Number(_.get(d, r.data)),
-        x: keyIsDate ? keyFormatted : currentKey,
-      };
-    });
-  };
 
   if (isEditor()) {
     data = [
@@ -414,44 +393,14 @@ const AltrpDiagram = props => {
       }
     ]
   } else {
-    if (isMultiple) {
-      let repeater = _.cloneDeep(settings.rep, []);
-      data = repeater.map((r, index) => {
-        let innerData = getDataByPath(r.path, []);
-        if (innerData.length > 0) {
-          //Исключаем дублирование ключей, т.к. это приводит к ошибкам рендера всех диаграм
-          innerData = _.uniqBy(innerData, r.key);
-          innerData = formatData(innerData, r);
-        }
-
-        return {
-          id: r.title || r.path,
-          data: innerData
-        };
-      });
-    } else if (settings.datasource_path != null) {
+    if (settings.datasource_path != null) {
       try {
         data = getDataByPath(settings.datasource_path, []);
-        data = _.uniqBy(data, settings.key_name);
-        const r = {
-          key: settings.key_name,
-          data: settings.data_name
-        };
-
-        data = [
-          {
-            data: formatData(data, r)
-          }
-        ];
       } catch (error) {
         console.log("====================================");
         console.error(error);
         console.log("====================================");
-        data = [
-          {
-            data: []
-          }
-        ];
+        data = [];
       }
     }
   }
@@ -464,20 +413,9 @@ const AltrpDiagram = props => {
     );
   }
 
-  const widget = {
-    options: {
-      colorScheme: settings.colorScheme,
-      animated: settings.animated,
-      isVertical: settings.isVertical
-    },
-    filter: {}
-  };
-
   console.log("====================================");
   console.log(data);
   console.log("====================================");
-
-  console.log({width: settings.width, height: settings.height});
   
   return (
     <DynamicLineChart
@@ -492,9 +430,7 @@ const AltrpDiagram = props => {
       yScaleMax={yScaleMax}
       customColorSchemeChecker={customColorSchemeChecker}
       customColors={customColors}
-      widget={widget}
-      dataSource={data}
-      keyIsDate={keyIsDate}
+      data={data}
       xScaleType={xScaleType}
       precision={precision}
       curve={curve}
@@ -508,7 +444,6 @@ const AltrpDiagram = props => {
       width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
       height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
       constantsAxises={constantsAxises}
-      sort={sort}
       tickRotation={tickRotation?.size}
       bottomAxis={bottomAxis}
       enableGridX={enableGridX}

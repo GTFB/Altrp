@@ -1,4 +1,6 @@
-export default function getFormatValueString (settings, {name = 'format'}) {
+export default function getFormatValueString (settings, options) {
+    const name = options?.name || 'format'
+
     if (!settings[name + 'Enable']) {
         return
     }

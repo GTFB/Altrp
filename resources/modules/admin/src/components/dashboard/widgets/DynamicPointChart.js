@@ -7,30 +7,23 @@ const milkScheme = _.find(Schemes, { value: "milk" }).colors;
 const milkScheme2 = _.find(Schemes, { value: "milk2" }).colors;
 
 import EmptyWidget from "./EmptyWidget";
-
-import { getWidgetData } from "../services/getWidgetData";
-import { customStyle } from "../widgetTypes";
-import { Spinner } from "react-bootstrap";
 import Tooltip from "./d3/TooltipScatter";
 
 import moment from "moment";
 const format = "%d.%m.%Y";
 
 const PointChart = ({
-  widget,
   width = `300px`,
   height = `450px`,
-  dataSource = [],
+  data = [],
   xScaleType,
   colorScheme = "red_grey",
   nodeSize = 6,
-  sort = "",
   tickRotation = 0,
   bottomAxis = true,
   precision,
   enableGridX = true,
   enableGridY = true,
-  keyIsDate = false,
   customColorSchemeChecker = false,
   customColors = [],
   constantsAxises = [],
@@ -42,70 +35,6 @@ const PointChart = ({
   if (legend) {
     Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
   }
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
-  const getData = useCallback(async () => {
-    setIsLoading(true);
-    if (dataSource.length == 0) {
-      const charts = await getWidgetData(widget.source, widget.filter);
-      if (charts.status === 200 && typeof charts.data !== "string") {
-        const newData = charts.data.data.map(item => {
-          const currentKey = item.key;
-          const keyFormatted = !moment(currentKey).isValid()
-            ? currentKey
-            : moment(currentKey).format("DD.MM.YYYY");
-          return {
-            y: Number(item.data),
-            x: keyIsDate ? keyFormatted : currentKey
-          };
-        });
-        let data = [
-          {
-            id: "",
-            data: newData
-          }
-        ];
-        setData(data);
-        setIsLoading(false);
-      }
-    } else {
-      if (
-        sort !== null &&
-        sort !== "undefined" &&
-        typeof dataSource !== "undefined"
-      ) {
-        switch (sort) {
-          case "value":
-            dataSource.forEach((item, index) => {
-              if (item.data.length > 0) {
-                dataSource[index].data = _.sortBy(item.data, ["y"]);
-              }
-            });
-            break;
-          case "key":
-            data.forEach((item, index) => {
-              if (item.data.length > 0) {
-                dataSource[index].data = _.sortBy(item.data, ["x"]);
-              }
-            });
-            break;
-
-          default:
-            // data = data;
-            break;
-        }
-      }
-      setData(dataSource || []);
-      setIsLoading(false);
-    }
-  }, [widget]);
-
-  useEffect(() => {
-    getData();
-  }, [getData]);
-
-  if (isLoading) return <Spinner />;
 
   let matches = [];
   let isNotEmpty = false;

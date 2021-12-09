@@ -57,44 +57,6 @@ class PieDiagram extends BaseElement {
       label: "Path to Data"
     });
 
-    this.addControl("key_name", {
-      dynamic: false,
-      label: "Key Field"
-    });
-
-    this.addControl("data_name", {
-      dynamic: false,
-      label: "Data Field"
-    });
-
-    this.addControl("key_is_date", {
-      dynamic: false,
-      label: "Key has Date format?",
-      type: CONTROLLER_SWITCHER
-    });
-
-    this.addControl("sort", {
-      type: CONTROLLER_SELECT,
-      label: "Sort",
-      options: [
-        {
-          id: 0,
-          value: "",
-          label: "By default"
-        },
-        {
-          id: 1,
-          value: "value",
-          label: "By value"
-        },
-        {
-          id: 2,
-          value: "key",
-          label: "By key"
-        }
-      ]
-    });
-
     this.addControl("use_legend", {
       type: CONTROLLER_SWITCHER,
       label: "Use legend?",
