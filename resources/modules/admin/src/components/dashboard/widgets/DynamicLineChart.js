@@ -40,7 +40,7 @@ const DynamicLineChart = ({
   legend,
   enableGradient,
   yFormat,
-  xFormat
+  xFormat,
 }) => {
   if (legend) {
     Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
@@ -120,10 +120,10 @@ const DynamicLineChart = ({
           }
           xScale={
             xScaleType === "time"
-              ? { type: xScaleType, format: format, precision: precision }
+              ? { type: xScaleType, format: format, precision }
               : { type: xScaleType }
           }
-          lineWidth={lineWidth}
+          lineWidth={lineWidth?.size}
           markers={constantsAxises}
           enableGridX={enableGridX}
           enableGridY={enableGridY}

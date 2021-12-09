@@ -139,8 +139,19 @@ class LineDiagram extends BaseElement {
         { id: 0, label: "Day", value: "day" },
         { id: 1, label: "Month", value: "month" },
         { id: 2, label: "Year", value: "year" }
-      ]
+      ],
+      conditions: {
+        xScaleType: 'time'
+      }
     });
+
+    this.addControl('lineWidth', {
+      type: CONTROLLER_SLIDER,
+      label: 'Line width',
+      min: 0,
+      max: 30,
+      step: 1
+    })
 
     this.addControl("curve", {
       type: CONTROLLER_SELECT,
@@ -157,11 +168,6 @@ class LineDiagram extends BaseElement {
         { id: 8, value: "stepAfter", label: "stepAfter" },
         { id: 9, value: "stepBefore", label: "stepBefore" }
       ]
-    });
-
-    this.addControl("lineWidth", {
-      type: CONTROLLER_NUMBER,
-      label: "Line width",
     });
 
     this.addControl("enableArea", {

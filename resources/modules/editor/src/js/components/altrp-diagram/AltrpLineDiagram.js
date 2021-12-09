@@ -100,7 +100,6 @@ const AltrpDiagram = props => {
     bottomAxis, 
     enableGridX, 
     enableGridY, 
-    lineWidth, 
     colorScheme,
     enableArea,
     enablePoints,
@@ -108,7 +107,8 @@ const AltrpDiagram = props => {
     pointColor,
     yMarker,
     enableGradient,
-    curve
+    curve,
+    lineWidth
   } = settings
 
   //line settings
@@ -437,7 +437,6 @@ const AltrpDiagram = props => {
       colorScheme={colorScheme || 'nivo'}
       enableArea={enableArea}
       enablePoints={enablePoints}
-      lineWidth={lineWidth}
       pointColor={pointColor}
       pointSize={pointSize}
       yMarker={yMarker}
@@ -450,6 +449,7 @@ const AltrpDiagram = props => {
       enableGridY={enableGridY}
       xFormat={getFormatValueString(settings, {name: 'xFormat'})}
       yFormat={getFormatValueString(settings, {name: 'yFormat'})}
+      lineWidth={lineWidth}
       legend={settings.use_legend && {
         anchor: settings.legend_anchor,
         direction: settings.legend_direction,
