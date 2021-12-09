@@ -32,7 +32,7 @@ import InputHiddenWidget from "../../../resources/modules/editor/src/js/componen
 import TemplateWidget from "../../../resources/modules/editor/src/js/components/widgets/TemplateWidget";
 import ImageLightboxWidget from "../../../resources/modules/editor/src/js/components/widgets/ImageLightboxWidget";
 import IconWidget from "../../../resources/modules/editor/src/js/components/widgets/IconWidget"
-import MenuPlaceholder from "../components/MenuPlaceholder";
+import MenuPlaceholder from "../components/MenuPlaceholder/MenuPlaceholder";
 // import BreadcrumbsWidget from '../../../resources/modules/editor/src/js/components/widgets/BreadcrumbsWidget';
 // import MenuWidget from '../../../resources/modules/editor/src/js/components/widgets/MenuWidget';
 
