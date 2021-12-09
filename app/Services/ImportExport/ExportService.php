@@ -6,6 +6,7 @@ namespace App\Services\ImportExport;
 
 use App\Services\ImportExport\Files\AccessorsFile;
 use App\Services\ImportExport\Files\ColumnsFile;
+use App\Services\ImportExport\Files\CustomizerFile;
 use App\Services\ImportExport\Files\DashboardsFile;
 use App\Services\ImportExport\Files\DiagramsFile;
 use App\Services\ImportExport\Files\IImportExportFile;
@@ -109,7 +110,8 @@ class ExportService
             ->exportDataSourcesRoles()
             ->exportDataSourcesPremissions()
             ->exportValidationFields()
-            ->exportValidationRules();
+            ->exportValidationRules()
+            ->exportCustomizers();
 
         return $this->createArchive([]);
     }
@@ -138,6 +140,9 @@ class ExportService
       }
       if (isset($params['exportDiagrams']) && !empty($params['exportDiagrams'])) {
         $this->exportDiagrams($params['exportDiagrams']);
+      }
+      if (isset($params['exportCustomizers']) && !empty($params['exportCustomizers'])) {
+        $this->exportCustomizers($params['exportCustomizers']);
       }
       if (isset($params['exportReports']) && !empty($params['exportReports'])) {
         $this->exportReports($params['exportReports']);
@@ -288,6 +293,16 @@ class ExportService
     public function exportPages(array $params = []) {
         $pages = new PagesFile();
         $this->addFile($pages->export($this->writer, self::EXPORT_PATH, $params));
+        return $this;
+    }
+
+    /**
+     * Экспорт данных о кастомайзере
+     * @return $this
+     */
+    public function exportCustomizers(array $params = []) {
+        $сustomizer = new CustomizerFile();
+        $this->addFile($сustomizer->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
 

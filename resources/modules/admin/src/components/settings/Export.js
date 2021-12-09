@@ -274,6 +274,7 @@ class Export extends Component {
       //{name: 'Remote DataSources Permissions', value: 'exportDataSourcesPremissions'},
       //{name: 'Validation Fields', value: 'exportValidationFields', uri: '/admin/ajax/validationfields'},
       //{name: 'Validation Rules', value: 'exportValidationRules', uri: '/admin/ajax/validationrules'},
+      {name: 'Customizers', value: 'exportCustomizers', uri: '/admin/ajax/customizers', field: 'data'},
     ];
 
     this.state = {

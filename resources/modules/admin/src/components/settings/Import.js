@@ -46,7 +46,7 @@ class Import extends Component {
                  method="post"
                  className="admin-updates admin-import p-4">
       <div className="admin-caption mt-1">
-        Import Filtered App Settings in Archive
+        Import All App Settings in Archive
       </div>
       <input type="hidden"
              name="_token"
@@ -70,7 +70,7 @@ class Import extends Component {
       method="post"
       className="admin-updates admin-import p-4">
       <div className="admin-caption mt-1">
-        Import All App Settings in Archive
+        Import Filtered App Settings in Archive
       </div>
       <input type="hidden"
              name="_token"
