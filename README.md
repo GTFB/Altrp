@@ -4,6 +4,9 @@
 ## Changelog
 
 
+### 0.19.10
++ Add Better Menu Server Side Render
+
 ### 0.19.9
 * Fix Carousel Widgets Synchronize
 + Add `Single Click for Lightbox` and `<img/> Tag` Settings for Carousel Widget

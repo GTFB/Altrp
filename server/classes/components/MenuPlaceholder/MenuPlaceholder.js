@@ -1,9 +1,7 @@
-import Skeleton from "../../../../resources/modules/editor/src/js/components/altrp-image/Skeleton";
 import styled from "styled-components";
 import React from "react";
 import SkeletonPlaceholder from "../SkeletonPlaceholder";
 import {mbParseJSON} from "../../../../resources/modules/front-app/src/js/helpers";
-import MenuBlueprintCSS from "./MenuBlueprintCSS";
 
 const Container = styled.ul`
   display: flex;
@@ -46,7 +44,7 @@ const MenuPlaceholder = props => {
     const gap = props.element.getResponsiveSetting("gap");
 
     if(!toggleButton) {
-      return <Container gap={gap} type={type} className="bp3-menu altrp-menu bp3-elevation-1">
+      return <Container gap={gap} type={type} className="bp3-menu altrp-menu">
         {
           items.map((i) => {
 
@@ -59,12 +57,12 @@ const MenuPlaceholder = props => {
         }
       </Container>
     } else {
-      let toggle_icon = JSON.parse(menu.settings || "")?.toggle_icon
+      let toggle_icon = JSON.parse(menu.settings || "")?.toggle_icon || ''
 
       return <span className="altrp-menu-popover-clone altrp-popover bp3-popover2-target">
         <button className="bp3-button altrp-menu-toggle">
         <span className="bp3-button-text">
-          {toggle_icon ? <span className="altrp-menu-item__icon" dangerouslySetInnerHTML={{__html: toggle_icon}}/> : ''}
+          <span className="altrp-menu-item__icon" dangerouslySetInnerHTML={{__html: toggle_icon}}/>
         </span>
         </button>
       </span>
@@ -80,7 +78,7 @@ const SkeletonMenuItem =
      item
    }) => {
     let __html = `
-    ${item.icon ? `<span class="altrp-menu-item__icon">${item.icon}</span>` : ''}
+    ${`<span class="altrp-menu-item__icon">${item.icon || ''}</span>`}
     <div class="bp3-fill bp3-text-overflow-ellipsis">${item.label}</div>
     ${item?.children?.length ? `
       <span class="bp3-icon bp3-icon-caret-right">

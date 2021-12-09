@@ -5,7 +5,13 @@ export default `
     height: 20px;
     width: 20px;
 }
-
+.bp3-menu{
+  overflow: hidden;
+}
+.bp3-icon > img ,
+.bp3-icon > svg {
+  display: block;
+}
 .altrp-menu-popover-clone {
  box-flex: 0;
  -ms-flex-positive: 0;
@@ -87,8 +93,6 @@ export default `
   border-top:1px solid rgba(16, 22, 26, 0.15);
   display:block;
   margin:5px; }
-  .bp3-dark .bp3-menu-divider{
-    border-top-color:rgba(255, 255, 255, 0.15); }
 
 .bp3-menu-item{
   display:-webkit-box;
@@ -138,14 +142,6 @@ export default `
     background-color:inherit;
     color:rgba(92, 112, 128, 0.6);
     cursor:not-allowed; }
-  .bp3-dark .bp3-menu-item{
-    color:inherit; }
-    .bp3-dark .bp3-menu-item:hover, .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-menu-item, .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-menu-item{
-      background-color:rgba(138, 155, 168, 0.15);
-      color:inherit; }
-    .bp3-dark .bp3-menu-item.bp3-disabled{
-      background-color:inherit;
-      color:rgba(167, 182, 194, 0.6); }
   .bp3-menu-item.bp3-intent-primary{
     color:#106ba3; }
     .bp3-menu-item.bp3-intent-primary .bp3-icon{
@@ -196,23 +192,6 @@ export default `
     .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-warning.bp3-menu-item .bp3-menu-item-label, .bp3-menu-item.bp3-intent-warning:active, .bp3-menu-item.bp3-intent-warning:active::before, .bp3-menu-item.bp3-intent-warning:active::after,
     .bp3-menu-item.bp3-intent-warning:active .bp3-menu-item-label, .bp3-menu-item.bp3-intent-warning.bp3-active, .bp3-menu-item.bp3-intent-warning.bp3-active::before, .bp3-menu-item.bp3-intent-warning.bp3-active::after,
     .bp3-menu-item.bp3-intent-warning.bp3-active .bp3-menu-item-label{
-      color:#ffffff; }
-  .bp3-menu-item.bp3-intent-danger{
-    color:#c23030; }
-    .bp3-menu-item.bp3-intent-danger .bp3-icon{
-      color:inherit; }
-    .bp3-menu-item.bp3-intent-danger::before, .bp3-menu-item.bp3-intent-danger::after,
-    .bp3-menu-item.bp3-intent-danger .bp3-menu-item-label{
-      color:#c23030; }
-    .bp3-menu-item.bp3-intent-danger:hover, .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-danger.bp3-menu-item, .bp3-menu-item.bp3-intent-danger.bp3-active{
-      background-color:#db3737; }
-    .bp3-menu-item.bp3-intent-danger:active{
-      background-color:#c23030; }
-    .bp3-menu-item.bp3-intent-danger:hover, .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-danger.bp3-menu-item, .bp3-menu-item.bp3-intent-danger:hover::before, .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-danger.bp3-menu-item::before, .bp3-menu-item.bp3-intent-danger:hover::after, .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-danger.bp3-menu-item::after,
-    .bp3-menu-item.bp3-intent-danger:hover .bp3-menu-item-label,
-    .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-danger.bp3-menu-item .bp3-menu-item-label, .bp3-menu-item.bp3-intent-danger:active, .bp3-menu-item.bp3-intent-danger:active::before, .bp3-menu-item.bp3-intent-danger:active::after,
-    .bp3-menu-item.bp3-intent-danger:active .bp3-menu-item-label, .bp3-menu-item.bp3-intent-danger.bp3-active, .bp3-menu-item.bp3-intent-danger.bp3-active::before, .bp3-menu-item.bp3-intent-danger.bp3-active::after,
-    .bp3-menu-item.bp3-intent-danger.bp3-active .bp3-menu-item-label{
       color:#ffffff; }
   .bp3-menu-item::before{
     font-family:"Icons16", sans-serif;
@@ -270,128 +249,7 @@ button.bp3-menu-item{
   margin:5px;
   cursor:default;
   padding-left:2px; }
-  .bp3-dark .bp3-menu-header{
-    border-top-color:rgba(255, 255, 255, 0.15); }
-  .bp3-menu-header:first-of-type{
-    border-top:none; }
-  .bp3-menu-header > h6{
-    color:#182026;
-    font-weight:600;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    word-wrap:normal;
-    line-height:17px;
-    margin:0;
-    padding:10px 7px 0 1px; }
-    .bp3-dark .bp3-menu-header > h6{
-      color:#f5f8fa; }
-  .bp3-menu-header:first-of-type > h6{
-    padding-top:0; }
-  .bp3-large .bp3-menu-header > h6{
-    font-size:18px;
-    padding-bottom:5px;
-    padding-top:15px; }
-  .bp3-large .bp3-menu-header:first-of-type > h6{
-    padding-top:0; }
 
-.bp3-dark .bp3-menu{
-  background:#30404d;
-  color:#f5f8fa; }
-
-.bp3-dark .bp3-menu-item{ }
-  .bp3-dark .bp3-menu-item.bp3-intent-primary{
-    color:#48aff0; }
-    .bp3-dark .bp3-menu-item.bp3-intent-primary .bp3-icon{
-      color:inherit; }
-    .bp3-dark .bp3-menu-item.bp3-intent-primary::before, .bp3-dark .bp3-menu-item.bp3-intent-primary::after,
-    .bp3-dark .bp3-menu-item.bp3-intent-primary .bp3-menu-item-label{
-      color:#48aff0; }
-    .bp3-dark .bp3-menu-item.bp3-intent-primary:hover, .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-primary.bp3-menu-item, .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-primary.bp3-menu-item, .bp3-dark .bp3-menu-item.bp3-intent-primary.bp3-active{
-      background-color:#137cbd; }
-    .bp3-dark .bp3-menu-item.bp3-intent-primary:active{
-      background-color:#106ba3; }
-    .bp3-dark .bp3-menu-item.bp3-intent-primary:hover, .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-primary.bp3-menu-item, .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-primary.bp3-menu-item, .bp3-dark .bp3-menu-item.bp3-intent-primary:hover::before, .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-primary.bp3-menu-item::before, .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-primary.bp3-menu-item::before, .bp3-dark .bp3-menu-item.bp3-intent-primary:hover::after, .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-primary.bp3-menu-item::after, .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-primary.bp3-menu-item::after,
-    .bp3-dark .bp3-menu-item.bp3-intent-primary:hover .bp3-menu-item-label,
-    .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-primary.bp3-menu-item .bp3-menu-item-label,
-    .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-primary.bp3-menu-item .bp3-menu-item-label, .bp3-dark .bp3-menu-item.bp3-intent-primary:active, .bp3-dark .bp3-menu-item.bp3-intent-primary:active::before, .bp3-dark .bp3-menu-item.bp3-intent-primary:active::after,
-    .bp3-dark .bp3-menu-item.bp3-intent-primary:active .bp3-menu-item-label, .bp3-dark .bp3-menu-item.bp3-intent-primary.bp3-active, .bp3-dark .bp3-menu-item.bp3-intent-primary.bp3-active::before, .bp3-dark .bp3-menu-item.bp3-intent-primary.bp3-active::after,
-    .bp3-dark .bp3-menu-item.bp3-intent-primary.bp3-active .bp3-menu-item-label{
-      color:#ffffff; }
-  .bp3-dark .bp3-menu-item.bp3-intent-success{
-    color:#3dcc91; }
-    .bp3-dark .bp3-menu-item.bp3-intent-success .bp3-icon{
-      color:inherit; }
-    .bp3-dark .bp3-menu-item.bp3-intent-success::before, .bp3-dark .bp3-menu-item.bp3-intent-success::after,
-    .bp3-dark .bp3-menu-item.bp3-intent-success .bp3-menu-item-label{
-      color:#3dcc91; }
-    .bp3-dark .bp3-menu-item.bp3-intent-success:hover, .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-success.bp3-menu-item, .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-success.bp3-menu-item, .bp3-dark .bp3-menu-item.bp3-intent-success.bp3-active{
-      background-color:#0f9960; }
-    .bp3-dark .bp3-menu-item.bp3-intent-success:active{
-      background-color:#0d8050; }
-    .bp3-dark .bp3-menu-item.bp3-intent-success:hover, .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-success.bp3-menu-item, .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-success.bp3-menu-item, .bp3-dark .bp3-menu-item.bp3-intent-success:hover::before, .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-success.bp3-menu-item::before, .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-success.bp3-menu-item::before, .bp3-dark .bp3-menu-item.bp3-intent-success:hover::after, .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-success.bp3-menu-item::after, .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-success.bp3-menu-item::after,
-    .bp3-dark .bp3-menu-item.bp3-intent-success:hover .bp3-menu-item-label,
-    .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-success.bp3-menu-item .bp3-menu-item-label,
-    .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-success.bp3-menu-item .bp3-menu-item-label, .bp3-dark .bp3-menu-item.bp3-intent-success:active, .bp3-dark .bp3-menu-item.bp3-intent-success:active::before, .bp3-dark .bp3-menu-item.bp3-intent-success:active::after,
-    .bp3-dark .bp3-menu-item.bp3-intent-success:active .bp3-menu-item-label, .bp3-dark .bp3-menu-item.bp3-intent-success.bp3-active, .bp3-dark .bp3-menu-item.bp3-intent-success.bp3-active::before, .bp3-dark .bp3-menu-item.bp3-intent-success.bp3-active::after,
-    .bp3-dark .bp3-menu-item.bp3-intent-success.bp3-active .bp3-menu-item-label{
-      color:#ffffff; }
-  .bp3-dark .bp3-menu-item.bp3-intent-warning{
-    color:#ffb366; }
-    .bp3-dark .bp3-menu-item.bp3-intent-warning .bp3-icon{
-      color:inherit; }
-    .bp3-dark .bp3-menu-item.bp3-intent-warning::before, .bp3-dark .bp3-menu-item.bp3-intent-warning::after,
-    .bp3-dark .bp3-menu-item.bp3-intent-warning .bp3-menu-item-label{
-      color:#ffb366; }
-    .bp3-dark .bp3-menu-item.bp3-intent-warning:hover, .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-warning.bp3-menu-item, .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-warning.bp3-menu-item, .bp3-dark .bp3-menu-item.bp3-intent-warning.bp3-active{
-      background-color:#d9822b; }
-    .bp3-dark .bp3-menu-item.bp3-intent-warning:active{
-      background-color:#bf7326; }
-    .bp3-dark .bp3-menu-item.bp3-intent-warning:hover, .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-warning.bp3-menu-item, .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-warning.bp3-menu-item, .bp3-dark .bp3-menu-item.bp3-intent-warning:hover::before, .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-warning.bp3-menu-item::before, .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-warning.bp3-menu-item::before, .bp3-dark .bp3-menu-item.bp3-intent-warning:hover::after, .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-warning.bp3-menu-item::after, .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-warning.bp3-menu-item::after,
-    .bp3-dark .bp3-menu-item.bp3-intent-warning:hover .bp3-menu-item-label,
-    .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-warning.bp3-menu-item .bp3-menu-item-label,
-    .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-warning.bp3-menu-item .bp3-menu-item-label, .bp3-dark .bp3-menu-item.bp3-intent-warning:active, .bp3-dark .bp3-menu-item.bp3-intent-warning:active::before, .bp3-dark .bp3-menu-item.bp3-intent-warning:active::after,
-    .bp3-dark .bp3-menu-item.bp3-intent-warning:active .bp3-menu-item-label, .bp3-dark .bp3-menu-item.bp3-intent-warning.bp3-active, .bp3-dark .bp3-menu-item.bp3-intent-warning.bp3-active::before, .bp3-dark .bp3-menu-item.bp3-intent-warning.bp3-active::after,
-    .bp3-dark .bp3-menu-item.bp3-intent-warning.bp3-active .bp3-menu-item-label{
-      color:#ffffff; }
-  .bp3-dark .bp3-menu-item.bp3-intent-danger{
-    color:#ff7373; }
-    .bp3-dark .bp3-menu-item.bp3-intent-danger .bp3-icon{
-      color:inherit; }
-    .bp3-dark .bp3-menu-item.bp3-intent-danger::before, .bp3-dark .bp3-menu-item.bp3-intent-danger::after,
-    .bp3-dark .bp3-menu-item.bp3-intent-danger .bp3-menu-item-label{
-      color:#ff7373; }
-    .bp3-dark .bp3-menu-item.bp3-intent-danger:hover, .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-danger.bp3-menu-item, .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-danger.bp3-menu-item, .bp3-dark .bp3-menu-item.bp3-intent-danger.bp3-active{
-      background-color:#db3737; }
-    .bp3-dark .bp3-menu-item.bp3-intent-danger:active{
-      background-color:#c23030; }
-    .bp3-dark .bp3-menu-item.bp3-intent-danger:hover, .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-danger.bp3-menu-item, .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-danger.bp3-menu-item, .bp3-dark .bp3-menu-item.bp3-intent-danger:hover::before, .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-danger.bp3-menu-item::before, .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-danger.bp3-menu-item::before, .bp3-dark .bp3-menu-item.bp3-intent-danger:hover::after, .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-danger.bp3-menu-item::after, .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-danger.bp3-menu-item::after,
-    .bp3-dark .bp3-menu-item.bp3-intent-danger:hover .bp3-menu-item-label,
-    .bp3-dark .bp3-submenu .bp3-popover-target.bp3-popover-open > .bp3-intent-danger.bp3-menu-item .bp3-menu-item-label,
-    .bp3-submenu .bp3-dark .bp3-popover-target.bp3-popover-open > .bp3-intent-danger.bp3-menu-item .bp3-menu-item-label, .bp3-dark .bp3-menu-item.bp3-intent-danger:active, .bp3-dark .bp3-menu-item.bp3-intent-danger:active::before, .bp3-dark .bp3-menu-item.bp3-intent-danger:active::after,
-    .bp3-dark .bp3-menu-item.bp3-intent-danger:active .bp3-menu-item-label, .bp3-dark .bp3-menu-item.bp3-intent-danger.bp3-active, .bp3-dark .bp3-menu-item.bp3-intent-danger.bp3-active::before, .bp3-dark .bp3-menu-item.bp3-intent-danger.bp3-active::after,
-    .bp3-dark .bp3-menu-item.bp3-intent-danger.bp3-active .bp3-menu-item-label{
-      color:#ffffff; }
-  .bp3-dark .bp3-menu-item::before,
-  .bp3-dark .bp3-menu-item > .bp3-icon{
-    color:#a7b6c2; }
-  .bp3-dark .bp3-menu-item .bp3-menu-item-label{
-    color:#a7b6c2; }
-  .bp3-dark .bp3-menu-item.bp3-active, .bp3-dark .bp3-menu-item:active{
-    background-color:rgba(138, 155, 168, 0.3); }
-  .bp3-dark .bp3-menu-item.bp3-disabled{
-    color:rgba(167, 182, 194, 0.6) !important; }
-    .bp3-dark .bp3-menu-item.bp3-disabled::before,
-    .bp3-dark .bp3-menu-item.bp3-disabled > .bp3-icon,
-    .bp3-dark .bp3-menu-item.bp3-disabled .bp3-menu-item-label{
-      color:rgba(167, 182, 194, 0.6) !important; }
-
-.bp3-dark .bp3-menu-divider,
-.bp3-dark .bp3-menu-header{
-  border-color:rgba(255, 255, 255, 0.15); }
-
-.bp3-dark .bp3-menu-header > h6{
-  color:#f5f8fa; }
 
 .bp3-label .bp3-menu{
   margin-top:5px; }
