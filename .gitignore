@@ -46,6 +46,7 @@ _ide_helper.php
 /routes/page_routes.php
 /out
 /app/Plugins/*/
+/app/AltrpPlugins/*/
 /Modules/*/
 /app/Plugins/plugins.json
 public/modules/

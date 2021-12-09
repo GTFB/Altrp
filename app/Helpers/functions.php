@@ -1036,6 +1036,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'input-gallery',
     'posts',
     'breadcrumbs',
+    'carousel',
     'map',
     'text',
     'map_builder',

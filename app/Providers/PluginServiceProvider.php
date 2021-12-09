@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
 
 class PluginServiceProvider extends ServiceProvider
@@ -72,9 +73,10 @@ class PluginServiceProvider extends ServiceProvider
       {
             $pluginsFile = app_path() . "/Plugins/plugins.json";
 
-            if (!is_file($pluginsFile)) {
-                  //make empty json config file
-                  file_put_contents(app_path() . "/Plugins/plugins.json", '{"installed":[], "enabled":[]}');
+
+            File::ensureDirectoryExists( app_path() . "/Plugins" );
+            if( ! File::exists( $pluginsFile ) ) {
+              File::put( $pluginsFile, '{"installed":[], "enabled":[]}' );
             }
       }
 }
