@@ -57,8 +57,20 @@ class UserForm extends Component {
 
       let user_data = await this.resource.get(this.state.id);
 
+      const { _roles, _permissions } = user_data
+      const userRolesMap = rolesOptions.filter(item => _roles.includes(item.value))
+
+      const userRolesPermissions = permissionsOptions.filter(item => _permissions.includes(item.value))
+
+      const userDataState = {
+        ...user_data,
+        _roles: userRolesMap,
+        _permissions: userRolesPermissions
+      }
+
+
       this.setState(state => {
-        return { ...state, user: user_data }
+        return { ...state, user: userDataState }
       }, async () => {
         let usermeta_data = await this.resource.get(this.state.id + "/usermeta");
 
@@ -77,11 +89,17 @@ class UserForm extends Component {
     if (isPasswordChange && password !== password_confirmation) {
       return alert("Password doesn't match confirmation");
     }
+    let userState = this.state.user
+    userState = {
+      ...userState,
+      _roles: userState._roles.map(item => item.value),
+      _permissions: userState._permissions.map(item => item.value)
+    }
 
     if (this.state.id) {
-      res = await this.resource.put(this.state.id, this.state.user);
+      res = await this.resource.put(this.state.id, userState);
     } else {
-      res = await this.resource.post(this.state.user);
+      res = await this.resource.post(userState);
     }
 
     if (res) {
@@ -89,7 +107,16 @@ class UserForm extends Component {
       //Обновление меты
       usermeta_resource = new Resource({ route: '/admin/ajax/users/' + res.id + "/usermeta" });
 
-      usermeta_res = await usermeta_resource.post(this.state.usermeta);
+      let userMetaState = this.state.usermeta
+      if (!this.state.id) {
+        userMetaState = {
+          ...userMetaState,
+          roles: userMetaState.roles.map(item => item.value),
+          permissions: userMetaState.permissions.map(item => item.value)
+        }
+      }
+
+      usermeta_res = await usermeta_resource.post(userMetaState);
 
       if (usermeta_res) {
         this.setState(state => {
@@ -180,40 +207,60 @@ class UserForm extends Component {
 
   handleItemSelectRoles = (item) => {
     if (!this.isItemSelectedRoles(item)) {
-      this.setState(state => {
-        const copyRoles = state.user._roles || []
-        copyRoles.push(item)
-        return {
-          ...state,
-          user: {
-            ...state.user,
-            _roles: copyRoles
-          },
-          usermeta: {
-            ...state.usermeta,
-            roles: copyRoles
+      if (this.state.id) {
+        this.setState(state => {
+          return {
+            ...state,
+            user: {
+              ...state.user,
+              _roles: [...state.user._roles, item]
+            }
           }
-        }
-      });
+        });
+      } else {
+        this.setState(state => {
+          return {
+            ...state,
+            user: {
+              ...state.user,
+              _roles: [...state.user._roles, item]
+            },
+            usermeta: {
+              ...state.usermeta,
+              roles: [...state.usermeta.roles, item]
+            }
+          }
+        });
+      }
     }
   };
 
   handleTagRemoveRoles = (item) => {
-    this.setState(state => {
-      const copyRoles = state.user._roles
-      const copyUserMetaRoles = state.usermeta.roles
-      return {
-        ...state,
-        user: {
-          ...state.user,
-          _roles: copyRoles.filter((i) => i.label !== item)
-        },
-        usermeta: {
-          ...state.usermeta,
-          roles: copyUserMetaRoles.filter((i) => i.label !== item)
+    if (this.state.id) {
+      this.setState(state => {
+        return {
+          ...state,
+          user: {
+            ...state.user,
+            _roles: [...state.user._roles].filter((i) => i.label !== item)
+          }
         }
-      }
-    });
+      });
+    } else {
+      this.setState(state => {
+        return {
+          ...state,
+          user: {
+            ...state.user,
+            _roles: [...state.user._roles].filter((i) => i.label !== item)
+          },
+          usermeta: {
+            ...state.usermeta,
+            roles: [...state.usermeta.roles].filter((i) => i.label !== item)
+          }
+        }
+      });
+    }
   };
 
   isItemSelectedPermissions = (item) => {
@@ -224,40 +271,60 @@ class UserForm extends Component {
 
   handleItemSelectPermissions = (item) => {
     if (!this.isItemSelectedPermissions(item)) {
-      this.setState(state => {
-        const copyPermissions = state.user._permissions || []
-        copyPermissions.push(item)
-        return {
-          ...state,
-          user: {
-            ...state.user,
-            _permissions: copyPermissions
-          },
-          usermeta: {
-            ...state.usermeta,
-            permissions: copyPermissions
-          }
-        }
-      });
+     if (this.state.id) {
+       this.setState(state => {
+         return {
+           ...state,
+           user: {
+             ...state.user,
+             _permissions: [...state.user._permissions, item]
+           }
+         }
+       });
+     } else {
+       this.setState(state => {
+         return {
+           ...state,
+           user: {
+             ...state.user,
+             _permissions: [...state.user._permissions, item]
+           },
+           usermeta: {
+             ...state.usermeta,
+             permissions: [...state.usermeta.permissions, item]
+           }
+         }
+       });
+     }
     }
   };
 
   handleTagRemovePermissions = (item) => {
-    this.setState(state => {
-      const copyPermissions = state.user._permissions
-      const copyUserMetaPermissions = state.usermeta.permissions
-      return {
-        ...state,
-        user: {
-          ...state.user,
-          _permissions: copyPermissions.filter((i) => i.label !== item)
-        },
-        usermeta: {
-          ...state.usermeta,
-          permissions: copyUserMetaPermissions.filter((i) => i.label !== item)
-        }
-      }
-    });
+   if (this.state.id) {
+     this.setState(state => {
+       return {
+         ...state,
+         user: {
+           ...state.user,
+           _permissions: [...state.user._permissions].filter((i) => i.label !== item)
+         }
+       }
+     });
+   } else {
+     this.setState(state => {
+       return {
+         ...state,
+         user: {
+           ...state.user,
+           _permissions: [...state.user._permissions].filter((i) => i.label !== item)
+         },
+         usermeta: {
+           ...state.usermeta,
+           permissions: [...state.usermeta.permissions].filter((i) => i.label !== item)
+         }
+       }
+     });
+   }
   };
 
   render() {
@@ -419,7 +486,7 @@ class UserForm extends Component {
                        noResults={<MenuItem disabled={true} text="No results." />}
                        fill={true}
                        placeholder="Select..."
-                       selectedItems={this.state.usermeta.roles}
+                       selectedItems={this.state.user._roles}
                        onItemSelect={this.handleItemSelectRoles}
                        itemRenderer={(item, {handleClick, modifiers, query}) => {
                          return (
@@ -457,7 +524,7 @@ class UserForm extends Component {
                        noResults={<MenuItem disabled={true} text="No results." />}
                        fill={true}
                        placeholder="Select..."
-                       selectedItems={this.state.usermeta.permissions}
+                       selectedItems={this.state.user._permissions}
                        onItemSelect={this.handleItemSelectPermissions}
                        itemRenderer={(item, {handleClick, modifiers, query}) => {
                          return (
