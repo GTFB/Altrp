@@ -1,8 +1,7 @@
-import Skeleton from "../../../resources/modules/editor/src/js/components/altrp-image/Skeleton";
 import styled from "styled-components";
 import React from "react";
-import SkeletonPlaceholder from "./SkeletonPlaceholder";
-import {mbParseJSON} from "../../../resources/modules/front-app/src/js/helpers";
+import SkeletonPlaceholder from "../SkeletonPlaceholder";
+import {mbParseJSON} from "../../../../resources/modules/front-app/src/js/helpers";
 
 const Container = styled.ul`
   display: flex;
@@ -17,9 +16,8 @@ const Container = styled.ul`
   }
 
   if (props.gap) {
-    styles += `grid-gap: ${props.gap}`
+    styles += `grid-gap: ${props.gap};`
   }
-
   return styles
 }}
 `
@@ -30,6 +28,8 @@ const MenuPlaceholder = props => {
     width: props.element.getResponsiveSetting('skeleton_width') || '100%',
     height: props.element.getResponsiveSetting('skeleton_height') || '30px',
   };
+
+  const toggleButton = props.element.getResponsiveSetting("button")
 
   const guid = props.element.getResponsiveSetting('menu');
 
@@ -43,19 +43,30 @@ const MenuPlaceholder = props => {
     const type = props.element.getResponsiveSetting("type", "", "vertical");
     const gap = props.element.getResponsiveSetting("gap");
 
+    if(!toggleButton) {
+      return <Container gap={gap} type={type} className="bp3-menu altrp-menu">
+        {
+          items.map((i) => {
 
-    return <Container gap={gap} type={type} className="bp3-menu altrp-menu">
-      {
-        items.map((i) => {
+            return (
+              <SkeletonMenuItem className={i?.children?.length ? 'bp3-submenu' : ''}
+                                item={i}
+                                key={i.id}/>
+            )
+          })
+        }
+      </Container>
+    } else {
+      let toggle_icon = JSON.parse(menu.settings || "")?.toggle_icon || ''
 
-          return (
-            <SkeletonMenuItem className={i?.children?.length ? 'bp3-submenu' : ''}
-                              item={i}
-                              key={i.id}/>
-          )
-        })
-      }
-    </Container>
+      return <span className="altrp-menu-popover-clone altrp-popover bp3-popover2-target">
+        <button className="bp3-button altrp-menu-toggle">
+        <span className="bp3-button-text">
+          <span className="altrp-menu-item__icon" dangerouslySetInnerHTML={{__html: toggle_icon}}/>
+        </span>
+        </button>
+      </span>
+    }
   } else {
     return <SkeletonPlaceholder {...props}/>
   }
@@ -67,7 +78,7 @@ const SkeletonMenuItem =
      item
    }) => {
     let __html = `
-    ${item.icon ? `<span class="altrp-menu-item__icon">${item.icon}</span>` : ''}
+    ${`<span class="altrp-menu-item__icon">${item.icon || ''}</span>`}
     <div class="bp3-fill bp3-text-overflow-ellipsis">${item.label}</div>
     ${item?.children?.length ? `
       <span class="bp3-icon bp3-icon-caret-right">
@@ -78,9 +89,11 @@ const SkeletonMenuItem =
         </svg>
       </span>` : ''}
     `;
-    let link = <a href={item.url} dangerouslySetInnerHTML={{__html: __html}}/>
+    let link = <a href={item.url} className="bp3-menu-item altrp-menu-item" dangerouslySetInnerHTML={{__html: __html}}/>
     return (
-      <li className={item?.children?.length ? 'bp3-submenu' : ''} key={item.id}>{link}</li>
+      <li className={item?.children?.length ? 'bp3-submenu' : ''} key={item.id}>
+        {link}
+      </li>
     )
   }
 

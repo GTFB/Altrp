@@ -6,13 +6,13 @@ import ArrowIcon from "../../../svgs/arrow.svg"
 import ("slick-carousel/slick/slick.scss");
 import ("slick-carousel/slick/slick-theme.scss");
 import ('./altrp-carousel.scss');
-import {
+const {
   getComponentByElementId,
   getDataByPath,
   getResponsiveSetting,
   isEditor,
   renderAsset
-} from "../../../../../front-app/src/js/helpers";
+} = window.altrpHelpers;
 const {TemplateLoader} = window.altrpHelpers;
 import AltrpCarouselWrapper from "./AltrpCarouselWrapper";
 
@@ -90,7 +90,9 @@ class AltrpCarousel extends Component {
       return;
     }
     const carouselsToSynchronize = this.carouselsToSynchronize || [];
+
     carousel = _.get(carousel, 'elementRef.current.carousel.current');
+
     if(carousel && carouselsToSynchronize.indexOf(carousel) === -1){
       carouselsToSynchronize.push(carousel);
       carouselsToSynchronize.push(this);
@@ -214,7 +216,9 @@ class AltrpCarousel extends Component {
           if(media.assetType === 'media') {
             media.assetType = 'mediaBackground';
           }
-
+          if(getResponsiveSetting(this.props, 'img_content')){
+            media.assetType = 'image';
+          }
           let content = renderAsset(media, {
             className: 'altrp-carousel-slide-img',
           });
@@ -227,6 +231,13 @@ class AltrpCarousel extends Component {
               <div className="altrp-carousel-slide" key={slide.id}
                    onClick={()=>{
                      this.slider.slickGoTo(slide.id);
+                     if(this.props.lightbox_slides_content && getResponsiveSetting(this.props, 'lightbox_s_click')) {
+                       this.setState((state) => ({
+                         ...state,
+                         activeSlide: slide.id,
+                         openLightBox: true
+                       }))
+                     }
                    }}
                    onDoubleClick={ () => {
                      this.slider.slickGoTo(slide.id);
@@ -351,6 +362,12 @@ class AltrpCarousel extends Component {
                 <div className="altrp-carousel-slide" key={idx}
                      onClick={()=>{
                        this.slider.slickGoTo(idx);
+                       if(this.props.lightbox_slides_content) {
+                         this.setState((state) => ({
+                           ...state,
+                           openLightBox: true
+                         }))
+                       }
                      }}
                      onDoubleClick={ () => {
                        this.slider.slickGoTo(idx);
