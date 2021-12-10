@@ -29,8 +29,8 @@ const DynamicLineChart = ({
   enableArea = false,
   enablePoints = true,
   pointColor,
-  tickRotation = 0,
-  bottomAxis = true,
+  pointBorderWidth,
+  pointBorderColor,
   enableGridX = true,
   enableGridY = true,
   customColorSchemeChecker = false,
@@ -41,6 +41,14 @@ const DynamicLineChart = ({
   enableGradient,
   yFormat,
   xFormat,
+  areaBaselineValue,
+  areaOpacity,
+  areaBlendMode,
+  enableSlices,
+  axisBottom,
+  axisTop,
+  axisRight,
+  axisLeft
 }) => {
   if (legend) {
     Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
@@ -123,21 +131,28 @@ const DynamicLineChart = ({
               ? { type: xScaleType, format: format, precision }
               : { type: xScaleType }
           }
-          lineWidth={lineWidth?.size}
+          areaBaselineValue={areaBaselineValue}
+          lineWidth={lineWidth}
+          areaBlendMode={areaBlendMode}
+          areaOpacity={areaOpacity}
           markers={constantsAxises}
           enableGridX={enableGridX}
           enableGridY={enableGridY}
+          pointBorderWidth={pointBorderWidth}
+          enableSlices={enableSlices}
           axisBottom={
-            bottomAxis &&
+            axisBottom &&
             (xScaleType === "time"
               ? {
                   format: format,
-                  tickRotation: tickRotation
+                  ...axisBottom
                 }
-              : {
-                  tickRotation: tickRotation
-                })
+              : axisBottom
+            )
           }
+          axisTop={axisTop}
+          axisLeft={axisLeft}
+          axisRight={axisRight}
           yFormat={yFormat}
           xFormat={xFormat}
           useMesh={true}
@@ -165,11 +180,9 @@ const DynamicLineChart = ({
               ? milkScheme2
               : { scheme: colorScheme }
           }
-          pointColor={
-            typeof pointColor !== "undefined" && pointColor !== null
-              ? pointColor.colorPickedHex
-              : { from: "color", modifiers: [] }
-          }
+          pointColor={pointColor}
+
+          pointBorderColor={pointBorderColor}
 
           {...customProps}
         />

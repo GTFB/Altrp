@@ -96,7 +96,6 @@ const AltrpDiagram = props => {
   }
 
   const { 
-    tickRotation, 
     bottomAxis, 
     enableGridX, 
     enableGridY, 
@@ -105,10 +104,16 @@ const AltrpDiagram = props => {
     enablePoints,
     pointSize,
     pointColor,
+    pointBorderWidth,
+    pointBorderColor,
     yMarker,
     enableGradient,
     curve,
-    lineWidth
+    lineWidth,
+    areaBaselineValue,
+    areaOpacity,
+    areaBlendMode,
+    enableSlices
   } = settings
 
   //line settings
@@ -430,6 +435,7 @@ const AltrpDiagram = props => {
       yScaleMax={yScaleMax}
       customColorSchemeChecker={customColorSchemeChecker}
       customColors={customColors}
+      enableSlices={enableSlices}
       data={data}
       xScaleType={xScaleType}
       precision={precision}
@@ -437,19 +443,59 @@ const AltrpDiagram = props => {
       colorScheme={colorScheme || 'nivo'}
       enableArea={enableArea}
       enablePoints={enablePoints}
-      pointColor={pointColor}
+      pointColor={pointColor?.colorPickedHex}
+      pointBorderWidth={pointBorderWidth?.size}
+      pointBorderColor={pointBorderColor?.colorPickedHex}
       pointSize={pointSize}
       yMarker={yMarker}
       width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
       height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
       constantsAxises={constantsAxises}
-      tickRotation={tickRotation?.size}
       bottomAxis={bottomAxis}
       enableGridX={enableGridX}
       enableGridY={enableGridY}
       xFormat={getFormatValueString(settings, {name: 'xFormat'})}
       yFormat={getFormatValueString(settings, {name: 'yFormat'})}
-      lineWidth={lineWidth}
+      lineWidth={lineWidth?.size}
+      areaBlendMode={areaBlendMode}
+      areaOpacity={areaOpacity?.size}
+      areaBaselineValue={areaBaselineValue}
+      axisBottom={settings.axisBottom ? {
+        orient: 'bottom',
+        tickSize: settings.bottomTickSize?.size,
+        tickPadding: settings.bottomTickPadding?.size,
+        tickRotation: settings.bottomTickRotation?.size,
+        legend: settings.bottomLegend,
+        legendOffset: settings.bottomLegendOffset?.size,
+        legendPosition: 'middle'
+      } : null}
+      axisTop={settings.axisTop ? {
+        orient: 'top',
+        tickSize: settings.topTickSize?.size,
+        tickPadding: settings.topTickPadding?.size,
+        tickRotation: settings.topTickRotation?.size,
+        legend: settings.topLegend,
+        legendOffset: settings.topLegendOffset?.size,
+        legendPosition: 'middle'
+      } : null}
+      axisLeft={settings.axisLeft ? {
+        orient: 'left',
+        tickSize: settings.leftTickSize?.size,
+        tickPadding: settings.leftTickPadding?.size,
+        tickRotation: settings.leftTickRotation?.size,
+        legend: settings.leftLegend,
+        legendOffset: settings.leftLegendOffset?.size,
+        legendPosition: 'middle'
+      } : null}
+      axisRight={settings.axisRight ? {
+        orient: 'right',
+        tickSize: settings.rightTickSize?.size,
+        tickPadding: settings.rightTickPadding?.size,
+        tickRotation: settings.rightTickRotation?.size,
+        legend: settings.rightLegend,
+        legendOffset: settings.rightLegendOffset?.size,
+        legendPosition: 'middle'
+      } : null}
       legend={settings.use_legend && {
         anchor: settings.legend_anchor,
         direction: settings.legend_direction,
