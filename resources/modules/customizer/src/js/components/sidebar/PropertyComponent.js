@@ -140,7 +140,7 @@ class PropertyComponent extends Component {
     let buttonText = 'None'
     const currentMethod = METHODS_OPTIONS.find(o => o.value == method);
     if (currentMethod?.objectInstance) {
-      buttonText = `${currentMethod?.objectInstance}::${currentMethod?.label || ''}`
+      buttonText = `${currentMethod?.objectInstance}::${currentMethod?.label || ''} (${namespace || ''}${path ? '.' + path : ''})${expression ? ', expression' : ''}`
     }
 
     return <>

@@ -356,6 +356,7 @@ class CustomizerEditor extends Component {
               elements={ this.props.elements }
               onConnect={ this.onConnect }
               onElementsRemove={ this.onElementsRemove }
+              deleteKeyCode={'Delete'}
               onElementClick={ this.onElementClick }
               onLoad={ this.onLoad }
               onDrop={ this.onDrop }
