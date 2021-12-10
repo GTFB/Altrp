@@ -95,50 +95,34 @@ const AltrpDiagram = props => {
     constantsAxises = constantsAxises.flat();
   }
 
-  const {
-    isMultiple, 
-    sort, 
-    tickRotation, 
+  const { 
     bottomAxis, 
     enableGridX, 
     enableGridY, 
-    lineWidth, 
     colorScheme,
     enableArea,
     enablePoints,
     pointSize,
     pointColor,
+    pointBorderWidth,
+    pointBorderColor,
     yMarker,
     enableGradient,
-    curve
+    curve,
+    lineWidth,
+    areaBaselineValue,
+    areaOpacity,
+    areaBlendMode,
+    enableSlices
   } = settings
 
-  const isCustomColor = settings.isCustomColors;
-  const keyIsDate = settings.key_is_date;
   //line settings
   const xScaleType = settings?.xScaleType || "point";
   const precision = settings?.precision || "month";
-  
-  const xMarkerValue = keyIsDate
-    ? moment(settings?.xMarkerValueDate).toDate()
-    : settings?.xMarkerValue;
 
   let data = [];
 
   //funciton for formattion data for all types
-  const formatData = (data, r) => {
-    return data.map((d, index) => {
-      const currentKey = _.get(d, r.key);
-      const keyFormatted = !moment(currentKey).isValid()
-        ? currentKey
-        : moment(currentKey).format("DD.MM.YYYY");
-      
-      return {
-        y: Number(_.get(d, r.data)),
-        x: keyIsDate ? keyFormatted : currentKey,
-      };
-    });
-  };
 
   if (isEditor()) {
     data = [
@@ -414,44 +398,14 @@ const AltrpDiagram = props => {
       }
     ]
   } else {
-    if (isMultiple) {
-      let repeater = _.cloneDeep(settings.rep, []);
-      data = repeater.map((r, index) => {
-        let innerData = getDataByPath(r.path, []);
-        if (innerData.length > 0) {
-          //Исключаем дублирование ключей, т.к. это приводит к ошибкам рендера всех диаграм
-          innerData = _.uniqBy(innerData, r.key);
-          innerData = formatData(innerData, r);
-        }
-
-        return {
-          id: r.title || r.path,
-          data: innerData
-        };
-      });
-    } else if (settings.datasource_path != null) {
+    if (settings.datasource_path != null) {
       try {
         data = getDataByPath(settings.datasource_path, []);
-        data = _.uniqBy(data, settings.key_name);
-        const r = {
-          key: settings.key_name,
-          data: settings.data_name
-        };
-
-        data = [
-          {
-            data: formatData(data, r)
-          }
-        ];
       } catch (error) {
         console.log("====================================");
         console.error(error);
         console.log("====================================");
-        data = [
-          {
-            data: []
-          }
-        ];
+        data = [];
       }
     }
   }
@@ -464,20 +418,9 @@ const AltrpDiagram = props => {
     );
   }
 
-  const widget = {
-    options: {
-      colorScheme: settings.colorScheme,
-      animated: settings.animated,
-      isVertical: settings.isVertical
-    },
-    filter: {}
-  };
-
   console.log("====================================");
   console.log(data);
   console.log("====================================");
-
-  console.log({width: settings.width, height: settings.height});
   
   return (
     <DynamicLineChart
@@ -492,29 +435,67 @@ const AltrpDiagram = props => {
       yScaleMax={yScaleMax}
       customColorSchemeChecker={customColorSchemeChecker}
       customColors={customColors}
-      widget={widget}
-      dataSource={data}
-      keyIsDate={keyIsDate}
+      enableSlices={enableSlices}
+      data={data}
       xScaleType={xScaleType}
       precision={precision}
       curve={curve}
       colorScheme={colorScheme || 'nivo'}
       enableArea={enableArea}
       enablePoints={enablePoints}
-      lineWidth={lineWidth}
-      pointColor={pointColor}
+      pointColor={pointColor?.colorPickedHex}
+      pointBorderWidth={pointBorderWidth?.size}
+      pointBorderColor={pointBorderColor?.colorPickedHex}
       pointSize={pointSize}
       yMarker={yMarker}
       width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
       height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
       constantsAxises={constantsAxises}
-      sort={sort}
-      tickRotation={tickRotation?.size}
       bottomAxis={bottomAxis}
       enableGridX={enableGridX}
       enableGridY={enableGridY}
       xFormat={getFormatValueString(settings, {name: 'xFormat'})}
       yFormat={getFormatValueString(settings, {name: 'yFormat'})}
+      lineWidth={lineWidth?.size}
+      areaBlendMode={areaBlendMode}
+      areaOpacity={areaOpacity?.size}
+      areaBaselineValue={areaBaselineValue}
+      axisBottom={settings.axisBottom ? {
+        orient: 'bottom',
+        tickSize: settings.bottomTickSize?.size,
+        tickPadding: settings.bottomTickPadding?.size,
+        tickRotation: settings.bottomTickRotation?.size,
+        legend: settings.bottomLegend,
+        legendOffset: settings.bottomLegendOffset?.size,
+        legendPosition: 'middle'
+      } : null}
+      axisTop={settings.axisTop ? {
+        orient: 'top',
+        tickSize: settings.topTickSize?.size,
+        tickPadding: settings.topTickPadding?.size,
+        tickRotation: settings.topTickRotation?.size,
+        legend: settings.topLegend,
+        legendOffset: settings.topLegendOffset?.size,
+        legendPosition: 'middle'
+      } : null}
+      axisLeft={settings.axisLeft ? {
+        orient: 'left',
+        tickSize: settings.leftTickSize?.size,
+        tickPadding: settings.leftTickPadding?.size,
+        tickRotation: settings.leftTickRotation?.size,
+        legend: settings.leftLegend,
+        legendOffset: settings.leftLegendOffset?.size,
+        legendPosition: 'middle'
+      } : null}
+      axisRight={settings.axisRight ? {
+        orient: 'right',
+        tickSize: settings.rightTickSize?.size,
+        tickPadding: settings.rightTickPadding?.size,
+        tickRotation: settings.rightTickRotation?.size,
+        legend: settings.rightLegend,
+        legendOffset: settings.rightLegendOffset?.size,
+        legendPosition: 'middle'
+      } : null}
       legend={settings.use_legend && {
         anchor: settings.legend_anchor,
         direction: settings.legend_direction,

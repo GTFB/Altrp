@@ -38,14 +38,12 @@ const DynamicPieChart = ({
   widget,
   width = "300px",
   height = "450px",
-  dataSource = [],
+  data = [],
   colorScheme = "red_grey",
   innerRadius = 0,
   padAngle = 0,
   cornerRadius = 0,
   sortByValue = 0,
-  sort = "",
-  keyIsDate = false,
   customColorSchemeChecker = false,
   customColors = [],
   useCustomTooltips,
@@ -65,57 +63,7 @@ const DynamicPieChart = ({
 
   let allValue = 0;
 
-  dataSource.forEach(el => allValue += el.value)
-  
-  const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
-
-  const getData = useCallback(async () => {
-    setIsLoading(true);
-    if (dataSource.length == 0) {
-      const charts = await getWidgetData(widget.source, widget.filter);
-      if (charts.status === 200) {
-        const newData = charts.data.data.map(item => {
-          const currentKey = item.key;
-          const keyFormatted = !moment(currentKey).isValid()
-            ? currentKey
-            : moment(currentKey).format("DD.MM.YYYY");
-
-          return {
-            value: Number(item.data),
-            id: keyIsDate ? keyFormatted : currentKey
-          };
-        });
-        let data = newData;
-        setData(data || []);
-        setIsLoading(false);
-      }
-    } else {
-      if (
-        sort !== null &&
-        sort !== "undefined" &&
-        typeof dataSource !== "undefined"
-      ) {
-        switch (sort) {
-          case "value":
-            dataSource = _.sortBy(dataSource, ["value"]);
-            break;
-          case "key":
-            dataSource = _.sortBy(dataSource, ["id"]);
-            break;
-          default:
-            dataSource = dataSource;
-            break;
-        }
-      }
-      setData(dataSource || []);
-      setIsLoading(false);
-    }
-  }, [widget]);
-
-  useEffect(() => {
-    getData();
-  }, [getData]);
+  data.forEach(el => allValue += el.value)
 
   const layers = ['arcs', 'arcLabels', 'arcLinkLabels', 'legends']
 
@@ -140,8 +88,6 @@ const DynamicPieChart = ({
       </div>
     )
   }
-
-  if (isLoading) return <Spinner />;
 
   if (!data || data.length === 0) return <EmptyWidget />;
 

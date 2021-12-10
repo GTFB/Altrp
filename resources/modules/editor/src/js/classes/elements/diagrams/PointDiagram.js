@@ -62,92 +62,13 @@ class PointDiagram extends BaseElement {
       label: "Path to Data"
     });
 
-    this.addControl("key_name", {
-      dynamic: false,
-      label: "Key Field (X)"
-    });
-
-    this.addControl("data_name", {
-      dynamic: false,
-      label: "Data Field (Y)"
-    });
-
-    this.addControl("key_is_date", {
-      dynamic: false,
-      label: "Key has Date format?",
-      type: CONTROLLER_SWITCHER
-    });
-
-    this.addControl("sort", {
-      type: CONTROLLER_SELECT,
-      label: "Сортировка",
-      options: [
-        {
-          id: 0,
-          value: "",
-          label: "По умолчанию"
-        },
-        {
-          id: 1,
-          value: "value",
-          label: "По значению"
-        },
-        {
-          id: 2,
-          value: "key",
-          label: "По ключу"
-        }
-      ]
-    });
-
     this.addControl("use_legend", {
       type: CONTROLLER_SWITCHER,
       label: "Use legend?",
     });
 
     this.endControlSection();
-
-    this.startControlSection("multiple_data", {
-      dynamic: false,
-      label: "Multiple data"
-    });
-
-    let repeater = new Repeater();
-    repeater.addControl("title", {
-      label: "Title",
-      dynamic: false
-    });
-    repeater.addControl("path", {
-      label: "Path",
-      dynamic: false
-    });
-    repeater.addControl("data", {
-      label: "Y",
-      dynamic: false
-    });
-    repeater.addControl("key", {
-      label: "X",
-      dynamic: false
-    });
-
-    this.addControl("isMultiple", {
-      type: CONTROLLER_SWITCHER,
-      label: "Use multiple data?",
-    });
-
-    // this.addControl("keysIsDate", {
-    //   label: "Ключи как дата",
-    //   type: CONTROLLER_SWITCHER,
-    //   dynamic: false
-    // });
-
-    this.addControl("rep", {
-      type: CONTROLLER_REPEATER,
-      fields: repeater.getControls()
-    });
-
-    this.endControlSection();
-
+    
     this.startControlSection("style", {
       tab: TAB_STYLE,
       label: "Visual"
