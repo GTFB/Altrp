@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 import UserTopPanel from "./UserTopPanel";
+import Resource from "../../../editor/src/js/classes/Resource";
+import mutate from "dot-prop-immutable";
 
 export default class Plugins extends Component {
   constructor(props) {
@@ -42,13 +44,18 @@ export default class Plugins extends Component {
     const pluginName = this.state.plugins[index].name;
     const value = event.target.checked;
 
-    const req = await axios.post("/admin/ajax/plugins/switch", {
+    const res = await (new Resource({route:'/admin/ajax/plugins/switch'})).post({
       name: pluginName,
       value: value
     });
-    this.setState({
-      plugins: this.state.plugins
-    });
+
+    if(res.success){
+      const plugins = mutate.set(this.state.plugins, `${index}.enabled`, ! value);
+
+      this.setState({
+        plugins
+      });
+    }
   }
 
   render() {
@@ -71,21 +78,19 @@ export default class Plugins extends Component {
             {this.state.plugins.map((item, key) => {
               return (
                 <div key={item.name} className="col-3 text-center border rounded mx-2">
-                  <div className="mb-2">{item.name}</div>
+                  <div className="mb-2">{item.title}</div>
                   <a href={item.url}><img
                     className="mb-2"
                     src={item.logo}
                     style={{ maxWidth: "150px" }}
-                    alt=""
-                  ></img></a>
+                    alt=""/></a>
                   <div className="custom-control custom-switch">
                     <input
                       type="checkbox"
                       className="custom-control-input"
                       id={`switch${key}`}
                       checked={item.enabled}
-                      onChange={event => this.updateChange(event, key)}
-                    ></input>
+                      onChange={event => this.updateChange(event, key)}/>
                     <label
                       className="custom-control-label"
                       htmlFor={`switch${key}`}
