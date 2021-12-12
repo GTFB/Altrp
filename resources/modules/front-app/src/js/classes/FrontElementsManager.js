@@ -20,6 +20,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "action-trigger",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'ActionTriggerWidget' */ "../../../../editor/src/js/components/widgets/ActionTriggerWidget"
+          );
+        }
+      },
+      {
         name: "heading-type-animating",
         import: async () => {
           return await import(

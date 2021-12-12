@@ -33,6 +33,7 @@ import TemplateWidget from "../../../resources/modules/editor/src/js/components/
 import ImageLightboxWidget from "../../../resources/modules/editor/src/js/components/widgets/ImageLightboxWidget";
 import IconWidget from "../../../resources/modules/editor/src/js/components/widgets/IconWidget"
 import MenuPlaceholder from "../components/MenuPlaceholder/MenuPlaceholder";
+import ActionTriggerWidget from "../../../resources/modules/editor/src/js/components/widgets/ActionTriggerWidget";
 // import BreadcrumbsWidget from '../../../resources/modules/editor/src/js/components/widgets/BreadcrumbsWidget';
 // import MenuWidget from '../../../resources/modules/editor/src/js/components/widgets/MenuWidget';
 
@@ -49,6 +50,7 @@ class FrontElementsManager {
       }
     })
     this.components['root-element'] = RootComponent;
+    this.components['action-trigger'] = ActionTriggerWidget
     this.components['heading'] = HeadingTypeHeadingWidget;
     this.components['section'] = SectionComponent;
     this.components['section_widget'] = SectionComponent;

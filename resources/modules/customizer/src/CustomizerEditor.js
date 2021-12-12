@@ -359,11 +359,6 @@ class CustomizerEditor extends Component {
                 start: Start,
                 switch: Switch,
                 change: Change,
-                documentAction: DocumentAction,
-                crudAction: CrudAction,
-                apiAction: ApiAction,
-                messageAction: MessageAction,
-                customizer: Customizer,
                 return: Return,
               }}
               onEdgeUpdate={this.onEdgeUpdate}
