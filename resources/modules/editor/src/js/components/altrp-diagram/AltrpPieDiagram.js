@@ -43,7 +43,7 @@ const AltrpPieDiagram = props => {
   //data variable
   let data = [];
 
-  if (true) {
+  if (isEditor()) {
     data = [
       {
         id: 'python',
