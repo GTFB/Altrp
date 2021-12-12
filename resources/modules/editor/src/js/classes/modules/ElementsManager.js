@@ -122,7 +122,7 @@ export default class ElementsManger {
       [PieDiagram, PieDiagramWidget],
       [BarDiagram, BarDiagramWidget],
       [LineDiagram, LineDiagramWidget],
-      [PointDiagram, PointDiagramWidget],
+      // [PointDiagram, PointDiagramWidget],
       [FunnelDiagram, FunnelDiagramWidget],
       [RadarDiagram, RadarDiagramWidget]
     ]

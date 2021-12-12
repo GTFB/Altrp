@@ -82,9 +82,6 @@ const AltrpFunnelDiagram = props => {
 
         data = formatData(data)
       } catch (error) {
-        console.log("====================================");
-        console.error(error);
-        console.log("====================================");
         data = [];
       }
     }
@@ -126,9 +123,6 @@ const AltrpFunnelDiagram = props => {
       setLegend(legend);
     }
   }, [legend]);
-  console.log("====================================");
-  console.log(data);
-  console.log("====================================");
   
   return (
     <DynamicFunnelChart
