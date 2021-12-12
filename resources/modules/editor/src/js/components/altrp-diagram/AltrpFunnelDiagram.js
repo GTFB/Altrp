@@ -143,7 +143,7 @@ const AltrpFunnelDiagram = props => {
       customColors={customColors}
       widget={widget}
       dataSource={data}
-      colorScheme={colorScheme}
+      colorScheme={colorScheme || 'nivo'}
       width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
       height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
       fillOpacity={settings.fillOpacity?.size}

@@ -29,8 +29,6 @@ const AltrpPieDiagram = props => {
     margin,
     yScaleMax,
     colorScheme,
-    isMultiple,
-    sort,
     innerRadius,
     padAngle,
     cornerRadius,
@@ -38,37 +36,12 @@ const AltrpPieDiagram = props => {
     activeInnerRadiusOffset,
     useCenteredMetric,
     useLinkArcLabels,
-    useProcent
+    useProcent,
+    formatCurrency
   } = settings
   
   //data variable
   let data = [];
-
-  //funciton for formattion data for all types
-  const formatData = (data, r) => {
-    return data.map((d, index) => {
-      const currentKey = _.get(d, r.key);
-      const keyFormatted = !moment(currentKey).isValid()
-        ? currentKey
-        : moment(currentKey).format("DD.MM.YYYY");
-      const tooltip =
-        typeof tooltipValues !== "undefined"
-          ? tooltipValues?.map(item => {
-              return {
-                label: item?.label,
-                value: _.get(d, item.field),
-                color: item?.color
-              };
-            })
-          : [];
-        
-        return {
-            value: Number(_.get(d, r.data)),
-            id: keyIsDate ? keyFormatted : currentKey,
-            tooltip: tooltip
-        };
-    });
-  };
 
   if (isEditor()) {
     data = [
@@ -94,40 +67,14 @@ const AltrpPieDiagram = props => {
       },
     ]
   } else {
-    if (isMultiple) {
-      let repeater = _.cloneDeep(settings.rep, []);
-      data = repeater.map((r, index) => {
-        let innerData = getDataByPath(r.path, []);
-        if (innerData.length > 0) {
-          //Исключаем дублирование ключей, т.к. это приводит к ошибкам рендера всех диаграм
-          innerData = _.uniqBy(innerData, r.key);
-          
-          innerData = formatData(innerData, r);
-        }
-        
-        return innerData;
-      });
-      
-      data = [].concat(...data);
-
-    } else if (settings.datasource_path != null) {
+    if (settings.datasource_path != null) {
       try {
         data = getDataByPath(settings.datasource_path, []);
-        const r = {
-          key: settings.key_name,
-          data: settings.data_name
-        };
-  
-        data = formatData(data, r);
       } catch (error) {
         console.log("====================================");
         console.error(error);
         console.log("====================================");
-        data = [
-          {
-            data: []
-          }
-        ];
+        data = [];
       }
     }
   }
@@ -139,16 +86,6 @@ const AltrpPieDiagram = props => {
       </div>
     );
   }
-
-  const widget = {
-    options: {
-      colorScheme: settings.colorScheme,
-      legend: settings.legend,
-      animated: settings.animated,
-      isVertical: settings.isVertical
-    },
-    filter: {}
-  };
 
   console.log("====================================");
   console.log(data);
@@ -168,17 +105,14 @@ const AltrpPieDiagram = props => {
       yScaleMax={yScaleMax}
       customColorSchemeChecker={customColorSchemeChecker}
       customColors={customColors}
-      isMultiple={isMultiple}
-      dataSource={data}
-      colorScheme={colorScheme}
-      widget={widget}
+      data={data}
+      colorScheme={colorScheme || 'nivo'}
       width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
       height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
       innerRadius={innerRadius?.size}
       padAngle={padAngle?.size}
       cornerRadius={cornerRadius?.size}
       sortByValue={sortByValue}
-      sort={sort}
       legend={settings.use_legend && {
         anchor: settings.legend_anchor,
         direction: settings.legend_direction,
@@ -192,11 +126,11 @@ const AltrpPieDiagram = props => {
         symbolSize: settings.legend_symbol_size,
         symbolShape: settings.legend_symbol_shape
       }}
-      keyIsDate={keyIsDate}
       activeOuterRadiusOffset={activeOuterRadiusOffset}
       activeInnerRadiusOffset={activeInnerRadiusOffset}
       useCenteredMetric={useCenteredMetric}
       useLinkArcLabels={useLinkArcLabels}
+      currency={formatCurrency}
     />
   );
 };

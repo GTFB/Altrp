@@ -24,6 +24,7 @@ const SKELETON_ELEMENTS = [
   'input-file',
   'input-gallery',
   'breadcrumbs',
+  'carousel',
   'map',
   'map_builder',
   'menu',

@@ -1,4 +1,5 @@
-const AltrpBarDiagram = React.lazy(() => import(/* webpackChunkName: 'AltrpBarDiagram' */"../../altrp-diagram/AltrpBarDiagram"));
+import AltrpBarDiagram from "../../altrp-diagram/AltrpBarDiagram";
+
 class BarDiagramWidget extends Component {
   constructor(props) {
     super(props);
@@ -20,9 +21,7 @@ class BarDiagramWidget extends Component {
 
   render() {
     return (
-      <Suspense fallback={"Loading"}>
         <AltrpBarDiagram settings={this.state.settings} id={this.state.id} />
-      </Suspense>
     );
   }
 }

@@ -1,4 +1,5 @@
 import {isClassComponent} from "../../../../../front-app/src/js/helpers/react";
+import AltrpCarousel from "../altrp-carousel/AltrpCarousel";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-carousel-slide-img {
@@ -238,19 +239,6 @@ class CarouselWidget extends Component {
     this.carousel = React.createRef();
   }
 
-  /**
-   * Асинхронно загрузим  AltrpCarousel
-   * @private
-   */
-  async _componentDidMount(){
-    let AltrpCarousel = await import(/* webpackChunkName: 'AltrpCarousel' */'../altrp-carousel/AltrpCarousel');
-    AltrpCarousel = AltrpCarousel.default;
-    this.setState(state=>({
-        ...state,
-      AltrpCarousel
-    }))
-  }
-
   render(){
     const carouselProps = {
       ...this.props.element.getSettings(),
@@ -260,10 +248,10 @@ class CarouselWidget extends Component {
     if(! carouselProps.slides_repeater){
       carouselProps.slides_repeater = [];
     }
-    if(isClassComponent(this.state.AltrpCarousel)){
+    if(isClassComponent(AltrpCarousel)){
       carouselProps.ref = this.carousel;
     }
-    return <this.state.AltrpCarousel {...carouselProps}/>
+    return <AltrpCarousel {...carouselProps}/>
   }
 }
 

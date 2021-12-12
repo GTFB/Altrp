@@ -56,6 +56,7 @@ import InputDateRangeComponent
 import getIconStyles from "./helpers/getIconStyles";
 import StarsComponent from "../../../../editor/src/js/components/widgets/styled-components/StarsComponent";
 import ProgressBarComponent from "../../../../editor/src/js/components/widgets/styled-components/ProgressBarComponent";
+import MenuBlueprintCSS from "../../../../../../server/classes/components/MenuPlaceholder/MenuBlueprintCSS";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -139,6 +140,7 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles+=getTabsStyles(item.settings, id);
           break;
         case "menu":
+          styles+=MenuBlueprintCSS;
           styles+=getMenuStyles(item.settings,id);
           break;
         case "breadcrumbs":
