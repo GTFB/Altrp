@@ -1065,6 +1065,11 @@ class ModelsController extends HttpController
                 'message' => 'Data source not found'
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
+
+        if (count($data['access']['roles']) <= 1) {
+            $data['need_all_roles'] = 0;
+        }
+
         $result = $dataSource->update($data);
         if ($result) {
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);

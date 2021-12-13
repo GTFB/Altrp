@@ -34,7 +34,8 @@ class Source extends Model
         'description',
         'headers',
         'bodies',
-        'updated_at'
+        'updated_at',
+        'need_all_roles',
     ];
 
     protected $appends = [
