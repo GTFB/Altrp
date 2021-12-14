@@ -50,7 +50,7 @@ export default class Plugins extends Component {
     });
 
     if(res.success){
-      const plugins = mutate.set(this.state.plugins, `${index}.enabled`, ! value);
+      const plugins = mutate.set(this.state.plugins, `${index}.enabled`, value);
 
       this.setState({
         plugins
@@ -68,7 +68,7 @@ export default class Plugins extends Component {
                 Plugins
               </a>
               <span className="admin-breadcrumbs__separator">/</span>
-              <span className="admin-breadcrumbs__current">All Plugins</span>
+              <span className="admin-breadcrumbs__current">Installed Plugins</span>
             </div>
           </div>
           <UserTopPanel />
@@ -78,7 +78,7 @@ export default class Plugins extends Component {
             {this.state.plugins.map((item, key) => {
               return (
                 <div key={item.name} className="col-3 text-center border rounded mx-2">
-                  <div className="mb-2">{item.title}</div>
+                  <div className="mb-2">{item.title} {item.version}</div>
                   <a href={item.url}><img
                     className="mb-2"
                     src={item.logo}
@@ -92,12 +92,12 @@ export default class Plugins extends Component {
                       checked={item.enabled}
                       onChange={event => this.updateChange(event, key)}/>
                     <label
-                      className="custom-control-label"
+                      className="custom-control-label cursor-pointer"
                       htmlFor={`switch${key}`}
                     >
                       {item.enabled == true
-                        ? "Plugin enabled"
-                        : "Plugin disabled"}
+                        ? "Plugin active"
+                        : "Plugin inactive"}
                     </label>
                   </div>
                 </div>

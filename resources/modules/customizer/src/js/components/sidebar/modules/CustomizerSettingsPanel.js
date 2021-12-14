@@ -68,7 +68,8 @@ class CustomizerSettingsPanel extends React.Component {
   render() {
     const {modelsOptions} = this.state;
     const {customizer} = this.props;
-    const {type, model_id} = customizer
+    const {type, model_id, settings = {}} = customizer
+    const {middlewares = []} = settings;
 
     return (
       <div className="panel settings-panel d-flex">
@@ -118,6 +119,22 @@ class CustomizerSettingsPanel extends React.Component {
                                    ]}
                       />
                     </div>
+                    {type === 'api' && <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                      <div className="controller-container__label control-select__label controller-label">Middlewares:</div>
+                      <AltrpSelect id="crud-fields"
+                                   className="controller-field"
+                                   isMulti={true}
+                                   value={middlewares}
+                                   onChange={this.changeMiddlewares}
+                                   options={[
+                                     {
+                                       value: 'cors',
+                                       label: 'CORS',
+                                     },
+
+                                   ]}
+                      />
+                    </div>}
                     <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
                       <div className="controller-container__label control-select__label controller-label">Model:</div>
                       <AltrpSelect id="crud-fields"
@@ -138,7 +155,12 @@ class CustomizerSettingsPanel extends React.Component {
       </div>
     );
   }
+  changeMiddlewares = (middlewares)=>{
+    let {customizer} = this.props;
+    customizer = mutate.set(customizer, 'settings.middlewares', middlewares||[])
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
 
+  }
   changeType = (e)=> {
     let {customizer} = this.props;
     customizer = mutate.set(customizer, 'type', e.value||'')

@@ -14,6 +14,7 @@ const excludes = [
   '!./bootstrap/cache/**',
   '!./Modules/**',
   '!./public/storage',
+  '!./public/altrp-plugins',
   '!./public/favicon.ico',
   '!./out/**',
   '!./app/AltrpModels/**',

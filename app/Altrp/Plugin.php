@@ -5,6 +5,7 @@ namespace App\Altrp;
 
 use Facade\FlareClient\Http\Exceptions\NotFound;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Jackiedo\DotenvEditor\Facades\DotenvEditor;
 
@@ -23,6 +24,7 @@ class Plugin extends Model
     'tags' => 'array',
     'enabled' => 'boolean',
     'description' => 'string',
+    'version' => 'string',
   ];
   protected $appends = [
     'title',
@@ -30,6 +32,7 @@ class Plugin extends Model
     'logo',
     'enabled',
     'description',
+    'version',
   ];
   private $plugin_main_file_content = null;
   private $plugin_meta_data = null;
@@ -48,26 +51,69 @@ class Plugin extends Model
     if( ! $pluginName ){
       return;
     }
-    $enabledPlugins = explode(',',  env( self::ALTRP_PLUGINS, '' ) );
+    $enabledPlugins =   env( self::ALTRP_PLUGINS );
+    if( ! $enabledPlugins ){
+      $enabledPlugins = [];
+    } else {
+      $enabledPlugins = explode(',',  $enabledPlugins );
+    }
     $plugin = new Plugin(['name' => $pluginName ]);
-    if( $enable && ! array_search( $plugin->name, $enabledPlugins ) ){
-      $publicPath = $plugin->getPath('/public');
-      if( ! File::copyDirectory( $publicPath, $plugin->getStoragePath() ) ){
-       throw new \Exception('Copy plugins public files error');
+    if( $enable ){
+      if( ! array_search( $plugin->name, $enabledPlugins ) ){
+        $enabledPlugins[] = $plugin->name;
       }
-      $enabledPlugins[] = $plugin->name;
-      $enabledPlugins = implode(',', $enabledPlugins);
-    } else if( array_search( $plugin->name, $enabledPlugins ) ){
-      File::deleteDirectory( $plugin->getStoragePath() );
+    } else {
       $enabledPlugins = array_filter( $enabledPlugins, function ( $_plugin ) use( $plugin ){
         return $_plugin != $plugin->name;
       } );
     }
+    $enabledPlugins = implode(',', $enabledPlugins);
     DotenvEditor::setKey( self::ALTRP_PLUGINS, $enabledPlugins );
+    DotenvEditor::save();
+    Artisan::call( 'cache:clear' );
   }
 
   /**
+   * @throws NotFound
+   * @throws \Exception
+   */
+  public function copyStaticFiles(){
+
+    $publicPath = $this->getPath('/public');
+    if( ! File::copyDirectory( $publicPath, $this->getPublicPath('/public') ) ){
+      throw new \Exception('Copy plugins public files error');
+    }
+  }
+  /**
+   * @throws NotFound
+   */
+  public function deleteStaticFiles(){
+    if( File::exists( $this->getPublicPath() ) ){
+      File::deleteDirectory( $this->getPublicPath() );
+    }
+  }
+
+  /**
+   * @throws NotFound
+   */
+  public function deletePluginFiles(){
+    if( File::exists( $this->getPath() ) ){
+      File::deleteDirectory( $this->getPath() );
+    }
+  }
+  /**
+   * @throws NotFound
+   */
+  public function deletePlugin(){
+    self::switchEnable( $this->name, false );
+    $this->deleteStaticFiles();
+    $this->deletePluginFiles();
+  }
+
+  /**
+   * @return string
    * @throws FileNotFoundException
+   * @throws NotFound
    */
   public function getTitleAttribute()
   {
@@ -75,11 +121,23 @@ class Plugin extends Model
   }
 
   /**
+   * @return string
    * @throws FileNotFoundException
+   * @throws NotFound
    */
-  public function getLogoAttribute()
+  public function getVersionAttribute()
   {
-    return '/storage/plugins/' . $this->name . $this->getMeta( 'logo', '/public/logo.png' );
+    return $this->getMeta( 'version' );
+  }
+
+  /**
+   * @return string
+   * @throws FileNotFoundException
+   * @throws NotFound
+   */
+  public function getLogoAttribute(): string
+  {
+    return '/altrp-plugins/' . $this->name . $this->getMeta( 'logo', '/public/logo.png' );
   }
   /**
    * @throws FileNotFoundException
@@ -122,12 +180,12 @@ class Plugin extends Model
    * @return string
    * @throws NotFound
    */
-  public function getStoragePath( string $path = '' ): string
+  public function getPublicPath( string $path = '' ): string
   {
     if ( ! $this->name ) {
       throw new NotFound( 'Plugin Name not Found' );
     }
-    return storage_path( 'app/public/plugins/' . $this->name . $path ) ;
+    return public_path( 'altrp-plugins/' . $this->name . $path ) ;
   }
 
   /**
@@ -157,7 +215,10 @@ class Plugin extends Model
     return data_get( $this->plugin_meta_data, $meta_name, $default );
   }
 
-  public function getEnabledAttribute()
+  /**
+   * @return bool
+   */
+  public function getEnabledAttribute(): bool
   {
     return self::pluginEnabled( $this->name );
   }
@@ -166,12 +227,16 @@ class Plugin extends Model
    * @param string $pluginName
    * @return bool
    */
-  static public function pluginEnabled( $pluginName = '' )
+  static public function pluginEnabled( string $pluginName = '' ): bool
   {
     if ( ! $pluginName ) {
       return false;
     }
-    $enabledPlugins = env( self::ALTRP_PLUGINS,  '' );
+    Artisan::call( 'cache:clear' );
+    $enabledPlugins = DotenvEditor::getValue( self::ALTRP_PLUGINS );
+    if( ! $enabledPlugins ){
+      return false;
+    }
     $enabledPlugins = explode( ',', $enabledPlugins );
     return array_search( $pluginName, $enabledPlugins ) !== false;
   }

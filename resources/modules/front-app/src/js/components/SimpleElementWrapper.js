@@ -390,6 +390,7 @@ class SimpleElementWrapper extends Component {
         WrapperComponent = NavComponent;
         break;
       case "menu":
+      case "input-file":
       case "section":
         WrapperComponent = React.Fragment;
         break;

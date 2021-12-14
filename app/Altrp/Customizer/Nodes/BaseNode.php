@@ -95,8 +95,17 @@ class BaseNode
   {
     return self::getNodesByType( 'start', $data )->get( 0 );
   }
+  /**
+   * @param Collection $data
+   * @return Collection
+   */
+  static public function getStartNodes( Collection $data ): Collection
+  {
+    return self::getNodesByType( 'start', $data );
+  }
 
-  public function findNextNodes( Collection $data ):Collection{
+  public function findNextNodes( Collection $data ):Collection
+  {
 
   }
 

@@ -26,6 +26,21 @@ class PluginController extends Controller
   }
 
   /**
+   * Переключатель состояния плагина (вкл./выкл.)
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   * @throws \Facade\FlareClient\Http\Exceptions\NotFound
+   */
+  public function delete_plugin( Request $request )
+  {
+
+
+    $plugin = new Plugin(['name'=> $request->get('name')]);
+    $plugin->deletePlugin();
+    return response()->json( ['success' => true, 'data' => $plugin->toArray()], 200, [], JSON_UNESCAPED_UNICODE );
+  }
+
+  /**
    * Установить плагин
    * @param Request $request
    * @return \Illuminate\Http\JsonResponse
