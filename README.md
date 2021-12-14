@@ -5,7 +5,7 @@
 
 
 ### 0.19.10
-+ Add Better Menu Server Side Render
++ Add Menu Widget Server Side Rendering
 
 ### 0.19.9
 * Fix Carousel Widgets Synchronize
