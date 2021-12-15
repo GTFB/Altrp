@@ -8,7 +8,7 @@ const getIconStyles = (settings, id) => {
 
     styles += `.icon-widget-wrapper {
         display: flex;
-        flex-direction: ${getResponsiveSetting(settings, 'flex_direction', '', 'column')};
+        ${simplePropertyStyled( getResponsiveSetting(settings, 'icon_position', '', 'column') , 'flex-direction')}
     }`
 
     styles += `.icon-widget__icon * {
@@ -28,11 +28,11 @@ const getIconStyles = (settings, id) => {
     }`
 
     styles += `.title {
+        ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '', 'center') , 'text-align')}
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'title_typography') )}
         ${colorPropertyStyled( getResponsiveSetting(settings, 'title_color', '', {color: 'rgb(0, 0, 0)'}) , 'color')}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_padding') , "padding")}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_margin') , "margin")}
-        ${simplePropertyStyled( getResponsiveSetting(settings, 'title_alignment', '', 'center') , 'text-align')}
     }`
 
     styles += `.title:hover {
@@ -40,15 +40,14 @@ const getIconStyles = (settings, id) => {
         ${colorPropertyStyled( getResponsiveSetting(settings, 'title_color', ':hover', {color: 'rgb(0, 0, 0)'}) , 'color')}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_padding', ':hover') , "padding")}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_margin', ':hover') , "margin")}
-        ${simplePropertyStyled( getResponsiveSetting(settings, 'title_alignment', ':hover', 'center') , 'text-align')}
     }`
 
     styles += `.description {
+        ${simplePropertyStyled( getResponsiveSetting(settings, 'content_alignment', '', 'center') , 'text-align')}
         ${typographicControllerToStyles( getResponsiveSetting(settings, 'description_typography') )}
         ${colorPropertyStyled( getResponsiveSetting(settings, 'description_color', '', {color: 'rgb(0, 0, 0)'}) , 'color')}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_padding') , "padding")}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_margin') , "margin")}
-        ${simplePropertyStyled( getResponsiveSetting(settings, 'description_alignment', '', 'center') , 'text-align')}
     }`
 
     styles += `.description:hover {
@@ -56,16 +55,26 @@ const getIconStyles = (settings, id) => {
         ${colorPropertyStyled( getResponsiveSetting(settings, 'description_color', ':hover', {color: 'rgb(0, 0, 0)'}) , 'color')}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_padding', ':hover') , "padding")}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_margin', ':hover') , "margin")}
-        ${simplePropertyStyled( getResponsiveSetting(settings, 'description_alignment', ':hover', 'center') , 'text-align')}
     }`
 
     styles += `.icon-widget__icon {
         width: auto;
-        display: flex;
-        justify-content: center;
-        ${simplePropertyStyled( getResponsiveSetting(settings, 'icon_alignment', '', 'center') , 'align-self')}
+        display: flex;`
+    
+    switch (getResponsiveSetting(settings, 'icon_position', '', 'column')) {
+        case 'column':
+        case 'column-reverse':
+            console.log('brrrr');
+            styles += simplePropertyStyled( getResponsiveSetting(settings, 'icon_horizontal_alignment', '', 'center') , 'justify-content')
+            break;
+        case 'row':
+        case 'row-reverse':
+            console.log('brrrr2');
+            styles += simplePropertyStyled( getResponsiveSetting(settings, 'icon_vertical_alignment', '', 'center') , 'align-items')
+            break;
+    }
 
-        ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'icon_padding', '') , "padding")}
+       `${dimensionsControllerToStyles( getResponsiveSetting(settings, 'icon_padding', '') , "padding")}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'icon_margin') , "margin")}
         ${opacityStyled( getResponsiveSetting(settings, 'icon_opacity') )}
     }`

@@ -65,37 +65,91 @@ class Icon extends BaseElement {
       label: 'Description',
     })
 
+    this.addControl('content_alignment', {
+      type: CONTROLLER_SELECT,
+      label: 'Content alignment',
+      options:[
+        {
+          label: 'left',
+          value: 'left',
+        },
+        {
+          label: 'center',
+          value: 'center',
+        },
+        {
+          label: 'right',
+          value: 'right',
+        },
+        {
+          label: 'justify',
+          value: 'justify',
+        }
+      ],
+    });
+
+    this.addControl('icon_position', {
+      type: CONTROLLER_SELECT,
+      label: 'Icon position',
+      options:[
+        {
+          label: 'left',
+          value: 'row',
+        },
+        {
+          label: 'top',
+          value: 'column',
+        },
+        {
+          label: 'right',
+          value: 'row-reverse',
+        },
+        {
+          label: 'bottom',
+          value: 'column-reverse',
+        }
+      ],
+    });
+
+    this.addControl('icon_vertical_alignment', {
+      type: CONTROLLER_SELECT,
+      label: 'Icon vertical alignment',
+      options:[
+        {
+          label: 'top',
+          value: 'flex-start',
+        },
+        {
+          label: 'center',
+          value: 'center',
+        },
+        {
+          label: 'bottom',
+          value: 'flex-end',
+        },
+      ],
+    });
+
+    this.addControl('icon_horizontal_alignment', {
+      type: CONTROLLER_SELECT,
+      label: 'Icon horizontal alignment',
+      options:[
+        {
+          label: 'left',
+          value: 'flex-start',
+        },
+        {
+          label: 'center',
+          value: 'center',
+        },
+        {
+          label: 'right',
+          value: 'flex-end',
+        },
+      ],
+    });
+
     this.endControlSection()
-
-    // this.startControlSection('common_styles', {
-    //   label: 'Common Styles',
-    //   tab: TAB_STYLE
-    // })
-
-    // this.addControl('flex_direction', {
-    //   type: CONTROLLER_SELECT,
-    //   label: 'Flex Direction',
-    //   options: [
-    //     {
-    //       value: "row",
-    //       label: "Row"
-    //     },
-    //     {
-    //       value: "column",
-    //       label: "Columnn"
-    //     },
-    //     {
-    //       value: "row-reverse",
-    //       label: "Row reverse"
-    //     },
-    //     {
-    //       value: "column-reverse",
-    //       label: "Column reverse"
-    //     },
-    //   ],
-    // })
-
-    // this.endControlSection()
 
     this.startControlSection('title_styles', {
       label: 'Title',
@@ -161,25 +215,6 @@ class Icon extends BaseElement {
       type: CONTROLLER_DIMENSIONS
     })
 
-    this.addControl('title_alignment', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Alignment',
-      options:[
-        {
-          icon: 'left',
-          value: 'left',
-        },
-        {
-          icon: 'center',
-          value: 'center',
-        },
-        {
-          icon: 'right',
-          value: 'right',
-        }
-      ],
-    });
-
     this.endControlSection()
 
     this.startControlSection('description_styles', {
@@ -205,25 +240,6 @@ class Icon extends BaseElement {
     this.addControl('description_margin', {
       label: 'Margin',
       type: CONTROLLER_DIMENSIONS
-    })
-
-    this.addControl('description_alignment', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Alignment',
-      options:[
-        {
-          icon: 'left',
-          value: 'left',
-        },
-        {
-          icon: 'center',
-          value: 'center',
-        },
-        {
-          icon: 'right',
-          value: 'right',
-        }
-      ],
     })
 
     this.endControlSection()
