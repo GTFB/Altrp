@@ -8,13 +8,13 @@ const getIconStyles = (settings, id) => {
 
     styles += `.icon-widget-wrapper {
         display: flex;
-        flex-direction: ${getResponsiveSetting(settings, 'flex_direction', '', 'row')};
+        flex-direction: ${getResponsiveSetting(settings, 'flex_direction', '', 'column')};
     }`
     
     styles += `.widget-icon {
         width: auto;
         display: contents;
-        ${simplePropertyStyled( getResponsiveSetting(settings, 'icon_alignment') , 'align-self')}
+        ${simplePropertyStyled( getResponsiveSetting(settings, 'icon_alignment', '', 'center') , 'align-self')}
     }`
 
     styles += `.widget-icon * {
@@ -36,7 +36,7 @@ const getIconStyles = (settings, id) => {
         ${colorPropertyStyled( getResponsiveSetting(settings, 'title_color', '', {color: 'rgb(0, 0, 0)'}) , 'color')}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_padding') , "padding")}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'title_margin') , "margin")}
-        ${simplePropertyStyled( getResponsiveSetting(settings, 'title_alignment') , 'text-align')}
+        ${simplePropertyStyled( getResponsiveSetting(settings, 'title_alignment', '', 'center') , 'text-align')}
     }`
 
     styles += `.description {
@@ -44,7 +44,7 @@ const getIconStyles = (settings, id) => {
         ${colorPropertyStyled( getResponsiveSetting(settings, 'description_color', '', {color: 'rgb(0, 0, 0)'}) , 'color')}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_padding') , "padding")}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'description_margin') , "margin")}
-        ${simplePropertyStyled( getResponsiveSetting(settings, 'description_alignment') , 'text-align')}
+        ${simplePropertyStyled( getResponsiveSetting(settings, 'description_alignment', '', 'center') , 'text-align')}
     }`
 
     styles += `${parentClass} .widget-icon {

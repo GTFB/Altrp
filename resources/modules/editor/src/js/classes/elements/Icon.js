@@ -67,35 +67,35 @@ class Icon extends BaseElement {
 
     this.endControlSection()
 
-    this.startControlSection('common_styles', {
-      label: 'Common Styles',
-      tab: TAB_STYLE
-    })
+    // this.startControlSection('common_styles', {
+    //   label: 'Common Styles',
+    //   tab: TAB_STYLE
+    // })
 
-    this.addControl('flex_direction', {
-      type: CONTROLLER_SELECT,
-      label: 'Flex Direction',
-      options: [
-        {
-          value: "row",
-          label: "Row"
-        },
-        {
-          value: "column",
-          label: "Columnn"
-        },
-        {
-          value: "row-reverse",
-          label: "Row reverse"
-        },
-        {
-          value: "column-reverse",
-          label: "Column reverse"
-        },
-      ],
-    })
+    // this.addControl('flex_direction', {
+    //   type: CONTROLLER_SELECT,
+    //   label: 'Flex Direction',
+    //   options: [
+    //     {
+    //       value: "row",
+    //       label: "Row"
+    //     },
+    //     {
+    //       value: "column",
+    //       label: "Columnn"
+    //     },
+    //     {
+    //       value: "row-reverse",
+    //       label: "Row reverse"
+    //     },
+    //     {
+    //       value: "column-reverse",
+    //       label: "Column reverse"
+    //     },
+    //   ],
+    // })
 
-    this.endControlSection()
+    // this.endControlSection()
 
     this.startControlSection('title_styles', {
       label: 'Title',
@@ -210,42 +210,42 @@ class Icon extends BaseElement {
       label: 'Fill color',
     });
 
-    this.addControl('icon_padding', {
-      label: 'Padding',
-      type: CONTROLLER_DIMENSIONS
-    })
+    // this.addControl('icon_padding', {
+    //   label: 'Padding',
+    //   type: CONTROLLER_DIMENSIONS
+    // })
     
     this.addControl('icon_margin', {
       label: 'Margin',
       type: CONTROLLER_DIMENSIONS
     })    
     
-    this.addControl('icon_opacity', {
-      type: CONTROLLER_SLIDER,
-      label: 'Opacity',
-      step: 0.01,
-      min: 0,
-      max: 1,
-    })
+    // this.addControl('icon_opacity', {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Opacity',
+    //   step: 0.01,
+    //   min: 0,
+    //   max: 1,
+    // })
 
-    this.addControl('icon_alignment', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Alignment',
-      options:[
-        {
-          icon: 'left',
-          value: 'flex-start',
-        },
-        {
-          icon: 'center',
-          value: 'center',
-        },
-        {
-          icon: 'right',
-          value: 'flex-end',
-        }
-      ],
-    })
+    // this.addControl('icon_alignment', {
+    //   type: CONTROLLER_CHOOSE,
+    //   label: 'Alignment',
+    //   options:[
+    //     {
+    //       icon: 'left',
+    //       value: 'flex-start',
+    //     },
+    //     {
+    //       icon: 'center',
+    //       value: 'center',
+    //     },
+    //     {
+    //       icon: 'right',
+    //       value: 'flex-end',
+    //     }
+    //   ],
+    // })
 
     this.endControlSection()
 
