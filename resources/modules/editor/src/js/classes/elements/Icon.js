@@ -102,6 +102,45 @@ class Icon extends BaseElement {
       tab: TAB_STYLE
     })
 
+    this.addControl('title_tag', {
+      label: 'Title tag',
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          label: 'h1',
+          value: 'h1'
+        },
+        {
+          label: 'h2',
+          value: 'h2'
+        },
+        {
+          label: 'h3',
+          value: 'h3'
+        },
+        {
+          label: 'h4',
+          value: 'h4'
+        },
+        {
+          label: 'h5',
+          value: 'h5'
+        },
+        {
+          label: 'h6',
+          value: 'h6'
+        },
+        {
+          label: 'p',
+          value: 'p'
+        },
+        {
+          label: 'div',
+          value: 'div'
+        },
+      ]
+    })
+
     this.addControl('title_typography', {
       label: 'Typography',
       type: CONTROLLER_TYPOGRAPHIC
