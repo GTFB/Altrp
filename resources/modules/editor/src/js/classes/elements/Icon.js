@@ -194,9 +194,14 @@ class Icon extends BaseElement {
       tab: TAB_STYLE
     })
 
+    this.addControl('icon_margin', {
+      label: 'Margin',
+      type: CONTROLLER_DIMENSIONS
+    })
+
     this.addControl("icon_height", {
       type: CONTROLLER_SLIDER,
-      label: 'Height',
+      label: 'Size',
       units: [
         'px',
         '%',
@@ -214,11 +219,6 @@ class Icon extends BaseElement {
     //   label: 'Padding',
     //   type: CONTROLLER_DIMENSIONS
     // })
-    
-    this.addControl('icon_margin', {
-      label: 'Margin',
-      type: CONTROLLER_DIMENSIONS
-    })    
     
     // this.addControl('icon_opacity', {
     //   type: CONTROLLER_SLIDER,

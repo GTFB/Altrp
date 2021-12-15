@@ -31,7 +31,7 @@ class IconWidget extends Component {
   render() {
     return (
       <div className='icon-widget-wrapper'>
-        <span className="widget-icon">{this.state.settings.icon?.id ? renderAsset(this.state.settings.icon) : <DefaultIcon />}</span>
+        <span className="icon-widget__icon">{this.state.settings.icon?.id ? renderAsset(this.state.settings.icon) : <DefaultIcon />}</span>
         <div className="content"> 
           <h3 className="title">{this.state.settings.title_text === undefined ? 'Title' : this.state.settings.title_text}</h3>
           <div className="description">{this.state.settings.description === undefined ? 'Icon description' : this.state.settings.description}</div>
