@@ -335,6 +335,50 @@ body {
     margin-top: 15px;
 }
 
+.element-index {
+  display: flex;
+
+  &_top {
+    margin-bottom: 10px;
+
+    & .bp3-input-group {
+      flex-basis: 60%;
+    }
+
+    & .bp3-html-select {
+      flex-basis: 40%;
+      & select {
+        border-radius: 3px 0 0 3px;
+      }
+    }
+
+    & .bp3-input {
+      border-radius: 0 3px 3px 0;
+
+
+      &:focus {
+        border-radius: 3px;
+      }
+    }
+  }
+
+  &_bottom {
+    flex-grow: 1;
+
+    & .button-one {
+      border-radius: 3px 0 0 3px;
+    }
+
+    & .button-two {
+      border-radius: 0 3px 3px 0;
+    }
+  }
+
+  & .bp3-popover-wrapper {
+    flex-grow: 1;
+  }
+}
+
 .controllers-wrapper {
     display: block;
     background-color: #fff;
@@ -553,12 +597,22 @@ body {
   width: 100%;
   &-item{
     margin-bottom: 10px;
+    padding-bottom: 20px;
+    margin-top: 10px;
     border-bottom: 1px solid $grey;
   }
     &:last-child{
       margin-bottom: 10px;
     }
 
+}
+
+.changeNode__label {
+  margin-left: 0;
+}
+
+.changeNode-center {
+  flex-grow: 1;
 }
 
 .widget-panel__text {
@@ -683,15 +737,20 @@ body {
   color: #CF0025;
 }
 
+.context-relative {
+  position: relative;
+}
+
 .textarea-custom {
   flex-grow: 1;
+  flex-basis: 60%;
   min-height: 120px;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   background: #fff;
   border: none;
-  border-radius: 3px;
+  border-radius: 0 3px 3px 3px;
   -webkit-box-shadow: 0 0 0 0 rgb(19 124 189 / 0%), 0 0 0 0 rgb(19 124 189 / 0%), inset 0 0 0 1px rgb(16 22 26 / 15%), inset 0 1px 1px rgb(16 22 26 / 20%);
   box-shadow: 0 0 0 0 rgb(19 124 189 / 0%), 0 0 0 0 rgb(19 124 189 / 0%), inset 0 0 0 1px rgb(16 22 26 / 15%), inset 0 1px 1px rgb(16 22 26 / 20%);
   color: #182026;

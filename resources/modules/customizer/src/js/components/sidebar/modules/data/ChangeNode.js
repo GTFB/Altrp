@@ -73,7 +73,7 @@ class ChangeNode extends React.Component {
 
           <div className="controllers-wrapper">
             <div className="controller-container controller-container_select">
-              <div className="settings-section__label">Set Actions</div>
+              <div className="settings-section__label changeNode__label">Set Actions</div>
               <ChangeRepeater changeByPath={this.changeByPath}
                               path="props.items"
                               deleteById={this.deleteById}

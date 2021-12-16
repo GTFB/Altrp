@@ -144,7 +144,7 @@ class PropertyComponent extends Component {
     }
 
     return <>
-      <ControlGroup>
+      <div className="element-index element-index_top">
         <HTMLSelect options={options} onChange={this.onSelect} value={namespace || ''}/>
         {namespace !== 'expression' &&
         <InputGroup fill={true}
@@ -158,19 +158,19 @@ class PropertyComponent extends Component {
         //           onChange={this.onTextareaChange}
         //           growVertically={true}
         //           value={expression || ''}/>
-          <textarea value={expression || ''}
-                    onChange={this.onTextareaChange}
-                    placeholder="php expression"
-                    ref={this.textareaRef}
-                    className="textarea-custom"
-          />
+        <textarea value={expression || ''}
+                  onChange={this.onTextareaChange}
+                  placeholder="php expression"
+                  ref={this.textareaRef}
+                  className="textarea-custom"
+        />
         }
-      </ControlGroup>
-      {!withoutMethods && showMethod && <ControlGroup fill={true}>
+      </div>
+      {!withoutMethods && showMethod && <div className="element-index element-index_bottom">
         <Select items={methodOptions}
                 onItemSelect={this.onItemSelect}
                 noResults={<MenuItem disabled={true} text="No results."/>}
-                // onQueryChange={this.onQueryChange}
+          // onQueryChange={this.onQueryChange}
                 itemPredicate={this.onQueryChange}
                 matchTargetWidth={true}
                 fill={true}
@@ -184,14 +184,16 @@ class PropertyComponent extends Component {
             fill={true}
             alignText={Alignment.LEFT}
             text={buttonText}
+            className="button-one"
           />
         </Select>
         <Button
           disabled={!method}
           text={'Edit'}
+          className="button-two"
           onClick={this.methodEditToggle}
         />
-      </ControlGroup>}
+      </div>}
       {!withoutMethods && method && currentMethod && <MethodEditComponent
         methodSettings={this.props.property?.methodSettings || {}}
         show={showMethod && showMethodEdit}

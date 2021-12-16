@@ -54,7 +54,7 @@ class ChangeRepeater extends Component {
             }}>
             <Button text={buttonText}/>
           </Select>
-          <div>
+          <div className="changeNode-center">
             <PropertyComponent
               path={`${this.props.path}.${idx}.left`}
               changeByPath={this.props.changeByPath}
