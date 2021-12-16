@@ -3,25 +3,20 @@ import { changePageState } from "../../../../../front-app/src/js/store/altrp-pag
 import { connect, useDispatch } from "react-redux";
 
 import DynamicFunnelChart from "../../../../../admin/src/components/dashboard/widgets/DynamicFunnelChart";
+import getFormatValueString from "../../../../../admin/src/components/dashboard/services/getFormatValueString";
 
 import { getDataByPath, isEditor } from "../../../../../front-app/src/js/helpers";
 
 const AltrpFunnelDiagram = props => {
   const { settings, id } = props;
 
-  const dispatch = useDispatch();
   const margin = settings?.margin;
-  const widgetName = settings?.widget_name || id;
   const customColorSchemeChecker = settings?.isCustomColor;
 
   const customColors = settings?.customScheme?.map(item =>
     _.get(item, "color.colorPickedHex")
   )
 
-  const yScaleMax = settings?.yScaleMax;
-
-  const sql = settings.query?.dataSource?.value;
-  const keyIsDate = settings.key_is_date;
   //line settings
   const colorScheme = settings?.colorScheme;
 
@@ -35,21 +30,13 @@ const AltrpFunnelDiagram = props => {
     direction,
     isInteractive,
     currentPartSizeExtension,
-    currentBorderWidth
+    currentBorderWidth,
+    borderColor,
+    enableLabels,
+    labelsColor
   } = settings
 
   let data = [];
-
-  //funciton for formattion data for all types
-  const formatData = (data, r) => {
-    return data.map((d) => ({
-        id: d[settings.key_name],
-        label: d[settings.key_name],
-        value: d[settings.data_name]
-    }))
-  };
-
-  let legend = [];
 
   if (isEditor()) {
     data = [
@@ -78,16 +65,13 @@ const AltrpFunnelDiagram = props => {
     if (settings.datasource_path != null) {
       try {
         data = getDataByPath(settings.datasource_path, []);
-        data = _.uniqBy(data, settings.key_name);
-
-        data = formatData(data)
       } catch (error) {
         data = [];
       }
     }
   }
 
-  if (!sql && data.length === 0) {
+  if (data.length === 0) {
     return (
       <div className={`altrp-chart ${settings.legendPosition}`}>
         Loading data...
@@ -95,34 +79,15 @@ const AltrpFunnelDiagram = props => {
     );
   }
 
-  const parseQueryParams = (qs = "") => {
-    if (!qs) return "";
-    const keyValues = qs.split("\n");
-    const result = keyValues.map(item => item.replace("|", "=")).join("&");
-    return `?${result}`;
-  };
+  let labelColor
 
-  const queryString = parseQueryParams(settings.query?.defaultParams);
-
-  const widget = {
-    source: sql + queryString,
-    options: {
-      colorScheme: settings.colorScheme,
-      legend: settings.legend,
-      animated: settings.animated,
-      isVertical: settings.isVertical
-    },
-    filter: {}
-  };
-
-  const setLegend = legend =>
-    dispatch(changePageState(widgetName, { legend: legend }));
-
-  useEffect(() => {
-    if (legend.length > 0) {
-      setLegend(legend);
+  if (enableLabels) {
+    if (labelsColor?.colorPickedHex) {
+      labelColor = labelsColor?.colorPickedHex
+    } else {
+      labelColor = { from: 'color', modifiers: [ [ 'darker', 3 ] ] }
     }
-  }, [legend]);
+  }
   
   return (
     <DynamicFunnelChart
@@ -132,11 +97,12 @@ const AltrpFunnelDiagram = props => {
         right: 30,
         left: 30 
       }}
-      yScaleMax={yScaleMax}
+      valueFormat={getFormatValueString(settings)}
       customColorSchemeChecker={customColorSchemeChecker}
       customColors={customColors}
-      widget={widget}
-      dataSource={data}
+      data={data}
+      labelColor={labelColor}
+      borderColor={borderColor?.colorPickedHex}
       colorScheme={colorScheme || 'nivo'}
       width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
       height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
@@ -147,7 +113,7 @@ const AltrpFunnelDiagram = props => {
       spacing={spacing?.size}
       shapeBlending={shapeBlending?.size}
       direction={direction}
-      isInteractive={isInteractive}
+      isInteractive={isInteractive !== false}
       currentPartSizeExtension={currentPartSizeExtension?.size ? +currentPartSizeExtension?.size : 0}
       currentBorderWidth={currentBorderWidth?.size ? +currentBorderWidth?.size : 0}
       legend={settings.use_legend && {
@@ -163,11 +129,6 @@ const AltrpFunnelDiagram = props => {
         symbolSize: settings.legend_symbol_size,
         symbolShape: settings.legend_symbol_shape
       }}
-      labelColor={
-        label_color_type && label_color_type === 'custom' 
-            ? label_color?.colorPickedHex
-            : label_modifier?.size && { from: 'color', modifiers: [ [ label_color_type, label_modifier?.size ] ] }
-      }
     />
   );
 };

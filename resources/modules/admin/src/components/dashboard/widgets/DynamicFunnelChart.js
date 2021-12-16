@@ -8,18 +8,15 @@ import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/se
 const milkScheme = _.find(Schemes, { value: "milk" }).colors;
 const milkScheme2 = _.find(Schemes, { value: "milk2" }).colors;
 
-import { getWidgetData } from "../services/getWidgetData";
-import moment from "moment";
 import Tooltip from "./d3/Tooltip";
 
 const format = "%d.%m.%Y";
 
 const DynamicFunnelChart = ({
-  widget,
   width = `300px`,
   height = `450px`,
   margin,
-  dataSource = [],
+  data = [],
   colorScheme = "red_grey",
   customColorSchemeChecker = false,
   customColors = [],
@@ -34,42 +31,19 @@ const DynamicFunnelChart = ({
   direction,
   isInteractive,
   currentBorderWidth,
-  currentPartSizeExtension
+  valueFormat,
+  currentPartSizeExtension,
+  borderColor,
 }) => {
   if (legend) {
     Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
   }
-  
-  const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
-
-  const getData = useCallback(async () => {
-    setIsLoading(true);
-    if (dataSource.length == 0) {
-      const charts = await getWidgetData(widget.source, widget.filter);
-      if (charts.status === 200) {
-        setData(charts.data.data || []);
-        setIsLoading(false);
-      }
-    } else {
-      setData(dataSource || []);
-      setIsLoading(false);
-    }
-  }, [widget]);
-
-  useEffect(() => {
-    getData();
-  }, [getData]);
-
-  if (isLoading) return <Spinner />;
 
   if (!data) return <EmptyWidget />
 
-  const customProps = {fillOpacity, borderWidth, borderOpacity, interpolation, shapeBlending, spacing, direction, currentBorderWidth, currentPartSizeExtension}
+  const customProps = {fillOpacity, borderWidth, borderOpacity, interpolation, shapeBlending, spacing, direction, currentBorderWidth, currentPartSizeExtension, labelColor}
 
-  if (labelColor) {
-    customProps.labelColor = labelColor
-  }
+  console.log({labelColor});
 
   return (
     <>
@@ -81,6 +55,7 @@ const DynamicFunnelChart = ({
       >
         <ResponsiveFunnel
           data={data}
+          valueFormat={valueFormat}
           margin={{
             top: margin?.top || 30,
             right: margin?.right || 30,
@@ -91,8 +66,8 @@ const DynamicFunnelChart = ({
           beforeSeparatorOffset={20}
           afterSeparatorLength={100}
           afterSeparatorOffset={20}
-          motionConfig="wobbly"
           isInteractive={isInteractive}
+          borderColor={borderColor}
           // tooltip={datum => {
           //   return (
           //     <Tooltip
@@ -126,6 +101,7 @@ const DynamicFunnelChart = ({
               ...legend
             }
           ]}
+          motionConfig="wobbly"
           {...customProps}
         />
       </div>
