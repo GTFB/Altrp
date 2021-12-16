@@ -85,6 +85,9 @@ class RouteFile
             $pageService = app(PageService::class);
             file_put_contents($path, "<?php\n/*{$description}*/");
             $page = Page::all()->first();
+            if( ! $page ){
+              return true;
+            }
             return $pageService->updatePageRoutes($page);
         }
         return false;

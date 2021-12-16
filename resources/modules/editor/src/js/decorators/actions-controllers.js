@@ -17,12 +17,14 @@ import Repeater from '../classes/Repeater';
  * @param {string} sectionLabel - заголовок секции
  * @param {string} idPrefix - префикс, который добавляется ко всем id секция и контроллеров
  * @param {string} tab - таб по умолчанию
+ * @param {boolean} showChangeEndControllers -
  */
 export function actionsControllers(
   element,
   sectionLabel = 'Actions',
   idPrefix = '',
-  tab = TAB_CONTENT
+  tab = TAB_CONTENT,
+  showChangeEndControllers = false
 ) {
   /**
    * Список произвольных действия для кнопки START
@@ -32,22 +34,23 @@ export function actionsControllers(
     hideOnEmail: true,
     label: sectionLabel
   });
+  if(showChangeEndControllers){
+    element.addControl(idPrefix + 'change_end', {
+      label: 'Make event when input end?',
+      type: CONTROLLER_SWITCHER,
+      responsive: false,
+      default: false
+    });
 
-  element.addControl(idPrefix + 'change_end', {
-    label: 'Make event when input end?',
-    type: CONTROLLER_SWITCHER,
-    responsive: false,
-    default: false
-  });
-
-  element.addControl(idPrefix + 'change_end_delay', {
-    label: 'Delay between char input (milliseconds)',
-    type: CONTROLLER_NUMBER,
-    responsive: false,
-    conditions: {
-      [`${idPrefix + 'change_end'}`]: true
-    }
-  });
+    element.addControl(idPrefix + 'change_end_delay', {
+      label: 'Delay between char input (milliseconds)',
+      type: CONTROLLER_NUMBER,
+      responsive: false,
+      conditions: {
+        [`${idPrefix + 'change_end'}`]: true
+      }
+    });
+  }
 
   // element.addControl('change_action_end', {
   //   label: 'Waiting for change end?',

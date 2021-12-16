@@ -6,7 +6,6 @@ import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
 import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
-const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
 const milkScheme = _.find(Schemes, { value: "milk" }).colors;
 const milkScheme2 = _.find(Schemes, { value: "milk2" }).colors;
 
@@ -17,12 +16,10 @@ import Tooltip from "./d3/Tooltip";
 const format = "%d.%m.%Y";
 
 const DynamicLineChart = ({
-  widget,
   width,
   height,
   margin,
-  keyIsDate,
-  dataSource = [],
+  data = [],
   lineWidth = 2,
   pointSize = 10,
   xScaleType = "point",
@@ -32,9 +29,8 @@ const DynamicLineChart = ({
   enableArea = false,
   enablePoints = true,
   pointColor,
-  sort = "",
-  tickRotation = 0,
-  bottomAxis = true,
+  pointBorderWidth,
+  pointBorderColor,
   enableGridX = true,
   enableGridY = true,
   customColorSchemeChecker = false,
@@ -42,75 +38,21 @@ const DynamicLineChart = ({
   constantsAxises = [],
   yScaleMax,
   legend,
-  enableGradient
+  enableGradient,
+  yFormat,
+  xFormat,
+  areaBaselineValue,
+  areaOpacity,
+  areaBlendMode,
+  enableSlices,
+  axisBottom,
+  axisTop,
+  axisRight,
+  axisLeft
 }) => {
   if (legend) {
     Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
   }
-  
-  const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
-
-  const getData = useCallback(async () => {
-    setIsLoading(true);
-    if (dataSource.length == 0) {
-      const charts = await getWidgetData(widget.source, widget.filter);
-      if (charts.status === 200) {
-        const newData = charts.data.data.map(item => {
-          const currentKey = item.key;
-          const keyFormatted = !moment(currentKey).isValid()
-            ? currentKey
-            : moment(currentKey).format("DD.MM.YYYY");
-          return {
-            y: Number(item.data),
-            x: keyIsDate ? keyFormatted : currentKey
-          };
-        });
-        let data = [
-          {
-            id: "",
-            data: newData
-          }
-        ];
-        setData(data || []);
-        setIsLoading(false);
-      }
-    } else {
-      if (
-        sort !== null &&
-        sort !== "undefined" &&
-        typeof dataSource !== "undefined"
-      ) {
-        switch (sort) {
-          case "value":
-            dataSource.forEach((item, index) => {
-              if (item.data.length > 0) {
-                dataSource[index].data = _.sortBy(item.data, ["y"]);
-              }
-            });
-            break;
-          case "key":
-            data.forEach((item, index) => {
-              if (item.data.length > 0) {
-                dataSource[index].data = _.sortBy(item.data, ["x"]);
-              }
-            });
-            break;
-
-          default:
-            break;
-        }
-      }
-      setData(dataSource || []);
-      setIsLoading(false);
-    }
-  }, [widget]);
-
-  useEffect(() => {
-    getData();
-  }, [getData]);
-
-  if (isLoading) return <Spinner />;
 
   let matches = [];
   let isNotEmpty = false;
@@ -186,24 +128,33 @@ const DynamicLineChart = ({
           }
           xScale={
             xScaleType === "time"
-              ? { type: xScaleType, format: format, precision: precision }
+              ? { type: xScaleType, format: format, precision }
               : { type: xScaleType }
           }
+          areaBaselineValue={areaBaselineValue}
           lineWidth={lineWidth}
+          areaBlendMode={areaBlendMode}
+          areaOpacity={areaOpacity}
           markers={constantsAxises}
           enableGridX={enableGridX}
           enableGridY={enableGridY}
+          pointBorderWidth={pointBorderWidth}
+          enableSlices={enableSlices}
           axisBottom={
-            bottomAxis &&
+            axisBottom &&
             (xScaleType === "time"
               ? {
                   format: format,
-                  tickRotation: tickRotation
+                  ...axisBottom
                 }
-              : {
-                  tickRotation: tickRotation
-                })
+              : axisBottom
+            )
           }
+          axisTop={axisTop}
+          axisLeft={axisLeft}
+          axisRight={axisRight}
+          yFormat={yFormat}
+          xFormat={xFormat}
           useMesh={true}
           enableArea={enableArea}
           enablePoints={enablePoints}
@@ -223,19 +174,15 @@ const DynamicLineChart = ({
           colors={
             customColorSchemeChecker && customColors.length > 0
               ? customColors
-              : colorScheme === "regagro"
-              ? regagroScheme
               : colorScheme === "milk"
               ? milkScheme
               : colorScheme === "milk2"
               ? milkScheme2
               : { scheme: colorScheme }
           }
-          pointColor={
-            typeof pointColor !== "undefined" && pointColor !== null
-              ? pointColor.colorPickedHex
-              : { from: "color", modifiers: [] }
-          }
+          pointColor={pointColor}
+
+          pointBorderColor={pointBorderColor}
 
           {...customProps}
         />

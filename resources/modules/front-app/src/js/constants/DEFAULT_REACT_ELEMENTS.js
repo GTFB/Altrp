@@ -1,4 +1,5 @@
 const DEFAULT_REACT_ELEMENTS = [
+  'action-trigger',
   'input',
   'input-select',
   'input-select-tree',

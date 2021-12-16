@@ -41,7 +41,9 @@ const AltrpBarDiagram = props => {
     minValue,
     enableMinValue,
     maxValue,
-    enableMaxValue
+    enableMaxValue,
+    currency,
+    borderColor
   } = settings
 
   let data = []
@@ -155,10 +157,11 @@ const AltrpBarDiagram = props => {
         left: 30 
       }}
       valueFormat={getFormatValueString(settings)}
+      currency={currency}
       customColorSchemeChecker={customColorSchemeChecker}
       customColors={customColors}
       isMultiple={isMultiple}
-      colorScheme={colorScheme}
+      colorScheme={colorScheme || 'nivo'}
       dataSource={data}
       widget={widget}
       enableLabel={enableLabel}
@@ -176,6 +179,7 @@ const AltrpBarDiagram = props => {
       enableGridY={enableGridY}
       useCustomTooltips={useCustomTooltips}
       keys={keys}
+      borderColor={borderColor?.colorPickedHex}
       indexBy={indexBy}
       legend={settings.use_legend && {
         anchor: settings.legend_anchor,

@@ -99,17 +99,13 @@ const AltrpDiagram = props => {
     constantsAxises = constantsAxises.flat();
   }
 
-  const sql = settings.query?.dataSource?.value;
-  const isMultiple = settings.isMultiple;
-  const isCustomColor = settings.isCustomColors;
-  const keyIsDate = settings.key_is_date;
   const sort = settings?.sort;
   const tickRotation = settings?.tickRotation;
   const bottomAxis = settings?.bottomAxis;
   const enableGridX = settings?.enableGridX;
   const enableGridY = settings?.enableGridY;
   //line settings
-  const xScaleType = settings?.xScaleType || "point";
+  const xScaleType = settings?.xScaleType || "linear";
   const precision = settings?.precision || "month";
   const colorScheme = settings?.colorScheme;
 
@@ -117,150 +113,914 @@ const AltrpDiagram = props => {
   //data variable
   let data = [];
 
-  //funciton for formattion data for all types
-  const formatData = (data, r) => {
-    return data.map((d, index) => {
-      const currentKey = _.get(d, r.key);
-      const keyFormatted = !moment(currentKey).isValid()
-        ? currentKey
-        : moment(currentKey).format("DD.MM.YYYY");
-      const tooltip =
-        typeof tooltipValues !== "undefined"
-          ? tooltipValues?.map(item => {
-              return {
-                label: item?.label,
-                value: _.get(d, item.field),
-                color: item?.color
-              };
-            })
-          : [];
-        
-      return {
-        y: Number(_.get(d, r.data)),
-        x: keyIsDate ? keyFormatted : currentKey,
-        tooltip: tooltip
-      };
-    });
-  };
-  let legend = [];
-
   if (isEditor()) {
     data = [
       {
-        id: 'Demo data',
-        data: [
+        "id": "group A",
+        "data": [
           {
-            x: '2020-01',
-            y: 50,
+            "x": 27,
+            "y": 111
           },
           {
-            x: '2020-02',
-            y: 140,
+            "x": 87,
+            "y": 85
           },
           {
-            x: '2013-03',
-            y: 40,
+            "x": 13,
+            "y": 119
           },
           {
-            x: '2013-04',
-            y: 20,
+            "x": 80,
+            "y": 16
           },
           {
-            x: '2013-05',
-            y: 60,
+            "x": 64,
+            "y": 12
           },
           {
-            x: '2013-06',
-            y: 30,
+            "x": 40,
+            "y": 104
+          },
+          {
+            "x": 69,
+            "y": 107
+          },
+          {
+            "x": 87,
+            "y": 99
+          },
+          {
+            "x": 71,
+            "y": 13
+          },
+          {
+            "x": 91,
+            "y": 45
+          },
+          {
+            "x": 39,
+            "y": 60
+          },
+          {
+            "x": 5,
+            "y": 47
+          },
+          {
+            "x": 93,
+            "y": 56
+          },
+          {
+            "x": 16,
+            "y": 104
+          },
+          {
+            "x": 24,
+            "y": 27
+          },
+          {
+            "x": 60,
+            "y": 85
+          },
+          {
+            "x": 52,
+            "y": 67
+          },
+          {
+            "x": 7,
+            "y": 7
+          },
+          {
+            "x": 72,
+            "y": 23
+          },
+          {
+            "x": 11,
+            "y": 3
+          },
+          {
+            "x": 57,
+            "y": 37
+          },
+          {
+            "x": 45,
+            "y": 73
+          },
+          {
+            "x": 39,
+            "y": 61
+          },
+          {
+            "x": 49,
+            "y": 68
+          },
+          {
+            "x": 40,
+            "y": 3
+          },
+          {
+            "x": 62,
+            "y": 75
+          },
+          {
+            "x": 87,
+            "y": 93
+          },
+          {
+            "x": 56,
+            "y": 17
+          },
+          {
+            "x": 79,
+            "y": 36
+          },
+          {
+            "x": 80,
+            "y": 63
+          },
+          {
+            "x": 10,
+            "y": 57
+          },
+          {
+            "x": 34,
+            "y": 71
+          },
+          {
+            "x": 43,
+            "y": 4
+          },
+          {
+            "x": 94,
+            "y": 76
+          },
+          {
+            "x": 96,
+            "y": 92
+          },
+          {
+            "x": 52,
+            "y": 84
+          },
+          {
+            "x": 31,
+            "y": 90
+          },
+          {
+            "x": 82,
+            "y": 88
+          },
+          {
+            "x": 36,
+            "y": 68
+          },
+          {
+            "x": 87,
+            "y": 108
+          },
+          {
+            "x": 38,
+            "y": 81
+          },
+          {
+            "x": 82,
+            "y": 78
+          },
+          {
+            "x": 64,
+            "y": 34
           },
         ]
       },
       {
-        id: 'Demo data 2',
-        data: [
+        "id": "group B",
+        "data": [
           {
-            x: '2020-01',
-            y: 60,
+            "x": 35,
+            "y": 35
           },
           {
-            x: '2020-02',
-            y: 200,
+            "x": 40,
+            "y": 15
           },
           {
-            x: '2013-03',
-            y: 20,
+            "x": 43,
+            "y": 89
           },
           {
-            x: '2013-04',
-            y: 10,
+            "x": 92,
+            "y": 24
           },
           {
-            x: '2013-05',
-            y: 50,
+            "x": 85,
+            "y": 80
           },
           {
-            x: '2013-06',
-            y: 31,
+            "x": 44,
+            "y": 70
+          },
+          {
+            "x": 68,
+            "y": 3
+          },
+          {
+            "x": 3,
+            "y": 30
+          },
+          {
+            "x": 56,
+            "y": 88
+          },
+          {
+            "x": 60,
+            "y": 119
+          },
+          {
+            "x": 38,
+            "y": 80
+          },
+          {
+            "x": 81,
+            "y": 105
+          },
+          {
+            "x": 68,
+            "y": 51
+          },
+          {
+            "x": 16,
+            "y": 91
+          },
+          {
+            "x": 26,
+            "y": 50
+          },
+          {
+            "x": 0,
+            "y": 18
+          },
+          {
+            "x": 96,
+            "y": 47
+          },
+          {
+            "x": 86,
+            "y": 1
+          },
+          {
+            "x": 31,
+            "y": 87
+          },
+          {
+            "x": 41,
+            "y": 28
+          },
+          {
+            "x": 100,
+            "y": 39
+          },
+          {
+            "x": 6,
+            "y": 23
+          },
+          {
+            "x": 45,
+            "y": 108
+          },
+          {
+            "x": 30,
+            "y": 91
+          },
+          {
+            "x": 71,
+            "y": 0
+          },
+          {
+            "x": 22,
+            "y": 2
+          },
+          {
+            "x": 68,
+            "y": 52
+          },
+          {
+            "x": 20,
+            "y": 114
+          },
+          {
+            "x": 97,
+            "y": 25
+          },
+          {
+            "x": 73,
+            "y": 87
+          },
+          {
+            "x": 99,
+            "y": 48
+          },
+          {
+            "x": 50,
+            "y": 7
+          },
+          {
+            "x": 6,
+            "y": 73
+          },
+          {
+            "x": 89,
+            "y": 34
+          },
+          {
+            "x": 19,
+            "y": 95
+          },
+          {
+            "x": 57,
+            "y": 46
+          },
+          {
+            "x": 23,
+            "y": 97
+          },
+          {
+            "x": 9,
+            "y": 54
+          },
+          {
+            "x": 60,
+            "y": 0
+          },
+          {
+            "x": 61,
+            "y": 90
+          },
+          {
+            "x": 45,
+            "y": 6
+          },
+          {
+            "x": 61,
+            "y": 58
+          },
+          {
+            "x": 45,
+            "y": 89
           },
         ]
       },
+      {
+        "id": "group C",
+        "data": [
+          {
+            "x": 14,
+            "y": 117
+          },
+          {
+            "x": 55,
+            "y": 21
+          },
+          {
+            "x": 77,
+            "y": 64
+          },
+          {
+            "x": 28,
+            "y": 68
+          },
+          {
+            "x": 77,
+            "y": 26
+          },
+          {
+            "x": 18,
+            "y": 32
+          },
+          {
+            "x": 66,
+            "y": 66
+          },
+          {
+            "x": 51,
+            "y": 89
+          },
+          {
+            "x": 76,
+            "y": 92
+          },
+          {
+            "x": 35,
+            "y": 42
+          },
+          {
+            "x": 41,
+            "y": 64
+          },
+          {
+            "x": 57,
+            "y": 83
+          },
+          {
+            "x": 91,
+            "y": 31
+          },
+          {
+            "x": 8,
+            "y": 76
+          },
+          {
+            "x": 67,
+            "y": 98
+          },
+          {
+            "x": 29,
+            "y": 40
+          },
+          {
+            "x": 11,
+            "y": 24
+          },
+          {
+            "x": 72,
+            "y": 85
+          },
+          {
+            "x": 93,
+            "y": 24
+          },
+          {
+            "x": 66,
+            "y": 94
+          },
+          {
+            "x": 94,
+            "y": 26
+          },
+          {
+            "x": 61,
+            "y": 18
+          },
+          {
+            "x": 81,
+            "y": 74
+          },
+          {
+            "x": 66,
+            "y": 91
+          },
+          {
+            "x": 51,
+            "y": 67
+          },
+          {
+            "x": 48,
+            "y": 71
+          },
+          {
+            "x": 68,
+            "y": 40
+          },
+          {
+            "x": 4,
+            "y": 9
+          },
+          {
+            "x": 0,
+            "y": 105
+          },
+          {
+            "x": 97,
+            "y": 16
+          },
+          {
+            "x": 9,
+            "y": 96
+          },
+          {
+            "x": 45,
+            "y": 112
+          },
+          {
+            "x": 28,
+            "y": 102
+          },
+          {
+            "x": 5,
+            "y": 90
+          },
+          {
+            "x": 1,
+            "y": 40
+          },
+          {
+            "x": 16,
+            "y": 8
+          },
+          {
+            "x": 11,
+            "y": 77
+          },
+          {
+            "x": 64,
+            "y": 48
+          },
+          {
+            "x": 29,
+            "y": 51
+          },
+          {
+            "x": 59,
+            "y": 90
+          },
+          {
+            "x": 51,
+            "y": 95
+          },
+          {
+            "x": 29,
+            "y": 65
+          },
+          {
+            "x": 59,
+            "y": 43
+          },
+        ]
+      },
+      {
+        "id": "group D",
+        "data": [
+          {
+            "x": 82,
+            "y": 116
+          },
+          {
+            "x": 41,
+            "y": 95
+          },
+          {
+            "x": 40,
+            "y": 88
+          },
+          {
+            "x": 43,
+            "y": 107
+          },
+          {
+            "x": 95,
+            "y": 67
+          },
+          {
+            "x": 100,
+            "y": 10
+          },
+          {
+            "x": 35,
+            "y": 102
+          },
+          {
+            "x": 38,
+            "y": 8
+          },
+          {
+            "x": 90,
+            "y": 0
+          },
+          {
+            "x": 39,
+            "y": 26
+          },
+          {
+            "x": 86,
+            "y": 69
+          },
+          {
+            "x": 67,
+            "y": 6
+          },
+          {
+            "x": 30,
+            "y": 40
+          },
+          {
+            "x": 6,
+            "y": 105
+          },
+          {
+            "x": 30,
+            "y": 5
+          },
+          {
+            "x": 70,
+            "y": 9
+          },
+          {
+            "x": 4,
+            "y": 6
+          },
+          {
+            "x": 42,
+            "y": 30
+          },
+          {
+            "x": 90,
+            "y": 8
+          },
+          {
+            "x": 89,
+            "y": 80
+          },
+          {
+            "x": 38,
+            "y": 23
+          },
+          {
+            "x": 62,
+            "y": 77
+          },
+          {
+            "x": 10,
+            "y": 14
+          },
+          {
+            "x": 99,
+            "y": 41
+          },
+          {
+            "x": 1,
+            "y": 14
+          },
+          {
+            "x": 27,
+            "y": 11
+          },
+          {
+            "x": 93,
+            "y": 8
+          },
+          {
+            "x": 91,
+            "y": 106
+          },
+          {
+            "x": 16,
+            "y": 49
+          },
+          {
+            "x": 56,
+            "y": 49
+          },
+          {
+            "x": 36,
+            "y": 59
+          },
+          {
+            "x": 25,
+            "y": 48
+          },
+          {
+            "x": 25,
+            "y": 66
+          },
+          {
+            "x": 78,
+            "y": 47
+          },
+          {
+            "x": 71,
+            "y": 31
+          },
+          {
+            "x": 52,
+            "y": 48
+          },
+          {
+            "x": 97,
+            "y": 1
+          },
+          {
+            "x": 12,
+            "y": 116
+          },
+          {
+            "x": 22,
+            "y": 28
+          },
+          {
+            "x": 56,
+            "y": 1
+          },
+          {
+            "x": 7,
+            "y": 112
+          },
+          {
+            "x": 74,
+            "y": 67
+          },
+          {
+            "x": 1,
+            "y": 118
+          },
+        ]
+      },
+      {
+        "id": "group E",
+        "data": [
+          {
+            "x": 10,
+            "y": 6
+          },
+          {
+            "x": 83,
+            "y": 86
+          },
+          {
+            "x": 78,
+            "y": 8
+          },
+          {
+            "x": 93,
+            "y": 82
+          },
+          {
+            "x": 86,
+            "y": 43
+          },
+          {
+            "x": 40,
+            "y": 101
+          },
+          {
+            "x": 84,
+            "y": 87
+          },
+          {
+            "x": 89,
+            "y": 46
+          },
+          {
+            "x": 63,
+            "y": 13
+          },
+          {
+            "x": 24,
+            "y": 100
+          },
+          {
+            "x": 0,
+            "y": 3
+          },
+          {
+            "x": 6,
+            "y": 54
+          },
+          {
+            "x": 96,
+            "y": 84
+          },
+          {
+            "x": 41,
+            "y": 20
+          },
+          {
+            "x": 49,
+            "y": 61
+          },
+          {
+            "x": 63,
+            "y": 55
+          },
+          {
+            "x": 30,
+            "y": 91
+          },
+          {
+            "x": 70,
+            "y": 96
+          },
+          {
+            "x": 53,
+            "y": 103
+          },
+          {
+            "x": 90,
+            "y": 58
+          },
+          {
+            "x": 73,
+            "y": 101
+          },
+          {
+            "x": 43,
+            "y": 34
+          },
+          {
+            "x": 65,
+            "y": 28
+          },
+          {
+            "x": 7,
+            "y": 49
+          },
+          {
+            "x": 73,
+            "y": 92
+          },
+          {
+            "x": 14,
+            "y": 76
+          },
+          {
+            "x": 81,
+            "y": 118
+          },
+          {
+            "x": 62,
+            "y": 88
+          },
+          {
+            "x": 19,
+            "y": 49
+          },
+          {
+            "x": 89,
+            "y": 49
+          },
+          {
+            "x": 81,
+            "y": 63
+          },
+          {
+            "x": 6,
+            "y": 70
+          },
+          {
+            "x": 82,
+            "y": 25
+          },
+          {
+            "x": 38,
+            "y": 108
+          },
+          {
+            "x": 36,
+            "y": 114
+          },
+          {
+            "x": 21,
+            "y": 92
+          },
+          {
+            "x": 69,
+            "y": 53
+          },
+          {
+            "x": 67,
+            "y": 50
+          },
+          {
+            "x": 16,
+            "y": 59
+          },
+          {
+            "x": 77,
+            "y": 97
+          },
+          {
+            "x": 59,
+            "y": 64
+          },
+          {
+            "x": 89,
+            "y": 17
+          },
+          {
+            "x": 64,
+            "y": 96
+          },
+        ]
+      }
     ]
   } else {
-    if (isMultiple) {
-      let repeater = _.cloneDeep(settings.rep, []);
-      data = repeater.map((r, index) => {
-        let innerData = getDataByPath(r.path, []);
-        if (innerData.length > 0) {
-          innerData = formatData(innerData, r);
-        }
-        
-        return {
-          id: r.title || r.path,
-          data: innerData
-        };
-      });
-    } else if (settings.datasource_path != null) {
+    if (settings.datasource_path != null) {
       try {
         data = getDataByPath(settings.datasource_path, []);
-        const r = {
-          key: settings.key_name,
-          data: settings.data_name
-        };
-
-        data = [
-          {
-            data: formatData(data, r)
-          }
-        ];
       } catch (error) {
         console.log("====================================");
         console.error(error);
         console.log("====================================");
-        data = [
-          {
-            data: []
-          }
-        ];
+        data = [];
       }
     }
   }
 
-  if (!sql && data.length === 0) {
+  if (data.length === 0) {
     return (
       <div className={`altrp-chart ${settings.legendPosition}`}>
         Loading data...
       </div>
     );
   }
-
-  const widget = {
-    options: {
-      colorScheme: settings.colorScheme,
-      animated: settings.animated,
-      isVertical: settings.isVertical
-    },
-    filter: {}
-  };
 
   console.log("====================================");
   console.log(data);
@@ -279,16 +1039,14 @@ const AltrpDiagram = props => {
       yScaleMax={yScaleMax}
       customColorSchemeChecker={customColorSchemeChecker}
       customColors={customColors}
-      dataSource={data}
+      data={data}
       constantsAxises={constantsAxises}
-      colorScheme={colorScheme}
+      colorScheme={colorScheme || 'nivo'}
       width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
       height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
-      widget={widget}
       nodeSize={pointSize}
       xScaleType={xScaleType}
       precision={precision}
-      sort={sort}
       tickRotation={tickRotation?.size}
       bottomAxis={bottomAxis}
       enableGridX={enableGridX}

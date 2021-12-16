@@ -1009,6 +1009,7 @@ function extractElementsNamesFromTemplate( $template_id, &$elementNames ){
  */
 function _extractElementsNames( $element,  &$elementNames, $only_react_elements ){
   $DEFAULT_REACT_ELEMENTS = [
+    'action-trigger',
     'input',
     'input-select',
     'input-date-range',
@@ -1036,6 +1037,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'input-gallery',
     'posts',
     'breadcrumbs',
+    'carousel',
     'map',
     'text',
     'map_builder',
