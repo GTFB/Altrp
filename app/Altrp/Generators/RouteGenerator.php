@@ -133,8 +133,12 @@ class RouteGenerator
                   if( ! $customizer ){
                     break;
                   }
-                  $middleware = array_merge( $middleware, $customizer->getMiddlewares() );
 
+                  try{
+                    $middleware = array_merge( $middleware, $customizer->getMiddlewares() );
+                  } catch ( \Exception $e){
+
+                  }
                   $middleware = $middleware ? "'middleware' => ['" . implode("','", $middleware) . "'], " : '';
                   $routes[] = 'Route::' . $source->request_type . '(\'/' . $tableName .'/customizers/'
                     . \Str::snake($source->name) . '\', [' . $middleware .'\'uses\' =>\'' . $controller . '@'

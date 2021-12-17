@@ -3,6 +3,8 @@ import axios from "axios";
 import UserTopPanel from "./UserTopPanel";
 import Resource from "../../../editor/src/js/classes/Resource";
 import mutate from "dot-prop-immutable";
+import {Button, Icon} from "@blueprintjs/core";
+import PluginItem from "./plugins/PluginItem";
 
 export default class Plugins extends Component {
   constructor(props) {
@@ -20,10 +22,16 @@ export default class Plugins extends Component {
     });
 
     window.addEventListener("scroll", this.listenScrollHeader)
-
     return () => {
       window.removeEventListener("scroll", this.listenScrollHeader)
     }
+  }
+
+  updatePlugins = async ()=>{
+    const plugins = await ( new Resource({route:'/admin/ajax/plugins'})).getAll()
+    this.setState({
+      plugins
+    });
   }
 
   listenScrollHeader = () => {
@@ -38,7 +46,7 @@ export default class Plugins extends Component {
     }
   }
 
-  async updateChange(event, index) {
+   updateChange = async(event, index) => {
     this.state.plugins[index].enabled = event.target.checked;
 
     const pluginName = this.state.plugins[index].name;
@@ -57,7 +65,6 @@ export default class Plugins extends Component {
       });
     }
   }
-
   render() {
     return (
       <div className="admin-pages admin-page">
@@ -77,30 +84,9 @@ export default class Plugins extends Component {
           <div className="row">
             {this.state.plugins.map((item, key) => {
               return (
-                <div key={item.name} className="col-3 text-center border rounded mx-2">
-                  <div className="mb-2">{item.title} {item.version}</div>
-                  <a href={item.url}><img
-                    className="mb-2"
-                    src={item.logo}
-                    style={{ maxWidth: "150px" }}
-                    alt=""/></a>
-                  <div className="custom-control custom-switch">
-                    <input
-                      type="checkbox"
-                      className="custom-control-input"
-                      id={`switch${key}`}
-                      checked={item.enabled}
-                      onChange={event => this.updateChange(event, key)}/>
-                    <label
-                      className="custom-control-label cursor-pointer"
-                      htmlFor={`switch${key}`}
-                    >
-                      {item.enabled == true
-                        ? "Plugin active"
-                        : "Plugin inactive"}
-                    </label>
-                  </div>
-                </div>
+                <PluginItem _key={key}
+                            updatePlugins={this.updatePlugins}
+                            key={item.name} updateChange={this.updateChange} plugin={item}/>
               );
             })}
           </div>

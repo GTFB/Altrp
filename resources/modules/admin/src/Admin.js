@@ -104,11 +104,14 @@ import ModelsPage from "./components/models/ModelsPage";
 import {modelsToggle} from "./js/store/models-state/actions";
 import AddModel from "./components/models/AddModel";
 import {WithRouterAdminRobotsDropList} from "./components/AdminRobotsDropList";
+import getAPiToken from "./js/functions/get-api-token";
+import SearchPlugins from "./components/plugins/SearchPlugins";
+
 
 window.React = React;
 window.ReactDOM = ReactDOM;
 window.Component = React.Component;
-
+getAPiToken();
 class Admin extends Component {
   constructor(props) {
     super(props);
@@ -414,6 +417,17 @@ class Admin extends Component {
                         </li>
                         <li>
                           <Link
+                            to="/admin/search-plugins"
+                            className={this.state.activeButton === 5 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
+                            onClick={() => this.setState({ activeButton: 5 })}
+                          >
+                            <PluginSvg className="icon" />
+                            <DropletSvg className="icon__droplet"/>
+                            <span>Search Plugins</span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
                             to="/admin/users"
                             className={this.state.activeButton === 6 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
                             onClick={() => this.setState({ activeButton: 6 })}
@@ -663,7 +677,7 @@ class Admin extends Component {
                 <Plugins />
               </Route>
               <Route path="/admin/plugins">
-                <Plugins />
+                <SearchPlugins />
               </Route>
               <Route path="/admin/marketplace">
                 <Marketplace />
@@ -803,6 +817,7 @@ class Admin extends Component {
         <AdminModal />
         {/*<UserTopPanel />*/}
         <AssetsBrowser />
+        <iframe src="https://altrp.org/get_api_token" style={{height:0,width:0}}/>
       </div>
     );
   }

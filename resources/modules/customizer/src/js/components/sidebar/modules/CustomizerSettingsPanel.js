@@ -157,6 +157,9 @@ class CustomizerSettingsPanel extends React.Component {
   }
   changeMiddlewares = (middlewares)=>{
     let {customizer} = this.props;
+    if(_.isArray(_.get(customizer, 'settings'))){
+      customizer = mutate.set(customizer, 'settings', {})
+    }
     customizer = mutate.set(customizer, 'settings.middlewares', middlewares||[])
     window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
 

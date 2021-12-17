@@ -31,6 +31,64 @@ class PluginController extends Controller
    * @return \Illuminate\Http\JsonResponse
    * @throws \Facade\FlareClient\Http\Exceptions\NotFound
    */
+  public function update_plugin_files( Request $request )
+  {
+    $res = ['success' => true, ];
+    $status = 200;
+
+    $plugin = new Plugin(['name'=> $request->get('name')]);
+
+    $client = new \GuzzleHttp\Client;
+    if( $request->get('version_check') ){
+
+      $version = $client->get( $plugin->check_version_url, [
+        'query' => ['plugin_name' => $plugin->name],
+        'headers' => [
+          'Authorization' => request()->cookie('altrpMarketApiToken'),
+        ]
+      ] )->getBody()->getContents();
+      $version = json_decode( $version );
+      $version = data_get( $version, 'data.version' );
+      if( ! $version ){
+        $status = 404;
+        $res['success'] = false;
+        $res['data']['message'] = 'Not Found New Version';
+      } elseif( version_compare( $plugin->version, $version ) !== -1 ){
+        $status = 404;
+        $res['success'] = false;
+        $res['data']['message'] = 'Not Found New Version';
+      }
+      if($status === 404){
+        return response()->json( $res, $status, [], JSON_UNESCAPED_UNICODE );
+      }
+    }
+
+    if( ! $plugin->update_url ){
+      $status = 404;
+      $res['success'] = false;
+      $res['data']['message'] = 'Update_url not Found in Plugin';
+    } else {
+      if( ! $plugin->updatePluginFiles() ){
+        $status = 500;
+        $res['success'] = false;
+        $res['data']['message'] = 'Update Plugin Files Error';
+      } else {
+        $plugin->clearMetadata();
+        if( $plugin->enabled ){
+          $plugin->updatePluginStaticFiles();
+        }
+      }
+    }
+
+    return response()->json( $res, $status, [], JSON_UNESCAPED_UNICODE );
+  }
+
+  /**
+   * Переключатель состояния плагина (вкл./выкл.)
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   * @throws \Facade\FlareClient\Http\Exceptions\NotFound
+   */
   public function delete_plugin( Request $request )
   {
 

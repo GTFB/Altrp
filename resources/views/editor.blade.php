@@ -34,12 +34,25 @@
   <link rel="stylesheet" href="{{ asset( '/modules/editor/editor.css?' ) . getCurrentVersion() }}">
   {{--<link rel="dns-prefetch" href="//fonts.gstatic.com">--}}
   <style id="styled" ></style>
+
+  @php
+    echo print_statics('style', 'EDITOR_HEAD_STYLE' );
+  @endphp
+  @php
+    echo print_statics('script', 'EDITOR_HEAD_SCRIPTS' );
+  @endphp
 </head>
 
 <body>
   <div id="editor">
 
   </div>
-</body>
 
+  @php
+    echo print_statics('style', 'EDITOR_BOTTOM_STYLE' );
+  @endphp
+  @php
+    echo print_statics('script', 'EDITOR_BOTTOM_SCRIPTS' );
+  @endphp
+</body>
 </html>

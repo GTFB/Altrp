@@ -1849,3 +1849,29 @@ function customizer_build_compare( $operator, string $left_php_property = 'null'
     default: return 'null';
   }
 }
+
+/**
+ * @param string $type
+ * @param string $place
+ * @return string
+ */
+function print_statics( string $type, string $place, $attributes  = []): string
+{
+  $content = '';
+  $statics = env( $place );
+  if( ! $statics ){
+    return $content;
+  }
+  $statics = explode(',', $statics);
+  foreach ( $statics as $static ) {
+    switch ( $type ){
+      case 'script':{
+        $content .= sprintf( '<script src="%s"></script>', $static );
+      } break;
+      case 'style':{
+        $content .= sprintf( '<link href="%s" type="text/css" rel="stylesheet">', $static );
+      } break;
+    }
+  }
+  return $content;
+}

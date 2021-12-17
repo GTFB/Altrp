@@ -388,9 +388,10 @@ class Resource {
    * GET запрос с параметрами
    * @param {object} params
    * @param {string | {}} customHeaders
+   * @param cors
    * @return {Promise}
    * */
-  async getQueried(params, customHeaders = null) {
+  async getQueried(params, customHeaders = null, cors = false) {
     let options = {
       method: "get",
       headers: _.assign(
@@ -400,6 +401,9 @@ class Resource {
         customHeaders
       )
     };
+    if(cors){
+      options.mode='cors'
+    }
     let _params = {};
     _.forEach(params, (paramValue, paramName) => {
       if (_.isArray(paramValue)) {

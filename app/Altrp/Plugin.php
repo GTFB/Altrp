@@ -3,6 +3,7 @@
 namespace App\Altrp;
 
 
+use App\AltrpMeta;
 use Facade\FlareClient\Http\Exceptions\NotFound;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\Artisan;
@@ -17,6 +18,30 @@ class Plugin extends Model
 {
 
   const ALTRP_PLUGINS = 'ALTRP_PLUGINS';
+  const ALTRP_STATIC_META = 'altrp_static_meta';
+
+  const STATIC_DISTANCE_LIST = [
+    'front_head_styles',
+    'front_bottom_styles',
+    'front_head_scripts',
+    'front_bottom_scripts',
+    'admin_head_styles',
+    'admin_bottom_styles',
+    'admin_head_scripts',
+    'admin_bottom_scripts',
+    'editor_head_styles',
+    'editor_bottom_styles',
+    'editor_head_scripts',
+    'editor_bottom_scripts',
+    'customizer_head_styles',
+    'customizer_bottom_styles',
+    'customizer_head_scripts',
+    'customizer_bottom_scripts',
+    'robot_head_styles',
+    'robot_bottom_styles',
+    'robot_head_scripts',
+    'robot_bottom_scripts ',
+  ];
 
   protected $casts = [
     'title' => 'string',
@@ -25,6 +50,8 @@ class Plugin extends Model
     'enabled' => 'boolean',
     'description' => 'string',
     'version' => 'string',
+    'check_version_url' => 'string',
+    'update_url' => 'string',
   ];
   protected $appends = [
     'title',
@@ -33,6 +60,8 @@ class Plugin extends Model
     'enabled',
     'description',
     'version',
+    'check_version_url',
+    'update_url',
   ];
   private $plugin_main_file_content = null;
   private $plugin_meta_data = null;
@@ -40,6 +69,11 @@ class Plugin extends Model
   protected $fillable = [
     'name'
   ];
+
+  public function clearMetadata(){
+    $this->plugin_meta_data = null;
+    $this->plugin_main_file_content = null;
+  }
 
   /**
    * @param string $pluginName
@@ -59,10 +93,12 @@ class Plugin extends Model
     }
     $plugin = new Plugin(['name' => $pluginName ]);
     if( $enable ){
+      $plugin->updatePluginStaticFiles();
       if( ! array_search( $plugin->name, $enabledPlugins ) ){
         $enabledPlugins[] = $plugin->name;
       }
     } else {
+      $plugin->removePluginStaticFiles();
       $enabledPlugins = array_filter( $enabledPlugins, function ( $_plugin ) use( $plugin ){
         return $_plugin != $plugin->name;
       } );
@@ -118,6 +154,24 @@ class Plugin extends Model
   public function getTitleAttribute()
   {
     return $this->getMeta( 'title' );
+  }
+  /**
+   * @return string
+   * @throws FileNotFoundException
+   * @throws NotFound
+   */
+  public function getCheckVersionUrlAttribute()
+  {
+    return $this->getMeta( 'check_version_url' );
+  }
+  /**
+   * @return string
+   * @throws FileNotFoundException
+   * @throws NotFound
+   */
+  public function getUpdateUrlAttribute()
+  {
+    return $this->getMeta( 'update_url' );
   }
 
   /**
@@ -240,4 +294,143 @@ class Plugin extends Model
     $enabledPlugins = explode( ',', $enabledPlugins );
     return array_search( $pluginName, $enabledPlugins ) !== false;
   }
+  /**
+   * @throws NotFound
+   */
+  public function updatePluginStaticFiles()
+  {
+    $this->copyStaticFiles();
+
+    $this->writeStaticsToAltrpMeta();
+  }
+  /**
+   * @throws NotFound
+   */
+  public function removePluginStaticFiles(){
+    File::deleteDirectory( $this->getPublicPath() );
+    $this->removeStaticsFromAltrpMeta();
+  }
+  public function removeStaticsFromAltrpMeta(){
+
+    $altrp_static_meta = AltrpMeta::find( self::ALTRP_STATIC_META );
+    if( ! $altrp_static_meta ){
+      $altrp_static_meta = new AltrpMeta(
+        [
+          'meta_name' =>self::ALTRP_STATIC_META,
+          'meta_value' => '{}',
+        ]
+      );
+      $altrp_static_meta->save();
+    }
+    $value = json_decode( $altrp_static_meta->meta_value, true );
+
+    foreach ( self::STATIC_DISTANCE_LIST as $item ) {
+      data_set( $value, $item . '.' . $this->name, null );
+    }
+    $altrp_static_meta->meta_value = json_encode( $value );
+    $altrp_static_meta->save();
+    self::writePluginsStatics();
+  }
+
+  function writeStaticsToAltrpMeta()
+  {
+    $altrp_static_meta = AltrpMeta::find( self::ALTRP_STATIC_META );
+    if( ! $altrp_static_meta ){
+      $altrp_static_meta = new AltrpMeta(
+        [
+          'meta_name' =>self::ALTRP_STATIC_META,
+          'meta_value' => '{}',
+        ]
+      );
+      $altrp_static_meta->save();
+    }
+    $value = json_decode( $altrp_static_meta->meta_value, true );
+
+    foreach ( self::STATIC_DISTANCE_LIST as $item ) {
+      data_set( $value, $item . '.' . $this->name, $this->getMeta( $item ) );
+    }
+    $altrp_static_meta->meta_value = json_encode( $value );
+    $altrp_static_meta->save();
+    self::writePluginsStatics();
+  }
+
+  static public function writePluginsStatics(){
+
+    $altrp_static_meta = AltrpMeta::find( self::ALTRP_STATIC_META );
+    if( ! $altrp_static_meta ){
+      $altrp_static_meta = new AltrpMeta(
+        [
+          'meta_name' =>self::ALTRP_STATIC_META,
+          'meta_value' => '{}',
+        ]
+      );
+      $altrp_static_meta->save();
+    }
+    $value = json_decode( $altrp_static_meta->meta_value, true );
+
+    foreach ( self::STATIC_DISTANCE_LIST as $item ) {
+      $statics_lis = data_get( $value, $item );
+      $statics_string = [];
+      if( is_array( $statics_lis ) ){
+        foreach ( $statics_lis as $plugin_name => $static ) {
+          if( is_string( $static ) && $static ){
+            $statics_string[] = trim( $static );
+          }
+        }
+      }
+      if( $statics_string ){
+        $statics_string = implode( ',', $statics_string );
+//        dd($statics_string);
+        DotenvEditor::setKey( \Str::upper( $item ), $statics_string );
+      } else {
+        DotenvEditor::deleteKey( \Str::upper( $item ) );
+      }
+      DotenvEditor::save();
+    }
+  }
+  /**
+   * @return bool
+   * @throws NotFound
+   */
+  public function updatePluginFiles(){
+
+    if( ! \URL::isValidUrl( $this->update_url )){
+      return true;
+    }
+
+    $client = new \GuzzleHttp\Client;
+    try{
+
+      $res = $client->get( $this->update_url, [
+        'headers' => [
+          'authorization' => request()->cookie('altrpMarketApiToken'),
+        ]
+      ])->getBody()->getContents();
+    } catch(\Throwable $e){
+      logger()->error( $e->getMessage() ."\n" . $e->getTraceAsString() );
+      return false;
+    }
+    if( ! $res ){
+      return false;
+    }
+    $temp_path = storage_path( 'temp' );
+    File::ensureDirectoryExists( $temp_path );
+    $filename = $temp_path . '/' . $this->name . '.zip';
+    File::put( $filename,  $res );
+    $archive = new \ZipArchive();
+
+    if ( ! $archive->open( $filename ) ) {
+      return false;
+    }
+
+    if ( ! $archive->extractTo( $this->getPath() ) ) {
+      $archive->close();
+      File::deleteDirectory( $temp_path );
+      return false;
+    }
+    $archive->close();
+    File::deleteDirectory( $temp_path );
+    return true;
+  }
+
 }

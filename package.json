@@ -78,6 +78,7 @@
         "bootstrap-switch-button-react": "^1.2.0",
         "chroma-js": "^2.1.0",
         "classnames": "^2.2.6",
+        "compare-versions": "^4.1.2",
         "core-js": "^3.15.1",
         "d3": "^6.7.0",
         "dagre": "^0.8.5",
