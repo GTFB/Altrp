@@ -5,6 +5,7 @@ import { connect, useDispatch } from "react-redux";
 import DynamicLineChart from "../../../../../admin/src/components/dashboard/widgets/DynamicLineChart";
 
 import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
+import getFormatValueString from "../../../../../admin/src/components/dashboard/services/getFormatValueString";
 
 import { getDataByPath, isEditor } from "../../../../../front-app/src/js/helpers";
 import moment from "moment";
@@ -12,22 +13,14 @@ import moment from "moment";
 const AltrpDiagram = props => {
   const { settings, id } = props;
 
-  const dispatch = useDispatch();
-  const margin = settings?.margin;
-  const widgetName = settings?.widget_name || id;
+  const {margin, yScaleMax, axisY, axisX} = settings
+
   const customColorSchemeChecker = settings?.isCustomColor;
 
   const customColors = settings?.customScheme?.map(item =>
     _.get(item, "color.colorPickedHex")
   );
-  const yScaleMax = settings?.yScaleMax;
 
-  const axisY = settings?.axisY;
-  const tooltipValues = settings?.repTooltips?.map(item => ({
-    label: _.get(item, "label"),
-    field: _.get(item, "value"),
-    color: _.get(item, "color")?.colorPickedHex
-  }));
   const useCustomTooltips = settings?.customTooltip;
 
   const formattedYAxis =
@@ -59,7 +52,6 @@ const AltrpDiagram = props => {
       return data;
     }) || [];
 
-  const axisX = settings?.axisX;
   const formattedXAxis =
     axisX?.map(item => {
       const valueFromPath = getDataByPath(item.xMarkerValue);
@@ -103,267 +95,420 @@ const AltrpDiagram = props => {
     constantsAxises = constantsAxises.flat();
   }
 
-  const sql = settings.query?.dataSource?.value;
-  const isMultiple = settings.isMultiple;
-  const isCustomColor = settings.isCustomColors;
-  const keyIsDate = settings.key_is_date;
-  const sort = settings?.sort;
-  const tickRotation = settings?.tickRotation;
-  const bottomAxis = settings?.bottomAxis;
-  const enableGridX = settings?.enableGridX;
-  const enableGridY = settings?.enableGridY;
+  const { 
+    bottomAxis, 
+    enableGridX, 
+    enableGridY, 
+    colorScheme,
+    enableArea,
+    enablePoints,
+    pointSize,
+    pointColor,
+    pointBorderWidth,
+    pointBorderColor,
+    yMarker,
+    enableGradient,
+    curve,
+    lineWidth,
+    areaBaselineValue,
+    areaOpacity,
+    areaBlendMode,
+    enableSlices
+  } = settings
+
   //line settings
   const xScaleType = settings?.xScaleType || "point";
   const precision = settings?.precision || "month";
-  const curve = settings?.curve || "line";
-  const lineWidth = settings?.lineWidth;
-  const colorScheme = settings?.colorScheme;
 
-  const enableArea = settings?.enableArea;
-  const enablePoints = settings?.enablePoints;
-  const pointSize = settings?.pointSize;
-  const pointColor = settings?.pointColor;
-  //line marker Y
-  const yMarker = settings?.yMarker;
-  const yMarkerValue = settings?.yMarkerValue;
-  const yMarkerOrientation = settings?.yMarkerOrientation;
-  const yMarkerColor = settings?.yMarkerColor;
-  const yMarkerWidth = settings?.yMarkerWidth;
-  const yMarkerLabel = settings?.yMarkerLabel;
-  const yMarkerLabelColor = settings?.yMarkerLabelColor;
-  //line marker X
-  const xMarker = settings?.xMarker;
-  const xMarkerValue = keyIsDate
-    ? moment(settings?.xMarkerValueDate).toDate()
-    : settings?.xMarkerValue;
-  const xMarkerOrientation = settings?.xMarkerOrientation;
-  const xMarkerColor = settings?.xMarkerColor;
-  const xMarkerWidth = settings?.xMarkerWidth;
-  const xMarkerLabel = settings?.xMarkerLabel;
-  const xMarkerLabelColor = settings?.xMarkerLabelColor;
-  //data variable
   let data = [];
 
   //funciton for formattion data for all types
-  const formatData = (data, r) => {
-    return data.map((d, index) => {
-      const currentKey = _.get(d, r.key);
-      const keyFormatted = !moment(currentKey).isValid()
-        ? currentKey
-        : moment(currentKey).format("DD.MM.YYYY");
-      const tooltip =
-        typeof tooltipValues !== "undefined"
-          ? tooltipValues?.map(item => {
-              return {
-                label: item?.label,
-                value: _.get(d, item.field),
-                color: item?.color
-              };
-            })
-          : [];
-      
-      return {
-        y: Number(_.get(d, r.data)),
-        x: keyIsDate ? keyFormatted : currentKey,
-        tooltip: tooltip
-      };
-    });
-  };
-  let legend = [];
-  const currentColors = isCustomColor
-    ? customColors
-    : _.find(Schemes, { value: settings?.colorScheme }).colors;
-  const colorsCount = currentColors.length;
 
   if (isEditor()) {
     data = [
       {
-        data: [
+        "id": "japan",
+        "color": "hsl(112, 70%, 50%)",
+        "data": [
           {
-            x: '2020-01',
-            y: 60,
+            "x": "plane",
+            "y": 187
           },
           {
-            x: '2020-02',
-            y: 200,
+            "x": "helicopter",
+            "y": 202
           },
           {
-            x: '2013-03',
-            y: 20,
+            "x": "boat",
+            "y": 215
           },
           {
-            x: '2013-04',
-            y: 10,
+            "x": "train",
+            "y": 272
           },
           {
-            x: '2013-05',
-            y: 50,
+            "x": "subway",
+            "y": 195
           },
-        ],
-        id: 'Line 1'
+          {
+            "x": "bus",
+            "y": 5
+          },
+          {
+            "x": "car",
+            "y": 236
+          },
+          {
+            "x": "moto",
+            "y": 270
+          },
+          {
+            "x": "bicycle",
+            "y": 230
+          },
+          {
+            "x": "horse",
+            "y": 146
+          },
+          {
+            "x": "skateboard",
+            "y": 141
+          },
+          {
+            "x": "others",
+            "y": 207
+          }
+        ]
       },
       {
-        data: [
+        "id": "france",
+        "color": "hsl(151, 70%, 50%)",
+        "data": [
           {
-            x: '2020-01',
-            y: 50,
+            "x": "plane",
+            "y": 151
           },
           {
-            x: '2020-02',
-            y: 140,
+            "x": "helicopter",
+            "y": 58
           },
           {
-            x: '2013-03',
-            y: 40,
+            "x": "boat",
+            "y": 154
           },
           {
-            x: '2013-04',
-            y: 20,
+            "x": "train",
+            "y": 280
           },
           {
-            x: '2013-05',
-            y: 60,
+            "x": "subway",
+            "y": 37
           },
-        ],
-        id: 'Line 2'
+          {
+            "x": "bus",
+            "y": 238
+          },
+          {
+            "x": "car",
+            "y": 176
+          },
+          {
+            "x": "moto",
+            "y": 239
+          },
+          {
+            "x": "bicycle",
+            "y": 52
+          },
+          {
+            "x": "horse",
+            "y": 24
+          },
+          {
+            "x": "skateboard",
+            "y": 5
+          },
+          {
+            "x": "others",
+            "y": 63
+          }
+        ]
       },
+      {
+        "id": "us",
+        "color": "hsl(211, 70%, 50%)",
+        "data": [
+          {
+            "x": "plane",
+            "y": 150
+          },
+          {
+            "x": "helicopter",
+            "y": 77
+          },
+          {
+            "x": "boat",
+            "y": 188
+          },
+          {
+            "x": "train",
+            "y": 201
+          },
+          {
+            "x": "subway",
+            "y": 163
+          },
+          {
+            "x": "bus",
+            "y": 274
+          },
+          {
+            "x": "car",
+            "y": 214
+          },
+          {
+            "x": "moto",
+            "y": 299
+          },
+          {
+            "x": "bicycle",
+            "y": 168
+          },
+          {
+            "x": "horse",
+            "y": 115
+          },
+          {
+            "x": "skateboard",
+            "y": 149
+          },
+          {
+            "x": "others",
+            "y": 153
+          }
+        ]
+      },
+      {
+        "id": "germany",
+        "color": "hsl(203, 70%, 50%)",
+        "data": [
+          {
+            "x": "plane",
+            "y": 228
+          },
+          {
+            "x": "helicopter",
+            "y": 69
+          },
+          {
+            "x": "boat",
+            "y": 251
+          },
+          {
+            "x": "train",
+            "y": 107
+          },
+          {
+            "x": "subway",
+            "y": 127
+          },
+          {
+            "x": "bus",
+            "y": 72
+          },
+          {
+            "x": "car",
+            "y": 34
+          },
+          {
+            "x": "moto",
+            "y": 255
+          },
+          {
+            "x": "bicycle",
+            "y": 213
+          },
+          {
+            "x": "horse",
+            "y": 246
+          },
+          {
+            "x": "skateboard",
+            "y": 286
+          },
+          {
+            "x": "others",
+            "y": 24
+          }
+        ]
+      },
+      {
+        "id": "norway",
+        "color": "hsl(21, 70%, 50%)",
+        "data": [
+          {
+            "x": "plane",
+            "y": 256
+          },
+          {
+            "x": "helicopter",
+            "y": 58
+          },
+          {
+            "x": "boat",
+            "y": 173
+          },
+          {
+            "x": "train",
+            "y": 246
+          },
+          {
+            "x": "subway",
+            "y": 154
+          },
+          {
+            "x": "bus",
+            "y": 108
+          },
+          {
+            "x": "car",
+            "y": 273
+          },
+          {
+            "x": "moto",
+            "y": 195
+          },
+          {
+            "x": "bicycle",
+            "y": 36
+          },
+          {
+            "x": "horse",
+            "y": 1
+          },
+          {
+            "x": "skateboard",
+            "y": 253
+          },
+          {
+            "x": "others",
+            "y": 143
+          }
+        ]
+      }
     ]
   } else {
-    if (isMultiple) {
-      let repeater = _.cloneDeep(settings.rep, []);
-      data = repeater.map((r, index) => {
-        let innerData = getDataByPath(r.path, []);
-        if (innerData.length > 0) {
-          //Исключаем дублирование ключей, т.к. это приводит к ошибкам рендера всех диаграм
-          innerData = _.uniqBy(innerData, r.key);
-          innerData = formatData(innerData, r);
-        }
-
-        legend.push({
-          color: currentColors[index % colorsCount],
-          label: r.title || r.path
-        });
-
-        return {
-          id: r.title || r.path,
-          data: innerData
-        };
-      });
-    } else if (settings.datasource_path != null) {
+    if (settings.datasource_path != null) {
       try {
         data = getDataByPath(settings.datasource_path, []);
-        data = _.uniqBy(data, settings.key_name);
-        const r = {
-          key: settings.key_name,
-          data: settings.data_name
-        };
-  
-        legend.push({
-          color: currentColors[0],
-          label: settings.datasource_title || settings.datasource_path
-        });
-        data = [
-          {
-            id: settings.datasource_title || settings.datasource_path,
-            data: formatData(data, r)
-          }
-        ];
       } catch (error) {
         console.log("====================================");
         console.error(error);
         console.log("====================================");
-        data = [
-          {
-            id: settings.datasource_title || settings.datasource_path,
-            data: []
-          }
-        ];
+        data = [];
       }
     }
   }
 
-  if (!sql && data.length === 0) {
+  if (data.length === 0) {
     return (
       <div className={`altrp-chart ${settings.legendPosition}`}>
-        Идет загрузка данных...
+        Loading data...
       </div>
     );
   }
 
-  const parseQueryParams = (qs = "") => {
-    if (!qs) return "";
-    const keyValues = qs.split("\n");
-    const result = keyValues.map(item => item.replace("|", "=")).join("&");
-    return `?${result}`;
-  };
-
-  const queryString = parseQueryParams(settings.query?.defaultParams);
-
-  const widget = {
-    source: sql + queryString,
-    options: {
-      colorScheme: settings.colorScheme,
-      legend: settings.legend,
-      animated: settings.animated,
-      isVertical: settings.isVertical
-    },
-    filter: {}
-  };
-
-  const setLegend = legend =>
-    dispatch(changePageState(widgetName, { legend: legend }));
-
-  useEffect(() => {
-    if (legend.length > 0) {
-      setLegend(legend);
-    }
-  }, [legend]);
   console.log("====================================");
   console.log(data);
   console.log("====================================");
   
   return (
     <DynamicLineChart
-      widgetID={id}
-      margin={margin}
+      enableGradient={enableGradient}
+      margin={margin ? margin : {
+        top: 30,
+        bottom: 30,
+        right: 30,
+        left: 30 
+      }}
       useCustomTooltips={useCustomTooltips}
       yScaleMax={yScaleMax}
       customColorSchemeChecker={customColorSchemeChecker}
       customColors={customColors}
-      widget={widget}
-      dataSource={data}
-      keyIsDate={keyIsDate}
+      enableSlices={enableSlices}
+      data={data}
       xScaleType={xScaleType}
       precision={precision}
       curve={curve}
-      colorScheme={colorScheme}
+      colorScheme={colorScheme || 'nivo'}
       enableArea={enableArea}
       enablePoints={enablePoints}
-      lineWidth={lineWidth}
-      pointColor={pointColor}
+      pointColor={pointColor?.colorPickedHex}
+      pointBorderWidth={pointBorderWidth?.size}
+      pointBorderColor={pointBorderColor?.colorPickedHex}
       pointSize={pointSize}
       yMarker={yMarker}
-      width={`${settings.width?.size}${settings.width?.unit}`}
-      height={`${settings.height?.size}${settings.height?.unit}`}
-      yMarkerValue={yMarkerValue}
-      yMarkerOrientation={yMarkerOrientation}
-      yMarkerColor={yMarkerColor}
-      yMarkerWidth={yMarkerWidth}
-      yMarkerLabel={yMarkerLabel}
-      xMarker={xMarker}
-      xMarkerValue={xMarkerValue}
-      xMarkerOrientation={xMarkerOrientation}
-      xMarkerColor={xMarkerColor}
-      xMarkerWidth={xMarkerWidth}
-      xMarkerLabel={xMarkerLabel}
-      yMarkerLabelColor={yMarkerLabelColor}
-      xMarkerLabelColor={xMarkerLabelColor}
+      width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
+      height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
       constantsAxises={constantsAxises}
-      sort={sort}
-      tickRotation={tickRotation}
       bottomAxis={bottomAxis}
       enableGridX={enableGridX}
       enableGridY={enableGridY}
+      xFormat={getFormatValueString(settings, {name: 'xFormat'})}
+      yFormat={getFormatValueString(settings, {name: 'yFormat'})}
+      lineWidth={lineWidth?.size}
+      areaBlendMode={areaBlendMode}
+      areaOpacity={areaOpacity?.size}
+      areaBaselineValue={areaBaselineValue}
+      axisBottom={settings.axisBottom ? {
+        orient: 'bottom',
+        tickSize: settings.bottomTickSize?.size,
+        tickPadding: settings.bottomTickPadding?.size,
+        tickRotation: settings.bottomTickRotation?.size,
+        legend: settings.bottomLegend,
+        legendOffset: settings.bottomLegendOffset?.size,
+        legendPosition: 'middle'
+      } : null}
+      axisTop={settings.axisTop ? {
+        orient: 'top',
+        tickSize: settings.topTickSize?.size,
+        tickPadding: settings.topTickPadding?.size,
+        tickRotation: settings.topTickRotation?.size,
+        legend: settings.topLegend,
+        legendOffset: settings.topLegendOffset?.size,
+        legendPosition: 'middle'
+      } : null}
+      axisLeft={settings.axisLeft ? {
+        orient: 'left',
+        tickSize: settings.leftTickSize?.size,
+        tickPadding: settings.leftTickPadding?.size,
+        tickRotation: settings.leftTickRotation?.size,
+        legend: settings.leftLegend,
+        legendOffset: settings.leftLegendOffset?.size,
+        legendPosition: 'middle'
+      } : null}
+      axisRight={settings.axisRight ? {
+        orient: 'right',
+        tickSize: settings.rightTickSize?.size,
+        tickPadding: settings.rightTickPadding?.size,
+        tickRotation: settings.rightTickRotation?.size,
+        legend: settings.rightLegend,
+        legendOffset: settings.rightLegendOffset?.size,
+        legendPosition: 'middle'
+      } : null}
+      legend={settings.use_legend && {
+        anchor: settings.legend_anchor,
+        direction: settings.legend_direction,
+        itemDirection: settings.legend_item_direction,
+        translateX: settings.legend_translate_x,
+        translateY: settings.legend_translate_y,
+        itemsSpacing: settings.legend_items_spacing,
+        itemWidth: settings.legend_item_width || 60,
+        itemHeight: settings.legend_item_height,
+        itemOpacity: settings.legend_item_opacity?.size,
+        symbolSize: settings.legend_symbol_size,
+        symbolShape: settings.legend_symbol_shape
+      }}
     />
   );
 };

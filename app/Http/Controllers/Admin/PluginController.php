@@ -6,110 +6,155 @@ use App\Altrp\Plugin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 use Nwidart\Modules\Facades\Module;
 
 
 class PluginController extends Controller
 {
-    /**
-     * Главная страница со всеми плагинами
-     * @return \Illuminate\Http\JsonResponse
-     */
-      public function index()
-      {
-          $modules = Module::all();
-          $modulesStatusesFile = base_path('modules_statuses.json');
-          if (!file_exists($modulesStatusesFile)) {
-              $content = '';
-              $plugins = Plugin::all();
-              foreach ($plugins as $plugin) {
-                  $enabled = $plugin->enabled ? 'true' : 'false';
-                  $content .= '"' . $plugin->name . '": ' . $enabled . ',';
-              }
-              file_put_contents($modulesStatusesFile, '{' . trim($content, ',') . '}');
-          }
-          $modulesStatusesConfig = json_decode(file_get_contents($modulesStatusesFile), true);
-          $modulesArr = [];
-          if ($modules) {
-              foreach ($modules as $module) {
-                  if (!isset($modulesStatusesConfig[$module->getName()])) {
-                      $modulesStatusesConfig[$module->getName()] = false;
-                      file_put_contents($modulesStatusesFile, json_encode($modulesStatusesConfig));
-                  }
-                  $enabled = $module->isEnabled();
-                  $modulesArr[] = [
-                      'name' => $module->getName(),
-                      'enabled' => $enabled,
-                      'image' => $module->json()->image,
-                      'url' => '/plugins/' . strtolower($module->getName())
-                  ];
-              }
-          }
-          return response()->json($modulesArr);
+  /**
+   * Переключатель состояния плагина (вкл./выкл.)
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function switch( Request $request )
+  {
+
+    Plugin::switchEnable( $request->get('name'), ! ! $request->get('value') );
+
+    $plugin = new Plugin(['name'=> $request->get('name')]);
+    return response()->json( ['success' => true, 'data' => $plugin->toArray()], 200, [], JSON_UNESCAPED_UNICODE );
+  }
+
+  /**
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   * @throws \Facade\FlareClient\Http\Exceptions\NotFound
+   */
+  public function update_plugin_files( Request $request )
+  {
+    $res = ['success' => true, ];
+    $status = 200;
+
+    $plugin = new Plugin(['name'=> $request->get('name')]);
+
+    $client = new \GuzzleHttp\Client;
+    if( $request->get('version_check') ){
+
+      $version = $client->get( $plugin->check_version_url, [
+        'query' => ['plugin_name' => $plugin->name],
+        'headers' => [
+          'Authorization' => request()->cookie('altrpMarketApiToken'),
+        ]
+      ] )->getBody()->getContents();
+      $version = json_decode( $version );
+      $version = data_get( $version, 'data.version' );
+      if( ! $version ){
+        $status = 404;
+        $res['success'] = false;
+        $res['data']['message'] = 'Not Found New Version';
+      } elseif( version_compare( $plugin->version, $version ) !== -1 ){
+        $status = 404;
+        $res['success'] = false;
+        $res['data']['message'] = 'Not Found New Version';
       }
-
-    /**
-     * Переключатель состояния плагина (вкл./выкл.)
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-      public function switch(Request $request)
-      {
-          $moduleName = $request->name;
-          $value = $request->value;
-          $module = Module::has(ucfirst($moduleName));
-          if (! $module)
-              return response()->json('Module no found', 404);
-          $isEnabled = Module::isEnabled(ucfirst($moduleName));
-          $moduleInstance = Module::find(ucfirst($moduleName));
-          if ($isEnabled) {
-              $moduleInstance->disable();
-          } else {
-              $moduleInstance->enable();
-          }
-
-          $plugin = Plugin::where('name', ucfirst($moduleName))->first();
-          if (!$plugin) {
-              $plugin = new Plugin();
-          }
-          $plugin->fill([
-              'enabled' => $value,
-              'name' => ucfirst($moduleName)
-          ]);
-          $plugin->save();
-
-            if ($value) {
-                  return response()->json([
-                      'message' => Module::isEnabled(ucfirst($moduleName))
-                          ? "Plugin activated successfully"
-                          : "Plugin already activated"
-                  ]);
-            }
-            return response()->json([
-                'message' => Module::isDisabled(ucfirst($moduleName))
-                    ? "Plugin deactivated successfully"
-                    : "Plugin already deactivated"
-            ]);
+      if($status === 404){
+        return response()->json( $res, $status, [], JSON_UNESCAPED_UNICODE );
       }
-
-    /**
-     * Установить плагин
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function install(Request $request)
-    {
-        \Validator::make($request->all(), [
-            'name' => 'required',
-            'version' => 'required'
-        ]);
-        $moduleName = $request->get('name');
-        $moduleVersion = $request->get('version');
-        $success = Module::install($moduleName, $moduleVersion);
-        $exitCode = Artisan::call('migrate', ['--force' => true]);
-        if ($success)
-            return response()->json('Successfully installed!', 200);
-
-        return response()->json('Failed of installation!', 500);
     }
+
+    if( ! $plugin->update_url ){
+      $status = 404;
+      $res['success'] = false;
+      $res['data']['message'] = 'Update_url not Found in Plugin';
+    } else {
+      if( ! $plugin->updatePluginFiles() ){
+        $status = 500;
+        $res['success'] = false;
+        $res['data']['message'] = 'Update Plugin Files Error';
+      } else {
+        $plugin->clearMetadata();
+        if( $plugin->enabled ){
+          $plugin->updatePluginStaticFiles();
+        }
+      }
+    }
+
+    return response()->json( $res, $status, [], JSON_UNESCAPED_UNICODE );
+  }
+
+  /**
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   * @throws \Facade\FlareClient\Http\Exceptions\NotFound
+   */
+  public function delete_plugin( Request $request )
+  {
+
+
+    $plugin = new Plugin(['name'=> $request->get('name')]);
+    $plugin->deletePlugin();
+    return response()->json( ['success' => true, 'data' => $plugin->toArray()], 200, [], JSON_UNESCAPED_UNICODE );
+  }
+
+  /**
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   * @throws \Illuminate\Validation\ValidationException
+   */
+  public function install( Request $request )
+  {
+    $res = ['success' => true, ];
+    $status = 200;
+    $this->validate($request,
+      ['name'=>'required',
+        'update_url' => 'required',]
+    );
+
+
+    $client = new \GuzzleHttp\Client;
+    try{
+
+      $response = $client->get( $request->get('update_url'), [
+        'headers' => [
+          'altrp-domain-resource' => str_replace(['https://', 'http://'], '', Request::root()),
+          'authorization' => request()->cookie('altrpMarketApiToken'),
+        ]
+      ])->getBody()->getContents();
+    } catch(\Throwable $e){
+      $res = ['success' => false,
+        'message' => $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine(),
+        'trace' => $e->getTrace(),
+        ];
+      $status = $e->getCode();
+      return response()->json( $res, $status, [], JSON_UNESCAPED_UNICODE );
+    }
+
+    $temp_path = storage_path( 'temp' );
+    $plugin = new Plugin(['name'=>$request->get('name')]);
+    File::ensureDirectoryExists( $temp_path );
+    $filename = $temp_path . '/' . $plugin->name . '.zip';
+    File::put( $filename,  $response );
+    $archive = new \ZipArchive();
+
+    if ( ! $archive->open( $filename ) ) {
+      $res = ['success' => false,'message' => 'Zip archive could not be open'];
+      $status = 500;
+      return response()->json( $res, $status, [], JSON_UNESCAPED_UNICODE );
+    }
+
+    if ( ! $archive->extractTo( $plugin->getPath() ) ) {
+      $archive->close();
+      File::deleteDirectory( $temp_path );
+      $res = ['success' => false,'message' => 'Zip archive could not be extracted'];
+      $status = 500;
+      return response()->json( $res, $status, [], JSON_UNESCAPED_UNICODE );
+    }
+    $archive->close();
+    File::deleteDirectory( $temp_path );
+    $plugin->updatePluginStaticFiles();
+    return response()->json( $res, $status, [], JSON_UNESCAPED_UNICODE );
+  }
 }

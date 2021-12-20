@@ -13,11 +13,18 @@ const getIconStyles = (settings, id) => {
     
     styles += `.widget-icon {
         width: auto;
+        display: contents;
         ${simplePropertyStyled( getResponsiveSetting(settings, 'icon_alignment') , 'align-self')}
     }`
 
-    styles += `.widget-icon img { 
+    styles += `.widget-icon * {
         width: auto;
+        height: ${sliderStyled( getResponsiveSetting(settings, 'icon_height') )};
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'icon_fill', '', 'rgb(0, 0, 0)') , 'fill')}
+    }`
+
+    styles += `.widget-icon *:hover {
+        ${colorPropertyStyled( getResponsiveSetting(settings, 'icon_fill', ':hover', 'rgb(0, 0, 0)') , 'fill')}
     }`
 
     styles += `.content {
@@ -40,7 +47,7 @@ const getIconStyles = (settings, id) => {
         ${simplePropertyStyled( getResponsiveSetting(settings, 'description_alignment') , 'text-align')}
     }`
 
-    styles += `.widget-icon {
+    styles += `${parentClass} .widget-icon {
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'icon_padding') , "padding")}
         ${dimensionsControllerToStyles( getResponsiveSetting(settings, 'icon_margin') , "margin")}
         ${opacityStyled( getResponsiveSetting(settings, 'icon_opacity') )}

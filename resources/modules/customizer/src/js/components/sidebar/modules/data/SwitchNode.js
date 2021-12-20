@@ -20,8 +20,8 @@ class SwitchNode extends React.Component {
 
   changeByPath = (e, path) => {
     let node = this.getNode();
-    let value = _.isString(e?.target?.value) ? e.target.value : e;
-    node = mutate.set(node, `data.${path}`, value)
+    // let value = _.isString(e?.target?.value) ? e.target.value : e;
+    node = mutate.set(node, `data.${path}`, e)
     store.dispatch(setUpdatedNode(node));
   }
 

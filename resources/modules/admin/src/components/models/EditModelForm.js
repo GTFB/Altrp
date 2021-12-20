@@ -204,6 +204,7 @@ class EditModelForm extends Component {
           <label htmlFor="page-time_stamps" className="label_model font__edit">Time Stamps</label>
         </div>
 
+
       </div>
       <div className="btn__wrapper">
         <button className="btn btn_success" type="submit">{this.props.submitText}</button>

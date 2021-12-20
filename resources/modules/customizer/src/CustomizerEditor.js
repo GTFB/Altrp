@@ -33,6 +33,8 @@ import Customizer from "./js/components/sidebar/modules/widgets/Customizer";
 import Return from "./js/components/sidebar/modules/widgets/Return";
 import CustomEdge from "./js/components/sidebar/modules/widgets/CustomEdge";
 import ConnectionLine from './js/components/sidebar/modules/widgets/ConnectionLine';
+import ContextMenuCustomizer from "./js/components/sidebar/modules/data/ContextMenuCustomizer";
+import {contextMenu} from "react-contexify";
 
 const mapStateToProps = state => {
   return {
@@ -71,6 +73,12 @@ class CustomizerEditor extends Component {
     const elements = store.getState()?.customizerSettingsData;
     const customizer = store.getState()?.currentCustomizer;
     this.setState(s => ({ ...s, elements, customizer, btnActive: "btn_active" }));
+  }
+
+  updateCustomizer = async () => {
+    const customizerId = new URL(window.location).searchParams.get("customizer_id");
+    const customizer = (await this.resource.get(customizerId)).data
+    store.dispatch(setCurrentCustomizer(customizer));
   }
 
   async componentDidMount() {
@@ -121,6 +129,7 @@ class CustomizerEditor extends Component {
         if(item.id == selectEdge?.id) this.setState(s => ({ ...s, selectEdge: {} }));
       })
     }
+    this.PaneClick();
     store.dispatch(setCustomizerSettingsData(newStore));
   }
 
@@ -249,7 +258,10 @@ class CustomizerEditor extends Component {
     this.setState(s => ({ ...s, reactFlowInstance }));
   }
 
-  onNodeDragStop(event, node) {
+  onNodeDragStop = (event, node) => {
+    if (node.id !== this.state.selectNode?.id) {
+      this.PaneClick();
+    }
     store.dispatch(setUpdatedNode(node));
   }
 
@@ -326,6 +338,19 @@ class CustomizerEditor extends Component {
     });
   }
 
+  PaneClick = () => {
+    if (this.state.activePanel !== 'widgets') {
+      this.setState(state => ({ ...state, activePanel: "widgets" }));
+    }
+  }
+
+  showMenu(e){
+    contextMenu.show({
+      event: e,
+      id: "context"
+    });
+  }
+
 
   render() {
     return (
@@ -343,13 +368,17 @@ class CustomizerEditor extends Component {
                   btnChange={ this.btnChange }
                   setSources={ this.setSources }
                    onLayout={ this.onLayout }
+                   updateCustomizer={ this.updateCustomizer }
           />
           <div className="content" ref={this.reactFlowRef }>
             <ReactFlow
               elements={ this.props.elements }
               onConnect={ this.onConnect }
               onElementsRemove={ this.onElementsRemove }
+              deleteKeyCode={'Delete'}
               onElementClick={ this.onElementClick }
+              onNodeContextMenu={(e) => this.showMenu(e)}
+              onPaneClick={(e) => this.PaneClick(e)}
               onLoad={ this.onLoad }
               onDrop={ this.onDrop }
               onNodeDragStart={ this.onNodeDragStart }
@@ -359,11 +388,6 @@ class CustomizerEditor extends Component {
                 start: Start,
                 switch: Switch,
                 change: Change,
-                documentAction: DocumentAction,
-                crudAction: CrudAction,
-                apiAction: ApiAction,
-                messageAction: MessageAction,
-                customizer: Customizer,
                 return: Return,
               }}
               onEdgeUpdate={this.onEdgeUpdate}
@@ -392,6 +416,11 @@ class CustomizerEditor extends Component {
                 }}
               />
             </ReactFlow>
+            <ContextMenuCustomizer
+              node={this.state.selectNode}
+              disabled={this.state.activePanel}
+              deleteNode={this.onElementsRemove}
+            />
           </div>
         </ReactFlowProvider>
       </div>

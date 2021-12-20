@@ -29,6 +29,7 @@ import {
   widgetTypes
 } from "../../../../../admin/src/components/dashboard/widgetTypes";
 import Repeater from "../Repeater";
+import { CONTROLLER_TEXTAREA } from "../../modules/ControllersManager.js";
 
 class TableDiagram extends BaseElement {
   static getName() {
@@ -64,6 +65,7 @@ class TableDiagram extends BaseElement {
 
     this.addControl("datasource_path", {
       dynamic: false,
+      type: CONTROLLER_TEXTAREA,
       label: "Path to Data"
     });
 
@@ -178,7 +180,7 @@ class TableDiagram extends BaseElement {
 
     this.startControlSection("style", {
       tab: TAB_STYLE,
-      label: "Visual type"
+      label: "Visual"
     });
 
     const types = widgetTypes.map(type => {

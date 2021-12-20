@@ -238,7 +238,17 @@ const COLLECTION_OPTIONS = [
         required: false,
       }),
     ],
-  }
+  },
+  {
+    value: 'Collection.values',
+    objectInstance: 'Collection',
+    label: 'values',
+    description: 'Reset the keys on the underlying array.',
+    classDescription,
+    returns: ANY,
+    parameters:[
+    ],
+  },
 ];
 
 export default COLLECTION_OPTIONS

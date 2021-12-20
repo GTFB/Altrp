@@ -44,6 +44,7 @@ import getInputGalleryStyles from "./helpers/getInputGalleryStyles";
 import {getResponsiveSetting} from "../helpers";
 import InputRangeSliderComponent
   from "../../../../editor/src/js/components/widgets/styled-components/InputRangeSliderComponent";
+import RangeSliderTableComponent from "../../../../editor/src/js/components/widgets/styled-components/RangeSliderTableComponent"
 import getTemplateStyles from "./helpers/getTemplateStyles";
 import TooltipComponent from "../../../../editor/src/js/components/widgets/styled-components/TooltipComponent";
 import getInputMultiSelectStyles, {getInputMultiSelectPopoverStyles} from "./helpers/getInputMultiSelectStyles";
@@ -52,8 +53,10 @@ import getInputTextAutocompleteStyles from "./helpers/getInputTextAutocompleteSt
 import TreeComponent from "../../../../editor/src/js/components/widgets/styled-components/TreeComponent";
 import InputDateRangeComponent
   from "../../../../editor/src/js/components/widgets/styled-components/InputDateRangeComponent";
+import getIconStyles from "./helpers/getIconStyles";
 import StarsComponent from "../../../../editor/src/js/components/widgets/styled-components/StarsComponent";
 import ProgressBarComponent from "../../../../editor/src/js/components/widgets/styled-components/ProgressBarComponent";
+import MenuBlueprintCSS from "../../../../../../server/classes/components/MenuPlaceholder/MenuBlueprintCSS";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -70,6 +73,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         case "image-lightbox":
           styles+=ImageLightboxComponent(item.settings,id);
           break;
+        case "icon":
+          styles += `.${prefix}${id} {${getIconStyles(item.settings, id)}}`
+          break;
         case "pie-diagram":
           styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
           break;
@@ -80,6 +86,12 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
           break;
         case "point-diagram":
+          styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
+          break;
+        case "funnel-diagram":
+          styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
+          break;
+        case "radar-diagram":
           styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
           break;
         case "tabs-switcher":
@@ -128,6 +140,7 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles+=getTabsStyles(item.settings, id);
           break;
         case "menu":
+          styles+=MenuBlueprintCSS;
           styles+=getMenuStyles(item.settings,id);
           break;
         case "breadcrumbs":
@@ -143,6 +156,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           break;
         case 'table': {
           styles += getTableStyles(item.settings, id);
+          styles += `.${prefix}${id} {${RangeSliderTableComponent(
+            item.settings,
+          )}}`;
         }
           break;
         case 'text': {
@@ -175,9 +191,11 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         }
           break
         case "input-date-range": {
-          styles += `.${prefix}${id} {${InputDateRangeComponent(
+          styles += InputDateRangeComponent(
             item.settings,
-          )}}`;
+            id,
+            prefix
+          );
         }
         break
         case "input-checkbox": {

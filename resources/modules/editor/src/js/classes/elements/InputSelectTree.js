@@ -116,18 +116,6 @@ class InputSelectTree extends BaseElement {
       responsive: false,
     });
 
-    this.addControl("hide_search", {
-      type: CONTROLLER_SWITCHER,
-      responsive: false,
-      label: "Hide Filter"
-    });
-
-    this.addControl("no_results_text", {
-      type: CONTROLLER_TEXT,
-      label: "No results text",
-      responsive: false,
-    });
-
     this.addControl("minimal", {
       type: CONTROLLER_SWITCHER,
       responsive: false,
@@ -186,15 +174,6 @@ class InputSelectTree extends BaseElement {
       label: "Sort Default"
     });
 
-    this.addControl("model_for_options", {
-      type: CONTROLLER_SELECT2,
-      label: "Choose Datasource for Select Options",
-      nullable: true,
-      isClearable: true,
-      options_resource:
-        "/admin/ajax/models_options?with_names=1&not_plural=1&with_sql_queries=1"
-    });
-
     this.addControl("params_for_update", {
       type: CONTROLLER_TEXTAREA,
       label: "Params for Update Options",
@@ -215,19 +194,8 @@ class InputSelectTree extends BaseElement {
 
     this.addControl("content_options", {
       type: CONTROLLER_TEXTAREA,
-      label: "Or Type Select Options",
-      description:
-        'Enter each option in a separate line. To differentiate between label and value, separate them with a pipe char ("|"). For example: f_name | First Name'
+      label: "Path",
     });
-
-    this.addControl('tree_substitute_datasource', {
-      type: CONTROLLER_TEXTAREA,
-      label: 'Substitute values',
-      responsive: false,
-      dynamic: false,
-      description: 'label | alias \n icon | alias \n tree_id | alias \n parent | alias',
-    });
-
 
     this.addControl("content_default_value", {
       type: CONTROLLER_TEXTAREA,
@@ -282,61 +250,28 @@ class InputSelectTree extends BaseElement {
 
     this.endControlSection();
 
-    actionsControllers(this, "Click Actions", "click_");
+    this.startControlSection('search', {
+      label: 'Search',
+    })
+
+    this.addControl('s_off', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Search Off'
+    })
+
+    this.addControl("no_results_text", {
+      type: CONTROLLER_TEXT,
+      label: "No results text",
+      responsive: false,
+    });
+
+    this.endControlSection();
+
+    // actionsControllers(this, "Click Actions", "click_");
 
     actionsControllers(this, "Change Actions", "change_");
 
-    actionsControllers(this, "On Search Actions", "s_");
-
-    this.startControlSection("create_section", {
-      label: "Creating New Items"
-    });
-
-    this.addControl("create", {
-      type: CONTROLLER_SWITCHER,
-      responsive: false,
-      label: "Allow Creating New Items"
-    });
-
-    this.addControl("create_text", {
-      responsive: false,
-      type: CONTROLLER_TEXTAREA,
-      conditions: {
-        create: true,
-      },
-      label: "Create Text",
-      description:'Create {{__query__}}',
-    });
-
-    this.addControl("create_url", {
-      responsive: false,
-      conditions: {
-        create: true,
-      },
-      label: "POST URL",
-    });
-
-    this.addControl("create_params", {
-      responsive: false,
-      type: CONTROLLER_TEXTAREA,
-      conditions: {
-        create: true,
-      },
-      label: "POST Params",
-      description:'Enter each param for Query in a separate line.<br/>To differentiate between label and value, separate them with a pipe char ("|").<br/>For example: title | Post.<br/>Or<br/>title | {\'{{title}}\'} for Take Value from This Form Field with Name "title" \n',
-    });
-
-    this.addControl('label_path', {
-      label: 'Label Alias',
-      responsive: false,
-    })
-
-    this.addControl('value_path', {
-      label: 'Value Alias',
-      responsive: false,
-    })
-
-    this.endControlSection()
+    // actionsControllers(this, "On Search Actions", "s_");
 
     this.startControlSection("label_style_section", {
       tab: TAB_STYLE,

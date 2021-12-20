@@ -50,7 +50,11 @@ const Cell = ({ cell, settings }) => {
 
       let cellStyles = _.get(cell, 'column.column_styles_field');
       cellStyles = _.get(row.original, cellStyles, '');
-      cellStyles = mbParseJSON(cellStyles, {});
+      if(_.isObject(cellStyles)){
+
+      } else {
+        cellStyles = mbParseJSON(cellStyles, {});
+      }
       cellProps.style = _.assign({...cellStyles}, cellProps.style);
     }
     // if(replace_rows){

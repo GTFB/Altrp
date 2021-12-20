@@ -6,24 +6,38 @@ import {Select} from "@blueprintjs/select";
 import CONDITIONS_OPTIONS from "../../../../../front-app/src/js/constants/CONDITIONS_OPTIONS";
 
 const SIMPLE_OPERATORS = [
+  'false',
+  'true',
   'empty',
   'not_empty',
   'null',
   'not_null',
+  'else',
 ]
-
+const OPTIONS = [
+  {
+    value: "true",
+    label: "True"
+  },
+  {
+    value: "false",
+    label: "False"
+  },
+  ...CONDITIONS_OPTIONS,
+]
 class SwitcherRepeater extends Component {
 
   render() {
     const {items} = this.props;
+
     return <div className="switcher-repeater">
       {items.map((item, idx) => {
         const { operator} = item;
-        const buttonText = CONDITIONS_OPTIONS.find(o=>o.value === operator)?.label || '';
+        const buttonText = OPTIONS.find(o=>o.value === operator)?.label || '';
         return <div className="switcher-repeater-item d-flex align-items-start"
                     key={item.id}>
           <Select
-            items={CONDITIONS_OPTIONS}
+            items={OPTIONS}
             popoverProps={{
               minimal:true,
             }}

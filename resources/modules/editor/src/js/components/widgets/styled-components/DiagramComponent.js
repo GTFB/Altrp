@@ -1,45 +1,9 @@
 import {getResponsiveSetting} from "../../../../../../front-app/src/js/helpers";
-import {defaultStyled, sliderStyled, styledString} from "../../../../../../front-app/src/js/helpers/styles";
+import {colorPropertyStyled, defaultStyled, sliderStyled, styledString} from "../../../../../../front-app/src/js/helpers/styles";
 
 export default function DiagramComponent(settings) {
-  const styles = [
-    "altrp-dashboard__tooltip--margin",
-      ["margin", "style_margin_tooltip", "dimensions"],
-      ["padding", "style_padding_tooltip", "dimensions"],
-    "}",
-
-    "altrp-dashboard__tooltip--width",
-      ["padding-top", "style_width_tooltip"],
-    "}",
-
-    "altrp-dashboard__tooltip--font",
-      ["", "style_font_tooltip", "typographic"],
-    "}",
-
-    "altrp-dashboard__tooltip--font-color",
-      ["color", "style_font_color_tooltip", "color"],
-    "}",
-
-    "altrp-dashboard__tooltip--label-background",
-      ["background-color", "style_background_color_tooltip", "color"],
-    "}",
-
-    "altrp-dashboard__tooltip--label-background-shadow",
-      ["background-color", "style_background_tooltip_shadow", "shadow"],
-    "}",
-
-    "altrp-dashboard__tooltip--border-type",
-      ["border-style", "border_type_tooltip"],
-    "}",
-
-    "altrp-dashboard__tooltip--border-width",
-      ["border-width", "border_width_tooltip", "dimensions"],
-    "}",
-
-    "altrp-dashboard__tooltip--border-color",
-      ["border-color", "border_color_tooltip", "color"],
-    "}",
-
+  let appendStyles = ``
+  let styles = [
     "altrp-diagram",
       ["width", "width", "slider"],
       ["height", "height", "slider"],
@@ -71,7 +35,41 @@ export default function DiagramComponent(settings) {
     'arc-label',
       ['', 'arc_label_typography', 'typographic'],
       ['fill', 'arc_label_color', 'color'],
-    '}'
+    '}',
   ];
-  return styledString(styles, settings)
+
+  if (settings.useCustomTooltips) {
+    styles = [
+      ...styles,
+      "altrp-dashboard__tooltip",
+        ["margin", "style_margin_tooltip", "dimensions"],
+        ["padding", "style_padding_tooltip", "dimensions"],
+        ["width", "style_width_tooltip"],
+        ["", "style_font_tooltip", "typographic"],
+        ["color", "style_font_color_tooltip", "color", "!important"],
+        ["background-color", "style_background_color_tooltip", "color"],
+        ['border-radius', 'border_radius_tooltip', 'slider'],
+        ["background-color", "style_background_tooltip_shadow", "shadow"],
+        ["border-style", "border_type_tooltip"],
+        ["border-width", "border_width_tooltip", "dimensions"],
+        ["border-color", "border_color_tooltip", "color"],
+      "}",
+    ]
+
+    appendStyles += `.altrp-dashboard__tooltip--font {
+      ${colorPropertyStyled(getResponsiveSetting(settings, 'style_font_color_tooltip'), 'color', '!important')}
+    }`
+
+    if (!getResponsiveSetting(settings, 'style_background_color_tooltip')) {
+      appendStyles += `.altrp-dashboard__tooltip--label-background {
+        background-color: white;
+      }`
+    }
+  }
+
+  // appendStyles += `.altrp-dashboard__tooltip < div {
+  //   padding: 0 !important;
+  // }`
+
+  return styledString(styles, settings) + appendStyles
 }

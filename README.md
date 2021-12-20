@@ -4,11 +4,35 @@
 ## Changelog
 
 
+### 0.19.10
++ Add Menu Widget Server Side Rendering
+
+### 0.19.9
+* Fix Carousel Widgets Synchronize
++ Add `Single Click for Lightbox` and `<img/> Tag` Settings for Carousel Widget
+
+### 0.19.8
+* Fix Dropbar with Template Issue
+* Fix Import/Export Issues
+* Fix Placeholders Color for Widgets
+* Fix Icon in Toggle Button In Menu Widget Issue
+
+### 0.19.7
+* Fix Lightbox Issues
+
+### 0.19.6
+* Fix Input Select Tree Widget
+* Fix Autofocus Issue in Input Autocomplete Widget
++ Add Filter Options in Input Autocomplete Widget
+
+### 0.19.5
++ Add Range Slider Filter for Table
+
 ### 0.19.4
 + Add Stars Input Widget
++ Add Progressbar Widget
 * Fix Sources Auth settings Bug
-+ Add Null Palceholder in Select-type Filter In table Widget
-
++ Add Null Placeholder in Select-type Filter In table Widget
 
 ### 0.19.3
 + Add Typing and Select Actions in Input Text Autocomplete Widget

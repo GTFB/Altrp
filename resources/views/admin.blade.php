@@ -27,7 +27,7 @@
     let altrp_version = '{!! config( 'app.altrp_version' ) !!}';
 
     window.altrpMenus = [];
-    
+
   </script>
 
   <script src="{{ altrp_asset( '/modules/admin/admin.js', 'http://localhost:3002/' ) }}" defer></script>
@@ -35,10 +35,23 @@
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">
 
+  @php
+    echo print_statics('style', 'ADMIN_HEAD_STYLE' );
+  @endphp
+  @php
+    echo print_statics('script', 'ADMIN_HEAD_SCRIPTS' );
+  @endphp
 </head>
 <body>
 <div id="admin">
 
 </div>
 </body>
+
+@php
+  echo print_statics('style', 'HEAD_BOTTOM_STYLE' );
+@endphp
+@php
+  echo print_statics('script', 'HEAD_BOTTOM_SCRIPTS' );
+@endphp
 </html>

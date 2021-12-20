@@ -95,6 +95,7 @@ const AdminBarWrapper = styled.div`
 
 
 & .admin-bar__tool {
+  position: relative;
   margin-left: 20px;
   cursor: pointer;
 }
@@ -119,8 +120,11 @@ const AdminBarWrapper = styled.div`
 }
 
 & .admin-bar__popup-template {
-  position: relative;
+  position: absolute;
+  left: 0;
+  top: 30px;
   width: 150px;
+  max-height: 450px;
   padding-bottom: 7px;
   padding-top: 5px;
 
@@ -129,12 +133,14 @@ const AdminBarWrapper = styled.div`
   background-color: #343b4c;
 }
 
+  & .admin-bar__popup-popups {
+    position: relative;
+  }
+
 & .admin-bar__popup-template-item {
   display: flex;
   justify-content: space-between;
-  padding: 4px 11px;
-
-  overflow: hidden;
+  padding: 6px 11px;
   text-overflow: ellipsis;
 }
 
@@ -148,10 +154,11 @@ const AdminBarWrapper = styled.div`
 
 & .admin-bar__popup-popups-items {
   display: none;
-  position: fixed;
-  left: 160px;
+  position: absolute;
+  right: -90px;
+  top: 4px;
   width: 150px;
-  padding-bottom: 7px;
+  //padding-bottom: 7px;
   margin-top: -4px;
 
   background-color: #343b4c;
@@ -162,7 +169,7 @@ const AdminBarWrapper = styled.div`
 }
 
 & .admin-bar__popup-popups-item {
-  padding: 4px 11px;
+  padding: 6px 11px;
 
   overflow: hidden;
   text-overflow: ellipsis;
@@ -299,8 +306,13 @@ const AdminBarWrapper = styled.div`
     }
 
     & .admin-bar__tools {
-      margin-bottom: 10px;
       flex-grow: 1;
+      order: 2;
+    }
+
+    & .admin-bar__left {
+      order: 1;
+      margin-bottom: 10px;
     }
 
     & .admin-bar__tool:last-child {

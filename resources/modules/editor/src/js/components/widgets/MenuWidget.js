@@ -1,7 +1,7 @@
 import {getMenuByGUID} from "../../../../../front-app/src/js/functions/menus";
 import {addMenu} from "../../../../../front-app/src/js/store/menus-storage/actions";
 
-const { isEditor, mbParseJSON, conditionChecker} = window.altrpHelpers;
+const { isEditor, mbParseJSON, conditionChecker, renderAsset} = window.altrpHelpers;
 
 
 const {Button, ButtonGroup, Menu, MenuItem, Position} = window.altrpLibs.Blueprint;
@@ -46,9 +46,11 @@ class MenuWidget extends Component {
     let menuData = menus.find(menu => menu.guid === menuGUID)
     if (!menuData) {
       menuData = await getMenuByGUID(menuGUID);
-      menuData.children = mbParseJSON(menuData.children)
-      menuData.settings = mbParseJSON(menuData.settings)
-      appStore.dispatch(addMenu(menuData));
+      if(menuData) {
+        menuData.children = mbParseJSON(menuData.children)
+        menuData.settings = mbParseJSON(menuData.settings)
+        appStore.dispatch(addMenu(menuData));
+      }
     }
     this.setState(state => ({...state, menuData}), () => {
       this.loading = false;
@@ -136,12 +138,22 @@ class MenuWidget extends Component {
 
       popoverProps.position = this.getPosition(positionSetting)
 
+      popoverProps.portalClassName += " altrp-menu-first-portal"
     } else {
       const positionSetting = this.props.element.getResponsiveSetting('sub_popover_position', "", "auto");
 
       popoverProps.position = this.getPosition(positionSetting)
 
+      popoverProps.portalClassName += " altrp-sub-portal"
     }
+
+    let caret = "";
+
+    // const caretMedia = this.props.element.getResponsiveSetting("caret");
+    //
+    // if(caretMedia?.type) {
+    //   caret = caretMedia
+    // }
 
     return <>
       {items.map((item) => {
@@ -229,8 +241,10 @@ class MenuWidget extends Component {
       return null;
     }
     let toggle_icon = _.get(menuData, 'settings.toggle_icon', '')
+    const position = this.props.element.getResponsiveSetting("popover_position_toggle", "", "auto")
     return <Popover2 content={this.renderVerticalMenu()}
                      className="altrp-popover"
+                     position={position}
                      portalContainer={window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body}
                      portalClassName={`altrp-portal altrp-portal_main altrp-portal${this.elementId}`}
                      minimal={true}>

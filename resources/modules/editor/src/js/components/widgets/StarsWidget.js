@@ -2,7 +2,6 @@ import React from "react";
 import EmptyStarInitial from "../../../svgs/empty-star.svg";
 import StarInitial from "../../../svgs/star.svg";
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
-import {isEditor, replaceContentWithData} from "../../../../../front-app/src/js/helpers";
 
 const StarsList = styled.ul`
   list-style-type: none;
@@ -14,6 +13,10 @@ const StarsList = styled.ul`
 
 const Star = styled.li`
   cursor: pointer;
+
+  & svg {
+    transition: none
+  }
 `
 
 const EmptyStarIcon = styled(EmptyStarInitial)`
@@ -21,23 +24,13 @@ const EmptyStarIcon = styled(EmptyStarInitial)`
 `;
 
 const StarIcon = styled(StarInitial)`
-
 `;
 
-
+const {isEditor, getDataByPath, replaceContentWithData} = window.altrpHelpers
 
 class StarsWidget extends Component {
   constructor(props) {
     super(props);
-
-    const settings = props.element.getSettings();
-
-    const defaultValue = parseInt(settings.default_value?.size || 0);
-
-    this.state = {
-      settings,
-      value: defaultValue
-    };
 
     props.element.component = this;
 
@@ -48,8 +41,25 @@ class StarsWidget extends Component {
       this.render = props.baseRender(this);
     }
 
+    const settings = props.element.getSettings();
 
-    this.dispatchFieldValueToStore(defaultValue);
+    let defaultValue = this.getContent(
+      "default_value"
+    );
+
+    if(!isNaN(defaultValue)) {
+      defaultValue = _.parseInt(defaultValue) || -1;
+    } else {
+      defaultValue = -1
+    }
+
+    this.state = {
+      settings,
+      value: defaultValue,
+      changed: false,
+    };
+
+    this.dispatchFieldValueToStore(defaultValue || 0);
 
     this.handleClick = this.handleClick.bind(this);
   }
@@ -63,10 +73,33 @@ class StarsWidget extends Component {
 
     this.setState((s) => ({
       ...s,
+      changed: true,
       value
     }), () => {
       this.dispatchFieldValueToStore(value, true)
     });
+  }
+
+  _componentDidUpdate(previousProps, previousState) {
+    if(this.state.settings.default_value !== previousState.settings.default_value) {
+      let defaultValue = this.getContent(
+        "default_value"
+      );
+
+      if(!isNaN(defaultValue)) {
+        defaultValue = _.parseInt(defaultValue) || -1;
+      } else {
+        defaultValue = -1
+      }
+
+      this.setState((s) => ({
+        ...s,
+        value: defaultValue
+      }))
+
+      this.dispatchFieldValueToStore(defaultValue || 0);
+
+    }
   }
 
   /**
@@ -127,15 +160,27 @@ class StarsWidget extends Component {
     const countNumber = parseInt(this.props.element.getContent("count")?.size) || 1;
     const count = new Array(countNumber).fill("", 0, countNumber);
     const value = this.getValue();
+    let visualValue = this.getContent("second_default_value");
+
+    if(!isNaN(visualValue)) {
+      visualValue = _.parseInt(visualValue) || 0;
+    } else {
+      visualValue = 0
+    }
 
     return (
       <StarsList className="altrp-stars-list">
         {
           count.map((count, idx) => {
-            const active = value-1 >= idx
+            let active = value-1 >= idx
+
+            if(!this.state.changed && this.state.value === -1 ) {
+              active = _.parseInt(visualValue)-1 >= idx
+            }
+
             return <Star
               onClick={() => this.handleClick(idx)}
-              className={"altrp-stars-star" + (active ? " active" : "")}
+              className={"altrp-stars-star" + (active ? " active" : "") + (!this.state.changed ? " altrp-stars-visual" : "")}
               acitve={active}
               key={idx}
             >

@@ -1,3 +1,4 @@
+import SliderRangeFilter from "./components/filters/SliderRangeFilter";
 import ('../altrp-posts/altrp-posts.scss');
 import update from 'immutability-helper'
 import ('../../../sass/altrp-pagination.scss');
@@ -951,6 +952,11 @@ export function settingsToColumns(settings, widgetId) {
           case 'min_max': {
             _column.filter = 'between';
             _column.Filter = NumberRangeColumnFilter;
+          }
+            break;
+          case 'range_slider': {
+            _column.filter = 'between';
+            _column.Filter = SliderRangeFilter;
           }
             break;
           case 'slider': {

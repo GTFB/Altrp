@@ -169,6 +169,19 @@ class Carousel extends BaseElement {
       default: false
     });
 
+    this.addControl('lightbox_s_click', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Single Click for Lightbox',
+      conditions:{
+        'lightbox_slides_content' : true,
+      },
+    });
+
+    this.addControl('img_content', {
+      type: CONTROLLER_SWITCHER,
+      label: '<img/> Tag',
+    });
+
     this.addControl('per_view_slides_content', {
       type: CONTROLLER_SELECT,
       label: 'Slides per view',
@@ -919,13 +932,6 @@ class Carousel extends BaseElement {
     );
 
     this.endControlSection();
-
-    // this.startControlSection('lightbox_style', {
-    //   tab: TAB_STYLE,
-    //   label: 'Lightbox',
-    // });
-
-    // this.endControlSection();
 
     advancedTabControllers(this);
   }

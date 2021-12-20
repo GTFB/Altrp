@@ -1,13 +1,12 @@
 import React, {Component, Suspense} from "react";
-import {
+const {
   getComponentByElementId,
   getHTMLElementById,
   isEditor,
   isSSR,
   parseURLTemplate, printElements,
   renderAssetIcon, scrollToElement
-} from "../../../../../front-app/src/js/helpers";
-import {Link} from "react-router-dom";
+} = window.altrpHelpers;
 import AltrpDropbar from "../altrp-dropbar/AltrpDropbar";
 
 (window.globalDefaults = window.globalDefaults || []).push(`

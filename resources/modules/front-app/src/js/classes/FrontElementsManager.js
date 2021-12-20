@@ -20,6 +20,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "action-trigger",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'ActionTriggerWidget' */ "../../../../editor/src/js/components/widgets/ActionTriggerWidget"
+          );
+        }
+      },
+      {
         name: "heading-type-animating",
         import: async () => {
           return await import(
@@ -376,6 +384,22 @@ class FrontElementsManager {
         import: async () => {
           return await import(
             /* webpackChunkName: 'LineDiagramWidget' */ "../../../../editor/src/js/components/widgets/diagrams/LineDiagramWidget"
+          );
+        }
+      },
+      {
+        name: "funnel-diagram",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'FunnelDiagramWidget' */ "../../../../editor/src/js/components/widgets/diagrams/FunnelDiagramWidget"
+          );
+        }
+      },
+      {
+        name: "radar-diagram",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'RadarDiagramWidget' */ "../../../../editor/src/js/components/widgets/diagrams/RadarDiagramWidget"
           );
         }
       },

@@ -256,7 +256,18 @@ class AltrpForm {
       data.user_message = userMessage;
     } else {
       this.fields.forEach(field => {
-        data[field.getFieldId()] = field.getValue();
+        switch (field.getName()) {
+          case "input-date-range":
+            const startField = field.getSettings("field_id_start");
+            const endField = field.getSettings("field_id_end");
+            const value = field.getValue();
+
+            data[startField] = value[0];
+            data[endField] = value[1];
+            break
+          default:
+            data[field.getFieldId()] = field.getValue();
+        }
       });
     }
     return data;

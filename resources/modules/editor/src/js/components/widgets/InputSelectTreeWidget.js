@@ -1,4 +1,4 @@
-import {childrenInChildren, getFromDatasource, normalizeValues, updateRepeater} from "./TreeWidget";
+import {matchSorter} from "match-sorter";
 
 const {
   convertData,
@@ -13,13 +13,12 @@ const {
   getDataFromLocalStorage
 } = window.altrpHelpers;
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
-import AltrpModel from "../../classes/AltrpModel";
 import React from "react";
+import recurseEach from "../../helpers/recurse-each";
 const Button = window.altrpLibs.Blueprint.Button;
 const MenuItem = window.altrpLibs.Blueprint.MenuItem;
 const Popover = window.altrpLibs.Popover2;
 const TreeBlueprint = window.altrpLibs.Blueprint.Tree;
-const Classes = window.altrpLibs.Popover2Classes;
 const Alignment = window.altrpLibs.Blueprint.Alignment;
 const InputGroup = window.altrpLibs.Blueprint.InputGroup;
 
@@ -29,6 +28,16 @@ const InputGroup = window.altrpLibs.Blueprint.InputGroup;
   display: flex;
   grid-gap: 5px;
   flex-direction: column;
+}
+
+.altrp-select-tree_popover{
+  .bp3-tree{
+    max-height: 250px;
+    overflow: auto;
+  }
+  .bp3-tree-node{
+    cursor: pointer;
+  }
 }
 
 .altrp-field {
@@ -439,34 +448,69 @@ class InputSelectTreeWidget extends Component {
       window.elementDecorator(this);
     }
     this.defaultValue =
-      this.getContent("content_default_value") ||
-      (this.valueMustArray() ? [] : "");
-    if (this.valueMustArray() && !_.isArray(this.defaultValue)) {
-      this.defaultValue = [];
-    }
+      this.getContent("content_default_value")
+    let options = [];
 
+    const flatOptions = [];
+    if(isEditor()){
+      options = [
+        {
+          label: 'Empty First Level',
+          value: 1,
+          id: 1,
+          childNodes: [],
+        },
+        {
+          label: 'First Level With Child',
+          value: 2,
+          id: 2,
+          childNodes: [
+
+            {
+              label: 'Empty Second Level',
+              value: 3,
+              id: 3,
+              childNodes: [
+
+              ],
+            },
+
+            {
+              label: 'Second Level With Child',
+              value: 4,
+              id: 4,
+              childNodes: [
+                {
+                  label: 'Empty Third Level',
+                  value: 5,
+                  id: 5,
+                  childNodes: [
+
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ];
+      recurseEach(options, 'childNodes', item => {
+        flatOptions.push(item)
+      });
+    }
     this.state = {
       settings: {...props.element.getSettings()},
       value: this.defaultValue,
-      options: this.getFromDatasource({}, ["content_options", "tree_substitute_datasource"]),
-      optionsList: this.getFromDatasource({}, ["content_options", "tree_substitute_datasource"], true),
+      options,
+      isOpen:false,
+      flatOptions,
       paramsForUpdate: null,
       searchValue: ""
     };
 
-
-    this.updateNode = this.updateNode.bind(this);
-    this.handleNodeExpand = this.handleNodeExpand.bind(this);
-    this.handleNodeCollapse = this.handleNodeCollapse.bind(this);
-    this.handleNodeClick = this.handleNodeClick.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
-
     this.popoverProps = {
       usePortal: true,
-
       position: 'bottom',
       minimal: props.element.getResponsiveSetting('minimal'),
-      // isOpen:true ,
       portalClassName: `altrp-portal altrp-portal_input-select altrp-portal${this.props.element.getId()} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
@@ -480,24 +524,10 @@ class InputSelectTreeWidget extends Component {
   }
 
   /**
-   * В некоторых случаях значение поля должно быть массивом
-   * @return {boolean}
-   */
-  valueMustArray() {
-    return false;
-  }
-
-  normalizeValues = normalizeValues;
-  getFromDatasource = getFromDatasource;
-  updateRepeater = updateRepeater;
-  childrenInChildren = childrenInChildren;
-
-  /**
    * Чистит значение
    */
   clearValue() {
     let value = "";
-    this.onChange(value);
     this.dispatchFieldValueToStore(value, true);
   }
 
@@ -508,20 +538,7 @@ class InputSelectTreeWidget extends Component {
    * @param {{}} prevState
    */
   async _componentDidMount(prevProps, prevState) {
-    if (this.props.element.getSettings("content_options")) {
-      let options = this.getFromDatasource({}, ["content_options", "tree_substitute_datasource"]);
-      let optionsList = this.getFromDatasource({}, ["content_options", "tree_substitute_datasource"], true);
 
-      this.setState(state => ({...state, options, optionsList}));
-    } else if (
-      ["input-select"].indexOf(this.props.element.getName()) >= 0 &&
-      this.state.settings.model_for_options
-    ) {
-      let options = await new Resource({route: this.getRoute()}).getAll();
-      options = !_.isArray(options) ? options.data : options;
-      options = _.isArray(options) ? options : [];
-      this.setState(state => ({...state, options}));
-    }
     let value = this.state.value;
 
     /**
@@ -596,7 +613,7 @@ class InputSelectTreeWidget extends Component {
    * Обновление виджета
    */
   async _componentDidUpdate(prevProps, prevState) {
-    const {content_options, model_for_options} = this.state.settings;
+
     if (
       prevProps &&
       !prevProps.currentDataStorage.getProperty("currentDataStorageLoaded") &&
@@ -604,7 +621,6 @@ class InputSelectTreeWidget extends Component {
     ) {
       let value = this.getContent(
         "content_default_value",
-        this.props.element.getSettings("select2_multiple")
       );
       this.setState(
         state => ({...state, value, contentLoaded: true}),
@@ -613,56 +629,8 @@ class InputSelectTreeWidget extends Component {
         }
       );
     }
-    if (
-      this.props.element.getName() === "input-select" &&
-      this.props.element.getSettings("model_for_options")
-    ) {
-      if (
-        !(
-          this.state.settings.model_for_options ===
-          prevProps.element.getSettings("model_for_options")
-        )
-      ) {
-        let model_for_options = prevProps.element.getSettings(
-          "model_for_options"
-        );
-        let options = await new Resource({route: this.getRoute()}).getAll();
-        options = !_.isArray(options) ? options.data : options;
-        options = _.isArray(options) ? options : [];
-        this.setState(state => ({...state, options, model_for_options}));
-      }
-    }
-    /**
-     * Если обновилась модель, то пробрасываем в стор новое значение (старый источник диамических данных)
-     */
-    if (
-      !_.isEqual(this.props.currentModel, prevProps.currentModel) &&
-      this.state.value &&
-      this.state.value.dynamic
-    ) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
-    }
-
-    /**
-     * Если обновилось хранилище данных формы, currentDataStorage или модель, то получаем новые опции c сервера
-     */
-    if (
-      this.props.formsStore !== prevProps.formsStore ||
-      this.props.currentModel !== prevProps.currentModel ||
-      this.props.currentDataStorage !== prevProps.currentDataStorage
-    ) {
-      this.updateOptions();
-    }
-    // if (content_options && !model_for_options) {
-    //   let options = parseOptionsFromSettings(content_options);
-    //   if (!_.isEqual(options, this.state.options)) {
-    //     this.setState(state => ({...state, options}));
-    //   }
-    // }
-
+    this.updateOptions();
     this.updateValue(prevProps);
-
-
   }
 
   /**
@@ -797,182 +765,65 @@ class InputSelectTreeWidget extends Component {
    * Обновляет опции для селекта при обновлении данных, полей формы
    */
   async updateOptions() {
-    {
-      let formId = this.props.element.getFormId();
-      let paramsForUpdate = this.props.element.getSettings("params_for_update");
-      let formData = _.get(this.props.formsStore, [formId], {});
-      paramsForUpdate = parseParamsFromString(
-        paramsForUpdate,
-        new AltrpModel(formData)
-      );
-      /**
-       * Сохраняем параметры запроса, и если надо обновляем опции
-       */
-      let options = [...this.state.options];
-      if (!_.isEqual(paramsForUpdate, this.state.paramsForUpdate)) {
-        if (!_.isEmpty(paramsForUpdate)) {
-          if (this.props.element.getSettings("params_as_filters", false)) {
-            paramsForUpdate = JSON.stringify(paramsForUpdate);
-            options = await new Resource({
-              route: this.getRoute()
-            }).getQueried({filters: paramsForUpdate});
-          } else {
-            options = await new Resource({route: this.getRoute()}).getQueried(
-              paramsForUpdate
-            );
-          }
-          options = !_.isArray(options) ? options.data : options;
-          options = _.isArray(options) ? options : [];
-        } else if (this.state.paramsForUpdate) {
-          options = await new Resource({route: this.getRoute()}).getAll();
-          options = !_.isArray(options) ? options.data : options;
-          options = _.isArray(options) ? options : [];
-        }
-        this.setState(state => ({
-          ...state,
-          paramsForUpdate,
-          options
-        }));
-      }
-    }
-  }
-
-  /**
-   * Изменение значения в виджете
-   * @param e
-   */
-  onChange = (e)=> {
-    let value = "";
-    let valueToDispatch;
-    const settings = this.props.element.getSettings();
-    value = e.target.value;
-
-    if (e && e.value) {
-      value = e.value;
+    if(isEditor()){
+      return;
     }
 
-    if (_.isArray(e)) {
-      value = _.cloneDeep(e);
+    let newOptions = this.props.element.getResponsiveSetting('content_options') || '';
+    newOptions = getDataByPath(newOptions.replace('{{', '').replace('}}', ''))
+    if(! _.isArray(newOptions)) {
+      return;
     }
-    if (
-      this.props.element.getSettings("content_options_nullable") &&
-      e &&
-      e.value === "<null>"
-    ) {
-      value = null;
-    }
-
-    this.setState(
-      state => ({
-        ...state,
-        value
-      }),
-      () => {
-
-        if (
-          ["text", "email", "phone", "tel", "number", "password"].indexOf(
-            this.state.settings.content_type
-          ) === -1
-        ) {
-          this.dispatchFieldValueToStore(
-            valueToDispatch !== undefined ? valueToDispatch : value,
-            true
-          );
-        }
-      }
-    );
-  }
-
-  async onItemSelect(value) {
-    if (value.value) {
-      value = value.value;
-    }
-    const options = this.getOptions();
-
-    const element = this.props.element;
-    if(! options.find(option => option.value == value)){
-      const create_url = element.getResponsiveSetting('create_url');
-      if(element.getResponsiveSetting('create') && create_url){
-        this.setState(state =>({...state, widgetDisabled: true}))
-        let params = element.getResponsiveSetting('create_params') || '';
-        params = params.replace(/\{\{__query__\}\}/g, value);
-        params = parseParamsFromString(params, element.getCurrentModel(), true)
-        const resource = new Resource({route: create_url});
-        try{
-          let res = await resource.post(params)
-          if(res.data){
-            res = res.data
-          }
-          const label_path = element.getResponsiveSetting('label_path')
-          if(label_path){
-            res.label = _.get(res, label_path, res.id);
-          }
-          const value_path = element.getResponsiveSetting('value_path')
-          if(value_path){
-            res.value = _.get(res, value_path, res.id);
-          }
-          // options.unshift(res)
-        } catch (e) {
-
-        }finally {
-          this.setState(state =>({...state, widgetDisabled: false}))
-        }
-      } else {
-        // options.unshift(arguments[0])
-      }
-    }
-    this.setState(state => ({
-        ...state,
-        options,
-        value
-      }),
-      () => {
-        /**
-         * Обновляем хранилище
-         */
-        this.dispatchFieldValueToStore(
-          value,
-          true
-        );
+    const flatOptions = []
+    recurseEach(newOptions, 'childNodes', item=>{
+      flatOptions.push(item)
     })
-
-    return options
+    if(! _.isEqual(this.state.flatOptions, flatOptions)){
+      this.setState(state => ({...state, options: _.cloneDeep(newOptions), flatOptions: _.cloneDeep(flatOptions)}))
+    }
   }
-
 
   /**
    * получить опции
+   * @return []
    */
   getOptions() {
     let options = [...this.state.options];
-
-    if(!this.state.searchValue) {
-      const optionsDynamicSetting = this.props.element.getDynamicSetting(
-        "content_options"
-      );
-      const content_options = this.props.element.getResponsiveSetting('content_options');
-      const model_for_options = this.props.element.getResponsiveSetting('model_for_options');
-      if(_.isString(content_options)
-        && content_options.indexOf('{{') === 0
-        && ! model_for_options){
-        options = this.state.options
-        if( ! _.isArray(options)){
-          options = [];
-        }
-      }
-      if (optionsDynamicSetting) {
-        options = convertData(optionsDynamicSetting, options);
-      }
-      if(this.props.element.getResponsiveSetting('content_options_nullable')){
-        options.unshift({
-          label: this.props.element.getResponsiveSetting('nulled_option_title') || '',
-          value: '',
-        })
-      }
-      return options;
-    } else {
-      return this.handleSearch(this.state.searchValue, true)
+    if(! _.isArray(options)){
+      options = [];
     }
+    const optionsDynamicSetting = this.props.element.getDynamicSetting(
+      "content_options"
+    );
+    if (optionsDynamicSetting) {
+      options = convertData(optionsDynamicSetting, options);
+    }
+    if(this.state.searchValue){
+      options = matchSorter(options, this.state.searchValue, {
+        keys: [o => {
+          return o.label
+        }]
+      })
+    }
+    if(this.props.element.getResponsiveSetting('content_options_nullable')){
+      let nullLabel = '';
+      if(this.props.element.getResponsiveSetting('nulled_option_title')){
+        nullLabel = this.props.element.getResponsiveSetting('nulled_option_title')
+      }
+      options.unshift({
+        value: '',
+        label: nullLabel,
+        id: '',
+        childNodes: [],
+      })
+    }
+    options = options.map(o=>{
+      o = {...o}
+      o.hasCaret = ! ! o?.childNodes?.length
+      return o;
+    })
+
+    return options
   }
 
   /**
@@ -1043,18 +894,6 @@ class InputSelectTreeWidget extends Component {
     return value;
   }
 
-  /**
-   * @return {*}
-   */
-  getCurrentLabel() {
-    const value = this.getValue()
-
-    const options = this.state.optionsList.length > 0 ?
-      this.state.optionsList :
-      this.getFromDatasource({}, ["content_options", "tree_substitute_datasource"], true);
-
-    return options.find(option => option.value == value)?.label || ''
-  }
 
   /**
    *
@@ -1083,19 +922,25 @@ class InputSelectTreeWidget extends Component {
     </span>
   }
 
-  handleNodeClick(node, path) {
-    if(node.treeId === -1) {
-      const originallySelected = node.isSelected;
+  handleNodeClick = (node, path)=> {
+    const options = this.getOptions();
+    path = path.join('.childNodes.')
+    let value = _.get(options,`${path}.value`)
+    this.dispatchFieldValueToStore(value, true)
+    this.setState(state=>({...state, isOpen:false,}))
+  }
 
-      this.updateNode({
-        node,
-        path,
-        current: path[0],
-        isSelected: originallySelected == null ? true : !originallySelected,
-        repeater: this.onItemSelect(node),
-        next: path[1] ? path[1] : -1
-      })
+  /**
+   * Вернуть лэйбл текущего значения
+   * @return {*}
+   */
+  getLabel = ()=>{
+    const flatOptions = this.state.flatOptions;
+    let label =  flatOptions.find(o=>o.value === this.getValue())?.label || '';
+    if(! this.getValue() && this.props.element.getResponsiveSetting('content_options_nullable')){
+      label = this.props.element.getResponsiveSetting('nulled_option_title') || ''
     }
+    return label
   }
 
   forEachNode(nodes, callback) {
@@ -1109,53 +954,17 @@ class InputSelectTreeWidget extends Component {
     }
   }
 
-  handleNodeCollapse(node, path) {
 
-    this.updateNode({
-      node,
-      path,
-      current: path[0],
-      isExpanded: false,
-      repeater: this.state.options,
-      next: path[1] ? path[1] : -1
-    })
-  }
-
-  handleNodeExpand(node, path) {
-
-    this.updateNode({
-      node,
-      path,
-      current: path[0],
-      isExpanded: true,
-      repeater: this.state.options,
-      next: path[1] ? path[1] : -1
-    })
-  }
-
-  updateNode(settings) {
-    this.setState(s => {
-      const options = s.options;
-      const optionsList = this.state.optionsList.length > 0 ?
-        this.state.optionsList :
-        this.getFromDatasource({}, ["content_options", "tree_substitute_datasource"], true);
-
-      if(settings.hasOwnProperty("isExpanded")) {
-        TreeBlueprint.nodeFromPath(settings.path, options).isExpanded = settings.isExpanded;
-      } else {
-        this.forEachNode(options, node => (node.isSelected = false))
-        TreeBlueprint.nodeFromPath(settings.path, options).isSelected = settings.isSelected;
-        this.forEachNode(optionsList, node => (node.isSelected = false))
-        TreeBlueprint.nodeFromPath(settings.path, options).isSelected = settings.isSelected;
-      }
-
-      return {
-        ...s,
-        options: options,
-        optionsList
+  handleNodeToggle = (node, path) => {
+    let options = this.state.options
+    recurseEach(options, 'childNodes', item=>{
+      if(item.value === node.value){
+        item.isExpanded = ! item.isExpanded
       }
     })
+    this.setState(state=>({...state, options}))
   }
+
 
   /**
    * Обработка клика по кнопке
@@ -1177,125 +986,25 @@ class InputSelectTreeWidget extends Component {
       );
     }
   }
+
   /**
-   * Создаем элемент из поисковой строки
-   * @return {{label, value}}
+   * Фильтрация опций
+   * @param searchValue
+   * @param get
+   * @return {T[]}
    */
-  createNewItemFromQuery = () => {
-    const title = this.state.searchValue;
-
-    this.onItemSelect(title)
-  }
-  /**
-   * отрисовываем создание нового элемента
-   * @param query
-   * @param active
-   * @param handleClick
-   * @return {JSX.Element|null}
-   */
-
-  createNewItemRenderer = ( query,
-                            active,
-                            handleClick) => {
-    /**
-     * @type {FrontElement}
-     */
-    const {element} = this.props;
-    // console.log(query,
-    //   active,
-    //   handleClick);
-    if(! element.getResponsiveSetting('create')){
-      return null;
-    }
-    const {options} = this.state;
-    if (options.find(option => {
-      let label = (option.label || '') + '';
-      label = label.toLowerCase();
-      query = (query || '') + '';
-      return query === label;
-    })) {
-      return null
-    }
-    let text = element.getResponsiveSetting('create_text') || ''
-    text = text.replace('{{__query__}}', query)
-    text = replaceContentWithData(text, element.getCurrentModel().getData())
-    return (
-      <MenuItem
-        icon="add"
-        text={text}
-        active={active}
-        onClick={handleClick}
-        shouldDismissPopover={false}
-      />)
-  }
-  onQueryChange = async (s)=>{
-    const searchActions = this.props.element.getSettings("s_actions");
-    if(_.isEmpty(searchActions)){
-      return
-    }
-    if(this.searchOnPending){
-      return
-    }
-    this.searchOnPending = true;
-    try{
-
-      const actionsManager = (
-        await import(
-          /* webpackChunkName: 'ActionsManager' */
-          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
-          )
-      ).default;
-      this.props.element.getCurrentModel().setProperty('altrp_search', s);
-      await actionsManager.callAllWidgetActions(
-        this.props.element.getIdForAction(),
-        "search",
-        searchActions,
-        this.props.element
-      );
-    } catch (e) {
-      console.error(e);
-    }finally{
-      this.searchOnPending = false;
-    }
+  handleSearch = (searchValue, get=false) => {
+    this.setState(state=>({...state, searchValue}))
   }
 
-  handleSearch(value, get=false) {
-    let options = this.state.optionsList.length > 0 ?
-      this.state.optionsList :
-      this.getFromDatasource({}, ["content_options", "tree_substitute_datasource"], true);
-
-    options = options.filter(option => option.treeId === -1);
-
-    options = options.filter(option => {
-      return `${option?.label?.toLowerCase() || ''}`.indexOf(value?.toLowerCase()) >= 0;
-    })
-
-    if(!get) {
-      if(value) {
-        this.setState((s) => ({
-          ...s,
-          options,
-          searchValue: value
-        }))
-      } else {
-        options = this.getFromDatasource({}, ["content_options", "tree_substitute_datasource"]);
-
-        this.setState((s) => ({
-          ...s,
-          options,
-          searchValue: ""
-        }))
-      }
-    } else {
-      return options
-    }
+  onInteraction = (isOpen)=>{
+    this.setState(state=>({...state, isOpen}))
   }
-
   render() {
     const element = this.props.element;
     let label = null;
     const settings = this.props.element.getSettings();
-    let value = this.getCurrentLabel();
+    let buttonLabel = this.getLabel();
 
     const {
       label_icon
@@ -1373,12 +1082,7 @@ class InputSelectTreeWidget extends Component {
     const placeholder = element.getResponsiveSetting('content_placeholder');
     const content_readonly = element.getResponsiveSetting('content_readonly');
     const no_results_text = element.getResponsiveSetting('no_results_text');
-    const hideFilter = element.getResponsiveSetting('hide_search', "", false);
-    const createSwitcher = element.getContent('create') || false;
-    const createText = element.getResponsiveSetting('create_text', "", "") ;
-
-    let createLabel = createText.replace('{{__query__}}', this.state.searchValue)
-    createLabel = replaceContentWithData(createLabel, element.getCurrentModel().getData())
+    const s_off = element.getResponsiveSetting('s_off');
 
     const inputProps = {
       placeholder,
@@ -1392,17 +1096,19 @@ class InputSelectTreeWidget extends Component {
     let body = isEditor() ?
       document.getElementById("editorContent").contentWindow.document.body
       :
-      document.body
-    
+      document.body;
     input = (
       <Popover
         usePortal={false}
-        popoverClassName={`altrp-select-tree${this.props.element.getId()}`}
+        fill={true}
+        isOpen={this.state.isOpen}
+        onInteraction={this.onInteraction}
+        popoverClassName={`altrp-select-tree_popover altrp-select-tree${this.props.element.getId()}`}
         renderTarget={({isOpen, ref, ...targetProps}) => {
           targetProps.className += " altrp-select-tree-btn"
           return (
             <Button
-              text={value}
+              text={buttonLabel}
               fill
               disabled={content_readonly}
               elementRef={ref}
@@ -1422,41 +1128,25 @@ class InputSelectTreeWidget extends Component {
         content={
           <div className={"altrp-select-tree" + (position_css_classes ? ` ${position_css_classes}` : "")} id={position_css_id}>
             {
-              !hideFilter ? (
+              ! s_off ? (
                 <InputGroup
                   leftIcon="search"
                   placeholder="Filter..."
                   value={this.state.searchValue}
                   onChange={(e) => this.handleSearch(e.target.value)}
                   {...inputProps}
-                  // rightElement={this.maybeRenderClearButton(listProps.query)}
-                  ///*{...inputProps}*/
-                  // inputRef={this.handleInputRef}
-                  // onChange={listProps.handleQueryChange}
-                  // value={listProps.query}
                 />
               ) : ""
             }
             {
-              this.state.options.length > 0 ? (
+              this.getOptions().length > 0 ? (
                 <TreeBlueprint
                   contents={this.getOptions()}
                   onNodeClick={this.handleNodeClick}
-                  onNodeCollapse={this.handleNodeCollapse}
-                  onNodeExpand={this.handleNodeExpand}
+                  onNodeCollapse={this.handleNodeToggle}
+                  onNodeExpand={this.handleNodeToggle}
                 />
-              ) : !createSwitcher && <Button fill disabled={true} text={no_results_text}/>
-            }
-            {
-              createSwitcher && this.state.searchValue &&
-              <Button
-                icon="add"
-                alignText={Alignment.LEFT}
-                minimal
-                fill
-                onClick={this.createNewItemFromQuery}
-                text={createLabel}
-              />
+              ) : ''
             }
           </div>
         }

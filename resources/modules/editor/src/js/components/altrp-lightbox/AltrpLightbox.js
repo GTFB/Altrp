@@ -8,14 +8,29 @@ class AltrpLightbox extends Component {
   constructor(props) {
     super(props);
 
+    let current
+
+    if(props.carousel) {
+      const value = props.carouselItems.findIndex(img => props.current === img.id);
+      if(value !== -1) {
+        current = props.carouselItems.findIndex(img => props.current === img.id);
+      } else if(props.current) {
+        current = props.current
+      } else {
+        current = 0
+      }
+    } else {
+      current = props.current
+    }
+
     this.state = {
-      current: props.current || 0
+      current: current
     }
   }
 
   getImages(){
     const {lightboxID} = this.props
-    if(! lightboxID){
+    if(!lightboxID){
       return this.props.images
     }
     return this.props.lightboxImages[lightboxID] || this.props.images
@@ -60,7 +75,7 @@ class AltrpLightbox extends Component {
     return (
       <Lightbox
         {...settings}
-        mainSrc={images[current]}
+        mainSrc={images[current] || "/img/nullImage.png"}
         onMovePrevRequest={() => {
           this.setState({
             current: (current + images.length - 1) % images.length,

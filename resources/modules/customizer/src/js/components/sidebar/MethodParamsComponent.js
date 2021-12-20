@@ -28,12 +28,15 @@ class MethodParamsComponent extends Component {
 
   render() {
     const {
-      types, name
+      types, name, required
     } =
       this.props.parameterSettings
     ;
     return <div className="rounded border border-light p-2 mb-2">
       <h5>Parameter: <code>{name}</code></h5>
+      {required && (
+        <div className="parameter__required">Parameter is Required</div>
+      )}
       <PropertyComponent path={`${this.props.path}.value`}
                          type="value"
                          withoutMethods={true}
