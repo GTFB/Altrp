@@ -5,6 +5,15 @@ import {Tooltip2} from "@blueprintjs/popover2";
 import {Select} from "@blueprintjs/select";
 import CHANGE_ACTION_OPTIONS from "../../const/CHANGE_ACTION_OPTIONS";
 
+const COMPUTATIONAL_OPERATORS = [
+  'addition',
+  'subtraction',
+  'multiplication',
+  'division',
+  'modulo division',
+  'exponentiation'
+]
+
 class ChangeRepeater extends Component {
 
   render() {
@@ -12,6 +21,7 @@ class ChangeRepeater extends Component {
     return <div className="switcher-repeater">
       {items.map((item, idx) => {
         const { action} = item;
+        console.log(item)
         const buttonText = CHANGE_ACTION_OPTIONS.find(o=>o.value === action)?.label || '';
         return <div className="switcher-repeater-item d-flex align-items-start"
                     key={item.id}>
@@ -27,6 +37,9 @@ class ChangeRepeater extends Component {
               if(this.props.path && this.props.changeByPath){
                 this.props.changeByPath(v.value, `${this.props.path}.${idx}.action`)
               }
+              if (COMPUTATIONAL_OPERATORS.includes(v.value)) {
+                this.addClick(v.value)
+              }
             }}
             itemRenderer={(item, {handleClick, modifiers}) => {
               if (!modifiers.matchesPredicate) {
@@ -41,7 +54,7 @@ class ChangeRepeater extends Component {
             }}>
             <Button text={buttonText}/>
           </Select>
-          <div>
+          <div className="changeNode-center">
             <PropertyComponent
               path={`${this.props.path}.${idx}.left`}
               changeByPath={this.props.changeByPath}
@@ -67,13 +80,13 @@ class ChangeRepeater extends Component {
 
         </div>
       })}
-      <Button icon="plus" onClick={this.addClick}/>
+      <Button icon="plus" onClick={() => this.addClick(false)}/>
     </div>
   }
 
-  addClick = (e) => {
+  addClick = (value) => {
     if (this.props.addClick) {
-      this.props.addClick(e)
+      this.props.addClick(value)
     }
   }
 }

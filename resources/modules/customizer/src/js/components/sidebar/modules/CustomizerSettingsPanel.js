@@ -6,6 +6,10 @@ import AltrpSelect from "../../../../../../admin/src/components/altrp-select/Alt
 import Resource from "../../../../../../editor/src/js/classes/Resource";
 import mutate from "dot-prop-immutable";
 import {connect} from "react-redux";
+import {InputGroup} from "@blueprintjs/core";
+import {compose} from "redux";
+import {withRouter} from "react-router-dom";
+import {AutoCopyText} from "../../../../../../admin/src/js/helpers";
 
 
 class CustomizerSettingsPanel extends React.Component {
@@ -14,8 +18,14 @@ class CustomizerSettingsPanel extends React.Component {
     this.state = {
       dataSources: [],
       modelsOptions: [],
+      customizer: {
+        ...this.props.customizer
+      },
+      copy: false,
+      copyText: false
     };
     this.modelsResource = new Resource({ route: "/admin/ajax/models_options?with_names=0&not_plural=1&with_sql_queries=0" });
+    this.resource = new Resource({ route: "/admin/ajax/customizers" });
   }
 
   async componentDidMount() {
@@ -65,11 +75,46 @@ class CustomizerSettingsPanel extends React.Component {
     this.props.setSources(sourcesData);
   }
 
+  EditTitleForm = async (e) => {
+    e.preventDefault();
+    if (confirm("Are you sure?")) {
+      await this.resource.put(this.state.customizer.id, this.state.customizer)
+      this.props.updateCustomizer()
+    }
+  }
+
+  EditTitle = (e) => {
+    this.setState(state => ({
+      ...state,
+      customizer: {
+        ...state.customizer,
+        title: e.target.value
+      }
+    }))
+  }
+
+  UrlCopy = () => {
+    const { pathname, search } = this.props.location
+    const Copy = AutoCopyText(`${pathname + search}`)
+    this.setState(state => ({
+      ...state,
+      copy: true,
+      copyText: Copy
+    }))
+    setTimeout(() => {
+      this.setState(state => ({
+        ...state,
+        copy: false
+      }))
+    }, 2000)
+  }
+
   render() {
     const {modelsOptions} = this.state;
     const {customizer} = this.props;
     const {type, model_id, settings = {}} = customizer
     const {middlewares = []} = settings;
+    const { pathname, search } = this.props.location
 
     return (
       <div className="panel settings-panel d-flex">
@@ -142,8 +187,32 @@ class CustomizerSettingsPanel extends React.Component {
                                    isMulti={false}
                                    value={modelsOptions.find(o=>o.value == model_id) || {}}
                                    onChange={this.changeModel}
-                                   options={modelsOptions}
+                                   options={modelsOptions.filter(item => item.value >= 5)}
                       />
+                    </div>
+                    <form className="Customizer-title" onSubmit={this.EditTitleForm}>
+                      <div className="controller-container__label control-select__label controller-label">Title:</div>
+                      <div className="customizer-block__title">
+                        <InputGroup className="form-control-blueprint"
+                                    type="text"
+                                    id="customizer-title"
+                                    value={this.state.customizer.title}
+                                    onChange={this.EditTitle}
+                        />
+                        <button className="btn btn_success" type="submit">Save</button>
+                      </div>
+                    </form>
+                    <div className="Customizer-url">
+                      <div className="controller-container__label control-select__label controller-label">Url:</div>
+                      <div className="Customizer-url__block">
+                        <button onClick={this.UrlCopy} className="btn btn_success">Copy url</button>
+                        {this.state.copyText ? (
+                          <div className={this.state.copy ? "text-copy__url on" : "text-copy__url"}>url copied successfully!</div>
+                        ) : (
+                          <div className={this.state.copy ? "error-copy__url on" : "error-copy__url"}>Copying is impossible without https!</div>
+                        )}
+                      </div>
+                      <div className="url-text">{`${pathname + search}`}</div>
                     </div>
                   </div> {/* ./controllers-wrapper */}
                 </div> {/* ./settings-section */}
@@ -181,4 +250,8 @@ function  mapStateToProps(state) {
     customizer: state.currentCustomizer
   }
 }
-export default connect(mapStateToProps)(CustomizerSettingsPanel)
+
+export const CustomizerSettingsPanelCompose = compose(
+  connect(mapStateToProps),
+  withRouter
+)(CustomizerSettingsPanel);

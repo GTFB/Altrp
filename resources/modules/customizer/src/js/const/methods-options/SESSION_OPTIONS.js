@@ -20,10 +20,6 @@ const classDescription = '';
  */
 const SESSION_OPTIONS = [
   {
-    value: '',
-    label: 'None',
-  },
-  {
     value: 'Session.all',
     objectInstance: 'Session',
     label: 'all',

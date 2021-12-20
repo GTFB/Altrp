@@ -12,13 +12,13 @@ export default class Change extends React.Component {
 
     return (
       <div className={nodeClasses}>
-        <Handle type="target" position={this.props?.targetPosition ?? 'top'} />
+        <Handle type="target" position={this.props?.targetPosition ?? 'top'}/>
         <div className="wrapper">
           <div></div>
           <div className="bot-text">{this.props?.data?.label}</div>
           <div className="bot-type">{this.props?.type}</div>
         </div>
-        <Handle type="source" position={this.props?.sourcePosition ?? 'bottom'} style={{ borderRadius: 0 }} />
+        <Handle type="source" position={this.props?.sourcePosition ?? 'bottom'} style={{borderRadius: 0}}/>
       </div>
     );
   }
