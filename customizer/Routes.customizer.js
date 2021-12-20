@@ -1,19 +1,19 @@
 "use strict";
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["Routes"],{
 
-/***/ "./front-app/src/js/classes/Routes.js":
-/*!********************************************!*\
-  !*** ./front-app/src/js/classes/Routes.js ***!
-  \********************************************/
+/***/ "./resources/modules/front-app/src/js/classes/Routes.js":
+/*!**************************************************************!*\
+  !*** ./resources/modules/front-app/src/js/classes/Routes.js ***!
+  \**************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
-/* harmony import */ var _editor_src_js_classes_Resource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../editor/src/js/classes/Resource */ "./editor/src/js/classes/Resource.js");
-/* harmony import */ var _Route__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Route */ "./front-app/src/js/classes/Route.js");
-/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../store/store */ "./front-app/src/js/store/store.js");
-/* harmony import */ var _store_routes_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../store/routes/actions */ "./front-app/src/js/store/routes/actions.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./resources/modules/node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./resources/modules/node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _editor_src_js_classes_Resource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../editor/src/js/classes/Resource */ "./resources/modules/editor/src/js/classes/Resource.js");
+/* harmony import */ var _Route__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Route */ "./resources/modules/front-app/src/js/classes/Route.js");
+/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../store/store */ "./resources/modules/front-app/src/js/store/store.js");
+/* harmony import */ var _store_routes_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../store/routes/actions */ "./resources/modules/front-app/src/js/store/routes/actions.js");
 
 
 
@@ -93,17 +93,17 @@ var Routes = /*#__PURE__*/function () {
 
 /***/ }),
 
-/***/ "./front-app/src/js/store/areas/reducers.js":
-/*!**************************************************!*\
-  !*** ./front-app/src/js/store/areas/reducers.js ***!
-  \**************************************************/
+/***/ "./resources/modules/front-app/src/js/store/areas/reducers.js":
+/*!********************************************************************!*\
+  !*** ./resources/modules/front-app/src/js/store/areas/reducers.js ***!
+  \********************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "areasReducer": function() { return /* binding */ areasReducer; }
 /* harmony export */ });
-/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./front-app/src/js/store/areas/actions.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./resources/modules/front-app/src/js/store/areas/actions.js");
 
 var defaultAreas = [];
 
@@ -129,10 +129,10 @@ function areasReducer(areas, action) {
 
 /***/ }),
 
-/***/ "./front-app/src/js/store/current-email-template/actions.js":
-/*!******************************************************************!*\
-  !*** ./front-app/src/js/store/current-email-template/actions.js ***!
-  \******************************************************************/
+/***/ "./resources/modules/front-app/src/js/store/current-email-template/actions.js":
+/*!************************************************************************************!*\
+  !*** ./resources/modules/front-app/src/js/store/current-email-template/actions.js ***!
+  \************************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -150,17 +150,17 @@ function changeCurrentEmailTemplate(template) {
 
 /***/ }),
 
-/***/ "./front-app/src/js/store/current-email-template/reducers.js":
-/*!*******************************************************************!*\
-  !*** ./front-app/src/js/store/current-email-template/reducers.js ***!
-  \*******************************************************************/
+/***/ "./resources/modules/front-app/src/js/store/current-email-template/reducers.js":
+/*!*************************************************************************************!*\
+  !*** ./resources/modules/front-app/src/js/store/current-email-template/reducers.js ***!
+  \*************************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "currentEmailTemplateReducer": function() { return /* binding */ currentEmailTemplateReducer; }
 /* harmony export */ });
-/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./front-app/src/js/store/current-email-template/actions.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./resources/modules/front-app/src/js/store/current-email-template/actions.js");
 
 var defaultTemplate = null;
 function currentEmailTemplateReducer(template, action) {
@@ -179,10 +179,10 @@ function currentEmailTemplateReducer(template, action) {
 
 /***/ }),
 
-/***/ "./front-app/src/js/store/current-title/actions.js":
-/*!*********************************************************!*\
-  !*** ./front-app/src/js/store/current-title/actions.js ***!
-  \*********************************************************/
+/***/ "./resources/modules/front-app/src/js/store/current-title/actions.js":
+/*!***************************************************************************!*\
+  !*** ./resources/modules/front-app/src/js/store/current-title/actions.js ***!
+  \***************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -200,17 +200,17 @@ function changeCurrentTitle(title) {
 
 /***/ }),
 
-/***/ "./front-app/src/js/store/current-title/reducers.js":
-/*!**********************************************************!*\
-  !*** ./front-app/src/js/store/current-title/reducers.js ***!
-  \**********************************************************/
+/***/ "./resources/modules/front-app/src/js/store/current-title/reducers.js":
+/*!****************************************************************************!*\
+  !*** ./resources/modules/front-app/src/js/store/current-title/reducers.js ***!
+  \****************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "currentTitleReducer": function() { return /* binding */ currentTitleReducer; }
 /* harmony export */ });
-/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./front-app/src/js/store/current-title/actions.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./resources/modules/front-app/src/js/store/current-title/actions.js");
 var _document;
 
 if (typeof document === "undefined") {
@@ -235,17 +235,17 @@ function currentTitleReducer(title, action) {
 
 /***/ }),
 
-/***/ "./front-app/src/js/store/forms-data-storage/reducers.js":
-/*!***************************************************************!*\
-  !*** ./front-app/src/js/store/forms-data-storage/reducers.js ***!
-  \***************************************************************/
+/***/ "./resources/modules/front-app/src/js/store/forms-data-storage/reducers.js":
+/*!*********************************************************************************!*\
+  !*** ./resources/modules/front-app/src/js/store/forms-data-storage/reducers.js ***!
+  \*********************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "formsStoreReducer": function() { return /* binding */ formsStoreReducer; }
 /* harmony export */ });
-/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./front-app/src/js/store/forms-data-storage/actions.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./resources/modules/front-app/src/js/store/forms-data-storage/actions.js");
 
 var defaultState = {};
 function formsStoreReducer(state, _ref) {
@@ -286,10 +286,10 @@ function formsStoreReducer(state, _ref) {
 
 /***/ }),
 
-/***/ "./front-app/src/js/store/ligtbox-images-storage/actions.js":
-/*!******************************************************************!*\
-  !*** ./front-app/src/js/store/ligtbox-images-storage/actions.js ***!
-  \******************************************************************/
+/***/ "./resources/modules/front-app/src/js/store/ligtbox-images-storage/actions.js":
+/*!************************************************************************************!*\
+  !*** ./resources/modules/front-app/src/js/store/ligtbox-images-storage/actions.js ***!
+  \************************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -332,19 +332,19 @@ var removeImageFromLightbox = function removeImageFromLightbox(image, storeName)
 
 /***/ }),
 
-/***/ "./front-app/src/js/store/ligtbox-images-storage/reducers.js":
-/*!*******************************************************************!*\
-  !*** ./front-app/src/js/store/ligtbox-images-storage/reducers.js ***!
-  \*******************************************************************/
+/***/ "./resources/modules/front-app/src/js/store/ligtbox-images-storage/reducers.js":
+/*!*************************************************************************************!*\
+  !*** ./resources/modules/front-app/src/js/store/ligtbox-images-storage/reducers.js ***!
+  \*************************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "lightboxImagesReducer": function() { return /* binding */ lightboxImagesReducer; }
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js");
-/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./actions */ "./front-app/src/js/store/ligtbox-images-storage/actions.js");
-/* harmony import */ var dot_prop_immutable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! dot-prop-immutable */ "./node_modules/dot-prop-immutable/lib/index.js");
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./resources/modules/node_modules/@babel/runtime/helpers/esm/toConsumableArray.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./actions */ "./resources/modules/front-app/src/js/store/ligtbox-images-storage/actions.js");
+/* harmony import */ var dot_prop_immutable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! dot-prop-immutable */ "./resources/modules/node_modules/dot-prop-immutable/lib/index.js");
 /* harmony import */ var dot_prop_immutable__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(dot_prop_immutable__WEBPACK_IMPORTED_MODULE_2__);
 
 
@@ -408,10 +408,10 @@ var lightboxImagesReducer = function lightboxImagesReducer() {
 
 /***/ }),
 
-/***/ "./front-app/src/js/store/popup-trigger/actions.js":
-/*!*********************************************************!*\
-  !*** ./front-app/src/js/store/popup-trigger/actions.js ***!
-  \*********************************************************/
+/***/ "./resources/modules/front-app/src/js/store/popup-trigger/actions.js":
+/*!***************************************************************************!*\
+  !*** ./resources/modules/front-app/src/js/store/popup-trigger/actions.js ***!
+  \***************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -429,17 +429,17 @@ var togglePopup = function togglePopup(payload) {
 
 /***/ }),
 
-/***/ "./front-app/src/js/store/popup-trigger/reducers.js":
-/*!**********************************************************!*\
-  !*** ./front-app/src/js/store/popup-trigger/reducers.js ***!
-  \**********************************************************/
+/***/ "./resources/modules/front-app/src/js/store/popup-trigger/reducers.js":
+/*!****************************************************************************!*\
+  !*** ./resources/modules/front-app/src/js/store/popup-trigger/reducers.js ***!
+  \****************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "popupReducer": function() { return /* binding */ popupReducer; }
 /* harmony export */ });
-/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./front-app/src/js/store/popup-trigger/actions.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./resources/modules/front-app/src/js/store/popup-trigger/actions.js");
 
 var initialState = {
   popupID: null
@@ -466,38 +466,38 @@ var popupReducer = function popupReducer() {
 
 /***/ }),
 
-/***/ "./front-app/src/js/store/reducers.js":
-/*!********************************************!*\
-  !*** ./front-app/src/js/store/reducers.js ***!
-  \********************************************/
+/***/ "./resources/modules/front-app/src/js/store/reducers.js":
+/*!**************************************************************!*\
+  !*** ./resources/modules/front-app/src/js/store/reducers.js ***!
+  \**************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
-/* harmony import */ var _routes_reducers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./routes/reducers */ "./front-app/src/js/store/routes/reducers.js");
-/* harmony import */ var _current_model_reducers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./current-model/reducers */ "./front-app/src/js/store/current-model/reducers.js");
-/* harmony import */ var _forms_data_storage_reducers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./forms-data-storage/reducers */ "./front-app/src/js/store/forms-data-storage/reducers.js");
-/* harmony import */ var _current_user_reducers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./current-user/reducers */ "./front-app/src/js/store/current-user/reducers.js");
-/* harmony import */ var _current_data_storage_reducers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./current-data-storage/reducers */ "./front-app/src/js/store/current-data-storage/reducers.js");
-/* harmony import */ var _scroll_position_reducers__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./scroll-position/reducers */ "./front-app/src/js/store/scroll-position/reducers.js");
-/* harmony import */ var _popup_trigger_reducers__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./popup-trigger/reducers */ "./front-app/src/js/store/popup-trigger/reducers.js");
-/* harmony import */ var _elements_storage_reducers__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./elements-storage/reducers */ "./front-app/src/js/store/elements-storage/reducers.js");
-/* harmony import */ var _hide_triggers_reducers__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./hide-triggers/reducers */ "./front-app/src/js/store/hide-triggers/reducers.js");
-/* harmony import */ var _responses_storage_reducers__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./responses-storage/reducers */ "./front-app/src/js/store/responses-storage/reducers.js");
-/* harmony import */ var _editor_src_js_store_altrp_dashboard_reducers__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../../editor/src/js/store/altrp-dashboard/reducers */ "./editor/src/js/store/altrp-dashboard/reducers.js");
-/* harmony import */ var _altrp_meta_storage_reducers__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./altrp-meta-storage/reducers */ "./front-app/src/js/store/altrp-meta-storage/reducers.js");
-/* harmony import */ var _altrp_page_state_storage_reducers__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./altrp-page-state-storage/reducers */ "./front-app/src/js/store/altrp-page-state-storage/reducers.js");
-/* harmony import */ var _fonts_storage_reducers__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./fonts-storage/reducers */ "./front-app/src/js/store/fonts-storage/reducers.js");
-/* harmony import */ var _user_local_storage_reducers__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./user-local-storage/reducers */ "./front-app/src/js/store/user-local-storage/reducers.js");
-/* harmony import */ var _altrp_dashboard_export_reducers__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./altrp-dashboard-export/reducers */ "./front-app/src/js/store/altrp-dashboard-export/reducers.js");
-/* harmony import */ var _media_screen_storage_reducers__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./media-screen-storage/reducers */ "./front-app/src/js/store/media-screen-storage/reducers.js");
-/* harmony import */ var _current_title_reducers__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./current-title/reducers */ "./front-app/src/js/store/current-title/reducers.js");
-/* harmony import */ var _current_email_template_reducers__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./current-email-template/reducers */ "./front-app/src/js/store/current-email-template/reducers.js");
-/* harmony import */ var _current_page_reducers__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./current-page/reducers */ "./front-app/src/js/store/current-page/reducers.js");
-/* harmony import */ var _menus_storage_reducers__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./menus-storage/reducers */ "./front-app/src/js/store/menus-storage/reducers.js");
-/* harmony import */ var _elements_settings_reducers__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./elements-settings/reducers */ "./front-app/src/js/store/elements-settings/reducers.js");
-/* harmony import */ var _areas_reducers__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./areas/reducers */ "./front-app/src/js/store/areas/reducers.js");
-/* harmony import */ var _ligtbox_images_storage_reducers__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./ligtbox-images-storage/reducers */ "./front-app/src/js/store/ligtbox-images-storage/reducers.js");
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! redux */ "./resources/modules/node_modules/redux/es/redux.js");
+/* harmony import */ var _routes_reducers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./routes/reducers */ "./resources/modules/front-app/src/js/store/routes/reducers.js");
+/* harmony import */ var _current_model_reducers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./current-model/reducers */ "./resources/modules/front-app/src/js/store/current-model/reducers.js");
+/* harmony import */ var _forms_data_storage_reducers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./forms-data-storage/reducers */ "./resources/modules/front-app/src/js/store/forms-data-storage/reducers.js");
+/* harmony import */ var _current_user_reducers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./current-user/reducers */ "./resources/modules/front-app/src/js/store/current-user/reducers.js");
+/* harmony import */ var _current_data_storage_reducers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./current-data-storage/reducers */ "./resources/modules/front-app/src/js/store/current-data-storage/reducers.js");
+/* harmony import */ var _scroll_position_reducers__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./scroll-position/reducers */ "./resources/modules/front-app/src/js/store/scroll-position/reducers.js");
+/* harmony import */ var _popup_trigger_reducers__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./popup-trigger/reducers */ "./resources/modules/front-app/src/js/store/popup-trigger/reducers.js");
+/* harmony import */ var _elements_storage_reducers__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./elements-storage/reducers */ "./resources/modules/front-app/src/js/store/elements-storage/reducers.js");
+/* harmony import */ var _hide_triggers_reducers__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./hide-triggers/reducers */ "./resources/modules/front-app/src/js/store/hide-triggers/reducers.js");
+/* harmony import */ var _responses_storage_reducers__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./responses-storage/reducers */ "./resources/modules/front-app/src/js/store/responses-storage/reducers.js");
+/* harmony import */ var _editor_src_js_store_altrp_dashboard_reducers__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../../editor/src/js/store/altrp-dashboard/reducers */ "./resources/modules/editor/src/js/store/altrp-dashboard/reducers.js");
+/* harmony import */ var _altrp_meta_storage_reducers__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./altrp-meta-storage/reducers */ "./resources/modules/front-app/src/js/store/altrp-meta-storage/reducers.js");
+/* harmony import */ var _altrp_page_state_storage_reducers__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./altrp-page-state-storage/reducers */ "./resources/modules/front-app/src/js/store/altrp-page-state-storage/reducers.js");
+/* harmony import */ var _fonts_storage_reducers__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./fonts-storage/reducers */ "./resources/modules/front-app/src/js/store/fonts-storage/reducers.js");
+/* harmony import */ var _user_local_storage_reducers__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./user-local-storage/reducers */ "./resources/modules/front-app/src/js/store/user-local-storage/reducers.js");
+/* harmony import */ var _altrp_dashboard_export_reducers__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./altrp-dashboard-export/reducers */ "./resources/modules/front-app/src/js/store/altrp-dashboard-export/reducers.js");
+/* harmony import */ var _media_screen_storage_reducers__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./media-screen-storage/reducers */ "./resources/modules/front-app/src/js/store/media-screen-storage/reducers.js");
+/* harmony import */ var _current_title_reducers__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./current-title/reducers */ "./resources/modules/front-app/src/js/store/current-title/reducers.js");
+/* harmony import */ var _current_email_template_reducers__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./current-email-template/reducers */ "./resources/modules/front-app/src/js/store/current-email-template/reducers.js");
+/* harmony import */ var _current_page_reducers__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./current-page/reducers */ "./resources/modules/front-app/src/js/store/current-page/reducers.js");
+/* harmony import */ var _menus_storage_reducers__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./menus-storage/reducers */ "./resources/modules/front-app/src/js/store/menus-storage/reducers.js");
+/* harmony import */ var _elements_settings_reducers__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./elements-settings/reducers */ "./resources/modules/front-app/src/js/store/elements-settings/reducers.js");
+/* harmony import */ var _areas_reducers__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./areas/reducers */ "./resources/modules/front-app/src/js/store/areas/reducers.js");
+/* harmony import */ var _ligtbox_images_storage_reducers__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./ligtbox-images-storage/reducers */ "./resources/modules/front-app/src/js/store/ligtbox-images-storage/reducers.js");
 
 
 
@@ -552,19 +552,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./front-app/src/js/store/responses-storage/reducers.js":
-/*!**************************************************************!*\
-  !*** ./front-app/src/js/store/responses-storage/reducers.js ***!
-  \**************************************************************/
+/***/ "./resources/modules/front-app/src/js/store/responses-storage/reducers.js":
+/*!********************************************************************************!*\
+  !*** ./resources/modules/front-app/src/js/store/responses-storage/reducers.js ***!
+  \********************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "responsesStorageReducer": function() { return /* binding */ responsesStorageReducer; }
 /* harmony export */ });
-/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./front-app/src/js/store/responses-storage/actions.js");
-/* harmony import */ var _editor_src_js_classes_AltrpModel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../../editor/src/js/classes/AltrpModel */ "./editor/src/js/classes/AltrpModel.js");
-/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../helpers */ "./front-app/src/js/helpers.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./resources/modules/front-app/src/js/store/responses-storage/actions.js");
+/* harmony import */ var _editor_src_js_classes_AltrpModel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../../editor/src/js/classes/AltrpModel */ "./resources/modules/editor/src/js/classes/AltrpModel.js");
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../helpers */ "./resources/modules/front-app/src/js/helpers.js");
 
 
 
@@ -602,18 +602,18 @@ function responsesStorageReducer(responsesStorage, action) {
 
 /***/ }),
 
-/***/ "./front-app/src/js/store/routes/reducers.js":
-/*!***************************************************!*\
-  !*** ./front-app/src/js/store/routes/reducers.js ***!
-  \***************************************************/
+/***/ "./resources/modules/front-app/src/js/store/routes/reducers.js":
+/*!*********************************************************************!*\
+  !*** ./resources/modules/front-app/src/js/store/routes/reducers.js ***!
+  \*********************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "appRoutesReducer": function() { return /* binding */ appRoutesReducer; }
 /* harmony export */ });
-/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./front-app/src/js/store/routes/actions.js");
-/* harmony import */ var _classes_Route__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../classes/Route */ "./front-app/src/js/classes/Route.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./resources/modules/front-app/src/js/store/routes/actions.js");
+/* harmony import */ var _classes_Route__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../classes/Route */ "./resources/modules/front-app/src/js/classes/Route.js");
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -661,10 +661,10 @@ function appRoutesReducer(state, action) {
 
 /***/ }),
 
-/***/ "./front-app/src/js/store/scroll-position/actions.js":
-/*!***********************************************************!*\
-  !*** ./front-app/src/js/store/scroll-position/actions.js ***!
-  \***********************************************************/
+/***/ "./resources/modules/front-app/src/js/store/scroll-position/actions.js":
+/*!*****************************************************************************!*\
+  !*** ./resources/modules/front-app/src/js/store/scroll-position/actions.js ***!
+  \*****************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -696,17 +696,17 @@ var setScrollValue = function setScrollValue(payload) {
 
 /***/ }),
 
-/***/ "./front-app/src/js/store/scroll-position/reducers.js":
-/*!************************************************************!*\
-  !*** ./front-app/src/js/store/scroll-position/reducers.js ***!
-  \************************************************************/
+/***/ "./resources/modules/front-app/src/js/store/scroll-position/reducers.js":
+/*!******************************************************************************!*\
+  !*** ./resources/modules/front-app/src/js/store/scroll-position/reducers.js ***!
+  \******************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "scrollReducer": function() { return /* binding */ scrollReducer; }
 /* harmony export */ });
-/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./front-app/src/js/store/scroll-position/actions.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./resources/modules/front-app/src/js/store/scroll-position/actions.js");
 
 var initialState = {};
 var scrollReducer = function scrollReducer() {
@@ -727,15 +727,15 @@ var scrollReducer = function scrollReducer() {
 
 /***/ }),
 
-/***/ "./front-app/src/js/store/store.js":
-/*!*****************************************!*\
-  !*** ./front-app/src/js/store/store.js ***!
-  \*****************************************/
+/***/ "./resources/modules/front-app/src/js/store/store.js":
+/*!***********************************************************!*\
+  !*** ./resources/modules/front-app/src/js/store/store.js ***!
+  \***********************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
-/* harmony import */ var _reducers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reducers */ "./front-app/src/js/store/reducers.js");
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! redux */ "./resources/modules/node_modules/redux/es/redux.js");
+/* harmony import */ var _reducers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reducers */ "./resources/modules/front-app/src/js/store/reducers.js");
 
  // Grab the state from a global variable injected into the server-generated HTML
 
@@ -757,10 +757,10 @@ if (window.ALTRP_DEBUG) {
 
 /***/ }),
 
-/***/ "./front-app/src/js/store/user-local-storage/actions.js":
-/*!**************************************************************!*\
-  !*** ./front-app/src/js/store/user-local-storage/actions.js ***!
-  \**************************************************************/
+/***/ "./resources/modules/front-app/src/js/store/user-local-storage/actions.js":
+/*!********************************************************************************!*\
+  !*** ./resources/modules/front-app/src/js/store/user-local-storage/actions.js ***!
+  \********************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -778,17 +778,17 @@ function changeStorageData(user) {
 
 /***/ }),
 
-/***/ "./front-app/src/js/store/user-local-storage/reducers.js":
-/*!***************************************************************!*\
-  !*** ./front-app/src/js/store/user-local-storage/reducers.js ***!
-  \***************************************************************/
+/***/ "./resources/modules/front-app/src/js/store/user-local-storage/reducers.js":
+/*!*********************************************************************************!*\
+  !*** ./resources/modules/front-app/src/js/store/user-local-storage/reducers.js ***!
+  \*********************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "changeLocalStorageReducer": function() { return /* binding */ changeLocalStorageReducer; }
 /* harmony export */ });
-/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./front-app/src/js/store/user-local-storage/actions.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./actions */ "./resources/modules/front-app/src/js/store/user-local-storage/actions.js");
 
 var defaultLocalStorage = {
   element: "test"
