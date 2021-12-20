@@ -8,6 +8,7 @@ use Facade\FlareClient\Http\Exceptions\NotFound;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Request;
 use Jackiedo\DotenvEditor\Facades\DotenvEditor;
 
 /**
@@ -399,7 +400,7 @@ class Plugin extends Model
       $res = $client->get( $this->update_url, [
         'headers' => [
           'authorization' => request()->cookie('altrpMarketApiToken'),
-          'altrp-domain-resource' => env( 'APP_URL' ),
+          'altrp-domain-resource' => str_replace(['https://', 'http://'], '', Request::root()),
         ]
       ])->getBody()->getContents();
     } catch(\Throwable $e){

@@ -117,7 +117,7 @@ class PluginController extends Controller
 
       $response = $client->get( $request->get('update_url'), [
         'headers' => [
-          'altrp-domain-resource' => env( 'APP_URL' ),
+          'altrp-domain-resource' => str_replace(['https://', 'http://'], '', Request::root()),
           'authorization' => request()->cookie('altrpMarketApiToken'),
         ]
       ])->getBody()->getContents();
