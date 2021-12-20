@@ -194,6 +194,22 @@ class Icon extends BaseElement {
       tab: TAB_STYLE
     })
 
+    this.addControl("icon_height", {
+      type: CONTROLLER_SLIDER,
+      label: 'Height',
+      units: [
+        'px',
+        '%',
+      ],
+      max: 1000,
+      min: 0,
+    });
+
+    this.addControl("icon_fill", {
+      type: CONTROLLER_COLOR,
+      label: 'Fill color',
+    });
+
     this.addControl('icon_padding', {
       label: 'Padding',
       type: CONTROLLER_DIMENSIONS

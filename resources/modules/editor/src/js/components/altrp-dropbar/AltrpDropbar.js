@@ -75,6 +75,7 @@ class Dropbar extends Component {
 
     const id = this.props.settings.template_dropbar_section;
 
+
     return (
       <div className={"altrp-dropbar altrp-dropbar-" + mainClass}>
         <span className={"altrp-dropbar-children-wrapper " + mainClass + "-wrapper"}

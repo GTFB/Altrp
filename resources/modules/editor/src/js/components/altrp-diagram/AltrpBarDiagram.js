@@ -1,292 +1,220 @@
 import React, { useEffect } from "react";
-import { changePageState } from "../../../../../front-app/src/js/store/altrp-page-state-storage/actions";
 import { connect, useDispatch } from "react-redux";
-
-import BarDiagram from "../../../../../front-app/src/ts/build/altrp-diagrams/layout/BarDiagram";
 
 import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
 
 import { getDataByPath, isEditor } from "../../../../../front-app/src/js/helpers";
 import moment from "moment";
+import DynamicBarChart from "../../../../../admin/src/components/dashboard/widgets/DynamicBarChart";
+import getFormatValueString from "../../../../../admin/src/components/dashboard/services/getFormatValueString";
 
-const AltrpDiagram = props => {
+const AltrpBarDiagram = props => {
   const { settings, id } = props;
 
-  const dispatch = useDispatch();
-  const margin = settings?.margin;
-  const widgetName = settings?.widget_name || id;
   const customColorSchemeChecker = settings?.isCustomColor;
 
   const customColors = settings?.customScheme?.map(item =>
     _.get(item, "color.colorPickedHex")
   );
-  const yScaleMax = settings?.yScaleMax;
 
-  const axisY = settings?.axisY;
-  const tooltipValues = settings?.repTooltips?.map(item => ({
-    label: _.get(item, "label"),
-    field: _.get(item, "value"),
-    color: _.get(item, "color")?.colorPickedHex
-  }));
-  const useCustomTooltips = settings?.customTooltip;
+  const {
+    isMultiple,
+    sort,
+    tickRotation,
+    enableGridX,
+    enableGridY,
+    colorScheme,
+    layout,
+    groupMode,
+    reverse,
+    borderRadius,
+    borderWidth,
+    enableLabel,
+    padding,
+    useCustomTooltips,
+    margin,
+    markersRepeater,
+    group_name,
+    key_name, 
+    data_name,
+    bottomAxis,
+    minValue,
+    enableMinValue,
+    maxValue,
+    enableMaxValue,
+    currency,
+    borderColor
+  } = settings
 
-  const formattedYAxis =
-    axisY?.map(item => {
-      const valueFromPath = getDataByPath(item.yMarkerValue);
-      const value =
-        valueFromPath !== null
-          ? Number(valueFromPath)
-          : Number(item.yMarkerValue);
-      const data = {
-        axis: "y",
-        value: value,
-        lineStyle: {
-          stroke:
-            item.yMarkerColor != null
-              ? item.yMarkerColor.colorPickedHex
-              : "#000000",
-          strokeWidth: item.yMarkerWidth
-        },
-        textStyle: {
-          fill:
-            item.yMarkerLabelColor != null
-              ? item.yMarkerLabelColor.colorPickedHex
-              : "#000000"
-        },
-        legend: item.yMarkerLabel,
-        legendOrientation: item.yMarkerOrientation
-      };
-      return data;
-    }) || [];
+  let data = []
+  let keys = []
+  let indexBy = ''
 
-  const axisX = settings?.axisX;
-  const formattedXAxis =
-    axisX?.map(item => {
-      const valueFromPath = getDataByPath(item.xMarkerValue);
+  const formatData = (data, groupName, keyName, dataName) => {
+    let hierarhed = {}
 
-      const value =
-        valueFromPath !== null
-          ? valueFromPath
-          : item.xMarkerIsDate
-          ? moment(item.xMarkerValue).format("DD.MM.YYYY")
-          : item.xMarkerValue;
+    data.forEach(el => {
+      hierarhed[el.type] = hierarhed[el.type] || []
+      hierarhed[el.type].push(el)
+    })
 
-      const data = {
-        axis: "x",
-        value: value,
-        lineStyle: {
-          stroke:
-            item.xMarkerColor != null
-              ? item.xMarkerColor.colorPickedHex
-              : "#000000",
-          strokeWidth: item.xMarkerWidth
-        },
-        textStyle: {
-          fill:
-            item.xMarkerLabelColor != null
-              ? item.xMarkerLabelColor.colorPickedHex
-              : "#000000"
-        },
-        legend: item.xMarkerLabel,
-        legendOrientation: item.xMarkerOrientation
-      };
-      return data;
-    }) || [];
+    let formatted = []
 
-  let constantsAxises = [];
-  if (formattedXAxis.length > 0) {
-    constantsAxises.push(formattedXAxis);
-    constantsAxises = constantsAxises.flat();
-  }
-  if (formattedYAxis.length > 0) {
-    constantsAxises.push(formattedYAxis);
-    constantsAxises = constantsAxises.flat();
-  }
+    Object.keys(hierarhed).forEach(key => {
+      const keyv = {}
 
-  const sql = settings.query?.dataSource?.value;
-  const isMultiple = settings.isMultiple;
-  const isCustomColor = settings.isCustomColors;
-  const keyIsDate = settings.key_is_date;
-  const sort = settings?.sort;
-  const tickRotation = settings?.tickRotation;
-  const bottomAxis = settings?.bottomAxis;
-  const enableGridX = settings?.enableGridX;
-  const enableGridY = settings?.enableGridY;
+      hierarhed[key].map(el => {
+        keyv[el[keyName]] = el[dataName]
+      })
 
-  const colorScheme = settings?.colorScheme;
+      keyv[groupName] = key 
+      formatted.push(keyv)
+    })
 
-  const layout = settings?.layout;
-  const groupMode = settings?.groupMode;
-  const reverse = settings?.reverse;
-  const borderRadius = settings?.borderRadius;
-  const borderWidth = settings?.borderWidth;
-  const enableLabel = settings?.enableLabel;
-  const padding = settings?.padding;
-  //data variable
-  let data = [];
-
-  //funciton for formattion data for all types
-  const formatData = (data, r) => {
-    return data.map((d, index) => {
-      const currentKey = _.get(d, r.key);
-      const keyFormatted = !moment(currentKey).isValid()
-        ? currentKey
-        : moment(currentKey).format("DD.MM.YYYY");
-      const tooltip =
-        typeof tooltipValues !== "undefined"
-          ? tooltipValues?.map(item => {
-              return {
-                label: item?.label,
-                value: _.get(d, item.field),
-                color: item?.color
-              };
-            })
-          : [];
-      
-        let key = keyIsDate ? keyFormatted : currentKey;
-        return {
-          [key]: Number(_.get(d, r.data)),
-          key: key,
-          value: Number(_.get(d, r.data)),
-          tooltip: tooltip
-        };
-    });
+    return formatted;
   };
-  let legend = [];
-  const currentColors = isCustomColor
-    ? customColors
-    : _.find(Schemes, { value: settings?.colorScheme }).colors;
 
   if (isEditor()) {
     data = [
       {
-        key: 'title',
-        value: 60,
-        title: 60,
-        tooltip: []
+        "country": "AG",
+        "hot dog": 69,
+        "burger": 148,
+        "sandwich": 173,
+        "kebab": 35,
       },
       {
-        key: 'title1',
-        value: 40,
-        title: 40,
-        tooltip: []
+        "country": "AI",
+        "hot dog": 45,
+        "burger": 96,
+        "sandwich": 154,
+        "kebab": 96,
       },
-    ]
-  } else {
-    if (isMultiple) {
-      let repeater = _.cloneDeep(settings.rep, []);
-      data = repeater.map((r, index) => {
-        let innerData = getDataByPath(r.path, []);
-        if (innerData.length > 0) {
-          //Исключаем дублирование ключей, т.к. это приводит к ошибкам рендера всех диаграм
-          innerData = formatData(innerData, r);
-        }
-        
-        return innerData;
-      });
-
-      data = [].concat(...data);
-      legend = data?.map((item, i) => ({
-        color: currentColors[0],
-        label: item.id || item.key
-      }));
-    } else if (settings.datasource_path != null) {
-      try {
-        data = getDataByPath(settings.datasource_path, []);
-        const r = {
-          key: settings.key_name,
-          data: settings.data_name
-        };
-  
-        data = formatData(data, r);
-        legend = data?.map((item, i) => ({
-          color: currentColors[0],
-          label: item.id || item.key
-        }));
-      } catch (error) {
-        console.log("====================================");
-        console.error(error);
-        console.log("====================================");
-        data = [
-          {
-            id: settings.datasource_title || settings.datasource_path,
-            data: []
-          }
-        ];
+      {
+        "country": "AL",
+        "hot dog": 107,
+        "burger": 39,
+        "sandwich": 159,
+        "kebab": 61,
+      },
+      {
+        "country": "AM",
+        "hot dog": 111,
+        "burger": 135,
+        "sandwich": 32,
+        "kebab": 54,
       }
+    ]
+
+    keys = ['hot dog', 'burger', 'sandwich', 'kebab']
+    indexBy = 'country'
+  } else {
+    try {
+      data = getDataByPath(settings.datasource_path, []);
+
+      keys = [
+        ...new Set(data.map(el => el[key_name]))
+      ]
+
+      indexBy = group_name
+
+      data = formatData(data, group_name, key_name, data_name);
+    } catch (error) {
+      console.log("====================================");
+      console.error(error);
+      console.log("====================================");
+      data = [];
     }
   }
 
-  if (!sql && data.length === 0) {
+  if (data.length === 0) {
     return (
       <div className={`altrp-chart ${settings.legendPosition}`}>
-        Идет загрузка данных...
+        Loading data...
       </div>
     );
   }
 
-  const parseQueryParams = (qs = "") => {
-    if (!qs) return "";
-    const keyValues = qs.split("\n");
-    const result = keyValues.map(item => item.replace("|", "=")).join("&");
-    return `?${result}`;
-  };
-
-  const queryString = parseQueryParams(settings.query?.defaultParams);
-
   const widget = {
-    source: sql + queryString,
     options: {
       colorScheme: settings.colorScheme,
-      legend: settings.legend,
       animated: settings.animated,
       isVertical: settings.isVertical
     },
     filter: {}
   };
 
-  const setLegend = legend =>
-    dispatch(changePageState(widgetName, { legend: legend }));
-
-  useEffect(() => {
-    if (legend.length > 0) {
-      setLegend(legend);
-    }
-  }, [legend]);
   console.log("====================================");
   console.log(data);
   console.log("====================================");
   
   return (
-    <BarDiagram
-      widgetID={id}
-      margin={margin}
-      useCustomTooltips={useCustomTooltips}
-      yScaleMax={yScaleMax}
+    <DynamicBarChart
+      margin={margin ? margin : {
+        top: 30,
+        bottom: 30,
+        right: 30,
+        left: 30 
+      }}
+      valueFormat={getFormatValueString(settings)}
+      currency={currency}
       customColorSchemeChecker={customColorSchemeChecker}
       customColors={customColors}
       isMultiple={isMultiple}
-      colorScheme={colorScheme}
+      colorScheme={colorScheme || 'nivo'}
       dataSource={data}
       widget={widget}
       enableLabel={enableLabel}
-      width={`${settings.width?.size}${settings.width?.unit}`}
-      height={`${settings.height?.size}${settings.height?.unit}`}
+      width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
+      height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
       layout={layout}
       groupMode={groupMode}
       reverse={reverse}
-      borderRadius={borderRadius}
-      borderWidth={borderWidth}
-      padding={padding}
+      borderRadius={borderRadius?.size}
+      borderWidth={borderWidth?.size}
+      padding={padding?.size}
       sort={sort}
       tickRotation={tickRotation}
-      bottomAxis={bottomAxis}
       enableGridX={enableGridX}
       enableGridY={enableGridY}
+      useCustomTooltips={useCustomTooltips}
+      keys={keys}
+      borderColor={borderColor?.colorPickedHex}
+      indexBy={indexBy}
+      legend={settings.use_legend && {
+        anchor: settings.legend_anchor,
+        direction: settings.legend_direction,
+        itemDirection: settings.legend_item_direction,
+        translateX: settings.legend_translate_x,
+        translateY: settings.legend_translate_y,
+        itemsSpacing: settings.legend_items_spacing,
+        itemWidth: settings.legend_item_width || 60,
+        itemHeight: settings.legend_item_height,
+        itemOpacity: settings.legend_item_opacity?.size,
+        symbolSize: settings.legend_symbol_size,
+        symbolShape: settings.legend_symbol_shape
+      }}
+      markers={markersRepeater?.map(el => ({
+        label: '',
+        value: 0,
+        axis: 'y', 
+        legendOrientation: el.legendOrientation || 'horizontal',
+        lineStyle: {stroke: el.stroke?.color || '#000'},
+        ...el,
+      }))}
+      axisBottom={bottomAxis && {
+        tickSize: 5,
+        tickPadding: 0,
+        tickRotation: 0,
+        legend: "",
+        legendOffset: 32
+      }}
+      minValue={enableMinValue && minValue}
+      maxValue={enableMaxValue && maxValue}
     />
   )
 };
 const mapStateToProps = state => ({
   currentDataStorage: state.currentDataStorage
 });
-export default connect(mapStateToProps)(AltrpDiagram);
+export default connect(mapStateToProps)(AltrpBarDiagram);

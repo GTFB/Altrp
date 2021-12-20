@@ -61,69 +61,12 @@ class Tooltip extends PureComponent {
   }
 
   render() {
-    if (this.state.enable) {
-      return (
-        <>
-          <div
-            className={`${this.props.widgetID} altrp-dashboard__tooltip--label-background altrp-dashboard__tooltip--width altrp-dashboard__tooltip--label-background-shadow altrp-dashboard__tooltip--border-type altrp-dashboard__tooltip--border-width altrp-dashboard__tooltip--border-color col-12`}
-            style={{ padding: "5px 9px" }}
-          >
-            <div>
-            {this.state.data?.tooltip === undefined &&
-              <div style={{
-                whiteSpace: "pre",
-                display: "flex",
-                alignItems: "center"
-              }}>
-                <span
-                  style={{
-                    display: "block",
-                    width: "12px",
-                    height: "12px",
-                    background: this.state.point.color,
-                    marginRight: "7px"
-                  }}
-                >
-                </span>
-                <div
-                  className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
-                >
-                  {this.props.keyIsDate
-                  ? this.state.data.xFormatted
-                  : this.state.data.x}
-                  :
-                  <strong
-                    className={`${this.props.widgetID} altrp-dashboard__tooltip--font col px-0`}
-                  >
-                    {this.state.data.y}
-                  </strong>
-                </div>
-              </div>
-              }
-              {this.state.data?.tooltip?.map((item, index) => {
-                return (
-                  <React.Fragment>
-                    <div
-                      style={{
-                        color: item?.color || "#000000"
-                      }}
-                      key={index}
-                    >
-                      {`${item?.label}:`}
-                      <strong>{item.value}</strong>
-                    </div>
-                  </React.Fragment>
-                );
-              })}
-            </div>
-          </div>
-        </>
-      );
-    }
-    //Дефолтный тултип
     const { xFormatted, yFormatted } = this.state.data;
     return (
-      <>
+      <div 
+        className={`${this.props.widgetID} altrp-dashboard__tooltip--font altrp-dashboard__tooltip--label-background altrp-dashboard__tooltip--width altrp-dashboard__tooltip--label-background-shadow altrp-dashboard__tooltip--border-type altrp-dashboard__tooltip--border-width altrp-dashboard__tooltip--border-color col-12`}
+        style={{ padding: "5px 9px" }}
+      >
         <div
           style={{
             background: "white",
@@ -155,7 +98,7 @@ class Tooltip extends PureComponent {
             </span>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 }

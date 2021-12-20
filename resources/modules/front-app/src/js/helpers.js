@@ -21,6 +21,7 @@ import mutate from "dot-prop-immutable";
 import React from "react";
 import convertQueryParamsToObject from "./functions/convert-query-params-to-object";
 import _CONDITIONS_OPTIONS from "./constants/CONDITIONS_OPTIONS";
+import _mbParseJSON from "./functions/mb-parse-JSON";
 export function getRoutes() {
 
   return import(/* webpackChunkName: 'Routes' */"./classes/Routes.js");
@@ -742,19 +743,22 @@ export function getObjectByPrefix(prefix = "", object = {}) {
   return result;
 }
 
-/**
- * Возвращает объект из json-строки если возможно
- * @param {string} string
- * @param {*} _default
- * @return {*}
- */
-export function mbParseJSON(string, _default = null) {
-  try {
-    return JSON.parse(string);
-  } catch (e) {
-    return _default === null ? string : _default;
-  }
-}
+// /**
+//  * Возвращает объект из json-строки если возможно
+//  * @param {string} string
+//  * @param {*} _default
+//  * @return {*}
+//  */
+// export function mbParseJSON(string, _default = null) {
+//   try {
+//     return JSON.parse(string);
+//   } catch (e) {
+//     return _default === null ? string : _default;
+//   }
+// }
+
+
+export const mbParseJSON = _mbParseJSON;
 
 /**
  * Функция для сравнения значений

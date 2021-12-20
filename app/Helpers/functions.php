@@ -1009,6 +1009,7 @@ function extractElementsNamesFromTemplate( $template_id, &$elementNames ){
  */
 function _extractElementsNames( $element,  &$elementNames, $only_react_elements ){
   $DEFAULT_REACT_ELEMENTS = [
+    'action-trigger',
     'input',
     'input-select',
     'input-date-range',
@@ -1036,6 +1037,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'input-gallery',
     'posts',
     'breadcrumbs',
+    'carousel',
     'map',
     'text',
     'map_builder',
@@ -1112,6 +1114,10 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     && data_get( $element, 'settings.row_expand' )
     && data_get( $element, 'settings.card_template' ) ){
     extractElementsNamesFromTemplate( data_get( $element, 'settings.card_template' ), $elementNames );
+  }
+  if( $element['name'] === 'dropbar'
+    && data_get( $element, 'settings.template_dropbar_section' ) ){
+    extractElementsNamesFromTemplate( data_get( $element, 'settings.template_dropbar_section' ), $elementNames );
   }
   if( $element['name'] === 'table'
     && data_get( $element, 'settings.tables_columns' ) ){
@@ -1679,9 +1685,14 @@ function unset_customizer_data($path, $data)
   return data_set($__customizer_data__, $path, null);
 }
 
+/**
+ * Выводит получение данных при помощи функции get_customizer_data
+ * @param $property_data
+ * @return string
+ */
 function property_to_php( $property_data ) : string{
   $PHPContent = '';
-  if( empty($property_data) ){
+  if( empty( $property_data ) ){
     return 'null';
   }
   $namespace = data_get($property_data,'namespace', 'context');
@@ -1722,6 +1733,15 @@ function property_to_php( $property_data ) : string{
   }
   return $PHPContent;
 }
+
+/**
+ * Выводит сохранение данных при помощи функций set_customizer_data и unset_customizer_data
+ * @param $property_data
+ * @param string $value
+ * @param string $type
+ * @return string
+ */
+
 function change_property_to_php( $property_data, $value = 'null', $type= 'set' ) : string{
   if( empty($property_data) ){
     return 'null';
@@ -1754,8 +1774,11 @@ function method_to_php( $method, $method_settings = []){
   }
   $PHPContent = '->' . $method . '(';
   $parameters = data_get( $method_settings, 'parameters', [] );
+  $parameters = array_filter( $parameters, function( $item ){
+    return ! empty( $item ) && data_get( $item, 'value' );
+  } );
   foreach ( $parameters as $key => $parameter ){
-    $PHPContent .= property_to_php( data_get($parameter, 'value', []));
+    $PHPContent .= property_to_php( data_get( $parameter, 'value', [] ) );
     if( $key < count( $parameters ) - 1){
       $PHPContent .= ', ';
     }
@@ -1765,7 +1788,15 @@ function method_to_php( $method, $method_settings = []){
   return $PHPContent;
 }
 
-function customizer_build_compare( $operator, $left_php_property = 'null', $right_php_property = 'null'){
+/**
+ * Выводит операторы сравнения
+ * @param $operator
+ * @param string $left_php_property
+ * @param string $right_php_property
+ * @return string
+ */
+function customizer_build_compare( $operator, string $left_php_property = 'null', string $right_php_property = 'null'): string
+{
   if(! $operator || $operator == 'empty'){
     return "empty($left_php_property)";
   }
@@ -1778,6 +1809,12 @@ function customizer_build_compare( $operator, $left_php_property = 'null', $righ
     }
     case 'not_null':{
       return "$left_php_property != null";
+    }
+    case 'true':{
+      return "$left_php_property == true";
+    }
+    case 'false':{
+      return "$left_php_property == false";
     }
     case '==':{
       return "$left_php_property == $right_php_property";
@@ -1811,4 +1848,30 @@ function customizer_build_compare( $operator, $left_php_property = 'null', $righ
     }
     default: return 'null';
   }
+}
+
+/**
+ * @param string $type
+ * @param string $place
+ * @return string
+ */
+function print_statics( string $type, string $place, $attributes  = []): string
+{
+  $content = '';
+  $statics = env( $place );
+  if( ! $statics ){
+    return $content;
+  }
+  $statics = explode(',', $statics);
+  foreach ( $statics as $static ) {
+    switch ( $type ){
+      case 'script':{
+        $content .= sprintf( '<script src="%s"></script>', $static );
+      } break;
+      case 'style':{
+        $content .= sprintf( '<link href="%s" type="text/css" rel="stylesheet">', $static );
+      } break;
+    }
+  }
+  return $content;
 }

@@ -4,7 +4,6 @@ import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
 import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
-const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
 const milkScheme = _.find(Schemes, { value: "milk" }).colors;
 const milkScheme2 = _.find(Schemes, { value: "milk2" }).colors;
 
@@ -12,6 +11,7 @@ import { getWidgetData } from "../services/getWidgetData";
 import moment from "moment";
 import { animated } from '@react-spring/web'
 import TooltipPie from "./d3/TooltipPie";
+import addCurrencyToLabel from "../services/addCurrencyToLabel";
 
 const CenteredMetric = ({ dataWithArc, centerX, centerY }) => {
   let total = 0
@@ -38,31 +38,24 @@ const DynamicPieChart = ({
   widget,
   width = "300px",
   height = "450px",
-  dataSource = [],
+  data = [],
   colorScheme = "red_grey",
-  enableSliceLabels = false,
   innerRadius = 0,
   padAngle = 0,
   cornerRadius = 0,
   sortByValue = 0,
-  enableRadialLabels = true,
-  sort = "",
-  tickRotation = 0,
-  bottomAxis = true,
-  keyIsDate = false,
   customColorSchemeChecker = false,
   customColors = [],
-  widgetID,
   useCustomTooltips,
+  valueFormat,
   margin,
-  title,
-  subTitle,
   legend,
   activeOuterRadiusOffset,
   activeInnerRadiusOffset,
   useCenteredMetric,
   useLinkArcLabels,
-  useProcent
+  useProcent,
+  currency
 }) => {
   if (legend) {
     Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
@@ -70,61 +63,7 @@ const DynamicPieChart = ({
 
   let allValue = 0;
 
-  dataSource.forEach(el => allValue += el.value)
-  
-  const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
-
-  const getData = useCallback(async () => {
-    setIsLoading(true);
-    if (dataSource.length == 0) {
-      const charts = await getWidgetData(widget.source, widget.filter);
-      if (charts.status === 200) {
-        const newData = charts.data.data.map(item => {
-          const currentKey = item.key;
-          const keyFormatted = !moment(currentKey).isValid()
-            ? currentKey
-            : moment(currentKey).format("DD.MM.YYYY");
-
-          return {
-            value: Number(item.data),
-            id: keyIsDate ? keyFormatted : currentKey
-          };
-        });
-        let data = newData;
-        setData(data || []);
-        setIsLoading(false);
-      }
-    } else {
-      if (
-        sort !== null &&
-        sort !== "undefined" &&
-        typeof dataSource !== "undefined"
-      ) {
-        switch (sort) {
-          case "value":
-            dataSource = _.sortBy(dataSource, ["value"]);
-            break;
-          case "key":
-            dataSource = _.sortBy(dataSource, ["id"]);
-            break;
-          default:
-            dataSource = dataSource;
-            break;
-        }
-      }
-      setData(dataSource || []);
-      setIsLoading(false);
-    }
-  }, [widget]);
-
-  useEffect(() => {
-    getData();
-  }, [getData]);
-
-  const clickHandler = async () => {
-
-  }
+  data.forEach(el => allValue += el.value)
 
   const layers = ['arcs', 'arcLabels', 'arcLinkLabels', 'legends']
 
@@ -132,51 +71,43 @@ const DynamicPieChart = ({
     layers.push(CenteredMetric)
   }
 
-  const customProperties = {}
+  const customProps = {}
 
-  if (!useLinkArcLabels) {
-    customProperties.arcLinkLabelComponent = () => <text />
+  if (useLinkArcLabels === false) {
+    customProps.arcLinkLabelComponent = () => <text />
   }
 
-  if (isLoading) return <Spinner />;
+  if (!!valueFormat && currency) {
+    customProps.arcLabel = addCurrencyToLabel(currency)
+    customProps.tooltip = ({datum}) => (
+      <div style={{background: 'white', color: 'inherit', fontSize: '13px', borderRadius: '2px', boxShadow: 'rgba(0, 0, 0, 0.25) 0px 1px 2px', padding: '5px 9px'}}>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <span style={{display: 'block', width: '12px', height: '12px', background: datum.color, marginRight: '7px'}}></span>
+          <span>{datum.label}: <strong>{addCurrencyToLabel(currency)(datum)}</strong></span>
+        </div>
+      </div>
+    )
+  }
 
   if (!data || data.length === 0) return <EmptyWidget />;
 
   return (
     <>
-      {title && <h3 className='diagram-title' style={{margin: 0}}>{title}</h3>}
-      {subTitle && <h5 className='diagram-subtitle' style={{margin: 0}}>{subTitle}</h5>}
-      <div className='diagram' style={{ height: height, width: width }}>
+      <div className='diagram' style={{ height, width }}>
         <ResponsivePie
           data={data}
           colors={
             customColorSchemeChecker && customColors.length > 0
               ? customColors
-              : colorScheme === "regagro"
-              ? regagroScheme
               : colorScheme === "milk"
               ? milkScheme
               : colorScheme === "milk2"
               ? milkScheme2
               : { scheme: colorScheme }
           }
-          tooltip={datum => (
-            <TooltipPie
-              enable={useCustomTooltips}
-              datum={datum}
-              data={data}
-              widgetID={widgetID}
-            ></TooltipPie>
-          )}
           cornerRadius={cornerRadius}
           sortByValue={sortByValue}
-          axisBottom={
-            bottomAxis && {
-              tickRotation: tickRotation
-            }
-          }
           margin={margin}
-          enableRadialLabels={enableRadialLabels}
           legends={legend && [
             {
               anchor: 'top-right',
@@ -194,14 +125,18 @@ const DynamicPieChart = ({
             }
           ]}
           innerRadius={innerRadius}
-          enableSliceLabels={enableSliceLabels}
           padAngle={padAngle}
           animate={true}
           activeOuterRadiusOffset={activeOuterRadiusOffset}
           activeInnerRadiusOffset={activeInnerRadiusOffset}
           layers={layers}
+          // tooltip={datum => (
+          //   <TooltipPie
+          //     datum={datum}
+          //     data={data}
+          //   ></TooltipPie>
+          // )}
           arcLabelsComponent={({ datum, label, style }) => {
-            console.log({datum});
             return <animated.g transform={style.transform} style={{ pointerEvents: 'none' }}>
                 <text
                     textAnchor="middle"
@@ -212,7 +147,8 @@ const DynamicPieChart = ({
                 </text>
             </animated.g>
           }}
-          {...customProperties}
+          valueFormat={valueFormat}
+          {...customProps}
         />
       </div>
     </>

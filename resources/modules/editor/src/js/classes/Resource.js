@@ -4,7 +4,7 @@ window.queryString = queryString;
 /**
  * @class Resource
  * */
-export const MAX_FILE_SIZE = 83886080;
+export const MAX_FILE_SIZE = 256886080;
 
 class Resource {
   /**
@@ -239,7 +239,9 @@ class Resource {
     //   fileType = fileType.trim();
     //
     // });
+    console.log(files);
     for (let i = 0; i < files.length; i++) {
+      console.log(files[i], files[i].size > MAX_FILE_SIZE);
       if (
         files[i].size > MAX_FILE_SIZE
         // ||          files[i].type.indexOf(fileType) === -1
@@ -386,9 +388,10 @@ class Resource {
    * GET запрос с параметрами
    * @param {object} params
    * @param {string | {}} customHeaders
+   * @param cors
    * @return {Promise}
    * */
-  async getQueried(params, customHeaders = null) {
+  async getQueried(params, customHeaders = null, cors = false) {
     let options = {
       method: "get",
       headers: _.assign(
@@ -398,6 +401,9 @@ class Resource {
         customHeaders
       )
     };
+    if(cors){
+      options.mode='cors'
+    }
     let _params = {};
     _.forEach(params, (paramValue, paramName) => {
       if (_.isArray(paramValue)) {

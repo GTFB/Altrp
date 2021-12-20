@@ -34,6 +34,13 @@
     </script>
     <link rel="stylesheet" href="{{ asset( '/modules/editor/editor.css?' ) . getCurrentVersion() }}">
     {{--<link rel="dns-prefetch" href="//fonts.gstatic.com">--}}
+
+  @php
+    echo print_statics('style', 'CUSTOMIZER_HEAD_STYLE' );
+  @endphp
+  @php
+    echo print_statics('script', 'CUSTOMIZER_HEAD_SCRIPTS' );
+  @endphp
 </head>
 
 <body>
@@ -41,6 +48,12 @@
 
     </div>
 <div id="portal-target"></div>
-</body>
 
+    @php
+      echo print_statics('style', 'CUSTOMIZER_BOTTOM_STYLE' );
+    @endphp
+    @php
+      echo print_statics('script', 'CUSTOMIZER_BOTTOM_SCRIPTS' );
+    @endphp
+</body>
 </html>

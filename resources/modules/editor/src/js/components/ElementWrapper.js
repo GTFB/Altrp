@@ -56,6 +56,7 @@ import getInputFileStyles from "../../../../front-app/src/js/components/helpers/
 import getInputGalleryStyles from "../../../../front-app/src/js/components/helpers/getInputGalleryStyles";
 import {getResponsiveSetting, isEditor} from "../../../../front-app/src/js/helpers";
 import InputRangeSliderComponent from "./widgets/styled-components/InputRangeSliderComponent";
+import RangeSliderTableComponent from "./widgets/styled-components/RangeSliderTableComponent"
 import getTemplateStyles from "../../../../front-app/src/js/components/helpers/getTemplateStyles";
 import getInputMultiSelectStyles, {
   getInputMultiSelectPopoverStyles
@@ -161,6 +162,9 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
     case "table":
       {
         styles += getTableStyles(settings, elementId);
+        styles += `.${prefix}${elementId} { ${RangeSliderTableComponent(
+          settings
+        )}}`;
       }
       break;
     case "posts":
@@ -186,7 +190,7 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       }
       break
     case "input-date-range": {
-      styles += `.${prefix}${elementId} {${InputDateRangeComponent(settings)}}`
+      styles += InputDateRangeComponent(settings, elementId, prefix)
       }
       break;
     case "input-checkbox":
@@ -245,7 +249,7 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       break;
     case "input-select-tree": {
       styles += `.${prefix}${elementId} {${getInputSelectTreeStyles(settings)}}`;
-        styles += `${getInputSelectPopoverStyles(settings, elementId)}`;
+      styles += `${getInputSelectPopoverStyles(settings, elementId)}`;
       styles += `.altrp-select-tree${elementId} {${TreeComponent(settings, "tree_")}}`;
       }
       break;
@@ -320,6 +324,16 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
     case "icon":
       styles += `.${prefix}${elementId} {${getIconStyles(settings, elementId)}}`
     case "pie-diagram":
+      styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
+    case "bar-diagram":
+      styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
+    case "line-diagram":
+      styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
+    case "point-diagram":
+      styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
+    case "funnel-diagram":
+      styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
+    case "radar-diagram":
       styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
   }
 

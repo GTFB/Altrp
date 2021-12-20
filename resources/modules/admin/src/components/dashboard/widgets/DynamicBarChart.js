@@ -1,10 +1,10 @@
+
 import React, { useState, useEffect, useCallback } from "react";
 
 import Spinner from "./Spinner";
 import EmptyWidget from "./EmptyWidget";
 
 import Schemes from "../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
-const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
 const milkScheme = _.find(Schemes, { value: "milk" }).colors;
 const milkScheme2 = _.find(Schemes, { value: "milk2" }).colors;
 
@@ -12,15 +12,16 @@ import { ResponsiveBar } from "@nivo/bar";
 
 import { getWidgetData } from "../services/getWidgetData";
 import TooltipBar from "./d3/TooltipBar";
+import addCurrencyToLabel from "../services/addCurrencyToLabel";
 
 const DynamicBarChart = ({
   widget,
-  width = 300,
-  height = 450,
+  height,
+  width,
   dataSource = [],
   groupMode = "stacked",
   layout = "vertical",
-  colorScheme = "regagro",
+  colorScheme,
   reverse = false,
   enableLabel = false,
   padding = 0.1,
@@ -28,16 +29,27 @@ const DynamicBarChart = ({
   borderRadius = 0,
   borderWidth = 0,
   sort = "",
-  tickRotation = 0,
-  bottomAxis = true,
   enableGridX = true,
   enableGridY = true,
   customColorSchemeChecker = false,
   customColors = [],
-  yScaleMax,
-  widgetID,
-  useCustomTooltips
+  useCustomTooltips,
+  margin,
+  legend,
+  markers,
+  keys,
+  indexBy,
+  valueFormat,
+  axisBottom,
+  maxValue,
+  minValue,
+  currency,
+  borderColor
 }) => {
+  if (legend) {
+    Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
+  }
+
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
 
@@ -57,23 +69,23 @@ const DynamicBarChart = ({
         setIsLoading(false);
       }
     } else {
-      if (
-        sort !== null &&
-        typeof sort !== "undefined" &&
-        typeof dataSource !== "undefined"
-      ) {
-        switch (sort) {
-          case "value":
-            dataSource = _.sortBy(dataSource, ["value"]);
-            break;
-          case "key":
-            dataSource = _.sortBy(dataSource, ["key"]);
-            break;
-          default:
-            dataSource = dataSource;
-            break;
-        }
-      }
+      // if (
+      //   sort !== null &&
+      //   typeof sort !== "undefined" &&
+      //   typeof dataSource !== "undefined"
+      // ) {
+      //   switch (sort) {
+      //     case "value":
+      //       dataSource = _.sortBy(dataSource, ["value"]);
+      //       break;
+      //     case "key":
+      //       dataSource = _.sortBy(dataSource, ["key"]);
+      //       break;
+      //     default:
+      //       dataSource = dataSource;
+      //       break;
+      //   }
+      // }
       setData(dataSource || []);
       setIsLoading(false);
     }
@@ -86,46 +98,72 @@ const DynamicBarChart = ({
   if (isLoading) return <Spinner />;
 
   if (data.length === 0) return <EmptyWidget />;
+
   console.log("====================================");
   console.log(colorScheme);
   console.log("====================================");
+
+  const customProps = {}
+
+  if (legend) {
+    customProps.legends = [
+      {
+        anchor: 'top-right',
+        direction: 'column',
+        translateX: 0,
+        translateY: 0,
+        itemsSpacing: 2,
+        itemWidth: 60,
+        itemHeight: 14,
+        itemDirection: "left-to-right",
+        itemOpacity: 1,
+        symbolSize: 14,
+        symbolShape: "circle",
+        ...legend
+      }
+    ]
+  }
+
+  if (borderColor) {
+    customProps.borderColor = borderColor
+  }
+
+  if (valueFormat && currency) {
+    customProps.arcLabel = addCurrencyToLabel(currency)
+    customProps.tooltipFormat = addCurrencyToLabel(currency)
+  }
+  
   return (
     <>
-      <div style={{ height: `${height}px` }}>
+      <div style={{ height, width }}>
         <ResponsiveBar
           data={data}
           margin={{
-            top: 30,
-            right: 30,
-            bottom: 30,
-            left: 30
+            top: margin?.top || 30,
+            right: margin?.right || 30,
+            bottom: margin?.bottom || 30,
+            left: margin?.left || 30
           }}
-          indexBy="key"
+          keys={keys}
+          indexBy={indexBy}
           colors={
             customColorSchemeChecker && customColors.length > 0
               ? customColors
-              : colorScheme === "regagro"
-              ? regagroScheme
               : colorScheme === "milk"
               ? milkScheme
               : colorScheme === "milk2"
               ? milkScheme2
               : { scheme: colorScheme }
           }
-          colorBy="index"
+          // colorBy="index"
           layout={layout}
-          axisBottom={
-            bottomAxis && {
-              tickRotation: tickRotation
-            }
-          }
-          tooltip={datum => (
-            <TooltipBar
-              enable={useCustomTooltips}
-              datum={datum}
-              widgetID={widgetID}
-            ></TooltipBar>
-          )}
+          // tooltip={useCustomTooltips && (datum => (
+          //   <TooltipBar
+          //     enable={useCustomTooltips}
+          //     datum={datum}
+          //   />
+          // ))}
+          valueFormat={valueFormat}
           enableGridX={enableGridX}
           enableGridY={enableGridY}
           enableLabel={enableLabel}
@@ -135,13 +173,11 @@ const DynamicBarChart = ({
           innerPadding={innerPadding}
           borderRadius={borderRadius}
           borderWidth={borderWidth}
-          axisBottom={{
-            tickSize: 5,
-            tickPadding: 5,
-            tickRotation: 0,
-            legend: "key",
-            legendOffset: 32
-          }}
+          axisBottom={axisBottom}
+          markers={markers}
+          maxValue={maxValue}
+          minValue={minValue}
+          {...customProps}
         />
       </div>
     </>

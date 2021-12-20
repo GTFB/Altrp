@@ -8,6 +8,8 @@ use Carbon\Traits\Timestamp;
 use Illuminate\Database\Eloquent\Model;
 use App\Altrp\Source;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 /**
  * Class Customizer
@@ -29,10 +31,13 @@ class Customizer extends Model
     "type",
     "model_id",
     "data",
+    "model_guid",
+    "settings",
   ];
 
   protected $casts = [
     'data' => 'array',
+    'settings' => 'json',
   ];
 
   protected $appends = [
@@ -78,6 +83,8 @@ class Customizer extends Model
           'success' => false,
           'message' => 'Customizer failed!',
           'throw message' => \$th->getMessage(),
+          'file' => \$th->getFile(),
+          'line' => \$th->getLine(),
           'trace' => \$th->getTrace(),
         ], 500, [], JSON_UNESCAPED_UNICODE
         );
@@ -140,6 +147,17 @@ class Customizer extends Model
 
     return BaseNode::getStartNode( $this->parsed_data );
   }
+  /**
+   * @return Collection
+   */
+  public function getStartNodes(): Collection
+  {
+    if( ! $this->parsed_data ){
+      $this->parsed_data = BaseNode::parseData( $this->data );
+    }
+
+    return BaseNode::getStartNodes( $this->parsed_data );
+  }
 
   /**
    * @return string
@@ -149,4 +167,21 @@ class Customizer extends Model
     return $this->getStartNode() ? $this->getStartNode()->getRequestType() : 'get';
   }
 
+  /**
+   * @return array
+   */
+  public function getMiddlewares(): array
+  {
+    $middlewares = data_get( $this, 'settings.middlewares', []);
+    $middlewares =array_map( function($middleware){
+      if(is_string($middleware)){
+        return $middleware;
+      }
+      return data_get( $middleware, 'value');
+    }, $middlewares );
+    $middlewares = array_filter( $middlewares, function($middleware){
+      return ! ! $middleware;
+    });
+    return $middlewares;
+  }
 }

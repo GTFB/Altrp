@@ -11,6 +11,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Model
@@ -35,7 +36,7 @@ class Model extends EloquentModel
         'table_id',
         'pk',
         'last_upgrade',
-        'preset'
+        'preset',
     ];
 
     protected $hidden = [
@@ -152,6 +153,11 @@ class Model extends EloquentModel
     }
 
     public function getSoftDeletesAttribute($value)
+    {
+        return (bool)$value;
+    }
+
+    public function getOnlyUserAttribute($value)
     {
         return (bool)$value;
     }
@@ -322,13 +328,15 @@ class Model extends EloquentModel
         return $relations;
     }
 
-    public static function getBySearch($search, $orderColumn = 'id', $orderType = 'Desc')
+    public static function getBySearch($search, $orderColumn = 'title', $orderType = 'Desc')
     {
         $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
-        return self::where('title','like', "%{$search}%")
-            ->orWhere('id', 'like', "%{$search}%")
-          ->$sortType($orderColumn)
-          ->get();
+         return self::where('title','like', "%{$search}%")
+             ->orWhere('id', 'like', "%{$search}%")
+           ->$sortType($orderColumn)
+           ->get();
+
+
     }
 
   /**
@@ -351,6 +359,7 @@ class Model extends EloquentModel
       } else {
         return self::where('title','like', "%{$search}%")
           ->orWhere('id', "%$search%")
+
           ->skip($offset)
           ->$sortType($orderColumn)
           ->take($limit);
@@ -370,6 +379,7 @@ class Model extends EloquentModel
         $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
       if( $request->has( 'preset' ) ) {
         return self::where('preset', $request->get( 'preset' ) )
+
           ->skip($offset)
           ->take($limit)
           ->$sortType($orderColumn);
@@ -388,10 +398,10 @@ class Model extends EloquentModel
 
     public static function getCountWithSearch($search)
     {
-        return self::where('title','like', "%{$search}%")
-            ->orWhere('id', $search)
-            ->toBase()
-            ->count();
+      return self::where('title','like', "%{$search}%")
+        ->orWhere('id', $search)
+        ->toBase()
+        ->count();
     }
 
   public function getFieldsOptions(){

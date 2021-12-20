@@ -1,10 +1,10 @@
 import React from "react";
-import {
+const {
   getDataByPath,
   isEditor,
   parseOptionsFromSettings, renderAsset,
   renderAssetIcon
-} from "../../../../../front-app/src/js/helpers";
+} = window.altrpHelpers;
 
 import {NullArray} from "./styled-components/TreeComponent";
 
@@ -32,14 +32,18 @@ export const normalizeValues = function(branch) {
   }
 }
 
-export const getFromDatasource = function (settings, settingNames=['tree_from_datasource', "tree_substitute_datasource"], defaultOptions=false) {
+export const getFromDatasource = function (settings = {}, settingNames=['tree_from_datasource', "tree_substitute_datasource"], defaultOptions=false) {
   settings.path = this.props.element.getSettings(settingNames[0], '');
   settings.path = settings.path.replace(/}}/g, '').replace(/{{/g, '');
-  settings.data = getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData());
   settings.dataSettings = parseOptionsFromSettings(this.props.element.getSettings(settingNames[1]))
   settings.sortDefault = this.props.element.getSettings("sort_default");
   settings.sortOption = this.props.element.getSettings("options_sorting");
+  const data = getDataByPath(settings.path, [], this.props.element.getCurrentModel().getData());
 
+  if(! _.isArray(data)){
+    return [];
+  }
+  return data;
   let repeater = [];
 
   const keys = {
@@ -137,7 +141,10 @@ export const getFromDatasource = function (settings, settingNames=['tree_from_da
       sort: [settings.sortDefault, settings.sortOption]
     })
   } else {
-    return settings.data.map(branch => this.normalizeValues(branch))
+    if(! _.isArray(settings?.data)){
+      return  [];
+    }
+    return settings?.data?.map(branch => this.normalizeValues(branch)) || []
   }
 }
 

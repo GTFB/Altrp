@@ -390,6 +390,7 @@ class ApiController extends Controller
         if (isset($attributes['password']) && $table == 'users') {
             $attributes['password'] = Hash::make($attributes['password']);
         }
+
         return $attributes;
     }
 

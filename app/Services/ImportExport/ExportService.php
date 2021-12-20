@@ -34,6 +34,7 @@ use App\Services\ImportExport\Files\ValidationRulesFile;
 use App\Services\ImportExport\Writers\IWriter;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use App\Media;
 use Illuminate\Http\Request;
 use ZipArchive;
 
@@ -110,7 +111,7 @@ class ExportService
             ->exportValidationFields()
             ->exportValidationRules();
 
-        return $this->createArchive();
+        return $this->createArchive([]);
     }
 
     /**
@@ -166,9 +167,9 @@ class ExportService
         //->exportPageTemplates()
         //->exportTemplateSettings()
         //->exportSettings()
-        //->exportDiagrams()
+        ->exportDiagrams()
         ->exportDashboards()
-        //->exportReports()
+        ->exportReports()
         //->exportTables()
         //->exportModels()
         //->exportColumns()
@@ -181,20 +182,20 @@ class ExportService
         //->exportPageRoles()
         ->exportPermissionRoles()
         ->exportRemoteData()
-        //->exportRemoteDataSources()
+        ->exportRemoteDataSources()
         //->exportDataSourcesRoles()
         //->exportDataSourcesPremissions()
         ->exportValidationFields()
         ->exportValidationRules();
 
-      return $this->createArchive();
+      return $this->createArchive($params);
     }
 
     /**
      * Функция создания архива с файлами
      * @return string
      */
-    public function createArchive() {
+    public function createArchive($params) {
         $zip = new ZipArchive();
         $file_path =  $this->getFilename();
         $open_result = $zip->open( $file_path, ZipArchive::CREATE );
@@ -203,7 +204,7 @@ class ExportService
             throw( $exception );
         }
         $this->archiveFiles( $zip );
-        $this->archiveMedia( $zip );
+        $this->archiveMedia( $zip, $params );
 
         $zip->close();
         $this->deleteFiles();
@@ -296,6 +297,8 @@ class ExportService
      */
     public function exportMedia(array $params = []) {
         $media = new MediaFile();
+
+        //dd($params);
         $this->addFile($media->export($this->writer, self::EXPORT_PATH, $params));
         return $this;
     }
@@ -488,13 +491,22 @@ class ExportService
      * @param ZipArchive $zip
      * @return ZipArchive
      */
-    private function archiveMedia(ZipArchive $zip) {
-        $all_media = Storage::allFiles( '/public/media' );
+    private function archiveMedia(ZipArchive $zip, $params) {
 
-        foreach ( $all_media as $file ) {
-            $zip->addFile( storage_path( 'app/' . $file ),
-                str_replace( 'public/', '', $file ) );
+        if (isset($params['exportMedia']) && count($params['exportMedia']) > 0) {
+            $media = Media::whereIn('id', $params['exportMedia'])->get();
+            foreach ( $media as $file ) {
+                $zip->addFile( storage_path( 'app/public/' . $file->filename ),
+                    str_replace( 'public/', '', $file->filename ) );
+            }
+        } else {
+            $all_media = Storage::allFiles( '/public/media' );
+            foreach ( $all_media as $file ) {
+                $zip->addFile( storage_path( 'app/' . $file ),
+                    str_replace( 'public/', '', $file ) );
+            }
         }
+
         return $zip;
     }
 

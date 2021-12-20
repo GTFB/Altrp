@@ -17,6 +17,13 @@ const MenuItem = window.altrpLibs.Blueprint.MenuItem;
 const Select = window.altrpLibs.BlueprintSelect.Select;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
+.bp3-popover {
+  width: 100%;
+}
+
+ul.bp3-menu {
+  min-width: initial;
+}
 
 .altrp-field {
   border-style: solid;
@@ -429,6 +436,7 @@ class InputSelectWidget extends Component {
       ),
       paramsForUpdate: null,
     };
+
     this.popoverProps = {
       usePortal: true,
       targetClassName: "altrp-select-popover",
@@ -445,6 +453,8 @@ class InputSelectWidget extends Component {
     if (this.getContent("content_default_value")) {
       this.dispatchFieldValueToStore(this.getContent("content_default_value"));
     }
+
+    this.inputRef = React.createRef();
   }
 
   /**
@@ -815,13 +825,6 @@ class InputSelectWidget extends Component {
     if (_.isArray(e)) {
       value = _.cloneDeep(e);
     }
-    if (
-      this.props.element.getSettings("content_options_nullable") &&
-      e &&
-      e.value === "<null>"
-    ) {
-      value = null;
-    }
 
     this.setState(
       state => ({
@@ -845,7 +848,7 @@ class InputSelectWidget extends Component {
   }
 
   async onItemSelect(value) {
-    if (value.value) {
+    if (value.value !== undefined && ! isNaN(value.value)){
       value = value.value;
     }
 
@@ -885,10 +888,13 @@ class InputSelectWidget extends Component {
       } else {
         options.unshift(arguments[0])
       }
+      this.setState(state => ({
+          ...state,
+          options,
+        }))
     }
     this.setState(state => ({
         ...state,
-        options,
         value
       }),
       () => {
@@ -907,7 +913,8 @@ class InputSelectWidget extends Component {
    * получить опции
    */
   getOptions() {
-    let options = [...this.state.options];
+    let options = this.state.options;
+
     const optionsDynamicSetting = this.props.element.getDynamicSetting(
       "content_options"
     );
@@ -923,6 +930,8 @@ class InputSelectWidget extends Component {
     }
     if (optionsDynamicSetting) {
       options = convertData(optionsDynamicSetting, options);
+    } else {
+      options = [...options]
     }
     if (!this.props.element.getSettings("sort_default")) {
       options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
@@ -1152,6 +1161,7 @@ class InputSelectWidget extends Component {
     }
   }
   render() {
+
     const element = this.props.element;
     let label = null;
     const settings = this.props.element.getSettings();
@@ -1160,6 +1170,18 @@ class InputSelectWidget extends Component {
     const {
       label_icon
     } = settings;
+
+    const fullWidth = element.getSettings("full_width") || false
+    this.popoverProps.onOpening = (e) => {
+      if(fullWidth) {
+        const inputWidth = this.inputRef.current.offsetWidth;
+
+        console.log(inputWidth, e)
+        e.style.width = `${inputWidth}px`
+      } else if(e.style.width) {
+        e.style.width = ""
+      }
+    }
 
     let classLabel = "";
     let styleLabel = {};
@@ -1244,13 +1266,12 @@ class InputSelectWidget extends Component {
     let itemsOptions = this.getOptions();
     const position_css_classes = element.getResponsiveSetting('position_css_classes', '', '')
     const position_css_id = this.getContent('position_css_id')
-    const fullWidth = element.getResponsiveSetting("full_width", "", "false")
+
 
     input = (
         <Select
           inputProps={inputProps}
           disabled={content_readonly}
-          matchTargetWidth={fullWidth}
           popoverProps={this.popoverProps}
           createNewItemFromQuery={element.getResponsiveSetting('create') ? this.createNewItemFromQuery : null}
           createNewItemRenderer={this.createNewItemRenderer}
@@ -1261,7 +1282,7 @@ class InputSelectWidget extends Component {
             return <MenuItem
               text={item.label}
               key={item.value}
-              active={item.value == value}
+              active={item.value === this.getValue()}
               disabled={modifiers.disabled || item.disabled}
               onClick={handleClick}
             />
@@ -1283,6 +1304,7 @@ class InputSelectWidget extends Component {
         >
           <Button
             text={value}
+            elementRef={this.inputRef}
             disabled={content_readonly}
             onClick={this.onClick}
             icon={this.renderLeftIcon()}

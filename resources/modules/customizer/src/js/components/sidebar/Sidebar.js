@@ -25,6 +25,8 @@ class Sidebar extends React.Component {
     const customizerId = new URL(window.location).searchParams.get("customizer_id");
     const customizerData = store.getState()?.currentCustomizer;
     const {customizerSettingsData} = this.props
+    console.log(customizerData);
+    console.log(customizerSettingsData);
     this.resource.put(customizerId, {
       ...customizerData,
       data: customizerSettingsData
