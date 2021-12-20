@@ -203,16 +203,6 @@ class EditModelForm extends Component {
           <label htmlFor="page-time_stamps" className="label_model font__edit">Time Stamps</label>
         </div>
 
-        <div className="form-group col-4 form-check-inline">
-          <input type="checkbox" id="page-only_user"
-
-
-            checked={this.state.value.user_id}
-
-            onChange={e => { this.changeValue(e.target.checked, 'user_id') }}
-            className="form-check-input form-check-input_inline" />
-          <label htmlFor="page-only_user" className="label_checkbox">Only for Current User</label>
-        </div>
 
       </div>
       <div className="btn__wrapper">

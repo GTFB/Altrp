@@ -6,6 +6,7 @@ use App\Altrp\Plugin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 use Nwidart\Modules\Facades\Module;
 
 
@@ -26,7 +27,6 @@ class PluginController extends Controller
   }
 
   /**
-   * Переключатель состояния плагина (вкл./выкл.)
    * @param Request $request
    * @return \Illuminate\Http\JsonResponse
    * @throws \Facade\FlareClient\Http\Exceptions\NotFound
@@ -84,7 +84,6 @@ class PluginController extends Controller
   }
 
   /**
-   * Переключатель состояния плагина (вкл./выкл.)
    * @param Request $request
    * @return \Illuminate\Http\JsonResponse
    * @throws \Facade\FlareClient\Http\Exceptions\NotFound
@@ -99,23 +98,63 @@ class PluginController extends Controller
   }
 
   /**
-   * Установить плагин
    * @param Request $request
    * @return \Illuminate\Http\JsonResponse
+   * @throws \Illuminate\Validation\ValidationException
    */
   public function install( Request $request )
   {
-    \Validator::make( $request->all(), [
-      'name' => 'required',
-      'version' => 'required'
-    ] );
-    $moduleName = $request->get( 'name' );
-    $moduleVersion = $request->get( 'version' );
-    $success = Module::install( $moduleName, $moduleVersion );
-    $exitCode = Artisan::call( 'migrate', [ '--force' => true ] );
-    if ( $success )
-      return response()->json( 'Successfully installed!', 200 );
+    $res = ['success' => true, ];
+    $status = 200;
+    $this->validate($request,
+      ['name'=>'required',
+        'update_url' => 'required',]
+    );
 
-    return response()->json( 'Failed of installation!', 500 );
+
+    $client = new \GuzzleHttp\Client;
+    try{
+
+      $response = $client->get( $request->get('update_url'), [
+        'headers' => [
+          'altrp-domain-resource' => env( 'APP_URL' ),
+          'authorization' => request()->cookie('altrpMarketApiToken'),
+        ]
+      ])->getBody()->getContents();
+    } catch(\Throwable $e){
+      $res = ['success' => false,
+        'message' => $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine(),
+        'trace' => $e->getTrace(),
+        ];
+      $status = $e->getCode();
+      return response()->json( $res, $status, [], JSON_UNESCAPED_UNICODE );
+    }
+
+    $temp_path = storage_path( 'temp' );
+    $plugin = new Plugin(['name'=>$request->get('name')]);
+    File::ensureDirectoryExists( $temp_path );
+    $filename = $temp_path . '/' . $plugin->name . '.zip';
+    File::put( $filename,  $response );
+    $archive = new \ZipArchive();
+
+    if ( ! $archive->open( $filename ) ) {
+      $res = ['success' => false,'message' => 'Zip archive could not be open'];
+      $status = 500;
+      return response()->json( $res, $status, [], JSON_UNESCAPED_UNICODE );
+    }
+
+    if ( ! $archive->extractTo( $plugin->getPath() ) ) {
+      $archive->close();
+      File::deleteDirectory( $temp_path );
+      $res = ['success' => false,'message' => 'Zip archive could not be extracted'];
+      $status = 500;
+      return response()->json( $res, $status, [], JSON_UNESCAPED_UNICODE );
+    }
+    $archive->close();
+    File::deleteDirectory( $temp_path );
+    $plugin->updatePluginStaticFiles();
+    return response()->json( $res, $status, [], JSON_UNESCAPED_UNICODE );
   }
 }

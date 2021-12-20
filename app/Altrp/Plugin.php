@@ -85,7 +85,7 @@ class Plugin extends Model
     if( ! $pluginName ){
       return;
     }
-    $enabledPlugins =   env( self::ALTRP_PLUGINS );
+    $enabledPlugins = env( self::ALTRP_PLUGINS );
     if( ! $enabledPlugins ){
       $enabledPlugins = [];
     } else {
@@ -98,7 +98,6 @@ class Plugin extends Model
         $enabledPlugins[] = $plugin->name;
       }
     } else {
-      $plugin->removePluginStaticFiles();
       $enabledPlugins = array_filter( $enabledPlugins, function ( $_plugin ) use( $plugin ){
         return $_plugin != $plugin->name;
       } );
@@ -287,7 +286,9 @@ class Plugin extends Model
       return false;
     }
     Artisan::call( 'cache:clear' );
-    $enabledPlugins = DotenvEditor::getValue( self::ALTRP_PLUGINS );
+
+    $enabledPlugins = env( self::ALTRP_PLUGINS );
+
     if( ! $enabledPlugins ){
       return false;
     }
@@ -303,13 +304,7 @@ class Plugin extends Model
 
     $this->writeStaticsToAltrpMeta();
   }
-  /**
-   * @throws NotFound
-   */
-  public function removePluginStaticFiles(){
-    File::deleteDirectory( $this->getPublicPath() );
-    $this->removeStaticsFromAltrpMeta();
-  }
+
   public function removeStaticsFromAltrpMeta(){
 
     $altrp_static_meta = AltrpMeta::find( self::ALTRP_STATIC_META );
@@ -404,6 +399,7 @@ class Plugin extends Model
       $res = $client->get( $this->update_url, [
         'headers' => [
           'authorization' => request()->cookie('altrpMarketApiToken'),
+          'altrp-domain-resource' => env( 'APP_URL' ),
         ]
       ])->getBody()->getContents();
     } catch(\Throwable $e){

@@ -676,7 +676,7 @@ class Admin extends Component {
               <Route path="/admin/plugins">
                 <Plugins />
               </Route>
-              <Route path="/admin/plugins">
+              <Route path="/admin/search-plugins">
                 <SearchPlugins />
               </Route>
               <Route path="/admin/marketplace">

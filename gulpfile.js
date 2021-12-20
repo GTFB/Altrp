@@ -10,6 +10,7 @@ const excludes = [
   '!./app/Http/Controllers/AltrpControllers/**',
   '!./app/Http/Requests/AltrpRequests/**',
   '!./app/Providers/AltrpProviders/AppServiceProvider.php',
+  '!./app/AltrpPlugins',
   '!./app/Plugins/plugins.json',
   '!./bootstrap/cache/**',
   '!./Modules/**',
