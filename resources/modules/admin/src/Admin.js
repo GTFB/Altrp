@@ -23,7 +23,7 @@ import TablesSvg from "./svgs/tables-v2.svg";
 import RobotsSvg from "./svgs/robots-v2.svg";
 import LayoutSvg from "./svgs/layout-v2.svg";
 import UserSvg from "./svgs/users-v2.svg";
-import DropletSvg from "./svgs/droplet-v2.svg";
+import DropletSvg from "./svgs/droplet-v3.svg";
 import MarketPlace from "./svgs/marketplace.svg"
 import ChevronMenu from "./svgs/chevron__menu.svg"
 import AdminLogoMini from "./svgs/admin-logo-mini.svg"

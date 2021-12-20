@@ -3,30 +3,49 @@ import { Link } from "react-router-dom";
 import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
 import UserTopPanel from "./UserTopPanel";
+import {Icon, InputGroup, Tree} from "@blueprintjs/core";
+import PagesSvg from "../svgs/pages-v2.svg";
+import Search from "../svgs/search.svg";
 
 export default class AllPages extends Component {
   constructor(props) {
     super(props);
     this.state = {
       pages: [],
+      pagesDidMount: [],
+      treePages: [],
       currentPage: 1,
       activeHeader: 0,
       pagesSearch: ""
     };
     this.resource = new Resource({ route: "/admin/ajax/pages" });
-    this.itemsPerPage = 20;
+    this.itemsPerPage = 10;
   }
 
-  getPages = async s => {
+  getPages = async () => {
     let res = await this.resource.getQueried({ s: this.state.pagesSearch });
     this.setState(state => {
       return { ...state, pages: res };
     });
+    let treePagesNew = res.map(page => {
+      return this.treePagesMap(page)
+    })
+    this.setState(state => {
+      return { ...state, treePages: treePagesNew };
+    });
   };
 
-  componentDidMount() {
-    this.getPages();
+  getPagesDidMount = async () => {
+    let res = await this.resource.getAll();
+    this.setState(state => {
+      return { ...state, pagesDidMount: res };
+    });
+  }
 
+
+  async componentDidMount() {
+    await this.getPagesDidMount();
+    await this.getPages();
     window.addEventListener("scroll", this.listenScrollHeader)
 
     return () => {
@@ -55,32 +74,61 @@ export default class AllPages extends Component {
     this.setState({pagesSearch: e.target.value})
   };
 
-  // PagesTree = (pages) => {
-  //   const tree = [];
-  //   const roots = pages.filter(({ parent_page_id }) => parent_page_id === null);
-  //
-  //   if (!roots.length) return pages;
-  //
-  //   roots.forEach(root => {
-  //     tree.push(root);
-  //     treeRecursion(root.id);
-  //   });
-  //
-  //   function treeRecursion(parentId) {
-  //     const children = pages.filter(({ parent_page_id }) => parent_page_id === parentId);
-  //     const childrenMap = children.map(page => ({
-  //       ...page,
-  //       title: "——" + page.title
-  //     }))
-  //     tree.push(...childrenMap);
-  //   }
-  //   console.log(tree)
-  //
-  //   return tree;
-  // }
+  handleNodeExpand = (nodeData, nodePath) => {
+    let currentTree = _.cloneDeep(this.state.treePages);
+    let currentNode = Tree.nodeFromPath(nodePath, currentTree);
+    currentNode.isExpanded = true;
+    this.setState(s => ({ ...s, treePages: currentTree }));
+  }
+
+  handleNodeCollapse = (nodeData, nodePath) => {
+    let currentTree = _.cloneDeep(this.state.treePages);
+    let currentNode = Tree.nodeFromPath(nodePath, currentTree);
+    currentNode.isExpanded = false;
+    this.setState(s => ({ ...s, treePages: currentTree }));
+  }
+
+
+
+  treePagesMap = (page) => {
+    let treePage = {}
+    let childPage = []
+
+    let objectPage = this.state.pagesDidMount.filter(item => item.id === page.parent_page_id)
+    if (objectPage[0]) {
+      childPage = [
+        {
+          id: `${page.title + ' ' + 'parent page'}`,
+          key: `${page.title + ' ' + 'parent page'}`,
+          hasCaret: true,
+          label: (
+            "parent page"
+          ),
+          childNodes: objectPage.map(item => this.treePagesMap(item))
+        }
+      ]
+    } else {
+      childPage = []
+    }
+
+    treePage = {
+      id: page.id,
+      key: page.id,
+      label: (
+        <Link to={page.editUrl}>{page.title}</Link>
+      ),
+      secondaryLabel: (
+        <a href={page.path} target="_blank">{page.path}</a>
+      ),
+      hasCaret: true,
+      childNodes: childPage
+    }
+    return treePage
+  }
 
   render() {
-    const { currentPage, pages, pagesSearch } = this.state;
+    const {  treePages  } = this.state;
+
     return (
       <div className="admin-pages admin-page">
         <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
@@ -104,62 +152,77 @@ export default class AllPages extends Component {
           <UserTopPanel />
         </div>
         <div className="admin-content">
-          <AdminTable
-            columns={[
-              {
-                name: "title",
-                title: "Title",
-                editUrl: true,
-                tag: "Link"
-              },
-              {
-                name: "author",
-                title: "Author"
-              },
-              {
-                name: "path",
-                title: "Path",
-                url: true,
-                target: "_blank"
-              },
-              {
-                name: 'categories',
-                title: 'Categories'
-              }
-            ]}
-            quickActions={[
-              {
-                tag: "button",
-                route: `/admin/ajax/pages/:id`,
-                method: "delete",
-                confirm: "Are You Sure?",
-                after: () => { this.getPages() },
-                className: "quick-action-menu__item_danger",
-                title: "Delete"
-              }
-            ]}
-            rows={pages.slice(
-              currentPage * this.itemsPerPage - this.itemsPerPage,
-              currentPage * this.itemsPerPage
-            )}
-            searchTables={{
-              value: pagesSearch || "",
-              submit: this.submitSearchHandler,
-              change: (e) => this.changeSearchHandler(e)
-            }}
-            getPages={this.getPages}
+          <div className="altrp-tree">
+            <div className="altrp-tree__block">
+              <form className="admin-tree-top" onSubmit={this.submitSearchHandler}>
+                <InputGroup className="form-tables" value={this.state.pagesSearch} onChange={this.changeSearchHandler} />
+                <Search />
+                <button className="btn btn_bare admin-users-button btn__tables">Search</button>
+              </form>
+              <Tree
+                contents={treePages}
+                className="altrp-tree__pages"
+                onNodeCollapse={this.handleNodeCollapse}
+                onNodeExpand={this.handleNodeExpand}
+              />
+            </div>
+          </div>
+          {/*<AdminTable*/}
+          {/*  columns={[*/}
+          {/*    {*/}
+          {/*      name: "title",*/}
+          {/*      title: "Title",*/}
+          {/*      editUrl: true,*/}
+          {/*      tag: "Link"*/}
+          {/*    },*/}
+          {/*    {*/}
+          {/*      name: "author",*/}
+          {/*      title: "Author"*/}
+          {/*    },*/}
+          {/*    {*/}
+          {/*      name: "path",*/}
+          {/*      title: "Path",*/}
+          {/*      url: true,*/}
+          {/*      target: "_blank"*/}
+          {/*    },*/}
+          {/*    {*/}
+          {/*      name: 'categories',*/}
+          {/*      title: 'Categories'*/}
+          {/*    }*/}
+          {/*  ]}*/}
+          {/*  quickActions={[*/}
+          {/*    {*/}
+          {/*      tag: "button",*/}
+          {/*      route: `/admin/ajax/pages/:id`,*/}
+          {/*      method: "delete",*/}
+          {/*      confirm: "Are You Sure?",*/}
+          {/*      after: () => { this.getPages() },*/}
+          {/*      className: "quick-action-menu__item_danger",*/}
+          {/*      title: "Delete"*/}
+          {/*    }*/}
+          {/*  ]}*/}
+          {/*  rows={pages.slice(*/}
+          {/*    currentPage * this.itemsPerPage - this.itemsPerPage,*/}
+          {/*    currentPage * this.itemsPerPage*/}
+          {/*  )}*/}
+          {/*  searchTables={{*/}
+          {/*    value: pagesSearch || "",*/}
+          {/*    submit: this.submitSearchHandler,*/}
+          {/*    change: (e) => this.changeSearchHandler(e)*/}
+          {/*  }}*/}
+          {/*  getPages={this.getPages}*/}
 
 
-            pageCount={Math.ceil(pages.length / this.itemsPerPage) || 1}
-            currentPage={currentPage}
-            changePage={page => {
-              if (currentPage !== page) {
-                this.setState({ currentPage: page });
-              }
-            }}
-            itemsCount={pages.length}
-            openPagination={true}
-          />
+          {/*  pageCount={Math.ceil(pages.length / this.itemsPerPage) || 1}*/}
+          {/*  currentPage={currentPage}*/}
+          {/*  changePage={page => {*/}
+          {/*    if (currentPage !== page) {*/}
+          {/*      this.setState({ currentPage: page });*/}
+          {/*    }*/}
+          {/*  }}*/}
+          {/*  itemsCount={pages.length}*/}
+          {/*  openPagination={true}*/}
+          {/*/>*/}
         </div>
       </div>
     );

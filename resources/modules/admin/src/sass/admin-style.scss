@@ -83,6 +83,10 @@
         &.admin-nav-list__link--models {
           padding: 10px 10px 10px 54px;
         }
+
+        & span {
+          flex-grow: 1;
+        }
         &:hover {
           color: $green;
           text-decoration: none;
@@ -146,6 +150,10 @@
           height: 40px;
           padding: 10.5px 10px 10.5px 54px;
           text-decoration: none;
+
+          & span {
+            flex-grow: 1;
+          }
 
           &:hover::before {
             height: 40px;
@@ -270,16 +278,16 @@
 
 .icon__droplet {
   position: absolute !important;
-  top: 11.1px !important;
-  right: -4px;
-  width: 16px;
-  height: 18px;
+  top: -1px !important;
+  right: -1px;
+  width: 8px;
+  height: 42.84px;
   fill: white;
   display: none;
 
   & path {
-    width: 16px;
-    height: 20px;
+    width: 8px;
+    height: 42.84px;
   }
 }
 
@@ -486,6 +494,14 @@ a {
   width: 17px;
   height: 27px;
   cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.icon-img {
+  min-width: 0;
+  max-width: 100px;
+  min-height: 0;
+  max-height: 100px;
   margin-bottom: 10px;
 }
 

@@ -87,18 +87,6 @@ class AddPage extends Component {
    * @return {Promise<void>}
    */
   async componentDidMount() {
-    this.pagesOptionsResource
-      .getAll()
-      .then(pagesOptions => this.setState({
-        pagesOptions: [
-          {
-            value: 'root',
-            label: 'None',
-          }
-          ,
-          ...pagesOptions
-        ]
-      }));
 
     let res = await this.templateResource.getOptions();
     this.setState(state => {
@@ -147,6 +135,53 @@ class AddPage extends Component {
           id
         };
       });
+    }
+
+    if (id) {
+      let pagesOptions = await this.pagesOptionsResource.getAll()
+      let pageData = await this.resource.get(id);
+      let pageAll = await this.resource.getAll();
+      let parentPage = pageAll.find(item => item.parent_page_id === pageData.id)
+      let pagesFilterSelect = pagesOptions.filter(item => item.value !== pageData.id)
+
+      if (parentPage) {
+        let pagesFilter = pagesFilterSelect.filter(item => item.value !== parentPage.id)
+        this.setState({
+          pagesOptions: [
+            {
+              value: 'root',
+              label: 'None',
+            }
+            ,
+            ...pagesFilter
+          ]
+        })
+      } else {
+        this.setState({
+          pagesOptions: [
+            {
+              value: 'root',
+              label: 'None',
+            }
+            ,
+            ...pagesFilterSelect
+          ]
+        })
+      }
+
+    } else {
+      let pagesOptions = await this.pagesOptionsResource.getAll()
+
+      this.setState({
+        pagesOptions: [
+          {
+            value: 'root',
+            label: 'None',
+          }
+          ,
+          ...pagesOptions
+        ]
+      })
     }
 
     window.addEventListener("scroll", this.listenScrollHeader)
@@ -350,9 +385,17 @@ class AddPage extends Component {
     await this.getDataSources()
   }
 
+  deletePages = async (id) => {
+    if (confirm('Are You Sure?')) {
+      await this.resource.delete(id)
+      this.props.history.push('/admin/pages')
+    }
+  }
+
   render() {
     const {isModalOpened, editingDataSource} = this.state;
     let {dataSources} = this.state;
+    let id = this.props.match.params.id
 
     dataSources = _.sortBy(dataSources, dataSource => dataSource.priority);
     return (
@@ -368,7 +411,17 @@ class AddPage extends Component {
               {this.state.value.title || "Add New Page"}
             </span>
             </div>
-            {this.props.match.params.id && this.state.currentTab === "Datasource" && (
+            {this.props.match.params.id && (
+              <button onClick={() => this.deletePages(id)} className="btn btn_failure btn_mrRight">
+                Delete Page
+              </button>
+            )}
+            {this.props.match.params.id && (
+              <a href={`${this.state.value.path}`} className="btn btn_add btn_mrRight" target="_blank">
+                Go To Page
+              </a>
+            )}
+            {(this.props.match.params.id && this.state.currentTab === "Datasource") && (
               <button onClick={() => this.setState({isModalOpened: true})} className="btn btn_add">
                 Add Data Source
               </button>

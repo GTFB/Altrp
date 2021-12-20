@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Link, withRouter} from "react-router-dom";
 import Resource from "../../../../editor/src/js/classes/Resource";
-import {titleToName} from "../../js/helpers";
+import {titleToName, titleToNameTwo} from "../../js/helpers";
 import store from '../../js/store/store';
 
 import AdminTable from "../AdminTable";
@@ -237,6 +237,18 @@ class SqlEditor extends Component {
     }));
   };
 
+  titleChangeHandler = (e) => {
+    e.persist();
+    const {id} = this.props.match.params;
+    this.setState(state => ({
+      ...state, value: {
+        ...state.value,
+        title: titleToNameTwo(e.target.value),
+        name: id ? state.value.name : titleToName(e.target.value)
+      }
+    }))
+  }
+
   /**
    * Имзенить поле
    * @param {*} value
@@ -348,9 +360,7 @@ class SqlEditor extends Component {
                                 id="field-title"
                                 required
                      value={this.state.value.title || ''}
-                     onChange={e => {
-                       this.changeValue(e.target.value, 'title')
-                     }}
+                     onChange={this.titleChangeHandler}
                                 className="form-control-blueprint"
                     />
             </div>
