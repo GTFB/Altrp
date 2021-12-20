@@ -21,6 +21,7 @@ const DEFAULT_REACT_ELEMENTS = [
   'input-hidden',
   'input-file',
   'input-gallery',
+  'input-crop-image',
   'breadcrumbs',
   'map',
   'map_builder',

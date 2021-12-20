@@ -20,6 +20,7 @@ const SKELETON_ELEMENTS = [
   'input-date',
   'input-file',
   'input-gallery',
+  'input-crop-image',
   'breadcrumbs',
   'map',
   'map_builder',

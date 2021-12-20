@@ -21,5 +21,6 @@ const INPUT_WIDGETS = [
   'input-email',
   'input-date',
   'input-hidden',
+  'input-crop-image',
 ];
 export default INPUT_WIDGETS;

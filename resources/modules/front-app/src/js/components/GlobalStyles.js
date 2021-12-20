@@ -49,6 +49,7 @@ import TooltipComponent from "../../../../editor/src/js/components/widgets/style
 import getInputMultiSelectStyles, {getInputMultiSelectPopoverStyles} from "./helpers/getInputMultiSelectStyles";
 import getSchedulerStyles from "./helpers/getSchedulerStyles";
 import getIconStyles from "./helpers/getIconStyles";
+import InputCropImageComponent from "../../../../editor/src/js/components/widgets/styled-components/InputCropImageComponent";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -241,6 +242,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
             id
           )}}`;
         }break
+        case "input-crop-image":
+          styles += InputCropImageComponent(item.settings)
+          break
         case "input-image-select":
         case "input-accept":
         case "input-textarea":

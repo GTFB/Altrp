@@ -64,6 +64,7 @@ import getInputMultiSelectStyles, {
 import TooltipComponent from "./widgets/styled-components/TooltipComponent";
 import getSchedulerStyles from "../../../../front-app/src/js/components/helpers/getSchedulerStyles";
 import getIconStyles from "../../../../front-app/src/js/components/helpers/getIconStyles";
+import InputCropImageComponent from "./widgets/styled-components/InputCropImageComponent";
 
 const { connect } = window.reactRedux;
 const { replaceContentWithData } = window.altrpHelpers;
@@ -264,6 +265,9 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
         )}}`;
       }
       break;
+    case "input-crop-image":
+      styles += InputCropImageComponent(settings)
+      break
     case "map":
       styles += `.${prefix}${elementId} {${MapComponent(settings)}}`;
       break;
