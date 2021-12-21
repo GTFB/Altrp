@@ -10,6 +10,8 @@ import Resource from "../../../editor/src/js/classes/Resource";
 import AutoUpdateCheckbox from "./AutoUpdateCheckbox";
 import UserTopPanel from "./UserTopPanel";
 import React from "react";
+import CategoryModal from "./CategoryModal";
+import CategoryTable from "./CategoryTable";
 const AdvancedSettings = React.lazy(() => import("./AdvancedSettings"));
 const MailForm = React.lazy(() => import("./settings/MailForm"));
 
@@ -22,7 +24,9 @@ export default class AdminSettings extends Component {
       SSRPort: "",
       SSRAlias: "",
       SSRConf: false,
-      activeTab: parseInt(window.location.hash[1]) || 0
+      activeTab: parseInt(window.location.hash[1]) || 0,
+      modal: false,
+      idModal: null
     };
   }
 
@@ -97,6 +101,13 @@ export default class AdminSettings extends Component {
     );
   };
 
+  toggleModalCategory = () => {
+    this.setState(state => ({
+      ...state,
+      modal: !state.modal
+    }))
+  }
+
   async componentDidMount() {
     let SSREnabled = !!(
       await new Resource({ route: "/admin/ajax/settings" }).get(
@@ -143,6 +154,9 @@ export default class AdminSettings extends Component {
               <span className="admin-breadcrumbs__separator">/</span>
               <span className="admin-breadcrumbs__current">Builder</span>
             </div>
+            {this.state.activeTab === 8 && (
+              <button className="btn" onClick={this.toggleModalCategory}>Add Category</button>
+            )}
           </div>
           <UserTopPanel />
         </div>
@@ -157,6 +171,7 @@ export default class AdminSettings extends Component {
               <Tab>Export</Tab>
               <Tab>Import</Tab>
               <Tab>Mail</Tab>
+              <Tab>Categories</Tab>
             </TabList>
             <TabPanel>
               <table>
@@ -319,8 +334,14 @@ export default class AdminSettings extends Component {
                 <MailForm />
               </React.Suspense>
             </TabPanel>
+            <TabPanel className="Category">
+              <CategoryTable />
+            </TabPanel>
           </Tabs>
         </div>
+        {this.state.modal && (
+          <CategoryModal activeMode={this.state.modal} onToggle={this.toggleModalCategory} />
+        )}
       </div>
     );
   }

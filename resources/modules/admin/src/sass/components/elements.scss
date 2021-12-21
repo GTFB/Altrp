@@ -827,6 +827,51 @@ input[type="text"].form__input {
   }
 }
 
+.category__block {
+  padding: 10px;
+
+  & .btn_success {
+    width: 100px;
+    height: 34px;
+    padding: 8px 12px;
+  }
+}
+
+
+.category-animation {
+  transform-origin: center;
+  animation: animation-category-open 0.4s
+}
+
+.category-animation-close {
+  transform-origin: center;
+  animation: animation-category-close 0.3s
+}
+
+@keyframes animation-category-open {
+  from {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+  to {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+@keyframes animation-category-close {
+  from {
+    visibility: visible;
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+}
+
 @media screen and (max-width: 1101px) {
   .upload__marginBottom {
     margin-bottom: 20px;

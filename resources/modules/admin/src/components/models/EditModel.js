@@ -57,6 +57,8 @@ class EditModel extends Component {
         title: '',
         description: '',
         bounded_model: '',
+        categories: [],
+        selectedCategory: [],
         soft_deletes: false,
         time_stamps: false
       },

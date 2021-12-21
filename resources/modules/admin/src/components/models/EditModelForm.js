@@ -3,7 +3,8 @@ import {Link, Redirect} from "react-router-dom";
 import {titleToName, titleToNameTwo} from "../../js/helpers";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import AltrpSelect from "../altrp-select/AltrpSelect";
-import {InputGroup} from "@blueprintjs/core";
+import {InputGroup, MenuItem} from "@blueprintjs/core";
+import {MultiSelect} from "@blueprintjs/select";
 
 class EditModelForm extends Component {
   constructor(props) {
@@ -95,8 +96,30 @@ class EditModelForm extends Component {
     this.setState(state=>({...state, redirect: '/admin/tables/models/'}))
   }
 
+  tagRenderer = (item) => {
+    return item.label;
+  };
+
+  onQueryChange = (query, value) => {
+
+  }
+
+  isItemSelectedCategory = () => {
+
+  }
+
+  handleItemSelectCategory = () => {
+
+  }
+
+  handleTagRemoveCategory = () => {
+
+  }
+
+
   render() {
     const model = this.state.value;
+    console.log(this.state)
     if(this.state.redirect){
       return <Redirect to={this.state.redirect} push={true}/>
     }
@@ -175,15 +198,33 @@ class EditModelForm extends Component {
             onChange={value => {this.changeValue(value, 'table_id')}}
             optionsRoute="/admin/ajax/tables/options"/>
         </div>}
-        <div className="form-group form-group_width47">
+        <div className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-pages form-group_width47">
           <label htmlFor="page-categories" className="font__edit">Categories (Временно не доступен)</label>
-          <InputGroup className="form-control-blueprint"
-                      onChange={this.categoriesChangeHandler}
-                      value={model.categories || ''}
-                      type="text"
-                      id="page-categories"
-                      disabled={true}
-                      required
+          <MultiSelect tagRenderer={this.tagRenderer} id="categories"
+                       items={this.state.value.categories || []}
+                       itemPredicate={this.onQueryChange}
+                       noResults={<MenuItem disabled={true} text="No results."/>}
+                       fill={true}
+                       placeholder="Categories..."
+                       selectedItems={this.state.value.selectedCategory}
+                       onItemSelect={this.handleItemSelectCategory}
+                       itemRenderer={(item, {handleClick, modifiers, query}) => {
+                         return (
+                           <MenuItem
+                             icon={this.isItemSelectedCategory(item) ? "tick" : "blank"}
+                             text={item.label}
+                             key={item.value}
+                             onClick={handleClick}
+                           />
+                         )
+                       }}
+                       tagInputProps={{
+                         onRemove: this.handleTagRemoveCategory,
+                         large: false,
+                       }}
+                       popoverProps={{
+                         usePortal: false
+                       }}
           />
         </div>
       </div>
