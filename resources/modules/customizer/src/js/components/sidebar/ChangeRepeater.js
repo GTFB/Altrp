@@ -21,7 +21,6 @@ class ChangeRepeater extends Component {
     return <div className="switcher-repeater">
       {items.map((item, idx) => {
         const { action} = item;
-        console.log(item)
         const buttonText = CHANGE_ACTION_OPTIONS.find(o=>o.value === action)?.label || '';
         return <div className="switcher-repeater-item d-flex align-items-start"
                     key={item.id}>

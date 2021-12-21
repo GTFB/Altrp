@@ -131,7 +131,7 @@ export default class AdminSettings extends Component {
   }
 
   render() {
-    const { SSRPort, SSRAlias, SSRConf } = this.state;
+
     return (
       <div className="admin-settings admin-page">
         <div className="admin-heading">
