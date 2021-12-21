@@ -6,13 +6,21 @@ const {
   replaceContentWithData,
   getDataFromLocalStorage
 } = window.altrpHelpers;
+const {ImageCrop} = window.altrpLibs
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
-  .crop-image-container {
+  .image-to-crop-container {
     cursor: pointer;
     position: relative;
   }
+
+  .image-crop-container {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+  }
+
   .crop-image-background {
     width: 100%;
     height: 100%;
@@ -23,6 +31,18 @@ import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+
+  .ReactCrop {
+    height: 100%;
+  }
+
+  .ReactCrop > * {
+    height: 100%;
+  }
+
+  .ReactCrop__image {
+    height: 100%;
   }
 `)
 
@@ -357,17 +377,17 @@ class InputCropImageWidget extends Component {
         const reader = new FileReader
         reader.readAsDataURL(file)
         reader.onload = () => {
-          this.setState(state => {
-              state[`imageUrl`] = reader.result;
-              return {...state};
-            }
+          this.setState(state => ({
+              imageUrl: reader.result,
+              ...state
+            })
           )
         }
       })
     } catch (e) {
       console.error(e);
     }
-    this.setState(state => ({...state, notActive: false}))
+    this.setState(state => ({...state, notActive: false, crop: {}}))
   }
 
   /**
@@ -420,13 +440,27 @@ class InputCropImageWidget extends Component {
   render() {
     const {element} = this.props
     let text = element.getResponsiveSetting('text')
+
     return (
-      <div className="crop-image-container">
-        <input type="file" accept="image/*" className="hidden" id='image-input' onChange={this.onChange} />
-        <label htmlFor="image-input">
-          <div className="crop-image-text">{text}</div>
-          <div className="crop-image-background" />
-        </label>
+      <div style={{display: 'flex', justifyContent: 'center'}}>
+        {!this.state.imageUrl 
+          ?
+          <div className="image-to-crop-container">
+            <input type="file" accept="image/*" className="hidden" id='image-input' onChange={this.onChange} />
+            <label htmlFor="image-input">
+              <div className="crop-image-text">{text}</div>
+              <div className="crop-image-background" />
+            </label>
+          </div>
+          :
+          <div className="image-crop-container">
+            <ImageCrop
+              src={this.state.imageUrl}
+              crop={this.state.crop}
+              onChange={newCrop => this.setState(state => ({...state, crop: newCrop}))} 
+            />
+          </div>
+        }
       </div>
     );
 

@@ -26,6 +26,7 @@ const WIDGETS_DEPENDS = {
   'input-date': ['blueprint', 'blueprint-datetime', 'moment'],
   'input-slider': ['blueprint'],
   'input-range-slider': ['blueprint'],
+  'input-crop-image': ['image-crop'],
   'scheduler': ['fullcalendar', 'blueprint']
 }
 export default WIDGETS_DEPENDS;

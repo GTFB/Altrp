@@ -57,6 +57,13 @@ window.LIBS = {
       console.log('LOAD "fullcalendar": ', performance.now());
       return Promise.resolve(res)
     });    
+  },
+  'image-crop': () => {
+    return import(/* webpackChunkName: 'image-crop' */'../libs/image-crop').then(res => {
+      window.libsLoaded.push('image-crop')
+      console.log('LOAD "image-crop": ', performance.now());
+      return Promise.resolve(res)
+    });    
   }
 };
 

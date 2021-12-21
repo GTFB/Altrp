@@ -6,9 +6,13 @@ export default function InputCropImageComponent(settings) {
 
   let styles = ``
 
-  styles += `.crop-image-container {
+  styles += `.image-to-crop-container {
     ${simplePropertyStyled(sliderStyled(getSetting('width', '', {size: 100, unit: '%'})), 'width')}
     ${simplePropertyStyled(sliderStyled(getSetting('height', '', {size: 300, unit: 'px'})), 'height')}
+  }`
+
+  styles += `.image-crop-container {
+    ${simplePropertyStyled(sliderStyled(getSetting('crop_size') || getSetting('height', '', {size: 300, unit: 'px'})), 'height')}
   }`
 
   styles += `.crop-image-background {
@@ -31,8 +35,14 @@ export default function InputCropImageComponent(settings) {
 
   styles += `.crop-image-text {
     ${typographicControllerToStyles(getSetting('text_typographic'))}
-    ${colorPropertyStyled(getSetting('text_color'), 'color')}
+    ${colorPropertyStyled(getSetting('text_color', '', {color: 'rgb(0, 0, 0)'}), 'color')}
     ${dimensionsControllerToStyles(getSetting('text_margin'), 'margin')}
+  }`
+
+  styles += `.crop-image-text:hover {
+    ${typographicControllerToStyles(getSetting('text_typographic', ':hover'))}
+    ${colorPropertyStyled(getSetting('text_color', ':hover', {color: 'rgb(0, 0, 0)'}), 'color')}
+    ${dimensionsControllerToStyles(getSetting('text_margin', ':hover'), 'margin')}
   }`
 
   return styles

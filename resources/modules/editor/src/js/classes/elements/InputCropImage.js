@@ -59,11 +59,6 @@ class InputCropImage extends BaseElement {
       label: 'Field ID (Column Name)'
     });
 
-    this.addControl('placeholder', {
-      type: CONTROLLER_TEXT,
-      label: 'Placeholder',
-    });
-
     this.addControl('text', {
       type: CONTROLLER_TEXT,
       label: 'Text',
@@ -78,12 +73,6 @@ class InputCropImage extends BaseElement {
       type: CONTROLLER_SWITCHER,
       responsive: false,
       label: 'Required'
-    });
-
-    this.addControl('readonly', {
-      type: CONTROLLER_SWITCHER,
-      responsive: false,
-      label: 'Readonly'
     });
 
     this.endControlSection();
@@ -267,6 +256,22 @@ class InputCropImage extends BaseElement {
     this.addControl('height', {
       type: CONTROLLER_SLIDER,
       label: 'Height',
+      max: 1000,
+      stateless: true,
+      min: 0,
+      units: ['px', 'vw']
+    });
+
+    this.endControlSection();
+
+    this.startControlSection('crop_size_section', {
+      tab: TAB_STYLE,
+      label: 'Crop Size'
+    });
+
+    this.addControl('crop_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Crop Size',
       max: 1000,
       stateless: true,
       min: 0,
