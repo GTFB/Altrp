@@ -6,6 +6,7 @@ use App\Altrp\Menu;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\CategoryObject;
 
 class MenuController extends Controller
 {
@@ -48,6 +49,20 @@ class MenuController extends Controller
     $menu = new Menu( $request->all() );
     $menu->guid = Str::uuid();
     if( ! $menu->save() ){
+
+      $categories = $request->get( '_categories' );
+      if( is_array($categories) && count($categories) > 0 ){
+        $insert = [];
+        foreach($categories as $key => $category){
+          $insert[$key] = [
+            "category_guid" => $category,
+            "object_guid" => $menu->guid,
+            "object_type" => "Menu"
+          ];
+        }
+        CategoryObject::insert($insert);
+      }
+
       return response()->json( ['success' => false, ], 500, [], JSON_UNESCAPED_UNICODE);
     }
     return response()->json( ['success' => true, 'data' => $menu->toArray()], 200, [], JSON_UNESCAPED_UNICODE);
@@ -124,6 +139,21 @@ class MenuController extends Controller
     }
     $menu->fill( $request->all() );
     $menu->save();
+
+    CategoryObject::where("object_guid", $menu->guid)->delete();
+    $categories = $request->get( '_categories' );
+    if( is_array($categories) && count($categories) > 0 ){
+      $insert = [];
+      foreach($categories as $key => $category){
+        $insert[$key] = [
+          "category_guid" => $category,
+          "object_guid" => $menu->guid,
+          "object_type" => "Menu"
+        ];
+      }
+      CategoryObject::insert($insert);
+    }
+    
     return response()->json( ['success' => true,], 200, [], JSON_UNESCAPED_UNICODE);
   }
 

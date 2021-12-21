@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\CategoryObject;
 
 class AreasController extends Controller
 {
@@ -50,6 +51,20 @@ class AreasController extends Controller
     );
 
     if( ! $area->save() ){
+
+      // $categories = $request->get( '_categories' );
+      // if( is_array($categories) && count($categories) > 0 ){
+      //   $insert = [];
+      //   foreach($categories as $key => $category){
+      //     $insert[$key] = [
+      //       "category_guid" => $category,
+      //       "object_guid" => $area->guid,
+      //       "object_type" => "Area"
+      //     ];
+      //   }
+      //   CategoryObject::insert($insert);
+      // }
+
       return response()->json( ['message' => 'Area not Saved'], 500, [], JSON_UNESCAPED_UNICODE );
     }
     return response()->json( $area->toArray(), 200, [], JSON_UNESCAPED_UNICODE );

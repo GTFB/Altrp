@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use App\CategoryObject;
 
 
 class RobotController extends Controller
@@ -55,6 +56,19 @@ class RobotController extends Controller
         $data['user_id'] = auth()->id();
         $robot = new Robot($data);
         $result = $robot->save();
+
+        $categories = $request->get( '_categories' );
+        if( is_array($categories) && count($categories) > 0 ){
+          $insert = [];
+          foreach($categories as $key => $category){
+            $insert[$key] = [
+              "category_guid" => $category,
+              "object_guid" => $result->guid,
+              "object_type" => "Robot"
+            ];
+          }
+          CategoryObject::insert($insert);
+        }
 
         return \response()->json([
             'success' => $result,
@@ -106,6 +120,20 @@ class RobotController extends Controller
         }
 
         $result = $robot->update($data);
+
+        CategoryObject::where("object_guid", $result->guid)->delete();
+        $categories = $request->get( '_categories' );
+        if( is_array($categories) && count($categories) > 0 ){
+          $insert = [];
+          foreach($categories as $key => $category){
+            $insert[$key] = [
+              "category_guid" => $category,
+              "object_guid" => $result->guid,
+              "object_type" => "Robot"
+            ];
+          }
+          CategoryObject::insert($insert);
+        }
 
         $writer = new ScheduleFileWriter(app_path('Console/Kernel.php'));
         $command = 'robot:run ' . $robot->id;

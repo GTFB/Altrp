@@ -6,6 +6,7 @@ use App\Constructor\Template;
 use App\Http\Controllers\Controller;
 use App\Page;
 use App\PagesTemplate;
+use App\CategoryObject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -75,6 +76,20 @@ class PagesController extends Controller
     $page->is_cached = $request->is_cached;
     $page->sections_count = $request->sections_count;
     if ( $page->save() ) {
+
+      $categories = $request->get( '_categories' );
+      if( is_array($categories) && count($categories) > 0 ){
+        $insert = [];
+        foreach($categories as $key => $category){
+          $insert[$key] = [
+            "category_guid" => $category,
+            "object_guid" => $page->guid,
+            "object_type" => "Page"
+          ];
+        }
+        CategoryObject::insert($insert);
+      }
+
       if ( $request->template_id ) {
         $template = Template::find( $request->template_id );
         $pages_templates = new PagesTemplate( [
@@ -91,6 +106,7 @@ class PagesController extends Controller
       $res['page'] = $page->toArray();
       $page->parseRoles( (array)$request->get( 'roles' ) );
       return response()->json( $res );
+
     }
     $res['message'] = 'Page not Saved';
     return response()->json( $res, 500 );
@@ -182,6 +198,21 @@ class PagesController extends Controller
     }
     $page->parseRoles( (array)$request->get( 'roles' ) );
     if ( $page->save() ) {
+
+      CategoryObject::where("object_guid", $page->guid)->delete();
+      $categories = $request->get( '_categories' );
+      if( is_array($categories) && count($categories) > 0 ){
+        $insert = [];
+        foreach($categories as $key => $category){
+          $insert[$key] = [
+            "category_guid" => $category,
+            "object_guid" => $page->guid,
+            "object_type" => "Page"
+          ];
+        }
+        CategoryObject::insert($insert);
+      }
+
       $res['success'] = true;
     }
 

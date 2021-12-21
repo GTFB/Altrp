@@ -8,6 +8,7 @@ use App\Page;
 use App\PagesTemplate;
 use App\Permission;
 use App\Role;
+use App\Category;
 use App\Traits\Searchable;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
@@ -321,6 +322,11 @@ class Template extends Model
   public function template_area()
   {
     return $this->hasOne( Area::class, 'id', 'area' );
+  }
+
+  public function categories()
+  {
+    return $this->hasMany( CategoryObject::class, 'object_guid', 'guid' );
   }
 
   /**

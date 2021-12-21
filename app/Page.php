@@ -507,6 +507,13 @@ class Page extends Model
     return $this->hasMany( PageDatasource::class, 'page_id', 'id' );
   }
 
+
+  public function categories()
+  {
+    return $this->hasMany( CategoryObject::class, 'object_guid', 'guid' );
+  }
+  
+
   /**
    * @param array $page_roles
    * @deprecated
