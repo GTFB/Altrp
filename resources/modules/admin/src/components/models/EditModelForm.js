@@ -101,25 +101,42 @@ class EditModelForm extends Component {
   };
 
   onQueryChange = (query, value) => {
-
+    return (
+      `${value.label.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0
+    );
   }
 
-  isItemSelectedCategory = () => {
-
+  isItemSelectedCategory = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.value._categories);
+    return selectedString.includes(itemString);
   }
 
-  handleItemSelectCategory = () => {
-
+  handleItemSelectCategory = (item) => {
+    if (!this.isItemSelectedCategory(item)) {
+      this.setState(state => ({
+        ...state,
+        value: {
+          ...state.value,
+          _categories: [...state.value._categories, item]
+        },
+      }));
+    }
   }
 
-  handleTagRemoveCategory = () => {
-
+  handleTagRemoveCategory = (item) => {
+    this.setState(state => ({
+      ...state,
+      value: {
+        ...state.value,
+        _categories: [...state.value._categories].filter((i) => i.label !== item)
+      },
+    }));
   }
 
 
   render() {
     const model = this.state.value;
-    console.log(this.state)
     if(this.state.redirect){
       return <Redirect to={this.state.redirect} push={true}/>
     }
@@ -182,8 +199,8 @@ class EditModelForm extends Component {
           />
         </div>
       </div>
-      <div className="form-group__inline-wrapper">
-        {(model.id) ? '' : <div className="form-group form-group_width47">
+      <div className="flex-model">
+        {(model.id) ? '' : <div className="form-group form-group_width34 right-margin">
           <label htmlFor="model-table_id" className="font__edit">Table</label>
           <AltrpSelect
             id="model-table_id"
@@ -198,15 +215,15 @@ class EditModelForm extends Component {
             onChange={value => {this.changeValue(value, 'table_id')}}
             optionsRoute="/admin/ajax/tables/options"/>
         </div>}
-        <div className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-pages form-group_width47">
-          <label htmlFor="page-categories" className="font__edit">Categories (Временно не доступен)</label>
+        <div className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-category form-group_width34">
+          <label htmlFor="page-categories" className="font__edit">Categories</label>
           <MultiSelect tagRenderer={this.tagRenderer} id="categories"
-                       items={this.state.value.categories || []}
+                       items={this.state.value.categoryOptions}
                        itemPredicate={this.onQueryChange}
                        noResults={<MenuItem disabled={true} text="No results."/>}
                        fill={true}
                        placeholder="Categories..."
-                       selectedItems={this.state.value.selectedCategory}
+                       selectedItems={this.state.value._categories}
                        onItemSelect={this.handleItemSelectCategory}
                        itemRenderer={(item, {handleClick, modifiers, query}) => {
                          return (
@@ -244,15 +261,15 @@ class EditModelForm extends Component {
           <label htmlFor="page-time_stamps" className="label_model font__edit">Time Stamps</label>
         </div>
 
-        <div className="form-group col-4 form-check-inline">
+        <div className="form-group__flexModel">
           <input type="checkbox" id="page-only_user"
 
 
             checked={this.state.value.user_id}
 
             onChange={e => { this.changeValue(e.target.checked, 'user_id') }}
-            className="form-check-input form-check-input_inline" />
-          <label htmlFor="page-only_user" className="label_checkbox">Only for Current User</label>
+            />
+          <label htmlFor="page-only_user" className="label_model font__edit">Only for Current User</label>
         </div>
 
       </div>

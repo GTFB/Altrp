@@ -102,10 +102,18 @@ export default class AdminSettings extends Component {
   };
 
   toggleModalCategory = () => {
-    this.setState(state => ({
-      ...state,
-      modal: !state.modal
-    }))
+    if (this.state.idModal) {
+      this.setState(state => ({
+        ...state,
+        modal: !state.modal,
+        idModal: null
+      }))
+    } else {
+      this.setState(state => ({
+        ...state,
+        modal: !state.modal
+      }))
+    }
   }
 
   async componentDidMount() {
@@ -141,8 +149,16 @@ export default class AdminSettings extends Component {
     });
   }
 
+  editCategory = (guid) => {
+    this.setState(state => ({
+      ...state,
+      modal: true,
+      idModal: guid
+    }))
+  }
+
   render() {
-    const { SSRPort, SSRAlias, SSRConf } = this.state;
+    const { SSRPort, SSRAlias, SSRConf, idModal  } = this.state;
     return (
       <div className="admin-settings admin-page">
         <div className="admin-heading">
@@ -335,13 +351,15 @@ export default class AdminSettings extends Component {
               </React.Suspense>
             </TabPanel>
             <TabPanel className="Category">
-              <CategoryTable />
+              <CategoryTable
+                edit={this.editCategory}
+                activeMode={this.state.modal}
+                guid={this.state.idModal}
+                onToggle={this.toggleModalCategory}
+              />
             </TabPanel>
           </Tabs>
         </div>
-        {this.state.modal && (
-          <CategoryModal activeMode={this.state.modal} onToggle={this.toggleModalCategory} />
-        )}
       </div>
     );
   }

@@ -295,7 +295,7 @@ input[type="text"].form__input {
   margin-top: 14px;
   margin-bottom: 20px;
 
-  &:first-child {
+  &:not(:last-child) {
     margin-right: 20px;
   }
 }
@@ -328,6 +328,28 @@ input[type="text"].form__input {
   }
 }
 
+.form-group_width34 {
+  flex-basis: 355px;
+}
+
+.flex-model {
+  display: flex;
+}
+
+.right-margin {
+  margin-right: 30px;
+}
+
+.form-group__multiSelectBlueprint-category {
+
+  & .bp3-menu {
+    width: 355px;
+  }
+
+  & .bp3-tag-input {
+    height: 38px;
+  }
+}
 
 .admin-styles-settings .uploader {
   box-shadow: none;

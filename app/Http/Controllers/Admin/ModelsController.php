@@ -476,7 +476,7 @@ class ModelsController extends HttpController
         $result = $model->update($request->all());
         if ($result) {
 
-            CategoryObject::where("object_guid", $result->guid)->delete();
+            CategoryObject::where("object_guid", $model->guid)->delete();
             $categories = $request->get( '_categories' );
             if( is_array($categories) && count($categories) > 0 ){
               $insert = [];

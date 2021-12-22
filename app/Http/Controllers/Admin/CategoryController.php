@@ -6,7 +6,7 @@ use App\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Validator; 
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
@@ -43,7 +43,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $validator = Validator::make($request->all(),[
             'name' => 'required',
             'title' => 'required'
@@ -71,10 +71,10 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($guid)
     {
 
-        $сategory = Category::find($id);
+        $сategory = Category::find($guid);
 
         if (!$сategory) {
           return response()->json( ['success' => true, 'message' => 'Category Not Found', 'data' => []], 404, [], JSON_UNESCAPED_UNICODE);
@@ -87,7 +87,7 @@ class CategoryController extends Controller
 
     public function options(Request $request)
     {
-        
+
         $сategories = Category::all();
 
         $сategories = $сategories->map( function( $сategory ) use ( $request ){
@@ -124,10 +124,10 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update($id, Request $request)
+    public function update($guid, Request $request)
     {
 
-        $сategory = Category::find($id);
+        $сategory = Category::find($guid);
 
         if (!$сategory) {
           return response()->json( ['success' => true, 'message' => 'Category Not Found', 'data' => []], 404, [], JSON_UNESCAPED_UNICODE);
@@ -151,10 +151,10 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy( $id )
+    public function destroy( $guid )
     {
-        
-        $сategory = Category::find($id);
+
+        $сategory = Category::find($guid);
 
         if (!$сategory) {
           return response()->json( ['success' => true, 'message' => 'Category Not Found', 'data' => []], 404, [], JSON_UNESCAPED_UNICODE);

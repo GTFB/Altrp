@@ -341,6 +341,7 @@ class AddPage extends Component {
   render() {
     const {isModalOpened, editingDataSource} = this.state;
     let {dataSources} = this.state;
+    console.log(this.state)
 
     dataSources = _.sortBy(dataSources, dataSource => dataSource.priority);
     return (

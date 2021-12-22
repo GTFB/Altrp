@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import AdminTable from "./AdminTable";
 import Resource from "../../../editor/src/js/classes/Resource";
+import CategoryModal from "./CategoryModal";
 
 
 class CategoryTable extends Component {
@@ -22,16 +23,17 @@ class CategoryTable extends Component {
   }
 
   getCategories = async () => {
-    const res = await this.categories.getAll()
+    const res = await this.categories.getQueried({ s: this.state.categorySearch } )
+
     this.setState(state => ({
       ...state,
-      categories: res
+      categories: res,
     }))
   }
 
   searchCategory = (e) => {
     e.preventDefault();
-
+    this.getCategories();
   }
 
   changeCategory = (e) => {
@@ -40,7 +42,6 @@ class CategoryTable extends Component {
 
   render() {
     const { categorySearch, categories, currentPage } = this.state
-    console.log("категории", categories)
     return (
       <div className="category-table">
         <AdminTable
@@ -49,7 +50,6 @@ class CategoryTable extends Component {
               name: 'title',
               title: 'Title',
               button__table: true,
-              editUrl: true,
               tag: "Link"
             },
             {
@@ -59,19 +59,15 @@ class CategoryTable extends Component {
             {
               name: 'description',
               title: 'Description'
-            },
-            {
-              name: 'guid',
-              title: "guid"
             }
           ]}
-          rows={categories.map(item => ({...item, editUrl: `/admin/ajax/categories/:id`}))}
+          rows={categories.map(item => ({...item, editUrl: `/admin/ajax/categories/:id`, button__table: () => this.props.edit(item.guid)}))}
           quickActions={[
             {
               tag: "button",
               route: `/admin/ajax/categories/:id`,
               method: "delete",
-              confirm: `/admin/ajax/categories/:id`,
+              confirm: `Are You Sure`,
               after: () => { this.getCategories() },
               className: "quick-action-menu__item_danger",
               title: "Delete"
@@ -94,6 +90,10 @@ class CategoryTable extends Component {
           itemsCount={categories.length}
           openPagination={true}
         />
+
+        {this.props.activeMode && (
+          <CategoryModal getCategories={this.getCategories} guid={this.props.guid} activeMode={this.props.activeMode} onToggle={this.props.onToggle} />
+        )}
       </div>
     );
   }
