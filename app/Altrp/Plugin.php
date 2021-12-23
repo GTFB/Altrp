@@ -102,6 +102,7 @@ class Plugin extends Model
       $enabledPlugins = array_filter( $enabledPlugins, function ( $_plugin ) use( $plugin ){
         return $_plugin != $plugin->name;
       } );
+      $plugin->removeStaticsFromAltrpMeta();
     }
     $enabledPlugins = implode(',', $enabledPlugins);
     DotenvEditor::setKey( self::ALTRP_PLUGINS, $enabledPlugins );

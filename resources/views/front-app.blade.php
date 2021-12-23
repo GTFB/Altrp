@@ -24,7 +24,9 @@ if( isset($_altrp_settings['redirect']) && $_altrp_settings['redirect']){
     }
     // window.onerror = myErrHandler;
     /* ]]> */
+    document.currentScript = "/modules/front-app/";
   </script>
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {!! loadFonts( $page_areas ) !!}
