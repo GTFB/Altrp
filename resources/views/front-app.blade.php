@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+  <script src="/data/current-user" defer></script>
   <?php
   $_altrp_settings = json_decode($altrp_settings, true);
 if( isset($_altrp_settings['redirect']) && $_altrp_settings['redirect']){
@@ -206,7 +207,6 @@ if( isset($_altrp_settings['redirect']) && $_altrp_settings['redirect']){
   </script>
 @endif
 <link rel="stylesheet" href="/modules/front-app/front-app.css?{{getCurrentVersion()}}">
-<script src="/data/current-user" defer></script>
 @php
   echo print_statics('style', 'FRONT_BOTTOM_STYLE' );
 @endphp
