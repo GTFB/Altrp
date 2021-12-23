@@ -78,11 +78,11 @@ class PagesController extends Controller
     if ( $page->save() ) {
 
       $categories = $request->get( '_categories' );
-      if( is_array($categories) && count($categories) > 0 ){
+      if( is_array($categories) && count($categories) > 0 && $page->guid){
         $insert = [];
         foreach($categories as $key => $category){
           $insert[$key] = [
-            "category_guid" => $category,
+            "category_guid" => $category['value'],
             "object_guid" => $page->guid,
             "object_type" => "Page"
           ];
@@ -122,7 +122,9 @@ class PagesController extends Controller
   {
     //
     $page = Page::find( $id );
+
     if ( $page ) {
+      $page->categories = $page->categoryOptions();
       $page->template_id = $page->get_content_template() ? $page->get_content_template()->id : null;
       $page->roles = $page->getRoles();
     }
@@ -201,11 +203,11 @@ class PagesController extends Controller
 
       CategoryObject::where("object_guid", $page->guid)->delete();
       $categories = $request->get( '_categories' );
-      if( is_array($categories) && count($categories) > 0 ){
+      if( is_array($categories) && count($categories) > 0 && $page->guid){
         $insert = [];
         foreach($categories as $key => $category){
           $insert[$key] = [
-            "category_guid" => $category,
+            "category_guid" => $category['value'],
             "object_guid" => $page->guid,
             "object_type" => "Page"
           ];

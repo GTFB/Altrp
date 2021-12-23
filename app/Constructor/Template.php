@@ -329,6 +329,12 @@ class Template extends Model
     return $this->hasMany( CategoryObject::class, 'object_guid', 'guid' );
   }
 
+  public function categoryOptions()
+  {
+      return CategoryObject::select('altrp_categories.guid as value', 'altrp_categories.name as label')->leftJoin('altrp_categories', 'altrp_categories.guid', '=', 'altrp_category_objects.category_guid')
+          ->where('altrp_category_objects.object_guid', $this->guid)->get();
+  }
+
   /**
    * Получить настройки условий отображения шаблона
    * возвращает

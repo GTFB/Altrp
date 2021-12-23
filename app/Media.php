@@ -34,6 +34,7 @@ class Media extends Model
     'alternate_text',
     'width',
     'height',
+    'guid',
   ];
 
   /**
@@ -89,5 +90,11 @@ class Media extends Model
 
     }
     return $result;
+  }
+
+  public function categoryOptions()
+  {
+      return CategoryObject::select('altrp_categories.guid as value', 'altrp_categories.name as label')->leftJoin('altrp_categories', 'altrp_categories.guid', '=', 'altrp_category_objects.category_guid')
+          ->where('altrp_category_objects.object_guid', $this->guid)->get();
   }
 }
