@@ -16,8 +16,9 @@ class CategoryObject extends Model
         'object_type'
     ];
 
-    public function categories()
+    public function category()
     {
-        return $this->hasMany(Category::class, 'guid', 'category_guid');
+        return $this->hasOne(Category::class, 'guid', 'category_guid');
     }
+
 }

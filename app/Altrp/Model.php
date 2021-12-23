@@ -55,6 +55,11 @@ class Model extends EloquentModel
         return $this->hasMany(Robot::class);
     }
 
+    public function categories()
+    {
+        return $this->hasMany(CategoryObject::class, 'object_guid', 'guid');
+    }
+
     public function categoryOptions()
     {
         return CategoryObject::select('altrp_categories.guid as value', 'altrp_categories.name as label')->leftJoin('altrp_categories', 'altrp_categories.guid', '=', 'altrp_category_objects.category_guid')
@@ -339,10 +344,11 @@ class Model extends EloquentModel
     public static function getBySearch($search, $orderColumn = 'title', $orderType = 'Desc')
     {
         $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
-         return self::where('title','like', "%{$search}%")
-             ->orWhere('id', 'like', "%{$search}%")
-           ->$sortType($orderColumn)
-           ->get();
+         return self::with('categories.category')
+            ->where('title','like', "%{$search}%")
+            ->orWhere('id', 'like', "%{$search}%")
+            ->$sortType($orderColumn)
+            ->get();
 
 
     }
@@ -358,7 +364,8 @@ class Model extends EloquentModel
     {
       $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
       if( $request->has( 'preset' ) ) {
-        return self::where('title','like', "%{$search}%")
+        return self::with('categories.category')
+          ->where('title','like', "%{$search}%")
           ->where( 'preset', $request->get( 'preset' ) )
           ->orWhere('id', "%$search%")
           ->orWhere('id', "%$category%")
@@ -373,7 +380,8 @@ class Model extends EloquentModel
           ->$sortType($orderColumn)
           ->take($limit);
       } else {
-        return self::where('title','like', "%{$search}%")
+        return self::with('categories.category')
+          ->where('title','like', "%{$search}%")
           ->orWhere('id', "%$search%")
           ->when($categories, function ($query, $categories) {
             if (is_string($category)) {
@@ -400,7 +408,8 @@ class Model extends EloquentModel
     {
         $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
       if( $request->has( 'preset' ) ) {
-        return self::where('preset', $request->get( 'preset' ) )
+        return self::with('categories.category')
+          ->where('preset', $request->get( 'preset' ) )
           ->when($categories, function ($query, $categories) {
             if (is_string($category)) {
                 $categories = explode(",", $categories);
@@ -412,7 +421,8 @@ class Model extends EloquentModel
           ->take($limit)
           ->$sortType($orderColumn);
       } else {
-        return self::when($categories, function ($query, $categories) {
+        return self::with('categories.category')
+          ->when($categories, function ($query, $categories) {
             if (is_string($category)) {
                 $categories = explode(",", $categories);
                 $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'altrp_models.guid')

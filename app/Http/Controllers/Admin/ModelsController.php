@@ -242,9 +242,9 @@ class ModelsController extends HttpController
             $models = $search
                 ? Model::getBySearch($search, $orderColumn, $orderType)
                 //: Model::all()->$sortType( $orderColumn )->values();
-                : Model::
+                : Model::with('categories.category')
                     //->$sortType( $orderColumn )->values();
-                    orderBy($orderColumn, $orderType)
+                    ->orderBy($orderColumn, $orderType)
                     ->get();
         } else {
             $modelsCount = $search ? Model::getCountWithSearch($search) : Model::getCount();
