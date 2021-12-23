@@ -507,10 +507,10 @@ class Page extends Model
     return $this->hasMany( PageDatasource::class, 'page_id', 'id' );
   }
 
-
-  public function categories()
+  public function categoryOptions()
   {
-    return $this->hasMany( CategoryObject::class, 'object_guid', 'guid' );
+    return CategoryObject::select('altrp_categories.guid as value', 'altrp_categories.name as label')->leftJoin('altrp_categories', 'altrp_categories.guid', '=', 'altrp_category_objects.category_guid')
+            ->where('altrp_category_objects.object_guid', $this->guid)->get();
   }
   
 

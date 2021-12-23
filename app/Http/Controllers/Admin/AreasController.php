@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use App\CategoryObject;
 
 class AreasController extends Controller
@@ -49,21 +50,22 @@ class AreasController extends Controller
     $area = new Area(
       $request->toArray()
     );
+    $area->guid = (string)Str::uuid();
 
     if( ! $area->save() ){
 
-      // $categories = $request->get( '_categories' );
-      // if( is_array($categories) && count($categories) > 0 ){
-      //   $insert = [];
-      //   foreach($categories as $key => $category){
-      //     $insert[$key] = [
-      //       "category_guid" => $category,
-      //       "object_guid" => $area->guid,
-      //       "object_type" => "Area"
-      //     ];
-      //   }
-      //   CategoryObject::insert($insert);
-      // }
+      $categories = $request->get( '_categories' );
+      if( is_array($categories) && count($categories) > 0 && $area->guid){
+        $insert = [];
+        foreach($categories as $key => $category){
+          $insert[$key] = [
+            "category_guid" => $category['value'],
+            "object_guid" => $area->guid,
+            "object_type" => "Area"
+          ];
+        }
+        CategoryObject::insert($insert);
+      }
 
       return response()->json( ['message' => 'Area not Saved'], 500, [], JSON_UNESCAPED_UNICODE );
     }
@@ -85,6 +87,7 @@ class AreasController extends Controller
     if( ! $area ){
       return response()->json( ['message' => 'Area not Found'], 404, [], JSON_UNESCAPED_UNICODE );
     }
+    $area->categories = $area->categoryOptions();
     return response()->json( $area->toArray(), 200, [], JSON_UNESCAPED_UNICODE );
 
   }
@@ -123,6 +126,21 @@ class AreasController extends Controller
     if( ! $area->save() ){
       return response()->json( ['message' => 'Area not Saved'], 500, [], JSON_UNESCAPED_UNICODE );
     }
+
+    CategoryObject::where("object_guid", $area->guid)->delete();
+    $categories = $request->get( '_categories' );
+    if( is_array($categories) && count($categories) > 0 && $area->guid){
+      $insert = [];
+      foreach($categories as $key => $category){
+        $insert[$key] = [
+          "category_guid" => $category['value'],
+          "object_guid" => $area->guid,
+          "object_type" => "Area"
+        ];
+      }
+      CategoryObject::insert($insert);
+    }
+
     return response()->json( $area->toArray(), 200, [], JSON_UNESCAPED_UNICODE );
   }
 

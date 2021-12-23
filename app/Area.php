@@ -11,6 +11,7 @@ class Area extends Model
     'name',
     'settings',
     'title',
+    'guid',
   ];
 
   const NOT_CONTENT_AREAS = [
@@ -35,4 +36,11 @@ class Area extends Model
       return [$area->id => $area->name];
     } )->toArray();
   }
+
+  public function categoryOptions()
+  {
+      return CategoryObject::select('altrp_categories.guid as value', 'altrp_categories.name as label')->leftJoin('altrp_categories', 'altrp_categories.guid', '=', 'altrp_category_objects.category_guid')
+          ->where('altrp_category_objects.object_guid', $this->guid)->get();
+  }
+  
 }

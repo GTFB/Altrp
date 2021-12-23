@@ -9,6 +9,7 @@ use App\GlobalTemplateStyle;
 use App\Page;
 use App\PagesTemplate;
 use App\User;
+use App\CategoryObject;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -190,6 +191,19 @@ class TemplateController extends Controller
     }
     if ( $template->save() ) {
 
+      $categories = $request->get( '_categories' );
+      if( is_array($categories) && count($categories) > 0 && $template->guid){
+        $insert = [];
+        foreach($categories as $key => $category){
+          $insert[$key] = [
+            "category_guid" => $category['value'],
+            "object_guid" => $template->guid,
+            "object_type" => "Template"
+          ];
+        }
+        CategoryObject::insert($insert);
+      }
+
       return \response()->json(
         [
           'message' => 'Success',
@@ -219,6 +233,8 @@ class TemplateController extends Controller
     if( ! $template ){
       return  response()->json( [ 'message' => 'Template not Found', 'success' => false], 404, [], JSON_UNESCAPED_UNICODE);
     }
+
+    $template->categories = $template->categoryOptions();
     $res = $template->toArray();
     $res['template_type'] = $template->template_type;
     return response()->json( $res, 200, [], JSON_UNESCAPED_UNICODE);
@@ -315,6 +331,21 @@ class TemplateController extends Controller
           }
         }
       }
+
+      CategoryObject::where("object_guid", $old_template->guid)->delete();
+      $categories = $request->get( '_categories' );
+      if( is_array($categories) && count($categories) > 0 && $old_template->guid){
+        $insert = [];
+        foreach($categories as $key => $category){
+          $insert[$key] = [
+            "category_guid" => $category['value'],
+            "object_guid" => $old_template->guid,
+            "object_type" => "Template"
+          ];
+        }
+        CategoryObject::insert($insert);
+      }
+
       return response()->json( $old_template, 200, [], JSON_UNESCAPED_UNICODE );
 
     }

@@ -103,7 +103,22 @@ class MediaController extends Controller
 
       $media->main_color = getMainColor( $path );
       $media->url =  Storage::url( $media->filename );
+      $media->guid = (string)Str::uuid();
       $media->save();
+
+      $categories = $request->get( '_categories' );
+      if( is_array($categories) && count($categories) > 0 && $media->guid){
+        $insert = [];
+        foreach($categories as $key => $category){
+          $insert[$key] = [
+            "category_guid" => $category['value'],
+            "object_guid" => $media->guid,
+            "object_type" => "Media"
+          ];
+        }
+        CategoryObject::insert($insert);
+      }
+
       $res[] = $media;
     }
     $res = array_reverse( $res );
@@ -186,6 +201,7 @@ class MediaController extends Controller
   {
     //
     $media = $media->find( $id );
+    $media->categories = $media->categoryOptions();
     return response()->json( $media->toArray() );
 
   }
@@ -225,6 +241,21 @@ class MediaController extends Controller
     }
     $media->fill( $request->all() );
     $media->save();
+
+    CategoryObject::where("object_guid", $media->guid)->delete();
+    $categories = $request->get( '_categories' );
+    if( is_array($categories) && count($categories) > 0 && $media->guid){
+      $insert = [];
+      foreach($categories as $key => $category){
+        $insert[$key] = [
+          "category_guid" => $category['value'],
+          "object_guid" => $media->guid,
+          "object_type" => "Media"
+        ];
+      }
+      CategoryObject::insert($insert);
+    }
+
     return response()->json( ['success' => true,], 200, [], JSON_UNESCAPED_UNICODE);
   }
 

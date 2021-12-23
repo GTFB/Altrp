@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Str;
 use App\CategoryObject;
 
 
@@ -55,15 +56,16 @@ class RobotController extends Controller
 
         $data['user_id'] = auth()->id();
         $robot = new Robot($data);
+        $robot->guid = (string)Str::uuid();
         $result = $robot->save();
 
         $categories = $request->get( '_categories' );
-        if( is_array($categories) && count($categories) > 0 ){
+        if( is_array($categories) && count($categories) > 0 && $robot->guid){
           $insert = [];
           foreach($categories as $key => $category){
             $insert[$key] = [
-              "category_guid" => $category,
-              "object_guid" => $result->guid,
+              "category_guid" => $category['value'],
+              "object_guid" => $robot->guid,
               "object_type" => "Robot"
             ];
           }
@@ -82,6 +84,7 @@ class RobotController extends Controller
      */
     public function show(Robot $robot)
     {
+        $robot->categories = $robot->categoryOptions();
         return \response()->json($robot);
     }
 
@@ -121,14 +124,14 @@ class RobotController extends Controller
 
         $result = $robot->update($data);
 
-        CategoryObject::where("object_guid", $result->guid)->delete();
+        CategoryObject::where("object_guid", $robot->guid)->delete();
         $categories = $request->get( '_categories' );
-        if( is_array($categories) && count($categories) > 0 ){
+        if( is_array($categories) && count($categories) > 0 && $robot->guid){
           $insert = [];
           foreach($categories as $key => $category){
             $insert[$key] = [
-              "category_guid" => $category,
-              "object_guid" => $result->guid,
+              "category_guid" => $category['value'],
+              "object_guid" => $robot->guid,
               "object_type" => "Robot"
             ];
           }

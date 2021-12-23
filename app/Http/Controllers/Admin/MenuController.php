@@ -48,23 +48,24 @@ class MenuController extends Controller
     //
     $menu = new Menu( $request->all() );
     $menu->guid = Str::uuid();
+
     if( ! $menu->save() ){
-
-      $categories = $request->get( '_categories' );
-      if( is_array($categories) && count($categories) > 0 ){
-        $insert = [];
-        foreach($categories as $key => $category){
-          $insert[$key] = [
-            "category_guid" => $category,
-            "object_guid" => $menu->guid,
-            "object_type" => "Menu"
-          ];
-        }
-        CategoryObject::insert($insert);
-      }
-
       return response()->json( ['success' => false, ], 500, [], JSON_UNESCAPED_UNICODE);
     }
+
+    $categories = $request->get( '_categories' );
+    if( is_array($categories) && count($categories) > 0  && $menu->guid){
+      $insert = [];
+      foreach($categories as $key => $category){
+        $insert[$key] = [
+          "category_guid" => $category['value'],
+          "object_guid" => $menu->guid,
+          "object_type" => "Menu"
+        ];
+      }
+      CategoryObject::insert($insert);
+    }
+
     return response()->json( ['success' => true, 'data' => $menu->toArray()], 200, [], JSON_UNESCAPED_UNICODE);
 
   }
@@ -99,6 +100,7 @@ class MenuController extends Controller
 
     }
     $menu = Menu::find( $id );
+    $menu->categories = $menu->categoryOptions();
     return response()->json( $menu->toArray(), 200, [], JSON_UNESCAPED_UNICODE);
 
   }
@@ -142,11 +144,11 @@ class MenuController extends Controller
 
     CategoryObject::where("object_guid", $menu->guid)->delete();
     $categories = $request->get( '_categories' );
-    if( is_array($categories) && count($categories) > 0 ){
+    if( is_array($categories) && count($categories) > 0 && $menu->guid){
       $insert = [];
       foreach($categories as $key => $category){
         $insert[$key] = [
-          "category_guid" => $category,
+          "category_guid" => $category['value'],
           "object_guid" => $menu->guid,
           "object_type" => "Menu"
         ];

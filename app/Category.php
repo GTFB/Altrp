@@ -22,7 +22,7 @@ class Category extends Model
         'description',
     ];
 
-    public function categoryObjects(): Eloquent\Relations\HasMany
+    public function categoryObjects()
     {
         return $this->hasMany(CategoryObject::class, 'category_guid', 'guid');
     }

@@ -232,6 +232,7 @@ class ModelsController extends HttpController
     private function getModelsAndPageCount(ApiRequest $request)
     {
         $search = $request->get('s');
+        $categories = $request->get('categories');
         $page = $request->get('page');
         $orderColumn = $request->get('order_by') ?? 'id';
         $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
@@ -251,8 +252,8 @@ class ModelsController extends HttpController
             $pageCount = ceil($modelsCount / $limit);
             $offset = $limit * ($page - 1);
             $models = $search
-                ? Model::getBySearchWithPaginate($search, $offset, $limit, $request, $orderColumn, $orderType)
-                : Model::getWithPaginate($offset, $limit, $request, $orderColumn, $orderType);
+                ? Model::getBySearchWithPaginate($search, $offset, $limit, $request, $orderColumn, $orderType, $categories)
+                : Model::getWithPaginate($offset, $limit, $request, $orderColumn, $orderType, $categories);
 
           $models = $models->get();
         }
@@ -422,16 +423,17 @@ class ModelsController extends HttpController
     }
 
     $model = new Model($request->all());
+    $model->guid = (string)Str::uuid();
     $result = $model->save();
     if ($result) {
 
       $categories = $request->get( '_categories' );
-      if( is_array($categories) && count($categories) > 0 ){
+      if( is_array($categories) && count($categories) > 0 && $model->guid){
         $insert = [];
         foreach($categories as $key => $category){
           $insert[$key] = [
-            "category_guid" => $category,
-            "object_guid" => $result->guid,
+            "category_guid" => $category['value'],
+            "object_guid" => $model->guid,
             "object_type" => "Model"
           ];
         }
@@ -478,12 +480,12 @@ class ModelsController extends HttpController
 
             CategoryObject::where("object_guid", $model->guid)->delete();
             $categories = $request->get( '_categories' );
-            if( is_array($categories) && count($categories) > 0 ){
+            if( is_array($categories) && count($categories) > 0 && $model->guid){
               $insert = [];
               foreach($categories as $key => $category){
                 $insert[$key] = [
-                  "category_guid" => $category,
-                  "object_guid" => $result->guid,
+                  "category_guid" => $category['value'],
+                  "object_guid" => $model->guid,
                   "object_type" => "Model"
                 ];
               }
@@ -507,7 +509,9 @@ class ModelsController extends HttpController
     public function showModel($model_id)
     {
         $model = Model::find($model_id);
+  
         if ($model) {
+            $model->categories = $model->categoryOptions();
             return response()->json($model, 200, [], JSON_UNESCAPED_UNICODE);
         }
         return response()->json([
