@@ -18,7 +18,7 @@ class CategoryController extends Controller
     public function index( Request $request )
     {
         if( $request->get( 's' ) ){
-          $сategories = Category::where( 'name', 'like', '%' . $request->get( 's' ) . '%' )->get();
+          $сategories = Category::where( 'title', 'like', '%' . $request->get( 's' ) . '%' )->get();
           $сategories = $сategories->sortByDesc( 'id' )->values()->toArray();
           return response()->json( $сategories, 200, [], JSON_UNESCAPED_UNICODE);
         }
@@ -94,11 +94,11 @@ class CategoryController extends Controller
           $result = [];
           if( $request->value && data_get( $сategory, $request->value ) ){
             $result['value'] = data_get( $сategory, $request->value );
-            $result['label'] = data_get( $сategory, 'name' );
+            $result['label'] = data_get( $сategory, 'title' );
           } else {
 
             $result['value'] = data_get( $сategory, 'guid' );
-            $result['label'] = data_get( $сategory, 'name' );
+            $result['label'] = data_get( $сategory, 'title' );
           }
           return $result;
         } );
@@ -168,13 +168,4 @@ class CategoryController extends Controller
         }
     }
 
-
-    // public static function getByGuid( $guid )
-    // {
-    //   $category = Category::where( 'guid', $guid )->first();
-    //   if( ! $category ){
-    //     return response()->json( ['success' => false,'message'=>'Сategory Not Found', 'data' => []], 404, [], JSON_UNESCAPED_UNICODE);
-    //   }
-    //   return response()->json( ['success' => true, 'message' => 'success', 'data' => $category->toArray()], 200, [], JSON_UNESCAPED_UNICODE);
-    // }
 }
