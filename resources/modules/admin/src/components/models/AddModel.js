@@ -13,6 +13,7 @@ class AddModel extends Component {
         title: '',
         description: '',
         _categories: [],
+        categories: [],
         categoryOptions: [],
         bounded_model: '',
         soft_deletes: false,

@@ -118,7 +118,8 @@ class EditModelForm extends Component {
         ...state,
         value: {
           ...state.value,
-          _categories: [...state.value._categories, item]
+          _categories: [...state.value._categories, item],
+          categories: [...state.value.categories, item]
         },
       }));
     }
@@ -129,7 +130,8 @@ class EditModelForm extends Component {
       ...state,
       value: {
         ...state.value,
-        _categories: [...state.value._categories].filter((i) => i.label !== item)
+        _categories: [...state.value._categories].filter((i) => i.label !== item),
+        categories: [...state.value.categories].filter((i) => i.label !== item)
       },
     }));
   }
@@ -223,7 +225,7 @@ class EditModelForm extends Component {
                        noResults={<MenuItem disabled={true} text="No results."/>}
                        fill={true}
                        placeholder="Categories..."
-                       selectedItems={this.state.value._categories}
+                       selectedItems={this.state.value.categories}
                        onItemSelect={this.handleItemSelectCategory}
                        itemRenderer={(item, {handleClick, modifiers, query}) => {
                          return (

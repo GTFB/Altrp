@@ -13,6 +13,7 @@ class RobotChildrenModal extends Component {
       robot: {
         name: '',
         _categories: [],
+        categories: [],
       },
       valid: false
     }
@@ -76,7 +77,8 @@ class RobotChildrenModal extends Component {
         ...state,
         robot: {
           ...state.robot,
-          _categories: [...state.robot._categories, item]
+          _categories: [...state.robot._categories, item],
+          categories: [...state.robot.categories, item]
         }
       }));
     }
@@ -87,7 +89,8 @@ class RobotChildrenModal extends Component {
       ...state,
       robot: {
         ...state.robot,
-        _categories: [...state.robot._categories].filter((i) => i.label !== item)
+        _categories: [...state.robot._categories].filter((i) => i.label !== item),
+        categories: [...state.robot.categories].filter((i) => i.label !== item)
       }
     }));
   }
@@ -125,7 +128,7 @@ class RobotChildrenModal extends Component {
                          noResults={<MenuItem disabled={true} text="No results."/>}
                          fill={true}
                          placeholder="Categories..."
-                         selectedItems={this.state.robot._categories}
+                         selectedItems={this.state.robot.categories}
                          onItemSelect={this.handleItemSelectCategory}
                          itemRenderer={(item, {handleClick, modifiers, query}) => {
                            return (

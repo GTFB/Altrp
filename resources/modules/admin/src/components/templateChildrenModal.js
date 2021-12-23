@@ -14,6 +14,7 @@ class TemplateChildrenModal extends Component {
         title: "",
         area: '1',
         _categories: [],
+        categories: [],
         data: {
           children: [],
           id: generateId(),
@@ -90,7 +91,7 @@ class TemplateChildrenModal extends Component {
 
   isItemSelectedCategory = (item) => {
     let itemString = JSON.stringify(item);
-    let selectedString = JSON.stringify(this.state.template._categories);
+    let selectedString = JSON.stringify(this.state.template.categories);
     return selectedString.includes(itemString);
   }
 
@@ -100,7 +101,8 @@ class TemplateChildrenModal extends Component {
         ...state,
         template: {
           ...state.template,
-          _categories: [...state.template._categories, item]
+          _categories: [...state.template._categories, item],
+          categories: [...state.template.categories, item]
         }
       }));
     }
@@ -111,7 +113,8 @@ class TemplateChildrenModal extends Component {
       ...state,
       template: {
         ...state.template,
-        _categories: [...state.template._categories].filter((i) => i.label !== item)
+        _categories: [...state.template._categories].filter((i) => i.label !== item),
+        categories: [...state.template.categories].filter((i) => i.label !== item)
       }
     }));
   }
@@ -176,7 +179,7 @@ class TemplateChildrenModal extends Component {
                          noResults={<MenuItem disabled={true} text="No results."/>}
                          fill={true}
                          placeholder="Categories..."
-                         selectedItems={this.state.template._categories}
+                         selectedItems={this.state.template.categories}
                          onItemSelect={this.handleItemSelectCategory}
                          itemRenderer={(item, {handleClick, modifiers, query}) => {
                            return (
