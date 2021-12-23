@@ -10,7 +10,6 @@ import Spinner from "../../../../../../admin/src/components/dashboard/widgets/Sp
 import EmptyWidget from "../../../../../../admin/src/components/dashboard/widgets/EmptyWidget";
 import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
 
-const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
 const milkScheme = _.find(Schemes, { value: "milk" }).colors;
 const milkScheme2 = _.find(Schemes, { value: "milk2" }).colors;
 
@@ -53,7 +52,7 @@ const BarDiagram: FunctionComponent<{
     dataSource = [],
     groupMode = "stacked",
     layout = "vertical",
-    colorScheme = "regagro",
+    colorScheme = "nivo",
     reverse = false,
     enableLabel = false,
     padding = 0.1,
@@ -134,8 +133,6 @@ const BarDiagram: FunctionComponent<{
                     colors={
                         customColorSchemeChecker && customColors.length > 0
                             ? customColors
-                            : colorScheme === "regagro"
-                            ? regagroScheme
                             : colorScheme === "milk"
                             ? milkScheme
                             : colorScheme === "milk2"
