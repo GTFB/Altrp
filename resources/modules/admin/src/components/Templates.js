@@ -6,6 +6,8 @@ import {setModalSettings} from "../js/store/modal-settings/actions";
 import {generateId, redirect, objectDeepCleaning} from "../js/helpers";
 import Pagination from "./Pagination";
 import UserTopPanel from "./UserTopPanel";
+import SmallModal from "./SmallModal";
+import TemplateChildrenModal from "./templateChildrenModal";
 
 
 export default class Templates extends Component {
@@ -20,7 +22,9 @@ export default class Templates extends Component {
       pageCount: 1,
       currentPage: 1,
       templateSearch: '',
-      sorting: {}
+      sorting: {},
+      categoryOptions: [],
+      modal: false
     };
     this.resource = new Resource({
       route: '/admin/ajax/templates'
@@ -33,6 +37,8 @@ export default class Templates extends Component {
     this.changeActiveArea = this.changeActiveArea.bind(this);
     this.generateTemplateJSON = this.generateTemplateJSON.bind(this);
     this.itemsPerPage = 10;
+
+    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"} )
   }
 
   changeActiveArea(e) {
@@ -127,6 +133,11 @@ export default class Templates extends Component {
       return {...state, templateAreas}
     });
     this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea)
+    const { data } = await this.categoryOptions.getAll();
+    this.setState(state => ({
+      ...state,
+      categoryOptions: data
+    }))
 
     window.addEventListener("scroll", this.listenScrollHeader)
 
@@ -270,6 +281,13 @@ export default class Templates extends Component {
     this.setState({templateSearch: e.target.value})
   }
 
+  toggleModal = () => {
+    this.setState(state => ({
+      ...state,
+      modal: !state.modal
+    }))
+  }
+
   render() {
     const {templateSearch, sorting, templates} = this.state
     return <div className="admin-templates admin-page">
@@ -280,7 +298,7 @@ export default class Templates extends Component {
            <span className="admin-breadcrumbs__separator">/</span>
            <span className="admin-breadcrumbs__current">All Templates</span>
          </div>
-         <button onClick={this.onClick} className="btn">Add New</button>
+         <button onClick={this.toggleModal} className="btn">Add New</button>
          <button onClick={this.toggleImportForm} className="btn ml-3">Import Template</button>
          <div className="admin-filters">
            <span className="admin-filters__current">All ({this.state.templates.length || ''})</span>
@@ -376,6 +394,11 @@ export default class Templates extends Component {
           openPagination={true}
         />
       </div>
+      {this.state.modal && (
+        <SmallModal toggleModal={this.toggleModal} activeMode={this.state.modal}>
+          <TemplateChildrenModal toggleModal={this.toggleModal} categoryOptions={this.state.categoryOptions} templateAreas={this.state.templateAreas} />
+        </SmallModal>
+      )}
     </div>;
   }
 

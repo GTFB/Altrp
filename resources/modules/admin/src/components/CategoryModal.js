@@ -72,7 +72,7 @@ class CategoryModal extends Component {
     return (
      ReactDOM.createPortal(
        <div className={this.props.activeMode ? "modal-window modal-window_active" : "modal-window"} onClick={this.props.onToggle}>
-         <div className={`modal-window-content category-animation`} onClick={(e) => e.stopPropagation()}>
+         <div className={`modal-window-content animation-scale`} onClick={(e) => e.stopPropagation()}>
            <CloseModal className="icon_modal" onClick={this.props.onToggle}/>
            <div className="category__block">
              <form className="category__form" onSubmit={this.submitCategory}>
