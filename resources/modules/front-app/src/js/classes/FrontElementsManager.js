@@ -623,6 +623,24 @@ class FrontElementsManager {
   checkElementExists(elementName) {
     return !!this.components[elementName];
   }
+
+
+
+  /**
+   * добавляем компонент виджета
+   * @param {{
+   *   name: string,
+   *   import: function <Promise>
+   * }} element
+   */
+  addElement(element){
+
+    if(! this.ELEMENTS.filter(el => {
+      return el.name === element.name
+    })){
+      this.ELEMENTS.push(element)
+    }
+  }
 }
 window.frontElementsManager = new FrontElementsManager();
 export default window.frontElementsManager;

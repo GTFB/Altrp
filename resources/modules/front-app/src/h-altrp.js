@@ -103,12 +103,6 @@ if (process.env.NODE_ENV !== 'production') {
   );
 }
 
-import(/* webpackChunkName: 'IconsManager' */'../../editor/src/js/classes/modules/IconsManager').then(
-  IconsManager => {
-    console.log('LOAD IconsManager: ', performance.now());
-    window.iconsManager = new IconsManager.default();
-  }
-);
 (async function () {
 
   let _token = await fetch('/ajax/_token', {

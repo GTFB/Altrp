@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 
 
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Redirect;
 
 class AfterMiddleware
 {
@@ -21,6 +22,10 @@ class AfterMiddleware
      * @var $response Response
      */
     global $altrp_need_cache;
+    if (substr($request->header('host'), 0, 4) === 'www.') {
+      $request->headers->set('host', env('APP_URL'));
+      return Redirect::to($request->path());
+    }
     $response = $next($request);
 
     global $altrp_route_id;

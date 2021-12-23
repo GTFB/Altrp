@@ -8,9 +8,11 @@ export default function loadAdminBar() {
   } else if(isAdmin && ! document.querySelector('.front-app_admin')){
     document.querySelector('.front-app').classList.add('front-app_admin')
   }
+  console.error(window.appStore.getState().currentUser.data);
 
   if(document.querySelector('.front-app_admin')) {
     import (/* webpackChunkName: 'AdminBar' */'../components/AdminBar').then(module => {
+      console.log(module);
       const AdminBar = module.default;
       const adminContainer = document.createElement('div');
       document.body.appendChild(adminContainer);

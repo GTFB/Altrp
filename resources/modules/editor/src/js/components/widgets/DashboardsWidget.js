@@ -1,17 +1,9 @@
 import axios from "axios";
 import { getCurrentBreakpoint } from "../../../../../front-app/src/js/helpers";
 
-const AltrpDashboards = React.lazy(() =>
-  import(
-    /* webpackChunkName: 'AltrpDashboards' */ "../altrp-dashboards/AltrpDashboards"
-  )
-);
+import AltrpDashboards from "../altrp-dashboards/AltrpDashboards"
 
-const DataSourceDashboards = React.lazy(() =>
-  import(
-    /* webpackChunkName: 'DataSourceDashboards' */ "../altrp-dashboards/DataSourceDashboards"
-  )
-);
+import DataSourceDashboards from "../altrp-dashboards/DataSourceDashboards"
 
 class DashboardsWidget extends Component {
   constructor(props) {
@@ -100,8 +92,7 @@ class DashboardsWidget extends Component {
     const drawerWidth = this.calculateDrawerWidth();
     const settingsData = this.state.settingsData;
     return (
-      <Suspense fallback={"Loading"}>
-        {!dataByDataSource ? (
+        !dataByDataSource ? (
           <AltrpDashboards
             settings={this.props.element.getSettings()}
             globalParameter={global_parameter}
@@ -123,8 +114,7 @@ class DashboardsWidget extends Component {
             delimer={this.props.element.getSettings("delimer")}
             rep={this.props.element.getSettings("rep", [])}
           />
-        )}
-      </Suspense>
+        )
     );
   }
 }
