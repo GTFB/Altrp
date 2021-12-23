@@ -15,7 +15,7 @@ class CustomizersSettings extends Migration
     {
         //
       Schema::table('altrp_customizers', function (Blueprint $table) {
-        $table->json('settings')->default('{}');
+        $table->json('settings');
       });
 
 

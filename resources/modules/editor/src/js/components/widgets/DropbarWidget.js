@@ -133,7 +133,7 @@ class DropbarWidget extends Component {
    */
   async _componentWillUnmount() {
     const actionsManager = (
-      await import(
+      await import(/* webpackChunkName: 'ActionsManager' */
         "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
         )
     ).default;
@@ -153,7 +153,7 @@ class DropbarWidget extends Component {
       e.preventDefault();
       e.stopPropagation();
       const actionsManager = (
-        await import(
+        await import(/* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
           )
       ).default;

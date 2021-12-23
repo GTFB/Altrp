@@ -269,5 +269,4 @@ class IconsManager {
     return React.createElement(iconComponent, props);
   }
 }
-
 export default IconsManager

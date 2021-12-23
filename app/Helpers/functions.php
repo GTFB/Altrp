@@ -1493,9 +1493,9 @@ function getPageSettings( $page_id ): array
       }
     }
 
-    if( is_array( data_get( $area, 'templates') ) ){
-      $settings['libsToLoad'][] = 'moment';
-    }
+//    if( is_array( data_get( $area, 'templates') ) ){
+//      $settings['libsToLoad'][] = 'moment';
+//    }
   }
 
   foreach ( ACTIONS_COMPONENTS as $ACTIONS_COMPONENT ) {
