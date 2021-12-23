@@ -120,9 +120,6 @@ const AltrpBarDiagram = props => {
 
       data = formatData(data, group_name, key_name, data_name);
     } catch (error) {
-      console.log("====================================");
-      console.error(error);
-      console.log("====================================");
       data = [];
     }
   }
@@ -134,19 +131,6 @@ const AltrpBarDiagram = props => {
       </div>
     );
   }
-
-  const widget = {
-    options: {
-      colorScheme: settings.colorScheme,
-      animated: settings.animated,
-      isVertical: settings.isVertical
-    },
-    filter: {}
-  };
-
-  console.log("====================================");
-  console.log(data);
-  console.log("====================================");
   
   return (
     <DynamicBarChart
@@ -162,8 +146,7 @@ const AltrpBarDiagram = props => {
       customColors={customColors}
       isMultiple={isMultiple}
       colorScheme={colorScheme || 'nivo'}
-      dataSource={data}
-      widget={widget}
+      data={data}
       enableLabel={enableLabel}
       width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
       height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}

@@ -80,8 +80,8 @@ class PieDiagram extends BaseElement {
     this.endControlSection();
 
     this.startControlSection("style", {
-      tab: TAB_STYLE,
-      label: "Visual style"
+      tab: TAB_CONTENT,
+      label: "Visual"
     });
 
     const colors = Schemes.map(object => {

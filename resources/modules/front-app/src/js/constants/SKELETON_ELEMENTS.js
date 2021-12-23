@@ -23,6 +23,7 @@ const SKELETON_ELEMENTS = [
   'input-date-range',
   'input-file',
   'input-gallery',
+  'input-crop-image',
   'breadcrumbs',
   'carousel',
   'map',

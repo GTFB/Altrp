@@ -62,7 +62,7 @@ class LineDiagram extends BaseElement {
     this.endControlSection();
 
     this.startControlSection("style", {
-      tab: TAB_STYLE,
+      tab: TAB_CONTENT,
       label: "Visual"
     });
 
