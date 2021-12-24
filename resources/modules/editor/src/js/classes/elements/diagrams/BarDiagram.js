@@ -52,21 +52,6 @@ class BarDiagram extends BaseElement {
       label: "Path to Data"
     });
 
-    this.addControl("group_name", {
-      dynamic: false,
-      label: "Group Field"
-    });
-
-    this.addControl("key_name", {
-      dynamic: false,
-      label: "Key Field"
-    });
-
-    this.addControl("data_name", {
-      dynamic: false,
-      label: "Data Field"
-    });
-
     this.addControl("key_is_date", {
       dynamic: false,
       label: "Key has Date format?",
