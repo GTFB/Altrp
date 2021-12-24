@@ -10,11 +10,18 @@ class AreaAdd extends Component {
     super(props);
     this.state = {
       activeHeader: 0,
+      categoryOptions: []
     }
     this.resource = new Resource({route: '/admin/ajax/areas'});
+    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"} )
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    let { data } = await this.categoryOptions.getAll();
+    this.setState(state => ({
+      ...state,
+      categoryOptions: data
+    }))
     window.addEventListener("scroll", this.listenScrollHeader)
 
     return () => {
@@ -55,7 +62,7 @@ class AreaAdd extends Component {
         <UserTopPanel />
       </div>
       <div className="admin-content">
-        <AreaForm onSubmit={this.submitForm}/>
+        <AreaForm categoryOptions={this.state.categoryOptions} onSubmit={this.submitForm}/>
       </div>
     </div>
   }

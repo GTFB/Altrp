@@ -313,6 +313,10 @@ a {
   position: relative;
   display: flex;
   flex-direction: column;
+
+  & .nav-pills .react-tabs__tab {
+    margin-bottom: 15px;
+  }
 }
 
 .ace_editor {

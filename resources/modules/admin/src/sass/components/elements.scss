@@ -377,6 +377,12 @@ input[type="text"].form__input {
   }
 }
 
+.multiSelectBlueprint-area {
+  & .bp3-menu {
+    min-width: 700px;
+  }
+}
+
 .admin-styles-settings .uploader {
   box-shadow: none;
   border: 1px solid $border-gray;

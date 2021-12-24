@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import AltrpCodeEditor from "../altrp-editor/AltrpCodeEditor";
 import {titleToName} from "../../js/helpers";
 import {InputGroup, MenuItem, Button, Alignment} from "@blueprintjs/core";
-import {Select} from "@blueprintjs/select";
+import {MultiSelect, Select} from "@blueprintjs/select";
 
 const AreaTypeOptions = ['sidebar']
 const SidebarTypeOptions = [
@@ -41,6 +41,8 @@ class AreaForm extends Component {
     let defaultValue = {
       title: '',
       name: '',
+      _categories: [],
+      categories: [],
       settings: {
         area_type: 'sidebar',
         sidebar_type: '',
@@ -93,6 +95,46 @@ class AreaForm extends Component {
         return false
       }
     }
+  }
+
+  tagRenderer = (item) => {
+    return item.label;
+  };
+
+  onQueryChange = (query, value) => {
+    return (
+      `${value.label.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0
+    );
+  }
+
+  isItemSelectedCategory = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.value.categories);
+    return selectedString.includes(itemString);
+  }
+
+  handleItemSelectCategory = (item) => {
+    if (!this.isItemSelectedCategory(item)) {
+      this.setState(state => ({
+        ...state,
+        value: {
+          ...state.value,
+          _categories: [...state.value._categories, item],
+          categories: [...state.value.categories, item]
+        }
+      }));
+    }
+  }
+
+  handleTagRemoveCategory = (item) => {
+    this.setState(state => ({
+      ...state,
+      value: {
+        ...state.value,
+        _categories: [...state.value._categories].filter((i) => i.label !== item),
+        categories: [...state.value.categories].filter((i) => i.label !== item)
+      },
+    }));
   }
 
   /**
@@ -334,6 +376,35 @@ class AreaForm extends Component {
         </div>
       </div>
       }
+      <div className="form-group  form-group__multiSelectBlueprint-bp3 multiSelectBlueprint-area">
+        <label htmlFor="area-categories" className="label__RobotoFont">Categories</label>
+        <MultiSelect tagRenderer={this.tagRenderer} id="categories"
+                     items={this.props.categoryOptions}
+                     itemPredicate={this.onQueryChange}
+                     noResults={<MenuItem disabled={true} text="No results."/>}
+                     fill={true}
+                     placeholder="Categories..."
+                     selectedItems={this.state.value.categories}
+                     onItemSelect={this.handleItemSelectCategory}
+                     itemRenderer={(item, {handleClick, modifiers, query}) => {
+                       return (
+                         <MenuItem
+                           icon={this.isItemSelectedCategory(item) ? "tick" : "blank"}
+                           text={item.label}
+                           key={item.value}
+                           onClick={handleClick}
+                         />
+                       )
+                     }}
+                     tagInputProps={{
+                       onRemove: this.handleTagRemoveCategory,
+                       large: false,
+                     }}
+                     popoverProps={{
+                       usePortal: false
+                     }}
+        />
+      </div>
       <div className="form-group">
         <label htmlFor="settings.custom_css"  className="label__RobotoFont">Custom CSS</label>
         <AltrpCodeEditor value={settings.custom_css}

@@ -7,6 +7,7 @@ import AdminTable from "./AdminTable";
 import Resource from "../../../editor/src/js/classes/Resource";
 import UserTopPanel from "./UserTopPanel";
 import {connect} from "react-redux";
+import {filterCategories} from "../js/helpers";
 
 const columnsModel = [
   {
@@ -67,12 +68,14 @@ class Models extends Component {
       dataSourcesSearch: '',
       dataSourcesPageCount: 1,
       dataSourcesCount: 0,
-      dataSourcesSorting: {}
+      dataSourcesSorting: {},
+      categoryOptions: []
     };
     this.switchTab = this.switchTab.bind(this);
     this.changePage = this.changePage.bind(this);
     this.modelsResource = new Resource({ route: '/admin/ajax/models' });
     this.dataSourcesResource = new Resource({ route: '/admin/ajax/data_sources' });
+    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"} )
     this.itemsPerPage = 20;
   }
 
@@ -129,6 +132,40 @@ class Models extends Component {
     }
   };
 
+  getCategory = async (guid) => {
+    if (guid) {
+      let { models } = await this.modelsResource.getQueried({
+        categories: guid
+      });
+
+      console.log("ldll", models)
+      if (this.props.modelsState) {
+        this.setState(state => ({
+          ...state,
+          models: models
+        }))
+      } else {
+        this.setState(state => ({
+          ...state,
+          models: models.filter(item => item.id >= 5)
+        }))
+      }
+    } else {
+      let { models } = await this.modelsResource.getAll()
+      if (this.props.modelsState) {
+        this.setState(state => ({
+          ...state,
+          models: models
+        }))
+      } else {
+        this.setState(state => ({
+          ...state,
+          models: models.filter(item => item.id >= 5)
+        }))
+      }
+    }
+  }
+
   // slicePage = (array, page, itemsPerPage) => {
   //   return array.slice(page * itemsPerPage - itemsPerPage, page * itemsPerPage);
   // }
@@ -151,6 +188,11 @@ class Models extends Component {
 
     this.getModels();
     this.getDataSources();
+    let { data } = await this.categoryOptions.getAll();
+    this.setState(state => ({
+      ...state,
+      categoryOptions: data
+    }))
 
     window.addEventListener("scroll", this.listenScrollHeader)
 
@@ -198,8 +240,9 @@ class Models extends Component {
   }
 
   render() {
-    const { activeTab, models, dataSources, modelsCurrentPage, modelsSearch, dataSourcesSearch,
+    const { activeTab, models, dataSources, modelsCurrentPage, modelsSearch, dataSourcesSearch, categoryOptions,
       modelsPageCount, modelsCount, dataSourcesCount, modelsSorting, dataSourcesSorting, currentPageDataSources, currentPageModels } = this.state;
+    console.log(this.state)
 
 
     let dataSourcesMap = dataSources.map(dataSource => ({
@@ -207,10 +250,17 @@ class Models extends Component {
       editUrl: '/admin/tables/data-sources/edit/' + dataSource.id
     }))
 
-    let modelsMap = models.map(model => ({
-      ...model,
-      editUrl: '/admin/tables/models/edit/' + model.id
-    }))
+    let modelsMap = models.map(model => {
+      let categories = model.categories.map(item => {
+        return item.category.title
+      })
+      categories = categories.join(', ')
+      return {
+        ...model,
+        editUrl: '/admin/tables/models/edit/' + model.id,
+        categories
+      }
+    })
 
     return <div className="admin-settings admin-page">
       <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
@@ -222,9 +272,21 @@ class Models extends Component {
           </div>
           <Link className="btn" to={`/admin/tables/${activeTab === 0 ? 'models' : 'data-sources'}/add`}>Add New</Link>
           <div className="admin-filters">
-            <span className="admin-filters__current">
-              All ({ activeTab === 0 ? this.state.models.length : this.state.dataSources.length || "0"})
+            <span onClick={() => this.getCategory(null)} className="admin-filters__current">
+              <a className="admin-filters__link">All ({ activeTab === 0 ? this.state.models.length : this.state.dataSources.length || "0"})</a>
             </span>
+            {categoryOptions.map(item => {
+              const itemsCount = filterCategories(models, item.value).length
+
+              return itemsCount ? (
+                <span key={item.value}>
+                   <span className="admin-filters__separator">|</span>
+                   <a className="admin-filters__link" onClick={() => this.getCategory(item.value)}>
+                     {item.label} ({itemsCount})
+                   </a>
+                </span>
+              ) : null
+            })}
           </div>
         </div>
         <UserTopPanel />

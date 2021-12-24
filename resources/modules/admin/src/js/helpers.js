@@ -135,6 +135,10 @@ export function buildPagesTree(pages) {
   return tree;
 }
 
+export function filterCategories(categories, categoryFilter) {
+  return categories.filter(item => item.categories.some(categoryItem => categoryItem.category.guid === categoryFilter));
+}
+
 
 export function filterUsers(users, roleFilter) {
   return users.filter(user => user.roles.some(role => role.id === roleFilter));
