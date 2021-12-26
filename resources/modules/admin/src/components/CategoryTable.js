@@ -61,7 +61,7 @@ class CategoryTable extends Component {
               title: 'Description'
             }
           ]}
-          rows={categories.map(item => ({...item, editUrl: `/admin/ajax/categories/:id`, button__table: () => this.props.edit(item.guid)}))}
+          rows={categories.map(item => ({...item, editUrl: `/admin/ajax/categories/:id`, button__table: () => this.props.edit(item.id)}))}
           quickActions={[
             {
               tag: "button",

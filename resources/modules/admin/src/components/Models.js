@@ -61,6 +61,7 @@ class Models extends Component {
       currentPageModels: 1,
       currentPageDataSources: 1,
       models: [],
+      modelsDidMount: [],
       modelsSearch: '',
       modelsPageCount: 1,
       modelsCount: 0,
@@ -119,6 +120,7 @@ class Models extends Component {
         return {
           ...state,
           models: res.models,
+          modelsDidMount: res.models,
           modelsPageCount: res.pageCount
         }
       });
@@ -127,6 +129,7 @@ class Models extends Component {
         return {
           ...state,
           models: res.models.filter(item => item.id >= 5),
+          modelsDidMount: res.models.filter(item => item.id >= 5),
           modelsPageCount: res.pageCount
         }
       });
@@ -255,7 +258,8 @@ class Models extends Component {
       modelsSorting,
       dataSourcesSorting,
       currentPageDataSources,
-      currentPageModels
+      currentPageModels,
+      modelsDidMount
     } = this.state;
     console.log(this.state)
 
@@ -289,19 +293,18 @@ class Models extends Component {
           {activeTab === 0 ? (
             <div className="admin-filters">
             <span onClick={() => this.getCategory(null)} className="admin-filters__current">
-              <a className="admin-filters__link">All</a>
+              <a className="admin-filters__link">All ({modelsDidMount.length || "0"})</a>
             </span>
               {categoryOptions.map(item => {
-                const itemsCount = filterCategories(models, item.value).length
+                const itemsCount = filterCategories(modelsDidMount, item.value).length
 
-                return itemsCount ? (
+                return (
                   <span key={item.value}>
                    <span className="admin-filters__separator">|</span>
                    <a className="admin-filters__link" onClick={() => this.getCategory(item.value)}>
                      {item.label} ({itemsCount})
                    </a>
-                </span>
-                ) : null
+                </span>)
               })}
             </div>
           ) : (
