@@ -176,6 +176,9 @@ class AreasController extends Controller
     if( ! $area->delete() ){
       return response()->json( ['message' => 'Area not Deleted'], 500, [], JSON_UNESCAPED_UNICODE );
     }
+
+    CategoryObject::where("object_guid", $area->guid)->delete();
+    
     return response()->json( ['success' => true], 200, [], JSON_UNESCAPED_UNICODE );
   }
 }

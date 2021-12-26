@@ -545,6 +545,9 @@ class ModelsController extends HttpController
         }
         $result = $model->delete();
         if ($result) {
+
+            CategoryObject::where("object_guid", $model->guid)->delete();
+            
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
         return response()->json([
