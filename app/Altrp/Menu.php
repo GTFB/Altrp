@@ -23,6 +23,10 @@ class Menu extends Model
     return '/admin/menus/' . $this->id;
   }
 
+  public function categories()
+  {
+      return $this->hasMany(CategoryObject::class, 'object_guid', 'guid');
+  }
 
   public function categoryOptions()
   {

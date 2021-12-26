@@ -19,12 +19,30 @@ class MenuController extends Controller
   public function index( Request $request )
   {
     //
-    if( $request->get( 's' ) ){
-      $menus = Menu::where( 'name', 'like', '%' . $request->get( 's' ) . '%' )->get();
-      $menus = $menus->sortByDesc( 'id' )->values()->toArray();
-      return response()->json( $menus, 200, [], JSON_UNESCAPED_UNICODE);
-    }
-    return response()->json( Menu::all()->sortByDesc( 'id' )->values()->toArray(), 200, [], JSON_UNESCAPED_UNICODE);
+    $search = $request->get('s');
+    $categories = $request->get('categories');
+
+    $menus = Menu::with('categories.category')
+      ->when($search, function ($query, $search) {
+              $query->where( 'name', 'like', '%' . $search . '%' );
+      })
+      ->when($categories, function ($query, $categories) {
+          if (is_string($categories)) {
+              $categories = explode(",", $categories);
+              $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'menus.guid')
+                    ->whereIn('altrp_category_objects.category_guid', $categories);
+          }
+      })
+      ->get()->sortByDesc( 'id' )->values()->toArray();
+
+    // if( $request->get( 's' ) ){
+    //   $menus = Menu::where( 'name', 'like', '%' . $request->get( 's' ) . '%' )->get();
+    //   $menus = $menus->sortByDesc( 'id' )->values()->toArray();
+    //   return response()->json( $menus, 200, [], JSON_UNESCAPED_UNICODE);
+    // }
+    // return response()->json( Menu::all()->sortByDesc( 'id' )->values()->toArray(), 200, [], JSON_UNESCAPED_UNICODE);
+
+    return response()->json( $menus, 200, [], JSON_UNESCAPED_UNICODE);
   }
 
   /**
@@ -176,6 +194,7 @@ class MenuController extends Controller
     }
 
     if( $menu->delete() ){
+      CategoryObject::where("object_guid", $menu->guid)->delete();
       return response()->json( ['success' => true] );
     }
     return response()->json( ['success' => false, 'message'=> 'Error deleting file' ], 500 );
