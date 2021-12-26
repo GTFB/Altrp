@@ -56,7 +56,18 @@ class MediaController extends Controller
       $media = $media->sortByDesc( 'id' )->values()->toArray();
       return response()->json( $media, 200, [], JSON_UNESCAPED_UNICODE);
     }
-    return response()->json( Media::with('categories.category')->get()->sortByDesc( 'id' )->values()->toArray(), 200, [], JSON_UNESCAPED_UNICODE);
+
+    $media = Media::with('categories.category')
+          ->when($categories, function ($query, $categories) {
+              if (is_string($categories)) {
+                  $categories = explode(",", $categories);
+                  $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'altrp_media.guid')
+                        ->whereIn('altrp_category_objects.category_guid', $categories);
+              }
+          })
+          ->get()->sortByDesc( 'id' )->values()->toArray();
+
+    return response()->json( $media, 200, [], JSON_UNESCAPED_UNICODE);
   }
 
   /**
