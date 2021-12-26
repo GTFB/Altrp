@@ -41,32 +41,6 @@ const AltrpRadarDiagram = props => {
   let keys = []
   let indexBy = ''
 
-  //funciton for formattion data for all types
-  
-  const formatData = (data, groupName, keyName, dataName) => {
-    let hierarhed = {}
-
-    data.forEach(el => {
-      hierarhed[el[groupName]] = hierarhed[el[groupName]] || []
-      hierarhed[el[groupName]].push(el)
-    })
-
-    let formatted = []
-
-    Object.keys(hierarhed).forEach(key => {
-      const keyv = {}
-
-      hierarhed[key].map(el => {
-        keyv[el[keyName]] = el[dataName]
-      })
-
-      keyv[groupName] = key 
-      formatted.push(keyv)
-    })
-
-    return formatted;
-  };
-
   if (isEditor()) {
     data = [
       {
@@ -107,13 +81,9 @@ const AltrpRadarDiagram = props => {
     try {
       data = getDataByPath(settings.datasource_path, []);
 
-      keys = [
-        ...new Set(data.map(el => el[group_name]))
-      ]
+      keys = settings.dataKeys?.split('\n')
 
-      indexBy = key_name
-
-      data = formatData(data, key_name, group_name, data_name);
+      indexBy = settings.indexBy
     } catch (error) {
       data = []
     }

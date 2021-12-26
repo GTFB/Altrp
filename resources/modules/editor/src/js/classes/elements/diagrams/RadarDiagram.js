@@ -53,15 +53,14 @@ class RadarDiagram extends BaseElement {
       label: "Path to Data"
     });
 
-    this.addControl("group_name", {
-      dynamic: false,
-      label: "Group Field"
-    });
+    this.addControl('dataKeys', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Data Keys'
+    })
 
-    this.addControl("key_name", {
-      dynamic: false,
-      label: "Key Field"
-    });
+    this.addControl('indexBy', {
+      label: 'Index By'
+    })
 
     this.addControl("data_name", {
         dynamic: false,
@@ -70,7 +69,7 @@ class RadarDiagram extends BaseElement {
 
     this.addControl("use_legend", {
       type: CONTROLLER_SWITCHER,
-      label: "Use legend?",
+      label: "Use Legend?",
     });
     
     this.endControlSection();
@@ -82,22 +81,22 @@ class RadarDiagram extends BaseElement {
 
     this.addControl('curve', {
       type: CONTROLLER_SELECT,
-      label: 'Curve type',
+      label: 'Curve Type',
       options: [
         {
-          label: 'linear',
+          label: 'Linear',
           value: 'linear'
         },
         {
-          label: 'cardinalClosed',
+          label: 'Cardinal Closed',
           value: 'cardinalClosed'
         },
         {
-          label: 'catmullRomClosed',
+          label: 'Catmull Rom Closed',
           value: 'catmullRomClosed'
         },
         {
-          label: 'basicsClosed',
+          label: 'Basics Closed',
           value: 'basicsClosed'
         },
       ]
@@ -105,7 +104,7 @@ class RadarDiagram extends BaseElement {
 
     this.addControl('fillOpacity', {
       type: CONTROLLER_SLIDER,
-      label: 'Fill opacity',
+      label: 'Fill Opacity',
       min: 0,
       max: 1,
       step: 0.01
@@ -113,7 +112,7 @@ class RadarDiagram extends BaseElement {
 
     this.addControl('borderWidth', {
       type: CONTROLLER_SLIDER,
-      label: 'Border width',
+      label: 'Border Width',
       min: 0,
       max: 20,
       step: 1
@@ -121,14 +120,14 @@ class RadarDiagram extends BaseElement {
 
     this.addControl('blendMode', {
       type: CONTROLLER_SELECT,
-      label: 'Blend mode',
+      label: 'Blend Mode',
       options: [
         {
-          label: 'multiply',
+          label: 'Multiply',
           value: 'multiply'
         },
         {
-          label: 'normal',
+          label: 'Normal',
           value: 'normal'
         },
       ]
@@ -136,7 +135,7 @@ class RadarDiagram extends BaseElement {
 
     this.addControl('gridLevels', {
       type: CONTROLLER_SLIDER,
-      label: 'Grid levels',
+      label: 'Grid Levels',
       min: 0,
       max: 12,
       step: 1
@@ -144,14 +143,14 @@ class RadarDiagram extends BaseElement {
 
     this.addControl('gridShape', {
       type: CONTROLLER_SELECT,
-      label: 'Grid shape',
+      label: 'Grid Shape',
       options: [
         {
-          label: 'circular',
+          label: 'Circular',
           value: 'circular'
         },
         {
-          label: 'linear',
+          label: 'Linear',
           value: 'linear'
         },
       ]
@@ -159,12 +158,12 @@ class RadarDiagram extends BaseElement {
 
     this.addControl('enableDots', {
       type: CONTROLLER_SWITCHER,
-      label: 'Enable dots'
+      label: 'Enable Dots'
     })
 
     this.addControl('dotSize', {
       type: CONTROLLER_SLIDER,
-      label: 'Dot size',
+      label: 'Dot Size',
       min: 0,
       max: 32,
       step: 1
@@ -185,7 +184,7 @@ class RadarDiagram extends BaseElement {
 
     this.startControlSection("custom_color_scheme", {
       tab: TAB_STYLE,
-      label: "Custom color scheme"
+      label: "Custom Color Scheme"
     });
 
     let repeaterScheme = new Repeater();
@@ -198,7 +197,7 @@ class RadarDiagram extends BaseElement {
 
     this.addControl("isCustomColor", {
       type: CONTROLLER_SWITCHER,
-      label: "Use custom color scheme?",
+      label: "Use Custom Color Scheme?",
     });
 
     this.addControl("customScheme", {
@@ -215,7 +214,7 @@ class RadarDiagram extends BaseElement {
 
     this.addControl("width", {
       type: CONTROLLER_SLIDER,
-      label: "width",
+      label: "Width",
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
@@ -223,7 +222,7 @@ class RadarDiagram extends BaseElement {
 
     this.addControl("height", {
       type: CONTROLLER_SLIDER,
-      label: "height",
+      label: "Height",
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,

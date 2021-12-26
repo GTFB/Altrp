@@ -11,35 +11,35 @@ export default function legendControllers(element) {
         label: 'Anchor',
         options: [
             {
-            label: 'top',
+            label: 'Top',
             value: 'top'
             },
             {
-            label: 'top-right',
+            label: 'Top Right',
             value: 'top-right'
             },
             {
-            label: 'right',
+            label: 'Right',
             value: 'right',
             },
             {
-            label: 'bottom-right',
+            label: 'Bottom Right',
             value: 'bottom-right'
             },
             {
-            label: 'bottom',
+            label: 'Bottom',
             value: 'bottom',
             },
             {
-            label: 'bottom-left',
+            label: 'Bottom Left',
             value: 'bottom-left',
             },
             {
-            label: 'left',
+            label: 'Left',
             value: 'left',
             },
             {
-            label: 'top-left',
+            label: 'Top Left',
             value: 'top-left',
             }
         ]
@@ -50,11 +50,11 @@ export default function legendControllers(element) {
         label: "Direction",
         options: [
             {
-            label: 'column',
+            label: 'Column',
             value: 'column'
             },
             {
-            label: 'row',
+            label: 'Row',
             value: 'row'
             },
         ],
@@ -66,19 +66,19 @@ export default function legendControllers(element) {
         label: "Legend item direction",
         options: [
             {
-            label: 'left-to-right',
+            label: 'Left To Right',
             value: 'left-to-right'
             },
             {
-            label: 'right-to-left',
+            label: 'Right To Left',
             value: 'right-to-left'
             },
             {
-            label: 'top-to-bottom',
+            label: 'Top To Bottom',
             value: 'top-to-bottom'
             },
             {
-            label: 'bottom-to-top',
+            label: 'Bottom To Top',
             value: 'bottom-to-top'
             },
         ],
@@ -129,20 +129,20 @@ export default function legendControllers(element) {
         label: "Symbol shape",
         options: [
             {
-            label: 'square',
-            value: 'square'
+                label: 'Circle',
+                value: 'circle'
             },
             {
-            label: 'circle',
-            value: 'circle'
+                label: 'Square',
+                value: 'square'
             },
             {
-            label: 'triangle',
-            value: 'triangle'
+                label: 'Triangle',
+                value: 'triangle'
             },
             {
-            label: 'diamond',
-            value: 'diamond'
+                label: 'Diamond',
+                value: 'diamond'
             },
         ],
     });

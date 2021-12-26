@@ -21,9 +21,6 @@ const AltrpFunnelDiagram = props => {
   const colorScheme = settings?.colorScheme;
 
   const {
-    label_color_type, 
-    label_color, 
-    label_modifier,
     interpolation,
     spacing,
     shapeBlending,
@@ -62,12 +59,10 @@ const AltrpFunnelDiagram = props => {
         },
     ]
   } else {
-    if (settings.datasource_path != null) {
-      try {
-        data = getDataByPath(settings.datasource_path, []);
-      } catch (error) {
-        data = [];
-      }
+    try {
+      data = getDataByPath(settings.datasource_path, []);
+    } catch (error) {
+      data = [];
     }
   }
 

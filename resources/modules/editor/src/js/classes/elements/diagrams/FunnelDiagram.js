@@ -54,16 +54,6 @@ class FunnelDiagram extends BaseElement {
       label: "Path to Data"
     });
 
-    this.addControl("key_name", {
-      dynamic: false,
-      label: "Key Field"
-    });
-
-    this.addControl("data_name", {
-      dynamic: false,
-      label: "Data Field"
-    });
-
     this.addControl("use_legend", {
       type: CONTROLLER_SWITCHER,
       label: "Use legend?",
@@ -170,12 +160,12 @@ class FunnelDiagram extends BaseElement {
 
     this.addControl("isInteractive", {
       type: CONTROLLER_SWITCHER,
-      label: "Is interactive",
+      label: "Is Interactive",
     });
 
     this.addControl("currentPartSizeExtension", {
       type: CONTROLLER_SLIDER,
-      label: "Hover part size",
+      label: "Hover Part Size",
       min: 0,
       max: 100,
       step: 1,
@@ -186,7 +176,7 @@ class FunnelDiagram extends BaseElement {
 
     this.addControl("currentBorderWidth", {
       type: CONTROLLER_SLIDER,
-      label: "Hover border width",
+      label: "Hover Border Width",
       min: 0,
       max: 100,
       step: 1,
@@ -202,36 +192,6 @@ class FunnelDiagram extends BaseElement {
       label: 'Label Styles',
     })
 
-    this.addControl('label_color_type', {
-      type: CONTROLLER_SELECT,
-      label: 'Color type',
-      options: [
-        {
-          label: 'Custom',
-          value: 'custom'
-        },
-        {
-          label: 'Darker',
-          value: 'darker'
-        },
-        {
-          label: 'Brighter',
-          value: 'brighter'
-        }
-      ]
-    })
-
-    this.addControl('label_modifier', {
-      type: CONTROLLER_SLIDER,
-      label: 'Value',
-      min: 0,
-      max: 3,
-      step: 0.1,
-      conditions: {
-        label_color_type: ['darker', 'brighter']
-      }
-    })
-
     this.addControl('label_color', {
       type: CONTROLLER_COLOR,
       label: 'Color'
@@ -245,7 +205,7 @@ class FunnelDiagram extends BaseElement {
 
     this.startControlSection("custom_color_scheme", {
       tab: TAB_STYLE,
-      label: "Custom color scheme"
+      label: "Custom Color Scheme"
     });
 
     let repeaterScheme = new Repeater();
@@ -275,7 +235,7 @@ class FunnelDiagram extends BaseElement {
 
     this.addControl("width", {
       type: CONTROLLER_SLIDER,
-      label: "width",
+      label: "Width",
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
@@ -283,7 +243,7 @@ class FunnelDiagram extends BaseElement {
 
     this.addControl("height", {
       type: CONTROLLER_SLIDER,
-      label: "height",
+      label: "Height",
       units: ["px", "vh"],
       max: 1000,
       min: 0,
