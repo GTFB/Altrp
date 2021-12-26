@@ -93,21 +93,14 @@ export default class AllPages extends Component {
   treePagesMap = (page) => {
     let treePage = {}
     let childPage = []
+    let hasCaret = null
 
-    let objectPage = this.state.pagesDidMount.filter(item => item.id === page.parent_page_id)
+    let objectPage = this.state.pagesDidMount.filter(item => item.parent_page_id === page.id)
     if (objectPage[0]) {
-      childPage = [
-        {
-          id: `${page.title + ' ' + 'parent page'}`,
-          key: `${page.title + ' ' + 'parent page'}`,
-          hasCaret: true,
-          label: (
-            "parent page"
-          ),
-          childNodes: objectPage.map(item => this.treePagesMap(item))
-        }
-      ]
+      hasCaret = true
+      childPage = objectPage.map(item => this.treePagesMap(item))
     } else {
+      hasCaret = false
       childPage = []
     }
 
@@ -120,7 +113,7 @@ export default class AllPages extends Component {
       secondaryLabel: (
         <a href={page.path} target="_blank">{page.path}</a>
       ),
-      hasCaret: true,
+      hasCaret: hasCaret,
       childNodes: childPage
     }
     return treePage
@@ -128,7 +121,6 @@ export default class AllPages extends Component {
 
   render() {
     const {  treePages  } = this.state;
-
     return (
       <div className="admin-pages admin-page">
         <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
