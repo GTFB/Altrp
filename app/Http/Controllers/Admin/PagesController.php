@@ -22,12 +22,24 @@ class PagesController extends Controller
   public function index(Request $request)
   {
     $search = $request->get('s');
+    $categories = $request->get('categories');
+    $table_name = "pages";
     $orderColumn = $request->get('order_by') ?? 'id';
     $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
     $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
     $_pages = $search
-        ? Page::getBySearch($search, 'title', [], $orderColumn, $orderType)
-        : Page::where('type',null)->get()->$sortType( $orderColumn )->values();
+        //? Page::getBySearch($search, 'title', [], $orderColumn, $orderType)
+        ? Page::search($search, 'title', ['categories.category'], $orderColumn, $orderType, $categories)
+        : Page::with('categories.category')
+            ->when($categories, function ($query, $categories) {
+                if (is_string($categories)) {
+                    $categories = explode(",", $categories);
+                    $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'pages.guid')
+                          ->whereIn('altrp_category_objects.category_guid', $categories);
+                }
+            })
+            ->where('type',null)->get()->$sortType( $orderColumn )
+            ->values();
     $pages = [];
     foreach ( $_pages as $page ) {
 
@@ -44,6 +56,7 @@ class PagesController extends Controller
         'url' => \url( $page->path ),
         'editUrl' => '/admin/pages/edit/' . $page->id,
         'path' => $page->path,
+        'categories' => $page->categories,
       ];
     }
     return response()->json( $pages );
@@ -239,6 +252,7 @@ class PagesController extends Controller
     if( $page->delete() ){
       try{
         Page::where( 'parent_page_id', $page->id )->update( ['parent_page_id'=> null] );
+        CategoryObject::where("object_guid", $page->guid)->delete();
       }catch( \Exception $e){
         logger()->error( $e->getMessage());
       }

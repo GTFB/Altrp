@@ -507,12 +507,35 @@ class Page extends Model
     return $this->hasMany( PageDatasource::class, 'page_id', 'id' );
   }
 
+  public function categories()
+  {
+      return $this->hasMany(CategoryObject::class, 'object_guid', 'guid');
+  }
+
   public function categoryOptions()
   {
     return CategoryObject::select('altrp_categories.guid as value', 'altrp_categories.title as label')->leftJoin('altrp_categories', 'altrp_categories.guid', '=', 'altrp_category_objects.category_guid')
             ->where('altrp_category_objects.object_guid', $this->guid)->get();
   }
   
+  public static function search($search, $field = 'title', $relations = [], $orderColumn = 'id', $orderType = 'Desc', $categories=null)
+  {
+      $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
+      return self::with($relations)
+          ->when($categories, function ($query, $categories) {
+              if (is_string($categories)) {
+                  $categories = explode(",", $categories);
+                  $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'pages.guid')
+                        ->whereIn('altrp_category_objects.category_guid', $categories);
+              }
+          })
+          ->where(function ($query) use ($field, $search) {
+              $query->where($field,'like', "%{$search}%")
+                    ->orWhere('id', 'like', "%{$search}%");
+          })
+          ->$sortType($orderColumn)
+          ->get();
+  }
 
   /**
    * @param array $page_roles
