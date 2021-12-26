@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
+import React, {Component} from "react";
+import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import 'react-tabs/style/react-tabs.scss';
-import { Link } from 'react-router-dom'
+import {Link} from 'react-router-dom'
 
 import AdminTable from "./AdminTable";
 import Resource from "../../../editor/src/js/classes/Resource";
@@ -51,6 +51,7 @@ const columnsDataSource = [
     title: 'Type'
   }
 ];
+
 class Models extends Component {
   constructor(props) {
     super(props);
@@ -73,18 +74,18 @@ class Models extends Component {
     };
     this.switchTab = this.switchTab.bind(this);
     this.changePage = this.changePage.bind(this);
-    this.modelsResource = new Resource({ route: '/admin/ajax/models' });
-    this.dataSourcesResource = new Resource({ route: '/admin/ajax/data_sources' });
-    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"} )
-    this.itemsPerPage = 20;
+    this.modelsResource = new Resource({route: '/admin/ajax/models'});
+    this.dataSourcesResource = new Resource({route: '/admin/ajax/data_sources'});
+    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"})
+    this.itemsPerPage = 10;
   }
 
   switchTab(activeTab) {
-    this.setState(state => ({ ...state, activeTab }))
+    this.setState(state => ({...state, activeTab}))
   }
 
   changePage(currentPage, pagination) {
-    this.setState(state => ({ ...state, [pagination]: { ...state[pagination], currentPage } }));
+    this.setState(state => ({...state, [pagination]: {...state[pagination], currentPage}}));
   }
 
   /**
@@ -134,7 +135,7 @@ class Models extends Component {
 
   getCategory = async (guid) => {
     if (guid) {
-      let { models } = await this.modelsResource.getQueried({
+      let {models} = await this.modelsResource.getQueried({
         categories: guid
       });
 
@@ -151,7 +152,7 @@ class Models extends Component {
         }))
       }
     } else {
-      let { models } = await this.modelsResource.getAll()
+      let {models} = await this.modelsResource.getAll()
       if (this.props.modelsState) {
         this.setState(state => ({
           ...state,
@@ -188,7 +189,7 @@ class Models extends Component {
 
     this.getModels();
     this.getDataSources();
-    let { data } = await this.categoryOptions.getAll();
+    let {data} = await this.categoryOptions.getAll();
     this.setState(state => ({
       ...state,
       categoryOptions: data
@@ -214,11 +215,11 @@ class Models extends Component {
   }
 
   modelsSortingHandler = (order_by, order) => {
-    this.setState({ modelsSorting: { order_by, order } }, this.getModels);
+    this.setState({modelsSorting: {order_by, order}}, this.getModels);
   }
 
   dataSourcesSortingHandler = (order_by, order) => {
-    this.setState({ dataSourcesSorting: { order_by, order } }, this.getDataSources);
+    this.setState({dataSourcesSorting: {order_by, order}}, this.getDataSources);
   }
 
   searchModel = e => {
@@ -232,16 +233,30 @@ class Models extends Component {
   }
 
   changeModel = (e) => {
-    this.setState({ modelsSearch: e.target.value })
+    this.setState({modelsSearch: e.target.value})
   }
 
   changeDataSource = (e) => {
-    this.setState({ dataSourcesSearch: e.target.value })
+    this.setState({dataSourcesSearch: e.target.value})
   }
 
   render() {
-    const { activeTab, models, dataSources, modelsCurrentPage, modelsSearch, dataSourcesSearch, categoryOptions,
-      modelsPageCount, modelsCount, dataSourcesCount, modelsSorting, dataSourcesSorting, currentPageDataSources, currentPageModels } = this.state;
+    const {
+      activeTab,
+      models,
+      dataSources,
+      modelsCurrentPage,
+      modelsSearch,
+      dataSourcesSearch,
+      categoryOptions,
+      modelsPageCount,
+      modelsCount,
+      dataSourcesCount,
+      modelsSorting,
+      dataSourcesSorting,
+      currentPageDataSources,
+      currentPageModels
+    } = this.state;
     console.log(this.state)
 
 
@@ -271,25 +286,31 @@ class Models extends Component {
             <span className="admin-breadcrumbs__current">{activeTab === 0 ? 'All Models' : 'All Data Sources'}</span>
           </div>
           <Link className="btn" to={`/admin/tables/${activeTab === 0 ? 'models' : 'data-sources'}/add`}>Add New</Link>
-          <div className="admin-filters">
+          {activeTab === 0 ? (
+            <div className="admin-filters">
             <span onClick={() => this.getCategory(null)} className="admin-filters__current">
-              <a className="admin-filters__link">All ({ activeTab === 0 ? this.state.models.length : this.state.dataSources.length || "0"})</a>
+              <a className="admin-filters__link">All</a>
             </span>
-            {categoryOptions.map(item => {
-              const itemsCount = filterCategories(models, item.value).length
+              {categoryOptions.map(item => {
+                const itemsCount = filterCategories(models, item.value).length
 
-              return itemsCount ? (
-                <span key={item.value}>
+                return itemsCount ? (
+                  <span key={item.value}>
                    <span className="admin-filters__separator">|</span>
                    <a className="admin-filters__link" onClick={() => this.getCategory(item.value)}>
                      {item.label} ({itemsCount})
                    </a>
                 </span>
-              ) : null
-            })}
-          </div>
+                ) : null
+              })}
+            </div>
+          ) : (
+            <div className="admin-filters">
+              <span className="admin-filters__current">All ({this.state.dataSources.length || "0"})</span>
+            </div>
+          )}
         </div>
-        <UserTopPanel />
+        <UserTopPanel/>
       </div>
       <div className="admin-content zeroing__styleTabs">
         <Tabs selectedIndex={activeTab} onSelect={this.switchTab}>
@@ -307,7 +328,7 @@ class Models extends Component {
               quickActions={[
                 {
                   tag: 'Link',
-                  props: { href: '/admin/tables/models/edit/:id' },
+                  props: {href: '/admin/tables/models/edit/:id'},
                   title: 'Edit'
                 },
                 {
@@ -315,7 +336,9 @@ class Models extends Component {
                   route: '/admin/ajax/models/:id',
                   method: 'delete',
                   confirm: 'Are You Sure?',
-                  after: () => { this.getModels() },
+                  after: () => {
+                    this.getModels()
+                  },
                   className: 'quick-action-menu__item_danger',
                   title: 'Delete'
                 }
@@ -337,7 +360,7 @@ class Models extends Component {
               currentPage={currentPageModels}
               changePage={page => {
                 if (currentPageModels !== page) {
-                  this.setState({ currentPageModels: page });
+                  this.setState({currentPageModels: page});
                 }
               }
               }
@@ -351,7 +374,7 @@ class Models extends Component {
               quickActions={[
                 {
                   tag: 'Link',
-                  props: { href: '/admin/tables/data-sources/edit/:id' },
+                  props: {href: '/admin/tables/data-sources/edit/:id'},
                   title: 'Edit'
                 },
                 {
@@ -359,7 +382,9 @@ class Models extends Component {
                   route: '/admin/ajax/data_sources/:id',
                   method: 'delete',
                   confirm: 'Are You Sure?',
-                  after: () => { this.getDataSources() },
+                  after: () => {
+                    this.getDataSources()
+                  },
                   className: 'quick-action-menu__item_danger',
                   title: 'Delete'
                 }
@@ -381,7 +406,7 @@ class Models extends Component {
               currentPage={currentPageDataSources}
               changePage={page => {
                 if (currentPageDataSources !== page) {
-                  this.setState({ currentPageDataSources: page });
+                  this.setState({currentPageDataSources: page});
                 }
               }}
               itemsCount={dataSourcesMap.length}
