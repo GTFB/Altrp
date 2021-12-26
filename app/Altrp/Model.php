@@ -360,7 +360,7 @@ class Model extends EloquentModel
    * @param ApiRequest $request
    * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
    */
-  public static function getBySearchWithPaginate( $search, $offset, $limit, ApiRequest $request, $orderColumn = 'id', $orderType = 'Desc', $categories=null)
+  public static function getBySearchWithPaginate( $search, $offset, $limit, ApiRequest $request, $orderColumn = 'altrp_models.id', $orderType = 'Desc', $categories=null)
     {
       $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
       if( $request->has( 'preset' ) ) {

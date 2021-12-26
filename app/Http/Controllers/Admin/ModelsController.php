@@ -234,7 +234,7 @@ class ModelsController extends HttpController
         $search = $request->get('s');
         $categories = $request->get('categories');
         $page = $request->get('page');
-        $orderColumn = $request->get('order_by') ?? 'id';
+        $orderColumn = $request->get('order_by') ?? 'altrp_models.id';
         $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
         if (! $page) {
             $pageCount = 0;
@@ -243,9 +243,17 @@ class ModelsController extends HttpController
                 ? Model::getBySearch($search, $orderColumn, $orderType)
                 //: Model::all()->$sortType( $orderColumn )->values();
                 : Model::with('categories.category')
+                    ->when($categories, function ($query, $categories) {
+                        if (is_string($categories)) {
+                            $categories = explode(",", $categories);
+                            $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'altrp_models.guid')
+                                  ->whereIn('altrp_category_objects.category_guid', $categories);
+                        }
+                    })
                     //->$sortType( $orderColumn )->values();
                     ->orderBy($orderColumn, $orderType)
                     ->get();
+
         } else {
             $modelsCount = $search ? Model::getCountWithSearch($search) : Model::getCount();
             $limit = $request->get('pageSize', 10);
