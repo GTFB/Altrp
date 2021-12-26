@@ -25,16 +25,38 @@ class MediaController extends Controller
   public function index( Request $request )
   {
     //
+    $categories = $request->get('categories');
     if( $request->get( 'type' ) ){
       if( $request->get( 'type' ) === 'other' ) {
-        $media = Media::where( 'type', 'other' )->orWhere( 'type', null )->get();
+        $media = Media::with('categories.category')
+          ->when($categories, function ($query, $categories) {
+              if (is_string($categories)) {
+                  $categories = explode(",", $categories);
+                  $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'altrp_media.guid')
+                        ->whereIn('altrp_category_objects.category_guid', $categories);
+              }
+          })
+          ->where(function ($query) use ($field, $search) {
+              $query->where( 'type', 'other' )
+                    ->orWhere( 'type', null );
+          })
+          ->get();
       } else {
-        $media = Media::where( 'type', $request->get( 'type' ) )->get();
+        $media = Media::with('categories.category')
+          ->where( 'type', $request->get( 'type' ) )
+          ->when($categories, function ($query, $categories) {
+              if (is_string($categories)) {
+                  $categories = explode(",", $categories);
+                  $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'altrp_media.guid')
+                        ->whereIn('altrp_category_objects.category_guid', $categories);
+              }
+          })
+          ->get();
       }
       $media = $media->sortByDesc( 'id' )->values()->toArray();
       return response()->json( $media, 200, [], JSON_UNESCAPED_UNICODE);
     }
-    return response()->json( Media::all()->sortByDesc( 'id' )->values()->toArray(), 200, [], JSON_UNESCAPED_UNICODE);
+    return response()->json( Media::with('categories.category')->get()->sortByDesc( 'id' )->values()->toArray(), 200, [], JSON_UNESCAPED_UNICODE);
   }
 
   /**
@@ -276,6 +298,7 @@ class MediaController extends Controller
       return response()->json( ['success' => false, 'message'=> 'Media not found' ], 404 );
     }
     if( $media->delete() ) {
+      CategoryObject::where("object_guid", $media->guid)->delete();
       return response()->json( [ 'success' => true ] );
     }
 
