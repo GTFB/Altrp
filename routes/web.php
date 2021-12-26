@@ -447,9 +447,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     Route::get('categories', 'Admin\CategoryController@index')->name('categories');
     Route::post('categories', 'Admin\CategoryController@store')->name('category.store');
-    Route::get('categories/{guid}', 'Admin\CategoryController@show')->name('category.show');
-    Route::put('categories/{guid}', 'Admin\CategoryController@update')->name('category.update');
-    Route::delete('categories/{guid}', 'Admin\CategoryController@destroy')->name('category.destroy');
+    Route::get('categories/{id}', 'Admin\CategoryController@show')->name('category.show');
+    Route::put('categories/{id}', 'Admin\CategoryController@update')->name('category.update');
+    Route::delete('categories/{id}', 'Admin\CategoryController@destroy')->name('category.destroy');
     Route::get('category/options', 'Admin\CategoryController@options')->name('category.options');
   });
 });

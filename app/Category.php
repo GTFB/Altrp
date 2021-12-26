@@ -11,7 +11,7 @@ class Category extends Model
 
     protected $table = 'altrp_categories';
 
-    protected $primaryKey = 'guid';
+    //protected $primaryKey = 'guid';
     protected $keyType = 'string';
     public $incrementing = false;
 

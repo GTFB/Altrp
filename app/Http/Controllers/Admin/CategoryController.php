@@ -71,10 +71,10 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function show($guid)
+    public function show($id)
     {
 
-        $сategory = Category::find($guid);
+        $сategory = Category::find($id);
 
         if (!$сategory) {
           return response()->json( ['success' => true, 'message' => 'Category Not Found', 'data' => []], 404, [], JSON_UNESCAPED_UNICODE);
@@ -124,10 +124,10 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update($guid, Request $request)
+    public function update($id, Request $request)
     {
 
-        $сategory = Category::find($guid);
+        $сategory = Category::find($id);
 
         if (!$сategory) {
           return response()->json( ['success' => true, 'message' => 'Category Not Found', 'data' => []], 404, [], JSON_UNESCAPED_UNICODE);
@@ -151,10 +151,10 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy( $guid )
+    public function destroy( $id )
     {
 
-        $сategory = Category::find($guid);
+        $сategory = Category::find($id);
 
         if (!$сategory) {
           return response()->json( ['success' => true, 'message' => 'Category Not Found', 'data' => []], 404, [], JSON_UNESCAPED_UNICODE);
