@@ -37,6 +37,11 @@ class Area extends Model
     } )->toArray();
   }
 
+  public function categories()
+  {
+      return $this->hasMany(CategoryObject::class, 'object_guid', 'guid');
+  }
+
   public function categoryOptions()
   {
       return CategoryObject::select('altrp_categories.guid as value', 'altrp_categories.title as label')->leftJoin('altrp_categories', 'altrp_categories.guid', '=', 'altrp_category_objects.category_guid')

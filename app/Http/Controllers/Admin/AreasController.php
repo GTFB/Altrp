@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\CategoryObject;
+use App\Http\Requests\ApiRequest;
 
 class AreasController extends Controller
 {
@@ -21,9 +22,23 @@ class AreasController extends Controller
    *
    * @return \Illuminate\Http\JsonResponse
    */
-  public function index()
+  public function index(ApiRequest $request)
   {
-    $_areas = Area::all();
+    
+    $categories = $request->get('categories');
+
+    //$_areas = Area::all();
+    $_areas = Area::with('categories.category')
+      ->when($categories, function ($query, $categories) {
+          if (is_string($categories)) {
+              $categories = explode(",", $categories);
+              $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'areas.guid')
+                    ->whereIn('altrp_category_objects.category_guid', $categories);
+          }
+      })
+      ->orderBy('areas.id', 'Desc')
+      ->get();
+
     return response()->json( $_areas->toArray() );
   }
 
