@@ -53,22 +53,22 @@ class AreasController extends Controller
     $area->guid = (string)Str::uuid();
 
     if( ! $area->save() ){
-
-      $categories = $request->get( '_categories' );
-      if( is_array($categories) && count($categories) > 0 && $area->guid){
-        $insert = [];
-        foreach($categories as $key => $category){
-          $insert[$key] = [
-            "category_guid" => $category['value'],
-            "object_guid" => $area->guid,
-            "object_type" => "Area"
-          ];
-        }
-        CategoryObject::insert($insert);
-      }
-
       return response()->json( ['message' => 'Area not Saved'], 500, [], JSON_UNESCAPED_UNICODE );
     }
+
+    $categories = $request->get( '_categories' );
+    if( is_array($categories) && count($categories) > 0 && $area->guid){
+      $insert = [];
+      foreach($categories as $key => $category){
+        $insert[$key] = [
+          "category_guid" => $category['value'],
+          "object_guid" => $area->guid,
+          "object_type" => "Area"
+        ];
+      }
+      CategoryObject::insert($insert);
+    }
+
     return response()->json( $area->toArray(), 200, [], JSON_UNESCAPED_UNICODE );
   }
 
