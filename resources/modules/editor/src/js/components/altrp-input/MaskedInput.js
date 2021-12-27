@@ -80,11 +80,9 @@ class MaskedInput extends React.Component {
 
         switch (char) {
           case "0":
-            if(!isNaN(currentValueChar)) {
-              if(currentValueChar) {
-                previewValue += currentValueChar
-                valueIndex = valueIndex + 1;
-              }
+            if(currentValueChar && !isNaN(currentValueChar)) {
+              previewValue += currentValueChar
+              valueIndex = valueIndex + 1;
             }
             break
           case "_":
@@ -119,7 +117,7 @@ class MaskedInput extends React.Component {
 
       switch (this.state.type) {
         case "number":
-          if(!isNaN(newChar)) {
+          if(!isNaN(newChar) && newChar !== ' ') {
             this.setState((s) => ({
               ...s,
               value: s.value + newChar
