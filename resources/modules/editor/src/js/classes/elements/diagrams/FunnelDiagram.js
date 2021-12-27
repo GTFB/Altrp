@@ -23,6 +23,7 @@ import {
 import Repeater from "../../Repeater";
 import titleControllers from "../../../decorators/diagrams/diagram-title-subtitle.js";
 import legendControllers from "../../../decorators/diagrams/diagram-legend.js";
+import valueFormatControllers from "../../../decorators/diagrams/diagram-value-format.js";
 
 class FunnelDiagram extends BaseElement {
   static getName() {
@@ -53,25 +54,15 @@ class FunnelDiagram extends BaseElement {
       label: "Path to Data"
     });
 
-    this.addControl("key_name", {
-      dynamic: false,
-      label: "Key Field"
-    });
-
-    this.addControl("data_name", {
-      dynamic: false,
-      label: "Data Field"
-    });
-
     this.addControl("use_legend", {
       type: CONTROLLER_SWITCHER,
       label: "Use legend?",
     });
-    
+
     this.endControlSection();
-    
+
     this.startControlSection("style", {
-      tab: TAB_STYLE,
+      tab: TAB_CONTENT,
       label: "Visual"
     });
 
@@ -88,38 +79,51 @@ class FunnelDiagram extends BaseElement {
     this.addControl("fillOpacity", {
       type: CONTROLLER_SLIDER,
       label: "Fill opacity",
-      default: 1,
       min: 0,
       max: 1,
       step: 0.01
     });
 
     this.addControl("borderOpacity", {
-        type: CONTROLLER_SLIDER,
-        label: "Border opacity",
-        default: 1,
-        min: 0,
-        max: 1,
-        step: 0.01
+      type: CONTROLLER_SLIDER,
+      label: "Border opacity",
+      min: 0,
+      max: 1,
+      step: 0.01
     });
 
     this.addControl('borderWidth', {
-        type: CONTROLLER_NUMBER,
-        label: 'Border width'
+      type: CONTROLLER_NUMBER,
+      label: 'Border width'
     })
-    
+
+    this.addControl('borderColor', {
+      type: CONTROLLER_COLOR,
+      label: 'Border color'
+    })
+
+    this.addControl('enableLabels', {
+      type: CONTROLLER_SWITCHER,
+      label: 'Enable labels'
+    })
+
+    this.addControl('labelsColor', {
+      type: CONTROLLER_COLOR,
+      label: 'Label color'
+    })
+
     this.addControl('interpolation', {
       type: CONTROLLER_SELECT,
       label: 'Interpolation',
       options: [
-          {
-              label: 'Smooth',
-              value: 'smooth'
-          },
-          {
-              label: 'Linear',
-              value: 'linear'
-          },
+        {
+          label: 'Smooth',
+          value: 'smooth'
+        },
+        {
+          label: 'Linear',
+          value: 'linear'
+        },
       ]
     })
 
@@ -134,36 +138,34 @@ class FunnelDiagram extends BaseElement {
     this.addControl("shapeBlending", {
       type: CONTROLLER_SLIDER,
       label: "Shape blending",
-      default: 1,
       min: 0,
       max: 1,
       step: 0.05
     });
-    
+
     this.addControl('direction', {
       type: CONTROLLER_SELECT,
       label: 'Direction',
       options: [
-          {
-              label: 'Vertical',
-              value: 'vertical'
-          },
-          {
-              label: 'Horizontal',
-              value: 'horizontal'
-          },
+        {
+          label: 'Vertical',
+          value: 'vertical'
+        },
+        {
+          label: 'Horizontal',
+          value: 'horizontal'
+        },
       ]
     })
 
     this.addControl("isInteractive", {
       type: CONTROLLER_SWITCHER,
-      label: "Is interactive",
-      default: true,
+      label: "Is Interactive",
     });
 
     this.addControl("currentPartSizeExtension", {
       type: CONTROLLER_SLIDER,
-      label: "Hover part size",
+      label: "Hover Part Size",
       min: 0,
       max: 100,
       step: 1,
@@ -174,7 +176,7 @@ class FunnelDiagram extends BaseElement {
 
     this.addControl("currentBorderWidth", {
       type: CONTROLLER_SLIDER,
-      label: "Hover border width",
+      label: "Hover Border Width",
       min: 0,
       max: 100,
       step: 1,
@@ -186,52 +188,24 @@ class FunnelDiagram extends BaseElement {
     this.endControlSection();
 
     this.startControlSection('labels', {
-        tab: TAB_STYLE,
-        label: 'Label Styles',
-    })
-
-    this.addControl('label_color_type', {
-        type: CONTROLLER_SELECT,
-        label: 'Color type',
-        options: [
-            {
-                label: 'Custom',
-                value: 'custom'
-            },
-            {
-                label: 'Darker',
-                value: 'darker'
-            },
-            {
-                label: 'Brighter',
-                value: 'brighter'
-            }
-        ]
-    })
-
-    this.addControl('label_modifier', {
-        type: CONTROLLER_SLIDER,
-        label: 'Value',
-        min: 0,
-        max: 3,
-        step: 0.1,
-        conditions: {
-            label_color_type: ['darker', 'brighter']
-        }
+      tab: TAB_STYLE,
+      label: 'Label Styles',
     })
 
     this.addControl('label_color', {
-        type: CONTROLLER_COLOR,
-        label: 'Color'
+      type: CONTROLLER_COLOR,
+      label: 'Color'
     })
 
     this.endControlSection()
+
+    valueFormatControllers(this)
 
     legendControllers(this)
 
     this.startControlSection("custom_color_scheme", {
       tab: TAB_STYLE,
-      label: "Custom color scheme"
+      label: "Custom Color Scheme"
     });
 
     let repeaterScheme = new Repeater();
@@ -261,7 +235,7 @@ class FunnelDiagram extends BaseElement {
 
     this.addControl("width", {
       type: CONTROLLER_SLIDER,
-      label: "width",
+      label: "Width",
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
@@ -269,8 +243,8 @@ class FunnelDiagram extends BaseElement {
 
     this.addControl("height", {
       type: CONTROLLER_SLIDER,
-      label: "height",
-      units: ["px", "%", "vh"],
+      label: "Height",
+      units: ["px", "vh"],
       max: 1000,
       min: 0,
     });

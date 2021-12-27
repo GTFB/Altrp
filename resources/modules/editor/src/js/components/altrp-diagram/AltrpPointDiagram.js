@@ -1006,9 +1006,6 @@ const AltrpDiagram = props => {
       try {
         data = getDataByPath(settings.datasource_path, []);
       } catch (error) {
-        console.log("====================================");
-        console.error(error);
-        console.log("====================================");
         data = [];
       }
     }
@@ -1021,11 +1018,6 @@ const AltrpDiagram = props => {
       </div>
     );
   }
-
-  console.log("====================================");
-  console.log(data);
-  console.log("====================================");
-  
   
   return (
     <DynamicPointChart

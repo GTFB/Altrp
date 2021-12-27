@@ -62,7 +62,7 @@ class LineDiagram extends BaseElement {
     this.endControlSection();
 
     this.startControlSection("style", {
-      tab: TAB_STYLE,
+      tab: TAB_CONTENT,
       label: "Visual"
     });
 
@@ -134,16 +134,16 @@ class LineDiagram extends BaseElement {
       type: CONTROLLER_SELECT,
       label: "Curve type",
       options: [
-        { id: 0, value: "basis", label: "basis" },
-        { id: 1, value: "cardinal", label: "cardinal" },
-        { id: 2, value: "catmullRom", label: "catmullRom" },
-        { id: 3, value: "linear", label: "linear" },
-        { id: 4, value: "monotoneX", label: "monotoneX" },
-        { id: 5, value: "monotoneY", label: "monotoneY" },
-        { id: 6, value: "natural", label: "natural" },
-        { id: 7, value: "step", label: "step" },
-        { id: 8, value: "stepAfter", label: "stepAfter" },
-        { id: 9, value: "stepBefore", label: "stepBefore" }
+        { id: 0, value: "basis", label: "Basis" },
+        { id: 1, value: "cardinal", label: "Cardinal" },
+        { id: 2, value: "catmullRom", label: "Catmull Rom" },
+        { id: 3, value: "linear", label: "Linear" },
+        { id: 4, value: "monotoneX", label: "MonotoneX" },
+        { id: 5, value: "monotoneY", label: "MonotoneY" },
+        { id: 6, value: "natural", label: "Natural" },
+        { id: 7, value: "step", label: "Step" },
+        { id: 8, value: "stepAfter", label: "Step After" },
+        { id: 9, value: "stepBefore", label: "Step Before" }
       ]
     });
     
@@ -152,15 +152,15 @@ class LineDiagram extends BaseElement {
       label: 'Enable slices',
       options: [
         {
-          label: 'false',
+          label: 'False',
           value: null
         },
         {
-          label: 'x',
+          label: 'X',
           value: 'x'
         },
         {
-          label: 'y',
+          label: 'Y',
           value: 'y'
         },
       ]
@@ -175,22 +175,22 @@ class LineDiagram extends BaseElement {
 
     this.addControl("enableGridX", {
       type: CONTROLLER_SWITCHER,
-      label: "Enable grid X",
+      label: "Enable Grid X",
     });
 
     this.addControl("enableGridY", {
       type: CONTROLLER_SWITCHER,
-      label: "Enable grid Y",
+      label: "Enable Grid Y",
     });
 
     this.addControl("axisBottom", {
       type: CONTROLLER_SWITCHER,
-      label: "Enable bottom axis",
+      label: "Enable Bottom Axis",
     });
 
     this.addControl('bottomTickSize', {
       type: CONTROLLER_SLIDER,
-      label: 'Bottom tick size',
+      label: 'Bottom Tick Size',
       min: 0,
       max: 20,
       step: 1,
@@ -201,7 +201,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl('bottomTickPadding', {
       type: CONTROLLER_SLIDER,
-      label: 'Bottom tick padding',
+      label: 'Bottom Tick Padding',
       conditions: {
         axisBottom: true
       }
@@ -209,7 +209,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl("bottomTickRotation", {
       type: CONTROLLER_SLIDER,
-      label: "Bottom tick rotation",
+      label: "Bottom Tick Rotation",
       min: -90,
       max: 90,
       step: 1,
@@ -220,7 +220,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl('bottomLegend', {
       type: CONTROLLER_TEXT,
-      label: 'Bottom legend',
+      label: 'Bottom Legend',
       conditions: {
         axisBottom: true
       }
@@ -228,7 +228,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl('bottomLegendOffset', {
       type: CONTROLLER_SLIDER,
-      label: 'Bottom legend offset',
+      label: 'Bottom Legend Offset',
       min: -60,
       max: 60,
       step: 1,
@@ -239,12 +239,12 @@ class LineDiagram extends BaseElement {
 
     this.addControl("axisTop", {
       type: CONTROLLER_SWITCHER,
-      label: "Enable top axis",
+      label: "Enable Top Axis",
     });
 
     this.addControl('topTickSize', {
       type: CONTROLLER_SLIDER,
-      label: 'Top tick size',
+      label: 'Top Tick Size',
       min: 0,
       max: 20,
       step: 1,
@@ -255,7 +255,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl('topTickPadding', {
       type: CONTROLLER_SLIDER,
-      label: 'Top tick padding',
+      label: 'Top Tick Padding',
       conditions: {
         axisTop: true
       }
@@ -263,7 +263,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl("topTickRotation", {
       type: CONTROLLER_SLIDER,
-      label: "Top tick rotation",
+      label: "Top Tick Rotation",
       min: -90,
       max: 90,
       step: 1,
@@ -274,7 +274,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl('topLegend', {
       type: CONTROLLER_TEXT,
-      label: 'Top legend',
+      label: 'Top Legend',
       conditions: {
         axisTop: true
       }
@@ -282,7 +282,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl('topLegendOffset', {
       type: CONTROLLER_SLIDER,
-      label: 'Top legend offset',
+      label: 'Top Legend Offset',
       min: -60,
       max: 60,
       step: 1,
@@ -293,12 +293,12 @@ class LineDiagram extends BaseElement {
     
     this.addControl("axisLeft", {
       type: CONTROLLER_SWITCHER,
-      label: "Enable left axis",
+      label: "Enable Left Axis",
     });
 
     this.addControl('leftTickSize', {
       type: CONTROLLER_SLIDER,
-      label: 'Left tick size',
+      label: 'Left Tick Size',
       min: 0,
       max: 20,
       step: 1,
@@ -309,7 +309,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl('leftTickPadding', {
       type: CONTROLLER_SLIDER,
-      label: 'Left tick padding',
+      label: 'Left Tick Padding',
       conditions: {
         axisLeft: true
       }
@@ -317,7 +317,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl("leftTickRotation", {
       type: CONTROLLER_SLIDER,
-      label: "Left tick rotation",
+      label: "Left Tick Rotation",
       min: -90,
       max: 90,
       step: 1,
@@ -328,7 +328,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl('leftLegend', {
       type: CONTROLLER_TEXT,
-      label: 'Left legend',
+      label: 'Left Legend',
       conditions: {
         axisLeft: true
       }
@@ -336,7 +336,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl('leftLegendOffset', {
       type: CONTROLLER_SLIDER,
-      label: 'Left legend offset',
+      label: 'Left Legend Offset',
       min: -60,
       max: 60,
       step: 1,
@@ -347,12 +347,12 @@ class LineDiagram extends BaseElement {
     
     this.addControl("axisRight", {
       type: CONTROLLER_SWITCHER,
-      label: "Enable right axis",
+      label: "Enable Right Axis",
     });
 
     this.addControl('rightTickSize', {
       type: CONTROLLER_SLIDER,
-      label: 'Right tick size',
+      label: 'Right Tick Size',
       min: 0,
       max: 20,
       step: 1,
@@ -363,7 +363,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl('rightTickPadding', {
       type: CONTROLLER_SLIDER,
-      label: 'Right tick padding',
+      label: 'Right Tick Padding',
       conditions: {
         axisRight: true
       }
@@ -371,7 +371,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl("rightTickRotation", {
       type: CONTROLLER_SLIDER,
-      label: "Right tick rotation",
+      label: "Right Tick Rotation",
       min: -90,
       max: 90,
       step: 1,
@@ -382,7 +382,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl('rightLegend', {
       type: CONTROLLER_TEXT,
-      label: 'Right legend',
+      label: 'Right Legend',
       conditions: {
         axisRight: true
       }
@@ -390,7 +390,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl('rightLegendOffset', {
       type: CONTROLLER_SLIDER,
-      label: 'Right legend offset',
+      label: 'Right Legend Offset',
       min: -60,
       max: 60,
       step: 1,
@@ -408,12 +408,12 @@ class LineDiagram extends BaseElement {
 
     this.addControl("enablePoints", {
       type: CONTROLLER_SWITCHER,
-      label: "Enable points?",
+      label: "Enable Points?",
     });
 
     this.addControl("pointSize", {
       type: CONTROLLER_NUMBER,
-      label: "Point size"
+      label: "Point Size"
     });
 
     this.addControl("pointColor", {
@@ -423,12 +423,12 @@ class LineDiagram extends BaseElement {
 
     this.addControl('pointBorderColor', {
       type: CONTROLLER_COLOR,
-      label: 'Point border color'
+      label: 'Point Border Color'
     })
 
     this.addControl('pointBorderWidth', {
       type: CONTROLLER_SLIDER,
-      label: 'Point border width',
+      label: 'Point Border Width',
       min: 0,
       max: 25,
       step: 1
@@ -443,12 +443,12 @@ class LineDiagram extends BaseElement {
     
     this.addControl("enableArea", {
       type: CONTROLLER_SWITCHER,
-      label: "Enable area?",
+      label: "Enable Area?",
     });
 
     this.addControl('areaBaselineValue', {
       type: CONTROLLER_NUMBER,
-      label: 'Baseline value',
+      label: 'Baseline Value',
     })
 
     this.addControl('areaOpacity', {
@@ -461,70 +461,70 @@ class LineDiagram extends BaseElement {
 
     this.addControl('areaBlendMode', {
       type: CONTROLLER_SELECT,
-      label: 'Area blend mode',
+      label: 'Area Blend Mode',
       options: [
         {
-          label: "normal",
+          label: "Normal",
           value: "normal"
         },
         {
-          label: "multiply",
+          label: "Multiply",
           value: "multiply"
         },
         {
-          label: "screen",
+          label: "Screen",
           value: "screen"
         },
         {
-          label: "overlay",
+          label: "Overlay",
           value: "overlay"
         },
         {
-          label: "darken",
+          label: "Darken",
           value: "darken"
         },
         {
-          label: "lighten",
+          label: "Lighten",
           value: "lighten"
         },
         {
-          label: "color-dodge",
+          label: "Color Dodge",
           value: "color-dodge"
         },
         {
-          label: "color-burn",
+          label: "Color Burn",
           value: "color-burn"
         },
         {
-          label: "hard-light",
+          label: "Hard Light",
           value: "hard-light"
         },
         {
-          label: "soft-light",
+          label: "Soft Light",
           value: "soft-light"
         },
         {
-          label: "difference",
+          label: "Difference",
           value: "difference"
         },
         {
-          label: "exclusion",
+          label: "Exclusion",
           value: "exclusion"
         },
         {
-          label: "hue",
+          label: "Hue",
           value: "hue"
         },
         {
-          label: "saturation",
+          label: "Saturation",
           value: "saturation"
         },
         {
-          label: "color",
+          label: "Color",
           value: "color"
         },
         {
-          label: "luminosity",
+          label: "Luminosity",
           value: "luminosity"
         },
       ]
@@ -532,7 +532,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl("enableGradient", {
       type: CONTROLLER_SWITCHER,
-      label: "Enable gradient?",
+      label: "Enable Gradient?",
     });
 
     this.endControlSection()
@@ -542,20 +542,20 @@ class LineDiagram extends BaseElement {
     valueFormatControllers(this, {
       name: 'yFormat',
       tabID: 'y_format_value',
-      tabName: 'Y format value',
+      tabName: 'Y Format Value',
       useCurrency: false,
     })
 
     valueFormatControllers(this, {
       name: 'xFormat',
       tabID: 'x_format_value',
-      tabName: 'X format value',
+      tabName: 'X Format Value',
       useCurrency: false,
     })
 
     this.startControlSection("axisConstants", {
       tab: TAB_STYLE,
-      label: "Axis constatns"
+      label: "Axis Constatns"
     });
     let repeaterY = new Repeater();
 
@@ -566,7 +566,7 @@ class LineDiagram extends BaseElement {
     });
     repeaterY.addControl("yMarkerValue", {
       type: CONTROLLER_TEXT,
-      label: "Value Y (only numbers)",
+      label: "Value Y (Only Numbers)",
       dynamic: false
     });
     repeaterY.addControl("yMarkerOrientation", {
@@ -587,7 +587,7 @@ class LineDiagram extends BaseElement {
 
     repeaterY.addControl("yMarkerLabelColor", {
       type: CONTROLLER_COLOR,
-      label: "Label color Y",
+      label: "Label Color Y",
       dynamic: false
     });
 
@@ -614,12 +614,12 @@ class LineDiagram extends BaseElement {
 
     repeaterX.addControl("xMarkerIsDate", {
       type: CONTROLLER_SWITCHER,
-      label: "Value X is Date",
+      label: "Value X Is Date",
       dynamic: false
     });
     repeaterX.addControl("xMarkerValue", {
       type: CONTROLLER_TEXT,
-      label: "Value X (only numbers or dates)",
+      label: "Value X (Only Numbers Or Dates)",
       dynamic: false
     });
     repeaterX.addControl("xMarkerOrientation", {
@@ -640,7 +640,7 @@ class LineDiagram extends BaseElement {
 
     repeaterX.addControl("xMarkerLabelColor", {
       type: CONTROLLER_COLOR,
-      label: "Label color X",
+      label: "Label Color X",
       dynamic: false
     });
 
@@ -660,7 +660,7 @@ class LineDiagram extends BaseElement {
 
     this.startControlSection("custom_color_scheme", {
       tab: TAB_STYLE,
-      label: "Custom color scheme"
+      label: "Custom Color Scheme"
     });
 
     let repeaterScheme = new Repeater();
@@ -673,7 +673,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl("isCustomColor", {
       type: CONTROLLER_SWITCHER,
-      label: "Use custom color scheme?",
+      label: "Use Custom Color Scheme?",
     });
 
     this.addControl("customScheme", {
@@ -690,7 +690,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl("width", {
       type: CONTROLLER_SLIDER,
-      label: "width",
+      label: "Width",
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
@@ -698,7 +698,7 @@ class LineDiagram extends BaseElement {
 
     this.addControl("height", {
       type: CONTROLLER_SLIDER,
-      label: "height",
+      label: "Height",
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,

@@ -74,6 +74,7 @@ import InputDateRange from "../classes/elements/InputDateRange";
 import InputDateRangeComponent from "./widgets/styled-components/InputDateRangeComponent";
 import StarsComponent from "./widgets/styled-components/StarsComponent";
 import ProgressBarComponent from "./widgets/styled-components/ProgressBarComponent";
+import InputCropImageComponent from "./widgets/styled-components/InputCropImageComponent";
 
 const { connect } = window.reactRedux;
 const { replaceContentWithData } = window.altrpHelpers;
@@ -312,6 +313,9 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
         )}}`;
       }
       break;
+    case "input-crop-image":
+      styles += InputCropImageComponent(settings)
+      break
     case "map":
       styles += `.${prefix}${elementId} {${MapComponent(settings)}}`;
       break;

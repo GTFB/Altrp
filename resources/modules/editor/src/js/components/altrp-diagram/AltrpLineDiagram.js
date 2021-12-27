@@ -117,7 +117,7 @@ const AltrpDiagram = props => {
   } = settings
 
   //line settings
-  const xScaleType = settings?.xScaleType || "point";
+  let xScaleType = settings?.xScaleType || "point";
   const precision = settings?.precision || "month";
 
   let data = [];
@@ -398,16 +398,15 @@ const AltrpDiagram = props => {
       }
     ]
   } else {
-    if (settings.datasource_path != null) {
-      try {
-        data = getDataByPath(settings.datasource_path, []);
-      } catch (error) {
-        console.log("====================================");
-        console.error(error);
-        console.log("====================================");
-        data = [];
-      }
+    try {
+      data = getDataByPath(settings.datasource_path, []);
+    } catch (error) {
+      data = [];
     }
+  }
+
+  if (xScaleType === 'time' && isNaN((new Date(xScaleType)).getDate())) {
+    xScaleType = 'point'
   }
 
   if (data.length === 0) {
@@ -417,10 +416,6 @@ const AltrpDiagram = props => {
       </div>
     );
   }
-
-  console.log("====================================");
-  console.log(data);
-  console.log("====================================");
   
   return (
     <DynamicLineChart

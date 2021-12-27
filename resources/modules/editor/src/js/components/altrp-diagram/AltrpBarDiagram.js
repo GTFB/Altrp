@@ -34,9 +34,6 @@ const AltrpBarDiagram = props => {
     useCustomTooltips,
     margin,
     markersRepeater,
-    group_name,
-    key_name, 
-    data_name,
     bottomAxis,
     minValue,
     enableMinValue,
@@ -49,30 +46,6 @@ const AltrpBarDiagram = props => {
   let data = []
   let keys = []
   let indexBy = ''
-
-  const formatData = (data, groupName, keyName, dataName) => {
-    let hierarhed = {}
-
-    data.forEach(el => {
-      hierarhed[el.type] = hierarhed[el.type] || []
-      hierarhed[el.type].push(el)
-    })
-
-    let formatted = []
-
-    Object.keys(hierarhed).forEach(key => {
-      const keyv = {}
-
-      hierarhed[key].map(el => {
-        keyv[el[keyName]] = el[dataName]
-      })
-
-      keyv[groupName] = key 
-      formatted.push(keyv)
-    })
-
-    return formatted;
-  };
 
   if (isEditor()) {
     data = [
@@ -112,17 +85,10 @@ const AltrpBarDiagram = props => {
     try {
       data = getDataByPath(settings.datasource_path, []);
 
-      keys = [
-        ...new Set(data.map(el => el[key_name]))
-      ]
+      keys = settings.dataKeys?.split('\n')
 
-      indexBy = group_name
-
-      data = formatData(data, group_name, key_name, data_name);
+      indexBy = settings.indexBy
     } catch (error) {
-      console.log("====================================");
-      console.error(error);
-      console.log("====================================");
       data = [];
     }
   }
@@ -134,19 +100,6 @@ const AltrpBarDiagram = props => {
       </div>
     );
   }
-
-  const widget = {
-    options: {
-      colorScheme: settings.colorScheme,
-      animated: settings.animated,
-      isVertical: settings.isVertical
-    },
-    filter: {}
-  };
-
-  console.log("====================================");
-  console.log(data);
-  console.log("====================================");
   
   return (
     <DynamicBarChart
@@ -162,8 +115,7 @@ const AltrpBarDiagram = props => {
       customColors={customColors}
       isMultiple={isMultiple}
       colorScheme={colorScheme || 'nivo'}
-      dataSource={data}
-      widget={widget}
+      data={data}
       enableLabel={enableLabel}
       width={settings.width ? `${settings.width?.size}${settings.width?.unit}` : '100%'}
       height={settings.height ? `${settings.height?.size}${settings.height?.unit}` : '420px'}
@@ -209,8 +161,8 @@ const AltrpBarDiagram = props => {
         legend: "",
         legendOffset: 32
       }}
-      minValue={enableMinValue && minValue}
-      maxValue={enableMaxValue && maxValue}
+      minValue={enableMinValue ? minValue : undefined}
+      maxValue={enableMaxValue ? maxValue : undefined}
     />
   )
 };

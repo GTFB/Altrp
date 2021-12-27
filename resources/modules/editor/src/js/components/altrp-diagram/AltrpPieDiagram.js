@@ -71,9 +71,6 @@ const AltrpPieDiagram = props => {
       try {
         data = getDataByPath(settings.datasource_path, []);
       } catch (error) {
-        console.log("====================================");
-        console.error(error);
-        console.log("====================================");
         data = [];
       }
     }
@@ -86,10 +83,6 @@ const AltrpPieDiagram = props => {
       </div>
     );
   }
-
-  console.log("====================================");
-  console.log(data);
-  console.log("====================================");
 
   return (
     <DynamicPieChart
