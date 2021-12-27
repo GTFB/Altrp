@@ -20,10 +20,10 @@ const AltrpRadarDiagram = props => {
   const sql = settings.query?.dataSource?.value;
 
   const {
-    pointSize, 
-    colorScheme, 
+    pointSize,
+    colorScheme,
     group_name,
-    key_name, 
+    key_name,
     data_name,
     margin,
     curve,
@@ -74,7 +74,7 @@ const AltrpRadarDiagram = props => {
         "syrah": 94
       }
     ]
-    
+
     keys = [ 'chardonay', 'carmenere', 'syrah' ]
     indexBy = 'taste'
   } else {
@@ -83,7 +83,7 @@ const AltrpRadarDiagram = props => {
 
       keys = settings.dataKeys?.split('\n')
 
-      indexBy = settings.indexBy
+      data = formatData(data, key_name, group_name, data_name);
     } catch (error) {
       data = []
     }
@@ -96,7 +96,7 @@ const AltrpRadarDiagram = props => {
       </div>
     );
   }
-  
+
   return (
     <DynamicRadarChart
       borderWidth={borderWidth?.size}
@@ -105,7 +105,7 @@ const AltrpRadarDiagram = props => {
         top: 30,
         bottom: 30,
         right: 30,
-        left: 30 
+        left: 30
       }}
       customColorSchemeChecker={customColorSchemeChecker}
       customColors={customColors}

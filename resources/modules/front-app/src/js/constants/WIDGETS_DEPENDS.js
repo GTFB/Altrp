@@ -31,8 +31,8 @@ const WIDGETS_DEPENDS = {
   'input-slider': ['blueprint'],
   'input-range-slider': ['blueprint'],
   'tree': ['blueprint'],
+  'scheduler': ['fullcalendar', 'blueprint'],
   'progress-bar': ['blueprint'],
   'input-crop-image': ['image-crop'],
-  'scheduler': ['fullcalendar', 'blueprint']
 }
 export default WIDGETS_DEPENDS;

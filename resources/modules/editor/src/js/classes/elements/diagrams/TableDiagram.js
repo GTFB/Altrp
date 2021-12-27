@@ -208,7 +208,6 @@ class TableDiagram extends BaseElement {
     this.addControl("colorScheme", {
       type: CONTROLLER_SELECT,
       label: "Color Scheme",
-      default: "regagro",
       options: colors
     });
 

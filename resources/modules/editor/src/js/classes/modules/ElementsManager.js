@@ -107,7 +107,6 @@ import InputDateRange from "../elements/InputDateRange";
 import InputDateRangeWidget from "../../components/widgets/InputDateRangeWidget";
 import InputCropImage from '../elements/InputCropImage';
 import InputCropImageWidget from "../../components/widgets/InputCropImageWidget";
-
 import PieDiagram from "../elements/diagrams/PieDiagram";
 import PieDiagramWidget from "../../components/widgets/diagrams/PieDiagramWidget";
 import BarDiagram from "../elements/diagrams/BarDiagram";
@@ -199,10 +198,6 @@ export default class ElementsManger {
     this.elements[Stars.getName()] = Stars;
     this.elements[ProgressBar.getName()] = ProgressBar;
 
-    widgetsList.forEach(([elem, comp]) => {
-      this.elements[elem.getName()] = elem
-      this.components[elem.getName()] = comp
-    })
     // Websocket Notifications
     // this.elements[Notifications.getName()] = Notifications;
     //список компонентов

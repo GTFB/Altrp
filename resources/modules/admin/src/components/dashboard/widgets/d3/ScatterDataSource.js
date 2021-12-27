@@ -4,8 +4,6 @@ import ErrorBoundary from "./ErrorBoundary";
 import { connect } from "react-redux";
 import DataAdapter from "./DataAdapter";
 import TooltipScatter from "./TooltipScatter";
-import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
-const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
 import moment from "moment";
 
 const mapStateToProps = state => {
@@ -200,11 +198,7 @@ class ScatterDataSource extends Component {
             }}
             xScale={this.state.settings?.xScale}
             enableSliceLabels={false}
-            colors={
-              this.state.settings?.colors?.scheme === "regagro"
-                ? regagroScheme
-                : this.state.settings?.colors
-            }
+            colors={this.state.settings?.colors}
             xFormat={
               this.state.settings?.xScale?.type === "time" && "time:%d.%m.%Y"
             }
