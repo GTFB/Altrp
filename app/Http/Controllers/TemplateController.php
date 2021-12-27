@@ -47,6 +47,7 @@ class TemplateController extends Controller
                         ->whereIn('altrp_category_objects.category_guid', $categories);
               }
           })
+          ->join( 'areas', 'areas.id', '=', 'templates.area' )
           ->where( 'areas.name', $area_name )
           ->where( 'type', '!=', 'review' )->get()->$sortType( $orderColumn )->values();
     } else {
