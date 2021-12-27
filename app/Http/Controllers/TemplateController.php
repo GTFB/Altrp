@@ -31,6 +31,7 @@ class TemplateController extends Controller
     $page_count = 1;
     $search = $request->get( 's' );
     $categories = $request->get( 'categories' );
+    $area_name = $request->get( 'area', 'content' );
 
     $orderColumn = $request->get( 'order_by' ) ?? 'id';
     $orderType = $request->get( 'order' ) ? ucfirst( strtolower( $request->get( 'order' ) ) ) : 'Desc';
@@ -46,10 +47,10 @@ class TemplateController extends Controller
                         ->whereIn('altrp_category_objects.category_guid', $categories);
               }
           })
+          ->where( 'areas.name', $area_name )
           ->where( 'type', '!=', 'review' )->get()->$sortType( $orderColumn )->values();
     } else {
       $page_size = $request->get( 'pageSize', 10 );
-      $area_name = $request->get( 'area', 'content' );
       $_templates = $search
         ? Template::getBySearchAsObject( $search, 'templates', 'title', ['categories.category'] )->where( 'type', '!=', 'review' )
         : Template::with('categories.category')->where( 'type', '!=', 'review' );
