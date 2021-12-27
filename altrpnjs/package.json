@@ -1,0 +1,38 @@
+{
+  "name": "altrpnjs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node ace serve --watch",
+    "build": "node ace build --production",
+    "start": "node server.ts",
+    "lint": "eslint . --ext=.ts"
+  },
+  "devDependencies": {
+    "@adonisjs/assembler": "^5.3.9",
+    "@typescript-eslint/eslint-plugin": "^5.7.0",
+    "adonis-preset-ts": "^2.1.0",
+    "eslint": "^8.0.0",
+    "eslint-plugin-adonis": "^2.1.0",
+    "pino-pretty": "^7.3.0",
+    "typescript": "~4.5",
+    "youch": "^2.2.2",
+    "youch-terminal": "^1.1.1"
+  },
+  "dependencies": {
+    "@adonisjs/auth": "^8.0.10",
+    "@adonisjs/core": "^5.4.2",
+    "@adonisjs/lucid": "^16.3.2",
+    "@adonisjs/repl": "^3.1.7",
+    "@adonisjs/session": "^6.1.2",
+    "@adonisjs/view": "^6.1.1",
+    "lodash": "^4.17.21",
+    "luxon": "^2.2.0",
+    "mysql": "^2.18.1",
+    "phc-argon2": "^1.1.2",
+    "proxy-addr": "^2.0.7",
+    "reflect-metadata": "^0.1.13",
+    "source-map-support": "^0.5.21",
+    "uuid": "^8.3.2"
+  }
+}

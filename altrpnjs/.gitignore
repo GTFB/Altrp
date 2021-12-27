@@ -1,0 +1,16 @@
+node_modules
+build
+coverage
+.vscode
+.DS_STORE
+.env
+tmp
+views/templates
+
+#bundles
+public/modules/admin
+public/favicon.ico
+public/modules/front-app
+public/modules/editor
+public/modules/reports
+public/modules/reports-new
