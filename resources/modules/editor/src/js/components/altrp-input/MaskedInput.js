@@ -6,9 +6,12 @@ class MaskedInput extends React.Component {
   constructor(props) {
     super(props);
 
+    const {content_default_value : defaultValue} = props.inputProps.settings
+
     this.state = {
-      previewValue: "",
-      value: "",
+      previewValue: defaultValue ? defaultValue : '',
+      value: defaultValue,
+      defaultValue,
       max: 0,
       type: [],
       mask: _.clone(props.inputProps.settings.content_mask)
@@ -156,6 +159,17 @@ class MaskedInput extends React.Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     const maskSetting = this.props.inputProps.settings.content_mask;
 
+    const {content_default_value : defaultValue} = this.props.inputProps.settings
+
+    if (defaultValue !== this.state.defaultValue) {
+      this.setState(s => ({
+        ...s,
+        previewValue: defaultValue ? defaultValue : '',
+        value: defaultValue,
+        defaultValue,
+      }))
+    }
+    
     if(this.state.mask !== maskSetting) {
       this.setState((s) => ({
         ...s,
@@ -165,7 +179,6 @@ class MaskedInput extends React.Component {
         type: [],
         max: 0,
       }))
-      this.updateMask()
     }
   }
 
