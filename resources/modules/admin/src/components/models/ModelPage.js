@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Link, withRouter } from 'react-router-dom';
 import Resource from "../../../../editor/src/js/classes/Resource";
 import AdminTable from "../AdminTable";
-import Pagination from "../Pagination";
 import AdminModal2 from "../AdminModal2";
 import ModelItemForm from "./ModelItemForm";
 
@@ -55,6 +54,10 @@ class ModelPage extends Component {
     this.getModelData();
   }
 
+  changeModalPage = (e) => {
+    this.setState({ search: e.target.value })
+  }
+
   render() {
     const { data, search, currentPage, pageCount, sorting, isModalOpened, editingItem, fields } = this.state;
     const { id } = this.props.match.params;
@@ -87,16 +90,25 @@ class ModelPage extends Component {
                 confirm: 'Are You Sure?',
                 after: () => this.getModelData(),
                 className: 'quick-action-menu__item_danger',
-                title: 'Trash'
+                title: 'Delete'
               }
             ]}
             rows={data}
             sortingHandler={this.sortingHandler}
             sortingField={sorting.order_by}
-          />
-          <Pagination pageCount={pageCount || 1}
+
+            searchTables={{
+              submit: this.searchModelData,
+              value: search,
+              change: this.changeModalPage
+            }}
+
+            pageCount={pageCount || 1}
             currentPage={currentPage}
             changePage={currentPage => this.setState({ currentPage }, this.getModelData)}
+            itemsCount={data.length}
+
+            openPagination={true}
           />
         </>}
 

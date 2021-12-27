@@ -256,9 +256,9 @@ class Export extends Component {
 
       {name: 'Media', value: 'exportMedia', uri: '/admin/ajax/media'},
       {name: 'Settings', value: 'exportSettings', uri: false},
-      {name: 'Diagrams', value: 'exportDiagrams', uri: '/admin/ajax/diagrams'},
+      //{name: 'Diagrams', value: 'exportDiagrams', uri: '/admin/ajax/diagrams'},
       //{name: 'Dashboards', value: 'exportDashboards', uri: '/admin/ajax/dashboards'},
-      {name: 'Reports', value: 'exportReports', uri: '/admin/ajax/reports'},
+      //{name: 'Reports', value: 'exportReports', uri: '/admin/ajax/reports'},
       {name: 'Tables', value: 'exportTables', uri: '/admin/ajax/tables'},
       {name: 'Models', value: 'exportModels', uri: '/admin/ajax/models', field: 'models'},
       //{name: 'Columns', value: 'exportColumns', uri: '/admin/ajax/columns'},
@@ -269,7 +269,7 @@ class Export extends Component {
       //{name: 'Roles', value: 'exportRoles', uri: '/admin/ajax/roles'},
       //{name: 'Permission Roles', value: 'exportPermissionRoles', uri: '/admin/ajax/permissionroles'},
       //{name: 'Remote Data', value: 'exportRemoteData', uri: '/admin/ajax/remotedata'},
-      {name: 'Remote DataSources', value: 'exportRemoteDataSources', uri: '/admin/ajax/ajax/data_sources'},
+      //{name: 'Remote DataSources', value: 'exportRemoteDataSources', uri: '/admin/ajax/ajax/data_sources'},
       //{name: 'Remote DataSources Roles', value: 'exportDataSourcesRoles'},
       //{name: 'Remote DataSources Permissions', value: 'exportDataSourcesPremissions'},
       //{name: 'Validation Fields', value: 'exportValidationFields', uri: '/admin/ajax/validationfields'},
@@ -447,7 +447,6 @@ class Export extends Component {
     const Style = {
       dt: {
         width: '100%',
-        borderBottom: '1px solid #000000',
       },
       dd: {
         width: '100%',
@@ -461,7 +460,7 @@ class Export extends Component {
       //this.props[key] = true;
       const template = <React.Fragment key={i}>
         <dl >
-          <dt style={Style.dt}>
+          <dt className="dt_font" style={Style.dt}>
             <input
               type="checkbox"
               className="form-check-input mr-1 ml-0 mt-0 position-static"
@@ -490,24 +489,25 @@ class Export extends Component {
     }
 
     return <div className="admin-updates p-4">
-      <div className="admin-caption mt-1">
+      <div className="admin-export-caption mt-1">
         Export All App Settings in Archive
       </div>
-      <div className="mt-1">
+      <div className="mt-1 admin-export-middle">
         {temp}
       </div>
-      <div>
+      <div className="export-block">
         <button className="btn_success btn" onClick={this.submitData}>Download Filtered ZIP Archive (JSON)</button>
       </div>
-      <div className="mt-1">
+      <div className="export-block">
         <a className="btn_success btn"
            href="/admin/ajax/downloads/settings"
         >Download ZIP Archive (JSON)</a>
-        <a className="btn_success btn ml-3"
+      </div>
+      <div className="export-block">
+        <a className="btn_success btn "
            href="/admin/ajax/downloads/stream_settings"
 
         >Download ZIP Archive (JSON Stream)</a>
-
       </div>
     </div>
   }

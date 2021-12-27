@@ -2,6 +2,7 @@ import CONSTANTS from "../../../../editor/src/js/consts";
 import {
   altrpRandomId,
   getResponsiveSetting,
+  isEditor,
   replaceContentWithData,
   valueReplacement
 } from "../helpers";
@@ -20,7 +21,10 @@ class FrontElement {
     this.cssClassStorage = data.cssClassStorage;
     this.type = data.type;
     this.id = data.id;
-    if(window.frontElementsManager && ! withoutComponent){
+
+    if(isEditor() && ! withoutComponent && this.getName()){
+      this.componentClass = window.elementsManager.getComponentClass(this.getName());
+    } else if(window.frontElementsManager && ! withoutComponent){
       this.componentClass = window.frontElementsManager.getComponentClass(this.getName());
     }
     this.parent = null;
@@ -139,10 +143,19 @@ class FrontElement {
       // }
     }
 
+    if(this.getName() === "input-date-range" &&
+      this.getFormId("form_id_start") &&
+      this.getFormId("form_id_end")
+    ) {
+      this.formInit();
+      return;
+    }
+
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getFormId()){
       this.formInit();
       return;
     }
+
     if(widgetsForForm.indexOf(this.getName()) >= 0 && this.getSettings('form_actions') === 'delete'){
       this.formInit();
       return;
@@ -242,6 +255,7 @@ class FrontElement {
       }
       break;
       case 'input-select':
+      case 'input-select-tree':
       case 'input-multi-select':
       case 'input-select2':
       case 'input-switch':
@@ -261,8 +275,17 @@ class FrontElement {
       case 'input-hidden':
       case 'input-text':
       case 'input-text-common':
+      case 'input-text-autocomplete':
+      case 'stars':
+
       case 'input': {
         formsManager.addField(this.getFormId(), this);
+      }
+      break;
+
+      case 'input-date-range': {
+        formsManager.addField(this.getFormId("form_id_start"), this);
+        formsManager.addField(this.getFormId("form_id_end"), this);
       }
       break;
     }
@@ -306,14 +329,12 @@ class FrontElement {
    */
   getIdForAction(){
     if(! this.idForAction){
-      this.idForAction = altrpRandomId();
+      this.idForAction = this.getId() +
+        (this.getCurrentModel()?.getProperty('altrpIndex')
+          || this.getCurrentModel()?.getProperty('id')
+          || '');
     }
     return this.idForAction;
-    let id = this.getId();//todo: delete this
-    if(this.getCurrentModel().getProperty('altrpIndex') !== ''){
-      id += `_${this.getCurrentModel().getProperty('altrpIndex')}`;
-    }
-    return id;
   }
 
   /**
@@ -509,22 +530,29 @@ class FrontElement {
    * Возвращает значение если виджет input, если другое, то null
    */
   getValue(){
-
     if(INPUT_WIDGETS.indexOf(this.getName()) === -1){
       return null;
     }
     if(! this.elementIsDisplay()){
       return null;
     }
-    const settings = this.getSettings();
-    let value = this.component.state.value;
-    /**
-     * Если значение динамическое и не менялось в виджете,
-     * то используем метод this.getContent для получения значения, а не динмического объекта
-     */
-    if(value && value.dynamic){
-      value = this.getContent('content_default_value')
+    const elementName = this.getName();
+    let value ;
+    switch (elementName) {
+      case 'input':
+      case 'input-textarea':
+      case 'input-text-autocomplete':
+      case 'stars':
+      case  'input-date-range':
+      case 'input-text-common':{
+        value = this?.component?.getValue() || this?.component?.state?.value || '';
+      }break;
+
+      default:{
+        value = this.component.state.value;
+      }
     }
+
     switch (this.getSettings('content_type')){
       /**
        * Если нужен массив
@@ -541,6 +569,7 @@ class FrontElement {
         value = value ? trueValue : falseValue;
       }
         break;
+
 
     }
     return value;

@@ -4,8 +4,9 @@ import 'react-tabs/style/react-tabs.scss';
 import { Link } from 'react-router-dom'
 
 import AdminTable from "./AdminTable";
-import Pagination from "./Pagination";
 import Resource from "../../../editor/src/js/classes/Resource";
+import UserTopPanel from "./UserTopPanel";
+import {connect} from "react-redux";
 
 const columnsModel = [
   {
@@ -24,8 +25,8 @@ const columnsModel = [
     title: 'Description'
   },
   {
-    name: 'updated_at',
-    title: 'Updated At'
+    name: 'categories',
+    title: 'Categories'
   }
 ];
 const columnsDataSource = [
@@ -49,14 +50,14 @@ const columnsDataSource = [
     title: 'Type'
   }
 ];
-
-export default class Models extends Component {
+class Models extends Component {
   constructor(props) {
     super(props);
     this.state = {
       activeTab: 0,
-      modelsCurrentPage: 1,
-      dataSourcesCurrentPage: 1,
+      activeHeader: 0,
+      currentPageModels: 1,
+      currentPageDataSources: 1,
       models: [],
       modelsSearch: '',
       modelsPageCount: 1,
@@ -72,7 +73,7 @@ export default class Models extends Component {
     this.changePage = this.changePage.bind(this);
     this.modelsResource = new Resource({ route: '/admin/ajax/models' });
     this.dataSourcesResource = new Resource({ route: '/admin/ajax/data_sources' });
-    this.itemsPerPage = 10;
+    this.itemsPerPage = 20;
   }
 
   switchTab(activeTab) {
@@ -88,9 +89,7 @@ export default class Models extends Component {
    */
   getDataSources = async () => {
     let res = await this.dataSourcesResource.getQueried({
-      page: this.state.dataSourcesCurrentPage,
-      pageSize: this.itemsPerPage,
-      preset: false,
+
       s: this.state.dataSourcesSearch,
       ...this.state.dataSourcesSorting
     });
@@ -98,7 +97,6 @@ export default class Models extends Component {
       return {
         ...state,
         dataSources: res.data_sources,
-        dataSourcesPageCount: res.pageCount || 1
       }
     });
   };
@@ -108,19 +106,27 @@ export default class Models extends Component {
    */
   getModels = async () => {
     let res = await this.modelsResource.getQueried({
-      page: this.state.modelsCurrentPage,
-      pageSize: this.itemsPerPage,
-      preset: false,
       s: this.state.modelsSearch,
       ...this.state.modelsSorting
     });
-    this.setState(state => {
-      return {
-        ...state,
-        models: res.models,
-        modelsPageCount: res.pageCount
-      }
-    });
+    this.props.updateModels()
+    if (this.props.modelsState) {
+      this.setState(state => {
+        return {
+          ...state,
+          models: res.models,
+          modelsPageCount: res.pageCount
+        }
+      });
+    } else {
+      this.setState(state => {
+        return {
+          ...state,
+          models: res.models.filter(item => item.id >= 5),
+          modelsPageCount: res.pageCount
+        }
+      });
+    }
   };
 
   // slicePage = (array, page, itemsPerPage) => {
@@ -145,6 +151,24 @@ export default class Models extends Component {
 
     this.getModels();
     this.getDataSources();
+
+    window.addEventListener("scroll", this.listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", this.listenScrollHeader)
+    }
+  }
+
+  listenScrollHeader = () => {
+    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
+      this.setState({
+        activeHeader: 1
+      })
+    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
+      this.setState({
+        activeHeader: 0
+      })
+    }
   }
 
   modelsSortingHandler = (order_by, order) => {
@@ -165,20 +189,47 @@ export default class Models extends Component {
     this.getDataSources();
   }
 
+  changeModel = (e) => {
+    this.setState({ modelsSearch: e.target.value })
+  }
+
+  changeDataSource = (e) => {
+    this.setState({ dataSourcesSearch: e.target.value })
+  }
+
   render() {
-    const { activeTab, models, dataSources, modelsCurrentPage, dataSourcesCurrentPage, modelsSearch, dataSourcesSearch,
-      modelsPageCount, dataSourcesPageCount, modelsCount, dataSourcesCount, modelsSorting, dataSourcesSorting } = this.state;
+    const { activeTab, models, dataSources, modelsCurrentPage, modelsSearch, dataSourcesSearch,
+      modelsPageCount, modelsCount, dataSourcesCount, modelsSorting, dataSourcesSorting, currentPageDataSources, currentPageModels } = this.state;
+
+
+    let dataSourcesMap = dataSources.map(dataSource => ({
+      ...dataSource,
+      editUrl: '/admin/tables/data-sources/edit/' + dataSource.id
+    }))
+
+    let modelsMap = models.map(model => ({
+      ...model,
+      editUrl: '/admin/tables/models/edit/' + model.id
+    }))
 
     return <div className="admin-settings admin-page">
-      <div className="admin-heading">
-        <div className="admin-breadcrumbs">
-          <a className="admin-breadcrumbs__link" href="#">Tables</a>
-          <span className="admin-breadcrumbs__separator">/</span>
-          <span className="admin-breadcrumbs__current">{activeTab === 0 ? 'All Models' : 'All Data Sources'}</span>
+      <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
+        <div className="admin-heading-left">
+          <div className="admin-breadcrumbs">
+            <a className="admin-breadcrumbs__link" href="#">Tables</a>
+            <span className="admin-breadcrumbs__separator">/</span>
+            <span className="admin-breadcrumbs__current">{activeTab === 0 ? 'All Models' : 'All Data Sources'}</span>
+          </div>
+          <Link className="btn" to={`/admin/tables/${activeTab === 0 ? 'models' : 'data-sources'}/add`}>Add New</Link>
+          <div className="admin-filters">
+            <span className="admin-filters__current">
+              All ({ activeTab === 0 ? this.state.models.length : this.state.dataSources.length || "0"})
+            </span>
+          </div>
         </div>
-        <Link className="btn" to={`/admin/tables/${activeTab === 0 ? 'models' : 'data-sources'}/add`}>Add New</Link>
+        <UserTopPanel />
       </div>
-      <div className="admin-content">
+      <div className="admin-content zeroing__styleTabs">
         <Tabs selectedIndex={activeTab} onSelect={this.switchTab}>
           <TabList className="nav nav-pills admin-pills">
             <Tab>
@@ -189,10 +240,6 @@ export default class Models extends Component {
             </Tab>
           </TabList>
           <TabPanel>
-            <form className="admin-panel py-2" onSubmit={this.searchModel}>
-              <input className="input-sm mr-2" value={modelsSearch} onChange={e => this.setState({ modelsSearch: e.target.value })} />
-              <button className="btn btn_bare admin-users-button">Search</button>
-            </form>
             <AdminTable
               columns={columnsModel}
               quickActions={[
@@ -208,32 +255,35 @@ export default class Models extends Component {
                   confirm: 'Are You Sure?',
                   after: () => { this.getModels() },
                   className: 'quick-action-menu__item_danger',
-                  title: 'Trash'
+                  title: 'Delete'
                 }
               ]}
-              rows={models.map(model => ({
-                ...model,
-                editUrl: '/admin/tables/models/edit/' + model.id
-              }))}
+              rows={modelsMap.slice(
+                currentPageModels * this.itemsPerPage - this.itemsPerPage,
+                currentPageModels * this.itemsPerPage
+              )}
               sortingHandler={this.modelsSortingHandler}
               sortingField={modelsSorting.order_by}
-            />
-            <Pagination pageCount={modelsPageCount || 1}
-              currentPage={modelsCurrentPage || 1}
-              changePage={modelsCurrentPage => {
-                if (this.state.modelsCurrentPage !== modelsCurrentPage) {
-                  this.setState({ modelsCurrentPage }, this.getModels)
+
+              searchTables={{
+                submit: this.searchModel,
+                value: modelsSearch,
+                change: this.changeModel
+              }}
+
+              pageCount={Math.ceil(modelsMap.length / this.itemsPerPage) || 1}
+              currentPage={currentPageModels}
+              changePage={page => {
+                if (currentPageModels !== page) {
+                  this.setState({ currentPageModels: page });
                 }
               }
               }
-              itemsCount={modelsCount}
+              itemsCount={modelsMap.length}
+              openPagination={true}
             />
           </TabPanel>
           <TabPanel>
-            <form className="admin-panel py-2" onSubmit={this.searchDataSources}>
-              <input className="input-sm mr-2" value={dataSourcesSearch} onChange={e => this.setState({ dataSourcesSearch: e.target.value })} />
-              <button className="btn btn_bare admin-users-button">Search</button>
-            </form>
             <AdminTable
               columns={columnsDataSource}
               quickActions={[
@@ -249,20 +299,31 @@ export default class Models extends Component {
                   confirm: 'Are You Sure?',
                   after: () => { this.getDataSources() },
                   className: 'quick-action-menu__item_danger',
-                  title: 'Trash'
+                  title: 'Delete'
                 }
               ]}
-              rows={dataSources.map(dataSource => ({
-                ...dataSource,
-                editUrl: '/admin/tables/data-sources/edit/' + dataSource.id
-              }))}
+              rows={dataSourcesMap.slice(
+                currentPageDataSources * this.itemsPerPage - this.itemsPerPage,
+                currentPageDataSources * this.itemsPerPage
+              )}
               sortingHandler={this.dataSourcesSortingHandler}
               sortingField={dataSourcesSorting.order_by}
-            />
-            <Pagination pageCount={dataSourcesPageCount}
-              currentPage={dataSourcesCurrentPage}
-              changePage={dataSourcesCurrentPage => this.setState({ dataSourcesCurrentPage }, this.getDataSources)}
-              itemsCount={dataSourcesCount}
+
+              searchTables={{
+                submit: this.searchDataSources,
+                value: dataSourcesSearch,
+                change: this.changeDataSource
+              }}
+
+              pageCount={Math.ceil(dataSourcesMap.length / this.itemsPerPage) || 1}
+              currentPage={currentPageDataSources}
+              changePage={page => {
+                if (currentPageDataSources !== page) {
+                  this.setState({ currentPageDataSources: page });
+                }
+              }}
+              itemsCount={dataSourcesMap.length}
+              openPagination={true}
             />
           </TabPanel>
         </Tabs>
@@ -270,3 +331,13 @@ export default class Models extends Component {
     </div>
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    modelsState: state.modelsState.toggleModels
+  }
+}
+
+Models = connect(mapStateToProps)(Models)
+
+export default Models;

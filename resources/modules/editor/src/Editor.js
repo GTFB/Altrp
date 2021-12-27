@@ -200,6 +200,7 @@ class Editor extends Component {
     console.log("editor loaded");
   }
 
+
   /**
    * Вызывается после загрузки компонента
    * @see {@link https://ru.reactjs.org/docs/react-component.html#componentdidmount}

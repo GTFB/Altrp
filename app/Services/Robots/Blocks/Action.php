@@ -43,7 +43,7 @@ class Action
     /**
      * Запустить действие в зависимости от типа
      */
-    public function runAction()
+    public function runAction($botData = null)
     {
         $res = [
             'name' => '',
@@ -61,6 +61,9 @@ class Action
                 break;
             case 'document':
                 $res = $this->generateDocument();
+                break;
+            case 'bot':
+                $res = $this->execBot($botData);
                 break;
         }
         return $res;
@@ -105,7 +108,37 @@ class Action
         $source = strtolower(implode('_', explode(' ', $name)));
 
         return [
-            'name' => $source,
+            'name' => 'api',
+            'value' => [ $source => $res]
+        ];
+    }
+
+    protected function getLabelForBot($shortcode)
+    {
+        $result = false;
+        if (is_array($this->getNodeProperties()->nodeData->data->content)){
+            foreach ($this->getNodeProperties()->nodeData->data->content as $item){
+                if (isset($item->data->shortcode) && $item->data->shortcode === $shortcode) $result = $item->data->text;
+            }
+        }
+        return $result;
+    }
+
+    protected function execBot($botData)
+    {
+        $res = [];
+        if ($botData){
+            $value = setDynamicData($botData->callback_query->data, $this->modelData);
+            $label = setDynamicData($this->getLabelForBot($botData->callback_query->data), $this->modelData);
+            $key = setDynamicData($this->getNodeProperties()->nodeData->data->shortcode, $this->modelData);
+
+            if ($key) {
+                $res[$key]['value'] = $value;
+                $res[$key]['label'] = $label;
+            }
+        }
+        return [
+            'name' => 'bot',
             'value' => $res
         ];
     }
@@ -117,8 +150,8 @@ class Action
     protected function execCrud()
     {
         $data = json_decode(json_encode($this->node->data->props->nodeData->data->body), true);
-        $custom = $this->node->data->props->nodeData->data->custom;
-        $custom_data = $this->node->data->props->nodeData->data->custom_data;
+        $custom = $this->node->data->props->nodeData->data->custom ?? false;
+        $custom_data = $this->node->data->props->nodeData->data->custom_data ?? false;
 
         $newData = [];
         if ($custom && $custom_data) {
@@ -142,7 +175,7 @@ class Action
         $modelNamespace = $model->parent ? $model->parent->namespace : $model->namespace;
         $modelClass = '\\' . $modelNamespace;
         $method = $this->node->data->props->nodeData->data->method;
-
+      $result = false;
         if ($method == 'create') {
             $entity = new $modelClass($newData);
             $result = $entity->$method($newData);
@@ -202,7 +235,7 @@ class Action
         $entities = $this->getNodeProperties()->nodeData->data->entities;
         $users = $this->getRequiredUsers($entities, $entitiesData);
 
-        if (!$users->isEmpty()) {
+        if ((is_array($users) && empty($users)) || !$users->isEmpty()) {
             Notification::send($users, new RobotNotification($this->node, $this->modelData));
         } else {
             Notification::route('user', 'anonymous')->notify(new RobotNotification($this->node, $this->modelData));
@@ -300,7 +333,7 @@ class Action
         if ($type == 'dynamic') {
             $field = $entities->dynamicValue;
             $columnName = 'id';
-            $users = [];
+            $users = collect();
             $value = setDynamicData($entities->dynamicValue, $this->modelData);
             if (isset($this->modelData['record']) && !Str::contains($field, "{{"))
                 $value = $this->modelData['record']->$field;

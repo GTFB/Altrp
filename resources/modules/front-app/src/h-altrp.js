@@ -6,7 +6,6 @@ import  queryString from 'query-string';
 import  "./js/functions/mount-elements";
 import  './js/libs/react-lodash';
 import {setScrollValue} from "./js/store/scroll-position/actions";
-
 window.Link = 'a';
 
 
@@ -21,6 +20,7 @@ function loadDatastorageUpdater(){
  * Рендерим главный компонент после загрузки основных модулей
  */
 window.loadingCallback = function loadingCallback() {
+  loadPageActions()
   if (window.React
     && window.Component
     && window.ReactDOM
@@ -49,7 +49,6 @@ window.loadingCallback = function loadingCallback() {
     /**
      * Загружаем все действия привязанные к загрузке страницы
      */
-    loadPageActions()
   }
 }
 
@@ -63,6 +62,7 @@ import(/* webpackChunkName: 'altrp' */'./js/libs/altrp').then(module => {
   window.currentRouterMatch = new window.AltrpModel({
     params:queryString.parseUrl(window.location.href).query
   });
+
   import (/* webpackChunkName: 'appStore' */'./js/store/store').then(module => {
     console.log('LOAD appStore: ', performance.now());
     loadingCallback();
@@ -103,12 +103,6 @@ if (process.env.NODE_ENV !== 'production') {
   );
 }
 
-import(/* webpackChunkName: 'IconsManager' */'../../editor/src/js/classes/modules/IconsManager').then(
-  IconsManager => {
-    console.log('LOAD IconsManager: ', performance.now());
-    window.iconsManager = new IconsManager.default();
-  }
-);
 (async function () {
 
   let _token = await fetch('/ajax/_token', {
@@ -143,8 +137,11 @@ if ('serviceWorker' in navigator) {
  */
 const frontAppContainer = document.getElementById('front-app');
 
-frontAppContainer.addEventListener('scroll', e=>{
-  appStore && appStore.dispatch(setScrollValue({top: e.target.scrollTop}))
+document.addEventListener('scroll', e=>{
+  appStore && appStore.dispatch(setScrollValue({top: document.documentElement.scrollTop}))
+  import(/* webpackChunkName: 'scroll-actions' */'./js/functions/actions/scroll-actions').then((module)=>{
+    module?.default(e);
+  })
 })
 document.body.addEventListener('click', e =>{
   import(/* webpackChunkName: 'click-actions' */'./js/functions/actions/click-actions').then((module)=>{
@@ -152,7 +149,7 @@ document.body.addEventListener('click', e =>{
   })
 })
 
-document.addEventListener('DOMContentLoaded', e =>{
+window.addEventListener('h-altrp-loaded', e =>{
   import(/* webpackChunkName: 'load-sticky' */'./js/functions/load-sticky').then((module)=>{
     module?.default(e);
   })

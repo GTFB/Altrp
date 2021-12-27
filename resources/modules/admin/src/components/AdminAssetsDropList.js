@@ -9,13 +9,13 @@ class AdminAssetsDropList extends React.Component {
 
         return (
                 <ul className={pathmanHaveAsssets !== -1 ? "admin-nav-list admin-nav-list--sublist_active" : "admin-nav-list admin-nav-list--sublist"}>
-                    <li><Link to="/admin/assets" className="admin-nav-list__link"><span>Library</span></Link></li>
                     <li>
                         <Link
-                            to="/admin/assets/custom-fonts" 
-                            className="admin-nav-list__link"
+                            to="/admin/assets/custom-fonts"
+                            className={pathname.indexOf('custom-fonts') !== -1 ? "admin-nav-list__link font__weightDropList" : "admin-nav-list__link"}
+                            onClick={this.props.activeButton}
                         >
-                            <span>Custom fonts</span>
+                            <span>Custom Fonts</span>
                         </Link>
                     </li>
                 </ul>

@@ -1,3 +1,4 @@
+import SliderRangeFilter from "./components/filters/SliderRangeFilter";
 import ('../altrp-posts/altrp-posts.scss');
 import update from 'immutability-helper'
 import ('../../../sass/altrp-pagination.scss');
@@ -179,6 +180,9 @@ function AltrpTableWithoutUpdate(
     checkbox_unchecked_icon: uncheckedIcon = {},
     checkbox_indeterminate_icon: indeterminateIcon = {} } = settings;
   const [cardTemplate, setCardTemplate] = React.useState(null);
+  const showPagination = React.useMemo(()=>{
+    return inner_page_size < data?.length
+  }, [data, inner_page_size]);
   /**
    * Для перетаскивания
    */
@@ -652,7 +656,7 @@ function AltrpTableWithoutUpdate(
         {global_filter && <div className="altrp-table-tr">
           <th className="altrp-table-th altrp-table-th_global-filter altrp-table-cell"
             role="cell"
-            colSpan={visibleColumns.length + replace_rows}
+            colSpan={(visibleColumns.length + replace_rows) || 1}
             style={{
               textAlign: 'left',
             }}
@@ -682,11 +686,11 @@ function AltrpTableWithoutUpdate(
           cardTemplate,
         }}
         /> :
-        <div><div className="altrp-table-tr altrp-table-tr_loading"><div className="altrp-table-td altrp-table-td_loading" colSpan={visibleColumns.length + replace_rows}>
+        <div><div className="altrp-table-tr altrp-table-tr_loading"><div className="altrp-table-td altrp-table-td_loading" colSpan={(visibleColumns.length + replace_rows) || 1}>
           {(_status === 'loading' ? (loading_text || null) : null)}
         </div></div></div>}
     </TableComponent>
-    {paginationProps && <Pagination {...paginationProps} />}
+    {showPagination && paginationProps && <Pagination {...paginationProps} />}
   </React.Fragment>
 }
 
@@ -734,22 +738,30 @@ function DefaultColumnFilter({
  * @param id
  * @param widgetId
  * @param filter_placeholder
+ * @param {string} null_placeholder
+ * @param {{}} settings
  * @return {*}
  * @constructor
  */
 function SelectColumnFilter({
-  column: { filterValue, setFilter, preFilteredRows, id, filter_placeholder },
-  widgetId
+  column: { filterValue, setFilter, preFilteredRows, id, filter_placeholder, null_placeholder },
+  widgetId,
 }) {
   const options = React.useMemo(() => {
     let _options = new Set();
     preFilteredRows.forEach(row => {
       _options.add(row.values[id])
     });
-    return [..._options.values()].map(option => ({
+    return [..._options.values()].map(option => {
+
+      let label = option;
+      if( ! label && ! _.isString(label)){
+        label = null_placeholder || '' ;
+      }
+      return({
       value: option,
-      label: option + '',
-    }));
+      label,
+    })});
   }, [id, preFilteredRows]);
 
   // Render a multi-select box
@@ -942,6 +954,11 @@ export function settingsToColumns(settings, widgetId) {
             _column.Filter = NumberRangeColumnFilter;
           }
             break;
+          case 'range_slider': {
+            _column.filter = 'between';
+            _column.Filter = SliderRangeFilter;
+          }
+            break;
           case 'slider': {
             _column.filter = 'equals';
             _column.Filter = SliderColumnFilter;
@@ -949,7 +966,10 @@ export function settingsToColumns(settings, widgetId) {
             break;
           case 'select': {
             _column.filter = 'includesSome';
-            _column.Filter = ({ column }) => <SelectColumnFilter column={column} widgetId={widgetId} />;
+            _column.Filter = ({ column}) =>
+              <SelectColumnFilter
+                column={column}
+                widgetId={widgetId} />;
           }
             break;
           case 'text': {

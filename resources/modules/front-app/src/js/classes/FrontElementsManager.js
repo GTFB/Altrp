@@ -1,7 +1,7 @@
 class FrontElementsManager {
   constructor() {
+    this.components = {};
     //список компонентов
-
     this.ELEMENTS = [
       {
         name: "root-element",
@@ -16,6 +16,14 @@ class FrontElementsManager {
         import: async () => {
           return await import(
             /* webpackChunkName: 'HeadingTypeHeadingWidget' */ "../../../../editor/src/js/components/widgets/HeadingTypeHeadingWidget"
+          );
+        }
+      },
+      {
+        name: "action-trigger",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'ActionTriggerWidget' */ "../../../../editor/src/js/components/widgets/ActionTriggerWidget"
           );
         }
       },
@@ -68,6 +76,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-text-autocomplete",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputTextCommonWidget' */ "../../../../editor/src/js/components/widgets/InputTextAutocompleteWidget"
+          );
+        }
+      },
+      {
         name: "input-text",
         import: async () => {
           return await import(
@@ -81,6 +97,14 @@ class FrontElementsManager {
           return await import(
             /* webpackChunkName: 'InputSelectWidget' */ "../../../../editor/src/js/components/widgets/InputSelectWidget"
           );
+        }
+      },
+      {
+        name: "input-select-tree",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputSelectTreeWidget' */ "../../../../editor/src/js/components/widgets/InputSelectTreeWidget"
+            );
         }
       },
       {
@@ -153,6 +177,30 @@ class FrontElementsManager {
           return await import(
             /* webpackChunkName: 'InputDate' */ "../../../../editor/src/js/components/widgets/InputDateWidget"
           );
+        }
+      },
+      {
+        name: "input-date-range",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputDateRange' */ "../../../../editor/src/js/components/widgets/InputDateRangeWidget"
+            );
+        }
+      },
+      {
+        name: "stars",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'Stars' */ "../../../../editor/src/js/components/widgets/StarsWidget"
+            );
+        }
+      },
+      {
+        name: "progress-bar",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'ProgressBar' */ "../../../../editor/src/js/components/widgets/ProgressBarWidget"
+            );
         }
       },
       {
@@ -279,7 +327,7 @@ class FrontElementsManager {
         name: "accordion",
         import: async () => {
           return await import(
-            /* webpackChunkName: 'AccordionWidget' */ "../../../../editor/src/js/components/widgets/AccordionWidget"
+            /* webpackChunkName: 'AccordionWidget' */ "../../../../editor/src/js/components/widgets/AccordionWidget/AccordionWidget"
           );
         }
       },
@@ -475,8 +523,15 @@ class FrontElementsManager {
             );
         }
       },
+      {
+        name: "tree",
+        import: async () => {
+          return await import(
+              /* webpackChunkName: 'TreeWidget' */ "../../../../editor/src/js/components/widgets/TreeWidget"
+            );
+        }
+      },
     ];
-    this.components = {};
   }
 
   /**
@@ -575,6 +630,24 @@ class FrontElementsManager {
 
   checkElementExists(elementName) {
     return !!this.components[elementName];
+  }
+
+
+
+  /**
+   * добавляем компонент виджета
+   * @param {{
+   *   name: string,
+   *   import: function <Promise>
+   * }} element
+   */
+  addElement(element){
+
+    if(! this.ELEMENTS.filter(el => {
+      return el.name === element.name
+    })){
+      this.ELEMENTS.push(element)
+    }
   }
 }
 window.frontElementsManager = new FrontElementsManager();

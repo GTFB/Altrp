@@ -6,6 +6,8 @@ import Schemes from "./NivoColorSchemes";
 import Checkbox from "@material-ui/core/Checkbox";
 import Slider from "@material-ui/core/Slider";
 
+const nivoScheme = _.find(Schemes, { value: "nivo" }).value;
+
 const mapStateToProps = state => {
   return { editElement: _.cloneDeep(state.editElement) };
 };
@@ -49,7 +51,7 @@ class TooltipSettings extends Component {
   componentDidMount() {
     if (typeof this.props.editElement?.settings?.color === "undefined") {
       setTimeout(() => {
-        this.setColorScheme(regagroScheme);
+        this.setColorScheme(nivoScheme);
       }, 1000);
     }
   }

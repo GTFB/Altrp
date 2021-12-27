@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import { Redirect, withRouter } from 'react-router-dom';
 import AltrpSelect from "../altrp-select/AltrpSelect";
+import {InputGroup, MenuItem} from "@blueprintjs/core";
+import {MultiSelect} from "@blueprintjs/select";
 //import TableForm from "../../../../admin/src/components/tables/TableForm";
 /**
  * @class
@@ -14,8 +16,14 @@ class UserForm extends Component {
     super(props);
     this.state = {
       id: this.props.id,
-      user: {},
-      usermeta: {},
+      user: {
+        _roles: [],
+        _permissions: []
+      },
+      usermeta: {
+        roles: [],
+        permissions: []
+      },
       errors: [],
       redirectAfterSave: false,
       redirectAfterError: false,
@@ -75,9 +83,6 @@ class UserForm extends Component {
     } else {
       res = await this.resource.post(this.state.user);
     }
-    console.log(res);
-
-
 
     if (res) {
 
@@ -141,8 +146,121 @@ class UserForm extends Component {
     })
   };
 
-  render() {
+  ItemPredicate(query, value) {
 
+    if(!query) {
+      return true
+    }
+    const index = _.findIndex(_.split(value.label, ""), char => {
+      let similar = false;
+      _.split(query, "").forEach(queryChar => {
+        if(queryChar === char) {
+          similar = true
+        }
+      });
+      return similar
+    });
+
+    if(index !== -1) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  tagRenderer = (item) => {
+    return item.label;
+  };
+
+  isItemSelectedRoles = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.user._roles || []);
+    return selectedString.includes(itemString);
+  };
+
+  handleItemSelectRoles = (item) => {
+    if (!this.isItemSelectedRoles(item)) {
+      this.setState(state => {
+        const copyRoles = state.user._roles || []
+        copyRoles.push(item)
+        return {
+          ...state,
+          user: {
+            ...state.user,
+            _roles: copyRoles
+          },
+          usermeta: {
+            ...state.usermeta,
+            roles: copyRoles
+          }
+        }
+      });
+    }
+  };
+
+  handleTagRemoveRoles = (item) => {
+    this.setState(state => {
+      const copyRoles = state.user._roles
+      const copyUserMetaRoles = state.usermeta.roles
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          _roles: copyRoles.filter((i) => i.label !== item)
+        },
+        usermeta: {
+          ...state.usermeta,
+          roles: copyUserMetaRoles.filter((i) => i.label !== item)
+        }
+      }
+    });
+  };
+
+  isItemSelectedPermissions = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.user._permissions || []);
+    return selectedString.includes(itemString);
+  };
+
+  handleItemSelectPermissions = (item) => {
+    if (!this.isItemSelectedPermissions(item)) {
+      this.setState(state => {
+        const copyPermissions = state.user._permissions || []
+        copyPermissions.push(item)
+        return {
+          ...state,
+          user: {
+            ...state.user,
+            _permissions: copyPermissions
+          },
+          usermeta: {
+            ...state.usermeta,
+            permissions: copyPermissions
+          }
+        }
+      });
+    }
+  };
+
+  handleTagRemovePermissions = (item) => {
+    this.setState(state => {
+      const copyPermissions = state.user._permissions
+      const copyUserMetaPermissions = state.usermeta.permissions
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          _permissions: copyPermissions.filter((i) => i.label !== item)
+        },
+        usermeta: {
+          ...state.usermeta,
+          permissions: copyUserMetaPermissions.filter((i) => i.label !== item)
+        }
+      }
+    });
+  };
+
+  render() {
     const { rolesOptions, permissionsOptions, isPasswordChange } = this.state;
     const { _roles: roles = [], _permissions: permissions = [] } = this.state.user;
     if (this.state.redirectAfterSave) {
@@ -152,95 +270,214 @@ class UserForm extends Component {
       return <Redirect to={this.state.redirect_error_url} />
     }
 
-    return <form className="admin-form" onSubmit={this.saveUser}>
-      <div className="form-group">
-        <label htmlFor="page-name">Name</label>
-        <input type="text" id="name" name="name" required={1}
-          value={this.state.user.name || ''}
-          disabled={this.props.id}
-          onChange={(e) => { this.changeValue(e) }}
-          className="form-control" />
+    return <form className="admin-form admin-form_newUsers" onSubmit={this.saveUser}>
+     <div className="form-group__inline-wrapper">
+       <div className="form-group form-group_width47">
+         <label htmlFor="page-name" className="label__RobotoFont">Name</label>
+         {/*<input type="text" id="name" name="name" required={1}*/}
+         {/*       value={this.state.user.name || ''}*/}
+         {/*       disabled={this.props.id}*/}
+         {/*       onChange={(e) => { this.changeValue(e) }}*/}
+         {/*       className="form-control" />*/}
+
+         <InputGroup type="text" id="name" name="name" required={1}
+                     value={this.state.user.name || ''}
+                     disabled={this.props.id}
+                     onChange={(e) => { this.changeValue(e) }}
+                     className="form-control-blueprint"
+         />
+       </div>
+
+       <div className="form-group form-group_width47">
+         <label htmlFor="page-title" className="label__RobotoFont">Email</label>
+         {/*<input type="email" id="email" name="email" required={1}*/}
+         {/*       value={this.state.user.email || ''}*/}
+         {/*       onChange={(e) => { this.changeValue(e) }}*/}
+         {/*       disabled={this.props.id}*/}
+         {/*       className="form-control" />*/}
+
+         <InputGroup type="email" id="email" name="email" required={1}
+                     value={this.state.user.email || ''}
+                     onChange={(e) => { this.changeValue(e) }}
+                     disabled={this.props.id}
+                     className="form-control-blueprint"
+         />
+       </div>
+     </div>
+
+      <div className="form-group__inline-wrapper">
+        {!this.state.id ?
+          <div className="form-group form-group_width47">
+            <label htmlFor="page-description" className="label__RobotoFont">Password</label>
+            {/*<input type="password" id="password" name="password" required={1}*/}
+            {/*       minlength={8}*/}
+            {/*       value={this.state.user.password || ''}*/}
+            {/*       onChange={(e) => { this.changeValue(e) }}*/}
+            {/*       className="form-control" />*/}
+
+            <InputGroup type="password" id="password" name="password" required={1}
+                        minLength={8}
+                        autoComplete="off"
+                        value={this.state.user.password || ''}
+                        onChange={(e) => { this.changeValue(e) }}
+                        className="form-control-blueprint"
+            />
+          </div> : null}
+        {!this.state.id ?
+          <div className="form-group form-group_width47">
+            <label htmlFor="page-description" className="label__RobotoFont">Confirm Password</label>
+            {/*<input type="password" id="password_confirmation" name="password_confirmation" required={1}*/}
+            {/*       minlength={8}*/}
+            {/*       value={this.state.user.password_confirmation || ''}*/}
+            {/*       onChange={(e) => { this.changeValue(e) }}*/}
+            {/*       className="form-control" />*/}
+
+            <InputGroup type="password" id="password_confirmation" name="password_confirmation" required={1}
+                        minLength={8}
+                        autoComplete="off"
+                        value={this.state.user.password_confirmation || ''}
+                        onChange={(e) => { this.changeValue(e) }}
+                        className="form-control-blueprint"
+            />
+          </div> : null}
       </div>
 
-      <div className="form-group">
-        <label htmlFor="page-title">Email</label>
-        <input type="email" id="email" name="email" required={1}
-          value={this.state.user.email || ''}
-          onChange={(e) => { this.changeValue(e) }}
-          disabled={this.props.id}
-          className="form-control" />
+
+     <div className="form-group__inline-wrapper">
+       <div className="form-group form-group_width47">
+         <label htmlFor="page-description" className="label__RobotoFont">First Name</label>
+         {/*<input type="text" id="first_name" name="first_name"*/}
+         {/*       value={this.state.usermeta.first_name || ''}*/}
+         {/*       onChange={(e) => { this.changeValue(e, "usermeta") }}*/}
+         {/*       className="form-control" />*/}
+
+         <InputGroup type="text" id="first_name" name="first_name"
+                     value={this.state.usermeta.first_name || ''}
+                     onChange={(e) => { this.changeValue(e, "usermeta") }}
+                     className="form-control-blueprint"
+         />
+       </div>
+
+       <div className="form-group form-group_width47">
+         <label htmlFor="page-description" className="label__RobotoFont">Second Name</label>
+         {/*<input type="text" id="second_name" name="second_name"*/}
+         {/*       value={this.state.usermeta.second_name || ''}*/}
+         {/*       onChange={(e) => { this.changeValue(e, "usermeta") }}*/}
+         {/*       className="form-control" />*/}
+
+         <InputGroup type="text" id="second_name" name="second_name"
+                     value={this.state.usermeta.second_name || ''}
+                     onChange={(e) => { this.changeValue(e, "usermeta") }}
+                     className="form-control-blueprint"
+         />
+       </div>
+     </div>
+
+      <div className="form-group__inline-wrapper">
+        <div className="form-group form-group_width47">
+          <label htmlFor="page-description" className="label__RobotoFont">Telegram ID</label>
+          {/*<input type="text" id="telegram_user_id" name="telegram_user_id"*/}
+          {/*       value={this.state.user.telegram_user_id || ''}*/}
+          {/*       onChange={(e) => { this.changeValue(e) }}*/}
+          {/*       className="form-control" />*/}
+
+          <InputGroup type="text" id="telegram_user_id" name="telegram_user_id"
+                      value={this.state.user.telegram_user_id || ''}
+                      onChange={(e) => { this.changeValue(e) }}
+                      className="form-control-blueprint"
+          />
+        </div>
+
+        <div className="form-group form-group_width47">
+          <label htmlFor="page-description" className="label__RobotoFont">Patronymic</label>
+          {/*<input type="text" id="patronymic" name="patronymic"*/}
+          {/*       value={this.state.usermeta.patronymic || ''}*/}
+          {/*       onChange={(e) => { this.changeValue(e, "usermeta") }}*/}
+          {/*       className="form-control" />*/}
+
+          <InputGroup type="text" id="patronymic" name="patronymic"
+                      value={this.state.usermeta.patronymic || ''}
+                      onChange={(e) => { this.changeValue(e, "usermeta") }}
+                      className="form-control-blueprint"
+          />
+        </div>
       </div>
 
-      {!this.state.id ?
-        <div className="form-group">
-          <label htmlFor="page-description">Password</label>
-          <input type="password" id="password" name="password" required={1}
-            minlength={8}
-            value={this.state.user.password || ''}
-            onChange={(e) => { this.changeValue(e) }}
-            className="form-control" />
-        </div> : null}
-      {!this.state.id ?
-        <div className="form-group">
-          <label htmlFor="page-description">Confirm Password</label>
-          <input type="password" id="password_confirmation" name="password_confirmation" required={1}
-            minlength={8}
-            value={this.state.user.password_confirmation || ''}
-            onChange={(e) => { this.changeValue(e) }}
-            className="form-control" />
-        </div> : null}
+      <div className="form-group__inline-wrapper">
+        <div className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-users form-group_width47">
+          <label htmlFor="roles" className="label__RobotoFont">Roles</label>
+          {/*<AltrpSelect id="roles"*/}
+          {/*             closeMenuOnSelect={false}*/}
+          {/*             value={_.filter(rolesOptions, r => roles && roles.indexOf(r.value) >= 0)}*/}
+          {/*             isMulti={true}*/}
+          {/*             onChange={this.changeRolesHandler}*/}
+          {/*             options={rolesOptions} />*/}
+
+          <MultiSelect tagRenderer={this.tagRenderer} id="roles"
+                       items={rolesOptions}
+                       itemPredicate={this.ItemPredicate}
+                       noResults={<MenuItem disabled={true} text="No results." />}
+                       fill={true}
+                       placeholder="Select..."
+                       selectedItems={this.state.usermeta.roles}
+                       onItemSelect={this.handleItemSelectRoles}
+                       itemRenderer={(item, {handleClick, modifiers, query}) => {
+                         return (
+                           <MenuItem
+                             icon={this.isItemSelectedRoles(item) ? "tick" : "blank"}
+                             text={item.label}
+                             key={item.value}
+                             onClick={handleClick}
+                           />
+                         )
+                       }}
+                       tagInputProps={{
+                         onRemove: this.handleTagRemoveRoles,
+                         large: false,
+                       }}
+                       popoverProps={{
+                         usePortal: false
+                       }}
+          />
+        </div>
+
+        <div className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-users overflow-blueprint__multiSelect form-group_width47">
+          <label htmlFor="permissions" className="label__RobotoFont">Permissions</label>
+          {/*<AltrpSelect id="permissions"*/}
+          {/*             value={_.filter(permissionsOptions, p => permissions && permissions.indexOf(p.value) >= 0)}*/}
+          {/*             closeMenuOnSelect={false}*/}
+          {/*             isMulti={true}*/}
+          {/*             onChange={this.changePermissionsHandler}*/}
+          {/*             options={permissionsOptions} />*/}
 
 
-      <div className="form-group">
-        <label htmlFor="page-description">First Name</label>
-        <input type="text" id="first_name" name="first_name"
-          value={this.state.usermeta.first_name || ''}
-          onChange={(e) => { this.changeValue(e, "usermeta") }}
-          className="form-control" />
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="page-description">Second Name</label>
-        <input type="text" id="second_name" name="second_name"
-          value={this.state.usermeta.second_name || ''}
-          onChange={(e) => { this.changeValue(e, "usermeta") }}
-          className="form-control" />
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="page-description">Telegram ID</label>
-        <input type="text" id="telegram_user_id" name="telegram_user_id"
-          value={this.state.user.telegram_user_id || ''}
-          onChange={(e) => { this.changeValue(e) }}
-          className="form-control" />
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="page-description">Patronymic</label>
-        <input type="text" id="patronymic" name="patronymic"
-          value={this.state.usermeta.patronymic || ''}
-          onChange={(e) => { this.changeValue(e, "usermeta") }}
-          className="form-control" />
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="roles">Roles</label>
-        <AltrpSelect id="roles"
-          closeMenuOnSelect={false}
-          value={_.filter(rolesOptions, r => roles && roles.indexOf(r.value) >= 0)}
-          isMulti={true}
-          onChange={this.changeRolesHandler}
-          options={rolesOptions} />
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="permissions">Permissions</label>
-        <AltrpSelect id="permissions"
-          value={_.filter(permissionsOptions, p => permissions && permissions.indexOf(p.value) >= 0)}
-          closeMenuOnSelect={false}
-          isMulti={true}
-          onChange={this.changePermissionsHandler}
-          options={permissionsOptions} />
+          <MultiSelect tagRenderer={this.tagRenderer} id="permissions"
+                       items={permissionsOptions}
+                       itemPredicate={this.ItemPredicate}
+                       noResults={<MenuItem disabled={true} text="No results." />}
+                       fill={true}
+                       placeholder="Select..."
+                       selectedItems={this.state.usermeta.permissions}
+                       onItemSelect={this.handleItemSelectPermissions}
+                       itemRenderer={(item, {handleClick, modifiers, query}) => {
+                         return (
+                           <MenuItem
+                             icon={this.isItemSelectedPermissions(item) ? "tick" : "blank"}
+                             text={item.label}
+                             key={item.value}
+                             onClick={handleClick}
+                           />
+                         )
+                       }}
+                       tagInputProps={{
+                         onRemove: this.handleTagRemovePermissions,
+                         large: false,
+                       }}
+                       popoverProps={{
+                         usePortal: false
+                       }}
+          />
+        </div>
       </div>
 
       {this.state.id && <div className="form-group">
@@ -248,23 +485,23 @@ class UserForm extends Component {
           checked={isPasswordChange}
           onChange={e => { this.setState({ isPasswordChange: e.target.checked }) }}
         />
-        <label className="checkbox-label" htmlFor="changePassword">Change Password</label>
+        <label className="checkbox-label label__RobotoFont" htmlFor="changePassword">Change Password</label>
       </div>}
 
       {isPasswordChange && this.state.id && <>
         <div className="form-group">
-          <label htmlFor="newPassword">New Password</label>
+          <label htmlFor="newPassword" className="label__RobotoFont">New Password</label>
           <input type="password" id="newPassword" name="password" required
-            minlength={8}
+            minLength={8}
             value={this.state.user.password || ''}
             onChange={this.changeValue}
             className="form-control" />
         </div>
 
         <div className="form-group">
-          <label htmlFor="page-description">Confirm Password</label>
+          <label htmlFor="page-description" className="label__RobotoFont">Confirm Password</label>
           <input type="password" id="confirmNewPassword" name="password_confirmation" required
-            minlength={8}
+            minLength={8}
             value={this.state.user.password_confirmation || ''}
             onChange={this.changeValue}
             className="form-control" />

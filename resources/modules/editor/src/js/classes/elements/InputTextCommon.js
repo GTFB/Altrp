@@ -929,13 +929,13 @@ class InputTextCommon extends BaseElement {
     this.addControl("required_style_font_typographic", {
       type: CONTROLLER_TYPOGRAPHIC,
       label: "Typographic",
-      stateless: true,
+      // stateless: true,
     });
 
     this.addControl("required_style_font_color", {
       type: CONTROLLER_COLOR,
       label: "font color",
-      stateless: true,
+      // stateless: true,
     });
 
     this.endControlSection();
@@ -1004,13 +1004,13 @@ class InputTextCommon extends BaseElement {
           label: "Groove"
         }
       ],
-      stateless:true,
+      // stateless: true,
     });
 
     this.addControl("border_width", {
       type: CONTROLLER_DIMENSIONS,
       label: "Border Width",
-      stateless:true,
+      // stateless:true,
       units: ["px", "%", "vh"]
     });
 

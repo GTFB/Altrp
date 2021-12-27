@@ -1,6 +1,6 @@
 import React from "react";
-import ('../../../sass/altrp-pagination.scss');
-import ('./altrp-posts.scss');
+import '../../../sass/altrp-pagination.scss';
+import './altrp-posts.scss';
 import AltrpQueryComponent from "../altrp-query-component/altrp-query-component";
 import templateLoader from "../../classes/modules/TemplateLoader"
 import frontElementsFabric from "../../../../../front-app/src/js/classes/FrontElementsFabric"
@@ -53,7 +53,13 @@ class AltrpPosts extends React.Component {
     if(! _.isEqual(this.state.simpleTemplate, nextState.simpleTemplate)){
       return true;
     }
+    if(! _.isEqual(this.state.hoverSimpleTemplate, nextState.hoverSimpleTemplate)){
+      return true;
+    }
     if(! _.isEqual(this.state.simpleTemplateId, nextState.simpleTemplateId)){
+      return true;
+    }
+    if(this.state.hoverSimpleTemplateId == nextState.hoverSimpleTemplateId){
       return true;
     }
     // if(this.props.data !== nextProps.data){
@@ -71,19 +77,35 @@ class AltrpPosts extends React.Component {
    */
   async componentDidUpdate(prevProps) {
     const{settings} = this.props;
-    const{simpleTemplateId} = this.state;
-    const newSimpleTemplateId = _.get(settings, 'posts_card_template', simpleTemplateId);
+    const{simpleTemplateId, hoverSimpleTemplateId} = this.state;
+    const newSimpleTemplateId = _.get(settings, 'posts_card_template');
+    const newHoverSimpleTemplateId = _.get(settings, 'posts_card_hover_template');
     // if(prevProps.posts !== this.state.posts)
     if(! _.isEqual(prevProps.data, this.props.data)){
       this.setState(state =>({...state, posts: this.props.data}));
     }
+    if(this.props.data !== prevProps.data){
+      this.postsComponents = {};
+    }
     if(newSimpleTemplateId !== simpleTemplateId){
       if(! newSimpleTemplateId){
+        this.setState(state=>({...state, simpleTemplateId: newSimpleTemplateId, simpleTemplate:null}));
         return;
       }
       this.setState(state=>({...state, simpleTemplateId: newSimpleTemplateId}),async ()=>{
         let template = await templateLoader.loadParsedTemplate(newSimpleTemplateId);
         this.setState(state=>({...state, simpleTemplate:template}));
+      });
+    }
+    if(newHoverSimpleTemplateId !== hoverSimpleTemplateId){
+      if(! newHoverSimpleTemplateId){
+
+        this.setState(state=>({...state, hoverSimpleTemplateId: newHoverSimpleTemplateId, hoverSimpleTemplate: null}));
+        return;
+      }
+      this.setState(state=>({...state, hoverSimpleTemplateId: newHoverSimpleTemplateId}),async ()=>{
+        let hoverTemplate = await templateLoader.loadParsedTemplate(newHoverSimpleTemplateId);
+        this.setState(state=>({...state, hoverSimpleTemplate:hoverTemplate}));
       });
     }
   }
@@ -93,11 +115,11 @@ class AltrpPosts extends React.Component {
    * @param {int} idx - индекс в массиве записей
    */
   renderPost = (idx) => {
-    const hoverTemplateId = _.get(this.props.settings, 'posts_card_hover_template', null);
     const transitionType = _.get(this.props.settings, 'posts_transition_type', null);
     let post = _.cloneDeep(this.props.data[idx] || this.props.data);
     let PostContentComponent = post.component || '';
-    if(this.state.simpleTemplate && ! _.get(this.postsComponents, `${this.state.simpleTemplate}.${idx}`)){
+    let HoverPostContentComponent = post.component || '';
+    if(this.state.simpleTemplate && ! _.get(this.postsComponents, `${this.state.simpleTemplateId}.${idx}`)){
       let template = frontElementsFabric.cloneElement(this.state.simpleTemplate);
       template.setCardModel(new AltrpModel(post), idx);
       PostContentComponent = React.createElement(template.componentClass,
@@ -106,16 +128,28 @@ class AltrpPosts extends React.Component {
           ElementWrapper: ElementWrapper,
           children: template.children
         });
-      _.set(this.postsComponents, `${this.state.simpleTemplate}.${idx}`, PostContentComponent)
-    } else if(_.get(this.postsComponents, `${this.state.simpleTemplate}.${idx}`)){
-      PostContentComponent = _.get(this.postsComponents, `${this.state.simpleTemplate}.${idx}`)
+      _.set(this.postsComponents, `${this.state.simpleTemplateId}.${idx}`, PostContentComponent)
+    } else if(_.get(this.postsComponents, `${this.state.simpleTemplateId}.${idx}`)){
+      PostContentComponent = _.get(this.postsComponents, `${this.state.simpleTemplateId}.${idx}`)
     }
-    return <React.Fragment key={(post.id || post.altrpIndex)}>
-      <div className="altrp-post">{PostContentComponent}
-        {hoverTemplateId && <div className={`altrp-post altrp-post--hover altrp-post--hover--${transitionType}`}>{PostContentComponent}</div>}
+    if(this.state.hoverSimpleTemplate && ! _.get(this.postsComponents, `hover.${this.state.hoverSimpleTemplateId}.${idx}`)){
+      let template = frontElementsFabric.cloneElement(this.state.hoverSimpleTemplate);
+      template.setCardModel(new AltrpModel(post), idx);
+      HoverPostContentComponent = React.createElement(template.componentClass,
+        {
+          element: template,
+          ElementWrapper: ElementWrapper,
+          children: template.children
+        });
+      _.set(this.postsComponents, `hover.${this.state.hoverSimpleTemplateId}.${idx}`, HoverPostContentComponent)
+    } else if(_.get(this.postsComponents, `hover.${this.state.hoverSimpleTemplateId}.${idx}`)){
+      HoverPostContentComponent = _.get(this.postsComponents, `hover.${this.state.hoverSimpleTemplateId}.${idx}`)
+    }
+    return <div className="altrp-post" key={(post.id || post.altrpIndex)}>
+        {PostContentComponent}
+        {this.state.hoverSimpleTemplateId && <div className={`altrp-post altrp-post--hover altrp-post--hover--${transitionType}`}>{HoverPostContentComponent}</div>}
       </div>
 
-    </React.Fragment>
   };
 
   /**
@@ -159,10 +193,17 @@ class AltrpPosts extends React.Component {
    */
   renderPagination(){
     const settings = {...this.props.settings};
+    const element = this.props.element;
     let {data: posts} = this.props;
     if(! posts.length && ! isEditor()){
       return null;
     }
+
+    if(element.getResponsiveSetting('posts_per_page') >= posts?.length || element.getResponsiveSetting('posts_per_page') <= 0){
+      return null;
+    }
+    let prev_text = element.getResponsiveSetting('prev_text', '', 'Previous Page')
+    let next_text = element.getResponsiveSetting('next_text', '', 'Next Page')
     let posts_pagination_type = getResponsiveSetting(this.props.settings, 'posts_pagination_type') || '';
     if(posts_pagination_type){
       const {currentPage} = this.state;
@@ -209,7 +250,7 @@ class AltrpPosts extends React.Component {
           onClick={() => this.setPage(currentPage - 1)}
           disabled={currentPage <= 1}
         >
-          <span dangerouslySetInnerHTML={{ __html: settings.prev_text || 'Previous Page' }} />
+          <span dangerouslySetInnerHTML={{ __html: prev_text }} />
             {renderAssetIcon(settings.prev_icon)}
         </button>}
         {! settings.hide_pages_buttons_button && <div className="altrp-pagination__count">
@@ -219,7 +260,7 @@ class AltrpPosts extends React.Component {
             onClick={() => this.setPage(currentPage + 1)}
             disabled={currentPage === pageCount}
           >
-            <span dangerouslySetInnerHTML={{ __html: settings.next_text || 'Next Page' }} />
+            <span dangerouslySetInnerHTML={{ __html: next_text }} />
             {renderAssetIcon(settings.next_icon)}
           </button>}
         {/* {!settings.hide_page_input && <input className="altrp-pagination__goto-page"
@@ -251,7 +292,7 @@ class AltrpPosts extends React.Component {
       posts = [];
     }
     let postsStart = 0;
-    if(posts_per_page && Number(posts_per_page)){
+    if(posts_per_page && Number(posts_per_page) && posts_per_page > 0){
       if(currentPage > 1){
         postsStart = (currentPage - 1) * posts_per_page
       }
@@ -261,8 +302,7 @@ class AltrpPosts extends React.Component {
     let posts_columns_gap = getResponsiveSetting(this.props.settings,'posts_columns_gap') || '';
     let posts_rows_gap = getResponsiveSetting(this.props.settings,'posts_rows_gap') || '';
 
-
-    return <React.Fragment>
+    return<React.Fragment>
       <PostsWrapper columnsCount={columnsCount}
                                         posts_columns_gap={posts_columns_gap}
                                         posts_rows_gap={posts_rows_gap}
@@ -281,7 +321,7 @@ export default (props) => {
     if(isEditor()){
       props = {...props};
       props.settings = {...props.settings};
-      props.data = Array.from({length: 100}, () => ({}));
+      props.data = Array.from({length: 3}, () => ({}));
       setAltrpIndex(props.data);
     }
     return<AltrpPosts {...props}/>

@@ -349,7 +349,7 @@ class InputHiddenWidget extends Component {
       );
     } catch (e) {
       console.error(
-        "Evaluate error in Input " + e.message,
+        "Evaluate error in Input: '" + e.message + "'",
         this.props.element.getId()
       );
     }
@@ -552,7 +552,9 @@ class InputHiddenWidget extends Component {
     if (isEditor()) {
       value = this.state.value;
     } else {
-      value = _.get(appStore.getState(), `formsStore.${formId}.${fieldName}`, '')
+
+      value = _.get(appStore.getState().formsStore, `${formId}`, '')
+      value = _.get(value, fieldName, '')
     }
     return value;
   }

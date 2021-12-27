@@ -1,6 +1,7 @@
 const SKELETON_ELEMENTS = [
   'input',
   'input-select',
+  'input-select-tree',
   'input-multi-select',
   'input-select2',
   'input-radio',
@@ -13,15 +14,18 @@ const SKELETON_ELEMENTS = [
   'input-accept',
   'input-text',
   'input-text-common',
+  'input-text-autocomplete',
   'input-password',
   'input-number',
   'input-tel',
   'input-email',
   'input-date',
+  'input-date-range',
   'input-file',
   'input-gallery',
   'input-crop-image',
   'breadcrumbs',
+  'carousel',
   'map',
   'map_builder',
   'menu',
@@ -30,6 +34,7 @@ const SKELETON_ELEMENTS = [
   'line-diagram',
   'bar-diagram',
   'funnel-diagram',
+  'diagram',
   'nav',
   'dashboards',
   'tour',
@@ -43,5 +48,8 @@ const SKELETON_ELEMENTS = [
   'tabs',
   'heading-type-animating',
   'scheduler',
+  'tree',
+  'stars',
+  'progress-bar'
 ]
 export default SKELETON_ELEMENTS

@@ -1,6 +1,7 @@
 // const merge = require('webpack-merge');
 // const common = require('./webpack.admin.common.js');
 const path = require("path");
+const webpack = require("webpack");
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 
 // module.exports = merge(common, {
@@ -9,6 +10,7 @@ module.exports = {
   devtool: 'source-map',
   output: {
     path: path.resolve(__dirname, "./public/modules/admin/"),
+    chunkFilename: "[name].[contenthash].bundle.js",
     publicPath: "/modules/admin/",
     filename: "admin.js"
   },
@@ -67,5 +69,12 @@ module.exports = {
   resolve: {
     extensions: ["*", ".js", ".jsx"]
   },
-  plugins: [ new CleanWebpackPlugin()]
+  plugins: [
+    new CleanWebpackPlugin(),
+    new webpack.DefinePlugin({
+      "process.env": "{}",
+      global: {}
+    }),
+
+  ]
 };

@@ -7,7 +7,7 @@ export default class AdminTableRow extends Component {
   render() {
     const { row } = this.props;
     return (
-      <tr className="admin-table-row" key={row.id} title={row.id}>
+      <tr className={this.props.offBorderLast ? "admin-table-row admin-table-row-offLastBorder" : "admin-table-row"} key={row.id} title={row.id}>
         <td
           className="admin-table__td admin-table__td_check"
           key={"choose" + row.id}
@@ -53,6 +53,11 @@ export default class AdminTableRow extends Component {
             props.onClick = () => {
               column.button.function(row);
             };
+          }
+          if (column.button__table && row.button__table) {
+            tag = "button";
+            props.className = "td__content button__table";
+            props.onClick = row.button__table
           }
           if (column.is_boolean) {
             props.children = [

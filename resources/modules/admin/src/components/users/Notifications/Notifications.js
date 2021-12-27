@@ -15,7 +15,7 @@ class Notifications extends Component{
             currentPage: 1,
             noticeSearch: '',
             sorting: {}
-      
+
         };
         this.itemsPerPage = 3;
         this.notificationsAll = new Resource({route: `/admin/ajax/users/${this.state.user_id}/notifications`});
@@ -26,17 +26,17 @@ class Notifications extends Component{
     componentDidMount(){
         this.getNotices();
     }
-        
+
     changePage(currentPage, pagination) {
         this.setState(state => ({ ...state, [pagination]: { ...state[pagination], currentPage } }));
     }
-        
-        
+
+
     getNotices = async () => {
         let noticeSettingsData = await this.notificationsAll.getAll();
         this.setState(state => {
             return { ...state, notices: noticeSettingsData };
-        }); 
+        });
     };
 
     noticesSortingHandler = (order_by, order) => {
@@ -51,7 +51,7 @@ class Notifications extends Component{
     getArrayForRows = (notices, currentPage, itemsPerPage) => {
 
         let arrayNew = notices.slice(currentPage * this.itemsPerPage - this.itemsPerPage, currentPage * this.itemsPerPage).map(item =>{
-                            item.url = `/admin/users/user/${item.noticed_id}/notification/${item.id}`;            
+                            item.url = `/admin/users/user/${item.noticed_id}/notification/${item.id}`;
                             return item;
                         });
 
@@ -84,19 +84,12 @@ class Notifications extends Component{
         // document.body.appendChild(element); // Required for this to work in FireFox
         // element.click();
     }
-    
-    
-        
+
+
+
     render(){
         const { currentPage, notices, user_id, noticeSearch, sorting} = this.state;
         return <div className="admin-users-notice">
-            <div className="admin-breadcrumbs">
-                <Link to={`/admin/users`}>Users</Link>
-                <span className="admin-breadcrumbs__separator">/</span>
-                <span className="admin-breadcrumbs__current">{user_id}</span>
-                <span className="admin-breadcrumbs__separator">/</span>
-                <span className="admin-breadcrumbs__current">Settings Notifications</span>
-            </div>
             <Link className="btn" to={`/admin/users/user/${user_id}/notification/new`}>Add New</Link>
             <div className="admin-notifications-table">
                 <form className="admin-panel py-2" onSubmit={this.searchNotice}>

@@ -29,7 +29,7 @@ class CurrentEnvironment
     {
         $requestData = [];
         foreach ($data as $key => $value) {
-            if (is_array($value) && !empty($value) && $value[0] instanceof UploadedFile) {
+            if (is_array($value) && !empty($value) && isset($value[0]) && $value[0] instanceof UploadedFile) {
                 continue;
             }
             $requestData[$key] = $value;

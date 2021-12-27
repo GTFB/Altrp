@@ -1,0 +1,36 @@
+@@layout('base')
+
+
+@section('head')
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    @if(css)
+        <link href="{{css}}" rel="stylesheet"/>
+    @endif
+
+    <title>Builder</title>
+
+    <script>
+        let _altrpVersion = "{{ version }}";
+
+        window.altrpMenus = [];
+        const _token = "{{ token }}";
+    </script>
+    <style>
+        .altrp-hidden{
+        display: none!important;
+        }
+
+        .altrp-element > .bp3-popover2-target{
+        display: content;
+        }
+    </style>
+@end
+
+@section('body')
+    <div id="editor-content">
+
+    </div>
+    <style id="styled"></style>
+@end

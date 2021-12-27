@@ -32,7 +32,7 @@ const selectSettings = {
   })
 };
 
-const regagroScheme = _.find(Schemes, { value: "regagro" }).value;
+const nivoScheme = _.find(Schemes, { value: "nivo" }).value;
 
 const curvieTypes = [
   { id: 0, value: "basis" },
@@ -152,7 +152,7 @@ class StyleSettings extends Component {
   componentDidMount() {
     if (typeof this.props.editElement?.settings?.color === "undefined") {
       setTimeout(() => {
-        this.setColorScheme(regagroScheme);
+        this.setColorScheme(nivoScheme);
       }, 1000);
     }
   }
@@ -174,7 +174,6 @@ class StyleSettings extends Component {
   }
 
   handleChange(event) {
-    console.log(event);
     event.persist();
     this.setState(state => ({
       ...state,

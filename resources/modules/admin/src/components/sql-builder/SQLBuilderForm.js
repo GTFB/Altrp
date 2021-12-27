@@ -1,19 +1,21 @@
-import React, { Component, Fragment } from "react";
-import { Link, withRouter } from "react-router-dom";
+import React, {Component, Fragment} from "react";
+import {Link, withRouter} from "react-router-dom";
 import moment from "moment";
 import Resource from "../../../../editor/src/js/classes/Resource";
-import { titleToName } from "../../js/helpers";
+import {titleToName} from "../../js/helpers";
 import AggregateComponent from "./AggregateComponent";
 import JoinComponent from "./JoinComponent";
 import ConditionComponent from "./ConditionComponent";
 import OrderByComponent from "./OrderByComponent";
 import AltrpSelect from "../altrp-select/AltrpSelect";
-import { getMomentFormat } from "./helpers";
+import {getMomentFormat} from "./helpers";
+import {InputGroup, MenuItem} from "@blueprintjs/core";
+import {MultiSelect} from "@blueprintjs/select";
 
 class SQLBuilderForm extends Component {
   constructor(props) {
     super(props);
-    const { modelId, id } = this.props.match.params;
+    const {modelId, id} = this.props.match.params;
     this.state = {
       value: {
         title: "",
@@ -24,7 +26,7 @@ class SQLBuilderForm extends Component {
         conditions: [],
         relations: [],
         order_by: [],
-        access: { roles: [], permissions: [] },
+        access: {roles: [], permissions: []},
         group_by: [],
         // offset: 'REQUEST:pageSize * (REQUEST:page - 1)',
         // limit: 'REQUEST:pageSize'
@@ -40,12 +42,12 @@ class SQLBuilderForm extends Component {
       // isLimitDisable: true
     };
     this.counter = 0;
-    this.rolesOptions = new Resource({ route: '/admin/ajax/role_options' });
-    this.permissionsOptions = new Resource({ route: '/admin/ajax/permissions_options' });
-    this.tablesOptions = new Resource({ route: '/admin/ajax/tables_options' });
-    this.selfFieldsResource = new Resource({ route: `/admin/ajax/models/${modelId}/fields_only` });
-    this.relationsResource = new Resource({ route: `/admin/ajax/models/${modelId}/relations` });
-    this.sqlResource = new Resource({ route: `/admin/ajax/models/${modelId}/queries` });
+    this.rolesOptions = new Resource({route: '/admin/ajax/role_options'});
+    this.permissionsOptions = new Resource({route: '/admin/ajax/permissions_options'});
+    this.tablesOptions = new Resource({route: '/admin/ajax/tables_options'});
+    this.selfFieldsResource = new Resource({route: `/admin/ajax/models/${modelId}/fields_only`});
+    this.relationsResource = new Resource({route: `/admin/ajax/models/${modelId}/relations`});
+    this.sqlResource = new Resource({route: `/admin/ajax/models/${modelId}/queries`});
     this.submitHandler = this.submitHandler.bind(this);
     this.multipleSelectChangeHandler = this.multipleSelectChangeHandler.bind(this);
     this.aggregateChangeHandler = this.aggregateChangeHandler.bind(this);
@@ -66,17 +68,17 @@ class SQLBuilderForm extends Component {
    *
    */
   async componentDidMount() {
-    const { id } = this.props.match.params
+    const {id} = this.props.match.params
     if (id) {
       const value = await this.sqlResource.get(id);
-      this.setState(state => ({ ...state, value }));
+      this.setState(state => ({...state, value}));
     }
     const rolesOptions = await this.rolesOptions.getAll();
-    this.setState(state => ({ ...state, rolesOptions }));
+    this.setState(state => ({...state, rolesOptions}));
     const permissionsOptions = await this.permissionsOptions.getAll();
-    this.setState(state => ({ ...state, permissionsOptions }));
+    this.setState(state => ({...state, permissionsOptions}));
     const tablesOptions = await this.tablesOptions.getAll();
-    this.setState(state => ({ ...state, tablesOptions }));
+    this.setState(state => ({...state, tablesOptions}));
     const selfFields = await this.selfFieldsResource.getAll();
     let selfFieldsOptions = selfFields.map(field => {
       return {
@@ -84,7 +86,7 @@ class SQLBuilderForm extends Component {
         value: field.name,
       };
     });
-    this.setState(state => ({ ...state, selfFields, selfFieldsOptions }));
+    this.setState(state => ({...state, selfFields, selfFieldsOptions}));
     const relations = await this.relationsResource.getAll();
     let relationsOptions = relations.map(relation => {
       return {
@@ -92,7 +94,7 @@ class SQLBuilderForm extends Component {
         value: relation.name,
       };
     });
-    this.setState(state => ({ ...state, relationsOptions }));
+    this.setState(state => ({...state, relationsOptions}));
   }
 
   /**
@@ -125,7 +127,7 @@ class SQLBuilderForm extends Component {
     if (columns) columns.forEach(c => {
       _columns.push(c.value)
     });
-    this.setState(state => ({ ...state, value: { ...state.value, columns: _columns } }));
+    this.setState(state => ({...state, value: {...state.value, columns: _columns}}));
   };
   /**
    * Смена связей
@@ -135,7 +137,7 @@ class SQLBuilderForm extends Component {
     if (relations) relations.forEach(r => {
       _relations.push(r.value)
     });
-    this.setState(state => ({ ...state, value: { ...state.value, relations: _relations } }));
+    this.setState(state => ({...state, value: {...state.value, relations: _relations}}));
   };
   /**
    * Смена ролей
@@ -166,8 +168,8 @@ class SQLBuilderForm extends Component {
     });
   };
 
-  valueChangeHandler = ({ target: { value, name } }) => {
-    this.setState(state => ({ ...state, value: { ...state.value, [name]: value } }));
+  valueChangeHandler = ({target: {value, name}}) => {
+    this.setState(state => ({...state, value: {...state.value, [name]: value}}));
   }
 
   // обработчик изменения поля title, изменяющий значение поля name
@@ -184,13 +186,13 @@ class SQLBuilderForm extends Component {
   }
 
   // обработчики событий для массива aggregates
-  aggregateChangeHandler({ target: { value, name } }, index) {
+  aggregateChangeHandler({target: {value, name}}, index) {
     this.setState(state => {
       const aggregates = [...state.value.aggregates];
-      aggregates[index] = { ...state.value.aggregates[index], [name]: value };
+      aggregates[index] = {...state.value.aggregates[index], [name]: value};
       return {
         ...state,
-        value: { ...state.value, aggregates }
+        value: {...state.value, aggregates}
       };
     });
   }
@@ -198,10 +200,10 @@ class SQLBuilderForm extends Component {
   aggregateAddHandler() {
     this.setState(state => {
       const aggregates = [...state.value.aggregates];
-      aggregates.push({ type: '', column: '', alias: ''/* , id: this.counter */ });
+      aggregates.push({type: '', column: '', alias: ''/* , id: this.counter */});
       return {
         ...state,
-        value: { ...state.value, aggregates }
+        value: {...state.value, aggregates}
       };
     });
   }
@@ -212,7 +214,7 @@ class SQLBuilderForm extends Component {
       aggregates.splice(index, 1);
       return {
         ...state,
-        value: { ...state.value, aggregates }
+        value: {...state.value, aggregates}
       };
     });
   }
@@ -222,19 +224,19 @@ class SQLBuilderForm extends Component {
       isAggregateRaw: !state.isAggregateRaw,
       value: {
         ...state.value,
-        aggregates: state.isAggregateRaw ? [{ type: '', column: '', alias: '' }] : ''
+        aggregates: state.isAggregateRaw ? [{type: '', column: '', alias: ''}] : ''
       }
     }));
   }
 
   // обработчики событий для массива joins
-  joinChangeHandler({ target: { value, name } }, index) {
+  joinChangeHandler({target: {value, name}}, index) {
     this.setState(state => {
       const joins = [...state.value.joins];
-      joins[index] = { ...state.value.joins[index], [name]: value };
+      joins[index] = {...state.value.joins[index], [name]: value};
       return {
         ...state,
-        value: { ...state.value, joins }
+        value: {...state.value, joins}
       };
     });
   }
@@ -247,7 +249,7 @@ class SQLBuilderForm extends Component {
       });
       return {
         ...state,
-        value: { ...state.value, joins }
+        value: {...state.value, joins}
       };
     });
   }
@@ -258,7 +260,7 @@ class SQLBuilderForm extends Component {
       joins.splice(index, 1);
       return {
         ...state,
-        value: { ...state.value, joins }
+        value: {...state.value, joins}
       };
     });
   }
@@ -267,15 +269,15 @@ class SQLBuilderForm extends Component {
   conditionAddHandler = () => {
     this.setState(state => {
       const conditions = [...state.value.conditions];
-      conditions.push({ condition_type: '' });
+      conditions.push({condition_type: ''});
       return {
         ...state,
-        value: { ...state.value, conditions }
+        value: {...state.value, conditions}
       };
     });
   }
 
-  conditionChangeHandler({ target: { value, name, checked } }, index) {
+  conditionChangeHandler({target: {value, name, checked}}, index) {
     this.setState(state => {
       const conditions = [...state.value.conditions];
       let condition;
@@ -283,21 +285,21 @@ class SQLBuilderForm extends Component {
         switch (value) {
           case 'where':
           case 'or_where':
-            condition = { condition_type: value, column: '', operator: '', value: '' };
+            condition = {condition_type: value, column: '', operator: '', value: ''};
             break;
           case 'where_between':
           case 'where_in':
             condition = index === 0 ?
-              { condition_type: value, not: false, column: '', values: [] } :
-              { condition_type: value, or: false, not: false, column: '', values: [] };
+              {condition_type: value, not: false, column: '', values: []} :
+              {condition_type: value, or: false, not: false, column: '', values: []};
             break;
           case 'where_date':
-            condition = { condition_type: value, type: 'year', column: '', value: '2020' };
+            condition = {condition_type: value, type: 'year', column: '', value: '2020'};
             break;
           case 'where_column':
             condition = index === 0 ?
-              { condition_type: value, first_column: '', operator: '', second_column: '' } :
-              { condition_type: value, or: false, first_column: '', operator: '', second_column: '' };
+              {condition_type: value, first_column: '', operator: '', second_column: ''} :
+              {condition_type: value, or: false, first_column: '', operator: '', second_column: ''};
             break;
 
           default:
@@ -352,7 +354,7 @@ class SQLBuilderForm extends Component {
       conditions[index] = condition;
       return {
         ...state,
-        value: { ...state.value, conditions }
+        value: {...state.value, conditions}
       };
     });
   }
@@ -363,19 +365,19 @@ class SQLBuilderForm extends Component {
       conditions.splice(index, 1);
       return {
         ...state,
-        value: { ...state.value, conditions }
+        value: {...state.value, conditions}
       };
     });
   }
 
   // обработчики событий для массива orderBy
-  orderByChangeHandler({ target: { value, name } }, index) {
+  orderByChangeHandler({target: {value, name}}, index) {
     this.setState(state => {
       const order_by = [...state.value.order_by];
-      order_by[index] = { ...state.value.order_by[index], [name]: value };
+      order_by[index] = {...state.value.order_by[index], [name]: value};
       return {
         ...state,
-        value: { ...state.value, order_by }
+        value: {...state.value, order_by}
       };
     });
   }
@@ -385,10 +387,10 @@ class SQLBuilderForm extends Component {
 
     this.setState(state => {
       const order_by = [...state.value.order_by];
-      order_by.push({ type: 'asc', column: ''/* , id: this.counter */ });
+      order_by.push({type: 'asc', column: ''/* , id: this.counter */});
       return {
         ...state,
-        value: { ...state.value, order_by }
+        value: {...state.value, order_by}
       };
     });
   }
@@ -399,13 +401,13 @@ class SQLBuilderForm extends Component {
       order_by.splice(index, 1);
       return {
         ...state,
-        value: { ...state.value, order_by }
+        value: {...state.value, order_by}
       };
     })
   }
 
   // обработчик изменения для multiple-селектов
-  multipleSelectChangeHandler({ target: { value, name } }) {
+  multipleSelectChangeHandler({target: {value, name}}) {
     this.setState(state => {
       const array = [...state[name]];
 
@@ -416,7 +418,7 @@ class SQLBuilderForm extends Component {
         array.push(value);
       }
 
-      return { ...state, [name]: array };
+      return {...state, [name]: array};
     })
   }
 
@@ -438,7 +440,7 @@ class SQLBuilderForm extends Component {
   }
 
   async submitHandler(e) {
-    const { modelId, id } = this.props.match.params;
+    const {modelId, id} = this.props.match.params;
     e.preventDefault();
 
     const isNameTaken = await fetch(`/admin/ajax/models/${modelId}/sql_builder_name_is_free?name=${this.state.value.name}`)
@@ -463,7 +465,7 @@ class SQLBuilderForm extends Component {
     relations.forEach(r => {
       _relations.push(r.value);
     });
-    this.setState(state => ({ ...state, relations: _relations }))
+    this.setState(state => ({...state, relations: _relations}))
   };
   /**
    * сохранить колонки
@@ -473,209 +475,606 @@ class SQLBuilderForm extends Component {
     columns.forEach(c => {
       _columns.push(c.value)
     });
-    this.setState(state => ({ ...state, columns: _columns }))
+    this.setState(state => ({...state, columns: _columns}))
+  };
+
+  ItemPredicate(query, value) {
+
+    if(!query) {
+      return true
+    }
+    const index = _.findIndex(_.split(value.label, ""), char => {
+      let similar = false;
+      _.split(query, "").forEach(queryChar => {
+        if(queryChar === char) {
+          similar = true
+        }
+      });
+      return similar
+    });
+
+    if(index !== -1) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  tagRenderer = (item) => {
+    return item.label;
+  };
+
+  isItemSelectedRoles = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.value.access.roles || []);
+    return selectedString.includes(itemString);
+  };
+
+  handleItemSelectRoles = (item) => {
+    if (!this.isItemSelectedRoles(item)) {
+      this.setState(state => {
+        return {
+          ...state,
+          value: {
+            ...state.value,
+            access: {
+              ...state.value.access,
+              roles: [...state.value.access.roles, item]
+            }
+          }
+        }
+      });
+    }
+  };
+
+  handleTagRemoveRoles = (item) => {
+    this.setState(state => {
+      return {
+        ...state,
+        value: {
+          ...state.value,
+          access: {
+            ...state.value.access,
+            roles: [...state.value.access.roles].filter((i) => i.label !== item)
+          }
+        }
+      }
+    });
+  };
+
+  isItemSelectedPermissions = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.value.access.permissions || []);
+    return selectedString.includes(itemString);
+  };
+
+  handleItemSelectPermissions = (item) => {
+    if (!this.isItemSelectedPermissions(item)) {
+      this.setState(state => {
+        return {
+          ...state,
+          value: {
+            ...state.value,
+            access: {
+              ...state.value.access,
+              permissions: [...state.value.access.permissions, item]
+            }
+          }
+        }
+      });
+    }
+  };
+
+  handleTagRemovePermissions = (item) => {
+    this.setState(state => {
+      return {
+        ...state,
+        value: {
+          ...state.value,
+          access: {
+            ...state.value.access,
+            permissions: [...state.value.access.permissions].filter((i) => i.label !== item)
+          }
+        }
+      }
+    });
+  };
+
+  isItemSelectedRelations = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.value.relations || []);
+    return selectedString.includes(itemString);
+  };
+
+  handleItemSelectRelations = (item) => {
+    if (!this.isItemSelectedRelations(item)) {
+      this.setState(state => {
+        return {
+          ...state,
+          value: {
+            ...state.value,
+            relations: [...state.value.relations, item]
+          }
+        }
+      });
+    }
+  };
+
+  handleTagRemoveRelations = (item) => {
+    this.setState(state => {
+      return {
+        ...state,
+        value: {
+          ...state.value,
+          relations: [...state.value.relations].filter((i) => i.label !== item)
+        }
+      }
+    });
+  };
+
+  isItemSelectedFields = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.value.columns || []);
+    return selectedString.includes(itemString);
+  };
+
+  handleItemSelectFields = (item) => {
+    if (!this.isItemSelectedFields(item)) {
+      this.setState(state => {
+        return {
+          ...state,
+          value: {
+            ...state.value,
+            columns: [...state.value.columns, item]
+          }
+        }
+      });
+    }
+  };
+
+  handleTagRemoveFields = (item) => {
+    this.setState(state => {
+      return {
+        ...state,
+        value: {
+          ...state.value,
+          columns: [...state.value.columns].filter((i) => i.label !== item)
+        }
+      }
+    });
+  };
+
+  isItemSelectedFieldsGroupBy = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.value.group_by || []);
+    return selectedString.includes(itemString);
+  };
+
+  handleItemSelectFieldsGroupBy = (item) => {
+    if (!this.isItemSelectedFieldsGroupBy(item)) {
+      this.setState(state => {
+        return {
+          ...state,
+          value: {
+            ...state.value,
+            group_by: [...state.value.group_by, item]
+          }
+        }
+      });
+    }
+  };
+
+  handleTagRemoveFieldsGroupBy = (item) => {
+    this.setState(state => {
+      return {
+        ...state,
+        value: {
+          ...state.value,
+          group_by: [...state.value.group_by].filter((i) => i.label !== item)
+        }
+      }
+    });
   };
 
   render() {
-    const { title, name, relations, columns, aggregates, joins, conditions, order_by, group_by, offset, limit } = this.state.value;
-    const { roles, permissions } = this.state.value.access;
-    const { selfFieldsOptions, permissionsOptions, relationsOptions, rolesOptions, tablesOptions, isAggregateRaw /* isOffsetDisable, isLimitDisable  */ } = this.state;
-    const { modelId } = this.props.match.params;
+    const {
+      title,
+      name,
+      relations,
+      columns,
+      aggregates,
+      joins,
+      conditions,
+      order_by,
+      group_by,
+      offset,
+      limit
+    } = this.state.value;
+    const {roles, permissions} = this.state.value.access;
+    const {
+      selfFieldsOptions,
+      permissionsOptions,
+      relationsOptions,
+      rolesOptions,
+      tablesOptions,
+      isAggregateRaw /* isOffsetDisable, isLimitDisable  */
+    } = this.state;
+    const {modelId} = this.props.match.params;
     return <form className="admin-form" onSubmit={this.submitHandler}>
-      <div className="row">
-        <div className="form-group  col-6">
-          <label htmlFor="title">Title</label>
-          <input type="text" id="title" required name="title"
-            value={title}
-            onChange={this.titleChangeHandler}
-            className="form-control" />
+      <div className="form-queries">
+        <div className="form-group__inline-wrapper">
+          <div className="form-group form-group_width47">
+            <label htmlFor="title">Title</label>
+            {/*<input type="text" id="title" required name="title"*/}
+            {/*       value={title}*/}
+            {/*       onChange={this.titleChangeHandler}*/}
+            {/*       className="form-control"/>*/}
+            <InputGroup type="text"
+                        id="title"
+                        required
+                        name="title"
+                        value={title}
+                        onChange={this.titleChangeHandler}
+                        className="form-control-blueprint"
+            />
+          </div>
+
+          <div className="form-group form-group_width47">
+            <label htmlFor="name">Name</label>
+            {/*<input type="text" id="name" required name="name"*/}
+            {/*       value={name}*/}
+            {/*       onChange={this.valueChangeHandler}*/}
+            {/*       className="form-control"/>*/}
+
+            <InputGroup type="text"
+                        id="name"
+                        required
+                        name="name"
+                        value={name}
+                        onChange={this.valueChangeHandler}
+                        className="form-control-blueprint"
+            />
+          </div>
         </div>
 
-        <div className="form-group col-6 ">
-          <label htmlFor="name">Name</label>
-          <input type="text" id="name" required name="name"
-            value={name}
-            onChange={this.valueChangeHandler}
-            className="form-control" />
-        </div>
+        <div className="form-group__inline-wrapper">
+          <div className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-users form-group_width47">
+            <label htmlFor="relations">With</label>
+            {/*<AltrpSelect*/}
+            {/*  closeMenuOnSelect={false}*/}
+            {/*  onChange={this.changeRelations}*/}
+            {/*  value={_.filter(relationsOptions, r => relations.indexOf(r.value) >= 0)}*/}
+            {/*  options={relationsOptions}*/}
+            {/*  isMulti={true}/>*/}
 
-        <div className="form-group col-6">
-          <label htmlFor="relations">With</label>
-          <AltrpSelect
-            closeMenuOnSelect={false}
-            onChange={this.changeRelations}
-            value={_.filter(relationsOptions, r => relations.indexOf(r.value) >= 0)}
-            options={relationsOptions}
-            isMulti={true} />
-        </div>
+            <MultiSelect tagRenderer={this.tagRenderer} id="relations"
+                         items={relationsOptions}
+                         itemPredicate={this.ItemPredicate}
+                         noResults={<MenuItem disabled={true} text="No results." />}
+                         fill={true}
+                         placeholder="Select..."
+                         selectedItems={this.state.value.relations}
+                         onItemSelect={this.handleItemSelectRelations}
+                         itemRenderer={(item, {handleClick, modifiers, query}) => {
+                           return (
+                             <MenuItem
+                               icon={this.isItemSelectedRelations(item) ? "tick" : "blank"}
+                               text={item.label}
+                               key={item.value}
+                               onClick={handleClick}
+                             />
+                           )
+                         }}
+                         tagInputProps={{
+                           onRemove: this.handleTagRemoveRelations,
+                           large: false,
+                         }}
+                         popoverProps={{
+                           usePortal: false
+                         }}
+            />
+          </div>
 
-        <div className="form-group col-6">
-          <label htmlFor="columns">Fields</label>
+          <div className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-users form-group_width47">
+            <label htmlFor="columns">Fields</label>
 
-          <AltrpSelect
-            closeMenuOnSelect={false}
-            onChange={this.changeColumns}
-            value={_.filter(selfFieldsOptions, c => columns.indexOf(c.value) >= 0)}
-            options={selfFieldsOptions}
-            isMulti={true} />
+            {/*<AltrpSelect*/}
+            {/*  closeMenuOnSelect={false}*/}
+            {/*  onChange={this.changeColumns}*/}
+            {/*  value={_.filter(selfFieldsOptions, c => columns.indexOf(c.value) >= 0)}*/}
+            {/*  options={selfFieldsOptions}*/}
+            {/*  isMulti={true}/>*/}
+
+
+            <MultiSelect tagRenderer={this.tagRenderer} id="fields"
+                         items={selfFieldsOptions}
+                         itemPredicate={this.ItemPredicate}
+                         noResults={<MenuItem disabled={true} text="No results." />}
+                         fill={true}
+                         placeholder="Select..."
+                         selectedItems={this.state.value.columns}
+                         onItemSelect={this.handleItemSelectFields}
+                         itemRenderer={(item, {handleClick, modifiers, query}) => {
+                           return (
+                             <MenuItem
+                               icon={this.isItemSelectedFields(item) ? "tick" : "blank"}
+                               text={item.label}
+                               key={item.value}
+                               onClick={handleClick}
+                             />
+                           )
+                         }}
+                         tagInputProps={{
+                           onRemove: this.handleTagRemoveFields,
+                           large: false,
+                         }}
+                         popoverProps={{
+                           usePortal: false
+                         }}
+            />
+          </div>
         </div>
       </div>
 
-      <h2 className="admin-form__subheader centred">Access</h2>
+      <div className="form-queries">
+        <h2 className="admin-form__subheader centred">Access</h2>
 
-      <div className="form-group__inline-wrapper">
-        <div className="form-group form-group_width47">
-          <label htmlFor="roles">Roles</label>
+        <div className="form-group__inline-wrapper">
+          <div className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-users form-group_width47">
+            <label htmlFor="roles">Roles</label>
 
-          <AltrpSelect id="roles"
-            closeMenuOnSelect={false}
-            value={_.filter(rolesOptions, r => roles.indexOf(r.value) >= 0)}
-            isMulti={true}
-            onChange={this.changeRoles}
-            options={rolesOptions} />
-        </div>
+            {/*<AltrpSelect id="roles"*/}
+            {/*             closeMenuOnSelect={false}*/}
+            {/*             value={_.filter(rolesOptions, r => roles.indexOf(r.value) >= 0)}*/}
+            {/*             isMulti={true}*/}
+            {/*             onChange={this.changeRoles}*/}
+            {/*             options={rolesOptions}/>*/}
 
-        <div className="form-group form-group_width47">
-          <label htmlFor="permissions">Permissions</label>
-          <AltrpSelect id="roles"
-            value={_.filter(permissionsOptions, p => permissions.indexOf(p.value) >= 0)}
-            closeMenuOnSelect={false}
-            isMulti={true}
-            onChange={this.changePermission}
-            options={permissionsOptions} />
+
+            <MultiSelect tagRenderer={this.tagRenderer} id="roles"
+                         items={rolesOptions}
+                         itemPredicate={this.ItemPredicate}
+                         noResults={<MenuItem disabled={true} text="No results." />}
+                         fill={true}
+                         placeholder="Select..."
+                         selectedItems={this.state.value.access.roles}
+                         onItemSelect={this.handleItemSelectRoles}
+                         itemRenderer={(item, {handleClick, modifiers, query}) => {
+                           return (
+                             <MenuItem
+                               icon={this.isItemSelectedRoles(item) ? "tick" : "blank"}
+                               text={item.label}
+                               key={item.value}
+                               onClick={handleClick}
+                             />
+                           )
+                         }}
+                         tagInputProps={{
+                           onRemove: this.handleTagRemoveRoles,
+                           large: false,
+                         }}
+                         popoverProps={{
+                           usePortal: false
+                         }}
+            />
+          </div>
+
+          <div className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-users form-group_width47">
+            <label htmlFor="permissions">Permissions</label>
+            {/*<AltrpSelect id="roles"*/}
+            {/*             value={_.filter(permissionsOptions, p => permissions.indexOf(p.value) >= 0)}*/}
+            {/*             closeMenuOnSelect={false}*/}
+            {/*             isMulti={true}*/}
+            {/*             onChange={this.changePermission}*/}
+            {/*             options={permissionsOptions}/>*/}
+
+            <MultiSelect tagRenderer={this.tagRenderer} id="permissions"
+                         items={permissionsOptions}
+                         itemPredicate={this.ItemPredicate}
+                         noResults={<MenuItem disabled={true} text="No results." />}
+                         fill={true}
+                         placeholder="Select..."
+                         selectedItems={this.state.value.access.permissions}
+                         onItemSelect={this.handleItemSelectPermissions}
+                         itemRenderer={(item, {handleClick, modifiers, query}) => {
+                           return (
+                             <MenuItem
+                               icon={this.isItemSelectedPermissions(item) ? "tick" : "blank"}
+                               text={item.label}
+                               key={item.value}
+                               onClick={handleClick}
+                             />
+                           )
+                         }}
+                         tagInputProps={{
+                           onRemove: this.handleTagRemovePermissions,
+                           large: false,
+                         }}
+                         popoverProps={{
+                           usePortal: false
+                         }}
+            />
+          </div>
         </div>
       </div>
 
-      <h2 className="admin-form__subheader centred">Joins</h2>
-      {joins.map((item, index) => <Fragment key={index}>
-        {index !== 0 && <hr />}
-        <div className="text-right">
-          <button className="btn btn_failure" type="button" onClick={() => this.joinDeleteHandler(index)}>
-            ✖
-          </button>
+      <div className="form-queries">
+        <h2 className="admin-form__subheader centred">Group By</h2>
+
+        <div className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-users fields__groupBy">
+          <label htmlFor="group_by">Fields</label>
+
+          {/*<AltrpSelect*/}
+          {/*  id="group_by"*/}
+          {/*  closeMenuOnSelect={false}*/}
+          {/*  onChange={this.changeGroupBy}*/}
+          {/*  value={_.filter(selfFieldsOptions, f => group_by.indexOf(f.value) >= 0)}*/}
+          {/*  options={selfFieldsOptions}*/}
+          {/*  isMulti={true}/>*/}
+
+
+          <MultiSelect tagRenderer={this.tagRenderer} id="group_by"
+                       items={selfFieldsOptions}
+                       itemPredicate={this.ItemPredicate}
+                       noResults={<MenuItem disabled={true} text="No results." />}
+                       fill={true}
+                       placeholder="Select..."
+                       selectedItems={this.state.value.group_by}
+                       onItemSelect={this.handleItemSelectFieldsGroupBy}
+                       itemRenderer={(item, {handleClick, modifiers, query}) => {
+                         return (
+                           <MenuItem
+                             icon={this.isItemSelectedFieldsGroupBy(item) ? "tick" : "blank"}
+                             text={item.label}
+                             key={item.value}
+                             onClick={handleClick}
+                           />
+                         )
+                       }}
+                       tagInputProps={{
+                         onRemove: this.handleTagRemoveFieldsGroupBy,
+                         large: false,
+                       }}
+                       popoverProps={{
+                         usePortal: false
+                       }}
+          />
         </div>
-        <JoinComponent item={item}
-          tablesOptions={tablesOptions}
-          sourceColumnOptions={selfFieldsOptions}
-          changeHandler={e => this.joinChangeHandler(e, index)}
-        />
-      </Fragment>)}
-      <div className="centred">
-        <button className="btn btn_success" type="button" onClick={this.joinAddHandler}>
-          + New Join
-        </button>
       </div>
 
-      <h2 className="admin-form__subheader centred">Aggregates</h2>
+      <div className="queries__button">
+        <h2 className="admin-form__subheader centred">Order By</h2>
 
-      {(!!aggregates.length || isAggregateRaw) &&
-        <div className="text-center">
-          <button className={`btn ${isAggregateRaw ? 'btn_success' : ''}`} type="button" onClick={this.aggregateToggle}>
-            Aggregate Raw
-          </button>
-        </div>}
-
-      {isAggregateRaw ?
-        <div className="form-group">
-          <input type="text" id="aggregates" required name="aggregates"
-            value={aggregates}
-            onChange={this.valueChangeHandler}
-            className="form-control" />
-        </div> :
-        aggregates.map((item, index) => <Fragment key={index}>
-          {index !== 0 && <hr />}
+        {order_by.map((item, index) => <Fragment key={index}>
+          {index !== 0 && <hr/>}
           <div className="text-right">
-            <button className="btn btn_failure" type="button" onClick={() => this.aggregateDeleteHandler(index)}>
+            <button className="btn btn_failure" type="button" onClick={() => this.orderByDeleteHandler(index)}>
               ✖
             </button>
           </div>
-          <AggregateComponent item={item}
+          <OrderByComponent
+            item={item}
             columnsOptions={selfFieldsOptions}
-            changeHandler={e => this.aggregateChangeHandler(e, index)}
+            changeHandler={e => this.orderByChangeHandler(e, index)}
           />
         </Fragment>)}
-
-      {!isAggregateRaw && <div className="centred">
-        <button className="btn btn_success" type="button" onClick={this.aggregateAddHandler}>
-          + New Aggregate
-        </button>
-      </div>}
-
-      <h2 className="admin-form__subheader centred">Conditions</h2>
-
-      {conditions.map((condition, index) => <Fragment key={index}>
-        <div className="text-right">
-          <button className="btn btn_failure" type="button" onClick={() => this.conditionDeleteHandler(index)}>
-            ✖
+        <div className="centred">
+          <button className="btn btn_success" type="button" onClick={this.orderByAddHandler}>
+            + New Order
           </button>
         </div>
-        {index !== 0 && <hr />}
-        <ConditionComponent
-          item={condition}
-          isFirst={index === 0}
-          columnsOptions={selfFieldsOptions}
-          changeHandler={e => this.conditionChangeHandler(e, index)}
-        />
-
-      </Fragment>)}
-      <div className="centred">
-        <button className="btn btn_success" type="button" onClick={this.conditionAddHandler}>
-          + New Condition
-        </button>
       </div>
 
-      <h2 className="admin-form__subheader centred">Order By</h2>
+     <div className="queries__button">
+       <h2 className="admin-form__subheader centred">Joins</h2>
+       {joins.map((item, index) => <Fragment key={index}>
+         {index !== 0 && <hr/>}
+         <div className="text-right">
+           <button className="btn btn_failure" type="button" onClick={() => this.joinDeleteHandler(index)}>
+             ✖
+           </button>
+         </div>
+         <JoinComponent item={item}
+                        tablesOptions={tablesOptions}
+                        sourceColumnOptions={selfFieldsOptions}
+                        changeHandler={e => this.joinChangeHandler(e, index)}
+         />
+       </Fragment>)}
+       <div className="centred">
+         <button className="btn btn_success" type="button" onClick={this.joinAddHandler}>
+           + New Join
+         </button>
+       </div>
+     </div>
 
-      {order_by.map((item, index) => <Fragment key={index}>
-        {index !== 0 && <hr />}
-        <div className="text-right">
-          <button className="btn btn_failure" type="button" onClick={() => this.orderByDeleteHandler(index)}>
-            ✖
-          </button>
-        </div>
-        <OrderByComponent
-          item={item}
-          columnsOptions={selfFieldsOptions}
-          changeHandler={e => this.orderByChangeHandler(e, index)}
-        />
-      </Fragment>)}
-      <div className="centred">
-        <button className="btn btn_success" type="button" onClick={this.orderByAddHandler}>
-          + New Order
-        </button>
-      </div>
+     <div className="queries__button">
+       <h2 className="admin-form__subheader centred">Aggregates</h2>
 
-      <h2 className="admin-form__subheader centred">Group By</h2>
+       {(!!aggregates.length || isAggregateRaw) &&
+       <div className="text-center">
+         <button className={`btn ${isAggregateRaw ? 'btn_success' : ''}`} type="button" onClick={this.aggregateToggle}>
+           Aggregate Raw
+         </button>
+       </div>}
 
-      <div className="form-group">
-        <label htmlFor="group_by">Fields</label>
+       {isAggregateRaw ?
+         <div className="form-group">
+           <input type="text" id="aggregates" required name="aggregates"
+                  value={aggregates}
+                  onChange={this.valueChangeHandler}
+                  className="form-control"/>
+         </div> :
+         aggregates.map((item, index) => <Fragment key={index}>
+           {index !== 0 && <hr/>}
+           <div className="text-right">
+             <button className="btn btn_failure" type="button" onClick={() => this.aggregateDeleteHandler(index)}>
+               ✖
+             </button>
+           </div>
+           <AggregateComponent item={item}
+                               columnsOptions={selfFieldsOptions}
+                               changeHandler={e => this.aggregateChangeHandler(e, index)}
+           />
+         </Fragment>)}
 
-        <AltrpSelect
-          id="group_by"
-          closeMenuOnSelect={false}
-          onChange={this.changeGroupBy}
-          value={_.filter(selfFieldsOptions, f => group_by.indexOf(f.value) >= 0)}
-          options={selfFieldsOptions}
-          isMulti={true} />
-      </div>
+       {!isAggregateRaw && <div className="centred">
+         <button className="btn btn_success" type="button" onClick={this.aggregateAddHandler}>
+           + New Aggregate
+         </button>
+       </div>}
+     </div>
 
-      <h2 className="admin-form__subheader centred">Pagination Settings</h2>
+     <div className="queries__button">
+       <h2 className="admin-form__subheader centred">Conditions</h2>
 
-      <div className="centred">
-        <button className="btn btn_success" type="button"
-          onClick={() => this.setState({ value: { ...this.state.value, limit: 'REQUEST:pageSize' } })}
-        >
-          Add Limit
-        </button>
-      </div>
+       {conditions.map((condition, index) => <Fragment key={index}>
+         <div className="text-right">
+           <button className="btn btn_failure" type="button" onClick={() => this.conditionDeleteHandler(index)}>
+             ✖
+           </button>
+         </div>
+         {index !== 0 && <hr/>}
+         <ConditionComponent
+           item={condition}
+           isFirst={index === 0}
+           columnsOptions={selfFieldsOptions}
+           changeHandler={e => this.conditionChangeHandler(e, index)}
+         />
 
-      {limit && <div className="centred mt-3">
-        <button className="btn btn_success" type="button"
-          onClick={() => this.setState({ value: { ...this.state.value, offset: 'REQUEST:pageSize * (REQUEST:page - 1)' } })}
-        >
-          Add Offset
-        </button>
-      </div>}
+       </Fragment>)}
+       <div className="centred">
+         <button className="btn btn_success" type="button" onClick={this.conditionAddHandler}>
+           + New Condition
+         </button>
+       </div>
+     </div>
+
+
+
+     <div className="queries__button">
+       <h2 className="admin-form__subheader centred">Pagination Settings</h2>
+
+       <div className="centred">
+         <button className="btn btn_success" type="button"
+                 onClick={() => this.setState({value: {...this.state.value, limit: 'REQUEST:pageSize'}})}
+         >
+           Add Limit
+         </button>
+       </div>
+
+       {limit && <div className="centred mt-3">
+         <button className="btn btn_success" type="button"
+                 onClick={() => this.setState({
+                   value: {
+                     ...this.state.value,
+                     offset: 'REQUEST:pageSize * (REQUEST:page - 1)'
+                   }
+                 })}
+         >
+           Add Offset
+         </button>
+       </div>}
+     </div>
 
       <div className="row">
         {offset && <div className="form-group  col-6">
@@ -693,10 +1092,10 @@ class SQLBuilderForm extends Component {
             /> Blocked
           </label> */}
           <input type="text" id="offset" required name="offset"
-            value={offset}
+                 value={offset}
             // disabled={isOffsetDisable}
-            onChange={this.valueChangeHandler}
-            className="form-control" />
+                 onChange={this.valueChangeHandler}
+                 className="form-control"/>
         </div>}
 
         {limit && <div className="form-group col-6 ">
@@ -714,18 +1113,18 @@ class SQLBuilderForm extends Component {
             /> Blocked
           </label> */}
           <input type="text" id="limit" required name="limit"
-            value={limit}
+                 value={limit}
             // disabled={isLimitDisable}
-            onChange={this.valueChangeHandler}
-            className="form-control" />
+                 onChange={this.valueChangeHandler}
+                 className="form-control"/>
         </div>}
       </div>
 
-      <div className="btn__wrapper btn_add centred">
+      <div className="btn__wrapper btn_add">
         <button className="btn btn_success" type="submit">Save</button>
         <Link className="btn" to="/admin/tables/models">Cancel</Link>
       </div>
-    </form >
+    </form>
   }
 }
 

@@ -82,6 +82,17 @@ class GalleryWidget extends Component {
 
   _componentDidMount() {
     this.updateRepeater()
+
+    let repeater = this.props.element.getResponsiveSetting("repeater_simple_settings", "",[]);
+    const orderBy = this.state.settings.order_by_settings || "default";
+
+    if(!isEditor() && this.state.simpleRepeater.length === 0 && repeater.length !== 0) {
+      if(orderBy === "random" && !this.state.shuffled) {
+        repeater = _.shuffle(repeater)
+      };
+
+      this.setState({simpleRepeater: repeater})
+    }
   }
 
   _componentDidUpdate(prevProps, prevState) {
@@ -137,7 +148,7 @@ class GalleryWidget extends Component {
 
     if(simpleRepeater.length > 0) {
       images = simpleRepeater.map((img, idx) => {
-        const url = img.simple_media_settings ? img.simple_media_settings.url : '/img/nullImage.png';
+        const url = img?.simple_media_settings ? img?.simple_media_settings.url : '/img/nullImage.png';
 
         const imageProps = {
           className: "altrp-gallery-img",
@@ -147,12 +158,10 @@ class GalleryWidget extends Component {
         let containerClassNames = "altrp-gallery-img-container";
 
         if(hoverAnimationType && hoverAnimationType !== "none" ) {
-          console.log(hoverAnimationType)
           containerClassNames += " altrp-hover-parent-image";
         };
 
         if(overlayAnimationType && overlayAnimationType !== "none" ) {
-          console.log(overlayAnimationType)
           containerClassNames += " altrp-hover-parent-overlay";
         };
 
@@ -166,8 +175,8 @@ class GalleryWidget extends Component {
         const overlayProps = {
           animation: overlayAnimationType,
           animationDuration: overlayAnimationDuration.size,
-          description: img.simple_description_media_settings,
-          title: img.simple_title_media_settings,
+          description: img?.simple_description_media_settings,
+          title: img?.simple_title_media_settings,
           type: overlayType
         }
 
@@ -185,7 +194,7 @@ class GalleryWidget extends Component {
 
         if(hoverAnimationType && hoverAnimationType !== "none" ) {
           image = <div {...containerProps}>
-            <HoverImage type={hoverAnimationType} hoverParent="altrp-gallery-img-container" transition={hoverAnimationDuration.size} component={Image} attributes={imageProps}/>
+            {/*<HoverImage type={hoverAnimationType} hoverParent="altrp-gallery-img-container" transition={hoverAnimationDuration.size} component={Image} attributes={imageProps}/>*/}
             {
               overlaySwitcher ? <Overlay {...overlayProps}/> : null
             }
@@ -209,7 +218,7 @@ class GalleryWidget extends Component {
 
     let imagesSrcs = [];
     if(linkType === "media" && simpleRepeater.length > 0) {
-      imagesSrcs = simpleRepeater.map(img => img.simple_media_settings.url)
+      imagesSrcs = simpleRepeater.map(img => img?.simple_media_settings?.url)
     }
 
     return simpleRepeater.length > 0 ? (

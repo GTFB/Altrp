@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Altrp\Accessor;
 use App\Altrp\Controller;
+use App\Altrp\Customizer;
 use App\Altrp\Model;
 use App\Altrp\Query;
 use App\Altrp\Source;
@@ -17,10 +18,12 @@ use App\Observers\AltrpSourceObserver;
 use App\Observers\AltrpSQLEditorObserver;
 use App\Observers\AltrpValidationFieldObserver;
 use App\Observers\AltrpValidationRuleObserver;
+use App\Observers\CustomizerObserver;
 use App\Observers\PageObserver;
 use App\Observers\UserObserver;
 use App\Page;
 use App\Services\AltrpImportExportService;
+use App\Services\AltrpPluginsService;
 use App\Services\AltrpSettingsService;
 use App\Services\AltrpUpdateService;
 use App\SQLEditor;
@@ -53,6 +56,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Services\AltrpUpdateService', function ($app) {
             return new AltrpUpdateService();
         });
+        $this->app->bind('App\Services\AltrpPluginsService', function ($app) {
+            return new AltrpPluginsService();
+        });
         $this->app->bind('App\Services\AltrpSettingsService', function ($app) {
             return new AltrpSettingsService();
         });
@@ -75,6 +81,7 @@ class AppServiceProvider extends ServiceProvider
         Column::observe(AltrpColumnObserver::class);
         Relationship::observe(AltrpRelationshipObserver::class);
         Model::observe(AltrpModelObserver::class);
+        Customizer::observe(CustomizerObserver::class);
         Controller::observe(AltrpControllerObserver::class);
         Query::observe(AltrpQueryObserver::class);
         SQLEditor::observe(AltrpSQLEditorObserver::class);

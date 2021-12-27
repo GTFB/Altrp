@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import 'react-tabs/style/react-tabs.scss';
 import { Link } from 'react-router-dom'
 
 import AdminTable from "./AdminTable";
-import Pagination from "./Pagination";
 import Resource from "../../../editor/src/js/classes/Resource";
+import UserTopPanel from "./UserTopPanel";
 
 const columns = [
   {
@@ -22,6 +21,10 @@ const columns = [
   {
     name: 'description',
     title: 'Description'
+  },
+  {
+    name: 'categories',
+    title: 'Categories'
   },
   {
     name: 'updated_at',
@@ -59,13 +62,15 @@ export default class SQLEditors extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      sql_editorsPagination: initPaginationProps,
+      currentPage: 1,
       sql_editors: [],
+      activeHeader: 0,
       sqlEditorSearch: '',
       sorting: {}
     };
     this.changePage = this.changePage.bind(this);
     this.sql_editorsResource = new Resource({ route: '/admin/ajax/sql_editors' });
+    this.itemsPerPage = 20;
   }
 
   changePage(currentPage, pagination) {
@@ -86,6 +91,24 @@ export default class SQLEditors extends Component {
       ...state,
       sql_editors
     }))
+
+    window.addEventListener("scroll", this.listenScrollHeader)
+
+    return () => {
+      window.removeEventListener("scroll", this.listenScrollHeader)
+    }
+  }
+
+  listenScrollHeader = () => {
+    if (window.scrollY > 4 && this.state.activeHeader !== 1) {
+      this.setState({
+        activeHeader: 1
+      })
+    } else if (window.scrollY < 4 && this.state.activeHeader !== 0) {
+      this.setState({
+        activeHeader: 0
+      })
+    }
   }
 
   getSqlEditors = async () => {
@@ -101,27 +124,41 @@ export default class SQLEditors extends Component {
     this.setState({ sorting: { order_by, order } }, this.getSqlEditors);
   }
 
-  searchSqlEditors = e => {
+  searchSqlEditors = (e) => {
     e.preventDefault();
     this.getSqlEditors();
   }
 
+  changeSQLEditors = (e) => {
+    this.setState({ sqlEditorSearch: e.target.value })
+  }
+
   render() {
-    const { sql_editors, sql_editorsPagination, sqlEditorSearch, sorting } = this.state;
+    const { sql_editors, sql_editorsPagination, sqlEditorSearch, sorting, currentPage } = this.state;
+
+    let sql_editorsMap = sql_editors.map(sql_editor => ({
+      ...sql_editor,
+      editUrl: '/admin/tables/sql_editors/edit/' + sql_editor.id
+    }))
+
     return <div className="admin-settings admin-page">
-      <div className="admin-heading">
-        <div className="admin-breadcrumbs">
-          <a className="admin-breadcrumbs__link" href="#">SQL Editors</a>
-          <span className="admin-breadcrumbs__separator">/</span>
-          <span className="admin-breadcrumbs__current">SQL Editors</span>
-        </div>
-        <Link className="btn" to={`/admin/tables/sql_editors/add`}>Add New</Link>
+      <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
+       <div className="admin-heading-left">
+         <div className="admin-breadcrumbs">
+           <a className="admin-breadcrumbs__link" href="#">SQL Queries</a>
+           <span className="admin-breadcrumbs__separator">/</span>
+           <span className="admin-breadcrumbs__current">SQL Queries</span>
+         </div>
+         <Link className="btn" to={`/admin/tables/sql_editors/add`}>Add New</Link>
+         <div className="admin-filters">
+            <span className="admin-filters__current">
+              All ({this.state.sql_editors.length || "0"})
+            </span>
+         </div>
+       </div>
+        <UserTopPanel />
       </div>
       <div className="admin-content">
-        <form className="admin-panel py-2" onSubmit={this.searchSqlEditors}>
-          <input className="input-sm mr-2" value={sqlEditorSearch} onChange={e => this.setState({ sqlEditorSearch: e.target.value })} />
-          <button type="button" onClick={this.getSqlEditors} className="btn btn_bare admin-users-button">Search</button>
-        </form>
         <AdminTable
           columns={columns}
           quickActions={[{
@@ -134,21 +171,33 @@ export default class SQLEditors extends Component {
             route: '/admin/ajax/sql_editors/:id',
             method: 'delete',
             confirm: 'Are You Sure?',
-            // after: () => this.updateModels(this.state.currentPage, this.state.activeTemplateArea),
+            after: () => { this.getSqlEditors() },
             className: 'quick-action-menu__item_danger',
-            title: 'Trash'
+            title: 'Delete'
           }]}
-          rows={sql_editors.map(sql_editor => ({
-            ...sql_editor,
-            editUrl: '/admin/tables/sql_editors/edit/' + sql_editor.id
-          }))}
+          rows={sql_editorsMap.slice(
+            currentPage * this.itemsPerPage - this.itemsPerPage,
+            currentPage * this.itemsPerPage
+          )}
           sortingHandler={this.sortingHandler}
           sortingField={sorting.order_by}
-        />
-        <Pagination pageCount={sql_editorsPagination.pageCount}
-          currentPage={sql_editorsPagination.currentPage}
-          changePage={currentPage => this.changePage(currentPage, "sql_editorsPagination")}
-          itemsCount={sql_editors.length}
+
+          searchTables={{
+            submit: this.searchSqlEditors,
+            value: sqlEditorSearch,
+            change: (e) => this.changeSQLEditors(e),
+          }}
+
+          pageCount={Math.ceil(sql_editorsMap.length / this.itemsPerPage) || 1}
+          currentPage={currentPage}
+          changePage={page => {
+            if (currentPage !== page) {
+              this.setState({ currentPage: page });
+            }
+          }}
+          itemsCount={sql_editorsMap.length}
+
+          openPagination={true}
         />
       </div>
     </div>

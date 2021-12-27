@@ -1,4 +1,6 @@
-import React, { Component,  } from "react";
+import React, { Component } from "react";
+
+const {isEditor} = window.altrpHelpers
 
 class RootComponent extends Component {
   constructor(props) {
@@ -23,18 +25,20 @@ class RootComponent extends Component {
     //     .map(item => item.trim());
     //   this.props.setDefaultTriggers(hiddenElementsTriggers);
     // }
-
-    const actionsManager = (
+    if(! isEditor() && this.props.element.getResponsiveSetting("page_load_actions", [])?.length){
+      const actionsManager = (
         await import(
           /* webpackChunkName: 'ActionsManager' */"../../../../front-app/src/js/classes/modules/ActionsManager.js"
-            )
-    ).default;
-    await actionsManager.callAllWidgetActions(
+          )
+      ).default;
+
+      await actionsManager.callAllWidgetActions(
         this.props.element.getIdForAction(),
         'load',
         this.props.element.getResponsiveSetting("page_load_actions", []),
         this.props.element
-    );
+      );
+    }
   }
 
   render() {
@@ -42,6 +46,7 @@ class RootComponent extends Component {
       .getSelector()
       .replace(".", "")} ${this.props.element.hasCardModel() ? 'sections-wrapper_card' : ''}`;
     let ElementWrapper = this.props.ElementWrapper || window.ElementWrapper;
+
     return (
       <div className={classes}>
         {this.props.element.children.map(section => {

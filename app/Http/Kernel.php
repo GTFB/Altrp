@@ -18,7 +18,7 @@ class Kernel extends HttpKernel
     \App\Http\Middleware\CheckForMaintenanceMode::class,
     \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
     \App\Http\Middleware\TrimStrings::class,
-    \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+    \App\Http\Middleware\AltrpConvertEmptyStringsToNull::class,
     \Illuminate\Session\Middleware\StartSession::class,
   ];
 
@@ -58,6 +58,7 @@ class Kernel extends HttpKernel
     'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
     'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
     'can' => \Illuminate\Auth\Middleware\Authorize::class,
+    'cors' => \App\Http\Middleware\Cors::class,
     'guest' => \App\Http\Middleware\ResponseIfAuthenticated::class,
     'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
     'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
@@ -65,7 +66,7 @@ class Kernel extends HttpKernel
     'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     'installation.checker' => \App\Http\Middleware\InstallationChecker::class,
     'admin' => \App\Http\Middleware\IsAdmin::class,
-      'inputStream' => \App\Http\Middleware\ParseMultipartFormDataInputForNonPostRequests::class
+    'inputStream' => \App\Http\Middleware\ParseMultipartFormDataInputForNonPostRequests::class
   ];
 
   /**

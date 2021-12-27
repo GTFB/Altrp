@@ -14,4 +14,11 @@ class Menu extends Model
     'settings',
   ];
   use SoftDeletes;
+  protected $appends = [
+    'editUrl'
+  ];
+
+  public function getEditUrlAttribute(){
+    return '/admin/menus/' . $this->id;
+  }
 }

@@ -6,6 +6,7 @@ const {
   replaceContentWithData,
   renderAssetIcon,
   renderAsset,
+  getDataByPath,
   Resource,
   getDataFromLocalStorage
 } = window.altrpHelpers;
@@ -16,6 +17,13 @@ const MenuItem = window.altrpLibs.Blueprint.MenuItem;
 const Select = window.altrpLibs.BlueprintSelect.Select;
 
 (window.globalDefaults = window.globalDefaults || []).push(`
+.bp3-popover {
+  width: 100%;
+}
+
+ul.bp3-menu {
+  min-width: initial;
+}
 
 .altrp-field {
   border-style: solid;
@@ -391,7 +399,7 @@ const AltrpFieldContainer = styled.div`
   ${({settings: {content_label_position_type}}) => {
   switch (content_label_position_type) {
     case "left": {
-      return "display: flex";
+      return "display: flex;";
     }
     case "right": {
       return "display:flex;flex-direction:row-reverse;justify-content:flex-end;";
@@ -399,6 +407,10 @@ const AltrpFieldContainer = styled.div`
   }
   return "";
 }}
+
+  & .bp3-popover-wrapper {
+    width: 100%
+  }
 `;
 
 class InputSelectWidget extends Component {
@@ -424,18 +436,25 @@ class InputSelectWidget extends Component {
       ),
       paramsForUpdate: null,
     };
+
     this.popoverProps = {
       usePortal: true,
+      targetClassName: "altrp-select-popover",
       position: 'bottom',
       minimal: props.element.getResponsiveSetting('minimal'),
       // isOpen:true ,
       portalClassName: `altrp-portal altrp-portal_input-select altrp-portal${this.props.element.getId()} ${this.state.widgetDisabled ? 'pointer-event-none' : ''}`,
       portalContainer: window.EditorFrame ? window.EditorFrame.contentWindow.document.body : document.body,
     };
+    if(! isEditor()){
+      // this.popoverProps.boundary = '#front-app'
+    }
     this.altrpSelectRef = React.createRef();
     if (this.getContent("content_default_value")) {
       this.dispatchFieldValueToStore(this.getContent("content_default_value"));
     }
+
+    this.inputRef = React.createRef();
   }
 
   /**
@@ -739,7 +758,7 @@ class InputSelectWidget extends Component {
       );
     } catch (e) {
       console.error(
-        "Evaluate error in Input " + e.message,
+        "Evaluate error in Input: '" + e.message + "'",
         this.props.element.getId()
       );
     }
@@ -806,13 +825,6 @@ class InputSelectWidget extends Component {
     if (_.isArray(e)) {
       value = _.cloneDeep(e);
     }
-    if (
-      this.props.element.getSettings("content_options_nullable") &&
-      e &&
-      e.value === "<null>"
-    ) {
-      value = null;
-    }
 
     this.setState(
       state => ({
@@ -836,12 +848,17 @@ class InputSelectWidget extends Component {
   }
 
   async onItemSelect(value) {
-    if (value.value) {
+    if (value.value !== undefined && ! isNaN(value.value)){
       value = value.value;
     }
-    const options = [...this.state.options];
+
+    if(value === -1) {
+      value = null
+    }
+
+    const options = this.getOptions();
     const element = this.props.element;
-    if(! options.find(option => option.value === value)){
+    if(! options.find(option => option.value == value)){
       const create_url = element.getResponsiveSetting('create_url');
       if(element.getResponsiveSetting('create') && create_url){
         this.setState(state =>({...state, widgetDisabled: true}))
@@ -854,6 +871,14 @@ class InputSelectWidget extends Component {
           if(res.data){
             res = res.data
           }
+          const label_path = element.getResponsiveSetting('label_path')
+          if(label_path){
+            res.label = _.get(res, label_path, res.id);
+          }
+          const value_path = element.getResponsiveSetting('value_path')
+          if(value_path){
+            res.value = _.get(res, value_path, res.id);
+          }
           options.unshift(res)
         } catch (e) {
 
@@ -863,10 +888,13 @@ class InputSelectWidget extends Component {
       } else {
         options.unshift(arguments[0])
       }
+      this.setState(state => ({
+          ...state,
+          options,
+        }))
     }
     this.setState(state => ({
         ...state,
-        options,
         value
       }),
       () => {
@@ -885,12 +913,25 @@ class InputSelectWidget extends Component {
    * получить опции
    */
   getOptions() {
-    let options = [...this.state.options];
+    let options = this.state.options;
+
     const optionsDynamicSetting = this.props.element.getDynamicSetting(
       "content_options"
     );
+    const content_options = this.props.element.getResponsiveSetting('content_options');
+    const model_for_options = this.props.element.getResponsiveSetting('model_for_options');
+    if(_.isString(content_options)
+      && content_options.indexOf('{{') === 0
+      && ! model_for_options){
+      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''))
+      if( ! _.isArray(options)){
+        options = [];
+      }
+    }
     if (optionsDynamicSetting) {
       options = convertData(optionsDynamicSetting, options);
+    } else {
+      options = [...options]
     }
     if (!this.props.element.getSettings("sort_default")) {
       options = _.sortBy(options, o => o && (o.label ? o.label.toString() : o));
@@ -898,6 +939,20 @@ class InputSelectWidget extends Component {
         options = _.reverse(options)
       }
     }
+    if(this.props.element.getResponsiveSetting('content_options_nullable')){
+      options.unshift({
+        label: this.props.element.getResponsiveSetting('nulled_option_title') || '',
+        value: '',
+      })
+    }
+
+    if(this.props.element.getResponsiveSetting("remove") && this.state.value) {
+      options = [{
+        value: -1,
+        label: this.props.element.getResponsiveSetting("remove_label", "", "remove"),
+      }, ...options]
+    }
+
     return options;
   }
 
@@ -961,7 +1016,9 @@ class InputSelectWidget extends Component {
     if (isEditor()) {
       value = this.state.value;
     } else {
-      value = _.get(appStore.getState(), `formsStore.${formId}.${fieldName}`, '')
+
+      value = _.get(appStore.getState().formsStore, `${formId}`, '')
+      value = _.get(value, fieldName, '')
     }
 
     return value;
@@ -972,8 +1029,9 @@ class InputSelectWidget extends Component {
    */
   getCurrentLabel() {
     const value = this.getValue()
+
     const options = this.getOptions() || []
-    return options.find(option => option.value === value)?.label || ''
+    return options.find(option => option.value == value)?.label || ''
   }
 
   /**
@@ -1052,10 +1110,15 @@ class InputSelectWidget extends Component {
       return null;
     }
     const {options} = this.state;
-    if(options.find(option => option.value === query)) {
+    if (options.find(option => {
+      let label = (option.label || '') + '';
+      label = label.toLowerCase();
+      query = (query || '') + '';
+      return query === label;
+    })) {
       return null
     }
-      let text = element.getResponsiveSetting('create_text') || ''
+    let text = element.getResponsiveSetting('create_text') || ''
     text = text.replace('{{__query__}}', query)
     text = replaceContentWithData(text, element.getCurrentModel().getData())
     return (
@@ -1067,8 +1130,38 @@ class InputSelectWidget extends Component {
         shouldDismissPopover={false}
       />)
   }
+  onQueryChange = async (s)=>{
+    const searchActions = this.props.element.getSettings("s_actions");
+    if(_.isEmpty(searchActions)){
+      return
+    }
+    if(this.searchOnPending){
+      return
+    }
+    this.searchOnPending = true;
+    try{
 
+      const actionsManager = (
+        await import(
+          /* webpackChunkName: 'ActionsManager' */
+          "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
+          )
+      ).default;
+      this.props.element.getCurrentModel().setProperty('altrp_search', s);
+      await actionsManager.callAllWidgetActions(
+        this.props.element.getIdForAction(),
+        "search",
+        searchActions,
+        this.props.element
+      );
+    } catch (e) {
+      console.error(e);
+    }finally{
+      this.searchOnPending = false;
+    }
+  }
   render() {
+
     const element = this.props.element;
     let label = null;
     const settings = this.props.element.getSettings();
@@ -1077,6 +1170,18 @@ class InputSelectWidget extends Component {
     const {
       label_icon
     } = settings;
+
+    const fullWidth = element.getSettings("full_width") || false
+    this.popoverProps.onOpening = (e) => {
+      if(fullWidth) {
+        const inputWidth = this.inputRef.current.offsetWidth;
+
+        console.log(inputWidth, e)
+        e.style.width = `${inputWidth}px`
+      } else if(e.style.width) {
+        e.style.width = ""
+      }
+    }
 
     let classLabel = "";
     let styleLabel = {};
@@ -1162,6 +1267,7 @@ class InputSelectWidget extends Component {
     const position_css_classes = element.getResponsiveSetting('position_css_classes', '', '')
     const position_css_id = this.getContent('position_css_id')
 
+
     input = (
         <Select
           inputProps={inputProps}
@@ -1176,7 +1282,7 @@ class InputSelectWidget extends Component {
             return <MenuItem
               text={item.label}
               key={item.value}
-              active={item.value === value}
+              active={item.value === this.getValue()}
               disabled={modifiers.disabled || item.disabled}
               onClick={handleClick}
             />
@@ -1185,8 +1291,9 @@ class InputSelectWidget extends Component {
             if (query === undefined || query.length === 0) {
               return true
             }
-            return `${item?.label?.toLowerCase() || ''}`.indexOf(query.toLowerCase()) >= 0;
+            return `${item?.label?.toLowerCase() || ''}`.indexOf(query?.toLowerCase()) >= 0;
           }}
+          onQueryChange={this.onQueryChange}
           items={itemsOptions}
           // itemRenderer={({label})=>label}
           noResults={<MenuItem disabled={true} text={no_results_text}/>}
@@ -1197,6 +1304,7 @@ class InputSelectWidget extends Component {
         >
           <Button
             text={value}
+            elementRef={this.inputRef}
             disabled={content_readonly}
             onClick={this.onClick}
             icon={this.renderLeftIcon()}

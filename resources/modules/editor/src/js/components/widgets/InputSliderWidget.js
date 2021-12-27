@@ -1,3 +1,5 @@
+import numberWithSpaces from "../../helpers/number-with-spaces";
+
 const { isEditor } =
   window.altrpHelpers
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
@@ -137,7 +139,7 @@ class InputSliderWidget extends Component {
     let decimalPlace = this.props.element.getResponsiveSetting("decimal_place", "", null);
     const custom = this.props.element.getResponsiveSetting("custom_label", "", "{n}");
     const thousandsSeparator = this.props.element.getResponsiveSetting("thousands_separator", "", false);
-    const thousandsSeparatorValue = this.props.element.getResponsiveSetting("thousands_separator_value", "", " ");
+    let thousandsSeparatorValue = this.props.element.getResponsiveSetting("thousands_separator_value", "", " ");
     const decimalSeparator = this.props.element.getResponsiveSetting("decimal_separator");
     value = Number(value)
 
@@ -150,10 +152,11 @@ class InputSliderWidget extends Component {
       value = value.toString().replace(".", decimalSeparator)
     }
 
-    if(thousandsSeparator && thousandsSeparatorValue) {
-      value = value
-        .toString()
-        .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, thousandsSeparatorValue);
+    if(thousandsSeparator) {
+      if( ! thousandsSeparatorValue){
+        thousandsSeparatorValue = ' '
+      }
+      value = numberWithSpaces(value, thousandsSeparatorValue);
     }
 
 
@@ -173,7 +176,8 @@ class InputSliderWidget extends Component {
     if (isEditor()) {
       value = this.state.value;
     } else {
-      value = _.get(appStore.getState(), `formsStore.${formId}.${fieldName}`, '')
+      value = _.get(appStore.getState().formsStore, `${formId}`, '')
+      value = _.get(value, fieldName, '')
     }
 
     return value || this.props.element.getResponsiveSetting('min') || 0;

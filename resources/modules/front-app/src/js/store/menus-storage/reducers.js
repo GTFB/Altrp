@@ -1,6 +1,16 @@
-import {ADD_MENU, } from './actions'
+import {ADD_MENU, ADD_MENUS} from './actions'
+import {mbParseJSON} from "../../helpers";
 
-const defaultMenus = window.altrpMenus || [];
+let menusJSON =  window.__altrp_settings__?.altrpMenus || [];
+
+menusJSON = menusJSON.map(menu => {
+  menu.children = mbParseJSON(menu.children);
+  menu.settings = mbParseJSON(menu.settings);
+
+  return menu;
+})
+
+const defaultMenus = menusJSON;
 /**
  *
  * @param {[]} menus
@@ -17,6 +27,9 @@ export function menusReducer(menus = defaultMenus, action) {
       }
       menus = [...menus];
       menus.push(action.menu)
+    }break;
+    case ADD_MENUS:{
+      menus = [...action.menus];
     }break;
   }
 

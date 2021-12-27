@@ -15,9 +15,7 @@ class Tooltip extends PureComponent {
       settings: props?.settings,
       keyIsDate: props?.keyIsDate
     };
-    console.log("====================================");
-    console.log(this.state.data);
-    console.log("====================================");
+
     this.containerSettings = this.containerSettings.bind(this);
   }
 
@@ -45,9 +43,7 @@ class Tooltip extends PureComponent {
 
   containerSettings() {
     const settings = this.state?.settings || {};
-    console.log("====================================");
-    console.log(settings);
-    console.log("====================================");
+
     const result = {
       padding: `${settings?.padding?.top || 5}px ${settings?.padding?.right ||
         5}px ${settings?.padding?.bottom || 5}px ${settings?.padding?.left ||

@@ -144,6 +144,8 @@ class PagesController extends Controller
     $page->path = $request->path;
     $page->title = $request->title;
     $page->model_id = $request->model_id;
+    $page->param_name = $request->param_name;
+    $page->model_column = $request->model_column;
     $page->redirect = $request->redirect;
     $page->parent_page_id = $request->parent_page_id;
     $page->seo_description = $request->seo_description;
@@ -163,9 +165,9 @@ class PagesController extends Controller
       $pages_template->save();
       $res['pages_template'] = $pages_template->toArray();
     }
-    if ( ( ! $request->template_id ) && $pages_template ) {
-      $pages_template->delete();
-    }
+//    if ( ( ! $request->template_id ) && $pages_template ) {
+//      $pages_template->delete();
+//    }
     if ( $request->template_id && ! $pages_template ) {
       $template = Template::find( $request->template_id );
       $pages_template = new PagesTemplate( [
@@ -203,7 +205,7 @@ class PagesController extends Controller
     $page = $page->find( $id );
     if( $page->delete() ){
       try{
-        Page::where( 'parent_page_id', $page->id )->update( 'parent_page_id', null );
+        Page::where( 'parent_page_id', $page->id )->update( ['parent_page_id'=> null] );
       }catch( \Exception $e){
         logger()->error( $e->getMessage());
       }

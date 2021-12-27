@@ -25,6 +25,7 @@ import Loader from "./Loader";
 
 import MemoPaintIcon from "./Icons/PaintIcon";
 import { isEditor } from "../../../../../front-app/src/js/helpers";
+import MarkerCluster from "./MarkerCluster";
 
 function noob() {}
 
@@ -66,18 +67,12 @@ function MapDesigner({
         [field_id]: JSON.stringify(data)
       })
       .then(res => {
-        console.log("====================================");
-        console.log(res);
-        console.log("====================================");
       });
   };
 
   const deleteGeoObjectToModel = geoObject => {
     const { dbID } = geoObject;
     axios.delete(`${url}/${dbID}`).then(res => {
-      console.log("====================================");
-      console.log(res);
-      console.log("====================================");
     });
   };
 
@@ -397,7 +392,7 @@ function MapDesigner({
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {markers !== null && <MarkerCluster markers={markers} />}
+        {markers !== null && <MarkerCluster markers={markers} FG={FG} />}
 
         <FeatureGroup ref={FG}>
           <EditControl

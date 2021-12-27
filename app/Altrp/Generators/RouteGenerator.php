@@ -3,6 +3,7 @@
 namespace App\Altrp\Generators;
 
 use App\Altrp\Controller;
+use App\Altrp\Customizer;
 use App\Altrp\Source;
 use App\Role;
 use Illuminate\Support\Str;
@@ -94,7 +95,6 @@ class RouteGenerator
         $allRoutes[] = $comment;
         $allRoutes = array_merge($allRoutes,$sourceRoutes,$routes);
         $this->routeStub = $allRoutes;
-
         if ($items = $this->routeExists($oldModelName, $controller)) {
             $this->routeRewrite($items);
         } else {
@@ -123,16 +123,45 @@ class RouteGenerator
         if (! $sources) return [];
         foreach ($sources as $source) {
             $middleware = $this->getMiddleware($source, $isApi);
-            if (!in_array($source->type, $actions) && $source->type != 'remote') {
-                $middleware = $middleware ? "'middleware' => ['" . implode("','", $middleware) . "'], " : '';
-                $routes[] = 'Route::get(\'/queries/' . $tableName .'/'
-                . $source->type . '\', [' . $middleware .'\'uses\' =>\'' . $controller . '@'
-                . lcfirst($source->type) . '\']);';
-            } elseif (!in_array($source->type, $actions) && $source->type == 'remote') {
-                $middleware = $middleware ? "'middleware' => ['" . implode("','", $middleware) . "'], " : '';
-                $routes[] = 'Route::' . $source->request_type . '(\'/data_sources/' . $tableName .'/'
+            if(!in_array($source->type, $actions)){
+              switch($source->type){
+                case 'customizer':{
+                  /**
+                   * @var $customizer Customizer
+                   */
+                  $customizer = Customizer::find( $source->sourceable_id );
+                  if( ! $customizer ){
+                    break;
+                  }
+
+                  try{
+                    $middleware = array_merge( $middleware, $customizer->getMiddlewares() );
+                  } catch ( \Exception $e){
+
+                  }
+                  $middleware = $middleware ? "'middleware' => ['" . implode("','", $middleware) . "'], " : '';
+                  $routes[] = 'Route::' . $source->request_type . '(\'/' . $tableName .'/customizers/'
                     . \Str::snake($source->name) . '\', [' . $middleware .'\'uses\' =>\'' . $controller . '@'
                     . \Str::snake($source->name) . '\']);';
+                } break;
+                case 'remote':{
+                  $middleware = $middleware ? "'middleware' => ['" . implode("','", $middleware) . "'], " : '';
+                  $routes[] = 'Route::' . $source->request_type . '(\'/data_sources/' . $tableName .'/'
+                    . \Str::snake($source->name) . '\', [' . $middleware .'\'uses\' =>\'' . $controller . '@'
+                    . \Str::snake($source->name) . '\']);';
+                } break;
+                default:{
+                  $middleware = $middleware ? "'middleware' => ['" . implode("','", $middleware) . "'], " : '';
+                  $routes[] = 'Route::get(\'/queries/' . $tableName .'/'
+                    . $source->type . '\', [' . $middleware .'\'uses\' =>\'' . $controller . '@'
+                    . lcfirst($source->type) . '\']);';
+                }
+              }
+            }
+            if (!in_array($source->type, $actions) && $source->type != 'remote') {
+
+            } elseif (!in_array($source->type, $actions) && $source->type == 'remote') {
+
             }
         }
         return $routes;

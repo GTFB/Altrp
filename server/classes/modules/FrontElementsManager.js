@@ -9,7 +9,7 @@ import ImageWidget from '../../../resources/modules/editor/src/js/components/wid
 import DividerWidget from '../../../resources/modules/editor/src/js/components/widgets/DividerWidget';
 import PosterWidget from '../../../resources/modules/editor/src/js/components/widgets/PosterWidget';
 import ListWidget from '../../../resources/modules/editor/src/js/components/widgets/ListWidget';
-import AccordionWidget from '../../../resources/modules/editor/src/js/components/widgets/AccordionWidget';
+import AccordionWidget from '../../../resources/modules/editor/src/js/components/widgets/AccordionWidget/AccordionWidget';
 import CarouselWidget from '../../../resources/modules/editor/src/js/components/widgets/CarouselWidget';
 // import MapWidget from '../../../resources/modules/editor/src/js/components/widgets/MapWidget';
 // import MapConstructorWidget from '../../../resources/modules/editor/src/js/components/widgets/MapConstructorWidget';
@@ -32,6 +32,8 @@ import InputHiddenWidget from "../../../resources/modules/editor/src/js/componen
 import TemplateWidget from "../../../resources/modules/editor/src/js/components/widgets/TemplateWidget";
 import ImageLightboxWidget from "../../../resources/modules/editor/src/js/components/widgets/ImageLightboxWidget";
 import IconWidget from "../../../resources/modules/editor/src/js/components/widgets/IconWidget"
+import MenuPlaceholder from "../components/MenuPlaceholder/MenuPlaceholder";
+import ActionTriggerWidget from "../../../resources/modules/editor/src/js/components/widgets/ActionTriggerWidget";
 // import BreadcrumbsWidget from '../../../resources/modules/editor/src/js/components/widgets/BreadcrumbsWidget';
 // import MenuWidget from '../../../resources/modules/editor/src/js/components/widgets/MenuWidget';
 
@@ -41,9 +43,14 @@ class FrontElementsManager {
     //список компонентов
     this.components = {};
     SKELETON_ELEMENTS.forEach(el=>{
-      this.components[el] = SkeletonPlaceholder;
+      if(el === "menu") {
+        this.components[el] = MenuPlaceholder;
+      } else {
+        this.components[el] = SkeletonPlaceholder;
+      }
     })
     this.components['root-element'] = RootComponent;
+    this.components['action-trigger'] = ActionTriggerWidget
     this.components['heading'] = HeadingTypeHeadingWidget;
     this.components['section'] = SectionComponent;
     this.components['section_widget'] = SectionComponent;
@@ -59,7 +66,6 @@ class FrontElementsManager {
     this.components['poster'] = PosterWidget;
     this.components['list'] = ListWidget;
     this.components['accordion'] = AccordionWidget;
-    this.components['carousel'] = CarouselWidget;
     this.components['html'] = HtmlWidget;
     this.components['video'] = VideoWidget;
     this.components['template'] = TemplateWidget;

@@ -1,4 +1,5 @@
 import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-data-storage/actions";
+import numberWithSpaces from "../../helpers/number-with-spaces";
 const {isEditor} = window.altrpHelpers;
 
 const Slider = window.altrpLibs.Blueprint.RangeSlider;
@@ -163,9 +164,18 @@ class InputRangeSliderWidget extends Component {
     if (isEditor()) {
       value = this.state.value;
     } else {
+      let valueStart
+
+      valueStart = _.get(appStore.getState().formsStore, `${formIdStart}`, '')
+      valueStart = _.get(valueStart, fieldNameStart, '')
+      let valueEnd
+
+      valueEnd = _.get(appStore.getState().formsStore, `${formIdEnd}`, '')
+      valueEnd = _.get(valueEnd, fieldNameEnd, '')
+
       value = [
-        _.get(appStore.getState(), `formsStore.${formIdStart}.${fieldNameStart}`, ''),
-        _.get(appStore.getState(), `formsStore.${formIdEnd}.${fieldNameEnd}`, '')
+        valueStart,
+        valueEnd
       ];
     }
 
@@ -210,7 +220,7 @@ class InputRangeSliderWidget extends Component {
     let decimalPlace = this.props.element.getResponsiveSetting("decimal_place", "", null);
     const custom = this.props.element.getResponsiveSetting("custom_label", "", "{n}");
     const thousandsSeparator = this.props.element.getResponsiveSetting("thousands_separator", "", false);
-    const thousandsSeparatorValue = this.props.element.getResponsiveSetting("thousands_separator_value", "", " ");
+    let thousandsSeparatorValue = this.props.element.getResponsiveSetting("thousands_separator_value", "", " ");
     const decimalSeparator = this.props.element.getResponsiveSetting("decimal_separator");
     value = Number(value)
 
@@ -224,10 +234,11 @@ class InputRangeSliderWidget extends Component {
       value = value.toString().replace(".", decimalSeparator)
     }
 
-    if(thousandsSeparator && thousandsSeparatorValue) {
-      value = value
-        .toString()
-        .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, thousandsSeparatorValue);
+    if(thousandsSeparator) {
+      if( ! thousandsSeparatorValue){
+        thousandsSeparatorValue = ' '
+      }
+      value = numberWithSpaces(value, thousandsSeparatorValue);
     }
 
 

@@ -50,13 +50,18 @@ class ActionsManager extends AltrpModel{
     if(isEditor()){
       return
     }
-    preventedActions = preventedActions || [];
-    let actions = this.getProperty(`actions.${widgetId}.${eventName}`, []);
-    const errors = [];
-    if(! actions.length && preventedActions.length && element){
-      this.registerWidgetActions(widgetId, preventedActions, eventName, element);
-      actions = this.getProperty(`actions.${widgetId}.${eventName}`, []);
+    if(this.getProperty(`widget.statuses.${widgetId}.${eventName}`) === 'inAction'){
+      return
     }
+    this.setProperty(`widget.statuses.${widgetId}.${eventName}`, 'inAction')
+    preventedActions = preventedActions || [];
+    let actions = preventedActions;
+    const errors = [];
+    actions = actions.map(a=> new AltrpAction(a, widgetId, element))
+    // if(! actions.length && preventedActions.length && element){
+    //   this.registerWidgetActions(widgetId, preventedActions, eventName, element);
+    //   actions = this.getProperty(`actions.${widgetId}.${eventName}`, []);
+    // }
     for (let action of actions){
       try {
         let result = await action.doAction();
@@ -72,6 +77,7 @@ class ActionsManager extends AltrpModel{
         console.error(error);
       }
     }
+    this.setProperty(`widget.statuses.${widgetId}.${eventName}`, 'noAction')
     if (errors.length){
       return {
         success: false,

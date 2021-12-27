@@ -29,7 +29,7 @@
     <img src="{{ get_logo_url() }}" alt="Logo">
   @endif
 </div>
-<form  method="POST" action="{{ route('login') }}" class="flex-center">
+<form  method="POST" action="{{ route('post.login') }}" class="flex-center">
   @csrf
   <div class="contain">
     <label>

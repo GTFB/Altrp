@@ -59,10 +59,12 @@ const AltrpFunnelDiagram = props => {
         },
     ]
   } else {
-    try {
-      data = getDataByPath(settings.datasource_path, []);
-    } catch (error) {
-      data = [];
+    if (settings.datasource_path != null) {
+      try {
+        data = getDataByPath(settings.datasource_path, []);
+      } catch (error) {
+        data = [];
+      }
     }
   }
 
@@ -83,14 +85,14 @@ const AltrpFunnelDiagram = props => {
       labelColor = { from: 'color', modifiers: [ [ 'darker', 3 ] ] }
     }
   }
-  
+
   return (
     <DynamicFunnelChart
       margin={margin ? margin : {
         top: 30,
         bottom: 30,
         right: 30,
-        left: 30 
+        left: 30
       }}
       valueFormat={getFormatValueString(settings)}
       customColorSchemeChecker={customColorSchemeChecker}

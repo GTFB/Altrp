@@ -204,7 +204,7 @@ class AssetsBrowser extends Component {
         <div className="assets-browser-content">
           <div className="assets-browser-top">
             <div className="caption">Append Media</div>
-            <button className="btn btn_bare assets-browser__close" onClick={this.toggleBrowser} >
+            <button className="btn_bare assets-browser__close" onClick={this.toggleBrowser} >
               <Times className="icon"/>
             </button>
             <div className="assets-browser-nav">

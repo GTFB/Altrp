@@ -1,13 +1,12 @@
 import React, {Component, Suspense} from "react";
-import {
+const {
   getComponentByElementId,
   getHTMLElementById,
   isEditor,
   isSSR,
   parseURLTemplate, printElements,
   renderAssetIcon, scrollToElement
-} from "../../../../../front-app/src/js/helpers";
-import {Link} from "react-router-dom";
+} = window.altrpHelpers;
 import AltrpDropbar from "../altrp-dropbar/AltrpDropbar";
 
 (window.globalDefaults = window.globalDefaults || []).push(`
@@ -134,7 +133,7 @@ class DropbarWidget extends Component {
    */
   async _componentWillUnmount() {
     const actionsManager = (
-      await import(
+      await import(/* webpackChunkName: 'ActionsManager' */
         "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
         )
     ).default;
@@ -154,7 +153,7 @@ class DropbarWidget extends Component {
       e.preventDefault();
       e.stopPropagation();
       const actionsManager = (
-        await import(
+        await import(/* webpackChunkName: 'ActionsManager' */
           "../../../../../front-app/src/js/classes/modules/ActionsManager.js"
           )
       ).default;

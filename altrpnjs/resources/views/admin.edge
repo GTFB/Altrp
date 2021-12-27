@@ -1,0 +1,18 @@
+@@layout('base')
+
+
+@section('head')
+    <script src="{{ url }}"></script>
+
+    <script>
+        let altrp_version = "{{ version }}";
+
+        window.altrpMenus = [];
+        const _token = "{{ token }}";
+    </script>
+@end
+
+@section('body')
+    <div id="admin">
+    </div>
+@end

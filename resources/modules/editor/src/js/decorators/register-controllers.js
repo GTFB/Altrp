@@ -85,6 +85,7 @@ export function advancedTabControllers(element) {
   element.addControl('en_an', {
     label: 'Entrance Animation',
     type: CONTROLLER_SELECT2,
+    isClearable: true,
     //<editor-fold description="Entrance Animation Options" defaultstate="collapsed">
     options:[
       {
@@ -929,6 +930,7 @@ export function advancedTabControllers(element) {
   element.addControl('tooltip_show_type', {
     type: CONTROLLER_SELECT,
     label: 'Show type',
+    default: 'never',
     options: [
       {
         value: 'never',
@@ -1103,5 +1105,9 @@ export function advancedTabControllers(element) {
   element.endControlSection();
 
   actionsControllers(element, 'Wrapper Click Actions', 'wrapper_click_', TAB_ADVANCED);
+
+  actionsControllers(element, 'Appearance of Top of Element Actions', 'wrapper_appearT_', TAB_ADVANCED);
+
+  actionsControllers(element, 'Appearance of Bottom of Element Actions', 'wrapper_appearB_', TAB_ADVANCED);
 
 }

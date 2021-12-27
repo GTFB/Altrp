@@ -30,6 +30,7 @@ use App\Http\Requests\ApiRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 
 class ModelsController extends HttpController
@@ -235,10 +236,15 @@ class ModelsController extends HttpController
         $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
         if (! $page) {
             $pageCount = 0;
-            $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
+            //$sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
             $models = $search
                 ? Model::getBySearch($search, $orderColumn, $orderType)
-                : Model::all()->$sortType( $orderColumn )->values();
+                //: Model::all()->$sortType( $orderColumn )->values();
+
+                : Model::
+                    //->$sortType( $orderColumn )->values();
+                    orderBy($orderColumn, $orderType)
+                    ->get();
         } else {
             $modelsCount = $search ? Model::getCountWithSearch($search) : Model::getCount();
             $limit = $request->get('pageSize', 10);
@@ -410,6 +416,11 @@ class ModelsController extends HttpController
       'title' => 'required|max:32',
       'name' => 'required|max:32'
     ]);
+
+    if ($request->user_id) {
+        $request->merge(['user_id' => Auth::user()->id]);
+    }
+
     $model = new Model($request->all());
     $result = $model->save();
     if ($result) {
@@ -441,6 +452,13 @@ class ModelsController extends HttpController
                 'message' => 'Model not found'
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
+
+        if ($request->user_id) {
+            $request->merge(['user_id' => Auth::user()->id]);
+        } else {
+            $request->merge(['user_id' => null]);
+        }
+
         $result = $model->update($request->all());
         if ($result) {
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);

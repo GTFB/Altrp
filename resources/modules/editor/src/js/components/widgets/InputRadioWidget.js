@@ -5,6 +5,7 @@ import {
   parseOptionsFromSettings,
   parseParamsFromString,
   parseURLTemplate,
+  getDataByPath,
   replaceContentWithData,
   renderAssetIcon,
   getDataFromLocalStorage
@@ -692,7 +693,7 @@ class InputRadioWidget extends Component {
       );
     } catch (e) {
       console.error(
-        "Evaluate error in Input " + e.message,
+        "Evaluate error in Input: '" + e.message + "'",
         this.props.element.getId()
       );
     }
@@ -826,6 +827,16 @@ class InputRadioWidget extends Component {
     const optionsDynamicSetting = this.props.element.getDynamicSetting(
       "content_options"
     );
+    const content_options = this.props.element.getResponsiveSetting('content_options');
+    const model_for_options = this.props.element.getResponsiveSetting('model_for_options');
+    if(_.isString(content_options)
+      && content_options.indexOf('{{') === 0
+      && ! model_for_options){
+      options = getDataByPath(content_options.replace('{{', '').replace('}}', ''))
+      if( ! _.isArray(options)){
+        options = [];
+      }
+    }
     if (optionsDynamicSetting) {
       options = convertData(optionsDynamicSetting, options);
     }

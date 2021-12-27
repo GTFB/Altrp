@@ -6,8 +6,12 @@ const HeaderCellComponent = styled.div`${({settings, column})=>{
   const {
     table_transpose,
   } = settings;
+
   if(! table_transpose){
-    return ''
+    return `& .altrp-filter-group_range-slider{
+    padding-left: 20px;
+    padding-right: 20px;
+  }`
   }
   const {
     column_cell_vertical_alignment,
@@ -52,6 +56,7 @@ const HeaderCellComponent = styled.div`${({settings, column})=>{
   }
 
   styles += `}`;
+
   return styles;
 }}`;
 

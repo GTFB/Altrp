@@ -1,5 +1,4 @@
-
-const AltrpMap = React.lazy(() => import(/* webpackChunkName: 'AltrpMap' */"../altrp-map/AltrpMap"));
+import AltrpMap from "../altrp-map/AltrpMap"
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .altrp-map {
@@ -157,9 +156,7 @@ class MapWidget extends Component {
 
   render() {
     return (
-      <Suspense fallback={"Loading"}>
         <AltrpMap settings={this.state.settings} id={this.props.element.id} />
-      </Suspense>
     );
   }
 }

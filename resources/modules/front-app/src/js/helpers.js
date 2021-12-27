@@ -18,6 +18,14 @@ import Area from "./classes/Area";
 import {altrpFontsSet, GOOGLE_FONT} from "./constants/fonts";
 import {addSettings} from "./store/elements-settings/actions";
 import mutate from "dot-prop-immutable";
+import React from "react";
+import convertQueryParamsToObject from "./functions/convert-query-params-to-object";
+import _CONDITIONS_OPTIONS from "./constants/CONDITIONS_OPTIONS";
+import _mbParseJSON from "./functions/mb-parse-JSON";
+import _getResponsiveSetting from "./helpers/get-responsive-setting";
+
+export const getResponsiveSetting = _getResponsiveSetting;
+
 export function getRoutes() {
 
   return import(/* webpackChunkName: 'Routes' */"./classes/Routes.js");
@@ -398,7 +406,7 @@ export function conditionsChecker(
  * @param {boolean} dataByPath - брать ли данный из getDataByPath
  * @return {boolean}
  */
-function conditionChecker(c, model, dataByPath = true) {
+export function conditionChecker(c, model, dataByPath = true) {
   let result = 0;
   const { operator } = c;
   let { modelField: left, value } = c;
@@ -408,33 +416,6 @@ function conditionChecker(c, model, dataByPath = true) {
     return altrpCompare(left, value, operator);
   }
   return altrpCompare(model.getProperty(left), value, operator);
-  switch (operator) {
-    case "empty": {
-      return !model.getProperty(modelField, "");
-    }
-    case "not_empty": {
-      return !!model.getProperty(modelField, "");
-    }
-    case "==": {
-      return _.isEqual(model.getProperty(modelField, ""), value);
-    }
-    case "<>": {
-      return !_.isEqual(model.getProperty(modelField, ""), value);
-    }
-    case ">": {
-      return Number(model.getProperty(modelField, "")) > Number(value);
-    }
-    case ">=": {
-      return Number(model.getProperty(modelField, "")) >= Number(value);
-    }
-    case "<": {
-      return Number(model.getProperty(modelField, "")) < Number(value);
-    }
-    case "<=": {
-      return Number(model.getProperty(modelField, "")) <= Number(value);
-    }
-  }
-  return result;
 }
 
 /**
@@ -682,6 +663,9 @@ export function getDataByPath(
     value = altrpPage
       ? altrpPage.getProperty(path.replace("altrppage.", ""), _default)
       : "";
+    if(_.isString(value) && value.match(/{{([\s\S]+?)}}/)){
+      value = replaceContentWithData(value, context.getData());
+    }
   } else if (path.indexOf("altrpelements.") === 0) {
     const pathElements = path.split(".");
     const [prefix, elementId, updateType, propName] = pathElements;
@@ -715,10 +699,10 @@ export function getDataByPath(
       value = area.getSetting(propName, _default);
     }
   } else {
-    value = currentModel.getProperty(path)
+    value = currentModel.getProperty(path) !== undefined
       ? currentModel.getProperty(path)
       : urlParams[path];
-    if (!value) {
+    if (! value && value !== 0) {
       value = _default;
     }
   }
@@ -763,19 +747,22 @@ export function getObjectByPrefix(prefix = "", object = {}) {
   return result;
 }
 
-/**
- * Возвращает объект из json-строки если возможно
- * @param {string} string
- * @param {*} _default
- * @return {*}
- */
-export function mbParseJSON(string, _default = null) {
-  try {
-    return JSON.parse(string);
-  } catch (e) {
-    return _default === null ? string : _default;
-  }
-}
+// /**
+//  * Возвращает объект из json-строки если возможно
+//  * @param {string} string
+//  * @param {*} _default
+//  * @return {*}
+//  */
+// export function mbParseJSON(string, _default = null) {
+//   try {
+//     return JSON.parse(string);
+//   } catch (e) {
+//     return _default === null ? string : _default;
+//   }
+// }
+
+
+export const mbParseJSON = _mbParseJSON;
 
 /**
  * Функция для сравнения значений
@@ -849,6 +836,7 @@ export function altrpCompare(
       return !altrpCompare(leftValue, rightValue, "in");
     }
     case "contain": {
+
       if (_.isString(leftValue)) {
         return leftValue.indexOf(rightValue) !== -1;
       }
@@ -869,68 +857,7 @@ export function altrpCompare(
   }
 }
 
-export const CONDITIONS_OPTIONS = [
-  {
-    value: "empty",
-    label: "Empty"
-  },
-  {
-    value: "not_empty",
-    label: "Not Empty"
-  },
-  {
-    value: "null",
-    label: "Null"
-  },
-  {
-    value: "not_null",
-    label: "Not Null"
-  },
-  {
-    value: "==",
-    label: "Equals"
-  },
-  {
-    value: "<>",
-    label: "Not Equals"
-  },
-  {
-    value: "between",
-    label: "Between"
-  },
-  {
-    value: ">",
-    label: ">"
-  },
-  {
-    value: ">=",
-    label: ">="
-  },
-  {
-    value: "<",
-    label: "<"
-  },
-  {
-    value: "<=",
-    label: "<="
-  },
-  {
-    value: "in",
-    label: "In"
-  },
-  {
-    value: "not_in",
-    label: "Not In"
-  },
-  {
-    value: "contain",
-    label: "Contain"
-  },
-  {
-    value: "not_contain",
-    label: "Not Contain"
-  }
-];
+export const CONDITIONS_OPTIONS = _CONDITIONS_OPTIONS
 
 export function isElementTopInViewport(top, scrollTop, clientHeight) {
   return top > scrollTop && top < scrollTop + clientHeight;
@@ -1056,9 +983,12 @@ export function scrollToElement(scrollbars, element) {
     container = scrollbars;
     let scroll = getOffsetTopInElement(element, scrollbars);
     if(scroll){
-      scrollbars.scrollTop =scroll;
+      scrollbars.scrollTop = scroll;
     }
 
+  }
+  if(scrollbars instanceof Window){
+    container = scrollbars;
   }
   /**
    * @member {HTMLElement} container
@@ -1066,19 +996,20 @@ export function scrollToElement(scrollbars, element) {
   if (!container) {
     return;
   }
-  if (!_.isFunction(scrollbars.scrollTop)) {
+  if (!_.isFunction(scrollbars.scrollTop) && !_.isFunction(scrollbars.scrollTo)) {
     return;
   }
+
 
   let parent = element.offsetParent;
   let top = element.offsetTop;
 
-  while (parent !== container) {
+  while (parent !== container || parent !== document.body) {
     if (! parent) {
       /**
        * ушли в самый корень ДОМ и контейнер не встретился
        */
-      return;
+      break;
     }
     top += parent.offsetTop;
     parent = parent.offsetParent;
@@ -1089,7 +1020,15 @@ export function scrollToElement(scrollbars, element) {
   if (! top) {
     return;
   }
-  scrollbars.scrollTop(top);
+
+
+  console.log(scrollbars.scrollTo);
+  scrollbars.scrollTop && scrollbars.scrollTop(top);
+  scrollbars.scrollTo && scrollbars.scrollTo({
+    top,
+    left: 0,
+    behavior: 'smooth',
+  });
 }
 
 /**
@@ -1240,8 +1179,10 @@ export function replaceContentWithData(content = "", modelContext = null) {
     paths.forEach(path => {
       path = path.replace("{{", "");
       let value = getDataByPath(path, "", modelContext);
+
       if (value === 0) {
         value = "0";
+        console.log();
       }
       path = escapeRegExp(path);
       content = content.replace(new RegExp(`{{${path}}}`, "g"), value || "");
@@ -1671,7 +1612,11 @@ export function saveDataToLocalStorage(name, data) {
   if (_.isObject(data)) {
     data = JSON.stringify(data);
   }
-  localStorage.setItem(name, data);
+  try {
+    localStorage.setItem(name, data);
+  } catch (e) {
+    return true;
+  }
   return true;
 }
 /**
@@ -1684,14 +1629,14 @@ export function getDataFromLocalStorage(name, _default = undefined) {
   if (!name) {
     return _default;
   }
-  let value = localStorage.getItem(name);
-  if (!value) {
-    return _default;
-  }
+  let value
   try {
+    value = localStorage.getItem(name);
+    if (!value) {
+      return _default;
+    }
     value = JSON.parse(value);
   } catch (error) {
-    console.error(error);
   }
   if (_.isString(value) && Number(value)) {
     value = Number(value);
@@ -1916,56 +1861,6 @@ export function redirect(linkSettings, e, context = {}) {
 export function validateEmail(email) {
   const re = /^(([^<>()[\]\\.,;:\s@']+(\.[^<>()[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
-}
-
-/**
- * значение настройки в зависимости от разрешения можно использовать вне виджетов с объектом настроек
- * @param {{}} settings - объект настроек
- * @param {string} settingName
- * @param {string} elementState
- * @param {*} _default
- * @return {*}
- */
-export function getResponsiveSetting(
-  settings,
-  settingName,
-  elementState = "",
-  _default = null
-) {
-  let { currentScreen } = window.parent.appStore.getState();
-  let _settingName = `${settingName}_${elementState}_`;
-  if (currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT) {
-    let setting = settings[_settingName];
-    if (setting === undefined) {
-      setting = _.get(settings, settingName, _default);
-    }
-    return setting;
-  }
-  let suffix = currentScreen.name;
-  _settingName = `${settingName}_${elementState}_${suffix}`;
-  let setting = settings[_settingName];
-  if (setting === undefined) {
-    for (let screen of [...CONSTANTS.SCREENS].reverse()) {
-      if (
-        currentScreen.id < screen.id ||
-        screen.name === CONSTANTS.DEFAULT_BREAKPOINT
-      ) {
-        continue;
-      }
-
-      _settingName = `${settingName}_${elementState}_${screen.name}`;
-
-      if (settings[_settingName] !== undefined) {
-        setting = settings[_settingName];
-        break;
-      }
-    }
-  }
-
-  if (setting === undefined) {
-    setting = _.get(settings, settingName, _default);
-  }
-  return setting;
 }
 
 /**

@@ -445,17 +445,6 @@ class InputTextareaWidget extends Component {
     }
 
     let value = this.state.value;
-    /**
-     * Если динамическое значение загрузилось,
-     * то используем this.getContent для получение этого динамического значения
-     * старые динамические данные
-     * */
-    if (
-      _.get(value, "dynamic") &&
-      this.props.currentModel.getProperty("altrpModelUpdated")
-    ) {
-      value = this.getContent("content_default_value");
-    }
 
     /**
      * Если модель обновилась при смене URL
@@ -523,8 +512,7 @@ class InputTextareaWidget extends Component {
       this.props.currentDataStorage.getProperty("currentDataStorageLoaded")
     ) {
       let value = this.getContent(
-        "content_default_value",
-        this.props.element.getSettings("select2_multiple")
+        "content_default_value"
       );
       this.setState(
         state => ({ ...state, value, contentLoaded: true }),
@@ -532,17 +520,6 @@ class InputTextareaWidget extends Component {
           this.dispatchFieldValueToStore(value);
         }
       );
-    }
-
-    /**
-     * Если обновилась модель, то пробрасываем в стор новое значение (старый источник диамических данных)
-     */
-    if (
-      !_.isEqual(this.props.currentModel, prevProps.currentModel) &&
-      this.state.value &&
-      this.state.value.dynamic
-    ) {
-      this.dispatchFieldValueToStore(this.getContent("content_default_value"));
     }
 
     /**
@@ -686,7 +663,7 @@ class InputTextareaWidget extends Component {
       );
     } catch (e) {
       console.error(
-        "Evaluate error in Input " + e.message,
+        "Evaluate error in Input: '" + e.message + "'",
         this.props.element.getId()
       );
     }
@@ -1004,7 +981,9 @@ class InputTextareaWidget extends Component {
     if (isEditor()) {
       value = this.state.value;
     } else {
-      value = _.get(appStore.getState(), `formsStore.${formId}.${fieldName}`, '')
+
+      value = _.get(appStore.getState().formsStore, `${formId}`, '')
+      value = _.get(value, fieldName, '')
     }
     return value;
   }
@@ -1022,12 +1001,6 @@ class InputTextareaWidget extends Component {
 
     let value = this.getValue();
 
-    if (
-      _.get(value, "dynamic") &&
-      this.props.currentModel.getProperty("altrpModelUpdated")
-    ) {
-      value = this.getContent("content_default_value");
-    }
 
     let classLabel = "";
     let styleLabel = {};

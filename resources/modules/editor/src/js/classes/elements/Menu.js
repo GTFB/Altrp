@@ -9,7 +9,7 @@ import {
   CONTROLLER_SELECT,
   CONTROLLER_COLOR,
   CONTROLLER_TYPOGRAPHIC,
-  CONTROLLER_SHADOW, CONTROLLER_SWITCHER, CONTROLLER_CHOOSE,
+  CONTROLLER_SHADOW, CONTROLLER_SWITCHER, CONTROLLER_CHOOSE, CONTROLLER_MEDIA, CONTROLLER_SLIDER, CONTROLLER_TEXT,
 } from '../modules/ControllersManager';
 
 class Menu extends BaseElement {
@@ -25,6 +25,7 @@ class Menu extends BaseElement {
   static getType() {
     return 'widget';
   }
+
   _registerControls() {
     if (this.controllersRegistered) {
       return;
@@ -44,7 +45,6 @@ class Menu extends BaseElement {
       options_resource: '/admin/ajax/menus/options?value=guid',
       nullable: true,
       after: <div className="control-button-container mt-2"><button onClick={()=>{
-        console.log(appStore);
       }} className="btn btn_success">Edit Menus</button></div>
     });
 
@@ -65,6 +65,99 @@ class Menu extends BaseElement {
     })
 
 
+    this.addControl('caret', {
+      type: CONTROLLER_MEDIA,
+      label: 'Caret',
+    });
+
+    this.endControlSection();
+
+    const popoverPositions = [
+      {
+        value: 'auto',
+        label: 'auto',
+      },
+      {
+        value: 'top-left',
+        label: 'top left',
+      },
+      {
+        value: 'top',
+        label: 'top',
+      },
+      {
+        value: 'top-right',
+        label: 'top right',
+      },
+      {
+        value: 'right-top',
+        label: 'right top',
+      },
+      {
+        value: 'right',
+        label: 'right',
+      },
+      {
+        value: 'right-bottom',
+        label: 'right bottom',
+      },
+      {
+        value: 'left-top',
+        label: 'left top',
+      },
+      {
+        value: 'left',
+        label: 'left',
+      },
+      {
+        value: 'left-bottom',
+        label: 'left bottom',
+      },
+      {
+        value: 'bottom-left',
+        label: 'bottom left',
+      },
+      {
+        value: 'bottom',
+        label: 'bottom',
+      },
+      {
+        value: 'bottom-right',
+        label: 'bottom right',
+      },
+    ]
+
+    this.startControlSection('content_menu', {
+      tab: TAB_CONTENT,
+      label: 'Menu',
+    });
+
+    this.addControl('popover_position', {
+      type: CONTROLLER_SELECT,
+      label: 'Popover position',
+      options: popoverPositions
+    });
+
+    this.addControl('popover_width', {
+      label: 'Width',
+    })
+
+    this.endControlSection();
+
+    this.startControlSection('sub_menu_content', {
+      tab: TAB_CONTENT,
+      label: 'Sub menu',
+    });
+
+    this.addControl('sub_popover_position', {
+      type: CONTROLLER_SELECT,
+      label: 'Popover position',
+      options: popoverPositions
+    });
+
+    this.addControl('sub_width', {
+      label: 'Width',
+    })
 
     this.endControlSection();
 
@@ -101,6 +194,12 @@ class Menu extends BaseElement {
       ],
     });
 
+    this.addControl('popover_position_toggle', {
+      type: CONTROLLER_SELECT,
+      label: 'Popover position',
+      options: popoverPositions
+    });
+
     this.addControl('width', {
       label: 'Main Menu Width',
       dynamic: false,
@@ -129,12 +228,51 @@ class Menu extends BaseElement {
     this.addControl('menu_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Radius',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
     })
 
     this.addControl('menu_bg',{
       label: 'Background Color',
       type: CONTROLLER_COLOR,
     })
+
+    this.addControl('menu_alignment', {
+      type: CONTROLLER_CHOOSE,
+      label: 'Alignment',
+      options: [
+        {
+          icon: 'left',
+          value: 'flex-start',
+        },
+        {
+          icon: 'center',
+          value: 'center',
+        },
+        {
+          icon: 'right',
+          value: 'flex-end',
+        },
+        {
+          icon: 'in_width',
+          value: 'stretch',
+        }
+      ],
+    });
+
+    this.addControl('caret_size', {
+      type: CONTROLLER_SLIDER,
+      label: 'Caret size',
+      units: [
+        'px',
+      ],
+      max: 50,
+      min: 5,
+      stateless: true,
+    });
 
     this.endControlSection();
 
@@ -154,10 +292,30 @@ class Menu extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       stateless: true,
       label: 'Padding',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
     })
+
+    this.addControl('item_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Border Radius',
+      default: {
+        unit: 'px',
+        bind: true,
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
 
     this.addControl('typographic', {
       type: CONTROLLER_TYPOGRAPHIC,
+      label: "Typographic"
     })
 
     this.addControl('bg',{
@@ -181,6 +339,11 @@ class Menu extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       stateless: true,
       label: 'Padding',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
     })
 
     this.addControl('sub_menu_bg',{
@@ -191,12 +354,33 @@ class Menu extends BaseElement {
     this.addControl('sub_menu_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Radius',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
     })
+
 
     this.addControl('sub_menu_shadow',{
       label: 'Shadow',
       type: CONTROLLER_SHADOW,
     })
+
+    this.addControl('popover_radius', {
+      type: CONTROLLER_DIMENSIONS,
+      label: 'Popover border radius',
+      default: {
+        unit: 'px',
+        bind: true,
+      },
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
+    });
+
 
     this.endControlSection();
 
@@ -209,6 +393,11 @@ class Menu extends BaseElement {
       type: CONTROLLER_DIMENSIONS,
       stateless: true,
       label: 'Padding',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
     })
 
     this.addControl('button_bg',{
@@ -220,6 +409,11 @@ class Menu extends BaseElement {
       label: 'Icon Fill Color',
       type: CONTROLLER_COLOR,
     })
+
+    this.addControl('icon_size', {
+      type: CONTROLLER_TEXT,
+      label: "Icon size"
+    });
 
     this.addControl('border',{
       type: CONTROLLER_SELECT,
@@ -260,11 +454,21 @@ class Menu extends BaseElement {
     this.addControl('border_width', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Width',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
     })
 
     this.addControl('button_radius', {
       type: CONTROLLER_DIMENSIONS,
       label: 'Border Radius',
+      units: [
+        'px',
+        '%',
+        'vh',
+      ],
     })
 
     this.endControlSection();

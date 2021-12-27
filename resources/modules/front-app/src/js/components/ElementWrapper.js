@@ -6,6 +6,10 @@ import { ElementWrapperDivComponent } from "../../../../editor/src/js/components
 import NavComponent from "../../../../editor/src/js/components/widgets/styled-components/NavComponent";
 import DEFAULT_REACT_ELEMENTS from "../constants/DEFAULT_REACT_ELEMENTS";
 import EntranceAnimationsStyles from "./EntranceAnimationsStyles";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd";
+import React from "react";
+import AltrpTooltip2 from "../../../../editor/src/js/components/altrp-tooltip/AltrpTooltip2";
 const {
   altrpCompare,
   altrpRandomId,
@@ -55,7 +59,24 @@ class ElementWrapper extends Component {
       this.props.element.update();
       this.props.element.updateFonts();
     }
+    const {element} = this.props
+    const mountElementEvent = new Event(`altrp-mount-element:${element.getId()}` );
+    const mountElementTypeEvent = new Event(`altrp-mount-element:${element.getName()}` );
+    document.dispatchEvent(mountElementEvent)
+    document.dispatchEvent(mountElementTypeEvent)
     this.checkElementDisplay();
+  }
+
+  componentWillUnmount() {
+
+    const {element} = this.props
+    // if(element.getId() === '_giafvu4nk'){
+    //   console.error(this);
+    // }
+    const unmountElementEvent = new Event(`altrp-unmount-element:${element.getId()}` );
+    const unmountElementTypeEvent = new Event(`altrp-unmount-element:${element.getName()}` );
+    document.dispatchEvent(unmountElementEvent)
+    document.dispatchEvent(unmountElementTypeEvent)
   }
   /**
    * Подписываемся на обновление store редакса
@@ -281,18 +302,6 @@ class ElementWrapper extends Component {
     }
     const styles = {};
 
-    if (element.getResponsiveSetting("layout_column_width")) {
-      if (
-        Number(element.getResponsiveSetting("layout_column_width"))
-      ) {
-        styles.width =
-          element.getResponsiveSetting("layout_column_width") + "%";
-      } else {
-        styles.width = element.getResponsiveSetting(
-          "layout_column_width"
-        );
-      }
-    }
     if (!this.state.elementDisplay) {
       styles.display = "none";
     }
@@ -311,7 +320,7 @@ class ElementWrapper extends Component {
       ref: this.elementRef,
       rootElement: this.props.rootElement,
       ElementWrapper: this.props.ElementWrapper,
-      element: element,
+      element,
       children: element.getChildren(),
       match: this.props.match,
       currentModel: this.props.currentModel,
@@ -328,6 +337,30 @@ class ElementWrapper extends Component {
       history: this.props.history,
       appStore
     });
+    if (this.props.element.getName() === "table") {
+      content = <DndProvider backend={HTML5Backend}>{
+        React.createElement(ContentComponent, {
+          ref: this.elementRef,
+          rootElement: this.props.rootElement,
+          ElementWrapper: this.props.ElementWrapper,
+          element: this.props.element,
+          children: this.props.element.getChildren(),
+          match: this.props.match,
+          currentModel: this.props.currentModel,
+          currentUser: this.props.currentUser,
+          currentDataStorage: this.props.currentDataStorage,
+          altrpresponses: this.props.altrpresponses,
+          formsStore: this.props.formsStore,
+          elementDisplay: this.state.elementDisplay,
+          altrpPageState: this.props.altrpPageState,
+          altrpMeta: this.props.altrpMeta,
+          updateToken: this.state.updateToken,
+          currentScreen: this.props.currentScreen,
+          baseRender: this.props.baseRender,
+          history: this.props.history,
+          appStore
+        })}</DndProvider>;
+    }
     if (element.getTemplateType() === "email") {
       if (!this.state.elementDisplay) {
         return null;
@@ -358,7 +391,13 @@ class ElementWrapper extends Component {
       wrapperProps["data-react-element"] = element.getId();
     }
     if(! _.isEmpty(element.getResponsiveSetting('wrapper_click_actions'))){
-      wrapperProps["data-altrp-wrapper-click-actions"] = element.getId();
+      wrapperProps["data-altrp-wrapper-click-actions"] = element.getIdForAction();
+    }
+    if(! _.isEmpty(element.getResponsiveSetting('wrapper_appearB_actions'))){
+      wrapperProps["data-altrp-wrapper-appear-bottom-actions"] = element.getIdForAction();
+    }
+    if(! _.isEmpty(element.getResponsiveSetting('wrapper_appearT_actions'))){
+      wrapperProps["data-altrp-wrapper-appear-top-actions"] = element.getIdForAction();
     }
     if(! _.isEmpty(element.getResponsiveSetting('sticky'))){
       wrapperProps["data-altrp-sticky"] = element.getResponsiveSetting('sticky');
@@ -367,7 +406,7 @@ class ElementWrapper extends Component {
     }
     wrapperProps["data-altrp-id"] = element.getId();
 
-    const tooltip_position = element.getResponsiveSetting('tooltip_position', 'bottom')
+    const tooltip_position = element.getResponsiveSetting('tooltip_position') || 'bottom'
     let tooltip_text = element.getResponsiveSetting('tooltip_text')
 
     tooltip_text = replaceContentWithData(
@@ -385,13 +424,35 @@ class ElementWrapper extends Component {
     if(entranceAnimationType){
       wrapperProps['data-enter-animation-type'] = entranceAnimationType;
       // wrapperProps['data-enter-animation-duration'] = element.getResponsiveSetting('en_a_duration') || 400;
-      wrapperProps['data-enter-animation-delay'] = element.getResponsiveSetting('en_a_delay') || 0;
+      wrapperProps['data-enter-animation-delay'] = element.getResponsiveSetting('en_a_delay')?.size || 0;
       wrapperProps.className += ` altrp-invisible`;
       content = <>
         <EntranceAnimationsStyles settings={element.getSettings()} elementId={element.getId()}/>
         {content}
       </>
     }
+    return (
+      <>
+
+        <WrapperComponent {...wrapperProps} >
+          {
+            tooltip_show_type && (tooltip_show_type !== "never" && tooltip_show_type !== "Never") ?
+              <AltrpTooltip2
+                element={this.elementWrapperRef}
+                text={tooltip_text}
+                id={this.props.element.getId()}
+                open={tooltip_show_type === "always" ? true : this.state.tooltipOpen}
+                position={tooltip_position}
+                minimal={tooltip_minimal}
+                horizontal={tooltip_horizontal_offset}
+                vertical={tooltip_vertical_offset}
+              /> : ''
+          }
+          {content}
+        </WrapperComponent>
+
+      </>
+    );
     return  (
       <WrapperComponent {...wrapperProps} element={element.getId()}>
 

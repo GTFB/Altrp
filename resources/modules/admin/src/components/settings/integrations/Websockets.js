@@ -31,7 +31,7 @@ class Websockets extends Component {
     if(res.success){
       alert(res.message || 'success');
       store.dispatch(setWebsocketsEnabled(false));
-      window.location.reload();  
+      window.location.reload();
     }
   };
 
@@ -60,7 +60,7 @@ class Websockets extends Component {
             route="/admin/ajax/settings"
             resourceid="websockets_port"
             id="websockets-port"
-            className="admin_input_port" />
+            className="admin_input_port form_styles_border" />
         </div>
         <div className="admin_input__label" width="10%">
               <label htmlFor="websockets-key">
@@ -72,7 +72,7 @@ class Websockets extends Component {
             route="/admin/ajax/settings"
             resourceid="pusher_app_key"
             id="websockets-key"
-            className="admin_input_key" />
+            className="admin_input_key form_styles_border" />
         </div>
 
         <div className="admin_input__label" width="10%">
@@ -85,13 +85,13 @@ class Websockets extends Component {
             route="/admin/ajax/settings"
             resourceid="pusher_host"
             id="websockets-host"
-            className="admin_input_host" />
+            className="admin_input_host form_styles_border" />
         </div>
 
         <div>
           <button className="btn btn_save" onClick={() => this.onReset()}>
             Reset
-          </button>          
+          </button>
         </div>
       </div>
     </div>

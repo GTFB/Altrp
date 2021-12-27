@@ -50,7 +50,6 @@ class CKeditor extends Component {
             data={this.props.text || "Type text here"}
             onReady={editor => {
               // You can store the "editor" and use when it is needed.
-              console.log("Editor is ready to use!", editor);
               editor.plugins.get( 'TextTransformation' ).isEnabled = false;
             }}
             onChange={(event, editor) =>
@@ -68,7 +67,6 @@ class CKeditor extends Component {
         data={this.props.text || "Type text here"}
         disabled={this.props.readOnly}
         onReady={editor => {
-          console.log("Editor is ready to use!", editor);
           editor.plugins.get( 'TextTransformation' ).isEnabled = false;
 
         }}

@@ -192,6 +192,36 @@ class FunnelDiagram extends BaseElement {
       label: 'Label Styles',
     })
 
+    this.addControl('label_color_type', {
+      type: CONTROLLER_SELECT,
+      label: 'Color type',
+      options: [
+        {
+          label: 'Custom',
+          value: 'custom'
+        },
+        {
+          label: 'Darker',
+          value: 'darker'
+        },
+        {
+          label: 'Brighter',
+          value: 'brighter'
+        }
+      ]
+    })
+
+    this.addControl('label_modifier', {
+      type: CONTROLLER_SLIDER,
+      label: 'Value',
+      min: 0,
+      max: 3,
+      step: 0.1,
+      conditions: {
+        label_color_type: ['darker', 'brighter']
+      }
+    })
+
     this.addControl('label_color', {
       type: CONTROLLER_COLOR,
       label: 'Color'

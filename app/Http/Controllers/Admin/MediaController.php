@@ -244,12 +244,10 @@ class MediaController extends Controller
     if( ! $media ){
       return response()->json( ['success' => false, 'message'=> 'Media not found' ], 404 );
     }
-    if( Storage::delete( 'public/' . $media->filename ) ){
-      if( $media->delete() ){
-        return response()->json( ['success' => true] );
-      }
-      return response()->json( ['success' => false, 'message'=> 'Error deleting media' ], 500 );
+    if( $media->delete() ) {
+      return response()->json( [ 'success' => true ] );
     }
+
     return response()->json( ['success' => false, 'message'=> 'Error deleting file' ], 500 );
   }
 

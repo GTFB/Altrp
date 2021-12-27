@@ -5,6 +5,7 @@ namespace App\Altrp\Generators\Controller;
 
 
 use App\Altrp\Builders\Traits\DynamicVariables;
+use App\Altrp\Customizer;
 use App\Altrp\Generators\Repository\RepositoryFile;
 use App\Altrp\Generators\Repository\RepositoryInterfaceFile;
 use App\Exceptions\Controller\ControllerFileException;
@@ -368,7 +369,18 @@ class ControllerFileWriter
         ) !== false;
     }
 
-    /**
+  /**
+   * @param Customizer $customizer
+   */
+  public function writeCustomizerMethod( Customizer $customizer )
+  {
+    $methodContent = $customizer->getMethodContent();
+    $methodContent = explode( PHP_EOL, $methodContent );
+    $controllerContent = file($this->controller->getFile(), 2);
+    return $this->writeMethods($controllerContent, $methodContent, 'CUSTOMIZERS_METHODS_END');
+  }
+
+  /**
      * Получить уже существующие в файле методы
      *
      * @param $file

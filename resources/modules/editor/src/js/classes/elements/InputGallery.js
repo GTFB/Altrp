@@ -86,7 +86,7 @@ class InputGallery extends BaseElement {
     actionsControllers(this, 'Change Actions', 'change_');
 
     this.startControlSection('delete_section', {
-      label: 'Gallery'
+      label: 'Delete Settings'
     });
 
     this.addControl('delete', {

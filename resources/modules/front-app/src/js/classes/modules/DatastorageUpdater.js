@@ -5,6 +5,7 @@ import {
 } from "../../store/current-data-storage/actions";
 import {changeCurrentUser} from "../../store/current-user/actions";
 import Datasource from "../Datasource";
+import {getDataByPath} from "../../helpers";
 const { Resource, isJSON, mbParseJSON, replaceContentWithData} = window.altrpHelpers;
 
 /**
@@ -12,7 +13,8 @@ const { Resource, isJSON, mbParseJSON, replaceContentWithData} = window.altrpHel
  */
 class DataStorageUpdater extends AltrpModel {
 
-  constructor(data) {    super(data);
+  constructor(data) {
+    super(data);
     this.setProperty('dataSourcesFormsDependent', []);
     this.setProperty('formsStore', appStore.getState().formsStore);
     appStore.subscribe(this.onStoreUpdate)
@@ -33,6 +35,7 @@ class DataStorageUpdater extends AltrpModel {
     if(appStore.getState().currentUser.isEmpty()){
       let currentUser = await new Resource({ route: "/ajax/current-user" }).getAll();
       currentUser = currentUser.data;
+      console.error(currentUser);
       appStore.dispatch(changeCurrentUser(currentUser));
     }
     if(!initialUpdate && !_.get(dataSources, 'length')){
@@ -59,9 +62,11 @@ class DataStorageUpdater extends AltrpModel {
       /**
        * Находим хотя бы один обязательный параметр, который не имеет значения
        */
+
       return ! (parameters && parameters.find(param=>{
         if (param.paramValue.toString().indexOf('altrpforms.') !== -1) {
           let params = dataSource.getParams(window.currentRouterMatch.data.params, 'altrpforms.');
+
           initialUpdate && this.subscribeToFormsUpdate(dataSource, params);
         } else {
           return false;
@@ -92,7 +97,6 @@ class DataStorageUpdater extends AltrpModel {
       }
       initialUpdate && appStore.dispatch(currentDataStorageLoading());
       let requests = groupedDataSources[groupPriority].map(async dataSource => {
-
         if (dataSource.getWebUrl()) {
           let params = dataSource.getParams(window.currentRouterMatch.params, 'altrpforms.');
           let defaultParams = _.cloneDeep(params);
@@ -148,6 +152,9 @@ class DataStorageUpdater extends AltrpModel {
       console.log('Update Datasource End: ',performance.now());
       initialUpdate && appStore.dispatch(currentDataStorageLoaded());
     }
+    if(_.isEmpty(groupedDataSources)){
+      this.setProperty('updated', true);
+    }
     if(! dataSources.length){
       appStore.dispatch(currentDataStorageLoaded());
     }
@@ -189,7 +196,6 @@ class DataStorageUpdater extends AltrpModel {
      * @type {formsStore}
      */
     let formsStore = appStore.getState().formsStore;
-
     if (! _.isEqual(this.getProperty('formsStore'), formsStore) && this.getProperty('updated')) {
       this.setProperty('formsStore', formsStore);
       await this.onFormsUpdate();
@@ -227,7 +233,6 @@ class DataStorageUpdater extends AltrpModel {
         return ! value;
       });
     });
-    // console.log(dataSources);
     dataSources = _.sortBy(dataSources, data_source => data_source.priority);
     let formsStore = appStore.getState().formsStore;
     for (let ds of dataSources) {

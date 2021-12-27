@@ -9,7 +9,6 @@ import store from "../store/store";
 import { START_DRAG, startDrag } from "../store/element-drag/actions";
 import { contextMenu } from "react-contexify";
 import { setCurrentContextElement } from "../store/current-context-element/actions";
-import AltrpTooltip from "./altrp-tooltip/AltrpTooltip";
 import NavComponent from "./widgets/styled-components/NavComponent";
 import Column from "../classes/elements/Column";
 import DiagramComponent from "./widgets/styled-components/DiagramComponent";
@@ -55,15 +54,26 @@ import InputRadioComponent from "./widgets/styled-components/InputRadioComponent
 import InputSliderComponent from "./widgets/styled-components/InputSliderComponent";
 import getInputFileStyles from "../../../../front-app/src/js/components/helpers/getInputFileStyles";
 import getInputGalleryStyles from "../../../../front-app/src/js/components/helpers/getInputGalleryStyles";
-import { getResponsiveSetting } from "../../../../front-app/src/js/helpers";
+import {getResponsiveSetting, isEditor} from "../../../../front-app/src/js/helpers";
 import InputRangeSliderComponent from "./widgets/styled-components/InputRangeSliderComponent";
+import RangeSliderTableComponent from "./widgets/styled-components/RangeSliderTableComponent"
 import getTemplateStyles from "../../../../front-app/src/js/components/helpers/getTemplateStyles";
 import getInputMultiSelectStyles, {
   getInputMultiSelectPopoverStyles
 } from "../../../../front-app/src/js/components/helpers/getInputMultiSelectStyles";
 import TooltipComponent from "./widgets/styled-components/TooltipComponent";
+import AltrpTooltip2 from "./altrp-tooltip/AltrpTooltip2";
+import React from "react";
 import getSchedulerStyles from "../../../../front-app/src/js/components/helpers/getSchedulerStyles";
 import getIconStyles from "../../../../front-app/src/js/components/helpers/getIconStyles";
+import getInputTextAutocompleteStyles
+  from "../../../../front-app/src/js/components/helpers/getInputTextAutocompleteStyles";
+import TreeComponent from "./widgets/styled-components/TreeComponent";
+import getInputSelectTreeStyles from "../../../../front-app/src/js/components/helpers/getInputSelectTreeStyles";
+import InputDateRange from "../classes/elements/InputDateRange";
+import InputDateRangeComponent from "./widgets/styled-components/InputDateRangeComponent";
+import StarsComponent from "./widgets/styled-components/StarsComponent";
+import ProgressBarComponent from "./widgets/styled-components/ProgressBarComponent";
 import InputCropImageComponent from "./widgets/styled-components/InputCropImageComponent";
 
 const { connect } = window.reactRedux;
@@ -103,6 +113,9 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       break;
     case "accordion":
       styles += `.${prefix}${elementId} {${AccordionComponent(settings)}}`;
+      break;
+    case "tree":
+      styles += `.${prefix}${elementId} {${TreeComponent(settings)}}`;
       break;
     case "section_widget":
     case "section":
@@ -150,6 +163,9 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
     case "table":
       {
         styles += getTableStyles(settings, elementId);
+        styles += `.${prefix}${elementId} { ${RangeSliderTableComponent(
+          settings
+        )}}`;
       }
       break;
     case "posts":
@@ -172,6 +188,10 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
         styles += InputDateComponent(settings, elementId, prefix);
 
         styles += `${DatePickerComponent(settings, elementId)}`;
+      }
+      break
+    case "input-date-range": {
+      styles += InputDateRangeComponent(settings, elementId, prefix)
       }
       break;
     case "input-checkbox":
@@ -202,6 +222,14 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
         )}}`;
       }
       break;
+    case "input-text-autocomplete":
+      {
+        styles += `.${prefix}${elementId} {${getInputTextAutocompleteStyles(
+          settings,
+          elementId
+        )}}`;
+      }
+      break;
 
     case "template":
       {
@@ -220,6 +248,12 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
         styles += `${getInputSelectPopoverStyles(settings, elementId)}`;
       }
       break;
+    case "input-select-tree": {
+      styles += `.${prefix}${elementId} {${getInputSelectTreeStyles(settings)}}`;
+      styles += `${getInputSelectPopoverStyles(settings, elementId)}`;
+      styles += `.altrp-select-tree${elementId} {${TreeComponent(settings, "tree_")}}`;
+      }
+      break;
     case "input-multi-select":
       {
         styles += `.${prefix}${elementId} {${getInputMultiSelectStyles(
@@ -231,6 +265,20 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       break;
     case "input-radio": {
       styles += InputRadioComponent(settings, elementId, prefix);
+      break;
+    }
+    case "stars": {
+      styles += `.${prefix}${elementId} {${StarsComponent(
+        settings,
+        elementId
+      )}}`;
+      break;
+    }
+    case "progress-bar": {
+      styles += `.${prefix}${elementId} {${ProgressBarComponent(
+        settings,
+        elementId
+      )}}`;
       break;
     }
     case "input-text":
@@ -323,7 +371,8 @@ class ElementWrapper extends Component {
     this.state = {
       children: this.props.element.getChildren(),
       dragOver: false,
-      isDrag: false
+      isDrag: false,
+      tooltipOpen: false,
     };
     this.onDragLeave = this.onDragLeave.bind(this);
     this.onDragOver = this.onDragOver.bind(this);
@@ -333,6 +382,10 @@ class ElementWrapper extends Component {
     this.handleContext = this.handleContext.bind(this);
     this.wrapper = React.createRef();
     this.elementId = this.props.element.getId();
+    this.onClickTooltip = this.onClickTooltip.bind(this);
+    this.closeTooltip = this.closeTooltip.bind(this);
+    this.tooltipOnMouseEnter = this.tooltipOnMouseEnter.bind(this);
+    this.tooltipOnMouseLeave = this.tooltipOnMouseLeave.bind(this);
     props.element.wrapperComponent = this;
   }
   onDragLeave(e) {
@@ -395,6 +448,55 @@ class ElementWrapper extends Component {
       }
     });
   }
+
+  closeTooltip(e) {
+    if(!e.path.includes(this.wrapper.current)) {
+      const checkTooltip = e.path.find(domElem => domElem.classList ? domElem.classList.contains("bp3-popover2") : false);
+
+
+      if(!checkTooltip) {
+        this.setState(s => ({
+          ...s, tooltipOpen: false
+        }))
+
+        this.tooltipOnClickListener(true)
+      }
+    }
+
+  }
+
+  tooltipOnClickListener(remove) {
+    if(remove) {
+      document.getElementById("editorContent").contentWindow.document.removeEventListener("click", this.closeTooltip, {
+        capture: true
+      });
+    } else {
+      document.getElementById("editorContent").contentWindow.document.addEventListener("click", this.closeTooltip, {
+        capture: true
+      });
+    }
+  }
+
+  tooltipOnMouseEnter() {
+    this.setState(s => ({
+      ...s, tooltipOpen: true
+    }))
+  }
+
+  tooltipOnMouseLeave() {
+    this.setState(s => ({
+      ...s, tooltipOpen: false
+    }))
+  }
+
+  onClickTooltip() {
+
+    this.setState(s => ({
+      ...s, tooltipOpen: !s.tooltipOpen
+    }))
+
+    this.tooltipOnClickListener()
+  };
 
   /**
    * событие дропа
@@ -553,6 +655,17 @@ class ElementWrapper extends Component {
     }));
   }
 
+  componentDidUpdate(prevProps) {
+    document.getElementById("editorContent")?.contentWindow?.dispatchEvent(new Event("resize"));
+
+    const prevTooltipState = prevProps.element.getSettings("tooltip_show_type");
+    const tooltipState = this.props.element.getSettings("tooltip_show_type");
+
+    if(prevTooltipState !== tooltipState) {
+      this.tooltipOnClickListener(true)
+    }
+  }
+
   /**
    * Нужно ли обновлять компонент
    * @param {{}} nextProps
@@ -579,6 +692,7 @@ class ElementWrapper extends Component {
   }
   render() {
     const elementHideTrigger = this.props.element.settings.hide_on_trigger;
+    const element = this.props.element
     let {
       isFixed,
       tooltip_text,
@@ -586,11 +700,12 @@ class ElementWrapper extends Component {
       tooltip_show_type,
       tooltip_horizontal_offset,
       tooltip_vertical_offset,
-      tooltip_position = "bottom"
     } = this.props.element.getSettings();
     if (["column", "section"].indexOf(this.props.element.getType()) !== -1) {
       tooltip_show_type = "never";
     }
+    const tooltip_position = element.getResponsiveSetting('tooltip_position') || 'bottom'
+
     let errorContent = null;
     if (this.state.errorInfo) {
       errorContent = (
@@ -607,6 +722,11 @@ class ElementWrapper extends Component {
     let classes = `altrp-element ${this.props.element
       .getSelector()
       .replace(".", "")} altrp-element_${this.props.element.getType()}`;
+    if(! this.props.element?.children?.length){
+      if(this.props.element.getType() === 'column'){
+        classes += ' altrp-element_empty-column '
+      }
+    }
     if (this.props.element.getType() === "widget") {
       classes += ` altrp-widget_${this.props.element.getName()}`;
     }
@@ -679,7 +799,7 @@ class ElementWrapper extends Component {
       globalStyles: this.props.globalStyles,
       fireAction: this.fireAction,
       CKEditor: CKEditor,
-      wrapper: this
+      wrapper: this,
     };
 
     let WrapperComponent = "div";
@@ -691,83 +811,90 @@ class ElementWrapper extends Component {
       // WrapperComponent = DashboardComponent;
       // break;
     }
+    if(! this.props.element.getResponsiveSetting('tooltip_enable')){
+      tooltip_show_type = 'never'
+    }
     return elementHideTrigger &&
       this.props.hideTriggers.includes(elementHideTrigger) ? null : (
-      <WrapperComponent
-        className={classes}
-        style={{ ...styles, width: layout_column_width }}
-        ref={this.wrapper}
-        element={this.props.element.getId()}
-        onContextMenu={this.handleContext}
-        onDragOver={this.onDragOver}
-        onClick={this.chooseElement}
-        onDrop={this.onDrop}
-        settings={this.props.element.getSettings()}
-        onDragEnd={this.onDragEnd}
-        onDragLeave={this.onDragLeave}
-        onDragEnter={this.onDragEnter}
-      >
-        <div
-          className={overlayClasses}
-          id={"overlay" + this.props.element.getId()}
-          style={overlayStyles}
-        >
-          <div className="overlay-settings">
-            <button
-              className="overlay-settings__button overlay-settings__button_add "
-              title="Add Section"
-            >
-              <AddIcon className="icon" />
-            </button>
-            <button
-              className="overlay-settings__button overlay-settings__button_edit "
-              onClick={this.chooseElement}
-              draggable="true"
-              onDragStart={this.onDragStart}
-              title={editText}
-            >
-              <_EditIcon className="icon" />
-            </button>
-            <button
-              className="overlay-settings__button overlay-settings__button_duplicate "
-              onClick={this.duplicateElement}
-              title={duplicateText}
-            >
-              <DuplicateIcon className="icon" />
-            </button>
-            <button
-              className="overlay-settings__button overlay-settings__button_delete "
-              onClick={this.deleteElement}
-              title={deleteText}
-            >
-              <CloseIcon className="icon" width="35" height="35" />
-            </button>
-          </div>
-        </div>
-        {tooltip_show_type && tooltip_show_type !== "never" && !errorContent ? (
-          <AltrpTooltip
-            text={tooltip_text}
-            id={this.props.element.getId()}
-            state={tooltip_show_type}
-            position={tooltip_position}
-            minimal={tooltip_minimal}
-            horizontal={tooltip_horizontal_offset}
-            vertical={tooltip_vertical_offset}
+        <>
+          {
+            tooltip_show_type !== "never" && !errorContent && tooltip_show_type ?
+              <AltrpTooltip2
+                element={this.wrapper}
+                text={tooltip_text}
+                id={this.props.element.getId()}
+                open={tooltip_show_type === "always" ? true : this.state.tooltipOpen}
+                position={tooltip_position}
+                minimal={tooltip_minimal}
+                horizontal={tooltip_horizontal_offset}
+                vertical={tooltip_vertical_offset}
+              /> : ""
+          }
+          <WrapperComponent
+            className={classes}
+            style={{ ...styles, width: layout_column_width }}
+            ref={this.wrapper}
+            element={this.props.element.getId()}
+            onContextMenu={this.handleContext}
+            onDragOver={this.onDragOver}
+            onClick={this.chooseElement}
+            onDrop={this.onDrop}
+            settings={this.props.element.getSettings()}
+            onDragEnd={this.onDragEnd}
+            onDragLeave={this.onDragLeave}
+            onDragEnter={this.onDragEnter}
+            onMouseEnter={tooltip_show_type === "hover" ? this.tooltipOnMouseEnter : null}
+            onMouseLeave={tooltip_show_type === "hover" ? this.tooltipOnMouseLeave : null}
           >
-            {React.createElement(this.props.component, elementProps)}
-          </AltrpTooltip>
-        ) : (
-          errorContent ||
-          React.createElement(this.props.component, elementProps)
-        )}
-        {emptyColumn}
-        <ElementWrapperGlobalStyles
-          settings={this.props.element.getSettings()}
-          elementName={this.props.element.getName()}
-          element={this.props.element}
-          elementId={this.elementId}
-        />
-      </WrapperComponent>
+            <div
+              className={overlayClasses}
+              id={"overlay" + this.props.element.getId()}
+              style={overlayStyles}
+            >
+              <div className="overlay-settings">
+                <button
+                  className="overlay-settings__button overlay-settings__button_add "
+                  title="Add Section"
+                >
+                  <AddIcon className="icon" />
+                </button>
+                <button
+                  className="overlay-settings__button overlay-settings__button_edit "
+                  onClick={this.chooseElement}
+                  draggable="true"
+                  onDragStart={this.onDragStart}
+                  title={editText}
+                >
+                  <_EditIcon className="icon" />
+                </button>
+                <button
+                  className="overlay-settings__button overlay-settings__button_duplicate "
+                  onClick={this.duplicateElement}
+                  title={duplicateText}
+                >
+                  <DuplicateIcon className="icon" />
+                </button>
+                <button
+                  className="overlay-settings__button overlay-settings__button_delete "
+                  onClick={this.deleteElement}
+                  title={deleteText}
+                >
+                  <CloseIcon className="icon" width="35" height="35" />
+                </button>
+              </div>
+            </div>
+            {
+              errorContent || React.createElement(this.props.component, elementProps)
+            }
+            {emptyColumn}
+            <ElementWrapperGlobalStyles
+              settings={this.props.element.getSettings()}
+              elementName={this.props.element.getName()}
+              element={this.props.element}
+              elementId={this.elementId}
+            />
+          </WrapperComponent>
+        </>
     );
   }
 
@@ -780,6 +907,11 @@ class ElementWrapper extends Component {
 
     this.props.element.setElementAsCurrent();
     getEditor().showSettingsPanel();
+
+
+    if(this.props.element.getSettings("tooltip_show_type") === "click") {
+      this.onClickTooltip()
+    }
   }
 
   deleteElement(e) {

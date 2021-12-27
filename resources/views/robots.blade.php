@@ -34,12 +34,25 @@
     </script>
     <link rel="stylesheet" href="{{ asset( '/modules/editor/editor.css?' ) . getCurrentVersion() }}">
     {{--<link rel="dns-prefetch" href="//fonts.gstatic.com">--}}
+
+  @php
+    echo print_statics('style', 'ROBOT_HEAD_STYLE' );
+  @endphp
+  @php
+    echo print_statics('script', 'ROBOT_HEAD_SCRIPTS' );
+  @endphp
 </head>
 
 <body>
     <div id="robots-editor">
 
     </div>
-</body>
 
+    @php
+      echo print_statics('style', 'ROBOT_BOTTOM_STYLE' );
+    @endphp
+    @php
+      echo print_statics('script', 'ROBOT_BOTTOM_SCRIPTS' );
+    @endphp
+</body>
 </html>

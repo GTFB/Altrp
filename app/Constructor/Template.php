@@ -569,6 +569,7 @@ class Template extends Model
   public static function sanitizeSettings( $data = [] )
   {
 //    return $data; //todo: to test
+
     if ( is_string( $data ) ) {
       $data = json_decode( $data, true );
       if ( ! $data ) {
@@ -592,6 +593,8 @@ class Template extends Model
           continue;
         }
         if ( empty( $setting ) && ! is_string( $setting ) ) {
+
+
 
           unset( $data['settings'][$index] );
         } else {

@@ -58,6 +58,7 @@ class FrontElementsFabric {
     }
     let clonedElement = _.cloneDeep(element);
     // console.log(element.idForAction);
+    delete clonedElement.idForAction;
     this.updateParents(clonedElement);
     return clonedElement
   }

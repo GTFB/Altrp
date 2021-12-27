@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import SortableHeader from "./AdminTableComponents/SortableHeader";
 import AdminTableRow from "./AdminTableRow";
+import Pagination from "./Pagination";
+import Search from "./../svgs/search.svg"
+import {InputGroup} from "@blueprintjs/core";
 class AdminTable extends Component {
   /**
    * Фильтр по введенной строке
@@ -14,19 +17,22 @@ class AdminTable extends Component {
   };
 
   render() {
-    const { search, sortingHandler, sortingField } = this.props;
+    const {
+      searchTables,
+      sortingHandler,
+      radiusTable, sortingField, tableHalf } = this.props;
     return (
-      <div className="admin-table">
-        {search && (
-          <div className="admin-table">
-            <input
-              value={search.value}
-              onChange={search.changeHandler}
-              type="text"
-              className="form-group"
-            />
-          </div>
+      /*Search всех компонент*/
+      <div className={"admin-table" + (radiusTable ? " admin-table-noRadius" : "")}>
+
+        {searchTables && (
+          <form className="admin-table-top" onSubmit={searchTables.submit}>
+            <InputGroup className="form-tables" value={searchTables.value} onChange={searchTables.change} />
+            <Search />
+            <button className="btn btn_bare admin-users-button btn__tables">Search</button>
+          </form>
         )}
+
         <table>
           <thead className="admin-table-head">
             <tr className="admin-table-row">
@@ -55,10 +61,21 @@ class AdminTable extends Component {
           </thead>
           <tbody className="admin-table-body">
             {this.props.rows.map(row => (
-              <AdminTableRow key={row.id} row={row} {...this.props} />
+              <AdminTableRow offBorderLast={this.props.offBorderLast} key={row.id} row={row} {...this.props} />
             ))}
           </tbody>
         </table>
+
+        {
+          this.props.openPagination && (
+            <Pagination
+              pageCount={this.props.pageCount}
+              currentPage={this.props.currentPage}
+              changePage={this.props.changePage}
+              itemsCount={this.props.itemsCount}
+            />
+          )
+        }
       </div>
     );
   }

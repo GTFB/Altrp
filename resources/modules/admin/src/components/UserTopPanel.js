@@ -10,11 +10,11 @@ import {logout} from "../js/helpers";
 class UserTopPanel extends Component {
   render(){
     return<div className="admin-user-top-panel top-panel d-flex align-items-center">
-      <a href="#" className="top-panel-notification notification">
+      {this.props.userName&&<a href="#" className="top-panel-notification notification">
         <BellIcon className="notification__icon"/>
-      </a>
-      <UserIcon className="top-panel__portrait"/>
-      <div className="top-panel__greeting">Hello, {this.props.userName || "administrator"}</div>
+      </a>}
+      {/*<UserIcon className="top-panel__portrait"/>*/}
+      {this.props.userName&&<div className="top-panel__greeting">Hello, {this.props.userName}</div>}
       <button className="top-panel-logout logout" onClick={logout}>
         <LogoutIcon className="logout__icon"/>
       </button>
@@ -24,7 +24,7 @@ class UserTopPanel extends Component {
 
 const mapStateToProps = state => {
   return {
-    userName: state.currentUser.name
+    userName: state.currentUser?.data?.name || ''
   }
 };
 

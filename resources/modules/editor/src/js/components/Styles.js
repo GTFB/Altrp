@@ -38,11 +38,7 @@ class Styles extends Component {
    * @param {string} styles
    * */
   addElementStyles(elementId, styles) {
-    if (elementId == "_wla0hknmd") {
-      console.log("====================================");
-      console.log(styles);
-      console.log("====================================");
-    }
+
     if (!styles) {
       return;
     }

@@ -14,10 +14,14 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Str;
 use Ixudra\Curl\Facades\Curl;
+use App\Services\Robots\Bots\TelegramBot\TelegramBotService;
+
 
 class RobotsService
 {
     use DispatchesJobs;
+
+    protected $data;
 
     /**
      * @var Robot объект робота
@@ -125,12 +129,8 @@ class RobotsService
         return $node->data->props;
     }
 
-    /**
-     * Запустить робота
-     * @param null $modelData
-     * @return bool
-     */
-    public function runRobot($modelData = null)
+
+    protected function getDataSources($modelData)
     {
         $arr = [];
         foreach ($this->robotSources as $source) {
@@ -147,17 +147,33 @@ class RobotsService
             $name = Str::snake(strtolower($source->name));
             $arr[$name] = $res;
         }
+        return $arr;
+    }
 
-        $modelData['sources'] = $arr;
+    /**
+     * Запустить робота
+     * @param null $modelData
+     * @return bool
+     */
+    public function runRobot($modelData = [])
+    {
+        $modelData['sources'] = $this->getDataSources($modelData);
 
-        $currentAction = $this->getStartBlock($modelData);
+        $this->data = $modelData;       
 
-        if (!$currentAction->toStart()) return false;
+        $currentAction = $this->getCurrentBlock('start');
 
-        do {
-            $currentAction->run();
-            $currentAction = $currentAction->next();
-        } while(! $currentAction->isEnd());
+        if ($this->robot->start_condition !== 'telegram_bot' && !$currentAction->toStart()) return false;
+
+        if ($this->robot->start_condition === 'telegram_bot') {
+                $bot = new TelegramBotService($this->robot->start_config['bot_token'], $this);
+                $update = $bot->getUpdates();
+        } else {
+            do {
+                $currentAction->run();
+                $currentAction = $currentAction->next();
+            } while(! $currentAction->isEnd());
+        }
 
         return true;
     }
@@ -167,9 +183,19 @@ class RobotsService
      * @param $modelData
      * @return Block
      */
-    protected function getStartBlock($modelData)
+    protected function getStartBlock()
     {
-        return new Block('start', $this->edges, $this->nodes, $modelData);
+        return new Block('start', $this->edges, $this->nodes, $this->data);
+    }
+
+    /**
+     * Получить текущий блок диаграммы
+     * @param $modelData
+     * @return Block
+     */
+    public function getCurrentBlock($id)
+    {
+        return new Block($id, $this->edges, $this->nodes, $this->data);
     }
 
     /**

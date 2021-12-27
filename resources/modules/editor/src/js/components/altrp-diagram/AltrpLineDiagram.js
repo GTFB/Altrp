@@ -95,10 +95,10 @@ const AltrpDiagram = props => {
     constantsAxises = constantsAxises.flat();
   }
 
-  const { 
-    bottomAxis, 
-    enableGridX, 
-    enableGridY, 
+  const {
+    bottomAxis,
+    enableGridX,
+    enableGridY,
     colorScheme,
     enableArea,
     enablePoints,
@@ -416,7 +416,7 @@ const AltrpDiagram = props => {
       </div>
     );
   }
-  
+
   return (
     <DynamicLineChart
       enableGradient={enableGradient}
@@ -424,7 +424,7 @@ const AltrpDiagram = props => {
         top: 30,
         bottom: 30,
         right: 30,
-        left: 30 
+        left: 30
       }}
       useCustomTooltips={useCustomTooltips}
       yScaleMax={yScaleMax}

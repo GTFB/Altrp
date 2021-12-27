@@ -40,24 +40,41 @@ class PageService
           $argument_index = true;
         }
       }
+      $custom_argument = false;
+      $custom_model = '';
+      if( ($_frontend_route['model'] ?? false)
+        && ($_frontend_route['model_column'] ?? false)
+        && ($_frontend_route['param_name'] ?? false) ){
+        $argument_index = true;
+        $custom_argument = true;
+        $custom_model = "\$model = \$model->where( '" . $_frontend_route['model_column'] . "', \$"
+           . $_frontend_route['param_name'] . " )->first();";
+      }
 
       preg_match_all('/\{[a-z0-9_]+\}/', $frontend_route, $matches);
       $params = '';
       $id = null;
+      $route_args = '[';
       foreach ($matches[0] as $i => $param) {
         $parameter = str_replace(['{', '}'], '', $param);
+        $route_args .= "'$parameter'=> $$parameter,";
         $params .= '$' . $parameter;
         if ($parameter == 'id')
           $id = '$' . $parameter;
         if ($i != count($matches[0] ) - 1) $params .= ', ';
       }
-
+      $route_args .= ']';
       $data = [
         'frontend_route_id' => $_frontend_route['id'],
         'title' => "'$title'",
         'frontend_route' => "'$frontend_route'",
         'argument_index' => $argument_index ? $argument_index : 'false',
+        'custom_argument' => $custom_argument ? $custom_argument : 'false',
         'params' => $params,
+        'param_name' => $_frontend_route['param_name'],
+        'model_column' => $_frontend_route['model_column'],
+        'custom_model' => $custom_model,
+        'route_args' => $route_args,
         'model_id'  => $id ?: '0'
       ];
 

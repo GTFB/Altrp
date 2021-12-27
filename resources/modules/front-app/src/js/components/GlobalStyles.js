@@ -44,11 +44,19 @@ import getInputGalleryStyles from "./helpers/getInputGalleryStyles";
 import {getResponsiveSetting} from "../helpers";
 import InputRangeSliderComponent
   from "../../../../editor/src/js/components/widgets/styled-components/InputRangeSliderComponent";
+import RangeSliderTableComponent from "../../../../editor/src/js/components/widgets/styled-components/RangeSliderTableComponent"
 import getTemplateStyles from "./helpers/getTemplateStyles";
 import TooltipComponent from "../../../../editor/src/js/components/widgets/styled-components/TooltipComponent";
 import getInputMultiSelectStyles, {getInputMultiSelectPopoverStyles} from "./helpers/getInputMultiSelectStyles";
 import getSchedulerStyles from "./helpers/getSchedulerStyles";
+import getInputTextAutocompleteStyles from "./helpers/getInputTextAutocompleteStyles";
+import TreeComponent from "../../../../editor/src/js/components/widgets/styled-components/TreeComponent";
+import InputDateRangeComponent
+  from "../../../../editor/src/js/components/widgets/styled-components/InputDateRangeComponent";
 import getIconStyles from "./helpers/getIconStyles";
+import StarsComponent from "../../../../editor/src/js/components/widgets/styled-components/StarsComponent";
+import ProgressBarComponent from "../../../../editor/src/js/components/widgets/styled-components/ProgressBarComponent";
+import MenuBlueprintCSS from "../../../../../../server/classes/components/MenuPlaceholder/MenuBlueprintCSS";
 import InputCropImageComponent from "../../../../editor/src/js/components/widgets/styled-components/InputCropImageComponent";
 
 const {isEditor} = window.altrpHelpers;
@@ -133,6 +141,7 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles+=getTabsStyles(item.settings, id);
           break;
         case "menu":
+          styles+=MenuBlueprintCSS;
           styles+=getMenuStyles(item.settings,id);
           break;
         case "breadcrumbs":
@@ -148,6 +157,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           break;
         case 'table': {
           styles += getTableStyles(item.settings, id);
+          styles += `.${prefix}${id} {${RangeSliderTableComponent(
+            item.settings,
+          )}}`;
         }
           break;
         case 'text': {
@@ -179,8 +191,30 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           )}`;
         }
           break
+        case "input-date-range": {
+          styles += InputDateRangeComponent(
+            item.settings,
+            id,
+            prefix
+          );
+        }
+        break
         case "input-checkbox": {
           styles += `.${prefix}${id} {${InputCheckboxComponent(
+            item.settings,
+            id
+          )}}`;
+        }
+          break
+        case "stars": {
+          styles += `.${prefix}${id} {${StarsComponent(
+            item.settings,
+            id
+          )}}`;
+        }
+          break
+        case "progress-bar": {
+          styles += `.${prefix}${id} {${ProgressBarComponent(
             item.settings,
             id
           )}}`;
@@ -201,10 +235,20 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         case "input-text-common":{
           styles += `.${prefix}${id} {${getInputTextCommonStyles(item.settings, id)}}`
         }
+          break
+        case "input-text-autocomplete":{
+          styles += `.${prefix}${id} {${getInputTextAutocompleteStyles(item.settings, id)}}`
+        }
           break;
         case "input-select":{
           styles += `.${prefix}${id} {${getInputSelectStyles(item.settings, id)}}`
           styles += `${getInputSelectPopoverStyles(item.settings, id)}`
+        }
+          break;
+        case "input-select-tree": {
+          styles += `.${prefix}${id} {${getInputSelectStyles(item.settings, id)}}`
+          styles += `${getInputSelectPopoverStyles(item.settings, id)}`
+          styles += `.altrp-select-tree${id} {${TreeComponent(item.settings, "tree_")}}`;
         }
           break;
         case "input-multi-select":{
@@ -264,6 +308,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
         case "scheduler":
           styles += `.${prefix}${id} {${getSchedulerStyles(item.settings, id)}}`;
           break;
+        case "tree":
+          styles += `.${prefix}${id} {${TreeComponent(item.settings)}}`;
+          break;
       }
       styles += `div.${prefix}${id}.${prefix}${id} {${AdvancedComponent(
         item.settings
@@ -277,12 +324,13 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
 
       let element_css_editor = getResponsiveSetting(item.settings, "element_css_editor");
       if(_.isString(element_css_editor)){
-        styles+=element_css_editor.replace(/__selector__/g, `${prefix}${id}`)
+        styles+=element_css_editor.replace(/__selector__/g, `.${prefix}${id}`)
       }
     }
   });
 
-  styles += `} `;
+  styles += ` `;
+
   window.globalDefaults && (styles += window.globalDefaults.join(''));
   return styles;
 }}`

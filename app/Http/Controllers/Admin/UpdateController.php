@@ -55,13 +55,15 @@ class UpdateController extends Controller
       $result = $updateService->update( true );
     }catch ( \HttpException $e ) {
       Artisan::call( 'up' );
-      return response()->json( ['message' => $e->getMessage()], 500 );
+      return response()->json( ['message' => $e->getMessage(), 'result' => false], 500 );
     }catch (\Exception $e) {
       Artisan::call( 'up' );
-      return response()->json( ['message' => $e->getMessage()], 500 );
+      return response()->json( ['message' => $e->getMessage(), 'result' => false], 500 );
     }
     Artisan::call( 'up' );
-    return response()->json( ['result' => $result] );
+    return response()->json( ['result' => $result], 200, [
+      'Clear-Site-Data' => 'cache',
+    ], JSON_UNESCAPED_UNICODE);
   }
   /**
    * Обновление Altrp
