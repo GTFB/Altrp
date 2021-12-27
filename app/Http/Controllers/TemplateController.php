@@ -32,26 +32,43 @@ class TemplateController extends Controller
     $search = $request->get( 's' );
     $categories = $request->get( 'categories' );
     $area_name = $request->get( 'area', 'content' );
+    
 
     $orderColumn = $request->get( 'order_by' ) ?? 'id';
     $orderType = $request->get( 'order' ) ? ucfirst( strtolower( $request->get( 'order' ) ) ) : 'Desc';
     $sortType = 'sortBy' . ( $orderType == 'Asc' ? '' : $orderType );
     if ( ! $request->get( 'page' ) ) {
+
       $_templates = $search
         ? Template::getBySearchWhere( [ [ 'type', '!=', 'review' ] ], $search, $orderColumn, $orderType )
-        : Template::with('categories.category')
-          ->when($categories, function ($query, $categories) {
-              if (is_string($categories)) {
-                  $categories = explode(",", $categories);
-                  $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'templates.guid')
-                        ->whereIn('altrp_category_objects.category_guid', $categories);
-              }
-          })
-          ->join( 'areas', 'areas.id', '=', 'templates.area' )
-          ->where( 'areas.name', $area_name )
-          ->where( 'type', '!=', 'review' )->get()->$sortType( $orderColumn )->values();
+        // : Template::with('categories.category')
+        //   ->when($categories, function ($query, $categories) {
+        //       if (is_string($categories)) {
+        //           $categories = explode(",", $categories);
+        //           $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'templates.guid')
+        //                 ->whereIn('altrp_category_objects.category_guid', $categories);
+        //       }
+        //   })
+        //   ->where( 'type', '!=', 'review' )->get()->$sortType( $orderColumn )->values();
+
+        : Template::with('categories.category')->where( 'type', '!=', 'review' );
+
+          $_templates = $_templates->join( 'areas', 'areas.id', '=', 'templates.area' )
+            ->when($categories, function ($query, $categories) {
+                  if (is_string($categories)) {
+                      $categories = explode(",", $categories);
+                      $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'templates.guid')
+                            ->whereIn('altrp_category_objects.category_guid', $categories);
+                  }
+              })
+            ->where( 'areas.name', $area_name );
+          $page_count = $_templates->toBase()->getCountForPagination();
+          $_templates = $_templates->get( 'templates.*' )->$sortType( $orderColumn )->values();
+
+
     } else {
       $page_size = $request->get( 'pageSize', 10 );
+      
       $_templates = $search
         ? Template::getBySearchAsObject( $search, 'templates', 'title', ['categories.category'] )->where( 'type', '!=', 'review' )
         : Template::with('categories.category')->where( 'type', '!=', 'review' );
