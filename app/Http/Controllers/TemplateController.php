@@ -30,20 +30,38 @@ class TemplateController extends Controller
   {
     $page_count = 1;
     $search = $request->get( 's' );
+    $categories = $request->get( 'categories' );
+
     $orderColumn = $request->get( 'order_by' ) ?? 'id';
     $orderType = $request->get( 'order' ) ? ucfirst( strtolower( $request->get( 'order' ) ) ) : 'Desc';
     $sortType = 'sortBy' . ( $orderType == 'Asc' ? '' : $orderType );
     if ( ! $request->get( 'page' ) ) {
       $_templates = $search
         ? Template::getBySearchWhere( [ [ 'type', '!=', 'review' ] ], $search, $orderColumn, $orderType )
-        : Template::where( 'type', '!=', 'review' )->get()->$sortType( $orderColumn )->values();
+        : Template::with('categories.category')
+          ->when($categories, function ($query, $categories) {
+              if (is_string($categories)) {
+                  $categories = explode(",", $categories);
+                  $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'templates.guid')
+                        ->whereIn('altrp_category_objects.category_guid', $categories);
+              }
+          })
+          ->where( 'type', '!=', 'review' )->get()->$sortType( $orderColumn )->values();
     } else {
       $page_size = $request->get( 'pageSize', 10 );
       $area_name = $request->get( 'area', 'content' );
       $_templates = $search
-        ? Template::getBySearchAsObject( $search, 'templates' )->where( 'type', '!=', 'review' )
-        : Template::where( 'type', '!=', 'review' );
+        ? Template::getBySearchAsObject( $search, 'templates', 'title', ['categories.category'] )->where( 'type', '!=', 'review' )
+        : Template::with('categories.category')->where( 'type', '!=', 'review' );
+
       $_templates = $_templates->join( 'areas', 'areas.id', '=', 'templates.area' )
+        ->when($categories, function ($query, $categories) {
+              if (is_string($categories)) {
+                  $categories = explode(",", $categories);
+                  $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'templates.guid')
+                        ->whereIn('altrp_category_objects.category_guid', $categories);
+              }
+          })
         ->where( 'areas.name', $area_name )
         ->offset( $page_size * ( $request->get( 'page' ) - 1 ) )
         ->limit( $page_size );
@@ -52,6 +70,7 @@ class TemplateController extends Controller
 
       $page_count = ceil( $page_count / $page_size );
     }
+
     $templates = [];
     foreach ( $_templates as $template ) {
       /**
@@ -66,6 +85,7 @@ class TemplateController extends Controller
         'author' => data_get( $user, 'name' ),
         'url' => '/admin/editor?template_id=' . $template->id,
         'area' => data_get( $template->area(), 'name', 'content' ),
+        'categories' => $template->categories,
       ];
 
     }
@@ -365,6 +385,7 @@ class TemplateController extends Controller
     //
 
     if ( $template->delete() ) {
+      CategoryObject::where("object_guid", $template->guid)->delete();
       return \response()->json( [ 'success' => true ] );
     }
     return \response()->json( [ 'success' => false ], 500 );

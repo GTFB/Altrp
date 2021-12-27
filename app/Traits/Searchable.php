@@ -27,8 +27,8 @@ trait Searchable
             ->get();
     }
 
-    public static function getBySearchAsObject($search, $table, $field = 'title')
+    public static function getBySearchAsObject($search, $table, $field = 'title', $relations = [])
     {
-        return self::where($table . '.' . $field, 'like', "%{$search}%");
+        return self::with($relations)->where($table . '.' . $field, 'like', "%{$search}%");
     }
 }

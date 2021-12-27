@@ -11,6 +11,7 @@ use App\Role;
 use App\Category;
 use App\Traits\Searchable;
 use App\User;
+use App\CategoryObject;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
