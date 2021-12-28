@@ -69,10 +69,10 @@ const getCroppedImg = (image, crop, fileName) => {
     crop.width,
     crop.height
   );
- 
+
   // As Base64 string
   // const base64Image = canvas.toDataURL('image/jpeg');
- 
+
   // As a blob
   return new Promise((resolve, reject) => {
     canvas.toBlob(file => {
@@ -476,7 +476,7 @@ class InputCropImageWidget extends Component {
   /**
    * Clear image
    */
-  clear() {
+  clear = async ()=> {
     this.onChange(null);
     this.dispatchFieldValueToStore(null, true);
   }
@@ -491,7 +491,7 @@ class InputCropImageWidget extends Component {
     } catch (e) {
       console.error(e);
     }
-    
+
     this.selectOtherInput.current.click();
   }
 
@@ -502,7 +502,7 @@ class InputCropImageWidget extends Component {
     const img = await getCroppedImg(this.imageToCrop.current, crop, 'img.jpg')
 
     let value = new AltrpFile(img)
-    
+
     try {
       const storedFile = await value.storeFile()
 
@@ -551,7 +551,7 @@ class InputCropImageWidget extends Component {
 
     return (
       <div style={{display: 'flex', justifyContent: 'center'}}>
-        {!this.state.imageUrl 
+        {!this.state.imageUrl
           ?
           <div className="image-to-crop-container">
             {!isEditor() && <input type="file" accept="image/*" className="hidden" id={this.getName()} onChange={this.onChange} required={required} />}

@@ -1136,6 +1136,7 @@ class AltrpAction extends AltrpModel {
     let elementId = this.getProperty('element_id');
     let element = getComponentByElementId(elementId);
     let action = this.getProperty('action');
+    console.log(element);
     if (_.isFunction(element[action])) {
       element[action]();
       return {
@@ -1143,6 +1144,13 @@ class AltrpAction extends AltrpModel {
       };
     }
     try {
+      if(_.isFunction(element.elementRef.current[action])){
+        let result = await element.elementRef.current[action]();
+        if(_.isObject(result)){
+          return result
+        }
+        return {success:true}
+      }
       element.elementRef.current.fireAction(action);
       return {
         success: true
