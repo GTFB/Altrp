@@ -374,6 +374,7 @@ class InputCropImageWidget extends Component {
    * @param e
    */
   onChange = async (e) => {
+
     this.setState(state => ({...state, notActive: true}))
     const {filesStorage} = this.state;
     try {
@@ -553,7 +554,7 @@ class InputCropImageWidget extends Component {
         {!this.state.imageUrl 
           ?
           <div className="image-to-crop-container">
-            <input type="file" accept="image/*" className="hidden" id={this.getName()} onChange={this.onChange} required={required} />
+            {!isEditor() && <input type="file" accept="image/*" className="hidden" id={this.getName()} onChange={this.onChange} required={required} />}
             <label htmlFor={this.getName()}>
               <div className="crop-image-text">{text}</div>
               <div className="crop-image-background" />
@@ -565,7 +566,6 @@ class InputCropImageWidget extends Component {
             <ImageCrop
               crop={this.state.crop}
               onChange={newCrop => this.setState(state => ({...state, crop: newCrop}))}
-              onComplete={this.upload}
               renderComponent={renderComponent}
             />
           </div>
