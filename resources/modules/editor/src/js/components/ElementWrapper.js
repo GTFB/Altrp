@@ -333,8 +333,6 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
     case "line-diagram":
       styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
-    case "point-diagram":
-      styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
     case "funnel-diagram":
       styles += `.${prefix}${elementId} {${DiagramComponent(settings)}}`
     case "radar-diagram":

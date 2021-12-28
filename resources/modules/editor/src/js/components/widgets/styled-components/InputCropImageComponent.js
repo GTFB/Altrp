@@ -17,11 +17,11 @@ export default function InputCropImageComponent(settings) {
 
   styles += `.crop-image-background {
     ${backgroundImageControllerToStyles(getSetting('background_image'))}
-    ${simplePropertyStyled(getSetting('background_position'), 'background-position')}
+    ${simplePropertyStyled(getSetting('background_position', '', 'center'), 'background-position')}
     ${simplePropertyStyled(getSetting('background_attachment'), 'background-attachment')}
-    ${simplePropertyStyled(getSetting('background_repeat'), 'background-repeat')}
+    ${simplePropertyStyled(getSetting('background_repeat', '', 'no-repeat'), 'background-repeat')}
     ${simplePropertyStyled(sliderStyled(getSetting('background_image_width')), 'background-image-width')}
-    ${simplePropertyStyled(getSetting('background_size'), 'background-size')}
+    ${simplePropertyStyled(getSetting('background_size', '', 'contain'), 'background-size')}
   }`
 
   styles += `.crop-image-background:hover {

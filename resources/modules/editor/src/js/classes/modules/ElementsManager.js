@@ -113,8 +113,6 @@ import BarDiagram from "../elements/diagrams/BarDiagram";
 import BarDiagramWidget from "../../components/widgets/diagrams/BarDiagramWidget";
 import LineDiagram from "../elements/diagrams/LineDiagram";
 import LineDiagramWidget from "../../components/widgets/diagrams/LineDiagramWidget";
-import PointDiagram from "../elements/diagrams/PointDiagram";
-import PointDiagramWidget from "../../components/widgets/diagrams/PointDiagramWidget";
 import FunnelDiagram from "../elements/diagrams/FunnelDiagram";
 import FunnelDiagramWidget from "../../components/widgets/diagrams/FunnelDiagramWidget";
 import RadarDiagram from "../elements/diagrams/RadarDiagram";
