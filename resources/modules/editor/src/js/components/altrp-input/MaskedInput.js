@@ -114,7 +114,7 @@ class MaskedInput extends React.Component {
   }
 
   handleChange(e) {
-    if(this.state.value.length < this.state.max) {
+    if(this.state.value?.length < this.state.max) {
       let value = e.target.value;
       const newChar = value.slice(-1);
 
