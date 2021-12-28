@@ -1035,6 +1035,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'input-hidden',
     'input-file',
     'input-gallery',
+    'input-crop-image',
     'posts',
     'breadcrumbs',
     'carousel',
