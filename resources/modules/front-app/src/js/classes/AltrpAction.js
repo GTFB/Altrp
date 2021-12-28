@@ -1136,7 +1136,6 @@ class AltrpAction extends AltrpModel {
     let elementId = this.getProperty('element_id');
     let element = getComponentByElementId(elementId);
     let action = this.getProperty('action');
-    console.log(element);
     if (_.isFunction(element[action])) {
       element[action]();
       return {
