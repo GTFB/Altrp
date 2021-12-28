@@ -303,14 +303,14 @@ class AdminBar extends React.Component {
                         </div>
                       );
                     else {
-                      if(item.template.name)
+                      if(item.template?.name)
                         return (
                           <div
                             className="admin-bar__popup-template-item"
                             key={`template-${index}`}
                             onClick={this.openTemplate(item.template.id)}
                           >
-                            {item.template.name}
+                            {item.template?.name}
                           </div>
                         );
                     }
