@@ -228,6 +228,14 @@ class FrontElementsManager {
         }
       },
       {
+        name: "input-crop-image",
+        import: async () => {
+          return await import(
+            /* webpackChunkName: 'InputCropImageWidget' */ "../../../../editor/src/js/components/widgets/InputCropImageWidget"
+          );
+        }
+      },
+      {
         name: "button",
         import: async () => {
           return await import(
@@ -368,14 +376,6 @@ class FrontElementsManager {
         import: async () => {
           return await import(
             /* webpackChunkName: 'BarDiagramWidget' */ "../../../../editor/src/js/components/widgets/diagrams/BarDiagramWidget"
-          );
-        }
-      },
-      {
-        name: "point-diagram",
-        import: async () => {
-          return await import(
-            /* webpackChunkName: 'PointDiagramWidget' */ "../../../../editor/src/js/components/widgets/diagrams/PointDiagramWidget"
           );
         }
       },

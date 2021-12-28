@@ -52,20 +52,14 @@ class BarDiagram extends BaseElement {
       label: "Path to Data"
     });
 
-    this.addControl("group_name", {
-      dynamic: false,
-      label: "Group Field"
-    });
+    this.addControl('dataKeys', {
+      type: CONTROLLER_TEXTAREA,
+      label: 'Data Keys'
+    })
 
-    this.addControl("key_name", {
-      dynamic: false,
-      label: "Key Field"
-    });
-
-    this.addControl("data_name", {
-      dynamic: false,
-      label: "Data Field"
-    });
+    this.addControl('indexBy', {
+      label: 'Index By'
+    })
 
     this.addControl("key_is_date", {
       dynamic: false,
@@ -101,11 +95,11 @@ class BarDiagram extends BaseElement {
       type: CONTROLLER_SELECT,
       options: [
         {
-          label: 'vertical',
+          label: 'Vertical',
           value: 'vertical'
         },
         {
-          label: 'horizontal',
+          label: 'Horizontal',
           value: 'horizontal'
         },
       ]
@@ -237,7 +231,7 @@ class BarDiagram extends BaseElement {
 
     this.addControl("width", {
       type: CONTROLLER_SLIDER,
-      label: "width",
+      label: "Width",
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
@@ -245,7 +239,7 @@ class BarDiagram extends BaseElement {
 
     this.addControl("height", {
       type: CONTROLLER_SLIDER,
-      label: "height",
+      label: "Height",
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
@@ -299,7 +293,7 @@ class BarDiagram extends BaseElement {
 
     this.startControlSection("custom_color_scheme", {
       tab: TAB_STYLE,
-      label: "Custom color scheme"
+      label: "Custom Color Scheme"
     });
 
     let repeaterScheme = new Repeater();

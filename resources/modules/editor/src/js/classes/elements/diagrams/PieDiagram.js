@@ -54,34 +54,34 @@ class PieDiagram extends BaseElement {
     this.addControl("datasource_path", {
       dynamic: false,
       type: CONTROLLER_TEXTAREA,
-      label: "Path to Data"
+      label: "Path To Data"
     });
 
     this.addControl("use_legend", {
       type: CONTROLLER_SWITCHER,
-      label: "Use legend?",
+      label: "Use Legend?",
     });
 
     this.addControl("useCenteredMetric", {
       type: CONTROLLER_SWITCHER,
-      label: "Use centered metric?",
+      label: "Use Centered Metric?",
     });
     
     this.addControl("useProcent", {
       type: CONTROLLER_SWITCHER,
-      label: "Add procent?",
+      label: "Add Procent?",
     });
     
     this.addControl("useLinkArcLabels", {
       type: CONTROLLER_SWITCHER,
-      label: "Use link arc labels?",
+      label: "Use Link Arc Labels?",
     });
 
     this.endControlSection();
 
     this.startControlSection("style", {
-      tab: TAB_STYLE,
-      label: "Visual style"
+      tab: TAB_CONTENT,
+      label: "Visual"
     });
 
     const colors = Schemes.map(object => {
@@ -90,17 +90,17 @@ class PieDiagram extends BaseElement {
     
     this.addControl("activeOuterRadiusOffset", {
       type: CONTROLLER_NUMBER,
-      label: "Active outer radius offset"
+      label: "Active Outer Radius Offset"
     });
     
     this.addControl("activeInnerRadiusOffset", {
       type: CONTROLLER_NUMBER,
-      label: "Active inner radius offset"
+      label: "Active Inner Radius Offset"
     });
 
     this.addControl("innerRadius", {
       type: CONTROLLER_SLIDER,
-      label: "Inner radius",
+      label: "Inner Radius",
       min: 0,
       max: 0.95,
       step: 0.05
@@ -108,7 +108,7 @@ class PieDiagram extends BaseElement {
 
     this.addControl("padAngle", {
       type: CONTROLLER_SLIDER,
-      label: "Pad angle",
+      label: "Pad Angle",
       min: 0,
       max: 45,
       step: 1
@@ -122,12 +122,12 @@ class PieDiagram extends BaseElement {
 
     this.addControl("yScaleMax", {
       type: CONTROLLER_NUMBER,
-      label: "Y scale max"
+      label: "Y Scale Max"
     });
 
     this.addControl("cornerRadius", {
       type: CONTROLLER_SLIDER,
-      label: "Corner radius",
+      label: "Corner Radius",
       min: 0,
       max: 45,
       step: 1,
@@ -141,7 +141,7 @@ class PieDiagram extends BaseElement {
 
     this.startControlSection("custom_color_scheme", {
       tab: TAB_STYLE,
-      label: "Custom color scheme"
+      label: "Custom Color Scheme"
     });
 
     let repeaterScheme = new Repeater();
@@ -154,7 +154,7 @@ class PieDiagram extends BaseElement {
 
     this.addControl("isCustomColor", {
       type: CONTROLLER_SWITCHER,
-      label: "Use custom color scheme?",
+      label: "Use Custom Color Scheme?",
     });
 
     this.addControl("customScheme", {
@@ -171,7 +171,7 @@ class PieDiagram extends BaseElement {
 
     this.addControl("width", {
       type: CONTROLLER_SLIDER,
-      label: "width",
+      label: "Width",
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
@@ -179,7 +179,7 @@ class PieDiagram extends BaseElement {
 
     this.addControl("height", {
       type: CONTROLLER_SLIDER,
-      label: "height",
+      label: "Height",
       units: ["px", "%", "vh"],
       max: 1000,
       min: 0,
@@ -195,7 +195,7 @@ class PieDiagram extends BaseElement {
     
     this.startControlSection("centered_metric", {
       tab: TAB_STYLE,
-      label: "Center metric"
+      label: "Center Metric"
     });
 
     this.addControl('centered_metric_typography', {
@@ -205,14 +205,14 @@ class PieDiagram extends BaseElement {
 
     this.addControl('centered_metric_color', {
       type: CONTROLLER_COLOR,
-      label: 'Text color',
+      label: 'Text Color',
     })
 
     this.endControlSection()
 
     this.startControlSection("arc_label", {
       tab: TAB_STYLE,
-      label: "Arc label"
+      label: "Arc Label"
     });
 
     this.addControl('arc_label_typography', {

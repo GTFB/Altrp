@@ -15,10 +15,9 @@ import TooltipBar from "./d3/TooltipBar";
 import addCurrencyToLabel from "../services/addCurrencyToLabel";
 
 const DynamicBarChart = ({
-  widget,
   height,
   width,
-  dataSource = [],
+  data = [],
   groupMode = "stacked",
   layout = "vertical",
   colorScheme,
@@ -28,7 +27,6 @@ const DynamicBarChart = ({
   innerPadding = 0,
   borderRadius = 0,
   borderWidth = 0,
-  sort = "",
   enableGridX = true,
   enableGridY = true,
   customColorSchemeChecker = false,
@@ -50,58 +48,7 @@ const DynamicBarChart = ({
     Object.keys(legend).forEach(key => legend[key] === undefined && delete legend[key])
   }
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
-
-  const getData = useCallback(async () => {
-    setIsLoading(true);
-    if (dataSource.length == 0) {
-      const charts = await getWidgetData(widget.source, widget.filter);
-      if (charts.status === 200) {
-        let data = charts.data.data.map((item, index) => {
-          return {
-            [item.key]: Number(item.data),
-            key: item.key,
-            value: Number(item.data)
-          };
-        });
-        setData(data || []);
-        setIsLoading(false);
-      }
-    } else {
-      // if (
-      //   sort !== null &&
-      //   typeof sort !== "undefined" &&
-      //   typeof dataSource !== "undefined"
-      // ) {
-      //   switch (sort) {
-      //     case "value":
-      //       dataSource = _.sortBy(dataSource, ["value"]);
-      //       break;
-      //     case "key":
-      //       dataSource = _.sortBy(dataSource, ["key"]);
-      //       break;
-      //     default:
-      //       dataSource = dataSource;
-      //       break;
-      //   }
-      // }
-      setData(dataSource || []);
-      setIsLoading(false);
-    }
-  }, [widget]);
-
-  useEffect(() => {
-    getData();
-  }, [getData]);
-
-  if (isLoading) return <Spinner />;
-
   if (data.length === 0) return <EmptyWidget />;
-
-  console.log("====================================");
-  console.log(colorScheme);
-  console.log("====================================");
 
   const customProps = {}
 

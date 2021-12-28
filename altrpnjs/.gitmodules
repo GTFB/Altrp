@@ -1,0 +1,3 @@
+[submodule "resources/modules"]
+	path = resources/modules
+	url = https://github.com/GTFB/altrp-front.git
