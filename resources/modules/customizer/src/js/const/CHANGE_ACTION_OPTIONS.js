@@ -9,27 +9,27 @@ const CHANGE_ACTION_OPTIONS = [
   },
   {
     value: 'addition',
-    label: 'Addition',
+    label: '$a + $b',
   },
   {
     value: 'subtraction',
-    label: 'Subtraction',
+    label: '$a - $b',
   },
   {
     value: 'multiplication',
-    label: 'Multiplication',
+    label: '$a * $b',
   },
   {
     value: 'division',
-    label: 'Division',
+    label: '$a / $b',
   },
   {
     value: 'modulo division',
-    label: 'Modulo division',
+    label: '$a % $b',
   },
   {
     value: 'exponentiation',
-    label: 'Exponentiation',
+    label: '$a ** $b',
   },
 ];
 export default CHANGE_ACTION_OPTIONS

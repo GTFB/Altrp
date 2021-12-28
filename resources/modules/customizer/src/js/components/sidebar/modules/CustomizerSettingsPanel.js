@@ -94,8 +94,12 @@ class CustomizerSettingsPanel extends React.Component {
   }
 
   UrlCopy = () => {
-    const { pathname, search } = this.props.location
-    const Copy = AutoCopyText(`${pathname + search}`)
+    let sourceUrl = ''
+    if (this.state.customizer.source !== null) {
+      const { model, url } = this.state.customizer.source
+      sourceUrl = `${'/ajax/models/' + (model?.name.slice(-1) === 's' ? model?.name + '/' : model?.name + 's/') + 'customizers' + url}`
+    }
+    const Copy = AutoCopyText(sourceUrl)
     this.setState(state => ({
       ...state,
       copy: true,
@@ -113,8 +117,14 @@ class CustomizerSettingsPanel extends React.Component {
     const {modelsOptions} = this.state;
     const {customizer} = this.props;
     const {type, model_id, settings = {}} = customizer
-    const {middlewares = []} = settings;
-    const { pathname, search } = this.props.location
+    const Middlewares = settings?.middlewares;
+
+    let Url = ''
+    if (this.state.customizer.source !== null) {
+      const { model, url } = this.state.customizer.source
+      Url = `${'/ajax/models/' + (model?.name.slice(-1) === 's' ? model?.name + '/' : model?.name + 's/') + 'customizers' + url}`
+    }
+    console.log(this.state)
 
     return (
       <div className="panel settings-panel d-flex">
@@ -169,7 +179,7 @@ class CustomizerSettingsPanel extends React.Component {
                       <AltrpSelect id="crud-fields"
                                    className="controller-field"
                                    isMulti={true}
-                                   value={middlewares}
+                                   value={Middlewares || []}
                                    onChange={this.changeMiddlewares}
                                    options={[
                                      {
@@ -185,7 +195,7 @@ class CustomizerSettingsPanel extends React.Component {
                       <AltrpSelect id="crud-fields"
                                    className="controller-field"
                                    isMulti={false}
-                                   value={modelsOptions.find(o=>o.value == model_id) || {}}
+                                   value={modelsOptions.find(o=>o.value === model_id) || {}}
                                    onChange={this.changeModel}
                                    options={modelsOptions.filter(item => item.value >= 5)}
                       />
@@ -212,7 +222,7 @@ class CustomizerSettingsPanel extends React.Component {
                           <div className={this.state.copy ? "error-copy__url on" : "error-copy__url"}>Copying is impossible without https!</div>
                         )}
                       </div>
-                      <div className="url-text">{`${pathname + search}`}</div>
+                      <input value={Url} readOnly={true} className="url-text"/>
                     </div>
                   </div> {/* ./controllers-wrapper */}
                 </div> {/* ./settings-section */}

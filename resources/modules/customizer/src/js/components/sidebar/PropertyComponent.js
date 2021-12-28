@@ -103,7 +103,8 @@ class PropertyComponent extends Component {
   }
   onQueryChange = (query, value) => {
     return (
-      `${value.label.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0 || `${value.objectInstance}`.indexOf(query) >= 0
+      `${value.label.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0 || `${String(value.objectInstance).toLowerCase()}`.indexOf(query.toLowerCase()) >= 0 ||
+      ((`${value.label.toLowerCase()}` + ' ' + `${String(value.objectInstance).toLowerCase()}`).indexOf(query.toLowerCase()) >= 0)
     );
   }
 
