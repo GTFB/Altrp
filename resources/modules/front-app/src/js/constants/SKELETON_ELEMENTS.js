@@ -29,7 +29,6 @@ const SKELETON_ELEMENTS = [
   'map',
   'map_builder',
   'menu',
-  'point-diagram',
   'pie-diagram',
   'line-diagram',
   'bar-diagram',

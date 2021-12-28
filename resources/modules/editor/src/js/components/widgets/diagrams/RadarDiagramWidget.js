@@ -1,4 +1,5 @@
-const AltrpRadarDiagram = React.lazy(() => import(/* webpackChunkName: 'AltrpRadarDiagram' */"../../altrp-diagram/AltrpRadarDiagram"));
+import AltrpRadarDiagram from "../../altrp-diagram/AltrpRadarDiagram";
+
 class RadarDiagramWidget extends Component {
   constructor(props) {
     super(props);

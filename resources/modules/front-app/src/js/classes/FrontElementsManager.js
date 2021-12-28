@@ -380,14 +380,6 @@ class FrontElementsManager {
         }
       },
       {
-        name: "point-diagram",
-        import: async () => {
-          return await import(
-            /* webpackChunkName: 'PointDiagramWidget' */ "../../../../editor/src/js/components/widgets/diagrams/PointDiagramWidget"
-          );
-        }
-      },
-      {
         name: "line-diagram",
         import: async () => {
           return await import(
