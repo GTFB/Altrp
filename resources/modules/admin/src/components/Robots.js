@@ -14,6 +14,7 @@ export default class Robots extends Component {
 
     this.state = {
       robots: [],
+      robotsDidMount: [],
       currentPage: 1,
       activeHeader: 0,
       robotsSearch: "",
@@ -33,10 +34,12 @@ export default class Robots extends Component {
 
   async componentDidMount() {
     await this.fetchData();
+    const robots = await this.resource.getAll();
     const { data } = await this.categoryOptions.getAll();
     this.setState(state => ({
       ...state,
-      categoryOptions: data
+      categoryOptions: data,
+      robotsDidMount: robots
     }))
 
     window.addEventListener("scroll", this.listenScrollHeader)
@@ -118,8 +121,49 @@ export default class Robots extends Component {
     }))
   }
 
+  getCategory = async (guid) => {
+    if (guid) {
+      let robots = await this.resource.getQueried({
+        categories: guid
+      });
+      if (_.isArray(robots)) {
+        robots.map(item =>{
+          item.url = `/admin/robots-editor?robot_id=${item.id}`;
+          return item;
+        });
+      }
+      this.setState(state => ({
+        ...state,
+        robots: robots
+      }))
+    } else {
+      let robots = await this.resource.getAll();
+      if (_.isArray(robots)) {
+        robots.map(item =>{
+          item.url = `/admin/robots-editor?robot_id=${item.id}`;
+          return item;
+        });
+      }
+      this.setState(state => ({
+        ...state,
+        robots: robots
+      }))
+    }
+  }
+
   render() {
-    const { currentPage, robots, robotsSearch } = this.state;
+    const { currentPage, categoryOptions, robotsDidMount, robots, robotsSearch } = this.state;
+
+    let robotsMap = robots.map(robot => {
+      let categories = robot.categories.map(item => {
+        return item.category.title
+      })
+      categories = categories.join(', ')
+      return {
+        ...robot,
+        categories
+      }
+    })
 
     return (
       <div className="admin-templates admin-page">
@@ -168,9 +212,19 @@ export default class Robots extends Component {
               {
                 name: "enabled",
                 title: "Enabled",
+              },
+              {
+                name: 'categories',
+                title: 'Categories'
               }
             ]}
-            rows={robots.slice(
+
+            filterPropsCategories={{
+              DidMountArray: robotsDidMount,
+              categoryOptions: categoryOptions,
+              getCategories: this.getCategory
+            }}
+            rows={robotsMap.slice(
               currentPage * this.itemsPerPage - this.itemsPerPage,
               currentPage * this.itemsPerPage
             )}

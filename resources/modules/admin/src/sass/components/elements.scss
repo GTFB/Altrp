@@ -956,6 +956,18 @@ input[type="text"].form__input {
   animation: animation-category-close 0.3s
 }
 
+.form-group-menu {
+  flex-basis: 452.33px;
+  display: flex;
+  align-items: center;
+
+  & label {
+    margin-right: 10px;
+    margin-left: 20px;
+    margin-bottom: 0;
+  }
+}
+
 @keyframes animation-scale-frames {
   from {
     opacity: 0;

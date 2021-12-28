@@ -120,7 +120,6 @@ class Models extends Component {
         return {
           ...state,
           models: res.models,
-          modelsDidMount: res.models,
           modelsPageCount: res.pageCount
         }
       });
@@ -129,7 +128,6 @@ class Models extends Component {
         return {
           ...state,
           models: res.models.filter(item => item.id >= 5),
-          modelsDidMount: res.models.filter(item => item.id >= 5),
           modelsPageCount: res.pageCount
         }
       });
@@ -142,7 +140,6 @@ class Models extends Component {
         categories: guid
       });
 
-      console.log("ldll", models)
       if (this.props.modelsState) {
         this.setState(state => ({
           ...state,
@@ -192,6 +189,24 @@ class Models extends Component {
 
     this.getModels();
     this.getDataSources();
+    let res = await this.modelsResource.getAll();
+
+    if (this.props.modelsState) {
+      this.setState(state => {
+        return {
+          ...state,
+          modelsDidMount: res.models,
+        }
+      });
+    } else {
+      this.setState(state => {
+        return {
+          ...state,
+          modelsDidMount: res.models.filter(item => item.id >= 5),
+        }
+      });
+    }
+
     let {data} = await this.categoryOptions.getAll();
     this.setState(state => ({
       ...state,
@@ -261,7 +276,6 @@ class Models extends Component {
       currentPageModels,
       modelsDidMount
     } = this.state;
-    console.log(this.state)
 
 
     let dataSourcesMap = dataSources.map(dataSource => ({
@@ -290,28 +304,11 @@ class Models extends Component {
             <span className="admin-breadcrumbs__current">{activeTab === 0 ? 'All Models' : 'All Data Sources'}</span>
           </div>
           <Link className="btn" to={`/admin/tables/${activeTab === 0 ? 'models' : 'data-sources'}/add`}>Add New</Link>
-          {activeTab === 0 ? (
-            <div className="admin-filters">
-            <span onClick={() => this.getCategory(null)} className="admin-filters__current">
-              <a className="admin-filters__link">All ({modelsDidMount.length || "0"})</a>
+          <div className="admin-filters">
+            <span className="admin-filters__current">
+              All ({ activeTab === 0 ? this.state.modelsDidMount.length : this.state.dataSources.length || "0"})
             </span>
-              {categoryOptions.map(item => {
-                const itemsCount = filterCategories(modelsDidMount, item.value).length
-
-                return (
-                  <span key={item.value}>
-                   <span className="admin-filters__separator">|</span>
-                   <a className="admin-filters__link" onClick={() => this.getCategory(item.value)}>
-                     {item.label} ({itemsCount})
-                   </a>
-                </span>)
-              })}
-            </div>
-          ) : (
-            <div className="admin-filters">
-              <span className="admin-filters__current">All ({this.state.dataSources.length || "0"})</span>
-            </div>
-          )}
+          </div>
         </div>
         <UserTopPanel/>
       </div>
@@ -346,6 +343,11 @@ class Models extends Component {
                   title: 'Delete'
                 }
               ]}
+              filterPropsCategories={{
+                DidMountArray: modelsDidMount,
+                categoryOptions: categoryOptions,
+                getCategories: this.getCategory
+              }}
               rows={modelsMap.slice(
                 currentPageModels * this.itemsPerPage - this.itemsPerPage,
                 currentPageModels * this.itemsPerPage

@@ -15,6 +15,7 @@ export default class Templates extends Component {
     super(props);
     this.state = {
       templates: [],
+      templatesDidMount: [],
       activeHeader: 0,
       allTemplates: [],
       templateAreas: [],
@@ -66,6 +67,7 @@ export default class Templates extends Component {
    */
   setActiveArea(activeTemplateArea) {
     this.updateTemplates(1, activeTemplateArea);
+    this.DidMountTemplates(activeTemplateArea)
     this.setState(state => {
       return {...state, activeTemplateArea};
     })
@@ -79,8 +81,7 @@ export default class Templates extends Component {
   updateTemplates = (currentPage = this.state.currentPage, activeTemplateArea = this.state.activeTemplateArea) => {
     this.resource.getQueried({
       area: activeTemplateArea.name,
-      page: currentPage,
-      pageSize: 10,
+
       s: this.state.templateSearch,
       ...this.state.sorting
     }).then(res => {
@@ -92,6 +93,19 @@ export default class Templates extends Component {
         }
       });
     });
+  }
+
+  DidMountTemplates = async (activeTemplateArea = this.state.activeTemplateArea) => {
+    let { templates } = await this.resource.getQueried({
+      area: activeTemplateArea.name,
+
+      s: this.state.templateSearch,
+      ...this.state.sorting
+    })
+    this.setState(state => ({
+      ...state,
+      templatesDidMount: templates
+    }))
   }
 
   /** @function generateTemplateJSON
@@ -133,6 +147,7 @@ export default class Templates extends Component {
       return {...state, templateAreas}
     });
     this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea)
+    await this.DidMountTemplates(this.state.activeTemplateArea)
     const { data } = await this.categoryOptions.getAll();
     this.setState(state => ({
       ...state,
@@ -288,8 +303,43 @@ export default class Templates extends Component {
     }))
   }
 
+  getCategory = async (guid) => {
+    if (guid) {
+      let { templates } = await this.resource.getQueried({
+        categories: guid,
+        area: this.state.activeTemplateArea.name,
+      });
+
+      this.setState(state => ({
+        ...state,
+        templates
+      }))
+    } else {
+      let { templates } = await this.resource.getQueried({
+        area: this.state.activeTemplateArea.name,
+      });
+      this.setState(state => ({
+        ...state,
+        templates
+      }))
+    }
+  }
+
   render() {
-    const {templateSearch, sorting, templates} = this.state
+    const {templateSearch, categoryOptions, templatesDidMount, sorting, templates} = this.state
+
+    let templatesMap = templates.map(template => {
+      let categories = template.categories.map(item => {
+        return item.category.title
+      })
+      categories = categories.join(', ')
+      return {
+        ...template,
+        categories
+      }
+    })
+
+    console.log(this.state)
     return <div className="admin-templates admin-page">
       <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
        <div className="admin-heading-left">
@@ -348,7 +398,15 @@ export default class Templates extends Component {
               title: 'Categories'
             }
           ]}
-          rows={this.state.templates}
+          filterPropsCategories={{
+            DidMountArray: templatesDidMount,
+            categoryOptions: categoryOptions,
+            getCategories: this.getCategory
+          }}
+          rows={templatesMap.slice(
+            this.state.currentPage * this.itemsPerPage - this.itemsPerPage,
+            this.state.currentPage * this.itemsPerPage
+          )}
           quickActions={[{
             tag: 'a', props: {
               href: '/admin/editor?template_id=:id',
@@ -386,10 +444,14 @@ export default class Templates extends Component {
             change: (e) => this.changeTemplates(e)
           }}
 
-          pageCount={this.state.pageCount || 1}
+          pageCount={Math.ceil(templates.length / this.itemsPerPage) || 1}
           currentPage={this.state.currentPage}
-          changePage={this.changePage}
-          itemsCount={this.state.templates.length}
+          changePage={page => {
+            if (this.state.currentPage !== page) {
+              this.setState({currentPage: page});
+            }
+          }}
+          itemsCount={templates.length}
 
           openPagination={true}
         />

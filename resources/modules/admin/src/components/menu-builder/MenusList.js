@@ -10,18 +10,22 @@ class MenusList extends Component {
     super(props);
     this.state = {
       menus: [],
+      menusDidMount: [],
+      categoryOptions: [],
       activeHeader: 0,
       currentPage: 1,
       menusSearch: ""
     }
     this.resource = new Resource({route: '/admin/ajax/menus'})
+    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"})
     this.itemsPerPage = 3;
   }
 
   async componentDidMount() {
     try {
+      let {data} = await this.categoryOptions.getAll();
       let menus = await this.resource.getAll();
-      this.setState(state => ({...state, menus}));
+      this.setState(state => ({...state, menus, menusDidMount: menus, categoryOptions: data }));
     } catch (e) {
       console.error(e);
     }
@@ -74,12 +78,40 @@ class MenusList extends Component {
 
   updateMenus = async () => {
     let menus = await  this.resource.getQueried({ s: this.state.menusSearch });
-    this.setState(state => ({...state, menus}))
+    this.setState(state => ({...state, menus, menusDidMount: menus}))
+  }
+
+  getCategory = async (guid) => {
+    if (guid) {
+      let menus = await this.resource.getQueried({
+        categories: guid
+      });
+      this.setState(state => ({
+        ...state,
+        menus
+      }))
+    } else {
+      let menus = await this.resource.getAll();
+      this.setState(state => ({
+        ...state,
+        menus
+      }))
+    }
   }
 
   render() {
 
-    const { menus, currentPage, menusSearch } = this.state;
+    const { menus, currentPage, menusSearch, categoryOptions, menusDidMount } = this.state;
+    let menusMap = menus.map(menu => {
+      let categories = menu.categories.map(item => {
+        return item.category.title
+      })
+      categories = categories.join(', ')
+      return {
+        ...menu,
+        categories
+      }
+    })
 
     return <div className="admin-pages admin-page">
       <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
@@ -88,6 +120,11 @@ class MenusList extends Component {
             <div className="admin-breadcrumbs__current">Menus</div>
           </div>
           <button className="btn" onClick={this.addNew} >Add New</button>
+          <div className="admin-filters">
+            <span className="admin-filters__current">
+              All ({ menusDidMount.length || "0" })
+            </span>
+          </div>
         </div>
         <UserTopPanel />
       </div>
@@ -107,7 +144,6 @@ class MenusList extends Component {
               title: 'Categories'
             }
           ]}
-
           quickActions={[
             {
               tag: "button",
@@ -121,7 +157,12 @@ class MenusList extends Component {
               title: "Delete"
             }
           ]}
-          rows={menus.slice(
+          filterPropsCategories={{
+            DidMountArray: menusDidMount,
+            categoryOptions: categoryOptions,
+            getCategories: this.getCategory
+          }}
+          rows={menusMap.slice(
             currentPage * this.itemsPerPage - this.itemsPerPage,
             currentPage * this.itemsPerPage
           )}
