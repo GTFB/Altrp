@@ -41,16 +41,6 @@ class TemplateController extends Controller
 
       $_templates = $search
         ? Template::getBySearchWhere( [ [ 'type', '!=', 'review' ] ], $search, $orderColumn, $orderType )
-        // : Template::with('categories.category')
-        //   ->when($categories, function ($query, $categories) {
-        //       if (is_string($categories)) {
-        //           $categories = explode(",", $categories);
-        //           $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'templates.guid')
-        //                 ->whereIn('altrp_category_objects.category_guid', $categories);
-        //       }
-        //   })
-        //   ->where( 'type', '!=', 'review' )->get()->$sortType( $orderColumn )->values();
-
         : Template::with('categories.category')->where( 'type', '!=', 'review' );
 
           $_templates = $_templates->join( 'areas', 'areas.id', '=', 'templates.area' )
