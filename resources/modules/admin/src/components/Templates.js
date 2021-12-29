@@ -348,7 +348,7 @@ export default class Templates extends Component {
       }
     })
 
-    console.log(this.state)
+
     return <div className="admin-templates admin-page">
       <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
        <div className="admin-heading-left">

@@ -4,6 +4,9 @@
 ## Changelog
 
 
+### 0.20.0
++ Add Categories
+
 ### 0.19.10
 + Add Menu Widget Server Side Rendering
 

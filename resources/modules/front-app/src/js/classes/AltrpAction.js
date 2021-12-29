@@ -1058,9 +1058,10 @@ class AltrpAction extends AltrpModel {
    * действие - выполнение пользовательского кода
    * @return {Promise<{}>}
    */
-  doActionCustomCode() {
+  async doActionCustomCode() {
     let code = this.getProperty('code');
     try {
+      code = replaceContentWithData(code, this.getCurrentModel().getData())
       eval(code);
       return {success: true};
     } catch (error) {

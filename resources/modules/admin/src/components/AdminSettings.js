@@ -131,7 +131,7 @@ export default class AdminSettings extends Component {
       )
     ).ssr_settings_alias;
     let SSRConf = (
-      await new Resource({ route: "/admin/ajax/ssr/check" }).get("")
+      await new Resource({ route: "/admin/ajax/ssr/check" }).getAll()
     ).file;
 
     this.setState(state => ({

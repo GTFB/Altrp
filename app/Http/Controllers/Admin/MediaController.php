@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\CategoryObject;
 use App\Http\Controllers\Controller;
 use App\Media;
 use Illuminate\Http\Request;
@@ -36,7 +37,7 @@ class MediaController extends Controller
                         ->whereIn('altrp_category_objects.category_guid', $categories);
               }
           })
-          ->where(function ($query) use ($field, $search) {
+          ->where(function ($query) {
               $query->where( 'type', 'other' )
                     ->orWhere( 'type', null );
           })
@@ -84,7 +85,7 @@ class MediaController extends Controller
    * Store a newly created resource in storage.
    *
    * @param  \Illuminate\Http\Request $request
-   * @return \Illuminate\Http\Response
+   * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
    */
   public function store( Request $request )
   {
@@ -308,8 +309,8 @@ class MediaController extends Controller
     if( ! $media ){
       return response()->json( ['success' => false, 'message'=> 'Media not found' ], 404 );
     }
-    if( $media->delete() ) {
-      CategoryObject::where("object_guid", $media->guid)->delete();
+    if( $media->forceDelete() ) {
+      CategoryObject::where("object_guid", $media->guid)->forceDelete();
       return response()->json( [ 'success' => true ] );
     }
 
@@ -341,7 +342,7 @@ class MediaController extends Controller
       return response()->json( ['success' => false, 'message'=> 'Not Access to deleting media' ], 403 );
     }
     if( Storage::delete( 'public/' . $media->filename ) ){
-      if( $media->delete() ){
+      if( $media->forceDelete() ){
         return response()->json( ['success' => true] );
       }
       return response()->json( ['success' => false, 'message'=> 'Error deleting media' ], 500 );
