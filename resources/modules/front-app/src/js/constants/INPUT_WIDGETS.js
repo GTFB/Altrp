@@ -24,5 +24,6 @@ const INPUT_WIDGETS = [
   'input-date-range',
   'input-hidden',
   'stars',
+  'input-crop-image',
 ];
 export default INPUT_WIDGETS;

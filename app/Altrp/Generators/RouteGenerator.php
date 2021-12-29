@@ -3,6 +3,7 @@
 namespace App\Altrp\Generators;
 
 use App\Altrp\Controller;
+use App\Altrp\Customizer;
 use App\Altrp\Source;
 use App\Role;
 use Illuminate\Support\Str;
@@ -125,6 +126,19 @@ class RouteGenerator
             if(!in_array($source->type, $actions)){
               switch($source->type){
                 case 'customizer':{
+                  /**
+                   * @var $customizer Customizer
+                   */
+                  $customizer = Customizer::find( $source->sourceable_id );
+                  if( ! $customizer ){
+                    break;
+                  }
+
+                  try{
+                    $middleware = array_merge( $middleware, $customizer->getMiddlewares() );
+                  } catch ( \Exception $e){
+
+                  }
                   $middleware = $middleware ? "'middleware' => ['" . implode("','", $middleware) . "'], " : '';
                   $routes[] = 'Route::' . $source->request_type . '(\'/' . $tableName .'/customizers/'
                     . \Str::snake($source->name) . '\', [' . $middleware .'\'uses\' =>\'' . $controller . '@'

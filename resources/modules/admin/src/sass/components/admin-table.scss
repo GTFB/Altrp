@@ -17,6 +17,12 @@
       left: 35px;
       top: 42px;
     }
+    &__search-plugin{
+      width: 100%;
+      & .bp3-input.bp3-input.bp3-input{
+        width: 100%;
+      }
+    }
   }
 
   & .admin-table__td{

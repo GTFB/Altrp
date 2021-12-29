@@ -5,9 +5,6 @@ import ErrorBoundary from "./ErrorBoundary";
 import DataAdapter from "./DataAdapter";
 import invert from "invert-color";
 import TooltipBar from "./TooltipBar";
-import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
-
-const regagroScheme = _.find(Schemes, { value: "regagro" }).colors.reverse();
 
 const mapStateToProps = state => {
   return { formsStore: _.cloneDeep(state.formsStore) };
@@ -175,11 +172,7 @@ class BarDataSource extends Component {
                 bottom: this.state.settings?.margin?.bottom || 80,
                 left: this.state.settings?.margin?.left || 80
               }}
-              colors={
-                this.state.settings?.colors?.scheme === "regagro"
-                  ? regagroScheme
-                  : this.state.settings?.colors
-              }
+              colors={this.state.settings?.colors}
               colorBy="index"
               tooltip={datum => (
                 <TooltipBar

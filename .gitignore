@@ -1,6 +1,7 @@
 /.history
 launch.json
 /node_modules
+/public/altrp-plugins/
 /public/hot
 /public/storage
 /server-dist

@@ -63,6 +63,14 @@ window.LIBS = {
       window.libsLoaded.push('fullcalendar')
       console.log('LOAD "fullcalendar": ', performance.now());
       return Promise.resolve(res)
+
+    });
+  },
+  'image-crop': () => {
+    return import(/* webpackChunkName: 'image-crop' */'../libs/image-crop').then(res => {
+      window.libsLoaded.push('image-crop')
+      console.log('LOAD "image-crop": ', performance.now());
+      return Promise.resolve(res)
     });
   }
 };
@@ -72,12 +80,16 @@ __altrp_settings__.libsToLoad?.forEach(lib=>{
   libsToLoad.push(LIBS[lib]())
 })
 export default function loadDepends(){
-
+  const _libsNames = [];
   if (window.altrpElementsLists) {
     window.altrpElementsLists.forEach(el => {
-      if (WIDGETS_DEPENDS[el] && WIDGETS_DEPENDS[el].length && libsToLoad.indexOf(el) === -1) {
+      if (WIDGETS_DEPENDS[el] && WIDGETS_DEPENDS[el].length) {
         WIDGETS_DEPENDS[el].forEach(lib => {
+          if(_libsNames.indexOf(lib) !== -1){
+            return
+          }
           if (LIBS[lib]) {
+            _libsNames.push(lib)
             libsToLoad.push(LIBS[lib]())
           }
         });

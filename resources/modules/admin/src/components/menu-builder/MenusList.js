@@ -134,7 +134,6 @@ class MenusList extends Component {
             {
               name: 'name',
               title: 'Name',
-              default: '(no Name)',
               url: true,
               editUrl: true,
               tag: 'Link'
@@ -145,6 +144,11 @@ class MenusList extends Component {
             }
           ]}
           quickActions={[
+            {
+              tag: 'Link',
+              props: { href: '/admin/menus/:id' },
+              title: 'Edit'
+            },
             {
               tag: "button",
               route: `/admin/ajax/menus/:id`,

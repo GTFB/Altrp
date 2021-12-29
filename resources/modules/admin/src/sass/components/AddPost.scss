@@ -22,6 +22,8 @@
   }
 
   &-block {
+    display: flex;
+    align-items: center;
     margin-right: 60px;
 
     &:last-child {

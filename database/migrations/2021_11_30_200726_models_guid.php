@@ -21,7 +21,9 @@ class ModelsGuid extends Migration
       $models = \App\Altrp\Model::all();
       $models->each(function (\App\Altrp\Model $model){
         $model->guid = (string)Str::uuid();
-        $model->save();
+        \App\Altrp\Model::withoutEvents( function () use ($model) {
+          $model->save();
+        });
       });
 
       Schema::table('altrp_customizers', function (Blueprint $table) {
@@ -32,7 +34,9 @@ class ModelsGuid extends Migration
       $customizers->each(function (\App\Altrp\Customizer $customizer){
         if($customizer->altrp_model){
           $customizer->model_guid = $customizer->altrp_model->guid;
-          $customizer->save();
+          \App\Altrp\Customizer::withoutEvents( function () use ($customizer) {
+            $customizer->save();
+          });
         }
       });
 

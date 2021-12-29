@@ -142,9 +142,18 @@ export default class Templates extends Component {
    */
   async componentDidMount() {
     let templateAreas = await this.templateTypesResource.getAll();
-    this.setActiveArea(templateAreas[0]);
+    let templateAreasNew = [
+      {
+        id: 0,
+        name: 'all',
+        settings: '[]',
+        title: 'All'
+      },
+      ...templateAreas
+    ]
+    this.setActiveArea(templateAreasNew[0]);
     this.setState(state => {
-      return {...state, templateAreas}
+      return {...state, templateAreas: templateAreasNew}
     });
     this.updateTemplates(this.state.currentPage, this.state.activeTemplateArea)
     await this.DidMountTemplates(this.state.activeTemplateArea)

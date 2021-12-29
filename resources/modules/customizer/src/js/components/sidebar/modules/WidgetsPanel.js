@@ -9,9 +9,10 @@ import ApiIcon from "../../../../svgs/api.svg";
 import MessageIcon from "../../../../svgs/message.svg";
 import CustomizerIcon from "../../../../svgs/customizer.svg";
 import FinishIcon from "../../../../svgs/finish.svg";
+import {connect} from "react-redux";
 
 
-export default class WidgetsPanel extends React.Component {
+class WidgetsPanel extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -40,41 +41,53 @@ export default class WidgetsPanel extends React.Component {
 
   return <div className="widget-panel-wrapper">
       <Scrollbars autoHide autoHideTimeout={500} autoHideDuration={200}>
-        <div className="widget-panel">
-          {start && <div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'start' )} draggable>
-            <StartIcon/>
-            <p>Start</p>
-          </div>}
-          <div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'switch' )} draggable>
-            <SwitchIcon/>
-            <p>Switch</p>
+        {this.props.customizer.type ? (
+          <div className="widget-panel">
+            {start && <div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'start' )} draggable>
+              <StartIcon/>
+              <p>Start</p>
+            </div>}
+            <div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'switch' )} draggable>
+              <SwitchIcon/>
+              <p>Switch</p>
+            </div>
+            {/*<div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'documentAction' )} draggable>*/}
+            {/*  <DocumentIcon/>*/}
+            {/*  <p>Document</p>*/}
+            {/*</div>*/}
+            {/*<div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'crudAction' )} draggable>*/}
+            {/*  <CrudIcon/>*/}
+            {/*  <p>CRUD</p>*/}
+            {/*</div>*/}
+            {/*<div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'apiAction' )} draggable>*/}
+            {/*  <ApiIcon/>*/}
+            {/*  <p>API</p>*/}
+            {/*</div>*/}
+            {/*<div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'messageAction' )} draggable>*/}
+            {/*  <MessageIcon/>*/}
+            {/*  <p>Message</p>*/}
+            {/*</div>*/}
+            <div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'change' )} draggable>
+              <CustomizerIcon/>
+              <p>Change</p>
+            </div>
+            {<div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'return' )} draggable>
+              <FinishIcon/>
+              <p>Return</p>
+            </div>}
           </div>
-          {/*<div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'documentAction' )} draggable>*/}
-          {/*  <DocumentIcon/>*/}
-          {/*  <p>Document</p>*/}
-          {/*</div>*/}
-          {/*<div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'crudAction' )} draggable>*/}
-          {/*  <CrudIcon/>*/}
-          {/*  <p>CRUD</p>*/}
-          {/*</div>*/}
-          {/*<div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'apiAction' )} draggable>*/}
-          {/*  <ApiIcon/>*/}
-          {/*  <p>API</p>*/}
-          {/*</div>*/}
-          {/*<div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'messageAction' )} draggable>*/}
-          {/*  <MessageIcon/>*/}
-          {/*  <p>Message</p>*/}
-          {/*</div>*/}
-          <div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'change' )} draggable>
-            <CustomizerIcon/>
-            <p>Change</p>
-          </div>
-          {<div className="customizer-widget" onDragStart={(event) => this.onDragStart( event, 'return' )} draggable>
-            <FinishIcon/>
-            <p>Return</p>
-          </div>}
-        </div>
+        ) : (
+          <h2 className="widget-panel__text">Choose Type in settings</h2>
+        )}
       </Scrollbars>
     </div>
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    customizer: state.currentCustomizer
+  }
+}
+
+export default connect(mapStateToProps)(WidgetsPanel)

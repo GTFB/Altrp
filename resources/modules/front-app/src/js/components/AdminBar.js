@@ -279,7 +279,7 @@ class AdminBar extends React.Component {
                   ref={this.popupTemplateRef}
                 >
                   {this.props.areas.map((item, index) => {
-                    if(item.id === "popups")
+                    if(item.id === "popups" && item.templates.length > 0)
                       return (
                         <div
                           className="admin-bar__popup-template-item admin-bar__popup-popups"
@@ -303,14 +303,14 @@ class AdminBar extends React.Component {
                         </div>
                       );
                     else {
-                      if(item.template.name)
+                      if(item.template?.name)
                         return (
                           <div
                             className="admin-bar__popup-template-item"
                             key={`template-${index}`}
                             onClick={this.openTemplate(item.template.id)}
                           >
-                            {item.template.name}
+                            {item.template?.name}
                           </div>
                         );
                     }

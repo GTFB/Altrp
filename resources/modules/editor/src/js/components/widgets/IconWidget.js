@@ -1,11 +1,6 @@
+import DefaultIcon from '../../../svgs/favorite.svg'
 const {
-  getComponentByElementId,
-  getHTMLElementById,
-  isEditor,
-  parseURLTemplate,
-  printElements,
   renderAsset,
-  scrollToElement
 } = window.altrpHelpers;
 
 class IconWidget extends Component {
@@ -23,9 +18,7 @@ class IconWidget extends Component {
       this.render = props.baseRender(this);
     }
   }
-  /**
-   * Компонент удаляется со страницы
-   */
+
   async _componentWillUnmount() {
     const actionsManager = (
       await import(/* webpackChunkName: 'ActionsManager' */
@@ -36,12 +29,15 @@ class IconWidget extends Component {
   }
 
   render() {
+    const titleText = this.state.settings.title_text === undefined ? 'Title' : this.state.settings.title_text
     return (
       <div className='icon-widget-wrapper'>
-        <span className="widget-icon">{renderAsset(this.state.settings.icon)}</span>
+        <span className="icon-widget__icon">{this.state.settings.icon?.id ? renderAsset(this.state.settings.icon) : <DefaultIcon />}</span>
         <div className="content">
-          <h3 className="title">{this.state.settings.title_text}</h3>
-          <div className="description">{this.state.settings.description}</div>
+          {React.createElement(this.state.settings.title_tag || 'h3', {
+            className: 'title',
+          }, titleText)}
+          <div className="description">{this.state.settings.description === undefined ? 'Icon description' : this.state.settings.description}</div>
         </div>
       </div>
     )

@@ -58,7 +58,7 @@ class EditModelForm extends Component {
       ...state, value: {
         ...state.value,
         title: titleToNameTwo(e.target.value),
-        name: titleToName(e.target.value)
+        name: this.props.paramsId ? state.value.name : titleToName(e.target.value)
       }
     }))
   }
@@ -171,6 +171,7 @@ class EditModelForm extends Component {
                       type="text"
                       id="page-name"
                       required
+                      readOnly={this.props.paramsId}
           />
         </div>
 
@@ -273,7 +274,6 @@ class EditModelForm extends Component {
             />
           <label htmlFor="page-only_user" className="label_model font__edit">Only for Current User</label>
         </div>
-
       </div>
       <div className="btn__wrapper">
         <button className="btn btn_success" type="submit">{this.props.submitText}</button>

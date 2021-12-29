@@ -57,6 +57,7 @@ import getIconStyles from "./helpers/getIconStyles";
 import StarsComponent from "../../../../editor/src/js/components/widgets/styled-components/StarsComponent";
 import ProgressBarComponent from "../../../../editor/src/js/components/widgets/styled-components/ProgressBarComponent";
 import MenuBlueprintCSS from "../../../../../../server/classes/components/MenuPlaceholder/MenuBlueprintCSS";
+import InputCropImageComponent from "../../../../editor/src/js/components/widgets/styled-components/InputCropImageComponent";
 
 const {isEditor} = window.altrpHelpers;
 
@@ -83,9 +84,6 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
           break;
         case "bar-diagram":
-          styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
-          break;
-        case "point-diagram":
           styles += `.${prefix}${id} {${DiagramComponent(item.settings)}}`;
           break;
         case "funnel-diagram":
@@ -285,6 +283,9 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
             id
           )}}`;
         }break
+        case "input-crop-image":
+          styles += InputCropImageComponent(item.settings)
+          break
         case "input-image-select":
         case "input-accept":
         case "input-textarea":

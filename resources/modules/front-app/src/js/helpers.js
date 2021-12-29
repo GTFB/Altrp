@@ -21,6 +21,11 @@ import mutate from "dot-prop-immutable";
 import React from "react";
 import convertQueryParamsToObject from "./functions/convert-query-params-to-object";
 import _CONDITIONS_OPTIONS from "./constants/CONDITIONS_OPTIONS";
+import _mbParseJSON from "./functions/mb-parse-JSON";
+import _getResponsiveSetting from "./helpers/get-responsive-setting";
+
+export const getResponsiveSetting = _getResponsiveSetting;
+
 export function getRoutes() {
 
   return import(/* webpackChunkName: 'Routes' */"./classes/Routes.js");
@@ -742,19 +747,22 @@ export function getObjectByPrefix(prefix = "", object = {}) {
   return result;
 }
 
-/**
- * Возвращает объект из json-строки если возможно
- * @param {string} string
- * @param {*} _default
- * @return {*}
- */
-export function mbParseJSON(string, _default = null) {
-  try {
-    return JSON.parse(string);
-  } catch (e) {
-    return _default === null ? string : _default;
-  }
-}
+// /**
+//  * Возвращает объект из json-строки если возможно
+//  * @param {string} string
+//  * @param {*} _default
+//  * @return {*}
+//  */
+// export function mbParseJSON(string, _default = null) {
+//   try {
+//     return JSON.parse(string);
+//   } catch (e) {
+//     return _default === null ? string : _default;
+//   }
+// }
+
+
+export const mbParseJSON = _mbParseJSON;
 
 /**
  * Функция для сравнения значений
@@ -1853,71 +1861,6 @@ export function redirect(linkSettings, e, context = {}) {
 export function validateEmail(email) {
   const re = /^(([^<>()[\]\\.,;:\s@']+(\.[^<>()[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
-}
-
-/**
- * значение настройки в зависимости от разрешения можно использовать вне виджетов с объектом настроек
- * @param {{}} settings - объект настроек
- * @param {string} settingName
- * @param {string} elementState
- * @param {*} _default
- * @return {*}
- */
-export function getResponsiveSetting(
-  settings,
-  settingName,
-  elementState = "",
-  _default = null
-) {
-  let  currentScreen
-  try{
-    currentScreen = window.parent.appStore.getState().currentScreen
-  } catch(e){
-    // console.trace(e);
-    currentScreen = window.appStore.getState().currentScreen
-  }
-  let _settingName = `${settingName}_${elementState}_`;
-  if (currentScreen.name === CONSTANTS.DEFAULT_BREAKPOINT) {
-    let setting = settings[_settingName];
-
-    if (setting === undefined) {
-      if(elementState){
-        return undefined
-      }
-      setting = _.get(settings, settingName, _default);
-    }
-    return setting;
-  }
-  let suffix = currentScreen.name;
-  _settingName = `${settingName}_${elementState}_${suffix}`;
-  let setting = settings[_settingName];
-  if (setting === undefined) {
-    for (let screen of [...CONSTANTS.SCREENS].reverse()) {
-      if (
-        currentScreen.id < screen.id ||
-        screen.name === CONSTANTS.DEFAULT_BREAKPOINT
-      ) {
-        continue;
-      }
-
-      _settingName = `${settingName}_${elementState}_${screen.name}`;
-
-      if (settings[_settingName] !== undefined) {
-        setting = settings[_settingName];
-        break;
-      }
-    }
-  }
-
-
-
-  if (setting === undefined) {
-    if(elementState){
-      return undefined
-    }
-    setting = _.get(settings, settingName, _default);
-  }
-  return setting;
 }
 
 /**

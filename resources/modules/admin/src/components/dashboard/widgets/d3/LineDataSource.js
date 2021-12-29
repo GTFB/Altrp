@@ -6,8 +6,6 @@ import DataAdapter from "./DataAdapter";
 import ErrorBoundary from "./ErrorBoundary";
 import Tooltip from "./Tooltip";
 
-import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
-const regagroScheme = _.find(Schemes, { value: "regagro" }).colors;
 import moment from "moment";
 
 const mapStateToProps = state => {
@@ -206,11 +204,7 @@ class LineDataSource extends Component {
               left: this.state.settings?.margin?.left || 100
             }}
             curve={this.state.settings?.curve}
-            colors={
-              this.state.settings?.colors?.scheme === "regagro"
-                ? regagroScheme
-                : this.state.settings?.colors
-            }
+            colors={this.state.settings?.colors}
             enableArea={this.state.settings?.enableArea}
             defs={
               this.state.settings?.enableArea && [

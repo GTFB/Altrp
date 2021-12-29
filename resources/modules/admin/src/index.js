@@ -30,6 +30,6 @@ import('react').then((_export) => {
   let store = (await import("./js/store/store")).default;
 
   ReactDOM.render(<Provider store={store}>
-    <Admin />
+    <window.Admin  />
   </Provider>, document.getElementById('admin'));
 });

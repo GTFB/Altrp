@@ -10,10 +10,12 @@ const excludes = [
   '!./app/Http/Controllers/AltrpControllers/**',
   '!./app/Http/Requests/AltrpRequests/**',
   '!./app/Providers/AltrpProviders/AppServiceProvider.php',
+  '!./app/AltrpPlugins/**',
   '!./app/Plugins/plugins.json',
   '!./bootstrap/cache/**',
   '!./Modules/**',
   '!./public/storage',
+  '!./public/altrp-plugins',
   '!./public/favicon.ico',
   '!./out/**',
   '!./app/AltrpModels/**',
@@ -80,42 +82,3 @@ function altrpZip(filename = 'altrp.zip') {
 exports.pack = ()=>{return altrpZip()};
 exports.packTest = ()=>{return altrpZip('altrp-test.zip')};
 
-function altrpFTPUpload(callback){
-  let client = new FTPClient();
-  // console.log(fs.readFile('../altrp.zip',(file)=>{
-  //
-  //   callback();
-  // }));
-  client.on('error', err=>{
-    console.error(err);
-    client.end();
-  });
-  client.on('end', err=>{
-    console.error(err);
-    callback();
-  });
-  client.on('end', err=>{
-    console.error(err);
-    callback();
-  });
-  client.connect({
-    host: '91.240.87.181',
-    user: 'up.altrp.com',
-    password: 'ZaMpMnBvmZdIlet3',
-    port: 21,
-    secure: "control",
-    secureOptions: {
-      rejectUnauthorized: false
-    },
-    connTimeout: 20000
-  });
-  client.put('../altrp.zip','/storage/app/products/altrp.zip', function(err) {
-    // if (err) throw err;
-    console.error('put');
-    console.error(err);
-    client.end();
-  });
-
-}
-
-exports.ftp = altrpFTPUpload;

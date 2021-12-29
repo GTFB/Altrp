@@ -6,6 +6,10 @@ import AltrpSelect from "../../../../../../admin/src/components/altrp-select/Alt
 import Resource from "../../../../../../editor/src/js/classes/Resource";
 import mutate from "dot-prop-immutable";
 import {connect} from "react-redux";
+import {InputGroup} from "@blueprintjs/core";
+import {compose} from "redux";
+import {withRouter} from "react-router-dom";
+import {AutoCopyText} from "../../../../../../admin/src/js/helpers";
 
 
 class CustomizerSettingsPanel extends React.Component {
@@ -14,8 +18,14 @@ class CustomizerSettingsPanel extends React.Component {
     this.state = {
       dataSources: [],
       modelsOptions: [],
+      customizer: {
+        ...this.props.customizer
+      },
+      copy: false,
+      copyText: false
     };
     this.modelsResource = new Resource({ route: "/admin/ajax/models_options?with_names=0&not_plural=1&with_sql_queries=0" });
+    this.resource = new Resource({ route: "/admin/ajax/customizers" });
   }
 
   async componentDidMount() {
@@ -65,10 +75,56 @@ class CustomizerSettingsPanel extends React.Component {
     this.props.setSources(sourcesData);
   }
 
+  EditTitleForm = async (e) => {
+    e.preventDefault();
+    if (confirm("Are you sure?")) {
+      await this.resource.put(this.state.customizer.id, this.state.customizer)
+      this.props.updateCustomizer()
+    }
+  }
+
+  EditTitle = (e) => {
+    this.setState(state => ({
+      ...state,
+      customizer: {
+        ...state.customizer,
+        title: e.target.value
+      }
+    }))
+  }
+
+  UrlCopy = () => {
+    let sourceUrl = ''
+    if (this.state.customizer.source !== null) {
+      const { model, url } = this.state.customizer.source
+      sourceUrl = `${'/ajax/models/' + (model?.name.slice(-1) === 's' ? model?.name + '/' : model?.name + 's/') + 'customizers' + url}`
+    }
+    const Copy = AutoCopyText(sourceUrl)
+    this.setState(state => ({
+      ...state,
+      copy: true,
+      copyText: Copy
+    }))
+    setTimeout(() => {
+      this.setState(state => ({
+        ...state,
+        copy: false
+      }))
+    }, 2000)
+  }
+
   render() {
     const {modelsOptions} = this.state;
     const {customizer} = this.props;
-    const {type, model_id} = customizer
+    const {type, model_id, settings = {}} = customizer
+    const Middlewares = settings?.middlewares;
+
+    let Url = ''
+    if (this.state.customizer.source !== null) {
+      const { model, url } = this.state.customizer.source
+      Url = `${'/ajax/models/' + (model?.name.slice(-1) === 's' ? model?.name + '/' : model?.name + 's/') + 'customizers' + url}`
+    }
+    console.log(this.state)
 
     return (
       <div className="panel settings-panel d-flex">
@@ -118,15 +174,55 @@ class CustomizerSettingsPanel extends React.Component {
                                    ]}
                       />
                     </div>
+                    {type === 'api' && <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
+                      <div className="controller-container__label control-select__label controller-label">Middlewares:</div>
+                      <AltrpSelect id="crud-fields"
+                                   className="controller-field"
+                                   isMulti={true}
+                                   value={Middlewares || []}
+                                   onChange={this.changeMiddlewares}
+                                   options={[
+                                     {
+                                       value: 'cors',
+                                       label: 'CORS',
+                                     },
+
+                                   ]}
+                      />
+                    </div>}
                     <div className="controller-container controller-container_select2" style={{fontSize: '13px'}}>
                       <div className="controller-container__label control-select__label controller-label">Model:</div>
                       <AltrpSelect id="crud-fields"
                                    className="controller-field"
                                    isMulti={false}
-                                   value={modelsOptions.find(o=>o.value == model_id) || {}}
+                                   value={modelsOptions.find(o=>o.value === model_id) || {}}
                                    onChange={this.changeModel}
-                                   options={modelsOptions}
+                                   options={modelsOptions.filter(item => item.value >= 5)}
                       />
+                    </div>
+                    <form className="Customizer-title" onSubmit={this.EditTitleForm}>
+                      <div className="controller-container__label control-select__label controller-label">Title:</div>
+                      <div className="customizer-block__title">
+                        <InputGroup className="form-control-blueprint"
+                                    type="text"
+                                    id="customizer-title"
+                                    value={this.state.customizer.title}
+                                    onChange={this.EditTitle}
+                        />
+                        <button className="btn btn_success" type="submit">Save</button>
+                      </div>
+                    </form>
+                    <div className="Customizer-url">
+                      <div className="controller-container__label control-select__label controller-label">Url:</div>
+                      <div className="Customizer-url__block">
+                        <button onClick={this.UrlCopy} className="btn btn_success">Copy url</button>
+                        {this.state.copyText ? (
+                          <div className={this.state.copy ? "text-copy__url on" : "text-copy__url"}>url copied successfully!</div>
+                        ) : (
+                          <div className={this.state.copy ? "error-copy__url on" : "error-copy__url"}>Copying is impossible without https!</div>
+                        )}
+                      </div>
+                      <input value={Url} readOnly={true} className="url-text"/>
                     </div>
                   </div> {/* ./controllers-wrapper */}
                 </div> {/* ./settings-section */}
@@ -138,7 +234,15 @@ class CustomizerSettingsPanel extends React.Component {
       </div>
     );
   }
+  changeMiddlewares = (middlewares)=>{
+    let {customizer} = this.props;
+    if(_.isArray(_.get(customizer, 'settings'))){
+      customizer = mutate.set(customizer, 'settings', {})
+    }
+    customizer = mutate.set(customizer, 'settings.middlewares', middlewares||[])
+    window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
 
+  }
   changeType = (e)=> {
     let {customizer} = this.props;
     customizer = mutate.set(customizer, 'type', e.value||'')
@@ -156,4 +260,8 @@ function  mapStateToProps(state) {
     customizer: state.currentCustomizer
   }
 }
-export default connect(mapStateToProps)(CustomizerSettingsPanel)
+
+export const CustomizerSettingsPanelCompose = compose(
+  connect(mapStateToProps),
+  withRouter
+)(CustomizerSettingsPanel);
