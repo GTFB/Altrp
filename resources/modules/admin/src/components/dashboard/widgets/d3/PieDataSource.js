@@ -6,10 +6,6 @@ import invert from "invert-color";
 import DataAdapter from "./DataAdapter";
 import TooltipPie from "./TooltipPie";
 
-import Schemes from "../../../../../../editor/src/js/components/altrp-dashboards/settings/NivoColorSchemes";
-
-const regagroScheme = _.find(Schemes, { value: "regagro" }).colors.reverse();
-
 const mapStateToProps = state => {
   return { formsStore: _.cloneDeep(state.formsStore) };
 };
@@ -169,11 +165,7 @@ class PieDataSource extends Component {
             borderWidth={this.state.settings?.borderWidth}
             borderColor={this.state.settings?.borderColor}
             data={data}
-            colors={
-              this.state.settings?.colors?.scheme === "regagro"
-                ? regagroScheme
-                : this.state.settings?.colors
-            }
+            colors={this.state.settings?.colors}
             sliceLabelsSkipAngle={this.state.settings?.sliceLabelsSkipAngle}
             sliceLabelsRadiusOffset={
               this.state.settings?.sliceLabelsRadiusOffset

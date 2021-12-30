@@ -105,7 +105,7 @@ const Widgets = (props) => {
         styles: {},
         applyStylesToWidget: true,
         dataFrom: "custom",
-        api: "https://regagro.herokuapp.com/animals",
+        api: "",
       },
     },
     {

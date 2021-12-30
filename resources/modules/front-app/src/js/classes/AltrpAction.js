@@ -1143,6 +1143,13 @@ class AltrpAction extends AltrpModel {
       };
     }
     try {
+      if(_.isFunction(element.elementRef.current[action])){
+        let result = await element.elementRef.current[action]();
+        if(_.isObject(result)){
+          return result
+        }
+        return {success:true}
+      }
       element.elementRef.current.fireAction(action);
       return {
         success: true

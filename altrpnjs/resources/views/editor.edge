@@ -1,0 +1,22 @@
+@@layout('base')
+
+
+@section('head')
+    <script src="{{ url }}"></script>
+
+    @if(css)
+        <link href="{{css}}" rel="stylesheet"/>
+    @end
+
+    <script>
+        let _altrpVersion = "{{ version }}";
+
+        window.altrpMenus = [];
+        const _token = "{{ token }}";
+    </script>
+@end
+
+@section('body')
+    <div id="editor">
+    </div>
+@end

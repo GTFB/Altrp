@@ -12,7 +12,7 @@ export default function valueFormatControllers(element, options) {
   })
 
   element.addControl(name + 'Enable', {
-    label: 'Enable formatting',
+    label: 'Enable Formatting',
     type: CONTROLLER_SWITCHER,
   })
 
@@ -217,7 +217,7 @@ export default function valueFormatControllers(element, options) {
 
     element.addControl(name + 'ZeroPadding', {
       type: CONTROLLER_SWITCHER,
-      label: 'Zero padding'
+      label: 'Zero Padding'
     })
 
     element.addControl(name + 'Comma', {
@@ -227,7 +227,7 @@ export default function valueFormatControllers(element, options) {
 
     element.addControl(name + 'TrimTrailingZeros', {
       type: CONTROLLER_SWITCHER,
-      label: 'Trim trailing zeros'
+      label: 'Trim Trailing Zeros'
     })
 
     element.endControlSection()
