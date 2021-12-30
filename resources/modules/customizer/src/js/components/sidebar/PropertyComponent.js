@@ -173,7 +173,6 @@ class PropertyComponent extends Component {
         <Select items={methodOptions}
                 onItemSelect={this.onItemSelect}
                 noResults={<MenuItem disabled={true} text="No results."/>}
-          // onQueryChange={this.onQueryChange}
                 itemPredicate={this.onQueryChange}
                 matchTargetWidth={true}
                 fill={true}
