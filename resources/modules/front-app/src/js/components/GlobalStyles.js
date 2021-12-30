@@ -284,7 +284,7 @@ const GlobalStyles = createGlobalStyle`${({ elementsSettings, areas }) => {
           )}}`;
         }break
         case "input-crop-image":
-          styles += InputCropImageComponent(item.settings)
+          styles += `.${prefix}${id} {${InputCropImageComponent(item.settings)}}`
           break
         case "input-image-select":
         case "input-accept":

@@ -11,7 +11,9 @@ import {changeFormFieldValue} from "../../../../../front-app/src/js/store/forms-
 
 (window.globalDefaults = window.globalDefaults || []).push(`
   .image-to-crop-container {
-    cursor: pointer;
+    label{
+      cursor: pointer;
+    }
     position: relative;
   }
 

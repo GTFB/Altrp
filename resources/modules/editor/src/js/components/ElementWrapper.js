@@ -314,7 +314,7 @@ const ElementWrapperGlobalStyles = window.createGlobalStyle`${({
       }
       break;
     case "input-crop-image":
-      styles += InputCropImageComponent(settings)
+      styles += `.${prefix}${elementId} {${InputCropImageComponent(settings)}}`
       break
     case "map":
       styles += `.${prefix}${elementId} {${MapComponent(settings)}}`;

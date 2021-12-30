@@ -239,9 +239,7 @@ class Resource {
     //   fileType = fileType.trim();
     //
     // });
-    console.log(files);
     for (let i = 0; i < files.length; i++) {
-      console.log(files[i], files[i].size > MAX_FILE_SIZE);
       if (
         files[i].size > MAX_FILE_SIZE
         // ||          files[i].type.indexOf(fileType) === -1
