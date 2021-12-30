@@ -31,7 +31,7 @@ class PagesController extends Controller
     $_pages = $search
         //? Page::getBySearch($search, 'title', [], $orderColumn, $orderType)
         ? Page::search($search, 'title', ['categories.category'], $orderColumn, $orderType, $categories)
-        : Page::with('categories.category')
+        : Page::select('pages.*')->with('categories.category')
             ->when($categories, function ($query, $categories) {
                 if (is_string($categories)) {
                     $categories = explode(",", $categories);
