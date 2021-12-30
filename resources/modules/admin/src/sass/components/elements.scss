@@ -723,6 +723,11 @@ input[type="text"].form__input {
   min-height: 38px;
 }
 
+.form-group__multiSelectBlueprint-pages .bp3-tag-input .bp3-tag {
+  margin-bottom: 5px !important;
+  margin-top: 5px;
+}
+
 .overflow-select__blueprint-pages .bp3-menu {
   height: 220px;
   overflow: auto;
@@ -1023,10 +1028,21 @@ input[type="text"].form__input {
   }
 }
 
+.admin-table__filterCategories-pages {
+  background-color: white;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
 .admin-tree-top {
   position: relative;
   border: none;
   padding-bottom: 10px;
+  flex-basis: 50%;
+
+  & .bp3-input-group .bp3-input {
+    width: calc(100% - (20px + 94.06px));
+  }
 
 
   & svg {
@@ -1037,10 +1053,6 @@ input[type="text"].form__input {
 
   & .form-tables {
     display: inline;
-  }
-
-  & .bp3-input-group .bp3-input {
-    width: 50%;
   }
 }
 

@@ -71,7 +71,8 @@ class Models extends Component {
       dataSourcesPageCount: 1,
       dataSourcesCount: 0,
       dataSourcesSorting: {},
-      categoryOptions: []
+      categoryOptions: [],
+      activeCategory: 'All',
     };
     this.switchTab = this.switchTab.bind(this);
     this.changePage = this.changePage.bind(this);
@@ -134,7 +135,7 @@ class Models extends Component {
     }
   };
 
-  getCategory = async (guid) => {
+  getCategory = async (guid, all) => {
     if (guid) {
       let {models} = await this.modelsResource.getQueried({
         categories: guid
@@ -143,12 +144,14 @@ class Models extends Component {
       if (this.props.modelsState) {
         this.setState(state => ({
           ...state,
-          models: models
+          models: models,
+          activeCategory: guid
         }))
       } else {
         this.setState(state => ({
           ...state,
-          models: models.filter(item => item.id >= 5)
+          models: models.filter(item => item.id >= 5),
+          activeCategory: guid
         }))
       }
     } else {
@@ -156,12 +159,14 @@ class Models extends Component {
       if (this.props.modelsState) {
         this.setState(state => ({
           ...state,
-          models: models
+          models: models,
+          activeCategory: all
         }))
       } else {
         this.setState(state => ({
           ...state,
-          models: models.filter(item => item.id >= 5)
+          models: models.filter(item => item.id >= 5),
+          activeCategory: all
         }))
       }
     }
@@ -346,7 +351,8 @@ class Models extends Component {
               filterPropsCategories={{
                 DidMountArray: modelsDidMount,
                 categoryOptions: categoryOptions,
-                getCategories: this.getCategory
+                getCategories: this.getCategory,
+                activeCategory: this.state.activeCategory
               }}
               rows={modelsMap.slice(
                 currentPageModels * this.itemsPerPage - this.itemsPerPage,

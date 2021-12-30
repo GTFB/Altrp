@@ -178,6 +178,15 @@
   }
 }
 
+.active-category {
+  color: #007bff;
+
+  &:hover {
+    color: #007bff;
+    text-decoration: none;
+  }
+}
+
 .form-tables .bp3-input {
   height: 40px;
   border: 1px solid #dcddde;

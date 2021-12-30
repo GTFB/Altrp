@@ -54,6 +54,8 @@ class AddPage extends Component {
         roles: [],
         rolesOptions: [{ value: "guest", label: "Guest" }],
         title: "",
+        _categories: [],
+        categories: [],
       },
       redirectAfterSave: false,
       templates: [],
@@ -65,9 +67,11 @@ class AddPage extends Component {
       dataSourceSearch: '',
       currentPage: 1,
       currentTab: 'content',
+      categoryOptions: [],
     };
     this.resource = new Resource({route: "/admin/ajax/pages"});
     this.rolesOptionsResource = new Resource( {route: "/admin/ajax/role_options"} )
+    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"})
     this.pagesOptionsResource = new Resource({
       route: "/admin/ajax/pages_options"
     });
@@ -94,16 +98,29 @@ class AddPage extends Component {
     });
 
     let models_res = await this.model_resource.getAll();
-    this.setState(state => {
-      return {
-        ...state, models: [
-          {
-            value: '0',
-            label: 'None',
-          },
-          ...models_res]
-      };
-    });
+    if (this.props.modelsState) {
+      this.setState(state => {
+        return {
+          ...state, models: [
+            {
+              value: '',
+              label: 'None',
+            },
+            ...models_res]
+        };
+      });
+    } else {
+      this.setState(state => {
+        return {
+          ...state, models: [
+            {
+              value: '',
+              label: 'None',
+            },
+            ...models_res.filter(item => item.value >= 5)]
+        };
+      });
+    }
 
     let roles = await this.rolesOptionsResource.getAll();
     this.setState(state => ({
@@ -130,6 +147,10 @@ class AddPage extends Component {
             redirect: pageData.redirect,
             roles: pageData.roles,
             title: pageData.title,
+            _categories: pageData.categories,
+            categories: pageData.categories,
+            model_column: pageData.model_column,
+            param_name: pageData.param_name,
             id
           },
           id
@@ -392,9 +413,47 @@ class AddPage extends Component {
     }
   }
 
+  onQueryChangeMulti = (query, value) => {
+    return (
+      `${value.label.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0
+    );
+  }
+
+  isItemSelectedCategory = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.value.categories);
+    return selectedString.includes(itemString);
+  }
+
+  handleItemSelectCategory = (item) => {
+    if (!this.isItemSelectedCategory(item)) {
+      this.setState(state => ({
+        ...state,
+        value: {
+          ...state.value,
+          _categories: [...state.value._categories, item],
+          categories: [...state.value.categories, item]
+        }
+      }));
+    }
+  }
+
+  handleTagRemoveCategory = (item) => {
+    this.setState(state => ({
+      ...state,
+      value: {
+        ...state.value,
+        _categories: [...state.value._categories].filter((i) => i.label !== item),
+        categories: [...state.value.categories].filter((i) => i.label !== item)
+      }
+    }));
+  }
+
   render() {
     const {isModalOpened, editingDataSource} = this.state;
     let {dataSources} = this.state;
+
+    console.log(this.state)
 
     dataSources = _.sortBy(dataSources, dataSource => dataSource.priority);
     return (
@@ -633,6 +692,39 @@ class AddPage extends Component {
                                        }}
                           />
                         </div>
+
+                        <div className="form-group form-group_width47 form-group__multiSelectBlueprint form-group__multiSelectBlueprint-pages">
+                          <label htmlFor="categories-pages" className="font__edit">Categories</label>
+                          <MultiSelect tagRenderer={this.tagRenderer} id="categories"
+                                       items={this.state.categoryOptions}
+                                       itemPredicate={this.onQueryChangeMulti}
+                                       noResults={<MenuItem disabled={true} text="No results."/>}
+                                       fill={true}
+                                       placeholder="Categories..."
+                                       selectedItems={this.state.value.categories}
+                                       onItemSelect={this.handleItemSelectCategory}
+                                       itemRenderer={(item, {handleClick, modifiers, query}) => {
+                                         return (
+                                           <MenuItem
+                                             icon={this.isItemSelectedCategory(item) ? "tick" : "blank"}
+                                             text={item.label}
+                                             key={item.value}
+                                             onClick={handleClick}
+                                           />
+                                         )
+                                       }}
+                                       tagInputProps={{
+                                         onRemove: this.handleTagRemoveCategory,
+                                         large: false,
+                                       }}
+                                       popoverProps={{
+                                         usePortal: false
+                                       }}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="form-group__inline-wrapper">
                         <div className="form-group form-group_width47">
                           <label htmlFor="redirect" className="font__edit">Redirect</label>
 
