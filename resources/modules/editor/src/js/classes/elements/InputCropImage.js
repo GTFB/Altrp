@@ -272,7 +272,7 @@ class InputCropImage extends BaseElement {
     this.addControl('crop_size', {
       type: CONTROLLER_SLIDER,
       label: 'Crop Size',
-      max: 1000,
+      max: 1500,
       stateless: true,
       min: 0,
       units: ['px', 'vw']
