@@ -31,8 +31,8 @@ class TemplateController extends Controller
     $page_count = 1;
     $search = $request->get( 's' );
     $categories = $request->get( 'categories' );
-    $area_name = $request->get( 'area', 'content' );
-    
+    //$area_name = $request->get( 'area', 'content' );
+    $area_name = $request->get( 'area' );
 
     $orderColumn = $request->get( 'order_by' ) ?? 'id';
     $orderType = $request->get( 'order' ) ? ucfirst( strtolower( $request->get( 'order' ) ) ) : 'Desc';
@@ -51,7 +51,10 @@ class TemplateController extends Controller
                             ->whereIn('altrp_category_objects.category_guid', $categories);
                   }
               })
-            ->where( 'areas.name', $area_name );
+            ->when($area_name, function ($query, $area_name) {
+                return $query->where( 'areas.name', $area_name );
+            })
+            ;
           $page_count = $_templates->toBase()->getCountForPagination();
           $_templates = $_templates->get( 'templates.*' )->$sortType( $orderColumn )->values();
 
@@ -71,7 +74,9 @@ class TemplateController extends Controller
                         ->whereIn('altrp_category_objects.category_guid', $categories);
               }
           })
-        ->where( 'areas.name', $area_name )
+        ->when($area_name, function ($query, $area_name) {
+            return $query->where( 'areas.name', $area_name );
+        })
         ->offset( $page_size * ( $request->get( 'page' ) - 1 ) )
         ->limit( $page_size );
       $page_count = $_templates->toBase()->getCountForPagination();
