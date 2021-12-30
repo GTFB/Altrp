@@ -3,6 +3,8 @@
 
 ## Changelog
 
+### 0.20.21
+* Bug bixed
 
 ### 0.20.0
 + Add Categories
