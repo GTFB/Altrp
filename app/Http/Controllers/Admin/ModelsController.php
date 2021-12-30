@@ -234,7 +234,8 @@ class ModelsController extends HttpController
         $search = $request->get('s');
         $categories = $request->get('categories');
         $page = $request->get('page');
-        $orderColumn = $request->get('order_by') ?? 'altrp_models.id';
+        $orderColumn = $request->get('order_by') ?? 'title';
+        $orderColumn = 'altrp_models.' . $orderColumn;
         $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
         if (! $page) {
             $pageCount = 0;
@@ -353,8 +354,9 @@ class ModelsController extends HttpController
             $parts = explode('.', $request->order_by);
             $request->order_by = 'altrp_' . Str::plural($parts[0]) . '.' . $parts[1];
         }
-        $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
-        $orderColumn = $request->order_by ? $request->order_by : 'id';
+        $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Asc';
+        //$orderColumn = $request->order_by ? $request->order_by : 'id';
+        $orderColumn = $request->order_by ? $request->order_by : 'title';
         $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
         if (! $page) {
             $pageCount = 0;

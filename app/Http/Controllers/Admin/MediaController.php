@@ -53,7 +53,7 @@ class MediaController extends Controller
           })
           ->get();
       }
-      $media = $media->sortByDesc( 'id' )->values()->toArray();
+      $media = $media->sortBy( 'title' )->values()->toArray();
       return response()->json( $media, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -65,7 +65,7 @@ class MediaController extends Controller
                         ->whereIn('altrp_category_objects.category_guid', $categories);
               }
           })
-          ->get()->sortByDesc( 'id' )->values()->toArray();
+          ->get()->sortBy( 'title' )->values()->toArray();
 
     return response()->json( $media, 200, [], JSON_UNESCAPED_UNICODE);
   }

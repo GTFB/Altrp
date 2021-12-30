@@ -50,6 +50,7 @@ class RobotController extends Controller
                           ->whereIn('altrp_category_objects.category_guid', $categories);
                 }
             })
+            ->orderBy('altrp_robots.name', 'Asc')
             ->get()->each(function (Robot $robot) {
                 $robot->setAttribute('author',data_get( $robot, 'user.name', ''));
             });

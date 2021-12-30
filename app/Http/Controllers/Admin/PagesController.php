@@ -24,7 +24,8 @@ class PagesController extends Controller
     $search = $request->get('s');
     $categories = $request->get('categories');
     $table_name = "pages";
-    $orderColumn = $request->get('order_by') ?? 'id';
+    $orderColumn = $request->get('order_by') ?? 'title';
+    $orderColumn = 'pages.'.$orderColumn;
     $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
     $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
     $_pages = $search

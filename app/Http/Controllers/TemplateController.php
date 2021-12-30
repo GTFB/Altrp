@@ -34,7 +34,8 @@ class TemplateController extends Controller
     //$area_name = $request->get( 'area', 'content' );
     $area_name = $request->get( 'area' );
 
-    $orderColumn = $request->get( 'order_by' ) ?? 'id';
+    $orderColumn = $request->get( 'order_by' ) ?? 'title';
+    $orderColumn = 'templates.'.$orderColumn;
     $orderType = $request->get( 'order' ) ? ucfirst( strtolower( $request->get( 'order' ) ) ) : 'Desc';
     $sortType = 'sortBy' . ( $orderType == 'Asc' ? '' : $orderType );
     if ( ! $request->get( 'page' ) ) {
