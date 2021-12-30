@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+  <script src="/data/current-user" defer></script>
   <?php
   $_altrp_settings = json_decode($altrp_settings, true);
 if( isset($_altrp_settings['redirect']) && $_altrp_settings['redirect']){
@@ -24,7 +25,9 @@ if( isset($_altrp_settings['redirect']) && $_altrp_settings['redirect']){
     }
     // window.onerror = myErrHandler;
     /* ]]> */
+    document.currentScript = "/modules/front-app/";
   </script>
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {!! loadFonts( $page_areas ) !!}
@@ -130,6 +133,13 @@ if( isset($_altrp_settings['redirect']) && $_altrp_settings['redirect']){
     {!! $preload_content[ 'important_styles'] !!}
 {{--    {!! $preload_content[ 'important_styles'] !!}--}}
   @endif
+
+    @php
+      echo print_statics('style', 'FRONT_HEAD_STYLE' );
+    @endphp
+    @php
+      echo print_statics('script', 'FRONT_HEAD_SCRIPTS' );
+    @endphp
 </head>
 <body class="front-app-body" >
 
@@ -170,7 +180,6 @@ if( isset($_altrp_settings['redirect']) && $_altrp_settings['redirect']){
   window.container_width = {!! get_altrp_setting( 'container_width', '1440' ) !!};
   /* ]]> */
 </script>
-<script src="/data/current-user" defer></script>
 @if( ! get_altrp_setting( 'altrp_ssr_disabled' ) && isset( $preload_content[ 'content'] ) && $preload_content[ 'content'] )
 
   <script>
@@ -198,5 +207,12 @@ if( isset($_altrp_settings['redirect']) && $_altrp_settings['redirect']){
   </script>
 @endif
 <link rel="stylesheet" href="/modules/front-app/front-app.css?{{getCurrentVersion()}}">
+@php
+  echo print_statics('style', 'FRONT_BOTTOM_STYLE' );
+@endphp
+@php
+  echo print_statics('script', 'FRONT_BOTTOM_SCRIPTS' );
+@endphp
+
 </body>
 </html>

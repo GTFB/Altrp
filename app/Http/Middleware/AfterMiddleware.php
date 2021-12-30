@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 
 
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Redirect;
 
 class AfterMiddleware
 {

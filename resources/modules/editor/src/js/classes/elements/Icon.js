@@ -65,41 +65,134 @@ class Icon extends BaseElement {
       label: 'Description',
     })
 
-    this.endControlSection()
-
-    this.startControlSection('common_styles', {
-      label: 'Common Styles',
-      tab: TAB_STYLE
-    })
-
-    this.addControl('flex_direction', {
+    this.addControl('content_alignment', {
       type: CONTROLLER_SELECT,
-      label: 'Flex Direction',
-      options: [
+      label: 'Content alignment',
+      options:[
         {
-          value: "row",
-          label: "Row"
+          label: 'left',
+          value: 'left',
         },
         {
-          value: "column",
-          label: "Columnn"
+          label: 'center',
+          value: 'center',
         },
         {
-          value: "row-reverse",
-          label: "Row reverse"
+          label: 'right',
+          value: 'right',
         },
         {
-          value: "column-reverse",
-          label: "Column reverse"
+          label: 'justify',
+          value: 'justify',
+        }
+      ],
+    });
+
+    this.addControl('icon_position', {
+      type: CONTROLLER_SELECT,
+      label: 'Icon position',
+      options:[
+        {
+          label: 'left',
+          value: 'row',
+        },
+        {
+          label: 'top',
+          value: 'column',
+        },
+        {
+          label: 'right',
+          value: 'row-reverse',
+        },
+        {
+          label: 'bottom',
+          value: 'column-reverse',
+        }
+      ],
+    });
+
+    this.addControl('icon_vertical_alignment', {
+      type: CONTROLLER_SELECT,
+      label: 'Icon vertical alignment',
+      options:[
+        {
+          label: 'top',
+          value: 'flex-start',
+        },
+        {
+          label: 'center',
+          value: 'center',
+        },
+        {
+          label: 'bottom',
+          value: 'flex-end',
         },
       ],
-    })
+    });
+
+    this.addControl('icon_horizontal_alignment', {
+      type: CONTROLLER_SELECT,
+      label: 'Icon horizontal alignment',
+      options:[
+        {
+          label: 'left',
+          value: 'flex-start',
+        },
+        {
+          label: 'center',
+          value: 'center',
+        },
+        {
+          label: 'right',
+          value: 'flex-end',
+        },
+      ],
+    });
 
     this.endControlSection()
 
     this.startControlSection('title_styles', {
       label: 'Title',
       tab: TAB_STYLE
+    })
+
+    this.addControl('title_tag', {
+      label: 'Title tag',
+      type: CONTROLLER_SELECT,
+      options: [
+        {
+          label: 'h1',
+          value: 'h1'
+        },
+        {
+          label: 'h2',
+          value: 'h2'
+        },
+        {
+          label: 'h3',
+          value: 'h3'
+        },
+        {
+          label: 'h4',
+          value: 'h4'
+        },
+        {
+          label: 'h5',
+          value: 'h5'
+        },
+        {
+          label: 'h6',
+          value: 'h6'
+        },
+        {
+          label: 'p',
+          value: 'p'
+        },
+        {
+          label: 'div',
+          value: 'div'
+        },
+      ]
     })
 
     this.addControl('title_typography', {
@@ -121,25 +214,6 @@ class Icon extends BaseElement {
       label: 'Margin',
       type: CONTROLLER_DIMENSIONS
     })
-
-    this.addControl('title_alignment', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Alignment',
-      options:[
-        {
-          icon: 'left',
-          value: 'left',
-        },
-        {
-          icon: 'center',
-          value: 'center',
-        },
-        {
-          icon: 'right',
-          value: 'right',
-        }
-      ],
-    });
 
     this.endControlSection()
 
@@ -168,25 +242,6 @@ class Icon extends BaseElement {
       type: CONTROLLER_DIMENSIONS
     })
 
-    this.addControl('description_alignment', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Alignment',
-      options:[
-        {
-          icon: 'left',
-          value: 'left',
-        },
-        {
-          icon: 'center',
-          value: 'center',
-        },
-        {
-          icon: 'right',
-          value: 'right',
-        }
-      ],
-    })
-
     this.endControlSection()
 
     this.startControlSection('icon_styles', {
@@ -194,9 +249,14 @@ class Icon extends BaseElement {
       tab: TAB_STYLE
     })
 
+    this.addControl('icon_margin', {
+      label: 'Margin',
+      type: CONTROLLER_DIMENSIONS
+    })
+
     this.addControl("icon_height", {
       type: CONTROLLER_SLIDER,
-      label: 'Height',
+      label: 'Size',
       units: [
         'px',
         '%',
@@ -210,42 +270,37 @@ class Icon extends BaseElement {
       label: 'Fill color',
     });
 
-    this.addControl('icon_padding', {
-      label: 'Padding',
-      type: CONTROLLER_DIMENSIONS
-    })
+    // this.addControl('icon_padding', {
+    //   label: 'Padding',
+    //   type: CONTROLLER_DIMENSIONS
+    // })
     
-    this.addControl('icon_margin', {
-      label: 'Margin',
-      type: CONTROLLER_DIMENSIONS
-    })    
-    
-    this.addControl('icon_opacity', {
-      type: CONTROLLER_SLIDER,
-      label: 'Opacity',
-      step: 0.01,
-      min: 0,
-      max: 1,
-    })
+    // this.addControl('icon_opacity', {
+    //   type: CONTROLLER_SLIDER,
+    //   label: 'Opacity',
+    //   step: 0.01,
+    //   min: 0,
+    //   max: 1,
+    // })
 
-    this.addControl('icon_alignment', {
-      type: CONTROLLER_CHOOSE,
-      label: 'Alignment',
-      options:[
-        {
-          icon: 'left',
-          value: 'flex-start',
-        },
-        {
-          icon: 'center',
-          value: 'center',
-        },
-        {
-          icon: 'right',
-          value: 'flex-end',
-        }
-      ],
-    })
+    // this.addControl('icon_alignment', {
+    //   type: CONTROLLER_CHOOSE,
+    //   label: 'Alignment',
+    //   options:[
+    //     {
+    //       icon: 'left',
+    //       value: 'flex-start',
+    //     },
+    //     {
+    //       icon: 'center',
+    //       value: 'center',
+    //     },
+    //     {
+    //       icon: 'right',
+    //       value: 'flex-end',
+    //     }
+    //   ],
+    // })
 
     this.endControlSection()
 

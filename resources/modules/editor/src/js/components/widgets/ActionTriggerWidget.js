@@ -28,7 +28,6 @@ class ActionTriggerWidget extends React.Component {
       return
     }
     const type = this.element.getResponsiveSetting('type')
-    console.log(this);
     switch (type) {
       case 'interval': this.subscribeIntervalTriggers()
         break;

@@ -306,5 +306,27 @@
   }
 }
 
+.admin-styles-button {
+  display: inline-block;
+  width: 163px;
+  height: 30px;
+  padding: 6px 12px;
+  cursor: pointer;
+  box-sizing: border-box;
+  border-radius: 6px;
+  color: white;
+  font-family: Roboto, sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  text-decoration: none;
+  line-height: 18px;
+  border: none;
+  background-color: #87CA00;
+
+  &:hover {
+    background-color: #7CA727;
+  }
+}
+
 
 

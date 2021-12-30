@@ -250,6 +250,7 @@ class ModelsController extends HttpController
                                   ->whereIn('altrp_category_objects.category_guid', $categories);
                         }
                     })
+
                     //->$sortType( $orderColumn )->values();
                     ->orderBy($orderColumn, $orderType)
                     ->get();
@@ -517,7 +518,7 @@ class ModelsController extends HttpController
     public function showModel($model_id)
     {
         $model = Model::find($model_id);
-  
+
         if ($model) {
             $model->categories = $model->categoryOptions();
             return response()->json($model, 200, [], JSON_UNESCAPED_UNICODE);
@@ -547,7 +548,7 @@ class ModelsController extends HttpController
         if ($result) {
 
             CategoryObject::where("object_guid", $model->guid)->delete();
-            
+
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
         return response()->json([

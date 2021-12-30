@@ -1,0 +1,7 @@
+* text=auto
+*.js linguist-language=JavaScript
+*.ts linguist-language=TypeScript
+*.scss linguist-language=SCSS
+*.css linguist-language=CSS
+*.php linguist-language=PHP
+CHANGELOG.md export-ignore

@@ -421,8 +421,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
      * Плагины
      */
 
-    Route::get('/plugins', "Admin\PluginController@index");
+    Route::get('/plugins', "Admin\AdminController@plugins");
     Route::post('/plugins/switch', "Admin\PluginController@switch");
+    Route::post('/plugins/install', "Admin\PluginController@install");
+    Route::post('/plugins/update_plugin_files', "Admin\PluginController@update_plugin_files");
 
     /**
      * Настройка почты

@@ -6,6 +6,10 @@ import AltrpModel from "../../../../editor/src/js/classes/AltrpModel";
 import Styles from '../../../../editor/src/js/components/Styles';
 import {baseEmailRender} from '../../../../editor/src/js/decorators/base-email-render';
 import Area from "../classes/Area";
+import IconsManager from "../../../../editor/src/js/classes/modules/IconsManager";
+
+window.iconsManager = new IconsManager;
+
 window.altrpHelpers = window.altrpHelpers || {};
 window.baseEmailRender = baseEmailRender;
 window.Cookies = Cookies

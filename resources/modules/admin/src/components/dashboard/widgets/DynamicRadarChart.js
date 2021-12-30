@@ -14,19 +14,15 @@ import { Spinner } from "react-bootstrap";
 import Tooltip from "./d3/TooltipScatter";
 
 const RadarChart = ({
-  widget,
   width = `300px`,
   height = `450px`,
-  dataSource = [],
+  data = [],
   colorScheme = "red_grey",
   nodeSize = 6,
   customColorSchemeChecker = false,
   customColors = [],
-  widgetID,
   margin,
   legends,
-  title,
-  subTitle,
   keys,
   indexBy,
   curve,
@@ -41,28 +37,6 @@ const RadarChart = ({
   if (legends) {
     Object.keys(legends).forEach(key => legends[key] === undefined && delete legends[key])
   }
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
-  const getData = useCallback(async () => {
-    setIsLoading(true);
-    if (dataSource.length == 0) {
-      const charts = await getWidgetData(widget.source, widget.filter);
-      if (charts.status === 200 && typeof charts.data !== "string") {
-        setData(data);
-        setIsLoading(false);
-      }
-    } else {
-      setData(dataSource || []);
-      setIsLoading(false);
-    }
-  }, [widget]);
-
-  useEffect(() => {
-    getData();
-  }, [getData]);
-
-  if (isLoading) return <Spinner />;
 
   if (!data) return <EmptyWidget />;
 
@@ -86,8 +60,6 @@ const RadarChart = ({
       }
     ]
   }
-
-  console.log({legends: customProps.legends});
 
   return (
     <>

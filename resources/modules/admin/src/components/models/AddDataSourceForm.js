@@ -113,7 +113,7 @@ class AddDataSourceForm extends Component {
       ...state, value: {
         ...state.value,
         title: titleToNameTwo(e.target.value),
-        name: titleToName(e.target.value)
+        name: this.props.paramsId ? state.value.name : titleToName(e.target.value)
       }
     }))
   }
@@ -344,6 +344,7 @@ class AddDataSourceForm extends Component {
                             this.changeValue(e.target.value, 'name')
                           }}
                           className="form-control-blueprint"
+                          readOnly={this.props.paramsId}
               />
             </div>
           </div>

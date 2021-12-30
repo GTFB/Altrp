@@ -25,6 +25,9 @@ class CustomizerController extends Controller
       if($customizer->model_id && Model::find($customizer->model_id)){
         $customizer->model_guid = Model::find($customizer->model_id)->guid;
       }
+      if(! $customizer->settings ){
+        $customizer->settings = [];
+      }
       $customizer->save();
     } catch ( \Throwable $th ) {
       return response()->json( [

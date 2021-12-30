@@ -12,6 +12,7 @@ const SIMPLE_OPERATORS = [
   'not_empty',
   'null',
   'not_null',
+  'else',
 ]
 const OPTIONS = [
   {

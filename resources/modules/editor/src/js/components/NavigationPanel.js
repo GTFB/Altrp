@@ -138,6 +138,7 @@ class NavigationPanel extends Component {
   }
 
   render() {
+    console.log(this.state.template)
     return (
       <div style={{ overflow: "auto" }}>
         <Tree

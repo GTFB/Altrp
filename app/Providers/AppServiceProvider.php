@@ -23,6 +23,7 @@ use App\Observers\PageObserver;
 use App\Observers\UserObserver;
 use App\Page;
 use App\Services\AltrpImportExportService;
+use App\Services\AltrpPluginsService;
 use App\Services\AltrpSettingsService;
 use App\Services\AltrpUpdateService;
 use App\SQLEditor;
@@ -54,6 +55,9 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind('App\Services\AltrpUpdateService', function ($app) {
             return new AltrpUpdateService();
+        });
+        $this->app->bind('App\Services\AltrpPluginsService', function ($app) {
+            return new AltrpPluginsService();
         });
         $this->app->bind('App\Services\AltrpSettingsService', function ($app) {
             return new AltrpSettingsService();
