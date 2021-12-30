@@ -1058,9 +1058,10 @@ class AltrpAction extends AltrpModel {
    * действие - выполнение пользовательского кода
    * @return {Promise<{}>}
    */
-  doActionCustomCode() {
+  async doActionCustomCode() {
     let code = this.getProperty('code');
     try {
+      code = replaceContentWithData(code, this.getCurrentModel().getData())
       eval(code);
       return {success: true};
     } catch (error) {
@@ -1136,7 +1137,6 @@ class AltrpAction extends AltrpModel {
     let elementId = this.getProperty('element_id');
     let element = getComponentByElementId(elementId);
     let action = this.getProperty('action');
-    console.log(element);
     if (_.isFunction(element[action])) {
       element[action]();
       return {

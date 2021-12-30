@@ -446,8 +446,17 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
       Route::post('filtered_settings', 'Admin\DownloadsController@exportAltrpFilteredSettings')->name('admin.download.filtered_settings');
       Route::get('stream_settings', 'Admin\DownloadsController@exportStreamAltrpSettings')->name('admin.download.stream_settings');
     });
+
+    Route::get('categories', 'Admin\CategoryController@index')->name('categories');
+    Route::post('categories', 'Admin\CategoryController@store')->name('category.store');
+    Route::get('categories/{id}', 'Admin\CategoryController@show')->name('category.show');
+    Route::put('categories/{id}', 'Admin\CategoryController@update')->name('category.update');
+    Route::delete('categories/{id}', 'Admin\CategoryController@destroy')->name('category.destroy');
+    Route::get('category/options', 'Admin\CategoryController@options')->name('category.options');
   });
 });
+
+
 
 Route::view('/admin/{path?}', 'admin')
   ->where('path', '.*')

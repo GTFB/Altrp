@@ -31,7 +31,6 @@ class AutoUpdateCheckbox extends Component {
   }
 
   render() {
-    console.log("Значение", this.state.modelsChecked)
     let {className, type} = this.props
 
     return (

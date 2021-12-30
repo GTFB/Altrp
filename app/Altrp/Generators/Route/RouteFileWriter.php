@@ -329,12 +329,15 @@ class RouteFileWriter
         foreach ($sourcePermissions as $sourcePermission) {
             $accessPermissions[] = $sourcePermission->permission->name;
         }
+
         foreach ($sourceRoles as $sourceRole) {
             $accessRoles[] = $sourceRole->role->name;
         }
 
+        $roles_glue = $source->need_all_roles ? "," : "|";
         if ($accessRoles)
-            $accessSource[] = implode('|', $accessRoles);
+            //$accessSource[] = implode('|', $accessRoles);
+            $accessSource[] = implode($roles_glue, $accessRoles);
 
         if ($accessPermissions)
             $accessSource[] = implode('|', $accessPermissions);
@@ -343,12 +346,14 @@ class RouteFileWriter
         if ($source->auth) {
             $middleware[] = $this->route->isApi() ? 'auth:api' : 'auth';
         }
-        if ($accessRoles && $accessPermissions)
+        if ($accessRoles && $accessPermissions) {
             $middleware[] = "ability:" . implode(',', $accessSource);
-        elseif ($accessRoles)
-            $middleware[] = "role:" . implode(',', $accessRoles);
-        elseif ($accessPermissions)
+        } elseif ($accessRoles) {
+            //$middleware[] = "role:" . implode(',', $accessRoles);
+            $middleware[] = "role:" . implode($roles_glue, $accessRoles);
+        } elseif ($accessPermissions) {
             $middleware[] = "permission:" . implode('|', $accessPermissions);
+        }
 
         return $middleware;
     }

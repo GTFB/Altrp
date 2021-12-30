@@ -23,7 +23,7 @@ import TablesSvg from "./svgs/tables-v2.svg";
 import RobotsSvg from "./svgs/robots-v2.svg";
 import LayoutSvg from "./svgs/layout-v2.svg";
 import UserSvg from "./svgs/users-v2.svg";
-import DropletSvg from "./svgs/droplet-v2.svg";
+import DropletSvg from "./svgs/droplet-v3.svg";
 import MarketPlace from "./svgs/marketplace.svg"
 import ChevronMenu from "./svgs/chevron__menu.svg"
 import AdminLogoMini from "./svgs/admin-logo-mini.svg"
@@ -563,14 +563,7 @@ class Admin extends Component {
                           </Link>
                           <WithRouterAdminRobotsDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 4 })} />
                         </li>
-                        <li>
-                          <Link to="/admin/customizers"
-                                className={this.state.activeButton === 11 ? "admin-nav-list__link-mini active__panel" : "admin-nav-list__link-mini admin-nav-list__link-top"}
-                                onClick={() => this.setState({ activeButton: 11 })}
-                          >
-                            <TemplateSvg className="icon-mini" />
-                          </Link>
-                        </li>
+
                         {/* <li>
                     <Link to="/admin/reports" className="admin-nav-list__link">
                       <ReportSvg className="icon" />

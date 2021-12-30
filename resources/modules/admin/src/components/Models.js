@@ -1,12 +1,13 @@
-import React, { Component } from "react";
-import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
+import React, {Component} from "react";
+import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import 'react-tabs/style/react-tabs.scss';
-import { Link } from 'react-router-dom'
+import {Link} from 'react-router-dom'
 
 import AdminTable from "./AdminTable";
 import Resource from "../../../editor/src/js/classes/Resource";
 import UserTopPanel from "./UserTopPanel";
 import {connect} from "react-redux";
+import {filterCategories} from "../js/helpers";
 
 const columnsModel = [
   {
@@ -50,6 +51,7 @@ const columnsDataSource = [
     title: 'Type'
   }
 ];
+
 class Models extends Component {
   constructor(props) {
     super(props);
@@ -59,6 +61,7 @@ class Models extends Component {
       currentPageModels: 1,
       currentPageDataSources: 1,
       models: [],
+      modelsDidMount: [],
       modelsSearch: '',
       modelsPageCount: 1,
       modelsCount: 0,
@@ -67,21 +70,23 @@ class Models extends Component {
       dataSourcesSearch: '',
       dataSourcesPageCount: 1,
       dataSourcesCount: 0,
-      dataSourcesSorting: {}
+      dataSourcesSorting: {},
+      categoryOptions: []
     };
     this.switchTab = this.switchTab.bind(this);
     this.changePage = this.changePage.bind(this);
-    this.modelsResource = new Resource({ route: '/admin/ajax/models' });
-    this.dataSourcesResource = new Resource({ route: '/admin/ajax/data_sources' });
-    this.itemsPerPage = 20;
+    this.modelsResource = new Resource({route: '/admin/ajax/models'});
+    this.dataSourcesResource = new Resource({route: '/admin/ajax/data_sources'});
+    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"})
+    this.itemsPerPage = 10;
   }
 
   switchTab(activeTab) {
-    this.setState(state => ({ ...state, activeTab }))
+    this.setState(state => ({...state, activeTab}))
   }
 
   changePage(currentPage, pagination) {
-    this.setState(state => ({ ...state, [pagination]: { ...state[pagination], currentPage } }));
+    this.setState(state => ({...state, [pagination]: {...state[pagination], currentPage}}));
   }
 
   /**
@@ -129,6 +134,39 @@ class Models extends Component {
     }
   };
 
+  getCategory = async (guid) => {
+    if (guid) {
+      let {models} = await this.modelsResource.getQueried({
+        categories: guid
+      });
+
+      if (this.props.modelsState) {
+        this.setState(state => ({
+          ...state,
+          models: models
+        }))
+      } else {
+        this.setState(state => ({
+          ...state,
+          models: models.filter(item => item.id >= 5)
+        }))
+      }
+    } else {
+      let {models} = await this.modelsResource.getAll()
+      if (this.props.modelsState) {
+        this.setState(state => ({
+          ...state,
+          models: models
+        }))
+      } else {
+        this.setState(state => ({
+          ...state,
+          models: models.filter(item => item.id >= 5)
+        }))
+      }
+    }
+  }
+
   // slicePage = (array, page, itemsPerPage) => {
   //   return array.slice(page * itemsPerPage - itemsPerPage, page * itemsPerPage);
   // }
@@ -151,6 +189,29 @@ class Models extends Component {
 
     this.getModels();
     this.getDataSources();
+    let res = await this.modelsResource.getAll();
+
+    if (this.props.modelsState) {
+      this.setState(state => {
+        return {
+          ...state,
+          modelsDidMount: res.models,
+        }
+      });
+    } else {
+      this.setState(state => {
+        return {
+          ...state,
+          modelsDidMount: res.models.filter(item => item.id >= 5),
+        }
+      });
+    }
+
+    let {data} = await this.categoryOptions.getAll();
+    this.setState(state => ({
+      ...state,
+      categoryOptions: data
+    }))
 
     window.addEventListener("scroll", this.listenScrollHeader)
 
@@ -172,11 +233,11 @@ class Models extends Component {
   }
 
   modelsSortingHandler = (order_by, order) => {
-    this.setState({ modelsSorting: { order_by, order } }, this.getModels);
+    this.setState({modelsSorting: {order_by, order}}, this.getModels);
   }
 
   dataSourcesSortingHandler = (order_by, order) => {
-    this.setState({ dataSourcesSorting: { order_by, order } }, this.getDataSources);
+    this.setState({dataSourcesSorting: {order_by, order}}, this.getDataSources);
   }
 
   searchModel = e => {
@@ -190,16 +251,31 @@ class Models extends Component {
   }
 
   changeModel = (e) => {
-    this.setState({ modelsSearch: e.target.value })
+    this.setState({modelsSearch: e.target.value})
   }
 
   changeDataSource = (e) => {
-    this.setState({ dataSourcesSearch: e.target.value })
+    this.setState({dataSourcesSearch: e.target.value})
   }
 
   render() {
-    const { activeTab, models, dataSources, modelsCurrentPage, modelsSearch, dataSourcesSearch,
-      modelsPageCount, modelsCount, dataSourcesCount, modelsSorting, dataSourcesSorting, currentPageDataSources, currentPageModels } = this.state;
+    const {
+      activeTab,
+      models,
+      dataSources,
+      modelsCurrentPage,
+      modelsSearch,
+      dataSourcesSearch,
+      categoryOptions,
+      modelsPageCount,
+      modelsCount,
+      dataSourcesCount,
+      modelsSorting,
+      dataSourcesSorting,
+      currentPageDataSources,
+      currentPageModels,
+      modelsDidMount
+    } = this.state;
 
 
     let dataSourcesMap = dataSources.map(dataSource => ({
@@ -207,10 +283,17 @@ class Models extends Component {
       editUrl: '/admin/tables/data-sources/edit/' + dataSource.id
     }))
 
-    let modelsMap = models.map(model => ({
-      ...model,
-      editUrl: '/admin/tables/models/edit/' + model.id
-    }))
+    let modelsMap = models.map(model => {
+      let categories = model.categories.map(item => {
+        return item.category.title
+      })
+      categories = categories.join(', ')
+      return {
+        ...model,
+        editUrl: '/admin/tables/models/edit/' + model.id,
+        categories
+      }
+    })
 
     return <div className="admin-settings admin-page">
       <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
@@ -223,11 +306,11 @@ class Models extends Component {
           <Link className="btn" to={`/admin/tables/${activeTab === 0 ? 'models' : 'data-sources'}/add`}>Add New</Link>
           <div className="admin-filters">
             <span className="admin-filters__current">
-              All ({ activeTab === 0 ? this.state.models.length : this.state.dataSources.length || "0"})
+              All ({ activeTab === 0 ? this.state.modelsDidMount.length : this.state.dataSources.length || "0"})
             </span>
           </div>
         </div>
-        <UserTopPanel />
+        <UserTopPanel/>
       </div>
       <div className="admin-content zeroing__styleTabs">
         <Tabs selectedIndex={activeTab} onSelect={this.switchTab}>
@@ -245,7 +328,7 @@ class Models extends Component {
               quickActions={[
                 {
                   tag: 'Link',
-                  props: { href: '/admin/tables/models/edit/:id' },
+                  props: {href: '/admin/tables/models/edit/:id'},
                   title: 'Edit'
                 },
                 {
@@ -253,11 +336,18 @@ class Models extends Component {
                   route: '/admin/ajax/models/:id',
                   method: 'delete',
                   confirm: 'Are You Sure?',
-                  after: () => { this.getModels() },
+                  after: () => {
+                    this.getModels()
+                  },
                   className: 'quick-action-menu__item_danger',
                   title: 'Delete'
                 }
               ]}
+              filterPropsCategories={{
+                DidMountArray: modelsDidMount,
+                categoryOptions: categoryOptions,
+                getCategories: this.getCategory
+              }}
               rows={modelsMap.slice(
                 currentPageModels * this.itemsPerPage - this.itemsPerPage,
                 currentPageModels * this.itemsPerPage
@@ -275,7 +365,7 @@ class Models extends Component {
               currentPage={currentPageModels}
               changePage={page => {
                 if (currentPageModels !== page) {
-                  this.setState({ currentPageModels: page });
+                  this.setState({currentPageModels: page});
                 }
               }
               }
@@ -289,7 +379,7 @@ class Models extends Component {
               quickActions={[
                 {
                   tag: 'Link',
-                  props: { href: '/admin/tables/data-sources/edit/:id' },
+                  props: {href: '/admin/tables/data-sources/edit/:id'},
                   title: 'Edit'
                 },
                 {
@@ -297,7 +387,9 @@ class Models extends Component {
                   route: '/admin/ajax/data_sources/:id',
                   method: 'delete',
                   confirm: 'Are You Sure?',
-                  after: () => { this.getDataSources() },
+                  after: () => {
+                    this.getDataSources()
+                  },
                   className: 'quick-action-menu__item_danger',
                   title: 'Delete'
                 }
@@ -319,7 +411,7 @@ class Models extends Component {
               currentPage={currentPageDataSources}
               changePage={page => {
                 if (currentPageDataSources !== page) {
-                  this.setState({ currentPageDataSources: page });
+                  this.setState({currentPageDataSources: page});
                 }
               }}
               itemsCount={dataSourcesMap.length}

@@ -64,6 +64,15 @@ export function titleToPath(str) {
   return str.toLowerCase().replace(/^\d+/, '').replace(/[^\d\w]/g, '-');
 
 }
+
+export function AutoCopyText(text) {
+  if (navigator.clipboard !== undefined) {
+    navigator.clipboard?.writeText(text)
+    return true
+  } else {
+    return false
+  }
+}
 /** @function objectDeepCleaning
   * Удаляет все свойства id, и чистит settings (пока нет) todo: нужна оптимизация
   * @param {object} collection
@@ -133,6 +142,10 @@ export function buildPagesTree(pages) {
   }
 
   return tree;
+}
+
+export function filterCategories(categories, categoryFilter) {
+  return categories.filter(item => item.categories.some(categoryItem => categoryItem.category.guid === categoryFilter));
 }
 
 

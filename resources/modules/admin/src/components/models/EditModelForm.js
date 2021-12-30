@@ -3,7 +3,8 @@ import {Link, Redirect} from "react-router-dom";
 import {titleToName, titleToNameTwo} from "../../js/helpers";
 import Resource from "../../../../editor/src/js/classes/Resource";
 import AltrpSelect from "../altrp-select/AltrpSelect";
-import {InputGroup} from "@blueprintjs/core";
+import {InputGroup, MenuItem} from "@blueprintjs/core";
+import {MultiSelect} from "@blueprintjs/select";
 
 class EditModelForm extends Component {
   constructor(props) {
@@ -57,7 +58,7 @@ class EditModelForm extends Component {
       ...state, value: {
         ...state.value,
         title: titleToNameTwo(e.target.value),
-        name: titleToName(e.target.value)
+        name: this.props.paramsId ? state.value.name : titleToName(e.target.value)
       }
     }))
   }
@@ -95,6 +96,47 @@ class EditModelForm extends Component {
     this.setState(state=>({...state, redirect: '/admin/tables/models/'}))
   }
 
+  tagRenderer = (item) => {
+    return item.label;
+  };
+
+  onQueryChange = (query, value) => {
+    return (
+      `${value.label.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0
+    );
+  }
+
+  isItemSelectedCategory = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.value._categories);
+    return selectedString.includes(itemString);
+  }
+
+  handleItemSelectCategory = (item) => {
+    if (!this.isItemSelectedCategory(item)) {
+      this.setState(state => ({
+        ...state,
+        value: {
+          ...state.value,
+          _categories: [...state.value._categories, item],
+          categories: [...state.value.categories, item]
+        },
+      }));
+    }
+  }
+
+  handleTagRemoveCategory = (item) => {
+    this.setState(state => ({
+      ...state,
+      value: {
+        ...state.value,
+        _categories: [...state.value._categories].filter((i) => i.label !== item),
+        categories: [...state.value.categories].filter((i) => i.label !== item)
+      },
+    }));
+  }
+
+
   render() {
     const model = this.state.value;
     if(this.state.redirect){
@@ -129,6 +171,7 @@ class EditModelForm extends Component {
                       type="text"
                       id="page-name"
                       required
+                      readOnly={this.props.paramsId}
           />
         </div>
 
@@ -159,8 +202,8 @@ class EditModelForm extends Component {
           />
         </div>
       </div>
-      <div className="form-group__inline-wrapper">
-        {(model.id) ? '' : <div className="form-group form-group_width47">
+      <div className="flex-model">
+        {(model.id) ? '' : <div className="form-group form-group_width34 right-margin">
           <label htmlFor="model-table_id" className="font__edit">Table</label>
           <AltrpSelect
             id="model-table_id"
@@ -175,15 +218,33 @@ class EditModelForm extends Component {
             onChange={value => {this.changeValue(value, 'table_id')}}
             optionsRoute="/admin/ajax/tables/options"/>
         </div>}
-        <div className="form-group form-group_width47">
-          <label htmlFor="page-categories" className="font__edit">Categories (Временно не доступен)</label>
-          <InputGroup className="form-control-blueprint"
-                      onChange={this.categoriesChangeHandler}
-                      value={model.categories || ''}
-                      type="text"
-                      id="page-categories"
-                      disabled={true}
-                      required
+        <div className="form-group form-group__multiSelectBlueprint form-group__multiSelectBlueprint-category form-group_width34">
+          <label htmlFor="page-categories" className="font__edit">Categories</label>
+          <MultiSelect tagRenderer={this.tagRenderer} id="categories"
+                       items={this.state.value.categoryOptions}
+                       itemPredicate={this.onQueryChange}
+                       noResults={<MenuItem disabled={true} text="No results."/>}
+                       fill={true}
+                       placeholder="Categories..."
+                       selectedItems={this.state.value.categories}
+                       onItemSelect={this.handleItemSelectCategory}
+                       itemRenderer={(item, {handleClick, modifiers, query}) => {
+                         return (
+                           <MenuItem
+                             icon={this.isItemSelectedCategory(item) ? "tick" : "blank"}
+                             text={item.label}
+                             key={item.value}
+                             onClick={handleClick}
+                           />
+                         )
+                       }}
+                       tagInputProps={{
+                         onRemove: this.handleTagRemoveCategory,
+                         large: false,
+                       }}
+                       popoverProps={{
+                         usePortal: false
+                       }}
           />
         </div>
       </div>
@@ -203,7 +264,16 @@ class EditModelForm extends Component {
           <label htmlFor="page-time_stamps" className="label_model font__edit">Time Stamps</label>
         </div>
 
+        <div className="form-group__flexModel">
+          <input type="checkbox" id="page-only_user"
 
+
+            checked={this.state.value.user_id}
+
+            onChange={e => { this.changeValue(e.target.checked, 'user_id') }}
+            />
+          <label htmlFor="page-only_user" className="label_model font__edit">Only for Current User</label>
+        </div>
       </div>
       <div className="btn__wrapper">
         <button className="btn btn_success" type="submit">{this.props.submitText}</button>

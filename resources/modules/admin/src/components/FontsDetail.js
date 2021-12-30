@@ -18,7 +18,7 @@ const save = async values => {
     await sleep(1000)
 }
 
-export class FontsDetail extends React.Component {
+export class  FontsDetail extends React.Component {
     state = {}
 
     componentDidUpdate(prevProps) {
@@ -35,7 +35,7 @@ export class FontsDetail extends React.Component {
             })
         })
     }
-    
+
     deleteAsset(id) {
         this.props.deleteAsset(id)
     }
@@ -64,7 +64,7 @@ export class FontsDetail extends React.Component {
                     </div>
                     <div className="document-detail__content">
                         <div className="document-detail__display">
-                            
+
                         </div>
                         <div className="document-detail__editing-section">
                             <div className="document-detail__data-wrap">

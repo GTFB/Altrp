@@ -5,6 +5,8 @@ import store from "../js/store/store";
 import { setModalSettings } from "../js/store/modal-settings/actions";
 import {redirect} from "../js/helpers";
 import UserTopPanel from "./UserTopPanel";
+import SmallModal from "./SmallModal";
+import RobotChildrenModal from "./RobotChildrenModal";
 
 export default class Robots extends Component {
   constructor(props) {
@@ -12,15 +14,19 @@ export default class Robots extends Component {
 
     this.state = {
       robots: [],
+      robotsDidMount: [],
       currentPage: 1,
       activeHeader: 0,
       robotsSearch: "",
-      model_id: false
+      model_id: false,
+      categoryOptions: [],
+      modal: false,
     };
 
     this.resource = new Resource({
       route: "/admin/ajax/robots"
     });
+    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"} )
 
     this.addNew = this.addNew.bind(this);
     this.itemsPerPage = 10;
@@ -28,6 +34,13 @@ export default class Robots extends Component {
 
   async componentDidMount() {
     await this.fetchData();
+    const robots = await this.resource.getAll();
+    const { data } = await this.categoryOptions.getAll();
+    this.setState(state => ({
+      ...state,
+      categoryOptions: data,
+      robotsDidMount: robots
+    }))
 
     window.addEventListener("scroll", this.listenScrollHeader)
 
@@ -101,8 +114,56 @@ export default class Robots extends Component {
     this.setState( { robotsSearch: e.target.value})
   }
 
+  toggleModal = () => {
+    this.setState(state => ({
+      ...state,
+      modal: !state.modal
+    }))
+  }
+
+  getCategory = async (guid) => {
+    if (guid) {
+      let robots = await this.resource.getQueried({
+        categories: guid
+      });
+      if (_.isArray(robots)) {
+        robots.map(item =>{
+          item.url = `/admin/robots-editor?robot_id=${item.id}`;
+          return item;
+        });
+      }
+      this.setState(state => ({
+        ...state,
+        robots: robots
+      }))
+    } else {
+      let robots = await this.resource.getAll();
+      if (_.isArray(robots)) {
+        robots.map(item =>{
+          item.url = `/admin/robots-editor?robot_id=${item.id}`;
+          return item;
+        });
+      }
+      this.setState(state => ({
+        ...state,
+        robots: robots
+      }))
+    }
+  }
+
   render() {
-    const { currentPage, robots, robotsSearch } = this.state;
+    const { currentPage, categoryOptions, robotsDidMount, robots, robotsSearch } = this.state;
+
+    let robotsMap = robots.map(robot => {
+      let categories = robot.categories.map(item => {
+        return item.category.title
+      })
+      categories = categories.join(', ')
+      return {
+        ...robot,
+        categories
+      }
+    })
 
     return (
       <div className="admin-templates admin-page">
@@ -115,7 +176,7 @@ export default class Robots extends Component {
               <span className="admin-breadcrumbs__separator">/</span>
               <span className="admin-breadcrumbs__current">All Robots</span>
             </div>
-            <button onClick={this.addNew} className="btn">
+            <button onClick={this.toggleModal} className="btn">
               Add New
             </button>
             {/* <button className="btn ml-3">Import Robot</button> */}
@@ -151,9 +212,19 @@ export default class Robots extends Component {
               {
                 name: "enabled",
                 title: "Enabled",
+              },
+              {
+                name: 'categories',
+                title: 'Categories'
               }
             ]}
-            rows={robots.slice(
+
+            filterPropsCategories={{
+              DidMountArray: robotsDidMount,
+              categoryOptions: categoryOptions,
+              getCategories: this.getCategory
+            }}
+            rows={robotsMap.slice(
               currentPage * this.itemsPerPage - this.itemsPerPage,
               currentPage * this.itemsPerPage
             )}
@@ -209,6 +280,11 @@ export default class Robots extends Component {
             openPagination={true}
           />
         </div>
+        {this.state.modal && (
+          <SmallModal toggleModal={this.toggleModal} activeMode={this.state.modal}>
+            <RobotChildrenModal categoryOptions={this.state.categoryOptions} toggleModal={this.toggleModal}/>
+          </SmallModal>
+        )}
       </div>
     );
   }

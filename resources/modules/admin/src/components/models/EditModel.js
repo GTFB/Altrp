@@ -57,6 +57,9 @@ class EditModel extends Component {
         title: '',
         description: '',
         bounded_model: '',
+        categories: [],
+        _categories: [],
+        categoryOptions: [],
         soft_deletes: false,
         time_stamps: false
       },
@@ -77,6 +80,7 @@ class EditModel extends Component {
     };
 
     this.modelsResource = new Resource({ route: '/admin/ajax/models' });
+    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"} )
     if (id) {
       this.fieldsResource = new Resource({ route: `/admin/ajax/models/${id}/fields` });
       this.remoteFieldsResource = new Resource({ route: `/admin/ajax/remote_data/model/${id}` });
@@ -146,10 +150,25 @@ class EditModel extends Component {
    * @return {Promise<void>}
    */
   async componentDidMount() {
+    const { data } = await this.categoryOptions.getAll();
+    this.setState(state => ({
+      ...state,
+      model: {
+        ...state.model,
+        categoryOptions: data
+      }
+    }))
     if (this.state.id) {
       this.modelsResource.get(this.state.id)
         .then(model => {
-          this.setState({ model });
+          this.setState(state => ({
+            ...state,
+            model: {
+              ...state.model,
+              _categories: model.categories,
+              ...model,
+            }
+          }));
           this.modelName = model.name;
         });
 
@@ -236,7 +255,9 @@ class EditModel extends Component {
         <UserTopPanel />
       </div>
       <div className="admin-content">
-        <EditModelForm model={model}
+        <EditModelForm
+          paramsId={id}
+          model={model}
           submitText="Save"
           edit={model.id}
           onSubmit={this.onSubmit} />

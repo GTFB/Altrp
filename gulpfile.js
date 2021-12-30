@@ -19,6 +19,7 @@ const excludes = [
   '!./public/favicon.ico',
   '!./out/**',
   '!./app/AltrpModels/**',
+  '!./altrpnjs/**',
   '!./public/storage/**',
   '!./database/altrp_migrations/**',
   '!./resources/modules/**',

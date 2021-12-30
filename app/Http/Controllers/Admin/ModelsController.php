@@ -23,6 +23,7 @@ use App\Http\Requests\Admin\ModelRequest;
 use App\Permission;
 use App\Role;
 use App\SQLEditor;
+use App\CategoryObject;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -231,8 +232,9 @@ class ModelsController extends HttpController
     private function getModelsAndPageCount(ApiRequest $request)
     {
         $search = $request->get('s');
+        $categories = $request->get('categories');
         $page = $request->get('page');
-        $orderColumn = $request->get('order_by') ?? 'id';
+        $orderColumn = $request->get('order_by') ?? 'altrp_models.id';
         $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
         if (! $page) {
             $pageCount = 0;
@@ -240,19 +242,27 @@ class ModelsController extends HttpController
             $models = $search
                 ? Model::getBySearch($search, $orderColumn, $orderType)
                 //: Model::all()->$sortType( $orderColumn )->values();
+                : Model::with('categories.category')
+                    ->when($categories, function ($query, $categories) {
+                        if (is_string($categories)) {
+                            $categories = explode(",", $categories);
+                            $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'altrp_models.guid')
+                                  ->whereIn('altrp_category_objects.category_guid', $categories);
+                        }
+                    })
 
-                : Model::
                     //->$sortType( $orderColumn )->values();
-                    orderBy($orderColumn, $orderType)
+                    ->orderBy($orderColumn, $orderType)
                     ->get();
+
         } else {
             $modelsCount = $search ? Model::getCountWithSearch($search) : Model::getCount();
             $limit = $request->get('pageSize', 10);
             $pageCount = ceil($modelsCount / $limit);
             $offset = $limit * ($page - 1);
             $models = $search
-                ? Model::getBySearchWithPaginate($search, $offset, $limit, $request, $orderColumn, $orderType)
-                : Model::getWithPaginate($offset, $limit, $request, $orderColumn, $orderType);
+                ? Model::getBySearchWithPaginate($search, $offset, $limit, $request, $orderColumn, $orderType, $categories)
+                : Model::getWithPaginate($offset, $limit, $request, $orderColumn, $orderType, $categories);
 
           $models = $models->get();
         }
@@ -422,8 +432,23 @@ class ModelsController extends HttpController
     }
 
     $model = new Model($request->all());
+    $model->guid = (string)Str::uuid();
     $result = $model->save();
     if ($result) {
+
+      $categories = $request->get( '_categories' );
+      if( is_array($categories) && count($categories) > 0 && $model->guid){
+        $insert = [];
+        foreach($categories as $key => $category){
+          $insert[$key] = [
+            "category_guid" => $category['value'],
+            "object_guid" => $model->guid,
+            "object_type" => "Model"
+          ];
+        }
+        CategoryObject::insert($insert);
+      }
+
       return response()->json( [ 'success' => true ], 200, [], JSON_UNESCAPED_UNICODE );
     }
     return response()->json([
@@ -461,6 +486,21 @@ class ModelsController extends HttpController
 
         $result = $model->update($request->all());
         if ($result) {
+
+            CategoryObject::where("object_guid", $model->guid)->delete();
+            $categories = $request->get( '_categories' );
+            if( is_array($categories) && count($categories) > 0 && $model->guid){
+              $insert = [];
+              foreach($categories as $key => $category){
+                $insert[$key] = [
+                  "category_guid" => $category['value'],
+                  "object_guid" => $model->guid,
+                  "object_type" => "Model"
+                ];
+              }
+              CategoryObject::insert($insert);
+            }
+
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
         return response()->json([
@@ -478,7 +518,9 @@ class ModelsController extends HttpController
     public function showModel($model_id)
     {
         $model = Model::find($model_id);
+
         if ($model) {
+            $model->categories = $model->categoryOptions();
             return response()->json($model, 200, [], JSON_UNESCAPED_UNICODE);
         }
         return response()->json([
@@ -504,6 +546,9 @@ class ModelsController extends HttpController
         }
         $result = $model->delete();
         if ($result) {
+
+            CategoryObject::where("object_guid", $model->guid)->delete();
+
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);
         }
         return response()->json([
@@ -1065,6 +1110,11 @@ class ModelsController extends HttpController
                 'message' => 'Data source not found'
             ], 404, [], JSON_UNESCAPED_UNICODE);
         }
+
+        if (count($data['access']['roles']) <= 1) {
+            $data['need_all_roles'] = 0;
+        }
+
         $result = $dataSource->update($data);
         if ($result) {
             return response()->json(['success' => true], 200, [], JSON_UNESCAPED_UNICODE);

@@ -113,7 +113,7 @@ class AddDataSourceForm extends Component {
       ...state, value: {
         ...state.value,
         title: titleToNameTwo(e.target.value),
-        name: titleToName(e.target.value)
+        name: this.props.paramsId ? state.value.name : titleToName(e.target.value)
       }
     }))
   }
@@ -344,6 +344,7 @@ class AddDataSourceForm extends Component {
                             this.changeValue(e.target.value, 'name')
                           }}
                           className="form-control-blueprint"
+                          readOnly={this.props.paramsId}
               />
             </div>
           </div>
@@ -548,27 +549,25 @@ class AddDataSourceForm extends Component {
 
           <h2 className="admin-form__subheader centred">Access</h2>
 
-         <div className="data_sources_checkbox">
-           <input type="checkbox" id="field-auth"
+          <div className="data_sources_checkbox">
+            <input type="checkbox" id="field-auth"
                   checked={this.state.value.auth} value={this.state.value.auth}
                   onChange={e => {
                     this.changeValue(e.target.checked, 'auth')
                   }}
-           />
-           <label className="checkbox-label" htmlFor="field-auth" >Auth</label>
-         </div>
+            />
+            <label className="checkbox-label" htmlFor="field-auth" >Auth</label>
+          </div>
 
           {this.state.value.auth ? <div className="form-group__inline-wrapper">
             <div className="form-group form-group__multiSelectBlueprint form-group_width47 ">
               <label htmlFor="roles" className="data-source-label">Roles</label>
-
               {/*<AltrpSelect id="roles"*/}
               {/*             closeMenuOnSelect={false}*/}
               {/*             value={_.filter(rolesOptions, r => roles.indexOf(r.value) >= 0)}*/}
               {/*             isMulti={true}*/}
               {/*             onChange={this.changeRoles}*/}
               {/*             options={rolesOptions}/>*/}
-
               <MultiSelect tagRenderer={this.tagRenderer} id="roles"
                            items={rolesOptions}
                            itemPredicate={this.ItemPredicate}
@@ -605,8 +604,6 @@ class AddDataSourceForm extends Component {
               {/*             isMulti={true}*/}
               {/*             onChange={this.changePermission}*/}
               {/*             options={permissionsOptions}/>*/}
-
-
               <MultiSelect tagRenderer={this.tagRenderer} id="roles"
                            items={permissionsOptions}
                            itemPredicate={this.ItemPredicate}
@@ -633,6 +630,18 @@ class AddDataSourceForm extends Component {
                              usePortal: false
                            }}
               />
+            </div>
+          </div> : null}
+
+          {this.state.value.auth && roles.length > 1 ? <div className="form-group__inline-wrapper">          
+            <div className="form-group form-group_width47 data_sources_checkbox">
+             <input type="checkbox" id="field-all-roles"
+                    checked={this.state.value.need_all_roles} value={this.state.value.need_all_roles}
+                    onChange={e => {
+                      this.changeValue(e.target.checked, 'need_all_roles')
+                    }}
+             />
+             <label className="checkbox-label" htmlFor="field-all-roles" >Need all roles</label>
             </div>
           </div> : null}
 
