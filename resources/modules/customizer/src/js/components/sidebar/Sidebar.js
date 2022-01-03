@@ -11,6 +11,7 @@ import SettingsIcon from "../../../../../editor/src/svgs/settings.svg";
 import {renderAsset} from "../../../../../front-app/src/js/helpers";
 import {connect} from "react-redux";
 import {BrowserRouter as Router} from "react-router-dom";
+import {setCurrentCustomizer} from "../../store/current-customizer/actions";
 
 class Sidebar extends React.Component {
   constructor(props) {
@@ -28,10 +29,12 @@ class Sidebar extends React.Component {
     const {customizerSettingsData} = this.props
     console.log(customizerData);
     console.log(customizerSettingsData);
-    this.resource.put(customizerId, {
+    let {data} = await this.resource.put(customizerId, {
       ...customizerData,
       data: customizerSettingsData
     });
+    // let customizer = mutate.set(customizerData, 'source', data.source)
+    store.dispatch(setCurrentCustomizer(data));
     this.props.btnChange("");
   }
 

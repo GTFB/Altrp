@@ -279,17 +279,11 @@
 
 .icon__droplet {
   position: absolute !important;
-  top: -1px !important;
-  right: -1px;
-  width: 8px;
-  height: 42.84px;
+  top: 50% !important;
+  transform: translateY(-50%);
+  right: 0;
   fill: white;
   display: none;
-
-  & path {
-    width: 8px;
-    height: 42.84px;
-  }
 }
 
 

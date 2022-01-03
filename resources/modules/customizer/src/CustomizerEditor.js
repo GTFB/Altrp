@@ -378,6 +378,7 @@ class CustomizerEditor extends Component {
               deleteKeyCode={'Delete'}
               onElementClick={ this.onElementClick }
               onNodeContextMenu={(e) => this.showMenu(e)}
+              onPaneContextMenu={(e) => this.showMenu(e)}
               onPaneClick={(e) => this.PaneClick(e)}
               onLoad={ this.onLoad }
               onDrop={ this.onDrop }
@@ -420,6 +421,8 @@ class CustomizerEditor extends Component {
               node={this.state.selectNode}
               disabled={this.state.activePanel}
               deleteNode={this.onElementsRemove}
+              reactFlowRef={this.reactFlowRef.current}
+              reactFlowInstance={this.state.reactFlowInstance}
             />
           </div>
         </ReactFlowProvider>
