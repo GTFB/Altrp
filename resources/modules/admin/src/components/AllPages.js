@@ -6,6 +6,7 @@ import UserTopPanel from "./UserTopPanel";
 import {Icon, InputGroup, Tree} from "@blueprintjs/core";
 import PagesSvg from "../svgs/pages-v2.svg";
 import Search from "../svgs/search.svg";
+import {filterCategories} from "../js/helpers";
 
 export default class AllPages extends Component {
   constructor(props) {
@@ -16,9 +17,13 @@ export default class AllPages extends Component {
       treePages: [],
       currentPage: 1,
       activeHeader: 0,
-      pagesSearch: ""
+      pagesSearch: "",
+      filter: false,
+      activeCategory: 'All',
+      categoryOptions: [],
     };
     this.resource = new Resource({ route: "/admin/ajax/pages" });
+    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"} )
     this.itemsPerPage = 10;
   }
 
@@ -46,6 +51,12 @@ export default class AllPages extends Component {
   async componentDidMount() {
     await this.getPagesDidMount();
     await this.getPages();
+
+    const { data } = await this.categoryOptions.getAll();
+    this.setState(state => ({
+      ...state,
+      categoryOptions: data
+    }))
     window.addEventListener("scroll", this.listenScrollHeader)
 
     return () => {
@@ -88,7 +99,40 @@ export default class AllPages extends Component {
     this.setState(s => ({ ...s, treePages: currentTree }));
   }
 
+  toggleFilterCategories = () => {
+    this.setState(state => ({
+      ...state,
+      filter: !state.filter
+    }))
+  }
 
+  getCategory = async (guid, all) => {
+    if (guid) {
+      let pages = await this.resource.getQueried({
+        categories: guid
+      });
+      let treePagesNew = pages.map(page => {
+        return this.treePagesMap(page)
+      })
+      this.setState(state => ({
+        ...state,
+        pages: pages,
+        treePages: treePagesNew,
+        activeCategory: guid
+      }))
+    } else {
+      let pages = await this.resource.getAll();
+      let treePagesNew = pages.map(page => {
+        return this.treePagesMap(page)
+      })
+      this.setState(state => ({
+        ...state,
+        pages: pages,
+        treePages: treePagesNew,
+        activeCategory: all
+      }))
+    }
+  }
 
   treePagesMap = (page) => {
     let treePage = {}
@@ -146,11 +190,39 @@ export default class AllPages extends Component {
         <div className="admin-content">
           <div className="altrp-tree">
             <div className="altrp-tree__block">
-              <form className="admin-tree-top" onSubmit={this.submitSearchHandler}>
-                <InputGroup className="form-tables" value={this.state.pagesSearch} onChange={this.changeSearchHandler} />
-                <Search />
-                <button className="btn btn_bare admin-users-button btn__tables">Search</button>
-              </form>
+             <div className="admin-table-top__flex">
+               <form className="admin-tree-top" onSubmit={this.submitSearchHandler}>
+                 <InputGroup className="form-tables" value={this.state.pagesSearch} onChange={this.changeSearchHandler} />
+                 <Search />
+                 <button className="btn btn_bare admin-users-button btn__tables">Search</button>
+               </form>
+               <span onClick={this.toggleFilterCategories} className="showFilter">{this.state.filter ? "Close filter categories" : "Open filter categories"}</span>
+             </div>
+              {this.state.filter && (
+                <div className="admin-table__filterCategories-pages">
+                  <span className="heading__categories">Categories:</span>
+                  <span onClick={() => this.getCategory(null, "All")} className="admin-filters__current">
+                    <a className={this.state.activeCategory === "All" ? "admin-filters__link active-category" : "admin-filters__link"}>
+                      All ({this.state.pagesDidMount.length || "0"})
+                    </a>
+                  </span>
+
+                  {this.state.categoryOptions.map(item => {
+                    const itemsCount = filterCategories(this.state.pagesDidMount, item.value).length
+
+                    return (
+                      <span className="category__block-span" key={item.value}>
+                        <span className="admin-filters__separator">|</span>
+                          <a
+                            className={item.value === this.state.activeCategory ? "admin-filters__link active-category" : "admin-filters__link" }
+                            onClick={() => this.getCategory(item.value)}
+                          >
+                           {item.label} ({itemsCount})
+                          </a>
+                      </span>)
+                    })}
+                </div>
+              )}
               <Tree
                 contents={treePages}
                 className="altrp-tree__pages"

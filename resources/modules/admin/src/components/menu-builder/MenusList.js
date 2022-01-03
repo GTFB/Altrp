@@ -12,6 +12,7 @@ class MenusList extends Component {
       menus: [],
       menusDidMount: [],
       categoryOptions: [],
+      activeCategory: 'All',
       activeHeader: 0,
       currentPage: 1,
       menusSearch: ""
@@ -81,20 +82,22 @@ class MenusList extends Component {
     this.setState(state => ({...state, menus, menusDidMount: menus}))
   }
 
-  getCategory = async (guid) => {
+  getCategory = async (guid, all) => {
     if (guid) {
       let menus = await this.resource.getQueried({
         categories: guid
       });
       this.setState(state => ({
         ...state,
-        menus
+        menus,
+        activeCategory: guid
       }))
     } else {
       let menus = await this.resource.getAll();
       this.setState(state => ({
         ...state,
-        menus
+        menus,
+        activeCategory: all
       }))
     }
   }
@@ -164,7 +167,8 @@ class MenusList extends Component {
           filterPropsCategories={{
             DidMountArray: menusDidMount,
             categoryOptions: categoryOptions,
-            getCategories: this.getCategory
+            getCategories: this.getCategory,
+            activeCategory: this.state.activeCategory
           }}
           rows={menusMap.slice(
             currentPage * this.itemsPerPage - this.itemsPerPage,

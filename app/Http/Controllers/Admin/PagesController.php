@@ -24,13 +24,14 @@ class PagesController extends Controller
     $search = $request->get('s');
     $categories = $request->get('categories');
     $table_name = "pages";
-    $orderColumn = $request->get('order_by') ?? 'id';
+    $orderColumn = $request->get('order_by') ?? 'title';
+    $orderColumn = 'pages.'.$orderColumn;
     $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
     $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
     $_pages = $search
         //? Page::getBySearch($search, 'title', [], $orderColumn, $orderType)
         ? Page::search($search, 'title', ['categories.category'], $orderColumn, $orderType, $categories)
-        : Page::with('categories.category')
+        : Page::select('pages.*')->with('categories.category')
             ->when($categories, function ($query, $categories) {
                 if (is_string($categories)) {
                     $categories = explode(",", $categories);

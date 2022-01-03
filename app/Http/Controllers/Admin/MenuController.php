@@ -33,7 +33,7 @@ class MenuController extends Controller
                     ->whereIn('altrp_category_objects.category_guid', $categories);
           }
       })
-      ->get()->sortByDesc( 'id' )->values()->toArray();
+      ->get()->sortByDesc( 'menus.name' )->values()->toArray();
 
     // if( $request->get( 's' ) ){
     //   $menus = Menu::where( 'name', 'like', '%' . $request->get( 's' ) . '%' )->get();

@@ -9,20 +9,39 @@ import DotsIcon from "../../../../../editor/src/svgs/dots.svg";
 import HamburgerIcon from "../../../../../editor/src/svgs/hamburger.svg";
 import SettingsIcon from "../../../../../editor/src/svgs/settings.svg";
 import {renderAsset} from "../../../../../front-app/src/js/helpers";
+import {connect} from "react-redux";
+import AutoUpdateCheckbox from "../../../../../admin/src/components/AutoUpdateCheckbox";
 
 export default class Sidebar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      robot: {}
     };
 
     this.resource = new Resource({ route: "/admin/ajax/robots" });
     this.update = this.update.bind(this);
   }
 
+  componentDidMount() {
+    const robotTimeOut = setTimeout(() => {
+      this.setState(state => ({
+        ...state,
+        robot: {
+          ...this.props.robot
+        }
+      }))
+    }, 2000)
+
+    return () => {
+      clearTimeout(robotTimeOut)
+    }
+  }
+
   async update() {
     const robotId = new URL(window.location).searchParams.get("robot_id");
-    const robotData = store.getState()?.currentRobot;
+    // const robotData = store.getState()?.currentRobot;
+    const robotData = this.state.robot
     const robotChart = store.getState()?.robotSettingsData;
     robotData.chart = JSON.stringify(robotChart);
     console.log(this.props.sources);
@@ -31,6 +50,46 @@ export default class Sidebar extends React.Component {
       sources: this.props.sources,
     });
     this.props.btnChange("");
+  }
+
+  onQueryChangeMulti = (query, value) => {
+    return (
+      `${value.label.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0
+    );
+  }
+
+  tagRenderer = (item) => {
+    return item.label;
+  };
+
+  isItemSelectedCategory = (item) => {
+    let itemString = JSON.stringify(item);
+    let selectedString = JSON.stringify(this.state.robot.categories || []);
+    return selectedString.includes(itemString);
+  };
+
+  handleItemSelectCategory = (item) => {
+    if (!this.isItemSelectedCategory(item)) {
+      this.setState(state => ({
+        ...state,
+        robot: {
+          ...state.robot,
+          _categories: [...state.robot._categories, item],
+          categories: [...state.robot.categories, item]
+        }
+      }));
+    }
+  }
+
+  handleTagRemoveCategory = (item) => {
+    this.setState(state => ({
+      ...state,
+      robot: {
+        ...state.robot,
+        _categories: [...state.robot._categories].filter((i) => i.label !== item),
+        categories: [...state.robot.categories].filter((i) => i.label !== item)
+      }
+    }));
   }
 
   render() {
@@ -65,6 +124,12 @@ export default class Sidebar extends React.Component {
                                             sources={ this.props.sources }
                                             setSources={ this.props.setSources }
                                             onLayout={ this.props.onLayout }
+                                            onQueryChangeMulti={this.onQueryChangeMulti}
+                                            tagRenderer={this.tagRenderer}
+                                            isItemSelectedCategory={this.isItemSelectedCategory}
+                                            handleItemSelectCategory={this.handleItemSelectCategory}
+                                            handleTagRemoveCategory={this.handleTagRemoveCategory}
+                                            selectItems={this.state.robot.categories}
                                           />}
           {activePanel === "selected" && <SelectedPanel
                                             robot={ this.props.robot }

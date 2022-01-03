@@ -12,6 +12,7 @@ class Areas extends Component {
       areas: [],
       areasDidMount: [],
       categoryOptions: [],
+      activeCategory: 'All',
       activeHeader: 0,
       currentPage: 1,
       areasSearch: ""
@@ -67,7 +68,7 @@ class Areas extends Component {
     this.setState( { areasSearch: e.target.value})
   }
 
-  getCategory = async (guid) => {
+  getCategory = async (guid, all) => {
     if (guid) {
       let areas = await this.resource.getQueried({
         categories: guid
@@ -75,14 +76,16 @@ class Areas extends Component {
       areas = areas.filter(area => CONSTANTS.DEFAULT_AREAS.indexOf(area.name) === -1)
       this.setState(state => ({
         ...state,
-        areas: areas
+        areas: areas,
+        activeCategory: guid
       }))
     } else {
       let areas = await this.resource.getAll();
       areas = areas.filter(area => CONSTANTS.DEFAULT_AREAS.indexOf(area.name) === -1)
       this.setState(state => ({
         ...state,
-        areas: areas
+        areas: areas,
+        activeCategory: all
       }))
     }
   }
@@ -150,7 +153,8 @@ class Areas extends Component {
           filterPropsCategories={{
             DidMountArray: areasDidMount,
             categoryOptions: categoryOptions,
-            getCategories: this.getCategory
+            getCategories: this.getCategory,
+            activeCategory: this.state.activeCategory
           }}
           rows={areasMap.slice(
             currentPage * this.itemsPerPage - this.itemsPerPage,

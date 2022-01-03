@@ -19,7 +19,7 @@ class CategoryController extends Controller
     {
         if( $request->get( 's' ) ){
           $сategories = Category::where( 'title', 'like', '%' . $request->get( 's' ) . '%' )->get();
-          $сategories = $сategories->sortByDesc( 'id' )->values()->toArray();
+          $сategories = $сategories->sortByDesc( 'title' )->values()->toArray();
           return response()->json( $сategories, 200, [], JSON_UNESCAPED_UNICODE);
         }
         return response()->json( Category::all()->sortByDesc( 'id' )->values()->toArray(), 200, [], JSON_UNESCAPED_UNICODE);

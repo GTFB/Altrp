@@ -719,7 +719,7 @@ class Admin extends Component {
                 <AddPage />
               </Route>
               <Route path="/admin/pages/add">
-                <AddPage />
+                <AddPage modelsState={this.props.modelsState} />
               </Route>
               <Route path="/admin/tables/models" exact>
                 <Models updateModels={this.updateModels} />
@@ -813,6 +813,7 @@ let _export;
 const mapStateToProps = (state) => {
   return {
     metaValue: state.customFonts.metaValue,
+    modelsState: state.modelsState.toggleModels
   }
 }
 
