@@ -4,7 +4,8 @@
 ## Changelog
 
 ### 0.20.21
-* Bug bixed
+* Bug fixed
++ Add Changelog for Updates Page
 
 ### 0.20.0
 + Add Categories
@@ -14,7 +15,7 @@
 
 ### 0.19.9
 * Fix Carousel Widgets Synchronize
-+ Add `Single Click for Lightbox` and `<img/> Tag` Settings for Carousel Widget
++ Add `Single Click for Lightbox` and `<img/>` Tag Settings for Carousel Widget
 
 ### 0.19.8
 * Fix Dropbar with Template Issue

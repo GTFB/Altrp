@@ -80,6 +80,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
   Route::group(['prefix' => 'ajax'], function () {
 
+    Route::get('/changelog', 'Admin\UpdateController@changelog');
+
     Route::post('/export_json', 'Admin\AdminController@export_json')->name('admin.export_json');
     /**
      * Роуты модели AltrpMeta

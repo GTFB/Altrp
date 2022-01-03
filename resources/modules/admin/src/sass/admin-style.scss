@@ -524,3 +524,9 @@ body {
   --menu-droplet-false: 45px;
   --menu-droplet-default: var(--menu-droplet-true);
 }
+
+.admin-changelog{
+  padding: 25px;
+  font-size: 14px;
+  background-color: $light-gray;
+}
