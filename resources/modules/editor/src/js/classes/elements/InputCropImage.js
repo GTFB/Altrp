@@ -269,13 +269,22 @@ class InputCropImage extends BaseElement {
       label: 'Crop Size'
     });
 
-    this.addControl('crop_size', {
+    this.addControl('crop_width', {
       type: CONTROLLER_SLIDER,
-      label: 'Crop Size',
+      label: 'Crop Width',
       max: 1500,
       stateless: true,
       min: 0,
       units: ['px', 'vw']
+    });
+
+    this.addControl('crop_height', {
+      type: CONTROLLER_SLIDER,
+      label: 'Crop Height',
+      max: 1500,
+      stateless: true,
+      min: 0,
+      units: ['px', 'vh']
     });
 
     this.endControlSection();

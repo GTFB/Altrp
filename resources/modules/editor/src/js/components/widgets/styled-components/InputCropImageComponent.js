@@ -4,6 +4,8 @@ import { getResponsiveSetting } from "../../../../../../front-app/src/js/helpers
 export default function InputCropImageComponent(settings) {
   const getSetting = (...args) => getResponsiveSetting(settings, ...args)
 
+  console.log(getSetting('crop_height'));
+
   let styles = ``
 
   styles += `.image-to-crop-container {
@@ -12,7 +14,8 @@ export default function InputCropImageComponent(settings) {
   }`
 
   styles += `.image-crop-container {
-    ${simplePropertyStyled(sliderStyled(getSetting('crop_size') || getSetting('height', '', {size: 300, unit: 'px'})), 'height')}
+    ${simplePropertyStyled(sliderStyled(getSetting('crop_height') || getSetting('height', '', {size: 300, unit: 'px'})), 'height')}
+    ${simplePropertyStyled(sliderStyled(getSetting('crop_width') || getSetting('width', '', {})), 'width')}
   }`
 
   styles += `.crop-image-background {
