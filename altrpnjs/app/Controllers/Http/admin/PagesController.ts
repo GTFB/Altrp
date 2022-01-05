@@ -18,6 +18,8 @@ export default class PagesController {
     }
 
     const data = {
+      ...request.body(),
+      content: request.input("content") || "",
       model_id: request.input("model_id"),
       author: auth.user.id,
       guid: uuid(),
@@ -25,15 +27,18 @@ export default class PagesController {
       path: request.input("path"),
       redirect: request.input("redirect"),
       is_cached: request.input("is_cached"),
-      sections_count: request.input("sections_count")
+      sections_count: request.input("sections_count"),
+      title: request.input("title")
     }
+
+    delete data.roles;
+    delete data.rolesOptions;
 
     const page = await Page.create(data)
 
     if(page) {
       const template_id = request.input("template_id")
       if(template_id) {
-        console.log(template_id)
         const template = await Template.find(template_id);
 
         if(template) {
@@ -57,5 +62,119 @@ export default class PagesController {
 
     res.message = 'Page not Saved';
     return response.status(500).send(res)
+  }
+
+  public async index({ request }) {
+    const params = request.qs();
+    const page = parseInt(params.page) || 1
+
+    const pages = await Page.query()
+      .preload("user")
+      .paginate(page, 500)
+
+    const modPages = pages.all().map( page => {
+      return {
+        author: page.user.email,
+        id: page.id,
+        title: page.title,
+        path: page.path,
+        url: request.url,
+        parent_page_id: page.parent_page_id,
+        editUrl: `/admin/pages/edit/${page.id}`,
+      }
+    })
+
+    return modPages
+  }
+
+  public async show({ params }) {
+    const page = await Page.query().preload("roles").where("id", parseInt(params.id)).firstOrFail();
+
+
+
+    return {
+      model: null,
+      model_name: "",
+      ...page.serialize()
+    }
+  }
+
+  public async getAreas({ params }) {
+    const page = await Page.find(parseInt(params.id));
+
+    return {
+      "areas": [
+        {
+          "area_name": "header",
+          "id": "header",
+          "settings": [],
+          "template": {
+            "data": {
+              "name": "root-element",
+              "type": "root-element",
+              "children": [],
+              "settings": []
+            }
+          }
+        },
+        {
+          "area_name": "content",
+          "id": "content",
+          "settings": [],
+          "template": {
+            "data": {
+              "name": "root-element",
+              "type": "root-element",
+              "children": [],
+              "settings": []
+            }
+          }
+        },
+        {
+          "area_name": "footer",
+          "id": "footer",
+          "settings": [],
+          "template": {
+            "data": {
+              "name": "root-element",
+              "type": "root-element",
+              "children": [],
+              "settings": []
+            }
+          }
+        },
+        {
+          "area_name": "popups",
+          "id": "popups",
+          "settings": [],
+          "templates": []
+        }
+      ]
+    }
+  }
+
+  public async update({ params, request }) {
+    const page = await Page.find(parseInt(params.id))
+
+    if(page) {
+      const body = request.body();
+
+      Object.keys(body).forEach(input => {
+        console.log(body[input])
+        if(body[input] && input !== "rolesOptions" && input !== "roles") {
+          page[input] = body[input]
+        }
+      })
+
+      await page.save()
+
+      return {
+        success: true
+      }
+    }
+
+    return {
+      success: false
+    }
   }
 }
