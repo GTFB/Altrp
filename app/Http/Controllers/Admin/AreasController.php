@@ -25,10 +25,17 @@ class AreasController extends Controller
   public function index(ApiRequest $request)
   {
     
+    $search = $request->get('s');
     $categories = $request->get('categories');
+    $page = $request->get('page', 1);
+    $orderColumn = $request->get('order_by') ?? 'title';
+    $orderColumn = 'areas.' . $orderColumn;
+    $limit = $request->get('pageSize', 10);
+    $offset = $limit * ($page - 1);
+    $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
+    $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
 
-    //$_areas = Area::all();
-    $_areas = Area::with('categories.category')
+    $_areas = Area::select('areas.*')->with('categories.category')
       ->when($categories, function ($query, $categories) {
           if (is_string($categories)) {
               $categories = explode(",", $categories);
@@ -36,7 +43,16 @@ class AreasController extends Controller
                     ->whereIn('altrp_category_objects.category_guid', $categories);
           }
       })
-      ->orderBy('areas.title', 'Asc')
+      ->when($search, function ($query, $search) {
+          $query->where(function ($query) use ($search) {
+              $query->where('areas.title','like', '%'.$search.'%')
+                    ->orWhere('areas.id','like', '%'.$search.'%');
+          });
+      })
+      ->when(($offset == 0 || $offset > 0) && $limit, function ($query) use ($offset, $limit) {
+          $query->skip($offset)->take($limit);
+      })
+      ->$sortType($orderColumn)
       ->get();
 
     return response()->json( $_areas->toArray() );
