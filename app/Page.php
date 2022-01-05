@@ -518,10 +518,10 @@ class Page extends Model
             ->where('altrp_category_objects.object_guid', $this->guid)->get();
   }
   
-  public static function search($search, $field = 'title', $relations = [], $orderColumn = 'id', $orderType = 'Desc', $categories=null)
+  public static function search($search, $field = 'pages.title', $relations = [], $orderColumn = 'id', $orderType = 'Desc', $categories=null)
   {
       $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
-      return self::with($relations)
+      return self::select('pages.*')->with($relations)
           ->when($categories, function ($query, $categories) {
               if (is_string($categories)) {
                   $categories = explode(",", $categories);
@@ -529,9 +529,18 @@ class Page extends Model
                         ->whereIn('altrp_category_objects.category_guid', $categories);
               }
           })
+
+          // ->when($categories, function ($query, $categories) {
+          //     if (is_string($categories)) {
+          //         $categories = explode(",", $categories);
+          //         $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'pages.guid')
+          //               ->whereIn('altrp_category_objects.category_guid', $categories);
+          //     }
+          // })
+
           ->where(function ($query) use ($field, $search) {
               $query->where($field,'like', "%{$search}%")
-                    ->orWhere('id', 'like', "%{$search}%");
+                    ->orWhere('pages.id', 'like', "%{$search}%");
           })
           ->$sortType($orderColumn)
           ->get();

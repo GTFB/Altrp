@@ -30,7 +30,7 @@ class PagesController extends Controller
     $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
     $_pages = $search
         //? Page::getBySearch($search, 'title', [], $orderColumn, $orderType)
-        ? Page::search($search, 'title', ['categories.category'], $orderColumn, $orderType, $categories)
+        ? Page::search($search, 'pages.title', ['categories.category'], $orderColumn, $orderType, $categories)
         : Page::select('pages.*')->with('categories.category')
             ->when($categories, function ($query, $categories) {
                 if (is_string($categories)) {
