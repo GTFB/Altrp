@@ -21,17 +21,28 @@
 import Route from '@ioc:Adonis/Core/Route'
 // import {UserFactory} from "Database/factories";
 
-Route.get('/', async () => {
-  // await UserFactory.create()
-  return { hello: 'world' }
-})
-
 Route.get("/login", "IndicesController.loginView")
 Route.post("/login", "IndicesController.login")
 
+
+
 Route.group(() => {
+
+  Route.get("/pages/:id", "admin/PagesController.getAreas")
 
   Route.get("/current-user", "users/UsersController.getCurrentUser")
 
+  Route.get("/_token", () => {
+    return {
+      success: true,
+      _token: "token"
+    }
+  })
+
+  Route.get("/models/queries/galleries/get_galley", () => {
+    return {
+      data: []
+    }
+  })
 })
 .prefix("/ajax")

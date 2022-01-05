@@ -10,6 +10,7 @@
 */
 
 import Server from '@ioc:Adonis/Core/Server'
+import Route from "@ioc:Adonis/Core/Route";
 
 /*
 |--------------------------------------------------------------------------
@@ -21,8 +22,12 @@ import Server from '@ioc:Adonis/Core/Server'
 |
 */
 Server.middleware.register([
+  () => import('App/Middleware/AltrpRouting'),
   () => import('@ioc:Adonis/Core/BodyParser'),
 ])
+
+Route.get('*', async () => {
+})
 
 /*
 |--------------------------------------------------------------------------

@@ -23,6 +23,12 @@ export default class IndicesController {
     }))
   }
 
+  // public frontApp({ view }) {
+  //   return view.render('front-app', Edge({
+  //     hAltrp: Env.get("PATH_ENV") === "production" ? "/modules/front-app/h-altrp.js" : null
+  //   }))
+  // }
+
   public loginView({ view }) {
     return view.render('login')
   }
