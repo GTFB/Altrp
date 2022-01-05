@@ -483,6 +483,33 @@ body {
     margin-bottom: 15px;
 }
 
+.form-group__multiSelectBlueprint-robot {
+  & .bp3-tag-input.bp3-large {
+    height: auto;
+    min-height: 38px;
+  }
+
+  & .bp3-input {
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    box-shadow: none;
+  }
+
+  & .bp3-input:focus, .bp3-input.bp3-active {
+    box-shadow: 0 0 0 1px #315efb, 0 0 0 3px rgb(19 124 189 / 30%);
+  }
+
+  & .bp3-menu {
+    min-width: 230px;
+  }
+
+  & .bp3-tag-input .bp3-tag {
+    margin-bottom: 5px !important;
+    margin-top: 5px;
+  }
+}
+
 // .condition-node-map {
 //     transform: rotate(-45deg);
 // }

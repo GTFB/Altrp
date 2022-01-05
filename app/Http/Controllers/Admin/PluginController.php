@@ -117,7 +117,7 @@ class PluginController extends Controller
 
       $response = $client->get( $request->get('update_url'), [
         'headers' => [
-          'altrp-domain-resource' => str_replace(['https://', 'http://'], '', Request::root()),
+          'altrp-domain-resource' => str_replace(['https://', 'http://'], '', $request->root()),
           'authorization' => request()->cookie('altrpMarketApiToken'),
         ]
       ])->getBody()->getContents();
@@ -128,7 +128,7 @@ class PluginController extends Controller
         'line' => $e->getLine(),
         'trace' => $e->getTrace(),
         ];
-      $status = $e->getCode();
+      $status = 500;
       return response()->json( $res, $status, [], JSON_UNESCAPED_UNICODE );
     }
 

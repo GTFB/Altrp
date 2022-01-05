@@ -78,8 +78,10 @@ class CustomizerSettingsPanel extends React.Component {
   EditTitleForm = async (e) => {
     e.preventDefault();
     if (confirm("Are you sure?")) {
+      let {customizer} = this.props;
+      customizer = mutate.set(customizer, 'title', this.state.customizer.title)
+      window.customizerEditorStore.dispatch(setCurrentCustomizer(customizer))
       await this.resource.put(this.state.customizer.id, this.state.customizer)
-      this.props.updateCustomizer()
     }
   }
 
@@ -95,7 +97,7 @@ class CustomizerSettingsPanel extends React.Component {
 
   UrlCopy = () => {
     let sourceUrl = ''
-    if (this.state.customizer.source !== null) {
+    if (this.props.customizer.source !== null) {
       const { model, url } = this.state.customizer.source
       sourceUrl = `${'/ajax/models/' + (model?.name.slice(-1) === 's' ? model?.name + '/' : model?.name + 's/') + 'customizers' + url}`
     }
@@ -120,11 +122,10 @@ class CustomizerSettingsPanel extends React.Component {
     const Middlewares = settings?.middlewares;
 
     let Url = ''
-    if (this.state.customizer.source !== null) {
-      const { model, url } = this.state.customizer.source
+    if (this.props.customizer.source !== null) {
+      const { model, url } = this.props.customizer.source
       Url = `${'/ajax/models/' + (model?.name.slice(-1) === 's' ? model?.name + '/' : model?.name + 's/') + 'customizers' + url}`
     }
-    console.log(this.state)
 
     return (
       <div className="panel settings-panel d-flex">

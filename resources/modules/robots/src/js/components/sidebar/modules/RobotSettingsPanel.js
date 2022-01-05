@@ -5,22 +5,27 @@ import store from "../../../store/store";
 import {setCurrentRobot} from "../../../store/current-robot/actions";
 import AltrpSelect from "../../../../../../admin/src/components/altrp-select/AltrpSelect";
 import Resource from "../../../../../../editor/src/js/classes/Resource";
+import {MultiSelect} from "@blueprintjs/select";
+import {MenuItem} from "@blueprintjs/core";
 
 
 export default class RobotSettingsPanel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataSources: []
+      dataSources: [],
+      categoryOptions: []
     };
     this.toggleChevron = this.toggleChevron.bind(this);
     this.toggle = this.toggle.bind(this);
     this.dataSources = new Resource({ route: "/admin/ajax/data_source_options" });
+    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"})
   }
 
   async componentDidMount() {
     const dataSources = await this.dataSources.getAll();
-    this.setState(s =>({...s, dataSources: dataSources?.options ?? []}));
+    let {data} = await this.categoryOptions.getAll();
+    this.setState(s =>({...s, dataSources: dataSources?.options ?? [], categoryOptions: data }));
   }
 
   toggleChevron(type) {
@@ -168,6 +173,35 @@ export default class RobotSettingsPanel extends React.Component {
                           </div>}
                         </div>
                       </div>
+                    <div className="controller-container controller-container_select form-group__multiSelectBlueprint-robot">
+                      <label htmlFor="categories-robot" className="controller-container__label control-select__label controller-label">Categories</label>
+                      <MultiSelect tagRenderer={this.props.tagRenderer} id="categories"
+                                   items={this.state.categoryOptions}
+                                   itemPredicate={this.props.onQueryChangeMulti}
+                                   noResults={<MenuItem disabled={true} text="No results."/>}
+                                   fill={true}
+                                   placeholder="Categories..."
+                                   selectedItems={this.props.selectItems}
+                                   onItemSelect={this.props.handleItemSelectCategory}
+                                   itemRenderer={(item, {handleClick, modifiers, query}) => {
+                                     return (
+                                       <MenuItem
+                                         icon={this.props.isItemSelectedCategory(item) ? "tick" : "blank"}
+                                         text={item.label}
+                                         key={item.value}
+                                         onClick={handleClick}
+                                       />
+                                     )
+                                   }}
+                                   tagInputProps={{
+                                     onRemove: this.props.handleTagRemoveCategory,
+                                     large: false,
+                                   }}
+                                   popoverProps={{
+                                     usePortal: false
+                                   }}
+                      />
+                    </div>
                   </div> {/* ./controllers-wrapper */}
                 </div> {/* ./settings-section */}
 

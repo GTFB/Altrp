@@ -20,6 +20,7 @@ export default class Robots extends Component {
       robotsSearch: "",
       model_id: false,
       categoryOptions: [],
+      activeCategory: 'All',
       modal: false,
     };
 
@@ -121,7 +122,7 @@ export default class Robots extends Component {
     }))
   }
 
-  getCategory = async (guid) => {
+  getCategory = async (guid, all) => {
     if (guid) {
       let robots = await this.resource.getQueried({
         categories: guid
@@ -134,7 +135,8 @@ export default class Robots extends Component {
       }
       this.setState(state => ({
         ...state,
-        robots: robots
+        robots: robots,
+        activeCategory: guid
       }))
     } else {
       let robots = await this.resource.getAll();
@@ -146,7 +148,8 @@ export default class Robots extends Component {
       }
       this.setState(state => ({
         ...state,
-        robots: robots
+        robots: robots,
+        activeCategory: all
       }))
     }
   }
@@ -222,7 +225,8 @@ export default class Robots extends Component {
             filterPropsCategories={{
               DidMountArray: robotsDidMount,
               categoryOptions: categoryOptions,
-              getCategories: this.getCategory
+              getCategories: this.getCategory,
+              activeCategory: this.state.activeCategory
             }}
             rows={robotsMap.slice(
               currentPage * this.itemsPerPage - this.itemsPerPage,

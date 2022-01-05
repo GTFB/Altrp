@@ -36,7 +36,7 @@ class AreasController extends Controller
                     ->whereIn('altrp_category_objects.category_guid', $categories);
           }
       })
-      ->orderBy('areas.id', 'Asc')
+      ->orderBy('areas.title', 'Asc')
       ->get();
 
     return response()->json( $_areas->toArray() );

@@ -23,7 +23,7 @@ import TablesSvg from "./svgs/tables-v2.svg";
 import RobotsSvg from "./svgs/robots-v2.svg";
 import LayoutSvg from "./svgs/layout-v2.svg";
 import UserSvg from "./svgs/users-v2.svg";
-import DropletSvg from "./svgs/droplet-v3.svg";
+import DropletSvg from "./svgs/droplet-new.svg";
 import MarketPlace from "./svgs/marketplace.svg"
 import ChevronMenu from "./svgs/chevron__menu.svg"
 import AdminLogoMini from "./svgs/admin-logo-mini.svg"
@@ -106,6 +106,7 @@ import AddModel from "./components/models/AddModel";
 import {WithRouterAdminRobotsDropList} from "./components/AdminRobotsDropList";
 import getAPiToken from "./js/functions/get-api-token";
 import SearchPlugins from "./components/plugins/SearchPlugins";
+import {WithRouterAdminSearchPluginsDropList} from "./components/AdminSearchPluginsDropList";
 
 
 window.React = React;
@@ -414,17 +415,7 @@ class Admin extends Component {
                             <DropletSvg className="icon__droplet"/>
                             <span>Plugins</span>
                           </Link>
-                        </li>
-                        <li>
-                          <Link
-                            to="/admin/search-plugins"
-                            className={this.state.activeButton === 5 ? "admin-nav-list__link active__panel" : "admin-nav-list__link admin-nav-list__link-top"}
-                            onClick={() => this.setState({ activeButton: 5 })}
-                          >
-                            <PluginSvg className="icon" />
-                            <DropletSvg className="icon__droplet"/>
-                            <span>Search Plugins</span>
-                          </Link>
+                          <WithRouterAdminSearchPluginsDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 5 })} />
                         </li>
                         <li>
                           <Link
@@ -578,6 +569,7 @@ class Admin extends Component {
                           >
                             <PluginSvg className="icon-mini" />
                           </Link>
+                          <WithRouterAdminSearchPluginsDropList menu={this.state.menu} activeButton={() => this.setState({ activeButton: 5 })} />
                         </li>
                         <li>
                           <Link
@@ -727,7 +719,7 @@ class Admin extends Component {
                 <AddPage />
               </Route>
               <Route path="/admin/pages/add">
-                <AddPage />
+                <AddPage modelsState={this.props.modelsState} />
               </Route>
               <Route path="/admin/tables/models" exact>
                 <Models updateModels={this.updateModels} />
@@ -821,6 +813,7 @@ let _export;
 const mapStateToProps = (state) => {
   return {
     metaValue: state.customFonts.metaValue,
+    modelsState: state.modelsState.toggleModels
   }
 }
 

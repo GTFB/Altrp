@@ -23,8 +23,8 @@ class SQLEditorController extends Controller
     public function index( Request $request )
     {
       $search = $request->get('s');
-      $orderColumn = $request->get('order_by') ?? 'id';
-      $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
+      $orderColumn = $request->get('order_by') ?? 'title';
+      $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Asc';
       $sortType = 'sortBy' . ($orderType == 'Asc' ? '' : $orderType);
       $page_count = 1;
       if ( ! $request->get( 'page' ) ) {

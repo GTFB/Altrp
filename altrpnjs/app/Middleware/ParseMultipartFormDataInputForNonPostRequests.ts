@@ -1,10 +1,4 @@
-<?php
 
-namespace App\Http\Middleware;
-
-use App\Services\AltrpInputStreamService;
-use Closure;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ParseMultipartFormDataInputForNonPostRequests
 {

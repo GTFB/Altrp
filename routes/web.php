@@ -45,7 +45,7 @@ Route::get('/admin/editor', function () {
 
 Route::get('/admin/editor-content', function () {
   return view('editor-content');
-})->middleware('auth')->name('editor-content');
+})->middleware('auth', 'admin')->name('editor-content');
 
 Route::get('/admin/editor-reports', function () {
   return view('editor-reports');
@@ -79,6 +79,8 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
   Route::group(['prefix' => 'ajax'], function () {
+
+    Route::get('/changelog', 'Admin\UpdateController@changelog');
 
     Route::post('/export_json', 'Admin\AdminController@export_json')->name('admin.export_json');
     /**

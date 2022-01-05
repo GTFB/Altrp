@@ -59,8 +59,10 @@ class AdminTable extends Component {
         {filter && (
           <div className="admin-table__filterCategories">
             <span className="heading__categories">Categories:</span>
-            <span onClick={() => filterPropsCategories.getCategories(null)} className="admin-filters__current">
-              <a className="admin-filters__link">All ({filterPropsCategories.DidMountArray.length || "0"})</a>
+            <span onClick={() => filterPropsCategories.getCategories(null, "All")} className="admin-filters__current">
+              <a className={filterPropsCategories.activeCategory === "All" ? "admin-filters__link active-category" : "admin-filters__link"}>
+                All ({filterPropsCategories.DidMountArray.length || "0"})
+              </a>
             </span>
             {filterPropsCategories.categoryOptions.map(item => {
               const itemsCount = filterCategories(filterPropsCategories.DidMountArray, item.value).length
@@ -68,7 +70,10 @@ class AdminTable extends Component {
               return (
                 <span className="category__block-span" key={item.value}>
                    <span className="admin-filters__separator">|</span>
-                   <a className="admin-filters__link" onClick={() => filterPropsCategories.getCategories(item.value)}>
+                   <a
+                     className={item.value === filterPropsCategories.activeCategory ? "admin-filters__link active-category" : "admin-filters__link" }
+                     onClick={() => filterPropsCategories.getCategories(item.value)}
+                   >
                      {item.label} ({itemsCount})
                    </a>
                 </span>)

@@ -1,15 +1,15 @@
 import {HttpContextContract} from "@ioc:Adonis/Core/HttpContext";
 import empty from "../../helpers/empty";
 import Env from "@ioc:Adonis/Core/Env";
-import Application from '@ioc:Adonis/Core/Application'
-import {RequestContract} from '@ioc:Adonis/Core/Request'
 import {SessionContract} from "@ioc:Adonis/Addons/Session";
 import Drive from '@ioc:Adonis/Core/Drive'
 import storage_path from "../../helpers/storage_path";
+import appIsInstalled from "../../helpers/appIsInstalled";
 
 export default class InstallationChecker {
   public async handle({response, request, session}: HttpContextContract, next: () => Promise<void>) {
-    if (request.segment(1) == 'install') {
+    const segments = request.url().split('/')
+    if (segments[1] == 'install') {
       // Check if installation is processing
       let installInProgress = false;
       if (
@@ -24,7 +24,7 @@ export default class InstallationChecker {
       }
     } else {
       // Check if the website is installed
-      if (!await this.alreadyInstalled( session)) {
+      if (!await this.alreadyInstalled(session)) {
         return response.redirect('/install');
       }
 
@@ -48,7 +48,7 @@ export default class InstallationChecker {
       session.clear();
 
       // Redirect to the homepage after installation
-      return redirect('/');
+      return true;
     }
 
     // Check if the app is installed

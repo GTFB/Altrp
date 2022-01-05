@@ -63,6 +63,16 @@ export default class TemplatesController {
     }
   }
 
+  public async options() {
+    const templates = await Template.all();
+
+    const options = templates.map((template) => ({
+      value: template.id,
+      label: template.title
+    }))
+    return options
+  }
+
   public async get({ params }) {
     const template = await Template.find(parseInt(params.id));
 

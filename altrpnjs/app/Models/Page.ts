@@ -1,15 +1,22 @@
 import { DateTime } from 'luxon'
-import {BaseModel, BelongsTo, belongsTo, column} from '@ioc:Adonis/Lucid/Orm'
+import {BaseModel, BelongsTo, belongsTo, column, ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm'
 import User from "App/Models/User";
 import { isString } from "lodash";
 import PageRole from "App/Models/PageRole";
+import Role from "App/Models/Role";
+import Template from "App/Models/Template";
 
 export default class Page extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
-  @belongsTo(() => Page)
-  public parent_page_id: BelongsTo<typeof Page>
+  @belongsTo(() => Page, {
+    foreignKey: "parent_page_id"
+  })
+  public parentPage: BelongsTo<typeof Page>
+
+  @column()
+  public parent_page_id: number
 
   @column()
   public content: string
@@ -63,12 +70,33 @@ export default class Page extends BaseModel {
   public model_column: string
 
   @column()
+  public model: number
+
+  @column()
   public model_id: number
+
 
   @belongsTo(() => User, {
     foreignKey: "author"
   })
   public user: BelongsTo<typeof User>
+
+  @manyToMany(() => Role, {
+    pivotForeignKey: "role_id",
+    localKey: "id",
+    pivotTable: "page_roles"
+  })
+  public roles: ManyToMany<typeof Role>
+
+  // public getAuthor() {
+  //   return this.user.email
+  // }
+
+  @manyToMany(() => Template, {
+    pivotTable: "pages_templates",
+    pivotRelatedForeignKey: "template_id"
+  })
+  public templates: ManyToMany<typeof Template>
 
   /**
    * Перебирает массив от фронтенда и привязвает/удаляет роли;отмечает for_guest

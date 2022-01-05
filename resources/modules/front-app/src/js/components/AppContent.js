@@ -33,14 +33,14 @@ class AppContent extends Component {
         <EmailTemplatesRenderer/>
         <div ref={this.mainScroller} className={`front-app-content ${isAltrpTestMode() ? 'front-app-content_test' : ''}`}>
           <Switch>
-            {this.props.routes.map(route => (
-              <Route
+            {this.props.routes.map(route => {
+              return <Route
                 key={route.id}
                 children={<RouteContent {...route} />}
                 path={route.path}
                 exact
               />
-            ))}
+            })}
           </Switch>
         </div>
         <window.StylesComponent />

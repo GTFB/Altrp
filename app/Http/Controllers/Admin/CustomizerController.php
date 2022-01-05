@@ -98,7 +98,7 @@ class CustomizerController extends Controller
    */
   public function index(): \Illuminate\Http\JsonResponse
   {
-    $customizers = Customizer::all()->toArray();
+    $customizers = Customizer::orderBy('altrp_customizers.title', 'Asc')->get()->toArray();
 
     return response()->json( [
       'success' => true,

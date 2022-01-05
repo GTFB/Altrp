@@ -369,7 +369,6 @@ class InputAcceptWidget extends Component {
       window.elementDecorator(this);
     }
     this.onChange = this.onChange.bind(this);
-    this.debounceDispatch = this.debounceDispatch.bind(this);
 
     this.defaultValue =
       this.getContent("content_default_value") ||
@@ -784,40 +783,15 @@ class InputAcceptWidget extends Component {
          * Обновляем хранилище только если не текстовое поле
          */
 
-        const change_actions = this.props.element.getSettings("change_actions");
-        const change_change_end = this.props.element.getSettings(
-          "change_change_end"
-        );
-        const change_change_end_delay = this.props.element.getSettings(
-          "change_change_end_delay"
-        );
-
         this.dispatchFieldValueToStore(
           valueToDispatch !== undefined ? valueToDispatch : value,
           true
         );
 
-        if (change_actions && !change_change_end && !isEditor()) {
-          this.debounceDispatch(
-            valueToDispatch !== undefined ? valueToDispatch : value
-          );
-        }
-        if (change_actions && change_change_end && !isEditor()) {
-          this.timeInput && clearTimeout(this.timeInput);
-          this.timeInput = setTimeout(() => {
-            this.debounceDispatch(
-              valueToDispatch !== undefined ? valueToDispatch : value
-            );
-          }, change_change_end_delay);
-        }
       }
     );
   }
 
-  debounceDispatch = _.debounce(
-    value => this.dispatchFieldValueToStore(value, true),
-    150
-  );
 
   /**
    * получить опции

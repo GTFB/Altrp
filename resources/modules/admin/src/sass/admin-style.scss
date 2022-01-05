@@ -279,17 +279,11 @@
 
 .icon__droplet {
   position: absolute !important;
-  top: -1px !important;
-  right: -1px;
-  width: 8px;
-  height: 42.84px;
+  top: 50% !important;
+  transform: translateY(-50%);
+  right: 0;
   fill: white;
   display: none;
-
-  & path {
-    width: 8px;
-    height: 42.84px;
-  }
 }
 
 
@@ -523,4 +517,10 @@ body {
   --menu-droplet-true: 235px;
   --menu-droplet-false: 45px;
   --menu-droplet-default: var(--menu-droplet-true);
+}
+
+.admin-changelog{
+  padding: 25px;
+  font-size: 14px;
+  background-color: $light-gray;
 }
