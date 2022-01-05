@@ -21,4 +21,4 @@ Route.group(() => {
 
   Route.get('/', "IndicesController.admin")
   Route.get('/*', "IndicesController.admin")
-}).prefix("/admin").middleware('admin')
+}).prefix("/admin").middleware('admin').middleware('admin')

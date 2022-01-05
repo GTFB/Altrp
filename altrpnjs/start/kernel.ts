@@ -45,3 +45,4 @@ Server.middleware.registerNamed({
   admin: () => import("App/Middleware/IsAdmin"),
   cors: () => import("App/Middleware/Cors"),
 })
+

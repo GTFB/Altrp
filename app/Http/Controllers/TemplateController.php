@@ -69,7 +69,7 @@ class TemplateController extends Controller
 
     } else {
       $page_size = $request->get( 'pageSize', 10 );
-      
+
       $_templates = $search
         ? Template::getBySearchAsObject( $search, 'templates', 'title', ['categories.category'] )->where( 'type', '!=', 'review' )
         : Template::with('categories.category')->where( 'type', '!=', 'review' );

@@ -45,7 +45,7 @@ Route::get('/admin/editor', function () {
 
 Route::get('/admin/editor-content', function () {
   return view('editor-content');
-})->middleware('auth')->name('editor-content');
+})->middleware('auth', 'admin')->name('editor-content');
 
 Route::get('/admin/editor-reports', function () {
   return view('editor-reports');
