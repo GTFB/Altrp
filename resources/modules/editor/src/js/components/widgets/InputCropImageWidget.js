@@ -205,7 +205,7 @@ class InputCropImageWidget extends Component {
   async _componentDidUpdate(prevProps, prevState) {
     const imageCropContainer = this.imageCropContainer.current
 
-    if (imageCropContainer && this.state.imageCropContainer?.height !== imageCropContainer.offsetHeight || this.state.imageCropContainer?.width !== imageCropContainer.offsetWidth) {
+    if (this.state.imageCropContainer?.height !== imageCropContainer?.offsetHeight || this.state.imageCropContainer?.width !== imageCropContainer?.offsetWidth) {
       this.setState(state => ({
         ...state,
         imageCropContainer: {
