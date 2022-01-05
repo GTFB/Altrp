@@ -41,8 +41,17 @@ class RobotController extends Controller
     public function index(Request $request): JsonResponse
     {
         
+        $search = $request->get('s');
         $categories = $request->get('categories');
-        $robots = Robot::with(['user', 'categories.category'])
+        $page = $request->get('page', 1);
+        $orderColumn = $request->get('order_by') ?? 'name';
+        $orderColumn = 'altrp_robots.' . $orderColumn;
+        $limit = $request->get('pageSize', 10);
+        $offset = $limit * ($page - 1);
+        $orderType = $request->get('order') ? ucfirst(strtolower($request->get('order'))) : 'Desc';
+        $sortType = 'orderBy' . ($orderType == 'Asc' ? '' : $orderType);
+
+        $robots = Robot::select('altrp_robots.*')->with(['user', 'categories.category'])
             ->when($categories, function ($query, $categories) {
                 if (is_string($categories)) {
                     $categories = explode(",", $categories);
@@ -50,7 +59,16 @@ class RobotController extends Controller
                           ->whereIn('altrp_category_objects.category_guid', $categories);
                 }
             })
-            ->orderBy('altrp_robots.name', 'Asc')
+            ->when($search, function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('altrp_robots.name','like', '%'.$search.'%')
+                          ->orWhere('altrp_robots.id','like', '%'.$search.'%');
+                });
+            })
+            ->when(($offset == 0 || $offset > 0) && $limit, function ($query) use ($offset, $limit) {
+                $query->skip($offset)->take($limit);
+            })
+            ->$sortType($orderColumn)
             ->get()->each(function (Robot $robot) {
                 $robot->setAttribute('author',data_get( $robot, 'user.name', ''));
             });
