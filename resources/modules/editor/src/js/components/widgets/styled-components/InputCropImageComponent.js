@@ -4,8 +4,6 @@ import { getResponsiveSetting } from "../../../../../../front-app/src/js/helpers
 export default function InputCropImageComponent(settings) {
   const getSetting = (...args) => getResponsiveSetting(settings, ...args)
 
-  console.log(getSetting('crop_height'));
-
   let styles = ``
 
   styles += `.image-to-crop-container {
