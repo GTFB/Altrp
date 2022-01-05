@@ -529,15 +529,6 @@ class Page extends Model
                         ->whereIn('altrp_category_objects.category_guid', $categories);
               }
           })
-
-          // ->when($categories, function ($query, $categories) {
-          //     if (is_string($categories)) {
-          //         $categories = explode(",", $categories);
-          //         $query->leftJoin('altrp_category_objects', 'altrp_category_objects.object_guid', '=', 'pages.guid')
-          //               ->whereIn('altrp_category_objects.category_guid', $categories);
-          //     }
-          // })
-
           ->where(function ($query) use ($field, $search) {
               $query->where($field,'like', "%{$search}%")
                     ->orWhere('pages.id', 'like', "%{$search}%");
