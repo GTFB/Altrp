@@ -475,6 +475,25 @@ class InputSelect extends BaseElement {
 
     this.endControlSection();
 
+    this.startControlSection('padding_section', {
+      label: 'Padding',
+      tab: TAB_STYLE
+    })
+
+    this.addControl("item_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Item Padding",
+      units: ["px", "%", "vh"]
+    });
+
+    this.addControl("menu_padding", {
+      type: CONTROLLER_DIMENSIONS,
+      label: "Menu Padding",
+      units: ["px", "%", "vh"]
+    });
+
+    this.endControlSection()
+
     this.startControlSection("position_section", {
       tab: TAB_STYLE,
       label: "Button Position"
@@ -499,7 +518,7 @@ class InputSelect extends BaseElement {
       label: "Padding",
       units: ["px", "%", "vh"]
     });
-
+    
     this.endControlSection();
 
     this.startControlSection("font_style_section", {
@@ -552,6 +571,11 @@ class InputSelect extends BaseElement {
       max: 1,
       min: 0,
       step: 0.01
+    });
+
+    this.addControl("drop_menu_background_color", {
+      type: CONTROLLER_COLOR,
+      label: "Drop Menu Background Color"
     });
 
     this.endControlSection();

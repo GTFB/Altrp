@@ -10,6 +10,18 @@ export default function TreeComponent(settings, prefix) {
       ["height", "icon_size", "slider"],
     "}",
 
+    'bp3-tree',
+      ['background-color', 'tree_menu_background', 'color'],
+    '}',
+
+    'bp3-tree-node-list',
+      ['padding', 'tree_menu_padding', 'dimensions'],
+    '}',
+
+    'bp3-tree-node-content',
+      ['padding', 'tree_item_padding', 'dimensions'],
+    '}',
+
     "bp3-tree-node.bp3-tree-node-selected path",
       ["fill", "icon_fill", "color", ".active"],
       ["stroke", "icon_stroke", "color", ".active"],
