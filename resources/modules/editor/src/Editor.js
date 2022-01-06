@@ -46,7 +46,7 @@ import {
   setGlobalFonts
 } from "./js/store/altrp-global-colors/actions";
 import {setGlobalStylesPresets} from "./js/store/altrp-global-styles/actions";
-import { addWidget } from "./js/store/widgets/actions";
+import { addWidget, filterWidgets } from "./js/store/widgets/actions";
 
 /**
  * Главный класс редактора.<br/>
@@ -272,6 +272,13 @@ class Editor extends Component {
 
   addWidget(element, component) {
     window.appStore.dispatch(addWidget({element, component}))
+  }
+
+  /**
+   * Method accepts a function that changes the list of widgets
+   */
+  filterWidgets(fn) {
+    window.appStore.dispatch(filterWidgets(fn))
   }
 
   /**

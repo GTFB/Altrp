@@ -119,7 +119,8 @@ class ControllersManager {
   }
 
   registerControls() {
-    let elementClasses = window.elementsManager.getElements();
+    let elementClasses = window.appStore.getState().widgetsManager.elements;
+    
     this.elementsControls = {};
     for (let elementClassName in elementClasses) {
       if (elementClasses.hasOwnProperty(elementClassName)) {
