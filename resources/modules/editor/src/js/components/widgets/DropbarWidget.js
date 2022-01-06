@@ -20,41 +20,11 @@ import AltrpDropbar from "../altrp-dropbar/AltrpDropbar";
     }
   }
 
-  .altrp-btn-wrapper_dropbar .altrp-btn {
-    width: auto;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    flex-direction: row;
-    background-color: #343B4C;
-    color: #FFFFFF;
-    padding-top: 20px;
-    padding-right: 25px;
-    padding-bottom: 20px;
-    padding-left: 25px
-
-    &_gray {
-      background-color: #8E94AA;
-      color: #fff;
-    }
-
-    &__icon {
-      transform: scale(0.6);
-    }
-
-    &-icon {
-      display: flex;
-      justify-content: center;
-    }
-
-    & svg {
-      height: 25px;
-      width: 25px;
-    }
+  .altrp-dropbar-content p {
+    margin-top: 0;
+    margin-bottom: 10px;
   }
-
+  
   .altrp-dropbar {
     display: flex;
     flex-direction: column;
@@ -287,6 +257,8 @@ class DropbarWidget extends Component {
     if(customClasses) {
       classes.push(customClasses)
     }
+
+    console.log({background_image});
 
     if (background_image.url) {
       classes.push("altrp-background-image");
