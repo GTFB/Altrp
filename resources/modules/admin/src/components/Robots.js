@@ -7,8 +7,9 @@ import {redirect} from "../js/helpers";
 import UserTopPanel from "./UserTopPanel";
 import SmallModal from "./SmallModal";
 import RobotChildrenModal from "./RobotChildrenModal";
+import {withRouter} from 'react-router-dom'
 
-export default class Robots extends Component {
+class Robots extends Component {
   constructor(props) {
     super(props);
 
@@ -34,13 +35,11 @@ export default class Robots extends Component {
   }
 
   async componentDidMount() {
-    await this.fetchData();
-    const robots = await this.resource.getAll();
+    await this.updatePages();
     const { data } = await this.categoryOptions.getAll();
     this.setState(state => ({
       ...state,
-      categoryOptions: data,
-      robotsDidMount: robots
+      categoryOptions: data
     }))
 
     window.addEventListener("scroll", this.listenScrollHeader)
@@ -62,8 +61,30 @@ export default class Robots extends Component {
     }
   }
 
+  updatePages = async () => {
+    const robots = await this.resource.getAll();
+    this.setState(state => ({
+      ...state,
+      robotsDidMount: robots
+    }))
+    await this.fetchData();
+  }
+
   fetchData = async () => {
-    const robots = await this.resource.getQueried({ s: this.state.robotsSearch });
+    let url = new URL(location.href);
+    let urlCategories = url.searchParams.get('categories')
+    let urlS = url.searchParams.get('s')
+    let robots = []
+    if (urlCategories) {
+      robots = await this.resource.getQueried({
+        categories: urlCategories,
+        s: urlS === null ? this.state.robotsSearch : urlS
+      });
+    } else {
+      robots = await this.resource.getQueried({
+        s: urlS === null ? this.state.robotsSearch : urlS
+      });
+    }
 
     if (_.isArray(robots)) {
       robots.map(item =>{
@@ -72,12 +93,25 @@ export default class Robots extends Component {
       });
     }
     this.setState(state => {
-      return { ...state, robots: robots }
+      return {
+        ...state,
+        robots: robots,
+        robotsSearch: urlS === null ? this.state.robotsSearch : urlS,
+        activeCategory: urlCategories === null ? 'All' : urlCategories
+      }
     });
   }
 
   searchRobots = (e) => {
     e.preventDefault();
+    let url = new URL(location.href);
+    if (this.state.robotsSearch) {
+      url.searchParams.set('s', this.state.robotsSearch);
+      this.props.history.push(`${url.pathname + url.search}`)
+    } else {
+      url.searchParams.delete('s');
+      this.props.history.push(`${url.pathname + url.search}`)
+    }
     this.fetchData();
   }
 
@@ -123,9 +157,14 @@ export default class Robots extends Component {
   }
 
   getCategory = async (guid, all) => {
+    let url = new URL(location.href);
+    let urlS = url.searchParams.get('s')
     if (guid) {
+      url.searchParams.set('categories', guid);
+      this.props.history.push(`${url.pathname + url.search}`)
       let robots = await this.resource.getQueried({
-        categories: guid
+        categories: guid,
+        s: urlS === null ? this.state.robotsSearch : urlS
       });
       if (_.isArray(robots)) {
         robots.map(item =>{
@@ -139,7 +178,11 @@ export default class Robots extends Component {
         activeCategory: guid
       }))
     } else {
-      let robots = await this.resource.getAll();
+      url.searchParams.delete('categories');
+      this.props.history.push(`${url.pathname + url.search}`)
+      let robots = await this.resource.getQueried({
+        s: urlS === null ? this.state.robotsSearch : urlS
+      });
       if (_.isArray(robots)) {
         robots.map(item =>{
           item.url = `/admin/robots-editor?robot_id=${item.id}`;
@@ -260,7 +303,7 @@ export default class Robots extends Component {
                 route: "/admin/ajax/robots/:id",
                 method: "delete",
                 confirm: "Are You Sure?",
-                after: () => this.fetchData(),
+                after: () => this.updatePages(),
                 className: "quick-action-menu__item_danger",
                 title: "Delete"
               }
@@ -293,3 +336,5 @@ export default class Robots extends Component {
     );
   }
 }
+
+export default withRouter(Robots)

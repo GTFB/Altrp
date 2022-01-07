@@ -1,14 +1,15 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, {Component} from "react";
+import {Link, withRouter} from "react-router-dom";
 import Resource from "../../../editor/src/js/classes/Resource";
 import AdminTable from "./AdminTable";
 import UserTopPanel from "./UserTopPanel";
-import {Icon, InputGroup, Tree} from "@blueprintjs/core";
-import PagesSvg from "../svgs/pages-v2.svg";
+import {InputGroup, Tree} from "@blueprintjs/core";
 import Search from "../svgs/search.svg";
 import {filterCategories} from "../js/helpers";
+import DraggableScroll from "./DraggableScroll/DraggableScroll";
+import {SwiperSlide} from 'swiper/react';
 
-export default class AllPages extends Component {
+class AllPages extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,28 +23,46 @@ export default class AllPages extends Component {
       activeCategory: 'All',
       categoryOptions: [],
     };
-    this.resource = new Resource({ route: "/admin/ajax/pages" });
-    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"} )
+    this.resource = new Resource({route: "/admin/ajax/pages"});
+    this.categoryOptions = new Resource({route: "/admin/ajax/category/options"})
     this.itemsPerPage = 10;
   }
 
   getPages = async () => {
-    let res = await this.resource.getQueried({ s: this.state.pagesSearch });
+    let url = new URL(location.href);
+    let urlCategories = url.searchParams.get('categories')
+    let urlS = url.searchParams.get('s')
+    let res = []
+    if (urlCategories) {
+      res = await this.resource.getQueried({
+        categories: urlCategories,
+        s: urlS === null ? this.state.pagesSearch : urlS
+      });
+    } else {
+      res = await this.resource.getQueried({
+        s: urlS === null ? this.state.pagesSearch : urlS
+      });
+    }
     this.setState(state => {
-      return { ...state, pages: res };
+      return {
+        ...state,
+        pages: res,
+        activeCategory: urlCategories === null ? 'All' : urlCategories,
+        pagesSearch: urlS === null ? this.state.pagesSearch : urlS
+      };
     });
     let treePagesNew = res.map(page => {
       return this.treePagesMap(page)
     })
     this.setState(state => {
-      return { ...state, treePages: treePagesNew };
+      return {...state, treePages: treePagesNew};
     });
   };
 
   getPagesDidMount = async () => {
     let res = await this.resource.getAll();
     this.setState(state => {
-      return { ...state, pagesDidMount: res };
+      return {...state, pagesDidMount: res};
     });
   }
 
@@ -52,7 +71,7 @@ export default class AllPages extends Component {
     await this.getPagesDidMount();
     await this.getPages();
 
-    const { data } = await this.categoryOptions.getAll();
+    const {data} = await this.categoryOptions.getAll();
     this.setState(state => ({
       ...state,
       categoryOptions: data
@@ -78,6 +97,15 @@ export default class AllPages extends Component {
 
   submitSearchHandler = (e) => {
     e.preventDefault();
+
+    let url = new URL(location.href);
+    if (this.state.pagesSearch) {
+      url.searchParams.set('s', this.state.pagesSearch);
+      this.props.history.push(`${url.pathname + url.search}`)
+    } else {
+      url.searchParams.delete('s');
+      this.props.history.push(`${url.pathname + url.search}`)
+    }
     this.getPages();
   }
 
@@ -89,14 +117,14 @@ export default class AllPages extends Component {
     let currentTree = _.cloneDeep(this.state.treePages);
     let currentNode = Tree.nodeFromPath(nodePath, currentTree);
     currentNode.isExpanded = true;
-    this.setState(s => ({ ...s, treePages: currentTree }));
+    this.setState(s => ({...s, treePages: currentTree}));
   }
 
   handleNodeCollapse = (nodeData, nodePath) => {
     let currentTree = _.cloneDeep(this.state.treePages);
     let currentNode = Tree.nodeFromPath(nodePath, currentTree);
     currentNode.isExpanded = false;
-    this.setState(s => ({ ...s, treePages: currentTree }));
+    this.setState(s => ({...s, treePages: currentTree}));
   }
 
   toggleFilterCategories = () => {
@@ -107,9 +135,14 @@ export default class AllPages extends Component {
   }
 
   getCategory = async (guid, all) => {
+    let url = new URL(location.href);
+    let urlS = url.searchParams.get('s')
     if (guid) {
+      url.searchParams.set('categories', guid);
+      this.props.history.push(`${url.pathname + url.search}`)
       let pages = await this.resource.getQueried({
-        categories: guid
+        categories: guid,
+        s: urlS === null ? this.state.pagesSearch : urlS
       });
       let treePagesNew = pages.map(page => {
         return this.treePagesMap(page)
@@ -121,7 +154,11 @@ export default class AllPages extends Component {
         activeCategory: guid
       }))
     } else {
-      let pages = await this.resource.getAll();
+      url.searchParams.delete('categories');
+      this.props.history.push(`${url.pathname + url.search}`)
+      let pages = await this.resource.getQueried({
+        s: urlS === null ? this.state.pagesSearch : urlS
+      });
       let treePagesNew = pages.map(page => {
         return this.treePagesMap(page)
       })
@@ -164,45 +201,72 @@ export default class AllPages extends Component {
   }
 
   render() {
-    const {  treePages  } = this.state;
+    const {treePages} = this.state;
     return (
       <div className="admin-pages admin-page">
         <div className={this.state.activeHeader ? "admin-heading admin-heading-shadow" : "admin-heading"}>
-         <div className="admin-heading-left">
-           <div className="admin-breadcrumbs">
-             <a className="admin-breadcrumbs__link" href="#">
-               Pages
-             </a>
-             <span className="admin-breadcrumbs__separator">/</span>
-             <span className="admin-breadcrumbs__current">All Pages</span>
-           </div>
-           <Link className="btn" to="/admin/pages/add">
-             Add New
-           </Link>
-           <div className="admin-filters">
-            <span className="admin-filters__current">
-              All ({this.state.pages.length || "0"})
-            </span>
-           </div>
-         </div>
-          <UserTopPanel />
+          <div className="admin-heading-left">
+            <div className="admin-breadcrumbs">
+              <a className="admin-breadcrumbs__link" href="#">
+                Pages
+              </a>
+              <span className="admin-breadcrumbs__separator">/</span>
+              <span className="admin-breadcrumbs__current">All Pages</span>
+            </div>
+            <Link className="btn" to="/admin/pages/add">
+              Add New
+            </Link>
+            <div className="admin-filters admin-filters-flex">
+              <span className="admin-filters__current">
+                All ({this.state.pages.length || "0"})
+              </span>
+              {/*<DraggableScroll>*/}
+              {/*  <SwiperSlide className="category__block-slider">*/}
+              {/*    <a*/}
+              {/*      className={this.state.activeCategory === 'All' ? "admin-filters__link active-category" : "admin-filters__link"}*/}
+              {/*      onClick={() => this.getCategory(null, 'All')}*/}
+              {/*    >*/}
+              {/*      All ({this.state.pagesDidMount.length || "0"})*/}
+              {/*    </a>*/}
+              {/*  </SwiperSlide>*/}
+              {/*  {this.state.categoryOptions.map(item => {*/}
+              {/*    const itemsCount = filterCategories(this.state.pagesDidMount, item.value).length*/}
+
+              {/*    return (*/}
+              {/*      <SwiperSlide className="category__block-slider" key={item.value}>*/}
+              {/*       <a*/}
+              {/*         className={item.value === this.state.activeCategory ? "admin-filters__link active-category" : "admin-filters__link"}*/}
+              {/*         onClick={() => this.getCategory(item.value)}*/}
+              {/*       >*/}
+              {/*         {item.label} ({itemsCount})*/}
+              {/*       </a>*/}
+              {/*      </SwiperSlide>*/}
+              {/*    )*/}
+              {/*  })}*/}
+              {/*</DraggableScroll>*/}
+            </div>
+          </div>
+          <UserTopPanel/>
         </div>
         <div className="admin-content">
           <div className="altrp-tree">
             <div className="altrp-tree__block">
-             <div className="admin-table-top__flex">
-               <form className="admin-tree-top" onSubmit={this.submitSearchHandler}>
-                 <InputGroup className="form-tables" value={this.state.pagesSearch} onChange={this.changeSearchHandler} />
-                 <Search />
-                 <button className="btn btn_bare admin-users-button btn__tables">Search</button>
-               </form>
-               <span onClick={this.toggleFilterCategories} className="showFilter">{this.state.filter ? "Close filter categories" : "Open filter categories"}</span>
-             </div>
+              <div className="admin-table-top__flex">
+                <form className="admin-tree-top" onSubmit={this.submitSearchHandler}>
+                  <InputGroup className="form-tables" value={this.state.pagesSearch}
+                              onChange={this.changeSearchHandler}/>
+                  <Search/>
+                  <button className="btn btn_bare admin-users-button btn__tables">Search</button>
+                </form>
+                <span onClick={this.toggleFilterCategories}
+                      className="showFilter">{this.state.filter ? "Close filter categories" : "Open filter categories"}</span>
+              </div>
               {this.state.filter && (
                 <div className="admin-table__filterCategories-pages">
                   <span className="heading__categories">Categories:</span>
                   <span onClick={() => this.getCategory(null, "All")} className="admin-filters__current">
-                    <a className={this.state.activeCategory === "All" ? "admin-filters__link active-category" : "admin-filters__link"}>
+                    <a
+                      className={this.state.activeCategory === "All" ? "admin-filters__link active-category" : "admin-filters__link"}>
                       All ({this.state.pagesDidMount.length || "0"})
                     </a>
                   </span>
@@ -214,13 +278,13 @@ export default class AllPages extends Component {
                       <span className="category__block-span" key={item.value}>
                         <span className="admin-filters__separator">|</span>
                           <a
-                            className={item.value === this.state.activeCategory ? "admin-filters__link active-category" : "admin-filters__link" }
+                            className={item.value === this.state.activeCategory ? "admin-filters__link active-category" : "admin-filters__link"}
                             onClick={() => this.getCategory(item.value)}
                           >
                            {item.label} ({itemsCount})
                           </a>
                       </span>)
-                    })}
+                  })}
                 </div>
               )}
               <Tree
@@ -292,3 +356,5 @@ export default class AllPages extends Component {
     );
   }
 }
+
+export default withRouter(AllPages)

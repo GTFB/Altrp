@@ -51,15 +51,17 @@ class AccessOptions extends Component {
    * Список ролей
    */
   getRoles = async () => {
+    let url = new URL(location.href);
+    let urlS = url.searchParams.get('s')
     const { rolesPagination, rolesFilter, rolesSorting } = this.state;
     const { roles, count, pageCount } = await rolesResource.getQueried({
       page: rolesPagination.currentPage,
       pageSize: itemsPerPage,
       preset: false,
-      s: rolesFilter,
+      s: urlS === null ? rolesFilter : urlS,
       ...rolesSorting
     });
-    this.setState({ roles, rolesPagination: { ...rolesPagination, count, pageCount: pageCount || 1 } });
+    this.setState({ roles, rolesFilter: urlS === null ? rolesFilter : urlS,  rolesPagination: { ...rolesPagination, count, pageCount: pageCount || 1 } });
   }
 
   rolesSortingHandler = (order_by, order) => {
@@ -69,15 +71,21 @@ class AccessOptions extends Component {
    * Список permissions
    */
   getPermissions = async () => {
+    let url = new URL(location.href);
+    let urlS = url.searchParams.get('s')
     const { permissionsPagination, permissionsFilter, permissionsSorting } = this.state;
     const { permissions, count, pageCount } = await permissionsResource.getQueried({
       page: permissionsPagination.currentPage,
       pageSize: itemsPerPage,
       preset: false,
-      s: permissionsFilter,
+      s: urlS === null ? permissionsFilter : urlS,
       ...permissionsSorting
     });
-    this.setState({ permissions, permissionsPagination: { ...permissionsPagination, count, pageCount: pageCount || 1 } });
+    this.setState({
+      permissions,
+      permissionsFilter: urlS === null ? permissionsFilter : urlS,
+      permissionsPagination: { ...permissionsPagination, count, pageCount: pageCount || 1 }
+    });
   }
 
   permissionsSortingHandler = (order_by, order) => {
@@ -85,8 +93,13 @@ class AccessOptions extends Component {
   }
 
   componentDidMount() {
-    this.getRoles();
-    this.getPermissions();
+    const activeTab = this.props.location.pathname === "/admin/access/roles";
+    if (activeTab) {
+      this.getRoles();
+    } else {
+      this.getPermissions();
+    }
+
 
     window.addEventListener("scroll", this.listenScrollHeader)
 
@@ -109,11 +122,27 @@ class AccessOptions extends Component {
 
   searchRoles = e => {
     e.preventDefault();
+    let url = new URL(location.href);
+    if (this.state.rolesFilter) {
+      url.searchParams.set('s', this.state.rolesFilter);
+      this.props.history.push(`${url.pathname + url.search}`)
+    } else {
+      url.searchParams.delete('s');
+      this.props.history.push(`${url.pathname + url.search}`)
+    }
     this.getRoles();
   }
 
   searchPermissions = e => {
     e.preventDefault();
+    let url = new URL(location.href);
+    if (this.state.permissionsFilter) {
+      url.searchParams.set('s', this.state.permissionsFilter);
+      this.props.history.push(`${url.pathname + url.search}`)
+    } else {
+      url.searchParams.delete('s');
+      this.props.history.push(`${url.pathname + url.search}`)
+    }
     this.getPermissions();
   }
 
@@ -123,6 +152,20 @@ class AccessOptions extends Component {
 
   changePermissions = (e) => {
     this.setState({ permissionsFilter: e.target.value })
+  }
+
+  tabsFun = () => {
+    this.setState(state => ({
+      ...state,
+      rolesFilter: '',
+      permissionsFilter: ''
+    }))
+    const activeTab = this.props.location.pathname === "/admin/access/roles";
+    if (activeTab) {
+      this.getPermissions()
+    } else {
+      this.getRoles()
+    }
   }
 
   render() {
@@ -146,7 +189,7 @@ class AccessOptions extends Component {
         <UserTopPanel />
       </div>
       <div className="admin-content zeroing__styleTabs">
-        <Tabs selectedIndex={activeTab} onSelect={() => { }}>
+        <Tabs selectedIndex={activeTab} onSelect={() => this.tabsFun()}>
           <TabList className="nav nav-pills admin-pills">
             <Link to="/admin/access/roles"><Tab>Roles</Tab></Link>
             <Link to="/admin/access/permissions"><Tab>Permissions</Tab></Link>

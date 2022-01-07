@@ -10,7 +10,6 @@ import Resource from "../../../editor/src/js/classes/Resource";
 import AutoUpdateCheckbox from "./AutoUpdateCheckbox";
 import UserTopPanel from "./UserTopPanel";
 import React from "react";
-import CategoryModal from "./CategoryModal";
 import CategoryTable from "./CategoryTable";
 const AdvancedSettings = React.lazy(() => import("./AdvancedSettings"));
 const MailForm = React.lazy(() => import("./settings/MailForm"));

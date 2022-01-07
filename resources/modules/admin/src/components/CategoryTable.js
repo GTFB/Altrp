@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import AdminTable from "./AdminTable";
 import Resource from "../../../editor/src/js/classes/Resource";
 import CategoryModal from "./CategoryModal";
+import { withRouter } from 'react-router-dom'
 
 
 class CategoryTable extends Component {
@@ -23,16 +24,29 @@ class CategoryTable extends Component {
   }
 
   getCategories = async () => {
-    const res = await this.categories.getQueried({ s: this.state.categorySearch } )
+    let url = new URL(location.href);
+    let urlS = url.searchParams.get('s')
+    const res = await this.categories.getQueried({
+      s: urlS === null ? this.state.categorySearch : urlS
+    })
 
     this.setState(state => ({
       ...state,
       categories: res,
+      categorySearch: urlS === null ? this.state.categorySearch : urlS
     }))
   }
 
   searchCategory = (e) => {
     e.preventDefault();
+    let url = new URL(location.href);
+    if (this.state.categorySearch) {
+      url.searchParams.set('s', this.state.categorySearch);
+      this.props.history.push(`${url.pathname + url.search + url.hash}`)
+    } else {
+      url.searchParams.delete('s');
+      this.props.history.push(`${url.pathname + url.search + url.hash}`)
+    }
     this.getCategories();
   }
 
@@ -99,4 +113,4 @@ class CategoryTable extends Component {
   }
 }
 
-export default CategoryTable;
+export default withRouter(CategoryTable);

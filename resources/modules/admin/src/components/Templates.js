@@ -4,13 +4,14 @@ import AdminTable from "./AdminTable";
 import store from "../js/store/store";
 import {setModalSettings} from "../js/store/modal-settings/actions";
 import {generateId, redirect, objectDeepCleaning} from "../js/helpers";
+import {withRouter} from "react-router-dom";
 import Pagination from "./Pagination";
 import UserTopPanel from "./UserTopPanel";
 import SmallModal from "./SmallModal";
 import TemplateChildrenModal from "./templateChildrenModal";
 
 
-export default class Templates extends Component {
+class Templates extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -51,6 +52,14 @@ export default class Templates extends Component {
         activeTemplateArea = area;
       }
     });
+    let url = new URL(location.href);
+    if ( activeTemplateArea.name !== 'all') {
+      url.searchParams.set('area', activeTemplateArea.name);
+      this.props.history.push(`${url.pathname + url.search}`)
+    } else {
+      url.searchParams.delete('area');
+      this.props.history.push(`${url.pathname + url.search}`)
+    }
     this.setActiveArea(activeTemplateArea)
   }
 
@@ -80,34 +89,75 @@ export default class Templates extends Component {
    * @param activeTemplateArea
    */
   updateTemplates = (currentPage = this.state.currentPage, activeTemplateArea = this.state.activeTemplateArea) => {
-    if (activeTemplateArea.name === "all") {
-      this.resource.getQueried({
-        s: this.state.templateSearch,
-        ...this.state.sorting
-      }).then(res => {
-        this.setState(state => {
-          return {
-            ...state,
-            pageCount: res.pageCount,
-            templates: res.templates
-          }
+    let url = new URL(location.href);
+    let urlCategories = url.searchParams.get('categories')
+    let urlS = url.searchParams.get('s')
+    if (urlCategories) {
+      if (activeTemplateArea.name === "all") {
+        this.resource.getQueried({
+          categories: urlCategories,
+          s: urlS === null ? this.state.templateSearch : urlS,
+          ...this.state.sorting
+        }).then(res => {
+          this.setState(state => {
+            return {
+              ...state,
+              pageCount: res.pageCount,
+              templates: res.templates,
+              activeCategory: urlCategories,
+              templateSearch: urlS === null ? this.state.templateSearch : urlS
+            }
+          });
         });
-      });
+      } else {
+        this.resource.getQueried({
+          area: activeTemplateArea.name,
+          categories: urlCategories,
+          s: urlS === null ? this.state.templateSearch : urlS,
+          ...this.state.sorting
+        }).then(res => {
+          this.setState(state => {
+            return {
+              ...state,
+              pageCount: res.pageCount,
+              templates: res.templates,
+              activeCategory: urlCategories,
+              templateSearch: urlS === null ? this.state.templateSearch : urlS
+            }
+          });
+        });
+      }
     } else {
-      this.resource.getQueried({
-        area: activeTemplateArea.name,
-
-        s: this.state.templateSearch,
-        ...this.state.sorting
-      }).then(res => {
-        this.setState(state => {
-          return {
-            ...state,
-            pageCount: res.pageCount,
-            templates: res.templates
-          }
+      if (activeTemplateArea.name === "all") {
+        this.resource.getQueried({
+          s: urlS === null ? this.state.templateSearch : urlS,
+          ...this.state.sorting
+        }).then(res => {
+          this.setState(state => {
+            return {
+              ...state,
+              pageCount: res.pageCount,
+              templates: res.templates,
+              templateSearch: urlS === null ? this.state.templateSearch : urlS
+            }
+          });
         });
-      });
+      } else {
+        this.resource.getQueried({
+          area: activeTemplateArea.name,
+          s: urlS === null ? this.state.templateSearch : urlS,
+          ...this.state.sorting
+        }).then(res => {
+          this.setState(state => {
+            return {
+              ...state,
+              pageCount: res.pageCount,
+              templates: res.templates,
+              templateSearch: urlS === null ? this.state.templateSearch : urlS
+            }
+          });
+        });
+      }
     }
   }
 
@@ -168,7 +218,10 @@ export default class Templates extends Component {
    * Компонент загрузился
    */
   async componentDidMount() {
-    let templateAreas = await this.templateTypesResource.getAll();
+    let templateAreas = await this.templateTypesResource.getQueried({
+      order: 'ASC',
+      order_by: 'created_at'
+    });
     let templateAreasNew = [
       {
         id: 0,
@@ -178,7 +231,20 @@ export default class Templates extends Component {
       },
       ...templateAreas
     ]
-    this.setActiveArea(templateAreasNew[0]);
+    let url = new URL(location.href);
+    let urlArea =  url.searchParams.get('area')
+    if ( urlArea ) {
+      let activeTemplateArea = {};
+      templateAreas.forEach(area => {
+        if (area.name === urlArea) {
+          activeTemplateArea = area;
+        }
+      });
+      this.setActiveArea(activeTemplateArea)
+    } else {
+      this.setActiveArea(templateAreasNew[0]);
+    }
+
     this.setState(state => {
       return {...state, templateAreas: templateAreasNew}
     });
@@ -325,6 +391,14 @@ export default class Templates extends Component {
 
   searchTemplates = e => {
     e.preventDefault();
+    let url = new URL(location.href);
+    if (this.state.templateSearch) {
+      url.searchParams.set('s', this.state.templateSearch);
+      this.props.history.push(`${url.pathname + url.search}`)
+    } else {
+      url.searchParams.delete('s');
+      this.props.history.push(`${url.pathname + url.search}`)
+    }
     this.updateTemplates();
   }
 
@@ -340,10 +414,15 @@ export default class Templates extends Component {
   }
 
   getCategory = async (guid, all) => {
+    let url = new URL(location.href);
+    let urlS = url.searchParams.get('s')
     if (guid) {
+      url.searchParams.set('categories', guid);
+      this.props.history.push(`${url.pathname + url.search}`)
      if (this.state.activeTemplateArea.name === "all") {
        let { templates } = await this.resource.getQueried({
          categories: guid,
+         s: urlS === null ? this.state.templateSearch : urlS
        });
 
        this.setState(state => ({
@@ -355,6 +434,7 @@ export default class Templates extends Component {
        let { templates } = await this.resource.getQueried({
          categories: guid,
          area: this.state.activeTemplateArea.name,
+         s: urlS === null ? this.state.templateSearch : urlS
        });
 
        this.setState(state => ({
@@ -364,9 +444,11 @@ export default class Templates extends Component {
        }))
      }
     } else {
+      url.searchParams.delete('categories');
+      this.props.history.push(`${url.pathname + url.search}`)
       if (this.state.activeTemplateArea.name === "all") {
         let { templates } = await this.resource.getQueried({
-
+          s: urlS === null ? this.state.templateSearch : urlS
         });
         this.setState(state => ({
           ...state,
@@ -376,6 +458,7 @@ export default class Templates extends Component {
       } else {
         let { templates } = await this.resource.getQueried({
           area: this.state.activeTemplateArea.name,
+          s: urlS === null ? this.state.templateSearch : urlS
         });
         this.setState(state => ({
           ...state,
@@ -527,3 +610,5 @@ export default class Templates extends Component {
   }
 
 }
+
+export default withRouter(Templates)

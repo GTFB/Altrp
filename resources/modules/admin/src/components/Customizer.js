@@ -6,8 +6,9 @@ import { setModalSettings } from "../js/store/modal-settings/actions";
 import {redirect, titleToName} from "../js/helpers";
 import {altrpRandomId} from "../../../front-app/src/js/helpers";
 import UserTopPanel from "./UserTopPanel";
+import { withRouter } from 'react-router-dom'
 
-export default class Customizer extends Component {
+class Customizer extends Component {
   constructor(props) {
     super(props);
 
@@ -51,7 +52,11 @@ export default class Customizer extends Component {
   }
 
   async fetchData() {
-    const customizers = (await this.resource.getQueried({ s: this.state.customizersSearch })).data;
+    let url = new URL(location.href);
+    let urlS = url.searchParams.get('s')
+    const customizers = (await this.resource.getQueried({
+      s: urlS === null ? this.state.customizersSearch : urlS
+    })).data;
 
     if (_.isArray(customizers)) {
       customizers.map(item =>{
@@ -60,7 +65,7 @@ export default class Customizer extends Component {
       });
     }
 
-    this.setState(state => ({ ...state, customizers }));
+    this.setState(state => ({ ...state, customizers, customizersSearch: urlS === null ? this.state.customizersSearch : urlS  }));
   }
 
   goToCustomizerEditor() {
@@ -97,6 +102,14 @@ export default class Customizer extends Component {
 
   submitSearchCustomizers = async (e) => {
     e.preventDefault();
+    let url = new URL(location.href);
+    if (this.state.customizersSearch) {
+      url.searchParams.set('s', this.state.customizersSearch);
+      this.props.history.push(`${url.pathname + url.search}`)
+    } else {
+      url.searchParams.delete('s');
+      this.props.history.push(`${url.pathname + url.search}`)
+    }
     await this.fetchData();
   }
 
@@ -198,3 +211,5 @@ export default class Customizer extends Component {
     );
   }
 }
+
+export default withRouter(Customizer)
