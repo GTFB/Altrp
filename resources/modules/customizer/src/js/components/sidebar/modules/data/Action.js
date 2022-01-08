@@ -4,7 +4,6 @@ import Send from "./action/Send"
 import Crud from "./action/Crud"
 import Api from "./action/Api";
 import { setUpdatedNode } from "../../../../store/customizer-settings/actions";
-import Chevron from "../../../../../../../editor/src/svgs/chevron.svg";
 import Document from "./action/Document";
 
 

@@ -1,8 +1,6 @@
 import * as React from "react";
 import Scrollbars from "react-custom-scrollbars";
-import Action from "./data/Action"
 import CustomizerNode from "./data/CustomizerNode"
-import Bot from "./data/Bot"
 import StartNode from "./data/StartNode"
 import Edge from "./data/Edge"
 import store from "../../../store/store"
@@ -113,16 +111,6 @@ import mutate from "dot-prop-immutable";
                                                 />}
                       </div>
                     </div>
-
-                      {(this.props.selectNode?.type === "documentAction" ||
-                        this.props.selectNode?.type === "crudAction" ||
-                        this.props.selectNode?.type === "apiAction" ||
-                        this.props.selectNode?.type === "messageAction") && <Action
-                                                                        activeSection={this.state.activeSection}
-                                                                        toggleChevron={this.toggleChevron}
-                                                                        customizer={ this.props.customizer }
-                                                                        selectNode={this.props.selectNode || []}
-                                                                      />}
                       {(this.props.selectNode?.type === "switch") && <SwitchNode
                                                                           activeSection={this.state.activeSection}
                                                                           toggleChevron={this.toggleChevron}
@@ -142,12 +130,6 @@ import mutate from "dot-prop-immutable";
                                                                           selectNode={this.props.selectNode || []}
                                                                         />}
                       {(this.props.selectNode?.type === "customizer") && <CustomizerNode
-                                                                      activeSection={this.state.activeSection}
-                                                                      toggleChevron={this.toggleChevron}
-                                                                      customizer={ this.props.customizer }
-                                                                      selectNode={this.props.selectNode || []}
-                                                                    />}
-                      {(this.props.selectNode?.type === "bot") && <Bot
                                                                       activeSection={this.state.activeSection}
                                                                       toggleChevron={this.toggleChevron}
                                                                       customizer={ this.props.customizer }

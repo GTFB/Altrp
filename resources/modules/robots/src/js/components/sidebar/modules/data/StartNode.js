@@ -4,10 +4,8 @@ import Resource from "../../../../../../../editor/src/js/classes/Resource";
 import store from "../../../../store/store";
 import {setCurrentRobot} from "../../../../store/current-robot/actions";
 import {setUpdatedNode} from "../../../../store/robot-settings/actions";
-import {iconsManager} from "../../../../../../../editor/src/js/helpers";
 import ModelField from "./start/ModelField";
 import {CONDITIONS_OPTIONS} from "../../../../../../../front-app/src/js/helpers";
-import AltrpSelect from "../../../../../../../admin/src/components/altrp-select/AltrpSelect";
 
 export default class StartNode extends React.Component {
   constructor(props) {
@@ -27,7 +25,7 @@ export default class StartNode extends React.Component {
   changeSelectRobot = (e, type, key = false, item = false) => {
     let robot = this.props.robot;
     const value = e.target.value;
-    
+
     if (type === "start_config") {
       if (key === 'period') {
         robot.start_config.period.name = value;
@@ -51,7 +49,7 @@ export default class StartNode extends React.Component {
                 time: ''
               },
               restrictions: [],
-            }    
+            }
             break;
           case "telegram_bot":
             robot.start_config = { bot_token: '' }
@@ -59,7 +57,7 @@ export default class StartNode extends React.Component {
           default:
             robot.start_config = '';
             break;
-        }    
+        }
       }
       robot[type] = value;
     }
@@ -339,7 +337,7 @@ export default class StartNode extends React.Component {
                             />
                           </div>
                           <button className="repeater-item__icon" onClick={() => this.onDelete(item)}>
-                            {iconsManager().renderIcon('times')}
+                            {window.iconsManager.renderIcon('times')}
                           </button>
                         </div>
                         <div className="repeater-item-content">
@@ -487,7 +485,7 @@ export default class StartNode extends React.Component {
                       <div className="repeater-item-tools">
                         <div className="repeater-item__caption"></div>
                         <button className="repeater-item__icon" onClick={() => this.onDeleteRobot(item)}>
-                          {iconsManager().renderIcon('times')}
+                          {window.iconsManager.renderIcon('times')}
                         </button>
                       </div>
                       <div className="repeater-item-content">

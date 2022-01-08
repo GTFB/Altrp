@@ -11,10 +11,10 @@ import { SessionConfig } from '@ioc:Adonis/Addons/Session'
 
 const sessionConfig: SessionConfig = {
   enabled: true,
-  driver: Env.get('SESSION_DRIVER'),
+  driver: Env.get('SESSION_DRIVER', 'file'),
   cookieName: 'adonis-session',
   clearWithBrowser: false,
-  age: '2h',
+  age: Env.get('SESSION_LIFETIME','2h'),
   cookie: {}, // see the cookie driver
   file: {
     location: Application.tmpPath('sessions'),

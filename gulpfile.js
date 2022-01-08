@@ -1,7 +1,9 @@
 let gulp = require('gulp');
 let zip = require('gulp-zip');
 let notify = require("gulp-notify");
+let gulpCopy = require("gulp-copy");
 let path = require('path');
+let fs = require('fs');
 
 const excludes = [
   './**/*',
@@ -70,6 +72,11 @@ const excludes = [
   '!./WriteChunksToFrontBlade.js',
 ];
 
+/**
+ *
+ * @param filename
+ * @returns {*}
+ */
 function altrpZip(filename = 'altrp.zip') {
   return gulp.src(excludes).pipe(zip(filename))
       .pipe(gulp.dest('../'))
@@ -80,6 +87,29 @@ function altrpZip(filename = 'altrp.zip') {
       }));
 }
 
-exports.pack = ()=>{return altrpZip()};
-exports.packTest = ()=>{return altrpZip('altrp-test.zip')};
+function altrpJSZip(){
+  let filename = 'altrp-js.zip'
+  gulp.src([
+    './public/**/*',
+    '!./public/storage/**',
+    '!./public/altrp-plugins/**',
+    '!./public/.htaccess',
+    '!./public/**.php',
+    '!./public/web.config',
+    '!./public/mix-manifest.json',
+  ]).pipe(gulpCopy('./altrpnjs/build/public', {}))
+  return gulp.src([
+    './altrpnjs/build/**/*'
+  ]).pipe(zip(filename))
+    .pipe(gulp.dest('../'))
+    .pipe(notify({
+      message:'Архив готов',
+      sound: true,
+      title: 'Altrp JS'
+    }))
+}
 
+exports.pack = ()=>{return altrpZip()};
+exports.packJS = ()=>{return altrpJSZip()};
+exports.packTest = ()=>{return altrpZip('altrp-test.zip')};
+exports.clearJSBuild = ()=>{return fs.unlinkSync(__dirname + '/altrpnjs/build')}

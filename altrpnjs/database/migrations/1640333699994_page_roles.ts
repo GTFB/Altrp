@@ -4,15 +4,18 @@ export default class PageRoles extends BaseSchema {
   protected tableName = 'page_roles'
 
   public async up () {
-    this.schema.createTable(this.tableName, (table) => {
-      table.integer('role_id').unsigned()
-      table.integer('page_id').unsigned()
+    if(! await this.schema.hasTable(this.tableName)) {
 
-      table.foreign('role_id').references('roles.id')
-        .onUpdate('cascade').onDelete('cascade');
+      this.schema.createTable(this.tableName, (table) => {
+        table.integer('role_id').unsigned()
+        table.integer('page_id').unsigned()
 
-      table.primary(['page_id', 'role_id']);
-    })
+        table.foreign('role_id').references('roles.id')
+          .onUpdate('cascade').onDelete('cascade');
+
+        table.primary(['page_id', 'role_id']);
+      })
+    }
   }
 
   public async down () {

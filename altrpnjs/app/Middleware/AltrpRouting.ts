@@ -2,13 +2,20 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Page from "App/Models/Page";
 import Edge from "../../helpers/edge";
 import Env from "@ioc:Adonis/Core/Env";
+import appInstallFilesExist from "../../helpers/appInstallFilesExist";
 
 
 export default class AltrpRouting {
   public async handle({request, response, view}: HttpContextContract, next: () => Promise<void>) {
     const url = request.url();
+    if(url === '/altrp-install'){
+      await next()
+      return
+    }
+    if(! this.altrpInstalled()){
+      return response.redirect('/altrp-install', true)
+    }
 
-    console.log(url)
     const page = await Page.query().where("path", url).preload("templates").first();
 
     if(page) {
@@ -32,5 +39,12 @@ export default class AltrpRouting {
     }
 
 
+  }
+
+  /**
+   * Проверка установки
+   */
+  altrpInstalled():boolean{
+    return appInstallFilesExist();
   }
 }

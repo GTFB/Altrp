@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import Chevron from "../../../../../../../../../editor/src/svgs/chevron.svg";
-import {iconsManager} from "../../../../../../../../../editor/src/js/helpers";
 import { setUpdatedNode } from "../../../../../../store/robot-settings/actions";
 import store from "../../../../../../store/store";
 
@@ -150,7 +149,7 @@ export default class SendTelegram extends Component{
                               />
                             </div>
                             <button className="repeater-item__icon" onClick={() => this.onDelete(item)}>
-                              {iconsManager().renderIcon('times')}
+                              {window.iconsManager.renderIcon('times')}
                             </button>
                           </div>
                           <div className="repeater-item-content">

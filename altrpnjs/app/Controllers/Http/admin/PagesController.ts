@@ -99,8 +99,7 @@ export default class PagesController {
     }
   }
 
-  public async getAreas({ params }) {
-    const page = await Page.find(parseInt(params.id));
+  public async getAreas({  }) {
 
     return {
       "areas": [

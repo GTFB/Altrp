@@ -23,6 +23,7 @@
         "customizer-build": "webpack --config webpack.customizer.prod.js",
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
         "pack": "npm run server-build && npm run front-build && npm run editor-build && npm run admin-build && npm run customizer-build  && npm run robots-build && gulp pack",
+        "only-build": "npm run server-build && npm run front-build && npm run editor-build && npm run admin-build && npm run customizer-build  && npm run robots-build",
         "packTest": "npm run server-build && npm run front-build && npm run editor-build && npm run admin-build && npm run robots-build && npm run customizer-build && gulp packTest",
         "only-pack": "gulp pack",
         "gulp-pack-test": "gulp packTest",
@@ -31,6 +32,8 @@
         "reports:build": "rm -rf public/modules/altrp-reports && cd resources/modules/altrp-reports && PUBLIC_URL=/modules/reports/ react-scripts build",
         "reports:move": "mv -f resources/modules/altrp-reports/build public/modules/reports",
         "server:start": "node server-dist/index.js",
+        "build-pack-js-server": "npm run only-build && node ./altrpnjs/ace build --production && gulp packJS",
+        "pack-js-server": "gulp packJS",
         "docs": "jsdoc resources/modules -r"
     },
     "dependencies": {
@@ -242,6 +245,7 @@
         "extract-text-webpack-plugin": "^3.0.2",
         "gulp": "^4.0.2",
         "gulp-clean": "^0.4.0",
+        "gulp-copy": "^4.0.1",
         "gulp-notify": "^3.2.0",
         "gulp-zip": "^5.0.1",
         "ignore-styles": "^5.0.1",

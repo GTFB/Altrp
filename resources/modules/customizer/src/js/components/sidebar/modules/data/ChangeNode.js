@@ -3,10 +3,7 @@ import Chevron from "../../../../../../../editor/src/svgs/chevron.svg";
 import store from "../../../../store/store";
 import {setUpdatedNode} from "../../../../store/customizer-settings/actions";
 import mutate from "dot-prop-immutable";
-import {setCurrentCustomizer} from "../../../../store/current-customizer/actions";
 import {connect} from "react-redux";
-import PropertyComponent from "../../PropertyComponent";
-import SwitcherRepeater from "../../SwitcherRepeater";
 import altrpRandomId from "../../../../../../../front-app/src/js/helpers/functions/altrp-random-id";
 import ChangeRepeater from "../../ChangeRepeater";
 

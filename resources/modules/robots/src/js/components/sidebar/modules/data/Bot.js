@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import store from "../../../../store/store";
 import { setUpdatedNode } from "../../../../store/robot-settings/actions";
-import {iconsManager} from "../../../../../../../editor/src/js/helpers";
 import Chevron from "../../../../../../../editor/src/svgs/chevron.svg";
 import SendTelegram from "./action/send/SendTelegram";
 

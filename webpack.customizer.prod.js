@@ -6,7 +6,7 @@ const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 
 module.exports =  {
   entry: "./resources/modules/customizer/src/index.js",
-  mode: "development",
+  mode: "production",
   module: {
     rules: [
       {
@@ -48,7 +48,11 @@ module.exports =  {
         options: {
           name: "[path][name].[ext]"
         }
-      }
+      },
+      {
+        test: /(\.(woff|woff2|eot|ttf|otf)|slick.svg|spritesheet.svg)$/,
+        use: ["file-loader"]
+      },
     ]
   },
   resolve: {

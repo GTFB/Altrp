@@ -6,6 +6,7 @@ namespace App\Altrp;
 use App\AltrpMeta;
 use Facade\FlareClient\Http\Exceptions\NotFound;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Request;
@@ -18,10 +19,27 @@ use Jackiedo\DotenvEditor\Facades\DotenvEditor;
 class Plugin extends Model
 {
 
+  /**
+   * Ключ списка плагинов в .env
+   */
   const ALTRP_PLUGINS = 'ALTRP_PLUGINS';
+  /**
+   * Ключ списка виджетов в .env
+   */
+  const ALTRP_PLUGINS_WIDGET_LIST = 'ALTRP_PLUGINS_WIDGET_LIST';
+  /**
+   * Ключ списка виджетов в plugin_meta
+   */
+  const PLUGIN_WIDGETS = 'plugin_widgets';
+  /**
+   * Ключ списка статики активных плагинов в таблице altrp_meta
+   */
   const ALTRP_STATIC_META = 'altrp_static_meta';
 
-  const STATIC_DISTANCE_LIST = [
+  /**
+   * список локаций для статики в шаблонах
+   */
+  const STATIC_LOCATIONS_LIST = [
     'front_head_styles',
     'front_bottom_styles',
     'front_head_scripts',
@@ -94,7 +112,7 @@ class Plugin extends Model
     }
     $plugin = new Plugin(['name' => $pluginName ]);
     if( $enable ){
-      $plugin->updatePluginStaticFiles();
+      $plugin->updatePluginSettings();
       if( ! array_search( $plugin->name, $enabledPlugins ) ){
         $enabledPlugins[] = $plugin->name;
       }
@@ -108,6 +126,7 @@ class Plugin extends Model
     DotenvEditor::setKey( self::ALTRP_PLUGINS, $enabledPlugins );
     DotenvEditor::save();
     Artisan::call( 'cache:clear' );
+    self::updateAltrpPluginLists();
   }
 
   /**
@@ -243,6 +262,8 @@ class Plugin extends Model
     return public_path( 'altrp-plugins/' . $this->name . $path ) ;
   }
 
+
+
   /**
    * @param string $meta_name
    * @param null $default
@@ -300,11 +321,11 @@ class Plugin extends Model
   /**
    * @throws NotFound
    */
-  public function updatePluginStaticFiles()
+  public function updatePluginSettings()
   {
     $this->copyStaticFiles();
-
     $this->writeStaticsToAltrpMeta();
+
   }
 
   public function removeStaticsFromAltrpMeta(){
@@ -321,12 +342,12 @@ class Plugin extends Model
     }
     $value = json_decode( $altrp_static_meta->meta_value, true );
 
-    foreach ( self::STATIC_DISTANCE_LIST as $item ) {
+    foreach ( self::STATIC_LOCATIONS_LIST as $item ) {
       data_set( $value, $item . '.' . $this->name, null );
     }
     $altrp_static_meta->meta_value = json_encode( $value );
     $altrp_static_meta->save();
-    self::writePluginsStatics();
+    self::writePluginsSettings();
   }
 
   function writeStaticsToAltrpMeta()
@@ -343,15 +364,15 @@ class Plugin extends Model
     }
     $value = json_decode( $altrp_static_meta->meta_value, true );
 
-    foreach ( self::STATIC_DISTANCE_LIST as $item ) {
+    foreach ( self::STATIC_LOCATIONS_LIST as $item ) {
       data_set( $value, $item . '.' . $this->name, $this->getMeta( $item ) );
     }
     $altrp_static_meta->meta_value = json_encode( $value );
     $altrp_static_meta->save();
-    self::writePluginsStatics();
+    self::writePluginsSettings();
   }
 
-  static public function writePluginsStatics(){
+  static public function writePluginsSettings(){
 
     $altrp_static_meta = AltrpMeta::find( self::ALTRP_STATIC_META );
     if( ! $altrp_static_meta ){
@@ -365,7 +386,7 @@ class Plugin extends Model
     }
     $value = json_decode( $altrp_static_meta->meta_value, true );
 
-    foreach ( self::STATIC_DISTANCE_LIST as $item ) {
+    foreach ( self::STATIC_LOCATIONS_LIST as $item ) {
       $statics_lis = data_get( $value, $item );
       $statics_string = [];
       if( is_array( $statics_lis ) ){
@@ -377,7 +398,6 @@ class Plugin extends Model
       }
       if( $statics_string ){
         $statics_string = implode( ',', $statics_string );
-//        dd($statics_string);
         DotenvEditor::setKey( \Str::upper( $item ), $statics_string );
       } else {
         DotenvEditor::deleteKey( \Str::upper( $item ) );
@@ -429,6 +449,76 @@ class Plugin extends Model
     $archive->close();
     File::deleteDirectory( $temp_path );
     return true;
+  }
+
+  /**
+   * @return Collection
+   */
+  static function getEnabledPlugins(): Collection{
+    if(DotenvEditor::keyExists(self::ALTRP_PLUGINS)){
+      $enabledPlugins =  explode(',', DotenvEditor::getValue( self::ALTRP_PLUGINS ));
+    } else {
+      $enabledPlugins = [];
+    }
+    $enabledPlugins =  collect( $enabledPlugins );
+    $enabledPlugins = $enabledPlugins->map(function( $plugin_name) {
+      return new Plugin(['name' => $plugin_name ]);
+    });
+    $duplicatesPlugins = $enabledPlugins->duplicates( function( Plugin $plugin ){
+      return $plugin->name;
+    });
+    if( $duplicatesPlugins->count() ){
+      $enabledPlugins = $enabledPlugins->unique( function( Plugin $plugin ){
+        return $plugin->name;
+      })->values();
+
+      $enabledPluginsString = $enabledPlugins->map(function ( Plugin $plugin ) {
+        return $plugin->name;
+      } );
+      $enabledPluginsString = $enabledPluginsString->implode( ',' );
+
+      DotenvEditor::setKey( self::ALTRP_PLUGINS, $enabledPluginsString );
+      DotenvEditor::save();
+    }
+    return $enabledPlugins;
+  }
+
+  /**
+   * @return Collection
+   */
+  static function getPlugins(): Collection
+  {
+
+    if( File::exists( app_path( 'AltrpPlugins' ) )){
+      $plugins = File::directories( app_path( 'AltrpPlugins' ) );
+    } else {
+      $plugins = [];
+    }
+    return collect( $plugins );
+  }
+
+
+  /**
+   * Удалить списки виджетов и пр. для активных плагинов из .env
+   */
+  static function updateAltrpPluginLists()
+  {
+    $plugins = self::getEnabledPlugins();
+    $new_widget_list = [];
+    $plugins->each( function( Plugin $plugin )use(&$new_widget_list){
+      try {
+        if ( $plugin->getMeta( Plugin::PLUGIN_WIDGETS ) )  {
+          $new_widget_list =
+            array_merge( $new_widget_list,
+              explode( ',',$plugin->getMeta( Plugin::PLUGIN_WIDGETS))
+            );
+        }
+      } catch ( NotFound | FileNotFoundException $e ) {
+      }
+    });
+    $new_widget_list = implode( ',',$new_widget_list);
+    DotenvEditor::setKey( self::ALTRP_PLUGINS_WIDGET_LIST, $new_widget_list );
+    DotenvEditor::save();
   }
 
 }

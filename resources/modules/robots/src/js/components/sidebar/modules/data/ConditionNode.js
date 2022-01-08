@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import store from "../../../../store/store";
 import { setUpdatedNode } from "../../../../store/robot-settings/actions";
 import {CONDITIONS_OPTIONS} from "../../../../../../../front-app/src/js/helpers";
-import {iconsManager} from "../../../../../../../editor/src/js/helpers";
 import Chevron from "../../../../../../../editor/src/svgs/chevron.svg";
 
 
@@ -129,7 +128,7 @@ export default class ConditionNode extends Component{
                                         />
                                 </div>
                                 <button className="repeater-item__icon" onClick={() => this.onDelete(item)}>
-                                    {iconsManager().renderIcon('times')}
+                                    {window.iconsManager.renderIcon('times')}
                                 </button>
                             </div>
                             <div className="repeater-item-content">

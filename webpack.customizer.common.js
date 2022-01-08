@@ -9,10 +9,18 @@ module.exports = {
     rules: [
       {
         test: /\.(js|jsx)$/,
+        exclude: /(node_modules|bower_components).*/,
+        loader: "babel-loader",
+        options: {
+        }
+      },
+      {
+        test: /\.(js|jsx)$/,
         exclude: /(node_modules|bower_components)/,
         loader: "babel-loader",
         options: {
-          presets: ["@babel/env"]
+          presets: ["@babel/env", "@babel/preset-react"],
+          plugins: ["@babel/plugin-syntax-jsx", "inline-react-svg"]
         }
       },
       {
@@ -28,6 +36,7 @@ module.exports = {
       },
       {
         test: /\.svg$/,
+        exclude: /slick.svg$/,
         use: [
           {
             loader: "babel-loader"
@@ -35,10 +44,14 @@ module.exports = {
           {
             loader: "react-svg-loader",
             options: {
-              jsx: true // true outputs JSX tags
+              //jsx: true, // true outputs JSX tags
             }
           }
         ]
+      },
+      {
+        test: /(\.(woff|woff2|eot|ttf|otf)|slick.svg)$/,
+        use: ["file-loader"]
       },
       {
         test: /\.(png|jpg|gif)$/,

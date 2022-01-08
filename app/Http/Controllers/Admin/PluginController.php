@@ -75,11 +75,11 @@ class PluginController extends Controller
       } else {
         $plugin->clearMetadata();
         if( $plugin->enabled ){
-          $plugin->updatePluginStaticFiles();
+          $plugin->updatePluginSettings();
         }
       }
     }
-
+    Plugin::updateAltrpPluginLists();
     return response()->json( $res, $status, [], JSON_UNESCAPED_UNICODE );
   }
 
@@ -154,7 +154,7 @@ class PluginController extends Controller
     }
     $archive->close();
     File::deleteDirectory( $temp_path );
-    $plugin->updatePluginStaticFiles();
+    $plugin->updatePluginSettings();
     return response()->json( $res, $status, [], JSON_UNESCAPED_UNICODE );
   }
 }

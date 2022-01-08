@@ -4,19 +4,22 @@ export default class Roles extends BaseSchema {
   protected tableName = 'roles'
 
   public async up () {
-    this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
+    if(! await this.schema.hasTable(this.tableName)) {
 
-      table.string("name")
-      table.string("display_name")
-      table.string("description")
+      this.schema.createTable(this.tableName, (table) => {
+        table.increments('id')
 
-      /**
-       * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
-       */
-      table.timestamp('created_at', { useTz: true })
-      table.timestamp('updated_at', { useTz: true })
-    })
+        table.string("name")
+        table.string("display_name")
+        table.string("description")
+
+        /**
+         * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
+         */
+        table.timestamp('created_at', {useTz: true})
+        table.timestamp('updated_at', {useTz: true})
+      })
+    }
   }
 
   public async down () {

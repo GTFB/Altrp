@@ -1,5 +1,6 @@
 <?php
 
+use App\Altrp\Plugin;
 use App\Constructor\Template;
 use App\Http\Requests\ApiRequest;
 use App\Role;
@@ -1008,7 +1009,13 @@ function extractElementsNamesFromTemplate( $template_id, &$elementNames ){
  * @param boolean $only_react_elements
  */
 function _extractElementsNames( $element,  &$elementNames, $only_react_elements ){
-  $DEFAULT_REACT_ELEMENTS = [
+  $plugins_widget_list = env( Plugin::ALTRP_PLUGINS_WIDGET_LIST, '' );
+  if( ! $plugins_widget_list ){
+    $plugins_widget_list = [];
+  } else {
+    $plugins_widget_list = explode( ',', $plugins_widget_list );
+  }
+  $DEFAULT_REACT_ELEMENTS = array_merge($plugins_widget_list, [
     'action-trigger',
     'input',
     'input-select',
@@ -1063,7 +1070,7 @@ function _extractElementsNames( $element,  &$elementNames, $only_react_elements 
     'list',
     'stars',
     'progress-bar'
-  ];
+  ]);
   if( ! is_array( $elementNames ) ){
     $elementNames = [];
   }

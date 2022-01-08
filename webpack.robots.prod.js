@@ -1,3 +1,4 @@
+const webpack = require("webpack");
 const merge = require("webpack-merge");
 const common = require("./webpack.robots.common.js");
 const path = require("path");
@@ -5,7 +6,7 @@ const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 
 module.exports =  {
   entry: "./resources/modules/robots/src/index.js",
-  mode: "development",
+  mode: "production",
   module: {
     rules: [
       {
@@ -47,7 +48,11 @@ module.exports =  {
         options: {
           name: "[path][name].[ext]"
         }
-      }
+      },
+      {
+        test: /(\.(woff|woff2|eot|ttf|otf)|slick.svg|spritesheet.svg)$/,
+        use: ["file-loader"]
+      },
     ]
   },
   resolve: {
@@ -59,5 +64,12 @@ module.exports =  {
     publicPath: "/modules/robots/",
     filename: "robots.js"
   },
-  plugins: [ new CleanWebpackPlugin()]
+  plugins: [
+
+    new webpack.DefinePlugin({
+      "process.env": "{}",
+      global: {}
+    }),
+    new CleanWebpackPlugin()
+  ]
 };

@@ -72,15 +72,20 @@ class FrontElementsManager {
     this.components['icon'] = IconWidget;
   }
 
+  /**
+   * Если компонент виджета не найден, то возвращаем скелетон
+   * @param name
+   * @returns {(function(*): *)|*}
+   */
   getComponentClass(name) {
     if (! this.components[name]) {
-      console.error( 'Not found component with ' + name);
+      return SkeletonPlaceholder
     }
     return this.components[name];
   }
 
   checkElementExists(elementName) {
-    return !!this.components[elementName];
+    return true;
   }
 }
 export default window.frontElementsManager = new FrontElementsManager();

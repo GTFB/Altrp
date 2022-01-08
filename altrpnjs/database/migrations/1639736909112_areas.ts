@@ -6,52 +6,54 @@ export default class Areas extends BaseSchema {
   protected tableName = 'areas'
 
   public async up () {
-    this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
+    if(! await this.schema.hasTable(this.tableName)) {
+      this.schema.createTable(this.tableName, (table) => {
+        table.increments('id')
 
-      table.string("name")
-      table.string("settings")
-      /**
-       * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
-       */
-      table.timestamp('created_at', { useTz: true })
-      table.timestamp('updated_at', { useTz: true })
+        table.string("name")
+        table.string("settings")
+        /**
+         * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
+         */
+        table.timestamp('created_at', {useTz: true})
+        table.timestamp('updated_at', {useTz: true})
 
-      const areas = [
-        {
-          name: "content",
-          settings: "[]"
-        },
-        {
-          name: "header",
-          settings: "[]"
-        },
-        {
-          name: "footer",
-          settings: "[]"
-        },
-        {
-          name: "card",
-          settings: "[]"
-        },
-        {
-          name: "popup",
-          settings: "[]"
-        },
-        {
-          name: "reports",
-          settings: "[]"
-        },
-        {
-          name: "mails",
-          settings: "[]"
-        },
-      ]
+        const areas = [
+          {
+            name: "content",
+            settings: "[]"
+          },
+          {
+            name: "header",
+            settings: "[]"
+          },
+          {
+            name: "footer",
+            settings: "[]"
+          },
+          {
+            name: "card",
+            settings: "[]"
+          },
+          {
+            name: "popup",
+            settings: "[]"
+          },
+          {
+            name: "reports",
+            settings: "[]"
+          },
+          {
+            name: "mails",
+            settings: "[]"
+          },
+        ]
 
-      areas.forEach((area) => {
-        Area.create(area)
+        areas.forEach((area) => {
+          Area.create(area)
+        })
       })
-    })
+    }
   }
 
   public async down () {

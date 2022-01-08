@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import { column, beforeSave, BaseModel } from '@ioc:Adonis/Lucid/Orm'
+import {column, beforeSave, BaseModel, ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm'
+import Role from "App/Models/Role";
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -28,7 +29,34 @@ export default class User extends BaseModel {
     }
   }
 
+  /**
+   *
+   */
   isAdmin():boolean {
-    return false;
+    return this.hasRole('admin');
+  }
+
+  @manyToMany(() => Role, {
+    pivotTable: ''
+  })
+  public roles: ManyToMany<typeof Role>
+
+  /**
+   *
+   * @param roles
+   * @private
+   */
+  private hasRole(roles: string|number|Array<string|number>):boolean {
+    if(typeof roles === 'string' || typeof roles === 'number'){
+      roles = [roles]
+    }
+    return ! ! roles.filter((roleName)=>{
+      return this.roles.map((role:Role)=>{
+        if(typeof roleName === 'string'){
+          return role.name
+        }
+        return role.id
+      }).indexOf(roleName) !== -1;
+    })
   }
 }

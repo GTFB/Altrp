@@ -24,7 +24,8 @@
     "@adonisjs/view",
     "@adonisjs/lucid",
     "@adonisjs/auth",
-    "@adonisjs/session"
+    "@adonisjs/session",
+    "@adonisjs/shield"
   ],
   "aceProviders": [
     "@adonisjs/repl"

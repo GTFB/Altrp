@@ -12,8 +12,20 @@ module.exports = {
         exclude: /(node_modules|bower_components)/,
         loader: "babel-loader",
         options: {
-          presets: ["@babel/env"]
+
+          presets: ["@babel/env", "@babel/preset-react"],
+          plugins: ["@babel/plugin-syntax-jsx", "inline-react-svg"]
         }
+      },
+      {
+        test: /\.css$/,
+        // loader: "css-loader",
+        use: [
+          // Creates `style` nodes from JS strings
+          "file-loader",
+          // Translates CSS into CommonJS
+          "css-loader"
+        ]
       },
       {
         test: /\.s[ac]ss$/i,
@@ -28,6 +40,7 @@ module.exports = {
       },
       {
         test: /\.svg$/,
+        exclude: /slick.svg$/,
         use: [
           {
             loader: "babel-loader"
@@ -46,7 +59,11 @@ module.exports = {
         options: {
           name: "[path][name].[ext]"
         }
-      }
+      },
+      {
+        test: /(\.(woff|woff2|eot|ttf|otf)|slick.svg)$/,
+        use: ["file-loader"]
+      },
     ]
   },
   resolve: {

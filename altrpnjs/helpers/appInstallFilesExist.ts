@@ -7,7 +7,7 @@ import base_path from "./base_path";
 import file_exists from "./file_exists";
 import storage_path from "./storage_path";
 
-export default function appInstallFilesExist(){
+export default function appInstallFilesExist():boolean{
 
   // Check if the '.env' and 'storage/installed' files exist
 
